@@ -1,0 +1,2 @@
+;;; Generated package description from /home/krisbalintona/testing-emacs/elpa/org-msg-20201010.1531/org-msg.el  -*- no-byte-compile: t -*-
+(define-package "org-msg" "20201010.1531" "Org mode to send and reply to email in HTML." '((emacs "24.4") (htmlize "1.54")) :commit "557d490ecbd80522a42f7b1fb6aaacca504d4512" :keywords '("extensions" "mail") :authors '(("Jérémy Compostella" . "jeremy.compostella@gmail.com")) :maintainer '("Jérémy Compostella" . "jeremy.compostella@gmail.com") :url "https://github.com/jeremy-compostella/org-msg")

@@ -1,0 +1,36 @@
+cp vanilla-emacs/ispell-personal-dict-en testing/
+cp vanilla-emacs/ispell-personal-dict-en testing-emacs/
+cp vanilla-emacs/snippets testing-emacs/
+mkdir testing-emacs/snippets
+sudo timeshift --create --comment
+wc -l .
+wc -l testing-emacs/base-config.el 
+wc -l testing-emacs/*
+sudo timeshift --create --comment "While having trouble with restoring fonts from daemon"
+vanilla-emacs
+sudo timeshift --create --comment "Gonna go nap. After reading some general.el documentation"
+ls
+testing-emacs
+ls
+ls eshell
+cp ~/vanilla-emacs/eshell/alias alias
+ls
+mv alias eshell/alias
+ls
+ls eshell
+cat eshell/alias
+xinput float20
+xinput float 20
+exit
+xinput reattach 20 3
+xinput float 20
+asusctl -c 70
+xinput reattach 20 3
+sudo timeshift --create --comment "In the morning"
+cd roam
+count --help
+testing-emacs/
+ls
+ls elpa
+rm -rf elpa
+sudo timeshift --create --comment "After class"

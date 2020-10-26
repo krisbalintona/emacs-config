@@ -1,0 +1,10 @@
+alias stcc sudo timeshift --create --comment
+alias stl sudo timeshift --list
+alias stc sudo timeshift --create
+alias mcd mkdir $1 && cd $1
+alias q exit
+alias ff find-file $1
+alias d dired $1
+alias ll ls -lah $*
+alias l ls -lh $*
+alias clear clear-scrollback
