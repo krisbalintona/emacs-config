@@ -1,4 +1,4 @@
-#+TITLE: WIP Configuration File
+#+TITLE: Main Configuration File
 
 * System constants
 ** User info
