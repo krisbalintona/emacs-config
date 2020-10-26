@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
+ magit-file-untrack
  magit-init
  dired-do-rename
  rename-file
  magit
  org-version
  org-mode-restart
- smooth-scrolling-mode
 )
 
 ;; ----- amx-data -----
@@ -164,4 +164,5 @@
  (rename-file . 1)
  (dired-do-rename . 1)
  (magit-init . 1)
+ (magit-file-untrack . 2)
 )

@@ -34,3 +34,4 @@ ls
 ls elpa
 rm -rf elpa
 sudo timeshift --create --comment "After class"
+dust

@@ -1,2 +1,0 @@
-;;; Generated package description from /home/krisbalintona/testing-emacs/elpa/request-deferred-20181129.317/request-deferred.el  -*- no-byte-compile: t -*-
-(define-package "request-deferred" "20181129.317" "Wrap request.el by deferred" '((deferred "0.3.1") (request "0.2.0")) :commit "94f87a84fd3c643bd85638e667f01513c9223ea5" :authors '(("Takafumi Arakaki <aka.tkf at gmail.com>")) :maintainer '("Takafumi Arakaki <aka.tkf at gmail.com>") :url "https://github.com/tkf/emacs-request")
