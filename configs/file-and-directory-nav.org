@@ -53,7 +53,7 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     "fcw" '((lambda () (interactive) (find-file kb/wm-config-file)) :which-key "Open WM config file")
 
     "fcb" '((lambda () (interactive) (find-file kb/emacs-base-config-file)) :which-key "Open Emacs base config")
-    "fce" '((lambda () (interactive) (counsel-find-file kb/emacs-config-dir)) :which-key "Open Emacs base config")
+    "fce" '((lambda () (interactive) (counsel-find-file kb/emacs-config-dir)) :which-key "Config directory")
     "fcE" '((lambda () (interactive) (kb/org-dir-show-headings kb/emacs-config-dir)) :which-key "Edit Emacs configs")
 
     ;; ;; Section for Jumping directly to headings
