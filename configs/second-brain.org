@@ -77,6 +77,7 @@ Zettelkasten and Evergreen notes
 #+END_SRC
 
 To fix the error with match clobbering from title change
+- It seems this was fixed in a recent commit
 #+BEGIN_SRC emacs-lisp
   ;; (defun org-roam--replace-link (old-path new-path &optional old-desc new-desc)
   ;;   "Replace Org-roam file links with path OLD-PATH to path NEW-PATH.
@@ -126,7 +127,9 @@ Interactive browser graph view
     (org-roam-server-default-include-filters "null") ; Default inclusion
     :config
     (if (daemonp)
-        (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) ; Don't start server if not in daemo mode, otherwise will break things
+        (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) ; Don't start server if not in daemon mode, otherwise will break things
+    (if (bound-and-true-p org-roam-mode) ; Necessary for first invocation of org-roam-server-mode because hook is written (currently) after org-roam is loaded
+        (org-roam-server-mode))
     )
 #+END_SRC
 * Org-roam-capture-templates
