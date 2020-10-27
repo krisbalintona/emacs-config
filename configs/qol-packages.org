@@ -44,6 +44,7 @@ Cool version of nav-flash
 Scroll line-by-line rather than half-screens
 #+BEGIN_SRC emacs-lisp
   (use-package smooth-scrolling
+    :disabled ; Annoying
     :custom
     (smooth-scroll-margin 9)
     :config

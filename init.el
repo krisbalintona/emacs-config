@@ -77,7 +77,19 @@
 (require 'repo-configure-rcp)
 (require 'package-management-rcp)
 
-(mapc #'org-babel-load-file (directory-files (concat user-emacs-directory "configs/") t "\\.org$"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "completion-frameworks.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "buffer-management.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "evil-packages.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "email.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "programming.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "eshell.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
 
 ;; Packages
 (provide 'init)
