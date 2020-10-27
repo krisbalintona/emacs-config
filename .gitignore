@@ -2,3 +2,6 @@
 /quelpa/
 /elpa/
 /configs/*.el
+/org-roam.db
+/.emacs.desktop.lock
+/emacs-save-desktop
