@@ -6,3 +6,6 @@
 /.emacs.desktop.lock
 /emacs-save-desktop
 /undo-fu-session/
+/.last-package-update-day
+/amx-items
+/var/pcache/unicode-fonts
