@@ -1,0 +1,210 @@
+#+TITLE: Programming packages
+
+
+* Org-babel
+
+*Loading org-babel is what enables proper indentation in src blocks.* Indentation will naturally load when you are in a proper programming file.
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org
+    (setq org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it were in the language's major mode
+    )
+#+end_src
+* Lsp-mode
+
+Syntax highlighting for every language
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    :bind (:map lsp-mode-map
+                ("TAB" . completion-at-point))
+    :config
+    (kb/leader-keys
+      "ld" 'xref-find-definitions
+      "lr" 'xref-find-references
+      "ln" 'lsp-ui-find-next-reference
+      "lp" 'lsp-ui-find-prev-reference
+      "ls" 'counsel-imenu
+      "le" 'lsp-ui-flycheck-list
+      "lS" 'lsp-ui-sideline-mode
+      "lX" 'lsp-execute-code-action)
+    )
+#+END_SRC
+* Doom-snippets
+
+Large library of snippet templates
+- Not available on MELPA yet
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-snippets
+    :demand t
+    :quelpa (doom-snippets :fetcher git :url "https://github.com/hlissner/doom-snippets")
+    )
+#+END_SRC
+* Org-tempo
+
+#+BEGIN_SRC emacs-lisp
+  (require' org-tempo)
+
+  (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  ;; (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+  ;; (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  ;; (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+  ;; (add-to-list 'org-structure-template-alist '("json" . "src json"))
+#+END_SRC
+* Yasnippet
+
+Template-expansion system (doesn't include templates)
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :hook ((text-mode . yas-minor-mode-on)
+           (prog-mode . yas-minor-mode-on)
+           (snippet-mode . yas-minor-mode-on))
+    :config
+    (defvar kb/personal-snippets-dir
+      (concat user-emacs-directory "snippets/"))
+    (add-to-list 'yas-snippet-dirs 'kb/personal-snippets-dir) ; Only accepts symbols or strings
+
+    (yas-reload-all)
+    )
+#+END_SRC
+* Lisp-extra-font-lock
+
+Give faces to elisp symbols
+#+begin_src emacs-lisp
+  (use-package lisp-extra-font-lock
+    :hook (emacs-lisp-mode . (lambda () (lisp-extra-font-lock-mode t)))
+    :config
+    ;; (lisp-extra-font-lock-global-mode 1)
+    )
+#+end_src
+* Highlight-function-calls
+
+Give function calls a special face (default is underline)
+#+begin_src emacs-lisp
+  (use-package highlight-function-calls
+    :hook (emacs-lisp-mode . (lambda () (highlight-function-calls-mode t)))
+    )
+#+end_src
+* Magit
+
+You know the deal
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+    (auto-revert-check-vc-info nil) ; Fixes VC info on a timer in order to take into account changes made outside of Emacs - causes micro-stutters when too many version controlled buffers
+    :config
+    ;; (add-hook 'magit-post-stage-hook 'magit-refresh) ; Immedieatly refresh buffer after staging something - causes freezing?
+
+    (kb/leader-keys
+      "gg"  '(magit-status :which-key "Status")
+      "gs"  '(magit-status :which-key "Status")
+      "gd"  'magit-diff-unstaged
+      "gc"  'magit-branch-or-checkout
+      "gl"   '(:ignore t :which-key "log")
+      "glc" 'magit-log-current
+      "glf" 'magit-log-buffer-file
+      "gb"  'magit-branch
+      "gP"  'magit-push-current
+      "gp"  'magit-pull-branch
+      "gf"  'magit-fetch
+      "gF"  'magit-fetch-all
+      "gr"  'magit-rebase)
+    )
+#+END_SRC
+* Highlight-indent-guides
+
+Show indicator for indentation levels (like in VS Code)
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-indent-guides
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-method 'column)
+    (highlight-indent-guides-character ?⏐)
+    :config
+    ;; (set-face-attribute 'highlight-indent-guides-character-face nil :inherit 'org-block) ;:(background "#232635") ; Same as org-block background
+    (highlight-indent-guides-auto-set-faces) ; Set faces based on theme
+    )
+#+END_SRC
+* Flycheck
+
+Checking your code
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :hook (lsp-mode . flycheck-mode) ; Sthart alongside lsp-mode
+    :custom
+    (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
+
+    ;; Check syntax only when saving file and switching to other buffer
+    (flycheck-check-syntax-automatically '(save mode-enabled idle-buffer-switch))
+    (flycheck-idle-buffer-switch-delay 2) ; Wait 2 secons after buffer switch
+
+    ;; Run flycheck even if visiting buffer quickly (reliant on idle-buffer-switch)
+    (flycheck-buffer-switch-check-intermediate-buffers t)
+
+    ;; Time to show an error on point
+    (flycheck-display-errors-delay 0.25)
+    )
+#+END_SRC
+* Rainbow-mode
+
+Colorify your color codes
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :config
+    (rainbow-mode) ; Enable everywhere
+    )
+#+END_SRC
+* Highlight-quoted
+
+Make quoted symbols easier to distinguish from free variables by highlighting them
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-quoted
+    :hook (emacs-lisp-mode . highlight-quoted-mode)
+    )
+#+END_SRC
+
+* Projectile
+
+Manage project directories
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    (when (file-directory-p user-emacs-directory)
+      (setq projectile-project-search-path `(,user-emacs-directory)))
+    (setq projectile-switch-project-action #'projectile-dired)
+    :custom
+    (projectile-completion-system 'ivy)
+    :config
+    (projectile-mode)
+
+    (kb/leader-keys
+      "Pf"  'counsel-projectile-find-file
+      "Ps"  'counsel-projectile-switch-project
+      "PF"  'counsel-projectile-rg
+      "Pp"  'counsel-projectile
+      "Pc"  'projectile-compile-project
+      "Pd"  'projectile-dired)
+    )
+#+END_SRC
+* Paren
+
+Helpful parenthesis indicator
+#+BEGIN_SRC emacs-lisp
+  (use-package paren
+    :config
+    (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
+    (show-paren-mode t)
+    )
+#+END_SRC
+* Elisp-demos
+
+Add example code snippets to some of the help windows
+#+BEGIN_SRC emacs-lisp
+  (use-package elisp-demos
+    :config
+    (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
+    )
+#+END_SRC

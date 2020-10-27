@@ -1,0 +1,140 @@
+#+TITLE: Evil Packages
+
+
+* Evil-mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :init
+    ;; A lot of the settings need to be set before evil inisializes
+    (setq evil-want-integration t
+          evil-want-keybinding nil ; Add more keybinds for other modes I don't want
+          evil-want-C-u-scroll t ; Rebind C-u from universal argument to evil scroll up
+          evil-want-C-i-jump nil
+          evil-respect-visual-line-mode t ; Don't skip lines in visual-line-mode
+          evil-want-Y-yank-to-eol t
+          evil-move-cursor-back nil
+          evil-move-beyond-eol t
+          evil-normal-state-cursor 'box
+          evil-insert-state-cursor 'bar
+          evil-visual-state-cursor 'hollow
+          evil-undo-system 'undo-fu)
+    :config
+    (evil-mode t)
+
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal)
+    (evil-set-initial-state 'eshell-mode 'insert)
+
+    (evil-define-key 'insert 'global (kbd "C-g") 'evil-escape)
+    (evil-define-key '(normal insert visual) 'global (kbd "C-:") 'evil-jump-forward)
+    (evil-define-key '(normal visual) 'global (kbd "zi") 'org-toggle-inline-images)
+
+    (kb/leader-keys
+      "ww" 'evil-window-next
+      "wc" 'evil-window-delete
+      "wo" 'delete-other-windows
+
+      "wL" 'evil-window-move-far-right
+      "wH" 'evil-window-move-far-left
+      "wJ" 'evil-window-move-very-bottom
+      "wK" 'evil-window-move-very-top
+
+      "wl" 'evil-window-right
+      "wh" 'evil-window-left
+      "wj" 'evil-window-down
+      "wk" 'evil-window-up
+
+      "wv" 'evil-window-vsplit
+      "ws" 'evil-window-split
+      )
+    )
+#+END_SRC
+* Evil-collection
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-collection
+    :after evil
+    :custom
+    (evil-collection-outline-bind-tab-p nil)
+    (evil-collection-company-use-tng nil)
+    :config
+    (evil-collection-init)
+    )
+#+END_SRC
+* Evil-goggles
+
+Visual indicators for when you kill, yank, undo, redo, etc.
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-goggles
+    :disabled ; Doesn't add anything for me and makes editing feel slower because of the delay
+    :after (evil)
+    :custom
+    (evil-goggles-duration 0.1)
+    ;; :init
+    ;; (custom-set-faces
+    ;;  '(evil-goggles-delete-face ((t (:inherit 'shadow))))
+    ;;  '(evil-goggles-paste-face ((t (:inherit 'lazy-highlight))))
+    ;;  '(evil-goggles-yank-face ((t (:inherit 'isearch-fail)))))
+    :config
+    (evil-goggles-mode)
+
+    ;; ;; optionally use diff-mode's faces; as a result, deleted text
+    ;; ;; will be highlighed with `diff-removed` face which is typically
+    ;; ;; some red color (as defined by the color theme)
+    ;; ;; other faces such as `diff-added` will be used for other actions
+    (evil-goggles-use-diff-faces)
+    )
+#+END_SRC
+* Evil-commentary
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-commentary
+    :config
+    (evil-commentary-mode +1)
+    )
+#+END_SRC
+
+* Evil-org
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-org
+    :after (evil evil-collection org)
+    :custom
+    (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+              (lambda ()
+                (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
+
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys)
+    )
+#+END_SRC
+* Evil-surround
+
+Surround a selection with a pair of characters
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode t)
+    )
+#+END_SRC
+* Evil-visualstar
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-visualstar
+    :custom
+    (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
+    :config
+    (global-evil-visualstar-mode)
+    )
+#+END_SRC
+* Evil-magit
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-magit
+    :after (evil evil-collection magit)
+    )
+#+END_SRC

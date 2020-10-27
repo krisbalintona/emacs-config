@@ -1,0 +1,279 @@
+#+TITLE: Completion Frameworks
+
+
+* Company
+** Company itself
+
+Point autocompletion backend
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :hook ((after-init . global-company-mode)
+           (company-mode . company-tng-mode)
+           (company-mode . evil-normalize-keymaps))
+    :custom
+    (company-idle-delay 0.8) ; Trigger completion in a second
+    (company-tooltip-delay 1) ; Wait a little until the tooltip shows
+    (company-minimum-prefix-length 2)
+    (company-tooltip-align-annotations t)
+    (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
+
+    ;; Only search the current buffer for `company-dabbrev' (a backend that
+    ;; suggests text your open buffers). This prevents Company from causing
+    ;; lag once you have a lot of buffers open.
+    (company-dabbrev-other-buffers nil)
+
+    ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
+    ;; domain-specific words with particular casing.
+    (company-dabbrev-ignore-case nil)
+    (company-dabbrev-downcase nil)
+
+    (company-show-numbers t) ; Number the candidates (use M-1, M-2 etc to select completions).
+
+    ;; ;; ;; These are the backends that Doom has active
+    ;; (company-backends '(company-dabbrev company-yasnippet company-ispell))
+    :config
+    (add-to-list 'company-backends 'company-capf) ; For org-roam
+
+    ;; Company-tng to use tab to cycle through suggestions
+    (add-to-list 'company-frontends 'company-tng-frontend)
+    (define-key company-active-map (kbd "RET") 'nil)
+    (define-key company-active-map [return] 'nil)
+    (define-key company-active-map (kbd "TAB") #'company-select-next)
+    (define-key company-active-map [tab] #'company-select-next)
+    (define-key company-active-map [backtab] #'company-select-previous)
+    )
+#+END_SRC
+
+** Company-box
+
+A pretty company autocomplete frontend.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-box
+    :after (company)
+    :hook (company-mode . company-box-mode)
+    :custom
+    (company-box-show-single-candidate 'always)
+    (company-box-backends-colors nil)
+    (company-box-max-candidates 50)
+    (company-box-icons-alist 'company-box-icons-all-the-icons)
+    (company-box-icons-all-the-icons
+     (let ((all-the-icons-scale-factor 0.8))
+       `((Unknown       . ,(all-the-icons-material "find_in_page"             :face 'all-the-icons-purple))
+         (Text          . ,(all-the-icons-material "text_fields"              :face 'all-the-icons-green))
+         (Method        . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+         (Function      . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+         (Constructor   . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+         (Field         . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+         (Variable      . ,(all-the-icons-material "adjust"                   :face 'all-the-icons-blue))
+         (Class         . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
+         (Interface     . ,(all-the-icons-material "settings_input_component" :face 'all-the-icons-red))
+         (Module        . ,(all-the-icons-material "view_module"              :face 'all-the-icons-red))
+         (Property      . ,(all-the-icons-material "settings"                 :face 'all-the-icons-red))
+         (Unit          . ,(all-the-icons-material "straighten"               :face 'all-the-icons-red))
+         (Value         . ,(all-the-icons-material "filter_1"                 :face 'all-the-icons-red))
+         (Enum          . ,(all-the-icons-material "plus_one"                 :face 'all-the-icons-red))
+         (Keyword       . ,(all-the-icons-material "filter_center_focus"      :face 'all-the-icons-red))
+         (Snippet       . ,(all-the-icons-material "short_text"               :face 'all-the-icons-red))
+         (Color         . ,(all-the-icons-material "color_lens"               :face 'all-the-icons-red))
+         (File          . ,(all-the-icons-material "insert_drive_file"        :face 'all-the-icons-red))
+         (Reference     . ,(all-the-icons-material "collections_bookmark"     :face 'all-the-icons-red))
+         (Folder        . ,(all-the-icons-material "folder"                   :face 'all-the-icons-red))
+         (EnumMember    . ,(all-the-icons-material "people"                   :face 'all-the-icons-red))
+         (Constant      . ,(all-the-icons-material "pause_circle_filled"      :face 'all-the-icons-red))
+         (Struct        . ,(all-the-icons-material "streetview"               :face 'all-the-icons-red))
+         (Event         . ,(all-the-icons-material "event"                    :face 'all-the-icons-red))
+         (Operator      . ,(all-the-icons-material "control_point"            :face 'all-the-icons-red))
+         (TypeParameter . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
+         (Template      . ,(all-the-icons-material "short_text"               :face 'all-the-icons-green))
+         (ElispFunction . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+         (ElispVariable . ,(all-the-icons-material "check_circle"             :face 'all-the-icons-blue))
+         (ElispFeature  . ,(all-the-icons-material "stars"                    :face 'all-the-icons-orange))
+         (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink)))))
+    )
+#+END_SRC
+
+** Company-dict
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company-dict
+    :custom
+    (company-dict-dir (concat user-emacs-directory "dict/")) ; Where to look for dictionary files
+    :config
+    (add-to-list 'company-backends 'company-dict)
+  ;; Make company-dict aware of other minor modes' dictionaries by
+  ;; adding minor mode symbols to company-dict-minor-mode-list
+    )
+#+END_SRC
+* Ivy
+** Ivy itself
+
+Some Ivy tips, taken from [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-performance][dotfiles/Emacs.org at master · daviwil/dotfiles · GitHub]]:
+#+BEGIN_QUOTE
++ While in an Ivy minibuffer, you can search within the current results by using S-Space.
++ To quickly jump to an item in the minibuffer, use =C-‘= to get Avy line jump keys.
++ To see actions for the selected minibuffer item, use M-o and then press the action’s key.
++ Super useful: Use C-c C-o to open ivy-occur to open the search results in a separate buffer. From there you can click any item to perform the ivy action.
+#+END_QUOTE
+
+Ido but more powerful and eye-pleasing
+#+BEGIN_SRC emacs-lisp
+    (use-package ivy
+      :bind (:map ivy-minibuffer-map
+                  ("TAB" . ivy-alt-done)
+                  ("C-l" . ivy-alt-done)
+                  :map ivy-switch-buffer-map
+                  ("C-l" . ivy-done)
+                  ("C-d" . ivy-switch-buffer-kill)
+                  :map ivy-reverse-i-search-map
+                  ("C-d" . ivy-reverse-i-search-kill))
+      :custom
+      (ivy-extra-directories nil) ; Remove ./ and ../
+      (ivy-use-virtual-buffers nil) ; Bookmarks and recent files in completion buffer
+      (ivy-count-format "(%d/%d) ")
+      (ivy-use-selectable-prompt t) ; Make prompt line selectable (as a candidate)
+      (enable-recursive-minibuffers t) ; Allow minibuffer commands in minibuffer
+      (ivy-height 17)
+      (ivy-wrap t)
+      (ivy-fixed-height-minibuffer t)
+      (ivy-magic-slash-non-match-action nil) ; disable magic slash on non-match
+      (ivy-virtual-abbreviate 'abbreviate)
+      (ivy-on-del-error-function #'ignore) ; don't quit minibuffer on delete-error
+      (ivy-sort-max-size 7500) ; Default is wayy too high - slows down in big projects
+      (ivy-re-builders-alist
+       '((counsel-esh-history . ivy--regex-fuzzy) ; Fuzzy findings for counsel-esh-history
+         (t . ivy--regex-ignore-order))) ; Default
+      :config
+      (ivy-mode t)
+
+      ;; Faces
+      (set-face-attribute 'ivy-minibuffer-match-face-1 nil :height 136)
+
+      ;; Counsel changes a lot of ivy's state at startup; to control for that, we
+      ;; need to load it as early as possible. Some packages (like `ivy-prescient')
+      ;; require this.
+      (require 'counsel nil t)
+      )
+#+END_SRC
+** Swiper
+
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :bind ("C-s" . counsel-grep-or-swiper) ; Depending on length of file
+    )
+#+END_SRC
+
+** Counsel
+
+Remapping original commands to an Ivy-esque version
+#+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :bind (("M-x" . 'counsel-M-x)
+           ("C-x C-f" . 'counsel-find-file)
+           ("C-x b" . 'counsel-switch-buffer)
+           ("C-x b" . 'counsel-switch-buffer)
+           ("C-h t" . 'counsel-load-theme) ; Replace help-with-tutorial
+           ("C-c g" . 'counsel-git)
+           ("C-c j" . 'counsel-git-grep)
+           ("C-c k" . 'counsel-ag)
+           ("C-x l" . 'counsel-locate)
+           ("C-h f" . 'counsel-describe-function)
+           ("C-h v" . 'counsel-describe-variable)
+           ("C-h o" . 'counsel-describe-symbol)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history)
+           )
+    :custom
+    ;; Remove "^" when entering a ivy completion buffer
+    (ivy-initial-inputs-alist nil)
+    :config
+
+    (kb/leader-keys
+      "ff" '(counsel-find-file :which-key "Find file")
+      "fF" '(counsel-file-jump :which-key "Fuzzy find file")
+      "fr" '(counsel-recentf :which-key "Recent files")
+
+      "hf" '(counsel-describe-function :which-key "Desc func")
+      "hv" '(counsel-describe-variable :which-key "Desc var")
+      "ho" '(counsel-describe-symbol :which-key "Desc sym")
+      "ht" '(counsel-load-theme :which-key "Change theme")
+
+      "bc" '(counsel-switch-buffer :which-key "Counsel switch")
+
+      "mm" '(counsel-bookmark :which-key "Go to bookmark")
+      "ms" '(bookmark-set :which-key "Set bookmark")
+
+      "iy" '(counsel-yank-pop :which-key "Paste")
+
+      "eh" '(counsel-esh-history :which-key "Eshell history") ; I need to figure out how to do mode maps
+      )
+    )
+#+END_SRC
+
+** Counsel-projectile
+
+#+BEGIN_SRC emacs-lisp
+  (use-package counsel-projectile
+    :after projectile)
+#+END_SRC
+** Flx
+
+Allow for fuzzy searching (if in =ivy-re-builders-alist=)
+#+BEGIN_SRC emacs-lisp
+  (use-package flx
+    :defer t  ; Ivy loads this when needed
+    :custom
+    (ivy-flx-limit 10000)
+    )
+#+END_SRC
+** Ivy-rich
+
+Better Ivy-interface
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy-rich
+    :custom
+    (ivy-rich-path-style 'abbrev) ; Abbreviate file names
+    :config
+    (ivy-rich-mode t)
+    (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+    )
+#+END_SRC
+
+** Amx
+
+Show keybinds in M-x
+#+BEGIN_SRC emacs-lisp
+  (use-package amx
+    :config
+    (amx-mode)
+    )
+#+END_SRC
+
+** Flx
+
+Fuzzy finding in Ivy. /Incompatible with presient/ (other Doom flag)
+ - Set from setting ivy-re-builders-alist to ivy--regex-fuzzy
+#+BEGIN_SRC emacs-lisp
+  (use-package flx
+    :disabled
+    :defer t  ; is loaded by ivy
+    :custom
+    (ivy-flx-limit 10000)
+    )
+#+END_SRC
+
+** All-the-icons-ivy-rich
+
+A version of all-the-icons but compatible with ivy-rich
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons-ivy-rich
+    :after (ivy-rich)
+    :custom
+    (all-the-icons-ivy-rich-icon-size 0.9) ; The icon size
+    ;; Slow Rendering
+    ;; If you experience a slow down in performance when rendering multiple icons simultaneously,
+    ;; you can try setting the following variable
+    (inhibit-compacting-font-caches t)
+    :config
+    (all-the-icons-ivy-rich-mode t)
+    )
+#+END_SRC

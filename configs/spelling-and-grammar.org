@@ -1,0 +1,54 @@
+#+TITLE: Spelling and grammar checking
+
+* Spell-fu
+
+Fast spell checking
+#+BEGIN_SRC emacs-lisp
+  (use-package spell-fu
+    :custom
+    (spell-fu-idle-delay 0.6)
+    (spell-fu-directory (concat user-emacs-directory "spell-fu"))
+
+    ;; Ispell settings
+    (ispell-program-name "/usr/bin/aspell")
+    (ispell-dictionary "en_US")
+    (ispell-personal-dictionary (concat user-emacs-directory "ispell-personal-dict-en"))
+    :config
+    (add-hook 'text-mode-hook 'spell-fu-mode)
+
+    (kb/leader-keys
+      "ts" '(spell-fu-mode :which-key "Toggle spell-fu")
+      "ta" '(spell-fu-word-add :which-key "Spell-fu-word-add"))
+    )
+#+END_SRC
+
+* Define-word
+
+See definitions within Emacs
+ - Offline version is [[https://github.com/gromnitsky/wordnut][wordnut]]
+#+BEGIN_SRC emacs-lisp
+  (use-package define-word
+    :config
+    (global-set-key (kbd "C-c d") 'define-word-at-point)
+    (global-set-key (kbd "C-c D") 'define-word)
+    )
+#+END_SRC
+* Powerthesaurus
+
+Insert or search words in thesaurus
+ - Offline version is [[https://github.com/hpdeifel/synosaurus][synosaurus]]
+#+BEGIN_SRC emacs-lisp
+  (use-package powerthesaurus
+    :config
+  (kb/leader-keys
+      "Ll" 'powerthesaurus-lookup-word
+      "Lp" 'powerthesaurus-lookup-word-at-point
+
+      ;; combines these two functions into one. It tries to infer whatever
+      ;; user wants to look up. If there is an active selection that will be
+      ;; the choice. Otherwise, it checks if there any word at point and
+      ;; fetches that word. And if there is nothing appropriate, it asks the
+      ;; user to provide a word.
+      "Lb" 'powerthesaurus-lookup-word-dwim)
+    )
+#+END_SRC

@@ -1,0 +1,18 @@
+#+TITLE: File and directory navigation and search
+
+
+* Helm-org-rifle
+
+Use helm to word search through org file and display the corresponding heading of search matches
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-org-rifle
+    :config
+    (kb/leader-keys
+      "fcl" '((lambda () (interactive) (helm-org-rifle-directories kb/library-dir nil)) :which-key "Library search")
+      "fco" '(helm-org-rifle-org-directory :which-key "Org directory search")
+
+      "or" '(helm-org-rifle-current-buffer :which-key "Helm-org-rifle current buffer")
+      "oR" '(helm-org-rifle-occur-current-buffer :which-key "Helm-org-rifle-occur current buffer")
+      )
+    )
+#+END_SRC

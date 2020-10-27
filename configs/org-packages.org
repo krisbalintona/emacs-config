@@ -1,0 +1,1562 @@
+#+TITLE: Org packages
+
+
+* Org-mode
+** Org-plus-contrib
+
+More org packages that are also more up to date
+- *IMPORTANT:* Install through Melpa when [[https://orgmode.org/org.html#Installation][no org functions and variables have been *LOADED* yet]]
+  #+BEGIN_SRC emacs-lisp
+    ;; (load-file "~/testing-emacs/elpa/org-plus-contrib-20201019/org.el") ;; (require 'org-plus-contrib-20201019)
+    ;; (use-package org-plus-contrib
+    ;;   :ensure t
+    ;;   :pin org)
+
+    ;; a kludge to solve multiple org versions conundrum:
+  #+END_SRC
+** Org-mode itself
+
+Stying (called in org-superstar)
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :hook (org-mode . kb/org-visual-setup)
+    :custom
+    ;; (org-ellipsis " ⛛") ; Specifically for org-mode headlines ; Doesn't work?
+    (org-startup-indented t)
+    (org-startup-folded 'nofold)
+    (org-pretty-entities t) ; Show as UTF-8 characters (useful for math)
+    (org-hide-emphasis-markers t) ; Remove org-mode markup characters
+    (org-fontify-whole-heading-line t)
+    (org-fontify-quote-and-verse-blocks t) ; Have these blocks look pretty
+    (org-pretty-entities t) ; Prettify things
+    (org-pretty-entities-include-sub-superscripts nil) ; Don't show super- and sunbscripts
+
+    (org-src-window-setup 'current-window) ; Open src block window on current buffer
+    :preface
+    (defun kb/org-face-setup ()
+      "Taken from https://github.com/daviwil/emacs-from-scratch/blob/1a13fcf0dd6afb41fce71bf93c5571931999fed8/init.el"
+
+      ;; Ensure that everything that should be fixed-pitch in Org files appears that way
+      (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch :background "#232635" :extend t) ; Set background of org-blocks and extend to the end of the line
+      (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+      (set-face-attribute 'org-quote nil :height 143)
+      (set-face-attribute 'org-tag nil :height 153 :bold t :italic t)
+      (set-face-attribute 'org-link nil :foreground "MediumPurple3" :bold nil :italic t :font "Noto Sans" :height 145 :underline nil)
+      (set-face-attribute 'org-document-title nil :inherit 'org-level-4 :height 1.7 :foreground "goldenrod")
+
+      (set-face-attribute 'org-level-1 nil :height 210 :font "Noto Sans")
+      (set-face-attribute 'org-level-2 nil :height 198 :font "Noto Sans")
+      (set-face-attribute 'org-level-3 nil :height 185 :font "Noto Sans")
+      (set-face-attribute 'org-level-4 nil :height 170 :foreground "medium aquamarine" :font "Noto Sans")
+      (set-face-attribute 'org-level-5 nil :height 165 :foreground "light sea green" :font "Noto Sans")
+      )
+
+    (defun kb/org-visual-setup () ; Modes only for org-mode
+      (org-indent-mode)
+      (variable-pitch-mode 1)
+      (visual-line-mode 1)
+      )
+
+    :config
+    (if (daemonp) ; Add hook based on if daemon or not
+        (add-hook 'server-after-make-frame-hook 'kb/org-face-setup)
+      (add-hook 'after-init-hook 'kb/org-face-setup))
+
+    (add-hook 'desktop-after-read-hook 'kb/org-face-setup)
+
+    (kb/leader-keys
+      "nn" '(org-capture :which-key "Org-capture")
+      )
+    )
+#+END_SRC
+** Custom functions
+
+Better C-ret functionality
+#+BEGIN_SRC emacs-lisp
+  (defun +org--insert-item (direction)
+    (let ((context (org-element-lineage
+                    (org-element-context)
+                    '(table table-row headline inlinetask item plain-list)
+                    t)))
+      (pcase (org-element-type context)
+        ;; Add a new list item (carrying over checkboxes if necessary)
+        ((or `item `plain-list)
+         ;; Position determines where org-insert-todo-heading and org-insert-item
+         ;; insert the new list item.
+         (if (eq direction 'above)
+             (org-beginning-of-item)
+           (org-end-of-item)
+           (backward-char))
+         (org-insert-item (org-element-property :checkbox context))
+         ;; Handle edge case where current item is empty and bottom of list is
+         ;; flush against a new heading.
+         (when (and (eq direction 'below)
+                    (eq (org-element-property :contents-begin context)
+                        (org-element-property :contents-end context)))
+           (org-end-of-item)
+           (org-end-of-line)))
+
+        ;; Add a new table row
+        ((or `table `table-row)
+         (pcase direction
+           ('below (save-excursion (org-table-insert-row t))
+                   (org-table-next-row))
+           ('above (save-excursion (org-shiftmetadown))
+                   (+org/table-previous-row))))
+
+        ;; Otherwise, add a new heading, carrying over any todo state, if
+        ;; necessary.
+        (_
+         (let ((level (or (org-current-level) 1)))
+           ;; I intentionally avoid `org-insert-heading' and the like because they
+           ;; impose unpredictable whitespace rules depending on the cursor
+           ;; position. It's simpler to express this command's responsibility at a
+           ;; lower level than work around all the quirks in org's API.
+           (pcase direction
+             (`below
+              (let (org-insert-heading-respect-content)
+                (goto-char (line-end-position))
+                (org-end-of-subtree)
+                (insert "\n" (make-string level ?*) " ")))
+             (`above
+              (org-back-to-heading)
+              (insert (make-string level ?*) " ")
+              (save-excursion (insert "\n"))))
+           (when-let* ((todo-keyword (org-element-property :todo-keyword context))
+                       (todo-type    (org-element-property :todo-type context)))
+             (org-todo
+              (cond ((eq todo-type 'done)
+                     ;; Doesn't make sense to create more "DONE" headings
+                     (car (+org-get-todo-keywords-for todo-keyword)))
+                    (todo-keyword)
+                    ('todo)))))))
+
+      (when (org-invisible-p)
+        (org-show-hidden-entry))
+      (when (and (bound-and-true-p evil-local-mode)
+                 (not (evil-emacs-state-p)))
+        (evil-insert 1))))
+
+
+  (defun +org/insert-item-below (count)
+    "Inserts a new heading, table cell or item below the current one."
+    (interactive "p")
+    (dotimes (_ count) (+org--insert-item 'below)))
+
+  (define-key org-mode-map (kbd "<C-return>") '+org/insert-item-below)
+  (evil-define-key '(normal visual) 'global (kbd "<C-return>") '+org/insert-item-below)
+#+END_SRC
+
+Alter RET to behave more usefully (like in Doom)
+#+BEGIN_SRC emacs-lisp
+(defun +org--toggle-inline-images-in-subtree (&optional beg end refresh)
+  "Refresh inline image previews in the current heading/tree."
+  (let ((beg (or beg
+                 (if (org-before-first-heading-p)
+                     (line-beginning-position)
+                   (save-excursion (org-back-to-heading) (point)))))
+        (end (or end
+                 (if (org-before-first-heading-p)
+                     (line-end-position)
+                   (save-excursion (org-end-of-subtree) (point)))))
+        (overlays (cl-remove-if-not (lambda (ov) (overlay-get ov 'org-image-overlay))
+                                    (ignore-errors (overlays-in beg end)))))
+    (dolist (ov overlays nil)
+      (delete-overlay ov)
+      (setq org-inline-image-overlays (delete ov org-inline-image-overlays)))
+    (when (or refresh (not overlays))
+      (org-display-inline-images t t beg end)
+      t)))
+
+  (defun +org/dwim-at-point (&optional arg)
+    "Do-what-I-mean at point.
+
+  If on a:
+  - checkbox list item or todo heading: toggle it.
+  - clock: update its time.
+  - headline: cycle ARCHIVE subtrees, toggle latex fragments and inline images in
+    subtree; update statistics cookies/checkboxes and ToCs.
+  - footnote reference: jump to the footnote's definition
+  - footnote definition: jump to the first reference of this footnote
+  - table-row or a TBLFM: recalculate the table's formulas
+  - table-cell: clear it and go into insert mode. If this is a formula cell,
+    recaluclate it instead.
+  - babel-call: execute the source block
+  - statistics-cookie: update it.
+  - latex fragment: toggle it.
+  - link: follow it
+  - otherwise, refresh all inline images in current tree."
+    (interactive "P")
+    (let* ((context (org-element-context))
+           (type (org-element-type context)))
+      ;; skip over unimportant contexts
+      (while (and context (memq type '(verbatim code bold italic underline strike-through subscript superscript)))
+        (setq context (org-element-property :parent context)
+              type (org-element-type context)))
+      (pcase type
+        (`headline
+         (cond ((memq (bound-and-true-p org-goto-map)
+                      (current-active-maps))
+                (org-goto-ret))
+               ((and (fboundp 'toc-org-insert-toc)
+                     (member "TOC" (org-get-tags)))
+                (toc-org-insert-toc)
+                (message "Updating table of contents"))
+               ((string= "ARCHIVE" (car-safe (org-get-tags)))
+                (org-force-cycle-archived))
+               ((or (org-element-property :todo-type context)
+                    (org-element-property :scheduled context))
+                (org-todo
+                 (if (eq (org-element-property :todo-type context) 'done)
+                     (or (car (+org-get-todo-keywords-for (org-element-property :todo-keyword context)))
+                         'todo)
+                   'done))))
+         ;; Update any metadata or inline previews in this subtree
+         (org-update-checkbox-count)
+         (org-update-parent-todo-statistics)
+         (when (and (fboundp 'toc-org-insert-toc)
+                    (member "TOC" (org-get-tags)))
+           (toc-org-insert-toc)
+           (message "Updating table of contents"))
+         (let* ((beg (if (org-before-first-heading-p)
+                         (line-beginning-position)
+                       (save-excursion (org-back-to-heading) (point))))
+                (end (if (org-before-first-heading-p)
+                         (line-end-position)
+                       (save-excursion (org-end-of-subtree) (point))))
+                (overlays (ignore-errors (overlays-in beg end)))
+                (latex-overlays
+                 (cl-find-if (lambda (o) (eq (overlay-get o 'org-overlay-type) 'org-latex-overlay))
+                             overlays))
+                (image-overlays
+                 (cl-find-if (lambda (o) (overlay-get o 'org-image-overlay))
+                             overlays)))
+           (+org--toggle-inline-images-in-subtree beg end)
+           (if (or image-overlays latex-overlays)
+               (org-clear-latex-preview beg end)
+             (org--latex-preview-region beg end))))
+
+        (`clock (org-clock-update-time-maybe))
+
+        (`footnote-reference
+         (org-footnote-goto-definition (org-element-property :label context)))
+
+        (`footnote-definition
+         (org-footnote-goto-previous-reference (org-element-property :label context)))
+
+        ((or `planning `timestamp)
+         (org-follow-timestamp-link))
+
+        ((or `table `table-row)
+         (if (org-at-TBLFM-p)
+             (org-table-calc-current-TBLFM)
+           (ignore-errors
+             (save-excursion
+               (goto-char (org-element-property :contents-begin context))
+               (org-call-with-arg 'org-table-recalculate (or arg t))))))
+
+        (`table-cell
+         (org-table-blank-field)
+         (org-table-recalculate arg)
+         (when (and (string-empty-p (string-trim (org-table-get-field)))
+                    (bound-and-true-p evil-local-mode))
+           (evil-change-state 'insert)))
+
+        (`babel-call
+         (org-babel-lob-execute-maybe))
+
+        (`statistics-cookie
+         (save-excursion (org-update-statistics-cookies arg)))
+
+        ((or `src-block `inline-src-block)
+         (org-babel-execute-src-block arg))
+
+        ((or `latex-fragment `latex-environment)
+         (org-latex-preview arg))
+
+        (`link
+         (let* ((lineage (org-element-lineage context '(link) t))
+                (path (org-element-property :path lineage)))
+           (if (or (equal (org-element-property :type lineage) "img")
+                   (and path (image-type-from-file-name path)))
+               (+org--toggle-inline-images-in-subtree
+                (org-element-property :begin lineage)
+                (org-element-property :end lineage))
+             (org-open-at-point arg))))
+
+        ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
+         (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
+           (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
+
+        (_
+         (if (or (org-in-regexp org-ts-regexp-both nil t)
+                 (org-in-regexp org-tsr-regexp-both nil  t)
+                 (org-in-regexp org-link-any-re nil t))
+             (call-interactively #'org-open-at-point)
+           (+org--toggle-inline-images-in-subtree
+            (org-element-property :begin context)
+            (org-element-property :end context)))))))
+
+
+  (define-key evil-motion-state-map (kbd "RET") '+org/dwim-at-point)
+#+END_SRC
+* Org-superstar
+
+Descendant of (and thus superior to) org-bullets
+#+BEGIN_SRC emacs-lisp
+  (use-package org-superstar  ;; Improved version of org-bullets
+    :hook ((prog-mode . (lambda () (visual-line-mode 0)))
+           (org-mode . (lambda () (org-superstar-mode t))))
+    :custom
+    (org-cycle-level-faces nil)
+    (org-n-level-faces 5)
+
+    (org-superstar-leading-bullet ?\s) ;; Render leading stars as spaces!
+    (org-superstar-leading-fallback ?\s) ; Hide away leading stars on terminal.
+    (org-hide-leading-stars t) ;; t means no character is there at all
+    (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in heirarchy
+    (org-superstar-todo-bullet-alist
+     '(("TODO" . 9744)
+       ("[ ]"  . 9744)
+       ("DONE" . 9745)
+       ("[X]"  . 9745)))
+    (org-superstar-headline-bullets-list
+     '("⚝" "●" "◉" "○"))
+    (org-superstar-first-inlinetask-bullet ?▶)
+    ;; org-superstar-item-bullet-alist ; For plainlist bullets
+
+    (org-hidden-keywords '(title)) ; hide #+TITLE:
+    (inhibit-compacting-font-caches t) ; Stop slowdown
+    )
+#+END_SRC
+* My Zettelkasten
+** Org-roam
+
+Zettelkasten and Evergreen notes
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+    :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master")
+    :after company ; Necessary for some reason
+    :custom
+    (org-roam-directory kb/roam-dir)
+    (org-roam-verbose nil) ; Don't echo messages that aren't errors
+    (org-roam-completion-system 'ivy)
+    (org-roam-completion-everywhere t) ; Org-roam completion everywhere
+    (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
+    (org-roam-buffer-window-parameters '((no-other-window . t)
+                                         (no-delete-other-windows . t)
+                                         ))
+    (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
+    (org-roam-index-file "index.org") ; My Index
+    (org-roam-tag-separator " ")
+    (org-roam-link-use-custom-faces 'everywhere) ; Use org-roam-link face everywhere (including org-roam-buffer)
+    ;; Roam-buffer specific changes
+    (org-roam-graph-extra-config '(("rankdir" . "LR"))) ; Extra options passed to graphviz
+    (org-roam-buffer-prepare-hook
+     '(org-roam-buffer--insert-title
+       org-roam-buffer--insert-backlinks
+       org-roam-buffer--insert-ref-links))
+    (org-roam-buffer-width 0.20)
+    :config
+    (org-roam-mode)
+
+    (add-to-list 'org-open-link-functions 'org-roam--open-fuzzy-link)
+    (add-to-list 'org-open-at-point-functions 'org-roam-open-id-at-point)
+
+    ;; Overall faces
+    (set-face-attribute 'org-roam-link nil :inherit 'org-link :italic nil :foreground "goldenrod3")
+
+    (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer
+    (add-hook 'org-roam-buffer-prepare-hook
+              (lambda ()
+                (face-remap-add-relative 'default :height 109)
+                (face-remap-add-relative 'org-document-title :height 145 :foreground "DarkOrange3")
+                (face-remap-add-relative 'org-roam-link :height 112 :slant 'normal)
+                (face-remap-add-relative 'org-level-1 :height 140)
+                (face-remap-add-relative 'org-level-2 :height 117)
+                (face-remap-add-relative 'org-level-3 :height 114)
+                ))
+
+    (kb/leader-keys
+      "nb" '(org-roam-switch-to-buffer :which-key "Switch to buffer")
+      "nf" '(org-roam-find-file :which-key "Find file")
+      "ng" '(org-roam-graph :which-key "Show graph")
+      "ni" '(org-roam-insert :which-key "Insert note")
+      "nI" '(org-roam-jump-to-index :which-key "Go to index")
+      ;; "nI" '(org-roam-insert-immediate :which-key "Insert now") ; Calls org-roam-capture-immediate-template
+      "nl" '(org-roam :which-key "Toggle Roam buffer")
+      "nL" '(org-roam-db-build-cache :which-key "Rebuild cache")
+      "nc" '(org-roam-capture :which-key "Roam capture")
+
+      "nD" '(:ignore t :which-key "Call the doctor")
+      "nDt" '(org-roam-doctor :which-key "Doctor this file")
+      "nDa" '((lambda () ; Call org-roam-doctor with universal argument (C-u)
+                (interactive)
+                (let ((current-prefix-arg 4))
+                  (call-interactively 'org-roam-doctor)
+                  ))
+              :which-key "Doctor all files")
+
+      ;; "nd" '(:ignore t :which-key "Roam dailies")
+      ;; "ndd" '(org-roam-dailies-date :which-key "Choose date")
+      ;; "ndt" '(org-roam-dailies-today :which-key "Today")
+      ;; "ndm" '(org-roam-dailies-tomorrow :which-key "Tomorrow")
+      ;; "ndy" '(org-roam-dailies-yesterday :which-key "Yesterday")
+      )
+    )
+#+END_SRC
+
+To fix the error with match clobbering from title change
+#+BEGIN_SRC emacs-lisp
+  ;; (defun org-roam--replace-link (old-path new-path &optional old-desc new-desc)
+  ;;   "Replace Org-roam file links with path OLD-PATH to path NEW-PATH.
+  ;;     If OLD-DESC is passed, and is not the same as the link
+  ;;     description, it is assumed that the user has modified the
+  ;;     description, and the description will not be updated. Else,
+  ;;     update with NEW-DESC."
+  ;;   (save-excursion
+  ;;     (goto-char (point-min))
+  ;;     (while (re-search-forward org-link-any-re nil t)
+  ;;       (when-let ((link (org-element-lineage (org-element-context) '(link) t)))
+  ;;         (let ((type (org-element-property :type link))
+  ;;               (path (org-element-property :path link)))
+  ;;           (when (and (string-equal (expand-file-name path) old-path)
+  ;;                      (org-in-regexp org-link-bracket-re 1))
+  ;;             (let* ((label (if (match-end 2)
+  ;;                               (match-string-no-properties 2)
+  ;;                             (org-link-unescape (match-string-no-properties 1))))
+  ;;                    (new-label (if (string-equal label old-desc)
+  ;;                                   new-desc
+  ;;                                 label)))
+  ;;               (replace-match
+  ;;                (save-match-data (org-roam-format-link new-path new-label type))))))))))
+#+END_SRC
+** Org-roam-server
+
+Interactive browser graph view
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam-server
+    ;; :quelpa (org-roam-server :fetcher git :url "https://github.com/org-roam/org-roam-server" :branch "master") ; Quelpa version doesn't work? Perhaps has to do with org-roam dependency?
+    :after org-roam
+    :custom
+    (org-roam-server-host "127.0.0.1")
+    (org-roam-server-port 8080)
+    (org-roam-server-authenticate nil)
+    (org-roam-server-export-inline-images t)
+    (org-roam-server-serve-files nil)
+    (org-roam-server-served-file-extensions '("pdf" "mp4" "ogv"))
+    (org-roam-server-network-poll t)
+    (org-roam-server-network-label-truncate t)
+    (org-roam-server-network-label-truncate-length 60)
+    (org-roam-server-network-label-wrap-length 30)
+    (org-roam-graph-viewer "/usr/bin/brave")
+    (org-roam-graph-executable "/usr/bin/dot") ; Graphviz executable
+    (org-roam-server-network-arrows nil) ; Arrows?
+    ;; (org-roam-server-default-exclude-filters [{ "id": "moc", "parent" : "tags"  }]) ; Default exclusion
+    (org-roam-server-default-include-filters "null") ; Default inclusion
+    :config
+    (if (daemonp)
+        (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) ; Don't start server if not in daemo mode, otherwise will break things
+    )
+#+END_SRC
+** Org-roam-capture-templates
+
+Templates for inserting files into my Zettelkasten
+#+BEGIN_SRC emacs-lisp
+  (setq org-roam-capture-templates
+        '(("l" "New literature note" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: lit\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :WAITING:\n:PROPERTIES:\n:CATEGORY: lit\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Lit Notes\")\n:END:\n"
+           :jump-to-captured t
+           :immediate-finish t
+           :unnarrowed t)
+          ("p" "New permanent note" plain (function org-roam--capture-get-point)
+           "\n\n* Insight%?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: zett\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- MOC :: \n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :NASCENT:\n:PROPERTIES:\n:CATEGORY: zett\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Zetts\")\n:END:"
+           :unnarrowed t
+           :immediate-finish t
+           :jump-to-captured t)
+          ("m" "New map of content" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: moc\n- TAGS :: \n- BREADCRUMBS :: \n\n---"
+           :immediate-finish t
+           :unnarrowed t)
+          ("i" "New quote" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: quote\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- TAGS :: \n- LINKS :: \n\n---"
+           :unnarrowed t
+           :jump-to-captured t)
+          ("e" "New entity" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: %^{What type of entity is this?|person|system|website|platform|organization}\n- CREATED :: %T\n- Time-stamp: <>\n- TAGS :: \n- LINKS :: \n\n---"
+           :immediate-finish t)
+          ("t" "New tag" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: tag\n- CREATED :: %T\n- Time-stamp: <>\n\n---"
+           :immediate-finish t)
+          ("w" "Produce a work of writing" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: product\n- CREATED :: %T\n- Time-stamp: <>\n- MOC :: \n\n---"
+           :immediate-finish t
+           :jump-to-captured t)
+          ))
+#+END_SRC
+** Deft
+
+Full text search for my roam files
+#+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :custom
+    (deft-recursive t)
+    (deft-use-filter-string-for-filename t)
+    (deft-default-extension "org")
+    (deft-directory kb/roam-dir)
+    (deft-use-filename-as-title nil) ; Use title not file name
+    (deft-auto-save-interval -1.0) ; disable auto-save
+    ;; converts the filter string into a readable file-name using kebab-case:
+    (deft-file-naming-rules
+      '((noslash . "-")
+        (nospace . "-")
+        (case-fn . downcase)))
+    :config
+
+    (kb/leader-keys
+      "nd" '(deft :which-key "Deft")
+      )
+    )
+#+END_SRC
+** Bibliographical notes
+*** Ivy/Helm-bibtex
+
+Use ivy or helm search frontend with the bibtex-completion backend
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy-bibtex
+    :after org-roam
+    :custom
+    (bibtex-completion-notes-path kb/roam-dir) ; Irrelevant since I use org-roam-bibtex instead
+    (bibtex-completion-library-path (concat kb/roam-dir "bibliographic/bib-pdfs")) ; Where bibtex searches for pdfs
+    (bibtex-completion-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
+    (bibtex-completion-pdf-field "file") ; Zotero stores pdfs in a field called file - this settings allows bibtex to find the pdf
+    (bibtex-completion-pdf-open-function ; Use okular to open a pdf
+     (lambda (fpath)
+       (call-process "okular" nil 0 nil fpath)))
+    (bibtex-completion-browser-function 'browse-url-default-browser) ; Use default browser to open
+    (ivy-bibtex-default-action 'ivy-bibtex-edit-notes) ; Edit notes on defualt selection
+
+    ;; Template for new note (but I use orb for this)
+    (bibtex-completion-notes-template-multiple-files
+     (concat
+      "#+TITLE: ${title}\n"
+      "#+ROAM_KEY: cite:${=key=}\n"
+      "* TODO Notes\n"
+      ":PROPERTIES:\n"
+      ":Custom_ID: ${=key=}\n"
+      ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+      ":AUTHOR: ${author-abbrev}\n"
+      ":JOURNAL: ${journaltitle}\n"
+      ":DATE: ${date}\n"
+      ":YEAR: ${year}\n"
+      ":DOI: ${doi}\n"
+      ":URL: ${url}\n"
+      ":END:\n\n")
+     )
+
+    ;; Symbols used for indicating the availability of notes and PDF files
+    (bibtex-completion-pdf-symbol "🖇")
+    (bibtex-completion-notes-symbol "🖋")
+    :config
+    ;; ivy-bibtex requires ivy's `ivy--regex-ignore-order` which I already
+    ;; have set in ivy-re-builders-alist
+    (autoload 'ivy-bibtex "ivy-bibtex" "" t)
+
+    (ivy-set-actions ; Actions shown after M-o
+     'ivy-bibtex
+     '(("p" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+       ("e" ivy-bibtex-edit-notes "Edit notes")
+       ("c" ivy-bibtex-insert-citation "Insert citation")
+       ("r" ivy-bibtex-insert-reference "Insert reference")
+       ("P" ivy-bibtex-open-annotated-pdf "Open annotated PDF (if present)") ; This last function doesn't have an associated action yet (for annotated pdfs)
+       ("a" bibtex-completion-add-pdf-to-library "Add pdf to library")
+       ))
+
+    (kb/leader-keys
+      "fa" '(ivy-bibtex :which-key "Ivy-bibtex")
+      "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
+      )
+    )
+#+END_SRC
+*** Org-roam-bibtex
+
+Ivy/helm-bibtex (which integrates with bibtex-completion) integration
+with org-roam (provides templates and modifies edit notes action)
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam-bibtex
+    :after (org-roam ivy-bibtex)
+    :hook (org-roam-mode . org-roam-bibtex-mode)
+    :bind (:map org-mode-map ; Within files that have #+ROAM_KEY
+                (("C-c n a" . orb-note-actions)))
+    :custom
+    (orb-preformat-keywords
+     '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+    (orb-templates
+     '(("n" "Reference paired with notes" plain (function org-roam-capture--get-point)
+        ""
+        :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)-${slug}"
+        :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS: bib_notes\n- CREATED :: %T\n- Time-stamp: <>\n- KEYWORDS :: ${keywords}\n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :WAITING:\n:PROPERTIES:\n:CATEGORY: bib_notes\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Bib Notes\")\n:END:\n\n* ${title} Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"
+        :unnarrowed t)
+
+       ;; ("r" "Plain reference" plain (function org-roam-capture--get-point)
+       ;;  ""
+       ;;  :file-name "%(format-time-string \"%b%d%Y-%H%M\" (current-time) nil)-${slug}"
+       ;;  :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n- CREATED :: %T\n- Time-stamp: <>\n- KEYWORDS :: ${keywords}\n- TAGS :: \n- LINKS :: \n\n---\n\n* ${title} Note\n:PROPERTIES\n:Custom_ID: ${citekey\n:URL: ${url\n:AUTHOR: ${author-or-editor\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\"\n:NOTER_PAGE\n:END:\n\n"
+       ;;  :unnarrowed t)
+       ))
+    :config
+    (kb/leader-keys
+      "nBs" '(orb-find-non-ref-file :which-key "Search non-bibliographic Roam notes")
+      "nBi" '(orb-insert-non-ref :which-key "Insert non-bibliographic Roam note")
+      "nBa" '(orb-note-actions :which-key "Orb actions")
+      )
+    )
+#+END_SRC
+*** Pdf-tools
+
+View pdfs and interact with them
+#+BEGIN_SRC emacs-lisp
+  (use-package pdf-tools
+    :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
+    :magic ("%PDF" . pdf-view-mode)
+    :custom
+    (pdf-view-display-size 'fit-width)
+    ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
+    (pdf-view-use-scaling t)
+    (pdf-view-use-imagemagick nil)
+    :config
+    ;; (evil-define-key 'normal 'pdf-view-mode-map (kbd "q") #'kill-current-buffer)
+    (define-key pdf-view-mode-map (kbd "q") #'kill-current-buffer)
+    )
+#+END_SRC
+*** Org-noter
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-noter
+    :demand t ; Demand so it doesn't defer to noter insert call
+    :custom
+    (org-noter-notes-search-path kb/roam-dir)
+    (org-noter-separate-notes-from-heading t) ; Add blank line betwwen note heading and content
+    (org-noter-notes-window-location 'horizontal-split) ; Horizontal split between notes and pdf
+    (org-noter-always-create-frame nil) ; Don't open frame
+    (org-noter-hide-other nil) ; Show notes that aren't synced with (you're on)
+    (org-noter-auto-save-last-location t) ; Go to last location
+    :config
+    (define-key org-noter-doc-mode-map (kbd "M-o") 'org-noter-insert-note)
+
+    (kb/leader-keys
+      "on" '(org-noter :which-key "Org-noter"))
+    )
+#+END_SRC
+*** Org-ref
+
+Bibtex is a way to add bibliographic information
+(e.g. refernces/citations to equations, sources, images, etc) in
+latex. Ivy/helm-bibtex is a way to access the .bib files bibtex
+makes. Org-ref is a way to directly insert citations and references
+into latex and org files
+#+BEGIN_SRC emacs-lisp
+  (use-package org-ref
+    :custom
+    (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
+    (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
+    (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
+    (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
+    (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
+    (org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
+    (org-ref-notes-function 'orb-edit-notes)
+    )
+#+END_SRC
+** Org-protocol
+
+Necessary for outside-of-emacs integration (i.e. through Emacsclient)
+#+BEGIN_SRC emacs-lisp
+  (require 'org-protocol)
+#+END_SRC
+* Org-agenda
+** Org-agenda itself
+*** Setting directories and variables
+
+#+BEGIN_SRC emacs-lisp
+  (require 'org-agenda)
+
+  (setq org-agenda-files kb/all-org-dir-files)
+
+  (setq org-agenda-start-with-log-mode t ; Show progression of done and clocked tasks in grid view
+        org-agenda-log-mode-items '(closed clock) ; Things which should be added to grid view in log mode (turned on above)
+        org-log-done 'time ; When done add CLOSED line with inactive timestamp
+        org-log-into-drawer t) ; But everything into a drawer as opposed to appending it
+#+END_SRC
+*** Refiling and archiving
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-refile-targets (quote (;; (nil :maxlevel . 9)
+                                          ; Consider headlines in the current buffer
+                                   (kb/all-agenda-dir-files-minus-inbox :maxlevel . 1)))) ; Only first-level headlines
+  (setq org-refile-use-outline-path 'file) ; Show file name while refiling
+  (setq org-outline-path-complete-in-steps nil) ; Don't have consequtive promps for paths and headings
+  (setq org-refile-allow-creating-parent-nodes "confirm")
+
+  ;; ; Exclude DONE state tasks from refile targets
+  ;; (defun kb/verify-refile-target ()
+  ;;   "Remove todos in done states from possible refile target"
+  ;;   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+  ;; (setq org-refile-target-verify-function 'kb/verify-refile-target)
+
+  ;; Custom org-reverse-datetree refile function
+  (defun kb/org-refile-to-reverse-datetree-archive (); (arg)
+    "Refile a todo into my archive file, with today as the day"
+    (interactive "P")
+    (org-reverse-datetree-refile-to-file
+     kb/agenda-dir "archive.org" (current-time)))
+  ;; :ask-always arg :prefer '("CREATED_TIME" "CREATED_AT" "CLOSED")))
+
+  ;; Save all buffers after refiling to avoid losing progress
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+#+END_SRC
+*** Org todo settings
+
+#+BEGIN_SRC emacs-lisp
+  ;; Causes freezing on refile and changing priority for parent todos
+  (setq org-enforce-todo-dependencies nil)
+  (setq org-enforce-todo-checkbox-dependencies nil)
+  (setq org-agenda-dim-blocked-tasks t)
+
+                                          ; Classic org-agenda archiving
+  (setq org-archive-location (concat kb/agenda-dir "archive.org::"))
+
+  ;; Change todo states with S-left and S-right skipping all of the
+  ;; normal processing when entering or leaving a todo state. This
+  ;; cycles through the todo states but skips setting timestamps and
+  ;; entering notes which is very convenient when all you want to do is
+  ;; fix up the status of an entry.
+  (setq org-use-fast-todo-selection 'auto)
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)")
+          (sequence "HOLD(h!)" "SOMEDAY(s)" "INACTIVE(i@)" "|" "CANCELLED(c@/!)")))
+
+  (setq org-todo-keyword-faces
+        '(("TODO" :foreground "orange" :underline t)
+          ("NEXT" :foreground "orchid" :weight bold)
+          ("PROG" :foreground "turquoise" :underline t)
+          ("DONE" :foreground "chartreuse" :weight normal)
+          ("HOLD" :foreground "LightGoldenrod1" :weight normal :underline t)
+          ("SOMEDAY" :foreground aquamarine :weight normal)
+          ("CANCELLED" :foreground "deep pink" :weight normal)
+          ("INACTIVE" :foreground "light slate blue" :weight normal)
+          ))
+
+                                          ; Priorities
+  ;; (setq org-priority-faces ; Faces set by org-fancy-priorities
+  ;;       '((65 :foreground "#e45649")
+  ;;         (66 :foreground "#da8548")
+  ;;         (67 :foreground "#0098dd")))
+  (setq org-priority-highest ?A
+        org-priority-lowest ?F
+        org-priority-default ?D) ; This needs to be defined due to a bug which uses the old variable names (these) instead of the new ones (the following)
+  (setq org-highest-priority ?A
+        org-lowest-priority ?F
+        org-default-priority ?D)
+
+                                          ; Add or remove tags as you change the checkbox state
+  ;; (setq org-todo-state-tags-triggers
+  ;;       '(("TODO" ("TODO") ("NEXT") ("DONE") ("HOLD") ("SOMEDAY") ("CANCELLED") ("INACTIVE"))
+  ;;         ("NEXT" ("TODO") ("NEXT") ("DONE") ("HOLD") ("SOMEDAY") ("CANCELLED") ("INACTIVE"))
+  ;;         ("DONE" ("TODO") ("NEXT") ("DONE") ("HOLD") ("SOMEDAY") ("CANCELLED") ("INACTIVE"))
+  ;;         ("HOLD" ("TODO") ("NEXT") ("DONE") ("HOLD") ("SOMEDAY") ("CANCELLED") ("INACTIVE"))
+  ;;         ("CANCELLED" ("TODO") ("NEXT") ("DONE") ("HOLD") ("SOMEDAY") ("CANCELLED") ("INACTIVE"))
+  ;;         ("INACTIVE" ("NEXT") ("HOLD") ("SOMEDAY") ("CANCELLED") ("INACTIVE"))))
+
+  ;; ; Automatically change todo keyword to DONE when all children are complete
+  ;; (defun kb/org-summary-todo (n-done n-not-done)
+  ;;   "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  ;;   (let (org-log-done org-log-states)   ; turn off logging
+  ;;     (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+  ;; (add-hook 'org-after-todo-statistics-hook 'kb/org-summary-todo)
+
+  ;; Remove empty LOGBOOK drawers on clock out
+  (defun kb/remove-empty-drawer-on-clock-out ()
+    (interactive)
+    (save-excursion
+      (beginning-of-line 0)
+      (org-remove-empty-drawer-at "LOGBOOK" (point))))
+
+  (add-hook 'org-clock-out-hook 'kb/remove-empty-drawer-on-clock-out 'append)
+#+END_SRC
+*** Agenda view and stuck tasks
+
+#+BEGIN_SRC emacs-lisp
+  ;; Window setup
+  (setq org-agenda-window-setup 'current-window) ; Open agenda in current window
+  (setq org-indirect-buffer-display 'current-window) ; Put indirect buffers right on top of the current window
+
+  (add-hook 'org-agenda-finalize-hook 'evil-goto-first-line) ; Start at first line in org-agenda
+
+  ;; Custom bulk mark functions
+  (setq org-agenda-bulk-custom-functions
+        '((?P org-agenda-priority)
+          (?R kb/org-agenda-process-inbox-item)
+          ))
+
+  ;; Columns
+  (setq org-tags-column -180)
+  ;; (setq org-agenda-tags-column -208)
+  ;; (add-hook 'after-focus-change-function
+  ;;           (lambda () (progn
+  ;;                        (setq org-tags-column -80)
+  ;;                        (org-align-tags t))))
+
+  ;; Schedule and item format settings
+  (setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>")
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        ;; org-agenda-include-deadlines t
+        org-agenda-block-separator 61
+        org-agenda-tags-column 'auto
+        org-cycle-separator-lines 0) ; Remove blank lines when folding
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+          (todo . " %i %-13:c   %-6e %?s %t |%l")
+          (tags . " %i %-12:c")
+          (search . " %i %-12:c")
+          ))
+  ;; org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%a, %b %e - %H:%M>") ; For org-agenda timestamps, default is '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>")
+
+  ;; Stuck projects
+  (setq org-stuck-projects
+        '("*/!-HOLD-SOMEDAY" ; Tags/todo/property matcher that identifies which tasks are projects
+          ("PROG" "NEXT") ; Todo keywords for non-stuck projects
+          nil ; Tags for non-stuck projects
+          "" ; Any regexp for non-stuck projects
+          ))
+
+  ;; Function to quicky set effort, priority, tags, and refile.
+  ;; From https://blog.jethro.dev/posts/processing_inbox/
+  (defun kb/org-agenda-process-inbox-item ()
+    "Process a single item in the org-agenda."
+    (interactive)
+    (org-with-wide-buffer
+     ;; (org-agenda-set-tags)
+     (org-agenda-priority)
+     (org-agenda-todo)
+     ;; (call-interactively 'jethro/my-org-agenda-set-effort)
+     (call-interactively 'org-agenda-set-effort)
+     (org-agenda-refile nil nil t)
+     ))
+#+END_SRC
+*** Make sure org-agenda doesn't keep files open
+
+#+BEGIN_SRC emacs-lisp
+  (require 'dash)
+
+  (defun my-org-keep-quiet (orig-fun &rest args)
+    (let ((buffers-pre (-filter #'get-file-buffer (org-agenda-files))))
+      (apply orig-fun args)
+      (let* ((buffers-post (-filter #'get-file-buffer (org-agenda-files)))
+             (buffers-new  (-difference buffers-post buffers-pre)))
+        (mapcar (lambda (file) (kill-buffer (get-file-buffer file))) buffers-new))))
+
+  (advice-add 'org-agenda-list :around #'my-org-keep-quiet)
+  (advice-add 'org-search-view :around #'my-org-keep-quiet)
+  (advice-add 'org-tags-view   :around #'my-org-keep-quiet)
+#+END_SRC
+*** Habits
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-show-habits-only-for-today t
+        org-habit-preceding-days 3
+        org-habit-following-days 5)
+  ;; org-habit-graph-column 110)
+  (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t))) ; Force showing of habits in agenda every day at 6AM
+
+  (setq org-habit-graph-column 100)
+#+END_SRC
+*** Keybindings
+
+#+BEGIN_SRC emacs-lisp
+  (kb/leader-keys
+    "oa" '(org-agenda :which-key "Org-agenda")
+    )
+
+  (general-define-key ; Eyebrowse keybindings overwrite this so I reset it
+    :keymaps 'org-capture-mode-map
+    "C-c C-w" 'org-capture-refile
+    )
+
+  (define-key org-agenda-mode-map (kbd "s") #'kb/org-refile-to-reverse-datetree-archive) ; Archiving tasks with org-reverse-datetree
+  (define-key org-agenda-mode-map (kbd "r") #'kb/org-agenda-process-inbox-item) ; Archiving tasks with org-reverse-datetree
+
+  ;; (evil-define-key 'motion 'org-agenda-mode-map (kbd "q") #'org-agenda-exit) ; Bury org-agenda and close all related buffers
+  ;; (evil-define-key 'motion 'org-agenda-mode-map (kbd "z q") #'org-agenda-quit) ; Bury org-agenda buffer only. Note that org-agenda-quit is distinct from org-agenda-Quit
+#+END_SRC
+** Org-ql
+
+More powerful searching and selecting of todo headlines
+#+BEGIN_SRC emacs-lisp
+  (use-package org-ql
+    :after org-roam ; Necessary for one or more of the functions
+    :config
+    (setq org-ql-views
+     `(("Current projects"
+        :buffers-files org-agenda-files
+        :query (and (parent (todo))
+                    (todo)
+                    (not (done)))
+        :super-groups ((:auto-parent t))
+        :title "Current projects"
+        :sort (deadline scheduled todo priority)
+        )
+       ("In-progress tasks not in a project"
+        :buffers-files org-agenda-files
+        :query (and (not (done))
+                    (not (parent (todo)))
+                    (not (children (todo)))
+                    (todo "PROG"))
+        :super-groups ((:discard (:file-path "roam"))
+                       (:name none
+                              :anything t))
+        :title "In-progress tasks"
+        :sort (priority deadline scheduled)
+        )
+       ("In-progress and upcoming Zettelkasten notes"
+        :buffers-files ,(org-roam--list-all-files)
+        :query (and (not (done))
+                    (todo "PROG" "NEXT"))
+        :super-groups ((:name none
+                              :anything t))
+        :title "Zettelkasten notes I'm working on"
+        :sort (todo deadline scheduled priority)
+        )
+       ))
+    ;; (setq org-ql-view-buffer nil) ; No clue how to set this variable
+
+    (kb/leader-keys
+      "oq" '(org-ql-view :which-key "Org-ql views") ; Currently can't find a way to close all org-agenda bufers after opening the org-ql-view
+      )
+    )
+#+END_SRC
+** Org-super-agenda
+*** Org-super-agenda itself
+
+Autoload the package and start with nothing
+#+BEGIN_SRC emacs-lisp
+   (use-package org-super-agenda
+     :config
+     (org-super-agenda-mode)
+
+     ;; Remove Evil bindings on group headings
+     (define-key org-agenda-mode-map (kbd "h") nil)
+     (define-key org-super-agenda-header-map (kbd "h") nil)
+     (define-key org-agenda-mode-map (kbd "j") nil)
+     (define-key org-super-agenda-header-map (kbd "j") nil)
+     (define-key org-agenda-mode-map (kbd "k") nil)
+     (define-key org-super-agenda-header-map (kbd "k") nil)
+     (define-key org-agenda-mode-map (kbd "l") nil)
+     (define-key org-super-agenda-header-map (kbd "l") nil)
+
+     (setq org-agenda-custom-commands nil) ; Start from scratch
+     )
+#+END_SRC
+*** Org-agenda-views
+
+Active tasks
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-agenda-custom-commands
+               '("p" "Current tasks"
+                 ((org-ql-block '(and (parent (todo "PROG"))
+                                      (todo)
+                                      (not (done)))
+                                ((org-ql-block-header "Current projects")
+                                 (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                                 (org-super-agenda-groups
+                                  '((:auto-parent t))
+                                  )))
+                  (agenda ""
+                          ((org-agenda-overriding-header "The near future")
+                           (org-habit-show-habits-only-for-today t)
+                           (org-agenda-start-day "+0") ; Start the agenda view with yesterday
+                           (org-agenda-span 4)
+                           (org-super-agenda-groups
+                            '((:name "Due"
+                                     :time-grid t
+                                     :scheduled today
+                                     :deadline today)
+                              (:name "Planned in the future"
+                                     :scheduled future)
+                              (:name "Due in the future"
+                                     :deadline future)
+                              (:name "Missed Items!"
+                                     :scheduled past
+                                     :deadline past)
+                              (:name "Uncategorized"
+                                     :anything t)
+                              ))
+                           ))
+                  (org-ql-block '(and (todo "PROG")
+                                      (not (parent (todo)))
+                                      (not (children (todo)))
+                                      (not (done)))
+                                ((org-ql-block-header "Tasks by priority")
+                                 (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                                 (org-super-agenda-groups
+                                  '((:auto-priority t))
+                                  )))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("n" "What's next?"
+                 ((org-ql-block '(or (and (parent (todo "NEXT"))
+                                          (not (done)))
+                                     (and (children (todo))
+                                          (todo "NEXT")
+                                          (not (done))
+                                          ))
+                                ((org-ql-block-header "Next projects")
+                                 (org-super-agenda-groups
+                                  '((:name "Projects" :children todo)
+                                    (:auto-parent t)
+                                    ))
+                                 ))
+                  (org-ql-block '(and (not (parent (todo)))
+                                      (not (children (todo)))
+                                      (todo "NEXT")
+                                      (not (done)))
+                                ((org-ql-block-header "Next Non-project Tasks")
+                                 (org-super-agenda-groups
+                                  '((:name "No effort or effort less than 5 minutes"
+                                           :effort< "5")
+                                    (:name "10 minutes or less"
+                                           :effort< "11")
+                                    (:name "30 minutes or less"
+                                           :effort< "31")
+                                    (:name "1 hour or less"
+                                           :effort< "61")
+                                    (:name "More than an hour but less than 3"
+                                           :effort< "180")
+                                    (:name "3 hours or more"
+                                           :effort> "179")
+                                    (:name "Next tasks without an effort rating"
+                                           :anything t)
+                                    ))
+                                 ))
+                  ;; (alltodo ""
+                  ;;          ((org-agenda-overriding-header "What else is on my to-do list?")
+                  ;;           (org-agenda-prefix-format
+                  ;;            '((agenda . " %i %-12:c%?-12t% s")
+                  ;;              (todo . " %i %-13:c   %-6e %?s %t | ")
+                  ;;              (tags . " %i %-12:c")
+                  ;;              (search . " %i %-12:c")
+                  ;;              ))
+                  ;;         (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                  ;;           (org-super-agenda-groups
+                  ;;            '((:discard (:not (:todo "NEXT")))
+                  ;;              (:name "No effort or effort less than 5 minutes"
+                  ;;                     :effort< "5")
+                  ;;              (:name "10 minutes or less"
+                  ;;                     :effort< "11")
+                  ;;              (:name "30 minutes or less"
+                  ;;                     :effort< "31")
+                  ;;              (:name "1 hour or less"
+                  ;;                     :effort< "61")
+                  ;;              (:name "More than an hour but less than 3"
+                  ;;                     :effort< "180")
+                  ;;              (:name "3 hours or more"
+                  ;;                     :effort> "179")
+                  ;;              (:name "Next tasks without an effort rating"
+                  ;;                     :anything t)
+                  ;;              ))
+                  ;;           ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("z" "Current Zettelkasten notes"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "Current and upcoming Zettelkasten notes")
+                            (org-agenda-files (org-roam--list-all-files))
+                            (org-super-agenda-groups
+                             '((:discard (:not (:todo ("PROG" "NEXT"))))
+                               (:name none
+                                      :auto-parent t)
+                               ))
+                            ))
+                  ))
+               t)
+#+END_SRC
+
+Zettelkasten
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-agenda-custom-commands
+               '("Zz" "Fresh Zettelkasten notes"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "Zettelkasten maintanence overview")
+                            (org-agenda-files (org-roam--list-all-files))
+                            (org-super-agenda-groups
+                             '((:name "Tags that are done but not marked as done"
+                                      :tag ("MATURE" "COMPLETE"))
+                               (:name "Fermenting notes"
+                                      :tag "ephemeral")
+                               (:name "Unprocessed ephemeral notes" ; Remove once I've finished processing all the notes with the ephemeral tag. I use my seedbox for this now
+                                      :tag "ephemeral")
+                               (:name "Fresh notes"
+                                      :tag ("WAITING" "NASCENT"))
+                               (:name "Intermediate notes"
+                                      :tag ("PROGRESS" "GROWING"))
+                               (:name "Irregular notes"
+                                      :anything t)
+                               ))
+                            ))
+                  (alltodo ""
+                           ((org-agenda-overriding-header "By category")
+                            (org-agenda-files (org-roam--list-all-files))
+                            (org-super-agenda-groups
+                             '((:name "Tags that are done but not marked as done"
+                                      :tag ("MATURE" "COMPLETE"))
+                               (:name none
+                                      :auto-category t)
+                               ))
+                            ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("Zg" "Zettelkasten growth and done"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "All notes organized by note-type")
+                            (org-agenda-files (org-roam--list-all-files))
+                            (org-super-agenda-groups
+                             '((:name none
+                                      :auto-category t)
+                               ))
+                            ))
+                  (todo "DONE|CANCELLED"
+                        ((org-agenda-overriding-header "Finished notes")
+                         (org-agenda-files (org-roam--list-all-files))
+                         (org-super-agenda-groups
+                          '((:discard (:not (:category ("lit" "bib_notes" "quote" "zett" "ephemeral"))))
+                            (:name none
+                                   :auto-ts t)
+                            (:name "Irregular notes"
+                                   :anything t)
+                            ))
+                         ))
+                  ))
+               t)
+#+END_SRC
+
+Maintainence
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-agenda-custom-commands
+               '("xu" "Projects potentially in limbo (via stuck projects)"
+                 ((stuck ""
+                         ((org-agenda-overriding-header "School")
+                          (org-super-agenda-groups
+                           '((:discard (:tag "REFILE"))
+                             (:discard (:not (:file-path "school.org")))
+                             (:discard (:todo "INACTIVE"))
+                             (:auto-category t)
+                             ))
+                          ))
+                  (stuck ""
+                         ((org-agenda-overriding-header "Computer stuff")
+                          (org-super-agenda-groups
+                           '((:discard (:tag "REFILE"))
+                             (:discard (:not (:file-path "computers.org")))
+                             (:discard (:todo "INACTIVE"))
+                             (:auto-category t)
+                             ))
+                          ))
+                  (stuck ""
+                         ((org-agenda-overriding-header "Inputs")
+                          (org-super-agenda-groups
+                           '((:discard (:tag "REFILE"))
+                             (:discard (:not (:file-path "inputs.org")))
+                             (:discard (:todo "INACTIVE"))
+                             (:auto-category t)
+                             ))
+                          ))
+                  (stuck ""
+                         ((org-agenda-overriding-header "Miscellaneous")
+                          (org-super-agenda-groups
+                           '((:discard (:tag "REFILE"))
+                             (:discard (:not (:file-path "misc.org")))
+                             (:discard (:todo "INACTIVE"))
+                             (:auto-category t)
+                             ))
+                          ))
+                  (stuck ""
+                         ((org-agenda-overriding-header "Habits")
+                          (org-super-agenda-groups
+                           '((:discard (:tag "REFILE"))
+                             (:discard (:not (:file-path "habits.org")))
+                             (:discard (:todo "INACTIVE"))
+                             (:auto-category t)
+                             ))
+                          ))
+                  (stuck ""
+                         ((org-agenda-overriding-header "Entertainment")
+                          (org-super-agenda-groups
+                           '((:discard (:tag "REFILE"))
+                             (:discard (:not (:file-path "media.org")))
+                             (:discard (:todo "INACTIVE"))
+                             (:auto-category t)
+                             ))
+                          ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("xb" "Stuff in the backburner"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "Did I forget about these?")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:todo ("SOMEDAY" "HOLD" "INACTIVE"))))
+                               (:name none
+                                      :auto-category t)
+                               (:name "You shouldn't be here..."
+                                      :anything t)
+                               ))
+                            ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("xd" "Todos in a DONE state"
+                 ((todo "DONE|CANCELLED"
+                        ((org-agenda-overriding-header "Regular candidates for archival")
+                         (org-agenda-files (directory-files-recursively kb/agenda-dir "[^hive].org$"))))
+                  (todo "DONE|CANCELLED"
+                        ((org-agenda-overriding-header "Done Zettelkasten notes")
+                         (org-agenda-files (org-roam--list-all-files))))
+                  )
+                 )
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("xr" "All trivial and to-refile tasks"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "Tasks to refile")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:tag "REFILE")))
+                               (:name none
+                                      :auto-tags t)
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  (alltodo ""
+                           ((org-agenda-overriding-header "High-priority items without next todo keyword")
+                            (org-super-agenda-groups
+                             '((:name none
+                                      :and (:priority>= "B" :not (:todo ("NEXT" "PROG"))))
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  (alltodo ""
+                           ((org-agenda-overriding-header "Trivial Tasks")
+                            (org-super-agenda-groups
+                             '((:name none
+                                      :and (:priority<= "E" :not (:todo ("HOLD" "SOMEDAY" "INACTIVE" "CANCELLED"))))
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  ))
+               t)
+#+END_SRC
+
+File-specific
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-agenda-custom-commands
+               '("fw" "Schoolwork"
+                 ((agenda ""
+                          ((org-agenda-overriding-header "My school calendar")
+                           (org-agenda-span 'week)
+                           (org-agenda-start-day "-1") ; Start the agenda view with yestersy
+                           (org-agenda-span 7)
+                           (org-super-agenda-groups
+                            '((:discard (:not (:file-path "school")))
+                              (:name "Due"
+                                     :time-grid t
+                                     :deadline today)
+                              (:name "Planned"
+                                     :time-grid t
+                                     :scheduled today)
+                              (:name "Due in the future"
+                                     :time-grid t
+                                     :deadline future)
+                              (:name "Planned in the future"
+                                     :time-grid t
+                                     :scheduled future)
+                              (:name "Missed Items!"
+                                     :scheduled past
+                                     :deadline past)
+                              (:name "Uncategorized"
+                                     :anything t)
+                              ))
+                           ))
+                  (alltodo ""
+                           ((org-agenda-overriding-header "Assignments on my plate...")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:file-path "school.org")))
+                               (:name "Related to coursework"
+                                      :tag ("ASSIGNMENT" "EMAIL"))
+                               (:name "Me involved with the community"
+                                      :tag ("CLUB" "EVENT" "SOCIAL" "ORGANIZATION"))
+                               (:name "Consumption"
+                                      :tag ("LEARN" "PARSE"))
+                               (:name "Finances"
+                                      :tag ("PAYING"))
+                               (:name "Overflow (uncategorized)"
+                                      :anything t)
+                               ))
+                            ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("fe" "Entertainment time?"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "What's on my \"to-comsume\" list?")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:file-path "media.org")))
+                               (:name "Movies"
+                                      :tag "MOVIE")
+                               (:name "Shows"
+                                      :tag "SHOW")
+                               (:name "Books"
+                                      :tag "BOOK")
+                               (:name "Videos"
+                                      :tag "VIDEOS")
+                               (:name "Overflow (uncategorized)"
+                                      :anything t)
+                               ))
+                            ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("fc" "Computer-related tasks"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "Computer stuff I have to get to")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:file-path "computers.org")))
+                               (:name "Projects"
+                                      :tag ("PROJECT"))
+                               (:name "Things that involve thinking"
+                                      :tag ("DWELL" "WORKFLOW"))
+                               (:name "Going through information"
+                                      :tag ("LEARN" "PACKAGE" "DOCS"))
+                               (:name "Actions for the better"
+                                      :tag ("CONFIG" "TROUBLESHOOTING"))
+                               (:name "Actions for QoL"
+                                      :tag ("RICE"))
+                               (:name "Overflow (uncategorized)"
+                                      :anything t)
+                               ))
+                            ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("fi" "My input tasks"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "All my inputs")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:file-path "inputs.org")))
+                               (:name none
+                                      :auto-tags t)
+                               ))
+                            ))
+                  ))
+               t)
+#+END_SRC
+
+** Agenda view faces
+
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'org-super-agenda
+    (set-face-attribute 'org-super-agenda-header nil :height 148 :font "Noto Sans" :foreground "DarkGoldenrod2" :underline nil)
+    (set-face-attribute 'org-agenda-date nil :height 157 :font "Noto Sans" :foreground "dodger blue" :underline nil)
+    (set-face-attribute 'org-agenda-structure nil :height 180 :font "Noto Sans" :bold t :italic t :foreground "DarkOliveGreen3" :underline t)
+    )
+  #+END_SRC
+** Org-capture-templates
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-default-notes-file (concat kb/agenda-dir "inbox.org"))
+  (setq org-capture-templates ; Used for org-agenda task management
+        '(("s" "School related task")
+          ("ss" "New assignment" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] :ASSIGNMENT:\nSCHEDULED: %^T\nDEADLINE: %^T\n%U")
+          ;; ("si" "Go through information" entry (file org-default-notes-file)
+          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] :PARSE:\nSCHEDULED: %^T\n%U")
+          ;; ("st" "Think about something" entry (file org-default-notes-file)
+          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\nSCHEDULED: %^T\n%U")
+          ("se" "Email" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Revisit %:fromname ( %:fromaddress ) -- /%:subject/ [/] :EMAIL:\n- RECEIVED :: %:date-timestamp-inactive\nSCHEDULED: %^t\nDEADLINE: %^T\n%A\n%U")
+          ;; ("sz" "Zoom call" entry (file org-default-notes-file)
+          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\nDEADLINE: %^T\n%U")
+          ;; ("sw" "Watch or listen to something" entry (file org-default-notes-file)
+          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
+
+          ("i" "New input")
+          ("iv" "Video" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Watch %(org-cliplink-capture) :VIDEO:\n%U\n"
+           :immediate-finish t)
+          ("ia" "Article" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Read %(org-cliplink-capture) :ARTICLE:\n%U\n"
+           :immediate-finish t)
+          ("ip" "Podcast" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Listen to %(org-cliplink-capture) :PODCAST:\n%U\n")
+          ("iw" "Profound quote" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p%? :QUOTE:\nby \n%U\n\n")
+          ("ib" "Book" entry (file org-default-notes-file)
+           "* TODO [#%^{Priority?|A|B|C|D|E|F}] Read /%?/ :BOOK:\nby \n%U\n")
+          ("il" "Lecture" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Watch and study %(org-cliplink-capture) :LECTURE:\n%U\n"
+           :immediate-finish t)
+          ("ij" "Academic paper" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Read and analyze %(org-cliplink-capture) :PAPER:\n%U\n"
+           :immediate-finish t)
+
+          ("m" "New entertainment to gobble" entry (file org-default-notes-file)
+           "* TODO Consume %? %^{What type of entertainment?|MOVIE|BOOK|SHOW|VIDEO}\n%U\n")
+          ;; ("m" "New entertainment to gobble")
+          ;; ("mm" "Movie" entry (file org-default-notes-file)
+          ;;  "* TODO Watch %? :MOVIE:\n%U\n")
+          ;; ("mb" "Book" entry (file org-default-notes-file)
+          ;;  "* TODO Read %? :BOOK:\n%U\n")
+          ;; ("ms" "Show" entry (file org-default-notes-file)
+          ;;  "* TODO Watch %? :SHOW:\n%U\n")
+          ;; ("mv" "Video" entry (file org-default-notes-file)
+          ;;  "* TODO Watch %? :VIDEO:\n%U\n")
+
+          ("c" "Computer thing")
+          ("cc" "Check something" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
+          ;; ("ct" "Something related to though or learning" entry (file org-default-notes-file)
+          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
+          ("ca" "Do something technical" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
+
+          ("a" "Agnostic todo" entry (file org-default-notes-file)
+           "* TODO %? [/] %^G\n%U")
+          ;; ("a" "Agnostic todo" entry (file org-default-notes-file)
+          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
+          ("f" "This is an idea I should ferment" entry (file+headline "~/Documents/org-database/roam/seedbox.org" "Fermenting Items")
+           "* %? \n%U"
+           :jump-to-captured t)
+          ("h" "Habit/recurring task" entry (file org-default-notes-file)
+           "* NEXT %? [/] :HABIT:\nSCHEDULED: %^t\n:PROPERTY:\n:LOGGING: DONE(!)\n:STYLE: habit\n:END:\n%U\n"
+           :immediate-finish t
+           :jump-to-captured t)
+          ))
+#+END_SRC
+** Org-wild-notifier
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-wild-notifier
+    :custom
+    (alert-default-style 'libnotify) ; Set default alert (global) style
+    (org-wild-notifier-alert-time '(10 45 120))
+    (org-wild-notifier-notification-title "Org-agenda")
+    (org-wild-notifier-keyword-whitelist nil)
+    (org-wild-notifier-keyword-blacklist nil)
+    (org-wild-notifier-tags-whitelist nil)
+    (org-wild-notifier-tags-blacklist nil)
+    (org-wild-notifier-alert-times-property "wild_notifier_notify_before")
+    :config
+    (org-wild-notifier-mode)
+    )
+#+END_SRC
+* Org-attach
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-attach-id-dir "attachments/")
+  (setq org-attach-dir-relative t) ; Use relative file paths
+  (setq org-attach-method 'cp) ; Attach copies of files
+  (setq org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
+#+END_SRC
+* Org-download
+
+Insert images and screenshots
+#+BEGIN_SRC emacs-lisp
+  (use-package org-download
+    :hook (org-mode . org-download-enable)
+    :custom
+    (org-download-method 'attach)
+    (org-download-screenshot-method "scrot -s %s") ; Use scrot
+    (org-download-link-format "[[download:%s]]\n")
+    (org-download-annotate-function (lambda (_link) ""))
+    :config
+    (setq-default org-download-image-dir (concat org-directory "resources/")
+                  org-download-heading-lvl nil
+                  org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
+
+    (kb/leader-keys
+      "ii" '(org-download-clipboard :which-key "Paste image from clipboard")
+      )
+    )
+#+END_SRC
+* Org-fancy-priorities
+
+Icons for org priorities
+#+BEGIN_SRC emacs-lisp
+  (use-package org-fancy-priorities
+    :hook (org-mode . org-fancy-priorities-mode)
+    :custom
+    (org-fancy-priorities-list '((?A . "💀")
+                                 (?B . "🔥")
+                                 (?C . "🌟")
+                                 (?D . "🏃")
+                                 (?E . "👍")
+                                 (?F . "🧋")))
+    )
+#+END_SRC
+
+* Org-cliplink
+
+Paste https link with automatic description
+#+BEGIN_SRC emacs-lisp
+  (use-package org-cliplink
+    :config
+    (kb/leader-keys
+      "ib" '(org-cliplink :which-key "Paste https"))
+    )
+#+END_SRC
+
+* Visual-fill-column
+
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-fill-column
+    :hook ((org-mode . visual-fill-column-mode)
+           (mu4e-view-mode . visual-fill-column-mode))
+    :custom
+    (visual-fill-column-width 120)
+    (visual-fill-column-center-text t)
+    :config
+    (setq-default split-window-preferred-function 'visual-fill-column-split-window-sensibly) ; Be able to vertically split windos that have wide margins
+    )
+#+END_SRC
