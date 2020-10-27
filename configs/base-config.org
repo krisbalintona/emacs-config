@@ -44,100 +44,6 @@
          (not (equal (shell-command-to-string "pip freeze | grep '^PyQt\\|PyQtWebEngine'") "")))
     "Do we have EAF environment setup?")
 #+END_SRC
-* Package management
-** Load repositories
-
-#+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (setq package-user-dir (expand-file-name "elpa" user-emacs-directory) ; Select folder to store packages
-        package-archives
-        '(("org" . "http://orgmode.org/elpa/")
-          ("melpa" . "https://melpa.org/packages/")
-          ("melpa-stable" . "https://stable.melpa.org/packages/")
-          ("gnu"   . "https://elpa.gnu.org/packages/")
-          ("cselpa" . "https://elpa.thecybershadow.net/packages/")
-          ;; ;; Chinese servers
-          ;; ("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
-          ;; ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
-          ))
-#+END_SRC
-** Configure package management
-
-#+BEGIN_SRC emacs-lisp
-    (unless (bound-and-true-p package--initialized)
-      (setq package-enable-at-startup t)          ; To prevent initializing twice
-      (package-initialize))
-
-    ;; Set use-package-verbose to t for interpreted .emacs, and to nil for
-    ;; byte-compiled .emacs.elc.
-    (eval-and-compile
-      (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
-#+END_SRC
-** Configure Use-package
-
-#+BEGIN_SRC emacs-lisp
-  (unless (package-installed-p 'use-package) ; Install use-package if not installed
-    (package-refresh-contents)
-    (package-install 'use-package))
-
-  (eval-and-compile
-    (setq use-package-always-ensure t)
-    (setq use-package-expand-minimally t)
-    (setq use-package-compute-statistics t)
-    (setq use-package-enable-imenu-support t))
-
-  (eval-when-compile
-    (require 'use-package)
-    (require 'bind-key))
-#+END_SRC
-** Configure Quelpa
-
-Get packages directly from repos
-#+begin_src emacs-lisp
-  (unless (package-installed-p 'quelpa)
-    (with-temp-buffer
-      (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
-      (eval-buffer)
-      (quelpa-self-upgrade)))
-
-  (setq quelpa-upgrade-interval 2) ; Update quelpa packages every X days after init
-  (add-hook #'after-init-hook #'quelpa-upgrade-all-maybe)
-
-  (setq quelpa-checkout-melpa-p t) ; Update (or not) local MELPA git repo since I'll be using quelpa for non-MELPA packages
-  (setq quelpa-upgrade-p nil) ; Only applies to MELPA packages?: Don't upgrade packages automatically
-#+end_src
-** Quelpa-use-package
-
-Integration between use-package and quelpa
-#+begin_src emacs-lisp
-  (quelpa
-   '(quelpa-use-package
-     :fetcher git
-     :url "https://github.com/quelpa/quelpa-use-package.git"))
-  (require 'quelpa-use-package)
-
-  (quelpa-use-package-activate-advice) ; Necessary for use-package-always-ensure to take from ELPA but all quelpa packages to take from quelpa
-#+end_src
-** Auto-package-update
-
-#+BEGIN_SRC emacs-lisp
-    (use-package auto-package-update
-      :if (not (daemonp))
-      :custom
-      (auto-package-update-interval 1) ;; in days
-      (auto-package-update-prompt-before-update nil)
-      (auto-package-update-delete-old-versions t)
-      (auto-package-update-hide-results nil)
-      :config
-      (auto-package-update-maybe)
-      )
-#+END_SRC
-
-** Diminish
-
-#+BEGIN_SRC emacs-lisp
-  (use-package diminish)
-#+END_SRC
 * Package agnostic settings
 ** UTF-8 everywhere!
 #+BEGIN_SRC emacs-lisp
@@ -290,7 +196,6 @@ Allow faces to be selectively fixed- or variable-pitch
   ;;   :ensure t
   ;;   :config (load-theme 'doom-palenight t))
   (use-package atom-one-dark-theme
-    :ensure t
     :config (load-theme 'atom-one-dark t))
   ;; (use-package mood-one-theme
   ;;   :ensure t
@@ -1985,7 +1890,6 @@ More org packages that are also more up to date
     ;;   :pin org)
 
     ;; a kludge to solve multiple org versions conundrum:
-    (assq-delete-all 'org package--builtins)
   #+END_SRC
 *** Org-mode itself
 
@@ -2414,7 +2318,7 @@ To fix the error with match clobbering from title change
 Interactive browser graph view
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-server
-    :quelpa (org-roam-server :fetcher git :url "https://github.com/org-roam/org-roam-server")
+    ;; :quelpa (org-roam-server :fetcher git :url "https://github.com/org-roam/org-roam-server" :branch "master") ; Quelpa version doesn't work? Perhaps has to do with org-roam dependency?
     :after org-roam
     :custom
     (org-roam-server-host "127.0.0.1")
@@ -2936,7 +2840,6 @@ More powerful searching and selecting of todo headlines
 Autoload the package and start with nothing
 #+BEGIN_SRC emacs-lisp
    (use-package org-super-agenda
-     :ensure t
      :config
      (org-super-agenda-mode)
 
@@ -3525,7 +3428,6 @@ Paste https link with automatic description
 
 #+BEGIN_SRC emacs-lisp
   (use-package visual-fill-column
-    :ensure t
     :hook ((org-mode . visual-fill-column-mode)
            (mu4e-view-mode . visual-fill-column-mode))
     :custom

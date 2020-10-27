@@ -74,6 +74,9 @@
 ;; Packages
 ;; Load all config files in my config directory
 
+(require 'repo-configure-rcp)
+(require 'package-management-rcp)
+
 (mapc #'org-babel-load-file (directory-files (concat user-emacs-directory "configs/") t "\\.org$"))
 
 ;; Packages
