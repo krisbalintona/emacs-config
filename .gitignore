@@ -1,3 +1,4 @@
 /undo-fu-session/*.gz
 /quelpa/
 /elpa/
+/configs/*.el
