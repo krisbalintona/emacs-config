@@ -18,7 +18,7 @@ Zettelkasten and Evergreen notes
                                          ))
     (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
     (org-roam-index-file "index.org") ; My Index
-    (org-roam-tag-separator " ")
+    (org-roam-tag-separator ", ")
     (org-roam-link-use-custom-faces 'everywhere) ; Use org-roam-link face everywhere (including org-roam-buffer)
     ;; Roam-buffer specific changes
     (org-roam-graph-extra-config '(("rankdir" . "LR"))) ; Extra options passed to graphviz
