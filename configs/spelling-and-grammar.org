@@ -40,15 +40,10 @@ Insert or search words in thesaurus
 #+BEGIN_SRC emacs-lisp
   (use-package powerthesaurus
     :config
-  (kb/leader-keys
-      "Ll" 'powerthesaurus-lookup-word
-      "Lp" 'powerthesaurus-lookup-word-at-point
-
-      ;; combines these two functions into one. It tries to infer whatever
-      ;; user wants to look up. If there is an active selection that will be
-      ;; the choice. Otherwise, it checks if there any word at point and
-      ;; fetches that word. And if there is nothing appropriate, it asks the
-      ;; user to provide a word.
-      "Lb" 'powerthesaurus-lookup-word-dwim)
+    (kb/leader-keys
+      "ll" 'powerthesaurus-lookup-word
+      "lp" 'powerthesaurus-lookup-word-at-point
+      "lb" 'powerthesaurus-lookup-word-dwim
+      )
     )
 #+END_SRC

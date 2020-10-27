@@ -333,6 +333,7 @@ Leader key capabilities
       "fs" '(save-buffer :which-key "Save buffer")
       "h"  '(:ignore t :which-key "Help")
       "q"  '(:ignore t :which-key "Quit")
+      "qs" '(org-save-all-org-buffers :which-key "Save all org buffers")
       "l"  '(:ignore t :which-key "Langtool")
       "n" '(:ignore t :which-key "Org-roam")
       "i" '(:ignore t :which-key "Copying and pasting")
@@ -345,9 +346,10 @@ Leader key capabilities
       )
 
     (kb/leader-keys
-      :keymaps '(visual)
-      "er" '(eval-region :which-key "Eval region")
+      :keymaps 'normal
       "ee" '(eval-last-sexp :which-key "Eval last sexp")
+      :keymaps 'visual
+      "er" '(eval-region :which-key "Eval region")
       )
     )
 #+END_SRC
@@ -625,13 +627,6 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     ;; "fdp" '((lambda () (interactive) (kb/org-file-jump-to-heading "~/.dotfiles/Desktop.org" "Panel via Polybar")) :which-key "polybar")
     )
 #+END_SRC
-** Save all org files keybind
-
-#+begin_src emacs-lisp
-  (kb/leader-keys
-    "qs" '(org-save-all-org-buffers :which-key "Save all org buffers")
-    )
-#+end_src
 ** Traversing mark rings
 
 #+begin_src emacs-lisp
