@@ -379,7 +379,7 @@ For file and directory shortcut functions (in custom functions section)
 #+BEGIN_SRC emacs-lisp
   (defvar kb/library-dir (concat org-directory "library"))
   (defvar kb/emacs-base-config-file (concat user-emacs-directory "configs/base-config.org"))
-  (defvar kb/emacs-config-dir (concat user-emacs-directory "configs/base-config.org"))
+  (defvar kb/emacs-config-dir (concat user-emacs-directory "configs/"))
 
   (defvar kb/dot-config-dir "~/.config/")
   (defvar kb/wm-config-file (concat kb/dot-config-dir "i3/config"))
@@ -569,33 +569,39 @@ Keybinds
 From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-performance][dotfiles/Emacs.org at master · daviwil/dotfiles · GitHub]]
 *** Functions
 #+BEGIN_SRC emacs-lisp
-    (defun kb/org-file-jump-to-heading (org-file heading-title)
-      (interactive)
-      (find-file (expand-file-name org-file))
-      (goto-char (point-min))
-      (search-forward (concat "* " heading-title))
-      (org-overview)
-      (org-reveal)
-      (org-show-subtree)
-      (forward-line))
+  (defun kb/org-file-jump-to-heading (org-file heading-title)
+    (interactive)
+    (find-file (expand-file-name org-file))
+    (goto-char (point-min))
+    (search-forward (concat "* " heading-title))
+    (org-overview)
+    (org-reveal)
+    (org-show-subtree)
+    (forward-line))
 
-    (defun kb/org-file-show-headings (org-file)
-      (interactive)
-      (find-file (expand-file-name org-file)) ; An issue with this is that you open the file
-      (counsel-org-goto)
-      (org-overview)
-      (org-reveal)
-      (org-show-subtree)
-      (forward-line))
+  (defun kb/org-file-show-headings (org-file)
+    (interactive)
+    (find-file (expand-file-name org-file)) ; An issue with this is that you open the file
+    (counsel-org-goto)
+    (org-overview)
+    (org-reveal)
+    (org-show-subtree)
+    (forward-line))
 
-    (defun kb/org-dir-show-headings (dir) ; An issue with this is that you open the file
-      (interactive)
-      (find-file (concat dir "*.org") t)
-      (counsel-org-goto)
-      (org-overview)
-      (org-reveal)
-      (org-show-subtree)
-      (forward-line))
+  (defun kb/org-dir-show-headings (dir) ; An issue with this is that you open the file
+    (interactive)
+    (let ((regexp-initial counsel-find-file-ignore-regexp)))
+    (let ((dir-initial default-directory)))
+    (setq counsel-find-file-ignore-regexp "\\.el$")
+    (cd dir)
+    (counsel-find-file)
+    (counsel-org-goto)
+    (setq counsel-find-file-ignore-regexp regexp-initial)
+    (cd dir-initial)
+    (org-overview)
+    (org-reveal)
+    (org-show-subtree)
+    (forward-line))
 #+END_SRC
 *** Keybindings
 
@@ -609,9 +615,9 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     "fcl" '((lambda () (interactive) (kb/org-dir-show-headings kb/library-dir)) :which-key "Edit library file")
 
     "fcw" '((lambda () (interactive) (find-file kb/wm-config-file)) :which-key "Open WM config file")
-    "fce" '((lambda () (interactive) (find-file kb/emacs-base-config-file)) :which-key "Open Emacs base config")
 
-    "fcE" '((lambda () (interactive) (kb/org-dir-show-headings kb/emacs-config-dir)) :which-key "Edit Emacs configs")
+    "fcE" '((lambda () (interactive) (find-file kb/emacs-base-config-file)) :which-key "Open Emacs base config")
+    "fce" '((lambda () (interactive) (kb/org-dir-show-headings kb/emacs-config-dir)) :which-key "Edit Emacs configs")
 
     ;; ;; Section for Jumping directly to headings
     ;; "fds" '((lambda () (interactive) (kb/org-file-jump-to-heading "~/.dotfiles/Systems.org" "Base Configuration")) :which-key "base system")
