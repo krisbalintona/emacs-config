@@ -81,6 +81,7 @@ Hide the modeline when you don't want to see it
 Automatically save buffers when you do certain things
 #+BEGIN_SRC emacs-lisp
   (use-package super-save
+    :hook (after-init . super-save-mode)
     :custom
     (super-save-auto-save-when-idle t) ; Save buffer if Emacs is idle
     (super-save-idle-duration 10) ; Wait 10 seconds for idle trigger
@@ -88,8 +89,7 @@ Automatically save buffers when you do certain things
     (super-save-exclude nil) ; Don't exclude anything from being saved
     :config
     (add-to-list 'super-save-triggers 'evil-window-next)
-
-    (super-save-mode t)
+    (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
     )
 #+END_SRC
 
