@@ -7,6 +7,7 @@ Zettelkasten and Evergreen notes
   (use-package org-roam
     ;; :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master") ; Incompatible with straight.el
     :after company ; Necessary for some reason
+    :hook (emacs-startup . org-roam-mode)
     :custom
     (org-roam-directory kb/roam-dir)
     (org-roam-verbose nil) ; Don't echo messages that aren't errors
@@ -28,8 +29,6 @@ Zettelkasten and Evergreen notes
        org-roam-buffer--insert-ref-links))
     (org-roam-buffer-width 0.20)
     :config
-    (org-roam-mode)
-
     (add-to-list 'org-open-link-functions 'org-roam--open-fuzzy-link)
     (add-to-list 'org-open-at-point-functions 'org-roam-open-id-at-point)
 
@@ -128,8 +127,6 @@ Interactive browser graph view
     :config
     (if (daemonp)
         (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) ; Don't start server if not in daemon mode, otherwise will break things
-    (if (bound-and-true-p org-roam-mode) ; Necessary for first invocation of org-roam-server-mode because hook is written (currently) after org-roam is loaded
-        (org-roam-server-mode))
     )
 #+END_SRC
 * Org-roam-capture-templates
