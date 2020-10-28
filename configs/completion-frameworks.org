@@ -117,48 +117,52 @@ Some Ivy tips, taken from [[https://github.com/daviwil/dotfiles/blob/master/Emac
 
 Ido but more powerful and eye-pleasing
 #+BEGIN_SRC emacs-lisp
-    (use-package ivy
-      :bind (:map ivy-minibuffer-map
-                  ("TAB" . ivy-alt-done)
-                  ("C-l" . ivy-alt-done)
-                  :map ivy-switch-buffer-map
-                  ("C-l" . ivy-done)
-                  ("C-d" . ivy-switch-buffer-kill)
-                  :map ivy-reverse-i-search-map
-                  ("C-d" . ivy-reverse-i-search-kill))
-      :custom
-      (ivy-extra-directories nil) ; Remove ./ and ../
-      (ivy-use-virtual-buffers nil) ; Bookmarks and recent files in completion buffer
-      (ivy-count-format "(%d/%d) ")
-      (ivy-use-selectable-prompt t) ; Make prompt line selectable (as a candidate)
-      (enable-recursive-minibuffers t) ; Allow minibuffer commands in minibuffer
-      (ivy-height 17)
-      (ivy-wrap t)
-      (ivy-fixed-height-minibuffer t)
-      (ivy-magic-slash-non-match-action nil) ; disable magic slash on non-match
-      (ivy-virtual-abbreviate 'abbreviate)
-      (ivy-on-del-error-function #'ignore) ; don't quit minibuffer on delete-error
-      (ivy-sort-max-size 7500) ; Default is wayy too high - slows down in big projects
-      (ivy-re-builders-alist
-       '((counsel-esh-history . ivy--regex-fuzzy) ; Fuzzy findings for counsel-esh-history
-         (t . ivy--regex-ignore-order))) ; Default
-      :config
-      (ivy-mode t)
+  (use-package ivy
+    :hook (after-init . ivy-mode)
+    :bind (:map ivy-minibuffer-map
+                ("TAB" . ivy-alt-done)
+                ("C-l" . ivy-alt-done)
+                :map ivy-switch-buffer-map
+                ("C-l" . ivy-done)
+                ("C-d" . ivy-switch-buffer-kill)
+                :map ivy-reverse-i-search-map
+                ("C-d" . ivy-reverse-i-search-kill))
+    :custom
+    (ivy-extra-directories nil) ; Remove ./ and ../
+    (ivy-use-virtual-buffers nil) ; Bookmarks and recent files in completion buffer
+    (ivy-count-format "(%d/%d) ")
+    (ivy-use-selectable-prompt t) ; Make prompt line selectable (as a candidate)
+    (enable-recursive-minibuffers t) ; Allow minibuffer commands in minibuffer
+    (ivy-height 17)
+    (ivy-wrap t)
+    (ivy-fixed-height-minibuffer t)
+    (ivy-magic-slash-non-match-action nil) ; disable magic slash on non-match
+    (ivy-virtual-abbreviate 'abbreviate)
+    (ivy-on-del-error-function #'ignore) ; don't quit minibuffer on delete-error
+    (ivy-sort-max-size 7500) ; Default is wayy too high - slows down in big projects
+    (ivy-re-builders-alist
+     '((counsel-esh-history . ivy--regex-fuzzy) ; Fuzzy findings for counsel-esh-history
+       (t . ivy--regex-ignore-order))) ; Default
+    :config
+    (setf (alist-get 't ivy-format-functions-alist) #'ivy-format-function-line))
 
-      ;; Faces
-      (set-face-attribute 'ivy-minibuffer-match-face-1 nil :height 136)
+  ;; Faces
+  (set-face-attribute 'ivy-minibuffer-match-face-1 nil :height 136)
 
-      ;; Counsel changes a lot of ivy's state at startup; to control for that, we
-      ;; need to load it as early as possible. Some packages (like `ivy-prescient')
-      ;; require this.
-      (require 'counsel nil t)
-      )
+  ;; Counsel changes a lot of ivy's state at startup; to control for that, we
+  ;; need to load it as early as possible. Some packages (like `ivy-prescient')
+  ;; require this.
+  (require 'counsel nil t)
+  )
 #+END_SRC
 ** Swiper
 
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
-    :bind ("C-s" . counsel-grep-or-swiper) ; Depending on length of file
+    :custom
+    (swiper-goto-start-of-match t)
+    :config
+    (general-define-key (kbd "C-s") 'counsel-grep-or-swiper) ; Depending on length of file
     )
 #+END_SRC
 
