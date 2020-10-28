@@ -48,7 +48,7 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "programming.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "eshell.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "shell.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
 
