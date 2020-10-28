@@ -6,16 +6,17 @@
 Save and restore open buffers and frames
 #+BEGIN_SRC emacs-lisp
   (use-package desktop
-    :hook (window-setup . desktop-save-mode)
+    :hook ((window-setup . desktop-save-mode)
+           (window-setup . session-restore))
     :custom
     (desktop-save t) ; Always save when quitting Emacs or changing desktop
     (desktop-path `(,user-emacs-directory))
     (desktop-dirname user-emacs-directory)
     (desktop-base-file-name "emacs-save-desktop")
-    (desktop-restore-eager t) ; Lazily restore buffers to reduce startup time
-    ;; (desktop-restore-eager 12) ; Lazily restore buffers to reduce startup time
-    ;; (desktop-lazy-verbose nil) ; Don't be verbose when lazy loading buffers
-    ;; (desktop-lazy-idle-delay 10) ; Wait 10 seconds until lazy loading buffers
+    (desktop-restore-eager nil) ; Lazily restore buffers to reduce startup time
+    (desktop-restore-eager 13) ; Lazily restore buffers to reduce startup time
+    (desktop-lazy-verbose nil) ; Don't be verbose when lazy loading buffers
+    (desktop-lazy-idle-delay 10) ; Wait 10 seconds until lazy loading buffers
     (desktop-auto-save-timeout 20) ; Idle time until save
     (desktop-restore-frames t) ; Restore frames too
     (desktop-load-locked-desktop t) ; Always load so that it is compatible with daemon
@@ -73,14 +74,14 @@ Save and restore open buffers and frames
     (run-with-timer 0 480 'kb/auto-session-save) ; Save every 10 minutes
 
     ;; Restore when I want it to
-    (add-hook 'after-init-hook
-              '(lambda ()
-                 (if (saved-session)
-                     ;; (if (y-or-n-p "Restore desktop? ")    )
-                     (session-restore)
-                   (progn (session-restore)
-                          (if (daemonp) (org-mode-restart))) ; Restart org-mode to properly set faces for org files after loading with daemon
-                   )))
+    ;; (add-hook 'after-init-hook
+    ;;           '(lambda ()
+    ;;              (if (saved-session)
+    ;;                  ;; (if (y-or-n-p "Restore desktop? ")    )
+    ;;                  (session-restore)
+    ;;                (progn (session-restore)
+    ;;                       (if (daemonp) (org-mode-restart))) ; Restart org-mode to properly set faces for org files after loading with daemon
+    ;;                )))
 
 
     ;; Prevent desktop file from being locked on system and
