@@ -6,6 +6,7 @@
 Save and restore open buffers and frames
 #+BEGIN_SRC emacs-lisp
   (use-package desktop
+    :disabled ; More inconvient that useful right now
     :hook ((window-setup . desktop-save-mode)
            (window-setup . session-restore))
     :custom
