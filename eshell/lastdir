@@ -8,6 +8,8 @@
 ~/qmk_firmware
 ~/Documents/org-database
 ~/Documents/org-database
-~/main-emacs
 ~
 /home/krisbalintona/main-emacs/straight/repos/org
+/home/krisbalintona/testing-emacs
+~/main-emacs
+/home/krisbalintona/main-emacs/straight/repos/emacs-libvterm

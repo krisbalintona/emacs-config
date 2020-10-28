@@ -15,6 +15,6 @@
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
  (front-context-string . "* TODO Look into")
- (rear-context-string . "0-26 Mon 09:22]\n")
- (position . 3842))
+ (rear-context-string . "0-28 Wed 08:34]\n")
+ (position . 4533))
 )
