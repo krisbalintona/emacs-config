@@ -201,6 +201,22 @@ Better window configuration management
     (global-set-key (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
     )
 #+END_SRC
+* Shackle
+
+Control the behavior of popup and side windows
+#+begin_src emacs-lisp
+  (use-package shackle
+    :hook (after-init . shackle-mode)
+    :custom
+    (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)
+                     (help-mode :inhibit-window-quit t :same t)
+                     (helpful-mode :inhibit-window-quit t :same t)
+                     (process-menu-mode :inhibit-window-quit t :same t)
+                     ("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)
+                     ))
+    (shackle-select-reused-windows t)
+    )
+#+end_src
 * Window resizing
 
 Resize easier with hydra
