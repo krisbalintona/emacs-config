@@ -128,6 +128,26 @@ You know the deal
       "gr"  'magit-rebase)
     )
 #+END_SRC
+* Git-gutter-fringes
+
+Diffs in fringes
+- Taken from [[https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control][dotemacs/dotemacs.org at master · angrybacon/dotemacs · GitHub]]
+#+begin_src emacs-lisp
+  (use-package git-gutter-fringe
+    :hook (after-change-major-mode . kb/git-gutter-enable)
+    :preface
+    (defun kb/git-gutter-enable ()
+      (when-let* ((buffer (buffer-file-name))
+                  (backend (vc-backend buffer)))
+        (require 'git-gutter)
+        (require 'git-gutter-fringe)
+        (git-gutter-mode 1)))
+    :config
+    (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center t))
+    (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil 'bottom)
+    (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center t))
+    )
+#+end_src
 * Highlight-indent-guides
 
 Show indicator for indentation levels (like in VS Code)
