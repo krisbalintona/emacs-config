@@ -1,36 +1,40 @@
-#+TITLE: Eshell configuration
+#+TITLE: Shell configuration
 
 
 * Eshell itself
 
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'eshell
-    (setq eshell-kill-processes-on-exit t
-          eshell-hist-ignoredups t
-          eshell-scroll-to-bottom-on-input 'all
-          eshell-scroll-to-bottom-on-output 'all
-          eshell-input-filter (lambda (input) (not (string-match-p "\\`\\s-+" input))) ; don't record command in history if prefixed with whitespace
-          eshell-glob-case-insensitive t
-          eshell-error-if-no-glob t)
+  (use-package esh-mode
+    :straight nil
+    :hook ((eshell-mode . (lambda () ; UI enhancements
+                            (visual-line-mode +1)
+                            (set-display-table-slot standard-display-table 0 ?\ )))
+           (eshell-mode . (lambda () ; Text-wrap
+                            (set-window-fringes nil 0 0)
+                            (set-window-margins nil 1 nil)))
+  (eshell-mode . (lambda () (setq-local scroll-margin 3)))
+           )
+    :custom
+    (eshell-kill-processes-on-exit t)
+    (eshell-hist-ignoredups t)
+    (eshell-scroll-to-bottom-on-input 'all)
+    (eshell-scroll-to-bottom-on-output 'all)
+    (eshell-input-filter (lambda (input) (not (string-match-p "\\`\\s-+" input)))) ; Don't record command in history if prefixed with whitespace
+    (eshell-glob-case-insensitive t)
+    (eshell-error-if-no-glob t)
+    (eshell-banner-message "Welcome to the shell, Onii-chan~ (◠﹏◠✿)\n")
+    (eshell-hist-ignoredups t)
+    :config
+    (kb/leader-keys
+      "oE" '(eshell :which-key "Open eshell")
+      )
 
-    ;; UI Enhancements
-    (add-hook 'eshell-mode-hook
-              (defun +eshell-remove-fringes-h ()
-                (set-window-fringes nil 0 0)
-                (set-window-margins nil 1 nil)))
-
-    ;; Enable text wrapping
-    (add-hook 'eshell-mode-hook
-              (defun +eshell-enable-text-wrapping-h ()
-                (visual-line-mode +1)
-                (set-display-table-slot standard-display-table 0 ?\ )))
+    (general-define-key
+      :keymaps 'eshell-mode-map
+      :stats '(normal visual motion)
+      [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
+      )
     )
-
-  ;; (define-key eshell-mode-map (kbd "<up>") 'eshell-previous-matching-input-from-input) ; Mode map doesn't fking exist
-  ;; (define-key eshell-mode-map (kbd "<down>") 'eshell-next-matching-input-from-input)
-
-  (kb/leader-keys
-    "oE" '(eshell :which-key "Open eshell"))
 #+END_SRC
 
 Make it fancy
@@ -293,3 +297,44 @@ Zsh-esque syntax highlighting in eshell
     (eshell-syntax-highlighting-global-mode t)
     )
 #+END_SRC
+* Other terminal emulators
+** Vterm
+
+Full-fledged terminal emulator
+#+begin_src emacs-lisp
+  ;; (straight-use-package ; This doesn't work, so I have to do this manually for now
+  ;;  '(vterm :build '(("mkdir -p build")
+  ;;                   ("cd build")
+  ;;                   ("cmake ..")
+  ;;                   ("make"))
+  ;;          ))
+
+  (use-package vterm
+    :hook (vterm-mode . (lambda ()
+                          (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
+                          (buffer-face-mode t)))
+    :custom
+    (vterm-kill-buffer-on-exit nil)
+    (vterm-copy-exclude-prompt t)
+    )
+#+end_src
+** Vterm-toggle
+
+Eshell-toggle but for vterm
+#+begin_src emacs-lisp
+  (use-package vterm-toggle
+    :config
+    (kb/leader-keys
+      :keymaps 'vterm-mode-map
+      :states '(normal motion visual)
+      "vp" '(vterm-toggle-backward :which-key "Prev vterm buffer")
+      "vn" '(vterm-toggle-forward :which-key "Prev vterm buffer")
+      "vd" '(vterm-toggle-insert-cd :which-key "Cd to current buffer dir")
+      )
+
+    (kb/leader-keys
+      "ot" '(vterm-toggle :which-key "Vterm-toggle")
+      "oT" '(vterm :which-key "Vterm in current window")
+      )
+    )
+#+end_src
