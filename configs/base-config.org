@@ -1,91 +1,5 @@
 #+TITLE: Base Configuration Settings
 
-* Unaffiliated settings
-** UTF-8 everywhere!
-#+BEGIN_SRC emacs-lisp
-  (set-language-environment "UTF-8")
-  (prefer-coding-system       'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-#+END_SRC
-** Confirm when quitting Emacs
-#+BEGIN_SRC emacs-lisp
-  (setq confirm-kill-emacs 'y-or-n-p) ; Confirm before killing emacs
-#+END_SRC
-** Don't confirm when closing Emacs child processes
-
-#+BEGIN_SRC emacs-lisp
-  (custom-set-variables '(confirm-kill-processes nil))
-#+END_SRC
-** Update timestamp if exists
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'before-save-hook 'time-stamp) ; or (add-hook 'write-file-functions
-#+END_SRC
-** Don't consider case in completion
-#+BEGIN_SRC emacs-lisp
-  (setq completion-ignore-case t)
-  (custom-set-variables
-   '(read-buffer-completion-ignore-case t)
-   '(read-file-name-completion-ignore-case t))
-#+END_SRC
-** Stop making backup and lockfiles
-#+BEGIN_SRC emacs-lisp
-  (setq make-backup-files nil)
-  (setq create-lockfiles nil) ; don't create .# files (crashes 'npm start')
-#+END_SRC
-** Tab defaults
-#+BEGIN_SRC emacs-lisp
-  ;; 2 Spaces
-  (setq-default tab-width 2)
-  (setq-default evil-shift-width tab-width)
-
-  ;; Spaces instead of indentations
-  (setq-default indent-tabs-mode nil)
-#+END_SRC
-** Don’t warn when advice is added for functions
-#+BEGIN_SRC emacs-lisp
-  (setq ad-redefinition-action 'accept)
-#+END_SRC
-** Don't warm when opening large files
-#+BEGIN_SRC emacs-lisp
-  (setq large-file-warning-threshold nil)
-#+END_SRC
-** Don't auto-save
-
-#+BEGIN_SRC emacs-lisp
-  (setq auto-save-default nil) ; Prevents transitory files from being saved
-#+END_SRC
-** Stretch cursor to match character width
-
-#+BEGIN_SRC emacs-lisp
-  (setq x-stretch-cursor t) ; Stretch cursor to the glyph width
-#+END_SRC
-** Resize window combinations proportionally
-
-#+BEGIN_SRC emacs-lisp
-  (setq window-combination-resize t) ; take new window space from all
-#+END_SRC
-** Recognize camelcase
-
-#+BEGIN_SRC emacs-lisp
-  (global-subword-mode t) ; Iterate through CamelCase words
-#+END_SRC
-** Truncate string ellipsis
-
-#+BEGIN_SRC emacs-lisp
-  (setq truncate-string-ellipsis "…") ; For all elliipsis
-#+END_SRC
-** Minibuffer height
-
-#+BEGIN_SRC emacs-lisp
-  (setq max-mini-window-height 0.15)
-#+END_SRC
-** Make ESC quit everywhere
-
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-#+END_SRC
 * Faces
 *** Set default fonts
 
@@ -375,14 +289,14 @@ Leader key capabilities
         ("u" #'straight-push-all "Push all")
         ("U" #'straight-push-package "Push particular")
         ("m" #'straight-merge-all "Merge all")
-        ("M" #'straight-merge-package "Merge partiucular"))
+        ("M" #'straight-merge-package "Merge particular"))
        "Automatic and manual updates"
        (("n" #'straight-normalize-all "Normalize all")
         ("N" #'straight-normalize-package "Normalize particular")
-        ("w" #'straight-watcher-start "Start filesystem watcher")
-        ("W" #'straight-watcher-quit "Kill filesystem watcher")
+        ("w" #'straight-watcher-start "Start file system watcher")
+        ("W" #'straight-watcher-quit "Kill file system watcher")
         ("g" #'straight-get-recipe "Copy particular recipe")
-        ("e" #'straight-prune-build "Prune: delete packages not currently loaded (?)")) ; Recmmended occassionally to clean up really long cache file (straight-cache-autoloads t) over time
+        ("e" #'straight-prune-build "Prune: delete packages not currently loaded (?)")) ; Recommended occasionally to clean up really long cache file (straight-cache-autoloads t) over time
        "Suspending and restoring package versions"
        (("v" #'straight-freeze-versions "\"Freeze\" all installed packages (?)")
         ("V" #'straight-thaw-versions "\"Unfreeze\" all frozen packages (?)"))
