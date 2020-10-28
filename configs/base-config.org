@@ -349,6 +349,46 @@ Leader key capabilities
       )
     )
 #+END_SRC
+* Hydra
+
+#+begin_src emacs-lisp
+  (use-package hydra
+    :config
+    ;; Straight.el integration
+    (kb/leader-keys
+      "qp" '(hydra:straight-helper/body :which-key "Straight.el management")
+      )
+
+    (pretty-hydra-define hydra:straight-helper
+      (:hint t :foreign-keys run :quit-key "q" :exit t)
+      ("Package building"
+       (("c" #'straight-check-all "Check and build all modified")
+        ("C" #'straight-check-package "Check and build particular modified")
+        ("r" #'straight-rebuild-all "Rebuild all")
+        ("R" #'straight-rebuild-package "Rebuild particular"))
+       "Managing remote and local repos"
+       (("f" #'straight-fetch-all "Fetch all")
+        ("F" #'straight-fetch-package "Fetch particular")
+        ("p" #'straight-pull-all "Pull all")
+        ("P" #'straight-pull-package "Pull particular")
+        ("u" #'straight-push-all "Push all")
+        ("U" #'straight-push-package "Push particular")
+        ("m" #'straight-merge-all "Merge all")
+        ("M" #'straight-merge-package "Merge partiucular"))
+       "Automatic and manual updates"
+       (("n" #'straight-normalize-all "Normalize all")
+        ("N" #'straight-normalize-package "Normalize particular")
+        ("w" #'straight-watcher-start "Start filesystem watcher")
+        ("W" #'straight-watcher-quit "Kill filesystem watcher")
+        ("g" #'straight-get-recipe "Copy particular recipe")
+        ("e" #'straight-prune-build "Prune: delete packages not currently loaded (?)")) ; Recmmended occassionally to clean up really long cache file (straight-cache-autoloads t) over time
+       "Suspending and restoring package versions"
+       (("v" #'straight-freeze-versions "\"Freeze\" all installed packages (?)")
+        ("V" #'straight-thaw-versions "\"Unfreeze\" all frozen packages (?)"))
+       ("q" nil) ; Reserved for quit
+       ))
+    )
+#+end_src
 * Custom variables
 
 For org and org-agenda
