@@ -35,3 +35,8 @@ ls elpa
 rm -rf elpa
 sudo timeshift --create --comment "After class"
 dust
+sudo timeshift --create --comment "GCCEmacs?"
+dust
+main-emacs/straight/repos/org
+ls
+make

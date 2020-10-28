@@ -1,2 +1,7 @@
 ((magit-commit nil)
- (magit-push nil))
+ (magit-gitignore nil)
+ (magit-log
+  ("-n256" "--graph" "--decorate"))
+ (magit-push nil)
+ (magit-remote
+  ("-f")))
