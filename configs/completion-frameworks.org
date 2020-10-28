@@ -12,36 +12,35 @@ Point autocompletion backend
            (company-mode . company-tng-mode)
            (company-mode . evil-normalize-keymaps))
     :custom
-    (company-idle-delay 0.8) ; Trigger completion in a second
+    (company-show-numbers t) ; Number the candidates (use M-1, M-2 etc to select completions).
+    (company-tooltip-offset-display nil)
+    (company-tooltip-width-grow-only t)
+    ;; (company-idle-delay 0.8) ; Trigger completion in a second
+    (company-idle-delay 0.12) ; Trigger completion in a second
     (company-tooltip-delay 1) ; Wait a little until the tooltip shows
-    (company-minimum-prefix-length 2)
+    ;; (company-minimum-prefix-length 2)
+    (company-minimum-prefix-length 1)
+    (company-require-match 'never)
+    (company-selection-wrap-around t) ; Wrap when selecting canditates
+    (company-tooltip-flip-when-above t)
     (company-tooltip-align-annotations t)
     (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
 
-    ;; Only search the current buffer for `company-dabbrev' (a backend that
-    ;; suggests text your open buffers). This prevents Company from causing
-    ;; lag once you have a lot of buffers open.
     (company-dabbrev-other-buffers nil)
-
-    ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
-    ;; domain-specific words with particular casing.
     (company-dabbrev-ignore-case nil)
     (company-dabbrev-downcase nil)
-
-    (company-show-numbers t) ; Number the candidates (use M-1, M-2 etc to select completions).
-
     ;; ;; ;; These are the backends that Doom has active
     ;; (company-backends '(company-dabbrev company-yasnippet company-ispell))
     :config
-    (add-to-list 'company-backends 'company-capf) ; For org-roam
+    ;; (add-to-list 'company-backends 'company-capf) ; For org-roam
+    (setq company-backends '(company-capf))
+    (add-to-list 'company-frontends 'company-tng-frontend) ; Company-tng to use tab to cycle through suggestions
 
-    ;; Company-tng to use tab to cycle through suggestions
-    (add-to-list 'company-frontends 'company-tng-frontend)
-    (define-key company-active-map (kbd "RET") 'nil)
-    (define-key company-active-map [return] 'nil)
-    (define-key company-active-map (kbd "TAB") #'company-select-next)
-    (define-key company-active-map [tab] #'company-select-next)
-    (define-key company-active-map [backtab] #'company-select-previous)
+    ;; (define-key company-active-map (kbd "RET") 'nil)
+    ;; (define-key company-active-map [return] 'nil)
+    ;; (define-key company-active-map (kbd "TAB") #'company-select-next)
+    ;; (define-key company-active-map [tab] #'company-select-next)
+    ;; (define-key company-active-map [backtab] #'company-select-previous)
     )
 #+END_SRC
 
