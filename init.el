@@ -74,8 +74,8 @@
 ;; Packages
 ;; Load all config files in my config directory
 
-(require 'package-management-rcp)
-(require 'repo-configure-rcp)
+;; (require 'default-package-management-rcp) ; Use package.el
+(require 'straight-package-management-rcp) ; Use straight.el
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
