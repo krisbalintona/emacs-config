@@ -170,8 +170,7 @@ Make quoted symbols easier to distinguish from free variables by highlighting th
 Manage project directories
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
+    :bind-keymap ("C-c p" . projectile-command-map)
     :init
     (when (file-directory-p user-emacs-directory)
       (setq projectile-project-search-path `(,user-emacs-directory)))
@@ -181,13 +180,36 @@ Manage project directories
     :config
     (projectile-mode)
 
+    ;; Hydra menu
+    (pretty-hydra-define hydra:projectile
+      (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
+      ("Projectile"
+       (("i" projectile-invalidate-cache :color red)
+        ("n" projectile-add-known-project))
+       "Buffers"
+       (("b" counsel-projectile-switch-to-buffer)
+        ("K" projectile-kill-buffers)
+        ("S" projectile-save-project-buffers))
+       "Find"
+       (("d" counsel-projectile-find-dir)
+        ("D" projectile-dired)
+        ("f" counsel-projectile-find-file)
+        ("p" counsel-projectile-switch-project))
+       "Search"
+       (("r" projectile-replace)
+        ("R" projectile-replace-regexp)
+        ("s" counsel-projectile-rg))
+       ))
+
     (kb/leader-keys
-      "Pf"  'counsel-projectile-find-file
-      "Ps"  'counsel-projectile-switch-project
-      "PF"  'counsel-projectile-rg
-      "Pp"  'counsel-projectile
-      "Pc"  'projectile-compile-project
-      "Pd"  'projectile-dired)
+      "p?" '(hydra:projectile/body :which-key "Help menu")
+      "pf"  'counsel-projectile-find-file
+      "pp"  'counsel-projectile-switch-project
+      "ps"  'counsel-projectile-rg
+      "pb"  'counsel-projectile-switch-to-buffer
+      "pD"  'projectile-dired
+      ;; "pc"  'projectile-compile-project
+      )
     )
 #+END_SRC
 * Paren

@@ -201,3 +201,29 @@ Better window configuration management
     (global-set-key (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
     )
 #+END_SRC
+* Window resizing
+
+Resize easier with hydra
+#+begin_src emacs-lisp
+  (pretty-hydra-define hydra:windows
+    (:color pink :hint t :foreign-keys run :quit-key "q")
+    ("Windows"
+     (("m" toggle-frame-fullscreen :color blue))
+     "Size"
+     (("b" balance-windows :color blue)
+      ("e" enlarge-window)
+      ("s" shrink-window)
+      ("j" shrink-window-horizontally)
+      ("k" enlarge-window-horizontally))
+     "Zoom"
+     (("-" text-scale-decrease)
+      ("=" text-scale-increase)
+      ("0" default-text-scale-reset :color blue)) ; Variable not defined yet
+     "Buffers"
+     (("w" (revert-buffer nil t) :color blue))
+     ))
+
+  (kb/leader-keys
+    "hw" '(hydra:windows/body :which-key "Augment window settings")
+    )
+#+end_src

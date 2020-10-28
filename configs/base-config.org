@@ -262,7 +262,7 @@ Leader key capabilities
       )
     )
 #+END_SRC
-* Hydra
+* Pretty-hydra
 
 #+begin_src emacs-lisp
   (use-package pretty-hydra
@@ -301,6 +301,16 @@ Leader key capabilities
         ("V" #'straight-thaw-versions "\"Unfreeze\" all frozen packages (?)"))
        ("q" nil) ; Reserved for quit
        ))
+    )
+#+end_src
+* Hydra-posframe
+
+Prettify hydra frame
+#+begin_src emacs-lisp
+  (use-package hydra-posframe
+    :disabled ; Too small sometimes
+    :straight (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
+    :hook (after-init . hydra-posframe-enable)
     )
 #+end_src
 * Custom variables
