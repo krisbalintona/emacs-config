@@ -6,6 +6,7 @@
 Save and restore open buffers and frames
 #+BEGIN_SRC emacs-lisp
   (use-package desktop
+    :hook (window-setup . desktop-save-mode)
     :custom
     (desktop-save t) ; Always save when quitting Emacs or changing desktop
     (desktop-path `(,user-emacs-directory))
@@ -21,8 +22,6 @@ Save and restore open buffers and frames
     ;; (desktop-restore-reuses-frames 'keep) ; Keep current frames when restoring session
     (history-length 1000) ; This is what Doom uses
     :config
-    (desktop-save-mode)
-
     (setq desktop-buffers-not-to-save ;; Don't save these buffers
           (concat "\\("
                   "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
