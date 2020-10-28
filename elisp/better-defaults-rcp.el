@@ -17,7 +17,7 @@
               auto-save-list-file-prefix nil               ; Prevent tracking for auto-saves
 
               inhibit-startup-screen t                     ; Disable start-up screen
-              initial-scratch-message "Hi, Onii-chan~ UwU" ; Set a cringe scratch buffer message
+              initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n" ; Set a cringe scratch buffer message
 
               x-stretch-cursor t                           ; Stretch cursor to the glyph width
               cursor-in-non-selected-windows nil           ; Hide the cursor in inactive windows
@@ -26,7 +26,7 @@
               delete-by-moving-to-trash t                  ; Delete files to trash
 
               scroll-conservatively most-positive-fixnum   ; Always scroll by one line
-              scroll-margin 2                              ; Add a margin when scrolling vertically
+              scroll-margin 7                              ; Add a margin when scrolling vertically
 
               select-enable-clipboard t                    ; Merge system's and Emacs' clipboard
 
@@ -56,6 +56,7 @@
 ;;; VariableDefaults
 
 ;;; LoadCustomFile
+(setq custom-file (concat user-emacs-directory "custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
 ;;; LoadCustomFile

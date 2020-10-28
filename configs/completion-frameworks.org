@@ -342,8 +342,6 @@ Fuzzy finding in Ivy. /Incompatible with presient/ (other Doom flag)
  - Set from setting ivy-re-builders-alist to ivy--regex-fuzzy
 #+BEGIN_SRC emacs-lisp
   (use-package flx
-    :disabled
-    :defer t  ; is loaded by ivy
     :custom
     (ivy-flx-limit 10000)
     )

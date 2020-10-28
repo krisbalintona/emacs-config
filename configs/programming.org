@@ -144,9 +144,16 @@ Checking your code
     (flycheck-buffer-switch-check-intermediate-buffers t)
 
     ;; Time to show an error on point
-    (flycheck-display-errors-delay 0.25)
+    (flycheck-display-errors-delay 0.1)
+    (flycheck-indication-mode 'right-fringe)
     )
 #+END_SRC
+* Prettier
+
+Reformats code automatically for some languages
+#+begin_src emacs-lisp
+  (use-package prettier)
+#+end_src
 * Rainbow-mode
 
 Colorify your color codes
@@ -177,6 +184,8 @@ Manage project directories
     (setq projectile-switch-project-action #'projectile-dired)
     :custom
     (projectile-completion-system 'ivy)
+    (projectile-enable-caching t)
+    (projectile-track-known-projects-automatically nil) ; Don't create procjets automatically
     :config
     (projectile-mode)
 

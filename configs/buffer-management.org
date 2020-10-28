@@ -216,9 +216,9 @@ Resize easier with hydra
       ("j" shrink-window-horizontally)
       ("k" enlarge-window-horizontally))
      "Zoom"
-     (("-" text-scale-decrease)
-      ("=" text-scale-increase)
-      ("0" default-text-scale-reset :color blue)) ; Variable not defined yet
+     (("-" default-text-scale-decrease)
+      ("=" default-text-scale-increase)
+      ("0" default-text-scale-reset :color blue))
      "Buffers"
      (("w" (revert-buffer nil t) :color blue))
      ))

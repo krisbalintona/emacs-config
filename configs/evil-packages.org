@@ -62,30 +62,6 @@
     (evil-collection-init)
     )
 #+END_SRC
-* Evil-goggles
-
-Visual indicators for when you kill, yank, undo, redo, etc.
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-goggles
-    :disabled ; Doesn't add anything for me and makes editing feel slower because of the delay
-    :after (evil)
-    :custom
-    (evil-goggles-duration 0.1)
-    ;; :init
-    ;; (custom-set-faces
-    ;;  '(evil-goggles-delete-face ((t (:inherit 'shadow))))
-    ;;  '(evil-goggles-paste-face ((t (:inherit 'lazy-highlight))))
-    ;;  '(evil-goggles-yank-face ((t (:inherit 'isearch-fail)))))
-    :config
-    (evil-goggles-mode)
-
-    ;; ;; optionally use diff-mode's faces; as a result, deleted text
-    ;; ;; will be highlighed with `diff-removed` face which is typically
-    ;; ;; some red color (as defined by the color theme)
-    ;; ;; other faces such as `diff-added` will be used for other actions
-    (evil-goggles-use-diff-faces)
-    )
-#+END_SRC
 * Evil-commentary
 
 #+BEGIN_SRC emacs-lisp

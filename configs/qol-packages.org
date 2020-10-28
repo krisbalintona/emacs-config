@@ -39,21 +39,6 @@ Cool version of nav-flash
     (beacon-mode)
     )
 #+END_SRC
-* Smooth-scrolling
-
-Scroll line-by-line rather than half-screens
-#+BEGIN_SRC emacs-lisp
-  (use-package smooth-scrolling
-    :disabled ; Annoying
-    :custom
-    (smooth-scroll-margin 9)
-    :config
-    (smooth-scrolling-mode t)
-
-    (add-hook 'eshell-mode-hook (lambda () (smooth-scrolling-mode 0))) ; Turn off smooth scrolling in eshell
-    )
-#+END_SRC
-
 * Saveplace
 
 Save and restore point in files
@@ -192,20 +177,33 @@ Emacs can be prompted for the PIN of GPG private keys, we just need to set epa-p
   (setq epg-pinentry-mode 'loopback)
   ;; (pinentry-start) ; This function doesn't exist?
 #+END_SRC
-* Sublimity
+* Anzu
 
-Minimap + smooth scroll + distraction-free
+Highlight indicators during replace and regexp
 #+begin_src emacs-lisp
-  (use-package sublimity
-    :disabled
-    :init
-    (require 'sublimity-scroll)
-    ;; (require 'sublimity-map) ;; experimental
-    ;; (require 'sublimity-attractive)
+  (use-package anzu
+    :hook (after-init . global-anzu-mode)
     :custom
-    (sublimity-scroll-weight 5)
-    (sublimity-scroll-drift-length 10)
-    :config
-    (sublimity-mode)
+    (anzu-cons-mode-line-p nil)
+
+    (general-define-key [remap query-replace] 'anzu-query-replace-regexp)
     )
+#+end_src
+* Expand-region
+
+Incrementally select a region outward
+#+begin_src emacs-lisp
+  (use-package expand-region
+    :config
+    (general-define-key
+     :keymaps '(normal motion visaul)
+     "ge" 'er/expand-region)
+    )
+#+end_src
+
+* Default-text-scale
+
+Text-scale-mode but Emacs-wide
+#+begin_src emacs-lisp
+  (use-package default-text-scale)
 #+end_src

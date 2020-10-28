@@ -121,66 +121,12 @@ Sleek modeline from Doom
     (doom-modeline-unicode-fallback t)
     (doom-modeline-minor-modes nil)
     (doom-modeline-enable-word-count t)
-
-    ;; Major modes in which to display word count continuously.
-    ;; Also applies to any derived modes. Respects `doom-modeline-enable-word-count'.
-    ;; If it brings the sluggish issue, disable `doom-modeline-enable-word-count' or
-    ;; remove the modes from `doom-modeline-continuous-word-count-modes'.
     (doom-modeline-continuous-word-count-modes '(markdown-mode gfm-mode org-mode))
-
-    (doom-modeline-buffer-encoding t)
-    (doom-modeline-indent-info t)
-    (doom-modeline-checker-simple-format t)
     (doom-modeline-number-limit 99)
-    (doom-modeline-vcs-max-length 12)
-    (doom-modeline-persp-name t)
-    (doom-modeline-display-default-persp-name nil)
-    (doom-modeline-persp-icon t)
+    (doom-modeline-vcs-max-length 28)
     (doom-modeline-lsp t)
-
-    ;; Whether display the GitHub notifications. It requires `ghub' package.
-    (doom-modeline-github nil)
-    (doom-modeline-github-interval (* 30 60))
-
-    ;; Whether display the modal state icon.
-    ;; Including `evil', `overwrite', `god', `ryo' and `xah-fly-keys', etc.
-    (doom-modeline-modal-icon t)
-
-    ;; Whether display the mu4e notifications. It requires `mu4e-alert' package.
-    (doom-modeline-mu4e nil) ; This variable is flipped?
-
-    ;; Whether display the gnus notifications.
-    (doom-modeline-gnus t)
-    (doom-modeline-gnus-timer 2)
-    ;; (doom-modeline-gnus-excluded-groups '("dummy.group"))
-
-    ;; Whether display the IRC notifications. It requires `circe' or `erc' package.
-    (doom-modeline-irc t)
-    (doom-modeline-irc-stylize 'identity)
-
-    ;; Whether display the environment version.
-    (doom-modeline-env-version t)
-    ;; Or for individual languages
-    (doom-modeline-env-enable-python t)
-    (doom-modeline-env-enable-ruby t)
-    (doom-modeline-env-enable-perl t)
-    (doom-modeline-env-enable-go t)
-    (doom-modeline-env-enable-elixir t)
-    (doom-modeline-env-enable-rust t)
-
-    ;; Change the executables to use for the language version string
-    (doom-modeline-env-python-executable "python") ; or `python-shell-interpreter'
-    (doom-modeline-env-ruby-executable "ruby")
-    (doom-modeline-env-perl-executable "perl")
-    (doom-modeline-env-go-executable "go")
-    (doom-modeline-env-elixir-executable "iex")
-    (doom-modeline-env-rust-executable "rustc")
-
-    ;; What to dispaly as the version while a new one is being loaded
-    (doom-modeline-env-load-string "...")
-
     (doom-modeline-height 26)
-    (doom-modeline-bar-width 6)
+    (doom-modeline-bar-width 1)
     :config
     (if (daemonp) ; Hooks depending on daemon or not
         (progn (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
@@ -270,7 +216,7 @@ Leader key capabilities
     :config
     ;; Straight.el integration
     (kb/leader-keys
-      "qp" '(hydra:straight-helper/body :which-key "Straight.el management")
+      "hp" '(hydra:straight-helper/body :which-key "Straight.el management")
       )
 
     (pretty-hydra-define hydra:straight-helper
