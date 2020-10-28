@@ -5,7 +5,7 @@
 Zettelkasten and Evergreen notes
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
-    :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master")
+    ;; :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master") ; Incompatible with straight.el
     :after company ; Necessary for some reason
     :custom
     (org-roam-directory kb/roam-dir)

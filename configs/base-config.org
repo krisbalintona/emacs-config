@@ -146,18 +146,14 @@ Allow faces to be selectively fixed- or variable-pitch
 
 #+BEGIN_SRC emacs-lisp
   ;; (use-package doom-themes
-  ;;   :ensure t
   ;;   :config (load-theme 'doom-dracula t))
   ;; (use-package doom-themes
-  ;;   :ensure t
   ;;   :config (load-theme 'doom-palenight t))
   (use-package atom-one-dark-theme
     :config (load-theme 'atom-one-dark t))
   ;; (use-package mood-one-theme
-  ;;   :ensure t
   ;;   :config (load-theme 'mood-one t))
   ;; (use-package spacemacs-theme
-  ;;   :ensure t
   ;;   :config (load-theme 'spacemacs-dark t))
 #+END_SRC
 ** Columns and line numbers

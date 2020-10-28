@@ -74,7 +74,7 @@
           ("INACTIVE" :foreground "light slate blue" :weight normal)
           ))
 
-                                          ; Priorities
+  ;; Priorities
   ;; (setq org-priority-faces ; Faces set by org-fancy-priorities
   ;;       '((65 :foreground "#e45649")
   ;;         (66 :foreground "#da8548")
@@ -223,40 +223,41 @@
 More powerful searching and selecting of todo headlines
 #+BEGIN_SRC emacs-lisp
   (use-package org-ql
+    :straight (org-ql :type git :host github :repo "alphapapa/org-ql")
     :after org-roam ; Necessary for one or more of the functions
     :config
     (setq org-ql-views
-     `(("Current projects"
-        :buffers-files org-agenda-files
-        :query (and (parent (todo))
-                    (todo)
-                    (not (done)))
-        :super-groups ((:auto-parent t))
-        :title "Current projects"
-        :sort (deadline scheduled todo priority)
-        )
-       ("In-progress tasks not in a project"
-        :buffers-files org-agenda-files
-        :query (and (not (done))
-                    (not (parent (todo)))
-                    (not (children (todo)))
-                    (todo "PROG"))
-        :super-groups ((:discard (:file-path "roam"))
-                       (:name none
-                              :anything t))
-        :title "In-progress tasks"
-        :sort (priority deadline scheduled)
-        )
-       ("In-progress and upcoming Zettelkasten notes"
-        :buffers-files ,(org-roam--list-all-files)
-        :query (and (not (done))
-                    (todo "PROG" "NEXT"))
-        :super-groups ((:name none
-                              :anything t))
-        :title "Zettelkasten notes I'm working on"
-        :sort (todo deadline scheduled priority)
-        )
-       ))
+          `(("Current projects"
+             :buffers-files org-agenda-files
+             :query (and (parent (todo))
+                         (todo)
+                         (not (done)))
+             :super-groups ((:auto-parent t))
+             :title "Current projects"
+             :sort (deadline scheduled todo priority)
+             )
+            ("In-progress tasks not in a project"
+             :buffers-files org-agenda-files
+             :query (and (not (done))
+                         (not (parent (todo)))
+                         (not (children (todo)))
+                         (todo "PROG"))
+             :super-groups ((:discard (:file-path "roam"))
+                            (:name none
+                                   :anything t))
+             :title "In-progress tasks"
+             :sort (priority deadline scheduled)
+             )
+            ("In-progress and upcoming Zettelkasten notes"
+             :buffers-files ,(org-roam--list-all-files)
+             :query (and (not (done))
+                         (todo "PROG" "NEXT"))
+             :super-groups ((:name none
+                                   :anything t))
+             :title "Zettelkasten notes I'm working on"
+             :sort (todo deadline scheduled priority)
+             )
+            ))
     ;; (setq org-ql-view-buffer nil) ; No clue how to set this variable
 
     (kb/leader-keys
@@ -269,22 +270,23 @@ More powerful searching and selecting of todo headlines
 
 Autoload the package and start with nothing
 #+BEGIN_SRC emacs-lisp
-   (use-package org-super-agenda
-     :config
-     (org-super-agenda-mode)
+  (use-package org-super-agenda
+    :after org-agenda
+    :config
+    (org-super-agenda-mode)
 
-     ;; Remove Evil bindings on group headings
-     (define-key org-agenda-mode-map (kbd "h") nil)
-     (define-key org-super-agenda-header-map (kbd "h") nil)
-     (define-key org-agenda-mode-map (kbd "j") nil)
-     (define-key org-super-agenda-header-map (kbd "j") nil)
-     (define-key org-agenda-mode-map (kbd "k") nil)
-     (define-key org-super-agenda-header-map (kbd "k") nil)
-     (define-key org-agenda-mode-map (kbd "l") nil)
-     (define-key org-super-agenda-header-map (kbd "l") nil)
+    ;; Remove Evil bindings on group headings
+    (define-key org-agenda-mode-map (kbd "h") nil)
+    (define-key org-super-agenda-header-map (kbd "h") nil)
+    (define-key org-agenda-mode-map (kbd "j") nil)
+    (define-key org-super-agenda-header-map (kbd "j") nil)
+    (define-key org-agenda-mode-map (kbd "k") nil)
+    (define-key org-super-agenda-header-map (kbd "k") nil)
+    (define-key org-agenda-mode-map (kbd "l") nil)
+    (define-key org-super-agenda-header-map (kbd "l") nil)
 
-     (setq org-agenda-custom-commands nil) ; Start from scratch
-     )
+    (setq org-agenda-custom-commands nil) ; Start from scratch
+    )
 #+END_SRC
 ** Org-agenda-views
 

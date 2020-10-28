@@ -74,8 +74,8 @@
 ;; Packages
 ;; Load all config files in my config directory
 
-(require 'repo-configure-rcp)
 (require 'package-management-rcp)
+(require 'repo-configure-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
@@ -85,6 +85,8 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "email.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "org-agenda.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "programming.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "eshell.org"))
