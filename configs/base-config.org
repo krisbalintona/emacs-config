@@ -352,7 +352,8 @@ Leader key capabilities
 * Hydra
 
 #+begin_src emacs-lisp
-  (use-package hydra
+  (use-package pretty-hydra
+    :demand t
     :config
     ;; Straight.el integration
     (kb/leader-keys
