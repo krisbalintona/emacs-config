@@ -256,9 +256,8 @@ Leader key capabilities
       )
 
     (kb/leader-keys
-      :keymaps 'normal
+      :keymaps '(visual normal)
       "ee" '(eval-last-sexp :which-key "Eval last sexp")
-      :keymaps 'visual
       "er" '(eval-region :which-key "Eval region")
       )
     )
