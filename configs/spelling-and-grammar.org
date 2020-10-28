@@ -33,6 +33,15 @@ See definitions within Emacs
     (global-set-key (kbd "C-c D") 'define-word)
     )
 #+END_SRC
+* Google-translate
+
+Translate strings via Google Translate
+#+begin_src emacs-lisp
+  (use-package google-translate
+    :config
+    (global-set-key (kbd "C-c t") 'google-translate-smooth-translate)
+    )
+#+end_src
 * Powerthesaurus
 
 Insert or search words in thesaurus
@@ -40,10 +49,6 @@ Insert or search words in thesaurus
 #+BEGIN_SRC emacs-lisp
   (use-package powerthesaurus
     :config
-    (kb/leader-keys
-      "ll" 'powerthesaurus-lookup-word
-      "lp" 'powerthesaurus-lookup-word-at-point
-      "lb" 'powerthesaurus-lookup-word-dwim
-      )
+    (global-set-key (kbd "C-c l") 'powerthesaurus-lookup-word-dwim)
     )
 #+END_SRC
