@@ -187,8 +187,12 @@ Remapping original commands to an Ivy-esque version
            ("C-r" . 'counsel-minibuffer-history)
            )
     :custom
-    ;; Remove "^" when entering a ivy completion buffer
-    (ivy-initial-inputs-alist nil)
+    (counsel-describe-function-function #'helpful-function)
+    (counsel-describe-symbol-function #'helpful-symbol)
+    (counsel-describe-variable-function #'helpful-variable)
+    (ivy-initial-inputs-alist nil)         ; Remove "^" when entering a ivy completion buffer
+    (counsel-outline-face-style 'org)      ; Have faces match org's
+    (counsel-outline-path-separator " / ") ; More distinct outline paths
     :config
 
     (kb/leader-keys
@@ -215,9 +219,13 @@ Remapping original commands to an Ivy-esque version
 
 ** Counsel-projectile
 
+Use Ivy/Counsel with projectile
 #+BEGIN_SRC emacs-lisp
   (use-package counsel-projectile
-    :after projectile)
+    :after (counsel projectile)
+    :config
+    (counsel-projectile-mode t)
+    )
 #+END_SRC
 ** Flx
 
