@@ -10,6 +10,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;;: InitialGC
+(setq gc-cons-threshold most-positive-fixnum)
+;;: InitialGC
+
 ;;; LoadPath
 ;; Add elisp in folder to load path
 (defun update-to-load-path (folder)
@@ -31,10 +35,10 @@
 ;;; Packages
 ;; Load all config files in my config directory
 
+(require 'auto-gc-rcp)
 ;; (require 'default-package-management-rcp) ; Use package.el
 (require 'straight-package-management-rcp) ; Use straight.el
 (require 'better-defaults-rcp)
-(require 'auto-gc-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
