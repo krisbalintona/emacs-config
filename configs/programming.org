@@ -194,8 +194,8 @@ Reformats code automatically for some languages
 Colorify your color codes
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-    :config
-    (rainbow-mode) ; Enable everywhere
+    :hook ((text-mode . rainbow-mode)
+           (prog-mode . rainbow-mode))
     )
 #+END_SRC
 * Highlight-quoted
