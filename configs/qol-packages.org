@@ -209,3 +209,29 @@ Text-scale-mode but Emacs-wide
 #+begin_src emacs-lisp
   (use-package default-text-scale)
 #+end_src
+* Emacs-startup-profiler
+
+Profile my startup time without leaving Emacs
+#+begin_src emacs-lisp
+  (use-package esup
+    :commands (esup))
+#+end_src
+
+* Expain-pause-mode
+
+Profile what's causing your Emacs to slow down
+#+begin_src emacs-lisp
+  (use-package explain-pause-mode
+    :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
+    :config
+    (explain-pause-mode)
+    )
+#+end_src
+* Bug-hunter
+
+Easy way to see if there is an error in your config files
+- Not sure if this looks through literate configs?
+#+begin_src emacs-lisp
+  (use-package 'bug-hunter)
+#+end_src
+* Helm-system-packages
