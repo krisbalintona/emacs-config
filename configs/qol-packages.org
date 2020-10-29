@@ -112,10 +112,9 @@ Automatically save buffers when you do certain things
 Remove whitespace on save
 #+BEGIN_SRC emacs-lisp
   (use-package whitespace
-    :hook ((prog-mode . whitespace-mode)
-           (text-mode . whitespace-mode))
-    :custom
-    (whitespace-style '(face empty indentation::space tab trailing))
+    :hook (before-save . whitespace-cleanup)
+    ;; :custom
+    ;; (whitespace-style '(face empty indentation::space tab))
     )
 #+END_SRC
 
