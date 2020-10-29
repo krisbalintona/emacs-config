@@ -209,6 +209,16 @@ Text-scale-mode but Emacs-wide
 #+begin_src emacs-lisp
   (use-package default-text-scale)
 #+end_src
+* Goto-line-preview
+
+Preview line before you jump to it with =M-x goto-line=
+#+begin_src emacs-lisp
+  (use-package goto-line-preview
+    :config
+    (general-define-key [remap goto-line] 'goto-line-preview) ; Remap
+    )
+#+end_src
+
 * Emacs-startup-profiler
 
 Profile my startup time without leaving Emacs
