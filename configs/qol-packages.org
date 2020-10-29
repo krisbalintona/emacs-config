@@ -33,7 +33,7 @@ Cool version of nav-flash
   (use-package beacon
     :custom
     (beacon-blink-when-focused t) ; Blink when Emacs comes into focus
-    (beacon-blink-delay 0.1)
+    (beacon-blink-delay 0.04)
     (beacon-blink-duration 0.5)
     :config
     (beacon-mode)
