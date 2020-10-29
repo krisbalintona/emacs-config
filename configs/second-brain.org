@@ -74,33 +74,6 @@ Zettelkasten and Evergreen notes
       )
     )
 #+END_SRC
-
-To fix the error with match clobbering from title change
-- It seems this was fixed in a recent commit
-#+BEGIN_SRC emacs-lisp
-  ;; (defun org-roam--replace-link (old-path new-path &optional old-desc new-desc)
-  ;;   "Replace Org-roam file links with path OLD-PATH to path NEW-PATH.
-  ;;     If OLD-DESC is passed, and is not the same as the link
-  ;;     description, it is assumed that the user has modified the
-  ;;     description, and the description will not be updated. Else,
-  ;;     update with NEW-DESC."
-  ;;   (save-excursion
-  ;;     (goto-char (point-min))
-  ;;     (while (re-search-forward org-link-any-re nil t)
-  ;;       (when-let ((link (org-element-lineage (org-element-context) '(link) t)))
-  ;;         (let ((type (org-element-property :type link))
-  ;;               (path (org-element-property :path link)))
-  ;;           (when (and (string-equal (expand-file-name path) old-path)
-  ;;                      (org-in-regexp org-link-bracket-re 1))
-  ;;             (let* ((label (if (match-end 2)
-  ;;                               (match-string-no-properties 2)
-  ;;                             (org-link-unescape (match-string-no-properties 1))))
-  ;;                    (new-label (if (string-equal label old-desc)
-  ;;                                   new-desc
-  ;;                                 label)))
-  ;;               (replace-match
-  ;;                (save-match-data (org-roam-format-link new-path new-label type))))))))))
-#+END_SRC
 * Org-roam-server
 
 Interactive browser graph view
