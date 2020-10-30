@@ -73,17 +73,17 @@ Template-expansion system (doesn't include templates)
 Manage project directories
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
+    :hook (after-init . projectile-mode)
     :bind-keymap ("C-c p" . projectile-command-map)
     :init
     (when (file-directory-p user-emacs-directory)
       (setq projectile-project-search-path `(,user-emacs-directory)))
     (setq projectile-switch-project-action #'projectile-dired)
     :custom
-    (projectile-completion-system 'ivy)
+    ;; (projectile-completion-system 'ivy) ; Set to default because I use selectrum now
     (projectile-enable-caching t)
-    (projectile-track-known-projects-automatically nil) ; Don't create procjets automatically
+    (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
     :config
-    (projectile-mode)
 
     ;; Hydra menu
     (pretty-hydra-define hydra:selectrum-projectile
