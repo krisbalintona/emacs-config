@@ -116,8 +116,8 @@ Remove whitespace on save
 #+BEGIN_SRC emacs-lisp
   (use-package whitespace
     :hook (before-save . whitespace-cleanup)
-    ;; :custom
-    ;; (whitespace-style '(face empty indentation::space tab))
+    :custom
+    (whitespace-style '(face empty indentation::space tab))
     )
 #+END_SRC
 
