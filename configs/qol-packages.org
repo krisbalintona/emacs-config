@@ -249,8 +249,6 @@ Profile what's causing your Emacs to slow down
 #+begin_src emacs-lisp
   (use-package explain-pause-mode
     :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
-    :config
-    (explain-pause-mode)
     )
 #+end_src
 * Bug-hunter
