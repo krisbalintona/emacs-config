@@ -27,7 +27,7 @@
               (add-hook 'focus-out-hook 'garbage-collect))
 
             (defun gc-minibuffer-setup-hook ()
-              (setq gc-cons-threshold (* better-gc-cons-threshold 2)))
+              (setq gc-cons-threshold (* better-gc-cons-threshold 3)))
             (defun gc-minibuffer-exit-hook ()
               (garbage-collect)
               (setq gc-cons-threshold better-gc-cons-threshold))
