@@ -1,0 +1,17 @@
+tree data
+ls data
+ls data/auto-save
+ls data/auto-save-sessions
+ls data/auto-save/sessions
+ls data/auto-save/sessions/964535-PuddingMachine~
+cat data/auto-save/sessions/964535-PuddingMachine~
+ls var
+ls data | grep bookmark
+ls var | grep bookmark
+time dust
+time dust ~
+mv eshell/* data/eshell
+ls eshell
+ls eshell/data
+ls data/eshell
+rmdir eshell
