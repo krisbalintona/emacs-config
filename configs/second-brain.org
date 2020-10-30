@@ -235,6 +235,24 @@ Use ivy or helm search frontend with the bibtex-completion backend
       )
     )
 #+END_SRC
+** Org-ref
+
+Bibtex is a way to add bibliographic information (e.g. refernces/citations to
+equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
+the .bib files bibtex makes. Org-ref is a way to directly insert citations and
+references into latex and org files
+#+BEGIN_SRC emacs-lisp
+  (use-package org-ref
+    :custom
+    (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
+    (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
+    (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
+    (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
+    (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
+    (org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
+    (org-ref-notes-function 'orb-edit-notes)
+    )
+#+END_SRC
 ** Org-roam-bibtex
 
 Ivy/helm-bibtex (which integrates with bibtex-completion) integration
@@ -303,25 +321,6 @@ View pdfs and interact with them
 
     (kb/leader-keys
       "on" '(org-noter :which-key "Org-noter"))
-    )
-#+END_SRC
-** Org-ref
-
-Bibtex is a way to add bibliographic information
-(e.g. refernces/citations to equations, sources, images, etc) in
-latex. Ivy/helm-bibtex is a way to access the .bib files bibtex
-makes. Org-ref is a way to directly insert citations and references
-into latex and org files
-#+BEGIN_SRC emacs-lisp
-  (use-package org-ref
-    :custom
-    (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
-    (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
-    (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
-    (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
-    (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
-    (org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
-    (org-ref-notes-function 'orb-edit-notes)
     )
 #+END_SRC
 * Org-protocol
