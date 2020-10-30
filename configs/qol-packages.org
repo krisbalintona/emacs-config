@@ -209,6 +209,22 @@ Text-scale-mode but Emacs-wide
 #+begin_src emacs-lisp
   (use-package default-text-scale)
 #+end_src
+
+* Dimmer
+
+Dim inactive buffers
+#+begin_src emacs-lisp
+  (use-package dimmer
+    :disabled ; Not sure if I should keep
+    :hook (after-init . dimmer-mode)
+    :custom
+    (dimmer-fraction 0.27)
+    :config
+    (dimmer-configure-which-key) ; Exclude which-key buffer
+    (add-to-list 'dimmer-buffer-exclusion-regexps "^ \\*org-roam\\*$") ; Exclude org-roam-buffer
+    )
+#+end_src
+
 * Goto-line-preview
 
 Preview line before you jump to it with =M-x goto-line=
