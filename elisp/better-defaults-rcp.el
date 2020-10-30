@@ -11,43 +11,43 @@
 ;; UnnecessaryUI
 
 ;;; VariableDefaults
-(setq-default ad-redefinition-action 'accept               ; Don’t warn when advice is added for functions
-              large-file-warning-threshold nil             ; Don't warn when opening large files
-              auto-save-default nil                        ; Don't auto save, prevents transitory files from being saved
-              auto-save-list-file-prefix nil               ; Prevent tracking for auto-saves
+(setq-default ad-redefinition-action 'accept             ; Don’t warn when advice is added for functions
+              large-file-warning-threshold nil           ; Don't warn when opening large files
+              auto-save-default nil                      ; Don't auto save, prevents transitory files from being saved
+              auto-save-list-file-prefix nil             ; Prevent tracking for auto-saves
 
-              inhibit-startup-screen t                     ; Disable start-up screen
-              initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n" ; Set a cringe scratch buffer message
+              inhibit-startup-screen t                   ; Disable start-up screen
+              initial-scratch-message "                  ;; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n" ; Set a cringe scratch buffer message
 
-              x-stretch-cursor t                           ; Stretch cursor to the glyph width
-              cursor-in-non-selected-windows nil           ; Hide the cursor in inactive windows
-              mouse-yank-at-point t                        ; Yank at point rather than pointer
+              x-stretch-cursor t                         ; Stretch cursor to the glyph width
+              cursor-in-non-selected-windows nil         ; Hide the cursor in inactive windows
+              mouse-yank-at-point t                      ; Yank at point rather than pointer
 
-              delete-by-moving-to-trash t                  ; Delete files to trash
+              delete-by-moving-to-trash t                ; Delete files to trash
 
-              scroll-conservatively most-positive-fixnum   ; Always scroll by one line
-              scroll-margin 7                              ; Add a margin when scrolling vertically
+              scroll-conservatively most-positive-fixnum ; Always scroll by one line
+              scroll-margin 7                            ; Add a margin when scrolling vertically
 
-              select-enable-clipboard t                    ; Merge system's and Emacs' clipboard
+              select-enable-clipboard t                  ; Merge system's and Emacs' clipboard
 
-              sentence-end-double-space nil                ; Single space after period denotes end of sentence
+              sentence-end-double-space nil              ; Single space after period denotes end of sentence
 
-              show-help-function nil                       ; Disable help text on most UI elements
+              show-help-function nil                     ; Disable help text on most UI elements
 
-              uniquify-buffer-name-style 'forward          ; Uniquify buffer names
-              window-combination-resize t                  ; Resize windows proportionally
-              split-height-threshold nil                   ; Disable vertical window splitting
-              split-width-threshold nil                    ; Disable horizontal window splitting
-              recenter-positions '(5 top bottom)           ; Set re-centering positions
-              help-window-select t                         ; Focus new help windows when opened
-              fill-column 80                               ; Set width for automatic line breaks
+              uniquify-buffer-name-style 'forward        ; Uniquify buffer names
+              window-combination-resize t                ; Resize windows proportionally
+              split-height-threshold nil                 ; Threshiold for vertical window splitting
+              split-width-threshold 160                  ; Threshold for horizontal window splitting
+              recenter-positions '(5 top bottom)         ; Set re-centering positions
+              help-window-select t                       ; Focus new help windows when opened
+              fill-column 80                             ; Set width for automatic line breaks
 
-              truncate-string-ellipsis "…"                 ; For all elliipsis
+              truncate-string-ellipsis "…"               ; For all elliipsis
 
-              max-mini-window-height 0.15                  ; Minibuffer height
+              max-mini-window-height 0.15                ; Minibuffer height
 
-              make-backup-files nil                        ; Don't make backups
-              create-lockfiles nil                         ; Don't create lockfiles
+              make-backup-files nil                      ; Don't make backups
+              create-lockfiles nil                       ; Don't create lockfiles
 
               tab-width 4
               evil-shift-width tab-width
