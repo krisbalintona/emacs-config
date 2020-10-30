@@ -58,10 +58,11 @@ Show keybinds
     (which-key-show-early-on-C-h t) ; Show which-key immediately for C-h
     (which-key-add-column-padding 0)
     (which-key-max-display-columns nil)
+    :init
+    (which-key-setup-side-window-right) ; Show which-key on the right
     :config
     (which-key-mode)
-    (which-key-setup-side-window-right) ; Show which-key on the ritght
-   )
+    )
 #+END_SRC
 
 * All-the-icons
