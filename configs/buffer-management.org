@@ -124,6 +124,7 @@ Save and restore open buffers and frames
 Manage buffers better
 #+BEGIN_SRC emacs-lisp
   (use-package bufler
+    :disabled ; Don't really use
     :after (evil evil-collection)
     :config
     (bufler-mode)
