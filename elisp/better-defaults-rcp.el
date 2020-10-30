@@ -62,7 +62,7 @@
 ;;; LoadCustomFile
 
 ;;; ThinnerVerticalFringes
-(fringe-mode '(5 . 0))
+(fringe-mode '(5 . 5))
 ;;; ThinnerVerticalFringes
 
 ;;; ReplaceWithYorN
