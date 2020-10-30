@@ -163,19 +163,21 @@ You know the deal
     (remove-hook 'magit-section-highlight-hook #'magit-section-highlight)
 
     (kb/leader-keys
+      "g"  '(:ignore t :which-key "Magit")
       "gg"  '(magit-status :which-key "Status")
       "gs"  '(magit-status :which-key "Status")
       "gd"  'magit-diff-unstaged
       "gc"  'magit-branch-or-checkout
-      "gl"   '(:ignore t :which-key "log")
+      "gl"   '(:ignore t :which-key "Logs")
       "glc" 'magit-log-current
       "glf" 'magit-log-buffer-file
       "gb"  'magit-branch
-      "gP"  'magit-push-current
+      "gP"  '(magit-push-current :which-key "Push")
       "gp"  'magit-pull-branch
       "gf"  'magit-fetch
       "gF"  'magit-fetch-all
-      "gr"  'magit-rebase)
+      "gr"  '(magit-rebase :which-key "Rebase")
+      )
     )
 #+END_SRC
 * Git-gutter-fringes
