@@ -237,21 +237,17 @@ Preview line before you jump to it with =M-x goto-line=
     (general-define-key [remap goto-line] 'goto-line-preview) ; Remap
     )
 #+end_src
+* Ace-link
 
-* Emacs-startup-profiler
-
-Profile my startup time without leaving Emacs
+Click links easier
 #+begin_src emacs-lisp
-  (use-package esup
-    :commands (esup))
-#+end_src
+  (use-package ace-link
+    :config
 
-* Expain-pause-mode
-
-Profile what's causing your Emacs to slow down
-#+begin_src emacs-lisp
-  (use-package explain-pause-mode
-    :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
+    (general-define-key
+     :kemaps '(Info-mode helpful-mode help-mode woman-mode eww-mode compilation-mode mu4e-view-mode custom-mode-map)
+     "M-o" 'ace-link
+     )
     )
 #+end_src
 * Bug-hunter
