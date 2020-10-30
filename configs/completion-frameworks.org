@@ -130,7 +130,7 @@ Some Ivy tips, taken from [[https://github.com/daviwil/dotfiles/blob/master/Emac
 Ido but more powerful and eye-pleasing
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
-    :hook (after-init . ivy-mode)
+    ;; :hook (after-init . ivy-mode)
     :bind (:map ivy-minibuffer-map
                 ("TAB" . ivy-alt-done)
                 ("C-l" . ivy-alt-done)
@@ -179,6 +179,7 @@ Ido but more powerful and eye-pleasing
 
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
+    :disabled ; Now use selectrum-swiper
     :custom
     (swiper-goto-start-of-match t)
     :config
@@ -191,6 +192,8 @@ Ido but more powerful and eye-pleasing
 Remapping original commands to an Ivy-esque version
 #+BEGIN_SRC emacs-lisp
   (use-package counsel
+    :demand t
+    :after ivy
     :bind (("M-x" . 'counsel-M-x)
            ("C-x C-f" . 'counsel-find-file)
            ("C-x b" . 'counsel-switch-buffer)
@@ -296,7 +299,8 @@ Better Ivy-interface
 #+BEGIN_SRC emacs-lisp
   (use-package ivy-rich
     :after ivy
-    :hook (ivy-mode . ivy-rich-mode)
+    :requires ivy
+    :hook (after-init . ivy-rich-mode)
     :preface
     ;; Taken from https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#ivy
     (defun kb/ivy-rich-describe-variable-value (candidate)
