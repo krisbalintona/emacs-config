@@ -104,6 +104,15 @@ A pretty company autocomplete frontend.
   ;; adding minor mode symbols to company-dict-minor-mode-list
     )
 #+END_SRC
+* Prescient
+
+#+begin_src emacs-lisp
+  (use-package prescient
+    :after (ivy counsel swiper) ; Needs to be called after counsel so that counsel doesn't overwrite stuff
+    :config
+    (prescient-persist-mode)
+    )
+#+end_src
 * Ivy
 ** Ivy itself
 
@@ -155,6 +164,14 @@ Ido but more powerful and eye-pleasing
     (require 'counsel nil t)
     )
 #+END_SRC
+** Ivy-prescient
+
+#+begin_src emacs-lisp
+  (use-package ivy-prescient
+    :config
+    (ivy-prescient-mode)
+    )
+#+end_src
 ** Swiper
 
 #+BEGIN_SRC emacs-lisp
