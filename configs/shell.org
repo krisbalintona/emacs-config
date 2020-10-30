@@ -215,11 +215,11 @@ Truncate eshell directory path
 Uses pcomplete completion framework with completion from fish (the shell)
 #+BEGIN_SRC emacs-lisp
   (use-package fish-completion
-    :hook (eshell-mode . fish-completion-mode)
-    :config
-    (when (and (executable-find "fish")
-               (require 'fish-completion nil t))
-      (global-fish-completion-mode))
+    :hook (eshell-mode . (lambda ()
+                           (when (and (executable-find "fish")
+                                      (require 'fish-completion nil t))
+                             (fish-completion-mode))
+                           ))
     )
 #+END_SRC
 * Eshell-syntax-highlighting
