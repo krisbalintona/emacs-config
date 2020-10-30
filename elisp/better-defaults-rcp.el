@@ -64,7 +64,7 @@
 ;;; ReplaceWithYorN
 
 ;;; AviedCursorCollisions
-(mouse-avoidance-mode 'exile)                     ; Avoid collision of mouse with point
+(mouse-avoidance-mode 'proteus)                     ; Avoid collision of mouse with point
 ;;; AviedCursorCollisions
 
 ;;: DownAndUpCase
