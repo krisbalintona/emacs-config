@@ -17,7 +17,7 @@
               auto-save-list-file-prefix nil             ; Prevent tracking for auto-saves
 
               inhibit-startup-screen t                   ; Disable start-up screen
-              initial-scratch-message "                  ;; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n" ; Set a cringe scratch buffer message
+              initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n" ; Set a cringe scratch buffer message
 
               x-stretch-cursor t                         ; Stretch cursor to the glyph width
               cursor-in-non-selected-windows nil         ; Hide the cursor in inactive windows
