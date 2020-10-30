@@ -10,6 +10,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;;; NativeCompDefer
+(setq comp-deferred-compilation t) ; AoT or JiT compilation?
+;;; NativeCompDefer
+
 ;;: InitialGC
 (setq gc-cons-threshold most-positive-fixnum)
 ;;: InitialGC
