@@ -423,13 +423,13 @@ A version of all-the-icons but compatible with ivy-rich
 
 #+begin_src emacs-lisp
   (use-package selectrum
+    :after ivy
+    :hook (emacs-startup . selectrum-mode)
     :custom
     ;; Change backends
     (amx-backend 'selectrum)
     (projectile-completion-system 'default)
     (org-roam-completion-system 'default)
-    :config
-    (selectrum-mode)
     )
 #+end_src
 ** Selectrum-presient
