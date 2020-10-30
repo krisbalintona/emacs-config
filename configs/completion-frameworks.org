@@ -234,8 +234,6 @@ Remapping original commands to an Ivy-esque version
       "ms" '(bookmark-set :which-key "Set bookmark")
 
       "iy" '(counsel-yank-pop :which-key "Paste")
-
-      "eh" '(counsel-esh-history :which-key "Eshell history") ; I need to figure out how to do mode maps
       )
     )
 #+END_SRC

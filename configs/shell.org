@@ -23,17 +23,18 @@
     (eshell-glob-case-insensitive t)
     (eshell-error-if-no-glob t)
     (eshell-banner-message "Welcome to the shell, Onii-chan~ (◠﹏◠✿)\n")
-    (eshell-hist-ignoredups t)
     :config
+
     (kb/leader-keys
       "oE" '(eshell :which-key "Open eshell")
       )
 
     (general-define-key
-      :keymaps 'eshell-mode-map
-      :stats '(normal visual motion)
-      [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
-      )
+     :keymaps 'eshell-mode-map
+     [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
+     [remap eshell-previous-matching-input] 'eshell-bol ; Jump after the prompt
+     "<home>" 'eshell-bol
+     )
     )
 #+END_SRC
 
