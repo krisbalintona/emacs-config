@@ -12,7 +12,10 @@
            (eshell-mode . (lambda () ; Text-wrap
                             (set-window-fringes nil 0 0)
                             (set-window-margins nil 1 nil)))
-  (eshell-mode . (lambda () (setq-local scroll-margin 3)))
+           (eshell-mode . (lambda () (setq-local scroll-margin 3))) ; Scroll-margin
+           (eshell-mode . (lambda () ; Change default face size
+                            (face-remap-add-relative 'default :height 127) 
+                            ))
            )
     :custom
     (eshell-kill-processes-on-exit t)
@@ -248,6 +251,11 @@ Full-fledged terminal emulator
     (vterm-kill-buffer-on-exit nil)
     (vterm-copy-exclude-prompt t)
     (vterm-min-window-width 50)
+    :config
+    (add-hook 'vterm-mode-hook
+              (lambda ()
+                (face-remap-add-relative 'default :height 119) ; Change default face size
+                ))
     )
 #+end_src
 ** Vterm-toggle
