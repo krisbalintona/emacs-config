@@ -9,14 +9,10 @@ wc -l testing-emacs/*
 sudo timeshift --create --comment "While having trouble with restoring fonts from daemon"
 vanilla-emacs
 sudo timeshift --create --comment "Gonna go nap. After reading some general.el documentation"
-ls
 testing-emacs
-ls
 ls eshell
 cp ~/vanilla-emacs/eshell/alias alias
-ls
 mv alias eshell/alias
-ls
 ls eshell
 cat eshell/alias
 xinput float20
@@ -30,7 +26,6 @@ sudo timeshift --create --comment "In the morning"
 cd roam
 count --help
 testing-emacs/
-ls
 ls elpa
 rm -rf elpa
 sudo timeshift --create --comment "After class"
@@ -38,22 +33,18 @@ dust
 sudo timeshift --create --comment "GCCEmacs?"
 dust
 main-emacs/straight/repos/org
-ls
 make
-ls
 rm -r *-old
-ls
 rm -r elpa
 ~/testing-emacs
-ls
 rm -r *
-ls
 cp -r ~/main-emacs/* .
-ls
 rm -r straight
-ls
 sudo timeshift --create --comment "After complete migration to straight.el and GCCEmacs"
 systemctl restart --user emacs
 sudo timeshift --create --comment "Really stable GCCemacs"
 straight/repos/emacs-libvterm
 ls
+sudo timeshift --create --comment "A shit ton of tweaking DONE"
+stc
+sudo timeshift --create --comment "After a very large update"

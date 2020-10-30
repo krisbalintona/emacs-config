@@ -96380,6 +96380,7 @@ schoolroom
 schoolroom's
 schoolrooms
 schools
+schools
 schoolteacher
 schoolteacher's
 schoolteachers
