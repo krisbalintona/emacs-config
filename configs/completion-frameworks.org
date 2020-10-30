@@ -795,8 +795,12 @@ Unfold headlines when searching with selectrum-swiper
 
   (kb/leader-keys
     "sr" 'selectrum-rg
-    "fo" 'selectrum-imenu
-    "fi" 'selectrum-isearch-history
+    "ss" 'selectrum-swiper
+    "so" 'selectrum-imenu
+    "si" 'selectrum-isearch-history
+
+    "bb" 'switch-to-buffer
+
     "iy" 'selectrum-yank-pop
     )
 #+end_src
