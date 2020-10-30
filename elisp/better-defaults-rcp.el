@@ -55,12 +55,6 @@
               )
 ;;; VariableDefaults
 
-;;; LoadCustomFile
-(setq custom-file (concat user-emacs-directory "custom.el"))
-(when (file-exists-p custom-file)
-  (load custom-file))
-;;; LoadCustomFile
-
 ;;; ThinnerVerticalFringes
 (fringe-mode '(5 . 5))
 ;;; ThinnerVerticalFringes
