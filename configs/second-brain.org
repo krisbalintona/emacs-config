@@ -11,7 +11,7 @@ Zettelkasten and Evergreen notes
     :custom
     (org-roam-directory kb/roam-dir)
     (org-roam-verbose nil) ; Don't echo messages that aren't errors
-    (org-roam-completion-system 'ivy)
+    ;; (org-roam-completion-system 'ivy) ; I set this to default to use selectrum
     (org-roam-completion-everywhere t) ; Org-roam completion everywhere
     (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
     (org-roam-buffer-window-parameters '((no-other-window . t)
