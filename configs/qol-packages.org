@@ -8,12 +8,13 @@ Have more descriptive and helpful function and variable descriptions
     :after (evil evil-collection)
     :demand t ; Don't wait for the binded keys
     :bind
-    ;; Counsel commands are already remapped in the counsel section
-    ;; ([remap describe-function] . counsel-describe-function)
+    ;; Remap all default help commands to helpful
+    ([remap describe-function] . helpful-function)
     ([remap describe-command] . helpful-command)
-    ;; ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-variable] . helpful-variable)
     ([remap describe-key] . helpful-key)
     :custom
+    ;; Make counsel use helpful
     (counsel-describe-function-function #'helpful-callable)
     (counsel-describe-variable-function #'helpful-variable)
 
@@ -21,7 +22,8 @@ Have more descriptive and helpful function and variable descriptions
     (evil-define-key '(visual normal) 'global (kbd "K") 'helpful-at-point)
 
     (kb/leader-keys
-      "hk" '(helpful-key :which-key "Desc key"))
+      "hk" '(helpful-key :which-key "Desc key")
+      )
     )
 #+END_SRC
 
