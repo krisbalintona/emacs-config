@@ -35,7 +35,7 @@
     (general-define-key
      :keymaps 'eshell-mode-map
      [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
-     [remap eshell-previous-matching-input] 'eshell-bol ; Jump after the prompt
+     [remap eshell-previous-matching-input] 'counsel-esh-history ; Jump after the prompt
      "<home>" 'eshell-bol
      )
     )
