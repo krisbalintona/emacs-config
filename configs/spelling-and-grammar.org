@@ -39,7 +39,7 @@ Translate strings via Google Translate
 #+begin_src emacs-lisp
   (use-package google-translate
     :config
-    (global-set-key (kbd "C-c t") 'google-translate-smooth-translate)
+    (general-define-key "C-c t" '(google-translate-smooth-translate :which-key "Google translate"))
     )
 #+end_src
 * Powerthesaurus
@@ -52,3 +52,36 @@ Insert or search words in thesaurus
     (global-set-key (kbd "C-c l") 'powerthesaurus-lookup-word-dwim)
     )
 #+END_SRC
+* Langtool
+
+#+begin_src emacs-lisp
+  (use-package langtool
+    :custom
+    (langtool-default-language "en-US")
+    (langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*")
+    (langtool-autoshow-message-function 'langtool-autoshow-detail-popup)
+    :preface
+    (defun langtool-autoshow-detail-popup (overlays)
+      (when (require 'popup nil t)
+        ;; Do not interrupt current popup
+        (unless (or popup-instances
+                    ;; suppress popup after type `C-g` .
+                    (memq last-command '(keyboard-quit)))
+          (let ((msg (langtool-details-error-message overlays)))
+            (popup-tip msg)))))
+    :config
+
+    (pretty-hydra-define hydra:langtool
+      (:color green :hint t :foreign-keys run :quit-key "q" :exit t)
+      ("Correct grammar"
+       (("b" 'langtool-check-buffer "Check")
+        ("c" 'langtool-correct-buffer "Correct")
+        ("d" 'langtool-check-done "Done")
+        )
+       ))
+
+    (general-define-key
+     "C-c L" 'hydra:langtool/body
+     )
+    )
+#+end_src
