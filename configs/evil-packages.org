@@ -86,6 +86,11 @@
 
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys)
+
+    (general-define-key
+     :keymaps 'org-mode-map
+     [remap evil-first-non-blank] 'evil-org-beginning-of-line ; To respect visual-line-mode
+     )
     )
 #+END_SRC
 * Evil-surround
