@@ -256,5 +256,25 @@ Easy way to see if there is an error in your config files
 - Not sure if this looks through literate configs?
 #+begin_src emacs-lisp
   (use-package 'bug-hunter)
+* Keyfreq
+
+See a heatmap of your keypresses
+#+begin_quote
+Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= to get the original rendered HTML page. Use =keyfreq-html-v2= to get the keyboard heat map.
+#+end_quote
+#+begin_src emacs-lisp
+  (use-package keyfreq
+    :straight (keyfreq :type git :host github :repo "KirmTwinty/keyfreq")
+    :hook ((after-init . keyfreq-mode)
+           (after-init. keyfreq-autosave-mode t))
+    :custom
+    (keyfreq-folder (concat no-littering-var-directory "keyfreq"))
+    (keyfreq-excluded-commands '(self-insert-command ; Commands not to be logged
+                                 ;; forward-char
+                                 ;; backward-char
+                                 ;; previous-line
+                                 ;; next-line
+                                 ))
+    )
 #+end_src
 * Helm-system-packages
