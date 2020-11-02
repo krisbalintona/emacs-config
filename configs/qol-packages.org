@@ -250,12 +250,6 @@ Click links easier
      )
     )
 #+end_src
-* Bug-hunter
-
-Easy way to see if there is an error in your config files
-- Not sure if this looks through literate configs?
-#+begin_src emacs-lisp
-  (use-package 'bug-hunter)
 * Keyfreq
 
 See a heatmap of your keypresses
