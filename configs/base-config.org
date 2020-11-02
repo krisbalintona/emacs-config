@@ -3,19 +3,28 @@
 * Faces
 *** Set default fonts
 
+*Potential Fonts:*
+/Default:/
++ RobotoMono Nerd Font
++ Iosevka Fixed Slab
++ Iosevka Term SS04
+/Fixed-Pitch:/
++ FiraCode Nerd Font
++ Hack Nerd Font Mono
+/Variable-Pitch:/
++ Noto Sans
++ IBM Plex Sans KR
 #+BEGIN_SRC emacs-lisp
-  (setq kb/default-font "RobotoMono Nerd Font")
-
-  (add-to-list 'default-frame-alist `(font . ,kb/default-font))
-  ;; (add-to-list 'default-frame-alist '(font . "Iosevka Fixed Slab"))
+  (setq kb/default-font "Iosevka Term SS04")
 
   (defun kb/default-fonts-setup ()
     "Set Emacs-wide fonts"
 
-    ;; (set-face-attribute 'default nil :font "Iosevka Fixed Slab" :height 135)
+    (add-to-list 'default-frame-alist `(font . ,kb/default-font))
+
     (set-face-attribute 'default nil :font kb/default-font :height 135)
-    (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :height 140)
-    (set-face-attribute 'variable-pitch nil :font "Noto Sans" :height 148)
+    (set-face-attribute 'fixed-pitch nil :font "Hack Nerd Font Mono" :height 140)
+    (set-face-attribute 'variable-pitch nil :font "IBM Plex Sans KR" :height 148)
 
     (set-fontset-font ; Emoji support
      t
@@ -33,11 +42,8 @@
     )
 
   (if (daemonp) ; Set fonts based on if daemon or not
-      (progn (add-hook 'server-after-make-frame-hook 'kb/default-fonts-setup)
-             (add-hook 'window-setup-hook 'kb/default-fonts-setup)
-             (add-hook 'server-after-make-frame-hook 'org-mode-restart)) ; Make sure fonts are properly loaded in org files
+      (add-hook 'server-after-make-frame-hook 'kb/default-fonts-setup)
     (add-hook 'window-setup-hook 'kb/default-fonts-setup))
-  ;; Regular fonts
 #+END_SRC
 *** Mixed-pitch
 
