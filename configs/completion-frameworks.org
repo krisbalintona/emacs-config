@@ -781,6 +781,65 @@ Unfold headlines when searching with selectrum-swiper
        (mapconcat 'isearch-text-char-description x ""))
       (selectrum-isearch--switch-direction-on-fail)))
 #+end_src
+** Embark
+
+Allow an equivalent to =ivy-actions= to regular =comlete-read= minibuffers
+#+begin_src emacs-lisp
+  (use-package embark
+    :straight (embark :type git :host github :repo "oantolin/embark")
+    :config
+  
+    (general-define-key
+     :kemaps 'minibuffer-local-map
+     "M-o" '(embark-act :which-key "Embark-act")
+     ;; "?" '(embark-act-noexit :which-key "Embark-act-noexit")
+     ;; "?" '(embark-export :which-key "Embark-export")
+     )
+    )
+#+end_src
+
+For Selectrum
+#+begin_src emacs-lisp
+  (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
+  (add-hook 'embark-candidate-collectors
+            (defun embark-selectrum-candidates+ ()
+              (when selectrum-active-p
+                (selectrum-get-current-candidates
+                 ;; Pass relative file names for dired.
+                 minibuffer-completing-file-name))))
+  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
+  (add-hook 'embark-input-getters
+            (defun embark-selectrum-input-getter+ ()
+              (when selectrum-active-p
+                (let ((input (selectrum-get-current-input)))
+                  (if minibuffer-completing-file-name
+                      ;; Only get the input used for matching.
+                      (file-name-nondirectory input)
+                    input)))))
+
+  ;; The following is not selectrum specific but included here for convenience.
+  ;; If you don't want to use which-key as a key prompter skip the following code.
+
+  (setq which-key-show-transient-maps t) ; Necessary so show embark keybinds with which-key
+  (setq embark-action-indicator
+        (defun embark-which-key-setup+ ()
+          (let ((help-char nil)
+                (which-key-show-transient-maps t)
+                (which-key-replacement-alist
+                 (cons '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
+                       which-key-replacement-alist)))
+            (setq-local which-key-show-prefix nil)
+            (setq-local which-key-persistent-popup t)
+            (which-key--update)))
+        embark-become-indicator embark-action-indicator)
+
+  (add-hook 'embark-pre-action-hook
+            (defun embark-which-key-tear-down+ ()
+              (kill-local-variable 'which-key-persistent-popup)
+              (kill-local-variable 'which-key-show-prefix)
+              (unless which-key-persistent-popup
+                (which-key--hide-popup-ignore-command))))
+#+end_src
 ** Keybinds
 
 #+begin_src emacs-lisp
