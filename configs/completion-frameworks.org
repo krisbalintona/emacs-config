@@ -41,21 +41,19 @@ Point autocompletion backend
      :keymaps 'company-active-map
      "RET" 'nil
      [return] 'nil
-     "TAB" #'company-complete
-     [tab] #'company-complete
+     "TAB" #'company-complete-selection
+     [tab] #'company-complete-selection
      )
     )
 #+END_SRC
 
 ** Company-box
 
-A pretty company autocomplete frontend.
-- Requires =all-the-icons-install-fonts= to be run in order to show customized icons
+A pretty company autocomplete frontend that also displays candidate documentation
 #+BEGIN_SRC emacs-lisp
   (use-package company-box
-    :after company
-    :defer nil
-    :hook (company-mode . company-box-mode)
+    :after (company all-the-icons)
+    :hook (global-company-mode . company-box-mode) ; Has to be the same hook hook that starts company mode otherwise company-box-mode won't load properly on company-mode's invocation
     :custom
     (company-box-show-single-candidate 'always)
     (company-box-backends-colors nil)
