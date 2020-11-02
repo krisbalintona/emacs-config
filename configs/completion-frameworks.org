@@ -10,7 +10,7 @@ Point autocompletion backend
     :hook ((after-init . (lambda () ; Adds to appropriate hook depending on if called from emacsclient
                            (if (daemonp)
                                (add-hook 'server-after-make-frame-hook 'global-company-mode)
-                             (add-hook 'after-init-hook 'global-company-mode))
+                             (add-hook 'window-setup-hook 'global-company-mode))
                            ))
            (company-mode . company-tng-mode)
            (company-mode . evil-normalize-keymaps))
@@ -30,10 +30,11 @@ Point autocompletion backend
     (company-dabbrev-other-buffers nil)
     (company-dabbrev-ignore-case nil)
     (company-dabbrev-downcase nil)
-    ;; ;; These are the backends that Doom has active
+  
+    ;; These are the backends that Doom has active
     (company-backends '(company-dabbrev company-yasnippet company-ispell))
     :config
-  
+
     (add-to-list 'company-backends 'company-capf) ; For org-roam
     (add-to-list 'company-frontends 'company-tng-frontend) ; Company-tng to use tab to cycle through suggestions
 
