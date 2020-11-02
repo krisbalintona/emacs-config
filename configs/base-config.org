@@ -223,7 +223,8 @@ Leader key capabilities
     (pretty-hydra-define hydra:straight-helper
       (:hint t :foreign-keys run :quit-key "q" :exit t)
       ("Package building"
-       (("c" #'straight-check-all "Check and build all modified")
+       (("t" #'straight-use-package "Temporarily install package")
+        ("c" #'straight-check-all "Check and build all modified")
         ("C" #'straight-check-package "Check and build particular modified")
         ("r" #'straight-rebuild-all "Rebuild all")
         ("R" #'straight-rebuild-package "Rebuild particular"))
