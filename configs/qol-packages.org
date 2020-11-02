@@ -55,6 +55,7 @@ Save and restore point in files
 Show keybinds
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
+    :hook (after-init . which-key-mode)
     :custom
     (which-key-idle-delay 0.85)
     (which-key-show-early-on-C-h t) ; Show which-key immediately for C-h
@@ -63,7 +64,9 @@ Show keybinds
     :init
     (which-key-setup-side-window-right) ; Show which-key on the right
     :config
-    (which-key-mode)
+    ;; Don't display C-u, digit, and other numeric keybad bindings
+    (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore) 
+          which-key-replacement-alist)
     )
 #+END_SRC
 
