@@ -822,8 +822,6 @@ Unfold headlines when searching with selectrum-swiper
 
 #+begin_src emacs-lisp
   (general-define-key
-   "C-s" 'selectrum-swiper
-
    "C-h f" 'describe-function
    "C-h v" 'describe-variable
    )
