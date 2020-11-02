@@ -213,8 +213,8 @@
    )
 
   (general-define-key
-   :keymap 'org-agenda-mode-map
-   "s" 'kb/org-refile-to-reverse-datetree-archive ; Archiving tasks with org-reverse-datetree
+   :keymaps 'org-agenda-mode-map
+   [remap org-agenda-archive] 'kb/org-refile-to-reverse-datetree-archive ; Archiving tasks with org-reverse-datetree
    "r" 'kb/org-agenda-process-inbox-item ; Process task
    )
 
