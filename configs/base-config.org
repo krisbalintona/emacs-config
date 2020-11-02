@@ -495,6 +495,20 @@ Enable logging of recent files
     (recentf-max-menu-items 15)
     )
 #+end_src
+** Golden-ratio
+
+Auto-size window so current is largest
+#+begin_src emacs-lisp
+  (use-package golden-ratio
+    :disabled ; Not good in all cases
+    :after (evil evil-collection) ; Relies on evil-window commands
+    :hook (after-init . golden-ratio-mode)
+    :custom
+    (golden-ratio-extra-commands ; Commands which trigger changing of window ratio
+     '(evil-window-next evil-window-right evil-window-left evil-window-down evil-window-up))
+    (golden-ratio-exclude-buffer-names '("*org-roam*")) ; still buggy
+    )
+#+end_src
 ** Savehist
 
 Make history of certain things (e.g. minibuffer,) persistent across sessions
