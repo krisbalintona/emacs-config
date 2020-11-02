@@ -250,6 +250,17 @@ Click links easier
      )
     )
 #+end_src
+* Ace-jump
+
+Quickly jump to characters
+#+begin_src emacs-lisp
+  (use-package ace-jump-mode
+    :config
+    (kb/leader-keys
+      "sa" '(ace-jump-mode :which-key "Ace-jump")
+      )
+    )
+#+end_src
 * Keyfreq
 
 See a heatmap of your keypresses
