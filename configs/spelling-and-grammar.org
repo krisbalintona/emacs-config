@@ -52,6 +52,13 @@ Insert or search words in thesaurus
     (global-set-key (kbd "C-c l") 'powerthesaurus-lookup-word-dwim)
     )
 #+END_SRC
+* Writegood-mode
+
+#+begin_src emacs-lisp
+  (use-package writegood-mode
+    :hook (text-mode . writegood-mode)
+    )
+#+end_src
 * Langtool
 
 #+begin_src emacs-lisp
