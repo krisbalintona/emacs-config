@@ -210,6 +210,10 @@
   (general-define-key ; Eyebrowse keybindings overwrite this so I reset it
    :keymaps 'org-capture-mode-map
    "C-c C-w" 'org-capture-refile
+   )
+
+  (general-define-key
+   :keymap 'org-agenda-mode-map
    "s" 'kb/org-refile-to-reverse-datetree-archive ; Archiving tasks with org-reverse-datetree
    "r" 'kb/org-agenda-process-inbox-item ; Process task
    )
