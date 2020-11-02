@@ -213,7 +213,7 @@ Control the behavior of popup and side windows
                      (helpful-mode :inhibit-window-quit t :same t)
                      (help-mode :inhibit-window-quit t :same t)
                      (process-menu-mode :inhibit-window-quit t :same t)
-                     ;; ("\\*Org-roam-doctor Help\\*" :regexp t :align t)
+                     ;; ("\\*org-roam-doctor Help\\*" :regexp t :align t)
                      ("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)
                      ))
     (shackle-select-reused-windows t)
