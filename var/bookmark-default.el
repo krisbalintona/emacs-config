@@ -13,8 +13,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/Oct302020-065314.org")
- (front-context-string . "#+TITLE: unexpec")
- (rear-context-string)
- (position . 1))
+ (filename . "~/Documents/org-database/agenda/inbox.org")
+ (front-context-string . "* TODO Make plan")
+ (rear-context-string . "1-01 Sun 18:03]\n")
+ (position . 1247))
 )

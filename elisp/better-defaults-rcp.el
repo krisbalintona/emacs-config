@@ -52,6 +52,8 @@
               tab-width 4
               evil-shift-width tab-width
               indent-tabs-mode nil
+
+              visible-bell nil
               )
 ;;; VariableDefaults
 
