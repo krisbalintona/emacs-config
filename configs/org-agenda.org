@@ -208,15 +208,18 @@
     )
 
   (general-define-key ; Eyebrowse keybindings overwrite this so I reset it
-    :keymaps 'org-capture-mode-map
-    "C-c C-w" 'org-capture-refile
-    )
+   :keymaps 'org-capture-mode-map
+   "C-c C-w" 'org-capture-refile
+   "s" 'kb/org-refile-to-reverse-datetree-archive ; Archiving tasks with org-reverse-datetree
+   "r" 'kb/org-agenda-process-inbox-item ; Process task
+   )
 
-  (define-key org-agenda-mode-map (kbd "s") #'kb/org-refile-to-reverse-datetree-archive) ; Archiving tasks with org-reverse-datetree
-  (define-key org-agenda-mode-map (kbd "r") #'kb/org-agenda-process-inbox-item) ; Archiving tasks with org-reverse-datetree
-
-  ;; (evil-define-key 'motion 'org-agenda-mode-map (kbd "q") #'org-agenda-exit) ; Bury org-agenda and close all related buffers
-  ;; (evil-define-key 'motion 'org-agenda-mode-map (kbd "z q") #'org-agenda-quit) ; Bury org-agenda buffer only. Note that org-agenda-quit is distinct from org-agenda-Quit
+  (add-hook 'org-agenda-mode-hook ; Don't rebuild agenda buffer after "g"
+            (lambda ()
+              (general-define-key
+               :keymaps 'local
+               "g" nil)
+              ))
 #+END_SRC
 * Org-ql
 
