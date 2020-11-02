@@ -258,6 +258,10 @@ Click links easier
 Quickly jump to characters
 #+begin_src emacs-lisp
   (use-package ace-jump-mode
+    :custom
+    (ace-jump-mode-gray-background nil) ; Don't make text's background gray
+    (ace-jump-mode-scope 'visible) ; Everything visible
+    (ace-jump-mode-case-fold t) ; Ignore case
     :config
     (kb/leader-keys
       "sa" '(ace-jump-mode :which-key "Ace-jump")
