@@ -819,8 +819,7 @@ Unfold headlines when searching with selectrum-swiper
 
     (helm-autoresize-mode t)
     :config
-    (general-unbind "C-x c")
-    (general-define-key "C-c h" 'helm-command-prefix)
+    (general-unbind "C-x c") ; Unbind original helm-prefix
 
     (general-define-key
      :keymaps 'helm-map
@@ -829,11 +828,10 @@ Unfold headlines when searching with selectrum-swiper
 
     (kb/leader-keys
       "oh" '(helm-command-prefix :which-key "Helm prefix")
+      "oha" '(helm-apropos :which-key "Helm-apropos")
 
       "bb" 'helm-mini
       "ff" 'helm-find-files
-
-      "ha" '(helm-apropos :which-key "Helm-apropos")
       )
     )
 #+end_src
