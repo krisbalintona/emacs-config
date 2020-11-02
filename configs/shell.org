@@ -96,7 +96,7 @@ Entirely taken from [[http://www.modernemacs.com/post/custom-eshell/][Making esh
   (esh-section esh-dir
                " \xf07c "  ;  (faicon folder)
                (abbreviate-file-name (eshell/pwd))
-               '(:foreground "gold" :weight 'bold))
+               '(:foreground "gold" :weight bold))
 
   (esh-section esh-git
                "ᛦ"  ;  (git icon)

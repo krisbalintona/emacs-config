@@ -69,7 +69,7 @@
           ("PROG" :foreground "turquoise" :underline t)
           ("DONE" :foreground "chartreuse" :weight normal)
           ("HOLD" :foreground "LightGoldenrod1" :weight normal :underline t)
-          ("SOMEDAY" :foreground aquamarine :weight normal)
+          ("SOMEDAY" :foreground "aquamarine" :weight normal)
           ("CANCELLED" :foreground "deep pink" :weight normal)
           ("INACTIVE" :foreground "light slate blue" :weight normal)
           ))
