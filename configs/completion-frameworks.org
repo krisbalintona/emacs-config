@@ -458,8 +458,8 @@ A version of all-the-icons but compatible with ivy-rich
     )
 #+END_SRC
 
-* Trying out selectrum
-** Selectrum
+* Selctrum
+** Selectrum itself  
 
 #+begin_src emacs-lisp
   (use-package selectrum
