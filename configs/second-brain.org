@@ -321,7 +321,7 @@ View pdfs and interact with them
     (add-hook 'org-noter-doc-mode-hook ; Add keykinds only for org-noter pdf (doc)
               (lambda ()
                 (general-define-key
-                 :keymaps '(local override)
+                 :keymaps 'local
                  "M-o" 'org-noter-insert-note)
                 ))
 
