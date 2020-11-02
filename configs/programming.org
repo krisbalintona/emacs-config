@@ -133,7 +133,7 @@ Give faces to elisp symbols
 Give function calls a special face (default is underline)
 #+begin_src emacs-lisp
   (use-package highlight-function-calls
-    :hook (emacs-lisp-mode . (lambda () (highlight-function-calls-mode t)))
+    :hook (after-init . highlight-function-calls-mode)
     )
 #+end_src
 * Magit
