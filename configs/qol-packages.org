@@ -271,10 +271,11 @@ Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= 
   (use-package keyfreq
     :straight (keyfreq :type git :host github :repo "KirmTwinty/keyfreq")
     :hook ((after-init . keyfreq-mode)
-           (after-init. keyfreq-autosave-mode t))
+           (after-init . keyfreq-autosave-mode))
     :custom
     (keyfreq-folder (concat no-littering-var-directory "keyfreq"))
-    (keyfreq-excluded-commands '(self-insert-command ; Commands not to be logged
+    ;; Commands not to be logged
+    (keyfreq-excluded-commands '(self-insert-command 
                                  ;; forward-char
                                  ;; backward-char
                                  ;; previous-line
