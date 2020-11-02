@@ -15,18 +15,16 @@ Point autocompletion backend
            (company-mode . company-tng-mode)
            (company-mode . evil-normalize-keymaps))
     :custom
-    (company-show-numbers t) ; Number the candidates (use M-1, M-2 etc to select completions).
+    (company-show-numbers t) ; Number the candidates 
     (company-tooltip-offset-display nil)
     (company-tooltip-width-grow-only t)
-    ;; (company-idle-delay 0.8) ; Trigger completion in a second
-    (company-idle-delay 0.12) ; Trigger completion in a second
-    (company-tooltip-delay 1) ; Wait a little until the tooltip shows
+    (company-tooltip-flip-when-above t)
+    (company-tooltip-align-annotations t)
+    (company-idle-delay 0.35)
     ;; (company-minimum-prefix-length 2)
     (company-minimum-prefix-length 1)
     (company-require-match 'never)
     (company-selection-wrap-around t) ; Wrap when selecting canditates
-    (company-tooltip-flip-when-above t)
-    (company-tooltip-align-annotations t)
     (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
 
     (company-dabbrev-other-buffers nil)
