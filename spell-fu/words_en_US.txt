@@ -951,6 +951,7 @@ actinium
 actinium's
 action
 action's
+actionability
 actionable
 actions
 activate
@@ -15548,6 +15549,7 @@ Camilla
 Camilla's
 Camille
 Camille's
+caminhaLetterPeroVaz
 camisole
 camisole's
 camisoles
@@ -24225,6 +24227,7 @@ corridor's
 corridors
 corrie
 corries
+Corrin
 Corrine
 Corrine's
 corroborate
@@ -49177,6 +49180,7 @@ Hasidim
 Hasidim's
 Haskell
 Haskell's
+Haskins
 hasn't
 hasp
 hasp's
@@ -59041,6 +59045,7 @@ Kalmyk
 Kalmyk's
 Kama
 Kama's
+Kamala
 Kamchatka
 Kamchatka's
 Kamehameha
@@ -102368,6 +102373,7 @@ somerset's
 somersets
 somersetted
 somersetting
+Somerville
 something
 something's
 somethings
@@ -102887,6 +102893,7 @@ Spahn's
 Spain
 Spain's
 spake
+Spalter
 Spam
 spam
 Spam's

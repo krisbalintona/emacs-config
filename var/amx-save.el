@@ -1,18 +1,18 @@
 
 ;; ----- amx-history -----
 (
- company-tng-mode
- company-tng-configure-default
- lisp-extra-font-lock-mode
+ hide-mode-line-mode
+ org-mode-restart
  customize-group
+ company-box-mode
  global-company-mode
- find-file
- downcase-word
+ counsel-buffer-or-recentf
+ whitespace-cleanup
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 6)
+ (customize-group . 8)
  (pdf-tools-install . 1)
  (load-file . 2)
  (counsel-load-library . 2)
@@ -34,9 +34,9 @@
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
  (company-diag . 3)
- (global-company-mode . 12)
+ (global-company-mode . 22)
  (counsel-describe-face . 1)
- (company-box-mode . 5)
+ (company-box-mode . 29)
  (smartparens-mode . 4)
  (show-smartparens-mode . 3)
  (all-the-icons-install-fonts . 1)
@@ -49,9 +49,9 @@
  (helm-mini . 2)
  (helm-browse-project . 3)
  (helm-projects-find-files . 2)
- (org-mode-restart . 1)
+ (org-mode-restart . 3)
  (helm-minibuffer-history . 1)
- (helm-find-files . 2)
+ (helm-find-files . 3)
  (find-file . 2)
  (golden-ratio-mode . 6)
  (windmove-right . 1)
@@ -59,7 +59,29 @@
  (read-only-mode . 1)
  (describe-keymap . 1)
  (downcase-word . 1)
- (org-noter-kill-session . 1)
+ (org-noter-kill-session . 3)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
+ (global-auto-revert-mode . 2)
+ (git-gutter-mode . 2)
+ (global-git-gutter-mode . 1)
+ (highlight-function-calls-mode . 1)
+ (helm-M-x . 1)
+ (helm-occur . 1)
+ (helm-apropos . 1)
+ (counsel-apropos . 2)
+ (helm-imenu . 1)
+ (helm-swoop . 5)
+ (helm-multi-files . 1)
+ (helm-multi-swoop . 1)
+ (helm-swoop-from-isearch . 1)
+ (evil-motion-state . 1)
+ (evil-first-non-blank . 1)
+ (ace-jump-mode . 2)
+ (ace-jump-move . 1)
+ (evil-ace-jump-char-mode . 1)
+ (ace-jump-line-mode . 2)
+ (whitespace-cleanup . 1)
+ (counsel-buffer-or-recentf . 1)
+ (hide-mode-line-mode . 2)
 )
