@@ -302,8 +302,6 @@ View pdfs and interact with them
     (pdf-view-use-scaling t)
     (pdf-view-use-imagemagick nil)
     :config
-    ;; (evil-define-key 'normal 'pdf-view-mode-map (kbd "q") #'kill-current-buffer)
-    (define-key pdf-view-mode-map (kbd "q") #'kill-current-buffer)
     )
 #+END_SRC
 ** Org-noter
@@ -318,11 +316,18 @@ View pdfs and interact with them
     (org-noter-always-create-frame nil) ; Don't open frame
     (org-noter-hide-other nil) ; Show notes that aren't synced with (you're on)
     (org-noter-auto-save-last-location t) ; Go to last location
+    (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
     :config
-    (define-key org-noter-doc-mode-map (kbd "M-o") 'org-noter-insert-note)
+    (add-hook 'org-noter-doc-mode-hook ; Add keykinds only for org-noter pdf (doc)
+              (lambda ()
+                (general-define-key
+                 :keymaps '(local override)
+                 "M-o" 'org-noter-insert-note)
+                ))
 
     (kb/leader-keys
-      "on" '(org-noter :which-key "Org-noter"))
+      "on" '(org-noter :which-key "Org-noter")
+      )
     )
 #+END_SRC
 * Org-protocol
