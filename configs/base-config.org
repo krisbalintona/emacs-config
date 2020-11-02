@@ -170,11 +170,11 @@ Leader key capabilities
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :config
-    (general-evil-setup t)
+    (general-evil-setup)
     (general-auto-unbind-keys)
 
     (general-create-definer kb/leader-keys
-      :keymaps '(normal insert visual emacs eshell helpful)
+      :keymaps '(normal insert visual emacs)
       :prefix "SPC"
       :global-prefix "M-SPC")
 
