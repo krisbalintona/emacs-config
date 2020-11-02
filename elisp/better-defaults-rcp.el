@@ -66,12 +66,12 @@
 ;;; ReplaceWithYorN
 
 ;;; AviedCursorCollisions
-(mouse-avoidance-mode 'proteus)                     ; Avoid collision of mouse with point
+(mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 ;;; AviedCursorCollisions
 
 ;;: DownAndUpCase
-(put 'downcase-region 'disabled nil)              ; Enable downcase-region
-(put 'upcase-region 'disabled nil)                ; Enable upcase-region
+(put 'downcase-region 'disabled nil) ; Enable downcase-region
+(put 'upcase-region 'disabled nil)   ; Enable upcase-region
 ;;: DownAndUpCase
 
 ;;; ConfirmQuit
