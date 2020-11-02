@@ -925,3 +925,15 @@ Feature-rich version of Ivy completion
       )
     )
 #+end_src
+** Helm-projectile
+
+Projectile with Helm
+#+begin_src emacs-lisp
+  (use-package helm-projectile
+    :after (helm projectile)
+    ;; :hook (projectile-mode . helm-projectile-on)
+    :custom
+    (projectile-completion-system 'helm)
+    (projectile-switch-project-action 'helm-projectile)
+    )
+#+end_src
