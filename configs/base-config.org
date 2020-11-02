@@ -508,6 +508,13 @@ Auto-size window so current is largest
     (golden-ratio-extra-commands ; Commands which trigger changing of window ratio
      '(evil-window-next evil-window-right evil-window-left evil-window-down evil-window-up))
     (golden-ratio-exclude-buffer-names '("*org-roam*")) ; still buggy
+    :preface
+    (defun pl/helm-alive-p ()
+      "Detect if helm buffer is active. Taken from https://emacs.readthedocs.io/en/latest/completion_and_selection.html"
+      (if (boundp 'helm-alive-p)
+          (symbol-value 'helm-alive-p)))
+    :config
+    (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
     )
 #+end_src
 ** Savehist
