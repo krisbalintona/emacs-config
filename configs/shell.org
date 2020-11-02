@@ -166,7 +166,9 @@ Toggle eshell window in bottom of current buffer
 Autopairing parentheses
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
-    :hook (eshell-mode . smartparens-mode)
+    :hook ((eshell-mode . smartparens-mode)
+           (text-mode . smartparens-mode)
+           (smartparens-mode . show-smartparens-mode)) ; Subtlely highlight matching parentheses
     )
 #+END_SRC
 * Eshell-up
