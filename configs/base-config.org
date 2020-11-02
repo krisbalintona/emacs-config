@@ -482,3 +482,12 @@ Keybinds
     "ma" 'org-mark-ring-push
     )
 #+end_src
+** Savehist
+
+Make history of certain things (e.g. minibuffer,) persistent across sessions
+#+begin_src emacs-lisp
+  (use-package save-hist
+    :straight nil
+    :hook (after-init . savehist-mode)
+    )
+#+end_src
