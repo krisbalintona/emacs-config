@@ -304,6 +304,11 @@ View pdfs and interact with them
     (pdf-view-use-scaling t)
     (pdf-view-use-imagemagick nil)
     :config
+
+    (general-define-key ; Unbind SPC so it's prefix instead
+      :keymaps 'pdf-view-mode-map
+      [remap pdf-view-scroll-up-or-next-page] nil
+      )
     )
 #+END_SRC
 ** Org-noter
