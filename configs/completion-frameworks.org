@@ -939,3 +939,9 @@ Projectile with Helm
     (projectile-switch-project-action 'helm-projectile)
     )
 #+end_src
+** Helm-rg
+
+Required for =helm-projectile-rg=
+#+begin_src emacs-lisp
+  (use-package helm-rg)
+#+end_src
