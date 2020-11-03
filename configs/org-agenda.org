@@ -713,9 +713,9 @@ File-specific
 
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'org-super-agenda
-    (set-face-attribute 'org-super-agenda-header nil :height 148 :font "Noto Sans" :foreground "DarkGoldenrod2" :underline nil)
-    (set-face-attribute 'org-agenda-date nil :height 157 :font "Noto Sans" :foreground "dodger blue" :underline nil)
-    (set-face-attribute 'org-agenda-structure nil :height 180 :font "Noto Sans" :bold t :italic t :foreground "DarkOliveGreen3" :underline t)
+    (set-face-attribute 'org-super-agenda-header nil :height 148 :font kb/variable-pitch-font :foreground "DarkGoldenrod2" :underline nil)
+    (set-face-attribute 'org-agenda-date nil :height 157 :font kb/variable-pitch-font :foreground "dodger blue" :underline nil)
+    (set-face-attribute 'org-agenda-structure nil :height 180 :font kb/variable-pitch-font :bold t :italic t :foreground "DarkOliveGreen3" :underline t)
     )
   #+END_SRC
 * Org-capture-templates
