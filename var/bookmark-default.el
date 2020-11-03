@@ -14,7 +14,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* TODO Change or")
- (rear-context-string . "1-01 Sun 20:06]\n")
- (position . 1330))
+ (front-context-string . "* TODO [#F] Watc")
+ (rear-context-string . "1-02 Mon 20:58]\n")
+ (position . 2971))
 )

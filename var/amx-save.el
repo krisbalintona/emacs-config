@@ -1,21 +1,21 @@
 
 ;; ----- amx-history -----
 (
- hide-mode-line-mode
- org-mode-restart
+ helm-projectile-rg
  customize-group
- company-box-mode
- global-company-mode
- counsel-buffer-or-recentf
- whitespace-cleanup
+ latex-preview-pane-mode
+ org-mode-restart
+ next-error
+ latex-mode
+ LaTeX-mode
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 8)
+ (customize-group . 12)
  (pdf-tools-install . 1)
  (load-file . 2)
- (counsel-load-library . 2)
+ (counsel-load-library . 4)
  (explain-pause-top . 3)
  (selectrum-mode . 2)
  (orb-note-actions . 1)
@@ -33,10 +33,10 @@
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
- (company-diag . 3)
+ (company-diag . 4)
  (global-company-mode . 22)
- (counsel-describe-face . 1)
- (company-box-mode . 29)
+ (counsel-describe-face . 2)
+ (company-box-mode . 31)
  (smartparens-mode . 4)
  (show-smartparens-mode . 3)
  (all-the-icons-install-fonts . 1)
@@ -48,18 +48,18 @@
  (helm-recentf . 2)
  (helm-mini . 2)
  (helm-browse-project . 3)
- (helm-projects-find-files . 2)
- (org-mode-restart . 3)
+ (helm-projects-find-files . 5)
+ (org-mode-restart . 26)
  (helm-minibuffer-history . 1)
  (helm-find-files . 3)
- (find-file . 2)
+ (find-file . 4)
  (golden-ratio-mode . 6)
  (windmove-right . 1)
  (windmove-left . 1)
  (read-only-mode . 1)
- (describe-keymap . 1)
+ (describe-keymap . 2)
  (downcase-word . 1)
- (org-noter-kill-session . 3)
+ (org-noter-kill-session . 4)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
  (global-auto-revert-mode . 2)
@@ -84,4 +84,36 @@
  (whitespace-cleanup . 1)
  (counsel-buffer-or-recentf . 1)
  (hide-mode-line-mode . 2)
+ (align-entire . 1)
+ (evil-align-right . 1)
+ (align-regexp . 1)
+ (mouse-avoidance-mode . 1)
+ (selectrum-helm-mode . 4)
+ (modify-face . 1)
+ (counsel-rg . 1)
+ (selectrum-rg . 2)
+ (helm-projectile-on . 1)
+ (helm-projectile-find-file . 2)
+ (projectile-global-mode . 1)
+ (esup . 1)
+ (flyspell-mode . 1)
+ (artbollocks-count-words . 1)
+ (artbollocks-mode . 5)
+ (writegood-mode . 1)
+ (writegood-grade-level . 1)
+ (writegood-reading-ease . 1)
+ (helm-projectile-switch-to-buffer . 2)
+ (helm-projectile-rg . 7)
+ (helm-projectile-switch-project . 1)
+ (counsel-fonts . 12)
+ (describe-char . 4)
+ (doom-modeline-mode . 4)
+ (find-library . 1)
+ (make-empty-file . 1)
+ (latex-preview-pane-mode . 33)
+ (org-copy-subtree . 1)
+ (imenu-add-menubar-index . 2)
+ (LaTeX-mode . 2)
+ (latex-mode . 2)
+ (next-error . 1)
 )

@@ -44113,6 +44113,7 @@ galvanometers
 Galveston
 Galveston's
 Gama
+Gama's
 Gamay
 Gamay's
 Gambia
@@ -62468,6 +62469,7 @@ licensee's
 licensees
 licenses
 licensing
+licentia
 licentiate
 licentiate's
 licentiates

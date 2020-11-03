@@ -7,3 +7,7 @@ alias
 asusctl -c
 asusctl -c 100
 yay -S texlive-most
+sudo timeshift --create --comment "Before class"
+sudo timeshift --create --comment "After class"
+sudo timeshift --create --comment "Starting to mess and learn about latex"
+yay -Ss texlive-full
