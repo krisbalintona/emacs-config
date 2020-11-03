@@ -263,9 +263,10 @@ Quickly jump to characters
     (ace-jump-mode-scope 'visible) ; Everything visible
     (ace-jump-mode-case-fold t) ; Ignore case
     :config
-    (kb/leader-keys
-      "sa" '(ace-jump-mode :which-key "Ace-jump")
-      )
+
+    (general-define-key
+     "M-s s" '(ace-jump-mode :which-key "Ace-jump")
+     )
     )
 #+end_src
 * Keyfreq
