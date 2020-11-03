@@ -223,7 +223,7 @@ Control the behavior of popup and side windows
 
 Resize easier with hydra
 #+begin_src emacs-lisp
-  (pretty-hydra-define hydra:windows
+  (pretty-hydra-define hydra:windows-and-font-size
     (:color pink :hint t :foreign-keys run :quit-key "q")
     ("Windows"
      (("m" toggle-frame-fullscreen :color blue))
