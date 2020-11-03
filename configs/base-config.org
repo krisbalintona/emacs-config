@@ -5,17 +5,21 @@
 
 *Potential Fonts:*
 /Default:/
-+ RobotoMono Nerd Font
-+ Iosevka Fixed Slab
-+ Iosevka Term SS04
++ =RobotoMono Nerd Font=
++ =Iosevka Fixed Slab=
++ =Iosevka Term SS04=
 /Fixed-Pitch:/
-+ FiraCode Nerd Font
-+ Hack Nerd Font Mono
++ =FiraCode Nerd Font=
++ =Hack Nerd Font Mono=
 /Variable-Pitch:/
-+ Noto Sans
-+ IBM Plex Sans KR
++ =Noto Sans=
++ =IBM Plex Sans KR= (Note: This doesn't have italics available)
++ =IBM Plex Sans Condensed=
 #+BEGIN_SRC emacs-lisp
-  (setq kb/default-font "Iosevka Term SS04")
+  (defvar kb/default-font "Iosevka Term SS04")
+  (defvar kb/fixed-pitch-font "Hack Nerd Font Mono")
+  (defvar kb/variable-pitch-font "ETBembo")
+  (defvar kb/modeline-font "Noto Sans")
 
   (defun kb/default-fonts-setup ()
     "Set Emacs-wide fonts"
@@ -23,8 +27,9 @@
     (add-to-list 'default-frame-alist `(font . ,kb/default-font))
 
     (set-face-attribute 'default nil :font kb/default-font :height 135)
-    (set-face-attribute 'fixed-pitch nil :font "Hack Nerd Font Mono" :height 140)
-    (set-face-attribute 'variable-pitch nil :font "IBM Plex Sans KR" :height 148)
+    (set-face-attribute 'fixed-pitch nil :font kb/fixed-pitch-font :height 140)
+    ;; (set-face-attribute 'variable-pitch nil :font kb/variable-pitch-font :height 148)
+    (set-face-attribute 'variable-pitch nil :font kb/variable-pitch-font :height 158)
 
     (set-fontset-font ; Emoji support
      t
@@ -131,7 +136,7 @@ Sleek modeline from Doom
     (doom-modeline-number-limit 99)
     (doom-modeline-vcs-max-length 28)
     (doom-modeline-lsp t)
-    (doom-modeline-height 26)
+    (doom-modeline-height 33)
     (doom-modeline-bar-width 1)
     :config
     (if (daemonp) ; Hooks depending on daemon or not
@@ -139,8 +144,8 @@ Sleek modeline from Doom
                (add-hook 'window-setup-hook 'doom-modeline-mode))
       (add-hook 'window-setup-hook 'doom-modeline-mode)) ; Use this hook to prevent right side from being clipped
 
-    (set-face-attribute 'mode-line nil :family "Noto Sans" :height 0.75)
-    (set-face-attribute 'mode-line-inactive nil :family "Noto Sans" :height 0.68)
+    (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.75)
+    (set-face-attribute 'mode-line-inactive nil :family kb/modeline-font :height 0.68)
 
     ;; Don't show encoding on modeline if it is UTF-8
     (defun doom-modeline-conditional-buffer-encoding ()
