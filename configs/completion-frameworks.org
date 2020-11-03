@@ -918,6 +918,10 @@ Feature-rich version of Ivy completion
      :keymaps 'evil-motion-state-map
      "M-i" 'helm-swoop-from-evil-search)
 
+    (general-define-key
+     :keymaps '(helm-find-files-map helm-read-file-map)
+     "C-<backspace>" 'helm-find-files-up-one-level) ; This overwrites auto expansion toggle?
+
     (kb/leader-keys
       "shs" '(helm-swoop :which-key "Helm-swoop")
       )
