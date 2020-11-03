@@ -81,7 +81,7 @@ Allow faces to be selectively fixed- or variable-pitch
   ;; (use-package spacemacs-theme
   ;;   :config (load-theme 'spacemacs-dark t))
 #+END_SRC
-** Columns and line numbers
+** Show line numbers
 
 Column number in modeline
 #+BEGIN_SRC emacs-lisp
@@ -94,6 +94,7 @@ Set linum-numbers mode
 
   ;; Enabled for these
   (dolist (mode '(prog-mode-hook
+                  latex-mode-hook
                   ))
     (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
