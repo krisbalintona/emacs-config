@@ -7,11 +7,8 @@
 Point autocompletion backend
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    :hook ((after-init . (lambda () ; Adds to appropriate hook depending on if called from emacsclient
-                           (if (daemonp)
-                               (add-hook 'server-after-make-frame-hook 'global-company-mode)
-                             (add-hook 'window-setup-hook 'global-company-mode))
-                           ))
+    :hook ((text-mode . company-mode)
+           (prog-mode . company-mode)
            (company-mode . company-tng-mode)
            (company-mode . evil-normalize-keymaps))
     :custom
@@ -30,9 +27,9 @@ Point autocompletion backend
     (company-dabbrev-other-buffers nil)
     (company-dabbrev-ignore-case nil)
     (company-dabbrev-downcase nil)
-  
-    ;; These are the backends that Doom has active
-    (company-backends '(company-dabbrev company-yasnippet company-ispell))
+
+    ;; ;; These are the backends that Doom has active
+    ;; (company-backends '(company-dabbrev company-yasnippet company-ispell))
     :config
 
     (add-to-list 'company-backends 'company-capf) ; For org-roam
@@ -54,7 +51,7 @@ A pretty company autocomplete frontend that also displays candidate documentatio
 #+BEGIN_SRC emacs-lisp
   (use-package company-box
     :after (company all-the-icons)
-    :hook (global-company-mode . company-box-mode) ; Has to be the same hook hook that starts company mode otherwise company-box-mode won't load properly on company-mode's invocation
+    :hook (company-mode . company-box-mode) ; Has to be the same hook that starts company mode otherwise company-box-mode won't load properly on company-mode's invocation
     :custom
     (company-box-show-single-candidate 'always)
     (company-box-backends-colors nil)
