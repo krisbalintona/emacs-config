@@ -235,13 +235,13 @@ Resize easier with hydra
       ("k" enlarge-window-horizontally))
      "Zoom"
      (("-" default-text-scale-decrease)
-      ("=" default-text-scale-increase)
+      ("+" default-text-scale-increase)
       ("0" default-text-scale-reset :color blue))
      "Buffers"
      (("w" (revert-buffer nil t) :color blue))
      ))
 
   (kb/leader-keys
-    "hw" '(hydra:windows/body :which-key "Augment window settings")
+    "hw" '(hydra:windows-and-font-size/body :which-key "Augment window settings")
     )
 #+end_src
