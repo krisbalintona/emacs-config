@@ -517,8 +517,8 @@ Display a random quote in the minibuffer after a certain amount of idle time. It
   "Show random quotes to minibuffer"
   (interactive)
   (message "%s"
-           (nth (random (length yt/quotes))
-                yt/quotes)))
+           (nth (random (length kb/quotes))
+                kb/quotes)))
 
 (run-with-idle-timer 300 t 'kb/show-random-quotes)
 #+end_src
