@@ -2,15 +2,29 @@
 
 * Tex-site
 
+Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - MatthewZMD/.emacs.d: M-EMACS, a full-featured GNU Emacs configuratio...]]
 #+begin_src emacs-lisp
-  (use-package tex-site
+  (use-package tex
     :straight auctex
+    :hook
+    (LaTeX-mode . (lambda ()
+                    (turn-on-reftex)
+                    (setq reftex-plug-into-AUCTeX t)
+                    (reftex-isearch-minor-mode)
+                    (setq TeX-PDF-mode t)
+                    (setq TeX-source-correlate-method 'synctex)
+                    (setq TeX-source-correlate-start-server t)))
     :custom
     ;; If you want to make AUCTeX aware of style files and multi-file documents right away, insert the following in your ‘.emacs’ file.
     (TeX-parse-self t)
     (TeX-auto-save t)
-    :config
-    (setq-default TeX-master nil) ; if you often use \include or \input, you should make AUCTeX aware of the multi-file document structure. Each time you open a new file, AUCTeX will then ask you for a master file
+    (TeX-master nil) ; if you often use \include or \input, you should make AUCTeX aware of the multi-file document structure. Each time you open a new file, AUCTeX will then ask you for a master file
+
+    ;; To use pdfview with auctex
+    (TeX-view-program-selection '((output-pdf "pdf-tools"))
+                                TeX-source-correlate-start-server t)
+    (TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
+    (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
     )
 #+end_src
 
