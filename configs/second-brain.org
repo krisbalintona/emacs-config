@@ -57,8 +57,6 @@ Zettelkasten and Evergreen notes
       "nL" '(org-roam-db-build-cache :which-key "Rebuild cache")
       "nc" '(org-roam-capture :which-key "Roam capture")
 
-      "ns" '(org-capture-goto-last-stored :which-key "Goto last stored note")
-
       "nD" '(:ignore t :which-key "Call the doctor")
       "nDt" '(org-roam-doctor :which-key "Doctor this file")
       "nDa" '((lambda () ; Call org-roam-doctor with universal argument (C-u)
