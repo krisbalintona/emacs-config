@@ -265,7 +265,7 @@ Quickly jump to characters
     :config
 
     (general-define-key
-     "M-s s" '(ace-jump-mode :which-key "Ace-jump")
+     "M-a" '(ace-jump-mode :which-key "Ace-jump")
      )
     )
 #+end_src
