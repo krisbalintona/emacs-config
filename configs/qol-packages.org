@@ -284,6 +284,7 @@ Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= 
     (keyfreq-folder (concat no-littering-var-directory "keyfreq"))
     ;; Commands not to be logged
     (keyfreq-excluded-commands '(self-insert-command 
+                                 org-self-insert-command
                                  ;; forward-char
                                  ;; backward-char
                                  ;; previous-line
