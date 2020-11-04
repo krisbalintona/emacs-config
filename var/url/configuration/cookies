@@ -2,11 +2,25 @@
 ;; Automatically generated file!!! DO NOT EDIT!!!
 
 (setq url-cookie-storage
- 'nil)
+ '((".youtube.com"
+  [url-cookie "GPS" "1" "Wed, 04-Nov-2020 03:42:17 GMT" "/" ".youtube.com" nil]))
+)
 (setq url-cookie-secure-storage
- '(("github.com"
-  [url-cookie "_octo" "GH1.1.2004151135.1604372119" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t]
-  [url-cookie "logged_in" "no" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t]))
+ '((".reddit.com"
+  [url-cookie "loid" "00000000008qw7tli5.2.1604458466542.Z0FBQUFBQmZvaGZpYkxwVUFwU09KOE5WR0JHSC1SNHE4T1pDNlhuRnItNlUtYkxTZ0pFbjdRc2pIMHBRNmxBTV8tN2pGc2V0TmZiYWZkZEMxbVhFQjJKVXViUndBRHlKQ3dFYmY4dF9fRHFCTUpkUUFuZzVkYVM5bDlnWkQ3cU5DcmI4YnVVcUxXWTE" "Fri, 04 Nov 2022 02:54:26 GMT" "/" ".reddit.com" t]
+  [url-cookie "d2_token" "3.95b0331125dc91fd537d12920a8edbe17433078535c1df5727f2a8525fa12188.eyJhY2Nlc3NUb2tlbiI6Ii1WeGk2MlRncVBkZzN0OTE4ZGVibFY2UXdNNE0iLCJleHBpcmVzIjoiMjAyMC0xMS0wNFQwMzo1NDoyNi4wMDBaIiwibG9nZ2VkT3V0Ijp0cnVlLCJzY29wZXMiOlsiKiIsImVtYWlsIl19" "Fri, 04 Nov 2022 02:54:26 GMT" "/" ".reddit.com" t]
+  [url-cookie "csv" "1" "Fri Nov 04 02:54:27 2022 GMT" "/" ".reddit.com" t])
+ ("reddit.com"
+  [url-cookie "edgebucket" "Pyx4M8SV7J3Cw25Ngj" "Fri Nov 04 02:54:26 2022 GMT" "/" "reddit.com" t])
+ ("en.wikipedia.org"
+  [url-cookie "WMF-Last-Access" "04-Nov-2020" "Sun, 06 Dec 2020 00:00:00 GMT" "/" "en.wikipedia.org" t])
+ (".wikipedia.org"
+  [url-cookie "WMF-Last-Access-Global" "04-Nov-2020" "Sun, 06 Dec 2020 00:00:00 GMT" "/" ".wikipedia.org" t])
+ (".youtube.com"
+  [url-cookie "VISITOR_INFO1_LIVE" "rlqWqFIsejY" "Mon, 03-May-2021 03:12:17 GMT" "/" ".youtube.com" t])
+ ("github.com"
+  [url-cookie "logged_in" "no" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t]
+  [url-cookie "_octo" "GH1.1.2004151135.1604372119" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t]))
 )
 
 ;; Local Variables:

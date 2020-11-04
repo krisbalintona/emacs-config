@@ -1,23 +1,23 @@
 
 ;; ----- amx-history -----
 (
- helm-projectile-rg
+ keyfreq-html
+ keyfreq-html-v2
  customize-group
- latex-preview-pane-mode
- org-mode-restart
- next-error
- latex-mode
- LaTeX-mode
+ selectrum-mode
+ wikinforg
+ ivy-mode
+ company-box-mode
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 12)
+ (customize-group . 13)
  (pdf-tools-install . 1)
  (load-file . 2)
  (counsel-load-library . 4)
  (explain-pause-top . 3)
- (selectrum-mode . 2)
+ (selectrum-mode . 4)
  (orb-note-actions . 1)
  (kill-this-buffer . 1)
  (evil-org-beginning-of-line . 1)
@@ -33,10 +33,10 @@
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
- (company-diag . 4)
+ (company-diag . 5)
  (global-company-mode . 22)
  (counsel-describe-face . 2)
- (company-box-mode . 31)
+ (company-box-mode . 35)
  (smartparens-mode . 4)
  (show-smartparens-mode . 3)
  (all-the-icons-install-fonts . 1)
@@ -116,4 +116,11 @@
  (LaTeX-mode . 2)
  (latex-mode . 2)
  (next-error . 1)
+ (counsel-yank-pop . 2)
+ (pdf-view-mode . 1)
+ (company-org-block . 2)
+ (wikinforg . 4)
+ (ivy-mode . 4)
+ (keyfreq-html-v2 . 1)
+ (keyfreq-html . 1)
 )
