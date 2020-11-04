@@ -568,3 +568,17 @@ Make history of certain things (e.g. minibuffer) persistent across sessions
     (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
     )
 #+end_src
+** Company-org-block
+
+Custom company-backend for org-block snippets
+- Found from [[https://www.reddit.com/r/emacs/comments/jf0jo1/org_block_company_complete_and_edit/][org block company complete and edit : emacs]]
+#+begin_src emacs-lisp
+  (use-package company-org-block ; Found in ~/main-emacs/elisp/company-org-block.el
+    :straight nil
+    :after (company company-box)
+    :custom
+    (company-org-block-edit-mode 'auto) ; Automatically enter if in an environment
+    :config
+    (add-to-list 'company-backends 'company-org-block)
+    )
+#+end_src
