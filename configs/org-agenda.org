@@ -649,7 +649,7 @@ File-specific
                            (org-agenda-start-day "-1") ; Start the agenda view with yestersy
                            (org-agenda-span 7)
                            (org-super-agenda-groups
-                            '((:discard (:not (:file-path "school")))
+                            '((:discard (:not (:file-path "school.org")))
                               (:name "Due"
                                      :time-grid t
                                      :deadline today)
