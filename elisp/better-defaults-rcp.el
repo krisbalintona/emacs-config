@@ -48,6 +48,7 @@
 
               make-backup-files nil                      ; Don't make backups
               create-lockfiles nil                       ; Don't create lockfiles
+              find-file-existing-other-name t            ; Visit buffer when finding file if it already exists?
 
               tab-width 4
               evil-shift-width tab-width
