@@ -301,128 +301,129 @@ Autoload the package and start with nothing
 
 Active tasks
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'org-agenda-custom-commands
-               '("p" "Current tasks"
-                 ((org-ql-block '(and (parent (todo "PROG"))
-                                      (todo)
-                                      (not (done)))
-                                ((org-ql-block-header "Current projects")
-                                 (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
-                                 (org-super-agenda-groups
-                                  '((:auto-parent t))
-                                  )))
-                  (agenda ""
-                          ((org-agenda-overriding-header "The near future")
-                           (org-habit-show-habits-only-for-today t)
-                           (org-agenda-start-day "+0") ; Start the agenda view with yesterday
-                           (org-agenda-span 4)
-                           (org-super-agenda-groups
-                            '((:name "Due"
-                                     :time-grid t
-                                     :scheduled today
-                                     :deadline today)
-                              (:name "Planned in the future"
-                                     :scheduled future)
-                              (:name "Due in the future"
-                                     :deadline future)
-                              (:name "Missed Items!"
-                                     :scheduled past
-                                     :deadline past)
-                              (:name "Uncategorized"
-                                     :anything t)
+    (add-to-list 'org-agenda-custom-commands
+                 '("p" "Current tasks"
+                   ((org-ql-block '(and (parent (todo "PROG"))
+                                        (todo)
+                                        (not (done)))
+                                  ((org-ql-block-header "Current projects")
+                                   (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                                   (org-super-agenda-groups
+                                    '((:auto-parent t))
+                                    )))
+                    (agenda ""
+                            ((org-agenda-overriding-header "The near future")
+                             (org-habit-show-habits-only-for-today t)
+                             (org-agenda-start-day "+0") ; Start the agenda view with yesterday
+                             (org-agenda-span 4)
+                             (org-super-agenda-groups
+                              '((:discard (:file-path "habits.org")))
+                                (:name "Due"
+                                       :time-grid t
+                                       :scheduled today
+                                       :deadline today)
+                                (:name "Planned in the future"
+                                       :scheduled future)
+                                (:name "Due in the future"
+                                       :deadline future)
+                                (:name "Missed Items!"
+                                       :scheduled past
+                                       :deadline past)
+                                (:name "Uncategorized"
+                                       :anything t)
+                                ))
+                             ))
+                    (org-ql-block '(and (todo "PROG")
+                                        (not (parent (todo)))
+                                        (not (children (todo)))
+                                        (not (done)))
+                                  ((org-ql-block-header "Tasks by priority")
+                                   (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                                   (org-super-agenda-groups
+                                    '((:auto-priority t))
+                                    )))
+                    ))
+                 t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("n" "What's next?"
+                   ((org-ql-block '(or (and (parent (todo "NEXT"))
+                                            (not (done)))
+                                       (and (children (todo))
+                                            (todo "NEXT")
+                                            (not (done))
+                                            ))
+                                  ((org-ql-block-header "Next projects")
+                                   (org-super-agenda-groups
+                                    '((:name "Projects" :children todo)
+                                      (:auto-parent t)
+                                      ))
+                                   ))
+                    (org-ql-block '(and (not (parent (todo)))
+                                        (not (children (todo)))
+                                        (todo "NEXT")
+                                        (not (done)))
+                                  ((org-ql-block-header "Next Non-project Tasks")
+                                   (org-super-agenda-groups
+                                    '((:name "No effort or effort less than 5 minutes"
+                                             :effort< "5")
+                                      (:name "10 minutes or less"
+                                             :effort< "11")
+                                      (:name "30 minutes or less"
+                                             :effort< "31")
+                                      (:name "1 hour or less"
+                                             :effort< "61")
+                                      (:name "More than an hour but less than 3"
+                                             :effort< "180")
+                                      (:name "3 hours or more"
+                                             :effort> "179")
+                                      (:name "Next tasks without an effort rating"
+                                             :anything t)
+                                      ))
+                                   ))
+                    ;; (alltodo ""
+                    ;;          ((org-agenda-overriding-header "What else is on my to-do list?")
+                    ;;           (org-agenda-prefix-format
+                    ;;            '((agenda . " %i %-12:c%?-12t% s")
+                    ;;              (todo . " %i %-13:c   %-6e %?s %t | ")
+                    ;;              (tags . " %i %-12:c")
+                    ;;              (search . " %i %-12:c")
+                    ;;              ))
+                    ;;         (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                    ;;           (org-super-agenda-groups
+                    ;;            '((:discard (:not (:todo "NEXT")))
+                    ;;              (:name "No effort or effort less than 5 minutes"
+                    ;;                     :effort< "5")
+                    ;;              (:name "10 minutes or less"
+                    ;;                     :effort< "11")
+                    ;;              (:name "30 minutes or less"
+                    ;;                     :effort< "31")
+                    ;;              (:name "1 hour or less"
+                    ;;                     :effort< "61")
+                    ;;              (:name "More than an hour but less than 3"
+                    ;;                     :effort< "180")
+                    ;;              (:name "3 hours or more"
+                    ;;                     :effort> "179")
+                    ;;              (:name "Next tasks without an effort rating"
+                    ;;                     :anything t)
+                    ;;              ))
+                    ;;           ))
+                    ))
+                 t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("z" "Current Zettelkasten notes"
+                   ((alltodo ""
+                             ((org-agenda-overriding-header "Current and upcoming Zettelkasten notes")
+                              (org-agenda-files (org-roam--list-all-files))
+                              (org-super-agenda-groups
+                               '((:discard (:not (:todo ("PROG" "NEXT"))))
+                                 (:name none
+                                        :auto-parent t)
+                                 ))
                               ))
-                           ))
-                  (org-ql-block '(and (todo "PROG")
-                                      (not (parent (todo)))
-                                      (not (children (todo)))
-                                      (not (done)))
-                                ((org-ql-block-header "Tasks by priority")
-                                 (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
-                                 (org-super-agenda-groups
-                                  '((:auto-priority t))
-                                  )))
-                  ))
-               t)
-
-  (add-to-list 'org-agenda-custom-commands
-               '("n" "What's next?"
-                 ((org-ql-block '(or (and (parent (todo "NEXT"))
-                                          (not (done)))
-                                     (and (children (todo))
-                                          (todo "NEXT")
-                                          (not (done))
-                                          ))
-                                ((org-ql-block-header "Next projects")
-                                 (org-super-agenda-groups
-                                  '((:name "Projects" :children todo)
-                                    (:auto-parent t)
-                                    ))
-                                 ))
-                  (org-ql-block '(and (not (parent (todo)))
-                                      (not (children (todo)))
-                                      (todo "NEXT")
-                                      (not (done)))
-                                ((org-ql-block-header "Next Non-project Tasks")
-                                 (org-super-agenda-groups
-                                  '((:name "No effort or effort less than 5 minutes"
-                                           :effort< "5")
-                                    (:name "10 minutes or less"
-                                           :effort< "11")
-                                    (:name "30 minutes or less"
-                                           :effort< "31")
-                                    (:name "1 hour or less"
-                                           :effort< "61")
-                                    (:name "More than an hour but less than 3"
-                                           :effort< "180")
-                                    (:name "3 hours or more"
-                                           :effort> "179")
-                                    (:name "Next tasks without an effort rating"
-                                           :anything t)
-                                    ))
-                                 ))
-                  ;; (alltodo ""
-                  ;;          ((org-agenda-overriding-header "What else is on my to-do list?")
-                  ;;           (org-agenda-prefix-format
-                  ;;            '((agenda . " %i %-12:c%?-12t% s")
-                  ;;              (todo . " %i %-13:c   %-6e %?s %t | ")
-                  ;;              (tags . " %i %-12:c")
-                  ;;              (search . " %i %-12:c")
-                  ;;              ))
-                  ;;         (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
-                  ;;           (org-super-agenda-groups
-                  ;;            '((:discard (:not (:todo "NEXT")))
-                  ;;              (:name "No effort or effort less than 5 minutes"
-                  ;;                     :effort< "5")
-                  ;;              (:name "10 minutes or less"
-                  ;;                     :effort< "11")
-                  ;;              (:name "30 minutes or less"
-                  ;;                     :effort< "31")
-                  ;;              (:name "1 hour or less"
-                  ;;                     :effort< "61")
-                  ;;              (:name "More than an hour but less than 3"
-                  ;;                     :effort< "180")
-                  ;;              (:name "3 hours or more"
-                  ;;                     :effort> "179")
-                  ;;              (:name "Next tasks without an effort rating"
-                  ;;                     :anything t)
-                  ;;              ))
-                  ;;           ))
-                  ))
-               t)
-
-  (add-to-list 'org-agenda-custom-commands
-               '("z" "Current Zettelkasten notes"
-                 ((alltodo ""
-                           ((org-agenda-overriding-header "Current and upcoming Zettelkasten notes")
-                            (org-agenda-files (org-roam--list-all-files))
-                            (org-super-agenda-groups
-                             '((:discard (:not (:todo ("PROG" "NEXT"))))
-                               (:name none
-                                      :auto-parent t)
-                               ))
-                            ))
-                  ))
-               t)
+                    ))
+                 t)
 #+END_SRC
 
 Zettelkasten
@@ -603,6 +604,40 @@ Maintainence
                   ))
                t)
 #+END_SRC
+
+Habits
+#+begin_src emacs-lisp
+  (add-to-list 'org-agenda-custom-commands
+               '("h" "Habits"
+                 ((agenda ""
+                          ((org-agenda-overriding-header "My habit calendar")
+                           (org-agenda-span 'week)
+                           (org-agenda-start-day "+0") ; Start the agenda view with yestersy
+                           (org-agenda-span 3)
+                           (org-super-agenda-groups
+                            '((:file-path "habits.org")
+                              (:name "Due"
+                                     :time-grid t
+                                     :deadline today)
+                              (:name "Planned"
+                                     :time-grid t
+                                     :scheduled today)
+                              (:name "Due in the future"
+                                     :time-grid t
+                                     :deadline future)
+                              (:name "Planned in the future"
+                                     :time-grid t
+                                     :scheduled future)
+                              (:name "Missed Items!"
+                                     :scheduled past
+                                     :deadline past)
+                              (:name "Uncategorized"
+                                     :anything t)
+                              ))
+                           ))
+                  ))
+               t)
+#+end_src
 
 File-specific
 #+BEGIN_SRC emacs-lisp
