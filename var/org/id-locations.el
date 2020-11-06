@@ -1,2 +1,2 @@
 
-(("~/Documents/org-database/agenda/archive.org" #("045bebd3-cc2d-4d00-8b48-4015603bf78d" 0 36 (face org-property-value org-category "paper" fontified t))))
+(("~/Documents/org-database/agenda/archive.org" #("045bebd3-cc2d-4d00-8b48-4015603bf78d" 0 36 (face org-property-value org-category "paper" fontified t))) ("~/Documents/Emails/Brown/Drafts/cur/1604450443.3d3371b85480d5ec.puddingmachine:2,DS" "0609c6e4-bdb1-4232-8376-79662d619e33" "6553a6b4-af1a-4d8b-b6c4-367b602e32ba") ("~/Documents/org-database/agenda/school.org" "5854d817-bb0e-4f90-8fa4-31aa46063811"))

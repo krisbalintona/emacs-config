@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- keyfreq-html
- keyfreq-html-v2
+ buffer-expose
+ list-colors-display
+ garbage-collect
+ org-refile
+ visual-line-mode
+ esup
  customize-group
- selectrum-mode
- wikinforg
- ivy-mode
- company-box-mode
 )
 
 ;; ----- amx-data -----
@@ -21,7 +21,7 @@
  (orb-note-actions . 1)
  (kill-this-buffer . 1)
  (evil-org-beginning-of-line . 1)
- (garbage-collect . 6)
+ (garbage-collect . 7)
  (powerthesaurus-lookup-word . 2)
  (straight-use-package . 1)
  (langtool-check . 2)
@@ -59,7 +59,7 @@
  (read-only-mode . 1)
  (describe-keymap . 2)
  (downcase-word . 1)
- (org-noter-kill-session . 4)
+ (org-noter-kill-session . 5)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
  (global-auto-revert-mode . 2)
@@ -95,7 +95,7 @@
  (helm-projectile-on . 1)
  (helm-projectile-find-file . 2)
  (projectile-global-mode . 1)
- (esup . 1)
+ (esup . 2)
  (flyspell-mode . 1)
  (artbollocks-count-words . 1)
  (artbollocks-mode . 5)
@@ -123,4 +123,9 @@
  (ivy-mode . 4)
  (keyfreq-html-v2 . 1)
  (keyfreq-html . 1)
+ (org-roam-bibtex-mode . 4)
+ (visual-line-mode . 1)
+ (org-refile . 1)
+ (list-colors-display . 1)
+ (buffer-expose . 2)
 )

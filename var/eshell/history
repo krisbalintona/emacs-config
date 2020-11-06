@@ -1,4 +1,3 @@
-stc
 ls
 sudo timeshift --create --comment "After working on my paper"
 main-emacs
@@ -11,3 +10,11 @@ sudo timeshift --create --comment "Before class"
 sudo timeshift --create --comment "After class"
 sudo timeshift --create --comment "Starting to mess and learn about latex"
 yay -Ss texlive-full
+dust
+sudo timeshift --create --comment "Disgusted by latex"
+stc
+sudo timeshift --create --comment "At the end of the day"
+stl
+yay
+sudo timeshift --create --comment "After turning a lot of my tabs into todos"
+sudo timeshift --create --comment "Before upgarde"

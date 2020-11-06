@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("QMK Keymap"
+(("org-refile-last-stored"
+ (filename . "~/Documents/org-database/agenda/school.org")
+ (front-context-string . "** PROG [#A] Go ")
+ (rear-context-string . "hare with Angel\n")
+ (position . 5989))
+("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
  (rear-context-string . "IA,\n_BOARD,\n};\n\n")
@@ -14,7 +19,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* TODO [#F] Watc")
- (rear-context-string . "1-02 Mon 20:58]\n")
- (position . 2971))
+ (front-context-string . "* TODO Go throug")
+ (rear-context-string . "hare with Angel\n")
+ (position . 7106))
 )
