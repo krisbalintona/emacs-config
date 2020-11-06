@@ -160,7 +160,7 @@ Full text search for my roam files
     (deft-recursive t)
     (deft-use-filter-string-for-filename t)
     (deft-default-extension "org")
-    (deft-directory kb/roam-dir)
+    (deft-directory org-directory) ; All org files
     (deft-use-filename-as-title nil) ; Use title not file name
     (deft-auto-save-interval -1.0) ; disable auto-save
     ;; converts the filter string into a readable file-name using kebab-case:
@@ -242,18 +242,18 @@ equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
 the .bib files bibtex makes. Org-ref is a way to directly insert citations and
 references into latex and org files
 #+BEGIN_SRC emacs-lisp
-    (use-package org-ref
-      :after ivy
-      :custom
-      (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
-      (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
-      (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
-      (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
-      (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
-      (org-ref-note-title-format
-       "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
-      (org-ref-notes-function 'orb-edit-notes)
-      )
+  (use-package org-ref
+    :after ivy
+    :custom
+    (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
+    (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
+    (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
+    (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
+    (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
+    (org-ref-note-title-format
+     "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
+    (org-ref-notes-function 'orb-edit-notes)
+    )
 #+END_SRC
 ** Org-roam-bibtex
 
