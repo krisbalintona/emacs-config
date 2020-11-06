@@ -7,12 +7,12 @@ Fast spell checking
   (use-package spell-fu
     :custom
     (spell-fu-idle-delay 0.6)
-    (spell-fu-directory (concat user-emacs-directory "spell-fu"))
+    (spell-fu-directory (concat no-littering-var-directory "spell-fu"))
 
     ;; Ispell settings
     (ispell-program-name "/usr/bin/aspell")
     (ispell-dictionary "en_US")
-    (ispell-personal-dictionary (concat user-emacs-directory "ispell-personal-dict-en"))
+    (ispell-personal-dictionary (concat spell-fu-directory "/ispell-personal-dict-en"))
     :config
     (add-hook 'text-mode-hook 'spell-fu-mode)
 
