@@ -47,6 +47,7 @@
   (setq org-enforce-todo-dependencies nil)
   (setq org-enforce-todo-checkbox-dependencies nil)
   (setq org-agenda-dim-blocked-tasks t)
+  (setq org-agenda-todo-ignore-time-comparison-use-seconds t) ; Compare seconds, not days
 
                                           ; Classic org-agenda archiving
   (setq org-archive-location (concat kb/agenda-dir "archive.org::"))
@@ -120,6 +121,7 @@
   ;; Window setup
   (setq org-agenda-window-setup 'current-window) ; Open agenda in current window
   (setq org-indirect-buffer-display 'current-window) ; Put indirect buffers right on top of the current window
+  (setq org-agenda-include-diary t) ; Show diary in calendar
 
   (add-hook 'org-agenda-finalize-hook 'evil-goto-first-line) ; Start at first line in org-agenda
 
