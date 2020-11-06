@@ -900,6 +900,7 @@ Feature-rich version of Ivy completion
 
 #+begin_src emacs-lisp
   (use-package helm-swoop
+    :disabled ; Conflicting bingings within PDF
     :custom
     (helm-swoop-split-with-multiple-windows nil) ; If this value is t, split window inside the current window
     (helm-swoop-split-direction 'split-window-vertically) ; Split direcion. 'split-window-vertically or 'split-window-horizontally
