@@ -560,7 +560,7 @@ Auto-size window so current is largest
 
 Make history of certain things (e.g. minibuffer) persistent across sessions
 #+begin_src emacs-lisp
-  (use-package save-hist
+  (use-package savehist
     :straight nil
     :hook (after-init . savehist-mode)
     :config
