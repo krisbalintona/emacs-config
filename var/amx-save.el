@@ -1,18 +1,18 @@
 
 ;; ----- amx-history -----
 (
- buffer-expose
- list-colors-display
- garbage-collect
- org-refile
- visual-line-mode
- esup
  customize-group
+ describe-keymap
+ customize-face
+ org-toggle-tags-groups
+ rename-file
+ org-mode
+ list-colors-display
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 13)
+ (customize-group . 15)
  (pdf-tools-install . 1)
  (load-file . 2)
  (counsel-load-library . 4)
@@ -44,7 +44,7 @@
  (rainbow-delimiters-mode . 2)
  (beacon-mode . 2)
  (global-eldoc-mode . 2)
- (rename-file . 1)
+ (rename-file . 2)
  (helm-recentf . 2)
  (helm-mini . 2)
  (helm-browse-project . 3)
@@ -57,7 +57,7 @@
  (windmove-right . 1)
  (windmove-left . 1)
  (read-only-mode . 1)
- (describe-keymap . 2)
+ (describe-keymap . 3)
  (downcase-word . 1)
  (org-noter-kill-session . 5)
  (company-tng-configure-default . 1)
@@ -128,4 +128,7 @@
  (org-refile . 1)
  (list-colors-display . 1)
  (buffer-expose . 2)
+ (org-mode . 1)
+ (org-toggle-tags-groups . 2)
+ (customize-face . 1)
 )
