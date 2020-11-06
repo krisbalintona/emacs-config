@@ -60,12 +60,15 @@
   (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)")
-          (sequence "HOLD(h!)" "SOMEDAY(s)" "INACTIVE(i@)" "|" "CANCELLED(c@/!)")))
+        '((sequence "TODO(t)" "HABIT(H)" "WAITING(w!)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)")
+          (sequence "HOLD(h!)" "SOMEDAY(s)" "INACTIVE(i@)" "|" "CANCELLED(c@/!)")
+          ))
 
   (setq org-todo-keyword-faces
         '(("TODO" :foreground "orange" :underline t)
           ("NEXT" :foreground "orchid" :weight bold)
+          ("HABIT" :foreground "bisque3" :weight bold)
+          ("WAITING" :foreground "khaki1" :weight bold)
           ("PROG" :foreground "turquoise" :underline t)
           ("DONE" :foreground "chartreuse" :weight normal)
           ("HOLD" :foreground "LightGoldenrod1" :weight normal :underline t)
@@ -142,6 +145,7 @@
         org-agenda-block-separator 61
         org-agenda-tags-column 'auto
         org-cycle-separator-lines 0) ; Remove blank lines when folding
+
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
           (todo . " %i %-13:c   %-6e %?s %t |%l")
