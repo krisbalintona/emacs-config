@@ -594,7 +594,7 @@ Maintainence
                     (alltodo ""
                              ((org-agenda-overriding-header "High-priority items without next todo keyword")
                               (org-super-agenda-groups
-                               '((:discard (:todo "HABIT"))
+                               '((:discard (:todo ("HABIT" "PROG")))
                                  (:name none
                                         :and (:priority>= "B" :not (:todo ("NEXT" "PROG"))))
                                  (:discard (:anything t))
@@ -623,23 +623,23 @@ Habits
                            (org-agenda-span 3)
                            (org-super-agenda-groups
                             '((:discard (:not (:file-path "habits.org")))
-                              (:name "Due"
-                                     :time-grid t
-                                     :deadline today)
-                              (:name "Planned"
-                                     :time-grid t
-                                     :scheduled today)
-                              (:name "Due in the future"
-                                     :time-grid t
-                                     :deadline future)
-                              (:name "Planned in the future"
-                                     :time-grid t
-                                     :scheduled future)
-                              (:name "Missed Items!"
-                                     :scheduled past
-                                     :deadline past)
-                              (:name "Uncategorized"
-                                     :anything t)
+                              ;; (:name "Due"
+                              ;;        :time-grid t
+                              ;;        :deadline today)
+                              ;; (:name "Planned"
+                              ;;        :time-grid t
+                              ;;        :scheduled today)
+                              ;; (:name "Due in the future"
+                              ;;        :time-grid t
+                              ;;        :deadline future)
+                              ;; (:name "Planned in the future"
+                              ;;        :time-grid t
+                              ;;        :scheduled future)
+                              ;; (:name "Missed Items!"
+                              ;;        :scheduled past
+                              ;;        :deadline past)
+                              ;; (:name "Uncategorized"
+                              ;;        :anything t)
                               ))
                            ))
                   ))
