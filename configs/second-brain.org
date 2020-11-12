@@ -6,6 +6,7 @@ Zettelkasten and Evergreen notes
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
     ;; :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master") ; Incompatible with straight.el
+    :straight (org-roam :type git :host github :repo "org-roam/org-roam")
     :after company ; Necessary for some reason
     :hook (emacs-startup . org-roam-mode)
     :custom
@@ -226,28 +227,7 @@ Use ivy or helm search frontend with the bibtex-completion backend
        ("c" ivy-bibtex-insert-citation "Insert citation")
        ("r" ivy-bibtex-insert-reference "Insert reference")
        ("P" ivy-bibtex-open-annotated-pdf "Open annotated PDF (if present)") ; This last function doesn't have an associated action yet (for annotated pdfs)
-       ("a" bibtex-completion-add-pdf-to-library "Add pdf to library")
-       ))
-
-    (kb/leader-keys
-      "fa" '(ivy-bibtex :which-key "Ivy-bibtex")
-      "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
-      )
-    )
-#+END_SRC
-** Org-ref
-
-Bibtex is a way to add bibliographic information (e.g. refernces/citations to
-equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
-the .bib files bibtex makes. Org-ref is a way to directly insert citations and
-references into latex and org files
-#+BEGIN_SRC emacs-lisp
-  (use-package org-ref
-    :after ivy
-    :custom
-    (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
-    (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
-    (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
+       ("a" bibtex-comtory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
     (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
     (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
     (org-ref-note-title-format
@@ -282,6 +262,7 @@ with org-roam (provides templates and modifies edit notes action)
        ;;  :unnarrowed t)
        ))
     :config
+
     (kb/leader-keys
       "nBs" '(orb-find-non-ref-file :which-key "Search non-bibliographic Roam notes")
       "nBi" '(orb-insert-non-ref :which-key "Insert non-bibliographic Roam note")
