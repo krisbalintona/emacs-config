@@ -227,7 +227,28 @@ Use ivy or helm search frontend with the bibtex-completion backend
        ("c" ivy-bibtex-insert-citation "Insert citation")
        ("r" ivy-bibtex-insert-reference "Insert reference")
        ("P" ivy-bibtex-open-annotated-pdf "Open annotated PDF (if present)") ; This last function doesn't have an associated action yet (for annotated pdfs)
-       ("a" bibtex-comtory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
+       ("a" bibtex-completion-add-pdf-to-library "Add pdf to library")
+       ))
+
+    (kb/leader-keys
+      "fa" '(ivy-bibtex :which-key "Ivy-bibtex")
+      "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
+      )
+    )
+#+END_SRC
+** Org-ref
+
+Bibtex is a way to add bibliographic information (e.g. refernces/citations to
+equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
+the .bib files bibtex makes. Org-ref is a way to directly insert citations and
+references into latex and org files
+#+BEGIN_SRC emacs-lisp
+  (use-package org-ref
+    :after ivy
+    :custom
+    (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
+    (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
+    (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
     (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
     (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
     (org-ref-note-title-format
