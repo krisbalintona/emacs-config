@@ -18,3 +18,7 @@ stl
 yay
 sudo timeshift --create --comment "After turning a lot of my tabs into todos"
 sudo timeshift --create --comment "Before upgarde"
+sudo timeshift --create --comment "Good morning"
+stc
+sudo timeshift --create --comment "Good morning"
+stc

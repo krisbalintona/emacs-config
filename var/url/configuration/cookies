@@ -4,22 +4,28 @@
 (setq url-cookie-storage
  'nil)
 (setq url-cookie-secure-storage
- '((".reddit.com"
-  [url-cookie "loid" "00000000008qw7tli5.2.1604458466542.Z0FBQUFBQmZvaGZpYkxwVUFwU09KOE5WR0JHSC1SNHE4T1pDNlhuRnItNlUtYkxTZ0pFbjdRc2pIMHBRNmxBTV8tN2pGc2V0TmZiYWZkZEMxbVhFQjJKVXViUndBRHlKQ3dFYmY4dF9fRHFCTUpkUUFuZzVkYVM5bDlnWkQ3cU5DcmI4YnVVcUxXWTE" "Fri, 04 Nov 2022 02:54:26 GMT" "/" ".reddit.com" t]
-  [url-cookie "d2_token" "3.a614b1b37ecaf266f0bf049aa0f76b5ad65dedcf034322376b034031bf680120.eyJhY2Nlc3NUb2tlbiI6Ii1DMUwwdTJxQ2Z0RUVJQ1R6ajA0RnNvX25iclEiLCJleHBpcmVzIjoiMjAyMC0xMS0wNlQwMTo1MDoxMS4wMDBaIiwibG9nZ2VkT3V0Ijp0cnVlLCJzY29wZXMiOlsiKiIsImVtYWlsIl19" "Sun, 06 Nov 2022 00:50:11 GMT" "/" ".reddit.com" t]
-  [url-cookie "csv" "1" "Fri Nov 04 02:54:27 2022 GMT" "/" ".reddit.com" t])
- ("reddit.com"
-  [url-cookie "edgebucket" "Pyx4M8SV7J3Cw25Ngj" "Fri Nov 04 02:54:26 2022 GMT" "/" "reddit.com" t]
-  [url-cookie "token_v2" "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDQ2NDI3MjYsInN1YiI6Ii1BY3lSWDZvX1pSM1A5SXB6R1BVQ1J5ZFREWE0iLCJsb2dnZWRJbiI6ZmFsc2UsInNjb3BlcyI6WyIqIiwiZW1haWwiXX0._2K6rCzgCEJyUkcZWYYKmwZudQYnyrxeyIeQ6uO18Uk" "Sun, 06 Nov 2022 05:07:27 GMT" "/" "reddit.com" t])
- ("en.wikipedia.org"
-  [url-cookie "WMF-Last-Access" "04-Nov-2020" "Sun, 06 Dec 2020 00:00:00 GMT" "/" "en.wikipedia.org" t])
- (".wikipedia.org"
-  [url-cookie "WMF-Last-Access-Global" "04-Nov-2020" "Sun, 06 Dec 2020 00:00:00 GMT" "/" ".wikipedia.org" t])
+ '(("github.com"
+  [url-cookie "_octo" "GH1.1.2004151135.1604372119" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t]
+  [url-cookie "logged_in" "no" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t])
  (".youtube.com"
   [url-cookie "VISITOR_INFO1_LIVE" "rlqWqFIsejY" "Mon, 03-May-2021 03:12:17 GMT" "/" ".youtube.com" t])
- ("github.com"
-  [url-cookie "logged_in" "no" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t]
-  [url-cookie "_octo" "GH1.1.2004151135.1604372119" "Wed, 03 Nov 2021 01:55:19 GMT" "/" "github.com" t]))
+ (".wikipedia.org"
+  [url-cookie "WMF-Last-Access-Global" "04-Nov-2020" "Sun, 06 Dec 2020 00:00:00 GMT" "/" ".wikipedia.org" t])
+ ("en.wikipedia.org"
+  [url-cookie "WMF-Last-Access" "04-Nov-2020" "Sun, 06 Dec 2020 00:00:00 GMT" "/" "en.wikipedia.org" t])
+ ("reddit.com"
+  [url-cookie "token_v2" "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDQ2NDI3MjYsInN1YiI6Ii1BY3lSWDZvX1pSM1A5SXB6R1BVQ1J5ZFREWE0iLCJsb2dnZWRJbiI6ZmFsc2UsInNjb3BlcyI6WyIqIiwiZW1haWwiXX0._2K6rCzgCEJyUkcZWYYKmwZudQYnyrxeyIeQ6uO18Uk" "Sun, 06 Nov 2022 05:07:27 GMT" "/" "reddit.com" t]
+  [url-cookie "edgebucket" "Pyx4M8SV7J3Cw25Ngj" "Fri Nov 04 02:54:26 2022 GMT" "/" "reddit.com" t])
+ (".www.linkedin.com"
+  [url-cookie "bscookie" "v=1&20201109025334631fc4a6-cdc7-4b6c-8949-77101c1e9d73AQFdbpRFK1dUmdrU6VNEdvLX-EC46741" "Wed, 09-Nov-2022 14:31:06 GMT" "/" ".www.linkedin.com" t])
+ (".linkedin.com"
+  [url-cookie "bcookie" "v=2&37b03fdf-1bb5-4d2a-8400-fc261d1c1301" "Wed, 09-Nov-2022 14:31:06 GMT" "/" ".linkedin.com" t]
+  [url-cookie "lissc" "1" "Tue, 09-Nov-2021 02:53:34 GMT" "/" ".linkedin.com" t]
+  [url-cookie "lidc" "b=VGST08:s=V:r=V:g=1880:u=1:i=1604890414:t=1604976814:v=1:sig=AQFHSj4EyxuQyV670l-FjofGQVfsKbsF" "Tue, 10 Nov 2020 02:53:34 GMT" "/" ".linkedin.com" t])
+ (".reddit.com"
+  [url-cookie "csv" "1" "Fri Nov 04 02:54:27 2022 GMT" "/" ".reddit.com" t]
+  [url-cookie "d2_token" "3.a614b1b37ecaf266f0bf049aa0f76b5ad65dedcf034322376b034031bf680120.eyJhY2Nlc3NUb2tlbiI6Ii1DMUwwdTJxQ2Z0RUVJQ1R6ajA0RnNvX25iclEiLCJleHBpcmVzIjoiMjAyMC0xMS0wNlQwMTo1MDoxMS4wMDBaIiwibG9nZ2VkT3V0Ijp0cnVlLCJzY29wZXMiOlsiKiIsImVtYWlsIl19" "Sun, 06 Nov 2022 00:50:11 GMT" "/" ".reddit.com" t]
+  [url-cookie "loid" "00000000008qw7tli5.2.1604458466542.Z0FBQUFBQmZvaGZpYkxwVUFwU09KOE5WR0JHSC1SNHE4T1pDNlhuRnItNlUtYkxTZ0pFbjdRc2pIMHBRNmxBTV8tN2pGc2V0TmZiYWZkZEMxbVhFQjJKVXViUndBRHlKQ3dFYmY4dF9fRHFCTUpkUUFuZzVkYVM5bDlnWkQ3cU5DcmI4YnVVcUxXWTE" "Fri, 04 Nov 2022 02:54:26 GMT" "/" ".reddit.com" t]))
 )
 
 ;; Local Variables:

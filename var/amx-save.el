@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- customize-group
- describe-keymap
- customize-face
- org-toggle-tags-groups
- rename-file
- org-mode
- list-colors-display
+ org-refile
+ org-noter-kill-session
+ org-roam-bibtex-mode
+ unicode-fonts-setup
+ visual-line-mode
+ explain-pause-top
+ company-box-mode
 )
 
 ;; ----- amx-data -----
@@ -16,18 +16,18 @@
  (pdf-tools-install . 1)
  (load-file . 2)
  (counsel-load-library . 4)
- (explain-pause-top . 3)
+ (explain-pause-top . 5)
  (selectrum-mode . 4)
  (orb-note-actions . 1)
  (kill-this-buffer . 1)
  (evil-org-beginning-of-line . 1)
- (garbage-collect . 7)
+ (garbage-collect . 9)
  (powerthesaurus-lookup-word . 2)
  (straight-use-package . 1)
  (langtool-check . 2)
  (langtool-correct-buffer . 1)
  (langtool-check-done . 1)
- (explain-pause-mode . 2)
+ (explain-pause-mode . 3)
  (calendar . 1)
  (counsel-imenu . 1)
  (org-tree-to-indirect-buffer . 1)
@@ -36,7 +36,7 @@
  (company-diag . 5)
  (global-company-mode . 22)
  (counsel-describe-face . 2)
- (company-box-mode . 35)
+ (company-box-mode . 43)
  (smartparens-mode . 4)
  (show-smartparens-mode . 3)
  (all-the-icons-install-fonts . 1)
@@ -59,10 +59,10 @@
  (read-only-mode . 1)
  (describe-keymap . 3)
  (downcase-word . 1)
- (org-noter-kill-session . 5)
+ (org-noter-kill-session . 7)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
- (global-auto-revert-mode . 2)
+ (global-auto-revert-mode . 4)
  (git-gutter-mode . 2)
  (global-git-gutter-mode . 1)
  (highlight-function-calls-mode . 1)
@@ -123,12 +123,14 @@
  (ivy-mode . 4)
  (keyfreq-html-v2 . 1)
  (keyfreq-html . 1)
- (org-roam-bibtex-mode . 4)
- (visual-line-mode . 1)
- (org-refile . 1)
+ (org-roam-bibtex-mode . 6)
+ (visual-line-mode . 3)
+ (org-refile . 3)
  (list-colors-display . 1)
  (buffer-expose . 2)
- (org-mode . 1)
+ (org-mode . 2)
  (org-toggle-tags-groups . 2)
  (customize-face . 1)
+ (spell-fu-word-remove . 1)
+ (unicode-fonts-setup . 1)
 )
