@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- org-refile
- org-noter-kill-session
- org-roam-bibtex-mode
- unicode-fonts-setup
- visual-line-mode
- explain-pause-top
- company-box-mode
+ describe-char
+ describe-face
+ mu4e-compose-mode
+ describe-character-set
+ counsel-faces
+ org-mu4e-compose-org-mode
+ mu4e-org-mode
 )
 
 ;; ----- amx-data -----
@@ -36,7 +36,7 @@
  (company-diag . 5)
  (global-company-mode . 22)
  (counsel-describe-face . 2)
- (company-box-mode . 43)
+ (company-box-mode . 65)
  (smartparens-mode . 4)
  (show-smartparens-mode . 3)
  (all-the-icons-install-fonts . 1)
@@ -45,7 +45,7 @@
  (beacon-mode . 2)
  (global-eldoc-mode . 2)
  (rename-file . 2)
- (helm-recentf . 2)
+ (helm-recentf . 3)
  (helm-mini . 2)
  (helm-browse-project . 3)
  (helm-projects-find-files . 5)
@@ -106,7 +106,7 @@
  (helm-projectile-rg . 7)
  (helm-projectile-switch-project . 1)
  (counsel-fonts . 12)
- (describe-char . 4)
+ (describe-char . 16)
  (doom-modeline-mode . 4)
  (find-library . 1)
  (make-empty-file . 1)
@@ -133,4 +133,14 @@
  (customize-face . 1)
  (spell-fu-word-remove . 1)
  (unicode-fonts-setup . 1)
+ (org-cut-subtree . 1)
+ (org-paste-subtree . 1)
+ (org-roam-mode . 1)
+ (org-mu4e-compose-org-mode . 10)
+ (mu4e-org-mode . 4)
+ (mu4e-compose-mode . 2)
+ (mu4e-message-kill-buffer . 1)
+ (counsel-faces . 4)
+ (describe-face . 3)
+ (describe-character-set . 1)
 )
