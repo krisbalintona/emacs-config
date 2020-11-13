@@ -98,6 +98,7 @@ A pretty company autocomplete frontend that also displays candidate documentatio
 
 #+BEGIN_SRC emacs-lisp
   (use-package company-dict
+    :disabled t
     :custom
     (company-dict-dir (concat user-emacs-directory "dict/")) ; Where to look for dictionary files
     :config
