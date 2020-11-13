@@ -1,6 +1,5 @@
 #+TITLE: Email packages and settings
 
-
 * Mu4e
 
 Best email client
@@ -193,8 +192,10 @@ Best email client
   ;;       (error "No email account found"))))
   ;; (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
   (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
+  (add-hook 'mu4e-compose-mode-hook 'org-mu4e-compose-org-mode)
+  (add-hook 'mu4e-compose-mode-hook 'visual-fill-column-mode) ; Otherwise it won't immediately center
 
-                                          ; Queuing mail
+  ;; Queuing mail
   (setq smtpmail-queue-mail  't
         smtpmail-queue-dir  "~/Documents/Emails/Queue/cur")
 
@@ -220,6 +221,15 @@ Best email client
   (set-face-attribute 'mu4e-header-highlight-face nil :height 140 :font "FiraCode Nerd Font") ; Current item
   (set-face-attribute 'mu4e-flagged-face nil :height 140 :font "FiraCode Nerd Font")
   (set-face-attribute 'mu4e-unread-face nil :height 140 :font "FiraCode Nerd Font") ; Unread (pink) items
+
+  ;; Compose-mode - same height and font as org-mode to work well with org-mu4e-compose-org-mode
+  (set-face-attribute 'message-header-name nil :height 158 :font kb/variable-pitch-font)
+  (set-face-attribute 'message-header-cc nil :height 158 :font kb/variable-pitch-font)
+  (set-face-attribute 'message-header-to nil :height 158 :font kb/variable-pitch-font)
+  (set-face-attribute 'message-header-other nil :height 158 :font kb/variable-pitch-font)
+  (set-face-attribute 'message-header-xheader nil :height 158 :font kb/variable-pitch-font)
+  (set-face-attribute 'message-header-subject nil :height 158 :font kb/variable-pitch-font)
+  (set-face-attribute 'message-header-newsgroups nil :height 158 :font kb/variable-pitch-font)
 #+END_SRC
 * Mu4e-alert
 
