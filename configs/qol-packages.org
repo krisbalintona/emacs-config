@@ -292,3 +292,9 @@ Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= 
                                  ))
     )
 #+end_src
+* Git-timemachine
+
+Enable in current buffer to iterate through git revision history
+#+begin_src emacs-lisp
+  (use-package git-timemachine)
+#+end_src
