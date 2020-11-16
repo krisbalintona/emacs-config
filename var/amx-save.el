@@ -1,23 +1,23 @@
 
 ;; ----- amx-history -----
 (
+ visual-fill-column-mode
+ text-scale-adjust
+ text-scale-mode
+ org-roam-mode
+ recover-session-finish
+ org-mode
  describe-char
- describe-face
- mu4e-compose-mode
- describe-character-set
- counsel-faces
- org-mu4e-compose-org-mode
- mu4e-org-mode
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 15)
+ (customize-group . 17)
  (pdf-tools-install . 1)
  (load-file . 2)
  (counsel-load-library . 4)
  (explain-pause-top . 5)
- (selectrum-mode . 4)
+ (selectrum-mode . 6)
  (orb-note-actions . 1)
  (kill-this-buffer . 1)
  (evil-org-beginning-of-line . 1)
@@ -106,7 +106,7 @@
  (helm-projectile-rg . 7)
  (helm-projectile-switch-project . 1)
  (counsel-fonts . 12)
- (describe-char . 16)
+ (describe-char . 17)
  (doom-modeline-mode . 4)
  (find-library . 1)
  (make-empty-file . 1)
@@ -128,14 +128,14 @@
  (org-refile . 3)
  (list-colors-display . 1)
  (buffer-expose . 2)
- (org-mode . 2)
+ (org-mode . 3)
  (org-toggle-tags-groups . 2)
  (customize-face . 1)
  (spell-fu-word-remove . 1)
  (unicode-fonts-setup . 1)
  (org-cut-subtree . 1)
  (org-paste-subtree . 1)
- (org-roam-mode . 1)
+ (org-roam-mode . 2)
  (org-mu4e-compose-org-mode . 10)
  (mu4e-org-mode . 4)
  (mu4e-compose-mode . 2)
@@ -143,4 +143,14 @@
  (counsel-faces . 4)
  (describe-face . 3)
  (describe-character-set . 1)
+ (simpleclip-mode . 2)
+ (simpleclip-paste . 1)
+ (yank-pop . 1)
+ (org-agenda-redo . 1)
+ (org-agenda-refile . 1)
+ (git-timemachine . 1)
+ (recover-session-finish . 1)
+ (text-scale-mode . 4)
+ (text-scale-adjust . 1)
+ (visual-fill-column-mode . 4)
 )
