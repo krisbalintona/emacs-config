@@ -232,6 +232,12 @@
                :keymaps 'local
                "g" nil)
               ))
+  (add-hook 'org-super-agenda-mode-hook ; Don't rebuild agenda buffer after "g"
+            (lambda ()
+              (general-define-key
+               :keymaps 'local
+               "g" nil)
+              ))
 #+END_SRC
 * Org-ql
 
