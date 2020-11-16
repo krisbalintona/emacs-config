@@ -260,8 +260,8 @@ Quickly jump to characters
   (use-package ace-jump-mode
     :custom
     (ace-jump-mode-gray-background nil) ; Don't make text's background gray
-    (ace-jump-mode-scope 'visible) ; Everything visible
-    (ace-jump-mode-case-fold t) ; Ignore case
+    (ace-jump-mode-scope 'frame)
+    (ace-jump-mode-case-fold t) ; Ignore case?
     :config
 
     (general-define-key
