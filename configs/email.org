@@ -192,7 +192,7 @@ Best email client
   ;;       (error "No email account found"))))
   ;; (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
   (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
-  (add-hook 'mu4e-compose-mode-hook 'org-mu4e-compose-org-mode)
+  ;; (add-hook 'mu4e-compose-mode-hook 'org-mu4e-compose-org-mode)
   (add-hook 'mu4e-compose-mode-hook 'visual-fill-column-mode) ; Otherwise it won't immediately center
 
   ;; Queuing mail
