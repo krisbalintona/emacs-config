@@ -287,9 +287,8 @@ More powerful searching and selecting of todo headlines
     )
 #+END_SRC
 * Org-super-agenda
-** Org-super-agenda itself
 
-Autoload the package and start with nothing
+Autoload the package and start with no views
 #+BEGIN_SRC emacs-lisp
   (use-package org-super-agenda
     :after org-agenda
@@ -309,50 +308,101 @@ Autoload the package and start with nothing
     (setq org-agenda-custom-commands nil) ; Start from scratch
     )
 #+END_SRC
+* Views
 ** Org-agenda-views
+*** Active tasks
 
-Active tasks
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-agenda-custom-commands
-               '("p" "Current tasks"
-                 ((org-ql-block '(and (parent (todo "PROG"))
+               '("c" "Schoolwork"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:file-path "school.org"))) 
+                               (:name none
+                                      :auto-planning t)
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  (org-ql-block '(and (path "school.org")
+                                      (parent (todo "PROG"))
                                       (todo)
                                       (not (done)))
-                                ((org-ql-block-header "Current projects")
+                                ((org-ql-block-header "")
                                  (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
                                  (org-super-agenda-groups
-                                  '((:auto-parent t))
+                                  '((:auto-outline-path t))
                                   )))
-                  (agenda ""
-                          ((org-agenda-overriding-header "The near future")
-                           (org-habit-show-habits-only-for-today t)
-                           (org-agenda-start-day "+0") ; Start the agenda view with yesterday
-                           (org-agenda-span 4)
-                           (org-super-agenda-groups
-                            '((:discard (:file-path "habits.org"))
-                              (:name "Due"
-                                     :time-grid t
-                                     :scheduled today
-                                     :deadline today)
-                              (:name "Planned in the future"
-                                     :scheduled future)
-                              (:name "Due in the future"
-                                     :deadline future)
-                              (:name "Missed Items!"
-                                     :scheduled past
-                                     :deadline past)
-                              (:name "Uncategorized"
-                                     :anything t)
-                              ))
-                           ))
-                  (org-ql-block '(and (todo "PROG")
+                  (alltodo ""
+                           ((org-agenda-overriding-header "")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:file-path "school.org"))) 
+                               (:discard (:not (:todo "PROG")))
+                               (:name none
+                                      :auto-priority t)
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  (alltodo ""
+                           ((org-agenda-overriding-header "")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:file-path "school.org"))) 
+                               (:discard (:not (:todo "NEXT")))
+                               (:name none
+                                      :auto-priority t)
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  (org-ql-block '(and (path "school.org")
                                       (not (parent (todo)))
-                                      (not (children (todo)))
+                                      (not (todo "PROG" "NEXT"))
+                                      (todo)
                                       (not (done)))
-                                ((org-ql-block-header "Tasks by priority")
+                                ((org-ql-block-header "")
                                  (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
                                  (org-super-agenda-groups
-                                  '((:auto-priority t))
+                                  '((:anything t)
+                                    ))
+                                 ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("p" "Personal tasks"
+                 ((alltodo ""
+                           ((org-agenda-overriding-header "")
+                            (org-super-agenda-groups
+                             '((:discard (:file-path "school.org"))
+                               (:discard (:file-path "habits.org"))
+                               (:discard (:not (:todo "PROG")))
+                               (:tag "URGENT")
+                               (:tag "TOP")
+                               (:tag "DEMANDING")
+                               (:tag "TRANSITORY")
+                               (:tag "CHUNK")
+                               (:tag "BACKGROUND")
+                               (:auto-priority t)
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  (alltodo ""
+                           ((org-agenda-overriding-header "")
+                            (org-super-agenda-groups
+                             '((:discard (:file-path "school.org"))
+                               (:discard (:file-path "habits.org"))
+                               (:auto-planning t)
+                               (:discard (:anything t))
+                               ))
+                            ))
+                  (org-ql-block '(and (not (path "school.org"))
+                                      (not (path "habits.org"))
+                                      (parent (todo "PROG"))
+                                      (todo)
+                                      (not (done)))
+                                ((org-ql-block-header "")
+                                 (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                                 (org-super-agenda-groups
+                                  '((:auto-outline-path t))
                                   )))
                   ))
                t)
@@ -437,8 +487,8 @@ Active tasks
                   ))
                t)
 #+END_SRC
+*** Zettelkasten
 
-Zettelkasten
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("Zz" "Fresh Zettelkasten notes"
@@ -497,8 +547,8 @@ Zettelkasten
                   ))
                t)
 #+END_SRC
+*** Maintainence
 
-Maintainence
 #+BEGIN_SRC emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("xu" "Projects potentially in limbo (via stuck projects)"
@@ -617,8 +667,8 @@ Maintainence
                     ))
                  t)
 #+END_SRC
+*** Habits
 
-Habits
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("h" "Habits"
@@ -651,8 +701,8 @@ Habits
                   ))
                t)
 #+end_src
+*** File-specific
 
-File-specific
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("fw" "Schoolwork"
@@ -759,7 +809,7 @@ File-specific
                t)
 #+END_SRC
 
-* Agenda view faces
+** Agenda view faces
 
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'org-super-agenda
