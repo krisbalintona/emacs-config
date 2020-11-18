@@ -273,7 +273,7 @@ with org-roam (provides templates and modifies edit notes action)
      '(("n" "Reference paired with notes" plain (function org-roam-capture--get-point)
         ""
         :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)-${slug}"
-        :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS: bib_notes\n- CREATED :: %T\n- Time-stamp: <>\n- KEYWORDS :: ${keywords}\n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :WAITING:\n:PROPERTIES:\n:CATEGORY: bib_notes\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Bib Notes\")\n:END:\n\n* ${title} Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"
+        :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS: bib \n- CREATED :: %T\n- Time-stamp: <>\n- KEYWORDS :: ${keywords}\n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :WAITING:\n:PROPERTIES:\n:CATEGORY: bib_notes\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Bib Notes\")\n:END:\n\n* ${title} Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"
         :unnarrowed t)
 
        ;; ("r" "Plain reference" plain (function org-roam-capture--get-point)
