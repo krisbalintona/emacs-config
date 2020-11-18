@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- visual-fill-column-mode
- text-scale-adjust
- text-scale-mode
- org-roam-mode
- recover-session-finish
- org-mode
- describe-char
+ company-mode
+ company-box-mode
+ rename-file
+ org-id-store-link
+ org-insert-last-stored-link
+ org-mode-restart
+ global-company-mode
 )
 
 ;; ----- amx-data -----
@@ -34,9 +34,9 @@
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
  (company-diag . 5)
- (global-company-mode . 22)
+ (global-company-mode . 24)
  (counsel-describe-face . 2)
- (company-box-mode . 65)
+ (company-box-mode . 70)
  (smartparens-mode . 4)
  (show-smartparens-mode . 3)
  (all-the-icons-install-fonts . 1)
@@ -44,7 +44,7 @@
  (rainbow-delimiters-mode . 2)
  (beacon-mode . 2)
  (global-eldoc-mode . 2)
- (rename-file . 2)
+ (rename-file . 3)
  (helm-recentf . 3)
  (helm-mini . 2)
  (helm-browse-project . 3)
@@ -123,7 +123,7 @@
  (ivy-mode . 4)
  (keyfreq-html-v2 . 1)
  (keyfreq-html . 1)
- (org-roam-bibtex-mode . 6)
+ (org-roam-bibtex-mode . 8)
  (visual-line-mode . 3)
  (org-refile . 3)
  (list-colors-display . 1)
@@ -135,8 +135,8 @@
  (unicode-fonts-setup . 1)
  (org-cut-subtree . 1)
  (org-paste-subtree . 1)
- (org-roam-mode . 2)
- (org-mu4e-compose-org-mode . 10)
+ (org-roam-mode . 3)
+ (org-mu4e-compose-org-mode . 11)
  (mu4e-org-mode . 4)
  (mu4e-compose-mode . 2)
  (mu4e-message-kill-buffer . 1)
@@ -153,4 +153,8 @@
  (text-scale-mode . 4)
  (text-scale-adjust . 1)
  (visual-fill-column-mode . 4)
+ (org-id-store-link . 2)
+ (org-insert-link . 2)
+ (org-insert-last-stored-link . 1)
+ (company-mode . 1)
 )
