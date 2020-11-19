@@ -325,7 +325,7 @@ Autoload the package and start with no views
                                ))
                             ))
                   (org-ql-block '(and (path "school.org")
-                                      (parent (todo "PROG"))
+                                      (parent (tags "PROJECT"))
                                       (todo)
                                       (not (done)))
                                 ((org-ql-block-header "")
@@ -338,8 +338,8 @@ Autoload the package and start with no views
                             (org-super-agenda-groups
                              '((:discard (:not (:file-path "school.org"))) 
                                (:discard (:not (:todo "PROG")))
-                               (:name none
-                                      :auto-priority t)
+                               (:discard (:tag "PROJECT"))
+                               (:auto-priority t)
                                (:discard (:anything t))
                                ))
                             ))
@@ -348,14 +348,15 @@ Autoload the package and start with no views
                             (org-super-agenda-groups
                              '((:discard (:not (:file-path "school.org"))) 
                                (:discard (:not (:todo "NEXT")))
-                               (:name none
-                                      :auto-priority t)
+                               (:discard (:tag "PROJECT"))
+                               (:auto-priority t)
                                (:discard (:anything t))
                                ))
                             ))
                   (org-ql-block '(and (path "school.org")
                                       (not (parent (todo)))
                                       (not (todo "PROG" "NEXT"))
+                                      (not (tags "PROJECT"))
                                       (todo)
                                       (not (done)))
                                 ((org-ql-block-header "")
@@ -679,23 +680,7 @@ Autoload the package and start with no views
                            (org-agenda-span 3)
                            (org-super-agenda-groups
                             '((:discard (:not (:file-path "habits.org")))
-                              ;; (:name "Due"
-                              ;;        :time-grid t
-                              ;;        :deadline today)
-                              ;; (:name "Planned"
-                              ;;        :time-grid t
-                              ;;        :scheduled today)
-                              ;; (:name "Due in the future"
-                              ;;        :time-grid t
-                              ;;        :deadline future)
-                              ;; (:name "Planned in the future"
-                              ;;        :time-grid t
-                              ;;        :scheduled future)
-                              ;; (:name "Missed Items!"
-                              ;;        :scheduled past
-                              ;;        :deadline past)
-                              ;; (:name "Uncategorized"
-                              ;;        :anything t)
+                              (:anything t)
                               ))
                            ))
                   ))
