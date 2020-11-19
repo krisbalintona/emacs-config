@@ -174,7 +174,7 @@
      (org-agenda-priority)
      (org-agenda-todo)
      ;; (call-interactively 'jethro/my-org-agenda-set-effort)
-     (call-interactively 'org-agenda-set-effort)
+     ;; (org-agenda-set-effort)
      (org-agenda-refile nil nil t)
      ))
 #+END_SRC
