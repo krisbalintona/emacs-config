@@ -22,3 +22,7 @@ sudo timeshift --create --comment "Good morning"
 stc
 sudo timeshift --create --comment "Good morning"
 stc
+stc
+ls
+ls ~/Documents
+stc

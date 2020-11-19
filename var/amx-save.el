@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- company-mode
+ org-toggle-checkbox
+ git-timemachine
+ git-timemachine-show-previous-revision
  company-box-mode
- rename-file
- org-id-store-link
- org-insert-last-stored-link
  org-mode-restart
  global-company-mode
+ describe-char
 )
 
 ;; ----- amx-data -----
@@ -29,7 +29,7 @@
  (langtool-check-done . 1)
  (explain-pause-mode . 3)
  (calendar . 1)
- (counsel-imenu . 1)
+ (counsel-imenu . 2)
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
@@ -59,7 +59,7 @@
  (read-only-mode . 1)
  (describe-keymap . 3)
  (downcase-word . 1)
- (org-noter-kill-session . 7)
+ (org-noter-kill-session . 8)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
  (global-auto-revert-mode . 4)
@@ -69,7 +69,7 @@
  (helm-M-x . 1)
  (helm-occur . 1)
  (helm-apropos . 1)
- (counsel-apropos . 2)
+ (counsel-apropos . 3)
  (helm-imenu . 1)
  (helm-swoop . 5)
  (helm-multi-files . 1)
@@ -125,7 +125,7 @@
  (keyfreq-html . 1)
  (org-roam-bibtex-mode . 8)
  (visual-line-mode . 3)
- (org-refile . 3)
+ (org-refile . 4)
  (list-colors-display . 1)
  (buffer-expose . 2)
  (org-mode . 3)
@@ -135,7 +135,7 @@
  (unicode-fonts-setup . 1)
  (org-cut-subtree . 1)
  (org-paste-subtree . 1)
- (org-roam-mode . 3)
+ (org-roam-mode . 4)
  (org-mu4e-compose-org-mode . 11)
  (mu4e-org-mode . 4)
  (mu4e-compose-mode . 2)
@@ -147,8 +147,8 @@
  (simpleclip-paste . 1)
  (yank-pop . 1)
  (org-agenda-redo . 1)
- (org-agenda-refile . 1)
- (git-timemachine . 1)
+ (org-agenda-refile . 3)
+ (git-timemachine . 3)
  (recover-session-finish . 1)
  (text-scale-mode . 4)
  (text-scale-adjust . 1)
@@ -157,4 +157,7 @@
  (org-insert-link . 2)
  (org-insert-last-stored-link . 1)
  (company-mode . 1)
+ (samray/esh-history . 1)
+ (git-timemachine-show-previous-revision . 1)
+ (org-toggle-checkbox . 1)
 )
