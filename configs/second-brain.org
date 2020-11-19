@@ -8,7 +8,7 @@ Zettelkasten and Evergreen notes
     ;; :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master") ; Incompatible with straight.el
     :straight (org-roam :type git :host github :repo "org-roam/org-roam")
     :after company ; Necessary for some reason
-    :hook (emacs-startup . org-roam-mode)
+    :hook (server-after-make-frame . (lambda () (org-roam-mode t)))
     :custom
     (org-roam-directory kb/roam-dir)
     (org-roam-verbose nil) ; Don't echo messages that aren't errors
