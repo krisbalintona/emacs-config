@@ -26,3 +26,11 @@ stc
 ls
 ls ~/Documents
 stc
+~/.local/share/applications/
+ls
+ls /
+ls /usr/share/applications
+/usr/share/applications
+ls
+ff virt-manager.desktop
+sudo timeshift --create --comment "After getting back to my room"

@@ -17702,6 +17702,7 @@ cesspools
 cetacean
 cetacean's
 cetaceans
+cetera
 ceteris
 Cetus
 Cetus's
@@ -34919,6 +34920,7 @@ Eldon's
 eldritch
 Eleanor
 Eleanor's
+eLearning
 Eleazar
 Eleazar's
 elect
@@ -96365,6 +96367,7 @@ schoolchildren
 schoolchildren's
 schooldays
 schooled
+schoolers
 schoolfellow
 schoolfellow's
 schoolfellows

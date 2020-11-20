@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- org-toggle-checkbox
- git-timemachine
- git-timemachine-show-previous-revision
- company-box-mode
- org-mode-restart
  global-company-mode
- describe-char
+ company-diag
+ company-box-mode
+ counsel-imenu
+ swiper
+ org-mode-restart
+ org-toggle-checkbox
 )
 
 ;; ----- amx-data -----
@@ -29,14 +29,14 @@
  (langtool-check-done . 1)
  (explain-pause-mode . 3)
  (calendar . 1)
- (counsel-imenu . 2)
+ (counsel-imenu . 3)
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
- (company-diag . 5)
- (global-company-mode . 24)
+ (company-diag . 6)
+ (global-company-mode . 26)
  (counsel-describe-face . 2)
- (company-box-mode . 70)
+ (company-box-mode . 74)
  (smartparens-mode . 4)
  (show-smartparens-mode . 3)
  (all-the-icons-install-fonts . 1)
@@ -49,7 +49,7 @@
  (helm-mini . 2)
  (helm-browse-project . 3)
  (helm-projects-find-files . 5)
- (org-mode-restart . 26)
+ (org-mode-restart . 27)
  (helm-minibuffer-history . 1)
  (helm-find-files . 3)
  (find-file . 4)
@@ -135,7 +135,7 @@
  (unicode-fonts-setup . 1)
  (org-cut-subtree . 1)
  (org-paste-subtree . 1)
- (org-roam-mode . 4)
+ (org-roam-mode . 6)
  (org-mu4e-compose-org-mode . 11)
  (mu4e-org-mode . 4)
  (mu4e-compose-mode . 2)
@@ -160,4 +160,6 @@
  (samray/esh-history . 1)
  (git-timemachine-show-previous-revision . 1)
  (org-toggle-checkbox . 1)
+ (eshell-kill-input . 1)
+ (swiper . 1)
 )
