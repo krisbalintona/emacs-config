@@ -7,9 +7,7 @@
 Point autocompletion backend
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    :hook ((text-mode . company-mode)
-           (prog-mode . company-mode)
-           (company-mode . company-tng-mode)
+    :hook ((after-init . global-company-mode)
            (company-mode . evil-normalize-keymaps))
     :custom
     (company-show-numbers t) ; Number the candidates 
@@ -33,7 +31,6 @@ Point autocompletion backend
     :config
 
     (add-to-list 'company-backends 'company-capf) ; For org-roam
-    (add-to-list 'company-frontends 'company-tng-frontend) ; Company-tng to use tab to cycle through suggestions
 
     (general-define-key
      :keymaps 'company-active-map
