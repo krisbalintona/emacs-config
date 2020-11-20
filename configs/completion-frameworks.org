@@ -15,10 +15,10 @@ Point autocompletion backend
     (company-tooltip-width-grow-only t)
     (company-tooltip-flip-when-above t)
     (company-tooltip-align-annotations t)
-    (company-idle-delay 0.35)
+    (company-idle-delay 0.55)
     ;; (company-minimum-prefix-length 2)
     (company-minimum-prefix-length 1)
-    (company-require-match t)
+    (company-require-match 'company-explicit-action-p)
     (company-selection-wrap-around t) ; Wrap when selecting canditates
     (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
 
@@ -53,7 +53,7 @@ A pretty company autocomplete frontend that also displays candidate documentatio
     (company-box-show-single-candidate 'always)
     (company-box-backends-colors nil)
     (company-box-max-candidates 7)
-    (company-box-scrollbar nil)
+    (company-box-scrollbar t)
     (company-box-icons-alist 'company-box-icons-all-the-icons)
     (company-box-icons-all-the-icons
      (let ((all-the-icons-scale-factor 0.8))
