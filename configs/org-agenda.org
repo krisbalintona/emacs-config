@@ -376,6 +376,7 @@ Autoload the package and start with no views
                              '((:discard (:file-path "school.org"))
                                (:discard (:file-path "habits.org"))
                                (:discard (:not (:todo "PROG")))
+                               (:discard (:tag "PROJECT"))
                                (:tag "URGENT")
                                (:tag "TOP")
                                (:tag "DEMANDING")
@@ -410,19 +411,7 @@ Autoload the package and start with no views
 
   (add-to-list 'org-agenda-custom-commands
                '("n" "What's next?"
-                 (;; (org-ql-block '(or (and (parent (todo "NEXT"))
-                  ;;                         (not (done)))
-                  ;;                    (and (children (todo))
-                  ;;                         (todo "NEXT")
-                  ;;                         (not (done))
-                  ;;                         ))
-                  ;;               ((org-ql-block-header "Next projects")
-                  ;;                (org-super-agenda-groups
-                  ;;                 '((:name "Projects" :children todo)
-                  ;;                   (:auto-parent t)
-                  ;;                   ))
-                  ;;                ))
-                  (org-ql-block '(and (not (parent (todo)))
+                 ((org-ql-block '(and (not (parent (todo)))
                                       (not (children (todo)))
                                       (todo "NEXT")
                                       (not (done)))
