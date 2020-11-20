@@ -444,33 +444,21 @@ Autoload the package and start with no views
                                            :anything t)
                                     ))
                                  ))
-                  ;; (alltodo ""
-                  ;;          ((org-agenda-overriding-header "What else is on my to-do list?")
-                  ;;           (org-agenda-prefix-format
-                  ;;            '((agenda . " %i %-12:c%?-12t% s")
-                  ;;              (todo . " %i %-13:c   %-6e %?s %t | ")
-                  ;;              (tags . " %i %-12:c")
-                  ;;              (search . " %i %-12:c")
-                  ;;              ))
-                  ;;         (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
-                  ;;           (org-super-agenda-groups
-                  ;;            '((:discard (:not (:todo "NEXT")))
-                  ;;              (:name "No effort or effort less than 5 minutes"
-                  ;;                     :effort< "5")
-                  ;;              (:name "10 minutes or less"
-                  ;;                     :effort< "11")
-                  ;;              (:name "30 minutes or less"
-                  ;;                     :effort< "31")
-                  ;;              (:name "1 hour or less"
-                  ;;                     :effort< "61")
-                  ;;              (:name "More than an hour but less than 3"
-                  ;;                     :effort< "180")
-                  ;;              (:name "3 hours or more"
-                  ;;                     :effort> "179")
-                  ;;              (:name "Next tasks without an effort rating"
-                  ;;                     :anything t)
-                  ;;              ))
-                  ;;           ))
+                  ))
+               t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("T" "Tickles"
+                 ((agenda ""
+                          ((org-agenda-overriding-header "My habit calendar")
+                           (org-agenda-span 'week)
+                           (org-agenda-start-day "+2") ; Start the agenda view with yestersy
+                           (org-agenda-span 'fortnight)
+                           (org-super-agenda-groups
+                            '((:discard (:not (:todo "TICKLE")))
+                              (:anything t)
+                              ))
+                           ))
                   ))
                t)
 
