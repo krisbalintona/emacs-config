@@ -61,14 +61,14 @@
   (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "HABIT(H)" "WAITING(w!)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)")
-          (sequence "HOLD(h!)" "SOMEDAY(s)" "INACTIVE(i@)" "|" "CANCELLED(c@/!)")
+        '((sequence "TODO(t)" "WAITING(w!)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)")
+          (sequence "TICKLE(T)" "HOLD(h!)" "SOMEDAY(s)" "INACTIVE(i@)" "|" "CANCELLED(c@/!)")
           ))
 
   (setq org-todo-keyword-faces
         '(("TODO" :foreground "orange" :underline t)
           ("NEXT" :foreground "orchid" :weight bold)
-          ("HABIT" :foreground "bisque3" :weight bold)
+          ("TICKLE" :foreground "bisque3" :weight bold)
           ("WAITING" :foreground "khaki1" :weight bold)
           ("PROG" :foreground "turquoise" :underline t)
           ("DONE" :foreground "chartreuse" :weight normal)
