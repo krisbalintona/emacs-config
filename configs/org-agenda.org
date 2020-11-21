@@ -198,13 +198,13 @@
 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-modules 'org-habit)
-  (setq org-habit-show-habits-only-for-today t
+  (setq org-habit-show-habits-only-for-today nil ; I want to see when habits are rescheduled for
         org-habit-preceding-days 8
-        org-habit-following-days 4)
-  ;; org-habit-graph-column 110)
+        org-habit-following-days 4
+        org-habit-graph-column 90)
+
   (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t))) ; Force showing of habits in agenda every day at 6AM
 
-  (setq org-habit-graph-column 90)
 #+END_SRC
 ** Keybindings
 
