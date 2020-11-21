@@ -34,14 +34,13 @@ Point autocompletion backend
 
     (general-define-key
      :keymaps 'company-active-map
-     "RET" 'nil
-     [return] 'nil
+     "RET" 'org-return
+     [return] 'org-return
      "TAB" #'company-complete-selection
      [tab] #'company-complete-selection
      )
     )
 #+END_SRC
-
 ** Company-box
 
 A pretty company autocomplete frontend that also displays candidate documentation
