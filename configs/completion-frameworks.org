@@ -16,8 +16,8 @@ Point autocompletion backend
     (company-tooltip-flip-when-above t)
     (company-tooltip-align-annotations t)
     (company-idle-delay 0.55)
-    ;; (company-minimum-prefix-length 2)
-    (company-minimum-prefix-length 1)
+    (company-tooltip-idle-delay 0.7)
+    (company-minimum-prefix-length 2)
     (company-require-match 'company-explicit-action-p)
     (company-selection-wrap-around t) ; Wrap when selecting canditates
     (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
