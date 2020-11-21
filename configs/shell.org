@@ -239,7 +239,6 @@ Truncate eshell directory path
 
 #+BEGIN_SRC emacs-lisp
   (use-package esh-autosuggest
-    :disabled ; Fish does this better?
     :hook (eshell-mode . esh-autosuggest-mode)
     :custom
     (esh-autosuggest-delay 0.5)
@@ -253,6 +252,7 @@ Truncate eshell directory path
 Uses pcomplete completion framework with completion from fish (the shell)
 #+BEGIN_SRC emacs-lisp
   (use-package fish-completion
+    :disabled ; Doesn't work?
     :hook (eshell-mode . (lambda ()
                            (when (and (executable-find "fish")
                                       (require 'fish-completion nil t))
