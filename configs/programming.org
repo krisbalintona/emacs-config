@@ -118,16 +118,6 @@ Manage project directories
       )
     )
 #+END_SRC
-* Lisp-extra-font-lock
-
-Give faces to elisp symbols
-#+begin_src emacs-lisp
-  (use-package lisp-extra-font-lock
-    :hook (emacs-lisp-mode . (lambda () (lisp-extra-font-lock-mode t)))
-    :config
-    ;; (lisp-extra-font-lock-global-mode 1)
-    )
-#+end_src
 * Highlight-function-calls
 
 Give function calls a special face (default is underline)
@@ -273,7 +263,18 @@ Helpful parenthesis indicator
     (show-paren-mode t)
     )
 #+END_SRC
-* Elisp-demos
+* Elisp
+** Lisp-extra-font-lock
+
+Give faces to elisp symbols
+#+begin_src emacs-lisp
+  (use-package lisp-extra-font-lock
+    :hook (emacs-lisp-mode . (lambda () (lisp-extra-font-lock-mode t)))
+    :config
+    ;; (lisp-extra-font-lock-global-mode 1)
+    )
+#+end_src
+** Elisp-demos
 
 Add example code snippets to some of the help windows
 #+BEGIN_SRC emacs-lisp
