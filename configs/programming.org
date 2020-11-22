@@ -283,3 +283,21 @@ Add example code snippets to some of the help windows
     (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
     )
 #+END_SRC
+* Lua
+** Lua-mode
+
+Major-mode for the Lua language
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :custom
+    (lua-indent-level 2) ; lua-indent-level defaults to 3 otherwise. Madness.
+    (lua-indent-string-contents t) ; Contents of a multiline string will be indented
+    )
+#+end_src
+
+** Company-lua
+
+Company backend for Lua
+#+begin_src emacs-lisp
+  (use-package company-lua)
+#+end_src
