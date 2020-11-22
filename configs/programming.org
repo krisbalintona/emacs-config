@@ -9,6 +9,7 @@
     (setq org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it were in the language's major mode
     )
 #+end_src
+
 * Lsp-mode
 
 Syntax highlighting for every language
@@ -28,6 +29,7 @@ Syntax highlighting for every language
       "lX" 'lsp-execute-code-action)
     )
 #+END_SRC
+
 * Doom-snippets
 
 Large library of snippet templates
@@ -39,6 +41,7 @@ Large library of snippet templates
     ;; :quelpa (doom-snippets :fetcher git :url "https://github.com/hlissner/doom-snippets")
     )
 #+END_SRC
+
 * Org-tempo
 
 #+BEGIN_SRC emacs-lisp
@@ -52,6 +55,7 @@ Large library of snippet templates
   ;; (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
   ;; (add-to-list 'org-structure-template-alist '("json" . "src json"))
 #+END_SRC
+
 * Yasnippet
 
 Template-expansion system (doesn't include templates)
@@ -68,6 +72,7 @@ Template-expansion system (doesn't include templates)
     (yas-reload-all)
     )
 #+END_SRC
+
 * Projectile
 
 Manage project directories
@@ -118,6 +123,7 @@ Manage project directories
       )
     )
 #+END_SRC
+
 * Highlight-function-calls
 
 Give function calls a special face (default is underline)
@@ -126,6 +132,7 @@ Give function calls a special face (default is underline)
     :hook (after-init . highlight-function-calls-mode)
     )
 #+end_src
+
 * Magit
 
 You know the deal
@@ -170,6 +177,7 @@ You know the deal
       )
     )
 #+END_SRC
+
 * Git-gutter-fringes
 
 Diffs in fringes
@@ -194,6 +202,7 @@ Diffs in fringes
     (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center t))
     )
 #+end_src
+
 * Highlight-indent-guides
 
 Show indicator for indentation levels (like in VS Code)
@@ -208,6 +217,7 @@ Show indicator for indentation levels (like in VS Code)
     (highlight-indent-guides-auto-set-faces) ; Set faces based on theme
     )
 #+END_SRC
+
 * Flycheck
 
 Checking your code
@@ -229,12 +239,14 @@ Checking your code
     (flycheck-indication-mode 'right-fringe)
     )
 #+END_SRC
+
 * Prettier
 
 Reformats code automatically for some languages
 #+begin_src emacs-lisp
   (use-package prettier)
 #+end_src
+
 * Rainbow-mode
 
 Colorify your color codes
@@ -244,6 +256,7 @@ Colorify your color codes
            (prog-mode . rainbow-mode))
     )
 #+END_SRC
+
 * Highlight-quoted
 
 Make quoted symbols easier to distinguish from free variables by highlighting them
@@ -263,7 +276,9 @@ Helpful parenthesis indicator
     (show-paren-mode t)
     )
 #+END_SRC
+
 * Elisp
+
 ** Lisp-extra-font-lock
 
 Give faces to elisp symbols
@@ -274,6 +289,7 @@ Give faces to elisp symbols
     ;; (lisp-extra-font-lock-global-mode 1)
     )
 #+end_src
+
 ** Elisp-demos
 
 Add example code snippets to some of the help windows
@@ -283,7 +299,9 @@ Add example code snippets to some of the help windows
     (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
     )
 #+END_SRC
+
 * Lua
+
 ** Lua-mode
 
 Major-mode for the Lua language
@@ -292,6 +310,12 @@ Major-mode for the Lua language
     :custom
     (lua-indent-level 2) ; lua-indent-level defaults to 3 otherwise. Madness.
     (lua-indent-string-contents t) ; Contents of a multiline string will be indented
+    :config
+    (general-define-key ; Lua-mode overwrites my eyebrowse-last-window-config binding
+     :keymaps 'lua-mode-map
+     :states '(motion normal visual)
+     "gz" 'eyebrowse-last-window-config
+     )
     )
 #+end_src
 
