@@ -34,3 +34,11 @@ ls /usr/share/applications
 ls
 ff virt-manager.desktop
 sudo timeshift --create --comment "After getting back to my room"
+mu init
+sudo timeshift --create --comment "Getting back in my room	"
+sudo timeshift --create --comment "Getting back in my room"
+sudo timeshift --create --comment "Right before going to bed"
+sudo find / -name rc.lua
+cp /etc/xdg/awesome/rc.lua ~/.config/awesome/rc.lua
+mkdir ~/.config/awesome/
+cp /etc/xdg/awesome/rc.lua ~/.config/awesome/rc.lua

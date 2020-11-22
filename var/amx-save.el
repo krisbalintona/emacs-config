@@ -1,21 +1,21 @@
 
 ;; ----- amx-history -----
 (
- global-company-mode
- company-diag
+ flyspell-mode
+ unpackaged/reload-package
+ unpackaged/magit-log-date-headers-mode
+ unpackaged/org-fix-blank-lines
+ unpackaged/font-compare
  company-box-mode
- counsel-imenu
- swiper
  org-mode-restart
- org-toggle-checkbox
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 17)
+ (customize-group . 19)
  (pdf-tools-install . 1)
  (load-file . 2)
- (counsel-load-library . 4)
+ (counsel-load-library . 6)
  (explain-pause-top . 5)
  (selectrum-mode . 6)
  (orb-note-actions . 1)
@@ -33,7 +33,7 @@
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
- (company-diag . 6)
+ (company-diag . 7)
  (global-company-mode . 26)
  (counsel-describe-face . 2)
  (company-box-mode . 74)
@@ -96,7 +96,7 @@
  (helm-projectile-find-file . 2)
  (projectile-global-mode . 1)
  (esup . 2)
- (flyspell-mode . 1)
+ (flyspell-mode . 2)
  (artbollocks-count-words . 1)
  (artbollocks-mode . 5)
  (writegood-mode . 1)
@@ -162,4 +162,16 @@
  (org-toggle-checkbox . 1)
  (eshell-kill-input . 1)
  (swiper . 1)
+ (mu4e-kill-update-mail . 1)
+ (mu4e-update-mail-and-index . 1)
+ (fish-completion-mode . 2)
+ (esh-autosuggest-mode . 1)
+ (eshell-kill-process . 1)
+ (lua-mode . 2)
+ (unpackaged/font-compare . 2)
+ (unpackaged/org-fix-blank-lines . 6)
+ (unpackaged/magit-log-date-headers-mode . 3)
+ (unpackaged/magit-status . 1)
+ (unpackaged/reload-package . 1)
+ (flyspell-correct-wrapper . 2)
 )
