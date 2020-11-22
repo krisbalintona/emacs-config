@@ -41,6 +41,7 @@ Cool version of nav-flash
     (beacon-mode)
     )
 #+END_SRC
+
 * Saveplace
 
 Save and restore point in files
@@ -50,6 +51,7 @@ Save and restore point in files
     (save-place-mode)
     )
 #+END_SRC
+
 * Which-key
 
 Show keybinds
@@ -75,6 +77,7 @@ Show keybinds
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons)
 #+END_SRC
+
 * Hide-mode-line
 
 Hide the modeline when you don't want to see it
@@ -132,6 +135,7 @@ Color-code your parentheses
     :hook (prog-mode . rainbow-delimiters-mode)
     )
 #+END_SRC
+
 * Unicode-fonts
 
 #+BEGIN_SRC emacs-lisp
@@ -177,6 +181,7 @@ Show emojiis
     (global-emojify-mode t)
     )
 #+END_SRC
+
 * Pinetry
 
 Emacs can be prompted for the PIN of GPG private keys, we just need to set epa-pinentry-mode to accomplish that:
@@ -185,6 +190,7 @@ Emacs can be prompted for the PIN of GPG private keys, we just need to set epa-p
   (setq epg-pinentry-mode 'loopback)
   ;; (pinentry-start) ; This function doesn't exist?
 #+END_SRC
+
 * Anzu
 
 Highlight indicators during replace and regexp
@@ -197,6 +203,7 @@ Highlight indicators during replace and regexp
     (general-define-key [remap query-replace] 'anzu-query-replace-regexp)
     )
 #+end_src
+
 * Expand-region
 
 Incrementally select a region outward
@@ -240,6 +247,7 @@ Preview line before you jump to it with =M-x goto-line=
     (general-define-key [remap goto-line] 'goto-line-preview) ; Remap
     )
 #+end_src
+
 * Ace-link
 
 Click links easier
@@ -253,6 +261,7 @@ Click links easier
      )
     )
 #+end_src
+
 * Ace-jump
 
 Quickly jump to characters
@@ -269,6 +278,7 @@ Quickly jump to characters
      )
     )
 #+end_src
+
 * Keyfreq
 
 See a heatmap of your keypresses
@@ -292,9 +302,31 @@ Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= 
                                  ))
     )
 #+end_src
+
 * Git-timemachine
 
 Enable in current buffer to iterate through git revision history
 #+begin_src emacs-lisp
   (use-package git-timemachine)
+#+end_src
+
+* Better-jumper
+
+Better version of evil-jump
+#+begin_src emacs-lisp
+  (use-package better-jumper
+    :after evil
+    :hook (evil-mode . better-jumper-mode)
+    :custom
+    (better-jumper-context 'window)
+    (better-jumper-new-window-behavior 'copy)
+    (better-jumper-max-length 200)
+    (better-jumper-use-evil-jump-advice t)
+    :config
+    (general-define-key
+     :keymaps 'evil-motion-state-map
+     "C-o" 'better-jumper-jump-backward
+     "C-i" 'better-jumper-jump-forward
+    )
+    )
 #+end_src
