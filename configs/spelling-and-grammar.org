@@ -22,6 +22,24 @@ Fast spell checking
     )
 #+END_SRC
 
+* Flyspell-correct
+
+** Flyspell-correct itself
+
+#+begin_src emacs-lisp
+  (use-package flyspell-correct
+    :disabled t ; Dictionary of spell-fu conflicts for now
+    )
+#+end_src
+
+** Flyspell-correct-ivy
+
+#+begin_src emacs-lisp
+  (use-package flyspell-correct-ivy
+    :disabled t ; Dictionary of spell-fu conflicts for now
+    )
+#+end_src
+
 * Define-word
 
 See definitions within Emacs
@@ -33,6 +51,7 @@ See definitions within Emacs
     (global-set-key (kbd "C-c D") 'define-word)
     )
 #+END_SRC
+
 * Google-translate
 
 Translate strings via Google Translate
@@ -42,6 +61,7 @@ Translate strings via Google Translate
     (general-define-key "C-c t" '(google-translate-smooth-translate :which-key "Google translate"))
     )
 #+end_src
+
 * Powerthesaurus
 
 Insert or search words in thesaurus
@@ -52,6 +72,7 @@ Insert or search words in thesaurus
     (global-set-key (kbd "C-c l") 'powerthesaurus-lookup-word-dwim)
     )
 #+END_SRC
+
 * Writegood-mode
 
 #+begin_src emacs-lisp
@@ -59,6 +80,7 @@ Insert or search words in thesaurus
     :hook (text-mode . writegood-mode)
     )
 #+end_src
+
 * Langtool
 
 #+begin_src emacs-lisp
