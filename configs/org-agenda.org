@@ -1,6 +1,7 @@
 #+TITLE: Org-agenda configuration
 
 * Org-agenda itself
+
 ** Setting directories and variables
 
 #+BEGIN_SRC emacs-lisp
@@ -13,6 +14,7 @@
         org-log-done 'time ; When done add CLOSED line with inactive timestamp
         org-log-into-drawer t) ; But everything into a drawer as opposed to appending it
 #+END_SRC
+
 ** Refiling and archiving
 
 #+BEGIN_SRC emacs-lisp
@@ -40,6 +42,7 @@
   ;; Save all buffers after refiling to avoid losing progress
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
 #+END_SRC
+
 ** Org todo settings
 
 #+BEGIN_SRC emacs-lisp
@@ -115,6 +118,7 @@
 
   (add-hook 'org-clock-out-hook 'kb/remove-empty-drawer-on-clock-out 'append)
 #+END_SRC
+
 ** Agenda view and stuck tasks
 
 #+BEGIN_SRC emacs-lisp
@@ -178,6 +182,7 @@
      (org-agenda-refile nil nil t)
      ))
 #+END_SRC
+
 ** Make sure org-agenda doesn't keep files open
 
 #+BEGIN_SRC emacs-lisp
@@ -194,6 +199,7 @@
   (advice-add 'org-search-view :around #'my-org-keep-quiet)
   (advice-add 'org-tags-view   :around #'my-org-keep-quiet)
 #+END_SRC
+
 ** Habits
 
 #+BEGIN_SRC emacs-lisp
@@ -206,6 +212,7 @@
   (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t))) ; Force showing of habits in agenda every day at 6AM
 
 #+END_SRC
+
 ** Keybindings
 
 #+BEGIN_SRC emacs-lisp
@@ -239,6 +246,7 @@
                "g" nil)
               ))
 #+END_SRC
+
 * Org-ql
 
 More powerful searching and selecting of todo headlines
@@ -286,6 +294,7 @@ More powerful searching and selecting of todo headlines
       )
     )
 #+END_SRC
+
 * Org-super-agenda
 
 Autoload the package and start with no views
@@ -308,8 +317,11 @@ Autoload the package and start with no views
     (setq org-agenda-custom-commands nil) ; Start from scratch
     )
 #+END_SRC
+
 * Views
+
 ** Org-agenda-views
+
 *** Active tasks
 
 #+BEGIN_SRC emacs-lisp
@@ -465,6 +477,7 @@ Autoload the package and start with no views
                   ))
                t)
 #+END_SRC
+
 *** Zettelkasten
 
 #+BEGIN_SRC emacs-lisp
@@ -525,6 +538,7 @@ Autoload the package and start with no views
                   ))
                t)
 #+END_SRC
+
 *** Maintainence
 
 #+BEGIN_SRC emacs-lisp
@@ -620,7 +634,7 @@ Autoload the package and start with no views
                            ((org-agenda-overriding-header "Tasks to refile")
                             (org-super-agenda-groups
                              '((:discard (:not (:tag "REFILE")))
-                               (:discard (:not (todo "WAITING" "TICKLE")))
+                               (:discard (:todo ("WAITING" "TICKLE")))
                                (:discard (:file-path "habits.org"))
                                (:auto-tags t)
                                (:discard (:anything t))
@@ -646,6 +660,7 @@ Autoload the package and start with no views
                   ))
                t)
 #+END_SRC
+
 *** Habits
 
 #+begin_src emacs-lisp
@@ -664,6 +679,7 @@ Autoload the package and start with no views
                   ))
                t)
 #+end_src
+
 *** File-specific
 
 #+BEGIN_SRC emacs-lisp
@@ -781,6 +797,7 @@ Autoload the package and start with no views
     (set-face-attribute 'org-agenda-structure nil :height 180 :font kb/variable-pitch-font :bold t :italic t :foreground "DarkOliveGreen3" :underline t)
     )
   #+END_SRC
+
 * Org-capture-templates
 
 #+BEGIN_SRC emacs-lisp
@@ -853,6 +870,7 @@ Autoload the package and start with no views
            :jump-to-captured t)
           ))
 #+END_SRC
+
 * Org-wild-notifier
 
 #+BEGIN_SRC emacs-lisp
