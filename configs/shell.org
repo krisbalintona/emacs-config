@@ -77,6 +77,7 @@ Make it fancy
 #+BEGIN_SRC emacs-lisp
 ;; Go to https://github.com/daviwil/dotfiles/blob/master/Emacs.org#better-colors
 #+END_SRC
+
 * My own Eshell prompt
 
 Entirely taken from [[http://www.modernemacs.com/post/custom-eshell/][Making eshell your own | Modern Emacs]]
@@ -173,6 +174,7 @@ Not sure what esh-opt is yet
     (setq eshell-visual-commands '("htop" "nvim")) ; Commands to run in term buffer to properly display from eshell
     ) 
 #+end_src
+
 * Eshell-toggle
 
 Toggle eshell window in bottom of current buffer
@@ -193,12 +195,14 @@ Toggle eshell window in bottom of current buffer
       )
     )
 #+END_SRC
+
 * Smartparens
 
 Autopairing parentheses
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :hook ((eshell-mode . smartparens-mode)
+           (lua-mode . smartparens-mode)
            (text-mode . smartparens-mode)
            (smartparens-mode . show-smartparens-mode)) ; Subtlely highlight matching parentheses
     :custom
@@ -207,18 +211,21 @@ Autopairing parentheses
     (sp-pair "'" nil :actions :rem) ; Don't pair '
     )
 #+END_SRC
+
 * Eshell-up
 
 Go up directories easily
 #+BEGIN_SRC emacs-lisp
   (use-package eshell-up)
 #+END_SRC
+
 * Eshell-z
 
 Better and quicker usage of cd
 #+BEGIN_SRC emacs-lisp
   (use-package eshell-z)
 #+END_SRC
+
 * Eshell-help
 
 See help doctrings for functions easlily via =M-x esh-help-run-help=
@@ -228,6 +235,7 @@ See help doctrings for functions easlily via =M-x esh-help-run-help=
     (setup-esh-help-eldoc)
     )
 #+END_SRC
+
 * Shrink-path
 
 Truncate eshell directory path
@@ -235,6 +243,7 @@ Truncate eshell directory path
 #+BEGIN_SRC emacs-lisp
   (use-package shrink-path)
 #+END_SRC
+
 * Esh-autosuggest
 
 #+BEGIN_SRC emacs-lisp
@@ -247,6 +256,7 @@ Truncate eshell directory path
     (set-face-background 'company-preview nil)
     )
 #+END_SRC
+
 * Fish-completion
 
 Uses pcomplete completion framework with completion from fish (the shell)
@@ -260,6 +270,7 @@ Uses pcomplete completion framework with completion from fish (the shell)
                            ))
     )
 #+END_SRC
+
 * Eshell-syntax-highlighting
 
 Zsh-esque syntax highlighting in eshell
@@ -269,7 +280,9 @@ Zsh-esque syntax highlighting in eshell
     (eshell-syntax-highlighting-global-mode t)
     )
 #+END_SRC
+
 * Other terminal emulators
+
 ** Vterm
 
 Full-fledged terminal emulator
@@ -296,6 +309,7 @@ Full-fledged terminal emulator
                 ))
     )
 #+end_src
+
 ** Vterm-toggle
 
 Eshell-toggle but for vterm
