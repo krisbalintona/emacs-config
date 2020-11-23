@@ -1,21 +1,21 @@
 
 ;; ----- amx-history -----
 (
- flyspell-mode
- unpackaged/reload-package
- unpackaged/magit-log-date-headers-mode
- unpackaged/org-fix-blank-lines
- unpackaged/font-compare
- company-box-mode
- org-mode-restart
+ helm-org-rifle
+ eww
+ org-refile
+ org-agenda-refile
+ org-noter-kill-session
+ flycheck-vale-toggle-enabled
+ flycheck-mode
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 19)
+ (customize-group . 21)
  (pdf-tools-install . 1)
  (load-file . 2)
- (counsel-load-library . 6)
+ (counsel-load-library . 7)
  (explain-pause-top . 5)
  (selectrum-mode . 6)
  (orb-note-actions . 1)
@@ -57,9 +57,9 @@
  (windmove-right . 1)
  (windmove-left . 1)
  (read-only-mode . 1)
- (describe-keymap . 3)
+ (describe-keymap . 4)
  (downcase-word . 1)
- (org-noter-kill-session . 8)
+ (org-noter-kill-session . 10)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
  (global-auto-revert-mode . 4)
@@ -99,7 +99,7 @@
  (flyspell-mode . 2)
  (artbollocks-count-words . 1)
  (artbollocks-mode . 5)
- (writegood-mode . 1)
+ (writegood-mode . 4)
  (writegood-grade-level . 1)
  (writegood-reading-ease . 1)
  (helm-projectile-switch-to-buffer . 2)
@@ -125,7 +125,7 @@
  (keyfreq-html . 1)
  (org-roam-bibtex-mode . 8)
  (visual-line-mode . 3)
- (org-refile . 4)
+ (org-refile . 5)
  (list-colors-display . 1)
  (buffer-expose . 2)
  (org-mode . 3)
@@ -147,7 +147,7 @@
  (simpleclip-paste . 1)
  (yank-pop . 1)
  (org-agenda-redo . 1)
- (org-agenda-refile . 3)
+ (org-agenda-refile . 4)
  (git-timemachine . 3)
  (recover-session-finish . 1)
  (text-scale-mode . 4)
@@ -161,17 +161,23 @@
  (git-timemachine-show-previous-revision . 1)
  (org-toggle-checkbox . 1)
  (eshell-kill-input . 1)
- (swiper . 1)
+ (swiper . 2)
  (mu4e-kill-update-mail . 1)
  (mu4e-update-mail-and-index . 1)
  (fish-completion-mode . 2)
  (esh-autosuggest-mode . 1)
  (eshell-kill-process . 1)
- (lua-mode . 2)
+ (lua-mode . 3)
  (unpackaged/font-compare . 2)
  (unpackaged/org-fix-blank-lines . 6)
  (unpackaged/magit-log-date-headers-mode . 3)
  (unpackaged/magit-status . 1)
  (unpackaged/reload-package . 1)
  (flyspell-correct-wrapper . 2)
+ (savehist-save . 1)
+ (better-jumper-mode . 1)
+ (flycheck-vale-toggle-enabled . 6)
+ (flycheck-mode . 2)
+ (eww . 1)
+ (helm-org-rifle . 1)
 )

@@ -3,15 +3,15 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored-marker"
- (filename . "~/Documents/org-database/agenda/school.org")
- (front-context-string . "** PROG Figure o")
- (rear-context-string . "1-20 Fri 00:32]\n")
- (position . 6336))
+ (filename . "~/Documents/org-database/agenda/hobbies.org")
+ (front-context-string . "** PROG Check ou")
+ (rear-context-string . "1-22 Sun 05:00]\n")
+ (position . 19477))
 ("org-refile-last-stored"
- (filename . "~/Documents/org-database/agenda/school.org")
- (front-context-string . "** PROG Figure o")
- (rear-context-string . "1-20 Fri 00:32]\n")
- (position . 6336))
+ (filename . "~/Documents/org-database/agenda/hobbies.org")
+ (front-context-string . "** PROG Check ou")
+ (rear-context-string . "1-22 Sun 05:00]\n")
+ (position . 19477))
 ("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
@@ -24,7 +24,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* TODO Check out")
- (rear-context-string . "1-21 Sat 03:51]\n")
- (position . 441))
+ (front-context-string . "* PROG Check out")
+ (rear-context-string . "1-22 Sun 05:41]\n")
+ (position . 2387))
 )

@@ -1,6 +1,3 @@
-ls
-sudo timeshift --create --comment "After working on my paper"
-main-emacs
 dust 
 alias
 asusctl -c
@@ -23,15 +20,12 @@ stc
 sudo timeshift --create --comment "Good morning"
 stc
 stc
-ls
 ls ~/Documents
 stc
 ~/.local/share/applications/
-ls
 ls /
 ls /usr/share/applications
 /usr/share/applications
-ls
 ff virt-manager.desktop
 sudo timeshift --create --comment "After getting back to my room"
 mu init
@@ -42,3 +36,93 @@ sudo find / -name rc.lua
 cp /etc/xdg/awesome/rc.lua ~/.config/awesome/rc.lua
 mkdir ~/.config/awesome/
 cp /etc/xdg/awesome/rc.lua ~/.config/awesome/rc.lua
+sudo timeshift --create --comment "After adding a bit of stuff to my Emacs config"
+stc
+.config/awesome
+git clone https://github.com/Elv13/collision.git
+ls
+.config/awesome
+ls
+rm -r collision
+ls
+exit
+stc
+stl
+stc
+tc
+stc
+xinput st
+xinput list
+xinput float 14
+stc
+dotfiles
+stow -Sv kitty
+stow -Sv kitty
+ls
+stow -Sv kitty
+stow --help
+stow -Rv kitty
+tree kitty
+ls
+kitty
+cd kitty
+tree .
+ls -la
+ls -la kitty
+ls
+ls
+..
+ls
+cd kitty
+ls
+ls .config
+..
+stow -Rv kitty
+mkdir ~/.config/kitty
+tree ~/.config/kitty
+stow -Sv zsh
+tree i3
+ls i3
+ls
+ls i3
+stow -Dv i3
+stow -Sv i3
+stow -Dv daedd
+stow -Dv deadd
+stow -Dv deadd
+stow -Rv deadd
+stow -Dv deadd
+cat ~/.config/deadd/deadd.conf
+cat ~/.config/deadd/deadd.conf
+mv ~/.config/deadd/deadd.conf ~/dotfiles/deadd/.config/deadd
+stow -Sv deadd
+cat ~/.config/deadd/deadd.conf
+stow -Dv gtk-3.0
+ls
+stow -Dv gtk
+tree gtk
+stow -Sv gtk
+ls
+stow -SV *
+stow -Sv *
+stow -Sv zsh
+~/dotfiles
+stow -Sv cava
+nvim/.config/nvim
+ls nvim/.config/nvim
+cd nvim/.config/nvim/
+ls
+ls -la
+cd dotfiles
+stow -Dv nvim
+cd ~/dotfiles
+stow -Dv nvim
+stow -Sv nvim
+stow -Dv nvim
+cd nvim/
+ls
+tree
+ls
+..
+stow -Rv nvim
+sudo timeshift --create --comment "After successfully starting stow dotfile management"
