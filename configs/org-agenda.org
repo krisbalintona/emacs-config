@@ -860,7 +860,7 @@ Autoload the package and start with no views
            "* TODO %? [/] %^G\n%U")
           ;; ("a" "Agnostic todo" entry (file org-default-notes-file)
           ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
-          ("f" "This is an idea I should ferment" entry (file+headline "~/Documents/org-database/roam/seedbox.org" "Fermenting Items")
+          ("f" "This is an idea I should ferment" entry (file+headline "~/Documents/org-database/roam/seedbox.org" "Fermenting Seeds")
            "* %? \n%U"
            :jump-to-captured t)
           ("h" "Habit/recurring task" entry (file org-default-notes-file)
