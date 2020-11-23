@@ -634,8 +634,6 @@ Autoload the package and start with no views
                            ((org-agenda-overriding-header "Tasks to refile")
                             (org-super-agenda-groups
                              '((:discard (:not (:tag "REFILE")))
-                               (:discard (:todo ("WAITING" "TICKLE")))
-                               (:discard (:file-path "habits.org"))
                                (:auto-tags t)
                                (:discard (:anything t))
                                ))
@@ -643,9 +641,10 @@ Autoload the package and start with no views
                   (alltodo ""
                            ((org-agenda-overriding-header "High-priority items without next todo keyword")
                             (org-super-agenda-groups
-                             '((:discard (:todo ("HABIT" "PROG")))
-                               (:name none
-                                      :and (:priority>= "B" :not (:todo ("NEXT" "PROG"))))
+                             '((:discard (:todo ("NEXT" "PROG")))
+                               (:discard (:todo ("WAITING" "TICKLE")))
+                               (:discard (:file-path "habits.org"))
+                               (:name none :and (:priority>= "B" :not (:todo ("NEXT" "PROG"))))
                                (:discard (:anything t))
                                ))
                             ))
