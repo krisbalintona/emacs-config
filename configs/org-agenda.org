@@ -298,7 +298,7 @@ Taken from [[https://github.com/alphapapa/unpackaged.el#refile-to-datetree-file-
 
   (general-define-key
    :keymaps 'org-agenda-mode-map
-   [remap org-agenda-archive] 'kb/org-refile-to-reverse-datetree-archive ; Archiving tasks with org-reverse-datetree
+   [remap org-agenda-archive] 'kb/refile-to-datetree-using-ts ; Archive
    "r" 'kb/org-agenda-process-inbox-item ; Process task
    )
 
