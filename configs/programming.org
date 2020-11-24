@@ -220,25 +220,93 @@ Show indicator for indentation levels (like in VS Code)
 
 * Flycheck
 
+** Flycheck itself
+
 Checking your code
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :hook (lsp-mode . flycheck-mode) ; Sthart alongside lsp-mode
+    :hook (after-init . global-flycheck-mode)
     :custom
     (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
-    ;; Check syntax only when saving file and switching to other buffer
-    (flycheck-check-syntax-automatically '(save mode-enabled idle-buffer-switch))
-    (flycheck-idle-buffer-switch-delay 2) ; Wait 2 secons after buffer switch
+    (flycheck-check-syntax-automatically '(save mode-enabled idle-buffer-switch)) ; When to check
+    (flycheck-idle-buffer-switch-delay 1.5) ; Wait 2 secons after buffer switch
+    (flycheck-buffer-switch-check-intermediate-buffers t) ; Run flycheck even if visiting buffer quickly (reliant on idle-buffer-switch)
 
-    ;; Run flycheck even if visiting buffer quickly (reliant on idle-buffer-switch)
-    (flycheck-buffer-switch-check-intermediate-buffers t)
+    (flycheck-display-errors-delay 0.5) ; Time to show an error on point
+    (flycheck-indication-mode 'right-margin)
+    (flycheck-highlighting-mode 'lines)
 
-    ;; Time to show an error on point
-    (flycheck-display-errors-delay 0.1)
-    (flycheck-indication-mode 'right-fringe)
+    (flycheck-standard-error-navigation t) ; Use standard M-g n/p error navigation keybindings
+    (flycheck-navigation-minimum-level nil)
+
+    ;; Errors from other files
+    (flycheck-relevant-error-other-file-show t)
+    (flycheck-relevant-error-other-file-minimum-level 'error)
+    :config
+    ;; Make the flycheck buffer occupy the bottom third of the screen
+    (add-to-list 'display-buffer-alist
+                 `(,(rx bos "*Flycheck errors*" eos)
+                   (display-buffer-reuse-window
+                    display-buffer-in-side-window)
+                   (side            . bottom)
+                   (reusable-frames . visible)
+                   (window-height   . 0.33)))
+
+    (kb/leader-keys
+      "of" '(flycheck-list-errors :which-key "List flycheck errors")
+      )
     )
 #+END_SRC
+
+** Flycheck-pos-tip-mode
+
+Shows flychek errors in pos-tip popup
+#+begin_src emacs-lisp
+  (use-package flycheck-pos-tip
+    :after flycheck
+    :hook (flycheck-mode . flycheck-pos-tip-mode)
+    )
+#+end_src
+
+** Flycheck-grammarly
+
+Use grammarly API with flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck-grammarly
+    :disabled t ; Broken in non-trivial files https://github.com/jcs-elpa/flycheck-grammarly/issues/3
+    :straight (flycheck-grammarly :type git :host github :repo "jcs-elpa/flycheck-grammarly")
+    :after flycheck
+    :init (require 'grammarly)
+    :custom
+    ;; If you have a paid subscription
+    (grammarly-username "")
+    (grammarly-password "")
+
+    (flycheck-grammarly-check-time 2)
+    )
+#+end_src
+
+** Flycheck-color-mode-line
+
+Changes color of modeline face based on flycheck status
+#+begin_src emacs-lisp
+  (use-package flycheck-color-mode-line
+    :disabled t ; Doesn't look pretty
+    :after flycheck
+    :hook (flycheck-mode . flycheck-color-mode-line-mode)
+    )
+#+end_src
+
+** Flycheck-status-emoji
+
+Use emojis to display flycheck statuses
+#+begin_src emacs-lisp
+  (use-package flycheck-status-emoji
+    :after flycheck
+    :hook (flycheck-mode . flycheck-status-emoji-mode)
+    )
+#+end_src
 
 * Prettier
 
