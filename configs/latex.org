@@ -7,13 +7,14 @@ Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matthe
   (use-package tex
     :straight auctex
     :hook
-    (LaTeX-mode . (lambda ()
-                    (turn-on-reftex)
-                    (setq reftex-plug-into-AUCTeX t)
-                    (reftex-isearch-minor-mode)
-                    (setq TeX-PDF-mode t)
-                    (setq TeX-source-correlate-method 'synctex)
-                    (setq TeX-source-correlate-start-server t)))
+    ((LaTeX-mode . (lambda ()
+                     (turn-on-reftex)
+                     (setq reftex-plug-into-AUCTeX t)
+                     (reftex-isearch-minor-mode)
+                     (setq TeX-PDF-mode t)
+                     (setq TeX-source-correlate-method 'synctex)
+                     (setq TeX-source-correlate-start-server t)))
+     (LaTeX-mode . prettify-symbols-mode))
     :custom
     ;; If you want to make AUCTeX aware of style files and multi-file documents right away, insert the following in your ‘.emacs’ file.
     (TeX-parse-self t)
