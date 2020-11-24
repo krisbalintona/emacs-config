@@ -27,22 +27,19 @@
   (setq org-outline-path-complete-in-steps nil) ; Don't have consequtive prompts for paths and headings
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 
-  ;; ; Exclude DONE state tasks from refile targets
-  ;; (defun kb/verify-refile-target ()
-  ;;   "Remove todos in done states from possible refile target"
-  ;;   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-  ;; (setq org-refile-target-verify-function 'kb/verify-refile-target)
+  ;; Exclude DONE state tasks from refile targets
+  (defun kb/verify-refile-target ()
+    "Remove todos in done states from possible refile target"
+    (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+  (setq org-refile-target-verify-function 'kb/verify-refile-target)
 
-  ;; Custom org-reverse-datetree refile function
-  (defun kb/org-refile-to-reverse-datetree-archive (); (arg)
+  ;; Custom org-reverse-datetree refile function - Now outdated in favor of unpackaged/org-refile-to-datetree-using-ts-in-entry
+  (defun kb/org-refile-to-reverse-datetree-archive ()
     "Refile a todo into my archive file, with today as the day"
     (interactive "P")
     (org-reverse-datetree-refile-to-file
      kb/agenda-dir "archive.org" (current-time)))
   ;; :ask-always arg :prefer '("CREATED_TIME" "CREATED_AT" "CLOSED")))
-
-  ;; Save all buffers after refiling to avoid losing progress
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
 #+END_SRC
 
 Taken from [[https://github.com/alphapapa/unpackaged.el#refile-to-datetree-file-using-earliestlatest-timestamp-in-entry][GitHub - alphapapa/unpackaged.el: A collection of useful Emacs Lisp code that...]]
