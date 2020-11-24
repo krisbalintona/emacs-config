@@ -881,71 +881,35 @@ Autoload the package and start with no views
 #+BEGIN_SRC emacs-lisp
   (setq org-default-notes-file (concat kb/agenda-dir "inbox.org"))
   (setq org-capture-templates ; Used for org-agenda task management
-        '(("s" "School related task")
-          ("ss" "New assignment" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] :ASSIGNMENT:\nSCHEDULED: %^T\nDEADLINE: %^T\n%U")
-          ;; ("si" "Go through information" entry (file org-default-notes-file)
-          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] :PARSE:\nSCHEDULED: %^T\n%U")
-          ;; ("st" "Think about something" entry (file org-default-notes-file)
-          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\nSCHEDULED: %^T\n%U")
-          ("se" "Email" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Revisit %:fromname ( %:fromaddress ) -- /%:subject/ [/] :EMAIL:\n- RECEIVED :: %:date-timestamp-inactive\nSCHEDULED: %^t\nDEADLINE: %^T\n%A\n%U")
-          ;; ("sz" "Zoom call" entry (file org-default-notes-file)
-          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\nDEADLINE: %^T\n%U")
-          ;; ("sw" "Watch or listen to something" entry (file org-default-notes-file)
-          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
-
-          ("i" "New input")
+        '(("i" "New input")
           ("iv" "Video" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Watch %(org-cliplink-capture) :VIDEO:\n%U\n"
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Watch %(org-cliplink-capture)\n%U\n"
            :immediate-finish t)
           ("ia" "Article" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Read %(org-cliplink-capture) :ARTICLE:\n%U\n"
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Read %(org-cliplink-capture)\n%U\n"
            :immediate-finish t)
           ("ip" "Podcast" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Listen to %(org-cliplink-capture) :PODCAST:\n%U\n")
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Listen to %(org-cliplink-capture)\n%U\n")
           ("iw" "Profound quote" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p%? :QUOTE:\nby \n%U\n\n")
+           "* TODO %^{EFFORT}p%?\nby \n%U\n\n")
           ("ib" "Book" entry (file org-default-notes-file)
-           "* TODO [#%^{Priority?|A|B|C|D|E|F}] Read /%?/ :BOOK:\nby \n%U\n")
+           "* TODO [#%^{Priority?|A|B|C|D|E|F}] Read /%?/\nby \n%U\n")
           ("il" "Lecture" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Watch and study %(org-cliplink-capture) :LECTURE:\n%U\n"
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Watch and study %(org-cliplink-capture)\n%U\n"
            :immediate-finish t)
           ("ij" "Academic paper" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Read and analyze %(org-cliplink-capture) :PAPER:\n%U\n"
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Read and analyze %(org-cliplink-capture)\n%U\n"
            :immediate-finish t)
 
           ("m" "New entertainment to gobble" entry (file org-default-notes-file)
            "* TODO Consume %? %^{What type of entertainment?|MOVIE|BOOK|SHOW|VIDEO}\n%U\n")
-          ;; ("m" "New entertainment to gobble")
-          ;; ("mm" "Movie" entry (file org-default-notes-file)
-          ;;  "* TODO Watch %? :MOVIE:\n%U\n")
-          ;; ("mb" "Book" entry (file org-default-notes-file)
-          ;;  "* TODO Read %? :BOOK:\n%U\n")
-          ;; ("ms" "Show" entry (file org-default-notes-file)
-          ;;  "* TODO Watch %? :SHOW:\n%U\n")
-          ;; ("mv" "Video" entry (file org-default-notes-file)
-          ;;  "* TODO Watch %? :VIDEO:\n%U\n")
 
-          ("c" "Computer thing")
-          ("cc" "Check something" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
-          ;; ("ct" "Something related to though or learning" entry (file org-default-notes-file)
-          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
-          ("ca" "Do something technical" entry (file org-default-notes-file)
-           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
-
-          ("a" "Agnostic todo" entry (file org-default-notes-file)
+          ("e" "Email" entry (file org-default-notes-file)
+           "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] Revisit %:fromname ( %:fromaddress ) -- /%:subject/ [/] :EMAIL:\n- RECEIVED :: %:date-timestamp-inactive\nSCHEDULED: %^t\nDEADLINE: %^T\n%A\n%U")
+          ("a" "General todo" entry (file org-default-notes-file)
            "* TODO %? [/] %^G\n%U")
-          ;; ("a" "Agnostic todo" entry (file org-default-notes-file)
-          ;;  "* TODO %^{EFFORT}p[#%^{Priority?|A|B|C|D|E|F}] %? [/] %^G\n%U")
           ("f" "This is an idea I should ferment" entry (file+headline "~/Documents/org-database/roam/seedbox.org" "Fermenting Seeds")
-           "* %? \n%U"
-           :jump-to-captured t)
-          ("h" "Habit/recurring task" entry (file org-default-notes-file)
-           "* NEXT %? [/] :HABIT:\nSCHEDULED: %^t\n:PROPERTY:\n:LOGGING: DONE(!)\n:STYLE: habit\n:END:\n%U\n"
-           :immediate-finish t
-           :jump-to-captured t)
+           "* %? \n%U")
           ))
 #+END_SRC
 
