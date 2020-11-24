@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- helm-org-rifle
- eww
- org-refile
+ unpackaged/org-refile-to-datetree
+ kb/refile-to-datetree-using-ts
  org-agenda-refile
- org-noter-kill-session
- flycheck-vale-toggle-enabled
- flycheck-mode
+ unpackaged/org-refile-to-datetree-using-ts-in-entry
+ scroll-lock-mode
+ clone-indirect-buffer-other-window
+ make-indirect-buffer
 )
 
 ;; ----- amx-data -----
@@ -125,7 +125,7 @@
  (keyfreq-html . 1)
  (org-roam-bibtex-mode . 8)
  (visual-line-mode . 3)
- (org-refile . 5)
+ (org-refile . 7)
  (list-colors-display . 1)
  (buffer-expose . 2)
  (org-mode . 3)
@@ -147,7 +147,7 @@
  (simpleclip-paste . 1)
  (yank-pop . 1)
  (org-agenda-redo . 1)
- (org-agenda-refile . 4)
+ (org-agenda-refile . 5)
  (git-timemachine . 3)
  (recover-session-finish . 1)
  (text-scale-mode . 4)
@@ -180,4 +180,12 @@
  (flycheck-mode . 2)
  (eww . 1)
  (helm-org-rifle . 1)
+ (set-selective-display . 2)
+ (prettify-symbols-mode . 2)
+ (make-indirect-buffer . 2)
+ (clone-indirect-buffer-other-window . 1)
+ (scroll-lock-mode . 2)
+ (unpackaged/org-refile-to-datetree-using-ts-in-entry . 1)
+ (kb/refile-to-datetree-using-ts . 1)
+ (unpackaged/org-refile-to-datetree . 1)
 )

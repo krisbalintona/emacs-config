@@ -126,3 +126,4 @@ ls
 ..
 stow -Rv nvim
 sudo timeshift --create --comment "After successfully starting stow dotfile management"
+stc

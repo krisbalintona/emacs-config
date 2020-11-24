@@ -4,14 +4,14 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored-marker"
  (filename . "~/Documents/org-database/agenda/hobbies.org")
- (front-context-string . "** PROG Check ou")
- (rear-context-string . "1-22 Sun 05:00]\n")
- (position . 19477))
+ (front-context-string . "** NEXT Learn ab")
+ (rear-context-string . "1-22 Sun 19:58]\n")
+ (position . 14317))
 ("org-refile-last-stored"
  (filename . "~/Documents/org-database/agenda/hobbies.org")
- (front-context-string . "** PROG Check ou")
- (rear-context-string . "1-22 Sun 05:00]\n")
- (position . 19477))
+ (front-context-string . "** NEXT Learn ab")
+ (rear-context-string . "1-22 Sun 19:58]\n")
+ (position . 14317))
 ("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
@@ -24,7 +24,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* PROG Check out")
- (rear-context-string . "1-22 Sun 05:41]\n")
- (position . 2387))
+ (front-context-string . "* NEXT Learn abo")
+ (rear-context-string . "1-23 Mon 19:35]\n")
+ (position . 308))
 )
