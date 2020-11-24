@@ -739,7 +739,7 @@ Simple function for reloading an entire package and all its features
   ;;;###autoload
   (defun unpackaged/font-compare (text fonts)
     "Compare TEXT displayed in FONTS.
-  If TEXT is nil, use `lorem-ipsum' text.  FONTS is a list of font
+  If TEXT is nil, use `lorem-ipsum' text. FONTS is a list of font
   family strings and/or font specs.
 
   Interactively, prompt for TEXT, using `lorem-ipsum' if left
