@@ -241,7 +241,7 @@ Checking your code
     (flycheck-navigation-minimum-level nil)
 
     ;; Errors from other files
-    (flycheck-relevant-error-other-file-show t)
+    (flycheck-relevant-error-other-file-show nil)
     (flycheck-relevant-error-other-file-minimum-level 'error)
     :config
     ;; Make the flycheck buffer occupy the bottom third of the screen
