@@ -180,8 +180,8 @@ Sleek modeline from Doom
     (size-indication-mode t)
 
     (doom-modeline-def-modeline 'main
-      '(bar " " matches buffer-info remote-host buffer-position parrot selection-info)
-      '(misc-info " " battery " " minor-modes checker input-method buffer-encoding major-mode process vcs))
+      '(bar " " matches vcs " " buffer-info remote-host buffer-position parrot selection-info)
+      '(misc-info " " battery " " input-method buffer-encoding major-mode checker minor-modes process))
     )
 #+END_SRC
 
