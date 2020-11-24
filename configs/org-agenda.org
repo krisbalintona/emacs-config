@@ -412,8 +412,9 @@ Autoload the package and start with no views
                                 ((org-ql-block-header "")
                                  (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
                                  (org-super-agenda-groups
-                                  '((:auto-outline-path t))
-                                  )))
+                                  '((:auto-outline-path t)
+                                    ))
+                                 ))
                   (alltodo ""
                            ((org-agenda-overriding-header "")
                             (org-super-agenda-groups
@@ -479,7 +480,7 @@ Autoload the package and start with no views
                             ))
                   (org-ql-block '(and (not (path "school.org"))
                                       (not (path "habits.org"))
-                                      (parent (todo "PROG"))
+                                      (parent (tag "PROJECT"))
                                       (todo)
                                       (not (done)))
                                 ((org-ql-block-header "")
@@ -529,6 +530,15 @@ Autoload the package and start with no views
                               (:anything t)
                               ))
                            ))
+                  (alltodo ""
+                           ((org-agenda-overriding-header "Unscheduled tickles")
+                            (org-super-agenda-groups
+                             '((:discard (:not (:todo "TICKLE")))
+                               (:discard (:deadline nil))
+                               (:discard (:scheduled nil))
+                               (:anything t)
+                               ))
+                            ))
                   ))
                t)
 
