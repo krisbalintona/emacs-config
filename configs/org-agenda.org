@@ -43,6 +43,76 @@
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
 #+END_SRC
 
+Taken from [[https://github.com/alphapapa/unpackaged.el#refile-to-datetree-file-using-earliestlatest-timestamp-in-entry][GitHub - alphapapa/unpackaged.el: A collection of useful Emacs Lisp code that...]]
+#+begin_src emacs-lisp
+        ;;;###autoload
+  (defun unpackaged/org-refile-to-datetree-using-ts-in-entry (which-ts file &optional subtree-p)
+    "Refile current entry to datetree in FILE using timestamp found in entry.
+        WHICH should be `earliest' or `latest'. If SUBTREE-P is non-nil,
+        search whole subtree."
+    (interactive (list (intern (completing-read "Which timestamp? " '(earliest latest)))
+                       (read-file-name "File: " (concat org-directory "/") nil 'mustmatch nil
+                                       (lambda (filename)
+                                         (string-suffix-p ".org" filename)))
+                       current-prefix-arg))
+    (require 'ts)
+    (let* ((sorter (pcase which-ts
+                     ('earliest #'ts<)
+                     ('latest #'ts>)))
+           (tss (unpackaged/org-timestamps-in-entry subtree-p))
+           (ts (car (sort tss sorter)))
+           (date (list (ts-month ts) (ts-day ts) (ts-year ts))))
+      (unpackaged/org-refile-to-datetree file :date date)))
+
+        ;;;###autoload
+  (defun unpackaged/org-timestamps-in-entry (&optional subtree-p)
+    "Return timestamp objects for all Org timestamps in entry.
+         If SUBTREE-P is non-nil (interactively, with prefix), search
+         whole subtree."
+    (interactive (list current-prefix-arg))
+    (save-excursion
+      (let* ((beg (org-entry-beginning-position))
+             (end (if subtree-p
+                      (org-end-of-subtree)
+                    (org-entry-end-position))))
+        (goto-char beg)
+        (cl-loop while (re-search-forward org-tsr-regexp-both end t)
+                 collect (ts-parse-org (match-string 0))))))
+
+        ;;;###autoload
+  (cl-defun unpackaged/org-refile-to-datetree (file &key (date (calendar-current-date)) entry)
+    "Refile ENTRY or current node to entry for DATE in datetree in FILE.
+        DATE should be a list of (MONTH DAY YEAR) integers, e.g. as
+        returned by `calendar-current-date'."
+    (interactive (list (read-file-name "File: " (concat org-directory "/") nil 'mustmatch nil
+                                       (lambda (filename)
+                                         (string-suffix-p ".org" filename)))))
+    ;; If org-datetree isn't loaded, it will cut the tree but not file
+    ;; it anywhere, losing data. I don't know why
+    ;; org-datetree-file-entry-under is in a separate package, not
+    ;; loaded with the rest of org-mode.
+    (require 'org-datetree)
+    (unless entry
+      (org-cut-subtree))
+    ;; Using a condition-case to be extra careful. In case the refile
+    ;; fails in any way, put cut subtree back.
+    (condition-case err
+        (with-current-buffer (or (org-find-base-buffer-visiting file)
+                                 (find-file-noselect file))
+          (org-datetree-file-entry-under (or entry (car kill-ring)) date)
+          (save-buffer))
+      (error (unless entry
+               (org-paste-subtree))
+             (message "Unable to refile! %s" err))))
+
+  (defun kb/refile-to-datetree-using-ts ()
+    "Uses unpackaged/org-refile-to-datetree-using-ts-in-entry with the target file being archive.org"
+(interactive)
+(funcall-interactively
+    (unpackaged/org-refile-to-datetree-using-ts-in-entry 'earliest (expand-file-name "archive.org" kb/agenda-dir) t))
+    )
+#+end_src
+
 ** Org todo settings
 
 #+BEGIN_SRC emacs-lisp
