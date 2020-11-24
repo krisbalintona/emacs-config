@@ -480,7 +480,7 @@ Autoload the package and start with no views
                             ))
                   (org-ql-block '(and (not (path "school.org"))
                                       (not (path "habits.org"))
-                                      (parent (tag "PROJECT"))
+                                      (parent (tags "PROJECT"))
                                       (todo)
                                       (not (done)))
                                 ((org-ql-block-header "")
