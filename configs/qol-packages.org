@@ -336,3 +336,65 @@ Better version of evil-jump
     )
     )
 #+end_src
+
+* System package management
+
+** System-packages
+
+#+begin_src emacs-lisp
+  (use-package system-packages
+    :custom
+    ;; (system-packages-package-manager )
+    (system-packages-use-sudo t)
+    )
+#+end_src
+
+** Helm-system-packages
+
+#+begin_src emacs-lisp
+  (use-package helm-system-packages
+    :config
+    ;; Workaround from INSERT LINK HERE
+    (defun helm-system-packages ()
+      "Helm user interface for system packages."
+      (interactive)
+      ;; Some package managgers do not have an executable bearing the same name,
+      ;; hence the optional pair (EXECUTABLE PACKAGE-MANAGER).
+      (let ((managers (seq-filter (lambda (p)
+                                    (if (tramp-tramp-file-p default-directory)
+                                        (tramp-find-executable (tramp-dissect-file-name default-directory) (car p) nil)
+                                      (executable-find (car p))))
+                                  '(("emerge" "portage") ("dnf") ("pacman") ("xbps-query" "xbps") ("brew")
+
+  ;;; Fix
+                                    ;; Removed ("dpkg") from the list
+  ;;; Fix
+
+                                    ;; Keep "guix" last because it can be installed
+                                    ;; beside other package managers and we want to
+                                    ;; give priority to the original package
+                                    ;; manager.
+                                    ("guix")))))
+        (if (not managers)
+            (message (if (eq system-type 'darwin)
+                         "No supported package manager was found. Check your `exec-path'."
+                       "No supported package manager was found."))
+          (let ((manager (car (last (car managers)))))
+            (require (intern (concat "helm-system-packages-" manager)))
+            (if (boundp (intern (concat "helm-system-packages-" manager)))
+                ;; New abstraction.
+                (let ((current-manager
+                       (symbol-value (intern (concat "helm-system-packages-" manager)))))
+                  (unless (apply 'helm-system-packages-missing-dependencies-p
+                                 (helm-system-packages-manager-dependencies current-manager))
+                    (helm :sources (helm-system-packages-build-source current-manager)
+                          :buffer (format "*helm %s*" (helm-system-packages-manager-name
+                                                       current-manager))
+                          :truncate-lines t
+                          :input (when helm-system-packages-use-symbol-at-point-p
+                                   (substring-no-properties (or (thing-at-point 'symbol) ""))))))
+              ;; Old abstraction.
+              (fset 'helm-system-packages-refresh (intern (concat "helm-system-packages-" manager "-refresh")))
+              (funcall (intern (concat "helm-system-packages-" manager))))))))
+    )
+#+end_src
