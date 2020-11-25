@@ -75,8 +75,10 @@ Insert or search words in thesaurus
 
 * Writegood-mode
 
+Catch weasel words
 #+begin_src emacs-lisp
   (use-package writegood-mode
+    :disabled t ; Not necessary anymore with proselint syntax checker in flycheck
     :hook (text-mode . writegood-mode)
     )
 #+end_src
