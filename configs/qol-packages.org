@@ -75,7 +75,10 @@ Show keybinds
 * All-the-icons
 
 #+BEGIN_SRC emacs-lisp
-(use-package all-the-icons)
+  (use-package all-the-icons
+    :custom
+    (all-the-icons-scale-factor 1.1)
+    )
 #+END_SRC
 
 * Hide-mode-line
