@@ -272,10 +272,13 @@ Quickly jump to characters
   (use-package ace-jump-mode
     :custom
     (ace-jump-mode-gray-background nil) ; Don't make text's background gray
-    (ace-jump-mode-scope 'frame)
+    (ace-jump-mode-scope 'window)
     (ace-jump-mode-case-fold t) ; Ignore case?
+    ;; Priority of ace-jump selections - you can prefix with 1 or 2 universal
+    ;; arguments to activate the second and third submode in the list,
+    ;; respectively
+    (ace-jump-mode-submode-list '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))  
     :config
-
     (general-define-key
      "M-a" '(ace-jump-mode :which-key "Ace-jump")
      )
