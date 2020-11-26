@@ -813,16 +813,12 @@ Autoload the package and start with no views
                            ((org-agenda-overriding-header "What's on my \"to-comsume\" list?")
                             (org-super-agenda-groups
                              '((:discard (:not (:file-path "media.org")))
-                               (:name "Movies"
-                                      :tag "MOVIE")
-                               (:name "Shows"
-                                      :tag "SHOW")
-                               (:name "Books"
-                                      :tag "BOOK")
-                               (:name "Videos"
-                                      :tag "VIDEOS")
-                               (:name "Overflow (uncategorized)"
-                                      :anything t)
+                               (:name "Movies" :tag "MOVIE")
+                               (:name "Shows" :tag "SHOW")
+                               (:name "Books" :tag "BOOK")
+                               (:name "Videos" :tag "VIDEOS")
+                               (:name "Manga" :tag "MANGA")
+                               (:name "Overflow (uncategorized)" :anything t)
                                ))
                             ))
                   ))
