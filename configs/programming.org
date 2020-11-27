@@ -54,6 +54,29 @@ Syntax highlighting for every language
     )
 #+END_SRC
 
+** Lsp-ui
+
+Fancy frame and sideline overlay which shows useful information about what's on the point.
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'top)
+    )
+#+end_src
+
+** Lsp-ivy
+
+Search through symbols with Ivy
+#+begin_src emacs-lisp
+  (use-package lsp-ivy
+    :config
+    (kb/leader-keys
+      "ls" 'lsp-ivy-workspace-symbol
+      )
+    )
+#+end_src
+
 * Doom-snippets
 
 Large library of snippet templates
@@ -276,10 +299,6 @@ Checking your code
                    (side            . bottom)
                    (reusable-frames . visible)
                    (window-height   . 0.33)))
-
-    (kb/leader-keys
-      "of" '(flycheck-list-errors :which-key "List flycheck errors")
-      )
     )
 #+END_SRC
 
