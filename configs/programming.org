@@ -17,15 +17,12 @@ Syntax highlighting for every language
   (use-package lsp-mode
     :hook (;;(prog-mode . lsp-deferred) ; Lsp-mode only when buffer is visible
            (lsp-mode . lsp-enable-which-key-integration)
-           (lsp-mode . kb/lsp-mode-setup))
+           (lsp-mode . lsp-headerline-breadcrumb-mode)
+           (prog-mode . lsp-headerline-breadcrumb-mode))
     :commands (lsp lsp-deferred) ; Defer until either of these commands are run
-    :preface
-    (defun kb/lsp-mode-setup ()
-      "Set breadcrumb format and show breadcrumbs at the top of the window."
-      (setq lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
-      (lsp-headerline-breadcrumb-mode))
     :custom
     (lsp-keymap-prefix "C-c l")
+    (lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
     :config
     ;; Put flymake diagnostic buffer at the bottom third of the window
     (add-to-list 'display-buffer-alist
