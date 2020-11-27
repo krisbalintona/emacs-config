@@ -273,7 +273,7 @@ Checking your code
     :custom
     (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
-    (flycheck-check-syntax-automatically '(save mode-enabled idle-buffer-switch)) ; When to check
+    (flycheck-check-syntax-automatically '(save mode-enabled idle-change idle-buffer-switch)) ; When to check
     (flycheck-idle-buffer-switch-delay 1.5) ; Wait 2 secons after buffer switch
     (flycheck-buffer-switch-check-intermediate-buffers t) ; Run flycheck even if visiting buffer quickly (reliant on idle-buffer-switch)
 
