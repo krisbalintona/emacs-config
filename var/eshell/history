@@ -127,3 +127,33 @@ ls
 stow -Rv nvim
 sudo timeshift --create --comment "After successfully starting stow dotfile management"
 stc
+stc
+sudo timeshift --create --comment "After successfully starting stow dotfile management"
+sudo timeshift --create --comment "After remembering about Swappa"
+sudo timeshift --create --comment "After learning about student finances"
+sudo timeshift --help
+sudo timeshift --delete
+stl
+sudo timeshift --delete 78
+sudo timeshift --delete
+sudo timeshift --create --comment "After learning about student finances"
+sudo timeshift --delete-all
+sudo timeshift --create --comment "After successfully starting stow dotfile management"
+sudo timeshift --create --comment "After setting and messing around in virtualbox VM"
+stl
+sudo timeshift --create --comment "After setting and messing around in virtualbox VM"
+/mnt
+ls
+lsblk
+lsblk
+/run/timeshift/backup
+df -H .
+tree
+qmk flash -kb kbdfans/kbd4x -km my-programmed-keymap
+sudo timeshift --create --comment "After plaing MC"
+sudo timeshift --create --comment "After playing MC for the first time"
+stl
+sudo timeshift --lisp
+sudo timeshift --list
+sudo timeshift --list
+stl

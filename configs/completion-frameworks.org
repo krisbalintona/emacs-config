@@ -2,6 +2,7 @@
 
 
 * Company
+
 ** Company itself
 
 Point autocompletion backend
@@ -40,6 +41,7 @@ Point autocompletion backend
      )
     )
 #+END_SRC
+
 ** Company-box
 
 A pretty company autocomplete frontend that also displays candidate documentation
@@ -118,6 +120,7 @@ A pretty company autocomplete frontend that also displays candidate documentatio
     (add-to-list 'company-backends 'company-dict)
     )
 #+END_SRC
+
 * Prescient
 
 #+begin_src emacs-lisp
@@ -127,7 +130,9 @@ A pretty company autocomplete frontend that also displays candidate documentatio
     (prescient-persist-mode)
     )
 #+end_src
+
 * Ivy
+
 ** Ivy itself
 
 Some Ivy tips, taken from [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-performance][dotfiles/Emacs.org at master · daviwil/dotfiles · GitHub]]:
@@ -178,6 +183,7 @@ Ido but more powerful and eye-pleasing
     (require 'counsel nil t)
     )
 #+END_SRC
+
 ** Ivy-prescient
 
 #+begin_src emacs-lisp
@@ -186,6 +192,7 @@ Ido but more powerful and eye-pleasing
     (ivy-prescient-mode)
     )
 #+end_src
+
 ** Swiper
 
 #+BEGIN_SRC emacs-lisp
@@ -291,6 +298,7 @@ Use Ivy/Counsel with projectile
     ;;   )
     )
 #+END_SRC
+
 ** Flx
 
 Allow for fuzzy searching (if in =ivy-re-builders-alist=)
@@ -301,6 +309,7 @@ Allow for fuzzy searching (if in =ivy-re-builders-alist=)
     (ivy-flx-limit 10000)
     )
 #+END_SRC
+
 ** Ivy-rich
 
 Better Ivy-interface
@@ -391,6 +400,7 @@ Better Ivy-interface
     (ivy-rich-set-display-transformer)
     )
 #+END_SRC
+
 ** Amx
 
 Show keybinds in M-x
@@ -430,6 +440,7 @@ A version of all-the-icons but compatible with ivy-rich
 #+END_SRC
 
 * Selctrum
+
 ** Selectrum itself  
 
 Advanced =complete-read=
@@ -444,6 +455,7 @@ Advanced =complete-read=
     (org-roam-completion-system 'default)
     )
 #+end_src
+
 ** Selectrum-presient
 
 #+begin_src emacs-lisp
@@ -452,7 +464,9 @@ Advanced =complete-read=
     (selectrum-prescient-mode)
     )
 #+end_src
+
 ** Selectrum custom functions
+
 *** Helper functions
 
 Helper function to add action support
@@ -475,6 +489,7 @@ Helper function to add action support
                        (length args)))
        (abort-recursive-edit)))
 #+end_src
+
 *** Selectrum-swiper
 
 #+begin_src emacs-lisp
@@ -566,6 +581,7 @@ Unfold headlines when searching with selectrum-swiper
 
   (advice-add #'selectrum-swiper :around #'selectrum:reveal-if-in-org-folds)
 #+end_src
+
 *** Selectrum-imenu
 
 #+begin_src emacs-lisp
@@ -603,6 +619,7 @@ Unfold headlines when searching with selectrum-swiper
            (cand (completing-read "Imenu: " (mapcar #'car candidates) nil t nil selectrum-imenu+)))
       (imenu (cdr (cl-find cand candidates :test #'string= :key #'car)))))
 #+end_src
+
 *** Selectrum-rg
 
 #+begin_src emacs-lisp
@@ -729,6 +746,7 @@ Unfold headlines when searching with selectrum-swiper
             (recenter))
         (message "Bad candidate?"))))
 #+end_src
+
 *** Selectrum-yank-pop
 
 #+begin_src emacs-lisp
@@ -756,6 +774,7 @@ Unfold headlines when searching with selectrum-swiper
         (if (eq last-command 'yank)
             (yank-pop n) (insert-for-yank text)))))
 #+end_src
+
 *** Selectrum-isearch-history
 
 #+begin_src emacs-lisp
@@ -790,6 +809,7 @@ Unfold headlines when searching with selectrum-swiper
        (mapconcat 'isearch-text-char-description x ""))
       (selectrum-isearch--switch-direction-on-fail)))
 #+end_src
+
 ** Embark
 
 Allow an equivalent to =ivy-actions= to regular =comlete-read= minibuffers
@@ -850,6 +870,7 @@ For Selectrum
               (unless which-key-persistent-popup
                 (which-key--hide-popup-ignore-command))))
 #+end_src
+
 ** Keybinds
 
 #+begin_src emacs-lisp
@@ -874,7 +895,9 @@ For Selectrum
     "iy" 'selectrum-yank-pop
     )
 #+end_src
+
 * Helm
+
 ** Helm itself
 
 Feature-rich version of Ivy completion
@@ -908,6 +931,7 @@ Feature-rich version of Ivy completion
       )
     )
 #+end_src
+
 ** Helm swoop
 
 #+begin_src emacs-lisp
@@ -940,6 +964,7 @@ Feature-rich version of Ivy completion
       )
     )
 #+end_src
+
 ** Helm-projectile
 
 Projectile with Helm
@@ -952,6 +977,7 @@ Projectile with Helm
     (projectile-switch-project-action 'helm-projectile)
     )
 #+end_src
+
 ** Helm-rg
 
 Required for =helm-projectile-rg=

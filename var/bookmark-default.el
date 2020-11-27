@@ -3,15 +3,15 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored-marker"
- (filename . "~/Documents/org-database/agenda/hobbies.org")
- (front-context-string . "** NEXT Learn ab")
- (rear-context-string . "1-22 Sun 19:58]\n")
- (position . 14317))
+ (filename . "~/Documents/org-database/agenda/school.org")
+ (front-context-string . "** TODO Start co")
+ (rear-context-string . "1-23 Mon 21:46]\n")
+ (position . 4667))
 ("org-refile-last-stored"
- (filename . "~/Documents/org-database/agenda/hobbies.org")
- (front-context-string . "** NEXT Learn ab")
- (rear-context-string . "1-22 Sun 19:58]\n")
- (position . 14317))
+ (filename . "~/Documents/org-database/agenda/school.org")
+ (front-context-string . "** TODO Start co")
+ (rear-context-string . "1-23 Mon 21:46]\n")
+ (position . 4667))
 ("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
@@ -24,7 +24,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* NEXT Learn abo")
- (rear-context-string . "1-23 Mon 19:35]\n")
- (position . 308))
+ (front-context-string . "* TODO Figure ou")
+ (rear-context-string . "le for editing \n")
+ (position . 557))
 )

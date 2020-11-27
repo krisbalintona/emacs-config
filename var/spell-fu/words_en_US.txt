@@ -64722,6 +64722,7 @@ Machiavelli
 Machiavelli's
 Machiavellian
 Machiavellian's
+Machiavellianism
 machinable
 machinate
 machinated
@@ -65737,6 +65738,7 @@ manipulation's
 manipulations
 manipulative
 manipulatively
+manipulativeness
 manipulator
 manipulator's
 manipulators
@@ -118659,6 +118661,7 @@ Vince
 Vince's
 Vincent
 Vincent's
+Vinci
 vincible
 Vindemiatrix
 Vindemiatrix's

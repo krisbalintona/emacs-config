@@ -1,21 +1,21 @@
 
 ;; ----- amx-history -----
 (
- unpackaged/org-refile-to-datetree
- kb/refile-to-datetree-using-ts
- org-agenda-refile
- unpackaged/org-refile-to-datetree-using-ts-in-entry
- scroll-lock-mode
- clone-indirect-buffer-other-window
- make-indirect-buffer
+ delete-frame
+ c-mode
+ counsel-imenu
+ company-box-mode
+ customize-group
+ org-mode-restart
+ global-company-mode
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 21)
+ (customize-group . 30)
  (pdf-tools-install . 1)
  (load-file . 2)
- (counsel-load-library . 7)
+ (counsel-load-library . 9)
  (explain-pause-top . 5)
  (selectrum-mode . 6)
  (orb-note-actions . 1)
@@ -29,7 +29,7 @@
  (langtool-check-done . 1)
  (explain-pause-mode . 3)
  (calendar . 1)
- (counsel-imenu . 3)
+ (counsel-imenu . 4)
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
@@ -49,7 +49,7 @@
  (helm-mini . 2)
  (helm-browse-project . 3)
  (helm-projects-find-files . 5)
- (org-mode-restart . 27)
+ (org-mode-restart . 28)
  (helm-minibuffer-history . 1)
  (helm-find-files . 3)
  (find-file . 4)
@@ -59,7 +59,7 @@
  (read-only-mode . 1)
  (describe-keymap . 4)
  (downcase-word . 1)
- (org-noter-kill-session . 10)
+ (org-noter-kill-session . 11)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
  (global-auto-revert-mode . 4)
@@ -99,7 +99,7 @@
  (flyspell-mode . 2)
  (artbollocks-count-words . 1)
  (artbollocks-mode . 5)
- (writegood-mode . 4)
+ (writegood-mode . 7)
  (writegood-grade-level . 1)
  (writegood-reading-ease . 1)
  (helm-projectile-switch-to-buffer . 2)
@@ -125,10 +125,10 @@
  (keyfreq-html . 1)
  (org-roam-bibtex-mode . 8)
  (visual-line-mode . 3)
- (org-refile . 7)
+ (org-refile . 8)
  (list-colors-display . 1)
  (buffer-expose . 2)
- (org-mode . 3)
+ (org-mode . 4)
  (org-toggle-tags-groups . 2)
  (customize-face . 1)
  (spell-fu-word-remove . 1)
@@ -147,7 +147,7 @@
  (simpleclip-paste . 1)
  (yank-pop . 1)
  (org-agenda-redo . 1)
- (org-agenda-refile . 5)
+ (org-agenda-refile . 6)
  (git-timemachine . 3)
  (recover-session-finish . 1)
  (text-scale-mode . 4)
@@ -172,20 +172,48 @@
  (unpackaged/org-fix-blank-lines . 6)
  (unpackaged/magit-log-date-headers-mode . 3)
  (unpackaged/magit-status . 1)
- (unpackaged/reload-package . 1)
+ (unpackaged/reload-package . 2)
  (flyspell-correct-wrapper . 2)
  (savehist-save . 1)
  (better-jumper-mode . 1)
  (flycheck-vale-toggle-enabled . 6)
- (flycheck-mode . 2)
+ (flycheck-mode . 10)
  (eww . 1)
  (helm-org-rifle . 1)
  (set-selective-display . 2)
  (prettify-symbols-mode . 2)
  (make-indirect-buffer . 2)
- (clone-indirect-buffer-other-window . 1)
+ (clone-indirect-buffer-other-window . 2)
  (scroll-lock-mode . 2)
  (unpackaged/org-refile-to-datetree-using-ts-in-entry . 1)
  (kb/refile-to-datetree-using-ts . 1)
  (unpackaged/org-refile-to-datetree . 1)
+ (counsel-flycheck . 8)
+ (flycheck-buffer . 5)
+ (flycheck-list-errors . 1)
+ (flycheck-select-checker . 1)
+ (flycheck-error-list-explain-error . 1)
+ (global-flycheck-mode . 12)
+ (flycheck-color-mode-line-mode . 2)
+ (flycheck-pos-tip-mode . 3)
+ (flycheck-inline-mode . 7)
+ (quick-peek-hide . 1)
+ (undo . 1)
+ (super-save-mode . 1)
+ (org-toggle-timestamp-type . 2)
+ (run-lua . 2)
+ (helm-system-packages . 12)
+ (kb/helm-system-packages . 3)
+ (lsp . 14)
+ (lsp-install-server . 6)
+ (lsp-mode . 18)
+ (flymake-show-diagnostics-buffer . 5)
+ (lsp-format-buffer . 2)
+ (lsp-toggle-on-type-formatting . 2)
+ (lsp-headerline-breadcrumb-mode . 3)
+ (lsp-ui-sideline-toggle-symbols-info . 4)
+ (lsp-ivy-workspace-symbol . 1)
+ (lsp-ui-mode . 1)
+ (c-mode . 2)
+ (delete-frame . 1)
 )
