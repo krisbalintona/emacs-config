@@ -15,18 +15,42 @@
 Syntax highlighting for every language
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
-    :bind (:map lsp-mode-map
-                ("TAB" . completion-at-point))
+    :hook (;;(prog-mode . lsp-deferred) ; Lsp-mode only when buffer is visible
+           (lsp-mode . lsp-enable-which-key-integration)
+           (lsp-mode . kb/lsp-mode-setup))
+    :commands (lsp lsp-deferred) ; Defer until either of these commands are run
+    :preface
+    (defun kb/lsp-mode-setup ()
+      "Set breadcrumb format and show breadcrumbs at the top of the window."
+      (setq lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
+      (lsp-headerline-breadcrumb-mode))
+    :custom
+    (lsp-keymap-prefix "C-c l")
     :config
+    ;; Put flymake diagnostic buffer at the bottom third of the window
+    (add-to-list 'display-buffer-alist
+                 `(,(rx bos "*Flymake diagnostics for")
+                   (display-buffer-reuse-window
+                    display-buffer-in-side-window)
+                   (side            . bottom)
+                   (reusable-frames . visible)
+                   (window-height   . 0.33)))
+
+    (general-define-key
+     :keymaps 'lsp-mode-map
+     "TAB" 'company-indent-or-complete-common
+     )
+
     (kb/leader-keys
+      "lf" '(flycheck-list-errors :which-key "List flycheck errors")
       "ld" 'xref-find-definitions
       "lr" 'xref-find-references
       "ln" 'lsp-ui-find-next-reference
       "lp" 'lsp-ui-find-prev-reference
-      "ls" 'counsel-imenu
       "le" 'lsp-ui-flycheck-list
       "lS" 'lsp-ui-sideline-mode
-      "lX" 'lsp-execute-code-action)
+      "lX" 'lsp-execute-code-action
+      )
     )
 #+END_SRC
 

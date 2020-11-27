@@ -50,6 +50,7 @@
       )
     )
 #+END_SRC
+
 * Evil-collection
 
 #+BEGIN_SRC emacs-lisp
@@ -62,6 +63,7 @@
     (evil-collection-init)
     )
 #+END_SRC
+
 * Evil-commentary
 
 #+BEGIN_SRC emacs-lisp
@@ -93,6 +95,7 @@
      )
     )
 #+END_SRC
+
 * Evil-surround
 
 Surround a selection with a pair of characters
@@ -102,6 +105,7 @@ Surround a selection with a pair of characters
     (global-evil-surround-mode t)
     )
 #+END_SRC
+
 * Evil-visualstar
 
 #+BEGIN_SRC emacs-lisp
@@ -112,6 +116,7 @@ Surround a selection with a pair of characters
     (global-evil-visualstar-mode)
     )
 #+END_SRC
+
 * Evil-magit
 
 #+BEGIN_SRC emacs-lisp
