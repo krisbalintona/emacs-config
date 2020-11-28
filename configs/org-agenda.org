@@ -473,6 +473,9 @@ Autoload the package and start with no views
                             (org-super-agenda-groups
                              '((:discard (:file-path "school.org"))
                                (:discard (:file-path "habits.org"))
+                               (:name "Projects without tasks"
+                                      :tag "PROJECT"
+                                      (:not(:children todo)))
                                (:auto-planning t)
                                (:discard (:anything t))
                                ))
