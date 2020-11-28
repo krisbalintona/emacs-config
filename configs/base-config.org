@@ -663,11 +663,11 @@ Make history of certain things (e.g. minibuffer) persistent across sessions
   (use-package savehist
     :straight nil
     :hook (after-init . savehist-mode)
+    :custom
+    (savehist-autosave-interval 300)
     :config
     (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
     (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
-
-    (run-with-timer 0 480 'savehist-save) ; Save every 10 minutes
     )
 #+end_src
 
