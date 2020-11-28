@@ -522,7 +522,7 @@ Autoload the package and start with no views
                  ((agenda ""
                           ((org-agenda-overriding-header "My habit calendar")
                            (org-agenda-span 'week)
-                           (org-agenda-start-day "+2") ; Start the agenda view with yestersy
+                           (org-agenda-start-day "+2") ; Start the agenda view with yesterday
                            (org-agenda-span 'fortnight)
                            (org-super-agenda-groups
                             '((:discard (:not (:todo "TICKLE")))
@@ -530,12 +530,12 @@ Autoload the package and start with no views
                               ))
                            ))
                   (alltodo ""
-                           ((org-agenda-overriding-header "Unscheduled tickles")
+                           ((org-agenda-overriding-header "Unscheduled or missed tickles")
                             (org-super-agenda-groups
                              '((:discard (:not (:todo "TICKLE")))
-                               (:discard (:deadline nil))
-                               (:discard (:scheduled nil))
-                               (:anything t)
+                               (:name "Unscheduled" :deadline nil :scheduled nil)
+                               (:name "Unscheduled" :deadline past :scheduled past)
+                               (:name "Other" :anything t)
                                ))
                             ))
                   ))
