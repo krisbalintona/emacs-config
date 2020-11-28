@@ -400,8 +400,7 @@ Autoload the package and start with no views
                            ((org-agenda-overriding-header "")
                             (org-super-agenda-groups
                              '((:discard (:not (:file-path "school.org"))) 
-                               (:name none
-                                      :auto-planning t)
+                               (:auto-planning t)
                                (:discard (:anything t))
                                ))
                             ))
@@ -537,7 +536,7 @@ Autoload the package and start with no views
                             (org-super-agenda-groups
                              '((:discard (:not (:todo "TICKLE")))
                                (:name "Unscheduled" :deadline nil :scheduled nil)
-                               (:name "Unscheduled" :deadline past :scheduled past)
+                               (:name "Missed" :deadline past :scheduled past)
                                (:name "Other" :anything t)
                                ))
                             ))
