@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
+ helm-timers
  delete-frame
  c-mode
  counsel-imenu
  company-box-mode
  customize-group
  org-mode-restart
- global-company-mode
 )
 
 ;; ----- amx-data -----
@@ -174,10 +174,10 @@
  (unpackaged/magit-status . 1)
  (unpackaged/reload-package . 2)
  (flyspell-correct-wrapper . 2)
- (savehist-save . 1)
+ (savehist-save . 2)
  (better-jumper-mode . 1)
  (flycheck-vale-toggle-enabled . 6)
- (flycheck-mode . 10)
+ (flycheck-mode . 12)
  (eww . 1)
  (helm-org-rifle . 1)
  (set-selective-display . 2)
@@ -206,14 +206,15 @@
  (kb/helm-system-packages . 3)
  (lsp . 14)
  (lsp-install-server . 6)
- (lsp-mode . 18)
+ (lsp-mode . 21)
  (flymake-show-diagnostics-buffer . 5)
  (lsp-format-buffer . 2)
  (lsp-toggle-on-type-formatting . 2)
- (lsp-headerline-breadcrumb-mode . 3)
+ (lsp-headerline-breadcrumb-mode . 6)
  (lsp-ui-sideline-toggle-symbols-info . 4)
  (lsp-ivy-workspace-symbol . 1)
- (lsp-ui-mode . 1)
+ (lsp-ui-mode . 7)
  (c-mode . 2)
  (delete-frame . 1)
+ (helm-timers . 1)
 )

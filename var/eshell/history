@@ -157,3 +157,7 @@ sudo timeshift --lisp
 sudo timeshift --list
 sudo timeshift --list
 stl
+sudo timeshift --create --comment "After a lot of work on Minecraft and QMK keymap"
+stl
+stc
+sudo timeshift --create --comment "After doing my weekly GTD review"
