@@ -463,8 +463,7 @@ Autoload the package and start with no views
                                (:tag "TRANSITORY")
                                (:tag "DEMANDING")
                                (:tag "BACKGROUND")
-                               (:auto-priority t)
-                               (:discard (:anything t))
+                               (:name "Uncategorized" :anything t)
                                ))
                             ))
                   (alltodo ""
