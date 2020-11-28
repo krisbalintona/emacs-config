@@ -276,6 +276,7 @@ Taken from [[https://github.com/alphapapa/unpackaged.el#refile-to-datetree-file-
   (setq org-habit-show-habits-only-for-today nil ; I want to see when habits are rescheduled for
         org-habit-preceding-days 8
         org-habit-following-days 4
+        org-extend-today-until 3 ; The day ends at 3AM!
         org-habit-graph-column 90)
 
   (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t))) ; Force showing of habits in agenda every day at 6AM
