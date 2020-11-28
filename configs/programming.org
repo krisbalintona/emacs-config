@@ -17,8 +17,7 @@ Syntax highlighting for every language
   (use-package lsp-mode
     :hook (;;(prog-mode . lsp-deferred) ; Lsp-mode only when buffer is visible
            (lsp-mode . lsp-enable-which-key-integration)
-           (lsp-mode . lsp-headerline-breadcrumb-mode)
-           (prog-mode . lsp-headerline-breadcrumb-mode))
+           (lsp-mode . lsp-headerline-breadcrumb-mode))
     :commands (lsp lsp-deferred) ; Defer until either of these commands are run
     :custom
     (lsp-keymap-prefix "C-c l")
