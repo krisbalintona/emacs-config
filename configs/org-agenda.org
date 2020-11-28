@@ -411,7 +411,8 @@ Autoload the package and start with no views
                                 ((org-ql-block-header "")
                                  (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
                                  (org-super-agenda-groups
-                                  '((:auto-outline-path t)
+                                  '((:name "Projects without tasks" :not (:children todo))
+                                    (:auto-outline-path t)
                                     ))
                                  ))
                   (alltodo ""
@@ -446,6 +447,17 @@ Autoload the package and start with no views
                                   '((:anything t)
                                     ))
                                  ))
+                  (org-ql-block '(and (path "school.org")
+                                      (tags-local "PROJECT")
+                                      (not (children))
+                                      (todo)
+                                      (not (done)))
+                                ((org-ql-block-header "Projects without any tasks")
+                                 (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                                 (org-super-agenda-groups
+                                  '((:auto-category t)
+                                    ))
+                                 ))
                   ))
                t)
 
@@ -471,9 +483,6 @@ Autoload the package and start with no views
                             (org-super-agenda-groups
                              '((:discard (:file-path "school.org"))
                                (:discard (:file-path "habits.org"))
-                               (:name "Projects without tasks"
-                                      :tag "PROJECT"
-                                      (:not(:children todo)))
                                (:auto-planning t)
                                (:discard (:anything t))
                                ))
@@ -486,8 +495,22 @@ Autoload the package and start with no views
                                 ((org-ql-block-header "")
                                  (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
                                  (org-super-agenda-groups
-                                  '((:auto-outline-path t))
-                                  )))
+                                  '((:auto-outline-path t)
+                                    (:name "Projects without tasks" :not (:children todo))
+                                    ))
+                                 ))
+                  (org-ql-block '(and (not (path "school.org"))
+                                      (not (path "habits.org"))
+                                      (tags-local "PROJECT")
+                                      (not (children))
+                                      (todo)
+                                      (not (done)))
+                                ((org-ql-block-header "Projects without any tasks")
+                                 (org-agenda-files kb/all-agenda-dir-files-minus-inbox)
+                                 (org-super-agenda-groups
+                                  '((:auto-category t)
+                                    ))
+                                 ))
                   ))
                t)
 
