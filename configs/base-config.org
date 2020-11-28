@@ -164,26 +164,34 @@ Sleek modeline from Doom
     (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
     (add-hook 'doom-modeline-mode-hook #'doom-modeline-conditional-buffer-encoding) ; Necessary so it takes affect imediately, not before I change major modes
 
-    ;; Show actual path of file in symlinks
-    (setq find-file-visit-truename t)
-
-    ;; Enable time in the mode-line
-    (display-time-mode t)
-    ;; Show battery
-    (setq battery-load-critical 15)
-    (setq battery-load-low 25)
-    (unless (equal "Battery status not available"
-                   (battery))
-      (display-battery-mode 1))                       ; On laptops it's nice to know how much power you have
-
-    ;; Show file-size
-    (size-indication-mode t)
-
     (doom-modeline-def-modeline 'main
       '(bar " " matches vcs " " buffer-info remote-host buffer-position parrot selection-info)
       '(misc-info " " battery " " input-method buffer-encoding major-mode checker minor-modes process))
     )
 #+END_SRC
+
+*** Modeline additions
+
+Minor modeline additions/settings
+#+begin_src emacs-lisp
+  (with-eval-after-load 'doom-modeline
+    ;; Show actual path of file in symlinks
+    (setq find-file-visit-truename t)
+
+    ;; Disable time in the mode-line
+    (display-time-mode t)
+
+    ;; Show file-size
+    (size-indication-mode t)
+
+    ;; Show battery
+    (setq battery-load-critical 15)
+    (setq battery-load-low 25)
+    (unless (equal "Battery status not available"
+                   (battery))
+      (display-battery-mode t)) ; On laptops it's nice to know how much power you have
+    )
+#+end_src
 
 * General.el
 
