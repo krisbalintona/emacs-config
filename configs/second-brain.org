@@ -75,6 +75,7 @@ Zettelkasten and Evergreen notes
       )
     )
 #+END_SRC
+
 * Org-roam-server
 
 Interactive browser graph view
@@ -103,6 +104,7 @@ Interactive browser graph view
         (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) ; Don't start server if not in daemon mode, otherwise will break things
     )
 #+END_SRC
+
 * Org-roam-capture-templates
 
 Templates for inserting files into my Zettelkasten
@@ -152,6 +154,21 @@ Templates for inserting files into my Zettelkasten
            :jump-to-captured t)
           ))
 #+END_SRC
+
+* Org-transclusion
+
+Allow transclusion of org files
+#+begin_src emacs-lisp
+  (use-package org-transclusion
+    :after org-roam
+    :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion" :branch "main")
+    :config
+    (kb/leader-keys
+      "tc" '(org-transclusion-mode :which-key "Org-transclusion")
+      )
+    )
+#+end_src
+
 * Deft
 
 Full text search for my roam files
@@ -176,7 +193,9 @@ Full text search for my roam files
       )
     )
 #+END_SRC
+
 * Bibliographical notes
+
 ** Ivy/Helm-bibtex
 
 Use ivy or helm search frontend with the bibtex-completion backend
@@ -236,6 +255,7 @@ Use ivy or helm search frontend with the bibtex-completion backend
       )
     )
 #+END_SRC
+
 ** Org-ref
 
 Bibtex is a way to add bibliographic information (e.g. refernces/citations to
@@ -256,6 +276,7 @@ references into latex and org files
     (org-ref-notes-function 'orb-edit-notes)
     )
 #+END_SRC
+
 ** Org-roam-bibtex
 
 Ivy/helm-bibtex (which integrates with bibtex-completion) integration
@@ -291,6 +312,7 @@ with org-roam (provides templates and modifies edit notes action)
       )
     )
 #+END_SRC
+
 ** Pdf-tools
 
 View pdfs and interact with them
@@ -311,6 +333,7 @@ View pdfs and interact with them
       )
     )
 #+END_SRC
+
 ** Org-noter
 
 #+BEGIN_SRC emacs-lisp
@@ -337,6 +360,7 @@ View pdfs and interact with them
       )
     )
 #+END_SRC
+
 * Org-protocol
 
 Necessary for outside-of-emacs integration (i.e. through Emacsclient)
