@@ -903,11 +903,11 @@ Essentially counsel but for selectrum!
 #+begin_src emacs-lisp
   (use-package consult
     :after selectrum
-    :straight (consult :type git :host github :repo "minad/consult")
-    :config
     ;; Show more information for certain functions. These functions can see what is
     ;; seen from consult-annotate-alist
-    (add-hook 'selectrum-mode 'consult-annotate-mode)
+    :hook (selectrum-mode . consult-annotate-mode)
+    :straight (consult :type git :host github :repo "minad/consult")
+    :config
     (add-to-list 'consult-annotate-alist
                  '(execute-extended-command . consult-annotate-command)) ; Show more information in default M-x
 
