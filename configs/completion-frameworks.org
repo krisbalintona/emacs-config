@@ -905,6 +905,12 @@ Essentially counsel but for selectrum!
     :after selectrum
     :straight (consult :type git :host github :repo "minad/consult")
     :config
+    ;; Show more information for certain functions. These functions can see what is
+    ;; seen from consult-annotate-alist
+    (add-hook 'selectrum-mode 'consult-annotate-mode)
+    (add-to-list 'consult-annotate-alist
+                 '(execute-extended-command . consult-annotate-command)) ; Show more information in default M-x
+
     (kb/leader-keys
       "so" '(consult-outline :which-key "Consult outline")
       ;; ("C-x b" . consult-buffer)
