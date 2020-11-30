@@ -456,18 +456,9 @@ Advanced =complete-read=
     )
 #+end_src
 
-** Selectrum-presient
+*** Selectrum custom functions
 
-#+begin_src emacs-lisp
-  (use-package selectrum-prescient
-    :config
-    (selectrum-prescient-mode)
-    )
-#+end_src
-
-** Selectrum custom functions
-
-*** Helper functions
+**** Helper functions
 
 Helper function to add action support
 #+begin_src emacs-lisp
@@ -490,7 +481,7 @@ Helper function to add action support
        (abort-recursive-edit)))
 #+end_src
 
-*** Selectrum-swiper
+**** Selectrum-swiper
 
 #+begin_src emacs-lisp
   (defvar selectrum-swiper-history nil "Submission history for `selectrum-swiper'.")
@@ -582,7 +573,7 @@ Unfold headlines when searching with selectrum-swiper
   (advice-add #'selectrum-swiper :around #'selectrum:reveal-if-in-org-folds)
 #+end_src
 
-*** Selectrum-imenu
+**** Selectrum-imenu
 
 #+begin_src emacs-lisp
   (defvar selectrum-imenu+ nil)
@@ -620,7 +611,7 @@ Unfold headlines when searching with selectrum-swiper
       (imenu (cdr (cl-find cand candidates :test #'string= :key #'car)))))
 #+end_src
 
-*** Selectrum-rg
+**** Selectrum-rg
 
 #+begin_src emacs-lisp
   (defvar selectrum-rg-history nil)
@@ -747,7 +738,7 @@ Unfold headlines when searching with selectrum-swiper
         (message "Bad candidate?"))))
 #+end_src
 
-*** Selectrum-yank-pop
+**** Selectrum-yank-pop
 
 #+begin_src emacs-lisp
   (defun selectrum-yank-pop (&optional arg)
@@ -775,7 +766,7 @@ Unfold headlines when searching with selectrum-swiper
             (yank-pop n) (insert-for-yank text)))))
 #+end_src
 
-*** Selectrum-isearch-history
+**** Selectrum-isearch-history
 
 #+begin_src emacs-lisp
   (defun selectrum-isearch--switch-direction-on-fail ()
@@ -808,6 +799,41 @@ Unfold headlines when searching with selectrum-swiper
        x
        (mapconcat 'isearch-text-char-description x ""))
       (selectrum-isearch--switch-direction-on-fail)))
+#+end_src
+
+*** Keybinds
+
+#+begin_src emacs-lisp
+  (general-define-key
+   "C-h f" 'describe-function
+   "C-h v" 'describe-variable
+   )
+
+  (general-define-key
+   :keymaps 'isearch-mode-map
+   "C-c r" 'selectrum-isearch-history-from-isearch ; Drop back into isearch history menu
+   )
+
+  ;; Disabled now because I found consult.el!
+  ;; (kb/leader-keys
+  ;;   "sr" 'selectrum-rg
+  ;;   "ss" 'selectrum-swiper
+  ;;   "so" 'selectrum-imenu
+  ;;   "si" 'selectrum-isearch-history
+
+  ;;   "bb" 'switch-to-buffer
+
+  ;;   "iy" 'selectrum-yank-pop
+  ;;   )
+#+end_src
+
+** Selectrum-presient
+
+#+begin_src emacs-lisp
+  (use-package selectrum-prescient
+    :config
+    (selectrum-prescient-mode)
+    )
 #+end_src
 
 ** Embark
@@ -871,28 +897,27 @@ For Selectrum
                 (which-key--hide-popup-ignore-command))))
 #+end_src
 
-** Keybinds
+** Consult.el
 
+Essentially counsel but for selectrum!
 #+begin_src emacs-lisp
-  (general-define-key
-   "C-h f" 'describe-function
-   "C-h v" 'describe-variable
-   )
-
-  (general-define-key
-   :keymaps 'isearch-mode-map
-   "C-c r" 'selectrum-isearch-history-from-isearch ; Drop back into isearch history menu
-   )
-
-  (kb/leader-keys
-    "sr" 'selectrum-rg
-    "ss" 'selectrum-swiper
-    "so" 'selectrum-imenu
-    "si" 'selectrum-isearch-history
-
-    "bb" 'switch-to-buffer
-
-    "iy" 'selectrum-yank-pop
+  (use-package consult
+    :after selectrum
+    :straight (consult :type git :host github :repo "minad/consult")
+    :config
+    (kb/leader-keys
+      "so" '(consult-outline :which-key "Consult outline")
+      ;; ("C-x b" . consult-buffer)
+      ;; ("C-x 4 b" . consult-buffer-other-window)
+      ;; ("C-x 5 b" . consult-buffer-other-frame)
+      ;; ("C-x r x" . consult-register)
+      ;; ("C-x r b" . consult-bookmark)
+      "sm" '(consult-mark :which-key "Consult mark")
+      "ss" '(consult-line :which-key "Consult swiper")
+      ;; ("-s m" . consult-multi-occur)
+      "iy" '(consult-yank-pop :which-key "Consult yank-pop")
+      "ha" '(consult-apropos :which-key "Consult apropos")
+      )
     )
 #+end_src
 
