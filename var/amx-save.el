@@ -1,21 +1,21 @@
 
 ;; ----- amx-history -----
 (
- helm-timers
- delete-frame
- c-mode
- counsel-imenu
- company-box-mode
- customize-group
- org-mode-restart
+ helm-projectile-find-file
+ org-agenda-refile
+ org-refile
+ counsel-yank-pop
+ widen
+ outline-show-all
+ imenu
 )
 
 ;; ----- amx-data -----
 (
  (customize-group . 30)
  (pdf-tools-install . 1)
- (load-file . 2)
- (counsel-load-library . 9)
+ (load-file . 3)
+ (counsel-load-library . 11)
  (explain-pause-top . 5)
  (selectrum-mode . 6)
  (orb-note-actions . 1)
@@ -29,7 +29,7 @@
  (langtool-check-done . 1)
  (explain-pause-mode . 3)
  (calendar . 1)
- (counsel-imenu . 4)
+ (counsel-imenu . 6)
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
@@ -93,7 +93,7 @@
  (counsel-rg . 1)
  (selectrum-rg . 2)
  (helm-projectile-on . 1)
- (helm-projectile-find-file . 2)
+ (helm-projectile-find-file . 3)
  (projectile-global-mode . 1)
  (esup . 2)
  (flyspell-mode . 2)
@@ -116,7 +116,7 @@
  (LaTeX-mode . 2)
  (latex-mode . 2)
  (next-error . 1)
- (counsel-yank-pop . 2)
+ (counsel-yank-pop . 3)
  (pdf-view-mode . 1)
  (company-org-block . 2)
  (wikinforg . 4)
@@ -125,7 +125,7 @@
  (keyfreq-html . 1)
  (org-roam-bibtex-mode . 8)
  (visual-line-mode . 3)
- (org-refile . 8)
+ (org-refile . 10)
  (list-colors-display . 1)
  (buffer-expose . 2)
  (org-mode . 4)
@@ -147,7 +147,7 @@
  (simpleclip-paste . 1)
  (yank-pop . 1)
  (org-agenda-redo . 1)
- (org-agenda-refile . 6)
+ (org-agenda-refile . 8)
  (git-timemachine . 3)
  (recover-session-finish . 1)
  (text-scale-mode . 4)
@@ -174,7 +174,7 @@
  (unpackaged/magit-status . 1)
  (unpackaged/reload-package . 2)
  (flyspell-correct-wrapper . 2)
- (savehist-save . 2)
+ (savehist-save . 4)
  (better-jumper-mode . 1)
  (flycheck-vale-toggle-enabled . 6)
  (flycheck-mode . 12)
@@ -199,7 +199,7 @@
  (flycheck-inline-mode . 7)
  (quick-peek-hide . 1)
  (undo . 1)
- (super-save-mode . 1)
+ (super-save-mode . 3)
  (org-toggle-timestamp-type . 2)
  (run-lua . 2)
  (helm-system-packages . 12)
@@ -217,4 +217,25 @@
  (c-mode . 2)
  (delete-frame . 1)
  (helm-timers . 1)
+ (org-transclusion-mode . 2)
+ (org-transclusion-activate . 1)
+ (org-transclusion-deactivate . 1)
+ (eval-expression . 1)
+ (consult-annotate-mode . 4)
+ (consult-mark . 3)
+ (consult-bookmark . 1)
+ (consult-line . 3)
+ (consult-outline . 1)
+ (consult-buffer . 1)
+ (consult-recent-file . 1)
+ (consult-recent-file-other-window . 1)
+ (consult-apropos . 1)
+ (consult-minor-mode . 1)
+ (consult-theme . 1)
+ (consult-yank-pop . 1)
+ (execute-extended-command . 1)
+ (counsel-grep-or-swiper . 1)
+ (imenu . 1)
+ (outline-show-all . 1)
+ (widen . 1)
 )

@@ -3,15 +3,15 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored-marker"
- (filename . "~/Documents/org-database/agenda/housekeeping.org")
- (front-context-string . "* PROG Figure ou")
- (rear-context-string . "1-25 Wed 18:44]\n")
- (position . 697))
+ (filename . "~/Documents/org-database/agenda/hobbies.org")
+ (front-context-string . "* NEXT Start res")
+ (rear-context-string . "1-29 Sun 22:27]\n")
+ (position . 23330))
 ("org-refile-last-stored"
- (filename . "~/Documents/org-database/agenda/housekeeping.org")
- (front-context-string . "* PROG Figure ou")
- (rear-context-string . "1-25 Wed 18:44]\n")
- (position . 697))
+ (filename . "~/Documents/org-database/agenda/hobbies.org")
+ (front-context-string . "* NEXT Start res")
+ (rear-context-string . "1-29 Sun 22:27]\n")
+ (position . 23330))
 ("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
@@ -24,7 +24,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* PROG Figure ou")
- (rear-context-string . "indow manager]]\n")
- (position . 584))
+ (front-context-string . "* NEXT Start res")
+ (rear-context-string . "1-29 Sun 22:53]\n")
+ (position . 1339))
 )

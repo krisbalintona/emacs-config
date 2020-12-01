@@ -41727,6 +41727,7 @@ focal
 focally
 Foch
 Foch's
+Foci
 focus
 focus's
 focused
@@ -73320,6 +73321,7 @@ Nicolas
 Nicolas's
 Nicole
 Nicole's
+Nicollo
 Nicosia
 Nicosia's
 nicotine
@@ -81617,6 +81619,7 @@ Pierrot
 Pierrot's
 piers
 pies
+pietism
 piety
 piety's
 piezoelectric
@@ -89575,6 +89578,8 @@ recontaminate
 recontaminated
 recontaminates
 recontaminating
+recontextualize
+recontextualizing
 reconvene
 reconvened
 reconvenes
@@ -98068,6 +98073,7 @@ sequoia's
 sequoias
 Sequoya
 Sequoya's
+Ser
 seraglio
 seraglio's
 seraglios

@@ -4,7 +4,9 @@
 * Custom file and directory shortcuts
 
 From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-performance][dotfiles/Emacs.org at master · daviwil/dotfiles · GitHub]]
+
 *** Functions
+
 #+BEGIN_SRC emacs-lisp
   (defun kb/org-file-jump-to-heading (org-file heading-title)
     (interactive)
@@ -39,6 +41,7 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     (org-show-subtree)
     (forward-line))
 #+END_SRC
+
 *** Keybindings
 
 #+BEGIN_SRC emacs-lisp
@@ -50,7 +53,7 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     "fcL" '((lambda () (interactive) (counsel-find-file kb/library-dir)) :which-key "Library files")
     "fcl" '((lambda () (interactive) (kb/org-dir-show-headings kb/library-dir)) :which-key "Edit library file")
 
-    "fcw" '((lambda () (interactive) (find-file kb/wm-config-file)) :which-key "Open WM config file")
+    "fcw" '((lambda () (interactive) (find-file kb/wm-config-file)) :which-key "Dotfiles directory")
 
     "fcb" '((lambda () (interactive) (find-file kb/emacs-base-config-file)) :which-key "Open Emacs base config")
     "fce" '((lambda () (interactive) (counsel-find-file kb/emacs-config-dir)) :which-key "Config directory")
@@ -62,6 +65,7 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     ;; "fdp" '((lambda () (interactive) (kb/org-file-jump-to-heading "~/.dotfiles/Desktop.org" "Panel via Polybar")) :which-key "polybar")
     )
 #+END_SRC
+
 * Helm-org-rifle
 
 Use helm to word search through org file and display the corresponding heading of search matches

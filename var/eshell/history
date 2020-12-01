@@ -1,55 +1,3 @@
-dust 
-alias
-asusctl -c
-asusctl -c 100
-yay -S texlive-most
-sudo timeshift --create --comment "Before class"
-sudo timeshift --create --comment "After class"
-sudo timeshift --create --comment "Starting to mess and learn about latex"
-yay -Ss texlive-full
-dust
-sudo timeshift --create --comment "Disgusted by latex"
-stc
-sudo timeshift --create --comment "At the end of the day"
-stl
-yay
-sudo timeshift --create --comment "After turning a lot of my tabs into todos"
-sudo timeshift --create --comment "Before upgarde"
-sudo timeshift --create --comment "Good morning"
-stc
-sudo timeshift --create --comment "Good morning"
-stc
-stc
-ls ~/Documents
-stc
-~/.local/share/applications/
-ls /
-ls /usr/share/applications
-/usr/share/applications
-ff virt-manager.desktop
-sudo timeshift --create --comment "After getting back to my room"
-mu init
-sudo timeshift --create --comment "Getting back in my room	"
-sudo timeshift --create --comment "Getting back in my room"
-sudo timeshift --create --comment "Right before going to bed"
-sudo find / -name rc.lua
-cp /etc/xdg/awesome/rc.lua ~/.config/awesome/rc.lua
-mkdir ~/.config/awesome/
-cp /etc/xdg/awesome/rc.lua ~/.config/awesome/rc.lua
-sudo timeshift --create --comment "After adding a bit of stuff to my Emacs config"
-stc
-.config/awesome
-git clone https://github.com/Elv13/collision.git
-ls
-.config/awesome
-ls
-rm -r collision
-ls
-exit
-stc
-stl
-stc
-tc
 stc
 xinput st
 xinput list
@@ -133,14 +81,12 @@ sudo timeshift --create --comment "After remembering about Swappa"
 sudo timeshift --create --comment "After learning about student finances"
 sudo timeshift --help
 sudo timeshift --delete
-stl
 sudo timeshift --delete 78
 sudo timeshift --delete
 sudo timeshift --create --comment "After learning about student finances"
 sudo timeshift --delete-all
 sudo timeshift --create --comment "After successfully starting stow dotfile management"
 sudo timeshift --create --comment "After setting and messing around in virtualbox VM"
-stl
 sudo timeshift --create --comment "After setting and messing around in virtualbox VM"
 /mnt
 ls
@@ -152,12 +98,112 @@ tree
 qmk flash -kb kbdfans/kbd4x -km my-programmed-keymap
 sudo timeshift --create --comment "After plaing MC"
 sudo timeshift --create --comment "After playing MC for the first time"
-stl
 sudo timeshift --lisp
 sudo timeshift --list
 sudo timeshift --list
-stl
 sudo timeshift --create --comment "After a lot of work on Minecraft and QMK keymap"
-stl
 stc
 sudo timeshift --create --comment "After doing my weekly GTD review"
+stc
+asusctl -c 100
+sudo timeshift --create --comment "After being productive for once"
+stl
+ls
+zsh
+cd zsh
+ls
+..
+stow -Rv zsh/ 
+stow -Dv zsh/ 
+stow -Sv zsh/ 
+cat .zsh_history
+stow -Dv
+stow -Dv zsh
+mv zsh/.zsh_history .
+ls
+ls -la
+ls zsh
+mv .zshrc ./zsh
+ls zsh
+ls -la zsh
+sudo timeshift --create --comment "After installing and configuring consult.el"
+exec zsh
+xinput lsit
+xinput list
+xinput float 14
+sudo timeshift --create --comment "Just started to read How to Take Smart Notes"
+find . qmk
+stc
+~
+rm .zsh_history 
+dotfiles
+stow -Rv zsh
+stow -Rv zsh
+rm ~/.zsh_history 
+stow -Rv zsh
+cat zsh/zsh/.zsh_history 
+stow -Dv zsh
+stow -Sv zsh
+stow -Dv zsh
+cat ~/.zsh_history 
+aliases
+alias
+alias ffo "find-file-other-window $1"
+ffo zsh/.zshenv
+cat zsh/.zshenv
+stow -Sv zsh
+cat ~/.zshrc
+stow -Rv zsh
+rm ~/.zsh_history
+stow -Dv zsh
+stow -Rv zsh
+ls zsh
+ls -la zsh
+ls -la zsh/zsh
+ls ~/zsh
+ls -la ~/zsh
+cat ~/zsh/.zsh_history 
+ls -la ~/zsh
+mv ~/zsh/.zsh_history ./zsh/zsh
+stow -Rv zsh
+cat ~/zsh/.zsh_history 
+stow -Dv zsh
+mv zsh/zsh/antigen/ ~/zsh/antigen-old
+ls ~/zsh
+mv ~/zsh/antigen-old ~/zsh/antigen
+ls -la ~ | grep zsh
+ls -la ~ | grep .zsh
+mv ~/zsh/antigen ~/zsh/antigen-old
+stow -Sv zsh
+cat ~/zsh/
+ls ~/zsh/
+rm -f ~/zsh/antigen-old/ 
+rm -r ~/zsh/antigen-old/ 
+wc -l ~/zsh/.zsh_history 
+~/.config/vim
+~/.config/nvim
+cd ~/.config/nvim
+ls
+ls autoload
+cat autoload/plug.vim 
+ls -la 
+~/dotfiles
+stow -D nvim
+mv nvim/.config/nvim/autoload/ ~/.config/nvim/ 
+ls ~/.config/nvim/ 
+stow -Sv zsh
+stow -Sv nvim
+fd --type f
+fd --type f ~/dotfiles
+fd --type f --full-path ~/dotfiles
+fd --type f . ~/dotfiles
+/home/krisbalintona/dotfiles/zsh/zsh/antigen.zsh
+fd --type f . ~/dotfiles
+fd --type f ~/dotfiles
+fd --full-path --type f ~/dotfiles
+fd --full-path --type f ~/dotfiles/
+fd --type f . ~/dotfiles
+fd --type f ~/dotfiles
+fd --type f "~/dotfiles"
+fd --type f --full-path"~/dotfiles"
+fd --type f --full-path "~/dotfiles"
