@@ -273,12 +273,12 @@ Taken from [[https://github.com/alphapapa/unpackaged.el#refile-to-datetree-file-
 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-modules 'org-habit)
-  (setq org-habit-show-habits-only-for-today nil ; I want to see when habits are rescheduled for
-        org-habit-preceding-days 8
-        org-habit-following-days 4
-        org-extend-today-until 4 ; The day ends at 3AM!
-        org-use-effective-time t ; Set timestamps respecting org-extend-today-until
-        org-habit-graph-column 90)
+  (customize-set-variable 'org-habit-show-habits-only-for-today nil) ; I want to see when habits are rescheduled for
+  (customize-set-variable 'org-habit-preceding-days 8)
+  (customize-set-variable 'org-habit-following-days 4)
+  (customize-set-variable 'org-extend-today-until 4) ; The day ends at 3AM!
+  (customize-set-variable 'org-use-effective-time t) ; Set timestamps respecting org-extend-today-until
+  (customize-set-variable 'org-habit-graph-column 90)
 
   (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t))) ; Force showing of habits in agenda every day at 6AM
 #+END_SRC
