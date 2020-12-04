@@ -8,6 +8,7 @@ Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matthe
     :straight auctex
     :hook
     ((LaTeX-mode . (lambda ()
+                     ;; Enable reftex
                      (turn-on-reftex)
                      (setq reftex-plug-into-AUCTeX t)
                      (reftex-isearch-minor-mode)
@@ -16,6 +17,7 @@ Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matthe
                      (setq TeX-source-correlate-start-server t)))
      (LaTeX-mode . prettify-symbols-mode)
      (LaTeX-mode . display-line-numbers-mode)
+     (LaTeX-mode . LaTeX-math-mode) ; Access to math macros
      )
     :custom
     ;; If you want to make AUCTeX aware of style files and multi-file documents right away, insert the following in your ‘.emacs’ file.
