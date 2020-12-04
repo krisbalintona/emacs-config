@@ -117,10 +117,3 @@ Surround a selection with a pair of characters
     )
 #+END_SRC
 
-* Evil-magit
-
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-magit
-    :after (evil evil-collection magit)
-    )
-#+END_SRC
