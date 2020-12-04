@@ -565,8 +565,8 @@ Autoload the package and start with no views
                            ((org-agenda-overriding-header "Unscheduled or missed tickles")
                             (org-super-agenda-groups
                              '((:discard (:not (:todo "TICKLE")))
-                               (:name "Unscheduled" :deadline nil :scheduled nil)
-                               (:name "Missed" :deadline past :scheduled past)
+                               (:name "Unscheduled" :and (:deadline nil :scheduled nil))
+                               (:name "Missed" :and (:deadline past :scheduled past))
                                (:name "Other" :anything t)
                                ))
                             ))
