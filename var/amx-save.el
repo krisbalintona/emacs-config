@@ -1,18 +1,18 @@
 
 ;; ----- amx-history -----
 (
- helm-projectile-find-file
- org-agenda-refile
- org-refile
- counsel-yank-pop
- widen
- outline-show-all
  imenu
+ counsel-imenu
+ imenu-add-menubar-index
+ scratch
+ outline-hide-other
+ company-box-mode
+ customize-group
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 30)
+ (customize-group . 31)
  (pdf-tools-install . 1)
  (load-file . 3)
  (counsel-load-library . 11)
@@ -29,7 +29,7 @@
  (langtool-check-done . 1)
  (explain-pause-mode . 3)
  (calendar . 1)
- (counsel-imenu . 6)
+ (counsel-imenu . 7)
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
@@ -59,7 +59,7 @@
  (read-only-mode . 1)
  (describe-keymap . 4)
  (downcase-word . 1)
- (org-noter-kill-session . 11)
+ (org-noter-kill-session . 12)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
  (global-auto-revert-mode . 4)
@@ -110,13 +110,13 @@
  (doom-modeline-mode . 4)
  (find-library . 1)
  (make-empty-file . 1)
- (latex-preview-pane-mode . 33)
+ (latex-preview-pane-mode . 34)
  (org-copy-subtree . 1)
- (imenu-add-menubar-index . 2)
+ (imenu-add-menubar-index . 3)
  (LaTeX-mode . 2)
  (latex-mode . 2)
  (next-error . 1)
- (counsel-yank-pop . 3)
+ (counsel-yank-pop . 4)
  (pdf-view-mode . 1)
  (company-org-block . 2)
  (wikinforg . 4)
@@ -147,8 +147,8 @@
  (simpleclip-paste . 1)
  (yank-pop . 1)
  (org-agenda-redo . 1)
- (org-agenda-refile . 8)
- (git-timemachine . 3)
+ (org-agenda-refile . 13)
+ (git-timemachine . 5)
  (recover-session-finish . 1)
  (text-scale-mode . 4)
  (text-scale-adjust . 1)
@@ -158,7 +158,7 @@
  (org-insert-last-stored-link . 1)
  (company-mode . 1)
  (samray/esh-history . 1)
- (git-timemachine-show-previous-revision . 1)
+ (git-timemachine-show-previous-revision . 2)
  (org-toggle-checkbox . 1)
  (eshell-kill-input . 1)
  (swiper . 2)
@@ -225,7 +225,7 @@
  (consult-mark . 3)
  (consult-bookmark . 1)
  (consult-line . 3)
- (consult-outline . 1)
+ (consult-outline . 2)
  (consult-buffer . 1)
  (consult-recent-file . 1)
  (consult-recent-file-other-window . 1)
@@ -233,9 +233,21 @@
  (consult-minor-mode . 1)
  (consult-theme . 1)
  (consult-yank-pop . 1)
- (execute-extended-command . 1)
+ (execute-extended-command . 2)
  (counsel-grep-or-swiper . 1)
- (imenu . 1)
- (outline-show-all . 1)
+ (imenu . 3)
+ (outline-show-all . 2)
  (widen . 1)
+ (better-jumper-jump-forward . 1)
+ (tramp-cleanup-this-connection . 1)
+ (tramp-cleanup-all-connections . 1)
+ (tramp-cleanup-connection . 1)
+ (git-timemachine-mode . 1)
+ (outline-minor-mode . 2)
+ (allout-yank . 1)
+ (outline-hide-body . 1)
+ (outline-hide-other . 3)
+ (selectrum-imenu . 1)
+ (sh-mode . 2)
+ (scratch . 1)
 )

@@ -207,3 +207,24 @@ fd --type f ~/dotfiles
 fd --type f "~/dotfiles"
 fd --type f --full-path"~/dotfiles"
 fd --type f --full-path "~/dotfiles"
+sudo timeshift --create --comment "Working on zsh"
+stc
+ff /etc/bluetooth/main.conf
+ls
+ls /usr/share/fzf
+which fzf
+ff Documents/useful-github-projects
+~/bin
+ls ~/bin
+tree --help
+ls ~/zsh
+ls -la ~/zsh
+rm ~/zsh/.zsh_history 
+ls -la ~/zsh
+stow -Rv zsh
+sudo timeshift --create --comment "After setting up a basic starship configuration"
+sudo timeshift --create --comment "Moved to awesome-copycats"
+sudo timeshift --create --comment "Several changes to rc.lua"
+stc
+stl
+sudo timeshift --create --comment "Just finished brainstorming for both papers"
