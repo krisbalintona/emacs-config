@@ -57,12 +57,13 @@ Save and restore point in files
 Show keybinds
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    :hook (after-init . which-key-mode)
-    :custom
-    (which-key-idle-delay 0.85)
-    (which-key-show-early-on-C-h t) ; Show which-key immediately for C-h
-    (which-key-add-column-padding 0)
-    (which-key-max-display-columns nil)
+    :hook (window-setup . which-key-mode)
+    :preface
+    ;; These variables should be set before which-key-mode is activated
+    (setq which-key-idle-delay 1.2
+          which-key-show-early-on-C-h t ; Show which-key immediately for C-h
+          which-key-add-column-padding 0
+          which-key-max-display-columns nil)
     :init
     (which-key-setup-side-window-right) ; Show which-key on the right
     :config
