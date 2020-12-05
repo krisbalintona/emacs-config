@@ -18,6 +18,7 @@ Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matthe
      (LaTeX-mode . prettify-symbols-mode)
      (LaTeX-mode . display-line-numbers-mode)
      (LaTeX-mode . LaTeX-math-mode) ; Access to math macros
+     (LaTeX-mode . visual-line-mode) ; So evil can respect true lines
      )
     :custom
     ;; If you want to make AUCTeX aware of style files and multi-file documents right away, insert the following in your ‘.emacs’ file.
