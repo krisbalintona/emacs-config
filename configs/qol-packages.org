@@ -424,3 +424,17 @@ Easily create scratch buffers for different modes
      )
     )
 #+end_src
+
+* Outshine
+
+Outline-minor-mode but with better keybindings and more support
+#+begin_src emacs-lisp
+  (use-package outshine
+    :straight (outshine :type git :host github :repo "alphapapa/outshine")
+    :hook (LaTeX-mode . outshine-mode)
+    :preface
+    (defvar outline-minor-mode-prefix (kbd "M-o"))
+    :custom
+    (outshine-use-speed-commands t) ; Use speedy commands
+    )
+#+end_src
