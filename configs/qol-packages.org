@@ -258,10 +258,9 @@ Click links easier
 #+begin_src emacs-lisp
   (use-package ace-link
     :config
-
     (general-define-key
      :kemaps '(Info-mode helpful-mode help-mode woman-mode eww-mode compilation-mode mu4e-view-mode custom-mode-map)
-     "M-o" 'ace-link
+     "M-/" '(ace-link :which-key "Ace-link")
      )
     )
 #+end_src
