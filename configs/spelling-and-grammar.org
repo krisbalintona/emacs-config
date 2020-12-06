@@ -78,13 +78,9 @@ Suggest correct spelling for words flyspell marks as incorrect
     :after flyspell
     :config
     (kb/leader-keys
-      "c" '(flyspell-correct-wrapper :which-key "Flyspell one")
-      "C" '((lambda () ; Suggest corrections for every word in buffer (C-u)
-              (interactive)
-              (let ((current-prefix-arg 4))
-                (call-interactively 'flyspell-correct-wrapper)
-                ))
-            :which-key "Flyspell all")
+      "." '(flyspell-correct-next :which-key "Flyspell next")
+      "," '(flyspell-correct-previous :which-key "Flyspell prev")
+      "tc" '(flyspell-mode :which-key "Flyspell toggle")
       )
     )
 #+end_src
