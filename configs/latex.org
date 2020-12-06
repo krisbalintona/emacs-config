@@ -2,17 +2,17 @@
 
 * Tex-site
 
-Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - MatthewZMD/.emacs.d: M-EMACS, a full-featured GNU Emacs configuratio...]]
+A lot taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - MatthewZMD/.emacs.d: M-EMACS, a full-featured GNU Emacs configuratio...]]
 #+begin_src emacs-lisp
   (use-package tex
+    :demand t ; Other latex packages are reliant on this one
     :straight auctex
     :hook
     ((LaTeX-mode . (lambda ()
-                     ;; Enable reftex
-                     (turn-on-reftex)
                      (setq reftex-plug-into-AUCTeX t)
                      (reftex-isearch-minor-mode)
                      (setq TeX-PDF-mode t)
+                     (setq TeX-source-correlate-mode t)
                      (setq TeX-source-correlate-method 'synctex)
                      (setq TeX-source-correlate-start-server t)))
      (LaTeX-mode . prettify-symbols-mode)
@@ -24,13 +24,26 @@ Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matthe
     ;; If you want to make AUCTeX aware of style files and multi-file documents right away, insert the following in your ‘.emacs’ file.
     (TeX-parse-self t)
     (TeX-auto-save t)
-    (TeX-master nil) ; if you often use \include or \input, you should make AUCTeX aware of the multi-file document structure. Each time you open a new file, AUCTeX will then ask you for a master file
+    (TeX-master t)
+    ;; (TeX-master nil) ; if you often use \include or \input, you should make AUCTeX aware of the multi-file document structure. Each time you open a new file, AUCTeX will then ask you for a master file
 
     ;; To use pdfview with auctex
-    (TeX-view-program-selection '((output-pdf "pdf-tools"))
-                                TeX-source-correlate-start-server t)
-    (TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
+    ;; (TeX-view-program-selection '((output-pdf "pdf-tools")))
+    ;; (TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
+
+    ;; To use latex-preview-pane with auctex
+    (TeX-view-program-selection '((output-pdf "preview-pane-mode")))
+    (TeX-view-program-list '(("preview-pane-mode" latex-preview-pane-mode)))
+
     (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
+
+    ;; Procusses for org-to-latex conversion
+    (org-latex-pdf-process
+     '("%latex -interaction nonstopmode -output-directory %o %f"
+       "biber --output-directory %o $(basename %f .tex)"
+       "%latex -interaction nonstopmode -output-directory %o %f"
+       "%latex -interaction nonstopmode -output-directory %o %f")
+     )
     )
 #+end_src
 
@@ -45,11 +58,51 @@ Integration with latexmk to more easily create pdfs
     )
 #+end_src
 
+* Reftex
+
+Manage references, citations, and labels with AUCTeX
+#+begin_src emacs-lisp
+  (use-package reftex
+    :hook (LaTeX-mode . reftex-mode)
+    :custom
+    (reftex-cite-prompt-optional-args 'maybe) ; Prompt for empty optional arguments in cite?
+    )
+#+end_src
+
+* Magic-latex-buffer
+
+Magically enhance LaTeX-mode font-locking
+#+begin_src emacs-lisp
+  (use-package magic-latex-buffer
+    :disabled t ; Too laggy for now
+    :hook (LaTeX-mode . magic-latex-buffer)
+    :custom
+    ;; All available customizations
+    (magic-latex-enable-block-highlight t)
+    (magic-latex-enable-suscript t)
+    (magic-latex-enable-pretty-symbols t)
+    (magic-latex-enable-block-align t)
+    (magic-latex-enable-inline-image t)
+    (magic-latex-enable-minibuffer-echo t)
+    )
+#+end_src
+
 * Latex-preview-pane
 
 #+begin_src emacs-lisp
   (use-package latex-preview-pane
-    :config
-    (latex-preview-pane-enable) ; Automatically open preview
+    :straight (latex-preview-pane :type git :host github :repo "jsinglet/latex-preview-pane")
+    :custom
+    (pdf-latex-command "latexmk")
+    )
+#+end_src
+
+* Company-auctex
+
+Auctex suggestions using the company backend
+#+begin_src emacs-lisp
+  (use-package company-auctex
+    :after company
+    :hook (company-mode . company-auctex-init)
     )
 #+end_src
