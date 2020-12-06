@@ -13,3 +13,4 @@
 /url/
 /projectile.cache
 /var/auto-save/
+*.elc
