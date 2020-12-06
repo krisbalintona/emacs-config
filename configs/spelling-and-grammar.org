@@ -45,7 +45,13 @@ Fast spell checking
                         ))
      )
     :custom
+    (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (abbrev mode)
     (flyspell-issue-message-flag nil) ; Disable to prevent massive slowdown
+    (flyspell-issue-welcome-flag nil) ; Don't display welcome message
+    :config
+    ;; Face for incorrect words
+    (set-face-attribute 'flyspell-incorrect nil :underline '(:color "red2" :style wave))
+    (set-face-attribute 'flyspell-duplicate nil :underline '(:color "#D19A66" :style line))
     )
 #+end_src
 
@@ -60,7 +66,7 @@ Check on idle instead of instantly
     (flyspell-lazy-changes-threshold 100) ; Force check if this many changes are pending
     (flyspell-lazy-idle-seconds 2)
     (flyspell-lazy-window-idle-seconds 15)
-    (flyspell-lazy-use-flyspell-word t) ; Immediately recheck when leaving a marked word
+    (flyspell-lazy-use-flyspell-word nil) ; Immediately recheck when leaving a marked word
     )
 #+end_src
 
