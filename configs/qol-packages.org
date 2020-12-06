@@ -443,7 +443,7 @@ Outline-minor-mode but with better keybindings and more support
 
 Ensure eshell and system shell have same path
 #+begin_src emacs-lisp
-(use-package exec-path-from-shell
-  :hook (window-setup . exec-path-from-shell-initialize)
-)
+  (use-package exec-path-from-shell
+    :hook (window-setup . exec-path-from-shell-initialize)
+    )
 #+end_src
