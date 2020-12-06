@@ -94,6 +94,16 @@ Flyspell-correct interface via Ivy
     )
 #+end_src
 
+** Auto-dictionary
+
+Automatically change ispell dictionary based on contents of buffer
+#+begin_src emacs-lisp
+(use-package auto-dictionary
+:after flyspell
+:hook (flyspell-mode . auto-dictionary-mode)
+)
+#+end_src
+
 * Grammar
 
 ** Writegood-mode
