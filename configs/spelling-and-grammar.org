@@ -1,79 +1,94 @@
 #+TITLE: Spelling and grammar checking
 
-* Spell-fu
+* Spell checking
+
+General ispell settings
+#+begin_src emacs-lisp
+  (ispell-program-name "/usr/bin/aspell") ; Use aspell
+  (ispell-dictionary "en_US")
+#+end_src
+
+** Spell-fu
 
 Fast spell checking
 #+BEGIN_SRC emacs-lisp
   (use-package spell-fu
+    :disabled t ; Testing flyspell for now
+    :hook
+    ((text-mode . spell-fu-mode)
+     (spell-fu-mode . (lambda () ; Change personal dictionary
+                        (setq ispell-personal-dictionary (concat spell-fu-directory "spell-fu-ispell-personal-dict-en"))
+                        ))
+     )
     :custom
     (spell-fu-idle-delay 0.6)
-    (spell-fu-directory (concat no-littering-var-directory "spell-fu"))
-
-    ;; Ispell settings
-    (ispell-program-name "/usr/bin/aspell")
-    (ispell-dictionary "en_US")
-    (ispell-personal-dictionary (concat spell-fu-directory "/ispell-personal-dict-en"))
+    (spell-fu-directory (concat no-littering-var-directory "spell-fu/"))
     :config
-    (add-hook 'text-mode-hook 'spell-fu-mode)
-
     (kb/leader-keys
       "ts" '(spell-fu-mode :which-key "Toggle spell-fu")
-      "ta" '(spell-fu-word-add :which-key "Spell-fu-word-add"))
+      "ta" '(spell-fu-word-add :which-key "Spell-fu-word-add")
+      )
     )
 #+END_SRC
 
-* Flyspell-correct
+** Flyspell
 
-** Flyspell-correct itself
+*** Flyspell itself
 
+#+begin_src emacs-lisp
+  (use-package flyspell
+    :hook
+    ((text-mode . flyspell-mode)
+     (prog-mode . flyspell-prog-mode)
+     (flyspell-mode . (lambda () ; Change personal dictionary
+                        (setq ispell-personal-dictionary (concat no-littering-var-directory "flyspell/flyspell-ispell-personal-dict-en"))
+                        ))
+     )
+    :custom
+    (flyspell-issue-message-flag nil) ; Disable to prevent massive slowdown
+    )
+#+end_src
+
+*** Flyspell-lazy
+
+Check on idle instead of instantly
+#+begin_src emacs-lisp
+  (use-package flyspell-lazy
+    :after flyspell
+    :hook (flyspell-mode . flyspell-lazy-mode)
+    :custom
+    (flyspell-lazy-changes-threshold 100) ; Force check if this many changes are pending
+    (flyspell-lazy-idle-seconds 2)
+    (flyspell-lazy-window-idle-seconds 15)
+    (flyspell-lazy-use-flyspell-word t) ; Immediately recheck when leaving a marked word
+    )
+#+end_src
+
+*** Flyspell-correct
+
+Suggest correct spelling for words flyspell marks as incorrect
 #+begin_src emacs-lisp
   (use-package flyspell-correct
-    :disabled t ; Dictionary of spell-fu conflicts for now
+    :after flyspell
+    :config
+    (kb/leader-keys
+      "tf" '(flyspell-correct-wrapper :which-key "Flyspell")
+      )
     )
 #+end_src
 
-** Flyspell-correct-ivy
+*** Flyspell-correct-ivy
 
+Flyspell-correct interface via Ivy
 #+begin_src emacs-lisp
   (use-package flyspell-correct-ivy
-    :disabled t ; Dictionary of spell-fu conflicts for now
+    :after flyspell-correct
     )
 #+end_src
 
-* Define-word
+* Grammar
 
-See definitions within Emacs
- - Offline version is [[https://github.com/gromnitsky/wordnut][wordnut]]
-#+BEGIN_SRC emacs-lisp
-  (use-package define-word
-    :config
-    (global-set-key (kbd "C-c d") 'define-word-at-point)
-    (global-set-key (kbd "C-c D") 'define-word)
-    )
-#+END_SRC
-
-* Google-translate
-
-Translate strings via Google Translate
-#+begin_src emacs-lisp
-  (use-package google-translate
-    :config
-    (general-define-key "C-c t" '(google-translate-smooth-translate :which-key "Google translate"))
-    )
-#+end_src
-
-* Powerthesaurus
-
-Insert or search words in thesaurus
- - Offline version is [[https://github.com/hpdeifel/synosaurus][synosaurus]]
-#+BEGIN_SRC emacs-lisp
-  (use-package powerthesaurus
-    :config
-    (global-set-key (kbd "C-c l") 'powerthesaurus-lookup-word-dwim)
-    )
-#+END_SRC
-
-* Writegood-mode
+** Writegood-mode
 
 Catch weasel words
 #+begin_src emacs-lisp
@@ -83,7 +98,7 @@ Catch weasel words
     )
 #+end_src
 
-* Langtool
+** Langtool
 
 #+begin_src emacs-lisp
   (use-package langtool
@@ -114,3 +129,38 @@ Catch weasel words
      )
     )
 #+end_src
+
+* Online
+
+** Define-word
+
+See definitions within Emacs
+ - Offline version is [[https://github.com/gromnitsky/wordnut][wordnut]]
+#+BEGIN_SRC emacs-lisp
+  (use-package define-word
+    :config
+    (global-set-key (kbd "C-c d") 'define-word-at-point)
+    (global-set-key (kbd "C-c D") 'define-word)
+    )
+#+END_SRC
+
+** Google-translate
+
+Translate strings via Google Translate
+#+begin_src emacs-lisp
+  (use-package google-translate
+    :config
+    (general-define-key "C-c t" '(google-translate-smooth-translate :which-key "Google translate"))
+    )
+#+end_src
+
+** Powerthesaurus
+
+Insert or search words in thesaurus
+ - Offline version is [[https://github.com/hpdeifel/synosaurus][synosaurus]]
+#+BEGIN_SRC emacs-lisp
+  (use-package powerthesaurus
+    :config
+    (global-set-key (kbd "C-c l") 'powerthesaurus-lookup-word-dwim)
+    )
+#+END_SRC
