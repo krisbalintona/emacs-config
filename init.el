@@ -35,6 +35,11 @@
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
 ;;; LoadPath
 
+;;; CompileElisp
+(byte-recompile-directory (expand-file-name "elisp" user-emacs-directory) 0)
+(byte-recompile-directory (expand-file-name "configs" user-emacs-directory) 0)
+;;; CompileElisp
+
 ;;; Packages
 ;; Load all config files in my config directory
 
