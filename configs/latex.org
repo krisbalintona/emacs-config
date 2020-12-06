@@ -30,14 +30,13 @@ Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matthe
     (TeX-view-program-selection '((output-pdf "pdf-tools"))
                                 TeX-source-correlate-start-server t)
     (TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
-    (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+    (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
 
 * Auctex-latexmk
 
 Integration with latexmk to more easily create pdfs
 #+begin_src emacs-lisp
   (use-package auctex-latexmk
-    :after tex
     :hook (after-init . auctex-latexmk-setup)
     :custom
     (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
