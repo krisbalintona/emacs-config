@@ -101,18 +101,16 @@ Catch weasel words
           (let ((msg (langtool-details-error-message overlays)))
             (popup-tip msg)))))
     :config
-
     (pretty-hydra-define hydra:langtool
       (:color green :hint t :foreign-keys run :quit-key "q" :exit t)
       ("Correct grammar"
-       (("b" 'langtool-check-buffer "Check")
-        ("c" 'langtool-correct-buffer "Correct")
-        ("d" 'langtool-check-done "Done")
-        )
+       (("b" #'langtool-check-buffer "Check")
+        ("c" #'langtool-correct-buffer "Correct")
+        ("d" #'langtool-check-done "Done"))
        ))
 
     (general-define-key
-     "C-c L" 'hydra:langtool/body
+     "C-c L" '(hydra:langtool/body :which-key "Langtool")
      )
     )
 #+end_src
