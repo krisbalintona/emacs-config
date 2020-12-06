@@ -141,12 +141,12 @@ Sleek modeline from Doom
     (doom-modeline-unicode-fallback t)
     (doom-modeline-minor-modes nil)
     (doom-modeline-enable-word-count t)
-    (doom-modeline-continuous-word-count-modes '(markdown-mode gfm-mode org-mode))
+    (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
     (doom-modeline-number-limit 99)
     (doom-modeline-vcs-max-length 28)
     (doom-modeline-lsp t)
     (doom-modeline-height 33)
-    (doom-modeline-bar-width 1)
+    (doom-modeline-bar-width 0)
     :config
     (if (daemonp) ; Hooks depending on daemon or not
         (progn (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
@@ -162,7 +162,7 @@ Sleek modeline from Doom
                   (unless (or (eq buffer-file-coding-system 'utf-8-unix)
                               (eq buffer-file-coding-system 'utf-8)))))
     (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
-    (add-hook 'doom-modeline-mode-hook #'doom-modeline-conditional-buffer-encoding) ; Necessary so it takes affect imediately, not before I change major modes
+    (add-hook 'doom-modeline-mode-hook #'doom-modeline-conditional-buffer-encoding) ; Necessary so it takes affect imediately, not before I change major modes for the first time
 
     (doom-modeline-def-modeline 'main
       '(bar " " matches vcs " " buffer-info remote-host buffer-position parrot selection-info)
