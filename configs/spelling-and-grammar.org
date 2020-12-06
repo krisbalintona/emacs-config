@@ -87,7 +87,7 @@ Suggest correct spelling for words flyspell marks as incorrect
 
 Flyspell-correct interface via Ivy
 #+begin_src emacs-lisp
-  (use-package flyspell-correct-ivy
+  (use-package flyspell-correct-helm
     :after flyspell-correct
     )
 #+end_src

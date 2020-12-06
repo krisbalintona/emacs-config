@@ -31,6 +31,8 @@ Most taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matthe
                                 TeX-source-correlate-start-server t)
     (TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
     (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
+    )
+#+end_src
 
 * Auctex-latexmk
 
