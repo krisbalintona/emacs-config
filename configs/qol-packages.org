@@ -404,6 +404,7 @@ Better version of evil-jump
 Easily create scratch buffers for different modes
 #+begin_src emacs-lisp
   (use-package scratch
+    :demand t ; Don't wait for deferred hook
     :hook (scratch-create-buffer . kb/scratch-buffer-setup)
     :preface
     (defun kb/scratch-buffer-setup ()
