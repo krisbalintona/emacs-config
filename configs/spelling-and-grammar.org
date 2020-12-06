@@ -4,8 +4,8 @@
 
 General ispell settings
 #+begin_src emacs-lisp
-  (ispell-program-name "/usr/bin/aspell") ; Use aspell
-  (ispell-dictionary "en_US")
+  (setq ispell-program-name "/usr/bin/aspell") ; Use aspell
+  (setq ispell-dictionary "en_US")
 #+end_src
 
 ** Spell-fu
