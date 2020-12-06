@@ -1,21 +1,21 @@
 
 ;; ----- amx-history -----
 (
- flyspell-buffer
+ company-diag
+ global-company-mode
+ latex-mode
  counsel-load-library
  company-box-mode
  customize-group
  org-mode-restart
- global-company-mode
- flyspell-mode
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 42)
+ (customize-group . 44)
  (pdf-tools-install . 2)
  (load-file . 3)
- (counsel-load-library . 23)
+ (counsel-load-library . 26)
  (explain-pause-top . 5)
  (selectrum-mode . 6)
  (orb-note-actions . 1)
@@ -33,8 +33,8 @@
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
- (company-diag . 7)
- (global-company-mode . 26)
+ (company-diag . 10)
+ (global-company-mode . 28)
  (counsel-describe-face . 2)
  (company-box-mode . 74)
  (smartparens-mode . 4)
@@ -49,7 +49,7 @@
  (helm-mini . 2)
  (helm-browse-project . 3)
  (helm-projects-find-files . 5)
- (org-mode-restart . 28)
+ (org-mode-restart . 29)
  (helm-minibuffer-history . 1)
  (helm-find-files . 3)
  (find-file . 4)
@@ -110,11 +110,11 @@
  (doom-modeline-mode . 8)
  (find-library . 1)
  (make-empty-file . 1)
- (latex-preview-pane-mode . 44)
+ (latex-preview-pane-mode . 63)
  (org-copy-subtree . 1)
  (imenu-add-menubar-index . 3)
- (LaTeX-mode . 3)
- (latex-mode . 2)
+ (LaTeX-mode . 4)
+ (latex-mode . 5)
  (next-error . 1)
  (counsel-yank-pop . 4)
  (pdf-view-mode . 1)
@@ -256,10 +256,10 @@
  (reftex-citation . 1)
  (org-latex-export-to-pdf . 1)
  (TeX-interactive-mode . 4)
- (preview-buffer . 1)
+ (preview-buffer . 2)
  (which-key-mode . 2)
  (org-version . 1)
- (reftex-view-crossref . 3)
+ (reftex-view-crossref . 5)
  (outshine-speed-command-help . 3)
  (outshine-mode . 3)
  (outshine-imenu . 2)
@@ -273,7 +273,7 @@
  (latex-preview-pane-update . 2)
  (org-roam-server-mode . 7)
  (clone-indirect-buffer . 1)
- (ispell-change-dictionary . 1)
+ (ispell-change-dictionary . 2)
  (flyspell-lazy-mode . 5)
  (flyspell-prog-mode . 3)
  (flyspell-auto-correct-word . 1)
@@ -286,4 +286,7 @@
  (flyspell-correct-auto-mode . 2)
  (flyspell-correct-previous . 1)
  (flyspell-correct-next . 2)
+ (exec-path-from-shell-initialize . 1)
+ (auto-dictionary-mode . 2)
+ (magic-latex-buffer . 6)
 )
