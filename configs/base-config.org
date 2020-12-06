@@ -99,7 +99,7 @@ Set linum-numbers mode
 
   ;; Enabled for these
   (dolist (mode '(prog-mode-hook
-                  latex-mode-hook
+                  LaTeX-mode-hook
                   ))
     (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
