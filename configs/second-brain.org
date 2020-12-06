@@ -102,6 +102,7 @@ Interactive browser graph view
     :config
     (if (daemonp)
         (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) ; Don't start server if not in daemon mode, otherwise will break things
+    (add-hook 'org-roam-server-mode-hook (lambda () (require 'org-protocol))) ; Required to open roam buffers from the server
     )
 #+END_SRC
 
@@ -359,11 +360,4 @@ View pdfs and interact with them
       "on" '(org-noter :which-key "Org-noter")
       )
     )
-#+END_SRC
-
-* Org-protocol
-
-Necessary for outside-of-emacs integration (i.e. through Emacsclient)
-#+BEGIN_SRC emacs-lisp
-  (require 'org-protocol)
 #+END_SRC
