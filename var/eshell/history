@@ -228,3 +228,13 @@ sudo timeshift --create --comment "Several changes to rc.lua"
 stc
 stl
 sudo timeshift --create --comment "Just finished brainstorming for both papers"
+sudo timeshift --create --comment "After rebooting and fixing emacs compilation"
+sudo timeshift --create --comment "After rebooting and fixing emacs compilation"
+stl
+ff /home/krisbalintona/Documents/org-database/roam/bibliographic/master-lib-temp.bib
+sudo timeshift --create --comment "Finally! I figured out LaTeX!"
+fc-cache -fv
+stc
+sudo timeshift --create --comment "After my first draft of Machiavelli paper"
+stl
+stl

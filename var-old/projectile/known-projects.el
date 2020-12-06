@@ -1,1 +1,0 @@
-("~/main-emacs/var/" "~/main-emacs/url/" "~/main-emacs/undo-fu-session/" "~/main-emacs/transient/" "~/main-emacs/straight/" "~/main-emacs/spell-fu/" "~/main-emacs/snippets/" "~/main-emacs/request/" "~/main-emacs/etc/" "~/main-emacs/eshell/" "~/main-emacs/elpa/" "~/main-emacs/elisp/" "~/main-emacs/configs/" "~/main-emacs/.git/")
