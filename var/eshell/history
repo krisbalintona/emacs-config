@@ -238,3 +238,4 @@ stc
 sudo timeshift --create --comment "After my first draft of Machiavelli paper"
 stl
 stl
+sudo timeshift --create --comment "Just pushed flyspell changes to gitlab"

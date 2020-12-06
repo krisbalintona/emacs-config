@@ -1,21 +1,21 @@
 
 ;; ----- amx-history -----
 (
- flyspell-prog-mode
- flyspell-mode
+ flyspell-buffer
+ counsel-load-library
+ company-box-mode
  customize-group
- flyspell-lazy-mode
- ispell-change-dictionary
- esup
- prettify-symbols-mode
+ org-mode-restart
+ global-company-mode
+ flyspell-mode
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 38)
+ (customize-group . 42)
  (pdf-tools-install . 2)
  (load-file . 3)
- (counsel-load-library . 12)
+ (counsel-load-library . 23)
  (explain-pause-top . 5)
  (selectrum-mode . 6)
  (orb-note-actions . 1)
@@ -96,7 +96,7 @@
  (helm-projectile-find-file . 3)
  (projectile-global-mode . 1)
  (esup . 3)
- (flyspell-mode . 19)
+ (flyspell-mode . 21)
  (artbollocks-count-words . 1)
  (artbollocks-mode . 5)
  (writegood-mode . 7)
@@ -106,8 +106,8 @@
  (helm-projectile-rg . 7)
  (helm-projectile-switch-project . 1)
  (counsel-fonts . 12)
- (describe-char . 17)
- (doom-modeline-mode . 6)
+ (describe-char . 19)
+ (doom-modeline-mode . 8)
  (find-library . 1)
  (make-empty-file . 1)
  (latex-preview-pane-mode . 44)
@@ -126,7 +126,7 @@
  (org-roam-bibtex-mode . 9)
  (visual-line-mode . 4)
  (org-refile . 10)
- (list-colors-display . 1)
+ (list-colors-display . 2)
  (buffer-expose . 2)
  (org-mode . 4)
  (org-toggle-tags-groups . 2)
@@ -140,7 +140,7 @@
  (mu4e-org-mode . 4)
  (mu4e-compose-mode . 2)
  (mu4e-message-kill-buffer . 1)
- (counsel-faces . 4)
+ (counsel-faces . 9)
  (describe-face . 3)
  (describe-character-set . 1)
  (simpleclip-mode . 2)
@@ -152,7 +152,7 @@
  (recover-session-finish . 1)
  (text-scale-mode . 4)
  (text-scale-adjust . 1)
- (visual-fill-column-mode . 4)
+ (visual-fill-column-mode . 6)
  (org-id-store-link . 2)
  (org-insert-link . 2)
  (org-insert-last-stored-link . 1)
@@ -193,7 +193,7 @@
  (flycheck-list-errors . 1)
  (flycheck-select-checker . 1)
  (flycheck-error-list-explain-error . 1)
- (global-flycheck-mode . 12)
+ (global-flycheck-mode . 14)
  (flycheck-color-mode-line-mode . 2)
  (flycheck-pos-tip-mode . 3)
  (flycheck-inline-mode . 7)
@@ -230,7 +230,7 @@
  (consult-recent-file . 1)
  (consult-recent-file-other-window . 1)
  (consult-apropos . 1)
- (consult-minor-mode . 1)
+ (consult-minor-mode . 2)
  (consult-theme . 1)
  (consult-yank-pop . 1)
  (execute-extended-command . 2)
@@ -271,9 +271,19 @@
  (outline-cycle . 4)
  (latex-preview-update . 3)
  (latex-preview-pane-update . 2)
- (org-roam-server-mode . 2)
+ (org-roam-server-mode . 7)
  (clone-indirect-buffer . 1)
  (ispell-change-dictionary . 1)
- (flyspell-lazy-mode . 1)
+ (flyspell-lazy-mode . 5)
  (flyspell-prog-mode . 3)
+ (flyspell-auto-correct-word . 1)
+ (flyspell-buffer . 10)
+ (list-faces-display . 3)
+ (spell-fu-mode . 2)
+ (load-library . 2)
+ (LaTeX-mode-menu . 1)
+ (flyspell-correct-word . 1)
+ (flyspell-correct-auto-mode . 2)
+ (flyspell-correct-previous . 1)
+ (flyspell-correct-next . 2)
 )

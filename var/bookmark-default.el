@@ -4,14 +4,14 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored-marker"
  (filename . "~/Documents/org-database/agenda/hobbies.org")
- (front-context-string . "** NEXT Create a")
- (rear-context-string . "2-03 Thu 23:59]\n")
- (position . 22160))
+ (front-context-string . "** TICKLE Check ")
+ (rear-context-string . "2-03 Thu 18:32]\n")
+ (position . 14383))
 ("org-refile-last-stored"
  (filename . "~/Documents/org-database/agenda/hobbies.org")
- (front-context-string . "** NEXT Create a")
- (rear-context-string . "2-03 Thu 23:59]\n")
- (position . 22160))
+ (front-context-string . "** TICKLE Check ")
+ (rear-context-string . "2-03 Thu 18:32]\n")
+ (position . 14383))
 ("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
@@ -23,8 +23,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/Dec052020-014943.org")
- (front-context-string . "#+TITLE: #Popper")
- (rear-context-string)
- (position . 1))
+ (filename . "~/Documents/org-database/agenda/inbox.org")
+ (front-context-string . "* TODO Check wch")
+ (rear-context-string . "2-04 Fri 13:23]\n")
+ (position . 2210))
 )
