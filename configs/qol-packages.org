@@ -447,3 +447,19 @@ Ensure eshell and system shell have same path
     :hook (window-setup . exec-path-from-shell-initialize)
     )
 #+end_src
+
+* Disable-mouse
+
+Disable mouse interaction within Emacs
+#+begin_src emacs-lisp
+  (use-package disable-mouse
+    :hook (window-setup . global-disable-mouse-mode)
+    :config
+    ;; For evil states
+    (mapc #'disable-mouse-in-keymap
+          (list evil-motion-state-map
+                evil-normal-state-map
+                evil-visual-state-map
+                evil-insert-state-map))
+    )
+#+end_src
