@@ -28,13 +28,8 @@ A lot taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matth
     ;; (TeX-master nil) ; if you often use \include or \input, you should make AUCTeX aware of the multi-file document structure. Each time you open a new file, AUCTeX will then ask you for a master file
 
     ;; To use pdfview with auctex
-    ;; (TeX-view-program-selection '((output-pdf "pdf-tools")))
-    ;; (TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
-
-    ;; To use latex-preview-pane with auctex
-    (TeX-view-program-selection '((output-pdf "preview-pane-mode")))
-    (TeX-view-program-list '(("preview-pane-mode" latex-preview-pane-mode)))
-
+    (TeX-view-program-selection '((output-pdf "pdf-tools")))
+    (TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
     (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
 
     ;; Procusses for org-to-latex conversion
@@ -76,6 +71,34 @@ Integration with latexmk to more easily create pdfs
     :hook (after-init . auctex-latexmk-setup)
     :custom
     (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
+    )
+#+end_src
+
+* Latexmk-mode
+
+My own minor-mode for automatically updating pdf-tools LaTeX preview
+#+begin_src emacs-lisp
+  (with-eval-after-load 'auctex-latexmk
+    (define-minor-mode latexmk-mode
+      "Toggle LatexMK mode."
+      :init-value nil
+      :lighter " LatexMK "
+      )
+
+    (defun kb/run-latexmk ()
+      "Start external latexmk process and run in current buffer."
+      (interactive)
+      (start-process "latexmk" "latexmk output" "latexmk" "--silent" "--pdf" (buffer-file-name (current-buffer)))
+      )
+
+    (defun kb/try-run-latexmk ()
+      "Try to execute kb/run-latexmk."
+      (if (and (bound-and-true-p latexmk-mode) (eql major-mode 'latex-mode))
+          (kb/run-latexmk))
+      )
+
+    (add-hook 'after-save-hook 'kb/try-run-latexmk)
+    (add-hook 'LaTeX-mode-hook 'latexmk-mode)
     )
 #+end_src
 
