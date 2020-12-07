@@ -47,6 +47,27 @@ A lot taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matth
     )
 #+end_src
 
+* Reftex
+
+Manage references, citations, and labels with AUCTeX
+#+begin_src emacs-lisp
+  (use-package reftex
+    :hook (LaTeX-mode . reftex-mode)
+    :custom
+    (reftex-cite-prompt-optional-args 'maybe) ; Prompt for empty optional arguments in cite?
+    )
+#+end_src
+
+* Latex-preview-pane
+
+#+begin_src emacs-lisp
+  (use-package latex-preview-pane
+    :straight (latex-preview-pane :type git :host github :repo "jsinglet/latex-preview-pane")
+    :custom
+    (pdf-latex-command "latexmk")
+    )
+#+end_src
+
 * Auctex-latexmk
 
 Integration with latexmk to more easily create pdfs
@@ -58,14 +79,13 @@ Integration with latexmk to more easily create pdfs
     )
 #+end_src
 
-* Reftex
+* Company-auctex
 
-Manage references, citations, and labels with AUCTeX
+Auctex suggestions using the company backend
 #+begin_src emacs-lisp
-  (use-package reftex
-    :hook (LaTeX-mode . reftex-mode)
-    :custom
-    (reftex-cite-prompt-optional-args 'maybe) ; Prompt for empty optional arguments in cite?
+  (use-package company-auctex
+    :after company
+    :hook (company-mode . company-auctex-init)
     )
 #+end_src
 
@@ -87,22 +107,20 @@ Magically enhance LaTeX-mode font-locking
     )
 #+end_src
 
-* Latex-preview-pane
+* Mathpix.el
 
+Use mathpix AI to turn pictures of math into LaTeX
 #+begin_src emacs-lisp
-  (use-package latex-preview-pane
-    :straight (latex-preview-pane :type git :host github :repo "jsinglet/latex-preview-pane")
+  (use-package mathpix
+    :straight (mathpix :type git :host github :repo "jethrokuan/mathpix.el")
     :custom
-    (pdf-latex-command "latexmk")
-    )
-#+end_src
-
-* Company-auctex
-
-Auctex suggestions using the company backend
-#+begin_src emacs-lisp
-  (use-package company-auctex
-    :after company
-    :hook (company-mode . company-auctex-init)
+    ;; From mathpix api
+    (mathpix-app-id "kristoffer_balintona_brown_edu_282770_f79d0b")
+    (mathpix-app-key "2b7d2df8ebba358834bf")
+    (mathpix-screenshot-method "xclip -selection clipboard -t image/png -o > %s") ; Take an image that is already on the clipboard, for Linux
+    :config
+    (general-define-key
+     "C-c m" '(mathpix-screenshot :which-key "Mathpix")
+     )
     )
 #+end_src
