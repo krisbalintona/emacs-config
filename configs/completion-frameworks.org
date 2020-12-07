@@ -248,7 +248,6 @@ Remapping original commands to an Ivy-esque version
 
       "bc" '(counsel-switch-buffer :which-key "Counsel switch")
 
-      "mm" '(counsel-bookmark :which-key "Go to bookmark")
       "ms" '(bookmark-set :which-key "Set bookmark")
 
       "iy" '(counsel-yank-pop :which-key "Paste")
@@ -446,7 +445,6 @@ A version of all-the-icons but compatible with ivy-rich
 Advanced =complete-read=
 #+begin_src emacs-lisp
   (use-package selectrum
-    :after ivy
     :hook (emacs-startup . selectrum-mode)
     :custom
     ;; Change backends
@@ -903,27 +901,38 @@ Essentially counsel but for selectrum!
 #+begin_src emacs-lisp
   (use-package consult
     :after selectrum
-    ;; Show more information for certain functions. These functions can see what is
-    ;; seen from consult-annotate-alist
-    :hook (selectrum-mode . consult-annotate-mode)
     :straight (consult :type git :host github :repo "minad/consult")
+    :hook (selectrum-mode . consult-preview-mode)
     :config
-    (add-to-list 'consult-annotate-alist
-                 '(execute-extended-command . consult-annotate-command)) ; Show more information in default M-x
+    ;; (add-to-list 'consult-annotate-alist
+    ;;              '(execute-extended-command . consult-annotate-command)) ; Show more information in default M-x
 
     (kb/leader-keys
-      "so" '(consult-outline :which-key "Consult outline")
-      ;; ("C-x b" . consult-buffer)
+      "bb" '(consult-buffer :which-key "Consult buffer")
       ;; ("C-x 4 b" . consult-buffer-other-window)
       ;; ("C-x 5 b" . consult-buffer-other-frame)
       ;; ("C-x r x" . consult-register)
-      ;; ("C-x r b" . consult-bookmark)
+      "mm" '(counsel-bookmark :which-key "Consult bookmark")
       "sm" '(consult-mark :which-key "Consult mark")
+      "so" '(consult-outline :which-key "Consult outline")
       "ss" '(consult-line :which-key "Consult swiper")
+      "sm" '(consult-mark :which-key "Consult mark")
       ;; ("-s m" . consult-multi-occur)
       "iy" '(consult-yank-pop :which-key "Consult yank-pop")
       "ha" '(consult-apropos :which-key "Consult apropos")
       )
+    )
+#+end_src
+
+** Marginalia
+
+Enable richer annotations in minibuffer (companion package of consult.el)
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :straight (marginalia :type git :host github :repo "minad/marginalia")
+    :hook (selectrum-mode . marginalia-mode)
+    :custom
+    (marginalia-annotators 'marginalia-annotators-heavy) ; Show as much information as possible
     )
 #+end_src
 
@@ -957,7 +966,7 @@ Feature-rich version of Ivy completion
       "oh" '(helm-command-prefix :which-key "Helm prefix")
       "oha" '(helm-apropos :which-key "Helm-apropos")
 
-      "bb" 'helm-mini
+      ;; "bb" 'helm-mini
       "ff" 'helm-find-files
       )
     )
