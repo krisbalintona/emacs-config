@@ -20,7 +20,9 @@ Stlying (called in org-superstar)
     (org-pretty-entities t) ; Prettify things
     (org-pretty-entities-include-sub-superscripts nil) ; Don't show super- and sunbscripts
 
-    (org-src-window-setup 'current-window) ; Open src block window on current buffer
+    ;; For programming
+    (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it 
+    (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
     :preface
     (defun kb/org-face-setup ()
       "Taken from https://github.com/daviwil/emacs-from-scratch/blob/1a13fcf0dd6afb41fce71bf93c5571931999fed8/init.el"
