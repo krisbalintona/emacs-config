@@ -30,6 +30,9 @@
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
 
+;;;; Byte compile config files
+;; (byte-recompile-directory (expand-file-name "elisp" user-emacs-directory) 0 t)
+
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
@@ -75,7 +78,9 @@
 (require 'checking-spelling-rcp)
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
-(org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
+
+
+;; (byte-recompile-directory (expand-file-name "configs" user-emacs-directory) 0 t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'init)
