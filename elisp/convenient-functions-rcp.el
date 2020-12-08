@@ -40,88 +40,88 @@
 
 ;;;;; Keybinds
 (kb/leader-keys
-"fu" '(kb/sudo-find-file :which-key "Sudo find file")
-"fU" '(kb/sudo-this-file :which-key "Sudo save this file")
-)
+  "fu" '(kb/sudo-find-file :which-key "Sudo find file")
+  "fU" '(kb/sudo-this-file :which-key "Sudo save this file")
+  )
 
 ;;;; Rename/move current file
-  (defun kb/move-this-file (new-path &optional force-p)
-    "Move current buffer's file to NEW-PATH.
+(defun kb/move-this-file (new-path &optional force-p)
+  "Move current buffer's file to NEW-PATH.
 
       If FORCE-P, overwrite the destination file if it exists, without confirmation."
-    (interactive
-     (list (read-file-name "Move file to: ")
-           current-prefix-arg))
-    (unless (and buffer-file-name (file-exists-p buffer-file-name))
-      (user-error "Buffer is not visiting any file"))
-    (let ((old-path (buffer-file-name (buffer-base-buffer)))
-          (new-path (expand-file-name new-path)))
-      (make-directory (file-name-directory new-path) 't)
-      (rename-file old-path new-path (or force-p 1))
-      (set-visited-file-name new-path t t)
-      ;; (doom--update-files old-path new-path)
-      (message "File moved to %S" (abbreviate-file-name new-path))))
+  (interactive
+   (list (read-file-name "Move file to: ")
+         current-prefix-arg))
+  (unless (and buffer-file-name (file-exists-p buffer-file-name))
+    (user-error "Buffer is not visiting any file"))
+  (let ((old-path (buffer-file-name (buffer-base-buffer)))
+        (new-path (expand-file-name new-path)))
+    (make-directory (file-name-directory new-path) 't)
+    (rename-file old-path new-path (or force-p 1))
+    (set-visited-file-name new-path t t)
+    ;; (doom--update-files old-path new-path)
+    (message "File moved to %S" (abbreviate-file-name new-path))))
 
-  (kb/leader-keys
-    "fR" '(kb/move-this-file :which-key "Rename current file")
-    )
+(kb/leader-keys
+  "fR" '(kb/move-this-file :which-key "Rename current file")
+  )
 
 ;;;; Yank current buffer's file-path
-  (defun kb/yank-buffer-filename ()
-    "Copy the current buffer's path to the kill ring."
-    (interactive)
-    (if-let (filename (or buffer-file-name (bound-and-true-p list-buffers-directory)))
-        (message (kill-new (abbreviate-file-name filename)))
-      (error "Couldn't find filename in current buffer")))
+(defun kb/yank-buffer-filename ()
+  "Copy the current buffer's path to the kill ring."
+  (interactive)
+  (if-let (filename (or buffer-file-name (bound-and-true-p list-buffers-directory)))
+      (message (kill-new (abbreviate-file-name filename)))
+    (error "Couldn't find filename in current buffer")))
 
-  (kb/leader-keys
-    "fy" '(kb/yank-buffer-filename :which-key "Yank file-path")
-    )
+(kb/leader-keys
+  "fy" '(kb/yank-buffer-filename :which-key "Yank file-path")
+  )
 
 ;;;; Kill
 ;;;;; Kill all buffers
-  (defun kb/kill-all-buffers ()
-    (interactive)
-    (mapc 'kill-buffer (buffer-list)))
+(defun kb/kill-all-buffers ()
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
 
 ;;;;; Kill this file
-  (defun kb/delete-this-file (&optional path force-p)
-    "Delete PATH, kill its buffers and expunge it from vc/magit cache.
+(defun kb/delete-this-file (&optional path force-p)
+  "Delete PATH, kill its buffers and expunge it from vc/magit cache.
 
       If PATH is not specified, default to the current buffer's file.
 
       If FORCE-P, delete without confirmation."
-    (interactive
-     (list (buffer-file-name (buffer-base-buffer))
-           current-prefix-arg))
-    (let* ((path (or path (buffer-file-name (buffer-base-buffer))))
-           (short-path (abbreviate-file-name path)))
-      (unless (and path (file-exists-p path))
-        (user-error "Buffer is not visiting any file"))
-      (unless (file-exists-p path)
-        (error "File doesn't exist: %s" path))
-      (unless (or force-p (y-or-n-p (format "Really delete %S?" short-path)))
-        (user-error "Aborted"))
-      (let ((buf (current-buffer)))
-        (unwind-protect
-            (progn (delete-file path) t)
-          (if (file-exists-p path)
-              (error "Failed to delete %S" short-path)
-            ;; ;; Ensures that windows displaying this buffer will be switched to
-            ;; ;; real buffers (`doom-real-buffer-p')
-            ;; (doom/kill-this-buffer-in-all-windows buf t)
-            ;; (doom--update-files path)
-            (kb/kill-current-buffer)
-            (message "Deleted %S" short-path))))))
+  (interactive
+   (list (buffer-file-name (buffer-base-buffer))
+         current-prefix-arg))
+  (let* ((path (or path (buffer-file-name (buffer-base-buffer))))
+         (short-path (abbreviate-file-name path)))
+    (unless (and path (file-exists-p path))
+      (user-error "Buffer is not visiting any file"))
+    (unless (file-exists-p path)
+      (error "File doesn't exist: %s" path))
+    (unless (or force-p (y-or-n-p (format "Really delete %S?" short-path)))
+      (user-error "Aborted"))
+    (let ((buf (current-buffer)))
+      (unwind-protect
+          (progn (delete-file path) t)
+        (if (file-exists-p path)
+            (error "Failed to delete %S" short-path)
+          ;; ;; Ensures that windows displaying this buffer will be switched to
+          ;; ;; real buffers (`doom-real-buffer-p')
+          ;; (doom/kill-this-buffer-in-all-windows buf t)
+          ;; (doom--update-files path)
+          (kb/kill-current-buffer)
+          (message "Deleted %S" short-path))))))
 
 ;;;;; Keybinds
 ;; Keybinds for the aforementioned functions
-  (general-define-key "C-x K" 'kill-this-buffer)
-  (kb/leader-keys
-    "bK" '(kill-this-buffer :which-key "Kill current buffer") ; Sets keybinds for kill-this-buffer function
-    "fD" '(kb/delete-this-file :which-key "Delete current file")
-    "qQ" '(kb/kill-all-buffers :which-key "Kill all buffers")
-    )
+(general-define-key "C-x K" 'kill-this-buffer)
+(kb/leader-keys
+  "bK" '(kill-this-buffer :which-key "Kill current buffer") ; Sets keybinds for kill-this-buffer function
+  "fD" '(kb/delete-this-file :which-key "Delete current file")
+  "qQ" '(kb/kill-all-buffers :which-key "Kill all buffers")
+  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
