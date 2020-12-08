@@ -1,16 +1,22 @@
-;;; better-defaults-rcp.el
+;;; better-defaults-rcp.el --- Summary
 ;;
+;; Set more sane defaults for Emacs as well as other QoL modes. These settings
+;; are package-agnostic
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;; UnnecessaryUI
+;;;; Remove unnecessary UI
 (menu-bar-mode -1)
 (unless (and (display-graphic-p) (eq system-type 'darwin))
   (push '(menu-bar-lines . 0) default-frame-alist))
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
-;; UnnecessaryUI
 
-;;; VariableDefaults
+;;;; Transparency
+(set-frame-parameter (selected-frame) 'alpha '(98 . 85))
+(add-to-list 'default-frame-alist '(alpha . (98 . 85)))
+;;;; Variable defaults
 (setq-default ad-redefinition-action 'accept             ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil           ; Don't warn when opening large files
               auto-save-default nil                      ; Don't auto save, prevents transitory files from being saved
@@ -56,72 +62,48 @@
 
               visible-bell nil
               )
-;;; VariableDefaults
-
-;;; ThinnerVerticalFringes
+;;;; Thinner vertical fringes
 (fringe-mode '(5 . 5))
-;;; ThinnerVerticalFringes
-
-;;; ReplaceWithYorN
+;;;; Make asking "Y or N"
 (fset 'yes-or-no-p 'y-or-n-p)
-;;; ReplaceWithYorN
-
-;;; AviedCursorCollisions
+;;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
-;;; AviedCursorCollisions
+;;;; Display line numbers
+(column-number-mode) ; Column number in modeline
+(setq display-line-numbers-type 'relative)
 
-;;: DownAndUpCase
-(put 'downcase-region 'disabled nil) ; Enable downcase-region
-(put 'upcase-region 'disabled nil)   ; Enable upcase-region
-;;: DownAndUpCase
+;; Enabled for these
+(dolist (mode '(prog-mode-hook
+                LaTeX-mode-hook
+                ))
+  (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
-;;; ConfirmQuit
+;; Disabled for these
+(dolist (mode '(org-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+;;;; Line spacing
+(setq line-spacing 0) ; This is default
+;;;; Confirm quit
 (setq confirm-kill-emacs 'y-or-n-p) ; Confirm before killing emacs
-;;; ConfirmQuit
-
-;;; KillChildProcessesWithoutConfirm
+;;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
-;;; KillChildProcessesWithoutConfirm
-
-;;; IgnoreCase
+;;;; Ignore case
 (setq completion-ignore-case t)
 (custom-set-variables
  '(read-buffer-completion-ignore-case t)
  '(read-file-name-completion-ignore-case t))
-;;; IgnoreCase
-
-;;; RecognizeCamelCase
+;;;; Recognize camel case
 (global-subword-mode t) ; Iterate through CamelCase words
-;;; RecognizeCamelCase
-
-;;: ESCQuitEverywhere
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-;;: ESCQuitEverywhere
-
- ;;; UTF-8
-(set-language-environment "UTF-8")
-(prefer-coding-system       'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
- ;;; UTF-8
-
-;;; UpdateTimestamp
+;;;; Update timestamp
 (add-hook 'before-save-hook 'time-stamp) ; or (add-hook 'write-file-functions
-;;; UpdateTimestamp
-
-;;; HighlightLineInAgenda
+;;;; Highlight line in org-agenda
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode t)))
-;;; HighlightLineInAgenda
-
-;;; LoadCustomFile
+;;;; Load custom file
 (when (file-exists-p custom-file)
   (load custom-file))
-;;; LoadCustomFile
-
-(provide 'better-defaults-rcp)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Commentary:
-;; Set more sane defaults for Emacs as well as other QoL modes. These settings are
-;; package-agnostic
 ;;
 ;;; better-defaults-rcp.el ends here
