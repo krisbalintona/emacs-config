@@ -90,7 +90,7 @@
     (evil-org-agenda-set-keys)
 
     (general-define-key
-     :keymaps 'org-mode-map
+     :keymaps '(org-mode-map LaTeX-mode-map)
      [remap evil-first-non-blank] 'evil-org-beginning-of-line ; To respect visual-line-mode
      )
     )
@@ -116,4 +116,3 @@ Surround a selection with a pair of characters
     (global-evil-visualstar-mode)
     )
 #+END_SRC
-
