@@ -73,6 +73,7 @@
 
 ;;;;; Spelling and grammar
 (require 'checking-spelling-rcp)
+(require 'checking-grammar-rcp)
 (org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
