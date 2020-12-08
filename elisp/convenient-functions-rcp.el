@@ -10,6 +10,7 @@
 ;;;;; Sudo find-file
 ;; Find a file with sudo
 (defun doom--sudo-file-path (file)
+  "Enter FILE with sudo privileges."
   (let ((host (or (file-remote-p file 'host) "localhost")))
     (concat "/" (when (file-remote-p file)
                   (concat (file-remote-p file 'method) ":"
@@ -81,6 +82,7 @@
 ;;;; Kill
 ;;;;; Kill all buffers
 (defun kb/kill-all-buffers ()
+  "Kill all existing buffers."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
@@ -100,7 +102,7 @@
       (user-error "Buffer is not visiting any file"))
     (unless (file-exists-p path)
       (error "File doesn't exist: %s" path))
-    (unless (or force-p (y-or-n-p (format "Really delete %S?" short-path)))
+    (unless (or force-p (y-or-n-p (format "Really delete %S? " short-path)))
       (user-error "Aborted"))
     (let ((buf (current-buffer)))
       (unwind-protect
@@ -162,6 +164,7 @@
 ;; after upgrading
 (defun unpackaged/reload-package (package &optional allp)
   "Reload PACKAGE's features.
+
   If ALLP is non-nil (interactively, with prefix), load all of its
   features; otherwise only load ones that were already loaded.
 
@@ -210,6 +213,7 @@
   ;;;###autoload
 (defun unpackaged/font-compare (text fonts)
   "Compare TEXT displayed in FONTS.
+
   If TEXT is nil, use `lorem-ipsum' text. FONTS is a list of font
   family strings and/or font specs.
 
@@ -247,8 +251,9 @@
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
 (defun unpackaged/org-fix-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
-  With prefix, operate on whole buffer. Ensures that blank lines
-  exist after each headings's drawers."
+
+  With PREFIX, operate on whole buffer. Ensures that blank lines
+  exist after each heading's drawers."
   (interactive "P")
   (org-map-entries (lambda ()
                      (org-with-wide-buffer
@@ -278,8 +283,9 @@
                          nil
                        'tree)))
 
-;;Call this function before every save in an org file. Don't do this for
-;;org-agenda files - it makes it ugly
+;; Call this function before every save in an org file. Don't do this for
+;; org-agenda files - it makes it ugly
+(require 'custom-directories-rcp)
 (add-hook 'before-save-hook (lambda ()
                               (if (and
                                    (eq major-mode 'org-mode) ; Org-mode

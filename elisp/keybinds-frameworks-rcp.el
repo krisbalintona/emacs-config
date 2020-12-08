@@ -56,6 +56,7 @@
 ;; Hydra but with prettier displays
 (use-package pretty-hydra
   :demand t
+  :after general
   :config
   ;; Straight.el integration
   (kb/leader-keys

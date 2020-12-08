@@ -74,6 +74,7 @@
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 
 ;;;; Display line numbers
+(require 'display-line-numbers)
 (column-number-mode) ; Column number in modeline
 (setq display-line-numbers-type 'relative)
 
@@ -117,6 +118,11 @@
 ;; location is defined
 (when (file-exists-p custom-file)
   (load custom-file))
+
+;;;; Pinentry (pin-entry)
+;; Pinentry is responsible for querying passphrases
+(require 'epg)
+(setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'better-defaults-rcp)

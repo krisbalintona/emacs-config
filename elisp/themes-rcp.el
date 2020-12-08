@@ -50,6 +50,7 @@
   (doom-modeline-lsp t)
   (doom-modeline-height 33)
   (doom-modeline-bar-width 0)
+  :init (require 'themes-rcp)
   :config
   (if (daemonp) ; Hooks depending on daemon or not
       (progn (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
@@ -71,15 +72,20 @@
   (size-indication-mode t) ; Show file-size
 
   ;; Show battery
-  (setq battery-load-critical 15)
-  (setq battery-load-low 25)
-  (unless (equal "Battery status not available"
-                 (battery))
-    (display-battery-mode t)) ; On laptops it's nice to know how much power you have
+  (use-package battery
+    :custom
+    (battery-load-critical 15)
+    (battery-load-low 25)
+    :config
+    (unless (equal "Battery status not available"
+                   (battery))
+      (display-battery-mode t)) ; Show battery in modeline
+    )
   )
 
 ;; Don't show encoding on modeline if it is UTF-8
 (defun doom-modeline-conditional-buffer-encoding ()
+  "Don't show encoding on modeline if it is UTF-8."
   (setq-local doom-modeline-buffer-encoding
               (unless (or (eq buffer-file-coding-system 'utf-8-unix)
                           (eq buffer-file-coding-system 'utf-8)))))

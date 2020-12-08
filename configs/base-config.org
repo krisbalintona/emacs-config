@@ -6,8 +6,8 @@ Enable logging of recent files
 #+begin_src emacs-lisp
   (use-package recentf
     :straight nil
-    :hook (after-init . recentf-mode)
     :custom
+    (recentf-mode t)
     (recentf-max-saved-items 1000)
     (recentf-max-menu-items 15)
     )
@@ -47,22 +47,6 @@ Make history of certain things (e.g. minibuffer) persistent across sessions
     :config
     (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
     (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
-    )
-#+end_src
-
-* Company-org-block
-
-Custom company-backend for org-block snippets. Also opens code block automatically (or prompted) after creating the snippet
-- Found from [[https://www.reddit.com/r/emacs/comments/jf0jo1/org_block_company_complete_and_edit/][org block company complete and edit : emacs]]
-#+begin_src emacs-lisp
-  (use-package company-org-block ; Found in ~/main-emacs/elisp/company-org-block.el
-    :disabled ; Doesn't seem to work well right now
-    :straight nil
-    :after (company company-box)
-    :custom
-    (company-org-block-edit-mode 'auto) ; Automatically enter if in an environment
-    :config
-    (add-to-list 'company-backends 'company-org-block)
     )
 #+end_src
 

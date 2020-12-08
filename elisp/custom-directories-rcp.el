@@ -6,7 +6,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; For org and org-agenda 
+;;;; For org and org-agenda
+(require 'org)
 (setq org-directory "~/Documents/org-database/")
 (defvar kb/agenda-dir (concat org-directory "agenda/"))
 (defvar kb/roam-dir (concat org-directory "roam/"))

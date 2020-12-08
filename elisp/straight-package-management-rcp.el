@@ -7,10 +7,10 @@
 
 ;;;; Set straight.el variables
 ;; Set all variables before bootstrapping straight.el
-(setq straight-use-package-by-default t) ; Automatically :straight t for use-package
-(setq straight-check-for-modifications '(watch-files find-when-checking)) ; Faster init, requires python3 and watchexec
-(setq straight-fix-org t)
-(setq straight-repository-branch "develop") ; Use development branch
+(defvar straight-use-package-by-default t) ; Automatically :straight t for use-package
+(defvar straight-check-for-modifications '(watch-files find-when-checking)) ; Faster init, requires python3 and watchexec
+(defvar straight-fix-org t)
+(defvar straight-repository-branch "develop") ; Use development branch
 
 ;;;; Bootstrap (install straight.el)
 (defvar bootstrap-version)
@@ -27,6 +27,7 @@
   (load bootstrap-file nil 'nomessage))
 
 ;;;; Install use-package and set settings
+(require 'straight)
 (straight-use-package 'use-package)
 
 (eval-and-compile
