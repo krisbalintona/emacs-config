@@ -25,6 +25,7 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Commentary:
 ;;
 ;;; better-defaults-rcp.el ends here
