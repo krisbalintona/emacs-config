@@ -65,8 +65,8 @@
 ;;;;; Programmming
 (require 'profiling-and-debug-rcp)
 (require 'programming-general-rcp)
-
-(org-babel-load-file (concat user-emacs-directory "configs/" "programming.org"))
+(require 'programming-elisp-rcp)
+(require 'programming-lua-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "shell.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))

@@ -8,23 +8,23 @@
 ;;;; Completion
 ;;;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
-  (use-package yasnippet
-    :hook ((text-mode prog-mode snippet-mode) . yas-minor-mode-on)
-    :preface
-    (defvar kb/personal-snippets-dir
-      (concat user-emacs-directory "snippets/"))
-    :config
-    (add-to-list 'yas-snippet-dirs 'kb/personal-snippets-dir) ; Where I keep my own snippets
-    )
+(use-package yasnippet
+  :hook ((text-mode prog-mode snippet-mode) . yas-minor-mode-on)
+  :preface
+  (defvar kb/personal-snippets-dir
+    (concat user-emacs-directory "snippets/"))
+  :config
+  (add-to-list 'yas-snippet-dirs 'kb/personal-snippets-dir) ; Where I keep my own snippets
+  )
 
 ;;;;; Doom-snippets
 ;; Large library of snippet templates
-  (use-package doom-snippets
-    :after yasnippet
-    :straight (doom-snippts :type git :host github :repo "hlissner/doom-snippets")
-    ;; :quelpa (doom-snippets :fetcher git :url "https://github.com/hlissner/doom-snippets")
-    :config (yas-reload-all)
-    )
+(use-package doom-snippets
+  :after yasnippet
+  :straight (doom-snippts :type git :host github :repo "hlissner/doom-snippets")
+  ;; :quelpa (doom-snippets :fetcher git :url "https://github.com/hlissner/doom-snippets")
+  :config (yas-reload-all)
+  )
 
 ;;;;; Org-tempo
 ;; Completion for org-blocks
@@ -136,24 +136,24 @@
 ;;;;; Git-gutter-fringes
 ;; Show diffs in fringes. Taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
-  (use-package git-gutter-fringe
-    :disabled t ; Until I figure out how to disable in org-mode
-    :hook (after-change-major-mode . kb/git-gutter-enable)
-    :preface
-    (defun kb/git-gutter-enable ()
-      (when-let* ((buffer (buffer-file-name))
-                  (backend (vc-backend buffer)))
-        (require 'git-gutter)
-        (require 'git-gutter-fringe)
-        (git-gutter-mode t)))
-    :custom
-    (git-gutter-fr:side 'left-side)
-    (git-gutter:disabled-modes '(org-mode))
-    :config
-    (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center t))
-    (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil 'bottom)
-    (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center t))
-    )
+(use-package git-gutter-fringe
+  :disabled t ; Until I figure out how to disable in org-mode
+  :hook (after-change-major-mode . kb/git-gutter-enable)
+  :preface
+  (defun kb/git-gutter-enable ()
+    (when-let* ((buffer (buffer-file-name))
+                (backend (vc-backend buffer)))
+      (require 'git-gutter)
+      (require 'git-gutter-fringe)
+      (git-gutter-mode t)))
+  :custom
+  (git-gutter-fr:side 'left-side)
+  (git-gutter:disabled-modes '(org-mode))
+  :config
+  (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center t))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil 'bottom)
+  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center t))
+  )
 
 ;;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)
@@ -169,25 +169,25 @@
 
 ;;;;; Rainbow-mode
 ;; Colorify color codes
-  (use-package rainbow-mode
-    :hook ((text-mode prog-mode) . rainbow-mode)
-    )
+(use-package rainbow-mode
+  :hook ((text-mode prog-mode) . rainbow-mode)
+  )
 
 ;;;;; Highlight-quoted
 ;; Make quoted symbols easier to distinguish from free variables by highlighting
 ;; them
-  (use-package highlight-quoted
-    :hook (emacs-lisp-mode . highlight-quoted-mode)
-    )
+(use-package highlight-quoted
+  :hook (emacs-lisp-mode . highlight-quoted-mode)
+  )
 
 ;;;;; Paren
 ;; Highlight matching parentheses
-  (use-package paren
-    :config
-    (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
-    (show-paren-mode t)
-    (show-smartparens-mode t)
-    )
+(use-package paren
+  :config
+  (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
+  (show-paren-mode t)
+  (show-smartparens-mode t)
+  )
 
 ;;;;; Prettier
 ;; Re-formats code automatically for some languages. Dependent on the prettier
@@ -201,35 +201,35 @@
 ;;;; Syntax checking
 ;;;;; Flycheck
 ;; Check your code
-  (use-package flycheck
-    :hook (after-init . global-flycheck-mode)
-    :custom
-    (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
+(use-package flycheck
+  :hook (after-init . global-flycheck-mode)
+  :custom
+  (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
-    (flycheck-check-syntax-automatically '(save mode-enabled idle-change idle-buffer-switch)) ; When to check
-    (flycheck-idle-buffer-switch-delay 1.5) ; Wait 2 secons after buffer switch
-    (flycheck-buffer-switch-check-intermediate-buffers t) ; Run flycheck even if visiting buffer quickly (reliant on idle-buffer-switch)
+  (flycheck-check-syntax-automatically '(save mode-enabled idle-change idle-buffer-switch)) ; When to check
+  (flycheck-idle-buffer-switch-delay 1.5) ; Wait 2 secons after buffer switch
+  (flycheck-buffer-switch-check-intermediate-buffers t) ; Run flycheck even if visiting buffer quickly (reliant on idle-buffer-switch)
 
-    (flycheck-display-errors-delay 0.5) ; Time to show an error on point
-    (flycheck-indication-mode 'right-margin)
-    (flycheck-highlighting-mode 'lines)
+  (flycheck-display-errors-delay 0.5) ; Time to show an error on point
+  (flycheck-indication-mode 'right-margin)
+  (flycheck-highlighting-mode 'lines)
 
-    (flycheck-standard-error-navigation t) ; Use standard M-g n/p error navigation keybindings
-    (flycheck-navigation-minimum-level nil)
+  (flycheck-standard-error-navigation t) ; Use standard M-g n/p error navigation keybindings
+  (flycheck-navigation-minimum-level nil)
 
-    ;; Errors from other files
-    (flycheck-relevant-error-other-file-show nil)
-    (flycheck-relevant-error-other-file-minimum-level 'error)
-    :config
-    ;; Make the flycheck buffer occupy the bottom third of the screen
-    (add-to-list 'display-buffer-alist
-                 `(,(rx bos "*Flycheck errors*" eos)
-                   (display-buffer-reuse-window
-                    display-buffer-in-side-window)
-                   (side            . bottom)
-                   (reusable-frames . visible)
-                   (window-height   . 0.33)))
-    )
+  ;; Errors from other files
+  (flycheck-relevant-error-other-file-show nil)
+  (flycheck-relevant-error-other-file-minimum-level 'error)
+  :config
+  ;; Make the flycheck buffer occupy the bottom third of the screen
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*Flycheck errors*" eos)
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (side            . bottom)
+                 (reusable-frames . visible)
+                 (window-height   . 0.33)))
+  )
 
 ;;;;; Flycheck-pos-tip-mode
 ;; Shows flychek errors in pos-tip popup
@@ -240,18 +240,18 @@
 
 ;;;;; Flychek-grammarly
 ;; Use grammarly API with flycheck
-  (use-package flycheck-grammarly
-    :disabled t ; Broken in non-trivial files https://github.com/jcs-elpa/flycheck-grammarly/issues/3
-    :straight (flycheck-grammarly :type git :host github :repo "jcs-elpa/flycheck-grammarly")
-    :after flycheck
-    :init (require 'grammarly)
-    :custom
-    ;; If you have a paid subscription
-    (grammarly-username "")
-    (grammarly-password "")
+(use-package flycheck-grammarly
+  :disabled t ; Broken in non-trivial files https://github.com/jcs-elpa/flycheck-grammarly/issues/3
+  :straight (flycheck-grammarly :type git :host github :repo "jcs-elpa/flycheck-grammarly")
+  :after flycheck
+  :init (require 'grammarly)
+  :custom
+  ;; If you have a paid subscription
+  (grammarly-username "")
+  (grammarly-password "")
 
-    (flycheck-grammarly-check-time 2)
-    )
+  (flycheck-grammarly-check-time 2)
+  )
 
 ;;;;; Flychek-color-mode-line
 ;; Changes font color of modeline face based on flycheck status
@@ -263,10 +263,10 @@
 
 ;;;;; Flychec-status-emoji
 ;; Use emojis to display flycheck statuses
-  (use-package flycheck-status-emoji
-    :after flycheck
-    :hook (flycheck-mode . flycheck-status-emoji-mode)
-    )
+(use-package flycheck-status-emoji
+  :after flycheck
+  :hook (flycheck-mode . flycheck-status-emoji-mode)
+  )
 
 ;;;; IDE
 ;;;; Lsp-mode
@@ -309,20 +309,20 @@
 
 ;;;; Lsp-ui
 ;; Fancy frame and sideline overlay which shows useful information about what's on the point.
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'top)
-    )
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'top)
+  )
 
 ;;;; Lsp-ivy
 ;; Search through symbols with Ivy
-  (use-package lsp-ivy
-    :config
-    (kb/leader-keys
-      "ls" 'lsp-ivy-workspace-symbol
-      )
+(use-package lsp-ivy
+  :config
+  (kb/leader-keys
+    "ls" 'lsp-ivy-workspace-symbol
     )
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-general-rcp)
