@@ -39,6 +39,7 @@
 (require 'early-packages-rcp)
 (require 'better-defaults-rcp)
 (require 'custom-directories-rcp.el)
+(require 'conventient-functions-rcp.el)
 (require 'themes-rcp)
 (require 'faces-rcp)
 (require 'profiling-and-debug-rcp)

@@ -2,6 +2,7 @@
 
 
 * Org-mode
+
 ** Org-mode itself
 
 Stlying (called in org-superstar)
@@ -59,9 +60,12 @@ Stlying (called in org-superstar)
 
     (kb/leader-keys
       "nn" '(org-capture :which-key "Org-capture")
+      "mg" '(org-mark-ring-goto :which-key "Goto last mark")
+      "ma" '(org-mark-ring-push :which-key "Push to mark-ring")
       )
     )
 #+END_SRC
+
 ** Custom functions
 
 Better C-ret functionality
@@ -293,7 +297,9 @@ Alter RET to behave more usefully (like in Doom)
 
   (define-key evil-motion-state-map (kbd "RET") '+org/dwim-at-point)
 #+END_SRC
+
 * Aesthetics
+
 ** Org-superstar
 
 Descendant of (and thus superior to) org-bullets
@@ -323,6 +329,7 @@ Descendant of (and thus superior to) org-bullets
     (inhibit-compacting-font-caches t) ; Stop slowdown
     )
 #+END_SRC
+
 ** Org-fancy-priorities
 
 Icons for org priorities
@@ -352,7 +359,9 @@ Icons for org priorities
     (setq-default split-window-preferred-function 'visual-fill-column-split-window-sensibly) ; Be able to vertically split windows that have wide margins
     )
 #+END_SRC
+
 * Yanking
+
 ** Org-attach
 
 #+BEGIN_SRC emacs-lisp
@@ -361,6 +370,7 @@ Icons for org priorities
   (setq org-attach-method 'cp) ; Attach copies of files
   (setq org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
 #+END_SRC
+
 ** Org-download
 
 Insert images and screenshots
@@ -382,6 +392,7 @@ Insert images and screenshots
       )
     )
 #+END_SRC
+
 ** Org-cliplink
 
 Paste https link with automatic description
