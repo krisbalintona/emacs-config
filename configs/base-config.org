@@ -170,40 +170,6 @@ Prettify hydra frame
     )
 #+end_src
 
-* Custom variables
-
-For org and org-agenda
-#+BEGIN_SRC emacs-lisp
-  (setq org-directory "~/Documents/org-database/")
-  (defvar kb/agenda-dir (concat org-directory "agenda/"))
-  (defvar kb/roam-dir (concat org-directory "roam/"))
-  (defvar kb/library-dir (concat org-directory "library/"))
-
-  (defvar kb/all-org-dir-files (cl-remove-if
-                                (lambda (it)
-                                  (string-match-p (rx "archive.org") it))
-                                (directory-files-recursively org-directory ".org$")))
-  (defvar kb/all-agenda-dir-files (cl-remove-if
-                                   (lambda (it)
-                                     (string-match-p (rx "archive.org") it))
-                                   (directory-files-recursively kb/agenda-dir ".org$")))
-  (defvar kb/all-agenda-dir-files-minus-inbox (cl-remove-if
-                                               (lambda (it)
-                                                 (string-match-p (rx "archive.org") it)
-                                                 (string-match-p (rx "inbox.org") it))
-                                               (directory-files-recursively kb/agenda-dir ".org$")))
-#+END_SRC
-
-For file and directory shortcut functions (in custom functions section)
-#+BEGIN_SRC emacs-lisp
-  (defvar kb/library-dir (concat org-directory "library"))
-  (defvar kb/emacs-base-config-file (concat user-emacs-directory "configs/base-config.org"))
-  (defvar kb/emacs-config-dir (concat user-emacs-directory "configs/"))
-
-  (defvar kb/dot-config-dir "~/.config/")
-  (defvar kb/wm-config-file (concat kb/dot-config-dir "i3/config"))
-#+END_SRC
-
 * Custom functions
 
 ** Sudo a file
