@@ -114,7 +114,6 @@
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode t)))
 ;;; HighlightLineInAgenda
 
-
 (provide 'better-defaults-rcp)
 ;;; Commentary:
 ;; Set more sane defaults for Emacs as well as other QoL modes. These settings are

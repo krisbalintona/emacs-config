@@ -11,7 +11,7 @@
   (custom-file (no-littering-expand-etc-file-name "custom.el")) ; Set custom.el path
   (auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))) ; Store auto-saved files here
   :config
-  ;; Exlude these files from recent files list
+  ;; Exclude these files from recent files list
   (require 'recentf)
   (add-to-list 'recentf-exclude no-littering-var-directory)
   (add-to-list 'recentf-exclude no-littering-etc-directory)
