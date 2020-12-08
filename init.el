@@ -41,8 +41,8 @@
 (require 'auto-gc-rcp)
 ;; (require 'default-package-management-rcp) ; Use package.el
 (require 'straight-package-management-rcp) ; Use straight.el
-(require 'better-defaults-rcp)
 (require 'early-packages-rcp)
+(require 'better-defaults-rcp)
 (require 'profiling-and-debug-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
