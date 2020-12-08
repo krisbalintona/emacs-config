@@ -321,6 +321,7 @@ Enable in current buffer to iterate through git revision history
 Better version of evil-jump
 #+begin_src emacs-lisp
   (use-package better-jumper
+    :disabled t ; I don't use this
     :after evil
     :hook (evil-mode . better-jumper-mode)
     :custom
@@ -328,12 +329,13 @@ Better version of evil-jump
     (better-jumper-new-window-behavior 'copy)
     (better-jumper-max-length 200)
     (better-jumper-use-evil-jump-advice t)
+    (better-jumper-use-savehist t)
     :config
     (general-define-key
      :keymaps 'evil-motion-state-map
      "C-o" 'better-jumper-jump-backward
      "C-i" 'better-jumper-jump-forward
-    )
+     )
     )
 #+end_src
 
