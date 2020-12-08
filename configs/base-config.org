@@ -70,171 +70,6 @@ Minor modeline additions/settings
     )
 #+end_src
 
-* General.el
-
-Leader key capabilities
-#+BEGIN_SRC emacs-lisp
-  (use-package general
-    :config
-    (general-evil-setup)
-    (general-auto-unbind-keys)
-
-    (general-create-definer kb/leader-keys
-      :keymaps '(normal insert visual emacs)
-      :prefix "SPC"
-      :global-prefix "M-SPC")
-
-    (kb/leader-keys
-      "t"  '(:ignore t :which-key "Toggles")
-      "tl" '(display-line-numbers-mode :which-key "Line numbers")
-      "o"  '(:ignore t :which-key "Open")
-      "oc" '(calendar :which-key "Open calendar")
-      "b"  '(:ignore t :which-key "Buffers")
-      "bp" '(previous-buffer :which-key "Prev buffer")
-      "bn" '(next-buffer :which-key "Next buffer")
-      "f"  '(:ignore t :which-key "Files")
-      "fs" '(save-buffer :which-key "Save buffer")
-      "h"  '(:ignore t :which-key "Help")
-      "q"  '(:ignore t :which-key "Quit")
-      "qs" '(org-save-all-org-buffers :which-key "Save all org buffers")
-      "l"  '(:ignore t :which-key "Langtool")
-      "n" '(:ignore t :which-key "Org-roam")
-      "i" '(:ignore t :which-key "Copying and pasting")
-      "w" '(:ignore t :which-key "Manage windows")
-      "g"   '(:ignore t :which-key "git")
-      "e"   '(:ignore t :which-key "Eval stuff")
-      "eb"  '(eval-buffer :which-key "Eval buffer")
-
-      "u" 'universal-argument
-      )
-
-    (kb/leader-keys
-      :keymaps '(visual normal)
-      "ee" '(eval-last-sexp :which-key "Eval last sexp")
-      "er" '(eval-region :which-key "Eval region")
-      )
-    )
-#+END_SRC
-
-* Pretty-hydra
-
-#+begin_src emacs-lisp
-  (use-package pretty-hydra
-    :demand t
-    :config
-    ;; Straight.el integration
-    (kb/leader-keys
-      "hp" '(hydra:straight-helper/body :which-key "Straight.el management")
-      )
-
-    (pretty-hydra-define hydra:straight-helper
-      (:hint t :foreign-keys run :quit-key "q" :exit t)
-      ("Package building"
-       (("t" #'straight-use-package "Temporarily install package")
-        ("c" #'straight-check-all "Check and build all modified")
-        ("C" #'straight-check-package "Check and build particular modified")
-        ("r" #'straight-rebuild-all "Rebuild all")
-        ("R" #'straight-rebuild-package "Rebuild particular"))
-       "Managing remote and local repos"
-       (("f" #'straight-fetch-all "Fetch all")
-        ("F" #'straight-fetch-package "Fetch particular")
-        ("p" #'straight-pull-all "Pull all")
-        ("P" #'straight-pull-package "Pull particular")
-        ("u" #'straight-push-all "Push all")
-        ("U" #'straight-push-package "Push particular")
-        ("m" #'straight-merge-all "Merge all")
-        ("M" #'straight-merge-package "Merge particular"))
-       "Automatic and manual updates"
-       (("n" #'straight-normalize-all "Normalize all")
-        ("N" #'straight-normalize-package "Normalize particular")
-        ("w" #'straight-watcher-start "Start file system watcher")
-        ("W" #'straight-watcher-quit "Kill file system watcher")
-        ("g" #'straight-get-recipe "Copy particular recipe")
-        ("e" #'straight-prune-build "Prune: delete packages not currently loaded (?)")) ; Recommended occasionally to clean up really long cache file (straight-cache-autoloads t) over time
-       "Suspending and restoring package versions"
-       (("v" #'straight-freeze-versions "\"Freeze\" all installed packages (?)")
-        ("V" #'straight-thaw-versions "\"Unfreeze\" all frozen packages (?)"))
-       ("q" nil) ; Reserved for quit
-       ))
-    )
-#+end_src
-
-* Hydra-posframe
-
-Prettify hydra frame
-#+begin_src emacs-lisp
-  (use-package hydra-posframe
-    :disabled ; Too small sometimes
-    :straight (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
-    :hook (after-init . hydra-posframe-enable)
-    )
-#+end_src
-
-* Keep tags on right-hand side
-
-Taken from [[https://orgmode.org/worg/org-hacks.html#archiving][Org ad hoc code, quick hacks and workarounds]]. May be slow in big files
-#+begin_src emacs-lisp
-  (setq ba/org-adjust-tags-column t)
-
-  (defun ba/org-adjust-tags-column-reset-tags ()
-    "In org-mode buffers it will reset tag position according to
-    `org-tags-column'."
-    (when (and
-           (not (string= (buffer-name) "*Remember*"))
-           (eql major-mode 'org-mode))
-      (let ((b-m-p (buffer-modified-p)))
-        (condition-case nil
-            (save-excursion
-              (goto-char (point-min))
-              (command-execute 'outline-next-visible-heading)
-              ;; disable (message) that org-set-tags generates
-              (flet ((message (&rest ignored) nil))
-                (org-set-tags 1 t))
-              (set-buffer-modified-p b-m-p))
-          (error nil)))))
-
-  (defun ba/org-adjust-tags-column-now ()
-    "Right-adjust `org-tags-column' value, then reset tag position."
-    (set (make-local-variable 'org-tags-column)
-         (- (- (window-width) (length org-ellipsis))))
-    (ba/org-adjust-tags-column-reset-tags))
-
-  (defun ba/org-adjust-tags-column-maybe ()
-    "If `ba/org-adjust-tags-column' is set to non-nil, adjust tags."
-    (when ba/org-adjust-tags-column
-      (ba/org-adjust-tags-column-now)))
-
-  (defun ba/org-adjust-tags-column-before-save ()
-    "Tags need to be left-adjusted when saving."
-    (when ba/org-adjust-tags-column
-      (setq org-tags-column 1)
-      (ba/org-adjust-tags-column-reset-tags)))
-
-  (defun ba/org-adjust-tags-column-after-save ()
-    "Revert left-adjusted tag position done by before-save hook."
-    (ba/org-adjust-tags-column-maybe)
-    (set-buffer-modified-p nil))
-
-  ;; Automatically align tags on right-hand side
-  (add-hook 'window-configuration-change-hook
-            'ba/org-adjust-tags-column-maybe)
-  (add-hook 'before-save-hook 'ba/org-adjust-tags-column-before-save)
-  (add-hook 'after-save-hook 'ba/org-adjust-tags-column-after-save)
-  (add-hook 'org-agenda-mode-hook (lambda ()
-                                    (setq org-agenda-tags-column (- (window-width)))))
-
-  ;; Between invoking org-refile and
-  ;; displaying the prompt (which triggers
-  ;; window-configuration-change-hook)
-  ;; tags might adjust, which invalidates
-  ;; the org-refile cache
-  (defadvice org-refile (around org-refile-disable-adjust-tags)
-    "Disable dynamically adjusting tags"
-    (let ((ba/org-adjust-tags-column nil))
-      ad-do-it))
-  (ad-activate 'org-refile)
-#+end_src
-
 * Misc
 
 ** Recentf
@@ -499,4 +334,69 @@ Add dates to magit-logs
       (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
 
   (add-hook 'magit-mode-hook 'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
+#+end_src
+
+** Keep tags on right-hand side
+
+Taken from [[https://orgmode.org/worg/org-hacks.html#archiving][Org ad hoc code, quick hacks and workarounds]]. May be slow in big files
+#+begin_src emacs-lisp
+  (setq ba/org-adjust-tags-column t)
+
+  (defun ba/org-adjust-tags-column-reset-tags ()
+    "In org-mode buffers it will reset tag position according to
+    `org-tags-column'."
+    (when (and
+           (not (string= (buffer-name) "*Remember*"))
+           (eql major-mode 'org-mode))
+      (let ((b-m-p (buffer-modified-p)))
+        (condition-case nil
+            (save-excursion
+              (goto-char (point-min))
+              (command-execute 'outline-next-visible-heading)
+              ;; disable (message) that org-set-tags generates
+              (flet ((message (&rest ignored) nil))
+                (org-set-tags 1 t))
+              (set-buffer-modified-p b-m-p))
+          (error nil)))))
+
+  (defun ba/org-adjust-tags-column-now ()
+    "Right-adjust `org-tags-column' value, then reset tag position."
+    (set (make-local-variable 'org-tags-column)
+         (- (- (window-width) (length org-ellipsis))))
+    (ba/org-adjust-tags-column-reset-tags))
+
+  (defun ba/org-adjust-tags-column-maybe ()
+    "If `ba/org-adjust-tags-column' is set to non-nil, adjust tags."
+    (when ba/org-adjust-tags-column
+      (ba/org-adjust-tags-column-now)))
+
+  (defun ba/org-adjust-tags-column-before-save ()
+    "Tags need to be left-adjusted when saving."
+    (when ba/org-adjust-tags-column
+      (setq org-tags-column 1)
+      (ba/org-adjust-tags-column-reset-tags)))
+
+  (defun ba/org-adjust-tags-column-after-save ()
+    "Revert left-adjusted tag position done by before-save hook."
+    (ba/org-adjust-tags-column-maybe)
+    (set-buffer-modified-p nil))
+
+  ;; Automatically align tags on right-hand side
+  (add-hook 'window-configuration-change-hook
+            'ba/org-adjust-tags-column-maybe)
+  (add-hook 'before-save-hook 'ba/org-adjust-tags-column-before-save)
+  (add-hook 'after-save-hook 'ba/org-adjust-tags-column-after-save)
+  (add-hook 'org-agenda-mode-hook (lambda ()
+                                    (setq org-agenda-tags-column (- (window-width)))))
+
+  ;; Between invoking org-refile and
+  ;; displaying the prompt (which triggers
+  ;; window-configuration-change-hook)
+  ;; tags might adjust, which invalidates
+  ;; the org-refile cache
+  (defadvice org-refile (around org-refile-disable-adjust-tags)
+    "Disable dynamically adjusting tags"
+    (let ((ba/org-adjust-tags-column nil))
+      ad-do-it))
+  (ad-activate 'org-refile)
 #+end_src

@@ -43,6 +43,7 @@
 (require 'themes-rcp)
 (require 'faces-rcp)
 (require 'profiling-and-debug-rcp)
+(require 'keybinds-framework-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
