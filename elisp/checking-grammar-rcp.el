@@ -38,7 +38,7 @@
        ))
 
     (general-define-key
-     "C-c L" '(hydra:langtool/body :which-key "Langtool")
+     "C-c g" '(hydra:langtool/body :which-key "Langtool")
      )
     )
 
