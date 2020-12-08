@@ -1,78 +1,6 @@
 #+TITLE: Base Configuration Settings
 
-* Doom-modeline
-
-Sleek modeline from Doom
-#+BEGIN_SRC emacs-lisp
-  (use-package doom-modeline
-    :custom
-    (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
-    (doom-modeline-project-detection 'project)
-    (doom-modeline-buffer-file-name-style 'buffer-name)
-    ;; (doom-modeline-icon (display-graphic-p)) ; Show icons if in Emacs GUI
-    (doom-modeline-icon t) ; In order to work with emacsclient
-    (doom-modeline-major-mode-icon t)
-    (doom-modeline-major-mode-color-icon t)
-    (doom-modeline-buffer-state-icon t)
-    (doom-modeline-buffer-modification-icon t)
-    (doom-modeline-unicode-fallback t)
-    (doom-modeline-minor-modes nil)
-    (doom-modeline-enable-word-count t)
-    (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
-    (doom-modeline-number-limit 99)
-    (doom-modeline-vcs-max-length 28)
-    (doom-modeline-lsp t)
-    (doom-modeline-height 33)
-    (doom-modeline-bar-width 0)
-    :config
-    (if (daemonp) ; Hooks depending on daemon or not
-        (progn (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
-               (add-hook 'window-setup-hook 'doom-modeline-mode))
-      (add-hook 'window-setup-hook 'doom-modeline-mode)) ; Use this hook to prevent right side from being clipped
-
-    (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.75)
-    (set-face-attribute 'mode-line-inactive nil :family kb/modeline-font :height 0.68)
-
-    ;; Don't show encoding on modeline if it is UTF-8
-    (defun doom-modeline-conditional-buffer-encoding ()
-      (setq-local doom-modeline-buffer-encoding
-                  (unless (or (eq buffer-file-coding-system 'utf-8-unix)
-                              (eq buffer-file-coding-system 'utf-8)))))
-    (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
-    (add-hook 'doom-modeline-mode-hook #'doom-modeline-conditional-buffer-encoding) ; Necessary so it takes affect imediately, not before I change major modes for the first time
-
-    (doom-modeline-def-modeline 'main
-      '(bar " " matches vcs " " buffer-info remote-host buffer-position parrot selection-info)
-      '(misc-info " " battery " " input-method buffer-encoding major-mode checker minor-modes process))
-    )
-#+END_SRC
-
-** Modeline additions
-
-Minor modeline additions/settings
-#+begin_src emacs-lisp
-  (with-eval-after-load 'doom-modeline
-    ;; Show actual path of file in symlinks
-    (setq find-file-visit-truename t)
-
-    ;; Disable time in the mode-line
-    (display-time-mode t)
-
-    ;; Show file-size
-    (size-indication-mode t)
-
-    ;; Show battery
-    (setq battery-load-critical 15)
-    (setq battery-load-low 25)
-    (unless (equal "Battery status not available"
-                   (battery))
-      (display-battery-mode t)) ; On laptops it's nice to know how much power you have
-    )
-#+end_src
-
-* Misc
-
-** Recentf
+* Recentf
 
 Enable logging of recent files
 #+begin_src emacs-lisp
@@ -85,7 +13,7 @@ Enable logging of recent files
     )
 #+end_src
 
-** Golden-ratio
+* Golden-ratio
 
 Auto-size window so current is largest
 #+begin_src emacs-lisp
@@ -107,7 +35,7 @@ Auto-size window so current is largest
     )
 #+end_src
 
-** Savehist
+* Savehist
 
 Make history of certain things (e.g. minibuffer) persistent across sessions
 #+begin_src emacs-lisp
@@ -122,7 +50,7 @@ Make history of certain things (e.g. minibuffer) persistent across sessions
     )
 #+end_src
 
-** Company-org-block
+* Company-org-block
 
 Custom company-backend for org-block snippets. Also opens code block automatically (or prompted) after creating the snippet
 - Found from [[https://www.reddit.com/r/emacs/comments/jf0jo1/org_block_company_complete_and_edit/][org block company complete and edit : emacs]]
@@ -138,11 +66,11 @@ Custom company-backend for org-block snippets. Also opens code block automatical
     )
 #+end_src
 
-** Unpackaged.el
+* Unpackaged.el
 
 A bunch of functions taken from [[https://github.com/alphapapa/unpackaged.el#reload-a-packages-features][GitHub - alphapapa/unpackaged.el: A collection of useful Emacs Lisp code that...]]. These are things which are useful but don't warrant an entire package.
 
-*** Reload-package
+** Reload-package
 
 Simple function for reloading an entire package and all its features
 + Useful after upgrading
@@ -192,7 +120,7 @@ Simple function for reloading an entire package and all its features
         (message "Reloaded: %s" (mapconcat #'symbol-name package-features " ")))))
 #+end_src
 
-*** Font-compare
+** Font-compare
 
 #+begin_src emacs-lisp
   (defvar lorem-ipsum-text)
@@ -234,7 +162,7 @@ Simple function for reloading an entire package and all its features
       (pop-to-buffer (current-buffer))))
 #+end_src
 
-*** Org-fix-blank-lines
+** Org-fix-blank-lines
 
 Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
 #+begin_src emacs-lisp
@@ -285,7 +213,7 @@ Call this function before every save in an org file
                                 ))
 #+end_src
 
-*** Magit-log date headers
+** Magit-log date headers
 
 Add dates to magit-logs
 #+begin_src emacs-lisp
@@ -336,7 +264,7 @@ Add dates to magit-logs
   (add-hook 'magit-mode-hook 'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
 #+end_src
 
-** Keep tags on right-hand side
+* Keep tags on right-hand side
 
 Taken from [[https://orgmode.org/worg/org-hacks.html#archiving][Org ad hoc code, quick hacks and workarounds]]. May be slow in big files
 #+begin_src emacs-lisp
