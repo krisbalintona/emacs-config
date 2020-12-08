@@ -44,11 +44,6 @@
   (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
 ;;; UsePackage
 
-;;; EarlyInstalls
-(straight-use-package 'org-plus-contrib)
-(use-package diminish)
-;;; EarlyInstalls
-
 ;;; LoadRepos
 ;; All of this is package.el and it conflicts with
 ;; straight.el. Package-archives can be used if loaded after

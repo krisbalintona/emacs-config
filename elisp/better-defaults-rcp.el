@@ -114,6 +114,11 @@
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode t)))
 ;;; HighlightLineInAgenda
 
+;;; LoadCustomFile
+(when (file-exists-p custom-file)
+  (load custom-file))
+;;; LoadCustomFile
+
 (provide 'better-defaults-rcp)
 ;;; Commentary:
 ;; Set more sane defaults for Emacs as well as other QoL modes. These settings are
