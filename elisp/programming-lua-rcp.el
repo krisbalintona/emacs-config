@@ -39,7 +39,7 @@
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'programming-lua-rcp.el)
+(provide 'programming-lua-rcp)
 ;;; Commentary:
 ;;
 ;;; programming-lua-rcp.el ends here

@@ -28,7 +28,7 @@
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'programming-elisp-rcp.el)
+(provide 'programming-elisp-rcp)
 ;;; Commentary:
 ;;
 ;;; programming-elisp-rcp.el ends here

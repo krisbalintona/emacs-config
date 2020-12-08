@@ -85,7 +85,7 @@
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'spell-checking-rcp)
+(provide 'checking-spelling-rcp)
 ;;; Commentary:
 ;;
 ;;; checking-spelling-rcp.el ends here

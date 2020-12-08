@@ -196,23 +196,6 @@ Toggle eshell window in bottom of current buffer
     )
 #+END_SRC
 
-* Smartparens
-
-Autopairing parentheses
-#+BEGIN_SRC emacs-lisp
-  (use-package smartparens
-    :hook ((eshell-mode . smartparens-mode)
-           (sh-mode . smartparens-mode)
-           (lua-mode . smartparens-mode)
-           (text-mode . smartparens-mode)
-           (smartparens-mode . show-smartparens-mode)) ; Subtlely highlight matching parentheses
-    :custom
-    (sp-show-pair-from-inside t)
-    :config
-    (sp-pair "'" nil :actions :rem) ; Don't pair '
-    )
-#+END_SRC
-
 * Eshell-up
 
 Go up directories easily
