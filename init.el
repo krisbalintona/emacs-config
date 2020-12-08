@@ -1,12 +1,11 @@
 ;;; init.el --- -*- lexical-binding: t -*-
 ;;
-;;; package --- Summary
-;;; Commentary:
-;;; Add Melpa and Elpa package archives.  Then update package archives if they
-;;; haven't done so already and then install and reqeire use-package if it isn't
-;;; installed already.  Then load my actual init file that is in the form of an
-;;; org file.
-
+;; package --- Summary
+;; Commentary:
+;; Add MELPA and ELPA package archives.  Then update package archives if they
+;; haven't done so already and then install and require use-package if it isn't
+;; installed already.  Then load my actual init file that is in the form of an
+;; org file.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
@@ -14,9 +13,9 @@
 (setq comp-deferred-compilation t) ; AoT or JiT compilation?
 ;;; NativeCompDefer
 
-;;: InitialGC
+;;; InitialGC
 (setq gc-cons-threshold most-positive-fixnum)
-;;: InitialGC
+;;; InitialGC
 
 ;;; LoadPath
 ;; Add elisp in folder to load path

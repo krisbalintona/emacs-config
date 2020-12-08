@@ -126,3 +126,19 @@ stl
 ls
 ls ~/Documents/Brown-documents/ 
 which biber
+sudo timeshift --create --comment "Gonna go sleep"
+stc
+stc
+stc
+stl
+stc
+sudo timeshift --create --comment "After writing my final draft of my Machiavelli paper"
+ls
+ls | grep text.
+ls | grep text.
+ls | grep text.
+ls | grep text.
+stc
+sudo timeshift --create --comment "After creating latexmk-mode"
+stc
+sudo timeshift --create --comment "Done with Machiavelli paper"
