@@ -50,7 +50,6 @@
   (doom-modeline-lsp t)
   (doom-modeline-height 33)
   (doom-modeline-bar-width 0)
-  :init (require 'themes-rcp)
   :config
   (if (daemonp) ; Hooks depending on daemon or not
       (progn (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)

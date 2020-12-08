@@ -33,17 +33,21 @@
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
+;;;;; Necessary packages and settings
 (require 'auto-gc-rcp)
 ;; (require 'default-package-management-rcp) ; Use package.el
 (require 'straight-package-management-rcp) ; Use straight.el
 (require 'early-packages-rcp)
 (require 'better-defaults-rcp)
 (require 'faces-rcp)
+
+;;;;; Emacs-wide packages
+;; Packages that are useful across my entire Emacs experience. Other packages
+;; defined afterward will often rely on these
 (require 'keybinds-frameworks-rcp)
 (require 'custom-directories-rcp)
 (require 'convenient-functions-rcp)
 (require 'themes-rcp)
-(require 'profiling-and-debug-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
@@ -57,7 +61,13 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "latex.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
+
+;;;;; Programmming
+(require 'profiling-and-debug-rcp)
+(require 'programming-general-rcp)
+
 (org-babel-load-file (concat user-emacs-directory "configs/" "programming.org"))
+
 (org-babel-load-file (concat user-emacs-directory "configs/" "shell.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
