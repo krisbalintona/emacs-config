@@ -1,25 +1,21 @@
-;;; init.el --- -*- lexical-binding: t -*-
+;;; init.el --- -*- lexical-binding: t -*- --- Summary
 ;;
-;; package --- Summary
-;; Commentary:
-;; Add MELPA and ELPA package archives.  Then update package archives if they
-;; haven't done so already and then install and require use-package if it isn't
-;; installed already.  Then load my actual init file that is in the form of an
-;; org file.
+;; Set native-compilation settings. Also define paths for my config (org and
+;; elisp) files and load them
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;; NativeCompDefer
+;;;; Native compilation defer?
 (setq comp-deferred-compilation t) ; AoT or JiT compilation?
-;;; NativeCompDefer
 
-;;; InitialGC
+;;;; Initial GC threshold
+;; Set as high as possible threshold for GC as early as possible in order to
+;; reduce load time. This value is then lowered to a normal threshold later
 (setq gc-cons-threshold most-positive-fixnum)
-;;; InitialGC
 
-;;; LoadPath
-;; Add elisp in folder to load path
+;;;; Load elisp config path
+;; Add elisp directory that contains configuration files to load path
 (defun update-to-load-path (folder)
   "Update FOLDER and its subdirectories to `load-path'."
   (let ((base folder))
@@ -33,10 +29,9 @@
           (unless (member base load-path)
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
-;;; LoadPath
 
-;;; Packages
-;; Load all config files in my config directory
+;;;; Load packages
+;; Load all elisp and org configuration files
 
 (require 'auto-gc-rcp)
 ;; (require 'default-package-management-rcp) ; Use package.el
@@ -64,8 +59,9 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "shell.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
-;;; Packages
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'init)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Commentary:
+;;
 ;;; init.el ends here

@@ -26,6 +26,7 @@
   :config (load-theme 'spacemacs-dark t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'themes-rcp)
 ;;; Commentary:
 ;;
-;;; better-defaults-rcp.el ends here
+;;; themes-rcp.el ends here

@@ -1,7 +1,7 @@
 ;;; better-defaults-rcp.el --- Summary
 ;;
-;; Set more sane defaults for Emacs as well as other QoL modes. These settings
-;; are package-agnostic
+;; Set more sane Emacs-wide defaults for Emacs as well as other QoL modes. These
+;; settings are package-agnostic
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -16,6 +16,7 @@
 ;;;; Transparency
 (set-frame-parameter (selected-frame) 'alpha '(98 . 85))
 (add-to-list 'default-frame-alist '(alpha . (98 . 85)))
+
 ;;;; Variable defaults
 (setq-default ad-redefinition-action 'accept             ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil           ; Don't warn when opening large files
@@ -62,12 +63,16 @@
 
               visible-bell nil
               )
+
 ;;;; Thinner vertical fringes
 (fringe-mode '(5 . 5))
+
 ;;;; Make asking "Y or N"
 (fset 'yes-or-no-p 'y-or-n-p)
+
 ;;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
+
 ;;;; Display line numbers
 (column-number-mode) ; Column number in modeline
 (setq display-line-numbers-type 'relative)
@@ -85,26 +90,36 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 ;;;; Line spacing
 (setq line-spacing 0) ; This is default
+
 ;;;; Confirm quit
 (setq confirm-kill-emacs 'y-or-n-p) ; Confirm before killing emacs
+
 ;;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
+
 ;;;; Ignore case
 (setq completion-ignore-case t)
 (custom-set-variables
  '(read-buffer-completion-ignore-case t)
  '(read-file-name-completion-ignore-case t))
+
 ;;;; Recognize camel case
 (global-subword-mode t) ; Iterate through CamelCase words
+
 ;;;; Update timestamp
 (add-hook 'before-save-hook 'time-stamp) ; or (add-hook 'write-file-functions
+
 ;;;; Highlight line in org-agenda
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode t)))
+
 ;;;; Load custom file
+;; Must be loaded after early-packages-rcp because that is where custom-file
+;; location is defined
 (when (file-exists-p custom-file)
   (load custom-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'early-packages-rcp)
 ;;; Commentary:
 ;;
 ;;; better-defaults-rcp.el ends here

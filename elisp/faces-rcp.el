@@ -6,7 +6,6 @@
 ;;; Code:
 
 ;;;; Face definitions
-;; 
 ;; Potential Fonts:
 ;; Default:
 ;; - RobotoMono Nerd Font
@@ -26,7 +25,7 @@
 
 ;;;; Setup fonts
 (defun kb/default-fonts-setup ()
-  "Set Emacs-wide fonts"
+  "Set Emacs-wide fonts."
 
   (add-to-list 'default-frame-alist `(font . ,kb/default-font))
 
@@ -49,6 +48,7 @@
     ;; http://ergoemacs.org/misc/emacs_macos_emoji.html
     ))
   )
+
 ;;;; Add to hooks
 ;; Set fonts based on if daemon or not
 (if (daemonp)
@@ -59,7 +59,6 @@
 ;; Allow faces to be selectively fixed- or variable-pitch
 ;; Note: Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
-
 (use-package mixed-pitch
   :hook (text-mode . mixed-pitch-mode)
   :custom
@@ -71,6 +70,7 @@
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'faces-rcp)
 ;;; Commentary:
 ;;
 ;;; faces-rcp.el ends here

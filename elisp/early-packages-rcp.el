@@ -2,17 +2,18 @@
 ;;
 ;; Load packages which need to be loaded at an early state here.
 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;; Org-plus-contrib
+;;;; Org-plus-contrib
 ;; Org but with more useful packages
 (straight-use-package 'org-plus-contrib)
 
-;;; Diminish
+;;;; Diminish
 ;; Remove or rename modeline lighters
 (use-package diminish)
 
-;;; NoLittering
+;;;; NoLittering
 ;; Set default package paths
 (use-package no-littering
   :custom
@@ -28,7 +29,7 @@
   (add-to-list 'recentf-exclude no-littering-etc-directory)
   )
 
-;;; Outshine
+;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
@@ -41,6 +42,7 @@
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'early-packages-rcp)
 ;;; Commentary:
 ;;
