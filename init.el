@@ -42,6 +42,7 @@
 ;; (require 'default-package-management-rcp) ; Use package.el
 (require 'straight-package-management-rcp) ; Use straight.el
 (require 'early-packages-rcp)
+(require 'themes-rcp)
 (require 'better-defaults-rcp)
 (require 'profiling-and-debug-rcp)
 
