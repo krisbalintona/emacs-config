@@ -70,6 +70,9 @@
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "shell.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))
+
+;;;;; Spelling and grammar
+(require 'checking-spelling-rcp)
 (org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
