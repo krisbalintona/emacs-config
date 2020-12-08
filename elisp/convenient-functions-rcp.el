@@ -152,6 +152,191 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'convenient-functions-rcp)
+;;;; Unpackaged.el
+;; These are a bunch of functions taken from
+;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
+;; but don't warrant an entire package.
+
+;;;;; Reload-package
+;; Simple function for reloading an entire package and all its feature. Useful
+;; after upgrading
+(defun unpackaged/reload-package (package &optional allp)
+  "Reload PACKAGE's features.
+  If ALLP is non-nil (interactively, with prefix), load all of its
+  features; otherwise only load ones that were already loaded.
+
+  This is useful to reload a package after upgrading it.  Since a
+  package may provide multiple features, to reload it properly
+  would require either restarting Emacs or manually unloading and
+  reloading each loaded feature.  This automates that process.
+
+  Note that this unloads all of the package's symbols before
+  reloading.  Any data stored in those symbols will be lost, so if
+  the package would normally save that data, e.g. when a mode is
+  deactivated or when Emacs exits, the user should do so before
+  using this command."
+  (interactive
+   (list (intern (completing-read "Package: "
+                                  (mapcar #'car package-alist) nil t))
+         current-prefix-arg))
+  ;; This finds features in the currently installed version of PACKAGE, so if
+  ;; it provided other features in an older version, those are not unloaded.
+  (when (yes-or-no-p (format "Unload all of %s's symbols and reload its features? " package))
+    (let* ((package-name (symbol-name package))
+           (package-dir (file-name-directory
+                         (locate-file package-name load-path (get-load-suffixes))))
+           (package-files (directory-files package-dir 'full (rx ".el" eos)))
+           (package-features
+            (cl-loop for file in package-files
+                     when (with-temp-buffer
+                            (insert-file-contents file)
+                            (when (re-search-forward (rx bol "(provide" (1+ space)) nil t)
+                              (goto-char (match-beginning 0))
+                              (cadadr (read (current-buffer)))))
+                     collect it)))
+      (unless allp
+        (setf package-features (seq-intersection package-features features)))
+      (dolist (feature package-features)
+        (ignore-errors
+          ;; Ignore error in case it's not loaded.
+          (unload-feature feature 'force)))
+      (dolist (feature package-features)
+        (require feature))
+      (message "Reloaded: %s" (mapconcat #'symbol-name package-features " ")))))
+
+;;;;; Font-compare
+(defvar lorem-ipsum-text)
+
+  ;;;###autoload
+(defun unpackaged/font-compare (text fonts)
+  "Compare TEXT displayed in FONTS.
+  If TEXT is nil, use `lorem-ipsum' text. FONTS is a list of font
+  family strings and/or font specs.
+
+  Interactively, prompt for TEXT, using `lorem-ipsum' if left
+  empty, and select FONTS with `x-select-font', pressing Cancel to
+  stop selecting fonts."
+  (interactive (list (pcase (read-string "Text: ")
+                       ("" nil)
+                       (else else))
+                     ;; `x-select-font' calls quit() when Cancel is pressed, so we use
+                     ;; `inhibit-quit', `with-local-quit', and `quit-flag' to avoid that.
+                     (let ((inhibit-quit t))
+                       (cl-loop for font = (with-local-quit
+                                             (x-select-font))
+                                while font
+                                collect font into fonts
+                                finally do (setf quit-flag nil)
+                                finally return fonts))))
+  (setq text (or text (s-word-wrap 80 (s-join " " (progn
+                                                    (require 'lorem-ipsum)
+                                                    (seq-random-elt lorem-ipsum-text))))))
+  (with-current-buffer (get-buffer-create "*Font Compare*")
+    (erase-buffer)
+    (--each fonts
+      (let ((family (cl-typecase it
+                      (font (symbol-name (font-get it :family)))
+                      (string it))))
+        (insert family ": "
+                (propertize text
+                            'face (list :family family))
+                "\n\n")))
+    (pop-to-buffer (current-buffer))))
+
+;;;;; Org-fix-blank-lines
+;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
+(defun unpackaged/org-fix-blank-lines (&optional prefix)
+  "Ensure that blank lines exist between headings and between headings and their contents.
+  With prefix, operate on whole buffer. Ensures that blank lines
+  exist after each headings's drawers."
+  (interactive "P")
+  (org-map-entries (lambda ()
+                     (org-with-wide-buffer
+                      ;; `org-map-entries' narrows the buffer, which prevents us from seeing
+                      ;; newlines before the current heading, so we do this part widened.
+                      (while (not (looking-back "\n\n" nil))
+                        ;; Insert blank lines before heading.
+                        (insert "\n")))
+                     (let ((end (org-entry-end-position)))
+                       ;; Insert blank lines before entry content
+                       (forward-line)
+                       (while (and (org-at-planning-p)
+                                   (< (point) (point-max)))
+                         ;; Skip planning lines
+                         (forward-line))
+                       (while (re-search-forward org-drawer-regexp end t)
+                         ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
+                         ;; for some reason it doesn't work correctly when operating on hidden text.
+                         ;; This works, taken from `org-agenda-get-some-entry-text'.
+                         (re-search-forward "^[ \t]*:END:.*\n?" end t)
+                         (goto-char (match-end 0)))
+                       (unless (or (= (point) (point-max))
+                                   (org-at-heading-p)
+                                   (looking-at-p "\n"))
+                         (insert "\n"))))
+                   t (if prefix
+                         nil
+                       'tree)))
+
+;;Call this function before every save in an org file. Don't do this for
+;;org-agenda files - it makes it ugly
+(add-hook 'before-save-hook (lambda ()
+                              (if (and
+                                   (eq major-mode 'org-mode) ; Org-mode
+                                   (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
+                                   (not (string-equal buffer-file-name (expand-file-name "seedbox.org" org-roam-directory)))) ; Not seedbox
+                                  (let ((current-prefix-arg 4)) ; Emulate C-u
+                                    (call-interactively 'unpackaged/org-fix-blank-lines)))
+                              ))
+
+;;;;; Magit-log date headers
+;; Add dates to magit-logs
+(use-package ov) ; Dependency
+
+(defun unpackaged/magit-log--add-date-headers (&rest _ignore)
+  "Add date headers to Magit log buffers."
+  (when (derived-mode-p 'magit-log-mode)
+    (save-excursion
+      (ov-clear 'date-header t)
+      (goto-char (point-min))
+      (cl-loop with last-age
+               for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
+                                car
+                                (overlay-get it 'before-string)
+                                (get-text-property 0 'display it)
+                                cadr
+                                (s-match (rx (group (1+ digit) ; number
+                                                    " "
+                                                    (1+ (not blank))) ; unit
+                                             (1+ blank) eos)
+                                         it)
+                                cadr)
+               do (when (and this-age
+                             (not (equal this-age last-age)))
+                    (ov (line-beginning-position) (line-beginning-position)
+                        'after-string (propertize (concat " " this-age "\n")
+                                                  'face 'magit-section-heading)
+                        'date-header t)
+                    (setq last-age this-age))
+               do (forward-line 1)
+               until (eobp)))))
+
+(define-minor-mode unpackaged/magit-log-date-headers-mode
+  "Display date/time headers in `magit-log' buffers."
+  :global t
+  (if unpackaged/magit-log-date-headers-mode
+      (progn
+        ;; Enable mode
+        (add-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+        (advice-add #'magit-setup-buffer-internal :after #'unpackaged/magit-log--add-date-headers))
+    ;; Disable mode
+    (remove-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+    (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
+
+(add-hook 'magit-mode-hook 'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'conventient-functions-rcp)
 ;;; Commentary:
 ;;
 ;; Most of these functions are taken from elsewhere (e.g. Doom)
