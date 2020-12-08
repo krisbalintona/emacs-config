@@ -119,6 +119,7 @@ Save and restore open buffers and frames
     (advice-add #'desktop-owner :around #'kb/desktop-owner-advice)
     )
 #+END_SRC
+
 * Bufler
 
 Manage buffers better
@@ -168,6 +169,7 @@ Manage buffers better
       )
     )
 #+END_SRC
+
 * Eyebrowse
 
 Better window configuration management
@@ -202,6 +204,7 @@ Better window configuration management
     (global-set-key (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
     )
 #+END_SRC
+
 * Shackle
 
 Control the behavior of popup and side windows
@@ -219,20 +222,19 @@ Control the behavior of popup and side windows
     (shackle-select-reused-windows t)
     )
 #+end_src
+
 * Window resizing
 
 Resize easier with hydra
 #+begin_src emacs-lisp
   (pretty-hydra-define hydra:windows-and-font-size
     (:color pink :hint t :foreign-keys run :quit-key "q")
-    ("Windows"
-     (("m" toggle-frame-fullscreen :color blue))
-     "Size"
+    ("Size"
      (("b" balance-windows :color blue)
-      ("e" enlarge-window)
-      ("s" shrink-window)
-      ("j" shrink-window-horizontally)
-      ("k" enlarge-window-horizontally))
+      ("j" enlarge-window "Enlarge vertically")
+      ("k" shrink-window "Shrink vertically")
+      ("l" enlarge-window-horizontally "Enlarge horizontally")
+      ("h" shrink-window-horizontally "Shrink horizontally"))
      "Zoom"
      (("-" default-text-scale-decrease)
       ("+" default-text-scale-increase)
@@ -242,6 +244,6 @@ Resize easier with hydra
      ))
 
   (kb/leader-keys
-    "hw" '(hydra:windows-and-font-size/body :which-key "Augment window settings")
+    "w TAB" '(hydra:windows-and-font-size/body :which-key "Augment window sizing")
     )
 #+end_src
