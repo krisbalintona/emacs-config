@@ -83,6 +83,10 @@ Interactive browser graph view
   (use-package org-roam-server
     ;; :quelpa (org-roam-server :fetcher git :url "https://github.com/org-roam/org-roam-server" :branch "master") ; Quelpa version doesn't work? Perhaps has to do with org-roam dependency?
     :after org-roam
+    :hook ((org-roam-server-mode . (lambda () ; Necessary to open buffers from graph
+                                     (require 'org-protocol)
+                                     (require 'org-roam-protocol))
+                                 ))
     :custom
     (org-roam-server-host "127.0.0.1")
     (org-roam-server-port 8080)
@@ -100,9 +104,8 @@ Interactive browser graph view
     ;; (org-roam-server-default-exclude-filters [{ "id": "moc", "parent" : "tags"  }]) ; Default exclusion
     (org-roam-server-default-include-filters "null") ; Default inclusion
     :config
-    (if (daemonp)
-        (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) ; Don't start server if not in daemon mode, otherwise will break things
-    (add-hook 'org-roam-server-mode-hook (lambda () (require 'org-protocol))) ; Required to open roam buffers from the server
+    (if (daemonp) ; Don't start server if not in daemon mode, otherwise will break things
+        (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) 
     )
 #+END_SRC
 
