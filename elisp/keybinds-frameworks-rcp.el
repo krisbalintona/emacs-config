@@ -106,5 +106,4 @@
 (provide 'keybinds-frameworks-rcp)
 ;;; Commentary:
 ;;
-;;
 ;;; keybinds-frameworks-rcp.el ends here

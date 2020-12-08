@@ -119,7 +119,7 @@
   (load custom-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'early-packages-rcp)
+(provide 'better-defaults-rcp)
 ;;; Commentary:
 ;;
 ;;; better-defaults-rcp.el ends here

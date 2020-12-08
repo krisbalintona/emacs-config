@@ -38,12 +38,12 @@
 (require 'straight-package-management-rcp) ; Use straight.el
 (require 'early-packages-rcp)
 (require 'better-defaults-rcp)
-(require 'custom-directories-rcp.el)
-(require 'conventient-functions-rcp.el)
-(require 'themes-rcp)
 (require 'faces-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'custom-directories-rcp)
+(require 'convenient-functions-rcp)
+(require 'themes-rcp)
 (require 'profiling-and-debug-rcp)
-(require 'keybinds-framework-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
