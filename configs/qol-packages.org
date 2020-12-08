@@ -333,8 +333,8 @@ Better version of evil-jump
     :config
     (general-define-key
      :keymaps 'evil-motion-state-map
-     "C-o" 'better-jumper-jump-backward
-     "C-i" 'better-jumper-jump-forward
+     [remap evil-jump-backward] 'better-jumper-jump-backward
+     [remap evil-jump-forward] 'better-jumper-jump-forward
      )
     )
 #+end_src

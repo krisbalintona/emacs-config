@@ -6,6 +6,7 @@
 ;; haven't done so already and then install and require use-package if it isn't
 ;; installed already.  Then load my actual init file that is in the form of an
 ;; org file.
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
