@@ -124,6 +124,10 @@
 (require 'epg)
 (setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
 
+;;;; ESC everywhere
+;; Make ESC quit prompts everywhere
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'better-defaults-rcp)
 ;;; Commentary:
