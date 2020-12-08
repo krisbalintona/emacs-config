@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
+ copy-file
+ outline-demote
+ outline-promote
+ kb/move-this-file
+ outshine-insert-heading
+ visual-line-mode
  outshine-mode
- customize-group
- LaTeX-mode
- beacon-blink
- flyspell-buffer
- flyspell-mode
- company-box-mode
 )
 
 ;; ----- amx-data -----
@@ -15,7 +15,7 @@
  (customize-group . 50)
  (pdf-tools-install . 2)
  (load-file . 3)
- (counsel-load-library . 27)
+ (counsel-load-library . 28)
  (explain-pause-top . 5)
  (selectrum-mode . 16)
  (orb-note-actions . 1)
@@ -52,7 +52,7 @@
  (org-mode-restart . 29)
  (helm-minibuffer-history . 1)
  (helm-find-files . 3)
- (find-file . 6)
+ (find-file . 8)
  (golden-ratio-mode . 6)
  (windmove-right . 1)
  (windmove-left . 1)
@@ -124,7 +124,7 @@
  (keyfreq-html-v2 . 1)
  (keyfreq-html . 1)
  (org-roam-bibtex-mode . 9)
- (visual-line-mode . 4)
+ (visual-line-mode . 5)
  (org-refile . 10)
  (list-colors-display . 2)
  (buffer-expose . 2)
@@ -174,8 +174,8 @@
  (unpackaged/magit-status . 1)
  (unpackaged/reload-package . 2)
  (flyspell-correct-wrapper . 2)
- (savehist-save . 4)
- (better-jumper-mode . 1)
+ (savehist-save . 5)
+ (better-jumper-mode . 2)
  (flycheck-vale-toggle-enabled . 6)
  (flycheck-mode . 12)
  (eww . 1)
@@ -227,13 +227,13 @@
  (consult-line . 3)
  (consult-outline . 2)
  (consult-buffer . 4)
- (consult-recent-file . 1)
+ (consult-recent-file . 3)
  (consult-recent-file-other-window . 1)
  (consult-apropos . 1)
  (consult-minor-mode . 3)
  (consult-theme . 1)
  (consult-yank-pop . 1)
- (execute-extended-command . 6)
+ (execute-extended-command . 7)
  (counsel-grep-or-swiper . 1)
  (imenu . 3)
  (outline-show-all . 3)
@@ -261,7 +261,7 @@
  (org-version . 1)
  (reftex-view-crossref . 5)
  (outshine-speed-command-help . 4)
- (outshine-mode . 18)
+ (outshine-mode . 20)
  (outshine-imenu . 6)
  (outshine-kbd-TAB . 2)
  (outshine-latex-insert-header . 5)
@@ -271,7 +271,7 @@
  (outline-cycle . 8)
  (latex-preview-update . 3)
  (latex-preview-pane-update . 2)
- (org-roam-server-mode . 7)
+ (org-roam-server-mode . 9)
  (clone-indirect-buffer . 1)
  (ispell-change-dictionary . 2)
  (flyspell-lazy-mode . 7)
@@ -280,7 +280,7 @@
  (flyspell-buffer . 20)
  (list-faces-display . 3)
  (spell-fu-mode . 2)
- (load-library . 2)
+ (load-library . 3)
  (LaTeX-mode-menu . 1)
  (flyspell-correct-word . 1)
  (flyspell-correct-auto-mode . 2)
@@ -297,9 +297,21 @@
  (global-disable-mouse-mode . 1)
  (consult-preview-mode . 1)
  (consult-yank . 1)
- (consult-multi-occur . 1)
+ (consult-multi-occur . 2)
  (replace-regexp . 1)
- (org-clone-subtree-with-time-shift . 1)
+ (org-clone-subtree-with-time-shift . 2)
  (beacon-blink . 1)
  (latexmk-mode . 2)
+ (projectile-multi-occur . 1)
+ (winner-undo . 1)
+ (disable-mouse-global-mode . 2)
+ (marginalia-mode . 2)
+ (deft-find-file . 1)
+ (electric-quote-local-mode . 1)
+ (electric-quote-mode . 2)
+ (copy-file . 6)
+ (outshine-insert-heading . 1)
+ (kb/move-this-file . 1)
+ (outline-promote . 1)
+ (outline-demote . 1)
 )

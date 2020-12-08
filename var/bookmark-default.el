@@ -24,7 +24,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* TODO Check wch")
- (rear-context-string . "2-04 Fri 13:23]\n")
- (position . 2210))
+ (front-context-string . "* TODO Check out")
+ (rear-context-string . "ILETAGS: REFILE\n")
+ (position . 106))
 )

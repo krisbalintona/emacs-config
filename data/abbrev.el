@@ -1,4 +1,9 @@
 ;;-*-coding: utf-8;-*-
+(define-abbrev-table 'emacs-lisp-mode-abbrev-table
+  '(
+    ("priveleges" "privileges" nil :count 0)
+   ))
+
 (define-abbrev-table 'latex-mode-abbrev-table
   '(
     ("doublespacing" "Double-spacing" nil :count 0)
