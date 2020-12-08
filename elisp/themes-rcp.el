@@ -29,7 +29,7 @@
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
-  :demand t
+  :after faces-rcp
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
