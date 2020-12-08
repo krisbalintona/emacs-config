@@ -63,11 +63,6 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "spelling-and-grammar.org"))
 ;;; Packages
 
-;;; CompileElisp
-(byte-recompile-directory (expand-file-name "elisp" user-emacs-directory) 0)
-(byte-recompile-directory (expand-file-name "configs" user-emacs-directory) 0)
-;;; CompileElisp
-
 (provide 'init)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
