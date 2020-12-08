@@ -69,61 +69,7 @@ Allow faces to be selectively fixed- or variable-pitch
     )
 #+END_SRC
 
-* UI and appearance
-
-** Set theme
-
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package doom-themes
-  ;;   :config (load-theme 'doom-dracula t))
-  ;; (use-package doom-themes
-  ;;   :config (load-theme 'doom-palenight t))
-  (use-package atom-one-dark-theme
-    :config (load-theme 'atom-one-dark t))
-  ;; (use-package mood-one-theme
-  ;;   :config (load-theme 'mood-one t))
-  ;; (use-package spacemacs-theme
-  ;;   :config (load-theme 'spacemacs-dark t))
-#+END_SRC
-
-** Show line numbers
-
-Column number in modeline
-#+BEGIN_SRC emacs-lisp
-  (column-number-mode)
-#+END_SRC
-
-Set linum-numbers mode
-#+BEGIN_SRC emacs-lisp
-  (setq display-line-numbers-type 'relative)
-
-  ;; Enabled for these
-  (dolist (mode '(prog-mode-hook
-                  LaTeX-mode-hook
-                  ))
-    (add-hook mode (lambda () (display-line-numbers-mode 1))))
-
-  ;; Disabled for these
-  (dolist (mode '(org-mode-hook
-                  shell-mode-hook
-                  eshell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
-#+END_SRC
-
-** Transparency
-
-#+BEGIN_SRC emacs-lisp
-  (set-frame-parameter (selected-frame) 'alpha '(98 . 85))
-  (add-to-list 'default-frame-alist '(alpha . (98 . 85)))
-#+END_SRC
-
-** Line spacing
-
-#+BEGIN_SRC emacs-lisp
-  (setq line-spacing 0) ; This is default
-#+END_SRC
-
-** Doom-modeline
+* Doom-modeline
 
 Sleek modeline from Doom
 #+BEGIN_SRC emacs-lisp
@@ -170,7 +116,7 @@ Sleek modeline from Doom
     )
 #+END_SRC
 
-*** Modeline additions
+** Modeline additions
 
 Minor modeline additions/settings
 #+begin_src emacs-lisp
