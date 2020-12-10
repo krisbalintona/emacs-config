@@ -8,12 +8,13 @@ Zettelkasten and Evergreen notes
     ;; :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master") ; Incompatible with straight.el
     :straight (org-roam :type git :host github :repo "org-roam/org-roam")
     :after company ; Necessary for some reason
-    :hook (server-after-make-frame . (lambda () (org-roam-mode t)))
+    :hook (server-after-make-frame . org-roam-mode)
     :custom
     (org-roam-directory kb/roam-dir)
     (org-roam-verbose nil) ; Don't echo messages that aren't errors
     ;; (org-roam-completion-system 'ivy) ; I set this to default to use selectrum
     (org-roam-completion-everywhere t) ; Org-roam completion everywhere
+    (org-roam-db-update-idle-seconds 1)
     (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
     (org-roam-buffer-window-parameters '((no-other-window . t)
                                          (no-delete-other-windows . t)
@@ -55,7 +56,7 @@ Zettelkasten and Evergreen notes
       "nI" '(org-roam-jump-to-index :which-key "Go to index")
       ;; "nI" '(org-roam-insert-immediate :which-key "Insert now") ; Calls org-roam-capture-immediate-template
       "nl" '(org-roam :which-key "Toggle Roam buffer")
-      "nL" '(org-roam-db-build-cache :which-key "Rebuild cache")
+      "nL" '(org-roam-db-build-cache :which-key "Build cache")
       "nc" '(org-roam-capture :which-key "Roam capture")
 
       "nD" '(:ignore t :which-key "Call the doctor")
