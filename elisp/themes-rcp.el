@@ -72,6 +72,7 @@
 
   ;; Show battery
   (use-package battery
+    :straight nil
     :custom
     (battery-load-critical 15)
     (battery-load-low 25)

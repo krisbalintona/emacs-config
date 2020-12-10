@@ -113,7 +113,7 @@
           ;; ;; real buffers (`doom-real-buffer-p')
           ;; (doom/kill-this-buffer-in-all-windows buf t)
           ;; (doom--update-files path)
-          (kb/kill-current-buffer)
+          (kill-this-buffer)
           (message "Deleted %S" short-path))))))
 
 ;;;;; Keybinds
@@ -132,7 +132,6 @@
 ;; Display a random quote in the minibuffer after a certain amount of idle time.
 ;; It's useful to get inspiration when stuck writing
 (defconst kb/quotes
-  "Good quotes they can be useful for creative writers as well."
   '("You can't see paradise, if you don't pedal.  - Chicken Run "
     "He who who says he can and he who says he can’t are both usually right ― Confucius"
     "Why waste time proving over and over how great you are when you could be getting better? - Dweck The Mindset"
@@ -141,6 +140,7 @@
     "A writer is a sum of their experiences. Go get some - Stuck in Love (2012)"
     "If there is any one secret of success, it lies in the ability to get the other person's point of view and see things from that person's angle as well as from your own. - Henry Ford"
     "People who can put themselves in the place of other people who can understand the workings of their minds, need never worry about what the future has in store for them. - Owen D. Young"
+    "Good quotes they can be useful for creative writers as well."
     ))
 
 (defun kb/show-random-quotes ()
