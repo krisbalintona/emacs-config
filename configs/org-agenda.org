@@ -567,7 +567,7 @@ Autoload the package and start with no views
                              '((:discard (:not (:todo "TICKLE")))
                                (:name "Unscheduled" :and (:deadline nil :scheduled nil))
                                (:name "Missed" :and (:deadline past :scheduled past))
-                               (:name "Other" :anything t)
+                               (:name "Future?" :and (:deadline future :scheduled future))
                                ))
                             ))
                   ))

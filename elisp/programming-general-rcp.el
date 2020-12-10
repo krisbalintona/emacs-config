@@ -204,9 +204,7 @@
 ;; Re-formats code automatically for some languages. Dependent on the prettier
 ;; npm package
 (use-package prettier
-  :config
-  (global-prettier-mode)
-  (global-prettify-symbols-mode)
+  :hook ((prog-mode text-mode) . (global-prettier-mode global-prettify-symbols-mode))
   )
 
 ;;;; Syntax checking
