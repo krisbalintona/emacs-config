@@ -80,6 +80,7 @@
 ;;;;; Auto-dictionary
 ;; Automatically change ispell dictionary based on contents of buffer
 (use-package auto-dictionary
+  :disabled t ; Seeing what effect it has
   :after flyspell
   :hook (flyspell-mode . auto-dictionary-mode)
   )
