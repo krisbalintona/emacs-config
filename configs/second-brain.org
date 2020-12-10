@@ -106,7 +106,7 @@ Interactive browser graph view
     (org-roam-server-default-include-filters "null") ; Default inclusion
     :config
     (if (daemonp) ; Don't start server if not in daemon mode, otherwise will break things
-        (add-hook 'org-roam-mode-hook 'org-roam-server-mode)) 
+        (add-hook 'org-roam-mode-hook 'org-roam-server-mode))
     )
 #+END_SRC
 
@@ -169,7 +169,7 @@ Allow transclusion of org files
     :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion" :branch "main")
     :config
     (kb/leader-keys
-      "tc" '(org-transclusion-mode :which-key "Org-transclusion")
+      "tC" '(org-transclusion-mode :which-key "Org-transclusion")
       )
     )
 #+end_src
