@@ -28,20 +28,6 @@ Have more descriptive and helpful function and variable descriptions
 #+END_SRC
 
 
-* Beacon
-
-Cool version of nav-flash
-#+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :custom
-    (beacon-blink-when-focused t) ; Blink when Emacs comes into focus
-    (beacon-blink-delay 0.04)
-    (beacon-blink-duration 0.5)
-    :config
-    (beacon-mode)
-    )
-#+END_SRC
-
 * Saveplace
 
 Save and restore point in files
@@ -73,12 +59,36 @@ Show keybinds
     )
 #+END_SRC
 
+* Beacon
+
+Cool version of nav-flash
+#+BEGIN_SRC emacs-lisp
+  (use-package beacon
+    :custom
+    (beacon-blink-when-focused t) ; Blink when Emacs comes into focus
+    (beacon-blink-delay 0.04)
+    (beacon-blink-duration 0.5)
+    :config
+    (beacon-mode)
+    )
+#+END_SRC
+
 * All-the-icons
 
 #+BEGIN_SRC emacs-lisp
   (use-package all-the-icons
     :custom
     (all-the-icons-scale-factor 1.1)
+    )
+#+END_SRC
+
+* Emojify
+
+Show emojiis
+#+BEGIN_SRC emacs-lisp
+  (use-package emojify
+    :custom
+    (global-emojify-mode t)
     )
 #+END_SRC
 
@@ -174,25 +184,6 @@ Color-code your parentheses
         (add-hook 'server-after-make-frame-hook 'kb/fix-unicode-fonts)
       (add-hook 'window-setup-hook 'kb/fix-unicode-fonts))
     )
-#+END_SRC
-
-* Emojify
-
-Show emojiis
-#+BEGIN_SRC emacs-lisp
-  (use-package emojify
-    :custom
-    (global-emojify-mode t)
-    )
-#+END_SRC
-
-* Pinetry
-
-Emacs can be prompted for the PIN of GPG private keys, we just need to set epa-pinentry-mode to accomplish that:
-- Doom has this settings as well
-#+BEGIN_SRC emacs-lisp
-  (setq epg-pinentry-mode 'loopback)
-  ;; (pinentry-start) ; This function doesn't exist?
 #+END_SRC
 
 * Anzu
