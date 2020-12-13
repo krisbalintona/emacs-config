@@ -908,6 +908,8 @@ Essentially counsel but for selectrum!
     :after selectrum
     :straight (consult :type git :host github :repo "minad/consult")
     :hook (selectrum-mode . consult-preview-mode)
+    :custom
+    (consult-preview-outline nil) ; Annoying
     :config
     ;; (add-to-list 'consult-annotate-alist
     ;;              '(execute-extended-command . consult-annotate-command)) ; Show more information in default M-x
