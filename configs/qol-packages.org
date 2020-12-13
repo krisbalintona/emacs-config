@@ -204,6 +204,10 @@ Highlight indicators during replace and regexp
 Incrementally select a region outward
 #+begin_src emacs-lisp
   (use-package expand-region
+    :custom
+    (expand-region-smart-cursor t)
+    (expand-region-skip-whitespace nil)
+    (expand-region-subword-enabled t)
     :config
     (general-define-key
      :keymaps '(normal motion visaul)
