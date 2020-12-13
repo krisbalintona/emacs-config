@@ -14,7 +14,8 @@ Zettelkasten and Evergreen notes
     (org-roam-verbose nil) ; Don't echo messages that aren't errors
     ;; (org-roam-completion-system 'ivy) ; I set this to default to use selectrum
     (org-roam-completion-everywhere t) ; Org-roam completion everywhere
-    (org-roam-db-update-idle-seconds 1)
+    (org-roam-db-update-method 'immediate)
+    (org-roam-db-update-idle-seconds 1) ; Save immediately - applies only if org-roam-db-update-method is set to idle-timer
     (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
     (org-roam-buffer-window-parameters '((no-other-window . t)
                                          (no-delete-other-windows . t)
@@ -309,7 +310,6 @@ with org-roam (provides templates and modifies edit notes action)
        ;;  :unnarrowed t)
        ))
     :config
-
     (kb/leader-keys
       "nBs" '(orb-find-non-ref-file :which-key "Search non-bibliographic Roam notes")
       "nBi" '(orb-insert-non-ref :which-key "Insert non-bibliographic Roam note")
