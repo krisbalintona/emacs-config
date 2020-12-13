@@ -1,5 +1,17 @@
 #+TITLE: Base Configuration Settings
 
+* Display-fill-column-indicator-mode
+
+Visually indicates where the fill-column is
+#+begin_src emacs-lisp
+  (use-package display-fill-column-indicator
+    :straight nil
+    :hook (prog-mode . display-fill-column-indicator-mode)
+    :config
+    (set-face-attribute 'fill-column-indicator nil :foreground "grey25") ; Change color of line
+    )
+#+end_src
+
 * Recentf
 
 Enable logging of recent files
