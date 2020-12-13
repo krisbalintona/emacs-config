@@ -184,7 +184,7 @@
 ;;;;; Smartparens
 ;; Autopairing parentheses
   (use-package smartparens
-    :hook (((eshell-mode sh-mode lua-mode text-mode) . smartparens-mode)
+    :hook (((sh-mode lua-mode text-mode) . smartparens-mode)
            (smartparens-mode . show-smartparens-mode)) ; Subtlely highlight matching parentheses
     :custom
     (sp-show-pair-from-inside t)
