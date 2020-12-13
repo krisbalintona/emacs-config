@@ -239,10 +239,14 @@
                  (side            . bottom)
                  (reusable-frames . visible)
                  (window-height   . 0.33)))
+
+  (kb/leader-keys
+    "lf" '(flycheck-list-errors :which-key "List flycheck errors")
+    )
   )
 
 ;;;;; Flycheck-pos-tip-mode
-;; Shows flychek errors in pos-tip popup
+;; Shows flycheck errors in pos-tip popup
 (use-package flycheck-pos-tip
   :after flycheck
   :hook (flycheck-mode . flycheck-pos-tip-mode)
@@ -306,7 +310,6 @@
    )
 
   (kb/leader-keys
-    "lf" '(flycheck-list-errors :which-key "List flycheck errors")
     "ld" 'xref-find-definitions
     "lr" 'xref-find-references
     "ln" 'lsp-ui-find-next-reference
