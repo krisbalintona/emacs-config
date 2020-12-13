@@ -5,7 +5,7 @@
 
 ** Org-mode itself
 
-Stlying (called in org-superstar)
+Styling (called in org-superstar)
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :hook (org-mode . kb/org-visual-setup)

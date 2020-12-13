@@ -8,13 +8,12 @@
     :straight nil
     :hook ((eshell-mode . (lambda () ; UI enhancements
                             (visual-line-mode +1)
-                            (set-display-table-slot standard-display-table 0 ?\ )))
-           (eshell-mode . (lambda () ; Text-wrap
+                            (set-display-table-slot standard-display-table 0 ?\ )
+                            ;; Text-wrap
                             (set-window-fringes nil 0 0)
-                            (set-window-margins nil 1 nil)))
-           (eshell-mode . (lambda () (setq-local scroll-margin 3))) ; Scroll-margin
-           (eshell-mode . (lambda () ; Change default face size
-                            (face-remap-add-relative 'default :height 127) 
+                            (set-window-margins nil 1 nil)
+                            (face-remap-add-relative 'default :height 127) ; Change default face size
+                            (setq-local scroll-margin 3) ; Scroll-margin
                             ))
            )
     :custom
