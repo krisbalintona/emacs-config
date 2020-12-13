@@ -137,7 +137,7 @@ Templates for inserting files into my Zettelkasten
            :immediate-finish t
            :unnarrowed t)
           ("i" "New quote" plain (function org-roam--capture-get-point)
-           "\n\n* %?"
+           "\n\n* Insight%?"
            :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
            :head "#+TITLE: ${title}\n#+ROAM_TAGS: quote\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- TAGS :: \n- LINKS :: \n\n---"
            :unnarrowed t
