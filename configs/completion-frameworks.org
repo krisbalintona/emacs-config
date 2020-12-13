@@ -451,6 +451,11 @@ Advanced =complete-read=
     (amx-backend 'selectrum)
     (projectile-completion-system 'default)
     (org-roam-completion-system 'default)
+    :config
+    ;; Selectrum minibuffer faces
+    (set-face-attribute 'selectrum-current-candidate nil :inherit '(ivy-current-match all-the-icons-ivy-rich-icon-face))
+    (set-face-attribute 'selectrum-primary-highlight nil :inherit 'ivy-minibuffer-match-face-2)
+    (set-face-attribute 'selectrum-secondary-highlight nil :inherit 'ivy-minibuffer-match-face-3)
     )
 #+end_src
 
