@@ -23,8 +23,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* TODO Check out")
- (rear-context-string . "ILETAGS: REFILE\n")
- (position . 106))
+ (filename . "~/Documents/org-database/roam/Dec082020-221513.org")
+ (front-context-string . "#+TITLE: The fir")
+ (rear-context-string)
+ (position . 1))
 )

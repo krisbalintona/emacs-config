@@ -128,3 +128,48 @@ systemctl status --user mbsync
 git log
 stc
 stl
+sudo timeshift --create --comment "Right before trying to fix mbsync"
+systemctl status --user emacs
+sudo timeshift --create --comment "In the middle of my third class note"
+stl
+stc
+stc
+cat .gitignore
+stc
+stc
+find ./roam -type f -exec sed -i 's/lindbergBeginningsWesternSciencecite:lindbergBeginningsWesternScience/lindbergBeginningsWesternScience2007/' {} \;
+find ./roam -type f -exec sed -i 's/lindbergBeginningsWesternScience/lindbergBeginningsWesternScience2007/' {} \;
+sudo timeshift --create --comment "After taking notes on all my class' lectures"
+sudo timeshift --create --comment "Completed my first full outline"
+stl
+sudo timeshift --create --comment "Writing my first draft"
+stc
+stl
+sudo timeshift --help
+stl
+sudo timeshift --delete 37
+sudo timeshift --delete "2020-12-11_04-51-55"
+sudo timeshift --delet
+sudo timeshift --delete
+stc
+du /boot/
+du -H /boot/
+sudo du -h /boot/
+stl
+yay -Ss latex
+yay -Ss texlive
+yay -Ss texlive-most
+yay -S texlive-most
+stc
+sudo timeshift --delete
+sudo timeshift --create --comment "Before I eat breakfast. After reaching the empirical rationalism section of my essay"
+stl
+sudo timeshift --create --comment "Before I eat breakfast. After reaching the empirical rationalism section of my essay"
+stl
+sudo timeshift --delete 0
+sudo timeshift --delete 0
+sudo timeshift --delete
+sudo timeshift --delete
+sudo timeshift --create --comment "After reaching my limit"""""
+sudo timeshift --create --comment "After reaching my limit"
+sudo timeshift --create --comment "After finishing my first draft"
