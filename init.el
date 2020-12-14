@@ -54,7 +54,12 @@
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
+
+;;;;; Completion frameworks
+(require 'completion-general-rcp)
 (org-babel-load-file (concat user-emacs-directory "configs/" "completion-frameworks.org"))
+
+
 (org-babel-load-file (concat user-emacs-directory "configs/" "buffer-management.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "evil-packages.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "email.org"))
