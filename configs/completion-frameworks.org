@@ -223,7 +223,7 @@ Remapping original commands to an Ivy-esque version
            ("C-x l" . 'counsel-locate)
            ;; ("C-h f" . 'counsel-describe-function)
            ;; ("C-h v" . 'counsel-describe-variable)
-           ("C-h o" . 'counsel-describe-symbol)
+           ;; ("C-h o" . 'counsel-describe-symbol)
            :map minibuffer-local-map
            ("C-r" . 'counsel-minibuffer-history)
            )
