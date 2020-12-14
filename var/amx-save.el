@@ -1,18 +1,18 @@
 
 ;; ----- amx-history -----
 (
- customize-group
- ido-find-file
- counsel-grep-or-swiper
- eval-expression
- copy-file
- kill-this-buffer
- org-ref-insert-cite-with-completion
+ revert-buffer
+ global-auto-revert-mode
+ company-mode
+ esup
+ bug-hunter-init-file
+ flycheck-buffer
+ outshine-imenu
 )
 
 ;; ----- amx-data -----
 (
- (customize-group . 55)
+ (customize-group . 56)
  (pdf-tools-install . 2)
  (load-file . 4)
  (counsel-load-library . 28)
@@ -29,7 +29,7 @@
  (langtool-check-done . 2)
  (explain-pause-mode . 3)
  (calendar . 1)
- (counsel-imenu . 8)
+ (counsel-imenu . 9)
  (org-tree-to-indirect-buffer . 1)
  (lexic-search . 1)
  (lexic-search-word-at-point . 2)
@@ -62,7 +62,7 @@
  (org-noter-kill-session . 17)
  (company-tng-configure-default . 1)
  (company-tng-mode . 1)
- (global-auto-revert-mode . 6)
+ (global-auto-revert-mode . 16)
  (git-gutter-mode . 2)
  (global-git-gutter-mode . 1)
  (highlight-function-calls-mode . 4)
@@ -95,7 +95,7 @@
  (helm-projectile-on . 1)
  (helm-projectile-find-file . 3)
  (projectile-global-mode . 1)
- (esup . 10)
+ (esup . 11)
  (flyspell-mode . 23)
  (artbollocks-count-words . 1)
  (artbollocks-mode . 5)
@@ -152,11 +152,11 @@
  (recover-session-finish . 1)
  (text-scale-mode . 4)
  (text-scale-adjust . 1)
- (visual-fill-column-mode . 6)
+ (visual-fill-column-mode . 8)
  (org-id-store-link . 2)
  (org-insert-link . 2)
  (org-insert-last-stored-link . 1)
- (company-mode . 1)
+ (company-mode . 2)
  (samray/esh-history . 1)
  (git-timemachine-show-previous-revision . 2)
  (org-toggle-checkbox . 1)
@@ -189,7 +189,7 @@
  (kb/refile-to-datetree-using-ts . 1)
  (unpackaged/org-refile-to-datetree . 1)
  (counsel-flycheck . 8)
- (flycheck-buffer . 5)
+ (flycheck-buffer . 6)
  (flycheck-list-errors . 1)
  (flycheck-select-checker . 1)
  (flycheck-error-list-explain-error . 1)
@@ -233,7 +233,7 @@
  (consult-minor-mode . 3)
  (consult-theme . 1)
  (consult-yank-pop . 1)
- (execute-extended-command . 8)
+ (execute-extended-command . 11)
  (counsel-grep-or-swiper . 2)
  (imenu . 3)
  (outline-show-all . 3)
@@ -257,12 +257,12 @@
  (org-latex-export-to-pdf . 1)
  (TeX-interactive-mode . 4)
  (preview-buffer . 2)
- (which-key-mode . 3)
+ (which-key-mode . 5)
  (org-version . 1)
  (reftex-view-crossref . 5)
  (outshine-speed-command-help . 4)
- (outshine-mode . 27)
- (outshine-imenu . 6)
+ (outshine-mode . 31)
+ (outshine-imenu . 7)
  (outshine-kbd-TAB . 2)
  (outshine-latex-insert-header . 5)
  (outshine-cycle-buffer . 3)
@@ -309,12 +309,12 @@
  (deft-find-file . 1)
  (electric-quote-local-mode . 1)
  (electric-quote-mode . 2)
- (copy-file . 14)
+ (copy-file . 15)
  (outshine-insert-heading . 1)
  (kb/move-this-file . 1)
  (outline-promote . 1)
  (outline-demote . 1)
- (bug-hunter-init-file . 14)
+ (bug-hunter-init-file . 15)
  (project-find-file . 1)
  (flycheck-status-emoji-mode . 2)
  (global-prettier-mode . 2)
@@ -326,7 +326,7 @@
  (org-meta-return . 1)
  (counsel-major . 1)
  (mixed-pitch-mode . 2)
- (revert-buffer . 4)
+ (revert-buffer . 8)
  (display-fill-column-indicator-mode . 13)
  (consult-kmacro . 1)
  (consult-yank-replace . 1)
@@ -336,4 +336,9 @@
  (org-ref-insert-cite-with-completion . 2)
  (org-ref-ivy-insert-cite-link . 2)
  (ido-find-file . 1)
+ (speedbar . 2)
+ (speedbar-mode . 3)
+ (speedbar-menu-map . 1)
+ (global-semantic-decoration-mode . 4)
+ (describe-symbol . 1)
 )

@@ -173,3 +173,15 @@ sudo timeshift --delete
 sudo timeshift --create --comment "After reaching my limit"""""
 sudo timeshift --create --comment "After reaching my limit"
 sudo timeshift --create --comment "After finishing my first draft"
+stc
+stc
+sudo timeshift --delete
+sudo timeshift --create --comment "Just finished section on writing"
+stl
+sudo timeshift --create --comment "After editing my section on rational empiricism"
+sudo timeshift --delete
+find ./roam -type f -exec sed -i 's/crosbyMeasureRealityQuantification/crosbyMeasureRealityQuantification1997/' {} \;
+find ./roam -type f -exec sed -i 's/augustineBasicWritingsSaint/augustineBasicWritingsSaint1992/' {} \;
+find ./roam -type f -exec sed -i 's/sanchesThatNothingKnown/sanchezThatNothingKnown1988/' {} \;
+find ./roam -type f -exec sed -i 's/baconNovumOrganum/hutchinsGreatBooksWestern1955/' {} \;
+sudo timeshift --create --comment "After submitting my final"
