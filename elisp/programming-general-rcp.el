@@ -90,45 +90,6 @@
     )
   )
 
-;;;; Counsel-projectile
-;; Use Ivy as projectile interface
-(use-package counsel-projectile
-  :after (counsel projectile)
-  :hook (counsel-mode . counsel-projectile-mode)
-  :config
-  ;; ;; Hydra menu
-  ;; (pretty-hydra-define hydra:counsel-projectile
-  ;;   (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
-  ;;   ("Projectile"
-  ;;    (("i" projectile-invalidate-cache :color red)
-  ;;     ("n" projectile-add-known-project))
-  ;;    "Buffers"
-  ;;    (("b" counsel-projectile-switch-to-buffer)
-  ;;     ("K" projectile-kill-buffers)
-  ;;     ("S" projectile-save-project-buffers))
-  ;;    "Find"
-  ;;    (("d" counsel-projectile-find-dir)
-  ;;     ("D" projectile-dired)
-  ;;     ("f" counsel-projectile-find-file)
-  ;;     ("p" counsel-projectile-switch-project))
-  ;;    "Search"
-  ;;    (("r" projectile-replace)
-  ;;     ("R" projectile-replace-regexp)
-  ;;     ("s" counsel-projectile-rg))
-  ;;    ))
-
-  ;; (kb/leader-keys
-  ;;   "p" '(:ignore t :which-key "Projectile")
-  ;;   "p?" '(hydra:counsel-projectile/body :which-key "Help menu")
-  ;;   "pf"  'counsel-projectile-find-file
-  ;;   "pp"  'counsel-projectile-switch-project
-  ;;   "ps"  'counsel-projectile-rg
-  ;;   "pb"  'counsel-projectile-switch-to-buffer
-  ;;   "pD"  'projectile-dired
-  ;;   ;; "pc"  'projectile-compile-project
-  ;;   )
-  )
-
 ;;;;; Magit
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
@@ -172,6 +133,56 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-general-rcp)
+;;;;; Counsel-projectile
+;; Use Ivy as projectile interface
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :hook (counsel-mode . counsel-projectile-mode)
+  :config
+  ;; ;; Hydra menu
+  ;; (pretty-hydra-define hydra:counsel-projectile
+  ;;   (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
+  ;;   ("Projectile"
+  ;;    (("i" projectile-invalidate-cache :color red)
+  ;;     ("n" projectile-add-known-project))
+  ;;    "Buffers"
+  ;;    (("b" counsel-projectile-switch-to-buffer)
+  ;;     ("K" projectile-kill-buffers)
+  ;;     ("S" projectile-save-project-buffers))
+  ;;    "Find"
+  ;;    (("d" counsel-projectile-find-dir)
+  ;;     ("D" projectile-dired)
+  ;;     ("f" counsel-projectile-find-file)
+  ;;     ("p" counsel-projectile-switch-project))
+  ;;    "Search"
+  ;;    (("r" projectile-replace)
+  ;;     ("R" projectile-replace-regexp)
+  ;;     ("s" counsel-projectile-rg))
+  ;;    ))
+
+  ;; (kb/leader-keys
+  ;;   "p" '(:ignore t :which-key "Projectile")
+  ;;   "p?" '(hydra:counsel-projectile/body :which-key "Help menu")
+  ;;   "pf"  'counsel-projectile-find-file
+  ;;   "pp"  'counsel-projectile-switch-project
+  ;;   "ps"  'counsel-projectile-rg
+  ;;   "pb"  'counsel-projectile-switch-to-buffer
+  ;;   "pD"  'projectile-dired
+  ;;   ;; "pc"  'projectile-compile-project
+  ;;   )
+  )
+
+;;;;; Helm-projectile
+;; Projectile with helm
+(use-package helm-projectile
+  :after (helm projectile)
+  ;; :hook (projectile-mode . helm-projectile-on)
+  :preface (use-package helm-rg) ; Required for helm-projectile-rg
+  :custom
+  (projectile-completion-system 'helm)
+  (projectile-switch-project-action 'helm-projectile)
+  )
+
 ;;;; Aesthetics
 ;;;;; Git-gutter-fringes
 ;; Show diffs in fringes. Taken from
