@@ -38,8 +38,9 @@
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
   :hook ((LaTeX-mode . outshine-mode)
          (prog-mode . outshine-mode)
+         (outshine-mode . display-line-numbers-mode)
          (outshine-mode . visual-line-mode)
-         (outshine-mode . display-line-numbers-mode))
+         )
   :preface
   (defvar outline-minor-mode-prefix (kbd "M-#"))
   :custom
