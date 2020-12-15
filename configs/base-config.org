@@ -5,6 +5,7 @@
 Visually indicates where the fill-column is
 #+begin_src emacs-lisp
   (use-package display-fill-column-indicator
+    :disabled t ; Don't find it useful or pleasant to look at
     :straight nil
     :hook (prog-mode . display-fill-column-indicator-mode)
     :config
