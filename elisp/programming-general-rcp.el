@@ -321,6 +321,16 @@
   :hook (flycheck-mode . flycheck-status-emoji-mode)
   )
 
+;;;;; Consult-flycheck
+;; List flycheck errors in minibuffer with consult
+(use-package consult-flycheck
+  :after consult
+  :hook (text-mode . (lambda ()
+                       (kb/leader-keys
+                         "le" '(consult-flycheck :which-key "Consult flycheck"))
+                       ))
+  )
+
 ;;;; IDE-like features
 ;;;;; Lsp-mode
 ;; More IDE features in Emacs

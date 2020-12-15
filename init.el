@@ -59,6 +59,7 @@
 (require 'completion-general-rcp)
 (require 'completion-company-rcp)
 (require 'completion-ivy-rcp)
+(require 'completion-selectrum-rcp)
 (org-babel-load-file (concat user-emacs-directory "configs/" "completion-frameworks.org"))
 
 
