@@ -902,7 +902,7 @@ For Selectrum
 
 ** Consult.el
 
-Essentially counsel but for selectrum!
+Essentially counsel but for default Emacs (and thus selectrum!)
 #+begin_src emacs-lisp
   (use-package consult
     :after selectrum
@@ -910,9 +910,31 @@ Essentially counsel but for selectrum!
     :hook (selectrum-mode . consult-preview-mode)
     :custom
     (consult-preview-outline nil) ; Annoying
+    (consult-mode-histories ; What variable consult-history looks at for history
+     '((eshell-mode . eshell-history-ring)
+       (comint-mode . comint-input-ring)
+       (term-mode . term-input-ring))
+     )
+  
+    (consult-narrow-key [?<])
+    (consult-widen-key [?< ?<])
+  
+    ;; Optional configure a "view" library to be used by `consult-buffer`.
+    ;; The view library must provide two functions, one to open the view by name,
+    ;; and one function which must return a list of views as strings.
+    ;; Example: https://github.com/minad/bookmark-view/
+    ;; (setq consult-view-open-function #'bookmark-jump
+    ;;       consult-view-list-function #'bookmark-view-names)
     :config
-    ;; (add-to-list 'consult-annotate-alist
-    ;;              '(execute-extended-command . consult-annotate-command)) ; Show more information in default M-x
+    (general-define-key
+     [remap apropos-command] '(consult-apropos :which-key "Consult apropos")
+     )  
+
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (kb/leader-keys
+                 "le" '(consult-error :which-key "Consult error"))
+                ))
 
     (kb/leader-keys
       "bb" '(consult-buffer :which-key "Consult buffer")
@@ -921,14 +943,27 @@ Essentially counsel but for selectrum!
       ;; ("C-x r x" . consult-register)
       "mm" '(counsel-bookmark :which-key "Consult bookmark")
       "mr" '(consult-mark :which-key "Consult mark-ring")
-      "sm" '(consult-mark :which-key "Consult mark")
       "so" '(consult-outline :which-key "Consult outline")
       "ss" '(consult-line :which-key "Consult swiper")
+      "si" '(consult-imenu :which-key "Consult imenu")
       ;; ("-s m" . consult-multi-occur)
       "ff" '(find-file :which-key "Find file")
       "iy" '(consult-yank-pop :which-key "Consult yank-pop")
       "ha" '(consult-apropos :which-key "Consult apropos")
       )
+    )
+#+end_src
+
+** Consult-flycheck
+
+List flycheck errors in minibuffer with consult
+#+begin_src emacs-lisp
+  (use-package consult-flycheck
+    :after consult
+    :hook (text-mode . (lambda ()
+                         (kb/leader-keys
+                          "le" '(consult-flycheck :which-key "Consult flycheck"))
+                         ))
     )
 #+end_src
 
@@ -940,7 +975,7 @@ Enable richer annotations in minibuffer (companion package of consult.el)
     :straight (marginalia :type git :host github :repo "minad/marginalia")
     :hook (selectrum-mode . marginalia-mode)
     :custom
-    (marginalia-annotators 'marginalia-annotators-heavy) ; Show as much information as possible
+    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)) ; Show as much information as possible
     )
 #+end_src
 
