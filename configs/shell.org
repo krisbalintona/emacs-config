@@ -38,6 +38,7 @@
     (add-hook 'eshell-pre-command-hook #'eshell-append-history)
 
     ;; Modified version of counsel-esh-history
+    ;; Obsolete now with consult-history
     (defun kb/esh-history ()
       "Interactive search eshell history."
       (interactive)
@@ -66,7 +67,7 @@
     (general-define-key
      :keymaps 'eshell-mode-map
      [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
-     [remap eshell-previous-matching-input] 'kb/esh-history ; Eshell history
+     [remap eshell-previous-matching-input] 'consult-history ; Eshell history
      "<home>" 'eshell-bol
      )
     )
