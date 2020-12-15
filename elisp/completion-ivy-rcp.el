@@ -136,14 +136,12 @@
 ;; Show icons with ivy-rich
 (use-package all-the-icons-ivy-rich
   :after (ivy-rich all-the-icons)
-  :hook (ivy-rich-mode . all-the-icons-ivy-rich-mode)
   :custom
   (all-the-icons-ivy-rich-icon-size 0.9) ; The icon size
   ;; Slow Rendering
   ;; If you experience a slow down in performance when rendering multiple icons simultaneously,
   ;; you can try setting the following variable
   (inhibit-compacting-font-caches t)
-  :config
   )
 
 ;;;; Candidate selection and sorting
