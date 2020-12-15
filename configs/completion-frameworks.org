@@ -1,15 +1,5 @@
 #+TITLE: Completion Frameworks
 
-* Prescient
-
-#+begin_src emacs-lisp
-  (use-package prescient
-    :after (ivy counsel swiper) ; Needs to be called after counsel so that counsel doesn't overwrite stuff
-    :config
-    (prescient-persist-mode)
-    )
-#+end_src
-
 * Ivy
 
 ** Ivy itself
