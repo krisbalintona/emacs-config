@@ -8,7 +8,8 @@
 ;;;; Company
 ;; Point auto-completion backend
 (use-package company
-  :hook (company-mode . evil-normalize-keymaps)
+  :hook ((after-init . global-company-mode)
+         (company-mode . evil-normalize-keymaps))
   :custom
   (company-show-numbers t) ; Number the candidates
   (company-tooltip-offset-display nil)
@@ -29,7 +30,6 @@
   ;; ;; These are the backends that Doom has active
   ;; (company-backends '(company-dabbrev company-yasnippet company-ispell))
   :config
-  (global-company-mode)
   (add-to-list 'company-backends 'company-capf) ; For org-roam
 
   (general-define-key
