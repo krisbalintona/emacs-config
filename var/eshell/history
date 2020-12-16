@@ -185,3 +185,24 @@ find ./roam -type f -exec sed -i 's/augustineBasicWritingsSaint/augustineBasicWr
 find ./roam -type f -exec sed -i 's/sanchesThatNothingKnown/sanchezThatNothingKnown1988/' {} \;
 find ./roam -type f -exec sed -i 's/baconNovumOrganum/hutchinsGreatBooksWestern1955/' {} \;
 sudo timeshift --create --comment "After submitting my final"
+sudo timeshift --delete
+sudo timeshift --create --comment "After submitting my final"
+stl
+sudo timeshift --delete
+sudo timeshift --create --comment "After submitting my final"
+stc
+ffo ~/.config/rofi/themes/dt-center.rasi
+sudo timeshift --create --comment "Awesomewm stuff"
+~/Pictures
+ls
+pwd
+stl
+sudo timeshift --delete-all
+ls
+mkdir scripts
+scripts
+..
+mkdir -p scripts/Scripts
+tree
+stl
+sudo timeshift --create --comment "After writing internal-keyboard-toggle script and adding awesomewm keybind"
