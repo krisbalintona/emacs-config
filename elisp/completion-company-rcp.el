@@ -12,7 +12,7 @@
          (company-mode . evil-normalize-keymaps))
   :custom
   (company-show-numbers t) ; Number the candidates
-  (company-tooltip-offset-display nil)
+  (company-tooltip-offset-display 'lines)
   (company-tooltip-width-grow-only t)
   (company-tooltip-flip-when-above t)
   (company-tooltip-align-annotations t)

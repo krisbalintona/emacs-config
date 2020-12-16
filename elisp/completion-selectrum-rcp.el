@@ -52,7 +52,7 @@
   :config
   (general-define-key
    [remap apropos-command] '(consult-apropos :which-key "Consult apropos")
-   )  
+   )
 
   (add-hook 'prog-mode-hook
             (lambda ()
@@ -90,12 +90,10 @@
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
-  :disabled ; For now until I learn more about it
   :straight (embark :type git :host github :repo "oantolin/embark")
   :config
-
   (general-define-key
-   :kemaps 'minibuffer-local-map
+   :keymaps 'selectrum-minibuffer-map
    "M-o" '(embark-act :which-key "Embark-act")
    ;; "?" '(embark-act-noexit :which-key "Embark-act-noexit")
    ;; "?" '(embark-export :which-key "Embark-export")

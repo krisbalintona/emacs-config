@@ -4,22 +4,6 @@
 
 ** Embark
 
-Allow an equivalent to =ivy-actions= to regular =comlete-read= minibuffers
-#+begin_src emacs-lisp
-  (use-package embark
-    :disabled ; For now until I learn more about it
-    :straight (embark :type git :host github :repo "oantolin/embark")
-    :config
-
-    (general-define-key
-     :kemaps 'minibuffer-local-map
-     "M-o" '(embark-act :which-key "Embark-act")
-     ;; "?" '(embark-act-noexit :which-key "Embark-act-noexit")
-     ;; "?" '(embark-export :which-key "Embark-export")
-     )
-    )
-#+end_src
-
 For Selectrum
 #+begin_src emacs-lisp
   (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
