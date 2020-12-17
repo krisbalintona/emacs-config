@@ -44,6 +44,49 @@
   )
 
 ;;;; Project management
+;;;;; Magit
+;; The best git interface. Mostly taken from Mostly taken from
+;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
+(use-package magit
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (auto-revert-check-vc-info nil) ; Fixes VC info on a timer in order to take into account changes made outside of Emacs - causes micro-stutters when too many version controlled buffers
+  (magit-diff-highlight-hunk-body nil)
+  (magit-diff-highlight-hunk-region-functions
+   '(magit-diff-highlight-hunk-region-dim-outside magit-diff-highlight-hunk-region-using-face))
+  (magit-module-sections-nested nil)
+  (magit-popup-display-buffer-action '((display-buffer-same-window)))
+  (magit-refs-show-commit-count 'all)
+  (magit-section-initial-visibility-alist '((modules . show)
+                                            (stashes . show)
+                                            (unpulled . show)
+                                            (unpushed . show)))
+  (magit-section-show-child-count t)
+  (transient-mode-line-format nil)
+  :config
+  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
+  (remove-hook 'magit-section-highlight-hook #'magit-section-highlight)
+
+  (kb/leader-keys
+    "g"  '(:ignore t :which-key "Magit")
+    "gg"  '(magit-status :which-key "Status")
+    "gs"  '(magit-status :which-key "Status")
+    "gd"  'magit-diff-unstaged
+    "gc"  'magit-branch-or-checkout
+    "gl"   '(:ignore t :which-key "Logs")
+    "glc" 'magit-log-current
+    "glf" 'magit-log-buffer-file
+    "gb"  'magit-branch
+    "gP"  '(magit-push-current :which-key "Push")
+    "gp"  'magit-pull-branch
+    "gf"  'magit-fetch
+    "gF"  'magit-fetch-all
+    "gr"  '(magit-rebase :which-key "Rebase")
+    )
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'programming-general-rcp)
 ;;;;; Projectile
 ;; Navigate and manage project directories easier
 (use-package projectile
@@ -90,54 +133,13 @@
     )
   )
 
-;;;;; Magit
-;; The best git interface. Mostly taken from Mostly taken from
-;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
-(use-package magit
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  (auto-revert-check-vc-info nil) ; Fixes VC info on a timer in order to take into account changes made outside of Emacs - causes micro-stutters when too many version controlled buffers
-  (magit-diff-highlight-hunk-body nil)
-  (magit-diff-highlight-hunk-region-functions
-   '(magit-diff-highlight-hunk-region-dim-outside magit-diff-highlight-hunk-region-using-face))
-  (magit-module-sections-nested nil)
-  (magit-popup-display-buffer-action '((display-buffer-same-window)))
-  (magit-refs-show-commit-count 'all)
-  (magit-section-initial-visibility-alist '((modules . show)
-                                            (stashes . show)
-                                            (unpulled . show)
-                                            (unpushed . show)))
-  (magit-section-show-child-count t)
-  (transient-mode-line-format nil)
-  :config
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
-  (remove-hook 'magit-section-highlight-hook #'magit-section-highlight)
-
-  (kb/leader-keys
-    "g"  '(:ignore t :which-key "Magit")
-    "gg"  '(magit-status :which-key "Status")
-    "gs"  '(magit-status :which-key "Status")
-    "gd"  'magit-diff-unstaged
-    "gc"  'magit-branch-or-checkout
-    "gl"   '(:ignore t :which-key "Logs")
-    "glc" 'magit-log-current
-    "glf" 'magit-log-buffer-file
-    "gb"  'magit-branch
-    "gP"  '(magit-push-current :which-key "Push")
-    "gp"  'magit-pull-branch
-    "gf"  'magit-fetch
-    "gF"  'magit-fetch-all
-    "gr"  '(magit-rebase :which-key "Rebase")
-    )
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'programming-general-rcp)
 ;;;;; Counsel-projectile
 ;; Use Ivy as projectile interface
 (use-package counsel-projectile
   :after (counsel projectile)
   :hook (counsel-mode . counsel-projectile-mode)
+  :custom
+  ;; (projectile-completion-system 'ivy) ; Set to default because I use selectrum now
   :config
   ;; ;; Hydra menu
   ;; (pretty-hydra-define hydra:counsel-projectile
