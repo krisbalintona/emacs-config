@@ -84,9 +84,8 @@
   :custom
   (ivy-rich-path-style 'abbrev) ; Abbreviate file names
   :config
-  ;; Change transformer to show variable values
-  (setq-default
-   ivy-rich-display-transformers-list
+  (setq-default 
+    ivy-rich-display-transformers-list ; Change transformer to show variable values
    (plist-put ivy-rich-display-transformers-list
               'counsel-M-x
               '(:columns
@@ -136,6 +135,7 @@
 ;; Show icons with ivy-rich
 (use-package all-the-icons-ivy-rich
   :after (ivy-rich all-the-icons)
+  :hook (ivy-rich-mode . all-the-icons-ivy-rich-mode)
   :custom
   (all-the-icons-ivy-rich-icon-size 0.9) ; The icon size
   ;; Slow Rendering
