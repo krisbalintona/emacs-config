@@ -120,7 +120,6 @@ icon."
       (when-let ((icon doom-modeline--vcs-icon)
                  (text doom-modeline--vcs-text))
         (concat
-         (doom-modeline-spc) ; Two spaces
          (doom-modeline-spc)
          (propertize
           (concat
@@ -208,9 +207,9 @@ UTF-8."
   (doom-modeline-def-segment kb/buffer-default-directory
     "Standard `buffer-default-directory' without the state, icon, and color change."
     (let* ((active (doom-modeline--active))
-           (face (if active 'doom-modeline-buffer-path 'mode-line-inactive)))
+           (face (if active 'doom-modeline-buffer-path 'mode-line-inactive))) ; Don't use here
       (concat (doom-modeline-spc)
-              (propertize (abbreviate-file-name default-directory) 'face face)
+              (propertize (abbreviate-file-name default-directory) 'face 'italic)
               (doom-modeline-spc))))
   (doom-modeline-def-segment me/major-mode
     "The current major mode, including environment information."
@@ -249,7 +248,7 @@ UTF-8."
              'mode-line-inactive)))
 
   (doom-modeline-def-modeline 'main
-    '("  " kb/major-mode-icon kb/mu4e " " bar " " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
+    '("   " kb/major-mode-icon " " kb/mu4e "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
     '(input-method process debug kb/buffer-encoding kb/time battery " " bar " " kb/major-mode checker minor-modes))
   )
 
