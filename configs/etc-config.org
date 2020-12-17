@@ -186,3 +186,21 @@ Using transient to display the pre-configured transient dispatcher for your situ
      )
     )
 #+end_src
+
+* Markdown-mode
+
+Taken from [[https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#markdown][dotemacs/dotemacs.org at master · angrybacon/dotemacs · GitHub]]
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")
+    :custom
+    ;; (markdown-asymmetric-header t) ; Not sure what this does yet
+    (markdown-split-window-direction 'right)
+    :config
+    ;; (general-unbind
+    ;;   :keymaps 'markdown-mode-map
+    ;;   "M-<down>"
+    ;;   "M-<up>"
+    ;;   )
+    )
+#+end_src

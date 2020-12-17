@@ -84,6 +84,21 @@ Use helm to word search through org file and display the corresponding heading o
 
 * Dired-mode
 
+** Dired itself
+
+Emacs' file manager
+#+begin_src emacs-lisp
+  (use-package dired
+    :straight nil
+    :hook (dired-mode . dired-hide-details-mode)
+    :custom
+    (dired-auto-revert-buffer t)
+    (dired-dwim-target t) ; Guess default target directory
+    (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
+    (dired-recursive-copies 'always) ; Copy directories recursively?
+    )
+#+end_src
+
 ** Dired-git
 
 Show git information in dired
