@@ -81,3 +81,31 @@ Use helm to word search through org file and display the corresponding heading o
       )
     )
 #+END_SRC
+
+* Dired-mode
+
+** Dired-git
+
+Show git information in dired
+#+begin_src emacs-lisp
+  (use-package dired-git
+    :hook (dired-mode . dired-git-mode)
+    )
+#+end_src
+
+* Neotree
+
+Neotree for Emacs
+#+begin_src emacs-lisp
+  (use-package neotree
+    :after all-the-icons ; Required for one of the themes
+    :config
+    (if (display-graphic-p) (setq neo-theme 'icons) (setq neo-theme 'arrow))
+
+    (add-hook 'neotree-mode-hook 'hide-mode-line-mode)
+
+    (kb/leader-keys
+      "fn" '(neotree-toggle :which-key "Show neotree")
+      )
+    )
+#+end_src
