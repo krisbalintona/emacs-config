@@ -144,8 +144,9 @@ Turns tree-based imenu sorting into a flat hierarchy
 Properties given to the shadowed part of a filename in the minibuffer
 #+begin_src emacs-lisp
   (use-package rfn-eshadow
+    :straight nil
     :hook (after-init . file-name-shadow-mode)
-    :custom
+    ;; :custom
     ;; (file-name-shadow-properties '(invisible t)) ; Hide shadowed paths
     )
 #+end_src
