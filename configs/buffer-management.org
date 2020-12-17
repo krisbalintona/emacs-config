@@ -182,7 +182,7 @@ Better window configuration management
     (eyebrowse-keymap-prefix (kbd "C-c C-w"))
     (eyebrowse-mode-line-left-delimiter "")
     (eyebrowse-mode-line-right-delimiter "")
-    (eyebrowse-mode-line-separator ", ")
+    (eyebrowse-mode-line-separator " ")
     (eyebrowse-tagged-slot-format "%t") ; Only show workspace name (tag) if avail
     (eyebrowse-wrap-around t) ; Not sure waht this does
     :config
