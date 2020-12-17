@@ -896,12 +896,37 @@ Autoload the package and start with no views
 ** Agenda view faces
 
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'org-super-agenda
-    (set-face-attribute 'org-super-agenda-header nil :height 148 :font kb/variable-pitch-font :foreground "DarkGoldenrod2" :underline nil)
-    (set-face-attribute 'org-agenda-date nil :height 157 :font kb/variable-pitch-font :foreground "dodger blue" :underline nil)
-    (set-face-attribute 'org-agenda-structure nil :height 180 :font kb/variable-pitch-font :bold t :italic t :foreground "DarkOliveGreen3" :underline t)
-    )
+  (if (not (featurep 'elegant-agenda-mode)) ; Only load if elegant-agenda-mode is disabled
+      (with-eval-after-load 'org-super-agenda
+        (set-face-attribute 'org-super-agenda-header nil :height 148 :font kb/variable-pitch-font :foreground "DarkGoldenrod2" :underline nil)
+        (set-face-attribute 'org-agenda-date nil :height 157 :font kb/variable-pitch-font :foreground "dodger blue" :underline nil)
+        (set-face-attribute 'org-agenda-structure nil :height 180 :font kb/variable-pitch-font :bold t :italic t :foreground "DarkOliveGreen3" :underline t)
+        ))
   #+END_SRC
+
+** Elegant-agenda-mode
+
+Pre-configured org-agenda to be beautiful
+#+begin_src emacs-lisp
+  (use-package elegant-agenda-mode
+    :straight (elegant-agenda-mode :type git :host github :repo "justinbarclay/elegant-agenda-mode")
+    :hook (org-agenda-mode . elegant-agenda-mode)
+    :custom
+    (elegant-agenda-font "Yanone Kaffeesatz") ; Other fonts may not support the weights used
+    (elegant-agenda-face-remappings ; Default but with smaller font sizes
+     '((default
+         (:family elegant-agenda-font :height 130 :weight thin))
+       (header-line
+        (:family elegant-agenda-font :height 154 :weight thin :underline nil :overline nil :box nil))
+       (org-agenda-date-today
+        (:weight regular))
+       (org-agenda-structure
+        (:weight regular))
+       (bold
+        (:height 149 :weight thin)))
+     )
+    )
+#+end_src
 
 * Org-capture-templates
 
