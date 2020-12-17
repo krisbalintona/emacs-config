@@ -51,7 +51,7 @@ Show keybinds
     (which-key-show-early-on-C-h t) ; Show which-key help immediately
     (which-key-add-column-padding 0)
     (which-key-max-display-columns nil)
-    (which-key-show-transient-maps t) ; Necessary so show embark keybinds with which-key
+    ;; (which-key-show-transient-maps t) ; Necessary so show embark keybinds with which-key
     (which-key-popup-type 'side-window)
     (which-key-side-window-location 'right)
     (which-key-side-window-max-width 0.23)
