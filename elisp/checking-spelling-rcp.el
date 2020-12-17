@@ -56,6 +56,7 @@
   (flyspell-lazy-idle-seconds 2)
   (flyspell-lazy-window-idle-seconds 15)
   (flyspell-lazy-use-flyspell-word nil) ; Immediately recheck when leaving a marked word
+  (flyspell-correct-interface #'flyspell-correct-dummy) ; Use default (now selectrum) minibuffer
   )
 
 ;;;;; Flyspell-correct
@@ -74,6 +75,7 @@
 ;;;;; Flyspell-correct-helm
 ;; Flyspell-correct using Helm interface
 (use-package flyspell-correct-helm
+  :disabled t ; Now use selectrum (flyspell-correct-dummy) for cleaner interface
   :after flyspell-correct
   )
 
