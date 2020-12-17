@@ -214,6 +214,7 @@ Best email client
   (kb/leader-keys
     "om" '(mu4e :which-key "Email"))
 #+END_SRC
+
 * Mu4e faces
 
 #+BEGIN_SRC emacs-lisp
@@ -231,6 +232,7 @@ Best email client
   (set-face-attribute 'message-header-subject nil :height 158 :font kb/variable-pitch-font)
   (set-face-attribute 'message-header-newsgroups nil :height 158 :font kb/variable-pitch-font)
 #+END_SRC
+
 * Mu4e-alert
 
 Email notifications for desktop and modeline
@@ -257,10 +259,10 @@ Email notifications for desktop and modeline
       "Default formatter used to get the string to be displayed in the mode-line.
          MAIL-COUNT is the count of mails for which the string is to displayed"
       (when (not (zerop mail-count))
-        (concat "  "
+        (concat ""
                 (if (zerop mail-count)
-                    " "
-                  (format "  %d " mail-count))
+                    ""
+                  (format "%d " mail-count))
                 (propertize
                  "Mail"
                  'display (when (display-graphic-p)
@@ -289,6 +291,7 @@ Email notifications for desktop and modeline
     (add-hook 'server-after-make-frame-hook #'mu4e-alert-enable-notifications)
     )
 #+END_SRC
+
 * Org-msg
 
 I think this is for more options when sending messages in mu4e

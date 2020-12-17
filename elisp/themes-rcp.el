@@ -45,7 +45,7 @@
   (doom-modeline-minor-modes nil)
   (doom-modeline-enable-word-count t)
   (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
-  (doom-modeline-mu4e t) ; Requires `mu4e-alert'
+  (doom-modeline-mu4e nil) ; Requires `mu4e-alert' - flip this value
   (doom-modeline-percent-position nil)
   (doom-modeline-number-limit 99)
   (doom-modeline-vcs-max-length 28)
@@ -59,10 +59,38 @@
     (add-hook 'window-setup-hook 'doom-modeline-mode)) ; Use this hook to prevent right side from being clipped
 
   (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.75)
-  (set-face-attribute 'mode-line-inactive nil :family kb/modeline-font :height 0.68)
+  (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line)
+  )
 
+;;;;; Time
+;; Enable time in the mode-line
+(use-package time
+  :straight nil
+  :hook (after-init . display-time-mode)
+  :custom
+  (display-time-format "%H:%M") ; Use 24hr format
+  (display-time-default-load-average nil) ; Don't show load average along with time
+  )
 
-  ;; (Re)defining my own modeline segments
+;;;;; Battery
+;; Display batter percentage
+(use-package battery
+  :straight nil
+  :after doom-modeline
+  :custom
+  (battery-load-critical 15)
+  (battery-load-low 25)
+  :config
+  (unless (equal "Battery status not available"
+                 (battery))
+    (display-battery-mode t)) ; Show battery in modeline
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'themes-rcp)
+;;;;; Modeline segments
+;; (Re)defining my own modeline segments
+(with-eval-after-load 'doom-modeline
   (doom-modeline-def-segment kb/buffer-info
     "The standard `buffer-info' but without the 'unsaved' icon and major mode
 icon."
@@ -222,35 +250,9 @@ UTF-8."
 
   (doom-modeline-def-modeline 'main
     '(" " kb/time " " kb/major-mode-icon workspace-name "  " bar " " kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
-    '(input-method process debug kb/buffer-encoding battery kb/mu4e kb/eyebrowse " " bar " " kb/major-mode checker minor-modes))
+    '(input-method process debug kb/buffer-encoding battery " " kb/mu4e kb/eyebrowse " " bar " " kb/major-mode checker minor-modes))
   )
 
-;;;;; Time
-;; Enable time in the mode-line
-(use-package time
-  :straight nil
-  :hook (after-init . display-time-mode)
-  :custom
-  (display-time-format "%H:%M") ; Use 24hr format
-  (display-time-default-load-average nil) ; Don't show load average along with time
-  )
-
-;;;;; Battery
-;; Display batter percentage
-(use-package battery
-  :straight nil
-  :after doom-modeline
-  :custom
-  (battery-load-critical 15)
-  (battery-load-low 25)
-  :config
-  (unless (equal "Battery status not available"
-                 (battery))
-    (display-battery-mode t)) ; Show battery in modeline
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'themes-rcp)
 ;;; Commentary:
 ;;
 ;;; themes-rcp.el ends here
