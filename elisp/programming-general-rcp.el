@@ -236,14 +236,14 @@
 
 ;;;;; Smartparens
 ;; Autopairing parentheses
-  (use-package smartparens
-    :hook (((sh-mode lua-mode text-mode) . smartparens-mode)
-           (smartparens-mode . show-smartparens-mode)) ; Subtlely highlight matching parentheses
-    :custom
-    (sp-show-pair-from-inside t)
-    :config
-    (sp-pair "'" nil :actions :rem) ; Don't pair '
-    )
+(use-package smartparens
+  :hook (((sh-mode lua-mode text-mode) . smartparens-mode)
+         (smartparens-mode . show-smartparens-mode)) ; Subtlely highlight matching parentheses
+  :custom
+  (sp-show-pair-from-inside t)
+  :config
+  (sp-pair "'" nil :actions :rem) ; Don't pair '
+  )
 
 ;;;;; Paren
 ;; Highlight matching parentheses

@@ -177,8 +177,8 @@ UTF-8."
           'local-map mode-line-coding-system-map)
 
          (doom-modeline-spc)))))
-(doom-modeline-def-segment kb/buffer-default-directory
-  "Standard `buffer-default-directory' without the state, icon, and color change."
+  (doom-modeline-def-segment kb/buffer-default-directory
+    "Standard `buffer-default-directory' without the state, icon, and color change."
     (let* ((active (doom-modeline--active))
            (face (if active 'doom-modeline-buffer-path 'mode-line-inactive)))
       (concat (doom-modeline-spc)
@@ -191,37 +191,37 @@ UTF-8."
       (concat (doom-modeline-spc)
               (propertize (format-mode-line mode-name) 'face face)
               (doom-modeline-spc))))
-(doom-modeline-def-segment kb/major-mode
-  "Standard `major-mode' but bolded."
-  (propertize
-   (concat
-    (doom-modeline-spc)
-    (propertize (format-mode-line
-                 (or (and (boundp 'delighted-modes)
-                          (cadr (assq major-mode delighted-modes)))
-                     mode-name))
-                'help-echo "Major mode\n\
+  (doom-modeline-def-segment kb/major-mode
+    "Standard `major-mode' but bolded."
+    (propertize
+     (concat
+      (doom-modeline-spc)
+      (propertize (format-mode-line
+                   (or (and (boundp 'delighted-modes)
+                            (cadr (assq major-mode delighted-modes)))
+                       mode-name))
+                  'help-echo "Major mode\n\
   mouse-1: Display major mode menu\n\
   mouse-2: Show help for major mode\n\
   mouse-3: Toggle minor modes"
-                'mouse-face 'mode-line-highlight
-                'local-map mode-line-major-mode-keymap)
-    (when (and doom-modeline-env-version doom-modeline-env--version)
-      (format " %s" doom-modeline-env--version))
-    (and (boundp 'text-scale-mode-amount)
-         (/= text-scale-mode-amount 0)
-         (format
-          (if (> text-scale-mode-amount 0)
-              " (%+d)"
-            " (%-d)")
-          text-scale-mode-amount))
-    (doom-modeline-spc))
-   'face (if (doom-modeline--active)
-             '(doom-modeline-buffer-major-mode bold) ; Make bold
-           'mode-line-inactive)))
+                  'mouse-face 'mode-line-highlight
+                  'local-map mode-line-major-mode-keymap)
+      (when (and doom-modeline-env-version doom-modeline-env--version)
+        (format " %s" doom-modeline-env--version))
+      (and (boundp 'text-scale-mode-amount)
+           (/= text-scale-mode-amount 0)
+           (format
+            (if (> text-scale-mode-amount 0)
+                " (%+d)"
+              " (%-d)")
+            text-scale-mode-amount))
+      (doom-modeline-spc))
+     'face (if (doom-modeline--active)
+               '(doom-modeline-buffer-major-mode bold) ; Make bold
+             'mode-line-inactive)))
 
   (doom-modeline-def-modeline 'main
-    '(" " kb/time " " kb/major-mode-icon workspace-name " " bar " " kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
+    '(" " kb/time " " kb/major-mode-icon workspace-name "  " bar " " kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
     '(input-method process debug kb/buffer-encoding battery kb/mu4e kb/eyebrowse " " bar " " kb/major-mode checker minor-modes))
   )
 
@@ -229,7 +229,7 @@ UTF-8."
 ;; Enable time in the mode-line
 (use-package time
   :straight nil
-  :hook (after-init. display-time-mode)
+  :hook (after-init . display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average nil) ; Don't show load average along with time
@@ -237,17 +237,17 @@ UTF-8."
 
 ;;;;; Battery
 ;; Display batter percentage
-  (use-package battery
-    :straight nil
-    :after doom-modeline
-    :custom
-    (battery-load-critical 15)
-    (battery-load-low 25)
-    :config
-    (unless (equal "Battery status not available"
-                   (battery))
-      (display-battery-mode t)) ; Show battery in modeline
-    )
+(use-package battery
+  :straight nil
+  :after doom-modeline
+  :custom
+  (battery-load-critical 15)
+  (battery-load-low 25)
+  :config
+  (unless (equal "Battery status not available"
+                 (battery))
+    (display-battery-mode t)) ; Show battery in modeline
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'themes-rcp)

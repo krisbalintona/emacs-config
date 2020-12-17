@@ -86,7 +86,7 @@
   (ivy-rich-path-style 'abbrev) ; Abbreviate file names
   :config
   (setq-default 
-    ivy-rich-display-transformers-list ; Change transformer to show variable values
+   ivy-rich-display-transformers-list ; Change transformer to show variable values
    (plist-put ivy-rich-display-transformers-list
               'counsel-M-x
               '(:columns
