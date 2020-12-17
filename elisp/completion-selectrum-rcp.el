@@ -10,9 +10,6 @@
 (use-package selectrum
   :hook (after-init . selectrum-mode)
   :custom
-  (amx-backend 'selectrum)
-  ;; (projectile-completion-system 'default)
-
   (selectrum-num-candidates-displayed 10) ; Maximum candidates shown
   (selectrum-fix-minibuffer-height t) ; Fixed height?
   (selectrum-extend-current-candidate-highlight t) ; Highlight entire line

@@ -53,7 +53,7 @@
     (setq projectile-project-search-path `(,user-emacs-directory)))
   (setq projectile-switch-project-action #'projectile-dired)
   :custom
-  ;; (projectile-completion-system 'ivy) ; Set to default because I use selectrum now
+  (projectile-completion-system 'default) ; Use selectrum
   (projectile-enable-caching t)
   (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
   :config
@@ -175,6 +175,7 @@
 ;;;;; Helm-projectile
 ;; Projectile with helm
 (use-package helm-projectile
+  :disabled t ; Now I use selectrum instead
   :after (helm projectile)
   ;; :hook (projectile-mode . helm-projectile-on)
   :preface (use-package helm-rg) ; Required for helm-projectile-rg
