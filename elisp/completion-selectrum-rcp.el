@@ -38,9 +38,9 @@
 
 ;;;; Selectrum-prescient
 ;; Selectrum with prescient completion style
-  (use-package selectrum-prescient
-    :hook (after-init . selectrum-prescient-mode)
-    )
+(use-package selectrum-prescient
+  :hook (after-init . selectrum-prescient-mode)
+  )
 
 ;;;; Cousin packages
 ;;;;; Consult.el
@@ -113,11 +113,6 @@
 (use-package embark
   :straight (embark :type git :host github :repo "oantolin/embark")
   :config
-  (defun refresh-selectrum () ; Reset list after embark-act (which may change candidates e.g. delete-file)
-    "Reset the Selectrum candidate list."
-    (setq selectrum--previous-input-string nil))
-  (add-hook 'embark-pre-action-hook #'refresh-selectrum)
-
   (general-define-key
    ;; :keymaps 'selectrum-minibuffer-map
    "M-o" '(embark-act :which-key "Embark-act")
@@ -127,6 +122,10 @@
   )
 
 ;;;;;; Embark with Selectrum
+;; Embark elisp to enable selectrum to be used in selectrum (the way I want to
+;; use it)
+
+;; Allows embark to take targets from the selectrum minibuffer and act on them.
 ;; Taken from
 ;; https://github.com/raxod502/selectrum/wiki/Additional-Configuration#minibuffer-actions-with-embark
 (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
@@ -145,6 +144,14 @@
                     ;; Only get the input used for matching.
                     (file-name-nondirectory input)
                   input)))))
+
+;; Reset list after embark-act (which may change candidates e.g. delete-file).
+;; Taken from
+;; https://github.com/oantolin/embark/wiki/Additional-Configuration#selectrum
+(defun refresh-selectrum ()
+  "Reset the Selectrum candidate list."
+  (setq selectrum--previous-input-string nil))
+(add-hook 'embark-pre-action-hook #'refresh-selectrum)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-selectrum-rcp)
