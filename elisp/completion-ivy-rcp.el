@@ -148,6 +148,7 @@
 ;;;;; Ivy-prescient
 ;; Ivy with the prescient completion style
 (use-package ivy-prescient
+  :after ivy
   :hook (after-init . ivy-prescient-mode)
   )
 

@@ -112,6 +112,9 @@
 ;; thus selectrum!)
 (use-package embark
   :straight (embark :type git :host github :repo "oantolin/embark")
+  :custom
+  (embark-prompt-style 'default) ; Or manual completion
+  (setq embark-action-indicator (propertize "Embark on:" 'face '(bold underline))) ; A function, string, or nil - remember: propertize returns a string
   :config
   (general-define-key
    ;; :keymaps 'selectrum-minibuffer-map
