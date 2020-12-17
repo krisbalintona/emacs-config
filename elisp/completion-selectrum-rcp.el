@@ -10,15 +10,27 @@
 (use-package selectrum
   :hook (after-init . selectrum-mode)
   :custom
-  ;; Change backends
   (amx-backend 'selectrum)
   ;; (projectile-completion-system 'default)
+
+  (selectrum-num-candidates-displayed 10) ; Maximum candidates shown
+  (selectrum-fix-minibuffer-height t) ; Fixed height?
+  (selectrum-extend-current-candidate-highlight t) ; Highlight entire line
+  (selectrum-count-style 'current/matches)
+  (selectrum-show-indices nil) ; Can also be custom if passed a function
   :config
   ;; Selectrum minibuffer faces
   (set-face-attribute 'selectrum-current-candidate nil :inherit 'ivy-minibuffer-match-highlight)
   (set-face-attribute 'selectrum-primary-highlight nil :inherit 'ivy-minibuffer-match-face-2)
   (set-face-attribute 'selectrum-secondary-highlight nil :inherit 'ivy-minibuffer-match-face-4)
   (set-face-attribute 'selectrum-completion-annotation nil :inherit 'ivy-grep-info)
+
+  (kb/leader-keys
+    "ff" '(find-file :which-key "Find file")
+    "hf" '(describe-function :which-key "Desc func")
+    "hv" '(describe-variable :which-key "Desc var")
+    "ho" '(describe-symbol :which-key "Desc sym")
+    )
   )
 
 ;;;; Selectrum-prescient
@@ -72,7 +84,6 @@
     "ss" '(consult-line :which-key "Consult swiper")
     "si" '(consult-imenu :which-key "Consult imenu")
     ;; ("-s m" . consult-multi-occur)
-    "ff" '(find-file :which-key "Find file")
     "iy" '(consult-yank-pop :which-key "Consult yank-pop")
     "ha" '(consult-apropos :which-key "Consult apropos")
     )

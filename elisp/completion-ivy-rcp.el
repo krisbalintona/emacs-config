@@ -166,7 +166,7 @@
 (use-package counsel
   :demand t
   :after ivy
-  :bind (("M-x" . 'counsel-M-x)
+  :bind (;; ("M-x" . 'counsel-M-x)
          ;; ("C-x C-f" . 'counsel-find-file)
          ;; ("C-x b" . 'counsel-switch-buffer)
          ;; ("C-h t" . 'counsel-load-theme) ; Replace help-with-tutorial
@@ -192,20 +192,20 @@
    )
 
   (kb/leader-keys
-    "ff" '(counsel-find-file :which-key "Find file")
+    ;; "ff" '(counsel-find-file :which-key "Find file")
     "fF" '(counsel-file-jump :which-key "Fuzzy find file")
     "fr" '(counsel-recentf :which-key "Recent files")
 
-    "hf" '(counsel-describe-function :which-key "Desc func")
-    "hv" '(counsel-describe-variable :which-key "Desc var")
-    "ho" '(counsel-describe-symbol :which-key "Desc sym")
-    "ht" '(counsel-load-theme :which-key "Change theme")
+    ;; "hf" '(counsel-describe-function :which-key "Desc func")
+    ;; "hv" '(counsel-describe-variable :which-key "Desc var")
+    ;; "ho" '(counsel-describe-symbol :which-key "Desc sym")
+    ;; "ht" '(counsel-load-theme :which-key "Change theme")
 
-    "bc" '(counsel-switch-buffer :which-key "Counsel switch")
+    "bc" '(counsel-switch-buffer :which-key "Counsel switch buffer")
 
     "ms" '(bookmark-set :which-key "Set bookmark")
 
-    "iy" '(counsel-yank-pop :which-key "Paste")
+    ;; "iy" '(counsel-yank-pop :which-key "Paste")
     )
   )
 
