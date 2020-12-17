@@ -19,6 +19,7 @@
               :map ivy-reverse-i-search-map
               ("C-d" . ivy-reverse-i-search-kill))
   :custom
+  (ivy-initial-inputs-alist nil) ; Remove "^" when entering a ivy completion buffer
   (ivy-extra-directories nil) ; Remove ./ and ../
   (ivy-use-virtual-buffers nil) ; Bookmarks and recent files in completion buffer
   (ivy-count-format "(%d/%d) ")
@@ -134,8 +135,8 @@
 ;;;;; All-the-icons-ivy-rich
 ;; Show icons with ivy-rich
 (use-package all-the-icons-ivy-rich
-  :after (ivy-rich all-the-icons)
-  :hook (ivy-rich-mode . all-the-icons-ivy-rich-mode)
+  :after ivy-rich
+  :hook (window-setup . all-the-icons-ivy-rich-mode) ; after-init calls too early
   :custom
   (all-the-icons-ivy-rich-icon-size 0.9) ; The icon size
   ;; Slow Rendering
@@ -180,12 +181,12 @@
          ;; ("C-h o" . 'counsel-describe-symbol)
          )
   :custom
+  (counsel-outline-face-style 'org)      ; Have faces match org's
+  (counsel-outline-path-separator " / ") ; More distinct outline paths
+  ;; Make counsel use helpful
   (counsel-describe-function-function #'helpful-function)
   (counsel-describe-symbol-function #'helpful-symbol)
   (counsel-describe-variable-function #'helpful-variable)
-  (ivy-initial-inputs-alist nil)         ; Remove "^" when entering a ivy completion buffer
-  (counsel-outline-face-style 'org)      ; Have faces match org's
-  (counsel-outline-path-separator " / ") ; More distinct outline paths
   :config
   (general-define-key
    :keymaps 'minibuffer-local-map

@@ -138,7 +138,7 @@
 (use-package counsel-projectile
   :after (counsel projectile)
   :hook (counsel-mode . counsel-projectile-mode)
-  :custom
+  ;; :custom
   ;; (projectile-completion-system 'ivy) ; Set to default because I use selectrum now
   :config
   ;; ;; Hydra menu

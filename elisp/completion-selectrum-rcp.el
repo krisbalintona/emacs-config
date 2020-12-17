@@ -114,7 +114,7 @@
   :straight (embark :type git :host github :repo "oantolin/embark")
   :custom
   (embark-prompt-style 'default) ; Or manual completion
-  (setq embark-action-indicator (propertize "Embark on:" 'face '(bold underline))) ; A function, string, or nil - remember: propertize returns a string
+  (embark-action-indicator (propertize "Embark on:" 'face '(bold underline))) ; A function, string, or nil - remember: propertize returns a string
   :config
   (general-define-key
    ;; :keymaps 'selectrum-minibuffer-map
@@ -131,30 +131,62 @@
 ;; Allows embark to take targets from the selectrum minibuffer and act on them.
 ;; Taken from
 ;; https://github.com/raxod502/selectrum/wiki/Additional-Configuration#minibuffer-actions-with-embark
-(add-hook 'embark-target-finders 'selectrum-get-current-candidate)
-(add-hook 'embark-candidate-collectors
-          (defun embark-selectrum-candidates+ ()
-            (when selectrum-active-p
-              (selectrum-get-current-candidates
-               ;; Pass relative file names for dired.
-               minibuffer-completing-file-name))))
-(add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
-(add-hook 'embark-input-getters
-          (defun embark-selectrum-input-getter+ ()
-            (when selectrum-active-p
-              (let ((input (selectrum-get-current-input)))
-                (if minibuffer-completing-file-name
-                    ;; Only get the input used for matching.
-                    (file-name-nondirectory input)
-                  input)))))
+(with-eval-after-load 'embark
+  (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
+  (add-hook 'embark-candidate-collectors
+            (defun embark-selectrum-candidates+ ()
+              (when selectrum-active-p
+                (selectrum-get-current-candidates
+                 ;; Pass relative file names for dired.
+                 minibuffer-completing-file-name))))
+  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
+  (add-hook 'embark-input-getters
+            (defun embark-selectrum-input-getter+ ()
+              (when selectrum-active-p
+                (let ((input (selectrum-get-current-input)))
+                  (if minibuffer-completing-file-name
+                      ;; Only get the input used for matching.
+                      (file-name-nondirectory input)
+                    input)))))
 
-;; Reset list after embark-act (which may change candidates e.g. delete-file).
-;; Taken from
-;; https://github.com/oantolin/embark/wiki/Additional-Configuration#selectrum
-(defun refresh-selectrum ()
-  "Reset the Selectrum candidate list."
-  (setq selectrum--previous-input-string nil))
-(add-hook 'embark-pre-action-hook #'refresh-selectrum)
+  ;; Redefine embark-symbol-map to use helpful-symbol
+  (defun embark-helpful-callable-or-symbol ()
+    "Call `helpful-callable' or `helpful-symbol' on embark target depending on context."
+    (interactive)
+    ;; (eval-expression (typep (embark-target) 'symbol))
+    (funcall helpful-switch-buffer-function (helpful--buffer (intern (embark-target)) nil))
+    (helpful-update)
+    )
+  (setq embark-symbol-map
+        (embark-keymap '(("h" . embark-helpful-callable-or-symbol) ; Replace default embark-describe-*
+                         ("c" . embark-info-emacs-command)
+                         ("s" . embark-info-lookup-symbol)
+                         ("d" . embark-find-definition)
+                         ("b" . where-is)
+                         ("e" . eval-expression))
+                       embark-general-map))
+  (add-to-list 'embark-keymap-alist '(variable . embark-symbol-map)) ; For helpful- and describe-variable
+
+  ;; Reset list after embark-act (which may change candidates e.g. delete-file).
+  ;; Taken from
+  ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#selectrum
+  (defun refresh-selectrum ()
+    "Reset the Selectrum candidate list."
+    (setq selectrum--previous-input-string nil))
+  (add-hook 'embark-pre-action-hook #'refresh-selectrum)
+  )
+
+;;;;;; Misc embark actions
+;; Embark actions which are useful but I either haven't found a place for them
+;; yet or have yet to properly solidify its place in its own heading. Bind
+;; actions in the maps of embark-keymap-alist to make use of them within embark.
+
+;; Magit status of repo containing a given file. Taken from Magit status of repo
+;; containing a given file
+(defun embark-magit-status ()
+  "Run `magit-status` on repo containing the embark target."
+  (interactive)
+  (magit-status (locate-dominating-file (embark-target) ".git")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-selectrum-rcp)
