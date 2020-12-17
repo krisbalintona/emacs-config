@@ -116,13 +116,38 @@
 (use-package embark
   :straight (embark :type git :host github :repo "oantolin/embark")
   :config
+  (defun refresh-selectrum () ; Reset list after embark-act (which may change candidates e.g. delete-file)
+    "Reset the Selectrum candidate list."
+    (setq selectrum--previous-input-string nil))
+  (add-hook 'embark-pre-action-hook #'refresh-selectrum)
+
   (general-define-key
-   :keymaps 'selectrum-minibuffer-map
+   ;; :keymaps 'selectrum-minibuffer-map
    "M-o" '(embark-act :which-key "Embark-act")
    ;; "?" '(embark-act-noexit :which-key "Embark-act-noexit")
    ;; "?" '(embark-export :which-key "Embark-export")
    )
   )
+
+;;;;;; Embark with Selectrum
+;; Taken from
+;; https://github.com/raxod502/selectrum/wiki/Additional-Configuration#minibuffer-actions-with-embark
+(add-hook 'embark-target-finders 'selectrum-get-current-candidate)
+(add-hook 'embark-candidate-collectors
+          (defun embark-selectrum-candidates+ ()
+            (when selectrum-active-p
+              (selectrum-get-current-candidates
+               ;; Pass relative file names for dired.
+               minibuffer-completing-file-name))))
+(add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
+(add-hook 'embark-input-getters
+          (defun embark-selectrum-input-getter+ ()
+            (when selectrum-active-p
+              (let ((input (selectrum-get-current-input)))
+                (if minibuffer-completing-file-name
+                    ;; Only get the input used for matching.
+                    (file-name-nondirectory input)
+                  input)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-selectrum-rcp)
