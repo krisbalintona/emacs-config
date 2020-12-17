@@ -173,3 +173,16 @@ Automatically sudo files you don't have write access to
     :hook (after-init . auto-sudoedit-mode)
     )
 #+end_src
+
+* Transient-dwim
+
+Using transient to display the pre-configured transient dispatcher for your situation (major-mode or installed packages)
++ Has in-built transient menus for =dired-mode=, =origami-mode=, =neotree-mode=, and =magit-mode=
+#+begin_src emacs-lisp
+  (use-package transient-dwim
+    :config
+    (general-define-key
+     "M-," 'transient-dwim-dispatch
+     )
+    )
+#+end_src
