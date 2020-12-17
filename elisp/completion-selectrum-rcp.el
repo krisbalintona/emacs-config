@@ -25,7 +25,7 @@
                       :inherit 'ivy-minibuffer-match-highlight
                       :weight 'semi-bold)
   (set-face-attribute 'selectrum-primary-highlight nil
-                      :foreground "#C678DD")
+                      :foreground "#dc85f7")
   (set-face-attribute 'selectrum-secondary-highlight nil
                       :foreground "#E5C07B")
   (set-face-attribute 'selectrum-completion-annotation nil
