@@ -20,10 +20,16 @@
   (selectrum-show-indices nil) ; Can also be custom if passed a function
   :config
   ;; Selectrum minibuffer faces
-  (set-face-attribute 'selectrum-current-candidate nil :inherit 'ivy-minibuffer-match-highlight)
-  (set-face-attribute 'selectrum-primary-highlight nil :inherit 'ivy-minibuffer-match-face-2)
-  (set-face-attribute 'selectrum-secondary-highlight nil :inherit 'ivy-minibuffer-match-face-4)
-  (set-face-attribute 'selectrum-completion-annotation nil :inherit 'ivy-grep-info)
+  ;; Foregrounds based on ivy-minibuffer-match-face-*
+  (set-face-attribute 'selectrum-current-candidate nil
+                      :inherit 'ivy-minibuffer-match-highlight
+                      :weight 'semi-bold)
+  (set-face-attribute 'selectrum-primary-highlight nil
+                      :foreground "#C678DD")
+  (set-face-attribute 'selectrum-secondary-highlight nil
+                      :foreground "#E5C07B")
+  (set-face-attribute 'selectrum-completion-annotation nil
+                      :inherit 'ivy-grep-info)
 
   (kb/leader-keys
     "ff" '(find-file :which-key "Find file")
@@ -96,6 +102,12 @@
   :hook (after-init . marginalia-mode)
   :custom
   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)) ; Show as much information as possible
+  :config
+  ;; Marginalia faces
+  (set-face-attribute 'marginalia-documentation nil
+                      :inherit nil
+                      :foreground "#98C379"
+                      :slant 'italic)
   )
 
 ;;;;; Embark
