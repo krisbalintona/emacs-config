@@ -249,8 +249,8 @@ UTF-8."
              'mode-line-inactive)))
 
   (doom-modeline-def-modeline 'main
-    '(" " kb/time " " kb/major-mode-icon workspace-name "  " bar " " kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
-    '(input-method process debug kb/buffer-encoding battery " " kb/mu4e kb/eyebrowse " " bar " " kb/major-mode checker minor-modes))
+    '("  " kb/major-mode-icon kb/mu4e " " bar " " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
+    '(input-method process debug kb/buffer-encoding kb/time battery " " bar " " kb/major-mode checker minor-modes))
   )
 
 ;;; Commentary:

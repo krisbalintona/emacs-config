@@ -184,8 +184,10 @@ Better window configuration management
     (eyebrowse-mode-line-right-delimiter "")
     (eyebrowse-mode-line-separator " ")
     (eyebrowse-tagged-slot-format "%t") ; Only show workspace name (tag) if avail
-    (eyebrowse-wrap-around t) ; Not sure waht this does
+    (eyebrowse-wrap-around t) ; Cycle back to beginning when at the end and vice versa
     :config
+    (set-face-attribute 'eyebrowse-mode-line-active nil :weight 'semi-bold)
+
     (general-define-key
      :states '(visual normal motion)
      "gt" 'eyebrowse-next-window-config
