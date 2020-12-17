@@ -45,6 +45,8 @@
   (doom-modeline-minor-modes nil)
   (doom-modeline-enable-word-count t)
   (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
+  (doom-modeline-mu4e t) ; Requires `mu4e-alert'
+  (doom-modeline-percent-position nil)
   (doom-modeline-number-limit 99)
   (doom-modeline-vcs-max-length 28)
   (doom-modeline-lsp t)
@@ -58,21 +60,142 @@
 
   (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.75)
   (set-face-attribute 'mode-line-inactive nil :family kb/modeline-font :height 0.68)
+  ;; (Re)defining my own modeline segments
+  (doom-modeline-def-segment kb/buffer-info
+    "The standard `buffer-info' but without the 'unsaved' icon and major mode
+icon."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-name)
+     ))
+  (doom-modeline-def-segment kb/major-mode-icon
+    "Simply the major-mode icon."
+    (doom-modeline--buffer-mode-icon)
+    )
+  (doom-modeline-def-segment kb/matches
+    "The standard `matches' segment but doesn't show buffer size (if unused)."
+    (let ((meta (concat (doom-modeline--macro-recording)
+                        (doom-modeline--anzu)
+                        (doom-modeline--phi-search)
+                        (doom-modeline--evil-substitute)
+                        (doom-modeline--iedit)
+                        (doom-modeline--symbol-overlay)
+                        (doom-modeline--multiple-cursors))))
+      (or (and (not (equal meta "")) meta)
+          ""))
+    )
+  (doom-modeline-def-segment kb/vcs
+    "Standard `vcs' but don't show branch if it's 'master'."
+    (let ((active (doom-modeline--active)))
+      (when-let ((icon doom-modeline--vcs-icon)
+                 (text doom-modeline--vcs-text))
+        (concat
+         (doom-modeline-spc) ; Two spaces
+         (doom-modeline-spc)
+         (propertize
+          (concat
+           (if active
+               icon
+             (doom-modeline-propertize-icon icon 'mode-line-inactive))
+           (doom-modeline-vspc))
+          'mouse-face 'mode-line-highlight
+          'help-echo (get-text-property 1 'help-echo vc-mode)
+          'local-map (get-text-property 1 'local-map vc-mode))
+         (if (string= text "master") ; Only print branch if not master
+             ""
+           (progn (if active
+                      text
+                    (propertize text 'face 'mode-line-inactive))
+                  (doom-modeline-spc))))
+        )))
+  (doom-modeline-def-segment kb/eyebrowse
+    "Show eyebrowse workspace information."
+    (when (and (doom-modeline--active)
+               (not doom-modeline--limited-width-p))
+      '(" "
+        (eyebrowse-mode (:eval (eyebrowse-mode-line-indicator)))
+        " ")
+      ))
+  (doom-modeline-def-segment kb/time
+    "Display time."
+    (when (and (doom-modeline--active)
+               (not doom-modeline--limited-width-p))
+      '(("" display-time-string)
+        " ")
+      ))
+  (doom-modeline-def-segment kb/mu4e
+    "Display mu4e mail. Require `mu4e-alert'."
+    (when (and (doom-modeline--active)
+               (not doom-modeline--limited-width-p))
+      '((:eval mu4e-alert-mode-line))
+      ))
+  (doom-modeline-def-segment kb/buffer-encoding
+    "Standard `buffer-encoding' but don't show encoding on modeline if it is
+UTF-8."
+    (when doom-modeline-buffer-encoding
+      (let ((face (if (doom-modeline--active) 'mode-line 'mode-line-inactive))
+            (mouse-face 'mode-line-highlight))
+        (concat
+         (doom-modeline-spc)
+
+         ;; eol type
+         (let ((eol (coding-system-eol-type buffer-file-coding-system)))
+           (propertize
+            (pcase eol
+              (0 "LF ")
+              (1 "CRLF ")
+              (2 "CR ")
+              (_ ""))
+            'face face
+            'mouse-face mouse-face
+            'help-echo (format "End-of-line style: %s\nmouse-1: Cycle"
+                               (pcase eol
+                                 (0 "Unix-style LF")
+                                 (1 "DOS-style CRLF")
+                                 (2 "Mac-style CR")
+                                 (_ "Undecided")))
+            'local-map (let ((map (make-sparse-keymap)))
+                         (define-key map [mode-line mouse-1] 'mode-line-change-eol)
+                         map)))
+
+         ;; coding system
+         (propertize
+          (let ((sys (coding-system-plist buffer-file-coding-system)))
+            (if (or (eq buffer-file-coding-system 'utf-8-unix) ; Check for UTF-8
+                    (eq buffer-file-coding-system 'utf-8)
+                    (eq buffer-file-coding-system 'prefer-utf-8-unix))
+                nil
+              (cond ((memq (plist-get sys :category)
+                           '(coding-category-undecided coding-category-utf-8))
+                     "UTF-8")
+                    (t (upcase (symbol-name (plist-get sys :name)))))))
+          'face face
+          'mouse-face mouse-face
+          'help-echo 'mode-line-mule-info-help-echo
+          'local-map mode-line-coding-system-map)
+
+         (doom-modeline-spc)))))
+
   (doom-modeline-def-modeline 'main
-    '(bar " " matches vcs " " buffer-info remote-host buffer-position parrot selection-info)
-    '(misc-info " " battery " " input-method buffer-encoding major-mode checker minor-modes process))
+    '(" " kb/time " " kb/major-mode-icon kb/eyebrowse " " bar " " kb/matches kb/vcs kb/buffer-info remote-host buffer-position selection-info)
+    '(input-method process kb/buffer-encoding battery kb/mu4e " " bar " " major-mode checker minor-modes))
   )
 
-;;;;; Modeline additions
-;; Minor modeline additions/settings
-(with-eval-after-load 'doom-modeline
-  (setq find-file-visit-truename t) ; Show actual path of file in symlinks
-  (display-time-mode t) ; Enable time in the mode-line
-  (size-indication-mode t) ; Show file-size
+;;;;; Time
+;; Enable time in the mode-line
+(use-package time
+  :straight nil
+  :hook (after-init. display-time-mode)
+  :custom
+  (display-time-format "%H:%M") ; Use 24hr format
+  (display-time-default-load-average nil) ; Don't show load average along with time
+  )
 
-  ;; Show battery
+;;;;; Battery
+;; Display batter percentage
   (use-package battery
     :straight nil
+    :after doom-modeline
     :custom
     (battery-load-critical 15)
     (battery-load-low 25)
@@ -81,16 +204,6 @@
                    (battery))
       (display-battery-mode t)) ; Show battery in modeline
     )
-  )
-
-;; Don't show encoding on modeline if it is UTF-8
-(defun doom-modeline-conditional-buffer-encoding ()
-  "Don't show encoding on modeline if it is UTF-8."
-  (setq-local doom-modeline-buffer-encoding
-              (unless (or (eq buffer-file-coding-system 'utf-8-unix)
-                          (eq buffer-file-coding-system 'utf-8)))))
-(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
-(add-hook 'doom-modeline-mode-hook #'doom-modeline-conditional-buffer-encoding) ; Necessary so it takes affect imediately, not before I change major modes for the first time
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'themes-rcp)

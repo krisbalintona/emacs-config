@@ -31,6 +31,7 @@
               mouse-yank-at-point t                      ; Yank at point rather than pointer
 
               delete-by-moving-to-trash t                ; Delete files to trash
+              find-file-visit-truename t                 ; Follow symlink to actual file
 
               scroll-conservatively most-positive-fixnum ; Always scroll by one line
               scroll-margin 7                            ; Add a margin when scrolling vertically
@@ -127,6 +128,13 @@
 ;;;; ESC everywhere
 ;; Make ESC quit prompts everywhere
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;;;; Size-indication-mode
+;; Show file-size
+(use-package simple
+  :straight nil
+  :hook (after-init. size-indication-mode)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'better-defaults-rcp)
