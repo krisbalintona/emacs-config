@@ -13,6 +13,7 @@ Zettelkasten and Evergreen notes
     (org-roam-directory kb/roam-dir)
     (org-roam-verbose nil) ; Don't echo messages that aren't errors
     ;; (org-roam-completion-system 'ivy) ; I set this to default to use selectrum
+    (org-roam-completion-system 'default)
     (org-roam-completion-everywhere t) ; Org-roam completion everywhere
     (org-roam-db-update-method 'immediate)
     (org-roam-db-update-idle-seconds 1) ; Save immediately - applies only if org-roam-db-update-method is set to idle-timer
@@ -37,6 +38,7 @@ Zettelkasten and Evergreen notes
 
     ;; Overall faces
     (set-face-attribute 'org-roam-link nil :inherit 'org-link :italic nil :foreground "goldenrod3")
+    (set-face-attribute 'org-roam-tag nil :weight 'extra-bold :foreground "#98be65")
 
     (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer
     (add-hook 'org-roam-buffer-prepare-hook

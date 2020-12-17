@@ -15,9 +15,10 @@
   ;; (projectile-completion-system 'default)
   :config
   ;; Selectrum minibuffer faces
-  (set-face-attribute 'selectrum-current-candidate nil :inherit '(ivy-current-match all-the-icons-ivy-rich-icon-face))
+  (set-face-attribute 'selectrum-current-candidate nil :inherit 'ivy-minibuffer-match-highlight)
   (set-face-attribute 'selectrum-primary-highlight nil :inherit 'ivy-minibuffer-match-face-2)
-  (set-face-attribute 'selectrum-secondary-highlight nil :inherit 'ivy-minibuffer-match-face-3)
+  (set-face-attribute 'selectrum-secondary-highlight nil :inherit 'ivy-minibuffer-match-face-4)
+  (set-face-attribute 'selectrum-completion-annotation nil :inherit 'ivy-grep-info)
   )
 
 ;;;; Selectrum-prescient
