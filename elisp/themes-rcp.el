@@ -51,7 +51,8 @@
   (doom-modeline-vcs-max-length 28)
   (doom-modeline-lsp t)
   (doom-modeline-height 33)
-  (doom-modeline-bar-width 0)
+  (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
+  (doom-modeline-window-width-limit 100) ; Width of the bar segment
   :config
   (if (daemonp) ; Hooks depending on daemon or not
       (progn (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
@@ -249,7 +250,7 @@ UTF-8."
 
   (doom-modeline-def-modeline 'main
     '("   " kb/major-mode-icon " " kb/mu4e "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " kb/matches selection-info)
-    '(input-method process debug kb/buffer-encoding kb/time battery " " bar " " kb/major-mode checker minor-modes))
+    '(input-method process debug kb/time battery " " bar " " kb/buffer-encoding kb/major-mode checker))
   )
 
 ;;; Commentary:
