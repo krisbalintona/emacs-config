@@ -127,3 +127,14 @@ Taken from [[https://orgmode.org/worg/org-hacks.html#archiving][Org ad hoc code,
       ad-do-it))
   (ad-activate 'org-refile)
 #+end_src
+
+* Flimenu
+
+Turns tree-based imenu sorting into a flat hierarchy
+#+begin_src emacs-lisp
+  (use-package flimenu
+    :hook (after-init . flimenu-global-mode)
+    :custom
+    (flimenu-ignore-modes-list nil) ; Igorned modes
+    )
+#+end_src
