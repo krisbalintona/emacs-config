@@ -52,7 +52,7 @@
 (require 'convenient-functions-rcp)
 (require 'themes-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "base-config.org"))
+(org-babel-load-file (concat user-emacs-directory "configs/" "etc-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
 
 ;;;;; Completion frameworks
@@ -61,7 +61,6 @@
 (require 'completion-ivy-rcp)
 (require 'completion-selectrum-rcp)
 (require 'completion-helm-rcp)
-(org-babel-load-file (concat user-emacs-directory "configs/" "completion-frameworks.org"))
 
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "buffer-management.org"))

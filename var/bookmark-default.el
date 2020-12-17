@@ -2,16 +2,21 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored-marker"
+(("Zotero"
+ (filename . "~/Documents/Zotero/")
+ (front-context-string . "tmp\n  drwxr-xr-x")
+ (rear-context-string . "96 Nov 22 21:12 ")
+ (position . 1104))
+("org-capture-last-stored-marker"
  (filename . "~/Documents/org-database/agenda/housekeeping.org")
  (front-context-string . "* PROG Tell pare")
  (rear-context-string . "2-04 Fri 12:59]\n")
  (position . 836))
 ("org-refile-last-stored"
- (filename . "~/Documents/org-database/agenda/housekeeping.org")
- (front-context-string . "* PROG Tell pare")
- (rear-context-string . "2-04 Fri 12:59]\n")
- (position . 836))
+ (filename . "~/Documents/org-database/agenda/hobbies.org")
+ (front-context-string . "** PROG [#B] Bac")
+ (rear-context-string . "2-08 Tue 16:53]\n")
+ (position . 25581))
 ("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
