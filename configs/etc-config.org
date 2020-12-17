@@ -138,3 +138,37 @@ Turns tree-based imenu sorting into a flat hierarchy
     (flimenu-ignore-modes-list nil) ; Igorned modes
     )
 #+end_src
+
+* File-name-shadow-mode
+
+Properties given to the shadowed part of a filename in the minibuffer
+#+begin_src emacs-lisp
+  (use-package rfn-eshadow
+    :hook (after-init . file-name-shadow-mode)
+    :custom
+    ;; (file-name-shadow-properties '(invisible t)) ; Hide shadowed paths
+    )
+#+end_src
+
+* Sudo-edit
+
+Utilities to edit files as root
+#+begin_src emacs-lisp
+  (use-package sudo-edit
+    :hook (after-init . sudo-edit-indicator-mode)
+    :config
+    (kb/leader-keys
+      "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
+      "fu" '(sudo-edit-current-file :which-key "Sudo this file")
+      )
+    )
+#+end_src
+
+* Auto-sudo-edit
+
+Automatically sudo files you don't have write access to
+#+begin_src emacs-lisp
+  (use-package auto-sudoedit
+    :hook (after-init . auto-sudoedit-mode)
+    )
+#+end_src

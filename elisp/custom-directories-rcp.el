@@ -29,7 +29,7 @@
 
 ;;;; For my frequently visited directories and files
 (defvar kb/library-dir (concat org-directory "library"))
-(defvar kb/emacs-base-config-file (concat user-emacs-directory "configs/base-config.org"))
+(defvar kb/emacs-etc-config-file (concat user-emacs-directory "configs/etc-config.org"))
 (defvar kb/emacs-config-dir (concat user-emacs-directory "configs/"))
 
 (defvar kb/dot-config-dir "~/.config/")
