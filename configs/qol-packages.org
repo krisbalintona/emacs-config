@@ -7,19 +7,19 @@ Have more descriptive and helpful function and variable descriptions
   (use-package helpful
     :after (evil evil-collection)
     :demand t ; Don't wait for the binded keys
-    :bind
-    ;; Remap all default help commands to helpful
-    ([remap describe-function] . helpful-function)
-    ([remap describe-command] . helpful-command)
-    ([remap describe-variable] . helpful-variable)
-    ([remap describe-key] . helpful-key)
-    :custom
-    ;; Make counsel use helpful
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
-
     :config
-    (evil-define-key '(visual normal) 'global (kbd "K") 'helpful-at-point)
+    (general-define-key; Remap all default help commands to helpful
+     [remap describe-function] 'helpful-callable ; Emacs' describe-function includes both functions and macros
+     [remap describe-command] 'helpful-command
+     [remap describe-variable] 'helpful-variable
+     [remap describe-symbol] 'helpful-symbol
+     [remap describe-key] 'helpful-key
+     )
+
+    (general-define-key
+     :states '(visual normal)
+     "K" 'helpful-at-point
+     )
 
     (kb/leader-keys
       "hk" '(helpful-key :which-key "Desc key")
