@@ -74,7 +74,7 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
 
 ;;;;; Programmming
-(require 'profiling-and-debug-rcp)
+(require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
 (require 'programming-elisp-rcp)
 (require 'programming-lua-rcp)
