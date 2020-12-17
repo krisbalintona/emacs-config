@@ -38,7 +38,7 @@ Zettelkasten and Evergreen notes
 
     ;; Overall faces
     (set-face-attribute 'org-roam-link nil :inherit 'org-link :italic nil :foreground "goldenrod3")
-    (set-face-attribute 'org-roam-tag nil :weight 'extra-bold :foreground "#98be65")
+    (set-face-attribute 'org-roam-tag nil :weight 'bold :foreground "#98be65")
 
     (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer
     (add-hook 'org-roam-buffer-prepare-hook
