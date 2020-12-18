@@ -142,9 +142,7 @@ icon."
     "Show eyebrowse workspace information."
     (when (and (doom-modeline--active)
                (not doom-modeline--limited-width-p))
-      '(" "
-        (eyebrowse-mode (:eval (eyebrowse-mode-line-indicator)))
-        " ")
+      '((eyebrowse-mode (:eval (eyebrowse-mode-line-indicator))))
       ))
   (doom-modeline-def-segment kb/time
     "Display time."
