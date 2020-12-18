@@ -62,8 +62,9 @@
 (require 'completion-selectrum-rcp)
 (require 'completion-helm-rcp)
 
+;;;;; Buffer management
+(require 'buffer-management-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "buffer-management.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "evil-packages.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "email.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
@@ -85,7 +86,6 @@
 
 ;;;;; Undoing
 (require 'undoing-rcp)
-(org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))
 
 ;;;;; Spelling and grammar
 (require 'checking-spelling-rcp)

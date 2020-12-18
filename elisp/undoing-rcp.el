@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Vterm packages and their configuration
+;; Packages for undoing mistakes and redoing them
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
