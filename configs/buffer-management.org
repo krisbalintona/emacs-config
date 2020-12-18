@@ -120,6 +120,23 @@ Save and restore open buffers and frames
     )
 #+END_SRC
 
+* Winner-mode
+
+Reverting and traversing window configurations across time
+#+begin_src emacs-lisp
+  (use-package winner
+    :custom
+    (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
+    :config
+    (winner-mode)
+
+    (general-define-key
+     "C-<left>" 'winner-undo
+     "C-<right>" 'winner-redo
+     )
+    )
+#+end_src
+
 * Bufler
 
 Manage buffers better
