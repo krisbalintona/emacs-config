@@ -96,7 +96,7 @@
      ))
   )
 
-;;;;;  Hydra-posframe
+;;;;; Hydra-posframe
 ;; Prettify the hydra-frame my positioning it where you like
 (use-package hydra-posframe
   :disabled t ; Too small sometimes

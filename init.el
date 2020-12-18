@@ -65,7 +65,9 @@
 ;;;;; Buffer management
 (require 'buffer-management-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "evil-packages.org"))
+;;;;; Evil
+(require 'evil-rcp)
+
 (org-babel-load-file (concat user-emacs-directory "configs/" "email.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
