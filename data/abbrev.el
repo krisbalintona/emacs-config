@@ -1,8 +1,13 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table
   '(
+    ("debending" "depending" nil :count 0)
+    ("disapper" "disappear" nil :count 0)
+    ("imediately" "immediately" nil :count 0)
+    ("infrmatoion" "information" nil :count 0)
     ("inovlved" "involved" nil :count 0)
     ("priveleges" "privileges" nil :count 0)
+    ("remembr" "remember" nil :count 0)
     ("thersuaruses" "thesaurus" nil :count 0)
    ))
 
@@ -186,5 +191,6 @@
 (define-abbrev-table 'text-mode-abbrev-table
   '(
     ("maintanence" "maintenance" nil :count 0)
+    ("reorded" "Reordered" nil :count 0)
    ))
 
