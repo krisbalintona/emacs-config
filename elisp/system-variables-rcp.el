@@ -1,12 +1,17 @@
 ;;; system-variables-rcp.el --- Configure and load repositories
-
+;;
+;;; Commentary:
+;;
+;; Variables pertinent to me and my system
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-;; UserInfo
+
+;;;; UserInfo
 (setq user-full-name "Kristoffer Balintona"
       user-mail-address "krisbalintona@gmail.com")
-;; UserInfo
 
-;; SystemInfo
+;;;; SystemInfo
 (defconst *sys/win32*
   (eq system-type 'windows-nt)
   "Are we running on a WinTel system?")
@@ -40,9 +45,7 @@
   (and *sys/linux* (display-graphic-p) python-p pip-p
        (not (equal (shell-command-to-string "pip freeze | grep '^PyQt\\|PyQtWebEngine'") "")))
   "Do we have EAF environment setup?")
-;; SystemInfo
 
-(provide 'system-variables-rcp)
-;;; Commentary:
-;;
 ;;; system-variables-rcp.el ends here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'system-variables-rcp)
