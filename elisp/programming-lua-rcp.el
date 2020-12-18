@@ -1,5 +1,7 @@
 ;;; programming-lua-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; These are packages that are helpful for programming in elisp
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38,8 +40,6 @@
                              ))
   )
 
+;;; programming-lua-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-lua-rcp)
-;;; Commentary:
-;;
-;;; programming-lua-rcp.el ends here

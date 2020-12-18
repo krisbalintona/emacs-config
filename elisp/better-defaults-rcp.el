@@ -1,5 +1,7 @@
 ;;; better-defaults-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Set more sane Emacs-wide defaults for Emacs as well as other QoL modes. These
 ;; settings are package-agnostic
 ;;
@@ -136,8 +138,6 @@
   :hook (after-init. size-indication-mode)
   )
 
+;;; better-defaults-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'better-defaults-rcp)
-;;; Commentary:
-;;
-;;; better-defaults-rcp.el ends here

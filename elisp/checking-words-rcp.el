@@ -1,5 +1,7 @@
 ;;; checking-words-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Packages relevant to the dictionaries and thesauruses
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -39,8 +41,6 @@
 
 ;;;;; Offline
 
+;;; checking-words-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-words-rcp)
-;;; Commentary:
-;;
-;;; checking-words-rcp.el ends here

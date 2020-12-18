@@ -1,5 +1,7 @@
 ;;; checking-spelling-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Packages for spell checking
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -87,8 +89,6 @@
   :hook (flyspell-mode . auto-dictionary-mode)
   )
 
+;;; checking-spelling-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-spelling-rcp)
-;;; Commentary:
-;;
-;;; checking-spelling-rcp.el ends here

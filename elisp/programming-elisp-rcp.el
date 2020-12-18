@@ -1,5 +1,7 @@
 ;;; programming-elisp-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; These are packages that are helpful for programming or working in elisp
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27,8 +29,6 @@
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   )
 
+;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-elisp-rcp)
-;;; Commentary:
-;;
-;;; programming-elisp-rcp.el ends here

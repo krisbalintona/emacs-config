@@ -1,5 +1,7 @@
 ;;; auto-gc-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Set better garbage collection timing
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -43,8 +45,6 @@
               (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
               )))
 
+;;; auto-gc-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'auto-gc-rcp)
-;;; Commentary:
-;;
-;;; auto-gc-rcp.el ends here

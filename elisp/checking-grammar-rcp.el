@@ -1,5 +1,7 @@
 ;;; checking-grammar-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Packages relevant to checking grammar
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42,8 +44,6 @@
    )
   )
 
+;;; checking-grammar-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-grammar-rcp)
-;;; Commentary:
-;;
-;;; checking-grammar-rcp.el ends here

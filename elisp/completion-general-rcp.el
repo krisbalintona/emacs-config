@@ -1,5 +1,7 @@
 ;;; completion-general-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; These are settings and/or packages which are package agnostic, some involved
 ;; with the default Emacs completion
 ;;
@@ -23,8 +25,6 @@
   (prescient-persist-mode)
   )
 
+;;; completion-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-general-rcp)
-;;; Commentary:
-;;
-;;; completion-general-rcp.el ends here

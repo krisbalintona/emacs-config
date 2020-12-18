@@ -1,5 +1,7 @@
 ;;; programming-general-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Language-agnostic packages helpful or required for programming
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -400,8 +402,6 @@
     )
   )
 
+;;; programming-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-general-rcp)
-;;; Commentary:
-;;
-;;; programming-general-rcp.el ends here

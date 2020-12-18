@@ -1,5 +1,7 @@
 ;;; completion-company-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Packages that configure the company completion backend
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -105,8 +107,6 @@
      ))
   )
 
+;;; completion-company-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-company-rcp)
-;;; Commentary:
-;;
-;;; completion-company-rcp.el ends here

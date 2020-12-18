@@ -1,5 +1,7 @@
 ;;; early-packages-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Load packages which need to be loaded at an early state here.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -53,8 +55,6 @@
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
   )
 
+;;; early-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'early-packages-rcp)
-;;; Commentary:
-;;
-;;; early-packages-rcp.el ends here

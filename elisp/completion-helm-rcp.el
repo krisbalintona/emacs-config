@@ -1,5 +1,7 @@
 ;;; completion-helm-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Helm completion framework and cousin packages
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,8 +69,7 @@
     "shs" '(helm-swoop :which-key "Helm-swoop")
     )
   )
+
+;;; completion-helm-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-helm-rcp)
-;;; Commentary:
-;;
-;;; completion-helm-rcp.el ends here

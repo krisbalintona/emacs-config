@@ -1,5 +1,7 @@
 ;;; faces-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; These are the base faces I used across all of Emacs
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -70,8 +72,6 @@
                  ))
   )
 
+;;; faces-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'faces-rcp)
-;;; Commentary:
-;;
-;;; faces-rcp.el ends here

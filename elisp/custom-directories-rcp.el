@@ -1,5 +1,7 @@
 ;;; custom-directories-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; These are directory and file definitions that I use frequently enough to
 ;; define
 ;;
@@ -35,8 +37,6 @@
 (defvar kb/dot-config-dir "~/.config/")
 (defvar kb/wm-config-file (concat kb/dot-config-dir "i3/config"))
 
+;;; custom-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'custom-directories-rcp)
-;;; Commentary:
-;;
-;;; custom-directories-rcp.el ends here

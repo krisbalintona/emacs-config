@@ -1,6 +1,8 @@
 ;;; straight-package-management-rcp.el --- Summary
 ;;
-;; Set up package management packages and settings
+;;; Commentary:
+;;
+;; Install straight.el and use-package and load repositories
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -61,10 +63,6 @@
         ;; ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
         ))
 
+;;; straight-package-management-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'straight-package-management-rcp)
-;;; Commentary:
-;;
-;; Install straight.el, use-package, and other early installs
-;;
-;;; straight-package-management-rcp.el ends here

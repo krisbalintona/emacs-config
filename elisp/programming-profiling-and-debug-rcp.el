@@ -1,6 +1,8 @@
 ;;; programming-profiling-and-debug-rcp.el --- Summary
 ;;
-;; Install and configure profiling and debug packages
+;;; Commentary:
+;;
+;; Profile Emacs startup and Emacs performance as well as debugging startup.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -21,10 +23,6 @@
 ;; NOTE: Not sure if this looks through literate configs?
 (use-package bug-hunter)
 
+;;; programming-profiling-and-debug-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-profiling-and-debug-rcp)
-;;; Commentary:
-;;
-;; Profile Emacs startup and Emacs performance as well as debugging startup
-;;
-;;; programming-profiling-and-debug-rcp.el ends here

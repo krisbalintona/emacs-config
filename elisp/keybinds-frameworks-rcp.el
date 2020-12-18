@@ -1,5 +1,7 @@
 ;;; keybinds-frameworks-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; This is where I set up general.el and define the main categories of prefixes
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -103,8 +105,6 @@
   (hydra-posframe-enable)
   )
 
+;;; keybinds-frameworks-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybinds-frameworks-rcp)
-;;; Commentary:
-;;
-;;; keybinds-frameworks-rcp.el ends here

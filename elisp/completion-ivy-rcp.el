@@ -1,5 +1,7 @@
 ;;; completion-ivy-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Ivy completion framework and (agnostic) cousin packages
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -223,8 +225,6 @@
    )
   )
 
+;;; completion-ivy-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-ivy-rcp)
-;;; Commentary:
-;;
-;;; completion-ivy-rcp.el ends here

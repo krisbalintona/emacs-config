@@ -1,5 +1,7 @@
 ;;; themes-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Here are all the themes that interest me. One is enabled and all the others
 ;; are disabled. I've also added my doom-modeline configuration
 ;;
@@ -87,8 +89,6 @@
     (display-battery-mode t)) ; Show battery in modeline
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'themes-rcp)
 ;;;;; Modeline segments
 ;; (Re)defining my own modeline segments
 (with-eval-after-load 'doom-modeline
@@ -251,6 +251,6 @@ UTF-8."
     '(input-method process debug kb/time battery " " bar " " kb/buffer-encoding kb/major-mode checker))
   )
 
-;;; Commentary:
-;;
 ;;; themes-rcp.el ends here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'themes-rcp)

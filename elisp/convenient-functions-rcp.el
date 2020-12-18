@@ -1,7 +1,9 @@
 ;;; convenient-functions-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; These are small groups of code, many of which are self-defined, that I find
-;; useful
+;; useful. Most of these functions are taken from elsewhere (e.g. Doom)
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -302,10 +304,6 @@
 
 (add-hook 'magit-mode-hook 'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
 
+;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'conventient-functions-rcp)
-;;; Commentary:
-;;
-;; Most of these functions are taken from elsewhere (e.g. Doom)
-;;
-;;; convenient-functions-rcp.el ends here
