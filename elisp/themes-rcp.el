@@ -59,7 +59,7 @@
              (add-hook 'window-setup-hook 'doom-modeline-mode))
     (add-hook 'window-setup-hook 'doom-modeline-mode)) ; Use this hook to prevent right side from being clipped
 
-  (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.75)
+  (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
   (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line)
   )
 
@@ -208,7 +208,7 @@ UTF-8."
     (let* ((active (doom-modeline--active))
            (face (if active 'doom-modeline-buffer-path 'mode-line-inactive))) ; Don't use here
       (concat (doom-modeline-spc)
-              (propertize (abbreviate-file-name default-directory) 'face 'italic)
+              (propertize (abbreviate-file-name default-directory) 'face 'bold-italic)
               (doom-modeline-spc))))
   (doom-modeline-def-segment me/major-mode
     "The current major mode, including environment information."
