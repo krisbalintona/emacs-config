@@ -79,7 +79,10 @@
 (require 'programming-elisp-rcp)
 (require 'programming-lua-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "shell.org"))
+;;;;; Shells
+(require 'shell-eshell-rcp)
+(require 'shell-vterm-rcp)
+
 (org-babel-load-file (concat user-emacs-directory "configs/" "undoing.org"))
 
 ;;;;; Spelling and grammar

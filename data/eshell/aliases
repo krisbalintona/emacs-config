@@ -1,11 +1,13 @@
-alias ffo find-file-other-window nil
-alias clear clear-scrollback
-alias l ls -lh $*
-alias ll ls -lah $*
-alias d dired $1
-alias ff find-file $1
-alias q exit
-alias mcd mkdir $1 && cd $1
-alias stc sudo timeshift --create
-alias stl sudo timeshift --list
+alias up eshell-up
+alias pk eshell-up-peek
 alias stcc sudo timeshift --create --comment
+alias stl sudo timeshift --list
+alias stc sudo timeshift --create
+alias mcd mkdir $1 && cd $1
+alias q exit
+alias ff find-file $1
+alias d dired $1
+alias ll ls -lah $*
+alias l ls -lh $*
+alias clear clear-scrollback
+alias ffo find-file-other-window nil
