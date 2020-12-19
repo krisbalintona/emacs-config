@@ -150,22 +150,21 @@
                       (file-name-nondirectory input)
                     input)))))
 
-  ;; Redefine embark-symbol-map to use helpful-symbol
+  ;; Redefine embark-symbol-map to use helpful-*
   (defun embark-helpful-callable-or-symbol ()
-    "Call `helpful-callable' or `helpful-symbol' on embark target depending on context."
+    "Call `helpful-callable' or `helpful-symbol' on embark target."
     (interactive)
-    ;; (eval-expression (typep (embark-target) 'symbol))
-    (funcall helpful-switch-buffer-function (helpful--buffer (intern (embark-target)) nil))
-    (helpful-update)
-    )
+    (funcall helpful-switch-buffer-function (helpful--buffer (intern "bug-hunter-init-file") t))
+    (helpful-update))
   (embark-define-keymap embark-symbol-map
-    '(("h" . embark-helpful-callable-or-symbol) ; Replace default embark-describe-*
-      ("c" . embark-info-emacs-command)
-      ("s" . embark-info-lookup-symbol)
-      ("d" . embark-find-definition)
-      ("b" . where-is)
-      ("e" . eval-expression)))
-  (add-to-list 'embark-keymap-alist '(variable . embark-symbol-map)) ; For helpful- and describe-variable
+    "My own keymap for seeing helpful buffer for a symbol."
+    ("h" embark-helpful-callable-or-symbol) ; Replace default embark-describe-*
+    ("c" embark-info-emacs-command)
+    ("s" embark-info-lookup-symbol)
+    ("d" embark-find-definition)
+    ("b" where-is)
+    ("e" eval-expression))
+  (add-to-list 'embark-keymap-alist '(variable . embark-symbol-map)) ; For and `describe-variable'
 
   ;; Reset list after embark-act (which may change candidates e.g. delete-file).
   ;; Taken from
