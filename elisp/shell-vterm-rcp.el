@@ -10,6 +10,9 @@
 ;;;; Vterm
 ;; Full-fledged terminal emulator
 (use-package vterm
+  :ensure-system-package ((libvterm)
+                          (libtool)
+                          (cmake))
   :hook (vterm-mode . (lambda ()
                         (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
                         (buffer-face-mode t)

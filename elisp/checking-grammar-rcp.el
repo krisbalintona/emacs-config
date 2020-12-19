@@ -17,6 +17,7 @@
 ;;;; Langtool
 ;; Use langtool program to check grammar of current buffer
 (use-package langtool
+  :ensure-system-package (languagetool)
   :custom
   (langtool-default-language "en-US")
   (langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*")

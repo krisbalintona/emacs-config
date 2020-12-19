@@ -86,6 +86,7 @@ Interactive browser graph view
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-server
     ;; :quelpa (org-roam-server :fetcher git :url "https://github.com/org-roam/org-roam-server" :branch "master") ; Quelpa version doesn't work? Perhaps has to do with org-roam dependency?
+    :ensure-system-package (watchexec)
     :after org-roam
     :hook ((org-roam-server-mode . (lambda () ; Necessary to open buffers from graph
                                      (require 'org-protocol)
@@ -323,6 +324,7 @@ with org-roam (provides templates and modifies edit notes action)
 ** Pdf-tools
 
 View pdfs and interact with them
++ Many dependencies [[https://github.com/politza/pdf-tools#compiling-on-fedora][GitHub - politza/pdf-tools: Emacs support library for PDF files.]]
 #+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
     :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)

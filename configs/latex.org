@@ -1,11 +1,12 @@
 #+TITLE:LaTeX configuration
 
-* Tex-site
+* Auctex
 
 A lot taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - MatthewZMD/.emacs.d: M-EMACS, a full-featured GNU Emacs configuratio...]]
 #+begin_src emacs-lisp
   (use-package tex
     :demand t ; Other latex packages are reliant on this one
+    :ensure-system-package (texlive-most)
     :straight auctex
     :hook
     ((LaTeX-mode . (lambda ()

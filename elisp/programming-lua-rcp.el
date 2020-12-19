@@ -10,7 +10,9 @@
 (require 'keybinds-frameworks-rcp)
 ;;;; Lua-mode
 ;; Major-mode for the Lua language.
-;; NOTE:For lsp-mode support, install lua-language-server, a separate system package
+;; Install directions for system package described here:
+;; https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
+;; NOTE: For lsp-mode support, install lua-language-server, a separate system package
 (use-package lua-mode
   :defines lsp-clients-lua-language-server-install-dir
   :custom

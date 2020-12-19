@@ -189,7 +189,7 @@
 ;; Fall back on fish when Emacs does not find any completion candidate with its
 ;; native completion support (pcomplete).
 (use-package fish-completion
-  :if (string= (executable-find "fish") "/usr/bin/fish") ; Check if fish is installed
+  :ensure-system-package (fish)
   :hook (after-init . global-fish-completion-mode)
   )
 

@@ -11,6 +11,7 @@
 ;; Fast and simple spell checking
 (use-package spell-fu
   :disabled t ; Testing flyspell for now
+  :ensure-system-package (aspell)
   :hook
   ((text-mode . spell-fu-mode)
    (spell-fu-mode . (lambda () ; Change personal dictionary
@@ -31,6 +32,8 @@
 ;;;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
+  :ensure-system-package ((aspell)
+                          (proselint))
   :hook
   ((text-mode . flyspell-mode)
    (prog-mode . flyspell-prog-mode)
