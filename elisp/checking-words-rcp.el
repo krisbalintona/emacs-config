@@ -7,15 +7,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+(require 'keybinds-frameworks-rcp)
 ;;;; Online
-;;;;; Emacs themes
+;;;;; Define-word
 ;; See definitions of words within Emacs. Offline version is
 ;; https://github.com/gromnitsky/wordnut
 (use-package define-word
   :config
   (general-define-key
-   "C-c d" '(define-word-at-point :which-key "Definition at point")
-   "C-c D" '(define-word :which-key "Definition lookup")
+   "C-c d" '(define-word-at-point :which-key "Define-word at point")
+   "C-c D" '(define-word :which-key "Define-word lookup")
    )
   )
 
@@ -39,7 +40,38 @@
    )
   )
 
-;;;;; Offline
+;;;; Offline
+;;;;; Wordnut
+;; Offline dictionary
+(use-package wordnut
+  :if (eq system-packages-package-manager 'yay) ; Be on Arch Linux
+  :ensure-system-package (wn . wordnet-cli) ; Install alongside `english-wordnet' dependency
+  :config
+  (unless (featurep 'define-word)
+    (general-define-key
+     "C-c d" '(wordnut-lookup-current-word :which-key "Wordnut lookup this word")
+     "C-c D" '(wordnut-search :which-key "Wordnut search")
+     )
+    )
+  )
+
+;;;;; Synosaurus
+;; Offline thesaurus
+(use-package synosaurus
+  :if (eq system-packages-package-manager 'yay) ; Be on Arch Linux
+  :ensure-system-package (wn . wordnet-cli) ; Install alongside `english-wordnet' dependency
+  :hook (after-init . synosaurus-mode)
+  :custom
+  (synosaurus-backend 'synosaurus-backend-wordnet) ; Offline thesaurus that relies on `wordnet'
+  (synosaurus-choose-method 'default)
+  :config
+  (unless (featurep 'powerthesaurus)
+    (general-define-key
+     "C-c l" '(synosaurus-choose-and-replace :which-key "Synosaurus at point")
+     "C-c L" '(synosaurus-choose-and-insert :which-key "Synosaurus lookup")
+     )
+    )
+  )
 
 ;;; checking-words-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

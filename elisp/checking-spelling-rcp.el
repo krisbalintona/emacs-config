@@ -29,7 +29,7 @@
 
 ;;;; Flyspell packages
 ;;;;; Flyspell
-                                        ;: Feature-rich spell-checker
+;; Feature-rich spell-checker
 (use-package flyspell
   :hook
   ((text-mode . flyspell-mode)

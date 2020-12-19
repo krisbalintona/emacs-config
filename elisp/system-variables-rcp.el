@@ -46,6 +46,11 @@
        (not (equal (shell-command-to-string "pip freeze | grep '^PyQt\\|PyQtWebEngine'") "")))
   "Do we have EAF environment setup?")
 
+(defvar linux-distribution
+  (shell-command-to-string "printf %s \"$(lsb_release -sd)\"")
+  "An escaped string that has the name of my Linux distribution."
+  )
+
 ;;; system-variables-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'system-variables-rcp)

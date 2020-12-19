@@ -1,5 +1,7 @@
 ;;; init.el --- -*- lexical-binding: t -*- --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Set native-compilation settings. Also define paths for my config (org and
 ;; elisp) files and load them
 ;;
@@ -38,6 +40,7 @@
 
 ;;;;; Package management and settings
 (require 'auto-gc-rcp)
+(require 'system-variables-rcp)
 ;; (require 'default-package-management-rcp) ; Use package.el
 (require 'straight-package-management-rcp) ; Use straight.el
 (require 'use-package-rcp)
@@ -98,8 +101,6 @@
 
 ;; (byte-recompile-directory (expand-file-name "configs" user-emacs-directory) 0 t)
 
+;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'init)
-;;; Commentary:
-;;
-;;; init.el ends here

@@ -7,6 +7,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+(require 'keybinds-frameworks-rcp)
 ;;;; Eshell
 (use-package esh-mode
   :straight nil

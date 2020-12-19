@@ -12,9 +12,45 @@
 (require 'straight)
 (straight-use-package 'org-plus-contrib)
 
-;;;; Diminish
-;; Remove or rename modeline lighters
-(use-package diminish)
+;;;; System-packages
+;; Install system packages within Emacs. Necessary for use-package's `:ensure-system-package' flag
+(use-package system-packages
+  :p
+  :custom
+  (system-packages-use-sudo t)
+  :config
+  (add-to-list 'system-packages-supported-package-managers
+               '(yay . ; Add support for yay
+                     ((default-sudo . t)
+                      (install . "yay -S")
+                      (search . "yay -Ss")
+                      (uninstall . "yay -Rns")
+                      (update . "yay -Syu")
+                      (clean-cache . "yay -Sc")
+                      (change-log . "yay -Qc")
+                      (log . "cat /var/log/yay.log")
+                      (get-info . "yay -Qi")
+                      (get-info-remote . "yay -Si")
+                      (list-files-provided-by . "yay -qQl")
+                      (owning-file . "yay -Qo")
+                      (owning-file-remote . "yay -F")
+                      (verify-all-packages . "yay -Qkk")
+                      (verify-all-dependencies . "yay -Dk")
+                      (remove-orphaned . "yay -Rns $(yay -Qtdq)")
+                      (list-installed-packages . "yay -Qe")
+                      (list-installed-packages-all . "yay -Q")
+                      (list-dependencies-of . "yay -Qi")
+                      (noconfirm . "--noconfirm"))
+                     ))
+
+  (if (string= linux-distribution "\"Arch Linux\"")
+      (progn
+        (setq system-packages-package-manager 'yay)
+        (setq system-packages-use-sudo nil))
+    (if (string= linux-distribution "\"Fedora release 33 (Thirty Three)\"")
+        (system-packages-package-manager 'dnf)
+      )
+  )
 
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path
@@ -61,6 +97,10 @@
   (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
   )
+
+;;;; Diminish
+;; Remove or rename modeline lighters
+(use-package diminish)
 
 ;;; early-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
