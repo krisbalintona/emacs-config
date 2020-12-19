@@ -12,6 +12,13 @@
 (require 'straight)
 (straight-use-package 'org-plus-contrib)
 
+;;;; Exec-path-from-shell
+;; Ensure eshell and system shell have same path
+(use-package exec-path-from-shell
+  :functions exec-path-from-shell-initialize
+  :config (exec-path-from-shell-initialize)
+  )
+
 ;;;; System-packages
 ;; Install system packages within Emacs. Necessary for use-package's `:ensure-system-package' flag
 (use-package system-packages
@@ -48,11 +55,10 @@
         (setq system-packages-use-sudo nil)))
   )
 
-;;;; Exec-path-from-shell
-;; Ensure eshell and system shell have same path
-(use-package exec-path-from-shell
-  :functions exec-path-from-shell-initialize
-  :config (exec-path-from-shell-initialize)
+;;;; Use-package-ensure-system-package
+;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword. Requires `system-packages'
+(use-package use-package-ensure-system-package
+  :after (exec-path-from-shell system-packages)
   )
 
 ;;;; NoLittering

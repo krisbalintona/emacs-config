@@ -23,10 +23,6 @@
   ;; byte-compiled .emacs.elc.
   (use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
 
-;;;; Use-package-ensure-system-package
-;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword
-(use-package use-package-ensure-system-package)
-
 ;;;; Load repos
 (require 'package)
 (setq package-archives
