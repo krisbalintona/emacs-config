@@ -10,7 +10,6 @@
 ;;;; Undo-fu
 ;; Easy and simple undoing
 (use-package undo-fu
-  :hook (after-init . undo-fu-mode)
   :custom
   ;; Store more undo history to prevent loss of data
   (undo-limit (* 100 1024))

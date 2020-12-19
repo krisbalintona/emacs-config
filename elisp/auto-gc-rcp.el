@@ -29,10 +29,13 @@
   (garbage-collect)
   (setq gc-cons-threshold better-gc-cons-threshold))
 
-(add-hook 'after-focus-change-function '(lambda () (unless (frame-focus-state)
-                                                     (garbage-collect))))
-(add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
-(add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
+(add-hook 'emacs-startup-hook (lambda ()
+                                (add-hook 'after-focus-change-function (lambda () (unless (frame-focus-state)
+                                                                                    (garbage-collect))
+                                                                         ))
+                                (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
+                                (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
+                                ))
 
 ;;; auto-gc-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
