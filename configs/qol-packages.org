@@ -425,15 +425,6 @@ Easily create scratch buffers for different modes
     )
 #+end_src
 
-* Exec-path-from-shell
-
-Ensure eshell and system shell have same path
-#+begin_src emacs-lisp
-  (use-package exec-path-from-shell
-    :hook (window-setup . exec-path-from-shell-initialize)
-    )
-#+end_src
-
 * Disable-mouse
 
 Disable mouse interaction within Emacs
