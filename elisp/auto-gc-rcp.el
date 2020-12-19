@@ -14,10 +14,9 @@
   If you experience freezing, decrease this. If you experience stuttering,
   increase this.")
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold better-gc-cons-threshold)
-            ))
+(add-hook 'emacs-startup-hook (lambda ()
+                                (setq gc-cons-threshold better-gc-cons-threshold)
+                                ))
 
 ;;;; AutoGC
 ;; Garbage Collect when Emacs is out of focus and try to avoid garbage
@@ -30,20 +29,10 @@
   (garbage-collect)
   (setq gc-cons-threshold better-gc-cons-threshold))
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (if (boundp 'after-focus-change-function)
-                (add-function :after after-focus-change-function
-                              (lambda ()
-                                (unless (frame-focus-state)
-                                  (garbage-collect))))
-              (add-hook 'after-focus-change-function '(lambda ()
-                                                        (unless (frame-focus-state)
-                                                          (garbage-collect))))
-
-              (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
-              (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
-              )))
+(add-hook 'after-focus-change-function '(lambda () (unless (frame-focus-state)
+                                                     (garbage-collect))))
+(add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
 
 ;;; auto-gc-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
