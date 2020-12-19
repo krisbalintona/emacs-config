@@ -28,43 +28,6 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;;;; Install use-package and set settings
-(require 'straight)
-(straight-use-package 'use-package)
-
-(eval-and-compile
-  ;; (setq use-package-always-ensure t) ; May cause issues with straight.el
-  (setq use-package-expand-minimally t) ; Less verbose
-  ;; (setq use-package-compute-statistics t) ; Need this at "loadup time" or else errors about undefined variables will appear
-  (setq use-package-enable-imenu-support t))
-
-(eval-when-compile
-  (require 'use-package)
-  (require 'bind-key))
-
-;; Set use-package-verbose to t for interpreted .emacs, and to nil for
-;; byte-compiled .emacs.elc.
-(eval-and-compile
-  (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
-
-;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword
-(use-package use-package-ensure-system-package)
-
-;;;; Load repos
-;; All of this is package.el and it conflicts with straight.el. Package-archives
-;; can be used if loaded after straight.el. Useful if you want to still peruse
-;; packages with M-x package-list-packages
-(require 'package)
-(setq package-archives
-      '(("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ;; ("org" . "http://orgmode.org/elpa/")
-        ;; ("gnu"   . "https://elpa.gnu.org/packages/")
-        ("cselpa" . "https://elpa.thecybershadow.net/packages/")
-        ;; ;; Chinese servers
-        ;; ("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
-        ;; ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
-        ))
 
 ;;; straight-package-management-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

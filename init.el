@@ -36,10 +36,11 @@
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
-;;;;; Necessary packages and settings
+;;;;; Package management and settings
 (require 'auto-gc-rcp)
 ;; (require 'default-package-management-rcp) ; Use package.el
 (require 'straight-package-management-rcp) ; Use straight.el
+(require 'use-package-rcp)
 (require 'early-packages-rcp)
 (require 'better-defaults-rcp)
 (require 'faces-rcp)
