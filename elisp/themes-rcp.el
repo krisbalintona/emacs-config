@@ -57,9 +57,8 @@
   (doom-modeline-window-width-limit 100) ; Width of the bar segment
   :config
   (if (daemonp) ; Hooks depending on daemon or not
-      (progn (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
-             (add-hook 'window-setup-hook 'doom-modeline-mode))
-    (add-hook 'window-setup-hook 'doom-modeline-mode)) ; Use this hook to prevent right side from being clipped
+      (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
+    (add-hook 'window-setup-hook 'doom-modeline-mode))
 
   (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
   (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line)

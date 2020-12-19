@@ -16,7 +16,6 @@
   (selectrum-count-style 'current/matches)
   (selectrum-show-indices nil) ; Can also be custom if passed a function
   :config
-
   ;; Selectrum minibuffer faces
   ;; Foregrounds based on ivy-minibuffer-match-face-*
   (set-face-attribute 'selectrum-current-candidate nil
@@ -112,10 +111,11 @@
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
-  :straight (embark :type git :host github :repo "oantolin/embark")
   :custom
   (embark-prompt-style 'default) ; Or manual completion
-  (embark-action-indicator (propertize "Embark on:" 'face '(bold underline))) ; A function, string, or nil - remember: propertize returns a string
+  (embark-action-indicator (concat ; A function, string, or nil - remember: propertize returns a string
+                            (propertize "Embark on" 'face '(bold underline))
+                            ":")) 
   :config
   (general-define-key
    ;; :keymaps 'selectrum-minibuffer-map
@@ -158,14 +158,13 @@
     (funcall helpful-switch-buffer-function (helpful--buffer (intern (embark-target)) nil))
     (helpful-update)
     )
-  (setq embark-symbol-map
-        (embark-keymap '(("h" . embark-helpful-callable-or-symbol) ; Replace default embark-describe-*
-                         ("c" . embark-info-emacs-command)
-                         ("s" . embark-info-lookup-symbol)
-                         ("d" . embark-find-definition)
-                         ("b" . where-is)
-                         ("e" . eval-expression))
-                       embark-general-map))
+  (embark-define-keymap embark-symbol-map
+    '(("h" . embark-helpful-callable-or-symbol) ; Replace default embark-describe-*
+      ("c" . embark-info-emacs-command)
+      ("s" . embark-info-lookup-symbol)
+      ("d" . embark-find-definition)
+      ("b" . where-is)
+      ("e" . eval-expression)))
   (add-to-list 'embark-keymap-alist '(variable . embark-symbol-map)) ; For helpful- and describe-variable
 
   ;; Reset list after embark-act (which may change candidates e.g. delete-file).

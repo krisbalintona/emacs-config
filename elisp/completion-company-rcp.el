@@ -23,7 +23,7 @@
   (company-tooltip-idle-delay 0.7)
   (company-minimum-prefix-length 2)
   (company-require-match 'company-explicit-action-p)
-  (company-selection-wrap-around t) ; Wrap when selecting canditates
+  (company-selection-wrap-around t) ; Wrap when selecting candidates
   (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
 
   (company-dabbrev-other-buffers nil)

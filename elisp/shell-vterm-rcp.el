@@ -10,7 +10,7 @@
 ;;;; Vterm
 ;; Full-fledged terminal emulator
 (use-package vterm
-  :ensure-system-package ((libvterm)
+  :ensure-system-package ((vterm-ctrl . libvterm)
                           (libtool)
                           (cmake))
   :hook (vterm-mode . (lambda ()

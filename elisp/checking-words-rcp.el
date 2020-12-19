@@ -7,7 +7,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-(require 'keybinds-frameworks-rcp)
+(require 'general)
 ;;;; Online
 ;;;;; Define-word
 ;; See definitions of words within Emacs. Offline version is

@@ -15,7 +15,6 @@
 ;;;; System-packages
 ;; Install system packages within Emacs. Necessary for use-package's `:ensure-system-package' flag
 (use-package system-packages
-  :p
   :custom
   (system-packages-use-sudo t)
   :config
@@ -46,10 +45,7 @@
   (if (string= linux-distribution "\"Arch Linux\"")
       (progn
         (setq system-packages-package-manager 'yay)
-        (setq system-packages-use-sudo nil))
-    (if (string= linux-distribution "\"Fedora release 33 (Thirty Three)\"")
-        (system-packages-package-manager 'dnf)
-      )
+        (setq system-packages-use-sudo nil)))
   )
 
 ;;;; Exec-path-from-shell

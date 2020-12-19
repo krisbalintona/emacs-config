@@ -7,7 +7,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-(require 'keybinds-frameworks-rcp)
+(require 'general)
 ;;;; Lua-mode
 ;; Major-mode for the Lua language.
 ;; Install directions for system package described here:
