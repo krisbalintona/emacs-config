@@ -181,8 +181,7 @@
   :custom
   (esh-autosuggest-delay 0.25)
   :config
-  ;; (set-face-foreground 'company-preview-common "#4b5668")
-  ;; (set-face-background 'company-preview nil)
+  (set-face-foreground 'company-preview-common "#4b5668")
   )
 
 ;;;; Fish-completion
