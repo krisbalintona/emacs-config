@@ -215,3 +215,24 @@ sudo timeshift --create --comment "After modeline revamp"
 sudo timeshift --create --comment "Goodnight"
 sudo timeshift --create --comment "Goodnight"
 sudo timeshift --create --comment "After system upgrade"
+stl
+alias pk "eshell-up-peek"
+pk
+pk ho
+ls {pk home}
+alias up "eshell-up"
+z --1elp
+z --help
+ls
+ls
+pwd
+ls
+ls
+cd elisp
+..
+dust undo-fu-session/
+sudo timeshift --create --comment "After installing offline dictionary and thesaurus"
+stc
+mkdir ~/Documents/Emails/Personal/Archive/
+rmdir ~/Documents/Emails/Personal/Archive/
+mv .gitignore .gitignore-old

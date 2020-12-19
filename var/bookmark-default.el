@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/Dec142020-003134-hutchinsgreatbookswestern1955.org")
- (front-context-string . "#+TITLE: hutchin")
- (rear-context-string)
- (position . 1))
+ (filename . "~/Documents/org-database/agenda/inbox.org")
+ (front-context-string . "* TODO Figure ou")
+ (rear-context-string . "ILETAGS: REFILE\n")
+ (position . 106))
 )

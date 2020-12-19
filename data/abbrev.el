@@ -1,13 +1,20 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table
   '(
+    ("canditates" "candidates" nil :count 0)
+    ("completin" "completion" nil :count 0)
+    ("conventient" "convenient" nil :count 0)
     ("debending" "depending" nil :count 0)
     ("disapper" "disappear" nil :count 0)
     ("imediately" "immediately" nil :count 0)
+    ("inconvient" "inconvenient" nil :count 0)
     ("infrmatoion" "information" nil :count 0)
+    ("inisializes" "initializes" nil :count 0)
     ("inovlved" "involved" nil :count 0)
+    ("linebreaks" "line breaks" nil :count 0)
     ("priveleges" "privileges" nil :count 0)
     ("remembr" "remember" nil :count 0)
+    ("situatoinally" "Situational" nil :count 0)
     ("thersuaruses" "thesaurus" nil :count 0)
    ))
 
