@@ -63,7 +63,7 @@
 (require 'completion-helm-rcp)
 
 ;;;;; Buffer management
-(require 'buffer-management-rcp)
+(require 'buffer-and-window-management-rcp)
 
 ;;;;; Evil
 (require 'evil-rcp)
