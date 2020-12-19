@@ -54,7 +54,9 @@
 (use-package ivy-rich
   :after ivy
   :hook (after-init . ivy-rich-mode)
-  :preface
+  :custom
+  (ivy-rich-path-style 'abbrev) ; Abbreviate file names
+  :config
   ;; Taken from https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#ivy
   (defun kb/ivy-rich-describe-variable-value (candidate)
     "Return the value of the variable in a `counsel-describe-variable' session."
@@ -84,9 +86,7 @@
          ((> size 1000000) (format "%.1fM" (/ size 1000000.0)))
          ((> size 1000) (format "%.1fk" (/ size 1000.0)))
          (t (format "%d" size))))))
-  :custom
-  (ivy-rich-path-style 'abbrev) ; Abbreviate file names
-  :config
+
   (setq-default 
    ivy-rich-display-transformers-list ; Change transformer to show variable values
    (plist-put ivy-rich-display-transformers-list

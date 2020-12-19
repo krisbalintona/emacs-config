@@ -10,6 +10,8 @@
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
+  :functions general-define-key
+  :commands winner-mode
   :hook (after-init . winner-mode)
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
@@ -25,6 +27,7 @@
 (use-package eyebrowse
   :after (evil evil-collection)
   :hook (after-init . eyebrowse-mode)
+  :commands eyebrowse-mode
   :custom
   (eyebrowse-default-workspace-slot 0) ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c C-w"))
@@ -67,6 +70,7 @@
 ;;;; Shackle
 ;; Control the behavior of popup and side windows
 (use-package shackle
+  :commands shackle-mode
   :hook (after-init . shackle-mode)
   :custom
   (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)
@@ -77,29 +81,6 @@
                    ("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)
                    ))
   (shackle-select-reused-windows t)
-  )
-
-;;;; Window resizing
-;; Resize windows easily with hydra
-(require 'pretty-hydra)
-(pretty-hydra-define hydra:windows-and-font-size
-  (:color pink :hint t :foreign-keys run :quit-key "q")
-  ("Size"
-   (("b" balance-windows :color blue)
-    ("j" enlarge-window "Enlarge vertically")
-    ("k" shrink-window "Shrink vertically")
-    ("l" enlarge-window-horizontally "Enlarge horizontally")
-    ("h" shrink-window-horizontally "Shrink horizontally"))
-   "Zoom"
-   (("-" default-text-scale-decrease)
-    ("+" default-text-scale-increase)
-    ("0" default-text-scale-reset :color blue))
-   "Buffers"
-   (("w" (revert-buffer nil t) :color blue))
-   ))
-
-(kb/leader-keys
-  "w TAB" '(hydra:windows-and-font-size/body :which-key "Augment window sizing")
   )
 
 ;;;; Bufler

@@ -30,7 +30,7 @@
   (setq gc-cons-threshold better-gc-cons-threshold))
 
 (add-hook 'emacs-startup-hook (lambda ()
-                                (add-hook 'after-focus-change-function (lambda () (unless (frame-focus-state)
+                                (add-hook 'after-focus-change-hook (lambda () (unless (frame-focus-state)
                                                                                     (garbage-collect))
                                                                          ))
                                 (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)

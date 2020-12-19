@@ -28,7 +28,6 @@
 ;;;; Setup fonts
 (defun kb/default-fonts-setup ()
   "Set Emacs-wide fonts."
-
   (add-to-list 'default-frame-alist `(font . ,kb/default-font))
 
   (set-face-attribute 'default nil :font kb/default-font :height 135)

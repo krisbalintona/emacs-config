@@ -23,9 +23,9 @@
 ;; Large library of snippet templates
 (use-package doom-snippets
   :after yasnippet
+  :hook (after-init . yas-reload-all)
   :straight (doom-snippts :type git :host github :repo "hlissner/doom-snippets")
   ;; :quelpa (doom-snippets :fetcher git :url "https://github.com/hlissner/doom-snippets")
-  :config (yas-reload-all)
   )
 
 ;;;;; Org-tempo

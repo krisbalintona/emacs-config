@@ -19,13 +19,14 @@
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path
 (use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize)
+  :functions exec-path-from-shell-initialize
+  :config (exec-path-from-shell-initialize)
   )
 
 ;;;; NoLittering
 ;; Set default package paths
 (use-package no-littering
+  :functions (no-littering-expand-var-file-name no-littering-expand-etc-file-name)
   :custom
   (no-littering-etc-directory (expand-file-name "data/" user-emacs-directory)) ; Config files
   (no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files

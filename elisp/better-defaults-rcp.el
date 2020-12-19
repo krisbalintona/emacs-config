@@ -37,6 +37,7 @@
 
               scroll-conservatively most-positive-fixnum ; Always scroll by one line
               scroll-margin 7                            ; Add a margin when scrolling vertically
+line-spacing 0 ; This is the default line spacing
 
               select-enable-clipboard t                  ; Merge system's and Emacs' clipboard
 
@@ -65,6 +66,8 @@
               indent-tabs-mode nil
 
               visible-bell nil
+
+confirm-kill-emacs 'y-or-n-p ; Confirm before killing emacs
               )
 
 ;;;; Thinner vertical fringes
@@ -77,26 +80,25 @@
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 
 ;;;; Display line numbers
-(require 'display-line-numbers)
-(column-number-mode) ; Column number in modeline
-(setq display-line-numbers-type 'relative)
+(use-package display-line-numbers
+  :custom
+  (display-line-numbers-type 'relative)
+  :config
+  (column-number-mode) ; Column number in modeline
 
-;; Enabled for these
-(dolist (mode '(prog-mode-hook
-                LaTeX-mode-hook
-                ))
-  (add-hook mode (lambda () (display-line-numbers-mode 1))))
+  ;; Enabled for these
+  (dolist (mode '(prog-mode-hook
+                  LaTeX-mode-hook
+                  ))
+    (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
-;; Disabled for these
-(dolist (mode '(org-mode-hook
-                shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-;;;; Line spacing
-(setq line-spacing 0) ; This is default
 
-;;;; Confirm quit
-(setq confirm-kill-emacs 'y-or-n-p) ; Confirm before killing emacs
+  ;; Disabled for these
+  (dolist (mode '(org-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  )
 
 ;;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
@@ -116,12 +118,6 @@
 ;;;; Highlight line in org-agenda
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode t)))
 
-;;;; Load custom file
-;; Must be loaded after early-packages-rcp because that is where custom-file
-;; location is defined
-(when (file-exists-p custom-file)
-  (load custom-file))
-
 ;;;; Pinentry (pin-entry)
 ;; Pinentry is responsible for querying passphrases
 (require 'epg)
@@ -137,6 +133,12 @@
   :straight nil
   :hook (after-init. size-indication-mode)
   )
+
+;;;; Load custom file
+;; Must be loaded after early-packages-rcp because that is where custom-file
+;; location is defined
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;;; better-defaults-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

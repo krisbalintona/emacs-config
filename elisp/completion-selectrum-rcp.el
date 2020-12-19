@@ -16,6 +16,7 @@
   (selectrum-count-style 'current/matches)
   (selectrum-show-indices nil) ; Can also be custom if passed a function
   :config
+
   ;; Selectrum minibuffer faces
   ;; Foregrounds based on ivy-minibuffer-match-face-*
   (set-face-attribute 'selectrum-current-candidate nil
@@ -184,7 +185,7 @@
 ;; Magit status of repo containing a given file. Taken from Magit status of repo
 ;; containing a given file
 (defun embark-magit-status ()
-  "Run `magit-status` on repo containing the embark target."
+  "Run `magit-status' on repo containing the embark target."
   (interactive)
   (magit-status (locate-dominating-file (embark-target) ".git")))
 

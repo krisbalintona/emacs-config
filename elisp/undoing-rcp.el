@@ -10,6 +10,7 @@
 ;;;; Undo-fu
 ;; Easy and simple undoing
 (use-package undo-fu
+  :functions general-define-key
   :custom
   ;; Store more undo history to prevent loss of data
   (undo-limit (* 100 1024))
@@ -25,6 +26,7 @@
 ;;;; Undo-fu-session
 ;; Keep undo history across sessions
 (use-package undo-fu-session
+  :defines no-littering-var-directory
   :hook (undo-fu-mode . global-undo-fu-session-mode)
   :custom
   (undo-fu-session-directory (concat user-emacs-directory "undo-fu-session/"))

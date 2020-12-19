@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; These are the base faces I used across all of Emacs
+;; Evil packages
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -77,13 +77,14 @@
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
   :after (evil evil-collection org)
-  :requires evil-org-agenda
   :hook ((org-mode . evil-org-mode)
          (evil-org-mode . (lambda ()
                             (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
                             ))
          )
-  :init (evil-org-agenda-set-keys)
+  :init
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)
   :custom
   (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
   :config

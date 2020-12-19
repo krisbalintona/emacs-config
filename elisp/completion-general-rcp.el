@@ -20,7 +20,7 @@
 ;; Simple sorting of minibuffer candidates. Big benefit is having most recent
 ;; candidate shown on top
 (use-package prescient
-  :after (ivy counsel swiper selectrum helm) ; Needs to be called after counsel so that counsel doesn't overwrite stuff
+  :after counsel ; Needs to be called after counsel so that counsel doesn't overwrite stuff
   :config
   (prescient-persist-mode)
   )

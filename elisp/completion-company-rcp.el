@@ -11,7 +11,8 @@
 ;; Point auto-completion backend
 (use-package company
   :hook ((after-init . global-company-mode)
-         (company-mode . evil-normalize-keymaps))
+         (company-mode . evil-normalize-keymaps)
+         )
   :custom
   (company-show-numbers t) ; Number the candidates
   (company-tooltip-offset-display 'lines)

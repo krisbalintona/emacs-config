@@ -94,6 +94,27 @@
       ("V" #'straight-thaw-versions "\"Unfreeze\" all frozen packages (?)"))
      ("q" nil) ; Reserved for quit
      ))
+
+  ;; Resize windows easily with hydra
+  (pretty-hydra-define hydra:windows-and-font-size
+    (:color pink :hint t :foreign-keys run :quit-key "q")
+    ("Size"
+     (("b" balance-windows :color blue)
+      ("j" enlarge-window "Enlarge vertically")
+      ("k" shrink-window "Shrink vertically")
+      ("l" enlarge-window-horizontally "Enlarge horizontally")
+      ("h" shrink-window-horizontally "Shrink horizontally"))
+     "Zoom"
+     (("-" default-text-scale-decrease)
+      ("+" default-text-scale-increase)
+      ("0" default-text-scale-reset :color blue))
+     "Buffers"
+     (("w" (revert-buffer nil t) :color blue))
+     ))
+
+  (kb/leader-keys
+    "w TAB" '(hydra:windows-and-font-size/body :which-key "Augment window sizing")
+    )
   )
 
 ;;;;; Hydra-posframe
