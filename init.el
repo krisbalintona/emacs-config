@@ -32,9 +32,6 @@
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
 
-;;;; Byte compile config files
-;; (byte-recompile-directory (expand-file-name "elisp" user-emacs-directory) 0 t)
-
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
@@ -72,7 +69,9 @@
 ;;;;; Evil
 (require 'evil-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "email.org"))
+;;;;; Email
+(require 'mu4e-rcp)
+
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-agenda.org"))
@@ -98,8 +97,6 @@
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
 
-
-;; (byte-recompile-directory (expand-file-name "configs" user-emacs-directory) 0 t)
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
