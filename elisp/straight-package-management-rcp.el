@@ -47,6 +47,9 @@
 (eval-and-compile
   (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
 
+;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword
+(use-package use-package-ensure-system-package)
+
 ;;;; Load repos
 ;; All of this is package.el and it conflicts with straight.el. Package-archives
 ;; can be used if loaded after straight.el. Useful if you want to still peruse
