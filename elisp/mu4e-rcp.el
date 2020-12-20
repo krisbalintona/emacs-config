@@ -12,7 +12,8 @@
 ;; Viewing emails with the best email client
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :ensure-system-package (isync)
+  :ensure-system-package ((isync)
+                          (magick . imagemagick))
   :custom
   ;; Overall mu4e and mbsync settings
   (mu4e-get-mail-command "/usr/bin/mbsync -a") ; Use mbsync to sync mail
