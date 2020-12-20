@@ -264,6 +264,7 @@ MAIL-COUNT is the count of mails for which the string is to displayed"
 ;; xwidget support. Check by evaluating: (xwidget-webkit-browse-url
 ;; "https://www.gnu.org/")
 (use-package mu4e-views
+  :disabled t ; Needs Emacs compiled with xwidget support
   :after mu4e
   :functions mu4e-views-mu4e-use-view-msg-method
   :custom
