@@ -236,3 +236,39 @@ stc
 mkdir ~/Documents/Emails/Personal/Archive/
 rmdir ~/Documents/Emails/Personal/Archive/
 mv .gitignore .gitignore-old
+sudo timeshift --create --comment "After debugging init file"
+stl
+ff /etc/sysctl.d/vsyscall.conf
+stc
+sudo timeshift --create --comment "Right after checking the move-in email"
+stl
+stc
+stc
+ls Pictures
+~/dotfiles
+stow -Rv zsh
+~/dotfiles
+stow -Rv zsh
+stow -Rv *
+sudo timeshift --create --comment "After moving remaining things into repo"
+cat /usr/share/applications/defaults.list  | grep pdf
+cat /usr/share/applications/defaults.list
+sudo timeshift --create --comment "After moving remaining things into repo"
+sudo timeshift --create --comment "Before transferring everything onto USB"
+sudo timeshift --create --comment "Before transferring everything onto USB"
+sudo timeshift --create --comment "After fixing my issue with sudoers file"
+mv ~/.emacs-profiles.el ~/dotfiles/misc/
+~/dotfiles
+stow -Rv misc
+tree misc
+tree misc/.config
+cat ~/.config/mimeapps.list
+ls -la ~ | grep profile
+stow -Rv misc/.emacs-profiles.el
+stow -Rv misc
+cat ~/.config/mimeapps.list
+tree misc/.config
+stow -Rv misc
+ls -la ~ | grep profile
+sudo timeshift --create --comment "Trying to fix npm issue"
+sudo timeshift --create --comment "After transferring onto usb"

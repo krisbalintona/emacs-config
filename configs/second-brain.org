@@ -106,8 +106,9 @@ Interactive browser graph view
     (org-roam-graph-viewer "/usr/bin/brave")
     (org-roam-graph-executable "/usr/bin/dot") ; Graphviz executable
     (org-roam-server-network-arrows nil) ; Arrows?
-    ;; (org-roam-server-default-exclude-filters [{ "id": "moc", "parent" : "tags"  }]) ; Default exclusion
-    (org-roam-server-default-include-filters "null") ; Default inclusion
+    ;; ;; Excluded and included filters
+    ;; (org-roam-server-default-exclude-filters "null")
+    ;; (org-roam-server-default-include-filters "(json-encode (list (list (cons 'parent \"zett\"))))")
     :config
     (if (daemonp) ; Don't start server if not in daemon mode, otherwise will break things
         (add-hook 'org-roam-mode-hook 'org-roam-server-mode))
@@ -283,6 +284,7 @@ references into latex and org files
     (org-ref-note-title-format
      "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
     (org-ref-notes-function 'orb-edit-notes)
+    (org-ref-default-citation-link "autocite")
     )
 #+END_SRC
 

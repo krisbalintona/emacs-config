@@ -29,7 +29,7 @@
  (position . 601))
 ("org-capture-last-stored"
  (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* TODO Figure ou")
- (rear-context-string . "ILETAGS: REFILE\n")
- (position . 106))
+ (front-context-string . "* TODO Check out")
+ (rear-context-string . "uto Recompile]]\n")
+ (position . 451))
 )

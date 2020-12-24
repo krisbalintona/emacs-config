@@ -1,3 +1,3 @@
 ;;; -*- lisp-data -*-
-(("~/main-emacs/")
- ("~/dotfiles/"))
+(("~/dotfiles/")
+ ("~/main-emacs/"))
