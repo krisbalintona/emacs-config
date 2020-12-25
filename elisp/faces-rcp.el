@@ -23,11 +23,13 @@
 (defvar kb/default-font "Iosevka Term SS04")
 (defvar kb/fixed-pitch-font "Hack Nerd Font Mono")
 (defvar kb/variable-pitch-font "ETBembo")
-(defvar kb/modeline-font "Noto Sans")
+;(defvar kb/modeline-font "Noto Sans")
+(defvar kb/modeline-font "NotoSans Nerd Font")
 
 ;;;; Setup fonts
 (defun kb/default-fonts-setup ()
   "Set Emacs-wide fonts."
+  (interactive)
   (add-to-list 'default-frame-alist `(font . ,kb/default-font))
 
   (set-face-attribute 'default nil :font kb/default-font :height 135)
