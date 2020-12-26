@@ -170,6 +170,7 @@ Utilities to edit files as root
 Automatically sudo files you don't have write access to
 #+begin_src emacs-lisp
   (use-package auto-sudoedit
+    :disabled t ; Annoying for now
     :hook (after-init . auto-sudoedit-mode)
     )
 #+end_src

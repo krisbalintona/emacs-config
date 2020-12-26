@@ -86,7 +86,7 @@ Interactive browser graph view
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-server
     ;; :quelpa (org-roam-server :fetcher git :url "https://github.com/org-roam/org-roam-server" :branch "master") ; Quelpa version doesn't work? Perhaps has to do with org-roam dependency?
-    :ensure-system-package (watchexec)
+    :ensure-system-package ("~/.cargo/bin/watchexec" . "cargo install watchexec")
     :after org-roam
     :hook ((org-roam-server-mode . (lambda () ; Necessary to open buffers from graph
                                      (require 'org-protocol)

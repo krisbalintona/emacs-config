@@ -272,3 +272,7 @@ stow -Rv misc
 ls -la ~ | grep profile
 sudo timeshift --create --comment "Trying to fix npm issue"
 sudo timeshift --create --comment "After transferring onto usb"
+ff ~/.config/systemd/user/mbsync.service
+ff ~/.config/systemd/user/mbsync.timer
+systemctl --user enable --now mbsync.timer
+systemctl --user enable --now mbsync.service

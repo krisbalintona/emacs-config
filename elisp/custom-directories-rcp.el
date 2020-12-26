@@ -35,7 +35,7 @@
 (defvar kb/emacs-config-dir (concat user-emacs-directory "configs/"))
 
 (defvar kb/dot-config-dir "~/.config/")
-(defvar kb/wm-config-file (concat kb/dot-config-dir "i3/config"))
+(defvar kb/wm-config-file (concat kb/dot-config-dir "awesome/rc.lua"))
 
 ;;; custom-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
