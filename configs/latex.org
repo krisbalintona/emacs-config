@@ -6,7 +6,7 @@ A lot taken from [[https://github.com/MatthewZMD/.emacs.d#auctex][GitHub - Matth
 #+begin_src emacs-lisp
   (use-package tex
     :demand t ; Other latex packages are reliant on this one
-    :ensure-system-package (latex . texlive-most)
+    :ensure-system-package (latex . texlive-scheme-full)
     :straight auctex
     :hook
     ((LaTeX-mode . (lambda ()

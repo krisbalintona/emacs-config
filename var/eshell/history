@@ -276,3 +276,12 @@ ff ~/.config/systemd/user/mbsync.service
 ff ~/.config/systemd/user/mbsync.timer
 systemctl --user enable --now mbsync.timer
 systemctl --user enable --now mbsync.service
+snapper -c @root create -c timeline -d Test
+snapper list
+snapper -c @root list
+snapper -c @root delete 42
+snapper -c @root list
+snapper -c @root create -c timeline -d Test
+snapper -c @root delete 43
+snapper -c @root create -c timeline -d "After systemd-swap"
+snapper -c @root create -c timeline -d "After nohang-desktop"
