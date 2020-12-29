@@ -13,7 +13,7 @@
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :ensure-system-package ((isync)
-                          (ImageMagick))
+                          (mu . maildir-utils))
   :custom
   ;; Overall mu4e and mbsync settings
   (mu4e-get-mail-command "/usr/bin/mbsync -a") ; Use mbsync to sync mail

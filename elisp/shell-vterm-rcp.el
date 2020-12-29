@@ -12,6 +12,7 @@
 (use-package vterm
   :ensure-system-package (("/usr/lib64/libvterm.so.0" . libvterm) ; Specifically for Fedora
                           (libtool)
+                          ("/usr/include/vterm.h" . "libvterm-devel")
                           (cmake))
   :hook (vterm-mode . (lambda ()
                         (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)

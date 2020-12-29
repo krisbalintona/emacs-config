@@ -33,6 +33,7 @@
 ;; Feature-rich spell-checker
 (use-package flyspell
   :ensure-system-package ((aspell)
+                          ("/usr/lib64/aspell-0.60/american-variant_0.alias". aspell-en)
                           (proselint))
   :hook
   ((text-mode . flyspell-mode)
