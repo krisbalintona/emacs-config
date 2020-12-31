@@ -7,6 +7,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;;;; Shell-mode
+(use-package sh-script
+  :straight nil
+  :config
+  (general-unbind ; Interferes with eyebrowse
+    :keymaps 'sh-mode-map
+    :states 'normal
+    "gz"
+    )
+  )
+
 ;;;; Vterm
 ;; Full-fledged terminal emulator
 (use-package vterm
