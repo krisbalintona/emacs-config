@@ -1,4 +1,3 @@
-~/qmk_firmware
 ~/Documents/org-database
 ~/main-emacs
 ~/Documents/org-database
@@ -31,3 +30,4 @@
 ~/main-emacs
 /home/krisbalintona/main-emacs/configs
 ~/main-emacs
+/sudo:root@localhost:/etc

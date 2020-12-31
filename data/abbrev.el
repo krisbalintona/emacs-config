@@ -71,6 +71,7 @@
     ("despte" "despite" nil :count 0)
     ("developming" "DEVELOPING" nil :count 0)
     ("diffrent" "different" nil :count 0)
+    ("digitalized" "Digitized" nil :count 0)
     ("domenstrably" "Demonstrably" nil :count 0)
     ("earliers" "earliest" nil :count 0)
     ("echochamber" "echo-chamber" nil :count 0)
@@ -193,6 +194,11 @@
     ("wrtiting" "writing" nil :count 0)
     ("you" "You" nil :count 0)
     ("yuo" "you" nil :count 0)
+   ))
+
+(define-abbrev-table 'sh-mode-abbrev-table
+  '(
+    ("existsing" "existing" nil :count 0)
    ))
 
 (define-abbrev-table 'text-mode-abbrev-table

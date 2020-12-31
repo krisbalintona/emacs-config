@@ -285,3 +285,57 @@ snapper -c @root create -c timeline -d Test
 snapper -c @root delete 43
 snapper -c @root create -c timeline -d "After systemd-swap"
 snapper -c @root create -c timeline -d "After nohang-desktop"
+snapper -c @root create -c timeline -d "After figuring out latex"
+snapper -c @home create -c timeline -d "After figuring out latex"
+snapper -c @home create -c timeline -d "After picom"
+snapper -c @root create -c timeline -d "After picom"
+snapper -c @root create -c timeline -d "Disabled systemd-swap to try to fix it"
+snapper -c @root create -c timeline -d "After installing and configuring ibus"
+snapper -c @home create -c timeline -d "After installing and configuring ibus"
+snapper -c @root create -c timeline -d "Replaced acpi_call-dks with akmod-dkms from tlp repo"
+snapper -c @root create -c timeline -d "Test"
+snapper -c @root create -c timeline -d "Test2"
+snapper -c @root create -c timeline -d "Test3"
+snapper -c @root create -c timeline -d "Test4"
+snapper -c @root create -c timeline -d "Test5"
+snapper -c @root create -c timeline -d "Test6"
+snapper -c @root su list
+snapper -c @root lsit
+snapper -c @root list
+snapper -c @root delete 101-104
+snapper -c @root list
+snapper -c @root delete 106
+snapper -c @root list
+snapper -c @root delete 99
+snapper -c @root create -c timeline -d "After fixing custom fan curves for asusd"
+snapper -c @root create -c timeline -d "Test"
+snapper -c @root list
+snapper -c @root delete 109
+snapper -c @root create -c timeline -d "Test"
+snapper -c @root create -c timeline -d "Test2"
+snapper -c @root create -c timeline -d "Test3"
+snapper -c @root list
+snapper -c @root delete 110-112
+snapper -c @root list
+snapper -c @root create -c timeline -d "After fixing grub-btrfs and before testing out lightdm web-greeter"
+snapper -c @home create -c timeline -d "Moved interview audio to laptop"
+snapper -c @home create -c timeline -d "After installing slack"
+snapper -c @root create -c timeline -d "After fixing Brave not being used by Emacs"
+snapper -c @home create -c timeline -d "In the middle of editing the transcript"
+snapper -c @home create -c timeline -d "After fixing keyboard script"
+snapper -c @home create -c timeline -d "Fixed scripts and added to git repo"
+snapper -c @home create -c timeline -d "Added autostart scripts to rc.lua"
+snapper -c @home create -c timeline -d "Reverted back to pre-font error"
+snapper -c @root create -c timeline -d "Enabled autologin for GDM and lengthened snapper-cleanup timer"
+snapper -c @root create -c timeline -d "After switching to emptty"
+snapper -c @home create -c timeline -d "After fixing .xinitrc"
+stow -Rv scripts
+snapper -c @home create -c timeline -d "Before merging"
+snapper -c @home create -c timeline -d "After merging"
+stow -Rv scripts
+stow -Rv scripts
+stow -Rv scripts
+snapper -c @root create -c timeline -d "Setting up btrbk"
+snapper -c @root create -c timeline -d "Finised with setting up btrbk and systemd timer"
+snapper -c @home create -c timeline -d "Finised with setting up btrbk and systemd timer"
+snapper -c @root create -c timeline -d "Set up systemd timer and service to backup /boot"
