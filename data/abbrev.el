@@ -199,6 +199,7 @@
 (define-abbrev-table 'sh-mode-abbrev-table
   '(
     ("existsing" "existing" nil :count 0)
+    ("harddrive" "hard-drive" nil :count 0)
    ))
 
 (define-abbrev-table 'text-mode-abbrev-table

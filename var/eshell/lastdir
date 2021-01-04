@@ -1,8 +1,6 @@
 ~/Documents/org-database
 ~/main-emacs
 ~/Documents/org-database
-~/main-emacs
-~/Documents/org-database
 /home/krisbalintona/.config/awesome
 ~
 /home/krisbalintona/dotfiles
@@ -31,3 +29,4 @@
 /home/krisbalintona/main-emacs/configs
 ~/main-emacs
 /sudo:root@localhost:/etc
+~/dotfiles

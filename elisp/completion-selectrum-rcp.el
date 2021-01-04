@@ -36,16 +36,25 @@
     )
   )
 
-;;;; Selectrum-prescient
+;;;; Cousin packages
+;;;;; Selectrum-prescient
 ;; Selectrum with prescient completion style
 (use-package selectrum-prescient
   :hook (after-init . selectrum-prescient-mode)
   )
 
-;;;; Cousin packages
+;;;;; Consult-selectrum
+;; Consult with selectrum support
+(use-package consult-selectrum
+  :after (selectrum consult)
+  :demand t
+  )
+
 ;;;;; Consult.el
 ;; Counsel equivalent for default Emacs (and thus selectrum!)
 (use-package consult
+  :ensure-system-package ((fd . fdfind)
+                          (rg . ripgrep))
   :after selectrum
   :straight (consult :type git :host github :repo "minad/consult")
   :hook (selectrum-mode . consult-preview-mode)
@@ -65,6 +74,9 @@
   ;; Example: https://github.com/minad/bookmark-view/
   ;; (setq consult-view-open-function #'bookmark-jump
   ;;       consult-view-list-function #'bookmark-view-names)
+
+  (consult--fdfind-cmd '("fd" "--color=never" "--full-path")) ; Fd-find command for Fedora
+  (consult-project-root-function #'projectile-project-root)
   :config
   (general-define-key
    [remap apropos-command] '(consult-apropos :which-key "Consult apropos")
@@ -89,6 +101,8 @@
     ;; ("-s m" . consult-multi-occur)
     "iy" '(consult-yank-pop :which-key "Consult yank-pop")
     "ha" '(consult-apropos :which-key "Consult apropos")
+    "pf" '(consult-fdfind :which-key "Consult find file")
+    "ps" '(consult-ripgrep :which-key "Consult rg")
     )
   )
 
@@ -133,46 +147,30 @@
 ;; Taken from
 ;; https://github.com/raxod502/selectrum/wiki/Additional-Configuration#minibuffer-actions-with-embark
 (with-eval-after-load 'embark
-  (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
-  (add-hook 'embark-candidate-collectors
-            (defun embark-selectrum-candidates+ ()
-              (when selectrum-active-p
-                (selectrum-get-current-candidates
-                 ;; Pass relative file names for dired.
-                 minibuffer-completing-file-name))))
-  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
-  (add-hook 'embark-input-getters
-            (defun embark-selectrum-input-getter+ ()
-              (when selectrum-active-p
-                (let ((input (selectrum-get-current-input)))
-                  (if minibuffer-completing-file-name
-                      ;; Only get the input used for matching.
-                      (file-name-nondirectory input)
-                    input)))))
-
-  ;; Redefine embark-symbol-map to use helpful-*
-  (defun embark-helpful-callable-or-symbol ()
-    "Call `helpful-callable' or `helpful-symbol' on embark target."
-    (interactive)
-    (funcall helpful-switch-buffer-function (helpful--buffer (intern "bug-hunter-init-file") t))
-    (helpful-update))
-  (embark-define-keymap embark-symbol-map
-    "My own keymap for seeing helpful buffer for a symbol."
-    ("h" embark-helpful-callable-or-symbol) ; Replace default embark-describe-*
-    ("c" embark-info-emacs-command)
-    ("s" embark-info-lookup-symbol)
-    ("d" embark-find-definition)
-    ("b" where-is)
-    ("e" eval-expression))
-  (add-to-list 'embark-keymap-alist '(variable . embark-symbol-map)) ; For and `describe-variable'
+  ;; (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
+  ;; (add-hook 'embark-candidate-collectors
+  ;;           (defun embark-selectrum-candidates+ ()
+  ;;             (when selectrum-active-p
+  ;;               (selectrum-get-current-candidates
+  ;;                ;; Pass relative file names for dired.
+  ;;                minibuffer-completing-file-name))))
+  ;; (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
+  ;; (add-hook 'embark-input-getters
+  ;;           (defun embark-selectrum-input-getter+ ()
+  ;;             (when selectrum-active-p
+  ;;               (let ((input (selectrum-get-current-input)))
+  ;;                 (if minibuffer-completing-file-name
+  ;;                     ;; Only get the input used for matching.
+  ;;                     (file-name-nondirectory input)
+  ;;                   input)))))
 
   ;; Reset list after embark-act (which may change candidates e.g. delete-file).
   ;; Taken from
   ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#selectrum
-  (defun refresh-selectrum ()
-    "Reset the Selectrum candidate list."
-    (setq selectrum--previous-input-string nil))
-  (add-hook 'embark-pre-action-hook #'refresh-selectrum)
+  ;; (defun refresh-selectrum ()
+  ;;   "Reset the Selectrum candidate list."
+  ;;   (setq selectrum--previous-input-string nil))
+  ;; (add-hook 'embark-pre-action-hook #'refresh-selectrum)
   )
 
 ;;;;;; Misc embark actions

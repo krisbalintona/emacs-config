@@ -126,9 +126,9 @@
   (kb/leader-keys
     "p" '(:ignore t :which-key "Projectile")
     "p?" '(hydra:selectrum-projectile/body :which-key "Help menu")
-    "pf"  'projectile-find-file
+    ;; "pf"  'projectile-find-file
     "pp"  'projectile-switch-project
-    "ps"  'counsel-projectile-rg
+    ;; "ps"  'counsel-projectile-rg
     "pb"  'projectile-switch-to-buffer
     "pD"  'projectile-dired
     ;; "pc"  'projectile-compile-project
