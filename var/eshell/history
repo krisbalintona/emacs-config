@@ -351,3 +351,7 @@ snapper -c @home create -c timeline -d "After setting up xidlehook and unclutter
 reboot
 snapper -c @root create -c timeline -d "Installed wine-lol"
 snapper -c @home create -c timeline -d "Configured new consult version"
+snapper -c @root create -c timeline -d "Fixed afetch"
+snapper -c @root create -c timeline -d "After installing redshift"
+snapper -c @home create -c timeline -d "After installing awesome dependencies"
+snapper -c @root create -c timeline -d "After installing awesome dependencies"
