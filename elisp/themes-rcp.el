@@ -165,44 +165,53 @@ UTF-8."
             (mouse-face 'mode-line-highlight))
         (concat
          (doom-modeline-spc)
+         ;; Check for UTF-8. If so then do these 2 propertize sections.If not,
+         ;; then nothing is propertized and thus shown.
+         (if (or (eq buffer-file-coding-system 'utf-8-unix)
+                 (eq buffer-file-coding-system 'utf-8)
+                 (eq buffer-file-coding-system 'prefer-utf-8-unix))
+             nil
+           ;; eol type
+           (let ((eol (coding-system-eol-type buffer-file-coding-system)))
+             (propertize
+              (pcase eol
+                (0 "LF ")
+                (1 "CRLF ")
+                (2 "CR ")
+                (_ ""))
+              'face face
+              'mouse-face mouse-face
+              'help-echo (format "End-of-line style: %s\nmouse-1: Cycle"
+                                 (pcase eol
+                                   (0 "Unix-style LF")
+                                   (1 "DOS-style CRLF")
+                                   (2 "Mac-style CR")
+                                   (_ "Undecided")))
+              'local-map (let ((map (make-sparse-keymap)))
+                           (define-key map [mode-line mouse-1] 'mode-line-change-eol)
+                           map)))
 
-         ;; eol type
-         (let ((eol (coding-system-eol-type buffer-file-coding-system)))
-           (propertize
-            (pcase eol
-              (0 "LF ")
-              (1 "CRLF ")
-              (2 "CR ")
-              (_ ""))
-            'face face
-            'mouse-face mouse-face
-            'help-echo (format "End-of-line style: %s\nmouse-1: Cycle"
-                               (pcase eol
-                                 (0 "Unix-style LF")
-                                 (1 "DOS-style CRLF")
-                                 (2 "Mac-style CR")
-                                 (_ "Undecided")))
-            'local-map (let ((map (make-sparse-keymap)))
-                         (define-key map [mode-line mouse-1] 'mode-line-change-eol)
-                         map)))
-
-         ;; coding system
-         (propertize
-          (let ((sys (coding-system-plist buffer-file-coding-system)))
-            (if (or (eq buffer-file-coding-system 'utf-8-unix) ; Check for UTF-8
-                    (eq buffer-file-coding-system 'utf-8)
-                    (eq buffer-file-coding-system 'prefer-utf-8-unix))
-                nil
-              (cond ((memq (plist-get sys :category)
-                           '(coding-category-undecided coding-category-utf-8))
-                     "UTF-8")
-                    (t (upcase (symbol-name (plist-get sys :name)))))))
-          'face face
-          'mouse-face mouse-face
-          'help-echo 'mode-line-mule-info-help-echo
-          'local-map mode-line-coding-system-map)
+           ;; coding system
+           (let* ((sys (coding-system-plist buffer-file-coding-system))
+                  (cat (plist-get sys :category))
+                  (sym (if (memq cat
+                                 '(coding-category-undecided coding-category-utf-8))
+                           'test
+                         (plist-get sys :name))))
+             (when (or (eq doom-modeline-buffer-encoding t)
+                       (and (eq doom-modeline-buffer-encoding 'nondefault)
+                            (not (eq cat 'coding-category-undecided))
+                            (not (eq sym doom-modeline-default-coding-system))))
+               (propertize
+                (upcase (symbol-name sym))
+                'face face
+                'mouse-face mouse-face
+                'help-echo 'mode-line-mule-info-help-echo
+                'local-map mode-line-coding-system-map)))
+           )
 
          (doom-modeline-spc)))))
+
   (doom-modeline-def-segment kb/buffer-default-directory
     "Standard `buffer-default-directory' without the state, icon, and color change."
     (let* ((active (doom-modeline--active))
@@ -246,8 +255,11 @@ UTF-8."
                '(doom-modeline-buffer-major-mode bold) ; Make bold
              'mode-line-inactive)))
 
+  ;; (doom-modeline-def-modeline 'main
+  ;;   '(kb/matches "   " kb/major-mode-icon " " kb/mu4e "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
+  ;;   '(input-method process debug kb/time battery " " bar "  " kb/buffer-encoding checker "          "))
   (doom-modeline-def-modeline 'main
-    '(kb/matches "   " kb/major-mode-icon " " kb/mu4e "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
+    '(kb/matches "   " kb/major-mode-icon " " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
     '(input-method process debug kb/time battery " " bar "  " kb/buffer-encoding checker "          "))
   )
 
