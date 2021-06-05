@@ -37,7 +37,7 @@ Styling (called in org-superstar)
       (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
       (set-face-attribute 'org-quote nil :height 143)
       (set-face-attribute 'org-tag nil :height 153 :bold t :italic t)
-      (set-face-attribute 'org-link nil :foreground "MediumPurple3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
+      ;; (set-face-attribute 'org-link nil :foreground "MediumPurple3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil) ; Managaed by org-roam
       (set-face-attribute 'org-document-title nil :inherit 'org-level-4 :height 1.7 :foreground "goldenrod")
 
       (set-face-attribute 'org-level-1 nil :height 210 :font kb/variable-pitch-font)

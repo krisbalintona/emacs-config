@@ -1,6 +1,6 @@
 #+TITLE: My Zettelkasten
 
-* Org-roam
+* Org-roam (old)
 
 Zettelkasten and Evergreen notes
 #+BEGIN_SRC emacs-lisp
@@ -80,51 +80,12 @@ Zettelkasten and Evergreen notes
   ;;   )
 #+END_SRC
 
-* Test 1
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-roam
-    ;; :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master") ; Incompatible with straight.el
-    :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "origin/v2") ; Org-roam v2
-    :after company ; Necessary for some reason
-    ;; :hook (window-setup-hook . 
-    :custom
-    (org-roam-directory kb/roam-dir)
-    (org-roam-verbose nil) ; Don't echo messages that aren't errors
-    (org-roam-completion-everywhere t) ; Org-roam completion everywhere
-    (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
-    (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
-    :config
-    (org-roam-setup) ; Replacement for org-roam-mode
-    (add-to-list 'org-open-at-point-functions 'org-roam-open-id-at-point)
-    ;; Size of org-roam-buffer-toggle
-    (add-to-list 'display-buffer-alist
-                 '(("\\*org-roam\\*"
-                    (display-buffer-in-direction)
-                    (direction . right)
-                    (window-width . 0.33)
-                    (window-height . fit-window-to-buffer))))
-
-    ;; To add back mouse click to visit the node in the backlink buffer
-    (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
-
-    (kb/leader-keys
-      "nf" '(org-roam-node-find :which-key "Find file")
-      "ni" '(org-roam-node-insert :which-key "Insert note")
-      "nI" '(org-roam-jump-to-index :which-key "Go to index")
-      "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
-      "nL" '(org-roam-db-sync :which-key "Build cache")
-      "nc" '(org-roam-capture :which-key "Roam capture")
-      )
-    )
-#+END_SRC
-
 * Org-roam-server
 
 Interactive browser graph view
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-server
-    :disabled t
+    :disabled t ; Doesn't work with org-roam v2
     ;; :quelpa (org-roam-server :fetcher git :url "https://github.com/org-roam/org-roam-server" :branch "master") ; Quelpa version doesn't work? Perhaps has to do with org-roam dependency?
     :ensure-system-package ("~/.cargo/bin/watchexec" . "cargo install watchexec")
     :after org-roam
@@ -155,67 +116,53 @@ Interactive browser graph view
     )
 #+END_SRC
 
-* Org-roam-capture-templates
+* Org-roam-capture-templates (old)
 
 Templates for inserting files into my Zettelkasten
 #+BEGIN_SRC emacs-lisp
-  ;; (setq org-roam-capture-templates
-  ;;       '(("l" "New literature note" plain (function org-roam--capture-get-point)
-  ;;          "\n\n* %?"
-  ;;          :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
-  ;;          :head "#+TITLE: ${title}\n#+ROAM_TAGS: lit\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :WAITING:\n:PROPERTIES:\n:CATEGORY: lit\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Lit Notes\")\n:END:\n"
-  ;;          :jump-to-captured t
-  ;;          :immediate-finish t
-  ;;          :unnarrowed t)
-  ;;         ("p" "New permanent note" plain (function org-roam--capture-get-point)
-  ;;          "\n\n* Insight%?"
-  ;;          :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
-  ;;          :head "#+TITLE: ${title}\n#+ROAM_TAGS: zett\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- MOC :: \n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :NASCENT:\n:PROPERTIES:\n:CATEGORY: zett\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Zetts\")\n:END:"
-  ;;          :unnarrowed t
-  ;;          :immediate-finish t
-  ;;          :jump-to-captured t)
-  ;;         ("m" "New map of content" plain (function org-roam--capture-get-point)
-  ;;          "\n\n* %?"
-  ;;          :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
-  ;;          :head "#+TITLE: ${title}\n#+ROAM_TAGS: moc\n- TAGS :: \n- BREADCRUMBS :: \n\n---"
-  ;;          :immediate-finish t
-  ;;          :unnarrowed t)
-  ;;         ("i" "New quote" plain (function org-roam--capture-get-point)
-  ;;          "\n\n* Insight%?"
-  ;;          :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
-  ;;          :head "#+TITLE: ${title}\n#+ROAM_TAGS: quote\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- TAGS :: \n- LINKS :: \n\n---"
-  ;;          :unnarrowed t
-  ;;          :jump-to-captured t)
-  ;;         ("e" "New entity" plain (function org-roam--capture-get-point)
-  ;;          "\n\n* %?"
-  ;;          :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
-  ;;          :head "#+TITLE: ${title}\n#+ROAM_TAGS: %^{What type of entity is this?|person|system|website|platform|organization}\n- CREATED :: %T\n- Time-stamp: <>\n- TAGS :: \n- LINKS :: \n\n---"
-  ;;          :immediate-finish t)
-  ;;         ("t" "New tag" plain (function org-roam--capture-get-point)
-  ;;          "\n\n* %?"
-  ;;          :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
-  ;;          :head "#+TITLE: ${title}\n#+ROAM_TAGS: tag\n- CREATED :: %T\n- Time-stamp: <>\n\n---"
-  ;;          :immediate-finish t)
-  ;;         ("w" "Produce a work of writing" plain (function org-roam--capture-get-point)
-  ;;          "\n\n* %?"
-  ;;          :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
-  ;;          :head "#+TITLE: ${title}\n#+ROAM_TAGS: product\n- CREATED :: %T\n- Time-stamp: <>\n- MOC :: \n\n---"
-  ;;          :immediate-finish t
-  ;;          :jump-to-captured t)
-  ;;         ))
-
-
-
   (setq org-roam-capture-templates
-        '(("d" "default" plain "%?"
-           :if-new
-           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+        '(("l" "New literature note" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: lit\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :WAITING:\n:PROPERTIES:\n:CATEGORY: lit\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Lit Notes\")\n:END:\n"
+           :jump-to-captured t
+           :immediate-finish t
            :unnarrowed t)
-          ("r" "Reference paired with notes" plain ""
-           :if-new
-           (file+head "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)-${slug}.org"
-                      "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS: bib \n- CREATED :: %T\n- Time-stamp: <>\n- KEYWORDS :: ${keywords}\n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :WAITING:\n:PROPERTIES:\n:CATEGORY: bib_notes\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Bib Notes\")\n:END:\n\n* ${title} Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n")
+          ("p" "New permanent note" plain (function org-roam--capture-get-point)
+           "\n\n* Insight%?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: zett\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- MOC :: \n- TAGS :: \n- LINKS :: \n\n---\n\n* TODO Process ${title} :NASCENT:\n:PROPERTIES:\n:CATEGORY: zett\n:ARCHIVE: %(concat kb/agenda-dir \"archive.org::datetree/* Zetts\")\n:END:"
+           :unnarrowed t
+           :immediate-finish t
+           :jump-to-captured t)
+          ("m" "New map of content" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: moc\n- TAGS :: \n- BREADCRUMBS :: \n\n---"
+           :immediate-finish t
            :unnarrowed t)
+          ("i" "New quote" plain (function org-roam--capture-get-point)
+           "\n\n* Insight%?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: quote\n- CREATED :: %T\n- Time-stamp: <>\n- SOURCE :: \n- TAGS :: \n- LINKS :: \n\n---"
+           :unnarrowed t
+           :jump-to-captured t)
+          ("e" "New entity" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: %^{What type of entity is this?|person|system|website|platform|organization}\n- CREATED :: %T\n- Time-stamp: <>\n- TAGS :: \n- LINKS :: \n\n---"
+           :immediate-finish t)
+          ("t" "New tag" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: tag\n- CREATED :: %T\n- Time-stamp: <>\n\n---"
+           :immediate-finish t)
+          ("w" "Produce a work of writing" plain (function org-roam--capture-get-point)
+           "\n\n* %?"
+           :file-name "%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil)"
+           :head "#+TITLE: ${title}\n#+ROAM_TAGS: product\n- CREATED :: %T\n- Time-stamp: <>\n- MOC :: \n\n---"
+           :immediate-finish t
+           :jump-to-captured t)
           ))
 #+END_SRC
 
@@ -224,7 +171,7 @@ Templates for inserting files into my Zettelkasten
 Allow transclusion of org files
 #+begin_src emacs-lisp
   (use-package org-transclusion
-    :disabled t
+    :disabled t ; No need right now. Also experimental and incomplete
     :after org-roam
     :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion" :branch "main")
     :config
@@ -259,91 +206,7 @@ Full text search for my roam files
     )
 #+END_SRC
 
-* Bibliographical notes
-
-** Ivy/Helm-bibtex
-
-Use ivy or helm search frontend with the bibtex-completion backend
-#+BEGIN_SRC emacs-lisp
-  (use-package ivy-bibtex
-    :after org-roam
-    :custom
-    (bibtex-completion-notes-path kb/roam-dir) ; Irrelevant since I use org-roam-bibtex instead
-    (bibtex-completion-library-path (concat kb/roam-dir "bibliographic/bib-pdfs")) ; Where bibtex searches for pdfs
-    (bibtex-completion-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
-    (bibtex-completion-pdf-field "file") ; Zotero stores pdfs in a field called file - this settings allows bibtex to find the pdf
-    (bibtex-completion-pdf-open-function ; Use okular to open a pdf
-     (lambda (fpath)
-       (call-process "okular" nil 0 nil fpath)))
-    (bibtex-completion-browser-function 'browse-url-default-browser) ; Use default browser to open
-    (ivy-bibtex-default-action 'ivy-bibtex-edit-notes) ; Edit notes on defualt selection
-
-    ;; Template for new note (but I use orb for this)
-    (bibtex-completion-notes-template-multiple-files
-     (concat
-      "#+TITLE: ${title}\n"
-      "#+ROAM_KEY: cite:${=key=}\n"
-      "* TODO Notes\n"
-      ":PROPERTIES:\n"
-      ":Custom_ID: ${=key=}\n"
-      ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-      ":AUTHOR: ${author-abbrev}\n"
-      ":JOURNAL: ${journaltitle}\n"
-      ":DATE: ${date}\n"
-      ":YEAR: ${year}\n"
-      ":DOI: ${doi}\n"
-      ":URL: ${url}\n"
-      ":END:\n\n")
-     )
-
-    ;; Symbols used for indicating the availability of notes and PDF files
-    (bibtex-completion-pdf-symbol "🖇")
-    (bibtex-completion-notes-symbol "🖋")
-    :config
-    ;; ivy-bibtex requires ivy's `ivy--regex-ignore-order` which I already
-    ;; have set in ivy-re-builders-alist
-    (autoload 'ivy-bibtex "ivy-bibtex" "" t)
-
-    (ivy-set-actions ; Actions shown after M-o
-     'ivy-bibtex
-     '(("p" ivy-bibtex-open-any "Open PDF, URL, or DOI")
-       ("e" ivy-bibtex-edit-notes "Edit notes")
-       ("c" ivy-bibtex-insert-citation "Insert citation")
-       ("r" ivy-bibtex-insert-reference "Insert reference")
-       ("P" ivy-bibtex-open-annotated-pdf "Open annotated PDF (if present)") ; This last function doesn't have an associated action yet (for annotated pdfs)
-       ("a" bibtex-completion-add-pdf-to-library "Add pdf to library")
-       ))
-
-    (kb/leader-keys
-      "fa" '(ivy-bibtex :which-key "Ivy-bibtex")
-      "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
-      )
-    )
-#+END_SRC
-
-** Org-ref
-
-Bibtex is a way to add bibliographic information (e.g. refernces/citations to
-equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
-the .bib files bibtex makes. Org-ref is a way to directly insert citations and
-references into latex and org files
-#+BEGIN_SRC emacs-lisp
-  (use-package org-ref
-    :after ivy
-    :custom
-    (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
-    (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
-    (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
-    (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
-    (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
-    (org-ref-note-title-format
-     "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
-    (org-ref-notes-function 'orb-edit-notes)
-    (org-ref-default-citation-link "autocite")
-    )
-#+END_SRC
-
-** Org-roam-bibtex
+* Org-roam-bibtex (old)
 
 Ivy/helm-bibtex (which integrates with bibtex-completion) integration
 with org-roam (provides templates and modifies edit notes action)
@@ -377,70 +240,4 @@ with org-roam (provides templates and modifies edit notes action)
   ;;     "nBa" '(orb-note-actions :which-key "Orb actions")
   ;;     )
   ;;   )
-#+END_SRC
-
-** Test 2
-
-Ivy/helm-bibtex (which integrates with bibtex-completion) integration
-with org-roam (provides templates and modifies edit notes action)
-#+BEGIN_SRC emacs-lisp
-  (use-package org-roam-bibtex
-    :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "origin/org-roam-v2") ; For org-roam v2
-    :after (org-roam org-ref ivy-bibtex)
-    :custom
-    (orb-preformat-keywords
-     '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
-    :config
-    (org-roam-bibtex-mode)
-    )
-#+END_SRC
-
-** Pdf-tools
-
-View pdfs and interact with them
-+ Many dependencies [[https://github.com/politza/pdf-tools#compiling-on-fedora][GitHub - politza/pdf-tools: Emacs support library for PDF files.]]
-#+BEGIN_SRC emacs-lisp
-  (use-package pdf-tools
-    :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools") ; Repo of current maintianer
-    :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
-    :magic ("%PDF" . pdf-view-mode)
-    :custom
-    (pdf-view-display-size 'fit-width)
-    ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
-    (pdf-view-use-scaling t)
-    (pdf-view-use-imagemagick nil)
-    :config
-
-    (general-define-key ; Unbind SPC so it's prefix instead
-      :keymaps 'pdf-view-mode-map
-      [remap pdf-view-scroll-up-or-next-page] nil
-      )
-    )
-#+END_SRC
-
-** Org-noter
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-noter
-    :demand t ; Demand so it doesn't defer to noter insert call
-    :custom
-    (org-noter-notes-search-path kb/roam-dir)
-    (org-noter-separate-notes-from-heading t) ; Add blank line betwwen note heading and content
-    (org-noter-notes-window-location 'horizontal-split) ; Horizontal split between notes and pdf
-    (org-noter-always-create-frame nil) ; Don't open frame
-    (org-noter-hide-other nil) ; Show notes that aren't synced with (you're on)
-    (org-noter-auto-save-last-location t) ; Go to last location
-    (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
-    :config
-    (add-hook 'org-noter-doc-mode-hook ; Add keykinds only for org-noter pdf (doc)
-              (lambda ()
-                (general-define-key
-                 :keymaps 'local
-                 "M-o" 'org-noter-insert-note)
-                ))
-
-    (kb/leader-keys
-      "on" '(org-noter :which-key "Org-noter")
-      )
-    )
 #+END_SRC

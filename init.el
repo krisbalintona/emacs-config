@@ -9,7 +9,7 @@
 ;;; Code:
 
 ;;;; Native compilation defer?
-(setq comp-deferred-compilation t) ; AoT or JiT compilation?
+(setq native-comp-deferred-compilation t) ; AoT or JiT (async) compilation?
 
 ;;;; Initial GC threshold
 ;; Set as high as possible threshold for GC as early as possible in order to

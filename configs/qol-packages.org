@@ -270,7 +270,6 @@ Quickly jump to characters
 #+begin_src emacs-lisp
   (use-package ace-jump-mode
     :custom
-    (ace-jump-mode-gray-background nil) ; Don't make text's background gray
     (ace-jump-mode-scope 'window)
     (ace-jump-mode-case-fold t) ; Ignore case?
     ;; Priority of ace-jump selections - you can prefix with 1 or 2 universal
@@ -278,6 +277,8 @@ Quickly jump to characters
     ;; respectively
     (ace-jump-mode-submode-list '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))  
     :config
+    (setq ace-jump-mode-gray-background nil) ; Don't make text's background gray
+  
     (general-define-key
      "M-a" '(ace-jump-mode :which-key "Ace-jump")
      )
