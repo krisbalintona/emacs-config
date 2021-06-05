@@ -70,7 +70,8 @@
 (require 'evil-rcp)
 
 ;;;;; Email
-;(require 'mu4e-rcp)
+(require 'mu4e-rcp)
+
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))

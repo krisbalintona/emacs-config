@@ -13,7 +13,9 @@
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :ensure-system-package ((isync)
-                          (mu . maildir-utils))
+                          (mu . maildir-utils)
+                          (gmime30-devel)
+                          (xapian-core-devel))
   :custom
   ;; Overall mu4e and mbsync settings
   (mu4e-get-mail-command "/usr/bin/mbsync -a") ; Use mbsync to sync mail
