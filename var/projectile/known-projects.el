@@ -1,1 +1,1 @@
-("~/main-emacs/var/" "~/main-emacs/transient/" "~/main-emacs/straight-old/" "~/main-emacs/straight/" "~/main-emacs/snippets/" "~/main-emacs/request/" "~/main-emacs/etc/" "~/main-emacs/elisp/" "~/main-emacs/data/" "~/main-emacs/configs/" "~/main-emacs/.git/")
+("~/main-emacs/.git/" "~/main-emacs/configs/" "~/main-emacs/data/" "~/main-emacs/elisp/" "~/main-emacs/request/" "~/main-emacs/transient/" "~/main-emacs/var/" "~/main-emacs/snippets/" "~/main-emacs/etc/" "~/main-emacs/straight/")

@@ -10,7 +10,6 @@
 ;;;; Org-plus-contrib
 ;; Org but with more useful packages
 (require 'straight)
-(straight-use-package 'org-plus-contrib)
 
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path

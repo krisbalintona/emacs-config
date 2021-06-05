@@ -29,6 +29,14 @@
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   )
 
+;;;; Other
+;; Elisp-mode overwrites my eyebrowse-last-window-config binding
+(general-define-key
+ :keymaps 'emacs-lisp-mode-map
+ :states '(motion normal visual)
+ "gz" 'eyebrowse-last-window-config
+ )
+
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-elisp-rcp)

@@ -172,6 +172,7 @@ Color-code your parentheses
     :preface
     (defun kb/fix-unicode-fonts ()
       "Fix the font mappings to use the right emoji font"
+      (interactive)
       (mapcar
        (lambda (block-name)
          (dw/replace-unicode-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))

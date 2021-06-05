@@ -67,7 +67,6 @@
   (transient-mode-line-format nil)
   :config
   (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
-  (remove-hook 'magit-section-highlight-hook #'magit-section-highlight)
 
   (kb/leader-keys
     "g"  '(:ignore t :which-key "Magit")
@@ -87,8 +86,6 @@
     )
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'programming-general-rcp)
 ;;;;; Projectile
 ;; Navigate and manage project directories easier
 (use-package projectile
@@ -272,7 +269,7 @@
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
   (flycheck-check-syntax-automatically '(save mode-enabled idle-change idle-buffer-switch)) ; When to check
-  (flycheck-idle-buffer-switch-delay 1.5) ; Wait 2 secons after buffer switch
+  (flycheck-idle-buffer-switch-delay 1.5) ; Wait 2 second after buffer switch
   (flycheck-buffer-switch-check-intermediate-buffers t) ; Run flycheck even if visiting buffer quickly (reliant on idle-buffer-switch)
 
   (flycheck-display-errors-delay 0.5) ; Time to show an error on point
@@ -330,7 +327,7 @@
   :hook (flycheck-mode . flycheck-color-mode-line-mode)
   )
 
-;;;;; Flychec-status-emoji
+;;;;; Flycheck-status-emoji
 ;; Use emojis to display flycheck statuses
 (use-package flycheck-status-emoji
   :after flycheck
@@ -396,6 +393,7 @@
 ;;;;; Lsp-ivy
 ;; Search through symbols with Ivy
 (use-package lsp-ivy
+  :disabled t ; Messes up startup for one reason 6/2/2021
   :config
   (kb/leader-keys
     "ls" 'lsp-ivy-workspace-symbol

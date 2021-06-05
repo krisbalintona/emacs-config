@@ -68,10 +68,11 @@
 ;; Enable time in the mode-line
 (use-package time
   :straight nil
-  :hook (after-init . display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average nil) ; Don't show load average along with time
+  :config
+  (add-hook 'after-init-hook 'display-time-mode)
   )
 
 ;;;;; Battery
@@ -247,7 +248,7 @@ UTF-8."
 
   (doom-modeline-def-modeline 'main
     '(kb/matches "   " kb/major-mode-icon " " kb/mu4e "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
-    '(input-method process debug kb/time battery " " bar " " kb/buffer-encoding kb/major-mode checker))
+    '(input-method process debug kb/time battery " " bar "  " kb/buffer-encoding checker "          "))
   )
 
 ;;; themes-rcp.el ends here

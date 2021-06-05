@@ -13,10 +13,10 @@
  (rear-context-string . "2-04 Fri 12:59]\n")
  (position . 836))
 ("org-refile-last-stored"
- (filename . "~/Documents/org-database/agenda/hobbies.org")
- (front-context-string . "** PROG [#B] Bac")
- (rear-context-string . "2-08 Tue 16:53]\n")
- (position . 25581))
+ (filename . "~/Documents/org-database/agenda/school.org")
+ (front-context-string . "*** PROG [#A] Li")
+ (rear-context-string . "1-21 Thu 11:39]\n")
+ (position . 304))
 ("QMK Keymap"
  (filename . "~/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c")
  (front-context-string . "enum custom_keyc")
@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/agenda/inbox.org")
- (front-context-string . "* TODO Check out")
- (rear-context-string . "uto Recompile]]\n")
- (position . 451))
+ (filename . "~/Documents/org-database/roam/Jun032021-024322-an_introduction_to_confucianism.org")
+ (front-context-string)
+ (rear-context-string . "TER_PAGE:\n:END:\n")
+ (position . 779))
 )

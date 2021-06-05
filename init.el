@@ -70,11 +70,11 @@
 (require 'evil-rcp)
 
 ;;;;; Email
-(require 'mu4e-rcp)
+;(require 'mu4e-rcp)
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "org-agenda.org"))
+;; (org-babel-load-file (concat user-emacs-directory "configs/" "org-agenda.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "latex.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))

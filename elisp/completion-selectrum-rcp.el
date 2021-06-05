@@ -1,5 +1,7 @@
 ;;; completion-selectrum-rcp.el --- Summary
 ;;
+;;; Commentary:
+;;
 ;; Selectrum completion framework and cousin packages
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8,6 +10,7 @@
 ;;;; Selectrum
 ;; Advanced complete-read
 (use-package selectrum
+  ;:after ivy
   :hook (after-init . selectrum-mode)
   :custom
   (selectrum-num-candidates-displayed 10) ; Maximum candidates shown
@@ -21,10 +24,6 @@
   (set-face-attribute 'selectrum-current-candidate nil
                       :inherit 'ivy-minibuffer-match-highlight
                       :weight 'semi-bold)
-  (set-face-attribute 'selectrum-primary-highlight nil
-                      :foreground "#dc85f7")
-  (set-face-attribute 'selectrum-secondary-highlight nil
-                      :foreground "#E5C07B")
   (set-face-attribute 'selectrum-completion-annotation nil
                       :inherit 'ivy-grep-info)
 
@@ -41,13 +40,11 @@
 ;; Selectrum with prescient completion style
 (use-package selectrum-prescient
   :hook (after-init . selectrum-prescient-mode)
-  )
-
-;;;;; Consult-selectrum
-;; Consult with selectrum support
-(use-package consult-selectrum
-  :after (selectrum consult)
-  :demand t
+  :config
+  (set-face-attribute 'selectrum-prescient-primary-highlight nil
+                      :foreground "#dc85f7")
+  (set-face-attribute 'selectrum-prescient-secondary-highlight nil
+                      :foreground "#E5C07B")
   )
 
 ;;;;; Consult.el
@@ -57,9 +54,7 @@
                           (rg . ripgrep))
   :after selectrum
   :straight (consult :type git :host github :repo "minad/consult")
-  :hook (selectrum-mode . consult-preview-mode)
   :custom
-  (consult-preview-outline nil) ; Annoying
   (consult-mode-histories ; What variable consult-history looks at for history
    '((eshell-mode . eshell-history-ring)
      (comint-mode . comint-input-ring)
@@ -75,9 +70,26 @@
   ;; (setq consult-view-open-function #'bookmark-jump
   ;;       consult-view-list-function #'bookmark-view-names)
 
-  (consult--fdfind-cmd '("fd" "--color=never" "--full-path")) ; Fd-find command for Fedora
   (consult-project-root-function #'projectile-project-root)
   :config
+  (defun consult-fdfind (&optional dir)
+    (interactive "P")
+    (let ((consult-find-command "fd --color=never --full-path"))
+      (consult-find dir))
+    )
+
+  ;; Customize consult commands
+  (consult-customize
+   ;; For `consult-buffer'
+   consult-buffer :preview-key (kbd "M-l")
+   consult-buffer :prompt "Can use b, m, f, p..."
+   ;; For `consult-ripgrep'
+   consult-ripgrep :preview-key (kbd "M-l")
+   ;; For `consult-fdfind'. Make sure this is after the definition of
+   ;; `consult-fdfind'
+   consult-fdfind :preview-key (kbd "M-l")
+   )
+
   (general-define-key
    [remap apropos-command] '(consult-apropos :which-key "Consult apropos")
    )
@@ -147,30 +159,42 @@
 ;; Taken from
 ;; https://github.com/raxod502/selectrum/wiki/Additional-Configuration#minibuffer-actions-with-embark
 (with-eval-after-load 'embark
-  ;; (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
-  ;; (add-hook 'embark-candidate-collectors
-  ;;           (defun embark-selectrum-candidates+ ()
-  ;;             (when selectrum-active-p
-  ;;               (selectrum-get-current-candidates
-  ;;                ;; Pass relative file names for dired.
-  ;;                minibuffer-completing-file-name))))
-  ;; (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
-  ;; (add-hook 'embark-input-getters
-  ;;           (defun embark-selectrum-input-getter+ ()
-  ;;             (when selectrum-active-p
-  ;;               (let ((input (selectrum-get-current-input)))
-  ;;                 (if minibuffer-completing-file-name
-  ;;                     ;; Only get the input used for matching.
-  ;;                     (file-name-nondirectory input)
-  ;;                   input)))))
+  (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
+  (add-hook 'embark-candidate-collectors
+            (defun embark-selectrum-candidates+ ()
+              (when selectrum-active-p
+                (selectrum-get-current-candidates
+                 ;; Pass relative file names for dired.
+                 minibuffer-completing-file-name))))
+  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
+  (add-hook 'embark-input-getters
+            (defun embark-selectrum-input-getter+ ()
+              (when selectrum-active-p
+                (let ((input (selectrum-get-current-input)))
+                  (if minibuffer-completing-file-name
+                      ;; Only get the input used for matching.
+                      (file-name-nondirectory input)
+                    input)))))
 
   ;; Reset list after embark-act (which may change candidates e.g. delete-file).
   ;; Taken from
   ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#selectrum
-  ;; (defun refresh-selectrum ()
-  ;;   "Reset the Selectrum candidate list."
-  ;;   (setq selectrum--previous-input-string nil))
-  ;; (add-hook 'embark-pre-action-hook #'refresh-selectrum)
+  (defun refresh-selectrum ()
+    "Reset the Selectrum candidate list."
+    (setq selectrum--previous-input-string nil))
+  (add-hook 'embark-pre-action-hook #'refresh-selectrum)
+  )
+
+;;;;;; Embark with Consult
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode)
   )
 
 ;;;;;; Misc embark actions
@@ -185,8 +209,6 @@
   (interactive)
   (magit-status (locate-dominating-file (embark-target) ".git")))
 
+;;; completion-selectrum-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-selectrum-rcp)
-;;; Commentary:
-;;
-;;; completion-selectrum-rcp.el ends here
