@@ -50,14 +50,15 @@
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
+  :straight (magit :type git :host github :repo "magit/magit")
   :custom
+  (magit-popup-display-buffer-action '((display-buffer-same-window)))
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (auto-revert-check-vc-info nil) ; Fixes VC info on a timer in order to take into account changes made outside of Emacs - causes micro-stutters when too many version controlled buffers
   (magit-diff-highlight-hunk-body nil)
   (magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside magit-diff-highlight-hunk-region-using-face))
   (magit-module-sections-nested nil)
-  (magit-popup-display-buffer-action '((display-buffer-same-window)))
   (magit-refs-show-commit-count 'all)
   (magit-section-initial-visibility-alist '((modules . show)
                                             (stashes . show)

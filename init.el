@@ -72,13 +72,25 @@
 ;;;;; Email
 (require 'mu4e-rcp)
 
+;;;;; Org
+
+(org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
+
+;(require 'org-agenda-general-rcp)
+;(require 'org-agenda-views-rcp)
+;(require 'org-agenda-other-rcp)
+
+(require 'org-roam-general-rcp)
+(require 'org-roam-other-rcp)
+
+;; (org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
-;; (org-babel-load-file (concat user-emacs-directory "configs/" "org-agenda.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "latex.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
+
+;;;;; Email
+(require 'latex-general-rcp)
+(require 'latex-pdf-rcp)
 
 ;;;;; Programmming
 (require 'programming-profiling-and-debug-rcp)

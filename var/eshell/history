@@ -355,3 +355,9 @@ snapper -c @root create -c timeline -d "Fixed afetch"
 snapper -c @root create -c timeline -d "After installing redshift"
 snapper -c @home create -c timeline -d "After installing awesome dependencies"
 snapper -c @root create -c timeline -d "After installing awesome dependencies"
+which okular
+mkdir ~/Documents/org-database/roam/journals
+cp /home/krisbalintona/Documents/org-database/agenda/ ~/Documents/
+ls ~/Documents/
+mv /home/krisbalintona/Documents/org-database/agenda/ ~/Documents/
+mkdir /home/krisbalintona/Documents/org-database/agenda/

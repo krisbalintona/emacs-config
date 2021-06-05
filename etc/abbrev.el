@@ -1,6 +1,7 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table
   '(
+    ("refernces" "references" nil :count 0)
     ("secons" "second" nil :count 0)
    ))
 
@@ -241,6 +242,7 @@
     ("conemplation" "contemplation" nil :count 0)
     ("conflict" "Conflict" nil :count 0)
     ("conforable" "conformable" nil :count 0)
+    ("confucious's" "Confucius's" nil :count 0)
     ("congruitity" "congruity" nil :count 0)
     ("coniscious" "conscious" nil :count 0)
     ("conjuction" "conjunction" nil :count 0)
@@ -526,6 +528,7 @@
     ("fromt" "front" nil :count 0)
     ("fromwithin" "From Within" nil :count 0)
     ("fruqency" "frequency" nil :count 0)
+    ("fulfill's" "fulfills" nil :count 0)
     ("functinos" "functions" nil :count 0)
     ("futher" "further" nil :count 0)
     ("gaols" "goals" nil :count 0)
@@ -761,6 +764,7 @@
     ("localwords" "Local Words" nil :count 0)
     ("locken" "Lockean" nil :count 0)
     ("lonourse" "long course" nil :count 0)
+    ("machiavellianism" "Machiavellian ism" nil :count 0)
     ("macroeconimics" "Macroeconomics" nil :count 0)
     ("magnitic" "magnetic" nil :count 0)
     ("maintaenence" "maintenance" nil :count 0)
@@ -845,8 +849,10 @@
     ("occassoinal" "occasional" nil :count 0)
     ("occuping" "occupying" nil :count 0)
     ("offerred" "offered" nil :count 0)
+    ("offormidable" "of formidable" nil :count 0)
     ("ofparts" "of parts" nil :count 0)
     ("ofpoliteness" "of politeness" nil :count 0)
+    ("ofthe" "of the" nil :count 0)
     ("oftn" "often" nil :count 0)
     ("oheion" "cohesion" nil :count 0)
     ("ojbective" "Objective" nil :count 0)
