@@ -205,3 +205,9 @@ Taken from [[https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#mar
     ;;   )
     )
 #+end_src
+
+* Abbrev-mode
+
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook 'abbrev-mode)
+#+end_src

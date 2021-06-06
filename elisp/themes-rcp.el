@@ -255,12 +255,9 @@ UTF-8."
                '(doom-modeline-buffer-major-mode bold) ; Make bold
              'mode-line-inactive)))
 
-  ;; (doom-modeline-def-modeline 'main
-  ;;   '(kb/matches "   " kb/major-mode-icon " " kb/mu4e "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
-  ;;   '(input-method process debug kb/time battery " " bar "  " kb/buffer-encoding checker "          "))
   (doom-modeline-def-modeline 'main
-    '(kb/matches "   " kb/major-mode-icon " " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
-    '(input-method process debug kb/time battery " " bar "  " kb/buffer-encoding checker "          "))
+    '(kb/matches "   " kb/major-mode-icon " " kb/mu4e "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
+    '(input-method process debug kb/time battery " " bar " " kb/buffer-encoding checker))
   )
 
 ;;; themes-rcp.el ends here

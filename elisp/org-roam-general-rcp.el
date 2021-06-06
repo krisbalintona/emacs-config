@@ -28,6 +28,7 @@
 
     (add-hook 'org-roam-buffer-mode-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer; Doesn't work b/c no hook anymore
     (set-face-attribute 'org-link nil :foreground "goldenrod3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
+    (set-face-attribute 'bookmark-face nil :foreground nil :background nil) ; This is the fact used for captures. Its background is ugly
 
     ;; To add back mouse click to visit the node in the backlink buffer
     (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)

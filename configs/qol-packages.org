@@ -442,3 +442,12 @@ Disable mouse interaction within Emacs
                 evil-insert-state-map))
     )
 #+end_src
+
+* Typo-mode
+
+Typography stuff for quotations, hyphens, back-ticks, etc.
+#+begin_src emacs-lisp
+  (use-package typo
+    :hook (org-mode . typo-mode)
+    )
+#+end_src
