@@ -165,11 +165,14 @@ UTF-8."
             (mouse-face 'mode-line-highlight))
         (concat
          (doom-modeline-spc)
+
          ;; Check for UTF-8. If so then do these 2 propertize sections.If not,
          ;; then nothing is propertized and thus shown.
          (if (or (eq buffer-file-coding-system 'utf-8-unix)
                  (eq buffer-file-coding-system 'utf-8)
-                 (eq buffer-file-coding-system 'prefer-utf-8-unix))
+                 (eq buffer-file-coding-system 'prefer-utf-8-unix)
+                 (eq buffer-file-coding-system 'undecided-unix) ; Not sure what this is but it appears in my org-roam files
+                 )
              nil
            ;; eol type
            (let ((eol (coding-system-eol-type buffer-file-coding-system)))
@@ -196,7 +199,7 @@ UTF-8."
                   (cat (plist-get sys :category))
                   (sym (if (memq cat
                                  '(coding-category-undecided coding-category-utf-8))
-                           'test
+                           'failure
                          (plist-get sys :name))))
              (when (or (eq doom-modeline-buffer-encoding t)
                        (and (eq doom-modeline-buffer-encoding 'nondefault)
