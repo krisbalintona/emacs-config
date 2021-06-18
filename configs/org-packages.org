@@ -300,8 +300,6 @@ Alter RET to behave more usefully (like in Doom)
   (define-key evil-motion-state-map (kbd "RET") '+org/dwim-at-point)
 #+END_SRC
 
-* Aesthetics
-
 ** Org-superstar
 
 Descendant of (and thus superior to) org-bullets

@@ -34,6 +34,7 @@
 ;;;;; Google-translate
 ;; Translate strings via Google Translate
 (use-package google-translate
+  :disabled t ; Don't use
   :config
   (general-define-key
    "C-c t" '(google-translate-smooth-translate :which-key "Google translate")

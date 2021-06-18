@@ -113,7 +113,7 @@
     ;; ("-s m" . consult-multi-occur)
     "iy" '(consult-yank-pop :which-key "Consult yank-pop")
     "ha" '(consult-apropos :which-key "Consult apropos")
-    "pf" '(consult-fdfind :which-key "Consult find file")
+    "pf" '(consult-find :which-key "Consult find file")
     "ps" '(consult-ripgrep :which-key "Consult rg")
     )
   )

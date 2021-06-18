@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/Jun032021-024322-an_introduction_to_confucianism.org")
+ (filename . "~/Documents/org-database/roam/ahrensHowTakeSmart2017-how_to_take_smart_notes_one_simple_technique_to_boost_writing_learning_and_thinking_for_students_academics_and_nonfiction_book_writers-Jun142021-003711.org")
  (front-context-string)
- (rear-context-string . "TER_PAGE:\n:END:\n")
- (position . 779))
+ (rear-context-string . "e: Jun 14, 2021\n")
+ (position . 341))
 )

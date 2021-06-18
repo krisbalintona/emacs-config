@@ -75,7 +75,7 @@
   :custom
   (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)
                    (helpful-mode :inhibit-window-quit t :same t)
-                   (help-mode :inhibit-window-quit t :same t)
+                   ;; (help-mode :inhibit-window-quit t :same t) ; Messes with org-roam-doctor buffer
                    (process-menu-mode :inhibit-window-quit t :same t)
                    ("magit:" :regexp t :align t :same t)
                    ("\\*org-roam\\*" :regexp t :align right :same nil :size 0.2)

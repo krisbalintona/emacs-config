@@ -451,3 +451,40 @@ Typography stuff for quotations, hyphens, back-ticks, etc.
     :hook (org-mode . typo-mode)
     )
 #+end_src
+
+* Draft-mode
+
+
+Draft-mode enables your thoughts to flow into your drafts by disabling the ability to edit what you've already written and inserting any new text always at the end of the buffer.
+#+begin_src emacs-lisp
+  (use-package draft-mode
+    :disabled t ; Does this work?
+    )
+#+end_src
+
+* Speed-type-mode
+
+
+Draft-mode enables your thoughts to flow into your drafts by disabling the ability to edit what you've already written and inserting any new text always at the end of the buffer.
+#+begin_src emacs-lisp
+  (use-package speed-type)
+#+end_src
+
+* Egg-timer
+
+
+#+begin_src emacs-lisp
+  (use-package egg-timer
+    :disabled t
+    :custom
+    (egg-timer-intervals
+     (add-to-list 'egg-timer-intervals '("25 minutes" . 25))
+     (add-to-list 'egg-timer-intervals '("50 minutes" . 50))
+     )
+    :config
+    (general-define-key
+     "C-c t" '((lambda () (interactive) (egg-timer-do-schedule 50)) :which-key "Start work")
+     "C-c b" '((lambda () (interactive) (egg-timer-do-schedule 10)) :which-key "Start break")
+     )
+    )
+#+end_src

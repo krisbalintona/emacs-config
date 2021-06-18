@@ -20,6 +20,7 @@
     (org-roam-completion-everywhere t) ; Org-roam completion everywhere
     (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
     ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
+    (org-roam-db-gc-threshold (* 3 838861))
 
     (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
     :config
@@ -89,7 +90,17 @@
         ("e" "Evergreen" plain
          ""
          :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: :refine:\n#+title: ${title}\nReference: \n\n"))
+                            "#+filetags: :refine:\n#+title: ${title}\nReference: \n\n\n"))
+        ("Q" "Quote" entry
+         "* ${title} :quote:
+:PROPERTIES:
+:DATE: %(format-time-string \"%D\" (current-time) nil)
+:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+:REFERENCE:
+:END:"
+         :if-new (file+head "quotes-Jun062021-185530.org"
+                            "#+title: Quotes\n\n\n")
+         )
         ("l" "Lit Note" plain
          ""
          :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
