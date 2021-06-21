@@ -198,7 +198,7 @@
   (kb/leader-keys
     ;; "ff" '(counsel-find-file :which-key "Find file")
     "fF" '(counsel-file-jump :which-key "Fuzzy find file")
-    "fr" '(counsel-recentf :which-key "Recent files")
+    ;; "fr" '(counsel-recentf :which-key "Recent files")
 
     ;; "hf" '(counsel-describe-function :which-key "Desc func")
     ;; "hv" '(counsel-describe-variable :which-key "Desc var")

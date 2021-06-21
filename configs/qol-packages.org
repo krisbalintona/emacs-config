@@ -488,3 +488,39 @@ Draft-mode enables your thoughts to flow into your drafts by disabling the abili
      )
     )
 #+end_src
+
+* Prettify-symbols-mode
+
+#+begin_src emacs-lisp
+  (use-package pretty-symbols
+    :hook (after-init . global-prettify-symbols-mode)
+    :custom
+    (prettify-symbols-alist '(("TODO" . "")
+                              ("WAIT" . "")        
+                              ("NOPE" . "")
+                              ("DONE" . "")
+                              ("[#A]" . "")
+                              ("[#B]" . "")
+                              ("[#C]" . "")
+                              ("[ ]" . "")
+                              ("[X]" . "")
+                              ("[-]" . "")
+                              ("#+BEGIN_SRC" . "")
+                              ("#+END_SRC" . "―")
+                              (":PROPERTIES:" . "")
+                              (":END:" . "―")
+                              ("#+STARTUP:" . "")
+                              ;; ("#+TITLE: " . "")
+
+                              ("#+RESULTS:" . "")
+                              ("#+NAME:" . "")
+                              ("#+ROAM_TAGS:" . "")
+                              ("#+FILETAGS:" . "")
+                              ("#+HTML_HEAD:" . "")
+                              ("#+SUBTITLE:" . "")
+                              ("#+AUTHOR:" . "")
+                              (":Effort:" . "")
+                              ("SCHEDULED:" . "")
+                              ("DEADLINE:" . "")))
+    )
+#+end_src
