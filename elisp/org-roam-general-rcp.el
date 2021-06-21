@@ -82,8 +82,9 @@
 
 ;;;; Org-roam-capture-templates
 (defun kb/insert-lit-category ()
+  "Common types of literature note sources."
   (completing-read "Category: "
-                   '("video" "book" "article" "website" "journal_article"))
+                   '(":video:" ":book:" ":article:" ":website:" ":journal_article:"))
   )
 
 (setq org-roam-capture-templates
@@ -110,18 +111,18 @@
         ("l" "Lit Note" plain
          ""
          :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: %(substring(kb/insert-lit-category) 0 1)\n#+title: ${title}\nSource: \nDate: %<%b %d, %Y>")
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${title}\nSource: \nDate: %<%b %d, %Y>")
          :immediate-finish t
          :jump-to-captured t)
         ("r" "Reference without pdf notes" plain
          ""
          :if-new (file+head "${citekey}-${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: %(substring(kb/insert-lit-category) 0 1)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
          :immediate-finish t)
         ("R" "Reference with pdf notes" plain
          ""
          :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
-                            "#+filetags: %(substring(kb/insert-lit-category) 0 1)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
         ))
 
 ;;;; Org-roam-dailies-capture-templates
