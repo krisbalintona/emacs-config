@@ -86,8 +86,10 @@
    ;; For `consult-ripgrep'
    consult-ripgrep :preview-key (kbd "M-l")
    ;; For `consult-fdfind'. Make sure this is after the definition of
-   ;; `consult-fdfind'
-   consult-fdfind :preview-key (kbd "M-l")
+   ;; `consult-recent-file'
+   consult-recent-file :preview-key (kbd "M-l")
+   ;; `consult-find'
+   consult-find :preview-key (kbd "M-l")
    )
 
   (general-define-key
@@ -101,6 +103,7 @@
               ))
 
   (kb/leader-keys
+    "fr" '(consult-recent-file :which-key "Consult recent file")
     "bb" '(consult-buffer :which-key "Consult buffer")
     ;; ("C-x 4 b" . consult-buffer-other-window)
     ;; ("C-x 5 b" . consult-buffer-other-frame)
