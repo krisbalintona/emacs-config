@@ -437,6 +437,7 @@ Easily create scratch buffers for different modes
 Disable mouse interaction within Emacs
 #+begin_src emacs-lisp
   (use-package disable-mouse
+    :disabled t ; I actually want to use my mouse when on laptop
     :hook (window-setup . global-disable-mouse-mode)
     :config
     ;; For evil states
