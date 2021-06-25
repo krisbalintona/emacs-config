@@ -279,6 +279,11 @@ Quickly jump to characters
     ;; respectively
     (setq ace-jump-mode-submode-list '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))  
 
+    ;; When in org-mode, set face to match the variable font
+    (add-hook 'org-mode-hook (lambda ()
+                               (set-face-attribute 'ace-jump-face-foreground nil :font kb/variable-pitch-font)
+                               ))
+
     (general-define-key
      "M-a" '(ace-jump-mode :which-key "Ace-jump")
      )
