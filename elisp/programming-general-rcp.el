@@ -288,6 +288,21 @@
                  (reusable-frames . visible)
                  (window-height   . 0.33)))
 
+  ;; Textlink prose linter setup
+  (setq flycheck-textlint-config "~/.config/textlint/textlintrc.json")
+  ;; (add-to-list 'flycheck-textlint-plugin-alist '(tex-mode . "latex2e"))
+
+(flycheck-define-checker vale
+  "A checker for prose"
+  :command ("vale" "--output" "line"
+            source)
+  :standard-input nil
+  :error-patterns
+  ((error line-start (file-name) ":" line ":" column ":" (id (one-or-more (not (any ":")))) ":" (message) line-end))
+  :modes (markdown-mode org-mode text-mode)
+  )
+(add-to-list 'flycheck-checkers 'vale 'append)
+
   (kb/leader-keys
     "lf" '(flycheck-list-errors :which-key "List flycheck errors")
     )

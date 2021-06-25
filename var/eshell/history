@@ -361,3 +361,12 @@ cp /home/krisbalintona/Documents/org-database/agenda/ ~/Documents/
 ls ~/Documents/
 mv /home/krisbalintona/Documents/org-database/agenda/ ~/Documents/
 mkdir /home/krisbalintona/Documents/org-database/agenda/
+ls
+la
+ls -lAh
+install.sh
+.install.sh
+./install.sh
+sudo !!
+sudo ./install.sh
+which java

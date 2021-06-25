@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/ahrensHowTakeSmart2017-how_to_take_smart_notes_one_simple_technique_to_boost_writing_learning_and_thinking_for_students_academics_and_nonfiction_book_writers-Jun142021-003711.org")
- (front-context-string)
- (rear-context-string . "e: Jun 14, 2021\n")
- (position . 341))
+ (filename . "~/Documents/org-database/roam/quotes-Jun062021-185530.org")
+ (front-context-string . "* Who have felt ")
+ (rear-context-string . "tle: 002 Quotes\n")
+ (position . 88))
 )
