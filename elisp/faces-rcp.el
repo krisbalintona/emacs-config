@@ -22,7 +22,9 @@
 ;; - IBM Plex Sans Condensed
 (defvar kb/default-font "Iosevka Term SS04")
 (defvar kb/fixed-pitch-font "Hack Nerd Font Mono")
-(defvar kb/variable-pitch-font "ETBembo")
+(defvar kb/variable-pitch-font "LiterationSerif Nerd Font")
+;; (defvar kb/variable-pitch-font "Garamond-Math")
+;; (defvar kb/variable-pitch-font "ETBembo")
 ;(defvar kb/modeline-font "Noto Sans")
 (defvar kb/modeline-font "NotoSans Nerd Font")
 
