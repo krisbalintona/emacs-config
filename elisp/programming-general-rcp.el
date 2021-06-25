@@ -12,11 +12,6 @@
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
   :hook ((text-mode prog-mode snippet-mode) . yas-minor-mode-on)
-  :preface
-  (defvar kb/personal-snippets-dir
-    (concat user-emacs-directory "snippets/"))
-  :config
-  (add-to-list 'yas-snippet-dirs 'kb/personal-snippets-dir) ; Where I keep my own snippets
   )
 
 ;;;;; Doom-snippets
