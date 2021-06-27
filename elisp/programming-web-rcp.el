@@ -13,6 +13,11 @@
          )
   :custom
   (css-indent-offset 4)
+
+  (general-define-key
+   :keymaps 'css-mode-map
+   "C-x n s" 'outshine-narrow-to-subtree
+   )
   )
 
 ;;;; Handlebars-mode
@@ -23,6 +28,11 @@
          )
   :custom
   (handlebars-basic-offset 4)
+
+  (general-define-key
+   :keymaps 'handlebars-mode-map
+   "C-x n s" 'outshine-narrow-to-subtree
+   )
   )
 
 ;;; programming-web-rcp.el ends here
