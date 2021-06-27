@@ -84,7 +84,7 @@
 (defun kb/insert-lit-category ()
   "Common types of literature note sources."
   (completing-read "Category: "
-                   '(":video:" ":book:" ":article:" ":website:" ":journal_article:"))
+                   '(":video:" ":book:" ":podccast:" ":article:" ":website:" ":journal_article:"))
   )
 
 (setq org-roam-capture-templates
