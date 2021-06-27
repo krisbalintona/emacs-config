@@ -97,6 +97,7 @@
 (require 'programming-general-rcp)
 (require 'programming-elisp-rcp)
 (require 'programming-lua-rcp)
+(require 'programming-web-rcp)
 
 ;;;;; Shells
 (require 'shell-eshell-rcp)
