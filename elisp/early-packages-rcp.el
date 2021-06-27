@@ -83,6 +83,7 @@
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
   :hook ((LaTeX-mode . outshine-mode)
+         (css-mode . outshine-mode)
          (prog-mode . outshine-mode)
          (outshine-mode . display-line-numbers-mode)
          (outshine-mode . visual-line-mode)
