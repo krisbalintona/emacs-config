@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/quotes-Jun062021-185530.org")
- (front-context-string . "* Who have felt ")
- (rear-context-string . "tle: 002 Quotes\n")
- (position . 88))
+ (filename . "~/Documents/org-database/roam/eisenhower_method-Jun232021-164959.org")
+ (front-context-string)
+ (rear-context-string . "hod\nReference: \n")
+ (position . 128))
 )
