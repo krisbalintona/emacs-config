@@ -142,6 +142,43 @@
     )
   )
 
+;;;; Additional code
+;;;;; Nobiot
+;; Include number of backlinks for each node in the org-roam buffer.
+;; From https://gist.github.com/nobiot/852978b41b1869df3cf9180202f5bbc9
+(define-minor-mode nobiot/org-roam-v2-extensions-mode
+  "Toggle custom enhancements for Org-roam V2.
+It does not work for V1."
+  :init-value nil
+  :lighter nil
+  :global t
+  (cond
+   (nobiot/org-roam-v2-extensions-mode
+    ;; Activate
+    (require 'org-roam)
+    (advice-add #'org-roam-node--annotation :override #'nobiot/org-roam-node--annotation))
+   (t
+    ;; Deactivate
+    (advice-remove #'org-roam-node--annotation #'nobiot/org-roam-node--annotation))))
+
+(defun nobiot/org-roam-node--annotation (node-title)
+  "Return the annotation string for a NODE-TITLE.
+This custom function enhances Org-roam's function of the same
+name to include number of backlinks for the node."
+  (let* ((node (get-text-property 0 'node node-title))
+         (tags (org-roam-node-tags node))
+         (count)
+         (annotation))
+    (setq count (caar (org-roam-db-query
+                       [:select (funcall count source)
+                                :from links
+                                :where (= dest $s1)
+                                :and (= type "id")]
+                       (org-roam-node-id node))))
+    (concat annotation
+            (when tags (format " (%s)" (string-join tags ", ")))
+            (when count (format " [%d]" count)))))
+
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-roam-other-rcp)
