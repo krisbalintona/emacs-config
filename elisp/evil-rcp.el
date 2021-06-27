@@ -37,7 +37,8 @@
   (evil-define-key '(normal visual) 'global (kbd "zi") 'org-toggle-inline-images)
 
   (kb/leader-keys
-    "ww" 'evil-window-next
+    "ww" 'evil-window-mru
+
     "wc" 'evil-window-delete
     "wo" 'delete-other-windows
 
@@ -53,6 +54,9 @@
 
     "wv" 'evil-window-vsplit
     "ws" 'evil-window-split
+
+    "wr" 'evil-window-rotate-downwards
+    "wR" 'evil-window-rotate-upwards
     )
   )
 
