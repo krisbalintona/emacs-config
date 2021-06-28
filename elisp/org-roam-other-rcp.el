@@ -23,6 +23,16 @@
   (bibtex-completion-browser-function 'browse-url-default-browser) ; Use default browser to open
   (ivy-bibtex-default-action 'ivy-bibtex-edit-notes) ; Edit notes on defualt selection
 
+  ;; Citation format when citing using `ivy-bibtex`
+  (bibtex-completion-format-citation-functions
+   '((org-mode . bibtex-completion-format-citation-autocite) ; I changed this line
+     (latex-mode . bibtex-completion-format-citation-cite)
+     (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+     (python-mode . bibtex-completion-format-citation-sphinxcontrib-bibtex)
+     (rst-mode . bibtex-completion-format-citation-sphinxcontrib-bibtex)
+     (default . bibtex-completion-format-citation-default)
+     ))
+
   ;; Template for new note (but I use orb for this)
   (bibtex-completion-notes-template-multiple-files
    (concat
