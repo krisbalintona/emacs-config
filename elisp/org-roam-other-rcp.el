@@ -21,9 +21,9 @@
    (lambda (fpath)
      (call-process "okular" nil 0 nil fpath)))
   (bibtex-completion-browser-function 'browse-url-default-browser) ; Use default browser to open
-  (ivy-bibtex-default-action 'ivy-bibtex-edit-notes) ; Edit notes on defualt selection
+  (ivy-bibtex-default-action 'ivy-bibtex-edit-notes) ; Edit notes on default selection
 
-  ;; Citation format when citing using `ivy-bibtex`
+  ;; Citation format when citing using `ivy-bibtex'
   (bibtex-completion-format-citation-functions
    '((org-mode . bibtex-completion-format-citation-autocite) ; I changed this line
      (latex-mode . bibtex-completion-format-citation-cite)
