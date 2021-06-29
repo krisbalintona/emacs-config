@@ -96,7 +96,7 @@
         ("e" "Evergreen" plain
          ""
          :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: :refine:\n#+title: ${title}\nReference: \n\n\n")
+                            "#+filetags: :new:\n#+title: ${title}\nReference: \n\n\n")
          :jump-to-captured t)
         ("Q" "Quote" entry
          "* ${title} :quote:
