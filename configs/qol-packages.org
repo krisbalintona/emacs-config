@@ -90,6 +90,7 @@ Cool version of nav-flash
 Show emojiis
 #+BEGIN_SRC emacs-lisp
   (use-package emojify
+    :disabled t ; Annoying most of the time and don’t use
     :custom
     (global-emojify-mode t)
     )
