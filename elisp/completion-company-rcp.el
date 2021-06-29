@@ -30,11 +30,9 @@
   (company-dabbrev-ignore-case nil)
   (company-dabbrev-downcase nil)
 
-  ;; ;; These are the backends that Doom has active
-  ;; (company-backends '(company-dabbrev company-yasnippet company-ispell))
+  ;; These are the backends that Doom has active
+  (company-backends '(company-dabbrev company-yasnippet company-ispell))
   :config
-  ;; (add-to-list 'company-backends 'company-capf) ; For org-roam
-
   (general-define-key
    :keymaps 'company-active-map
    "RET" 'org-return
