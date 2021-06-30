@@ -12,6 +12,11 @@
 ;; Use ivy or helm search frontend with the bibtex-completion backend
 (use-package ivy-bibtex
   :after org-roam
+  :init
+  (defun kb/bibtex-completion-format-citation-autocite (keys)
+    "My own bibtex-completion-format. Accepts KEYS."
+    (s-join ", "
+            (--map (format "autocite:%s" it) keys)))
   :custom
   (bibtex-completion-notes-path kb/roam-dir) ; Irrelevant since I use org-roam-bibtex instead
   (bibtex-completion-library-path (concat kb/roam-dir "bibliographic/bib-pdfs")) ; Where bibtex searches for pdfs
@@ -25,7 +30,7 @@
 
   ;; Citation format when citing using `ivy-bibtex'
   (bibtex-completion-format-citation-functions
-   '((org-mode . bibtex-completion-format-citation-autocite) ; I changed this line
+   '((org-mode . kb/bibtex-completion-format-citation-autocite) ; I changed this line
      (latex-mode . bibtex-completion-format-citation-cite)
      (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
      (python-mode . bibtex-completion-format-citation-sphinxcontrib-bibtex)
