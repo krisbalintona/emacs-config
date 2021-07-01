@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/eisenhower_method-Jun232021-164959.org")
+ (filename . "~/Documents/org-database/roam/the_zettelkasten_index_shouldn_t_be_overlooked-Jun272021-165858.org")
  (front-context-string)
- (rear-context-string . "hod\nReference: \n")
- (position . 128))
+ (rear-context-string . "ked\nReference: \n")
+ (position . 157))
 )

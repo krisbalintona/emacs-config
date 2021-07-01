@@ -370,3 +370,7 @@ install.sh
 sudo !!
 sudo ./install.sh
 which java
+ls
+ls roam/node_modules/
+rm -r roam/node_modules/
+rm roam/package.json roam/package-lock.json
