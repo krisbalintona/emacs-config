@@ -99,7 +99,7 @@
                             "#+filetags: :new:\n#+title: ${title}\nReference: \n\n\n")
          :jump-to-captured t)
         ("Q" "Quote" entry
-         "* ${title} :quote:
+         "* ${title} :quote:new:
 :PROPERTIES:
 :DATE: %(format-time-string \"%D\" (current-time) nil)
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
