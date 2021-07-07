@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/the_zettelkasten_index_shouldn_t_be_overlooked-Jun272021-165858.org")
- (front-context-string)
- (rear-context-string . "ked\nReference: \n")
- (position . 157))
+ (filename . "~/Documents/org-database/roam/quotes-Jun062021-185530.org")
+ (front-context-string . "* Do you want to")
+ (rear-context-string . "what you do\n\n* \n")
+ (position . 2994))
 )
