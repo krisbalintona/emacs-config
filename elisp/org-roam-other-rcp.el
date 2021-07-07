@@ -158,7 +158,7 @@
   )
 
 ;;;; Additional code
-;;;;; Nobiot
+;;;;; Number of backlinks in `orgroam' buffer
 ;; Include number of backlinks for each node in the org-roam buffer.
 ;; From https://gist.github.com/nobiot/852978b41b1869df3cf9180202f5bbc9
 (define-minor-mode nobiot/org-roam-v2-extensions-mode
@@ -193,6 +193,45 @@ name to include number of backlinks for the node."
     (concat annotation
             (when tags (format " (%s)" (string-join tags ", ")))
             (when count (format " [%d]" count)))))
+
+;;;;; Additional column in `org-roam-node-find'
+;; From https://org-roam.discourse.group/t/find-node-ui-possibilities-for-v2/1422/15
+(setq org-roam-node-display-template "${tags:25} ${title:*} ${file:30}")
+
+(defun nobiot/org-roam-get-file-title (filename)
+  "Return the title of the file node for FILENAME."
+  (caar (org-roam-db-query
+        [:select [title] :from nodes :where (and (= level 0)(= file $s1))] filename)))
+
+(defun nobiot/org-roam-node--format-entry (node width)
+  "Formats NODE for display in the results list.
+WIDTH is the width of the results list.
+nobit has modified one line of this function (see the source comment) to get title of the file."
+  (let ((format (org-roam--process-display-format org-roam-node-display-template)))
+    (s-format (car format)
+              (lambda (field)
+                (let* ((field (split-string field ":"))
+                       (field-name (car field))
+                       (field-width (cadr field))
+                       (getter (intern (concat "org-roam-node-" field-name)))
+                       (field-value (or (funcall getter node) "")))
+                  (when (and (equal field-name "tags")
+                             field-value)
+                    (setq field-value (org-roam--tags-to-str field-value)))
+                  (when (and (equal field-name "file")
+                             field-value)
+                    (setq field-value (nobiot/org-roam-get-file-title field-value))) ;; << Changed by nobiot
+                  (if (not field-width)
+                      field-value
+                    (setq field-width (string-to-number field-width))
+                    (truncate-string-to-width
+                     field-value
+                     (if (> field-width 0)
+                         field-width
+                       (- width (cdr format)))
+                     0 ?\s)))))))
+
+(advice-add #'org-roam-node--format-entry :override #'nobiot/org-roam-node--format-entry)
 
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

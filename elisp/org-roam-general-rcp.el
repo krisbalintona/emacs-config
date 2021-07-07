@@ -24,7 +24,6 @@
 
     (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
 
-    (org-roam-node-display-template "${title:80} ${tags:*}") ; Format of items in `org-roam-node-find'
     :config
     (org-roam-setup) ; Replacement for org-roam-mode
     ;; (add-to-list 'org-open-at-point-functions 'org-roam-open-id-at-point)
