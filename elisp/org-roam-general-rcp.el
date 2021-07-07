@@ -46,6 +46,12 @@
       "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
       "nL" '(org-roam-db-sync :which-key "Build cache")
       "nc" '(org-roam-capture :which-key "Roam capture")
+
+      "nd" '(:ignore t :which-key "Roam dailies")
+      "ndd" '(org-roam-dailies-find-date :which-key "Find date")
+      "ndt" '(org-roam-dailies-find-today :which-key "Today")
+      "ndm" '(org-roam-dailies-find-tomorrow :which-key "Tomorrow")
+      "ndy" '(org-roam-dailies-find-yesterday :which-key "Yesterday")
       )
     )
 
@@ -134,16 +140,19 @@
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
-         :if-new (file+head "journals/%<%d-%m-%Y>.org"
-                            "#+title: %<%b %d, %Y>\n\n"))
+         :if-new
+         (file+head "journals/%<%Y>.org"
+                            "* %<%b %d>\n\n"))
         ("w" "Writing" entry
          "* %? :c_writing:
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
-         :if-new (file+head "journals/%<%d-%m-%Y>.org"
-                            "#+title: %<%b %d, %Y>\n\n"))
-        ))
+         :if-new
+         (file+head "journals/%<%Y>.org"
+                            "* %<%b %d>\n\n"))
+        )
+      )
 
 ;;;; Custom updating descriptions
 ;; Credit to @nobiot for helping me
