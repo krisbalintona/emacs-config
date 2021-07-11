@@ -26,7 +26,7 @@
    (lambda (fpath)
      (call-process "okular" nil 0 nil fpath)))
   (bibtex-completion-browser-function 'browse-url-default-browser) ; Use default browser to open
-  (ivy-bibtex-default-action 'ivy-bibtex-edit-notes) ; Edit notes on default selection
+  (ivy-bibtex-default-action 'ivy-bibtex-insert-citation) ; Edit notes on default selection
 
   ;; Citation format when citing using `ivy-bibtex'
   (bibtex-completion-format-citation-functions
@@ -69,6 +69,7 @@
    '(("p" ivy-bibtex-open-any "Open PDF, URL, or DOI")
      ("e" ivy-bibtex-edit-notes "Edit notes")
      ("c" ivy-bibtex-insert-citation "Insert citation")
+     ("k" ivy-bibtex-insert-key "Insert key")
      ("r" ivy-bibtex-insert-reference "Insert reference")
      ("P" ivy-bibtex-open-annotated-pdf "Open annotated PDF (if present)") ; This last function doesn't have an associated action yet (for annotated pdfs)
      ("a" bibtex-completion-add-pdf-to-library "Add pdf to library")
@@ -88,10 +89,11 @@
 (use-package org-ref
   :after ivy
   :custom
-  (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
+  (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
   (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
   (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
-  (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
+  (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
+
   (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
   (org-ref-note-title-format
    "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")

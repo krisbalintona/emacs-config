@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+# name: LaTeX CMS title page
+# key: <ctitle
+# --
+
+#+begin_latex
+  \begin{titlepage}
+    \begin{center}
+      \vspace*{180px}
+      The Ancient Chinese Traditions on Language
+
+      % When subtitles apply, end the title with a colon and place the subtitle on
+      % the line below the title.
+      % SUBTITLE
+
+      \vspace*{\fill}
+      Kristoffer Balintona\\
+      CLASS\\
+      \daymonthyeardate\\ % Use today's date
+      \vspace*{\fill}
+    \end{center}
+  \end{titlepage}
+#+end_latex
