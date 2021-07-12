@@ -134,24 +134,21 @@
 
 ;;;; Org-roam-dailies-capture-templates
 (setq org-roam-dailies-capture-templates
-      '(("d" "Default" entry
+      '(("d" "Default" plain
          "* %?
-:PROPERTIES:
-:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-:END:"
+         :PROPERTIES:
+         :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+         :END:"
          :if-new
-         (file+datetree "journals/%<%Y>.org"
-                        month))
-        ("w" "Writing" entry
+         (file+datetree "journals/%<%Y>.org" week))
+        ("w" "Writing" plain
          "* %? :c_writing:
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
          :if-new
-         (file+datetree "journals/%<%Y>.org"
-                        month))
-        )
-      )
+         (file+datetree "journals/%<%Y>.org" week))
+        ))
 
 ;;;; Custom updating descriptions
 ;; Credit to @nobiot for helping me
