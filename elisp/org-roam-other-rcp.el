@@ -99,11 +99,28 @@
    "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
   (org-ref-notes-function 'orb-edit-notes)
   (org-ref-default-citation-link "autocite")
+
+  (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t
+                                       ("pdflatex"))
+                                      ("T1" "fontenc" t
+                                       ("pdflatex"))
+                                      ("" "graphicx" t)
+                                      ("" "grffile" t)
+                                      ("" "longtable" nil)
+                                      ("" "wrapfig" nil)
+                                      ("" "rotating" nil)
+                                      ("normalem" "ulem" t)
+                                      ("" "amsmath" t)
+                                      ("" "textcomp" t)
+                                      ("" "amssymb" t)
+                                      ("" "capt-of" nil)
+                                      ("hidelinks" "hyperref" nil)) ; Ugly boxes
+                                    )
   :config  
   ;; Files removed after `org-export' to LaTeX
   (add-to-list 'org-latex-logfiles-extensions "tex")
   (add-to-list 'org-latex-logfiles-extensions "bbl")
-  (add-to-list 'org-latex-logfiles-extensions "pdf")
+  ;; (add-to-list 'org-latex-logfiles-extensions "pdf")
   (add-to-list 'org-latex-logfiles-extensions "synctex.gz")
   )
 

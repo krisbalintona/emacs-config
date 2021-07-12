@@ -20,7 +20,7 @@
                                         \\daymonthyeardate\n
                                         \\vspace*{\\fill}\n
                                         \\end{center}\n
-                                        \\newpage"
+                                        \\end{titlepage}"
         )
 #+end_src
 #+LATEX_HEADER: \input{/home/krisbalintona/Documents/org-database/latex/header-chicago_manual.tex}
