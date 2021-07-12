@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: LaTeX blockcquote
+# key: <bcq
+# --
+
+\blockcquote[$1]{$2}{
+$0
+}

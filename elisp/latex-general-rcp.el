@@ -38,14 +38,18 @@
   (TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
   (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
 
-  ;; Procusses for org-to-latex conversion
-  (org-latex-pdf-process
-   '("%latex -interaction nonstopmode -output-directory %o %f"
-     "biber --output-directory %o $(basename %f .tex)"
-     "%latex -interaction nonstopmode -output-directory %o %f"
-     "%latex -interaction nonstopmode -output-directory %o %f")
-   )
+  ;; Processes for org-to-latex conversion
+  ;; (org-latex-pdf-process
+  ;;  '("%latex -interaction nonstopmode -output-directory %o %f"
+  ;;    "biber --output-directory %o $(basename %f .tex)"
+  ;;    "%latex -interaction nonstopmode -output-directory %o %f"
+  ;;    "%latex -interaction nonstopmode -output-directory %o %f")
+  ;;  )
+
+  ;; From https://github.com/jkitchin/org-ref
+  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
   )
+
 ;;;; Reftex
 ;; Manage references, citations, and labels with AUCTeX
 (use-package reftex
