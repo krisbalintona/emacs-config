@@ -140,16 +140,16 @@
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
          :if-new
-         (file+head "journals/%<%Y>.org"
-                            "* %<%b %d>\n\n"))
+         (file+datetree "journals/%<%Y>.org"
+                        month))
         ("w" "Writing" entry
          "* %? :c_writing:
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
          :if-new
-         (file+head "journals/%<%Y>.org"
-                            "* %<%b %d>\n\n"))
+         (file+datetree "journals/%<%Y>.org"
+                        month))
         )
       )
 
