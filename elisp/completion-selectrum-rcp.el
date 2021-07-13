@@ -142,9 +142,23 @@
 (use-package embark
   :custom
   (embark-prompt-style 'default) ; Or manual completion
+
+  ;; Custom indicator
   (embark-action-indicator (concat ; A function, string, or nil - remember: propertize returns a string
                             (propertize "Embark on" 'face '(bold underline))
                             ":")) 
+
+  ;; `which-key' indicator. From
+  ;; https://github.com/oantolin/embark/#showing-a-reminder-of-available-actions
+  (embark-action-indicator
+   (lambda (map _target)
+     (which-key--show-keymap "Embark" map nil nil 'no-paging)
+     #'which-key--hide-popup-ignore-command)
+   embark-become-indicator embark-action-indicator)
+
+
+  ;; Optionally replace the key help with a completing-read interface
+  (prefix-help-command #'embark-prefix-help-command)
   :config
   (general-define-key
    ;; :keymaps 'selectrum-minibuffer-map
@@ -152,6 +166,10 @@
    ;; "?" '(embark-act-noexit :which-key "Embark-act-noexit")
    ;; "?" '(embark-export :which-key "Embark-export")
    )
+
+  (kb/leader-keys
+    "h b" '(embark-bindings :which-key "Embark-bindings")
+    )
   )
 
 ;;;;;; Embark with Selectrum
