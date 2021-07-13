@@ -8,84 +8,50 @@
 ;;; Code:
 
 ;;;; Org-roam
-  (use-package org-roam
-    ;; :quelpa (org-roam :fetcher git :url "https://github.com/org-roam/org-roam" :branch "master") ; Incompatible with straight.el
-    :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "origin/v2") ; Org-roam v2
-    :after company ; Necessary for some reason
-    ;; :hook (window-setup-hook . 
-    :custom
-    (org-roam-directory kb/roam-dir)
-    (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
-    (org-roam-verbose nil) ; Don't echo messages that aren't errors
-    (org-roam-completion-everywhere t) ; Org-roam completion everywhere
-    (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
-    ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
-    (org-roam-db-gc-threshold (* 3 838861))
+(use-package org-roam
+  :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "origin/v2") ; Org-roam v2
+  :after company ; Necessary for some reason
+  :custom
+  (org-roam-directory kb/roam-dir)
+  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
+  (org-roam-verbose nil) ; Don't echo messages that aren't errors
+  (org-roam-completion-everywhere t) ; Org-roam completion everywhere
+  (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
+  ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
+  (org-roam-db-gc-threshold (* 3 838861))
 
-    (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
+  (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
 
-    :config
-    (org-roam-setup) ; Replacement for org-roam-mode
-    ;; (add-to-list 'org-open-at-point-functions 'org-roam-open-id-at-point)
+  ;; How it appears in the minibuffer
+  (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
+  :config
+  (org-roam-setup) ; Replacement for org-roam-mode
 
-    (add-hook 'org-roam-buffer-mode-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer; Doesn't work b/c no hook anymore
-    (set-face-attribute 'org-link nil :foreground "goldenrod3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
-    (set-face-attribute 'bookmark-face nil :foreground nil :background nil) ; This is the fact used for captures. Its background is ugly
+  (add-hook 'org-roam-buffer-mode-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer; Doesn't work b/c no hook anymore
+  (set-face-attribute 'org-link nil :foreground "goldenrod3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
+  (set-face-attribute 'bookmark-face nil :foreground nil :background nil) ; This is the fact used for captures. Its background is ugly
 
-    ;; To add back mouse click to visit the node in the backlink buffer
-    (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
+  ;; To add back mouse click to visit the node in the backlink buffer
+  (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
 
-    (kb/leader-keys
-      "nf" '(org-roam-node-find :which-key "Find file")
-      "ni" '(org-roam-node-insert :which-key "Insert note")
-      "nt" '(org-roam-tag-add :which-key "Add tag")
-      "nT" '(org-roam-tag-remove :which-key "Remove tag")
-      "nN" '(org-id-get-create :which-key "Add ID")
-      "nI" '(org-roam-jump-to-index :which-key "Go to index")
-      "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
-      "nL" '(org-roam-db-sync :which-key "Build cache")
-      "nc" '(org-roam-capture :which-key "Roam capture")
+  (kb/leader-keys
+    "nf" '(org-roam-node-find :which-key "Find file")
+    "ni" '(org-roam-node-insert :which-key "Insert note")
+    "nt" '(org-roam-tag-add :which-key "Add tag")
+    "nT" '(org-roam-tag-remove :which-key "Remove tag")
+    "nN" '(org-id-get-create :which-key "Add ID")
+    "nI" '(org-roam-jump-to-index :which-key "Go to index")
+    "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
+    "nL" '(org-roam-db-sync :which-key "Build cache")
+    "nc" '(org-roam-capture :which-key "Roam capture")
 
-      "nd" '(:ignore t :which-key "Roam dailies")
-      "ndd" '(org-roam-dailies-find-date :which-key "Find date")
-      "ndt" '(org-roam-dailies-find-today :which-key "Today")
-      "ndm" '(org-roam-dailies-find-tomorrow :which-key "Tomorrow")
-      "ndy" '(org-roam-dailies-find-yesterday :which-key "Yesterday")
-      )
+    "nd" '(:ignore t :which-key "Roam dailies")
+    "ndd" '(org-roam-dailies-find-date :which-key "Find date")
+    "ndt" '(org-roam-dailies-find-today :which-key "Today")
+    "ndm" '(org-roam-dailies-find-tomorrow :which-key "Tomorrow")
+    "ndy" '(org-roam-dailies-find-yesterday :which-key "Yesterday")
     )
-
-;;;; Hide property drawers
-;; From https://github.com/org-roam/org-roam/wiki/Hitchhiker%27s-Rough-Guide-to-Org-roam-V2#hiding-properties
-(defun kb/org-hide-properties ()
-  "Hide all org-mode headline property drawers in buffer. Could be slow if buffer has a lot of overlays."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward
-            "^ *:properties:\n\\( *:.+?:.*\n\\)+ *:end:\n" nil t)
-      (let ((ov_this (make-overlay (match-beginning 0) (match-end 0))))
-        (overlay-put ov_this 'display "")
-        (overlay-put ov_this 'hidden-prop-drawer t)))))
-
-(defun kb/org-show-properties ()
-  "Show all org-mode property drawers hidden by org-hide-properties."
-  (interactive)
-  (remove-overlays (point-min) (point-max) 'hidden-prop-drawer t))
-
-(defun kb/org-toggle-properties ()
-  "Toggle visibility of property drawers."
-  (interactive)
-  (if (eq (get 'org-toggle-properties-hide-state 'state) 'hidden)
-      (progn
-        (kb/org-show-properties)
-        (put 'org-toggle-properties-hide-state 'state 'shown))
-    (progn
-      (kb/org-hide-properties)
-      (put 'org-toggle-properties-hide-state 'state 'hidden))))
-
-(general-define-key
- :keymaps 'org-mode-map
- "C-c p t" 'kb/org-toggle-properties)
+  )
 
 ;;;; Org-roam-capture-templates
 (defun kb/insert-lit-category ()
@@ -220,6 +186,137 @@ files if called with universal argument."
         ))
     (message "Done!")
     ))
+
+;;;; Hide property drawers
+;; From https://github.com/org-roam/org-roam/wiki/Hitchhiker%27s-Rough-Guide-to-Org-roam-V2#hiding-properties
+(defun kb/org-hide-properties ()
+  "Hide all org-mode headline property drawers in buffer. Could be slow if buffer has a lot of overlays."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward
+            "^ *:properties:\n\\( *:.+?:.*\n\\)+ *:end:\n" nil t)
+      (let ((ov_this (make-overlay (match-beginning 0) (match-end 0))))
+        (overlay-put ov_this 'display "")
+        (overlay-put ov_this 'hidden-prop-drawer t)))))
+
+(defun kb/org-show-properties ()
+  "Show all org-mode property drawers hidden by org-hide-properties."
+  (interactive)
+  (remove-overlays (point-min) (point-max) 'hidden-prop-drawer t))
+
+(defun kb/org-toggle-properties ()
+  "Toggle visibility of property drawers."
+  (interactive)
+  (if (eq (get 'org-toggle-properties-hide-state 'state) 'hidden)
+      (progn
+        (kb/org-show-properties)
+        (put 'org-toggle-properties-hide-state 'state 'shown))
+    (progn
+      (kb/org-hide-properties)
+      (put 'org-toggle-properties-hide-state 'state 'hidden))))
+
+(general-define-key
+ :keymaps 'org-mode-map
+ "C-c p t" 'kb/org-toggle-properties)
+
+;;;; Additional code
+;;;;; Number of backlinks in `orgroam' buffer
+;; Include number of backlinks for each node in the org-roam buffer.
+;; From https://gist.github.com/nobiot/852978b41b1869df3cf9180202f5bbc9
+(define-minor-mode nobiot/org-roam-v2-extensions-mode
+  "Toggle custom enhancements for Org-roam V2.
+It does not work for V1."
+  :init-value nil
+  :lighter nil
+  :global t
+  (cond
+   (nobiot/org-roam-v2-extensions-mode
+    ;; Activate
+    (require 'org-roam)
+    (advice-add #'org-roam-node--annotation :override #'nobiot/org-roam-node--annotation))
+   (t
+    ;; Deactivate
+    (advice-remove #'org-roam-node--annotation #'nobiot/org-roam-node--annotation))))
+
+(defun nobiot/org-roam-node--annotation (node-title)
+  "Return the annotation string for a NODE-TITLE.
+This custom function enhances Org-roam's function of the same
+name to include number of backlinks for the node."
+  (let* ((node (get-text-property 0 'node node-title))
+         (tags (org-roam-node-tags node))
+         (count)
+         (annotation))
+    (setq count (caar (org-roam-db-query
+                       [:select (funcall count source)
+                                :from links
+                                :where (= dest $s1)
+                                :and (= type "id")]
+                       (org-roam-node-id node))))
+    (concat annotation
+            (when tags (format " (%s)" (string-join tags ", ")))
+            (when count (format " [%d]" count)))))
+
+;;;;; Additional column in `org-roam-node-find'
+;; From https://org-roam.discourse.group/t/find-node-ui-possibilities-for-v2/1422/15
+(defun kb/org-roam--tags-to-str (tags)
+  "My custom version to convert list of TAGS into a string."
+  (if (> (length tags) 0)
+      ;; (propertize (concat "(" (mapconcat #'identity tags ", ") ")")
+      ;;             'face 'org-roam-dim)
+      (mapconcat (lambda (s) (concat "@" s)) tags ", ")
+    ""
+    )
+  )
+(advice-add #'org-roam--tags-to-str :override #'kb/org-roam--tags-to-str)
+
+(defun nobiot/org-roam-get-file-title (filename)
+  "Return the title of the file node for FILENAME."
+  (caar (org-roam-db-query
+         [:select [title] :from nodes :where (and (= level 0)(= file $s1))] filename)))
+
+(defun nobiot/org-roam-node--format-entry (node width)
+  "Formats NODE for display in the results list.
+WIDTH is the width of the results list.
+nobit has modified one line of this function (see the source comment) to get title of the file."
+  (let ((format (org-roam--process-display-format org-roam-node-display-template)))
+    (s-format (car format)
+              (lambda (field)
+                (let* ((field (split-string field ":"))
+                       (field-name (car field))
+                       (field-width (cadr field))
+                       (getter (intern (concat "org-roam-node-" field-name)))
+                       (field-value (or (funcall getter node) "")))
+                  (when (and (equal field-name "tags")
+                             field-value)
+                    (setq field-value (org-roam--tags-to-str field-value)))
+
+                  ;; (when (and (equal field-name "file") ; By nobiot
+                  ;;            field-value)
+                  ;;   (setq field-value (nobiot/org-roam-get-file-title field-value))
+                  ;;   )
+
+                  (when (and (equal field-name "file") ; My custom file
+                             field-value)
+                    (if (string= (nobiot/org-roam-get-file-title field-value) (funcall 'org-roam-node-title node))
+                        (setq field-value "")
+                      (setq field-value (propertize (nobiot/org-roam-get-file-title field-value) 'face 'org-roam-dim))
+                      )
+                    )
+
+                  (when (and (equal field-name "olp")
+                             field-value)
+                    (setq field-value (string-join field-value " > ")))
+                  (if (not field-width)
+                      field-value
+                    (setq field-width (string-to-number field-width))
+                    (truncate-string-to-width
+                     field-value
+                     (if (> field-width 0)
+                         field-width
+                       (- width (cdr format)))
+                     0 ?\s)))))))
+(advice-add #'org-roam-node--format-entry :override #'nobiot/org-roam-node--format-entry)
 
 ;;; org-roam-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
