@@ -264,7 +264,7 @@ name to include number of backlinks for the node."
   (if (> (length tags) 0)
       ;; (propertize (concat "(" (mapconcat #'identity tags ", ") ")")
       ;;             'face 'org-roam-dim)
-      (mapconcat (lambda (s) (concat "@" s)) tags ", ")
+      (propertize (mapconcat (lambda (s) (concat "@" s)) tags ", ") 'face 'org-roam-dim)
     ""
     )
   )
