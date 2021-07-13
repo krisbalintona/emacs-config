@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/quotes-Jun062021-185530.org")
- (front-context-string . "* Do you want to")
- (rear-context-string . "what you do\n\n* \n")
- (position . 2994))
+ (filename . "~/Documents/org-database/roam/ancient_chinese_traditions_recognized_an_issue_of_language_and_disagreed_on_its_limits-Jul122021-011655.org")
+ (front-context-string)
+ (rear-context-string . "its\nReference: \n")
+ (position . 194))
 )
