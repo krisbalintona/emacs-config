@@ -300,7 +300,7 @@ nobit has modified one line of this function (see the source comment) to get tit
                              field-value)
                     (if (string= (nobiot/org-roam-get-file-title field-value) (funcall 'org-roam-node-title node))
                         (setq field-value "")
-                      (setq field-value (propertize (nobiot/org-roam-get-file-title field-value) 'face 'org-roam-dim))
+                      (setq field-value (propertize (concat "#" (nobiot/org-roam-get-file-title field-value)) 'face 'org-roam-dim))
                       )
                     )
 
