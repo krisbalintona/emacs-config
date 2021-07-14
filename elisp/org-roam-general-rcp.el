@@ -9,7 +9,7 @@
 
 ;;;; Org-roam
 (use-package org-roam
-  :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "origin/v2") ; Org-roam v2
+  :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "origin/v2")
   :after company ; Necessary for some reason
   :custom
   (org-roam-directory kb/roam-dir)
@@ -166,12 +166,12 @@ files if called with universal argument."
   (let* ((checkall (equal current-prefix-arg '(4))) ; Universal-argument check
          (files (if checkall ; Taken from `org-roam-doctor'
                     (org-roam--list-all-files)
-                  (unless (org-roam--org-roam-file-p)
+                  (unless (org-roam-file-p)
                     (user-error "Not in an org-roam file"))
                   `(,(buffer-file-name)))
                 ))
     (save-window-excursion ; Taken from `org-roam-doctor-start'
-      (let ((existing-buffers (org-roam--get-roam-buffers)))
+      (let ((existing-buffers (org-roam-buffer-list)))
         (org-id-update-id-locations)
         (dolist (file files) ; Save all opened files and kill if not opened already
           (let ((buffer (find-file-noselect file)))
