@@ -208,13 +208,12 @@
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
 ;; org-roam (provides templates and modifies edit notes action)
 (use-package org-roam-bibtex
-  :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "origin/org-roam-v2") ; For org-roam v2
+  :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex")
   :after (org-roam org-ref bibtex-actions)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
   :custom
   (orb-preformat-keywords
    '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
-  :config
-  (org-roam-bibtex-mode)
   )
 
 ;;;; Note-taking
