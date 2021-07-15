@@ -32,22 +32,10 @@
      ))
 
   ;; Template for new note (but I use orb for this)
-  (bibtex-completion-notes-template-multiple-files
-   (concat
-    "#+TITLE: ${title}\n"
-    "#+ROAM_KEY: cite:${=key=}\n"
-    "* TODO Notes\n"
-    ":PROPERTIES:\n"
-    ":Custom_ID: ${=key=}\n"
-    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-    ":AUTHOR: ${author-abbrev}\n"
-    ":JOURNAL: ${journaltitle}\n"
-    ":DATE: ${date}\n"
-    ":YEAR: ${year}\n"
-    ":DOI: ${doi}\n"
-    ":URL: ${url}\n"
-    ":END:\n\n")
-   )
+  ;; Taken from `org-roam-capture-templates'; copied from "Reference without pdf
+  ;; notes". Doesn't matter though since `org-roam-bibtex' forces a template
+  ;; selection
+  (bibtex-completion-notes-template-multiple-files "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
 
   ;; Symbols used for indicating the availability of notes and PDF files
   (bibtex-completion-pdf-symbol "🖇")
@@ -66,6 +54,8 @@
   ;; A list of predefined searches
   (bibtex-actions-presets '("has:note"))
 
+  (bibtex-actions-at-point-function 'embark-act)
+
   ;; Initial input depending on `bibtex-actions-open-*'
   (bibtex-actions-initial-inputs
    '((pdf    . "has:pdf")
@@ -73,11 +63,10 @@
      (link   . "has:link")
      (source . "has:link\\|has:pdf"))
    )
-  
-  ;; For org-mode's native citation support (`org-cite')
-  (org-cite-follow-processor 'bibtex-actions)
-  (org-cite-insert-processor 'bibtex-actions)
   :config
+  ;; For org-mode's native citation support (`org-cite')
+  (require 'bibtex-actions-org-cite)
+
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/bibtex-actions#rich-ui
   (setq bibtex-actions-symbols
@@ -96,23 +85,26 @@
     :group 'all-the-icons-faces)
 
   ;; Enhanced multiple selection experience. Replaced the built-in method
-  (advice-add #'completing-read-multiple :override #'selectrum-completing-read-multiple)
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
   ;; Custom keymap for `bibtex-actions'
   (general-define-key
    :keymaps 'bibtex-actions-map
-   "t" 'bibtex-actions-add-pdf-attachment
-   "a" 'bibtex-actions-add-pdf-to-library
-   "b" 'bibtex-actions-insert-bibtex
-   "c" 'bibtex-actions-insert-citation
-   "k" 'bibtex-actions-insert-key
-   "r" 'bibtex-actions-insert-reference ; Changed
-   "o" 'bibtex-actions-open
-   "e" 'bibtex-actions-open-entry
-   "l" 'bibtex-actions-open-link
-   "n" 'bibtex-actions-open-notes
-   "p" 'bibtex-actions-open-pdf
-   "R" 'bibtex-actions-refresh ; Changed
+   "t" '("reference | add pdf attachment" . bibtex-actions-add-pdf-attachment)
+   "a" '("reference | add pdf to library" . bibtex-actions-add-pdf-to-library)
+   "b" '("reference | insert bibtex" . bibtex-actions-insert-bibtex)
+   "c" '("reference | insert citation" . bibtex-actions-insert-citation)
+   "k" '("reference | insert key" . bibtex-actions-insert-key)
+   "r" '("reference | insert" . bibtex-actions-insert-reference) ; Changed
+   "o" '("reference | open source" . bibtex-actions-open)
+   "e" '("reference | open entry" . bibtex-actions-open-entry)
+   "l" '("reference | open link" . bibtex-actions-open-link)
+   "n" '("reference | open notes" . bibtex-actions-open-notes)
+   "p" '("reference | open pdf" . bibtex-actions-open-pdf)
+   "R" '("reference | refresh library" . bibtex-actions-refresh) ; Changed
+   ;; Embark doesn't currently use the menu description.
+   ;; https://github.com/oantolin/embark/issues/251
+   "RET" '("reference | default action" . bibtex-actions-run-default-action)
    )
 
   (general-define-key
@@ -156,9 +148,9 @@
      ))
 
   (general-define-key
-    "C-c b" '(ivy-bibtex :which-key "Ivy-bibtex")
-    ;; "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
-    )
+   "C-c b" '(ivy-bibtex :which-key "Ivy-bibtex")
+   ;; "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
+   )
   )
 
 ;;;;; Org-ref
@@ -208,12 +200,14 @@
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
 ;; org-roam (provides templates and modifies edit notes action)
 (use-package org-roam-bibtex
-  :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex")
-  :after (org-roam org-ref bibtex-actions)
-  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "origin/org-roam-v2")
+  :after (org-roam org-ref ivy-bibtex bibtex-actions)
   :custom
   (orb-preformat-keywords
-   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords")
+   )
+  :config
+  ;; (org-roam-bibtex-mode) ; Doesn't permit making new nodes for some reason
   )
 
 ;;;; Note-taking

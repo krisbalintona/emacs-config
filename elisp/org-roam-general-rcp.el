@@ -25,9 +25,12 @@
   ;; How it appears in the minibuffer
   (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
   :config
+  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
   (org-roam-setup) ; Replacement for org-roam-mode
 
-  (add-hook 'org-roam-buffer-mode-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer; Doesn't work b/c no hook anymore
+  (add-hook 'org-roam-mode-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer
+
+  ;; Faces
   (set-face-attribute 'org-link nil :foreground "goldenrod3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
   (set-face-attribute 'bookmark-face nil :foreground nil :background nil) ; This is the fact used for captures. Its background is ugly
 
@@ -96,7 +99,8 @@
          ""
          :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
                             "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
-        ))
+        )
+      )
 
 ;;;; Org-roam-dailies-capture-templates
 (setq org-roam-dailies-capture-templates

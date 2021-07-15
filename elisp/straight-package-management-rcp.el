@@ -28,6 +28,8 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;;;; Require it
+(require 'straight)
 
 ;;; straight-package-management-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

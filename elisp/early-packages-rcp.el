@@ -7,9 +7,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; Org-plus-contrib
-;; Org but with more useful packages
-(require 'straight)
+;;;; Org
+;; Use `org' from `straight.el'. This may or may not work?
+(use-package org
+  :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
+  )
 
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path
