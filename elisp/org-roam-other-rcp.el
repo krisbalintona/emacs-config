@@ -159,11 +159,12 @@
 ;; the .bib files bibtex makes. Org-ref is a way to directly insert citations
 ;; and references into latex and org files
 (use-package org-ref
+  :demand t ; Hard dependency for `org-roam-bibtex' (and maybe others)
   :after ivy
   :custom
-  (org-ref-default-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
+  (org-ref-default-bibliography bibtex-completion-bibliography)
   (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
-  (org-ref-pdf-directory (concat kb/roam-dir "bibliographic/bib-pdfs/"))
+  (org-ref-pdf-directory bibtex-completion-library-path)
   (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
 
   (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
@@ -207,7 +208,7 @@
    '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords")
    )
   :config
-  ;; (org-roam-bibtex-mode) ; Doesn't permit making new nodes for some reason
+  (org-roam-bibtex-mode) ; Doesn't permit making new nodes for some reason
   )
 
 ;;;; Note-taking
