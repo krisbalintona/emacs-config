@@ -252,6 +252,15 @@
   (advice-add #'desktop-owner :around #'kb/desktop-owner-advice)
   )
 
+;;;; Workgroups
+(use-package workgroups
+  ;; :hook (server-after-make-frame . (lambda () (wg-load "~/main-emacs/var/workgroups/Index")))
+  :custom
+  (wg-prefix-key (kbd "C-z"))
+  :config
+  (workgroups-mode)
+  )
+
 ;;; buffer-and-window-management-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'buffer-and-window-management-rcp)
