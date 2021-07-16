@@ -1,6 +1,6 @@
 /configs/*.el
 /elpa/
-/org-roam.db
+/var/org/org-roam.db
 /straight/
 /url/
 /var/auto-save/
