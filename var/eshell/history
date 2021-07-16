@@ -374,3 +374,7 @@ ls
 ls roam/node_modules/
 rm -r roam/node_modules/
 rm roam/package.json roam/package-lock.json
+git rm ./var/org/org-roam.db
+git commit -m "Tried to delete org-roam.db"
+git push
+git push --set-upstream origin master
