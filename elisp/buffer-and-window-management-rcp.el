@@ -254,6 +254,7 @@
 
 ;;;; Workgroups
 (use-package workgroups
+  :disabled t ; Dislike reliance on hard files
   ;; :hook (server-after-make-frame . (lambda () (wg-load "~/main-emacs/var/workgroups/Index")))
   :custom
   (wg-prefix-key (kbd "C-z"))
