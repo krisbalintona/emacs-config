@@ -364,6 +364,20 @@ nobit has modified one line of this function (see the source comment) to get tit
   (org-roam-get-keyword "TITLE" (org-roam-node-file node))
   )
 
+(cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+  (let* ((count (caar (org-roam-db-query
+                       [:select (funcall count source)
+                                :from links
+                                :where (= dest $s1)
+                                :and (= type "id")]
+                       (org-roam-node-id node))))
+         )
+    (if (> count 0)
+        (concat (all-the-icons-material "link" :face 'all-the-icons-dblue :height 0.9) " " (format "%d" count) " ")
+      (concat (all-the-icons-material "link" :face 'org-roam-dim :height 0.9) "   ")
+      )
+    ))
+
 (cl-defmethod org-roam-node-firsttag ((node org-roam-node))
   "The first tag of notes are used to denote note type"
   (let* ((specialtags kb/lit-categories)
@@ -403,31 +417,21 @@ nobit has modified one line of this function (see the source comment) to get tit
          (olp (mapcar (lambda (s) (if (> (length s) 10) (concat (substring s 0 10)  "…") s)) (org-roam-node-olp node)))
          (level (org-roam-node-level node))
          (filetitle (org-roam-node-filetitle node))
-         (shortentitle (if (> (length filetitle) 10) (concat (substring filetitle 0 10)  "...") filetitle))
+         (shortentitle (if (> (length filetitle) 20) (concat (substring filetitle 0 20)  "...") filetitle))
          (separator (concat " " (all-the-icons-material "chevron_right") " "))
          )
     (cond
-     ((= level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-green :v-adjust 0.02 :height 0.8) " "
-                          (propertize shortentitle 'face 'org-roam-dim) separator title))
-     ((> level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-dpurple :v-adjust 0.02 :height 0.8) " "
-                          (propertize (concat shortentitle separator (string-join olp separator)) 'face 'org-roam-dim)
-                          separator title))
-     (t (concat (all-the-icons-faicon "file-text-o" :face 'all-the-icons-lyellow :v-adjust 0.02 :height 0.75) " " title))
+     ((>= level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-green :v-adjust 0.02 :height 0.8) " "
+                          (propertize shortentitle 'face 'org-roam-dim)
+                          (propertize separator 'face 'org-roam-dim)
+                          title))
+     ;; ((> level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-dpurple :v-adjust 0.02 :height 0.8)
+     ;;                      " "
+     ;;                      (propertize (concat shortentitle separator (string-join olp separator)) 'face 'org-roam-dim)
+     ;;                      (propertize separator 'face 'org-roam-dim)
+     ;;                      title))
+     (t (concat (all-the-icons-faicon "file-text-o" :face 'all-the-icons-lyellow :v-adjust 0.02 :height 0.7) " " title))
      )
-    ))
-
-(cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
-  (let* ((count (caar (org-roam-db-query
-                       [:select (funcall count source)
-                                :from links
-                                :where (= dest $s1)
-                                :and (= type "id")]
-                       (org-roam-node-id node))))
-         )
-    (if (> count 0)
-        (concat (all-the-icons-material "link" :face 'all-the-icons-dblue :height 0.9) " " (format "%d" count) " ")
-      (concat (all-the-icons-material "link" :face 'org-roam-dim :height 0.9) "   ")
-      )
     ))
 
 ;;; org-roam-general-rcp.el ends here
