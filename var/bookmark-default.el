@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/linux_system-Jul172021-104308.org")
- (front-context-string)
- (rear-context-string . "e: Linux system\n")
- (position . 90))
+ (filename . "~/Documents/org-database/roam/quotes-Jun062021-185530.org")
+ (front-context-string . "* test :quote:ne")
+ (rear-context-string . "7adbe63e2\n:END:\n")
+ (position . 6403))
 )

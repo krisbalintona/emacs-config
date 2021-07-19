@@ -379,3 +379,4 @@ git commit -m "Tried to delete org-roam.db"
 git push
 git push --set-upstream origin master
 sudo dnf copr enable zeno/systemd-swapsudo dnf install systemd-swap
+grep -lR "journal_article" . | xargs sed -i "s/journal_article/journal/g"

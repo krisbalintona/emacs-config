@@ -90,7 +90,7 @@
 
 ;;;; Org-roam-capture-templates
 (setq kb/lit-categories
-      '("video" "book" "podcast" "article" "website" "journal_article" "quote" "structure")
+      '("video" "book" "podcast" "article" "website" "journal" "quote" "structure")
       )
 
 (defun kb/insert-lit-category ()

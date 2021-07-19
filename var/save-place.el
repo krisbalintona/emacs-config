@@ -1,5 +1,8 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/krisbalintona/main-emacs/configs/file-and-directory-nav.org" . 1455)
+(("/home/krisbalintona/main-emacs/var/bookmark-default.el" . 251)
+ ("/home/krisbalintona/Documents/org-database/roam/quotes-Jun062021-185530.org" . 188)
+ ("/home/krisbalintona/main-emacs/straight/repos/org/lisp/org.el" . 26105)
+ ("/home/krisbalintona/main-emacs/configs/file-and-directory-nav.org" . 1455)
  ("/home/krisbalintona/main-emacs/straight/repos/org-roam/org-roam.el" . 22457)
  ("/home/krisbalintona/main-emacs/init.el" . 2644)
  ("/home/krisbalintona/main-emacs/elisp/shell-eshell-rcp.el" . 4479)
@@ -25,7 +28,6 @@
  ("/home/krisbalintona/main-emacs/straight/repos/workgroups.el/workgroups.el" . 2191)
  ("/home/krisbalintona/main-emacs/straight/build/workgroups/workgroups-autoloads.el" . 331)
  ("/home/krisbalintona/main-emacs/straight/repos/org-roam/org-roam-dailies.el" . 1899)
- ("/home/krisbalintona/Documents/org-database/roam/quotes-Jun062021-185530.org" . 80)
  ("/home/krisbalintona/Documents/org-database/roam/littlejohnDaoismIntroduction2014-daoism_an_introduction-Jun132021-234517.org" . 10559)
  ("/home/krisbalintona/Documents/org-database/roam/possible_courses-Jun162021-015016.org" . 79)
  ("/home/krisbalintona/Documents/org-database/roam/blog-Jun172021-013937.org" . 80)
