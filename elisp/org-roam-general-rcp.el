@@ -115,6 +115,7 @@
 :DATE: %(format-time-string \"%D\" (current-time) nil)
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :REFERENCE:
+:ID: %(org-id-new)
 :END:"
          :if-new (file+head "quotes-Jun062021-185530.org"
                             "#+title: Quotes\n\n\n")
