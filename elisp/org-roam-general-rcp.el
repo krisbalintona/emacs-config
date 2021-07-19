@@ -24,7 +24,7 @@
 
   ;; How it appears in the minibuffer
   ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
-  (org-roam-node-display-template (concat "${backlinkscount:4} " "${firsttag:13} " "${cleantags:13} " "${hierarchy:*}"))
+  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
   :config
   (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
   (org-roam-setup) ; Replacement for org-roam-mode
@@ -377,40 +377,46 @@ nobit has modified one line of this function (see the source comment) to get tit
                        (org-roam-node-id node))))
          )
     (if (> count 0)
-        (concat (all-the-icons-material "link" :face 'all-the-icons-dblue :height 0.9) " " (format "%d" count) " ")
-      (concat (all-the-icons-material "link" :face 'org-roam-dim :height 0.9) "   ")
+        (concat (propertize "=has:backlinks=" 'display (all-the-icons-material "link" :face 'all-the-icons-dblue :height 0.9)) (format "%d" count))
+      (concat (propertize "=not-backlinks=" 'display (all-the-icons-material "link" :face 'org-roam-dim :height 0.9))  " ")
       )
     ))
 
-(cl-defmethod org-roam-node-firsttag ((node org-roam-node))
+(cl-defmethod org-roam-node-functiontag ((node org-roam-node))
   "The first tag of notes are used to denote note type"
   (let* ((specialtags kb/lit-categories)
          (tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
-         (firsttag (seq-intersection specialtags tags 'string=))
+         (functiontag (seq-intersection specialtags tags 'string=))
          )
     (concat
-     (if firsttag
-         (all-the-icons-octicon "gear" :face 'all-the-icons-silver :v-adjust 0.02 :height 0.8)
-       (all-the-icons-octicon "gear" :face 'org-roam-dim :v-adjust 0.02 :height 0.8)
+     ;; (if functiontag
+     ;;     (propertize "=has:functions=" 'display (all-the-icons-octicon "gear" :face 'all-the-icons-silver :v-adjust 0.02 :height 0.8))
+     ;;   (propertize "=not-functions=" 'display (all-the-icons-octicon "gear" :face 'org-roam-dim :v-adjust 0.02 :height 0.8))
+     ;;   )
+     (if functiontag
+         (propertize "=@=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
+       (propertize "= =" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
        )
      " "
-     (if firsttag
-         "@")
-     (string-join firsttag ", "))
+     (string-join functiontag ", "))
     ))
 
-(cl-defmethod org-roam-node-cleantags ((node org-roam-node))
+(cl-defmethod org-roam-node-othertags ((node org-roam-node))
   "Return the file TITLE for the node."
   (let* ((tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
          (specialtags kb/lit-categories)
          (othertags (seq-difference tags specialtags 'string=))
          )
     (concat
+     ;; " "
      ;; (if othertags
-     ;;     (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02))
-     " "
+     ;;     (propertize "=has:tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
+     ;;   (propertize "=not-tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
+     ;;   )
+     ;; " "
      (if othertags
-         (propertize "@" 'face 'all-the-icons-dgreen)
+         (propertize "=@=" 'display "")
+       (propertize "= =" 'display "")
        )
      (propertize (string-join othertags ", ") 'face 'all-the-icons-dgreen))
     ))
@@ -418,23 +424,21 @@ nobit has modified one line of this function (see the source comment) to get tit
 (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
   "Return the hierarchy for the node."
   (let* ((title (org-roam-node-title node))
-         (olp (mapcar (lambda (s) (if (> (length s) 10) (concat (substring s 0 10)  "…") s)) (org-roam-node-olp node)))
+         (olp (mapcar (lambda (s) (if (> (length s) 10) (concat (substring s 0 10)  "...") s)) (org-roam-node-olp node)))
          (level (org-roam-node-level node))
-         (filetitle (org-roam-node-filetitle node))
+         (filetitle (org-roam-get-keyword "TITLE" (org-roam-node-file node)))
          (shortentitle (if (> (length filetitle) 20) (concat (substring filetitle 0 20)  "...") filetitle))
          (separator (concat " " (all-the-icons-material "chevron_right") " "))
          )
     (cond
-     ((>= level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-green :v-adjust 0.02 :height 0.8) " "
+     ((>= level 1) (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "list" :face 'all-the-icons-blue))
+                           " "
                            (propertize shortentitle 'face 'org-roam-dim)
                            (propertize separator 'face 'org-roam-dim)
                            title))
-     ;; ((> level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-dpurple :v-adjust 0.02 :height 0.8)
-     ;;                      " "
-     ;;                      (propertize (concat shortentitle separator (string-join olp separator)) 'face 'org-roam-dim)
-     ;;                      (propertize separator 'face 'org-roam-dim)
-     ;;                      title))
-     (t (concat (all-the-icons-faicon "file-text-o" :face 'all-the-icons-lyellow :v-adjust 0.02 :height 0.7) " " title))
+     (t (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "insert_drive_file" :face 'all-the-icons-yellow))
+                " "
+                title))
      )
     ))
 
