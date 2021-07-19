@@ -1,6 +1,8 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table
   '(
+    ("compatiable" "compatible" nil :count 0)
+    ("compatibl" "compatible" nil :count 0)
     ("defualt" "default" nil :count 0)
     ("inserations" "insertions" nil :count 0)
     ("proccess" "process" nil :count 0)
