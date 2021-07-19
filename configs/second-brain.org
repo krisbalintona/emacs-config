@@ -166,21 +166,6 @@ Templates for inserting files into my Zettelkasten
           ))
 #+END_SRC
 
-* Org-transclusion
-
-Allow transclusion of org files
-#+begin_src emacs-lisp
-  (use-package org-transclusion
-    :disabled t ; No need right now. Also experimental and incomplete
-    :after org-roam
-    :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion" :branch "main")
-    :config
-    (kb/leader-keys
-      "tC" '(org-transclusion-mode :which-key "Org-transclusion")
-      )
-    )
-#+end_src
-
 * Deft
 
 Full text search for my roam files

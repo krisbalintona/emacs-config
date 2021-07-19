@@ -24,7 +24,7 @@
 
   ;; How it appears in the minibuffer
   ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
-  (org-roam-node-display-template "${backlinkscount:4} ${firsttag:13} ${cleantags:13} ${hierarchy:*}")
+  (org-roam-node-display-template (concat "${backlinkscount:4} " "${firsttag:13} " "${cleantags:13} " "${hierarchy:*}"))
   :config
   (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
   (org-roam-setup) ; Replacement for org-roam-mode
@@ -358,7 +358,11 @@ nobit has modified one line of this function (see the source comment) to get tit
                      0 ?\s)))))))
 (advice-add #'org-roam-node--format-entry :override #'nobiot/org-roam-node--format-entry)
 
-;;;;;; Slack (current)
+;;;;;; Slack (current) From
+;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
+;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
+(require 'all-the-icons)
+
 (cl-defmethod org-roam-node-filetitle ((node org-roam-node))
   "Return the file TITLE for the node."
   (org-roam-get-keyword "TITLE" (org-roam-node-file node))
@@ -422,9 +426,9 @@ nobit has modified one line of this function (see the source comment) to get tit
          )
     (cond
      ((>= level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-green :v-adjust 0.02 :height 0.8) " "
-                          (propertize shortentitle 'face 'org-roam-dim)
-                          (propertize separator 'face 'org-roam-dim)
-                          title))
+                           (propertize shortentitle 'face 'org-roam-dim)
+                           (propertize separator 'face 'org-roam-dim)
+                           title))
      ;; ((> level 1) (concat (all-the-icons-material "list" :face 'all-the-icons-dpurple :v-adjust 0.02 :height 0.8)
      ;;                      " "
      ;;                      (propertize (concat shortentitle separator (string-join olp separator)) 'face 'org-roam-dim)

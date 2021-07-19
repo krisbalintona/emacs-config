@@ -256,6 +256,36 @@
     )
   )
 
+;;;; Org-transclusion
+;; Enable transclusion of org files
+(use-package org-transclusion
+  :after org-roam
+  :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion" :files ("*.el"))
+  :hook (org-mode . org-transclusion-activate)
+  :custom
+  (org-transclusion-include-first-section t)
+  (org-transclusion-exclude-elements '(property-drawer keyword))
+  :config
+  ;; Currently need to look through Roam directory, not just agenda files
+  (org-id-update-id-locations (org-roam--list-all-files))
+
+  ;; Make fringe in referenced node invisible
+  (set-face-attribute
+   'org-transclusion-source-fringe nil
+   :foreground (face-background 'default)
+   :background (face-background 'default))
+
+  (kb/leader-keys
+    "Tc" '(org-transclusion-mode :which-key "Toggle mode")
+    "TR" '(org-transclusion-refresh :which-key "Refresh")
+    "Tm" '(org-transclusion-make-from-link :which-key "Make")
+    "Ta" '(org-transclusion-add :which-key "Add")
+    "Tr" '(org-transclusion-remove :which-key "Remove")
+    "Ts" '(org-transclusion-live-sync-start :which-key "Edit start")
+    "Te" '(org-transclusion-live-sync-exit :which-key "Edit exit")
+    )
+  )
+
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-roam-other-rcp)
