@@ -246,14 +246,14 @@
    ))
 
 ;;;; Make sure org-agenda doesn't keep files open
-  (require 'dash)
+(require 'dash)
 
-  (defun my-org-keep-quiet (orig-fun &rest args)
-    (let ((buffers-pre (-filter #'get-file-buffer (org-agenda-files))))
-      (apply orig-fun args)
-      (let* ((buffers-post (-filter #'get-file-buffer (org-agenda-files)))
-             (buffers-new  (-difference buffers-post buffers-pre)))
-        (mapcar (lambda (file) (kill-buffer (get-file-buffer file))) buffers-new))))
+(defun my-org-keep-quiet (orig-fun &rest args)
+  (let ((buffers-pre (-filter #'get-file-buffer (org-agenda-files))))
+    (apply orig-fun args)
+    (let* ((buffers-post (-filter #'get-file-buffer (org-agenda-files)))
+           (buffers-new  (-difference buffers-post buffers-pre)))
+      (mapcar (lambda (file) (kill-buffer (get-file-buffer file))) buffers-new))))
 
 (advice-add 'org-agenda-list :around #'my-org-keep-quiet)
 (advice-add 'org-search-view :around #'my-org-keep-quiet)

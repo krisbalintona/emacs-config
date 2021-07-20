@@ -1,8 +1,6 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table
   '(
-    ("compatiable" "compatible" nil :count 0)
-    ("compatibl" "compatible" nil :count 0)
     ("defualt" "default" nil :count 0)
     ("inserations" "insertions" nil :count 0)
     ("proccess" "process" nil :count 0)
@@ -324,7 +322,7 @@
     ("conemplation" "contemplation" nil :count 0)
     ("conforable" "conformable" nil :count 0)
     ("confucainism" "Confucianism" nil :count 0)
-    ("confucianism" "Confucianism" nil :count 50)
+    ("confucianism" "Confucianism" nil :count 57)
     ("confucious's" "Confucius's" nil :count 0)
     ("congruitity" "congruity" nil :count 0)
     ("conince" "convince" nil :count 0)
@@ -399,7 +397,7 @@
     ("cutural" "cultural" nil :count 0)
     ("daism" "Daoism" nil :count 0)
     ("dalism" "dualism" nil :count 0)
-    ("daoism" "Daoism" nil :count 88)
+    ("daoism" "Daoism" nil :count 90)
     ("daosim" "Daoism" nil :count 8)
     ("daosits" "Daoists" nil :count 1)
     ("darkeness" "darkness" nil :count 0)
@@ -1761,6 +1759,7 @@
     ("tought" "thought" nil :count 0)
     ("towartd" "toward" nil :count 0)
     ("towerswhich" "towers which" nil :count 0)
+    ("traditios" "traditions" nil :count 0)
     ("traet" "treat" nil :count 0)
     ("traeted" "treated" nil :count 0)
     ("traeting" "treating" nil :count 0)
