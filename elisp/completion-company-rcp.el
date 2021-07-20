@@ -31,7 +31,7 @@
   (company-dabbrev-downcase nil)
 
   ;; These are the backends that Doom has active
-  (company-backends '(company-dabbrev company-yasnippet company-ispell))
+  (company-backends '(company-capf company-dabbrev company-yasnippet company-ispell))
   :config
   (general-define-key
    :keymaps 'company-active-map
