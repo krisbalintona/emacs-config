@@ -14,16 +14,16 @@
          (company-mode . evil-normalize-keymaps)
          )
   :custom
-  (company-show-numbers t) ; Number the candidates
+  (company-show-numbers nil) ; Number the candidates?
   (company-tooltip-offset-display 'lines)
-  (company-tooltip-width-grow-only t)
+  (company-tooltip-width-grow-only nil)
   (company-tooltip-flip-when-above t)
   (company-tooltip-align-annotations t)
   (company-idle-delay 0.55)
   (company-tooltip-idle-delay 0.7)
   (company-minimum-prefix-length 2)
   (company-require-match 'company-explicit-action-p)
-  (company-selection-wrap-around t) ; Wrap when selecting candidates
+  (company-selection-wrap-around nil) ; Wrap when selecting candidates?
   (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
 
   (company-dabbrev-other-buffers nil)
