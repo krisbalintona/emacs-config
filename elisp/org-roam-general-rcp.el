@@ -27,12 +27,37 @@
   ;; How it appears in the minibuffer
   ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
   (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
+  :init
+  (defun kb/roam-filter-journals (node binary)
+    "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
+journals directory."
+    (if binary
+        (not (string-equal
+              (concat
+               (expand-file-name kb/roam-dir)
+               "journals/"
+               (format-time-string "%Y" (current-time))
+               ".org")
+              (org-roam-node-file node))
+             )
+      (string-equal
+       (concat
+        (expand-file-name kb/roam-dir)
+        "journals/"
+        (format-time-string "%Y" (current-time))
+        ".org")
+       (org-roam-node-file node))
+      )
+    )
   :config
   (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
   (org-roam-setup) ; Replacement for org-roam-mode
 
-  (add-hook 'org-roam-mode-hook #'hide-mode-line-mode) ; Hide modeline in org-roam buffer
-  (add-hook 'org-mode-hook (lambda ();; Faces
+  (add-hook 'org-roam-mode-hook (lambda ()
+                                  (hide-mode-line-mode) ; Hide modeline in org-roam buffer
+                                  (visual-line-mode))
+            )
+  (add-hook 'org-mode-hook (lambda () ;; Faces
                              (set-face-attribute 'org-link nil :foreground "goldenrod3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
                              (set-face-attribute 'bookmark-face nil :foreground nil :background nil)) ; This is the fact used for captures. Its background is ugly
             )
@@ -44,23 +69,22 @@
    )
 
   (kb/leader-keys
-    ;; "nf" '((lambda ()
-    ;;          (interactive)
-    ;;          (org-roam-node-find nil ""
-    ;;                              (org-roam-node-read nil (lambda (node)
-    ;;                                                        (not (string-equal
-    ;;                                                              (concat (expand-file-name kb/roam-dir) "journals/" (format-time-string "%Y" (current-time)) ".org")
-    ;;                                                              (org-roam-node-file node))))
-    ;;                                                  'org-roam-node-sort-by-file-mtime))
-    ;;          )
-    ;;        :which-key "Find file")
-    ;; "nF" '((lambda ()
-    ;;          (interactive)
-    ;;          (org-roam-node-find t ""
-    ;;                              (org-roam-node-read nil nil
-    ;;                                                  'org-roam-node-sort-by-file-mtime))
-    ;;          )
-    ;;        :which-key "Find file other window")
+    "nf" '((lambda ()
+             (interactive)
+             (org-roam-node-visit (org-roam-node-read nil
+                                                      (lambda (node) (kb/roam-filter-journals node t))
+                                                      )
+                                  nil)
+             )
+           :which-key "Find file")
+    "nF" '((lambda ()
+             (interactive)
+             (org-roam-node-visit (org-roam-node-read nil
+                                                      (lambda (node) (kb/roam-filter-journals node t))
+                                                      )
+                                  t)
+             )
+           :which-key "Find file other window")
     "ni" '(org-roam-node-insert :which-key "Insert note")
     "nt" '(org-roam-tag-add :which-key "Add tag")
     "nT" '(org-roam-tag-remove :which-key "Remove tag")
@@ -71,22 +95,16 @@
     "nc" '(org-roam-capture :which-key "Roam capture")
 
     "nd" '(:ignore t :which-key "Roam dailies")
-    ;; "ndd" '(org-roam-dailies-find-date :which-key "Find date")
-    "ndd" '((lambda()
+    "ndd" '((lambda ()
               (interactive)
-              (org-roam-node-find nil "vo"
-                                  (org-roam-node-read nil (lambda (node)
-                                                            (string-equal
-                                                             (concat (expand-file-name kb/roam-dir) "journals/" (format-time-string "%Y" (current-time)) ".org")
-                                                             (org-roam-node-file node)))
-                                                      'org-roam-node-sort-by-file-mtime))
+              (org-roam-node-visit (org-roam-node-read nil
+                                                       (lambda (node) (kb/roam-filter-journals node nil))
+                                                       ))
               )
             :which-key "Find date")
     "ndt" '(org-roam-dailies-find-today :which-key "Today")
     "ndm" '(org-roam-dailies-find-tomorrow :which-key "Tomorrow")
     "ndy" '(org-roam-dailies-find-yesterday :which-key "Yesterday")
-
-    "nf" '(org-roam-node-find :which-key "Temp")
     )
   )
 
