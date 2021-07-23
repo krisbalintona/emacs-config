@@ -46,6 +46,7 @@
                                  (heaven-and-hell-toggle-theme)
                                  (highlight-indent-guides-auto-set-faces)
                                  (kb/org-face-setup)
+                                 (kb/doom-modeline-font-setup)
                                  )
                                :which-key "Toggle theme"
                                ))
@@ -82,13 +83,17 @@
   (doom-modeline-height 33)
   (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
   (doom-modeline-window-width-limit 100) ; Width of the bar segment
+  :init
+  (defun kb/doom-modeline-font-setup ()
+    "Set doom modeline fonts."
+    (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
+    (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line)
+    )
   :config
   (if (daemonp) ; Hooks depending on daemon or not
       (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
     (add-hook 'window-setup-hook 'doom-modeline-mode))
-
-  (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
-  (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line)
+  (kb/doom-modeline-font-setup)
   )
 
 ;;;;; Time
