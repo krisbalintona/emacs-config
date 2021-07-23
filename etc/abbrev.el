@@ -805,6 +805,7 @@
     ("huamns" "humans" nil :count 0)
     ("huamsn" "Hamsun" nil :count 2)
     ("hume" "Hume" nil :count 0)
+    ("humling" "Humbling" nil :count 0)
     ("humn" "human" nil :count 0)
     ("humna" "Human" nil :count 0)
     ("hvae" "have" nil :count 0)
