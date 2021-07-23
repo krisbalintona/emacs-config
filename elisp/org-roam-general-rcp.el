@@ -49,8 +49,9 @@ journals directory."
        (org-roam-node-file node))
       )
     )
-  :config
+  :init
   (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
+  :config
   (org-roam-setup) ; Replacement for org-roam-mode
 
   (add-hook 'org-roam-mode-hook (lambda ()
@@ -61,6 +62,9 @@ journals directory."
                              (set-face-attribute 'org-link nil :foreground "goldenrod3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
                              (set-face-attribute 'bookmark-face nil :foreground nil :background nil)) ; This is the fact used for captures. Its background is ugly
             )
+
+  ;; Annoying. Closes frame when I want to add a footnote
+  (general-define-key "C-x C-c" 'nil)
 
   ;; To add back mouse click to visit the node in the backlink buffer
   (general-define-key
@@ -85,14 +89,21 @@ journals directory."
                                   t)
              )
            :which-key "Find file other window")
+
     "ni" '(org-roam-node-insert :which-key "Insert note")
+
+    "nc" '(org-roam-capture :which-key "Roam capture")
+
+    "nN" '(org-id-get-create :which-key "Add ID")
     "nt" '(org-roam-tag-add :which-key "Add tag")
     "nT" '(org-roam-tag-remove :which-key "Remove tag")
-    "nN" '(org-id-get-create :which-key "Add ID")
-    "nI" '(org-roam-jump-to-index :which-key "Go to index")
+
+    "nh" '(org-roam-jump-to-index :which-key "Go to index")
+
     "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
-    "nL" '(org-roam-db-sync :which-key "Build cache")
-    "nc" '(org-roam-capture :which-key "Roam capture")
+    "nL" '(org-roam-buffer :which-key "New Roam buffer")
+
+    "nb" '(org-roam-db-sync :which-key "Build cache")
 
     "nd" '(:ignore t :which-key "Roam dailies")
     "ndd" '((lambda ()
@@ -166,15 +177,16 @@ journals directory."
          :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
          :END:"
          :if-new
-         (file+datetree "journals/%<%Y>.org" week))
+         (file+datetree "%<%Y>.org" week))
         ("w" "Writing" plain
          "* %? :c_writing:
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
          :if-new
-         (file+datetree "journals/%<%Y>.org" week))
-        ))
+         (file+datetree "%<%Y>.org" week))
+        )
+      )
 
 ;;;; Custom updating descriptions
 ;; Credit to @nobiot for helping me
@@ -281,6 +293,71 @@ files if called with universal argument."
  "C-c p t" 'kb/org-toggle-properties)
 
 ;;;; Additional code
+;;;;; Only update database while idle
+;; From
+;; https://orgmode-exocortex.com/2021/07/22/configure-org-roam-v2-to-update-database-only-when-idle/
+(with-eval-after-load 'org-roam
+  ;; queue for files that will be updated in org-roam-db when emacs is idle
+  (setq org-roam-db-update-queue (list))
+  ;; save the original update function;
+  (setq orig-update-file (symbol-function 'org-roam-db-update-file))
+  ;; then redefine the db update function to add the filename to a queue
+  (defun org-roam-db-update-file (&optional file-path)
+    ;; do same logic as original to determine current file-path if not passed as arg
+    (setq file-path (or file-path (buffer-file-name (buffer-base-buffer))))
+    (message "org-roam: scheduling update of %s" file-path)
+    (if (not (memq file-path org-roam-db-update-queue))
+        (push file-path org-roam-db-update-queue)))
+
+  ;; this function will be called when emacs is idle for a few seconds
+  (defun org-roam-db-idle-update-files ()
+    ;; go through queued filenames one-by-one and update db
+    ;; if we're not idle anymore, stop. will get rest of queue next idle.
+    (while (and org-roam-db-update-queue (current-idle-time))
+      ;; apply takes function var and list
+      (apply orig-update-file (list (pop org-roam-db-update-queue)))))
+
+  ;; we'll only start updating db if we've been idle for this many seconds
+  (run-with-idle-timer 5 t #'org-roam-db-idle-update-files)
+  )
+
+;;;;; Find a node which links to any other given node
+;; From
+;; https://ag91.github.io/blog/2021/03/12/find-org-roam-notes-via-their-relations/
+(defun kb/find-node-backlink (arg &optional node choices)
+  "Navigate notes by link. With universal ARG try to use only to navigate the tags of the current note. Optionally takes a selected NODE and filepaths CHOICES."
+  (interactive "P")
+  (let* ((depth (if (numberp arg) arg 1))
+         (choices
+          (or choices
+              (when arg
+                (-map #'org-roam-backlink-target-node (org-roam-backlinks-get (org-roam-node-from-id (or (ignore-errors (org-roam-node-id node))
+                                                                                                         (org-id-get-create))))))))
+         (all-notes (org-roam-node--completions))
+         (completions
+          (or (--filter (-contains-p choices (cdr it)) all-notes) all-notes))
+         (next-node
+          ;; taken from org-roam-node-read
+          (let* ((nodes completions)
+                 (node (completing-read
+                        "Node: "
+                        (lambda (string pred action)
+                          (if (eq action 'metadata)
+                              '(metadata
+                                (annotation-function . (lambda (title)
+                                                         (funcall org-roam-node-annotation-function
+                                                                  (get-text-property 0 'node title))))
+                                (category . org-roam-node))
+                            (complete-with-action action nodes string pred))))))
+            (or (cdr (assoc node nodes))
+                (org-roam-node-create :title node)))
+          )
+         )
+    (if (equal node next-node)
+        (org-roam-node-visit node)
+      (my/navigate-note nil next-node (cons next-node (-map #'org-roam-backlink-source-node (org-roam-backlinks-get next-node))))
+      )))
+
 ;;;;; Number of backlinks in `orgroam' buffer
 ;; Include number of backlinks for each node in the org-roam buffer.
 ;; From https://gist.github.com/nobiot/852978b41b1869df3cf9180202f5bbc9
