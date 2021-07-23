@@ -17,9 +17,6 @@
   :disabled t
   :config (load-theme 'doom-palenight t))
 
-(use-package atom-one-dark-theme
-  :config (load-theme 'atom-one-dark t))
-
 (use-package mood-one-theme
   :disabled t
   :config (load-theme 'mood-one t))
@@ -28,18 +25,24 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
+(use-package atom-one-dark-theme
+  :config (load-theme 'atom-one-dark t))
+
+(use-package apropospriate-theme
+  :config (load-theme 'apropospriate-light t t))
+
 ;;;; Heaven-and-hell
 ;; Toggle between light and dark themes
 (use-package heaven-and-hell
   :hook (after-init . heaven-and-hell-init-hook)
-  :custom
-  (heaven-and-hell-theme-type 'dark) ; Use dark by default
-  (heaven-and-hell-themes
+  :init
+  (setq heaven-and-hell-theme-type 'dark) ; Use dark by default
+  (setq heaven-and-hell-themes
    '((light . apropospriate-light)
      (dark . atom-one-dark))) ;; Themes can be the list: (dark . (tsdh-dark wombat))
 
   ;; Load themes without asking for confirmation
-  (heaven-and-hell-load-theme-no-confirm t)
+  (setq heaven-and-hell-load-theme-no-confirm t)
   :config
   (general-define-key "<f6>" '((lambda ()
                                  (interactive)
