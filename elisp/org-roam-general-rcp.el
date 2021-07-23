@@ -98,7 +98,11 @@ journals directory."
     "nt" '(org-roam-tag-add :which-key "Add tag")
     "nT" '(org-roam-tag-remove :which-key "Remove tag")
 
-    "nh" '(org-roam-jump-to-index :which-key "Go to index")
+    "nh" '((lambda ()
+             (interactive)
+             (find-file "~/Documents/org-database/roam/index-Jun042021-183426.org")
+             )
+            :which-key "Go to index")
 
     "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
     "nL" '(org-roam-buffer :which-key "New Roam buffer")
