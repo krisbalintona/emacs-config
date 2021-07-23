@@ -28,6 +28,33 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
+;;;; Heaven-and-hell
+;; Toggle between light and dark themes
+(use-package heaven-and-hell
+  :hook (after-init . heaven-and-hell-init-hook)
+  :custom
+  (heaven-and-hell-theme-type 'dark) ; Use dark by default
+  (heaven-and-hell-themes
+   '((light . apropospriate-light)
+     (dark . atom-one-dark))) ;; Themes can be the list: (dark . (tsdh-dark wombat))
+
+  ;; Load themes without asking for confirmation
+  (heaven-and-hell-load-theme-no-confirm t)
+  :config
+  (general-define-key "<f6>" '((lambda ()
+                                 (interactive)
+                                 (heaven-and-hell-toggle-theme)
+                                 (highlight-indent-guides-auto-set-faces)
+                                 (kb/org-face-setup)
+                                 )
+                               :which-key "Toggle theme"
+                               ))
+  )
+
+;;;; Transparency
+;; (set-frame-parameter (selected-frame) 'background-color '98)
+;; (add-to-list 'default-frame-alist '(alpha . 98)))
+
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline

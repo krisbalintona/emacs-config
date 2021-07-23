@@ -15,10 +15,6 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
-;;;; Transparency
-(set-frame-parameter (selected-frame) 'alpha '(98 . 85))
-(add-to-list 'default-frame-alist '(alpha . (98 . 85)))
-
 ;;;; Variable defaults
 (setq-default ad-redefinition-action 'accept             ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil           ; Don't warn when opening large files
