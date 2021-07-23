@@ -384,3 +384,11 @@ sudo systemctl restart emacs
 sudo systemctl --user restart emacs
 systemctl --user restart emacs
 systemctl --user restart emacs
+grep -h
+grep --help
+grep -l "condified"
+grep -l "codified"
+grep -l "codify"
+grep -l "comprehensible"
+grep -l "universe"
+grep "codified"

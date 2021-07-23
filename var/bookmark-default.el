@@ -28,8 +28,8 @@
  (rear-context-string . "96 Oct 15 01:42 ")
  (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/test-Jul192021-031755.org")
- (front-context-string)
- (rear-context-string . ":\n#+title: Test\n")
- (position . 82))
+ (filename . "~/Documents/org-database/roam/writing_is_another_form_of_writing-Jul212021-115335.org")
+ (front-context-string . "The line between")
+ (rear-context-string . "ing\nReference: \n")
+ (position . 142))
 )
