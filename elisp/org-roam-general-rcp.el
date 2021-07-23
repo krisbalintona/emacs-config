@@ -119,6 +119,92 @@ journals directory."
     )
   )
 
+;;;;; Customizing `org-roam-node-find'
+;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
+;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
+(with-eval-after-load 'org-roam
+  (require 'all-the-icons)
+
+  (cl-defmethod org-roam-node-filetitle ((node org-roam-node))
+    "Return the file TITLE for the node."
+    (org-roam-get-keyword "TITLE" (org-roam-node-file node))
+    )
+
+  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+    (let* ((count (caar (org-roam-db-query
+                         [:select (funcall count source)
+                                  :from links
+                                  :where (= dest $s1)
+                                  :and (= type "id")]
+                         (org-roam-node-id node))))
+           )
+      (if (> count 0)
+          (concat (propertize "=has:backlinks=" 'display (all-the-icons-material "link" :face 'all-the-icons-dblue :height 0.9)) (format "%d" count))
+        (concat (propertize "=not-backlinks=" 'display (all-the-icons-material "link" :face 'org-roam-dim :height 0.9))  " ")
+        )
+      ))
+
+  (cl-defmethod org-roam-node-functiontag ((node org-roam-node))
+    "The first tag of notes are used to denote note type"
+    (let* ((specialtags kb/lit-categories)
+           (tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
+           (functiontag (seq-intersection specialtags tags 'string=))
+           )
+      (concat
+       ;; (if functiontag
+       ;;     (propertize "=has:functions=" 'display (all-the-icons-octicon "gear" :face 'all-the-icons-silver :v-adjust 0.02 :height 0.8))
+       ;;   (propertize "=not-functions=" 'display (all-the-icons-octicon "gear" :face 'org-roam-dim :v-adjust 0.02 :height 0.8))
+       ;;   )
+       (if functiontag
+           (propertize "=@=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
+         (propertize "= =" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
+         )
+       " "
+       (string-join functiontag ", "))
+      ))
+
+  (cl-defmethod org-roam-node-othertags ((node org-roam-node))
+    "Return the file TITLE for the node."
+    (let* ((tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
+           (specialtags kb/lit-categories)
+           (othertags (seq-difference tags specialtags 'string=))
+           )
+      (concat
+       ;; " "
+       ;; (if othertags
+       ;;     (propertize "=has:tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
+       ;;   (propertize "=not-tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
+       ;;   )
+       ;; " "
+       (if othertags
+           (propertize "=@=" 'display "")
+         (propertize "= =" 'display "")
+         )
+       (propertize (string-join othertags ", ") 'face 'all-the-icons-dgreen))
+      ))
+
+  (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
+    "Return the hierarchy for the node."
+    (let* ((title (org-roam-node-title node))
+           (olp (mapcar (lambda (s) (if (> (length s) 10) (concat (substring s 0 10)  "...") s)) (org-roam-node-olp node)))
+           (level (org-roam-node-level node))
+           (filetitle (org-roam-get-keyword "TITLE" (org-roam-node-file node)))
+           (shortentitle (if (> (length filetitle) 20) (concat (substring filetitle 0 20)  "...") filetitle))
+           (separator (concat " " (all-the-icons-material "chevron_right") " "))
+           )
+      (cond
+       ((>= level 1) (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "list" :face 'all-the-icons-blue))
+                             " "
+                             (propertize shortentitle 'face 'org-roam-dim)
+                             (propertize separator 'face 'org-roam-dim)
+                             title))
+       (t (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "insert_drive_file" :face 'all-the-icons-yellow))
+                  " "
+                  title))
+       )
+      ))
+  )
+
 ;;;; Org-roam-capture-templates
 (setq kb/lit-categories
       '("video" "book" "podcast" "article" "website" "journal" "quote" "structure")
@@ -393,154 +479,6 @@ name to include number of backlinks for the node."
     (concat annotation
             (when tags (format " (%s)" (string-join tags ", ")))
             (when count (format " [%d]" count)))))
-
-;;;;; Customizing `org-roam-node-find'
-;;;;;; Nobiot
-;; From https://org-roam.discourse.group/t/find-node-ui-possibilities-for-v2/1422/15
-(defun kb/org-roam--tags-to-str (tags)
-  "My custom version to convert list of TAGS into a string."
-  (if (> (length tags) 0)
-      ;; (propertize (concat "(" (mapconcat #'identity tags ", ") ")")
-      ;;             'face 'org-roam-dim)
-      (propertize (mapconcat (lambda (s) (concat "@" s)) tags ", ") 'face 'org-roam-dim)
-    ""
-    )
-  )
-(advice-add #'org-roam--tags-to-str :override #'kb/org-roam--tags-to-str)
-
-(defun nobiot/org-roam-get-file-title (filename)
-  "Return the title of the file node for FILENAME."
-  (caar (org-roam-db-query
-         [:select [title] :from nodes :where (and (= level 0)(= file $s1))] filename)))
-
-(defun nobiot/org-roam-node--format-entry (node width)
-  "Formats NODE for display in the results list.
-WIDTH is the width of the results list.
-nobit has modified one line of this function (see the source comment) to get title of the file."
-  (let ((format (org-roam--process-display-format org-roam-node-display-template)))
-    (s-format (car format)
-              (lambda (field)
-                (let* ((field (split-string field ":"))
-                       (field-name (car field))
-                       (field-width (cadr field))
-                       (getter (intern (concat "org-roam-node-" field-name)))
-                       (field-value (or (funcall getter node) "")))
-                  (when (and (equal field-name "tags")
-                             field-value)
-                    (setq field-value (org-roam--tags-to-str field-value)))
-
-                  ;; (when (and (equal field-name "file") ; By nobiot
-                  ;;            field-value)
-                  ;;   (setq field-value (nobiot/org-roam-get-file-title field-value))
-                  ;;   )
-
-                  (when (and (equal field-name "file") ; My custom file
-                             field-value)
-                    (if (string= (nobiot/org-roam-get-file-title field-value) (funcall 'org-roam-node-title node))
-                        (setq field-value "")
-                      (setq field-value (propertize (concat "#" (nobiot/org-roam-get-file-title field-value)) 'face 'org-roam-dim))
-                      )
-                    )
-
-                  (when (and (equal field-name "olp")
-                             field-value)
-                    (setq field-value (string-join field-value " > ")))
-                  (if (not field-width)
-                      field-value
-                    (setq field-width (string-to-number field-width))
-                    (truncate-string-to-width
-                     field-value
-                     (if (> field-width 0)
-                         field-width
-                       (- width (cdr format)))
-                     0 ?\s)))))))
-(advice-add #'org-roam-node--format-entry :override #'nobiot/org-roam-node--format-entry)
-
-;;;;;; Slack (current) From
-;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
-;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
-(with-eval-after-load 'org-roam
-  (require 'all-the-icons)
-
-  (cl-defmethod org-roam-node-filetitle ((node org-roam-node))
-    "Return the file TITLE for the node."
-    (org-roam-get-keyword "TITLE" (org-roam-node-file node))
-    )
-
-  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
-    (let* ((count (caar (org-roam-db-query
-                         [:select (funcall count source)
-                                  :from links
-                                  :where (= dest $s1)
-                                  :and (= type "id")]
-                         (org-roam-node-id node))))
-           )
-      (if (> count 0)
-          (concat (propertize "=has:backlinks=" 'display (all-the-icons-material "link" :face 'all-the-icons-dblue :height 0.9)) (format "%d" count))
-        (concat (propertize "=not-backlinks=" 'display (all-the-icons-material "link" :face 'org-roam-dim :height 0.9))  " ")
-        )
-      ))
-
-  (cl-defmethod org-roam-node-functiontag ((node org-roam-node))
-    "The first tag of notes are used to denote note type"
-    (let* ((specialtags kb/lit-categories)
-           (tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
-           (functiontag (seq-intersection specialtags tags 'string=))
-           )
-      (concat
-       ;; (if functiontag
-       ;;     (propertize "=has:functions=" 'display (all-the-icons-octicon "gear" :face 'all-the-icons-silver :v-adjust 0.02 :height 0.8))
-       ;;   (propertize "=not-functions=" 'display (all-the-icons-octicon "gear" :face 'org-roam-dim :v-adjust 0.02 :height 0.8))
-       ;;   )
-       (if functiontag
-           (propertize "=@=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
-         (propertize "= =" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
-         )
-       " "
-       (string-join functiontag ", "))
-      ))
-
-  (cl-defmethod org-roam-node-othertags ((node org-roam-node))
-    "Return the file TITLE for the node."
-    (let* ((tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
-           (specialtags kb/lit-categories)
-           (othertags (seq-difference tags specialtags 'string=))
-           )
-      (concat
-       ;; " "
-       ;; (if othertags
-       ;;     (propertize "=has:tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
-       ;;   (propertize "=not-tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
-       ;;   )
-       ;; " "
-       (if othertags
-           (propertize "=@=" 'display "")
-         (propertize "= =" 'display "")
-         )
-       (propertize (string-join othertags ", ") 'face 'all-the-icons-dgreen))
-      ))
-
-  (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
-    "Return the hierarchy for the node."
-    (let* ((title (org-roam-node-title node))
-           (olp (mapcar (lambda (s) (if (> (length s) 10) (concat (substring s 0 10)  "...") s)) (org-roam-node-olp node)))
-           (level (org-roam-node-level node))
-           (filetitle (org-roam-get-keyword "TITLE" (org-roam-node-file node)))
-           (shortentitle (if (> (length filetitle) 20) (concat (substring filetitle 0 20)  "...") filetitle))
-           (separator (concat " " (all-the-icons-material "chevron_right") " "))
-           )
-      (cond
-       ((>= level 1) (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "list" :face 'all-the-icons-blue))
-                             " "
-                             (propertize shortentitle 'face 'org-roam-dim)
-                             (propertize separator 'face 'org-roam-dim)
-                             title))
-       (t (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "insert_drive_file" :face 'all-the-icons-yellow))
-                  " "
-                  title))
-       )
-      ))
-  )
 
 ;;; org-roam-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
