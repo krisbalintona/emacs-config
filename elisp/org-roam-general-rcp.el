@@ -27,7 +27,17 @@
   ;; How it appears in the minibuffer
   ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
   (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
+
+  ;; Roam buffer format
+  (org-roam-mode-section-functions
+   '(org-roam-backlinks-section
+     org-roam-reflinks-section
+     org-roam-unlinked-references-section
+     )
+   )
   :init
+  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
+
   (defun kb/roam-filter-journals (node binary)
     "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
 journals directory."
