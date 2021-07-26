@@ -208,7 +208,7 @@
    '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords")
    )
   :config
-  (org-roam-bibtex-mode) ; Doesn't permit making new nodes for some reason
+  ;; (org-roam-bibtex-mode) ; Doesn't permit making new nodes for some reason
   )
 
 ;;;; Note-taking

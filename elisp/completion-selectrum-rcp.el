@@ -10,7 +10,6 @@
 ;;;; Selectrum
 ;; Advanced complete-read
 (use-package selectrum
-  ;:after ivy
   :hook (after-init . selectrum-mode)
   :custom
   (selectrum-num-candidates-displayed 10) ; Maximum candidates shown
