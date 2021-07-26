@@ -49,22 +49,27 @@ journals directory."
        (org-roam-node-file node))
       )
     )
-  :init
-  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
   :config
-  (org-roam-setup) ; Replacement for org-roam-mode
+  (org-roam-setup)
 
+  ;; Org roam buffer
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . hide))
   (add-hook 'org-roam-mode-hook (lambda ()
                                   (hide-mode-line-mode) ; Hide modeline in org-roam buffer
-                                  (visual-line-mode))
+                                  (visual-line-mode)
+                                  )
             )
-  (add-hook 'org-mode-hook (lambda () ;; Faces
-                             (set-face-attribute 'org-link nil :foreground "goldenrod3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil)
-                             (set-face-attribute 'bookmark-face nil :foreground nil :background nil)) ; This is the fact used for captures. Its background is ugly
-            )
+  (with-eval-after-load 'atom-one-dark-theme
+    (custom-theme-set-faces
+     `atom-one-dark
+     `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
+     `(bookmark-face ((t (:foreground nil :background nil))))
+     )
+    )
 
   ;; Annoying. Closes frame when I want to add a footnote
-  (general-define-key "C-x C-c" 'nil)
+ (general-define-key "C-x C-c" 'nil)
 
   ;; To add back mouse click to visit the node in the backlink buffer
   (general-define-key
@@ -102,7 +107,7 @@ journals directory."
              (interactive)
              (find-file "~/Documents/org-database/roam/index-Jun042021-183426.org")
              )
-            :which-key "Go to index")
+           :which-key "Go to index")
 
     "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
     "nL" '(org-roam-buffer :which-key "New Roam buffer")
@@ -123,7 +128,76 @@ journals directory."
     )
   )
 
-;;;;; Customizing `org-roam-node-find'
+;;;; Org-roam-capture-templates
+(setq kb/lit-categories
+      '("video" "book" "podcast" "article" "website" "journal" "quote" "structure")
+      )
+
+(defun kb/insert-lit-category ()
+  "Insert type of literature note sources."
+  (completing-read "Category: " kb/lit-categories)
+  )
+
+(setq org-roam-capture-templates
+      '(("d" "Default" plain
+         ""
+         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+title: ${title}\n")
+         :immediate-finish t)
+        ("e" "Evergreen" plain
+         ""
+         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+filetags: :new:\n#+title: ${title}\nReference: \n\n\n")
+         :jump-to-captured t)
+        ("Q" "Quote" entry
+         "* ${title} :quote:new:
+:PROPERTIES:
+:DATE: %(format-time-string \"%D\" (current-time) nil)
+:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+:REFERENCE:
+:ID: %(org-id-new)
+:END:"
+         :if-new (file+head "quotes-Jun062021-185530.org"
+                            "#+title: Quotes\n\n\n")
+         )
+        ("l" "Lit Note" plain
+         ""
+         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${title}\nSource: \nDate: %<%b %d, %Y>")
+         :immediate-finish t
+         :jump-to-captured t)
+        ("r" "Reference without pdf notes" plain
+         ""
+         :if-new (file+head "${citekey}-${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
+         :immediate-finish t)
+        ("R" "Reference with pdf notes" plain
+         ""
+         :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
+        )
+      )
+
+;;;; Org-roam-dailies-capture-templates
+(setq org-roam-dailies-capture-templates
+      '(("d" "Default" plain
+         "* %?
+         :PROPERTIES:
+         :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+         :END:"
+         :if-new
+         (file+datetree "%<%Y>.org" week))
+        ("w" "Writing" plain
+         "* %? :c_writing:
+:PROPERTIES:
+:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+:END:"
+         :if-new
+         (file+datetree "%<%Y>.org" week))
+        )
+      )
+
+;;;; Customizing `org-roam-node-find'
 ;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
 ;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
 (with-eval-after-load 'org-roam
@@ -209,75 +283,6 @@ journals directory."
       ))
   )
 
-;;;; Org-roam-capture-templates
-(setq kb/lit-categories
-      '("video" "book" "podcast" "article" "website" "journal" "quote" "structure")
-      )
-
-(defun kb/insert-lit-category ()
-  "Insert type of literature note sources."
-  (completing-read "Category: " kb/lit-categories)
-  )
-
-(setq org-roam-capture-templates
-      '(("d" "Default" plain
-         ""
-         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+title: ${title}\n")
-         :immediate-finish t)
-        ("e" "Evergreen" plain
-         ""
-         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: :new:\n#+title: ${title}\nReference: \n\n\n")
-         :jump-to-captured t)
-        ("Q" "Quote" entry
-         "* ${title} :quote:new:
-:PROPERTIES:
-:DATE: %(format-time-string \"%D\" (current-time) nil)
-:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-:REFERENCE:
-:ID: %(org-id-new)
-:END:"
-         :if-new (file+head "quotes-Jun062021-185530.org"
-                            "#+title: Quotes\n\n\n")
-         )
-        ("l" "Lit Note" plain
-         ""
-         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${title}\nSource: \nDate: %<%b %d, %Y>")
-         :immediate-finish t
-         :jump-to-captured t)
-        ("r" "Reference without pdf notes" plain
-         ""
-         :if-new (file+head "${citekey}-${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
-         :immediate-finish t)
-        ("R" "Reference with pdf notes" plain
-         ""
-         :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
-        )
-      )
-
-;;;; Org-roam-dailies-capture-templates
-(setq org-roam-dailies-capture-templates
-      '(("d" "Default" plain
-         "* %?
-         :PROPERTIES:
-         :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-         :END:"
-         :if-new
-         (file+datetree "%<%Y>.org" week))
-        ("w" "Writing" plain
-         "* %? :c_writing:
-:PROPERTIES:
-:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-:END:"
-         :if-new
-         (file+datetree "%<%Y>.org" week))
-        )
-      )
-
 ;;;; Custom updating descriptions
 ;; Credit to @nobiot for helping me
 (defun kb/org-roam-update-link-desc--action (buffer)
@@ -339,7 +344,7 @@ files if called with universal argument."
           (let ((buffer (find-file-noselect file)))
 
             ;; Where I insert my custom function instead
-            (kb/org-roam-update-link-desc--action buffer) 
+            (kb/org-roam-update-link-desc--action buffer)
 
             (unless (memq buffer existing-buffers)
               (with-current-buffer buffer
@@ -380,36 +385,37 @@ files if called with universal argument."
 
 (general-define-key
  :keymaps 'org-mode-map
- "C-c p t" 'kb/org-toggle-properties)
+ "C-c p t" 'kb/org-toggle-properties
+ )
 
 ;;;; Additional code
 ;;;;; Only update database while idle
 ;; From
 ;; https://orgmode-exocortex.com/2021/07/22/configure-org-roam-v2-to-update-database-only-when-idle/
-(with-eval-after-load 'org-roam
-  ;; queue for files that will be updated in org-roam-db when emacs is idle
-  (setq org-roam-db-update-queue (list))
-  ;; save the original update function;
-  (setq orig-update-file (symbol-function 'org-roam-db-update-file))
-  ;; then redefine the db update function to add the filename to a queue
-  (defun org-roam-db-update-file (&optional file-path)
-    ;; do same logic as original to determine current file-path if not passed as arg
-    (setq file-path (or file-path (buffer-file-name (buffer-base-buffer))))
-    (message "org-roam: scheduling update of %s" file-path)
-    (if (not (memq file-path org-roam-db-update-queue))
-        (push file-path org-roam-db-update-queue)))
+;; (with-eval-after-load 'org-roam
+;;   ;; queue for files that will be updated in org-roam-db when emacs is idle
+;;   (setq org-roam-db-update-queue (list))
+;;   ;; save the original update function;
+;;   (setq orig-update-file (symbol-function 'org-roam-db-update-file))
+;;   ;; then redefine the db update function to add the filename to a queue
+;;   (defun org-roam-db-update-file (&optional file-path)
+;;     ;; do same logic as original to determine current file-path if not passed as arg
+;;     (setq file-path (or file-path (buffer-file-name (buffer-base-buffer))))
+;;     (message "org-roam: scheduling update of %s" file-path)
+;;     (if (not (memq file-path org-roam-db-update-queue))
+;;         (push file-path org-roam-db-update-queue)))
 
-  ;; this function will be called when emacs is idle for a few seconds
-  (defun org-roam-db-idle-update-files ()
-    ;; go through queued filenames one-by-one and update db
-    ;; if we're not idle anymore, stop. will get rest of queue next idle.
-    (while (and org-roam-db-update-queue (current-idle-time))
-      ;; apply takes function var and list
-      (apply orig-update-file (list (pop org-roam-db-update-queue)))))
+;;   ;; this function will be called when emacs is idle for a few seconds
+;;   (defun org-roam-db-idle-update-files ()
+;;     ;; go through queued filenames one-by-one and update db
+;;     ;; if we're not idle anymore, stop. will get rest of queue next idle.
+;;     (while (and org-roam-db-update-queue (current-idle-time))
+;;       ;; apply takes function var and list
+;;       (apply orig-update-file (list (pop org-roam-db-update-queue)))))
 
-  ;; we'll only start updating db if we've been idle for this many seconds
-  (run-with-idle-timer 5 t #'org-roam-db-idle-update-files)
-  )
+;;   ;; we'll only start updating db if we've been idle for this many seconds
+;;   (run-with-idle-timer 5 t #'org-roam-db-idle-update-files)
+;;   )
 
 ;;;;; Find a node which links to any other given node
 ;; From
@@ -445,10 +451,10 @@ files if called with universal argument."
          )
     (if (equal node next-node)
         (org-roam-node-visit node)
-      (my/navigate-note nil next-node (cons next-node (-map #'org-roam-backlink-source-node (org-roam-backlinks-get next-node))))
+      (kb/find-node-backlink nil next-node (cons next-node (-map #'org-roam-backlink-source-node (org-roam-backlinks-get next-node))))
       )))
 
-;;;;; Number of backlinks in `orgroam' buffer
+;;;;; Number of backlinks in `org-roam' minibuffer
 ;; Include number of backlinks for each node in the org-roam buffer.
 ;; From https://gist.github.com/nobiot/852978b41b1869df3cf9180202f5bbc9
 (define-minor-mode nobiot/org-roam-v2-extensions-mode

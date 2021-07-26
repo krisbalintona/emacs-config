@@ -54,7 +54,6 @@
     ))
   )
 
-;;;; Add to hooks
 ;; Set fonts based on if daemon or not
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook 'kb/default-fonts-setup)

@@ -24,31 +24,6 @@ Styling (called in org-superstar)
     (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it 
     (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
     :preface
-    (defun kb/org-face-setup ()
-      "Taken from https://github.com/daviwil/emacs-from-scratch/blob/1a13fcf0dd6afb41fce71bf93c5571931999fed8/init.el"
-  
-      ;; Ensure that everything that should be fixed-pitch in Org files appears that way
-      (if (not (string-equal (car custom-enabled-themes) (cdr (car heaven-and-hell-themes))))
-          (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch :background "#232635" :extend t) ; Set background of org-blocks and extend to the end of the line
-        )
-      (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-      (set-face-attribute 'org-quote nil :height 143)
-      (set-face-attribute 'org-tag nil :height 153 :bold t :italic t)
-      ;; (set-face-attribute 'org-link nil :foreground "MediumPurple3" :bold nil :italic t :font kb/variable-pitch-font :height 145 :underline nil) ; Managaed by org-roam
-      (set-face-attribute 'org-document-title nil :inherit 'org-level-4 :height 1.7 :foreground "goldenrod")
-  
-      (set-face-attribute 'org-level-1 nil :height 210 :font kb/variable-pitch-font)
-      (set-face-attribute 'org-level-2 nil :height 198 :font kb/variable-pitch-font)
-      (set-face-attribute 'org-level-3 nil :height 185 :font kb/variable-pitch-font)
-      (set-face-attribute 'org-level-4 nil :height 170 :foreground "medium aquamarine" :font kb/variable-pitch-font)
-      (set-face-attribute 'org-level-5 nil :height 165 :foreground "light sea green" :font kb/variable-pitch-font)
-      )
-  
     (defun kb/org-visual-setup () ; Modes only for org-mode
       (org-indent-mode)
       (variable-pitch-mode 1)
@@ -56,12 +31,6 @@ Styling (called in org-superstar)
       )
   
     :config
-    (if (daemonp) ; Add hook based on if daemon or not
-        (add-hook 'server-after-make-frame-hook 'kb/org-face-setup)
-      (add-hook 'after-init-hook 'kb/org-face-setup))
-  
-    (add-hook 'desktop-after-read-hook 'kb/org-face-setup)
-  
     (kb/leader-keys
       "nn" '(org-capture :which-key "Org-capture")
       "mg" '(org-mark-ring-goto :which-key "Goto last mark")
