@@ -1,4 +1,4 @@
-#+TITLE: Quality of life packages
+  #+TITLE: Quality of life packages
 
 * Helpful
 
@@ -15,12 +15,12 @@ Have more descriptive and helpful function and variable descriptions
      [remap describe-symbol] 'helpful-symbol
      [remap describe-key] 'helpful-key
      )
-
+  
     (general-define-key
      :states '(visual normal)
      "K" 'helpful-at-point
      )
-
+  
     (kb/leader-keys
       "hk" '(helpful-key :which-key "Desc key")
       )
@@ -57,7 +57,7 @@ Show keybinds
     (which-key-side-window-max-width 0.23)
     :config
     ;; Don't display C-u, digit, and other numeric keybad bindings
-    (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore) 
+    (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
           which-key-replacement-alist)
     )
 #+END_SRC
@@ -181,7 +181,7 @@ Color-code your parentheses
          "Emoticons"
          "Miscellaneous Symbols and Pictographs"
          "Transport and Map Symbols"))
-
+  
       (unicode-fonts-setup)
       )
     :config
@@ -199,7 +199,7 @@ Highlight indicators during replace and regexp
     :hook (after-init . global-anzu-mode)
     :custom
     (anzu-cons-mode-line-p nil)
-
+  
     (general-define-key [remap query-replace] 'anzu-query-replace-regexp)
     )
 #+end_src
@@ -274,17 +274,17 @@ Quickly jump to characters
     (setq ace-jump-mode-scope 'window)
     (setq ace-jump-mode-case-fold t) ; Ignore case?
     (setq ace-jump-mode-gray-background nil) ; Don't make text's background gray
-
+  
     ;; Priority of ace-jump selections - you can prefix with 1 or 2 universal
     ;; arguments to activate the second and third submode in the list,
     ;; respectively
-    (setq ace-jump-mode-submode-list '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))  
-
+    (setq ace-jump-mode-submode-list '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))
+  
     ;; When in org-mode, set face to match the variable font
     (add-hook 'org-mode-hook (lambda ()
                                (set-face-attribute 'ace-jump-face-foreground nil :font kb/variable-pitch-font)
                                ))
-
+  
     (general-define-key
      "M-a" '(ace-jump-mode :which-key "Ace-jump")
      )
@@ -305,7 +305,7 @@ Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= 
     :custom
     (keyfreq-folder (concat no-littering-var-directory "keyfreq"))
     ;; Commands not to be logged
-    (keyfreq-excluded-commands '(self-insert-command 
+    (keyfreq-excluded-commands '(self-insert-command
                                  org-self-insert-command
                                  ;; forward-char
                                  ;; backward-char
@@ -373,11 +373,11 @@ Better version of evil-jump
                                         (tramp-find-executable (tramp-dissect-file-name default-directory) (car p) nil)
                                       (executable-find (car p))))
                                   '(("emerge" "portage") ("dnf") ("pacman") ("xbps-query" "xbps") ("brew")
-
+  
   ;;; Fix
                                     ;; Removed ("dpkg") from the list
   ;;; Fix
-
+  
                                     ;; Keep "guix" last because it can be installed
                                     ;; beside other package managers and we want to
                                     ;; give priority to the original package
@@ -503,7 +503,7 @@ Draft-mode enables your thoughts to flow into your drafts by disabling the abili
     :hook (after-init . global-prettify-symbols-mode)
     :custom
     (prettify-symbols-alist '(("TODO" . "")
-                              ("WAIT" . "")        
+                              ("WAIT" . "")
                               ("NOPE" . "")
                               ("DONE" . "")
                               ("[#A]" . "")
@@ -518,7 +518,7 @@ Draft-mode enables your thoughts to flow into your drafts by disabling the abili
                               (":END:" . "―")
                               ("#+STARTUP:" . "")
                               ;; ("#+TITLE: " . "")
-
+  
                               ("#+RESULTS:" . "")
                               ("#+NAME:" . "")
                               ("#+ROAM_TAGS:" . "")
@@ -529,5 +529,21 @@ Draft-mode enables your thoughts to flow into your drafts by disabling the abili
                               (":Effort:" . "")
                               ("SCHEDULED:" . "")
                               ("DEADLINE:" . "")))
+    )
+#+end_src
+
+* Indent whole buffer
+
+#+begin_src emacs-lisp
+  (defun kb/indent-whole-buffer ()
+    "Indent whole buffer."
+    (interactive)
+    (delete-trailing-whitespace)
+    (indent-region (point-min) (point-max) nil)
+    (untabify (point-min) (point-max))
+    )
+  
+  (kb/leader-keys
+    "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer")
     )
 #+end_src
