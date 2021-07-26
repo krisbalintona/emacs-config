@@ -16,7 +16,9 @@
   :custom
   (company-show-numbers nil) ; Number the candidates?
   (company-tooltip-offset-display 'lines)
-  (company-tooltip-width-grow-only nil)
+  (company-tooltip-minimum-width 85)
+  (company-tooltip-maximum-width 85)
+  (company-tooltip-width-grow-only t)
   (company-tooltip-flip-when-above t)
   (company-tooltip-align-annotations t)
   (company-idle-delay 0.55)

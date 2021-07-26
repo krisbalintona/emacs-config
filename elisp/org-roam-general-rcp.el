@@ -13,6 +13,7 @@
   :after company ; Necessary for some reason
   :custom
   (org-roam-directory kb/roam-dir)
+  (org-roam-file-exclude-regexp nil)
   (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
   (org-roam-verbose nil) ; Don't echo messages that aren't errors
   (org-roam-completion-everywhere t) ; Org-roam completion everywhere
@@ -20,6 +21,7 @@
   ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
   (org-roam-db-gc-threshold (* 3 838861))
 
+  (org-roam-node-default-sort 'file-atime)
   (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
 
   (org-footnote-section nil) ; Don't put footnotes in headline
