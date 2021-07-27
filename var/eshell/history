@@ -392,3 +392,4 @@ grep -l "codify"
 grep -l "comprehensible"
 grep -l "universe"
 grep "codified"
+systemctl --user restart emacs

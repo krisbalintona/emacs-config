@@ -14,6 +14,12 @@
          (company-mode . evil-normalize-keymaps)
          )
   :custom
+  (company-idle-delay 0.55)
+  (company-minimum-prefix-length 2)
+  (company-require-match 'company-explicit-action-p)
+  (company-selection-wrap-around nil) ; Cycle?
+  (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
+
   (company-show-numbers nil) ; Number the candidates?
   (company-tooltip-offset-display 'lines)
   (company-tooltip-minimum-width 85)
@@ -21,12 +27,7 @@
   (company-tooltip-width-grow-only t)
   (company-tooltip-flip-when-above t)
   (company-tooltip-align-annotations t)
-  (company-idle-delay 0.55)
   (company-tooltip-idle-delay 0.7)
-  (company-minimum-prefix-length 2)
-  (company-require-match 'company-explicit-action-p)
-  (company-selection-wrap-around nil) ; Wrap when selecting candidates?
-  (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
 
   (company-dabbrev-other-buffers nil)
   (company-dabbrev-ignore-case nil)

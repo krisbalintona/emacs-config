@@ -76,9 +76,9 @@
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
 
-;(require 'org-agenda-general-rcp)
-;(require 'org-agenda-views-rcp)
-;(require 'org-agenda-other-rcp)
+;; (require 'org-agenda-general-rcp)
+;; (require 'org-agenda-views-rcp)
+;; (require 'org-agenda-other-rcp)
 
 (require 'org-roam-general-rcp)
 (require 'org-roam-other-rcp)
