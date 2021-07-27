@@ -259,8 +259,9 @@
 ;;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
+  :disabled t ; Issue with org-roam-node-capture
   :after org-roam
-  :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion" :files ("*.el"))
+  :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion")
   :hook (org-mode . org-transclusion-activate)
   :custom
   (org-transclusion-include-first-section t)
