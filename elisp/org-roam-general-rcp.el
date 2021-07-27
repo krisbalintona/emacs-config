@@ -401,33 +401,76 @@ files if called with universal argument."
  )
 
 ;;;; Additional code
-;;;;; Only update database while idle
-;; From
+;;;;; Update database only for small files
+;; Inspired from "only update database when idle":
 ;; https://orgmode-exocortex.com/2021/07/22/configure-org-roam-v2-to-update-database-only-when-idle/
-;; (with-eval-after-load 'org-roam
-;;   ;; queue for files that will be updated in org-roam-db when emacs is idle
-;;   (setq org-roam-db-update-queue (list))
-;;   ;; save the original update function;
-;;   (setq orig-update-file (symbol-function 'org-roam-db-update-file))
-;;   ;; then redefine the db update function to add the filename to a queue
-;;   (defun org-roam-db-update-file (&optional file-path)
-;;     ;; do same logic as original to determine current file-path if not passed as arg
-;;     (setq file-path (or file-path (buffer-file-name (buffer-base-buffer))))
-;;     (message "org-roam: scheduling update of %s" file-path)
-;;     (if (not (memq file-path org-roam-db-update-queue))
-;;         (push file-path org-roam-db-update-queue)))
+(with-eval-after-load 'org-roam
+  (setq kb/update-db-file-threshold 50)
+  (setq kb/update-db-file-time-duration 10)
 
-;;   ;; this function will be called when emacs is idle for a few seconds
-;;   (defun org-roam-db-idle-update-files ()
-;;     ;; go through queued filenames one-by-one and update db
-;;     ;; if we're not idle anymore, stop. will get rest of queue next idle.
-;;     (while (and org-roam-db-update-queue (current-idle-time))
-;;       ;; apply takes function var and list
-;;       (apply orig-update-file (list (pop org-roam-db-update-queue)))))
+  (defun kb/org-roam-db-update-file (&optional file-path)
+    "Update database with links in FILE-PATH immediately if small (based on
+`kb/update-db-file-threshold'), else update on idle."
+    (setq file-path (or file-path (buffer-file-name (buffer-base-buffer))))
+    (let ((content-hash (org-roam-db--file-hash file-path))
+          (db-hash (caar (org-roam-db-query [:select hash :from files
+                                                     :where (= file $s1)] file-path)))
+          (links)
+          )
 
-;;   ;; we'll only start updating db if we've been idle for this many seconds
-;;   (run-with-idle-timer 5 t #'org-roam-db-idle-update-files)
-;;   )
+
+      ;; Create an array of links
+      (org-roam-with-file file-path nil
+        (save-excursion
+          (goto-char (point-min))
+          (while (re-search-forward (symbol-value 'org-link-bracket-re) nil t)
+            (if (equal (buffer-substring-no-properties ; Get only links with ids (not https, etc)
+                        (+ (match-beginning 0) 2)
+                        (+ (match-beginning 0) 4))
+                       "id")
+                (add-to-list 'links "ID")
+              ))
+          )
+        )
+
+      (unless (string= content-hash db-hash)
+        ;; Act based on the number of links in the above array
+        (if (<= (length links) 20)
+            ;; (print "True")
+            (run-with-idle-timer kb/update-db-file-time-duration nil `(lambda ()
+                                          (unless (string= ,content-hash ,db-hash)
+                                            (org-roam-with-file ,file-path nil
+                                              (save-excursion
+                                                (org-set-regexps-and-options 'tags-only)
+                                                (org-roam-db-clear-file)
+                                                (org-roam-db-insert-file)
+                                                (org-roam-db-insert-file-node)
+                                                (org-roam-db-map-nodes
+                                                 (list #'org-roam-db-insert-node-data
+                                                       #'org-roam-db-insert-aliases
+                                                       #'org-roam-db-insert-tags
+                                                       #'org-roam-db-insert-refs))
+                                                (org-roam-db-map-links
+                                                 (list #'org-roam-db-insert-link)))))
+                                          ))
+          ;; (print "False")
+          (org-roam-with-file file-path nil
+            (save-excursion
+              (org-set-regexps-and-options 'tags-only)
+              (org-roam-db-clear-file)
+              (org-roam-db-insert-file)
+              (org-roam-db-insert-file-node)
+              (org-roam-db-map-nodes
+               (list #'org-roam-db-insert-node-data
+                     #'org-roam-db-insert-aliases
+                     #'org-roam-db-insert-tags
+                     #'org-roam-db-insert-refs))
+              (org-roam-db-map-links
+               (list #'org-roam-db-insert-link))))
+          ))
+      ))
+  (advice-add #'org-roam-db-update-file :override #'kb/org-roam-db-update-file)
+  )
 
 ;;;;; Find a node which links to any other given node
 ;; From
