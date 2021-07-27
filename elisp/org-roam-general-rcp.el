@@ -65,8 +65,8 @@ journals directory."
   (org-roam-setup)
 
   ;; Org roam buffer
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
-  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . hide))
   (add-hook 'org-roam-mode-hook (lambda ()
                                   (hide-mode-line-mode) ; Hide modeline in org-roam buffer
                                   (visual-line-mode)
@@ -81,7 +81,7 @@ journals directory."
     )
 
   ;; Annoying. Closes frame when I want to add a footnote
- (general-define-key "C-x C-c" 'nil)
+  (general-define-key "C-x C-c" 'nil)
 
   ;; To add back mouse click to visit the node in the backlink buffer
   (general-define-key
@@ -92,18 +92,12 @@ journals directory."
   (kb/leader-keys
     "nf" '((lambda ()
              (interactive)
-             (org-roam-node-visit (org-roam-node-read nil
-                                                      (lambda (node) (kb/roam-filter-journals node t))
-                                                      )
-                                  nil)
+             (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node t)))
              )
            :which-key "Find file")
     "nF" '((lambda ()
              (interactive)
-             (org-roam-node-visit (org-roam-node-read nil
-                                                      (lambda (node) (kb/roam-filter-journals node t))
-                                                      )
-                                  t)
+             (org-roam-node-find t nil (lambda (node) (kb/roam-filter-journals node t)))
              )
            :which-key "Find file other window")
 
@@ -129,9 +123,7 @@ journals directory."
     "nd" '(:ignore t :which-key "Roam dailies")
     "ndd" '((lambda ()
               (interactive)
-              (org-roam-node-visit (org-roam-node-read nil
-                                                       (lambda (node) (kb/roam-filter-journals node nil))
-                                                       ))
+              (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node nil)))
               )
             :which-key "Find date")
     "ndt" '(org-roam-dailies-find-today :which-key "Today")
@@ -405,7 +397,7 @@ files if called with universal argument."
 ;; Inspired from "only update database when idle":
 ;; https://orgmode-exocortex.com/2021/07/22/configure-org-roam-v2-to-update-database-only-when-idle/
 (with-eval-after-load 'org-roam
-  (setq kb/update-db-file-threshold 50)
+  (setq kb/update-db-file-threshold 25)
   (setq kb/update-db-file-time-duration 10)
 
   (defun kb/org-roam-db-update-file (&optional file-path)
@@ -437,22 +429,23 @@ files if called with universal argument."
         ;; Act based on the number of links in the above array
         (if (<= (length links) 20)
             ;; (print "True")
-            (run-with-idle-timer kb/update-db-file-time-duration nil `(lambda ()
-                                          (unless (string= ,content-hash ,db-hash)
-                                            (org-roam-with-file ,file-path nil
-                                              (save-excursion
-                                                (org-set-regexps-and-options 'tags-only)
-                                                (org-roam-db-clear-file)
-                                                (org-roam-db-insert-file)
-                                                (org-roam-db-insert-file-node)
-                                                (org-roam-db-map-nodes
-                                                 (list #'org-roam-db-insert-node-data
-                                                       #'org-roam-db-insert-aliases
-                                                       #'org-roam-db-insert-tags
-                                                       #'org-roam-db-insert-refs))
-                                                (org-roam-db-map-links
-                                                 (list #'org-roam-db-insert-link)))))
-                                          ))
+            (run-with-idle-timer kb/update-db-file-time-duration nil
+                                 `(lambda ()
+                                    (unless (string= ,content-hash ,db-hash)
+                                      (org-roam-with-file ,file-path nil
+                                        (save-excursion
+                                          (org-set-regexps-and-options 'tags-only)
+                                          (org-roam-db-clear-file)
+                                          (org-roam-db-insert-file)
+                                          (org-roam-db-insert-file-node)
+                                          (org-roam-db-map-nodes
+                                           (list #'org-roam-db-insert-node-data
+                                                 #'org-roam-db-insert-aliases
+                                                 #'org-roam-db-insert-tags
+                                                 #'org-roam-db-insert-refs))
+                                          (org-roam-db-map-links
+                                           (list #'org-roam-db-insert-link)))))
+                                    ))
           ;; (print "False")
           (org-roam-with-file file-path nil
             (save-excursion
