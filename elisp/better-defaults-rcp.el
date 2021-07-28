@@ -16,46 +16,48 @@
 (push '(vertical-scroll-bars) default-frame-alist)
 
 ;;;; Variable defaults
-(setq-default ad-redefinition-action 'accept             ; Don’t warn when advice is added for functions
-              large-file-warning-threshold nil           ; Don't warn when opening large files
-              auto-save-default nil                      ; Don't auto save, prevents transitory files from being saved
-              auto-save-list-file-prefix nil             ; Prevent tracking for auto-saves
+(setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
+              large-file-warning-threshold nil                                                    ; Don't warn when opening large files
+              auto-save-default nil                                                               ; Don't auto save, prevents transitory files from being saved
+              auto-save-list-file-prefix nil                                                      ; Prevent tracking for auto-saves
 
-              inhibit-startup-screen t                   ; Disable start-up screen
-              initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n" ; Set a cringe scratch buffer message
+              inhibit-startup-screen t                                                            ; Disable start-up screen
+              initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n"  ; Set a cringe scratch buffer message
 
-              x-stretch-cursor t                         ; Stretch cursor to the glyph width
-              cursor-in-non-selected-windows nil         ; Hide the cursor in inactive windows
-              mouse-yank-at-point t                      ; Yank at point rather than pointer
+              x-stretch-cursor t                                                                  ; Stretch cursor to the glyph width
+              cursor-in-non-selected-windows nil                                                  ; Hide the cursor in inactive windows
+              mouse-yank-at-point t                                                               ; Yank at point rather than pointer
 
-              delete-by-moving-to-trash t                ; Delete files to trash
-              find-file-visit-truename t                 ; Follow symlink to actual file
+              delete-by-moving-to-trash t                                                         ; Delete files to trash
+              trash-directory (concat user-emacs-directory "trash")                               ; Trash directory
 
-              scroll-conservatively most-positive-fixnum ; Always scroll by one line
-              scroll-margin 7                            ; Add a margin when scrolling vertically
-line-spacing 0 ; This is the default line spacing
+              find-file-visit-truename t                                                          ; Follow symlink to actual file
 
-              select-enable-clipboard t                  ; Merge system's and Emacs' clipboard
+              scroll-conservatively most-positive-fixnum                                          ; Always scroll by one line
+              scroll-margin 7                                                                     ; Add a margin when scrolling vertically
+              line-spacing 0                                                                      ; This is the default line spacing
 
-              sentence-end-double-space nil              ; Single space after period denotes end of sentence
+              select-enable-clipboard t                                                           ; Merge system's and Emacs' clipboard
 
-              show-help-function nil                     ; Disable help text on most UI elements
+              sentence-end-double-space nil                                                       ; Single space after period denotes end of sentence
 
-              uniquify-buffer-name-style 'forward        ; Uniquify buffer names
-              window-combination-resize t                ; Resize windows proportionally
-              split-height-threshold nil                 ; Threshiold for vertical window splitting
-              split-width-threshold 160                  ; Threshold for horizontal window splitting
-              recenter-positions '(5 top bottom)         ; Set re-centering positions
-              help-window-select t                       ; Focus new help windows when opened
-              fill-column 80                             ; Set width for automatic line breaks
+              show-help-function nil                                                              ; Disable help text on most UI elements
 
-              truncate-string-ellipsis "…"               ; For all elliipsis
+              uniquify-buffer-name-style 'forward                                                 ; Uniquify buffer names
+              window-combination-resize t                                                         ; Resize windows proportionally
+              split-height-threshold nil                                                          ; Threshiold for vertical window splitting
+              split-width-threshold 160                                                           ; Threshold for horizontal window splitting
+              recenter-positions '(5 top bottom)                                                  ; Set re-centering positions
+              help-window-select t                                                                ; Focus new help windows when opened
+              fill-column 80                                                                      ; Set width for automatic line breaks
 
-              max-mini-window-height 0.15                ; Minibuffer height
+              truncate-string-ellipsis "…"                                                        ; For all elliipsis
 
-              make-backup-files nil                      ; Don't make backups
-              create-lockfiles nil                       ; Don't create lockfiles
-              find-file-existing-other-name t            ; Visit buffer when finding file if it already exists?
+              max-mini-window-height 0.15                                                         ; Minibuffer height
+
+              make-backup-files nil                                                               ; Don't make backups
+              create-lockfiles nil                                                                ; Don't create lockfiles
+              find-file-existing-other-name t                                                     ; Visit buffer when finding file if it already exists?
 
               tab-width 4
               evil-shift-width tab-width
@@ -63,7 +65,7 @@ line-spacing 0 ; This is the default line spacing
 
               visible-bell nil
 
-confirm-kill-emacs 'y-or-n-p ; Confirm before killing emacs
+              confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
               )
 
 ;;;; Thinner vertical fringes
