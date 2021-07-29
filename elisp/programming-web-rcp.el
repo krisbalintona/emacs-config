@@ -13,7 +13,7 @@
          )
   :custom
   (css-indent-offset 4)
-
+  :config
   (general-define-key
    :keymaps 'css-mode-map
    "C-x n s" 'outshine-narrow-to-subtree
@@ -28,7 +28,7 @@
          )
   :custom
   (handlebars-basic-offset 4)
-
+  :config
   (general-define-key
    :keymaps 'handlebars-mode-map
    "C-x n s" 'outshine-narrow-to-subtree
