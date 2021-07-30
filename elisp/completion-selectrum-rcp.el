@@ -92,7 +92,7 @@
   ;; (setq consult-view-open-function #'bookmark-jump
   ;;       consult-view-list-function #'bookmark-view-names)
 
-  (consult-project-root-function #'projectile-project-root)
+  (consult-project-root-function #'doom-modeline-project-root)
   :config
   (defun consult-fdfind (&optional dir)
     (interactive "P")
