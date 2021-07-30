@@ -91,6 +91,7 @@
 ;;;;; Projectile
 ;; Navigate and manage project directories easier
 (use-package projectile
+  :disabled t ; In favor of `project.el'
   :hook (after-init . projectile-mode)
   :init
   (when (file-directory-p user-emacs-directory)
@@ -133,7 +134,6 @@
     ;; "pc"  'projectile-compile-project
     )
   )
-
 ;;;;; Counsel-projectile
 ;; Use Ivy as projectile interface
 (use-package counsel-projectile
@@ -186,6 +186,19 @@
   (projectile-completion-system 'helm)
   (projectile-switch-project-action 'helm-projectile)
   )
+
+;;;;; Project.el
+(use-package project
+  :config
+  (kb/leader-keys
+    "p" '(:ignore t :which-key "Project")
+    "pF"  '(project-find-file :which-key "Project find file")
+    "pp"  '(project-switch-project :which-key "Project.el switch project"
+    "pb"  '(project-switch-to-buffer :which-key "Project switch to buffer")
+    "pD"  '(project-dired :which-key "Project dired")
+    )
+  )
+
 
 ;;;; Aesthetics
 ;;;;; Git-gutter-fringes
