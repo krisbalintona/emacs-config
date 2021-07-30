@@ -25,6 +25,7 @@
   :hook ((handlebars-mode . electric-pair-mode)
          (handlebars-mode . highlight-indent-guides-mode)
          (handlebars-mode . display-line-numbers-mode)
+         (handlebars-mode . visual-line-mode)
          )
   :custom
   (handlebars-basic-offset 4)
@@ -32,6 +33,30 @@
   (general-define-key
    :keymaps 'handlebars-mode-map
    "C-x n s" 'outshine-narrow-to-subtree
+   )
+  )
+
+;;;; Javascript
+(use-package js-mode
+  :straight nil
+  :hook ((js-mode . electric-pair-mode)
+         (js-mode . highlight-indent-guides-mode)
+         (js-mode . display-line-numbers-mode)
+         (js-mode . visual-line-mode)
+         )
+  :config
+  (general-define-key
+   :keymaps 'js-mode-map
+   "C-x n s" 'outshine-narrow-to-subtree
+   )
+  )
+
+;;;; Yaml
+(use-package yaml
+  :config
+  (general-define-key
+   :keymaps 'yaml-mode-map
+   [remap evil-indent] 'yaml-indent-line
    )
   )
 
