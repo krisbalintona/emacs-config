@@ -1,4 +1,4 @@
-  #+TITLE: Quality of life packages
+#+TITLE: Quality of life packages
 
 * Helpful
 
@@ -26,7 +26,6 @@ Have more descriptive and helpful function and variable descriptions
       )
     )
 #+END_SRC
-
 
 * Saveplace
 
@@ -545,5 +544,25 @@ Draft-mode enables your thoughts to flow into your drafts by disabling the abili
   
   (kb/leader-keys
     "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer")
+    )
+#+end_src
+
+* Aj-toggle-fold
+
+#+begin_src emacs-lisp
+  (defun aj-toggle-fold ()
+    "Toggle fold all lines larger than indentation on current line. Taken from https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159."
+    (interactive)
+    (let ((col 1))
+      (save-excursion
+        (back-to-indentation)
+        (setq col (+ 1 (current-column)))
+        (set-selective-display
+         (if selective-display nil (or col 1)))
+        ))
+    )
+  
+  (kb/leader-keys
+    "of" '(aj-toggle-fold :which-key "aj-toggle-fold")
     )
 #+end_src
