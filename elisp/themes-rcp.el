@@ -26,15 +26,9 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
-(use-package atom-one-dark-theme
-  :config (load-theme 'atom-one-dark t))
+(use-package atom-one-dark-theme)
 
-(use-package apropospriate-theme
-  :config (load-theme 'apropospriate-light t t))
-
-;;;; Transparency
-;; (set-frame-parameter (selected-frame) 'background-color '98)
-;; (add-to-list 'default-frame-alist '(alpha . 98)))
+(use-package apropospriate-theme)
 
 ;;;; Heaven-and-hell
 ;; Toggle between light and dark themes
@@ -50,6 +44,8 @@
   (setq heaven-and-hell-load-theme-no-confirm t)
   :config
   (setq custom--inhibit-theme-enable nil)
+  ;; Cleanly load themes
+  (heaven-and-hell-clean-load-themes '(atom-one-dark apropospriate-light))
 
   (general-define-key "<f6>" '((lambda ()
                                  (interactive)
@@ -64,6 +60,8 @@
 
 ;;;; Dark theme
 (with-eval-after-load 'atom-one-dark-theme
+  (require 'org-faces)
+
   (custom-theme-set-faces ; Dark theme
    (cdr (car (cdr heaven-and-hell-themes)))
    `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
@@ -85,7 +83,7 @@
    )
   )
 
-(add-hook 'org-mode-hook '(lambda() (set-face-attribute 'org-document-title nil :bold t :height 1.7 :foreground "goldenrod")))
+;; (set-face-attribute 'org-hide nil :foreground (face-background 'default))
 
 ;;;; Light theme
 ;; (with-eval-after-load 'apropospriate-theme
