@@ -201,6 +201,7 @@
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
 ;; org-roam (provides templates and modifies edit notes action)
 (use-package org-roam-bibtex
+  :disabled t
   :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "origin/org-roam-v2")
   :after (org-roam org-ref ivy-bibtex bibtex-actions)
   :custom
