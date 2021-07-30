@@ -123,7 +123,7 @@
   (defun kb/doom-modeline-font-setup ()
     "Set doom modeline fonts."
     (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
-    (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line)
+    (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
     )
   :config
   (if (daemonp) ; Hooks depending on daemon or not
