@@ -129,14 +129,17 @@
     "bb" '(consult-buffer :which-key "Consult buffer")
     ;; ("C-x 4 b" . consult-buffer-other-window)
     ;; ("C-x 5 b" . consult-buffer-other-frame)
-    ;; ("C-x r x" . consult-register)
-    "mm" '(counsel-bookmark :which-key "Consult bookmark")
+
+    "mm" '(consult-bookmark :which-key "Consult bookmark")
     "mr" '(consult-mark :which-key "Consult mark-ring")
+
     "so" '(consult-outline :which-key "Consult outline")
     "ss" '(consult-line :which-key "Consult swiper")
     "si" '(consult-imenu :which-key "Consult imenu")
-    ;; ("-s m" . consult-multi-occur)
+    "sO" '(consult-multi-occur :which-key "Consult multi-occur")
+
     "iy" '(consult-yank-pop :which-key "Consult yank-pop")
+    ;; ("C-x r x" . consult-register)
     "ha" '(consult-apropos :which-key "Consult apropos")
     "pf" '(consult-find :which-key "Consult find file")
     "ps" '(consult-ripgrep :which-key "Consult rg")
