@@ -47,8 +47,7 @@
   )
 
 ;;;; Javascript
-(use-package js-mode
-  :straight nil
+(use-package js2-mode
   :hook ((js-mode . electric-pair-mode)
          (js-mode . highlight-indent-guides-mode)
          (js-mode . display-line-numbers-mode)
