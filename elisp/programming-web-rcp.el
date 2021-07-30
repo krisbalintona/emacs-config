@@ -20,18 +20,28 @@
    )
   )
 
-;;;; Handlebars-mode
-(use-package handlebars-mode
-  :hook ((handlebars-mode . electric-pair-mode)
-         (handlebars-mode . highlight-indent-guides-mode)
-         (handlebars-mode . display-line-numbers-mode)
-         (handlebars-mode . visual-line-mode)
+;;;; Web-mode
+;; Compatible with most template engines (e.g. handlebars mode, mustache) and
+;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
+(use-package web-mode
+  :mode "\\.hbs\\'"
+  :hook ((web-mode . electric-pair-mode)
+         (web-mode . highlight-indent-guides-mode)
+         (web-mode . display-line-numbers-mode)
+         (web-mode . visual-line-mode)
          )
   :custom
-  (handlebars-basic-offset 4)
+  (web-mode-comment-formats '(("handlebars" . "{{!")
+                              ("javascript" . "/*")
+                              ("java" . "//")
+                              ("typescript" . "//")
+                              ("php" . "/*")
+                              ("css" . "/*"))
+                            )
+  (web-mode-comment-style 2)
   :config
   (general-define-key
-   :keymaps 'handlebars-mode-map
+   :keymaps 'web-mode-map
    "C-x n s" 'outshine-narrow-to-subtree
    )
   )
