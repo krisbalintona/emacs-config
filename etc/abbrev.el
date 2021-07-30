@@ -13,6 +13,12 @@
     ("uuid" "UUID" nil :count 0)
    ))
 
+(define-abbrev-table 'js2-mode-abbrev-table
+  '(
+    ("lastest" "latest" nil :count 0)
+    ("versino" "version" nil :count 0)
+   ))
+
 (define-abbrev-table 'latex-mode-abbrev-table
   '(
     ("certaintly" "certainly" nil :count 0)

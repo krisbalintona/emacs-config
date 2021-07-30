@@ -397,3 +397,10 @@ cd ~/ghost-devel
 mv ./content/{ghost-theme/,themes/personal/}
 mv ./content/ghost-theme/ ./content/themes/personal/}
 mv ./content/ghost-theme/ ./content/themes/personal/
+pwd
+ls ../../../
+find ../../../ .yaml
+find ../../../ ".yaml"
+find ../../../ ".yaml$"
+gscan .
+gscan ../personal
