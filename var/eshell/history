@@ -393,3 +393,7 @@ grep -l "comprehensible"
 grep -l "universe"
 grep "codified"
 systemctl --user restart emacs
+cd ~/ghost-devel
+mv ./content/{ghost-theme/,themes/personal/}
+mv ./content/ghost-theme/ ./content/themes/personal/}
+mv ./content/ghost-theme/ ./content/themes/personal/
