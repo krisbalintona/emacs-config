@@ -24,7 +24,9 @@
 ;; Compatible with most template engines (e.g. handlebars mode, mustache) and
 ;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
 (use-package web-mode
-  :mode "\\.hbs\\'"
+  :mode ("\\.hbs\\'"
+         "\\.yaml\\'"
+         )
   :hook ((web-mode . electric-pair-mode)
          (web-mode . highlight-indent-guides-mode)
          (web-mode . display-line-numbers-mode)
@@ -61,7 +63,8 @@
   )
 
 ;;;; Yaml
-(use-package yaml
+(use-package yaml-mode
+  :disabled t ; Sucks
   :config
   (general-define-key
    :keymaps 'yaml-mode-map
