@@ -7,19 +7,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; CSS-mode
-(use-package css-mode
-  :hook ((css-mode . electric-pair-mode)
-         )
-  :custom
-  (css-indent-offset 4)
-  :config
-  (general-define-key
-   :keymaps 'css-mode-map
-   "C-x n s" 'outshine-narrow-to-subtree
-   )
-  )
-
 ;;;; Web-mode
 ;; Compatible with most template engines (e.g. handlebars mode, mustache) and
 ;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
@@ -44,6 +31,23 @@
   :config
   (general-define-key
    :keymaps 'web-mode-map
+   "C-x n s" 'outshine-narrow-to-subtree
+   )
+  )
+
+;;;; CSS-mode
+(use-package css-mode
+  :hook ((css-mode . electric-pair-mode)
+         )
+  :custom
+  (css-indent-offset 2)
+
+  (flycheck-css-stylelint-executable "/usr/local/bin/stylelint")
+  (flycheck-stylelintrc (concat no-littering-var-directory "flycheck/.stylelintrc.json"))
+  (flycheck-stylelint-quiet nil)
+  :config
+  (general-define-key
+   :keymaps 'css-mode-map
    "C-x n s" 'outshine-narrow-to-subtree
    )
   )
