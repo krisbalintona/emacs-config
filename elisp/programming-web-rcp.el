@@ -56,10 +56,10 @@
 
 ;;;; Javascript
 (use-package js2-mode
-  :hook ((js-mode . electric-pair-mode)
-         (js-mode . highlight-indent-guides-mode)
-         (js-mode . display-line-numbers-mode)
-         (js-mode . visual-line-mode)
+  :hook ((js2-mode . electric-pair-mode)
+         (js2-mode . highlight-indent-guides-mode)
+         (js2-mode . display-line-numbers-mode)
+         (js2-mode . visual-line-mode)
          )
   :custom
   (flycheck-javascript-standard-executable "/usr/local/bin/semistandard")
