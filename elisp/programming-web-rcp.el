@@ -62,9 +62,20 @@
    )
   )
 
+;;;; Json
+(use-package json-mode
+  :custom
+  (flycheck-json-jsonlint-executable "/usr/local/bin/jsonlint")
+  )
+
 ;;;; Yaml
 (use-package yaml-mode
-  :disabled t ; Sucks
+  :hook ((yaml-mode . highlight-indent-guides-mode)
+         (yaml-mode . display-line-numbers-mode)
+         (yaml-mode . visual-line-mode)
+         )
+  :custom
+  (flycheck-yaml-jsyaml-executable "/usr/local/bin/js-yaml")
   :config
   (general-define-key
    :keymaps 'yaml-mode-map
