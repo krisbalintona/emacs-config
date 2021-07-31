@@ -28,6 +28,8 @@
                               ("css" . "/*"))
                             )
   (web-mode-comment-style 2)
+
+  (flycheck-handlebars-executable "/usr/local/bin/handlebars")
   :config
   (general-define-key
    :keymaps 'web-mode-map
@@ -59,6 +61,10 @@
          (js-mode . display-line-numbers-mode)
          (js-mode . visual-line-mode)
          )
+  :custom
+  (flycheck-javascript-standard-executable "/usr/local/bin/semistandard")
+  (js-indent-level 2)
+  (flycheck-checker-error-threshold 10000)
   :config
   (general-define-key
    :keymaps 'js-mode-map
