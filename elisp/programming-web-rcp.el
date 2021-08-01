@@ -65,9 +65,11 @@
   (flycheck-javascript-standard-executable "/usr/local/bin/semistandard")
   (js-indent-level 2)
   (flycheck-checker-error-threshold 10000)
+
+  (flycheck-javascript-eslint-executable "~/node_modules/.bin/eslint")
   :config
   (general-define-key
-   :keymaps 'js-mode-map
+   :keymaps 'js2-mode-map
    "C-x n s" 'outshine-narrow-to-subtree
    )
   )
