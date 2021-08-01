@@ -49,13 +49,8 @@
  (front-context-string . "enum custom_keyc")
  (rear-context-string . "IA,\n_BOARD,\n};\n\n")
  (position . 963))
-("Org Database"
- (filename . "~/Documents/org-database/")
- (front-context-string . "library\n  -rw-r-")
- (rear-context-string . "96 Oct 15 01:42 ")
- (position . 601))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/tevisQueenGambit2003-the_queen_s_gambit-Jul302021-003442.org")
+ (filename . "~/Documents/org-database/roam/lex_fridman_podcast_101_joscha_bach_artificial_consciousness_and_the_nature_of_reality-Jul302021-151825.org")
  (front-context-string)
  (rear-context-string . "e: Jul 30, 2021\n")
  (position . 212))

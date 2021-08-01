@@ -1,10 +1,18 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/krisbalintona/Documents/org-database/roam/brownMakeItStick2014-make_it_stick_the_science_of_successful_learning-Jun122021-233751.org" . 3487)
- ("/home/krisbalintona/main-emacs/elisp/themes-rcp.el" . 5089)
- ("/home/krisbalintona/Documents/org-database/roam/fleeting_notes-Jun092021-031415.org" . 4125)
- ("/home/krisbalintona/Documents/org-database/roam/index-Jun042021-183426.org" . 14379)
+(("/home/krisbalintona/Documents/org-database/roam/index-Jun042021-183426.org" . 15139)
+ ("/home/krisbalintona/Documents/org-database/roam/004_vocabulary-Jul092021-002027.org" . 1209)
+ ("/home/krisbalintona/Documents/org-database/roam/fleeting_notes-Jun092021-031415.org" . 7111)
+ ("/home/krisbalintona/ghost-devel/content/themes/personal/assets/js/main.js" . 5819)
+ ("/home/krisbalintona/Documents/org-database/roam/brownMakeItStick2014-make_it_stick_the_science_of_successful_learning-Jun122021-233751.org" . 3487)
+ ("/home/krisbalintona/main-emacs/elisp/completion-selectrum-rcp.el" . 5070)
+ ("/home/krisbalintona/main-emacs/elisp/themes-rcp.el" . 4795)
+ ("/home/krisbalintona/Documents/org-database/roam/tevisQueenGambit2003-the_queen_s_gambit-Jul302021-003442.org" . 212)
+ ("/home/krisbalintona/Documents/org-database/"
+  (dired-filename . "/home/krisbalintona/Documents/org-database/README.md"))
+ ("/home/krisbalintona/dotfiles/qmk/qmk_firmware/keyboards/kbdfans/kbd4x/keymaps/my-programmed-keymap/keymap.c" . 963)
+ ("/home/krisbalintona/Documents/Zotero/"
+  (dired-filename . "/home/krisbalintona/Documents/Zotero/storage"))
  ("/home/krisbalintona/main-emacs/elisp/programming-general-rcp.el" . 4826)
- ("/home/krisbalintona/main-emacs/elisp/completion-selectrum-rcp.el" . 5312)
  ("/home/krisbalintona/main-emacs/elisp/programming-web-rcp.el" . 1340)
  ("/home/krisbalintona/ghost-devel/content/themes/personal/assets/css/style.css" . 26820)
  ("/home/krisbalintona/ghost-devel/content/themes/personal/partials/theme_header.hbs" . 8816)
@@ -16,7 +24,6 @@
  ("/home/krisbalintona/main-emacs/straight/repos/org-roam/org-roam.el" . 54976)
  ("/home/krisbalintona/main-emacs/elisp/org-roam-general-rcp.el" . 7342)
  ("/home/krisbalintona/Documents/org-database/roam/quotes-Jun062021-185530.org" . 7655)
- ("/home/krisbalintona/Documents/org-database/roam/tevisQueenGambit2003-the_queen_s_gambit-Jul302021-003442.org" . 225)
  ("/home/krisbalintona/Documents/org-database/roam/ecoHowWriteThesis2015-how_to_write_a_thesis-Jul072021-193747.org" . 627)
  ("/home/krisbalintona/main-emacs/straight/build/org-roam/org-roam-autoloads.el" . 1911)
  ("/home/krisbalintona/Documents/Emails/Queue/cur/" . 222)
@@ -45,14 +52,10 @@
  ("/home/krisbalintona/Documents/org-database/roam/live_for_the_long_term_not_expediency-Jul292021-173801.org" . 210)
  ("/home/krisbalintona/Documents/org-database/roam/buoy_mock_write_up-Jul282021-104657.org" . 6955)
  ("/home/krisbalintona/main-emacs/straight/repos/heaven-and-hell/heaven-and-hell.el" . 3346)
- ("/home/krisbalintona/ghost-master/"
-  (dired-filename . "/home/krisbalintona/ghost-master/config.development.json"))
- ("/home/krisbalintona/ghost-master/content/themes/personal/partials/navigation.hbs" . 262)
  ("/home/krisbalintona/ghost-devel/content/"
   (dired-filename . "/home/krisbalintona/ghost-devel/content/themes"))
  ("/home/krisbalintona/ghost-devel/content/themes/"
   (dired-filename . "/home/krisbalintona/ghost-devel/content/themes/personal"))
- ("/home/krisbalintona/ghost-master/content/themes/personal/package.json" . 181)
  ("/home/krisbalintona/ghost-devel/content/themes/personal/index.hbs" . 1395)
  ("/home/krisbalintona/ghost-devel/content/themes/personal/"
   (dired-filename . "/home/krisbalintona/ghost-devel/content/themes/personal/partials"))
@@ -62,7 +65,6 @@
  ("/home/krisbalintona/Documents/org-database/roam/blog_focus_narrowly_but_consume_vastly-Jul282021-132834.org" . 254)
  ("/home/krisbalintona/Repos/emacs/src/fns.c" . 88415)
  ("/home/krisbalintona/main-emacs/straight/repos/org-roam-bibtex/README.md" . 1522)
- ("/home/krisbalintona/ghost-devel/content/themes/personal/assets/js/main.js" . 5819)
  ("/home/krisbalintona/main-emacs/elisp/org-roam-other-rcp.el" . 9377)
  ("/home/krisbalintona/main-emacs/straight/repos/web-mode/web-mode.el" . 7722)
  ("/usr/local/share/emacs/28.0.50/lisp/files.el.gz" . 116280)
@@ -223,8 +225,6 @@
  ("/home/krisbalintona/main-emacs/elisp/completion-general-rcp.el" . 859)
  ("/usr/share/emacs/28.0.50/lisp/loaddefs.el" . 239070)
  ("/home/krisbalintona/main-emacs/etc/abbrev.el" . 418)
- ("/home/krisbalintona/Documents/Zotero/"
-  (dired-filename . "/home/krisbalintona/Documents/Zotero/pipes"))
  ("/home/krisbalintona/main-emacs/var/save-place.el" . 11880)
  ("/home/krisbalintona/main-emacs/var/keyfreq.el" . 184713)
  ("/home/krisbalintona/main-emacs/configs/etc-config.org" . 5387)

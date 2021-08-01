@@ -6,6 +6,7 @@
     ("defualt" "default" nil :count 0)
     ("farme" "frame" nil :count 0)
     ("inserations" "insertions" nil :count 0)
+    ("maintianer" "maintainer" nil :count 0)
     ("proccess" "process" nil :count 0)
     ("procusses" "Processes" nil :count 0)
     ("refernces" "references" nil :count 0)
