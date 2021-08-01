@@ -73,8 +73,8 @@
         `((pdf . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
                   ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
           (note . (,(all-the-icons-icon-for-file "foo.txt") .
-                   ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))        
-          (link . 
+                   ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
+          (link .
                 (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
                  ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
   ;; Here we define a face to dim non 'active' icons, but preserve alignment
@@ -189,7 +189,7 @@
                                            ("" "capt-of" nil)
                                            ("hidelinks" "hyperref" nil)) ; Ugly boxes
         )
-  :config  
+  :config
   ;; Files removed after `org-export' to LaTeX
   (add-to-list 'org-latex-logfiles-extensions "tex")
   (add-to-list 'org-latex-logfiles-extensions "bbl")
@@ -287,6 +287,33 @@
     "Te" '(org-transclusion-live-sync-exit :which-key "Edit exit")
     )
   )
+
+;;;; Org-roam-ui
+(use-package org-roam-ui
+  :after (websocket simple-httpd f org-roam)
+  :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :hook (org-roam . org-roam-ui-mode)
+  :custom
+  (org-roam-ui-custom-theme '(list
+                              (bg . "#1E2029")
+                              (bg-alt . "#282a36")
+                              (fg . "#f8f8f2")
+                              (fg-alt . "#6272a4")
+                              (red . "#ff5555")
+                              (orange . "#f1fa8c")
+                              (yellow ."#ffb86c")
+                              (green . "#50fa7b")
+                              (cyan . "#8be9fd")
+                              (blue . "#ff79c6")
+                              (violet . "#8be9fd")
+                              (magenta . "#bd93f9"))
+                            )
+  )
+
+;;;;; Dependencies of `org-roam-ui'.
+(use-package websocket)
+(use-package simple-httpd)
+(use-package f)
 
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
