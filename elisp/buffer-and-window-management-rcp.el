@@ -252,14 +252,16 @@
   (advice-add #'desktop-owner :around #'kb/desktop-owner-advice)
   )
 
-;;;; Workgroups
-(use-package workgroups
-  :disabled t ; Dislike reliance on hard files
-  ;; :hook (server-after-make-frame . (lambda () (wg-load "~/main-emacs/var/workgroups/Index")))
+;;;; Burly
+(use-package burly
   :custom
-  (wg-prefix-key (kbd "C-z"))
+  (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
   :config
-  (workgroups-mode)
+  (kb/leader-keys
+    "Bw" '(burly-bookmark-windows :which-key "Burly windows")
+    "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
+    "BM" '(burly-open-last-bookmark :which-key "Open last bookmark")
+    )
   )
 
 ;;; buffer-and-window-management-rcp.el ends here

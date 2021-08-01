@@ -217,7 +217,7 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
-  :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools") ; Repo of current maintianer
+  :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools") ; Repo of current maintainer
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
   :custom
