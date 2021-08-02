@@ -415,3 +415,4 @@ zip -rDq /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/person
 zip -rjT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/personal/*
 zip -rDT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/personal/*
 rm /tmp/personal.zip | zip -rDT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/personal/*
+rm /tmp/personal.zip | zip -rDT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/personal/*

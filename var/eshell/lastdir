@@ -1,5 +1,3 @@
-/home/krisbalintona/dotfiles
-~/main-emacs
 ~/qmk_firmware
 ~/main-emacs
 ~/dotfiles
@@ -31,3 +29,5 @@
 ~/Documents/org-database
 ~/main-emacs
 /home/krisbalintona/ghost/content/themes/personal/partials
+/home/krisbalintona/ghost-devel/content/settings
+~/ghost-devel/content/themes/personal
