@@ -45,7 +45,7 @@
 ;;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
-  :after (selectrum embark consult ivy-bibtex)
+  :after (bibtex-completion selectrum embark consult ivy-bibtex)
   :custom
   ;; What the minibuffer displays
   (bibtex-actions-template '((t . "${author:40}   ${title:130}")))
@@ -64,8 +64,10 @@
      (source . "has:link\\|has:pdf"))
    )
   :config
-  ;; For org-mode's native citation support (`org-cite')
-  (require 'bibtex-actions-org-cite)
+  ;; Make the 'bibtex-actions' bindings and targets available to `embark'.
+  (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
+  (add-to-list 'embark-keymap-alist '(bibtex . bibtex-actions-map))
+  (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
 
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/bibtex-actions#rich-ui

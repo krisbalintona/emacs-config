@@ -72,6 +72,7 @@ journals directory."
                                   (visual-line-mode)
                                   )
             )
+
   (with-eval-after-load 'atom-one-dark-theme
     (custom-theme-set-faces
      `atom-one-dark
