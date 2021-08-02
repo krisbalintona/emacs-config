@@ -293,7 +293,7 @@
 (use-package org-roam-ui
   :after (websocket simple-httpd f org-roam)
   :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-  :hook (org-roam . org-roam-ui-mode)
+  :hook (org-roam-mode . org-roam-ui-mode)
   :custom
   (org-roam-ui-custom-theme '(list
                               (bg . "#1E2029")

@@ -56,6 +56,7 @@
 
 ;;;; Javascript
 (use-package js2-mode
+  :mode "\\.js\\'"
   :hook ((js2-mode . electric-pair-mode)
          (js2-mode . highlight-indent-guides-mode)
          (js2-mode . display-line-numbers-mode)
