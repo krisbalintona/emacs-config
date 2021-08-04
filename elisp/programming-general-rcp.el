@@ -324,7 +324,7 @@
   (add-to-list 'flycheck-checkers 'vale 'append)
 
   (kb/leader-keys
-    "lf" '(flycheck-list-errors :which-key "List flycheck errors")
+    "lf" '(consult-flycheck :which-key "List flycheck errors")
     )
   )
 
