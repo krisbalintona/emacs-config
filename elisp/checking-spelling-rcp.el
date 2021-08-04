@@ -70,6 +70,8 @@
 ;; Suggest correct spelling for words flyspell marks as incorrect
 (use-package flyspell-correct
   :after flyspell
+  :custom
+  (flyspell-correct-interface 'flyspell-correct-completing-read)
   :config
   (kb/leader-keys
     "." '(flyspell-correct-next :which-key "Flyspell next")
@@ -77,13 +79,6 @@
     "c" '(flyspell-buffer :which-key "Flyspell check buffer")
     "tc" '(flyspell-mode :which-key "Flyspell toggle")
     )
-  )
-
-;;;;; Flyspell-correct-helm
-;; Flyspell-correct using Helm interface
-(use-package flyspell-correct-helm
-  :disabled t ; Now use selectrum (flyspell-correct-dummy) for cleaner interface
-  :after flyspell-correct
   )
 
 ;;;;; Auto-dictionary
