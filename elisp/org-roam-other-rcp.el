@@ -45,7 +45,7 @@
 ;;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
-  :after (bibtex-completion selectrum embark consult ivy-bibtex)
+  :after (bibtex-completion selectrum embark consult ivy-bibtex consult)
   :custom
   ;; What the minibuffer displays
   (bibtex-actions-template '((t . "${author:40}   ${title:130}")))
@@ -210,7 +210,7 @@
    '("citekey" "title" "url" "file" "author-or-editor" "keywords")
    )
   :config
-  (org-roam-bibtex-mode) ; Doesn't permit making new nodes for some reason
+  (org-roam-bibtex-mode)
   )
 
 ;;;; Note-taking
@@ -295,6 +295,7 @@
   :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :hook (after-init . org-roam-ui-mode)
   :custom
+  (org-roam-ui-open-on-start nil) ; Don't open graph on startup
   (org-roam-ui-custom-theme '(list
                               (bg . "#1E2029")
                               (bg-alt . "#282a36")
