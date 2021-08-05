@@ -135,7 +135,7 @@ journals directory."
 
 ;;;; Org-roam-capture-templates
 (setq kb/lit-categories
-      '("video" "book" "podcast" "article" "website" "journal" "quote" "structure")
+      '("video" "book" "podcast" "article" "website" "journal" "quote" "structure" "writing")
       )
 
 (defun kb/insert-lit-category ()
