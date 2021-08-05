@@ -21,6 +21,15 @@
      (call-process "okular" nil 0 nil fpath)))
   (bibtex-completion-browser-function 'browse-url-default-browser) ; Use default browser to open
 
+  ;; Display formats
+  (bibtex-completion-display-formats
+   '((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+     (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+     (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+     (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+     (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
+   )
+
   ;; Citation format when citing using `ivy-bibtex'
   (bibtex-completion-format-citation-functions
    '((org-mode . kb/bibtex-completion-format-citation-autocite) ; I changed this line
