@@ -420,7 +420,7 @@ If the file exists, update the cache with information."
           (org-roam-db-map-links
            (list #'org-roam-db-insert-link))
           )))
-    )))
+    ))
 (advice-add #'org-roam-db-update-file :override #'kb/org-roam-db-update-file)
 
 ;;;;; Update database only for small files

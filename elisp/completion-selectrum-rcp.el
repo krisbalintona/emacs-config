@@ -234,8 +234,10 @@
   ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#selectrum
   (defun refresh-selectrum ()
     "Reset the Selectrum candidate list."
-    (setq selectrum--previous-input-string nil))
-  (add-hook 'embark-pre-action-hook #'refresh-selectrum)
+    (setq selectrum--previous-input-string nil)
+    )
+
+  (add-hook 'embark-pre-action-hooks #'refresh-selectrum)
   )
 
 ;;;;;; Embark-consult
