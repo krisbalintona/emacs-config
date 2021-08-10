@@ -9,7 +9,7 @@
 
 ;;;; Org-roam
 (use-package org-roam
-  :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "origin/master")
+  :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "master")
   :after company ; Necessary for some reason
   :custom
   (org-roam-directory kb/roam-dir)
