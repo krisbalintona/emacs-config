@@ -38,9 +38,10 @@
   (setq custom--inhibit-theme-enable nil)
   :config
   (setq heaven-and-hell-theme-type 'dark) ; Use dark by default
-  (setq heaven-and-hell-themes
-        '((light . apropospriate-light)
-          (dark . atom-one-dark))) ;; Themes can be the list: (dark . (tsdh-dark wombat))
+  (setq heaven-and-hell-themes ;; Themes can be the list: (dark . (tsdh-dark wombat))
+        '((dark . atom-one-dark)
+          (light . apropospriate-light))
+        )
 
   ;; Load themes without asking for confirmation
   (setq heaven-and-hell-load-theme-no-confirm t)
@@ -84,12 +85,12 @@
             ))
 
 ;;;; Light theme
-(add-hook 'server-after-make-frame-hook
-          (lambda ()
-            (custom-theme-set-faces ; Light theme
-             (cdr (car heaven-and-hell-themes))
-             )
-            ))
+;; (add-hook 'server-after-make-frame-hook
+;;           (lambda ()
+;;             (custom-theme-set-faces ; Light theme
+;;              (cdr (car heaven-and-hell-themes))
+;;              )
+;;             ))
 
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
