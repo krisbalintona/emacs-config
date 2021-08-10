@@ -68,6 +68,28 @@
   (magit-section-show-child-count t)
   (transient-mode-line-format nil)
   :config
+
+  (defun kb/magit-mode-quit-window (kill-buffer)
+    "Quit Magit window (KILL-BUFFER) but don't close window."
+    (if (or (one-window-p)
+            (--first (let ((buffer (car it)))
+                       (and (not (eq buffer (current-buffer)))
+                            (buffer-live-p buffer)
+                            (or (not (window-parameter nil 'magit-dedicated))
+                                (with-current-buffer buffer
+                                  (derived-mode-p 'magit-mode
+                                                  'magit-process-mode)))))
+                     (window-prev-buffers)))
+        (quit-window kill-buffer)
+      (let ((window (selected-window)))
+        (quit-window kill-buffer)
+        ;; (when (window-live-p window)
+        ;;   (delete-window window))
+        )
+      ))
+  (advice-add #'magit-mode-quit-window :override #'kb/magit-mode-quit-window)
+
+
   (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
 
   (kb/leader-keys
