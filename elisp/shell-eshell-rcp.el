@@ -43,12 +43,12 @@
           (eshell-write-history eshell-history-file-name t)))))
   (add-hook 'eshell-pre-command-hook #'eshell-append-history)
 
-  (general-define-key
-   :keymaps 'eshell-mode-map
-   [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
-   [remap eshell-previous-matching-input] 'consult-history ; Eshell history
-   "<home>" 'eshell-bol
-   )
+  ;; (general-define-key
+  ;;  :keymaps 'eshell-mode-map ; For some reason this keymap isn't being recognized?
+  ;;  [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
+  ;;  [remap eshell-previous-matching-input] 'consult-history ; Eshell history
+  ;;  "<home>" 'eshell-bol
+  ;;  )
 
   (kb/leader-keys
     "oE" '(eshell :which-key "Open eshell")
