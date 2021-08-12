@@ -62,7 +62,7 @@ journals directory."
       )
     )
   :config
-  (org-roam-setup)
+  (org-roam-db-autosync-enable)
 
   ;; Org roam buffer
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
