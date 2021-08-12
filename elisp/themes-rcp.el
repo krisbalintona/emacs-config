@@ -56,6 +56,7 @@
                                  (heaven-and-hell-toggle-theme)
                                  (highlight-indent-guides-auto-set-faces)
                                  (kb/doom-modeline-font-setup)
+                                 (kb/theme-faces)
                                  )
                                :which-key "Toggle theme"
                                )
@@ -93,7 +94,7 @@
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
-  :after faces-rcp
+  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
