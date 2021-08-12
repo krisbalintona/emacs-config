@@ -11,7 +11,8 @@
 ;; Fast and simple spell checking
 (use-package spell-fu
   :disabled t ; Testing flyspell for now
-  :ensure-system-package (aspell)
+  :ensure-system-package ((aspell)
+                          (aspell-en))
   :hook
   ((text-mode . spell-fu-mode)
    (spell-fu-mode . (lambda () ; Change personal dictionary
@@ -32,9 +33,8 @@
 ;;;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
-  :ensure-system-package ((aspell)
-                          ("/usr/lib64/aspell-0.60/american-variant_0.alias". aspell-en)
-                          (proselint))
+  :ensure-system-package ((aspell . "sudo apt install aspell aspell-en")
+                          (proselint . "sudo add-apt-repository universe && sudo apt install python3-proselint"))
   :hook
   ((text-mode . flyspell-mode)
    (prog-mode . flyspell-prog-mode)
@@ -46,7 +46,7 @@
   (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (abbrev mode)
   (flyspell-issue-message-flag nil) ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil) ; Don't display welcome message
-(flycheck-proselint-executable "/usr/bin/proselint")
+  (flycheck-proselint-executable "/usr/bin/proselint")
   :config
   ;; Face for incorrect words
   (set-face-attribute 'flyspell-incorrect nil :underline '(:color "red2" :style wave))

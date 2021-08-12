@@ -11,7 +11,7 @@
 ;; A lot taken from https://github.com/MatthewZMD/.emacs.d#auctex
 (use-package tex
   :demand t ; Other latex packages are reliant on this one
-  :ensure-system-package (latex . texlive-scheme-full)
+  :ensure-system-package (latex . texlive-full)
   :straight auctex
   :hook
   ((LaTeX-mode . (lambda ()

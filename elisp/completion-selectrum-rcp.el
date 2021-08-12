@@ -72,7 +72,7 @@
 ;;;;; Consult.el
 ;; Counsel equivalent for default Emacs (and thus selectrum!)
 (use-package consult
-  :ensure-system-package ((fd . fdfind)
+  :ensure-system-package ((fdfind . fd-find)
                           (rg . ripgrep))
   :after selectrum
   :straight (consult :type git :host github :repo "minad/consult")
