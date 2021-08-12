@@ -416,3 +416,5 @@ zip -rjT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/person
 zip -rDT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/personal/*
 rm /tmp/personal.zip | zip -rDT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/personal/*
 rm /tmp/personal.zip | zip -rDT /tmp/personal.zip /home/krisbalintona/ghost-devel/content/themes/personal/*
+git rm --cached ./var/savehist.el
+git rm --cached ./var/keyfreq.el
