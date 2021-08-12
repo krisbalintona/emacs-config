@@ -6,6 +6,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Org
 ;; Use `org' from `straight.el'. This may or may not work?

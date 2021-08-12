@@ -4,6 +4,7 @@
  (magit-diff
   ("--no-ext-diff" "--stat"))
  (magit-dispatch nil)
+ (magit-fetch nil)
  (magit-gitignore nil)
  (magit-log
   ("-n256" "--graph" "--decorate"))
@@ -14,6 +15,7 @@
  (magit-rebase nil)
  (magit-remote
   ("-f"))
+ (magit-remote\.<remote>\.*url "git@gitlab.com:PreciousPudding/main-emacs.git")
  (magit-reset nil)
  (magit-revert
   ("--edit"))

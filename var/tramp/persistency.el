@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <21/06/20 13:52:13 /home/krisbalintona/main-emacs/var/tramp/persistency.el>
+;; -*- emacs-lisp -*- <21/08/12 09:06:11 /home/krisbalintona/.emacs.d/var/tramp/persistency.el>
 ;; Tramp connection history.  Don't change this file.
 ;; Run `M-x tramp-cleanup-all-connections' instead.
 
@@ -19,4 +19,6 @@
   ("uid-string" "root")
   ("gid-string" "root")
   ("uid-integer" 0)
-  ("gid-integer" 0)))
+  ("gid-integer" 0))
+ ((tramp-file-name "sudo" "root" nil "DESKTOP-FCSJNTM" nil nil nil)
+  nil))

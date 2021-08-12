@@ -1,4 +1,4 @@
 ;;; -*- lisp-data -*-
-(("~/ghost-devel/content/themes/personal/")
- ("~/main-emacs/")
+(("~/.emacs.d/")
+ ("~/ghost-devel/content/themes/personal/")
  ("~/dotfiles/"))
