@@ -6,5 +6,5 @@
 /var/auto-save/
 /var/pcache/unicode-fonts
 /org-roam.db
-var/keyfreq.el
-var/savehist.el
+/var/keyfreq.el
+/var/savehist.el
