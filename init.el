@@ -70,7 +70,7 @@
 (require 'evil-rcp)
 
 ;;;;; Email
-(require 'mu4e-rcp)
+;; (require 'mu4e-rcp)
 
 ;;;;; Org
 
@@ -110,7 +110,6 @@
 (require 'checking-spelling-rcp)
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
-
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
