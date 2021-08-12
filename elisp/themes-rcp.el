@@ -33,7 +33,9 @@
 ;;;; Heaven-and-hell
 ;; Toggle between light and dark themes
 (use-package heaven-and-hell
-  :hook (after-init . heaven-and-hell-init-hook)
+  :hook ((after-init . heaven-and-hell-init-hook)
+         (window-configuration-change . kb/theme-faces)
+         )
   :init
   (setq custom--inhibit-theme-enable nil)
   :config
@@ -60,37 +62,33 @@
                       )
   )
 
-;;;; Dark theme
-(add-hook 'server-after-make-frame-hook
-          (lambda ()
-            (custom-theme-set-faces ; Dark theme
-             (cdr (car (cdr heaven-and-hell-themes)))
-             `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
-             `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,kb/variable-pitch-font))) t)
-             `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,kb/variable-pitch-font))) t)
-             `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,kb/variable-pitch-font))) t)
-             `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,kb/variable-pitch-font))) t)
+;;;;; Set faces based on theme
+(defun kb/theme-faces ()
+  "Set light and dark theme faces."
+  (interactive)
+  (custom-theme-set-faces ; Dark theme
+   (cdr (car (cdr heaven-and-hell-themes)))
+   `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
+   `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,kb/variable-pitch-font))) t)
+   `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,kb/variable-pitch-font))) t)
+   `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,kb/variable-pitch-font))) t)
+   `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,kb/variable-pitch-font))) t)
 
-             `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
-             `(org-quote ((t (:inherit org-block :height 143))) t)
-             `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
-             `(org-verbatim ((t (:inherit (shadow fixed-pitch)))) t)
-             `(org-table ((t (:inherit (shadow fixed-pitch)))) t)
-             `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-             `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-             `(org-checkbox ((t (:inherit fixed-pitch))) t)
-             `(org-tag ((t (:height 153 :bold t :italic t))) t)
-             `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
-             )
-            ))
-
-;;;; Light theme
-;; (add-hook 'server-after-make-frame-hook
-;;           (lambda ()
-;;             (custom-theme-set-faces ; Light theme
-;;              (cdr (car heaven-and-hell-themes))
-;;              )
-;;             ))
+   `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
+   `(org-quote ((t (:inherit org-block :height 143))) t)
+   `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
+   `(org-verbatim ((t (:inherit (shadow fixed-pitch)))) t)
+   `(org-table ((t (:inherit (shadow fixed-pitch)))) t)
+   `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
+   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
+   `(org-checkbox ((t (:inherit fixed-pitch))) t)
+   `(org-tag ((t (:height 153 :bold t :italic t))) t)
+   `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
+   )
+  (custom-theme-set-faces ; Light theme
+   (cdr (car heaven-and-hell-themes))
+   )
+  )
 
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
