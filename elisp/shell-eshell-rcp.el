@@ -6,8 +6,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-
 (require 'general)
+
 ;;;; Eshell
 (use-package esh-mode
   :straight nil
@@ -69,9 +69,9 @@
     "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
     `(setq ,NAME
            (lambda () (when ,FORM
-                        (-> ,ICON
-                            (concat esh-section-delim ,FORM)
-                            (with-face ,@PROPS))))))
+                   (-> ,ICON
+                       (concat esh-section-delim ,FORM)
+                       (with-face ,@PROPS))))))
 
   (defun esh-acc (acc x)
     "Accumulator for evaluating and concatenating esh-sections."
@@ -164,7 +164,6 @@
 
   (kb/leader-keys
     "oe" '(eshell-toggle :which-key "Toggle eshell")
-    "oE" '(eshell :which-key "Open eshell")
     )
   )
 
