@@ -200,10 +200,9 @@ icon."
           'local-map (get-text-property 1 'local-map vc-mode))
          (if (string= text "master") ; Only print branch if not master
              ""
-           (progn (if active
-                      text
-                    (propertize text 'face 'mode-line-inactive))
-                  (doom-modeline-spc))))
+           (if active
+               text)
+           (doom-modeline-spc)))
         )))
   (doom-modeline-def-segment kb/eyebrowse
     "Show eyebrowse workspace information."
@@ -241,25 +240,6 @@ UTF-8."
                  (eq buffer-file-coding-system 'undecided-unix) ; Not sure what this is but it appears in my org-roam files
                  )
              nil
-           ;; eol type
-           (let ((eol (coding-system-eol-type buffer-file-coding-system)))
-             (propertize
-              (pcase eol
-                (0 "LF ")
-                (1 "CRLF ")
-                (2 "CR ")
-                (_ ""))
-              'face face
-              'mouse-face mouse-face
-              'help-echo (format "End-of-line style: %s\nmouse-1: Cycle"
-                                 (pcase eol
-                                   (0 "Unix-style LF")
-                                   (1 "DOS-style CRLF")
-                                   (2 "Mac-style CR")
-                                   (_ "Undecided")))
-              'local-map (let ((map (make-sparse-keymap)))
-                           (define-key map [mode-line mouse-1] 'mode-line-change-eol)
-                           map)))
 
            ;; coding system
            (let* ((sys (coding-system-plist buffer-file-coding-system))
