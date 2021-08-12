@@ -101,7 +101,7 @@
 
 ;;;;; Shells
 (require 'shell-eshell-rcp)
-(require 'shell-vterm-rcp)
+;; (require 'shell-vterm-rcp)
 
 ;;;;; Undoing
 (require 'undoing-rcp)
