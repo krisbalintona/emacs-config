@@ -36,8 +36,6 @@
 (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
 
-;; test
-
 ;;; auto-gc-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'auto-gc-rcp)
