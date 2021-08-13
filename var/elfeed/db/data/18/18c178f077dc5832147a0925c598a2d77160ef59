@@ -1,0 +1,15 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=I3BvGZ3m8Oo">https://www.youtube.com/watch?v=I3BvGZ3m8Oo</a></p>
+         
+         <p>In this video I show how I integrate my <code>fzf</code> front-end with
+<code>ace-window</code>.  This makes it possible to fuzzy find files and also place
+them exactly where you want in the Emacs frame.</p>
+
+<p>Also check <a href="https://protesilaos.com/codelog/2019-12-15-emacs-ivy-fzf-rg/">the video I did
+yesterday</a>,
+with regard to the <code>fzf</code>, <code>ripgrep</code>, and <code>counsel</code> workflow.</p>
+
+<p>Copy the code from <a href="https://protesilaos.com/dotemacs">my dotemacs</a>.</p>
+        
+      

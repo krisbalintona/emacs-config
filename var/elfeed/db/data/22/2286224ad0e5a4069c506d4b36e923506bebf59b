@@ -1,0 +1,18 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=zgzxdcktyLk">https://www.youtube.com/watch?v=zgzxdcktyLk</a></p>
+         
+         <p>In this screen cast, I present a working prototype of TMR (<em>TMR Must
+Recur</em>).  This is a shell script written in Bash that implements
+a simplistic timer.  <code>tmr</code> is meant to be executed in the console and
+accepts a single argument that must be a valid unit of time, such as
+<code>10s</code> for ten seconds.</p>
+
+<p>The purpose of this script is mostly didactic.  It tries to do things by
+using Bash parameter expansion.  Ultimately, this is just an experiment
+meant to explore the possibilities of various shell scripting methods.</p>
+
+<p>TMR is part of <a href="https://gitlab.com/protesilaos/dotfiles">my dotfiles</a>
+and is licensed under the GPLv3 (as is the rest of the code).</p>
+        
+      

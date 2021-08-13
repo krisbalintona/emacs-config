@@ -1,0 +1,13 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=_2NAbPp_0zY">https://www.youtube.com/watch?v=_2NAbPp_0zY</a></p>
+         
+         <p>In this screen cast I present the various customisations I have made
+to Emacs’ built-in directory editor (file manager).  <code>dired</code> is a very
+powerful program.  These improve upon various aspects of its behaviour
+and functionality.</p>
+
+<p>The changes I have made are part of my <a href="https://protesilaos.com/dotemacs">“dotemacs” init
+file</a>.</p>
+        
+      

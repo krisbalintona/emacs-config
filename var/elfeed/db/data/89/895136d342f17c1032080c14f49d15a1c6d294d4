@@ -1,0 +1,34 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=T6OLSl4l4x4">https://www.youtube.com/watch?v=T6OLSl4l4x4</a></p>
+         
+         <p>In this video blog I do something different than what has been the norm
+lately: I just to talk about Emacs rather than demonstrate some of its
+cool functionalities.</p>
+
+<p>My thesis is that Emacs has a strong documentation culture, which
+extends to the entire experience with this tool.</p>
+
+<p>I also discuss how Emacs is the vivid realisation of the GNU telos,
+which is codified in <a href="https://www.gnu.org/philosophy/free-sw.html">the four
+freedoms</a>.  Your day-to-day
+usage of Emacs will most likely cover—or directly benefit from—all of
+them:</p>
+
+<ul>
+  <li>to use the software as you wish;</li>
+  <li>to study its source and to modify it;</li>
+  <li>to share the original;</li>
+  <li>to share your changes to the original.</li>
+</ul>
+
+<p>Combined with its documentation culture, Emacs is a microcosm of the GNU
+project’s vision for software freedom.</p>
+
+<hr />
+
+<p>While not related to this video blog, here is my dotemacs, in case you
+want to exercise some of that freedom:
+<a href="https://protesilaos.com/dotemacs">protesilaos.com/dotemacs</a>.</p>
+        
+      

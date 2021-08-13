@@ -1,0 +1,16 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=g6YA4tiW1eQ">https://www.youtube.com/watch?v=g6YA4tiW1eQ</a></p>
+         
+         <p>In this screen cast I demonstrate certain techniques for filtering the
+listing produced by <code>dired</code> (the <em>powerful</em> built-in file manager for
+Emacs).</p>
+
+<p>The narrowed view behaves like a standard Dired buffer.  This opens up
+possibilities for more advanced workflows, such as to run a keyboard
+macro on the files.</p>
+
+<p>Here is my configuration file, with all my settings for Dired and more:
+<a href="https://protesilaos.com/dotemacs">protesilaos.com/dotemacs</a>.</p>
+        
+      

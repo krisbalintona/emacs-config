@@ -1,0 +1,142 @@
+
+         
+         <p>I was asked whether it would be possible to reproduce this aesthetic:
+<a href="https://lepisma.xyz/2017/10/28/ricing-org-mode/">https://lepisma.xyz/2017/10/28/ricing-org-mode/</a></p>
+
+<p>I do not want to use <code>writeroom-mode</code> because it assumes far more things
+than the narrower-in-scope <code>olivetti-mode</code>.  So I am sticking with the
+tools I presented in my last two videos:</p>
+
+<ul>
+  <li><a href="https://protesilaos.com/codelog/2020-07-16-emacs-focused-editing/">Emacs: configuring mixed fonts in Org mode</a></li>
+  <li><a href="https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/">“Focused editing” tools for Emacs</a></li>
+</ul>
+
+<h2>Screenshots</h2>
+
+<p>So here are my two themes, Modus Operandi and Modus Vivendi, showcasing
+the result.</p>
+
+<p><strong>Remember to visit the image’s direct link</strong> to see it full size.  The
+smaller view may distort some of its details.  Also bear in mind that
+<em>this is a proof-of-concept</em> that is done on an existing document.  I
+did not prepare a fake environment that would make things look good.</p>
+
+<p><img alt="Modus Operandi single window" src="https://protesilaos.com/assets/images/attachments/modus-operandi-org-focus-demo-single-2020-07-18.png" /></p>
+
+<p><img alt="Modus Operandi side-by-side windows" src="https://protesilaos.com/assets/images/attachments/modus-operandi-org-focus-demo-dual-2020-07-18.png" /></p>
+
+<p><img alt="Modus Vivendi single window" src="https://protesilaos.com/assets/images/attachments/modus-vivendi-org-focus-demo-single-2020-07-18.png" /></p>
+
+<p><img alt="Modus Vivendi side-by-side windows" src="https://protesilaos.com/assets/images/attachments/modus-vivendi-org-focus-demo-dual-2020-07-18.png" /></p>
+
+<p>Note that here I also enable a few theme-specific customisation options,
+such as scaled headings and distinct org blocks (there are <em>a lot of
+options</em>).  For Org blocks, you may also consider the “rainbow” symbol
+that you can pass to the relevant variable (check <a href="https://gitlab.com/protesilaos/modus-themes">the project’s
+README</a>), which applies a
+colour-coded background on a per-programming-language basis (useful for
+those who work with multiple languages in an Org buffer).</p>
+
+<h2>The new state of affairs</h2>
+
+<p>Overview of what is new for this proof-of-concept when
+<code>prot/olivetti-mode</code> is enabled:</p>
+
+<ul>
+  <li>Hides the leading stars from Org headings.  This is done by enabling
+<code>org-superstar-mode</code> and by making sure that the heading marks are
+empty, thus: <code>(setq org-superstar-headline-bullets-list '(" "))</code></li>
+  <li>Configures the built-in <code>window-divider-mode</code> to draw 1px wide borders
+to the bottom and right sides of the windows.</li>
+</ul>
+
+<p>To make the text look more book-like, I use the <a href="https://huertatipografica.com/en/fonts/alegreya-ht-pro">Alegreya font by Huerta
+Typografica</a>,
+employing the methods I already explained in my video for mixing fonts.</p>
+
+<p>If you want to force Olivetti to push the contents of the buffer off
+centre, you could increase the values of <code>olivetti-body-width</code> and/or
+<code>olivetti-minimum-body-width</code> variable.  That would, however, not
+produce a good effect when you have two windows side-by-side, so please
+experiment accordingly.</p>
+
+<p>For me this result is <em>prima facie</em> both usable and visually pleasing.
+If you really want to control more things with padding, then do consider
+<code>writeroom-mode</code> instead of <code>olivetti-mode</code>.</p>
+
+<p>If you wish to use the Modus themes but tweak some of their colours,
+then I have good news for you: it is possible and supported!  Check the
+README for the tools that the themes provide.</p>
+
+<h2>New code snippets</h2>
+
+<p>Below are the little extras you would need (always in addition to what I
+covered in the last two videos).  I already had configurations for
+those, but I tweaked them a bit for the sake of this demo:</p>
+
+<pre><code class="language-elisp">(use-package org-superstar              ; supersedes `org-bullets'
+  :ensure
+  :after org
+  :config
+  (setq org-superstar-remove-leading-stars t)
+  (setq org-superstar-headline-bullets-list '(" ")) ;; '("🞛" "◉" "○" "▷")
+  (setq org-superstar-item-bullet-alist
+        '((?+ . ?•)
+          (?* . ?➤)
+          (?- . ?–)))
+  (org-superstar-mode -1))
+
+(use-package emacs
+  :config
+  (setq window-divider-default-right-width 1)
+  (setq window-divider-default-bottom-width 1)
+  (setq window-divider-default-places t)
+  (window-divider-mode -1))
+</code></pre>
+
+<p>And this is the new <code>prot/olivetti-mode</code>:</p>
+
+<pre><code class="language-elisp">(use-package olivetti
+  :ensure
+  :diminish
+  :config
+  (setq olivetti-body-width 0.65)
+  (setq olivetti-minimum-body-width 72)
+  (setq olivetti-recall-visual-line-mode-entry-state t)
+
+  (define-minor-mode prot/olivetti-mode
+    "Toggle buffer-local `olivetti-mode' with additional parameters.
+
+Fringes are disabled.  The modeline is hidden, except for
+`prog-mode' buffers (see `prot/hidden-mode-line-mode').  The
+default typeface is set to a proportionately-spaced family,
+except for programming modes (see `prot/variable-pitch-mode').
+The cursor becomes a blinking bar, per `prot/cursor-type-mode'."
+    :init-value nil
+    :global nil
+    (if prot/olivetti-mode
+        (progn
+          (olivetti-mode 1)
+          (set-window-fringes (selected-window) 0 0)
+          (prot/variable-pitch-mode 1)
+          (prot/cursor-type-mode 1)
+          (unless (derived-mode-p 'prog-mode)
+            (prot/hidden-mode-line-mode 1))
+          (window-divider-mode 1)
+          (when (eq major-mode 'org-mode)
+            (org-superstar-mode 1)))
+      (olivetti-mode -1)
+      (set-window-fringes (selected-window) nil) ; Use default width
+      (prot/variable-pitch-mode -1)
+      (prot/cursor-type-mode -1)
+      (unless (derived-mode-p 'prog-mode)
+        (prot/hidden-mode-line-mode -1))
+      (window-divider-mode -1)
+      (when (eq major-mode "org-mode")
+        (org-superstar-mode -1))))
+
+  :bind ("C-c o" . prot/olivetti-mode))
+</code></pre>
+        
+      

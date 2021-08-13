@@ -1,0 +1,18 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=NkhgIB64zgc">https://www.youtube.com/watch?v=NkhgIB64zgc</a></p>
+         
+         <p>In this video I demonstrate how I use the suite of tools that is built
+into Emacs for keeping track of time-sensite events in my life.  Its two
+main components are the Diary and the Calendar.</p>
+
+<p>Apart from the present demo, I have also written at length about this
+topic and discussed my particular opinions in context.  Refer to my
+Emacs configuration file (“dotemacs”) for the relevant documentation and
+the accompanying configurations: <a href="https://protesilaos.com/dotemacs">https://protesilaos.com/dotemacs</a>.</p>
+
+<p>The specific item that contains my extensions for both the Diary and the
+Calendar is called <code>prot-diary.el</code>.  Everything is part of my dotfiles’
+repository: <a href="https://gitlab.com/protesilaos/dotfiles">https://gitlab.com/protesilaos/dotfiles</a>.</p>
+        
+      

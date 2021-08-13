@@ -1,0 +1,328 @@
+
+         
+         <p>I just published version <code>0.12.0</code> of the Modus themes.  These are my
+highly-accessible themes for GNU Emacs.  They conform with the WCAG AAA
+standard for colour contrast accessibility (a minimum contrast ratio of
+7:1 between the foreground and background values).  You can find the
+packages on GNU ELPA, MELPA, MELPA Stable:</p>
+
+<ul>
+  <li><code>modus-operandi-theme</code> (light)</li>
+  <li><code>modus-vivendi-theme</code> (dark)</li>
+</ul>
+
+<p>An HTML version of the project’s README is also available on my website:
+<a href="https://protesilaos.com/modus-themes">https://protesilaos.com/modus-themes</a></p>
+
+<p>Below are the release notes.</p>
+
+<hr />
+
+<h2>Modus Operandi and Modus Vivendi version 0.12.0</h2>
+
+<p>By Protesilaos Stavrou <a href="mailto:info@protesilaos.com">info@protesilaos.com</a> on 2020-08-26</p>
+
+<p>This entry documents the set of changes since version 0.11.0
+(2020-07-31).  There have been around 70 commits in the meatime, though
+the sheer number may obfuscate the fact that a lot of work has gone into
+this release.</p>
+
+<p>As always, every change described here conforms with the accessibility
+objective of the themes for a minimum 7:1 contrast ratio between
+background and foreground values in their given combinations
+(conformance with the WCAG AAA standard).</p>
+
+<h2>New customisation options</h2>
+
+<h3>1 Completion Frameworks</h3>
+
+<p>The star of the show has to be the new option that refashions the
+aesthetics of completion UIs: Helm, Icomplete, Ido, Ivy, Sallet,
+Selectrum.  The <code>modus-operandi-theme-completions</code> and
+<code>modus-vivendi-theme-completions</code> accept the following symbols:</p>
+
+<ul>
+  <li>nil (default)</li>
+  <li>moderate</li>
+  <li>opinionated</li>
+</ul>
+
+<p>Nil means that the overall presentation of the UI follows the patterns
+established by its own source code.  For example, Ivy uses four distinct
+background and foreground combinations of accented colours to highlight
+the matching groups.  A grey background is added to denote the implicit
+match between those groups.  So we choose to respect this metaphor,
+while applying colours that conform with the accessibility goal of our
+project.  Whereas Icomplete or Ido use subtle styles to present their
+results.  Again, we remain faithful to their presentation.</p>
+
+<p>With <code>moderate</code>, we apply nuanced background and foreground combinations
+of accented colour values.  This will slightly tone down Helm, Ivy,
+Sallet, Selectrum, while it will slightly adjust the looks of Icomplete
+and Ido.</p>
+
+<p>Whereas <code>opinionated</code> has a more pronounced effect on the overall
+aesthetics of the UI.  For the likes of Icomplete and Ido which are
+subtle by default, this option will use intense combinations of
+background and foreground colours.  They are the diametric opposite of
+the nil value.  Whereas Helm, Ivy, Sallet, Selectrum, will use even more
+subtle colours.  Again, they are farther away than their default looks.</p>
+
+<p>These new options supersede the now-deprecated and more limited in scope
+variables of prior releases:</p>
+
+<ul>
+  <li>modus-operandi-theme-intense-standard-completions</li>
+  <li>modus-vivendi-theme-intense-standard-completions</li>
+</ul>
+
+<p>Thanks to the following people for their valuable feedback in issue 75:
+https://gitlab.com/protesilaos/modus-themes/-/issues/75</p>
+
+<ul>
+  <li>Anders Johansson</li>
+  <li>Manuel Uberti</li>
+  <li>Shreyas Ragavan</li>
+</ul>
+
+<h3>2 Prompts</h3>
+
+<p>The <code>modus-operandi-theme-prompts</code> and modus-vivendi-theme-prompts’ will
+change the overall looks of minibuffer and shell prompts (<code>M-x shell</code> as
+well as <code>M-x eshell</code>).  Their possible values are:</p>
+
+<ul>
+  <li>nil (default)</li>
+  <li>subtle</li>
+  <li>intense</li>
+</ul>
+
+<p>Nil will only use a coloured foreground for the prompts’ text.  Simple
+and effective.</p>
+
+<p>With <code>subtle</code>, the default foreground value is retained but is now
+complemented by an appropriately tinted background.  The effect is more
+noticeable than the default, though not by much.</p>
+
+<p>While <code>intense</code> applies a coloured background and foreground combination
+that should clearly stand out from the rest of the context.</p>
+
+<p>Thanks to Manuel Uberti for sharing feedback in issue 74:
+https://gitlab.com/protesilaos/modus-themes/-/issues/74</p>
+
+<h3>3 Fringe visibility</h3>
+
+<p>A new pair of symbols supersedes older variables:</p>
+
+<ul>
+  <li>modus-operandi-theme-visible-fringes ==&gt; modus-operandi-theme-fringes</li>
+  <li>modus-vivendi-theme-visible-fringes  ==&gt; modus-vivendi-theme-fringes</li>
+</ul>
+
+<p>While the deprecated options were booleans, the current ones offer a
+choice between the following:</p>
+
+<ul>
+  <li>nil (default)</li>
+  <li>subtle</li>
+  <li>intense</li>
+</ul>
+
+<p>Nil means that the fringes have no distinct background of their own.
+They still exist per the settings of <code>fringe-mode</code>, but can only be
+discerned by tracking the negative space between the frame’s or window’s
+edge and the buffer’s effective boundaries.</p>
+
+<p>The <code>subtle</code> value will apply a greyscale background that is fairly
+close to the default main background (pure white/black).  The fringes
+are now visible.</p>
+
+<p>As its name implies, <code>intense</code> has a more pronounced effect than the
+other values.  It also uses a greyscale background.</p>
+
+<h2>Review of already supported faces and colours</h2>
+
+<h3>1 Magit blame styles</h3>
+
+<p>The headers that Magit’s blame interface produces were difficult to tell
+apart from their context.  A set of carefully selected colours now makes
+sure that they are always distinct.  Some subtle background values are
+used, in addition to other typographic elements.</p>
+
+<p>Thanks to Damien Cassou for reporting this problem and for providing
+valuable feedback that informed the final design.  Refer to issue 71:
+https://gitlab.com/protesilaos/modus-themes/-/issues/71</p>
+
+<h3>2 Paren match colours</h3>
+
+<p>The face that highlights the matching delimiter when <code>show-paren-mode</code>
+(or equivalent) is enabled uses two dedicated colours, whose names are:
+<code>bg-paren-match</code> and <code>bg-paren-match-intense</code>.  Those have been reviewed
+to make them more obvious in various contexts and to improve their
+overall consistency.</p>
+
+<p>A report with relative contrast ratios is available on my website:
+https://protesilaos.com/codelog/2020-08-09-modus-themes-paren-match/</p>
+
+<p>I benefited from valuable feedback from Shreyas Ragavan in issue 70:
+https://gitlab.com/protesilaos/modus-themes/-/issues/70</p>
+
+<h3>3 Mu4e faces</h3>
+
+<p>Some faces were tweaked to make it easier to distinguish replied,
+forwarded, and draft messages from other headers.  The changes are
+fairly small in scope, but the effect should be that of an overall
+improvement.</p>
+
+<p>Thanks to Shreyas Ragavan for noticing these inconsistencies and for
+their continued participation in addressing them.  See issue 69:
+https://gitlab.com/protesilaos/modus-themes/-/issues/69</p>
+
+<h3>4 Notmuch message headings</h3>
+
+<p>A couple of inconsistencies with how notmuch would style email addresses
+and folded messages were addressed.  The generic <code>italic</code> face was also
+tweaked in the process, removing the foreground it would falsely define.</p>
+
+<p>Thanks to Damien Cassou for bringing these to my attention in issue 72:
+https://gitlab.com/protesilaos/modus-themes/-/issues/72</p>
+
+<h3>5 hl-todo</h3>
+
+<p>Let the special keywords of <code>hl-todo-mode</code> use an optional slant, just
+like code comments do.  This is to ensure that they feel part of their
+context.</p>
+
+<h3>6 Magit general interface</h3>
+
+<p>Several faces were reviewed in the interest of colour harmony and to
+address potential inconsistencies or exaggerations.  The most noticeable
+change pertains to the log views, as we now use fewer accent values,
+reducing whatever unnecessary “rainbow effect” may have existed.</p>
+
+<h3>7 VC commit logs</h3>
+
+<p>The presentation of <code>vc-print-log</code> and <code>vc-print-root-log</code> has been
+reviewed to reduce the stark contrast between the colours it once used.
+While the elements remain distinct, the differences between them are
+more subtle, which is preferable when viewing long lists of
+similar-looking patterns.</p>
+
+<h3>8 Powerline</h3>
+
+<p>The active and inactive minibuffers now use appropriate accented
+backgrounds or foregrounds for some of their elements.  This makes them
+better for their intended function.</p>
+
+<p>Thanks to Shreyas Ragavan and tycho garen for their feedback in issue
+73, which was actually about adding support for Spaceline.  It uses
+Powerline as its dependency, so we eventually had to accommodate both of
+them: https://gitlab.com/protesilaos/modus-themes/-/issues/73</p>
+
+<p>Shreyas also helped by adding a short note in the README which informs
+users of those two packages on how to tweak things when conducting tests
+or changing themes.  See merge requests 9 and 10:</p>
+
+<ul>
+  <li>https://gitlab.com/protesilaos/modus-themes/-/merge_requests/9</li>
+  <li>https://gitlab.com/protesilaos/modus-themes/-/merge_requests/10</li>
+</ul>
+
+<h3>9 Latex sectioning</h3>
+
+<p>The themes will no longer affect the height of the Latex sectioning
+faces.  This is because there already exists a variable that scales them
+accordingly.</p>
+
+<p>Thanks to Anders Johansson for providing insights in issue 77:
+https://gitlab.com/protesilaos/modus-themes/-/issues/77</p>
+
+<h3>10 Transient pop-up menu</h3>
+
+<p>Extended support for its new colour-coded faces that follow in the
+footsteps of the <code>hydra</code> package for visual semantics.</p>
+
+<h3>11 Miscellaneous</h3>
+
+<p>The following faces were refined:</p>
+
+<ul>
+  <li>
+    <p><code>org-formula</code> inherits from <code>fixed-pitch</code> to ensure that it does not
+break table layouts when the user opts for a mixed-font setup (such as
+with <code>M-x variable-pitch-mode</code>).</p>
+  </li>
+  <li>
+    <p><code>bongo-elapsed-track-part</code> uses a more appropriate accented
+background.</p>
+  </li>
+  <li>
+    <p><code>symbol-overlay-default-face</code> is less intense than before.  This is in
+response to feedback I received from Manuel Uberti as an aside in
+issue 75: https://gitlab.com/protesilaos/modus-themes/-/issues/75</p>
+  </li>
+  <li>
+    <p><code>rectangle-preview</code> uses a slightly accented background, which
+distinguishes it from the highlighted region.  This is to denote a
+different state where the user is typing in some text.</p>
+  </li>
+  <li>
+    <p><code>diff-hl-change</code> now uses the more appropriate yellow colour instead
+of blue.  Yellow denotes “mixed changes” and, therefore, stands
+between “removed” (red) and “added” (green).  As it so happens, yellow
+is a colour that derives by mixing red with green.</p>
+  </li>
+</ul>
+
+<h2>New packages</h2>
+
+<p>The following are now explicitly supported by the themes:</p>
+
+<ul>
+  <li>org-table-sticky-header</li>
+  <li>pkgbuild-mode</li>
+  <li>semantic</li>
+  <li>spaceline</li>
+</ul>
+
+<p>More faces or face groups that are defined:</p>
+
+<ul>
+  <li>git-rebase (magit)</li>
+  <li>doom-modeline-debug-visual</li>
+  <li>file-name-shadow</li>
+  <li>the faces used by Emacs 27’s ‘display-line-numbers-major-tick’ and
+<code>display-line-numbers-minor-tick</code></li>
+  <li>table-cell</li>
+</ul>
+
+<h2>Final notes</h2>
+
+<p>There now exists an HTML version of the README, which will hopefully
+make things easier for users: https://protesilaos.com/modus-themes/</p>
+
+<p>Other changes are not user-facing.  For example, using <code>pcase</code> instead
+of <code>cond</code> to make relevant expressions more succinct.  Or defining a
+coloured underline in a more straightforward way.  No need to document
+them at length.</p>
+
+<p>While this release introduces customisation options, it feels as though
+the themes are approaching a stable state.  We know what works, we have
+a comprehensive colour palette that can meet our evolving needs, and we
+have already achieved broad package/face coverage.  All while conforming
+with the overarching objective of this project for a minimum 7:1
+contrast ratio between background and foreground values in any given
+combination we specify.</p>
+
+<p>I wish to thank everyone who has helped me by testing things and sharing
+their thoughts.  The people already mentioned herein:</p>
+
+<ul>
+  <li>Anders Johansson (https://gitlab.com/andersjohansson)</li>
+  <li>Damien Cassou (https://gitlab.com/DamienCassou)</li>
+  <li>Manuel Uberti (https://gitlab.com/muberti)</li>
+  <li>Shreyas Ragavan (https://gitlab.com/shrysr)</li>
+  <li>tycho garen (https://gitlab.com/tychoish)</li>
+</ul>
+        
+      
