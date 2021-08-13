@@ -4,6 +4,7 @@
     ("annnoying" "Annoying" nil :count 0)
     ("betweel" "between" nil :count 0)
     ("clilpboard" "clipboard" nil :count 0)
+    ("configuratoin" "configuration" nil :count 0)
     ("defualt" "default" nil :count 0)
     ("farme" "frame" nil :count 0)
     ("inserations" "insertions" nil :count 0)
