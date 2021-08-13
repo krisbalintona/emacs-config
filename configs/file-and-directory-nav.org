@@ -17,7 +17,7 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     (org-reveal)
     (org-show-subtree)
     (forward-line))
-
+  
   (defun kb/org-file-show-headings (org-file)
     (interactive)
     (find-file (expand-file-name org-file)) ; An issue with this is that you open the file
@@ -26,7 +26,7 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
     (org-reveal)
     (org-show-subtree)
     (forward-line))
-
+  
   (defun kb/org-dir-show-headings (dir) ; An issue with this is that you open the file
     (interactive)
     (let ((regexp-initial counsel-find-file-ignore-regexp)
@@ -47,18 +47,18 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
 #+BEGIN_SRC emacs-lisp
   (kb/leader-keys
     "fo" '(counsel-outline :which-key "Goto heading in current file")
-
+  
     "fc"  '(:ignore t :which-key "Custom file searches")
-
+  
     "fcL" '((lambda () (interactive) (counsel-find-file kb/library-dir)) :which-key "Library files")
     "fcl" '((lambda () (interactive) (kb/org-dir-show-headings kb/library-dir)) :which-key "Edit library file")
-
+  
     "fcw" '((lambda () (interactive) (find-file kb/wm-config-file)) :which-key "Dotfiles directory")
-
+  
     "fcb" '((lambda () (interactive) (find-file kb/emacs-etc-config-file)) :which-key "Open Emacs base config")
     "fce" '((lambda () (interactive) (counsel-find-file kb/emacs-config-dir)) :which-key "Config directory")
     "fcE" '((lambda () (interactive) (kb/org-dir-show-headings kb/emacs-config-dir)) :which-key "Edit Emacs configs")
-
+  
     ;; ;; Section for Jumping directly to headings
     ;; "fds" '((lambda () (interactive) (kb/org-file-jump-to-heading "~/.dotfiles/Systems.org" "Base Configuration")) :which-key "base system")
     ;; "fdS" '((lambda () (interactive) (kb/org-file-jump-to-heading "~/.dotfiles/Systems.org" system-name)) :which-key "this system")
@@ -71,11 +71,12 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
 Use helm to word search through org file and display the corresponding heading of search matches
 #+BEGIN_SRC emacs-lisp
   (use-package helm-org-rifle
+    :disabled t ; Never use
     :config
     (kb/leader-keys
       "fcl" '((lambda () (interactive) (helm-org-rifle-directories kb/library-dir nil)) :which-key "Library search")
       "fco" '(helm-org-rifle-org-directory :which-key "Org directory search")
-
+  
       "or" '(helm-org-rifle-current-buffer :which-key "Helm-org-rifle current buffer")
       "oR" '(helm-org-rifle-occur-current-buffer :which-key "Helm-org-rifle-occur current buffer")
       )
@@ -116,9 +117,9 @@ Neotree for Emacs
     :after all-the-icons ; Required for one of the themes
     :config
     (if (display-graphic-p) (setq neo-theme 'icons) (setq neo-theme 'arrow))
-
+  
     (add-hook 'neotree-mode-hook 'hide-mode-line-mode)
-
+  
     (kb/leader-keys
       "fn" '(neotree-toggle :which-key "Show neotree")
       )
