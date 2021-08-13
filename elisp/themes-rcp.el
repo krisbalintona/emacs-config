@@ -126,7 +126,7 @@
     )
   :config
   (if (daemonp) ; Hooks depending on daemon or not
-      (add-hook 'server-after-make-frame-hook 'doom-modeline-mode 100)
+      (add-hook 'server-after-make-frame-hook 'doom-modeline-mode)
     (add-hook 'window-setup-hook 'doom-modeline-mode))
   (kb/doom-modeline-font-setup)
   )
