@@ -681,6 +681,7 @@
     ("exerience" "experience" nil :count 0)
     ("existene" "existence" nil :count 0)
     ("existince" "existence" nil :count 0)
+    ("exluded" "excluded" nil :count 0)
     ("exogenis" "Exogenous" nil :count 0)
     ("expeerince" "experience" nil :count 0)
     ("expeinrence" "experience" nil :count 0)

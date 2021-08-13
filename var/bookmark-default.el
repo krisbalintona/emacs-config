@@ -1,4 +1,4 @@
-;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*-
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
@@ -56,8 +56,8 @@
  (rear-context-string . "IA,\n_BOARD,\n};\n\n")
  (position . 963))
 ("org-capture-last-stored"
- (filename . "~/Documents/org-database/roam/engl0930_final_portfolio-Aug092021-083639.org")
+ (filename . "~/Documents/org-database/roam/no_matter_what_leverage_your_momentum-Aug122021-195828.org")
  (front-context-string)
- (rear-context-string . "Final Portfolio\n")
- (position . 104))
+ (rear-context-string . "tum\nReference: \n")
+ (position . 146))
 )
