@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; This is all the configuration of the org-roam package
+;; Elfeed RSS reader configuration
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -11,9 +11,14 @@
 (use-package elfeed
   :custom
   ;; Give time for long updates to complete
-  (url-queue-timeout 300)
+  (elfeed-use-curl t)
   (elfeed-curl-timeout 300)
+  (url-queue-timeout 300)
   (elfeed-curl-max-connections 300) ; Get a bunch at a time
+
+  (elfeed-search-date-format '("%F %R" 16 :left))
+  (elfeed-search-title-max-width 100)
+  (elfeed-search-title-min-width 30)
 
   (elfeed-search-remain-on-entry t)
   (elfeed-search-clipboard-type 'clipboard) ; Paste to system clipboard
@@ -22,38 +27,18 @@
   ;; (elfeed-search-filter "-archive @2-week-ago +unread")
   (elfeed-search-filter "")
   (elfeed-initial-tags nil)
-  :init
-  (defun prot-elfeed-kill-buffer-close-window-dwim ()
-    "Do-what-I-mean way to handle `elfeed' windows and buffers.
-
-When in an entry buffer, kill the buffer and return to the Elfeed
-Search view.  If the entry is in its own window, delete it as
-well.
-
-When in the search view, close all other windows.  Else just kill
-the buffer."
-    (interactive)
-    (let ((win (selected-window)))
-      (cond ((eq major-mode 'elfeed-show-mode)
-             (elfeed-kill-buffer)
-             (unless (one-window-p) (delete-window win))
-             (switch-to-buffer "*elfeed-search*"))
-            ((eq major-mode 'elfeed-search-mode)
-             (if (one-window-p)
-                 (elfeed-search-quit-window)
-               (delete-other-windows win))))))
   :config
   ;; Tag hooks
   (setq elfeed-new-entry-hook
-   `(;; Status tags
-     ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
-                          :remove 'aging
-                          :add 'archive)
-     ,(elfeed-make-tagger :before "1 month ago" ; Don't be distracted by old entries
-                          :after "3 months ago"
-                          :remove 'unread
-                          :add 'aging)
-     ))
+        `(;; Status tags
+          ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
+                               :remove 'aging
+                               :add 'archive)
+          ,(elfeed-make-tagger :before "1 month ago" ; Don't be distracted by old entries
+                               :after "3 months ago"
+                               :remove 'unread
+                               :add 'aging)
+          ))
 
   ;; Update elfeed every time it is opened
   (advice-add 'elfeed :after #'elfeed-update)
@@ -63,7 +48,6 @@ the buffer."
   (general-define-key
    :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
    :states 'normal
-   [remap elfeed-search-quit-window] '(prot-elfeed-kill-buffer-close-window-dwim :which-key "Close elfeed")
    [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
    "L" '((lambda ()
            (interactive)

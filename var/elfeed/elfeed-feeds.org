@@ -1,21 +1,27 @@
-            #+TITLE: Elfeed Feeds
+                  #+TITLE: Elfeed Feeds
 
-* Root                                                                                            :elfeed:
+* Blogs                                                                                     :blog:elfeed:
 
-** Blogs                                                                                            :blog:
+** [[https://protesilaos.com/books.xml][Prot: Essays]]
 
-*** Intellectual                                             :intellectual:
+** [[https://protesilaos.com/codelog.xml][Prot: Coding]]                                                                                           :emacs:
 
-**** [[https://protesilaos.com/books.xml][Protesilaos Essays]]
+* Podcasts                                                                               :podcast:elfeed:
 
-**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCA0XHv5MYr8mmQTJoJ4Z0IQ][Weltergeist]]                                                                                  :second:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCSHZKyawb77ixDdsGog4iWA][Lex Fridman Podcast]]
 
-*** Emacs                                                           :emacs:
+** [[http://podcasts.joerogan.net/feed][JRE]]
 
-**** [[https://protesilaos.com/codelog.xml][Protesilaos Coding]]
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2D2CMWXMOVWx7giW1n3LIg][Huberman Lab]]
 
-** Podcasts                                                        :podcast:
+* YouTube channels                                                                                           :YT:elfeed:
 
-*** Intellectual                                         :intellectual:first:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g][Prot: YT]]
 
-**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCSHZKyawb77ixDdsGog4iWA][Lex Fridman Podcast]]
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCafEZMU5s8geb9oIly6xTrg][R.C. Waldun]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCqYPhGiB9tkShZorfgcL2lA][What I've Learned]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCI91jQdeMzuQRgg4VOSZZmw][Under The Scope]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCA0XHv5MYr8mmQTJoJ4Z0IQ][Weltergeist]]
