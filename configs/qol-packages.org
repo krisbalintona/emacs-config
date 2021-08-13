@@ -1,4 +1,4 @@
-#+TITLE: Quality of life packages
+ #+TITLE: Quality of life packages
 
 * Helpful
 
@@ -41,42 +41,43 @@ Save and restore point in files
 
 Saveplace but with listings
 #+begin_src emacs-lisp
-      (use-package dogears
-        :straight (dogears :type git :host github :repo "alphapapa/dogears.el")
-        :custom
-        (dogears-limit 200)
-        (dogears-line-width 40)
-        (dogears-ignore-places-functions
-         '(dogears--ignored-mode-p
-           minibufferp
-           (lambda () (string-match "^/tmp/" (expand-file-name buffer-file-truename)))
-           )
-         )
-        (dogears-ignore-modes
-         '(fundamental-mode helm-major-mode
-                            dogears-list-mode custom-mode helpful-mode
-                            org-roam-mode
-                            )
-         )
-        (dogears-functions
-         '(
-           ))
-        (dogears-hooks
-         '(imenu-after-jump-hook
-           change-major-mode-hook
-           ))
-        :config
-        (general-define-key ; Dogears-list-mode-map
-         :keymaps 'dogears-list-mode-map
-         :states '(motion normal visual)
-         "dd" 'dogears-list-delete
-         "RET" 'dogears-list-go
-         )
-      
-        (kb/leader-keys
-          "bd" '(dogears-list :which-key "Dogears list")
-          )
-        )
+  (use-package dogears
+    :straight (dogears :type git :host github :repo "alphapapa/dogears.el")
+    :custom
+    (dogears-limit 200)
+    (dogears-line-width 40)
+    (dogears-ignore-places-functions
+     '(dogears--ignored-mode-p
+       minibufferp
+       (lambda () (string-match "^/tmp/" (expand-file-name buffer-file-truename)))
+       )
+     )
+    (dogears-ignore-modes
+     '(fundamental-mode helm-major-mode
+                        dogears-list-mode custom-mode helpful-mode
+                        magit-status-mode magit-log-mode magit-wip-mode magit-diff-mode magit-blob-mode magit-refs-mode magit-stash-mode magit-blame-mode magit-reflog-mode magit-cherry-mode magit-proces-mode magit-section-mode magit-stashes-mode magit-repolist-mode magit-revision-mode magit-log-select-mode magit-merge-preview-mode magit-wip-after-save-mode magit-submodule-list-mode magit-blame-read-only-mode magit-wip-after-apply-mode magit-wip-before-apply-mode magit-wip-initial-backup-mode magit-wip-after-save-local-mode unpackaged/magit-log-date-headers-mode
+                        org-roam-mode
+                        )
+     )
+    (dogears-functions
+     '(
+       ))
+    (dogears-hooks
+     '(imenu-after-jump-hook
+       change-major-mode-hook
+       ))
+    :config
+    (general-define-key ; Dogears-list-mode-map
+     :keymaps 'dogears-list-mode-map
+     :states '(motion normal visual)
+     "dd" 'dogears-list-delete
+     "RET" 'dogears-list-go
+     )
+  
+    (kb/leader-keys
+      "bd" '(dogears-list :which-key "Dogears list")
+      )
+    )
 #+end_src
 
 * Which-key
