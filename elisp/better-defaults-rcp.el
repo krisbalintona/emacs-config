@@ -64,6 +64,7 @@
               indent-tabs-mode nil
 
               visible-bell nil
+              ring-bell-function 'ignore                                                          ; Disable annoying error sound on Windows 10
 
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
               )
