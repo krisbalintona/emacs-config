@@ -26,6 +26,26 @@
      ,(elfeed-make-tagger :feed-url "youtube\\.com"
                           :add '(video youtube))
      ;; Status tags
+  :init
+  (defun prot-elfeed-kill-buffer-close-window-dwim ()
+    "Do-what-I-mean way to handle `elfeed' windows and buffers.
+
+When in an entry buffer, kill the buffer and return to the Elfeed
+Search view.  If the entry is in its own window, delete it as
+well.
+
+When in the search view, close all other windows.  Else just kill
+the buffer."
+    (interactive)
+    (let ((win (selected-window)))
+      (cond ((eq major-mode 'elfeed-show-mode)
+             (elfeed-kill-buffer)
+             (unless (one-window-p) (delete-window win))
+             (switch-to-buffer "*elfeed-search*"))
+            ((eq major-mode 'elfeed-search-mode)
+             (if (one-window-p)
+                 (elfeed-search-quit-window)
+               (delete-other-windows win))))))
      ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
                           :remove 'aging
                           :add 'archive)
@@ -62,9 +82,11 @@
          :which-key "Add archive tag")
    )
 
-  (general-define-key ; Both
+  (general-define-key
    :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
    :states 'normal
+   [remap elfeed-search-quit-window] '(prot-elfeed-kill-buffer-close-window-dwim :which-key "Close elfeed")
+   [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
    "L" '((lambda ()
            (interactive)
            (elfeed-goodies/toggle-logs)
@@ -94,6 +116,54 @@ fail on poorly-designed websites."
     (eww link)
     (add-hook 'eww-after-render-hook 'eww-readable nil t))
   )
+(general-define-key
+ :keymaps 'elfeed-show-mode-map
+ :states 'normal
+ "e" '(prot-elfeed-show-eww :which-key "Show in EWW")
+ )
+
+(add-hook 'eww-mode-hook '(lambda () (visual-fill-column-mode) (variable-pitch-mode)))
+
+;;;;; Add archive tag
+(defun prot-elfeed-toggle-tag (tag)
+  "Toggle TAG for the current item.
+
+When the region is active in the `elfeed-search-mode' buffer, all
+entries encompassed by it are affected.  Otherwise the item at
+point is the target.  For `elfeed-show-mode', the current entry
+is always the target.
+
+The list of tags is provided by `prot-elfeed-search-tags'."
+  (interactive
+   (list
+    (intern
+     ;; (prot-elfeed--character-prompt prot-elfeed-search-tags))))
+     ;; (prot-elfeed--character-prompt prot-elfeed-search-tags)
+     (car (completing-read-multiple
+           "Apply one or more tags: "
+           (delete-dups (append (mapcar (lambda (tag)
+                                          (format "%s" tag))
+                                        (elfeed-db-get-all-tags))
+                                ))
+           #'prot-common-crm-exclude-selected-p t)
+          ;; (prot-elfeed-search-tag-filter)
+          ))
+    ))
+  (if (derived-mode-p 'elfeed-show-mode)
+      (if (elfeed-tagged-p tag elfeed-show-entry)
+          (elfeed-show-untag tag)
+        (elfeed-show-tag tag))
+    (elfeed-search-toggle-all tag))
+  )
+(general-define-key ; Search keymap
+ :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
+ :states '(visual normal)
+ "a" '((lambda ()
+         (interactive)
+         (prot-elfeed-toggle-tag 'archive)
+         )
+       :which-key "Add archive tag")
+ )
 
 ;;;;; Search completion
 (defun prot-common-crm-exclude-selected-p (input)
