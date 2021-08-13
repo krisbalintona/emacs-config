@@ -37,6 +37,48 @@ Save and restore point in files
     )
 #+END_SRC
 
+* Dogears
+
+Saveplace but with listings
+#+begin_src emacs-lisp
+      (use-package dogears
+        :straight (dogears :type git :host github :repo "alphapapa/dogears.el")
+        :custom
+        (dogears-limit 200)
+        (dogears-line-width 40)
+        (dogears-ignore-places-functions
+         '(dogears--ignored-mode-p
+           minibufferp
+           (lambda () (string-match "^/tmp/" (expand-file-name buffer-file-truename)))
+           )
+         )
+        (dogears-ignore-modes
+         '(fundamental-mode helm-major-mode
+                            dogears-list-mode custom-mode helpful-mode
+                            org-roam-mode
+                            )
+         )
+        (dogears-functions
+         '(
+           ))
+        (dogears-hooks
+         '(imenu-after-jump-hook
+           change-major-mode-hook
+           ))
+        :config
+        (general-define-key ; Dogears-list-mode-map
+         :keymaps 'dogears-list-mode-map
+         :states '(motion normal visual)
+         "dd" 'dogears-list-delete
+         "RET" 'dogears-list-go
+         )
+      
+        (kb/leader-keys
+          "bd" '(dogears-list :which-key "Dogears list")
+          )
+        )
+#+end_src
+
 * Which-key
 
 Show keybinds

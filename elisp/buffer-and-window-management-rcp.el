@@ -81,6 +81,7 @@
                    ("\\*org-roam\\*" :regexp t :align right :same nil :size 0.2)
                    ("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)
                    ("*Flycheck errors*" :select t :align below :size 0.33)
+                   ("\\*Dogears List\\*" :regexp t :align below :same t :inhibit-window-quit t :size 0.3)
                    ))
   (shackle-select-reused-windows t)
   )
