@@ -1,4 +1,4 @@
- #+TITLE: Quality of life packages
+  #+TITLE: Quality of life packages
 
 * Helpful
 
@@ -53,10 +53,11 @@ Saveplace but with listings
        )
      )
     (dogears-ignore-modes
-     '(fundamental-mode helm-major-mode
-                        dogears-list-mode custom-mode helpful-mode
+     '(fundamental-mode special-mode helm-major-mode
+                        dogears-list-mode messages-buffer-mode custom-mode helpful-mode elfeed-search-mode elfeed-show-mode org-roam-mode
+  
                         magit-status-mode magit-log-mode magit-wip-mode magit-diff-mode magit-blob-mode magit-refs-mode magit-stash-mode magit-blame-mode magit-reflog-mode magit-cherry-mode magit-proces-mode magit-section-mode magit-stashes-mode magit-repolist-mode magit-revision-mode magit-log-select-mode magit-merge-preview-mode magit-wip-after-save-mode magit-submodule-list-mode magit-blame-read-only-mode magit-wip-after-apply-mode magit-wip-before-apply-mode magit-wip-initial-backup-mode magit-wip-after-save-local-mode unpackaged/magit-log-date-headers-mode
-                        org-roam-mode
+  
                         )
      )
     (dogears-functions
@@ -75,7 +76,8 @@ Saveplace but with listings
      )
   
     (kb/leader-keys
-      "bd" '(dogears-list :which-key "Dogears list")
+      "bd" '(dogears-go :which-key "Dogears go")
+      "bD" '(dogears-list :which-key "Dogears list")
       )
     )
 #+end_src
