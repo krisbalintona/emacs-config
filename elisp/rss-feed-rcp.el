@@ -10,22 +10,18 @@
 ;;;; Elfeed
 (use-package elfeed
   :custom
-  (url-queue-timeout 60) ; Give time for long updates to complete
-  (elfeed-curl-max-connections 100) ; Get a bunch at a time
+  ;; Give time for long updates to complete
+  (url-queue-timeout 300)
+  (elfeed-curl-timeout 300)
+  (elfeed-curl-max-connections 300) ; Get a bunch at a time
 
   (elfeed-search-remain-on-entry t)
+  (elfeed-search-clipboard-type 'clipboard) ; Paste to system clipboard
 
   (elfeed-feeds '())
-  (elfeed-search-filter "-archive @2-week-ago +unread")
-  (elfeed-initial-tags '())
-
-  ;; Elfeed tag hooks
-  (elfeed-new-entry-hook
-   `(
-     ;; Autotags
-     ,(elfeed-make-tagger :feed-url "youtube\\.com"
-                          :add '(video youtube))
-     ;; Status tags
+  ;; (elfeed-search-filter "-archive @2-week-ago +unread")
+  (elfeed-search-filter "")
+  (elfeed-initial-tags nil)
   :init
   (defun prot-elfeed-kill-buffer-close-window-dwim ()
     "Do-what-I-mean way to handle `elfeed' windows and buffers.
@@ -46,6 +42,10 @@ the buffer."
              (if (one-window-p)
                  (elfeed-search-quit-window)
                (delete-other-windows win))))))
+  :config
+  ;; Tag hooks
+  (setq elfeed-new-entry-hook
+   `(;; Status tags
      ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
                           :remove 'aging
                           :add 'archive)
@@ -54,33 +54,11 @@ the buffer."
                           :remove 'unread
                           :add 'aging)
      ))
-  :config
+
   ;; Update elfeed every time it is opened
   (advice-add 'elfeed :after #'elfeed-update)
-
   ;; Apply the appropriate autotags to already existing entries
-  (advice-add 'elfeed-search-fetch :after #'elfeed-apply-autotags-now)
-  (advice-add 'elfeed-search-update--force :after #'elfeed-apply-autotags-now)
-
-  (general-define-key ; Search keymap
-   :keymaps 'elfeed-search-mode-map
-   :states 'normal
-   "a" '((lambda ()
-           (interactive)
-           (elfeed-search-tag-all 'archive)
-           )
-         :which-key "Add archive tag")
-   )
-
-  (general-define-key ; Show keymap
-   :keymaps 'elfeed-show-mode-map
-   :states 'normal
-   "a" '((lambda ()
-           (interactive)
-           (elfeed-show-tag 'archive)
-           )
-         :which-key "Add archive tag")
-   )
+  (add-hook 'elfeed-search-update-hook #'elfeed-apply-autotags-now)
 
   (general-define-key
    :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
@@ -228,7 +206,7 @@ minibuffer with something like `exit-minibuffer'."
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")
                           ))
-  (rmh-elfeed-org-auto-ignore-invalid-feeds t) ; Appropriately tag failed entries
+  (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
   :config
   (elfeed-org)
   )
