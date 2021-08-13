@@ -86,7 +86,7 @@
 ;; (require 'mu4e-rcp)
 
 ;;;;; RSS feed
-(require 'latex-general-rcp)
+(require 'rss-feed-rcp)
 
 ;;;;; LaTeX
 (require 'latex-general-rcp)
