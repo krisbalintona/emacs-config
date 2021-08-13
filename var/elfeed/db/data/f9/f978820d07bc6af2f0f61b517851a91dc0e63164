@@ -1,0 +1,13 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=PietHIi2kpw">https://www.youtube.com/watch?v=PietHIi2kpw</a></p>
+         
+         <p>This screen cast is a demonstration of my shell script that implements
+dynamic desktop creation/removal in the Binary Space Partitioning Window
+Manager.  It is a feature that runs contrary to the upstream default of
+setting a fixed number of desktops.</p>
+
+<p>This script and all other parts of the demo are distributed with <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a>.</p>
+        
+      

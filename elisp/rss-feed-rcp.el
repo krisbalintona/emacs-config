@@ -9,6 +9,188 @@
 
 ;;;; Elfeed
 (use-package elfeed
+  :custom
+  (url-queue-timeout 60) ; Give time for long updates to complete
+  (elfeed-curl-max-connections 100) ; Get a bunch at a time
+
+  (elfeed-search-remain-on-entry t)
+
+  (elfeed-feeds '())
+  (elfeed-search-filter "-archive @2-week-ago +unread")
+  (elfeed-initial-tags '())
+
+  ;; Elfeed tag hooks
+  (elfeed-new-entry-hook
+   `(
+     ;; Autotags
+     ,(elfeed-make-tagger :feed-url "youtube\\.com"
+                          :add '(video youtube))
+     ;; Status tags
+     ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
+                          :remove 'aging
+                          :add 'archive)
+     ,(elfeed-make-tagger :before "1 month ago" ; Don't be distracted by old entries
+                          :after "3 months ago"
+                          :remove 'unread
+                          :add 'aging)
+     ))
+  :config
+  ;; Update elfeed every time it is opened
+  (advice-add 'elfeed :after #'elfeed-update)
+
+  ;; Apply the appropriate autotags to already existing entries
+  (advice-add 'elfeed-search-fetch :after #'elfeed-apply-autotags-now)
+  (advice-add 'elfeed-search-update--force :after #'elfeed-apply-autotags-now)
+
+  (general-define-key ; Search keymap
+   :keymaps 'elfeed-search-mode-map
+   :states 'normal
+   "a" '((lambda ()
+           (interactive)
+           (elfeed-search-tag-all 'archive)
+           )
+         :which-key "Add archive tag")
+   )
+
+  (general-define-key ; Show keymap
+   :keymaps 'elfeed-show-mode-map
+   :states 'normal
+   "a" '((lambda ()
+           (interactive)
+           (elfeed-show-tag 'archive)
+           )
+         :which-key "Add archive tag")
+   )
+
+  (general-define-key ; Both
+   :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+   :states 'normal
+   "L" '((lambda ()
+           (interactive)
+           (elfeed-goodies/toggle-logs)
+           (other-window 1)
+           )
+         :which-key "Elfeed logs")
+   )
+
+  (kb/leader-keys
+    "or" '(elfeed :which-key "Elfeed")
+    )
+  )
+
+;;;; QoL
+;; From https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
+;;;;; View in EWW
+(defun prot-elfeed-show-eww (&optional link)
+  "Browse current entry's link or optional LINK in `eww'.
+
+Only show the readable part once the website loads.  This can
+fail on poorly-designed websites."
+  (interactive)
+  (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                    elfeed-show-entry
+                  (elfeed-search-selected :ignore-region)))
+         (link (or link (elfeed-entry-link entry))))
+    (eww link)
+    (add-hook 'eww-after-render-hook 'eww-readable nil t))
+  )
+
+;;;;; Search completion
+(defun prot-common-crm-exclude-selected-p (input)
+  "Filter out INPUT from `completing-read-multiple'.
+Hide non-destructively the selected entries from the completion
+table, thus avoiding the risk of inputting the same match twice.
+
+To be used as the PREDICATE of `completing-read-multiple'."
+  (if-let* ((pos (string-match-p crm-separator input))
+            (rev-input (reverse input))
+            (element (reverse
+                      (substring rev-input 0
+                                 (string-match-p crm-separator rev-input))))
+            (flag t))
+      (progn
+        (while pos
+          (if (string= (substring input 0 pos) element)
+              (setq pos nil)
+            (setq input (substring input (1+ pos))
+                  pos (string-match-p crm-separator input)
+                  flag (when pos t))))
+        (not flag))
+    t)
+  )
+
+(defun prot-elfeed-search-tag-filter ()
+  "Filter Elfeed search buffer by tags using completion.
+
+Completion accepts multiple inputs, delimited by `crm-separator'.
+Arbitrary input is also possible, but you may have to exit the
+minibuffer with something like `exit-minibuffer'."
+  (interactive)
+  (unwind-protect
+      (elfeed-search-clear-filter)
+    (let* ((elfeed-search-filter-active :live)
+           (db-tags (elfeed-db-get-all-tags))
+           (plus-tags (mapcar (lambda (tag)
+                                (format "+%s" tag))
+                              db-tags))
+           (minus-tags (mapcar (lambda (tag)
+                                 (format "-%s" tag))
+                               db-tags))
+           (all-tags (delete-dups (append plus-tags minus-tags)))
+           (tags (completing-read-multiple
+                  "Apply one or more tags: "
+                  all-tags #'prot-common-crm-exclude-selected-p t))
+           (input (string-join `(,elfeed-search-filter ,@tags) " ")))
+      (setq elfeed-search-filter input))
+    (elfeed-search-update :force))
+  )
+
+(general-define-key
+ :keymaps 'elfeed-search-mode-map
+ :states 'normal
+ "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion")
+ )
+
+;;;; Ancillary
+;;;;; Elfeed-org
+(use-package elfeed-org
+  :after elfeed
+  :custom
+  (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")
+                          ))
+  (rmh-elfeed-org-auto-ignore-invalid-feeds t) ; Appropriately tag failed entries
+  :config
+  (elfeed-org)
+  )
+
+;;;;; Elfeed-goodies
+(use-package elfeed-goodies
+  :after elfeed
+  :custom
+  (elfeed-goodies/feed-source-column-width 25)
+  (elfeed-goodies/tag-column-width 40)
+
+  (elfeed-goodies/entry-pane-position 'right)
+  (elfeed-goodies/entry-pane-size 0.5)
+  :config
+  (elfeed-goodies/setup)
+
+  (general-define-key
+   :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+   :states 'normal
+   "K" 'elfeed-goodies/split-show-prev
+   "J" 'elfeed-goodies/split-show-next
+   )
+  )
+
+;;;;; Elfeed-dashboard
+(use-package elfeed-dashboard
+  :disabled t ; Not really working
+  :straight (elfeed-dashboard :type git :host github :repo "Manoj321/elfeed-dashboard")
+  :custom
+  (elfeed-dashboard-file (concat no-littering-var-directory "elfeed/elfeed-dashboard.org"))
+  :config
+  (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links) ; Update feed counts on elfeed-quit
   )
 
 ;;; rss-feed-rcp.el ends here

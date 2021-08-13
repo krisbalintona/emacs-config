@@ -1,0 +1,16 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=k5v2iB1FqFw">https://www.youtube.com/watch?v=k5v2iB1FqFw</a></p>
+         
+         <p>In this screen cast I demonstrate the minor tweaks I have made to Emacs’
+various transposition commands.  Their combined effect contributes to a
+more efficient workflow.</p>
+
+<p>“Transpose” in this case, means to exchange the positions of two text
+objects.  This applies to words, sentences, lines, paragraphs, symbolic
+expressions (sexps).</p>
+
+<p>And here is my dotemacs, from where you can copy all my customisations:
+<a href="https://protesilaos.com/dotemacs">protesilaos.com/dotemacs</a>.</p>
+        
+      

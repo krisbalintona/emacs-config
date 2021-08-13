@@ -1,0 +1,104 @@
+
+         
+         <p>I just published the initial version of the <code>modus-themes-exporter.el</code>
+as part of <a href="https://gitlab.com/protesilaos/dotfiles">my dotfiles’ Emacs setup</a>.</p>
+
+<p>The library consists of a set of functions that help produce a port of
+the active Modus theme (<code>modus-operandi</code> or <code>modus-vivendi</code>) for a
+variety of external applications.  Currently covered entries are XTerm,
+URxvt (rxvt-unicode), Xfce terminal (xfce4-terminal), and Vim (gui and
+term, as well as NeoVim).</p>
+
+<p>The exporting is performed by the <code>modus-themes-exporter-export</code>
+command.  Its doc string reads thus:</p>
+
+<pre><code>Export current Modus theme using TEMPLATE.
+
+When called interactively, TEMPLATE is chosen from a list of candidates
+using completion.  Else it must be a string that corresponds to the car
+of a cons cell in `modus-themes-exporter-templates-alist'.
+
+The output is stored in the kill ring.
+
+When called from Lisp with optional FILE as a path to a regular file,
+write there directly.  When called interactively with the universal
+prefix argument (\\[universal-argument]), prompt for FILE instead:
+supplying a non-existent path will create that file outright.  Once the
+output has been written to the file, prompt to visit it.
+
+With optional NO-VISIT, either as a non-nil symbol in Lisp or a
+double prefix argument interactively, do not prompt to visit the
+file.
+</code></pre>
+
+<p>Here is a side-by-side presentation of Emacs (left) and Xfce’s terminal
+with Vim running inside of it (right).  Click to enlarge.</p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-22-modus-themes-exporter-light.png"><img alt="Modus themes exporter light" src="https://protesilaos.com/assets/images/attachments/2021-02-22-modus-themes-exporter-light.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-22-modus-themes-exporter-dark.png"><img alt="Modus themes exporter dark" src="https://protesilaos.com/assets/images/attachments/2021-02-22-modus-themes-exporter-dark.png" /></a></p>
+
+<h2>What is this all about?</h2>
+
+<p>Before we start… No, I do not intend to switch back to Vim: I plan to
+remain a full time Emacs user for years to come.</p>
+
+<p>The <code>modus-themes-exporter.el</code> allows me to satisfy the demand for
+porting my Modus themes to other applications.  I have done so several
+times in private, where I would supply an Xresources file or whatnot to
+the person emailing me.  I have also offered my consent to those who
+asked whether they could create ports for VSCode—none of those
+endeavours has yielded any results as far as I know.</p>
+
+<p>Demand for ports has also been expressed publicly on the issue tracker
+of the Modus themes’ repo (<a href="https://gitlab.com/protesilaos/modus-themes/-/issues/116">issue
+116</a>) as well
+as my dotfiles (<a href="https://gitlab.com/protesilaos/dotfiles/-/issues/31">issue
+31</a>).  Furthermore,
+Simon Pugnet wrote the
+<a href="https://github.com/polaris64/modus-exporter">modus-exporter</a> a while
+ago which, however, is targeted at older versions of the themes prior to
+their major refactoring in version <code>1.0.0</code>.</p>
+
+<p>I must stress that insofar as external text editors are concerned <strong>the
+output of this library does not constitute a fully fledged theme</strong>.
+Creating an original piece, especially one with the technical
+requirements for uncompromising legibility that the Modus themes stand
+for, requires a lot of work and painstaking attention to detail (I have
+been doing so for ~1.5 years now, ever since day one of switching to
+Emacs).  No automated process invented thus far can replace the
+context-specific aesthetic judgement of the designer.  Still, a
+templating system can help <em>approximate</em> what has already been achieved,
+while acknowledging the constraints imposed by the incompatibilities
+between the various applications and Emacs (e.g. how they highlight
+code, as illustrated in the screenshots above).</p>
+
+<p>With those granted, the ports cover a subset of the palette used in each
+of the Modus themes which means, ipso facto, that they make compromises
+in the interest of maintainability.  Similarly, there is no plan
+whatsoever to replicate the customisation options that the real themes
+for Emacs have, as well as implement anew their advanced,
+“do-it-yourself” features (consult <a href="https://protesilaos.com/modus-themes/">the Modus themes’
+manual</a>, which, by the way, is
+pushing towards 20k words).</p>
+
+<h2>Experimental release</h2>
+
+<p>Please bear in mind that there is still a lot of work to be done before
+this library reaches a certain standard of quality:</p>
+
+<ol>
+  <li>Refine the templating system.</li>
+  <li>Test automated processes for outputting ports in bulk.</li>
+  <li>Improve Vim’s colour mapping so that it mimics that of Emacs, to the
+extent possible.</li>
+  <li>Write ports for the GTK Source view widget (Gedit, GNOME Builder,
+etc.).</li>
+  <li>Expand support for more terminal emulators, such as Kitty, Alacritty.</li>
+  <li>Convert colours from hexadecimal RGB notation to decimal, so that we
+can cover KDE’s Konsole and, potentially, Kate, Kwrite, etc.</li>
+</ol>
+
+<p>Patches and user feedback are most welcome!</p>
+        
+      

@@ -1,0 +1,17 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=6KN_oSLFf-k">https://www.youtube.com/watch?v=6KN_oSLFf-k</a></p>
+         
+         <p><code>ibuffer</code> is a library that is built into Emacs.  It allows us to
+operate on the buffer list in a number of ways.  We can sort, mark,
+filter using several predicates such as buffer name, major mode,
+filesystem path.</p>
+
+<p>Furthermore, <code>ibuffer</code> provides convenient access to other built-in
+commands, such as <code>query-replace</code> and <code>occur</code>.  You can use these to
+operate on a subset of marked buffers.</p>
+
+<p>Check <a href="https://protesilaos.com/dotemacs">my dotemacs</a> for configurations
+on this and other tools.</p>
+        
+      

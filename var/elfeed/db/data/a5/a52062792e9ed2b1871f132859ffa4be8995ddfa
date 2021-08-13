@@ -1,0 +1,131 @@
+
+         
+         <p>I wanted to improve the Emacs experience for some awkward key bindings
+that require you to hold down both Ctrl and Meta.  My goal was to create
+a shortcut for <code>C-M-KEY</code> bindings.</p>
+
+<p>While I could not find a way to simulate that combination by a single
+key press, I figured I could just use an extra modifier.</p>
+
+<p>Using Super was not an option.  I already have that as a shortcut for
+key sequences such as <code>C-x b</code> that become <code>s-b</code>.  So I decided to enable
+the Hyper key, since my keyboard does not have one by default (standard
+US QWERTY).</p>
+
+<h2>Contents of ~/.Xmodmap</h2>
+
+<p>Here is my <code>~/.Xmodmap</code> in its current form.  It is meant to work on my
+Debian 10 ‘buster’ system—your mileage may vary.  The inline comments
+should offer the guidance you need.  In short:</p>
+
+<ul>
+  <li>Use Caps Lock as an extra Control.  This disables the default
+behaviour of locking the letter casing.</li>
+  <li>Map Hyper to the right Super (“windows key”).  The left Super remains
+in tact.</li>
+  <li>Assign Compose to the Menu key (positioned to the right of Super_R).
+I use this to type all sorts of useful characters, such as the em
+dash.</li>
+</ul>
+
+<pre><code>!!!!!!!!!!!!!!!
+! Prior notes !
+!!!!!!!!!!!!!!!
+
+! These settings have been implemented succesfully on Debian 10
+! 'buster' running a variety of desktop environments on top of Xorg.
+
+! To get the current status of the modifiers:
+!
+!	xmodmap -pm
+!
+! To find out the key codes that are available:
+!
+!	xmodmap -pke
+!
+! Or narrow the results, e.g.:
+!
+!	xmodmap -pke | grep -E '(Alt|Shift)'
+!
+! Alternatively, use `xev` to print the key code upon key press.
+!
+! Here are some of the most likely candidates for changes:
+!
+!	keycode 37  = Control_L
+!	keycode 50  = Shift_L
+!	keycode 62  = Shift_R
+!	keycode 64  = Alt_L
+!	keycode 66  = Caps_Lock
+!	keycode 105 = Control_R
+!	keycode 133 = Super_L
+!	keycode 135 = Menu
+
+!!!!!!!!!!!!!!!!!
+! Modifications !
+!!!!!!!!!!!!!!!!!
+
+! Clear the modifiers concerned
+clear lock
+clear mod3
+clear mod4
+
+! Set Caps Lock as an extra Ctrl
+keycode 66 = Control_L
+
+! Set the Right Super as Hyper
+keycode 134 = Hyper_R
+
+!!! OR Set the Right Alt as Hyper
+!! keycode 108 = Hyper_R
+
+! Set the Menu key as Compose
+keycode 135 = Multi_key
+
+! Add/update the modifiers
+add control = Control_L
+
+! Add a new Hyper_R modifier and move Hyper_L from mod4 to mod3
+add mod3 = Hyper_L Hyper_R
+add mod4 = Super_L Super_R
+</code></pre>
+
+<p>Create that file and then load it with <code>xmodmap ~/.Xmodmap</code>.</p>
+
+<h2>Sample of Emacs keys using Hyper</h2>
+
+<p>Everything works as expected on my end.  I can now inspect the functions
+that Emacs calls when pressing <code>C-M-KEY</code> (do that with <code>C-h k</code> followed
+by the key press you are interested in).</p>
+
+<p>For example, here is a set of aliases.  These do not change the
+defaults.  They just provide additional means of accomplishing the same
+task (so replace the initial <code>H</code> with <code>C-M</code> to view the original keys).</p>
+
+<pre><code>(use-package lisp
+  :bind (("H-f" . forward-sexp)
+		 ("H-b" . backward-sexp)
+		 ("H-n" . forward-list)
+		 ("H-p" . backward-list)
+		 ("H-a" . beginning-of-defun)
+		 ("H-e" . end-of-defun)
+		 ("H-h" . mark-defun)
+		 ("H-d" . narrow-to-defun)
+		 ("H-k" . kill-sexp)
+		 ("H-K" . backward-kill-sexp)
+		 ("H-[" . insert-pair)
+		 ("H-]" . delete-pair)
+		 ("H-SPC" . mark-sexp)))
+</code></pre>
+
+<p>I have yet to find a way to simulate <code>C-M-</code> by just pressing <code>H-</code>
+without having to define each key binding individually.  For example, I
+would like to have something like:</p>
+
+<pre><code>(setq (x-ctrl-keysym x-meta-keysym) 'hyper)  ; Not valid elisp
+</code></pre>
+
+<p>With that, Hyper would not be a real modifier.  It would rather be the
+same as holding down Ctrl+Alt at the same time.  Will continue exploring
+this and update this article accordingly.</p>
+        
+      

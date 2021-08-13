@@ -1,0 +1,15 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=pQWa43YvQ2A">https://www.youtube.com/watch?v=pQWa43YvQ2A</a></p>
+         
+         <p>In this video I show how to use the built-in file manager of Emacs
+(dired == directory editor) to change file permissions for multiple
+items.  This is yet another clear case where <code>dired</code> proves its utility.</p>
+
+<p>Given the topic of this video, I also offer a primer on file permissions
+in Linux (I do not know how it works on other operating systems).</p>
+
+<p>Though not related to this demo, here is the link to my
+<a href="https://protesilaos.com/dotemacs">dotemacs</a>.</p>
+        
+      

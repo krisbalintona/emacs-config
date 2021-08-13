@@ -1,0 +1,93 @@
+
+         
+         <p>If you are new to the topic of the Emacs Diary and the Calendar, please
+refer to yesterday’s video introduction:
+<a href="https://protesilaos.com/codelog/2021-04-14-emacs-diary-calendar/">https://protesilaos.com/codelog/2021-04-14-emacs-diary-calendar/</a>.</p>
+
+<p>One of the major upsides of the Emacs Diary is that it is a regular file
+that you can navigate using whatever tools you like: Isearch and <code>M-x
+occur</code>, Swiper or <code>consult-line</code>, and the like.  It also is possible to
+extend it so that it uses the foldable headings that are familiar to
+users of Org mode; a feature that comes from <code>outline-mode</code>.  We can add
+that to any major mode by means of <code>outline-minor-mode</code>.</p>
+
+<p>To make the outline work, we need to specify a pattern of what
+constitutes a heading within the file.  This is controlled by the
+buffer-local variable <code>outline-regexp</code>.  The best candidate for headings
+is the Diary’s own comments.  It feels natural for users of Elisp to set
+those to <code>;;</code>, so we have this:</p>
+
+<pre><code class="language-elisp">(setq diary-comment-start ";;")
+(setq diary-comment-end "")
+</code></pre>
+
+<p>Then we need to write the pattern for the headings.  I prefer that
+heading levels start with at least three semicolons and a space, which
+lets us still use comments for their intended purpose (the same way it
+is in <code>elisp-mode</code>):</p>
+
+<pre><code class="language-elisp">;; The pattern evaluates to ";;+\\{2,\\} [^ \t\n]"
+(setq outline-regexp (format "%s+\\{2,\\} [^ \t\n]" diary-comment-start))
+</code></pre>
+
+<p>We can test our pattern in a new buffer with <code>M-x re-builder</code> and some
+text samples:</p>
+
+<pre><code>;; A regular comment.  This should not be matched.
+
+;;; A heading level 1
+;;;; A heading level 2
+;;;;; A heading level 3
+</code></pre>
+
+<p>Now that we got everything in order, we just need to integrate with with
+<code>diary-mode</code>:</p>
+
+<pre><code class="language-elisp">(defun my-diary-extras-setup ()
+  "Additional setup for Diary mode buffers."
+  (when (derived-mode-p 'diary-mode)
+    (setq outline-regexp (format "%s+\\{2,\\} [^ \t\n]" diary-comment-start))))
+
+(add-hook 'diary-mode-hook #'my-diary-extras-setup)
+</code></pre>
+
+<p>Next time we access the <code>diary-file</code> and <code>diary-mode</code> gets enabled, we
+will get headings function the way we want.  It then is up to you to
+specify the key bindings you want to make navigating the outline easier.
+For example:</p>
+
+<pre><code class="language-elisp">(with-eval-after-load 'outline
+  (let ((map outline-minor-mode-map))
+    (define-key map (kbd "C-c C-n") 'outline-next-visible-heading)
+    (define-key map (kbd "C-c C-p") 'outline-previous-visible-heading)
+    (define-key map (kbd "C-c C-f") 'outline-forward-same-level)
+    (define-key map (kbd "C-c C-b") 'outline-backward-same-level)
+    (define-key map (kbd "C-c C-u") 'outline-up-heading)
+    (define-key map (kbd "C-c C-a") 'outline-show-all)
+    (define-key map (kbd "C-c C-v") 'outline-move-subtree-down)
+    (define-key map (kbd "C-c M-v") 'outline-move-subtree-up)
+    (define-key map (kbd "&lt;C-tab&gt;") 'outline-cycle))) ; This is from Emacs28
+</code></pre>
+
+<p>Finally we need to enable <code>outline-minor-mode</code>:</p>
+
+<pre><code class="language-elisp">(add-hook 'diary-mode-hook #'outline-minor-mode)
+</code></pre>
+
+<p>Or <code>M-x outline-minor-mode</code>.</p>
+
+<p>With those in place, we have set the foundations to make the Diary
+buffer very easy to navigate, all while retaining its overall
+simplicity.  I am using Daniel Mendler’s <code>consult</code> library, which
+includes the <code>consult-outline</code> command (among many others): it lets you
+jump to a heading using minibuffer completion and requires no extra
+setup the way the built-in <code>imenu</code> does (though Imenu is also great in
+its own right).</p>
+
+<p>Personally, I also change the fontification of the Diary buffer, but
+will not bother you with the technicalities.  Please refer to my
+dotemacs instead: <a href="https://protesilaos.com/dotemacs">https://protesilaos.com/dotemacs</a> (specifically the
+section <a href="https://protesilaos.com/dotemacs/#h:b4040bc0-7a2a-4f17-824d-42de621bd1b9">Calendar and Diary (and
+prot-diary.el)</a>).</p>
+        
+      

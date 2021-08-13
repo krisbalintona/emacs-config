@@ -1,0 +1,21 @@
+            #+TITLE: Elfeed Feeds
+
+* Root                                                                                            :elfeed:
+
+** Blogs                                                                                            :blog:
+
+*** Intellectual                                             :intellectual:
+
+**** [[https://protesilaos.com/books.xml][Protesilaos Essays]]
+
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCA0XHv5MYr8mmQTJoJ4Z0IQ][Weltergeist]]                                                                                  :second:
+
+*** Emacs                                                           :emacs:
+
+**** [[https://protesilaos.com/codelog.xml][Protesilaos Coding]]
+
+** Podcasts                                                        :podcast:
+
+*** Intellectual                                         :intellectual:first:
+
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCSHZKyawb77ixDdsGog4iWA][Lex Fridman Podcast]]
