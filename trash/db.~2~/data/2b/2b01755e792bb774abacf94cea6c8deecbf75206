@@ -1,0 +1,17 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=Ad2grH_wFjk">https://www.youtube.com/watch?v=Ad2grH_wFjk</a></p>
+         
+         <p>In this video I demonstrate some of the powers of <code>isearch</code> through a
+keyboard macro.  This explains why I still rely on this unassuming yet
+potent built-in tool while I also have a package declaration for
+<code>swiper</code>.</p>
+
+<p>See <a href="https://protesilaos.com/dotemacs">my dotemacs</a> for the
+documentation and package declarations I provide.</p>
+
+<p>For the sake of completeness, Swiper is a search tool underpinned by
+the Ivy completion framework that I use: it fills a different niche
+than that of Isearch.</p>
+        
+      

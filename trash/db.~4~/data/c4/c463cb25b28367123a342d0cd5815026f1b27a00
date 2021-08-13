@@ -1,0 +1,75 @@
+
+         
+         <p>I decided to maintain my own fork of Lemonbar with support for Xft,
+because GitHub user <em>krypt-n</em> <a href="https://github.com/krypt-n/bar/pull/37#issuecomment-473265449">seems to have lost
+interest</a>
+in their project.</p>
+
+<p>My fork is on GitLab:
+<a href="https://gitlab.com/protesilaos/lemonbar-xft">https://gitlab.com/protesilaos/lemonbar-xft</a>.
+Here I want to tell you the steps I followed to produce it.</p>
+
+<p>Start by cloning upstream (all my links will be for SSH connections,
+which require an appropriately-configured GitHub account):</p>
+
+<pre><code>git clone git@github.com:LemonBoy/bar.git ~/lemonbar-upstream
+</code></pre>
+
+<p>Now also clone the fork with Xft support:</p>
+
+<pre><code>git clone git@github.com:krypt-n/bar.git ~/lemonbar-xft-discontinued
+</code></pre>
+
+<p>Switch to the upstream repo:</p>
+
+<pre><code>cd ~/lemonbar-upstream
+</code></pre>
+
+<p>Prepare to pull in the Xft fork:</p>
+
+<pre><code>git remote add xft ~/lemonbar-xft-discontinued
+git fetch xft
+</code></pre>
+
+<p>Now create a new branch with the fork:</p>
+
+<pre><code>git checkout -b xft-port
+</code></pre>
+
+<p>Then merge <code>master</code> into <code>xft-port</code>:</p>
+
+<pre><code>git merge master
+</code></pre>
+
+<p>You are mostly done.  I just added an extra file that explains what this
+fork is about.  It is named “README-xft” and has the following:</p>
+
+<pre><code>Personal fork of Lemonbar with Xft support
+==========================================
+
+The purpose of this fork is to keep up with upstream while maintaining
+the changes by GitHub user krypt-n who seems to have lots interest in
+the project.[0]
+
+The contributions by krypt-n allow Xft support (to use typefaces
+supported by fontconfig).  Upstream Lemonbar appears to be unable or
+unwilling to merge them into master.[1]
+
+I have decided to maintain this project, because I want to use it as
+part of my custom desktop session on Debian 10 Buster.[2]
+
+[0]: https://github.com/krypt-n/bar/pull/37#issuecomment-473265449
+[1]: https://github.com/LemonBoy/bar/issues/188
+[2]: https://gitlab.com/protesilaos/dotfiles
+</code></pre>
+
+<p>Lastly, I did the following to push my fork to GitLab:</p>
+
+<pre><code>git remote add lemonbar-xft-current git@gitlab.com:protesilaos/lemonbar-xft.git
+git push -u lemonbar-xft-current --all
+</code></pre>
+
+<p>Done!  Read my previous entry on <a href="https://protesilaos.com/codelog/2019-06-23-lemonbar-xft-new/">how to compile this fork on Debian 10
+Buster</a>.</p>
+        
+      

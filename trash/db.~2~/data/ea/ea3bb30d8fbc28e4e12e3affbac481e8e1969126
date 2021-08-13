@@ -1,0 +1,18 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=0YlYX_UjH5Q">https://www.youtube.com/watch?v=0YlYX_UjH5Q</a></p>
+         
+         <p>In this video I provide an overview of my workflow with the built-in
+Version Control (VC) framework of Emacs.  I am using it to manage all of
+my Git projects.  VC has become my primary interface for Git even though
+I keep Magit installed.  The latter is only needed for some specialised
+operations—VC and my extras cover my day-to-day needs.</p>
+
+<p>This demo includes lots of custom extensions that I have written in an
+attempt to make VC work the way I want.  Refer to my Emacs configuration
+file (“dotemacs”) for the implementation details:
+<a href="https://protesilaos.com/dotemacs">https://protesilaos.com/dotemacs</a>.  The specific item that contains
+those extensions is <code>prot-vc.el</code>.  Everything is part of my dotfiles’
+repository: <a href="https://gitlab.com/protesilaos/dotfiles">https://gitlab.com/protesilaos/dotfiles</a>.</p>
+        
+      

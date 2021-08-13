@@ -419,3 +419,6 @@ rm /tmp/personal.zip | zip -rDT /tmp/personal.zip /home/krisbalintona/ghost-deve
 git rm --cached ./var/savehist.el
 git rm --cached ./var/keyfreq.el
 apt search pandoc
+ls -la ~
+ls -la ~ | grep elfeed
+rm -r ~/.emacs.d/var/elfeed/db/

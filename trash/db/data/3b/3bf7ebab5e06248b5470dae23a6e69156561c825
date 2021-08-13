@@ -1,0 +1,25 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=rLF9oTmVFsc">https://www.youtube.com/watch?v=rLF9oTmVFsc</a></p>
+         
+         <p>In this video I demonstrate a few techniques to replace search matches
+across a number of files or buffers, using a variety of tools.  The
+tools I use involve:</p>
+
+<ul>
+  <li><code>counsel-git-grep</code>, which is powered by the <code>ivy</code> completion
+framework and which can edit its output with <code>wgrep</code>.</li>
+  <li><code>ivy-switch-buffer</code>, followed by <code>ibuffer</code> and <code>occur</code>.</li>
+  <li><code>dired</code>, followed by an interface that looks like that of <code>occur</code>.</li>
+</ul>
+
+<p>Other commands where <code>query-replace</code> and keyboard macros.</p>
+
+<hr />
+
+<p>For my setup check <a href="https://protesilaos.com/dotemacs">my dotemacs</a>.  The
+theme used in this video is “Modus Operandi” (<code>modus-operandi-theme</code>)
+which is available on MELPA.  For more, check the <a href="https://gitlab.com/protesilaos/modus-themes">Modus themes on
+GitLab</a>.</p>
+        
+      

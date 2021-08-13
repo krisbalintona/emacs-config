@@ -1,0 +1,140 @@
+
+         
+         <p>I came up with my own solution to managing my task list.  Yes, there
+probably are a zillion such approaches in the libre software world.  And
+yes, mine is not the best of the bunch.  But I am happy with what I got,
+so I might as well share my experience.</p>
+
+<p>It all starts with the realisation that a task list is just a plain text
+file.  You do not need a spreadsheet or some other type of structured
+data.  Manipulating text is what the terminal is good at.  The point is
+to be able to control everything with standard shell programs, such
+as <code>cat</code>, <code>sed</code>, <code>grep</code>, <code>sort</code>.</p>
+
+<p>Here is a sample of my task list:</p>
+
+<pre><code>cat ~/.my_task_list
+
+Continue with the work @swätzchen =2019-01-23
+This should pop up first =2016-12-21
+Contact &lt;person&gt; @chat =2019-01-22
+Another test @dots =2017-01-20
+Date is not added @dots
+this task starts with a lower case letter
+</code></pre>
+
+<p>I can add items to the list by editing the file.  Such as:</p>
+
+<ul>
+  <li>By using Vim or another text editor.</li>
+  <li>Or by appending some text directly <code>echo 'string' &gt;&gt; ~/.my_task_list</code>.</li>
+</ul>
+
+<p>As this is plain text, no markup is needed, no further requirements.
+<em>Just write</em>.</p>
+
+<h2>Managing the task list</h2>
+
+<p>Writing to a file is only the beginning.  Now we get to manipulate that
+text.  Some examples are in order.</p>
+
+<p>Print the contents of the file and capitalise the first letter on each
+sentence:</p>
+
+<pre><code>cat ~/.my_task_list | sed 's/\(^[a-z]\)/\U\1/'
+
+Continue with the work @swätzchen =2019-01-23
+This should pop up first =2016-12-21
+Contact &lt;person&gt; @chat =2019-01-22
+Another test @dots =2017-01-20
+Date is not added @dots
+This task starts with a lower case letter
+</code></pre>
+
+<p>Print only the tasks that have a due date assigned to them.  Also sort
+numerically and put the date at the beginning of the line:</p>
+
+<pre><code>grep -e '=[0-9-]*' ~/.my_task_list | sed 's/\(^.*\) =\([0-9-]*\)/\2: \1/g' | sort -g
+
+2016-12-21: This should pop up first
+2017-01-20: Another test @dots
+2019-01-22: Contact &lt;person&gt; @chat
+2019-01-23: Continue with the work @swätzchen
+</code></pre>
+
+<p>Sort and display tasks that match a specific string or pattern:</p>
+
+<pre><code>grep -e '^This\|^this' ~/.my_task_list
+
+This should pop up first =2016-12-21
+this task starts with a lower case letter
+</code></pre>
+
+<p>You get the idea…  It is new to me, so I might figure out more use cases
+and better ways of doing things.  Everything will be made clear in time
+as I believe I am on the right track.</p>
+
+<h2>Simple formatting</h2>
+
+<p>While everything is plain text, we can still use typographic symbols to
+give a sense of structure and assign meaning to different parts of the
+string.</p>
+
+<p>This is particularly useful for printing the data in a different format
+than its original.  Such as what I did in the example above where I got
+the tasks with a date assigned to them.  The date appears first and then
+the task description, even though the actual file has the date <em>after</em>
+the task’s description.</p>
+
+<p>Without any kind of structure we find ourselves more limited in what we
+can do.  Adding a few minor things here and there can help us greatly.
+As such, I follow this pattern for marking my tasks:</p>
+
+<pre><code>&lt;description&gt; @&lt;context&gt; #&lt;tag&gt; =&lt;date in YYYY-MM-DD&gt;
+</code></pre>
+
+<p>I usually need only the <code>&lt;description&gt;</code>.  Every other piece of
+“meta-data” is added in that given order, so that the context always
+precedes the tag, which always precedes the date.</p>
+
+<h2>Introducing a couple of scripts</h2>
+
+<p>To further improve my workflow, I just finished writing two scripts that
+iterate on my task list file:</p>
+
+<ul>
+  <li>The first is <code>stm</code>, the <em>Simplistic Task Manager</em> which is a wrapper
+for the scenaria I showcased above.  So I can run <code>stm</code> to get a list
+of my pending tasks;  <code>stm due</code> to show those with a due date; and
+<code>stm list &lt;string&gt;</code> to search for something specific.</li>
+  <li>The second is <code>stmmenu</code>, which is a <code>dmenu</code> tool that displays a list
+with all my tasks.  If I select an existing item, it is removed from
+the list.  If I type something new, it is appended to the list.</li>
+</ul>
+
+<p>While <code>stm</code> is meant to be used in the terminal, <code>stmmenu</code> is invoked
+with a hotkey.  <em>Need to quickly write down a task?</em>  Press the key
+binding and start typing <code>&lt;description&gt; @context #tag =&lt;date&gt;</code>.  Done!</p>
+
+<p>These new scripts are part of <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a>.  Look inside the
+“bin” directory.  Note though that I plan to review them, so things
+might change in the future.</p>
+
+<h2>“Do one thing and do it well”</h2>
+
+<p>Plain text.  Standard shell utilities.  A user-defined methodology for
+writing things.  Minimal. Super effective.</p>
+
+<p>I am so satisfied with the results that I have completely removed <code>task</code>
+(aka “Taskwarrior”) from my workflow.  That tool has served me well over
+the last couple of years or so, but I always felt it offered more than
+I ever needed.  Or it tried to perform too many specialised functions
+outside the narrow confines of controlling a task list.  Something was
+amiss.</p>
+
+<p>Now I have found solace in the simplest of tools which, rather
+unsurprisingly, involve the application of UNIX principles and use of
+relevant commands.</p>
+        
+      

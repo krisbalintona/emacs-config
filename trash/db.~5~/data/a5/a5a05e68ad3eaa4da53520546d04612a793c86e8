@@ -1,0 +1,22 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=-qo2Ai3pZRk">https://www.youtube.com/watch?v=-qo2Ai3pZRk</a></p>
+         
+         <p>In this screen cast I demonstrate how to use the power of the built-in
+directory editor to create playlists of your media files.  Playlists are
+curated file system paths that point to media files or directories that
+contain such files.</p>
+
+<p>You can play back the contents of playlists with Bongo.  When you insert
+a playlist that contains links to directories, it will insert all media
+files recursively.  Otherwise it just adds the music files that are
+referenced.</p>
+
+<hr />
+
+<p>As noted in the demo, here is my previous video on how I use <a href="https://protesilaos.com/codelog/2019-11-13-emacs-bongo-music/">Bongo with
+Dired</a>
+and here is my <a href="https://protesilaos.com/dotemacs">dotemacs</a>, from where
+you can get all my configurations for <code>bongo</code>, <code>dired</code>, etc.</p>
+        
+      

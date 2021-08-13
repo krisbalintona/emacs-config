@@ -1,0 +1,19 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=2-0OwGTt0dI">https://www.youtube.com/watch?v=2-0OwGTt0dI</a></p>
+         
+         <p>In this video I offer an introduction to the main features of Magit:
+staging, committing, diffing, logging, branching, merging, etc.</p>
+
+<p>Magit implements a modal interface to Git, the version control system.
+It clearly is one of the best packages in the Emacs space.</p>
+
+<hr />
+
+<p>This is the link to <code>icomplete-vertical</code>:
+<a href="https://github.com/oantolin/icomplete-vertical">https://github.com/oantolin/icomplete-vertical</a></p>
+
+<p>Refer to <a href="https://protesilaos.com/dotemacs">my dotemacs</a> for all my
+configurations.</p>
+        
+      

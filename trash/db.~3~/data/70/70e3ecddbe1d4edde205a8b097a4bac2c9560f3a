@@ -1,0 +1,24 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=L1f2tulD9N8">https://www.youtube.com/watch?v=L1f2tulD9N8</a></p>
+         
+         <p>Eshell is a line-oriented command shell that is deeply integrated with
+the rest of Emacs.  And it is extensible in true Emacs fashion.</p>
+
+<p>In this video I showcase the extensions I have programmed for it.  The
+idea is that you can see in action the value of using Elisp for your
+regular command-line needs.</p>
+
+<p>Refer to <a href="https://protesilaos.com/dotemacs">my dotemacs</a> for all the
+configurations for this and other tools.</p>
+
+<p>And these are some valuable resources you could also check (and don’t
+forget the official manual):</p>
+
+<ul>
+  <li><a href="https://cestlaz.github.io/post/using-emacs-66-eshell-elisp">Mike Zamansky’s video demo</a> that also shows how to program an Eshell switcher.</li>
+  <li><a href="https://www.youtube.com/watch?v=RhYNu6i_uY4">Howard Abrahams’ video</a> that covers the features of Eshell.</li>
+  <li><a href="https://ambrevar.xyz/emacs-eshell/">Pierre Neidhardt’s detailed blog post</a> on the pros and cons of Eshell.</li>
+</ul>
+        
+      

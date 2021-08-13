@@ -1,0 +1,175 @@
+
+         
+         <p>While iterating on my <a href="https://protesilaos.com/tempus-themes/">Tempus themes</a> project of
+accessible colour schemes for terminal emulators and text editors,
+I started conducting experiments for mixing colours.  The goal is to
+derive a median value from two others.  A couple of variants of red
+would produce a third one in between them.  Same with two greens,
+yellows, and so on for all basic sixteen colours that constitute each
+theme’s palette.</p>
+
+<h2>Scripting things with Bash</h2>
+
+<p>Part of my experimentation was trying to figure out a way to do things
+using the shell.  And I have found a way, only it is not
+straightforward…</p>
+
+<p>To start with, to derive the median colour from two others, we follow
+this formula:</p>
+
+<pre><code>blend = ( (R1 + R2) / 2 ) ( (G1 + G2) / 2 ) ( (B1 + B2) / 2 )
+</code></pre>
+
+<p>This assumes that the colour is defined in RGB, i.e as a mixture of red,
+green, and blue channels.  <em>But what if we have been using hexadecimal
+notation?</em>  A HEX colour might include letters, whereas an RGB one will
+always be described with integers.</p>
+
+<p>While there probably is a way to do arithmetic with base16 notation,
+I could not figure it out.  As such, I settled on the roundabout way of
+converting HEX to RGB, doing the arithmetic, and then turning the
+blended colour into HEX.</p>
+
+<p>To rebase a HEX to RGB (base16 to base10), we need to know how to break
+it up into its constituent red, green, blue channels.  So a hexadecimal
+value such as <code>202427</code> would be abstracted to <code>20 (red channel)</code>, <code>24
+(green channel)</code> <code>27 (blue channel)</code>.  Doing that in the shell:</p>
+
+<pre><code>#!/bin/bash
+
+col0=202427 # black variant
+
+echo "${col0:0:2}" # prints first pair of characters (red)
+echo "${col0:2:2}" # prints second pair of characters (green)
+echo "${col0:4:2}" # prints third pair of characters (blue)
+</code></pre>
+
+<p>This gives us:</p>
+
+<pre><code>20
+24
+27
+</code></pre>
+
+<p>Now we need to convert each channel to decimal notation, which is what
+is used for RGB.  Instead of doing the mathematics, we can use the
+<code>printf</code> built-in mechanism for converting base16 to base10.  This is
+done with the <code>%d</code> specifier.  To denote the presence of a hexadecimal
+number, we prepend <code>0x</code>.  More concretely, we use the substring
+extraction we saw earlier to operate on each of the colour’s three
+channels:</p>
+
+<pre><code>printf "%d,%d,%d" 0x${col0:0:2} 0x${col0:2:2} 0x${col0:4:2}
+</code></pre>
+
+<p>This command takes <code>0x20</code>, <code>0x24</code>, <code>0x27</code> in sequence and prints them in
+decimal notation as R,G,B.  Let us put it all together and see what we
+get, while also introducing our other shade of black:</p>
+
+<pre><code>col0=202427 # black variant
+col8=292b35 # bright black variant
+
+col0rgb=$(printf "%d,%d,%d" 0x${col0:0:2} 0x${col0:2:2} 0x${col0:4:2})
+col8rgb=$(printf "%d,%d,%d" 0x${col8:0:2} 0x${col8:2:2} 0x${col8:4:2})
+
+echo "$col0rgb"
+echo "$col8rgb"
+</code></pre>
+
+<p>Our new RGB colour is <code>32,36,39</code>.  Doing the same on the bright black
+variant <code>292b35</code>, will give us <code>41,43,53</code>.</p>
+
+<p>Notice the presence of commas.  Without them they would be not be valid
+RGB colours.  However, for this particular task what we want is to
+ultimately blend the two and get a HEX out of them.  No commas then:</p>
+
+<pre><code>col0rgbalt=$(printf "%d%d%d" 0x${col0:0:2} 0x${col0:2:2} 0x${col0:4:2})
+col8rgbalt=$(printf "%d%d%d" 0x${col8:0:2} 0x${col8:2:2} 0x${col8:4:2})
+</code></pre>
+
+<p>With that done, here comes the ugly part of using the formula that
+derives the median value between the two.  The code we will be using
+looks like this:</p>
+
+<pre><code>printf "%d" "$(( (${col0rgbalt:0:2} + ${col8rgbalt:0:2}) / 2 ))"
+</code></pre>
+
+<p>We need to do this for each of the RGB channels.  So thrice:</p>
+
+<pre><code>printf "%d%d%d" "$(( (${col0rgbalt:0:2} + ${col8rgbalt:0:2}) / 2 ))" "$(( (${col0rgbalt:2:2} + ${col8rgbalt:2:2}) / 2 ))" "$(( (${col0rgbalt:4:2} + ${col8rgbalt:4:2}) / 2 ))"
+
+col08rgb=$(printf "%d%d%d" "$(( (${col0rgbalt:0:2} + ${col8rgbalt:0:2}) / 2 ))" "$(( (${col0rgbalt:2:2} + ${col8rgbalt:2:2}) / 2 ))" "$(( (${col0rgbalt:4:2} + ${col8rgbalt:4:2}) / 2 ))")
+
+echo "$col08rgb"
+</code></pre>
+
+<p>This gives us <code>363946</code>, which in valid RGB would be <code>36,39,46</code>.  As we
+can tell, it is positioned in between <code>32,36,39</code> and <code>41,43,53</code>.  Great,
+almost done!  Now convert that to base16, this time using the <code>%x</code>
+specifier, while omitting the <code>0x</code> notation:</p>
+
+<pre><code>printf "%x%x%x" ${col08rgb:0:2} ${col08rgb:2:2} ${col08rgb:4:2}
+</code></pre>
+
+<p>Our new colour is <code>24272e</code>, which once again is between <code>202427</code> and
+<code>282b35</code>.  Perfect!</p>
+
+<h2>Moving forward with our newfound knowledge</h2>
+
+<p>The Tempus Themes use a 16 colour palette that represents the standard
+one you would find on any GNU/Linux terminal emulator.  The colours are,
+in order:</p>
+
+<ul>
+  <li>black, red, green, yellow, blue, magenta, cyan, white</li>
+  <li>bright {black, red, green, yellow, blue, magenta, cyan, white}</li>
+</ul>
+
+<p>These are denoted numerically as:</p>
+
+<ul>
+  <li>0, 1, 2, 3, 4, 5, 6, 7</li>
+  <li>8, 9, 10, 11, 12, 13, 14, 15</li>
+</ul>
+
+<p>By creating a blend out of each regular and bright pair, we get an extra
+eight colours, bringing the total count to twenty four.  <em>Should we
+commit to that path though?</em></p>
+
+<p>I remain undecided.  Part of developing the Tempus Themes is to preserve
+a certain contrast ratio that conforms <strong>at minimum</strong> with the WCAG AA
+accessibility standard.  This is the scientific guide to choosing
+colours.  However, a theme is also a work of art.  It needs to have
+a certain aesthetic to it, a recognisable look and feel.  Deriving
+colours programmatically can detract from the appeal of the end product.
+We do not want that, as fascinating as the procedure may be.</p>
+
+<p>So far, the exception to this hesitation of mine is to allow
+programmatic blending only from the background values of each theme.
+Basically a third colour that is designated internally as the “dimmed”
+background.</p>
+
+<p>I still wish to make design decisions myself, while letting the computer
+handle the repetitive tasks.</p>
+
+<h2>The Tempus Themes are under active development</h2>
+
+<p>If you have not checked my project in a while, please have another look
+at the <a href="https://gitlab.com/protesilaos/tempus-themes">main git repo</a>
+(each app-specific implementation has its own dedicated repository, see
+links in the README).</p>
+
+<p>The latest template I added concerns the GTK4 Source View widget.
+Basically, this means that you can use the Tempus Themes in GNOME
+Builder.</p>
+
+<p>Besides, these themes are also deeply incorporated in <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a>.  I use them daily
+and always try to improve them further and/or port them to more
+applications (notwithstanding the comprehensive list currently on
+offer).</p>
+
+<p>For the sake of completeness, the colours used in the examples above,
+are <code>col0</code> and <code>col8</code> from <a href="https://protesilaos.com/tempus-winter/">Tempus Winter</a>.</p>
+        
+      

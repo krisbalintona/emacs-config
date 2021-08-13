@@ -1,0 +1,15 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=oHfAht9uTx8">https://www.youtube.com/watch?v=oHfAht9uTx8</a></p>
+         
+         <p>Elfeed is a third-party standalone feed reader (RSS/Atom) for Emacs.  It
+ships with good defaults and is well designed overall.</p>
+
+<p>In this video I describe the main principles of Elfeed’s interaction
+model, specifically its expressive and efficient tagging system.  I also
+demonstrate the custom extensions I have written for it, which leverage
+other parts of the Emacs ecosystem.</p>
+
+<p>Everything is in <a href="https://protesilaos.com/dotemacs">my dotemacs</a>.</p>
+        
+      

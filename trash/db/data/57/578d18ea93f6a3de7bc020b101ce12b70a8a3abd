@@ -1,0 +1,85 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=S4D9KaW3ERw">https://www.youtube.com/watch?v=S4D9KaW3ERw</a></p>
+         
+         <p>In this screen cast I showcase some of the features of BASH for
+manipulating variables, aka “parameters”.  Parameter expansion is a very
+powerful feature.  Mastering it should greatly improve your shell
+scripting skills (see the <a href="https://www.gnu.org/software/bash/manual/">GNU Bash
+manual</a>).</p>
+
+<p>Started applying this knowledge to the scripts that are distributed with
+<a href="https://gitlab.com/protesilaos.com/dotfiles">my dotfiles</a>, in
+preparation of the next beta version of “Prot’s Dots For Debian” (which
+I introduced in <a href="https://protesilaos.com/codelog/2019-04-28-beta-bspwm-pdfd/">the previous
+entry</a>).</p>
+
+<p>Below I include the code samples shown in this screen cast.</p>
+
+<hr />
+
+<p>First demo script:</p>
+
+<pre><code>#!/bin/bash
+
+name=protesilaos
+
+# Replace parameter with its value
+echo "$name"
+
+# Get parameter length
+echo "${#name}"
+
+# Extract substring ${parameter:offset:length}
+echo "${name:0:4}"
+
+# Capitalise first character
+echo "${name^}"
+
+# All majuscules
+echo "${name^^}"
+</code></pre>
+
+<p>Second example:</p>
+
+<pre><code>#!/bin/bash
+
+name=PROTESILAOS
+
+# First character is lower case
+echo "${name,}"
+
+# All miniscules
+echo "${name,,}"
+
+# Use default value if parameter is unset/null
+unset name
+echo "$name"
+echo "${name:-Protesilaos}"
+echo "${name:-$USER}"
+</code></pre>
+
+<p>Third sample:</p>
+
+<pre><code>#!/bin/bash
+
+freedom='GNU Not UNIX ; GNU plus Linux'
+
+# Replace first occurence of pattern with string
+echo "${freedom/GNU/Gahnoo}"
+
+# Replace all matches of pattern with string
+echo "${freedom//GNU/Gahnoo}"
+
+# Remove first match of pattern
+echo "${freedom/* ; /}"
+
+freedom='GNU Not UNIX ; GNU is Not Unix ; Gahnoo slash Linaks ; GNU/Linux'
+
+echo "$freedom"
+
+# Remove all occurences of pattern
+echo "${freedom//* ; /}"
+</code></pre>
+        
+      

@@ -1,0 +1,3372 @@
+<h2>Prior notice to using PDFD</h2>
+
+<p>The purpose of <em>Prot’s Dots For Debian</em> (PDFD) is to guide you through
+the process of replicating my custom desktop session on Debian 10
+‘buster’.</p>
+
+<p>I have tried every step in this guide on real hardware, my Lenovo
+ThinkPad X220.  The initial installation was done on Saturday 12 January
+2019 using the latest netinstall iso for Debian 9 ‘stretch’ and retried
+on 2019-04-17 using the same method.</p>
+
+<h3>COPYING</h3>
+
+<p>All code by Protesilaos Stavrou presented herein is available under the
+terms of the GNU General Public License Version 3 or later.</p>
+
+<p>The non-code parts of this book by Protesilaos Stavrou are distributed
+under the terms of the Creative Commons Attribution-ShareAlike 4.0
+International License.</p>
+
+<p>The canonical link to “Prot’s Dots for Debian” is an extension of my
+website: https://protesilaos.com/pdfd</p>
+
+<h3>DISCLAIMERS</h3>
+
+<p>The following disclaimers apply to this work.</p>
+
+<p>Excerpt from the GPLv3:</p>
+
+<blockquote>
+  <p>THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT
+WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE
+OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU
+ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</p>
+</blockquote>
+
+<p>And this is from the CC BY-SA 4.0 License:</p>
+
+<blockquote>
+  <p>a. Unless otherwise separately undertaken by the Licensor, to the extent
+possible, the Licensor offers the Licensed Material as-is and
+as-available, and makes no representations or warranties of any kind
+concerning the Licensed Material, whether express, implied, statutory,
+or other. This includes, without limitation, warranties of title,
+merchantability, fitness for a particular purpose, non-infringement,
+absence of latent or other defects, accuracy, or the presence or absence
+of errors, whether or not known or discoverable. Where disclaimers of
+warranties are not allowed in full or in part, this disclaimer may not
+apply to You.
+b. To the extent possible, in no event will the Licensor be liable to
+You on any legal theory (including, without limitation, negligence) or
+otherwise for any direct, special, indirect, incidental, consequential,
+punitive, exemplary, or other losses, costs, expenses, or damages
+arising out of this Public License or use of the Licensed Material, even
+if the Licensor has been advised of the possibility of such losses,
+costs, expenses, or damages. Where a limitation of liability is not
+allowed in full or in part, this limitation may not apply to You.
+c. The disclaimer of warranties and limitation of liability provided
+above shall be interpreted in a manner that, to the extent possible,
+most closely approximates an absolute disclaimer and waiver of all
+liability.</p>
+</blockquote>
+
+<h2>Introduction to Prot’s Dots for Debian</h2>
+
+<p>The purpose of this book is to help you reproduce my custom desktop
+session on Debian 10 ‘Buster’ (the current Debian “stable”).  The set of
+configurations that make up my system shall hereinafter be referred to
+as “my dotfiles” or other notions that are described in context.</p>
+
+<p>My dotfiles apply to a BSPWM session.  That tiling window manager is the
+core package.  Complementing it, are programs that draw a system panel
+at the top of the viewport, display desktop notifications, set the
+wallpaper, perform live theme changes to the terminals and graphical
+applications, and the like.  The idea is to have a lightweight yet
+perfectly functional desktop environment by combining small, specialised
+tools.</p>
+
+<p>A short description of my custom desktop session:</p>
+
+<ul>
+  <li>Debian because I prefer longer-term predictability over novelty.</li>
+  <li><code>bspwm</code> for fine-grained window management, with my custom scripts for
+added features.</li>
+  <li><code>tmux</code> to make the terminal power user even more powerful (no
+plugins).</li>
+  <li><code>vim</code> because I need an efficient text editor (no plugins).</li>
+  <li>True minimalism: no complex status lines, no fancy prompts, no
+decorative elements that add no functionality whatsoever.</li>
+  <li>Carefully-defined font configurations to complement my hardware and
+satisfy my aesthetic preferences.</li>
+  <li>Full integration of my Tempus themes for considerate colour contrast
+and easy live theme switching for the entire session.</li>
+  <li>The superb Maté desktop environment as a fallback option and provider
+of some important programs and system-wide base configurations.</li>
+</ul>
+
+<h3>A book, not an install.sh</h3>
+
+<p>Some of PDFD’s chapters or sections thereof can, at times, be read as a shell
+script with extensive inline documentation.  While I could have provided a
+script to automate the installation process, along with some basic guidelines
+on how to use it, I have opted to use this format instead.  It is to ensure
+that no random user attempts to install something they do not fully understand,
+both in terms of its content and scope.</p>
+
+<p>A book makes the installation process fully transparent to the user.  You can
+read what I am doing, inspect the relevant files and, if needed, make changes
+on the spot.</p>
+
+<p>By following the steps in <em>Prot’s Dots For Debian</em> (PDFD), you will develop an
+intimate understanding of my dotfiles, which will help you further customise
+the environment to your liking.</p>
+
+<p>This is important and ultimately good for all parties involved, due to
+the highly personalised nature of dotfile management.</p>
+
+<h3>Prepare to adapt things to your liking</h3>
+
+<p>Please understand that my dotfiles have been designed with my use case
+in mind.  There are bits and pieces you might find surplus to your
+requirements or outright unsuitable to your needs.  Hopefully this
+manual will help you identify them at an early stage and address them
+accordingly.</p>
+
+<p>By sharing my work, I do not purport to be an expert on the matter.
+I am just a regular user who has spent enough time documenting their
+practices.  If you happen to identify areas in my setup that could be
+improved or altogether reworked, your contribution shall be taken into
+consideration.</p>
+
+<h3>Not for hipsters</h3>
+
+<p>The target audience for this book is the <strong>experienced GNU/Linux user
+who wants to run Debian 10 ‘buster’ as a desktop OS</strong>.  PDFD may also
+appeal to existing BSPWM users of other distros who would like to test
+my custom desktop session in a virtual setup or cherry-pick features for
+use in their setup.  Newbies are welcome as well, provided they are
+willing to learn and understand who this book is for.</p>
+
+<p>You do not need to be a programmer to follow the instructions in PDFD—I
+am not one either.  Though it is recommended you have at least some
+knowledge of shell scripting: it is required to make certain adaptations
+to programs such as the one that controls the system panel.</p>
+
+<h3>Why Debian and not some rolling-release distro?</h3>
+
+<p>Exactly because I do not need the latest version of every package ever
+released.  I was an Arch Linux user for a good amount of time.  While
+I did learn a lot and consider that distro my second favourite, I did
+not find any compelling reason to cling on to the rolling-release model
+for the entire operating system.</p>
+
+<p>Perhaps paradoxically, Debian is exciting because it is predictable.  It
+takes a very conservative stance towards introducing breaking changes.
+It does not chase new technology trends for innovation’s sake.  Debian
+is reliable.  Simple and super effective.</p>
+
+<p>This is precisely what we need for the custom desktop session: a stable
+OS that we can expect to remain constant for at least another couple of
+years.  Else we are trapped in a state of flux where we need to track
+every changelog out there in order to keep our custom desktop
+environment in good working condition.</p>
+
+<p>If I were using a rolling-release distro, I would not be writing this
+book.  Things change all the time and it is impossible to maintain
+documentation such as this: I do not want this to become some full-time
+occupation.</p>
+
+<p>Here is a rule that is based on my experience: in an ever-changing OS,
+the broader the scope of customisations, the greater the chance of
+experiencing breakage or minor annoyances that require manual
+interventions.</p>
+
+<p>For someone like myself, who tends to document the various types of
+functionality that affect my setup, with this book being a prime
+example, it simply is too much trouble to constantly update everything
+for whatever marginal benefit there is to be gained from a fresh package
+version.</p>
+
+<p>Speaking of “fresh”, we should avoid thinking of packages in terms of
+groceries.  That is a pernicious metaphor.  Programs remain relevant for
+as long as they work and receive security fixes (where appropriate).
+The criterion for evaluating a program is not its recency or the hype
+around it, but its serviceability.  <em>“If it ain’t broke, don’t fix it”</em>.
+Programs that fall in that category do not become “stale” just because
+their last upstream release was a few months or years ago.</p>
+
+<p>Stability means predictability and peace-of-mind.  This is the constant
+against which one may develop habits to meet their computing
+requirements.  Having a stable basis means that you ultimately treat
+customisations as a means to the end of a more efficient workflow.  You
+do not care about incessant “ricing” per se; constantly tweaking things
+for the sake of fitting in with the cool kids.  You are interested in
+a custom desktop session that behaves the way you intend.  Every
+customisation, every minute refinement, every careful tweak, serves the
+purpose of minimising perceived friction, of shortening the distance
+between your mind and the machine.  Nothing more, nothing less.</p>
+
+<h2>Installing Debian 10</h2>
+
+<p>To get Debian 10 ‘buster’ on our machine, we are going to use one of the
+netinstall iso images.  The official way is to follow the standard
+method, which includes only free/libre software, or to use the
+unconventional method which comes preconfigured with the <code>contrib</code> and
+<code>non-free</code> package repos.  The latter is intended for awkward hardware
+setups that absolutely require certain non-free packages (firmware
+drivers) to run the installer.  Here are the corresponding links:</p>
+
+<ul>
+  <li><a href="https://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/">Debian 10 netinstall</a></li>
+  <li><a href="https://cdimage.debian.org/cdimage/unofficial/non-free/images-including-firmware/current/amd64/iso-cd/">Debian 10 netinstall (non-free firmware)</a></li>
+</ul>
+
+<h3>Short note about free software</h3>
+
+<p>Debian refers to the second iso as “unofficial”.  Do not let that
+mislead you.  It is still provided by the team responsible for the
+installer images.  In this context, “unofficial” means that it does not
+fully conform with Debian’s Free Software Guidelines.</p>
+
+<p>While understandable, this is a rather unconvincing attempt to maintain
+the line that Debian only ships with free/libre software.  I can, thus,
+see why the Free Software Foundation or the GNU project<sup id="fnref:GNUViewDistros" role="doc-noteref"><a href="#fn:GNUViewDistros" class="footnote" rel="footnote">1</a></sup>
+do not include Debian in their list of approved distributions that do
+not sacrifice software freedom for convenience.<sup id="fnref:FSFDistros" role="doc-noteref"><a href="#fn:FSFDistros" class="footnote" rel="footnote">2</a></sup></p>
+
+<p>Personally, I use Debian with a single non-free package that is
+necessary to enable my Wi-Fi card.  Otherwise I could not run a free OS
+<em>at all</em>.</p>
+
+<p>If you start with the unofficial method, you can still opt to run only
+free software by retroactively removing any “contrib” and “non-free”
+entries from the APT sources list.  System administration of this sort
+is outside the scope of PDFD.  I have, nonetheless, taken care to only
+recommend libre software in the pages of this book.</p>
+
+<h3>Writing the latest release iso</h3>
+
+<p>Politics aside, let us proceed with the installation.  You need to
+verify your iso with information provided by Debian (from the pages you
+get the iso from).  Once the checks are done, write the iso to a flash
+drive.  I usually follow these steps after I insert the medium and open
+a new terminal:</p>
+
+<pre><code># prints information about devices
+sudo fdisk -l
+
+# the flash drive I insterted is usually at /dev/sdb
+# unmount the flash drive
+umount /dev/sdb
+
+# write to it
+sudo dd if=/path/to/iso/file of=/dev/sdb
+
+# eject the flash drive
+sudo eject /dev/sdb
+</code></pre>
+
+<p><strong>Please be extemely careful with the above commands</strong>, especially when
+identifying the flash drive.  Pay attention to the output of <code>sudo fdisk
+-l</code> and make sure you correctly spot the writeable medium you intend to
+use.  Carelessness might result in data loss or other damages.</p>
+
+<h3>The installation process</h3>
+
+<p>Now on to get Debian on the machine.  Insert the flash drive and power
+on the computer.  You are given the choice of a simple graphical or
+textual interface, as well as advanced options.  If in doubt, go with
+the graphical option.  Once the installer starts, you will have to
+choose your language and keyboard settings, set your root user’s
+password, create a regular user, and the like.</p>
+
+<p>At some point in the installation process, you will be asked to select
+your major system components.  These include a Desktop Environment, an
+SSH server, a print server, and a web server.  I always keep the first
+option checked, then using the space key to toggle on/off I add MATE,
+SSH server, remove the print server, and keep the standard system
+utilities.</p>
+
+<p>The selection screen looks like this:</p>
+
+<pre><code>[x] Debian desktop environment
+[ ] ... GNOME
+[ ] ... Xfce
+[ ] ... KDE Plasma
+[ ] ... Cinnamon
+[x] ... MATE
+[ ] ... LXDE
+[ ] ... LXQt
+[ ] web server
+[ ] print server
+[x] SSH server
+[x] standard system utilities
+</code></pre>
+
+<p>You can omit the SSH server if you have no use for it.  Follow the
+remaining steps and after a while you will have successfully installed
+Debian on your machine.  Congratulations!</p>
+
+<p>Later in the book I explain why you should also choose MATE.  For the
+time being, let us proceed to the next chapter of actually installing
+the core packages and configuring things accordingly.</p>
+
+<h2>Installing the core packages</h2>
+
+<p>Boot up your newly-installed Debian 10 ‘buster’.  When you reach the
+display manager screen, enter your user credentials (user name and
+password).  This will put you in a default MATE session (pronounced
+<em>MA-te</em>, from <em>yerba maté</em>).  From here, we will be installing all the
+packages we need and doing the rest of the preparatory work.</p>
+
+<h3>Enable sudo</h3>
+
+<p>First things first: we need to grant superuser privileges to your user
+account.  This is necessary in order to use <code>sudo</code> with the various
+commands, rather than having to switch to the root user.</p>
+
+<p>Open a terminal.  For this initial step, you need to switch to the root
+account.</p>
+
+<pre><code>su -
+</code></pre>
+
+<p>While being root, make sure you update the package lists.  Then install
+Vim and the package that enables “sudo”.</p>
+
+<pre><code>apt update &amp;&amp; apt install vim sudo
+</code></pre>
+
+<p>Also install these core utilities, which are needed for getting and
+deploying my dotfiles.</p>
+
+<pre><code>apt install git stow
+</code></pre>
+
+<p>Once that is done, add your user account to the “sudo” group, replacing
+USER with your username.</p>
+
+<pre><code>adduser USER sudo
+</code></pre>
+
+<p>Reboot if you want to use the regular user, or continue as root.  For
+the sake of this manual, I assume you rebooted, logged back in to the
+default MATE session and are now prepared to run all commands from your
+regular user but with escalated privileges, prepending “sudo” to all
+relevant commands.</p>
+
+<h3>Getting BSPWM and related core components</h3>
+
+<p>We start by installing:</p>
+
+<ul>
+  <li>the window manager (<code>bspwm</code>) as the irreducible factor of my custom
+desktop session,</li>
+  <li>the hotkey daemon (<code>sxhkd</code>) for handling custom key bindings that
+control BSPWM and other programs,</li>
+  <li>the standard terminal emulator <code>xterm</code>,</li>
+  <li>the <code>suckless-tools</code>, which provide the simple screen locker (<code>slock</code>)
+and the dynamic menu (<code>dmenu</code>),</li>
+  <li>the program that manages the wallpaper and can display images (<code>feh</code>),</li>
+  <li>the display compositor (<code>compton</code>) for smoother transitions and no
+screen-tearing,</li>
+  <li>the notification daemon and concomitant library for sending desktop
+notifications (<code>dunst</code> and <code>libnotify-bin</code> respectively),</li>
+  <li>the system bar (<code>lemonbar</code>) that is used by one of my scripts to draw
+a bespoke panel on the top of the viewport as well as its dependencies
+(<code>xdo</code>, <code>acpi</code>),</li>
+  <li>and the secrets’ manager (<code>gnome-keyring</code>).</li>
+</ul>
+
+<p>Run this:</p>
+
+<pre><code>sudo apt install bspwm sxhkd xterm suckless-tools feh compton dunst libnotify-bin lemonbar xdo acpi gnome-keyring
+</code></pre>
+
+<p>Note that <code>slock</code> may be unintuitive at first, because it just turns the
+screen dark without any further notice.  You unlock it by typing in your
+pass word (confirming with “Return”).  The screen will keep switching to
+a blue colour as you type.  I am aware this is not the most
+user-friendly design, at least not for first time users, but I decided
+to keep it nonetheless: once you know about it, it works just fine.  If
+you find yourself disliking this tool, consider installing Debian
+package <code>i3lock</code>: it is a bit more intuitive and configurable (then you
+need to apply changes to my script <code>poweroptionsmenu</code>—refer to the
+chapter about my local ~/bin).</p>
+
+<p>To make sure <code>dunst</code> works unencumbered, we better remove MATE’s own
+notification daemon:</p>
+
+<pre><code>sudo apt remove mate-notification-daemon
+</code></pre>
+
+<p><em>For more on this set of packages, see the chapter about the basics of my
+BSPWM as well as the one about the top panel.</em></p>
+
+<h3>GTK icon theme</h3>
+
+<p>Now we get the GTK icon theme.  I choose Papirus because it is very well
+crafted and actively developed.</p>
+
+<pre><code>sudo apt install papirus-icon-theme
+</code></pre>
+
+<h3>Fixed and proportional fonts</h3>
+
+<p>We need outline/proportional typefaces for the various UI components and
+graphical applications, plus a fixed-size (bitmap) typeface for use in
+the system panel.</p>
+
+<p>The outline fonts are:</p>
+
+<pre><code>sudo apt install fonts-firacode fonts-hack fonts-roboto fonts-dejavu fonts-dejavu-extra fonts-noto-color-emoji fonts-symbola
+</code></pre>
+
+<p>The bitmap font is Terminus.  This is optional, though highly
+recommended:</p>
+
+<pre><code>sudo apt install xfonts-terminus
+</code></pre>
+
+<p><em>The typographic considerations are discussed in the chapter about the
+fonts and their configs.</em></p>
+
+<h3>Terminal tools</h3>
+
+<p>My user session makes heavy use of a terminal multiplexer (<code>tmux</code>),
+while I occasionally need to use Vim’s external register or graphical
+application (<code>vim-gtk3</code>).</p>
+
+<pre><code>sudo apt install tmux vim-gtk3
+</code></pre>
+
+<p><em>The use of these tools is documented in the chapter about my Tmux and
+Vim combo.  Of relevance is the chapter about the default terminal
+setup.</em></p>
+
+<h3>General CLI tools</h3>
+
+<p>Then we need the RSS/Atom feed reader for the console (<code>newsboat</code>) and
+a simple utility to capture screenshots (<code>scrot</code>).</p>
+
+<pre><code>sudo apt install newsboat scrot
+</code></pre>
+
+<p>Are you using a laptop or a screen with built-in brightness controls?
+You need this:</p>
+
+<pre><code>sudo apt install xbacklight
+</code></pre>
+
+<h3>The music setup</h3>
+
+<p>For my music, I choose to use the Music Player Daemon and connect to it
+with a client program (<code>mpc</code> and/or <code>ncmpcpp</code>).  I also want MPD to
+expose itself to applications that implement the MPRIS protocol
+(<code>mpdris2</code> with <code>python-mutagen</code> for album covers), in order to be able
+to control it through other means than its own clients (<code>playerctl</code>). To
+this end, I install the following:</p>
+
+<pre><code>sudo apt install mpd mpc ncmpcpp mpdris2 python-mutagen playerctl
+</code></pre>
+
+<p><em>Detailed instructions about these are provided in the chapter about the
+Per-user MPD setup.</em></p>
+
+<h3>Extra packages for convenience and added functionality</h3>
+
+<p>I do not want my BSPWM session to be primitive.  I just want it to be
+configurable and catered to my needs, while being light on system
+resources.</p>
+
+<p>I therefore need a multimedia player that I can launch from the console,
+which also streams online content (<code>mpv</code> with <code>youtube-dl</code>), a tool that
+can edit/transform/convert images from the command line (<code>imagemagick</code>),
+a program to perform file transfers (<code>rsync</code>), a graphical frontend to
+my password manager (<code>qtpass</code>, which pulls in <code>pass</code>), a frontend for
+PulseAudio (<code>pavucontrol</code>), a very capable image viewer (<code>sxiv</code>), and
+a calculator for the console (<code>apcalc</code>—the executable is <code>calc</code>).</p>
+
+<pre><code>sudo apt install mpv youtube-dl imagemagick rsync qtpass pavucontrol sxiv apcalc
+</code></pre>
+
+<h3>Thunderbird setup (optional, but recommended)</h3>
+
+<p>In the same spirit, I use Thunderbird as my primary email client (I also
+use Mutt, which is not covered in this book due to its configuration
+being highly dependent on the user).  Thunderbird is a robust tool that
+can easily filter spam, handle my CalDAV and CardDAV accounts, and cope
+with large volumes of email traffic.  The following command will get you
+the email client, plus extensions for GPG encryption (<code>enigmail</code>) and
+calendaring (<code>lightning</code>).</p>
+
+<pre><code>sudo apt install thunderbird enigmail lightning
+</code></pre>
+
+<p>While still on the topic of Thunderbird, I also install the following
+package for handling {Cal,Card}DAV services.  I put it here on its own
+as you might have no need for it, unless your host also uses SOGo.</p>
+
+<pre><code>sudo apt install xul-ext-sogo-connector
+</code></pre>
+
+<p>For further language support, I also get these (the latter with
+extension <code>-el</code> is for the Greek language):</p>
+
+<pre><code>sudo apt install hunspell {a,hun}spell-el
+</code></pre>
+
+<h3>Firefox setup (optional, but recommended)</h3>
+
+<p>The Extended Support Release of Firefox (<code>firefox-esr</code>) is my web
+browser of choice.  This is shipped by Debian as the default option.
+Users normally install whatever web extensions they may need via the
+browser’s own interface.  However, I have found that I prefer to let
+<code>apt</code> handle things.  The following packages are sufficient for my
+use case:</p>
+
+<pre><code>sudo apt install webext-noscript webext-https-everywhere webext-ublock-origin webext-privacy-badger
+</code></pre>
+
+<p>These extensions are NoScript, HTTPS Everywhere, UBlock Origin, Privacy
+Badger.</p>
+
+<p>To make the browser better suited to my needs, I also disable the Pocket
+bloatware, from inside Firefox’s interface.</p>
+
+<ul>
+  <li>First type the address <code>about:config</code> and accept the warning message.</li>
+  <li>Then search for the entry <code>extensions.pocket.enabled</code>.</li>
+  <li>Double click to change it to false.</li>
+</ul>
+
+<p>Then we need to address an age-old bug that affects dark GTK themes
+where Firefox may display dark text on a dark action element, like
+a search box.</p>
+
+<ul>
+  <li>Visit <code>about:config</code>.</li>
+  <li>Do: left click on some empty space &gt; select New &gt; select String.</li>
+  <li>Add this: <code>widget.content.gtk-theme-override</code>.</li>
+  <li>Its value should be <code>Adwaita</code> (the default GTK light theme).</li>
+</ul>
+
+<h3>Optional packages</h3>
+
+<p>Sometimes I need to edit photographs (<code>darktable</code>), record audio
+(<code>audacity</code>), and use a different web browser (<code>epiphany-browser</code>).</p>
+
+<pre><code># other packages
+sudo apt install audacity darktable epiphany-browser
+</code></pre>
+
+<p>And here are some other console tools that might come in handy.  <code>vrms</code>
+displays information about non-free software on your system, while
+<code>neofetch</code> prints details about your machine and distro.</p>
+
+<pre><code>sudo apt install vrms neofetch
+</code></pre>
+
+<p>I just ran <code>vrms</code> and it tells me that I have 1 non-free package on my
+ThinkPad X220 out of a total of 1727.  ABSOLUTELY PROPRIETARY!  The
+offending package is <code>firmware-iwlwifi</code> for making Wi-Fi work, else
+I cannot access the Internet…</p>
+
+<h3>Optional: set up Flatpak with Flathub as its remote repo</h3>
+
+<p>I think that, when used in moderation and care, Flatpak is a compelling
+proposition for a stable OS like Debian.  Your system will remain rock
+solid, while the Flatpak’ed applications will use their latest version,
+while being confined to a sandboxed environment (in the near future
+a tool like <code>guix</code> may be the superior alternative).</p>
+
+<p>To get started, install the core package:</p>
+
+<pre><code>sudo apt install flatpak
+</code></pre>
+
+<p>Now add <a href="https://flathub.org">Flathub as a remote package repository</a>.
+Note that you can have multiple remote repos.  This is something that,
+in my opinion, distros should provide themselves (would much rather
+trust Debian’s curated list of <code>flatpak</code> packages, but I digress).</p>
+
+<pre><code>flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+</code></pre>
+
+<p>For the record, Flatpak needs a running settings daemon to known which
+theme to apply.  It is why I use the <code>mate-settings-daemon</code> in my BSPWM
+session (more on that in the chapter about the basics of BSPWM).</p>
+
+<p>Note that Flathub does not discriminate against non-free software.  If
+you care about freedom, exercise caution.  That granted, the only
+flatpaks I tend to use are libre:</p>
+
+<pre><code>flatpak install org.gnome.Podcasts org.gnome.clocks org.kde.kdenlive
+</code></pre>
+
+<h3>Next steps</h3>
+
+<p>We are done installing software.  Thanks for your patience!  Let us
+proceed to the next chapter where we actually get the dotfiles and stow
+them in place.</p>
+
+<p><em>Stay logged in to the current MATE session for the time being and keep
+reading</em>.</p>
+
+<h2>Set up my dotfiles and base configs</h2>
+
+<p>You have installed all the necessary packages and are now ready to fetch
+the configurations and code that makes up my custom desktop session.  It
+is assumed you are running the stock MATE session and have an open
+terminal.</p>
+
+<h3>The latest fixed release of my dots</h3>
+
+<p>The “Code for Prot’s Dots For Debian” (Code for PDFD == CPDFD) is the
+repository that contains the latest <em>fixed release</em> of my dotfiles.
+Such tagged releases are versions that I have tested extensively and am
+confident that others can use.  We shall be employing CPDFD, because my
+dotfiles’ <code>git</code> repository is an unstable environment, intended for
+running tests and developing new features that eventually end up in
+a fixed release.</p>
+
+<p>CPDFD is hosted on GitLab’s own instance (gitlab.com).  If you have an
+account there and have configured SSH access, you can clone the repo
+with the following command:</p>
+
+<pre><code>git clone git@gitlab.com:protesilaos/cpdfd ~/cpdfd
+</code></pre>
+
+<p>Otherwise, just clone over HTTPS:</p>
+
+<pre><code>git clone https://gitlab.com/protesilaos/cpdfd ~/cpdfd
+</code></pre>
+
+<p>Bear in mind that we clone the repo into the user’s home directory.  The
+rest of this manual will assume <code>~/cpdfd</code> as a constant.</p>
+
+<p><em>For the record, my dotfiles are available here:
+https://gitlab.com/protesilaos/dotfiles.</em></p>
+
+<h3>Primer to managing dotfiles with GNU Stow</h3>
+
+<p>You will not be copying anything manually.  That is a recipe for
+disaster!  Instead we leverage the power of symbolic links, aka
+“symlinks”, by using GNU Stow.</p>
+
+<p>The way Stow works is to read the filesystem paths defined by a target
+and create equivalent symlinks to them at the parent of the present
+working directory (or a given destination).  In practice, since <code>cpdfd</code>
+is in your home directory, all symlinks will be extensions of
+<code>/home/USERNAME/</code>, else the <code>~</code> path.</p>
+
+<p>Let us take a closer look at what it means to give <code>stow</code> a target.  In
+my dotfiles, I have a directory called “vim”.  Its structure looks like
+this:</p>
+
+<pre><code>~/cpdfd $ tree -aF vim
+vim
+├── .vim/
+│   ├── colors/
+│   │   ├── tempus_autumn.vim
+│   │   ├── tempus_classic.vim
+│   │   ├── tempus_dawn.vim
+│   │   ├── tempus_day.vim
+│   │   ├── tempus_dusk.vim
+│   │   ├── tempus_fugit.vim
+│   │   ├── tempus_future.vim
+│   │   ├── tempus_night.vim
+│   │   ├── tempus_past.vim
+│   │   ├── tempus_rift.vim
+│   │   ├── tempus_spring.vim
+│   │   ├── tempus_summer.vim
+│   │   ├── tempus_tempest.vim
+│   │   ├── tempus_totus.vim
+│   │   ├── tempus_warp.vim
+│   │   └── tempus_winter.vim
+│   └── spell/
+│       ├── el.utf-8.spl
+│       ├── el.utf-8.sug
+│       ├── en.utf-8.add
+│       └── en.utf-8.add.spl
+└── .vimrc
+
+3 directories, 21 files
+</code></pre>
+
+<p>It includes a <code>.vimrc</code> file and a <code>.vim</code> directory with more content.
+So if you run <code>stow vim</code> from within <code>~/cpdfd</code> all those paths will be
+added to your home directory as symlinks.  Here I also add the <code>-v</code>
+option for a verbose output:</p>
+
+<pre><code>~/cpdfd $ stow -v vim
+LINK: .vim =&gt; cpdfd/vim/.vim
+LINK: .vimrc =&gt; cpdfd/vim/.vimrc
+</code></pre>
+
+<p>This means:</p>
+
+<ul>
+  <li><code>~/.vim</code> links to <code>~/cpdfd/vim/.vim</code>.</li>
+  <li><code>~/.vimrc</code> links to <code>~/cpdfd/vim/.vimrc</code>.</li>
+</ul>
+
+<p>The contents of <code>.vim</code> are accordingly expanded into:</p>
+
+<pre><code>~/.vim/colors
+~/.vim/colors/tempus_autumn.vim
+~/.vim/colors/tempus_classic.vim
+~/.vim/colors/tempus_dawn.vim
+~/.vim/colors/tempus_day.vim
+~/.vim/colors/tempus_dusk.vim
+~/.vim/colors/tempus_fugit.vim
+~/.vim/colors/tempus_future.vim
+~/.vim/colors/tempus_night.vim
+~/.vim/colors/tempus_past.vim
+~/.vim/colors/tempus_rift.vim
+~/.vim/colors/tempus_spring.vim
+~/.vim/colors/tempus_summer.vim
+~/.vim/colors/tempus_tempest.vim
+~/.vim/colors/tempus_totus.vim
+~/.vim/colors/tempus_warp.vim
+~/.vim/colors/tempus_winter.vim
+~/.vim/spell
+~/.vim/spell/el.utf-8.spl
+~/.vim/spell/el.utf-8.sug
+~/.vim/spell/en.utf-8.add
+~/.vim/spell/en.utf-8.add.spl
+</code></pre>
+
+<p>From now on, we will be referring to the immediate subdirectories of
+<code>~/cpdfd</code> as “Stow Packages”, as per <code>man stow</code>.</p>
+
+<p>Using GNU Stow is essential because many of my Stow Packages contain
+somewhat complex structures such as the one shown above.  Plus, keeping
+everything symlinked provides the benefit of controlling things with
+<code>git</code>.  If you need to make changes or pull my latest fixed release, you
+will be able to do so centrally at <code>~/cpdfd</code>.</p>
+
+<h3>About my Stow packages</h3>
+
+<p>Switch to my dotfiles:</p>
+
+<pre><code>cd ~/cpdfd
+</code></pre>
+
+<p>Now list only the directories that are relevant for <code>stow</code> (they are always
+written in lower case letters):</p>
+
+<pre><code>~/cpdfd $ ls --ignore='[A-Z]*'
+bin  bspwm  colours  compton  dunst  fontconfig  gtk  keyring  music  newsboat  shell  tmux  vim  xterm
+</code></pre>
+
+<p>Note though, that the directories that are named “NO-STOW-<name>" still
+contain useful configs.  However, they need to be manually adapted to
+each use case.</name></p>
+
+<p>Target them all at once (we pass the <code>-v</code> flag so that you see where
+everything is linked to—though you can always just browse through my
+dotfiles’ contents):</p>
+
+<pre><code>stow -v bin bspwm colours compton dunst fontconfig gtk keyring music newsboat shell tmux vim xterm
+</code></pre>
+
+<p>If Stow throws and error and complains that some files already exist,
+you must delete them, rename them, or otherwise move them to another
+location.  The common offenders are the default <code>~/.bashrc</code> and
+<code>~/.profile</code> which will block the Stow package called “shell”.</p>
+
+<p><strong>The rest of this book assumes that you have used GNU Stow on all the
+appropriate packages, otherwise things will not work as intended.</strong></p>
+
+<p>Now a few words about each Stow package:</p>
+
+<ul>
+  <li><code>bin</code> contains my custom scripts.  Some of these are an integral part
+of my custom desktop session.  This topic is covered in the chapter
+about my local ~/bin.</li>
+  <li><code>bspwm</code> includes the configuration files for the window manager
+(BSPWM) and the hotkey daemon (SXHKD).  The former is where we define
+settings such as the width of the border that is drawn around windows,
+the ratio at which windows are split, and the like.  The hotkey daemon
+stores all the custom key bindings we use to control the session.  For
+more, read the chapter about the basics of my BSPWM.</li>
+  <li><code>colours</code> is where my Tempus themes for the shell and X resources are
+located.  These files are used by various scripts of mine and should
+never be edited manually.  For more, read the chapter about the Tempus
+themes.</li>
+  <li><code>compton</code> refers to the display compositor and has the relevant config
+file.  We use this to avoid screen tearing, add some subtle shadows
+around windows and enable somewhat smoother transitions.</li>
+  <li><code>dunst</code> includes configurations for the daemon that displays desktop
+notifications.  These control the look and feel of the program.</li>
+  <li><code>fontconfig</code> includes all of my custom font configurations.  For the
+specifics, refer to the chapter about fonts.</li>
+  <li><code>gtk</code> defines the settings for the graphical toolkit.  It also adds
+ports of the Tempus Themes for the GTK3 Source View widget (used by
+text editors such as Gedit, Pluma, Mousepad) as well as the GTK4
+equivalent (used by GNOME Builder).</li>
+  <li><code>keyring</code> contains the files necessary for autostarting the GNOME
+Keyring, the tool that stores passwords and secrets.  You can use this
+to store access to SSH keys and the like.</li>
+  <li><code>music</code> refers to the configuration files for the Music Player Daemon
+and its ncmpcpp client.  Please note that you need to read the chapter
+about the music setup in order to make this work properly.</li>
+  <li><code>newsboat</code> stores the files needed by the RSS/Atom reader of the same
+name.  In order to use this program, you need to add some URLs that
+point to valid feeds.  Read the chapter about Newsboat.</li>
+  <li><code>shell</code> defines my Bash-related configurations, including aliases for
+common commands, the command line prompt, and various useful tweaks.
+Read the chapter about my shell setup.</li>
+  <li><code>tmux</code> is about the terminal multiplexer used in my default terminal.
+Details are included in the chapter about my Tmux and Vim
+configurations.</li>
+  <li><code>vim</code> is my editor of choice, which I use without any plugins or
+whimsical tweaks. As with the above Stow target, refer to the chapter
+about Tmux and Vim.</li>
+  <li><code>xterm</code> contains all the necessary files for configuring the terminal
+emulator according to my preference.</li>
+</ul>
+
+<h3>Ready to go!</h3>
+
+<p>You are now ready to log in to BSPWM.  Just to be sure, reboot your
+system.  When you reach the login screen, look for the drop-down menu on
+the top-right corner of the screen, where desktop sessions are listed.
+Select <code>bspwm</code> and then proceed to add your username and password.</p>
+
+<p><em>But before you actually log in, read the following chapter about the
+basics of my BSPWM, how to control it and move around, and the like</em>.</p>
+
+<h2>Basics of my BSPWM</h2>
+
+<p>You used GNU Stow to place all my configurations in the right filesystem
+path and are now eager to start using the custom desktop session.  Just
+hold on a little longer, while you read through this chapter.  The rest
+of this book is mostly recommended reading but not absolutely essential.</p>
+
+<p>Here we will inspect the underlying configurations and core files that
+control the Binary Space Partitioning Window Manager.</p>
+
+<pre><code>~/cpdfd $ tree -aF bspwm/
+bspwm
+└── .config/
+	├── bspwm/
+	│   └── bspwmrc*
+	└── sxhkd/
+		├── cheatsheet_sxhkdrc.txt
+		├── sxhkdrc
+		└── sxhkdrc_bspc
+
+3 directories, 4 files
+</code></pre>
+
+<h3>Overview of bspwmrc</h3>
+
+<p>The nice thing about <code>bspwmrc</code> is that it is an executable shell script.
+It is thus possible to add conditional logic and other aspects of shell
+scripting in order to exercise a more fine-grained control over the
+desktop session.</p>
+
+<p>Each setting is a <code>bspc</code> command that can be run in a terminal at any
+moment (<code>bspwmrc</code> <em>is a shell script</em>).  This is quite convenient: just
+execute the command to get an idea of what it does.  The options are
+descriptive enough to offer a clear idea of what they pertain to.  Here
+is a snippet of code:</p>
+
+<pre><code>bspc config border_width 2       # outer border around nodes/windows
+bspc config window_gap 4         # empty space between nodes
+bspc config split_ratio 0.50     # the ratio of new:existing node
+</code></pre>
+
+<p>The file is divided in three sections, the description notwithstanding:</p>
+
+<ol>
+  <li>Visual options for the window manager.</li>
+  <li>Autostart programs at BSPWM launch.</li>
+  <li>Per-host configurations.</li>
+</ol>
+
+<h3>1. Visual options</h3>
+
+<p>These define such things as the border that is drawn around windows, or
+the gap between them.  They also govern the colours that are applied to
+the various states of the window border.</p>
+
+<p>The colours are taken from my Tempus themes collection.  The theme that
+is defined as the current default is Tempus Classic, which features warm
+hues on a dark background (the Tempus themes apply to the entire
+environment—see the chapter on the Tempus themes).</p>
+
+<p>I will let you read the file for the specifics.  Detailed comments are
+provided therein.  Allow me to highlight a very opinionated setting that
+I have and which might be unsuitable for your use-case:</p>
+
+<pre><code>bspc config ignore_ewmh_focus true
+</code></pre>
+
+<p>This prevents applications from stealing focus.  Set it to <code>false</code> if it
+is causing you trouble.  Personally, I dislike focus stealing.  It is
+very intrusive and can disrupt my rhythm.  One common scenario where
+I do not want focus stealing is while running <code>newsboat</code>: I go through
+the feed list opening all interesting links in browser tabs (or use
+<code>mpv</code> in the console for multimedia).  Once I am done, I close
+<code>newsboat</code>: no need to go back and forth between it and whatever program
+steals its focus each time I try to open a new item in the background.</p>
+
+<p>Another thing to bear in mind concerning this section is the invocation
+of my <code>bspwm_external_rules</code> script.  “External rules” is the set of
+conditions that the window manager evaluates in order to treat certain
+windows accordingly.  For example, when should a window be spawned in
+“floating” mode rather than the standard tiling one.  My external rules
+contain some more advanced tweaks that cover <em>manual tiling operations</em>
+that are discussed in further detail in the chapter about the advanced
+features of my BSPWM session.</p>
+
+<h3>2. Autostart</h3>
+
+<p>This section of the <code>bspwmrc</code> is where we instruct the window manager to
+run the programs that are essential to the desktop session.  The most
+important of them is <code>sxhkd</code>, which is the hotkey daemon that stores all
+our custom key bindings, including those that control BSPWM.</p>
+
+<p>Some notable points:</p>
+
+<ul>
+  <li>Each program leverages shell scripting, so as to be run only if it is
+indeed present on the system.</li>
+  <li><code>melonpanel</code> is the script that draws the panel at the top of the
+screen.  This is my implementation of <code>lemonbar</code> (read the chapter
+about the top panel).</li>
+  <li><code>compton</code> is a display compositor, which is configured to add subtle
+shadows around windows, and the like.  Its real necessity is to
+eliminate or at least minimise screen tearing.</li>
+  <li><code>feh</code> is the tool that sets the wallpaper.  I manually define
+a “{light,dark}.jpg” at <code>~/Pictures/theme</code>.  The last used file path
+is stored in <code>~/.fehbg</code> (you can set any jpg file as a wallpaper using
+a command like <code>feh --bg-fill /path/to/jpg</code>).</li>
+  <li><code>setxkbmap</code> sets the keyboard layout to US QWERTY and assigns the
+Compose key to the “Menu” button.  Note though that
+<code>own_script_current_keyboard_layout</code> is designed to switch layouts
+between the default and Greek.  To change this behaviour, you need to
+either edit <code>sxhkdrc</code> (find that script’s invocation) or adapt the
+script to your needs.  Else, just remove it.</li>
+  <li>A settings daemon is also launched.  If you have followed the
+instructions in this manual, it should be <code>mate-settings-daemon</code>.  We
+need such a tool for a couple of reasons: (1) to be able to change the
+theme of GTK applications, (2) to apply the same theme to Flatpak
+apps.  As a bonus, the settings daemon allows for live theme switching
+(as discussed in the chapter about the Tempus themes).</li>
+  <li>The last two programs that are launched are <code>mpd</code> and <code>mpDris2</code>.
+These are for our music player, as documented in the chapter about the
+music setup.</li>
+</ul>
+
+<h3>3. Per-host configurations</h3>
+
+<p>Here I execute a single command: <code>own_script_bspwm_per_host_configs</code>.
+This contains some additional <code>bspc</code> commands for defining the number of
+desktops (workspaces) and their mapping to one or two monitors.  The
+default is to set one desktop (because of the “dynamic desktops”
+functionality discussed in the chapter about the advanced features of my
+BSPWM session):</p>
+
+<pre><code>bspc monitor -d 1
+</code></pre>
+
+<p>While these settings can be stored in <code>bspwmrc</code> directly, I have decided
+to keep them in their own file. It is a prime example of an external
+script that configures BSPWM in a context-aware manner (and why having
+<code>bspwmrc</code> as an executable is a powerful feature).</p>
+
+<p>Bear in mind that <code>own_script_bspwm_per_host_configs</code> is documented
+extensively.  If, however, you have no use for such functionality, just
+define the workspaces directly inside BSPWM’s config file (see the <code>bspc
+monitor</code> command shown above).</p>
+
+<p>Also note that <code>own_script_laptop_dual_monitor</code> contains an <code>xrandr</code>
+command that slightly adjusts the brightness and gamma channels of the
+LVDS1 display.  I have sanitised this behaviour by running a check
+against the <code>HOSTNAME</code>, to make sure this only runs on <em>my laptop</em>.
+Still, it is important for you to know, as you might need to adapt
+things to your liking.</p>
+
+<h3>Outlines of SXHKD</h3>
+
+<p>There are two config files, <code>sxhkdrc</code> and <code>sxhkdrc_bspc</code>, which are
+meant to separate custom hotkeys between those that are specific to
+BSPWM actions and others that are WM-independent.</p>
+
+<p>Each of the SXHKD configs stores custom key bindings, internally known
+as “key chords”.  There are two main types of patterns: the direct and
+the chained.  To illustrate the difference:</p>
+
+<pre><code># key chord
+Super + &lt;key&gt;
+
+# key chord chain
+Super + &lt;key&gt; ; &lt;key&gt;
+</code></pre>
+
+<p>Sample of an actual direct key chord is:</p>
+
+<pre><code># Session management (log out, lock, switch users, reboot, shutdown).
+ctrl + alt + {Home,End,Delete}
+	poweroptionsmenu
+</code></pre>
+
+<p>This means that while holding down the <code>Ctrl</code> and <code>Alt</code> modifiers, you
+can press either of <code>Home</code>, <code>End</code>, <code>Delete</code> to invoke the command
+<code>poweroptionsmenu</code> (a script of mine for running common session
+management operations, such as logging out, locking the screen,
+rebooting…).</p>
+
+<p>Now this is a simplified version of an actual key chord chain:</p>
+
+<pre><code>super + e ; {p,t}
+	{ \
+	pkill -x melonpanel &amp;&amp; melonpanel, \
+	tempusmenu, \
+	}
+</code></pre>
+
+<p>This pattern means that you first hold down <code>Super</code>, then press <code>e</code>,
+then release <code>Super</code> and press any of the keys defined to the right of
+the semicolon <code>;</code> to invoke the corresponding command.  To that end,
+<code>super + e ; t</code> will execute <code>tempusmenu</code>.</p>
+
+<p>All key chord chains are designed with mnemonics in mind:</p>
+
+<ul>
+  <li>Everything that concerns the entire session, else “the environment”,
+starts with <code>super + e ; &lt;keys&gt;</code>.</li>
+  <li>All graphical applications are launched with <code>super + g ; &lt;keys&gt;</code>.</li>
+  <li>All the command line programs you would normally run in a terminal are
+<code>super + x ; &lt;keys&gt;</code>.</li>
+  <li>To assign flags to nodes, we have <code>super + a ; &lt;keys&gt;</code>.</li>
+  <li>For splits between nodes we go with <code>super + s ; &lt;keys&gt;</code>.</li>
+  <li>There are a few more that are documented in the chapter about the
+advanced features of my BSPWM session.  They are <code>super + n ; &lt;keys&gt;</code>
+for node-related operations (mostly manual tiling and receptacles),
+and <code>super + c : &lt;keys&gt;</code> (notice the colon sign) for the continuous
+input mode.</li>
+</ul>
+
+<p>A note on the selection of keys for launching common programs:</p>
+
+<pre><code># GUI
+super + g ; {1-3}
+	{ \
+	notify-send -i firefox "Run GUI program" "Launching Web Browser" &amp;&amp; firefox-esr, \
+	notify-send -i system-file-manager "Run GUI program" "Launching File Manager" &amp;&amp; caja, \
+	notify-send -i thunderbird "Run GUI program" "Launching Email Client" &amp;&amp; thunderbird \
+	}
+# CLI
+super + x ; {3-5}
+	mate-terminal --disable-factory -x {neomutt,newsboat,ncmpcpp}
+</code></pre>
+
+<p>You might wonder why I have not started numbering the CLIs from 1:
+because I want to remember that while launching programs I have the
+following mappings, regardless of whether they are graphical or textual:</p>
+
+<ul>
+  <li>1 == web browser</li>
+  <li>2 == file manager</li>
+  <li>3 == email client</li>
+  <li>4 == RSS/Atom reader</li>
+  <li>5 == music player</li>
+</ul>
+
+<p>I have not found any CLI tools that I consider good enough for web
+browsing and file management.  Given that most websites are not designed
+to work without javascript and CSS (or have poor HTML structure and/or
+typography), I believe there will be no truly decent console-based web
+browser.  As for a file manager, I used to use <code>ranger</code> but have
+realised that I have no real need for it: I mostly manipulate files the
+UNIX way.</p>
+
+<p>The point is that you might find this indexing useful in case you choose
+to add your own programs.</p>
+
+<h4>Cheat sheet with common key bindings</h4>
+
+<p>To help you get started, I provide the <code>cheatsheet_sxhkdrc.txt</code>.  It
+includes the most common key chords, accompanied by short descriptions
+or explanations.  Type <code>super + F1</code> or <code>super + Home</code>.  This will launch
+a floating terminal window that runs <code>less</code> on the cheat sheet.</p>
+
+<p>The first section of the cheat sheet covers the basics about key chords
+and key chord chains.  It also notes that the main motions that
+correspond to the four cardinal directions are the same as with Vim: h,
+j, k, l keys for left, down, up, right respectively.</p>
+
+<p>So go ahead and run <code>super + F1</code> once you log in to the BSPWM session
+for the first time.  Below I present the entirety of the cheat sheet,
+with a reminder that you must always look at the source code that
+I strive to keep clean, readable, and well-documented:</p>
+
+<pre><code>List of common key bindings.  All definitions are stored at:
+
+	~/.config/sxhkd/sxhkdrc
+	~/.config/sxhkd/sxhkdrc_bspc
+
+The latter is for definitions that control the window manager.  While
+the former has WM-independent keys.
+
+Last review 2019-07-01.
+
+Explanation of the basics
+=========================
+
+The Super key, aka "mod4", is the one that most keyboards mark with the
+Windows logo.  While the key "Return" is also known as "Enter".
+
+Motions are the same as Vim: h,j,k,l (left,down,up,right).
+
+This is the general format of a key chord (aka key binding):
+
+	Super + &lt;key&gt;
+
+And this is a key chord chain:
+
+	Super + &lt;key&gt; ; &lt;key&gt;
+
+The keys "Super", "Alt", "Shift", "Ctrl" are known as "modifiers".
+
+To run a key chord, hold down the modifier and press the key.  Key chord
+chains build on that principle: you type the key binding to the left of
+the semicolon (;), release the modifier and then type the key (or key
+chord) to the right of the semicolon.
+
+In this document, the notation {h,j,k,l} means "any one among" the
+comma-separated items.  Whereas {1-4} denotes a range: 1,2,3,4.
+
+Getting started
+===============
+
+Super + Return            |-Open a terminal running the "Default" tmux session
+Super + Shift + Return    |-Open a generic, yet fully-capable terminal (xterm)
+Super + q                 |-Close focused window safely (apps might require confirmation)
+Super + Shift + q         |-Kill focused window (no confirmation whatsoever)
+Ctrl + Alt + Delete       |-Launch poweroptionsmenu, where you can choose to log out, reboot, etc.
+
+Window motions
+==============
+
+Super + {h,j,k,l}         |-Move focus in the given direction == choose which window has attention
+Super + Shift + {h,j,k,l} |-Swap focused node with the one in the given direction
+Super + Ctrl + {h,j,k,l}  |-Expand/contract tiled node in that direction, provided there is a split
+Super + Alt + {h,j,k,l}   |-Set preselection (manual tiling) for next window
+                          |---Cancel presel by inputting same command again
+Super + Alt + {1-9}       |-Set the presel ratio, relative to the focused node
+Super + Shift + &lt;arrows&gt;  |-Move floating window
+Alt + right click         |-Drag floating window
+Alt + left click          |-Resize floating window from the nearest edge
+
+Window and desktop actions
+==========================
+
+Super + Space             |-Toggle between tiled and floating states
+Super + m                 |-Toggle between tiled and monocle layout (monocle == maximised nodes)
+Super + f                 |-Toggle focused window's full screen view
+Alt + Tab                 |-Cycle through windows on the current desktop
+Alt + Shift + Tab         |-Cycle backwardly through windows on the current desktop
+
+Desktop operations
+==================
+
+Super + {0-9}             |-Switch to the designated desktop (workspace)
+Super + Shift + {0-9}     |-Send focused node to the given desktop
+                          |---Desktops are created/removed dynamically (my custom setup)
+Super + Tab               |-Cycle through desktops on the current monitor
+Super + Shift + Tab       |-Cycle backwardly through desktops on the current monitor
+Super + r                 |-Rotate the node tree 90 degrees clockwise
+Super + Shift + r         |-Rotate the node tree 90 degrees counter-clockwise
+Super + Alt + r           |-Mirror/flip the node tree (top left becomes bottom right)
+Super + s ; {b,e}         |-Balance or equalise node splits (better try it to get an idea)
+                          |---Balance works on the parent node.  Equalise is for all nodes.
+Super + Shift + {[,]}     |-Incrementally decrease or increase the gaps between the tiled nodes
+Super + Shift + {y,u,i,o} |-Change to gap presents {0,5,10,20}
+Super + comma             |-Switch focus to the next monitor (cycles through monitors)
+Super + Shift + comma     |-Switch focus to the previous monitor (cycles through monitors)
+
+Launching programs
+==================
+
+Super + d                 |-Run dmenu with access to all binaries in PATH
+Super + Shift + d         |-Run flatpakmenu with access to all flatpak apps
+Super + g ; {1-3}         |-Open graphical apps {firefox,caja,thunderbird}
+Super + x ; {3-5}         |-Run a terminal with {mutt,newsboat,ncmcpp}
+Super + x ; 0             |-Launch a floating terminal running calc
+
+Useful extras
+=============
+
+Super + {F1,Home}         |-Launch a floating window with this cheat sheet
+Print                     |-Get a screenshot of the focused window saved to the ~/Desktop
+Super + Print             |-Get a screenshot of the entire viewport saved to the ~/Desktop
+Super + p                 |-Run passmenu to copy a password stored with the UNIX tool "pass"
+Super + x ; w             |-Run a floating image browser, from where you can also set the wallpaper
+Super + e ; c             |-Toggle the display compotisor (do this if you have performance issues)
+Super + e ; f             |-Toggle BSPWM "focus mode", to remove gaps, the padding, the panel
+Super + e ; t             |-Run tempusmenu to select a Tempus theme for a live theme switch
+                          |---The Tempus themes: https://gitlab.com/protesilaos/tempus-themes
+                          |---Some ports of the Tempus themes are distributed with my dotfiles
+
+Further reading
+===============
+
+Study the ~/.config/sxhkd/sxhkdrc and ~/.config/sxhkd/sxhkdrc_bspc.
+They are extensively documented.  You will find key chords for tasks not
+included herein, such as multimedia keys, setting node flags, and more.
+</code></pre>
+
+<h2>About the default terminal setup</h2>
+
+<p>My default terminal emulator is the standard for the X Window System and
+probably the one with the fewest “gotchas”: <code>xterm</code>.  This has not
+always been the case.  Until fairly recently I was using my custom build
+of the Simple Terminal, by <em>suckless</em>.  Prior to that I was a <code>urxvt</code>
+user.  I have also worked extensively with <code>{gnome,mate,xfce4}-terminal</code>
+(VTE-based) and others.</p>
+
+<p>I only tried Xterm last, due to the baseless belief that it was legacy
+software, more or less.  This was compounded by the misinformation that
+<em>suckless</em> spreads regarding the maintainability of Xterm.  Read what
+the main Xterm developer, Thomas E. Dickey, has to say about its many
+<a href="https://invisible-island.net/xterm/xterm.faq.html#known_bugs">look-alikes</a>.</p>
+
+<p>Such misconceptions were quickly cast aside once I started reading
+through the program’s manpage and then checked its upstream provider.
+Xterm is a very capable tool that continues to receive regular updates.</p>
+
+<p>To be clear: no terminal is perfect.  Choosing one is a matter of
+weighing the pros and cons.  I find that Xterm meets the following
+criteria better than its alternatives:</p>
+
+<ol>
+  <li>Is in the Debian repos.  True for all other options.  However, note
+that <code>st</code> (Debian package <code>stterm</code>) only makes sense to use as
+a custom build, so it technically does not meet this criterion.
+Overall, Xterm is more suited to Debian than a custom build of the
+Suckless Terminal, because it does not depend on development packages
+and therefore is not going to have any issues over the long term
+(e.g. the upstream has build dependencies that are not available in
+Debian Stable).</li>
+  <li>Is highly configurable and easy to reproduce.  In large part this is
+true for all options though there are differences in degree and ways
+of doing things: <code>xterm</code> uses the <code>.Xresources</code> file, making it the
+most dotfile-friendly option.</li>
+  <li>Has good performance.  My totally-non-scientific tests suggest that
+only <em>unpatched</em> <code>st</code> has a slight edge over Xterm.  But the
+unpatched tool lacks all sorts of features such as scroll-back
+functionality and cursor blinking, meaning that this is not
+a one-to-one comparison.  At any rate, I think the use of <code>tmux</code>
+renders this point largely irrelevant.</li>
+  <li>Is agnostic to the choice of desktop environment or toolkit.  True
+for <code>st</code> and <code>urxvt</code> as well, though not for the VTE-based options.</li>
+  <li>Has good font-drawing capabilities.  This is particularly important
+when using <code>tmux</code> and other programs that draw borders.  The
+VTE-based programs have no issues whatsoever.  Xterm requires some
+careful font configurations, which I have taken care of.  <code>st</code> can
+only cope well if it is extensively patched.  <code>urxvt</code> has weird
+issues with letter spacing.</li>
+</ol>
+
+<p>If you find that <code>xterm</code> does not fit your use case, I also have
+a script that configures <code>mate-terminal</code> to my liking, including colours
+that match the rest of the session: <code>own_script_mate_terminal_setup</code>.
+If you still want to use something else, and are willing to do things
+manually, I recommend my custom build of <code>st</code> (has no upstream patches
+and is configured to use my Tempus themes):
+<a href="https://gitlab.com/protesilaos/st">https://gitlab.com/protesilaos/st</a>.</p>
+
+<p><strong>Be warned that only Xterm is integrated with my dotfiles to keep
+things maintainable.</strong></p>
+
+<h3>The practical uses of Xterm</h3>
+
+<p>The many roles of <code>xterm</code> are defined in my <code>sxhkdrc</code>.  In short:</p>
+
+<ul>
+  <li>Serves as a container for <code>tmux</code>, the terminal multiplexer (see
+chapter about my Tmux and Vim setup)</li>
+  <li>Can be run on its own.  Offers everything you expect from
+a feature-complete, yet fairly lightweight terminal (though I strongly
+encourage you to learn <code>tmux</code>).</li>
+  <li>Launches CLI tools (<code>mutt</code>, <code>newsboat</code>, <code>ncmpcpp</code>) in a standalone
+tiled window.</li>
+  <li>Runs a console calculator in a standalone floating window.</li>
+  <li>Displays the cheat sheet with the most common key chords in
+a standalone floating window.</li>
+</ul>
+
+<p>With these granted, type <code>super + F1</code> or <code>super + Home</code> to get started
+on my <code>sxhkd</code> keys (as noted in the chapter about the basics of my
+BSPWM).</p>
+
+<h2>Why choose the MATE Desktop</h2>
+
+<p>You should already be up-and-running with the custom desktop session.
+But there is still much to learn from the rest of this book.  Let us
+review the choice of MATE (Maté) as the default option for the desktop
+environment.</p>
+
+<p>In the chapter about installing Debian 10 ‘buster’ on your machine,
+I suggested you select MATE as a core part of your new system.  The
+installer’s major component selection should look like this:</p>
+
+<pre><code>[x] Debian desktop environment
+[ ] ... GNOME
+[ ] ... Xfce
+[ ] ... KDE Plasma
+[ ] ... Cinnamon
+[x] ... MATE
+[ ] ... LXDE
+[ ] ... LXQt
+[ ] web server
+[ ] print server
+[x] SSH server
+[x] standard system utilities
+</code></pre>
+
+<p>You may be wondering why I recommend this step: <em>is not the purpose of
+this manual to set up a custom BSPWM session?</em>  The reasons are
+basically these:</p>
+
+<ol>
+  <li>You get all the Xorg and GTK dependencies in place.  You need these
+anyhow for running a graphical session and some of the most common
+application software, such as Firefox and Thunderbird.</li>
+  <li>You install some MATE programs that my custom desktop session makes
+use of.  These are <code>caja</code> (file manager) and <code>mate-settings-daemon</code>
+(touched upon in the chapter about the Tempus themes).</li>
+  <li>You have a robust fallback option in case you need to use the
+computer without BSPWM (e.g. multiple users on a single computer).</li>
+  <li>Things like networking, the policy kit agent, and the xdg backend
+(matching programs to MIME types) are configured for you.</li>
+</ol>
+
+<h3>What about minimalism?</h3>
+
+<p>Minimalism is about striving to achieve a state of minimum viability,
+the least possible completeness, but not less.  We still want something
+that works without any “gotchas” (edge cases where things do not perform
+at the desired standard).</p>
+
+<p>Installing a fallback DE at the very outset makes things simpler, more
+predictable and maintainable over the entire life-cycle of the Debian
+system; a system that can span multiple releases of Debian’s “stable”
+distribution.</p>
+
+<p>Do not be a nag about some Internet meme.</p>
+
+<ul>
+  <li>Bloat is when you run a modified web browser as your text editor, or
+whatever the latest trend is with Electron-based applications and web
+apps.</li>
+  <li>Bloat is when your favourite web page eats up 50% of my CPU.</li>
+  <li>Bloat is Vim with a spaghetti code of plugins and concomitant settings
+that try to reinvent the wheel.</li>
+  <li>Bloat is a much-vaunted ‘minimalist’ program like <code>st</code> with
+a hodgepodge of patches piled on top of it.</li>
+  <li>Bloat is every addition that actively detracts from the end goal of
+usability, such as fancy animations for every interaction, wanton use
+of transparency and blur effects, etc.</li>
+</ul>
+
+<p>Free software is about choices.  Best we keep our opinions to ourselves
+and do what we consider appropriate for our particular use case.  Enough
+with the misbegotten elitism and the smugness that certain communities
+actively cultivate.</p>
+
+<p>To my eyes, setting up Xorg is a task that falls outside the scope of
+dotfile management.  Same with configuring the network stack and similar
+basic utilities.  The moment we enter into that domain we start creating
+our own distro or bespoke sysadmin setup.  Let Debian handle that, while
+we focus on stowing the dotfiles in place, so that we may get our
+desired workflow going.</p>
+
+<p>Personally, I do not keep track of the package count to determine the
+‘bloat’ installed on my machine.  This is not a game where the user with
+the fewer packages wins.  If a piece of software is genuinely useful and
+is known to be fairly stable and maintained, then I keep it.</p>
+
+<h3>Why specifically MATE and not “foo”?</h3>
+
+<p>MATE is the most complete GTK-based desktop environment after GNOME,
+<em>without using the GNOME shell stack</em> (in which case we should mention
+Cinnamon and Budgie).  This is to be expected due to its heritage: it is
+the fork and subsequent continuation of the GNOME 2 code base.</p>
+
+<p>MATE’s main apps are very competent tools.  The file manager, <em>Caja</em>, is
+a good piece of software.  The document viewer, <em>Atril</em>, gets the job
+done.  Same with the image viewer, <em>Eye of MATE</em>.  Meanwhile, the
+archive manager, <em>Engrampa</em>, will handle compressing or decompressing
+data without any problem.</p>
+
+<p>Make no mistake: MATE is far from perfect.  Otherwise it would be
+frivolous to set up a <em>custom</em> desktop session.</p>
+
+<p>Compared to the other options provided by the Debian installer:</p>
+
+<ul>
+  <li>MATE is ideal for a stable distro such as Debian 10 (same with Xfce).
+It is developed at a rather slow yet steady pace, perfectly
+complementing the stability and predictability of the underlying OS.
+Debian is a poor fit for tracking DEs like GNOME and KDE Plasma that
+are developed at a somewhat fast pace.  For instance, the GNOME
+version in ‘buster’ (3.30) is already one release behind upstream and
+will be two by the end of summer 2019.  The gap will continue to widen
+every six months, <em>ceteris paribus</em>.  Similar story with KDE Plasma.</li>
+  <li>MATE is fairly modular, much like Xfce.  You can use its individual
+components without having to run the entire session.  And unlike Xfce,
+MATE has already completed the migration to GTK3 (last checked on
+2019-07-01).</li>
+  <li>Unlike GNOME (GNOME 3), MATE is committed to preserving the
+traditional desktop metaphor instead of turning the desktop into an
+oversized phone UI.  It also is less taxing on system resources.</li>
+  <li>Compared to Xfce, MATE does not need to pull in packages from another
+DE in order to function properly.  Whereas Xfce lacks its own archive
+manager, document viewer, calculator, among others.</li>
+  <li>MATE is more lightweight than GNOME and at least on par with—if not
+lighter than—KDE Plasma, without losing out on any of the core
+functionality.  For our use case, being light-yet-complete and
+self-contained is exactly what we are looking for.</li>
+</ul>
+
+<p>My point is clear: MATE is the best GTK-based option we could go for.</p>
+
+<h2>Notes about my shell setup</h2>
+
+<p>I only use <code>bash</code> as my CLI shell.  It is ubiquitous.  It works.  And,
+because I have no need for fancy extras or technology previews, my
+shell’s setup has no plugins, external add-ons, or other obscure
+extensions (same as with my Vim and Tmux, by the way).</p>
+
+<pre><code>~/cpdfd $ tree -aF shell
+shell
+├── .bash_profile
+├── .bashrc
+├── .inputrc
+├── .local/
+│   └── share/
+│       └── my_bash/
+│           └── dircolors
+├── .profile
+└── .xsessionrc
+</code></pre>
+
+<p>There are a couple of files that are only read at startup: <code>.xsessionrc</code>
+and <code>.profile</code>.  The former exists for the sole purpose of sourcing the
+latter.  In <code>.profile</code> I have instructions to:</p>
+
+<ul>
+  <li>Use my <code>.bashrc</code>.</li>
+  <li>Add <code>~/bin</code> to the <code>PATH</code>.</li>
+  <li>Launch the keyring (mostly for storing SSH credentials).</li>
+</ul>
+
+<p><code>.bash_profile</code> is also just a placeholder for sourcing the <code>.bashrc</code>.
+Meanwhile, <code>.inputrc</code> provides some basic options for slightly modifying
+the behaviour of the command line interpreter.  These concern the (1)
+reduction of key presses for tab completion, (2) textual and colourised
+information about files and directories, (3) colours that enhance the
+visuals of tab-completion’s feedback.</p>
+
+<h3>About the .bashrc</h3>
+
+<p>As is the norm with my dotfiles, the <code>.bashrc</code> is heavily documented.
+This is an overview of its headline options:</p>
+
+<ul>
+  <li><code>PAGER</code> and <code>MANPAGER</code> is <code>less</code> with the option to quit after
+reaching the end of a file and trying to read further below.</li>
+  <li>The <code>EDITOR</code> is <code>vim</code>, while its GUI variant is the <code>VISUAL</code>.</li>
+  <li>The default browser is whatever is defined by the MIME list (should be
+<code>firefox-esr</code>).</li>
+  <li>The prompt is simple and super effective: <code>&lt;filesystem path&gt; $ </code> by
+default or, if running via an SSH connection, it becomes slightly more
+informative with <code>&lt;user&gt;@&lt;host&gt;: &lt;filesystem path&gt; $ </code>.</li>
+  <li>Enable tab-completion when starting commands with <code>sudo</code>.</li>
+</ul>
+
+<p>Then I have a comprehensive list of aliases, that you may or may not
+like to keep in place.  Run <code>alias</code> from the command prompt to get the
+full list and/or filter its output accordingly.  Here is a sample:</p>
+
+<pre><code>~ $ alias | grep 'apt'
+alias aac='sudo apt autoclean'
+alias aar='sudo apt autoremove -V'
+alias adl='apt download'
+alias afu='sudo apt full-upgrade -V'
+alias ai='sudo apt install'
+alias air='sudo apt install --reinstall'
+alias ali='apt list --installed'
+alias alu='apt list --upgradable'
+alias ama='sudo apt-mark auto'
+alias amm='sudo apt-mark manual'
+alias apc='sudo aptitude purge ~c'
+alias ar='sudo apt remove -V'
+alias ard='apt rdepends'
+alias as='apt search'
+alias ash='apt show'
+alias au='sudo apt update'
+alias aug='sudo apt upgrade -V'
+alias aulu='sudo apt update &amp;&amp; apt list --upgradable'
+alias auu='sudo apt update &amp;&amp; sudo apt upgrade -V'
+alias auufu='sudo apt update &amp;&amp; sudo apt upgrade -V &amp;&amp; sudo apt full-upgrade -V'
+</code></pre>
+
+<p>The most opinionated aliases are those that change the default behaviour
+of core utilities like <code>cp</code>, <code>mv</code>, <code>rm</code>.  They make their output verbose
+and introduce a prompt for confirming user input where appropriate.
+I believe these are sound defaults, as they protect you from accidents.
+That granted, you can always run an unmodified command by prepending
+a backslash <code>\</code>.  For example:</p>
+
+<pre><code># This uses the alias for `cp`
+~/cpdfd $ cp README test
+'README' -&gt; 'test'
+~/cpdfd $
+
+# This uses the original `cp`
+~/cpdfd $ \cp README test
+~/cpdfd $
+</code></pre>
+
+<p>Finally, there are a few functions:</p>
+
+<ul>
+  <li><code>man()</code> configures <code>man</code> to show some colours and formatting for the
+various parts of its syntax.</li>
+  <li><code>cd()</code> tells <code>cd</code> to list in a clean way the directory’s contents when
+entering it, including the hidden items, though not the implicit ones.</li>
+  <li><code>backupthis()</code> can be run as <code>backupthis &lt;file&gt;</code> to create a copy of
+the target, with a time stamp as its extension and identifier.</li>
+</ul>
+
+<p>That just about covers it.  I wish you luck on your PATH; make sure to
+get HOME safe.</p>
+
+<h2>Notes about my Tmux and Vim</h2>
+
+<p>Both Tmux and Vim are essential to my workflow.  It is thus pertinent to
+inform you about their respective configuration files so that you know
+what to expect.  This is with the proviso that you already are familiar
+with these tools.</p>
+
+<h3>About my tmux setup</h3>
+
+<p>Let’s start with the terminal multiplexer.  It is the first thing you
+will interact with when you log into the session and type the key chord
+<code>super + return</code>:</p>
+
+<pre><code>~/cpdfd $ tree -aF tmux
+tmux
+└── .tmux.conf
+
+0 directories, 1 file
+</code></pre>
+
+<p>Only its config is distributed with my dotfiles, which is another way of
+saying that <em>I do not use any plugins whatsoever</em>.  What is provided by
+the program itself is more than enough.</p>
+
+<p>To send commands to <code>tmux</code> you must typically start by first pressing
+its prefix key, which I have kept to the default of <code>Ctrl + b</code> as it is
+the one that causes no issues with other programs’ main functionality,
+<em>in the way I use them</em>.  To be clear, <code>Ctrl + b</code> does interfere with
+a couple of commands: (a) the command line motion for moving one
+character backwards and (b) Vim’s full page back scroll.</p>
+
+<p>So you press the prefix key, then release it and you can then either
+access the command prompt by inputting the colon <code>:</code> sign or typing one
+of the many key sequences that are assigned to direct actions (see table
+below).</p>
+
+<p>In the configuration file, modifier keys are shortened.  So <code>Ctrl + b</code>
+is written as <code>C-b</code>, <code>Alt</code> is <code>A</code>.  Note that <code>Shift</code> is not used
+directly, but is instead implied by the use of a capital letter (just to
+be sure: Shift inserts the majuscule of the given letter).</p>
+
+<p>Here are the main key bindings to get you started:</p>
+
+<pre><code># Those that involve C-b (prefix)
+# -------------------------------
+&lt;prefix&gt; s        # split current pane horizontally
+&lt;prefix&gt; v        # split current pane vertically
+                  ### these are similar to Vim's C-w {s,v}
+&lt;prefix&gt; S        # split the whole window horizontally
+&lt;prefix&gt; V        # split the whole window vertically
+&lt;prefix&gt; x        # kill current pane
+&lt;prefix&gt; C-x      # kill all panes except the current one
+&lt;prefix&gt; r        # reload the tmux conf
+&lt;prefix&gt; m        # mark active pane
+&lt;prefix&gt; C-m      # toggle maximise active pane
+                  ### the default is &lt;prefix&gt; z (too close to x)
+&lt;prefix&gt; A-{1-5}  # switch to one of the five layout presets
+&lt;prefix&gt; E        # evenly spread out active and adjacent panes
+&lt;prefix&gt; c        # create a new window (windows contain panes)
+&lt;prefix&gt; b        # break pane from current window
+                  ### default is &lt;prefix&gt; !
+&lt;prefix&gt; J        # the opposite of break-pane
+&lt;prefix&gt; Tab      # swap active pane with the previous one
+&lt;prefix&gt; C-Tab    # swap active pane with the marked one
+&lt;prefix&gt; a        # sync input across panes in the current window
+
+# Keys without the prefix
+# -----------------------
+A-{h,j,k,l}       # navigate panes in the given direction
+A-S-{h,l}         # move to left/right window
+C-Space           # enter copy-mode
+                  ### use Vim keys to scroll, select/copy text
+</code></pre>
+
+<p>Read <code>.tmux.conf</code> for the entirety of my settings and custom key
+bindings.  That file is heavily documented, as is the norm with
+practically every item in my dotfiles.</p>
+
+<p>Now if you are thinking that you do not need a terminal multiplexer and
+have no time to learn how to use one, I urge you to think again.  This
+is a great skill to master.  It greatly improves the overall use of the
+terminal.  It is a skill that is highly portable.  It will come in handy
+in a variety of situations whereas, to be blunt, learning <code>bspwm</code> may
+not be particularly useful outside the narrow confines of a custom
+desktop session.</p>
+
+<p>Tmux is superior to a standard terminal because it offers unique
+capabilities:</p>
+
+<ul>
+  <li>Persistent local/remote sessions (even if you close the terminal or
+log out).  Once you use this, there is no going back.</li>
+  <li>Advanced management of a large number of pseudo-terminals by
+leveraging window splitting (panes) like a tiling window manager, pane
+grouping per window (the equivalent of tabs/workspaces), and sessions
+(sessions hold windows, windows hold panes).</li>
+  <li>Scriptability including the possibility to send key sequences to
+running applications (I use this to source my .vimrc when I perform
+a live theme change, as noted in the chapter about my Tempus themes).</li>
+</ul>
+
+<h3>About my Vim setup</h3>
+
+<p>That last piece of advice holds true for <code>vim</code> as well.  Spend some time
+learning its basics.  Over time you will become proficient at editing
+text.</p>
+
+<p>And here is another piece of advice, before we delve into the specifics
+of my Vim setup: set a very high bar for the use of plugins or, as in my
+case, do not use plugins <em>at all</em>.  Also avoid copy-pasting stuff
+without carefully considering the ramifications.</p>
+
+<p>The more comfortable you are with the generic program, the higher the
+portability of your knowledge.  Vim is meant to be used as the standard
+UNIX editor that is available in virtually every such machine out there.
+Straying too much from the defaults might impede your ability to work
+effectively under circumstances that are not under your immediate
+control.</p>
+
+<p>Now on to my customisations.</p>
+
+<pre><code>~/cpdfd $ tree -aF vim
+vim
+├── .vim/
+│   ├── colors/
+│   │   ├── tempus_autumn.vim
+│   │   ├── tempus_classic.vim
+│   │   ├── tempus_dawn.vim
+│   │   ├── tempus_day.vim
+│   │   ├── tempus_dusk.vim
+│   │   ├── tempus_fugit.vim
+│   │   ├── tempus_future.vim
+│   │   ├── tempus_night.vim
+│   │   ├── tempus_past.vim
+│   │   ├── tempus_rift.vim
+│   │   ├── tempus_spring.vim
+│   │   ├── tempus_summer.vim
+│   │   ├── tempus_tempest.vim
+│   │   ├── tempus_totus.vim
+│   │   ├── tempus_warp.vim
+│   │   └── tempus_winter.vim
+│   └── spell/
+│       ├── el.utf-8.spl
+│       ├── el.utf-8.sug
+│       ├── en.utf-8.add
+│       └── en.utf-8.add.spl
+└── .vimrc
+
+3 directories, 19 files
+</code></pre>
+
+<p>A quick rundown of my very short and simple <code>.vimrc</code>:</p>
+
+<ul>
+  <li>I stick to the default key bindings.</li>
+  <li>I expect Vim to ask for confirmation when closing a modified buffer.</li>
+  <li>I use tabs instead of spaces for indentation, setting the width of the
+tab character to be equal to four spaces.  I used to use spaces when
+I first started using a text editor, because that was the default.
+However, experience suggests that tabs are semantically more
+appropriate for indentation.  The tab key inserts its own character,
+which can have an arbitrary width defined by the program that reads
+it.  In short, tabs are better for indentation, while spaces are
+better for tabular layouts such as the <code>tmux</code> key table I presented
+above.</li>
+  <li>The text width is 72 blocks long.  This is particularly important for
+writing good <code>git</code> commit messages.  And, because <code>git</code> is designed
+with email in mind, this line length is ideal for sending plain text
+email, such as with <code>mutt</code>.  In general, this line length also makes
+sense for comment blocks in your code, because it makes them easier to
+read without having to rely on non-standard things like text-wrapping
+(so, for example, hitting <code>gqip</code> will format inside the given
+paragraph, while <code>gq</code> does the same over the given selection).</li>
+  <li>Sentences in a paragraph start with two spaces after a period or full
+stop.  This is better visually when typing in a monospaced font.  The
+various parsers, e.g. Markdown to HTML, know how to convert that to
+a single space, just as they know how to turn hard line wraps between
+consecutive lines of text into uniform paragraphs (a blank line marks
+a new paragraph).</li>
+  <li>Syntax highlighting is on and uses my Tempus themes.  Do not edit this
+part manually, as it will be changed when running <code>tempus</code> or its
+<code>tempusmenu</code> interface (see chapter on Tempus themes).</li>
+</ul>
+
+<p>Read the <code>.vimrc</code> for an in-depth understanding of my customisations (it
+is a straightforward, well-commented config).</p>
+
+<h3>Neither Tmux nor Vim is an OS</h3>
+
+<p>Now you may be wondering how it is possible to use Tmux and Vim without
+plugins and all the accoutrements of a modern workflow.  The answer is
+rather simple: let Tmux+Vim be specialised tools and leave the rest to
+other programs.</p>
+
+<p>Do you really need Vim’s sub-par approach to multiplexing (its own
+approach to splits, buffers, tabs) when you can just be a <code>tmux</code> ninja?
+What, you need more than that?  Let me tell you about this nice program
+called BSPWM…  Why do you require a plugin to check <code>git</code> information
+inside Vim when you can just use the command line?  Open a new <code>tmux</code>
+split and type <code>git status</code>, <code>git log</code>, <code>git diff</code>…  You need to commit
+only parts of a changed file?  Know that <code>git add --patch</code> is your
+friend.</p>
+
+<p>In the same spirit, use the core utilities like <code>cd</code>, <code>ls</code>, <code>find</code>,
+<code>grep</code>, <code>cp</code>, <code>mv</code>, <code>rm</code>.  Keep things simple and avoid feature creep.
+Let the text editor <em>edit text</em>.  Keep the multiplexer true to its
+spirit of managing terminal sessions.  If you truly need an extensible,
+fully-customisable integrated development environment, then you should
+seriously consider GNU Emacs (which is a Lisp interpreter that
+implements a text editor among <em>many</em> others).</p>
+
+<p>Of course, there are scenaria where a plugin makes a program better for
+the task at hand.  My point is that you should be very picky about your
+choice of external functionality.  GNU/Linux is a powerful OS (Emacs
+too!).  You do not need to incorporate every kind of feature in the core
+tool.  Perhaps there are other operating systems that make things
+difficult for the power user: if you are using one of those, then
+a pile of plugins is the least of your troubles.</p>
+
+<p>As a closing remark, let me leave you with a joke I once heard about
+Emacs (a tool that I genuinely like and will eventually incorporate in
+my computing life): its name is an allusion to its design that involves
+active use of modifier keys…  Escape, Meta, Alt, Control, Shift.</p>
+
+<h2>About the top panel</h2>
+
+<p>The panel that appears at the uppermost area of the viewport is drawn by
+<code>lemonbar</code>.  This is a beautifully simple tool.  On the face of it, all
+it does is place an empty bar at either the top (default) or bottom of
+the screen, while offering a syntax for formatting any output it may
+display.  It is up to the user to add content to it.</p>
+
+<p>This is where my <code>melonpanel</code> comes into play.  It is a shell script
+that fetches and parses some useful information about the system and the
+running session, and lays it on the bar.  Each snippet of info is
+internally referred to as a “module” and has its own dedicated logic
+inside the script.</p>
+
+<p>The modules are the following:</p>
+
+<ul>
+  <li>BSPWM report about the workspaces, nodes, their flags and state (see
+next section about it).</li>
+  <li>Battery status and current capacity.</li>
+  <li>Core temperature.</li>
+  <li>Speaker volume strength and status.</li>
+  <li>Keyboard indicators for alternate layout and caps lock.</li>
+  <li>Date and time.</li>
+</ul>
+
+<p>This is what a module looks like:</p>
+
+<pre><code># Core temperature.
+_temperature() {
+	command -v acpi &gt; /dev/null || return 1
+
+	local therm_label therm_status
+
+	therm_label='T:'
+	therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $5 }')"
+	therm_status="${therm_status:0:2}"
+
+	# Up to 59 degrees celcius keep text colour same as default.  60-79
+	# turn the colour red on normal background.  Else turn the whole
+	# indicator red.
+	case "$therm_status" in
+		[12345][0-9])
+			echo "$therm_label ${therm_status}°C"
+			;;
+		[67][0-9])
+			echo "$therm_label %{F$color1}${therm_status}°C%{F-}"
+			;;
+		*)
+			echo "%{F$background}%{B$color1} $therm_label ${therm_status}°C %{B-}%{F-}"
+			;;
+	esac
+}
+</code></pre>
+
+<h3>How the modules are placed on the panel</h3>
+
+<p>All modules will grab some piece of text and clean it up so that it
+looks nice on the panel.  However, each individual module <em>does not
+output directly</em> to the named pipe where the data is read from.
+Instead, all modules are called from <code>_modules()</code>, which I need to
+explain a bit:</p>
+
+<pre><code>_modules() {
+	while true; do
+		echo "B" "$(_battery)"
+		echo "T" "$(_temperature)"
+		echo "D" "$(_datetime)"
+		echo "K" "$(_keyboard)"
+		echo "V" "$(_volume)"
+		sleep 1s
+	done
+}
+</code></pre>
+
+<p>You will notice that each individual item echoes a majuscule and then
+the output of the module it references.  These capital letters are
+important because they demarcate each set of data in the named pipe,
+making it possible to put the right thing in the right place.  We see
+this in practice at <code>_melonpanel()</code>, specifically this part:</p>
+
+<pre><code>while read -r line ; do
+	case $line in
+		B*)
+			# battery status
+			bat="${line#?}"
+			;;
+		T*)
+			# temperature
+			therm="${line#?}"
+			;;
+		D*)
+			# current date and time
+			date="${line#?}"
+			;;
+		K*)
+			# keyboard layout (en or gr)
+			key="${line#?}"
+			;;
+		V*)
+			# volume level
+			vol="${line#?}"
+			;;
+</code></pre>
+
+<p>What this does is identify the part that contains the data of each
+module and assign a variable to it.  The variables are then placed on
+the panel with the following:</p>
+
+<pre><code>_panel_layout() {
+	echo "%{l}$wm%{r}$key $bat $therm $vol $date "
+}
+</code></pre>
+
+<p>Focus on the content of the <code>echo</code>.  The syntax <code>%{l}</code> places things on
+the left, while <code>%{r}</code> aligns them to the right (this notation is
+provided by <code>lemonbar</code>—see its manpage).</p>
+
+<p>I believe this pretty much covers the essentials of how <code>melonpanel</code> is
+designed.  As with all my scripts, this too is heavily documented.  So
+do read it.  That granted, I admit that <code>lemonbar</code> is not the most
+user-friendly, point-and-click program out there.  But hey, neither is
+BSPWM, Xterm, Tmux, Vim, etc.</p>
+
+<h3>The BSPWM module</h3>
+
+<p>On the left side of the panel lies the set of indicators that report on
+the status of the window manager (based on the output of the command
+<code>bspc subscribe report</code>).  This is what you see when starting the
+session (note that I have taken care to use the appropriate spacing, so
+that all typographic elements are evenly spread out):</p>
+
+<pre><code>[1] *
+</code></pre>
+
+<p>The numbers correspond to the names of the available desktops.  Because
+I have implemented <em>dynamic desktops</em> (see chapter about the advanced
+features of my BSPWM), there is only one desktop on the panel.  If you
+navigate to desktop number two, the module will be like this, <em>if
+desktop 1 is empty</em>:</p>
+
+<pre><code>[2] *
+</code></pre>
+
+<p>If desktop 1 is occupied, the module will be:</p>
+
+<pre><code>1^ [2] *
+</code></pre>
+
+<p>The desktop inside square brackets (and also drawn with a bold font) is
+the current one, while the caret sign denotes an occupied desktop.</p>
+
+<p>Next to the desktop numbers there is at least one asterisk.  If the
+desktop contains windows, then the asterisks are two:</p>
+
+<ul>
+  <li>The first asterisk always indicates the layout of the desktop.  If the
+view is set to monocle, then the letter <code>M</code> will take the place of the
+asterisk.  The layout cycles between tiled and monocle, but because
+the former is what we normally use, I have opted to hide the <code>T</code>
+behind the asterisk and only display the <code>M</code>.</li>
+  <li>The second asterisk contains information about the active window’s
+flags.  The flags I define in my <code>sxhkdrc_bspc</code> are: Sticky, Private,
+Locked, Marked (see <code>man bspc</code> for their meaning).  When a flag for
+the current node is active, its initial letter is displayed on the
+panel.  More than one flags can be activated at once.</li>
+</ul>
+
+<p>If all indicators are toggled on at once, you will see something like
+this:</p>
+
+<pre><code>[1] 2^ * SPLM
+</code></pre>
+
+<p>Urgent and unfocused desktops are denoted by the column sign and are
+coloured red:</p>
+
+<pre><code>[1] 2# * *
+</code></pre>
+
+<p>On multi-head setups (e.g. dual monitor), the BSPWM report will divide
+desktops and their corresponding indicators per monitor.  Combined with
+the above, we get the following:</p>
+
+<pre><code>[1] 2^ * L  4- 5# 6^ M SP
+</code></pre>
+
+<p>Notice how the indicators that display the <code>*</code> (asterisk) are visible
+for each set of desktops.  Also look at the use of another typographic
+marker next to desktop 4:  the hyphen is for showing the <em>focused
+desktop on the unfocused monitor</em>.  The letter <code>M</code> in this case concerns
+desktop 4.  Same with the node flags <code>S</code> and <code>P</code>.  While <code>L</code> applies to
+the focused node in desktop 1 and the asterisk next to it informs us
+that the layout is the default, i.e. tiled.</p>
+
+<p>I believe all this will become easier to grasp once you start using the
+system.  For the record, this design bears close resemblance to the
+status line of my <code>tmux</code> setup.</p>
+
+<h3>Panel transparency</h3>
+
+<p>By default, the panel is opaque, though I have made it fairly trivial to
+add a transparency effect to its background.  The following is an
+excerpt from the relevant <code>melonpanel</code> section:</p>
+
+<pre><code>_melonpanel &lt; "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
+-F "$foreground" -B "#ff${background:1}" -f "$fontmain" -f "$fontbold" -n "Melonpanel" &amp;
+</code></pre>
+
+<p>Take a closer look at the segment of the command that controls the
+background colour: <code>-B "#ff${background:1}"</code>.  I have designed it so
+that you can tweak its alpha value, which is governed by the <code>ff</code> part.
+This is hexadecimal notation and means that the alpha channel is set to
+full, which translates to complete opacity.  <code>00</code> is the opposite.</p>
+
+<p>Try replacing <code>ff</code> with <code>aa</code> to get some subtle transparency, or with
+<code>55</code> for a more pronounced effect.  Possible values for each digit are:
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, f.  A running compositor is
+required to enable transparency effects (I use <code>compton</code> as already
+mentioned in previous chapters).</p>
+
+<p>As a rule of thumb, light themes will require a greater adjustment than
+dark themes to create a noticeable see-through style.  The choice of
+wallpaper will also affect your perception of it.</p>
+
+<p>For changes to be applied, reload the panel with the key chord chain
+<code>super + e ; p</code> (as explained in the chapter about the basics of my
+BSPWM).  Otherwise, you can always just use <code>tempusmenu</code> to switch to
+another Tempus theme (as discussed in the chapter about my themes), thus
+forcing a panel reload.</p>
+
+<h3>Known issues</h3>
+
+<p>Sometimes, seemingly at random, the panel will not be hidden when
+entering a window’s full screen view.  The less-than-ideal workaround is
+to reload <code>melonpanel</code> with the key chord chain <code>super + e ; p</code>.  This
+seems to be an upstream bug.</p>
+
+<p>Another thing to bear in mind is that upstream <code>lemonbar</code> does not
+support proportional or outline fonts (e.g. the “DejaVu” family).  It
+can only display fixed-size, else bitmap, typefaces such as “Terminus”.
+If you have followed the instructions in the chapter about installing
+the core packages, you will have <code>xfonts-terminus</code> available on your
+system.  This is an optional dependency, as the panel will fall back to
+the <code>fixed</code> typeface which comes pre-installed with Debian.  I just
+think that Terminus is more consistent and is better suited for such
+a UI task (see ANNEX below for Lemonbar with proportional fonts).</p>
+
+<p>Finally, you may notice that <code>pgrep melonpanel</code> always lists two running
+processes.  This is because it is running <code>_modules()</code> (mentioned above)
+as well as <code>bspc subscribe report</code> that displays desktop information and
+the like.  The report needs to be its own process because it has its own
+synchronicity, controlled by the window manager itself (please let me
+know if there is a way of merging every modules functionality into
+a single process).</p>
+
+<h3>ANNEX for lemonbar-xft</h3>
+
+<p>I maintain a personal fork of <code>lemonbar</code> with support for Xft (the
+fontconfig library).  This basically means running the panel using
+proportional/outline fonts.</p>
+
+<ul>
+  <li>I have a <a href="https://protesilaos.com/codelog/2019-06-24-demo-lemonbar-xft/">video where I talk about my fork</a>.</li>
+  <li>I also provide information on <a href="https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/">how I forked lemonbar-xft</a>.</li>
+  <li>And here is how to <a href="https://protesilaos.com/codelog/2019-06-23-lemonbar-xft-new/">compile Lemonbar Xft on Debian 10 Buster</a>.</li>
+</ul>
+
+<p>I will not provide any further information herein.  <strong>I do not encourage
+you to compile stuff from random sources or to create what is known as
+a “FrankenDebian”.</strong>  I use this fork as part of my own system and am
+prepared to deal with any possible breakage.  If you are not or do not
+trust my fork (you should not trust any random source), then stick with
+the package provided by Debian: it includes the upstream code that only
+uses bitmap fonts.</p>
+
+<h2>Fonts and their configs</h2>
+
+<p>Typography is essential to a good computing experience.  I would even
+argue that type is the irreducible factor of a computer’s user
+interface.  But let’s keep things in focus: good fonts are essential to
+a setup that strongly emphasises the use of a text terminal.</p>
+
+<p>My <em>opinionated</em> font-related settings are stored in my dotfiles’
+“fontconfig” directory (stow package).  These take precedence over
+system-wide defaults that are defined in <code>/etc/fonts/</code>.</p>
+
+<pre><code>~/cpdfd $ tree -aF fontconfig/
+fontconfig/
+└── .config/
+	└── fontconfig/
+		├── conf.d/
+		│   ├── 10-hinting-full.conf
+		│   ├── 10-sub-pixel-rgb.conf
+		│   ├── 11-lcdfilter-default.conf
+		│   ├── 20-unhint-small-hack.conf
+		│   ├── 45-generic.conf
+		│   ├── 45-latin.conf
+		│   ├── 50-enable-terminus.conf
+		│   ├── 60-generic.conf
+		│   ├── 60-latin.conf
+		│   ├── 80-condensed-large-dejavu.conf
+		│   └── README
+		└── fonts.conf
+
+3 directories, 12 files
+</code></pre>
+
+<p>The <code>fonts.conf</code> includes basic rules for adding emoji character support
+to all generic font family definitions: serif, sans-serif, monospace.</p>
+
+<p>Inside <code>conf.d</code> we find the important rules (sorry, I do not really care
+about emoji).  Some file names will suggest what each rule is about.
+For example, <code>50-enable-terminus.conf</code> overrides the default settings
+that <em>disable</em> fixed-size typefaces (bitmap fonts).</p>
+
+<p>The file <code>20-unhint-small-hack.conf</code> applies to the “Hack” typeface.  It
+concerns small point sizes.  This rule serves mostly as an example, but
+also because that family is my preferred choice of monospaced font.  You
+can copy and then edit the rule to match whatever typeface fails to
+display properly at certain point sizes.</p>
+
+<p>On the other end, <code>80-condensed-large-dejavu.conf</code> will substitute the
+default DejaVu fonts for Serif and Sans with their condensed
+equivalents.  This makes either DejaVu variant better as a fallback font
+for UI elements and long form texts, because it removes the rivers of
+white space that run through its widely-spaced letter forms.</p>
+
+<p>The file names that start with “45” attribute a generic family to each
+typeface.  For example, I assign “Hack” to the “monospace” group.</p>
+
+<p>While the “60-*” rules concern the priority of font selection.  Here is
+a snippet of XML that I will explain:</p>
+
+<pre><code>&lt;alias&gt;
+	&lt;family&gt;sans-serif&lt;/family&gt;
+	&lt;prefer&gt;
+		&lt;family&gt;Roboto&lt;/family&gt;
+		&lt;family&gt;Noto Sans&lt;/family&gt;
+		&lt;family&gt;Liberation Sans&lt;/family&gt;
+	&lt;/prefer&gt;
+	&lt;default&gt;
+		&lt;family&gt;DejaVu Sans&lt;/family&gt;
+	&lt;/default&gt;
+&lt;/alias&gt;
+</code></pre>
+
+<p>When selecting the fontconfig alias “sans-serif” (or just “Sans”), the
+actual typeface is, in order of priority from top to bottom: Roboto,
+Noto Sans, Liberation Sans.  If none of these are installed or
+available, then DejaVu Sans shall be used instead.</p>
+
+<p>As already discussed in the chapter about installing core packages,
+these are the fonts I use and consider solid defaults:</p>
+
+<pre><code>sudo apt install fonts-firacode fonts-hack fonts-roboto fonts-dejavu fonts-dejavu-extra fonts-noto-color-emoji fonts-symbola xfonts-terminus
+</code></pre>
+
+<p>Note that <code>fonts-symbola</code> is mostly required to display symbols in
+terminals that have trouble with ambiguous characters.</p>
+
+<h3>Modifying the font configurations</h3>
+
+<p>My settings are tailored to my hardware and aesthetic preferences.
+I strongly encourage you to spend some time inside my <code>conf.d</code> to get
+a sense of how things work.  For more, run <code>man fonts-conf</code>.  Settings
+provided by Debian, are stored at <code>/usr/share/fontconfig/conf.d/</code>, while
+the <em>applicable rules</em> are defined in <code>/etc/fonts/conf.d/</code>.</p>
+
+<p>Graphical applications read the configuration files that are specific to
+their toolkit.  I only have GTK apps, so we get these files:</p>
+
+<pre><code>~/cpdfd $ tree -aF gtk
+gtk
+├── .config/
+│   ├── gtk-3.0/
+│   │   └── settings.ini
+# Irrelevant files
+├── .gtkrc-2.0
+# More files that do not concern fonts
+</code></pre>
+
+<p>You only need to check <code>.gtkrc-2.0</code> and the GTK3 <code>settings.ini</code>.  The
+default typeface is the fontconfig alias “sans” at 10 point size.  If
+you have followed the instructions in the chapter about installing core
+packages, “Sans” or “Sans-serif” should stand for “Roboto” (package is
+<code>fonts-roboto</code>).</p>
+
+<p>The panel (top bar) only supports bitmap fonts, as explained in the
+chapter about the top panel.  It is configured to use Terminus
+(<code>xfonts-terminus</code>) else fall back to whatever the “fixed” typeface is.</p>
+
+<p>The notification daemon—<code>dunst</code>—uses “Sans-10”, in large part because
+its configuration file is static and cannot run shell logic.
+A sans-serif font is the safest default.  Besides, notifications can
+display a big chunk of text, where a monospaced font will make the
+notification’s box expand out of proportion.  We want them to be
+discreet.</p>
+
+<p>All the above notwithstanding, you should know that not all applications
+out there will faithfully follow your rules.  For example, Flatpak apps
+will use their own settings because they do not read from the user’s
+font configurations.  Graphical tools that are launched with escalated
+privileges will read from the root user’s configs.  And so on.</p>
+
+<h3>What makes a good choice of font</h3>
+
+<p>Some closing notes on the criteria that determine the choice of my
+default typefaces: Hack and Roboto.</p>
+
+<ul>
+  <li>Good unicode coverage.  Support extended latin and greek glyphs <em>at
+minimum</em>.</li>
+  <li>Have at least two weights: regular and bold.  Ideally, also support
+true italics, or at least oblique forms with some effort put into
+them, rather than some procedurally generated slanted variant of the
+regular letters.</li>
+  <li>Be legible at small point sizes.  Do not create rivers of white space
+that flow through the text at larger sizes.</li>
+  <li>Have good typographic colour.  In other words, do not have too thin
+letter forms.  Typefaces that are too thin are harder to read, make
+colours less distinct from each other, while they tend to create
+a certain “halo effect” around letter forms when using them against
+a light backdrop.</li>
+  <li>Do not have a very high x-height.  I need to easily tell apart
+miniscules from majuscules.</li>
+  <li>Do not rely too much on serifs and fine details.  Such letters can
+become the standard when our displays have a pixel density that is at
+least as good as printed text.  Until then, they can be hard to read
+in certain conditions.</li>
+  <li>For monospaced fonts: all vaguely similar glyphs should be easy to
+tell apart, such as <code>0</code>, <code>o</code>, <code>O</code>, <code>i</code>, <code>I</code>, <code>l</code>, <code>L</code> <code>1</code>, <code>s</code>, <code>5</code>…</li>
+  <li>Be available in Debian’s <code>main</code> archives.  Comply with Debian’s Free
+Software Guidelines.</li>
+</ul>
+
+<p>All this can be summarised as “do not be frivolous; be frugal, be
+accessible, and get the job done”.</p>
+
+<h3>ANNEX on Xterm fonts</h3>
+
+<p>You will notice that I recommend installing <code>fonts-firacode</code>.  This is
+the typeface I use inside my terminal emulator (Xterm), because it has
+excellent support for box-drawing capabilities, which is particularly
+important for <code>tmux</code>.</p>
+
+<p>Xterm has a <em>very rare</em> bug that you will only encounter if you use
+Greek letters and only with certain font and point size combinations.
+I have submitted a detailed report on the <a href="https://protesilaos.com/codelog/2019-07-01-xterm-greek-pi-bug/">Greek pi (π) and box-drawing
+bug</a>.</p>
+
+<p>The bug notwithstanding, I have made sure that my <code>.Xresources</code> includes
+the necessary settings that work around this problem.  As such, “Hack”
+and “DejaVu Sans Mono” will cope just fine with all typography-related
+requirements inside of Xterm.</p>
+
+<h2>Per-user MPD setup</h2>
+
+<p>The Music Player Daemon is a program that stores information about your
+music collection.  It manages metadata and playlists of currently queued
+songs or ones that are saved.</p>
+
+<p>MPD uses a server/client model.  To interface with it we need to use one
+of the many available client programs.  The simplest one is <code>mpc</code>,
+a console utility with basic functionality for querying the daemon’s
+status, handling media controls, and the like.  A more feature-rich
+client is <code>ncmpcpp</code>, which also runs in the console.</p>
+
+<h3>Basic configuration</h3>
+
+<p>MPD may be run as a system-wide server and can be controlled remotely as
+well.  For my use case, all I need is a local, user-specific setup.
+This is what we will be doing.</p>
+
+<p>Assuming you have followed the instructions in the chapter about
+installing the core packages, you should have these in place:</p>
+
+<pre><code>sudo apt install mpd mpc ncmpcpp mpdris2 python-mutagen playerctl
+</code></pre>
+
+<p>Then switch to the base of my dotfiles’ directory and proceed to create
+symlinks for the music-related programs:</p>
+
+<pre><code>~/cpdfd $ stow music
+</code></pre>
+
+<p>Now you need to run a series of commands to configure <code>mpd</code> in
+accordance with our per-user requirements.  Start by disabling the
+<code>systemd</code> service, since we autostart <code>mpd</code> from within the <code>bspwm</code>
+session:</p>
+
+<pre><code>sudo systemctl disable mpd
+</code></pre>
+
+<p>Now switch to the local config directory:</p>
+
+<pre><code>cd ~/.config/mpd
+</code></pre>
+
+<p>Create the directory where saved playlist data is stored:</p>
+
+<pre><code>mkdir playlists
+</code></pre>
+
+<p>Generate the files <code>mpd</code> needs in order to run:</p>
+
+<pre><code>touch database log pid state sticker.sql
+</code></pre>
+
+<p>Configuration is done!  You might need to reboot for changes to take
+effect.</p>
+
+<h3>Update the database</h3>
+
+<p>To update the <code>mpd</code> database (assuming the presence of audio files at
+<code>~/Music</code>) either run <code>mpc update</code> in a terminal or type <code>ncmpcpp</code> and
+then press <code>u</code>.  If your music is in a different directory, edit the
+relevant path in <code>~/.config/mpd/mpd.conf</code>.</p>
+
+<h3>Basics of ncmpcpp</h3>
+
+<p>The “Ncurses Console Media Player C++”.  To start interfacing with this
+excellent tool, simply type <code>ncmpcpp</code> in a terminal, or use the key
+chord chain <code>super + x ; 5</code> (see the chapter about the basics of my
+BSPWM).</p>
+
+<p>To play music, learn how to use <code>ncmpcpp</code> by studying the corresponding
+manpage.  I typically switch to screen 4, by hitting <code>4</code>, then <code>A</code> and
+hit enter.  This inserts an empty prompt which adds all available music
+to the playlist.  Then I toggle on repeat mode with <code>r</code>, random playback
+order with <code>z</code>, and a 5 second cross-fade with <code>x</code>.</p>
+
+<p>If you do not like <code>ncmpcpp</code>, I highly recommend <code>cantata</code>, a graphical
+MPD front end using the Qt toolkit which, however, does not integrate
+well with my mostly GTK- and text- based environment (as such, Cantata
+is not part of my custom desktop session).</p>
+
+<h3>Why we also need mpc</h3>
+
+<p>The comparatively simpler <code>mpc</code> tool performs the role of a remote
+control.  We use it to assign key chords with which to control <code>mpd</code>
+even when no client is running.  In a similar fashion, <code>mpc</code> provides
+a simple way of querying the status of the server for the sake of, say,
+displaying information about the current song on the panel (see the
+chapter about the top panel).</p>
+
+<h3>The MPRIS bridge</h3>
+
+<p>By default, <code>mpd</code> does not behave like most up-to-date music players in
+the GNU/Linux world.  Put differently, it cannot be controlled by
+dedicated media keys, nor interact with specialised tools that might be
+offered by the desktop environment.</p>
+
+<p>This kind of functionality is part of the MPRIS protocol.  To make <code>mpd</code>
+a good citizen, we have fetched the <code>mpdris2</code> package as well as
+a dedicated, console-based program for controlling MPRIS-aware
+applications: <code>playerctl</code>.</p>
+
+<p>With these in place, the Music Player Daemon (and all other MPRIS-aware
+media players, like the ever-popular <code>vlc</code>) can be controlled using the
+keyboard’s dedicated media keys.  See <code>man playerctl</code> for more demanding
+types of interaction.  The key chords are defined in my <code>sxhkdrc</code> as
+explained in the chapter about the basics of my BSPWM.</p>
+
+<h3>Peace of mind</h3>
+
+<p>MPD is great because while it is powerful and can cater to the needs of
+the most avid audiophile, it also works seamlessly once you set it up.
+I prefer it over its alternatives because it is very much <em>laissez
+faire</em>, to the point you almost forget it is even there.</p>
+
+<p>When you log back in to the custom BSPWM session, <code>mpd</code> will be up and
+running, waiting for your input in a paused state (or stopped, in case
+that was the last interaction with it).</p>
+
+<p>You do not need to keep any window open, nor run some resource-hungry
+web app just for the sake of playing audio from your local collection.
+Use the keyboard’s dedicated key for play/pause or use the combination
+<code>super + down arrow</code>: music will start playing, while you get on with
+your work (do not forget to see my <code>sxhkdrc</code> for the relevant key
+chords).</p>
+
+<h2>Quick guide to set up Newsboat</h2>
+
+<p>Part of my customisations concern <code>newsboat</code>, a decent RSS/Atom reader
+for the console.  If you have never heard what an RSS or Atom feed is,
+it is a data stream that is meant to be read by client programs, known
+as “readers” or “feed readers”.  Whenever the source that publishes the
+feed makes a new entry (publishes something), the stream is populated
+with the new content, which the reader can then fetch.  This makes it
+possible to keep track of multiple websites from a single interface.
+Having all that in the terminal makes things even better.</p>
+
+<pre><code>~/cpdfd $ tree -aF newsboat/
+newsboat/
+└── .config/
+	└── newsboat/
+		├── config
+		├── queue
+		├── themes/
+		│   ├── tempus_theme_dark.theme
+		│   └── tempus_theme_light.theme
+		└── urls -&gt; /path/to/my/symlink # not part of the dotfiles
+
+3 directories, 5 files
+</code></pre>
+
+<p>All you need to get started is to first put things in place:</p>
+
+<pre><code>~/cpdfd $ stow -v newsboat
+LINK: .config/newsboat =&gt; ../dotfiles/newsboat/.config/newsboat
+</code></pre>
+
+<p>Then to actually read some feeds, you must <em>manually create</em> a <code>urls</code>
+file at <code>~/.config/newsboat/</code> with a single feed source per line, like
+this:</p>
+
+<pre><code>https://www.debian.org/News/news
+https://bits.debian.org/feeds/atom.xml
+https://www.gnu.org/software/guix/news/feed.xml
+</code></pre>
+
+<p>I personally <strong>exclude this file from the dotfiles because it might
+contain sensitive information</strong>.</p>
+
+<p>If you want to filter feeds, you can add one or more tags to them, with
+a space demarcating each entry:</p>
+
+<pre><code>https://www.debian.org/News/news "Distro"
+https://bits.debian.org/feeds/atom.xml "Distro Community"
+https://www.gnu.org/software/guix/news/feed.xml "GNU Linux Distro"
+</code></pre>
+
+<p>Tags are used to aggregate content from multiple sources:</p>
+
+<pre><code># A catch-all filter for unread items
+"query:Unread Articles:unread = \"yes\""
+
+# Some tag-specific filters
+"query:GNU plus Linux:tags # \"Distro\""
+"query:ARBITRARY NAME OF FILTER:tags # \"Tag\""
+</code></pre>
+
+<p>Once you launch the program, either from the command line or with the
+key chord chain <code>super + x ; 4</code> (see chapter on the basics of BSPWM) you
+will start seeing news items pop up, grouped by source URL.  From there
+you can use Vi motions or the arrow keys to select the desired item and
+either read it in place by hitting the <code>Return</code> key (<code>Enter</code>) or open it
+in the browser by hitting <code>o</code> (<code>firefox-esr</code> is the default and what
+I use).</p>
+
+<p>The config file is fairly simple, with each setting usually describing
+what it does:</p>
+
+<pre><code># General
+# -------
+show-read-articles no
+show-read-feeds no
+prepopulate-query-feeds no
+feed-sort-order unreadarticlecount
+show-keymap-hint yes
+swap-title-and-hints no
+text-width 72
+save-path "~/Documents/archived-articles/rss"
+browser /usr/bin/xdg-open %u
+confirm-exit yes
+display-article-progress yes
+</code></pre>
+
+<p>For more, see the source for the actual configurations.  Also read the
+manual with <code>man newsboat</code>.</p>
+
+<h2>The Tempus themes</h2>
+
+<p>PRIOR NOTICE: all the scripts referenced herein are discussed in greater
+detail in the chapter about my local <code>~/bin</code>.</p>
+
+<hr />
+
+<p>All the colours you see are part of a project of mine called <a href="https://protesilaos.com//tempus-themes/">Tempus
+themes</a>.  These are colour
+schemes for Vim, terminal emulators and relevant tools.  They consist of
+sixteen hues that correspond to the standard escape sequences for
+terminal colour definitions, in order from 0 to 15:</p>
+
+<pre><code>0-7: black, red, green, yellow, blue, magenta, cyan, white
+8-15: bright {black, red, green, yellow, blue, magenta, cyan, white}
+</code></pre>
+
+<p>I have designed Tempus with the purpose of filling a perceived void in
+the theming space: that of accessible, functional, yet still presentable
+colour schemes.  Tempus is designed to work well for as many users as
+possible, myself included.</p>
+
+<p>In more technical terms, the Tempus themes are compliant <strong>at minimum</strong>
+with the <em>Web Content Accessibility Guidelines</em> (WCAG) level AA for
+colour contrast between foreground and background values.  This stands
+for a relative luminance ratio of 4.5:1.  That ratio is but a threshold
+as some members of the collection conform with the even higher standard
+of 7:1 (WCAG AAA).</p>
+
+<h3>Accessibility is about good design</h3>
+
+<p>To dispel any misconceptions, “accessibility” is not only useful for
+a subset of users.  Accessibility is another way of describing
+thoughtful design.  It benefits everyone.  Being forced to read light
+grey on a white background or green text on a red backdrop is a major
+failure, indicating a lack of forethought and empathy with the user.</p>
+
+<p>For us who spend considerable amounts of time interfacing with
+a computer, a good contrast ratio is essential to a subconsciously
+pleasant session (just as with good typography, as discussed in the
+chapter about fonts).  Whether you read, write, code, your eyes will
+appreciate the improved legibility of text on the screen.</p>
+
+<p>Try this: miscalibrate your monitor and/or your font configurations to
+make text look blurry and irritating to the eye.  Work in that
+environment for a while to realise how much more painful it is.  Eye
+strain is real, so do yourself a service by prioritising legibility over
+whimsy.</p>
+
+<p>If you are used to inaccessible colour combinations, you may find Tempus
+themes a bit too sharp at first.  Give it some time: your eyes will
+adapt to the improved presentation.  I know from experience, as I used
+to work with inaccessible themes.  In fact, I had developed an entire
+collection of them: <a href="https://protesilaos.com/schemes/">Prot16</a>.  Those
+were not designed with accessibility and functionality in mind.  Some
+might even “look better” than the Tempus themes, but none <em>works
+better</em>.</p>
+
+<h3>The Tempus themes collection</h3>
+
+<p>As of this writing (2019-07-02) the Tempus themes collection consists of
+the following items (WCAG rating in parentheses):</p>
+
+<pre><code># Light themes
+dawn       (AA)
+day        (AA)
+fugit      (AA)
+past       (AA)
+totus      (AAA)
+
+# Dark themes
+autumn     (AA)
+classic    (AA)
+dusk       (AA)
+future     (AAA)
+night      (AAA)
+rift       (AA)
+spring     (AA)
+summer     (AA)
+tempest    (AAA)
+warp       (AA)
+winter     (AA)
+</code></pre>
+
+<p>The one you get by default is Tempus Classic, which is a dark theme with
+warm hues.</p>
+
+<h3>Tempus and my dotfiles</h3>
+
+<p>With the exception of GTK widget and icon themes, Tempus is applied
+everywhere colours can be defined.  Some notable examples are <code>bspwm</code>,
+<code>vim</code>, <code>tmux</code>, <code>newsboat</code>, <code>neomutt</code>, <code>dunst</code>, and my <code>lemonbar</code> script
+called <code>melonpanel</code>.  Even GTK-based text editors are covered, such as
+<code>gedit</code> (GNOME default), <code>pluma</code> (MATE default), and <code>gnome-builder</code>.</p>
+
+<p>A shell script is responsible for changing themes across all those
+applications: it is aptly named <code>tempus</code>, which is a <em>backronym</em>
+standing for “Themes Every Meticulous Person Ultimately Seeks” (in case
+you do not know, “tempus” is a real word in Latin).</p>
+
+<p>You can run <code>tempus</code> directly from the terminal by adding a scheme’s
+unique name as its argument.  For example, to switch to the light theme
+<code>day</code>, you would do:</p>
+
+<pre><code>tempus day
+</code></pre>
+
+<p>A slightly more convenient way is to use <code>tempusmenu</code>.  This is
+a <code>dmenu</code> script that interfaces with the aforementioned command.  It is
+bound to a hotkey sequence for your convenience.  To invoke
+<code>tempusmenu</code>, type <code>super + e ; t</code> (hold <code>super</code> and press <code>e</code>, then
+release <code>super</code> and just press <code>t</code>—this is a key chord chain, as
+discussed in the chapter about the basics of my BSPWM).  A menu with all
+available items will appear.  Either type your choice and press enter or
+use the arrow keys (or CLI/Emacs motions) and press enter.</p>
+
+<p>My dotfiles are designed in such a way that the following changes will
+occur when performing a theme switch across the entire environment:</p>
+
+<ul>
+  <li>All running terminals will “live reload” their colours using escape
+sequences.  Thanks to my <code>own_script_update_running_terminals</code>.
+Similarly, all running CLI programs like <code>vim</code>, <code>newsboat</code>, <code>neomutt</code>,
+<code>less</code> will gracefully adjust to the theme change.</li>
+  <li>My default terminal emulator, <code>xterm</code>, will also write the new colour
+definitions to its configuration file (also see the chapter about the
+default terminal).</li>
+  <li>The terminal multiplexer (<code>tmux</code>) will be instructed to reload its
+configurations in order to parse the new colours.</li>
+  <li>The top panel (<code>melonpanel</code>) will be re-run and display the new
+colours.  Same with the notification daemon (<code>dunst</code>).</li>
+  <li>All running GTK applications, including Flatpaks, will convert to
+a light or dark variant of their current theme, depending on whether
+the selected Tempus theme is light or dark (assuming you followed the
+instructions in the chapter about installing core packages).  So if
+you choose <code>totus</code>, for example, which is dark text on a light
+background, the GTK themes will also be light, and vice versa.  This
+is courtesy of a running settings daemon.  If you have followed the
+instructions in the chapters about installing Debian 10 ‘buster’ and
+adding the core packages, this is the <code>mate-settings-daemon</code>.</li>
+  <li>The wallpaper will change accordingly, if you have defined images at
+<code>~/Pictures/theme/{dark,light}.jpg</code>.</li>
+</ul>
+
+<p>All this happens in the blink of an eye.  If you care about the
+specifics (or wish to contribute) you need to examine the script that
+does the heavy lifting: <code>tempus</code>.</p>
+
+<p>In my opinion, this is a very neat feature.  Having it bound to a key
+chord makes it even better.  Now if you need any convincing of why you
+should ever be able to switch themes on the fly, try coding using a dark
+theme under direct sunlight…</p>
+
+<h3>Additional resources</h3>
+
+<p>The Tempus themes is a standalone project that happens to be integrated
+with my dotfiles.  There are a number of <code>git</code> repos.  The specialised
+ones are specific to the program they reference:</p>
+
+<ul>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes">Tempus themes</a>.  The
+main content hub, which provides information about the project, screen
+shots, and offers all available ports in a central place.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-gtksourceview3">Tempus themes GTK3 Source
+View</a>.
+For GTK-based text editors like Gedit, Pluma, Mousepad.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-gtksourceview4">Tempus themes GTK4 Source
+View</a>.
+Only known implementation is for GNOME builder though other apps will
+follow once the migration to GTK4 gains momentum.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-kitty">Tempus themes Kitty</a>.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-konsole">Tempus themes Konsole</a>.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-st">Tempus themes ST</a>.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-tilix">Tempus themes Tilix</a>.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-urxvt">Tempus themes URxvt</a>.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-vim">Tempus themes Vim</a>.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-xfce4-terminal">Tempus themes Xfce4-terminal</a>.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes-xterm">Tempus themes Xterm</a>.</li>
+</ul>
+
+<p>Also see the <a href="https://gitlab.com/protesilaos/tempus-themes-generator">Tempus themes
+Generator</a>: the
+tool that produces all these ports and the place where you could
+contribute new templates, code, ideas.</p>
+
+<h3>Known issues</h3>
+
+<p>The “live reloading” of all running instances of <code>vim</code> is contingent on
+<code>tmux</code> (see chapter on my Tmux+Vim combo).  If you are running the text
+editor outside of the multiplexer’s control (e.g. a GUI), then the theme
+switch requires manual intervention.  Either exit Vim and enter again or
+run <code>:source ~/.vimrc</code>.  To fix this, I would need a program that can
+send key chords to running applications: this is possible within <code>tmux</code>,
+as can be seen in <code>tmux_update_vim</code>.  There is <code>xdotool</code>, but my tests
+did not yield promising results…</p>
+
+<p>If you are using the <code>mate-terminal</code> (recall that <code>xterm</code> is my default
+and recommended option) and try to open a new instance of it while the
+theme switch is underway, it will likely retain its older colour scheme
+in the database, even if it might catch the step where terminals are
+live reloaded via escape sequences.  In such a case the theme switch
+needs to be performed anew or you must manually run
+<code>own_script_mate_terminal_setup</code>.</p>
+
+<h2>About my local ~/bin</h2>
+
+<p>An integral part my dotfiles is the <code>bin</code> directory.  It includes
+various scripts that I have written for use in my custom desktop
+session.  Some of these are essential to various functions and
+workflows.  Others are convenient extras.</p>
+
+<pre><code>~/cpdfd $ tree -aF bin
+bin
+├── bin/
+│   ├── bspwm_dynamic_desktops*
+│   ├── bspwm_external_rules*
+│   ├── bspwm_focus_mode*
+│   ├── bspwm_multifaceted_operation*
+│   ├── bspwm_reorder_desktops*
+│   ├── bspwm_smart_move*
+│   ├── bspwm_smart_presel*
+│   ├── clr*
+│   ├── dotsmenu*
+│   ├── flatpakmenu*
+│   ├── gev*
+│   ├── melonpanel*
+│   ├── nbm*
+│   ├── own_script_bspwm_node_resize*
+│   ├── own_script_bspwm_per_host_configs*
+│   ├── own_script_current_keyboard_layout*
+│   ├── own_script_laptop_dual_monitor*
+│   ├── own_script_local_build_tempus_themes*
+│   ├── own_script_mate_setup*
+│   ├── own_script_mate_terminal_setup*
+│   ├── own_script_notify_send_mpc_status*
+│   ├── own_script_print_colour_table*
+│   ├── own_script_run_dmenu_xcolors*
+│   ├── own_script_run_passmenu_xcolors*
+│   ├── own_script_update_environment_theme*
+│   ├── own_script_update_running_terminals*
+│   ├── own_script_update_tmux_running_vim*
+│   ├── passmenu*
+│   ├── poweroptionsmenu*
+│   ├── ptp*
+│   ├── sbg*
+│   ├── sbgmenu*
+│   ├── stm*
+│   ├── stmmenu*
+│   ├── tempus*
+│   ├── tempusmenu*
+│   ├── tmr*
+│   ├── tmux_update_vim*
+│   ├── toggle_compton*
+│   └── toggle_screenkey*
+└── .local/
+	└── share/
+		└── my_custom_ui_font.sh*
+
+3 directories, 41 files
+</code></pre>
+
+<p>Let’s first get out of the way the <code>my_custom_ui_font.sh</code>.  This file
+contains the font definition that is used in my various <code>dmenu</code>
+implementations.  The code part:</p>
+
+<pre><code>if [ -n "$(fc-list 'dejavu sans condensed')" ]; then
+	my_font_family='DejaVu Sans Condensed'
+	my_font_size=12.5
+fi
+
+my_custom_ui_font="${my_font_family:-sans}-${my_font_size-12}:${my_font_weight:-regular}"
+</code></pre>
+
+<p>Now a few words about the scripts, with the proviso that you can always
+learn more about each one by studying the source code:</p>
+
+<ul>
+  <li>Scripts that start with “own_script” are labelled as such for
+a variety of reasons: (1) their function is ancillary to something
+else, (2) I might develop a better replacement, (3) avoid naming
+conflicts, (4) be descriptive about what each item is about.</li>
+  <li>Scripts whose name begins with “bspwm_” implement various advanced
+functions for the window manager.  These are documented in the chapter
+about the advanced features of my BSPWM.</li>
+  <li>In principle, all items have inline documentation, except <code>passmenu</code>
+which is provided by another source referenced therein.</li>
+  <li>While on the topic of <code>passmenu</code>, this is a <code>dmenu</code> interface for
+copying to the clipboard a password stored with <code>pass</code>.  Such an
+awesome feature!  To put it succinctly, this is what sold me on both
+the power of <code>dmenu</code> and the idea of a dedicated password manager that
+works seamlessly with core UNIX utilities.</li>
+  <li>Many of these scripts are assigned to custom key bindings.  Better
+check my <code>sxhkdrc</code> and/or <code>sxhkdrc_bspc</code> to find out the relevant key
+chords (as explained in the chapter about the basics of my BSPWM).</li>
+  <li>The items <code>nbm</code>, <code>sbg</code>, and <code>sbgmenu</code> cover various ways of setting
+the desktop backdrop.  I guess it is better explained in this short
+video: <a href="https://protesilaos.com/codelog/2019-02-09-unix-ways-wallpapers/">My UNIX-y ways to wallpapers</a>.</li>
+  <li>The <code>stm</code> and <code>stmmenu</code> are tools for handling my task list, in
+accordance with my own methodology.  They are complementary to each
+other.  This short video of mine should be enough to get you started:
+<a href="https://protesilaos.com/codelog/2019-02-17-unix-ways-todo/">UNIX way to task management</a>.</li>
+  <li><code>gev</code> must be run in the terminal to print a table with the status of
+all <code>git</code> repositories inside the user’s home directory.  Better see
+this video: <a href="https://protesilaos.com/codelog/2019-03-25-gev-demo/">Demo of my Git’s Eye View</a>.</li>
+  <li>The <code>own_script_run_*</code> commands are wrappers around <code>dmenu_run</code> and
+<code>passmenu</code> respectively.  They are meant to customise the looks to my
+liking, in order to keep things consistent.</li>
+  <li>If you have Flatpak applications on your system, <code>flatpakmenu</code> will
+provide a nice interface to launching them.</li>
+  <li><code>melonpanel</code> is the script that draws the session’s panel.  It is what
+provides content/information to <code>lemonbar</code> for display on the screen.
+This is discussed at length in the chapter about the top panel.</li>
+  <li>Then there are a few items that are meant to integrate my themes into
+the various parts of the running session (as explained in the chapter
+about the Tempus themes): <code>tempusmenu</code> is a front end to selecting the
+theme you want; <code>tempus</code> does the actual work of applying the new
+theme across all supported programs; running terminals are re-coloured
+with <code>own_script_update_running_terminals</code>; while the running Vim
+sessions inside of Tmux are re-styled with the use of
+<code>tmux_update_vim</code>.</li>
+  <li><code>poweroptionsmenu</code> provides an interface for logging out of the
+session, switching users, locking the screen (using <code>slock</code>),
+rebooting, and shutting down the system.  Note that <code>slock</code> may have
+an unintuitive interface at first, since all it does is turn the
+screen dark—you need to type your pass word and hit “Return” to unlock
+it.  The screen will switch to a blue colour each time you type.</li>
+  <li><code>toggle_compton</code> will enable or disable the display compositor.
+A very useful feature under certain circumstances where running
+<code>compton</code> is detrimental to the task at hand.  For instance, I use
+this to shut down the compositor when I am screen casting.</li>
+  <li><code>toggle_screenkey</code> is another on/off switch for the program it
+references.</li>
+  <li><code>ptp</code> is a script that prints a table with the colour palette of the
+active Tempus theme.  The table is “context-aware”, so that it
+displays information depending on the width of the running terminal.</li>
+  <li><code>clr</code> calculates the contrast ratio between two colours.  You run it
+by passing two arguments to it, each representing a colour that is
+written in valid hexadecimal RGB notation.</li>
+  <li><code>tmr</code> is a very simple timer.  Run it with a single argument that
+represents a valid unit of time in seconds, minutes, hours, such as
+<code>tmr 10m</code>.  Once the time has elapsed, it will print a message
+informing you of the time it started and end.  It will also ring an
+alarm for a few seconds.</li>
+</ul>
+
+<p>Finally, it is worth pointing out that the quality of these scripts may
+vary considerably.  The newer the script, the better it is.  This is all
+part of a learning process as I am not a programmer by trade.  Despite
+that, I hope my efforts on this front are enough to set you up and
+running on a custom desktop session centred around the Binary Space
+Partitioning Window Manager.</p>
+
+<h2>Advanced features of my BSPWM session</h2>
+
+<p>My dotfiles’ stow package called “bin” includes the following set of
+scripts that alter the behaviour of the window manager:</p>
+
+<pre><code>~/cpdfd $ tree -aF bin
+bin
+├── bin/
+│   ├── bspwm_dynamic_desktops*
+│   ├── bspwm_external_rules*
+│   ├── bspwm_focus_mode*
+│   ├── bspwm_multifaceted_operation*
+│   ├── bspwm_reorder_desktops*
+│   ├── bspwm_smart_move*
+│   ├── bspwm_smart_presel*
+# Trimmed output
+</code></pre>
+
+<p>Here I explain what each item does and how it is implemented in my
+system.  All hotkeys mentioned herein are defined in my <code>sxhkdrc_bspc</code>.</p>
+
+<h3>Dynamic desktops</h3>
+
+<p>By default, BSPWM uses a fixed number of desktops.  A set is assigned to
+a monitor at startup.  This is a perfectly usable design, especially for
+single-monitor setups.  It can, however, be inefficient:</p>
+
+<ul>
+  <li>You seldom need, say, ten desktops at all times.  Your normal work
+requires only three or four of them.  So why keep the rest?  And why
+try to work around this by retroactively concealing them from the
+<code>bspc</code> report, the panel, etc.?</li>
+  <li>On multi-head setups, you might find it preferable to decouple
+desktops from monitors.  You might, for instance, require five
+desktops on the larger monitor and only one on the smallest one.
+Again, why commit to a specific number at startup and try to adapt
+your workflow to it.</li>
+</ul>
+
+<p>Dynamic desktops solve these <em>potential</em> issues.  You start with
+a single desktop per monitor and go from there in accordance with your
+evolving requirements.</p>
+
+<p>The script is designed to insert/remove desktops on a per monitor basis.
+This means that its operations are always confined to the focused
+monitor.  As such, if you are on desktop 1 on monitor one, and switch to
+desktop 2 (using <code>super + {0-9}</code>), then desktop 2 will be placed on
+monitor one as well.  If you wanted to have it on monitor two, you would
+need to bring focus to it first (cycle through monitors with the key
+chord <code>super + comma</code>).</p>
+
+<p>Alternatively, you can spawn a desktop on the next monitor without
+switching focus to it, by pressing <code>super + ctrl + {0-9}</code>.  Such
+a desktop will hold a receptacle (discussed below).</p>
+
+<p>Sending the focused window to a dynamically-created desktop is
+straightforward: <code>super + shift + {0-9}</code>.  Again, this is limited to the
+given monitor, while I have decided not to implement a direct action for
+sending the focused window to a new desktop on the next monitor.  There
+is a trade-off between feature completeness and complexity.</p>
+
+<p>In short, dynamic desktops should have a natural feel to them.  You just
+move around and they adapt accordingly.  As a bonus, I have added
+a “back-and-forth” behaviour, so if you input the same number of the
+desktop twice while using <code>super + {0-9}</code>, focus will move to the last
+desktop and back again.</p>
+
+<p>Dynamic desktops and the concomitant back-and-forth behaviour were
+inspired by <code>i3wm</code>.</p>
+
+<h3>Reorder desktops</h3>
+
+<p>This is a simple script that will reorder the desktops in numerical
+order.  You will probably have no use for this, because it is already
+part of <code>bspwm_dynamic_desktops</code> from where it was extracted.  Still, it
+is provided as a standalone utility in case you ever find yourself
+manually performing the necessary <code>bspc</code> actions that add/remove
+desktops.</p>
+
+<h3>Manual tiling (smart presel and external rules)</h3>
+
+<p>BSPWM automatically tiles windows in a spiral layout.  Older windows
+move inwardly, while the newest one occupies the outermost part of the
+spiral (at the given level).  However, the window manager also offers
+a couple of features for manually placing windows on the screen.  Those
+are referred to as preselections and receptacles respectively.</p>
+
+<p>A preselection is, by default, an area that is a fraction of the focused
+node.  The preselection provides feedback on where the <em>next</em> window
+will be placed.  When that event takes place, the focused window is
+split at the given ratio and focus switches to the new window.</p>
+
+<p>In contradistinction, receptacles are empty frames that occupy an area
+of the screen, as per the tiling scheme, until they are expressly told
+to host a window, at which point they cease to exist.  Think of them as
+placeholders for windows yet-to-be.  To send an item to the position of
+the receptacle, we need to pass a specific command: the unscripted
+tiling method will not affect receptacles.</p>
+
+<p>I have decided to carve a niche for each of these features and design
+distinct courses of action around them.  The two scripts involved in the
+process are <code>bspwm_smart_presel</code> and <code>bspwm_external_rules</code>.</p>
+
+<p>“Smart presel” contains logic to evaluate the following and lead to the
+relevant consequences:</p>
+
+<ul>
+  <li>Is there a marked window (using the node flag “marked”, which is
+assigned with <code>super + a ; m</code>)?  If yes, then use the first that
+matches this criterion.  Otherwise operate on the focused window.</li>
+  <li>Does a receptacle exist?  If yes, use it to place the window in its
+stead.  Else put the window in the position of the first matching
+preselection.</li>
+</ul>
+
+<p>A preselection is given with <code>super + alt + {h,j,k,l}</code>.  It is cancelled
+by inputting the same direction twice.  To insert a receptacle, press
+<code>super + n ; r</code>.  Remove it at any time with <code>super + n ; super + r</code>
+(you can then resize nodes, adjust the split ratios etc. as mentioned in
+the chapter on the basics of my BSPWM).  If a preselection is available,
+then a new receptacle will be placed there.</p>
+
+<p>To place the marked or focused window in the position of the available
+receptacle or preselection type <code>super + n ; i</code>.  The difference between
+the two is revealed when performing such actions across desktops.
+A receptacle will not call focus to itself, whereas a preselection will.</p>
+
+<p>The assumption that underpins this design is that a receptacle can be
+placed in a desktop, then a program that has a rather slow startup time
+is launched (e.g. the web browser).  The user is free to switch to
+another desktop in the meantime.</p>
+
+<p>This way you can continue your work and get back to that slow
+application at a later point.  Multi-head setups render this apparent.
+For example, you “pre-load” the smaller monitor, switch to the larger
+one, work there and the application will appear on the small monitor,
+taking the place of the receptacle.  No interruptions, no things moving
+around.  This is precise and deliberate.</p>
+
+<p>Note that for such a scenario you do not need to press <code>super + n ; i</code>,
+because the external rules come into play, automatically placing the
+next window in the position of the first available receptacle (or
+preselection if no receptacle exists).  You can, nonetheless, still use
+<code>super + n ; i</code>.  Place a receptacle in a new desktop, switch to another
+and then type that key sequence to insert the marked or focused window
+there.</p>
+
+<p>At any rate, all this is a means of fleshing out BSPWM’s notions of
+manual tiling actions.  You are free to tweak things to your liking.</p>
+
+<h3>Multifaceted operations (multi-node actions)</h3>
+
+<p>This is, dare I say, a beautifully simple script that facilitates window
+management over multiple selection paths.  Its various actions are
+assigned to key chords and concern the following:</p>
+
+<ul>
+  <li><code>super + n ; super + shift + r</code>: kill all receptacles (as opposed to
+only remove the last one, with <code>super + n ; super + r</code>).</li>
+  <li><code>super + n ; super + q</code>: close all non-focused, non-marked windows on
+the focused desktop.  This is an extension of the standard key for
+closing the focused window: <code>super + q</code> with the added bonus of
+respecting the “marked” flag (it is assumed you are marking windows
+for a reason).</li>
+  <li><code>super + n ; super + shift + q</code>: same as above, but kills them
+instead.  For context, the key for killing just the focused window is
+<code>super + shift + q</code>.</li>
+  <li><code>super + n ; l</code>: assign the “locked” flag to all windows in the
+present desktop.  A locked window cannot be closed with any of the
+commands mentioned earlier (though it <em>can be killed</em>).  Recall from
+the chapter on the basics of my BSPWM that to assign such a flag to
+the focused window, you press <code>super + a ; l</code> (inputting twice toggles
+the behaviour).</li>
+  <li><code>super + n ; shift + l</code>: remove the “locked” flag from all windows on
+the present desktop.</li>
+  <li><code>super + n ; m</code>: summon all “marked” windows, regardless of where they
+are, to the present desktop.  You can mark a window by passing to it
+that flag: <code>super + a ; m</code>.</li>
+  <li><code>super + n ; super + {0-9}</code>: bring all the windows of the given
+desktop (the given number) to the focused one.  This is an extension
+of the basic key for focusing desktops: <code>super + {0-9}</code>.</li>
+  <li><code>super + n ; super + shift + {0-9}</code>: send the windows of the present
+desktop to the given one.  This incorporates the dynamic desktops
+mentioned above, so inputting a number will just create that desktop
+on the focused monitor.</li>
+</ul>
+
+<p>With those granted, I recommend you try learning things one command at
+a time.  Otherwise you will most certainly mix up all the key chords and
+key chord chains.  Start with the basics.  You will then realise that
+the more advanced ones build on that foundation.</p>
+
+<h3>Smart move</h3>
+
+<p>You move focus around windows with <code>super + {h,j,k,l}</code>.  Additionally,
+you swap the position between the focused window and the one in the
+given direction with <code>super + shift + {h,j,k,l}</code>.  These are standard
+actions that are provided out-of-the-box.  Their two limitations are:</p>
+
+<ol>
+  <li>They do not work with receptacles.</li>
+  <li>You cannot remove a window from the automatic tiling scheme.  You
+must instead switch places with an existing one.</li>
+</ol>
+
+<p>So what I have decided to do is provide a wrapper around the standard
+commands for focusing and switching windows, but also account for
+receptacles.</p>
+
+<p>If you input the keys that switch windows in a direction where no window
+exists, a receptacle will be spawned to occupy that place.  Inputting
+the same direction again will move the focused window that is adjacent
+to the receptacle to the space occupied by the latter.  At that point
+the receptacle will disappear.</p>
+
+<p>This provides an intuitive way of moving a window to the position of an
+adjacent receptacle, rather than having to memorise a key chord chain
+(though that still has its use case for instances where you do not want
+to move a window adjacent to a receptacle).</p>
+
+<p>Furthermore, this offers the upside of creating three column/row layouts
+by just moving things around.  Consider this standard layout for three
+windows:</p>
+
+<pre><code>_____ _____
+|   | | B |
+| A | |___|
+|   | | C |
+|___| |___|
+</code></pre>
+
+<p>You can focus B or C and input <code>super + shift + l</code> to insert
+a receptacle to their right.  Do so again to move the adjacent focused
+window there, to get a three column layout.  You can then even out the
+proportions of the splits between the windows with <code>super + s ; b</code>.</p>
+
+<p>Try working with <code>bspwm_smart_move</code> for a while.  If you find that it
+poses an impediment to your workflow you can find easy-to-follow
+instructions inside <code>sxhkdrc_bspc</code>.</p>
+
+<h3>Focus mode</h3>
+
+<p>This is a “distraction-free” environment that removes the top panel,
+window gaps, and any padding from the desktop.  All you see is windows
+with <em>overlapping borders</em> between them.  The idea is to remove all
+complementary elements and focus on the content of your work.  For
+example, I often use this when I am doing long-form writing.</p>
+
+<p>Toggle the focus mode with <code>super + e ; f</code>.</p>
+
+<h3>Is BSPWM the best tiling window manager?</h3>
+
+<p>Short answer: it depends.</p>
+
+<p>Long answer:  You cannot possibly address such questions in abstract.
+Much hinges on the desired workflow and the needs each user has.  One’s
+disposition must be accounted for: whether they want to experiment and
+script certain patterns of behaviour, and the like.</p>
+
+<p>The purpose of this chapter, and this book at-large, is to make a point
+about the degree to which we can approximate a desktop environment by
+utilising disparate programs in a synergistic way.</p>
+
+<p>BSPWM works perfectly fine without scripting anything.  It does,
+nonetheless, offer that option, which opens up a range of possibilities
+for advanced window management.</p>
+
+<h2>Closing notes and additional resources</h2>
+
+<p>That is all from my side.  Thank you for reading through the pages of
+<em>Prot’s Dots for Debian</em> (PDFD).  You should now have a solid basis to
+build upon.</p>
+
+<p>Remember: we customise our session to improve our workflow.  Efficiency
+is all that matters.  What gets upvoted in various fora for *NIX
+enthusiasts does not always work as well (e.g. low-contrast colour
+schemes, excessive transparency and wanton use of blur effects).</p>
+
+<p>I leave you with some links, just for the sake of completeness:</p>
+
+<ul>
+  <li>The canonical link to <a href="https://protesilaos.com/pdfd">PDFD</a> (part of my
+website).</li>
+  <li><a href="https://protesilaos.com/">My website</a>, where I publish all sorts of
+things apart from libre software stuff.</li>
+  <li>Source files for <em>Prot’s Dots For Debian</em>:
+    <ol>
+      <li><a href="https://gitlab.com/protesilaos/pdfd">PDFD repo</a>.</li>
+      <li><a href="https://gitlab.com/protesilaos/protesilaos.gitlab.io">Site repo</a>.</li>
+    </ol>
+  </li>
+  <li>The <a href="https://gitlab.com/protesilaos/cpdfd">Code for PDFD</a> contains the
+latest fixed release of my dotfiles.  It was our reference point
+throughout this book.</li>
+  <li><a href="https://gitlab.com/protesilaos/dotfiles">My dotfiles</a> is where I push
+regular changes to my custom desktop session.  I include them in
+a “fixed release” when I feel they are ready for broader adoption.</li>
+  <li><a href="https://gitlab.com/protesilaos/tempus-themes">Tempus themes</a>.  This
+is just the main repo, which includes information about the entirety
+of the project, as noted in the chapter about the Tempus themes.</li>
+</ul>
+
+<h3>Annex on the multi-monitor setup</h3>
+
+<p>This <em>annex</em> is only meant to share with the public a modified version
+of a reply I sent via email to a fellow user.  Changes are made to
+ensure compatibility with the rest of the book.</p>
+
+<p>The purpose of annexes is to provide some extra information, with the
+proviso that the reader is also willing to put in the effort where
+necessary.  They also are published for the longer-term maintainability
+of “Prot’s Dots For Debian” (PDFD): I can just link to them in case
+anyone else has a similar question/issue.</p>
+
+<hr />
+
+<p>This chapter concerns the settings I have in place for allowing my
+custom desktop session to use a dual monitor setup.  My main machine is
+a laptop (Thinkpad X220) to which I attach an external monitor via the
+VGA port.</p>
+
+<p>The multi-monitor setup consists of three parts, which are documented in
+sequence.  It is assumed that you have already followed earlier steps in
+this book to get my code/configs and put them in their right place.</p>
+
+<p>Before we start, here is a short primer on <code>xrandr</code>.</p>
+
+<h3>0. Basics of XrandR</h3>
+
+<p>The <code>xrandr</code> utility helps us identify the available connected monitors,
+or “outputs”, with the command <code>xrandr -q</code>.</p>
+
+<p>What I get from that:</p>
+
+<pre><code>xrandr -q
+
+Screen 0: minimum 8 x 8, current 3286 x 1080, maximum 32767 x 32767
+LVDS1 connected primary 1366x768+0+0 (normal left inverted right x axis y axis) 280mm x 160mm
+   1366x768      60.00*+
+   1360x768      59.96
+   1280x720      59.86    60.00    59.74
+   1024x768      60.00
+   1024x576      60.00    59.90    59.82
+   960x540       60.00    59.63    59.82
+   800x600       60.32    56.25
+   864x486       60.00    59.92    59.57
+   640x480       59.94
+   720x405       59.51    60.00    58.99
+   680x384       60.00
+   640x360       59.84    59.32    60.00
+DP1 disconnected (normal left inverted right x axis y axis)
+DP2 disconnected (normal left inverted right x axis y axis)
+DP3 disconnected (normal left inverted right x axis y axis)
+HDMI1 disconnected (normal left inverted right x axis y axis)
+HDMI2 disconnected (normal left inverted right x axis y axis)
+HDMI3 disconnected (normal left inverted right x axis y axis)
+VGA1 connected 1920x1080+1366+0 (normal left inverted right x axis y axis) 480mm x 270mm
+   1920x1080     60.00*+
+   1680x1050     59.95
+   1600x900      60.00
+   1280x1024     75.02    60.02
+   1440x900      59.89
+   1280x800      59.81
+   1152x864      75.00
+   1280x720      60.00
+   1024x768      75.03    70.07    60.00
+   832x624       74.55
+   800x600       72.19    75.00    60.32    56.25
+   640x480       75.00    72.81    66.67    59.94
+   720x400       70.08
+VIRTUAL1 disconnected (normal left inverted right x axis y axis)
+</code></pre>
+
+<p>We can then limit the output to just those we are interested in:</p>
+
+<pre><code>xrandr -q | grep -w connected
+
+LVDS1 connected primary 1366x768+0+0 (normal left inverted right x axis y axis) 280mm x 160mm
+VGA1 connected 1920x1080+1366+0 (normal left inverted right x axis y axis) 480mm x 270mm
+</code></pre>
+
+<p>With this in mind, we proceed to my scripts.</p>
+
+<h3>1. Monitor layout for the X display server</h3>
+
+<p>We first need to tell the X server how we want our monitors to be drawn.
+This concerns their geometry and relative positions.  The script
+dedicated to this task is <code>own_script_laptop_dual_monitor</code> (refer to the
+chapter about my local ~/bin).  Let us then have a look into its main
+elements.</p>
+
+<p>This function accepts an argument that determines whether the laptop
+screen will be designated as the “primary” one or not.  It also
+establishes the coordinates of the laptop’s built-in display.  The
+<code>--mode</code> is the monitor’s dimensions (resolution), while <code>--pos</code> means
+to place the monitor at the upper left point of the notional space that
+X assigns to the displays.  The <code>X×Y</code> coordinates are <code>Width×Height</code>:</p>
+
+<pre><code>laptop_coordinates() {
+    if [ "$#" == 1 ]; then
+        xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x0
+    else
+        xrandr --output LVDS1 --mode 1366x768 --pos 0x0
+    fi
+}
+</code></pre>
+
+<p>And this one below sets the coordinates and dimensions for the external
+monitor.  The laptop is specified as the primary display.  Note the
+<code>--pos</code> of the external display, which has an <code>X</code> axis that continues
+right after the end of the laptop monitor.  The <code>Y</code> axis remains at <code>0</code>,
+which means that the two monitors are aligned at the top horizontally
+but not at the bottom, because the laptop’s is shorter.</p>
+
+<pre><code>multihead_coordinates() {
+    echo "Configuring LVDS1 + VGA1 XrandR coordinates"
+    # pass a single argument to activate the --primary option
+    laptop_coordinates 'primary'
+
+    # configure the external display on the VGA port
+    xrandr --output VGA1 --mode 1920x1080 --pos 1366x0
+}
+</code></pre>
+
+<p>Then I have a very simple command to see if the VGA monitor is
+connected.  If it is not, then this variable is empty:</p>
+
+<pre><code>my_laptop_external_monitor=$(xrandr --query | grep 'VGA1 connected')
+</code></pre>
+
+<p>Finally I run a check against this variable.  I leave out some extra
+commands here, for the sake of our topic.  The <code>elif</code> condition is there
+for cases where I need to use the script outside BSPWM (e.g. to set up
+LightDM—contact me if this is something you are interested in):</p>
+
+<pre><code>if [ -n "$my_laptop_external_monitor" ] &amp;&amp; [ "$DESKTOP_SESSION" == 'bspwm' ]; then
+    multihead_coordinates
+elif [ -n "$my_laptop_external_monitor" ]; then
+    multihead_coordinates
+else
+    laptop_coordinates
+fi
+</code></pre>
+
+<h3>2. BSPWM multihead</h3>
+
+<p>The above will just prepare the dual monitors for the X display server.
+We still need to configure BSPWM accordingly, otherwise we will not get
+the desired results.  I do this in a separate script, for the sake of
+portability.  This one is <code>own_script_bspwm_per_host_configs</code> (it has a
+few more commands that I omit for the sake of brevity and to remain on
+topic).</p>
+
+<p>First we check the number of monitors.  Basically to confirm that an
+external display is on.  This time we use BSPWM client program, just to
+be sure that it is running and finding the information it needs:</p>
+
+<pre><code>monitor_count="$(bspc query -M | wc -l)"
+</code></pre>
+
+<p>I then have a very simple command for single monitor setups.  This just
+defines the workspaces/desktops on the first available monitor (i.e. the
+only one).  Note that I only specify a single desktop because I use my
+custom script for dynamic desktops, which is documented in the chapter
+about the advanced features of my BSPWM.</p>
+
+<pre><code>bspwm_generic_workspaces() {
+    bspc monitor -d 1
+}
+</code></pre>
+
+<p>Then I have settings for the workspaces/desktops and a few other things.
+I just include the desktops’ part to keep this article on point.</p>
+
+<pre><code>bspwm_laptop_dual_monitor() {
+    bspc monitor LVDS1 -d 1
+    bspc monitor VGA1 -d 8
+}
+</code></pre>
+
+<p>So I place just a single desktop on each monitor.  The actual numbers
+have no real significance here.  You can switch desktops with the
+motions I document in the basics of my BSPWM (use <code>super+NUM</code> or to
+switch monitors while retaining their currently-focused desktop go with
+<code>super+,</code>)</p>
+
+<p>I implement one desktop per monitor because I use my own “dynamic
+desktops” script.  Otherwise you can have something like:</p>
+
+<pre><code>bspwm_laptop_dual_monitor() {
+	bspc monitor LVDS1 -d 1 2 3 4 5
+	bspc monitor VGA1 -d 6 7 8 9 0
+}
+</code></pre>
+
+<p>In my experience the numbers need to be in sequence.  You <em>cannot have</em>
+them alternate (LVDS has 1 3 5 /// VGA has 2 4 6).</p>
+
+<p>At any rate, here is the excerpt of the final piece of the script.  I
+put it first and explain it below:</p>
+
+<pre><code># run the script that adds the appropriate `xrandr` settings
+if [ "$(command -v own_script_laptop_dual_monitor 2&gt; /dev/null)" ]; then
+    own_script_laptop_dual_monitor
+fi
+
+# Is an external monitor connected to my laptop?
+if [ "$monitor_count" == 2 ]; then
+    echo "Monitor count is equal to 2"
+    echo "Defining per-monitor workspaces"
+    bspwm_laptop_dual_monitor
+else
+    bspwm_generic_workspaces
+fi
+</code></pre>
+
+<p>As you can see, it first runs the script I mentioned in the previous
+section.  This is because I only autostart this one script at BSPWM
+launch (more on that below).</p>
+
+<p>Then it simply configures the workspaces/desktops depending on whether
+there is an external monitor or not.</p>
+
+<p>That is all to it.  The final piece is to run this script when BSPWM
+starts.  So this is the very last line in my <code>bspwmrc</code>:</p>
+
+<pre><code>_check own_script_bspwm_per_host_configs &amp;&amp; own_script_bspwm_per_host_configs
+</code></pre>
+
+<p>The <code>_check</code> function expands into <code>command -v "$1" &gt; /dev/null</code> where
+the argument <code>$1</code> is the name of the script/command to check against
+(see the file to understand how I use this throughout it).  The command
+basically checks for the existence of the script before running it.</p>
+
+<h3>3. Panel settings (lemonbar)</h3>
+
+<p>Thus far everything should work except the system panel.  As explained
+in much greater detail in the chapter about the top panel, my script
+that configures <code>lemonbar</code> is called <code>melonpanel</code>.  This is a long
+script.  The part about monitors concerns the actual placement of the
+panel on which all the “modules” are printed (information about
+desktops, the date, sound volume, etc.).  Here are the extracted parts:</p>
+
+<pre><code>laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
+
+if [ -n "$laptop_external_monitor" ]; then
+   printf "%s%s\n" "%{Sf}$(_panel_layout)" "%{Sl}$(_panel_layout)"
+else
+    printf "%s\n" "%{Sf}$(_panel_layout)"
+fi
+</code></pre>
+
+<p>Focus on the <code>%{Sf}</code> and <code>%{Sl}</code> constructs.  This is <code>lemonbar</code> syntax
+for the first and second monitor respectively.  Basically to place the
+same panel on both of them.</p>
+
+<h3>Concluding notes</h3>
+
+<p>I understand this is a rather complex topic.  Hopefully you now have a
+basis to work with.  The way I would troubleshoot any problems is to
+make sure that the X server draws the screens correctly and that BSPWM
+places the right desktops on each monitor.</p>
+
+<p>For example, say desktop 8 is on the external display, while desktop 1
+is on the laptop.  Switch to 8 and spawn a terminal emulator.  Then
+switch to 1 and do the same.  If you get terminals on both monitors,
+then your only problem is with the panel.</p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:GNUViewDistros" role="doc-endnote">
+      <p><a href="https://www.gnu.org/distros/common-distros.html">Explaining Why We Don’t Endorse Other Systems</a>.  By the GNU project. <a href="#fnref:GNUViewDistros" class="reversefootnote" role="doc-backlink">[^]</a></p>
+    </li>
+    <li id="fn:FSFDistros" role="doc-endnote">
+      <p><a href="https://www.gnu.org/distros/free-distros.html">Free GNU/Linux distributions</a>.  By the GNU project. <a href="#fnref:FSFDistros" class="reversefootnote" role="doc-backlink">[^]</a></p>
+    </li>
+  </ol>
+</div>

@@ -1,0 +1,96 @@
+
+         
+         <p><strong>UPDATE 2019-06-24.</strong>  I created <a href="https://gitlab.com/protesilaos/lemonbar-xft">my own
+fork</a> for this very
+purpose.  See <a href="https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/">how I forked
+lemonbar-xft</a>.</p>
+
+<hr />
+
+<p>Lemonbar is a lightweight program that draws a panel on the viewport.
+The information on display is whatever is pipped to it.</p>
+
+<h2>The problem: upstream only works with bitmap fonts</h2>
+
+<p>Upstream <code>lemonbar</code> lacks support for proportional fonts and the
+corresponding interface with <code>fontconfig</code>.</p>
+
+<p>This is a disappointment because fixed/bitmap typefaces leave much to be
+desired:</p>
+
+<ul>
+  <li>support for Greek glyphs is limited to a handful of typefaces such as
+<code>terminus</code>, <code>fixed</code>, <code>times</code>;</li>
+  <li>the quality of bold variants can be lower than the regular ones;</li>
+  <li>only specific point sizes work well;</li>
+  <li>colours are less distinct on a light background.</li>
+</ul>
+
+<h2>The solution: compile lemonbar-xft (my fork)</h2>
+
+<p>There is a popular alternative by GitHub user <em>krypt-n</em> that provides
+Xft support, but seems to <a href="https://github.com/krypt-n/bar/pull/37#issuecomment-473265449">have been
+discontinued</a>.
+So I have decided to pick it up and maintain it.  To make sure it syncs
+with upstream’s <code>master</code> branch and builds correctly.</p>
+
+<p>So let us get going.  First we need to get the build dependencies for
+Debian 10 Buster:</p>
+
+<pre><code>sudo apt install build-essential libx11-dev libxft-dev libx11-xcb-dev libxcb-randr0-dev libxcb-xinerama0-dev
+</code></pre>
+
+<p>Now clone my <code>lemonbar-xft</code> fork:</p>
+
+<pre><code>git clone https://gitlab.com/protesilaos/lemonbar-xft.git
+</code></pre>
+
+<p>Switch to that directory:</p>
+
+<pre><code>cd lemonbar-xft
+</code></pre>
+
+<p>Compile it and install it system-wide:</p>
+
+<pre><code>make
+sudo make install
+</code></pre>
+
+<p>Or if you are like me, compile it just for your current user, by placing
+the artifacts in your home directory.  This assumes you have configured
+<code>$HOME/bin</code> to be part of <code>PATH</code>.</p>
+
+<pre><code>make PREFIX="$HOME" install
+</code></pre>
+
+<p>Uninstalling it requires the same steps, except you just pass the
+<code>uninstall</code> argument.</p>
+
+<p>Done!  Now <code>lemonbar</code> can use any typeface supported by <code>fontconfig</code>.
+Make sure you <code>apt remove lemonbar</code> in case you had the upstream
+package.</p>
+
+<h2>Closing thoughts</h2>
+
+<p>I generally stick to the packages provided by Debian.  This is an
+exception because:</p>
+
+<ol>
+  <li>Lemonbar is developed at a slow pace, so I can afford to inspect all
+commits.</li>
+  <li>It is a small program that compiles in virtually no time.  I am
+fairly confident that combined with the above, the compilation
+process will not become more complex in the foreseeable future.</li>
+  <li>Upstream does not offer any good reason why it does not consider Xft
+support (see <a href="https://github.com/LemonBoy/bar/issues/188">#188</a>).
+This leads me to believe that there will be no progress on this
+front, at least not with how things currently stand.</li>
+</ol>
+
+<p>The above granted, I am still not sure whether I will make changes to my
+<a href="https://gitlab.com/protesilaos/dotfiles">custom desktop session</a>, which
+still uses upstream <code>lemonbar</code>.  I might just add a reference in my
+<a href="https://protesilaos.com/pdfd/">Prot’s Dots For Debian</a> for users that
+want to follow the instruction documented herein.</p>
+        
+      

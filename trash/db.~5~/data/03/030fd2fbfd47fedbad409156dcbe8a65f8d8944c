@@ -1,0 +1,103 @@
+
+         
+         <p>I just published version <code>0.5.0</code> of the Modus themes.  These are my
+highly-accessible themes for GNU Emacs.  They conform with the WCAG AAA
+standard for colour contrast accessibility (a minimum contrast ratio of
+7:1 between the foreground and background values).  You can find the
+packages on MELPA:</p>
+
+<ul>
+  <li><code>modus-operandi-theme</code> (light)</li>
+  <li><code>modus-vivendi-theme</code> (dark)</li>
+</ul>
+
+<hr />
+
+<p>This release contains support for several new packages and lots of
+refinements to existing ones.  A lot of work went into making the
+themes more robust by reviewing the inheritance of styles from one
+face group to another (in general, the <code>:inherit</code> property should not
+be used frivolously).  Several subtle changes were made to the colour
+palette of both themes to ensure consistency, enable more possible
+combinations, and avoid potential ambiguity under certain potential
+circumstances.</p>
+
+<p>Overall, this release gives me confidence that the themes have reached
+a fairly stable state.  What follows is an overview of the changes
+since version 0.4.0 (2020-01-02).</p>
+
+<p>Added support for:</p>
+
+<ul>
+  <li><code>equake</code></li>
+  <li><code>flymake</code></li>
+  <li><code>focus</code></li>
+  <li><code>fountain</code> (aka <code>fountain-mode</code>)</li>
+  <li><code>git-lens</code></li>
+  <li><code>git-timemachine</code></li>
+  <li><code>hi-fill-column</code></li>
+  <li><code>highlight-blocks</code></li>
+  <li><code>info-colors</code></li>
+  <li><code>lsp-mode</code></li>
+  <li><code>lsp-ui</code></li>
+  <li><code>proced</code> (built-in)</li>
+  <li><code>regexp-builder</code> (built-in)</li>
+  <li><code>suggest</code></li>
+</ul>
+
+<p>Refinements:</p>
+
+<ul>
+  <li>The header line uses its own dedicated colours.  Several changes
+were made in <code>eww</code>, <code>info</code>, <code>elfeed</code>, <code>magit</code>, <code>flycheck</code> to make
+sure that any accent value that appears there conforms with the
+overarching accessibility objective of the Modus themes (contrast
+ratio of &gt;= 7:1, else WCAG AAA).</li>
+  <li><code>ivy</code> no longer uses a box style for the current line, as that was
+not always reliable.  Appropriate colours are used instead.</li>
+  <li><code>org-mode</code> blocks use a foreground value that distinguishes their
+opening and closing tags from source code comments.</li>
+  <li>The <code>org-ellipsis</code> face was configured to always inherit the looks
+of its respective heading or element, rather than have its own
+excessive styling.</li>
+  <li><code>paren-match</code> has colours that are designed specifically for it.
+This is done to retain their utility while making sure they are not
+mistaken for some other type of feedback.</li>
+  <li><code>magit</code> has explicit styles for the mode line process indicators,
+instead of inheriting from another face.  The intention is to use
+foreground values that are designed specifically for use on the mode
+line (the minimum contrast ratio requirement).</li>
+  <li><code>erc</code> faces have been thoroughly reviewed in the interest of better
+usability.  Its mode line indicators now use appropriate colours.</li>
+  <li>The faces of the <code>messages</code> library have been thoroughly reviewed.
+This affects various email interfaces, but also <code>elfeed</code> entry
+metadata headings.</li>
+  <li><code>whitespace-mode</code> no longer has a newline character that stands out.
+That kind of emphasis was not necessary, given that the symbol used
+is a dollar sign, which is already far more visible than a mid dot.</li>
+  <li><code>font-lock</code> (generic syntax highlighting) has better colour
+combinations for regexp grouping constructs.</li>
+  <li><code>rainbow-delimiters</code> was given its missing base error face.</li>
+  <li><code>git-commit</code> comment action uses a slightly different foreground
+value than before to better match its context.</li>
+  <li><code>isearch</code> and <code>query-replace</code> use colours that properly denote each
+action’s utility.</li>
+  <li><code>visual-regexp</code> has been reviewed to make the matching groups more
+distinct from each other.</li>
+  <li><code>occur</code> and any other buffer that relies on the <code>match</code> face can now
+benefit from the new colour combinations, in that its results cannot
+be confused for the active <code>isearch</code> or <code>query-replace</code> or even
+their lazily highlighted results (or, indeed, of any other search
+tool).</li>
+  <li><code>company</code> uses faces for its search feedback that are consistent
+with other search metaphors.</li>
+  <li>Emacs 27’s new <code>:extend</code> property is only implemented where
+necessary (note that the latest release is version 26.3).</li>
+</ul>
+
+<hr />
+
+<p>For more information, check the <a href="https://gitlab.com/protesilaos/modus-themes">git repository of the
+modus-themes</a>.</p>
+        
+      

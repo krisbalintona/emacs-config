@@ -1,0 +1,17 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=q7JxIO6Vddg">https://www.youtube.com/watch?v=q7JxIO6Vddg</a></p>
+         
+         <p>In this video I talk about <a href="https://gitlab.com/protesilaos/lemonbar-xft">my fork of
+lemonbar</a> that has support
+for the <code>fontconfig</code> library.</p>
+
+<p>What I discuss here has been documented in my last two coding blog
+(codelog) entries:</p>
+
+<ol>
+  <li><a href="https://protesilaos.com/codelog/2019-06-23-lemonbar-xft-new/">Compile Lemonbar Xft on Debian 10 Buster</a>.</li>
+  <li><a href="https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/">How I forked lemonbar-xft</a>.</li>
+</ol>
+        
+      

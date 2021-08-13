@@ -1,0 +1,29 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=VlVl_5RyG3M">https://www.youtube.com/watch?v=VlVl_5RyG3M</a></p>
+         
+         <p>In this screen cast I share my first impressions of GNU Emacs; a tool
+that I have been using exclusively for the last two weeks or so.</p>
+
+<p>I explain the main differences between Vim and Emacs and how the
+latter should be seen as an open-ended proposition.  Emacs is more of
+an application platform than a mere text editor, courtesy of its
+ability to interpret and evaluate Lisp code (Emacs Lisp, to be
+precise).</p>
+
+<p>I think Vim is better suited as a text editor and has a more rigid
+approach to tackling that task.  Whereas Emacs is all about
+extensibility.  It is meant to be tailored to your workflow and to
+match your requirements.  As such, you are encouraged to configure it
+exactly the way you want and even write your own elisp functions.</p>
+
+<p>Here is the code I have accumulated thus far, with the proviso that
+everything is in its early development days and things might change
+quite drastically:</p>
+
+<ul>
+  <li><a href="https://protesilaos.com/dotemacs">init.el</a></li>
+  <li><a href="https://gitlab.com/protesilaos/modus-themes">Modus themes</a></li>
+</ul>
+        
+      

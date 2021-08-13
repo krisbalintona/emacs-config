@@ -1,0 +1,166 @@
+
+         
+         <p>It is a good practice to optimise font files before self hosting them.
+Each font family may contain hundreds of glyphs that are not used
+anywhere on the website.  This typically concerns the characters from
+scripts other than the one[s] you write in.  Subsetting a font file
+removes those superfluous code points.  It is the right way to reduce
+overall file size.  For example, I only use glyphs from the Latin and
+Greek alphabets, as well as punctuation marks and numerals that are
+common to both.</p>
+
+<h2>Self hosted Google Fonts was a decent compromise</h2>
+
+<p>In the past, I would get fonts optimised for my use case from the Google
+Fonts project.  It already offers font presets that include the
+supported Unicode subsets.  You can download a <code>ttf</code> file or set
+thereof, then run command line tools to convert it to the <code>woff</code> and
+<code>woff2</code> formats for use on the web.  Or you can use a web app like the
+<a href="https://google-webfonts-helper.herokuapp.com/fonts">google webfonts
+helper</a> which
+automates those steps for you.</p>
+
+<p>The major downside with that method is the lack of control.  You are
+limited to fonts that are hosted on Google’s platform.  Some of the best
+free/libre typefaces are not available there, such as the DejaVu fonts,
+Mononoki, Hack, FiraGO, Iosevka, and so on.</p>
+
+<p>Besides, the plethora of choice on that platform is largely an illusion.
+The available options are limited to a small group of fonts once you
+factor in the need for supporting multiple languages, bold, italics,
+etc. (most offerings are incomplete or at least not suited to my
+requirements).</p>
+
+<p>Personally, I prefer the aforementioned free fonts.  The problem is that
+they do not provide subsets or convenient built-in tools to reduce the
+Unicode coverage only to the set of needed glyphs.  For my application,
+an optimised <code>woff</code> is about 50KB while <code>woff2</code> falls to 30KB.  Compare
+that to something around 1MB for Latin + Extended Latin + Greek and
+Coptic + Cyrillic…</p>
+
+<p>This is where Google’s service has a clear advantage.  It is why I would
+ultimately compromise on my demands, using self hosted variants of
+Google Fonts because I did not know how to subset fonts myself.  And no,
+sending ~5MB of font data per initial page load was never something I
+wanted to do.</p>
+
+<h2>The “fonttools” package to the rescue</h2>
+
+<p>Subsetting fonts is no longer a hindrance.  Today I discovered a package
+in the Debian repos which offers the means to subset a font from the
+command line.  It is the <code>fonttools</code> collection of python programs.</p>
+
+<pre><code>sudo apt install fonttools
+</code></pre>
+
+<p>After figuring out the command I needed to execute, I wrote a small BASH
+script that automates the process for each <code>ttf</code> file in the present
+working directory.  Below is the essence of the script in its current
+“alpha” version.  I bundle it with <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a> under the “bin”
+directory, as this is something I might develop into a multi-purpose
+utility.</p>
+
+<pre><code>#!/bin/bash
+
+# This function accepts two arguments.  The first is the name of the ttf
+# file without the file type extension.  The second is the desired
+# output format (woff|woff2).  These are provided by the subsequent
+# loop.
+subset_font() {
+    pyftsubset "$1.ttf" \
+    --unicodes='U+0020-007E,U+00A1-00FF,\
+    U+0370-03CE,U+2010,U+2012-2014,U+2018-201F,U+2022-2027' \
+    --layout-features='*' \
+    --flavor="$2" \
+    --output-file="$1.$2"
+}
+
+# Loop through all ttf files in the present working directory and run
+# the `subset_font` function defined above.
+for i in $(find ./*.ttf | sed 's,\(\./\)\([a-zA-Z0-9_-]*\)\(\.ttf\),\2,g'); do
+    subset_font $i 'woff'
+    subset_font $i 'woff2'
+done
+</code></pre>
+
+<p>Note the value of the <code>--unicodes</code> flag in the <code>subset_font</code> function.
+I had to figure out the Unicode code points I had to reference. This
+website on <a href="https://unicode-table.com">Unicode tables</a> proved an
+invaluable resource.</p>
+
+<h2>About the two font families I use</h2>
+
+<p class="warn">This section is out-of-date.  I now only use one font: Clear Sans.  See
+<a href="https://gitlab.com/protesilaos/protesilaos.gitlab.io/commit/5f168cf6eacbeb47eff6e6a5f7300b502a659317">commit
+5f168cf6</a>
+for the details.  However, FiraGO and Hack (alt) are still the default
+typefaces on my GNU/Linux computer.  Refer to <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a> for more on that.</p>
+
+<p>As I linked to my dotfiles already, I might as well write a few words
+about the fonts I have chosen.</p>
+
+<p>The first is <a href="https://bboxtype.com/typefaces/FiraGO/">FiraGO</a>, a
+sans-serif typeface, which is what is applied to the body text and
+headings.  It is the main font of this website and is available in
+regular and bold weights with corresponding italics.  This is also the
+system font I apply on my Debian machines running my custom working
+environment.</p>
+
+<p><em>FiraGO</em> is the continuation of <em>Fira Sans</em>, with support for more
+scripts and, possibly in the future, more variants.  At this point,
+<em>FiraGO</em> has not yet deviated substantially from its predecessor, though
+this is to be expected.</p>
+
+<p>Fira Sans was a project funded by Mozilla to cover the needs of the
+Firefox OS endeavour.  It is a free/libre implementation of Erik
+Spiekermann’s “modern classic”: the <em>FF Meta</em>.  Consider reading
+<a href="https://typographica.org/typeface-reviews/fira-sans/">Matthew Butterick’s
+review</a> on the
+matter.</p>
+
+<p>My second font is <a href="https://sourcefoundry.org/hack/">Hack</a>, a monospaced
+design that is ideal for long coding sessions <em>because it is not
+flamboyant</em>.  It only tries to be utilitarian.  Legible, clear, well
+balanced, decipherable.  A true workhorse.  It seems to me that <em>Hack</em>
+is the best typeface to emerge from the libre software milieu, as it is
+derived from the <em>DejaVu</em> fonts, which themselves trace their roots to
+<em>Bitstream Vera</em>.</p>
+
+<p>The <em>Hack</em> designers offer the
+<a href="https://github.com/source-foundry/alt-hack">alt-hack</a> repository for
+those who, like me, want to build a modified version of the font with
+some alternate glyphs.  This is what I use (and what I distribute with
+my dotfiles, under the same license terms as the original).  I have
+built the font from source and applied these patches:</p>
+
+<ol>
+  <li><a href="https://github.com/source-foundry/alt-hack/tree/master/glyphs/u0028-curved">u0028-curved</a></li>
+  <li><a href="https://github.com/source-foundry/alt-hack/tree/master/glyphs/u0029-curved">u0029-curved</a></li>
+  <li><a href="https://github.com/source-foundry/alt-hack/tree/master/glyphs/u0030-forwardslash">u0030-forwardslash</a></li>
+  <li><a href="https://github.com/source-foundry/alt-hack/tree/master/glyphs/u0033-flattop">u0033-flattop</a></li>
+</ol>
+
+<p>To my eyes, these minor tweaks make <em>Hack</em> “sturdier” and are slightly
+more consistent with the overall personality of the typeface.  This is
+just a matter of agreeing on the defaults.  The original glyphs for
+those four code points add a bit more “character” to an otherwise
+Spartan presentation; the kind of flair I would rather avoid.  Not that
+they are bad per se—just that I prefer their alternatives in the context
+of what <em>Hack</em> represents.</p>
+
+<h2>The right tool for the job</h2>
+
+<p>I will be refining my subsetting script and may build on top of it to
+automate various tasks, such as building the optimised <code>woff</code> and
+<code>woff2</code> files for my website when new upstream versions are released.</p>
+
+<p>Now that I have found a way to manipulate practically every available
+typeface out there, I can think of no good reason to ever compromise
+again with something like Google Fonts.</p>
+
+<p>Granted, there is a bit of an effort involved, which is well worth it
+for the added flexibility it offers.</p>
+        
+      

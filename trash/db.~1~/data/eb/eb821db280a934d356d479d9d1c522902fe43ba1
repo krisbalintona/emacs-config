@@ -1,0 +1,128 @@
+
+         
+         <p>I just published version <code>0.6.0</code> of the Modus themes.  These are my
+highly-accessible themes for GNU Emacs.  They conform with the WCAG AAA
+standard for colour contrast accessibility (a minimum contrast ratio of
+7:1 between the foreground and background values).  You can find the
+packages on MELPA (and soon on ELPA as well):</p>
+
+<ul>
+  <li><code>modus-operandi-theme</code> (light)</li>
+  <li><code>modus-vivendi-theme</code> (dark)</li>
+</ul>
+
+<hr />
+
+<p>This release contains lots of refinements and additions.</p>
+
+<p>Let me start with an administrative point: I have completed the process
+of assigning my copy rights to the Free Software Foundation.  This
+covers every contribution I make to GNU Emacs.  In practice, it means
+that the Modus themes can now be included in the official ELPA archive
+and theoretically be shipped with Emacs itself.  The ELPA inclusion is
+ongoing.  Once it is completed, I will update the docs accordingly.</p>
+
+<p>The administrative change has no effect on the way this project is
+handled.  I still am the developer/maintainer and will continue to
+improve things further.  If you still have questions, feel free to
+contact me: https://protesilaos.com/contact</p>
+
+<p>Moving on to the changes since version 0.5.0 (2020-01-26).</p>
+
+<p>Added support for:</p>
+
+<ul>
+  <li>alert</li>
+  <li>apropos (built-in)</li>
+  <li>dap-mode</li>
+  <li>deft</li>
+  <li>dim-autoload</li>
+  <li>dired-git</li>
+  <li>enhanced-ruby-mode</li>
+  <li>gbd-mi.el (built-in library)</li>
+  <li>helm-ls-git</li>
+  <li>helm-xref</li>
+  <li>imenu-list</li>
+  <li>jira (org-jira)</li>
+  <li>js2-mode</li>
+  <li>jupyter</li>
+  <li>org-pomodoro</li>
+  <li>origami</li>
+  <li>rmail (built-in)</li>
+  <li>vc-print-log (built-in)</li>
+  <li>window-divider-mode (built-in)</li>
+  <li>xref (built-in)</li>
+</ul>
+
+<p>Refinements to existing faces:</p>
+
+<ul>
+  <li>
+    <p>A new subset of “nuanced” accent colours has been introduced.  These
+are named {red,green,yellow,blue,magenta,cyan}-nuanced.  Their purpose
+is to be used in contexts where lots of structured information is
+presented to the user, but each component does not need to draw too much
+attention to itself (e.g. Org’s metadata).  As always, their contrast
+ratio is designed to always be &gt;= 7:1 relative to the backgrounds they
+may be combined with.</p>
+  </li>
+  <li>
+    <p>Greatly improve the support for Gnus, even though most changes are
+subtle and are made in the interest of consistency.  The group levels
+now make use of the “nuanced” palette where appropriate (to denote
+levels of lower importance).</p>
+  </li>
+  <li>
+    <p>Several refinements for Org, including the use of “nuanced” colours
+for various metadata tags.  The agenda headers will now be scaled
+appropriately and use a variable-pitch font if the user sets the
+relevant customisation values of the theme they are using (check the
+documentation in each theme file or the repo’s README).</p>
+  </li>
+  <li>
+    <p>Lots of refinements for Helm.  Some of these were introduced to align
+the overall aesthetic with equivalent metaphors in Ivy.  Others are
+meant to improve the styles of the headers and make various constructs
+consistent with their variants in the Helm ecosystem but also with their
+non-Helm counterparts (such as xref file names with and without Helm,
+but also with Helm’s grep).</p>
+  </li>
+  <li>
+    <p>Improve the colours of buttons in contexts such as M-x customize.
+This is especially noticeable in modus-vivendi-theme (the dark theme)
+where the buttons are a darker shade of grey rather than the original
+lighter one.</p>
+  </li>
+  <li>
+    <p>Keycast now uses styles that are more consistent with the overall
+aesthetic of the Modus themes.  This means that the mode line indicators
+are blue-ish (blue is generally used for highlights in the mode line,
+but also when hovering over an item with the mouse pointer).  The pseudo
+button effect (colours + 3d) has been removed in favour of a flat look,
+in line with the flatness of the mode line itself.  Whereas before the
+keycast faces where designed to be consistent with the package’s
+defaults.</p>
+  </li>
+</ul>
+
+<p>There were also a few minor refinements for:</p>
+
+<ul>
+  <li>calendar and diary</li>
+  <li>icomplete</li>
+  <li>mm-uu-extract</li>
+  <li>nobreak-hyphen and nobreak-space</li>
+  <li>org-habit</li>
+  <li>tooltip-mode</li>
+</ul>
+
+<p>Finally, the Commentary section of each theme has been greatly expanded.
+It now includes the user-facing customisation options and the complete
+list of supported packages.</p>
+
+<hr />
+
+<p>For more information, check the <a href="https://gitlab.com/protesilaos/modus-themes">git repository of the
+modus-themes</a>.</p>
+        
+      

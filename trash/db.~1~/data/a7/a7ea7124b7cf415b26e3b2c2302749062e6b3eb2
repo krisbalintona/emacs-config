@@ -1,0 +1,27 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=UHk3FbieW0w">https://www.youtube.com/watch?v=UHk3FbieW0w</a></p>
+         
+         <p>In this video I demonstrate two built-in tools for navigating large
+files in a manner that is both efficient and convenient.</p>
+
+<ul>
+  <li>
+    <p><code>outline-minor-mode</code> can be combined with a major mode for
+programming, such as <code>emacs-lisp-mode</code>, to produce headings that may
+then be expanded or contracted (same idea as with Org mode).</p>
+  </li>
+  <li>
+    <p><code>imenu</code> presents a dynamically-generated index with points of interest
+in the given buffer (e.g. headings), allowing you to jump to one using
+completion methods.</p>
+  </li>
+</ul>
+
+<p>Both tools are complemented by other packages as well as my own
+functions and minor extras.</p>
+
+<p>Check <a href="https://protesilaos.com/dotemacs">my dotemacs</a> for all the code
+and relevant documentation.</p>
+        
+      

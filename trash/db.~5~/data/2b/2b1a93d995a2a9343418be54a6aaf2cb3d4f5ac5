@@ -1,0 +1,296 @@
+
+         
+         <p>The “Modus themes” are a pair of themes for Emacs that conform with the
+WCAG AAA accessibility standard for colour contrast between background
+and foreground values.  This is the highest standard of its kind for
+making text readable, representing a minimum contrast ratio of 7:1.</p>
+
+<p>There is a light and a dark theme.  The former is called “Modus
+Operandi”, while the latter is “Modus Vivendi”.</p>
+
+<p>In this article I document the principles that inform my decision-making
+in the design of these themes, though the insights apply more generally.</p>
+
+<p>If you want to see how the themes look in practice, you can watch some
+of my <a href="https://protesilaos.com/code-casts/">videos on Emacs</a> or refer to
+this <a href="https://protesilaos.com/modus-themes-pictures">collection of screenshots</a>.</p>
+
+<h2>What is colour</h2>
+
+<p>For our purposes, “colour” is the amalgamation of three distinct
+channels of light: red, green, blue.  By combining them in different
+amounts we get what we understand as orange, turquoise, violet, etc.</p>
+
+<p>Red, in the sense of “pure red”, is a combination of the three channels
+of light where only the red component is at its fullest, while the
+others are contributing nothing.  Same for the other colours that
+correspond to the remaining light channels.</p>
+
+<p>White, in its purest, is the combination of the three channels with each
+contributing as much as possible.  Whereas black is derived by having
+the channels contribute zero.</p>
+
+<p>Couched in those terms, white and black are “colours” (in other domains
+they are described as “tones” that produce “tints” or “shades” when
+combined with hues).</p>
+
+<p>I distinguish between “base” and “accent” values.  The grey scale is
+part of the base group, while any other colour that derives from the
+accentuation of one or two light channels belongs to the accent’s group.</p>
+
+<p>At its core, a palette consists of eight colours.  Six accents plus
+white and black.  The six are: red, green, blue, yellow, cyan, magenta.</p>
+
+<p>To be clear about the accents that result from the three channels of
+light, consider these possibilities:</p>
+
+<pre><code>red   + green = yellow
+green + blue  = cyan
+blue  + red   = magenta
+</code></pre>
+
+<h2>Colour notation</h2>
+
+<p>The total number of colours is a function of the amount that each
+channel of light can accept.  With current technology this is 256, which
+means:</p>
+
+<pre><code>256 × 256 × 256 = 16,777,216
+</code></pre>
+
+<p>We can represent a colour using zero-based decimal notation, so values
+from 0 to 255 for each channel of light (e.g. <code>255,0,0</code> is pure red), or
+we can use hexadecimal notation, where possible values are 0-9 and a-f
+with each of the RGB channels having either one or two entries.</p>
+
+<p>A hexadecimal representation of <code>#f00</code> is interpreted as equivalent to
+<code>#ff0000</code>.  To avoid confusion and allow for more possible combinations,
+I always use the six-digit-long format.</p>
+
+<h2>Choosing colours</h2>
+
+<p>The design of the palette’s main colours is governed by the inherent
+luminance of the six primary accent values.  The following table shows
+the contrast ratio of each of them relative to pure white and pure black
+respectively.  The colour values are written in hexadecimal RGB notation
+with <code>#ffffff</code> representing the maximum (white) and <code>#000000</code> the
+minimum (black).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hexadecimal (name)</th>
+      <th>ffffff (white)</th>
+      <th>000000 (black)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ff0000 (red)</td>
+      <td>3.99</td>
+      <td>5.25</td>
+    </tr>
+    <tr>
+      <td>00ff00 (green)</td>
+      <td>1.37</td>
+      <td>15.3</td>
+    </tr>
+    <tr>
+      <td>0000ff (blue)</td>
+      <td>8.59</td>
+      <td>2.44</td>
+    </tr>
+    <tr>
+      <td>ffff00 (yellow)</td>
+      <td>1.07</td>
+      <td>19.5</td>
+    </tr>
+    <tr>
+      <td>00ffff (cyan)</td>
+      <td>1.25</td>
+      <td>16.7</td>
+    </tr>
+    <tr>
+      <td>ff00ff (magenta)</td>
+      <td>3.13</td>
+      <td>6.69</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For reference, the maximum contrast ratio is 21:1 between black and
+white, while the minimum is always 1:1.  These ratios are derived from a
+<a href="https://www.w3.org/TR/WCAG20-TECHS/G18.html">scientific formula</a> that
+underpins the WCAG standard (you can use an online tool to perform the
+calculations or try my <code>clr</code> shell script that is distributed as part of
+<a href="https://gitlab.com/protesilaos/dotfiles">my dotfiles</a>).</p>
+
+<p>The table shows us indirectly that each channel of light is assigned a
+unique weight in the calculation of the final luminance, which is
+reflected in the different contrast ratios of red, green, blue.  This
+means that for the purposes of colour contrast we cannot equate the
+amount of each channel with its total contribution.  Our intuition that
+<code>#ff0000</code> is the same as <code>#0000ff</code> in terms of distance relative to zero
+cannot guide us by itself in selecting between the two.</p>
+
+<p>We need a more qualified understanding of the mechanics of these three
+channels of light, predicated on the relative weights that the formula
+defines for red, green, blue respectively.  These are the precise
+numbers:</p>
+
+<pre><code>L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+</code></pre>
+
+<p>The general rules for luminance that we can deduce from the
+aforementioned are outlined thus:</p>
+
+<ul>
+  <li>“More green” means “lighter”.</li>
+  <li>“More green” and “more red” means “even lighter”.</li>
+  <li>“More blue” and to a lesser extent “more red” is the right way to
+tweak colours without completely changing their luminance.</li>
+</ul>
+
+<p>In practice, adding a bit of blue makes virtually no difference to a
+colour’s luminance, while a good amount of it can help distinguish two
+accent values.  For example <code>#aa0000</code> is a red that has 7.75 contrast
+with white, while <code>#aa0077</code> is a magenta that has 7.05 contrast (recall
+that 7:1 is our minimum target).  We see how “a lot” of blue added to
+our particular red made little difference in the total luminance of the
+new colour, while it did have a greater effect on the perception of
+these two colours (you can use <code>rainbow-mode</code> for Emacs to preview valid
+values).</p>
+
+<p>Now some insights about the choice of colour for use in the themes:</p>
+
+<ul>
+  <li>When designing a light theme, all colours need to rely on the blue
+channel of light and, to a lesser extent, on the red one.  You cannot
+develop a fully fledged accessible light theme that makes extensive
+use of green, yellow, cyan, while also trying to keep colours fairly
+distinct from each other.</li>
+  <li>When designing a dark theme, you cannot rely on green, yellow, cyan as
+your main colours because they will look much more luminant than other
+accents, unless you lower their values to a point where they no longer
+approximate their pure representation.</li>
+</ul>
+
+<p>These mean that the most common colours for both the light and dark
+variants have to be derived by combining blue and red, with green being
+the channel that adjusts the relative luminance.  Hence the various
+shades of pink, purple, azure, teal that are most used in the Modus
+themes to highlight text.</p>
+
+<p>Combined with insights from colour psychology, we must rule out red as a
+valid colour for syntax highlighting.  Red calls too much attention to
+itself.  It is reserved for cases where such a property is desired, such
+as when presenting an error message.  Similar principles apply to the
+use of yellow and green: they are used to signify something that has a
+special meaning in its context.</p>
+
+<h2>The importance of knowing the background</h2>
+
+<p>It is impossible to pick a colour without knowing the context it will be
+used in.  We thus start by identifying our main background value.</p>
+
+<p>When selecting multiple colours for the purposes of developing a theme,
+we know that their common point of reference is the background on which
+they will be used.  The background is a constant.  For my light theme
+the main one is white; for the dark it is black.</p>
+
+<p>There are many cases where a different background needs to be used in
+order to render a certain function explicit and unambiguous.  For
+example, to represent a matching search term, draw the selected region,
+and so on.  For each of these scenaria we use the potentially
+purpose-specific background as our guide for choosing the possible
+colours that are allowed to be used with it as foreground values.  As
+always, our overarching objective is conformance with the WCAG AAA
+standard.</p>
+
+<p>It is for this reason that the Modus themes have several palette subsets
+with inline commentary on the colours they may be combined with (see
+source code).  For instance, the red intended for text on the mode line
+differs from the one used in the main buffer because the mode line has a
+background that is a particular shade of grey.</p>
+
+<p>Emacs allows for different combinations of text and colour properties:
+what is called a “face”.  Such faces empower us to implement these
+palette subsets with precision.</p>
+
+<h2>Part art, part science</h2>
+
+<p>Theme development stands at the intersection of art and science:</p>
+
+<ul>
+  <li>Science allows us to measure the luminance of colours and decide on
+the acceptable values for any given combination of foreground and
+background.</li>
+  <li>While the choice of one among possible combinations to denote the
+function of a given construct (interface or code element) is a matter
+of art.</li>
+</ul>
+
+<p>It is not pertinent to this essay to investigate the exact proportion of
+each of these magnitudes to the delivery of the final outcome.  Perhaps
+art is just an imprecise science waiting to be refined further by a
+yet-to-be-discovered method.  At any rate, art is also governed by
+principles such as consistency, frugality, and temperance.</p>
+
+<p>The Modus themes are designed with an intention to avoid exaggerations
+or what may be described as a “rainbow effect”.  There are cases where
+science would allow us to combine variants of red, green, blue, yellow,
+magenta, cyan all in one place.  Nothing would be technically wrong once
+the colour contrast criterion is satisfied.  It would however look ugly
+by being excessive, flamboyant.</p>
+
+<p>This is the tacit minimalism of the Modus themes: the visual aspect of a
+state of affairs is expressed by using as few colours as deemed
+necessary.  There should be no imbalance in the visual “rhythm” of the
+highlighted text: a highly-luminant colour next to a considerably darker
+one all trying to present parts that are semantically similar or
+connatural is a bad choice; and “bad choice” implies the lack of a
+thematic thread running through all applicable colour combinations.</p>
+
+<p>I understand minimalism as minimum viable completeness, basically
+meaning that “it works” without requiring any further additions to
+continue to work well and with such additions delivering diminishing
+returns to scale or even being detrimental to the task of avoiding
+exaggerations (i.e. the notion of enforcing a <em>theme</em>).</p>
+
+<p>Differences of degree or nuances should also be discernible in the use
+of colour, in line with rhythmic consistency.  For example, in the Modus
+themes documentation strings are a more subtle blue than literal
+strings.  They could have been green, for instance, but that would
+introduce too much variation for semantically similar functions:
+scientifically correct, artistically sub-optimal.</p>
+
+<h2>Try the themes</h2>
+
+<p>The Modus themes are available in MELPA and MELPA Stable already for a
+few months now, while they were recently admitted to the official ELPA
+repository.  They are distributed as standalone packages, in case you
+want to use one but not the other.</p>
+
+<p>I am continuously refining the themes and expanding support for packages
+(face groups) in the Emacs milieu.  This is necessary to ensure a
+consistent experience for all users.</p>
+
+<p>I am happy for the feedback I have received, including but not limited
+to email messages.  Meanwhile, <a href="https://www.manueluberti.eu//emacs/2020/03/16/modus-themes/">Manuel Uberti has published a blog
+entry</a>
+detailing how Modus Operandi has addressed a persistent issue with light
+themes.  Given this opportunity, I must also thank Manuel for the
+valuable issues (and concomitant feedback) reported in the <a href="https://gitlab.com/protesilaos/modus-themes">project’s
+git repo</a>.</p>
+
+<p>My commitment to accessibility of the WCAG AAA sort comes from the
+realisation that legibility is the single most important characteristic
+of any text-heavy interface.  Emacs is all about text; and text should
+not pose a barrier to entry.</p>
+
+<p>Use a reliable and unassuming typeface that does not draw too thin
+letter forms or demand constant attention to its peculiarities (such as
+<a href="https://gitlab.com/protesilaos/hack-font-mod">my patched “Hack”</a>) and
+apply a theme that prioritises good colour contrast.</p>
+        
+      

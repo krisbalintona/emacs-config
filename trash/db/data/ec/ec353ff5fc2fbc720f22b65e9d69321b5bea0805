@@ -1,0 +1,154 @@
+
+         
+         <p>Starting with commit <code>29b5e57e</code> to the <code>main</code> branch of <a href="https://protesilaos.com/modus-themes">the Modus
+themes</a>, users have the option to
+customise the presentation of the Org agenda.  This will become widely
+available through upstream Emacs and GNU ELPA in version <code>1.5.0</code> of the
+themes (tentative release frame in early July).  The new variable is
+<code>modus-themes-org-agenda</code>, which accepts an alist where each combination
+corresponds to specific parts of the agenda buffers.  Those parts are
+parameterised to be styled independent of each other.</p>
+
+<p>First an overview of the user-facing code and then some screen shots:</p>
+
+<pre><code class="language-elisp">(setq modus-themes-org-agenda
+      '((header-block . (variable-pitch scale-title))
+        (header-date . (grayscale bold-today))
+        (scheduled . uniform)
+        (habit . traffic-light-deuteranopia)))
+</code></pre>
+
+<p>Those associations correspond in the given order to:</p>
+
+<ul>
+  <li>
+    <p>The block headers that describe each agenda view.  For example, when
+you do <code>M-x org-agenda</code> followed by <code>n</code> you get a header at the top
+that describes the days’ view and one further below which pertains to
+all pending tasks.</p>
+  </li>
+  <li>
+    <p>The date headers in the day views.</p>
+  </li>
+  <li>
+    <p>Items with a scheduled timestamp assigned to them.  Remember that
+“scheduled” refers to the day/time a task should be started: it is not
+a deadline (read <a href="https://bzg.fr/en/on-using-to-do-lists-efficiently/">On using to-do lists
+efficiently</a>
+(2021-04-26) by Bastien Guerry, the Org maintainer).</p>
+  </li>
+  <li>
+    <p>The <code>org-habit</code> graph for those who use it to track their consistency
+over recurring tasks (e.g. daily exercise).</p>
+  </li>
+</ul>
+
+<p>The <code>header-block</code> and <code>header-date</code> keys accept lists of values which
+combine their effects.  For instance, <code>header-date</code> can use a
+<code>workaholic</code> value to apply uniform colouration to weekdays and weekends
+and combine it with <code>grayscale</code> so that the colours are black/white
+instead of the default shades of cyan.  Those lists can be one item
+long, such as <code>(header-date . (grayscale))</code>.  For more items, the order
+is not significant, so <code>(header-date . (workaholic grayscale))</code> and
+<code>(header-date . (grayscale workaholic))</code> yield the same results.</p>
+
+<p>The <code>scheduled</code> and <code>habit</code> keys accept a symbol, as shown in the sample
+alist above.</p>
+
+<h2>Default looks</h2>
+
+<p>This is an agenda buffer without any customisations whatsoever.  We use
+colour to differentiate the various constructs, but try not to overdo it
+as users’ agendas can be rich with entries and too much colour can be a
+hindrance to productivity.</p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-operandi-org-agenda-default.png"><img alt="Modus Operandi default" src="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-operandi-org-agenda-default.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-vivendi-org-agenda-default.png"><img alt="Modus Vivendi default" src="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-vivendi-org-agenda-default.png" /></a></p>
+
+<h2>Tweaked looks</h2>
+
+<p>Here is the same agenda view with the following styles (remember to read
+either the doc string or the manual’s entry on the matter):</p>
+
+<pre><code class="language-elisp">(setq modus-themes-org-agenda
+      '((header-block . (variable-pitch scale-title))
+        (header-date . (grayscale bold-today))
+        (scheduled . uniform)
+        (habit . simplified)))
+</code></pre>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-operandi-org-agenda-tweaked.png"><img alt="Modus Operandi tweaked" src="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-operandi-org-agenda-tweaked.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-vivendi-org-agenda-tweaked.png"><img alt="Modus Vivendi tweaked" src="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-vivendi-org-agenda-tweaked.png" /></a></p>
+
+<h2>Deuteranopia styles</h2>
+
+<p>As I have noted before, such as in <a href="https://protesilaos.com/codelog/2021-05-19-modus-themes-status-update/">my latest status
+report</a>
+on the Modus themes’ progress, we provide the tools to empower users
+with red-green colour deficiency (deuteranopia).  This practically means
+to avoid unconditional colour-coding that relies on a distinction
+between red and green, by substituting green with blue.  To that end,
+the themes provide <code>modus-themes-success-deuteranopia</code> (e.g. for Org
+“DONE” tasks or Isearch matches) and <code>modus-themes-diffs</code> which has
+relevant styles with a red-blue design.</p>
+
+<p>For <code>modus-themes-org-agenda</code>, the only place where we need to introduce
+such an alternative is for the <code>org-habit</code> graph.  We do so by tweaking
+the <code>traffic-light</code> style/workflow as <code>traffic-light-deuteranopia</code>: it
+uses red, yellow, and blue to present its indicators.</p>
+
+<p>With those configurations we get the following samples:</p>
+
+<pre><code class="language-elisp">(setq modus-themes-success-deuteranopia t)
+
+(setq modus-themes-org-agenda
+      '((header-block . (variable-pitch scale-title))
+        (header-date . (grayscale bold-today))
+        (scheduled . uniform)
+        (habit . traffic-light-deuteranopia)))
+</code></pre>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-operandi-org-agenda-deuteranopia.png"><img alt="Modus Operandi deuteranopia" src="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-operandi-org-agenda-deuteranopia.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-vivendi-org-agenda-deuteranopia.png"><img alt="Modus Vivendi deuteranopia" src="https://protesilaos.com/assets/images/attachments/2021-06-02-modus-vivendi-org-agenda-deuteranopia.png" /></a></p>
+
+<h2>Attention to detail</h2>
+
+<p>To develop this variable, I benefited from the insights, commentary,
+suggestions, and testing of Gustavo Barros <a href="https://gitlab.com/protesilaos/modus-themes/-/issues/208">in issue
+208</a> (the
+discussion has over 200 comments as of this writing).  Gustavo put
+forward the idea of reviewing the old defaults, which eventually led us
+to the realisation that only a new customisation option would suffice;
+an option in the form of an alist to offer us maximum flexibility.</p>
+
+<p>Internally, the design of <code>modus-themes-org-agenda</code> draws from the
+in-progress patch of Philip Kaludercic on the redesign of compound
+values for the numerous customisation options the themes provide,
+starting with <code>modus-themes-mode-line</code> (refer to the discussion in
+<a href="https://gitlab.com/protesilaos/modus-themes/-/merge_requests/40">merge request
+40</a>).</p>
+
+<p>Through the discussion with Gustavo, we also identified areas where Org
+itself can be improved.  Those will be formalised as patches and sent to
+the maintainers.  Their basic idea is to implement faces that are
+optimised for their context in the agenda buffers.  I shall work on
+those as soon as I am done with this report and will write about them in
+those web pages after they are accepted by upstream.</p>
+
+<p>In short, we pay attention to detail and want the best possible result
+for all users.  Thanks again to Gustavo for the fruitful collaboration
+thus far and thanks in advance to Philip for the forthcoming patches!</p>
+
+<hr />
+
+<p><strong>NOTE:</strong> The <code>modus-themes-org-agenda</code> supersedes the now-deprecated
+<code>modus-themes-org-habit</code>.  Users of the old variable can get the exact
+same styles by controlling the <code>habit</code> key inside of the new alist, with
+possible values still being the same as before, plus the
+deuteranopia-optimised addition, namely: <code>nil</code> (default), <code>simplified</code>,
+<code>traffic-light</code>, <code>traffic-light-deuteranopia</code>.</p>
+        
+      

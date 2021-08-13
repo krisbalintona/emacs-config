@@ -1,0 +1,16 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=SQ3Beqn2CEc">https://www.youtube.com/watch?v=SQ3Beqn2CEc</a></p>
+         
+         <p>In this video I showcase the main features and workflows of <code>vc</code>.  This
+is a generic framework that can be used with several version control
+systems, one of which is <code>git</code>.</p>
+
+<p>I am using VC in parallel with the more powerful <code>magit</code>.  The former is
+for smaller, simpler operations.  The latter is for the advanced
+features that <code>git</code> provides.</p>
+
+<p>Check <a href="https://protesilaos.com/dotemacs">my dotemacs</a> for all relevant
+configurations.</p>
+        
+      

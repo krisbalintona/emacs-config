@@ -1,0 +1,16 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=3VgQ69FfktI">https://www.youtube.com/watch?v=3VgQ69FfktI</a></p>
+         
+         <p>In this screen cast, I offer an overview of SXHKD, the “Simple X Hotkey
+Daemon”.  This is a program that stores custom key bindings.  We use it
+to control the window manager, as well as launch other arbitrary
+processes</p>
+
+<p>I use <code>sxhkd</code> in tandem with my tiling window manager: <code>bspwm</code>.  These
+two programs have been developed by the same person: Bastien Dejean.</p>
+
+<p>The demo is based on the configurations that are bundled with the rest
+of <a href="https://gitlab.com/protesilaos/dotfiles">my dotfiles</a>.</p>
+        
+      

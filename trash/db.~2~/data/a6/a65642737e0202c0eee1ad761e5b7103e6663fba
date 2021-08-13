@@ -1,0 +1,18 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=TG_R7lpR2zU">https://www.youtube.com/watch?v=TG_R7lpR2zU</a></p>
+         
+         <p>In this screen cast, I offer an introduction to GNU Stow.  Its manpage
+describes it as a “software package installation manager”.</p>
+
+<p>I personally use <code>stow</code> to exercise centralised control over sets of
+custom configuration files.  It makes things considerably easier,
+especially when working with complex directory structures, such as
+those found in <a href="https://gitlab.com/protesilaos/dotfiles">my dotfiles</a>.</p>
+
+<p>In the video I also make reference to my latest book, “<a href="https://protesilaos.com/pdfd">Prot’s Dots
+For Debian</a>” (PDFD) which contains a
+section on how to use GNU Stow for the purposes of reproducing my
+custom desktop session.</p>
+        
+      

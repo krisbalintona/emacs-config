@@ -1,0 +1,24 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=EWApxQd1sYI">https://www.youtube.com/watch?v=EWApxQd1sYI</a></p>
+         
+         <p>In this video I demonstrate how I combine Elfeed and Bongo into a
+workflow for storing and playing content from my multimedia feeds
+(podcasts and videos).  The implementation is fairly straightforward and
+the overall result is quite effective, based on my expectations.</p>
+
+<p>On a more general note, this shows yet again how integration between
+various otherwise standalone tools is one of Emacs’ greatest strengths.</p>
+
+<p>To understand how I use Elfeed and Bongo separately, you can watch my
+recent videos:</p>
+
+<ul>
+  <li>Bongo and my extras: <a href="https://protesilaos.com/codelog/2020-08-06-emacs-bongo-extras/">https://protesilaos.com/codelog/2020-08-06-emacs-bongo-extras/</a></li>
+  <li>Elfeed and my extras: <a href="https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/">https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/</a></li>
+</ul>
+
+<p>Also make sure to visit my Emacs configuration file, from where you can
+get the code: <a href="https://protesilaos.com/dotemacs">https://protesilaos.com/dotemacs</a></p>
+        
+      
