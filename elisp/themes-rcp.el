@@ -125,9 +125,9 @@
     (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
     )
   :config
-  (if (daemonp) ; Hooks depending on daemon or not
-      (add-hook 'server-after-make-frame-hook 'doom-modeline-mode)
-    (add-hook 'window-setup-hook 'doom-modeline-mode))
+  ;; (if (daemonp) ; Hooks depending on daemon or not
+  (add-hook 'server-after-make-frame-hook 'doom-modeline-mode)
+  (add-hook 'window-setup-hook 'doom-modeline-mode);; )
   (kb/doom-modeline-font-setup)
   )
 
