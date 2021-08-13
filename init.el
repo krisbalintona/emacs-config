@@ -66,9 +66,6 @@
 ;;;;; Evil
 (require 'evil-rcp)
 
-;;;;; Email
-;; (require 'mu4e-rcp)
-
 ;;;;; Org
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
@@ -86,6 +83,9 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
 
 ;;;;; Email
+;; (require 'mu4e-rcp)
+
+;;;;; LaTeX
 (require 'latex-general-rcp)
 (require 'latex-pdf-rcp)
 
