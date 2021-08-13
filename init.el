@@ -85,6 +85,9 @@
 ;;;;; Email
 (require 'mu4e-rcp)
 
+;;;;; RSS feed
+(require 'latex-general-rcp)
+
 ;;;;; LaTeX
 (require 'latex-general-rcp)
 (require 'latex-pdf-rcp)
