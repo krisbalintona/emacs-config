@@ -1,0 +1,85 @@
+
+         
+         <p>The other day I was asked whether it is possible to change the width of
+a window’s border while it is marked.  The short answer is affirmative.
+This is a piece of functionality I considered but never implemented in
+<a href="https://protesilaos.com/pdfd">my free book about BSPWM on Debian</a> 10
+‘buster’.</p>
+
+<p>So here is an outline of how it could be achieved.</p>
+
+<h2>Querying the marked nodes</h2>
+
+<p>We can produce the list of all marked windows with:</p>
+
+<pre><code>bspc query -N -n .marked
+</code></pre>
+
+<p>You can fine-tune this to your liking by specifying the scope of the
+query.  For example <code>.marked.local</code> will only apply to the current
+desktop (see <code>man bspc</code>).</p>
+
+<p>We can then use that to adjust the size of the first matching item to 10
+pixels (assuming the normal border is another value).</p>
+
+<pre><code>bspc config -n "$(bspc query -N -n .marked)" border_width 10
+</code></pre>
+
+<p>And here is the same principle for all marked nodes.</p>
+
+<pre><code>#!/bin/bash
+
+for i in $(bspc query -N -n .marked); do
+	bspc config -n "$i" border_width 10
+done
+</code></pre>
+
+<h2>Using the `subscribe’ command</h2>
+
+<p>For an event based approach, we can leverage BSPWM’s reporting system.
+We can poll for changes to the status of the flags that apply to nodes,
+targetting specifically the “mark” flag.</p>
+
+<p>Here is the loop.  Adjust the border width values to your liking (by the
+way, running the command without a value will give you the current one).</p>
+
+<pre><code>#!/bin/bash
+
+while read -r line; do
+	case "$line" in
+		*'marked on')
+			bspc config -n "$(bspc query -N -n .marked)" border_width 10
+			;;
+		*'marked off')
+			bspc config border_width 1
+			;;
+	esac
+done &lt; &lt;(bspc subscribe report node_flag)
+</code></pre>
+
+<p>Note that the very last part uses Bash’s process redirection to pass
+information to the loop.</p>
+
+<h2>Closing thoughts</h2>
+
+<p>Recall that assigning flags in BSPWM follows a toggle approach.  If the
+flag is active, then assigning it again will remove it and vice versa.
+Here is the relevant part from <code>man bspc</code>:</p>
+
+<pre><code>-g, --flag hidden|sticky|private|locked|marked[=on|off]
+Set or toggle the given flag for the selected node.
+</code></pre>
+
+<p>I never bothered with developing a workflow around these principles
+because I would always use marks for quick, targetted operations (see my
+book’s chapter about advanced BSPWM concepts).  As such, I am not sure
+whether it would be better to simply bind the commands to keys, which
+would set and reset the border upon toggling the flag, or whether the
+programmatic approach would be preferable.</p>
+
+<p>Please experiment with these concepts.  Feel free to contact me in case
+you produce something neat or wish to discuss this further.  Note though
+that you cannot use these principles to change a border’s colour.  That
+is just a global value.</p>
+        
+      

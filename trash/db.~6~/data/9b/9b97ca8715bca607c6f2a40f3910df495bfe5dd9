@@ -1,0 +1,14 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=xRm5SUf68pc">https://www.youtube.com/watch?v=xRm5SUf68pc</a></p>
+         
+         <p>In this screen cast I discuss the way Emacs handles buffer and window
+management.  This is quite different from the desktop-oriented
+metaphor, as it relies more on computer-specific paradigms, such as
+narrowing to selection candidates.</p>
+
+<p>All my customisations are defined in my “dotemacs” file—now provided
+as a dedicated page inside this website (with link to its source):
+<a href="https://protesilaos.com/dotemacs">protesilaos.com/dotemacs</a>.</p>
+        
+      

@@ -1,0 +1,14 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=zDz8nlUflbc">https://www.youtube.com/watch?v=zDz8nlUflbc</a></p>
+         
+         <p>In this screen cast I demonstrate the basics of TMUX, the terminal
+multiplexer.  I discuss why I think this is a very powerful tool to
+master and why I do not see any real overlap between it and a tiling
+window manager (such as BSPWM).</p>
+
+<p>I use TMUX daily and consider it essential to my workflow.  The theme
+and other configurations on display are part of <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a>.</p>
+        
+      

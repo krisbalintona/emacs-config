@@ -1,0 +1,21 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=5dlydii7tAU">https://www.youtube.com/watch?v=5dlydii7tAU</a></p>
+         
+         <p>In this screen cast I offer an overview of the basic file management
+operations we can perform inside of GNU Emacs.  The program that helps
+us in this task is called “dired”, which stands for “directory
+editor”.</p>
+
+<p>This demo covers the basics as well as some more advanced use cases,
+based on what I have learned thus far (recall that I am new to Emacs).</p>
+
+<p>In case you are interested to have a look at my configurations and
+acompanying themes, here are the links:</p>
+
+<ul>
+  <li><a href="https://protesilaos.com/dotemacs">dotemacs</a></li>
+  <li><a href="https://gitlab.com/protesilaos/modus-themes">Modus themes</a></li>
+</ul>
+        
+      

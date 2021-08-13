@@ -1,0 +1,18 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=jl9wMl6gSJw">https://www.youtube.com/watch?v=jl9wMl6gSJw</a></p>
+         
+         <p>In this screen cast I demonstrate the basics of BSPWM (Binary Space
+Partitioning Window Manager).  This is a tiling window manager that
+I use on my Debian GNU/Linux machine.  It is an integral part of my
+custom desktop session.</p>
+
+<p>For the underlying code base, refer to <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a>.  The more
+adventurous among you can also have a look at an older article of mine
+on <a href="https://protesilaos.com/codelog/how-to-bspwm-debian-sid/">how to get my setup on Debian
+Sid</a> (though this will not give you
+the most up-to-date version of my dotfiles—I intend to have a new guide
+in time for Debian 10).</p>
+        
+      

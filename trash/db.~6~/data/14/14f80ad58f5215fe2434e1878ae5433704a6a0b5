@@ -1,0 +1,18 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=2apuSji1WQk">https://www.youtube.com/watch?v=2apuSji1WQk</a></p>
+         
+         <p>In this screen cast I demonstrate my methodology for writing tasks, as
+well as a couple of scripts for interacting with the to-do list.</p>
+
+<ul>
+  <li><code>stm</code> is a CLI tool that provides various ways of presenting the
+pending tasks, using standard UNIX utilities.</li>
+  <li><code>stmmenu</code> is a <code>dmenu</code> interface that either removes a matching string
+from the list, or appends a non-matching item to the list.</li>
+</ul>
+
+<p>All scripts as well as the entire desktop session are part of <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a>.</p>
+        
+      

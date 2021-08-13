@@ -1,0 +1,166 @@
+
+         
+         <p class="info"><strong>Update 2021-01-26 20:30 +0200:</strong> Fixed link to dotfiles.<br />
+<strong>Update 2021-01-27 13:55 +0200:</strong> Tweaked Org regexp to avoid bold text at
+the beginning of the line.<br />
+<strong>Update 2021-01-27 16:39 +0200:</strong> Added Annex.</p>
+
+<p>Today I learnt how to instruct <code>git</code> to read the syntactically relevant
+beginning of the given context when producing diff hunk headings.  My
+intent is to improve the output for Emacs Lisp and Org mode files.</p>
+
+<p>The diff hunk heading is the text that is appended to the lines of a
+given change.  You must have noticed those:</p>
+
+<pre><code>@@ -210,7 +210,7 @@ TEXT OF THE HEADING
+</code></pre>
+
+<p>By default, the text for Elisp buffers is not particularly informative.
+For example:</p>
+
+<pre><code class="language-diff"> emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el b/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el
+index 318bb63e..3ea711f9 100644
+--- a/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el
++++ b/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el
+@@ -210,7 +210,7 @@ with the specified date."
+   (interactive "P")
+   (let* ((date prot-simple-date-specifier)
+          (time prot-simple-time-specifier)
+-         (format (if arg (format "%s %s" date time) date)))
++         (format (if arg (format "%s %s" date time) date))) ; This is a test
+     (when (use-region-p)
+       (delete-region (region-beginning) (region-end)))
+     (insert (format-time-string format))))
+</code></pre>
+
+<p>The heading <code>with the specified date."</code> does not really enlighten us as
+to what function is touched by this change.  Whereas with my newfound
+knowledge I get this:</p>
+
+<pre><code class="language-diff"> emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el b/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el
+index 318bb63e..3ea711f9 100644
+--- a/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el
++++ b/emacs/.emacs.d/straight/repos/prot-lisp/prot-simple.el
+@@ -210,7 +210,7 @@ (defun prot-simple-inset-date (&amp;optional arg)
+   (interactive "P")
+   (let* ((date prot-simple-date-specifier)
+          (time prot-simple-time-specifier)
+-         (format (if arg (format "%s %s" date time) date)))
++         (format (if arg (format "%s %s" date time) date))) ; This is a test
+     (when (use-region-p)
+       (delete-region (region-beginning) (region-end)))
+     (insert (format-time-string format))))
+</code></pre>
+
+<p>The <code>(defun prot-simple-inset-date (&amp;optional arg)</code> is insightful as it
+lets us understand in more precise terms the context of the relevant
+change.</p>
+
+<p>Same principle for Org, where it will read the heading under which the
+diff occurs:</p>
+
+<pre><code class="language-diff"> emacs/.emacs.d/emacs-init.org | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/emacs/.emacs.d/emacs-init.org b/emacs/.emacs.d/emacs-init.org
+index efe0d8a7..d71f8f8d 100644
+--- a/emacs/.emacs.d/emacs-init.org
++++ b/emacs/.emacs.d/emacs-init.org
+@@ -3359,6 +3359,8 @@ *** Version control framework (vc.el and prot-vc.el)
+ all basic versioning needs.  It however never stands as Magit's peer
+ when it comes to the sheer coverage of Git features.
+ 
++This is a test.
++
+ To my mind, VC and Magit can be used as part of the same setup.  Employ
+ the former for common tasks such as viewing diffs and logs, committing
+ changes in bulk, pushing and pulling from a remote.  And let Magit
+</code></pre>
+
+<p>Got the correct heading: <code>*** Version control framework (vc.el and
+prot-vc.el)</code>.  Much better!</p>
+
+<h2>Git config and attributes files</h2>
+
+<p>To get things to work we need to create <code>~/.config/git/attributes</code> and
+add at least the following:</p>
+
+<pre><code>*.lisp  diff=lisp
+*.el    diff=lisp
+*.org   diff=org
+</code></pre>
+
+<p>Then, in <code>~/.config/git/config</code> append:</p>
+
+<pre><code>[diff "lisp"]
+  xfuncname = "^(\\(.*)$"
+[diff "org"]
+  xfuncname = "^(\\*+ +.*)$"
+</code></pre>
+
+<p>And you should be good to go.</p>
+
+<p>This is based on information I got from the manpages.  The first version
+of the regular expressions comes from this page:
+<a href="https://gist.github.com/ruediger/5647207">https://gist.github.com/ruediger/5647207</a>.</p>
+
+<p>My Git config:</p>
+
+<pre><code>[user]
+  name = Protesilaos Stavrou
+  email = info@protesilaos.com
+  signingkey = 99BD6459CD5CA3EA
+[core]
+  excludesfile = ~/.config/git/ignore
+  attributesfile = ~/.config/git/attributes
+[commit]
+  gpgsign = true
+[merge]
+  conflictstyle = diff3
+[pull]
+  rebase = false
+[format]
+  thread = true
+[diff "lisp"]
+  xfuncname = "^(\\(.*)$"
+[diff "org"]
+  xfuncname = "^(\\*+ +.*)$"
+</code></pre>
+
+<h2>Quality-of-life improvements</h2>
+
+<p>I am very happy with this otherwise minor tweak and am looking forward
+to learn more about optimising my computing environment.  Git, in
+particular, is a powerful and comprehensive suite of tools that has a
+lot to offer.  I have been reading through its manpages now that I am
+not a total novice (with either <code>M-x man</code> or <code>M-x woman</code>) and am
+discovering new information that can, among others, benefit my Emacs
+setup.</p>
+
+<p>My git-related configurations are part of my dotfiles.  That is where I
+also keep all my Emacs files: <a href="https://gitlab.com/protesilaos/dotfiles">https://gitlab.com/protesilaos/dotfiles</a>.</p>
+
+<p>If some Emacs power user knows how to improve upon this setup, please do
+contact me: <a href="https://protesilaos.com/contact">https://protesilaos.com/contact</a>.</p>
+
+<h2>Annex</h2>
+
+<p>Gustavo Barros contacted me to share another take on the Elisp regexp.
+I am sharing it with permission.  This matches <code>outline-minor-mode</code>
+comment headings, any top-level form at beginning of line, and some
+selected forms even when indented:</p>
+
+<pre><code>[diff "lisp"]
+  xfuncname = "^(((;;;+ )|\\(|([ \t]+\\(((cl-|el-patch-)?def(un|var|macro|method|custom)|gb/))).*)$"
+</code></pre>
+
+<p>I like the idea and am excited to see what else we can do with this and
+other “hidden gems” of Git.</p>
+        
+      
