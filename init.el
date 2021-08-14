@@ -111,6 +111,11 @@
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
 
+<<<<<<< HEAD
+=======
+;;;;; Finances
+(require 'finance-rcp)
+>>>>>>> 1c02495... Create finance-rcp
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
