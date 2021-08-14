@@ -10,9 +10,36 @@
 ;;;; Ledger-mode
 (use-package ledger-mode
   :ensure-system-package (ledger . "sudo apt install ledger")
-  :hook (ledger-mode . (lambda () (mixed-pitch-mode 0)))
+  :hook ((ledger-mode . (lambda () (outshine-mode) (mixed-pitch-mode 0)))
+         (ledger-mode . (lambda ()
+                          (setq-local tab-always-indent 'complete)
+                          (setq-local completion-cycle-threshold t)
+                          ))
+         )
   :custom
+  ;; Administration
+  (ledger-accounts-file (concat no-littering-var-directory "ledger/accounts"))
+
+  ;; .ledger files
   (ledger-complete-in-steps t)
+  (ledger-post-auto-align t)
+  (ledger-post-amount-alignment-column 55)
+  (ledger-copy-transaction-insert-blank-line-after t)
+  (ledger-reconcile-finish-force-quit t)
+  :config
+  (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
+
+  (general-define-key
+   :keymaps 'ledger-mode-map
+   "C-c C-t" '(ledger-toggle-current :which-key "Reconcile mode")
+   )
+  )
+
+;;;; Flycheck-ledger
+(use-package flycheck-ledger
+  :after flycheck
+  :custom
+  (flycheck-ledger-zero-accounts t) ; Check even cleared transactions
   )
 
 ;;; finance-rcp.el ends here
