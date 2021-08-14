@@ -264,6 +264,15 @@
   :hook ((text-mode prog-mode) . rainbow-mode)
   )
 
+;;;;; Highlight-defined
+;; Have face for emacs-lisp variables already defined
+(use-package highlight-defined
+  :custom
+  (highlight-defined-face-use-itself t)
+  :config
+  (set-face-attribute 'highlight-defined-variable-name-face nil :inherit 'font-lock-variable-name-face :foreground "#9caabf")
+  )
+
 ;;;;; Highlight-quoted
 ;; Make quoted symbols easier to distinguish from free variables by highlighting
 ;; them
@@ -296,6 +305,11 @@
 (use-package prettier
   :disabled t ; I don't quite know what this package does or how to use it
   :hook ((prog-mode text-mode) . global-prettier-mode)
+  )
+
+;;;;; Eros
+(use-package eros
+  :hook (emacs-lisp-mode . eros-mode)
   )
 
 ;;;; Syntax checking
