@@ -100,6 +100,7 @@
 (require 'programming-web-rcp)
 
 ;;;;; Shells
+(require 'shell-basic-rcp)
 (require 'shell-eshell-rcp)
 ;; (require 'shell-vterm-rcp)
 
