@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <21/08/13 01:14:07 /home/krisbalintona/.emacs.d/var/tramp/persistency.el>
+;; -*- emacs-lisp -*- <21/08/13 20:50:53 /home/krisbalintona/.emacs.d/var/tramp/persistency.el>
 ;; Tramp connection history.  Don't change this file.
 ;; Run `M-x tramp-cleanup-all-connections' instead.
 
