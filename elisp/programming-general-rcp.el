@@ -298,6 +298,11 @@
   :hook ((prog-mode text-mode) . global-prettier-mode)
   )
 
+;;;;; Eros
+(use-package eros
+  :hook (emacs-lisp-mode . eros-mode)
+  )
+
 ;;;; Syntax checking
 ;;;;; Flycheck
 ;; Check your code
