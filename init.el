@@ -111,6 +111,9 @@
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
 
+;;;;; Finances
+(require 'finance-rcp)
+
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'init)
