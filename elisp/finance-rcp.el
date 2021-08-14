@@ -9,7 +9,7 @@
 
 ;;;; Ledger-mode
 (use-package ledger-mode
-  :ensure-system-package (ledger . "sudo apt install ledger")
+  :ensure-system-package (ledger . "sudo dnf install ledger")
   :hook ((ledger-mode . (lambda () (outshine-mode) (mixed-pitch-mode 0)))
          (ledger-mode . (lambda ()
                           (setq-local tab-always-indent 'complete)
