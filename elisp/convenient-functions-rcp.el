@@ -210,9 +210,9 @@
                 "\n\n")))
     (pop-to-buffer (current-buffer))))
 
-;;;;; Org-fix-blank-lines
+;;;;; Org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
-(defun unpackaged/org-fix-blank-lines (&optional prefix)
+(defun unpackaged/org-add-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
 
   With PREFIX, operate on whole buffer. Ensures that blank lines
@@ -255,7 +255,7 @@
                                    (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
                                    (not (string-equal buffer-file-name (expand-file-name "seedbox.org" org-roam-directory)))) ; Not seedbox
                                   (let ((current-prefix-arg 4)) ; Emulate C-u
-                                    (call-interactively 'unpackaged/org-fix-blank-lines)))
+                                    (call-interactively 'unpackaged/org-add-blank-lines)))
                               ))
 
 ;;;;; Magit-log date headers
