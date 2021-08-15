@@ -48,11 +48,30 @@
   (ledger-report-resize-window nil)
   (ledger-report-use-strict t) ; Adds `--strict' flag, make sure accounts are already defined
   (ledger-report-auto-refresh-sticky-cursor t) ; Don't lose cursor position on auto-refresh
+  :init
+  (defun kb/ledger-add-blank-lines ()
+    "Add a line to the end of every xact entry for visual clarity."
+    (interactive)
+    (save-excursion
+      (save-restriction
+        (widen)
+        (goto-char (point-min))
+        (if (not (ledger-navigate-start-xact-or-directive-p))
+            (ledger-navigate-next-xact))
+        (while (not (equal (point-max) (point)))
+          (ledger-navigate-end-of-xact)
+          (if (not (looking-at "\n\n")) (insert "\n"))
+          (ledger-navigate-next-xact))
+        ))
+    )
   :config
   ;; Administration
   (setq-default ledger-master-file (concat no-littering-var-directory "ledger/master.ledger"))
 
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
+
+  ;; Add a blank line to the end of every xact entry
+  (advice-add 'ledger-mode :after #'(lambda () (add-hook 'after-save-hook #'kb/ledger-add-blank-lines)))
 
   (general-define-key
    :keymaps 'ledger-mode-map
