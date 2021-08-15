@@ -34,6 +34,7 @@
   ;; Reconcile
   (ledger-narrow-on-reconcile nil)
 
+  ;; Reports
   (ledger-reports
    '(("bal this month" "%(binary) -f %(ledger-file) bal -p %(month) -S amount")
      ("bal 2020"       "%(binary) -f %(ledger-file) bal -p 2020")
@@ -43,6 +44,10 @@
      ("accounts"       "%(binary) -f %(ledger-file) accounts")
      ("account"        "%(binary) -f %(ledger-file) reg %(account)"))
    )
+  (ledger-report-auto-refresh nil) ; Don't continually bother me with a new window
+  (ledger-report-resize-window nil)
+  (ledger-report-use-strict t) ; Adds `--strict' flag, make sure accounts are already defined
+  (ledger-report-auto-refresh-sticky-cursor t) ; Don't lose cursor position on auto-refresh
   :config
   ;; Administration
   (setq-default ledger-master-file (concat no-littering-var-directory "ledger/master.ledger"))
