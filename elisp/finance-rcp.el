@@ -10,10 +10,12 @@
 ;;;; Ledger-mode
 (use-package ledger-mode
   :ensure-system-package (ledger . "sudo dnf install ledger")
-  :hook ((ledger-mode . (lambda () (outshine-mode) (mixed-pitch-mode 0)))
-         (ledger-mode . (lambda ()
-                          (setq-local tab-always-indent 'complete)
+  :hook ((ledger-mode . (lambda ()
+                          (setq-local tab-always-indent nil) ; Indent first then complete
                           (setq-local completion-cycle-threshold t)
+                          (outshine-mode)
+                          (mixed-pitch-mode 0)
+                          (display-line-numbers-mode 0)
                           ))
          )
   :custom
