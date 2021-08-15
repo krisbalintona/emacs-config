@@ -75,7 +75,28 @@
 
   (general-define-key
    :keymaps 'ledger-mode-map
-   "C-c C-t" '(ledger-toggle-current :which-key "Reconcile mode")
+   "C-c C-t" '(ledger-toggle-current :which-key "Toggle check on current")
+   [remap consult-flycheck] '(list-flycheck-errors :which-key "List flycheck errors")
+   )
+  (general-define-key
+   :keymaps 'ledger-mode-map
+   :state 'insert
+   "TAB" 'tab-to-tab-stop
+   )
+  (kb/leader-keys
+    :keymaps 'ledger-mode-map
+    )
+
+  (general-unbind ; Doesn't kill window as it should
+    :keymaps 'ledger-report-mode-map
+    :states '(normal visual motion)
+    "q"
+    )
+  (general-define-key
+   :keymaps 'ledger-report-mode-map
+   :states '(normal visual)
+   "RET" '(ledger-report-visit-source :which-key "Visit transaction")
+   "C-c C-o C-k" '(ledger-report-quit :which-key "Quit")
    )
   )
 
