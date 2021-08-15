@@ -35,7 +35,8 @@
 
               scroll-conservatively most-positive-fixnum                                          ; Always scroll by one line
               scroll-margin 7                                                                     ; Add a margin when scrolling vertically
-              line-spacing 0                                                                      ; This is the default line spacing
+              line-spacing 1                                                                      ; This is the default line spacing
+              mouse-wheel-tilt-scroll t                                                           ; Enable horizontal scrolling with mouse
 
               select-enable-clipboard t                                                           ; Merge system's and Emacs' clipboard
 
