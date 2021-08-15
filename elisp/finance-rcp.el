@@ -25,12 +25,15 @@
   (ledger-accounts-file (concat no-littering-var-directory "ledger/accounts.ledger"))
   (ledger-schedule-file (concat no-littering-var-directory "ledger/schedule.ledger"))
 
-  ;; .ledger files
-  (ledger-complete-in-steps t)
+  ;; .ledger files (ledger-complete-in-steps t)
   (ledger-post-auto-align t)
   (ledger-post-amount-alignment-column 55)
-  (ledger-copy-transaction-insert-blank-line-after t)
+  (ledger-copy-transaction-insert-blank-line-after nil)
   (ledger-reconcile-finish-force-quit t)
+
+  ;; Reconcile
+  (ledger-narrow-on-reconcile nil)
+
   :config
   ;; Administration
   (setq-default ledger-master-file (concat no-littering-var-directory "ledger/master.ledger"))
