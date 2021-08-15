@@ -34,6 +34,15 @@
   ;; Reconcile
   (ledger-narrow-on-reconcile nil)
 
+  (ledger-reports
+   '(("bal this month" "%(binary) -f %(ledger-file) bal -p %(month) -S amount")
+     ("bal 2020"       "%(binary) -f %(ledger-file) bal -p 2020")
+     ("bal"            "%(binary) -f %(ledger-file) bal")
+     ("reg monthly"    "%(binary) -f %(ledger-file) reg -M")
+     ("reg"            "%(binary) -f %(ledger-file) reg")
+     ("accounts"       "%(binary) -f %(ledger-file) accounts")
+     ("account"        "%(binary) -f %(ledger-file) reg %(account)"))
+   )
   :config
   ;; Administration
   (setq-default ledger-master-file (concat no-littering-var-directory "ledger/master.ledger"))
