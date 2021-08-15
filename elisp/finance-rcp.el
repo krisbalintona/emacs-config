@@ -20,7 +20,10 @@
          )
   :custom
   ;; Administration
-  (ledger-accounts-file (concat no-littering-var-directory "ledger/accounts"))
+  ;; (ledger-source-directory (concat no-littering-var-directory "ledger/source/"))
+  ;; (ledger-init-file-name (concat no-littering-var-directory "ledger/ledgerrc.ledger"))
+  (ledger-accounts-file (concat no-littering-var-directory "ledger/accounts.ledger"))
+  (ledger-schedule-file (concat no-littering-var-directory "ledger/schedule.ledger"))
 
   ;; .ledger files
   (ledger-complete-in-steps t)
@@ -29,6 +32,9 @@
   (ledger-copy-transaction-insert-blank-line-after t)
   (ledger-reconcile-finish-force-quit t)
   :config
+  ;; Administration
+  (setq-default ledger-master-file (concat no-littering-var-directory "ledger/master.ledger"))
+
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
 
   (general-define-key
