@@ -39,7 +39,8 @@
 (use-package flycheck-ledger
   :after flycheck
   :custom
-  (flycheck-ledger-zero-accounts t) ; Check even cleared transactions
+  (flycheck-ledger-explicit t) ; Check even cleared transactions
+  (flycheck-ledger-pedantic t) ; Check account names
   )
 
 ;;; finance-rcp.el ends here
