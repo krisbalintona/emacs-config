@@ -9,6 +9,10 @@
 
 ;;;; Elfeed
 (use-package elfeed
+  :hook (elfeed-search-mode . (lambda ()
+                         (display-line-numbers-mode 1)
+                         (setq-local display-line-numbers t)
+                         ))
   :custom
   ;; Give time for long updates to complete
   (elfeed-use-curl t)
@@ -24,9 +28,8 @@
   (elfeed-search-clipboard-type 'clipboard) ; Paste to system clipboard
 
   (elfeed-feeds '())
-  ;; (elfeed-search-filter "-archive @2-week-ago +unread")
-  (elfeed-search-filter "")
-  (elfeed-initial-tags nil)
+  (elfeed-search-filter "+unread")
+  (elfeed-initial-tags '(unread))
   :config
   ;; Tag hooks
   (setq elfeed-new-entry-hook
