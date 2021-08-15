@@ -43,6 +43,7 @@ Saveplace but with listings
 #+begin_src emacs-lisp
   (use-package dogears
     :straight (dogears :type git :host github :repo "alphapapa/dogears.el")
+    :hook (after-init . dogears-mode)
     :custom
     (dogears-limit 200)
     (dogears-line-width 40)
