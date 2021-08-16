@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Elfeed RSS reader configuration
+;; Elfeed RSS reader configuration.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -11,10 +11,23 @@
 
 ;;;; Elfeed
 (use-package elfeed
-  :hook (elfeed-search-mode . (lambda ()
-                         (display-line-numbers-mode 1)
-                         (setq-local display-line-numbers t)
-                         ))
+  :hook ((elfeed-search-mode . (lambda ()
+                                 (display-line-numbers-mode 1)
+                                 (setq-local display-line-numbers t)
+                                 ))
+         (elfeed-search-update . elfeed-apply-autotags-now) ; Apply the appropriate autotags to already existing entries
+         )
+  :general
+  (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+            :states 'normal
+            [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
+            "L" '((lambda ()
+                    (interactive)
+                    (elfeed-goodies/toggle-logs)
+                    (other-window 1))
+                  :which-key "Elfeed logs"))
+  (kb/leader-keys
+    "or" '(elfeed :which-key "Elfeed"))
   :custom
   ;; Give time for long updates to complete
   (elfeed-use-curl t)
@@ -32,39 +45,19 @@
   (elfeed-feeds '())
   (elfeed-search-filter "+unread")
   (elfeed-initial-tags '(unread))
-  :config
   ;; Tag hooks
-  (setq elfeed-new-entry-hook
-        `(;; Status tags
-          ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
-                               :remove 'aging
-                               :add 'archive)
-          ,(elfeed-make-tagger :before "1 month ago" ; Don't be distracted by old entries
-                               :after "3 months ago"
-                               :remove 'unread
-                               :add 'aging)
-          ))
-
-  ;; Update elfeed every time it is opened
-  (advice-add 'elfeed :after #'elfeed-update)
-  ;; Apply the appropriate autotags to already existing entries
-  (add-hook 'elfeed-search-update-hook #'elfeed-apply-autotags-now)
-
-  (general-define-key
-   :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-   :states 'normal
-   [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
-   "L" '((lambda ()
-           (interactive)
-           (elfeed-goodies/toggle-logs)
-           (other-window 1)
-           )
-         :which-key "Elfeed logs")
-   )
-
-  (kb/leader-keys
-    "or" '(elfeed :which-key "Elfeed")
-    )
+  (elfeed-new-entry-hook
+   `(;; Status tags
+     ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
+                          :remove 'aging
+                          :add 'archive)
+     ,(elfeed-make-tagger :before "1 month ago" ; Don't be distracted by old entries
+                          :after "3 months ago"
+                          :remove 'unread
+                          :add 'aging)
+     ))
+  :config
+  (advice-add 'elfeed :after #'elfeed-update) ; Update elfeed every time it is opened
   )
 
 ;;;; QoL
@@ -127,10 +120,8 @@ The list of tags is provided by `prot-elfeed-search-tags'."
  :states '(visual normal)
  "a" '((lambda ()
          (interactive)
-         (prot-elfeed-toggle-tag 'archive)
-         )
-       :which-key "Add archive tag")
- )
+         (prot-elfeed-toggle-tag 'archive))
+       :which-key "Add archive tag"))
 
 ;;;;; Custom search completion
 (defun prot-common-crm-exclude-selected-p (input)
@@ -181,16 +172,15 @@ minibuffer with something like `exit-minibuffer'."
       (setq elfeed-search-filter input))
     (elfeed-search-update :force))
   )
-
 (general-define-key
  :keymaps 'elfeed-search-mode-map
  :states 'normal
- "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion")
- )
+ "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion"))
 
 ;;;; Ancillary
 ;;;;; Elfeed-org
 (use-package elfeed-org
+  :requires elfeed
   :after elfeed
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")
@@ -202,7 +192,12 @@ minibuffer with something like `exit-minibuffer'."
 
 ;;;;; Elfeed-goodies
 (use-package elfeed-goodies
+  :requires elfeed
   :after elfeed
+  :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+                     :states 'normal
+                     "K" 'elfeed-goodies/split-show-prev
+                     "J" 'elfeed-goodies/split-show-next)
   :custom
   (elfeed-goodies/feed-source-column-width 25)
   (elfeed-goodies/tag-column-width 40)
@@ -211,23 +206,6 @@ minibuffer with something like `exit-minibuffer'."
   (elfeed-goodies/entry-pane-size 0.5)
   :config
   (elfeed-goodies/setup)
-
-  (general-define-key
-   :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-   :states 'normal
-   "K" 'elfeed-goodies/split-show-prev
-   "J" 'elfeed-goodies/split-show-next
-   )
-  )
-
-;;;;; Elfeed-dashboard
-(use-package elfeed-dashboard
-  :disabled t ; Not really working
-  :straight (elfeed-dashboard :type git :host github :repo "Manoj321/elfeed-dashboard")
-  :custom
-  (elfeed-dashboard-file (concat no-littering-var-directory "elfeed/elfeed-dashboard.org"))
-  :config
-  (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links) ; Update feed counts on elfeed-quit
   )
 
 ;;; rss-feed-rcp.el ends here
