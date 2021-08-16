@@ -55,7 +55,7 @@
   (kb/leader-keys
     "hp" '(hydra:straight-helper/body :which-key "Straight.el management")
     )
-  :init
+  :preface
   (use-package hydra)
   (use-package default-text-scale)
   :config

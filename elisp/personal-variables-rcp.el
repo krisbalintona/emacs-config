@@ -31,16 +31,16 @@
   "An escaped string that has the name of my Linux distribution.")
 
 (defconst kb/linux-ubuntu
-"Is this Ubuntu?"
-      (integerp (string-match "Ubuntu" kb/linux-distribution)))
+  (integerp (string-match "Ubuntu" kb/linux-distribution))
+  "Is this Ubuntu?")
 
 (defconst kb/linux-fedora
-      "Is this Fedora?"
-      (integerp (string-match "Fedora" kb/linux-distribution)))
+  (integerp (string-match "Fedora" kb/linux-distribution))
+  "Is this Fedora?")
 
 (defconst kb/linux-arch
-      "Is this Arch Linux?"
-      (integerp (string-match "Arch" kb/linux-distribution)))
+  (integerp (string-match "Arch" kb/linux-distribution))
+  "Is this Arch Linux?")
 
 ;;; personal-variables-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
