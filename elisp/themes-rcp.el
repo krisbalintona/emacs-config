@@ -9,6 +9,16 @@
 ;;; Code:
 (require 'faces-rcp)
 
+;;;; Remove unnecessary UI
+(menu-bar-mode -1)
+(unless (and (display-graphic-p) (eq system-type 'darwin))
+  (push '(menu-bar-lines . 0) default-frame-alist))
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;;;; Thinner vertical fringes
+(fringe-mode '(5 . 5))
+
 ;;;; Emacs themes
 (use-package doom-themes
   :disabled t

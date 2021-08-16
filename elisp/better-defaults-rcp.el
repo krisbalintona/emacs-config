@@ -2,20 +2,18 @@
 ;;
 ;;; Commentary:
 ;;
-;; Set more sane Emacs-wide defaults for Emacs as well as other QoL modes. These
-;; settings are package-agnostic
+;; Set more sane Emacs-wide settings and minor QoL changes.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; Remove unnecessary UI
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
+;;;; Load custom file
+;; Must be loaded after early-packages-rcp because that is where custom-file
+;; location is defined
+(when (file-exists-p custom-file)
+  (load custom-file))
 
-;;;; Variable defaults
+;;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil                                                    ; Don't warn when opening large files
               auto-save-default nil                                                               ; Don't auto save, prevents transitory files from being saved
@@ -70,8 +68,8 @@
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
               )
 
-;;;; Thinner vertical fringes
-(fringe-mode '(5 . 5))
+;;;; Kill child processes without confirm
+(custom-set-variables '(confirm-kill-processes nil))
 
 ;;;; Make asking "Y or N"
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -79,66 +77,19 @@
 ;;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 
-;;;; Display line numbers
-(use-package display-line-numbers
-  :custom
-  (display-line-numbers-type 'relative)
-  :config
-  (column-number-mode) ; Column number in modeline
-
-  ;; Enabled for these
-  (dolist (mode '(prog-mode-hook
-                  LaTeX-mode-hook
-                  ))
-    (add-hook mode (lambda () (display-line-numbers-mode 1))))
-
-
-  ;; Disabled for these
-  (dolist (mode '(org-mode-hook
-                  shell-mode-hook
-                  eshell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
-  )
-
-;;;; Kill child processes without confirm
-(custom-set-variables '(confirm-kill-processes nil))
-
-;;;; Ignore case
-(setq completion-ignore-case t)
+;;;; Ignore case for completion
 (custom-set-variables
+ '(completion-ignore-case t)
  '(read-buffer-completion-ignore-case t)
  '(read-file-name-completion-ignore-case t))
 
-;;;; Recognize camel case
+;;;; Recognize camel case as words
 (global-subword-mode t) ; Iterate through CamelCase words
 
-;;;; Update timestamp
-(add-hook 'before-save-hook 'time-stamp) ; or (add-hook 'write-file-functions
-
-;;;; Highlight line in org-agenda
-(add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode t)))
-
-;;;; Pinentry (pin-entry)
+;;;; Require pin-entry for passowrds
 ;; Pinentry is responsible for querying passphrases
 (require 'epg)
 (setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
-
-;;;; ESC everywhere
-;; Make ESC quit prompts everywhere
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;;;; Size-indication-mode
-;; Show file-size
-(use-package simple
-  :straight nil
-  :hook (after-init. size-indication-mode)
-  )
-
-;;;; Load custom file
-;; Must be loaded after early-packages-rcp because that is where custom-file
-;; location is defined
-(when (file-exists-p custom-file)
-  (load custom-file))
 
 ;;; better-defaults-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

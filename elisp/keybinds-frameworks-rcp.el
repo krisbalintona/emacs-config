@@ -15,6 +15,9 @@
   (general-evil-setup)
   (general-auto-unbind-keys)
 
+  ;; Make ESC quit everywhere
+  (general-define-key "<escape>" 'keyboard-escape-quit)
+
   (general-create-definer kb/leader-keys ; Use space as leader key
     :keymaps '(normal insert visual emacs)
     :prefix "SPC"

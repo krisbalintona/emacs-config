@@ -1,4 +1,4 @@
-  #+TITLE: Quality of life packages
+         #+TITLE: Quality of life packages
 
 * Helpful
 
@@ -82,6 +82,26 @@ Saveplace but with listings
       "bd" '(dogears-go :which-key "Dogears go")
       "bD" '(dogears-list :which-key "Dogears list")
       )
+    )
+#+end_src
+
+* Display-line-numbers-mode
+
+Display line numbers
+#+begin_src emacs-lisp
+  (use-package display-line-numbers
+    :ghook 'prog-mode-hook 'LaTeX-mode-hook
+    :custom
+    (display-line-numbers-type 'relative)
+    :config
+    (column-number-mode) ; Column number in modeline
+  
+    ;; Disabled for these
+    (general-add-hook
+     '(org-mode-hook
+       shell-mode-hook
+       eshell-mode-hook)
+     (display-line-numbers-mode 0))
     )
 #+end_src
 
@@ -335,6 +355,16 @@ Quickly jump to characters
     (general-define-key
      "M-a" '(ace-jump-mode :which-key "Ace-jump")
      )
+    )
+#+end_src
+
+* Size-indication-mode
+
+Show file-size
+#+begin_src emacs-lisp
+  (use-package simple
+    :straight nil
+    :hook (after-init. size-indication-mode)
     )
 #+end_src
 
