@@ -3,7 +3,7 @@
 ;;; Commentary:
 ;;
 ;; These are small groups of code, many of which are self-defined, that I find
-;; useful. Most of these functions are taken from elsewhere (e.g. Doom)
+;; useful. Most of these functions are taken from elsewhere (e.g. Doom).
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
