@@ -2,23 +2,17 @@
 ;;
 ;;; Commentary:
 ;;
-;; Packages that configure the company completion backend.
+;; Packages that configure the company completion backend
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'use-package-rcp)
 
 ;;;; Company
 ;; Point auto-completion backend
 (use-package company
-  :gfhook 'evil-normalize-keymaps 'global-company-mode
-  :general
-  (:keymaps 'company-active-map
-            "RET" 'org-return
-            [return] 'org-return
-            "TAB" #'company-complete-selection
-            [tab] #'company-complete-selection
-            )
+  :hook ((after-init . global-company-mode)
+         (company-mode . evil-normalize-keymaps)
+         )
   :custom
   (company-idle-delay 0.55)
   (company-minimum-prefix-length 2)
@@ -41,17 +35,24 @@
 
   ;; These are the backends that Doom has active
   (company-backends '(company-capf company-dabbrev company-yasnippet company-ispell))
+  :config
+  (general-define-key
+   :keymaps 'company-active-map
+   "RET" 'org-return
+   [return] 'org-return
+   "TAB" #'company-complete-selection
+   [tab] #'company-complete-selection
+   )
   )
 
 ;;;; Company-box
 ;; A pretty company autocomplete frontend that also displays candidate
 ;; documentation
 (use-package company-box
-  :gfhook 'company-box-mode
+  :after (company all-the-icons)
   :defines company-box-icons-all-the-icons
+  :hook (company-mode . company-box-mode)
   :preface
-  (require 'all-the-icons)
-
   (with-no-warnings
     ;; Prettify icons
     (defun my-company-box-icons--elisp (candidate)
