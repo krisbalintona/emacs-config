@@ -56,8 +56,8 @@
     "hp" '(hydra:straight-helper/body :which-key "Straight.el management")
     )
   :init
-  (require 'hydra)
-  (require 'default-text-scale)
+  (use-package hydra)
+  (use-package default-text-scale)
   :config
   (pretty-hydra-define hydra:straight-helper
     (:hint t :foreign-keys run :quit-key "q" :exit t)
