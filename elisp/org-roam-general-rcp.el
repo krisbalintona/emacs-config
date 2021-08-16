@@ -6,90 +6,22 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'custom-directories-rcp)
 
 ;;;; Org-roam
 (use-package org-roam
-  :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "master")
+  :straight (org-roam :type git :host github :repo "org-roam/org-roam")
   :after company ; Necessary for some reason
-  :custom
-  (org-roam-directory kb/roam-dir)
-  (org-roam-file-exclude-regexp nil)
-  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
-  (org-roam-verbose nil) ; Don't echo messages that aren't errors
-  (org-roam-completion-everywhere t) ; Org-roam completion everywhere
-  (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
-  ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
-  (org-roam-db-gc-threshold (* 3 838861))
-
-  (org-roam-node-default-sort 'file-atime)
-  (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
-
-  (org-footnote-section nil) ; Don't put footnotes in headline
-
-  ;; How it appears in the minibuffer
-  ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
-  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
-
-  ;; Roam buffer format
-  (org-roam-mode-section-functions
-   '(org-roam-backlinks-section
-     org-roam-reflinks-section
-     org-roam-unlinked-references-section
-     )
-   )
-  :init
-  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
-
-  (defun kb/roam-filter-journals (node binary)
-    "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
-journals directory."
-    (if binary
-        (not (string-equal
-              (concat
-               (expand-file-name kb/roam-dir)
-               "journals/"
-               (format-time-string "%Y" (current-time))
-               ".org")
-              (org-roam-node-file node))
-             )
-      (string-equal
-       (concat
-        (expand-file-name kb/roam-dir)
-        "journals/"
-        (format-time-string "%Y" (current-time))
-        ".org")
-       (org-roam-node-file node))
-      )
-    )
-  :config
-  (org-roam-db-autosync-enable)
-
-  ;; Org roam buffer
-  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
-  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
-  (add-hook 'org-roam-mode-hook (lambda ()
-                                  (hide-mode-line-mode) ; Hide modeline in org-roam buffer
-                                  (visual-line-mode)
-                                  )
-            )
-
-  (with-eval-after-load 'atom-one-dark-theme
-    (custom-theme-set-faces
-     `atom-one-dark
-     `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
-     `(bookmark-face ((t (:foreground nil :background nil))))
-     )
-    )
-
-  ;; Annoying. Closes frame when I want to add a footnote
-  (general-define-key "C-x C-c" 'nil)
-
-  ;; To add back mouse click to visit the node in the backlink buffer
-  (general-define-key
-   :keymaps 'org-roam-mode-map
-   [mouse-1] #'org-roam-visit-thing
-   )
-
+  :gfhook
+  ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
+  'hide-mode-line-mode
+  'visual-line-mode
+  :general
+  ("C-x C-c" 'nil) ; Annoying. Closes frame when I want to add a footnote
+  (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
+            [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/leader-keys
     "nf" '((lambda ()
              (interactive)
@@ -117,7 +49,7 @@ journals directory."
            :which-key "Go to index")
 
     "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
-    "nL" '(org-roam-buffer :which-key "New Roam buffer")
+    "nL" '(org-roam-buffer-display-dedicated :which-key "New Roam buffer")
 
     "nb" '(org-roam-db-sync :which-key "Build cache")
 
@@ -127,16 +59,70 @@ journals directory."
               (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node nil)))
               )
             :which-key "Find date")
-    "ndt" '(org-roam-dailies-find-today :which-key "Today")
-    "ndm" '(org-roam-dailies-find-tomorrow :which-key "Tomorrow")
-    "ndy" '(org-roam-dailies-find-yesterday :which-key "Yesterday")
+    "ndt" '(org-roam-dailies-goto-today :which-key "Today")
+    "ndm" '(org-roam-dailies-goto-tomorrow :which-key "Tomorrow")
+    "ndy" '(org-roam-dailies-goto-yesterday :which-key "Yesterday")
     )
+  :custom
+  (org-roam-directory kb/roam-dir)
+  (org-roam-file-exclude-regexp nil)
+  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
+  (org-roam-verbose nil) ; Don't echo messages that aren't errors
+  (org-roam-completion-everywhere t) ; Org-roam completion everywhere
+  (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
+  ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
+  (org-roam-db-gc-threshold (* 3 838861))
+
+  (org-roam-node-default-sort 'file-atime)
+  (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
+
+  (org-footnote-section nil) ; Don't put footnotes in headline
+
+  ;; How it appears in the minibuffer
+  ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
+  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
+
+  ;; Roam buffer format
+  (org-roam-mode-section-functions
+   '(org-roam-backlinks-section
+     org-roam-reflinks-section
+     org-roam-unlinked-references-section
+     )
+   )
+  :preface
+  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
+  :init
+  (defun kb/roam-filter-journals (node binary)
+    "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
+journals directory."
+    (if binary
+        (not (string-equal
+              (concat
+               (expand-file-name kb/roam-dir)
+               "journals/"
+               (format-time-string "%Y" (current-time))
+               ".org")
+              (org-roam-node-file node))
+             )
+      (string-equal
+       (concat
+        (expand-file-name kb/roam-dir)
+        "journals/"
+        (format-time-string "%Y" (current-time))
+        ".org")
+       (org-roam-node-file node))
+      )
+    )
+  :config
+  ;; Org roam buffer
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
   )
 
 ;;;; Org-roam-capture-templates
-(setq kb/lit-categories
-      '("video" "book" "podcast" "article" "website" "journal" "quote" "structure" "writing")
-      )
+(defvar kb/lit-categories
+  '("video" "book" "podcast" "article" "website" "journal" "quote" "structure" "writing")
+  "The main categories of inputs I process.")
 
 (defun kb/insert-lit-category ()
   "Insert type of literature note sources."
@@ -184,6 +170,7 @@ journals directory."
       )
 
 ;;;; Org-roam-dailies-capture-templates
+(require 'org-roam-dailies)
 (setq org-roam-dailies-capture-templates
       '(("d" "Default" plain
          "* %?
@@ -206,7 +193,7 @@ journals directory."
 ;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
 ;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
 (with-eval-after-load 'org-roam
-  (require 'all-the-icons)
+  (require 'faces-rcp)
 
   (cl-defmethod org-roam-node-filetitle ((node org-roam-node))
     "Return the file TITLE for the node."
@@ -291,7 +278,7 @@ journals directory."
 ;;;; Custom updating descriptions
 ;; Credit to @nobiot for helping me
 (defun kb/org-roam-update-link-desc--action (buffer)
-  "Updates the link descriptions for all org-roam insertions in a given buffer.
+  "Update the link descriptions for all org-roam insertions in a given BUFFER.
 Currently limited to only fix links whose UUID was automatically generated by
 Org."
   ;; Get all ids in buffer
@@ -362,7 +349,7 @@ files if called with universal argument."
 ;;;; Hide property drawers
 ;; From https://github.com/org-roam/org-roam/wiki/Hitchhiker%27s-Rough-Guide-to-Org-roam-V2#hiding-properties
 (defun kb/org-hide-properties ()
-  "Hide all org-mode headline property drawers in buffer. Could be slow if buffer has a lot of overlays."
+  "Hide all `org-mode' headline property drawers in buffer. Could be slow if buffer has a lot of overlays."
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -373,7 +360,7 @@ files if called with universal argument."
         (overlay-put ov_this 'hidden-prop-drawer t)))))
 
 (defun kb/org-show-properties ()
-  "Show all org-mode property drawers hidden by org-hide-properties."
+  "Show all `org-mode' property drawers hidden by org-hide-properties."
   (interactive)
   (remove-overlays (point-min) (point-max) 'hidden-prop-drawer t))
 
