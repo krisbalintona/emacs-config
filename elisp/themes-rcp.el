@@ -9,6 +9,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'faces-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Remove unnecessary UI
 (menu-bar-mode -1)
