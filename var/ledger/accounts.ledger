@@ -1,0 +1,13 @@
+; * Commodities
+commodity $
+    note American Dollars
+    alias USD
+    default
+commodity AAPL
+
+; * Accounts
+account Expenses
+account Assets
+account Income
+account Liabilities
+account Equity
