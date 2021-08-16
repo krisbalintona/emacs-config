@@ -32,19 +32,18 @@
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
-;;;;; Package management and settings
+;;;;; Emacs-wide packages
+;; Packages that are useful across my entire Emacs experience. Other packages
+;; defined afterward will often rely on these
 (require 'auto-gc-rcp)
 (require 'personal-variables-rcp)
 (require 'straight-package-management-rcp)
 (require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 (require 'early-packages-rcp)
 (require 'better-defaults-rcp)
 (require 'faces-rcp)
 
-;;;;; Emacs-wide packages
-;; Packages that are useful across my entire Emacs experience. Other packages
-;; defined afterward will often rely on these
-(require 'keybinds-frameworks-rcp)
 (require 'custom-directories-rcp)
 (require 'convenient-functions-rcp)
 (require 'themes-rcp)
