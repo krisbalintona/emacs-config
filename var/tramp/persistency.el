@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <21/08/15 23:13:26 /home/krisbalintona/.emacs.d/var/tramp/persistency.el>
+;; -*- emacs-lisp -*- <21/08/13 20:50:53 /home/krisbalintona/.emacs.d/var/tramp/persistency.el>
 ;; Tramp connection history.  Don't change this file.
 ;; Run `M-x tramp-cleanup-all-connections' instead.
 
@@ -21,14 +21,4 @@
   ("uid-integer" 0)
   ("gid-integer" 0))
  ((tramp-file-name "sudo" "root" nil "DESKTOP-FCSJNTM" nil nil nil)
-  ("readlink" "\\readlink")
-  ("uname" "Linux 5.10.16.3-microsoft-standard-WSL2")
-  ("locale" "LC_ALL=en_US.utf8")
-  ("test" "test")
-  ("remote-path"
-   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
-  ("pipe-buf" 4096)
-  ("remote-shell" "/bin/sh")
-  ("~root" "/root")
-  ("stat" "env QUOTING_STYLE=locale \\stat")
-  ("file-exists" "test -e")))
+  nil))

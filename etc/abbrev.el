@@ -14,7 +14,6 @@
     ("procusses" "Processes" nil :count 0)
     ("refernces" "references" nil :count 0)
     ("secons" "second" nil :count 0)
-    ("sements" "segments" nil :count 0)
     ("uuid" "UUID" nil :count 0)
    ))
 
