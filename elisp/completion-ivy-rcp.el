@@ -13,14 +13,15 @@
 ;;;;; Ivy
 ;; Ido but more powerful and eye-pleasing
 (use-package ivy
-  :bind (:map ivy-minibuffer-map
-              ("TAB" . ivy-alt-done)
-              ("C-l" . ivy-alt-done)
-              :map ivy-switch-buffer-map
-              ("C-l" . ivy-done)
-              ("C-d" . ivy-switch-buffer-kill)
-              :map ivy-reverse-i-search-map
-              ("C-d" . ivy-reverse-i-search-kill))
+  :general
+  (:keymaps 'ivy-minibuffer-map
+            "TAB" 'ivy-alt-done
+            "C-l" 'ivy-alt-done)
+  (:keymaps 'ivy-switch-buffer-map
+            "C-l" 'ivy-done
+            "C-d" 'ivy-switch-buffer-kill)
+  (:keymaps 'ivy-reverse-i-search-map
+            "C-d" 'ivy-reverse-i-search-kill)
   :custom
   (ivy-initial-inputs-alist nil) ; Remove "^" when entering a ivy completion buffer
   (ivy-extra-directories nil) ; Remove ./ and ../
@@ -88,7 +89,7 @@
          ((> size 1000) (format "%.1fk" (/ size 1000.0)))
          (t (format "%d" size))))))
 
-  (setq-default 
+  (setq-default
    ivy-rich-display-transformers-list ; Change transformer to show variable values
    (plist-put ivy-rich-display-transformers-list
               'counsel-M-x
@@ -131,15 +132,13 @@
                  (ivy-rich-package-archive-summary (:face font-lock-builtin-face :width 5))
                  (ivy-rich-package-install-summary (:face font-lock-doc-face)))
                 :delimiter "  ")))
-
-  (ivy-rich-set-display-transformer)
   )
 
 ;;;;; All-the-icons-ivy-rich
 ;; Show icons with ivy-rich
 (use-package all-the-icons-ivy-rich
   :after ivy-rich
-  :hook (window-setup . all-the-icons-ivy-rich-mode) ; after-init calls too early
+  :ghook 'window-setup-hook ; after-init calls too early
   :custom
   (all-the-icons-ivy-rich-icon-size 0.9) ; The icon size
   ;; Slow Rendering
@@ -153,14 +152,13 @@
 ;; Ivy with the prescient completion style
 (use-package ivy-prescient
   :after ivy
-  :hook (after-init . ivy-prescient-mode)
+  :ghook 'after-init-hook
   )
 
 ;;;;; Flx
 ;; Fuzzy finding in Ivy. /Incompatible with presient/ (other Doom flag)
 ;; Set from setting ivy-re-builders-alist to ivy--regex-fuzzy
 (use-package flx
-  :defer t ; Ivy loads this when needed
   :custom
   (ivy-flx-limit 10000)
   )
@@ -170,32 +168,10 @@
 ;; Ivy versions for built-in commands alongside other useful commands
 (use-package counsel
   :demand t
-  :after ivy
-  :bind (;; ("M-x" . 'counsel-M-x)
-         ;; ("C-x C-f" . 'counsel-find-file)
-         ;; ("C-x b" . 'counsel-switch-buffer)
-         ;; ("C-h t" . 'counsel-load-theme) ; Replace help-with-tutorial
-         ("C-c g" . 'counsel-git)
-         ("C-c j" . 'counsel-git-grep)
-         ("C-c k" . 'counsel-ag)
-         ("C-x l" . 'counsel-locate)
-         ;; ("C-h f" . 'counsel-describe-function)
-         ;; ("C-h v" . 'counsel-describe-variable)
-         ;; ("C-h o" . 'counsel-describe-symbol)
-         )
-  :custom
-  (counsel-outline-face-style 'org)      ; Have faces match org's
-  (counsel-outline-path-separator " / ") ; More distinct outline paths
-  ;; Make counsel use helpful
-  (counsel-describe-function-function #'helpful-function)
-  (counsel-describe-symbol-function #'helpful-symbol)
-  (counsel-describe-variable-function #'helpful-variable)
-  :config
-  (general-define-key
-   :keymaps 'minibuffer-local-map
-   "C-r" 'counsel-minibuffer-history
-   )
-
+  :requires ivy
+  :general
+  (:keymaps 'minibuffer-local-map
+            "C-r" '(counsel-minibuffer-history :which-key "Minibuffer history"))
   (kb/leader-keys
     ;; "ff" '(counsel-find-file :which-key "Find file")
     "fF" '(counsel-file-jump :which-key "Fuzzy find file")
@@ -212,18 +188,13 @@
 
     ;; "iy" '(counsel-yank-pop :which-key "Paste")
     )
-  )
-
-;;;;; Swiper
-;; Word search a buffer with Ivy
-(use-package swiper
-  :disabled t ; Now use selectrum-swiper
   :custom
-  (swiper-goto-start-of-match t)
-  :config
-  (general-define-key
-   "C-s" 'counsel-grep-or-swiper ; Depending on length of file
-   )
+  (counsel-outline-face-style 'org)      ; Have faces match org's
+  (counsel-outline-path-separator " / ") ; More distinct outline paths
+  ;; Make counsel use helpful
+  (counsel-describe-function-function #'helpful-function)
+  (counsel-describe-symbol-function #'helpful-symbol)
+  (counsel-describe-variable-function #'helpful-variable)
   )
 
 ;;; completion-ivy-rcp.el ends here
