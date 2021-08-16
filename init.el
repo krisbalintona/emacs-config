@@ -34,7 +34,7 @@
 
 ;;;;; Package management and settings
 (require 'auto-gc-rcp)
-(require 'system-variables-rcp)
+(require 'personal-variables-rcp)
 ;; (require 'default-package-management-rcp) ; Use package.el
 (require 'straight-package-management-rcp) ; Use straight.el
 (require 'use-package-rcp)
