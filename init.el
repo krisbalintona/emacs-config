@@ -51,6 +51,9 @@
 (org-babel-load-file (concat user-emacs-directory "configs/" "etc-config.org"))
 (org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
 
+;;;;; Evil
+(require 'evil-rcp)
+
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)
 (require 'completion-company-rcp)
@@ -60,9 +63,6 @@
 
 ;;;;; Buffer management
 (require 'buffer-and-window-management-rcp)
-
-;;;;; Evil
-(require 'evil-rcp)
 
 ;;;;; Org
 
