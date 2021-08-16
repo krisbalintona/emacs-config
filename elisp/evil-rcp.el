@@ -66,8 +66,8 @@
   :after evil
   :init (evil-collection-init)
   :custom
+  (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
-  (evil-collection-company-use-tng nil)
   )
 
 ;;;; Evil-commentary
@@ -100,9 +100,9 @@
 
 ;;;; Evil-surround
 ;; Surround a selection with a pair of characters
-  (use-package evil-surround
-    :init (global-evil-surround-mode)
-    )
+(use-package evil-surround
+  :init (global-evil-surround-mode)
+  )
 
 ;;;; Evil-visualstar
 ;; Situational convenient isearch
