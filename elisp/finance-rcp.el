@@ -10,14 +10,12 @@
 ;;;; Ledger-mode
 (use-package ledger-mode
   :ensure-system-package (ledger . "sudo apt install ledger")
-  :hook ((ledger-mode . (lambda ()
-                          (setq-local tab-always-indent nil) ; Indent first then complete
-                          (setq-local completion-cycle-threshold t)
-                          (outshine-mode)
-                          (mixed-pitch-mode 0)
-                          (display-line-numbers-mode 0)
-                          ))
-         )
+  :hook (after-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
+  :functions kb/ledger-add-blank-lines
+  :gfhook
+  #'outshine-mode
+  '(lambda () (mixed-pitch-mode 0))
+  '(lambda () (display-line-numbers-mode 0))
   :custom
   ;; Administration
   ;; (ledger-source-directory (concat no-littering-var-directory "ledger/source/"))
@@ -52,26 +50,28 @@
   (defun kb/ledger-add-blank-lines ()
     "Add a line to the end of every xact entry for visual clarity."
     (interactive)
-    (save-excursion
-      (save-restriction
-        (widen)
-        (goto-char (point-min))
-        (if (not (ledger-navigate-start-xact-or-directive-p))
-            (ledger-navigate-next-xact))
-        (while (not (equal (point-max) (point)))
-          (ledger-navigate-end-of-xact)
-          (if (not (looking-at "\n\n")) (insert "\n"))
-          (ledger-navigate-next-xact))
-        ))
+    (if (string= major-mode "ledger-mode")
+        (save-excursion
+          (save-restriction
+            (widen)
+            (goto-char (point-min))
+            (if (not (ledger-navigate-start-xact-or-directive-p))
+                (ledger-navigate-next-xact))
+            (while (not (equal (point-max) (point)))
+              (ledger-navigate-end-of-xact)
+              (if (not (looking-at "\n\n")) (insert "\n"))
+              (ledger-navigate-next-xact))
+            ))
+      )
     )
   :config
+  (setq-local tab-always-indent nil ; Indent first then complete
+              completion-cycle-threshold t)
+
   ;; Administration
   (setq-default ledger-master-file (concat no-littering-var-directory "ledger/master.ledger"))
 
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
-
-  ;; Add a blank line to the end of every xact entry
-  (advice-add 'ledger-mode :after #'(lambda () (add-hook 'after-save-hook #'kb/ledger-add-blank-lines)))
 
   (general-define-key
    :keymaps 'ledger-mode-map
