@@ -153,21 +153,6 @@
     )
   )
 
-;;;;; Marginalia
-;; Enable richer annotations in minibuffer (companion package of consult.el)
-(use-package marginalia
-  :straight (marginalia :type git :host github :repo "minad/marginalia")
-  :hook (after-init . marginalia-mode)
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)) ; Show as much information as possible
-  :config
-  ;; Marginalia faces
-  (set-face-attribute 'marginalia-documentation nil
-                      :inherit nil
-                      :foreground "#98C379"
-                      :slant 'italic)
-  )
-
 ;;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
