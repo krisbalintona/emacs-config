@@ -38,6 +38,10 @@
       "Is this Fedora?"
       (integerp (string-match "Fedora" kb/linux-distribution)))
 
+(defconst kb/linux-arch
+      "Is this Arch Linux?"
+      (integerp (string-match "Arch" kb/linux-distribution)))
+
 ;;; personal-variables-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'personal-variables-rcp)
