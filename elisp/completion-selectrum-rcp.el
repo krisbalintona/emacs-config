@@ -2,15 +2,23 @@
 ;;
 ;;; Commentary:
 ;;
-;; Selectrum completion framework and cousin packages
+;; Selectrum completion framework and its cousin packages.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Selectrum
 ;; Advanced complete-read
 (use-package selectrum
-  :hook (after-init . selectrum-mode)
+  :ghook 'after-init-hook
+  :general (kb/leader-keys
+             "ff" '(find-file :which-key "Find file")
+             "hf" '(describe-function :which-key "Desc func")
+             "hv" '(describe-variable :which-key "Desc var")
+             "ho" '(describe-symbol :which-key "Desc sym")
+             )
   :custom
   (selectrum-num-candidates-displayed 10) ; Maximum candidates shown
   (selectrum-fix-minibuffer-height t) ; Fixed height?
@@ -25,16 +33,8 @@
                       :weight 'semi-bold)
   (set-face-attribute 'selectrum-completion-annotation nil
                       :inherit 'ivy-grep-info)
-
-  (kb/leader-keys
-    "ff" '(find-file :which-key "Find file")
-    "hf" '(describe-function :which-key "Desc func")
-    "hv" '(describe-variable :which-key "Desc var")
-    "ho" '(describe-symbol :which-key "Desc sym")
-    )
   )
 
-;;;; Cousin packages
 ;;;;; Selectrum-prescient
 ;; Selectrum with prescient completion style
 (use-package selectrum-prescient
@@ -69,13 +69,42 @@
                       :foreground "#E5C07B")
   )
 
-;;;;; Consult.el
+;;;; Consult
 ;; Counsel equivalent for default Emacs (and thus selectrum!)
 (use-package consult
   :ensure-system-package ((fdfind . fd-find)
                           (rg . ripgrep))
-  :after selectrum
   :straight (consult :type git :host github :repo "minad/consult")
+  :after selectrum
+  :general
+  ([remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
+  (kb/leader-keys
+    :keyamps 'prog-mode-map
+    "le" '(consult-error :which-key "Consult error"))
+  (kb/leader-keys
+    :keymaps 'org-mode-map
+    [remap consult-outline] '(consult-org-heading :which-key "Consult outline"))
+  (kb/leader-keys
+    "fr" '(consult-recent-file :which-key "Consult recent file")
+    "bb" '(consult-buffer :which-key "Consult buffer")
+    ;; ("C-x 4 b" . consult-buffer-other-window)
+    ;; ("C-x 5 b" . consult-buffer-other-frame)
+
+    "mm" '(consult-bookmark :which-key "Consult bookmark")
+    "mr" '(consult-mark :which-key "Consult mark-ring")
+
+    "so" '(consult-outline :which-key "Consult outline")
+
+    "ss" '(consult-line :which-key "Consult swiper")
+    "si" '(consult-imenu :which-key "Consult imenu")
+    "sO" '(consult-multi-occur :which-key "Consult multi-occur")
+
+    "iy" '(consult-yank-pop :which-key "Consult yank-pop")
+    ;; ("C-x r x" . consult-register)
+    "ha" '(consult-apropos :which-key "Consult apropos")
+    "pf" '(consult-find :which-key "Consult find file")
+    "ps" '(consult-ripgrep :which-key "Consult rg")
+    )
   :custom
   (consult-mode-histories ; What variable consult-history looks at for history
    '((eshell-mode . eshell-history-ring)
@@ -94,12 +123,6 @@
 
   (consult-project-root-function #'doom-modeline-project-root)
   :config
-  (defun consult-fdfind (&optional dir)
-    (interactive "P")
-    (let ((consult-find-command "fd --color=never --full-path"))
-      (consult-find dir))
-    )
-
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
@@ -113,140 +136,32 @@
    ;; `consult-find'
    consult-find :preview-key (kbd "M-l")
    )
-
-  (general-define-key
-   [remap apropos-command] '(consult-apropos :which-key "Consult apropos")
-   )
-
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (kb/leader-keys
-                "le" '(consult-error :which-key "Consult error"))
-              ))
-
-  (kb/leader-keys
-    "fr" '(consult-recent-file :which-key "Consult recent file")
-    "bb" '(consult-buffer :which-key "Consult buffer")
-    ;; ("C-x 4 b" . consult-buffer-other-window)
-    ;; ("C-x 5 b" . consult-buffer-other-frame)
-
-    "mm" '(consult-bookmark :which-key "Consult bookmark")
-    "mr" '(consult-mark :which-key "Consult mark-ring")
-
-    "so" '((lambda ()
-             (interactive)
-             (if (string= major-mode "org-mode")
-                 (consult-org-heading)
-               (consult-outline)
-               )
-             )
-           :which-key "Consult outline")
-    "ss" '(consult-line :which-key "Consult swiper")
-    "si" '(consult-imenu :which-key "Consult imenu")
-    "sO" '(consult-multi-occur :which-key "Consult multi-occur")
-
-    "iy" '(consult-yank-pop :which-key "Consult yank-pop")
-    ;; ("C-x r x" . consult-register)
-    "ha" '(consult-apropos :which-key "Consult apropos")
-    "pf" '(consult-find :which-key "Consult find file")
-    "ps" '(consult-ripgrep :which-key "Consult rg")
-    )
   )
 
-;;;;; Embark
+;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
+  :after which-key ; Because I replace its value of `prefix-help-command'
+  :general
+  ("M-o" '(embark-act :which-key "Embark-act"))
+  (kb/leader-keys
+    "hb" '(embark-bindings :which-key "Embark-bindings")
+    )
   :custom
-  (embark-prompt-style 'default) ; Or manual completion
-
-  ;; Custom indicator
-  (embark-action-indicator (concat ; A function, string, or nil - remember: propertize returns a string
-                            (propertize "Embark on" 'face '(bold underline))
-                            ":"))
-
-  ;; `which-key' indicator. From
-  ;; https://github.com/oantolin/embark/#showing-a-reminder-of-available-actions
-  (embark-action-indicator
-   (lambda (map _target)
-     (which-key--show-keymap "Embark" map nil nil 'no-paging)
-     #'which-key--hide-popup-ignore-command)
-   embark-become-indicator embark-action-indicator)
-
-
   ;; Optionally replace the key help with a completing-read interface
   (prefix-help-command #'embark-prefix-help-command)
-  :config
-  (general-define-key
-   ;; :keymaps 'selectrum-minibuffer-map
-   "M-o" '(embark-act :which-key "Embark-act")
-   ;; "?" '(embark-act-noexit :which-key "Embark-act-noexit")
-   ;; "?" '(embark-export :which-key "Embark-export")
-   )
-
-  (kb/leader-keys
-    "h b" '(embark-bindings :which-key "Embark-bindings")
-    )
   )
 
-;;;;;; Embark with Selectrum
-;; Embark elisp to enable selectrum to be used in selectrum (the way I want to
-;; use it)
-
-;; Allows embark to take targets from the selectrum minibuffer and act on them.
-;; Taken from
-;; https://github.com/raxod502/selectrum/wiki/Additional-Configuration#minibuffer-actions-with-embark
-(with-eval-after-load 'embark
-  (add-hook 'embark-target-finders 'selectrum-get-current-candidate)
-  (add-hook 'embark-candidate-collectors
-            (defun embark-selectrum-candidates+ ()
-              (when selectrum-active-p
-                (selectrum-get-current-candidates
-                 ;; Pass relative file names for dired.
-                 minibuffer-completing-file-name))))
-  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate) ; No unnecessary computation delay after injection.
-  (add-hook 'embark-input-getters
-            (defun embark-selectrum-input-getter+ ()
-              (when selectrum-active-p
-                (let ((input (selectrum-get-current-input)))
-                  (if minibuffer-completing-file-name
-                      ;; Only get the input used for matching.
-                      (file-name-nondirectory input)
-                    input)))))
-
-  ;; Reset list after embark-act (which may change candidates e.g. delete-file).
-  ;; Taken from
-  ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#selectrum
-  (defun refresh-selectrum ()
-    "Reset the Selectrum candidate list."
-    (setq selectrum--previous-input-string nil)
-    )
-
-  (add-hook 'embark-pre-action-hooks #'refresh-selectrum)
-  )
-
-;;;;;; Embark-consult
+;;;; Embark-consult
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
-  :after (embark consult)
   :demand t ; only necessary if you have the hook below
   ;; if you want to have consult previews as you move around an
   ;; auto-updating embark collect buffer
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode)
+  :requires (embark consult)
+  :hook (embark-collect-mode . consult-preview-at-point-mode)
   )
-
-;;;;;; Misc embark actions
-;; Embark actions which are useful but I either haven't found a place for them
-;; yet or have yet to properly solidify its place in its own heading. Bind
-;; actions in the maps of embark-keymap-alist to make use of them within embark.
-
-;; Magit status of repo containing a given file. Taken from Magit status of repo
-;; containing a given file
-(defun embark-magit-status ()
-  "Run `magit-status' on repo containing the embark target."
-  (interactive)
-  (magit-status (locate-dominating-file (embark-target) ".git")))
 
 ;;; completion-selectrum-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
