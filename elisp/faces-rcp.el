@@ -2,10 +2,11 @@
 ;;
 ;;; Commentary:
 ;;
-;; These are the base faces I used across all of Emacs
+;; All the faces and fonts I use.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
 
 ;;;; Face definitions
 ;; Potential Fonts:
@@ -64,7 +65,7 @@
 ;; Note: Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
 (use-package mixed-pitch
-  :hook (text-mode . mixed-pitch-mode)
+  :ghook 'text-mode
   :config
   (add-to-list 'mixed-pitch-fixed-pitch-faces
                '(highlight-indent-guides-character-face ; Highlight-indent-guides
