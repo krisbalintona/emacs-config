@@ -13,20 +13,30 @@
 
 ;;;; System information
 (defconst kb/sys-win
-  "Are we running on a WinTel system?"
-  (eq system-type 'windows-nt))
+  (eq system-type 'windows-nt)
+  "Are we running on a WinTel system?")
 
 (defconst kb/sys-linux
-  "Are we running on a GNU/Linux system?"
-  (eq system-type 'gnu/linux))
+  (eq system-type 'gnu/linux)
+  "Are we running on a GNU/Linux system?")
 
 (defconst kb/sys-mac
-  "Are we running on a Mac system?"
-  (eq system-type 'darwin))
+  (eq system-type 'darwin)
+  "Are we running on a Mac system?")
 
 (defconst kb/linux-distribution
-  "An escaped string that has the name of my Linux distribution."
-  (shell-command-to-string "printf %s \"$(lsb_release -sd)\""))
+  (if kb/sys-linux
+      (shell-command-to-string "printf %s \"$(lsb_release -sd)\"")
+    nil)
+  "An escaped string that has the name of my Linux distribution.")
+
+(defconst kb/linux-ubuntu
+"Is this Ubuntu?"
+      (integerp (string-match "Ubuntu" kb/linux-distribution)))
+
+(defconst kb/linux-fedora
+      "Is this Fedora?"
+      (integerp (string-match "Fedora" kb/linux-distribution)))
 
 ;;; personal-variables-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
