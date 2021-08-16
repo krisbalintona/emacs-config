@@ -6,6 +6,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Company
 ;; Point auto-completion backend
@@ -13,6 +15,12 @@
   :hook ((after-init . global-company-mode)
          (company-mode . evil-normalize-keymaps)
          )
+  :general (:keymaps 'company-active-map
+                     "RET" 'org-return
+                     [return] 'org-return
+                     "TAB" #'company-complete-selection
+                     [tab] #'company-complete-selection
+                     )
   :custom
   (company-idle-delay 0.55)
   (company-minimum-prefix-length 2)
@@ -35,14 +43,6 @@
 
   ;; These are the backends that Doom has active
   (company-backends '(company-capf company-dabbrev company-yasnippet company-ispell))
-  :config
-  (general-define-key
-   :keymaps 'company-active-map
-   "RET" 'org-return
-   [return] 'org-return
-   "TAB" #'company-complete-selection
-   [tab] #'company-complete-selection
-   )
   )
 
 ;;;; Company-box
@@ -51,7 +51,7 @@
 (use-package company-box
   :after (company all-the-icons)
   :defines company-box-icons-all-the-icons
-  :hook (company-mode . company-box-mode)
+  :ghook 'company-mode-hook
   :preface
   (with-no-warnings
     ;; Prettify icons
