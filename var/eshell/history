@@ -422,3 +422,7 @@ apt search pandoc
 ls -la ~
 ls -la ~ | grep elfeed
 rm -r ~/.emacs.d/var/elfeed/db/
+ledger --help
+man ledger
+ledger -f ~/.emacs.d/var/ledger/master.ledger balance --flat --no-total --balance-format "%(scrub(display_total))\t\t%(account())\n"
+ledger -f ~/.emacs.d/var/ledger/master.ledger reg

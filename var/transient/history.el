@@ -3,7 +3,8 @@
  (magit-bisect nil)
  (magit-branch nil)
  (magit-cherry-pick
-  ("--ff"))
+  ("--ff")
+  nil)
  (magit-commit nil)
  (magit-diff
   ("--no-ext-diff" "--stat"))

@@ -1,4 +1,3 @@
-/home/krisbalintona/dotfiles
 ~/main-emacs
 /home/krisbalintona/Documents/org-database
 ~/Documents/org-database
@@ -29,4 +28,6 @@
 ~/ghost-devel/content/themes/personal
 /mnt/c/Users/KrisB/Documents/GitHub/emacs-wsl
 ~
+~/.emacs.d
+~/.emacs.d/straight/repos/flycheck-ledger
 ~/.emacs.d
