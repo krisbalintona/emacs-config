@@ -367,6 +367,7 @@
 
   (kb/leader-keys
     "lf" '(consult-flycheck :which-key "List flycheck errors")
+    "lF" '(flycheck-list-errors :which-key "List flycheck errors")
     )
   )
 
