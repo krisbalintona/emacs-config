@@ -38,7 +38,7 @@
 ;;;;; Selectrum-prescient
 ;; Selectrum with prescient completion style
 (use-package selectrum-prescient
-  :hook (after-init . selectrum-prescient-mode)
+  :ghook 'after-init-hook
   :custom
   ;; Use `prescient' to sort and filter
   (selectrum-prescient-enable-filtering t)

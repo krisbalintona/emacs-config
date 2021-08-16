@@ -13,6 +13,7 @@
 ;;;;; Ivy
 ;; Ido but more powerful and eye-pleasing
 (use-package ivy
+  :demand t
   :general
   (:keymaps 'ivy-minibuffer-map
             "TAB" 'ivy-alt-done
@@ -152,7 +153,7 @@
 ;; Ivy with the prescient completion style
 (use-package ivy-prescient
   :after ivy
-  :ghook 'after-init-hook
+  :ghook 'ivy-mode-hook
   )
 
 ;;;;; Flx
@@ -167,8 +168,8 @@
 ;;;;; Counsel
 ;; Ivy versions for built-in commands alongside other useful commands
 (use-package counsel
-  :demand t
   :requires ivy
+  :after ivy
   :general
   (:keymaps 'minibuffer-local-map
             "C-r" '(counsel-minibuffer-history :which-key "Minibuffer history"))

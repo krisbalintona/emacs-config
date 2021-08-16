@@ -21,9 +21,9 @@
 ;; Simple sorting of minibuffer candidates. Big benefit is having most recent
 ;; candidate shown on top
 (use-package prescient
-  :after counsel ; Needs to be called after counsel so that counsel doesn't overwrite stuff
-  :config
-  (prescient-persist-mode)
+  ;; :after (selectrum counsel) ; Needs to be called after counsel so that counsel doesn't overwrite stuff
+  :after selectrum
+  :ghook ('selectrum-prescient-mode-hook 'prescient-persist-mode)
   )
 
 ;;;; Marginalia
