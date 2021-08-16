@@ -3,7 +3,7 @@
 ;;; Commentary:
 ;;
 ;; These are settings and/or packages which are package agnostic, some involved
-;; with default Emacs' completion.
+;; with the default Emacs completion
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:

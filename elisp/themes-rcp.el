@@ -168,7 +168,7 @@
 ;;;;; Modeline segments
 ;; (Re)defining my own modeline segments
 (defun kb/set-doom-modeline-segments ()
-  "Define relevant doom modeline sements and define segment."
+  "Define relevant doom modeline segments and define segment."
   (require 'doom-modeline-segments)
 
   (doom-modeline-def-segment kb/buffer-info

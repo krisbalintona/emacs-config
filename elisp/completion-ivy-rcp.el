@@ -2,16 +2,17 @@
 ;;
 ;;; Commentary:
 ;;
-;; Ivy completion framework and (agnostic) cousin packages
+;; Ivy completion framework and its cousin packages.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Interface
 ;;;;; Ivy
 ;; Ido but more powerful and eye-pleasing
 (use-package ivy
-  ;; :hook (after-init . ivy-mode)
   :bind (:map ivy-minibuffer-map
               ("TAB" . ivy-alt-done)
               ("C-l" . ivy-alt-done)

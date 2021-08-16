@@ -130,7 +130,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
        :which-key "Add archive tag")
  )
 
-;;;;; Search completion
+;;;;; Custom search completion
 (defun prot-common-crm-exclude-selected-p (input)
   "Filter out INPUT from `completing-read-multiple'.
 Hide non-destructively the selected entries from the completion

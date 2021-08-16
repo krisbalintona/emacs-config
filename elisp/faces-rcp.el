@@ -26,7 +26,7 @@
 (defvar kb/variable-pitch-font "LiterationSerif Nerd Font")
 ;; (defvar kb/variable-pitch-font "Garamond-Math")
 ;; (defvar kb/variable-pitch-font "ETBembo")
-;(defvar kb/modeline-font "Noto Sans")
+;; (defvar kb/modeline-font "Noto Sans")
 (defvar kb/modeline-font "NotoSans Nerd Font")
 
 ;;;; Setup fonts
@@ -65,7 +65,7 @@
 ;; Note: Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
 (use-package mixed-pitch
-  :ghook 'text-mode
+  :ghook 'text-mode-hook
   :config
   (add-to-list 'mixed-pitch-fixed-pitch-faces
                '(highlight-indent-guides-character-face ; Highlight-indent-guides
