@@ -54,11 +54,7 @@
     ;; http://ergoemacs.org/misc/emacs_macos_emoji.html
     ))
   )
-
-;; Set fonts based on if daemon or not
-(if (daemonp)
-    (add-hook 'server-after-make-frame-hook 'kb/default-fonts-setup)
-  (add-hook 'window-setup-hook 'kb/default-fonts-setup))
+(general-add-hook '(server-after-make-frame-hook window-setup-hook) 'kb/default-fonts-setup)
 
 ;;;; Mixed-pitch
 ;; Allow faces to be selectively fixed- or variable-pitch
