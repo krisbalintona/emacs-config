@@ -110,6 +110,12 @@
     )
   )
 
+;;;;; Ediff
+(use-package ediff
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
+  )
+
 ;;;;; Projectile
 ;; Navigate and manage project directories easier
 (use-package projectile
