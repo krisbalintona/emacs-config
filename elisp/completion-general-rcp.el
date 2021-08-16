@@ -21,12 +21,27 @@
 ;; Simple sorting of minibuffer candidates. Big benefit is having most recent
 ;; candidate shown on top
 (use-package prescient
-  :preface (require 'counsel) ; Needs to be called after counsel so that counsel doesn't overwrite stuff
+  :after counsel ; Needs to be called after counsel so that counsel doesn't overwrite stuff
   :config
   (prescient-persist-mode)
   )
 
 ;;;; Marginalia
+;; Enable richer annotations in minibuffer (companion package of consult.el)
+(use-package marginalia
+  :straight (marginalia :type git :host github :repo "minad/marginalia")
+  :ghook 'after-init
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)) ; Show as much information as possible
+  :config
+  ;; Marginalia faces
+  (set-face-attribute 'marginalia-documentation nil
+                      :inherit nil
+                      :foreground "#98C379"
+                      :slant 'italic)
+  )
+
+;;;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
   :straight (marginalia :type git :host github :repo "minad/marginalia")
