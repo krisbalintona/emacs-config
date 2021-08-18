@@ -1,0 +1,3 @@
+[submodule "emacs-data"]
+	path = var
+	url = git@gitlab.com:PreciousPudding/emacs-data.git
