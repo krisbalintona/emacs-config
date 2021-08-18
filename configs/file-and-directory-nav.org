@@ -48,8 +48,6 @@ From [[https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-perform
   (kb/leader-keys
     "fo" '(counsel-outline :which-key "Goto heading in current file")
   
-    "fc"  '(:ignore t :which-key "Custom file searches")
-  
     "fcL" '((lambda () (interactive) (counsel-find-file kb/library-dir)) :which-key "Library files")
     "fcl" '((lambda () (interactive) (kb/org-dir-show-headings kb/library-dir)) :which-key "Edit library file")
   
