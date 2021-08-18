@@ -257,53 +257,6 @@
                                   (let ((current-prefix-arg 4)) ; Emulate C-u
                                     (call-interactively 'unpackaged/org-add-blank-lines)))
                               ))
-
-;;;;; Magit-log date headers
-;; Add dates to magit-logs
-(use-package ov) ; Dependency
-
-(defun unpackaged/magit-log--add-date-headers (&rest _ignore)
-  "Add date headers to Magit log buffers."
-  (when (derived-mode-p 'magit-log-mode)
-    (save-excursion
-      (ov-clear 'date-header t)
-      (goto-char (point-min))
-      (cl-loop with last-age
-               for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
-                                car
-                                (overlay-get it 'before-string)
-                                (get-text-property 0 'display it)
-                                cadr
-                                (s-match (rx (group (1+ digit) ; number
-                                                    " "
-                                                    (1+ (not blank))) ; unit
-                                             (1+ blank) eos)
-                                         it)
-                                cadr)
-               do (when (and this-age
-                             (not (equal this-age last-age)))
-                    (ov (line-beginning-position) (line-beginning-position)
-                        'after-string (propertize (concat " " this-age "\n")
-                                                  'face 'magit-section-heading)
-                        'date-header t)
-                    (setq last-age this-age))
-               do (forward-line 1)
-               until (eobp)))))
-
-(define-minor-mode unpackaged/magit-log-date-headers-mode
-  "Display date/time headers in `magit-log' buffers."
-  :global t
-  (if unpackaged/magit-log-date-headers-mode
-      (progn
-        ;; Enable mode
-        (add-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
-        (advice-add #'magit-setup-buffer-internal :after #'unpackaged/magit-log--add-date-headers))
-    ;; Disable mode
-    (remove-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
-    (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
-
-(add-hook 'magit-mode-hook 'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
-
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'conventient-functions-rcp)
