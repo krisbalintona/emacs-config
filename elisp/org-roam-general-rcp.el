@@ -40,6 +40,42 @@
   :init
   (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
 
+  ;; Exporting with links included
+  (setq org-id-track-globally t)
+  (defun org-html--reference (datum info &optional named-only)
+    "Return an appropriate reference for DATUM.
+
+DATUM is an element or a `target' type object.  INFO is the
+current export state, as a plist.
+
+When NAMED-ONLY is non-nil and DATUM has no NAME keyword, return
+nil.  This doesn't apply to headlines, inline tasks, radio
+targets and targets."
+    (let* ((type (org-element-type datum))
+           (user-label
+            (org-element-property
+             (pcase type
+               ((or `headline `inlinetask) :CUSTOM_ID)
+               ((or `radio-target `target) :value)
+               (_ :name))
+             datum))
+           (user-label (or user-label
+                           (when-let ((path (org-element-property :ID datum)))
+                             (concat "ID-" path)))))
+      (cond
+       ((and user-label
+             (or (plist-get info :html-prefer-user-labels)
+                 ;; Used CUSTOM_ID property unconditionally.
+                 (memq type '(headline inlinetask))))
+        user-label)
+       ((and named-only
+             (not (memq type '(headline inlinetask radio-target target)))
+             (not user-label))
+        nil)
+       (t
+        (org-export-get-reference datum info)))))
+
+  ;; Custom functions
   (defun kb/roam-filter-journals (node binary)
     "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
 journals directory."
