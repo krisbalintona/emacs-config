@@ -88,9 +88,6 @@
   "qQ" '(kb/kill-all-buffers :which-key "Kill all buffers")
   )
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'faces-rcp)
 ;;;; Idle quote
 ;; Display a random quote in the minibuffer after a certain amount of idle time.
 ;; It's useful to get inspiration when stuck writing
@@ -115,8 +112,6 @@
 
 (run-with-idle-timer 300 t 'kb/show-random-quotes)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'convenient-functions-rcp)
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
