@@ -1,0 +1,527 @@
+
+         
+         <p class="critical"><strong>Update 2019-05-15:</strong>  This post is out-of-date.  DO NOT FOLLOW ITS
+INTRUCTIONS.</p>
+
+<p class="info"><strong>Update 2019-05-15:</strong> These instructions have been superseded by my new book: <a href="https://protesilaos.com/pdfd/">Prot’s Dots For
+Debian</a>.  That is the comprehensive guide
+to reproducing my setup on Debian 10 ‘buster’.</p>
+
+<p class="note"><strong>Update 2019-05-15:</strong> For video demos, see my <a href="https://protesilaos.com/code-casts/">screen casts</a>.</p>
+
+<p>Original text below.</p>
+
+<hr />
+
+<p>I have been running Debian Sid for about a year now. Overall, I think it is an excellent rolling release GNU/Linux distribution. Debian is my distro of choice because of (i) its importance to the free software world, (ii) its diverse community, (iii) its politics and stance on free software,<sup id="fnref:NoteDFSGNonFree" role="doc-noteref"><a href="#fn:NoteDFSGNonFree" class="footnote" rel="footnote">1</a></sup> and (iv) the fact that it is an “enterprise-grade” operating system without being backed by any one company (e.g. Ubuntu).</p>
+
+<p>Debian is not an ideal choice for beginners. It does not try to make the experience the most user friendly or to provide everything “out of the box”. Users coming from distros such as the Ubuntu flavours or Linux Mint, thinking that they will just “cut out the middleman” and go directly to the source, are in for a hard time.</p>
+
+<p>A Debian user is expected to mould their system into their own needs, to make configurations and adaptations for their particular case. For example, you cannot use <code>sudo</code> with your regular user, unless you configure it to do so. The <code>lightdm</code> login screen will not show the user list by default. You will probably have to configure <code>fontconfig</code> in order to have consistent fonts across applications, such as in <code>chromium</code>. All desktop environments offer a basic experience, unlike the care and polish that goes into something like the Linux Mint editions or Ubuntu MATE. And so on. As such, I would argue that Debian is targeted at experienced GNU/Linux users.</p>
+
+<p>In this article, I document all the steps I take to get my custom desktop session on Debian <em>Sid</em>. The core of my setup is the Binary Space Partitioning Window Manager (BSPWM). It is a tilling window manager, similar to the arguably more popular i3 (i3WM).</p>
+
+<p>First some demos, then a few words about Debian release channels, a short note of why I prefer BSPWM over i3, and then the instructions.</p>
+
+<h2>1 Demonstrations</h2>
+
+<p><em>Any large gaps between windows are for demo purposes only, as I prefer to work with values between 0-5.</em></p>
+
+<h3>1.1 Screenshot</h3>
+
+<p><img src="https://gitlab.com/protesilaos/dotfiles-screenshots/raw/master/2019-03-26_multihead-dark-theme.png" alt="bspwm sample screenshot" /></p>
+
+<h3>1.2 Quick view of BSPWM motions</h3>
+
+<p><img src="https://thumbs.gfycat.com/KaleidoscopicPleasantAmmonite-size_restricted.gif" alt="BSPWM motions demo" /></p>
+
+<p><a href="https://gfycat.com/KaleidoscopicPleasantAmmonite">Higher quality demo of BSPWM motions</a>.</p>
+
+<h3>1.3 Change environment theme</h3>
+
+<p>Demo of a script that changes all themes on demand, from terminals to command line utilities, the system bar, etc. It is invoked by my <code>tempusmenu</code>: a <code>dmenu</code> script that provides the available options. The <a href="https://protesilaos.com/tempus-themes/">Tempus themes</a> are compliant <em>at minimum</em> with the WCAG AA accessibility standard for colour contrast.</p>
+
+<p><img src="https://thumbs.gfycat.com/HandmadeSimplisticBetafish-size_restricted.gif" alt="bspwm demo of theme change" /></p>
+
+<p><a href="https://gfycat.com/HandmadeSimplisticBetafish">Higher quality of environment theme change demo</a>.</p>
+
+<h2>2 A few words about Debian Sid and Debian release channels</h2>
+
+<p>Debian is divided in four release channels: Stable, Testing, Unstable, and Experimental. Packages migrate from the last to the first in sequence, after being subjected to careful scrutiny where release critical bugs and security holes are identified and addressed.</p>
+
+<p>The Stable release is the one recommended to regular users and readily available through the project’s homepage. It currently sits at version 9.4 and is codenamed “Stretch”. Stable gets a major release about once every two years, though there is no rigid release schedule. It is published when it is ready. Package versions remain on the same major version throughout the distribution’s life cycle, with minor fixes and security updates being the ones pushed down to users. Choose Stable if you intend to set up a system that requires very little maintenance, such as a home server or a generic desktop computer system.</p>
+
+<p>Testing is the next Stable release, currently codenamed “Buster”. It occupies the space between Stable and Unstable. In technical terms, Testing <em>as such</em> is a rolling release model, though the various code names are better described as semi-rolling.<sup id="fnref:NoteTestingRolling" role="doc-noteref"><a href="#fn:NoteTestingRolling" class="footnote" rel="footnote">2</a></sup> I think Testing covers a specific niche. It should not be used by Debian users who need access to newer packages and are prepared to assume the responsibility inherent in running bleeding edge software (more on that in the following subsection).</p>
+
+<p>The Unstable branch gets newer packages, which are subject to regular updates. Unstable is always codenamed ‘Sid’. It never has an actual version number, because it follows a rolling release model. Packages are updated as they come. Sid is only defined by approximation, based on what the current Testing branch is called. As such, the <em>current state</em> of Sid is internally referred to as Buster/Sid. Use Sid if you want to have a bleeding edge system and are prepared to resolve any problems as they arise.</p>
+
+<p>As for Experimental, its name denotes its function. It is meant for Debian developers.</p>
+
+<h3>2.1 Why Sid instead of Testing</h3>
+
+<p>The three-fold reason I favour Sid over Testing is as follows:</p>
+
+<ul>
+  <li><strong>Responsibility is yours.</strong> You want to run a rolling release distribution. You should not expect it to be as hassle-free as Stable. If you value stability above everything else, you should not be thinking about switching to Testing/Sid. Use Debian Stable, an Ubuntu LTS release, or Linux Mint.</li>
+  <li><strong>Testing offers the illusion of stability.</strong> If you read various comparisons online, there is this belief that you should use Testing over Sid because it has the best of both worlds. It is more like running Stable with newer packages. I find this kind of misleading. Testing is still a rolling release distribution, so <em>responsibility is yours</em>.</li>
+  <li><strong>Testing can remain broken for longer.</strong> If you go into Testing thinking that it is perfectly stable, then you will run into trouble. And when you do come across problems, they will persist for longer compared to Sid. The reason is that upstream fixes go to Sid first and only after a certain period of time do they migrate to Testing.</li>
+</ul>
+
+<p>In other words, I think Sid makes it crystal clear that you are responsible for your system. Whereas Testing can give the impression that you can sort of cheat your way into having both bleeding edge software and stability. That is the wrong mentality to have if you are to use a rolling release distro. If, however, you know exactly what you are doing, there is almost no difference between Testing and Sid: it is just a matter of how close to the bleeding edge you want to be.</p>
+
+<p>At any rate, I consider the package <code>apt-listbugs</code> essential to running either of these options (more on that in the installation instructions below).</p>
+
+<h2>3 Why BSPWM over i3WM</h2>
+
+<p>BSWPM represents windows as the leaves of a binary tree, dividing the working area between a focused node and a stack of inactive windows (technically a window spiral).</p>
+
+<p>GNU/Linux users may already be familiar with i3, a popular tiling window manager. I have used <code>i3wm</code> for quite a while. Both the upstream and the popular <code>i3-gaps</code> fork (which is not in the Debian repos). Overall, it is an excellent choice, but I think BSPWM is slightly better. For me, the main advantages are:</p>
+
+<ol>
+  <li>Follows the UNIX philosophy. Does not come bundled with its own status bar or any extras. BSPWM is quite literally a window manager and nothing else.</li>
+  <li>The configuration file is a shell executable, which allows scripting (e.g. if program exists, then run it, else do nothing) or sourcing other files.</li>
+  <li>The hotkey daemon, which handles interaction with BSPWM, has a clean syntax that allows the declaration of multiple key bindings at once. Also recognises events like activating the command on key release or on repeat. Finally, it provides the option of defining key chord chains (multiple key presses to run a command).</li>
+  <li>Unlike upstream i3, BSPWM offers the option for gaps between windows. Yeah, huge gaps are a gimmick. But small ones can be a productivity boost. This is not really an advantage if we compile <code>i3-gaps</code> from source, but mostly a convenience to get gaps from the official <code>bspwm</code> Debian package.</li>
+</ol>
+
+<h2>4 Installation instructions</h2>
+
+<p class="info">These instructions may be updated at a future date. I do, in particular, plan to add a table of contents and expand on some further customisations the user may want to consider.</p>
+
+<p class="note">The following instructions were implemented on 2018-06-30 on a clean Debian 9.4 install, using the latest available net install option. The hardware is Lenovo ThinkPad X220.</p>
+
+<p class="critical"><strong>Do not try these instructions on mission critical infrastructure.</strong> Use a Virtual Machine or a spare computer. These work on my Lenovo ThinkPad X220 laptop and the Lenovo H30-05 desktop. Your mileage may vary. I do not claim to know how different hardware configurations will behave. <strong>The responsibility is yours. Proceed at your own risk.</strong></p>
+
+<h3>4.1 Setting up a clean Debian install</h3>
+
+<p>I prefer to use the <a href="https://www.debian.org/distrib/netinst">net install of the current Stable release</a>. If you have a machine that does not have Ethernet access, or requires non-free drivers for Wi-Fi, then you will be better served by <a href="https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/">one of those</a>.</p>
+
+<p>The reason I first install Debian Stable and then switch to Sid, is to have a solid starting point. There are ways to install Sid directly, but your timing might coincide with the presence of a major bug in a core piece of software. The package <code>apt-listbugs</code> (more on that below) will protect you from such unpleasant surprises.</p>
+
+<p>During the installation process, you will be asked to choose your major system components. A Desktop Environment, an SSH server, a print server, etc. I always keep the first option checked, then [using the space key to toggle on/off] I add MATE, SSH server, remove the print server, and keep the standard system utilities.</p>
+
+<p>Here is a representation:</p>
+
+<pre><code>[x] Debian desktop environment
+[ ] ... GNOME
+[ ] ... Xfce
+[ ] ... KDE
+[ ] ... Cinnamon
+[x] ... MATE
+[ ] ... LXDE
+[ ] web server
+[ ] print server
+[x] SSH server
+[x] standard system utilities
+</code></pre>
+
+<p>You will get Debian Stable running the MATE desktop environment. I always choose a DE because it makes certain things easier, like network access and a functioning Xorg display server. It also provides a decent fallback option, as well as something that could be used by other users in the house or a guest.</p>
+
+<p>Now to prepare for the transition to Debian Sid. Open a terminal and type the following commands (lines starting with <code>#</code> are comments and should not be added to the command line).</p>
+
+<pre><code class="language-sh"># Switch to the root user (password was defined at install time)
+su
+
+# update the package archives
+apt update
+
+# install some core packages, especially `apt-listbugs`
+# `apt-listbugs` is essential if you want to run Sid or even Testing
+apt install sudo vim apt-listbugs build-essential
+
+# add your username to the sudo group
+adduser USERNAME sudo
+</code></pre>
+
+<p>Reboot your system.</p>
+
+<h3>4.2 Preparing the update to Sid</h3>
+
+<p>Now edit <code>/etc/apt/sources.list</code> to enable Sid (you must be the root user or run with <code>sudo</code>). You will need to replace all references to <code>stable</code> or <code>stretch</code> with <code>sid</code>. This is the right time to also include support for non-free packages if you need them.</p>
+
+<p>This is all I have in my APT sources file, using the mirrors from Greece:</p>
+
+<pre><code class="language-sh">deb http://ftp.gr.debian.org/debian/ sid main contrib non-free
+deb-src http://ftp.gr.debian.org/debian/ sid main contrib non-free
+</code></pre>
+
+<p>Save your changes. Now type the following commands in a terminal (use <code>sudo</code> as regular user, omit it if you login with <code>su</code>):</p>
+
+<pre><code class="language-sh"># refresh the package lists with references from Debian Sid
+sudo apt update
+
+# perform a full system upgrade
+sudo apt full-upgrade
+</code></pre>
+
+<p>These will start the process of converting Stable to Sid. The process might mess up with the fonts in your terminal, but is otherwise quite straightforward. Let it run and do not do anything in the meantime.</p>
+
+<p>Note though, that at the time of writing, there are some critical bugs that require your attention. <code>apt-listbugs</code> will print a list with short descriptions, and you have the option to open an HTML file with links to the full bug reports. To complete the upgrade, you might have to pin some packages (keep them at their current version). This can be done at the prompt of <code>apt-listbugs</code> with this command:</p>
+
+<pre><code class="language-sh">p &lt;package-name&gt;
+</code></pre>
+
+<p>My actual pinning was this:</p>
+
+<pre><code class="language-sh">p synaptic libgpg-error0 efibootmgr libdrm-radeon1
+</code></pre>
+
+<p>You will then have to select “NO” and type <code>sudo apt full-upgrade</code> to repeat the process while excluding the pinned packages.</p>
+
+<p>Those pinned packages are stored in <code>/etc/apt/preferences.d/apt-listbugs</code>. Remember to periodically check if the problems have been fixed. Lots of pinned packages might cause unpredictable behaviour.</p>
+
+<p>The upgrade will take a while, depending on your connection speed. Mine was about an hour.</p>
+
+<p>Reboot once done. You are now running Debian Sid with the latest MATE desktop. Congratulations!</p>
+
+<h3>4.3 Setting up my BSPWM environment</h3>
+
+<p>Log back in to MATE for the last time. Or use a TTY if you wish. We are almost done.</p>
+
+<h4>4.3.1 Getting the core packages</h4>
+
+<p>Now to install my custom environment. You might want to build the system yourself, in which case it is better to just install the essentials. Seeing though as you are reading this guide, I would recommend you install the essentials plus the extras. The following commands will also pull in all the relevant dependencies.</p>
+
+<pre><code class="language-sh"># essentials
+sudo apt install git stow curl scrot feh materia-gtk-theme rxvt-unicode bspwm suckless-tools sxhkd xbacklight compton dunst libnotify-bin rsync i3lock lxappearance
+
+# essentials + extras
+sudo apt install git stow curl qtpass fonts-roboto fonts-hack-ttf neomutt abook ranger newsboat scrot feh materia-gtk-theme rxvt-unicode mpd mpc ncmpcpp bspwm suckless-tools sxhkd xbacklight compton dunst mpv youtube-dl imagemagick libnotify-bin taskwarrior w3m zathura firefox thunderbird redshift dtrx rsync i3lock lxappearance fonts-font-awesome
+</code></pre>
+
+<h4>4.3.2 Install the Mint-Y icons</h4>
+
+<p>These are all the packages we need from the official repositories. Now on to get the icon theme I employ in my notification system (defined in the <code>~/.config/dunst/dunstrc</code> file). I choose the Mint-Y icon theme because it is quite complete and consistent. Open a terminal and run:</p>
+
+<pre><code class="language-sh"># Get the source files
+git clone https://github.com/linuxmint/mint-y-icons.git --depth 1
+
+# Enter the mint-y-icons directory
+cd mint-y-icons
+
+# Sync the source files to the system (makes the icons available to all users) 
+sudo rsync -avzr usr/share/icons/* /usr/share/icons/
+</code></pre>
+
+<p>Note that the last command uses <code>rsync</code> instead of <code>cp</code>. The former is good for incremental updates. So you can periodically <code>cd</code> into the icons’ source code (as above), run <code>git pull</code> to get the latest updates, and then execute the <code>rsync</code> command as shown above to pass only those updates to the system files (<code>rsync</code> is an awesome tool).</p>
+
+<h4>4.3.3 Install Polybar</h4>
+
+<p>Unlike your standard Desktop Environment, BSPWM does not come bundled with anything. BSPWM is just the window manager program. Does one thing and does it well. To get a decent system panel, we can use <code>lemonbar</code> from the official repositories, but I think that is not the best option. Instead I opt to compile <code>polybar</code> from source. Prepare a terminal for the following commands.</p>
+
+<p>These will get you the dependencies:</p>
+
+<pre><code class="language-sh"># prepare polybar from source
+# instructions https://github.com/jaagr/polybar/wiki/Compiling
+
+## install dependencies
+sudo apt install cmake cmake-data pkg-config libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev python-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev libasound2-dev libpulse-dev libmpdclient-dev libiw-dev libnl-3-dev
+</code></pre>
+
+<p>Now to retrieve the source code and compile it:</p>
+
+<pre><code class="language-sh">## get source and compile
+git clone --recursive https://github.com/jaagr/polybar
+mkdir polybar/build
+cd polybar/build
+cmake ..
+sudo make install
+</code></pre>
+
+<h4>4.3.4 Get my dotfiles (customisations)</h4>
+
+<p class="warn">Before proceeding, make sure you check this short blog post of mine about how I use <a href="https://protesilaos.com/codelog/gnu-stow-dotfiles/">GNU Stow with my dotfiles</a>.</p>
+
+<p>All packages are in place. Now we need the dotfiles to complete the process. As I tend to tweak things here and there, I link you to the <a href="https://gitlab.com/protesilaos/dotfiles/tags/v2.1.0">current version of my dotfiles, which is v2.1.0</a>. You must download that version, decompress it in your <code>$HOME</code> directory, rename it “dotfiles-prot” (or something that works for you), and then prepare to run the following (here is the <a href="https://gitlab.com/protesilaos/dotfiles">canonical link to my dotfiles</a>, if you wish to clone the repo).</p>
+
+<pre><code class="language-sh"># switch your current directory to my dotfiles
+cd ~/dotfiles-prot
+
+# use stow to create symlinks
+# all parts of the desktop session go to their right place
+# here are my essentials
+stow bin bspwm cli-tools colours extra fonts gtk shell polybar vim xorg music
+</code></pre>
+
+<p>After running the <code>stow</code> command, check the files in the <code>xorg-extra</code> directory. There are instructions on how to fix xbacklight if it is not working.</p>
+
+<p>Just to be sure, reboot you system. Done! You can now choose to log in to BSPWM from the login screen (which should be <code>lightdm</code> if you selected the MATE desktop).</p>
+
+<p class="warn">Do not delete my dotfiles after running <code>stow</code>. It will break all the symlinks it created. Similarly, do not reorganise things. If you want to customise things, first familiarise yourself with <code>stow</code>. Then make a copy of my dotfiles, add your adaptations, and use those to create the symlinks. I strongly encourage you to use <code>stow</code>. It saves you from a lot of manual work and makes your dotfiles portable and easy to deploy.</p>
+
+<h2>5 Using the new system</h2>
+
+<h3>5.1 Custom key chords</h3>
+<p>To see all available key bindings, read this file <code>~/.config/sxhkd/sxhkdrc</code>. Below are the basics (I have tried to define key bindings that do not conflict with any of the programs I have used):</p>
+
+<pre><code>Key bindings for my BSPWM setup
+followed by their description
+===============================
+
+Basic motions
+-------------
+
+Vi like motions:
+
+    super + h   Focus window to the left
+    super + l   Focus window to the right
+    super + j   Focus window to the bottom
+    super + k   Focus window to the top
+
+    super + shift + h   Move focused window to the left
+    super + shift + l   Move focused window to the right
+    super + shift + j   Move focused window to the bottom
+    super + shift + k   Move focused window to the top
+
+Window operations:
+
+    super + q   Close window
+    super + shift + q   Kill window
+
+    super + m   Toggle monocle view (the equivalent of maximise)
+    super + f   Toggle full screen view
+    super + space   Toggle floating/tiling
+
+Workspace operations:
+
+    super + 1   Switch to workspace 1
+    super + 2   Switch to workspace 2
+... same up to 9
+
+    super + shift + 1   Move focused window to workspace 1
+    super + shift + 2   Move focused window to workspace 2
+... same up to 9
+
+    super + ctrl + shift + 1   Move and follow focused window to workspace 1
+    super + ctrl + shift + 2   Move and follow focused window to workspace 2
+... same up to 9
+
+Main tools:
+
+    super + d         Open dmenu (for launching programs)
+    super + return    Open a urxvt instance
+
+Key chord chains
+----------------
+These are multiple key presses to perform an action.
+See comments in sxhkdrc about why I choose those letters.
+
+Commands that affect the environment:
+
+    super + e ; s   Reload the sxhkdrc (when making changes)
+    super + e ; p   Reload polybar
+
+Commands that invoke executables (see sxhkdrc for all the commands):
+
+    super + x ; 1   Run Firefox
+    super + x ; 2   Run a terminal with ranger (file manager)
+    super + x ; 3   Run a terminal with newsboat (feed reader)
+</code></pre>
+
+<h3>5.2 The file manager</h3>
+
+<p>Now that you know the basic shortcuts, you may want to personalise your setup. Start with adding your wallpaper. Open <code>ranger</code> by typing <code>super + x ; 2</code> (super and x, followed by 2). Once inside <code>ranger</code>, you can navigate using Vi motions or type <code>gpc</code> to go to your pictures folder (all shortcuts are defined in <code>~/.config/ranger/rc.conf</code>). Set the selection over the image you want and type <code>Cbg</code> to set your new background. Similarly, you can define a lock screen image, by typing <code>Clk</code>.</p>
+
+<h3>5.3 Auto starting programs</h3>
+
+<p>To see what programs are auto started, see <code>~/.config/bspwm/bspwmrc</code>, as well as <code>~/.xsessionrc</code>, <code>~/profile</code>, and <code>~/.config/autostart</code>.</p>
+
+<h3>5.4 The Tempus themes</h3>
+
+<p>All the colours you see are part of my <a href="https://protesilaos.com/tempus-themes/">Tempus themes</a> project. The one you get is Tempus Dusk, which is a dark theme with slightly desaturated colours. To switch to something else, type <code>super + e ; t</code>. A drop-down menu will appear. Either type your choice and press enter or use the arrow keys and press enter. Some themes are light, others are dark.</p>
+
+<p>Open terminals should be updated live (though not CLI programs, like <code>vim</code> or <code>ranger</code>), but GUI applications must typically be closed and opened again for changes to take effect.</p>
+
+<p>To customise what GTK themes and icons are used in this switch, you must edit this script <code>~/bin/own_script_update_environment_theme</code> (search for the definition of the <code>modify_gtk3</code> function—current GTK themes are Materia, while icons are Mint-Y). This script also changes the wallpaper if you go from a dark to a light theme and vice versa. To define the image for dark and light themes respectively, add the images of your choice at <code>~/Pictures/theme/dark.jpg</code> and <code>~/Pictures/theme/light.jpg</code> (edit the script if you wish to either disable this or use a different location—the function is <code>modify_wallpaper</code>).</p>
+
+<h3>5.5 Password manager (optional)</h3>
+
+<p>Consider setting up <code>pass</code> (or <code>qtpass</code>) as your password manager. If you do, you can conveniently copy your stored passwords to the clipboard (with a timed auto clear) by bringing up the <code>passmenu</code> with <code>super + p</code> (for me, this is one of the best things ever). The interface is the same as with all my <code>dmenu</code> implementations (such as the theme switch from the previous paragraph). Type your search or use the arrows and hit the return key.</p>
+
+<p>There are many more things you will learn as you use the system. I recommend you develop a good understanding of my dotfiles. Many of the files therein include inline comments and define all of the custom actions I rely on.</p>
+
+<h3>5.6 Add your music (optional)</h3>
+
+<p>We need to set up the Music Player Daemon using a per-user install.</p>
+
+<pre><code class="language-sh"># disable the systemd service
+# we autostart mpd from the bspwm environment
+sudo systemctl disable mpd
+
+# switch to the mpd local config directory
+cd ~/.config/mpd
+
+# create the directory where playlist data is stored
+mkdir playlists
+
+# create the files mpd needs to run
+touch database log pid state sticker.sql
+</code></pre>
+
+<p>To update the <code>mpd</code> database (assuming the presence of files at <code>~/Music</code>) either run <code>mpc update</code> in a terminal or type <code>ncmpcpp</code> and then press <code>u</code>. If your music is in a different directory, edit the path in this file <code>~/.config/mpd/mpd.conf</code>.</p>
+
+<p>You may need to reboot for the <code>systemd</code> service to stop interfering with your setup.</p>
+
+<p>To play music, learn how to use <code>ncmpcpp</code> (I typically switch to screen 4, by hitting <code>4</code>, then <code>A</code> and hit enter for an empty prompt which adds all available music to the playlist, then I toggle on repeat mode with <code>r</code> and random order with <code>z</code>).</p>
+
+<p>If you do not like <code>ncmpcpp</code>, I highly recommend <code>cantata</code>, a graphical MPD frontend using the Qt toolkit.</p>
+
+<h3>5.7 Use newsboat for RSS feeds (optional)</h3>
+
+<p>To actually use <code>newsboat</code> (shortcut is <code>super + x ; 3</code>), you first need to provide a file with links to RSS/Atom feeds. This should be placed at <code>~/.config/newsboat/urls</code>. Here is a sample:</p>
+
+<pre><code class="language-sh"># Just a feed URL per line
+https://protesilaos.com/politics.xml
+https://protesilaos.com/codelog.xml
+
+# The words inside quotes are tags, separated by a space.
+# Tags can be used to filter content (see filters below).
+https://protesilaos.com/politics.xml "Blogs Politics"
+https://protesilaos.com/codelog.xml "Blogs FOSS"
+
+https://gitlab.com/protesilaos/dotfiles.atom "Packages"
+https://github.com/ubuntu-mate/mate-tweak/releases.atom "Packages"
+
+# Filters
+# =======
+
+# What goes after `query:` is the text that newsboat displays
+"query:Blogs:tags # \"Blogs\""
+"query:Git Packages:tags # \"Packages\""
+
+"query:Unread Articles:unread = \"yes\""
+</code></pre>
+
+<p>Configure this program to your liking by editing <code>~/.config/newsboat/config</code>. For all available options, check <code>man newsboat</code>.</p>
+
+<h3>5.8 Configure the notification daemon (optional)</h3>
+
+<p>The daemon that handles notifications is <code>dunst</code>. Its options file is located at <code>~/.config/dunst/dunstrc</code>.</p>
+
+<p>For example, in case you want to change the icons that <code>dunst</code> uses, edit the paths in this:</p>
+
+<pre><code class="language-conf"># Paths to default icons.
+icon_folders = /usr/share/icons/Mint-Y/actions/32/:/usr/share/icons/Mint-Y/animations:/usr/share/icons/Mint-Y/apps/32/:/usr/share/icons/Mint-Y/categories:/usr/share/icons/Mint-Y/devices/32/:/usr/share/icons/Mint-Y/mimetypes/32/:/usr/share/icons/Mint-Y/panel/32/:/usr/share/icons/Mint-Y/places:/usr/share/icons/Mint-Y/status
+</code></pre>
+
+<p>To read about all the available settings, see <code>man dunst</code>.</p>
+
+<p>Note that the colours are changed every time you run the commands that change the Tempus themes (see above).</p>
+
+<h4>5.8.1 Custom notifications (optional)</h4>
+
+<p>If you want to create your own notifications, check <code>man notify-send</code>. Here are some examples:</p>
+
+<pre><code class="language-sh"># Generic test
+notify-send "Test title" "Test body of text"
+
+# Generic test with a generic icon
+# uses the icon paths defined in `~/.config/dunst/dunstrc`
+notify-send -i firefox "Test title" "Test body of text"
+
+# Generic test with absolute path to icon
+notify-send -i /usr/share/icons/Mint-Y/apps/32/firefox.png "Test title" "Test body of text"
+
+# Display the output of another command
+# Show the status of the Music Player Daemon in a custom format
+notify-send -i rhythmbox "Now Playing" "$(mpc --format '%artist% ~ %title% \[%album%\]' current)"
+</code></pre>
+
+<h2>6 Further steps</h2>
+
+<h3>6.1 General maintenance of Debian Sid</h3>
+
+<p>I always like to maintain a “Debian maintenance” file where I document all customisations I make which are not part of the official release (such as installing Polybar). I recommend you do the same and always keep track of custom files you add here and there, otherwise you will clutter your system. That might cause problems down the way.</p>
+
+<p>Also remember to run <code>sudo apt update</code> before installing packages that pull in new dependencies. The last thing you want is package conflicts arising from a combination of older and newer packages. As for upgrading packages, I always run <code>sudo apt full-upgrade</code> because it removes packages that become obsolete. Remove orphan packages with <code>sudo apt autoremove</code>.</p>
+
+<p>You already read about <code>apt-listbugs</code> that it stores its data at <code>/etc/apt/preferences.d/apt-listbugs</code>. In case you forgot about it, or I have not stressed enough the importance of this package, here is an excerpt from <code>man apt-listbugs</code>:</p>
+
+<blockquote>
+  <p>apt-listbugs is a tool which retrieves bug reports from the Debian Bug Tracking System and lists them. In particular, it is intended to be invoked before each installation or upgrade by APT, or other compatible package managers, in order to check whether the installation/upgrade is safe.</p>
+
+  <p>In the typical use case, the user is installing or upgrading a number of packages with APT or some other compatible package manager. Before the package installation or upgrade is actually  performed, apt-listbugs is automatically invoked: it queries the Debian Bug Tracking System for bugs (of certain configured severities) that would be introduced into the system by the installation or upgrade; if any such bug is found, apt-listbugs warns the user and asks how to proceed. Among other things, the user has the opportunity to continue, to abort the installation or upgrade, or to pin some packages  (so  that  the  unsafe installation or upgrade is deferred). However, pinning is not effective immediately, and requires restarting the APT session (by aborting and then re-running the same APT command).</p>
+</blockquote>
+
+<p>Always inspect the output of this program and act on it. Debian Sid expects you to take full responsibility over the maintenance of your system. Furthermore, make sure you periodically check the packages that you pinned in case a fix has been provided.</p>
+
+<h3>6.2 Nodejs environment (optional)</h3>
+
+<p>Debian provides packages for <code>nodejs</code> but I find them problematic. Instead I follow the <a href="https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions">official instructions</a>. I did:</p>
+
+<pre><code class="language-sh">curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+sudo apt-get install -y build-essential
+</code></pre>
+
+<h3>6.3 Ruby environment (optional)</h3>
+
+<p>This website is powered by Jekyll, a static site generator that is built with Ruby. I need the following to get my local testing environment:</p>
+
+<pre><code class="language-sh">sudo apt install ruby ruby-dev ruby-bundler zlib1g-dev
+</code></pre>
+
+<h3>6.4 Clean up GTK themes, icons, fonts (optional)</h3>
+
+<p>Unless you enjoy having a large collection of available fonts and themes (or are using one of the following), you will probably want to remove much of what is available:</p>
+
+<pre><code class="language-sh">sudo apt remove albatross-gtk-theme blackbird-gtk-theme bluebird-gtk-theme greybird-gtk-theme murrine-themes mate-icon-theme-faenza gnome-icon-theme fonts-droid-fallback fonts-sil-gentium fonts-sil-gentium-basic fonts-linuxlibertine fonts-vlgothic fonts-crosextra-carlito fonts-crosextra-caladea fonts-lato
+</code></pre>
+
+<p>If you want to add some excellent alternatives, I recommend these:</p>
+
+<pre><code class="language-sh">sudo apt install arc-theme papirus-icon-theme fonts-noto-hinted fonts-noto-mono
+</code></pre>
+
+<h2>7 Troubleshooting</h2>
+
+<h3>7.1 Polybar is missing</h3>
+
+<p>Note that <code>polybar</code> will not appear on screen if it does not recognise the active monitor. You need to edit <code>~/.config/polybar/config</code>. Search for “monitor” and change the value based on the output of <code>xrandr</code>.</p>
+
+<p>I find my connected monitor by typing this in a terminal <code>xrandr | grep -w connected</code>. You get something like this:</p>
+
+<pre><code class="language-sh">xrandr | grep -w connected
+
+VGA-0 connected 1920x1080+0+0 (normal left inverted right x axis y axis) 480mm x 270mm
+</code></pre>
+
+<p>What you are looking for is the very first part, <code>VGA-0</code> in this case.</p>
+
+<h3>7.2 URxvt does not show bold fonts</h3>
+
+<p>The configuration file for <code>urxvt</code> (package name is <code>rxvt-unicode</code>) is placed in a custom location: <code>~/.my_urxvt/config</code>. I used to have these font definitions:</p>
+
+<pre><code class="language-conf">URxvt.font: xft:Hack:pixelsize=14,xft:DejaVu Sans Mono:pixelsize=14
+URxvt.boldFont: xft:Hack:pixelsize=14:bold,xft:DejaVu Sans Mono:pixelsize=14:bold
+URxvt.italicFont: xft:Hack:pixelsize=14:italic,xft:DejaVu Sans Mono:pixelsize=14:italic
+URxvt.bolditalicFont: xft:Hack:pixelsize=14:bold:italic,xft:DejaVu Sans Mono:pixelsize=14:bold:italic
+</code></pre>
+
+<p>But they do not seem to work any longer. So I changed to these:</p>
+
+<pre><code class="language-conf">URxvt.font: xft:Hack:style=Regular:pixelsize=14,xft:DejaVu Sans Mono:style=Book:pixelsize=14
+URxvt.italicFont: xft:Hack:style=Italic:pixelsize=14,xft:DejaVu Sans Mono:style=Italic:pixelsize=14
+URxvt.boldFont: xft:Hack:style=Bold:pixelsize=14,xft:DejaVu Sans Mono:style=Bold:pixelsize=14
+URxvt.boldItalicFont: xft:Hack:style=Bold Italic:pixelsize=14,xft:DejaVu Sans Mono:style=Bold Italic:pixelsize=14
+</code></pre>
+
+<h2>Enjoy your new system</h2>
+
+<p>I hope you make good use of these instructions and that you appreciate Debian Sid and BSPWM (and all the rest) as much as I do. While I have written this guide in a user-friendly way, I strongly encourage you to research <em>everything</em> before proceeding. <strong>This is not a guide for inexperienced users who do not fully understand the effects of the commands they type in the terminal.</strong></p>
+
+<p>For any questions or recommendations, feel free to <a href="https://protesilaos.com/contact/">contact me</a>.</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:NoteDFSGNonFree" role="doc-endnote">
+      <p>The Free Software Foundation does not include Debian in its <a href="https://www.gnu.org/distros/free-distros.en.html">list of fully free GNU/Linux distributions</a>, probably because Debian offers a convenient way to include non-free packages (mainly drivers and firmware). The FSF’s stance is understandable, but I think Debian’s realism is beneficial overall. Getting hardware that does not require any propriety code is quite tricky and typically comes at a premium. Not everyone can afford that. <a href="#fnref:NoteDFSGNonFree" class="reversefootnote" role="doc-backlink">[^]</a></p>
+    </li>
+    <li id="fn:NoteTestingRolling" role="doc-endnote">
+      <p>What I mean is that if you define <code>testing</code> in your apt sources you will always remain on that branch, whereas setting it to <code>buster</code> will currently put you on Testing but eventually leave you on it once it becomes the new <code>stable</code>. <a href="#fnref:NoteTestingRolling" class="reversefootnote" role="doc-backlink">[^]</a></p>
+    </li>
+  </ol>
+</div>
+        
+      

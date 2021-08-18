@@ -1,0 +1,105 @@
+
+         
+         <p>I am now using Lemonbar to draw a panel for my custom working
+environment.  I was running <a href="https://github.com/jaagr/polybar">Polybar</a>
+before.  The reasons for the switch are documented herein.</p>
+
+<p>In practice, this means that the <code>master</code> branch of <a href="https://gitlab.com/protesilaos/dotfiles">my
+dotfiles</a> is considered
+unstable until further notice (see the README for demos with the new
+panel).</p>
+
+<h2>Stick with the Debian repos</h2>
+
+<p>To get Lemonbar execute:</p>
+
+<pre><code>sudo apt install lemonbar
+</code></pre>
+
+<p>Compare that to Polybar, which is not available in the official
+repositories.  One has to compile it from source.  A complication that
+can lead to inconveniences down the road.  What if in the near future I
+would also have to hunt down some of its new dependencies?  And what if
+Debian Stable, which I intend to <a href="https://protesilaos.com/codelog/debian-sid-stable-plan/">switch to once Buster is
+out</a>, does not have the version
+numbers needed to compile from source?  What if conflicts arise?</p>
+
+<p>I actively try to avoid making a FrankenDebian.  The only package I have
+no hesitation compiling from source is my fork of Simple Terminal by the
+Suckless community.<sup id="fnref:MySTFork" role="doc-noteref"><a href="#fn:MySTFork" class="footnote" rel="footnote">1</a></sup>  For all the rest, I try to rely only on
+packages provided by the official mirrors and make sure never to mix and
+match from the various Debian channels (stable, testing, unstable, …).</p>
+
+<p>There are cases where building directly from upstream is necessary.
+Such as when a piece of software is an absolute requirement for a given
+task and where no adequate alternatives are present.  This is not the
+case with Polybar.  It is not an integral part of my workflow, while
+there are alternatives available, including the option to use something
+like <code>xfce4-panel</code> in tandem with <code>bspwm</code>.</p>
+
+<h2>Have fun scripting</h2>
+
+<p>Make no mistake: I like Polybar.  It is a tool that covers most use
+cases and its modules work well with fairly little effort.  Its
+configuration file is easy to understand.  It uses a standard way for
+modifying the looks of the various pieces of information on display.
+Furthermore, it supports Xft fonts (proportional, outline font files
+like <code>.ttf</code>) and can display glyph icons with iconic typefaces such as
+FontAwesome.</p>
+
+<p>With all this power comes the downside of skipping an important learning
+session on how to retrieve all the data Polybar can present.  You want
+Polybar to display <code>bspwm</code> workspaces and the flags of the focused node?
+Just add the relevant module to the config file and you are good to go.
+Now try getting that yourself to realise how much more demanding the
+task becomes.</p>
+
+<p>Seeing as I was looking for alternatives anyhow, I decided to opt for
+Lemonbar.  What this tool does is draw an empty panel.  There are no
+modules built in.  No defined configuration file to add the stuff you
+need.  Nothing.  Lemonbar will just print the output of a command, same
+as what you would expect in the shell.  Example:</p>
+
+<pre><code>echo "Hello world" | lemonbar -p
+</code></pre>
+
+<p>This pipes the output of <code>echo</code> to the panel.  The <code>-p</code> flag makes the
+panel stay in place.  This is where scripting comes in: get it to
+display information dynamically, place it in the appropriate position,
+format it as needed, and so on.</p>
+
+<p>Not to bother you with the details, check out my <a href="https://gitlab.com/protesilaos/dotfiles/blob/master/bin/bin/melonpanel">Lemonbar script,
+called
+“melonpanel”</a>
+for the implementation, as well as my <code>bspwmrc</code> and <code>sxhkdrc</code> to see how
+it fits in with the rest of the system.</p>
+
+<h2>Scripts are more portable than source code</h2>
+
+<p>I want to make my dotfiles easy to deploy on new systems.  Having to
+compile software is the opposite of what I target.  I prefer to run one
+<code>apt install</code> with all the packages I need and then use GNU Stow on my
+dotfiles.  Everything will be in place within minutes.  Eventually this
+process will be scripted so that <code>./install.sh</code> will streamline the 
+work.</p>
+
+<p>I attach great importance to portability: my custom desktop session
+should ultimately be reproducible.  The dotfiles must work on any clean
+install of the next Debian stable release (codenamed “Buster”).  This is
+an ambitious, complex, multi-faceted task.  Removing bottlenecks will
+only be to its benefit.  My plan is never to have to compile a piece of
+software from source and then expect the user to maintain the package.
+Debian is not meant for that kind of setup (well-justified exceptions
+notwithstanding).</p>
+
+<p>Lemonbar it is then!</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:MySTFork" role="doc-endnote">
+      <p>My fork of the Simple Terminal by Suckless is distributed with my dotfiles.  There is a precompiled binary inside the “bin” directory as well as the source code inside “st”.  Additionally, my fork has <a href="https://gitlab.com/protesilaos/st">its own repo</a>. <a href="#fnref:MySTFork" class="reversefootnote" role="doc-backlink">[^]</a></p>
+    </li>
+  </ol>
+</div>
+        
+      

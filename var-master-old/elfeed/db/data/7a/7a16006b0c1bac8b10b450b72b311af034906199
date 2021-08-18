@@ -1,0 +1,147 @@
+
+         
+         <p class="info"><strong>Update 2020-10-25 10:57 +0300:</strong> Added screen shots with the Modus
+Operandi and Modus Vivendi themes.</p>
+
+<p class="info"><strong>Update 2020-11-28 15:33 +0300:</strong> Update screen shots for
+<code>modus-themes</code> version <code>1.0.0</code>.</p>
+
+<p>As of commit <code>7ebb2d562</code> in the git repo of Emacs’ Org mode, the export
+dispatcher uses a new face to highlight its available keys and possible
+options: <code>org-dispatcher-highlight</code>.  It supersedes the general purpose
+<code>org-warning</code> for this particular interface.</p>
+
+<h2>Before and after</h2>
+
+<p>This demonstration is on <code>emacs -Q</code>.  First without the patch and then
+with it:</p>
+
+<p><img alt="Org dispatcher before" src="https://protesilaos.com/assets/images/attachments/org-export-dispatcher-face-old.png" /></p>
+
+<p><img alt="Org dispatcher after" src="https://protesilaos.com/assets/images/attachments/org-export-dispatcher-face-new.png" /></p>
+
+<p>And below are <a href="https://protesilaos.com/modus-themes">my Modus themes</a>
+(Modus Operandi and Modus Vivendi, version <code>1.0.0</code> or higher) with the
+new face tweaked to match their established metaphors.  We apply yellow
+colouration to convey a sense of urgency, as the dispatcher is a special
+window that remaps common key bindings by assigning special commands to
+them:</p>
+
+<p><img alt="Modus Operandi Org dispatcher wide" src="https://protesilaos.com/assets/images/attachments/modus-operandi-org-export-wide.png" /></p>
+
+<p><img alt="Modus Operandi Org dispatcher narrow" src="https://protesilaos.com/assets/images/attachments/modus-operandi-org-export-narrow.png" /></p>
+
+<p><img alt="Modus Vivendi Org dispatcher wide" src="https://protesilaos.com/assets/images/attachments/modus-vivendi-org-export-wide.png" /></p>
+
+<p><img alt="Modus Vivendi Org dispatcher narrow" src="https://protesilaos.com/assets/images/attachments/modus-vivendi-org-export-narrow.png" /></p>
+
+<h2>In the interest of usability</h2>
+
+<p>The <a href="https://lists.gnu.org/archive/html/emacs-orgmode/2020-10/msg00158.html">email to the Org mailing
+list</a>
+reveals my rationale:</p>
+
+<blockquote>
+  <p>The export dispatcher’s active keys are highlighted using the
+<code>org-warning</code> face.  That face is applied in various contexts,
+including the agenda.</p>
+
+  <p>Users who have difficulty reading the active keys of the export
+dispatcher are therefore forced to modify <code>org-warning</code> throughout
+their setup, even though their problem is present only while viewing
+the dispatch UI (because highlighted keys are one or a few characters
+long).</p>
+
+  <p>The attached patch is an attempt to address this issue by creating a
+new face that is specifically designed for the dispatch UI.</p>
+
+  <p>For the background+foreground combinations, the selected values conform
+with the highest accessibility standard for colour contrast (WCAG AAA,
+else a minimum contrast ratio of 7:1).  I limited my options to what
+<code>M-x list-colors-display</code> provides.</p>
+</blockquote>
+
+<p>The relevant diff:</p>
+
+<pre><code class="language-diff"> lisp/org-faces.el | 14 ++++++++++++++
+ lisp/ox.el        |  2 +-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/lisp/org-faces.el b/lisp/org-faces.el
+index c0556b8bb..94b283ad6 100644
+--- a/lisp/org-faces.el
++++ b/lisp/org-faces.el
+@@ -45,6 +45,20 @@ The foreground color of this face should be equal to the background
+ color of the frame."
+   :group 'org-faces)
+ 
++(defface org-dispatcher-highlight
++  '((default :weight bold)
++    (((class color) (min-colors 88) (background dark))
++     :background "gray20" :foreground "gold1")
++    (((class color) (min-colors 88) (background light))
++     :background "SlateGray1" :foreground "DarkBlue")
++    (((class color) (min-colors 16) (background dark))
++     :foreground "yellow")
++    (((class color) (min-colors 16) (background light))
++     :foreground "blue")
++    (t :inverse-video t))
++  "Face for highlighted keys in the dispatcher."
++  :group 'org-faces)
++
+ (defface org-level-1 '((t :inherit outline-1))
+   "Face used for level 1 headlines."
+   :group 'org-faces)
+diff --git a/lisp/ox.el b/lisp/ox.el
+index 6dd2cd4a0..5ffd66816 100644
+--- a/lisp/ox.el
++++ b/lisp/ox.el
+@@ -6706,7 +6706,7 @@ back to standard interface."
+ 	    ;; on the first key, if any.  A nil value means KEY will
+ 	    ;; only be activated at first level.
+ 	    (if (or (eq access-key t) (eq access-key first-key))
+-		(propertize key 'face 'org-warning)
++		(propertize key 'face 'org-dispatcher-highlight)
+ 	      key)))
+ 	 (fontify-value
+ 	  (lambda (value)
+</code></pre>
+
+<p>This commit resolves a conundrum that theme developers could find
+themselves in:</p>
+
+<ul>
+  <li>Should I make the keys in the export dispatcher as clear as possible
+without compromising on their utility?</li>
+  <li>Or should I allow deadlines in the agenda to have a sense of urgency
+without becoming intrusive and outright unpleasant?</li>
+</ul>
+
+<p>The introduction of the new face removes this constraint altogether by
+disaggregating the uses of <code>org-warning</code>: dispatcher keys can be drawn
+in a style that best complements the intended function of their
+presentation, while agenda buffers and other interfaces can still
+present <em>warnings</em>, such as pending tasks, in a manner that suits the
+significations attached to that word.</p>
+
+<p>To retain the old export dispatcher aesthetic, instruct
+<code>org-dispatcher-highlight</code> to inherit from <code>org-warning</code> (or petition
+your theme’s developer to consider such a reform).  For example:</p>
+
+<pre><code class="language-elisp">(set-face-attribute 'org-dispatcher-highlight nil :inherit 'org-warning)
+</code></pre>
+
+<p>Please note that what matters is the presence of a new face, not the
+exact colour values assigned to it, as shown by the tweaks I made to it
+in my Modus themes.</p>
+
+<h2>Thanks to the community</h2>
+
+<p>I wrote this patch after receiving <a href="https://gitlab.com/protesilaos/modus-themes/-/issues/2#note_427541924">valuable feedback from user
+“Anders”</a>
+on the Modus themes’ issue tracker.</p>
+
+<p>My gratitude extends to Bastien Guerry, the maintainer of Org mode, for
+accepting my code and for their valuable contributions in general.</p>
+        
+      

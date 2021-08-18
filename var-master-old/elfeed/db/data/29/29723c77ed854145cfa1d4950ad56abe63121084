@@ -1,0 +1,128 @@
+
+         
+         <p>Modern typography provides technologies for tweaking various aspects
+of the font’s presentation.  The general idea is to make the typeface
+flexible enough for adapting to a variety of typographic requirement.
+Common features include tabular numerals, stylistic alternatives for
+select glyphs (e.g. slashed zero), ligatures, small caps, ordinal
+figures.  Each font family will have support for its own classes.</p>
+
+<p>GNU/Linux users can access <a href="https://en.wikipedia.org/wiki/OpenType_feature_tag_list">these
+features</a> by
+leveraging the <code>fontconfig</code> library’s rule declaration.  There may be
+differences between distros on where the system-wide defaults are
+placed.  But user-specific settings should normally be defined at
+<code>~/.config/fontconfig/conf.d</code>.  Here is an overview of my current
+settings (see <a href="https://gitlab.com/protesilaos/dotfiles">my dotfiles</a>):</p>
+
+<pre><code>.config/fontconfig/conf.d/
+├── 10-hinting-full.conf
+├── 10-sub-pixel-rgb.conf
+├── 11-lcdfilter-default.conf
+├── 20-unhint-small-hack.conf
+├── 45-generic.conf
+├── 45-latin.conf
+├── 50-enable-terminus.conf
+├── 60-generic.conf
+├── 60-latin.conf
+├── 80-alegreya-fontfeatures.conf
+├── 80-alegreya-sans-fontfeatures.conf
+├── 80-condensed-large-dejavu.conf
+├── 80-firago-fontfeatures.conf
+└── README
+</code></pre>
+
+<p>The numbering matters as it determines the sequence for loading these
+rules.  This is what Debian provides on the matter:</p>
+
+<blockquote>
+  <p>conf.d/README</p>
+
+  <p>Each file in this directory is a fontconfig configuration file.  Fontconfig
+scans this directory, loading all files of the form [0-9][0-9]*.conf.
+These files are normally installed in /usr/share/fontconfig/conf.avail
+and then symlinked here, allowing them to be easily installed and then
+enabled/disabled by adjusting the symlinks.</p>
+
+  <p>The files are loaded in numeric order, the structure of the configuration
+has led to the following conventions in usage:</p>
+
+  <pre>
+Files begining with:	Contain:
+00 through 09		Font directories
+10 through 19		system rendering defaults (AA, etc)
+20 through 29		font rendering options
+30 through 39		family substitution
+40 through 49		generic identification, map family-&gt;generic
+50 through 59		alternate config file loading
+60 through 69		generic aliases, map generic-&gt;family
+70 through 79		select font (adjust which fonts are available)
+80 through 89		match target="scan" (modify scanned patterns)
+90 through 99		font synthesis
+</pre>
+</blockquote>
+
+<p>Rules are written in XML.  See <a href="https://www.freedesktop.org/software/fontconfig/fontconfig-user.html">this
+spec</a>
+for all available constructs.</p>
+
+<h2>Trying things out</h2>
+
+<p>Now on to implementing our newfound knowledge!  Say you have
+downloaded <a href="https://bboxtype.com/typefaces/FiraGO">FiraGO</a> and placed
+a directory containing its font files somewhere it can be read by your
+operating system.  Font files can end in either <code>.otf</code> or <code>.ttf</code>.  On
+Debian, user-specific typefaces are read from <code>~/.local/share/fonts</code>.
+So FiraGO would be like this:</p>
+
+<pre><code>.local/share/fonts/FiraGO
+├── FiraGO-BoldItalic.otf
+├── FiraGO-Bold.otf
+├── FiraGO-Italic.
+└── FiraGO-Regular.otf
+</code></pre>
+
+<p>Then inside the local <code>conf.d</code> we add <code>80-firago-fontfeatures.conf</code>,
+which contains the following:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE fontconfig SYSTEM "fonts.dtd"&gt;
+&lt;fontconfig&gt;
+  &lt;description&gt;Enable select opentype features for FiraGO.&lt;/description&gt;
+
+  &lt;!--
+	  Typographic features are provided on a per-typeface basis.
+	  Tables with all available features are available here:
+	  https://en.wikipedia.org/wiki/OpenType_feature_tag_list 
+
+      Also read the fontconfig user spec:
+      https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+  --&gt;
+
+  &lt;match target="font"&gt;
+    &lt;test name="family" compare="eq" ignore-blanks="true"&gt;
+      &lt;string&gt;FiraGO&lt;/string&gt;
+    &lt;/test&gt;
+    &lt;edit name="fontfeatures" mode="append"&gt;
+      &lt;string&gt;tnum on&lt;/string&gt; &lt;!-- tabular numbers --&gt;
+      &lt;string&gt;zero on&lt;/string&gt; &lt;!-- slashed zero --&gt;
+    &lt;/edit&gt;
+  &lt;/match&gt;
+&lt;/fontconfig&gt;
+</code></pre>
+
+<p>Focus on the part inside of the <code>&lt;edit&gt;</code> tags.  This is where we
+toggle the features that FiraGO supports (as documented in its
+download page).  As you can see, I only need tabular numbers and a
+slashed zero.  This makes FiraGO far better as a UI font, while not
+detracting from its already superb ability to present body copy.</p>
+
+<p>To target another font family, simply replace “FiraGO” from this part:
+<code>&lt;string&gt;FiraGO&lt;/string&gt;</code>.  I have tried this method with a number of
+typefaces, all delivering the expected results.</p>
+
+<p>Pro tip: combine FiraGO with Fira Code (<code>apt install fonts-firacode</code>)
+for a consistent typographic experience across your desktop
+environment.</p>
+        
+      

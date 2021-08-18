@@ -1,0 +1,27 @@
+                  #+TITLE: Elfeed Feeds
+
+* Blogs                                                                                     :blog:elfeed:
+
+** [[https://protesilaos.com/books.xml][Prot: Essays]]
+
+** [[https://protesilaos.com/codelog.xml][Prot: Coding]]                                                                                           :emacs:
+
+* Podcasts                                                                               :podcast:elfeed:
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCSHZKyawb77ixDdsGog4iWA][Lex Fridman Podcast]]
+
+** [[http://podcasts.joerogan.net/feed][JRE]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2D2CMWXMOVWx7giW1n3LIg][Huberman Lab]]
+
+* YouTube channels                                                                                           :YT:elfeed:
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g][Prot: YT]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCafEZMU5s8geb9oIly6xTrg][R.C. Waldun]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCqYPhGiB9tkShZorfgcL2lA][What I've Learned]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCI91jQdeMzuQRgg4VOSZZmw][Under The Scope]]
+
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCA0XHv5MYr8mmQTJoJ4Z0IQ][Weltergeist]]

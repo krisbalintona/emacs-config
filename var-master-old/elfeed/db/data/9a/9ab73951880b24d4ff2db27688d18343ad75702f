@@ -1,0 +1,80 @@
+
+         
+         <p>I just extended the <code>modus-themes-diffs</code> customisation option with the
+ability to read a <code>deuteranopia</code> value.</p>
+
+<p><em>Deuteranopia</em> describes insensitivity to the green channel of light.
+This includes the possibility of not distinguishing between red and
+green; the two colours that are typically codified in diff buffers as
+denoting “removed” and “added” states respectively.</p>
+
+<p>Evaluating <code>(setq modus-themes-diffs 'deuteranopia)</code> and then re-loading
+the theme of choice will replace all instances of green in diff buffers
+with variants of blue.  This affects the standard <code>diff-mode</code>, Ediff,
+Smerge, Magit, Vdiff, and any other library that inherits from those.</p>
+
+<p>Below are illustrations of the phenomenon while using Magit diffs as an
+example with word-wise differences enabled (“refined” diffs).  We try to
+simulate how deuteranopia is experienced.  Those with it see red and
+green as variants of brown/yellow and interpret shades of magenta
+without its red channel’s intensity (magenta consists primarily of red
+and blue, so it looks closer to a desaturated blue).</p>
+
+<h2>Red VS Green (default)</h2>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-default.png"><img alt="Modus Operandi default" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-default.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-default-simulated.png"><img alt="Modus Operandi default simulated" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-default-simulated.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-default.png"><img alt="Modus Vivendi default" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-default.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-default-simulated.png"><img alt="Modus Vivendi default simulated" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-default-simulated.png" /></a></p>
+
+<h2>Red VS Blue (‘deuteranopia’ option)</h2>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-deuteranopia.png"><img alt="Modus Operandi deuteranopia" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-deuteranopia.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-deuteranopia-simulated.png"><img alt="Modus Operandi deuteranopia simulated" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-operandi-diff-deuteranopia-simulated.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-deuteranopia.png"><img alt="Modus Vivendi deuteranopia" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-deuteranopia.png" /></a></p>
+
+<p><a href="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-deuteranopia-simulated.png"><img alt="Modus Vivendi deuteranopia simulated" src="https://protesilaos.com/assets/images/attachments/2021-02-25-modus-vivendi-diff-deuteranopia-simulated.png" /></a></p>
+
+<h2>Accessibility broadly understood</h2>
+
+<p>While <a href="https://protesilaos.com/modus-themes/">the Modus themes</a> are not
+designed with the express goal of optimising for deuteranopia across all
+of Emacs’ interfaces, we can always make steps towards improving that
+experience.  The fact that we already conform with the highest standard
+for colour contrast (WCAG AAA) puts us in a good position to expand our
+commitment to accessibility so that it accounts for variations in colour
+perception.</p>
+
+<p>Designing for such cases is no mean feat.  I had to take screenshots of
+all relevant configurations, display them in the GNU Image Manipulation
+Program, and set a filter that simulates deuteranopia vision: from GNU
+IMP’s “View” menu, search for “Display Filters” and then apply “Color
+Deficient Vision”.  That had to be done tens of times during the testing
+process.</p>
+
+<p>What inspired me to add support for <code>(setq modus-themes-diffs
+'deuteranopia)</code> is the blog post of Sam Kleinman (aka “tycho garen”) on
+<a href="https://tychoish.com/post/editor-themes/">Editor Themes</a> (2021-02-24),
+which echoes the relevant wishlist item on my project’s issue tracker
+(<a href="https://gitlab.com/protesilaos/modus-themes/-/issues/118">issue 118</a>)
+where I got feedback from Hörmetjan Yiltiz.</p>
+
+<p>Apart from its immediate utility, consider this new feature a statement
+of intent: I want to make the themes as accessible as possible and am
+willing to act on user feedback to that end.</p>
+
+<p>If you believe something does not work properly while using either
+<code>modus-operandi</code> or <code>modus-vivendi</code>, please do not hesitate to bring the
+issue to my attention.  Colour is a complex phenomenon: even when we
+formally conform with the lofty target of a minimum 7:1 contrast in
+relative luminance, we may still encounter cases where things do not
+“feel right”.  We can always fix those outright or, where necessary,
+benefit from the power of Elisp to provide the relevant customisation
+options.</p>
+        
+      

@@ -1,0 +1,15 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=1lyGegcYxTI">https://www.youtube.com/watch?v=1lyGegcYxTI</a></p>
+         
+         <p>In this video I demonstrate the text-based web browser that is built
+into Emacs: <code>eww</code>, or else the “Emacs Web Wowser”.  While it is quite
+usable without any customisations, I have written several extensions for
+it to make my quotidian usage a bit more pleasant.</p>
+
+<p>Refer to my Emacs configuration file (“dotemacs”) for the implementation
+details: <a href="https://protesilaos.com/dotemacs">https://protesilaos.com/dotemacs</a>.  The specific item that
+contains those extensions is <code>prot-eww.el</code>.  Everything is part of my
+dotfiles’ repository: <a href="https://gitlab.com/protesilaos/dotfiles">https://gitlab.com/protesilaos/dotfiles</a>.</p>
+        
+      

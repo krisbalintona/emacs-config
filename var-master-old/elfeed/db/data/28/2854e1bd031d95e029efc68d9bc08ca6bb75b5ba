@@ -1,0 +1,15 @@
+
+         
+         <p>Raw link: <a href="https://www.youtube.com/watch?v=vm-FvNdYFcc">https://www.youtube.com/watch?v=vm-FvNdYFcc</a></p>
+         
+         <p>In this short video I explain how I was able to discover two
+<em>undocumented</em> functions of <code>dired-subtree</code>, which define a toggle and a
+cyclical behaviour for expanding or contracting a subdirectory inside of
+Dired.  I also discuss how to use the built-in methods of Emacs to
+discover such hidden features.</p>
+
+<p>And this is a link to my configuration file, with all the settings I
+showed in the video as well as everything else, from previous screen
+casts: <a href="https://protesilaos.com/dotemacs">protesilaos.com/dotemacs</a>.</p>
+        
+      
