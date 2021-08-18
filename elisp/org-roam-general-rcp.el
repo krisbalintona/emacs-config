@@ -373,7 +373,7 @@ files if called with universal argument."
   (interactive)
   (let* ((checkall (equal current-prefix-arg '(4))) ; Universal-argument check
          (files (if checkall ; Taken from `org-roam-doctor'
-                    (org-roam--list-all-files)
+                    (org-roam-list-files)
                   (unless (org-roam-file-p)
                     (user-error "Not in an org-roam file"))
                   `(,(buffer-file-name)))
