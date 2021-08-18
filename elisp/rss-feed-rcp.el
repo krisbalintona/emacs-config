@@ -49,6 +49,12 @@
   (add-hook 'elfeed-search-update-hook #'elfeed-apply-autotags-now)
 
   (general-define-key
+   :keymaps 'elfeed-search-mode-map
+   :states '(normal visual motion)
+   "S" 'elfeed-search-clear-filter
+   )
+
+  (general-define-key
    :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
    :states 'normal
    [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
@@ -185,6 +191,41 @@ minibuffer with something like `exit-minibuffer'."
  :states 'normal
  "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion")
  )
+
+;;;;; Quickly add custom tags
+(with-eval-after-load 'elfeed
+  (defalias 'kb/elfeed-search-tag-all-input
+    (elfeed-expose #'elfeed-search-tag-all 'input)
+    "Add the `input' tag to all selected entries.")
+  (defalias 'kb/elfeed-search-untag-all-input
+    (elfeed-expose #'elfeed-search-untag-all 'input)
+    "Remove the `input' tag from all selected entries.")
+
+  (defalias 'kb/elfeed-search-tag-all-done
+    (elfeed-expose #'elfeed-search-tag-all 'done)
+    "Add the `done' tag to all selected entries.")
+  (defalias 'kb/elfeed-search-untag-all-done
+    (elfeed-expose #'elfeed-search-untag-all 'done)
+    "Remove the `done' tag from all selected entries.")
+
+  (defalias 'kb/elfeed-search-tag-all-cancelled
+    (elfeed-expose #'elfeed-search-tag-all 'cancelled)
+    "Add the `cancelled' tag to all selected entries.")
+  (defalias 'kb/elfeed-search-tag-all-cancelled
+    (elfeed-expose #'elfeed-search-untag-all 'cancelled)
+    "Remove the `cancelled' tag from all selected entries.")
+
+  (general-define-key
+   :keymaps 'elfeed-search-mode-map
+   :states '(visual normal motion)
+   "i" 'kb/elfeed-search-tag-all-input
+   "I" 'kb/elfeed-search-untag-all-input
+   "d" 'kb/elfeed-search-tag-all-done
+   "D" 'kb/elfeed-search-untag-all-done
+   "c" 'kb/elfeed-search-tag-all-cancelled
+   "C" 'kb/elfeed-search-untag-all-cancelled
+   )
+  )
 
 ;;;; Ancillary
 ;;;;; Elfeed-org
