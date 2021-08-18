@@ -10,9 +10,9 @@
 ;;;; Elfeed
 (use-package elfeed
   :hook (elfeed-search-mode . (lambda ()
-                         (display-line-numbers-mode 1)
-                         (setq-local display-line-numbers t)
-                         ))
+                                (display-line-numbers-mode 1)
+                                (setq-local display-line-numbers t)
+                                ))
   :custom
   ;; Give time for long updates to complete
   (elfeed-use-curl t)
@@ -24,7 +24,7 @@
   (elfeed-search-title-max-width 100)
   (elfeed-search-title-min-width 30)
 
-  (elfeed-search-remain-on-entry t)
+  (elfeed-search-remain-on-entry nil) ; When performing a command, move to next line
   (elfeed-search-clipboard-type 'clipboard) ; Paste to system clipboard
 
   (elfeed-feeds '())
@@ -245,6 +245,7 @@ minibuffer with something like `exit-minibuffer'."
   :custom
   (elfeed-goodies/feed-source-column-width 25)
   (elfeed-goodies/tag-column-width 40)
+  (elfeed-goodies/wide-threshold 0.4)
 
   (elfeed-goodies/entry-pane-position 'right)
   (elfeed-goodies/entry-pane-size 0.5)
