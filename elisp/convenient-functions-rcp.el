@@ -3,7 +3,7 @@
 ;;; Commentary:
 ;;
 ;; These are small groups of code, many of which are self-defined, that I find
-;; useful. Most of these functions are taken from elsewhere (e.g. Doom)
+;; useful. Most of these functions are taken from elsewhere (e.g. Doom).
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -202,7 +202,7 @@ specified by `prot-comment-timestamp-format-verbose'."
     (prot-comment--keyword-prompt
      (cond ((derived-mode-p 'prog-mode) prot-comment-comment-keywords-coding)
            ((derived-mode-p 'org-mode) prot-comment-comment-keywords-writing)
-           (t (message "No associated keywords for current mode!"))))
+           (t nil)))
     current-prefix-arg))
   (let* ((date (if verbose
                    prot-comment-timestamp-format-verbose
@@ -233,6 +233,10 @@ specified by `prot-comment-timestamp-format-verbose'."
      (t
       (comment-indent t)
       (insert (concat " " string))))))
+
+(kb/leader-keys
+  "c" '(prot-comment-timestamp-keyword :which-key "Prot-comment")
+  )
 
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from

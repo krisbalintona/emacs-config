@@ -1,4 +1,4 @@
-  #+TITLE: Basic Org packages
+   #+TITLE: Basic Org packages
 
 
 * Org-mode
@@ -43,6 +43,8 @@ Styling (called in org-superstar)
 
 Better C-ret functionality
 #+BEGIN_SRC emacs-lisp
+  (require 'evil-rcp)
+  
   (defun +org--insert-item (direction)
     (let ((context (org-element-lineage
                     (org-element-context)

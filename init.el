@@ -32,20 +32,18 @@
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
-;;;;; Package management and settings
+;;;;; Emacs-wide packages
+;; Packages that are useful across my entire Emacs experience. Other packages
+;; defined afterward will often rely on these
 (require 'auto-gc-rcp)
-(require 'system-variables-rcp)
-;; (require 'default-package-management-rcp) ; Use package.el
-(require 'straight-package-management-rcp) ; Use straight.el
+(require 'personal-variables-rcp)
+(require 'straight-package-management-rcp)
 (require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 (require 'early-packages-rcp)
 (require 'better-defaults-rcp)
 (require 'faces-rcp)
 
-;;;;; Emacs-wide packages
-;; Packages that are useful across my entire Emacs experience. Other packages
-;; defined afterward will often rely on these
-(require 'keybinds-frameworks-rcp)
 (require 'custom-directories-rcp)
 (require 'convenient-functions-rcp)
 (require 'themes-rcp)
@@ -60,14 +58,13 @@
 (require 'completion-selectrum-rcp)
 (require 'completion-helm-rcp)
 
-;;;;; Buffer management
-(require 'buffer-and-window-management-rcp)
-
 ;;;;; Evil
 (require 'evil-rcp)
 
-;;;;; Org
+;;;;; Buffer management
+(require 'buffer-and-window-management-rcp)
 
+;;;;; Org
 (org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
 
 ;; (require 'org-agenda-general-rcp)
@@ -86,7 +83,7 @@
 (require 'mu4e-rcp)
 
 ;;;;; RSS feed
-(require 'latex-general-rcp)
+(require 'rss-feed-rcp)
 
 ;;;;; LaTeX
 (require 'latex-general-rcp)
@@ -111,11 +108,8 @@
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
 
-<<<<<<< HEAD
-=======
 ;;;;; Finances
 (require 'finance-rcp)
->>>>>>> 1c02495... Create finance-rcp
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

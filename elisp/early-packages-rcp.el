@@ -2,10 +2,13 @@
 ;;
 ;;; Commentary:
 ;;
-;; Load packages which need to be loaded at an early state here.
+;; Load packages which need to be loaded at an early stage here.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'personal-variables-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Org
 ;; Use `org' from `straight.el'. This may or may not work?
@@ -49,20 +52,12 @@
                       (list-dependencies-of . "yay -Qi")
                       (noconfirm . "--noconfirm"))
                      ))
-
-  (if (string= linux-distribution "\"Arch Linux\"")
-      (progn
-        (setq system-packages-package-manager 'yay)
-        (setq system-packages-use-sudo nil)))
+  (if kb/linux-arch
+      (setq system-packages-package-manager 'yay
+            system-packages-use-sudo nil))
   )
 
-;;;; Use-package-ensure-system-package
-;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword. Requires `system-packages'
-(use-package use-package-ensure-system-package
-  :after (exec-path-from-shell system-packages)
-  )
-
-;;;; NoLittering
+;;;; No-littering
 ;; Set default package paths
 (use-package no-littering
   :functions (no-littering-expand-var-file-name no-littering-expand-etc-file-name)
@@ -84,12 +79,10 @@
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
-  :hook ((LaTeX-mode . outshine-mode)
-         (css-mode . outshine-mode)
-         (prog-mode . outshine-mode)
-         (outshine-mode . display-line-numbers-mode)
-         (outshine-mode . visual-line-mode)
-         )
+  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
+  :gfhook 'display-line-numbers-mode 'visual-line-mode
+  :general (:keymaps 'emacs-lisp-mode-map
+                     "C-x n s" 'outshine-narrow-to-subtree)
   :preface
   (defvar outline-minor-mode-prefix (kbd "M-#"))
   :custom
@@ -100,16 +93,7 @@
   (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
   (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
-
-  (general-define-key
-   :keymaps 'emacs-lisp-mode-map
-   "C-x n s" 'outshine-narrow-to-subtree
-   )
   )
-
-;;;; Diminish
-;; Remove or rename modeline lighters
-(use-package diminish)
 
 ;;; early-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

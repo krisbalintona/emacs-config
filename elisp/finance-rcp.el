@@ -13,7 +13,7 @@
   :hook (after-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
   :functions kb/ledger-add-blank-lines
   :gfhook
-  #'outshine-mode
+  'outshine-mode
   '(lambda () (mixed-pitch-mode 0))
   '(lambda () (display-line-numbers-mode 0))
   :custom

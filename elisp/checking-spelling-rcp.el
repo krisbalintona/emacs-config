@@ -46,7 +46,7 @@
   (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (abbrev mode)
   (flyspell-issue-message-flag nil) ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil) ; Don't display welcome message
-(flycheck-proselint-executable "/usr/bin/proselint")
+  (flycheck-proselint-executable "/usr/bin/proselint")
   :config
   ;; Face for incorrect words
   (set-face-attribute 'flyspell-incorrect nil :underline '(:color "red2" :style wave))
@@ -76,7 +76,7 @@
   (kb/leader-keys
     "." '(flyspell-correct-next :which-key "Flyspell next")
     "," '(flyspell-correct-previous :which-key "Flyspell prev")
-    "c" '(flyspell-buffer :which-key "Flyspell check buffer")
+    "/" '(flyspell-buffer :which-key "Flyspell check buffer")
     "tc" '(flyspell-mode :which-key "Flyspell toggle")
     )
   )
