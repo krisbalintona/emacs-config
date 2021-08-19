@@ -11,22 +11,20 @@
 
 ;;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
-  (use-package savehist
-    :straight nil
-    :ghook 'after-init-hook
-    :custom
-    (savehist-autosave-interval 300)
-    :config
-    (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
-    (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
-    )
+(use-package savehist
+  :straight nil
+  :ghook 'after-init-hook
+  :custom
+  (savehist-autosave-interval 300)
+  :config
+  (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
+  (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
+  )
 
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
-  :functions general-define-key
-  :commands winner-mode
-  :hook (after-init . winner-mode)
+  :ghook 'after-init-hook
   :general ("C-<left>" 'winner-undo
             "C-<right>" 'winner-redo)
   :custom
@@ -36,8 +34,6 @@
 ;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
 (use-package eyebrowse
-  :after (evil evil-collection)
-  :commands eyebrowse-mode
   :ghook 'after-init-hook
   :general
   (:states '(visual normal motion)
@@ -119,6 +115,7 @@
 
 ;;;; Burly
 (use-package burly
+  :gfhook ('after-init-hook 'bookmark-maybe-load-default-file nil nil t) ; Load bookmarks immediately for access
   :general (kb/leader-keys
              "Bw" '(burly-bookmark-windows :which-key "Burly windows")
              "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
@@ -126,6 +123,7 @@
              )
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
+  :preface (require 'bookmark)
   )
 
 ;;; buffer-and-window-management-rcp.el ends here
