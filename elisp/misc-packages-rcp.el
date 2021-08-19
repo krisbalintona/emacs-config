@@ -14,8 +14,8 @@
 ;; Enable logging of recent files
 (use-package recentf
   :straight nil
+  :ghook 'after-init-hook
   :custom
-  (recentf-mode t)
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)
   )
@@ -24,12 +24,14 @@
 ;; Automatically correct typed strings (e.g. words)
 (use-package abbrev-mode
   :straight nil
-  :ghook 'text-mode-hook
+  :ghook 'text-mode-hook 'prog-mode-hook
   )
 
 ;;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
+  :requires helpful
+  :commands elisp-demos-advice-helpful-update
   :config
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   )
@@ -108,7 +110,7 @@
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :straight nil
-  :ghook ('prog-mode-hook 'LaTeX-mode-hook)
+  :ghook 'prog-mode-hook 'LaTeX-mode-hook
   ;; :ghook 'prog-mode-hook
   :gfhook 'column-number-mode ; Column number in modeline
   :custom
@@ -185,7 +187,7 @@
 ;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace
-  :ghook ('before-save-hook 'whitespace-cleanup)
+  :hook (before-save . whitespace-cleanup)
   :custom
   (whitespace-style '(face empty indentation::space tab))
   )
@@ -193,30 +195,14 @@
 ;;;; Unicode-fonts
 ;; Support unicode characters
 (use-package unicode-fonts
+  ;; `unicode-fonts-setup' is run rebuilds the disk cache during Emacs startup
+  ;; whenever a font is added or removed, or any relevant configuration
+  ;; variables are changed.
+  :hook ((server-after-make-frame . unicode-fonts-setup)
+         (window-setup . unicode-fonts-setup)
+         )
   :custom
   (unicode-fonts-skip-font-groups '(low-quality-glyphs))
-  :init
-  (defun dw/replace-unicode-font-mapping (block-name old-font new-font)
-    "Taken from https://github.com/daviwil/dotfiles/blob/master/Emacs.org#startup-performance"
-    (let* ((block-idx (cl-position-if
-                       (lambda (i) (string-equal (car i) block-name))
-                       unicode-fonts-block-font-mapping))
-           (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
-           (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
-      (setf (cdr (nth block-idx unicode-fonts-block-font-mapping))
-            `(,updated-block))))
-  (defun kb/unicode-setup ()
-    "Fix the font mappings to use the right emoji font"
-    (mapcar
-     (lambda (block-name)
-       (dw/replace-unicode-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))
-     '("Dingbats"
-       "Emoticons"
-       "Miscellaneous Symbols and Pictographs"
-       "Transport and Map Symbols"))
-    )
-  :config
-  (general-add-hook '(server-after-make-frame-hook window-setup-hook) 'kb/unicode-setup)
   )
 
 ;;;; Anzu
@@ -261,11 +247,11 @@
 ;;;; Ace-jump
 ;; Quickly jump to any character
 (use-package ace-jump-mode
-  :gfhook ('org-mode-hook '(lambda () (face-remap-add-relative 'ace-jump-face-foreground nil :font kb/variable-pitch-font)))
+  :hook (org-mode . (lambda () (face-remap-add-relative 'ace-jump-face-foreground :font kb/variable-pitch-font)))
   :general
   ("M-a" '(ace-jump-mode :which-key "Ace-jump"))
   :config
-  (setq qace-jump-mode-scope 'window
+  (setq ace-jump-mode-scope 'window
         ace-jump-mode-case-fold t ; Ignore case?
         ace-jump-mode-gray-background nil ; Don't make text's background gray
         ace-jump-mode-submode-list ; Priority of ace-jump selections
@@ -299,7 +285,7 @@
 ;; Easily create scratch buffers for different modes
 (use-package scratch
   ;; :demand t ; For the initial scratch buffer at startup
-  :hook (scratch-create-buffer-hook . kb/scratch-buffer-setup)
+  :hook (scratch-create-buffer . kb/scratch-buffer-setup)
   :general ("C-c s" '(scratch :which-key "Create scratch"))
   :preface
   (defun kb/scratch-buffer-setup ()
@@ -333,7 +319,7 @@
 ;;;; Prettify-symbols-mode
 ;; Turn arbitrary strings into desired unicode characters
 (use-package pretty-symbols
-  :hook (after-init-hook . global-prettify-symbols-mode)
+  :ghook ('after-init-hook 'global-prettify-symbols-mode)
   :custom
   (prettify-symbols-alist '(("TODO" . "")
                             ("WAIT" . "")

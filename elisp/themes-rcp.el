@@ -109,10 +109,8 @@
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
-  :hook ((window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
-         (server-after-make-frame . doom-modeline-mode)
-         (window-setup . doom-modeline-mode)
-         )
+  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
+  :ghook 'server-after-make-frame-hook 'window-setup-hook
   :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
   :custom
   ;; Modeline settings
@@ -148,8 +146,8 @@
 ;;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  :ghook ('after-init-hook 'display-time-mode)
   :straight nil
+  :ghook ('after-init-hook 'display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average nil) ; Don't show load average along with time

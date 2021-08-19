@@ -81,8 +81,6 @@
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
-  :general (:keymaps 'emacs-lisp-mode-map
-                     "C-x n s" 'outshine-narrow-to-subtree)
   :preface
   (defvar outline-minor-mode-prefix (kbd "M-#"))
   :custom

@@ -14,10 +14,9 @@
 (use-package org-roam
   :straight (org-roam :type git :host github :repo "org-roam/org-roam")
   :after company ; Necessary for some reason
-  :gfhook
+  :ghook
   ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
-  'hide-mode-line-mode
-  'visual-line-mode
+  :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
   ("C-x C-c" 'nil) ; Annoying. Closes frame when I want to add a footnote
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer

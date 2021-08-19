@@ -8,6 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Default completion settings
 ;; Taken from https://karthinks.com/software/more-batteries-included-with-emacs/
@@ -23,7 +24,7 @@
 (use-package prescient
   ;; :after (selectrum counsel) ; Needs to be called after counsel so that counsel doesn't overwrite stuff
   :after selectrum
-  :ghook ('selectrum-prescient-mode-hook 'prescient-persist-mode)
+  :hook (selectrum-prescient-mode . prescient-persist-mode)
   )
 
 ;;;; Marginalia
@@ -31,8 +32,6 @@
 (use-package marginalia
   :straight (marginalia :type git :host github :repo "minad/marginalia")
   :ghook 'after-init-hook
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)) ; Show as much information as possible
   :config
   ;; Marginalia faces
   (set-face-attribute 'marginalia-documentation nil

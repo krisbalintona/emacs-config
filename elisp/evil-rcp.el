@@ -69,7 +69,7 @@
   :demand t ; Load now or it won't
   :requires evil
   :after evil
-  :gfhook ('evil-mode-hook 'evil-collection-init)
+  :hook (evil-mode . evil-collection-init)
   :custom
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
@@ -123,11 +123,11 @@
   )
 
 ;;;; Evil-surround
-;; Surround a selection with a pair of characters
+;; Surround a selection with any pair of characters
 (use-package evil-surround
   :requires evil
   :after evil
-  :gfhook 'global-evil-surround-mode
+  :ghook ('evil-mode-hook 'global-evil-surround-mode)
   )
 
 ;;;; Evil-visualstar
@@ -136,7 +136,7 @@
   :requires evil
   :after evil
   :functions global-evil-surround-mode
-  :gfhook 'global-evil-visualstar-mode
+  :ghook ('evil-mode-hook 'global-evil-visualstar-mode)
   :custom
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
   )

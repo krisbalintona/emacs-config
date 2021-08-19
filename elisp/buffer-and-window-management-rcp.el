@@ -115,7 +115,7 @@
 
 ;;;; Burly
 (use-package burly
-  :gfhook ('after-init-hook 'bookmark-maybe-load-default-file nil nil t) ; Load bookmarks immediately for access
+  :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
   :general (kb/leader-keys
              "Bw" '(burly-bookmark-windows :which-key "Burly windows")
              "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")

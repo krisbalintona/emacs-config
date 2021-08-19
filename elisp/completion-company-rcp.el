@@ -12,9 +12,9 @@
 ;;;; Company
 ;; Point auto-completion backend
 (use-package company
-  :hook ((after-init . global-company-mode)
-         (company-mode . evil-normalize-keymaps)
-         )
+  :after evil
+  :ghook ('after-init-hook 'global-company-mode)
+  :gfhook 'evil-normalize-keymaps
   :general (:keymaps 'company-active-map
                      "RET" 'org-return
                      [return] 'org-return

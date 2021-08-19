@@ -16,6 +16,9 @@
   :general (:keymaps 'emacs-lisp-mode-map
                      :states '(normal visual motion)
                      "gz" nil)
+  :general
+  (:keymaps 'emacs-lisp-mode-map
+            "C-x n s" 'outshine-narrow-to-subtree)
   )
 
 ;;;; Syntax highlighting
