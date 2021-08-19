@@ -268,10 +268,10 @@ The list of tags is provided by `prot-elfeed-search-tags'."
       (elfeed-search-toggle-all tag))
     )
 
-  (general-define-key ; Search keymap
+  (general-define-key
    :keymaps 'elfeed-show-mode-map
    :states '(visual normal motion)
-   "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Add archive tag")
+   "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Toggle unread tag")
    )
   (general-define-key
    :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
@@ -303,7 +303,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (elfeed-goodies/tag-column-width 40)
   (elfeed-goodies/wide-threshold 0.4)
 
-  (elfeed-goodies/entry-pane-position 'right)
+  (elfeed-goodies/entry-pane-position 'bottom)
   (elfeed-goodies/entry-pane-size 0.5)
   :config
   (elfeed-goodies/setup)
