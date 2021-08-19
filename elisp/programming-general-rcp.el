@@ -270,6 +270,25 @@
   )
 
 
+;;;; Directory navigation
+;;;;; Dired
+;; Emacs' file manager
+(use-package dired
+  :straight nil
+  :gfhook 'dired-hide-details-mode
+  :custom
+  (dired-auto-revert-buffer t)
+  (dired-dwim-target t) ; Guess default target directory
+  (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
+  (dired-recursive-copies 'always) ; Copy directories recursively?
+  )
+
+;;;;; Dired-git
+;; Show git information in dired
+(use-package dired-git
+  :ghook 'dired-mode-hook
+  )
+
 ;;;; Aesthetics
 ;;;;; Git-gutter-fringes
 ;; Show diffs in fringes. Taken from

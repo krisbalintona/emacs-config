@@ -77,7 +77,6 @@
 ;; (org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
 
 (org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
 
 ;;;;; Email
 ;; (require 'mu4e-rcp)
