@@ -7,7 +7,19 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
 (require 'faces-rcp)
+(require 'keybinds-frameworks-rcp)
+
+;;;; Remove unnecessary UI
+(menu-bar-mode -1)
+(unless (and (display-graphic-p) (eq system-type 'darwin))
+  (push '(menu-bar-lines . 0) default-frame-alist))
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;;;; Thinner vertical fringes
+(fringe-mode '(5 . 5))
 
 ;;;; Emacs themes
 (use-package doom-themes
@@ -26,7 +38,14 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
-(use-package atom-one-dark-theme)
+(use-package atom-one-dark-theme
+  :config
+  (custom-theme-set-faces
+   `atom-one-dark
+   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
+   `(bookmark-face ((t (:foreground nil :background nil))))
+   )
+  )
 
 (use-package apropospriate-theme)
 
@@ -36,6 +55,16 @@
   :hook ((after-init . heaven-and-hell-init-hook)
          (window-configuration-change . kb/theme-faces)
          )
+  :general
+  ("<f6>" '((lambda ()
+              (interactive)
+              (heaven-and-hell-toggle-theme)
+              (highlight-indent-guides-auto-set-faces)
+              (kb/doom-modeline-font-setup)
+              (kb/theme-faces)
+              )
+            :which-key "Toggle theme"
+            ))
   :init
   (setq custom--inhibit-theme-enable nil)
   :config
@@ -50,23 +79,14 @@
 
   ;; Cleanly load themes
   (heaven-and-hell-clean-load-themes '(atom-one-dark apropospriate-light))
-
-  (general-define-key "<f6>" '((lambda ()
-                                 (interactive)
-                                 (heaven-and-hell-toggle-theme)
-                                 (highlight-indent-guides-auto-set-faces)
-                                 (kb/doom-modeline-font-setup)
-                                 (kb/theme-faces)
-                                 )
-                               :which-key "Toggle theme"
-                               )
-                      )
   )
 
 ;;;;; Set faces based on theme
 (defun kb/theme-faces ()
   "Set light and dark theme faces."
   (interactive)
+  (defvar heaven-and-hell-themes)
+  (require 'heaven-and-hell)
   (custom-theme-set-faces ; Dark theme
    (cdr (car (cdr heaven-and-hell-themes)))
    `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
@@ -86,15 +106,19 @@
    `(org-tag ((t (:height 153 :bold t :italic t))) t)
    `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
    )
-  (custom-theme-set-faces ; Light theme
-   (cdr (car heaven-and-hell-themes))
-   )
+  ;; (custom-theme-set-faces ; Light theme
+  ;;  (cdr (car heaven-and-hell-themes))
+  ;;  )
   )
 
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
-  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
+  :hook ((window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
+         (server-after-make-frame . doom-modeline-mode)
+         (window-setup . doom-modeline-mode)
+         )
+  :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
@@ -124,29 +148,22 @@
     (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
     (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
     )
-  :config
-  ;; (if (daemonp) ; Hooks depending on daemon or not
-  (add-hook 'server-after-make-frame-hook 'doom-modeline-mode)
-  (add-hook 'window-setup-hook 'doom-modeline-mode);; )
-  (kb/doom-modeline-font-setup)
   )
 
 ;;;;; Time
 ;; Enable time in the mode-line
 (use-package time
+  :ghook ('after-init-hook 'display-time-mode)
   :straight nil
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average nil) ; Don't show load average along with time
-  :config
-  (add-hook 'after-init-hook 'display-time-mode)
   )
 
 ;;;;; Battery
 ;; Display batter percentage
 (use-package battery
   :straight nil
-  :after doom-modeline
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
@@ -158,7 +175,10 @@
 
 ;;;;; Modeline segments
 ;; (Re)defining my own modeline segments
-(with-eval-after-load 'doom-modeline
+(defun kb/set-doom-modeline-segments ()
+  "Define relevant doom modeline segments and define segment."
+  (require 'doom-modeline-segments)
+
   (doom-modeline-def-segment kb/buffer-info
     "The standard `buffer-info' but without the 'unsaved' icon and major mode
 icon."

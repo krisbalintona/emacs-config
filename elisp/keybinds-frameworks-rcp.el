@@ -6,6 +6,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
 
 ;;;; General.el
 ;; Leader key capabilities
@@ -13,6 +14,9 @@
   :config
   (general-evil-setup)
   (general-auto-unbind-keys)
+
+  ;; Make ESC quit everywhere
+  (general-define-key "<escape>" 'keyboard-escape-quit)
 
   (general-create-definer kb/leader-keys ; Use space as leader key
     :keymaps '(normal insert visual emacs)
@@ -40,31 +44,24 @@
     "g"   '(:ignore t :which-key "git")
     "e"   '(:ignore t :which-key "Eval stuff")
     "eb"  '(eval-buffer :which-key "Eval buffer")
+    "ee" '(eval-last-sexp :which-key "Eval last sexp")
+    "er" '(eval-region :which-key "Eval region")
 
     "u" 'universal-argument
     )
   )
 
-;;;;; Misc keybinds
-;; Package-agnostic keybinds
-(kb/leader-keys
-  :keymaps '(visual normal)
-  "ee" '(eval-last-sexp :which-key "Eval last sexp")
-  "er" '(eval-region :which-key "Eval region")
-  )
-
-;;;; Hydra
-;;;;; Pretty-hydra
+;;;; Pretty-hydra
 ;; Hydra but with prettier displays
 (use-package pretty-hydra
-  :demand t
-  :after general
-  :config
-  ;; Straight.el integration
+  :general
   (kb/leader-keys
     "hp" '(hydra:straight-helper/body :which-key "Straight.el management")
     )
-
+  :preface
+  (use-package hydra)
+  (use-package default-text-scale)
+  :config
   (pretty-hydra-define hydra:straight-helper
     (:hint t :foreign-keys run :quit-key "q" :exit t)
     ("Package building"
@@ -86,7 +83,7 @@
      (("n" #'straight-normalize-all "Normalize all")
       ("N" #'straight-normalize-package "Normalize particular")
       ("w" #'straight-watcher-start "Start file system watcher")
-      ("W" #'straight-watcher-quit "Kill file system watcher")
+      ("W" #'straight-watcher-stop "Kill file system watcher")
       ("g" #'straight-get-recipe "Copy particular recipe")
       ("e" #'straight-prune-build "Prune: delete packages not currently loaded (?)")) ; Recommended occasionally to clean up really long cache file (straight-cache-autoloads t) over time
      "Suspending and restoring package versions"
@@ -115,15 +112,6 @@
   (kb/leader-keys
     "w TAB" '(hydra:windows-and-font-size/body :which-key "Augment window sizing")
     )
-  )
-
-;;;;; Hydra-posframe
-;; Prettify the hydra-frame my positioning it where you like
-(use-package hydra-posframe
-  :disabled t ; Too small sometimes
-  :straight (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
-  :config
-  (hydra-posframe-enable)
   )
 
 ;;; keybinds-frameworks-rcp.el ends here

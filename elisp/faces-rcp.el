@@ -2,10 +2,12 @@
 ;;
 ;;; Commentary:
 ;;
-;; These are the base faces I used across all of Emacs
+;; All the faces and fonts I use.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Face definitions
 ;; Potential Fonts:
@@ -25,7 +27,7 @@
 (defvar kb/variable-pitch-font "LiterationSerif Nerd Font")
 ;; (defvar kb/variable-pitch-font "Garamond-Math")
 ;; (defvar kb/variable-pitch-font "ETBembo")
-;(defvar kb/modeline-font "Noto Sans")
+;; (defvar kb/modeline-font "Noto Sans")
 (defvar kb/modeline-font "NotoSans Nerd Font")
 
 ;;;; Setup fonts
@@ -53,18 +55,14 @@
     ;; http://ergoemacs.org/misc/emacs_macos_emoji.html
     ))
   )
-
-;; Set fonts based on if daemon or not
-(if (daemonp)
-    (add-hook 'server-after-make-frame-hook 'kb/default-fonts-setup)
-  (add-hook 'window-setup-hook 'kb/default-fonts-setup))
+(general-add-hook '(server-after-make-frame-hook window-setup-hook) 'kb/default-fonts-setup)
 
 ;;;; Mixed-pitch
 ;; Allow faces to be selectively fixed- or variable-pitch
 ;; Note: Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
 (use-package mixed-pitch
-  :hook (text-mode . mixed-pitch-mode)
+  :ghook 'text-mode-hook
   :config
   (add-to-list 'mixed-pitch-fixed-pitch-faces
                '(highlight-indent-guides-character-face ; Highlight-indent-guides

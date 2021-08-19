@@ -3,7 +3,7 @@
 ;;; Commentary:
 ;;
 ;; These are directory and file definitions that I use frequently enough to
-;; define
+;; define.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
