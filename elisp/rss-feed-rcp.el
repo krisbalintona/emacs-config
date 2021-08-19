@@ -266,6 +266,9 @@ The list of tags is provided by `prot-elfeed-search-tags'."
             (elfeed-show-untag tag)
           (elfeed-show-tag tag))
       (elfeed-search-toggle-all tag))
+
+    (if (and (derived-mode-p 'elfeed-show-mode) (not elfeed-search-remain-on-entry))
+        (elfeed-goodies/split-show-next))
     )
 
   (general-define-key
