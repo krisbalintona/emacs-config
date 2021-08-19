@@ -300,9 +300,15 @@
 
 ;;;; Org-roam-ui
 (use-package org-roam-ui
-  :after (websocket simple-httpd f org-roam)
+  :disabled t ; For now to prevent issues at startup
+  :requires org-roam
+  :after org-roam
   :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :hook (after-init . org-roam-ui-mode)
+  :preface
+  (use-package websocket)
+  (use-package simple-httpd)
+  (use-package f)
   :custom
   (org-roam-ui-open-on-start nil) ; Don't open graph on startup
   (org-roam-ui-custom-theme '(list
@@ -320,11 +326,6 @@
                               (magenta . "#bd93f9"))
                             )
   )
-
-;;;;; Dependencies of `org-roam-ui'.
-(use-package websocket)
-(use-package simple-httpd)
-(use-package f)
 
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
