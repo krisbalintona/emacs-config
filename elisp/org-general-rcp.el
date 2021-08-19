@@ -128,8 +128,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                       (match-string 1 x)
-                                     x))
+                                  (match-string 1 x)
+                                x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)
@@ -454,6 +454,12 @@ re-align the table if necessary. (Necessary because org-mode has a
   (setq-default org-download-image-dir (concat org-directory "resources/")
                 org-download-heading-lvl nil
                 org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
+  )
+
+;;;;; Typo-mode
+;; Typography stuff for quotations, hyphens, back-ticks, etc.
+(use-package typo
+  :ghook 'org-mode-hook
   )
 
 ;;; org-general-rcp.el ends here

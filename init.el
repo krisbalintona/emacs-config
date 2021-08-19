@@ -48,8 +48,7 @@
 (require 'convenient-functions-rcp)
 (require 'themes-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "etc-config.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
+(require 'misc-packages-rcp)
 
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)

@@ -9,9 +9,9 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
-;;;; Emacs-lisp-mode
+;;;; Elisp-mode
 ;; Elisp-mode overwrites my eyebrowse-last-window-config binding
-(use-package emacs-lisp-mode
+(use-package elisp-mode
   :straight nil
   :general (:keymaps 'emacs-lisp-mode-map
                      :states '(normal visual motion)
@@ -29,6 +29,12 @@
 ;; Give function calls a special face (default is underline)
 (use-package highlight-function-calls
   :ghook 'emacs-lisp-mode-hook
+  )
+
+;;;;; Rainbow-delimiters
+;; Highlight matching delimiters (e.g. parenthesis)
+(use-package rainbow-delimiters
+  :ghook 'prog-mode-hook
   )
 
 ;;; programming-elisp-rcp.el ends here
