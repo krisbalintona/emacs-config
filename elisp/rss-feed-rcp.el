@@ -344,16 +344,6 @@ minibuffer with something like `exit-minibuffer'."
    )
   )
 
-;;;;; Elfeed-dashboard
-(use-package elfeed-dashboard
-  :disabled t ; Not really working
-  :straight (elfeed-dashboard :type git :host github :repo "Manoj321/elfeed-dashboard")
-  :custom
-  (elfeed-dashboard-file (concat no-littering-var-directory "elfeed/elfeed-dashboard.org"))
-  :config
-  (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links) ; Update feed counts on elfeed-quit
-  )
-
 ;;; rss-feed-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'rss-feed-rcp)
