@@ -38,14 +38,7 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
-(use-package atom-one-dark-theme
-  :config
-  (custom-theme-set-faces
-   `atom-one-dark
-   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
-   `(bookmark-face ((t (:foreground nil :background nil))))
-   )
-  )
+(use-package atom-one-dark-theme)
 
 (use-package apropospriate-theme)
 
@@ -105,6 +98,8 @@
    `(org-checkbox ((t (:inherit fixed-pitch))) t)
    `(org-tag ((t (:height 153 :bold t :italic t))) t)
    `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
+   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
+   `(bookmark-face ((t (:foreground nil :background nil))))
    )
   ;; (custom-theme-set-faces ; Light theme
   ;;  (cdr (car heaven-and-hell-themes))
