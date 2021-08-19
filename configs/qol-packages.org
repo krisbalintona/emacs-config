@@ -100,7 +100,7 @@ Display line numbers
      '(org-mode-hook
        shell-mode-hook
        eshell-mode-hook)
-     (display-line-numbers-mode 0))
+     '(lambda () (display-line-numbers-mode 0)))
     )
 #+end_src
 
