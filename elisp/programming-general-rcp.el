@@ -289,6 +289,18 @@
   :ghook 'dired-mode-hook
   )
 
+;;;; File editing
+;;;;; Sudo-edit
+;; Utilities to edit files as root
+(use-package sudo-edit
+  :ghook ('after-init 'sudo-edit-indicator-mode)
+  :general
+  (kb/leader-keys
+    "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
+    "fu" '(sudo-edit-current-file :which-key "Sudo this file")
+    )
+  )
+
 ;;;; Aesthetics
 ;;;;; Git-gutter-fringes
 ;; Show diffs in fringes. Taken from

@@ -9,6 +9,18 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
+;;;; Savehist
+;; Make history of certain things (e.g. minibuffer) persistent across sessions
+  (use-package savehist
+    :straight nil
+    :ghook 'after-init-hook
+    :custom
+    (savehist-autosave-interval 300)
+    :config
+    (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
+    (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
+    )
+
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
