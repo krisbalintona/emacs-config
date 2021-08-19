@@ -73,8 +73,6 @@
 (require 'org-roam-general-rcp)
 (require 'org-roam-other-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
-
 ;;;;; Email
 ;; (require 'mu4e-rcp)
 
