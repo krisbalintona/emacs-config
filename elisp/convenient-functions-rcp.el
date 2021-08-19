@@ -112,6 +112,131 @@
 
 (run-with-idle-timer 300 t 'kb/show-random-quotes)
 
+;;;; Prot-comment
+;; helper code from prot-common.el, which is `require'd by
+;; prot-comment.el
+(defvar prot-common--line-regexp-alist
+  '((empty . "[\s\t]*$")
+    (indent . "^[\s\t]+")
+    (non-empty . "^.+$")
+    (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
+    (heading . "^[=-]+"))
+  "Alist of regexp types used by `prot-common-line-regexp-p'.")
+
+(defun prot-common-line-regexp-p (type &optional n)
+  "Test for TYPE on line.
+TYPE is the car of a cons cell in
+`prot-common--line-regexp-alist'.  It matches a regular
+expression.
+
+With optional N, search in the Nth line from point."
+  (save-excursion
+    (goto-char (point-at-bol))
+    (and (not (bobp))
+         (or (beginning-of-line n) t)
+         (save-match-data
+           (looking-at
+            (alist-get type prot-common--line-regexp-alist))))))
+
+;; and what follows is from prot-comment.el
+(defcustom prot-comment-comment-keywords-writing
+  '("TODO" "COMMENT" "REVIEW" "FIXME")
+  "List of strings with comment keywords."
+  :type '(repeat string)
+  :group 'prot-comment)
+
+(defcustom prot-comment-comment-keywords-coding
+  '("TODO" "NOTE" "REVIEW" "FIXME")
+  "List of strings with comment keywords."
+  :type '(repeat string)
+  :group 'prot-comment)
+
+(defcustom prot-comment-timestamp-format-concise "%F"
+  "Specifier for date in `prot-comment-timestamp-keyword'.
+Refer to the doc string of `format-time-string' for the available
+options."
+  :type 'string
+  :group 'prot-comment)
+
+(defcustom prot-comment-timestamp-format-verbose "%F %T %z"
+  "Like `prot-comment-timestamp-format-concise', but longer."
+  :type 'string
+  :group 'prot-comment)
+
+(defvar prot-comment--keyword-hist '()
+  "Input history of selected comment keywords.")
+
+(defun prot-comment--keyword-prompt (keywords)
+  "Prompt for candidate among KEYWORDS."
+  (let ((def (car prot-comment--keyword-hist)))
+    (completing-read
+     (format "Select keyword [%s]: " def)
+     keywords nil nil nil 'prot-comment--keyword-hist def)))
+
+;;;###autoload
+(defun prot-comment-timestamp-keyword (keyword &optional verbose)
+  "Add timestamped comment with KEYWORD.
+
+When called interactively, the list of possible keywords is that
+of `prot-comment-comment-keywords', though it is possible to
+input arbitrary text.
+
+If point is at the beginning of the line or if line is empty (no
+characters at all or just indentation), the comment is started
+there in accordance with `comment-style'.  Any existing text
+after the point will be pushed to a new line and will not be
+turned into a comment.
+
+If point is anywhere else on the line, the comment is indented
+with `comment-indent'.
+
+The comment is always formatted as 'DELIMITER KEYWORD DATE:',
+with the date format being controlled by the variable
+`prot-comment-timestamp-format-concise'.
+
+With optional VERBOSE argument (such as a prefix argument
+`\\[universal-argument]'), use an alternative date format, as
+specified by `prot-comment-timestamp-format-verbose'."
+  (interactive
+   (list
+    (prot-comment--keyword-prompt
+     (cond ((derived-mode-p 'prog-mode) prot-comment-comment-keywords-coding)
+           ((derived-mode-p 'org-mode) prot-comment-comment-keywords-writing)
+           (t nil)))
+    current-prefix-arg))
+  (let* ((date (if verbose
+                   prot-comment-timestamp-format-verbose
+                 prot-comment-timestamp-format-concise))
+         (string (format "%s %s: " keyword (format-time-string date)))
+         (beg (point)))
+    (cond
+     ((or (eq beg (point-at-bol))
+          (prot-common-line-regexp-p 'empty))
+      (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
+        ;; NOTE 2021-07-24: we use this `insert' instead of
+        ;; `comment-region' because of a yet-to-be-determined bug that
+        ;; traps `undo' to the two states between the insertion of the
+        ;; string and its transformation into a comment.
+        (insert
+         (concat comment-start
+                 ;; NOTE 2021-07-24: See function `comment-add' for
+                 ;; why we need this.
+                 (make-string
+                  (comment-add nil)
+                  (string-to-char comment-start))
+                 comment-padding
+                 string
+                 comment-end))
+        (indent-region beg (point))
+        (when maybe-newline
+          (save-excursion (insert maybe-newline)))))
+     (t
+      (comment-indent t)
+      (insert (concat " " string))))))
+
+(kb/leader-keys
+  "c" '(prot-comment-timestamp-keyword :which-key "Prot-comment")
+  )
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
