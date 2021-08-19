@@ -6,36 +6,30 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
-;;;; Lisp-extra-font-lock
+;;;; Emacs-lisp-mode
+;; Elisp-mode overwrites my eyebrowse-last-window-config binding
+(use-package emacs-lisp-mode
+  :straight nil
+  :general (:keymaps 'emacs-lisp-mode-map
+                     :states '(normal visual motion)
+                     "gz" nil)
+  )
+
+;;;; Syntax highlighting
+;;;;; Lisp-extra-font-lock
 ;; Give faces to elisp symbols
 (use-package lisp-extra-font-lock
-  :hook (emacs-lisp-mode . (lambda ()
-                             (lisp-extra-font-lock-mode)
-                             (visual-line-mode)
-                             ))
+  :ghook 'emacs-lisp-mode-hook
   )
 
-;;;; Highlight-function-calls
+;;;;; Highlight-function-calls
 ;; Give function calls a special face (default is underline)
 (use-package highlight-function-calls
-  :hook (emacs-lisp-mode . highlight-function-calls-mode)
+  :ghook 'emacs-lisp-mode-hook
   )
-
-;;;; Elisp-demos
-;; Add example code snippets to some of the help windows
-(use-package elisp-demos
-  :config
-  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
-  )
-
-;;;; Other
-;; Elisp-mode overwrites my eyebrowse-last-window-config binding
-(general-define-key
- :keymaps 'emacs-lisp-mode-map
- :states '(motion normal visual)
- "gz" 'eyebrowse-last-window-config
- )
 
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

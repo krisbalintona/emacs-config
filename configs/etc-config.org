@@ -1,4 +1,4 @@
-   #+TITLE: Base Configuration Settings
+    #+TITLE: Base Configuration Settings
 
 * Recentf
 
@@ -20,5 +20,15 @@ Automatically correct typed strings (e.g. words)
   (use-package abbrev-mode
     :straight nil
     :ghook 'text-mode-hook
+    )
+#+end_src
+
+* Elisp-demos
+
+Add example code snippets to some of the help windows
+#+begin_src emacs-lisp
+  (use-package elisp-demos
+    :config
+    (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
     )
 #+end_src
