@@ -67,8 +67,50 @@
                                             (unpushed . show)))
   (magit-section-show-child-count t)
   (transient-mode-line-format nil)
-  :config
+  :init
+  ;; Add dates to magit-logs
+  (straight-use-package 'ov) ; Dependency
 
+  (defun unpackaged/magit-log--add-date-headers (&rest _ignore)
+    "Add date headers to Magit log buffers."
+    (when (derived-mode-p 'magit-log-mode)
+      (save-excursion
+        (ov-clear 'date-header t)
+        (goto-char (point-min))
+        (cl-loop with last-age
+                 for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
+                                  car
+                                  (overlay-get it 'before-string)
+                                  (get-text-property 0 'display it)
+                                  cadr
+                                  (s-match (rx (group (1+ digit) ; number
+                                                      " "
+                                                      (1+ (not blank))) ; unit
+                                               (1+ blank) eos)
+                                           it)
+                                  cadr)
+                 do (when (and this-age
+                               (not (equal this-age last-age)))
+                      (ov (line-beginning-position) (line-beginning-position)
+                          'after-string (propertize (concat " " this-age "\n")
+                                                    'face 'magit-section-heading)
+                          'date-header t)
+                      (setq last-age this-age))
+                 do (forward-line 1)
+                 until (eobp)))))
+  (define-minor-mode unpackaged/magit-log-date-headers-mode
+    "Display date/time headers in `magit-log' buffers."
+    :global t
+    (if unpackaged/magit-log-date-headers-mode
+        (progn
+          ;; Enable mode
+          (add-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+          (advice-add #'magit-setup-buffer-internal :after #'unpackaged/magit-log--add-date-headers))
+      ;; Disable mode
+      (remove-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+      (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
+  (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
+  :config
   (defun kb/magit-mode-quit-window (kill-buffer)
     "Quit Magit window (KILL-BUFFER) but don't close window."
     (if (or (one-window-p)
@@ -88,7 +130,6 @@
         )
       ))
   (advice-add #'magit-mode-quit-window :override #'kb/magit-mode-quit-window)
-
 
   (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
 

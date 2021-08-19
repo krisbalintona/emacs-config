@@ -6,6 +6,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'early-packages-rcp)
 
 ;;;; Load custom file
 ;; Must be loaded after early-packages-rcp because that is where custom-file
@@ -26,8 +28,8 @@
               cursor-in-non-selected-windows nil                                                  ; Hide the cursor in inactive windows
               mouse-yank-at-point t                                                               ; Yank at point rather than pointer
 
+              trash-directory (concat no-littering-var-directory "trash")                         ; Trash directory
               delete-by-moving-to-trash t                                                         ; Delete files to trash
-              trash-directory (concat user-emacs-directory "trash")                               ; Trash directory
 
               find-file-visit-truename t                                                          ; Follow symlink to actual file
 

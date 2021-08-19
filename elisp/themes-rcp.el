@@ -287,7 +287,10 @@ UTF-8."
     (let* ((active (doom-modeline--active))
            (face (if active 'doom-modeline-buffer-path 'mode-line-inactive))) ; Don't use here
       (concat (doom-modeline-spc)
-              (propertize (abbreviate-file-name default-directory) 'face 'bold-italic)
+              (propertize (if (vc-git-root (buffer-file-name))
+                              (abbreviate-file-name (vc-git-root (buffer-file-name)))
+                            (abbreviate-file-name default-directory))
+                          'face 'bold-italic)
               (doom-modeline-spc))))
   (doom-modeline-def-segment me/major-mode
     "The current major mode, including environment information."

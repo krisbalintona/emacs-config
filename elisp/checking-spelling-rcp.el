@@ -76,7 +76,7 @@
   (kb/leader-keys
     "." '(flyspell-correct-next :which-key "Flyspell next")
     "," '(flyspell-correct-previous :which-key "Flyspell prev")
-    "c" '(flyspell-buffer :which-key "Flyspell check buffer")
+    "/" '(flyspell-buffer :which-key "Flyspell check buffer")
     "tc" '(flyspell-mode :which-key "Flyspell toggle")
     )
   )
