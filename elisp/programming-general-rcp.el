@@ -69,7 +69,7 @@
   (transient-mode-line-format nil)
   :init
   ;; Add dates to magit-logs
-  (require 'ov) ; Dependency
+  (straight-use-package 'ov) ; Dependency
 
   (defun unpackaged/magit-log--add-date-headers (&rest _ignore)
     "Add date headers to Magit log buffers."
