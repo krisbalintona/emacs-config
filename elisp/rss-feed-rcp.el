@@ -35,12 +35,8 @@
   (setq elfeed-new-entry-hook
         `(;; Status tags
           ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
-                               :remove 'aging
-                               :add 'archive)
-          ,(elfeed-make-tagger :before "1 month ago" ; Don't be distracted by old entries
-                               :after "3 months ago"
                                :remove 'unread
-                               :add 'aging)
+                               :add 'archive)
           ))
 
   ;; Update elfeed every time it is opened
