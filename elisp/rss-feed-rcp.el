@@ -179,47 +179,6 @@ fail on poorly-designed websites."
         '((pre . eww-tag-pre)))
   )
 
-;;;;; Add archive tag
-(defun prot-elfeed-toggle-tag (tag)
-  "Toggle TAG for the current item.
-
-When the region is active in the `elfeed-search-mode' buffer, all
-entries encompassed by it are affected.  Otherwise the item at
-point is the target.  For `elfeed-show-mode', the current entry
-is always the target.
-
-The list of tags is provided by `prot-elfeed-search-tags'."
-  (interactive
-   (list
-    (intern
-     ;; (prot-elfeed--character-prompt prot-elfeed-search-tags))))
-     ;; (prot-elfeed--character-prompt prot-elfeed-search-tags)
-     (car (completing-read-multiple
-           "Apply one or more tags: "
-           (delete-dups (append (mapcar (lambda (tag)
-                                          (format "%s" tag))
-                                        (elfeed-db-get-all-tags))
-                                ))
-           #'prot-common-crm-exclude-selected-p t)
-          ;; (prot-elfeed-search-tag-filter)
-          ))
-    ))
-  (if (derived-mode-p 'elfeed-show-mode)
-      (if (elfeed-tagged-p tag elfeed-show-entry)
-          (elfeed-show-untag tag)
-        (elfeed-show-tag tag))
-    (elfeed-search-toggle-all tag))
-  )
-(general-define-key ; Search keymap
- :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
- :states '(visual normal)
- "a" '((lambda ()
-         (interactive)
-         (prot-elfeed-toggle-tag 'archive)
-         )
-       :which-key "Add archive tag")
- )
-
 ;;;;; Search completion
 (defun prot-common-crm-exclude-selected-p (input)
   "Filter out INPUT from `completing-read-multiple'.
@@ -276,38 +235,46 @@ minibuffer with something like `exit-minibuffer'."
  "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion")
  )
 
-;;;;; Quickly add custom tags
+;;;;; Toggle custom tag keybinds
 (with-eval-after-load 'elfeed
-  (defalias 'kb/elfeed-search-tag-all-input
-    (elfeed-expose #'elfeed-search-tag-all 'input)
-    "Add the `input' tag to all selected entries.")
-  (defalias 'kb/elfeed-search-untag-all-input
-    (elfeed-expose #'elfeed-search-untag-all 'input)
-    "Remove the `input' tag from all selected entries.")
+  (defun prot-elfeed-toggle-tag (tag)
+    "Toggle TAG for the current item.
 
-  (defalias 'kb/elfeed-search-tag-all-done
-    (elfeed-expose #'elfeed-search-tag-all 'done)
-    "Add the `done' tag to all selected entries.")
-  (defalias 'kb/elfeed-search-untag-all-done
-    (elfeed-expose #'elfeed-search-untag-all 'done)
-    "Remove the `done' tag from all selected entries.")
+When the region is active in the `elfeed-search-mode' buffer, all
+entries encompassed by it are affected.  Otherwise the item at
+point is the target.  For `elfeed-show-mode', the current entry
+is always the target.
 
-  (defalias 'kb/elfeed-search-tag-all-cancelled
-    (elfeed-expose #'elfeed-search-tag-all 'cancelled)
-    "Add the `cancelled' tag to all selected entries.")
-  (defalias 'kb/elfeed-search-tag-all-cancelled
-    (elfeed-expose #'elfeed-search-untag-all 'cancelled)
-    "Remove the `cancelled' tag from all selected entries.")
+The list of tags is provided by `prot-elfeed-search-tags'."
+    (interactive
+     (list
+      (intern
+       ;; (prot-elfeed--character-prompt prot-elfeed-search-tags))))
+       ;; (prot-elfeed--character-prompt prot-elfeed-search-tags)
+       (car (completing-read-multiple
+             "Apply one or more tags: "
+             (delete-dups (append (mapcar (lambda (tag)
+                                            (format "%s" tag))
+                                          (elfeed-db-get-all-tags))
+                                  ))
+             #'prot-common-crm-exclude-selected-p t)
+            ;; (prot-elfeed-search-tag-filter)
+            ))
+      ))
+    (if (derived-mode-p 'elfeed-show-mode)
+        (if (elfeed-tagged-p tag elfeed-show-entry)
+            (elfeed-show-untag tag)
+          (elfeed-show-tag tag))
+      (elfeed-search-toggle-all tag))
+    )
 
-  (general-define-key
-   :keymaps 'elfeed-search-mode-map
+  (general-define-key ; Search keymap
+   :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
    :states '(visual normal motion)
-   "i" 'kb/elfeed-search-tag-all-input
-   "I" 'kb/elfeed-search-untag-all-input
-   "d" 'kb/elfeed-search-tag-all-done
-   "D" 'kb/elfeed-search-untag-all-done
-   "c" 'kb/elfeed-search-tag-all-cancelled
-   "C" 'kb/elfeed-search-untag-all-cancelled
+   "a" '((lambda () (interactive) (prot-elfeed-toggle-tag 'archive)) :which-key "Add archive tag")
+   "i" '((lambda () (interactive) (prot-elfeed-toggle-tag 'input)) :which-key "Add input tag")
+   "d" '((lambda () (interactive) (prot-elfeed-toggle-tag 'done)) :which-key "Add done tag")
+   "c" '((lambda () (interactive) (prot-elfeed-toggle-tag 'cancelled)) :which-key "Add cancelled tag")
    )
   )
 
