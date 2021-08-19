@@ -7,6 +7,9 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'custom-directories-rcp)
 
 ;;;; Rename/move current file
 (defun kb/move-this-file (new-path &optional force-p)
@@ -369,15 +372,16 @@ specified by `prot-comment-timestamp-format-verbose'."
 
 ;; Call this function before every save in an org file. Don't do this for
 ;; org-agenda files - it makes it ugly
-(require 'custom-directories-rcp)
-(add-hook 'before-save-hook (lambda ()
-                              (if (and
-                                   (eq major-mode 'org-mode) ; Org-mode
-                                   (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
-                                   (not (string-equal buffer-file-name (expand-file-name "seedbox.org" org-roam-directory)))) ; Not seedbox
-                                  (let ((current-prefix-arg 4)) ; Emulate C-u
-                                    (call-interactively 'unpackaged/org-add-blank-lines)))
-                              ))
+(with-eval-after-load 'org-roam-general-rcp
+  (add-hook 'before-save-hook (lambda ()
+                                (if (and
+                                     (eq major-mode 'org-mode) ; Org-mode
+                                     (not (string-equal default-directory (expand-file-name kb/agenda-dir)))) ; Not agenda-dir
+                                    (let ((current-prefix-arg 4)) ; Emulate C-u
+                                      (call-interactively 'unpackaged/org-add-blank-lines)))
+                                ))
+  )
+
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'convenient-functions-rcp)
