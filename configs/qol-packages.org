@@ -5,22 +5,20 @@
 Have more descriptive and helpful function and variable descriptions
 #+BEGIN_SRC emacs-lisp
   (use-package helpful
-    :after (evil evil-collection)
     :demand t ; Don't wait for the binded keys
-    :config
-    (general-define-key; Remap all default help commands to helpful
-     [remap describe-function] 'helpful-callable ; Emacs' describe-function includes both functions and macros
+    :after (evil evil-collection)
+    :general
+    ;; Remap all default help commands to helpful
+    ([remap describe-function] 'helpful-callable ; Emacs' describe-function includes both functions and macros
      [remap describe-command] 'helpful-command
      [remap describe-variable] 'helpful-variable
      [remap describe-symbol] 'helpful-symbol
      [remap describe-key] 'helpful-key
      )
-  
     (general-define-key
-     :states '(visual normal)
+     :states '(visual normal motion)
      "K" 'helpful-at-point
      )
-  
     (kb/leader-keys
       "hk" '(helpful-key :which-key "Desc key")
       )
@@ -42,6 +40,7 @@ Save and restore point in files
 Saveplace but with listings
 #+begin_src emacs-lisp
   (use-package dogears
+    :disabled t ; For now
     :straight (dogears :type git :host github :repo "alphapapa/dogears.el")
     :hook (after-init . dogears-mode)
     :custom
@@ -82,6 +81,26 @@ Saveplace but with listings
       "bd" '(dogears-go :which-key "Dogears go")
       "bD" '(dogears-list :which-key "Dogears list")
       )
+    )
+#+end_src
+
+* Display-line-numbers-mode
+
+Display line numbers
+#+begin_src emacs-lisp
+  (use-package display-line-numbers
+    :ghook 'prog-mode-hook 'LaTeX-mode-hook
+    :custom
+    (display-line-numbers-type 'relative)
+    :config
+    (column-number-mode) ; Column number in modeline
+  
+    ;; Disabled for these
+    (general-add-hook
+     '(org-mode-hook
+       shell-mode-hook
+       eshell-mode-hook)
+     (display-line-numbers-mode 0))
     )
 #+end_src
 
@@ -335,6 +354,16 @@ Quickly jump to characters
     (general-define-key
      "M-a" '(ace-jump-mode :which-key "Ace-jump")
      )
+    )
+#+end_src
+
+* Size-indication-mode
+
+Show file-size
+#+begin_src emacs-lisp
+  (use-package simple
+    :straight nil
+    :hook (after-init. size-indication-mode)
     )
 #+end_src
 

@@ -2,17 +2,32 @@
 ;;
 ;;; Commentary:
 ;;
-;; Elfeed RSS reader configuration
+;; Elfeed RSS reader configuration.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Elfeed
 (use-package elfeed
-  :hook (elfeed-search-mode . (lambda ()
-                                (display-line-numbers-mode 1)
-                                (setq-local display-line-numbers t)
-                                ))
+  :hook ((elfeed-search-mode . (lambda ()
+                                 (display-line-numbers-mode 1)
+                                 (setq-local display-line-numbers t)
+                                 ))
+         (elfeed-search-update . elfeed-apply-autotags-now) ; Apply the appropriate autotags to already existing entries
+         )
+  :general
+  (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+            :states 'normal
+            [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
+            "L" '((lambda ()
+                    (interactive)
+                    (elfeed-goodies/toggle-logs)
+                    (other-window 1))
+                  :which-key "Elfeed logs"))
+  (kb/leader-keys
+    "or" '(elfeed :which-key "Elfeed"))
   :custom
   ;; Give time for long updates to complete
   (elfeed-use-curl t)
@@ -30,7 +45,6 @@
   (elfeed-feeds '())
   (elfeed-search-filter "+unread")
   (elfeed-initial-tags '(unread))
-  :config
   ;; Tag hooks
   (setq elfeed-new-entry-hook
         `(;; Status tags
@@ -49,22 +63,6 @@
    :states '(normal visual motion)
    "S" 'elfeed-search-clear-filter
    )
-
-  (general-define-key
-   :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-   :states 'normal
-   [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
-   "L" '((lambda ()
-           (interactive)
-           (elfeed-goodies/toggle-logs)
-           (other-window 1)
-           )
-         :which-key "Elfeed logs")
-   )
-
-  (kb/leader-keys
-    "or" '(elfeed :which-key "Elfeed")
-    )
   )
 
 ;;;; QoL
@@ -175,7 +173,7 @@ fail on poorly-designed websites."
         '((pre . eww-tag-pre)))
   )
 
-;;;;; Search completion
+;;;;; Custom search completion
 (defun prot-common-crm-exclude-selected-p (input)
   "Filter out INPUT from `completing-read-multiple'.
 Hide non-destructively the selected entries from the completion
@@ -224,12 +222,10 @@ minibuffer with something like `exit-minibuffer'."
       (setq elfeed-search-filter input))
     (elfeed-search-update :force))
   )
-
 (general-define-key
  :keymaps 'elfeed-search-mode-map
  :states 'normal
- "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion")
- )
+ "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion"))
 
 ;;;;; Toggle custom tag keybinds
 (with-eval-after-load 'elfeed
@@ -285,6 +281,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 ;;;; Ancillary
 ;;;;; Elfeed-org
 (use-package elfeed-org
+  :requires elfeed
   :after elfeed
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")
@@ -296,7 +293,12 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 
 ;;;;; Elfeed-goodies
 (use-package elfeed-goodies
+  :requires elfeed
   :after elfeed
+  :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+                     :states 'normal
+                     "K" 'elfeed-goodies/split-show-prev
+                     "J" 'elfeed-goodies/split-show-next)
   :custom
   (elfeed-goodies/feed-source-column-width 25)
   (elfeed-goodies/tag-column-width 40)

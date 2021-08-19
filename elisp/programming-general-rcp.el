@@ -131,7 +131,6 @@
       ))
   (advice-add #'magit-mode-quit-window :override #'kb/magit-mode-quit-window)
 
-
   (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
 
   (kb/leader-keys
@@ -409,6 +408,7 @@
 
   (kb/leader-keys
     "lf" '(consult-flycheck :which-key "List flycheck errors")
+    "lF" '(flycheck-list-errors :which-key "List flycheck errors")
     )
   )
 

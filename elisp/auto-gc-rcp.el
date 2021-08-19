@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Set better garbage collection timing
+;; Faster startup from better garbage collection timing.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -13,12 +13,9 @@
 
   If you experience freezing, decrease this. If you experience stuttering,
   increase this.")
+(add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold better-gc-cons-threshold)))
 
-(add-hook 'emacs-startup-hook (lambda ()
-                                (setq gc-cons-threshold better-gc-cons-threshold)
-                                ))
-
-;;;; AutoGC
+;;;; Restore GC threshold
 ;; Garbage Collect when Emacs is out of focus and try to avoid garbage
 ;; collection when using minibuffer
 (defun gc-minibuffer-setup-hook ()
@@ -29,13 +26,12 @@
   (garbage-collect)
   (setq gc-cons-threshold better-gc-cons-threshold))
 
-(add-hook 'emacs-startup-hook (lambda ()
-                                (add-hook 'after-focus-change-hook (lambda () (unless (frame-focus-state)
-                                                                                    (garbage-collect))
-                                                                         ))
-                                (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
-                                (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
-                                ))
+(add-hook 'after-focus-change-hook (lambda ()
+                                     (unless (frame-focus-state)
+                                       (garbage-collect))
+                                     ))
+(add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
 
 ;;; auto-gc-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
