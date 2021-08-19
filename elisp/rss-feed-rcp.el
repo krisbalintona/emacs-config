@@ -269,12 +269,17 @@ The list of tags is provided by `prot-elfeed-search-tags'."
     )
 
   (general-define-key ; Search keymap
+   :keymaps 'elfeed-show-mode-map
+   :states '(visual normal motion)
+   "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Add archive tag")
+   )
+  (general-define-key
    :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
    :states '(visual normal motion)
-   "a" '((lambda () (interactive) (prot-elfeed-toggle-tag 'archive)) :which-key "Add archive tag")
-   "i" '((lambda () (interactive) (prot-elfeed-toggle-tag 'input)) :which-key "Add input tag")
-   "d" '((lambda () (interactive) (prot-elfeed-toggle-tag 'done)) :which-key "Add done tag")
-   "c" '((lambda () (interactive) (prot-elfeed-toggle-tag 'cancelled)) :which-key "Add cancelled tag")
+   "a" '((lambda () (interactive) (prot-elfeed-toggle-tag 'archive)) :which-key "Toggle archive tag")
+   "i" '((lambda () (interactive) (prot-elfeed-toggle-tag 'input)) :which-key "Toggle input tag")
+   "d" '((lambda () (interactive) (prot-elfeed-toggle-tag 'done)) :which-key "Toggle done tag")
+   "c" '((lambda () (interactive) (prot-elfeed-toggle-tag 'cancelled)) :which-key "Toggle cancelled tag")
    )
   )
 
