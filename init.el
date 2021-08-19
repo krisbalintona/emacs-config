@@ -65,7 +65,7 @@
 (require 'buffer-and-window-management-rcp)
 
 ;;;;; Org
-(org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
+(require 'org-general-rcp)
 
 ;; (require 'org-agenda-general-rcp)
 ;; (require 'org-agenda-views-rcp)
