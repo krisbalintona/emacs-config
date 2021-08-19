@@ -350,6 +350,31 @@
                             ("DEADLINE:" . "")))
   )
 
+;;;; Ace-window
+(use-package ace-window
+  :general ("M-w" '(ace-window :which-key "Ace window"))
+  :custom
+  (aw-scope 'visible)
+  (aw-background t)
+  (aw-dispatch-always nil)
+  (aw-minibuffer-flag t)
+  (aw-keys '(?h ?j ?k ?l ?H ?J ?K ?L))
+  (aw-dispatch-alist
+   '((?x aw-delete-window "Delete Window")
+     (?m aw-swap-window "Swap Windows")
+     (?M aw-move-window "Move Window")
+     (?c aw-copy-window "Copy Window")
+     (?j aw-switch-buffer-in-window "Select Buffer")
+     (?n aw-flip-window)
+     (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
+     (?c aw-split-window-fair "Split Fair Window")
+     (?v aw-split-window-vert "Split Vert Window")
+     (?b aw-split-window-horz "Split Horz Window")
+     (?o delete-other-windows "Delete Other Windows")
+     (?? aw-show-dispatch-help))
+   )
+  )
+
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'misc-packages-rcp)
