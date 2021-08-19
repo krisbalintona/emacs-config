@@ -376,4 +376,4 @@ specified by `prot-comment-timestamp-format-verbose'."
                               ))
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'conventient-functions-rcp)
+(provide 'convenient-functions-rcp)
