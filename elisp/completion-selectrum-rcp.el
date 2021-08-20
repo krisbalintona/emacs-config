@@ -138,21 +138,6 @@
    )
   )
 
-;;;; Embark
-;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
-;; thus selectrum!)
-(use-package embark
-  :after which-key ; Because I replace its value of `prefix-help-command'
-  :general
-  ("M-o" '(embark-act :which-key "Embark-act"))
-  (kb/leader-keys
-    "hb" '(embark-bindings :which-key "Embark-bindings")
-    )
-  :custom
-  ;; Optionally replace the key help with a completing-read interface
-  (prefix-help-command #'embark-prefix-help-command)
-  )
-
 ;;;; Embark-consult
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult

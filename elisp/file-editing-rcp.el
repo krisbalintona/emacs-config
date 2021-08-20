@@ -74,15 +74,6 @@
   )
 
 ;;;; Other
-;;;;; Anzu
-;; Adds highlight face during replace and regexp
-(use-package anzu
-  :ghook ('after-init-hook 'global-anzu-mode)
-  :general ([remap query-replace] 'anzu-query-replace-regexp)
-  :custom
-  (anzu-cons-mode-line-p nil)
-  )
-
 ;;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
@@ -92,6 +83,30 @@
     "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
     "fu" '(sudo-edit :which-key "Sudo this file")
     )
+  )
+
+;;;;; Anzu
+;; Adds highlight face during replace and regexp
+(use-package anzu
+  :ghook ('after-init-hook 'global-anzu-mode)
+  :general ([remap query-replace] 'anzu-query-replace-regexp)
+  :custom
+  (anzu-cons-mode-line-p nil)
+  )
+
+;;;;; Embark
+;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
+;; thus selectrum!)
+(use-package embark
+  :after which-key ; Because I replace its value of `prefix-help-command'
+  :general
+  ("M-o" '(embark-act :which-key "Embark-act"))
+  (kb/leader-keys
+    "hb" '(embark-bindings :which-key "Embark-bindings")
+    )
+  :custom
+  ;; Optionally replace the key help with a completing-read interface
+  (prefix-help-command #'embark-prefix-help-command)
   )
 
 ;;; file-editing-rcp.el ends here
