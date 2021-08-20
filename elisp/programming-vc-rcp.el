@@ -68,7 +68,7 @@
   ;; Prefer these to be nil for performance boosts
   (magit-diff-highlight-indentation t) ; Highlight wrong indentation?
   (magit-diff-highlight-trailing t) ; Highlight trailing spaces?
-  (magit-diff-paint-whitespace 'uncommitted) ; Where to highlight whitespace errors?
+  (magit-diff-paint-whitespace 'nil) ; Where to highlight whitespace errors?
   (magit-diff-highlight-hunk-body t) ; Highlight hunks?
   (magit-diff-refine-hunk t) ; Extra-highlight word-level differences?
   :config
