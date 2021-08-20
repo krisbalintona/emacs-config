@@ -36,15 +36,6 @@
 (use-package eyebrowse
   :ghook 'after-init-hook
   :general
-  (:states '(visual normal motion)
-           "gt" 'eyebrowse-next-window-config
-           "ga" 'eyebrowse-prev-window-config
-           "gz" 'eyebrowse-last-window-config
-           )
-  (:keymaps 'eyebrowse-mode-map
-            "C-c C-w r" 'eyebrowse-rename-window-config
-            "C-c C-w c" 'eyebrowse-close-window-config
-            )
   ("M-1" 'eyebrowse-switch-to-window-config-1
    "M-2" 'eyebrowse-switch-to-window-config-2
    "M-3" 'eyebrowse-switch-to-window-config-3
@@ -56,6 +47,16 @@
    "M-9" 'eyebrowse-switch-to-window-config-9
    "M-0" 'eyebrowse-switch-to-window-config-0
    )
+  (:states '(visual normal motion)
+           "gt" 'eyebrowse-next-window-config
+           "ga" 'eyebrowse-prev-window-config
+           "gz" 'eyebrowse-last-window-config
+           )
+  (:keymaps 'eyebrowse-mode-map
+            :prefix "C-c C-w"
+            "r" 'eyebrowse-rename-window-config
+            "c" 'eyebrowse-close-window-config
+            )
   :custom
   (eyebrowse-default-workspace-slot 0) ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c C-w"))
