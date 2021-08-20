@@ -84,7 +84,7 @@ fail on poorly-designed websites."
  "e" '(prot-elfeed-show-eww :which-key "Show in EWW")
  )
 
-(add-hook 'eww-mode-hook '(lambda () (visual-fill-column-mode) (mixed-pitch-mode)))
+(add-hook 'eww-mode-hook #'(lambda () (visual-fill-column-mode) (mixed-pitch-mode)))
 
 ;;;;; Language-detection
 ;; Detects language of current buffer
@@ -280,22 +280,20 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 (use-package elfeed-org
   :requires elfeed
   :after elfeed
-  :ghook ('after-init-hook 'elfeed-org)
   :custom
-  (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")
-                          ))
+  (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")))
   (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
+  :config (general-advice-add 'elfeed :after 'elfeed-org nil t)
   )
 
 ;;;;; Elfeed-goodies
 (use-package elfeed-goodies
   :requires elfeed
-  :after elfeed
-  :ghook ('after-init-hook 'elfeed-goodies/setup t nil t)
+  :after (elfeed elfeed-org)
   :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
                      :states 'normal
-                     "K" 'elfeed-goodies/split-show-prev
-                     "J" 'elfeed-goodies/split-show-next)
+                     "p" 'elfeed-goodies/split-show-prev
+                     "n" 'elfeed-goodies/split-show-next)
   :custom
   (elfeed-goodies/feed-source-column-width 25)
   (elfeed-goodies/tag-column-width 40)
