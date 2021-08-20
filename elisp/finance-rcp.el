@@ -29,7 +29,7 @@
             [remap consult-flycheck] '(list-flycheck-errors :which-key "List flycheck errors")
             )
   (:keymaps 'ledger-mode-map
-            :state 'insert
+            :states 'insert
             "TAB" 'tab-to-tab-stop
             )
   (kb/leader-keys
