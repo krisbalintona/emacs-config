@@ -107,7 +107,7 @@
   :config
   (kb/leader-keys
     "p" '(:ignore t :which-key "Project")
-    "pF"  '(project-find-file :which-key "Project find file")
+    "pf"  '(project-find-file :which-key "Project find file")
     "pp"  '(project-switch-project :which-key "Project.el switch project")
     "pb"  '(project-switch-to-buffer :which-key "Project switch to buffer")
     "pD"  '(project-dired :which-key "Project dired")

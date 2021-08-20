@@ -102,7 +102,7 @@
     "iy" '(consult-yank-pop :which-key "Consult yank-pop")
     ;; ("C-x r x" . consult-register)
     "ha" '(consult-apropos :which-key "Consult apropos")
-    "pf" '(consult-find :which-key "Consult find file")
+    "pF" '(consult-find :which-key "Consult find file")
     "ps" '(consult-ripgrep :which-key "Consult rg")
     )
   :custom
