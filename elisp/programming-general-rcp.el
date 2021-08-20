@@ -190,28 +190,6 @@
     )
   )
 
-;;;; Other
-;;;;; Scratch.el
-;; Easily create scratch buffers for different modes
-(use-package scratch
-  ;; :demand t ; For the initial scratch buffer at startup
-  :hook (scratch-create-buffer . kb/scratch-buffer-setup)
-  :general ("C-c s" '(scratch :which-key "Create scratch"))
-  :preface
-  (defun kb/scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly. Taken from https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
-    (let* ((mode (format "%s" major-mode))
-           (string (concat "Scratch buffer for: " mode "\n\n")))
-      (when scratch-buffer
-        (save-excursion
-          (insert string)
-          (goto-char (point-min))
-          (comment-region (point-at-bol) (point-at-eol)))
-        (forward-line 2))
-      (rename-buffer (concat "*Scratch for " mode "*") t))
-    )
-  )
-
 ;;; programming-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-general-rcp)
