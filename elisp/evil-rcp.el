@@ -69,7 +69,7 @@
   :demand t ; Load now or it won't
   :requires evil
   :after evil
-  :hook (evil-mode . evil-collection-init)
+  :ghook ('evil-mode-hook 'evil-collection-init)
   :custom
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
