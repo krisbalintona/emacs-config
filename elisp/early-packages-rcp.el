@@ -98,19 +98,20 @@
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :general
-  ;; Remap all default help commands to helpful
-  ([remap describe-function] 'helpful-callable ; Emacs' describe-function includes both functions and macros
-   [remap describe-command] 'helpful-command
-   [remap describe-variable] 'helpful-variable
-   [remap describe-symbol] 'helpful-symbol
-   [remap describe-key] 'helpful-key
+  ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
+  ;; macros
+  ([remap describe-function] '(helpful-callable :which-key "Helpful function")
+   [remap describe-command] '(helpful-command :which-key "Helpful command")
+   [remap describe-variable] '(helpful-variable :which-key "Helpful variable")
+   [remap describe-symbol] '(helpful-symbol :which-key "Helpful symbol")
+   [remap describe-key] '(helpful-key :which-key "Helpful key")
    )
   (:states '(visual normal motion)
            "K" 'helpful-at-point
            )
   (kb/leader-keys
     "hk" '(helpful-key :which-key "Desc key")
-    )
+    "hc" '(helpful-command :which-key "Helpful command"))
   )
 
 ;;; early-packages-rcp.el ends here
