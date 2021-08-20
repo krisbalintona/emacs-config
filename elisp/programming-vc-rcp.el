@@ -139,47 +139,19 @@
 ;;;;; Git-gutter-fringes
 ;; Indicate diff areas in fringe
 (use-package git-gutter-fringe
-  :ghook ('prog-mode-hook 'git-gutter-mode)
+  :demand t ; Need or this won't load and set bitmaps correctly
+  :hook (window-configuration-change . git-gutter:update-all-windows)
+  :ghook ('after-init-hook 'global-git-gutter-mode)
   :custom
-  (git-gutter:disabled-modes '(org-mode))
+  (left-fringe-width 16)
+  (right-fringe-width 3)
   (git-gutter-fr:side 'left-fringe)
+  (git-gutter:update-interval 0)
+  (git-gutter:disabled-modes '(org-mode))
   :config
-  (setq-default left-fringe-width  10)
-  (setq-default right-fringe-width 10)
-
-  ;; (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center t))
-  ;; (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil 'bottom)
-  ;; (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center t))
-
-  ;; TODO 2021-08-19: Change these bitmaps (and associated fringe width) to be
-  ;; more appealing
-  (fringe-helper-define 'git-gutter-fr:added nil
-    ".XXXXXX."
-    "XX....XX"
-    "X......X"
-    "X......X"
-    "XXXXXXXX"
-    "XXXXXXXX"
-    "X......X"
-    "X......X")
-  (fringe-helper-define 'git-gutter-fr:deleted nil
-    "XXXXXX.."
-    "XX....X."
-    "XX.....X"
-    "XX.....X"
-    "XX.....X"
-    "XX.....X"
-    "XX....X."
-    "XXXXXX..")
-  (fringe-helper-define 'git-gutter-fr:modified nil
-    "XXXXXXXX"
-    "X..XX..X"
-    "X..XX..X"
-    "X..XX..X"
-    "X..XX..X"
-    "X..XX..X"
-    "X..XX..X"
-    "X..XX..X")
+  (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t))
+  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
   )
 
 ;;;;; Git-timemachine

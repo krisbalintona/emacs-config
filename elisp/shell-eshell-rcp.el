@@ -18,8 +18,6 @@
   'visual-line-mode
   '(lambda () (set-display-table-slot standard-display-table 0 ?\ )
      ;; Text-wrap
-     (set-window-fringes nil 0 0)
-     (set-window-margins nil 1 nil)
      (face-remap-add-relative 'default :height 127) ; Change default face size
      (setq-local scroll-margin 3) ; Scroll-margin
      )

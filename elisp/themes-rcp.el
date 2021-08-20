@@ -19,9 +19,6 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
-;;;;; Thinner vertical fringes
-(fringe-mode '(5 . 5))
-
 ;;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line)
