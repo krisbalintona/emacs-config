@@ -8,6 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
+(require 'personal-variables-rcp)
 
 ;;;; Flycheck
 ;; Check your code
@@ -45,6 +46,8 @@
     (async-shell-command "sudo apt install yarn"))
   (unless (executable-find "java")
     (async-shell-command "sudo apt install default-jdk"))
+    ;; TODO 2021-08-20: This statement currently only works with Fedora. Change
+    ;; to be compatible with other distributions.
   )
 
 ;;;; Flycheck-pos-tip-mode
