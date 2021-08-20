@@ -77,12 +77,11 @@
 ;;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
-  :ghook ('after-init 'sudo-edit-indicator-mode)
-  :general
-  (kb/leader-keys
-    "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
-    "fu" '(sudo-edit :which-key "Sudo this file")
-    )
+  :hook (after-init . sudo-edit-indicator-mode)
+  :general (kb/leader-keys
+             "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
+             "fu" '(sudo-edit :which-key "Sudo this file")
+             )
   )
 
 ;;;;; Anzu
