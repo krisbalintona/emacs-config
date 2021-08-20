@@ -69,7 +69,6 @@
   :demand t ; Load now or it won't
   :requires evil
   :after evil
-  :ghook ('evil-mode-hook 'evil-collection-init)
   :custom
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
@@ -94,6 +93,8 @@
                (ztree ztree-diff)
                xwidget)
    )
+  :config
+  (evil-collection-init) ; Load immediately so other keybind calls won't be overridden in config
   )
 
 ;;;; Evil-commentary

@@ -26,8 +26,7 @@
   (lua-indent-string-contents t) ; Contents of a multiline string will be indented
   :general (:keymaps 'lua-mode-map ; Lua-mode overwrites my eyebrowse-last-window-config binding
                      :states '(motion normal visual)
-                     "gz" 'eyebrowse-last-window-config
-                     )
+                     "gz" 'eyebrowse-last-window-config)
   )
 
 ;;;; Company-lua
