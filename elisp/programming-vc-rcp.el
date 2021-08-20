@@ -15,6 +15,7 @@
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
   :straight (magit :type git :host github :repo "magit/magit")
+  :commands magit-add-section-hook
   :hook (magit-process-mode . visual-line-mode)
   :general
   (kb/leader-keys
@@ -68,11 +69,13 @@
   ;; Prefer these to be nil for performance boosts
   (magit-diff-highlight-indentation t) ; Highlight wrong indentation?
   (magit-diff-highlight-trailing t) ; Highlight trailing spaces?
-  (magit-diff-paint-whitespace 'nil) ; Where to highlight whitespace errors?
+  (magit-diff-paint-whitespace nil) ; Where to highlight whitespace errors?
   (magit-diff-highlight-hunk-body t) ; Highlight hunks?
   (magit-diff-refine-hunk t) ; Extra-highlight word-level differences?
-  :init (require 'magit-extras) ; Provides useful functionality, such as `magit-project-status'
   :config
+  ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
+  (require 'magit-extras) ; Load the remaining magit libraries
+
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules-overview ; Have modules section
                           'magit-insert-status-headers ; Insert header sections for `magit-status'
