@@ -9,6 +9,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
+(require 'faces-rcp)
 
 ;;;; Manipulating text
 ;;;;; Expand-region
