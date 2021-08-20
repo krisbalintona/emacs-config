@@ -86,6 +86,9 @@
 ;;;;; Programmming
 (require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
+(require 'programming-vc-rcp)
+(require 'programming-linting-rcp)
+(require 'programming-ide-rcp)
 (require 'programming-elisp-rcp)
 (require 'programming-lua-rcp)
 (require 'programming-web-rcp)

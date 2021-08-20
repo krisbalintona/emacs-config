@@ -40,6 +40,12 @@
   :ghook 'prog-mode-hook
   )
 
+;;;;; Eros
+;; Overlay lisp evaluations into the current buffer (near cursor)
+(use-package eros
+  :ghook 'emacs-lisp-mode-hook
+  )
+
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-elisp-rcp)
