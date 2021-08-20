@@ -38,14 +38,7 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
-(use-package atom-one-dark-theme
-  :config
-  (custom-theme-set-faces
-   `atom-one-dark
-   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
-   `(bookmark-face ((t (:foreground nil :background nil))))
-   )
-  )
+(use-package atom-one-dark-theme)
 
 (use-package apropospriate-theme)
 
@@ -153,7 +146,6 @@
 ;;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  :ghook ('after-init-hook 'display-time-mode)
   :straight nil
   :ghook ('after-init-hook 'display-time-mode)
   :custom
