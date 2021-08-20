@@ -181,7 +181,7 @@
 ;; native completion support (pcomplete).
 (use-package fish-completion
   :ensure-system-package (fish)
-  :ghook ('after-init 'global-fish-completion-mode)
+  :ghook ('after-init-hook 'global-fish-completion-mode)
   )
 
 ;;;; Eshell-up
