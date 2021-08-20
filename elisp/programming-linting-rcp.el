@@ -17,6 +17,8 @@
   ;; linters)
   ;; :ensure-system-package ((npm . (concat "sudo " (kb/which-package-manager) " install npm"))
   ;;                         (yarn . (concat "sudo " (kb/which-package-manager) " install yarn"))
+  ;;                         (java . (concat "sudo " (kb/which-package-manager) " install default-jdk"))
+  ;;                         )
   :ghook ('after-init-mode 'global-flycheck-mode)
   :general
   (kb/leader-keys
@@ -41,6 +43,8 @@
     (async-shell-command "sudo apt install npm"))
   (unless (executable-find "yarn")
     (async-shell-command "sudo apt install yarn"))
+  (unless (executable-find "java")
+    (async-shell-command "sudo apt install default-jdk"))
   )
 
 ;;;; Flycheck-pos-tip-mode
