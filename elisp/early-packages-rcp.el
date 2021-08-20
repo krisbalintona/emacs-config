@@ -10,6 +10,12 @@
 (require 'personal-variables-rcp)
 (require 'keybinds-frameworks-rcp)
 
+;;;; Load custom file
+;; Set and load custom file.
+(with-eval-after-load 'no-littering
+  (setq custom-file (no-littering-expand-var-file-name "custom.el"))
+  (load custom-file))
+
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path
 (use-package exec-path-from-shell
@@ -58,8 +64,6 @@
   :custom
   (no-littering-etc-directory (expand-file-name "data/" user-emacs-directory)) ; Config files
   (no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-
-  (custom-file (no-littering-expand-etc-file-name "custom.el")) ; Set custom.el path
   (auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))) ; Store auto-saved files here
   :preface (require 'recentf)
   :config

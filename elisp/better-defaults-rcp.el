@@ -9,12 +9,6 @@
 (require 'use-package-rcp)
 (require 'early-packages-rcp)
 
-;;;; Load custom file
-;; Must be loaded after early-packages-rcp because that is where custom-file
-;; location is defined
-(when (file-exists-p custom-file)
-  (load custom-file))
-
 ;;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil                                                    ; Don't warn when opening large files
