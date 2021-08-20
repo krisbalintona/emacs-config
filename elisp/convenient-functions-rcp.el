@@ -267,6 +267,20 @@ specified by `prot-comment-timestamp-format-verbose'."
 
 (run-with-idle-timer 300 t 'kb/show-random-quotes)
 
+;;;; Run command and return output as string without newlines
+(defun kb/shell-command-to-string (command)
+  "Execute shell command COMMAND and return its output as a string, removing any
+newlines."
+  (let* ((str (with-output-to-string
+                (with-current-buffer
+                    standard-output
+                  (shell-command command t))))
+         (len (length str)))
+    (cond
+     ((and (> len 0) (eql (aref str (- len 1)) ?\n))
+      (substring str 0 (- len 1)))
+     (t str))
+    ))
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful

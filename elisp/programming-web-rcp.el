@@ -8,6 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
+(require 'convenient-functions-rcp)
 
 ;;;; Web-mode
 ;; Compatible with most template engines (e.g. handlebars mode, mustache) and
