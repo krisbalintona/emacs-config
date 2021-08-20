@@ -81,8 +81,7 @@
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general (:keymaps 'outshine-mode-map
-                     "C-x n s" 'outshine-narrow-to-subtree)
-  :preface (defvar outline-minor-mode-prefix (kbd "M-#"))
+                     "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :config
