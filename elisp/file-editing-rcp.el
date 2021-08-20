@@ -25,21 +25,36 @@
 ;;;;; Smartparens
 ;; Autopairing parentheses
 (use-package smartparens
-  :functions sp-fair
+  :commands sp-local-pair sp-pair
   :ghook ('after-init-hook 'smartparens-global-mode)
   :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
+  :general (:keymaps 'emacs-lisp-mode
+                     :states '(visual normal motion)
+                     [remap evil-forward-sentence-begin] 'sp-forward-sexp
+                     [remap evil-backward-sentence-begin] 'sp-backward-sexp)
   :custom
   (sp-show-pair-from-inside t)
   (sp-ignore-modes-list
    '(minibuffer-mode minibuffer-inactive-mode
                      ))
+  :config
   ;; TODO 2021-08-19: Determine how to do what I want in emacs-lisp-mode and
   ;; org-mode and how it interacts based on deleting, location (e.g. in comment
   ;; or not)--for writing and programming
-  ;; :config
-  ;; (sp-pair "'" nil :actions :rem) ; Don't pair '
-  ;; (sp-pair "'" :actions :rem) ; Don't pair '
-  ;; (sp-pair "`" "'" :when comment)
+
+  ;; Global
+  (sp-pair "(" ")" :actions '(autoskip navigate))
+  (sp-pair "\"" "\"" :actions '(autoskip navigate))
+
+  ;; emacs-lisp-mode
+  (sp-local-pair 'emacs-lisp-mode "'" nil)
+  (sp-local-pair 'emacs-lisp-mode "`" "'" :when '(nil nil comment))
+  (sp-local-pair 'emacs-lisp-mode "`" "'" :when '(nil nil string))
+
+  ;; org-mode
+  (when (featurep 'typo)
+    (sp-local-pair 'org-mode "“" "”")
+    (sp-local-pair 'org-mode "“" "”"))
   )
 
 ;;;; Quick movement
