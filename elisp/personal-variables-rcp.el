@@ -42,6 +42,18 @@
   (integerp (string-match "Arch" kb/linux-distribution))
   "Is this Arch Linux?")
 
+;;;; Return package manager
+(defun kb/which-package-manager (&optional sudo)
+  "Return the current system's package manager as a string."
+  (interactive)
+  (concat
+   (if sudo "sudo ")
+   (cond (kb/linux-arch "yay")
+         (kb/linux-fedora "dnf")
+         (kb/linux-ubuntu "apt")
+         (t "Unsupported distribution!"))
+   ))
+
 ;;; personal-variables-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'personal-variables-rcp)
