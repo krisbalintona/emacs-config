@@ -14,8 +14,8 @@
 ;;;;; Expand-region
 ;; Incrementally select a region outward
 (use-package expand-region
-  :general (:keymaps '(normal motion)
-            "ge" 'er/expand-region)
+  :general (:states '(normal motion)
+                    "ge" 'er/expand-region)
   :custom
   (expand-region-smart-cursor t)
   (expand-region-skip-whitespace nil)
@@ -46,7 +46,7 @@
 ;;;;; Ace-link
 ;; Open links easily
 (use-package ace-link
-  :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map)
+  :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map org-mode-map)
                      "M-/" '(ace-link :which-key "Ace-link")
                      )
   )
@@ -77,12 +77,11 @@
 ;;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
-  :ghook ('after-init 'sudo-edit-indicator-mode)
-  :general
-  (kb/leader-keys
-    "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
-    "fu" '(sudo-edit :which-key "Sudo this file")
-    )
+  :hook (after-init . sudo-edit-indicator-mode)
+  :general (kb/leader-keys
+             "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
+             "fu" '(sudo-edit :which-key "Sudo this file")
+             )
   )
 
 ;;;;; Anzu
