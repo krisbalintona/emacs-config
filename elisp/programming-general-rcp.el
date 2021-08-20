@@ -148,7 +148,7 @@
 ;;;;; Rainbow-mode
 ;; Colorify color codes
 (use-package rainbow-mode
-  :hook 'text-mode-hook 'prog-mode-hook
+  :ghook 'text-mode-hook 'prog-mode-hook
   )
 
 ;;;;; Highlight-defined
@@ -165,7 +165,7 @@
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
-  :hook 'emacs-lisp-mode-hook
+  :ghook 'emacs-lisp-mode-hook
   )
 
 ;;;; Other
