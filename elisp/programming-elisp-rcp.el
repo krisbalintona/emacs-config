@@ -45,6 +45,15 @@
   :ghook 'prog-mode-hook
   )
 
+;;;; Elisp-demos
+;; Add example code snippets to some of the help windows
+(use-package elisp-demos
+  :requires helpful
+  :commands elisp-demos-advice-helpful-update
+  :config
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
+  )
+
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-elisp-rcp)

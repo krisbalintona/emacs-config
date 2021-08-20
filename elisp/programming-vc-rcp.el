@@ -9,7 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
-;;;; Magit
+;;;; Version control
+;;;;; Magit
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
@@ -61,7 +62,7 @@
                           t)
   )
 
-;;;; Magit-log date headers
+;;;;; Magit-log date headers
 (with-eval-after-load 'magit
   ;; Add dates to magit-logs
   (straight-use-package 'ov) ; Dependency
@@ -107,7 +108,14 @@
   (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
   )
 
-;;;; Git-gutter-fringes
+;;;;; Ediff
+(use-package ediff
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
+  )
+
+;;;; QoL
+;;;;; Git-gutter-fringes
 ;; Indicate diff areas in fringe
 (use-package git-gutter-fringe
   :ghook ('prog-mode-hook 'git-gutter-mode)
@@ -153,11 +161,9 @@
     "X..XX..X")
   )
 
-;;;; Ediff
-(use-package ediff
-  :custom
-  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
-  )
+;;;;; Git-timemachine
+;; Enable in current buffer to iterate through git revision history
+(use-package git-timemachine)
 
 ;;; programming-vc-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

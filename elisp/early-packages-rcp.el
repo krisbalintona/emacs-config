@@ -94,6 +94,25 @@
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
   )
 
+;;;; Helpful
+;; Have more descriptive and helpful function and variable descriptions
+(use-package helpful
+  :general
+  ;; Remap all default help commands to helpful
+  ([remap describe-function] 'helpful-callable ; Emacs' describe-function includes both functions and macros
+   [remap describe-command] 'helpful-command
+   [remap describe-variable] 'helpful-variable
+   [remap describe-symbol] 'helpful-symbol
+   [remap describe-key] 'helpful-key
+   )
+  (:states '(visual normal motion)
+           "K" 'helpful-at-point
+           )
+  (kb/leader-keys
+    "hk" '(helpful-key :which-key "Desc key")
+    )
+  )
+
 ;;; early-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'early-packages-rcp)

@@ -9,6 +9,26 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
+;;;; Unicode-fonts
+;; Support unicode characters
+(use-package unicode-fonts
+  ;; `unicode-fonts-setup' is run rebuilds the disk cache during Emacs startup
+  ;; whenever a font is added or removed, or any relevant configuration
+  ;; variables are changed.
+  :hook ((server-after-make-frame . unicode-fonts-setup)
+         (window-setup . unicode-fonts-setup)
+         )
+  :custom
+  (unicode-fonts-skip-font-groups '(low-quality-glyphs))
+  )
+
+;;;; All-the-icons
+;; Provides a bunch of unicode icons which many other packages leverage
+(use-package all-the-icons
+  :custom
+  (all-the-icons-scale-factor 1.1)
+  )
+
 ;;;; Face definitions
 ;; Potential Fonts:
 ;; Default:
@@ -71,6 +91,10 @@
                  ace-jump-face-background
                  ))
   )
+
+;;;; Default-text-scale
+;; Text-scale-mode but Emacs-wide
+(use-package default-text-scale)
 
 ;;; faces-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
