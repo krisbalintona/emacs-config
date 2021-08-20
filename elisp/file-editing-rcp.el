@@ -46,7 +46,7 @@
 ;;;;; Ace-link
 ;; Open links easily
 (use-package ace-link
-  :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map)
+  :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map org-mode-map)
                      "M-/" '(ace-link :which-key "Ace-link")
                      )
   )
