@@ -18,10 +18,6 @@
          (elfeed-search-update . elfeed-apply-autotags-now) ; Apply the appropriate autotags to already existing entries
          )
   :general
-  (:keymaps 'elfeed-search-mode-map
-            :states '(normal visual motion)
-            "S" 'elfeed-search-clear-filter
-            )
   (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
             :states 'normal
             [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
