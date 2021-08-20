@@ -14,8 +14,8 @@
 ;;;;; Expand-region
 ;; Incrementally select a region outward
 (use-package expand-region
-  :general (:keymaps '(normal motion)
-            "ge" 'er/expand-region)
+  :general (:states '(normal motion)
+                    "ge" 'er/expand-region)
   :custom
   (expand-region-smart-cursor t)
   (expand-region-skip-whitespace nil)
