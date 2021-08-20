@@ -86,7 +86,7 @@
 
 ;;;;; Shells
 (require 'shell-eshell-rcp)
-;; (require 'shell-vterm-rcp)
+(require 'shell-vterm-rcp)
 
 ;;;;; Spelling and grammar
 (require 'checking-spelling-rcp)
