@@ -131,8 +131,8 @@
     (lambda (output checker buffer)
       (let ((pattern-errors (flycheck-parse-with-patterns output checker buffer)))
         (or pattern-errors
-           (when (> (length flycheck-ledger-zero-accounts) 0)
-             (flycheck-ledger--zero-error-parser output checker buffer)))))
+            (when (> (length flycheck-ledger-zero-accounts) 0)
+              (flycheck-ledger--zero-error-parser output checker buffer)))))
     :verify
     (lambda (checker)
       (let ((has-accounts (> (length flycheck-ledger-zero-accounts) 0)))

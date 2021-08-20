@@ -64,8 +64,8 @@
     `(setq ,NAME
            (lambda () (when ,FORM
                    (-> ,ICON
-                      (concat esh-section-delim ,FORM)
-                      (with-face ,@PROPS))))))
+                       (concat esh-section-delim ,FORM)
+                       (with-face ,@PROPS))))))
 
   (defun esh-acc (acc x)
     "Accumulator for evaluating and concatenating esh-sections."
