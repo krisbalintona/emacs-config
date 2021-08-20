@@ -179,7 +179,9 @@ specified by `prot-comment-timestamp-format-verbose'."
           (save-excursion (insert maybe-newline)))))
      (t
       (comment-indent t)
-      (insert (concat " " string))))))
+      (insert (concat " " string))))
+    (evil-insert-state) ; Immediately go into insert state
+    ))
 
 (kb/leader-keys
   "c" '(prot-comment-timestamp-keyword :which-key "Prot-comment")
