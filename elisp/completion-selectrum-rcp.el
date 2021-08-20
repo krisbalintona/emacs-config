@@ -83,6 +83,7 @@
     "le" '(consult-error :which-key "Consult error"))
   (kb/leader-keys
     :keymaps 'org-mode-map
+    :states '(normal visual motion)
     [remap consult-outline] '(consult-org-heading :which-key "Consult outline"))
   (kb/leader-keys
     "fr" '(consult-recent-file :which-key "Consult recent file")
