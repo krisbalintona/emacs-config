@@ -21,6 +21,11 @@
   (expand-region-skip-whitespace nil)
   (expand-region-subword-enabled t)
   )
+;;;;; Paren
+;; Highlight matching delimiters
+(use-package paren
+  :ghook ('after-init-hook 'show-paren-mode)
+  )
 
 ;;;;; Smartparens
 ;; Autopairing parentheses
