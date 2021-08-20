@@ -112,6 +112,7 @@
 (use-package ediff
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
+  (ediff-highlight-all-diffs nil) ; Only highlight currently selected diff
   )
 
 ;;;; QoL
