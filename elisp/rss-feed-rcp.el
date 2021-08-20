@@ -61,6 +61,38 @@
   (advice-add 'elfeed :after #'elfeed-update)
   )
 
+;;;; Complementary
+;;;;; Elfeed-org
+(use-package elfeed-org
+  :custom
+  (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")))
+  (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
+  :config (general-advice-add 'elfeed :after 'elfeed-org nil t)
+  )
+
+;;;;; Elfeed-goodies
+(use-package elfeed-goodies
+  :demand t
+  :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+                     :states 'normal
+                     "p" 'elfeed-goodies/split-show-prev
+                     "n" 'elfeed-goodies/split-show-next)
+  :custom
+  (elfeed-goodies/feed-source-column-width 25)
+  (elfeed-goodies/tag-column-width 40)
+  (elfeed-goodies/wide-threshold 0.4)
+
+  (elfeed-goodies/entry-pane-position 'bottom)
+  (elfeed-goodies/entry-pane-size 0.5)
+  :preface
+  ;; NOTE 2021-08-20: For some reason the manual `(require popwin)' called by
+  ;; `elfeed-goodies' doesn't work. So I call and require it here beforehand
+  ;; manually.
+  (straight-use-package 'popwin)
+  (require 'popwin)
+  :config (general-advice-add 'elfeed :after '(lambda () (elfeed-goodies/setup) (elfeed-search-update--force)) nil t)
+  )
+
 ;;;; QoL
 ;; Much is from https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
 
@@ -275,41 +307,6 @@ The list of tags is provided by `prot-elfeed-search-tags'."
    "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Toggle unread tag")
    "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk)) :which-key "Toggle junk tag")
    )
-  )
-
-;;;; Ancillary
-;;;;; Elfeed-org
-(use-package elfeed-org
-  :requires elfeed
-  :after elfeed
-  :custom
-  (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")))
-  (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
-  :config (general-advice-add 'elfeed :after 'elfeed-org nil t)
-  )
-
-;;;;; Elfeed-goodies
-(use-package elfeed-goodies
-  :requires elfeed
-  :after (elfeed elfeed-org)
-  :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-                     :states 'normal
-                     "p" 'elfeed-goodies/split-show-prev
-                     "n" 'elfeed-goodies/split-show-next)
-  :custom
-  (elfeed-goodies/feed-source-column-width 25)
-  (elfeed-goodies/tag-column-width 40)
-  (elfeed-goodies/wide-threshold 0.4)
-
-  (elfeed-goodies/entry-pane-position 'bottom)
-  (elfeed-goodies/entry-pane-size 0.5)
-  :preface
-  ;; NOTE 2021-08-20: For some reason the manual `(require popwin)' called by
-  ;; `elfeed-goodies' doesn't work. So I call and require it here beforehand
-  ;; manually.
-  (straight-use-package 'popwin)
-  (require 'popwin)
-  :config (general-advice-add 'elfeed :after 'elfeed-goodies/setup nil t)
   )
 
 ;;; rss-feed-rcp.el ends here
