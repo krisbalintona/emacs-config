@@ -301,6 +301,13 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 
   (elfeed-goodies/entry-pane-position 'bottom)
   (elfeed-goodies/entry-pane-size 0.5)
+  :preface
+  ;; NOTE 2021-08-20: For some reason the manual `(require popwin)' called by
+  ;; `elfeed-goodies' doesn't work. So I call and require it here beforehand
+  ;; manually.
+  (straight-use-package 'popwin)
+  (require 'popwin)
+  :config (general-advice-add 'elfeed :after 'elfeed-goodies/setup nil t)
   )
 
 ;;; rss-feed-rcp.el ends here
