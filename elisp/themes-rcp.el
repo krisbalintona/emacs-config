@@ -38,14 +38,7 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
-(use-package atom-one-dark-theme
-  :config
-  (custom-theme-set-faces
-   `atom-one-dark
-   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
-   `(bookmark-face ((t (:foreground nil :background nil))))
-   )
-  )
+(use-package atom-one-dark-theme)
 
 (use-package apropospriate-theme)
 
@@ -105,6 +98,8 @@
    `(org-checkbox ((t (:inherit fixed-pitch))) t)
    `(org-tag ((t (:height 153 :bold t :italic t))) t)
    `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
+   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
+   `(bookmark-face ((t (:foreground nil :background nil))))
    )
   ;; (custom-theme-set-faces ; Light theme
   ;;  (cdr (car heaven-and-hell-themes))
@@ -114,10 +109,8 @@
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
-  :hook ((window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
-         (server-after-make-frame . doom-modeline-mode)
-         (window-setup . doom-modeline-mode)
-         )
+  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
+  :ghook 'server-after-make-frame-hook 'window-setup-hook
   :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
   :custom
   ;; Modeline settings
@@ -153,8 +146,8 @@
 ;;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  :ghook ('after-init-hook 'display-time-mode)
   :straight nil
+  :ghook ('after-init-hook 'display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average nil) ; Don't show load average along with time

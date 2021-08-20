@@ -56,7 +56,7 @@
 ;; Enhance Ivy interface
 (use-package ivy-rich
   :after ivy
-  :hook (after-init . ivy-rich-mode)
+  :ghook 'after-init-hook
   :custom
   (ivy-rich-path-style 'abbrev) ; Abbreviate file names
   :config

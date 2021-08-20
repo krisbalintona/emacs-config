@@ -7,6 +7,9 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'custom-directories-rcp)
 
 ;;;; Rename/move current file
 (defun kb/move-this-file (new-path &optional force-p)
@@ -30,87 +33,31 @@
   "fR" '(kb/move-this-file :which-key "Rename current file")
   )
 
-;;;; Yank current buffer's file-path
-(defun kb/yank-buffer-filename ()
-  "Copy the current buffer's path to the kill ring."
+;;;; Aj-toggle-fold
+(defun aj-toggle-fold ()
+  "Toggle fold all lines larger than indentation on current line. Taken from https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159."
   (interactive)
-  (if-let (filename (or buffer-file-name (bound-and-true-p list-buffers-directory)))
-      (message (kill-new (abbreviate-file-name filename)))
-    (error "Couldn't find filename in current buffer")))
-
-(kb/leader-keys
-  "fy" '(kb/yank-buffer-filename :which-key "Yank file-path")
+  (let ((col 1))
+    (save-excursion
+      (back-to-indentation)
+      (setq col (+ 1 (current-column)))
+      (set-selective-display
+       (if selective-display nil (or col 1)))
+      ))
   )
-
-;;;; Kill
-;;;;; Kill all buffers
-(defun kb/kill-all-buffers ()
-  "Kill all existing buffers."
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
-
-;;;;; Kill this file
-(defun kb/delete-this-file (&optional path force-p)
-  "Delete PATH, kill its buffers and expunge it from vc/magit cache.
-
-      If PATH is not specified, default to the current buffer's file.
-
-      If FORCE-P, delete without confirmation."
-  (interactive
-   (list (buffer-file-name (buffer-base-buffer))
-         current-prefix-arg))
-  (let* ((path (or path (buffer-file-name (buffer-base-buffer))))
-         (short-path (abbreviate-file-name path)))
-    (unless (and path (file-exists-p path))
-      (user-error "Buffer is not visiting any file"))
-    (unless (file-exists-p path)
-      (error "File doesn't exist: %s" path))
-    (unless (or force-p (y-or-n-p (format "Really delete %S? " short-path)))
-      (user-error "Aborted"))
-    (let ((buf (current-buffer)))
-      (unwind-protect
-          (progn (delete-file path) t)
-        (if (file-exists-p path)
-            (error "Failed to delete %S" short-path)
-          ;; ;; Ensures that windows displaying this buffer will be switched to
-          ;; ;; real buffers (`doom-real-buffer-p')
-          ;; (doom/kill-this-buffer-in-all-windows buf t)
-          ;; (doom--update-files path)
-          (kill-this-buffer)
-          (message "Deleted %S" short-path))))))
-
-;;;;; Keybinds
-;; Keybinds for the aforementioned functions
-(general-define-key "C-x K" 'kill-this-buffer)
 (kb/leader-keys
-  "bK" '(kill-this-buffer :which-key "Kill current buffer") ; Sets keybinds for kill-this-buffer function
-  "fD" '(kb/delete-this-file :which-key "Delete current file")
-  "qQ" '(kb/kill-all-buffers :which-key "Kill all buffers")
-  )
+  "of" '(aj-toggle-fold :which-key "aj-toggle-fold"))
 
-;;;; Idle quote
-;; Display a random quote in the minibuffer after a certain amount of idle time.
-;; It's useful to get inspiration when stuck writing
-(defconst kb/quotes
-  '("You can't see paradise, if you don't pedal.  - Chicken Run "
-    "He who who says he can and he who says he can’t are both usually right ― Confucius"
-    "Why waste time proving over and over how great you are when you could be getting better? - Dweck The Mindset"
-    "You’re not a failure until you start to assign blame. - The legendary basketball coach John Wooden"
-    "I could hear my heart beating. I could hear everyone's heart. I could hear the human noise we sat there making, not one of us moving, not even when the room went dark. - Raymond Carver"
-    "A writer is a sum of their experiences. Go get some - Stuck in Love (2012)"
-    "If there is any one secret of success, it lies in the ability to get the other person's point of view and see things from that person's angle as well as from your own. - Henry Ford"
-    "People who can put themselves in the place of other people who can understand the workings of their minds, need never worry about what the future has in store for them. - Owen D. Young"
-    "Good quotes they can be useful for creative writers as well."
-    ))
-
-(defun kb/show-random-quotes ()
-  "Show random quotes to minibuffer."
+;;;; Indent whole buffer
+(defun kb/indent-whole-buffer ()
+  "Indent whole buffer."
   (interactive)
-  (message "%s" (nth (random (length kb/quotes))
-                     kb/quotes)
-           ))
-
-(run-with-idle-timer 300 t 'kb/show-random-quotes)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  (untabify (point-min) (point-max))
+  )
+(kb/leader-keys
+  "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer"))
 
 ;;;; Prot-comment
 ;; helper code from prot-common.el, which is `require'd by
@@ -238,6 +185,102 @@ specified by `prot-comment-timestamp-format-verbose'."
   "c" '(prot-comment-timestamp-keyword :which-key "Prot-comment")
   )
 
+;;;; Yank current buffer's file-path
+(defun kb/yank-buffer-filename ()
+  "Copy the current buffer's path to the kill ring."
+  (interactive)
+  (if-let (filename (or buffer-file-name (bound-and-true-p list-buffers-directory)))
+      (message (kill-new (abbreviate-file-name filename)))
+    (error "Couldn't find filename in current buffer")))
+
+(kb/leader-keys
+  "fy" '(kb/yank-buffer-filename :which-key "Yank file-path")
+  )
+
+;;;; Kill
+;;;;; Kill all buffers
+(defun kb/kill-all-buffers ()
+  "Kill all existing buffers."
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
+
+;;;;; Kill this file
+(defun kb/delete-this-file (&optional path force-p)
+  "Delete PATH, kill its buffers and expunge it from vc/magit cache.
+
+      If PATH is not specified, default to the current buffer's file.
+
+      If FORCE-P, delete without confirmation."
+  (interactive
+   (list (buffer-file-name (buffer-base-buffer))
+         current-prefix-arg))
+  (let* ((path (or path (buffer-file-name (buffer-base-buffer))))
+         (short-path (abbreviate-file-name path)))
+    (unless (and path (file-exists-p path))
+      (user-error "Buffer is not visiting any file"))
+    (unless (file-exists-p path)
+      (error "File doesn't exist: %s" path))
+    (unless (or force-p (y-or-n-p (format "Really delete %S? " short-path)))
+      (user-error "Aborted"))
+    (let ((buf (current-buffer)))
+      (unwind-protect
+          (progn (delete-file path) t)
+        (if (file-exists-p path)
+            (error "Failed to delete %S" short-path)
+          ;; ;; Ensures that windows displaying this buffer will be switched to
+          ;; ;; real buffers (`doom-real-buffer-p')
+          ;; (doom/kill-this-buffer-in-all-windows buf t)
+          ;; (doom--update-files path)
+          (kill-this-buffer)
+          (message "Deleted %S" short-path))))))
+
+;;;;; Keybinds
+;; Keybinds for the aforementioned functions
+(general-define-key "C-x K" 'kill-this-buffer)
+(kb/leader-keys
+  "bK" '(kill-this-buffer :which-key "Kill current buffer") ; Sets keybinds for kill-this-buffer function
+  "fD" '(kb/delete-this-file :which-key "Delete current file")
+  "qQ" '(kb/kill-all-buffers :which-key "Kill all buffers")
+  )
+
+;;;; Idle quote
+;; Display a random quote in the minibuffer after a certain amount of idle time.
+;; It's useful to get inspiration when stuck writing
+(defconst kb/quotes
+  '("You can't see paradise, if you don't pedal.  - Chicken Run "
+    "He who who says he can and he who says he can’t are both usually right ― Confucius"
+    "Why waste time proving over and over how great you are when you could be getting better? - Dweck The Mindset"
+    "You’re not a failure until you start to assign blame. - The legendary basketball coach John Wooden"
+    "I could hear my heart beating. I could hear everyone's heart. I could hear the human noise we sat there making, not one of us moving, not even when the room went dark. - Raymond Carver"
+    "A writer is a sum of their experiences. Go get some - Stuck in Love (2012)"
+    "If there is any one secret of success, it lies in the ability to get the other person's point of view and see things from that person's angle as well as from your own. - Henry Ford"
+    "People who can put themselves in the place of other people who can understand the workings of their minds, need never worry about what the future has in store for them. - Owen D. Young"
+    "Good quotes they can be useful for creative writers as well."
+    ))
+
+(defun kb/show-random-quotes ()
+  "Show random quotes to minibuffer."
+  (interactive)
+  (message "%s" (nth (random (length kb/quotes))
+                     kb/quotes)
+           ))
+
+(run-with-idle-timer 300 t 'kb/show-random-quotes)
+
+;;;; Run command and return output as string without newlines
+(defun kb/shell-command-to-string (command)
+  "Execute shell command COMMAND and return its output as a string, removing any
+newlines."
+  (let* ((str (with-output-to-string
+                (with-current-buffer
+                    standard-output
+                  (shell-command command t))))
+         (len (length str)))
+    (cond
+     ((and (> len 0) (eql (aref str (- len 1)) ?\n))
+      (substring str 0 (- len 1)))
+     (t str))
+    ))
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
@@ -369,15 +412,16 @@ specified by `prot-comment-timestamp-format-verbose'."
 
 ;; Call this function before every save in an org file. Don't do this for
 ;; org-agenda files - it makes it ugly
-(require 'custom-directories-rcp)
-(add-hook 'before-save-hook (lambda ()
-                              (if (and
-                                   (eq major-mode 'org-mode) ; Org-mode
-                                   (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
-                                   (not (string-equal buffer-file-name (expand-file-name "seedbox.org" org-roam-directory)))) ; Not seedbox
-                                  (let ((current-prefix-arg 4)) ; Emulate C-u
-                                    (call-interactively 'unpackaged/org-add-blank-lines)))
-                              ))
+(with-eval-after-load 'org-roam-general-rcp
+  (add-hook 'before-save-hook (lambda ()
+                                (if (and
+                                     (eq major-mode 'org-mode) ; Org-mode
+                                     (not (string-equal default-directory (expand-file-name kb/agenda-dir)))) ; Not agenda-dir
+                                    (let ((current-prefix-arg 4)) ; Emulate C-u
+                                      (call-interactively 'unpackaged/org-add-blank-lines)))
+                                ))
+  )
+
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'convenient-functions-rcp)

@@ -6,8 +6,9 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-
 (require 'general)
+(require 'keybinds-frameworks-rcp)
+
 ;;;; Lua-mode
 ;; Major-mode for the Lua language.
 ;; Install directions for system package described here:
@@ -23,25 +24,21 @@
 
   (lua-indent-level 2) ; lua-indent-level defaults to 3 otherwise. Madness.
   (lua-indent-string-contents t) ; Contents of a multiline string will be indented
-  :config
-  (general-define-key ; Lua-mode overwrites my eyebrowse-last-window-config binding
-   :keymaps 'lua-mode-map
-   :states '(motion normal visual)
-   "gz" 'eyebrowse-last-window-config
-   )
+  :general (:keymaps 'lua-mode-map ; Lua-mode overwrites my eyebrowse-last-window-config binding
+                     :states '(motion normal visual)
+                     "gz" 'eyebrowse-last-window-config
+                     )
   )
 
 ;;;; Company-lua
 ;; Company backend for Lua
 (use-package company-lua
   :after company
-  :config
-  (add-hook 'lua-mode-hook (lambda ()
-                             (setq-local company-backends '((company-lua
-                                                             company-etags
-                                                             company-dabbrev-code
-                                                             company-yasnippet)))
-                             ))
+  :gfhook
+  '(lambda () (setq-local company-backends '((company-lua
+                                         company-etags
+                                         company-dabbrev-code
+                                         company-yasnippet))))
   )
 
 ;;; programming-lua-rcp.el ends here

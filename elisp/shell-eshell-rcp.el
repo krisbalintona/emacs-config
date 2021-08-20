@@ -2,26 +2,30 @@
 ;;
 ;;; Commentary:
 ;;
-;; Eshell packages and their configuration
+;; Eshell-related packages and their configuration.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'general)
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Eshell
 (use-package esh-mode
   :straight nil
   :after shrink-path ; For a shorter directory name
-  :hook ((eshell-mode . (lambda () ; UI enhancements
-                          (visual-line-mode +1)
-                          (set-display-table-slot standard-display-table 0 ?\ )
-                          ;; Text-wrap
-                          (set-window-fringes nil 0 0)
-                          (set-window-margins nil 1 nil)
-                          (face-remap-add-relative 'default :height 127) ; Change default face size
-                          (setq-local scroll-margin 3) ; Scroll-margin
-                          ))
-         )
+  :gfhook
+  ;; UI enhancements
+  'visual-line-mode
+  '(lambda () (set-display-table-slot standard-display-table 0 ?\ )
+     ;; Text-wrap
+     (set-window-fringes nil 0 0)
+     (set-window-margins nil 1 nil)
+     (face-remap-add-relative 'default :height 127) ; Change default face size
+     (setq-local scroll-margin 3) ; Scroll-margin
+     )
+  :general (kb/leader-keys
+             "oE" '(eshell :which-key "Open eshell")
+             )
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-hist-ignoredups t)
@@ -31,6 +35,7 @@
   (eshell-glob-case-insensitive t)
   (eshell-error-if-no-glob t)
   (eshell-banner-message "Welcome to the shell, Onii-chan~ (◠﹏◠✿)\n")
+  :preface (defvaralias 'esh-mode-hook 'eshell-mode-hook) ; For more convenient `:gfhook'
   :config
   ;; Save history on eshell command
   (setq eshell-save-history-on-exit nil) ; Useless since only saves upon exiting eshell session
@@ -42,17 +47,6 @@
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t)))))
   (add-hook 'eshell-pre-command-hook #'eshell-append-history)
-
-  ;; (general-define-key
-  ;;  :keymaps 'eshell-mode-map ; For some reason this keymap isn't being recognized?
-  ;;  [remap evil-first-non-blank] 'eshell-bol ; Jump after the prompt
-  ;;  [remap eshell-previous-matching-input] 'consult-history ; Eshell history
-  ;;  "<home>" 'eshell-bol
-  ;;  )
-
-  (kb/leader-keys
-    "oE" '(eshell :which-key "Open eshell")
-    )
   )
 
 ;;;; Eshell prompt
@@ -70,8 +64,8 @@
     `(setq ,NAME
            (lambda () (when ,FORM
                    (-> ,ICON
-                       (concat esh-section-delim ,FORM)
-                       (with-face ,@PROPS))))))
+                      (concat esh-section-delim ,FORM)
+                      (with-face ,@PROPS))))))
 
   (defun esh-acc (acc x)
     "Accumulator for evaluating and concatenating esh-sections."
@@ -153,6 +147,9 @@
 ;;;; Eshell-toggle
 ;; Toggle eshell window in bottom of current buffer
 (use-package eshell-toggle
+  :general (kb/leader-keys
+             "oe" '(eshell-toggle :which-key "Toggle eshell")
+             )
   :custom
   (eshell-toggle-size-fraction 3) ; How big is the window?
   ;; (eshell-toggle-use-projectile-root t)
@@ -160,23 +157,18 @@
   (eshell-toggle-init-function #'eshell-toggle-init-eshell) ; Terminal emulator to use
   (eshell-toggle-run-command nil) ; Command to run in new buffer
   (eshell-toggle-window-side 'above)
-  :config
-
-  (kb/leader-keys
-    "oe" '(eshell-toggle :which-key "Toggle eshell")
-    )
   )
 
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
-  :hook (after-init . eshell-syntax-highlighting-global-mode)
+  :ghook ('after-init-hook 'eshell-syntax-highlighting-global-mode)
   )
 
 ;;;; Esh-autosuggest
 ;; Has shadowed suggestions from shell history (like in zsh)
 (use-package esh-autosuggest
-  :hook (eshell-mode . esh-autosuggest-mode)
+  :ghook 'eshell-mode-hook
   :custom
   (esh-autosuggest-delay 0.25)
   :config
@@ -188,7 +180,7 @@
 ;; native completion support (pcomplete).
 (use-package fish-completion
   :ensure-system-package (fish)
-  :hook (after-init . global-fish-completion-mode)
+  :ghook ('after-init 'global-fish-completion-mode)
   )
 
 ;;;; Eshell-up
@@ -209,8 +201,7 @@
 ;; See help doctrings/man pages for any function via esh-help-run-help. Also see
 ;; help strings if eldoc mode is enabled
 (use-package esh-help
-  :config
-  (setup-esh-help-eldoc)
+  :ghook ('after-init-hook 'setup-esh-help-eldoc)
   )
 
 ;;;; Shrink-path

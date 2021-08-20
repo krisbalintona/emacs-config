@@ -2,10 +2,21 @@
 ;;
 ;;; Commentary:
 ;;
-;; Live PDF previews
+;; Live PDF previews for latex
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+
+;;;; Auctex-latexmk
+;; Integration with `latexmk' for more compilation support (particularly
+;; citations)
+(use-package auctex-latexmk
+  :ghook ('after-init-hook 'auctex-latexmk-setup)
+  :custom
+  (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
+  )
 
 ;;;; Latex-preview-pane
 (use-package latex-preview-pane
@@ -13,15 +24,6 @@
   :straight (latex-preview-pane :type git :host github :repo "jsinglet/latex-preview-pane")
   :custom
   (pdf-latex-command "latexmk") ; Use latexmk for citation support
-  )
-
-;;;; Auctex-latexmk
-;; Integration with latexmk for more compilation support (particularly
-;; citations)
-(use-package auctex-latexmk
-  :hook (after-init . auctex-latexmk-setup)
-  :custom
-  (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
   )
 
 ;;;; Latexmk-mode
@@ -45,8 +47,8 @@
         (kb/run-latexmk))
     )
 
-  (add-hook 'after-save-hook 'kb/try-run-latexmk)
   (add-hook 'LaTeX-mode-hook 'latexmk-mode)
+  (add-hook 'after-save-hook #'kb/try-run-latexmk)
   )
 
 ;;; latex-pdf-rcp.el ends here

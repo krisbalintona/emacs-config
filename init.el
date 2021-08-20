@@ -48,8 +48,7 @@
 (require 'convenient-functions-rcp)
 (require 'themes-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "etc-config.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
+(require 'misc-packages-rcp)
 
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)
@@ -65,7 +64,7 @@
 (require 'buffer-and-window-management-rcp)
 
 ;;;;; Org
-(org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
+(require 'org-general-rcp)
 
 ;; (require 'org-agenda-general-rcp)
 ;; (require 'org-agenda-views-rcp)
@@ -73,10 +72,6 @@
 
 (require 'org-roam-general-rcp)
 (require 'org-roam-other-rcp)
-
-;; (org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
-
-(org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
 
 ;;;;; Email
 ;; (require 'mu4e-rcp)
@@ -91,6 +86,9 @@
 ;;;;; Programmming
 (require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
+(require 'programming-vc-rcp)
+(require 'programming-linting-rcp)
+(require 'programming-ide-rcp)
 (require 'programming-elisp-rcp)
 (require 'programming-lua-rcp)
 (require 'programming-web-rcp)

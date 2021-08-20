@@ -2,40 +2,48 @@
 ;;
 ;;; Commentary:
 ;;
-;; These are packages that are helpful for programming or working in elisp
+;; These are packages that are helpful for programming or working in elisp.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'buffer-and-window-management-rcp)
 
-;;;; Lisp-extra-font-lock
+;;;; Elisp-mode
+;; Elisp-mode overwrites my eyebrowse-last-window-config binding
+(use-package elisp-mode
+  :straight nil
+  :general
+  (:keymaps 'emacs-lisp-mode-map
+            :states '(normal visual motion)
+            "gz" nil)
+  )
+
+;;;; Eros-mode
+;; Overlay lisp evaluations into the current buffer (near cursor)
+(use-package eros
+  :ghook 'emacs-lisp-mode-hook
+  )
+
+;;;; Syntax highlighting
+;;;;; Lisp-extra-font-lock
 ;; Give faces to elisp symbols
 (use-package lisp-extra-font-lock
-  :hook (emacs-lisp-mode . (lambda ()
-                             (lisp-extra-font-lock-mode)
-                             (visual-line-mode)
-                             ))
+  :ghook 'emacs-lisp-mode-hook
   )
 
-;;;; Highlight-function-calls
+;;;;; Highlight-function-calls
 ;; Give function calls a special face (default is underline)
 (use-package highlight-function-calls
-  :hook (emacs-lisp-mode . highlight-function-calls-mode)
+  :ghook 'emacs-lisp-mode-hook
   )
 
-;;;; Elisp-demos
-;; Add example code snippets to some of the help windows
-(use-package elisp-demos
-  :config
-  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
+;;;;; Rainbow-delimiters
+;; Highlight matching delimiters (e.g. parenthesis)
+(use-package rainbow-delimiters
+  :ghook 'prog-mode-hook
   )
-
-;;;; Other
-;; Elisp-mode overwrites my eyebrowse-last-window-config binding
-(general-define-key
- :keymaps 'emacs-lisp-mode-map
- :states '(motion normal visual)
- "gz" 'eyebrowse-last-window-config
- )
 
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

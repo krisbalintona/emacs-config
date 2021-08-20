@@ -12,12 +12,16 @@
 ;;;; Elfeed
 (use-package elfeed
   :hook ((elfeed-search-mode . (lambda ()
-                                 (display-line-numbers-mode 1)
                                  (setq-local display-line-numbers t)
+                                 (display-line-numbers-mode 1)
                                  ))
          (elfeed-search-update . elfeed-apply-autotags-now) ; Apply the appropriate autotags to already existing entries
          )
   :general
+  (:keymaps 'elfeed-search-mode-map
+            :states '(normal visual motion)
+            "S" 'elfeed-search-clear-filter
+            )
   (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
             :states 'normal
             [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
@@ -46,27 +50,20 @@
   (elfeed-search-filter "+unread")
   (elfeed-initial-tags '(unread))
   ;; Tag hooks
-  (setq elfeed-new-entry-hook
-        `(;; Status tags
-          ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
-                               :remove 'unread
-                               :add 'archive)
-          ))
+  (elfeed-new-entry-hook
+   `(;; Status tags
+     ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
+                          :remove 'unread
+                          :add 'archive)
+     ))
 
   ;; Update elfeed every time it is opened
   (advice-add 'elfeed :after #'elfeed-update)
-  ;; Apply the appropriate autotags to already existing entries
-  (add-hook 'elfeed-search-update-hook #'elfeed-apply-autotags-now)
-
-  (general-define-key
-   :keymaps 'elfeed-search-mode-map
-   :states '(normal visual motion)
-   "S" 'elfeed-search-clear-filter
-   )
   )
 
 ;;;; QoL
-;; From https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
+;; Much is from https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
+
 ;;;;; View in EWW
 (defun prot-elfeed-show-eww (&optional link)
   "Browse current entry's link or optional LINK in `eww'.
@@ -87,7 +84,7 @@ fail on poorly-designed websites."
  "e" '(prot-elfeed-show-eww :which-key "Show in EWW")
  )
 
-(add-hook 'eww-mode-hook '(lambda () (visual-fill-column-mode) (variable-pitch-mode)))
+(add-hook 'eww-mode-hook '(lambda () (visual-fill-column-mode) (mixed-pitch-mode)))
 
 ;;;;; Language-detection
 ;; Detects language of current buffer
@@ -264,17 +261,17 @@ The list of tags is provided by `prot-elfeed-search-tags'."
     )
 
   (general-define-key
-   :keymaps 'elfeed-show-mode-map
-   :states '(visual normal motion)
-   "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Toggle unread tag")
-   )
-  (general-define-key
    :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
    :states '(visual normal motion)
    "a" '((lambda () (interactive) (prot-elfeed-toggle-tag 'archive)) :which-key "Toggle archive tag")
    "i" '((lambda () (interactive) (prot-elfeed-toggle-tag 'input)) :which-key "Toggle input tag")
    "d" '((lambda () (interactive) (prot-elfeed-toggle-tag 'done)) :which-key "Toggle done tag")
    "c" '((lambda () (interactive) (prot-elfeed-toggle-tag 'cancelled)) :which-key "Toggle cancelled tag")
+   )
+  (general-define-key
+   :keymaps 'elfeed-show-mode-map
+   :states '(visual normal motion)
+   "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Toggle unread tag")
    )
   )
 
@@ -283,18 +280,18 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 (use-package elfeed-org
   :requires elfeed
   :after elfeed
+  :ghook ('after-init-hook 'elfeed-org)
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")
                           ))
   (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
-  :config
-  (elfeed-org)
   )
 
 ;;;;; Elfeed-goodies
 (use-package elfeed-goodies
   :requires elfeed
   :after elfeed
+  :ghook ('after-init-hook 'elfeed-goodies/setup t nil t)
   :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
                      :states 'normal
                      "K" 'elfeed-goodies/split-show-prev
@@ -306,15 +303,6 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 
   (elfeed-goodies/entry-pane-position 'bottom)
   (elfeed-goodies/entry-pane-size 0.5)
-  :config
-  (elfeed-goodies/setup)
-
-  (general-define-key
-   :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-   :states 'normal
-   "K" 'elfeed-goodies/split-show-prev
-   "J" 'elfeed-goodies/split-show-next
-   )
   )
 
 ;;; rss-feed-rcp.el ends here
