@@ -60,16 +60,11 @@
 ;;;; No-littering
 ;; Set default package paths
 (use-package no-littering
-  :functions (no-littering-expand-var-file-name no-littering-expand-etc-file-name)
   :custom
   (no-littering-etc-directory (expand-file-name "data/" user-emacs-directory)) ; Config files
   (no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
   (auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))) ; Store auto-saved files here
   :preface (require 'recentf)
-  :config
-  ;; Exclude these files from recent files list
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory)
   )
 
 ;;;; Org
