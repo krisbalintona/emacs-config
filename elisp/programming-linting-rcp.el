@@ -12,6 +12,11 @@
 ;;;; Flycheck
 ;; Check your code
 (use-package flycheck
+  ;; NOTE 2021-08-19: This is to make sure npm and yarn are installed on the
+  ;; system for system dependencies for other packages (particularly flycheck
+  ;; linters)
+  ;; :ensure-system-package ((npm . (concat "sudo " (kb/which-package-manager) " install npm"))
+  ;;                         (yarn . (concat "sudo " (kb/which-package-manager) " install yarn"))
   :ghook ('after-init-mode 'global-flycheck-mode)
   :general
   (kb/leader-keys
@@ -29,6 +34,13 @@
   (flycheck-display-errors-delay 0.5) ; Time to show an error on point
   (flycheck-indication-mode 'right-margin)
   (flycheck-highlighting-mode 'symbols)
+  :preface
+  ;; NOTE 2021-08-19: Doing it here because I can't get `ensure-system-package'
+  ;; to accept and evaluated function.
+  (unless (executable-find "npm")
+    (async-shell-command "sudo apt install npm"))
+  (unless (executable-find "yarn")
+    (async-shell-command "sudo apt install yarn"))
   )
 
 ;;;; Flycheck-pos-tip-mode
