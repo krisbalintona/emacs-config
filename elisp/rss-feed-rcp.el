@@ -52,11 +52,11 @@
   ;; Tag hooks
   (elfeed-new-entry-hook
    `(;; Status tags
-     ,(elfeed-make-tagger :before "3 months ago" ; Archive very old entries
+     ,(elfeed-make-tagger :before "3 months ago" ; Mark very old entries as junk
                           :remove 'unread
-                          :add 'archive)
+                          :add 'junk)
      ))
-
+  :config
   ;; Update elfeed every time it is opened
   (advice-add 'elfeed :after #'elfeed-update)
   )
@@ -263,6 +263,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (general-define-key
    :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
    :states '(visual normal motion)
+   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk)) :which-key "Toggle junk tag")
    "a" '((lambda () (interactive) (prot-elfeed-toggle-tag 'archive)) :which-key "Toggle archive tag")
    "i" '((lambda () (interactive) (prot-elfeed-toggle-tag 'input)) :which-key "Toggle input tag")
    "d" '((lambda () (interactive) (prot-elfeed-toggle-tag 'done)) :which-key "Toggle done tag")
@@ -272,6 +273,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
    :keymaps 'elfeed-show-mode-map
    :states '(visual normal motion)
    "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Toggle unread tag")
+   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk)) :which-key "Toggle junk tag")
    )
   )
 
