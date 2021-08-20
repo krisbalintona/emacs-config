@@ -105,7 +105,7 @@
    [remap describe-key] '(helpful-key :which-key "Helpful key")
    )
   (:states '(visual normal motion)
-           "K" 'helpful-at-point
+           "F" 'helpful-at-point
            )
   (kb/leader-keys
     "hk" '(helpful-key :which-key "Desc key")
