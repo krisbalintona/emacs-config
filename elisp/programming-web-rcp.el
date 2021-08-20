@@ -6,19 +6,21 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Web-mode
 ;; Compatible with most template engines (e.g. handlebars mode, mustache) and
 ;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
 (use-package web-mode
+  :ensure-system-package (handlebars . "sudo npm --global install handlebars")
   :mode ("\\.hbs\\'"
-         "\\.yaml\\'"
-         )
-  :hook ((web-mode . electric-pair-mode)
-         (web-mode . highlight-indent-guides-mode)
-         (web-mode . display-line-numbers-mode)
-         (web-mode . visual-line-mode)
-         )
+         "\\.yaml\\'")
+  :gfhook
+  'electric-pair-mode
+  'highlight-indent-guides-mode
+  'display-line-numbers-mode
+  'visual-line-mode
   :custom
   (web-mode-comment-formats '(("handlebars" . "{{!")
                               ("javascript" . "/*")
@@ -29,71 +31,57 @@
                             )
   (web-mode-comment-style 2)
 
-  (flycheck-handlebars-executable "/usr/local/bin/handlebars")
-  :config
-  (general-define-key
-   :keymaps 'web-mode-map
-   "C-x n s" 'outshine-narrow-to-subtree
-   )
+  (flycheck-handlebars-executable (kb/shell-command-to-string "which handlebars"))
   )
 
 ;;;; CSS-mode
 (use-package css-mode
-  :hook ((css-mode . electric-pair-mode)
-         )
+  :ensure-system-package (stylelint . "sudo npm install --global --save-dev stylelint stylelint-config-standard")
+  :gfhook 'electric-pair-mode
   :custom
   (css-indent-offset 2)
 
-  (flycheck-css-stylelint-executable "/usr/local/bin/stylelint")
+  (flycheck-css-stylelint-executable (kb/shell-command-to-string "which stylelint"))
   (flycheck-stylelintrc (concat no-littering-var-directory "flycheck/.stylelintrc.json"))
   (flycheck-stylelint-quiet nil)
-  :config
-  (general-define-key
-   :keymaps 'css-mode-map
-   "C-x n s" 'outshine-narrow-to-subtree
-   )
   )
 
 ;;;; Javascript
 (use-package js2-mode
+  :ensure-system-package ((eslint . "sudo npm install --global --save-dev eslint")
+                          (semistandard . "sudo npm install --global semistandard"))
   :mode "\\.js\\'"
-  :hook ((js2-mode . electric-pair-mode)
-         (js2-mode . highlight-indent-guides-mode)
-         (js2-mode . display-line-numbers-mode)
-         (js2-mode . visual-line-mode)
-         )
+  :gfhook
+  'electric-pair-mode
+  'highlight-indent-guides-mode
+  'display-line-numbers-mode
+  'visual-line-mode
   :custom
-  (flycheck-javascript-standard-executable "/usr/local/bin/semistandard")
   (js-indent-level 2)
-  (flycheck-checker-error-threshold 10000)
 
-  (flycheck-javascript-eslint-executable "~/node_modules/.bin/eslint")
-  :config
-  (general-define-key
-   :keymaps 'js2-mode-map
-   "C-x n s" 'outshine-narrow-to-subtree
-   )
+  (flycheck-checker-error-threshold 10000)
+  (flycheck-javascript-standard-executable (kb/shell-command-to-string "which semistandard"))
+  (flycheck-javascript-eslint-executable (kb/shell-command-to-string "which eslint"))
   )
 
 ;;;; Json
 (use-package json-mode
+  :ensure-system-package (jsonlint . "sudo npm install --global jsonlint")
   :custom
-  (flycheck-json-jsonlint-executable "/usr/local/bin/jsonlint")
+  (flycheck-json-jsonlint-executable (kb/shell-command-to-string "which jsonlint"))
   )
 
 ;;;; Yaml
 (use-package yaml-mode
-  :hook ((yaml-mode . highlight-indent-guides-mode)
-         (yaml-mode . display-line-numbers-mode)
-         (yaml-mode . visual-line-mode)
-         )
+  :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
+  :gfhook
+  'highlight-indent-guides-mode
+  'display-line-numbers-mode
+  'visual-line-mode
+  :general (:keymaps 'yaml-mode-map
+                     [remap evil-indent] 'yaml-indent-line)
   :custom
-  (flycheck-yaml-jsyaml-executable "/usr/local/bin/js-yaml")
-  :config
-  (general-define-key
-   :keymaps 'yaml-mode-map
-   [remap evil-indent] 'yaml-indent-line
-   )
+  (flycheck-yaml-jsyaml-executable (kb/shell-command-to-string "which js-yaml"))
   )
 
 ;;; programming-web-rcp.el ends here
