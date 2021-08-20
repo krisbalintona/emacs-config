@@ -2,20 +2,49 @@
 ;;
 ;;; Commentary:
 ;;
-;; Finance-related packages
+;; Finance-related packages.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Ledger-mode
 (use-package ledger-mode
-  :ensure-system-package (ledger . "sudo dnf install ledger")
+  :ensure-system-package (ledger . "sudo apt install ledger")
+  :defines evil-emacs-state-modes
   :hook (after-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
-  :functions kb/ledger-add-blank-lines
   :gfhook
   'outshine-mode
-  '(lambda () (mixed-pitch-mode 0))
-  '(lambda () (display-line-numbers-mode 0))
+  '(lambda () (mixed-pitch-mode 0)
+     (display-line-numbers-mode 0)
+     (setq-local tab-always-indent nil ; Indent first then complete
+                 completion-cycle-threshold t)
+     (setq-default ledger-master-file
+                   (concat no-littering-var-directory "ledger/master.ledger"))
+     )
+  :general
+  (:keymaps 'ledger-mode-map
+            "C-c C-t" '(ledger-toggle-current :which-key "Toggle check on current")
+            [remap consult-flycheck] '(list-flycheck-errors :which-key "List flycheck errors")
+            )
+  (:keymaps 'ledger-mode-map
+            :state 'insert
+            "TAB" 'tab-to-tab-stop
+            )
+  (kb/leader-keys
+    :keymaps 'ledger-mode-map
+    )
+  (general-unbind ; Doesn't kill window as it would normally
+    :keymaps 'ledger-report-mode-map
+    :states '(normal visual motion)
+    "q"
+    )
+  (:keymaps 'ledger-report-mode-map
+            :states '(normal visual)
+            "RET" '(ledger-report-visit-source :which-key "Visit transaction")
+            "C-c C-o C-k" '(ledger-report-quit :which-key "Quit")
+            )
   :custom
   ;; Administration
   ;; (ledger-source-directory (concat no-littering-var-directory "ledger/source/"))
@@ -62,52 +91,20 @@
               (if (not (looking-at "\n\n")) (insert "\n"))
               (ledger-navigate-next-xact))
             ))
-      )
-    )
+      ))
   :config
-  (setq-local tab-always-indent nil ; Indent first then complete
-              completion-cycle-threshold t)
-
-  ;; Administration
-  (setq-default ledger-master-file (concat no-littering-var-directory "ledger/master.ledger"))
-
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
-
-  (general-define-key
-   :keymaps 'ledger-mode-map
-   "C-c C-t" '(ledger-toggle-current :which-key "Toggle check on current")
-   [remap consult-flycheck] '(list-flycheck-errors :which-key "List flycheck errors")
-   )
-  (general-define-key
-   :keymaps 'ledger-mode-map
-   :state 'insert
-   "TAB" 'tab-to-tab-stop
-   )
-  (kb/leader-keys
-    :keymaps 'ledger-mode-map
-    )
-
-  (general-unbind ; Doesn't kill window as it should
-    :keymaps 'ledger-report-mode-map
-    :states '(normal visual motion)
-    "q"
-    )
-  (general-define-key
-   :keymaps 'ledger-report-mode-map
-   :states '(normal visual)
-   "RET" '(ledger-report-visit-source :which-key "Visit transaction")
-   "C-c C-o C-k" '(ledger-report-quit :which-key "Quit")
-   )
   )
 
 ;;;; Flycheck-ledger
 (use-package flycheck-ledger
+  :requires flycheck
   :after flycheck
   :custom
   (flycheck-ledger-explicit t) ; Check even cleared transactions
   (flycheck-ledger-pedantic t) ; Check account names
-  :config
-  ;; Redefine the checker to use `ledger-master-file' rather than
+  :init
+  ;; Redefine the checker to check `ledger-master-file' rather than
   ;; `source-inplace' (current buffer)
   (flycheck-define-checker ledger
     "A checker for ledger files, showing unmatched balances and failed checks."
@@ -134,8 +131,8 @@
     (lambda (output checker buffer)
       (let ((pattern-errors (flycheck-parse-with-patterns output checker buffer)))
         (or pattern-errors
-            (when (> (length flycheck-ledger-zero-accounts) 0)
-              (flycheck-ledger--zero-error-parser output checker buffer)))))
+           (when (> (length flycheck-ledger-zero-accounts) 0)
+             (flycheck-ledger--zero-error-parser output checker buffer)))))
     :verify
     (lambda (checker)
       (let ((has-accounts (> (length flycheck-ledger-zero-accounts) 0)))

@@ -9,12 +9,22 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
+;;;; Savehist
+;; Make history of certain things (e.g. minibuffer) persistent across sessions
+(use-package savehist
+  :straight nil
+  :ghook 'after-init-hook
+  :custom
+  (savehist-autosave-interval 300)
+  :config
+  (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
+  (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
+  )
+
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
-  :functions general-define-key
-  :commands winner-mode
-  :hook (after-init . winner-mode)
+  :ghook 'after-init-hook
   :general ("C-<left>" 'winner-undo
             "C-<right>" 'winner-redo)
   :custom
@@ -24,8 +34,6 @@
 ;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
 (use-package eyebrowse
-  :after (evil evil-collection)
-  :commands eyebrowse-mode
   :ghook 'after-init-hook
   :general
   (:states '(visual normal motion)
@@ -61,31 +69,6 @@
   (set-face-attribute 'eyebrowse-mode-line-active nil :weight 'semi-bold)
   )
 
-;;;; Ace-window
-(use-package ace-window
-  :general ("M-w" '(ace-window :which-key "Ace window"))
-  :custom
-  (aw-scope 'visible)
-  (aw-background t)
-  (aw-dispatch-always nil)
-  (aw-minibuffer-flag t)
-  (aw-keys '(?h ?j ?k ?l ?H ?J ?K ?L))
-  (aw-dispatch-alist
-   '((?x aw-delete-window "Delete Window")
-     (?m aw-swap-window "Swap Windows")
-     (?M aw-move-window "Move Window")
-     (?c aw-copy-window "Copy Window")
-     (?j aw-switch-buffer-in-window "Select Buffer")
-     (?n aw-flip-window)
-     (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
-     (?c aw-split-window-fair "Split Fair Window")
-     (?v aw-split-window-vert "Split Vert Window")
-     (?b aw-split-window-horz "Split Horz Window")
-     (?o delete-other-windows "Delete Other Windows")
-     (?? aw-show-dispatch-help))
-   )
-  )
-
 ;;;; Shackle
 ;; Control the behavior of popup and side windows
 (use-package shackle
@@ -107,6 +90,7 @@
 
 ;;;; Burly
 (use-package burly
+  :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
   :general (kb/leader-keys
              "Bw" '(burly-bookmark-windows :which-key "Burly windows")
              "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
@@ -114,6 +98,7 @@
              )
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
+  :preface (require 'bookmark)
   )
 
 ;;; buffer-and-window-management-rcp.el ends here
