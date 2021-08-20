@@ -41,13 +41,13 @@
   ;; NOTE 2021-08-19: Doing it here because I can't get `ensure-system-package'
   ;; to accept and evaluated function.
   (unless (executable-find "npm")
-    (async-shell-command "sudo apt install npm"))
+    (async-shell-command "sudo " (kb/which-package-manager) " install npm"))
   (unless (executable-find "yarn")
-    (async-shell-command "sudo apt install yarn"))
+    (async-shell-command "sudo npm install yarn -g"))
   (unless (executable-find "java")
-    (async-shell-command "sudo apt install default-jdk"))
     ;; TODO 2021-08-20: This statement currently only works with Fedora. Change
     ;; to be compatible with other distributions.
+    (async-shell-command (concat "sudo " (kb/which-package-manager) " install java-latest-openjdk")))
   )
 
 ;;;; Flycheck-pos-tip-mode
