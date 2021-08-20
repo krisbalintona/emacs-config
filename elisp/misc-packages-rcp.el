@@ -25,6 +25,8 @@
 (use-package abbrev-mode
   :straight nil
   :ghook 'text-mode-hook 'prog-mode-hook
+  :custom
+  (abbrev-file-name (concat no-littering-var-directory "abbrev-mode/abbrev.el"))
   )
 
 ;;;; Elisp-demos
