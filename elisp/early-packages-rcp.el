@@ -10,17 +10,11 @@
 (require 'personal-variables-rcp)
 (require 'keybinds-frameworks-rcp)
 
-;;;; Org
-;; Use `org' from `straight.el'. This may or may not work?
-(use-package org
-  :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
-  )
-
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path
 (use-package exec-path-from-shell
   :functions exec-path-from-shell-initialize
-  :config (exec-path-from-shell-initialize)
+  :ghook ('after-init-hook 'exec-path-from-shell-initialize)
   )
 
 ;;;; System-packages
@@ -74,6 +68,12 @@
   (add-to-list 'recentf-exclude no-littering-etc-directory)
   )
 
+;;;; Org
+;; Use `org' from `straight.el'. This may or may not work?
+(use-package org
+  :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
+  )
+
 ;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support
 (use-package outshine
@@ -81,8 +81,9 @@
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
-  :preface
-  (defvar outline-minor-mode-prefix (kbd "M-#"))
+  :general (:keymaps 'outshine-mode-map
+                     "C-x n s" 'outshine-narrow-to-subtree)
+  :preface (defvar outline-minor-mode-prefix (kbd "M-#"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :config
