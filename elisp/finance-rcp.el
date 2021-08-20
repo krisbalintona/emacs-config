@@ -30,16 +30,13 @@
             )
   (:keymaps 'ledger-mode-map
             :states 'insert
-            "TAB" 'tab-to-tab-stop
-            )
+            "TAB" 'tab-to-tab-stop)
   (kb/leader-keys
     :keymaps 'ledger-mode-map
     )
-  (general-unbind ; Doesn't kill window as it would normally
-    :keymaps 'ledger-report-mode-map
-    :states '(normal visual motion)
-    "q"
-    )
+  (:keymaps 'ledger-report-mode-map
+            :states '(normal visual motion)
+            "q" nil) ; Doesn't kill window as it would normally
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual)
             "RET" '(ledger-report-visit-source :which-key "Visit transaction")
