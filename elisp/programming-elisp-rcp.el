@@ -14,10 +14,9 @@
 ;; Elisp-mode overwrites my eyebrowse-last-window-config binding
 (use-package elisp-mode
   :straight nil
-  :general
-  (:keymaps 'emacs-lisp-mode-map
-            :states '(normal visual motion)
-            "gz" nil)
+  :general (:keymaps 'emacs-lisp-mode-map
+                     :states '(normal visual motion)
+                     "gz" 'eyebrowse-last-window-config)
   )
 
 ;;;; Eros-mode
@@ -43,6 +42,15 @@
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
   :ghook 'prog-mode-hook
+  )
+
+;;;; Elisp-demos
+;; Add example code snippets to some of the help windows
+(use-package elisp-demos
+  :requires helpful
+  :commands elisp-demos-advice-helpful-update
+  :config
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   )
 
 ;;; programming-elisp-rcp.el ends here

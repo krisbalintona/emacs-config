@@ -29,17 +29,14 @@
             [remap consult-flycheck] '(list-flycheck-errors :which-key "List flycheck errors")
             )
   (:keymaps 'ledger-mode-map
-            :state 'insert
-            "TAB" 'tab-to-tab-stop
-            )
+            :states 'insert
+            "TAB" 'tab-to-tab-stop)
   (kb/leader-keys
     :keymaps 'ledger-mode-map
     )
-  (general-unbind ; Doesn't kill window as it would normally
-    :keymaps 'ledger-report-mode-map
-    :states '(normal visual motion)
-    "q"
-    )
+  (:keymaps 'ledger-report-mode-map
+            :states '(normal visual motion)
+            "q" nil) ; Doesn't kill window as it would normally
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual)
             "RET" '(ledger-report-visit-source :which-key "Visit transaction")
@@ -131,8 +128,8 @@
     (lambda (output checker buffer)
       (let ((pattern-errors (flycheck-parse-with-patterns output checker buffer)))
         (or pattern-errors
-           (when (> (length flycheck-ledger-zero-accounts) 0)
-             (flycheck-ledger--zero-error-parser output checker buffer)))))
+            (when (> (length flycheck-ledger-zero-accounts) 0)
+              (flycheck-ledger--zero-error-parser output checker buffer)))))
     :verify
     (lambda (checker)
       (let ((has-accounts (> (length flycheck-ledger-zero-accounts) 0)))

@@ -19,7 +19,7 @@
   ;;                         (yarn . (concat "sudo " (kb/which-package-manager) " install yarn"))
   ;;                         (java . (concat "sudo " (kb/which-package-manager) " install default-jdk"))
   ;;                         )
-  :ghook ('after-init-mode 'global-flycheck-mode)
+  :ghook ('after-init-hook 'global-flycheck-mode)
   :general
   (kb/leader-keys
     "lf" '(consult-flycheck :which-key "List flycheck errors")

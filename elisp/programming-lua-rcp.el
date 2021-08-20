@@ -26,19 +26,18 @@
   (lua-indent-string-contents t) ; Contents of a multiline string will be indented
   :general (:keymaps 'lua-mode-map ; Lua-mode overwrites my eyebrowse-last-window-config binding
                      :states '(motion normal visual)
-                     "gz" 'eyebrowse-last-window-config
-                     )
+                     "gz" 'eyebrowse-last-window-config)
   )
 
 ;;;; Company-lua
 ;; Company backend for Lua
 (use-package company-lua
   :after company
-  :gfhook
-  '(lambda () (setq-local company-backends '((company-lua
-                                         company-etags
-                                         company-dabbrev-code
-                                         company-yasnippet))))
+  :gfhook '(lambda () (setq-local company-backends
+                             '((company-lua
+                                company-etags
+                                company-dabbrev-code
+                                company-yasnippet))))
   )
 
 ;;; programming-lua-rcp.el ends here

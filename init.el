@@ -23,8 +23,8 @@
     (dolist (f (directory-files base))
       (let ((name (concat base "/" f)))
         (when (and (file-directory-p name)
-                   (not (equal f ".."))
-                   (not (equal f ".")))
+                 (not (equal f ".."))
+                 (not (equal f ".")))
           (unless (member base load-path)
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
@@ -39,16 +39,21 @@
 (require 'personal-variables-rcp)
 (require 'straight-package-management-rcp)
 (require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
 (require 'early-packages-rcp)
 (require 'better-defaults-rcp)
-(require 'faces-rcp)
+(require 'undoing-rcp)
 
-(require 'custom-directories-rcp)
-(require 'convenient-functions-rcp)
+;;;;; Aethetics
+(require 'faces-rcp)
 (require 'themes-rcp)
 
-(require 'misc-packages-rcp)
+;;;;; Custom
+(require 'custom-directories-rcp)
+(require 'convenient-functions-rcp)
+
+;;;;; Core keybindings
+(require 'keybinds-frameworks-rcp)
+(require 'evil-rcp)
 
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)
@@ -57,27 +62,13 @@
 (require 'completion-selectrum-rcp)
 (require 'completion-helm-rcp)
 
-;;;;; Evil
-(require 'evil-rcp)
-
-;;;;; Buffer management
-(require 'buffer-and-window-management-rcp)
-
 ;;;;; Org
 (require 'org-general-rcp)
-
+(require 'org-roam-general-rcp)
+(require 'org-roam-other-rcp)
 ;; (require 'org-agenda-general-rcp)
 ;; (require 'org-agenda-views-rcp)
 ;; (require 'org-agenda-other-rcp)
-
-(require 'org-roam-general-rcp)
-(require 'org-roam-other-rcp)
-
-;;;;; Email
-;; (require 'mu4e-rcp)
-
-;;;;; RSS feed
-(require 'rss-feed-rcp)
 
 ;;;;; LaTeX
 (require 'latex-general-rcp)
@@ -97,16 +88,20 @@
 (require 'shell-eshell-rcp)
 ;; (require 'shell-vterm-rcp)
 
-;;;;; Undoing
-(require 'undoing-rcp)
-
 ;;;;; Spelling and grammar
 (require 'checking-spelling-rcp)
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
 
-;;;;; Finances
+;;;;; Communication interfaces
+;; (require 'mu4e-rcp)
+(require 'rss-feed-rcp)
+
+;;;;; Other
+(require 'buffer-and-window-management-rcp)
+(require 'file-editing-rcp)
 (require 'finance-rcp)
+(require 'misc-packages-rcp)
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

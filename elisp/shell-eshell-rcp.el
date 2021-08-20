@@ -64,8 +64,8 @@
     `(setq ,NAME
            (lambda () (when ,FORM
                    (-> ,ICON
-                      (concat esh-section-delim ,FORM)
-                      (with-face ,@PROPS))))))
+                       (concat esh-section-delim ,FORM)
+                       (with-face ,@PROPS))))))
 
   (defun esh-acc (acc x)
     "Accumulator for evaluating and concatenating esh-sections."
@@ -104,6 +104,7 @@
                  (abbreviate-file-name (eshell/pwd))) ; Fallback to default if no shrink-path
                '(:foreground "gold" :weight bold))
 
+  (require 'magit) ; Need `magit' to load `magit-get-current-branch'
   (esh-section esh-git
                "ᛦ"  ;  (git icon)
                (magit-get-current-branch)

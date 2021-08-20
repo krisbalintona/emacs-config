@@ -134,38 +134,6 @@
   :ghook 'dired-mode-hook
   )
 
-;;;; File editing
-;;;;; Sudo-edit
-;; Utilities to edit files as root
-(use-package sudo-edit
-  :ghook ('after-init 'sudo-edit-indicator-mode)
-  :general
-  (kb/leader-keys
-    "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
-    "fu" '(sudo-edit :which-key "Sudo this file")
-    )
-  )
-
-;;;;; Smartparens
-;; Autopairing parentheses
-(use-package smartparens
-  :functions sp-fair
-  :ghook ('after-init-hook 'smartparens-global-mode)
-  :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
-  :custom
-  (sp-show-pair-from-inside t)
-  (sp-ignore-modes-list
-   '(minibuffer-mode minibuffer-inactive-mode
-                     ))
-  ;; TODO 2021-08-19: Determine how to do what I want in emacs-lisp-mode and
-  ;; org-mode and how it interacts based on deleting, location (e.g. in comment
-  ;; or not)--for writing and programming
-  ;; :config
-  ;; (sp-pair "'" nil :actions :rem) ; Don't pair '
-  ;; (sp-pair "'" :actions :rem) ; Don't pair '
-  ;; (sp-pair "`" "'" :when comment)
-  )
-
 ;;;; Aesthetics
 ;;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)
@@ -198,6 +166,28 @@
 ;; them
 (use-package highlight-quoted
   :hook 'emacs-lisp-mode-hook
+  )
+
+;;;; Other
+;;;;; Scratch.el
+;; Easily create scratch buffers for different modes
+(use-package scratch
+  ;; :demand t ; For the initial scratch buffer at startup
+  :hook (scratch-create-buffer . kb/scratch-buffer-setup)
+  :general ("C-c s" '(scratch :which-key "Create scratch"))
+  :preface
+  (defun kb/scratch-buffer-setup ()
+    "Add contents to `scratch' buffer and name it accordingly. Taken from https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
+    (let* ((mode (format "%s" major-mode))
+           (string (concat "Scratch buffer for: " mode "\n\n")))
+      (when scratch-buffer
+        (save-excursion
+          (insert string)
+          (goto-char (point-min))
+          (comment-region (point-at-bol) (point-at-eol)))
+        (forward-line 2))
+      (rename-buffer (concat "*Scratch for " mode "*") t))
+    )
   )
 
 ;;; programming-general-rcp.el ends here
