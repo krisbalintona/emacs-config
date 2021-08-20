@@ -71,6 +71,7 @@
   (magit-diff-paint-whitespace 'nil) ; Where to highlight whitespace errors?
   (magit-diff-highlight-hunk-body t) ; Highlight hunks?
   (magit-diff-refine-hunk t) ; Extra-highlight word-level differences?
+  :init (require 'magit-extras) ; Provides useful functionality, such as `magit-project-status'
   :config
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules-overview ; Have modules section
