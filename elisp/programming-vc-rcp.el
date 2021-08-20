@@ -15,6 +15,7 @@
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
   :straight (magit :type git :host github :repo "magit/magit")
+  :hook (magit-process-mode . visual-line-mode)
   :general
   (kb/leader-keys
     "g"  '(:ignore t :which-key "Magit")
@@ -37,7 +38,6 @@
   ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
-
   ;; Displaying hunks
   ;; (magit-diff-highlight-hunk-body nil)
   (magit-diff-highlight-hunk-body t)
@@ -54,7 +54,23 @@
                                             (stashes . show)
                                             (unpulled . show)
                                             (unpushed . show)))
-  (transient-mode-line-format 'line)
+  (transient-mode-line-format nil)
+
+  ;; Save transient changes to a different location (since I changed the
+  ;; transient-level for certain magit transient popups)
+  (transient-history-file (concat no-littering-var-directory "transient/history.el"))
+  (transient-values-file (concat no-littering-var-directory "transient/values.el"))
+  (transient-levels-file (concat no-littering-var-directory "transient/levels.el"))
+
+  ;; Performance-related variables
+  (magit-refresh-status-buffer t) ; Change to nil as last resort
+  (magit-refresh-verbose t) ; Help troubleshoot bottlenecks (check `*Messages*' buffer)
+  ;; Prefer these to be nil for performance boosts
+  (magit-diff-highlight-indentation t) ; Highlight wrong indentation?
+  (magit-diff-highlight-trailing t) ; Highlight trailing spaces?
+  (magit-diff-paint-whitespace 'uncommitted) ; Where to highlight whitespace errors?
+  (magit-diff-highlight-hunk-body t) ; Highlight hunks?
+  (magit-diff-refine-hunk t) ; Extra-highlight word-level differences?
   :config
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules-overview ; Have modules section
