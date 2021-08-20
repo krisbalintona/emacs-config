@@ -135,7 +135,7 @@ icon."
                         (doom-modeline--symbol-overlay)
                         (doom-modeline--multiple-cursors))))
       (or (and (not (equal meta "")) meta)
-         ""))
+          ""))
     )
   (doom-modeline-def-segment kb/vcs
     "Standard `vcs' but don't show branch if it's 'master'."
@@ -162,20 +162,20 @@ icon."
   (doom-modeline-def-segment kb/eyebrowse
     "Show eyebrowse workspace information."
     (when (and (doom-modeline--active)
-             (not doom-modeline--limited-width-p))
+               (not doom-modeline--limited-width-p))
       '((eyebrowse-mode (:eval (eyebrowse-mode-line-indicator))))
       ))
   (doom-modeline-def-segment kb/time
     "Display time."
     (when (and (doom-modeline--active)
-             (not doom-modeline--limited-width-p))
+               (not doom-modeline--limited-width-p))
       '(("" display-time-string)
         " ")
       ))
   (doom-modeline-def-segment kb/mu4e
     "Display mu4e mail. Require `mu4e-alert'."
     (when (and (doom-modeline--active)
-             (not doom-modeline--limited-width-p))
+               (not doom-modeline--limited-width-p))
       '((:eval mu4e-alert-mode-line))
       ))
   (doom-modeline-def-segment kb/buffer-encoding
@@ -190,10 +190,10 @@ UTF-8."
          ;; Check for UTF-8. If so then do these 2 propertize sections.If not,
          ;; then nothing is propertized and thus shown.
          (if (or (eq buffer-file-coding-system 'utf-8-unix)
-                (eq buffer-file-coding-system 'utf-8)
-                (eq buffer-file-coding-system 'prefer-utf-8-unix)
-                (eq buffer-file-coding-system 'undecided-unix) ; Not sure what this is but it appears in my org-roam files
-                )
+                 (eq buffer-file-coding-system 'utf-8)
+                 (eq buffer-file-coding-system 'prefer-utf-8-unix)
+                 (eq buffer-file-coding-system 'undecided-unix) ; Not sure what this is but it appears in my org-roam files
+                 )
              nil
 
            ;; coding system
@@ -204,9 +204,9 @@ UTF-8."
                            'failure
                          (plist-get sys :name))))
              (when (or (eq doom-modeline-buffer-encoding t)
-                      (and (eq doom-modeline-buffer-encoding 'nondefault)
-                         (not (eq cat 'coding-category-undecided))
-                         (not (eq sym doom-modeline-default-coding-system))))
+                       (and (eq doom-modeline-buffer-encoding 'nondefault)
+                            (not (eq cat 'coding-category-undecided))
+                            (not (eq sym doom-modeline-default-coding-system))))
                (propertize
                 (upcase (symbol-name sym))
                 'face face
@@ -241,8 +241,8 @@ UTF-8."
       (doom-modeline-spc)
       (propertize (format-mode-line
                    (or (and (boundp 'delighted-modes)
-                         (cadr (assq major-mode delighted-modes)))
-                      mode-name))
+                            (cadr (assq major-mode delighted-modes)))
+                       mode-name))
                   'help-echo "Major mode\n\
   mouse-1: Display major mode menu\n\
   mouse-2: Show help for major mode\n\
@@ -252,12 +252,12 @@ UTF-8."
       (when (and doom-modeline-env-version doom-modeline-env--version)
         (format " %s" doom-modeline-env--version))
       (and (boundp 'text-scale-mode-amount)
-         (/= text-scale-mode-amount 0)
-         (format
-          (if (> text-scale-mode-amount 0)
-              " (%+d)"
-            " (%-d)")
-          text-scale-mode-amount))
+           (/= text-scale-mode-amount 0)
+           (format
+            (if (> text-scale-mode-amount 0)
+                " (%+d)"
+              " (%-d)")
+            text-scale-mode-amount))
       (doom-modeline-spc))
      'face (if (doom-modeline--active)
                '(doom-modeline-buffer-major-mode bold) ; Make bold
