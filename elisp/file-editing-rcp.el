@@ -77,8 +77,8 @@ is only tested on \"insert\" action."
 
   ;; emacs-lisp-mode
   (sp-local-pair 'emacs-lisp-mode "(" ")"
-           :actions '(insert autoskip navigate)
-           :unless '(kb/sp-point-before-letter-digit-p))
+                 :actions '(insert autoskip navigate)
+                 :unless '(kb/sp-point-before-letter-digit-p))
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
   (sp-local-pair 'emacs-lisp-mode "`" "'"
                  :actions '(insert autoskip navigate)
