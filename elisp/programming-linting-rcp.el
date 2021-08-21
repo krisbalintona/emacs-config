@@ -37,19 +37,6 @@
   (flycheck-display-errors-delay 0.5) ; Time to show an error on point
   (flycheck-indication-mode 'right-margin)
   (flycheck-highlighting-mode 'symbols)
-  :preface
-  ;; NOTE 2021-08-19: Doing it here because I can't get `ensure-system-package'
-  ;; to accept and evaluated function.
-  (unless (executable-find "pip")
-    (async-shell-command "sudo " (kb/which-package-manager) " install pip"))
-  (unless (executable-find "npm")
-    (async-shell-command "sudo " (kb/which-package-manager) " install npm"))
-  (unless (executable-find "yarn")
-    (async-shell-command "sudo npm install yarn -g"))
-  (unless (executable-find "java")
-    ;; TODO 2021-08-20: This statement currently only works with Fedora. Change
-    ;; to be compatible with other distributions.
-    (async-shell-command (concat "sudo " (kb/which-package-manager) " install java-latest-openjdk")))
   )
 
 ;;;; Flycheck-pos-tip-mode

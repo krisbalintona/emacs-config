@@ -37,6 +37,7 @@
 ;; defined afterward will often rely on these
 (require 'auto-gc-rcp)
 (require 'personal-variables-rcp)
+(require 'external-programs-rcp)
 (require 'straight-package-management-rcp)
 (require 'use-package-rcp)
 (require 'early-packages-rcp)
