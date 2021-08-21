@@ -13,13 +13,6 @@
 ;;;; Flycheck
 ;; Check your code
 (use-package flycheck
-  ;; NOTE 2021-08-19: This is to make sure npm and yarn are installed on the
-  ;; system for system dependencies for other packages (particularly flycheck
-  ;; linters)
-  ;; :ensure-system-package ((npm . (concat "sudo " (kb/which-package-manager) " install npm"))
-  ;;                         (yarn . (concat "sudo " (kb/which-package-manager) " install yarn"))
-  ;;                         (java . (concat "sudo " (kb/which-package-manager) " install default-jdk"))
-  ;;                         )
   :ghook ('after-init-hook 'global-flycheck-mode)
   :general
   (kb/leader-keys
