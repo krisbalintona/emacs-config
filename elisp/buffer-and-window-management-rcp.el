@@ -121,6 +121,7 @@
              "Bw" '(burly-bookmark-windows :which-key "Burly windows")
              "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
              "BM" '(burly-open-last-bookmark :which-key "Open last bookmark")
+             "Bo" '(burly-open-url :which-key "Open url at point")
              )
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
