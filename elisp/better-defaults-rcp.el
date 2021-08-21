@@ -39,8 +39,6 @@
 
               sentence-end-double-space nil                                                       ; Single space after period denotes end of sentence
 
-              show-help-function nil                                                              ; Disable help text on most UI elements
-
               uniquify-buffer-name-style 'forward                                                 ; Uniquify buffer names
               window-combination-resize t                                                         ; Resize windows proportionally
               split-height-threshold nil                                                          ; Threshiold for vertical window splitting
@@ -65,6 +63,8 @@
               ring-bell-function 'ignore                                                          ; Disable annoying error sound on Windows 10
 
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
+
+              completions-detailed t                                                              ; Show more details in completion minibuffer (inspired by `marginalia')
               )
 
 ;;;; Kill child processes without confirm
