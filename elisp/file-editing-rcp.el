@@ -146,7 +146,7 @@ is only tested on \"insert\" action."
   :general
   ("M-o" '(embark-act :which-key "Embark-act"))
   (kb/leader-keys
-    "hb" '(embark-bindings :which-key "Embark-bindings")
+    "hB" '(embark-bindings :which-key "Embark-bindings")
     )
   :custom
   ;; Optionally replace the key help with a completing-read interface
