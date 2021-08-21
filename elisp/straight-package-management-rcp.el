@@ -28,6 +28,11 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;;;; Make sure watchexec is installed
+;; This automatically pulls package repo changes via straight.el
+(unless (executable-find "watchexec")
+  (async-shell-command "sudo cargo install watchexec-cli"))
+
 ;;; straight-package-management-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'straight-package-management-rcp)
