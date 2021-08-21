@@ -22,6 +22,9 @@
            "C-:" 'evil-jump-forward)
   (:states '(normal visual)
            "zi" 'org-toggle-inline-images)
+  (:states 'normal
+           "K" 'join-line
+           "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
            "C-P" 'evil-paste-before
            "C-p" 'evil-paste-after)
