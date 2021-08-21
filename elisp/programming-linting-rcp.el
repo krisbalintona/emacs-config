@@ -40,6 +40,8 @@
   :preface
   ;; NOTE 2021-08-19: Doing it here because I can't get `ensure-system-package'
   ;; to accept and evaluated function.
+  (unless (executable-find "pip")
+    (async-shell-command "sudo " (kb/which-package-manager) " install pip"))
   (unless (executable-find "npm")
     (async-shell-command "sudo " (kb/which-package-manager) " install npm"))
   (unless (executable-find "yarn")
