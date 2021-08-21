@@ -16,18 +16,19 @@
   :hook (git-commit-mode . evil-insert-state) ; For magit commits
   :ghook 'after-init-hook
   :general
-  (:states '(insert global)
-           "C-g" 'evil-escape)
-  (:states '(normal insert visual)
-           "C-:" 'evil-jump-forward)
-  (:states '(normal visual)
-           "zi" 'org-toggle-inline-images)
   (:states 'normal
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
+           ;; TODO 2021-08-21: For some reason, the second one doesn't load
            "C-P" 'evil-paste-before
            "C-p" 'evil-paste-after)
+  (:states '(normal insert visual)
+           ;; TODO 2021-08-21: Look into `better-jumper' to see if I can
+           ;; ameliorate evil's shortcomings
+           "C-:" 'evil-jump-forward)
+  (:states '(normal visual motion)
+           "zi" 'org-toggle-inline-images)
   (kb/leader-keys
     "ww" 'evil-window-mru
 
