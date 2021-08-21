@@ -18,6 +18,13 @@
   ;; Make ESC quit everywhere
   (general-define-key "<escape>" 'keyboard-escape-quit)
 
+  (general-unbind
+    :keymaps '(Info-mode-map
+               ;; Magit modes
+               magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
+               )
+    "SPC")
+
   (general-create-definer kb/leader-keys ; Use space as leader key
     :keymaps '(normal insert visual emacs)
     :prefix "SPC"
