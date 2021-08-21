@@ -67,6 +67,11 @@ otherwise. This predicate is only tested on \"insert\" action."
 is only tested on \"insert\" action."
     (when (eq action 'insert)
       (sp--looking-at-p "(\\|)")))
+  (defun kb/sp-point-before-closing-paren-p (_id action _context)
+    "Return t if point is before a closing parenthesis, nil otherwise. This predicate
+is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-at-p "(")))
   :config
   ;; Global
   (sp-pair "(" ")" :actions '(insert autoskip navigate))
@@ -78,7 +83,7 @@ is only tested on \"insert\" action."
   ;; emacs-lisp-mode
   (sp-local-pair 'emacs-lisp-mode "(" ")"
                  :actions '(insert autoskip navigate)
-                 :unless '(kb/sp-point-before-letter-digit-p))
+                 :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
   (sp-local-pair 'emacs-lisp-mode "`" "'"
                  :actions '(insert autoskip navigate)
