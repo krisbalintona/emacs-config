@@ -217,12 +217,14 @@ UTF-8."
   (doom-modeline-def-segment kb/buffer-default-directory
     "Standard `buffer-default-directory' without the state, icon, and color change."
     (let* ((active (doom-modeline--active))
-           (face (if active 'doom-modeline-buffer-path 'mode-line-inactive))) ; Don't use here
+           (face (if active 'bold-italic 'mode-line-inactive))) ; Don't use here
       (concat (doom-modeline-spc)
-              (propertize (if (vc-git-root (buffer-file-name))
-                              (abbreviate-file-name (vc-git-root (buffer-file-name)))
-                            (abbreviate-file-name default-directory))
-                          'face 'bold-italic)
+              (propertize (cond ((stringp (vc-git-root (buffer-file-name)))
+                                 (abbreviate-file-name (vc-git-root (buffer-file-name))))
+                                (buffer-file-name ; Connected to file?
+                                 default-directory)
+                                (t "Not file!"))
+                          'face face)
               (doom-modeline-spc))))
   (doom-modeline-def-segment me/major-mode
     "The current major mode, including environment information."
