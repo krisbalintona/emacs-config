@@ -41,18 +41,21 @@
   (lsp-ui-doc-position 'top)
   )
 ;;;; Dev-docs
-;; Viewing documentation within Emacs
+;; Viewing documentation within Emacs. Requires internet connection.
 (use-package devdocs
   :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
          (haskell-mode . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
+         (js2-mode . (lambda () (setq-local devdocs-current-docs '("JavaScript"))))
+         (lua-mode . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
+         (LaTeX-mode . (lambda () (setq-local devdocs-current-docs '("latex"))))
          )
   :general
-  (:keymaps 'devdocs-mode-map
-            "go" '(browse-url :which-key "Open in browser"))
   (kb/leader-keys
     :keymaps 'prog-mode-map
-    :states '(normal visual motion)
-    "dl" '(devdocs-lookup :which-key "Devdocs lookup"))
+    :states 'normal
+    "di" '(devdocs-install :which-key "Install documentation for a language")
+    "dl" '(devdocs-lookup :which-key "Documentation lookup")
+    "dL" '(devdocs-search :which-key "Search for docs in site"))
   )
 
 ;;; programming-ide-rcp.el ends here
