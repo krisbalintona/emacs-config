@@ -15,7 +15,7 @@
 ;;;;; Expand-region
 ;; Incrementally select a region outward
 (use-package expand-region
-  :hook (text-mode . er/add-text-mode-expansions)
+  :hook (org-mode . er/add-text-mode-expansions)
   :general (:states '(normal visual motion)
                     "+" 'er/expand-region)
   :custom
@@ -81,6 +81,7 @@ is only tested on \"insert\" action."
            :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
 
   ;; emacs-lisp-mode
+  ;; TODO 2021-08-21: Work still needs to be done for this mode
   (sp-local-pair 'emacs-lisp-mode "(" ")"
                  :actions '(insert autoskip navigate)
                  :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
