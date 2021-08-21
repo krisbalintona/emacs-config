@@ -26,7 +26,6 @@
 
   (kb/leader-keys
     "t"  '(:ignore t :which-key "Toggles")
-    "tl" '(display-line-numbers-mode :which-key "Line numbers")
     "o"  '(:ignore t :which-key "Open")
     "oc" '(calendar :which-key "Open calendar")
     "b"  '(:ignore t :which-key "Buffers")
