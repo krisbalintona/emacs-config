@@ -51,24 +51,35 @@
   (sp-ignore-modes-list
    '(minibuffer-mode minibuffer-inactive-mode
                      ))
+  (sp-autoskip-closing-pair 'always-end)
+  ;; Read `sp-delete-pair' docstring
+  (sp-autodelete-pair t)
+  (sp-autodelete-opening-pair t)
+  (sp-autodelete-closing-pair t)
+  :init
+  (defun kb/sp-point-before-letter-digit-p (_id action _context)
+    "Return t if point is followed by any digit or alphanumeric character, nil
+otherwise. This predicate is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-at-p "[a-z0-9A-Z]")))
+  (defun kb/sp-point-adjacent-paren-p (_id action _context)
+    "Return t if point is next to a parenthesis, nil otherwise. This predicate
+is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-at-p "(\\|)")))
   :config
-  ;; TODO 2021-08-19: Determine how to do what I want in emacs-lisp-mode and
-  ;; org-mode and how it interacts based on deleting, location (e.g. in comment
-  ;; or not)--for writing and programming
-
   ;; Global
-  (sp-pair "(" ")" :actions '(autoinsert autoskip navigate))
-  (sp-pair "\"" "\"" :actions '(autoinsert autoskip navigate))
+  (sp-pair "(" ")" :actions '(insert autoskip navigate))
+  (sp-pair "\"" "\""
+           :actions '(insert autoskip navigate escape)
+           :unless '(sp-in-string-quotes-p kb/sp-point-before-letter-digit-p sp-point-before-same-p)
+           :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
 
   ;; emacs-lisp-mode
-  (sp-local-pair 'emacs-lisp-mode "'" nil)
-  (sp-local-pair 'emacs-lisp-mode "`" "'" :when '(nil nil comment))
-  (sp-local-pair 'emacs-lisp-mode "`" "'" :when '(nil nil string))
-
-  ;; org-mode
-  (when (featurep 'typo)
-    (sp-local-pair 'org-mode "“" "”")
-    (sp-local-pair 'org-mode "“" "”"))
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+  (sp-local-pair 'emacs-lisp-mode "`" "'"
+                 :actions '(insert autoskip navigate)
+                 :unless '(kb/sp-point-before-letter-digit-p))
   )
 
 ;;;; Quick movement
