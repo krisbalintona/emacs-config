@@ -18,9 +18,9 @@
   :defines lsp-clients-lua-language-server-install-dir
   :custom
   ;; Lsp-mode settings
-  (lsp-clients-lua-language-server-install-dir "/home/krisbalintona/Cloned_Repos/lua-language-server/") ; Path to where I manually cloned lua-language-server
-  (lsp-clients-lua-language-server-bin (expand-file-name "bin/Linux/lua-language-server" lsp-clients-lua-language-server-install-dir))
-  (lsp-clients-lua-language-server-main-location (expand-file-name "main.lua" lsp-clients-lua-language-server-install-dir))
+  ;; (lsp-clients-lua-language-server-install-dir "/home/krisbalintona/Cloned_Repos/lua-language-server/") ; Path to where I manually cloned lua-language-server
+  ;; (lsp-clients-lua-language-server-bin (expand-file-name "bin/Linux/lua-language-server" lsp-clients-lua-language-server-install-dir))
+  ;; (lsp-clients-lua-language-server-main-location (expand-file-name "main.lua" lsp-clients-lua-language-server-install-dir))
 
   (lua-indent-level 2) ; lua-indent-level defaults to 3 otherwise. Madness.
   (lua-indent-string-contents t) ; Contents of a multiline string will be indented

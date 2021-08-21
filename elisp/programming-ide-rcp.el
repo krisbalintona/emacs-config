@@ -12,12 +12,12 @@
 ;;;; Lsp-mode
 ;; Use the language server protocol as a backend for Emacs.
 (use-package lsp-mode
-  :ghook ('prog-mode-mode 'lsp-deferred) ; Lsp-mode only when buffer is visible
+  :commands (lsp lsp-deferred)
+  :ghook ('prog-mode-mode-hook 'lsp-deferred) ; Lsp-mode only when buffer is visible
   :gfhook 'lsp-enable-which-key-integration 'lsp-headerline-breadcrumb-mode
   :general
   (:keymaps 'lsp-mode-map
-            "TAB" 'company-indent-or-complete-common
-            )
+            "TAB" 'company-indent-or-complete-common)
   (kb/leader-keys
     "ld" 'xref-find-definitions
     "lr" 'xref-find-references
@@ -39,6 +39,10 @@
   :ghook 'lsp-mode-hook
   :custom
   (lsp-ui-doc-position 'top)
+  )
+;;;; Dap-mode
+(use-package dap-mode
+  ;; :ensure-system-package ("pip install \"ptvsd>=4.2\"")
   )
 
 ;;; programming-ide-rcp.el ends here
