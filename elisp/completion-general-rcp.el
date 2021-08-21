@@ -32,6 +32,9 @@
 (use-package marginalia
   :straight (marginalia :type git :host github :repo "minad/marginalia")
   :ghook 'after-init-hook
+  :general
+  (:keymaps 'minibuffer-local-map
+            "M-A" '(marginalia-cycle :which-key "Marginalia cycle"))
   :config
   ;; Marginalia faces
   (set-face-attribute 'marginalia-documentation nil
