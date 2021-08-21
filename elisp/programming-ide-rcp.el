@@ -40,6 +40,20 @@
   :custom
   (lsp-ui-doc-position 'top)
   )
+;;;; Dev-docs
+;; Viewing documentation within Emacs
+(use-package devdocs
+  :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
+         (haskell-mode . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
+         )
+  :general
+  (:keymaps 'devdocs-mode-map
+            "go" '(browse-url :which-key "Open in browser"))
+  (kb/leader-keys
+    :keymaps 'prog-mode-map
+    :states '(normal visual motion)
+    "dl" '(devdocs-lookup :which-key "Devdocs lookup"))
+  )
 
 ;;; programming-ide-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
