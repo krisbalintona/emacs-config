@@ -142,8 +142,8 @@ with the date format being controlled by the variable
 `prot-comment-timestamp-format-concise'.
 
 With optional VERBOSE argument (such as a prefix argument
-`\\[universal-argument]'), use an alternative date format, as
-specified by `prot-comment-timestamp-format-verbose'."
+`\\[universal-argument]'), always insert newline above current one and write
+comment there."
   (interactive
    (list
     (prot-comment--keyword-prompt
@@ -151,36 +151,46 @@ specified by `prot-comment-timestamp-format-verbose'."
            ((derived-mode-p 'org-mode) prot-comment-comment-keywords-writing)
            (t nil)))
     current-prefix-arg))
-  (let* ((date (if verbose
-                   prot-comment-timestamp-format-verbose
-                 prot-comment-timestamp-format-concise))
+  (let* ((date prot-comment-timestamp-format-concise)
          (string (format "%s %s: " keyword (format-time-string date)))
          (beg (point)))
-    (cond
-     ((or (eq beg (point-at-bol))
-          (prot-common-line-regexp-p 'empty))
-      (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
-        ;; NOTE 2021-07-24: we use this `insert' instead of
-        ;; `comment-region' because of a yet-to-be-determined bug that
-        ;; traps `undo' to the two states between the insertion of the
-        ;; string and its transformation into a comment.
-        (insert
-         (concat comment-start
-                 ;; NOTE 2021-07-24: See function `comment-add' for
-                 ;; why we need this.
-                 (make-string
-                  (comment-add nil)
-                  (string-to-char comment-start))
-                 comment-padding
-                 string
-                 comment-end))
-        (indent-region beg (point))
-        (when maybe-newline
-          (save-excursion (insert maybe-newline)))))
-     (t
-      (comment-indent t)
-      (insert (concat " " string))))
-    (evil-insert-state) ; Immediately go into insert state
+    (cond ((equal current-prefix-arg '(4)) ; Universal argument case
+           (progn (evil-insert-newline-above)
+                  (indent-according-to-mode)
+                  (insert
+                   (concat comment-start
+                           (make-string
+                            (comment-add nil)
+                            (string-to-char comment-start))
+                           comment-padding
+                           string
+                           comment-end))
+                  ))
+          ((or (eq beg (point-at-bol)) ; Beginning of line or in indent whitespace case
+               (prot-common-line-regexp-p 'empty))
+           (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
+             ;; NOTE 2021-07-24: we use this `insert' instead of
+             ;; `comment-region' because of a yet-to-be-determined bug that
+             ;; traps `undo' to the two states between the insertion of the
+             ;; string and its transformation into a comment.
+             (insert
+              (concat comment-start
+                      ;; NOTE 2021-07-24: See function `comment-add' for
+                      ;; why we need this.
+                      (make-string
+                       (comment-add nil)
+                       (string-to-char comment-start))
+                      comment-padding
+                      string
+                      comment-end))
+             (indent-region beg (point))
+             (when maybe-newline
+               (save-excursion (insert maybe-newline)))))
+          (t ; Within code (creates node at `comment-column')
+           (comment-indent t)
+           (insert (concat " " string))))
+    ;; Immediately go into insert state afterward
+    (evil-insert-state)
     ))
 
 (kb/leader-keys
