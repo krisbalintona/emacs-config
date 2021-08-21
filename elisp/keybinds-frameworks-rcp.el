@@ -51,6 +51,16 @@
     )
   )
 
+;;;; Native-Emacs keybinds
+(general-define-key
+ :states 'insert
+ "M-RET" '(lambda () ; Newline above
+            (interactive)
+            (move-beginning-of-line 1)
+            (insert "\n")
+            (forward-line -1)
+            (back-to-indentation))
+ )
 ;;;; Pretty-hydra
 ;; Hydra but with prettier displays
 (use-package pretty-hydra
