@@ -17,7 +17,7 @@
 (use-package expand-region
   :hook (text-mode . er/add-text-mode-expansions)
   :general (:states '(normal visual motion)
-                    "C-=" 'er/expand-region)
+                    "+" 'er/expand-region)
   :custom
   (expand-region-smart-cursor t)
   (expand-region-skip-whitespace nil)
