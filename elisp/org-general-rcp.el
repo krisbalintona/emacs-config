@@ -346,9 +346,9 @@ re-align the table if necessary. (Necessary because org-mode has a
             (org-element-property :begin context)
             (org-element-property :end context)))))))
 
-  (general-define-key
-   :states 'normal
-   "RET" '(+org/dwim-at-point :which-key "RET-DWIM at point"))
+  ;; (general-define-key
+  ;;  :states 'normal
+  ;;  "RET" '(+org/dwim-at-point :which-key "RET-DWIM at point"))
   )
 
 ;;;;; Better C-RET
