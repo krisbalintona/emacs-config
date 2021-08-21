@@ -94,7 +94,7 @@
   (:states '(visual normal motion)
            "gt" 'eyebrowse-next-window-config
            "ga" 'eyebrowse-prev-window-config
-           "gz" 'eyebrowse-last-window-config
+           "gv" 'eyebrowse-last-window-config
            )
   (:keymaps 'eyebrowse-mode-map
             :prefix "C-c C-w"

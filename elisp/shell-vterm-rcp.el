@@ -12,11 +12,6 @@
 ;;;; Shell-mode
 (use-package sh-script
   :straight nil
-  :general (general-unbind ; Interferes with eyebrowse
-             :keymaps 'sh-mode-map
-             :states 'normal
-             "gz"
-             )
   )
 
 ;;;; Vterm

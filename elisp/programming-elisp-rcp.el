@@ -14,9 +14,6 @@
 ;; Elisp-mode overwrites my eyebrowse-last-window-config binding
 (use-package elisp-mode
   :straight nil
-  :general (:keymaps 'emacs-lisp-mode-map
-                     :states '(normal visual motion)
-                     "gz" 'eyebrowse-last-window-config)
   )
 
 ;;;; Eros-mode
