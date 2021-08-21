@@ -42,7 +42,7 @@
   :commands sp-local-pair sp-pair
   :ghook ('after-init-hook 'smartparens-global-mode)
   :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
-  :general (:keymaps 'emacs-lisp-mode
+  :general (:keymaps 'prog-mode-map
                      :states '(visual normal motion)
                      [remap evil-forward-sentence-begin] 'sp-forward-sexp
                      [remap evil-backward-sentence-begin] 'sp-backward-sexp)
