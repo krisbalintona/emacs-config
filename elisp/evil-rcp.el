@@ -113,9 +113,11 @@
   :functions evil-org-agenda-set-keys
   :ghook 'org-mode-hook
   :gfhook '(lambda () (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
-  :general (:keymaps '(org-mode-map LaTeX-mode-map)
-                     [remap evil-first-non-blank] 'evil-org-beginning-of-line ; To respect visual-line-mode
-                     )
+  :general
+  ;; (:states '(normal visual motion)
+  ;;          "ge" 'evil-backward-word-end)
+  (:keymaps '(org-mode-map LaTeX-mode-map)
+            [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; To respect visual-line-mode
   :init
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
