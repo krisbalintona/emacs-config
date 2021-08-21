@@ -59,10 +59,6 @@
 (use-package bibtex-actions
   :after (bibtex-completion embark)
   :general
-  (general-define-key
-   :keymaps 'minibuffer-local-map
-   "M-b" 'bibtex-actions-insert-preset
-   )
   (:keymaps 'bibtex-actions-map ; Custom keymap for `bibtex-actions'
             "t" '("reference | add pdf attachment" . bibtex-actions-add-pdf-attachment)
             "a" '("reference | add pdf to library" . bibtex-actions-add-pdf-to-library)
