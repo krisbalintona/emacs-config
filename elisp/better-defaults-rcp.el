@@ -9,6 +9,9 @@
 (require 'use-package-rcp)
 (require 'early-packages-rcp)
 
+;;;; Reenable these disabled commands
+(put 'narrow-to-region 'disabled nil) ; `narrow-to-region'
+
 ;;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil                                                    ; Don't warn when opening large files
