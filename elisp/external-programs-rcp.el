@@ -12,23 +12,27 @@
 ;;; Code:
 (require 'personal-variables-rcp)
 
-;;;; Languages
+;;;; Python
 (unless (executable-find "python")
   (async-shell-command (concat "sudo " (kb/which-package-manager) " install python")))
-(unless (executable-find "java")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " install java-latest-openjdk")))
-(unless (executable-find "rustc")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " install rust")))
-
-;;;; Package managers
 (unless (executable-find "pip")
   (async-shell-command "sudo " (kb/which-package-manager) " install pip"))
+
+;;;; Javascript
 (unless (executable-find "npm")
   (async-shell-command "sudo " (kb/which-package-manager) " install npm"))
 (unless (executable-find "yarn")
   (async-shell-command "sudo npm install yarn -g"))
+
+;;;; Rust
+(unless (executable-find "rustc")
+  (async-shell-command (concat "sudo " (kb/which-package-manager) " install rust")))
 (unless (executable-find "cargo")
   (async-shell-command (concat "sudo " (kb/which-package-manager) " install cargo")))
+
+;;;; Java
+(unless (executable-find "java")
+  (async-shell-command (concat "sudo " (kb/which-package-manager) " install java-latest-openjdk")))
 
 ;;; external-programs-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
