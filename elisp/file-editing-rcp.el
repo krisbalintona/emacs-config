@@ -28,7 +28,7 @@
     (setq er/try-expand-list (append
                               er/try-expand-list
                               '(mark-paragraph
-                                mark-page))))
+                                ))))
   )
 ;;;;; Paren
 ;; Highlight matching delimiters
