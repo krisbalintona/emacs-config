@@ -35,11 +35,6 @@
 (use-package paren
   :ghook ('after-init-hook 'show-paren-mode)
   )
-;;;;; Paren
-;; Highlight matching delimiters
-(use-package paren
-  :ghook ('after-init-hook 'show-paren-mode)
-  )
 
 ;;;;; Smartparens
 ;; Autopairing parentheses
