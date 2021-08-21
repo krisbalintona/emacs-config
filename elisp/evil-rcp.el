@@ -22,6 +22,9 @@
            "C-:" 'evil-jump-forward)
   (:states '(normal visual)
            "zi" 'org-toggle-inline-images)
+  (:states 'insert
+           "C-P" 'evil-paste-before
+           "C-p" 'evil-paste-after)
   (kb/leader-keys
     "ww" 'evil-window-mru
 

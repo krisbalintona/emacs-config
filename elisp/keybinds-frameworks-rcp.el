@@ -61,6 +61,29 @@
             (forward-line -1)
             (back-to-indentation))
  )
+(general-define-key
+ :keymaps 'reveal-mode-map
+ ;; Beginning and end of line
+ "C-f" 'end-of-line
+ "C-b" 'beginning-of-line
+ ;; Next and previous word
+ "M-f" 'forward-to-word
+ "M-F" 'forward-word
+ "M-b" 'backward-word
+ "M-B" 'backward-to-word
+ )
+(general-define-key
+ :states 'insert
+ ;; Beginning and end of line
+ "C-f" 'end-of-line
+ "C-b" 'beginning-of-line
+ ;; Next and previous word
+ "M-f" 'forward-to-word
+ "M-F" 'forward-word
+ "M-b" 'backward-word
+ "M-B" 'backward-to-word
+ )
+
 ;;;; Pretty-hydra
 ;; Hydra but with prettier displays
 (use-package pretty-hydra
