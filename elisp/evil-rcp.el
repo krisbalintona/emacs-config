@@ -15,6 +15,7 @@
   :demand t
   :hook (git-commit-mode . evil-insert-state) ; For magit commits
   :ghook 'after-init-hook
+  :commands evil-set-initial-state
   :general
   (:states 'normal
            "K" 'join-line
@@ -80,6 +81,7 @@
   :demand t ; Load now or it won't
   :requires evil
   :after evil
+  :commands evil-collection-init
   :custom
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
