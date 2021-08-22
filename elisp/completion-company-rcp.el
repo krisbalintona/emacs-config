@@ -44,8 +44,11 @@
   (company-dabbrev-ignore-case nil)
   (company-dabbrev-downcase nil)
 
-  ;; These are the backends that Doom has active
-  (company-backends '(company-capf company-dabbrev company-yasnippet company-ispell))
+  ;; NOTE 2021-08-22: I've set the initial backends to be minimal, removing a
+  ;; lot of the backends that company initially sets. Most notably, I removed
+  ;; `company-abbrev' because it slows down the performance significantly and I
+  ;; don't use it.
+  (company-backends '(company-capf company-yasnippet company-ispell))
   )
 
 ;;;; Company-box
