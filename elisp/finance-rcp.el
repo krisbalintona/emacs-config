@@ -11,7 +11,7 @@
 
 ;;;; Ledger-mode
 (use-package ledger-mode
-  :ensure-system-package (ledger . "sudo apt install ledger")
+  :ensure-system-package (ledger . "sudo dnf install ledger")
   :defines evil-emacs-state-modes
   :hook (after-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
   :gfhook
