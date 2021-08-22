@@ -12,24 +12,6 @@
 (require 'faces-rcp)
 
 ;;;; Manipulating text
-;;;;; Expand-region
-;; Incrementally select a region outward
-(use-package expand-region
-  :hook (org-mode . er/add-text-mode-expansions)
-  :general (:states '(normal visual motion)
-                    "+" 'er/expand-region)
-  :custom
-  (expand-region-smart-cursor t)
-  (expand-region-skip-whitespace nil)
-  (expand-region-subword-enabled t)
-  :init
-  (defun er/add-text-mode-expansions ()
-    (make-variable-buffer-local 'er/try-expand-list)
-    (setq er/try-expand-list (append
-                              er/try-expand-list
-                              '(mark-paragraph
-                                ))))
-  )
 ;;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
