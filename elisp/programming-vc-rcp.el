@@ -36,8 +36,7 @@
     )
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
-  ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  (magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
   ;; Displaying hunks
   ;; (magit-diff-highlight-hunk-body nil)
