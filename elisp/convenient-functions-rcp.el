@@ -60,8 +60,9 @@
   "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer"))
 
 ;;;; Better comment-dwim
-(defun kb/comment-dwim (arg)
-  "Call the comment command you want (Do What I Mean).
+(with-eval-after-load 'smartparens
+  (defun kb/comment-dwim (arg)
+    "Call the comment command you want (Do What I Mean).
 If the region is active and `transient-mark-mode' is on, call
 `comment-region' (unless it only consists of comments, in which
 case it calls `uncomment-region').
@@ -73,36 +74,37 @@ You can configure `comment-style' to change the way regions are commented.
 
 I've added a part at the end which puts me in insert mode with a
 space between point and the comment character."
-  (interactive "*P")
-  (comment-normalize-vars)
-  (if (use-region-p)
-      (comment-or-uncomment-region (region-beginning) (region-end) arg)
-    (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
-        ;; FIXME: If there's no comment to kill on this line and ARG is
-        ;; specified, calling comment-kill is not very clever.
-        (if arg (comment-kill (and (integerp arg) arg)) (comment-indent))
-      ;; Inserting a comment on a blank line. comment-indent calls
-      ;; c-i-c-f if needed in the non-blank case.
-      (if comment-insert-comment-function
-          (funcall comment-insert-comment-function)
-        (let ((add (comment-add arg)))
-          ;; Some modes insist on keeping column 0 comment in column 0
-          ;; so we need to move away from it before inserting the comment.
-          (indent-according-to-mode)
-          (insert (comment-padright comment-start add))
-          (save-excursion
-            (unless (string= "" comment-end)
-              (insert (comment-padleft comment-end add)))
-            (indent-according-to-mode)))))
-    ;; Add space and go into insert state when at the end of the line. The check
-    ;; needed for when called within a comment, to be faithful to the
-    ;; functionality of the original `comment-dwim', which makes it compatible
-    ;; with other functions that call it.
-    (when (sp--looking-at "[[:blank:]\n]")
-      (insert " ")
-      (evil-insert-state))
-    ))
-(advice-add 'comment-dwim :override 'kb/comment-dwim)
+    (interactive "*P")
+    (comment-normalize-vars)
+    (if (use-region-p)
+        (comment-or-uncomment-region (region-beginning) (region-end) arg)
+      (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
+          ;; FIXME: If there's no comment to kill on this line and ARG is
+          ;; specified, calling comment-kill is not very clever.
+          (if arg (comment-kill (and (integerp arg) arg)) (comment-indent))
+        ;; Inserting a comment on a blank line. comment-indent calls
+        ;; c-i-c-f if needed in the non-blank case.
+        (if comment-insert-comment-function
+            (funcall comment-insert-comment-function)
+          (let ((add (comment-add arg)))
+            ;; Some modes insist on keeping column 0 comment in column 0
+            ;; so we need to move away from it before inserting the comment.
+            (indent-according-to-mode)
+            (insert (comment-padright comment-start add))
+            (save-excursion
+              (unless (string= "" comment-end)
+                (insert (comment-padleft comment-end add)))
+              (indent-according-to-mode)))))
+      ;; Add space and go into insert state when at the end of the line. The check
+      ;; needed for when called within a comment, to be faithful to the
+      ;; functionality of the original `comment-dwim', which makes it compatible
+      ;; with other functions that call it.
+      (when (sp--looking-at "[[:blank:]\n]")
+        (insert " ")
+        (evil-insert-state))
+      ))
+  (advice-add 'comment-dwim :override 'kb/comment-dwim)
+  )
 
 ;;;; Prot-comment
 ;; helper code from prot-common.el, which is `require'd by
