@@ -40,6 +40,7 @@
   :custom
   (lsp-ui-doc-position 'top)
   )
+
 ;;;; Dev-docs
 ;; Viewing documentation within Emacs. Requires internet connection.
 (use-package devdocs

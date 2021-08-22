@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Packages that configure the company completion backend
+;; Packages that configure the company completion backend.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -15,27 +15,30 @@
   :after evil
   :ghook ('after-init-hook 'global-company-mode)
   :gfhook 'evil-normalize-keymaps
-  :general (:keymaps 'company-active-map
-                     "RET" 'org-return
-                     [return] 'org-return
-                     "TAB" #'company-complete-selection
-                     [tab] #'company-complete-selection
-                     )
+  :general
+  (:keymaps 'company-active-map
+            "<escape>" '(lambda () (interactive) (company-abort) (evil-normal-state))
+            "<return>" '(lambda () (interactive) (company-abort) (newline))
+            "<tab>" 'company-complete-selection
+            "C-j" 'company-select-next-or-abort
+            "C-k" 'company-select-previous-or-abort
+            "C-n" 'company-select-next-or-abort
+            "C-p" 'company-select-previous-or-abort)
   :custom
-  (company-idle-delay 0.55)
-  (company-minimum-prefix-length 2)
-  (company-require-match 'company-explicit-action-p)
+  (company-idle-delay 0.15)
+  (company-minimum-prefix-length 1)
+  (company-require-match 'never)
   (company-selection-wrap-around nil) ; Cycle?
-  (company-global-modes '(not erc-mode message-mode help-mode gud-mode))
+  (company-global-modes '(not shell-mode))
 
-  (company-show-numbers nil) ; Number the candidates?
+  (company-show-numbers nil)
   (company-tooltip-offset-display 'lines)
   (company-tooltip-minimum-width 85)
   (company-tooltip-maximum-width 85)
-  (company-tooltip-width-grow-only t)
+  (company-tooltip-width-grow-only t) ; Don't decrease the width?
   (company-tooltip-flip-when-above t)
   (company-tooltip-align-annotations t)
-  (company-tooltip-idle-delay 0.7)
+  (company-tooltip-idle-delay 0.1)
 
   (company-dabbrev-other-buffers nil)
   (company-dabbrev-ignore-case nil)
