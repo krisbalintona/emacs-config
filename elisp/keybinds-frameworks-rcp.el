@@ -100,6 +100,13 @@
  "M-j" 'next-line
  "M-k" 'previous-line
  )
+(general-define-key
+ :states '(normal motion visual insert)
+ "S-<return>" '(lambda ()
+                 (interactive)
+                 (forward-line -1)
+                 (back-to-indentation))
+ )
 
 ;;;; Pretty-hydra
 ;; Hydra but with prettier displays
