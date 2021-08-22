@@ -26,7 +26,7 @@
     "SPC")
 
   (general-create-definer kb/leader-keys ; Use space as leader key
-    :keymaps '(normal insert visual emacs)
+    :keymaps '(normal visual insert motion emacs)
     :prefix "SPC"
     :global-prefix "M-SPC"
     )
