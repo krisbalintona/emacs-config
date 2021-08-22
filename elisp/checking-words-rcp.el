@@ -30,6 +30,7 @@
 ;;;;; Wordnut
 ;; Offline dictionary
 (use-package wordnut
+  :after define-word
   ;; TODO 2021-08-20: Have this changed depending on linux distribution
   :ensure-system-package (wordnet) ; Make sure English dictionary is also installed
   :config
@@ -42,6 +43,7 @@
 ;;;;; Synosaurus
 ;; Offline thesaurus
 (use-package synosaurus
+  :after powerthesaurus
   ;; TODO 2021-08-20: Have this changed depending on Linux distribution
   :ensure-system-package (wn . wordnet) ; Make sure English dictionary is also installed
   :ghook 'after-init-hook
