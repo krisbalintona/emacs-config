@@ -64,7 +64,6 @@
   :custom
   (no-littering-etc-directory (expand-file-name "data/" user-emacs-directory)) ; Config files
   (no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-  (auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))) ; Store auto-saved files here
   :preface (require 'recentf)
   )
 
