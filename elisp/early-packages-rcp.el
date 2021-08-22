@@ -30,28 +30,28 @@
   (system-packages-use-sudo t)
   :config
   (add-to-list 'system-packages-supported-package-managers
-               '(yay . ; Add support for yay
-                     ((default-sudo . t)
-                      (install . "yay -S")
-                      (search . "yay -Ss")
-                      (uninstall . "yay -Rns")
-                      (update . "yay -Syu")
-                      (clean-cache . "yay -Sc")
-                      (change-log . "yay -Qc")
-                      (log . "cat /var/log/yay.log")
-                      (get-info . "yay -Qi")
-                      (get-info-remote . "yay -Si")
-                      (list-files-provided-by . "yay -qQl")
-                      (owning-file . "yay -Qo")
-                      (owning-file-remote . "yay -F")
-                      (verify-all-packages . "yay -Qkk")
-                      (verify-all-dependencies . "yay -Dk")
-                      (remove-orphaned . "yay -Rns $(yay -Qtdq)")
-                      (list-installed-packages . "yay -Qe")
-                      (list-installed-packages-all . "yay -Q")
-                      (list-dependencies-of . "yay -Qi")
-                      (noconfirm . "--noconfirm"))
-                     ))
+                '(yay . ; Add support for yay
+                      ((default-sudo . t)
+                       (install . "yay -S")
+                       (search . "yay -Ss")
+                       (uninstall . "yay -Rns")
+                       (update . "yay -Syu")
+                       (clean-cache . "yay -Sc")
+                       (change-log . "yay -Qc")
+                       (log . "cat /var/log/yay.log")
+                       (get-info . "yay -Qi")
+                       (get-info-remote . "yay -Si")
+                       (list-files-provided-by . "yay -qQl")
+                       (owning-file . "yay -Qo")
+                       (owning-file-remote . "yay -F")
+                       (verify-all-packages . "yay -Qkk")
+                       (verify-all-dependencies . "yay -Dk")
+                       (remove-orphaned . "yay -Rns $(yay -Qtdq)")
+                       (list-installed-packages . "yay -Qe")
+                       (list-installed-packages-all . "yay -Q")
+                       (list-dependencies-of . "yay -Qi")
+                       (noconfirm . "--noconfirm"))
+                      ))
   (if kb/linux-arch
       (setq system-packages-package-manager 'yay
             system-packages-use-sudo nil))
@@ -78,12 +78,49 @@
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
+  :functions (sp--looking-at-p sp--looking-back outline-back-to-heading outline-next-heading)
+  :commands evil-insert-state
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general (:keymaps 'outshine-mode-map
-                     "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+                      "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
+  :init
+  ;; More convenient `outline-insert-heading'
+  (defun kb/outline-insert-heading ()
+    "Insert a new heading at same depth at point.
+
+I've customized it such that it ensures there are newlines before
+and after the heading that that insert mode is entered
+afterward."
+    (interactive)
+    ;; Check for if previous line is empty
+    (unless (sp--looking-back "[[:space:]]*$")
+      (insert "\n"))
+    (let ((head (save-excursion
+                  (condition-case nil
+                      (outline-back-to-heading)
+                    (error (outline-next-heading)))
+                  (if (eobp)
+                      (or (caar outline-heading-alist) "")
+                    (match-string 0)))))
+      (unless (or (string-match "[ \t]\\'" head)
+                  (not (string-match (concat "\\`\\(?:" outline-regexp "\\)")
+                                     (concat head " "))))
+        (setq head (concat head " ")))
+      (unless (bolp) (end-of-line) (newline))
+      (insert head)
+      (unless (eolp)
+        (save-excursion (newline-and-indent)))
+      (run-hooks 'outline-insert-heading-hook))
+    ;; Check for if next line is empty
+    (unless (sp--looking-at-p "[[:space:]]*$")
+      (save-excursion
+        (end-of-line)
+        (insert "\n")))
+    (evil-insert-state))
+  (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
   :config
   ;; Outshine headline faces
   (set-face-attribute 'outshine-level-4 nil :inherit 'outline-5)
@@ -106,8 +143,8 @@
    [remap describe-key] '(helpful-key :which-key "Helpful key")
    )
   (:states '(visual normal motion)
-           "f" 'helpful-at-point
-           )
+            "f" 'helpful-at-point
+            )
   (kb/leader-keys
     "hk" '(helpful-key :which-key "Desc key")
     "hc" '(helpful-command :which-key "Helpful command"))
