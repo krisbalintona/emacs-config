@@ -28,6 +28,7 @@
 (use-package system-packages
   :custom
   (system-packages-use-sudo t)
+  (system-packages-noconfirm t) ; Just bypass this prompt
   :config
   (add-to-list 'system-packages-supported-package-managers
                 '(yay . ; Add support for yay
