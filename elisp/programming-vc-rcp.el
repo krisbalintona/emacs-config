@@ -36,7 +36,7 @@
     )
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
 
   ;; How opened magit buffers are closed
   (magit-bury-buffer-function 'magit-restore-window-configuration) ; Restore the window configuration used before calling magit when closing it
