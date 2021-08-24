@@ -41,7 +41,22 @@
   (lsp-ui-doc-position 'top)
   )
 
-;;;; Dev-docs
+;;;; Ancillary
+;;;;; Company-lsp
+;; Company integration with lsp-mode
+(use-package company-lsp
+  :requires company
+  :after company
+  :hook (lsp-mode . (lambda ()
+                      (add-to-list 'company-backends 'company-lsp)))
+  :custom
+  (company-lsp-cache-candidates t)      ; Cache all candidates
+  (company-lsp-async t)
+  (compnay-lsp-enable-snippet t)
+  (company-lsp-enable-recompletion t)   ; Reenables completion when before another trigger character
+  )
+
+;;;;; Dev-docs
 ;; Viewing documentation within Emacs. Requires internet connection.
 (use-package devdocs
   :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
