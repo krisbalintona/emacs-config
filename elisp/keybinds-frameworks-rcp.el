@@ -20,9 +20,9 @@
 
   (general-unbind
     :keymaps '(Info-mode-map help-mode
-               ;; Magit modes
-               magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
-               )
+                             ;; Magit modes
+                             magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
+                             )
     "SPC")
 
   (general-create-definer kb/leader-keys ; Use space as leader key
