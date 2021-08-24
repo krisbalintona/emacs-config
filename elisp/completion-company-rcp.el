@@ -48,7 +48,15 @@
   ;; lot of the backends that company initially sets. Most notably, I removed
   ;; `company-abbrev' because it slows down the performance significantly and I
   ;; don't use it.
-  (company-backends '(company-capf company-yasnippet company-ispell))
+  (company-backends '(company-bbdb company-yasnippet company-files
+                                   (company-gtags company-etags company-keywords)
+                                   company-capf))
+  :init (require 'company-autoloads)    ; Make sure all company-backends are loaded
+  :config
+  ;; Make `company-backends' buffer-local so that I can configure the enabled
+  ;; backends based on major-mode rather than adding every backend to the global
+  ;; list
+  (make-variable-buffer-local 'company-backends)
   )
 
 ;;;; Company-box
