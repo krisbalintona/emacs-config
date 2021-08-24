@@ -80,6 +80,10 @@
 (general-define-key
  :states 'insert
  ;; Newline above
+ "RET" '(lambda ()
+          (interactive)
+          (newline)
+          (indent-according-to-mode))
  "M-RET" '(lambda ()
             (interactive)
             (move-beginning-of-line 1)

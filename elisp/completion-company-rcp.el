@@ -18,7 +18,7 @@
   :general
   (:keymaps 'company-active-map
             "<escape>" '(lambda () (interactive) (company-abort) (evil-normal-state))
-            "<return>" '(lambda () (interactive) (company-abort) (newline))
+            "<return>" '(lambda () (interactive) (company-abort) (newline) (indent-according-to-mode))
             "<tab>" 'company-complete-selection
             "C-j" 'company-select-next-or-abort
             "C-k" 'company-select-previous-or-abort
