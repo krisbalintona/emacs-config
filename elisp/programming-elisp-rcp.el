@@ -50,6 +50,20 @@
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   )
 
+;;;; Custom font lock words
+;; Mainly for `prot-comment-timestamp-keyword'. Faces taken from
+;; `org-todo-keyword-faces' in org-agenda-general-rcp.el.
+(font-lock-add-keywords 'emacs-lisp-mode
+                        '(;; TODO wrapped between whitespace
+                          ("\\s-TODO\\s-" 0 '(t :foreground "orange") t)
+                          ;; NOTE wrapped between whitespace
+                          ("\\s-NOTE\\s-" 0 '(t :foreground "turquoise") t)
+                          ;; REVIEW wrapped between whitespace
+                          ("\\s-REVIEW\\s-" 0 '(t :foreground "orchid") t)
+                          ;; FIXME wrapped between whitespace
+                          ("\\s-FIXME\\s-" 0 '(t :foreground "deep pink") t)
+                          ))
+
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-elisp-rcp)
