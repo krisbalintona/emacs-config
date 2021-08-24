@@ -31,28 +31,28 @@
   (system-packages-noconfirm t) ; Just bypass this prompt
   :config
   (add-to-list 'system-packages-supported-package-managers
-                '(yay . ; Add support for yay
-                      ((default-sudo . t)
-                       (install . "yay -S")
-                       (search . "yay -Ss")
-                       (uninstall . "yay -Rns")
-                       (update . "yay -Syu")
-                       (clean-cache . "yay -Sc")
-                       (change-log . "yay -Qc")
-                       (log . "cat /var/log/yay.log")
-                       (get-info . "yay -Qi")
-                       (get-info-remote . "yay -Si")
-                       (list-files-provided-by . "yay -qQl")
-                       (owning-file . "yay -Qo")
-                       (owning-file-remote . "yay -F")
-                       (verify-all-packages . "yay -Qkk")
-                       (verify-all-dependencies . "yay -Dk")
-                       (remove-orphaned . "yay -Rns $(yay -Qtdq)")
-                       (list-installed-packages . "yay -Qe")
-                       (list-installed-packages-all . "yay -Q")
-                       (list-dependencies-of . "yay -Qi")
-                       (noconfirm . "--noconfirm"))
-                      ))
+               '(yay . ; Add support for yay
+                     ((default-sudo . t)
+                      (install . "yay -S")
+                      (search . "yay -Ss")
+                      (uninstall . "yay -Rns")
+                      (update . "yay -Syu")
+                      (clean-cache . "yay -Sc")
+                      (change-log . "yay -Qc")
+                      (log . "cat /var/log/yay.log")
+                      (get-info . "yay -Qi")
+                      (get-info-remote . "yay -Si")
+                      (list-files-provided-by . "yay -qQl")
+                      (owning-file . "yay -Qo")
+                      (owning-file-remote . "yay -F")
+                      (verify-all-packages . "yay -Qkk")
+                      (verify-all-dependencies . "yay -Dk")
+                      (remove-orphaned . "yay -Rns $(yay -Qtdq)")
+                      (list-installed-packages . "yay -Qe")
+                      (list-installed-packages-all . "yay -Q")
+                      (list-dependencies-of . "yay -Qi")
+                      (noconfirm . "--noconfirm"))
+                     ))
   (if kb/linux-arch
       (setq system-packages-package-manager 'yay
             system-packages-use-sudo nil))
@@ -83,7 +83,7 @@
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general (:keymaps 'outshine-mode-map
-                      "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+                     "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
@@ -143,8 +143,8 @@ afterward."
    [remap describe-key] '(helpful-key :which-key "Helpful key")
    )
   (:states '(visual normal motion)
-            "f" 'helpful-at-point
-            )
+           "f" 'helpful-at-point
+           )
   (kb/leader-keys
     "hk" '(helpful-key :which-key "Desc key")
     "hc" '(helpful-command :which-key "Helpful command"))
