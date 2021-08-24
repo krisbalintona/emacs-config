@@ -28,9 +28,8 @@
             "o" evil-outer-text-objects-map
             "i" evil-inner-text-objects-map)
   (:states '(normal insert visual)
-           ;; TODO 2021-08-21: Look into `better-jumper' to see if I can
-           ;; ameliorate evil's shortcomings
-           "C-:" 'evil-jump-forward)
+           "C-i" 'evil-jump-backward
+           "C-;" 'evil-jump-forward)
   (:states '(normal visual motion)
            "zi" 'org-toggle-inline-images)
   (kb/leader-keys
