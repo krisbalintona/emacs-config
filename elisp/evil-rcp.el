@@ -30,8 +30,6 @@
   (:states '(normal insert visual)
            "C-i" 'evil-jump-backward
            "C-;" 'evil-jump-forward)
-  (:states '(normal visual motion)
-           "zi" 'org-toggle-inline-images)
   (kb/leader-keys
     "ww" 'evil-window-mru
 
