@@ -28,8 +28,8 @@
             "o" evil-outer-text-objects-map
             "i" evil-inner-text-objects-map)
   (:states '(normal insert visual)
-           "C-o" 'evil-jump-backward
-           "C-;" 'evil-jump-forward)
+           "C-i" 'evil-jump-backward
+           "C-o" 'evil-jump-forward)
   (kb/leader-keys
     "ww" 'evil-window-mru
 
