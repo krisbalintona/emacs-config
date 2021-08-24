@@ -21,9 +21,8 @@
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
-           ;; TODO 2021-08-21: For some reason, the second one doesn't load
-           "C-P" 'evil-paste-before
-           "C-p" 'evil-paste-after)
+           "M-P" 'evil-paste-before
+           "M-p" 'evil-paste-after)
   (:keymaps 'evil-visual-state-map
             "a" 'exchange-point-and-mark
             "o" evil-outer-text-objects-map
