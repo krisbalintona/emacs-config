@@ -97,6 +97,7 @@ is only tested on \"insert\" action."
 
 ;;;;; Better-jumper
 (use-package better-jumper
+  :after evil
   :general (:states '(normal visual normal)
                     [remap evil-jump-backward] '(better-jumper-jump-backward :which-key "Jump backward")
                     [remap evil-jump-forward] '(better-jumper-jump-forward :which-key "Jump forward"))

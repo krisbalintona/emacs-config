@@ -28,7 +28,7 @@
             "o" evil-outer-text-objects-map
             "i" evil-inner-text-objects-map)
   (:states '(normal insert visual)
-           "C-i" 'evil-jump-backward
+           "C-o" 'evil-jump-backward
            "C-;" 'evil-jump-forward)
   (kb/leader-keys
     "ww" 'evil-window-mru
@@ -70,6 +70,10 @@
   :config
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'eshell-mode 'insert)
+
+  (general-unbind
+    :states '(normal visual insert)     ; These are the initial keybinds for `evil-jump-forward'
+    "TAB" nil)
   )
 
 ;;;; Evil-collection
