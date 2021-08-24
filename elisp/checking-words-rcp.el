@@ -32,7 +32,7 @@
 (use-package wordnut
   :after define-word
   ;; TODO 2021-08-20: Have this changed depending on linux distribution
-  :ensure-system-package (wordnet) ; Make sure English dictionary is also installed
+  :ensure-system-package (wn . wordnet) ; Make sure English dictionary is also installed
   :config
   (unless (featurep 'define-word)
     (general-define-key
