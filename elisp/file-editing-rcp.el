@@ -21,7 +21,7 @@
 ;;;;; Smartparens
 ;; Autopairing parentheses
 (use-package smartparens
-  :commands sp-local-pair sp-pair
+  :commands (sp-local-pair sp-pair sp--looking-at-p)
   :ghook ('after-init-hook 'smartparens-global-mode)
   :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
   :general (:keymaps 'prog-mode-map
