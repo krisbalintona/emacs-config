@@ -52,7 +52,7 @@
     "wr" 'evil-window-rotate-downwards
     "wR" 'evil-window-rotate-upwards
     )
-  :init
+  :preface
   ;; A lot of the settings need to be set before evil initializes
   (setq evil-want-integration t
         evil-want-keybinding nil ; Add more keybinds for other modes I don't want
@@ -64,6 +64,7 @@
         evil-move-beyond-eol t
         evil-normal-state-cursor 'box
         evil-insert-state-cursor 'bar
+        evil-visual-state-cursor 'hollow
         evil-echo-state nil ; Don't echo state in echo area
         evil-undo-system 'undo-fu)
   :config
