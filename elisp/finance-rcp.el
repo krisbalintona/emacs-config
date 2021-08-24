@@ -92,6 +92,8 @@
       ))
   :config
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
+
+  (set-face-attribute 'ledger-font-xact-highlight-face nil :inherit nil)
   )
 
 ;;;; Flycheck-ledger
@@ -102,45 +104,49 @@
   :custom
   (flycheck-ledger-explicit t) ; Check even cleared transactions
   (flycheck-ledger-pedantic t) ; Check account names
-  :init
-  ;; Redefine the checker to check `ledger-master-file' rather than
-  ;; `source-inplace' (current buffer)
-  (flycheck-define-checker ledger
-    "A checker for ledger files, showing unmatched balances and failed checks."
-    :command ("ledger"
-              (option-flag "--explicit" flycheck-ledger-explicit)
-              (option-flag "--pedantic" flycheck-ledger-pedantic)
-              (eval (when (eq flycheck-ledger-pedantic 'check-payees) "--check-payees"))
+  :ghook ('ledger-mode-hook  '(lambda () ; So my new ledger flycheck-checker doesn't get overridden by the default one
+                                (flycheck-define-checker ledger
+                                  "Redefine the original checker to check `ledger-master-file' rather than
+`source-inplace' (current buffer)
 
-              ;; "-f" source-inplace
-              "-f" (eval ledger-master-file)
-              ;; (setq-local ledger-master-file (concat no-littering-var-directory "ledger/2020.ledger"))
+Original docstring:
+A checker for ledger files, showing unmatched balances and failed checks."
+                                  :command ("ledger"
+                                            (option-flag "--explicit" flycheck-ledger-explicit)
+                                            (option-flag "--pedantic" flycheck-ledger-pedantic)
+                                            (eval (when (eq flycheck-ledger-pedantic 'check-payees) "--check-payees"))
 
-              "balance"
-              ;; to find non-zero zero accounts:
-              "--flat" "--no-total"
-              "--balance-format" "%(scrub(display_total))\t\t%(account())\n"
-              (eval flycheck-ledger-zero-accounts))
-    :error-patterns
-    ((error line-start "While parsing file \"" (file-name) "\", line " line ":" (zero-or-more whitespace) "\n"
-            (zero-or-more line-start (or "While " "> ") (one-or-more not-newline) "\n" )
-            (message (minimal-match (zero-or-more line-start (zero-or-more not-newline) "\n"))
-                     "Error: " (one-or-more not-newline) "\n")))
-    :error-parser
-    (lambda (output checker buffer)
-      (let ((pattern-errors (flycheck-parse-with-patterns output checker buffer)))
-        (or pattern-errors
-            (when (> (length flycheck-ledger-zero-accounts) 0)
-              (flycheck-ledger--zero-error-parser output checker buffer)))))
-    :verify
-    (lambda (checker)
-      (let ((has-accounts (> (length flycheck-ledger-zero-accounts) 0)))
-        (list
-         (flycheck-verification-result-new
-          :label "accounts"
-          :message (if has-accounts (format "%s" flycheck-ledger-zero-accounts) "none")
-          :face 'success))))
-    :modes ledger-mode)
+                                            ;; "-f" source-inplace
+                                            "-f" (eval ledger-master-file)
+                                            ;; (setq-local ledger-master-file (concat no-littering-var-directory "ledger/2020.ledger"))
+
+                                            "balance"
+                                            ;; to find non-zero zero accounts:
+                                            "--flat" "--no-total"
+                                            "--balance-format" "%(scrub(display_total))\t\t%(account())\n"
+                                            (eval flycheck-ledger-zero-accounts))
+                                  :error-patterns
+                                  ((error line-start "While parsing file \"" (file-name) "\", line " line ":" (zero-or-more whitespace) "\n"
+                                          (zero-or-more line-start (or "While " "> ") (one-or-more not-newline) "\n" )
+                                          (message (minimal-match (zero-or-more line-start (zero-or-more not-newline) "\n"))
+                                                   "Error: " (one-or-more not-newline) "\n")))
+                                  :error-parser
+                                  (lambda (output checker buffer)
+                                    (let ((pattern-errors (flycheck-parse-with-patterns output checker buffer)))
+                                      (or pattern-errors
+                                          (when (> (length flycheck-ledger-zero-accounts) 0)
+                                            (flycheck-ledger--zero-error-parser output checker buffer)))))
+                                  :verify
+                                  (lambda (checker)
+                                    (let ((has-accounts (> (length flycheck-ledger-zero-accounts) 0)))
+                                      (list
+                                       (flycheck-verification-result-new
+                                        :label "accounts"
+                                        :message (if has-accounts (format "%s" flycheck-ledger-zero-accounts) "none")
+                                        :face 'success))))
+                                  :modes ledger-mode)
+                                )
+                             nil nil t)
   )
 
 ;;; finance-rcp.el ends here
