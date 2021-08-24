@@ -70,7 +70,7 @@ is only tested on \"insert\" action."
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
   (sp-local-pair 'emacs-lisp-mode "`" "'"
                  :actions '(insert autoskip navigate)
-                 :unless '(kb/sp-point-before-letter-digit-p))
+                 :when '(sp-in-comment-p sp-in-string-p))
   )
 
 ;;;; Quick movement
