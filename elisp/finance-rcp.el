@@ -52,7 +52,7 @@
   ;; Administration
   ;; (ledger-source-directory (concat no-littering-var-directory "ledger/source/"))
   ;; (ledger-init-file-name (concat no-littering-var-directory "ledger/ledgerrc.ledger"))
-  (ledger-accounts-file (concat no-littering-var-directory "ledger/accounts.ledger"))
+  (ledger-accounts-file (concat no-littering-var-directory "ledger/declarations.ledger"))
   (ledger-schedule-file (concat no-littering-var-directory "ledger/schedule.ledger"))
 
   ;; .ledger files (ledger-complete-in-steps t)
