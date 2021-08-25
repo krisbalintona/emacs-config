@@ -127,6 +127,11 @@ afterward."
   (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
   (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
+
+  (general-define-key
+   :keymaps 'outshine-mode-map
+   :states 'normal
+   "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
   )
 
 ;;;; Helpful
