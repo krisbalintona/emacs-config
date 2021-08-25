@@ -63,11 +63,12 @@ is only tested on \"insert\" action."
            :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
 
   ;; emacs-lisp-mode
-  ;; TODO 2021-08-21: Work still needs to be done for this mode
   (sp-local-pair 'emacs-lisp-mode "(" ")"
                  :actions '(insert autoskip navigate)
                  :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
-  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+  (sp-local-pair 'emacs-lisp-mode "'" nil
+                 :actions '(insert autoskip navgiate)
+                 :when '(sp-in-string-p))
   (sp-local-pair 'emacs-lisp-mode "`" "'"
                  :actions '(insert autoskip navigate)
                  :when '(sp-in-comment-p sp-in-string-p))
