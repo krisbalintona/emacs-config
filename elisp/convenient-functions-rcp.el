@@ -354,6 +354,15 @@ newlines."
       (substring str 0 (- len 1)))
      (t str))
     ))
+
+;;;; Empty trash
+(defun kb/empty-trash ()
+  "Empty the trash directory."
+  (interactive)
+  (if delete-by-moving-to-trash
+      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))
+  )
+
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
