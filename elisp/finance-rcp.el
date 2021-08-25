@@ -14,7 +14,7 @@
   :ensure-system-package (ledger . "sudo dnf install ledger")
   :defines evil-emacs-state-modes
   :commands (ledger-navigate-start-xact-or-directive-p ledger-navigate-end-of-xact ledger-navigate-next-xact)
-  :hook (after-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
+  :hook (before-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
   :gfhook
   'outshine-mode
   '(lambda () (mixed-pitch-mode 0)
