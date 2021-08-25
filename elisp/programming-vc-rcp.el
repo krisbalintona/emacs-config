@@ -18,6 +18,11 @@
   :commands magit-add-section-hook
   :hook (magit-process-mode . visual-line-mode)
   :general
+  (:keymaps 'magit-mode-map
+            "C-<tab>" 'magit-section-toggle-children)
+  (:keymaps 'magit-mode-map
+            :states '(normal visual motion)
+            "D" '(magit-cherry-donate :which-key "Cherry conate"))
   (kb/leader-keys
     "g"  '(:ignore t :which-key "Magit")
     "gg"  '(magit-status :which-key "Status")

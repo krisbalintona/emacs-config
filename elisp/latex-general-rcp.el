@@ -63,6 +63,7 @@
   'display-line-numbers-mode
   'LaTeX-math-mode ; Access to math macros
   'visual-line-mode ; So evil can respect true lines
+  '(lambda () (mixed-pitch-mode -1))
   :custom
   ;; Processes for org-to-latex conversion
   ;; (org-latex-pdf-process
