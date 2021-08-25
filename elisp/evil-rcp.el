@@ -71,10 +71,6 @@
   :config
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'eshell-mode 'insert)
-
-  (general-unbind
-    :states '(normal visual insert)     ; These are the initial keybinds for `evil-jump-forward'
-    "TAB" nil)
   )
 
 ;;;; Evil-collection
