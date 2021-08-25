@@ -79,7 +79,7 @@ space between point and the comment character."
     (if (use-region-p)
         (comment-or-uncomment-region (region-beginning) (region-end) arg)
       (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
-          ;; FIXME: If there's no comment to kill on this line and ARG is
+          ;; FIXME If there's no comment to kill on this line and ARG is
           ;; specified, calling comment-kill is not very clever.
           (if arg (comment-kill (and (integerp arg) arg)) (comment-indent))
         ;; Inserting a comment on a blank line. comment-indent calls
