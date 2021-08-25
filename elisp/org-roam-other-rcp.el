@@ -207,7 +207,7 @@
 (use-package org-roam-bibtex
   :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "master")
   :requires (org-ref org-roam)
-  :ghook ('orgorg-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
+  :ghook ('org-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
   :custom
   (orb-preformat-keywords
    '("citekey" "title" "url" "file" "author-or-editor" "keywords"))
@@ -257,7 +257,7 @@
   :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion")
   :after org-roam
   :ghook ('org-mode-hook 'org-transclusion-activate)
-:general
+  :general
   (kb/leader-keys
     "Tc" '(org-transclusion-mode :which-key "Toggle mode")
     "TR" '(org-transclusion-refresh :which-key "Refresh")
