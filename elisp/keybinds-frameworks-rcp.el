@@ -19,10 +19,11 @@
   (general-define-key "<escape>" 'keyboard-escape-quit)
 
   (general-unbind
-    :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map customize-mode-map dired-mode-map doc-view-mode-map
+    :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map customize-mode-map dired-mode-map pdf-view-mode-map
                              ;; Magit modes
                              magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
                              )
+    :states '(normal visual motion)
     "SPC")
 
   (general-create-definer kb/leader-keys ; Use space as leader key
