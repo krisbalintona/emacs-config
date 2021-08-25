@@ -222,11 +222,8 @@
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
   ;; Ensure it's installed without manually doing so
-  :ghook (('server-after-make-frame-hook 'pdf-tools-install t nil t)
-          ('window-setup-hook 'pdf-tools-install t nil t))
-  :general (:keymaps 'pdf-view-mode-map ; Unbind SPC so it's prefix instead
-                     [remap pdf-view-scroll-up-or-next-page] nil
-                     )
+  :hook ((server-after-make-frame . pdf-tools-install)
+         ('window-setup . pdf-tools-install))
   :custom
   (pdf-view-display-size 'fit-width)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
