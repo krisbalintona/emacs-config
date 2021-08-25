@@ -36,6 +36,9 @@
             "TAB" 'tab-to-tab-stop)
   (kb/leader-keys
     :keymaps 'ledger-mode-map
+    :states 'normal
+    "id" '(kb/insert-date :which-key "Insert date")
+    "ie" '(ledger-insert-effective-date :which-key "Insert effective date")
     )
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual motion)

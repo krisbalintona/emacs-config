@@ -244,6 +244,20 @@ comment there."
   "c" '(prot-comment-timestamp-keyword :which-key "Prot-comment")
   )
 
+;;;; Insert date
+(defun kb/insert-date (prefix)
+  "Insert the current date. Accepts a PREFIX to change date format.
+Mainly used for `ledger-mode'."
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "%Y/%m/%d")
+                 ((equal prefix '(4)) "%d/%m/%Y"))) ; Other format
+        (system-time-locale "de_DE"))
+    (insert (format-time-string format)))
+  (insert " ")
+  (evil-insert-state)
+  )
+
 ;;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
   "Copy the current buffer's path to the kill ring."
