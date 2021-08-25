@@ -24,20 +24,14 @@
 
   (lua-indent-level 2) ; lua-indent-level defaults to 3 otherwise. Madness.
   (lua-indent-string-contents t) ; Contents of a multiline string will be indented
-  :general (:keymaps 'lua-mode-map ; Lua-mode overwrites my eyebrowse-last-window-config binding
-                     :states '(motion normal visual)
-                     "gz" 'eyebrowse-last-window-config)
   )
 
 ;;;; Company-lua
 ;; Company backend for Lua
 (use-package company-lua
   :after company
-  :gfhook '(lambda () (setq-local company-backends
-                             '((company-lua
-                                company-etags
-                                company-dabbrev-code
-                                company-yasnippet))))
+  :hook (lua-mode . (lambda ()
+                      (add-to-list 'company-backends 'company-lua)))
   )
 
 ;;; programming-lua-rcp.el ends here

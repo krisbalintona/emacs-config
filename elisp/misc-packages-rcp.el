@@ -89,6 +89,21 @@
   :general ([remap goto-line] 'goto-line-preview)
   )
 
+;;;; Info-mode
+(use-package info-mode
+  :straight nil
+  :general
+  (:keymaps 'Info-mode-map
+            :states '(visual normal motion)
+            "SPC" nil ; For my leader key
+            [remap evil-ret] 'Info-follow-nearest-node)
+  (kb/leader-keys
+    "hi" '(info :which-key "Info pages"))
+  )
+;;;; Visual-line-mode in *Messages* buffer
+;; I am putting it here because I don't know where else to put it
+(add-hook 'messages-buffer-mode-hook 'visual-line-mode)
+
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'misc-packages-rcp)

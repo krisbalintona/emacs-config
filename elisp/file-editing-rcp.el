@@ -12,24 +12,6 @@
 (require 'faces-rcp)
 
 ;;;; Manipulating text
-;;;;; Expand-region
-;; Incrementally select a region outward
-(use-package expand-region
-  :hook (text-mode . er/add-text-mode-expansions)
-  :general (:states '(normal visual motion)
-                    "+" 'er/expand-region)
-  :custom
-  (expand-region-smart-cursor t)
-  (expand-region-skip-whitespace nil)
-  (expand-region-subword-enabled t)
-  :init
-  (defun er/add-text-mode-expansions ()
-    (make-variable-buffer-local 'er/try-expand-list)
-    (setq er/try-expand-list (append
-                              er/try-expand-list
-                              '(mark-paragraph
-                                mark-page))))
-  )
 ;;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
@@ -39,7 +21,7 @@
 ;;;;; Smartparens
 ;; Autopairing parentheses
 (use-package smartparens
-  :commands sp-local-pair sp-pair
+  :commands (sp-local-pair sp-pair sp--looking-at-p)
   :ghook ('after-init-hook 'smartparens-global-mode)
   :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
   :general (:keymaps 'prog-mode-map
@@ -67,6 +49,11 @@ otherwise. This predicate is only tested on \"insert\" action."
 is only tested on \"insert\" action."
     (when (eq action 'insert)
       (sp--looking-at-p "(\\|)")))
+  (defun kb/sp-point-before-closing-paren-p (_id action _context)
+    "Return t if point is before a closing parenthesis, nil otherwise. This predicate
+is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-at-p "(")))
   :config
   ;; Global
   (sp-pair "(" ")" :actions '(insert autoskip navigate))
@@ -77,12 +64,14 @@ is only tested on \"insert\" action."
 
   ;; emacs-lisp-mode
   (sp-local-pair 'emacs-lisp-mode "(" ")"
-           :actions '(insert autoskip navigate)
-           :unless '(kb/sp-point-before-letter-digit-p))
-  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+                 :actions '(insert autoskip navigate)
+                 :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
+  (sp-local-pair 'emacs-lisp-mode "'" nil
+                 :actions '(insert autoskip navgiate)
+                 :when '(sp-in-string-p))
   (sp-local-pair 'emacs-lisp-mode "`" "'"
                  :actions '(insert autoskip navigate)
-                 :unless '(kb/sp-point-before-letter-digit-p))
+                 :when '(sp-in-comment-p sp-in-string-p))
   )
 
 ;;;; Quick movement
@@ -105,6 +94,27 @@ is only tested on \"insert\" action."
         ace-jump-mode-gray-background nil ; Don't make text's background gray
         ace-jump-mode-submode-list ; Priority of ace-jump selections
         '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))
+  )
+
+;;;;; Better-jumper
+(use-package better-jumper
+  :disabled t                           ; Troublesome for now
+  :after evil
+  :general (:states '(normal visual normal)
+                    [remap evil-jump-backward] '(better-jumper-jump-backward :which-key "Jump backward")
+                    [remap evil-jump-forward] '(better-jumper-jump-forward :which-key "Jump forward"))
+  :custom
+  (better-jumper-max-length 200)
+  (better-jumper-use-evil-jump-advice t) ; Add evil-jump jumps
+  (better-jumper-add-jump-behavior 'append)
+
+  (better-jumper-context 'buffer)
+  (better-jumper-use-savehist t)
+  (better-jumper-buffer-savehist-size 50)
+  :config
+  ;; Add evil navigation commands to the better-jumper jump list
+  (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin evil-jump-item evil-first-non-blank evil-end-of-visual-line)
+                      :after 'better-jumper-set-jump)
   )
 
 ;;;; Cleanup

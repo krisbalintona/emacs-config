@@ -11,15 +11,18 @@
 
 ;;;; Ledger-mode
 (use-package ledger-mode
-  :ensure-system-package (ledger . "sudo apt install ledger")
+  :ensure-system-package (ledger . "sudo dnf install ledger")
   :defines evil-emacs-state-modes
-  :hook (after-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
+  :commands (ledger-navigate-start-xact-or-directive-p ledger-navigate-end-of-xact ledger-navigate-next-xact)
+  :hook (before-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
   :gfhook
   'outshine-mode
   '(lambda () (mixed-pitch-mode 0)
      (display-line-numbers-mode 0)
      (setq-local tab-always-indent nil ; Indent first then complete
-                 completion-cycle-threshold t)
+                 completion-cycle-threshold t
+                 fill-column 90
+                 comment-column fill-column)
      (setq-default ledger-master-file
                    (concat no-littering-var-directory "ledger/master.ledger"))
      )
@@ -33,6 +36,9 @@
             "TAB" 'tab-to-tab-stop)
   (kb/leader-keys
     :keymaps 'ledger-mode-map
+    :states 'normal
+    "id" '(kb/insert-date :which-key "Insert date")
+    "ie" '(ledger-insert-effective-date :which-key "Insert effective date")
     )
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual motion)
@@ -46,7 +52,7 @@
   ;; Administration
   ;; (ledger-source-directory (concat no-littering-var-directory "ledger/source/"))
   ;; (ledger-init-file-name (concat no-littering-var-directory "ledger/ledgerrc.ledger"))
-  (ledger-accounts-file (concat no-littering-var-directory "ledger/accounts.ledger"))
+  (ledger-accounts-file (concat no-littering-var-directory "ledger/declarations.ledger"))
   (ledger-schedule-file (concat no-littering-var-directory "ledger/schedule.ledger"))
 
   ;; .ledger files (ledger-complete-in-steps t)
@@ -91,20 +97,26 @@
       ))
   :config
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
+
+  (set-face-attribute 'ledger-font-xact-highlight-face nil :inherit nil)
   )
 
 ;;;; Flycheck-ledger
 (use-package flycheck-ledger
+  :demand t
   :requires flycheck
-  :after flycheck
+  :after (flycheck ledger-mode)
+  :commands (flycheck-define-command-checker flycheck-parse-with-patterns flycheck-ledger--zero-error-parser flycheck-add-mode)
   :custom
   (flycheck-ledger-explicit t) ; Check even cleared transactions
   (flycheck-ledger-pedantic t) ; Check account names
-  :init
-  ;; Redefine the checker to check `ledger-master-file' rather than
-  ;; `source-inplace' (current buffer)
-  (flycheck-define-checker ledger
-    "A checker for ledger files, showing unmatched balances and failed checks."
+  :config
+  (flycheck-define-checker kb/ledger
+    "Redefine the original checker to check `ledger-master-file' rather than
+`source-inplace' (current buffer)
+
+Original docstring:
+A checker for ledger files, showing unmatched balances and failed checks."
     :command ("ledger"
               (option-flag "--explicit" flycheck-ledger-explicit)
               (option-flag "--pedantic" flycheck-ledger-pedantic)
@@ -118,7 +130,8 @@
               ;; to find non-zero zero accounts:
               "--flat" "--no-total"
               "--balance-format" "%(scrub(display_total))\t\t%(account())\n"
-              (eval flycheck-ledger-zero-accounts))
+              (eval flycheck-ledger-zero-accounts)
+              )
     :error-patterns
     ((error line-start "While parsing file \"" (file-name) "\", line " line ":" (zero-or-more whitespace) "\n"
             (zero-or-more line-start (or "While " "> ") (one-or-more not-newline) "\n" )
@@ -139,6 +152,7 @@
           :message (if has-accounts (format "%s" flycheck-ledger-zero-accounts) "none")
           :face 'success))))
     :modes ledger-mode)
+  (add-to-list 'flycheck-checkers 'kb/ledger)
   )
 
 ;;; finance-rcp.el ends here

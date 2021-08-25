@@ -28,6 +28,7 @@
 (use-package system-packages
   :custom
   (system-packages-use-sudo t)
+  (system-packages-noconfirm t) ; Just bypass this prompt
   :config
   (add-to-list 'system-packages-supported-package-managers
                '(yay . ; Add support for yay
@@ -63,7 +64,6 @@
   :custom
   (no-littering-etc-directory (expand-file-name "data/" user-emacs-directory)) ; Config files
   (no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-  (auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))) ; Store auto-saved files here
   :preface (require 'recentf)
   )
 
@@ -78,23 +78,66 @@
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
+  :functions (sp--looking-at-p sp--looking-back outline-back-to-heading outline-next-heading)
+  :commands evil-insert-state
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general (:keymaps 'outshine-mode-map
                      "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
+  :init
+  ;; More convenient `outline-insert-heading'
+  (defun kb/outline-insert-heading ()
+    "Insert a new heading at same depth at point.
+
+I've customized it such that it ensures there are newlines before
+and after the heading that that insert mode is entered
+afterward."
+    (interactive)
+    ;; Check for if previous line is empty
+    (unless (sp--looking-back "[[:space:]]*$")
+      (insert "\n"))
+    (let ((head (save-excursion
+                  (condition-case nil
+                      (outline-back-to-heading)
+                    (error (outline-next-heading)))
+                  (if (eobp)
+                      (or (caar outline-heading-alist) "")
+                    (match-string 0)))))
+      (unless (or (string-match "[ \t]\\'" head)
+                  (not (string-match (concat "\\`\\(?:" outline-regexp "\\)")
+                                     (concat head " "))))
+        (setq head (concat head " ")))
+      (unless (bolp) (end-of-line) (newline))
+      (insert head)
+      (unless (eolp)
+        (save-excursion (newline-and-indent)))
+      (run-hooks 'outline-insert-heading-hook))
+    ;; Check for if next line is empty
+    (unless (sp--looking-at-p "[[:space:]]*$")
+      (save-excursion
+        (end-of-line)
+        (insert "\n")))
+    (evil-insert-state))
+  (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
   :config
   ;; Outshine headline faces
   (set-face-attribute 'outshine-level-4 nil :inherit 'outline-5)
   (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
   (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
+
+  (general-define-key
+   :keymaps 'outshine-mode-map
+   :states 'normal
+   "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
   )
 
 ;;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
+  :gfhook 'visual-line-mode
   :general
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
@@ -105,7 +148,7 @@
    [remap describe-key] '(helpful-key :which-key "Helpful key")
    )
   (:states '(visual normal motion)
-           "K" 'helpful-at-point
+           "f" 'helpful-at-point
            )
   (kb/leader-keys
     "hk" '(helpful-key :which-key "Desc key")

@@ -59,10 +59,6 @@
 (use-package bibtex-actions
   :after (bibtex-completion embark)
   :general
-  (general-define-key
-   :keymaps 'minibuffer-local-map
-   "M-b" 'bibtex-actions-insert-preset
-   )
   (:keymaps 'bibtex-actions-map ; Custom keymap for `bibtex-actions'
             "t" '("reference | add pdf attachment" . bibtex-actions-add-pdf-attachment)
             "a" '("reference | add pdf to library" . bibtex-actions-add-pdf-to-library)
@@ -211,7 +207,7 @@
 (use-package org-roam-bibtex
   :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "master")
   :requires (org-ref org-roam)
-  :ghook ('orgorg-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
+  :ghook ('org-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
   :custom
   (orb-preformat-keywords
    '("citekey" "title" "url" "file" "author-or-editor" "keywords"))
@@ -261,7 +257,7 @@
   :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion")
   :after org-roam
   :ghook ('org-mode-hook 'org-transclusion-activate)
-:general
+  :general
   (kb/leader-keys
     "Tc" '(org-transclusion-mode :which-key "Toggle mode")
     "TR" '(org-transclusion-refresh :which-key "Refresh")

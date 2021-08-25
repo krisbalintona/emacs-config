@@ -94,7 +94,7 @@
   (:states '(visual normal motion)
            "gt" 'eyebrowse-next-window-config
            "ga" 'eyebrowse-prev-window-config
-           "gz" 'eyebrowse-last-window-config
+           "gv" 'eyebrowse-last-window-config
            )
   (:keymaps 'eyebrowse-mode-map
             :prefix "C-c C-w"
@@ -140,8 +140,8 @@
                    (process-menu-mode :inhibit-window-quit t :same t)
                    ;; ("magit:" :regexp t :inhibit-window-quit t :align t :same t) ; Replaced by creating `kb/magit-mode-quit-window'
                    ("\\*org-roam\\*" :regexp t :align right :same nil :size 0.2)
-                   ("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)
                    ("*Flycheck errors*" :select t :align below :size 0.33)
+                   ("\\*devdocs\\*" :select t :same nil)
                    ("\\*Dogears List\\*" :regexp t :align below :same t :inhibit-window-quit t :size 0.3)
                    ))
   (shackle-select-reused-windows t)

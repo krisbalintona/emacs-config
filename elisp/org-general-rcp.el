@@ -16,6 +16,8 @@
   'variable-pitch-mode
   'visual-line-mode
   :general
+  (:states '(normal visual motion)
+           "zi" 'org-toggle-inline-images)
   (kb/leader-keys
     "nn" '(org-capture :which-key "Org-capture")
     "mg" '(org-mark-ring-goto :which-key "Goto last mark")

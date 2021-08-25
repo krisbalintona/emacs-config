@@ -15,13 +15,22 @@
   :demand t
   :hook (git-commit-mode . evil-insert-state) ; For magit commits
   :ghook 'after-init-hook
+  :commands evil-set-initial-state
   :general
-  (:states '(insert global)
-           "C-g" 'evil-escape)
+  (:states 'normal
+           "K" 'join-line
+           "J" '(lambda () (interactive) (join-line 1)))
+  (:states 'insert
+           "<backtab>" 'evil-delete-back-to-indentation
+           "M-P" 'evil-paste-before
+           "M-p" 'evil-paste-after)
+  (:keymaps 'evil-visual-state-map
+            "a" 'exchange-point-and-mark
+            "o" evil-outer-text-objects-map
+            "i" evil-inner-text-objects-map)
   (:states '(normal insert visual)
-           "C-:" 'evil-jump-forward)
-  (:states '(normal visual)
-           "zi" 'org-toggle-inline-images)
+           "C-i" 'evil-jump-backward
+           "C-o" 'evil-jump-forward)
   (kb/leader-keys
     "ww" 'evil-window-mru
 
@@ -44,7 +53,7 @@
     "wr" 'evil-window-rotate-downwards
     "wR" 'evil-window-rotate-upwards
     )
-  :init
+  :preface
   ;; A lot of the settings need to be set before evil initializes
   (setq evil-want-integration t
         evil-want-keybinding nil ; Add more keybinds for other modes I don't want
@@ -56,11 +65,13 @@
         evil-move-beyond-eol t
         evil-normal-state-cursor 'box
         evil-insert-state-cursor 'bar
+        evil-visual-state-cursor 'hollow
         evil-echo-state nil ; Don't echo state in echo area
         evil-undo-system 'undo-fu)
   :config
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'eshell-mode 'insert)
+  (evil-set-initial-state 'calc-mode 'emacs)
   )
 
 ;;;; Evil-collection
@@ -69,6 +80,7 @@
   :demand t ; Load now or it won't
   :requires evil
   :after evil
+  :commands evil-collection-init
   :custom
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
@@ -94,7 +106,8 @@
                xwidget)
    )
   :config
-  (evil-collection-init) ; Load immediately so other keybind calls won't be overridden in config
+  ;; Load immediately (rather than hook) so other keybind calls won't be overridden in config
+  (evil-collection-init)
   )
 
 ;;;; Evil-commentary

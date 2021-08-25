@@ -18,15 +18,21 @@
   ;; Make ESC quit everywhere
   (general-define-key "<escape>" 'keyboard-escape-quit)
 
+  (general-unbind
+    :keymaps '(Info-mode-map help-mode calc-mode Man-mode woman-mode
+                             ;; Magit modes
+                             magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
+                             )
+    "SPC")
+
   (general-create-definer kb/leader-keys ; Use space as leader key
-    :keymaps '(normal insert visual emacs)
+    :keymaps '(normal visual insert motion emacs)
     :prefix "SPC"
     :global-prefix "M-SPC"
     )
 
   (kb/leader-keys
     "t"  '(:ignore t :which-key "Toggles")
-    "tl" '(display-line-numbers-mode :which-key "Line numbers")
     "o"  '(:ignore t :which-key "Open")
     "oc" '(calendar :which-key "Open calendar")
     "b"  '(:ignore t :which-key "Buffers")
@@ -50,6 +56,61 @@
     "u" 'universal-argument
     )
   )
+
+;;;; Native-Emacs keybinds
+;; TODO 2021-08-21: Relocate this somewhere else more appropriately
+(general-define-key
+ :keymaps 'minibuffer-mode-map
+ ;; Beginning and end of line
+ "C-f" 'end-of-line
+ "C-b" 'beginning-of-line
+ ;; Next and previous word
+ "M-f" 'forward-word
+ "M-F" 'forward-to-word
+ "M-b" 'backward-word
+ "M-B" 'backward-to-word
+ ;; Navigation
+ "M-h" 'left-char
+ "M-l" 'right-char
+ "M-j" 'evil-next-visual-line
+ "M-k" 'evil-previous-visual-line
+ )
+(general-define-key
+ :states 'normal)
+(general-define-key
+ :states 'insert
+ ;; Newline above
+ "RET" '(lambda ()
+          (interactive)
+          (newline)
+          (indent-according-to-mode))
+ "M-RET" '(lambda ()
+            (interactive)
+            (move-beginning-of-line 1)
+            (insert "\n")
+            (forward-line -1)
+            (indent-according-to-mode))
+ ;; Beginning and end of line
+ "C-f" 'end-of-line
+ "C-b" 'beginning-of-line
+ ;; Next and previous word
+ "M-f" 'forward-word
+ "M-F" 'forward-to-word
+ "M-b" 'backward-word
+ "M-B" 'backward-to-word
+ ;; Navigation
+ "M-h" 'left-char
+ "M-l" 'right-char
+ "M-j" 'next-line
+ "M-k" 'previous-line
+ )
+(general-define-key
+ :states '(normal motion visual insert)
+ "S-<return>" '(lambda ()
+                 (interactive)
+                 (forward-line -1)
+                 (back-to-indentation))
+ )
 
 ;;;; Pretty-hydra
 ;; Hydra but with prettier displays

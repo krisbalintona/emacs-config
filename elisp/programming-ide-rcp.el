@@ -45,6 +45,39 @@
   ;; :ensure-system-package ("pip install \"ptvsd>=4.2\"")
   )
 
+;;;; Ancillary
+;;;;; Company-lsp
+;; Company integration with lsp-mode
+(use-package company-lsp
+  :requires company
+  :after company
+  :hook (lsp-mode . (lambda ()
+                      (add-to-list 'company-backends 'company-lsp)))
+  :custom
+  (company-lsp-cache-candidates t)      ; Cache all candidates
+  (company-lsp-async t)
+  (compnay-lsp-enable-snippet t)
+  (company-lsp-enable-recompletion t)   ; Reenables completion when before another trigger character
+  )
+
+;;;;; Dev-docs
+;; Viewing documentation within Emacs. Requires internet connection.
+(use-package devdocs
+  :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
+         (haskell-mode . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
+         (js2-mode . (lambda () (setq-local devdocs-current-docs '("JavaScript"))))
+         (lua-mode . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
+         (LaTeX-mode . (lambda () (setq-local devdocs-current-docs '("latex"))))
+         )
+  :general
+  (kb/leader-keys
+    :keymaps 'prog-mode-map
+    :states 'normal
+    "di" '(devdocs-install :which-key "Install documentation for a language")
+    "dl" '(devdocs-lookup :which-key "Documentation lookup")
+    "dL" '(devdocs-search :which-key "Search for docs in site"))
+  )
+
 ;;; programming-ide-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-ide-rcp)

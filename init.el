@@ -23,8 +23,8 @@
     (dolist (f (directory-files base))
       (let ((name (concat base "/" f)))
         (when (and (file-directory-p name)
-                 (not (equal f ".."))
-                 (not (equal f ".")))
+                   (not (equal f ".."))
+                   (not (equal f ".")))
           (unless (member base load-path)
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
@@ -37,6 +37,7 @@
 ;; defined afterward will often rely on these
 (require 'auto-gc-rcp)
 (require 'personal-variables-rcp)
+(require 'external-programs-rcp)
 (require 'straight-package-management-rcp)
 (require 'use-package-rcp)
 (require 'early-packages-rcp)
@@ -83,6 +84,7 @@
 (require 'programming-elisp-rcp)
 (require 'programming-lua-rcp)
 (require 'programming-web-rcp)
+(require 'programming-haskell-rcp)
 
 ;;;;; Shells
 (require 'shell-eshell-rcp)

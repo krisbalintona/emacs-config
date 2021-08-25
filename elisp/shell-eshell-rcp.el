@@ -21,9 +21,12 @@
      (face-remap-add-relative 'default :height 127) ; Change default face size
      (setq-local scroll-margin 3) ; Scroll-margin
      )
-  :general (kb/leader-keys
-             "oE" '(eshell :which-key "Open eshell")
-             )
+  :general
+  (:keymaps 'eshell-mode-map
+            [remap eshell-previous-matching-input] '(consult-history :which-key "Command history"))
+  (kb/leader-keys
+    "oE" '(eshell :which-key "Open eshell")
+    )
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-hist-ignoredups t)
