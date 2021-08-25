@@ -41,7 +41,20 @@
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
   )
 
-
+;;;; Org-block company-mode backend
+;; Company backend for org-blocks
+(use-package company-org-block
+  :hook ((org-mode . (lambda () (add-to-list 'company-backends 'company-org-block)))
+         (org-src-mode . evil-insert-state))
+  :general (:keymaps 'org-src-mode-map
+                     "C-c '" nil        ; Unbind original to correct binding indicator
+                     "C-c C-c" 'org-edit-src-exit)
+  :custom
+  (company-org-block-edit-style 'auto)  ; Enter `org-src-mode' automatically when for code
+  (org-babel-load-languages             ; Languages which `company-org-block' recognizes
+   '((latex . t)
+     (emacs-lisp . t)))
+  )
 ;;;; Org-attach
 (require 'org-attach)
 (setq org-attach-id-dir "attachments/"
