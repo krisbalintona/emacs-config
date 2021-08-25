@@ -15,11 +15,7 @@
   ;; `unicode-fonts-setup' is run rebuilds the disk cache during Emacs startup
   ;; whenever a font is added or removed, or any relevant configuration
   ;; variables are changed.
-  :hook ((server-after-make-frame . unicode-fonts-setup)
-         (window-setup . unicode-fonts-setup)
-         )
-  :custom
-  (unicode-fonts-skip-font-groups '(low-quality-glyphs))
+  :ghook ('(window-setup-hook server-after-make-frame-hook) 'unicode-fonts-setup nil nil t)
   )
 
 ;;;; All-the-icons
