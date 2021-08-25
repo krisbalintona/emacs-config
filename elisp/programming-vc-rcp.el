@@ -18,6 +18,8 @@
   :commands magit-add-section-hook
   :hook (magit-process-mode . visual-line-mode)
   :general
+  (:keymaps 'magit-mode-map
+            "C-<tab>" 'magit-section-toggle-children)
   (kb/leader-keys
     "g"  '(:ignore t :which-key "Magit")
     "gg"  '(magit-status :which-key "Status")
