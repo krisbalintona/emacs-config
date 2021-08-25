@@ -19,7 +19,7 @@
   (general-define-key "<escape>" 'keyboard-escape-quit)
 
   (general-unbind
-    :keymaps '(Info-mode-map help-mode
+    :keymaps '(Info-mode-map help-mode calc-mode Man-mode woman-mode
                              ;; Magit modes
                              magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
                              )
