@@ -17,6 +17,7 @@
   'visual-line-mode
   :general
   (:states '(normal visual motion)
+           "RET" 'org-open-at-point
            "zi" 'org-toggle-inline-images)
   (kb/leader-keys
     "nn" '(org-capture :which-key "Org-capture")
