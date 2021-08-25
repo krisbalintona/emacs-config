@@ -21,6 +21,7 @@
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
+           "<backtab>" 'evil-delete-back-to-indentation
            "M-P" 'evil-paste-before
            "M-p" 'evil-paste-after)
   (:keymaps 'evil-visual-state-map
