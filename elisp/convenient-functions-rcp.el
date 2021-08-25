@@ -270,14 +270,7 @@ Mainly used for `ledger-mode'."
   "fy" '(kb/yank-buffer-filename :which-key "Yank file-path")
   )
 
-;;;; Kill
-;;;;; Kill all buffers
-(defun kb/kill-all-buffers ()
-  "Kill all existing buffers."
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
-
-;;;;; Kill this file
+;;;; Kill this file
 (defun kb/delete-this-file (&optional path force-p)
   "Delete PATH, kill its buffers and expunge it from vc/magit cache.
 
@@ -306,15 +299,8 @@ Mainly used for `ledger-mode'."
           ;; (doom--update-files path)
           (kill-this-buffer)
           (message "Deleted %S" short-path))))))
-
-;;;;; Keybinds
-;; Keybinds for the aforementioned functions
-(general-define-key "C-x K" 'kill-this-buffer)
 (kb/leader-keys
-  "bK" '(kill-this-buffer :which-key "Kill current buffer") ; Sets keybinds for kill-this-buffer function
-  "fD" '(kb/delete-this-file :which-key "Delete current file")
-  "qQ" '(kb/kill-all-buffers :which-key "Kill all buffers")
-  )
+  "fD" '(kb/delete-this-file :which-key "Delete current file"))
 
 ;;;; Idle quote
 ;; Display a random quote in the minibuffer after a certain amount of idle time.
