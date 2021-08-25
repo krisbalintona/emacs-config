@@ -71,6 +71,7 @@
   :config
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'eshell-mode 'insert)
+  (evil-set-initial-state 'calc-mode 'emacs)
   )
 
 ;;;; Evil-collection
