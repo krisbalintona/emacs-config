@@ -66,7 +66,8 @@ is only tested on \"insert\" action."
   (sp-local-pair 'emacs-lisp-mode "(" ")"
                  :actions '(insert autoskip navigate)
                  :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
-  (sp-local-pair 'emacs-lisp-mode "'" nil
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+  (sp-local-pair 'emacs-lisp-mode "'" "'"
                  :actions '(insert autoskip navgiate)
                  :when '(sp-in-string-p))
   (sp-local-pair 'emacs-lisp-mode "`" "'"
