@@ -63,8 +63,6 @@
               ring-bell-function 'ignore                                                          ; Disable annoying error sound on Windows 10
 
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
-
-              completions-detailed t                                                              ; Show more details in completion minibuffer (inspired by `marginalia')
               )
 
 ;;;; Kill child processes without confirm
@@ -75,12 +73,6 @@
 
 ;;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
-
-;;;; Ignore case for completion
-(custom-set-variables
- '(completion-ignore-case t)
- '(read-buffer-completion-ignore-case t)
- '(read-file-name-completion-ignore-case t))
 
 ;;;; Recognize camel case as words
 (global-subword-mode t) ; Iterate through CamelCase words

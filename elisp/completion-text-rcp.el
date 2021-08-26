@@ -164,7 +164,7 @@
   (corfu-cycle t)
 
   (corfu-echo-documentation t)
-  (corfu-quit-at-boundary t)
+  (corfu-quit-at-boundary nil)          ; Necessary for orderless
   (corfu-quit-no-match t)
   (corfu-commit-predicate t)
   )
