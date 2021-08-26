@@ -99,7 +99,6 @@ is only tested on \"insert\" action."
 
 ;;;;; Better-jumper
 (use-package better-jumper
-  :disabled t                           ; Troublesome for now
   :after evil
   :general (:states '(normal visual normal)
                     [remap evil-jump-backward] '(better-jumper-jump-backward :which-key "Jump backward")
@@ -116,6 +115,7 @@ is only tested on \"insert\" action."
   ;; Add evil navigation commands to the better-jumper jump list
   (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin evil-jump-item evil-first-non-blank evil-end-of-visual-line)
                       :after 'better-jumper-set-jump)
+  (general-add-hook '(ace-jump-mode-end-hook) 'better-jumper-set-jump)
   )
 
 ;;;; Cleanup

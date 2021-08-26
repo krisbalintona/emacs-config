@@ -79,6 +79,7 @@
 ;;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
+  :defines (selectrum-mode selectrum-highlight-candidates-function)
   :custom
   (orderless-component-separator " +")
   (orderless-matching-styles
@@ -99,12 +100,18 @@
   :disabled t                           ; Trying out `vertico'
   :ghook 'after-init-hook
   :custom
-  (selectrum-num-candidates-displayed 10) ; Maximum candidates shown
-  (selectrum-fix-minibuffer-height t) ; Fixed height?
+  (selectrum-num-candidates-displayed 'auto)
+  (selectrum-max-window-height 10)                 ; Maximum candidates shown
+  (selectrum-fix-vertical-window-height t)         ; Fixed height?
   (selectrum-extend-current-candidate-highlight t) ; Highlight entire line
   (selectrum-count-style 'current/matches)
-  (selectrum-show-indices nil) ; Can also be custom if passed a function
+  (selectrum-show-indices nil)
   :config
+  ;; Optional performance optimization for `selectrum' by highlighting only the
+  ;; visible candidates.
+  (setq orderless-skip-highlighting (lambda () selectrum-is-active)
+        selectrum-highlight-candidates-function #'orderless-highlight-matches)
+
   ;; Selectrum minibuffer faces
   ;; Foregrounds based on ivy-minibuffer-match-face-*
   (set-face-attribute 'selectrum-current-candidate nil
@@ -117,9 +124,13 @@
 ;;;;; Selectrum-prescient
 ;; Selectrum with `prescient' completion style
 (use-package selectrum-prescient
-  :ghook 'after-init-hook
+  :requires prescient
+  :ghook 'selectrum-mode-hook
   :custom
-  ;; Use `prescient' to sort and filter in `selectrum-mode'
+  ;; Use `prescient' to sort and filter in `selectrum-mode' This can be nil if
+  ;; with `orderless' and want that to be the one filtering.
+  ;; NOTE `Prescient' and `orderless' can both work with `selectrum'
+  ;; simultaneously.
   (selectrum-prescient-enable-filtering t)
   (selectrum-prescient-enable-sorting t)
   :config
