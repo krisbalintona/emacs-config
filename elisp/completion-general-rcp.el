@@ -10,7 +10,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
-;;;; Default completion settings
+;;;; Completion
+;;;;; Built-in
 ;; A lot of this is taken from
 ;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
 ;; (setq completion-styles '(basic initials partial-completion flex))
@@ -47,7 +48,15 @@
       minibuffer-eldef-shorten-default t) ; Shorten "(default ...)" to "[...]" in minibuffer prompts.
 (setq-default case-fold-search t)         ; For general regexp
 
-;;;;  Orderless
+;;;;; Prescient
+;; Sorting and filtering of minibuffer candidates. Big benefit is having most
+;; recent candidate shown on top
+(use-package prescient
+  ;; :after selectrum
+  :hook (selectrum-prescient-mode . prescient-persist-mode)
+  )
+
+;;;;; Orderless
 ;; Alternative and powerful completion style
 (use-package orderless
   :custom
@@ -64,15 +73,8 @@
   ;;    prot-orderless-flex-dispatcher))
   )
 
-;;;; Prescient
-;; Sorting and filtering of minibuffer candidates. Big benefit is having most
-;; recent candidate shown on top
-(use-package prescient
-  ;; :after selectrum
-  :hook (selectrum-prescient-mode . prescient-persist-mode)
-  )
-
-;;;; Marginalia
+;;;; Auxiliary
+;;;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
   :straight (marginalia :type git :host github :repo "minad/marginalia")
