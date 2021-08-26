@@ -115,7 +115,7 @@ is only tested on \"insert\" action."
   ;; Add evil navigation commands to the better-jumper jump list
   (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin evil-jump-item evil-first-non-blank evil-end-of-visual-line)
                       :after 'better-jumper-set-jump)
-  (general-add-hook '(ace-jump-mode-end-hook) 'better-jumper-set-jump)
+  (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump)
   )
 
 ;;;; Cleanup
