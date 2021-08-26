@@ -1,4 +1,4 @@
-;;; completion-company-rcp.el --- Summary
+;;; completion-text-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
@@ -16,6 +16,7 @@
 (use-package company
   ;; NOTE 2021-08-26: Keeping this active since it is necessary to keep `:after'
   ;; and `:requires' statements happy.
+  :demand t                             ; Necessary for other packages since I don't use it to load it anymore
   :after evil
   ;; :ghook ('after-init-hook 'global-company-mode)
   :gfhook 'evil-normalize-keymaps
@@ -151,6 +152,8 @@
                      "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
                      "M-d" 'corfu-show-documentation)
   :custom
+  (tab-always-indent 'complete)         ; Try to tab and then `complete-at-point'
+  
   (corfu-auto t)
   (corfu-auto-prefix 1)
   (corfu-auto-delay 0.05)
@@ -158,7 +161,7 @@
   (corfu-count 13)
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)
-  (corfu-cycle nil)
+  (corfu-cycle t)
 
   (corfu-echo-documentation t)
   (corfu-quit-at-boundary t)
@@ -180,6 +183,6 @@
             #'completion-file-name-table :exclusive 'no))))
 (add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
 
-;;; completion-company-rcp.el ends here
+;;; completion-text-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'completion-company-rcp)
+(provide 'completion-text-rcp)

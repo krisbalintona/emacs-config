@@ -58,7 +58,7 @@
 
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)
-(require 'completion-company-rcp)
+(require 'completion-text-rcp)
 (require 'completion-ivy-rcp)
 (require 'completion-selectrum-rcp)
 (require 'completion-helm-rcp)
