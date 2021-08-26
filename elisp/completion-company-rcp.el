@@ -11,6 +11,7 @@
 (require 'faces-rcp)
 
 ;;;; Company
+;;;;; Company-mode
 ;; Point auto-completion backend
 (use-package company
   ;; NOTE 2021-08-26: Keeping this active since it is necessary to keep `:after'
@@ -72,7 +73,7 @@
   (set-face-attribute 'company-tooltip nil :font kb/fixed-pitch-font :height 127)
   )
 
-;;;; Company-box
+;;;;; Company-box
 ;; A pretty company autocomplete frontend that also displays candidate
 ;; documentation
 (use-package company-box
