@@ -8,6 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
+(require 'convenient-functions-rcp)
 
 ;;;; TeX
 ;;;;; AucTeX
@@ -74,6 +75,10 @@
   ;;  )
   (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")) ; From https://github.com/jkitchin/org-ref
   (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
+
+  ;; Flycheck integration
+  (flycheck-tex-chktex-executable (kb/shell-command-to-string "which chktex"))
+  (flycheck-chktexrc (concat no-littering-var-directory "flycheck/chktexrc"))
   :preface (defvaralias 'latex-mode-hook 'LaTeX-mode-hook "For easier use-package declaration.")
   )
 
