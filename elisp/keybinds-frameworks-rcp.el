@@ -61,22 +61,22 @@
   )
 
 ;;;; Native-Emacs keybinds
-;; TODO 2021-08-21: Relocate this somewhere else more appropriately
 (general-define-key
  :keymaps 'minibuffer-mode-map
- ;; Beginning and end of line
+ ;; Text navigation
  "C-f" 'end-of-line
  "C-b" 'beginning-of-line
- ;; Next and previous word
  "M-f" 'forward-word
  "M-F" 'forward-to-word
  "M-b" 'backward-word
  "M-B" 'backward-to-word
- ;; Navigation
  "M-h" 'left-char
  "M-l" 'right-char
  "M-j" 'evil-next-visual-line
  "M-k" 'evil-previous-visual-line
+ ;; Candidate navigation
+ "M-k" 'previous-line
+ "M-j" 'next-line
  )
 (general-define-key
  :states 'normal)
