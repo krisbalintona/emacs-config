@@ -38,11 +38,10 @@
   :after flyspell
   :hook 'flyspell-mode-hook
   :custom
-  (flyspell-lazy-changes-threshold 100) ; Force check if this many changes are pending
+  (flyspell-lazy-changes-threshold 10) ; Force check if this many changes are pending
   (flyspell-lazy-idle-seconds 2)
-  (flyspell-lazy-window-idle-seconds 15)
-  (flyspell-lazy-use-flyspell-word nil) ; Immediately recheck when leaving a marked word
-  (flyspell-correct-interface #'flyspell-correct-dummy) ; Use default (now selectrum) minibuffer
+  (flyspell-lazy-window-idle-seconds 7)
+  (flyspell-lazy-use-flyspell-word t) ; Immediately recheck when leaving a marked word?
   )
 
 ;;;; Flyspell-correct
