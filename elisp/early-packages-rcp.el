@@ -153,6 +153,8 @@ afterward."
   (kb/leader-keys
     "hk" '(helpful-key :which-key "Desc key")
     "hc" '(helpful-command :which-key "Helpful command"))
+  :custom
+  (describe-bindings-outline t) ; Include interactive outline headings for each major mode in `describe-keys' buffer
   )
 
 ;;; early-packages-rcp.el ends here
