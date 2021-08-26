@@ -37,7 +37,7 @@
   (eshell-error-if-no-glob t)
   (eshell-banner-message "Welcome to the shell, Onii-chan~ (◠﹏◠✿)\n")
   :preface (defvaralias 'esh-mode-hook 'eshell-mode-hook) ; For more convenient `:gfhook'
-  :config
+  :init
   ;; Save history on eshell command
   (setq eshell-save-history-on-exit nil) ; Useless since only saves upon exiting eshell session
   (defun eshell-append-history ()
@@ -48,6 +48,8 @@
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t)))))
   (add-hook 'eshell-pre-command-hook #'eshell-append-history)
+  :config
+  (evil-set-initial-state 'eshell-mode 'insert)
   )
 
 ;;;; Eshell prompt

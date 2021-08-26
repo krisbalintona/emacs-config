@@ -100,9 +100,10 @@
   (kb/leader-keys
     "hi" '(info :which-key "Info pages"))
   )
-;;;; Visual-line-mode in *Messages* buffer
+;;;; *Messages* buffer
 ;; I am putting it here because I don't know where else to put it
 (add-hook 'messages-buffer-mode-hook 'visual-line-mode)
+(evil-set-initial-state 'messages-buffer-mode 'normal)
 
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

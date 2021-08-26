@@ -13,7 +13,6 @@
 ;; Emacs vim integration layer
 (use-package evil
   :demand t
-  :hook (git-commit-mode . evil-insert-state) ; For magit commits
   :ghook 'after-init-hook
   :commands evil-set-initial-state
   :general
@@ -69,8 +68,6 @@
         evil-echo-state nil ; Don't echo state in echo area
         evil-undo-system 'undo-fu)
   :config
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'eshell-mode 'insert)
   (evil-set-initial-state 'calc-mode 'emacs)
   )
 
