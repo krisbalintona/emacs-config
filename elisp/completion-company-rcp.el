@@ -66,6 +66,8 @@
   ;; backends based on major-mode rather than adding every backend to the global
   ;; list.
   (make-variable-buffer-local 'company-backends)
+
+  (set-face-attribute 'company-tooltip nil :font kb/fixed-pitch-font :height 127)
   )
 
 ;;;; Company-box
