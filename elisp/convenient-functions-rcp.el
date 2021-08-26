@@ -476,15 +476,12 @@ newlines."
 
 ;; Call this function before every save in an org file. Don't do this for
 ;; org-agenda files - it makes it ugly
-(with-eval-after-load 'org-roam-general-rcp
-  (add-hook 'before-save-hook (lambda ()
-                                (if (and
-                                     (eq major-mode 'org-mode) ; Org-mode
-                                     (not (string-equal default-directory (expand-file-name kb/agenda-dir)))) ; Not agenda-dir
-                                    (let ((current-prefix-arg 4)) ; Emulate C-u
-                                      (call-interactively 'unpackaged/org-add-blank-lines)))
-                                ))
-  )
+(add-hook 'org-mode-hook
+          #'(lambda () (add-hook 'before-save-hook (lambda ()
+                                                (if (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
+                                                    (let ((current-prefix-arg 4)) ; Emulate C-u
+                                                      (unpackaged/org-add-blank-lines))))
+                            nil 'local)))
 
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
