@@ -74,8 +74,8 @@
 (general-add-hook '(server-after-make-frame-hook window-setup-hook) 'kb/default-fonts-setup)
 
 ;;;; Mixed-pitch
-;; Allow faces to be selectively fixed- or variable-pitch
-;; Note: Changes the family and height of the default face to the family and
+;; Allow the same buffer to have both fixed- and variable-pitch
+;; NOTE Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
 (use-package mixed-pitch
   :ghook 'text-mode-hook
