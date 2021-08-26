@@ -149,6 +149,7 @@
   :general (:keymaps 'corfu-map
                       "<escape>" 'corfu-quit
                       "<tab>" 'corfu-insert
+                      "C-<tab>" 'corfu-complete
                       "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
                       "M-d" 'corfu-show-documentation)
   :custom

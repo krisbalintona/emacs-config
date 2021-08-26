@@ -20,6 +20,7 @@
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
+           "<escape>" 'evil-force-normal-state
            "<backtab>" 'evil-delete-back-to-indentation
            "M-P" 'evil-paste-before
            "M-p" 'evil-paste-after)
@@ -27,7 +28,7 @@
             "a" 'exchange-point-and-mark
             "o" evil-outer-text-objects-map
             "i" evil-inner-text-objects-map)
-  (:states '(normal insert visual)
+  (:states '(normal insert visual motion)
            "C-i" 'evil-jump-backward
            "C-o" 'evil-jump-forward)
   (kb/leader-keys
