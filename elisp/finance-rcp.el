@@ -13,8 +13,9 @@
 (use-package ledger-mode
   :ensure-system-package (ledger . "sudo dnf install ledger")
   :defines evil-emacs-state-modes
-  :commands (ledger-navigate-start-xact-or-directive-p ledger-navigate-end-of-xact ledger-navigate-next-xact)
-  :hook (before-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
+  :commands (ledger-navigate-start-xact-or-directive-p ledger-navigate-end-of-xact ledger-navigate-next-xact ledger-read-commodity-with-prompt)
+  :hook ((before-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
+         (calc-mode . evil-emacs-state))
   :gfhook
   'outshine-mode
   '(lambda () (mixed-pitch-mode 0)
@@ -65,20 +66,36 @@
   (ledger-narrow-on-reconcile nil)
 
   ;; Reports
+  (ledger-report-format-specifiers
+   '(("ledger-file" . ledger-report-ledger-file-format-specifier)
+     ("binary" . ledger-report-binary-format-specifier)
+     ("payee" . ledger-report-payee-format-specifier)
+     ("account" . ledger-report-account-format-specifier)
+     ("month" . ledger-report-month-format-specifier)
+     ("tagname" . ledger-report-tagname-format-specifier)
+     ("tagvalue" . ledger-report-tagvalue-format-specifier)
+     ("commodity" . kb/ledger-report-commodity-format-specifier)
+     ))
   (ledger-reports
    '(("bal this month" "%(binary) -f %(ledger-file) bal -p %(month) -S amount")
      ("bal 2020"       "%(binary) -f %(ledger-file) bal -p 2020")
      ("bal"            "%(binary) -f %(ledger-file) bal")
      ("reg monthly"    "%(binary) -f %(ledger-file) reg -M")
      ("reg"            "%(binary) -f %(ledger-file) reg")
-     ("accounts"       "%(binary) -f %(ledger-file) accounts")
-     ("account"        "%(binary) -f %(ledger-file) reg %(account)"))
+     ("account"        "%(binary) -f %(ledger-file) reg %(account)")
+     ("account single commodity" "%(binary) -f %(ledger-file) reg %(account) --exchange %(commodity)"))
    )
   (ledger-report-auto-refresh nil) ; Don't continually bother me with a new window
   (ledger-report-resize-window nil)
   (ledger-report-use-strict t) ; Adds `--strict' flag, make sure accounts are already defined
   (ledger-report-auto-refresh-sticky-cursor t) ; Don't lose cursor position on auto-refresh
   :init
+  ;; For `ledger-reports' expansions
+  (defun kb/ledger-report-commodity-format-specifier ()
+    "Substitute for a chosen (prompted) commodity."
+    (ledger-read-commodity-with-prompt "Commodity?"))
+
+  ;; Add blank lines
   (defun kb/ledger-add-blank-lines ()
     "Add a line to the end of every xact entry for visual clarity."
     (interactive)
