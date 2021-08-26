@@ -90,32 +90,13 @@
   )
 
 ;;;;; Selectrum-prescient
-;; Selectrum with prescient completion style
+;; Selectrum with `prescient' completion style
 (use-package selectrum-prescient
   :ghook 'after-init-hook
   :custom
-  ;; Use `prescient' to sort and filter
+  ;; Use `prescient' to sort and filter in `selectrum-mode'
   (selectrum-prescient-enable-filtering t)
   (selectrum-prescient-enable-sorting t)
-
-  ;; How does it filter?
-  (prescient-filter-alist '((literal . prescient-literal-regexp)
-                            (literal-prefix . prescient-literal-prefix-regexp)
-                            (initialism . prescient-initials-regexp)
-                            (regexp . prescient-regexp-regexp)
-                            (fuzzy . prescient-fuzzy-regexp)
-                            (prefix . prescient-prefix-regexp)
-                            (anchored . prescient-anchored-regexp))
-                          )
-  (prescient-filter-method '(literal regexp anchored initialism))
-
-  (prescient-use-char-folding t)
-  (prescient-use-case-folding t)
-  (prescient-sort-full-matches-first t)
-
-  (prescient-history-length 200)
-  (prescient-frequency-decay 0.999)
-  (prescient-frequency-threshold 0.10)
   :config
   (set-face-attribute 'selectrum-prescient-primary-highlight nil
                       :foreground "#dc85f7")
