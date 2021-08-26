@@ -13,8 +13,10 @@
 ;;;; Company
 ;; Point auto-completion backend
 (use-package company
+  ;; NOTE 2021-08-26: Keeping this active since it is necessary to keep `:after'
+  ;; and `:requires' statements happy.
   :after evil
-  :ghook ('after-init-hook 'global-company-mode)
+  ;; :ghook ('after-init-hook 'global-company-mode)
   :gfhook 'evil-normalize-keymaps
   :general
   (:keymaps 'company-active-map
