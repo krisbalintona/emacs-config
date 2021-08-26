@@ -8,6 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
+(require 'faces-rcp)
 
 ;;;; Company
 ;; Point auto-completion backend
@@ -25,7 +26,8 @@
             "C-n" 'company-select-next-or-abort
             "C-p" 'company-select-previous-or-abort)
   :custom
-  (company-idle-delay 0.15)
+  (company-idle-delay 0.3)
+  (company-tooltip-idle-delay 0.2)
   (company-minimum-prefix-length 1)
   (company-require-match 'never)
   (company-selection-wrap-around nil) ; Cycle?
@@ -38,7 +40,7 @@
   (company-tooltip-width-grow-only t) ; Don't decrease the width?
   (company-tooltip-flip-when-above t)
   (company-tooltip-align-annotations t)
-  (company-tooltip-idle-delay 0.1)
+  (company-tooltip-limit 12)
 
   (company-dabbrev-other-buffers nil)
   (company-dabbrev-ignore-case nil)
@@ -51,6 +53,13 @@
   (company-backends '(company-bbdb company-yasnippet company-files
                                    (company-gtags company-etags company-keywords)
                                    company-capf))
+  ;; NOTE 2021-08-25: Uncomment the code below if `company-box' isn't being used
+  ;; (company-frontends
+  ;;  '(company-preview-common-frontend ; Preview common part of candidates
+  ;;    company-preview-if-just-one-frontend ; Always preview if only 1 candidate
+  ;;    company-echo-metadata-frontend  ; Show symbol metadata in echo area
+  ;;    company-pseudo-tooltip-unless-just-one-frontend-with-delay ; Respect `company-idle-delay'
+  ;;    ))
   :init (require 'company-autoloads)    ; Make sure all company-backends are loaded
   :config
   ;; Make `company-backends' buffer-local so that I can configure the enabled
@@ -63,29 +72,17 @@
 ;; A pretty company autocomplete frontend that also displays candidate
 ;; documentation
 (use-package company-box
+  :requires (company all-the-icons)
   :after (company all-the-icons)
   :defines company-box-icons-all-the-icons
   :ghook 'company-mode-hook
-  :preface
-  (with-no-warnings
-    ;; Prettify icons
-    (defun my-company-box-icons--elisp (candidate)
-      (when (derived-mode-p 'emacs-lisp-mode)
-        (let ((sym (intern candidate)))
-          (cond ((fboundp sym) 'Function)
-                ((featurep sym) 'Module)
-                ((facep sym) 'Color)
-                ((boundp sym) 'Variable)
-                ((symbolp sym) 'Text)
-                (t . nil)))))
-    (advice-add #'company-box-icons--elisp :override #'my-company-box-icons--elisp))
-
-  ;; (delq 'company-echo-metadata-frontend company-frontends)
   :custom
   (company-box-show-single-candidate 'always)
   (company-box-backends-colors nil)
-  (company-box-max-candidates 7)
-  (company-box-scrollbar t)
+  (company-box-max-candidates company-tooltip-limit)
+  (company-box-doc-delay 0.4)
+  (company-box-scrollbar nil)
+  (company-box-frame-behavior 'default)   ; Follow point horizontally as I type?
   (company-box-icons-alist 'company-box-icons-all-the-icons)
   (company-box-icons-all-the-icons
    (let ((all-the-icons-scale-factor 0.8))
@@ -121,6 +118,22 @@
        (ElispFeature  . ,(all-the-icons-material "stars"                    :face 'all-the-icons-orange))
        (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink)))
      ))
+  :config
+  ;; (with-no-warnings
+  ;;   ;; Prettify icons
+  ;;   (defun my-company-box-icons--elisp (candidate)
+  ;;     (when (derived-mode-p 'emacs-lisp-mode)
+  ;;       (let ((sym (intern candidate)))
+  ;;         (cond ((fboundp sym) 'Function)
+  ;;               ((featurep sym) 'Module)
+  ;;               ((facep sym) 'Color)
+  ;;               ((boundp sym) 'Variable)
+  ;;               ((symbolp sym) 'Text)
+  ;;               (t . nil)))))
+  ;;   (advice-add #'company-box-icons--elisp :override #'my-company-box-icons--elisp))
+  (delq 'company-echo-metadata-frontend company-frontends) ; Redundant with `compan-box-doc'
+  )
+
   )
 
 ;;; completion-company-rcp.el ends here
