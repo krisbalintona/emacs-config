@@ -25,11 +25,14 @@
             "C-n" 'company-select-next-or-abort
             "C-p" 'company-select-previous-or-abort)
   :custom
-  (company-idle-delay 0.15)
+  (company-idle-delay 0.05)
   (company-minimum-prefix-length 1)
   (company-require-match 'never)
+  (company-require-match 'company-explicit-action-p)
   (company-selection-wrap-around nil) ; Cycle?
   (company-global-modes '(not shell-mode))
+  (company-occurrence-weight-function 'company-occurrence-prefer-any-closest)
+  (company-search-regexp-function 'regexp-quote)
 
   (company-show-numbers nil)
   (company-tooltip-offset-display 'lines)
@@ -38,11 +41,15 @@
   (company-tooltip-width-grow-only t) ; Don't decrease the width?
   (company-tooltip-flip-when-above t)
   (company-tooltip-align-annotations t)
-  (company-tooltip-idle-delay 0.1)
+  (company-tooltip-limit 12)
+  (company-tooltip-idle-delay 0.2)
 
   (company-dabbrev-other-buffers nil)
   (company-dabbrev-ignore-case nil)
   (company-dabbrev-downcase nil)
+  (company-dabbrev-other-buffers t)
+  (company-dabbrev-code-everywhere t)
+  (company-dabbrev-code-ignore-case t)
 
   ;; NOTE 2021-08-22: I've set the initial backends to be minimal, removing a
   ;; lot of the backends that company initially sets. Most notably, I removed
@@ -82,10 +89,12 @@
 
   ;; (delq 'company-echo-metadata-frontend company-frontends)
   :custom
-  (company-box-show-single-candidate 'always)
+  (company-box-show-single-candidate 'never)
   (company-box-backends-colors nil)
-  (company-box-max-candidates 7)
+  (company-box-max-candidates company-tooltip-limit)
+  (company-box-doc-delay 0.4)
   (company-box-scrollbar t)
+  (company-box-frame-behavior 'default)   ; Follow point horizontally as I type?
   (company-box-icons-alist 'company-box-icons-all-the-icons)
   (company-box-icons-all-the-icons
    (let ((all-the-icons-scale-factor 0.8))
