@@ -74,6 +74,13 @@
   (set-face-attribute 'company-tooltip nil :font kb/fixed-pitch-font :height 127)
   )
 
+;;;;; Company-prescient
+(use-package company-prescient
+  :ghook 'company-prescient-mode
+  :custom
+  (company-prescient-sort-length-enable nil) ; Don't sort by length since some backends already do this in the background
+  )
+
 ;;;;; Company-box
 ;; A pretty company autocomplete frontend that also displays candidate
 ;; documentation
