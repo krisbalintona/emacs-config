@@ -80,6 +80,8 @@
   :general
   (:keymaps 'minibuffer-local-map
             "M-A" '(marginalia-cycle :which-key "Marginalia cycle"))
+  :custom
+  (marginalia-max-relative-age 0)       ; Don't show relative ages
   :config
   ;; Marginalia faces
   (set-face-attribute 'marginalia-documentation nil
