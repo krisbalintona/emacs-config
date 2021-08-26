@@ -55,7 +55,7 @@
   :config
   ;; Make `company-backends' buffer-local so that I can configure the enabled
   ;; backends based on major-mode rather than adding every backend to the global
-  ;; list
+  ;; list.
   (make-variable-buffer-local 'company-backends)
   )
 
