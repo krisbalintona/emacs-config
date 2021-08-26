@@ -136,7 +136,46 @@
   (delq 'company-echo-metadata-frontend company-frontends) ; Redundant with `compan-box-doc'
   )
 
+;;;; Default `completion-at-point'
+;;;;; Corfu
+;; Faster, minimal, and more lightweight autocomplete that is more faithful to
+;; the Emacs infrastructure
+(use-package corfu
+  :ghook ('after-init-hook 'corfu-global-mode)
+  :general (:keymaps 'corfu-map
+                     "<escape>" 'corfu-quit
+                     "<tab>" 'corfu-insert
+                     "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
+                     "M-d" 'corfu-show-documentation)
+  :custom
+  (corfu-auto t)
+  (corfu-auto-prefix 1)
+  (corfu-auto-delay 0.05)
+
+  (corfu-count 13)
+  (corfu-min-width 80)
+  (corfu-max-width corfu-min-width)
+  (corfu-cycle nil)
+
+  (corfu-echo-documentation t)
+  (corfu-quit-at-boundary t)
+  (corfu-quit-no-match t)
+  (corfu-commit-predicate t)
   )
+
+;;;;; Custom completions
+(autoload 'ffap-file-at-point "ffap")
+(defun kb/complete-path-at-point ()
+  "Return completion data for UNIX path at point."
+  (let ((fn (ffap-file-at-point))
+        (fap (thing-at-point 'filename)))
+    (when (and (or fn (equal "/" fap))
+               (save-excursion
+                 (search-backward fap (line-beginning-position) t)))
+      (list (match-beginning 0)
+            (match-end 0)
+            #'completion-file-name-table :exclusive 'no))))
+(add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
 
 ;;; completion-company-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
