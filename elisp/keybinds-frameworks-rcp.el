@@ -55,6 +55,9 @@
 
     "u" 'universal-argument
     )
+  (kb/leader-keys                       ; Allow for more than 1 C-u
+    :keymaps 'universal-argument-map
+    "u" 'universal-argument-more)
   )
 
 ;;;; Native-Emacs keybinds
