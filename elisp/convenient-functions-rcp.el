@@ -78,15 +78,32 @@ space between point and the comment character when appropriate."
     (comment-normalize-vars)
     (if (use-region-p)
         ;; If highlighting a region (visual-mode) then comment those lines
-        (comment-or-uncomment-region (region-beginning) (region-end) arg)
+        (cond (t
+               (comment-or-uncomment-region (region-beginning) (region-end) arg)))
+      ;; If in the middle of a line with no comment
       (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
-          ;; If in the middle of a line with no comment
-          (if arg (comment-kill (and (integerp arg) arg)) ; If with arg
-            ;; This is what does most of the work
-            (progn (comment-indent)
-                   (when (looking-at "\\s-*$")
-                     (insert " ")
+          (cond ((equal arg '(4)) ; If with C-u
+                 (beginning-of-line)
+                 (insert "\n")
+                 (forward-line -1)
+                 (if comment-insert-comment-function
+                     (funcall comment-insert-comment-function)
+                   (progn
+                     (indent-according-to-mode)
+                     (insert (comment-padright comment-start (comment-add nil)))
+                     (save-excursion
+                       (unless (string= "" comment-end)
+                         (insert (comment-padleft comment-end (comment-add nil))))
+                       (indent-according-to-mode))
                      (evil-insert-state))))
+                ((equal arg '(16)) ; If with C-u C-u
+                 (comment-kill (and (integerp arg) arg)))
+                ;; If without universal argument
+                (t
+                 (comment-indent)
+                 (when (looking-at "\\s-*$")
+                   (insert " ")
+                   (evil-insert-state))))
         ;; When in an empty line
         (if comment-insert-comment-function
             (funcall comment-insert-comment-function)
