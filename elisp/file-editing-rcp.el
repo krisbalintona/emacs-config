@@ -163,6 +163,12 @@ is only tested on \"insert\" action."
   (prefix-help-command #'embark-prefix-help-command)
   )
 
+;;;;; Conf-mode
+(use-package conf-mode
+  :straight nil
+  :mode "\\rc$"                         ; For all files ending in "rc"
+  )
+
 ;;; file-editing-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'file-editing-rcp)
