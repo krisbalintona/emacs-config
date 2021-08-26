@@ -98,12 +98,6 @@
 (use-package selectrum
   :disabled t                           ; Trying out `vertico'
   :ghook 'after-init-hook
-  :general (kb/leader-keys
-             "ff" '(find-file :which-key "Find file")
-             "hf" '(describe-function :which-key "Desc func")
-             "hv" '(describe-variable :which-key "Desc var")
-             "ho" '(describe-symbol :which-key "Desc sym")
-             )
   :custom
   (selectrum-num-candidates-displayed 10) ; Maximum candidates shown
   (selectrum-fix-minibuffer-height t) ; Fixed height?

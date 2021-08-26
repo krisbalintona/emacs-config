@@ -39,8 +39,12 @@
     "bp" '(previous-buffer :which-key "Prev buffer")
     "bn" '(next-buffer :which-key "Next buffer")
     "f"  '(:ignore t :which-key "Files")
+    "ff" '(find-file :which-key "Find file")
     "fs" '(save-buffer :which-key "Save buffer")
     "h"  '(:ignore t :which-key "Help")
+    "hf" '(describe-function :which-key "Desc func")
+    "hv" '(describe-variable :which-key "Desc var")
+    "ho" '(describe-symbol :which-key "Desc sym")
     "q"  '(:ignore t :which-key "Quit")
     "qs" '(org-save-all-org-buffers :which-key "Save all org buffers")
     "l"  '(:ignore t :which-key "Langtool")
@@ -52,7 +56,6 @@
     "eb"  '(eval-buffer :which-key "Eval buffer")
     "ee" '(eval-last-sexp :which-key "Eval last sexp")
     "er" '(eval-region :which-key "Eval region")
-
     "u" 'universal-argument
     )
   (kb/leader-keys                       ; Allow for more than 1 C-u
