@@ -73,35 +73,31 @@ Else, call `comment-indent'.
 You can configure `comment-style' to change the way regions are commented.
 
 I've added a part at the end which puts me in insert mode with a
-space between point and the comment character."
+space between point and the comment character when appropriate."
     (interactive "*P")
     (comment-normalize-vars)
     (if (use-region-p)
+        ;; If highlighting a region (visual-mode) then comment those lines
         (comment-or-uncomment-region (region-beginning) (region-end) arg)
       (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
-          ;; FIXME If there's no comment to kill on this line and ARG is
-          ;; specified, calling comment-kill is not very clever.
-          (if arg (comment-kill (and (integerp arg) arg)) (comment-indent))
-        ;; Inserting a comment on a blank line. comment-indent calls
-        ;; c-i-c-f if needed in the non-blank case.
+          ;; If in the middle of a line with no comment
+          (if arg (comment-kill (and (integerp arg) arg)) ; If with arg
+            ;; This is what does most of the work
+            (progn (comment-indent)
+                   (when (looking-at "\\s-*$")
+                     (insert " ")
+                     (evil-insert-state))))
+        ;; When in an empty line
         (if comment-insert-comment-function
             (funcall comment-insert-comment-function)
           (let ((add (comment-add arg)))
-            ;; Some modes insist on keeping column 0 comment in column 0
-            ;; so we need to move away from it before inserting the comment.
             (indent-according-to-mode)
             (insert (comment-padright comment-start add))
             (save-excursion
               (unless (string= "" comment-end)
                 (insert (comment-padleft comment-end add)))
-              (indent-according-to-mode)))))
-      ;; Add space and go into insert state when at the end of the line. The check
-      ;; needed for when called within a comment, to be faithful to the
-      ;; functionality of the original `comment-dwim', which makes it compatible
-      ;; with other functions that call it.
-      (when (sp--looking-at "[[:blank:]\n]")
-        (insert " ")
-        (evil-insert-state))
+              (indent-according-to-mode))
+            (evil-insert-state))))
       ))
   (advice-add 'comment-dwim :override 'kb/comment-dwim)
   )
