@@ -14,7 +14,6 @@
 ;; Sorting and filtering of minibuffer candidates. Big benefit is having most
 ;; recent candidate shown on top
 (use-package prescient
-  :after selectrum
   :ghook ('after-init-hook 'prescient-persist-mode)
   :custom
   ;; How does it filter?

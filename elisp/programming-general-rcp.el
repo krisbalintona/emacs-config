@@ -244,7 +244,6 @@
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
   :straight (consult :type git :host github :repo "minad/consult")
-  :after selectrum
   :general
   ([remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
   (kb/leader-keys

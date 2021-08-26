@@ -12,8 +12,7 @@
 ;;;; Built-in
 ;; A lot of this is taken from
 ;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
-;; (setq completion-styles '(basic initials partial-completion flex))
-(setq completion-styles '(substring initials partial-completion orderless)
+(setq completion-styles '(basic initials partial-completion flex)
       completion-category-overrides     ; partial-completion is easier for files
       '((file (styles . (partial-completion orderless))))
       completion-cycle-threshold 2 ; Number of candidates until cycling turns off
@@ -46,8 +45,37 @@
       minibuffer-eldef-shorten-default t) ; Shorten "(default ...)" to "[...]" in minibuffer prompts.
 (setq-default case-fold-search t)         ; For general regexp
 
+;;;; Vertico
+(use-package vertico
+  :ghook 'after-init-hook
+  :gfhook '(lambda ()
+             ;; (setq completion-styles '(substring initials partial-completion orderless)
+             (setq completion-styles '(substring orderless)
+                   ))
+  :custom
+  ;; Workaround for problem with `org-refile'. See
+  ;; https://github.com/minad/vertico#org-refile
+  (org-refile-use-outline-path 'file)
+  (org-outline-path-complete-in-steps nil)
+  :config
+  ;; Workaround for problem with `tramp' hostname completions. This overrides
+  ;; the completion style specifically for remote files! See
+  ;; https://github.com/minad/vertico#tramp-hostname-completion
+  (defun kb/basic-remote-try-completion (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-try-completion string table pred point)))
+  (defun kb/basic-remote-all-completions (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-all-completions string table pred point)))
+  (add-to-list 'completion-styles-alist
+               '(basic-remote           ; Name of `completion-style'
+                 kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+  (setq completion-styles '(orderless)
+        completion-category-overrides '((file (styles basic-remote partial-completion orderless))))
+  )
+
 ;;;; Orderless
-;; Alternative and powerful completion style
+;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
   (orderless-component-separator " +")
@@ -66,6 +94,7 @@
 ;;;; Selectrum
 ;; Advanced complete-read
 (use-package selectrum
+  :disabled t                           ; Trying out `vertico'
   :ghook 'after-init-hook
   :general (kb/leader-keys
              "ff" '(find-file :which-key "Find file")
