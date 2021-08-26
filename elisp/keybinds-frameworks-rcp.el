@@ -91,6 +91,8 @@
             (insert "\n")
             (forward-line -1)
             (indent-according-to-mode))
+ ;; Indentation
+ "TAB" 'tab-to-tab-stop
  ;; Beginning and end of line
  "C-f" 'end-of-line
  "C-b" 'beginning-of-line
