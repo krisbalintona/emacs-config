@@ -222,8 +222,8 @@
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
   ;; Ensure it's installed without manually doing so
-  :hook ((server-after-make-frame . pdf-tools-install)
-         ('window-setup . pdf-tools-install))
+  :hook ((server-after-make-frame . (lambda () (pdf-tools-install :no-query)))
+         ('window-setup . (lambda () (pdf-tools-install :no-query))))
   :custom
   (pdf-view-display-size 'fit-width)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
