@@ -219,8 +219,8 @@ UTF-8."
     (let* ((active (doom-modeline--active))
            (face (if active 'bold-italic 'mode-line-inactive))) ; Don't use here
       (concat (doom-modeline-spc)
-              (propertize (cond ((stringp (vc-git-root (buffer-file-name)))
-                                 (abbreviate-file-name (vc-git-root (buffer-file-name))))
+              (propertize (cond ((doom-modeline--project-root)
+                                 (abbreviate-file-name (doom-modeline--project-root)))
                                 (buffer-file-name ; Connected to file?
                                  default-directory)
                                 (t "Not file!"))
