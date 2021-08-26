@@ -119,9 +119,6 @@
       (((background light)) :foreground "#fafafa"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
-
-  ;; Enhanced multiple selection experience. Replaced the built-in method
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
   )
 
 ;;;;; Ivy-bibtex

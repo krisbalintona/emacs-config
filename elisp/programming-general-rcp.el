@@ -293,18 +293,21 @@
 
   (consult-project-root-function #'doom-modeline-project-root)
   :config
+  ;; Enhanced multiple selection experience. Replaced the built-in method
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
-   consult-buffer :preview-key (kbd "M-l")
+   consult-buffer :preview-key (kbd "M-'")
    consult-buffer :prompt "Can use b, m, f, p..."
    ;; For `consult-ripgrep'
-   consult-ripgrep :preview-key (kbd "M-l")
+   consult-ripgrep :preview-key (kbd "M-'")
    ;; For `consult-fdfind'. Make sure this is after the definition of
    ;; `consult-recent-file'
-   consult-recent-file :preview-key (kbd "M-l")
+   consult-recent-file :preview-key (kbd "M-'")
    ;; `consult-find'
-   consult-find :preview-key (kbd "M-l")
+   consult-find :preview-key (kbd "M-'")
    )
   )
 
