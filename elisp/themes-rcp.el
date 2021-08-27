@@ -127,11 +127,11 @@ icon."
           'mouse-face 'mode-line-highlight
           'help-echo (get-text-property 1 'help-echo vc-mode)
           'local-map (get-text-property 1 'local-map vc-mode))
-         (if (string= text "master") ; Only print branch if not master
+         ;; If the current branch is the main one, then don't show in modeline
+         (if (string= (substring-no-properties (substring vc-mode (+ (if (eq (vc-backend buffer-file-name) 'Hg) 2 3) 2))) (magit-main-branch))
              ""
-           (if active
-               text)
-           (doom-modeline-spc)))
+           text)
+         (doom-modeline-spc))
         )))
   (doom-modeline-def-segment kb/eyebrowse
     "Show eyebrowse workspace information."
