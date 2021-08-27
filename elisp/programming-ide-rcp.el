@@ -10,11 +10,15 @@
 (require 'keybinds-frameworks-rcp)
 
 ;;;; Lsp-mode
-;; Use the language server protocol as a backend for Emacs.
+;; Use the language server protocol as a backend for Emacs. Provides IDE-like
+;; features such as code navigation, formatting, code completion, and linting.
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :ghook ('prog-mode-mode-hook 'lsp-deferred) ; Lsp-mode only when buffer is visible
-  :gfhook 'lsp-enable-which-key-integration 'lsp-headerline-breadcrumb-mode
+  :hook ((python-mode js2-mode typescript-mode web-mode c-mode lua-mode) . lsp-deferred) ; Lsp-mode only when buffer is visible
+  :gfhook
+  'lsp-enable-which-key-integration
+  'lsp-headerline-breadcrumb-mode
+  'lsp-completion-enable                ; `completion-at-point' support
   :general
   (:keymaps 'lsp-mode-map
             "TAB" 'company-indent-or-complete-common)
@@ -28,8 +32,16 @@
     "lX" 'lsp-execute-code-action
     )
   :custom
-  (lsp-keymap-prefix "C-x l")
+  (lsp-keymap-prefix "C-l")
   (lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
+  ;; NOTE 2021-08-25: As per the docstring:
+  ;; Automatically guess the project root using projectile/project. Do *not* use
+  ;; this setting unless you are familiar with lsp-mode internals and you are
+  ;; sure that all of your projects are following projectile/project.el
+  ;; conventions.
+  (lsp-auto-guess-root nil)
+  :config
+  (general-unbind "C-l")
   )
 
 ;;;; Lsp-ui
