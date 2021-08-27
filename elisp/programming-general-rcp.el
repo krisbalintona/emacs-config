@@ -179,6 +179,8 @@
   :general (:keymaps 'dired-mode-map
                      :states 'normal
                      "H" 'dired-hide-dotfiles-mode)
+  :custom
+  (dired-hide-dotfiles-verbose nil) ; No annoying announcements in echo area anymore
   )
 
 ;;;; Aesthetics
@@ -216,6 +218,12 @@
   )
 
 ;;;; Other
+;;;;; Tramp
+(use-package tramp
+  :custom
+  (tramp-default-method "ssh")
+  )
+
 ;;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
 (use-package scratch
@@ -244,7 +252,6 @@
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
   :straight (consult :type git :host github :repo "minad/consult")
-  :after selectrum
   :general
   ([remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
   (kb/leader-keys
@@ -281,30 +288,23 @@
      (comint-mode . comint-input-ring)
      (term-mode . term-input-ring))
    )
-
-  (consult-narrow-key [?<])
-  (consult-widen-key [?< ?<])
-  ;; Optional configure a "view" library to be used by `consult-buffer`.
-  ;; The view library must provide two functions, one to open the view by name,
-  ;; and one function which must return a list of views as strings.
-  ;; Example: https://github.com/minad/bookmark-view/
-  ;; (setq consult-view-open-function #'bookmark-jump
-  ;;       consult-view-list-function #'bookmark-view-names)
-
-  (consult-project-root-function #'doom-modeline-project-root)
+  (consult-project-root-function #'vc-root-dir)
   :config
+  ;; Enhanced multiple selection experience. Replaced the built-in method
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
-   consult-buffer :preview-key (kbd "M-l")
+   consult-buffer :preview-key (kbd "M-'")
    consult-buffer :prompt "Can use b, m, f, p..."
    ;; For `consult-ripgrep'
-   consult-ripgrep :preview-key (kbd "M-l")
+   consult-ripgrep :preview-key (kbd "M-'")
    ;; For `consult-fdfind'. Make sure this is after the definition of
    ;; `consult-recent-file'
-   consult-recent-file :preview-key (kbd "M-l")
+   consult-recent-file :preview-key (kbd "M-'")
    ;; `consult-find'
-   consult-find :preview-key (kbd "M-l")
+   consult-find :preview-key (kbd "M-'")
    )
   )
 

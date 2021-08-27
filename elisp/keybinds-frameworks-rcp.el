@@ -19,7 +19,7 @@
   (general-define-key "<escape>" 'keyboard-escape-quit)
 
   (general-unbind
-    :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map
+    :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map debugger-mode-map
                              ;; Magit modes
                              magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
                              )
@@ -41,9 +41,15 @@
     "bn" '(next-buffer :which-key "Next buffer")
     "bK" '(kill-this-buffer :which-key "Kill current buffer")
     "f"  '(:ignore t :which-key "Files")
+    "ff" '(find-file :which-key "Find file")
     "fs" '(save-buffer :which-key "Save buffer")
     "fS" '((lambda () (interactive) (save-some-buffers t)) :which-key "Save open buffers")
     "h"  '(:ignore t :which-key "Help")
+    "hf" '(describe-function :which-key "Desc func")
+    "hv" '(describe-variable :which-key "Desc var")
+    "ho" '(describe-symbol :which-key "Desc sym")
+    "q"  '(:ignore t :which-key "Quit")
+    "qs" '(org-save-all-org-buffers :which-key "Save all org buffers")
     "l"  '(:ignore t :which-key "Langtool")
     "n" '(:ignore t :which-key "Org-roam")
     "i" '(:ignore t :which-key "Copying and pasting")
@@ -53,12 +59,12 @@
     "eb"  '(eval-buffer :which-key "Eval buffer")
     "ee" '(eval-last-sexp :which-key "Eval last sexp")
     "er" '(eval-region :which-key "Eval region")
-
     "u" 'universal-argument
     )
-  (kb/leader-keys                       ; Allow for more than 1 C-u
-    :keymaps 'universal-argument-map
-    "u" 'universal-argument-more)
+  ;; Multiple universal arguments
+  (general-define-key
+   :states '(normal visual motion insert)
+   "u" 'universal-argument-more)
   )
 
 ;;;; Native-Emacs keybinds

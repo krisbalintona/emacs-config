@@ -17,7 +17,7 @@
   :straight (magit :type git :host github :repo "magit/magit")
   :commands magit-add-section-hook
   :hook ((magit-process-mode . visual-line-mode)
-         (git-commit-mode . evil-insert-state)) ; For magit commits
+         (git-commit-mode . evil-insert-state))
   :general
   (:keymaps 'magit-mode-map
             "C-<tab>" 'magit-section-toggle-children)

@@ -58,9 +58,9 @@
 
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)
+(require 'completion-default-rcp)
 (require 'completion-text-rcp)
 (require 'completion-ivy-rcp)
-(require 'completion-selectrum-rcp)
 (require 'completion-helm-rcp)
 
 ;;;;; Org
@@ -87,6 +87,7 @@
 (require 'programming-haskell-rcp)
 
 ;;;;; Shells
+(require 'shell-basic-rcp)
 (require 'shell-eshell-rcp)
 (require 'shell-vterm-rcp)
 

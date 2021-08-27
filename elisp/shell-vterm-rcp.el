@@ -9,11 +9,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
-;;;; Shell-mode
-(use-package sh-script
-  :straight nil
-  )
-
 ;;;; Vterm
 ;; Full-fledged terminal emulator
 (use-package vterm

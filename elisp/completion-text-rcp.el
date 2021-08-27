@@ -80,6 +80,13 @@
   (set-face-attribute 'company-tooltip nil :font kb/fixed-pitch-font :height 127)
   )
 
+;;;;; Company-prescient
+(use-package company-prescient
+  :ghook 'company-prescient-mode
+  :custom
+  (company-prescient-sort-length-enable nil) ; Don't sort by length since some backends already do this in the background
+  )
+
 ;;;;; Company-box
 ;; A pretty company autocomplete frontend that also displays candidate
 ;; documentation
@@ -152,11 +159,14 @@
 ;; the Emacs infrastructure
 (use-package corfu
   :ghook ('after-init-hook 'corfu-global-mode)
+  :hook (evil-normal-state-entry . corfu-quit)
   :general (:keymaps 'corfu-map
-                      "<escape>" 'corfu-quit
-                      "<tab>" 'corfu-insert
-                      "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
-                      "M-d" 'corfu-show-documentation)
+                     "<escape>" 'corfu-quit
+                     "<tab>" 'corfu-insert
+                     "C-<tab>" 'corfu-complete
+                     "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
+                     "M-d" 'corfu-show-documentation
+                     "M-;" 'comment-dwim)
   :custom
   (tab-always-indent 'complete)         ; Try to tab and then `complete-at-point'
 
