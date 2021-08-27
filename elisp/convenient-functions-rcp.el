@@ -60,59 +60,99 @@
   "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer"))
 
 ;;;; Better comment-dwim
+;; Heavily taken from the built-in `comment-dwim' and Prot's
+;; `prot-comment-timestamp-keyword' infrastructure. The idea of including a
+;; timestamp alongside keyword is inspired from him.
 (with-eval-after-load 'smartparens
-  (defun kb/comment-dwim-helper (arg)
-    "A helper function for `kb/comment-dwim'. Accepts ARG.
+  ;; Variables
+  (defvar kb/comment-keywords-writing
+    '("TODO" "COMMENT" "REVIEW" "FIXME")
+    "List of strings with comment keywords.")
+  (defvar kb/comment-keywords-coding
+    '("TODO" "NOTE" "REVIEW" "FIXME")
+    "List of strings with comment keywords.")
+
+  (defvar kb/comment-dwim--timestamp-format-concise "%F"
+    "Specifier for date in `kb/comment-dwim'.
+Refer to the doc string of `format-time-string' for the available
+options.")
+  (defvar kb/comment-dwim--timestamp-format-verbose "%F %T %z"
+    "Like `kb/comment-dwim-timestamp-format-concise', but longer.")
+
+  (defvar kb/comment-dwim--keyword-hist '()
+    "Input history of selected comment keywords.")
+  (defun kb/comment-dwim-timestamp--keyword-prompt (keywords)
+    "Prompt for candidate among KEYWORDS."
+    (let ((def (car kb/comment-dwim--keyword-hist)))
+      (completing-read
+       (format "Select keyword [%s]: " def)
+       keywords nil nil nil 'kb/comment-dwim--keyword-hist def)))
+
+  ;; Functions
+  (defun kb/comment-insert-timestamp ()
+    "Insert a timestamp at point, preceded by a keyword, defined in
+`kb/comment-keywords-writing' and `kb/comment-keywords-coding', depending on
+major-mode."
+    (let* ((date-style kb/comment-dwim--timestamp-format-concise)) ; An alternative date-style is `kb/comment-dwim--timestamp-format-verbose'
+      (insert
+       (format "%s %s: "
+               (kb/comment-dwim-timestamp--keyword-prompt
+                (cond ((derived-mode-p 'prog-mode) kb/comment-keywords-coding)
+                      ((derived-mode-p 'org-mode) kb/comment-keywords-writing)
+                      (t nil)))
+               (format-time-string date-style))
+       )))
+
+  (defun kb/comment-dwim-insert-comment ()
+    "A helper function for `kb/comment-dwim'.
 
 If in the middle of a line, then append comment. If on blank
-line, then comment."
+line, then comment. End in `evil-insert-state'."
     (if comment-insert-comment-function
         (funcall comment-insert-comment-function)
-      ;; Some modes insist on keeping column 0 comment in column 0
-      ;; so we need to move away from it before inserting the comment.
       (progn
         (indent-according-to-mode)
         (insert (comment-padright comment-start (comment-add nil)))
         (save-excursion
           (unless (string= "" comment-end)
             (insert (comment-padleft comment-end (comment-add nil))))
-          (indent-according-to-mode))
-        (evil-insert-state))))
+          (indent-according-to-mode)
+          ;; Finally, end in insert state
+          (evil-insert-state)))
+      ))
 
-  (defun kb/comment-dwim (arg)
+  (defun kb/comment-dwim (arg timestamp)
     "Call the comment command you want (Do What I Mean).
-If the region is active and `transient-mark-mode' is on, call
-`comment-region' (unless it only consists of comments, in which
-case it calls `uncomment-region').
-Else, if the current line is empty, call `comment-insert-comment-function'
-if it is defined, otherwise insert a comment and indent it.
-Else if a prefix ARG is specified, call `comment-kill'.
-Else, call `comment-indent'.
-You can configure `comment-style' to change the way regions are commented.
 
-I've added a part at the end which puts me in insert mode with a
-space between point and the comment character."
+If in visual-mode, comment region. If with `C-u', then uncomment region.
+If called without prefix argument, then append comment to the end of the line.
+If called with `C-u', then comment in new line above.
+
+If called with `C-u' `C-u', then comment in new line below.
+
+Additionally, append a timestamp preceded by a chosen keyword if
+TIMESTAMP is t."
     (interactive "*P")
     (comment-normalize-vars)
     (if (use-region-p)
         ;; If highlighting a region (visual-mode) then comment those lines
         (cond (t
-               (comment-or-uncomment-region (region-beginning) (region-end) arg))) ; If with ARG then uncomment
+               (comment-or-uncomment-region (region-beginning) (region-end) arg))) ; If with arg then uncomment
       ;; If in the middle of a line with no comment
       (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
           (cond (;; If with C-u
-                 (equal arg '(4))       ; Comment above
+                 (equal arg '(4)) ; Comment above
                  (beginning-of-line)
                  (insert "\n")
                  (forward-line -1)
-                 (kb/comment-dwim-helper arg))
+                 (kb/comment-dwim-insert-comment))
                 ;; If with C-u C-u
-                ((equal arg '(16))      ; Comment below
+                ((equal arg '(16)) ; Comment below
                  (end-of-line)
                  (insert "\n")
-                 (kb/comment-dwim-helper arg))
+                 (kb/comment-dwim-insert-comment))
                 ;; If with C-u C-u C-u
-                ((equal arg '(64))      ; Remove any comments from line
+                ((equal arg '(64)) ; Remove any comments from line
                  (comment-kill (and (integerp arg) arg)))
                 ;; If without universal argument
                 (t ; Comment at the end of the current line
@@ -121,146 +161,16 @@ space between point and the comment character."
                    (insert " ")
                    (evil-insert-state))))
         ;; When in an empty line
-        (kb/comment-dwim-helper arg))
+        (kb/comment-dwim-insert-comment))
+      ;; When timestamp is t
+      (if timestamp (kb/comment-insert-timestamp))
       ))
-  (advice-add 'comment-dwim :override 'kb/comment-dwim)
+
+  (general-define-key
+   "M-;" '((lambda (arg) (interactive "P") (kb/comment-dwim arg nil)) :which-key "Comment no timestamp")
+   "M-:" '((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
+   )
   )
-
-;;;; Prot-comment
-;; helper code from prot-common.el, which is `require'd by
-;; prot-comment.el
-(defvar prot-common--line-regexp-alist
-  '((empty . "[\s\t]*$")
-    (indent . "^[\s\t]+")
-    (non-empty . "^.+$")
-    (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
-    (heading . "^[=-]+"))
-  "Alist of regexp types used by `prot-common-line-regexp-p'.")
-
-(defun prot-common-line-regexp-p (type &optional n)
-  "Test for TYPE on line.
-TYPE is the car of a cons cell in
-`prot-common--line-regexp-alist'.  It matches a regular
-expression.
-
-With optional N, search in the Nth line from point."
-  (save-excursion
-    (goto-char (point-at-bol))
-    (and (not (bobp))
-         (or (beginning-of-line n) t)
-         (save-match-data
-           (looking-at
-            (alist-get type prot-common--line-regexp-alist))))))
-
-;; and what follows is from prot-comment.el
-(defcustom prot-comment-comment-keywords-writing
-  '("TODO" "COMMENT" "REVIEW" "FIXME")
-  "List of strings with comment keywords."
-  :type '(repeat string)
-  :group 'prot-comment)
-
-(defcustom prot-comment-comment-keywords-coding
-  '("TODO" "NOTE" "REVIEW" "FIXME")
-  "List of strings with comment keywords."
-  :type '(repeat string)
-  :group 'prot-comment)
-
-(defcustom prot-comment-timestamp-format-concise "%F"
-  "Specifier for date in `prot-comment-timestamp-keyword'.
-Refer to the doc string of `format-time-string' for the available
-options."
-  :type 'string
-  :group 'prot-comment)
-
-(defcustom prot-comment-timestamp-format-verbose "%F %T %z"
-  "Like `prot-comment-timestamp-format-concise', but longer."
-  :type 'string
-  :group 'prot-comment)
-
-(defvar prot-comment--keyword-hist '()
-  "Input history of selected comment keywords.")
-
-(defun prot-comment--keyword-prompt (keywords)
-  "Prompt for candidate among KEYWORDS."
-  (let ((def (car prot-comment--keyword-hist)))
-    (completing-read
-     (format "Select keyword [%s]: " def)
-     keywords nil nil nil 'prot-comment--keyword-hist def)))
-
-;;;###autoload
-(defun prot-comment-timestamp-keyword (keyword &optional verbose)
-  "Add timestamped comment with KEYWORD.
-
-When called interactively, the list of possible keywords is that
-of `prot-comment-comment-keywords', though it is possible to
-input arbitrary text.
-
-If point is at the beginning of the line or if line is empty (no
-characters at all or just indentation), the comment is started
-there in accordance with `comment-style'.  Any existing text
-after the point will be pushed to a new line and will not be
-turned into a comment.
-
-If point is anywhere else on the line, the comment is indented
-with `comment-indent'.
-
-The comment is always formatted as 'DELIMITER KEYWORD DATE:',
-with the date format being controlled by the variable
-`prot-comment-timestamp-format-concise'.
-
-With optional VERBOSE argument (such as a prefix argument
-`\\[universal-argument]'), always insert newline above current one and write
-comment there."
-  (interactive
-   (list
-    (prot-comment--keyword-prompt
-     (cond ((derived-mode-p 'prog-mode) prot-comment-comment-keywords-coding)
-           ((derived-mode-p 'org-mode) prot-comment-comment-keywords-writing)
-           (t nil)))
-    current-prefix-arg))
-  (let* ((date prot-comment-timestamp-format-concise)
-         (string (format "%s %s: " keyword (format-time-string date)))
-         (beg (point)))
-    (cond ((equal current-prefix-arg '(4)) ; Universal argument case
-           (progn (evil-insert-newline-above)
-                  (indent-according-to-mode)
-                  (insert
-                   (concat comment-start
-                           (make-string
-                            (comment-add nil)
-                            (string-to-char comment-start))
-                           comment-padding
-                           string
-                           comment-end))
-                  ))
-          ((or (eq beg (point-at-bol)) ; Beginning of line or in indent whitespace case
-               (prot-common-line-regexp-p 'empty))
-           (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
-             ;; NOTE 2021-07-24: we use this `insert' instead of
-             ;; `comment-region' because of a yet-to-be-determined bug that
-             ;; traps `undo' to the two states between the insertion of the
-             ;; string and its transformation into a comment.
-             (insert
-              (concat comment-start
-                      ;; NOTE 2021-07-24: See function `comment-add' for
-                      ;; why we need this.
-                      (make-string
-                       (comment-add nil)
-                       (string-to-char comment-start))
-                      comment-padding
-                      string
-                      comment-end))
-             (indent-region beg (point))
-             (when maybe-newline
-               (save-excursion (insert maybe-newline)))))
-          (t ; Within code (creates node at `comment-column')
-           (comment-indent t)
-           (insert (concat " " string))))
-    ;; Immediately go into insert state afterward
-    (evil-insert-state)
-    ))
-
-(general-define-key "M-:" '(prot-comment-timestamp-keyword :which-key "Prot-comment"))
 
 ;;;; Insert date
 (defun kb/insert-date (prefix)
