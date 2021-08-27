@@ -47,6 +47,7 @@
 
 ;;;; Vertico
 (use-package vertico
+  :commands vertico--remote-p
   :ghook 'after-init-hook
   :custom
   ;; Workaround for problem with `org-refile'. See
@@ -68,54 +69,6 @@
   (add-to-list 'completion-styles-alist
                '(basic-remote           ; Name of `completion-style'
                  kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
-  )
-
-;;;; Orderless
-;; Alternative and powerful completion style (i.e. filters candidates)
-(use-package orderless
-  :custom
-  (completion-styles '(substring initials partial-completion orderless))
-  ;; (setq completion-styles '(substring orderless)
-  (completion-category-overrides
-   '((file (styles basic-remote partial-completion orderless))))
-
-  (orderless-component-separator " +")
-  (orderless-matching-styles
-   '(orderless-flex
-     orderless-strict-leading-initialism
-     orderless-regexp
-     orderless-prefixes
-     orderless-literal
-     ;; orderless-initialism
-     ;; orderless-without-literal
-     ;; orderless-strict-initialism
-     ;; orderless-strict-full-initialism
-     ))
-  (orderless-style-dispatchers
-   '(prot-orderless-literal-dispatcher
-     prot-orderless-initialism-dispatcher
-     prot-orderless-flex-dispatcher))
-  :init
-  (defun prot-orderless-literal-dispatcher (pattern _index _total)
-    "Literal style dispatcher using the equals sign as a suffix.
-It matches PATTERN _INDEX and _TOTAL according to how Orderless
-parses its input."
-    (when (string-suffix-p "=" pattern)
-      `(orderless-literal . ,(substring pattern 0 -1))))
-
-  (defun prot-orderless-initialism-dispatcher (pattern _index _total)
-    "Leading initialism  dispatcher using the comma suffix.
-It matches PATTERN _INDEX and _TOTAL according to how Orderless
-parses its input."
-    (when (string-suffix-p "," pattern)
-      `(orderless-strict-leading-initialism . ,(substring pattern 0 -1))))
-
-  (defun prot-orderless-flex-dispatcher (pattern _index _total)
-    "Flex  dispatcher using the tilde suffix.
-It matches PATTERN _INDEX and _TOTAL according to how Orderless
-parses its input."
-    (when (string-suffix-p "~" pattern)
-      `(orderless-flex . ,(substring pattern 0 -1))))
   )
 
 ;;;; Selectrum
@@ -162,6 +115,62 @@ parses its input."
                       :foreground "#dc85f7")
   (set-face-attribute 'selectrum-prescient-secondary-highlight nil
                       :foreground "#E5C07B")
+  )
+
+;;;; Orderless
+;; Alternative and powerful completion style (i.e. filters candidates)
+(use-package orderless
+  :custom
+  (completion-styles '(substring initials partial-completion orderless))
+  (completion-category-defaults nil)    ; I want to be in control!
+  (completion-category-overrides
+   '((file (styles . (basic-remote ; For `tramp' hostname completion with `vertico'
+                      partial-completion ; Kinda like initialism for directory/file names
+                      orderless          ; Of course, default to `orderless'
+                      )))))
+
+  (orderless-component-separator   ; What separates components
+   ;; " +"                            ; Default
+   ;; 'split-string-and-unquote       ; "for shell-like double-quotable space"
+   'orderless-escapable-split-on-space  ; Use backslash for literal space
+   )
+  (orderless-matching-styles
+   '(orderless-flex
+     orderless-strict-leading-initialism
+     orderless-prefixes
+     orderless-regexp
+     orderless-literal
+     ;; orderless-initialism
+     ;; orderless-strict-initialism
+     ;; orderless-strict-full-initialism
+     ;; orderless-without-literal          ; Recommended for dispatches instaed
+     ))
+  (orderless-style-dispatchers
+   '(prot-orderless-literal-dispatcher    ; = suffix for literal
+     prot-orderless-initialism-dispatcher ; , suffix for initialism
+     prot-orderless-flex-dispatcher       ; ~ suffix for flex
+     ))
+  :init
+  (defun prot-orderless-literal-dispatcher (pattern _index _total)
+    "Literal style dispatcher using the equals sign as a suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "=" pattern)
+      `(orderless-literal . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-initialism-dispatcher (pattern _index _total)
+    "Leading initialism  dispatcher using the comma suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "," pattern)
+      `(orderless-strict-leading-initialism . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-flex-dispatcher (pattern _index _total)
+    "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "~" pattern)
+      `(orderless-flex . ,(substring pattern 0 -1))))
   )
 
 ;;; completion-default-rcp.el ends here
