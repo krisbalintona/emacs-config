@@ -82,30 +82,7 @@
     )
   )
 
-;;;;;  Time
-;; Enable time in the mode-line
-(use-package time
-  :straight nil
-  :ghook ('after-init-hook 'display-time-mode)
-  :custom
-  (display-time-format "%H:%M") ; Use 24hr format
-  (display-time-default-load-average nil) ; Don't show load average along with time
-  )
-
-;;;;;  Battery
-;; Display batter percentage
-(use-package battery
-  :straight nil
-  :custom
-  (battery-load-critical 15)
-  (battery-load-low 25)
-  :config
-  (unless (equal "Battery status not available"
-                 (battery))
-    (display-battery-mode t)) ; Show battery in modeline
-  )
-
-;;;;;  Modeline segments
+;;;;; Modeline segments
 ;; (Re)defining my own modeline segments
 (defun kb/set-doom-modeline-segments ()
   "Define relevant doom modeline segments and define segment."
@@ -265,6 +242,29 @@ UTF-8."
   (doom-modeline-def-modeline 'main
     '(kb/matches "   " kb/major-mode-icon "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
     '(input-method process debug kb/time battery " " bar " " kb/buffer-encoding checker))
+  )
+
+;;;;; Time
+;; Enable time in the mode-line
+(use-package time
+  :straight nil
+  :ghook ('after-init-hook 'display-time-mode)
+  :custom
+  (display-time-format "%H:%M") ; Use 24hr format
+  (display-time-default-load-average nil) ; Don't show load average along with time
+  )
+
+;;;;; Battery
+;; Display batter percentage
+(use-package battery
+  :straight nil
+  :custom
+  (battery-load-critical 15)
+  (battery-load-low 25)
+  :config
+  (unless (equal "Battery status not available"
+                 (battery))
+    (display-battery-mode t)) ; Show battery in modeline
   )
 
 ;;;; Heaven-and-hell
