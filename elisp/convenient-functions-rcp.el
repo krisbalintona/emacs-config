@@ -254,9 +254,7 @@ comment there."
     (evil-insert-state)
     ))
 
-(kb/leader-keys
-  "c" '(prot-comment-timestamp-keyword :which-key "Prot-comment")
-  )
+(general-define-key "M-:" '(prot-comment-timestamp-keyword :which-key "Prot-comment"))
 
 ;;;; Insert date
 (defun kb/insert-date (prefix)
