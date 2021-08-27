@@ -58,9 +58,10 @@
     "er" '(eval-region :which-key "Eval region")
     "u" 'universal-argument
     )
-  (kb/leader-keys                       ; Allow for more than 1 C-u
-    :keymaps 'universal-argument-map
-    "u" 'universal-argument-more)
+  ;; Multiple universal arguments
+  (general-define-key
+   :states '(normal visual motion insert)
+   "u" 'universal-argument-more)
   )
 
 ;;;; Native-Emacs keybinds
