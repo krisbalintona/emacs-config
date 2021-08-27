@@ -81,19 +81,41 @@
 
   (orderless-component-separator " +")
   (orderless-matching-styles
-   '(orderless-literal
-     ;; orderless-without-literal
-     orderless-prefixes
-     orderless-initialism
-     ;; orderless-strict-initialism
+   '(orderless-flex
      orderless-strict-leading-initialism
+     orderless-regexp
+     orderless-prefixes
+     orderless-literal
+     ;; orderless-initialism
+     ;; orderless-without-literal
+     ;; orderless-strict-initialism
      ;; orderless-strict-full-initialism
-     orderless-flex
      ))
-  ;; (orderless-style-dispatchers
-  ;;  '(prot-orderless-literal-dispatcher
-  ;;    prot-orderless-initialism-dispatcher
-  ;;    prot-orderless-flex-dispatcher))
+  (orderless-style-dispatchers
+   '(prot-orderless-literal-dispatcher
+     prot-orderless-initialism-dispatcher
+     prot-orderless-flex-dispatcher))
+  :init
+  (defun prot-orderless-literal-dispatcher (pattern _index _total)
+    "Literal style dispatcher using the equals sign as a suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "=" pattern)
+      `(orderless-literal . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-initialism-dispatcher (pattern _index _total)
+    "Leading initialism  dispatcher using the comma suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "," pattern)
+      `(orderless-strict-leading-initialism . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-flex-dispatcher (pattern _index _total)
+    "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "~" pattern)
+      `(orderless-flex . ,(substring pattern 0 -1))))
   )
 
 ;;;; Selectrum
