@@ -2,40 +2,34 @@
 ;;
 ;;; Commentary:
 ;;
-;; Evil packages
+;; Evil packages!
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Evil
 ;; Emacs vim integration layer
 (use-package evil
-  :hook (after-init . evil-mode)
-  :init
-  ;; A lot of the settings need to be set before evil initializes
-  (setq evil-want-integration t
-        evil-want-keybinding nil ; Add more keybinds for other modes I don't want
-        evil-want-C-u-scroll t ; Rebind C-u from universal argument to evil scroll up
-        evil-want-C-i-jump nil
-        evil-respect-visual-line-mode t ; Don't skip lines in visual-line-mode
-        evil-want-Y-yank-to-eol t
-        evil-move-cursor-back nil
-        evil-move-beyond-eol t
-        evil-normal-state-cursor 'box
-        evil-insert-state-cursor 'bar
-        evil-visual-state-cursor 'hollow
-        evil-echo-state nil ; Don't echo state in echo area
-        evil-undo-system 'undo-fu)
-  :config
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal)
-  (evil-set-initial-state 'eshell-mode 'insert)
-  (add-hook 'git-commit-mode-hook 'evil-insert-state) ; For magit commits
-
-  (evil-define-key 'insert 'global (kbd "C-g") 'evil-escape)
-  (evil-define-key '(normal insert visual) 'global (kbd "C-:") 'evil-jump-forward)
-  (evil-define-key '(normal visual) 'global (kbd "zi") 'org-toggle-inline-images)
-
+  :demand t
+  :ghook 'after-init-hook
+  :general
+  (:states 'normal
+           "K" 'join-line
+           "J" '(lambda () (interactive) (join-line 1)))
+  (:states 'insert
+           "<escape>" 'evil-force-normal-state
+           "<backtab>" 'evil-delete-back-to-indentation
+           "M-P" 'evil-paste-before
+           "M-p" 'evil-paste-after)
+  (:keymaps 'evil-visual-state-map
+            "a" 'exchange-point-and-mark
+            "o" evil-outer-text-objects-map
+            "i" evil-inner-text-objects-map)
+  (:states '(normal insert visual motion)
+           "C-i" 'evil-jump-backward
+           "C-o" 'evil-jump-forward)
   (kb/leader-keys
     "ww" 'evil-window-mru
 
@@ -58,58 +52,103 @@
     "wr" 'evil-window-rotate-downwards
     "wR" 'evil-window-rotate-upwards
     )
+  :custom
+  (evil-want-integration t)
+  (evil-want-keybinding nil) ; Add more keybinds for other modes I don't want
+  (evil-want-C-u-scroll t) ; Rebind C-u from universal argument to evil scroll up
+  (evil-want-C-i-jump nil)
+  (evil-respect-visual-line-mode t) ; Don't skip lines in visual-line-mode
+  (evil-want-Y-yank-to-eol t)
+  (evil-move-cursor-back nil)
+  (evil-move-beyond-eol t)
+  (evil-normal-state-cursor 'box)
+  (evil-insert-state-cursor 'bar)
+  (evil-visual-state-cursor 'hollow)
+  (evil-emacs-state-cursor 'hbar)
+  (evil-echo-state nil) ; Don't echo state in echo area
   )
 
 ;;;; Evil-collection
 ;; Evil keybinds for many other modes
 (use-package evil-collection
+  :demand t ; Load now or it won't
+  :requires evil
   :after evil
-  :init (evil-collection-init)
+  :commands evil-collection-init
   :custom
+  (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
-  (evil-collection-company-use-tng nil)
+  (evil-collection-mode-list
+   '(2048-game ag alchemist anaconda-mode apropos arc-mode auto-package-update bm bookmark
+               (buff-menu "buff-menu")
+               calc calendar cider cmake-mode comint company compile consult
+               (custom cus-edit)
+               cus-theme dashboard daemons deadgrep debbugs debug devdocs dictionary diff-mode dired dired-sidebar disk-usage distel doc-view docker ebib edbi edebug ediff eglot explain-pause-mode elfeed elisp-mode elisp-refs elisp-slime-nav embark emms epa ert eshell eval-sexp-fu evil-mc eww fanyi finder flycheck flymake free-keys geiser ggtags git-timemachine gnus go-mode grep guix hackernews helm help helpful hg-histedit hungry-delete ibuffer image image-dired image+ imenu imenu-list
+               (indent "indent")
+               indium info ivy js2-mode leetcode lispy log-edit log-view lsp-ui-imenu lua-mode kotlin-mode macrostep man magit magit-todos monky mpdel mu4e mu4e-conversation neotree newsticker notmuch nov
+               (occur replace)
+               omnisharp org-present zmusic osx-dictionary outline p4
+               (package-menu package)
+               pass
+               (pdf pdf-view)
+               popup proced
+               (process-menu simple)
+               prodigy profiler python quickrun racer racket-describe realgud reftex restclient rg ripgrep rjsx-mode robe rtags ruby-mode scroll-lock sh-script simple slime sly speedbar tab-bar tablist tabulated-list tar-mode telega
+               (term term ansi-term multi-term)
+               tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff view vlf vterm w3m wdired wgrep which-key woman xref youtube-dl
+               (ztree ztree-diff)
+               xwidget)
+   )
+  :config
+  ;; Load immediately (rather than hook) so other keybind calls won't be overridden in config
+  (evil-collection-init)
   )
 
 ;;;; Evil-commentary
 ;; Comment in evil-mode
 (use-package evil-commentary
-  :after (evil evil-collection)
-  :hook (evil-mode . evil-commentary-mode)
+  :requires evil
+  :after evil
+  :ghook 'evil-mode-hook
   )
 
 ;;;; Evil-org
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
-  :after (evil evil-collection org)
-  :hook ((org-mode . evil-org-mode)
-         (evil-org-mode . (lambda ()
-                            (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
-                            ))
-         )
+  :requires evil
+  :after (evil-collection org)
+  :functions evil-org-agenda-set-keys
+  :ghook 'org-mode-hook
+  :gfhook '(lambda () (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
+  :general
+  ;; (:states '(normal visual motion)
+  ;;          "ge" 'evil-backward-word-end)
+  (:keymaps '(org-mode-map LaTeX-mode-map)
+            [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; To respect visual-line-mode
   :init
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
   :custom
   (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
-  :config
-  (general-define-key
-   :keymaps '(org-mode-map LaTeX-mode-map)
-   [remap evil-first-non-blank] 'evil-org-beginning-of-line ; To respect visual-line-mode
-   )
   )
 
 ;;;; Evil-surround
-;; Surround a selection with a pair of characters
-  (use-package evil-surround
-    :init (global-evil-surround-mode)
-    )
+;; Surround a selection with any pair of characters
+(use-package evil-surround
+  :requires evil
+  :after evil
+  :ghook ('evil-mode-hook 'global-evil-surround-mode)
+  )
 
 ;;;; Evil-visualstar
 ;; Situational convenient isearch
 (use-package evil-visualstar
+  :requires evil
+  :after evil
+  :functions global-evil-surround-mode
+  :ghook ('evil-mode-hook 'global-evil-visualstar-mode)
   :custom
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
-  :init (global-evil-visualstar-mode)
   )
 
 ;;; evil-rcp.el ends here

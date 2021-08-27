@@ -2,32 +2,32 @@
 ;;
 ;;; Commentary:
 ;;
-;; Packages for undoing mistakes and redoing them
+;; Packages for undoing and redoing mistakes.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Undo-fu
 ;; Easy and simple undoing
 (use-package undo-fu
-  :functions general-define-key
+  :after evil
+  :general ([remap undo] 'undo-fu-only-undo
+            [remap redo] 'undo-fu-only-redo)
   :custom
   ;; Store more undo history to prevent loss of data
   (undo-limit (* 100 1024))
   (undo-strong-limit 3000000)
   (undo-outer-limit 3000000)
-  :config
-  (general-define-key
-   [remap undo] 'undo-fu-only-undo
-   [remap redo] 'undo-fu-only-redo
-   )
+  (evil-undo-system 'undo-fu)
   )
 
 ;;;; Undo-fu-session
 ;; Keep undo history across sessions
 (use-package undo-fu-session
-  :defines no-littering-var-directory
-  :hook (undo-fu-mode . global-undo-fu-session-mode)
+  :requires undo-fu
+  :ghook ('after-init-hook 'global-undo-fu-session-mode)
   :custom
   (undo-fu-session-directory (concat user-emacs-directory "undo-fu-session/"))
   (undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))

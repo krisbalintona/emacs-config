@@ -6,90 +6,21 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'custom-directories-rcp)
+(require 'faces-rcp)
 
 ;;;; Org-roam
 (use-package org-roam
-  :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "master")
+  :straight (org-roam :type git :host github :repo "org-roam/org-roam")
   :after company ; Necessary for some reason
-  :custom
-  (org-roam-directory kb/roam-dir)
-  (org-roam-file-exclude-regexp nil)
-  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
-  (org-roam-verbose nil) ; Don't echo messages that aren't errors
-  (org-roam-completion-everywhere t) ; Org-roam completion everywhere
-  (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
-  ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
-  (org-roam-db-gc-threshold (* 3 838861))
-
-  (org-roam-node-default-sort 'file-atime)
-  (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
-
-  (org-footnote-section nil) ; Don't put footnotes in headline
-
-  ;; How it appears in the minibuffer
-  ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
-  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
-
-  ;; Roam buffer format
-  (org-roam-mode-section-functions
-   '(org-roam-backlinks-section
-     org-roam-reflinks-section
-     org-roam-unlinked-references-section
-     )
-   )
-  :init
-  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
-
-  (defun kb/roam-filter-journals (node binary)
-    "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
-journals directory."
-    (if binary
-        (not (string-equal
-              (concat
-               (expand-file-name kb/roam-dir)
-               "journals/"
-               (format-time-string "%Y" (current-time))
-               ".org")
-              (org-roam-node-file node))
-             )
-      (string-equal
-       (concat
-        (expand-file-name kb/roam-dir)
-        "journals/"
-        (format-time-string "%Y" (current-time))
-        ".org")
-       (org-roam-node-file node))
-      )
-    )
-  :config
-  (org-roam-db-autosync-enable)
-
-  ;; Org roam buffer
-  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
-  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
-  (add-hook 'org-roam-mode-hook (lambda ()
-                                  (hide-mode-line-mode) ; Hide modeline in org-roam buffer
-                                  (visual-line-mode)
-                                  )
-            )
-
-  (with-eval-after-load 'atom-one-dark-theme
-    (custom-theme-set-faces
-     `atom-one-dark
-     `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
-     `(bookmark-face ((t (:foreground nil :background nil))))
-     )
-    )
-
-  ;; Annoying. Closes frame when I want to add a footnote
-  (general-define-key "C-x C-c" 'nil)
-
-  ;; To add back mouse click to visit the node in the backlink buffer
-  (general-define-key
-   :keymaps 'org-roam-mode-map
-   [mouse-1] #'org-roam-visit-thing
-   )
-
+  :ghook ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
+  :gfhook 'hide-mode-line-mode 'visual-line-mode
+  :general
+  ("C-x C-c" 'nil) ; Annoying. Closes frame when I want to add a footnote
+  (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
+            [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/leader-keys
     "nf" '((lambda ()
              (interactive)
@@ -117,7 +48,7 @@ journals directory."
            :which-key "Go to index")
 
     "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
-    "nL" '(org-roam-buffer :which-key "New Roam buffer")
+    "nL" '(org-roam-buffer-display-dedicated :which-key "New Roam buffer")
 
     "nb" '(org-roam-db-sync :which-key "Build cache")
 
@@ -127,87 +58,106 @@ journals directory."
               (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node nil)))
               )
             :which-key "Find date")
-    "ndt" '(org-roam-dailies-find-today :which-key "Today")
-    "ndm" '(org-roam-dailies-find-tomorrow :which-key "Tomorrow")
-    "ndy" '(org-roam-dailies-find-yesterday :which-key "Yesterday")
+    "ndt" '(org-roam-dailies-goto-today :which-key "Today")
+    "ndm" '(org-roam-dailies-goto-tomorrow :which-key "Tomorrow")
+    "ndy" '(org-roam-dailies-goto-yesterday :which-key "Yesterday")
     )
+  :custom
+  (org-roam-directory kb/roam-dir)
+  (org-roam-file-exclude-regexp nil)
+  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
+  (org-roam-verbose nil) ; Don't echo messages that aren't errors
+  (org-roam-completion-everywhere t) ; Org-roam completion everywhere
+  (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
+  ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
+  (org-roam-db-gc-threshold (* 3 838861))
+
+  (org-roam-node-default-sort 'file-atime)
+  (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
+
+  (org-footnote-section nil) ; Don't put footnotes in headline
+
+  ;; How it appears in the minibuffer
+  ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
+  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
+
+  ;; Roam buffer format
+  (org-roam-mode-section-functions
+   '(org-roam-backlinks-section
+     org-roam-reflinks-section
+     org-roam-unlinked-references-section
+     )
+   )
+  :preface
+  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
+
+  ;; Exporting with links included
+  (setq org-id-track-globally t)
+  (defun org-html--reference (datum info &optional named-only)
+    "Return an appropriate reference for DATUM.
+
+DATUM is an element or a `target' type object.  INFO is the
+current export state, as a plist.
+
+When NAMED-ONLY is non-nil and DATUM has no NAME keyword, return
+nil.  This doesn't apply to headlines, inline tasks, radio
+targets and targets."
+    (let* ((type (org-element-type datum))
+           (user-label
+            (org-element-property
+             (pcase type
+               ((or `headline `inlinetask) :CUSTOM_ID)
+               ((or `radio-target `target) :value)
+               (_ :name))
+             datum))
+           (user-label (or user-label
+                           (when-let ((path (org-element-property :ID datum)))
+                             (concat "ID-" path)))))
+      (cond
+       ((and user-label
+             (or (plist-get info :html-prefer-user-labels)
+                 ;; Used CUSTOM_ID property unconditionally.
+                 (memq type '(headline inlinetask))))
+        user-label)
+       ((and named-only
+             (not (memq type '(headline inlinetask radio-target target)))
+             (not user-label))
+        nil)
+       (t
+        (org-export-get-reference datum info)))))
+
+  ;; Custom functions
+  (defun kb/roam-filter-journals (node binary)
+    "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
+journals directory."
+    (if binary
+        (not (string-equal
+              (concat
+               (expand-file-name kb/roam-dir)
+               "journals/"
+               (format-time-string "%Y" (current-time))
+               ".org")
+              (org-roam-node-file node))
+             )
+      (string-equal
+       (concat
+        (expand-file-name kb/roam-dir)
+        "journals/"
+        (format-time-string "%Y" (current-time))
+        ".org")
+       (org-roam-node-file node))
+      )
+    )
+  :config
+  ;; Org roam buffer
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
   )
 
-;;;; Org-roam-capture-templates
-(setq kb/lit-categories
-      '("video" "book" "podcast" "article" "website" "journal" "quote" "structure" "writing")
-      )
-
-(defun kb/insert-lit-category ()
-  "Insert type of literature note sources."
-  (completing-read "Category: " kb/lit-categories)
-  )
-
-(setq org-roam-capture-templates
-      '(("d" "Default" plain
-         ""
-         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+title: ${title}\n")
-         :immediate-finish t)
-        ("e" "Evergreen" plain
-         ""
-         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: :new:\n#+title: ${title}\nReference: \n\n\n")
-         :jump-to-captured t)
-        ("Q" "Quote" entry
-         "* ${title} :quote:new:
-:PROPERTIES:
-:DATE: %(format-time-string \"%D\" (current-time) nil)
-:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-:REFERENCE:
-:ID: %(org-id-new)
-:END:"
-         :if-new (file+head "quotes-Jun062021-185530.org"
-                            "#+title: Quotes\n\n\n")
-         )
-        ("l" "Lit Note" plain
-         ""
-         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${title}\nSource: \nDate: %<%b %d, %Y>")
-         :immediate-finish t
-         :jump-to-captured t)
-        ("r" "Reference without pdf notes" plain
-         ""
-         :if-new (file+head "${citekey}-${slug}-%<%b%d%Y-%H%M%S>.org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
-         :immediate-finish t)
-        ("R" "Reference with pdf notes" plain
-         ""
-         :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
-        )
-      )
-
-;;;; Org-roam-dailies-capture-templates
-(setq org-roam-dailies-capture-templates
-      '(("d" "Default" plain
-         "* %?
-         :PROPERTIES:
-         :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-         :END:"
-         :if-new
-         (file+datetree "%<%Y>.org" week))
-        ("w" "Writing" plain
-         "* %? :c_writing:
-:PROPERTIES:
-:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-:END:"
-         :if-new
-         (file+datetree "%<%Y>.org" week))
-        )
-      )
-
-;;;; Customizing `org-roam-node-find'
+;;;; Customized `org-roam-node-find' functions
 ;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
 ;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
 (with-eval-after-load 'org-roam
-  (require 'all-the-icons)
-
   (cl-defmethod org-roam-node-filetitle ((node org-roam-node))
     "Return the file TITLE for the node."
     (org-roam-get-keyword "TITLE" (org-roam-node-file node))
@@ -288,81 +238,82 @@ journals directory."
       ))
   )
 
-;;;; Custom updating descriptions
-;; Credit to @nobiot for helping me
-(defun kb/org-roam-update-link-desc--action (buffer)
-  "Updates the link descriptions for all org-roam insertions in a given buffer.
-Currently limited to only fix links whose UUID was automatically generated by
-Org."
-  ;; Get all ids in buffer
-  (with-current-buffer buffer
-    ;; (print buffer) ; Uncomment for bugfixing. Check *Messages* buffer
-    (let* (links)
-      (save-excursion
-        (goto-char (point-min))
-        (while (re-search-forward (symbol-value 'org-link-bracket-re) nil t)
-          (if (equal (buffer-substring-no-properties ; Get only links with ids (not https, etc)
-                      (+ (match-beginning 0) 2)
-                      (+ (match-beginning 0) 4))
-                     "id")
-              (push (buffer-substring-no-properties ; Get only the id
-                     (+ (match-beginning 0) 5)
-                     (+ (match-beginning 0) 41))
-                    links)
-            (push "NOT ID" links)))
-        (setq links (nreverse links))
-        ;; (print links) ; Uncomment for bugfixing. Check *Messages* buffer
+;;;; Capture templates
+;;;;; Org-roam-capture-templates
+(defvar kb/lit-categories
+  '("video" "book" "podcast" "article" "website" "journal" "quote" "structure" "writing")
+  "The main categories of inputs I process.")
+
+(defun kb/insert-lit-category ()
+  "Insert type of literature note sources."
+  (completing-read "Category: " kb/lit-categories)
+  )
+
+(setq org-roam-capture-templates
+      '(("d" "Default" plain
+         ""
+         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+title: ${title}\n")
+         :immediate-finish t)
+        ("e" "Evergreen" plain
+         ""
+         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+filetags: :new:\n#+title: ${title}\nReference: \n\n\n")
+         :jump-to-captured t)
+        ("Q" "Quote" entry
+         "* ${title} :quote:new:
+:PROPERTIES:
+:DATE: %(format-time-string \"%D\" (current-time) nil)
+:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+:REFERENCE:
+:ID: %(org-id-new)
+:END:"
+         :if-new (file+head "quotes-Jun062021-185530.org"
+                            "#+title: Quotes\n\n\n")
+         )
+        ("l" "Lit Note" plain
+         ""
+         :if-new (file+head "${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${title}\nSource: \nDate: %<%b %d, %Y>")
+         :immediate-finish t
+         :jump-to-captured t)
+        ("r" "Reference without pdf notes" plain
+         ""
+         :if-new (file+head "${citekey}-${slug}-%<%b%d%Y-%H%M%S>.org"
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
+         :immediate-finish t)
+        ("R" "Reference with pdf notes" plain
+         ""
+         :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
+                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
         )
-      ;; Update all org-roam insertions in buffer
-      (save-excursion
-        (goto-char (point-min))
-        (dolist (link links)
-          (let* ((id link)
-                 (node (org-roam-populate (org-roam-node-create :id id))))
-            (re-search-forward (symbol-value 'org-link-bracket-re) nil t)
-            (if (equal (buffer-substring-no-properties ; Limit to only links with ids
-                        (+ (match-beginning 0) 2)
-                        (+ (match-beginning 0) 4))
-                       "id")
-                (replace-match (org-link-make-string
-                                (concat "id:" (org-roam-node-id node)) (org-roam-node-title node)
-                                ))
-              (print "Skipped because not an ID!") ; Uncomment for bugfixing. Check *Messages* buffer
-              )))
-        ))))
+      )
 
-(defun kb/org-roam-update-link-desc ()
-  "Run kb/org-roam-update-link-desc--action on current buffer or all org-roam
-files if called with universal argument."
-  (interactive)
-  (let* ((checkall (equal current-prefix-arg '(4))) ; Universal-argument check
-         (files (if checkall ; Taken from `org-roam-doctor'
-                    (org-roam--list-all-files)
-                  (unless (org-roam-file-p)
-                    (user-error "Not in an org-roam file"))
-                  `(,(buffer-file-name)))
-                ))
-    (save-window-excursion ; Taken from `org-roam-doctor-start'
-      (let ((existing-buffers (org-roam-buffer-list)))
-        (org-id-update-id-locations)
-        (dolist (file files) ; Save all opened files and kill if not opened already
-          (let ((buffer (find-file-noselect file)))
+;;;;; Org-roam-dailies-capture-templates
+(require 'org-roam-dailies)
+(setq org-roam-dailies-capture-templates
+      '(("d" "Default" plain
+         "* %?
+         :PROPERTIES:
+         :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+         :END:"
+         :if-new
+         (file+datetree "%<%Y>.org" week))
+        ("w" "Writing" plain
+         "* %? :c_writing:
+:PROPERTIES:
+:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
+:END:"
+         :if-new
+         (file+datetree "%<%Y>.org" week))
+        )
+      )
 
-            ;; Where I insert my custom function instead
-            (kb/org-roam-update-link-desc--action buffer)
-
-            (unless (memq buffer existing-buffers)
-              (with-current-buffer buffer
-                (save-buffer))
-              (kill-buffer buffer))))
-        ))
-    (message "Done!")
-    ))
-
-;;;; Hide property drawers
+;;;; Additional code
+;;;;; Hide property drawers
 ;; From https://github.com/org-roam/org-roam/wiki/Hitchhiker%27s-Rough-Guide-to-Org-roam-V2#hiding-properties
 (defun kb/org-hide-properties ()
-  "Hide all org-mode headline property drawers in buffer. Could be slow if buffer has a lot of overlays."
+  "Hide all `org-mode' headline property drawers in buffer. Could be slow if buffer has a lot of overlays."
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -373,7 +324,7 @@ files if called with universal argument."
         (overlay-put ov_this 'hidden-prop-drawer t)))))
 
 (defun kb/org-show-properties ()
-  "Show all org-mode property drawers hidden by org-hide-properties."
+  "Show all `org-mode' property drawers hidden by org-hide-properties."
   (interactive)
   (remove-overlays (point-min) (point-max) 'hidden-prop-drawer t))
 
@@ -393,7 +344,6 @@ files if called with universal argument."
  "C-c p t" 'kb/org-toggle-properties
  )
 
-;;;; Additional code
 ;;;;; Update databse on file save aside from index
 ;; A temporary solution
 (defun kb/org-roam-db-update-file (&optional file-path)
@@ -496,6 +446,77 @@ name to include number of backlinks for the node."
     (concat annotation
             (when tags (format " (%s)" (string-join tags ", ")))
             (when count (format " [%d]" count)))))
+
+;;;;; Custom updating descriptions
+;; Credit to @nobiot for helping me
+(defun kb/org-roam-update-link-desc--action (buffer)
+  "Update the link descriptions for all org-roam insertions in a given BUFFER.
+Currently limited to only fix links whose UUID was automatically generated by
+Org."
+  ;; Get all ids in buffer
+  (with-current-buffer buffer
+    ;; (print buffer) ; Uncomment for bugfixing. Check *Messages* buffer
+    (let* (links)
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward (symbol-value 'org-link-bracket-re) nil t)
+          (if (equal (buffer-substring-no-properties ; Get only links with ids (not https, etc)
+                      (+ (match-beginning 0) 2)
+                      (+ (match-beginning 0) 4))
+                     "id")
+              (push (buffer-substring-no-properties ; Get only the id
+                     (+ (match-beginning 0) 5)
+                     (+ (match-beginning 0) 41))
+                    links)
+            (push "NOT ID" links)))
+        (setq links (nreverse links))
+        ;; (print links) ; Uncomment for bugfixing. Check *Messages* buffer
+        )
+      ;; Update all org-roam insertions in buffer
+      (save-excursion
+        (goto-char (point-min))
+        (dolist (link links)
+          (let* ((id link)
+                 (node (org-roam-populate (org-roam-node-create :id id))))
+            (re-search-forward (symbol-value 'org-link-bracket-re) nil t)
+            (if (equal (buffer-substring-no-properties ; Limit to only links with ids
+                        (+ (match-beginning 0) 2)
+                        (+ (match-beginning 0) 4))
+                       "id")
+                (replace-match (org-link-make-string
+                                (concat "id:" (org-roam-node-id node)) (org-roam-node-title node)
+                                ))
+              (print "Skipped because not an ID!") ; Uncomment for bugfixing. Check *Messages* buffer
+              )))
+        ))))
+
+(defun kb/org-roam-update-link-desc ()
+  "Run kb/org-roam-update-link-desc--action on current buffer or all org-roam
+files if called with universal argument."
+  (interactive)
+  (let* ((checkall (equal current-prefix-arg '(4))) ; Universal-argument check
+         (files (if checkall ; Taken from `org-roam-doctor'
+                    (org-roam-list-files)
+                  (unless (org-roam-file-p)
+                    (user-error "Not in an org-roam file"))
+                  `(,(buffer-file-name)))
+                ))
+    (save-window-excursion ; Taken from `org-roam-doctor-start'
+      (let ((existing-buffers (org-roam-buffer-list)))
+        (org-id-update-id-locations)
+        (dolist (file files) ; Save all opened files and kill if not opened already
+          (let ((buffer (find-file-noselect file)))
+
+            ;; Where I insert my custom function instead
+            (kb/org-roam-update-link-desc--action buffer)
+
+            (unless (memq buffer existing-buffers)
+              (with-current-buffer buffer
+                (save-buffer))
+              (kill-buffer buffer))))
+        ))
+    (message "Done!")
+    ))
 
 ;;; org-roam-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

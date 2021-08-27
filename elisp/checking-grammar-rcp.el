@@ -6,18 +6,16 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-
-;;;; Writegood-mode
-;; Catch self-defined weasel words
-(use-package writegood-mode
-  :disabled t ; Not necessary anymore with proselint syntax checker in flycheck
-  :hook (text-mode . writegood-mode)
-  )
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Langtool
 ;; Use langtool program to check grammar of current buffer
 (use-package langtool
-  ;; ensure-system-package (languagetool)
+  ;; NOTE 2021-08-19: Can't use `ensure-system-package' becuase the installation
+  ;; of `languagetool' involves many steps (unless on Arch).
+  :if (system-packages-package-installed-p "languagetool")
+  :general ("C-c g" '(hydra:langtool/body :which-key "Langtool"))
   :custom
   (langtool-default-language "en-US")
   (langtool-autoshow-message-function 'langtool-autoshow-detail-popup)
@@ -33,14 +31,13 @@
   (langtool-http-server-port 8082)
   (langtool-http-server-stream-type 'tls)
   (langtool-default-language "en-US")
-
-  :preface
+  :init
   (defun langtool-autoshow-detail-popup (overlays)
     (when (require 'popup nil t)
       ;; Do not interrupt current popup
       (unless (or popup-instances
-                  ;; suppress popup after type `C-g` .
-                  (memq last-command '(keyboard-quit)))
+                 ;; suppress popup after type `C-g` .
+                 (memq last-command '(keyboard-quit)))
         (let ((msg (langtool-details-error-message overlays)))
           (popup-tip msg)))))
   :config
@@ -51,10 +48,6 @@
       ("c" #'langtool-correct-buffer "Correct")
       ("d" #'langtool-check-done "Done"))
      ))
-
-  (general-define-key
-   "C-c g" '(hydra:langtool/body :which-key "Langtool")
-   )
   )
 
 ;;; checking-grammar-rcp.el ends here

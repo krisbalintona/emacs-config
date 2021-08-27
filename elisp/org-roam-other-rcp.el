@@ -6,6 +6,9 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'custom-directories-rcp)
 
 ;;;; Citations
 ;;;;; Bibtex-completion
@@ -54,7 +57,29 @@
 ;;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
-  :after (bibtex-completion selectrum embark consult ivy-bibtex consult)
+  :after (bibtex-completion embark)
+  :general
+  (:keymaps 'bibtex-actions-map ; Custom keymap for `bibtex-actions'
+            "t" '("reference | add pdf attachment" . bibtex-actions-add-pdf-attachment)
+            "a" '("reference | add pdf to library" . bibtex-actions-add-pdf-to-library)
+            "b" '("reference | insert bibtex" . bibtex-actions-insert-bibtex)
+            "c" '("reference | insert citation" . bibtex-actions-insert-citation)
+            "k" '("reference | insert key" . bibtex-actions-insert-key)
+            "r" '("reference | insert" . bibtex-actions-insert-reference) ; Changed
+            "o" '("reference | open source" . bibtex-actions-open)
+            "e" '("reference | open entry" . bibtex-actions-open-entry)
+            "l" '("reference | open link" . bibtex-actions-open-link)
+            "n" '("reference | open notes" . bibtex-actions-open-notes)
+            "p" '("reference | open pdf" . bibtex-actions-open-pdf)
+            "R" '("reference | refresh library" . bibtex-actions-refresh) ; Changed
+            ;; Embark doesn't currently use the menu description.
+            ;; https://github.com/oantolin/embark/issues/251
+            "RET" '("reference | default action" . bibtex-actions-run-default-action)
+            )
+  (kb/leader-keys
+    "fa" '(bibtex-actions-insert-citation :which-key "Insert citation")
+    "fA" '(bibtex-actions-open-notes :which-key "Open note")
+    )
   :custom
   ;; What the minibuffer displays
   (bibtex-actions-template '((t . "${author:40}   ${title:130}")))
@@ -94,39 +119,6 @@
       (((background light)) :foreground "#fafafa"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
-
-  ;; Enhanced multiple selection experience. Replaced the built-in method
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-
-  ;; Custom keymap for `bibtex-actions'
-  (general-define-key
-   :keymaps 'bibtex-actions-map
-   "t" '("reference | add pdf attachment" . bibtex-actions-add-pdf-attachment)
-   "a" '("reference | add pdf to library" . bibtex-actions-add-pdf-to-library)
-   "b" '("reference | insert bibtex" . bibtex-actions-insert-bibtex)
-   "c" '("reference | insert citation" . bibtex-actions-insert-citation)
-   "k" '("reference | insert key" . bibtex-actions-insert-key)
-   "r" '("reference | insert" . bibtex-actions-insert-reference) ; Changed
-   "o" '("reference | open source" . bibtex-actions-open)
-   "e" '("reference | open entry" . bibtex-actions-open-entry)
-   "l" '("reference | open link" . bibtex-actions-open-link)
-   "n" '("reference | open notes" . bibtex-actions-open-notes)
-   "p" '("reference | open pdf" . bibtex-actions-open-pdf)
-   "R" '("reference | refresh library" . bibtex-actions-refresh) ; Changed
-   ;; Embark doesn't currently use the menu description.
-   ;; https://github.com/oantolin/embark/issues/251
-   "RET" '("reference | default action" . bibtex-actions-run-default-action)
-   )
-
-  (general-define-key
-   :keymaps 'minibuffer-local-map
-   "M-b" 'bibtex-actions-insert-preset
-   )
-
-  (kb/leader-keys
-    "fa" '(bibtex-actions-insert-citation :which-key "Insert citation")
-    "fA" '(bibtex-actions-open-notes :which-key "Open note")
-    )
   )
 
 ;;;;; Ivy-bibtex
@@ -134,6 +126,9 @@
 (use-package ivy-bibtex
   ;; :disabled t ; Replaced by `bibtex-actions'. Can't disable because I need the ivy faces
   :after org-roam
+  :general ("C-c b" '(ivy-bibtex :which-key "Ivy-bibtex")
+            ;; "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
+            )
   :init
   (defun kb/bibtex-completion-format-citation-autocite (keys)
     "My own bibtex-completion-format. Accepts KEYS."
@@ -157,11 +152,6 @@
      ("P" ivy-bibtex-open-annotated-pdf "Open annotated PDF (if present)") ; This last function doesn't have an associated action yet (for annotated pdfs)
      ("a" bibtex-completion-add-pdf-to-library "Add pdf to library")
      ))
-
-  (general-define-key
-   "C-c b" '(ivy-bibtex :which-key "Ivy-bibtex")
-   ;; "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
-   )
   )
 
 ;;;;; Org-ref
@@ -171,7 +161,7 @@
 ;; and references into latex and org files
 (use-package org-ref
   :demand t ; Hard dependency for `org-roam-bibtex' (and maybe others)
-  :after ivy
+  :after (ivy bibtex-completion)
   :custom
   (org-ref-default-bibliography bibtex-completion-bibliography)
   (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
@@ -183,7 +173,7 @@
    "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
   (org-ref-notes-function 'orb-edit-notes)
   (org-ref-default-citation-link "autocite")
-
+  :config
   (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t
                                             ("pdflatex"))
                                            ("T1" "fontenc" t
@@ -200,7 +190,7 @@
                                            ("" "capt-of" nil)
                                            ("hidelinks" "hyperref" nil)) ; Ugly boxes
         )
-  :config
+
   ;; Files removed after `org-export' to LaTeX
   (add-to-list 'org-latex-logfiles-extensions "tex")
   (add-to-list 'org-latex-logfiles-extensions "bbl")
@@ -213,13 +203,11 @@
 ;; org-roam (provides templates and modifies edit notes action)
 (use-package org-roam-bibtex
   :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "master")
-  :after (org-roam org-ref ivy-bibtex bibtex-actions)
+  :requires (org-ref org-roam)
+  :ghook ('org-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
   :custom
   (orb-preformat-keywords
-   '("citekey" "title" "url" "file" "author-or-editor" "keywords")
-   )
-  :config
-  (org-roam-bibtex-mode)
+   '("citekey" "title" "url" "file" "author-or-editor" "keywords"))
   )
 
 ;;;; Note-taking
@@ -230,22 +218,102 @@
   :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools") ; Repo of current maintainer
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
+  ;; Ensure it's installed without manually doing so
+  :hook ((server-after-make-frame . pdf-tools-install)
+         ('window-setup . pdf-tools-install))
   :custom
   (pdf-view-display-size 'fit-width)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick nil)
   :config
+  ;;  Redefine the original `pdf-tools-build-server' to prepend `sudo' to the
+  ;;  original function to give the proper permissions to build and install.
+  (defun kb/pdf-tools-build-server (target-directory
+                                    &optional
+                                    skip-dependencies-p
+                                    force-dependencies-p
+                                    callback
+                                    build-directory)
+    "Build the epdfinfo program in the background.
 
-  (general-define-key ; Unbind SPC so it's prefix instead
-   :keymaps 'pdf-view-mode-map
-   [remap pdf-view-scroll-up-or-next-page] nil
-   )
+Install into TARGET-DIRECTORY, which should be a directory.
+
+If CALLBACK is non-nil, it should be a function.  It is called
+with the compiled executable as the single argument or nil, if
+the build failed.
+
+Expect sources to be in BUILD-DIRECTORY.  If nil, search for it
+using `pdf-tools-locate-build-directory'.
+
+See `pdf-tools-install' for the SKIP-DEPENDENCIES-P and
+FORCE-DEPENDENCIES-P arguments.
+
+Returns the buffer of the compilation process."
+
+    (unless callback (setq callback #'ignore))
+    (unless build-directory
+      (setq build-directory (pdf-tools-locate-build-directory)))
+    (cl-check-type target-directory file-directory)
+    (setq target-directory (file-name-as-directory
+                            (expand-file-name target-directory)))
+    (cl-check-type build-directory (and (not null) file-directory))
+    (when (and skip-dependencies-p force-dependencies-p)
+      (error "Can't simultaneously skip and force dependencies"))
+    (let* ((compilation-auto-jump-to-first-error nil)
+           (compilation-scroll-output t)
+           (shell-file-name (pdf-tools-find-bourne-shell))
+           (shell-command-switch "-c")
+           (process-environment process-environment)
+           (default-directory build-directory)
+           (autobuild (shell-quote-argument
+                       (expand-file-name "autobuild" build-directory)))
+           (msys2-p (equal "bash.exe" (file-name-nondirectory shell-file-name))))
+      (unless shell-file-name
+        (error "No suitable shell found"))
+      (when msys2-p
+        (push "BASH_ENV=/etc/profile" process-environment))
+      (let ((executable
+             (expand-file-name
+              (concat "epdfinfo" (and (eq system-type 'windows-nt) ".exe"))
+              target-directory))
+            (compilation-buffer
+             (compilation-start
+              (format "sudo %s -i %s%s%s" ; Prepend `sudo' to the original command to give
+                                        ; proper permissions
+                      autobuild
+                      (shell-quote-argument target-directory)
+                      (cond
+                       (skip-dependencies-p " -D")
+                       (force-dependencies-p " -d")
+                       (t ""))
+                      (if pdf-tools-installer-os (concat " --os " pdf-tools-installer-os) ""))
+              t)))
+        ;; In most cases user-input is required, so select the window.
+        (if (get-buffer-window compilation-buffer)
+            (select-window (get-buffer-window compilation-buffer))
+          (pop-to-buffer compilation-buffer))
+        (with-current-buffer compilation-buffer
+          (setq-local compilation-error-regexp-alist nil)
+          (add-hook 'compilation-finish-functions
+                    (lambda (_buffer status)
+                      (funcall callback
+                               (and (equal status "finished\n")
+                                    executable)))
+                    nil t)
+          (current-buffer)))))
+  (advice-add 'pdf-tools-build-server :override 'kb/pdf-tools-build-server)
   )
 
 ;;;;; Org-noter
 (use-package org-noter
   :demand t ; Demand so it doesn't defer to noter insert call
+  :general
+  (:keymaps 'org-noter-doc-mode-map
+            "M-o" 'org-noter-insert-note)
+  (kb/leader-keys
+    "on" '(org-noter :which-key "Org-noter")
+    )
   :custom
   (org-noter-notes-search-path kb/roam-dir)
   (org-noter-separate-notes-from-heading t) ; Add blank line betwwen note heading and content
@@ -254,26 +322,25 @@
   (org-noter-hide-other nil) ; Show notes that aren't synced with (you're on)
   (org-noter-auto-save-last-location t) ; Go to last location
   (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
-  :config
-  (add-hook 'org-noter-doc-mode-hook ; Add keykinds only for org-noter pdf (doc)
-            (lambda ()
-              (general-define-key
-               :keymaps 'local
-               "M-o" 'org-noter-insert-note)
-              ))
-
-  (kb/leader-keys
-    "on" '(org-noter :which-key "Org-noter")
-    )
   )
 
 ;;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
   :disabled t ; Issue with org-roam-node-capture
-  :after org-roam
   :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion")
-  :hook (org-mode . org-transclusion-activate)
+  :after org-roam
+  :ghook ('org-mode-hook 'org-transclusion-activate)
+  :general
+  (kb/leader-keys
+    "Tc" '(org-transclusion-mode :which-key "Toggle mode")
+    "TR" '(org-transclusion-refresh :which-key "Refresh")
+    "Tm" '(org-transclusion-make-from-link :which-key "Make")
+    "Ta" '(org-transclusion-add :which-key "Add")
+    "Tr" '(org-transclusion-remove :which-key "Remove")
+    "Ts" '(org-transclusion-live-sync-start :which-key "Edit start")
+    "Te" '(org-transclusion-live-sync-exit :which-key "Edit exit")
+    )
   :custom
   (org-transclusion-include-first-section t)
   (org-transclusion-exclude-elements '(property-drawer keyword))
@@ -286,23 +353,19 @@
    'org-transclusion-source-fringe nil
    :foreground (face-background 'default)
    :background (face-background 'default))
-
-  (kb/leader-keys
-    "Tc" '(org-transclusion-mode :which-key "Toggle mode")
-    "TR" '(org-transclusion-refresh :which-key "Refresh")
-    "Tm" '(org-transclusion-make-from-link :which-key "Make")
-    "Ta" '(org-transclusion-add :which-key "Add")
-    "Tr" '(org-transclusion-remove :which-key "Remove")
-    "Ts" '(org-transclusion-live-sync-start :which-key "Edit start")
-    "Te" '(org-transclusion-live-sync-exit :which-key "Edit exit")
-    )
   )
 
 ;;;; Org-roam-ui
 (use-package org-roam-ui
-  :after (websocket simple-httpd f org-roam)
+  :disabled t ; For now to prevent issues at startup
   :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-  :hook (after-init . org-roam-ui-mode)
+  :requires org-roam
+  :after org-roam
+  :ghook 'after-init-hook
+  :preface
+  (use-package websocket)
+  (use-package simple-httpd)
+  (use-package f)
   :custom
   (org-roam-ui-open-on-start nil) ; Don't open graph on startup
   (org-roam-ui-custom-theme '(list
@@ -320,11 +383,6 @@
                               (magenta . "#bd93f9"))
                             )
   )
-
-;;;;; Dependencies of `org-roam-ui'.
-(use-package websocket)
-(use-package simple-httpd)
-(use-package f)
 
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

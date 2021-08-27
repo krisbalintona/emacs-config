@@ -3,10 +3,13 @@
 ;;; Commentary:
 ;;
 ;; These are small groups of code, many of which are self-defined, that I find
-;; useful. Most of these functions are taken from elsewhere (e.g. Doom)
+;; useful. Most of these functions are taken from elsewhere (e.g. Doom).
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'custom-directories-rcp)
 
 ;;;; Rename/move current file
 (defun kb/move-this-file (new-path &optional force-p)
@@ -28,6 +31,245 @@
 
 (kb/leader-keys
   "fR" '(kb/move-this-file :which-key "Rename current file")
+  )
+
+;;;; Aj-toggle-fold
+(defun aj-toggle-fold ()
+  "Toggle fold all lines larger than indentation on current line. Taken from https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159."
+  (interactive)
+  (let ((col 1))
+    (save-excursion
+      (back-to-indentation)
+      (setq col (+ 1 (current-column)))
+      (set-selective-display
+       (if selective-display nil (or col 1)))
+      ))
+  )
+(kb/leader-keys
+  "of" '(aj-toggle-fold :which-key "aj-toggle-fold"))
+
+;;;; Indent whole buffer
+(defun kb/indent-whole-buffer ()
+  "Indent whole buffer."
+  (interactive)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  (untabify (point-min) (point-max))
+  )
+(kb/leader-keys
+  "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer"))
+
+;;;; Better comment-dwim
+(with-eval-after-load 'smartparens
+  (defun kb/comment-dwim (arg)
+    "Call the comment command you want (Do What I Mean).
+If the region is active and `transient-mark-mode' is on, call
+`comment-region' (unless it only consists of comments, in which
+case it calls `uncomment-region').
+Else, if the current line is empty, call `comment-insert-comment-function'
+if it is defined, otherwise insert a comment and indent it.
+Else if a prefix ARG is specified, call `comment-kill'.
+Else, call `comment-indent'.
+You can configure `comment-style' to change the way regions are commented.
+
+I've added a part at the end which puts me in insert mode with a
+space between point and the comment character."
+    (interactive "*P")
+    (comment-normalize-vars)
+    (if (use-region-p)
+        ;; If highlighting a region (visual-mode) then comment those lines
+        (cond (t
+               (comment-or-uncomment-region (region-beginning) (region-end) arg)))
+      ;; If in the middle of a line with no comment
+      (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
+          (cond ((equal arg '(4)) ; If with C-u
+                 (beginning-of-line)
+                 (insert "\n")
+                 (forward-line -1)
+                 (if comment-insert-comment-function
+                     (funcall comment-insert-comment-function)
+                   (progn
+                     (indent-according-to-mode)
+                     (insert (comment-padright comment-start (comment-add nil)))
+                     (save-excursion
+                       (unless (string= "" comment-end)
+                         (insert (comment-padleft comment-end (comment-add nil))))
+                       (indent-according-to-mode))
+                     (evil-insert-state))))
+                ((equal arg '(16)) ; If with C-u C-u
+                 (comment-kill (and (integerp arg) arg)))
+                ;; If without universal argument
+                (t
+                 (comment-indent)
+                 (when (looking-at "\\s-*$")
+                   (insert " ")
+                   (evil-insert-state))))
+        ;; When in an empty line
+        (if comment-insert-comment-function
+            (funcall comment-insert-comment-function)
+          (let ((add (comment-add arg)))
+            ;; Some modes insist on keeping column 0 comment in column 0
+            ;; so we need to move away from it before inserting the comment.
+            (indent-according-to-mode)
+            (insert (comment-padright comment-start add))
+            (save-excursion
+              (unless (string= "" comment-end)
+                (insert (comment-padleft comment-end add)))
+              (indent-according-to-mode)))))
+      ))
+  (advice-add 'comment-dwim :override 'kb/comment-dwim)
+  )
+
+;;;; Prot-comment
+;; helper code from prot-common.el, which is `require'd by
+;; prot-comment.el
+(defvar prot-common--line-regexp-alist
+  '((empty . "[\s\t]*$")
+    (indent . "^[\s\t]+")
+    (non-empty . "^.+$")
+    (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
+    (heading . "^[=-]+"))
+  "Alist of regexp types used by `prot-common-line-regexp-p'.")
+
+(defun prot-common-line-regexp-p (type &optional n)
+  "Test for TYPE on line.
+TYPE is the car of a cons cell in
+`prot-common--line-regexp-alist'.  It matches a regular
+expression.
+
+With optional N, search in the Nth line from point."
+  (save-excursion
+    (goto-char (point-at-bol))
+    (and (not (bobp))
+         (or (beginning-of-line n) t)
+         (save-match-data
+           (looking-at
+            (alist-get type prot-common--line-regexp-alist))))))
+
+;; and what follows is from prot-comment.el
+(defcustom prot-comment-comment-keywords-writing
+  '("TODO" "COMMENT" "REVIEW" "FIXME")
+  "List of strings with comment keywords."
+  :type '(repeat string)
+  :group 'prot-comment)
+
+(defcustom prot-comment-comment-keywords-coding
+  '("TODO" "NOTE" "REVIEW" "FIXME")
+  "List of strings with comment keywords."
+  :type '(repeat string)
+  :group 'prot-comment)
+
+(defcustom prot-comment-timestamp-format-concise "%F"
+  "Specifier for date in `prot-comment-timestamp-keyword'.
+Refer to the doc string of `format-time-string' for the available
+options."
+  :type 'string
+  :group 'prot-comment)
+
+(defcustom prot-comment-timestamp-format-verbose "%F %T %z"
+  "Like `prot-comment-timestamp-format-concise', but longer."
+  :type 'string
+  :group 'prot-comment)
+
+(defvar prot-comment--keyword-hist '()
+  "Input history of selected comment keywords.")
+
+(defun prot-comment--keyword-prompt (keywords)
+  "Prompt for candidate among KEYWORDS."
+  (let ((def (car prot-comment--keyword-hist)))
+    (completing-read
+     (format "Select keyword [%s]: " def)
+     keywords nil nil nil 'prot-comment--keyword-hist def)))
+
+;;;###autoload
+(defun prot-comment-timestamp-keyword (keyword &optional verbose)
+  "Add timestamped comment with KEYWORD.
+
+When called interactively, the list of possible keywords is that
+of `prot-comment-comment-keywords', though it is possible to
+input arbitrary text.
+
+If point is at the beginning of the line or if line is empty (no
+characters at all or just indentation), the comment is started
+there in accordance with `comment-style'.  Any existing text
+after the point will be pushed to a new line and will not be
+turned into a comment.
+
+If point is anywhere else on the line, the comment is indented
+with `comment-indent'.
+
+The comment is always formatted as 'DELIMITER KEYWORD DATE:',
+with the date format being controlled by the variable
+`prot-comment-timestamp-format-concise'.
+
+With optional VERBOSE argument (such as a prefix argument
+`\\[universal-argument]'), always insert newline above current one and write
+comment there."
+  (interactive
+   (list
+    (prot-comment--keyword-prompt
+     (cond ((derived-mode-p 'prog-mode) prot-comment-comment-keywords-coding)
+           ((derived-mode-p 'org-mode) prot-comment-comment-keywords-writing)
+           (t nil)))
+    current-prefix-arg))
+  (let* ((date prot-comment-timestamp-format-concise)
+         (string (format "%s %s: " keyword (format-time-string date)))
+         (beg (point)))
+    (cond ((equal current-prefix-arg '(4)) ; Universal argument case
+           (progn (evil-insert-newline-above)
+                  (indent-according-to-mode)
+                  (insert
+                   (concat comment-start
+                           (make-string
+                            (comment-add nil)
+                            (string-to-char comment-start))
+                           comment-padding
+                           string
+                           comment-end))
+                  ))
+          ((or (eq beg (point-at-bol)) ; Beginning of line or in indent whitespace case
+               (prot-common-line-regexp-p 'empty))
+           (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
+             ;; NOTE 2021-07-24: we use this `insert' instead of
+             ;; `comment-region' because of a yet-to-be-determined bug that
+             ;; traps `undo' to the two states between the insertion of the
+             ;; string and its transformation into a comment.
+             (insert
+              (concat comment-start
+                      ;; NOTE 2021-07-24: See function `comment-add' for
+                      ;; why we need this.
+                      (make-string
+                       (comment-add nil)
+                       (string-to-char comment-start))
+                      comment-padding
+                      string
+                      comment-end))
+             (indent-region beg (point))
+             (when maybe-newline
+               (save-excursion (insert maybe-newline)))))
+          (t ; Within code (creates node at `comment-column')
+           (comment-indent t)
+           (insert (concat " " string))))
+    ;; Immediately go into insert state afterward
+    (evil-insert-state)
+    ))
+
+(kb/leader-keys
+  "c" '(prot-comment-timestamp-keyword :which-key "Prot-comment")
+  )
+
+;;;; Insert date
+(defun kb/insert-date (prefix)
+  "Insert the current date. Accepts a PREFIX to change date format.
+Mainly used for `ledger-mode'."
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "%Y/%m/%d")
+                 ((equal prefix '(4)) "%d/%m/%Y"))) ; Other format
+        (system-time-locale "de_DE"))
+    (insert (format-time-string format)))
+  (insert " ")
+  (evil-insert-state)
   )
 
 ;;;; Yank current buffer's file-path
@@ -88,9 +330,6 @@
   "qQ" '(kb/kill-all-buffers :which-key "Kill all buffers")
   )
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'faces-rcp)
 ;;;; Idle quote
 ;; Display a random quote in the minibuffer after a certain amount of idle time.
 ;; It's useful to get inspiration when stuck writing
@@ -115,8 +354,47 @@
 
 (run-with-idle-timer 300 t 'kb/show-random-quotes)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'convenient-functions-rcp)
+;;;; Run command and return output as string without newlines
+(defun kb/shell-command-to-string (command)
+  "Execute shell command COMMAND and return its output as a string, removing any
+newlines."
+  (let* ((str (with-output-to-string
+                (with-current-buffer
+                    standard-output
+                  (shell-command command t))))
+         (len (length str)))
+    (cond
+     ((and (> len 0) (eql (aref str (- len 1)) ?\n))
+      (substring str 0 (- len 1)))
+     (t str))
+    ))
+
+;;;; Empty trash
+(defun kb/empty-trash ()
+  "Empty the trash directory."
+  (interactive)
+  (if delete-by-moving-to-trash
+      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))
+  )
+
+;;;; Delete to parent directory while completing filename
+;; Taken from
+;; https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+(defun kb/minibuffer-backward-to-parent-or-word-kill (arg)
+  "When minibuffer is completing a file name, move up a directory
+ARG times--this means, with no ARG, delete up to parent folder.
+Otherwise, delete a word."
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+    (backward-kill-word arg)))
+(general-define-key
+ :keymaps 'minibuffer-local-map
+ [remap backward-kill-word] 'kb/minibuffer-backward-to-parent-or-word-kill
+ )
+
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
@@ -210,9 +488,9 @@
                 "\n\n")))
     (pop-to-buffer (current-buffer))))
 
-;;;;; Org-fix-blank-lines
+;;;;; Org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
-(defun unpackaged/org-fix-blank-lines (&optional prefix)
+(defun unpackaged/org-add-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
 
   With PREFIX, operate on whole buffer. Ensures that blank lines
@@ -248,62 +526,16 @@
 
 ;; Call this function before every save in an org file. Don't do this for
 ;; org-agenda files - it makes it ugly
-(require 'custom-directories-rcp)
-(add-hook 'before-save-hook (lambda ()
-                              (if (and
-                                   (eq major-mode 'org-mode) ; Org-mode
-                                   (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
-                                   (not (string-equal buffer-file-name (expand-file-name "seedbox.org" org-roam-directory)))) ; Not seedbox
-                                  (let ((current-prefix-arg 4)) ; Emulate C-u
-                                    (call-interactively 'unpackaged/org-fix-blank-lines)))
-                              ))
-
-;;;;; Magit-log date headers
-;; Add dates to magit-logs
-(use-package ov) ; Dependency
-
-(defun unpackaged/magit-log--add-date-headers (&rest _ignore)
-  "Add date headers to Magit log buffers."
-  (when (derived-mode-p 'magit-log-mode)
-    (save-excursion
-      (ov-clear 'date-header t)
-      (goto-char (point-min))
-      (cl-loop with last-age
-               for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
-                                car
-                                (overlay-get it 'before-string)
-                                (get-text-property 0 'display it)
-                                cadr
-                                (s-match (rx (group (1+ digit) ; number
-                                                    " "
-                                                    (1+ (not blank))) ; unit
-                                             (1+ blank) eos)
-                                         it)
-                                cadr)
-               do (when (and this-age
-                             (not (equal this-age last-age)))
-                    (ov (line-beginning-position) (line-beginning-position)
-                        'after-string (propertize (concat " " this-age "\n")
-                                                  'face 'magit-section-heading)
-                        'date-header t)
-                    (setq last-age this-age))
-               do (forward-line 1)
-               until (eobp)))))
-
-(define-minor-mode unpackaged/magit-log-date-headers-mode
-  "Display date/time headers in `magit-log' buffers."
-  :global t
-  (if unpackaged/magit-log-date-headers-mode
-      (progn
-        ;; Enable mode
-        (add-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
-        (advice-add #'magit-setup-buffer-internal :after #'unpackaged/magit-log--add-date-headers))
-    ;; Disable mode
-    (remove-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
-    (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
-
-(add-hook 'magit-mode-hook 'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
+(with-eval-after-load 'org-roam-general-rcp
+  (add-hook 'before-save-hook (lambda ()
+                                (if (and
+                                     (eq major-mode 'org-mode) ; Org-mode
+                                     (not (string-equal default-directory (expand-file-name kb/agenda-dir)))) ; Not agenda-dir
+                                    (let ((current-prefix-arg 4)) ; Emulate C-u
+                                      (call-interactively 'unpackaged/org-add-blank-lines)))
+                                ))
+  )
 
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'conventient-functions-rcp)
+(provide 'convenient-functions-rcp)

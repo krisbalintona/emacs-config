@@ -7,22 +7,51 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-
-;;;; Default completion settings
-;; Taken from https://karthinks.com/software/more-batteries-included-with-emacs/
-;; Unfortunately this isn’t the case, because ivy and helm are off doing their
-;; own thing. Emacs’ built in completion styles do work with icomplete, ido and
-;; possibly selectrum though.
-(setq completion-styles '(basic initials partial-completion flex))
-(setq completion-cycle-threshold 10)
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
 
 ;;;; Prescient
-;; Simple sorting of minibuffer candidates. Big benefit is having most recent
-;; candidate shown on top
+;; Sorting and filtering of minibuffer candidates. Big benefit is having most
+;; recent candidate shown on top
 (use-package prescient
-  :after counsel ; Needs to be called after counsel so that counsel doesn't overwrite stuff
+  :ghook ('after-init-hook 'prescient-persist-mode)
+  :custom
+  ;; How does it filter?
+  (prescient-filter-alist '((literal . prescient-literal-regexp)
+                            (literal-prefix . prescient-literal-prefix-regexp)
+                            (initialism . prescient-initials-regexp)
+                            (regexp . prescient-regexp-regexp)
+                            (fuzzy . prescient-fuzzy-regexp)
+                            (prefix . prescient-prefix-regexp)
+                            (anchored . prescient-anchored-regexp))
+                          )
+  (prescient-filter-method '(literal regexp anchored initialism))
+
+  (prescient-use-char-folding t)
+  (prescient-use-case-folding t)
+  (prescient-sort-full-matches-first t)
+
+  (prescient-history-length 200)
+  (prescient-frequency-decay 0.999)
+  (prescient-frequency-threshold 0.10)
+  )
+
+;;;; Marginalia
+;; Enable richer annotations in minibuffer (companion package of consult.el)
+(use-package marginalia
+  :straight (marginalia :type git :host github :repo "minad/marginalia")
+  :ghook 'after-init-hook
+  :general
+  (:keymaps 'minibuffer-local-map
+            "M-A" '(marginalia-cycle :which-key "Marginalia cycle"))
+  :custom
+  (marginalia-max-relative-age 0)       ; Don't show relative ages
   :config
-  (prescient-persist-mode)
+  ;; Marginalia faces
+  (set-face-attribute 'marginalia-documentation nil
+                      :inherit nil
+                      :foreground "#98C379"
+                      :slant 'italic)
   )
 
 ;;; completion-general-rcp.el ends here

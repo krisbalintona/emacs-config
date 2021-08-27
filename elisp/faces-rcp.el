@@ -2,10 +2,28 @@
 ;;
 ;;; Commentary:
 ;;
-;; These are the base faces I used across all of Emacs
+;; All the faces and fonts I use.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+
+;;;; Unicode-fonts
+;; Support unicode characters
+(use-package unicode-fonts
+  ;; `unicode-fonts-setup' is run rebuilds the disk cache during Emacs startup
+  ;; whenever a font is added or removed, or any relevant configuration
+  ;; variables are changed.
+  :ghook ('(window-setup-hook server-after-make-frame-hook) 'unicode-fonts-setup nil nil t)
+  )
+
+;;;; All-the-icons
+;; Provides a bunch of unicode icons which many other packages leverage
+(use-package all-the-icons
+  :custom
+  (all-the-icons-scale-factor 1.1)
+  )
 
 ;;;; Face definitions
 ;; Potential Fonts:
@@ -25,7 +43,7 @@
 (defvar kb/variable-pitch-font "LiterationSerif Nerd Font")
 ;; (defvar kb/variable-pitch-font "Garamond-Math")
 ;; (defvar kb/variable-pitch-font "ETBembo")
-;(defvar kb/modeline-font "Noto Sans")
+;; (defvar kb/modeline-font "Noto Sans")
 (defvar kb/modeline-font "NotoSans Nerd Font")
 
 ;;;; Setup fonts
@@ -53,18 +71,14 @@
     ;; http://ergoemacs.org/misc/emacs_macos_emoji.html
     ))
   )
-
-;; Set fonts based on if daemon or not
-(if (daemonp)
-    (add-hook 'server-after-make-frame-hook 'kb/default-fonts-setup)
-  (add-hook 'window-setup-hook 'kb/default-fonts-setup))
+(general-add-hook '(server-after-make-frame-hook window-setup-hook) 'kb/default-fonts-setup)
 
 ;;;; Mixed-pitch
-;; Allow faces to be selectively fixed- or variable-pitch
-;; Note: Changes the family and height of the default face to the family and
+;; Allow the same buffer to have both fixed- and variable-pitch
+;; NOTE Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
 (use-package mixed-pitch
-  :hook (text-mode . mixed-pitch-mode)
+  :ghook 'text-mode-hook
   :config
   (add-to-list 'mixed-pitch-fixed-pitch-faces
                '(highlight-indent-guides-character-face ; Highlight-indent-guides
@@ -73,6 +87,10 @@
                  ace-jump-face-background
                  ))
   )
+
+;;;; Default-text-scale
+;; Text-scale-mode but Emacs-wide
+(use-package default-text-scale)
 
 ;;; faces-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

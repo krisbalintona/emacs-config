@@ -7,9 +7,23 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
 (require 'faces-rcp)
+(require 'keybinds-frameworks-rcp)
 
-;;;; Emacs themes
+;;;; UI
+;;;;; Remove unnecessary UI
+(menu-bar-mode -1)
+(unless (and (display-graphic-p) (eq system-type 'darwin))
+  (push '(menu-bar-lines . 0) default-frame-alist))
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;;;;; Hide-mode-line
+;; Hide the modeline when you don't want to see it
+(use-package hide-mode-line)
+
+;;;; Themes
 (use-package doom-themes
   :disabled t
   :config (load-theme 'doom-dracula t))
@@ -30,71 +44,13 @@
 
 (use-package apropospriate-theme)
 
-;;;; Heaven-and-hell
-;; Toggle between light and dark themes
-(use-package heaven-and-hell
-  :hook ((after-init . heaven-and-hell-init-hook)
-         (window-configuration-change . kb/theme-faces)
-         )
-  :init
-  (setq custom--inhibit-theme-enable nil)
-  :config
-  (setq heaven-and-hell-theme-type 'dark) ; Use dark by default
-  (setq heaven-and-hell-themes ;; Themes can be the list: (dark . (tsdh-dark wombat))
-        '((dark . atom-one-dark)
-          (light . apropospriate-light))
-        )
-
-  ;; Load themes without asking for confirmation
-  (setq heaven-and-hell-load-theme-no-confirm t)
-
-  ;; Cleanly load themes
-  (heaven-and-hell-clean-load-themes '(atom-one-dark apropospriate-light))
-
-  (general-define-key "<f6>" '((lambda ()
-                                 (interactive)
-                                 (heaven-and-hell-toggle-theme)
-                                 (highlight-indent-guides-auto-set-faces)
-                                 (kb/doom-modeline-font-setup)
-                                 (kb/theme-faces)
-                                 )
-                               :which-key "Toggle theme"
-                               )
-                      )
-  )
-
-;;;;; Set faces based on theme
-(defun kb/theme-faces ()
-  "Set light and dark theme faces."
-  (interactive)
-  (custom-theme-set-faces ; Dark theme
-   (cdr (car (cdr heaven-and-hell-themes)))
-   `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
-   `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,kb/variable-pitch-font))) t)
-   `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,kb/variable-pitch-font))) t)
-   `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,kb/variable-pitch-font))) t)
-   `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,kb/variable-pitch-font))) t)
-
-   `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
-   `(org-quote ((t (:inherit org-block :height 143))) t)
-   `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-verbatim ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-table ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-   `(org-checkbox ((t (:inherit fixed-pitch))) t)
-   `(org-tag ((t (:height 153 :bold t :italic t))) t)
-   `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
-   )
-  (custom-theme-set-faces ; Light theme
-   (cdr (car heaven-and-hell-themes))
-   )
-  )
-
-;;;; Doom-modeline
+;;;; Modeline
+;;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
   :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
+  :ghook 'server-after-make-frame-hook 'window-setup-hook
+  :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
@@ -124,29 +80,22 @@
     (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
     (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
     )
-  :config
-  ;; (if (daemonp) ; Hooks depending on daemon or not
-  (add-hook 'server-after-make-frame-hook 'doom-modeline-mode)
-  (add-hook 'window-setup-hook 'doom-modeline-mode);; )
-  (kb/doom-modeline-font-setup)
   )
 
-;;;;; Time
+;;;;;  Time
 ;; Enable time in the mode-line
 (use-package time
   :straight nil
+  :ghook ('after-init-hook 'display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average nil) ; Don't show load average along with time
-  :config
-  (add-hook 'after-init-hook 'display-time-mode)
   )
 
-;;;;; Battery
+;;;;;  Battery
 ;; Display batter percentage
 (use-package battery
   :straight nil
-  :after doom-modeline
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
@@ -156,9 +105,12 @@
     (display-battery-mode t)) ; Show battery in modeline
   )
 
-;;;;; Modeline segments
+;;;;;  Modeline segments
 ;; (Re)defining my own modeline segments
-(with-eval-after-load 'doom-modeline
+(defun kb/set-doom-modeline-segments ()
+  "Define relevant doom modeline segments and define segment."
+  (require 'doom-modeline-segments)
+
   (doom-modeline-def-segment kb/buffer-info
     "The standard `buffer-info' but without the 'unsaved' icon and major mode
 icon."
@@ -265,9 +217,14 @@ UTF-8."
   (doom-modeline-def-segment kb/buffer-default-directory
     "Standard `buffer-default-directory' without the state, icon, and color change."
     (let* ((active (doom-modeline--active))
-           (face (if active 'doom-modeline-buffer-path 'mode-line-inactive))) ; Don't use here
+           (face (if active 'bold-italic 'mode-line-inactive))) ; Don't use here
       (concat (doom-modeline-spc)
-              (propertize (abbreviate-file-name default-directory) 'face 'bold-italic)
+              (propertize (cond ((stringp (vc-git-root (buffer-file-name)))
+                                 (abbreviate-file-name (vc-git-root (buffer-file-name))))
+                                (buffer-file-name ; Connected to file?
+                                 default-directory)
+                                (t "Not file!"))
+                          'face face)
               (doom-modeline-spc))))
   (doom-modeline-def-segment me/major-mode
     "The current major mode, including environment information."
@@ -308,6 +265,118 @@ UTF-8."
   (doom-modeline-def-modeline 'main
     '(kb/matches "   " kb/major-mode-icon "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
     '(input-method process debug kb/time battery " " bar " " kb/buffer-encoding checker))
+  )
+
+;;;; Heaven-and-hell
+;; Toggle between light and dark themes
+(use-package heaven-and-hell
+  :hook ((after-init . heaven-and-hell-init-hook)
+         (window-configuration-change . kb/theme-faces)
+         )
+  :general
+  ("<f6>" '((lambda ()
+              (interactive)
+              (heaven-and-hell-toggle-theme)
+              (highlight-indent-guides-auto-set-faces)
+              (kb/doom-modeline-font-setup)
+              (kb/theme-faces)
+              )
+            :which-key "Toggle theme"
+            ))
+  :init
+  (setq custom--inhibit-theme-enable nil)
+  :config
+  (setq heaven-and-hell-theme-type 'dark) ; Use dark by default
+  (setq heaven-and-hell-themes ;; Themes can be the list: (dark . (tsdh-dark wombat))
+        '((dark . atom-one-dark)
+          (light . apropospriate-light))
+        )
+
+  ;; Load themes without asking for confirmation
+  (setq heaven-and-hell-load-theme-no-confirm t)
+
+  ;; Cleanly load themes
+  (heaven-and-hell-clean-load-themes '(atom-one-dark apropospriate-light))
+  )
+
+;;;;; Set faces based on theme
+(defun kb/theme-faces ()
+  "Set light and dark theme faces."
+  (interactive)
+  (defvar heaven-and-hell-themes)
+  (require 'heaven-and-hell)
+  (custom-theme-set-faces ; Dark theme
+   (cdr (car (cdr heaven-and-hell-themes)))
+   `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
+   `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,kb/variable-pitch-font))) t)
+   `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,kb/variable-pitch-font))) t)
+   `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,kb/variable-pitch-font))) t)
+   `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,kb/variable-pitch-font))) t)
+
+   `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
+   `(org-quote ((t (:inherit org-block :height 143))) t)
+   `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
+   `(org-verbatim ((t (:inherit (shadow fixed-pitch)))) t)
+   `(org-table ((t (:inherit (shadow fixed-pitch)))) t)
+   `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
+   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
+   `(org-checkbox ((t (:inherit fixed-pitch))) t)
+   `(org-tag ((t (:height 153 :bold t :italic t))) t)
+   `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
+   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
+   `(bookmark-face ((t (:foreground nil :background nil))))
+   )
+  ;; (custom-theme-set-faces ; Light theme
+  ;;  (cdr (car heaven-and-hell-themes))
+  ;;  )
+  )
+
+;;;; Buffer display
+;;;;; Prettify-symbols-mode
+;; Turn arbitrary strings into desired unicode characters
+(use-package pretty-symbols
+  :ghook ('after-init-hook 'global-prettify-symbols-mode)
+  :custom
+  (prettify-symbols-alist '(("TODO" . "")
+                            ("WAIT" . "")
+                            ("NOPE" . "")
+                            ("DONE" . "")
+                            ("[#A]" . "")
+                            ("[#B]" . "")
+                            ("[#C]" . "")
+                            ("[ ]" . "")
+                            ("[X]" . "")
+                            ("[-]" . "")
+                            ("#+BEGIN_SRC" . "")
+                            ("#+END_SRC" . "―")
+                            (":PROPERTIES:" . "")
+                            (":END:" . "―")
+                            ("#+STARTUP:" . "")
+                            ;; ("#+TITLE: " . "")
+
+                            ("#+RESULTS:" . "")
+                            ("#+NAME:" . "")
+                            ("#+ROAM_TAGS:" . "")
+                            ("#+FILETAGS:" . "")
+                            ("#+HTML_HEAD:" . "")
+                            ("#+SUBTITLE:" . "")
+                            ("#+AUTHOR:" . "")
+                            (":Effort:" . "")
+                            ("SCHEDULED:" . "")
+                            ("DEADLINE:" . "")))
+  )
+
+;;;;; Display-line-numbers-mode
+;; Show line numbers on the left fringe
+(use-package display-line-numbers
+  :straight nil
+  :ghook 'prog-mode-hook 'LaTeX-mode-hook
+  ;; :ghook 'prog-mode-hook
+  :gfhook 'column-number-mode ; Column number in modeline
+  :general (kb/leader-keys
+             "tl" '(display-line-numbers-mode :which-key "Line numbers"))
+  :custom
+  (display-line-numbers-type 'relative)
   )
 
 ;;; themes-rcp.el ends here

@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Set better garbage collection timing
+;; Faster startup from better garbage collection timing.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -13,12 +13,9 @@
 
   If you experience freezing, decrease this. If you experience stuttering,
   increase this.")
+(add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold better-gc-cons-threshold)))
 
-(add-hook 'emacs-startup-hook (lambda ()
-                                (setq gc-cons-threshold better-gc-cons-threshold)
-                                ))
-
-;;;; Auto GC
+;;;; Restore GC threshold
 ;; Garbage Collect when Emacs is out of focus and try to avoid garbage
 ;; collection when using minibuffer
 (defun gc-minibuffer-setup-hook ()

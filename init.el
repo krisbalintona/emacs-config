@@ -32,61 +32,44 @@
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
-;;;;; Package management and settings
-(require 'auto-gc-rcp)
-(require 'system-variables-rcp)
-;; (require 'default-package-management-rcp) ; Use package.el
-(require 'straight-package-management-rcp) ; Use straight.el
-(require 'use-package-rcp)
-(require 'early-packages-rcp)
-(require 'better-defaults-rcp)
-(require 'faces-rcp)
-
 ;;;;; Emacs-wide packages
 ;; Packages that are useful across my entire Emacs experience. Other packages
 ;; defined afterward will often rely on these
-(require 'keybinds-frameworks-rcp)
-(require 'custom-directories-rcp)
-(require 'convenient-functions-rcp)
+(require 'auto-gc-rcp)
+(require 'personal-variables-rcp)
+(require 'external-programs-rcp)
+(require 'straight-package-management-rcp)
+(require 'use-package-rcp)
+(require 'early-packages-rcp)
+(require 'better-defaults-rcp)
+(require 'undoing-rcp)
+
+;;;;; Aethetics
+(require 'faces-rcp)
 (require 'themes-rcp)
 
-(org-babel-load-file (concat user-emacs-directory "configs/" "etc-config.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "qol-packages.org"))
+;;;;; Custom
+(require 'custom-directories-rcp)
+(require 'convenient-functions-rcp)
+
+;;;;; Core keybindings
+(require 'keybinds-frameworks-rcp)
+(require 'evil-rcp)
 
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)
-(require 'completion-company-rcp)
+(require 'completion-default-rcp)
+(require 'completion-text-rcp)
 (require 'completion-ivy-rcp)
-(require 'completion-selectrum-rcp)
 (require 'completion-helm-rcp)
 
-;;;;; Buffer management
-(require 'buffer-and-window-management-rcp)
-
-;;;;; Evil
-(require 'evil-rcp)
-
 ;;;;; Org
-
-(org-babel-load-file (concat user-emacs-directory "configs/" "org-packages.org"))
-
+(require 'org-general-rcp)
+(require 'org-roam-general-rcp)
+(require 'org-roam-other-rcp)
 ;; (require 'org-agenda-general-rcp)
 ;; (require 'org-agenda-views-rcp)
 ;; (require 'org-agenda-other-rcp)
-
-(require 'org-roam-general-rcp)
-(require 'org-roam-other-rcp)
-
-;; (org-babel-load-file (concat user-emacs-directory "configs/" "second-brain.org"))
-
-(org-babel-load-file (concat user-emacs-directory "configs/" "calendar-integration.org"))
-(org-babel-load-file (concat user-emacs-directory "configs/" "file-and-directory-nav.org"))
-
-;;;;; Email
-;; (require 'mu4e-rcp)
-
-;;;;; RSS feed
-(require 'rss-feed-rcp)
 
 ;;;;; LaTeX
 (require 'latex-general-rcp)
@@ -95,22 +78,33 @@
 ;;;;; Programmming
 (require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
+(require 'programming-vc-rcp)
+(require 'programming-linting-rcp)
+(require 'programming-ide-rcp)
 (require 'programming-elisp-rcp)
 (require 'programming-lua-rcp)
 (require 'programming-web-rcp)
+(require 'programming-haskell-rcp)
 
 ;;;;; Shells
 (require 'shell-basic-rcp)
 (require 'shell-eshell-rcp)
-;; (require 'shell-vterm-rcp)
-
-;;;;; Undoing
-(require 'undoing-rcp)
+(require 'shell-vterm-rcp)
 
 ;;;;; Spelling and grammar
 (require 'checking-spelling-rcp)
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
+
+;;;;; Communication interfaces
+;; (require 'mu4e-rcp)
+(require 'rss-feed-rcp)
+
+;;;;; Other
+(require 'buffer-and-window-management-rcp)
+(require 'file-editing-rcp)
+(require 'finance-rcp)
+(require 'misc-packages-rcp)
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

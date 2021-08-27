@@ -2,23 +2,25 @@
 ;;
 ;;; Commentary:
 ;;
-;; Load packages which need to be loaded at an early state here.
+;; Load packages which need to be loaded at an early stage here.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'use-package-rcp)
+(require 'personal-variables-rcp)
 (require 'keybinds-frameworks-rcp)
 
-;;;; Org
-;; Use `org' from `straight.el'. This may or may not work?
-(use-package org
-  :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
-  )
+;;;; Load custom file
+;; Set and load custom file.
+(with-eval-after-load 'no-littering
+  (setq custom-file (no-littering-expand-var-file-name "custom.el"))
+  (load custom-file))
 
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path
 (use-package exec-path-from-shell
   :functions exec-path-from-shell-initialize
-  :config (exec-path-from-shell-initialize)
+  :ghook ('after-init-hook 'exec-path-from-shell-initialize)
   )
 
 ;;;; System-packages
@@ -26,6 +28,7 @@
 (use-package system-packages
   :custom
   (system-packages-use-sudo t)
+  (system-packages-noconfirm t) ; Just bypass this prompt
   :config
   (add-to-list 'system-packages-supported-package-managers
                '(yay . ; Add support for yay
@@ -50,34 +53,24 @@
                       (list-dependencies-of . "yay -Qi")
                       (noconfirm . "--noconfirm"))
                      ))
-
-  (if (string= linux-distribution "\"Arch Linux\"")
-      (progn
-        (setq system-packages-package-manager 'yay)
-        (setq system-packages-use-sudo nil)))
+  (if kb/linux-arch
+      (setq system-packages-package-manager 'yay
+            system-packages-use-sudo nil))
   )
 
-;;;; Use-package-ensure-system-package
-;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword. Requires `system-packages'
-(use-package use-package-ensure-system-package
-  :after (exec-path-from-shell system-packages)
-  )
-
-;;;; NoLittering
+;;;; No-littering
 ;; Set default package paths
 (use-package no-littering
-  :functions (no-littering-expand-var-file-name no-littering-expand-etc-file-name)
   :custom
   (no-littering-etc-directory (expand-file-name "data/" user-emacs-directory)) ; Config files
   (no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-
-  (custom-file (no-littering-expand-etc-file-name "custom.el")) ; Set custom.el path
-  (auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))) ; Store auto-saved files here
   :preface (require 'recentf)
-  :config
-  ;; Exclude these files from recent files list
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory)
+  )
+
+;;;; Org
+;; Use `org' from `straight.el'. This may or may not work?
+(use-package org
+  :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
   )
 
 ;;;; Outshine
@@ -85,16 +78,49 @@
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
-  :hook ((LaTeX-mode . outshine-mode)
-         (css-mode . outshine-mode)
-         (prog-mode . outshine-mode)
-         (outshine-mode . display-line-numbers-mode)
-         (outshine-mode . visual-line-mode)
-         )
-  :preface
-  (defvar outline-minor-mode-prefix (kbd "M-#"))
+  :functions (sp--looking-at-p sp--looking-back outline-back-to-heading outline-next-heading)
+  :commands evil-insert-state
+  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
+  :gfhook 'display-line-numbers-mode 'visual-line-mode
+  :general (:keymaps 'outshine-mode-map
+                     "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
+  :init
+  ;; More convenient `outline-insert-heading'
+  (defun kb/outline-insert-heading ()
+    "Insert a new heading at same depth at point.
+
+I've customized it such that it ensures there are newlines before
+and after the heading that that insert mode is entered
+afterward."
+    (interactive)
+    ;; Check for if previous line is empty
+    (unless (sp--looking-back "[[:space:]]*$")
+      (insert "\n"))
+    (let ((head (save-excursion
+                  (condition-case nil
+                      (outline-back-to-heading)
+                    (error (outline-next-heading)))
+                  (if (eobp)
+                      (or (caar outline-heading-alist) "")
+                    (match-string 0)))))
+      (unless (or (string-match "[ \t]\\'" head)
+                  (not (string-match (concat "\\`\\(?:" outline-regexp "\\)")
+                                     (concat head " "))))
+        (setq head (concat head " ")))
+      (unless (bolp) (end-of-line) (newline))
+      (insert head)
+      (unless (eolp)
+        (save-excursion (newline-and-indent)))
+      (run-hooks 'outline-insert-heading-hook))
+    ;; Check for if next line is empty
+    (unless (sp--looking-at-p "[[:space:]]*$")
+      (save-excursion
+        (end-of-line)
+        (insert "\n")))
+    (evil-insert-state))
+  (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
   :config
   ;; Outshine headline faces
   (set-face-attribute 'outshine-level-4 nil :inherit 'outline-5)
@@ -103,14 +129,33 @@
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
 
   (general-define-key
-   :keymaps 'emacs-lisp-mode-map
-   "C-x n s" 'outshine-narrow-to-subtree
-   )
+   :keymaps 'outshine-mode-map
+   :states 'normal
+   "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
   )
 
-;;;; Diminish
-;; Remove or rename modeline lighters
-(use-package diminish)
+;;;; Helpful
+;; Have more descriptive and helpful function and variable descriptions
+(use-package helpful
+  :gfhook 'visual-line-mode
+  :general
+  ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
+  ;; macros
+  ([remap describe-function] '(helpful-callable :which-key "Helpful function")
+   [remap describe-command] '(helpful-command :which-key "Helpful command")
+   [remap describe-variable] '(helpful-variable :which-key "Helpful variable")
+   [remap describe-symbol] '(helpful-symbol :which-key "Helpful symbol")
+   [remap describe-key] '(helpful-key :which-key "Helpful key")
+   )
+  (:states '(visual normal motion)
+           "f" 'helpful-at-point
+           )
+  (kb/leader-keys
+    "hk" '(helpful-key :which-key "Desc key")
+    "hc" '(helpful-command :which-key "Helpful command"))
+  :custom
+  (describe-bindings-outline t) ; Include interactive outline headings for each major mode in `describe-keys' buffer
+  )
 
 ;;; early-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
