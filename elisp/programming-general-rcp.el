@@ -216,6 +216,12 @@
   )
 
 ;;;; Other
+;;;;; Tramp
+(use-package tramp
+  :custom
+  (tramp-default-method "ssh")
+  )
+
 ;;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
 (use-package scratch
@@ -280,17 +286,7 @@
      (comint-mode . comint-input-ring)
      (term-mode . term-input-ring))
    )
-
-  (consult-narrow-key [?<])
-  (consult-widen-key [?< ?<])
-  ;; Optional configure a "view" library to be used by `consult-buffer`.
-  ;; The view library must provide two functions, one to open the view by name,
-  ;; and one function which must return a list of views as strings.
-  ;; Example: https://github.com/minad/bookmark-view/
-  ;; (setq consult-view-open-function #'bookmark-jump
-  ;;       consult-view-list-function #'bookmark-view-names)
-
-  (consult-project-root-function #'doom-modeline-project-root)
+  (consult-project-root-function #'vc-root-dir)
   :config
   ;; Enhanced multiple selection experience. Replaced the built-in method
   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
