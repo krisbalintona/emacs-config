@@ -53,8 +53,18 @@
   (lsp-ui-doc-position 'top)
   )
 ;;;; Dap-mode
+;; Debugger
 (use-package dap-mode
   ;; :ensure-system-package ("pip install \"ptvsd>=4.2\"")
+  :gfhook
+  ;; Accompanying modes (all optional) for additional features
+  'dap-ui-mode ; Mouse hover support
+  'dap-tooltip-mode ;; Use tooltips for mouse hover. If disabled, use the minibuffer instead
+  'tooltip-mode
+  'dap-ui-controls-mode ; Displays floating panel with debug buttons
+  :custom
+  ;; One way to configure features without having to manually call other modes
+  (dap-auto-configure-features '(sessions locals controls tooltip))
   )
 
 ;;;; Ancillary
