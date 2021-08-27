@@ -384,6 +384,24 @@ newlines."
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))
   )
 
+;;;; Delete to parent directory while completing filename
+;; Taken from
+;; https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+(defun kb/minibuffer-backward-to-parent-or-word-kill (arg)
+  "When minibuffer is completing a file name, move up a directory
+ARG times--this means, with no ARG, delete up to parent folder.
+Otherwise, delete a word."
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+    (backward-kill-word arg)))
+(general-define-key
+ :keymaps 'minibuffer-local-map
+ [remap backward-kill-word] 'kb/minibuffer-backward-to-parent-or-word-kill
+ )
+
 ;;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
