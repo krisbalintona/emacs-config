@@ -61,6 +61,24 @@
 
 ;;;; Better comment-dwim
 (with-eval-after-load 'smartparens
+  (defun kb/comment-dwim-helper (arg)
+    "A helper function for `kb/comment-dwim'. Accepts ARG.
+
+If in the middle of a line, then append comment. If on blank
+line, then comment."
+    (if comment-insert-comment-function
+        (funcall comment-insert-comment-function)
+      ;; Some modes insist on keeping column 0 comment in column 0
+      ;; so we need to move away from it before inserting the comment.
+      (progn
+        (indent-according-to-mode)
+        (insert (comment-padright comment-start (comment-add nil)))
+        (save-excursion
+          (unless (string= "" comment-end)
+            (insert (comment-padleft comment-end (comment-add nil))))
+          (indent-according-to-mode))
+        (evil-insert-state))))
+
   (defun kb/comment-dwim (arg)
     "Call the comment command you want (Do What I Mean).
 If the region is active and `transient-mark-mode' is on, call
@@ -79,43 +97,31 @@ space between point and the comment character."
     (if (use-region-p)
         ;; If highlighting a region (visual-mode) then comment those lines
         (cond (t
-               (comment-or-uncomment-region (region-beginning) (region-end) arg)))
+               (comment-or-uncomment-region (region-beginning) (region-end) arg))) ; If with ARG then uncomment
       ;; If in the middle of a line with no comment
       (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
-          (cond ((equal arg '(4)) ; If with C-u
+          (cond (;; If with C-u
+                 (equal arg '(4))       ; Comment above
                  (beginning-of-line)
                  (insert "\n")
                  (forward-line -1)
-                 (if comment-insert-comment-function
-                     (funcall comment-insert-comment-function)
-                   (progn
-                     (indent-according-to-mode)
-                     (insert (comment-padright comment-start (comment-add nil)))
-                     (save-excursion
-                       (unless (string= "" comment-end)
-                         (insert (comment-padleft comment-end (comment-add nil))))
-                       (indent-according-to-mode))
-                     (evil-insert-state))))
-                ((equal arg '(16)) ; If with C-u C-u
+                 (kb/comment-dwim-helper arg))
+                ;; If with C-u C-u
+                ((equal arg '(16))      ; Comment below
+                 (end-of-line)
+                 (insert "\n")
+                 (kb/comment-dwim-helper arg))
+                ;; If with C-u C-u C-u
+                ((equal arg '(64))      ; Remove any comments from line
                  (comment-kill (and (integerp arg) arg)))
                 ;; If without universal argument
-                (t
+                (t ; Comment at the end of the current line
                  (comment-indent)
                  (when (looking-at "\\s-*$")
                    (insert " ")
                    (evil-insert-state))))
         ;; When in an empty line
-        (if comment-insert-comment-function
-            (funcall comment-insert-comment-function)
-          (let ((add (comment-add arg)))
-            ;; Some modes insist on keeping column 0 comment in column 0
-            ;; so we need to move away from it before inserting the comment.
-            (indent-according-to-mode)
-            (insert (comment-padright comment-start add))
-            (save-excursion
-              (unless (string= "" comment-end)
-                (insert (comment-padleft comment-end add)))
-              (indent-according-to-mode)))))
+        (kb/comment-dwim-helper arg))
       ))
   (advice-add 'comment-dwim :override 'kb/comment-dwim)
   )
