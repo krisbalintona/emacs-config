@@ -29,7 +29,7 @@
     )
   :custom
   (eshell-kill-processes-on-exit t)
-  (eshell-hist-ignoredups t)
+  (eshell-hist-ignoredups 'erase)       ; Only keep last duplicate
   (eshell-scroll-to-bottom-on-input 'all)
   (eshell-scroll-to-bottom-on-output 'all)
   (eshell-input-filter (lambda (input) (not (string-match-p "\\`\\s-+" input)))) ; Don't record command in history if prefixed with whitespace
@@ -47,7 +47,7 @@
         (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t)))))
-  (add-hook 'eshell-pre-command-hook #'eshell-append-history)
+  (add-hook 'eshell-post-command-hook #'eshell-append-history)
   )
 
 ;;;; Eshell prompt
