@@ -19,6 +19,7 @@
   (undo-outer-limit 3000000)
   :general ([remap undo] 'undo-fu-only-undo
             [remap redo] 'undo-fu-only-redo)
+  (evil-undo-system 'undo-fu)
   )
 
 ;;;; Undo-fu-session
