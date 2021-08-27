@@ -163,7 +163,7 @@ parses its input."
 It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
     (when (string-suffix-p "," pattern)
-      `(orderless-strict-leading-initialism . ,(substring pattern 0 -1))))
+      `(orderless-initialism . ,(substring pattern 0 -1))))
 
   (defun prot-orderless-flex-dispatcher (pattern _index _total)
     "Flex  dispatcher using the tilde suffix.
