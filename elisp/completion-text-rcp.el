@@ -22,13 +22,13 @@
   :gfhook 'evil-normalize-keymaps
   :general
   (:keymaps 'company-active-map
-             "<escape>" '(lambda () (interactive) (company-abort) (evil-normal-state))
-             "<return>" '(lambda () (interactive) (company-abort) (newline) (indent-according-to-mode))
-             "<tab>" 'company-complete-selection
-             "C-j" 'company-select-next-or-abort
-             "C-k" 'company-select-previous-or-abort
-             "C-n" 'company-select-next-or-abort
-             "C-p" 'company-select-previous-or-abort)
+            "<escape>" '(lambda () (interactive) (company-abort) (evil-normal-state))
+            "<return>" '(lambda () (interactive) (company-abort) (newline) (indent-according-to-mode))
+            "<tab>" 'company-complete-selection
+            "C-j" 'company-select-next-or-abort
+            "C-k" 'company-select-previous-or-abort
+            "C-n" 'company-select-next-or-abort
+            "C-p" 'company-select-previous-or-abort)
   :custom
   (company-idle-delay 0.3)
   (company-tooltip-idle-delay 0.2)
@@ -153,13 +153,14 @@
 ;; the Emacs infrastructure
 (use-package corfu
   :ghook ('after-init-hook 'corfu-global-mode)
+  :hook (evil-normal-state-entry . corfu-quit)
   :general (:keymaps 'corfu-map
-                      "<escape>" 'corfu-quit
-                      "<tab>" 'corfu-insert
-                      "C-<tab>" 'corfu-complete
-                      "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
-                      "M-d" 'corfu-show-documentation
-                      "M-;" 'comment-dwim)
+                     "<escape>" 'corfu-quit
+                     "<tab>" 'corfu-insert
+                     "C-<tab>" 'corfu-complete
+                     "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
+                     "M-d" 'corfu-show-documentation
+                     "M-;" 'comment-dwim)
   :custom
   (tab-always-indent 'complete)         ; Try to tab and then `complete-at-point'
 
