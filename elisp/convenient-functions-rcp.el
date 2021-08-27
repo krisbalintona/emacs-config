@@ -116,13 +116,6 @@ space between point and the comment character."
               (unless (string= "" comment-end)
                 (insert (comment-padleft comment-end add)))
               (indent-according-to-mode)))))
-      ;; Add space and go into insert state when at the end of the line. The check
-      ;; needed for when called within a comment, to be faithful to the
-      ;; functionality of the original `comment-dwim', which makes it compatible
-      ;; with other functions that call it.
-      (when (sp--looking-at "[[:blank:]\n]")
-        (insert " ")
-        (evil-insert-state))
       ))
   (advice-add 'comment-dwim :override 'kb/comment-dwim)
   )
