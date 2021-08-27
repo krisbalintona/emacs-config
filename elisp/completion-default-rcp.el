@@ -48,10 +48,6 @@
 ;;;; Vertico
 (use-package vertico
   :ghook 'after-init-hook
-  :gfhook '(lambda ()
-             ;; (setq completion-styles '(substring initials partial-completion orderless)
-             (setq completion-styles '(substring orderless)
-                   ))
   :custom
   ;; Workaround for problem with `org-refile'. See
   ;; https://github.com/minad/vertico#org-refile
@@ -72,22 +68,28 @@
   (add-to-list 'completion-styles-alist
                '(basic-remote           ; Name of `completion-style'
                  kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
-  (setq completion-styles '(orderless)
-        completion-category-overrides '((file (styles basic-remote partial-completion orderless))))
   )
 
 ;;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
-  :defines (selectrum-mode selectrum-highlight-candidates-function)
   :custom
+  (completion-styles '(substring initials partial-completion orderless))
+  ;; (setq completion-styles '(substring orderless)
+  (completion-category-overrides
+   '((file (styles basic-remote partial-completion orderless))))
+
   (orderless-component-separator " +")
   (orderless-matching-styles
-   '(orderless-flex
-     orderless-strict-leading-initialism
-     orderless-regexp
+   '(orderless-literal
+     ;; orderless-without-literal
      orderless-prefixes
-     orderless-literal))
+     orderless-initialism
+     ;; orderless-strict-initialism
+     orderless-strict-leading-initialism
+     ;; orderless-strict-full-initialism
+     orderless-flex
+     ))
   ;; (orderless-style-dispatchers
   ;;  '(prot-orderless-literal-dispatcher
   ;;    prot-orderless-initialism-dispatcher
