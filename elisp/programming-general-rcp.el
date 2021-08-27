@@ -179,6 +179,8 @@
   :general (:keymaps 'dired-mode-map
                      :states 'normal
                      "H" 'dired-hide-dotfiles-mode)
+  :custom
+  (dired-hide-dotfiles-verbose nil) ; No annoying announcements in echo area anymore
   )
 
 ;;;; Aesthetics
