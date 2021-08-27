@@ -377,13 +377,13 @@ newlines."
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))
   )
 
-;;;; Delete to parent directory while completing filename
+;;;; When completing filenames, delete full file/directory names
 ;; Taken from
 ;; https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
 (defun kb/minibuffer-backward-to-parent-or-word-kill (arg)
-  "When minibuffer is completing a file name, move up a directory
-ARG times--this means, with no ARG, delete up to parent folder.
-Otherwise, delete a word."
+  "When minibuffer is completing a file name, move up ARG
+directories. This means, with no ARG, delete full parent
+directory or filename."
   (interactive "p")
   (if minibuffer-completing-file-name
       (if (string-match-p "/." (minibuffer-contents))
