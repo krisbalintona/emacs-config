@@ -16,7 +16,7 @@
   :demand t
   :ghook 'after-init-hook
   :general
-  (:states 'normal
+  (:states '(normal visual)
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
