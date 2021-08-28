@@ -33,8 +33,8 @@
 
   (kb/leader-keys
     "t" '(:ignore t :which-key "Toggles")
-    "o" '(:ignore t :which-key "Open")
-    "oc" '(calendar :which-key "Open calendar")
+    "o" '(:ignore t :which-key "Open...")
+    "oc" '(calc :which-key "Open calculator")
     "b" '(:ignore t :which-key "Buffers")
     "bp" '(previous-buffer :which-key "Prev buffer")
     "bn" '(next-buffer :which-key "Next buffer")
