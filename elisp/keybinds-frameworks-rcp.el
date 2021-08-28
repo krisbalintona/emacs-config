@@ -12,11 +12,7 @@
 ;; Leader key capabilities
 (use-package general
   :config
-  (general-evil-setup)
-  (general-auto-unbind-keys)
-
-  ;; Make ESC quit everywhere
-  (general-define-key "<escape>" 'keyboard-escape-quit)
+  (general-auto-unbind-keys)            ; Overwrite keybinds without error
 
   (general-unbind
     :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map debugger-mode-map
@@ -25,12 +21,12 @@
                              )
     "SPC")
 
+  ;; My leader key definition and high-level keybindings
   (general-create-definer kb/leader-keys ; Use space as leader key
     :keymaps '(normal visual insert motion emacs)
     :prefix "SPC"
     :global-prefix "M-SPC"
     )
-
   (kb/leader-keys
     "t" '(:ignore t :which-key "Toggles")
     "o" '(:ignore t :which-key "Open...")
@@ -58,12 +54,15 @@
     "er" '(eval-region :which-key "Eval region")
     "u" '(universal-argument :which-key "Universal argument")
     )
+
   ;; Multiple universal arguments
   (general-define-key
    :keymaps 'universal-argument-map
    :states '(normal visual motion)
    "u" 'universal-argument-more
    )
+  ;; Make ESC quit everywhere
+  (general-define-key "<escape>" 'keyboard-escape-quit)
   )
 
 ;;;; Native-Emacs keybinds
