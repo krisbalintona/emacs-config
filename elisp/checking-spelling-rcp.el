@@ -18,11 +18,14 @@
   ('text-mode-hook 'flyspell-mode)
   ('prog-mode-hook 'flyspell-prog-mode)
   :custom
-  (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (abbrev mode)
-  (flyspell-issue-message-flag nil) ; Disable to prevent massive slowdown
-  (flyspell-issue-welcome-flag nil) ; Don't display welcome message
-  (flycheck-proselint-executable "/usr/bin/proselint")
+  (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
+  (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
 
+  (flyspell-delay 1)                    ; Number of seconds to wait
+  (flyspell-sort-corrections t)         ; Sort candidates
+
+  (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (`abbrev-mode')
+  (flycheck-proselint-executable (kb/shell-command-to-string "which proselint"))
   ;; Personal dictionary
   (ispell-personal-dictionary (concat no-littering-var-directory "flyspell/flyspell-ispell-personal-dict-en"))
   :config
