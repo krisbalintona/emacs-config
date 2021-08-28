@@ -67,7 +67,7 @@
   (evil-visual-state-cursor 'hollow)
   (evil-emacs-state-cursor 'hbar)
   (evil-echo-state nil) ; Don't echo state in echo area
-  :config (general-evil-setup)   ; Set up `general.el' infrastructure for `evil'
+  :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
   )
 
 ;;;; Evil-collection
