@@ -159,7 +159,8 @@
                      "C-<tab>" 'corfu-complete
                      "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
                      "M-d" 'corfu-show-documentation
-                     "M-;" 'kb/comment-dwim)
+                     "M-:" '((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
+                     )
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 3)
