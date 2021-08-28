@@ -19,8 +19,10 @@
 ;;;; Exec-path-from-shell
 ;; Ensure eshell and system shell have same path
 (use-package exec-path-from-shell
-  :functions exec-path-from-shell-initialize
-  :ghook ('after-init-hook 'exec-path-from-shell-initialize)
+  :custom
+  (exec-path-from-shell-arguments '("-l")) ; Remove `-i' (interactive) flag to quicken startup
+  :config
+  (exec-path-from-shell-initialize)     ; Call immediately
   )
 
 ;;;; System-packages
