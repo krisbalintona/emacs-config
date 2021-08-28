@@ -37,7 +37,7 @@
             "TAB" 'tab-to-tab-stop)
   (kb/leader-keys
     :keymaps 'ledger-mode-map
-    :states 'normal
+    :states '(normal insert)
     "id" '(kb/insert-date :which-key "Insert date")
     "ie" '(ledger-insert-effective-date :which-key "Insert effective date")
     )
@@ -53,7 +53,7 @@
   ;; Administration
   ;; (ledger-source-directory (concat no-littering-var-directory "ledger/source/"))
   ;; (ledger-init-file-name (concat no-littering-var-directory "ledger/ledgerrc.ledger"))
-  (ledger-accounts-file (concat no-littering-var-directory "ledger/declarations.ledger"))
+  (ledger-accounts-file (concat no-littering-var-directory "ledger/accounts.ledger"))
   (ledger-schedule-file (concat no-littering-var-directory "ledger/schedule.ledger"))
 
   ;; .ledger files (ledger-complete-in-steps t)
