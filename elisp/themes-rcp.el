@@ -102,6 +102,7 @@
    `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
    `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
    `(bookmark-face ((t (:foreground nil :background nil))))
+   `(vertico-current ((t (:background "#3a3f5a"))))
    )
   ;; (custom-theme-set-faces ; Light theme
   ;;  (cdr (car heaven-and-hell-themes))

@@ -54,8 +54,6 @@
   ;; https://github.com/minad/vertico#org-refile
   (org-refile-use-outline-path 'file)
   (org-outline-path-complete-in-steps nil)
-  :custom-face
-  (vertico-current ((t (:background "#3a3f5a"))))
   :init
   ;; Workaround for problem with `tramp' hostname completions. This overrides
   ;; the completion style specifically for remote files! See
