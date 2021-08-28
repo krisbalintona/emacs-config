@@ -84,13 +84,13 @@
  "M-j" 'next-line
  )
 (general-define-key
- :states 'normal)
-(general-define-key
+ :keymaps '(prog-mode-map text-mode-map)
  :states 'insert
  ;; Newline above
  "RET" '(lambda ()
           (interactive)
-          (newline)
+          (insert "\n")
+          (forward-line)
           (indent-according-to-mode))
  "M-RET" '(lambda ()
             (interactive)
