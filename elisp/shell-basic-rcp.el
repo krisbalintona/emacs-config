@@ -9,6 +9,13 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
+;;;; Shell
+(use-package shell
+  :straight nil
+  :general (kb/leader-keys
+             "os" '(shell :which-key "Shell-mode"))
+  )
+
 ;;;; Shx
 ;; Extends `comint-mode' (e.g. `shell'). Compatible with other underlying REPLs
 ;; (e.g. zsh, bash, psql, ipython).
