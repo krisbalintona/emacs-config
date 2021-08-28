@@ -82,7 +82,7 @@
      ("bal"            "%(binary) -f %(ledger-file) bal")
      ("reg monthly"    "%(binary) -f %(ledger-file) reg -M")
      ("reg"            "%(binary) -f %(ledger-file) reg")
-     ("account"        "%(binary) -f %(ledger-file) reg %(account)")
+     ("account"        "%(binary) -f %(ledger-file) reg %(account) --effective")
      ("account single commodity" "%(binary) -f %(ledger-file) reg %(account) --exchange %(commodity)"))
    )
   (ledger-report-auto-refresh nil) ; Don't continually bother me with a new window
