@@ -36,7 +36,7 @@
 (use-package flyspell-lazy
   :requires flyspell
   :after flyspell
-  :hook 'flyspell-mode-hook
+  :ghook 'flyspell-mode-hook
   :custom
   (flyspell-lazy-changes-threshold 10) ; Force check if this many changes are pending
   (flyspell-lazy-idle-seconds 2)
