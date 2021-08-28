@@ -9,11 +9,13 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 
-;;;; Shell
-(use-package shell
+;;;; Comint
+;; Derived mode for all shells in Emacs
+(use-package comint
   :straight nil
-  :general (kb/leader-keys
-             "os" '(shell :which-key "Shell-mode"))
+  :general
+  (kb/leader-keys
+    "os" '(shell :which-key "Shell-mode"))
   )
 
 ;;;; Shx
