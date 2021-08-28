@@ -3,6 +3,7 @@
 ;;; Commentary:
 ;;
 ;; Evil packages!
+;; FIXME 2021-08-27: For some reason, something relevant to `evil' or is getting in the way of `comint-mode' and `eshell-mode'.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
