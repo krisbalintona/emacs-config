@@ -60,8 +60,10 @@
     )
   ;; Multiple universal arguments
   (general-define-key
-   :states '(normal visual motion insert)
-   "u" 'universal-argument-more)
+   :keymaps 'universal-argument-map
+   :states '(normal visual motion)
+   "u" 'universal-argument-more
+   )
   )
 
 ;;;; Native-Emacs keybinds
