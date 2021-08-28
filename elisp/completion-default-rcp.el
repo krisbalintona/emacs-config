@@ -135,12 +135,12 @@
    'orderless-escapable-split-on-space  ; Use backslash for literal space
    )
   (orderless-matching-styles
-   '(orderless-flex
-     orderless-strict-leading-initialism
+   '(orderless-initialism
+     orderless-literal
      orderless-prefixes
      orderless-regexp
-     orderless-literal
-     ;; orderless-initialism
+     orderless-flex
+     ;; orderless-strict-leading-initialism
      ;; orderless-strict-initialism
      ;; orderless-strict-full-initialism
      ;; orderless-without-literal          ; Recommended for dispatches instaed
