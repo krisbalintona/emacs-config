@@ -15,6 +15,7 @@
 (use-package evil
   :demand t
   :ghook 'after-init-hook
+  :gfhook 'general-evil-setup   ; Set up `general.el' infrastructure for `evil'
   :general
   (:states '(normal visual)
            "K" 'join-line
