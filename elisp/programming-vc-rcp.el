@@ -136,6 +136,12 @@
   (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
   )
 
+;;;;; Forge
+;; Support for git forges (e.g. GitLab and GitHub).
+(use-package forge
+  :after magit
+  )
+
 ;;;;; Ediff
 (use-package ediff
   :custom
