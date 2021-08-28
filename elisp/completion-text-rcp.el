@@ -160,7 +160,7 @@
                      "C-<tab>" 'corfu-complete
                      "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
                      "M-d" 'corfu-show-documentation
-                     "M-;" 'comment-dwim)
+                     "M-;" 'kb/comment-dwim)
   :custom
   (tab-always-indent 'complete)         ; Try to tab and then `complete-at-point'
 
