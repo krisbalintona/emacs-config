@@ -27,6 +27,9 @@
    '(save mode-enabled idle-change idle-buffer-switch)) ; When to check
   (flycheck-idle-buffer-switch-delay 1.5) ; Wait 1.5 second after buffer switch
 
+  ;; Don't create temp files in current directory, create in /tmp/
+  (flycheck-temp-prefix "/tmp/flycheck")
+
   (flycheck-relevant-error-other-file-show nil) ; Errors from other files?
   (flycheck-display-errors-delay 0.5) ; Time to show an error on point
   (flycheck-indication-mode 'right-margin)
