@@ -56,10 +56,11 @@
     )
   :custom
   (evil-want-integration t)
-  (evil-want-keybinding nil) ; Add more keybinds for other modes I don't want
+  (evil-want-keybinding nil)    ; Add more keybinds for other modes I don't want
   (evil-want-C-u-scroll t) ; Rebind C-u from universal argument to evil scroll up
   (evil-want-C-i-jump nil)
-  (evil-respect-visual-line-mode t) ; Don't skip lines in visual-line-mode
+  (evil-want-fine-undo t)               ; More granular undos
+  (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
   (evil-want-Y-yank-to-eol t)
   (evil-move-cursor-back nil)
   (evil-move-beyond-eol t)
@@ -67,7 +68,7 @@
   (evil-insert-state-cursor 'bar)
   (evil-visual-state-cursor 'hollow)
   (evil-emacs-state-cursor 'hbar)
-  (evil-echo-state nil) ; Don't echo state in echo area
+  (evil-echo-state nil)                     ; Don't echo state in echo area
   :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
   )
 
