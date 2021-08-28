@@ -161,11 +161,9 @@
                      "M-d" 'corfu-show-documentation
                      "M-;" 'kb/comment-dwim)
   :custom
-  (tab-always-indent 'complete)         ; Try to tab and then `complete-at-point'
-
   (corfu-auto t)
-  (corfu-auto-prefix 1)
-  (corfu-auto-delay 0.05)
+  (corfu-auto-prefix 3)
+  (corfu-auto-delay 0.15)
 
   (corfu-count 13)
   (corfu-min-width 80)
@@ -174,7 +172,7 @@
 
   (corfu-echo-documentation t)
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
-  (corfu-quit-no-match t)
+  (corfu-quit-no-match 1.0) ; Quit if 0 matches, assuming completion started within this integer
   (corfu-commit-predicate t)
   )
 
