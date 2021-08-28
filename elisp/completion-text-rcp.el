@@ -153,7 +153,6 @@
 ;; the Emacs infrastructure
 (use-package corfu
   :ghook ('after-init-hook 'corfu-global-mode)
-  :hook (evil-normal-state-entry . corfu-quit)
   :general (:keymaps 'corfu-map
                      "<escape>" 'corfu-quit
                      "<tab>" 'corfu-insert
