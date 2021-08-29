@@ -90,7 +90,6 @@
  "RET" '(lambda ()
           (interactive)
           (insert "\n")
-          (forward-line)
           (indent-according-to-mode))
  "M-RET" '(lambda ()
             (interactive)
