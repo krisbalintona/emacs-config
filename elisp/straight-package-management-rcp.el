@@ -10,8 +10,6 @@
 ;;;; Set straight.el variables
 ;; Set all variables before bootstrapping straight.el
 (defvar straight-use-package-by-default t) ; Automatically :straight t for use-package
-(defvar straight-check-for-modifications '(watch-files find-when-checking)) ; Faster init, requires python3 and watchexec
-(defvar straight-fix-org t)
 (defvar straight-repository-branch "develop") ; Use development branch
 
 ;;;; Bootstrap (install straight.el)
