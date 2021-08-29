@@ -70,6 +70,17 @@
   :config (desktop-environment-mode)
   )
 
+;;;; Edwina
+;; DWM-like (dynamic tiling) behavior for windows
+(use-package edwina
+  :requires exwm
+  :ghook 'exwm-init-hook
+  :gfhook 'edwina-setup-dwm-keys
+  :custom
+  (edwina-keymap-prefix (kbd "C-e"))
+  (display-buffer-base-action '(display-buffer-below-selected))
+  )
+
 ;;; exwm-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'exwm-extras-rcp)
