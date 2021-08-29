@@ -19,7 +19,8 @@
   '(lambda () (set-display-table-slot standard-display-table 0 ?\ )
      ;; Text-wrap
      (face-remap-add-relative 'default :height 127) ; Change default face size
-     (setq-local scroll-margin 3) ; Scroll-margin
+     (setq-local scroll-margin 3                    ; Scroll-margin
+                 line-spacing 0)
      )
   :general
   (:keymaps 'eshell-mode-map
