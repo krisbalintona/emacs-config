@@ -14,7 +14,7 @@
 (use-package desktop-environment
   :requires exwm
   :after exwm
-  :ghook 'exwm-init-hook
+  :commands desktop-environment-mode
   :general
   (:keymaps 'desktop-environment-mode-map
             ;; Backlight brightness
@@ -64,6 +64,9 @@
   (desktop-environment-screenshot-command "scrot")
   (desktop-environment-screenshot-directory (expand-file-name "~/Pictures/Screenshots/"))
   (desktop-environment-screenshot-partial-command "flameshot gui")
+  ;; NOTE 2021-08-29: Call here (or later), otherwise it won't take the value of
+  ;; `desktop-environment-update-exwm-global-keys'
+  :config (desktop-environment-mode)
   )
 
 ;;; exwm-rcp.el ends here
