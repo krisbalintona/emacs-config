@@ -90,6 +90,9 @@ default for every xwindow."
       window-divider-default-right-width 2)
 (window-divider-mode)
 
+;;;;; Update modeline when changing mode
+;; Update modeline when changing from `line-mode' and `char-mode'.
+(add-hook 'exwm-input--input-mode-change-hook 'force-mode-line-update)
 
 ;;;;; Keybinds
 ;; These keys should always pass through to Emacs
