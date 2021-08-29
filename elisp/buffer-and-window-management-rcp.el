@@ -115,18 +115,22 @@
   (set-face-attribute 'eyebrowse-mode-line-active nil :weight 'semi-bold)
   )
 
+;;;;; Bookmark
+(use-package bookmark
+  :straight nil
+  :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
+  :custom
+  (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
+  )
+
 ;;;;; Burly
 (use-package burly
-  :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
   :general (kb/leader-keys
              "Bw" '(burly-bookmark-windows :which-key "Burly windows")
              "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
              "BM" '(burly-open-last-bookmark :which-key "Open last bookmark")
              "Bo" '(burly-open-url :which-key "Open url at point")
              )
-  :custom
-  (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
-  :preface (require 'bookmark)
   )
 
 ;;;;; Shackle
