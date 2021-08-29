@@ -28,6 +28,7 @@
           (unless (member base load-path)
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
+(update-to-load-path (expand-file-name "exwm" user-emacs-directory))
 
 ;;;; Load packages
 ;; Load all elisp and org configuration files
@@ -35,6 +36,7 @@
 ;;;;; Emacs-wide packages
 ;; Packages that are useful across my entire Emacs experience. Other packages
 ;; defined afterward will often rely on these
+(require 'exwm-rcp)
 (require 'auto-gc-rcp)
 (require 'personal-variables-rcp)
 (require 'external-programs-rcp)
