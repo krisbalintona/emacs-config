@@ -87,10 +87,10 @@
  :keymaps '(prog-mode-map text-mode-map)
  :states 'insert
  ;; Newline above
- "RET" '(lambda ()
-          (interactive)
-          (insert "\n")
-          (indent-according-to-mode))
+ [remap newline] '(lambda ()
+                    (interactive)
+                    (insert "\n")
+                    (indent-according-to-mode))
  "M-RET" '(lambda ()
             (interactive)
             (move-beginning-of-line 1)
