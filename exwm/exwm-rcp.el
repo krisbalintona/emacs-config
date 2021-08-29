@@ -103,8 +103,7 @@ Firefox)."
 ;; Set up global key bindings.  These always work, no matter the input state!
 ;; Keep in mind that changing this list after EXWM initializes has no effect.
 (setq exwm-input-global-keys
-      `(
-        ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
+      `(;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
         ([?\s-r] . exwm-reset)
 
         ;; Move between windows
@@ -132,22 +131,10 @@ Firefox)."
         ))
 
 (exwm-input-set-key (kbd "s-SPC") 'counsel-linux-app)
-(exwm-input-set-key (kbd "s-b") '(lambda () (interactive) (start-process-shell-command "Rofi-bluetooth" nil "/usr/bin/rofi-bluetooth")
-                                   :which-key "Bluetooth"))
+(exwm-input-set-key (kbd "s-b") '(lambda () (interactive) (start-process-shell-command "Rofi-bluetooth" nil "/usr/bin/rofi-bluetooth") :which-key "Bluetooth"))
 
 ;;;; Finally, enable exwm
 (exwm-enable)
-
-;;;; Other helper functions
-;; This function isn't currently used, only serves as an example how to
-;; position a window
-(defun efs/position-window ()
-  "Example for how to change the position of a window."
-  (let* ((pos (frame-position))
-         (pos-x (car pos))
-         (pos-y (cdr pos)))
-
-    (exwm-floating-move (- pos-x) (- pos-y))))
 
 ;;; exwm-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
