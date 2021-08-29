@@ -113,10 +113,11 @@
  )
 (general-define-key
  :states '(normal motion visual insert)
- "S-<return>" '(lambda ()
+ "S-<return>" '(lambda ()                    ; Go back a line
                  (interactive)
                  (forward-line -1)
                  (back-to-indentation))
+ "C-M-;" '(eval-expression :which-key "Eval expression")
  )
 
 ;;;; Pretty-hydra
