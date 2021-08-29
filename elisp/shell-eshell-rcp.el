@@ -22,6 +22,7 @@
      (setq-local scroll-margin 3                    ; Scroll-margin
                  line-spacing 0)
      )
+  'hide-mode-line-mode
   :general
   (:keymaps 'eshell-mode-map
             [remap eshell-previous-matching-input] '(consult-history :which-key "Command history"))
