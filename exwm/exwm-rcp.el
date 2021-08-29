@@ -85,14 +85,8 @@ Firefox)."
 ;; These keys should always pass through to Emacs
 (setq exwm-input-prefix-keys
       '(?\C-x
-        ?\C-u
-        ?\C-h
         ?\M-x
-        ?\M-&
-        ?\M-:
         ?\M-\                     ; Alt+Space
-        ;; ?\C-\M-j                      ; Buffer list
-        ;; ?\C-\                         ; Ctrl+Space
         ))
 
 ;; Ctrl+Q will enable the next key to be sent directly
