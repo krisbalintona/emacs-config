@@ -6,8 +6,6 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'use-package-rcp)
-(require 'early-packages-rcp)
 
 ;;;; Reenable these disabled commands
 (put 'narrow-to-region 'disabled nil) ; `narrow-to-region'
