@@ -23,6 +23,12 @@
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line)
 
+;;;;; Transparency
+(unless kb/linux-ubuntu
+  (set-frame-parameter (selected-frame) 'alpha '(98 . 98))
+  (add-to-list 'default-frame-alist '(alpha . (98 . 98)))
+  )
+
 ;;;; Themes
 (use-package doom-themes
   :disabled t
