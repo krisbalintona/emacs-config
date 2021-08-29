@@ -60,15 +60,6 @@
             system-packages-use-sudo nil))
   )
 
-;;;; No-littering
-;; Set default package paths
-(use-package no-littering
-  :custom
-  (no-littering-etc-directory (expand-file-name "data/" user-emacs-directory)) ; Config files
-  (no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-  :preface (require 'recentf)
-  )
-
 ;;;; Org
 ;; Use `org' from `straight.el'. This may or may not work?
 (use-package org
