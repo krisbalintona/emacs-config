@@ -96,7 +96,7 @@
 (require 'checking-words-rcp)
 
 ;;;;; Communication interfaces
-;; (require 'mu4e-rcp)
+;; (require 'email-mu4e-rcp)
 (require 'rss-feed-rcp)
 
 ;;;;; Other

@@ -1,4 +1,4 @@
-;;; mu4e-rcp.el --- Summary
+;;; email-mu4e-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
@@ -317,6 +317,6 @@ MAIL-COUNT is the count of mails for which the string is to displayed"
   (org-msg-text-plain-alternative t)
   )
 
-;;; mu4e-rcp.el ends here
+;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'mu4e-rcp)
+(provide 'email-mu4e-rcp)
