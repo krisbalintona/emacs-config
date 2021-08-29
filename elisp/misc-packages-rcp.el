@@ -40,16 +40,6 @@
         which-key-replacement-alist)
   )
 
-;;;; Beacon
-;; Cool version of nav-flash
-(use-package beacon
-  :ghook 'after-init-hook
-  :custom
-  (beacon-blink-when-focused t) ; Blink when Emacs comes into focus
-  (beacon-blink-delay 0.04)
-  (beacon-blink-duration 0.5)
-  )
-
 ;;;; Keyfreq
 ;; See a heatmap of your keypresses.
 ;; Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= to get the original rendered HTML page. Use =keyfreq-html-v2= to get the keyboard heat map.
