@@ -125,7 +125,8 @@ Firefox)."
                   (number-sequence 0 9))
         ))
 
-(exwm-input-set-key (kbd "s-SPC") 'counsel-linux-app)
+;; Application keybindings
+(exwm-input-set-key (kbd "s-z") '(lambda () (interactive) (start-process-shell-command "Application launcher" nil "rofi -p 'Open application:' -icon-theme 'Dracula' -show-icons -show drun") :which-key "Application launcher"))
 (exwm-input-set-key (kbd "s-b") '(lambda () (interactive) (start-process-shell-command "Rofi-bluetooth" nil "/usr/bin/rofi-bluetooth") :which-key "Bluetooth"))
 
 ;;;; Finally, enable exwm
