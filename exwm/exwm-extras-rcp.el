@@ -35,7 +35,6 @@
                      "S-<print>" 'desktop-environment-screenshot-part
                      "<print>" 'desktop-environment-screenshot
                      ;; Screen locking
-                     "s-l" 'desktop-environment-lock-screen
                      "<XF86ScreenSaver>" 'desktop-environment-lock-screen
                      ;; Wifi controls
                      "<XF86WLAN>" 'desktop-environment-toggle-wifi
