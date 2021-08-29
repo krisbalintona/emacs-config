@@ -84,6 +84,12 @@ default for every xwindow."
 (setq exwm-workspace-number 10            ; Default number of workspaces
       exwm-workspace-show-all-buffers nil ; Have a separate buffer list for each workspace?
       exwm-layout-show-all-buffers t)   ; Switch to buffers in other workspaces?
+;;;;; Window resizing with mouse
+;; Allow resizing with mouse, of non-floating windows.
+(setq window-divider-default-bottom-width 2
+      window-divider-default-right-width 2)
+(window-divider-mode)
+
 
 ;;;;; Keybinds
 ;; These keys should always pass through to Emacs
