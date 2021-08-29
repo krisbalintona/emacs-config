@@ -92,7 +92,6 @@ Firefox)."
         ?\C-u
         ?\C-h
         ?\M-x
-        ?\M-`
         ?\M-&
         ?\M-:
         ;; ?\C-\M-j                      ; Buffer list
@@ -110,10 +109,10 @@ Firefox)."
         ([?\s-r] . exwm-reset)
 
         ;; Move between windows
-        ([s-left] . windmove-left)
-        ([s-right] . windmove-right)
-        ([s-up] . windmove-up)
-        ([s-down] . windmove-down)
+        ([?\s-h] . windmove-left)
+        ([?\s-l] . windmove-right)
+        ([?\s-k] . windmove-up)
+        ([?\s-j] . windmove-down)
 
         ;; Launch applications via shell command
         ([?\s-&] . (lambda (command)
@@ -130,7 +129,8 @@ Firefox)."
                       (lambda ()
                         (interactive)
                         (exwm-workspace-switch-create ,i))))
-                  (number-sequence 0 9))))
+                  (number-sequence 0 9))
+        ))
 
 (exwm-input-set-key (kbd "s-SPC") 'counsel-linux-app)
 (exwm-input-set-key (kbd "s-b") '(lambda () (interactive) (start-process-shell-command "Rofi-bluetooth" nil "/usr/bin/rofi-bluetooth")
