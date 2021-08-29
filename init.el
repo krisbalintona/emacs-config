@@ -40,8 +40,8 @@
 (require 'personal-variables-rcp)
 (require 'external-programs-rcp)
 (require 'custom-directories-rcp)
-(require 'exwm-rcp)
-(require 'exwm-extras-rcp)
+;; (require 'exwm-rcp)
+;; (require 'exwm-extras-rcp)
 
 ;;;;; Configuration prerequisties
 ;; These are packages which come before others because their config files rely
