@@ -115,6 +115,7 @@
   (eyebrowse-switch-back-and-forth t) ; Select current workspace to go to last used one
   :config
   (set-face-attribute 'eyebrowse-mode-line-active nil :weight 'semi-bold)
+  (setq-default eyebrowse-new-workspace nil)    ; By default, just clone the current window configuration
   )
 
 ;;;;; Bookmark
