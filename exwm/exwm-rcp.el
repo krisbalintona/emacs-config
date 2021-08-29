@@ -83,7 +83,13 @@ default for every xwindow."
 ;;;;; Variables
 (setq exwm-workspace-number 10            ; Default number of workspaces
       exwm-workspace-show-all-buffers nil ; Have a separate buffer list for each workspace?
-      exwm-layout-show-all-buffers t)   ; Switch to buffers in other workspaces?
+      exwm-layout-show-all-buffers nil ; Move other xwindow to current workspace?
+      ;; exwm-workspace-minibuffer-position 'bottom ; Keep at bottom but only show when needed
+      exwm-workspace-display-echo-area-timeout 1 ; Timeout echo area in this many seconds
+      mouse-autoselect-window t
+      focus-follows-mouse t
+      )
+
 ;;;;; Window resizing with mouse
 ;; Allow resizing with mouse, of non-floating windows.
 (setq window-divider-default-bottom-width 2
