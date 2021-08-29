@@ -74,7 +74,6 @@ Firefox)."
 ;;;;; Load system tray
 ;; Do it before `exwm-init'
 (require 'exwm-systemtray)
-(setq exwm-systemtray-height 32)
 (exwm-systemtray-enable)
 
 ;;;;; Variables
