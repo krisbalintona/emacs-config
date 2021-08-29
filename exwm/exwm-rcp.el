@@ -77,12 +77,9 @@ Firefox)."
 (exwm-systemtray-enable)
 
 ;;;;; Variables
-(setq exwm-workspace-number 10    ; Default number of workspaces
-      exwm-workspace-show-all-buffers t ; Have a separate buffer list for each workspace
-      exwm-layout-show-all-buffers nil) ; Only switch to buffers in current workspace
-;; NOTE Uncomment this option if you want to detach the minibuffer!
-;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
-;; (exwm-workspace-minibuffer-position 'top)
+(setq exwm-workspace-number 10            ; Default number of workspaces
+      exwm-workspace-show-all-buffers nil ; Have a separate buffer list for each workspace?
+      exwm-layout-show-all-buffers t)   ; Switch to buffers in other workspaces?
 
 ;;;;; Keybinds
 ;; These keys should always pass through to Emacs
@@ -93,6 +90,7 @@ Firefox)."
         ?\M-x
         ?\M-&
         ?\M-:
+        ?\M-\                     ; Alt+Space
         ;; ?\C-\M-j                      ; Buffer list
         ;; ?\C-\                         ; Ctrl+Space
         ))
