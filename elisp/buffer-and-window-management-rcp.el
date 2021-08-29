@@ -80,7 +80,8 @@
 (use-package eyebrowse
   :ghook 'after-init-hook
   :general
-  ("M-1" 'eyebrowse-switch-to-window-config-1
+  ("M-`" 'eyebrowse-switch-to-window-config-0
+   "M-1" 'eyebrowse-switch-to-window-config-1
    "M-2" 'eyebrowse-switch-to-window-config-2
    "M-3" 'eyebrowse-switch-to-window-config-3
    "M-4" 'eyebrowse-switch-to-window-config-4
