@@ -169,6 +169,16 @@ default for every xwindow."
 (exwm-input-set-key (kbd "s-z") 'counsel-linux-app)
 (exwm-input-set-key (kbd "s-b") '(lambda () (interactive) (start-process-shell-command "Rofi-bluetooth" nil "/usr/bin/rofi-bluetooth")))
 
+;;;;; Clean logout
+(defun kb/exwm-logout ()
+  "Cleanly logout and save buffers alongside recentf list."
+  (interactive)
+  (recentf-save-list)
+  (savehist-save)
+  (save-some-buffers)
+  (shell-command "gdm logout" nil (concat "echo " (shell-quote-argument (read-passwd "Password: ")) " | sudo -S systemctl restart gdm"))
+  )
+
 ;;;; Finally, enable exwm
 (exwm-enable)
 
