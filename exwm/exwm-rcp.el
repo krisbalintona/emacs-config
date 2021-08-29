@@ -13,12 +13,13 @@
 ;;;; Hooks
 ;;;;; Functions
 (defun kb/exwm-update-class ()
-  "Update the name of a buffer to the program's class (e.g.
-Firefox)."
+  "Update the name of a buffer to the program's class. This is the
+default for every xwindow."
   (exwm-workspace-rename-buffer exwm-class-name))
 
 (defun kb/exwm-update-title ()
-  "Update the name of a buffer to the window's title."
+  "Update the name of a buffer to the window's title for the given
+`exwm-class-name's."
   (pcase exwm-class-name
     ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
 
