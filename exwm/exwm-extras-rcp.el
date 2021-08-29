@@ -49,7 +49,7 @@
             )
   :custom
   ;; EXWM
-  (desktop-environment-update-exwm-global-keys nil) ; Don't touch EXWM bindings
+  (desktop-environment-update-exwm-global-keys :global)
   ;; Backlight brightness
   (desktop-environment-brightness-small-increment "1%+")
   (desktop-environment-brightness-small-decrement "1%-")
