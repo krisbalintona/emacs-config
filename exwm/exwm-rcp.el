@@ -109,6 +109,9 @@ Firefox)."
         ([s-down] . windmove-down)
         ([?\s-w] . evil-window-mru)
 
+        ;; Window layouts
+        ([?\s-f] . 'exwm-layout-toggle-fullscreen)
+
         ;; Launch applications via shell command
         ([?\s-&] . (lambda (command)
                      (interactive (list (read-shell-command "$ ")))
