@@ -97,6 +97,7 @@
 
 ;;;;; Communication interfaces
 ;; (require 'email-mu4e-rcp)
+(require 'email-sending-rcp)
 (require 'rss-feed-rcp)
 
 ;;;;; Other

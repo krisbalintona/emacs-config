@@ -282,41 +282,6 @@ MAIL-COUNT is the count of mails for which the string is to displayed"
    )
   )
 
-;;;; Smtpmail
-;; Sending emails with msmtp
-(use-package smtpmail
-  :after mu4e
-  :custom
-  ;; Use smtpmail to send emails
-  (send-mail-function 'smtpmail-send-it)
-  (message-send-mail-function 'smtpmail-send-it)
-  (smtpmail-stream-type  'starttls)
-  (sendmail-program "/usr/bin/msmtp")
-  (smtpmail-smtp-service '587)
-
-  ;; I'm using gmail
-  (smtpmail-default-smtp-server "smtp.gmail.com")
-  (smtpmail-local-domain "gmail.com")
-
-  ;; Queuing mail
-  (smtpmail-queue-mail 't) ; Queue by default
-  (smtpmail-queue-dir  "~/Documents/Emails/Queue/cur")
-
-  ;; Other
-  (message-sendmail-extra-arguments '("--read-envelope-from")) ; Tell msmtp to choose the SMTP server according to the from field in the outgoing email
-  (message-sendmail-f-is-evil 't)
-  )
-
-;;;; Org-msg
-;; Using org-mode to compose HTML-friendly emails
-(use-package org-msg
-  :after mu4e
-  :custom
-  (org-msg-startup "inlineimages")
-  (org-msg-greeting-name-limit 3)
-  (org-msg-text-plain-alternative t)
-  )
-
 ;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'email-mu4e-rcp)
