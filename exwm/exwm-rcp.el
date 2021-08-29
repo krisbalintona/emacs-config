@@ -109,17 +109,20 @@ Firefox)."
         ([?\s-l] . windmove-right)
         ([?\s-k] . windmove-up)
         ([?\s-j] . windmove-down)
+        ([s-left] . windmove-left)
+        ([s-right] . windmove-right)
+        ([s-up] . windmove-up)
+        ([s-down] . windmove-down)
+        ([?\s-w] . evil-window-mru)
 
         ;; Launch applications via shell command
         ([?\s-&] . (lambda (command)
                      (interactive (list (read-shell-command "$ ")))
                      (start-process-shell-command command nil command)))
 
-        ;; Switch workspace
-        ([?\s-w] . exwm-workspace-switch)
+        ;; Switch workspaces
+        ([?\s-W] . exwm-workspace-switch)
         ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
-
-        ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
         ,@(mapcar (lambda (i)
                     `(,(kbd (format "s-%d" i)) .
                       (lambda ()
