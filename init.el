@@ -33,30 +33,27 @@
 ;;;; Load packages
 ;; Load all elisp and org configuration files
 
-;;;;; Emacs-wide packages
-;; Packages that are useful across my entire Emacs experience. Other packages
-;; defined afterward will often rely on these
-(require 'exwm-rcp)
+;;;;; Infrastructure
 (require 'auto-gc-rcp)
+(require 'straight-package-management-rcp)
+(require 'better-defaults-rcp)
 (require 'personal-variables-rcp)
 (require 'external-programs-rcp)
-(require 'straight-package-management-rcp)
+(require 'custom-directories-rcp)
+(require 'exwm-rcp)
+;; (require 'exwm-extras-rcp)
+
+;;;;; Configuration prerequisties
+;; These are packages which come before others because their config files rely
+;; on them.
 (require 'use-package-rcp)
+(require 'keybinds-frameworks-rcp)
+(require 'evil-rcp)
 (require 'early-packages-rcp)
-(require 'better-defaults-rcp)
-(require 'undoing-rcp)
 
 ;;;;; Aethetics
 (require 'faces-rcp)
 (require 'themes-rcp)
-
-;;;;; Custom
-(require 'custom-directories-rcp)
-(require 'convenient-functions-rcp)
-
-;;;;; Core keybindings
-(require 'keybinds-frameworks-rcp)
-(require 'evil-rcp)
 
 ;;;;; Completion frameworks
 (require 'completion-general-rcp)
@@ -103,9 +100,11 @@
 (require 'rss-feed-rcp)
 
 ;;;;; Other
+(require 'undoing-rcp)
 (require 'buffer-and-window-management-rcp)
 (require 'file-editing-rcp)
 (require 'finance-rcp)
+(require 'convenient-functions-rcp)
 (require 'misc-packages-rcp)
 
 ;;; init.el ends here
