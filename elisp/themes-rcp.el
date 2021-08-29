@@ -109,45 +109,7 @@
   ;;  )
   )
 
-;;;; Modeline
-;;;;; Doom-modeline
-;; Sleek modeline from Doom Emacs
-(use-package doom-modeline
-  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
-  :ghook 'server-after-make-frame-hook 'window-setup-hook
-  :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
-  :custom
-  ;; Modeline settings
-  (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
-  (doom-modeline-project-detection 'project)
-  (doom-modeline-buffer-file-name-style 'buffer-name)
-  ;; (doom-modeline-icon (display-graphic-p)) ; Show icons if in Emacs GUI
-  (doom-modeline-icon t) ; In order to work with Emacsclient
-  (doom-modeline-major-mode-icon t)
-  (doom-modeline-major-mode-color-icon t)
-  (doom-modeline-buffer-state-icon t)
-  (doom-modeline-buffer-modification-icon t)
-  (doom-modeline-unicode-fallback t)
-  (doom-modeline-minor-modes nil)
-  (doom-modeline-enable-word-count t)
-  (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
-  (doom-modeline-mu4e nil) ; Requires `mu4e-alert' - flip this value
-  (doom-modeline-percent-position nil)
-  (doom-modeline-number-limit 99)
-  (doom-modeline-vcs-max-length 28)
-  (doom-modeline-lsp t)
-  (doom-modeline-height 33)
-  (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
-  (doom-modeline-window-width-limit 100) ; Width of the bar segment
-  :init
-  (defun kb/doom-modeline-font-setup ()
-    "Set doom modeline fonts."
-    (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
-    (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
-    )
-  )
-
-;;;;; Modeline segments
+;;;; Modeline segments
 ;; (Re)defining my own modeline segments
 (defun kb/set-doom-modeline-segments ()
   "Define relevant doom modeline segments and define segment."
@@ -192,6 +154,7 @@ icon."
           'mouse-face 'mode-line-highlight
           'help-echo (get-text-property 1 'help-echo vc-mode)
           'local-map (get-text-property 1 'local-map vc-mode))
+
          ;; If the current branch is the main one, then don't show in modeline
          (if (string= (substring-no-properties (substring vc-mode (+ (if (eq (vc-backend buffer-file-name) 'Hg) 2 3) 2))) (magit-main-branch))
              ""
@@ -330,6 +293,44 @@ UTF-8."
   (unless (equal "Battery status not available"
                  (battery))
     (display-battery-mode t)) ; Show battery in modeline
+  )
+
+;;;; Modeline
+;;;;; Doom-modeline
+;; Sleek modeline from Doom Emacs
+(use-package doom-modeline
+  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
+  :ghook 'server-after-make-frame-hook 'window-setup-hook
+  :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
+  :custom
+  ;; Modeline settings
+  (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
+  (doom-modeline-project-detection 'project)
+  (doom-modeline-buffer-file-name-style 'buffer-name)
+  ;; (doom-modeline-icon (display-graphic-p)) ; Show icons if in Emacs GUI
+  (doom-modeline-icon t) ; In order to work with Emacsclient
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-buffer-modification-icon t)
+  (doom-modeline-unicode-fallback t)
+  (doom-modeline-minor-modes nil)
+  (doom-modeline-enable-word-count t)
+  (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
+  (doom-modeline-mu4e nil) ; Requires `mu4e-alert' - flip this value
+  (doom-modeline-percent-position nil)
+  (doom-modeline-number-limit 99)
+  (doom-modeline-vcs-max-length 28)
+  (doom-modeline-lsp t)
+  (doom-modeline-height 33)
+  (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
+  (doom-modeline-window-width-limit 100) ; Width of the bar segment
+  :init
+  (defun kb/doom-modeline-font-setup ()
+    "Set doom modeline fonts."
+    (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
+    (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
+    )
   )
 
 ;;;; Buffer display
