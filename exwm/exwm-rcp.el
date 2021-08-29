@@ -21,14 +21,17 @@ default for every xwindow."
   "Update the name of a buffer to the window's title for the given
 `exwm-class-name's."
   (pcase exwm-class-name
-    ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
+    ("Brave-browser" (exwm-workspace-rename-buffer (format "Brave-browser: %s" exwm-title)))
+    ))
 
 (defun kb/configure-window-by-class ()
   "Change the workspace a program opens in and how it opens (e.g. floating or not)."
   (interactive)
   (pcase exwm-class-name
-    ("Firefox" (exwm-workspace-move-window 9))
-    ;; ("Sol" (exwm-workspace-move-window 3))
+    ("discord"
+     (exwm-workspace-move-window 9)
+     (exwm-layout-hide-mode-line))
+    ("Brave-browser" (exwm-layout-hide-mode-line))
     ;; ("mpv" (exwm-floating-toggle-floating)
     ;;  (exwm-layout-toggle-mode-line))
     ))
