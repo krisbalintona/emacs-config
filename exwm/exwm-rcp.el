@@ -22,6 +22,7 @@ default for every xwindow."
 `exwm-class-name's."
   (pcase exwm-class-name
     ("Brave-browser" (exwm-workspace-rename-buffer (format "Brave-browser: %s" exwm-title)))
+    ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))
     ))
 
 (defun kb/configure-window-by-class ()
@@ -32,6 +33,7 @@ default for every xwindow."
      (exwm-workspace-move-window 9)
      (exwm-layout-hide-mode-line))
     ("Brave-browser" (exwm-layout-hide-mode-line))
+    ("Firefox" (exwm-layout-hide-mode-line))
     ;; ("mpv" (exwm-floating-toggle-floating)
     ;;  (exwm-layout-toggle-mode-line))
     ))
