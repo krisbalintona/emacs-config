@@ -125,8 +125,7 @@ default for every xwindow."
 ;; Set up global key bindings.  These always work, no matter the input state!
 ;; Keep in mind that changing this list after EXWM initializes has no effect.
 (setq exwm-input-global-keys
-      `(;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-        ([?\s-r] . exwm-reset)
+      `(([?\s-r] . exwm-reset)          ; Resets everything, including to `line-mode'
 
         ;; Move between windows
         ([?\s-h] . windmove-left)
@@ -140,14 +139,14 @@ default for every xwindow."
         ([?\s-w] . evil-window-mru)
 
         ;; Window layouts
-        ([?\s-f] . 'exwm-layout-toggle-fullscreen)
+        ([?\s-f] . exwm-layout-toggle-fullscreen)
 
         ;; Launch applications via shell command
         ([?\s-&] . (lambda (command)
                      (interactive (list (read-shell-command "$ ")))
                      (start-process-shell-command command nil command)))
 
-        ;; Switch workspaces
+        ;; ;; Switch workspaces
         ([?\s-W] . exwm-workspace-switch)
         ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
         ,@(mapcar (lambda (i)
@@ -158,7 +157,7 @@ default for every xwindow."
                   (number-sequence 0 9))
         ))
 
-;; Application keybindings
+;;;;; Application keybindings
 (exwm-input-set-key (kbd "s-z") '(lambda () (interactive) (start-process-shell-command "Application launcher" nil "rofi -p 'Open application:' -icon-theme 'Dracula' -show-icons -show drun") :which-key "Application launcher"))
 (exwm-input-set-key (kbd "s-b") '(lambda () (interactive) (start-process-shell-command "Rofi-bluetooth" nil "/usr/bin/rofi-bluetooth") :which-key "Bluetooth"))
 
