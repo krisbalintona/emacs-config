@@ -32,10 +32,8 @@ default for every xwindow."
     ("discord"
      (exwm-workspace-move-window 9)
      (exwm-layout-hide-mode-line))
-    ("Brave-browser" (exwm-layout-hide-mode-line))
-    ("Firefox" (exwm-layout-hide-mode-line))
-    ;; ("mpv" (exwm-floating-toggle-floating)
-    ;;  (exwm-layout-toggle-mode-line))
+    ("Brave-browser" (kb/exwm-browser-hook))
+    ("Firefox" (kb/exwm-browser-hook))
     ))
 
 (defun kb/exwm-init-hook ()
@@ -47,6 +45,26 @@ default for every xwindow."
   ;; (kb/run-in-background "nm-applet")
   ;; (kb/run-in-background "pasystray")
   ;; (kb/run-in-background "blueman-applet")
+  )
+
+(defun kb/exwm-browser-hook ()
+  "Functions run when a browser is opened."
+  (exwm-layout-hide-mode-line)
+  (exwm-input-release-keyboard)
+  (setq-local eyebrowse-new-workspace t) ; Eyebrowse: just use scratch
+  (exwm-input-set-local-simulation-keys
+   '(([?\M-h] . [left])
+     ([?\M-l] . [right])
+     ([?\M-k] . [up])
+     ([?\M-j] . [down])
+     ;; ([?\C-b] . [home])
+     ;; ([?\C-f] . [end])
+     ;; ([?\C-w] . [?\C-x])                ; Cut
+     ;; ([?\M-w] . [?\C-c])                ; Copy
+     ;; ([?\C-y] . [?\C-v])                ; Paste
+     ;; ([?\C-/] . [?\C-z])                ; Undo
+     ;; ([?\C-g] . [?\C-c])
+     ))
   )
 
 ;;;;; Declarations
