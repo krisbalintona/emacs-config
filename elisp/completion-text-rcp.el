@@ -154,10 +154,9 @@
 (use-package corfu
   :ghook ('after-init-hook 'corfu-global-mode)
   :general (:keymaps 'corfu-map
-                     "<escape>" 'corfu-quit
-                     "<tab>" 'corfu-insert
-                     "C-<tab>" 'corfu-complete
-                     "<return>" '(lambda () (interactive) (corfu-quit) (newline) (indent-according-to-mode))
+                     "<escape>" #'corfu-quit
+                     "<tab>" #'corfu-insert
+                     "C-<tab>" #'corfu-complete
                      "M-d" #'corfu-show-documentation
                      "M-l" #'corfu-show-location
                      "M-:" #'((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
