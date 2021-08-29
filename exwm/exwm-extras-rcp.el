@@ -15,37 +15,38 @@
   :requires exwm
   :after exwm
   :ghook 'exwm-init-hook
-  :general (:keymaps 'desktop-environment-mode-map
-                     ;; Backlight brightness
-                     "<XF86MonBrightnessUp>" 'desktop-environment-brightness-increment
-                     "<XF86MonBrightnessDown>" 'desktop-environment-brightness-decrement
-                     "S-<XF86MonBrightnessUp>" 'desktop-environment-brightness-increment-slowly
-                     "S-<XF86MonBrightnessDown>" 'desktop-environment-brightness-decrement-slowly
-                     ;; Keyboard brightness
-                     "<XF86KbdBrightnessUp>" 'desktop-environment-keyboard-backlight-increment
-                     "<XF86KbdBrightnessDown>" 'desktop-environment-keyboard-backlight-decrement
-                     ;; Volume
-                     "<XF86AudioRaiseVolume>" 'desktop-environment-volume-increment
-                     "<XF86AudioLowerVolume>" 'desktop-environment-volume-decrement
-                     "S-<XF86AudioRaiseVolume>" 'desktop-environment-volume-increment-slowly
-                     "S-<XF86AudioLowerVolume>" 'desktop-environment-volume-decrement-slowly
-                     "<XF86AudioMute>" 'desktop-environment-toggle-mute
-                     "<XF86AudioMicMute>" 'desktop-environment-toggle-microphone-mute
-                     ;; Screenshot
-                     "S-<print>" 'desktop-environment-screenshot-part
-                     "<print>" 'desktop-environment-screenshot
-                     ;; Screen locking
-                     "<XF86ScreenSaver>" 'desktop-environment-lock-screen
-                     ;; Wifi controls
-                     "<XF86WLAN>" 'desktop-environment-toggle-wifi
-                     ;; Bluetooth controls
-                     "<XF86Bluetooth>" 'desktop-environment-toggle-bluetooth
-                     ;; Music controls
-                     "<XF86AudioPlay>" 'desktop-environment-toggle-music
-                     "<XF86AudioPrev>" 'desktop-environment-music-previous
-                     "<XF86AudioNext>" 'desktop-environment-music-next
-                     "<XF86AudioStop>" 'desktop-environment-music-stop
-                     )
+  :general
+  (:keymaps 'desktop-environment-mode-map
+            ;; Backlight brightness
+            "<XF86MonBrightnessUp>" 'desktop-environment-brightness-increment
+            "<XF86MonBrightnessDown>" 'desktop-environment-brightness-decrement
+            "S-<XF86MonBrightnessUp>" 'desktop-environment-brightness-increment-slowly
+            "S-<XF86MonBrightnessDown>" 'desktop-environment-brightness-decrement-slowly
+            ;; Keyboard brightness
+            "<XF86KbdBrightnessUp>" 'desktop-environment-keyboard-backlight-increment
+            "<XF86KbdBrightnessDown>" 'desktop-environment-keyboard-backlight-decrement
+            ;; Volume
+            "<XF86AudioRaiseVolume>" 'desktop-environment-volume-increment
+            "<XF86AudioLowerVolume>" 'desktop-environment-volume-decrement
+            "S-<XF86AudioRaiseVolume>" 'desktop-environment-volume-increment-slowly
+            "S-<XF86AudioLowerVolume>" 'desktop-environment-volume-decrement-slowly
+            "<XF86AudioMute>" 'desktop-environment-toggle-mute
+            "<XF86AudioMicMute>" 'desktop-environment-toggle-microphone-mute
+            ;; Screenshot
+            "S-<print>" 'desktop-environment-screenshot-part
+            "<print>" 'desktop-environment-screenshot
+            ;; Screen locking
+            "<XF86ScreenSaver>" 'desktop-environment-lock-screen
+            ;; Wifi controls
+            "<XF86WLAN>" 'desktop-environment-toggle-wifi
+            ;; Bluetooth controls
+            "<XF86Bluetooth>" 'desktop-environment-toggle-bluetooth
+            ;; Music controls
+            "<XF86AudioPlay>" 'desktop-environment-toggle-music
+            "<XF86AudioPrev>" 'desktop-environment-music-previous
+            "<XF86AudioNext>" 'desktop-environment-music-next
+            "<XF86AudioStop>" 'desktop-environment-music-stop
+            )
   :custom
   ;; EXWM
   (desktop-environment-update-exwm-global-keys nil) ; Don't touch EXWM bindings
@@ -54,6 +55,11 @@
   (desktop-environment-brightness-small-decrement "1%-")
   (desktop-environment-brightness-normal-increment "2%+")
   (desktop-environment-brightness-normal-decrement "2%-")
+  ;; Volume
+  (desktop-environment-volume-normal-increment "3%+")
+  (desktop-environment-volume-normal-decrement "3%-")
+  (desktop-environment-volume-small-increment "1%+")
+  (desktop-environment-volume-small-decrement "1%-")
   ;; Screenshots
   (desktop-environment-screenshot-command "scrot")
   (desktop-environment-screenshot-directory (expand-file-name "~/Pictures/Screenshots/"))
