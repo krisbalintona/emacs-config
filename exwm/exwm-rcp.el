@@ -140,6 +140,12 @@ default for every xwindow."
         ([s-down] . windmove-down)
         ([?\s-w] . evil-window-mru)
 
+        ;; Swap windows
+        ([?\s-H] . windmove-swap-states-left)
+        ([?\s-L] . windmove-swap-states-right)
+        ([?\s-K] . windmove-swap-states-up)
+        ([?\s-J] . windmove-swap-states-down)
+
         ;; Window layouts
         ([?\s-f] . exwm-layout-toggle-fullscreen)
 
