@@ -42,8 +42,8 @@
                  (save-excursion (beginning-of-line) (open-line 1))
                  (forward-line -1)
                  (yank)
-                 (beginning-of-line)
-                 (indent-according-to-mode))
+                 (indent-according-to-mode)
+                 (back-to-indentation))
  "C-M-;" 'eval-expression               ; Evaluate inputted expression
  )
 
