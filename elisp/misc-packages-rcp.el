@@ -10,36 +10,6 @@
 (require 'keybinds-general-rcp)
 (require 'faces-rcp)
 
-;;;; Abbrev-mode
-;; Automatically correct typed strings (e.g. words)
-(use-package abbrev-mode
-  :straight nil
-  :ghook 'text-mode-hook 'prog-mode-hook
-  :custom
-  (abbrev-file-name (concat no-littering-var-directory "abbrev-mode/abbrev.el"))
-  )
-
-;;;; Which-key
-;; Show keybind tooltips
-(use-package which-key
-  :ghook 'after-init-hook
-  :custom
-  ;; These variables should be set before which-key-mode is activated
-  (which-key-idle-delay 1.6)
-  (which-key-idle-secondary-delay 1) ; Delay after which-key has already been shown
-  (which-key-show-early-on-C-h t) ; Show which-key help immediately
-  (which-key-add-column-padding 0)
-  (which-key-max-display-columns nil)
-  ;; (which-key-show-transient-maps t) ; Necessary so show embark keybinds with which-key
-  (which-key-popup-type 'side-window)
-  (which-key-side-window-location 'right)
-  (which-key-side-window-max-width 0.23)
-  :config
-  ;; Don't display C-u, digit, and other numeric keybad bindings
-  (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
-        which-key-replacement-alist)
-  )
-
 ;;;; Keyfreq
 ;; See a heatmap of your keypresses.
 ;; Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= to get the original rendered HTML page. Use =keyfreq-html-v2= to get the keyboard heat map.
@@ -73,16 +43,12 @@
               evil-insert-state-map))
   )
 
-;;;; Goto-line-preview
-;; Preview line before you jump to it with =M-x goto-line=
-(use-package goto-line-preview
-  :general ([remap goto-line] 'goto-line-preview)
-  )
-
-;;;; Info-mode
-(use-package info-mode
+;;;; Built-in Emacs modes/packages
+(use-package emacs
   :straight nil
+  :hook (messages-buffer-mode . visual-line-mode)
   :general
+  ;; Info-mode
   (:keymaps 'Info-mode-map
             :states '(visual normal motion)
             "SPC" nil ; For my leader key
@@ -90,10 +56,6 @@
   (kb/leader-keys
     "hi" '(info :which-key "Info pages"))
   )
-
-;;;; Visual-line-mode in *Messages* buffer
-;; I am putting it here because I don't know where else to put it
-(add-hook 'messages-buffer-mode-hook 'visual-line-mode)
 
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

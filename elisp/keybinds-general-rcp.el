@@ -70,6 +70,27 @@
 ;; Make ESC quit everywhere
 (general-define-key "<escape>" 'keyboard-escape-quit)
 
+;;;; Which-key
+;; Show keybind tooltips
+(use-package which-key
+  :ghook 'after-init-hook
+  :custom
+  ;; These variables should be set before which-key-mode is activated
+  (which-key-idle-delay 1.6)
+  (which-key-idle-secondary-delay 1) ; Delay after which-key has already been shown
+  (which-key-show-early-on-C-h t) ; Show which-key help immediately
+  (which-key-add-column-padding 0)
+  (which-key-max-display-columns nil)
+  ;; (which-key-show-transient-maps t) ; Necessary so show embark keybinds with which-key
+  (which-key-popup-type 'side-window)
+  (which-key-side-window-location 'right)
+  (which-key-side-window-max-width 0.23)
+  :config
+  ;; Don't display C-u, digit, and other numeric keybad bindings
+  (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
+        which-key-replacement-alist)
+  )
+
 ;;; keybinds-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybinds-general-rcp)

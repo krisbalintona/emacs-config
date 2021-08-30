@@ -62,6 +62,15 @@
   (flyspell-correct-interface 'flyspell-correct-completing-read)
   )
 
+;;;; Abbrev-mode
+;; Automatically correct typed strings (e.g. words). Most useful for correcting spelling mistakes as they are made.
+(use-package abbrev-mode
+  :straight nil
+  :ghook 'text-mode-hook 'prog-mode-hook
+  :custom
+  (abbrev-file-name (concat no-littering-var-directory "abbrev-mode/abbrev.el"))
+  )
+
 ;;; checking-spelling-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-spelling-rcp)

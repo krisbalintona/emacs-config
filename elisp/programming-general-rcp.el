@@ -8,180 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-
-;;;; Autofill
-;;;;; Yasnippet
-;; Template-expansion system (doesn't include templates)
-(use-package yasnippet
-  :ghook ('after-init-hook 'yas-minor-mode-on)
-  :custom
-  (warning-suppress-types
-   '(((yasnippet backquote-change))
-     (comp)
-     (:warning))
-   )
-  )
-
-;;;;; Doom-snippets
-;; Large library of snippet templates
-(use-package doom-snippets
-  :after yasnippet
-  :hook (after-init . yas-reload-all)
-  :straight (doom-snippts :type git :host github :repo "hlissner/doom-snippets")
-  )
-
-;;;;; Org-tempo
-;; Completion for org-block types
-(use-package org-tempo
-  :straight nil
-  :config
-  (dolist (expansion '(("sh" . "src sh")
-                       ("el" . "src emacs-lisp")
-                       ("py" . "src python")
-                       ;; ("sc" . "src scheme")
-                       ;; ("ts" . "src typescript")
-                       ;; ("yaml" . "src yaml")
-                       ;; ("json" . "src json")
-                       )
-                     org-structure-template-alist)
-    (push expansion org-structure-template-alist))
-  )
-
-;;;; Project management
-;;;;; Projectile
-;; Navigate and manage project directories easier
-(use-package projectile
-  :disabled t ; In favor of `project.el'
-  :hook (after-init . projectile-mode)
-  :init
-  (when (file-directory-p user-emacs-directory)
-    (setq projectile-project-search-path `(,user-emacs-directory)))
-  (setq projectile-switch-project-action #'projectile-dired)
-  :custom
-  (projectile-completion-system 'default) ; Use selectrum
-  (projectile-enable-caching t)
-  (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
-  :config
-  ;; Hydra menu
-  (pretty-hydra-define hydra:selectrum-projectile
-    (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
-    ("Projectile"
-     (("i" projectile-invalidate-cache :color red)
-      ("n" projectile-add-known-project))
-     "Buffers"
-     (("b" projectile-switch-to-buffer)
-      ("K" projectile-kill-buffers)
-      ("S" projectile-save-project-buffers))
-     "Find"
-     (("d" projectile-find-dir)
-      ("D" projectile-dired)
-      ("f" projectile-find-file)
-      ("p" projectile-switch-project))
-     "Search"
-     (("r" projectile-replace)
-      ("R" projectile-replace-regexp)
-      ("s" counsel-projectile-rg))
-     ))
-
-  (kb/leader-keys
-    "p" '(:ignore t :which-key "Projectile")
-    "p?" '(hydra:selectrum-projectile/body :which-key "Help menu")
-    ;; "pf"  'projectile-find-file
-    "pp"  'projectile-switch-project
-    ;; "ps"  'counsel-projectile-rg
-    "pb"  'projectile-switch-to-buffer
-    "pD"  'projectile-dired
-    ;; "pc"  'projectile-compile-project
-    )
-  )
-
-;;;;; Counsel-projectile
-;; Use Ivy as projectile interface
-(use-package counsel-projectile
-  :requires (counsel projectile)
-  :ghook 'counsel-mode-hook
-  )
-
-;;;;; Project.el
-(use-package project
-  :config
-  (kb/leader-keys
-    "p" '(:ignore t :which-key "Project")
-    "pf"  '(project-find-file :which-key "Project find file")
-    "pp"  '(project-switch-project :which-key "Project.el switch project")
-    "pb"  '(project-switch-to-buffer :which-key "Project switch to buffer")
-    "pD"  '(project-dired :which-key "Project dired")
-    )
-  )
-
-
-;;;; Directory navigation
-;;;;; Dired
-;; Emacs' file manager
-(use-package dired
-  :straight nil
-  :general
-  (:keymaps 'dired-mode-map
-            :states 'normal
-            "h" 'dired-up-directory
-            "l" 'dired-find-file)
-  (kb/leader-keys
-    "od" '(dired :which-key "Dired"))
-  :custom
-  (dired-auto-revert-buffer t)          ; Automatically revert buffer
-  (dired-dwim-target nil)               ; Guess default target directory?
-  (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
-  (dired-recursive-copies 'always)              ; Copy directories recursively?
-  (dired-listing-switches "-agho --group-directories-first") ; Flags `dired' passes to `ls'
-  )
-
-;;;;; Dired-git
-;; Show git information in dired
-(use-package dired-git
-  :ghook 'dired-mode-hook
-  :custom
-  (dired-git-disable-dirs
-   '())
-  (dired-git-parallel 7)                ; Number of parallel processes
-  )
-
-;;;;; Dired-single
-;; Use the same dired buffer for every directory you open using `dired'.
-(use-package dired-single
-  :general (:keymaps 'dired-mode-map
-                     [remap dired-up-directory] 'dired-single-up-directory
-                     [remap dired-find-file] 'dired-single-buffer)
-  )
-
-;;;;; All-the-icons-dired
-;; Add icons which represent file types
-(use-package all-the-icons-dired
-  :ghook 'dired-mode-hook
-  :gfhook '(lambda () (setq-local all-the-icons-scale-factor 0.95))
-  :custom
-  (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
-  )
-
-;;;;; Dired-open
-;; Override how dired opens files with certain extensions
-(use-package dired-open
-  :custom
-  ;; ;; Try to use `xdg-open' before anything else
-  ;; (add-to-list 'dired-open-functions #'dired-open-xdg t) ; Doesn't work as expected!
-  (dired-open-extensions '(("png" . "feh")
-                           ("mkv" . "vlc")))
-  )
-
-;;;;; Dired-hide-dotfiles
-;; Hide dotfiles
-(use-package dired-hide-dotfiles
-  :ghook 'dired-mode-hook
-  :general (:keymaps 'dired-mode-map
-                     :states 'normal
-                     "H" 'dired-hide-dotfiles-mode)
-  :custom
-  (dired-hide-dotfiles-verbose nil) ; No annoying announcements in echo area anymore
-  )
+(require 'faces-rcp)
 
 ;;;; Aesthetics
 ;;;;; Highlight-indent-guides
@@ -217,32 +44,93 @@
   :ghook 'emacs-lisp-mode-hook
   )
 
-;;;; Other
-;;;;; Tramp
-(use-package tramp
-  :custom
-  (tramp-default-method "ssh")
+;;;;; Paren
+;; Highlight matching delimiters
+(use-package paren
+  :ghook ('after-init-hook 'show-paren-mode)
   )
 
-;;;;; Scratch.el
-;; Easily create scratch buffers for different modes
-(use-package scratch
-  ;; :demand t ; For the initial scratch buffer at startup
-  :hook (scratch-create-buffer . kb/scratch-buffer-setup)
-  :general ("C-c s" '(scratch :which-key "Create scratch"))
-  :preface
-  (defun kb/scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly. Taken from https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
-    (let* ((mode (format "%s" major-mode))
-           (string (concat "Scratch buffer for: " mode "\n\n")))
-      (when scratch-buffer
-        (save-excursion
-          (insert string)
-          (goto-char (point-min))
-          (comment-region (point-at-bol) (point-at-eol)))
-        (forward-line 2))
-      (rename-buffer (concat "*Scratch for " mode "*") t))
-    )
+;;;; Quick movement
+;;;;; Ace-link
+;; Open links easily
+(use-package ace-link
+  :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map org-mode-map)
+                     "M-/" '(ace-link :which-key "Ace-link")
+                     )
+  )
+
+;;;;; Ace-jump
+;; Quickly jump to any character
+(use-package ace-jump-mode
+  :hook (org-mode . (lambda () (face-remap-add-relative 'ace-jump-face-foreground :font kb/variable-pitch-font)))
+  :general ("M-a" '(ace-jump-mode :which-key "Ace-jump"))
+  :config
+  (setq ace-jump-mode-scope 'window
+        ace-jump-mode-case-fold t ; Ignore case?
+        ace-jump-mode-gray-background nil ; Don't make text's background gray
+        ace-jump-mode-submode-list ; Priority of ace-jump selections
+        '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))
+  )
+
+;;;; Other
+;;;;; Outshine
+;; Outline-minor-mode but with better keybindings and more support
+(use-package outshine
+  :demand t ; Load immediately to properly set outline-minor-mode-prefix
+  :straight (outshine :type git :host github :repo "alphapapa/outshine")
+  :functions (sp--looking-at-p sp--looking-back outline-back-to-heading outline-next-heading)
+  :commands evil-insert-state
+  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook 'conf-mode-hook
+  :gfhook 'display-line-numbers-mode 'visual-line-mode
+  :general
+  (:keymaps 'outshine-mode-map
+            "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+  (:keymaps 'outshine-mode-map
+            :states 'normal
+            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
+  :custom
+  (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
+  :init
+  ;; More convenient `outline-insert-heading'
+  (defun kb/outline-insert-heading ()
+    "Insert a new heading at same depth at point.
+
+I've customized it such that it ensures there are newlines before
+and after the heading that that insert mode is entered
+afterward."
+    (interactive)
+    ;; Check for if previous line is empty
+    (unless (sp--looking-back "[[:space:]]*$")
+      (insert "\n"))
+    (let ((head (save-excursion
+                  (condition-case nil
+                      (outline-back-to-heading)
+                    (error (outline-next-heading)))
+                  (if (eobp)
+                      (or (caar outline-heading-alist) "")
+                    (match-string 0)))))
+      (unless (or (string-match "[ \t]\\'" head)
+                  (not (string-match (concat "\\`\\(?:" outline-regexp "\\)")
+                                     (concat head " "))))
+        (setq head (concat head " ")))
+      (unless (bolp) (end-of-line) (newline))
+      (insert head)
+      (unless (eolp)
+        (save-excursion (newline-and-indent)))
+      (run-hooks 'outline-insert-heading-hook))
+    ;; Check for if next line is empty
+    (unless (sp--looking-at-p "[[:space:]]*$")
+      (save-excursion
+        (end-of-line)
+        (insert "\n")))
+    (evil-insert-state))
+  (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
+  :config
+  ;; Outshine headline faces
+  (set-face-attribute 'outshine-level-4 nil :inherit 'outline-5)
+  (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
+  (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
+  (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
   )
 
 ;;;;; Consult
@@ -252,6 +140,7 @@
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
   :straight (consult :type git :host github :repo "minad/consult")
+  :commands (consult--customize-set outline-back-to-heading outline-next-heading consult-completing-read-multiple)
   :general
   ([remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
   (kb/leader-keys
@@ -308,6 +197,21 @@
    )
   )
 
+;;;;; Embark
+;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
+;; thus selectrum!)
+(use-package embark
+  :after which-key ; Because I replace its value of `prefix-help-command'
+  :general
+  ("M-o" '(embark-act :which-key "Embark-act"))
+  (kb/leader-keys
+    "hB" '(embark-bindings :which-key "Embark-bindings")
+    )
+  :custom
+  ;; Optionally replace the key help with a completing-read interface
+  (prefix-help-command #'embark-prefix-help-command)
+  )
+
 ;;;;; Embark-consult
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
@@ -316,6 +220,148 @@
   ;; auto-updating embark collect buffer
   :requires (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode)
+  )
+
+;;;;; Smartparens
+;; Auto pairing parentheses
+(use-package smartparens
+  :commands (sp-local-pair sp-pair sp--looking-at-p)
+  :ghook ('after-init-hook 'smartparens-global-mode)
+  :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
+  :general (:keymaps 'prog-mode-map
+                     :states '(visual normal motion)
+                     [remap evil-forward-sentence-begin] 'sp-forward-sexp
+                     [remap evil-backward-sentence-begin] 'sp-backward-sexp)
+  :custom
+  (sp-show-pair-from-inside t)
+  (sp-ignore-modes-list
+   '(minibuffer-mode minibuffer-inactive-mode
+                     ))
+  (sp-autoskip-closing-pair 'always-end)
+  ;; Read `sp-delete-pair' docstring
+  (sp-autodelete-pair t)
+  (sp-autodelete-opening-pair t)
+  (sp-autodelete-closing-pair t)
+  :init
+  (defun kb/sp-point-before-letter-digit-p (_id action _context)
+    "Return t if point is followed by any digit or alphanumeric character, nil
+otherwise. This predicate is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-at-p "[a-z0-9A-Z]")))
+  (defun kb/sp-point-adjacent-paren-p (_id action _context)
+    "Return t if point is next to a parenthesis, nil otherwise. This predicate
+is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-at-p "(\\|)")))
+  (defun kb/sp-point-before-closing-paren-p (_id action _context)
+    "Return t if point is before a closing parenthesis, nil otherwise. This predicate
+is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-at-p "(")))
+  :config
+  ;; Global
+  (sp-pair "(" ")" :actions '(insert autoskip navigate))
+  (sp-pair "\"" "\""
+           :actions '(insert autoskip navigate escape)
+           :unless '(sp-in-string-quotes-p kb/sp-point-before-letter-digit-p sp-point-before-same-p)
+           :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
+
+  ;; emacs-lisp-mode
+  (sp-local-pair 'emacs-lisp-mode "(" ")"
+                 :actions '(insert autoskip navigate)
+                 :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+  (sp-local-pair 'emacs-lisp-mode "'" "'"
+                 :actions '(insert autoskip navgiate)
+                 :when '(sp-in-string-p))
+  (sp-local-pair 'emacs-lisp-mode "`" "'"
+                 :actions '(insert autoskip navigate)
+                 :when '(sp-in-comment-p sp-in-string-p))
+  )
+
+;;;;; Scratch.el
+;; Easily create scratch buffers for different modes
+(use-package scratch
+  ;; :demand t ; For the initial scratch buffer at startup
+  :hook (scratch-create-buffer . kb/scratch-buffer-setup)
+  :general ("C-c s" '(scratch :which-key "Create scratch"))
+  :preface
+  (defun kb/scratch-buffer-setup ()
+    "Add contents to `scratch' buffer and name it accordingly. Taken from https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
+    (let* ((mode (format "%s" major-mode))
+           (string (concat "Scratch buffer for: " mode "\n\n")))
+      (when scratch-buffer
+        (save-excursion
+          (insert string)
+          (goto-char (point-min))
+          (comment-region (point-at-bol) (point-at-eol)))
+        (forward-line 2))
+      (rename-buffer (concat "*Scratch for " mode "*") t))
+    )
+  )
+
+;;;;; Anzu
+;; Adds highlight face during replace and regexp
+(use-package anzu
+  :ghook ('after-init-hook 'global-anzu-mode)
+  :general ([remap query-replace] 'anzu-query-replace-regexp)
+  :custom
+  (anzu-cons-mode-line-p nil)
+  )
+
+;;;;; Goto-line-preview
+;; Preview line before you jump to it with `goto-line'
+(use-package goto-line-preview
+  :general ([remap goto-line] 'goto-line-preview)
+  )
+
+;;;;; Sudo-edit
+;; Utilities to edit files as root
+(use-package sudo-edit
+  :hook (after-init . sudo-edit-indicator-mode)
+  :general (kb/leader-keys
+             "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
+             "fu" '(sudo-edit :which-key "Sudo this file")
+             )
+  )
+
+;;;;; Tramp
+(use-package tramp
+  :custom
+  (tramp-default-method "ssh")
+  )
+
+;;;;; Whitespace
+;; Remove whitespace on save
+(use-package whitespace
+  :hook (before-save . whitespace-cleanup)
+  :custom
+  (whitespace-style '(face empty indentation::space tab))
+  )
+
+;;;;; Autorevert
+;; Automatically update buffers as files are externally modified
+(use-package autorevert
+  :ghook ('after-init-hook 'global-auto-revert-mode)
+  :custom
+  (auto-revert-interval 7)
+  (auto-revert-check-vc-info t)
+  (global-auto-revert-non-file-buffers t)
+  (auto-revert-verbose t)
+  )
+
+;;;;; Super-save
+;; Automatically save buffers when you do certain things
+(use-package super-save
+  :ghook 'after-init-hook
+  :custom
+  (super-save-auto-save-when-idle t) ; Save buffer if Emacs is idle
+  (super-save-idle-duration 10) ; Wait 10 seconds for idle trigger
+  (super-save-remote-files t) ; Turn on saving of remote files (those pulled from git repo?)
+  (super-save-exclude nil) ; Don't exclude anything from being saved
+  :config
+  (add-to-list 'super-save-triggers 'evil-window-next)
+  (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
   )
 
 ;;; programming-general-rcp.el ends here

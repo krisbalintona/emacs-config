@@ -145,6 +145,28 @@
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
   )
 
+;;;; Better-jumper
+;; Accompanies `evil-jumper' very well
+(use-package better-jumper
+  :after evil
+  :general (:states '(normal visual normal)
+                    [remap evil-jump-backward] '(better-jumper-jump-backward :which-key "Jump backward")
+                    [remap evil-jump-forward] '(better-jumper-jump-forward :which-key "Jump forward"))
+  :custom
+  (better-jumper-max-length 200)
+  (better-jumper-use-evil-jump-advice t) ; Add evil-jump jumps
+  (better-jumper-add-jump-behavior 'append)
+
+  (better-jumper-context 'buffer)
+  (better-jumper-use-savehist t)
+  (better-jumper-buffer-savehist-size 50)
+  :config
+  ;; Add evil navigation commands to the better-jumper jump list
+  (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin evil-jump-item evil-first-non-blank evil-end-of-visual-line)
+                      :after 'better-jumper-set-jump)
+  (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump)
+  )
+
 ;;; keybinds-evil-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybinds-evil-rcp)

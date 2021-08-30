@@ -193,6 +193,44 @@
             #'completion-file-name-table :exclusive 'no))))
 (add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
 
+;;;; Expansion
+;;;;; Yasnippet
+;; Template-expansion system (doesn't include templates)
+(use-package yasnippet
+  :ghook ('after-init-hook 'yas-minor-mode-on)
+  :custom
+  (warning-suppress-types
+   '(((yasnippet backquote-change))
+     (comp)
+     (:warning))
+   )
+  )
+
+;;;;; Doom-snippets
+;; Large library of snippet templates
+(use-package doom-snippets
+  :after yasnippet
+  :hook (after-init . yas-reload-all)
+  :straight (doom-snippts :type git :host github :repo "hlissner/doom-snippets")
+  )
+
+;;;;; Org-tempo
+;; Completion for org-block types
+(use-package org-tempo
+  :straight nil
+  :config
+  (dolist (expansion '(("sh" . "src sh")
+                       ("el" . "src emacs-lisp")
+                       ("py" . "src python")
+                       ;; ("sc" . "src scheme")
+                       ;; ("ts" . "src typescript")
+                       ;; ("yaml" . "src yaml")
+                       ;; ("json" . "src json")
+                       )
+                     org-structure-template-alist)
+    (push expansion org-structure-template-alist))
+  )
+
 ;;; completion-text-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-text-rcp)

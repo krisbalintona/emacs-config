@@ -1,13 +1,80 @@
-;;; programming-vc-rcp.el --- Summary
+;;; programming-projects-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
-;; Everything to do with version control.
+;; Everything to do with managing projects.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
+
+;;;; Project management
+;;;;; Projectile
+;; Navigate and manage project directories easier
+(use-package projectile
+  :disabled t ; In favor of `project.el'
+  :hook (after-init . projectile-mode)
+  :init
+  (when (file-directory-p user-emacs-directory)
+    (setq projectile-project-search-path `(,user-emacs-directory)))
+  (setq projectile-switch-project-action #'projectile-dired)
+  :custom
+  (projectile-completion-system 'default) ; Use selectrum
+  (projectile-enable-caching t)
+  (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
+  :config
+  ;; Hydra menu
+  (pretty-hydra-define hydra:selectrum-projectile
+    (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
+    ("Projectile"
+     (("i" projectile-invalidate-cache :color red)
+      ("n" projectile-add-known-project))
+     "Buffers"
+     (("b" projectile-switch-to-buffer)
+      ("K" projectile-kill-buffers)
+      ("S" projectile-save-project-buffers))
+     "Find"
+     (("d" projectile-find-dir)
+      ("D" projectile-dired)
+      ("f" projectile-find-file)
+      ("p" projectile-switch-project))
+     "Search"
+     (("r" projectile-replace)
+      ("R" projectile-replace-regexp)
+      ("s" counsel-projectile-rg))
+     ))
+
+  (kb/leader-keys
+    "p" '(:ignore t :which-key "Projectile")
+    "p?" '(hydra:selectrum-projectile/body :which-key "Help menu")
+    ;; "pf"  'projectile-find-file
+    "pp"  'projectile-switch-project
+    ;; "ps"  'counsel-projectile-rg
+    "pb"  'projectile-switch-to-buffer
+    "pD"  'projectile-dired
+    ;; "pc"  'projectile-compile-project
+    )
+  )
+
+;;;;; Counsel-projectile
+;; Use Ivy as projectile interface
+(use-package counsel-projectile
+  :requires (counsel projectile)
+  :ghook 'counsel-mode-hook
+  )
+
+;;;;; Project.el
+(use-package project
+  :config
+  (kb/leader-keys
+    "p" '(:ignore t :which-key "Project")
+    "pf"  '(project-find-file :which-key "Project find file")
+    "pp"  '(project-switch-project :which-key "Project.el switch project")
+    "pb"  '(project-switch-to-buffer :which-key "Project switch to buffer")
+    "pD"  '(project-dired :which-key "Project dired")
+    )
+  )
 
 ;;;; Version control
 ;;;;; Magit
@@ -172,6 +239,6 @@
 ;; Enable in current buffer to iterate through git revision history
 (use-package git-timemachine)
 
-;;; programming-vc-rcp.el ends here
+;;; programming-projects-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'programming-vc-rcp)
+(provide 'programming-projects-rcp)

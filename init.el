@@ -62,6 +62,16 @@
 (require 'completion-ivy-rcp)
 (require 'completion-helm-rcp)
 
+;;;;; Buffers, text, and windows
+(require 'persistence-rcp)
+(require 'buffers-and-windows-rcp)
+(require 'undoing-rcp)
+
+;;;;; Spelling and grammar
+(require 'checking-spelling-rcp)
+(require 'checking-grammar-rcp)
+(require 'checking-words-rcp)
+
 ;;;;; Org
 (require 'org-general-rcp)
 (require 'org-roam-general-rcp)
@@ -77,7 +87,8 @@
 ;;;;; Programmming
 (require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
-(require 'programming-vc-rcp)
+(require 'programming-directories-rcp)
+(require 'programming-projects-rcp)
 (require 'programming-linting-rcp)
 (require 'programming-ide-rcp)
 (require 'programming-elisp-rcp)
@@ -90,11 +101,6 @@
 (require 'shell-eshell-rcp)
 (require 'shell-vterm-rcp)
 
-;;;;; Spelling and grammar
-(require 'checking-spelling-rcp)
-(require 'checking-grammar-rcp)
-(require 'checking-words-rcp)
-
 ;;;;; Communication interfaces
 (require 'email-notmuch-rcp)
 ;; (require 'email-mu4e-rcp)
@@ -102,9 +108,6 @@
 (require 'rss-feed-rcp)
 
 ;;;;; Other
-(require 'undoing-rcp)
-(require 'buffer-and-window-management-rcp)
-(require 'file-editing-rcp)
 (require 'finance-rcp)
 (require 'convenient-functions-rcp)
 (require 'misc-packages-rcp)

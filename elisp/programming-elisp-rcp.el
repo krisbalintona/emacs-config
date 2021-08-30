@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-(require 'buffer-and-window-management-rcp)
+(require 'buffers-and-windows-rcp)
 
 ;;;; Elisp-mode
 ;; Elisp-mode overwrites my eyebrowse-last-window-config binding

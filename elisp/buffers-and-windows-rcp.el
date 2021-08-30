@@ -1,4 +1,4 @@
-;;; buffer-and-window-management-rcp.el --- Summary
+;;; buffers-and-windows-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
@@ -9,62 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Automatically managed
-;;;;; Savehist
-;; Make history of certain things (e.g. minibuffer) persistent across sessions
-(use-package savehist
-  :straight nil
-  :ghook 'after-init-hook
-  :custom
-  (savehist-autosave-interval 300)
-  :config
-  (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
-  (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
-  )
-
-;;;;; Recentf
-;; Enable logging of recent files
-(use-package recentf
-  :straight nil
-  :ghook 'after-init-hook
-  :custom
-  (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15)
-  )
-
-;;;;; Save-place-mode
-;; Save and restore the point's location in files
-(use-package saveplace
-  :straight nil
-  :ghook ('after-init-hook 'save-place-mode)
-  )
-
-;;;;; Super-save
-;; Automatically save buffers when you do certain things
-(use-package super-save
-  :ghook 'after-init-hook
-  :custom
-  (super-save-auto-save-when-idle t) ; Save buffer if Emacs is idle
-  (super-save-idle-duration 10) ; Wait 10 seconds for idle trigger
-  (super-save-remote-files t) ; Turn on saving of remote files (those pulled from git repo?)
-  (super-save-exclude nil) ; Don't exclude anything from being saved
-  :config
-  (add-to-list 'super-save-triggers 'evil-window-next)
-  (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
-  )
-
-;;;;; Autorevert
-;; Automatically update buffers as files are externally modified
-(use-package autorevert
-  :ghook ('after-init-hook 'global-auto-revert-mode)
-  :custom
-  (auto-revert-interval 7)
-  (auto-revert-check-vc-info t)
-  (global-auto-revert-non-file-buffers t)
-  (auto-revert-verbose t)
-  )
-
-;;;; Window configuration
+;;;; Window configurations
 ;;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
@@ -75,6 +20,25 @@
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*"))
   (winner-boring-buffers-regexp "\\*helpful variable:\\|magit:") ; Skip `magit' and `helpful' buffers
+  )
+
+;;;;; Shackle
+;; Control the behavior of popup and side windows
+(use-package shackle
+  :commands shackle-mode
+  :ghook 'after-init-hook
+  :custom
+  (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)
+                   (helpful-mode :inhibit-window-quit t :same t)
+                   ;; (help-mode :inhibit-window-quit t :same t) ; Messes with org-roam-doctor buffer
+                   (process-menu-mode :inhibit-window-quit t :same t)
+                   ;; ("magit:" :regexp t :inhibit-window-quit t :align t :same t) ; Replaced by creating `kb/magit-mode-quit-window'
+                   ("\\*org-roam\\*" :regexp t :align right :same nil :size 0.2)
+                   ("*Flycheck errors*" :select t :align below :size 0.33)
+                   ("\\*devdocs\\*" :select t :same nil)
+                   ("\\*Dogears List\\*" :regexp t :align below :same t :inhibit-window-quit t :size 0.3)
+                   ))
+  (shackle-select-reused-windows t)
   )
 
 ;;;;; Eyebrowse
@@ -118,44 +82,6 @@
   (setq-default eyebrowse-new-workspace nil)    ; By default, just clone the current window configuration
   )
 
-;;;;; Bookmark
-(use-package bookmark
-  :straight nil
-  :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
-  :custom
-  (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
-  )
-
-;;;;; Burly
-(use-package burly
-  :general (kb/leader-keys
-             "Bw" '(burly-bookmark-windows :which-key "Burly windows")
-             "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
-             "BM" '(burly-open-last-bookmark :which-key "Open last bookmark")
-             "Bo" '(burly-open-url :which-key "Open url at point")
-             )
-  )
-
-;;;;; Shackle
-;; Control the behavior of popup and side windows
-(use-package shackle
-  :commands shackle-mode
-  :ghook 'after-init-hook
-  :custom
-  (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)
-                   (helpful-mode :inhibit-window-quit t :same t)
-                   ;; (help-mode :inhibit-window-quit t :same t) ; Messes with org-roam-doctor buffer
-                   (process-menu-mode :inhibit-window-quit t :same t)
-                   ;; ("magit:" :regexp t :inhibit-window-quit t :align t :same t) ; Replaced by creating `kb/magit-mode-quit-window'
-                   ("\\*org-roam\\*" :regexp t :align right :same nil :size 0.2)
-                   ("*Flycheck errors*" :select t :align below :size 0.33)
-                   ("\\*devdocs\\*" :select t :same nil)
-                   ("\\*Dogears List\\*" :regexp t :align below :same t :inhibit-window-quit t :size 0.3)
-                   ))
-  (shackle-select-reused-windows t)
-  )
-
-;;;; Other
 ;;;;; Ace-window
 (use-package ace-window
   :general ("M-w" '(ace-window :which-key "Ace window"))
@@ -179,6 +105,25 @@
      (?o delete-other-windows "Delete Other Windows")
      (?? aw-show-dispatch-help))
    )
+  )
+
+;;;;; Burly
+(use-package burly
+  :general (kb/leader-keys
+             "Bw" '(burly-bookmark-windows :which-key "Burly windows")
+             "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
+             "BM" '(burly-open-last-bookmark :which-key "Open last bookmark")
+             "Bo" '(burly-open-url :which-key "Open url at point")
+             )
+  )
+
+;;;; Buffers
+;;;;; Bookmark
+(use-package bookmark
+  :straight nil
+  :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
+  :custom
+  (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
   )
 
 ;;;;; Dogears
@@ -225,6 +170,6 @@
      ))
   )
 
-;;; buffer-and-window-management-rcp.el ends here
+;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'buffer-and-window-management-rcp)
+(provide 'buffers-and-windows-rcp)
