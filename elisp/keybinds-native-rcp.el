@@ -32,16 +32,23 @@
  :keymaps '(prog-mode-map text-mode-map)
  :states 'insert
  ;; Newline above
- [remap newline] '(lambda ()
+ [remap newline] '(lambda ()                 ; Newline with indent
                     (interactive)
                     (insert "\n")
                     (indent-according-to-mode))
- "M-RET" '(lambda ()
+ "M-RET" '(lambda ()                         ; Insert newline and go to it
             (interactive)
             (move-beginning-of-line 1)
             (insert "\n")
             (forward-line -1)
             (indent-according-to-mode))
+ "C-<return>" '(lambda ()          ; Insert rest of line after point in newline above
+                 (interactive)
+                 (kill-line)
+                 (save-excursion (beginning-of-line) (open-line 1))
+                 (forward-line -1)
+                 (yank)
+                 )
  ;; Beginning and end of line
  "C-f" 'end-of-line
  "C-b" 'beginning-of-line
