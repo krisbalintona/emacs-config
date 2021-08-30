@@ -19,6 +19,7 @@
                              ;; Magit modes
                              magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
                              )
+    :states '(normal visual motion)
     "SPC")
 
   ;; My leader key definition and high-level keybindings
