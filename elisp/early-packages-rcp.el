@@ -73,10 +73,14 @@
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
   :functions (sp--looking-at-p sp--looking-back outline-back-to-heading outline-next-heading)
   :commands evil-insert-state
-  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
+  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook 'conf-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
-  :general (:keymaps 'outshine-mode-map
-                     "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+  :general
+  (:keymaps 'outshine-mode-map
+            "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+  (:keymaps 'outshine-mode-map
+            :states 'normal
+            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
@@ -120,11 +124,6 @@ afterward."
   (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
   (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
   (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
-
-  (general-define-key
-   :keymaps 'outshine-mode-map
-   :states 'normal
-   "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
   )
 
 ;;;; Helpful
