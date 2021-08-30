@@ -24,6 +24,7 @@
  ;; Candidate navigation
  "M-k" 'previous-line
  "M-j" 'next-line
+ "<escape>" 'keyboard-escape-quit       ; Make ESC quit everywhere
  )
 
 "M-j" 'next-line"M-j" 'next-line"M-j" 'next-line"M-j" 'next-line"M-j" 'next-line"M-j" 'next-line"M-j" 'next-line"M-j" 'next-line

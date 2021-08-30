@@ -139,22 +139,20 @@ afterward."
 (use-package consult
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
-  :straight (consult :type git :host github :repo "minad/consult")
   :commands (consult--customize-set outline-back-to-heading outline-next-heading consult-completing-read-multiple)
   :general
-  ([remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
-  (kb/leader-keys
-    :keyamps 'prog-mode-map
-    "le" '(consult-error :which-key "Consult error"))
+  (:keymaps 'help-map
+            [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
+  (:keymaps 'global-map
+            "C-x b" 'consult-buffer
+            "C-x B" 'consult-buffer-other-window
+            )
   (kb/leader-keys
     :keymaps 'org-mode-map
     :states '(normal visual motion)
     [remap consult-outline] '(consult-org-heading :which-key "Consult outline"))
   (kb/leader-keys
     "fr" '(consult-recent-file :which-key "Consult recent file")
-    "bb" '(consult-buffer :which-key "Consult buffer")
-    ;; ("C-x 4 b" . consult-buffer-other-window)
-    ;; ("C-x 5 b" . consult-buffer-other-frame)
 
     "mm" '(consult-bookmark :which-key "Consult bookmark")
     "mr" '(consult-mark :which-key "Consult mark-ring")

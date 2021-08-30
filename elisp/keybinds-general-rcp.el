@@ -41,16 +41,8 @@
   "bp" '(previous-buffer :which-key "Prev buffer")
   "bn" '(next-buffer :which-key "Next buffer")
   "f" '(:ignore t :which-key "Files")
-  "ff" '(find-file :which-key "Find file")
-  "fs" '(save-buffer :which-key "Save buffer")
   "h" '(:ignore t :which-key "Help")
-  "hf" '(describe-function :which-key "Desc func")
-  "hv" '(describe-variable :which-key "Desc var")
-  "ho" '(describe-symbol :which-key "Desc sym")
   "q" '(:ignore t :which-key "Quit")
-  "qs" '(org-save-all-org-buffers :which-key "Save all org buffers")
-  "l" '(:ignore t :which-key "Langtool")
-  "n" '(:ignore t :which-key "Org-roam")
   "i" '(:ignore t :which-key "Copying and pasting")
   "w" '(:ignore t :which-key "Manage windows")
   "g" '(:ignore t :which-key "git")
@@ -67,8 +59,6 @@
  :states '(normal visual motion)
  "u" 'universal-argument-more
  )
-;; Make ESC quit everywhere
-(general-define-key "<escape>" 'keyboard-escape-quit)
 
 ;;;; Which-key
 ;; Show keybind tooltips
