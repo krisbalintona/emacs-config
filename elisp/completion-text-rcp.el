@@ -157,6 +157,7 @@
                      "<escape>" #'corfu-quit
                      "<tab>" #'corfu-insert
                      "C-<tab>" #'corfu-complete
+                     "C-<return>" '(lambda () (interactive) (corfu-quit) (newline))
                      "M-d" #'corfu-show-documentation
                      "M-l" #'corfu-show-location
                      "M-:" #'((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
