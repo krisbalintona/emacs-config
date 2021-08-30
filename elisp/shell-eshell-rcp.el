@@ -25,7 +25,8 @@
   'hide-mode-line-mode
   :general
   (:keymaps 'eshell-mode-map
-            [remap eshell-previous-matching-input] '(consult-history :which-key "Command history"))
+            [remap eshell-previous-matching-input] '(consult-history :which-key "Command history")
+            "<return>" 'eshell-send-input)
   (kb/leader-keys
     "oE" '(eshell :which-key "Open eshell")
     )
