@@ -13,7 +13,6 @@
 ;;;;; AucTeX
 ;; A lot taken from https://github.com/MatthewZMD/.emacs.d#auctex
 (use-package tex
-  :demand t ; Other latex packages are reliant on this one
   :straight auctex
   :custom
   (TeX-source-correlate-start-server t)

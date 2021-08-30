@@ -84,9 +84,8 @@
   ;; NOTE 2021-08-20: For some reason the manual `(require popwin)' called by
   ;; `elfeed-goodies' doesn't work. So I call and require it here beforehand
   ;; manually.
-  (straight-use-package 'popwin)
-  (require 'popwin)
-  :config (general-advice-add 'elfeed :after '(lambda () (elfeed-goodies/setup) (elfeed-search-update--force)) nil t)
+  (use-package popwin)
+  :config (elfeed-goodies/setup)        ; Immediately load in time for first `elfeed'
   )
 
 ;;;; QoL

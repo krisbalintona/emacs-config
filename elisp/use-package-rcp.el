@@ -15,6 +15,8 @@
 (setq use-package-expand-minimally t) ; Less verbose
 ;; (setq use-package-compute-statistics t) ; Need this at "loadup time" or else errors about undefined variables will appear
 
+(setq use-package-always-defer t)       ; Always try to defer
+
 ;; Set use-package-verbose to t for interpreted .emacs, and to nil for
 ;; byte-compiled .emacs.elc.
 (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file)))

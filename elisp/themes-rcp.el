@@ -46,9 +46,9 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
-(use-package atom-one-dark-theme)
+(use-package atom-one-dark-theme :demand t)
 
-(use-package apropospriate-theme)
+(use-package apropospriate-theme :demand t)
 
 ;;;; Heaven-and-hell
 ;; Toggle between light and dark themes
@@ -305,7 +305,6 @@ UTF-8."
 ;;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
-  :demand t
   :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
   :ghook 'server-after-make-frame-hook 'window-setup-hook
   :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments

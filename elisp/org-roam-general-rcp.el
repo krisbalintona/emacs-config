@@ -289,24 +289,26 @@ journals directory."
       )
 
 ;;;;; Org-roam-dailies-capture-templates
-(require 'org-roam-dailies)
-(setq org-roam-dailies-capture-templates
-      '(("d" "Default" plain
-         "* %?
+(with-eval-after-load 'org-roam
+  (require 'org-roam-dailies)
+  (setq org-roam-dailies-capture-templates
+        '(("d" "Default" plain
+           "* %?
          :PROPERTIES:
          :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
          :END:"
-         :if-new
-         (file+datetree "%<%Y>.org" week))
-        ("w" "Writing" plain
-         "* %? :c_writing:
+           :if-new
+           (file+datetree "%<%Y>.org" week))
+          ("w" "Writing" plain
+           "* %? :c_writing:
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
-         :if-new
-         (file+datetree "%<%Y>.org" week))
+           :if-new
+           (file+datetree "%<%Y>.org" week))
+          )
         )
-      )
+  )
 
 ;;;; Additional code
 ;;;;; Hide property drawers
