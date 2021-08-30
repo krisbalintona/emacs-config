@@ -120,6 +120,7 @@
 ;;;; Buffers
 ;;;;; Bookmark
 (use-package bookmark
+  :disabled t ; NOTE 2021-08-30: For some reason, burly bookmarks can't be deleted by `bookmark-delete'
   :straight nil
   :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
   :custom
