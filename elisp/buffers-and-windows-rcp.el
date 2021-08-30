@@ -19,7 +19,7 @@
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*"))
-  (winner-boring-buffers-regexp "\\*helpful variable:\\|magit:") ; Skip `magit' and `helpful' buffers
+  (winner-boring-buffers-regexp "\\*helpful variable:\\|||*helpful command:\\|magit:") ; Skip `magit' and `helpful' buffers
   )
 
 ;;;;; Shackle
