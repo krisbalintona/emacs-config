@@ -67,13 +67,20 @@
    [remap describe-variable] '(helpful-variable :which-key "Helpful variable")
    [remap describe-symbol] '(helpful-symbol :which-key "Helpful symbol")
    [remap describe-key] '(helpful-key :which-key "Helpful key")
+   [remap apropos-command] '(helpful-command :which-key "Helpful command")
    )
   (:states '(visual normal motion)
            "f" 'helpful-at-point
            )
   (kb/leader-keys
     "hk" '(helpful-key :which-key "Desc key")
-    "hc" '(helpful-command :which-key "Helpful command"))
+    "hK" '(describe-key-briefly :which-key "Desc key echo")
+    "ha" '(apropos-command :which-key "Apropos command")
+    "hf" '(describe-function :which-key "Desc func")
+    "hv" '(describe-variable :which-key "Desc var")
+    "ho" '(describe-symbol :which-key "Desc sym")
+    "hw" '(where-is :which-key "Where is...?")
+    )
   :custom
   (describe-bindings-outline t) ; Include interactive outline headings for each major mode in `describe-keys' buffer
   )
