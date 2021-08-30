@@ -89,6 +89,12 @@
 (require 'epg)
 (setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
 
+;;;; Load custom file
+;; Set and load custom file which contains persistent settings.
+(with-eval-after-load 'no-littering
+  (setq custom-file (no-littering-expand-var-file-name "custom.el"))
+  (load custom-file))
+
 ;;; better-defaults-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'better-defaults-rcp)
