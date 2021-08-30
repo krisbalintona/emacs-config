@@ -18,7 +18,6 @@
   :ghook ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
-  ("C-x C-c" 'nil) ; Annoying. Closes frame when I want to add a footnote
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/leader-keys
