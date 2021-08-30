@@ -68,7 +68,7 @@
 
 ;;;;; Elfeed-goodies
 (use-package elfeed-goodies
-  :demand t
+  :defer 2 ; Can't figure out how to have this work other than this and demanding it
   :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
                      :states 'normal
                      "p" 'elfeed-goodies/split-show-prev

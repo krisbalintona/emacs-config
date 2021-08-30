@@ -47,7 +47,6 @@
 
 ;;;; Vertico
 (use-package vertico
-  :commands vertico--remote-p
   :ghook 'after-init-hook
   :custom
   ;; Workaround for problem with `org-refile'. See

@@ -12,7 +12,6 @@
 ;;;; Lsp-mode
 ;; Use the language server protocol as a backend for Emacs.
 (use-package lsp-mode
-  :commands (lsp lsp-deferred)
   :ghook ('prog-mode-mode-hook 'lsp-deferred) ; Lsp-mode only when buffer is visible
   :gfhook 'lsp-enable-which-key-integration 'lsp-headerline-breadcrumb-mode
   :general

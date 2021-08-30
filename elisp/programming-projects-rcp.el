@@ -82,7 +82,6 @@
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
   :straight (magit :type git :host github :repo "magit/magit")
-  :commands magit-add-section-hook
   :hook ((magit-process-mode . visual-line-mode)
          (git-commit-mode . evil-insert-state))
   :general

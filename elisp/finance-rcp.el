@@ -12,8 +12,6 @@
 ;;;; Ledger-mode
 (use-package ledger-mode
   :ensure-system-package (ledger . "sudo dnf install ledger")
-  :defines evil-emacs-state-modes
-  :commands (ledger-navigate-start-xact-or-directive-p ledger-navigate-end-of-xact ledger-navigate-next-xact ledger-read-commodity-with-prompt)
   :hook ((before-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
          (calc-mode . evil-emacs-state))
   :gfhook
@@ -123,7 +121,6 @@
   :demand t
   :requires flycheck
   :after (flycheck ledger-mode)
-  :commands (flycheck-define-command-checker flycheck-parse-with-patterns flycheck-ledger--zero-error-parser flycheck-add-mode)
   :custom
   (flycheck-ledger-explicit t) ; Check even cleared transactions
   (flycheck-ledger-pedantic t) ; Check account names

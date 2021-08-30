@@ -25,7 +25,6 @@
 ;;;;; Shackle
 ;; Control the behavior of popup and side windows
 (use-package shackle
-  :commands shackle-mode
   :ghook 'after-init-hook
   :custom
   (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)

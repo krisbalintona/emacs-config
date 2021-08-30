@@ -88,7 +88,6 @@
 (use-package company-box
   :requires (company all-the-icons)
   :after (company all-the-icons)
-  :defines company-box-icons-all-the-icons
   :ghook 'company-mode-hook
   :custom
   (company-box-show-single-candidate 'always)

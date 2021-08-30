@@ -10,9 +10,7 @@
 
 ;;;; Emacs-startup-profiler
 ;; Profile my startup time without leaving Emacs
-(use-package esup
-  :commands esup
-  )
+(use-package esup)
 
 ;;;; Explain-pause-mode
 ;; Profile what's causing your Emacs to slow down

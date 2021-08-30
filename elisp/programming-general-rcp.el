@@ -78,8 +78,6 @@
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
-  :functions (sp--looking-at-p sp--looking-back outline-back-to-heading outline-next-heading)
-  :commands evil-insert-state
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook 'conf-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
@@ -139,7 +137,6 @@ afterward."
 (use-package consult
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
-  :commands (consult--customize-set outline-back-to-heading outline-next-heading consult-completing-read-multiple)
   :general
   (:keymaps 'help-map
             [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
@@ -223,7 +220,6 @@ afterward."
 ;;;;; Smartparens
 ;; Auto pairing parentheses
 (use-package smartparens
-  :commands (sp-local-pair sp-pair sp--looking-at-p)
   :ghook ('after-init-hook 'smartparens-global-mode)
   :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
   :general (:keymaps 'prog-mode-map

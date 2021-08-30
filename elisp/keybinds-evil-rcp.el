@@ -76,7 +76,6 @@
 ;; Evil keybinds for many other modes
 (use-package evil-collection
   :demand t ; Load now or it won't
-  :commands evil-collection-init
   :custom
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
@@ -115,7 +114,6 @@
 ;;;; Evil-org
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
-  :functions evil-org-agenda-set-keys
   :ghook 'org-mode-hook
   :gfhook '(lambda () (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
   :general
