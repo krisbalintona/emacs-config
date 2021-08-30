@@ -49,7 +49,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
 (require 'evil-rcp)
-(require 'early-packages-rcp)
 
 ;;;;; Aethetics
 (require 'faces-rcp)

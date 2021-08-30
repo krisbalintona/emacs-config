@@ -8,9 +8,11 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-frameworks-rcp)
+(require 'evil-rcp)
 
 ;;;; Org-mode itself
 (use-package org
+  :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
   :gfhook
   'org-indent-mode
   'variable-pitch-mode
@@ -39,7 +41,6 @@
   (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
   )
-
 
 ;;;; Org-attach
 (require 'org-attach)
@@ -130,8 +131,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                       (match-string 1 x)
-                                     x))
+                                  (match-string 1 x)
+                                x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)

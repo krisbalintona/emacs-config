@@ -26,6 +26,21 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;;;; Exec-path-from-shell
+;; Ensure Emacs' and system shell have same path
+(straight-use-package 'exec-path-from-shell)
+(require 'exec-path-from-shell)
+(setq exec-path-from-shell-arguments '("-l")) ; Remove `-i' (interactive) flag to quicken startup
+(exec-path-from-shell-initialize)             ; Call immediately
+
+;;;; System-packages
+;; Install system packages within Emacs. Necessary for use-package's
+;; `:ensure-system-package' flag
+(straight-use-package 'system-packages)
+(require 'system-packages)
+(setq system-packages-use-sudo t
+      system-packages-noconfirm t)      ; Bypass its prompt
+
 ;;; straight-package-management-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'straight-package-management-rcp)

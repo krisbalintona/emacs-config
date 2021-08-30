@@ -128,6 +128,66 @@ is only tested on \"insert\" action."
   )
 
 ;;;; Other
+;;;;; Outshine
+;; Outline-minor-mode but with better keybindings and more support
+(use-package outshine
+  :demand t ; Load immediately to properly set outline-minor-mode-prefix
+  :straight (outshine :type git :host github :repo "alphapapa/outshine")
+  :functions (sp--looking-at-p sp--looking-back outline-back-to-heading outline-next-heading)
+  :commands evil-insert-state
+  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook 'conf-mode-hook
+  :gfhook 'display-line-numbers-mode 'visual-line-mode
+  :general
+  (:keymaps 'outshine-mode-map
+            "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+  (:keymaps 'outshine-mode-map
+            :states 'normal
+            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
+  :custom
+  (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
+  :init
+  ;; More convenient `outline-insert-heading'
+  (defun kb/outline-insert-heading ()
+    "Insert a new heading at same depth at point.
+
+I've customized it such that it ensures there are newlines before
+and after the heading that that insert mode is entered
+afterward."
+    (interactive)
+    ;; Check for if previous line is empty
+    (unless (sp--looking-back "[[:space:]]*$")
+      (insert "\n"))
+    (let ((head (save-excursion
+                  (condition-case nil
+                      (outline-back-to-heading)
+                    (error (outline-next-heading)))
+                  (if (eobp)
+                      (or (caar outline-heading-alist) "")
+                    (match-string 0)))))
+      (unless (or (string-match "[ \t]\\'" head)
+                  (not (string-match (concat "\\`\\(?:" outline-regexp "\\)")
+                                     (concat head " "))))
+        (setq head (concat head " ")))
+      (unless (bolp) (end-of-line) (newline))
+      (insert head)
+      (unless (eolp)
+        (save-excursion (newline-and-indent)))
+      (run-hooks 'outline-insert-heading-hook))
+    ;; Check for if next line is empty
+    (unless (sp--looking-at-p "[[:space:]]*$")
+      (save-excursion
+        (end-of-line)
+        (insert "\n")))
+    (evil-insert-state))
+  (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
+  :config
+  ;; Outshine headline faces
+  (set-face-attribute 'outshine-level-4 nil :inherit 'outline-5)
+  (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
+  (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
+  (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
+  )
+
 ;;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit

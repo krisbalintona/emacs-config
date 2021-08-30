@@ -41,15 +41,6 @@
   :ghook 'prog-mode-hook
   )
 
-;;;; Elisp-demos
-;; Add example code snippets to some of the help windows
-(use-package elisp-demos
-  :requires helpful
-  :commands elisp-demos-advice-helpful-update
-  :config
-  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
-  )
-
 ;;;; Custom font lock words
 ;; Mainly for `prot-comment-timestamp-keyword'. Faces taken from
 ;; `org-todo-keyword-faces' in org-agenda-general-rcp.el.
@@ -63,6 +54,38 @@
                           ;; FIXME wrapped between whitespace
                           ("\\s-FIXME\\s-" 0 '(t :foreground "deep pink") t)
                           ))
+
+;;;; Helpful
+;; Have more descriptive and helpful function and variable descriptions
+(use-package helpful
+  :gfhook 'visual-line-mode
+  :general
+  ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
+  ;; macros
+  ([remap describe-function] '(helpful-callable :which-key "Helpful function")
+   [remap describe-command] '(helpful-command :which-key "Helpful command")
+   [remap describe-variable] '(helpful-variable :which-key "Helpful variable")
+   [remap describe-symbol] '(helpful-symbol :which-key "Helpful symbol")
+   [remap describe-key] '(helpful-key :which-key "Helpful key")
+   )
+  (:states '(visual normal motion)
+           "f" 'helpful-at-point
+           )
+  (kb/leader-keys
+    "hk" '(helpful-key :which-key "Desc key")
+    "hc" '(helpful-command :which-key "Helpful command"))
+  :custom
+  (describe-bindings-outline t) ; Include interactive outline headings for each major mode in `describe-keys' buffer
+  )
+
+;;;; Elisp-demos
+;; Add example code snippets to some of the help windows
+(use-package elisp-demos
+  :requires helpful
+  :commands elisp-demos-advice-helpful-update
+  :config
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
+  )
 
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
