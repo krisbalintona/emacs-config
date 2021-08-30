@@ -11,7 +11,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'general)
-(require 'keybinds-frameworks-rcp)
+(require 'keybinds-general-rcp)
 
 ;;;; Notmuch
 ;; NOTE 2021-08-29: Make sure that the `notmuch' program is installed on the

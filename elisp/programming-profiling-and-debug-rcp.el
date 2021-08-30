@@ -7,7 +7,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
 
 ;;;; Emacs-startup-profiler
 ;; Profile my startup time without leaving Emacs

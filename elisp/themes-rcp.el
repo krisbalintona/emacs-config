@@ -8,8 +8,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
+(require 'keybinds-general-rcp)
 (require 'faces-rcp)
-(require 'keybinds-frameworks-rcp)
 
 ;;;; UI
 ;;;;; Remove unnecessary UI
@@ -305,6 +305,7 @@ UTF-8."
 ;;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
+  :demand t
   :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
   :ghook 'server-after-make-frame-hook 'window-setup-hook
   :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments

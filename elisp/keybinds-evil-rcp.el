@@ -1,4 +1,4 @@
-;;; evil-rcp.el --- Summary
+;;; keybinds-evil-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
@@ -8,7 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
+(require 'keybinds-general-rcp)
 
 ;;;; Evil
 ;; Emacs vim integration layer
@@ -76,8 +76,6 @@
 ;; Evil keybinds for many other modes
 (use-package evil-collection
   :demand t ; Load now or it won't
-  :requires evil
-  :after evil
   :commands evil-collection-init
   :custom
   (evil-collection-setup-minibuffer nil)
@@ -111,16 +109,12 @@
 ;;;; Evil-commentary
 ;; Comment in evil-mode
 (use-package evil-commentary
-  :requires evil
-  :after evil
   :ghook 'evil-mode-hook
   )
 
 ;;;; Evil-org
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
-  :requires evil
-  :after (evil-collection org)
   :functions evil-org-agenda-set-keys
   :ghook 'org-mode-hook
   :gfhook '(lambda () (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
@@ -139,22 +133,18 @@
 ;;;; Evil-surround
 ;; Surround a selection with any pair of characters
 (use-package evil-surround
-  :requires evil
-  :after evil
   :ghook ('evil-mode-hook 'global-evil-surround-mode)
   )
 
 ;;;; Evil-visualstar
 ;; Situational convenient isearch
 (use-package evil-visualstar
-  :requires evil
-  :after evil
   :functions global-evil-surround-mode
   :ghook ('evil-mode-hook 'global-evil-visualstar-mode)
   :custom
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
   )
 
-;;; evil-rcp.el ends here
+;;; keybinds-evil-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'evil-rcp)
+(provide 'keybinds-evil-rcp)

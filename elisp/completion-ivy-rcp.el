@@ -7,11 +7,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
+(require 'keybinds-general-rcp)
 
 ;;;; Interface
 ;;;;; Ivy
-;; Ido but more powerful and eye-pleasing
 (use-package ivy
   :demand t
   :general

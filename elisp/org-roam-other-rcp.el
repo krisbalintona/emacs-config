@@ -6,9 +6,9 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
 (require 'custom-directories-rcp)
+(require 'use-package-rcp)
+(require 'keybinds-general-rcp)
 
 ;;;; Citations
 ;;;;; Bibtex-completion

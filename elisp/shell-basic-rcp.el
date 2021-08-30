@@ -7,7 +7,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
+(require 'keybinds-general-rcp)
 
 ;;;; Comint
 ;; Derived mode for all shells in Emacs

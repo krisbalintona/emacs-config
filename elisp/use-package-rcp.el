@@ -10,16 +10,14 @@
 
 ;;;; Use-package
 (straight-use-package 'use-package)
-(use-package use-package
-  :custom
-  ;; (setq use-package-always-ensure t) ; May cause issues with straight.el
-  (use-package-expand-minimally t) ; Less verbose
-  ;; (setq use-package-compute-statistics t) ; Need this at "loadup time" or else errors about undefined variables will appear
+(require 'use-package)
+;; (setq use-package-always-ensure t) ; May cause issues with straight.el
+(setq use-package-expand-minimally t) ; Less verbose
+;; (setq use-package-compute-statistics t) ; Need this at "loadup time" or else errors about undefined variables will appear
 
-  ;; Set use-package-verbose to t for interpreted .emacs, and to nil for
-  ;; byte-compiled .emacs.elc.
-  (use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
-  )
+;; Set use-package-verbose to t for interpreted .emacs, and to nil for
+;; byte-compiled .emacs.elc.
+(setq use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
 
 ;;;; Use-package-ensure-system-package
 ;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword. Requires `system-packages'

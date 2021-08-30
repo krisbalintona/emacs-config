@@ -6,8 +6,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'general)
-(require 'keybinds-frameworks-rcp)
+(require 'use-package)
+(require 'keybinds-general-rcp)
 
 ;;;; Smtpmail
 ;; Sending emails with msmtp

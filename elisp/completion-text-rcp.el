@@ -7,7 +7,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
+(require 'keybinds-general-rcp)
 (require 'faces-rcp)
 
 ;;;; Company
@@ -19,7 +19,8 @@
   :demand t                             ; Necessary for other packages since I don't use it to load it anymore
   :after evil
   ;; :ghook ('after-init-hook 'global-company-mode)
-  :gfhook 'evil-normalize-keymaps
+  :gfhook
+  'evil-normalize-keymaps
   :general
   (:keymaps 'company-active-map
             "<escape>" '(lambda () (interactive) (company-abort) (evil-normal-state))
@@ -64,7 +65,7 @@
   ;;    company-echo-metadata-frontend  ; Show symbol metadata in echo area
   ;;    company-pseudo-tooltip-unless-just-one-frontend-with-delay ; Respect `company-idle-delay'
   ;;    ))
-  :init (require 'company-autoloads)    ; Make sure all company-backends are loaded
+  :init (require 'company-autoloads) ; Make sure all company-backends are loaded
   :config
   ;; Make `company-backends' buffer-local so that I can configure the enabled
   ;; backends based on major-mode rather than adding every backend to the global

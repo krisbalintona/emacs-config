@@ -1,0 +1,75 @@
+;;; keybinds-general-rcp.el --- Summary
+;;
+;;; Commentary:
+;;
+;; General.el setup and very broad keybindings.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Code:
+(require 'use-package-rcp)
+
+;;;; General itself
+;; Leader key capabilities and more convenient key definitions and bindings.
+(use-package general
+  :config
+  (general-auto-unbind-keys)        ; Overwrite keybinds without returning error
+  )
+
+;;;; Leader key
+;; My leader key definition and high-level keybindings
+(general-create-definer kb/leader-keys ; Use space as leader key
+  :keymaps '(normal visual insert motion emacs)
+  :prefix "SPC"
+  :global-prefix "M-SPC"
+  )
+
+;;;; Unbinding leader key prefix
+(general-unbind
+  :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map debugger-mode-map
+                           ;; Magit modes
+                           magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
+                           )
+  :states '(normal visual motion)
+  "SPC")
+
+;;;; Keybinding labels and orphan bindings
+(kb/leader-keys
+  "t" '(:ignore t :which-key "Toggles")
+  "o" '(:ignore t :which-key "Open...")
+  "oc" '(calc :which-key "Open calculator")
+  "b" '(:ignore t :which-key "Buffers")
+  "bp" '(previous-buffer :which-key "Prev buffer")
+  "bn" '(next-buffer :which-key "Next buffer")
+  "f" '(:ignore t :which-key "Files")
+  "ff" '(find-file :which-key "Find file")
+  "fs" '(save-buffer :which-key "Save buffer")
+  "h" '(:ignore t :which-key "Help")
+  "hf" '(describe-function :which-key "Desc func")
+  "hv" '(describe-variable :which-key "Desc var")
+  "ho" '(describe-symbol :which-key "Desc sym")
+  "q" '(:ignore t :which-key "Quit")
+  "qs" '(org-save-all-org-buffers :which-key "Save all org buffers")
+  "l" '(:ignore t :which-key "Langtool")
+  "n" '(:ignore t :which-key "Org-roam")
+  "i" '(:ignore t :which-key "Copying and pasting")
+  "w" '(:ignore t :which-key "Manage windows")
+  "g" '(:ignore t :which-key "git")
+  "e" '(:ignore t :which-key "Eval stuff")
+  "eb" '(eval-buffer :which-key "Eval buffer")
+  "ee" '(eval-last-sexp :which-key "Eval last sexp")
+  "er" '(eval-region :which-key "Eval region")
+  "u" '(universal-argument :which-key "Universal argument")
+  )
+
+;; Multiple universal arguments
+(general-define-key
+ :keymaps 'universal-argument-map
+ :states '(normal visual motion)
+ "u" 'universal-argument-more
+ )
+;; Make ESC quit everywhere
+(general-define-key "<escape>" 'keyboard-escape-quit)
+
+;;; keybinds-general-rcp.el ends here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'keybinds-general-rcp)
