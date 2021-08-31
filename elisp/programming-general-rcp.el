@@ -206,8 +206,8 @@ afterward."
     "hB" '(embark-bindings :which-key "Embark-bindings")
     )
   :custom
-  ;; Optionally replace the key help with a completing-read interface
-  (prefix-help-command #'embark-prefix-help-command)
+  (prefix-help-command #'embark-prefix-help-command) ; Optionally replace the key help with a completing-read interface
+  (embark-collect-live-update-delay 0.5)
   )
 
 ;;;;; Embark-consult
