@@ -28,6 +28,7 @@
           (unless (member base load-path)
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
+(update-to-load-path (expand-file-name "elisp/my-themes/" user-emacs-directory))
 (update-to-load-path (expand-file-name "exwm" user-emacs-directory))
 
 ;;;; Load packages

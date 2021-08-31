@@ -5,7 +5,6 @@
  ;; If there is more than one, they won't work right.
  '(company-show-quick-access nil nil nil "Customized with use-package company")
  '(confirm-kill-processes nil)
- '(custom-enabled-themes '(atom-one-dark))
  '(custom-safe-themes
    '("171d1ae90e46978eb9c342be6658d937a83aaa45997b1d7af7657546cae5985b" default))
  '(helm-minibuffer-history-key "M-p")

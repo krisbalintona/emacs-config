@@ -31,60 +31,65 @@
   (add-to-list 'default-frame-alist '(alpha . (98 . 98)))
   )
 
-;;;; Themes
-(use-package doom-themes
-  :disabled t
-  :config (load-theme 'doom-dracula t))
+;;;; Themes and toggling
 
-(use-package doom-themes
-  :disabled t
-  :config (load-theme 'doom-palenight t))
-
-(use-package mood-one-theme
-  :disabled t
-  :config (load-theme 'mood-one t))
-
-(use-package spacemacs-theme
-  :disabled t
-  :config (load-theme 'spacemacs-dark t))
-
+;;;;; Install themes
 ;; (use-package atom-one-dark-theme :demand t)
-(use-package apropospriate-theme :demand t)
+;; (use-package apropospriate-theme :demand t)
 
 (add-to-list 'custom-theme-load-path "/home/krisbalintona/.emacs.d/elisp/my-themes/")
-(require-theme 'uninspiring-dark-theme)
+(require 'uninspiring-dark-theme)
+(use-package modus-themes)
 
-;;;; Heaven-and-hell
-;; Toggle between light and dark themes
-(use-package heaven-and-hell
-  :hook ((after-init . heaven-and-hell-init-hook)
-         (window-configuration-change . kb/theme-faces)
-         )
-  :general
-  ("<f6>" '((lambda ()
-              (interactive)
-              (heaven-and-hell-toggle-theme)
-              (highlight-indent-guides-auto-set-faces)
-              (kb/doom-modeline-font-setup)
-              (kb/theme-faces)
-              )
-            :which-key "Toggle theme"
-            ))
-  :init
-  (setq custom--inhibit-theme-enable nil)
-  :config
-  (setq heaven-and-hell-theme-type 'dark) ; Use dark by default
-  (setq heaven-and-hell-themes ;; Themes can be the list: (dark . (tsdh-dark wombat))
-        '((dark . uninspiring-dark)
-          (light . apropospriate-light))
-        )
+;;;;; Variable declarations
+(defvar kb/themes-light 'modus-operandi
+  "My chosen light theme.")
+(defvar kb/themes-dark 'uninspiring-dark
+  "My chosen dark theme.")
 
-  ;; Load themes without asking for confirmation
-  (setq heaven-and-hell-load-theme-no-confirm t)
+(defvar kb/themes-hooks nil
+  "Hook that runs after the `kb/proper-load-theme-light' and
+`kb/proper-load-theme-dark'.")
 
-  ;; Cleanly load themes
-  (heaven-and-hell-clean-load-themes '(uninspiring-dark apropospriate-light))
+;;;;; Function definitions
+(defun kb/ensure-themes-loaded ()
+  "Ensure that the themes in `kb/themes-list' are loaded."
+  (unless (or (custom-theme-p kb/themes-dark)
+              (custom-theme-p kb/themes-light))
+    (load-theme kb/themes-dark t t)
+    (load-theme kb/themes-light t t))
   )
+(defun kb/proper-load-theme-light ()
+  "Properly load `kb/theme-light' theme by disabling its dark counterpart as well.
+Additionally, run `kb/themes-hooks'."
+  (interactive)
+  (disable-theme kb/themes-dark)
+  (load-theme kb/themes-light t)
+  (run-hooks 'kb/themes-hooks)
+  )
+(defun kb/proper-load-theme-dark ()
+  "Properly load `kb/theme-dark' theme by disabling its light counterpart as well.
+Additionally, run `kb/themes-hooks'."
+  (interactive)
+  (disable-theme kb/themes-light)
+  (load-theme kb/themes-dark t)
+  (run-hooks 'kb/themes-hooks)
+  )
+
+;;;;; Theme switcher
+(defun kb/theme-switcher ()
+  "Switch between the light and dark themes specified in `kb/themes-list'."
+  (interactive)
+  (kb/ensure-themes-loaded)
+  (let* ((current (car custom-enabled-themes)))
+    (cond ((equal kb/themes-light current) (kb/proper-load-theme-dark))
+          ((equal kb/themes-dark current) (kb/proper-load-theme-light))
+          ))
+  )
+(general-define-key "<f6>" 'kb/theme-switcher)
+
+;;;;; Load default theme
+(kb/proper-load-theme-dark)
 
 ;;;; Modeline segments
 ;; (Re)defining my own modeline segments
