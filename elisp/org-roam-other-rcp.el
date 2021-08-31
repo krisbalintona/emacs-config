@@ -59,23 +59,6 @@
 (use-package bibtex-actions
   :after (bibtex-completion embark)
   :general
-  (:keymaps 'bibtex-actions-map ; Custom keymap for `bibtex-actions'
-            "t" '("reference | add pdf attachment" . bibtex-actions-add-pdf-attachment)
-            "a" '("reference | add pdf to library" . bibtex-actions-add-pdf-to-library)
-            "b" '("reference | insert bibtex" . bibtex-actions-insert-bibtex)
-            "c" '("reference | insert citation" . bibtex-actions-insert-citation)
-            "k" '("reference | insert key" . bibtex-actions-insert-key)
-            "r" '("reference | insert" . bibtex-actions-insert-reference) ; Changed
-            "o" '("reference | open source" . bibtex-actions-open)
-            "e" '("reference | open entry" . bibtex-actions-open-entry)
-            "l" '("reference | open link" . bibtex-actions-open-link)
-            "n" '("reference | open notes" . bibtex-actions-open-notes)
-            "p" '("reference | open pdf" . bibtex-actions-open-pdf)
-            "R" '("reference | refresh library" . bibtex-actions-refresh) ; Changed
-            ;; Embark doesn't currently use the menu description.
-            ;; https://github.com/oantolin/embark/issues/251
-            "RET" '("reference | default action" . bibtex-actions-run-default-action)
-            )
   (kb/leader-keys
     "fa" '(bibtex-actions-insert-citation :which-key "Insert citation")
     "fA" '(bibtex-actions-open-notes :which-key "Open note")
