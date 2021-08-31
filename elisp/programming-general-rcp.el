@@ -27,7 +27,8 @@
   )
 
 ;;;;; Highlight-defined
-;; Have face for emacs-lisp variables already defined
+;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
+;; text which is the symbol of a face.
 (use-package highlight-defined
   :ghook 'prog-mode-hook
   :custom
