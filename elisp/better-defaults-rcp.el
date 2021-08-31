@@ -6,7 +6,6 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'straight-package-management-rcp)
 
 ;;;; No-littering
 ;; Set better default package paths
