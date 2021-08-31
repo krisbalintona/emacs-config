@@ -43,6 +43,7 @@
 ;;;; Desktop
 ;; Save buffers across Emacs sessions
 (use-package desktop
+  :disabled t
   :straight nil
   :hook ((window-setup . desktop-save-mode)
          (desktop-save-mode . desktop-read))
