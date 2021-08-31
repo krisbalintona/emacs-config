@@ -58,7 +58,7 @@
   (evil-want-integration t)
   (evil-want-keybinding nil)    ; Add more keybinds for other modes I don't want
   (evil-want-C-u-scroll t) ; Rebind C-u from universal argument to evil scroll up
-  (evil-want-C-i-jump nil)
+  (evil-want-C-i-jump t)   ; C-i keybinding for jumps?
   (evil-want-fine-undo t)               ; More granular undos
   (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
   (evil-want-Y-yank-to-eol t)
