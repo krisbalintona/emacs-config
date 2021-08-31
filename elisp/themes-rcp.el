@@ -342,44 +342,9 @@ UTF-8."
   )
 
 ;;;; Buffer display
-;;;;; Prettify-symbols-mode
-;; Turn arbitrary strings into desired unicode characters
-(use-package pretty-symbols
-  :ghook ('after-init-hook 'global-prettify-symbols-mode)
-  :custom
-  (prettify-symbols-alist '(("TODO" . "")
-                            ("WAIT" . "")
-                            ("NOPE" . "")
-                            ("DONE" . "")
-                            ("[#A]" . "")
-                            ("[#B]" . "")
-                            ("[#C]" . "")
-                            ("[ ]" . "")
-                            ("[X]" . "")
-                            ("[-]" . "")
-                            ("#+BEGIN_SRC" . "")
-                            ("#+END_SRC" . "―")
-                            (":PROPERTIES:" . "")
-                            (":END:" . "―")
-                            ("#+STARTUP:" . "")
-                            ;; ("#+TITLE: " . "")
-
-                            ("#+RESULTS:" . "")
-                            ("#+NAME:" . "")
-                            ("#+ROAM_TAGS:" . "")
-                            ("#+FILETAGS:" . "")
-                            ("#+HTML_HEAD:" . "")
-                            ("#+SUBTITLE:" . "")
-                            ("#+AUTHOR:" . "")
-                            (":Effort:" . "")
-                            ("SCHEDULED:" . "")
-                            ("DEADLINE:" . "")))
-  )
-
 ;;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
-  :straight nil
   :ghook 'prog-mode-hook 'LaTeX-mode-hook
   ;; :ghook 'prog-mode-hook
   :gfhook 'column-number-mode ; Column number in modeline
