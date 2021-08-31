@@ -15,7 +15,10 @@
   :straight nil
   :ghook 'after-init-hook
   :custom
+  (history-length 1000)
+  (history-delete-duplicates t)
   (savehist-autosave-interval 300)
+  (savehist-save-minibuffer-history t)
   :config
   (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
   (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
@@ -31,12 +34,15 @@
   (recentf-max-menu-items 15)
   )
 
-;;;; Save-place-mode
+;;;; Saveplace
 ;; Save and restore the point's location in files
 (use-package saveplace
   :straight nil
   :ghook ('after-init-hook 'save-place-mode)
+  :custom
+  (save-place-forget-unreadable-files t)
   )
+
 
 ;;; persistence-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
