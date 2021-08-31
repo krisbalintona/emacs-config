@@ -9,10 +9,9 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Eshell
+;;;; Esh-mode
 (use-package esh-mode
   :straight nil
-  :after shrink-path ; For a shorter directory name
   :gfhook
   ;; UI enhancements
   'visual-line-mode
@@ -175,9 +174,17 @@
 ;;;; Esh-opt
 (use-package esh-opt ; An eshell module that needs to be loaded
   :straight nil
+  :after esh-mode
   :custom
   (eshell-history-buffer-when-process-dies t)
   (eshell-visual-commands '("htop" "vi" "vim" "nvim" "btm")) ; Commands to run in term buffer to properly display from eshell
+  )
+
+;;;; Shrink-path
+;; Truncate eshell directory path (has to be configured in mycustom eshell
+;; prompt)
+(use-package shrink-path
+  :after esh-mode
   )
 
 ;;;; Eshell-toggle
@@ -198,7 +205,8 @@
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
-  :ghook ('after-init-hook 'eshell-syntax-highlighting-global-mode)
+  :ghook ('esh-mode-hook 'eshell-syntax-highlighting-global-mode nil nil t)
+  :config (eshell-syntax-highlighting-global-mode)
   )
 
 ;;;; Esh-autosuggest
@@ -207,8 +215,6 @@
   :ghook 'eshell-mode-hook
   :custom
   (esh-autosuggest-delay 0.25)
-  :config
-  (set-face-foreground 'company-preview-common "#4b5668")
   )
 
 ;;;; Fish-completion
@@ -216,35 +222,8 @@
 ;; native completion support (pcomplete).
 (use-package fish-completion
   :ensure-system-package (fish)
-  :ghook ('after-init-hook 'global-fish-completion-mode)
-  )
-
-;;;; Eshell-up
-;; Go up directories easily with eshell-up (as well as eshell-up-peek)
-;; Their aliases are up and pk,respectively
-(use-package eshell-up
-  :custom
-  (eshell-up-ignore-case nil)
-  (eshell-up-print-parent-dir t) ; Print the matching parent directory before changing to it:
-  )
-
-;;;; Eshell-z
-;; Port of z cli command. Cd into most used and recent directories
-;; Type z --help for usage
-(use-package eshell-z)
-
-;;;; Esh-help
-;; See help doctrings/man pages for any function via esh-help-run-help. Also see
-;; help strings if eldoc mode is enabled
-(use-package esh-help
-  :ghook ('after-init-hook 'setup-esh-help-eldoc)
-  )
-
-;;;; Shrink-path
-;; Truncate eshell directory path (has to be configured in mycustom eshell
-;; prompt)
-(use-package shrink-path
-  :after esh-mode
+  :defer 3
+  :config (global-fish-completion-mode)
   )
 
 ;;; shell-eshell-rcp.el ends here
