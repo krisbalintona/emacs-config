@@ -43,6 +43,18 @@
               evil-insert-state-map))
   )
 
+;;;; Proced
+;; Built in process monitor
+(use-package proced
+  :straight nil
+  :gfhook 'evil-emacs-state
+  :custom
+  (proced-auto-update-flag t)      ; Update live
+  (proced-auto-update-interval 1)
+  (proced-descend t)                ; Descending order?
+  (proced-filter 'all)      ; Which processes are shown?
+  )
+
 ;;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
