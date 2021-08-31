@@ -156,12 +156,12 @@
   :ghook ('after-init-hook 'corfu-global-mode)
   :general (:keymaps 'corfu-map
                      "<escape>" #'corfu-quit
-                     "<tab>" #'corfu-insert
-                     "C-<tab>" #'corfu-complete
-                     "C-<return>" '(lambda () (interactive) (corfu-quit) (newline))
+                     ;; "<tab>" #'corfu-insert
+                     ;; "<tab>" #'corfu-complete
+                     ;; "C-<tab>" #'corfu-complete
+                     ;; "C-<return>" '(lambda () (interactive) (corfu-quit) (newline))
                      "M-d" #'corfu-show-documentation
                      "M-l" #'corfu-show-location
-                     "M-:" #'((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
                      )
   :custom
   (tab-always-indent 'complete) ; Make sure tab doesn't indent when you want to perform completion
