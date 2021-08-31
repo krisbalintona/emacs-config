@@ -108,6 +108,7 @@
 (require 'rss-feed-rcp)
 
 ;;;;; Other
+(require 'web-browsing-rcp)
 (require 'finance-rcp)
 (require 'convenient-functions-rcp)
 (require 'misc-packages-rcp)
