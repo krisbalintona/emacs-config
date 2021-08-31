@@ -199,6 +199,7 @@ afterward."
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
+  :demand t               ; Other packages depend on this
   :after which-key ; Because I replace its value of `prefix-help-command'
   :general
   ("M-o" '(embark-act :which-key "Embark-act"))
