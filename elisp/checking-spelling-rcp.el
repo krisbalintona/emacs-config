@@ -37,7 +37,6 @@
 ;;;; Flyspell-lazy
 ;; Check on idle instead of instantly
 (use-package flyspell-lazy
-  :requires flyspell
   :after flyspell
   :ghook 'flyspell-mode-hook
   :custom
@@ -50,7 +49,6 @@
 ;;;; Flyspell-correct
 ;; Suggest correct spelling for words flyspell marks as incorrect
 (use-package flyspell-correct
-  :requires flyspell
   :after flyspell
   :general (kb/leader-keys
              "." '(flyspell-correct-next :which-key "Flyspell next")
@@ -63,7 +61,8 @@
   )
 
 ;;;; Abbrev-mode
-;; Automatically correct typed strings (e.g. words). Most useful for correcting spelling mistakes as they are made.
+;; Automatically correct typed strings (e.g. words). Most useful for correcting
+;; spelling mistakes as they are made.
 (use-package abbrev-mode
   :straight nil
   :ghook 'text-mode-hook 'prog-mode-hook

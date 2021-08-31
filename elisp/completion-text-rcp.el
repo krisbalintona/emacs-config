@@ -199,27 +199,22 @@
 ;;;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
-  :ghook ('after-init-hook 'yas-minor-mode-on)
-  :custom
-  (warning-suppress-types
-   '(((yasnippet backquote-change))
-     (comp)
-     (:warning))
-   )
+  :hook (window-setup . yas-global-mode)
   )
 
 ;;;;; Doom-snippets
 ;; Large library of snippet templates
 (use-package doom-snippets
   :after yasnippet
-  :hook (after-init . yas-reload-all)
   :straight (doom-snippts :type git :host github :repo "hlissner/doom-snippets")
+  :config (doom-snippets-initialize)
   )
 
 ;;;;; Org-tempo
 ;; Completion for org-block types
 (use-package org-tempo
   :straight nil
+  :defer 5
   :config
   (dolist (expansion '(("sh" . "src sh")
                        ("el" . "src emacs-lisp")

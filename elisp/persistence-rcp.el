@@ -12,7 +12,6 @@
 ;;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist
-  :straight nil
   :ghook 'after-init-hook
   :custom
   (history-length 10000)
@@ -27,7 +26,6 @@
 ;;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
-  :straight nil
   :ghook 'after-init-hook
   :custom
   (recentf-max-saved-items 1000)
@@ -37,7 +35,6 @@
 ;;;; Saveplace
 ;; Save and restore the point's location in files
 (use-package saveplace
-  :straight nil
   :ghook ('after-init-hook 'save-place-mode)
   :custom
   (save-place-forget-unreadable-files t)

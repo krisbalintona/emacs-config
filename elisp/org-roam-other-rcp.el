@@ -13,6 +13,7 @@
 ;;;; Citations
 ;;;;; Bibtex-completion
 (use-package bibtex-completion
+  :demand t                             ; Other citation packages depend on this
   :custom
   (bibtex-completion-notes-path kb/roam-dir) ; Irrelevant since I use org-roam-bibtex instead
   (bibtex-completion-library-path (concat kb/roam-dir "bibliographic/bib-pdfs")) ; Where bibtex searches for pdfs
@@ -101,7 +102,6 @@
 ;; and references into latex and org files
 (use-package org-ref
   :demand t ; Hard dependency for `org-roam-bibtex' (and maybe others)
-  :after (ivy bibtex-completion)
   :custom
   (org-ref-default-bibliography bibtex-completion-bibliography)
   (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
@@ -144,6 +144,7 @@
 (use-package org-roam-bibtex
   :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "master")
   :requires (org-ref org-roam)
+  :after org-ref
   :ghook ('org-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
   :custom
   (orb-preformat-keywords
@@ -247,7 +248,7 @@ Returns the buffer of the compilation process."
 
 ;;;;; Org-noter
 (use-package org-noter
-  :demand t ; Demand so it doesn't defer to noter insert call
+  :defer 10                      ; Load so it doesn't defer to noter insert call
   :general
   (:keymaps 'org-noter-doc-mode-map
             "M-o" 'org-noter-insert-note)

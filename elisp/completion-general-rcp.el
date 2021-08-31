@@ -14,7 +14,7 @@
 ;; Sorting and filtering of minibuffer candidates. Big benefit is having most
 ;; recent candidate shown on top
 (use-package prescient
-  :ghook ('after-init-hook 'prescient-persist-mode)
+  :ghook ('window-setup-hook 'prescient-persist-mode)
   :custom
   ;; How does it filter?
   (prescient-filter-alist '((literal . prescient-literal-regexp)
@@ -40,7 +40,7 @@
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
   :straight (marginalia :type git :host github :repo "minad/marginalia")
-  :ghook 'after-init-hook
+  :ghook 'window-setup-hook
   :general
   (:keymaps 'minibuffer-local-map
             "M-A" '(marginalia-cycle :which-key "Marginalia cycle"))

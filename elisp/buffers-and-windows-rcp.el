@@ -19,7 +19,7 @@
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*"))
-  (winner-boring-buffers-regexp "\\*helpful variable:\\|||*helpful command:\\|magit:") ; Skip `magit' and `helpful' buffers
+  (winner-boring-buffers-regexp "\\*helpful variable:\\|\\*helpful command:\\|magit:") ; Skip `magit' and `helpful' buffers
   )
 
 ;;;;; Shackle
@@ -108,6 +108,7 @@
 
 ;;;;; Burly
 (use-package burly
+  :disabled t ; NOTE 2021-08-30: For some reason, burly bookmarks can't be deleted by `bookmark-delete'
   :general (kb/leader-keys
              "Bw" '(burly-bookmark-windows :which-key "Burly windows")
              "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
@@ -119,8 +120,6 @@
 ;;;; Buffers
 ;;;;; Bookmark
 (use-package bookmark
-  :disabled t ; NOTE 2021-08-30: For some reason, burly bookmarks can't be deleted by `bookmark-delete'
-  :straight nil
   :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark

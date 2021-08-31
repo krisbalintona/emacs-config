@@ -42,11 +42,14 @@
   )
 
 ;;;; Org-attach
-(require 'org-attach)
-(setq org-attach-id-dir "attachments/"
-      org-attach-dir-relative t ; Use relative file paths
-      org-attach-method 'cp ; Attach copies of files
-      org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
+(use-package org-attach
+  :straight nil
+  :custom
+  (org-attach-id-dir "attachments/")
+  (org-attach-dir-relative t)        ; Use relative file paths
+  (org-attach-method 'cp)            ; Attach copies of files
+  (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
+  )
 
 ;;;; Aesthetics
 ;;;;; Org-superstar
@@ -130,8 +133,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                  (match-string 1 x)
-                                x))
+                                       (match-string 1 x)
+                                     x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)
