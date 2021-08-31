@@ -32,15 +32,46 @@
     )
   :custom
   (eshell-kill-processes-on-exit t)
-  (eshell-hist-ignoredups 'erase)       ; Only keep last duplicate
   (eshell-scroll-to-bottom-on-input 'all)
   (eshell-scroll-to-bottom-on-output 'all)
   (eshell-input-filter (lambda (input) (not (string-match-p "\\`\\s-+" input)))) ; Don't record command in history if prefixed with whitespace
   (eshell-glob-case-insensitive t)
   (eshell-error-if-no-glob t)
   (eshell-banner-message "Welcome to the shell, Onii-chan~ (◠﹏◠✿)\n")
+  ;; Taken from https://protesilaos.com/dotemacs/#h:103a8795-c29c-474f-9ddf-ecafaa2f6775
+  (eshell-modules-list
+   '(eshell-alias
+     eshell-basic
+     eshell-cmpl
+     eshell-dirs
+     eshell-glob
+     eshell-hist
+     eshell-ls
+     eshell-pred
+     eshell-prompt
+     eshell-script
+     eshell-term
+     eshell-tramp
+     eshell-unix))
   :preface (defvaralias 'esh-mode-hook 'eshell-mode-hook) ; For more convenient `:gfhook'
+  :init
+  ;; Eshell modules should be loaded manually
+  ;; Taken from
+  ;; https://protesilaos.com/dotemacs/#h:103a8795-c29c-474f-9ddf-ecafaa2f6775
+  (require 'em-cmpl)
+  (require 'em-dirs)
+  (setq eshell-cd-on-directory t)
+
+  (require 'em-tramp)
+  (setq password-cache t)               ; Cache password for tramp
+  (setq password-cache-expiry 600)      ; Seconds passwords are cached
+
+  (require 'em-hist)
+  (setq eshell-hist-ignoredups 'erase)  ; Only keep last duplicate
+  (setq eshell-save-history-on-exit t)
   :config
+  (setenv "PAGER" "cat") ; solves issues, such as with 'git log' and the default 'less'
+
   ;; Save history on eshell command
   (setq eshell-save-history-on-exit nil) ; Useless since only saves upon exiting eshell session
   (defun eshell-append-history ()
