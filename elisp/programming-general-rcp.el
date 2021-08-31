@@ -151,6 +151,9 @@ afterward."
   (kb/leader-keys
     "fr" '(consult-recent-file :which-key "Consult recent file")
 
+    "bb" 'consult-buffer
+    "bB" 'consult-buffer-other-window
+
     "mm" '(consult-bookmark :which-key "Consult bookmark")
     "mr" '(consult-mark :which-key "Consult mark-ring")
 
