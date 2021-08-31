@@ -24,7 +24,8 @@
 ;;;; Use-package-ensure-system-package
 ;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword. Requires `system-packages'
 (use-package use-package-ensure-system-package
-  :after (exec-path-from-shell system-packages)
+  :demand t                             ; Make sure this is loaded
+  :requires (exec-path-from-shell system-packages)
   )
 
 ;;; use-package-rcp.el ends here
