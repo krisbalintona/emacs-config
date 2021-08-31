@@ -57,7 +57,6 @@
 ;;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
-  :after (bibtex-completion embark)
   :general
   (kb/leader-keys
     "fa" '(bibtex-actions-insert-citation :which-key "Insert citation")
@@ -93,39 +92,6 @@
       (((background light)) :foreground "#fafafa"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
-  )
-
-;;;;; Ivy-bibtex
-;; Use ivy or helm search frontend with the bibtex-completion backend
-(use-package ivy-bibtex
-  ;; :disabled t ; Replaced by `bibtex-actions'. Can't disable because I need the ivy faces
-  :after org-roam
-  :general ("C-c b" '(ivy-bibtex :which-key "Ivy-bibtex")
-            ;; "fA" '(ivy-bibtex-with-notes :which-key "Ivy-bibtex only notes")
-            )
-  :init
-  (defun kb/bibtex-completion-format-citation-autocite (keys)
-    "My own bibtex-completion-format. Accepts KEYS."
-    (s-join ", "
-            (--map (format "autocite:%s" it) keys)))
-  :custom
-  (ivy-bibtex-default-action 'ivy-bibtex-insert-citation) ; Edit notes on default selection
-
-  :config
-  ;; ivy-bibtex requires ivy's `ivy--regex-ignore-order` which I already
-  ;; have set in ivy-re-builders-alist
-  (autoload 'ivy-bibtex "ivy-bibtex" "" t)
-
-  (ivy-set-actions ; Actions shown after M-o
-   'ivy-bibtex
-   '(("p" ivy-bibtex-open-any "Open PDF, URL, or DOI")
-     ("e" ivy-bibtex-edit-notes "Edit notes")
-     ("c" ivy-bibtex-insert-citation "Insert citation")
-     ("k" ivy-bibtex-insert-key "Insert key")
-     ("r" ivy-bibtex-insert-reference "Insert reference")
-     ("P" ivy-bibtex-open-annotated-pdf "Open annotated PDF (if present)") ; This last function doesn't have an associated action yet (for annotated pdfs)
-     ("a" bibtex-completion-add-pdf-to-library "Add pdf to library")
-     ))
   )
 
 ;;;;; Org-ref
