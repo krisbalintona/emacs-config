@@ -62,7 +62,6 @@
 ;;;;; Ace-jump
 ;; Quickly jump to any character
 (use-package ace-jump-mode
-  :hook (org-mode . (lambda () (face-remap-add-relative 'ace-jump-face-foreground :font kb/variable-pitch-font)))
   :general ("M-a" '(ace-jump-mode :which-key "Ace-jump"))
   :config
   (setq ace-jump-mode-scope 'window
@@ -123,12 +122,6 @@ afterward."
         (insert "\n")))
     (evil-insert-state))
   (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
-  :config
-  ;; Outshine headline faces
-  (set-face-attribute 'outshine-level-4 nil :inherit 'outline-5)
-  (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
-  (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
-  (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
   )
 
 ;;;;; Consult

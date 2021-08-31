@@ -307,12 +307,6 @@ UTF-8."
   (doom-modeline-height 33)
   (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
   (doom-modeline-window-width-limit 100) ; Width of the bar segment
-  :init
-  (defun kb/doom-modeline-font-setup ()
-    "Set doom modeline fonts."
-    (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
-    (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
-    )
   )
 
 ;;;; Buffer display

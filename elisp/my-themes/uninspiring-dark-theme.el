@@ -51,11 +51,10 @@
                    ("atom-one-dark-gray"     . (if ,256color "color-237" "#3E4451"))
                    ("atom-one-dark-silver"   . (if ,256color "color-247" "#9DA5B4"))
                    ("atom-one-dark-black"    . (if ,256color "color-233" "#21252B"))
-                   ("atom-one-dark-border"   . (if ,256color "color-232" "#181A1F")))))
+                   ("atom-one-dark-border"   . (if ,256color "color-232" "#181A1F"))
+                   )))
     colors)
   "List of Atom One Dark colors.")
-
-;;; Bind variables to colors
 (defmacro atom-one-dark-with-color-variables (&rest body)
   "Bind the colors list around BODY."
   (declare (indent 0))
@@ -65,11 +64,20 @@
                     atom-one-dark-colors-alist))
      ,@body))
 
+;;; Define font families
+(defvar uninspiring-dark-default "Iosevka Term SS04")
+(defvar uninspiring-dark-fixed-pitch "Hack Nerd Font Mono")
+(defvar uninspiring-dark-variable-pitch "LiterationSerif Nerd Font")
+
+;;; Bind variables to colors
 (atom-one-dark-with-color-variables
   (custom-theme-set-faces
    'uninspiring-dark
 
-   `(default ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg))))
+;;;; Standard faces broad
+   `(default ((t (:font ,uninspiring-dark-default :height 136 :foreground ,atom-one-dark-fg :background ,atom-one-dark-bg))))
+   `(fixed-pitch ((t (:font ,uninspiring-dark-fixed-pitch :height 140))))
+   `(variable-pitch ((t (:font ,uninspiring-dark-variable-pitch :height 158))))
    `(success ((t (:foreground ,atom-one-dark-green))))
    `(warning ((t (:foreground ,atom-one-dark-orange-2))))
    `(error ((t (:foreground ,atom-one-dark-red-1 :weight bold))))
@@ -102,12 +110,12 @@
    `(font-lock-negation-char-face ((t (:foreground ,atom-one-dark-cyan :bold t))))
 
 ;;;; Mode-line
-   `(mode-line ((t (:background ,atom-one-dark-black :foreground ,atom-one-dark-silver :box (:color ,atom-one-dark-border :line-width 1)))))
+   `(mode-line ((t (:family "NotoSans Nerd Font" :height 0.77 :background ,atom-one-dark-black :foreground ,atom-one-dark-silver :box (:color ,atom-one-dark-border :line-width 1)))))
    `(mode-line-buffer-id ((t (:weight bold))))
    `(mode-line-emphasis ((t (:weight bold))))
-   `(mode-line-inactive ((t (:background ,atom-one-dark-border :foreground ,atom-one-dark-gray :box (:color ,atom-one-dark-border :line-width 1)))))
+   `(mode-line-inactive ((t (:inherit mode-line))))
 
-   ;; window-divider
+;;;; Window-divider
    `(window-divider ((t (:foreground ,atom-one-dark-border))))
    `(window-divider-first-pixel ((t (:foreground ,atom-one-dark-border))))
    `(window-divider-last-pixel ((t (:foreground ,atom-one-dark-border))))
@@ -117,10 +125,16 @@
 
 ;;;; Ace-jump
    `(ace-jump-face-background ((t (:foreground ,atom-one-dark-mono-3 :background ,atom-one-dark-bg-1 :inverse-video nil))))
-   `(ace-jump-face-foreground ((t (:foreground ,atom-one-dark-red-1 :background ,atom-one-dark-bg-1 :inverse-video nil))))
+   `(ace-jump-face-foreground ((t (:font ,uninspiring-dark-variable-pitch :foreground ,atom-one-dark-red-1 :background ,atom-one-dark-bg-1 :inverse-video nil))))
+
+;;;; Outshine
+   `(outshine-level-4 ((t :inherit outline-5)))
+   `(outshine-level-5 ((t :inherit outline-6)))
+   `(outshine-level-6 ((t :inherit outline-8)))
+   `(outshine-level-8 ((t :inherit outline-7)))
 
 ;;;; Company-mode
-   `(company-tooltip ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg-1))))
+   `(company-tooltip ((t (:font ,uninspiring-dark-fixed-pitch :height 127 :foreground ,atom-one-dark-fg :background ,atom-one-dark-bg-1))))
    `(company-tooltip-annotation ((t (:foreground ,atom-one-dark-mono-2 :background ,atom-one-dark-bg-1))))
    `(company-tooltip-annotation-selection ((t (:foreground ,atom-one-dark-mono-2 :background ,atom-one-dark-gray))))
    `(company-tooltip-selection ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-gray))))
@@ -128,7 +142,7 @@
    `(company-tooltip-common ((t (:foreground ,atom-one-dark-orange-2 :background ,atom-one-dark-bg-1))))
    `(company-tooltip-common-selection ((t (:foreground ,atom-one-dark-orange-2 :background ,atom-one-dark-gray))))
    `(company-preview ((t (:background ,atom-one-dark-bg))))
-   `(company-preview-common ((t (:foreground ,atom-one-dark-orange-2 :background ,atom-one-dark-bg))))
+   `(company-preview-common ((t (:foreground ,atom-one-dark-orange-2 :background "#4b5668"))))
    `(company-scrollbar-fg ((t (:background ,atom-one-dark-mono-1))))
    `(company-scrollbar-bg ((t (:background ,atom-one-dark-bg-1))))
    `(company-template-field ((t (:inherit highlight))))
@@ -440,13 +454,13 @@
    `(org-footnote ((t (:foreground ,atom-one-dark-cyan))))
    `(org-sexp-date ((t (:foreground ,atom-one-dark-cyan))))
 
-   `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
-   `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,kb/variable-pitch-font))) t)
-   `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,kb/variable-pitch-font))) t)
-   `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,kb/variable-pitch-font))) t)
-   `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,kb/variable-pitch-font))) t)
+   `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,uninspiring-dark-variable-pitch))) t)
+   `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,uninspiring-dark-variable-pitch))) t)
+   `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,uninspiring-dark-variable-pitch))) t)
+   `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,uninspiring-dark-variable-pitch))) t)
+   `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,uninspiring-dark-variable-pitch))) t)
 
-   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
+   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,uninspiring-dark-variable-pitch :height 145 :underline nil))))
    `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
    `(org-quote ((t (:inherit org-block :height 143))) t)
    `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
