@@ -12,6 +12,7 @@
 ;;;; Vterm
 ;; Full-fledged terminal emulator
 (use-package vterm
+  :demand t
   :ensure-system-package (("/usr/lib64/libvterm.so.0" . libvterm) ; Specifically for Fedora
                           (libtool)
                           ("/usr/include/vterm.h" . "libvterm-devel")
