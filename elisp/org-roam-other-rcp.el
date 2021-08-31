@@ -82,21 +82,13 @@
     )
   :custom
   ;; What the minibuffer displays
-  (bibtex-actions-template '((t . "${author:40}   ${title:130}")))
-  (bibtex-actions-template-suffix '((t . "     ${=type=:20}")))
+("${author editor:30}     ${date year issued:4}     ${title:48}" . "          ${=key= id:15}    ${=type=:12}    ${tags keywords keywords:*}")
+  (bibtex-actions-template '("${author:40}   ${title:130}" . "     ${=type=:20}"))
 
   ;; A list of predefined searches
   (bibtex-actions-presets '("has:note"))
 
   (bibtex-actions-at-point-function 'embark-act)
-
-  ;; Initial input depending on `bibtex-actions-open-*'
-  (bibtex-actions-initial-inputs
-   '((pdf    . "has:pdf")
-     (note   . "has:note")
-     (link   . "has:link")
-     (source . "has:link\\|has:pdf"))
-   )
   :config
   ;; Make the 'bibtex-actions' bindings and targets available to `embark'.
   (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
@@ -168,7 +160,7 @@
   (org-ref-pdf-directory bibtex-completion-library-path)
   (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
 
-  (org-ref-completion-library 'org-ref-ivy-cite) ; Use ivy
+  (org-ref-completion-library 'org-ref-reftex) ; Org completion
   (org-ref-note-title-format
    "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
   (org-ref-notes-function 'orb-edit-notes)
