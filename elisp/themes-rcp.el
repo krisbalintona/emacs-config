@@ -48,9 +48,11 @@
   :disabled t
   :config (load-theme 'spacemacs-dark t))
 
-(use-package atom-one-dark-theme :demand t)
-
+;; (use-package atom-one-dark-theme :demand t)
 (use-package apropospriate-theme :demand t)
+
+(add-to-list 'custom-theme-load-path "/home/krisbalintona/.emacs.d/elisp/my-themes/")
+(require-theme 'uninspiring-dark-theme)
 
 ;;;; Heaven-and-hell
 ;; Toggle between light and dark themes
@@ -73,7 +75,7 @@
   :config
   (setq heaven-and-hell-theme-type 'dark) ; Use dark by default
   (setq heaven-and-hell-themes ;; Themes can be the list: (dark . (tsdh-dark wombat))
-        '((dark . atom-one-dark)
+        '((dark . uninspiring-dark)
           (light . apropospriate-light))
         )
 
@@ -81,40 +83,7 @@
   (setq heaven-and-hell-load-theme-no-confirm t)
 
   ;; Cleanly load themes
-  (heaven-and-hell-clean-load-themes '(atom-one-dark apropospriate-light))
-  )
-
-;;;;; Set faces based on theme
-(defun kb/theme-faces ()
-  "Set light and dark theme faces."
-  (interactive)
-  (defvar heaven-and-hell-themes)
-  (require 'heaven-and-hell)
-  (custom-theme-set-faces ; Dark theme
-   (cdr (car (cdr heaven-and-hell-themes)))
-   `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
-   `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,kb/variable-pitch-font))) t)
-   `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,kb/variable-pitch-font))) t)
-   `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,kb/variable-pitch-font))) t)
-   `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,kb/variable-pitch-font))) t)
-
-   `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
-   `(org-quote ((t (:inherit org-block :height 143))) t)
-   `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-verbatim ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-table ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-   `(org-checkbox ((t (:inherit fixed-pitch))) t)
-   `(org-tag ((t (:height 153 :bold t :italic t))) t)
-   `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
-   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
-   `(bookmark-face ((t (:foreground nil :background nil))))
-   `(vertico-current ((t (:background "#3a3f5a"))))
-   )
-  ;; (custom-theme-set-faces ; Light theme
-  ;;  (cdr (car heaven-and-hell-themes))
-  ;;  )
+  (heaven-and-hell-clean-load-themes '(uninspiring-dark apropospriate-light))
   )
 
 ;;;; Modeline segments
