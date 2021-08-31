@@ -65,8 +65,7 @@
     )
   :custom
   ;; What the minibuffer displays
-("${author editor:30}     ${date year issued:4}     ${title:48}" . "          ${=key= id:15}    ${=type=:12}    ${tags keywords keywords:*}")
-  (bibtex-actions-template '("${author:40}   ${title:130}" . "     ${=type=:20}"))
+  (bibtex-actions-template '("${author editor:40}   ${date year issued:4}    ${title:115}" . "     ${=type=:20}    ${tags keywords keywords:*}"))
 
   ;; A list of predefined searches
   (bibtex-actions-presets '("has:note"))
