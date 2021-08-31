@@ -268,13 +268,10 @@ UTF-8."
 ;; Display batter percentage
 (use-package battery
   :straight nil
+  :ghook ('doom-modeline-mode-hook 'display-battery-mode)
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
-  :config
-  (unless (equal "Battery status not available"
-                 (battery))
-    (display-battery-mode t)) ; Show battery in modeline
   )
 
 ;;;; Modeline
