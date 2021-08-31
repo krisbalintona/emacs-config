@@ -73,6 +73,9 @@
               native-comp-async-report-warnings-errors 'silent                                    ; Show in *Warnings*  buffer but don't show buffer
               )
 
+;;;; Save replaced text into kill ring
+(setq save-interprogram-paste-before-kill t)
+
 ;;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
 
