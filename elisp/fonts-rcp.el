@@ -1,8 +1,8 @@
-;;; faces-rcp.el --- Summary
+;;; fonts-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
-;; All the faces and fonts I use.
+;; Packages related to fonts and faces.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -44,6 +44,6 @@
 ;; Text-scale-mode but Emacs-wide
 (use-package default-text-scale)
 
-;;; faces-rcp.el ends here
+;;; fonts-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'faces-rcp)
+(provide 'fonts-rcp)

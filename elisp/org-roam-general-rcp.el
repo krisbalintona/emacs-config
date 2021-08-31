@@ -9,7 +9,6 @@
 (require 'custom-directories-rcp)
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-(require 'faces-rcp)
 
 ;;;; Org-roam
 (use-package org-roam

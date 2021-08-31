@@ -53,7 +53,7 @@
 (require 'keybinds-evil-rcp)
 
 ;;;;; Aethetics
-(require 'faces-rcp)
+(require 'fonts-rcp)
 (require 'themes-rcp)
 
 ;;;;; Completion frameworks

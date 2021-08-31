@@ -9,7 +9,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-(require 'faces-rcp)
+(require 'fonts-rcp)
 
 ;;;; UI
 ;;;;; Remove unnecessary UI
