@@ -40,6 +40,34 @@
   (save-place-forget-unreadable-files t)
   )
 
+;;;; Desktop
+;; Save buffers across Emacs sessions
+(use-package desktop
+  :straight nil
+  :hook ((window-setup . desktop-save-mode)
+         (desktop-save-mode . desktop-read))
+  :custom
+  (desktop-dirname (no-littering-expand-var-file-name "desktop/"))
+  (desktop-base-file-name "emacs.desktop")
+  (desktop-path (list desktop-dirname))
+  (desktop-auto-save)
+  (desktop-save 'ask-if-new)
+  (desktop-files-not-to-save "^$")      ; Reload tramp paths
+  (desktop-load-locked-desktop 'ask)
+  (desktop-auto-save-timeout 20)
+  (desktop-buffers-not-to-save
+   (concat "\\("
+           "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
+           "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
+           "\\)$"))
+
+  ;; Lazy loading
+  (desktop-lazy-idle-delay 5)
+  (desktop-restore-eager nil)
+  (desktop-lazy-verbose nil)
+  ;; :config
+  ;; (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
+  )
 
 ;;; persistence-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
