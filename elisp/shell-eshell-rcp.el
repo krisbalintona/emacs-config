@@ -244,7 +244,7 @@
 ;; Truncate eshell directory path (has to be configured in mycustom eshell
 ;; prompt)
 (use-package shrink-path
-  :demand t
+  :after esh-mode
   )
 
 ;;; shell-eshell-rcp.el ends here
