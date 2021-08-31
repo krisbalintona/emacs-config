@@ -15,13 +15,13 @@
   :straight nil
   :ghook 'after-init-hook
   :custom
-  (history-length 1000)
+  (history-length 10000)
   (history-delete-duplicates t)
-  (savehist-autosave-interval 300)
+  (savehist-autosave-interval 30)
   (savehist-save-minibuffer-history t)
   :config
   (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
-  (add-to-list 'savehist-additional-variables 'kill-ring) ; Save kill ring
+  (add-to-list 'savehist-additional-variables 'kill-ring)    ; Save kill ring
   )
 
 ;;;; Recentf
