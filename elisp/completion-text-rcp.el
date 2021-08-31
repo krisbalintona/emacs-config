@@ -163,6 +163,8 @@
                      "M-:" #'((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
                      )
   :custom
+  (tab-always-indent 'complete) ; Make sure tab doesn't indent when you want to perform completion
+
   (corfu-auto t)
   (corfu-auto-prefix 3)
   (corfu-auto-delay 0.15)
