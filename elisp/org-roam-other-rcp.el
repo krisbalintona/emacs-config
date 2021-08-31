@@ -36,7 +36,7 @@
 
   ;; Citation format when citing using `ivy-bibtex'
   (bibtex-completion-format-citation-functions
-   '((org-mode . kb/bibtex-completion-format-citation-autocite) ; I changed this line
+   '((org-mode . bibtex-completion-format-citation-cite) ; I changed this line
      (latex-mode . bibtex-completion-format-citation-cite)
      (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
      (python-mode . bibtex-completion-format-citation-sphinxcontrib-bibtex)
