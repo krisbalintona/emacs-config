@@ -256,6 +256,7 @@ is only tested on \"insert\" action."
            :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
 
   ;; emacs-lisp-mode
+  (sp-local-pair 'emacs-lisp-mode "<" ">" :actions '(insert autoskip navigate))
   (sp-local-pair 'emacs-lisp-mode "(" ")"
                  :actions '(insert autoskip navigate)
                  :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
