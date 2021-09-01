@@ -12,11 +12,11 @@
 ;;;; Lsp-mode
 ;; Use the language server protocol as a backend for Emacs.
 (use-package lsp-mode
-  :ghook ('prog-mode-mode-hook 'lsp-deferred) ; Lsp-mode only when buffer is visible
+  ;; Lsp-mode only when buffer is visible
+  :hook ((lua-mode . lsp-deferred)
+         (haskell-mode . lsp-deferred)
+         )
   :gfhook 'lsp-enable-which-key-integration 'lsp-headerline-breadcrumb-mode
-  :general
-  (:keymaps 'lsp-mode-map
-            "TAB" 'company-indent-or-complete-common)
   (kb/leader-keys
     "ld" 'xref-find-definitions
     "lr" 'xref-find-references
