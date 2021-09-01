@@ -353,6 +353,19 @@ is only tested on \"insert\" action."
   (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
   )
 
+;;;;; Imenu
+(use-package imenu
+  :custom 
+  (org-imenu-depth 7)                   ; Show more than just 2 levels...
+  )
+
+;;;;; Imenu-list
+;; Side buffer with imenu items
+(use-package imenu-list
+  :general (kb/leader-keys
+             "sI" '(imenu-list :which-key "Imenu list"))
+  )
+
 ;;; programming-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-general-rcp)
