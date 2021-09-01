@@ -19,14 +19,6 @@
   :gfhook
   'lsp-enable-which-key-integration
   'lsp-headerline-breadcrumb-mode
-  :general
-  (kb/leader-keys
-    "ln" 'lsp-ui-find-next-reference
-    "lp" 'lsp-ui-find-prev-reference
-    "le" 'lsp-ui-flycheck-list
-    "lS" 'lsp-ui-sideline-mode
-    "lX" 'lsp-execute-code-action
-    )
   :custom
   (lsp-keymap-prefix "C-x l")
   (lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
