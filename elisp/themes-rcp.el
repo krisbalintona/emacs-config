@@ -261,7 +261,7 @@ UTF-8."
   :ghook ('after-init-hook 'display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
-  (display-time-default-load-average nil) ; Don't show load average along with time
+  (display-time-default-load-average 1) ; Don't show load average along with time
   )
 
 ;;;;; Battery
