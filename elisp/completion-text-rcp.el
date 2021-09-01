@@ -167,8 +167,8 @@
   :custom
   (tab-always-indent 'complete) ; Make sure tab doesn't indent when you want to perform completion
 
-  (corfu-auto t)
-  (corfu-auto-prefix 3)
+  (corfu-auto nil)
+  (corfu-auto-prefix 2)
   (corfu-auto-delay 0.15)
 
   (corfu-count 13)
@@ -178,7 +178,7 @@
 
   (corfu-echo-documentation t)
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
-  (corfu-quit-no-match 1.0) ; Quit if 0 matches, assuming completion started within this integer
+  (corfu-quit-no-match 1.2) ; Quit if 0 matches, assuming completion started within this integer
   (corfu-commit-predicate t)
   )
 
