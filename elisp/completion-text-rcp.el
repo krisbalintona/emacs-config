@@ -196,6 +196,13 @@
             #'completion-file-name-table :exclusive 'no))))
 (add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
 
+;;;;; Dabbrev
+(use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :general ("M-/" 'dabbrev-completion
+            "C-M-/" 'dabbrev-expand)
+  )
+
 ;;;; Expansion
 ;;;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
