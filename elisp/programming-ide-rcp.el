@@ -44,6 +44,37 @@
   ;; :ensure-system-package ("pip install \"ptvsd>=4.2\"")
   )
 
+;;;; Tree-sitter
+;; Create a syntax tree (e.g. the role of each piece of code) and add syntax
+;; highlighting from it (rather than regex and indentation). Additionally, the
+;; syntax tree itsel can help debug and quick editing in some cases.
+;; The following are the currently supported languages (provided by `tree-sitter-langs')
+;; C
+;; C++
+;; CSS
+;; Go
+;; HTML
+;; Java
+;; JavaScript
+;; PHP
+;; Python
+;; Ruby
+;; Rust
+;; TypeScript
+(use-package tree-sitter
+  :defer 10
+  :gfhook 'tree-sitter-hl-mode          ; Enable syntax highlighting
+  :init
+  (use-package tree-sitter-langs        ; Need support for languages
+    :demand t
+    :config
+    (tree-sitter-langs-install-grammars
+     t
+     tree-sitter-langs--bundle-version
+     tree-sitter-langs--os))
+  :config (global-tree-sitter-mode) ; Enable for all supported tree-sitter languages
+  )
+
 ;;;; Ancillary
 ;;;;; Company-lsp
 ;; Company integration with lsp-mode
