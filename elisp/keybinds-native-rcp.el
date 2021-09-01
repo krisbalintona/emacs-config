@@ -45,7 +45,7 @@
                  (yank)
                  (indent-according-to-mode)
                  (back-to-indentation))
- "C-a" 'move-beginning-of-line
+ "C-a" 'back-to-indentation
  "C-e" 'move-end-of-line
  )
 
