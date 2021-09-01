@@ -65,6 +65,14 @@
 
 ;;;;; Project.el
 (use-package project
+  :custom
+  (project-switch-commands
+   '((project-find-file "Find file")
+     (project-find-regexp "Find regexp")
+     (project-dired "Dired")
+     (project-eshell "Eshell")
+     (magit-project-status "Magit"))
+   )
   :config
   (kb/leader-keys
     "p" '(:ignore t :which-key "Project")
