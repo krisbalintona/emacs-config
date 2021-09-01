@@ -280,7 +280,7 @@ UTF-8."
 (use-package doom-modeline
   :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
   :ghook 'server-after-make-frame-hook 'window-setup-hook
-  :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
+  :gfhook 'kb/set-doom-modeline-segments
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.

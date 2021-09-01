@@ -43,8 +43,6 @@
   (setf (alist-get 't ivy-format-functions-alist) #'ivy-format-function-line)
 
   ;; Faces
-  (set-face-attribute 'ivy-minibuffer-match-face-1 nil :height 136)
-
   ;; Counsel changes a lot of ivy's state at startup; to control for that, we
   ;; need to load it as early as possible. Some packages (like `ivy-prescient')
   ;; require this.

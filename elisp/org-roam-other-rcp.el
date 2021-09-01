@@ -288,12 +288,6 @@ Returns the buffer of the compilation process."
   :config
   ;; Currently need to look through Roam directory, not just agenda files
   (org-id-update-id-locations (org-roam--list-all-files))
-
-  ;; Make fringe in referenced node invisible
-  (set-face-attribute
-   'org-transclusion-source-fringe nil
-   :foreground (face-background 'default)
-   :background (face-background 'default))
   )
 
 ;;;; Org-roam-ui

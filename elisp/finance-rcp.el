@@ -112,8 +112,6 @@
       ))
   :config
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
-
-  (set-face-attribute 'ledger-font-xact-highlight-face nil :inherit nil)
   )
 
 ;;;; Flycheck-ledger

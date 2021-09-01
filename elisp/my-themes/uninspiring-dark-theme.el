@@ -151,8 +151,8 @@
    `(doom-modeline-bar ((t (:background ,atom-one-dark-accent))))
 
 ;;;; Flyspell
-   `(flyspell-duplicate ((t (:underline (:color ,atom-one-dark-orange-1 :style wave)))))
-   `(flyspell-incorrect ((t (:underline (:color ,atom-one-dark-red-1 :style wave)))))
+   `(flyspell-duplicate ((t (:underline (:color "#D19A66" :style line)))))
+   `(flyspell-incorrect ((t (:underline (:color "red2" :style wave)))))
 
 ;;;; Flycheck
    `(flycheck-error ((t (:underline (:color ,atom-one-dark-red-1 :style wave)))))
@@ -191,7 +191,7 @@
    `(ivy-current-match ((t (:background ,atom-one-dark-gray :weight normal))))
    `(ivy-highlight-face ((t (:inherit font-lock-builtin-face))))
    `(ivy-match-required-face ((t (:inherit minibuffer-prompt :foreground ,atom-one-dark-red-1))))
-   `(ivy-minibuffer-match-face-1 ((t (:background ,atom-one-dark-bg-hl))))
+   `(ivy-minibuffer-match-face-1 ((t (:background ,atom-one-dark-bg-hl :height 136))))
    `(ivy-minibuffer-match-face-2 ((t (:inherit ivy-minibuffer-match-face-1 :background ,atom-one-dark-black :foreground ,atom-one-dark-purple :weight semi-bold))))
    `(ivy-minibuffer-match-face-3 ((t (:inherit ivy-minibuffer-match-face-2 :background ,atom-one-dark-black :foreground ,atom-one-dark-green :weight semi-bold))))
    `(ivy-minibuffer-match-face-4 ((t (:inherit ivy-minibuffer-match-face-2 :background ,atom-one-dark-black :foreground ,atom-one-dark-orange-2 :weight semi-bold))))
@@ -519,6 +519,31 @@
 
 ;;;; Vertico
    `(vertico-current ((t (:background "#3a3f5a"))))
+
+;;;; Highlight-defined
+   `(highlight-defined-variable-name-face ((t (:inherit font-lock-variable-name-face :foreground "#9caabf"))))
+
+;;;; Ledger
+   `(ledger-font-xact-highlight-face ((t (:inherit nil))))
+
+;;;; Org-transclusion
+   ;; NOTE 2021-08-31: Don't know if this is correctly written. Haven't tested
+   ;; yet.
+   `(org-transclusion-source-fringe ((t (:foreground (face-background default) :background (face-background default))))) ; Make fringe in referenced node invisible
+
+;;;; Marginalia
+   ;; `(marginalia-documentation ((t (:inherit nil :foreground "#98C379" slant italic))))
+
+;;;; Selectrum
+   `(selectrum-current-candidate ((t (:background "#3E4451" :extend t :weight 'semi-bold))))
+   `(selectrum-completion-annotation ((t (:inherit success))))
+   `(selectrum-prescient-primary-highlight ((t (:foreground "#dc85f7"))))
+   `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
+
+;;;; Eyebrowse
+   `(selectrum-prescient-primary-highlight ((t (:foreground "#dc85f7"))))
+   `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
+
 
 ;;;; End
    ))

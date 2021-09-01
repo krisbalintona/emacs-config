@@ -85,14 +85,6 @@
   ;; visible candidates.
   (setq orderless-skip-highlighting (lambda () selectrum-is-active)
         selectrum-highlight-candidates-function #'orderless-highlight-matches)
-
-  ;; Selectrum minibuffer faces
-  ;; Foregrounds based on ivy-minibuffer-match-face-*
-  (set-face-attribute 'selectrum-current-candidate nil
-                      :inherit 'ivy-minibuffer-match-highlight
-                      :weight 'semi-bold)
-  (set-face-attribute 'selectrum-completion-annotation nil
-                      :inherit 'ivy-grep-info)
   )
 
 ;;;;; Selectrum-prescient
@@ -107,11 +99,6 @@
   ;; simultaneously.
   (selectrum-prescient-enable-filtering t)
   (selectrum-prescient-enable-sorting t)
-  :config
-  (set-face-attribute 'selectrum-prescient-primary-highlight nil
-                      :foreground "#dc85f7")
-  (set-face-attribute 'selectrum-prescient-secondary-highlight nil
-                      :foreground "#E5C07B")
   )
 
 ;;;; Orderless

@@ -33,8 +33,6 @@
   :ghook 'prog-mode-hook
   :custom
   (highlight-defined-face-use-itself t)
-  :config
-  (set-face-attribute 'highlight-defined-variable-name-face nil :inherit 'font-lock-variable-name-face :foreground "#9caabf")
   )
 
 ;;;;; Highlight-quoted
