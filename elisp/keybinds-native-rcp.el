@@ -27,7 +27,7 @@
                  (interactive)
                  (forward-line -1)
                  (back-to-indentation))
- "<return>" '(lambda ()                 ; Newline with indent
+ [remap newline] '(lambda ()            ; Newline with indent
                (interactive)
                (insert "\n")
                (indent-according-to-mode))

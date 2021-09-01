@@ -150,15 +150,20 @@
 ;; the Emacs infrastructure
 (use-package corfu
   :ghook ('after-init-hook 'corfu-global-mode)
-  :general (:keymaps 'corfu-map
-                     "<escape>" #'corfu-quit
-                     ;; "<tab>" #'corfu-insert
-                     ;; "<tab>" #'corfu-complete
-                     ;; "C-<tab>" #'corfu-complete
-                     ;; "C-<return>" '(lambda () (interactive) (corfu-quit) (newline))
-                     "M-d" #'corfu-show-documentation
-                     "M-l" #'corfu-show-location
-                     )
+  :general
+  (:keymaps 'global-map
+            :states 'insert
+            ;; NOTE 2021-08-31: These keybinds override very annoying bindings.
+            ;; This should be set later in the config (after evil) other wise
+            ;; evil will overwrite those bindings
+            "<tab>" 'completion-at-point
+            "C-n" 'next-line            ; `corfu-next'
+            "C-p" 'previous-line)       ; `corfu-previous'
+  (:keymaps 'corfu-map
+            "<escape>" #'corfu-quit
+            "<return>" #'corfu-insert
+            "M-d" #'corfu-show-documentation
+            "M-l" #'corfu-show-location)
   :custom
   (tab-always-indent 'complete) ; Make sure tab doesn't indent when you want to perform completion
 
