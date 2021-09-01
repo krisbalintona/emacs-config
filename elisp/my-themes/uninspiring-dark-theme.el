@@ -532,7 +532,7 @@
    `(org-transclusion-source-fringe ((t (:foreground (face-background default) :background (face-background default))))) ; Make fringe in referenced node invisible
 
 ;;;; Marginalia
-   ;; `(marginalia-documentation ((t (:inherit nil :foreground "#98C379" slant italic))))
+   `(marginalia-documentation ((t (:inherit nil :foreground "#98C379" :slant 'italic))))
 
 ;;;; Selectrum
    `(selectrum-current-candidate ((t (:background "#3E4451" :extend t :weight 'semi-bold))))
@@ -543,7 +543,6 @@
 ;;;; Eyebrowse
    `(selectrum-prescient-primary-highlight ((t (:foreground "#dc85f7"))))
    `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
-
 
 ;;;; End
    ))
