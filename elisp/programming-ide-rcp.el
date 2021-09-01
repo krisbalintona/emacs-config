@@ -21,7 +21,14 @@
   'lsp-headerline-breadcrumb-mode
   :custom
   (lsp-keymap-prefix "C-x l")
+  (lsp-auto-guess-root t)
   (lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
+  (lsp-semantic-tokens-enable t)
+  (lsp-symbol-highlighting-skip-current t) ; When highlighting, don't highlight symbol on point
+  (lsp-modeline-diagnostics-scope :workspace)
+  (lsp-modeline-code-actions-segments '(count icon name))
+  (lsp-enable-file-watchers nil) ; Don't watch files - affects performance. Enable if I do actual programming
+  (lsp-log-io nil)               ; If set to true can cause a performance hit
   )
 
 ;;;; Lsp-ui

@@ -544,6 +544,10 @@
    `(selectrum-prescient-primary-highlight ((t (:foreground "#dc85f7"))))
    `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
 
+;;;; Lsp
+   ;; Doesn't work for some reason
+   ;; `(lsp-face-highlight-textual ((t (:inherit nil :underline (:style 'line)))))
+
 ;;;; End
    ))
 ;;; Force faces for certain modes
