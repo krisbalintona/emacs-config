@@ -16,10 +16,11 @@
   :hook ((lua-mode . lsp-deferred)
          (haskell-mode . lsp-deferred)
          )
-  :gfhook 'lsp-enable-which-key-integration 'lsp-headerline-breadcrumb-mode
+  :gfhook
+  'lsp-enable-which-key-integration
+  'lsp-headerline-breadcrumb-mode
+  :general
   (kb/leader-keys
-    "ld" 'xref-find-definitions
-    "lr" 'xref-find-references
     "ln" 'lsp-ui-find-next-reference
     "lp" 'lsp-ui-find-prev-reference
     "le" 'lsp-ui-flycheck-list
