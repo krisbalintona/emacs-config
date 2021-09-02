@@ -110,20 +110,6 @@
   :ghook 'evil-mode-hook
   )
 
-;;;; Evil-org
-;; Additional evil keybinds in org-mode
-(use-package evil-org
-  :disabled t
-  :ghook 'org-mode-hook
-  :general
-  (:keymaps 'org-mode-map
-            [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; Respect visual-line-mode
-  :config
-  (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)            ; Motion state for org-agenda
-  )
-
 ;;;; Evil-surround
 ;; Surround a selection with any pair of characters
 (use-package evil-surround
