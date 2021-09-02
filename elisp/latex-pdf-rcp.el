@@ -13,9 +13,9 @@
 ;; Integration with `latexmk' for more compilation support (particularly
 ;; citations)
 (use-package auctex-latexmk
-  :ghook ('after-init-hook 'auctex-latexmk-setup)
   :custom
   (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
+  :config (auctex-latexmk-setup)
   )
 
 ;;;; Latex-preview-pane
