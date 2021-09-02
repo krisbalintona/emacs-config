@@ -13,13 +13,13 @@
 ;;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
-  :ghook 'after-init-hook
   :general ("C-<left>" 'winner-undo
             "C-<right>" 'winner-redo)
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*"))
   (winner-boring-buffers-regexp "\\*helpful variable:\\|\\*helpful command:\\|magit:") ; Skip `magit' and `helpful' buffers
+  :init (winner-mode)
   )
 
 ;;;;; Shackle
@@ -117,9 +117,9 @@
 ;;;; Buffers
 ;;;;; Bookmark
 (use-package bookmark
-  :hook (after-init . bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
+  :config (bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
   )
 
 ;;;;; Dogears
@@ -127,6 +127,7 @@
 (use-package dogears
   :disabled t ; For now
   :straight (dogears :type git :host github :repo "alphapapa/dogears.el")
+  :after bookmark
   :ghook 'after-init-hook
   :general
   (:keymaps 'dogears-list-mode-map
