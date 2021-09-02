@@ -349,7 +349,7 @@ is only tested on \"insert\" action."
 ;;;;; Super-save
 ;; Automatically save buffers when you do certain things
 (use-package super-save
-  :ghook 'after-init-hook
+  :demand t
   :custom
   (super-save-auto-save-when-idle t) ; Save buffer if Emacs is idle
   (super-save-idle-duration 10) ; Wait 10 seconds for idle trigger
@@ -358,6 +358,7 @@ is only tested on \"insert\" action."
   :config
   (add-to-list 'super-save-triggers 'evil-window-next)
   (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
+  :config (super-save-mode)
   )
 
 ;;;;; Imenu
