@@ -54,6 +54,12 @@
   (proced-filter 'all)      ; Which processes are shown?
   )
 
+;;;; Adaptive-wrap
+;; Wrap lines as if they were hard newlines (like `fill-paragraph').
+(use-package adaptive-wrap
+  :hook (visual-line-mode . adaptive-wrap-prefix-mode)
+  )
+
 ;;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
