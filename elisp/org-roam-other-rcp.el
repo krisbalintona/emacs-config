@@ -220,7 +220,6 @@
   :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :requires org-roam
   :after org-roam
-  :ghook 'after-init-hook
   :preface
   (use-package websocket)
   (use-package simple-httpd)
@@ -241,6 +240,7 @@
                               (violet . "#8be9fd")
                               (magenta . "#bd93f9"))
                             )
+  :config (org-roam-ui-mode)
   )
 
 ;;; org-roam-other-rcp.el ends here
