@@ -27,18 +27,16 @@
     "ma" '(org-mark-ring-push :which-key "Push to mark-ring")
     )
   :custom
-  ;; (org-ellipsis " ⛛") ; Specifically for org-mode headlines ; Doesn't work?
-  (org-startup-indented t)
+  ;; Aesthetics
+  (org-ellipsis nil)       ; Specifically for org-mode headlines ; Doesn't work?
+  (org-startup-indented t) ; Start with `org-indent-mode'
   (org-startup-folded 'nofold)
-  (org-pretty-entities t) ; Show as UTF-8 characters (useful for math)
-  (org-hide-emphasis-markers t) ; Remove org-mode markup characters
-  (org-fontify-whole-heading-line t)
-  (org-fontify-quote-and-verse-blocks t) ; Have these blocks look pretty
-  (org-pretty-entities t) ; Prettify things
-  (org-pretty-entities-include-sub-superscripts nil) ; Don't show super- and sunbscripts
+  (org-hide-emphasis-markers t)          ; Remove org-mode markup characters
+  (org-fontify-quote-and-verse-blocks t) ; Properly syntax highlight block contents
+  (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
+  (org-pretty-entities-include-sub-superscripts t) ; Show super- and subscripts?
   (org-hidden-keywords '(title)) ; hide #+TITLE:
 
-  ;; For programming
   ;; For writing
   (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
   (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it
