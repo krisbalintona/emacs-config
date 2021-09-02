@@ -167,6 +167,18 @@
      ))
   )
 
+;;;;; Ibuffer
+;; Manage buffer list
+(use-package ibuffer
+  :general (kb/leader-keys
+             "bl" '(ibuffer :which-key "Ibuffer")
+             "bL" '(ibuffer-other-window :which-key "Ibuffer other window"))
+  :custom
+  (ibuffer-expert nil)
+  (ibuffer-truncate-lines nil)
+  (ibuffer-default-directory (cdr (project-current)))
+  )
+
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'buffers-and-windows-rcp)
