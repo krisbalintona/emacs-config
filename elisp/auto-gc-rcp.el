@@ -35,5 +35,10 @@
 (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
 
 ;;; auto-gc-rcp.el ends here
+;;;; More leeway for Emacs subprocesses
+;; Let Emacs subprocesses read more data per chunk
+(setq read-process-output-max (* 1024 1024)) ; 1mb
+
+;;; performance-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'auto-gc-rcp)
