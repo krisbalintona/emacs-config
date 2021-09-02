@@ -343,36 +343,6 @@ journals directory."
  "C-c p t" 'kb/org-toggle-properties
  )
 
-;;;;; Update databse on file save aside from index
-;; A temporary solution
-(defun kb/org-roam-db-update-file (&optional file-path)
-  "My custom function. Update Org-roam cache for FILE-PATH.
-If the file does not exist anymore, remove it from the cache.
-If the file exists, update the cache with information."
-  (setq file-path (or file-path (buffer-file-name (buffer-base-buffer))))
-  (unless (string= file-path "/home/krisbalintona/Documents/org-database/roam/index-Jun042021-183426.org")
-    (let ((content-hash (org-roam-db--file-hash file-path))
-          (db-hash (caar (org-roam-db-query
-                          [:select hash :from files :where (= file $s1)] file-path))))
-      (unless (string= content-hash db-hash)
-        (org-roam-with-file file-path nil
-          (save-excursion
-            (org-set-regexps-and-options 'tags-only)
-            (org-roam-db-clear-file)
-            (org-roam-db-insert-file)
-            (org-roam-db-insert-file-node)
-            (org-roam-db-map-nodes
-             (list #'org-roam-db-insert-node-data
-                   #'org-roam-db-insert-aliases
-                   #'org-roam-db-insert-tags
-                   #'org-roam-db-insert-refs))
-            (org-roam-db-map-links
-             (list #'org-roam-db-insert-link))
-            )))
-      ))
-  )
-(advice-add #'org-roam-db-update-file :override #'kb/org-roam-db-update-file)
-
 ;;;;; Find a node which links to any other given node
 ;; From
 ;; https://ag91.github.io/blog/2021/03/12/find-org-roam-notes-via-their-relations/
