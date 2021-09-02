@@ -14,7 +14,7 @@
 (use-package undo-fu
   :after evil
   :general ([remap undo] 'undo-fu-only-undo
-            [remap redo] 'undo-fu-only-redo)
+            [remap undo-redo] 'undo-fu-only-redo)
   :custom
   ;; Store more undo history to prevent loss of data
   (undo-limit (* 100 1024))

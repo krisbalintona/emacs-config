@@ -47,6 +47,7 @@
                  (back-to-indentation))
  "C-a" 'back-to-indentation
  "C-e" 'move-end-of-line
+ "C-k" 'kill-visual-line
  )
 
 ;;; keybinds-native-rcp.el ends here
