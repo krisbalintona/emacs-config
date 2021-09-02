@@ -25,12 +25,11 @@
   )
 
 ;;;; Themes and toggling
-
 ;;;;; Install themes
 ;; (use-package atom-one-dark-theme :demand t)
 ;; (use-package apropospriate-theme :demand t)
 
-(add-to-list 'custom-theme-load-path "/home/krisbalintona/.emacs.d/elisp/my-themes/")
+(setq custom-theme-load-path load-path)
 (require 'uninspiring-dark-theme)
 (use-package modus-themes)
 
