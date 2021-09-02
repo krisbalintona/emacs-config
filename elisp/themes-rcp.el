@@ -84,7 +84,38 @@ Additionally, run `kb/themes-hooks'."
 ;;;;; Load default theme
 (kb/proper-load-theme-dark)
 
-;;;; Modeline segments
+;;;; Modeline
+;;;;; Doom-modeline
+;; Sleek modeline from Doom Emacs
+(use-package doom-modeline
+  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
+  :ghook 'server-after-make-frame-hook 'window-setup-hook
+  :gfhook 'kb/set-doom-modeline-segments
+  :custom
+  ;; Modeline settings
+  (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
+  (doom-modeline-project-detection 'project)
+  (doom-modeline-buffer-file-name-style 'buffer-name)
+  (doom-modeline-icon (or(display-graphic-p) (server-running-p)) ; Show icons if in Emacs GUI or server
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-buffer-modification-icon t)
+  (doom-modeline-unicode-fallback t)
+  (doom-modeline-minor-modes nil)
+  (doom-modeline-enable-word-count t)
+  (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
+  (doom-modeline-mu4e nil) ; Requires `mu4e-alert' - flip this value
+  (doom-modeline-percent-position nil)
+  (doom-modeline-number-limit 99)
+  (doom-modeline-vcs-max-length 28)
+  (doom-modeline-lsp t)
+  (doom-modeline-height 33)
+  (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
+  (doom-modeline-window-width-limit 100) ; Width of the bar segment
+  )
+
+;;;;; Modeline segments
 ;; (Re)defining my own modeline segments
 (defun kb/set-doom-modeline-segments ()
   "Define relevant doom modeline segments and define segment."
@@ -247,7 +278,7 @@ UTF-8."
     '(input-method process debug kb/time battery " " bar " " kb/buffer-encoding checker))
   )
 
-;;;;; Time
+;;;;;  Time
 ;; Enable time in the mode-line
 (use-package time
   :after doom-modeline
@@ -257,7 +288,7 @@ UTF-8."
   (display-time-default-load-average 1) ; Don't show load average along with time
   )
 
-;;;;; Battery
+;;;;;  Battery
 ;; Display batter percentage
 (use-package battery
   :straight nil
@@ -265,38 +296,6 @@ UTF-8."
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
-  )
-
-;;;; Modeline
-;;;;; Doom-modeline
-;; Sleek modeline from Doom Emacs
-(use-package doom-modeline
-  :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
-  :ghook 'server-after-make-frame-hook 'window-setup-hook
-  :gfhook 'kb/set-doom-modeline-segments
-  :custom
-  ;; Modeline settings
-  (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
-  (doom-modeline-project-detection 'project)
-  (doom-modeline-buffer-file-name-style 'buffer-name)
-  ;; (doom-modeline-icon (display-graphic-p)) ; Show icons if in Emacs GUI
-  (doom-modeline-icon t) ; In order to work with Emacsclient
-  (doom-modeline-major-mode-icon t)
-  (doom-modeline-major-mode-color-icon t)
-  (doom-modeline-buffer-state-icon t)
-  (doom-modeline-buffer-modification-icon t)
-  (doom-modeline-unicode-fallback t)
-  (doom-modeline-minor-modes nil)
-  (doom-modeline-enable-word-count t)
-  (doom-modeline-continuous-word-count-modes '(LaTeX-mode markdown-mode gfm-mode org-mode))
-  (doom-modeline-mu4e nil) ; Requires `mu4e-alert' - flip this value
-  (doom-modeline-percent-position nil)
-  (doom-modeline-number-limit 99)
-  (doom-modeline-vcs-max-length 28)
-  (doom-modeline-lsp t)
-  (doom-modeline-height 33)
-  (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
-  (doom-modeline-window-width-limit 100) ; Width of the bar segment
   )
 
 ;;;; Display-line-numbers-mode
