@@ -113,18 +113,15 @@
 ;;;; Evil-org
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
+  :disabled t
   :ghook 'org-mode-hook
-  :gfhook '(lambda () (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
   :general
-  ;; (:states '(normal visual motion)
-  ;;          "ge" 'evil-backward-word-end)
-  (:keymaps '(org-mode-map LaTeX-mode-map)
-            [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; To respect visual-line-mode
-  :init
+  (:keymaps 'org-mode-map
+            [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; Respect visual-line-mode
+  :config
+  (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
-  :custom
-  (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
+  (evil-org-agenda-set-keys)            ; Motion state for org-agenda
   )
 
 ;;;; Evil-surround

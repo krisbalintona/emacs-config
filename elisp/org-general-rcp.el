@@ -39,6 +39,8 @@
   (org-hidden-keywords '(title)) ; hide #+TITLE:
 
   ;; For programming
+  ;; For writing
+  (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
   (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
   )
@@ -431,8 +433,11 @@ re-align the table if necessary. (Necessary because org-mode has a
     (interactive "p")
     (dotimes (_ count) (+org--insert-item 'below)))
 
-  (define-key org-mode-map (kbd "<C-return>") '+org/insert-item-below)
-  (evil-define-key '(normal visual) 'global (kbd "<C-return>") '+org/insert-item-below)
+  (general-define-key 
+   :keymaps 'org-mode-map
+   :states '(normal visual motion)
+   "C-<return>" '+org/insert-item-below
+   )
   )
 
 ;;;; Ancillary functionality
