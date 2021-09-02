@@ -119,7 +119,33 @@
 (use-package bookmark
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
-  :config (bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
+  :config
+  (bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
+
+  ;; From https://www.reddit.com/r/emacs/comments/e1uyvk/weekly_tipstricketc_thread/f8v4re2?utm_source=share&utm_medium=web2x&context=3
+  (defun kb/bookmark-cleanup ()
+    "Check for bookmarks which point to deleted/moved files at
+startup and popup bookmark menu to fix it"
+    (require 'recentf)
+    (bookmark-maybe-load-default-file)
+    (let ((lost ()))
+      (dolist (bm (mapcar #'car bookmark-alist))
+        (let ((file (bookmark-get-filename bm)))
+          ;; see `recentf-keep'
+          (when (and file (not (recentf-keep-p file)))
+            (push bm lost))))
+      (when lost
+        (call-interactively 'bookmark-bmenu-list)
+        (while lost
+          (bookmark-bmenu-goto-bookmark (car lost))
+          ;; just marks for deletion does not delete
+          (bookmark-bmenu-delete)
+          (pop lost))
+        (message "Fix fileless file bookmarks, press C-M-c when done.")
+        (recursive-edit)
+        (when (derived-mode-p 'bookmark-bmenu-mode)
+          (quit-window)))))
+  (add-hook 'emacs-startup-hook #'kb/bookmark-cleanup)
   )
 
 ;;;;; Dogears
