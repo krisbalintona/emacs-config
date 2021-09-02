@@ -22,9 +22,7 @@
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
            "<escape>" 'evil-force-normal-state
-           "<backtab>" 'evil-delete-back-to-indentation
-           "M-P" 'evil-paste-before
-           "M-p" 'evil-paste-after)
+           "<backtab>" 'evil-delete-back-to-indentation)
   (:keymaps 'evil-visual-state-map
             "a" 'exchange-point-and-mark
             "o" evil-outer-text-objects-map
