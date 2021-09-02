@@ -63,12 +63,13 @@
   (evil-want-Y-yank-to-eol t)
   (evil-move-cursor-back nil)
   (evil-move-beyond-eol t)
-  (evil-normal-state-cursor 'box)
-  (evil-insert-state-cursor 'bar)
-  (evil-visual-state-cursor 'hollow)
-  (evil-emacs-state-cursor 'hbar)
-  (evil-echo-state nil)                     ; Don't echo state in echo area
+  (evil-echo-state nil)                 ; Don't echo state in echo area
   :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
+  :config
+  (setq evil-normal-state-cursor 'box ; Set these variables since they aren't custom variables
+        evil-insert-state-cursor 'bar
+        evil-visual-state-cursor 'hollow
+        evil-emacs-state-cursor 'hbar)
   )
 
 ;;;; Evil-collection
