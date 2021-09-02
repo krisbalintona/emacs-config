@@ -46,9 +46,6 @@
               sentence-end-double-space nil                                                       ; Single space after period denotes end of sentence
 
               uniquify-buffer-name-style 'forward                                                 ; Uniquify buffer names
-              window-combination-resize t                                                         ; Resize windows proportionally
-              split-height-threshold nil                                                          ; Threshiold for vertical window splitting
-              split-width-threshold 160                                                           ; Threshold for horizontal window splitting
               recenter-positions '(5 top bottom)                                                  ; Set re-centering positions
               help-window-select t                                                                ; Focus new help windows when opened
               fill-column 80                                                                      ; Set width for automatic line breaks

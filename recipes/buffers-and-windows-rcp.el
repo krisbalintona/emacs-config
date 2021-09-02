@@ -25,6 +25,7 @@
 ;;;;; Shackle
 ;; Control the behavior of popup and side windows
 (use-package shackle
+  :disabled t
   :ghook 'after-init-hook
   :custom
   (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)
@@ -37,7 +38,19 @@
                    ("\\*devdocs\\*" :select t :same nil)
                    ("\\*Dogears List\\*" :regexp t :align below :same t :inhibit-window-quit t :size 0.3)
                    ))
-  (shackle-select-reused-windows t)
+  (shackle-select-reused-windows t)     ; Reuse windows by default
+  )
+
+;;;;; Display-buffer-alist
+(use-package window
+  :straight nil
+  :custom
+  (split-height-threshold nil)       ; Threshold for vertical window splitting
+  (split-width-threshold 160)        ; Threshold for horizontal window splitting
+  (window-combination-resize t)
+  (even-window-sizes 'height-only)      ; Or `t' or ``width-only''
+  (window-sides-vertical t)
+  (switch-to-buffer-in-dedicated-window 'pop)
   )
 
 ;;;;; Eyebrowse
