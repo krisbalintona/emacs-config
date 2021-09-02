@@ -16,6 +16,9 @@
 ;; Inhibit resizing frame
 (setq frame-inhibit-implied-resize t)
 
+;; Preview loading any packages prior to init.el being loading
+(setq package-enable-at-startup nil)
+
 ;; Faster to disable these graphical elements before they've been initialized
 (menu-bar-mode -1)
 (push '(menu-bar-lines . 0) default-frame-alist)
