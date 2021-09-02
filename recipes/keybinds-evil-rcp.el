@@ -139,7 +139,7 @@
   (better-jumper-use-evil-jump-advice t) ; Add evil-jump jumps
   (better-jumper-add-jump-behavior 'append)
 
-  (better-jumper-context 'buffer)
+  (better-jumper-context 'window)
   (better-jumper-use-savehist t)
   (better-jumper-buffer-savehist-size 50)
   :config
