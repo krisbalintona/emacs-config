@@ -12,7 +12,7 @@
 ;;;; Undo-fu
 ;; Easy and simple undoing
 (use-package undo-fu
-  :after evil
+  :demand t
   :general ([remap undo] 'undo-fu-only-undo
             [remap undo-redo] 'undo-fu-only-redo)
   :custom
@@ -27,7 +27,6 @@
 ;; Keep undo history across sessions
 (use-package undo-fu-session
   :demand t
-  :requires undo-fu
   :custom
   (undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
   (undo-fu-session-directory (concat no-littering-var-directory "undo-fu-session/"))

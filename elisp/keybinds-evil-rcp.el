@@ -13,6 +13,7 @@
 ;; Emacs vim integration layer
 (use-package evil
   :demand t
+  :ghook 'after-init-hook
   :gfhook 'general-evil-setup   ; Set up `general.el' infrastructure for `evil'
   :general
   (:states '(normal visual)
@@ -68,7 +69,6 @@
   (evil-emacs-state-cursor 'hbar)
   (evil-echo-state nil)                     ; Don't echo state in echo area
   :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
-  :config (evil-mode)
   )
 
 ;;;; Evil-collection
