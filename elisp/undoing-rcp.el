@@ -26,12 +26,12 @@
 ;;;; Undo-fu-session
 ;; Keep undo history across sessions
 (use-package undo-fu-session
-  :demand t
+  :requires undo-fu
+  :hook (after-init . global-undo-fu-session-mode)
   :custom
   (undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
   (undo-fu-session-directory (concat no-littering-var-directory "undo-fu-session/"))
   (undo-fu-session-file-limit 15000)
-  :config (global-undo-fu-session-mode)
   )
 
 ;;; undoing-rcp.el ends here
