@@ -8,11 +8,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; Defer garbage collection
-;; Set as high as possible threshold for GC as early as possible in order to
-;; reduce load time. This value is then lowered to a normal threshold later
-(setq gc-cons-threshold most-positive-fixnum)
-
 ;; Inhibit resizing frame
 (setq frame-inhibit-implied-resize t)
 
