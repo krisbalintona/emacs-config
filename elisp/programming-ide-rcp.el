@@ -15,14 +15,21 @@
   ;; Lsp-mode only when buffer is visible
   :hook ((lua-mode . lsp-deferred)
          (haskell-mode . lsp-deferred)
+         (js2-mode . lsp-deferred)
          )
   :gfhook
   'lsp-enable-which-key-integration
   'lsp-headerline-breadcrumb-mode
+  :general
+  (:keymaps 'lsp-ui-mode-map
+             [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
+             [remap xref-find-references] #'lsp-ui-peek-find-references
+             [remap imenu-list] #'lsp-ui-imenu
+             )
   :custom
   (lsp-keymap-prefix "C-x l")
   (lsp-auto-guess-root t)
-  (lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-semantic-tokens-enable t)
   (lsp-symbol-highlighting-skip-current t) ; When highlighting, don't highlight symbol on point
   (lsp-modeline-diagnostics-scope :workspace)
@@ -36,9 +43,38 @@
 ;; on the point.
 (use-package lsp-ui
   :ghook 'lsp-mode-hook
+  :hook (lsp-ui-imenu-mode . hide-mode-line-mode)
   :custom
+  ;; Lsp-ui-peek - Peek in a child frame
+  (lsp-ui-peek-enable t)
+  (lsp-ui-peek-show-directory t)
+
+  ;; Lsp-ui-doc - Show documentation on the side
+  (lsp-ui-doc-enable t)
   (lsp-ui-doc-position 'top)
+  (lsp-ui-doc-delay 1.5)
+  (lsp-ui-doc-show-with-cursor t)       ; Point hover (alongside cursor!)
+
+  ;; Lsp-ui-imenu - Imenu integration
+  (lsp-ui-imenu-window-width 70)
+  (lsp-ui-imenu-auto-refresh 1)         ; Auto refresh
+  ;; (lsp-ui-imenu-refresh-delay 1)        ; Variable doesn't exist?
   )
+
+
+;;;; Lsp-treemacs
+;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
+(use-package lsp-treemacs
+  :hook ((lsp-mode . lsp-treemacs-sync-mode)
+         (lsp-treemacs-generic-mode . hide-mode-line-mode)
+         (lsp-treemacs-error-list-mode . hide-mode-line-mode)
+         (lsp-treemacs-deps-list-mode . hide-mode-line-mode)
+         )
+  :general (:keymaps 'lsp-treemacs-error-list-mode-map
+                      :states 'normal
+                      "x" 'lsp-treemacs-quick-fix)
+  )
+
 ;;;; Dap-mode
 (use-package dap-mode
   ;; :ensure-system-package ("pip install \"ptvsd>=4.2\"")
