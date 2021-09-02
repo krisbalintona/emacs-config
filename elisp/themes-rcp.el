@@ -250,8 +250,8 @@ UTF-8."
 ;;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  :straight nil
-  :ghook ('after-init-hook 'display-time-mode)
+  :after doom-modeline
+  :hook (window-setup . display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average 1) ; Don't show load average along with time
