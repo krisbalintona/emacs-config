@@ -3,7 +3,6 @@
 ;;; Commentary:
 ;;
 ;; Evil packages!
-;; FIXME 2021-08-27: For some reason, something relevant to `evil' or is getting in the way of `comint-mode' and `eshell-mode'.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -109,23 +108,6 @@
 ;; Comment in evil-mode
 (use-package evil-commentary
   :ghook 'evil-mode-hook
-  )
-
-;;;; Evil-org
-;; Additional evil keybinds in org-mode
-(use-package evil-org
-  :ghook 'org-mode-hook
-  :gfhook '(lambda () (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
-  :general
-  ;; (:states '(normal visual motion)
-  ;;          "ge" 'evil-backward-word-end)
-  (:keymaps '(org-mode-map LaTeX-mode-map)
-            [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; To respect visual-line-mode
-  :init
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
-  :custom
-  (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
   )
 
 ;;;; Evil-surround

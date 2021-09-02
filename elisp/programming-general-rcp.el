@@ -8,7 +8,6 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-(require 'faces-rcp)
 
 ;;;; Aesthetics
 ;;;;; Highlight-indent-guides
@@ -28,13 +27,12 @@
   )
 
 ;;;;; Highlight-defined
-;; Have face for emacs-lisp variables already defined
+;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
+;; text which is the symbol of a face.
 (use-package highlight-defined
   :ghook 'prog-mode-hook
   :custom
   (highlight-defined-face-use-itself t)
-  :config
-  (set-face-attribute 'highlight-defined-variable-name-face nil :inherit 'font-lock-variable-name-face :foreground "#9caabf")
   )
 
 ;;;;; Highlight-quoted
@@ -62,7 +60,6 @@
 ;;;;; Ace-jump
 ;; Quickly jump to any character
 (use-package ace-jump-mode
-  :hook (org-mode . (lambda () (face-remap-add-relative 'ace-jump-face-foreground :font kb/variable-pitch-font)))
   :general ("M-a" '(ace-jump-mode :which-key "Ace-jump"))
   :config
   (setq ace-jump-mode-scope 'window
@@ -123,12 +120,6 @@ afterward."
         (insert "\n")))
     (evil-insert-state))
   (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
-  :config
-  ;; Outshine headline faces
-  (set-face-attribute 'outshine-level-4 nil :inherit 'outline-5)
-  (set-face-attribute 'outshine-level-5 nil :inherit 'outline-6)
-  (set-face-attribute 'outshine-level-6 nil :inherit 'outline-8)
-  (set-face-attribute 'outshine-level-8 nil :inherit 'outline-7)
   )
 
 ;;;;; Consult
@@ -265,6 +256,7 @@ is only tested on \"insert\" action."
            :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
 
   ;; emacs-lisp-mode
+  (sp-local-pair 'emacs-lisp-mode "<" ">" :actions '(insert autoskip navigate))
   (sp-local-pair 'emacs-lisp-mode "(" ")"
                  :actions '(insert autoskip navigate)
                  :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
@@ -360,6 +352,19 @@ is only tested on \"insert\" action."
   :config
   (add-to-list 'super-save-triggers 'evil-window-next)
   (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
+  )
+
+;;;;; Imenu
+(use-package imenu
+  :custom 
+  (org-imenu-depth 7)                   ; Show more than just 2 levels...
+  )
+
+;;;;; Imenu-list
+;; Side buffer with imenu items
+(use-package imenu-list
+  :general (kb/leader-keys
+             "sI" '(imenu-list :which-key "Imenu list"))
   )
 
 ;;; programming-general-rcp.el ends here

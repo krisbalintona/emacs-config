@@ -9,16 +9,9 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-(require 'faces-rcp)
+(require 'fonts-rcp)
 
 ;;;; UI
-;;;;; Remove unnecessary UI
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-
 ;;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
@@ -31,91 +24,65 @@
   (add-to-list 'default-frame-alist '(alpha . (98 . 98)))
   )
 
-;;;; Themes
-(use-package doom-themes
-  :disabled t
-  :config (load-theme 'doom-dracula t))
+;;;; Themes and toggling
 
-(use-package doom-themes
-  :disabled t
-  :config (load-theme 'doom-palenight t))
+;;;;; Install themes
+;; (use-package atom-one-dark-theme :demand t)
+;; (use-package apropospriate-theme :demand t)
 
-(use-package mood-one-theme
-  :disabled t
-  :config (load-theme 'mood-one t))
+(add-to-list 'custom-theme-load-path "/home/krisbalintona/.emacs.d/elisp/my-themes/")
+(require 'uninspiring-dark-theme)
+(use-package modus-themes)
 
-(use-package spacemacs-theme
-  :disabled t
-  :config (load-theme 'spacemacs-dark t))
+;;;;; Variable declarations
+(defvar kb/themes-light 'modus-operandi
+  "My chosen light theme.")
+(defvar kb/themes-dark 'uninspiring-dark
+  "My chosen dark theme.")
 
-(use-package atom-one-dark-theme :demand t)
+(defvar kb/themes-hooks nil
+  "Hook that runs after the `kb/proper-load-theme-light' and
+`kb/proper-load-theme-dark'.")
 
-(use-package apropospriate-theme :demand t)
-
-;;;; Heaven-and-hell
-;; Toggle between light and dark themes
-(use-package heaven-and-hell
-  :hook ((after-init . heaven-and-hell-init-hook)
-         (window-configuration-change . kb/theme-faces)
-         )
-  :general
-  ("<f6>" '((lambda ()
-              (interactive)
-              (heaven-and-hell-toggle-theme)
-              (highlight-indent-guides-auto-set-faces)
-              (kb/doom-modeline-font-setup)
-              (kb/theme-faces)
-              )
-            :which-key "Toggle theme"
-            ))
-  :init
-  (setq custom--inhibit-theme-enable nil)
-  :config
-  (setq heaven-and-hell-theme-type 'dark) ; Use dark by default
-  (setq heaven-and-hell-themes ;; Themes can be the list: (dark . (tsdh-dark wombat))
-        '((dark . atom-one-dark)
-          (light . apropospriate-light))
-        )
-
-  ;; Load themes without asking for confirmation
-  (setq heaven-and-hell-load-theme-no-confirm t)
-
-  ;; Cleanly load themes
-  (heaven-and-hell-clean-load-themes '(atom-one-dark apropospriate-light))
+;;;;; Function definitions
+(defun kb/ensure-themes-loaded ()
+  "Ensure that the themes in `kb/themes-list' are loaded."
+  (unless (or (custom-theme-p kb/themes-dark)
+              (custom-theme-p kb/themes-light))
+    (load-theme kb/themes-dark t t)
+    (load-theme kb/themes-light t t))
   )
-
-;;;;; Set faces based on theme
-(defun kb/theme-faces ()
-  "Set light and dark theme faces."
+(defun kb/proper-load-theme-light ()
+  "Properly load `kb/theme-light' theme by disabling its dark counterpart as well.
+Additionally, run `kb/themes-hooks'."
   (interactive)
-  (defvar heaven-and-hell-themes)
-  (require 'heaven-and-hell)
-  (custom-theme-set-faces ; Dark theme
-   (cdr (car (cdr heaven-and-hell-themes)))
-   `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,kb/variable-pitch-font))) t)
-   `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,kb/variable-pitch-font))) t)
-   `(org-level-3 ((t (:inherit outline-3 :height 185 :font ,kb/variable-pitch-font))) t)
-   `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,kb/variable-pitch-font))) t)
-   `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,kb/variable-pitch-font))) t)
-
-   `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
-   `(org-quote ((t (:inherit org-block :height 143))) t)
-   `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-verbatim ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-table ((t (:inherit (shadow fixed-pitch)))) t)
-   `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))) t)
-   `(org-checkbox ((t (:inherit fixed-pitch))) t)
-   `(org-tag ((t (:height 153 :bold t :italic t))) t)
-   `(org-document-title ((t (:bold t :height 1.7 :foreground "goldenrod"))) nil)
-   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,kb/variable-pitch-font :height 145 :underline nil))))
-   `(bookmark-face ((t (:foreground nil :background nil))))
-   `(vertico-current ((t (:background "#3a3f5a"))))
-   )
-  ;; (custom-theme-set-faces ; Light theme
-  ;;  (cdr (car heaven-and-hell-themes))
-  ;;  )
+  (disable-theme kb/themes-dark)
+  (load-theme kb/themes-light t)
+  (run-hooks 'kb/themes-hooks)
   )
+(defun kb/proper-load-theme-dark ()
+  "Properly load `kb/theme-dark' theme by disabling its light counterpart as well.
+Additionally, run `kb/themes-hooks'."
+  (interactive)
+  (disable-theme kb/themes-light)
+  (load-theme kb/themes-dark t)
+  (run-hooks 'kb/themes-hooks)
+  )
+
+;;;;; Theme switcher
+(defun kb/theme-switcher ()
+  "Switch between the light and dark themes specified in `kb/themes-list'."
+  (interactive)
+  (kb/ensure-themes-loaded)
+  (let* ((current (car custom-enabled-themes)))
+    (cond ((equal kb/themes-light current) (kb/proper-load-theme-dark))
+          ((equal kb/themes-dark current) (kb/proper-load-theme-light))
+          ))
+  )
+(general-define-key "<f6>" 'kb/theme-switcher)
+
+;;;;; Load default theme
+(kb/proper-load-theme-dark)
 
 ;;;; Modeline segments
 ;; (Re)defining my own modeline segments
@@ -287,20 +254,17 @@ UTF-8."
   :ghook ('after-init-hook 'display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
-  (display-time-default-load-average nil) ; Don't show load average along with time
+  (display-time-default-load-average 1) ; Don't show load average along with time
   )
 
 ;;;;; Battery
 ;; Display batter percentage
 (use-package battery
   :straight nil
+  :ghook ('doom-modeline-mode-hook 'display-battery-mode)
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
-  :config
-  (unless (equal "Battery status not available"
-                 (battery))
-    (display-battery-mode t)) ; Show battery in modeline
   )
 
 ;;;; Modeline
@@ -309,7 +273,7 @@ UTF-8."
 (use-package doom-modeline
   :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
   :ghook 'server-after-make-frame-hook 'window-setup-hook
-  :gfhook 'kb/doom-modeline-font-setup 'kb/set-doom-modeline-segments
+  :gfhook 'kb/set-doom-modeline-segments
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
@@ -333,16 +297,9 @@ UTF-8."
   (doom-modeline-height 33)
   (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
   (doom-modeline-window-width-limit 100) ; Width of the bar segment
-  :init
-  (defun kb/doom-modeline-font-setup ()
-    "Set doom modeline fonts."
-    (set-face-attribute 'mode-line nil :family kb/modeline-font :height 0.77)
-    (set-face-attribute 'mode-line-inactive nil :inherit 'mode-line :foreground (face-attribute 'mode-line :foreground) :box (face-attribute 'mode-line :box) :background (face-attribute 'mode-line :background) :height 1.0)
-    )
   )
 
-;;;; Buffer display
-;;;;; Display-line-numbers-mode
+;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ghook 'prog-mode-hook 'LaTeX-mode-hook

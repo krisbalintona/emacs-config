@@ -28,10 +28,6 @@
   (flycheck-proselint-executable (kb/shell-command-to-string "which proselint"))
   ;; Personal dictionary
   (ispell-personal-dictionary (concat no-littering-var-directory "flyspell/flyspell-ispell-personal-dict-en"))
-  :config
-  ;; Face for incorrect words
-  (set-face-attribute 'flyspell-incorrect nil :underline '(:color "red2" :style wave))
-  (set-face-attribute 'flyspell-duplicate nil :underline '(:color "#D19A66" :style line))
   )
 
 ;;;; Flyspell-lazy

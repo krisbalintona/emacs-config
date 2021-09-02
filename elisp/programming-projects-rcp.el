@@ -65,13 +65,26 @@
 
 ;;;;; Project.el
 (use-package project
+  :general (:keymaps 'project-prefix-map "m" #'magit-project-status)
+  :custom
+  (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
+  (project-switch-commands
+   '((project-find-file "Find file")
+     (project-find-regexp "Find regexp")
+     (project-dired "Dired")
+     (project-eshell "Eshell")
+     (project-compile "Compile")
+     (project-query-replace-regexp "Replace regexp")
+     (project-execute-extended-command "Execute extended command")
+     (magit-project-status "Magit")
+     ))
   :config
   (kb/leader-keys
     "p" '(:ignore t :which-key "Project")
-    "pf"  '(project-find-file :which-key "Project find file")
-    "pp"  '(project-switch-project :which-key "Project.el switch project")
-    "pb"  '(project-switch-to-buffer :which-key "Project switch to buffer")
-    "pD"  '(project-dired :which-key "Project dired")
+    "pf" '(project-find-file :which-key "Project find file")
+    "pp" '(project-switch-project :which-key "Project.el switch project")
+    "pb" '(project-switch-to-buffer :which-key "Project switch to buffer")
+    "pd" '(project-dired :which-key "Project dired")
     )
   )
 

@@ -31,7 +31,6 @@
 ;; Eshell-toggle but for vterm
 (use-package vterm-toggle
   :requires vterm
-  :after vterm
   :general
   (kb/leader-keys
     "ot" '(vterm-toggle :which-key "Vterm-toggle")

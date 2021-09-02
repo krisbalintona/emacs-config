@@ -8,7 +8,6 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-(require 'faces-rcp)
 
 ;;;; Company
 ;;;;; Company-mode
@@ -71,9 +70,6 @@
   ;; backends based on major-mode rather than adding every backend to the global
   ;; list.
   (make-variable-buffer-local 'company-backends)
-
-  (set-face-attribute 'company-tooltip nil :font kb/fixed-pitch-font :height 127)
-  (set-face-foreground 'company-preview-common "#4b5668")
   )
 
 ;;;;; Company-prescient
@@ -154,20 +150,25 @@
 ;; the Emacs infrastructure
 (use-package corfu
   :ghook ('after-init-hook 'corfu-global-mode)
-  :general (:keymaps 'corfu-map
-                     "<escape>" #'corfu-quit
-                     ;; "<tab>" #'corfu-insert
-                     ;; "<tab>" #'corfu-complete
-                     ;; "C-<tab>" #'corfu-complete
-                     ;; "C-<return>" '(lambda () (interactive) (corfu-quit) (newline))
-                     "M-d" #'corfu-show-documentation
-                     "M-l" #'corfu-show-location
-                     )
+  :general
+  (:keymaps 'global-map
+            :states 'insert
+            ;; NOTE 2021-08-31: These keybinds override very annoying bindings.
+            ;; This should be set later in the config (after evil) other wise
+            ;; evil will overwrite those bindings
+            "<tab>" 'completion-at-point
+            "C-n" 'next-line            ; `corfu-next'
+            "C-p" 'previous-line)       ; `corfu-previous'
+  (:keymaps 'corfu-map
+            "<escape>" #'corfu-quit
+            "<return>" #'corfu-insert
+            "M-d" #'corfu-show-documentation
+            "M-l" #'corfu-show-location)
   :custom
   (tab-always-indent 'complete) ; Make sure tab doesn't indent when you want to perform completion
 
-  (corfu-auto t)
-  (corfu-auto-prefix 3)
+  (corfu-auto nil)
+  (corfu-auto-prefix 2)
   (corfu-auto-delay 0.15)
 
   (corfu-count 13)
@@ -177,7 +178,7 @@
 
   (corfu-echo-documentation t)
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
-  (corfu-quit-no-match 1.0) ; Quit if 0 matches, assuming completion started within this integer
+  (corfu-quit-no-match 1.2) ; Quit if 0 matches, assuming completion started within this integer
   (corfu-commit-predicate t)
   )
 
@@ -194,6 +195,13 @@
             (match-end 0)
             #'completion-file-name-table :exclusive 'no))))
 (add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
+
+;;;;; Dabbrev
+(use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :general ("M-/" 'dabbrev-completion
+            "C-M-/" 'dabbrev-expand)
+  )
 
 ;;;; Expansion
 ;;;;; Yasnippet

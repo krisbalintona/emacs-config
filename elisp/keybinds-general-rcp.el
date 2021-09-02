@@ -17,8 +17,8 @@
 
 ;;;; Leader key
 ;; My leader key definition and high-level keybindings
-(general-create-definer kb/leader-keys ; Use space as leader key
-  :keymaps '(normal visual insert motion emacs)
+(general-create-definer kb/leader-keys  ; Use space as leader key
+  :keymaps '(normal visual insert motion)
   :prefix "SPC"
   :global-prefix "M-SPC"
   )

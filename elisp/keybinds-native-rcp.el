@@ -18,6 +18,7 @@
 (general-define-key
  :keymaps 'global-map
  "C-x C-c" nil ; Unbinds `save-buffers-kill-emacs'. Prevents me from leaving Emacs.
+ "C-M-;" 'eval-expression               ; Evaluate inputted expression
  )
 (general-define-key
  :keymaps 'global-map
@@ -26,10 +27,10 @@
                  (interactive)
                  (forward-line -1)
                  (back-to-indentation))
- [remap newline] '(lambda ()                 ; Newline with indent
-                    (interactive)
-                    (insert "\n")
-                    (indent-according-to-mode))
+ [remap newline] '(lambda ()            ; Newline with indent
+               (interactive)
+               (insert "\n")
+               (indent-according-to-mode))
  "M-<return>" '(lambda ()                    ; Insert newline and go to it
                  (interactive)
                  (move-beginning-of-line 1)
@@ -44,7 +45,8 @@
                  (yank)
                  (indent-according-to-mode)
                  (back-to-indentation))
- "C-M-;" 'eval-expression               ; Evaluate inputted expression
+ "C-a" 'back-to-indentation
+ "C-e" 'move-end-of-line
  )
 
 ;;; keybinds-native-rcp.el ends here

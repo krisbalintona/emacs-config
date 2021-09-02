@@ -8,7 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; Initial GC threshold
+;;;; Defer garbage collection
 ;; Set as high as possible threshold for GC as early as possible in order to
 ;; reduce load time. This value is then lowered to a normal threshold later
 (setq gc-cons-threshold most-positive-fixnum)
@@ -28,6 +28,7 @@
           (unless (member base load-path)
             (add-to-list 'load-path name)))))))
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
+(update-to-load-path (expand-file-name "elisp/my-themes/" user-emacs-directory))
 (update-to-load-path (expand-file-name "exwm" user-emacs-directory))
 
 ;;;; Load packages
@@ -36,7 +37,7 @@
 ;;;;; Configuration prerequisites
 ;; These are packages which come before others because their config files rely
 ;; on them.
-(require 'auto-gc-rcp)
+(require 'performance-rcp)
 (require 'straight-package-management-rcp)
 (require 'better-defaults-rcp)
 (require 'personal-variables-rcp)
@@ -52,7 +53,7 @@
 (require 'keybinds-evil-rcp)
 
 ;;;;; Aethetics
-(require 'faces-rcp)
+(require 'fonts-rcp)
 (require 'themes-rcp)
 
 ;;;;; Completion frameworks

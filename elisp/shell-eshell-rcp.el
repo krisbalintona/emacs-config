@@ -9,9 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Esh-mode
-(use-package esh-mode
-  :straight nil
+;;;; Eshell
+(use-package eshell
   :gfhook
   ;; UI enhancements
   'visual-line-mode
@@ -52,8 +51,7 @@
      eshell-term
      eshell-tramp
      eshell-unix))
-  :preface (defvaralias 'esh-mode-hook 'eshell-mode-hook) ; For more convenient `:gfhook'
-  :init
+  :config
   ;; Eshell modules should be loaded manually
   ;; Taken from
   ;; https://protesilaos.com/dotemacs/#h:103a8795-c29c-474f-9ddf-ecafaa2f6775
@@ -81,11 +79,9 @@
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t)))))
   (add-hook 'eshell-post-command-hook #'eshell-append-history)
-  )
 
-;;;; Eshell prompt
-;; Entirely taken from http://www.modernemacs.com/post/custom-eshell/
-(with-eval-after-load 'esh-mode
+  ;; Eshell prompt
+  ;; Entirely taken from http://www.modernemacs.com/post/custom-eshell/
   (require 'dash)
   (require 's)
 
@@ -97,9 +93,9 @@
     "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
     `(setq ,NAME
            (lambda () (when ,FORM
-                   (-> ,ICON
-                       (concat esh-section-delim ,FORM)
-                       (with-face ,@PROPS))))))
+                        (-> ,ICON
+                            (concat esh-section-delim ,FORM)
+                            (with-face ,@PROPS))))))
 
   (defun esh-acc (acc x)
     "Accumulator for evaluating and concatenating esh-sections."
@@ -174,7 +170,7 @@
 ;;;; Esh-opt
 (use-package esh-opt ; An eshell module that needs to be loaded
   :straight nil
-  :after esh-mode
+  :after eshell
   :custom
   (eshell-history-buffer-when-process-dies t)
   (eshell-visual-commands '("htop" "vi" "vim" "nvim" "btm")) ; Commands to run in term buffer to properly display from eshell
@@ -184,7 +180,7 @@
 ;; Truncate eshell directory path (has to be configured in mycustom eshell
 ;; prompt)
 (use-package shrink-path
-  :after esh-mode
+  :after eshell
   )
 
 ;;;; Eshell-toggle
@@ -205,7 +201,7 @@
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
-  :ghook ('esh-mode-hook 'eshell-syntax-highlighting-global-mode nil nil t)
+  :ghook ('eshell-mode-hook 'eshell-syntax-highlighting-global-mode nil nil t)
   :config (eshell-syntax-highlighting-global-mode)
   )
 

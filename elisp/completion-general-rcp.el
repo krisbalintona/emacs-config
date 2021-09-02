@@ -46,12 +46,6 @@
             "M-A" '(marginalia-cycle :which-key "Marginalia cycle"))
   :custom
   (marginalia-max-relative-age 0)       ; Don't show relative ages
-  :config
-  ;; Marginalia faces
-  (set-face-attribute 'marginalia-documentation nil
-                      :inherit nil
-                      :foreground "#98C379"
-                      :slant 'italic)
   )
 
 ;;; completion-general-rcp.el ends here

@@ -58,6 +58,7 @@
 ;;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
+  :after bibtex-completion
   :general
   (kb/leader-keys
     "fa" '(bibtex-actions-insert-citation :which-key "Insert citation")
@@ -101,7 +102,7 @@
 ;; the .bib files bibtex makes. Org-ref is a way to directly insert citations
 ;; and references into latex and org files
 (use-package org-ref
-  :demand t ; Hard dependency for `org-roam-bibtex' (and maybe others)
+  :after bibtex-completion
   :custom
   (org-ref-default-bibliography bibtex-completion-bibliography)
   (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
@@ -144,7 +145,7 @@
 (use-package org-roam-bibtex
   :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "master")
   :requires (org-ref org-roam)
-  :after org-ref
+  :after (bibtex-completion org-ref)
   :ghook ('org-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
   :custom
   (orb-preformat-keywords
@@ -167,83 +168,6 @@
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick nil)
-  :config
-  ;;  Redefine the original `pdf-tools-build-server' to prepend `sudo' to the
-  ;;  original function to give the proper permissions to build and install.
-  (defun kb/pdf-tools-build-server (target-directory
-                                    &optional
-                                    skip-dependencies-p
-                                    force-dependencies-p
-                                    callback
-                                    build-directory)
-    "Build the epdfinfo program in the background.
-
-Install into TARGET-DIRECTORY, which should be a directory.
-
-If CALLBACK is non-nil, it should be a function.  It is called
-with the compiled executable as the single argument or nil, if
-the build failed.
-
-Expect sources to be in BUILD-DIRECTORY.  If nil, search for it
-using `pdf-tools-locate-build-directory'.
-
-See `pdf-tools-install' for the SKIP-DEPENDENCIES-P and
-FORCE-DEPENDENCIES-P arguments.
-
-Returns the buffer of the compilation process."
-
-    (unless callback (setq callback #'ignore))
-    (unless build-directory
-      (setq build-directory (pdf-tools-locate-build-directory)))
-    (cl-check-type target-directory file-directory)
-    (setq target-directory (file-name-as-directory
-                            (expand-file-name target-directory)))
-    (cl-check-type build-directory (and (not null) file-directory))
-    (when (and skip-dependencies-p force-dependencies-p)
-      (error "Can't simultaneously skip and force dependencies"))
-    (let* ((compilation-auto-jump-to-first-error nil)
-           (compilation-scroll-output t)
-           (shell-file-name (pdf-tools-find-bourne-shell))
-           (shell-command-switch "-c")
-           (process-environment process-environment)
-           (default-directory build-directory)
-           (autobuild (shell-quote-argument
-                       (expand-file-name "autobuild" build-directory)))
-           (msys2-p (equal "bash.exe" (file-name-nondirectory shell-file-name))))
-      (unless shell-file-name
-        (error "No suitable shell found"))
-      (when msys2-p
-        (push "BASH_ENV=/etc/profile" process-environment))
-      (let ((executable
-             (expand-file-name
-              (concat "epdfinfo" (and (eq system-type 'windows-nt) ".exe"))
-              target-directory))
-            (compilation-buffer
-             (compilation-start
-              (format "sudo %s -i %s%s%s" ; Prepend `sudo' to the original command to give
-                                        ; proper permissions
-                      autobuild
-                      (shell-quote-argument target-directory)
-                      (cond
-                       (skip-dependencies-p " -D")
-                       (force-dependencies-p " -d")
-                       (t ""))
-                      (if pdf-tools-installer-os (concat " --os " pdf-tools-installer-os) ""))
-              t)))
-        ;; In most cases user-input is required, so select the window.
-        (if (get-buffer-window compilation-buffer)
-            (select-window (get-buffer-window compilation-buffer))
-          (pop-to-buffer compilation-buffer))
-        (with-current-buffer compilation-buffer
-          (setq-local compilation-error-regexp-alist nil)
-          (add-hook 'compilation-finish-functions
-                    (lambda (_buffer status)
-                      (funcall callback
-                               (and (equal status "finished\n")
-                                    executable)))
-                    nil t)
-          (current-buffer)))))
-  (advice-add 'pdf-tools-build-server :override 'kb/pdf-tools-build-server)
   )
 
 ;;;;; Org-noter
@@ -288,12 +212,6 @@ Returns the buffer of the compilation process."
   :config
   ;; Currently need to look through Roam directory, not just agenda files
   (org-id-update-id-locations (org-roam--list-all-files))
-
-  ;; Make fringe in referenced node invisible
-  (set-face-attribute
-   'org-transclusion-source-fringe nil
-   :foreground (face-background 'default)
-   :background (face-background 'default))
   )
 
 ;;;; Org-roam-ui
