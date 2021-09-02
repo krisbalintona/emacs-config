@@ -53,7 +53,7 @@
 ;; Enhance Ivy interface
 (use-package ivy-rich
   :after ivy
-  :ghook 'after-init-hook
+  :ghook 'ivy-mode-hook
   :custom
   (ivy-rich-path-style 'abbrev) ; Abbreviate file names
   :config
@@ -136,7 +136,7 @@
 ;; Show icons with ivy-rich
 (use-package all-the-icons-ivy-rich
   :after ivy-rich
-  :ghook 'window-setup-hook ; after-init calls too early
+  :ghook 'ivy-rich-mode-hook
   :custom
   (all-the-icons-ivy-rich-icon-size 0.9) ; The icon size
   ;; Slow Rendering
