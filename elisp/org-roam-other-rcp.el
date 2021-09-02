@@ -58,6 +58,7 @@
 ;;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
+  :after bibtex-completion
   :general
   (kb/leader-keys
     "fa" '(bibtex-actions-insert-citation :which-key "Insert citation")
@@ -101,7 +102,7 @@
 ;; the .bib files bibtex makes. Org-ref is a way to directly insert citations
 ;; and references into latex and org files
 (use-package org-ref
-  :demand t ; Hard dependency for `org-roam-bibtex' (and maybe others)
+  :after bibtex-completion
   :custom
   (org-ref-default-bibliography bibtex-completion-bibliography)
   (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
@@ -144,7 +145,7 @@
 (use-package org-roam-bibtex
   :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "master")
   :requires (org-ref org-roam)
-  :after org-ref
+  :after (bibtex-completion org-ref)
   :ghook ('org-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
   :custom
   (orb-preformat-keywords
