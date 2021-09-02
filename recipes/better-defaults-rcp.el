@@ -92,6 +92,13 @@
 (require 'epg)
 (setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
 
+;;;; Don't confirm when killing a process
+(setq confirm-kill-processes nil)
+
+;;;; Ignore case for buffer and file names
+(setq read-buffer-completion-ignore-case t
+      read-file-name-completion-ignore-case t)
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
