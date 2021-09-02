@@ -22,10 +22,10 @@
   'lsp-headerline-breadcrumb-mode
   :general
   (:keymaps 'lsp-ui-mode-map
-             [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
-             [remap xref-find-references] #'lsp-ui-peek-find-references
-             [remap imenu-list] #'lsp-ui-imenu
-             )
+            [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
+            [remap xref-find-references] #'lsp-ui-peek-find-references
+            [remap imenu-list] #'lsp-ui-imenu
+            )
   :custom
   (lsp-keymap-prefix "C-x l")
   (lsp-auto-guess-root t)
@@ -71,8 +71,8 @@
          (lsp-treemacs-deps-list-mode . hide-mode-line-mode)
          )
   :general (:keymaps 'lsp-treemacs-error-list-mode-map
-                      :states 'normal
-                      "x" 'lsp-treemacs-quick-fix)
+                     :states 'normal
+                     "x" 'lsp-treemacs-quick-fix)
   )
 
 ;;;; Dap-mode
@@ -100,15 +100,18 @@
 (use-package tree-sitter
   :defer 10
   :gfhook 'tree-sitter-hl-mode          ; Enable syntax highlighting
-  :init
-  (use-package tree-sitter-langs        ; Need support for languages
-    :demand t
-    :config
-    (tree-sitter-langs-install-grammars
-     t
-     tree-sitter-langs--bundle-version
-     tree-sitter-langs--os))
   :config (global-tree-sitter-mode) ; Enable for all supported tree-sitter languages
+  )
+
+;;;; Tree-sitter-langs
+;; Supported languge bundle for tree-sitter
+(use-package tree-sitter-langs
+  :after tree-sitter
+  :config
+  (tree-sitter-langs-install-grammars
+   t
+   tree-sitter-langs--bundle-version
+   tree-sitter-langs--os)
   )
 
 ;;;; Ancillary
