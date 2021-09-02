@@ -9,11 +9,12 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'personal-variables-rcp)
+(require 'convenient-functions-rcp)     ; For `kb/shell-command-to-string'
 
 ;;;; Flycheck
 ;; Check your code
 (use-package flycheck
-  :ghook ('after-init-hook 'global-flycheck-mode)
+  :demand t
   :general
   (kb/leader-keys
     "lf" '(consult-flycheck :which-key "List flycheck errors")
@@ -34,6 +35,7 @@
   (flycheck-display-errors-delay 0.5) ; Time to show an error on point
   (flycheck-indication-mode 'right-margin)
   (flycheck-highlighting-mode 'symbols)
+  :config (global-flycheck-mode)
   )
 
 ;;;; Flycheck-pos-tip-mode
