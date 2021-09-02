@@ -19,7 +19,7 @@
 
 ;;;; Set GC threshold
 ;; Set the GC threshold (for our Emacs session) higher than the default
-(defvar better-gc-cons-threshold (round (* 1024 1024 200)) ; In mb
+(defvar better-gc-cons-threshold (round (* 1024 1024 300)) ; In mb
   "The default value to use for `gc-cons-threshold'.
 
   If you experience freezing, decrease this. If you experience stuttering,
