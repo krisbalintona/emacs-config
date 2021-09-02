@@ -17,7 +17,6 @@
   ;; and `:requires' statements happy.
   :demand t                             ; Necessary for other packages since I don't use it to load it anymore
   :after evil
-  ;; :ghook ('after-init-hook 'global-company-mode)
   :gfhook
   'evil-normalize-keymaps
   :general
@@ -66,6 +65,8 @@
   ;;    ))
   :init (require 'company-autoloads) ; Make sure all company-backends are loaded
   :config
+  (global-company-mode)
+
   ;; Make `company-backends' buffer-local so that I can configure the enabled
   ;; backends based on major-mode rather than adding every backend to the global
   ;; list.
@@ -149,7 +150,7 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
-  :ghook ('after-init-hook 'corfu-global-mode)
+  :demand t
   :general
   (:keymaps 'global-map
             :states 'insert
@@ -180,6 +181,7 @@
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
   (corfu-quit-no-match 1.2) ; Quit if 0 matches, assuming completion started within this integer
   (corfu-commit-predicate t)
+  :config (corfu-global-mode)
   )
 
 ;;;;; Custom completions
