@@ -12,13 +12,6 @@
 (require 'fonts-rcp)
 
 ;;;; UI
-;;;;; Remove unnecessary UI
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-
 ;;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
@@ -306,8 +299,7 @@ UTF-8."
   (doom-modeline-window-width-limit 100) ; Width of the bar segment
   )
 
-;;;; Buffer display
-;;;;; Display-line-numbers-mode
+;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ghook 'prog-mode-hook 'LaTeX-mode-hook
