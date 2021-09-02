@@ -16,7 +16,8 @@
   :ghook 'after-init-hook
   :gfhook 'general-evil-setup   ; Set up `general.el' infrastructure for `evil'
   :general
-  (:states '(normal visual)
+  (:states '(normal visual motion)
+           "TAB" nil
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
