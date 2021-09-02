@@ -14,7 +14,6 @@
 ;; Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= to get the original rendered HTML page. Use =keyfreq-html-v2= to get the keyboard heat map.
 (use-package keyfreq
   :straight (keyfreq :type git :host github :repo "KirmTwinty/keyfreq")
-  :ghook 'after-init-hook
   :gfhook 'keyfreq-autosave-mode
   :custom
   (keyfreq-folder (concat no-littering-var-directory "keyfreq"))
@@ -26,6 +25,7 @@
                                ;; previous-line
                                ;; next-line
                                ))
+  :config (keyfreq-mode)
   )
 
 ;;;; Disable-mouse
