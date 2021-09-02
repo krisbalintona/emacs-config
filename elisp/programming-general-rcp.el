@@ -45,7 +45,8 @@
 ;;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
-  :ghook ('after-init-hook 'show-paren-mode)
+  :demand t
+  :config (show-paren-mode)
   )
 
 ;;;; Quick movement
@@ -215,7 +216,7 @@ afterward."
 ;;;;; Smartparens
 ;; Auto pairing parentheses
 (use-package smartparens
-  :ghook ('after-init-hook 'smartparens-global-mode)
+  :demand t
   :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
   :general (:keymaps 'prog-mode-map
                      :states '(visual normal motion)
@@ -231,7 +232,10 @@ afterward."
   (sp-autodelete-pair t)
   (sp-autodelete-opening-pair t)
   (sp-autodelete-closing-pair t)
-  :init
+  :config
+  (smartparens-global-mode)
+  
+  ;; Helpter functions
   (defun kb/sp-point-before-letter-digit-p (_id action _context)
     "Return t if point is followed by any digit or alphanumeric character, nil
 otherwise. This predicate is only tested on \"insert\" action."
@@ -247,7 +251,7 @@ is only tested on \"insert\" action."
 is only tested on \"insert\" action."
     (when (eq action 'insert)
       (sp--looking-at-p "(")))
-  :config
+  
   ;; Global
   (sp-pair "(" ")" :actions '(insert autoskip navigate))
   (sp-pair "\"" "\""
@@ -255,7 +259,7 @@ is only tested on \"insert\" action."
            :unless '(sp-in-string-quotes-p kb/sp-point-before-letter-digit-p sp-point-before-same-p)
            :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
 
-  ;; emacs-lisp-mode
+  ;; Emacs-lisp-mode
   (sp-local-pair 'emacs-lisp-mode "<" ">" :actions '(insert autoskip navigate))
   (sp-local-pair 'emacs-lisp-mode "(" ")"
                  :actions '(insert autoskip navigate)
@@ -293,10 +297,11 @@ is only tested on \"insert\" action."
 ;;;;; Anzu
 ;; Adds highlight face during replace and regexp
 (use-package anzu
-  :ghook ('after-init-hook 'global-anzu-mode)
+  :demand t
   :general ([remap query-replace] 'anzu-query-replace-regexp)
   :custom
   (anzu-cons-mode-line-p nil)
+  :config (global-anzu-mode)
   )
 
 ;;;;; Goto-line-preview
@@ -308,11 +313,11 @@ is only tested on \"insert\" action."
 ;;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
-  :hook (after-init . sudo-edit-indicator-mode)
   :general (kb/leader-keys
              "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
              "fu" '(sudo-edit :which-key "Sudo this file")
              )
+  :config (sudo-edit-indicator-mode)
   )
 
 ;;;;; Tramp
@@ -332,12 +337,13 @@ is only tested on \"insert\" action."
 ;;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
-  :ghook ('after-init-hook 'global-auto-revert-mode)
+  :demand t
   :custom
   (auto-revert-interval 7)
   (auto-revert-check-vc-info t)
   (global-auto-revert-non-file-buffers t)
   (auto-revert-verbose t)
+  :config (global-auto-revert-mode)
   )
 
 ;;;;; Super-save
