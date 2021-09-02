@@ -7,15 +7,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; Set the GC threshold
-(defvar better-gc-cons-threshold (round (* 1024 1024 0.8)) ; In mb
+;;;; Set GC threshold
+;; Set the GC threshold (for our Emacs session) higher than the default
+(defvar better-gc-cons-threshold (round (* 1024 1024 200)) ; In mb
   "The default value to use for `gc-cons-threshold'.
 
   If you experience freezing, decrease this. If you experience stuttering,
   increase this.")
 (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold better-gc-cons-threshold)))
 
-;;;; Restore GC threshold
+;;;; Increase GC threshold for minibuffer
 ;; Garbage Collect when Emacs is out of focus and try to avoid garbage
 ;; collection when using minibuffer
 (defun gc-minibuffer-setup-hook ()
