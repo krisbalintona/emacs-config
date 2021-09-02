@@ -144,7 +144,7 @@ UTF-8."
 ;;; Modeline definitions
 (doom-modeline-def-modeline 'main
   '(kb/matches "   " kb/major-mode-icon "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
-  '(lsp input-method process github debug kb/time battery " " bar " " kb/buffer-encoding checker))
+  '(input-method process github debug kb/time battery " " bar " " lsp kb/buffer-encoding checker))
 
 (doom-modeline-def-modeline 'special
   '(bar window-number modals matches buffer-info buffer-position word-count parrot selection-info)
@@ -152,11 +152,11 @@ UTF-8."
 
 (doom-modeline-def-modeline 'vcs
   '(kb/matches "   " kb/major-mode-icon "  " bar "  " kb/eyebrowse kb/vcs kb/buffer-default-directory kb/buffer-info remote-host buffer-position " " selection-info)
-  '(lsp input-method process github debug kb/time battery " " bar " " kb/buffer-encoding checker))
+  '(input-method process github debug kb/time battery " " bar " " lsp kb/buffer-encoding checker))
 
 (doom-modeline-def-modeline 'info
   '(kb/matches "   " kb/major-mode-icon "  " bar "  " kb/eyebrowse kb/vcs info-nodes kb/buffer-info remote-host buffer-position " " selection-info)
-  '(lsp input-method process github debug kb/time battery " " bar " " kb/buffer-encoding checker))
+  '(input-method process github debug kb/time battery " " bar " " lsp kb/buffer-encoding checker))
 
 (doom-modeline-def-modeline 'pdf
   '(bar window-number matches buffer-info pdf-pages)
@@ -164,7 +164,7 @@ UTF-8."
 
 (doom-modeline-def-modeline 'org-src
   '(bar window-number modals matches buffer-info-simple buffer-position word-count parrot selection-info)
-  '(objed-state misc-info debug lsp minor-modes input-method indent-info buffer-encoding major-mode process checker))
+  '(objed-state misc-info debug minor-modes input-method indent-info lsp buffer-encoding major-mode process checker))
 
 (doom-modeline-def-modeline 'timemachine
   '(bar window-number matches git-timemachine buffer-position word-count parrot selection-info)
