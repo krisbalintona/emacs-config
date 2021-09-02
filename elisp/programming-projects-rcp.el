@@ -14,11 +14,17 @@
 ;; Navigate and manage project directories easier
 (use-package projectile
   :disabled t ; In favor of `project.el'
-  :hook (after-init . projectile-mode)
-  :init
-  (when (file-directory-p user-emacs-directory)
-    (setq projectile-project-search-path `(,user-emacs-directory)))
-  (setq projectile-switch-project-action #'projectile-dired)
+  :general
+  (kb/leader-keys
+    "p" '(:ignore t :which-key "Projectile")
+    "p?" '(hydra:selectrum-projectile/body :which-key "Help menu")
+    ;; "pf"  'projectile-find-file
+    "pp"  'projectile-switch-project
+    ;; "ps"  'counsel-projectile-rg
+    "pb"  'projectile-switch-to-buffer
+    "pD"  'projectile-dired
+    ;; "pc"  'projectile-compile-project
+    )
   :custom
   (projectile-completion-system 'default) ; Use selectrum
   (projectile-enable-caching t)
@@ -44,16 +50,11 @@
                          ("s" counsel-projectile-rg))
                         ))
   :config
-  (kb/leader-keys
-    "p" '(:ignore t :which-key "Projectile")
-    "p?" '(hydra:selectrum-projectile/body :which-key "Help menu")
-    ;; "pf"  'projectile-find-file
-    "pp"  'projectile-switch-project
-    ;; "ps"  'counsel-projectile-rg
-    "pb"  'projectile-switch-to-buffer
-    "pD"  'projectile-dired
-    ;; "pc"  'projectile-compile-project
-    )
+  (projectile-mode)
+
+  (when (file-directory-p user-emacs-directory)
+    (setq projectile-project-search-path `(,user-emacs-directory)))
+  (setq projectile-switch-project-action #'projectile-dired)
   )
 
 ;;;;; Counsel-projectile
@@ -242,7 +243,6 @@
 (use-package git-gutter-fringe
   :demand t ; Need or this won't load and set bitmaps correctly
   :hook (window-configuration-change . git-gutter:update-all-windows)
-  :ghook ('after-init-hook 'global-git-gutter-mode)
   :custom
   (left-fringe-width 16)
   (right-fringe-width 3)
@@ -250,6 +250,8 @@
   (git-gutter:update-interval 0)
   (git-gutter:disabled-modes '(org-mode))
   :config
+  (global-git-gutter-mode)
+
   (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
