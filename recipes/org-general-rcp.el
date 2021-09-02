@@ -19,8 +19,7 @@
   :general
   (:keymaps 'org-mode-map
             :states '(normal visual motion)
-            "zi" 'org-toggle-inline-images
-            "RET" 'org-open-at-point)
+            "zi" 'org-toggle-inline-images)
   (kb/leader-keys
     "nn" '(org-capture :which-key "Org-capture")
     "mg" '(org-mark-ring-goto :which-key "Goto last mark")

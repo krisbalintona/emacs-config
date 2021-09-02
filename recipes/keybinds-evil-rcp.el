@@ -115,7 +115,6 @@
 ;;;; Evil-org
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
-  :disabled t
   :ghook 'org-mode-hook
   :general
   (:keymaps 'org-mode-map
