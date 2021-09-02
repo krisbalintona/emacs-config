@@ -47,7 +47,7 @@
 
 ;;;; Vertico
 (use-package vertico
-  :ghook 'after-init-hook
+  :demand t
   :custom
   ;; Workaround for problem with `org-refile'. See
   ;; https://github.com/minad/vertico#org-refile
@@ -66,13 +66,14 @@
   (add-to-list 'completion-styles-alist
                '(basic-remote           ; Name of `completion-style'
                  kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+  :config (vertico-mode)
   )
 
 ;;;; Selectrum
 ;; Advanced complete-read
 (use-package selectrum
   :disabled t                           ; Trying out `vertico'
-  :ghook 'after-init-hook
+  :demand t
   :custom
   (selectrum-num-candidates-displayed 'auto)
   (selectrum-max-window-height 10)                 ; Maximum candidates shown
@@ -81,6 +82,8 @@
   (selectrum-count-style 'current/matches)
   (selectrum-show-indices nil)
   :config
+  (selectrum-mode)
+
   ;; Optional performance optimization for `selectrum' by highlighting only the
   ;; visible candidates.
   (setq orderless-skip-highlighting (lambda () selectrum-is-active)

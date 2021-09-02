@@ -46,12 +46,12 @@
   :after powerthesaurus
   ;; TODO 2021-08-20: Have this changed depending on Linux distribution
   :ensure-system-package (wn . wordnet) ; Make sure English dictionary is also installed
-  :ghook 'after-init-hook
   :custom
   (synosaurus-backend 'synosaurus-backend-wordnet) ; Offline thesaurus that relies on `wordnet'
   (synosaurus-choose-method 'default)
   :config
   (unless (featurep 'powerthesaurus)
+    (synosaurus-mode)
     (general-define-key
      "C-c l" '(synosaurus-choose-and-replace :which-key "Synosaurus at point")
      "C-c L" '(synosaurus-choose-and-insert :which-key "Synosaurus lookup")))
