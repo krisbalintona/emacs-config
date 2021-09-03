@@ -25,9 +25,7 @@
   (:keymaps 'eshell-mode-map
             [remap eshell-previous-matching-input] '(consult-history :which-key "Command history")
             "<return>" 'eshell-send-input)
-  (kb/leader-keys
-    "oE" '(eshell :which-key "Open eshell")
-    )
+  (kb/leader-keys "oe" '(eshell :which-key "Eshell"))
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)
@@ -181,21 +179,6 @@
 ;; prompt)
 (use-package shrink-path
   :after eshell
-  )
-
-;;;; Eshell-toggle
-;; Toggle eshell window in bottom of current buffer
-(use-package eshell-toggle
-  :general (kb/leader-keys
-             "oe" '(eshell-toggle :which-key "Toggle eshell")
-             )
-  :custom
-  (eshell-toggle-size-fraction 3) ; How big is the window?
-  ;; (eshell-toggle-use-projectile-root t)
-  (eshell-toggle-use-git-root t)
-  (eshell-toggle-init-function #'eshell-toggle-init-eshell) ; Terminal emulator to use
-  (eshell-toggle-run-command nil) ; Command to run in new buffer
-  (eshell-toggle-window-side 'above)
   )
 
 ;;;; Eshell-syntax-highlighting
