@@ -517,7 +517,7 @@
    `(selectrum-prescient-primary-highlight ((t (:foreground "#dc85f7"))))
    `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
 
-;;;; Eyebrowse
+;;;; Selectrum-prescient
    `(selectrum-prescient-primary-highlight ((t (:foreground "#dc85f7"))))
    `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
 
