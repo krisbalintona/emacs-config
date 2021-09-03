@@ -37,10 +37,6 @@
   (garbage-collect)
   (setq gc-cons-threshold better-gc-cons-threshold))
 
-(add-hook 'after-focus-change-hook (lambda ()
-                                     (unless (frame-focus-state)
-                                       (garbage-collect))
-                                     ))
 (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
 
