@@ -17,19 +17,19 @@
   :gfhook 'general-evil-setup   ; Set up `general.el' infrastructure for `evil'
   :general
   (:states '(normal visual motion)
-           "TAB" nil
-           "K" 'join-line
-           "J" '(lambda () (interactive) (join-line 1)))
+            "TAB" nil
+            "K" 'join-line
+            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
-           "<escape>" 'evil-force-normal-state
-           "<backtab>" 'evil-delete-back-to-indentation)
+            "<escape>" 'evil-force-normal-state
+            "<backtab>" 'evil-delete-back-to-indentation)
   (:keymaps 'evil-visual-state-map
-            "a" 'exchange-point-and-mark
-            "o" evil-outer-text-objects-map
-            "i" evil-inner-text-objects-map)
+             "a" 'exchange-point-and-mark
+             "o" evil-outer-text-objects-map
+             "i" evil-inner-text-objects-map)
   (:states '(normal insert visual motion)
-           "C-i" 'evil-jump-backward
-           "C-o" 'evil-jump-forward)
+            "C-i" 'evil-jump-backward
+            "C-o" 'evil-jump-forward)
   (kb/leader-keys
     "ww" 'evil-window-mru
 
@@ -117,8 +117,26 @@
   :general
   (:keymaps 'org-mode-map
             [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; Respect visual-line-mode
+  (:keymaps 'org-mode-map
+            :states 'insert
+            "M-l" 'org-metaright
+            "M-h" 'org-metaleft
+            )
+
+  ;; Since I changed the binding for `evil-outer-text-objects-map' and
+  ;; `exchange-point-and-mark', I bind these myself.
+  (:keymaps 'evil-outer-text-objects-map
+            "e" 'evil-org-an-object
+            "E" 'evil-org-an-element
+            "r" 'evil-org-a-greater-element
+            "R" 'evil-org-a-subtree)
+  (:keymaps 'evil-inner-text-objects-map
+            "e" 'evil-org-inner-object
+            "E" 'evil-org-inner-element
+            "r" 'evil-org-inner-greater-element
+            "R" 'evil-org-inner-subtree)
   :config
-  (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+  (evil-org-set-key-theme '(navigation shift todo calendar additional))
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)            ; Motion state for org-agenda
   )
