@@ -59,7 +59,6 @@
 ;; Multiple universal arguments
 (general-define-key
  :keymaps 'universal-argument-map
- :states '(normal visual motion)
  "u" 'universal-argument-more
  )
 
