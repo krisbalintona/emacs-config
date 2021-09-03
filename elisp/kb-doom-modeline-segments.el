@@ -133,6 +133,7 @@ UTF-8."
   (let* ((active (doom-modeline--active))
          (face (if active 'bold-italic 'mode-line-inactive))) ; Don't use here
     (concat (doom-modeline-spc)
+            ;; NOTE 2021-09-03: Add support for org-roam node titles.
             (propertize (cond ((stringp (vc-git-root (buffer-file-name)))
                                (abbreviate-file-name (vc-git-root (buffer-file-name))))
                               (buffer-file-name ; Connected to file?
