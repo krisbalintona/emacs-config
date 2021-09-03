@@ -18,6 +18,12 @@
   'visual-line-mode
   :general
   (:keymaps 'org-mode-map
+            "M-u" 'org-up-element
+            "M-d" 'org-down-element
+            "M-n" 'org-forward-heading-same-level
+            "M-p" 'org-backward-heading-same-level
+            )
+  (:keymaps 'org-mode-map
             :states '(normal visual motion)
             "zi" 'org-toggle-inline-images)
   (kb/leader-keys
