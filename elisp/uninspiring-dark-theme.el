@@ -411,14 +411,10 @@
    `(web-mode-html-tag-face ((t (:foreground ,atom-one-dark-red-1))))
    `(web-mode-symbol-face ((t (:foreground ,atom-one-dark-orange-1))))
 
-;;;; Linum
-   `(linum ((t (:foreground ,atom-one-dark-gutter :background ,atom-one-dark-bg))))
-
-;;;; Hlinum
-   `(linum-highlight-face ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg))))
-   ;; native line numbers (emacs version >=26)
+;;;; Display-line-numbers
+   ;; Native line numbers
    `(line-number ((t (:foreground ,atom-one-dark-gutter :background ,atom-one-dark-bg))))
-   `(line-number-current-line ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg))))
+   `(line-number-current-line ((t (:weight bold :foreground ,atom-one-dark-fg :background ,atom-one-dark-bg-hl))))
 
 ;;;; Regexp-builder
    `(reb-match-0 ((t (:background ,atom-one-dark-gray))))
@@ -497,25 +493,6 @@
 
 ;;;; Fill-column-indicator
    `(fci-rule-color ,atom-one-dark-gray)
-
-;;;; Tetris
-   ;; | Tetromino | Color                    |
-   ;; | O         | `atom-one-dark-orange-2' |
-   ;; | J         | `atom-one-dark-blue'     |
-   ;; | L         | `atom-one-dark-orange-1' |
-   ;; | Z         | `atom-one-dark-red-1'    |
-   ;; | S         | `atom-one-dark-green'    |
-   ;; | T         | `atom-one-dark-purple'   |
-   ;; | I         | `atom-one-dark-cyan'     |
-   '(tetris-x-colors
-     [[229 192 123] [97 175 239] [209 154 102] [224 108 117] [152 195 121] [198 120 221] [86 182 194]])
-
-;;;; Ansi-color
-   `(ansi-color-names-vector
-     [,atom-one-dark-black ,atom-one-dark-red-1 ,atom-one-dark-green ,atom-one-dark-orange-2
-                           ,atom-one-dark-blue ,atom-one-dark-purple ,atom-one-dark-cyan ,atom-one-dark-fg])
-;;;; Bookmark
-   `(bookmark-face ((t (:foreground nil :background nil))))
 
 ;;;; Vertico
    `(vertico-current ((t (:background "#3a3f5a"))))
