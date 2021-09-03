@@ -17,8 +17,9 @@
 ;;;; Global-map
 (general-define-key
  :keymaps 'global-map
- "C-x C-c" nil ; Unbinds `save-buffers-kill-emacs'. Prevents me from leaving Emacs.
+ "C-x C-c" '(:ignore t) ; Unbinds `save-buffers-kill-emacs'. Prevents me from leaving Emacs.
  "C-M-;" 'eval-expression               ; Evaluate inputted expression
+ "C-x K" 'kill-this-buffer
  )
 (general-define-key
  :keymaps 'global-map

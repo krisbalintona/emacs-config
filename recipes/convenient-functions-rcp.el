@@ -237,7 +237,6 @@ Mainly used for `ledger-mode'."
 
 ;;;;; Keybinds
 ;; Keybinds for the aforementioned functions
-(general-define-key "C-x K" 'kill-this-buffer)
 (kb/leader-keys
   "bK" '(kill-this-buffer :which-key "Kill current buffer") ; Sets keybinds for kill-this-buffer function
   "fD" '(kb/delete-this-file :which-key "Delete current file")
