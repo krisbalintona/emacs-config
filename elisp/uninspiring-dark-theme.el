@@ -508,9 +508,6 @@
    ;; yet.
    `(org-transclusion-source-fringe ((t (:foreground (face-background default) :background (face-background default))))) ; Make fringe in referenced node invisible
 
-;;;; Marginalia
-   `(marginalia-documentation ((t (:inherit nil :foreground "#98C379" :slant 'italic))))
-
 ;;;; Selectrum
    `(selectrum-current-candidate ((t (:background "#3E4451" :extend t :weight 'semi-bold))))
    `(selectrum-completion-annotation ((t (:inherit success))))
@@ -527,6 +524,12 @@
 
 ;;;; End
    ))
+;;; Themes added for hooks
+;;;; Marginalia
+(add-hook 'marginalia-mode-hook
+          #'(lambda ()
+             (set-face-attribute 'marginalia-documentation nil :inherit nil :foreground "#98C379" :slant 'italic)))
+
 ;;; Force faces for certain modes
 (defvar atom-one-dark-theme-force-faces-for-mode t
   "If t, atom-one-dark-theme will use Face Remapping to alter the theme faces for
