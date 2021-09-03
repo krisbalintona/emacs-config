@@ -51,6 +51,59 @@
   (even-window-sizes 'height-only)      ; Or `t' or ``width-only''
   (window-sides-vertical t)
   (switch-to-buffer-in-dedicated-window 'pop)
+  (display-buffer-alist
+   `(;; No window
+     ("\\`\\*Async Shell Command\\*\\'"
+      (display-buffer-no-window))
+     ;; Same window
+     ("\\*helpful *"
+      (display-buffer-reuse-mode-window display-buffer-same-window))
+     ("*Flycheck errors*"
+      (display-buffer-same-window))
+     ("\\*devdocs\\*"
+      (display-buffer-same-window))
+     ;; To the right
+     ("\\*org-roam\\*"
+      (display-buffer-in-side-window)
+      (dedicated . t)
+      (side . right)
+      (window-width . 0.2))
+     ;; To the top
+     ("\\*Messages.*"
+      (display-buffer-in-side-window)
+      (window-height . 0.16)
+      (side . top)
+      (slot . 1))
+     ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.3)
+      (side . top)
+      (slot . 2))
+     ;; To the bottom
+     ("\\*Flycheck errors\\*"
+      (display-buffer-reuse-mode-window display-buffer-at-bottom)
+      (window-height . 0.33))
+     ("\\*.*\\(e?shell\\|v?term\\).*"
+      (display-buffer-reuse-mode-window display-buffer-at-bottom)
+      (window-height . 0.4))
+     ;; Below current window
+     ("\\*\\(Calendar\\|Org Select\\).*"
+      (display-buffer-reuse-mode-window display-buffer-below-selected)
+      (window-height . fit-window-to-buffer))
+     ("\\*Embark Actions.*"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -1)
+      (window-height . fit-window-to-buffer)
+      (window-parameters . ((no-other-window . t)
+                            (mode-line-format . none))))
+     ("\\*\\(Embark\\)?.*Completions.*"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . 0)
+      (window-parameters . ((no-other-window . t)
+                            (mode-line-format . none))))
+     ))
   )
 
 ;;;;; Eyebrowse
