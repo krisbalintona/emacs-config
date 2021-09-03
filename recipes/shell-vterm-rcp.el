@@ -27,24 +27,6 @@
   (vterm-min-window-width 50)
   )
 
-;;;; Vterm-toggle
-;; Eshell-toggle but for vterm
-(use-package vterm-toggle
-  :requires vterm
-  :general
-  (kb/leader-keys
-    "ot" '(vterm-toggle :which-key "Vterm-toggle")
-    "oT" '(vterm :which-key "Vterm in current window")
-    )
-  (kb/leader-keys
-    :keymaps 'vterm-mode-map
-    :states '(normal motion visual)
-    "vp" '(vterm-toggle-backward :which-key "Prev vterm buffer")
-    "vn" '(vterm-toggle-forward :which-key "Prev vterm buffer")
-    "vd" '(vterm-toggle-insert-cd :which-key "Cd to current buffer dir")
-    )
-  )
-
 ;;; shell-vterm-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'shell-vterm-rcp)
