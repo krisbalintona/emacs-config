@@ -44,6 +44,9 @@
       resize-mini-windows t         ; Not sure what this does
       minibuffer-eldef-shorten-default t) ; Shorten "(default ...)" to "[...]" in minibuffer prompts.
 (setq-default case-fold-search t)         ; For general regexp
+(setq minibuffer-prompt-properties        ; Don't show cursor in the minibuffer
+      '(read-only t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;;;; Vertico
 (use-package vertico
