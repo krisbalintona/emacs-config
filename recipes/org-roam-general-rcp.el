@@ -67,7 +67,7 @@
   (org-roam-completion-everywhere t) ; Org-roam completion everywhere
   (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
   ;; (org-roam-db-gc-threshold most-positive-fixnum) ; Temporarily increase GC threshold during intensive org-roam operations
-  (org-roam-db-gc-threshold (* 3 838861))
+  (org-roam-db-gc-threshold most-positive-fixnum) ; Minimize GC pauses while updating the database
 
   (org-roam-node-default-sort 'file-atime)
   (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
