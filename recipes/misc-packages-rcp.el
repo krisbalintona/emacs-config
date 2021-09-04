@@ -58,7 +58,7 @@
 ;; Wrap lines as if they were hard newlines (like `fill-paragraph'). In other
 ;; words, lines preserve indentation.
 (use-package adaptive-wrap
-  :hook (text-mode . adaptive-wrap-prefix-mode)
+  :hook (prog-mode . adaptive-wrap-prefix-mode)
   )
 
 ;;;; Built-in Emacs modes/packages
