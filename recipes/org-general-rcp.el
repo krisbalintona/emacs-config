@@ -26,6 +26,9 @@
   (:keymaps 'org-mode-map
             :states '(normal visual motion)
             "zi" 'org-toggle-inline-images)
+  (:keymaps 'org-mode-map
+            :states 'insert
+            "C-a" 'org-beginning-of-line)
   (kb/leader-keys
     "nn" '(org-capture :which-key "Org-capture")
     "mg" '(org-mark-ring-goto :which-key "Goto last mark")
