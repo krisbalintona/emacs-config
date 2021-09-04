@@ -50,13 +50,29 @@
 
 ;;;; Vertico
 (use-package vertico
+  :straight (vertico :type git :host github :repo "minad/vertico")
   :demand t
+  :general
+  (:keymaps 'global-map
+            "M-r" #'vertico-repeat
+            )
+  (:keymaps 'vertico-map
+            "?" #'minibuffer-completion-help
+            "C-<return>" #'vertico-quick-insert
+            "M-<return>" #'vertico-quick-exit
+            )
   :custom
   ;; Workaround for problem with `org-refile'. See
   ;; https://github.com/minad/vertico#org-refile
   (org-refile-use-outline-path 'file)
   (org-outline-path-complete-in-steps nil)
   :init
+  (load (concat user-emacs-directory "straight/build/vertico/extensions/vertico-quick.el"))
+  (load (concat user-emacs-directory "straight/build/vertico/extensions/vertico-repeat.el"))
+  (load (concat user-emacs-directory "straight/build/vertico/extensions/vertico-indexed.el"))
+  :config
+  (vertico-mode)
+
   ;; Workaround for problem with `tramp' hostname completions. This overrides
   ;; the completion style specifically for remote files! See
   ;; https://github.com/minad/vertico#tramp-hostname-completion
@@ -69,7 +85,6 @@
   (add-to-list 'completion-styles-alist
                '(basic-remote           ; Name of `completion-style'
                  kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
-  :config (vertico-mode)
   )
 
 ;;;; Selectrum
