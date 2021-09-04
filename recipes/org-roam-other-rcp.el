@@ -215,17 +215,19 @@
   )
 
 ;;;; Org-roam-ui
+;; Newer `org-roam-server' for org-roam V2.
 (use-package org-roam-ui
-  :disabled t ; For now to prevent issues at startup
   :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-  :requires org-roam
   :after org-roam
-  :preface
+  :init
   (use-package websocket)
   (use-package simple-httpd)
   (use-package f)
   :custom
   (org-roam-ui-open-on-start nil) ; Don't open graph on startup
+  (org-roam-ui-sync-theme t)
+  (org-roam-ui-follow t)
+  (org-roam-ui-update-on-save t)
   (org-roam-ui-custom-theme '(list
                               (bg . "#1E2029")
                               (bg-alt . "#282a36")
@@ -240,7 +242,6 @@
                               (violet . "#8be9fd")
                               (magenta . "#bd93f9"))
                             )
-  :config (org-roam-ui-mode)
   )
 
 ;;; org-roam-other-rcp.el ends here
