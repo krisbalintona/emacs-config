@@ -17,19 +17,19 @@
   :gfhook 'general-evil-setup   ; Set up `general.el' infrastructure for `evil'
   :general
   (:states '(normal visual motion)
-            "TAB" nil
-            "K" 'join-line
-            "J" '(lambda () (interactive) (join-line 1)))
+           "TAB" nil
+           "K" 'join-line
+           "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
-            "<escape>" 'evil-force-normal-state
-            "<backtab>" 'evil-delete-back-to-indentation)
+           "<escape>" 'evil-force-normal-state
+           "<backtab>" 'evil-delete-back-to-indentation)
   (:keymaps 'evil-visual-state-map
-             "a" 'exchange-point-and-mark
-             "o" evil-outer-text-objects-map
-             "i" evil-inner-text-objects-map)
+            "a" 'exchange-point-and-mark
+            "o" evil-outer-text-objects-map
+            "i" evil-inner-text-objects-map)
   (:states '(normal insert visual motion)
-            "C-i" 'evil-jump-backward
-            "C-o" 'evil-jump-forward)
+           "C-i" 'evil-jump-backward
+           "C-o" 'evil-jump-forward)
   (kb/leader-keys
     "ww" 'evil-window-mru
 
@@ -161,8 +161,8 @@
 (use-package better-jumper
   :after evil
   :general (:states '(normal visual normal)
-                     [remap evil-jump-backward] '(better-jumper-jump-backward :which-key "Jump backward")
-                     [remap evil-jump-forward] '(better-jumper-jump-forward :which-key "Jump forward"))
+                    [remap evil-jump-backward] '(better-jumper-jump-backward :which-key "Jump backward")
+                    [remap evil-jump-forward] '(better-jumper-jump-forward :which-key "Jump forward"))
   :custom
   (better-jumper-max-length 200)
   (better-jumper-use-evil-jump-advice t) ; Add evil-jump jumps
@@ -174,7 +174,7 @@
   :config
   ;; Add evil navigation commands to the better-jumper jump list
   (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin evil-jump-item evil-first-non-blank evil-end-of-visual-line)
-                       :after 'better-jumper-set-jump)
+                      :after 'better-jumper-set-jump)
   (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump)
   )
 
