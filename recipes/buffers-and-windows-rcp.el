@@ -149,9 +149,9 @@
 (use-package ace-window
   :general ("M-w" '(ace-window :which-key "Ace window"))
   :custom
-  (aw-scope 'visible)
+  (aw-scope 'frame)
   (aw-background t)
-  (aw-dispatch-always nil)
+  (aw-dispatch-always t)   ; Open dispatch when less than three windows are open
   (aw-minibuffer-flag t)
   (aw-keys '(?h ?j ?k ?l ?H ?J ?K ?L))
   (aw-dispatch-alist
