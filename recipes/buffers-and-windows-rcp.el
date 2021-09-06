@@ -81,11 +81,12 @@
       (slot . 2))
      ;; To the bottom
      ("\\*Flycheck errors\\*"
-      (display-buffer-reuse-mode-window display-buffer-at-bottom)
+      (display-buffer-reuse-mode-window display-buffer-in-side-window)
       (window-height . 0.33))
      ("\\*.*\\(e?shell\\|v?term\\).*"
-      (display-buffer-reuse-mode-window display-buffer-at-bottom)
-      (window-height . 0.4))
+      (display-buffer-reuse-mode-window display-buffer-in-side-window)
+      (side . right)
+      (window-width . 0.4)
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
