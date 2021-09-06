@@ -44,6 +44,8 @@
 ;;;;; Display-buffer-alist
 (use-package window
   :straight nil
+  :general (kb/leader-keys
+             "wt" '(window-toggle-side-windows :which-key "Toggle side windows"))
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
   (split-width-threshold 160)        ; Threshold for horizontal window splitting
