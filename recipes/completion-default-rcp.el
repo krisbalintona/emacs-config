@@ -50,7 +50,6 @@
 
 ;;;; Vertico
 (use-package vertico
-  :straight (vertico :type git :host github :repo "minad/vertico")
   :demand t
   :general
   (:keymaps 'global-map
