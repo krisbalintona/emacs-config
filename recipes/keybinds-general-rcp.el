@@ -24,13 +24,13 @@
   )
 
 ;;;; Unbinding leader key prefix
-(general-unbind
-  :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map debugger-mode-map
-                           ;; Magit modes
-                           magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
-                           )
-  :states '(normal visual motion)
-  "SPC")
+(general-define-key
+ :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map debugger-mode-map
+                          ;; Magit modes
+                          magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
+                          )
+ :states '(normal visual motion)
+ "SPC" '(:ignore t))
 
 ;;;; Keybinding labels and orphan bindings
 (kb/leader-keys
@@ -79,7 +79,7 @@
   (which-key-side-window-max-width 0.23)
   :config
   (which-key-mode)
-  
+
   ;; Don't display C-u, digit, and other numeric keybad bindings
   (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
         which-key-replacement-alist)

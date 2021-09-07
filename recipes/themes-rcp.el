@@ -33,6 +33,19 @@
 (require 'uninspiring-dark-theme)
 (use-package modus-themes)
 
+;;;;;; Make sure Modus theme font families are correct
+(defun kb/proper-set-font-families ()
+  "A makeshift solution to the Modus themes not having an in-built
+variable to set font families."
+  ;; (defvar uninspiring-dark-default "Iosevka Term SS04")
+  ;; (defvar uninspiring-dark-fixed-pitch "Hack Nerd Font Mono")
+  ;; (defvar uninspiring-dark-variable-pitch "LiterationSerif Nerd Font")
+  (set-face-attribute 'default nil :inherit 'uninspiring-dark-default)
+  (set-face-attribute 'variable-pitch nil :inherit 'uninspiring-dark-variable-pitch)
+  (set-face-attribute 'fixed-pitch nil :inherit 'uninspiring-dark-fixed-pitch)
+  )
+(advice-add 'kb/proper-load-theme-light :after #'kb/proper-set-font-families)
+
 ;;;;; Variable declarations
 (defvar kb/themes-light 'modus-operandi
   "My chosen light theme.")
