@@ -11,16 +11,22 @@
 
 ;;;; Online
 ;;;;; Define-word
-;; See definitions of words within Emacs. Offline version is
-;; https://github.com/gromnitsky/wordnut
-(use-package define-word
-  :general ("C-c d" '(define-word-at-point :which-key "Define-word at point")
-            "C-c D" '(define-word :which-key "Define-word lookup"))
+;; See definitions of words from an online dictionary.
+(use-package dictionary
+  :gfhook 'hide-mode-line-mode
+  :general
+  (:keymaps 'dictionary-mode-map
+            "q" 'dictionary-close)
+  ("C-c d" 'dictionary-lookup-definition
+   "C-c D" 'dictionary-search)
+  :custom
+  (dictionary-use-single-buffer t)      ; Resure dictionary buffers
+  (dictionary-default-dictionary "wn")
+  :config (global-dictionary-tooltip-mode)
   )
 
 ;;;;; Powerthesaurus
-;; Insert or search words in thesaurus. Offline version is
-;; https://github.com/hpdeifel/synosaurus
+;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
   :general ("C-c l" '(powerthesaurus-lookup-word-at-point :which-key "Thesaurus at point")
             "C-c L" '(powerthesaurus-lookup-word :which-key "Thesuarus lookup"))
