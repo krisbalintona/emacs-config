@@ -13,7 +13,7 @@
 (use-package org
   :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
   :gfhook
-  'org-indent-mode
+  ;; 'org-indent-mode
   'variable-pitch-mode
   'visual-line-mode
   :general
