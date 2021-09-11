@@ -42,6 +42,7 @@
   "bn" '(next-buffer :which-key "Next buffer")
   "f" '(:ignore t :which-key "Files")
   "ff" '(find-file :which-key "Find file")
+  "fF" '(find-file-other-window :which-key "Find file other window")
   "fs" '(save-buffer :which-key "Save buffer")
   "fS" '(save-some-buffers :which-key "Save most buffers")
   "h" '(:ignore t :which-key "Help")
