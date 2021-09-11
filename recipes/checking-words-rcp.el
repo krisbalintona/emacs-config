@@ -21,7 +21,8 @@
    "C-c D" 'dictionary-search)
   :custom
   (dictionary-use-single-buffer t)      ; Resure dictionary buffers
-  (dictionary-default-dictionary "wn")
+  ;; (dictionary-default-dictionary "wn")
+  (dictionary-default-dictionary "*")
   :config (global-dictionary-tooltip-mode)
   )
 
@@ -37,7 +38,7 @@
 ;; Offline dictionary
 (use-package wordnut
   :after define-word
-  ;; TODO 2021-08-20: Have this changed depending on linux distribution
+  ;; TODO 2021-08-20: Have this changed depending on Linux distribution
   :ensure-system-package (wn . wordnet) ; Make sure English dictionary is also installed
   :config
   (unless (featurep 'define-word)

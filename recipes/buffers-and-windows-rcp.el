@@ -88,7 +88,7 @@
      ("\\*.*\\(e?shell\\|v?term\\).*"
       (display-buffer-reuse-mode-window display-buffer-in-side-window)
       (side . right)
-      (window-width . 0.4)
+      (window-width . 0.4))
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
