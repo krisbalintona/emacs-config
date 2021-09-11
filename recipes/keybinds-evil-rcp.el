@@ -16,6 +16,8 @@
   :ghook 'after-init-hook
   :gfhook 'general-evil-setup   ; Set up `general.el' infrastructure for `evil'
   :general
+  (:keymaps '(evil-normal-state-map evil-insert-state-map) ; Remove `evil-jump-backward' keybind
+            "<tab>" nil)
   (:states '(normal visual motion)
            "TAB" nil
            "K" 'join-line

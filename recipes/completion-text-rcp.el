@@ -157,9 +157,8 @@
             ;; NOTE 2021-08-31: These keybinds override very annoying bindings.
             ;; This should be set later in the config (after evil) other wise
             ;; evil will overwrite those bindings
-            "<tab>" 'completion-at-point
-            "C-n" 'next-line            ; `corfu-next'
-            "C-p" 'previous-line)       ; `corfu-previous'
+            "C-n" #'next-line           ; `corfu-next'
+            "C-p" #'previous-line)      ; `corfu-previous'
   (:keymaps 'corfu-map
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
