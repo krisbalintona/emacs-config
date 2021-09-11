@@ -25,8 +25,9 @@
 ;;;; Browse-url
 (use-package browse-url
   :custom
-  (browse-url-browser-function 'eww-browse-url) ; Use `eww' for browser links
-  (browse-url-secondary-browser-function 'browse-url-default-browser) ; Use default browser as secondary
+  (browse-url-browser-function 'browse-url-default-browser)
+  (browse-url-new-window-flag 'browse-url-firefox)
+  (browse-url-secondary-browser-function 'eww-browse-url)
   )
 
 ;;;; Eww
