@@ -13,7 +13,7 @@
 (use-package org
   :straight (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
   :gfhook
-  ;; 'org-indent-mode
+  'adaptive-wrap-prefix-mode
   'variable-pitch-mode
   'visual-line-mode
   :general
@@ -37,7 +37,7 @@
   :custom
   ;; Aesthetics
   (org-ellipsis nil)       ; Specifically for org-mode headlines ; Doesn't work?
-  (org-startup-indented t) ; Start with `org-indent-mode'
+  (org-startup-indented nil) ; Start with `org-indent-mode'?
   (org-startup-folded 'nofold)
   (org-hide-emphasis-markers t)          ; Remove org-mode markup characters
   (org-fontify-quote-and-verse-blocks t) ; Properly syntax highlight block contents
