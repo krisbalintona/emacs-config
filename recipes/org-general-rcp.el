@@ -42,7 +42,7 @@
   (org-hide-emphasis-markers t)          ; Remove org-mode markup characters
   (org-fontify-quote-and-verse-blocks t) ; Properly syntax highlight block contents
   (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
-  (org-pretty-entities-include-sub-superscripts t) ; Show super- and subscripts?
+  (org-pretty-entities-include-sub-superscripts nil) ; Show super- and subscripts?
   (org-hidden-keywords '(title)) ; hide #+TITLE:
 
   ;; For writing
