@@ -28,6 +28,8 @@
             "zi" 'org-toggle-inline-images)
   (:keymaps 'org-mode-map
             :states 'insert
+            "M-K" 'org-shiftmetaup
+            "M-J" 'org-shiftmetadown
             "C-a" 'org-beginning-of-line)
   (kb/leader-keys
     "nn" '(org-capture :which-key "Org-capture")
