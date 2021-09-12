@@ -76,7 +76,7 @@
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :straight (outshine :type git :host github :repo "alphapapa/outshine")
-  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook 'conf-mode-hook
+  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
@@ -121,6 +121,18 @@ afterward."
         (insert "\n")))
     (evil-insert-state))
   (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
+  )
+
+;;;;; Conf-mode
+;; For Unix config files
+(use-package conf-mode
+  ;; :mode ("\\.vim\\'" . conf-mode)       ; Vim/Nvim config files
+  :ghook 'outshine-mode-hook
+  )
+
+;;;;; Vimrc-mode
+;; For editing vim/nvim config files
+(use-package vimrc-mode
   )
 
 ;;;;; Consult
@@ -234,7 +246,7 @@ afterward."
   (sp-autodelete-closing-pair t)
   :config
   (smartparens-global-mode)
-  
+
   ;; Helpter functions
   (defun kb/sp-point-before-letter-digit-p (_id action _context)
     "Return t if point is followed by any digit or alphanumeric character, nil
@@ -251,7 +263,7 @@ is only tested on \"insert\" action."
 is only tested on \"insert\" action."
     (when (eq action 'insert)
       (sp--looking-at-p "(")))
-  
+
   ;; Global
   (sp-pair "(" ")" :actions '(insert autoskip navigate))
   (sp-pair "\"" "\""
@@ -363,7 +375,7 @@ is only tested on \"insert\" action."
 
 ;;;;; Imenu
 (use-package imenu
-  :custom 
+  :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
   )
 
