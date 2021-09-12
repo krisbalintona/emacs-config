@@ -12,14 +12,15 @@
 ;;;; Everywhere
 (general-define-key
  "<escape>" 'keyboard-escape-quit       ; Make ESC quit everywhere
+ "C-x C-c" 'nil ; Unbinds `save-buffers-kill-emacs'. Prevents me from leaving Emacs.
  )
 
 ;;;; Global-map
 (general-define-key
  :keymaps 'global-map
- "C-x C-c" '(:ignore t) ; Unbinds `save-buffers-kill-emacs'. Prevents me from leaving Emacs.
  "C-M-;" 'eval-expression               ; Evaluate inputted expression
  "C-x K" 'kill-this-buffer
+ "TAB" nil                              ; Remove `evil-jump-backward' keybind
  )
 (general-define-key
  :keymaps 'global-map
@@ -29,9 +30,9 @@
                  (forward-line -1)
                  (back-to-indentation))
  [remap newline] '(lambda ()            ; Newline with indent
-               (interactive)
-               (insert "\n")
-               (indent-according-to-mode))
+                    (interactive)
+                    (insert "\n")
+                    (indent-according-to-mode))
  "M-<return>" '(lambda ()                    ; Insert newline and go to it
                  (interactive)
                  (move-beginning-of-line 1)
