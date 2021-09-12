@@ -123,6 +123,7 @@
             :states 'insert
             "M-l" 'org-metaright
             "M-h" 'org-metaleft
+            "C-<return>" 'evil-org-return
             )
   (:keymaps 'org-mode-map
             :states 'normal
