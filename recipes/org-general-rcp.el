@@ -49,6 +49,10 @@
   (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
   (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
+  :config
+  (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
+  )
+
 ;;;; Org-footnote
 (use-package org-footnote
   :straight nil
