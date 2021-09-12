@@ -294,14 +294,18 @@ journals directory."
          :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
          :END:"
            :if-new
-           (file+datetree "%<%Y>.org" week))
+           (file+datetree "%<%Y>.org" week)
+           :unnarrowed nil)
           ("m" "Musing" plain
            "* %? :musing:
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
            :if-new
-           (file+datetree "%<%Y>.org" week))
+           (file+datetree "%<%Y>.org" week)
+           :unnarrowed nil
+           :jump-to-captured t
+           :immediate-finish t)
           )
         )
   )
