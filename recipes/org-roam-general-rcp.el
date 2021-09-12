@@ -295,8 +295,8 @@ journals directory."
          :END:"
            :if-new
            (file+datetree "%<%Y>.org" week))
-          ("w" "Writing" plain
-           "* %? :c_writing:
+          ("m" "Musing" plain
+           "* %? :musing:
 :PROPERTIES:
 :TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
 :END:"
