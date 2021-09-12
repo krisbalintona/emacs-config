@@ -72,8 +72,6 @@
   (org-roam-node-default-sort 'file-atime)
   (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
 
-  (org-footnote-section nil) ; Don't put footnotes in headline
-
   ;; How it appears in the minibuffer
   ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
   (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))

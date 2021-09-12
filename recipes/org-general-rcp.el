@@ -49,6 +49,13 @@
   (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
   (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
+;;;; Org-footnote
+(use-package org-footnote
+  :straight nil
+  :after org
+  :custom
+  (org-footnote-section nil) ; Don't create footnote headline
+  (org-footnote-auto-adjust t) ; Automatically renumber
   )
 
 ;;;; Org-attach
