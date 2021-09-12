@@ -14,17 +14,15 @@
 (use-package evil
   :demand t
   :ghook 'after-init-hook
-  :gfhook 'general-evil-setup   ; Set up `general.el' infrastructure for `evil'
+  :gfhook 'general-evil-setup    ; Set up `general.el' infrastructure for `evil'
   :general
-  (:keymaps '(evil-normal-state-map evil-insert-state-map) ; Remove `evil-jump-backward' keybind
-            "<tab>" nil)
   (:states '(normal visual motion)
-           "TAB" nil
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
            "<escape>" 'evil-force-normal-state
-           "<backtab>" 'evil-delete-back-to-indentation)
+           "<backtab>" 'evil-delete-back-to-indentation
+           "<tab>" 'completion-at-point)
   (:keymaps 'evil-visual-state-map
             "a" 'exchange-point-and-mark
             "o" evil-outer-text-objects-map
