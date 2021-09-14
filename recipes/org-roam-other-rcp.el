@@ -58,6 +58,7 @@
 ;;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
+  :disabled t                   ; FIXME 2021-09-14: Won't open capture templates
   :after bibtex-completion
   :general
   (kb/leader-keys
@@ -96,12 +97,26 @@
     :group 'all-the-icons-faces)
   )
 
+
+;;;;; Ivy-bibtex
+(use-package ivy-bibtex
+  :after org-ref
+  :general
+  (kb/leader-keys
+    "fa" '(ivy-bibtex :which-key "Insert citation")
+    "fA" '(ivy-bibtex-with-notes :which-key "Open note")
+    )
+  :custom
+  (ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
+  )
+
 ;;;;; Org-ref
 ;; Bibtex is a way to add bibliographic information (e.g. references/citations to
 ;; equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
 ;; the .bib files bibtex makes. Org-ref is a way to directly insert citations
 ;; and references into latex and org files
 (use-package org-ref
+  :demand t
   :after bibtex-completion
   :custom
   (org-ref-default-bibliography bibtex-completion-bibliography)
@@ -109,11 +124,13 @@
   (org-ref-pdf-directory bibtex-completion-library-path)
   (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
 
-  (org-ref-completion-library 'org-ref-reftex) ; Org completion
+  ;; NOTE 2021-09-14: These two mess with the format of inserting citations
+  ;; (org-ref-completion-library 'org-ref-reftex) ; Org completion
+  ;; (org-ref-completion-library 'org-ref-ivy-cite) ; Ivy completion
   (org-ref-note-title-format
    "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
   (org-ref-notes-function 'orb-edit-notes)
-  (org-ref-default-citation-link "autocite")
+  (org-ref-default-citation-link "cite")
   :config
   (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t
                                             ("pdflatex"))
@@ -143,13 +160,10 @@
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
 ;; org-roam (provides templates and modifies edit notes action)
 (use-package org-roam-bibtex
-  :straight (org-roam-bibtex :type git :host github :repo "org-roam/org-roam-bibtex" :branch "master")
-  :requires (org-ref org-roam)
-  :after (bibtex-completion org-ref)
-  :ghook ('org-roam-db-autosync-mode-hook 'org-roam-bibtex-mode nil nil t)
+  :ghook 'org-mode-hook ; FIXME 2021-09-14: Make so that I don't need to call in this way
   :custom
-  (orb-preformat-keywords
-   '("citekey" "title" "url" "file" "author-or-editor" "keywords"))
+  (orb-preformat-keywords '("citekey" "author" "date"))
+  (orb-note-actions-interface 'ivy)
   )
 
 ;;;; Note-taking
