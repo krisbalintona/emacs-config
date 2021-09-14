@@ -220,15 +220,12 @@
   )
 
 ;;;;; Org-tempo
-;; Completion for org-block types
+;; Completion for org-block types. Adds to the functionality of `org-structure'.
 (use-package org-tempo
   :straight nil
   :defer 5
   :config
-  (dolist (expansion '(("sh" . "src sh")
-                       ("el" . "src emacs-lisp")
-                       ("py" . "src python")
-                       ;; ("sc" . "src scheme")
+  (dolist (expansion '(;; ("sc" . "src scheme")
                        ;; ("ts" . "src typescript")
                        ;; ("yaml" . "src yaml")
                        ;; ("json" . "src json")
