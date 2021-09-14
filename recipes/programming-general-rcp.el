@@ -126,8 +126,7 @@ afterward."
 ;;;;; Conf-mode
 ;; For Unix config files
 (use-package conf-mode
-  ;; :mode ("\\.vim\\'" . conf-mode)       ; Vim/Nvim config files
-  :ghook 'outshine-mode-hook
+  :gfhook 'outshine-mode
   )
 
 ;;;;; Vimrc-mode
