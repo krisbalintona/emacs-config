@@ -28,6 +28,8 @@
             "zi" 'org-toggle-inline-images)
   (:keymaps 'org-mode-map
             :states 'insert
+            "M-k" 'org-metaup
+            "M-j" 'org-metadown
             "M-K" 'org-shiftmetaup
             "M-J" 'org-shiftmetadown
             "C-a" 'org-beginning-of-line)
