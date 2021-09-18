@@ -48,6 +48,7 @@
   (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
   (org-pretty-entities-include-sub-superscripts nil) ; Show super- and subscripts?
   (org-hidden-keywords '(title)) ; hide #+TITLE:
+  (org-highlight-sparse-tree-matches nil) ; Don't highlight spare tree matches
 
   ;; For writing
   (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
