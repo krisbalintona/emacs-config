@@ -61,6 +61,12 @@ targets and targets."
         (org-export-get-reference datum info)))))
   (advice-add 'org-html--reference :override #'kb/org-html--reference)
   )
+
+;;; Citeproc-org
+;; Allow Hugo to export `org-ref' citations
+(use-package citeproc-org
+  :after ox-hugo
+  :config (citeproc-org-setup)
   )
 
 ;;; Ox-pandoc
