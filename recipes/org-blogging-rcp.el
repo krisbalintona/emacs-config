@@ -18,14 +18,16 @@
   :custom
   (org-hugo-base-dir (concat org-directory "hugo/"))
   (org-hugo-section "posts")
+  (org-hugo-auto-set-lastmod t)         ; Use lastmod
+  (org-hugo-suppress-lastmod-period 604800) ; Only use lasfmod if modified at least a week later
   :config
   (org-roam-update-org-id-locations)    ; Necessary for id's to be recognized for exports
-  
+
   ;; NOTE 2021-09-12: To ensure that anchor links directly to the headline are
   ;; functional, we need to patch `ox-html` to respect the ID property as the
   ;; anchor tag. From
   ;; https://github.com/org-roam/org-roam/wiki/Hitchhiker's-Rough-Guide-to-Org-roam-V2#export
-  (defun org-html--reference (datum info &optional named-only)
+  (defun kb/org-html--reference (datum info &optional named-only)
     "Return an appropriate reference for DATUM.
 
 DATUM is an element or a `target' type object.  INFO is the
@@ -57,6 +59,8 @@ targets and targets."
         nil)
        (t
         (org-export-get-reference datum info)))))
+  (advice-add 'org-html--reference :override #'kb/org-html--reference)
+  )
   )
 
 ;;; Ox-pandoc
