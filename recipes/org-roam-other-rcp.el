@@ -10,14 +10,15 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Citations
-;;;;; Bibtex-completion
+;;; Citations
+;;;; Bibtex-completion
 (use-package bibtex-completion
   :demand t                             ; Other citation packages depend on this
   :custom
   (bibtex-completion-notes-path kb/roam-dir) ; Irrelevant since I use org-roam-bibtex instead
-  (bibtex-completion-library-path (concat kb/roam-dir "bibliographic/bib-pdfs")) ; Where bibtex searches for pdfs
-  (bibtex-completion-bibliography (concat kb/roam-dir "bibliographic/master-lib.bib"))
+  (bibtex-completion-library-path (expand-file-name (concat kb/roam-dir "bibliographic/bib-pdfs")))
+  (bibtex-completion-bibliography
+   (list (expand-file-name (concat kb/roam-dir "bibliographic/master-lib.bib"))))
   (bibtex-completion-additional-search-fields '(doi url))
   (bibtex-completion-pdf-field "file") ; Zotero stores pdfs in a field called file - this settings allows bibtex to find the pdf
   (bibtex-completion-pdf-open-function ; Use okular to open a pdf
@@ -34,16 +35,6 @@
      (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
    )
 
-  ;; Citation format when citing using `ivy-bibtex'
-  (bibtex-completion-format-citation-functions
-   '((org-mode . bibtex-completion-format-citation-cite) ; I changed this line
-     (latex-mode . bibtex-completion-format-citation-cite)
-     (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
-     (python-mode . bibtex-completion-format-citation-sphinxcontrib-bibtex)
-     (rst-mode . bibtex-completion-format-citation-sphinxcontrib-bibtex)
-     (default . bibtex-completion-format-citation-default)
-     ))
-
   ;; Template for new note (but I use orb for this)
   ;; Taken from `org-roam-capture-templates'; copied from "Reference without pdf
   ;; notes". Doesn't matter though since `org-roam-bibtex' forces a template
@@ -55,62 +46,25 @@
   (bibtex-completion-notes-symbol "🖋")
   )
 
-;;;;; Bibtex-actions
-;; Alternative to `ivy-bibtex' and `helm-bibtex'
-(use-package bibtex-actions
-  :disabled t                   ; FIXME 2021-09-14: Won't open capture templates
+;;;; Org-cite
+;; Built-in citations in org-mode
+(use-package oc
+  :demand t
+  :straight nil
   :after bibtex-completion
   :general
   (kb/leader-keys
-    "fa" '(bibtex-actions-insert-citation :which-key "Insert citation")
-    "fA" '(bibtex-actions-open-notes :which-key "Open note")
+    "fa" '(org-cite-insert :which-key "Insert citation")
     )
   :custom
-  ;; What the minibuffer displays
-  (bibtex-actions-template '("${author editor:40}   ${date year issued:4}    ${title:115}" . "     ${=type=:20}    ${tags keywords keywords:*}"))
-
-  ;; A list of predefined searches
-  (bibtex-actions-presets '("has:note"))
-
-  (bibtex-actions-at-point-function 'embark-act)
-  :config
-  ;; Make the 'bibtex-actions' bindings and targets available to `embark'.
-  (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
-  (add-to-list 'embark-keymap-alist '(bibtex . bibtex-actions-map))
-  (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
-
-  ;; Configuring all-the-icons. From
-  ;; https://github.com/bdarcus/bibtex-actions#rich-ui
-  (setq bibtex-actions-symbols
-        `((pdf . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
-                  ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
-          (note . (,(all-the-icons-icon-for-file "foo.txt") .
-                   ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
-          (link .
-                (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
-                 ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
-  ;; Here we define a face to dim non 'active' icons, but preserve alignment
-  (defface bibtex-actions-icon-dim
-    '((((background dark)) :foreground "#282c34")
-      (((background light)) :foreground "#fafafa"))
-    "Face for obscuring/dimming icons"
-    :group 'all-the-icons-faces)
+  (org-cite-global-bibliography bibtex-completion-bibliography)
+  (org-cite-activate-processor 'basic)
+  ;; Not sure what this does. Got it from
+  ;; https://github.com/jkitchin/org-ref-cite
+  :config (require 'oc-csl)
   )
 
-
-;;;;; Ivy-bibtex
-(use-package ivy-bibtex
-  :after org-ref
-  :general
-  (kb/leader-keys
-    "fa" '(ivy-bibtex :which-key "Insert citation")
-    "fA" '(ivy-bibtex-with-notes :which-key "Open note")
-    )
-  :custom
-  (ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
-  )
-
-;;;;; Org-ref
+;;;; Org-ref
 ;; Bibtex is a way to add bibliographic information (e.g. references/citations to
 ;; equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
 ;; the .bib files bibtex makes. Org-ref is a way to directly insert citations
@@ -156,18 +110,88 @@
   (add-to-list 'org-latex-logfiles-extensions "synctex.gz")
   )
 
-;;;;; Org-roam-bibtex
+;;;; Org-roam-bibtex
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
 ;; org-roam (provides templates and modifies edit notes action)
 (use-package org-roam-bibtex
+  :after (org-roam oc embark)
   :ghook 'org-mode-hook ; FIXME 2021-09-14: Make so that I don't need to call in this way
   :custom
   (orb-preformat-keywords '("citekey" "author" "date"))
+  )
+;;;; Bibtex-actions
+;; Alternative to `ivy-bibtex' and `helm-bibtex'
+(use-package bibtex-actions
+  :defer 5        ; Otherwise I have to call `bibtex-actions-open-notes' to load
+  :after (bibtex-completion embark oc)
+  :general
+  (kb/leader-keys
+    [remap org-cite-insert] '(bibtex-actions-insert-citation :which-key "Insert citation")
+    "fA" '(bibtex-actions-open-notes :which-key "Open note")
+    )
+  :custom
+  (bibtex-actions-bibliography bibtex-completion-bibliography)
+  (bibtex-actions-presets '("has:note")) ; A list of predefined searches
+  (bibtex-actions-templates
+   '((main . "${author editor:40}   ${date year issued:4}    ${title:115}")
+     (suffix . "     ${=type=:20}    ${tags keywords keywords:*}")
+     (note . "#+title: Notes on ${author editor}, ${title}") ; For new notes
+     ))
+  (bibtex-actions-at-point-function 'embark-act)
+  :config
+  ;; Make the 'bibtex-actions' bindings and targets available to `embark'.
+  (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
+  (add-to-list 'embark-keymap-alist '(bibtex . bibtex-actions-map))
+  (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
+
+  ;; Configuring all-the-icons. From
+  ;; https://github.com/bdarcus/bibtex-actions#rich-ui
+  (setq bibtex-actions-symbols
+        `((pdf . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
+                  ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
+          (note . (,(all-the-icons-icon-for-file "foo.txt") .
+                   ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
+          (link .
+                (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
+                 ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
+  ;; Here we define a face to dim non 'active' icons, but preserve alignment
+  (defface bibtex-actions-icon-dim
+    '((((background dark)) :foreground "#282c34")
+      (((background light)) :foreground "#fafafa"))
+    "Face for obscuring/dimming icons"
+    :group 'all-the-icons-faces)
+  )
+
+;;;; Oc-bibtex-actions
+;; Bibtex-actions compatible with `org-cite'
+(use-package oc-bibtex-actions
+  :demand t                            ; Otherwise it won't be required anywhere
+  :straight nil
+  :after (bibtex-actions oc)
+  :custom
+  ;; Use `bibtex-actions'
+  (org-cite-insert-processor 'oc-bibtex-actions)
+  (org-cite-follow-processor 'oc-bibtex-actions)
+  )
+
+;;;; Ivy-bibtex
+;; Kept here just in case I need to use in the future
+(use-package ivy-bibtex
+  :disabled t
+  :after (org-ref org-roam-bibtex)
+  :general
+  (kb/leader-keys
+    "fa" '(ivy-bibtex :which-key "Insert citation")
+    "fA" '(ivy-bibtex-with-notes :which-key "Open note")
+    )
+  :custom
+  (ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
   (orb-note-actions-interface 'ivy)
   )
 
-;;;; Note-taking
-;;;;; Pdf-tools
+
+;;; Note-taking
+;;;; Pdf-tools
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
@@ -184,7 +208,7 @@
   (pdf-view-use-imagemagick nil)
   )
 
-;;;;; Org-noter
+;;;; Org-noter
 (use-package org-noter
   :defer 10                      ; Load so it doesn't defer to noter insert call
   :general
@@ -203,7 +227,7 @@
   (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
   )
 
-;;;; Org-transclusion
+;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
   :disabled t ; Issue with org-roam-node-capture
@@ -228,7 +252,7 @@
   (org-id-update-id-locations (org-roam--list-all-files))
   )
 
-;;;; Org-roam-ui
+;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
 (use-package org-roam-ui
   :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))

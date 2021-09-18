@@ -72,7 +72,7 @@ targets and targets."
 ;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
-  :demand t
+  :defer 15
   :after ox
   :ensure-system-package pandoc
   )
