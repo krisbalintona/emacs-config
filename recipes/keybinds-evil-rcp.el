@@ -59,7 +59,6 @@
   (evil-want-C-i-jump t)   ; C-i keybinding for jumps?
   (evil-want-fine-undo t)               ; More granular undos
   (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
-  (evil-want-Y-yank-to-eol t)
   (evil-move-cursor-back nil)
   (evil-move-beyond-eol t)
   (evil-echo-state nil)                 ; Don't echo state in echo area
@@ -68,7 +67,8 @@
   (setq evil-normal-state-cursor 'box ; Set these variables since they aren't custom variables
         evil-insert-state-cursor 'bar
         evil-visual-state-cursor 'hollow
-        evil-emacs-state-cursor 'hbar)
+        evil-emacs-state-cursor 'hbar
+        evil-want-Y-yank-to-eol t)
   )
 
 ;;;; Evil-collection
