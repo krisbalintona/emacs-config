@@ -49,13 +49,11 @@
 ;;;; Org-cite
 ;; Built-in citations in org-mode
 (use-package oc
-  :demand t
   :straight nil
-  :after bibtex-completion
+  :after (bibtex-completion bibtex-actions)
   :general
-  (kb/leader-keys
-    "fa" '(org-cite-insert :which-key "Insert citation")
-    )
+  (:keymaps 'org-mode-map
+            [remap bibtex-actions-insert-citation] '(org-cite-insert :which-key "Insert citation"))
   :custom
   (org-cite-global-bibliography bibtex-completion-bibliography)
   (org-cite-activate-processor 'basic)
@@ -122,13 +120,12 @@
 ;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
-  :defer 5        ; Otherwise I have to call `bibtex-actions-open-notes' to load
-  :after (bibtex-completion embark oc)
+  :after (bibtex-completion embark)
   :general
-  (kb/leader-keys
-    [remap org-cite-insert] '(bibtex-actions-insert-citation :which-key "Insert citation")
-    "fA" '(bibtex-actions-open-notes :which-key "Open note")
-    )
+  ("C-c bb" '(bibtex-actions-insert-citation :which-key "Insert citation")
+   "C-c br" '(bibtex-actions-insert-reference :which-key "Insert reference")
+   "C-c bo" '(bibtex-actions-open-notes :which-key "Open note")
+   )
   :custom
   (bibtex-actions-bibliography bibtex-completion-bibliography)
   (bibtex-actions-presets '("has:note")) ; A list of predefined searches
