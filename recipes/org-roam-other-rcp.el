@@ -160,6 +160,16 @@
       (((background light)) :foreground "#fafafa"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
+
+  ;; Set my own formatting for `bibtex-actions-insert-reference'
+  (defun kb/bibtex-completion-insert-reference (keys)
+    "Insert references for entries in KEYS without \"-\" on new line."
+    (let* ((refs (--map
+                  (s-word-wrap fill-column (bibtex-completion-apa-format-reference it))
+                  keys)))
+      (insert (s-join "\n" refs))
+      ))
+  (advice-add 'bibtex-completion-insert-reference :override 'kb/bibtex-completion-insert-reference)
   )
 
 ;;;; Oc-bibtex-actions
