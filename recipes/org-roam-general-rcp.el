@@ -253,6 +253,17 @@ journals directory."
          :if-new (file+head "${slug}.org"
                             "#+title: ${title}\n")
          :immediate-finish t)
+        ("b" "Blog" plain
+         ""
+         :if-new (file+head "blog/${slug}.org"
+                            "#+title: ${title}
+#+filetags: :blog:
+#+hugo_tags:
+#+hugo_categories:
+#+DATE: nil
+#+hugo_custom_front_matter:
+#+hugo_draft: true")
+         :immediate-finish t)
         ("e" "Evergreen" plain
          ""
          :if-new (file+head "${slug}.org"
