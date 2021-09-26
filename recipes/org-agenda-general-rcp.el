@@ -17,6 +17,7 @@
              )
   :custom
   (org-agenda-files nil)
+  (org-agenda-window-setup 'current-window)
   (org-use-fast-todo-selection 'auto)
   (org-todo-keywords
    '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
