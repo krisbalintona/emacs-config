@@ -46,7 +46,8 @@
 
 ;;;; Native-compilations settings
 ;; Allow async compilations occupy all the cores minus 1
-(setq native-comp-async-jobs-number (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1))
+;; (setq native-comp-async-jobs-number (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1))
+(setq native-comp-async-jobs-number 0)  ; Don't compile asynchronously
 
 ;;; performance-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
