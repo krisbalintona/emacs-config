@@ -116,7 +116,9 @@
   :ghook 'org-mode-hook ; FIXME 2021-09-14: Make so that I don't need to call in this way
   :custom
   (orb-preformat-keywords '("citekey" "author" "date"))
+  (bibtex-actions-file-open-note-function 'orb-bibtex-actions-edit-note)
   )
+
 ;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
@@ -184,18 +186,17 @@
 ;;;; Ivy-bibtex
 ;; Kept here just in case I need to use in the future
 (use-package ivy-bibtex
-  :disabled t
+  ;; :disabled t
   :after (org-ref org-roam-bibtex)
-  :general
-  (kb/leader-keys
-    "fa" '(ivy-bibtex :which-key "Insert citation")
-    "fA" '(ivy-bibtex-with-notes :which-key "Open note")
-    )
+  ;; :general
+  ;; (kb/leader-keys
+  ;;   "fa" '(ivy-bibtex :which-key "Insert citation")
+  ;;   "fA" '(ivy-bibtex-with-notes :which-key "Open note")
+  ;;   )
   :custom
   (ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
   (orb-note-actions-interface 'ivy)
   )
-
 
 ;;; Note-taking
 ;;;; Pdf-tools

@@ -42,6 +42,7 @@
   ;; Aesthetics
   (org-ellipsis nil)       ; Specifically for org-mode headlines ; Doesn't work?
   (org-startup-indented t) ; Start with `org-indent-mode'?
+  (org-adapt-indentation nil)            ; This is `org-indent-mode' but with hard changes
   (org-startup-folded 'nofold)
   (org-hide-emphasis-markers t)          ; Remove org-mode markup characters
   (org-fontify-quote-and-verse-blocks t) ; Properly syntax highlight block contents
