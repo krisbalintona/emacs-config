@@ -16,7 +16,7 @@
              "oa" '(org-agenda :which-key "Org-agenda")
              )
   :custom
-  (org-agenda-files nil)
+  (org-agenda-files (org-roam-list-files))
   (org-agenda-window-setup 'current-window)
   (org-use-fast-todo-selection 'auto)
   (org-todo-keywords
