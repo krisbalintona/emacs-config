@@ -12,6 +12,9 @@
 ;;; Org-agenda
 (use-package org-agenda
   :straight nil
+  :general (kb/leader-keys
+             "oa" '(org-agenda :which-key "Org-agenda")
+             )
   :custom
   (org-agenda-files nil)
   (org-use-fast-todo-selection 'auto)
