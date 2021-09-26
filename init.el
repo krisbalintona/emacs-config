@@ -78,7 +78,7 @@
 (require 'org-blogging-rcp)
 (require 'org-roam-general-rcp)
 (require 'org-roam-other-rcp)
-;; (require 'org-agenda-general-rcp)
+(require 'org-agenda-general-rcp)
 ;; (require 'org-agenda-views-rcp)
 ;; (require 'org-agenda-other-rcp)
 
