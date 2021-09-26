@@ -279,7 +279,7 @@ journals directory."
         ("e" "Evergreen" plain
          ""
          :if-new (file+head "${slug}.org"
-                            "#+filetags: :new:\n#+title: ${title}\nReference: \n\n\n")
+                            "#+title: ${title}\n#+filetags: :new:\nReference: \n\n\n")
          :jump-to-captured t)
         ("Q" "Quote" entry
          "* ${title} :quote:new:
@@ -295,18 +295,18 @@ journals directory."
         ("l" "Lit Note" plain
          ""
          :if-new (file+head "${slug}.org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${title}\nSource: \nDate: %<%b %d, %Y>")
+                            "#+title: ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: \nDate: %<%b %d, %Y>")
          :immediate-finish t
          :jump-to-captured t)
         ("r" "Reference without pdf notes" plain
          ""
          :if-new (file+head "${citekey}-${slug}.org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author}\nDate: %<%b %d, %Y>")
+                            "#+title: ${citekey} ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: ${author}\nDate: %<%b %d, %Y>")
          :immediate-finish t)
         ("R" "Reference with pdf notes" plain
          ""
          :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
-                            "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
+                            "#+title: ${citekey} ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: ${author}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
         )
       )
 
