@@ -152,6 +152,18 @@ journals directory."
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
   )
 
+;;;; Org-refile
+(use-package org-refile
+  :after org-roam
+  :straight nil
+  :custom
+  (org-refile-targets org-agenda-files)
+  (org-refile-use-cache t)
+  (org-refile-use-outline-path t)
+  (org-refile-history t)
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  )
+
 ;;;; Customized `org-roam-node-find' functions
 ;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
 ;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
