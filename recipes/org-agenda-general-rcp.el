@@ -29,7 +29,8 @@
      ("DONE" :foreground "chartreuse" :weight normal)
      ("CANCELLED" :foreground "deep pink" :weight normal)
      ))
-  (org-log-done 'time)       ; When done add CLOSED line with inactive timestamp
+  (org-log-done nil)       ; Inactive timestamp already added to logbook
+  (org-log-into-drawer t)
   )
 
 ;;; org-agenda-general-rcp.el ends here
