@@ -60,6 +60,21 @@ targets and targets."
        (t
         (org-export-get-reference datum info)))))
   (advice-add 'org-html--reference :override #'kb/org-html--reference)
+
+  ;; Org-export all files in an org-roam subdirectory. Modified from
+  ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/
+  (defun kb/org-hugo-org-roam-sync-all()
+    "Export all org-roam files to Hugo in my blogging directory."
+    (interactive)
+    (let* ((buffers (buffer-list)))
+      (dolist (fil (org-roam--list-files (expand-file-name (concat org-roam-directory "blog"))))
+        (with-current-buffer (find-file-noselect fil)
+          (org-hugo-export-wim-to-md)
+          (unless (member (get-buffer (buffer-name)) buffers) ; Kill buffer unless it already exists
+            (kill-buffer)
+            )
+          ))
+      ))
   )
 
 ;;; Citeproc-org
