@@ -57,6 +57,7 @@
   :custom
   (org-cite-global-bibliography bibtex-completion-bibliography)
   (org-cite-activate-processor 'basic)
+  (org-cite-csl-styles-dir "~/Documents/Zotero/styles")
   ;; Not sure what this does. Got it from
   ;; https://github.com/jkitchin/org-ref-cite
   :config (require 'oc-csl)
