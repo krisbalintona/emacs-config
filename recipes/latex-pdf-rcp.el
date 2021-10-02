@@ -13,6 +13,7 @@
 ;; Integration with `latexmk' for more compilation support (particularly
 ;; citations)
 (use-package auctex-latexmk
+  :defer 6
   :custom
   (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
   :config (auctex-latexmk-setup)
