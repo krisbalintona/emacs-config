@@ -58,7 +58,6 @@
   :gfhook
   'reftex-isearch-minor-mode
   'TeX-source-correlate-mode ; Minor mode for forward and inverse search.
-  'prettify-symbols-mode
   'display-line-numbers-mode
   'LaTeX-math-mode ; Access to math macros
   'visual-line-mode ; So evil can respect true lines

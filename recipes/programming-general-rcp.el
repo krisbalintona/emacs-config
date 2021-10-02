@@ -9,8 +9,14 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Aesthetics
-;;;;; Highlight-indent-guides
+;;; Aesthetics
+;;;; Prog-mode
+(use-package prog-mode
+  :straight nil
+  :hook (window-setup . global-prettify-symbols-mode)
+  )
+
+;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package highlight-indent-guides
   :ghook 'prog-mode-hook
@@ -20,13 +26,13 @@
   (highlight-indent-guides-character ?⏐)
   )
 
-;;;;; Rainbow-mode
+;;;; Rainbow-mode
 ;; Colorify color codes
 (use-package rainbow-mode
   :ghook 'text-mode-hook 'prog-mode-hook
   )
 
-;;;;; Highlight-defined
+;;;; Highlight-defined
 ;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
 ;; text which is the symbol of a face.
 (use-package highlight-defined
@@ -35,22 +41,22 @@
   (highlight-defined-face-use-itself t)
   )
 
-;;;;; Highlight-quoted
+;;;; Highlight-quoted
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
   :ghook 'emacs-lisp-mode-hook
   )
 
-;;;;; Paren
+;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
   :demand t
   :config (show-paren-mode)
   )
 
-;;;; Quick movement
-;;;;; Ace-link
+;;; Quick movement
+;;;; Ace-link
 ;; Open links easily
 (use-package ace-link
   :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map org-mode-map)
@@ -58,7 +64,7 @@
                      )
   )
 
-;;;;; Ace-jump
+;;;; Ace-jump
 ;; Quickly jump to any character
 (use-package ace-jump-mode
   :general ("M-a" '(ace-jump-mode :which-key "Ace-jump"))
@@ -70,8 +76,8 @@
         '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))
   )
 
-;;;; Other
-;;;;; Outshine
+;;; Other
+;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
@@ -82,7 +88,8 @@
             "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   (:keymaps 'outshine-mode-map
             :states 'normal
-            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB"))
+            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
+            "C-<return>" 'outshine-insert-heading)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
@@ -122,18 +129,18 @@ afterward."
   (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
   )
 
-;;;;; Conf-mode
+;;;; Conf-mode
 ;; For Unix config files
 (use-package conf-mode
   :gfhook 'outshine-mode
   )
 
-;;;;; Vimrc-mode
+;;;; Vimrc-mode
 ;; For editing vim/nvim config files
 (use-package vimrc-mode
   )
 
-;;;;; Consult
+;;;; Consult
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
@@ -197,7 +204,7 @@ afterward."
    )
   )
 
-;;;;; Embark
+;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
@@ -213,7 +220,7 @@ afterward."
   (embark-collect-live-update-delay 0.5)
   )
 
-;;;;; Embark-consult
+;;;; Embark-consult
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
   :demand t ; only necessary if you have the hook below
@@ -223,7 +230,7 @@ afterward."
   :hook (embark-collect-mode . consult-preview-at-point-mode)
   )
 
-;;;;; Smartparens
+;;;; Smartparens
 ;; Auto pairing parentheses
 (use-package smartparens
   :demand t
@@ -283,7 +290,7 @@ is only tested on \"insert\" action."
                  :when '(sp-in-comment-p sp-in-string-p))
   )
 
-;;;;; Scratch.el
+;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
 (use-package scratch
   ;; :demand t ; For the initial scratch buffer at startup
@@ -304,7 +311,7 @@ is only tested on \"insert\" action."
     )
   )
 
-;;;;; Anzu
+;;;; Anzu
 ;; Adds highlight face during replace and regexp
 (use-package anzu
   :demand t
@@ -314,13 +321,13 @@ is only tested on \"insert\" action."
   :config (global-anzu-mode)
   )
 
-;;;;; Goto-line-preview
+;;;; Goto-line-preview
 ;; Preview line before you jump to it with `goto-line'
 (use-package goto-line-preview
   :general ([remap goto-line] 'goto-line-preview)
   )
 
-;;;;; Sudo-edit
+;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
   :general (kb/leader-keys
@@ -330,13 +337,13 @@ is only tested on \"insert\" action."
   :config (sudo-edit-indicator-mode)
   )
 
-;;;;; Tramp
+;;;; Tramp
 (use-package tramp
   :custom
   (tramp-default-method "ssh")
   )
 
-;;;;; Whitespace
+;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace
   :hook (before-save . whitespace-cleanup)
@@ -344,7 +351,7 @@ is only tested on \"insert\" action."
   (whitespace-style '(face empty indentation::space tab))
   )
 
-;;;;; Autorevert
+;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
   :demand t
@@ -356,7 +363,7 @@ is only tested on \"insert\" action."
   :config (global-auto-revert-mode)
   )
 
-;;;;; Super-save
+;;;; Super-save
 ;; Automatically save buffers when you do certain things
 (use-package super-save
   :demand t
@@ -371,13 +378,13 @@ is only tested on \"insert\" action."
   :config (super-save-mode)
   )
 
-;;;;; Imenu
+;;;; Imenu
 (use-package imenu
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
   )
 
-;;;;; Imenu-list
+;;;; Imenu-list
 ;; Side buffer with imenu items
 (use-package imenu-list
   :general (kb/leader-keys

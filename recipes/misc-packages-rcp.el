@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Keyfreq
+;;; Keyfreq
 ;; See a heatmap of your keypresses.
 ;; Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= to get the original rendered HTML page. Use =keyfreq-html-v2= to get the keyboard heat map.
 (use-package keyfreq
@@ -28,7 +28,7 @@
   :config (keyfreq-mode)
   )
 
-;;;; Disable-mouse
+;;; Disable-mouse
 ;; Disable mouse interaction within Emacs
 (use-package disable-mouse
   :disabled t ; I actually want to use my mouse when on laptop
@@ -42,7 +42,7 @@
               evil-insert-state-map))
   )
 
-;;;; Proced
+;;; Proced
 ;; Built in process monitor
 (use-package proced
   :straight nil
@@ -54,14 +54,14 @@
   (proced-filter 'all)      ; Which processes are shown?
   )
 
-;;;; Adaptive-wrap
+;;; Adaptive-wrap
 ;; Wrap lines as if they were hard newlines (like `fill-paragraph'). In other
 ;; words, lines preserve indentation.
 (use-package adaptive-wrap
   :hook (prog-mode . adaptive-wrap-prefix-mode)
   )
 
-;;;; Built-in Emacs modes/packages
+;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
   :hook (messages-buffer-mode . visual-line-mode)
