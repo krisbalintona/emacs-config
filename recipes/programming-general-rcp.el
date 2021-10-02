@@ -75,7 +75,6 @@
 ;; Outline-minor-mode but with better keybindings and more support
 (use-package outshine
   :demand t ; Load immediately to properly set outline-minor-mode-prefix
-  :straight (outshine :type git :host github :repo "alphapapa/outshine")
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
