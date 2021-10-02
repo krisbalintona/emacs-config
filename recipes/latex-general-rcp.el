@@ -9,8 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; TeX
-;;;;; AucTeX
+;;; TeX
+;;;; AucTeX
 ;; A lot taken from https://github.com/MatthewZMD/.emacs.d#auctex
 (use-package tex
   :straight auctex
@@ -30,7 +30,7 @@
   (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
   )
 
-;;;;; Reftex
+;;;; Reftex
 ;; Manage references, citations, and labels with AUCTeX
 (use-package reftex
   :ghook 'LaTeX-mode-hook
@@ -39,7 +39,7 @@
   (reftex-cite-prompt-optional-args 'maybe) ; Prompt for empty optional arguments in cite?
   )
 
-;;;;; Company-auctex
+;;;; Company-auctex
 ;; Auctex suggestions using the company backend
 (use-package company-auctex
   :requires company
@@ -49,8 +49,8 @@
                                      '(company-auctex-labels company-auctex-bibs (company-auctex-macros company-auctex-symbols company-auctex-environments)))))
   )
 
-;;;; LaTeX
-;;;;; Latex
+;;; LaTeX
+;;;; Latex
 (use-package latex
   :straight nil
   :ensure-system-package (latex . texlive-full)
@@ -76,7 +76,14 @@
   :preface (defvaralias 'latex-mode-hook 'LaTeX-mode-hook "For easier use-package declaration.")
   )
 
-;;;;; Magic-latex-buffer
+;;;; Cdlatex
+;; Faster LaTeX inputs
+(use-package cdlatex
+  :demand t
+  :hook (LaTeX-mode . turn-on-cdlatex)
+  )
+
+;;;; Magic-latex-buffer
 ;; Magically enhance LaTeX-mode font-locking
 (use-package magic-latex-buffer
   :disabled t ; Too laggy for now

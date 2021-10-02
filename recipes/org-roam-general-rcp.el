@@ -147,7 +147,7 @@ journals directory."
       )
     )
   :config
-  ;; Org roam buffer
+  ;; Org roam buffer section visibility
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
   )
