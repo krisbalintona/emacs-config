@@ -39,14 +39,6 @@
                  (insert "\n")
                  (forward-line -1)
                  (indent-according-to-mode))
- "C-<return>" '(lambda ()          ; Insert rest of line after point in newline above
-                 (interactive)
-                 (kill-line)
-                 (save-excursion (beginning-of-line) (open-line 1))
-                 (forward-line -1)
-                 (yank)
-                 (indent-according-to-mode)
-                 (back-to-indentation))
  "C-a" 'back-to-indentation
  "C-e" 'move-end-of-line
  "C-k" 'kill-visual-line
