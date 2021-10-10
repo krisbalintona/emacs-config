@@ -157,11 +157,20 @@ journals directory."
   :after org-roam
   :straight nil
   :custom
-  (org-refile-targets org-agenda-files)
-  (org-refile-use-cache t)
-  (org-refile-use-outline-path t)
-  (org-refile-history t)
+  (org-refile-targets
+   `((kb/find-blog-files-org :maxlevel . 1)
+     ;; `((kb/find-blog-files-org :tag . "blog")
+     (org-agenda-files :regexp . "tnaoirnta") ; This will remove all headlines
+     ))
+  (org-refile-use-outline-path 'file)
+  (org-refile-use-cache nil)
+  ;; (org-refile-history t) ; FIXME 2021-10-09: For some reason makes `org-refile' not work
   (org-refile-allow-creating-parent-nodes 'confirm)
+  :config
+  (defun kb/find-blog-files-org ()
+    "Return a list of files which are within the blog directory of org-roam."
+    (directory-files-recursively (concat org-roam-directory "blog") "")
+    )
   )
 
 ;;;; Customized `org-roam-node-find' functions
