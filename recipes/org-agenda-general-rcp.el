@@ -11,6 +11,7 @@
 
 ;;; Org-agenda
 (use-package org-agenda
+  :after org-roam
   :straight nil
   :general (kb/leader-keys
              "oa" '(org-agenda :which-key "Org-agenda")
