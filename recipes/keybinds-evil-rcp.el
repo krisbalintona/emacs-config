@@ -63,7 +63,7 @@
   (evil-move-beyond-eol t)
   (evil-echo-state nil)                 ; Don't echo state in echo area
   :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
-  :config
+  :init
   (setq evil-normal-state-cursor 'box ; Set these variables since they aren't custom variables
         evil-insert-state-cursor 'bar
         evil-visual-state-cursor 'hollow
