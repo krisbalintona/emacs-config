@@ -84,7 +84,6 @@
 ;;;; Cdlatex
 ;; Faster LaTeX inputs
 (use-package cdlatex
-  :demand t
   :hook (LaTeX-mode . turn-on-cdlatex)
   )
 
