@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Evil
+;;; Evil
 ;; Emacs vim integration layer
 (use-package evil
   :demand t
@@ -71,7 +71,7 @@
         evil-want-Y-yank-to-eol t)
   )
 
-;;;; Evil-collection
+;;; Evil-collection
 ;; Evil keybinds for many other modes
 (use-package evil-collection
   :demand t ; Load now or it won't
@@ -104,13 +104,13 @@
   (evil-collection-init)
   )
 
-;;;; Evil-commentary
+;;; Evil-commentary
 ;; Comment in evil-mode
 (use-package evil-commentary
   :ghook 'evil-mode-hook
   )
 
-;;;; Evil-org
+;;; Evil-org
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
   :ghook 'org-mode-hook
@@ -141,13 +141,13 @@
   (evil-org-agenda-set-keys)            ; Motion state for org-agenda
   )
 
-;;;; Evil-surround
+;;; Evil-surround
 ;; Surround a selection with any pair of characters
 (use-package evil-surround
   :ghook ('evil-mode-hook 'global-evil-surround-mode)
   )
 
-;;;; Evil-visualstar
+;;; Evil-visualstar
 ;; Situational convenient isearch
 (use-package evil-visualstar
   :functions global-evil-surround-mode
@@ -156,7 +156,7 @@
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
   )
 
-;;;; Better-jumper
+;;; Better-jumper
 ;; Accompanies `evil-jumper' very well
 (use-package better-jumper
   :after evil

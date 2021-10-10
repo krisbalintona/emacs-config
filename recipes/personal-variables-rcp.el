@@ -7,11 +7,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; User information
+;;; User information
 (setq user-full-name "Kristoffer Balintona"
       user-mail-address "krisbalintona@gmail.com")
 
-;;;; System information
+;;; System information
 (defconst kb/sys-win
   (eq system-type 'windows-nt)
   "Are we running on a WinTel system?")
@@ -42,7 +42,7 @@
   (integerp (string-match "Arch" kb/linux-distribution))
   "Is this Arch Linux?")
 
-;;;; Return package manager
+;;; Return package manager
 (defun kb/which-package-manager (&optional sudo)
   "Return the current system's package manager as a string."
   (interactive)

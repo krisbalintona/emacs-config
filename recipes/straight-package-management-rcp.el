@@ -7,13 +7,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; Set straight.el variables
+;;; Set straight.el variables
 ;; Set all variables before bootstrapping straight.el
 (defvar straight-use-package-by-default t) ; Automatically :straight t for use-package
 (defvar straight-repository-branch "develop") ; Use development branch
 (defvar straight-check-for-modifications nil) ; I'll upgrade myself
 
-;;;; Bootstrap (install straight.el)
+;;; Bootstrap (install straight.el)
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -27,14 +27,14 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;;;; Exec-path-from-shell
+;;; Exec-path-from-shell
 ;; Ensure Emacs' and system shell have same path
 (straight-use-package 'exec-path-from-shell)
 (require 'exec-path-from-shell)
 (setq exec-path-from-shell-arguments '("-l")) ; Remove `-i' (interactive) flag to quicken startup
 (exec-path-from-shell-initialize)             ; Call immediately
 
-;;;; System-packages
+;;; System-packages
 ;; Install system packages within Emacs. Necessary for use-package's
 ;; `:ensure-system-package' flag
 (straight-use-package 'system-packages)

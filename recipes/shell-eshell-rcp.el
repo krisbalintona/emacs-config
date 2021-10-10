@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Eshell
+;;; Eshell
 (use-package eshell
   :gfhook
   ;; UI enhancements
@@ -165,7 +165,7 @@
   (setq eshell-prompt-function 'esh-prompt-func)
   )
 
-;;;; Esh-opt
+;;; Esh-opt
 (use-package esh-opt ; An eshell module that needs to be loaded
   :straight nil
   :after eshell
@@ -174,21 +174,21 @@
   (eshell-visual-commands '("htop" "vi" "vim" "nvim" "btm")) ; Commands to run in term buffer to properly display from eshell
   )
 
-;;;; Shrink-path
+;;; Shrink-path
 ;; Truncate eshell directory path (has to be configured in mycustom eshell
 ;; prompt)
 (use-package shrink-path
   :after eshell
   )
 
-;;;; Eshell-syntax-highlighting
+;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
   :ghook ('eshell-mode-hook 'eshell-syntax-highlighting-global-mode nil nil t)
   :config (eshell-syntax-highlighting-global-mode)
   )
 
-;;;; Esh-autosuggest
+;;; Esh-autosuggest
 ;; Has shadowed suggestions from shell history (like in zsh)
 (use-package esh-autosuggest
   :ghook 'eshell-mode-hook
@@ -196,7 +196,7 @@
   (esh-autosuggest-delay 0.25)
   )
 
-;;;; Fish-completion
+;;; Fish-completion
 ;; Fall back on fish when Emacs does not find any completion candidate with its
 ;; native completion support (pcomplete).
 (use-package fish-completion

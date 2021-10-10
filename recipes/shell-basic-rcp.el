@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Comint
+;;; Comint
 ;; Derived mode for all shells in Emacs
 (use-package comint
   :straight nil

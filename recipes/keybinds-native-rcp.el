@@ -9,13 +9,13 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Everywhere
+;;; Everywhere
 (general-define-key
  "<escape>" 'keyboard-escape-quit       ; Make ESC quit everywhere
  "C-x C-c" 'nil ; Unbinds `save-buffers-kill-emacs'. Prevents me from leaving Emacs.
  )
 
-;;;; Global-map
+;;; Global-map
 (general-define-key
  :keymaps 'global-map
  "C-M-;" 'eval-expression               ; Evaluate inputted expression

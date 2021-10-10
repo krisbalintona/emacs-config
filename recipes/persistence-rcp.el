@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Savehist
+;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist
   :demand t
@@ -24,7 +24,7 @@
   :config (savehist-mode)
   )
 
-;;;; Recentf
+;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
   :custom
@@ -33,7 +33,7 @@
   :config (recentf-mode)
   )
 
-;;;; Saveplace
+;;; Saveplace
 ;; Save and restore the point's location in files
 (use-package saveplace
   :demand t
@@ -42,7 +42,7 @@
   :config (save-place-mode)
   )
 
-;;;; Desktop
+;;; Desktop
 ;; Save buffers across Emacs sessions
 (use-package desktop
   :disabled t

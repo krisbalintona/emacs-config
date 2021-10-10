@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Dired
+;;; Dired
 ;; Emacs' file manager
 (use-package dired
   :straight nil
@@ -28,7 +28,7 @@
   (dired-listing-switches "-agho --group-directories-first") ; Flags `dired' passes to `ls'
   )
 
-;;;; Dired-git
+;;; Dired-git
 ;; Show git information in dired
 (use-package dired-git
   :ghook 'dired-mode-hook
@@ -38,7 +38,7 @@
   (dired-git-parallel 7)                ; Number of parallel processes
   )
 
-;;;; Dired-single
+;;; Dired-single
 ;; Use the same dired buffer for every directory you open using `dired'.
 (use-package dired-single
   :general (:keymaps 'dired-mode-map
@@ -46,7 +46,7 @@
                      [remap dired-find-file] 'dired-single-buffer)
   )
 
-;;;; All-the-icons-dired
+;;; All-the-icons-dired
 ;; Add icons which represent file types
 (use-package all-the-icons-dired
   :ghook 'dired-mode-hook
@@ -55,7 +55,7 @@
   (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
   )
 
-;;;; Dired-open
+;;; Dired-open
 ;; Override how dired opens files with certain extensions
 (use-package dired-open
   :custom
@@ -65,7 +65,7 @@
                            ("mkv" . "vlc")))
   )
 
-;;;; Dired-hide-dotfiles
+;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
   :ghook 'dired-mode-hook

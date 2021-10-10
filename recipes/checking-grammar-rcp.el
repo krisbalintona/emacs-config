@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Langtool
+;;; Langtool
 ;; Use langtool program to check grammar of current buffer
 (use-package langtool
   ;; NOTE 2021-08-19: Can't use `ensure-system-package' becuase the installation

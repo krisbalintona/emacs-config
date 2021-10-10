@@ -9,8 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Project management
-;;;;; Projectile
+;;; Project management
+;;;; Projectile
 ;; Navigate and manage project directories easier
 (use-package projectile
   :disabled t ; In favor of `project.el'
@@ -57,14 +57,14 @@
   (setq projectile-switch-project-action #'projectile-dired)
   )
 
-;;;;; Counsel-projectile
+;;;; Counsel-projectile
 ;; Use Ivy as projectile interface
 (use-package counsel-projectile
   :requires (counsel projectile)
   :ghook 'counsel-mode-hook
   )
 
-;;;;; Project.el
+;;;; Project.el
 (use-package project
   :general (:keymaps 'project-prefix-map "m" #'magit-project-status)
   :custom
@@ -89,7 +89,7 @@
     )
   )
 
-;;;;; Xref
+;;;; Xref
 (use-package xref
   :custom
   (xref-show-definitions-function #'xref-show-definitions-completing-read)
@@ -98,8 +98,8 @@
   (xref-search-program 'ripgrep)
   )
 
-;;;; Version control
-;;;;; Magit
+;;; Version control
+;;;; Magit
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
@@ -178,7 +178,7 @@
                           t)
   )
 
-;;;;; Magit-log date headers
+;;;; Magit-log date headers
 (with-eval-after-load 'magit
   ;; Add dates to magit-logs
   (straight-use-package 'ov) ; Dependency
@@ -224,21 +224,21 @@
   (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
   )
 
-;;;;; Forge
+;;;; Forge
 ;; Support for git forges (e.g. GitLab and GitHub).
 (use-package forge
   :after magit
   )
 
-;;;;; Ediff
+;;;; Ediff
 (use-package ediff
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
   (ediff-highlight-all-diffs nil) ; Only highlight currently selected diff
   )
 
-;;;; QoL
-;;;;; Git-gutter-fringes
+;;; QoL
+;;;; Git-gutter-fringes
 ;; Indicate diff areas in fringe
 (use-package git-gutter-fringe
   :demand t ; Need or this won't load and set bitmaps correctly
@@ -257,7 +257,7 @@
   (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
   )
 
-;;;;; Git-timemachine
+;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history
 (use-package git-timemachine)
 

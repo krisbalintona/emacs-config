@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Auctex-latexmk
+;;; Auctex-latexmk
 ;; Integration with `latexmk' for more compilation support (particularly
 ;; citations)
 (use-package auctex-latexmk
@@ -29,7 +29,7 @@
                             ))
   )
 
-;;;; Latex-preview-pane
+;;; Latex-preview-pane
 (use-package latex-preview-pane
   :disabled t ; Use my makeshift `latexmk-mode' instead for previews
   :straight (latex-preview-pane :type git :host github :repo "jsinglet/latex-preview-pane")
@@ -37,7 +37,7 @@
   (pdf-latex-command "latexmk") ; Use latexmk for citation support
   )
 
-;;;; Latexmk-mode
+;;; Latexmk-mode
 ;; My own minor-mode creating automatically updating pdf-tools LaTeX preview
 (with-eval-after-load 'auctex-latexmk
   (define-minor-mode latexmk-mode

@@ -10,7 +10,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Org-roam
+;;; Org-roam
 (use-package org-roam
   :straight (org-roam :type git :host github :repo "org-roam/org-roam")
   :ghook ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
@@ -152,7 +152,7 @@ journals directory."
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
   )
 
-;;;; Org-refile
+;;; Org-refile
 (use-package org-refile
   :after org-roam
   :straight nil
@@ -173,7 +173,7 @@ journals directory."
     )
   )
 
-;;;; Customized `org-roam-node-find' functions
+;;; Customized `org-roam-node-find' functions
 ;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
 ;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800
 (with-eval-after-load 'org-roam
@@ -257,8 +257,8 @@ journals directory."
       ))
   )
 
-;;;; Capture templates
-;;;;; Org-roam-capture-templates
+;;; Capture templates
+;;;; Org-roam-capture-templates
 (defvar kb/lit-categories
   '("video" "book" "podcast" "article" "website" "journal" "quote" "structure" "musing" "blog")
   "The main categories of inputs I process.")
@@ -319,7 +319,7 @@ journals directory."
         )
       )
 
-;;;;; Org-roam-dailies-capture-templates
+;;;; Org-roam-dailies-capture-templates
 (with-eval-after-load 'org-roam
   (require 'org-roam-dailies)
   (setq org-roam-dailies-capture-templates
@@ -345,8 +345,8 @@ journals directory."
         )
   )
 
-;;;; Additional code
-;;;;; Hide property drawers
+;;; Additional code
+;;;; Hide property drawers
 ;; From https://github.com/org-roam/org-roam/wiki/Hitchhiker%27s-Rough-Guide-to-Org-roam-V2#hiding-properties
 (defun kb/org-hide-properties ()
   "Hide all `org-mode' headline property drawers in buffer. Could be slow if buffer has a lot of overlays."
@@ -380,7 +380,7 @@ journals directory."
  "C-c p t" 'kb/org-toggle-properties
  )
 
-;;;;; Find a node which links to any other given node
+;;;; Find a node which links to any other given node
 ;; From
 ;; https://ag91.github.io/blog/2021/03/12/find-org-roam-notes-via-their-relations/
 (defun kb/find-node-backlink (arg &optional node choices)
@@ -417,7 +417,7 @@ journals directory."
       (kb/find-node-backlink nil next-node (cons next-node (-map #'org-roam-backlink-source-node (org-roam-backlinks-get next-node))))
       )))
 
-;;;;; Number of backlinks in `org-roam' minibuffer
+;;;; Number of backlinks in `org-roam' minibuffer
 ;; Include number of backlinks for each node in the org-roam buffer.
 ;; From https://gist.github.com/nobiot/852978b41b1869df3cf9180202f5bbc9
 (define-minor-mode nobiot/org-roam-v2-extensions-mode
@@ -453,7 +453,7 @@ name to include number of backlinks for the node."
             (when tags (format " (%s)" (string-join tags ", ")))
             (when count (format " [%d]" count)))))
 
-;;;;; Custom updating descriptions
+;;;; Custom updating descriptions
 ;; Credit to @nobiot for helping me
 (defun kb/org-roam-update-link-desc--action (buffer)
   "Update the link descriptions for all org-roam insertions in a given BUFFER.

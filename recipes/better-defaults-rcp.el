@@ -7,7 +7,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; No-littering
+;;; No-littering
 ;; Set better default package paths
 (require 'recentf)
 (straight-use-package 'no-littering)
@@ -15,10 +15,10 @@
 (setq no-littering-etc-directory (expand-file-name "data/" user-emacs-directory) ; Config files
       no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
 
-;;;; Reenable these disabled commands
+;;; Reenable these disabled commands
 (put 'narrow-to-region 'disabled nil) ; `narrow-to-region'
 
-;;;; Buffer-local defaults
+;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil                                                    ; Don't warn when opening large files
               auto-save-default nil                                                               ; Don't auto save, prevents transitory files from being saved
@@ -69,34 +69,34 @@
               native-comp-async-report-warnings-errors 'silent                                    ; Show in *Warnings*  buffer but don't show buffer
               )
 
-;;;; Save replaced text into kill ring
+;;; Save replaced text into kill ring
 (setq save-interprogram-paste-before-kill t)
 
-;;;; Kill child processes without confirm
+;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
 
-;;;; Make asking "Y or N"
+;;; Make asking "Y or N"
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;;;; Aviod cursor collisions
+;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 
-;;;; Recognize camel case as words
+;;; Recognize camel case as words
 (global-subword-mode t) ; Iterate through CamelCase words
 
-;;;; Require pin-entry for passowrds
+;;; Require pin-entry for passowrds
 ;; Pinentry is responsible for querying passphrases
 (require 'epg)
 (setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
 
-;;;; Don't confirm when killing a process
+;;; Don't confirm when killing a process
 (setq confirm-kill-processes nil)
 
-;;;; Ignore case for buffer and file names
+;;; Ignore case for buffer and file names
 (setq read-buffer-completion-ignore-case t
       read-file-name-completion-ignore-case t)
 
-;;;; Load custom file
+;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
   (setq custom-file (no-littering-expand-var-file-name "custom.el"))

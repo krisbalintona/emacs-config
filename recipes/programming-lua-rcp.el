@@ -9,7 +9,7 @@
 (require 'general)
 (require 'keybinds-general-rcp)
 
-;;;; Lua-mode
+;;; Lua-mode
 ;; Major-mode for the Lua language.
 ;; Install directions for system package described here:
 ;; https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
@@ -25,7 +25,7 @@
   (lua-indent-string-contents t) ; Contents of a multiline string will be indented
   )
 
-;;;; Company-lua
+;;; Company-lua
 ;; Company backend for Lua
 (use-package company-lua
   :after company

@@ -10,7 +10,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Prescient
+;;; Prescient
 ;; Sorting and filtering of minibuffer candidates. Big benefit is having most
 ;; recent candidate shown on top
 (use-package prescient
@@ -36,7 +36,7 @@
   (prescient-frequency-threshold 0.10)
   )
 
-;;;; Marginalia
+;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
   :straight (marginalia :type git :host github :repo "minad/marginalia")

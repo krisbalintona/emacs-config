@@ -13,7 +13,7 @@
 (require 'general)
 (require 'keybinds-general-rcp)
 
-;;;; Notmuch
+;;; Notmuch
 ;; NOTE 2021-08-29: Make sure that the `notmuch' program is installed on the
 ;; system. `:ensure-system-package', for some reason, spits out a recursive
 ;; error if I try to install it from there.

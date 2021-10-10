@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Elfeed
+;;; Elfeed
 (use-package elfeed
   :hook ((elfeed-search-mode . (lambda ()
                                  (setq-local display-line-numbers t)
@@ -57,8 +57,8 @@
   (advice-add 'elfeed :after #'elfeed-update)
   )
 
-;;;; Complementary
-;;;;; Elfeed-org
+;;; Complementary
+;;;; Elfeed-org
 (use-package elfeed-org
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")))
@@ -66,7 +66,7 @@
   :config (general-advice-add 'elfeed :after 'elfeed-org nil t)
   )
 
-;;;;; Elfeed-goodies
+;;;; Elfeed-goodies
 (use-package elfeed-goodies
   :defer 2 ; Can't figure out how to have this work other than this and demanding it
   :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
@@ -88,10 +88,10 @@
   :config (elfeed-goodies/setup)        ; Immediately load in time for first `elfeed'
   )
 
-;;;; QoL
+;;; QoL
 ;; Much is from https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
 
-;;;;; View in EWW
+;;;; View in EWW
 (defun prot-elfeed-show-eww (&optional link)
   "Browse current entry's link or optional LINK in `eww'.
 
@@ -113,7 +113,7 @@ fail on poorly-designed websites."
 
 (add-hook 'eww-mode-hook #'(lambda () (visual-fill-column-mode) (mixed-pitch-mode)))
 
-;;;;; Language-detection
+;;;; Language-detection
 ;; Detects language of current buffer
 (use-package language-detection
   :init
@@ -197,7 +197,7 @@ fail on poorly-designed websites."
         '((pre . eww-tag-pre)))
   )
 
-;;;;; Custom search completion
+;;;; Custom search completion
 (defun prot-common-crm-exclude-selected-p (input)
   "Filter out INPUT from `completing-read-multiple'.
 Hide non-destructively the selected entries from the completion
@@ -251,7 +251,7 @@ minibuffer with something like `exit-minibuffer'."
  :states 'normal
  "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion"))
 
-;;;;; Toggle custom tag keybinds
+;;;; Toggle custom tag keybinds
 (with-eval-after-load 'elfeed
   (defun prot-elfeed-toggle-tag (tag)
     "Toggle TAG for the current item.

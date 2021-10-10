@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Flyspell
+;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
   :ensure-system-package ((aspell . "sudo apt install aspell aspell-en")
@@ -30,7 +30,7 @@
   (ispell-personal-dictionary (concat no-littering-var-directory "flyspell/flyspell-ispell-personal-dict-en"))
   )
 
-;;;; Flyspell-lazy
+;;; Flyspell-lazy
 ;; Check on idle instead of instantly
 (use-package flyspell-lazy
   :after flyspell
@@ -42,7 +42,7 @@
   (flyspell-lazy-use-flyspell-word t) ; Immediately recheck when leaving a marked word?
   )
 
-;;;; Flyspell-correct
+;;; Flyspell-correct
 ;; Suggest correct spelling for words flyspell marks as incorrect
 (use-package flyspell-correct
   :after flyspell
@@ -56,7 +56,7 @@
   (flyspell-correct-interface 'flyspell-correct-completing-read)
   )
 
-;;;; Abbrev-mode
+;;; Abbrev-mode
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
 ;; spelling mistakes as they are made.
 (use-package abbrev-mode

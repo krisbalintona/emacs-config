@@ -11,21 +11,21 @@
 (require 'keybinds-general-rcp)
 (require 'fonts-rcp)
 
-;;;; UI
-;;;;; Hide-mode-line
+;;; UI
+;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
   :commands hide-mode-line-mode
   )
 
-;;;;; Transparency
+;;;; Transparency
 (unless kb/linux-ubuntu
   (set-frame-parameter (selected-frame) 'alpha '(98 . 98))
   (add-to-list 'default-frame-alist '(alpha . (98 . 98)))
   )
 
-;;;; Themes and toggling
-;;;;; Install themes
+;;; Themes and toggling
+;;;; Install themes
 ;; (use-package atom-one-dark-theme :demand t)
 ;; (use-package apropospriate-theme :demand t)
 
@@ -33,7 +33,7 @@
 (require 'uninspiring-dark-theme)
 (use-package modus-themes)
 
-;;;;;; Make sure Modus theme font families are correct
+;;;;; Make sure Modus theme font families are correct
 (defun kb/proper-set-font-families ()
   "A makeshift solution to the Modus themes not having an in-built
 variable to set font families."
@@ -46,7 +46,7 @@ variable to set font families."
   )
 (advice-add 'kb/proper-load-theme-light :after #'kb/proper-set-font-families)
 
-;;;;; Variable declarations
+;;;; Variable declarations
 (defvar kb/themes-light 'modus-operandi
   "My chosen light theme.")
 (defvar kb/themes-dark 'uninspiring-dark
@@ -56,7 +56,7 @@ variable to set font families."
   "Hook that runs after the `kb/proper-load-theme-light' and
 `kb/proper-load-theme-dark'.")
 
-;;;;; Function definitions
+;;;; Function definitions
 (defun kb/ensure-themes-loaded ()
   "Ensure that the themes in `kb/themes-list' are loaded."
   (unless (or (custom-theme-p kb/themes-dark)
@@ -81,7 +81,7 @@ Additionally, run `kb/themes-hooks'."
   (run-hooks 'kb/themes-hooks)
   )
 
-;;;;; Theme switcher
+;;;; Theme switcher
 (defun kb/theme-switcher ()
   "Switch between the light and dark themes specified in `kb/themes-list'."
   (interactive)
@@ -93,11 +93,11 @@ Additionally, run `kb/themes-hooks'."
   )
 (general-define-key "<f6>" 'kb/theme-switcher)
 
-;;;;; Load default theme
+;;;; Load default theme
 (kb/proper-load-theme-dark)
 
-;;;; Modeline
-;;;;; Doom-modeline
+;;; Modeline
+;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
   :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
@@ -127,7 +127,7 @@ Additionally, run `kb/themes-hooks'."
   :config (require 'kb-doom-modeline-segments)
   )
 
-;;;;; Time
+;;;; Time
 ;; Enable time in the mode-line
 (use-package time
   :after doom-modeline
@@ -137,7 +137,7 @@ Additionally, run `kb/themes-hooks'."
   (display-time-default-load-average 1) ; Don't show load average along with time
   )
 
-;;;;; Battery
+;;;; Battery
 ;; Display batter percentage
 (use-package battery
   :straight nil
@@ -147,7 +147,7 @@ Additionally, run `kb/themes-hooks'."
   (battery-load-low 25)
   )
 
-;;;; Display-line-numbers-mode
+;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ghook 'prog-mode-hook 'LaTeX-mode-hook

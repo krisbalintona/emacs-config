@@ -11,7 +11,7 @@
 (require 'personal-variables-rcp)
 (require 'convenient-functions-rcp)     ; For `kb/shell-command-to-string'
 
-;;;; Flycheck
+;;; Flycheck
 ;; Check your code
 (use-package flycheck
   :demand t
@@ -38,21 +38,21 @@
   :config (global-flycheck-mode)
   )
 
-;;;; Flycheck-pos-tip-mode
+;;; Flycheck-pos-tip-mode
 ;; Shows flycheck errors in pos-tip popup
 (use-package flycheck-pos-tip
   :requires flycheck
   :ghook 'flycheck-mode-hook
   )
 
-;;;; Flycheck-status-emoji
+;;; Flycheck-status-emoji
 ;; Use emojis to display flycheck statuses
 (use-package flycheck-status-emoji
   :requires flycheck
   :ghook 'flycheck-mode-hook
   )
 
-;;;; Consult-flycheck
+;;; Consult-flycheck
 ;; List flycheck errors in minibuffer with consult
 (use-package consult-flycheck
   :requires (consult flycheck)

@@ -8,14 +8,14 @@
 ;;; Code:
 (require 'use-package-rcp)
 
-;;;; General itself
+;;; General itself
 ;; Leader key capabilities and more convenient key definitions and bindings.
 (use-package general
   :config
   (general-auto-unbind-keys)        ; Overwrite keybinds without returning error
   )
 
-;;;; Leader key
+;;; Leader key
 ;; My leader key definition and high-level keybindings
 (general-create-definer kb/leader-keys  ; Use space as leader key
   :keymaps '(normal visual insert motion)
@@ -23,7 +23,7 @@
   :global-prefix "M-SPC"
   )
 
-;;;; Unbinding leader key prefix
+;;; Unbinding leader key prefix
 (general-define-key
  :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map debugger-mode-map
                           ;; Magit modes
@@ -32,7 +32,7 @@
  :states '(normal visual motion)
  "SPC" '(:ignore t))
 
-;;;; Keybinding labels and orphan bindings
+;;; Keybinding labels and orphan bindings
 (kb/leader-keys
   "t" '(:ignore t :which-key "Toggles")
   "o" '(:ignore t :which-key "Open...")
@@ -63,7 +63,7 @@
  "u" 'universal-argument-more
  )
 
-;;;; Which-key
+;;; Which-key
 ;; Show keybind tooltips
 (use-package which-key
   :demand t

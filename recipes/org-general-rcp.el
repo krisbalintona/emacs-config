@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Org-mode itself
+;;; Org-mode itself
 (use-package org
   :gfhook
   'prettify-symbols-mode
@@ -40,9 +40,7 @@
     )
   :custom
   ;; Aesthetics
-  (org-ellipsis nil)       ; Specifically for org-mode headlines ; Doesn't work?
   (org-startup-indented t) ; Start with `org-indent-mode'?
-  (org-adapt-indentation nil)            ; This is `org-indent-mode' but with hard changes
   (org-startup-folded 'nofold)
   (org-hide-emphasis-markers t)          ; Remove org-mode markup characters
   (org-fontify-quote-and-verse-blocks t) ; Properly syntax highlight block contents
@@ -59,7 +57,7 @@
   (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
   )
 
-;;;; Org-footnote
+;;; Org-footnote
 (use-package org-footnote
   :straight nil
   :after org
@@ -68,7 +66,7 @@
   (org-footnote-auto-adjust t) ; Automatically renumber
   )
 
-;;;; Org-attach
+;;; Org-attach
 (use-package org-attach
   :straight nil
   :custom
@@ -78,8 +76,8 @@
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
   )
 
-;;;; Aesthetics
-;;;;; Org-superstar
+;;; Aesthetics
+;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
 (use-package org-superstar  ;; Improved version of org-bullets
   :ghook 'org-mode-hook
@@ -107,7 +105,7 @@
   (inhibit-compacting-font-caches t) ; Stop slowdown
   )
 
-;;;;; Visual-fill-column
+;;;; Visual-fill-column
 ;; Soft wrap lines at fill-column
 (use-package visual-fill-column
   :ghook 'org-mode-hook 'mu4e-view-mode-hook
@@ -118,7 +116,7 @@
   (split-window-preferred-function 'visual-fill-column-split-window-sensibly) ; Be able to vertically split windows that have wide margins
   )
 
-;;;;; Org-fancy-priorities
+;;;; Org-fancy-priorities
 ;; Icons for org priorities
 (use-package org-fancy-priorities
   :ghook 'org-mode-hook
@@ -130,8 +128,8 @@
                                (?E . "👍")
                                (?F . "🧋")))
   )
-;;;; Custom functions
-;;;;; Better RET
+;;; Custom functions
+;;;; Better RET
 ;; Alter RET to behave more usefully (like in Doom)
 (require 'keybinds-evil-rcp)
 
@@ -385,7 +383,7 @@ re-align the table if necessary. (Necessary because org-mode has a
  "RET" '(+org/dwim-at-point :which-key "RET-DWIM at point")
  )
 
-;;;;; Better C-RET
+;;;; Better C-RET
 ;; Alter the functionality of C-RET to be more useful based on context
 (require 'keybinds-evil-rcp)
 (defun +org--insert-item (direction)
@@ -464,8 +462,8 @@ re-align the table if necessary. (Necessary because org-mode has a
  "C-<return>" '+org/insert-item-below
  )
 
-;;;; Ancillary functionality
-;;;;; Org-cliplink
+;;; Ancillary functionality
+;;;; Org-cliplink
 ;; Paste https links with automatic descriptions
 (use-package org-cliplink
   :general
@@ -473,7 +471,7 @@ re-align the table if necessary. (Necessary because org-mode has a
     "ib" '(org-cliplink :which-key "Paste https"))
   )
 
-;;;;; Org-download
+;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download
   :gfhook ('org-mode-hook 'org-download-enable)
@@ -492,7 +490,7 @@ re-align the table if necessary. (Necessary because org-mode has a
                 org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
   )
 
-;;;;; Typo-mode
+;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
   :ghook 'org-mode-hook

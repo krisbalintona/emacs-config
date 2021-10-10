@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Lsp-mode
+;;; Lsp-mode
 ;; Use the language server protocol as a backend for Emacs.
 (use-package lsp-mode
   ;; Lsp-mode only when buffer is visible
@@ -38,7 +38,7 @@
   (lsp-log-io nil)               ; If set to true can cause a performance hit
   )
 
-;;;; Lsp-ui
+;;; Lsp-ui
 ;; Fancy frame and sideline overlay which shows useful information about what's
 ;; on the point.
 (use-package lsp-ui
@@ -62,7 +62,7 @@
   )
 
 
-;;;; Lsp-treemacs
+;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
 (use-package lsp-treemacs
   :hook ((lsp-mode . lsp-treemacs-sync-mode)
@@ -75,12 +75,12 @@
                      "x" 'lsp-treemacs-quick-fix)
   )
 
-;;;; Dap-mode
+;;; Dap-mode
 (use-package dap-mode
   ;; :ensure-system-package ("pip install \"ptvsd>=4.2\"")
   )
 
-;;;; Tree-sitter
+;;; Tree-sitter
 ;; Create a syntax tree (e.g. the role of each piece of code) and add syntax
 ;; highlighting from it (rather than regex and indentation). Additionally, the
 ;; syntax tree itsel can help debug and quick editing in some cases.
@@ -103,7 +103,7 @@
   :config (global-tree-sitter-mode) ; Enable for all supported tree-sitter languages
   )
 
-;;;; Tree-sitter-langs
+;;; Tree-sitter-langs
 ;; Supported languge bundle for tree-sitter
 (use-package tree-sitter-langs
   :after tree-sitter
@@ -114,8 +114,8 @@
    tree-sitter-langs--os)
   )
 
-;;;; Ancillary
-;;;;; Company-lsp
+;;; Ancillary
+;;;; Company-lsp
 ;; Company integration with lsp-mode
 (use-package company-lsp
   :requires company
@@ -129,7 +129,7 @@
   (company-lsp-enable-recompletion t)   ; Reenables completion when before another trigger character
   )
 
-;;;;; Dev-docs
+;;;; Dev-docs
 ;; Viewing documentation within Emacs. Requires internet connection.
 (use-package devdocs
   :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))

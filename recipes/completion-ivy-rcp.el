@@ -9,8 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Interface
-;;;;; Ivy
+;;; Interface
+;;;; Ivy
 (use-package ivy
   :demand t
   :general
@@ -49,7 +49,7 @@
   (require 'counsel nil t)
   )
 
-;;;;; Ivy-rich
+;;;; Ivy-rich
 ;; Enhance Ivy interface
 (use-package ivy-rich
   :after ivy
@@ -132,7 +132,7 @@
                 :delimiter "  ")))
   )
 
-;;;;; All-the-icons-ivy-rich
+;;;; All-the-icons-ivy-rich
 ;; Show icons with ivy-rich
 (use-package all-the-icons-ivy-rich
   :after ivy-rich
@@ -145,15 +145,15 @@
   (inhibit-compacting-font-caches t)
   )
 
-;;;; Candidate selection and sorting
-;;;;; Ivy-prescient
+;;; Candidate selection and sorting
+;;;; Ivy-prescient
 ;; Ivy with the prescient completion style
 (use-package ivy-prescient
   :after ivy
   :ghook 'ivy-mode-hook
   )
 
-;;;;; Flx
+;;;; Flx
 ;; Fuzzy finding in Ivy. /Incompatible with presient/ (other Doom flag)
 ;; Set from setting ivy-re-builders-alist to ivy--regex-fuzzy
 (use-package flx
@@ -161,8 +161,8 @@
   (ivy-flx-limit 10000)
   )
 
-;;;; Cousin packages
-;;;;; Counsel
+;;; Cousin packages
+;;;; Counsel
 ;; Ivy versions for built-in commands alongside other useful commands
 (use-package counsel
   :requires ivy

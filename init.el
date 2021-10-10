@@ -8,12 +8,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; Defer garbage collection
+;;; Defer garbage collection
 ;; Set as high as possible threshold for GC as early as possible in order to
 ;; reduce load time. This value is then lowered to a normal threshold later
 (setq gc-cons-threshold most-positive-fixnum)
 
-;;;; Load elisp config path
+;;; Load elisp config path
 ;; Add elisp directory that contains configuration files to load path
 (defun update-to-load-path (folder)
   "Update FOLDER and its subdirectories to `load-path'."
@@ -31,10 +31,10 @@
 (update-to-load-path (expand-file-name "elisp" user-emacs-directory))
 (update-to-load-path (expand-file-name "exwm" user-emacs-directory))
 
-;;;; Load packages
+;;; Load packages
 ;; Load all elisp and org configuration files
 
-;;;;; Configuration prerequisites
+;;;; Configuration prerequisites
 ;; These are packages which come before others because their config files rely
 ;; on them.
 (require 'performance-rcp)
@@ -47,33 +47,33 @@
 ;; (require 'exwm-rcp)
 ;; (require 'exwm-extras-rcp)
 
-;;;;; Keybind infrastructure
+;;;; Keybind infrastructure
 (require 'keybinds-general-rcp)
 (require 'keybinds-native-rcp)
 (require 'keybinds-evil-rcp)
 
-;;;;; Aethetics
+;;;; Aethetics
 (require 'fonts-rcp)
 (require 'themes-rcp)
 
-;;;;; Completion frameworks
+;;;; Completion frameworks
 (require 'completion-general-rcp)
 (require 'completion-default-rcp)
 (require 'completion-text-rcp)
 (require 'completion-ivy-rcp)
 (require 'completion-helm-rcp)
 
-;;;;; Buffers, text, and windows
+;;;; Buffers, text, and windows
 (require 'persistence-rcp)
 (require 'buffers-and-windows-rcp)
 (require 'undoing-rcp)
 
-;;;;; Spelling and grammar
+;;;; Spelling and grammar
 (require 'checking-spelling-rcp)
 (require 'checking-grammar-rcp)
 (require 'checking-words-rcp)
 
-;;;;; Org
+;;;; Org
 (require 'org-general-rcp)
 (require 'org-blogging-rcp)
 (require 'org-roam-general-rcp)
@@ -82,11 +82,11 @@
 ;; (require 'org-agenda-views-rcp)
 ;; (require 'org-agenda-other-rcp)
 
-;;;;; LaTeX
+;;;; LaTeX
 (require 'latex-general-rcp)
 (require 'latex-pdf-rcp)
 
-;;;;; Programmming
+;;;; Programmming
 (require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
 (require 'programming-directories-rcp)
@@ -98,18 +98,18 @@
 (require 'programming-web-rcp)
 (require 'programming-haskell-rcp)
 
-;;;;; Shells
+;;;; Shells
 (require 'shell-basic-rcp)
 (require 'shell-eshell-rcp)
 (require 'shell-vterm-rcp)
 
-;;;;; Communication interfaces
+;;;; Communication interfaces
 (require 'email-notmuch-rcp)
 ;; (require 'email-mu4e-rcp)
 (require 'email-sending-rcp)
 (require 'rss-feed-rcp)
 
-;;;;; Other
+;;;; Other
 (require 'web-browsing-rcp)
 (require 'finance-rcp)
 (require 'convenient-functions-rcp)

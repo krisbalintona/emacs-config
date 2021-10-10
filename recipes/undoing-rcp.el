@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Undo-fu
+;;; Undo-fu
 ;; Easy and simple undoing
 (use-package undo-fu
   :demand t
@@ -23,7 +23,7 @@
   (evil-undo-system 'undo-fu)
   )
 
-;;;; Undo-fu-session
+;;; Undo-fu-session
 ;; Keep undo history across sessions
 (use-package undo-fu-session
   :requires undo-fu

@@ -11,7 +11,7 @@
 (require 'keybinds-general-rcp)
 (require 'custom-directories-rcp)
 
-;;;; Rename/move current file
+;;; Rename/move current file
 (defun kb/move-this-file (new-path &optional force-p)
   "Move current buffer's file to NEW-PATH.
 
@@ -33,7 +33,7 @@
   "fR" '(kb/move-this-file :which-key "Rename current file")
   )
 
-;;;; Aj-toggle-fold
+;;; Aj-toggle-fold
 (defun aj-toggle-fold ()
   "Toggle fold all lines larger than indentation on current line. Taken from https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159."
   (interactive)
@@ -48,7 +48,7 @@
 (kb/leader-keys
   "of" '(aj-toggle-fold :which-key "aj-toggle-fold"))
 
-;;;; Indent whole buffer
+;;; Indent whole buffer
 (defun kb/indent-whole-buffer ()
   "Indent whole buffer."
   (interactive)
@@ -59,7 +59,7 @@
 (kb/leader-keys
   "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer"))
 
-;;;; Better comment-dwim
+;;; Better comment-dwim
 ;; Heavily taken from the built-in `comment-dwim' and Prot's
 ;; `prot-comment-timestamp-keyword' infrastructure. The idea of including a
 ;; timestamp alongside keyword is inspired from him.
@@ -172,7 +172,7 @@ TIMESTAMP is t."
    )
   )
 
-;;;; Insert date
+;;; Insert date
 (defun kb/insert-date (prefix)
   "Insert the current date. Accepts a PREFIX to change date format.
 Mainly used for `ledger-mode'."
@@ -186,7 +186,7 @@ Mainly used for `ledger-mode'."
   (evil-insert-state)
   )
 
-;;;; Yank current buffer's file-path
+;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
   "Copy the current buffer's path to the kill ring."
   (interactive)
@@ -198,7 +198,7 @@ Mainly used for `ledger-mode'."
   "fy" '(kb/yank-buffer-filename :which-key "Yank file-path")
   )
 
-;;;; Delete this file
+;;; Delete this file
 (defun kb/delete-this-file (&optional path force-p)
   "Delete PATH, kill its buffers and expunge it from vc/magit cache.
 
@@ -232,7 +232,7 @@ Mainly used for `ledger-mode'."
   "fD" '(kb/delete-this-file :which-key "Delete current file")
   )
 
-;;;; Idle quote
+;;; Idle quote
 ;; Display a random quote in the minibuffer after a certain amount of idle time.
 ;; It's useful to get inspiration when stuck writing
 (defconst kb/quotes
@@ -256,7 +256,7 @@ Mainly used for `ledger-mode'."
 
 (run-with-idle-timer 300 t 'kb/show-random-quotes)
 
-;;;; Run command and return output as string without newlines
+;;; Run command and return output as string without newlines
 (defun kb/shell-command-to-string (command)
   "Execute shell command COMMAND and return its output as a string, removing any
 newlines."
@@ -271,7 +271,7 @@ newlines."
      (t str))
     ))
 
-;;;; Empty trash
+;;; Empty trash
 (defun kb/empty-trash ()
   "Empty the trash directory."
   (interactive)
@@ -279,7 +279,7 @@ newlines."
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))
   )
 
-;;;; When completing filenames, delete full file/directory names
+;;; When completing filenames, delete full file/directory names
 ;; Taken from
 ;; https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
 (defun kb/minibuffer-backward-to-parent-or-word-kill (arg)
@@ -297,12 +297,12 @@ directory or filename."
  [remap backward-kill-word] 'kb/minibuffer-backward-to-parent-or-word-kill
  )
 
-;;;; Unpackaged.el
+;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
 ;; but don't warrant an entire package.
 
-;;;;; Reload-package
+;;;; Reload-package
 ;; Simple function for reloading an entire package and all its feature. Useful
 ;; after upgrading
 (defun unpackaged/reload-package (package &optional allp)
@@ -350,7 +350,7 @@ directory or filename."
         (require feature))
       (message "Reloaded: %s" (mapconcat #'symbol-name package-features " ")))))
 
-;;;;; Font-compare
+;;;; Font-compare
 (defvar lorem-ipsum-text)
 
   ;;;###autoload
@@ -390,7 +390,7 @@ directory or filename."
                 "\n\n")))
     (pop-to-buffer (current-buffer))))
 
-;;;;; Org-add-blank-lines
+;;;; Org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
 (defun unpackaged/org-add-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.

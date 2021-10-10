@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Shr
+;;; Shr
 ;; Simple HTML Renderer (Shr)
 (use-package shr
   :custom
@@ -22,7 +22,7 @@
   ;; (shr-cookie-policy nil)               ; When to use cookies
   )
 
-;;;; Browse-url
+;;; Browse-url
 (use-package browse-url
   :custom
   (browse-url-browser-function 'browse-url-default-browser)
@@ -30,7 +30,7 @@
   (browse-url-secondary-browser-function 'eww-browse-url)
   )
 
-;;;; Eww
+;;; Eww
 ;; Emacs' web browser
 (use-package eww
   :gfhook 'hl-line-mode

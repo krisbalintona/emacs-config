@@ -8,7 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;;; For org and org-agenda
+;;; For org and org-agenda
 (setq org-directory "~/Documents/org-database/")
 (defvar kb/agenda-dir (concat org-directory "agenda/"))
 (defvar kb/roam-dir (concat org-directory "roam/"))
@@ -28,7 +28,7 @@
                                                (string-match-p (rx "inbox.org") it))
                                              (directory-files-recursively kb/agenda-dir ".org$")))
 
-;;;; For my frequently visited directories and files
+;;; For my frequently visited directories and files
 (defvar kb/library-dir (concat org-directory "library"))
 (defvar kb/emacs-etc-config-file (concat user-emacs-directory "configs/etc-config.org"))
 (defvar kb/emacs-config-dir (concat user-emacs-directory "configs/"))

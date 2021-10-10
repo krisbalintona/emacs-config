@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Ledger-mode
+;;; Ledger-mode
 (use-package ledger-mode
   :ensure-system-package (ledger . "sudo dnf install ledger")
   :hook ((before-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
@@ -114,7 +114,7 @@
   (add-to-list 'evil-emacs-state-modes 'ledger-reconcile-mode)
   )
 
-;;;; Flycheck-ledger
+;;; Flycheck-ledger
 (use-package flycheck-ledger
   :demand t
   :requires flycheck

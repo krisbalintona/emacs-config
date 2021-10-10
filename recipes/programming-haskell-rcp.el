@@ -9,7 +9,7 @@
 (require 'general)
 (require 'keybinds-general-rcp)
 
-;;;; Haskell-mode
+;;; Haskell-mode
 (use-package haskell-mode
   :init (require 'haskell-mode-autoloads)
   )

@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Helm
+;;; Helm
 ;; Feature-rich version of Ivy completion
 ;; NOTE: With the experimental minor mode selectrum-helm-mode, Helm defaults
 ;; to using complete-read (and thus Selectrum when selectrum-mode is active)
@@ -39,7 +39,7 @@
   (general-unbind "C-x c") ; Unbind original helm-prefix
   )
 
-;;;; Helm-swoop
+;;; Helm-swoop
 ;; Interactive version of multi-occur with helm
 (use-package helm-swoop
   :disabled t ; Conflicting bingings within PDF

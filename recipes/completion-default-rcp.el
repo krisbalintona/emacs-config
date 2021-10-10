@@ -9,7 +9,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Built-in
+;;; Built-in
 ;; A lot of this is taken from
 ;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
 (setq completion-styles '(basic initials partial-completion flex)
@@ -48,7 +48,7 @@
       '(read-only t cursor-intangible t face minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-;;;; Vertico
+;;; Vertico
 (use-package vertico
   :demand t
   :general
@@ -86,7 +86,7 @@
                  kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
   )
 
-;;;; Selectrum
+;;; Selectrum
 ;; Advanced complete-read
 (use-package selectrum
   :disabled t                           ; Trying out `vertico'
@@ -107,7 +107,7 @@
         selectrum-highlight-candidates-function #'orderless-highlight-matches)
   )
 
-;;;;; Selectrum-prescient
+;;;; Selectrum-prescient
 ;; Selectrum with `prescient' completion style
 (use-package selectrum-prescient
   :requires prescient
@@ -121,7 +121,7 @@
   (selectrum-prescient-enable-sorting t)
   )
 
-;;;; Orderless
+;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom

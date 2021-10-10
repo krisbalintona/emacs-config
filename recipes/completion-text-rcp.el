@@ -9,8 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Company
-;;;;; Company-mode
+;;; Company
+;;;; Company-mode
 ;; Point auto-completion backend
 (use-package company
   ;; NOTE 2021-08-26: Keeping this active since it is necessary to keep `:after'
@@ -73,14 +73,14 @@
   (make-variable-buffer-local 'company-backends)
   )
 
-;;;;; Company-prescient
+;;;; Company-prescient
 (use-package company-prescient
   :ghook 'company-prescient-mode
   :custom
   (company-prescient-sort-length-enable nil) ; Don't sort by length since some backends already do this in the background
   )
 
-;;;;; Company-box
+;;;; Company-box
 ;; A pretty company autocomplete frontend that also displays candidate
 ;; documentation
 (use-package company-box
@@ -145,8 +145,8 @@
   (delq 'company-echo-metadata-frontend company-frontends) ; Redundant with `compan-box-doc'
   )
 
-;;;; Default `completion-at-point'
-;;;;; Corfu
+;;; Default `completion-at-point'
+;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
@@ -183,7 +183,7 @@
   :config (corfu-global-mode)
   )
 
-;;;;; Custom completions
+;;;; Custom completions
 (autoload 'ffap-file-at-point "ffap")
 (defun kb/complete-path-at-point ()
   "Return completion data for UNIX path at point."
@@ -197,21 +197,21 @@
             #'completion-file-name-table :exclusive 'no))))
 (add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
 
-;;;;; Dabbrev
+;;;; Dabbrev
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
   :general ("M-/" 'dabbrev-completion
             "C-M-/" 'dabbrev-expand)
   )
 
-;;;; Expansion
-;;;;; Yasnippet
+;;; Expansion
+;;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
   :hook (window-setup . yas-global-mode)
   )
 
-;;;;; Doom-snippets
+;;;; Doom-snippets
 ;; Large library of snippet templates
 (use-package doom-snippets
   :after yasnippet
@@ -219,7 +219,7 @@
   :config (doom-snippets-initialize)
   )
 
-;;;;; Org-tempo
+;;;; Org-tempo
 ;; Completion for org-block types. Adds to the functionality of `org-structure'.
 (use-package org-tempo
   :straight nil

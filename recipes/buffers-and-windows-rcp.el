@@ -9,8 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Window configurations
-;;;;; Winner-mode
+;;; Window configurations
+;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
   :general ("C-<left>" 'winner-undo
@@ -22,7 +22,7 @@
   :init (winner-mode)
   )
 
-;;;;; Shackle
+;;;; Shackle
 ;; Control the behavior of popup and side windows
 (use-package shackle
   :disabled t
@@ -41,7 +41,7 @@
   (shackle-select-reused-windows t)     ; Reuse windows by default
   )
 
-;;;;; Display-buffer-alist
+;;;; Display-buffer-alist
 (use-package window
   :straight nil
   :general (kb/leader-keys
@@ -109,7 +109,7 @@
      ))
   )
 
-;;;;; Eyebrowse
+;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
 (use-package eyebrowse
   :ghook 'after-init-hook
@@ -147,7 +147,7 @@
   (eyebrowse-switch-back-and-forth t) ; Select current workspace to go to last used one
   )
 
-;;;;; Ace-window
+;;;; Ace-window
 (use-package ace-window
   :general ("M-w" '(ace-window :which-key "Ace window"))
   :custom
@@ -172,7 +172,7 @@
    )
   )
 
-;;;;; Burly
+;;;; Burly
 (use-package burly
   :disabled t ; NOTE 2021-08-30: For some reason, burly bookmarks can't be deleted by `bookmark-delete'
   :general (kb/leader-keys
@@ -183,8 +183,8 @@
              )
   )
 
-;;;; Buffers
-;;;;; Bookmark
+;;; Buffers
+;;;; Bookmark
 (use-package bookmark
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
@@ -217,7 +217,7 @@ startup and popup bookmark menu to fix it"
   (add-hook 'emacs-startup-hook #'kb/bookmark-cleanup)
   )
 
-;;;;; Dogears
+;;;; Dogears
 ;; Save and return to exact locations when you want, where you want
 (use-package dogears
   :disabled t ; For now
@@ -262,7 +262,7 @@ startup and popup bookmark menu to fix it"
      ))
   )
 
-;;;;; Ibuffer
+;;;; Ibuffer
 ;; Manage buffer list
 (use-package ibuffer
   :general (kb/leader-keys

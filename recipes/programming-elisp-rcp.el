@@ -10,38 +10,38 @@
 (require 'keybinds-general-rcp)
 (require 'buffers-and-windows-rcp)
 
-;;;; Elisp-mode
+;;; Elisp-mode
 ;; Elisp-mode overwrites my eyebrowse-last-window-config binding
 (use-package elisp-mode
   :straight nil
   )
 
-;;;; Eros-mode
+;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
 (use-package eros
   :ghook 'emacs-lisp-mode-hook
   )
 
-;;;; Syntax highlighting
-;;;;; Lisp-extra-font-lock
+;;; Syntax highlighting
+;;;; Lisp-extra-font-lock
 ;; Give faces to elisp symbols
 (use-package lisp-extra-font-lock
   :ghook 'emacs-lisp-mode-hook
   )
 
-;;;;; Highlight-function-calls
+;;;; Highlight-function-calls
 ;; Give function calls a special face (default is underline)
 (use-package highlight-function-calls
   :ghook 'emacs-lisp-mode-hook
   )
 
-;;;;; Rainbow-delimiters
+;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
   :ghook 'prog-mode-hook
   )
 
-;;;; Helpful
+;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :gfhook 'visual-line-mode
@@ -71,7 +71,7 @@
   (describe-bindings-outline t) ; Include interactive outline headings for each major mode in `describe-keys' buffer
   )
 
-;;;; Elisp-demos
+;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
   :after helpful

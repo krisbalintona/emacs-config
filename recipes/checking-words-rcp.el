@@ -9,8 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Online
-;;;;; Define-word
+;;; Online
+;;;; Define-word
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
   :gfhook 'hide-mode-line-mode
@@ -26,15 +26,15 @@
   :config (global-dictionary-tooltip-mode)
   )
 
-;;;;; Powerthesaurus
+;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
   :general ("C-c l" '(powerthesaurus-lookup-word-at-point :which-key "Thesaurus at point")
             "C-c L" '(powerthesaurus-lookup-word :which-key "Thesuarus lookup"))
   )
 
-;;;; Offline
-;;;;; Wordnut
+;;; Offline
+;;;; Wordnut
 ;; Offline dictionary
 (use-package wordnut
   :after define-word
@@ -47,7 +47,7 @@
      "C-c D" '(wordnut-search :which-key "Wordnut search")))
   )
 
-;;;;; Synosaurus
+;;;; Synosaurus
 ;; Offline thesaurus
 (use-package synosaurus
   :after powerthesaurus

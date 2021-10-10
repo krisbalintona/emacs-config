@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'straight-package-management-rcp)
 
-;;;; Use-package
+;;; Use-package
 (straight-use-package 'use-package)
 (require 'use-package)
 ;; (setq use-package-always-ensure t) ; May cause issues with straight.el
@@ -21,7 +21,7 @@
 ;; byte-compiled .emacs.elc.
 (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
 
-;;;; Use-package-ensure-system-package
+;;; Use-package-ensure-system-package
 ;; Pair with `exec-path-from-shell' to enable ensure-system-package keyword. Requires `system-packages'
 (use-package use-package-ensure-system-package
   :demand t                             ; Make sure this is loaded

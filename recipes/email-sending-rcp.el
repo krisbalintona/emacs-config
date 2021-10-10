@@ -9,7 +9,7 @@
 (require 'use-package)
 (require 'keybinds-general-rcp)
 
-;;;; Smtpmail
+;;; Smtpmail
 ;; Sending emails with msmtp
 (use-package smtpmail
   :custom
@@ -33,7 +33,7 @@
   (message-sendmail-f-is-evil 't)
   )
 
-;;;; Org-msg
+;;; Org-msg
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
   :custom
