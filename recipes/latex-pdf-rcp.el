@@ -16,7 +16,17 @@
   :defer 6
   :custom
   (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
-  :config (auctex-latexmk-setup)
+  :config
+  (auctex-latexmk-setup)
+
+  (font-lock-add-keywords 'latex-mode
+                          '(;; true
+                            ("true" 0 '(t :foreground "green") t)
+                            ;; false
+                            ("false" 0 '(t :foreground "red") t)
+                            ;; For table (tabular) columns
+                            ("rowmac" 0 '(t :background "blue") t)
+                            ))
   )
 
 ;;;; Latex-preview-pane
