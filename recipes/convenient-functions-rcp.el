@@ -117,9 +117,10 @@ line, then comment. End in `evil-insert-state'."
           (unless (string= "" comment-end)
             (insert (comment-padleft comment-end (comment-add nil))))
           (indent-according-to-mode)
-          ;; Finally, end in insert state
-          (evil-insert-state)))
-      ))
+          )))
+    ;; Finally, end in insert state
+    (evil-insert-state)
+    )
 
   (defun kb/comment-dwim (arg timestamp)
     "Call the comment command you want (Do What I Mean).
