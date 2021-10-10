@@ -1,3 +1,6 @@
 [submodule "emacs-data"]
 	path = var
 	url = git@gitlab.com:PreciousPudding/emacs-data.git
+[submodule "locales"]
+	path = locales
+	url = https://github.com/citation-style-language/locales.git
