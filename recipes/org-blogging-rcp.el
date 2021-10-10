@@ -77,10 +77,14 @@ targets and targets."
       ))
   )
 
+;;; Citeproc
+(use-package citeproc
+  )
+
 ;;; Citeproc-org
 ;; Allow Hugo to export `org-ref' citations
 (use-package citeproc-org
-  :after ox-hugo
+  :after (citeproc ox-hugo)
   :config (citeproc-org-setup)
   )
 

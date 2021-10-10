@@ -85,6 +85,7 @@
    "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
   (org-ref-notes-function 'orb-edit-notes)
   (org-ref-default-citation-link "cite")
+  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
   :config
   (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t
                                             ("pdflatex"))
@@ -124,6 +125,7 @@
 ;;;; Bibtex-actions
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package bibtex-actions
+  :demand t
   :after (bibtex-completion embark)
   :general
   ("C-c bb" '(bibtex-actions-insert-citation :which-key "Insert citation")
