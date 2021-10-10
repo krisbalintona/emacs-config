@@ -123,10 +123,6 @@
             "M-h" 'org-metaleft
             "C-<return>" 'evil-org-return
             )
-  (:keymaps 'org-mode-map
-            :states 'normal
-            [remap evil-org-insert-line] 'evil-insert-line
-            )
   ;; Since I changed the binding for `evil-outer-text-objects-map' and
   ;; `exchange-point-and-mark', I bind these myself.
   (:keymaps 'evil-outer-text-objects-map
