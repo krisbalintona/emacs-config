@@ -40,7 +40,7 @@
 
     "nh" '((lambda ()
              (interactive)
-             (find-file "~/Documents/org-database/roam/index-Jun042021-183426.org")
+             (find-file "~/Documents/org-database/roam/inbox.org")
              )
            :which-key "Go to index")
 
