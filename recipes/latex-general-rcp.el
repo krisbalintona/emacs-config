@@ -103,6 +103,37 @@
   (magic-latex-enable-minibuffer-echo t)
   )
 
+;;;; QoL
+;;;;; Align table cells
+;; From
+;; https://tex.stackexchange.com/questions/557959/emacs-auctex-tabular-vertical-alignment-of-cells
+(defun kb/tabular-magic ()
+  "Align all cells in current LaTeX buffer."
+  (interactive)
+  (unless (string= (LaTeX-current-environment) "document")
+    (let ((s (make-marker))
+          (e (make-marker)))
+      (set-marker s (save-excursion
+                      (LaTeX-find-matching-begin)
+                      (forward-line)
+                      (point)))
+      (set-marker e (save-excursion
+                      (LaTeX-find-matching-end)
+                      (forward-line -1)
+                      (end-of-line)
+                      (point)))
+      ;; Delete the next 2 lines if you don't like indenting and removal
+      ;; of whitespaces:
+      (LaTeX-fill-environment nil)
+      (whitespace-cleanup-region s e)
+      (align-regexp s e "\\(\\s-*\\)&" 1 1 t)
+      (align-regexp s e "\\(\\s-*\\)\\\\\\\\")
+      (set-marker s nil)
+      (set-marker e nil))))
+(advice-add 'kb/indent-whole-buffer :after (lambda ()
+                                             (if (eq major-mode 'latex-mode)
+                                                 (kb/tabular-magic))))
+
 ;;; latex-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'latex-general-rcp)
