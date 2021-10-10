@@ -55,7 +55,13 @@
   :straight nil
   :ensure-system-package (latex . texlive-full)
   :after tex
+  :hook (latex-mode . (lambda ()
+                        (push '("\\Dashv" . ?⫤) prettify-symbols-alist)
+                        (push '("\\DashVDash" . ?⟚) prettify-symbols-alist)
+                        ))
+
   :gfhook
+  'prettify-symbols-mode
   'reftex-isearch-minor-mode
   'TeX-source-correlate-mode ; Minor mode for forward and inverse search.
   'display-line-numbers-mode

@@ -13,7 +13,6 @@
 ;;;; Prog-mode
 (use-package prog-mode
   :straight nil
-  :hook (window-setup . global-prettify-symbols-mode)
   )
 
 ;;;; Highlight-indent-guides
