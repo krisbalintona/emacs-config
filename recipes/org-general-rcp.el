@@ -87,7 +87,7 @@
 
   (org-superstar-leading-bullet ?\s) ;; Render leading stars as spaces!
   (org-superstar-leading-fallback ?\s) ; Hide away leading stars on terminal.
-  (org-indent-mode-turns-on-hiding-star nil)
+  (org-indent-mode-turns-on-hiding-stars nil)
   (org-hide-leading-stars t) ;; t means no character is there at all
   (org-superstar-remove-leading-stars t)
 
