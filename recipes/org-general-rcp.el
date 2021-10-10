@@ -13,7 +13,6 @@
 (use-package org
   :gfhook
   'prettify-symbols-mode
-  'adaptive-wrap-prefix-mode
   'variable-pitch-mode
   'visual-line-mode
   :general
