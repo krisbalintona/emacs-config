@@ -61,6 +61,14 @@
   :hook (prog-mode . adaptive-wrap-prefix-mode)
   )
 
+;;; Tmr
+;; Timer package/library from Prot
+(use-package tmr
+  :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
+  :general ("C-c T t" '(tmr :which-key "Tmr")
+            "C-c T c" '(tmr-cancel :which-key "Tmr cancel"))
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
