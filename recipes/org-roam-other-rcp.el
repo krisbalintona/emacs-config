@@ -59,9 +59,7 @@
   (org-cite-activate-processor 'basic)
   (org-cite-csl-locales-dir (expand-file-name (concat user-emacs-directory "locales/")))
   (org-cite-csl-styles-dir "~/Documents/Zotero/styles")
-  ;; Not sure what this does. Got it from
-  ;; https://github.com/jkitchin/org-ref-cite
-  :config (require 'oc-csl)
+  (org-cite-csl--fallback-style-file (expand-file-name (concat org-cite-csl-styles-dir "/apa.csl"))) ; Default csl style
   )
 
 ;;;; Org-ref
