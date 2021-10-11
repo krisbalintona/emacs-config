@@ -290,17 +290,17 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (general-define-key
    :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
    :states '(visual normal motion)
-   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk)) :which-key "Toggle junk tag")
-   "a" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'archive)) :which-key "Toggle archive tag")
-   "i" '((lambda () (interactive) (prot-elfeed-toggle-tag 'input)) :which-key "Toggle input tag")
-   "d" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done)) :which-key "Toggle done tag")
-   "c" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :which-key "Toggle cancelled tag")
+   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :which-key "Toggle junk tag")
+   "a"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'archive))   :which-key "Toggle archive tag")
+   "i"   '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :which-key "Toggle input tag")
+   "d"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :which-key "Toggle done tag")
+   "c"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :which-key "Toggle canceled tag")
    )
   (general-define-key
    :keymaps 'elfeed-show-mode-map
    :states '(visual normal motion)
-   "u" '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :which-key "Toggle unread tag")
-   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk)) :which-key "Toggle junk tag")
+   "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread))                               :which-key "Toggle unread tag")
+   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :which-key "Toggle junk tag")
    )
   )
 
