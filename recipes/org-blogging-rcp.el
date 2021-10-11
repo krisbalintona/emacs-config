@@ -18,7 +18,7 @@
   :custom
   (org-hugo-base-dir (concat org-directory "hugo/"))
   (org-hugo-section "posts")
-  (org-hugo-auto-set-lastmod t)         ; Use lastmod
+  (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lasfmod if modified at least a week later
   :config
   (org-roam-update-org-id-locations)    ; Necessary for id's to be recognized for exports
