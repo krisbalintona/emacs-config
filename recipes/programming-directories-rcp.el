@@ -58,11 +58,16 @@
 ;;; Dired-open
 ;; Override how dired opens files with certain extensions
 (use-package dired-open
+  :defer 15
   :custom
+  (dired-open-extensions '(("odt" . "soffice -writer")
+                           ("docx" . "soffice -writer")
+                           ("mp4" . "vlc")
+                           ("mp3" . "vlc")
+                           ("mkv" . "vlc")
+                           ))
   ;; ;; Try to use `xdg-open' before anything else
   ;; (add-to-list 'dired-open-functions #'dired-open-xdg t) ; Doesn't work as expected!
-  (dired-open-extensions '(("png" . "feh")
-                           ("mkv" . "vlc")))
   )
 
 ;;; Dired-hide-dotfiles
