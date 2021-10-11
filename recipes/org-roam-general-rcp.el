@@ -16,6 +16,11 @@
   :ghook ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
+  (:keymaps 'org-mode-map
+            "C-c i" '(org-id-get-create :which-key "Add ID")
+            "C-c tt" '(org-roam-tag-add :which-key "Add tag")
+            "C-c tr" '(org-roam-tag-remove :which-key "Remove tag")
+            )
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/leader-keys
@@ -31,12 +36,6 @@
            :which-key "Find file other window")
 
     "ni" '(org-roam-node-insert :which-key "Insert note")
-
-    "nc" '(org-roam-capture :which-key "Roam capture")
-
-    "nN" '(org-id-get-create :which-key "Add ID")
-    "nt" '(org-roam-tag-add :which-key "Add tag")
-    "nT" '(org-roam-tag-remove :which-key "Remove tag")
 
     "nh" '((lambda ()
              (interactive)
@@ -56,8 +55,8 @@
               )
             :which-key "Find date")
     "ndt" '(org-roam-dailies-goto-today :which-key "Today")
-    "ndm" '(org-roam-dailies-goto-tomorrow :which-key "Tomorrow")
-    "ndy" '(org-roam-dailies-goto-yesterday :which-key "Yesterday")
+    "ndn" '(org-roam-dailies-goto-tomorrow :which-key "Tomorrow")
+    "ndp" '(org-roam-dailies-goto-yesterday :which-key "Yesterday")
     )
   :custom
   (org-roam-directory kb/roam-dir)
