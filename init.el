@@ -75,6 +75,7 @@
 
 ;;;; Org
 (require 'org-general-rcp)
+(require 'org-citations-rcp)
 (require 'org-blogging-rcp)
 (require 'org-roam-general-rcp)
 (require 'org-roam-other-rcp)
