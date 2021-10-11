@@ -56,10 +56,23 @@
             [remap bibtex-actions-insert-citation] '(org-cite-insert :which-key "Insert citation"))
   :custom
   (org-cite-global-bibliography bibtex-completion-bibliography)
-  (org-cite-activate-processor 'basic)
   (org-cite-csl-locales-dir (expand-file-name (concat user-emacs-directory "locales/")))
-  (org-cite-csl-styles-dir "~/Documents/Zotero/styles")
-  (org-cite-csl--fallback-style-file (expand-file-name (concat org-cite-csl-styles-dir "/apa.csl"))) ; Default csl style
+  (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles"))
+  (org-cite-export-processors
+   '((md csl "chicago-fullnote-bibliography.csl") ; Footnote reliant
+     (latex csl "chicago-author-date.csl")        ; For phiosophy
+     (t csl "modern-language-association.csl")
+     ))
+  :config
+  ;; NOTE 2021-10-11: For some reason these aren't being loaded?
+  (require 'oc-csl)
+  (require 'oc-basic)
+  (require 'oc-bibtex)
+  (require 'oc-biblatex)
+
+  ;; Have citation links be as they were for `org-ref'
+  (set-face-attribute 'org-cite nil :foreground "DarkSeaGreen4")
+  (set-face-attribute 'org-cite-key nil :foreground "forest green")
   )
 
 ;;;; Org-ref
