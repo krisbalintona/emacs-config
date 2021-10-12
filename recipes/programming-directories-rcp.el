@@ -26,6 +26,17 @@
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
   (dired-recursive-copies 'always)              ; Copy directories recursively?
   (dired-listing-switches "-agho --group-directories-first") ; Flags `dired' passes to `ls'
+
+  ;; Override how dired opens files with certain extensions
+  (dired-open-extensions '(("odt" . "soffice -writer")
+                           ("docx" . "soffice -writer")
+                           ("mp4" . "vlc")
+                           ("mp3" . "vlc")
+                           ("mkv" . "vlc")
+                           ))
+  ;; ;; Try to use `xdg-open' before anything else
+  ;; (add-to-list 'dired-open-functions #'dired-open-xdg t) ; FIXME 2021-10-12: Doesn't work as expected!
+  :config (require 'dired-open)
   )
 
 ;;; Dired-git
@@ -53,21 +64,6 @@
   :gfhook '(lambda () (setq-local all-the-icons-scale-factor 0.95))
   :custom
   (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
-  )
-
-;;; Dired-open
-;; Override how dired opens files with certain extensions
-(use-package dired-open
-  :defer 15
-  :custom
-  (dired-open-extensions '(("odt" . "soffice -writer")
-                           ("docx" . "soffice -writer")
-                           ("mp4" . "vlc")
-                           ("mp3" . "vlc")
-                           ("mkv" . "vlc")
-                           ))
-  ;; ;; Try to use `xdg-open' before anything else
-  ;; (add-to-list 'dired-open-functions #'dired-open-xdg t) ; Doesn't work as expected!
   )
 
 ;;; Dired-hide-dotfiles
