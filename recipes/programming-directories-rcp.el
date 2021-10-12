@@ -18,8 +18,6 @@
             :states 'normal
             "h" 'dired-up-directory
             "l" 'dired-find-file)
-  (kb/leader-keys
-    "od" '(dired :which-key "Dired"))
   :custom
   (dired-auto-revert-buffer t)          ; Automatically revert buffer
   (dired-dwim-target nil)               ; Guess default target directory?
