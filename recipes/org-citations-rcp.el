@@ -8,6 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
+(require 'org-general-rcp)
 
 ;;; Bibtex-completion
 (use-package bibtex-completion
@@ -62,6 +63,9 @@
      (t csl "modern-language-association.csl")
      ))
   :config
+  ;; NOTE 2021-10-11: Need org-export to be loaded for org files to properly be
+  ;; loaded without calling `org-export-dispatch'.
+  (require 'ox)
   ;; NOTE 2021-10-11: For some reason these aren't being loaded?
   (require 'oc-csl)
   (require 'oc-basic)
