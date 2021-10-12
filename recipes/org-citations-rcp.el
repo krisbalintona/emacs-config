@@ -77,54 +77,6 @@
   (set-face-attribute 'org-cite-key nil :foreground "forest green")
   )
 
-;;; Org-ref
-;; Bibtex is a way to add bibliographic information (e.g. references/citations to
-;; equations, sources, images, etc) in latex. Ivy/helm-bibtex is a way to access
-;; the .bib files bibtex makes. Org-ref is a way to directly insert citations
-;; and references into latex and org files
-(use-package org-ref
-  :disabled t
-  :demand t
-  :after bibtex-completion
-  :custom
-  (org-ref-default-bibliography bibtex-completion-bibliography)
-  (org-ref-bibliography-notes (concat kb/roam-dir "bibliographic/bib-notes.org")) ; Irrelevant for me - I have it here just in case
-  (org-ref-pdf-directory bibtex-completion-library-path)
-  (org-ref-notes-directory kb/roam-dir) ; Same directory as org-roam
-
-  ;; NOTE 2021-09-14: These two mess with the format of inserting citations
-  ;; (org-ref-completion-library 'org-ref-reftex) ; Org completion
-  ;; (org-ref-completion-library 'org-ref-ivy-cite) ; Ivy completion
-  (org-ref-note-title-format
-   "* TODO %y - %t\n :PROPERTIES:\n  :CUSTOM_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n")
-  (org-ref-notes-function 'orb-edit-notes)
-  (org-ref-default-citation-link "cite")
-  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-  :config
-  (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t
-                                            ("pdflatex"))
-                                           ("T1" "fontenc" t
-                                            ("pdflatex"))
-                                           ("" "graphicx" t)
-                                           ("" "grffile" t)
-                                           ("" "longtable" nil)
-                                           ("" "wrapfig" nil)
-                                           ("" "rotating" nil)
-                                           ("normalem" "ulem" t)
-                                           ("" "amsmath" t)
-                                           ("" "textcomp" t)
-                                           ("" "amssymb" t)
-                                           ("" "capt-of" nil)
-                                           ("hidelinks" "hyperref" nil)) ; Ugly boxes
-        )
-
-  ;; Files removed after `org-export' to LaTeX
-  (add-to-list 'org-latex-logfiles-extensions "tex")
-  (add-to-list 'org-latex-logfiles-extensions "bbl")
-  ;; (add-to-list 'org-latex-logfiles-extensions "pdf")
-  (add-to-list 'org-latex-logfiles-extensions "synctex.gz")
-  )
-
 ;;; Org-roam-bibtex
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
 ;; org-roam (provides templates and modifies edit notes action)
@@ -199,21 +151,6 @@
   ;; Use `bibtex-actions'
   (org-cite-insert-processor 'oc-bibtex-actions)
   (org-cite-follow-processor 'oc-bibtex-actions)
-  )
-
-;;; Ivy-bibtex
-;; Kept here just in case I need to use in the future
-(use-package ivy-bibtex
-  ;; :disabled t
-  :after org-roam-bibtex
-  ;; :general
-  ;; (kb/leader-keys
-  ;;   "fa" '(ivy-bibtex :which-key "Insert citation")
-  ;;   "fA" '(ivy-bibtex-with-notes :which-key "Open note")
-  ;;   )
-  :custom
-  (ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
-  (orb-note-actions-interface 'ivy)
   )
 
 ;;; org-citations-rcp.el ends here
