@@ -56,6 +56,14 @@
   (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
   )
 
+;;; Org-export
+;;;; Ox-extra
+(use-package ox-extra
+  :straight nil
+  :config
+  (ox-extras-activate '(ignore-headlines)) ; The ignore tag will export contents but ignore heading
+  )
+
 ;;; Org-footnote
 (use-package org-footnote
   :straight nil
