@@ -153,10 +153,12 @@
                  ))
   )
 
-;;;; Ox-extra
-(use-package ox-extra
-  :straight nil
+;;;; Org-contrib
+(use-package org-contrib
+  :demand t
+  ;; :after (ox org)
   :config
+  (require 'ox-extra)
   (ox-extras-activate '(ignore-headlines)) ; The ignore tag will export contents but ignore heading
   )
 
