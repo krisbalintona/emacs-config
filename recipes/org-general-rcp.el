@@ -77,7 +77,7 @@
    "\\renewcommand\\contentsname{Table of Contents}
 \\tableofcontents\n\n")
   (org-export-with-toc nil)
-  (setq org-latex-default-packages-alist
+  (org-latex-default-packages-alist
    '(("AUTO" "inputenc" t
       ("pdflatex"))
      ("T1" "fontenc" t

@@ -126,7 +126,7 @@
 
 ;;;; Ace-jump
    `(ace-jump-face-background ((t (:foreground ,atom-one-dark-mono-3 :background ,atom-one-dark-bg-1 :inverse-video nil))))
-   `(ace-jump-face-foreground ((t (:font ,uninspiring-dark-variable-pitch :foreground ,atom-one-dark-red-1 :background ,atom-one-dark-bg-1 :inverse-video nil))))
+   `(ace-jump-face-foreground ((t (:foreground ,atom-one-dark-red-1 :background ,atom-one-dark-bg-1 :inverse-video nil))))
 
 ;;;; Outshine
    `(outshine-level-4 ((t :inherit outline-5)))
