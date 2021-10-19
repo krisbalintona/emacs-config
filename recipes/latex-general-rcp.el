@@ -58,6 +58,8 @@
   :hook (latex-mode . (lambda ()
                         (push '("\\Dashv" . ?⫤) prettify-symbols-alist)
                         (push '("\\DashVDash" . ?⟚) prettify-symbols-alist)
+                        (delete '("--" . 8211) prettify-symbols-alist)
+                        (delete '("---" . 8212) prettify-symbols-alist)
                         ))
 
   :gfhook
