@@ -12,6 +12,7 @@
 ;;; Aesthetics
 ;;;; Prog-mode
 (use-package prog-mode
+  :demand t
   :straight nil
   :config
   ;; Custom font lock words
