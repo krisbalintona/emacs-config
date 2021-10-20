@@ -40,9 +40,9 @@ variable to set font families."
   ;; (defvar uninspiring-dark-default "Iosevka Term SS04")
   ;; (defvar uninspiring-dark-fixed-pitch "Hack Nerd Font Mono")
   ;; (defvar uninspiring-dark-variable-pitch "LiterationSerif Nerd Font")
-  (set-face-attribute 'default nil :inherit 'uninspiring-dark-default :font ,uninspiring-dark-default :height 136)
-  (set-face-attribute 'variable-pitch nil :inherit 'uninspiring-dark-variable-pitch :font ,uninspiring-dark-fixed-pitch :height 140)
-  (set-face-attribute 'fixed-pitch nil :inherit 'uninspiring-dark-fixed-pitch :font ,uninspiring-dark-variable-pitch :height 158)
+  (set-face-attribute 'default nil :inherit 'uninspiring-dark-default :font uninspiring-dark-default :height 136)
+  (set-face-attribute 'variable-pitch nil :inherit 'uninspiring-dark-variable-pitch :font uninspiring-dark-fixed-pitch :height 140)
+  (set-face-attribute 'fixed-pitch nil :inherit 'uninspiring-dark-fixed-pitch :font uninspiring-dark-variable-pitch :height 158)
   )
 (advice-add 'kb/proper-load-theme-light :after #'kb/proper-set-font-families)
 
