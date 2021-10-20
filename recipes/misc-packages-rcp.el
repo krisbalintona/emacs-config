@@ -69,6 +69,14 @@
             "C-c T c" '(tmr-cancel :which-key "Tmr cancel"))
   )
 
+;;; Emojify
+(use-package emojify
+  :hook (window-setup . global-emojify-mode)
+  :custom
+  (emojify-composed-text-p t)
+  (emojify-emoji-styles '(ascii unicode github))
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
