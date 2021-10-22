@@ -31,20 +31,15 @@
 
 (setq custom-theme-load-path load-path)
 (require 'uninspiring-dark-theme)
-(use-package modus-themes)
-
-;;;;; Make sure Modus theme font families are correct
-(defun kb/proper-set-font-families ()
-  "A makeshift solution to the Modus themes not having an in-built
-variable to set font families."
-  ;; (defvar uninspiring-dark-default "Iosevka Term SS04")
-  ;; (defvar uninspiring-dark-fixed-pitch "Hack Nerd Font Mono")
-  ;; (defvar uninspiring-dark-variable-pitch "LiterationSerif Nerd Font")
-  (set-face-attribute 'default nil :inherit 'uninspiring-dark-default :font uninspiring-dark-default :height 136)
-  (set-face-attribute 'variable-pitch nil :inherit 'uninspiring-dark-variable-pitch :font uninspiring-dark-fixed-pitch :height 140)
-  (set-face-attribute 'fixed-pitch nil :inherit 'uninspiring-dark-fixed-pitch :font uninspiring-dark-variable-pitch :height 158)
+(use-package modus-themes
+  :custom
+  (modus-themes-mixed-fonts t)
+  :config
+  ;; Set foundational faces
+  (set-face-attribute 'default nil :font uninspiring-dark-default :height 136)
+  (set-face-attribute 'modus-themes-variable-pitch nil :font uninspiring-dark-variable-pitch :height 140)
+  (set-face-attribute 'modus-themes-fixed-pitch nil :font uninspiring-dark-fixed-pitch :height 158)
   )
-(advice-add 'kb/proper-load-theme-light :after #'kb/proper-set-font-families)
 
 ;;;; Variable declarations
 (defvar kb/themes-light 'modus-operandi
