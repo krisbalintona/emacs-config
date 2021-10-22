@@ -104,8 +104,10 @@
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
   :straight (magit :type git :host github :repo "magit/magit")
-  :hook ((magit-process-mode . visual-line-mode)
-         (git-commit-mode . evil-insert-state))
+  :hook ((git-commit-mode . evil-insert-state)
+         (magit-process-mode . visual-line-mode)
+         (magit-diff-mode . visual-line-mode)
+         )
   :general
   (:keymaps 'magit-mode-map
             "C-<tab>" 'magit-section-toggle-children)
