@@ -148,6 +148,7 @@ afterward."
 ;;;; Conf-mode
 ;; For Unix config files
 (use-package conf-mode
+  :mode (".rc$" . conf-mode)
   :gfhook 'outshine-mode
   )
 
