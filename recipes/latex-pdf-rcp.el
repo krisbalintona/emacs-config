@@ -25,7 +25,18 @@
                             ;; false
                             ("false" 0 '(t :foreground "red") t)
                             ;; For table (tabular) columns
-                            ("rowmac" 0 '(t :background "blue") t)
+                            ("\\\\rowmac" 0 'font-latex-math-face t)
+                            ;; For natural deduction tables via `lplfitch'
+                            ("\\\\fitchprf" 0 'font-lock-keyword-face t)
+                            ("\\\\pline" 0 'font-latex-math-face t)
+                            ("\\\\subproof" 0 'font-latex-warning-face t)
+                            ("\\\\boxedsubproof" 0 'font-latex-warning-face t)
+                            ("\\\\brokenform" 0 'font-latex-warning-face t)
+                            ("\\\\formula" 0 'font-latex-math-face t)
+                            ("\\\\fitcharg" 0 'font-lock-keyword-face t)
+                            ("\\\\\fitchctx" 0 'font-lock-keyword-face t)
+                            ("\\\\fpline" 0 'font-latex-math-face t)
+                            ("\\\\tpline" 0 'font-latex-math-face t)
                             ))
   )
 

@@ -60,8 +60,11 @@
                         (push '("\\DashVDash" . ?⟚) prettify-symbols-alist)
                         (delete '("--" . 8211) prettify-symbols-alist)
                         (delete '("---" . 8212) prettify-symbols-alist)
+                        ;; For `lplfitch'. Slightly higher than `\vdots'. Using
+                        ;; the `\pline{\vdots}' results in the ellipses not
+                        ;; being centered on the line.
+                        (push '("\\ellipsesline" . ?⋮) prettify-symbols-alist)
                         ))
-
   :gfhook
   'prettify-symbols-mode
   'reftex-isearch-minor-mode
