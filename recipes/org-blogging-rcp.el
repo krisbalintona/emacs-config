@@ -85,7 +85,7 @@ targets and targets."
 ;; Allow Hugo to export `org-cite' citations
 (use-package citeproc-org
   :after (citeproc ox-hugo)
-  :config (citeproc-org-setup)
+  :hook (org-mode . citeproc-org-setup)
   )
 
 ;;; org-blogging-rcp.el ends here
