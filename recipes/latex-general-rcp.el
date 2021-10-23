@@ -14,6 +14,7 @@
 ;; A lot taken from https://github.com/MatthewZMD/.emacs.d#auctex
 (use-package tex
   :straight auctex
+  :after prog-mode
   :custom
   (TeX-source-correlate-start-server t)
   (TeX-source-correlate-method 'synctex)
