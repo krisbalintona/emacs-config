@@ -69,7 +69,12 @@
         (kb/run-latexmk))
     )
 
-  (add-hook 'LaTeX-mode-hook 'latexmk-mode)
+  (add-hook 'find-file-hook
+            (lambda ()
+              "Enable `latexmk-mode' in files whose extension is `.tex'."
+              (when (string= (file-name-extension buffer-file-name) "tex")
+                (latexmk-mode))
+              ))
   (add-hook 'after-save-hook #'kb/try-run-latexmk)
   )
 
