@@ -60,7 +60,6 @@
   (evil-want-fine-undo t)               ; More granular undos
   (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
   (evil-move-cursor-back nil)
-  (evil-move-beyond-eol t)
   (evil-echo-state nil)                 ; Don't echo state in echo area
   :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
   :init
