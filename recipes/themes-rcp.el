@@ -130,6 +130,15 @@ Additionally, run `kb/themes-hooks'."
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
   (display-time-default-load-average 1) ; Don't show load average along with time
+  (world-clock-list
+   '(("America/Los_Angeles" "Seattle")
+     ("America/New_York" "New York")
+     ("Europe/London" "London")
+     ("Europe/Paris" "Paris")
+     ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
+     ("Asia/Calcutta" "Bangalore")
+     ("Asia/Tokyo" "Tokyo")
+     ))
   )
 
 ;;;; Battery
