@@ -210,6 +210,14 @@
   (inhibit-compacting-font-caches t) ; Stop slowdown
   )
 
+;;;; Org-bars
+(use-package org-bars
+  :after org
+  :straight (org-bars :type git :host github :repo "tonyaldon/org-bars")
+  :config
+  (add-hook 'org-mode-hook 'org-bars-mode 100) ; Doesn't work if it is added to the beginning of the hook
+  )
+
 ;;;; Visual-fill-column
 ;; Soft wrap lines at fill-column
 (use-package visual-fill-column
