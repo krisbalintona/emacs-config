@@ -457,7 +457,7 @@
    `(org-level-4 ((t (:inherit outline-4 :height 170 :foreground "medium aquamarine" :font ,uninspiring-dark-variable-pitch))) t)
    `(org-level-5 ((t (:inherit outline-5 :height 165 :foreground "light sea green" :font ,uninspiring-dark-variable-pitch))) t)
 
-   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :font ,uninspiring-dark-variable-pitch :height 145 :underline nil))))
+   `(org-link ((t (:foreground "goldenrod3" :bold nil :italic t :underline nil))))
    `(org-block ((t (:foreground nil :inherit fixed-pitch :background "#232635" :extend t))) t)
    `(org-quote ((t (:inherit org-block :height 143))) t)
    `(org-code ((t (:inherit (shadow fixed-pitch)))) t)
