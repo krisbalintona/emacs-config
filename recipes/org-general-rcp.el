@@ -74,8 +74,13 @@
 %t
 \\end{center}")
   (org-latex-toc-command
-   "\\renewcommand\\contentsname{Table of Contents}
-\\tableofcontents\n\n")
+   "\\renewcommand{\\contentsname}{
+  \\begin{center}
+    Table of Contents
+  \\end{center}
+}
+\\tableofcontents
+\\newpage")
   (org-export-with-toc nil)
   (org-latex-default-packages-alist
    '(("AUTO" "inputenc" t
