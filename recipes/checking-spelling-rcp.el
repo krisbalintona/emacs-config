@@ -88,6 +88,7 @@
   :ghook 'text-mode-hook 'prog-mode-hook
   :custom
   (abbrev-file-name (concat no-littering-var-directory "abbrev-mode/abbrev.el"))
+  (save-abbrevs 'silently)
   )
 
 ;;; checking-spelling-rcp.el ends here
