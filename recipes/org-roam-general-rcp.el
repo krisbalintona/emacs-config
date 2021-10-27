@@ -74,9 +74,8 @@
   (org-roam-node-default-sort 'file-atime)
   (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
 
-  ;; How it appears in the minibuffer
-  ;; (org-roam-node-display-template (concat " ${title:130}" (propertize " ⸽ ${file:50} ⸽ ${tags:20}" 'face 'org-roam-dim)))
-  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:16} " "${othertags:13} " "${hierarchy:183}"))
+  ;; Format of `org-roam-node-find'
+  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:26} " "${othertags:47} " "${hierarchy:138}"))
 
   ;; Roam buffer format
   (org-roam-mode-section-functions
