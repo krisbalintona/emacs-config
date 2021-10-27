@@ -60,6 +60,7 @@
 ;;; Complementary
 ;;;; Elfeed-org
 (use-package elfeed-org
+  :defer 2 ; Can't figure out how to have this work other than this and demanding it
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")))
   (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
