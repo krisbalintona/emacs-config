@@ -34,7 +34,7 @@
                             ("\\\\brokenform" 0 'font-latex-warning-face t)
                             ("\\\\formula" 0 'font-latex-math-face t)
                             ("\\\\fitcharg" 0 'font-lock-keyword-face t)
-                            ("\\\\\fitchctx" 0 'font-lock-keyword-face t)
+                            ("\\\\fitchctx" 0 'font-lock-keyword-face t)
                             ("\\\\fpline" 0 'font-latex-math-face t)
                             ("\\\\tpline" 0 'font-latex-math-face t)
                             ))
