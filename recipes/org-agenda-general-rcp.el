@@ -37,7 +37,7 @@
    '((agenda . " %i %(vulpea-agenda-category 22)%?-12t% s")
      (todo . " %i %(vulpea-agenda-category 22) ")
      (tags . " %i %(vulpea-agenda-category 22) ")
-     (search . " %i %(vaulpea-agenda-category 22) ")
+     (search . " %i %(vulpea-agenda-category 22) ")
      ))
   :init
   ;; These modify `org-agenda' and `org-roam' integration. All of these are from
