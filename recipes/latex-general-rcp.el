@@ -90,7 +90,13 @@
 ;;;; Cdlatex
 ;; Faster LaTeX inputs
 (use-package cdlatex
-  :hook (LaTeX-mode . turn-on-cdlatex)
+  :hook ((LaTeX-mode . turn-on-cdlatex)
+         (LaTeX-mode . (lambda ()
+                         (push '("pline" "\\pline[]{?}[]" nil) cdlatex-env-alist-comb)
+                         (push '("fitchprf" "\\fitchprf{\n?\n}\n{\n\n}" nil) cdlatex-env-alist-comb)
+                         (push '("subproof" "\\subproof{\n?\n}\n{\n\n}" nil) cdlatex-env-alist-comb)
+                         ))
+         )
   )
 
 ;;;; Magic-latex-buffer
