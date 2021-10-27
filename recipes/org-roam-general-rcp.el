@@ -150,27 +150,6 @@ journals directory."
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
   )
 
-;;; Org-refile
-(use-package org-refile
-  :after org-roam
-  :straight nil
-  :custom
-  (org-refile-targets
-   `((kb/find-blog-files-org :maxlevel . 1)
-     ;; `((kb/find-blog-files-org :tag . "blog")
-     (org-agenda-files :regexp . "tnaoirnta") ; This will remove all headlines
-     ))
-  (org-refile-use-outline-path 'file)
-  (org-refile-use-cache nil)
-  ;; (org-refile-history t) ; FIXME 2021-10-09: For some reason makes `org-refile' not work
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  :config
-  (defun kb/find-blog-files-org ()
-    "Return a list of files which are within the blog directory of org-roam."
-    (directory-files-recursively (concat org-roam-directory "blog") "")
-    )
-  )
-
 ;;; Customized `org-roam-node-find' functions
 ;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
 ;; https://orgroam.slack.com/archives/CV20S23C0/p1626662183035800

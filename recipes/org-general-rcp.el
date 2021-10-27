@@ -186,6 +186,30 @@
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
   )
 
+;;; Org-refile
+(use-package org-refile
+  :after org-roam
+  :straight nil
+  :general (kb/leader-keys 
+             "nr" '(org-refile :which-key "Org-refile"))
+  :custom
+  (org-refile-targets
+   `((kb/find-blog-files-org :maxlevel . 1)
+     ;; `((kb/find-blog-files-org :tag . "blog")
+     (org-agenda-files :regexp . "tnaoirnta") ; This random string will remove all headlines
+     ("/home/krisbalintona/Documents/org-database/roam/inbox.org" :level . 0) ; Inbox file
+     ))
+  (org-refile-use-outline-path 'file)
+  (org-refile-use-cache nil)
+  ;; (org-refile-history t) ; FIXME 2021-10-09: For some reason makes `org-refile' not work
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  :config
+  (defun kb/find-blog-files-org ()
+    "Return a list of files which are within the blog directory of org-roam."
+    (directory-files-recursively (concat org-roam-directory "blog") "")
+    )
+  )
+
 ;;; Aesthetics
 ;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
