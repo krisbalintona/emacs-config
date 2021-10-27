@@ -258,7 +258,7 @@ journals directory."
 ;;; Capture templates
 ;;;; Org-roam-capture-templates
 (defvar kb/lit-categories
-  '("video" "book" "podcast" "article" "website" "journal" "quote" "structure" "musing" "blog")
+  '("working" "video" "book" "podcast" "article" "website" "journal" "quote" "structure" "musing")
   "The main categories of inputs I process.")
 
 (defun kb/insert-lit-category ()
