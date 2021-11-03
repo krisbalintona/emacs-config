@@ -59,6 +59,7 @@
   :hook (latex-mode . (lambda ()
                         (push '("\\Dashv" . ?⫤) prettify-symbols-alist)
                         (push '("\\DashVDash" . ?⟚) prettify-symbols-alist)
+                        (push '("\\dashVdash" . ?⊢) prettify-symbols-alist)
                         (delete '("--" . 8211) prettify-symbols-alist)
                         (delete '("---" . 8212) prettify-symbols-alist)
                         ;; For `lplfitch'. Slightly higher than `\vdots'. Using
