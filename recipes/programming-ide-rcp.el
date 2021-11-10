@@ -139,6 +139,29 @@
     "dL" '(devdocs-search :which-key "Search for docs in site"))
   )
 
+;;;; Treemacs
+(use-package treemacs
+  :gfhook 'hide-mode-line-mode
+  :custom
+  (treemacs-no-png-images t)
+  (treemacs-width 24)
+  :general (kb/leader-keys
+             "ft" '(treemacs :which-key "Treemacs"))
+  )
+
+;;;; Lsp-treemacs
+;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
+(use-package lsp-treemacs
+  :hook ((lsp-mode . lsp-treemacs-sync-mode)
+         (lsp-treemacs-generic-mode . hide-mode-line-mode)
+         (lsp-treemacs-error-list-mode . hide-mode-line-mode)
+         (lsp-treemacs-deps-list-mode . hide-mode-line-mode)
+         )
+  :general (:keymaps 'lsp-treemacs-error-list-mode-map
+                     :states 'normal
+                     "x" 'lsp-treemacs-quick-fix)
+  )
+
 ;;; programming-ide-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-ide-rcp)
