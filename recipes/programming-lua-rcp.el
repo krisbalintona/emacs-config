@@ -15,6 +15,7 @@
 ;; https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
 ;; NOTE: For lsp-mode support, install lua-language-server, a separate system package
 (use-package lua-mode
+  :hook (lua-mode . lsp-deferred)
   :custom
   ;; Lsp-mode settings
   ;; (lsp-clients-lua-language-server-install-dir "/home/krisbalintona/Cloned_Repos/lua-language-server/") ; Path to where I manually cloned lua-language-server

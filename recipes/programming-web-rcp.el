@@ -47,11 +47,12 @@
   (flycheck-stylelint-quiet nil)
   )
 
-;;; Javascript
+;;; Js2-mode
 (use-package js2-mode
   :ensure-system-package ((eslint . "sudo npm install --global --save-dev eslint")
                           (semistandard . "sudo npm install --global semistandard"))
   :mode "\\.js\\'"
+  :hook (js2-mode . lsp-deferred)
   :gfhook
   'electric-pair-mode
   'highlight-indent-guides-mode

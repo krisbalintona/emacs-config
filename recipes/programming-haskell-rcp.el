@@ -11,6 +11,7 @@
 
 ;;; Haskell-mode
 (use-package haskell-mode
+  :hook (haskell-mode . lsp-deferred)
   :init (require 'haskell-mode-autoloads)
   )
 
