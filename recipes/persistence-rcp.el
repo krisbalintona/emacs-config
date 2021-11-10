@@ -27,6 +27,7 @@
 ;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
+  :demand t
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)
