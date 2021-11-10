@@ -151,7 +151,7 @@
   (setq esh-prompt-num 0)
   (add-hook 'eshell-exit-hook (lambda () (setq esh-prompt-num 0)))
   (advice-add 'eshell-send-input :before
-              (lambda (&rest args) (setq esh-prompt-num (incf esh-prompt-num))))
+              (lambda (&rest args) (setq esh-prompt-num (cl-incf esh-prompt-num))))
 
   (esh-section esh-num
                "\xf0c9 "  ;  (list icon)
