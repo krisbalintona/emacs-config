@@ -61,7 +61,7 @@
 (use-package dap-python
   :demand t
   :after dap-mode
-  :ensure-system-package (debugpy . "pip install --user debugpy") ; For debugging in python using dap
+  :ensure-system-package ("/home/krisbalintona/.local/lib/python3.9/site-packages/debugpy" . "pip install --user debugpy") ; For debugging in python using dap
   :straight nil
   :custom
   (dap-python-executable "ipython3")
