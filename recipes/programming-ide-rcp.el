@@ -82,11 +82,39 @@
 ;;; Dap-mode
 (use-package dap-mode
   :demand t
+  :after lsp-mode
   :gfhook
   'dap-ui-mode      ; Mouse hover support
-  'dap-tooltip-mode ; Use tooltips for mouse hover, otherwise use the minibuffer
+  'dap-tooltip-mode ; Use tooltips for mouse hover over symbols, otherwise use the minibuffer
   'tooltip-mode     ; Displays floating panel with debug buttons
   'dap-ui-controls-mode
+  :general (:keymaps 'lsp-mode-map
+                     :prefix lsp-keymap-prefix
+                     "d" '(:ignore t :which-key "DAP")
+                     "dd" '(dap-debug :which-key "Debug")
+                     "dl" '(dap-debug-last :which-key "Debug")
+                     "dh" '(dap-hydra :which-key "Hydra")
+
+                     "db" '(:ignore t :which-key "Breakpoints")
+                     "dbt" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
+                     "dba" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
+                     "dbd" '(dap-breakpoint-delete :which-key "Delete breakpoint")
+                     "dbD" '(dap-breakpoint-delete-all :which-key "Delete all breakpoints")
+                     "dbl" '(dap-breakpoint-log-message :which-key "Breakpoint log")
+                     "dbc" '(dap-breakpoint-condition :which-key "Breakpoint condition")
+
+                     "de" '(:ignore t :which-key "Expressions")
+                     "dea" '(dap-ui-expressions-add :which-key "Expression add")
+                     "der" '(dap-ui-expressions-add :which-key "Expression add")
+                     "dr" '(dap-ui-repl :which-key "REPL")
+                     )
+  :custom (dap-auto-configure-features '(;; sessions
+                                         locals
+                                         breakpoints
+                                         expressions
+                                         controls
+                                         tooltip
+                                         ))
   )
 
 ;;; Tree-sitter
@@ -186,6 +214,7 @@
 
 ;;;; Consult-lsp
 (use-package consult-lsp
+  :after lsp-mode
   :gfhook consult-lsp-marginalia-mode
   :general
   (:keymaps 'lsp-mode-map
