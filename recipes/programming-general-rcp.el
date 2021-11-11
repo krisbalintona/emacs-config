@@ -29,6 +29,7 @@
                                ("\\s-FIXME\\s-" 0 '(t :foreground "deep pink") t)
                                ))
      )
+  :config (global-prettify-symbols-mode)
   )
 
 ;;;; Highlight-indent-guides
