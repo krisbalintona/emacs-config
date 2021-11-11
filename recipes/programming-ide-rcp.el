@@ -22,11 +22,18 @@
   (lsp-auto-guess-root nil)
   (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-semantic-tokens-enable t)
-  (lsp-symbol-highlighting-skip-current t) ; When highlighting, don't highlight symbol on point
   (lsp-modeline-diagnostics-scope :workspace)
   (lsp-modeline-code-actions-segments '(count icon name))
   (lsp-enable-file-watchers t) ; Affects performance. Enable if I do actual programming
   (lsp-log-io nil)             ; If set to true can cause a performance hit
+
+  ;; When you hover over a symbol
+  (lsp-enable-symbol-highlighting t)
+  (lsp-symbol-highlighting-skip-current nil) ; When highlighting, don't highlight symbol on point
+  :custom-face
+  (lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
+  ;; (lsp-face-highlight-textual ((t (:inherit nil :box t))))
+  ;; (lsp-face-highlight-write ((t (:inherit nil :box t))))
   )
 
 ;;; Lsp-ui
