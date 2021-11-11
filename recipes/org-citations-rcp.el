@@ -59,10 +59,11 @@
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
   :demand t
-  :general ("C-c bb" '(citar-insert-citation :which-key "Insert citation")
-            "C-c br" '(citar-insert-reference :which-key "Insert reference")
-            "C-c bo" '(citar-open-notes :which-key "Open note")
-            )
+  :general (:prefix "C-c b"
+                    "b" '(citar-insert-citation :which-key "Insert citation")
+                    "r" '(citar-insert-reference :which-key "Insert reference")
+                    "o" '(citar-open-notes :which-key "Open note")
+                    )
   :custom
   (citar-bibliography kb/bib-files)
   (citar-presets '("has:note")) ; A list of predefined searches
