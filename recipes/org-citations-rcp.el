@@ -10,39 +10,6 @@
 (require 'keybinds-general-rcp)
 (require 'org-general-rcp)
 
-;;; Bibtex-completion
-(use-package bibtex-completion
-  :custom
-  (bibtex-completion-notes-path kb/roam-dir) ; Irrelevant since I use org-roam-bibtex instead
-  (bibtex-completion-library-path (expand-file-name (concat kb/roam-dir "bibliographic/bib-pdfs")))
-  (bibtex-completion-bibliography kb/bib-files)
-  (bibtex-completion-additional-search-fields '(doi url))
-  (bibtex-completion-pdf-field "file") ; Zotero stores pdfs in a field called file - this settings allows bibtex to find the pdf
-  (bibtex-completion-pdf-open-function ; Use okular to open a pdf
-   (lambda (fpath)
-     (call-process "okular" nil 0 nil fpath)))
-  (bibtex-completion-browser-function 'browse-url-default-browser) ; Use default browser to open
-
-  ;; Display formats
-  (bibtex-completion-display-formats
-   '((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-     (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-     (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-     (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-     (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
-   )
-
-  ;; Template for new note (but I use orb for this)
-  ;; Taken from `org-roam-capture-templates'; copied from "Reference without pdf
-  ;; notes". Doesn't matter though since `org-roam-bibtex' forces a template
-  ;; selection
-  (bibtex-completion-notes-template-multiple-files "#+filetags: %(kb/insert-lit-category)\n#+title: ${citekey} ${title}\nSource: ${author-or-editor}\nDate: %<%b %d, %Y>")
-
-  ;; Symbols used for indicating the availability of notes and PDF files
-  (bibtex-completion-pdf-symbol "🖇")
-  (bibtex-completion-notes-symbol "🖋")
-  )
-
 ;;; Org-cite
 ;; Built-in citations in org-mode
 (use-package oc
