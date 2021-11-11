@@ -25,6 +25,7 @@
 ;; A little better than the built-in python package
 (use-package python-mode
   :ensure-system-package (pytest . "pip install --user pytest")
+  :hook (py-shell-mode . hide-mode-line-mode)
   :gfhook
   'lsp-deferred
   'dap-mode
@@ -33,6 +34,15 @@
      (push '("->" . ?⟹) prettify-symbols-alist)
      (prettify-symbols-mode)
      )
+  :custom
+  (py-shell-name "ipython3")
+
+  ;; When using `py-execute-' commands
+  (py-split-windows-on-execute-function 'split-window-horizontally) ; How window gets split
+  (py-split-window-on-execute-threshold 1) ; Number of current displayed windows until no splitting
+  (py-keep-windows-configuration nil)   ; Retain current window configuration?
+  (py-split-window-on-execute t)        ; Reuse existing windows?
+  (py-switch-buffers-on-execute-p nil)  ; Switch to buffer?
   )
 
 ;;; Dap-python
@@ -43,8 +53,10 @@
   :ensure-system-package (debugpy . "pip install --user debugpy") ; For debugging in python using dap
   :straight nil
   :custom
-  (dap-python-executable "python3")
-  (dap-python-debugger 'debugpy)      ; Updated version of ptvsd
+  (dap-python-executable "ipython3")
+  (dap-python-debugger 'debugpy)        ; Updated version of ptvsd
+  (dap-debug-compilation-keep t)        ; Keep output window in success?
+  (dap-debug-restart-keep-session nil)  ; Delete previous sessions
   )
 
 ;;; Lps-pyright

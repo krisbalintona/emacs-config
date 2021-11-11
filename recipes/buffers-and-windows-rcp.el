@@ -70,6 +70,10 @@
       (dedicated . t)
       (side . right)
       (window-width . 0.2))
+     ("\\*.*\\(e?shell\\|v?term\\).*"
+      (display-buffer-reuse-mode-window display-buffer-in-side-window)
+      (side . right)
+      (window-width . 0.4))
      ;; To the top
      ("\\*Messages.*"
       (display-buffer-in-side-window)
@@ -85,10 +89,6 @@
      ("\\*Flycheck errors\\*"
       (display-buffer-reuse-mode-window display-buffer-in-side-window)
       (window-height . 0.33))
-     ("\\*.*\\(e?shell\\|v?term\\).*"
-      (display-buffer-reuse-mode-window display-buffer-in-side-window)
-      (side . right)
-      (window-width . 0.4))
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
@@ -106,6 +106,11 @@
       (slot . 0)
       (window-parameters . ((no-other-window . t)
                             (mode-line-format . none))))
+     ("\\*\\(I?Python3\\|Python3\\)\\*"
+      (display-buffer-reuse-mode-window display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -1)
+      (window-height . 0.33))
      ))
   )
 
