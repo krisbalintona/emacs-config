@@ -8,24 +8,23 @@
 ;;; Code:
 (require 'general)
 (require 'keybinds-general-rcp)
+(require 'keybinds-evil-rcp)
+(require 'programming-projects-rcp)
 
 ;;; Python
 ;; Built-in python major mode
 (use-package python
-  :commands (python python-mode)
-  :hook ((inferior-python-mode . hide-mode-line-mode)
-         (py-shell-mode . (lambda ()
-                            (setq-local scroll-margin 0)
-                            )))
-  :custom
-  (python-shell-interpreter "python3")
+  :demand t
+  :general (:keymaps 'python-mode-map
+                     :states '(normal insert)
+                     "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1))) ; Python oddly replaces the normal C-<backspace>
   )
 
 ;;; Python-mode
 ;; A little better than the built-in python package
 (use-package python-mode
   :demand t
-  :after (python pyvenv)
+  :after python
   :hook ((python-mode . (lambda ()
                           (interactive)
                           (if (project-current) ; Set virtual environment to ./venv/ if currently in a project
@@ -36,7 +35,6 @@
                             (setq-local scroll-margin 0)
                             )))
   :ensure-system-package (pytest . "pip install --user pytest")
-  :hook (py-shell-mode . hide-mode-line-mode)
   :gfhook
   'lsp-deferred
   'dap-mode
@@ -54,6 +52,7 @@
   (py-keep-windows-configuration nil)   ; Retain current window configuration?
   (py-split-window-on-execute t)        ; Reuse existing windows?
   (py-switch-buffers-on-execute-p nil)  ; Switch to buffer?
+  :config (evil-set-initial-state 'py-shell-mode 'normal)
   )
 
 ;;; Dap-python
