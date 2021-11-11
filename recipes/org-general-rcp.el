@@ -11,6 +11,8 @@
 
 ;;; Org-mode itself
 (use-package org
+  :mode (("\\.docx\\'" . doc-view-mode)
+         ("\\.odt\\'" . doc-view-mode))
   :gfhook
   'prettify-symbols-mode
   'variable-pitch-mode
@@ -52,11 +54,30 @@
   (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
   (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
+
+  ;; For opening files based on extension
+  (org-file-apps
+   '(("\\.docx\\'" . "soffice -writer %s")
+     ("\\.odt\\'" . "soffice -writer %s")
+     ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . default)
+     ("\\.pdf\\'" . default)
+     (directory . emacs)
+     (auto-mode . emacs)
+     ))
   :config
   (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
   )
 
 ;;; Related to org-export
+;;;; Ox-odt
+(use-package ox-odf
+  :after (ox org)
+  :straight nil
+  :custom
+  (org-odt-preferred-output-format "docx") ; Automatically create a `.docx' version
+  )
+
 ;;;; Ox-latex
 (use-package ox-latex
   :after (ox org)
@@ -190,7 +211,7 @@
 (use-package org-refile
   :after org-roam
   :straight nil
-  :general (kb/leader-keys 
+  :general (kb/leader-keys
              "nr" '(org-refile :which-key "Org-refile"))
   :custom
   (org-refile-targets
