@@ -57,6 +57,7 @@
   :ensure-system-package (latex . texlive-full)
   :after tex
   :hook (latex-mode . (lambda ()
+                        (require 'prog-mode)
                         (push '("\\Dashv" . ?⫤) prettify-symbols-alist)
                         (push '("\\DashVDash" . ?⟚) prettify-symbols-alist)
                         (push '("\\dashVdash" . ?⊢) prettify-symbols-alist)
