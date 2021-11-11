@@ -57,19 +57,20 @@
   (advice-add 'elfeed :after #'elfeed-update)
   )
 
-;;; Complementary
-;;;; Elfeed-org
+;;; Elfeed-org
 (use-package elfeed-org
-  :defer 2 ; Can't figure out how to have this work other than this and demanding it
+  :demand t
+  :after elfeed
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")))
   (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
   :config (general-advice-add 'elfeed :after 'elfeed-org nil t)
   )
 
-;;;; Elfeed-goodies
+;;; Elfeed-goodies
 (use-package elfeed-goodies
-  :defer 2 ; Can't figure out how to have this work other than this and demanding it
+  :demand t
+  :after elfeed ; Can't figure out how to have this work other than this and demanding it
   :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
                      :states 'normal
                      "p" 'elfeed-goodies/split-show-prev
@@ -86,7 +87,7 @@
   ;; `elfeed-goodies' doesn't work. So I call and require it here beforehand
   ;; manually.
   (use-package popwin)
-  :config (elfeed-goodies/setup)        ; Immediately load in time for first `elfeed'
+  :config (elfeed-goodies/setup)   ; Immediately load in time for first `elfeed'
   )
 
 ;;; QoL
