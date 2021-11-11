@@ -48,17 +48,28 @@
 
   ;; Lsp-ui-sideline - Info at the side
   (lsp-ui-sideline-enable t)
+  (lsp-ui-sideline-show-diagnostics t)  ; Show diagnostics messages in sideline?
+  (lsp-ui-sideline-show-hover nil)      ; Show hover messages in sideline?
+  (lsp-ui-sideline-show-code-actions t) ; Show code actions in sideline?
+  ;; When set to 'line' the information will be updated when user changes
+  ;; current line otherwise the information will be updated when user changes
+  ;; current point
+  (lsp-ui-sideline-update-mode 'point)
+  (lsp-ui-sideline-delay 0.5)          ; Seconds to wait before showing sideline
 
   ;; Lsp-ui-doc - Show documentation
+  (lsp-eldoc-hook nil)
   (lsp-ui-doc-enable t)
+  (lsp-ui-doc-alignment 'frame)
   (lsp-ui-doc-position 'top)
   (lsp-ui-doc-delay 1.5)
   (lsp-ui-doc-show-with-cursor t)       ; Point hover (alongside cursor!)
+  (lsp-ui-doc-show-with-mouse t)        ; Point hover (alongside cursor!)
 
   ;; Lsp-ui-imenu - Imenu integration
   (lsp-ui-imenu-window-width 70)
-  (lsp-ui-imenu-auto-refresh 1)         ; Auto refresh
-  ;; (lsp-ui-imenu-refresh-delay 1)        ; Variable doesn't exist?
+  (lsp-ui-imenu-auto-refresh 'after-save) ; Auto refresh
+  (lsp-ui-imenu-auto-refresh-delay 1.0)   ; Variable doesn't exist?
   )
 
 ;;; Dap-mode
