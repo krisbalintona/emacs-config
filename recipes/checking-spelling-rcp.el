@@ -12,8 +12,8 @@
 ;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
-  :ensure-system-package ((aspell . "sudo apt install aspell aspell-en")
-                          (proselint . "sudo add-apt-repository universe && sudo apt install python3-proselint"))
+  :ensure-system-package (aspell . "sudo apt install aspell aspell-en")
+                          
   :custom
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
@@ -22,7 +22,6 @@
   (flyspell-sort-corrections t)         ; Sort candidates
 
   (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (`abbrev-mode')
-  (flycheck-proselint-executable (kb/shell-command-to-string "which proselint"))
   ;; Personal dictionary
   (ispell-personal-dictionary (concat no-littering-var-directory "flyspell/flyspell-ispell-personal-dict-en"))
   )

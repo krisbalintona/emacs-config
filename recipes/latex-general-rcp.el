@@ -100,21 +100,6 @@
          )
   )
 
-;;;; Magic-latex-buffer
-;; Magically enhance LaTeX-mode font-locking
-(use-package magic-latex-buffer
-  :disabled t ; Too laggy for now
-  :ghook ('LaTeX-mode-hook 'magic-latex-buffer)
-  :custom
-  ;; All available customizations
-  (magic-latex-enable-block-highlight t)
-  (magic-latex-enable-suscript t)
-  (magic-latex-enable-pretty-symbols t)
-  (magic-latex-enable-block-align t)
-  (magic-latex-enable-inline-image t)
-  (magic-latex-enable-minibuffer-echo t)
-  )
-
 ;;;; QoL
 ;;;;; Align table cells
 ;; From
