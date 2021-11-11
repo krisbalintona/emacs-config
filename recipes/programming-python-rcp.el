@@ -12,7 +12,11 @@
 ;;; Python
 ;; Built-in python major mode
 (use-package python
-  :hook (inferior-python-mode . hide-mode-line-mode)
+  :commands (python python-mode)
+  :hook ((inferior-python-mode . hide-mode-line-mode)
+         (py-shell-mode . (lambda ()
+                            (setq-local scroll-margin 0)
+                            )))
   :custom
   (python-shell-interpreter "python3")
   )
@@ -21,9 +25,14 @@
 ;; A little better than the built-in python package
 (use-package python-mode
   :ensure-system-package (pytest . "pip install --user pytest")
-  :hook ((python-mode . lsp-deferred)
-         (python-mode . dap-mode))
-  :init
+  :gfhook
+  'lsp-deferred
+  'dap-mode
+  '(lambda ()
+     (require 'prog-mode)
+     (push '("->" . ?⟹) prettify-symbols-alist)
+     (prettify-symbols-mode)
+     )
   )
 
 ;;; Dap-python
