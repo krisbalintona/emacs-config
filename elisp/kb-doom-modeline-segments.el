@@ -134,11 +134,13 @@ UTF-8."
          (face (if active 'bold-italic 'mode-line-inactive))) ; Don't use here
     (concat (doom-modeline-spc)
             ;; NOTE 2021-09-03: Add support for org-roam node titles.
-            (propertize (cond ((stringp (vc-git-root (buffer-file-name)))
+            (propertize (cond ((not buffer-file-name) ; Not visiting file
+                               "")
+                              ((project-current) ; Project root
                                (abbreviate-file-name (vc-git-root (buffer-file-name))))
-                              (buffer-file-name ; Connected to file?
+                              (buffer-file-name ; Current directory
                                default-directory)
-                              (t "Not file!"))
+                              )
                         'face face)
             (doom-modeline-spc))))
 
