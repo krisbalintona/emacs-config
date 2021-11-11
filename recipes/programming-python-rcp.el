@@ -24,6 +24,17 @@
 ;;; Python-mode
 ;; A little better than the built-in python package
 (use-package python-mode
+  :demand t
+  :after (python pyvenv)
+  :hook ((python-mode . (lambda ()
+                          (interactive)
+                          (if (project-current) ; Set virtual environment to ./venv/ if currently in a project
+                              (pyvenv-activate (concat default-directory "venv/")))
+                          ))
+         (py-shell-mode . (lambda ()
+                            (hide-mode-line-mode)
+                            (setq-local scroll-margin 0)
+                            )))
   :ensure-system-package (pytest . "pip install --user pytest")
   :hook (py-shell-mode . hide-mode-line-mode)
   :gfhook
@@ -59,7 +70,7 @@
   (dap-debug-restart-keep-session nil)  ; Delete previous sessions
   )
 
-;;; Lps-pyright
+;;; Lsp-pyright
 ;; Best python language server
 (use-package lsp-pyright
   :demand t
@@ -74,12 +85,16 @@
   ;; lsp-pyright-venv-directory
   )
 
-;;; Virtualenv
-;; Install packages to a local directory rather than globally
-;; Call `pyvenv-activate' and select a directory with virtual environment packages
+;;; Pyvenv
+;; Install packages to a local directory rather than globally Call
+;; `pyvenv-activate' and select a directory with virtual environment packages
 (use-package pyvenv
-  :after python
+  :after (python lsp-mode)
   :ghook 'python-mode-hook
+  :gfhook 'pyvenv-tracking-mode
+  :general (:keymaps 'lsp-mode-map
+                     (concat lsp-keymap-prefix "v") '((lambda () (interactive) (call-interactively 'pyvenv-activate)) :which-key "Pvenv activate"))
+  :custom (pyvenv-default-virtual-env-name "venv")
   )
 
 ;;; programming-python-rcp.el ends here
