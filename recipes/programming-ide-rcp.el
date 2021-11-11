@@ -163,14 +163,29 @@
 ;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
 (use-package lsp-treemacs
+  :requires treemacs
   :hook ((lsp-mode . lsp-treemacs-sync-mode)
          (lsp-treemacs-generic-mode . hide-mode-line-mode)
          (lsp-treemacs-error-list-mode . hide-mode-line-mode)
          (lsp-treemacs-deps-list-mode . hide-mode-line-mode)
          )
-  :general (:keymaps 'lsp-treemacs-error-list-mode-map
-                     :states 'normal
-                     "x" 'lsp-treemacs-quick-fix)
+  :general
+  (:keymaps 'lsp-mode-map
+            (concat lsp-keymap-prefix "Ft") '(lsp-treemacs-symbols :which-key "Lsp-treemacs"))
+  (:keymaps 'lsp-treemacs-error-list-mode-map
+            :states 'normal
+            "x" 'lsp-treemacs-quick-fix)
+  )
+
+;;;; Consult-lsp
+(use-package consult-lsp
+  :gfhook consult-lsp-marginalia-mode
+  :general
+  (:keymaps 'lsp-mode-map
+            [remap consult-flycheck] '(consult-lsp-diagnostics :which-key "Consult lsp diagnostics")
+            (concat lsp-keymap-prefix "gs") '(consult-lsp-symbols :which-key "Consult lsp symbols regexp")
+            (concat lsp-keymap-prefix "gf") '(consult-lsp-file-symbols :which-key "Consult lsp file symbols list")
+            )
   )
 
 ;;; programming-ide-rcp.el ends here
