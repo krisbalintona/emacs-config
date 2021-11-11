@@ -98,8 +98,8 @@
 ;;; Other
 ;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support
+;; Demand to properly set outline-minor-mode-prefix
 (use-package outshine
-  :demand t ; Load immediately to properly set outline-minor-mode-prefix
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general

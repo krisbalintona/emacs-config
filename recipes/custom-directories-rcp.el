@@ -36,6 +36,10 @@
 (defvar kb/dot-config-dir "~/.config/")
 (defvar kb/wm-config-file (concat kb/dot-config-dir "awesome/rc.lua"))
 
+;;; Other
+(defvar kb/bib-files
+  (list (expand-file-name (concat kb/roam-dir "bibliographic/master-lib.bib"))))
+
 ;;; custom-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'custom-directories-rcp)

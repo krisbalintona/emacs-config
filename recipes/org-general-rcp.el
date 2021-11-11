@@ -56,7 +56,7 @@
   (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
   )
 
-;;; Org-export
+;;; Related to org-export
 ;;;; Ox-latex
 (use-package ox-latex
   :after (ox org)

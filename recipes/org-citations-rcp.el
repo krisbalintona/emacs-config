@@ -12,12 +12,10 @@
 
 ;;; Bibtex-completion
 (use-package bibtex-completion
-  :demand t                             ; Other citation packages depend on this
   :custom
   (bibtex-completion-notes-path kb/roam-dir) ; Irrelevant since I use org-roam-bibtex instead
   (bibtex-completion-library-path (expand-file-name (concat kb/roam-dir "bibliographic/bib-pdfs")))
-  (bibtex-completion-bibliography
-   (list (expand-file-name (concat kb/roam-dir "bibliographic/master-lib.bib"))))
+  (bibtex-completion-bibliography kb/bib-files)
   (bibtex-completion-additional-search-fields '(doi url))
   (bibtex-completion-pdf-field "file") ; Zotero stores pdfs in a field called file - this settings allows bibtex to find the pdf
   (bibtex-completion-pdf-open-function ; Use okular to open a pdf
@@ -49,12 +47,12 @@
 ;; Built-in citations in org-mode
 (use-package oc
   :straight nil
-  :after (bibtex-completion citar)
+  :after citar
   :general
   (:keymaps 'org-mode-map
             [remap citar-insert-citation] '(org-cite-insert :which-key "Insert citation"))
   :custom
-  (org-cite-global-bibliography bibtex-completion-bibliography)
+  (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (expand-file-name (concat user-emacs-directory "locales/")))
   (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles"))
   (org-cite-export-processors
@@ -94,27 +92,19 @@
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
   :demand t
-  :after (bibtex-completion embark)
-  :general
-  ("C-c bb" '(citar-insert-citation :which-key "Insert citation")
-   "C-c br" '(citar-insert-reference :which-key "Insert reference")
-   "C-c bo" '(citar-open-notes :which-key "Open note")
-   )
+  :general ("C-c bb" '(citar-insert-citation :which-key "Insert citation")
+            "C-c br" '(citar-insert-reference :which-key "Insert reference")
+            "C-c bo" '(citar-open-notes :which-key "Open note")
+            )
   :custom
-  (citar-bibliography bibtex-completion-bibliography)
+  (citar-bibliography kb/bib-files)
   (citar-presets '("has:note")) ; A list of predefined searches
   (citar-templates
    '((main . "${author editor:40}   ${date year issued:4}    ${title:115}")
      (suffix . "     ${=type=:20}    ${tags keywords keywords:*}")
      (note . "#+title: Notes on ${author editor}, ${title}") ; For new notes
      ))
-  (citar-at-point-function 'embark-act)
   :config
-  ;; Make the 'citar' bindings and targets available to `embark'.
-  (add-to-list 'embark-target-finders 'citar-citation-key-at-point)
-  (add-to-list 'embark-keymap-alist '(bibtex . citar-map))
-  (add-to-list 'embark-keymap-alist '(citation-key . citar-buffer-map))
-
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
   (setq citar-symbols
@@ -144,7 +134,7 @@
   )
 
 ;;; Oc-citar
-;; citar compatible with `org-cite'
+;; Citar compatibility with `org-cite'
 (use-package citar-org
   :demand t                            ; Otherwise it won't be required anywhere
   :straight nil
