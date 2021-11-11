@@ -91,6 +91,8 @@
 ;;;; Cdlatex
 ;; Faster LaTeX inputs
 (use-package cdlatex
+  :demand t
+  :after latex
   :hook ((LaTeX-mode . turn-on-cdlatex)
          (LaTeX-mode . (lambda ()
                          (push '("pline" "\\pline[]{?}[]" nil) cdlatex-env-alist-comb)
