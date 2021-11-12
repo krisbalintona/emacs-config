@@ -157,6 +157,7 @@
 ;;;; Company-lsp
 ;; Company integration with lsp-mode
 (use-package company-lsp
+  :disabled t
   :requires company
   :after company
   :hook (lsp-mode . (lambda ()
