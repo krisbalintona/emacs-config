@@ -37,7 +37,7 @@
   'dap-mode
   '(lambda ()
      (require 'prog-mode)
-     (push '("->" . ?⟹) prettify-symbols-alist)
+     (push '("->" . ?») prettify-symbols-alist)
      (prettify-symbols-mode)
      )
   :general (:keymaps 'python-mode-map
