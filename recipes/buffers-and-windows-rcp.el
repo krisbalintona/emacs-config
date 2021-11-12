@@ -110,7 +110,7 @@
       (display-buffer-reuse-mode-window display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
-      (window-height . 0.33))
+      (window-height . 0.27))
      ))
   )
 
