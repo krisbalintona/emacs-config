@@ -142,10 +142,10 @@
   ;;               ((symbolp sym) 'Text)
   ;;               (t . nil)))))
   ;;   (advice-add #'company-box-icons--elisp :override #'my-company-box-icons--elisp))
-  (delq 'company-echo-metadata-frontend company-frontends) ; Redundant with `compan-box-doc'
+  (delq 'company-echo-metadata-frontend company-frontends) ; Redundant with `company-box-doc'
   )
 
-;;; Default `completion-at-point'
+;;; For the built-in `completion-at-point'
 ;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
