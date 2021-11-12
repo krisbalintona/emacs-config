@@ -76,7 +76,8 @@
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
   (evil-collection-mode-list
-   '(2048-game ag alchemist anaconda-mode apropos arc-mode auto-package-update bm bookmark
+   '(2048-game ag alchemist ;; anaconda
+               -mode apropos arc-mode auto-package-update bm bookmark
                (buff-menu "buff-menu")
                calc calendar cider cmake-mode comint company compile consult
                (custom cus-edit)

@@ -106,10 +106,11 @@
   :general
   (:keymaps 'python-mode-map
             [remap completion-at-point] 'anaconda-mode-complete)
-  (:keymaps 'anaconda-mode-map
-            :states '(normal visual motion)
-            "K" 'join-line
-            "f" 'anaconda-mode-show-doc
+  (:keymaps 'anaconda-mode-map        ; The bindings I want from evil-collection
+            :states 'normal
+            "gd" 'anaconda-mode-find-definitions
+            "gA" 'anaconda-mode-find-assignments
+            "gr" 'anaconda-mode-find-references
             )
   )
 
