@@ -74,6 +74,7 @@
 ;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
+  :demand t
   :after helpful
   :config
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
