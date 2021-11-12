@@ -160,60 +160,6 @@
          (python-mode . (lambda () (setq-local evilmi-always-simple-jump t))))
   )
 
-;;; Better-jumper
-;; Accompanies `evil-jumper' very well. Some of the smart stuff is taken from
-;; https://www.reddit.com/r/emacs/comments/ntnhkc/how_i_jump_around_emacs_with_betterjumper/
-(use-package better-jumper
-  :demand t
-  :after evil
-  :general (:states '(normal visual normal)
-                    [remap evil-jump-backward] 'better-jumper-jump-backward
-                    [remap evil-jump-forward] 'better-jumper-jump-forward
-                    "C-p" 'better-jumper-jump-toggle)
-  :custom
-  ;; This is THE key to avoiding conflict with evils' jumping functionality
-  (better-jumper-use-evil-jump-advice nil)
-
-  (better-jumper-max-length 200)
-  (better-jumper-use-evil-jump-advice t) ; Add evil-jump jumps
-  (better-jumper-add-jump-behavior 'append)
-
-  (better-jumper-context 'window)
-  (better-jumper-use-savehist t)
-  (better-jumper-buffer-savehist-size 50)
-  :init
-  (defun kb/better-jumper-jump-boundary-advice (oldfun &rest args)
-    "This is the key here. This advice makes it so you only set a
-     jump point if you move more than one line with whatever
-     command you call. For example if you add this advice around
-     evil-next-line, you will set a jump point if you do 10 j,
-     but not if you just hit j.."
-    (let ((old-pos (point)))
-      (apply oldfun args)
-      (when (> (abs (- (line-number-at-pos old-pos) (line-number-at-pos (point))))
-               1)
-        (better-jumper-set-jump old-pos))))
-
-  ;; Toggle between two between two points (adapted from evil-jump-backward-swap).
-  (evil-define-motion better-jumper-jump-toggle (count)
-    (let ((pnt (point)))
-      (better-jumper-jump-backward 1)
-      (better-jumper-set-jump pnt)))
-  :config
-  (better-jumper-mode)
-
-  ;; Whenever I want to jump, I should wrap it with `kb/better-jumper-jump-boundary-advice'
-  (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin
-                                              evil-jump-item
-                                              evil-first-non-blank evil-end-of-visual-line
-                                              evil-goto-mark evil-goto-definition
-                                              )
-                      :around 'kb/better-jumper-jump-boundary-advice)
-
-  ;; Specifically for ace-jump
-  (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump)
-  )
-
 ;;; keybinds-evil-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybinds-evil-rcp)
