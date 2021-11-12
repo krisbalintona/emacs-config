@@ -273,6 +273,9 @@ afterward."
   :config
   (smartparens-global-mode)
 
+  ;; For python
+  (require 'smartparens-python)
+
   ;; Helpter functions
   (defun kb/sp-point-before-letter-digit-p (_id action _context)
     "Return t if point is followed by any digit or alphanumeric character, nil
@@ -298,17 +301,19 @@ is only tested on \"insert\" action."
            :post-handlers '(sp-escape-wrapped-region sp-escape-quotes-after-insert))
 
   ;; Emacs-lisp-mode
-  (sp-local-pair 'emacs-lisp-mode "<" ">" :actions '(insert autoskip navigate))
-  (sp-local-pair 'emacs-lisp-mode "(" ")"
-                 :actions '(insert autoskip navigate)
-                 :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
-  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
-  (sp-local-pair 'emacs-lisp-mode "'" "'"
-                 :actions '(insert autoskip navgiate)
-                 :when '(sp-in-string-p))
-  (sp-local-pair 'emacs-lisp-mode "`" "'"
-                 :actions '(insert autoskip navigate)
-                 :when '(sp-in-comment-p sp-in-string-p))
+  (sp-with-modes 'emacs-lisp-mode
+    (sp-local-pair "<" ">" :actions '(insert autoskip navigate))
+    (sp-local-pair "(" ")"
+                   :actions '(insert autoskip navigate)
+                   :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
+    (sp-local-pair "'" nil :actions nil)
+    (sp-local-pair "'" "'"
+                   :actions '(insert autoskip navgiate)
+                   :when '(sp-in-string-p))
+    (sp-local-pair "`" "'"
+                   :actions '(insert autoskip navigate)
+                   :when '(sp-in-comment-p sp-in-string-p))
+    )
   )
 
 ;;;; Scratch.el
