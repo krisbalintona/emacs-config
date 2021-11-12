@@ -73,7 +73,11 @@
          (require 'latex-general-rcp)
          (kb/tabular-magic))
         ((eq major-mode 'python-mode)
-         (kb/format-buffer-indentation--base))
+         (require 'programming-python-rcp)
+         (if (buffer-modified-p)
+             (yapfify-buffer)
+           (yapfify-buffer)
+           (save-buffer)))
         (t (kb/format-buffer-indentation--base))
         ))
 (kb/leader-keys

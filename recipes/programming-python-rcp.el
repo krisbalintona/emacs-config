@@ -118,17 +118,6 @@
 (use-package yapfify
   :after python-mode
   :ensure-system-package (yapf . "pip install yapf")
-  :ghook 'python-mode-hook
-  :config
-  ;; NOTE 2021-11-12: For some reason the compiled versin of this package
-  ;; doesn't have `yapfify-mode', so I do it manually here.
-  (define-minor-mode yapfify-mode
-    "Run `yapfify-buffer' after every save if this mode is active."
-    :init-value nil
-    (if yapfify-mode
-        (add-hook 'before-save-hook #'yapfify-buffer nil t)
-      (remove-hook 'before-save-hook #'yapfify-buffer t))
-    )
   )
 
 ;;; Pyimport
