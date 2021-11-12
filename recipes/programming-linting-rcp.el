@@ -41,6 +41,7 @@
 ;;; Flycheck-pos-tip-mode
 ;; Shows flycheck errors in pos-tip popup
 (use-package flycheck-pos-tip
+  :disabled t ; NOTE 2021-11-12: Causes Emacs to crash when using the `alpha-background' patch of Emacs
   :requires flycheck
   :ghook 'flycheck-mode-hook
   )

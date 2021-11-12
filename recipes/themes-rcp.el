@@ -19,10 +19,30 @@
   )
 
 ;;;; Transparency
-(unless kb/linux-ubuntu
-  (set-frame-parameter (selected-frame) 'alpha '(98 . 98))
-  (add-to-list 'default-frame-alist '(alpha . (98 . 98)))
-  )
+(defun kb/set-default-transparency ()
+  "Sets default transparency of current and default frame alist."
+  (unless kb/linux-ubuntu
+    (set-frame-parameter (selected-frame) 'alpha '(98 .98))
+    (add-to-list 'default-frame-alist   '(alpha . (98 .98)))
+    ))
+
+(defvar alpha-background-transparency t
+  "Enable background transparency? Meant for the `alpha-background' parameter.")
+
+(defun kb/toggle-transparency ()
+  "Toggle transparency. Requires a patched version of Emacs found
+here: https://github.com/TheVaffel/emacs"
+  (interactive)
+  (if alpha-background-transparency
+      (progn (set-frame-parameter (selected-frame) 'alpha-background 75)
+             (setq alpha-background-transparency nil)
+             (kb/set-default-transparency)
+             )
+    (progn (set-frame-parameter (selected-frame) 'alpha-background 100)
+           (setq alpha-background-transparency t)
+           (kb/set-default-transparency))
+    ))
+(general-define-key "<f7>" 'kb/toggle-transparency)
 
 ;;; Themes and toggling
 ;;;; Install themes
