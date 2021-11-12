@@ -130,9 +130,6 @@
       (align-regexp s e "\\(\\s-*\\)\\\\\\\\")
       (set-marker s nil)
       (set-marker e nil))))
-(advice-add 'kb/indent-whole-buffer :after (lambda ()
-                                             (if (eq major-mode 'latex-mode)
-                                                 (kb/tabular-magic))))
 
 ;;; latex-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

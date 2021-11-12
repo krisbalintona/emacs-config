@@ -49,15 +49,35 @@
   "of" '(aj-toggle-fold :which-key "aj-toggle-fold"))
 
 ;;; Indent whole buffer
-(defun kb/indent-whole-buffer ()
-  "Indent whole buffer."
+(defun kb/format-buffer-indentation--base ()
+  "Basic indentation fix using `indent-region'."
   (interactive)
+  (untabify (point-min) (point-max))
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil)
-  (untabify (point-min) (point-max))
   )
+(defun kb/format-buffer-indentation--fill-column ()
+  "Basic indentation fix and wrap comments."
+  (interactive)
+  (kb/format-buffer-indentation--base)
+  (goto-char (point-min))
+  (while (re-search-forward comment-start nil t)
+    (call-interactively 'fill-paragraph)
+    (forward-line 1))
+  )
+(defun kb/format-buffer-indentation ()
+  "Properly indent the entire buffer."
+  (interactive)
+  (cond ((eq major-mode 'latex-mode)
+         (kb/format-buffer-indentation--base)
+         (require 'latex-general-rcp)
+         (kb/tabular-magic))
+        ((eq major-mode 'python-mode)
+         (kb/format-buffer-indentation--base))
+        (t (kb/format-buffer-indentation--base))
+        ))
 (kb/leader-keys
-  "TAB" '(kb/indent-whole-buffer :which-key "Indent whole buffer"))
+  "TAB" '(kb/format-buffer-indentation :which-key "Format buffer's indentation"))
 
 ;;; Better comment-dwim
 ;; Heavily taken from the built-in `comment-dwim' and Prot's
