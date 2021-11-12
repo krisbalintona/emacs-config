@@ -103,8 +103,14 @@
   :after python-mode
   :hook (python-mode . anaconda-mode)
   :gfhook 'anaconda-eldoc-mode
-  :general (:keymaps 'python-mode-map
-                     [remap completion-at-point] 'anaconda-mode-complete)
+  :general
+  (:keymaps 'python-mode-map
+            [remap completion-at-point] 'anaconda-mode-complete)
+  (:keymaps 'anaconda-mode-map
+            :states '(normal visual motion)
+            "K" 'join-line
+            "f" 'anaconda-mode-show-doc
+            )
   )
 
 ;;; Yapfify
