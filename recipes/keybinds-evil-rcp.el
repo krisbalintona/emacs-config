@@ -149,10 +149,17 @@
 ;;; Evil-visualstar
 ;; Situational convenient isearch
 (use-package evil-visualstar
-  :functions global-evil-surround-mode
-  :ghook ('evil-mode-hook 'global-evil-visualstar-mode)
+  :hook (evil-mode . global-evil-visualstar-mode)
   :custom
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
+  )
+
+;;; Evil-matchit
+;; Use `%' to jump to matching tags in different major modes (e.g., "<div>" and
+;; "</div>" in HTML).
+(use-package evil-matchit
+  :hook ((evil-mode . global-evil-matchit-mode)
+         (python-mode . (lambda () (setq-local evilmi-always-simple-jump t))))
   )
 
 ;;; Better-jumper
