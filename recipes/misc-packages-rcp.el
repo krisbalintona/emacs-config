@@ -75,6 +75,12 @@
   :custom
   (emojify-composed-text-p t)
   (emojify-emoji-styles '(ascii unicode github))
+  :config
+  ;; NOTE 2021-11-12: This isn't related to emojify but it does relate to how
+  ;; emojis are shown in Emacs. Taken from
+  ;; https://github.com/alphapapa/ement.el#displaying-symbols-and-emojis
+  (setf use-default-font-for-symbols nil)
+  (set-fontset-font t 'unicode "Noto Emoji" nil 'append)
   )
 
 ;;; Built-in Emacs modes/packages
