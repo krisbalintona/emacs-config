@@ -8,6 +8,7 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
+(require 'org-general-rcp)
 
 ;;; Org-agenda
 (use-package org-agenda

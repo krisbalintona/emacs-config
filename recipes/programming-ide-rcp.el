@@ -136,6 +136,7 @@
 ;; Rust
 ;; TypeScript
 (use-package tree-sitter
+  :straight (tree-sitter :type git :host github :repo "emacs-tree-sitter/elisp-tree-sitter")
   :demand t
   :hook (tree-sitter-after-on . tree-sitter-hl-mode) ; Enable syntax highlighting whenever possible
   :config
