@@ -126,7 +126,48 @@
                                          ))
   )
 
-;;; Tree-sitter
+;;; Ancillary
+;;;; Consult-lsp
+(use-package consult-lsp
+  :after lsp-mode
+  :gfhook consult-lsp-marginalia-mode
+  :general
+  (:keymaps 'lsp-mode-map
+            [remap consult-flycheck] '(consult-lsp-diagnostics :which-key "Consult lsp diagnostics")
+            (concat lsp-keymap-prefix "gs") '(consult-lsp-symbols :which-key "Consult lsp symbols regexp")
+            (concat lsp-keymap-prefix "gf") '(consult-lsp-file-symbols :which-key "Consult lsp file symbols list")
+            )
+  )
+
+;;;; Dev-docs
+;; Viewing documentation within Emacs. Requires internet connection.
+(use-package devdocs
+  :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
+         (haskell-mode . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
+         (js2-mode . (lambda () (setq-local devdocs-current-docs '("JavaScript"))))
+         (lua-mode . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
+         (LaTeX-mode . (lambda () (setq-local devdocs-current-docs '("latex"))))
+         )
+  :general
+  (kb/leader-keys
+    :keymaps 'prog-mode-map
+    :states 'normal
+    "di" '(devdocs-install :which-key "Install documentation for a language")
+    "dl" '(devdocs-lookup :which-key "Documentation lookup")
+    "dL" '(devdocs-search :which-key "Search for docs in site"))
+  )
+
+;;;; Treemacs
+(use-package treemacs
+  :gfhook 'hide-mode-line-mode
+  :custom
+  (treemacs-no-png-images nil)
+  (treemacs-width 24)
+  :general (kb/leader-keys
+             "ft" '(treemacs :which-key "Treemacs"))
+  )
+
+;;;; Tree-sitter
 ;; Create a syntax tree (e.g. the role of each piece of code) and add syntax
 ;; highlighting from it (rather than regex and indentation). Additionally, the
 ;; syntax tree itself can help debug and quick editing in some cases. The
@@ -162,50 +203,6 @@
     )
   )
 
-;;; Ancillary
-;;;; Company-lsp
-;; Company integration with lsp-mode
-(use-package company-lsp
-  :disabled t
-  :requires company
-  :after company
-  :hook (lsp-mode . (lambda ()
-                      (add-to-list 'company-backends 'company-lsp)))
-  :custom
-  (company-lsp-cache-candidates t)      ; Cache all candidates
-  (company-lsp-async t)
-  (compnay-lsp-enable-snippet t)
-  (company-lsp-enable-recompletion t)   ; Reenables completion when before another trigger character
-  )
-
-;;;; Dev-docs
-;; Viewing documentation within Emacs. Requires internet connection.
-(use-package devdocs
-  :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
-         (haskell-mode . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
-         (js2-mode . (lambda () (setq-local devdocs-current-docs '("JavaScript"))))
-         (lua-mode . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
-         (LaTeX-mode . (lambda () (setq-local devdocs-current-docs '("latex"))))
-         )
-  :general
-  (kb/leader-keys
-    :keymaps 'prog-mode-map
-    :states 'normal
-    "di" '(devdocs-install :which-key "Install documentation for a language")
-    "dl" '(devdocs-lookup :which-key "Documentation lookup")
-    "dL" '(devdocs-search :which-key "Search for docs in site"))
-  )
-
-;;;; Treemacs
-(use-package treemacs
-  :gfhook 'hide-mode-line-mode
-  :custom
-  (treemacs-no-png-images nil)
-  (treemacs-width 24)
-  :general (kb/leader-keys
-             "ft" '(treemacs :which-key "Treemacs"))
-  )
-
 ;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
 (use-package lsp-treemacs
@@ -221,18 +218,6 @@
   (:keymaps 'lsp-treemacs-error-list-mode-map
             :states 'normal
             "x" 'lsp-treemacs-quick-fix)
-  )
-
-;;;; Consult-lsp
-(use-package consult-lsp
-  :after lsp-mode
-  :gfhook consult-lsp-marginalia-mode
-  :general
-  (:keymaps 'lsp-mode-map
-            [remap consult-flycheck] '(consult-lsp-diagnostics :which-key "Consult lsp diagnostics")
-            (concat lsp-keymap-prefix "gs") '(consult-lsp-symbols :which-key "Consult lsp symbols regexp")
-            (concat lsp-keymap-prefix "gf") '(consult-lsp-file-symbols :which-key "Consult lsp file symbols list")
-            )
   )
 
 ;;; programming-ide-rcp.el ends here
