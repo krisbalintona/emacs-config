@@ -17,8 +17,68 @@
   :gfhook
   'lsp-enable-which-key-integration
   'lsp-headerline-breadcrumb-mode
+  :general (kb/lsp-keys ; Remap all the keys from `lsp-command-map'
+             "w" '(ignore t :which-key "Workspaces")
+             "wD" '(lsp-disconnect :which-key "disconnect")
+             "wd" '(lsp-describe-session :which-key "describe session")
+             "wq" '(lsp-workspace-shutdown :which-key "shutdown server")
+             "wr" '(lsp-workspace-restart :which-key "restart server")
+             "ws" '(lsp :which-key "start server")
+
+             "=" '(ignore t :which-key "Formatting")
+             "==" '(lsp-format-buffer :which-key "format buffer")
+             "=r" '(lsp-format-region :which-key "format region")
+
+             "F" '(ignore t :which-key "Folders")
+             "Fa" '(lsp-workspace-folders-add :which-key "add folder")
+             "Fb" '(lsp-workspace-blacklist-remove :which-key "un-blacklist folder")
+             "Fr" '(lsp-workspace-folders-remove :which-key "remove folder")
+
+             "T" '(ignore t :which-key "Toggles")
+             "TD" '(lsp-modeline-diagnostics-mode :which-key "toggle modeline diagnostics")
+             "TL" '(lsp-toggle-trace-io :which-key "toggle log io")
+             "TS" '(lsp-ui-sideline-mode :which-key "toggle sideline")
+             "TT" '(lsp-treemacs-sync-mode :which-key "toggle treemacs integration")
+             "Ta" '(lsp-modeline-code-actions-mode :which-key "toggle modeline code actions")
+             "Tb" '(lsp-headerline-breadcrumb-mode :which-key "toggle breadcrumb")
+             "Td" '(lsp-ui-doc-mode :which-key "toggle documentation popup")
+             "Tf" '(lsp-toggle-on-type-formatting :which-key "toggle on type formatting")
+             "Th" '(lsp-toggle-symbol-highlight :which-key "toggle highlighting")
+             "Tl" '(lsp-lens-mode :which-key "toggle lenses")
+             "Ts" '(lsp-toggle-signature-auto-activate :which-key "toggle signature")
+
+             "g" '(ignore t :which-key "Gotos")
+             "ga" '(xref-find-apropos :which-key "find symbol in workspace")
+             "gd" '(lsp-find-declaration :which-key "find declarations")
+             "ge" '(lsp-treemacs-errors-list :which-key "show errors")
+             "gg" '(lsp-find-definition :which-key "find definitions")
+             "gh" '(lsp-treemacs-call-hierarchy :which-key "call hierarchy")
+             "gi" '(lsp-find-implementation :which-key "find implementations")
+             "gr" '(lsp-find-references :which-key "find references")
+             "gt" '(lsp-find-type-definition :which-key "find type definition")
+
+             "h" '(ignore t :which-key "Help")
+             "hg" '(lsp-ui-doc-glance :which-key "glance symbol")
+             "hh" '(lsp-describe-thing-at-point :which-key "describe symbol at point")
+             "hs" '(lsp-signature-activate :which-key "signature help")
+
+             "r" '(ignore t :which-key "Refactoring")
+             "ro" '(lsp-organize-imports :which-key "organize imports")
+             "rr" '(lsp-rename :which-key "rename")
+
+             "a" '(ignore t :which-key "Actions")
+             "aa" '(lsp-execute-code-action :which-key "code actions")
+             "ah" '(lsp-document-highlight :which-key "highlight symbol")
+             "al" '(lsp-avy-lens :which-key "lens")
+
+             "p" '(ignore t :which-key "Peeks")
+             "Gg" '(lsp-ui-peek-find-definitions :which-key "peek definitions")
+             "Gi" '(lsp-ui-peek-find-implementation :which-key "peek implementations")
+             "Gr" '(lsp-ui-peek-find-references :which-key "peek references")
+             "Gs" '(lsp-ui-peek-find-workspace-symbol :which-key "peek workspace symbol")
+             )
   :custom
-  (lsp-keymap-prefix "C-x l")
+  (lsp-keymap-prefix nil)
   (lsp-auto-guess-root nil)
   (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-semantic-tokens-enable t)
@@ -34,6 +94,13 @@
   (lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
   ;; (lsp-face-highlight-textual ((t (:inherit nil :box t))))
   ;; (lsp-face-highlight-write ((t (:inherit nil :box t))))
+  :preface
+  (general-create-definer kb/lsp-keys ; For all lsp and dap commands
+    :states '(normal visual insert motion)
+    :keymaps 'lsp-mode-map
+    :prefix "\\"
+    :global-prefix "SPC \\"
+    )
   )
 
 ;;; Lsp-ui
@@ -97,27 +164,26 @@
   'dap-tooltip-mode ; Use tooltips for mouse hover over symbols, otherwise use the minibuffer
   'tooltip-mode     ; Displays floating panel with debug buttons
   'dap-ui-controls-mode
-  :general (:keymaps 'lsp-mode-map
-                     :prefix lsp-keymap-prefix
-                     "d" '(:ignore t :which-key "DAP")
-                     "dd" '(dap-debug :which-key "Debug")
-                     "dl" '(dap-debug-last :which-key "Debug last")
-                     "dh" '(dap-hydra :which-key "Hydra")
-                     "dq" '(dap-disconnect :which-key "Quit")
+  :general (kb/lsp-keys
+             "d" '(:ignore t :which-key "DAP")
+             "dd" '(dap-debug :which-key "Debug")
+             "dl" '(dap-debug-last :which-key "Debug last")
+             "dh" '(dap-hydra :which-key "Hydra")
+             "dq" '(dap-disconnect :which-key "Quit")
 
-                     "db" '(:ignore t :which-key "Breakpoints")
-                     "dbt" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
-                     "dba" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
-                     "dbd" '(dap-breakpoint-delete :which-key "Delete breakpoint")
-                     "dbD" '(dap-breakpoint-delete-all :which-key "Delete all breakpoints")
-                     "dbl" '(dap-breakpoint-log-message :which-key "Breakpoint log")
-                     "dbc" '(dap-breakpoint-condition :which-key "Breakpoint condition")
+             "db" '(:ignore t :which-key "Breakpoints")
+             "dbt" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
+             "dba" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
+             "dbd" '(dap-breakpoint-delete :which-key "Delete breakpoint")
+             "dbD" '(dap-breakpoint-delete-all :which-key "Delete all breakpoints")
+             "dbl" '(dap-breakpoint-log-message :which-key "Breakpoint log")
+             "dbc" '(dap-breakpoint-condition :which-key "Breakpoint condition")
 
-                     "de" '(:ignore t :which-key "Expressions")
-                     "dea" '(dap-ui-expressions-add :which-key "Expression add")
-                     "der" '(dap-ui-expressions-add :which-key "Expression add")
-                     "dr" '(dap-ui-repl :which-key "REPL")
-                     )
+             "de" '(:ignore t :which-key "Expressions")
+             "dea" '(dap-ui-expressions-add :which-key "Expression add")
+             "der" '(dap-ui-expressions-add :which-key "Expression add")
+             "dr" '(dap-ui-repl :which-key "REPL")
+             )
   :custom (dap-auto-configure-features '(;; sessions
                                          locals
                                          breakpoints
@@ -135,8 +201,8 @@
   :general
   (:keymaps 'lsp-mode-map
             [remap consult-flycheck] '(consult-lsp-diagnostics :which-key "Consult lsp diagnostics")
-            (concat lsp-keymap-prefix "gs") '(consult-lsp-symbols :which-key "Consult lsp symbols regexp")
-            (concat lsp-keymap-prefix "gf") '(consult-lsp-file-symbols :which-key "Consult lsp file symbols list")
+            "gs" '(consult-lsp-symbols :which-key "Consult lsp symbols regexp")
+            "gf" '(consult-lsp-file-symbols :which-key "Consult lsp file symbols list")
             )
   )
 
@@ -215,7 +281,7 @@
          )
   :general
   (:keymaps 'lsp-mode-map
-            (concat lsp-keymap-prefix "Ft") '(lsp-treemacs-symbols :which-key "Lsp-treemacs"))
+            "Ft" '(lsp-treemacs-symbols :which-key "Lsp-treemacs"))
   (:keymaps 'lsp-treemacs-error-list-mode-map
             :states 'normal
             "x" 'lsp-treemacs-quick-fix)
