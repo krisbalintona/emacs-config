@@ -89,16 +89,16 @@
 (use-package better-jumper
   :demand t
   :after evil
-  :general (:states '(normal visual normal)
+  :general (:states '(normal visual normal insert)
                     [remap evil-jump-backward] 'better-jumper-jump-backward
                     [remap evil-jump-forward] 'better-jumper-jump-forward
                     "C-p" 'better-jumper-jump-toggle)
   :custom
   ;; This is THE key to avoiding conflict with evils' jumping functionality
   (better-jumper-use-evil-jump-advice nil)
+  ;; (better-jumper-use-evil-jump-advice t) ; Add evil-jump jumps
 
   (better-jumper-max-length 200)
-  (better-jumper-use-evil-jump-advice t) ; Add evil-jump jumps
   (better-jumper-add-jump-behavior 'append)
 
   (better-jumper-context 'window)
@@ -129,7 +129,7 @@
   (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin
                                               evil-jump-item
                                               evil-first-non-blank evil-end-of-visual-line
-                                              evil-goto-mark evil-goto-definition
+                                              evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
                                               )
                       :around 'kb/better-jumper-jump-boundary-advice)
 
