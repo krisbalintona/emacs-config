@@ -158,7 +158,8 @@
             ;; This should be set later in the config (after evil) other wise
             ;; evil will overwrite those bindings
             "C-n" #'next-line           ; `corfu-next'
-            "C-p" #'previous-line)      ; `corfu-previous'
+            "C-p" #'previous-line       ; `corfu-previous'
+            "<tab>" #'completion-at-point)
   (:keymaps 'corfu-map
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
