@@ -53,19 +53,31 @@
   :custom
   (evil-want-integration t)
   (evil-want-keybinding nil)    ; Add more keybinds for other modes I don't want
-  (evil-want-C-u-scroll t) ; Rebind C-u from universal argument to evil scroll up
-  (evil-want-C-i-jump t)   ; C-i keybinding for jumps?
-  (evil-want-fine-undo t)               ; More granular undos
-  (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
+
+  (evil-want-change-word-to-end nil)    ; `cw' deletes to beginning of next word
+  (evil-want-C-u-scroll t)              ; `C-u' scroll up?
+  (evil-want-C-u-delete t)       ; `C-u' in insert state deletes to indentation?
+  (evil-want-C-i-jump t)         ; `C-i' for evil-jump-backward?
+  (evil-want-C-w-delete nil)     ; `C-w' deletes word in insert state?
+  (evil-want-Y-yank-to-eol t)
+
   (evil-move-cursor-back nil)
-  (evil-echo-state nil)                 ; Don't echo state in echo area
+  (evil-backspace-join-lines nil) ; Join lines when deleting newline char in backward delete?
+  (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
+
+  (evil-want-fine-undo t)               ; More granular undos
+  (evil-show-paren-range 3)
+  (evil-kill-on-visual-paste nil)       ; Add replaced text to kill ring?
+
+  (evil-esc-mode t)
+  (evil-search-wrap nil)                    ; Don't wrap when searching buffer
+  (evil-echo-state nil)                     ; Don't echo state in echo area
   :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
   :init
   (setq evil-normal-state-cursor 'box ; Set these variables since they aren't custom variables
         evil-insert-state-cursor 'bar
         evil-visual-state-cursor 'hollow
-        evil-emacs-state-cursor 'hbar
-        evil-want-Y-yank-to-eol t)
+        evil-emacs-state-cursor 'hbar)
   )
 
 ;;; Evil-collection
