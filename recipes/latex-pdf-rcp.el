@@ -13,39 +13,11 @@
 ;; Integration with `latexmk' for more compilation support (particularly
 ;; citations)
 (use-package auctex-latexmk
-  :defer 6
+  :demand t
+  :after latex
   :custom
   (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
-  :config
-  (auctex-latexmk-setup)
-
-  (font-lock-add-keywords 'latex-mode
-                          '(;; true
-                            ("true" 0 '(t :foreground "green") t)
-                            ;; false
-                            ("false" 0 '(t :foreground "red") t)
-                            ;; For table (tabular) columns
-                            ("\\\\rowmac" 0 'font-latex-math-face t)
-                            ;; For natural deduction tables via `lplfitch'
-                            ("\\\\fitchprf" 0 'font-lock-keyword-face t)
-                            ("\\\\pline" 0 'font-latex-math-face t)
-                            ("\\\\subproof" 0 'font-latex-warning-face t)
-                            ("\\\\boxedsubproof" 0 'font-latex-warning-face t)
-                            ("\\\\brokenform" 0 'font-latex-warning-face t)
-                            ("\\\\formula" 0 'font-latex-math-face t)
-                            ("\\\\fitcharg" 0 'font-lock-keyword-face t)
-                            ("\\\\fitchctx" 0 'font-lock-keyword-face t)
-                            ("\\\\fpline" 0 'font-latex-math-face t)
-                            ("\\\\tpline" 0 'font-latex-math-face t)
-                            ))
-  )
-
-;;; Latex-preview-pane
-(use-package latex-preview-pane
-  :disabled t ; Use my makeshift `latexmk-mode' instead for previews
-  :straight (latex-preview-pane :type git :host github :repo "jsinglet/latex-preview-pane")
-  :custom
-  (pdf-latex-command "latexmk") ; Use latexmk for citation support
+  :config (auctex-latexmk-setup)
   )
 
 ;;; Latexmk-mode

@@ -83,6 +83,7 @@
   :after (ox org)
   :straight nil
   :custom
+  ;; Templates
   (org-latex-title-command
    "\\begin{flushleft}
 %a\\\\
@@ -118,6 +119,17 @@
      ("" "capt-of" nil)
      ("hidelinks" "hyperref" nil)
      ))
+
+  ;; Processes for org-to-latex conversion
+  ;; (org-latex-pdf-process
+  ;;  '("%latex -interaction nonstopmode -output-directory %o %f"
+  ;;    "biber --output-directory %o $(basename %f .tex)"
+  ;;    "%latex -interaction nonstopmode -output-directory %o %f"
+  ;;    "%latex -interaction nonstopmode -output-directory %o %f")
+  ;;  )
+  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")) ; From https://github.com/jkitchin/org-ref
+  (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
+
   :config
   (add-to-list 'org-latex-classes
                '("mla"
@@ -323,8 +335,8 @@ re-align the table if necessary. (Necessary because org-mode has a
              in (cl-remove-if-not #'listp org-todo-keywords)
              for keywords =
              (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                     (match-string 1 x)
-                                   x))
+                                (match-string 1 x)
+                              x))
                      keyword-spec)
              if (eq type 'sequence)
              if (member keyword keywords)

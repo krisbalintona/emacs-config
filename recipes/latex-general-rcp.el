@@ -55,7 +55,7 @@
 (use-package latex
   :straight nil
   :ensure-system-package (latex . texlive-full)
-  :after tex
+  :after (tex prog-mode)
   :hook (latex-mode . (lambda ()
                         (require 'prog-mode)
                         (push '("\\Dashv" . ?⫤) prettify-symbols-alist)
@@ -76,17 +76,28 @@
   'LaTeX-math-mode ; Access to math macros
   'visual-line-mode ; So evil can respect true lines
   '(lambda () (mixed-pitch-mode -1))
-  :custom
-  ;; Processes for org-to-latex conversion
-  ;; (org-latex-pdf-process
-  ;;  '("%latex -interaction nonstopmode -output-directory %o %f"
-  ;;    "biber --output-directory %o $(basename %f .tex)"
-  ;;    "%latex -interaction nonstopmode -output-directory %o %f"
-  ;;    "%latex -interaction nonstopmode -output-directory %o %f")
-  ;;  )
-  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")) ; From https://github.com/jkitchin/org-ref
-  (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
   :preface (defvaralias 'latex-mode-hook 'LaTeX-mode-hook "For easier use-package declaration.")
+  :config
+  ;; Add font locked words to latex-mode
+  (font-lock-add-keywords 'latex-mode
+                          '(;; true
+                            ("true" 0 '(t :foreground "green") t)
+                            ;; false
+                            ("false" 0 '(t :foreground "red") t)
+                            ;; For table (tabular) columns
+                            ("\\\\rowmac" 0 'font-latex-math-face t)
+                            ;; For natural deduction tables via `lplfitch'
+                            ("\\\\fitchprf" 0 'font-lock-keyword-face t)
+                            ("\\\\pline" 0 'font-latex-math-face t)
+                            ("\\\\subproof" 0 'font-latex-warning-face t)
+                            ("\\\\boxedsubproof" 0 'font-latex-warning-face t)
+                            ("\\\\brokenform" 0 'font-latex-warning-face t)
+                            ("\\\\formula" 0 'font-latex-math-face t)
+                            ("\\\\fitcharg" 0 'font-lock-keyword-face t)
+                            ("\\\\fitchctx" 0 'font-lock-keyword-face t)
+                            ("\\\\fpline" 0 'font-latex-math-face t)
+                            ("\\\\tpline" 0 'font-latex-math-face t)
+                            ))
   )
 
 ;;;; Cdlatex
