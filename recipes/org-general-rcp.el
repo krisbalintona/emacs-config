@@ -67,6 +67,11 @@
      ))
   :config
   (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
+
+  ;; Org link parameters (good for modifying faces)
+  (make-face 'kb/org-roam-link-to-node)
+  (modify-face 'kb/org-roam-link-to-node "goldenrod3" nil nil nil t nil nil nil)
+  (org-link-set-parameters "id" :follow 'org-id-open :face 'kb/org-roam-link-to-node)
   )
 
 ;;; Related to org-export
