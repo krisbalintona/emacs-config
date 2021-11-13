@@ -183,30 +183,29 @@ afterward."
             "C-x b" 'consult-buffer
             "C-x B" 'consult-buffer-other-window
             )
-  (kb/leader-keys
+  (kb/nav-keys
+    "h" '(consult-outline :which-key "Consult outline")
+    "l" '(consult-line :which-key "Consult line")
+    "i" '(consult-imenu :which-key "Consult imenu")
+    "o" '(consult-multi-occur :which-key "Consult multi-occur")
+    )
+  (kb/nav-keys
     :keymaps 'org-mode-map
-    :states '(normal visual motion)
+    :states '(normal visual insert motion)
     [remap consult-outline] '(consult-org-heading :which-key "Consult outline"))
-  (kb/leader-keys
-    "fr" '(consult-recent-file :which-key "Consult recent file")
-
-    "bb" 'consult-buffer
-    "bB" 'consult-buffer-other-window
-
-    "mm" '(consult-bookmark :which-key "Consult bookmark")
-    "mr" '(consult-mark :which-key "Consult mark-ring")
-
-    "so" '(consult-outline :which-key "Consult outline")
-
-    "ss" '(consult-line :which-key "Consult swiper")
-    "si" '(consult-imenu :which-key "Consult imenu")
-    "sO" '(consult-multi-occur :which-key "Consult multi-occur")
-
-    "iy" '(consult-yank-pop :which-key "Consult yank-pop")
-    ;; ("C-x r x" . consult-register)
-    "ha" '(consult-apropos :which-key "Consult apropos")
-    "pF" '(consult-find :which-key "Consult find file")
-    "ps" '(consult-ripgrep :which-key "Consult rg")
+  (kb/yank-kill-keys
+    "y" '(consult-yank-pop :which-key "Consult yank-pop")
+    )
+  (kb/buffer-keys
+    "b" 'consult-buffer
+    "B" 'consult-buffer-other-window
+    )
+  (kb/file-keys
+    "r" '(consult-recent-file :which-key "Consult recent file")
+    )
+  (kb/mark-keys
+    "m" '(consult-bookmark :which-key "Consult bookmark")
+    "r" '(consult-mark :which-key "Consult mark-ring")
     )
   :custom
   (consult-mode-histories ; What variable consult-history looks at for history
@@ -242,8 +241,8 @@ afterward."
   :after which-key ; Because I replace its value of `prefix-help-command'
   :general
   ("M-o" '(embark-act :which-key "Embark-act"))
-  (kb/leader-keys
-    "hB" '(embark-bindings :which-key "Embark-bindings")
+  (kb/help-keys
+    "B" '(embark-bindings :which-key "Embark-bindings")
     )
   :custom
   (prefix-help-command #'embark-prefix-help-command) ; Optionally replace the key help with a completing-read interface
@@ -365,9 +364,9 @@ is only tested on \"insert\" action."
 ;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
-  :general (kb/leader-keys
-             "fU" '(sudo-edit-find-file :which-key "Sudo find-file")
-             "fu" '(sudo-edit :which-key "Sudo this file")
+  :general (kb/file-keys
+             "U" '(sudo-edit-find-file :which-key "Sudo find-file")
+             "u" '(sudo-edit :which-key "Sudo this file")
              )
   :config (sudo-edit-indicator-mode)
   )
@@ -422,8 +421,8 @@ is only tested on \"insert\" action."
 ;;;; Imenu-list
 ;; Side buffer with imenu items
 (use-package imenu-list
-  :general (kb/leader-keys
-             "sI" '(imenu-list :which-key "Imenu list"))
+  :general (kb/nav-keys
+             "I" '(imenu-list :which-key "Imenu list"))
   )
 
 ;;; programming-general-rcp.el ends here

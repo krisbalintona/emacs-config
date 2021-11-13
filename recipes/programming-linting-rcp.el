@@ -15,11 +15,13 @@
 ;; Check your code
 (use-package flycheck
   ;; :demand t
-  :general (kb/leader-keys
-             "le" '(consult-flycheck :which-key "List flycheck errors")
-             "lE" '(flycheck-list-errors :which-key "List flycheck errors")
-             "?" '(flycheck-buffer :which-key "Flycheck buffer")
-             )
+  :general
+  (kb/nav-keys
+    "E" '(flycheck-list-errors :which-key "List flycheck errors")
+    )
+  (kb/general-keys
+    "?" '(flycheck-buffer :which-key "Flycheck buffer")
+    )
   :custom
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
@@ -56,9 +58,8 @@
 ;; List flycheck errors in minibuffer with consult
 (use-package consult-flycheck
   :requires (consult flycheck)
-  :general
-  (kb/leader-keys
-    "le" '(consult-flycheck :which-key "Consult flycheck"))
+  :general (kb/nav-keys
+             "e" '(consult-flycheck :which-key "Consult flycheck"))
   )
 
 ;;; programming-linting-rcp.el ends here

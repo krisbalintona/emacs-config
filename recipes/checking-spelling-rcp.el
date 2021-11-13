@@ -33,7 +33,7 @@
   :hook ((text-mode . wucuo-start)
          (prog-mode . wucuo-start)
          )
-  :general (kb/leader-keys
+  :general (kb/general-keys
              "/" '(wucuo-spell-check-visible-region :which-key "Spellcheck buffer"))
   :custom
   (wucuo-flyspell-start-mode "fast")
@@ -71,7 +71,7 @@
 ;; Suggest correct spelling for words flyspell marks as incorrect
 (use-package flyspell-correct
   :after flyspell
-  :general (kb/leader-keys
+  :general (kb/general-keys
              "." '(flyspell-correct-next :which-key "Flyspell next")
              "," '(flyspell-correct-previous :which-key "Flyspell prev")
              )

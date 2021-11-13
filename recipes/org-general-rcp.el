@@ -34,10 +34,12 @@
             "M-K" 'org-shiftmetaup
             "M-J" 'org-shiftmetadown
             "C-a" 'org-beginning-of-line)
-  (kb/leader-keys
-    "nn" '(org-capture :which-key "Org-capture")
-    "mg" '(org-mark-ring-goto :which-key "Goto last mark")
-    "ma" '(org-mark-ring-push :which-key "Push to mark-ring")
+  (kb/note-keys
+    "c" '(org-capture :which-key "Org-capture")
+    )
+  (kb/mark-keys
+    "g" '(org-mark-ring-goto :which-key "Goto last mark")
+    "a" '(org-mark-ring-push :which-key "Push to mark-ring")
     )
   :custom
   ;; Aesthetics
@@ -228,8 +230,8 @@
 (use-package org-refile
   :after org-roam
   :straight nil
-  :general (kb/leader-keys
-             "nr" '(org-refile :which-key "Org-refile"))
+  :general (kb/note-keys
+             "r" '(org-refile :which-key "Org-refile"))
   :custom
   (org-refile-targets
    `((kb/find-blog-files-org :maxlevel . 1)
@@ -648,8 +650,8 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;; Paste https links with automatic descriptions
 (use-package org-cliplink
   :general
-  (kb/leader-keys
-    "ib" '(org-cliplink :which-key "Paste https"))
+  (kb/yank-kill-keys
+    "b" '(org-cliplink :which-key "Paste https"))
   )
 
 ;;;; Org-download
@@ -657,8 +659,8 @@ re-align the table if necessary. (Necessary because org-mode has a
 (use-package org-download
   :gfhook ('org-mode-hook 'org-download-enable)
   :general
-  (kb/leader-keys
-    "ii" '(org-download-clipboard :which-key "Paste image from clipboard")
+  (kb/yank-kill-keys
+    "i" '(org-download-clipboard :which-key "Paste image from clipboard")
     )
   :custom
   (org-download-method 'attach)

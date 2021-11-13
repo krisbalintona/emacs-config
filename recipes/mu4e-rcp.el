@@ -188,7 +188,7 @@
                 (`flag   (mu4e-action-retag-message msg "+\\Starred"))
                 (`unflag (mu4e-action-retag-message msg "-\\Starred")))))
 
-  (kb/leader-keys
+  (kb/general-keys
     "om" '(mu4e :which-key "Email")
     )
   )

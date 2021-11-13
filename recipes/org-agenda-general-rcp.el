@@ -14,7 +14,7 @@
 (use-package org-agenda
   :after org-roam
   :straight nil
-  :general (kb/leader-keys
+  :general (kb/open-keys
              "oa" '(org-agenda :which-key "Org-agenda")
              )
   :custom

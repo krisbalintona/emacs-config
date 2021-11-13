@@ -28,28 +28,28 @@
   (:states '(normal insert visual motion)
            "C-i" 'evil-jump-backward
            "C-o" 'evil-jump-forward)
-  (kb/leader-keys
-    "ww" 'evil-window-mru
+  (kb/window-keys
+   "w" 'evil-window-mru
 
-    "wc" 'evil-window-delete
-    "wo" 'delete-other-windows
+   "c" 'evil-window-delete
+   "o" 'delete-other-windows
 
-    "wL" 'evil-window-move-far-right
-    "wH" 'evil-window-move-far-left
-    "wJ" 'evil-window-move-very-bottom
-    "wK" 'evil-window-move-very-top
+   "L" 'evil-window-move-far-right
+   "H" 'evil-window-move-far-left
+   "J" 'evil-window-move-very-bottom
+   "K" 'evil-window-move-very-top
 
-    "wl" 'evil-window-right
-    "wh" 'evil-window-left
-    "wj" 'evil-window-down
-    "wk" 'evil-window-up
+   "l" 'evil-window-right
+   "h" 'evil-window-left
+   "j" 'evil-window-down
+   "k" 'evil-window-up
 
-    "wv" 'evil-window-vsplit
-    "ws" 'evil-window-split
+   "v" 'evil-window-vsplit
+   "s" 'evil-window-split
 
-    "wr" 'evil-window-rotate-downwards
-    "wR" 'evil-window-rotate-upwards
-    )
+   "r" 'evil-window-rotate-downwards
+   "R" 'evil-window-rotate-upwards
+   )
   :custom
   (evil-want-integration t)
   (evil-want-keybinding nil)    ; Add more keybinds for other modes I don't want

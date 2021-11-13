@@ -13,9 +13,8 @@
 ;; Derived mode for all shells in Emacs
 (use-package comint
   :straight nil
-  :general
-  (kb/leader-keys
-    "os" '(shell :which-key "Shell-mode"))
+  :general (kb/open-keys
+             "s" '(shell :which-key "Shell-mode"))
   )
 
 ;;; shell-basic-rcp.el ends here

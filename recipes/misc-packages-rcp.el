@@ -154,8 +154,28 @@
             :states '(visual normal motion)
             "SPC" nil ; For my leader key
             [remap evil-ret] 'Info-follow-nearest-node)
-  (kb/leader-keys
-    "hi" '(info :which-key "Info pages"))
+  (kb/general-keys
+    "u" '(universal-argument :which-key "Universal argument")
+
+    "fF" '(find-file-other-window :which-key "Find file other window")
+    "fS" '(save-some-buffers :which-key "Save most buffers")
+    "ff" '(find-file :which-key "Find file")
+    "fs" '(save-buffer :which-key "Save buffer")
+
+    "bn" '(next-buffer :which-key "Next buffer")
+    "bp" '(previous-buffer :which-key "Prev buffer")
+
+    "eb" '(eval-buffer :which-key "Eval buffer")
+    "ee" '(eval-last-sexp :which-key "Eval last sexp")
+    "er" '(eval-region :which-key "Eval region")
+
+    "hi" '(info :which-key "Info pages")
+
+    "oc" '(calc :which-key "Open calculator")
+    )
+  (:keymaps 'universal-argument-map     ; Multiple universal arguments
+            "u" 'universal-argument-more
+            )
   )
 
 ;;; misc-packages-rcp.el ends here

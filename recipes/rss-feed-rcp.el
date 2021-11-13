@@ -26,7 +26,7 @@
                     (elfeed-goodies/toggle-logs)
                     (other-window 1))
                   :which-key "Elfeed logs"))
-  (kb/leader-keys
+  (kb/open-keys
     "or" '(elfeed :which-key "Elfeed"))
   :custom
   ;; Give time for long updates to complete

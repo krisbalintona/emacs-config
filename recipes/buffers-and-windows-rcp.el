@@ -44,7 +44,7 @@
 ;;;; Display-buffer-alist
 (use-package window
   :straight nil
-  :general (kb/leader-keys
+  :general (kb/general-keys
              "wt" '(window-toggle-side-windows :which-key "Toggle side windows"))
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
@@ -180,7 +180,7 @@
 ;;;; Burly
 (use-package burly
   :disabled t ; NOTE 2021-08-30: For some reason, burly bookmarks can't be deleted by `bookmark-delete'
-  :general (kb/leader-keys
+  :general (kb/general-keys
              "Bw" '(burly-bookmark-windows :which-key "Burly windows")
              "Bm" '(burly-open-bookmark :which-key "Open burly bookmark")
              "BM" '(burly-open-last-bookmark :which-key "Open last bookmark")
@@ -235,9 +235,9 @@ startup and popup bookmark menu to fix it"
             "dd" 'dogears-list-delete
             "RET" 'dogears-list-go
             )
-  (kb/leader-keys
-    "bd" '(dogears-go :which-key "Dogears go")
-    "bD" '(dogears-list :which-key "Dogears list")
+  (kb/buffer-keys
+    "d" '(dogears-go :which-key "Dogears go")
+    "D" '(dogears-list :which-key "Dogears list")
     )
   :custom
   (dogears-limit 200)
@@ -270,9 +270,9 @@ startup and popup bookmark menu to fix it"
 ;;;; Ibuffer
 ;; Manage buffer list
 (use-package ibuffer
-  :general (kb/leader-keys
-             "bl" '(ibuffer :which-key "Ibuffer")
-             "bL" '(ibuffer-other-window :which-key "Ibuffer other window"))
+  :general (kb/buffer-keys
+             "l" '(ibuffer :which-key "Ibuffer")
+             "L" '(ibuffer-other-window :which-key "Ibuffer other window"))
   :custom
   (ibuffer-expert nil)
   (ibuffer-truncate-lines nil)

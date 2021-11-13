@@ -34,8 +34,8 @@
   :general
   (:keymaps 'org-noter-doc-mode-map
             "M-o" 'org-noter-insert-note)
-  (kb/leader-keys
-    "on" '(org-noter :which-key "Org-noter")
+  (kb/open-keys
+    "n" '(org-noter :which-key "Org-noter")
     )
   :custom
   (org-noter-notes-search-path kb/roam-dir)
@@ -55,14 +55,15 @@
   :after org-roam
   :ghook ('org-mode-hook 'org-transclusion-activate)
   :general
-  (kb/leader-keys
-    "Tc" '(org-transclusion-mode :which-key "Toggle mode")
-    "TR" '(org-transclusion-refresh :which-key "Refresh")
-    "Tm" '(org-transclusion-make-from-link :which-key "Make")
-    "Ta" '(org-transclusion-add :which-key "Add")
-    "Tr" '(org-transclusion-remove :which-key "Remove")
-    "Ts" '(org-transclusion-live-sync-start :which-key "Edit start")
-    "Te" '(org-transclusion-live-sync-exit :which-key "Edit exit")
+  (kb/toggle-keys
+    :keymaps 'org-mode-map
+    "c" '(org-transclusion-mode :which-key "Toggle mode")
+    "R" '(org-transclusion-refresh :which-key "Refresh")
+    "m" '(org-transclusion-make-from-link :which-key "Make")
+    "a" '(org-transclusion-add :which-key "Add")
+    "r" '(org-transclusion-remove :which-key "Remove")
+    "s" '(org-transclusion-live-sync-start :which-key "Edit start")
+    "e" '(org-transclusion-live-sync-exit :which-key "Edit exit")
     )
   :custom
   (org-transclusion-include-first-section t)

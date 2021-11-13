@@ -22,7 +22,8 @@
      (buffer-face-mode t)
      (face-remap-add-relative 'default :height 107)) ; Change default face size
   'hide-mode-line-mode
-  :general (kb/leader-keys "ot" '(vterm :which-key "Vterm"))
+  :general (kb/open-keys
+             "t" '(vterm :which-key "Vterm"))
   :custom
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)

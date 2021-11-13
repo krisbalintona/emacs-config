@@ -29,8 +29,8 @@
     ;; (doom--update-files old-path new-path)
     (message "File moved to %S" (abbreviate-file-name new-path))))
 
-(kb/leader-keys
-  "fR" '(kb/move-this-file :which-key "Rename current file")
+(kb/file-keys
+  "R" '(kb/move-this-file :which-key "Rename current file")
   )
 
 ;;; Aj-toggle-fold
@@ -45,8 +45,8 @@
        (if selective-display nil (or col 1)))
       ))
   )
-(kb/leader-keys
-  "of" '(aj-toggle-fold :which-key "aj-toggle-fold"))
+(kb/toggle-keys
+  "f" '(aj-toggle-fold :which-key "aj-toggle-fold"))
 
 ;;; Indent whole buffer
 (defun kb/format-buffer-indentation--base ()
@@ -80,7 +80,7 @@
            (save-buffer)))
         (t (kb/format-buffer-indentation--base))
         ))
-(kb/leader-keys
+(kb/general-keys
   "TAB" '(kb/format-buffer-indentation :which-key "Format buffer's indentation"))
 
 ;;; Better comment-dwim
@@ -219,8 +219,8 @@ Mainly used for `ledger-mode'."
       (message (kill-new (abbreviate-file-name filename)))
     (error "Couldn't find filename in current buffer")))
 
-(kb/leader-keys
-  "fy" '(kb/yank-buffer-filename :which-key "Yank file-path")
+(kb/yank-kill-keys
+  "f" '(kb/yank-buffer-filename :which-key "Yank file-path")
   )
 
 ;;; Delete this file
@@ -253,8 +253,8 @@ Mainly used for `ledger-mode'."
           (kill-this-buffer)
           (message "Deleted %S" short-path))))))
 
-(kb/leader-keys
-  "fD" '(kb/delete-this-file :which-key "Delete current file")
+(kb/file-keys
+  "D" '(kb/delete-this-file :which-key "Delete current file")
   )
 
 ;;; Idle quote

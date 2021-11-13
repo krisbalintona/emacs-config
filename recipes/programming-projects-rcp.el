@@ -15,7 +15,7 @@
 (use-package projectile
   :disabled t ; In favor of `project.el'
   :general
-  (kb/leader-keys
+  (kb/general-keys
     "p" '(:ignore t :which-key "Projectile")
     "p?" '(hydra:selectrum-projectile/body :which-key "Help menu")
     ;; "pf"  'projectile-find-file
@@ -66,7 +66,16 @@
 
 ;;;; Project.el
 (use-package project
-  :general (:keymaps 'project-prefix-map "m" #'magit-project-status)
+  :general
+  (kb/project-keys
+    "F" '(consult-find :which-key "Consult find file")
+    "b" '(project-switch-to-buffer :which-key "Project switch to buffer")
+    "d" '(project-dired :which-key "Project dired")
+    "f" '(project-find-file :which-key "Project find file")
+    "p" '(project-switch-project :which-key "Project.el switch project")
+    "s" '(consult-ripgrep :which-key "Consult rg")
+    )
+  (:keymaps 'project-prefix-map "m" #'magit-project-status)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
@@ -79,14 +88,6 @@
      (project-execute-extended-command "Execute extended command")
      (magit-project-status "Magit")
      ))
-  :config
-  (kb/leader-keys
-    "p" '(:ignore t :which-key "Project")
-    "pf" '(project-find-file :which-key "Project find file")
-    "pp" '(project-switch-project :which-key "Project.el switch project")
-    "pb" '(project-switch-to-buffer :which-key "Project switch to buffer")
-    "pd" '(project-dired :which-key "Project dired")
-    )
   )
 
 ;;;; Xref
@@ -114,21 +115,20 @@
   (:keymaps 'magit-mode-map
             :states '(normal visual motion)
             "D" '(magit-cherry-donate :which-key "Cherry conate"))
-  (kb/leader-keys
-    "g"  '(:ignore t :which-key "Magit")
-    "gg"  '(magit-status :which-key "Status")
-    "gs"  '(magit-status :which-key "Status")
-    "gd"  'magit-diff-unstaged
-    "gc"  'magit-branch-or-checkout
-    "gl"   '(:ignore t :which-key "Logs")
-    "glc" 'magit-log-current
-    "glf" 'magit-log-buffer-file
-    "gb"  'magit-branch
-    "gP"  '(magit-push-current :which-key "Push")
-    "gp"  'magit-pull-branch
-    "gf"  'magit-fetch
-    "gF"  'magit-fetch-all
-    "gr"  '(magit-rebase :which-key "Rebase")
+  (kb/magit-keys
+    "F"  'magit-fetch-all
+    "P"  '(magit-push-current :which-key "Push")
+    "b"  'magit-branch
+    "c"  'magit-branch-or-checkout
+    "d"  'magit-diff-unstaged
+    "f"  'magit-fetch
+    "g"  '(magit-status :which-key "Status")
+    "l"   '(:ignore t :which-key "Logs")
+    "lc" 'magit-log-current
+    "lf" 'magit-log-buffer-file
+    "p"  'magit-pull-branch
+    "r"  '(magit-rebase :which-key "Rebase")
+    "s"  '(magit-status :which-key "Status")
     )
   :custom
   ;; How opened magit buffers (e.g. commit) are shown

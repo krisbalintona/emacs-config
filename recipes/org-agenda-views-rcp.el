@@ -47,7 +47,7 @@
           ))
   ;; (setq org-ql-view-buffer nil) ; No clue how to set this variable
 
-  (kb/leader-keys
+  (kb/general-keys
     "oq" '(org-ql-view :which-key "Org-ql views") ; Currently can't find a way to close all org-agenda bufers after opening the org-ql-view
     )
   )

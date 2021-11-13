@@ -94,13 +94,6 @@
   (lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
   ;; (lsp-face-highlight-textual ((t (:inherit nil :box t))))
   ;; (lsp-face-highlight-write ((t (:inherit nil :box t))))
-  :preface
-  (general-create-definer kb/lsp-keys ; For all lsp and dap commands
-    :states '(normal visual insert motion)
-    :keymaps 'lsp-mode-map
-    :prefix "\\"
-    :global-prefix "SPC \\"
-    )
   )
 
 ;;; Lsp-ui
@@ -170,10 +163,11 @@
              "dl" '(dap-debug-last :which-key "Debug last")
              "dh" '(dap-hydra :which-key "Hydra")
              "dq" '(dap-disconnect :which-key "Quit")
+             "dr" '(dap-ui-repl :which-key "REPL")
 
              "db" '(:ignore t :which-key "Breakpoints")
              "dbt" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
-             "dba" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
+             "dba" '(dap-breakpoint-toggle :which-key "Add breakpoint")
              "dbd" '(dap-breakpoint-delete :which-key "Delete breakpoint")
              "dbD" '(dap-breakpoint-delete-all :which-key "Delete all breakpoints")
              "dbl" '(dap-breakpoint-log-message :which-key "Breakpoint log")
@@ -182,7 +176,6 @@
              "de" '(:ignore t :which-key "Expressions")
              "dea" '(dap-ui-expressions-add :which-key "Expression add")
              "der" '(dap-ui-expressions-add :which-key "Expression add")
-             "dr" '(dap-ui-repl :which-key "REPL")
              )
   :custom (dap-auto-configure-features '(;; sessions
                                          locals
@@ -229,8 +222,8 @@
   :custom
   (treemacs-no-png-images nil)
   (treemacs-width 24)
-  :general (kb/leader-keys
-             "ft" '(treemacs :which-key "Treemacs"))
+  :general (kb/file-keys
+             "t" '(treemacs :which-key "Treemacs"))
   )
 
 ;;;; Tree-sitter

@@ -15,12 +15,94 @@
   (general-auto-unbind-keys)        ; Overwrite keybinds without returning error
   )
 
-;;; Leader key
-;; My leader key definition and high-level keybindings
-(general-create-definer kb/leader-keys  ; Use space as leader key
+;;; Leader keys
+(general-create-definer kb/general-keys ; General leader key
   :keymaps '(normal visual insert motion)
   :prefix "SPC"
   :global-prefix "M-SPC"
+  )
+(general-create-definer kb/note-keys    ; For all lsp-related commands
+  :states '(normal visual insert motion)
+  :prefix "SPC n"
+  :global-prefix "M-SPC n"
+  )
+(general-create-definer kb/magit-keys   ; Magit et al.
+  :states '(normal visual insert motion)
+  :prefix "SPC g"
+  :global-prefix "M-SPC g"
+  )
+(general-create-definer kb/project-keys ; Projects
+  :states '(normal visual insert motion)
+  :prefix "SPC p"
+  :global-prefix "M-SPC p"
+  )
+(general-create-definer kb/lsp-keys     ; For all lsp-related commands
+  :states '(normal visual insert motion)
+  :keymaps 'lsp-mode-map
+  :prefix "\\"
+  :global-prefix "M-SPC \\"
+  )
+(general-create-definer kb/buffer-keys  ; Buffers
+  :states '(normal visual insert motion)
+  :prefix "SPC b"
+  :global-prefix "M-SPC b"
+  )
+(general-create-definer kb/file-keys    ; File-related
+  :states '(normal visual insert motion)
+  :prefix "SPC f"
+  :global-prefix "M-SPC f"
+  )
+(general-create-definer kb/mark-keys    ; Marks (e.g. bookmarks)
+  :states '(normal visual insert motion)
+  :prefix "SPC m"
+  :global-prefix "M-SPC m"
+  )
+(general-create-definer kb/help-keys    ; Help
+  :states '(normal visual insert motion)
+  :prefix "SPC h"
+  :global-prefix "M-SPC h"
+  )
+(general-create-definer kb/nav-keys     ; Navigation in buffers
+  :states '(normal visual insert motion)
+  :prefix "SPC l"
+  :global-prefix "M-SPC l"
+  )
+(general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping
+  :states '(normal visual insert motion)
+  :prefix "SPC i"
+  :global-prefix "M-SPC i"
+  )
+(general-create-definer kb/open-keys    ; Open certain things
+  :states '(normal visual insert motion)
+  :prefix "SPC o"
+  :global-prefix "M-SPC o"
+  )
+(general-create-definer kb/toggle-keys  ; Toggles
+  :states '(normal visual insert motion)
+  :prefix "SPC t"
+  :global-prefix "M-SPC t"
+  )
+(general-create-definer kb/window-keys  ; Windows
+  :states '(normal visual insert motion)
+  :prefix "SPC w"
+  :global-prefix "M-SPC w"
+  )
+
+;;; Keybinding labels
+(kb/general-keys
+  "b" '(:ignore t :which-key "Buffers")
+  "e" '(:ignore t :which-key "Evaluation")
+  "f" '(:ignore t :which-key "Files")
+  "g" '(:ignore t :which-key "Magit")
+  "h" '(:ignore t :which-key "Help")
+  "i" '(:ignore t :which-key "Yank and kill")
+  "l" '(:ignore t :which-key "Navigation")
+  "m" '(:ignore t :which-key "Marks")
+  "n" '(:ignore t :which-key "Notes")
+  "o" '(:ignore t :which-key "Open...")
+  "p" '(:ignore t :which-key "Project")
+  "t" '(:ignore t :which-key "Toggles")
+  "w" '(:ignore t :which-key "Windows")
   )
 
 ;;; Unbinding leader key prefix
@@ -29,39 +111,8 @@
                           ;; Magit modes
                           magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
                           )
- :states '(normal visual motion)
+ :keymaps '(normal visual motion)
  "SPC" '(:ignore t))
-
-;;; Keybinding labels and orphan bindings
-(kb/leader-keys
-  "t" '(:ignore t :which-key "Toggles")
-  "o" '(:ignore t :which-key "Open...")
-  "oc" '(calc :which-key "Open calculator")
-  "b" '(:ignore t :which-key "Buffers")
-  "bp" '(previous-buffer :which-key "Prev buffer")
-  "bn" '(next-buffer :which-key "Next buffer")
-  "f" '(:ignore t :which-key "Files")
-  "ff" '(find-file :which-key "Find file")
-  "fF" '(find-file-other-window :which-key "Find file other window")
-  "fs" '(save-buffer :which-key "Save buffer")
-  "fS" '(save-some-buffers :which-key "Save most buffers")
-  "h" '(:ignore t :which-key "Help")
-  "q" '(:ignore t :which-key "Quit")
-  "i" '(:ignore t :which-key "Copying and pasting")
-  "w" '(:ignore t :which-key "Manage windows")
-  "g" '(:ignore t :which-key "git")
-  "e" '(:ignore t :which-key "Eval stuff")
-  "eb" '(eval-buffer :which-key "Eval buffer")
-  "ee" '(eval-last-sexp :which-key "Eval last sexp")
-  "er" '(eval-region :which-key "Eval region")
-  "u" '(universal-argument :which-key "Universal argument")
-  )
-
-;; Multiple universal arguments
-(general-define-key
- :keymaps 'universal-argument-map
- "u" 'universal-argument-more
- )
 
 ;;; Which-key
 ;; Show keybind tooltips

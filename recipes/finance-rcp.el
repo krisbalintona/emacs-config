@@ -33,11 +33,11 @@
   (:keymaps 'ledger-mode-map
             :states 'insert
             "TAB" 'tab-to-tab-stop)
-  (kb/leader-keys
+  (kb/yank-kill-keys
     :keymaps 'ledger-mode-map
     :states '(normal insert)
-    "id" '(kb/insert-date :which-key "Insert date")
-    "ie" '(ledger-insert-effective-date :which-key "Insert effective date")
+    "d" '(kb/insert-date :which-key "Insert date")
+    "e" '(ledger-insert-effective-date :which-key "Insert effective date")
     )
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual motion)

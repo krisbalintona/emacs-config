@@ -23,40 +23,40 @@
             )
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             [mouse-1] #'org-roam-buffer-visit-thing)
-  (kb/leader-keys
-    "nf" '((lambda ()
+  (kb/note-keys
+    "f" '((lambda ()
+            (interactive)
+            (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node t)))
+            )
+          :which-key "Find file")
+    "F" '((lambda ()
+            (interactive)
+            (org-roam-node-find t nil (lambda (node) (kb/roam-filter-journals node t)))
+            )
+          :which-key "Find file other window")
+
+    "i" '(org-roam-node-insert :which-key "Insert note")
+
+    "h" '((lambda ()
+            (interactive)
+            (find-file "~/Documents/org-database/roam/inbox.org")
+            )
+          :which-key "Go to index")
+
+    "l" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
+    "L" '(org-roam-buffer-display-dedicated :which-key "New Roam buffer")
+
+    "b" '(org-roam-db-sync :which-key "Build cache")
+
+    "d" '(:ignore t :which-key "Roam dailies")
+    "dd" '((lambda ()
              (interactive)
-             (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node t)))
+             (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node nil)))
              )
-           :which-key "Find file")
-    "nF" '((lambda ()
-             (interactive)
-             (org-roam-node-find t nil (lambda (node) (kb/roam-filter-journals node t)))
-             )
-           :which-key "Find file other window")
-
-    "ni" '(org-roam-node-insert :which-key "Insert note")
-
-    "nh" '((lambda ()
-             (interactive)
-             (find-file "~/Documents/org-database/roam/inbox.org")
-             )
-           :which-key "Go to index")
-
-    "nl" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
-    "nL" '(org-roam-buffer-display-dedicated :which-key "New Roam buffer")
-
-    "nb" '(org-roam-db-sync :which-key "Build cache")
-
-    "nd" '(:ignore t :which-key "Roam dailies")
-    "ndd" '((lambda ()
-              (interactive)
-              (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node nil)))
-              )
-            :which-key "Find date")
-    "ndt" '(org-roam-dailies-goto-today :which-key "Today")
-    "ndn" '(org-roam-dailies-goto-tomorrow :which-key "Tomorrow")
-    "ndp" '(org-roam-dailies-goto-yesterday :which-key "Yesterday")
+           :which-key "Find date")
+    "dt" '(org-roam-dailies-goto-today :which-key "Today")
+    "dn" '(org-roam-dailies-goto-tomorrow :which-key "Tomorrow")
+    "dp" '(org-roam-dailies-goto-yesterday :which-key "Yesterday")
     )
   :custom
   (org-roam-directory kb/roam-dir)

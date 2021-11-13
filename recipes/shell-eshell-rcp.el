@@ -25,7 +25,8 @@
   (:keymaps 'eshell-mode-map
             [remap eshell-previous-matching-input] '(consult-history :which-key "Command history")
             "<return>" 'eshell-send-input)
-  (kb/leader-keys "oe" '(eshell :which-key "Eshell"))
+  (kb/open-keys
+    "e" '(eshell :which-key "Eshell"))
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)
@@ -91,9 +92,9 @@
     "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
     `(setq ,NAME
            (lambda () (when ,FORM
-                        (-> ,ICON
-                            (concat esh-section-delim ,FORM)
-                            (with-face ,@PROPS))))))
+                   (-> ,ICON
+                       (concat esh-section-delim ,FORM)
+                       (with-face ,@PROPS))))))
 
   (defun esh-acc (acc x)
     "Accumulator for evaluating and concatenating esh-sections."

@@ -177,8 +177,8 @@ Additionally, run `kb/themes-hooks'."
   :ghook 'prog-mode-hook 'LaTeX-mode-hook
   ;; :ghook 'prog-mode-hook
   :gfhook 'column-number-mode ; Column number in modeline
-  :general (kb/leader-keys
-             "tl" '(display-line-numbers-mode :which-key "Line numbers"))
+  :general (kb/toggle-keys
+             "l" '(display-line-numbers-mode :which-key "Line numbers"))
   :custom
   (display-line-numbers-type 'relative)
   )
