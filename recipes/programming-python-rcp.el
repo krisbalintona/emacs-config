@@ -38,6 +38,7 @@
   '(lambda ()
      (require 'prog-mode)
      (push '("->" . ?») prettify-symbols-alist)
+     (push '("lambda" . ?λ) prettify-symbols-alist)
      (prettify-symbols-mode)
      )
   'display-fill-column-indicator-mode
