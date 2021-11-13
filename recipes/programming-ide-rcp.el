@@ -101,8 +101,9 @@
                      :prefix lsp-keymap-prefix
                      "d" '(:ignore t :which-key "DAP")
                      "dd" '(dap-debug :which-key "Debug")
-                     "dl" '(dap-debug-last :which-key "Debug")
+                     "dl" '(dap-debug-last :which-key "Debug last")
                      "dh" '(dap-hydra :which-key "Hydra")
+                     "dq" '(dap-disconnect :which-key "Quit")
 
                      "db" '(:ignore t :which-key "Breakpoints")
                      "dbt" '(dap-breakpoint-toggle :which-key "Toggle breakpoint")
