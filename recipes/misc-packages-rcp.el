@@ -88,7 +88,7 @@
 ;; https://www.reddit.com/r/emacs/comments/ntnhkc/how_i_jump_around_emacs_with_betterjumper/
 (use-package better-jumper
   :demand t
-  :after evil
+  :after (evil consult)
   :general (:states '(normal visual normal insert)
                     [remap evil-jump-backward] 'better-jumper-jump-backward
                     [remap evil-jump-forward] 'better-jumper-jump-forward
@@ -130,6 +130,7 @@
                                               evil-jump-item
                                               evil-first-non-blank evil-end-of-visual-line
                                               evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
+                                              consult-line
                                               )
                       :around 'kb/better-jumper-jump-boundary-advice)
 
