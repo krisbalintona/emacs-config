@@ -216,12 +216,11 @@
          (LaTeX-mode . (lambda () (setq-local devdocs-current-docs '("latex"))))
          )
   :general
-  (kb/leader-keys
-    :keymaps 'prog-mode-map
-    :states 'normal
-    "di" '(devdocs-install :which-key "Install documentation for a language")
-    "dl" '(devdocs-lookup :which-key "Documentation lookup")
-    "dL" '(devdocs-search :which-key "Search for docs in site"))
+  (kb/lsp-keys
+    "D" '(:ignore t :which-key "Devdocs")
+    "Di" '(devdocs-install :which-key "Install documentation for a language")
+    "Dl" '(devdocs-lookup :which-key "Documentation lookup")
+    "DL" '(devdocs-search :which-key "Search for docs in site"))
   )
 
 ;;;; Treemacs
