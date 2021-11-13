@@ -64,14 +64,23 @@
   (lsp-ui-sideline-update-mode 'point)
   (lsp-ui-sideline-delay 0.5)          ; Seconds to wait before showing sideline
 
-  ;; Lsp-ui-doc - Show documentation
+  ;; Lsp-eldoc - Info in the echo area
   (lsp-eldoc-hook nil)
+  (lsp-eldoc-render-all t)
+
+  ;; Lsp-ui-doc - Show documentation
   (lsp-ui-doc-enable t)
-  (lsp-ui-doc-alignment 'frame)
-  (lsp-ui-doc-position 'top)
   (lsp-ui-doc-delay 1.5)
   (lsp-ui-doc-show-with-cursor t)       ; Point hover (alongside cursor!)
   (lsp-ui-doc-show-with-mouse t)        ; Point hover (alongside cursor!)
+  ;; Appearance
+  (lsp-ui-doc-alignment 'frame)
+  (lsp-ui-doc-position 'top)
+  (lsp-ui-doc-header nil)
+  (lsp-ui-doc-max-height 10)
+  (lsp-ui-doc-include-signature t)
+  (lsp-ui-doc-text-scale-level -1)
+  (lsp-ui-doc-use-webkit nil)
 
   ;; Lsp-ui-imenu - Imenu integration
   (lsp-ui-imenu-window-width 70)
