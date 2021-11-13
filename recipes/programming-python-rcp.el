@@ -40,6 +40,7 @@
      (push '("->" . ?») prettify-symbols-alist)
      (prettify-symbols-mode)
      )
+  'display-fill-column-indicator-mode
   :general (:keymaps 'python-mode-map
                      :states '(normal insert)
                      "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1))) ; Python oddly replaces the normal C-<backspace>

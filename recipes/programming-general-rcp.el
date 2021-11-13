@@ -75,6 +75,15 @@
   :config (show-paren-mode)
   )
 
+;;;; Display-fill-column-indicator
+(use-package display-fill-column-indicator
+  :straight nil
+  :custom
+  (display-fill-column-indicator-character ?│)
+  :custom-face
+  (fill-column-indicator ((t (:inherit line-number))))
+  )
+
 ;;; Quick movement
 ;;;; Ace-link
 ;; Open links easily
