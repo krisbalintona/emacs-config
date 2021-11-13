@@ -137,6 +137,12 @@
   (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump)
   )
 
+;;; Copy-as-format
+(use-package copy-as-format
+  :custom
+  (copy-as-format-default "slack")
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
