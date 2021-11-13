@@ -14,13 +14,12 @@
 ;;; Flycheck
 ;; Check your code
 (use-package flycheck
-  :demand t
-  :general
-  (kb/leader-keys
-    "lf" '(consult-flycheck :which-key "List flycheck errors")
-    "lF" '(flycheck-list-errors :which-key "List flycheck errors")
-    "?" '(flycheck-buffer :which-key "Flycheck buffer")
-    )
+  ;; :demand t
+  :general (kb/leader-keys
+             "le" '(consult-flycheck :which-key "List flycheck errors")
+             "lE" '(flycheck-list-errors :which-key "List flycheck errors")
+             "?" '(flycheck-buffer :which-key "Flycheck buffer")
+             )
   :custom
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
