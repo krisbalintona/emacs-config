@@ -29,27 +29,27 @@
            "C-i" 'evil-jump-backward
            "C-o" 'evil-jump-forward)
   (kb/window-keys
-   "w" 'evil-window-mru
+    "w" 'evil-window-mru
 
-   "c" 'evil-window-delete
-   "o" 'delete-other-windows
+    "c" 'evil-window-delete
+    "o" 'delete-other-windows
 
-   "L" 'evil-window-move-far-right
-   "H" 'evil-window-move-far-left
-   "J" 'evil-window-move-very-bottom
-   "K" 'evil-window-move-very-top
+    "L" 'evil-window-move-far-right
+    "H" 'evil-window-move-far-left
+    "J" 'evil-window-move-very-bottom
+    "K" 'evil-window-move-very-top
 
-   "l" 'evil-window-right
-   "h" 'evil-window-left
-   "j" 'evil-window-down
-   "k" 'evil-window-up
+    "l" 'evil-window-right
+    "h" 'evil-window-left
+    "j" 'evil-window-down
+    "k" 'evil-window-up
 
-   "v" 'evil-window-vsplit
-   "s" 'evil-window-split
+    "v" 'evil-window-vsplit
+    "s" 'evil-window-split
 
-   "r" 'evil-window-rotate-downwards
-   "R" 'evil-window-rotate-upwards
-   )
+    "r" 'evil-window-rotate-downwards
+    "R" 'evil-window-rotate-upwards
+    )
   :custom
   (evil-want-integration t)
   (evil-want-keybinding nil)    ; Add more keybinds for other modes I don't want
@@ -59,7 +59,6 @@
   (evil-want-C-u-delete t)       ; `C-u' in insert state deletes to indentation?
   (evil-want-C-i-jump t)         ; `C-i' for evil-jump-backward?
   (evil-want-C-w-delete nil)     ; `C-w' deletes word in insert state?
-  (evil-want-Y-yank-to-eol t)
 
   (evil-move-cursor-back nil)
   (evil-backspace-join-lines nil) ; Join lines when deleting newline char in backward delete?
@@ -73,11 +72,12 @@
   (evil-search-wrap nil)                    ; Don't wrap when searching buffer
   (evil-echo-state nil)                     ; Don't echo state in echo area
   :preface (use-package goto-chg :demand t) ; Dependency for `g\;' and `g\,'
-  :init
+  :init                                     ; Has to be init, not config
   (setq evil-normal-state-cursor 'box ; Set these variables since they aren't custom variables
         evil-insert-state-cursor 'bar
         evil-visual-state-cursor 'hollow
-        evil-emacs-state-cursor 'hbar)
+        evil-emacs-state-cursor 'hbar
+        evil-want-Y-yank-to-eol t)      ; Must be set here for some reason
   )
 
 ;;; Evil-collection
