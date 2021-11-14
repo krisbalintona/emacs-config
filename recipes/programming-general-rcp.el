@@ -96,6 +96,7 @@
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
+  :demand t
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
   :general

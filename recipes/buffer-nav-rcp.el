@@ -71,13 +71,18 @@
   :config
   (better-jumper-mode)
 
+  ;; Use regular `better-jumper-set-jump' so it includes movements within a line
+  (general-advice-add '(evil-forward-word-begin evil-forward-WORD-begin
+                                                evil-forward-word-end evil-forward-WORD-end
+                                                evil-first-non-blank evil-end-of-visual-line
+                                                evil-org-beginning-of-line evil-org-end-of-line
+                                                )
+                      :before 'better-jumper-set-jump)
+
   ;; Whenever I want to jump, I should wrap it with `kb/better-jumper-jump-boundary-advice'
-  (general-advice-add '(evil-forward-WORD-end evil-backward-WORD-begin
-                                              evil-jump-item
-                                              evil-first-non-blank evil-end-of-visual-line
-                                              evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
-                                              consult-line
-                                              )
+  (general-advice-add '(evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
+                                             consult-line
+                                             )
                       :around 'kb/better-jumper-jump-boundary-advice)
 
   ;; Specifically for ace-jump
@@ -109,7 +114,7 @@
   ;; For python
   (require 'smartparens-python)
 
-  ;; Helpter functions
+  ;; Helper functions
   (defun kb/sp-point-before-letter-digit-p (_id action _context)
     "Return t if point is followed by any digit or alphanumeric character, nil
 otherwise. This predicate is only tested on \"insert\" action."
