@@ -67,6 +67,7 @@
 (require 'persistence-rcp)
 (require 'buffers-and-windows-rcp)
 (require 'undoing-rcp)
+(require 'buffer-nav-rcp)
 
 ;;;; Spelling and grammar
 (require 'checking-spelling-rcp)
