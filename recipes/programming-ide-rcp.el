@@ -152,11 +152,6 @@
 (use-package dap-mode
   :demand t
   :after lsp-mode
-  :gfhook
-  'dap-ui-mode      ; Mouse hover support
-  'dap-tooltip-mode ; Use tooltips for mouse hover over symbols, otherwise use the minibuffer
-  'tooltip-mode     ; Displays floating panel with debug buttons
-  'dap-ui-controls-mode
   :general (kb/lsp-keys
              "d" '(:ignore t :which-key "DAP")
              "dd" '(dap-debug :which-key "Debug")
