@@ -78,6 +78,14 @@
              (yapfify-buffer)
            (yapfify-buffer)
            (save-buffer)))
+        ((eq major-mode 'org-mode)
+         (let* ((modified-before (buffer-modified-p)))
+           (kb/format-buffer-indentation--base)
+           ;; Save buffer if modified and in `org-mode' because drawers are
+           ;; annoying.
+           (if (and (not modified-before) (buffer-modified-p))
+               (save-buffer))
+           ))
         (t (kb/format-buffer-indentation--base))
         ))
 (kb/general-keys
