@@ -91,17 +91,7 @@
   :straight nil
   :custom
   ;; Templates
-  (org-latex-title-command
-   "\\begin{flushleft}
-%a\\\\
-%c\\\\
-%k\\\\
-\\daymonthyeardate\\\\
-\\end{flushleft}
-
-\\begin{center}
-%t
-\\end{center}")
+  (org-latex-title-command "\\begin{mla}{Kristoffer}{Balintona}{%c}{%k}{\\today}{%t}")
   (org-latex-toc-command
    "\\renewcommand{\\contentsname}{
   \\begin{center}
@@ -140,58 +130,40 @@
   :config
   (add-to-list 'org-latex-classes
                '("mla"
-                 "% * Preamble
-\\documentclass[12pt]{article}
+                 " % * Preamble
+\\documentclass[12pt,letterpaper]{article}
+
+% * Default packages
+[DEFAULT-PACKAGES]
+
+% ** MLA package
+\\usepackage{ifpdf}
+\\usepackage{mla}
+
+% ** Font (Garamond)
+\\usepackage[urw-garamond]{mathdesign}
+\\usepackage[T1]{fontenc}
 
 % ** Fancy quotes
 \\usepackage[american]{babel}
 \\usepackage[style=american, debug=true, strict=true, threshold=4]{csquotes}
-\\SetCiteCommand{\\autocite} % Tell csquotes to use biblatex's \autocite for citations
-
-% ** Font
-% Times New Roman
-\\usepackage{newtxtext}
-\\usepackage{newtxmath} % For math symbols
-% For heading sizes
-\\usepackage{sectsty}
-\\sectionfont{\\fontsize{12}{15}\\selectfont}
-
-% ** Margins
-\\usepackage[letterpaper]{geometry}
-\\geometry{top=1.0in, bottom=1.0in, left=1.0in, right=1.0in}
+\\SetCiteCommand{\\autocite} % Tell csquotes to use biblatex's \\autocite for citations
 
 % ** Line and after-sentence spacing
 \\usepackage{setspace}
 \\setstretch{2}%
 \\frenchspacing% Single spaces after sentences
 
-% ** MLA date format
-\\usepackage{datetime2}
-\\makeatletter
-\\newcommand{\\daymonthyeardate}{ % MLA formatted date
-\\@dtm@day\\ \\DTMenglishmonthname{\\@dtm@month}, \\@dtm@year}%
-\\makeatother
-
-% ** Fancy page header
-\\usepackage{fancyhdr}
-\\pagestyle{fancy} % Have header and footer separated into left, right, and center sections
-\\pagenumbering{arabic}
-\\lhead{}
-\\chead{}
-\\rhead{Balintona \\thepage}
-\\lfoot{}
-\\cfoot{}
-\\rfoot{}
-% To make sure we actually have header 0.5in away from top edge
-\\renewcommand{\\headrulewidth}{0pt}
-\\renewcommand{\\footrulewidth}{0pt}
+% % ** Page header
 % 12pt is one-sixth of an inch. Subtract this from 0.5in to get headsep value
 \\setlength\\headsep{0.333in}
 
 % ** Paragraph indentation
-\\setlength{\\parindent}{0.5in}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
+\\setlength{\\parindent}{0.5in}
+
+\\usepackage{lipsum}"
+                 ("\\section*{%s}" . "\\section*{%s}")
+                 ("\\subsection*{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
