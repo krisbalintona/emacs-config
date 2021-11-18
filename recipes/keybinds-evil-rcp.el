@@ -16,6 +16,8 @@
   :ghook 'after-init-hook
   :gfhook 'general-evil-setup    ; Set up `general.el' infrastructure for `evil'
   :general
+  ([remap undo] 'evil-undo
+   [remap undo-redo] 'evil-redo)
   (:states '(normal visual motion)
            "K" 'join-line
            "J" '(lambda () (interactive) (join-line 1)))
