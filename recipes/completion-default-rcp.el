@@ -139,8 +139,8 @@
    'orderless-escapable-split-on-space  ; Use backslash for literal space
    )
   (orderless-matching-styles
-   '(orderless-initialism
-     orderless-literal
+   '(orderless-literal
+     orderless-initialism
      orderless-prefixes
      orderless-regexp
      orderless-flex
