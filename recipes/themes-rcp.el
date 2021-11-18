@@ -16,6 +16,7 @@
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
   :commands hide-mode-line-mode
+  :general ("<f8>" 'hide-mode-line-mode)
   )
 
 ;;;; Transparency
