@@ -22,15 +22,10 @@
 (use-package python-mode
   :demand t
   :after python
-  :hook ((python-mode . (lambda ()
-                          (interactive)
-                          (if (project-current) ; Set virtual environment to ./venv/ if currently in a project
-                              (pyvenv-activate (concat default-directory "venv/")))
-                          ))
-         (py-shell-mode . (lambda ()
-                            (hide-mode-line-mode)
-                            (setq-local scroll-margin 0)
-                            )))
+  :hook (py-shell-mode . (lambda ()
+                           (hide-mode-line-mode)
+                           (setq-local scroll-margin 0)
+                           ))
   :ensure-system-package (pytest . "pip install pytest")
   :gfhook
   'lsp-deferred
@@ -91,6 +86,13 @@
 ;; `pyvenv-activate' and select a directory with virtual environment packages
 (use-package pyvenv
   :after (python lsp-mode)
+  :hook (python-mode . (lambda ()
+                         (interactive)
+                         (if (project-current) ; Set virtual environment to ./venv/ if currently in a project
+                             (let* ((venv (concat (project-root (project-current)) "venv/")))
+                               (if venv (pyvenv-activate venv))
+                               ))
+                         ))
   :ghook 'python-mode-hook
   :gfhook 'pyvenv-tracking-mode
   :general (:keymaps 'lsp-mode-map
