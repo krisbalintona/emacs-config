@@ -95,8 +95,9 @@
                          ))
   :ghook 'python-mode-hook
   :gfhook 'pyvenv-tracking-mode
-  :general (:keymaps 'lsp-mode-map
-                     "v" '((lambda () (interactive) (call-interactively 'pyvenv-activate)) :which-key "Pvenv activate"))
+  :general (kb/lsp-keys
+             :keymaps 'python-mode-map
+             "v" '((lambda () (interactive) (call-interactively 'pyvenv-activate)) :which-key "Pvenv activate"))
   :custom (pyvenv-default-virtual-env-name "venv")
   )
 
