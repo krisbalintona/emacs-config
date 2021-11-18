@@ -219,7 +219,7 @@
   :gfhook 'hide-mode-line-mode
   :custom
   (treemacs-no-png-images nil)
-  (treemacs-width 24)
+  (treemacs-width 27)
   :general (kb/file-keys
              "t" '(treemacs :which-key "Treemacs"))
   )
