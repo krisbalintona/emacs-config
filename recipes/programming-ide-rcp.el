@@ -189,6 +189,9 @@
   :general
   (:keymaps 'lsp-mode-map
             [remap consult-flycheck] '(consult-lsp-diagnostics :which-key "Consult lsp diagnostics")
+            )
+  (:keymaps 'lsp-mode-map
+            :states '(normal motion visual)
             "gs" '(consult-lsp-symbols :which-key "Consult lsp symbols regexp")
             "gf" '(consult-lsp-file-symbols :which-key "Consult lsp file symbols list")
             )
