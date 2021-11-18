@@ -63,7 +63,7 @@
   (evil-want-C-w-delete nil)     ; `C-w' deletes word in insert state?
 
   (evil-move-cursor-back nil)
-  (evil-backspace-join-lines nil) ; Join lines when deleting newline char in backward delete?
+  (evil-backspace-join-lines t) ; Join lines when deleting newline char from backward delete?
   (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
 
   (evil-want-fine-undo t)               ; More granular undos
