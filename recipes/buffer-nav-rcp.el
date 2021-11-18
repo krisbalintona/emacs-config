@@ -158,14 +158,17 @@ is only tested on \"insert\" action."
 (use-package imenu
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
+  (imenu-auto-rescan t)
   )
 
 ;;; Imenu-list
 ;; Side buffer with imenu items
 (use-package imenu-list
-  :requires imenu
+  :demand t
+  :after imenu
   :general (kb/nav-keys
              "I" '(imenu-list :which-key "Imenu list"))
+  :hook (imenu-list-major-mode . visual-line-mode)
   )
 
 ;;; Occur
