@@ -51,39 +51,26 @@
   (better-jumper-use-savehist t)
   (better-jumper-buffer-savehist-size 50)
   :init
-  (defun kb/better-jumper-jump-boundary-advice (oldfun &rest args)
-    "This is the key here. This advice makes it so you only set a
-     jump point if you move more than one line with whatever
-     command you call. For example if you add this advice around
-     evil-next-line, you will set a jump point if you do 10 j,
-     but not if you just hit j.."
-    (let ((old-pos (point)))
-      (apply oldfun args)
-      (when (> (abs (- (line-number-at-pos old-pos) (line-number-at-pos (point))))
-               1)
-        (better-jumper-set-jump old-pos))))
-
-  ;; Toggle between two between two points (adapted from evil-jump-backward-swap).
+  ;; Toggle between two between current point and last better-jumper set point
+  ;; (inspired by `evil-jump-backward-swap').
   (evil-define-motion better-jumper-jump-toggle (count)
     (let ((pnt (point)))
+      (better-jumper-set-jump pnt)
       (better-jumper-jump-backward 1)
-      (better-jumper-set-jump pnt)))
+      ))
   :config
   (better-jumper-mode)
 
-  ;; Use regular `better-jumper-set-jump' so it includes movements within a line
-  (general-advice-add '(evil-forward-word-begin evil-forward-WORD-begin
-                                                evil-forward-word-end evil-forward-WORD-end
-                                                evil-first-non-blank evil-end-of-visual-line
-                                                evil-org-beginning-of-line evil-org-end-of-line
-                                                )
-                      :before 'better-jumper-set-jump)
-
-  ;; Whenever I want to jump, I should wrap it with `kb/better-jumper-jump-boundary-advice'
-  (general-advice-add '(evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
+  ;; Set a jump point using `better-jumper-set-jump'
+  (general-advice-add '(evil-first-non-blank evil-end-of-visual-line
+                                             evil-org-beginning-of-line evil-org-end-of-line
+                                             org-beginning-of-line org-end-of-line
+                                             evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
+                                             evil-search-next evil-search-previous
+                                             evilmi-jump-items
                                              consult-line
                                              )
-                      :around 'kb/better-jumper-jump-boundary-advice)
+                      :before 'better-jumper-set-jump)
 
   ;; Specifically for ace-jump
   (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump)
@@ -93,7 +80,7 @@
 ;; Auto pairing parentheses
 (use-package smartparens
   :demand t
-  :gfhook 'show-smartparens-mode ; Subtlely highlight matching parentheses
+  :gfhook 'show-smartparens-mode        ; Subtly highlight matching parentheses
   :general (:keymaps 'prog-mode-map
                      :states '(visual normal motion)
                      [remap evil-forward-sentence-begin] 'sp-forward-sexp
