@@ -108,7 +108,7 @@
             )
   (kb/nav-keys
     "h" '(consult-outline :which-key "Consult outline")
-    "l" '(consult-line :which-key "Consult line")
+    "j" '(consult-line :which-key "Consult line")
     "i" '(consult-imenu :which-key "Consult imenu")
     "O" '(consult-multi-occur :which-key "Consult multi-occur")
     )

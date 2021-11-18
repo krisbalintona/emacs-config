@@ -64,8 +64,8 @@
   )
 (general-create-definer kb/nav-keys     ; Navigation in buffers
   :states '(normal visual insert motion)
-  :prefix "SPC l"
-  :global-prefix "M-SPC l"
+  :prefix "SPC j"
+  :global-prefix "M-SPC j"
   )
 (general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping
   :states '(normal visual insert motion)
