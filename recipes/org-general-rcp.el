@@ -90,6 +90,7 @@
   :after (ox org)
   :straight nil
   :custom
+  (org-latex-compiler "xelatex")
   ;; Templates
   (org-latex-title-command "\\begin{mla}{Kristoffer}{Balintona}{%c}{%k}{\\today}{%t}")
   (org-latex-toc-command
