@@ -157,16 +157,19 @@
             ;; NOTE 2021-08-31: These keybinds override very annoying bindings.
             ;; This should be set later in the config (after evil) other wise
             ;; evil will overwrite those bindings
-            "C-n" #'next-line           ; `corfu-next'
-            "C-p" #'previous-line       ; `corfu-previous'
-            "<tab>" #'completion-at-point)
+            "C-n" #'next-line                ; `corfu-next'
+            "C-p" #'previous-line            ; `corfu-previous'
+            "<tab>" #'indent-for-tab-command ; `completion-at-point' or `indent-relative'
+            )
   (:keymaps 'corfu-map
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
             "M-d" #'corfu-show-documentation
             "M-l" #'corfu-show-location)
   :custom
-  (tab-always-indent 'complete) ; Make sure tab doesn't indent when you want to perform completion
+  ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
+  ;; want to perform completion
+  (tab-always-indent 'complete)
 
   (corfu-auto nil)
   (corfu-auto-prefix 2)
