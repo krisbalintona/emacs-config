@@ -124,6 +124,8 @@
 (use-package yapfify
   :after python-mode
   :ensure-system-package (yapf . "pip install yapf")
+  :custom
+  (yapfify-executable (expand-file-name "~/.local/bin/yapf"))
   )
 
 ;;; Pyimport
