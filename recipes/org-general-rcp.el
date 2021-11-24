@@ -247,11 +247,11 @@
   (org-cycle-level-faces nil)
   (org-n-level-faces 5)
 
-  (org-superstar-leading-bullet ?\s) ;; Render leading stars as spaces!
-  (org-superstar-leading-fallback ?\s) ; Hide away leading stars on terminal.
-  (org-indent-mode-turns-on-hiding-stars nil)
-  (org-hide-leading-stars t) ;; t means no character is there at all
-  (org-superstar-remove-leading-stars t)
+  (org-superstar-leading-bullet ?\s)    ; Render leading stars as spaces!
+  (org-superstar-leading-fallback ?\s)  ; Hide away leading stars on terminal.
+  (org-indent-mode-turns-on-hiding-stars nil) ; Nil according to readme
+  (org-hide-leading-stars nil)                ; Nil according to readme
+  (org-superstar-remove-leading-stars nil)    ; Keep indentation from `org-indent'
 
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
   (org-superstar-todo-bullet-alist
@@ -261,8 +261,11 @@
      ("[X]"  . 9745)))
   (org-superstar-headline-bullets-list
    '("⚝" "●" "◉" "○"))
+  (org-superstar-special-todo-items t)  ; Cool todo items
+
+  (org-superstar-prettify-item-bullets t)
+  ;; org-superstar-item-bullet-alist ; For plainlist todo items
   (org-superstar-first-inlinetask-bullet ?▶)
-  ;; org-superstar-item-bullet-alist ; For plainlist bullets
 
   (inhibit-compacting-font-caches t) ; Stop slowdown
   )
