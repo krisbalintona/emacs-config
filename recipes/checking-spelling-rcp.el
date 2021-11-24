@@ -13,15 +13,16 @@
 ;; Feature-rich spell-checker
 (use-package flyspell
   :ensure-system-package (aspell . "sudo apt install aspell aspell-en")
-                          
+  :hook ((text-mode . flyspell-mode)
+         (prog-mode . flyspell-prog-mode))
   :general (kb/general-keys
              "/" '(flyspell-buffer :which-key "Spellcheck buffer"))
   :custom
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
 
-  (flyspell-delay 1)                    ; Number of seconds to wait
-  (flyspell-sort-corrections t)         ; Sort candidates
+  (flyspell-delay 1)                    ; Time to wait
+  (flyspell-sort-corrections t)         ; Sort candidates?
 
   (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (`abbrev-mode')
   ;; Personal dictionary
@@ -31,6 +32,7 @@
 ;;; Wucuo
 ;; A complete solution to the lag of flyspell
 (use-package wucuo
+  :disabled t
   :after flyspell
   :hook ((text-mode . wucuo-start)
          (prog-mode . wucuo-start)
