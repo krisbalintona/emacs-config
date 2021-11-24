@@ -146,22 +146,23 @@
   )
 
 ;;; Popweb
+;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
   :demand t
   :requires eaf
-  :straight (popweb :type git :host github :repo "manateelazycat/popweb")
-  :hook (latex-mode . (lambda ()
-                        ;; LaTeX preview functionality
-                        (add-to-list 'load-path "/home/krisbalintona/.emacs.d/straight/repos/popweb/extension/latex")
-                        (require 'popweb-latex)
-                        (popweb-latex-mode)
-                        ))
-  ;; :config
-
-  ;; ;; Chinese-English translation popup
-  ;; (add-to-list 'load-path "<path-to-popweb>/extension/dict") ;
-  ;; (require 'popweb-dict-bing) ; Translation using Bing
-  ;; (require 'popweb-dict-youdao) ; Translation using Youdao
+  :straight nil
+  :load-path "~/.emacs.d/popweb"
+  :custom
+  (popweb-popup-pos "point-bottom-right")
+  :config
+  ;; LaTeX preview functionality
+  (add-to-list 'load-path "/home/krisbalintona/.emacs.d/popweb/extension/latex")
+  (require 'popweb-latex)
+  (popweb-latex-mode)
+  ;; Chinese-English translation popup
+  (add-to-list 'load-path "/home/krisbalintona/.emacs.d/popweb/extension/dict")
+  (require 'popweb-dict-bing)           ; Translation using Bing
+  (require 'popweb-dict-youdao)         ; Translation using Youdao
   )
 
 ;;; Built-in Emacs modes/packages
