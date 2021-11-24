@@ -14,6 +14,8 @@
 (use-package flyspell
   :ensure-system-package (aspell . "sudo apt install aspell aspell-en")
                           
+  :general (kb/general-keys
+             "/" '(flyspell-buffer :which-key "Spellcheck buffer"))
   :custom
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
@@ -34,7 +36,7 @@
          (prog-mode . wucuo-start)
          )
   :general (kb/general-keys
-             "/" '(wucuo-spell-check-visible-region :which-key "Spellcheck buffer"))
+             [remap flyspell-buffer] '(wucuo-spell-check-visible-region :which-key "Spellcheck buffer"))
   :custom
   (wucuo-flyspell-start-mode "fast")
   ;; (ispell-extra-args "--run-together")  ; Faster aspell?
