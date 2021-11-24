@@ -54,19 +54,6 @@
           )))
   )
 
-;;; Flyspell-lazy
-;; Check on idle instead of instantly
-(use-package flyspell-lazy
-  :disabled t ; Not necessary since flyspell is fast enough, especially with wucuo
-  :after flyspell
-  :ghook 'flyspell-mode-hook
-  :custom
-  (flyspell-lazy-changes-threshold 10) ; Force check if this many changes are pending
-  (flyspell-lazy-idle-seconds 2)
-  (flyspell-lazy-window-idle-seconds 7)
-  (flyspell-lazy-use-flyspell-word t) ; Immediately recheck when leaving a marked word?
-  )
-
 ;;; Flyspell-correct
 ;; Suggest correct spelling for words flyspell marks as incorrect
 (use-package flyspell-correct
