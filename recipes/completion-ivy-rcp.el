@@ -165,7 +165,6 @@
 ;;;; Counsel
 ;; Ivy versions for built-in commands alongside other useful commands
 (use-package counsel
-  :requires ivy
   :after ivy
   :general
   (:keymaps 'minibuffer-local-map

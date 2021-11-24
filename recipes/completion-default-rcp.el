@@ -110,7 +110,8 @@
 ;;;; Selectrum-prescient
 ;; Selectrum with `prescient' completion style
 (use-package selectrum-prescient
-  :requires prescient
+  :demand t
+  :after prescient
   :ghook 'selectrum-mode-hook
   :custom
   ;; Use `prescient' to sort and filter in `selectrum-mode' This can be nil if

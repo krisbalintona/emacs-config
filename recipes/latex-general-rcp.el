@@ -43,7 +43,6 @@
 ;;;; Company-auctex
 ;; Auctex suggestions using the company backend
 (use-package company-auctex
-  :requires company
   :after company
   :hook (LaTeX-mode . (lambda () ;; I manually add backends from `company-auctex-init'
                         (add-to-list 'company-backends

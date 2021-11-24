@@ -60,7 +60,7 @@
 ;;;; Counsel-projectile
 ;; Use Ivy as projectile interface
 (use-package counsel-projectile
-  :requires (counsel projectile)
+  :after (counsel projectile)
   :ghook 'counsel-mode-hook
   )
 

@@ -84,7 +84,6 @@
 ;; A pretty company autocomplete frontend that also displays candidate
 ;; documentation
 (use-package company-box
-  :requires (company all-the-icons)
   :after (company all-the-icons)
   :ghook 'company-mode-hook
   :custom

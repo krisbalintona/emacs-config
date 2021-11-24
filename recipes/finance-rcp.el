@@ -117,7 +117,6 @@
 ;;; Flycheck-ledger
 (use-package flycheck-ledger
   :demand t
-  :requires flycheck
   :after (flycheck ledger-mode)
   :custom
   (flycheck-ledger-explicit t) ; Check even cleared transactions
