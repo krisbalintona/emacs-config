@@ -57,8 +57,7 @@
 ;;; Consult-flycheck
 ;; List flycheck errors in minibuffer with consult
 (use-package consult-flycheck
-  :demand t
-  :requires (consult flycheck)
+  :after (consult flycheck)
   :general (kb/nav-keys
              "e" '(consult-flycheck :which-key "Consult flycheck"))
   )
