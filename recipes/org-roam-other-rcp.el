@@ -16,16 +16,13 @@
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
   :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools") ; Repo of current maintainer
-  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
-  :magic ("%PDF" . pdf-view-mode)
   ;; Ensure it's installed without manually doing so
-  :hook ((server-after-make-frame . pdf-tools-install)
-         ('window-setup . pdf-tools-install))
+  :hook (after-init . pdf-tools-install)
   :custom
   (pdf-view-display-size 'fit-width)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
-  (pdf-view-use-imagemagick nil)
+  (pdf-view-use-imagemagick t)
   )
 
 ;;;; Org-noter
