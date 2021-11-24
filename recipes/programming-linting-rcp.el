@@ -43,11 +43,6 @@
 ;; Shows flycheck errors in pos-tip popup
 (use-package flycheck-pos-tip
   :disabled t ; NOTE 2021-11-12: Causes Emacs to crash when using the `alpha-background' patch of Emacs
-
-;;; Flycheck-status-emoji
-;; Use emojis to display flycheck statuses
-(use-package flycheck-status-emoji
-  :requires flycheck
   :after flycheck
   :ghook 'flycheck-mode-hook
   )
