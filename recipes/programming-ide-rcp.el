@@ -81,6 +81,7 @@
   (lsp-keymap-prefix nil)
   (lsp-auto-guess-root nil)
   (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't fontify headline breadcrumb text (janky fix)
   (lsp-semantic-tokens-enable t)
   (lsp-modeline-diagnostics-scope :workspace)
   (lsp-modeline-code-actions-segments '(count icon name))
