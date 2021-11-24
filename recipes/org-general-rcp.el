@@ -77,6 +77,13 @@
   )
 
 ;;; Related to org-export
+;;;; Org-export
+(use-package org-export
+  :straight nil
+  :custom
+  (org-export-with-sub-superscripts nil)
+  )
+
 ;;;; Ox-odt
 (use-package ox-odf
   :after (ox org)
