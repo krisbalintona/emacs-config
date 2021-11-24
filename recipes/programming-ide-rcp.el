@@ -264,7 +264,7 @@
 ;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
 (use-package lsp-treemacs
-  :requires treemacs
+  :after treemacs
   :hook ((lsp-mode . lsp-treemacs-sync-mode)
          (lsp-treemacs-generic-mode . hide-mode-line-mode)
          (lsp-treemacs-error-list-mode . hide-mode-line-mode)
