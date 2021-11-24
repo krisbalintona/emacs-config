@@ -108,6 +108,33 @@
                             ("\\\\fpline" 0 'font-latex-math-face t)
                             ("\\\\tpline" 0 'font-latex-math-face t)
                             ))
+
+  ;; Using EAF's pdf viewer
+  (require 'eaf)
+  (defun kb/eaf-pdf-synctex-forward-view ()
+    "View the PDF file of Tex synchronously."
+    (interactive)
+    ;; So that the pdf opens in a vsplit
+    (evil-window-vsplit)
+    (evil-window-right 1)
+    (let* ((pdf-url (expand-file-name (TeX-active-master (TeX-output-extension))))
+           (tex-buffer (window-buffer (minibuffer-selected-window)))
+           (tex-file (buffer-file-name tex-buffer))
+           (line-num (progn (set-buffer tex-buffer) (line-number-at-pos)))
+           (opened-buffer (eaf-pdf--find-buffer pdf-url))
+           (synctex-info (eaf-pdf--get-synctex-info tex-file line-num pdf-url)))
+      (if (not opened-buffer)
+          (eaf-open
+           ;; (prin1-to-string pdf-url)    ; This causes an error
+           pdf-url                      ; This fixes the error
+           "pdf-viewer" (format "synctex_info=%s" synctex-info))
+        (pop-to-buffer opened-buffer)
+        (eaf-call-sync "call_function_with_args" eaf--buffer-id
+                       "jump_to_page_synctex" (format "%s" synctex-info)))))
+  (advice-add 'eaf-pdf-synctex-forward-view :override #'kb/eaf-pdf-synctex-forward-view)
+
+  (add-to-list 'TeX-view-program-list '("eaf" eaf-pdf-synctex-forward-view))
+  (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))
   )
 
 ;;;; Cdlatex

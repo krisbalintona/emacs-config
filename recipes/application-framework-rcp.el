@@ -12,16 +12,39 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
-  :demand t
+  ;; :demand t
+  ;; :after latex
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
-  :custom
-  ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  (eaf-browser-continue-where-left-off t)
+  :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  ;; Browser
+  (eaf-browser-continue-where-left-off t) ; Also note `eaf-browser-restore-buffers'
   (eaf-browser-enable-adblocker t)
   (browse-url-browser-function 'eaf-open-browser)
+  (eaf-browser-default-search-engine "duckduckgo")
+  (eaf-browser-blank-page-url "https://duckduckgo.com")
+  (eaf-browser-download-path "/tmp")
+  (eaf-browser-default-zoom 1.25)
+
+  ;; Dark mode?
+  (eaf-browser-dark-mode "follow")
+  (eaf-terminal-dark-mode "follow")
+  (eaf-mindmap-dark-mode "follow")
+  (eaf-pdf-dark-mode "ignore")
+  :init
+  ;; Have `find-file' use `eaf-open'
+  (defun adviser-find-file (orig-fn file &rest args)
+    (let ((fn (if (commandp 'eaf-open) 'eaf-open orig-fn)))
+      (pcase (file-name-extension file)
+        ("pdf"  (apply fn file nil))
+        ("epub" (apply fn file nil))
+        (_      (apply orig-fn file args)))))
+  (advice-add #'find-file :around #'adviser-find-file)
   :config
-  ;; Require all modules
+  ;; All-the-icons integration
+  (require 'eaf-all-the-icons)
+
+  ;; All modules
   (require 'eaf-airshare)
   (require 'eaf-browser)
   (require 'eaf-camera)
@@ -45,19 +68,47 @@
   (require 'eaf-rss-reader)
 
   ;; Bindings
-  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  ;; Compatibility with Evil's normal mode
+  (require 'eaf-evil)
+  ;; Browser
+  (eaf-bind-key clear_focus "<escape>" eaf-browser-keybinding)
   (eaf-bind-key nil "M-q" eaf-browser-keybinding) ;; unbind, see more in the Wiki
+  ;; PDF
+  (eaf-bind-key eaf-py-proxy-rotate_counterclockwise "C-<up>" eaf-pdf-viewer-keybinding) ; Close buffer and window
+  (eaf-bind-key eaf-py-proxy-rotate_clockwise "C-<down>" eaf-pdf-viewer-keybinding) ; Close buffer and window
+  (eaf-bind-key winner-undo "C-<left>" eaf-pdf-viewer-keybinding) ; Close buffer and window
+  (eaf-bind-key winner-redo "C-<right>" eaf-pdf-viewer-keybinding) ; Close buffer and window
+  (eaf-bind-key evil-delete-buffer "x" eaf-pdf-viewer-keybinding) ; Close buffer and window
+  (eaf-bind-key eaf-py-proxy-scroll_down_page "C-u" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key eaf-py-proxy-scroll_up_page "C-d" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key nil "SPC" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-vsplit "SPC wv" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-split "SPC ws" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-next "SPC ww" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-left "SPC wh" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-right "SPC wl" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-up "SPC wk" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-down "SPC wj" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-next "C-w C-w" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-left "C-w h" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-right "C-w l" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-up "C-w k" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-window-down "C-w j" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key nil "g" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_to_begin "gg" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key eyebrowse-last-window-config "gv" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key eyebrowse-prev-window-config "ga" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key eyebrowse-next-window-config "gt" eaf-pdf-viewer-keybinding)
   )
 
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
   :demand t
-  :requires eaf
+  :after eaf
   :straight nil
   :load-path "~/.emacs.d/popweb"
+  :hook (latex-mode . popweb-latex-mode)
   :custom
   (popweb-popup-pos "point-bottom-right")
   :config

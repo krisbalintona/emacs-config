@@ -1,0 +1,5 @@
+/home/krisbalintona/Documents/org-database/latex/phil0640/phil0640-problem_set_8.pdf
+/home/krisbalintona/Documents/org-database/latex/phil0640/phil0640-problem_set_9.pdf
+/tmp/phil0640-problem_set_8.pdf
+/tmp/document.pdf
+/home/krisbalintona/PycharmProjects/CS11/hw7/tracing.pdf
