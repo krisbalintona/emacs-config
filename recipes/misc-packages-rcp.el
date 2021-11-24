@@ -103,6 +103,67 @@
   (copy-as-format-default "slack")
   )
 
+;;; EAF
+;; The Emacs application framework.
+(use-package eaf
+  :demand t
+  :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :custom
+  ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  ;; Require all modules
+  (require 'eaf-airshare)
+  (require 'eaf-browser)
+  (require 'eaf-camera)
+  (require 'eaf-demo)
+  (require 'eaf-file-browser)
+  (require 'eaf-file-manager)
+  (require 'eaf-file-sender)
+  (require 'eaf-image-viewer)
+  (require 'eaf-jupyter)
+  (require 'eaf-markdown-previewer)
+  ;; (require 'eaf-mermaid)
+  (require 'eaf-mindmap)
+  (require 'eaf-music-player)
+  (require 'eaf-org-previewer)
+  (require 'eaf-pdf-viewer)
+  (require 'eaf-system-monitor)
+  (require 'eaf-terminal)
+  (require 'eaf-video-player)
+  (require 'eaf-vue-demo)
+  (require 'eaf-netease-cloud-music)
+  (require 'eaf-rss-reader)
+
+  ;; Bindings
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding) ;; unbind, see more in the Wiki
+  )
+
+;;; Popweb
+(use-package popweb
+  :demand t
+  :requires eaf
+  :straight (popweb :type git :host github :repo "manateelazycat/popweb")
+  :hook (latex-mode . (lambda ()
+                        ;; LaTeX preview functionality
+                        (add-to-list 'load-path "/home/krisbalintona/.emacs.d/straight/repos/popweb/extension/latex")
+                        (require 'popweb-latex)
+                        (popweb-latex-mode)
+                        ))
+  ;; :config
+
+  ;; ;; Chinese-English translation popup
+  ;; (add-to-list 'load-path "<path-to-popweb>/extension/dict") ;
+  ;; (require 'popweb-dict-bing) ; Translation using Bing
+  ;; (require 'popweb-dict-youdao) ; Translation using Youdao
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
