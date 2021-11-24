@@ -26,7 +26,7 @@
                            (hide-mode-line-mode)
                            (setq-local scroll-margin 0)
                            ))
-  :ensure-system-package (pytest . "pip install pytest")
+  :ensure-system-package ("~/.local/bin/pytest" . "pip install --user pytest")
   :gfhook
   'lsp-deferred
   'dap-mode
