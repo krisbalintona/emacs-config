@@ -67,6 +67,17 @@
                         ;; the `\pline{\vdots}' results in the ellipses not
                         ;; being centered on the line.
                         (push '("\\ellipsesline" . ?⋮) prettify-symbols-alist)
+                        ;; Circled numbers from the pifont package
+                        (push '("\\ding{192}" . ?①) prettify-symbols-alist)
+                        (push '("\\ding{193}" . ?②) prettify-symbols-alist)
+                        (push '("\\ding{194}" . ?③) prettify-symbols-alist)
+                        (push '("\\ding{195}" . ?④) prettify-symbols-alist)
+                        (push '("\\ding{196}" . ?⑤) prettify-symbols-alist)
+                        (push '("\\ding{197}" . ?⑥) prettify-symbols-alist)
+                        (push '("\\ding{198}" . ?⑦) prettify-symbols-alist)
+                        (push '("\\ding{199}" . ?⑧) prettify-symbols-alist)
+                        (push '("\\ding{200}" . ?⑨) prettify-symbols-alist)
+                        (push '("\\ding{201}" . ?⑩) prettify-symbols-alist)
                         ))
   :gfhook
   'prettify-symbols-mode
