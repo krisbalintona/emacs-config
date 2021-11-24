@@ -18,9 +18,6 @@
   :general
   ([remap undo] 'evil-undo
    [remap undo-redo] 'evil-redo)
-  (:states '(normal visual motion)
-           "K" 'join-line
-           "J" '(lambda () (interactive) (join-line 1)))
   (:states 'insert
            "<escape>" 'evil-force-normal-state)
   (:keymaps 'evil-visual-state-map

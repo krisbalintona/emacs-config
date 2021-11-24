@@ -22,6 +22,7 @@
  "C-x K" 'kill-this-buffer
  "TAB" nil                              ; Remove `evil-jump-backward' keybind
  )
+
 (general-define-key
  :keymaps 'global-map
  :states 'insert
@@ -43,6 +44,15 @@
  "C-e" 'move-end-of-line
  "C-k" 'kill-visual-line
  "C-y" 'yank
+ "C-S-k" 'join-line
+ "C-S-j" '(lambda () (interactive) (join-line 1))
+ )
+
+(general-define-key
+ :keymaps 'global-map
+ :states '(normal visual motion)
+ "K" 'join-line
+ "J" '(lambda () (interactive) (join-line 1))
  )
 
 ;;; keybinds-native-rcp.el ends here
