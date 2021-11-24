@@ -115,6 +115,7 @@
 
 ;;;; Other
 (require 'web-browsing-rcp)
+(require 'application-framework-rcp)
 (require 'finance-rcp)
 (require 'convenient-functions-rcp)
 (require 'misc-packages-rcp)
