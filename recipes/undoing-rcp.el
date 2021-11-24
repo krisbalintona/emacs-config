@@ -24,8 +24,6 @@
 ;;; Undo-fu-session
 ;; Keep undo history across sessions
 (use-package undo-fu-session
-  :demand t
-  :after undo-fu
   :hook (after-init . global-undo-fu-session-mode)
   :custom
   (undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
