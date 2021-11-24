@@ -18,6 +18,7 @@
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
+  (eaf-buffer-background-color "#282C34") ; Set background color to uninspiring-dark background's
 
   ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   ;; Browser
