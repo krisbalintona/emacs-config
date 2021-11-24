@@ -31,7 +31,9 @@
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)
-  :config (recentf-mode)
+  :config
+  (recentf-mode)
+  (run-at-time nil (* 3 60) 'recentf-save-list) ; Save every 3 minutes
   )
 
 ;;; Saveplace
