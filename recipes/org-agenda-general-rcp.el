@@ -15,7 +15,7 @@
   :after org-roam
   :straight nil
   :general (kb/open-keys
-             "oa" '(org-agenda :which-key "Org-agenda")
+             "a" '(org-agenda :which-key "Org-agenda")
              )
   :custom
   (org-agenda-files (vulpea-project-files)) ; Dynamically generate agenda list

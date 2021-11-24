@@ -27,7 +27,7 @@
                     (other-window 1))
                   :which-key "Elfeed logs"))
   (kb/open-keys
-    "or" '(elfeed :which-key "Elfeed"))
+    "r" '(elfeed :which-key "Elfeed"))
   :custom
   ;; Give time for long updates to complete
   (elfeed-use-curl t)
