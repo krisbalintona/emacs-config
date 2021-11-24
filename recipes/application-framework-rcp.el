@@ -16,7 +16,10 @@
   ;; :after latex
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
-  :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  :custom
+  (eaf-config-location (concat no-littering-var-directory "eaf"))
+
+  ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   ;; Browser
   (eaf-browser-continue-where-left-off t) ; Also note `eaf-browser-restore-buffers'
   (eaf-browser-enable-adblocker t)
