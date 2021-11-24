@@ -92,7 +92,11 @@
   :custom
   (org-latex-compiler "xelatex")
   ;; Templates
-  (org-latex-title-command "\\begin{mla}{Kristoffer}{Balintona}{%c}{%k}{\\today}{%t}")
+  (org-latex-title-command
+   " \\newcommand{\\orgprofessor}{%c}
+\\newcommand{\\orgclass}{%k}
+\\newcommand{\\orgtitle}{%t}
+\\maketitle")
   (org-latex-toc-command
    "\\renewcommand{\\contentsname}{
   \\begin{center}
@@ -129,9 +133,8 @@
   (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
 
   :config
-  (add-to-list 'org-latex-classes
-               '("mla"
-                 " % * Preamble
+  (push '("mla"
+          " % * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
 % * Default packages
@@ -155,20 +158,25 @@
 \\setstretch{2}%
 \\frenchspacing% Single spaces after sentences
 
-% % ** Page header
+% ** Page header
 % 12pt is one-sixth of an inch. Subtract this from 0.5in to get headsep value
 \\setlength\\headsep{0.333in}
 
 % ** Paragraph indentation
 \\setlength{\\parindent}{0.5in}
 
-\\usepackage{lipsum}"
-                 ("\\section*{%s}" . "\\section*{%s}")
-                 ("\\subsection*{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-                 ))
+% ** Dummy text
+\\usepackage{lipsum}
+
+% ** Custom title
+\\renewcommand{\\maketitle}{\\begin{mla}{Kristoffer}{Balintona}{\\orgprofessor}{\\orgclass}{\\today}{\\orgtitle}}"
+          ("\\section*{%s}" . "\\section*{%s}")
+          ("\\subsection*{%s}" . "\\subsection*{%s}")
+          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+          ("\\paragraph{%s}" . "\\paragraph*{%s}")
+          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+          )
+        org-latex-classes)
   )
 
 ;;;; Org-contrib
