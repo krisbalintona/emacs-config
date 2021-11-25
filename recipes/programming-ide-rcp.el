@@ -182,6 +182,22 @@
                                          ))
   )
 
+;;; Apheleia
+;; Quality code formatting for (arbitrarily) many languages
+(use-package apheleia
+  :ensure-system-package (("~/.local/bin/black" . "pip install git+git://github.com/psf/black")
+                          ("~/node_modules/prettier". "sudo npm install prettier")
+                          ("~/.local/bin/clang-format" . "pip install clang-format")
+                          (latexindent . "sudo dnf install texlive-latexindent")
+                          )
+  :hook (after-init . apheleia-global-mode)
+  :config
+  (setf (alist-get 'black apheleia-formatters)
+        '("~/.local/bin/black" "-"))    ; Change executable location
+  (setf (alist-get 'latexindent apheleia-formatters)
+        '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")) ; Don't have indent.log polluting the directory
+  )
+
 ;;; Ancillary
 ;;;; Consult-lsp
 (use-package consult-lsp
