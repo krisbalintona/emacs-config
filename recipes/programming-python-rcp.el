@@ -11,17 +11,12 @@
 (require 'keybinds-evil-rcp)
 (require 'programming-projects-rcp)
 
-;;; Python
-;; Built-in python major mode
-(use-package python
-  :demand t
-  )
-
 ;;; Python-mode
 ;; A little better than the built-in python package
 (use-package python-mode
-  :demand t
-  :after python
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode)
+  ;; :after python
   :hook (py-shell-mode . (lambda ()
                            (hide-mode-line-mode)
                            (setq-local scroll-margin 0)

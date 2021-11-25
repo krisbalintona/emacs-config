@@ -12,8 +12,6 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
-  ;; :demand t
-  ;; :after latex
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :custom
