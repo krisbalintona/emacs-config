@@ -59,11 +59,11 @@
 
   ;; For opening files based on extension
   (org-file-apps
-   '(("\\.docx\\'" . "soffice -writer %s")
-     ("\\.odt\\'" . "soffice -writer %s")
+   '(("\\.docx\\'" . eaf-org-open-file)
+     ("\\.odt\\'" . eaf-org-open-file)
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . default)
-     ("\\.pdf\\'" . default)
+     ("\\.pdf\\'" . eaf-org-open-file)
      (directory . emacs)
      (auto-mode . emacs)
      ))
@@ -74,6 +74,14 @@
   (make-face 'kb/org-roam-link-to-node)
   (modify-face 'kb/org-roam-link-to-node "goldenrod3" nil nil nil t nil nil nil)
   (org-link-set-parameters "id" :follow 'org-id-open :face 'kb/org-roam-link-to-node)
+  :init
+  ;; Use EAF to open PDFs
+  (defun eaf-org-open-file (file &optional link)
+    "An wrapper function on `eaf-open'."
+    (evil-window-vsplit)
+    (evil-window-right 1)
+    (eaf-open file)
+    )
   )
 
 ;;; Related to org-export
