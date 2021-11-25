@@ -13,23 +13,30 @@
 ;;;; Prog-mode
 (use-package prog-mode
   :straight nil
-  :gfhook
-  ;; Custom font lock words
-  ;; Mainly for `prot-comment-timestamp-keyword'. Faces taken from
-  ;; `org-todo-keyword-faces' in org-agenda-general-rcp.el.
-  '(lambda () ; All `prog-mode' derived major modes
-     (font-lock-add-keywords nil
-                             '(;; TODO wrapped between whitespace
-                               ("\\s-TODO\\s-" 0 '(t :foreground "orange") t)
-                               ;; NOTE wrapped between whitespace
-                               ("\\s-NOTE\\s-" 0 '(t :foreground "turquoise") t)
-                               ;; REVIEW wrapped between whitespace
-                               ("\\s-REVIEW\\s-" 0 '(t :foreground "orchid") t)
-                               ;; FIXME wrapped between whitespace
-                               ("\\s-FIXME\\s-" 0 '(t :foreground "deep pink") t)
-                               ))
-     )
   :config (global-prettify-symbols-mode)
+  )
+
+;;;; Hl-todo
+(use-package hl-todo
+  :hook ((prog-mode . hl-todo-mode)
+         (org-mode . hl-todo-mode))
+  :general
+  (:keymaps 'hl-todo-mode-map
+             :prefix "C-c"
+             "p" 'hl-todo-previous
+             "n" 'hl-todo-next
+             "o" 'hl-todo-occur
+             "i" 'hl-todo-insert
+             )
+  :custom
+  (hl-todo-keyword-faces
+   '(("TODO" . "orange")
+     ("FIXME" error bold)
+     ("REVIEW" . "orchid")
+     ("NOTE" success bold)
+     ("BUG" error bold)
+     ("DEPRECATED" font-lock-doc-face bold)
+     ))
   )
 
 ;;;; Highlight-indent-guides
