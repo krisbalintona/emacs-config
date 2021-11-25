@@ -151,6 +151,18 @@
          )
   )
 
+;;;; Lsp-latex
+(use-package lsp-latex
+  :ensure-system-package ("~/.cargo/bin/texlab" . "cargo install --git https://github.com/latex-lsp/texlab.git --locked") ; Quite long of an install since compiling from source
+  :hook (latex-mode . (lambda ()
+                        (require 'lsp-latex)
+                        (lsp-deferred)
+                        ))
+  :custom
+  (lsp-latex-texlab-executable "~/.cargo/bin/texlab")
+  (lsp-latex-texlab-executable-argument-list nil)
+  )
+
 ;;;; QoL
 ;;;;; Align table cells
 ;; From
