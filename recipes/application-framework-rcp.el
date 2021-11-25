@@ -13,7 +13,7 @@
 ;; The Emacs application framework.
 (use-package eaf
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :load-path (lambda () (list (concat user-emacs-directory "site-lisp/emacs-application-framework"))) ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
   (eaf-buffer-background-color "#282C34") ; Set background color to uninspiring-dark background's
@@ -109,17 +109,17 @@
   :demand t
   :after eaf
   :straight nil
-  :load-path "~/.emacs.d/popweb"
+  :load-path (lambda () (list (concat user-emacs-directory "popweb")))
   :hook (latex-mode . popweb-latex-mode)
   :custom
   (popweb-popup-pos "point-bottom-right")
   :config
   ;; LaTeX preview functionality
-  (add-to-list 'load-path "/home/krisbalintona/.emacs.d/popweb/extension/latex")
+  (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/latex"))
   (require 'popweb-latex)
   (popweb-latex-mode)
   ;; Chinese-English translation popup
-  (add-to-list 'load-path "/home/krisbalintona/.emacs.d/popweb/extension/dict")
+  (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/dict"))
   (require 'popweb-dict-bing)           ; Translation using Bing
   (require 'popweb-dict-youdao)         ; Translation using Youdao
   )
