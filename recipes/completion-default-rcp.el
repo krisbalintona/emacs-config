@@ -50,7 +50,6 @@
 
 ;;; Vertico
 (use-package vertico
-  :demand t
   :general
   (:keymaps 'global-map
             "M-r" #'vertico-repeat
