@@ -103,6 +103,11 @@
   (copy-as-format-default "slack")
   )
 
+;;; Restart-emacs
+(use-package restart-emacs
+  :general ("C-x Q" '(restart-emacs :which-key "Restart emacs"))
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
