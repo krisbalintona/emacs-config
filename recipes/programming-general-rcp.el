@@ -116,11 +116,11 @@
                           (rg . ripgrep))
   :general
   (:keymaps 'help-map
-            [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
+             [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
   (:keymaps 'global-map
-            "C-x b" 'consult-buffer
-            "C-x B" 'consult-buffer-other-window
-            )
+             "C-x b" 'consult-buffer
+             "C-x B" 'consult-buffer-other-window
+             )
   (kb/nav-keys
     "h" '(consult-outline :which-key "Consult outline")
     "j" '(consult-line :which-key "Consult line")
@@ -197,6 +197,22 @@
   :hook (embark-collect-mode . consult-preview-at-point-mode)
   )
 
+;;;; Hideshow
+(use-package hideshow
+  :hook ((prog-mode conf-mode text-mode) . hs-minor-mode)
+  :general
+  (:prefix "C-c h"
+           "t" '(hs-hide-block :which-key "Toggle hide")
+           "l" '(hs-hide-level :which-key "Hide level")
+           "h" '(hs-hide-block :which-key "Hide block")
+           "s" '(hs-show-block :which-key "show block")
+           "H" '(hs-hide-all :which-key "Hide all")
+           "S" '(hs-show-all :which-key "show all")
+           )
+  (kb/toggle-keys
+    "t" '(hs-toggle-hiding :which-key "Toggle hide")
+    )
+  )
 ;;; File or buffer utilities
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
@@ -271,11 +287,11 @@
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
-            "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+             "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   (:keymaps 'outshine-mode-map
-            :states 'normal
-            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
-            "C-<return>" 'outshine-insert-heading)
+             :states 'normal
+             "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
+             "C-<return>" 'outshine-insert-heading)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
