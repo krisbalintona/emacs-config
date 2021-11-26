@@ -75,18 +75,17 @@
     "p" '(project-switch-project :which-key "Project.el switch project")
     "s" '(consult-ripgrep :which-key "Consult rg")
     )
-  (:keymaps 'project-prefix-map "m" #'magit-project-status)
+  (:keymaps 'project-prefix-map
+            "m" #'magit-project-status)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
    '((project-find-file "Find file")
-     (project-find-regexp "Find regexp")
+     (consult-ripgrep "Regexp" "r")
+     (magit-project-status "Magit")
+     (project-find-regexp "Xref regexp")
      (project-dired "Dired")
      (project-eshell "Eshell")
-     (project-compile "Compile")
-     (project-query-replace-regexp "Replace regexp")
-     (project-execute-extended-command "Execute extended command")
-     (magit-project-status "Magit")
      ))
   )
 
