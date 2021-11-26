@@ -108,12 +108,6 @@
   :general ("C-x Q" '(restart-emacs :which-key "Restart emacs"))
   )
 
-;;; Theme-magic
-(use-package theme-magic
-  :ensure-system-package (wal . "sudo pip install pywal")
-  :hook (window-setup . theme-magic-export-theme-mode)
-  )
-
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
