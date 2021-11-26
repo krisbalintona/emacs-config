@@ -88,7 +88,7 @@
    `(fringe ((t (:background ,atom-one-dark-bg))))
    `(region ((t (:background ,atom-one-dark-gray :distant-foreground ,atom-one-dark-mono-2))))
    `(highlight ((t (:background ,atom-one-dark-gray :distant-foreground ,atom-one-dark-mono-2))))
-   `(hl-line ((t (:background ,atom-one-dark-bg-hl :distant-foreground nil))))
+   `(hl-line ((t (:background "#1F2228" :distant-foreground nil))))
    `(header-line ((t (:background ,atom-one-dark-black))))
    `(vertical-border ((t (:background ,atom-one-dark-border :foreground ,atom-one-dark-border))))
    `(secondary-selection ((t (:background ,atom-one-dark-bg-1))))
@@ -528,7 +528,7 @@
 ;;;; Marginalia
 (add-hook 'marginalia-mode-hook
           #'(lambda ()
-             (set-face-attribute 'marginalia-documentation nil :inherit nil :foreground "#98C379" :slant 'italic)))
+              (set-face-attribute 'marginalia-documentation nil :inherit nil :foreground "#98C379" :slant 'italic)))
 
 ;;; Force faces for certain modes
 (defvar atom-one-dark-theme-force-faces-for-mode t

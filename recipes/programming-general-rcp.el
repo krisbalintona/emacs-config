@@ -16,6 +16,14 @@
   :config (global-prettify-symbols-mode)
   )
 
+;;;; Hl-line
+(use-package hl-line
+  :straight nil
+  :ghook
+  'prog-mode-hook
+  'conf-mode-hook
+  )
+
 ;;;; Hl-todo
 (use-package hl-todo
   :hook ((prog-mode . hl-todo-mode)
