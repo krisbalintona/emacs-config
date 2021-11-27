@@ -54,10 +54,9 @@
   ;; Toggle between two between current point and last better-jumper set point
   ;; (inspired by `evil-jump-backward-swap').
   (evil-define-motion better-jumper-jump-toggle (count)
-    (let ((pnt (point)))
-      (better-jumper-set-jump pnt)
-      (better-jumper-jump-backward 1)
-      ))
+    (better-jumper-jump-backward 1)
+    (better-jumper-set-jump (point))
+    )
   :config
   (better-jumper-mode)
 
@@ -68,7 +67,7 @@
                                              evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
                                              evil-search-next evil-search-previous
                                              evilmi-jump-items
-                                             consult-line
+                                             consult-line consult-outline consult-ripgrep consult-imenu
                                              )
                       :before 'better-jumper-set-jump)
 
