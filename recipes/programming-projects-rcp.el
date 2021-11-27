@@ -68,12 +68,12 @@
 (use-package project
   :general
   (kb/project-keys
-    "F" '(consult-find :which-key "Consult find file")
-    "b" '(project-switch-to-buffer :which-key "Project switch to buffer")
-    "d" '(project-dired :which-key "Project dired")
     "f" '(project-find-file :which-key "Project find file")
+    "F" '(consult-find :which-key "Consult find file")
+    "r" '(consult-ripgrep :which-key "Consult rg")
+    "b" '(project-switch-to-buffer :which-key "Project switch to buffer")
     "p" '(project-switch-project :which-key "Project.el switch project")
-    "s" '(consult-ripgrep :which-key "Consult rg")
+    "d" '(project-dired :which-key "Project dired")
     )
   (:keymaps 'project-prefix-map
             "m" #'magit-project-status)
@@ -84,7 +84,8 @@
      (consult-ripgrep "Regexp" "r")
      (magit-project-status "Magit")
      (project-find-regexp "Xref regexp")
-     (project-dired "Dired")
+     (project-find-dir "Open directory in dired")
+     (project-dired "Open dired")
      (project-eshell "Eshell")
      ))
   )
