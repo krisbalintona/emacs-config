@@ -230,6 +230,99 @@
              "DL" '(devdocs-search :which-key "Search for docs in site"))
   )
 
+;;;; Dash-docs
+;; Offline viewing of documentation via browser. Doesn't require an internet
+;; connection.
+(use-package dash-docs
+  :hook ((python-mode   . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
+         (haskell-mode  . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
+         (js2-mode      . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))
+         (lua-mode      . (lambda () (setq-local dash-docs-common-docsets '("Lua"))))
+         (LaTeX-mode    . (lambda () (setq-local dash-docs-common-docsets '("LaTeX"))))
+         )
+  :general (kb/lsp-keys
+             "D" '(:ignore t :which-key "Dashdocs")
+             "Di" '(dash-docs-install-docset :which-key "Install docs")
+             "Dl" '(builtin-dash-at-point :which-key "At-point search")
+             "DL" '(builtin-dash :which-key "Manual search")
+             )
+  :custom
+  (dash-docs-docsets-path (expand-file-name "dash-docs-docsets" no-littering-var-directory))
+  (dash-docs-browser-func 'browse-url)
+
+  (dash-docs-enable-debugging nil) ; Get rid of annoying messages when searching
+  (dash-docs-min-length 2)
+  :config
+  ;; My own interface for accessing docsets via `completing-read'.
+  (require 'cl-lib)
+  (require 'subr-x)
+  (require 'dash-docs)
+
+  (defvar builtin-dash--docset-elements nil
+    "Stores the previously retrieved docset results.")
+
+  (defvar-local builtin-dash-docsets nil
+    "Docsets to use for this buffer.")
+
+  (advice-add #'dash-docs-buffer-local-docsets :around
+              (lambda (old-fun &rest args)
+                (let ((old (apply old-fun args)))
+                  (cl-remove-duplicates (append old builtin-dash-docsets)))))
+
+  (defun builtin-dash--collect (docset)
+    "Given a string S, query a given docset, retrieve result, and
+remove the prepended docset name from each documented item. Also
+update `builtin-dash--docset-elements'."
+    (let* ((docset-results (dash-docs-search (concat docset " ")))
+           )
+      (setq builtin-dash--docset-elements docset-results)
+      (mapcar '(lambda (elt)
+                 (substring (car elt) (+ 1 (length docset)))
+                 )
+              docset-results)
+      ))
+
+  (defun builtin-dash--browse-matching-result (match)
+    "Given a MATCH, find matching result and browse it's url."
+    (when-let ((result (cdr (cl-find-if (lambda (e)
+                                          (string= match (car e))
+                                          )
+                                        builtin-dash--docset-elements)))
+               )
+      (dash-docs-browse-url result)
+      ))
+
+  (defun builtin-dash (&optional initial-input)
+    "Query dash docsets. INITIAL-INPUT will be used as the initial input if
+given."
+    ;; (interactive)
+    (interactive)
+    (dash-docs-initialize-debugging-buffer)
+    (dash-docs-create-buffer-connections)
+    (dash-docs-create-common-connections)
+    (let* ((docset (if (= (length dash-docs-common-docsets) 1)
+                       (car dash-docs-common-docsets)
+                     (completing-read "Select docset: "
+                                      dash-docs-common-docsets
+                                      )))
+           )
+      (builtin-dash--browse-matching-result
+       (concat docset " "
+               (completing-read "Documentation for: "
+                                (builtin-dash--collect docset)
+                                nil
+                                t
+                                initial-input
+                                t
+                                )))
+      ))
+
+  (defun builtin-dash-at-point ()
+    "Bring up a `builtin-dash' search interface with symbol at point."
+    (interactive)
+    (builtin-dash
+     (substring-no-properties (or (thing-at-point 'symbol) "")))
+    )
   )
 
 ;;;; Treemacs
