@@ -32,7 +32,8 @@
 (straight-use-package 'exec-path-from-shell)
 (require 'exec-path-from-shell)
 (setq exec-path-from-shell-arguments '("-l")) ; Remove `-i' (interactive) flag to quicken startup
-(exec-path-from-shell-initialize)             ; Call immediately
+(setq exec-path-from-shell-variables '("PATH" "MANPATH" "BROWSER"))
+(exec-path-from-shell-initialize)
 
 ;;; System-packages
 ;; Install system packages within Emacs. Necessary for use-package's
