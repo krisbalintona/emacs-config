@@ -105,10 +105,7 @@
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
   :straight (magit :type git :host github :repo "magit/magit")
-  :hook ((git-commit-mode . evil-insert-state)
-         (magit-process-mode . visual-line-mode)
-         (magit-diff-mode . visual-line-mode)
-         )
+  :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general
   (:keymaps 'magit-mode-map
             "C-<tab>" 'magit-section-toggle-children)
@@ -171,6 +168,8 @@
   (magit-diff-highlight-hunk-body t) ; Highlight hunks?
   (magit-diff-refine-hunk t) ; Extra-highlight word-level differences?
   :config
+  (evil-set-initial-state 'git-commit-mode 'insert)
+
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
   (require 'magit-extras) ; Load the remaining magit libraries
 
