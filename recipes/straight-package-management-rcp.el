@@ -31,7 +31,13 @@
 ;; Ensure Emacs' and system shell have same path
 (straight-use-package 'exec-path-from-shell)
 (require 'exec-path-from-shell)
-(setq exec-path-from-shell-arguments '("-l")) ; Remove `-i' (interactive) flag to quicken startup
+;; Set to nil, particularly removing the `-i' (interactive) flag to quicken
+;; startup. However, my variables need to be accessible by non-interactive
+;; shells, meaning the proper installation steps need to be followed. Thus,
+;; variables should be set in `~/.profile', `~/.bash_profile', or `~/.zshenv'
+;; instead of `~/.bashrc' or `~/.zshrc'. See here for more:
+;; https://github.com/purcell/exec-path-from-shell
+(setq exec-path-from-shell-arguments nil)
 (setq exec-path-from-shell-variables '("PATH" "MANPATH" "BROWSER"))
 (exec-path-from-shell-initialize)
 
