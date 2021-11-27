@@ -30,12 +30,12 @@
          (org-mode . hl-todo-mode))
   :general
   (:keymaps 'hl-todo-mode-map
-             :prefix "C-c"
-             "p" 'hl-todo-previous
-             "n" 'hl-todo-next
-             "o" 'hl-todo-occur
-             "i" 'hl-todo-insert
-             )
+            :prefix "C-c"
+            "p" 'hl-todo-previous
+            "n" 'hl-todo-next
+            "o" 'hl-todo-occur
+            "i" 'hl-todo-insert
+            )
   :custom
   (hl-todo-keyword-faces
    '(("TODO" . "orange")
@@ -116,11 +116,11 @@
                           (rg . ripgrep))
   :general
   (:keymaps 'help-map
-             [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
+            [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
   (:keymaps 'global-map
-             "C-x b" 'consult-buffer
-             "C-x B" 'consult-buffer-other-window
-             )
+            "C-x b" 'consult-buffer
+            "C-x B" 'consult-buffer-other-window
+            )
   (kb/nav-keys
     "h" '(consult-outline :which-key "Consult outline")
     "j" '(consult-line :which-key "Consult line")
@@ -287,11 +287,11 @@
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
-             "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+            "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   (:keymaps 'outshine-mode-map
-             :states 'normal
-             "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
-             "C-<return>" 'outshine-insert-heading)
+            :states 'normal
+            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
+            "C-<return>" 'outshine-insert-heading)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
