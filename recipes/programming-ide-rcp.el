@@ -214,21 +214,22 @@
             )
   )
 
-;;;; Dev-docs
+;;;; Devdocs
 ;; Viewing documentation within Emacs. Requires internet connection.
 (use-package devdocs
-  :hook ((python-mode . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
-         (haskell-mode . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
-         (js2-mode . (lambda () (setq-local devdocs-current-docs '("JavaScript"))))
-         (lua-mode . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
-         (LaTeX-mode . (lambda () (setq-local devdocs-current-docs '("latex"))))
+  :hook ((python-mode   . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
+         (haskell-mode  . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
+         (js2-mode      . (lambda () (setq-local devdocs-current-docs '("JavaScript"))))
+         (lua-mode      . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
+         (LaTeX-mode    . (lambda () (setq-local devdocs-current-docs '("latex"))))
          )
-  :general
-  (kb/lsp-keys
-    "D" '(:ignore t :which-key "Devdocs")
-    "Di" '(devdocs-install :which-key "Install documentation for a language")
-    "Dl" '(devdocs-lookup :which-key "Documentation lookup")
-    "DL" '(devdocs-search :which-key "Search for docs in site"))
+  :general (kb/lsp-keys
+             "D" '(:ignore t :which-key "Devdocs")
+             "Di" '(devdocs-install :which-key "Install documentation for a language")
+             "Dl" '(devdocs-lookup :which-key "Documentation lookup")
+             "DL" '(devdocs-search :which-key "Search for docs in site"))
+  )
+
   )
 
 ;;;; Treemacs

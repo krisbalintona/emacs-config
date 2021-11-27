@@ -25,9 +25,12 @@
 ;;; Browse-url
 (use-package browse-url
   :custom
-  (browse-url-browser-function 'browse-url-default-browser)
-  (browse-url-new-window-flag 'browse-url-firefox)
-  (browse-url-secondary-browser-function 'eww-browse-url)
+  (browse-url-generic-program (executable-find (getenv "BROWSER")))
+  (browse-url-browser-function 'browse-url-generic)       ; Primary browser
+  (browse-url-secondary-browser-function 'eww-browse-url) ; Secondary browser
+  (browse-url-handlers nil)
+
+  (browse-url-new-window-flag t)        ; Always open new browser window
   )
 
 ;;; Eww

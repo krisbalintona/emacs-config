@@ -12,8 +12,10 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
+  :demand t
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
   :load-path (lambda () (list (concat user-emacs-directory "site-lisp/emacs-application-framework"))) ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :after browse-url
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
   (eaf-buffer-background-color "#282C34") ; Set background color to uninspiring-dark background's
@@ -22,7 +24,7 @@
   ;; Browser
   (eaf-browser-continue-where-left-off t) ; Also note `eaf-browser-restore-buffers'
   (eaf-browser-enable-adblocker t)
-  (browse-url-browser-function 'eaf-open-browser)
+  (browse-url-browser-function 'eaf-open-browser) ; Set EAF to open WWW links
   (eaf-browser-default-search-engine "duckduckgo")
   (eaf-browser-blank-page-url "https://duckduckgo.com")
   (eaf-browser-download-path "/tmp")
