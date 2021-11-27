@@ -106,6 +106,7 @@
   :straight nil
   :custom
   (org-latex-compiler "xelatex")
+  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
   ;; Templates
   (org-latex-title-command
    " \\newcommand{\\orgprofessor}{%c}
@@ -136,17 +137,7 @@
      ("" "capt-of" nil)
      ("hidelinks" "hyperref" nil)
      ))
-
-  ;; Processes for org-to-latex conversion
-  ;; (org-latex-pdf-process
-  ;;  '("%latex -interaction nonstopmode -output-directory %o %f"
-  ;;    "biber --output-directory %o $(basename %f .tex)"
-  ;;    "%latex -interaction nonstopmode -output-directory %o %f"
-  ;;    "%latex -interaction nonstopmode -output-directory %o %f")
-  ;;  )
-  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")) ; From https://github.com/jkitchin/org-ref
   (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
-
   :config
   (push '("mla"
           " % * Preamble
