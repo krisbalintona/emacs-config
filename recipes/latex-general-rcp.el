@@ -151,6 +151,14 @@
          )
   )
 
+;;;; Evil-tex
+(use-package evil-tex
+  :after (evil tex)
+  :hook (latex-mode . evil-tex-mode)
+  :custom
+  (evil-tex-toggle-override-t t)
+  )
+
 ;;;; Lsp-latex
 (use-package lsp-latex
   :ensure-system-package ("~/.cargo/bin/texlab" . "cargo install --git https://github.com/latex-lsp/texlab.git --locked") ; Quite long of an install since compiling from source
