@@ -138,6 +138,10 @@ is only tested on \"insert\" action."
                    :actions '(insert autoskip navigate)
                    :when '(sp-in-comment-p sp-in-string-p))
     )
+
+  ;; Sh-mode
+  (sp-local-pair 'sh-mode "`" "`"
+                 :unless '(sp-point-before-word-p sp-point-before-same-p))
   )
 
 ;;; Imenu

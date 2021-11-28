@@ -104,6 +104,7 @@
 (require 'programming-web-rcp)
 (require 'programming-haskell-rcp)
 (require 'programming-python-rcp)
+(require 'programming-shell-rcp)
 
 ;;;; Shells
 (require 'shell-basic-rcp)
