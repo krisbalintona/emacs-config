@@ -20,28 +20,15 @@
             "l" 'dired-find-file)
   :custom
   (dired-auto-revert-buffer t)          ; Automatically revert buffer
-  (dired-dwim-target nil)               ; Guess default target directory?
+  (dired-dwim-target t)                 ; Guess default target directory?
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
-  (dired-recursive-copies 'always)              ; Copy directories recursively?
   (dired-listing-switches "-agho --group-directories-first") ; Flags `dired' passes to `ls'
-  )
-
-;;; Dired-git
-;; Show git information in dired
-(use-package dired-git
-  :ghook 'dired-mode-hook
-  :custom
-  (dired-git-disable-dirs
-   '())
-  (dired-git-parallel 7)                ; Number of parallel processes
-  )
-
-;;; Dired-single
-;; Use the same dired buffer for every directory you open using `dired'.
-(use-package dired-single
-  :general (:keymaps 'dired-mode-map
-                     [remap dired-up-directory] 'dired-single-up-directory
-                     [remap dired-find-file] 'dired-single-buffer)
+  (image-dired-thumb-size 150)                               ; Slightly larger thumbnails
+  ;; Always copy/delete recursively?
+  (dired-recursive-copies  'always)
+  (dired-recursive-deletes 'top)
+  ;; Ask whether destination dirs should get created when copying/removing files.
+  (dired-create-destination-dirs 'ask)
   )
 
 ;;; All-the-icons-dired
@@ -53,10 +40,20 @@
   (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
   )
 
+;;; Dired-git
+;; Show git information in dired
+(use-package dired-git
+  :ghook 'dired-mode-hook
+  :custom
+  (dired-git-disable-dirs '("~/"))
+  (dired-git-parallel 7)                ; Number of parallel processes
+  )
+
 ;;; Dired-open
 ;; Override how dired opens files with certain extensions
 (use-package dired-open
-  :defer 15
+  :demand t
+  :after dired
   :custom
   (dired-open-extensions '(("odt" . "soffice -writer")
                            ("docx" . "soffice -writer")
@@ -66,6 +63,38 @@
                            ))
   ;; ;; Try to use `xdg-open' before anything else
   ;; (add-to-list 'dired-open-functions #'dired-open-xdg t) ; Doesn't work as expected!
+  )
+
+;;; Dired-rsync
+;; This package adds a single command `dired-rsync' which allows the user to
+;; copy marked files in a dired buffer via rsync. This is useful, especially for
+;; large files, because the copy happens in the background and doesn’t lock up
+;; Emacs. It is also more efficient than using tramps own encoding methods for
+;; moving data between systems.
+(use-package dired-rsync
+  :after dired
+  :general
+  (:keymaps 'dired-mode-map
+            "C-c C-r" '(dired-rsync :which-key "Copy marked files with dired-rsync"))
+  :custom
+  (dired-rsync-unmark-on-completion t)
+  )
+
+;;; Fd-dired
+;; Show `find' results in a Dired buffer. Replaces the default `find-dired'
+;; command.
+(use-package fd-dired
+  :ensure-system-package (find)
+  :after dired
+  :general ([remap find-dired] #'(fd-dired :which-key "Fd-dired"))
+  )
+
+;;; Dired-single
+;; Use the same dired buffer for every directory you open using `dired'.
+(use-package dired-single
+  :general (:keymaps 'dired-mode-map
+                     [remap dired-up-directory] 'dired-single-up-directory
+                     [remap dired-find-file] 'dired-single-buffer)
   )
 
 ;;; Dired-hide-dotfiles
