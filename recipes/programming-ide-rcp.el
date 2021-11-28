@@ -189,11 +189,16 @@
                           ("~/node_modules/prettier". "sudo npm install prettier")
                           ("~/.local/bin/clang-format" . "pip install clang-format")
                           (latexindent . "sudo dnf install texlive-latexindent")
+                          (luafmt . "npm install --global lua-fmt")
                           )
   :hook (after-init . apheleia-global-mode)
   :custom
+  ;; Take a look at the `format-all' package for how to install particular
+  ;; formatters as well as their proper CLI commands. Namely, inspect
+  ;; `format-all--install-table' and `format-all--executable-table'.
   (apheleia-formatters
-   '((latexindent "latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
+   '((luafmt "luafmt" "--stdin")
+     (latexindent "latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
      (black "~/.local/bin/black" "-")
      (brittany "brittany")
      (clang-format "clang-format")
@@ -219,6 +224,7 @@
      (js3-mode . prettier)
      (js-mode . prettier)
      (json-mode . prettier)
+     (lua-mode . luafmt)
      (latex-mode . latexindent)
      (LaTeX-mode . latexindent)
      (php-mode)
