@@ -50,11 +50,14 @@
 ;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package highlight-indent-guides
-  :ghook 'prog-mode-hook
+  :ghook
+  'prog-mode-hook
+  'conf-mode-hook
   :gfhook 'highlight-indent-guides-auto-set-faces ; Set faces based on theme
   :custom
   (highlight-indent-guides-method 'column)
   (highlight-indent-guides-character ?⏐)
+  (highlight-indent-guides-suppress-auto-error t)
   )
 
 ;;;; Rainbow-mode
