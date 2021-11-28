@@ -199,7 +199,7 @@
   (apheleia-formatters
    '((luafmt "luafmt" "--stdin")
      (latexindent "latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
-     (black "~/.local/bin/black" "-")
+     (black "black" "-")
      (brittany "brittany")
      (clang-format "clang-format")
      (mix-format "mix" "format" "-")
@@ -207,7 +207,7 @@
      (google-java-format "google-java-format" "-")
      (isort "isort" "--stdout" "-")
      (ocamlformat "ocamlformat" "-" "--name" filepath)
-     (prettier npx "/home/krisbalintona/node_modules/.bin/prettier" "--stdin-filepath" filepath)
+     (prettier npx "prettier" "--stdin-filepath" filepath)
      (rustfmt "rustfmt" "--unstable-features" "--skip-children" "--quiet" "--emit" "stdout")
      (terraform "terraform" "fmt" "-")
      ))
