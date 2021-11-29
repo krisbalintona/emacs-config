@@ -29,8 +29,8 @@
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
-  :general ("C-c l" '(powerthesaurus-lookup-word-at-point :which-key "Thesaurus at point")
-            "C-c L" '(powerthesaurus-lookup-word :which-key "Thesuarus lookup"))
+  :general ("C-c l" '(powerthesaurus-lookup-synonyms-dwim :which-key "Synonyms")
+            "C-c L" '(powerthesaurus-lookup-dwim :which-key "Advanced word lookup"))
   )
 
 ;;; Offline
