@@ -667,6 +667,14 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
   :ghook 'org-mode-hook
+  :config
+  (define-typo-cycle typo-cycle-right-single-quotation-mark
+    "Cycle through the typewriter apostrophe and the right quotation mark.
+
+If used with a numeric prefix argument N, N typewriter apostrophes
+will be inserted."
+    ("'" "’")                           ; Swapped these two
+    )
   )
 
 ;;; org-general-rcp.el ends here
