@@ -77,6 +77,9 @@
                         (push '("\\ding{199}" . ?⑧) prettify-symbols-alist)
                         (push '("\\ding{200}" . ?⑨) prettify-symbols-alist)
                         (push '("\\ding{201}" . ?⑩) prettify-symbols-alist)
+                        ;; Angle brackets for text (non-math)
+                        (push '("\\textlangle" . ?⟨) prettify-symbols-alist)
+                        (push '("\\textrangle" . ?⟩) prettify-symbols-alist)
                         ))
   :gfhook
   'prettify-symbols-mode
