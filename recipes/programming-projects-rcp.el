@@ -84,6 +84,7 @@
      (consult-ripgrep "Regexp" "r")
      (magit-project-status "Magit")
      (project-find-regexp "Xref regexp")
+     (project-query-replace-regexp "Replace regexp" "R")
      (project-find-dir "Open directory in dired")
      (project-dired "Open dired")
      (project-eshell "Eshell")
