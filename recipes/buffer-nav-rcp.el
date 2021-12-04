@@ -67,6 +67,7 @@
                                              evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
                                              evil-search-next evil-search-previous
                                              evilmi-jump-items
+                                             back-to-indentation end-of-visual-line
                                              consult-line consult-outline consult-ripgrep consult-imenu
                                              )
                       :before 'better-jumper-set-jump)
