@@ -12,10 +12,15 @@
 ;;; Unicode-fonts
 ;; Support unicode characters
 (use-package unicode-fonts
-  ;; `unicode-fonts-setup' is run rebuilds the disk cache during Emacs startup
-  ;; whenever a font is added or removed, or any relevant configuration
+  ;; When `unicode-fonts-setup' is run it rebuilds the disk cache during Emacs
+  ;; startup whenever a font is added or removed, or any relevant configuration
   ;; variables are changed.
-  :ghook ('(window-setup-hook server-after-make-frame-hook) 'unicode-fonts-setup nil nil t)
+  :hook ((window-setup server-after-make-frame) . unicode-fonts-setup)
+  :preface
+  ;; Dependencies, though other packages have probably already installed them.
+  (use-package font-utils :demand t)
+  (use-package ucs-utils :demand t)
+  (use-package list-utils :demand t)
   )
 
 ;;; All-the-icons
