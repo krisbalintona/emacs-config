@@ -73,13 +73,10 @@
 ;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
 (use-package org-roam-ui
-  :straight (org-roam-ui :type git :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
-  :init
-  (use-package websocket)
-  (use-package simple-httpd)
-  (use-package f)
   :custom
+  (org-roam-ui-browser-function 'browse-url-firefox) ; Open in my actual browser, to avoid opening in EAF
   (org-roam-ui-open-on-start nil) ; Don't open graph on startup
   (org-roam-ui-sync-theme t)
   (org-roam-ui-follow t)
@@ -98,6 +95,10 @@
                               (violet . "#8be9fd")
                               (magenta . "#bd93f9"))
                             )
+  :preface
+  (use-package websocket :demand t)
+  (use-package simple-httpd :demand t)
+  (use-package f :demand t)
   )
 
 ;;; org-roam-other-rcp.el ends here
