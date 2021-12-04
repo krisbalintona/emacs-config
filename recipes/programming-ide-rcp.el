@@ -199,7 +199,7 @@
   (apheleia-formatters
    '((luafmt "luafmt" "--stdin")
      (latexindent "latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
-     (black "black" "-")
+     (black "black" "-l 80" "-")
      (brittany "brittany")
      (clang-format "clang-format")
      (mix-format "mix" "format" "-")
