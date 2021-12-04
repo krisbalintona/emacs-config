@@ -13,9 +13,10 @@
 ;; The Emacs application framework.
 (use-package eaf
   :demand t
+  :after browse-url
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
   :load-path (lambda () (list (concat user-emacs-directory "site-lisp/emacs-application-framework"))) ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
-  :after browse-url
+  :hook (eaf-pdf-viewer . hide-mode-line-mode)
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
   (eaf-buffer-background-color "#282C34") ; Set background color to uninspiring-dark background's
