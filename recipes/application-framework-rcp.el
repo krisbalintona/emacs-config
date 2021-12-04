@@ -30,6 +30,9 @@
   (eaf-browser-blank-page-url "https://duckduckgo.com")
   (eaf-browser-download-path "/tmp")
   (eaf-browser-default-zoom 1.25)
+  
+  ;; PDF
+  (eaf-pdf-notify-file-changed nil)
 
   ;; Dark mode?
   (eaf-browser-dark-mode "follow")
