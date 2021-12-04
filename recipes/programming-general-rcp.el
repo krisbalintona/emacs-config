@@ -26,8 +26,7 @@
 
 ;;;; Hl-todo
 (use-package hl-todo
-  :hook ((prog-mode . hl-todo-mode)
-         (org-mode . hl-todo-mode))
+  :hook (after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
             :prefix "C-c"
@@ -37,6 +36,9 @@
             "i" 'hl-todo-insert
             )
   :custom
+  (hl-todo-include-modes '(prog-mode text-mode))
+  (hl-todo-text-modes '(text-mode org-mode))
+  (hl-todo-exclude-modes nil)
   (hl-todo-keyword-faces
    '(("TODO" . "orange")
      ("FIXME" error bold)
