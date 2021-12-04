@@ -426,8 +426,8 @@ given."
          (lsp-treemacs-deps-list-mode . hide-mode-line-mode)
          )
   :general
-  (:keymaps 'lsp-mode-map
-            "Ft" '(lsp-treemacs-symbols :which-key "Lsp-treemacs"))
+  (kb/lsp-keys
+    "Ft" '(lsp-treemacs-symbols :which-key "Lsp-treemacs"))
   (:keymaps 'lsp-treemacs-error-list-mode-map
             :states 'normal
             "x" 'lsp-treemacs-quick-fix)
