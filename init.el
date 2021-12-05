@@ -55,9 +55,7 @@
 (require 'keybinds-general-rcp)
 (require 'keybinds-native-rcp)
 (require 'keybinds-evil-rcp)
-(unless (featurep 'keybinds-evil-rcp)
-  (require 'keybinds-kakoune-rcp)
-  )
+;; (require 'keybinds-kakoune-rcp)
 
 ;;;; Aethetics
 (require 'fonts-rcp)
