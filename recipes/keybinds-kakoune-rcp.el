@@ -63,21 +63,6 @@
   :bind (("C-s" . phi-search)
          ("C-r" . phi-search-backward)))
 
-;;; Undo-tree
-;; Probably the first thing you'd miss is undo and redo, which requires an extra
-;; package to work like it does in kakoune (and almost every other editor).
-(use-package undo-tree
-  :config
-  (global-undo-tree-mode)
-  :ryo
-  ("u" undo-tree-undo)
-  ("U" undo-tree-redo)
-  ("SPC u" undo-tree-visualize)
-  :bind (:map undo-tree-visualizer-mode-map
-              ("h" . undo-tree-visualize-switch-branch-left)
-              ("j" . undo-tree-visualize-redo)
-              ("k" . undo-tree-visualize-undo)
-              ("l" . undo-tree-visualize-switch-branch-right)))
 
 ;;; keybinds-kakoune-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
