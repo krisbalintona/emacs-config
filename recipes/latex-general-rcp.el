@@ -147,9 +147,9 @@
   :after latex
   :hook ((LaTeX-mode . turn-on-cdlatex)
          (LaTeX-mode . (lambda ()
-                         (push '("pline" "\\pline[]{?}[]" nil) cdlatex-env-alist-comb)
-                         (push '("fitchprf" "\\fitchprf{\n?\n}\n{\n\n}" nil) cdlatex-env-alist-comb)
-                         (push '("subproof" "\\subproof{\n?\n}\n{\n\n}" nil) cdlatex-env-alist-comb)
+                         (push '("pline" "\\pline[]{?}[]" nil) cdlatex-env-alist)
+                         (push '("fitchproof" "\\fitchprf{\n?\n}\n{\n\n}" nil) cdlatex-env-alist)
+                         (push '("subproof" "\\subproof{\n?\n}\n{\n\n}" nil) cdlatex-env-alist)
                          ))
          )
   )
