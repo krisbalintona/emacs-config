@@ -63,7 +63,7 @@
   ("g X" kakoune-exchange-cancel)
   ("h" backward-char :first '(kakoune-deactivate-mark))
   ("H" backward-char :first '(kakoune-set-mark-if-inactive))
-  ("i" kakoune-insert-mode)
+  ("i" kakoune-insert-mode :first '(kakoune-deactivate-mark))
   ("I" back-to-indentation :exit t)
   ("j" next-line :first '(kakoune-deactivate-mark))
   ("J" next-line :first '(kakoune-set-mark-if-inactive))
