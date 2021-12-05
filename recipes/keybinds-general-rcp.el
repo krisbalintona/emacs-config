@@ -17,7 +17,7 @@
 
 ;;; Leader keys
 (general-create-definer kb/general-keys ; General leader key
-  :keymaps '(normal visual insert motion)
+  :states '(normal visual insert motion)
   :prefix "SPC"
   :global-prefix "M-SPC"
   )
