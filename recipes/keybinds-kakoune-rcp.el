@@ -11,7 +11,12 @@
 ;;; Ryo-modal
 ;; Prerequisite for kakoune. Allows for creation of custom modal editing
 ;; framework.
-(use-package ryo-modal :demand t)
+(use-package ryo-modal
+  :demand t
+  :custom
+  (ryo-modal-cursor-color nil)          ; Use default color
+  (ryo-modal-cursor-type 'box)
+  )
 
 ;;; Kakoune
 ;; Alternative modal editor to evil.
@@ -168,8 +173,7 @@
             "z" ctl-x-map
             )
   :custom
-  (ryo-modal-cursor-color nil)          ; Use default color
-  (ryo-modal-cursor-type 'box)
+  (scroll-preserve-screen-position t) ; Preserve cursor location on screen when scrolling
   )
 
 ;;; Visual-regexp
