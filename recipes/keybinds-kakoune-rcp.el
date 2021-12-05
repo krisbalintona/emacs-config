@@ -21,7 +21,7 @@
 ;; Alternative modal editor to evil.
 (use-package kakoune
   :demand t
-  :after (ryo-modal consult)
+  :after (ryo-modal evil consult helpful)
   :ryo
   ;; this works now but I've gotten used to not having it
   (:mc-all t :mode 'prog-mode)
@@ -48,8 +48,7 @@
   ("D" kill-line)
   ("e" evil-forward-word-end :first '(kakoune-set-mark-here))
   ("E" evil-forward-WORD-end :first '(kakoune-set-mark-if-inactive))
-  ("f" kakoune-select-to-char :first '(kakoune-set-mark-here))
-  ("F" kakoune-select-to-char :first '(kakoune-set-mark-if-inactive))
+  ("f" helpful-at-point)
   ("g" (("h" beginning-of-line)
         ("<left>" beginning-of-line)
         ("j" end-of-buffer)
@@ -90,8 +89,6 @@
   ("p" kakoune-p)
   ("r" kakoune-replace-char)
   ("R" kakoune-replace-selection)
-  ("t" kakoune-select-up-to-char :first '(kakoune-set-mark-here))
-  ("T" kakoune-select-up-to-char :first '(kakoune-set-mark-if-inactive))
   ("w" forward-word :first '(kakoune-set-mark-here))
   ("W" forward-word :first '(kakoune-set-mark-if-inactive))
   ("M-w" forward-symbol :first '(kakoune-set-mark-here))
