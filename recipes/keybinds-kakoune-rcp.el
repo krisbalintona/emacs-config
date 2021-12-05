@@ -14,7 +14,6 @@
 (use-package ryo-modal
   :demand t
   :custom
-  (ryo-modal-cursor-color nil)          ; Use default color
   (ryo-modal-cursor-type 'box)
   )
 
@@ -22,18 +21,23 @@
 ;; Alternative modal editor to evil.
 (use-package kakoune
   :demand t
-  :after consult
+  :after (ryo-modal consult)
   :ryo
+  ;; this works now but I've gotten used to not having it
+  (:mc-all t :mode 'prog-mode)
+  ("b" kakoune-backward-same-syntax :first '(kakoune-set-mark-here))
+  ("B" kakoune-backward-same-syntax :first '(kakoune-set-mark-if-inactive))
+  ("w" forward-same-syntax :first '(kakoune-set-mark-here))
+  ("W" forward-same-syntax :first '(kakoune-set-mark-if-inactive))
   (:mc-all t)
-  ;; Region selectors ("M-i" (("w" er/mark-word) ("b" er/mark-inside-pairs) ("'"
-  ;; er/mark-inside-quotes))) ("M-a" (("w" er/mark-symbol) ("b"
-  ;; er/mark-outside-pairs) ("'" er/mark-outside-quotes)))) this works now but
-  ;; I've gotten used to not having it (ryo-modal-major-mode-keys 'prog-mode
-  ;; ("b" kakoune-backward-same-syntax :first '(kakoune-set-mark-here) :mc-all
-  ;; t) ("B" kakoune-backward-same-syntax :first '(kakoune-set-mark-if-inactive)
-  ;; :mc-all t) ("w" forward-same-syntax :first '(kakoune-set-mark-here) :mc-all
-  ;; t) ("W" forward-same-syntax :first '(kakoune-set-mark-if-inactive) :mc-all
-  ;; t)) Basic keybindings
+  ;; Region selectors
+  ;; ("M-i" (("w" er/mark-word)
+  ;;         ("b" er/mark-inside-pairs)
+  ;;         ("'" er/mark-inside-quotes)))
+  ;; ("M-a" (("w" er/mark-symbol)
+  ;;         ("b" er/mark-outside-pairs)
+  ;;         ("'" er/mark-outside-quotes)))
+  ;; Basic keybindings
   ("a" forward-char :exit t)
   ("A" move-end-of-line :exit t)
   ("b" backward-word :first '(kakoune-set-mark-here))
@@ -55,7 +59,8 @@
         ("g" kakoune-gg)
         ("l" end-of-line)
         ("<right>" end-of-line)
-        ("i" back-to-indentation)) :first '(kakoune-deactivate-mark))
+        ("i" back-to-indentation))
+   :first '(kakoune-deactivate-mark))
   ("G" (("h" beginning-of-line)
         ("<left>" beginning-of-line)
         ("j" end-of-buffer)
@@ -65,7 +70,8 @@
         ("g" kakoune-gg)
         ("l" end-of-line)
         ("<right>" end-of-line)
-        ("i" back-to-indentation)) :first '(kakoune-set-mark-if-inactive))
+        ("i" back-to-indentation))
+   :first '(kakoune-set-mark-if-inactive))
   ("g f" find-file-at-point)
   ("g x" kakoune-exchange)
   ("g X" kakoune-exchange-cancel)
@@ -168,12 +174,21 @@
                        (ryo-modal-mode 1))
               (progn (ryo-modal-mode -1)
                      (evil-local-mode 1))
-              )))
+              ))
+   "<escape>" '(lambda ()
+                 (interactive)
+                 (if ryo-modal-mode
+                     (keyboard-escape-quit)
+                   (progn (ryo-modal-mode 1)
+                          (keyboard-escape-quit)
+                          )))
+   )
   (:keymaps 'ryo-modal-mode-map
             "z" ctl-x-map
             )
   :custom
   (scroll-preserve-screen-position t) ; Preserve cursor location on screen when scrolling
+  (ryo-modal-cursor-color nil)          ; Use default color
   )
 
 ;;; Visual-regexp
