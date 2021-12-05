@@ -59,15 +59,15 @@
            "f" 'helpful-at-point
            )
   (kb/help-keys
-   "K" '(describe-key-briefly :which-key "Desc key echo")
-   "a" '(apropos-command :which-key "Apropos command")
-   "f" '(describe-function :which-key "Desc func")
-   "ha" '(consult-apropos :which-key "Consult apropos")
-   "k" '(helpful-key :which-key "Desc key")
-   "o" '(describe-symbol :which-key "Desc sym")
-   "v" '(describe-variable :which-key "Desc var")
-   "w" '(where-is :which-key "Where is...?")
-   )
+    "K" '(describe-key-briefly :which-key "Desc key echo")
+    "a" '(apropos-command :which-key "Apropos command")
+    "f" '(describe-function :which-key "Desc func")
+    "ha" '(consult-apropos :which-key "Consult apropos")
+    "k" '(helpful-key :which-key "Desc key")
+    "o" '(describe-symbol :which-key "Desc sym")
+    "v" '(describe-variable :which-key "Desc var")
+    "w" '(where-is :which-key "Where is...?")
+    )
   :custom
   (describe-bindings-outline t) ; Include interactive outline headings for each major mode in `describe-keys' buffer
   )
