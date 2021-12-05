@@ -83,7 +83,7 @@
   (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't fontify headline breadcrumb text (janky fix)
   (lsp-semantic-tokens-enable t)
-  (lsp-modeline-diagnostics-scope :workspace)
+  (lsp-modeline-diagnostics-scope :file)
   (lsp-modeline-code-actions-segments '(count icon name))
   (lsp-enable-file-watchers t) ; Affects performance. Enable if I do actual programming
   (lsp-log-io nil)             ; If set to true can cause a performance hit
