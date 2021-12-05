@@ -17,73 +17,73 @@
 
 ;;; Leader keys
 (general-create-definer kb/general-keys ; General leader key
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC"
   :global-prefix "M-SPC"
   )
 (general-create-definer kb/note-keys    ; For all lsp-related commands
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC n"
   :global-prefix "M-SPC n"
   )
 (general-create-definer kb/magit-keys   ; Magit et al.
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC g"
   :global-prefix "M-SPC g"
   )
 (general-create-definer kb/project-keys ; Projects
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC p"
   :global-prefix "M-SPC p"
   )
 (general-create-definer kb/lsp-keys     ; For all lsp-related commands
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :keymaps 'lsp-mode-map
   :prefix "\\"
   :global-prefix "M-SPC \\"
   )
 (general-create-definer kb/buffer-keys  ; Buffers
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC b"
   :global-prefix "M-SPC b"
   )
 (general-create-definer kb/file-keys    ; File-related
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC f"
   :global-prefix "M-SPC f"
   )
 (general-create-definer kb/mark-keys    ; Marks (e.g. bookmarks)
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC m"
   :global-prefix "M-SPC m"
   )
 (general-create-definer kb/help-keys    ; Help
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC h"
   :global-prefix "M-SPC h"
   )
 (general-create-definer kb/nav-keys     ; Navigation in buffers
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC j"
   :global-prefix "M-SPC j"
   )
 (general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC i"
   :global-prefix "M-SPC i"
   )
 (general-create-definer kb/open-keys    ; Open certain things
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC o"
   :global-prefix "M-SPC o"
   )
 (general-create-definer kb/toggle-keys  ; Toggles
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC t"
   :global-prefix "M-SPC t"
   )
 (general-create-definer kb/window-keys  ; Windows
-  :states '(normal visual insert motion)
+  :keymaps '(normal visual insert motion)
   :prefix "SPC w"
   :global-prefix "M-SPC w"
   )
