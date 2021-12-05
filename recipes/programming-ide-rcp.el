@@ -86,7 +86,8 @@
   (lsp-modeline-diagnostics-scope :file)
   (lsp-modeline-code-actions-segments '(count icon name))
   (lsp-enable-file-watchers t) ; Affects performance. Enable if I do actual programming
-  (lsp-log-io nil)             ; If set to true can cause a performance hit
+  (lsp-file-watch-threshold 5000) ; Increase number of watched files until prompt emerges
+  (lsp-log-io nil)                ; If set to true can cause a performance hit
 
   ;; When you hover over a symbol
   (lsp-enable-symbol-highlighting t)
