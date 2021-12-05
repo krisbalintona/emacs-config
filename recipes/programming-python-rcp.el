@@ -116,15 +116,6 @@
             )
   )
 
-;;; Yapfify
-;; Format python buffer to proper conventions using `yapf'
-(use-package yapfify
-  :after python-mode
-  :ensure-system-package (yapf . "pip install yapf")
-  :custom
-  (yapfify-executable (expand-file-name "~/.local/bin/yapf"))
-  )
-
 ;;; Pyimport
 ;; Functions which conveniently add or remove import statements when appropriate.
 (use-package pyimport
