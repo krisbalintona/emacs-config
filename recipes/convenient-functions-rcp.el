@@ -60,10 +60,12 @@
   "Basic indentation fix and wrap comments."
   (interactive)
   (kb/format-buffer-indentation--base)
-  (goto-char (point-min))
-  (while (re-search-forward comment-start nil t)
-    (call-interactively 'fill-paragraph)
-    (forward-line 1))
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward comment-start nil t)
+      (call-interactively 'fill-paragraph)
+      (forward-line 1)
+      ))
   )
 (defun kb/format-buffer-indentation ()
   "Properly indent the entire buffer."
