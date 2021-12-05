@@ -188,7 +188,8 @@
             )
   :custom
   (scroll-preserve-screen-position t) ; Preserve cursor location on screen when scrolling
-  (ryo-modal-cursor-color nil)          ; Use default color
+  (cursor-type 'bar)                  ; Use bar to for "insert mode"
+  (ryo-modal-cursor-color nil)        ; Use default color
   )
 
 ;;; Visual-regexp
