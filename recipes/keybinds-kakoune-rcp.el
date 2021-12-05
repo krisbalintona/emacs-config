@@ -168,6 +168,7 @@
             "z" 'ctl-x-map
             )
   :custom
+  (ryo-modal-cursor-color nil)          ; Use default color
   (ryo-modal-cursor-type 'box)
   )
 
