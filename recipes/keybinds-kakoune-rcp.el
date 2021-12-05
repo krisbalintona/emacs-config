@@ -8,12 +8,13 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-
-;;; Kakoune
+;;; Ryo-modal
 ;; Prerequisite for kakoune. Allows for creation of custom modal editing
 ;; framework.
 (use-package ryo-modal :demand t)
 
+;;; Kakoune
+;; Alternative modal editor to evil.
 (use-package kakoune
   :demand t
   :after consult
