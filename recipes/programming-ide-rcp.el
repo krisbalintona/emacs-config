@@ -225,8 +225,6 @@
      (js-mode . prettier)
      (json-mode . prettier)
      (lua-mode . luafmt)
-     (latex-mode . latexindent)
-     (LaTeX-mode . latexindent)
      (php-mode)
      (python-mode . black)
      (ruby-mode . prettier)
