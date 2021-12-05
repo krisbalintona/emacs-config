@@ -155,6 +155,7 @@
    )
   (:keymaps 'ryo-modal-mode-map
             "z" ctl-x-map
+            "zz" 'recenter
             )
   :custom
   (scroll-preserve-screen-position t) ; Preserve cursor location on screen when scrolling
