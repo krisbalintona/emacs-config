@@ -164,8 +164,7 @@
                      (evil-local-mode 1))
               )))
   (:keymaps 'ryo-modal-mode-map
-            "SPC h" 'help-command
-            "z" 'ctl-x-map
+            "z" ctl-x-map
             )
   :custom
   (ryo-modal-cursor-color nil)          ; Use default color
