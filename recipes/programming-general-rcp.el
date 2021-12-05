@@ -119,6 +119,8 @@
   :demand t
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
+  :ryo
+  ("P" consult-yank-pop)
   :general
   (:keymaps 'help-map
             [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))

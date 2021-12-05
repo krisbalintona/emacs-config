@@ -21,7 +21,7 @@
 ;; Alternative modal editor to evil.
 (use-package kakoune
   :demand t
-  :after (ryo-modal evil consult helpful)
+  :after (ryo-modal evil)
   :ryo
   (:mc-all t)
   ;; Basic keybindings
@@ -35,7 +35,6 @@
   ("D" kill-line)
   ("e" evil-forward-word-end :first '(kakoune-set-mark-here))
   ("E" evil-forward-WORD-end :first '(kakoune-set-mark-if-inactive))
-  ("f" helpful-at-point)
   ("g" (("h" beginning-of-line)
         ("<left>" beginning-of-line)
         ("j" end-of-buffer)
@@ -124,7 +123,6 @@
   ;; ("U" undo-tree-redo)
   ;; ("SPC u" undo-tree-visualize)
   ;; Access all C-x bindings easily
-  ("P" consult-yank-pop)
   ("m" mc/mark-next-like-this)
   ("M" mc/skip-to-next-like-this)
   ("n" mc/mark-previous-like-this)
