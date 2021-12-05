@@ -17,73 +17,73 @@
 
 ;;; Leader keys
 (general-create-definer kb/general-keys ; General leader key
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC"
   :global-prefix "M-SPC"
   )
 (general-create-definer kb/note-keys    ; For all lsp-related commands
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC n"
   :global-prefix "M-SPC n"
   )
 (general-create-definer kb/magit-keys   ; Magit et al.
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC g"
   :global-prefix "M-SPC g"
   )
 (general-create-definer kb/project-keys ; Projects
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC p"
   :global-prefix "M-SPC p"
   )
 (general-create-definer kb/lsp-keys     ; For all lsp-related commands
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :keymaps 'lsp-mode-map
   :prefix "\\"
   :global-prefix "M-SPC \\"
   )
 (general-create-definer kb/buffer-keys  ; Buffers
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC b"
   :global-prefix "M-SPC b"
   )
 (general-create-definer kb/file-keys    ; File-related
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC f"
   :global-prefix "M-SPC f"
   )
 (general-create-definer kb/mark-keys    ; Marks (e.g. bookmarks)
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC m"
   :global-prefix "M-SPC m"
   )
 (general-create-definer kb/help-keys    ; Help
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC h"
   :global-prefix "M-SPC h"
   )
 (general-create-definer kb/nav-keys     ; Navigation in buffers
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC j"
   :global-prefix "M-SPC j"
   )
 (general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC i"
   :global-prefix "M-SPC i"
   )
 (general-create-definer kb/open-keys    ; Open certain things
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC o"
   :global-prefix "M-SPC o"
   )
 (general-create-definer kb/toggle-keys  ; Toggles
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC t"
   :global-prefix "M-SPC t"
   )
 (general-create-definer kb/window-keys  ; Windows
-  :keymaps '(normal visual insert motion)
+  :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC w"
   :global-prefix "M-SPC w"
   )
