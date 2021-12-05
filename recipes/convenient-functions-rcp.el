@@ -88,6 +88,11 @@
            (if (and (not modified-before) (buffer-modified-p))
                (save-buffer))
            ))
+        ((or (eq major-mode 'emacs-lisp-mode)
+             (eq major-mode 'lisp-interaction-mode))
+         (kb/format-buffer-indentation--base))
+        ((derived-mode-p 'prog-mode)
+         (kb/format-buffer-indentation--fill-column))
         (t (kb/format-buffer-indentation--base))
         ))
 (kb/general-keys
