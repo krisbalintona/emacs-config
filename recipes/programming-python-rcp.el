@@ -37,6 +37,8 @@
                      "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1))) ; Python oddly replaces the normal C-<backspace>
   :custom
   (py-shell-name "ipython3")
+  (py-session-p t)
+  (py-dedicated-process-p nil)
 
   ;; When using `py-execute-' commands
   (py-split-windows-on-execute-function 'split-window-horizontally) ; How window gets split
