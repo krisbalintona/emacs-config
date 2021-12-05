@@ -23,20 +23,7 @@
   :demand t
   :after (ryo-modal evil consult helpful)
   :ryo
-  ;; this works now but I've gotten used to not having it
-  (:mc-all t :mode 'prog-mode)
-  ("b" kakoune-backward-same-syntax :first '(kakoune-set-mark-here))
-  ("B" kakoune-backward-same-syntax :first '(kakoune-set-mark-if-inactive))
-  ("w" forward-same-syntax :first '(kakoune-set-mark-here))
-  ("W" forward-same-syntax :first '(kakoune-set-mark-if-inactive))
   (:mc-all t)
-  ;; Region selectors
-  ;; ("M-i" (("w" er/mark-word)
-  ;;         ("b" er/mark-inside-pairs)
-  ;;         ("'" er/mark-inside-quotes)))
-  ;; ("M-a" (("w" er/mark-symbol)
-  ;;         ("b" er/mark-outside-pairs)
-  ;;         ("'" er/mark-outside-quotes)))
   ;; Basic keybindings
   ("a" forward-char :exit t)
   ("A" move-end-of-line :exit t)
@@ -116,18 +103,6 @@
   ("<S-right>" forward-char :first '(kakoune-set-mark-if-inactive))
   ("<left>" backward-char :first '(kakoune-deactivate-mark))
   ("<S-left>" backward-char :first '(kakoune-set-mark-if-inactive))
-  ;; Numeric arguments
-  ("0" "M-0" :norepeat t)
-  ("1" "M-1" :norepeat t)
-  ("2" "M-2" :norepeat t)
-  ("3" "M-3" :norepeat t)
-  ("4" "M-4" :norepeat t)
-  ("5" "M-5" :norepeat t)
-  ("6" "M-6" :norepeat t)
-  ("7" "M-7" :norepeat t)
-  ("8" "M-8" :norepeat t)
-  ("9" "M-9" :norepeat t)
-  ("-" "M--" :norepeat t)
   ;; Unimpaired-like functionality
   ("[" (("SPC" kakoune-insert-line-above)
         ("p" kakoune-paste-above)))
@@ -145,9 +120,10 @@
   ;; Undoing
   ("u" undo-fu-only-undo)
   ("U" undo-fu-only-redo)
-  ;; ("u" undo-tree-undo) ("U" undo-tree-redo) ("SPC u" undo-tree-visualize)
+  ;; ("u" undo-tree-undo)
+  ;; ("U" undo-tree-redo)
+  ;; ("SPC u" undo-tree-visualize)
   ;; Access all C-x bindings easily
-  ("," save-buffer)
   ("P" consult-yank-pop)
   ("m" mc/mark-next-like-this)
   ("M" mc/skip-to-next-like-this)
@@ -158,9 +134,6 @@
   ("v" er/expand-region)
   ("C-v" set-rectangular-region-anchor)
   ("M-s" mc/split-region)
-  (";" (("q" delete-window)
-        ("v" split-window-horizontally)
-        ("s" split-window-vertically)))
   ("C-u" scroll-down-command :first '(deactivate-mark))
   ("C-d" scroll-up-command :first '(deactivate-mark))
   :general
