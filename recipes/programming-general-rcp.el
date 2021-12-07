@@ -185,7 +185,10 @@
   :demand t               ; Other packages depend on this
   :after which-key ; Because I replace its value of `prefix-help-command'
   :general
-  ("M-o" '(embark-act :which-key "Embark-act"))
+  (:keymaps 'general-override-mode-map
+            "C-." 'embark-act
+            "C->" 'embark-dwim
+            )
   (kb/help-keys
     "B" '(embark-bindings :which-key "Embark-bindings")
     )
