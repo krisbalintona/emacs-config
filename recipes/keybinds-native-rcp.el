@@ -9,6 +9,12 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Ctl-x
+(general-define-key
+ :keymaps 'ctl-x-map
+ "K" '(kill-this-buffer :which-key "Kill this buffer")
+ )
+
 ;;; Everywhere
 (general-define-key
  "<escape>" 'keyboard-escape-quit       ; Make ESC quit everywhere
@@ -16,13 +22,6 @@
  )
 
 ;;; Global-map
-(general-define-key
- :keymaps 'global-map
- "C-M-;" 'eval-expression               ; Evaluate inputted expression
- "C-x K" 'kill-this-buffer
- "TAB" nil                              ; Remove `evil-jump-backward' keybind
- )
-
 (general-define-key
  :keymaps 'global-map
  :states 'insert
