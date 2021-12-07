@@ -48,7 +48,7 @@
  )
 
 (general-define-key
- :keymaps 'global-map
+ :keymaps '(global-map general-override-mode-map)
  :states '(normal visual motion)
  "K" 'join-line
  "J" '(lambda () (interactive) (join-line 1))
