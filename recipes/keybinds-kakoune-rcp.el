@@ -21,7 +21,7 @@
 ;; Alternative modal editor to evil.
 (use-package kakoune
   :demand t
-  :after (ryo-modal evil)
+  :after (ryo-modal evil undo-fu)
   :ryo
   (:mc-all t)
   ;; Basic keybindings
