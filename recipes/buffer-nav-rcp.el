@@ -34,10 +34,12 @@
      ;; New, custom actions
      (?. . avy-action-embark)
      (?H . avy-action-helpful)
+     (?D . avy-action-define)
      ))
   :init
   ;; Additional avy actions. Inspired or taken from
   ;; https://karthinks.com/software/avy-can-do-anything/
+  ;; Embark
   (defun avy-action-embark (pt)
     (unwind-protect
         (save-excursion
@@ -46,10 +48,34 @@
       (select-window
        (cdr (ring-ref avy-ring 0))))
     t)
+
+  ;; Helpful
   (defun avy-action-helpful (pt)
     (save-excursion
       (goto-char pt)
       (helpful-at-point))
+    (select-window
+     (cdr (ring-ref avy-ring 0)))
+    t)
+
+  ;; Dictionary
+  (defun dictionary-search-dwim (&optional arg)
+    "Search for definition of word at point. If region is active,
+search for contents of region instead. If called with a prefix
+argument, query for word to search."
+    (interactive "P")
+    (if arg
+        (dictionary-search nil)
+      (if (use-region-p)
+          (dictionary-search (buffer-substring-no-properties
+                              (region-beginning)
+                              (region-end)))
+        (if (thing-at-point 'word)
+            (dictionary-lookup-definition)
+          (dictionary-search-dwim '(4))))))
+  (defun avy-action-define (pt)
+    (goto-char pt)
+    (dictionary-search-dwim)
     (select-window
      (cdr (ring-ref avy-ring 0)))
     t)
