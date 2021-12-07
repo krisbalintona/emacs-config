@@ -51,9 +51,6 @@
 ;;; Vertico
 (use-package vertico
   :general
-  (:keymaps 'global-map
-            "M-r" #'vertico-repeat
-            )
   (:keymaps 'vertico-map
             "?" #'minibuffer-completion-help
             "C-<return>" #'vertico-quick-insert

@@ -9,16 +9,15 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Ace-jump
+;;; Avy
 ;; Quickly jump to any character
-(use-package ace-jump-mode
-  :general ("M-a" '(ace-jump-mode :which-key "Ace-jump"))
-  :config
-  (setq ace-jump-mode-scope 'window
-        ace-jump-mode-case-fold t ; Ignore case?
-        ace-jump-mode-gray-background nil ; Don't make text's background gray
-        ace-jump-mode-submode-list ; Priority of ace-jump selections
-        '(ace-jump-char-mode ace-jump-word-mode ace-jump-line-mode))
+(use-package avy
+  :general ("M-a" 'avy-goto-word-1
+            "M-A" 'avy-goto-char
+            "M-r" 'avy-resume
+            )
+  :custom
+  (avy-all-windows nil)                 ; Scope
   )
 
 ;;; Ace-link
