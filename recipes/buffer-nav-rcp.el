@@ -18,6 +18,41 @@
             )
   :custom
   (avy-all-windows nil)                 ; Scope
+  (avy-keys                             ; Used for letter combinations
+   '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+   )
+  (avy-dispatch-alist ; Avy actions (first narrow so letter combinations appear)
+   '((?x . avy-action-kill-move)
+     (?X . avy-action-kill-stay)
+     (?t . avy-action-teleport)
+     (?m . avy-action-mark)
+     (?n . avy-action-copy)
+     (?y . avy-action-yank)
+     (?Y . avy-action-yank-line)
+     (?i . avy-action-ispell)
+     (?z . avy-action-zap-to-char)
+     ;; New, custom actions
+     (?. . avy-action-embark)
+     (?H . avy-action-helpful)
+     ))
+  :init
+  ;; Additional avy actions. Inspired or taken from
+  ;; https://karthinks.com/software/avy-can-do-anything/
+  (defun avy-action-embark (pt)
+    (unwind-protect
+        (save-excursion
+          (goto-char pt)
+          (embark-act))
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+  (defun avy-action-helpful (pt)
+    (save-excursion
+      (goto-char pt)
+      (helpful-at-point))
+    (select-window
+     (cdr (ring-ref avy-ring 0)))
+    t)
   )
 
 ;;; Ace-link
