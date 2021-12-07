@@ -29,15 +29,20 @@
                  (interactive)
                  (forward-line -1)
                  (back-to-indentation))
- [remap newline] '(lambda ()            ; Newline with indent
+ [remap newline] '(lambda ()                 ; Newline with indent
                     (interactive)
                     (insert "\n")
                     (indent-according-to-mode))
- "M-<return>" '(lambda ()                    ; Insert newline and go to it
+ "M-<return>" '(lambda ()                    ; Insert newline above and go to it
                  (interactive)
                  (move-beginning-of-line 1)
                  (insert "\n")
                  (forward-line -1)
+                 (indent-according-to-mode))
+ "C-<return>" '(lambda ()                    ; Insert newline below and go to it
+                 (interactive)
+                 (move-end-of-line 1)
+                 (insert "\n")
                  (indent-according-to-mode))
  "C-a" 'back-to-indentation
  "C-e" 'move-end-of-line
