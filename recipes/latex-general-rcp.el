@@ -79,7 +79,7 @@
                         (push '("\\ding{201}" . ?⑩) prettify-symbols-alist)
                         ;; Angle brackets for text (non-math)
                         (push '("\\textlangle" . ?⟨) prettify-symbols-alist)
-                        (push '("\\textrangle" . ?⟩) prettify-symbols-alist)
+                              (push '("\\textrangle" . ?⟩) prettify-symbols-alist)
                         ))
   :gfhook
   'prettify-symbols-mode
@@ -89,6 +89,8 @@
   'LaTeX-math-mode ; Access to math macros
   'visual-line-mode ; So evil can respect true lines
   '(lambda () (mixed-pitch-mode -1))
+  'hl-line-mode
+  '(lambda () (flycheck-mode -1))
   :preface (defvaralias 'latex-mode-hook 'LaTeX-mode-hook "For easier use-package declaration.")
   :config
   ;; Add font locked words to latex-mode
