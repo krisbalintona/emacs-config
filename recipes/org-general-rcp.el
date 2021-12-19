@@ -198,9 +198,13 @@
 (use-package org-footnote
   :straight nil
   :after org
+  :general (:keymaps 'org-mode-map
+                     "C-x f" '(org-footnote-new :which-key "New footnote"))
   :custom
-  (org-footnote-section nil) ; Don't create footnote headline
-  (org-footnote-auto-adjust t) ; Automatically renumber
+  (org-footnote-section nil)            ; Don't create footnote headline
+  (org-footnote-auto-adjust t)          ; Automatically renumber
+  (org-footnote-define-inline t) ; Write footnote content where you declare rather in a particular section (i.e. `org-footnote-section')?
+  (org-footnote-fill-after-inline-note-extraction t) ; Not sure what this does
   )
 
 ;;; Org-attach
@@ -332,8 +336,8 @@ re-align the table if necessary. (Necessary because org-mode has a
              in (cl-remove-if-not #'listp org-todo-keywords)
              for keywords =
              (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                     (match-string 1 x)
-                                   x))
+                                (match-string 1 x)
+                              x))
                      keyword-spec)
              if (eq type 'sequence)
              if (member keyword keywords)
