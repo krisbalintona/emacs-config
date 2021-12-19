@@ -77,18 +77,6 @@ targets and targets."
       ))
   )
 
-;;; Citeproc
-(use-package citeproc
-  )
-
-;;; Citeproc-org
-;; Allow Hugo to export `org-cite' citations
-(use-package citeproc-org
-  :disabled t      ; This is a scam! Breaks citations for non-LaTeX file exports
-  :after (citeproc ox-hugo)
-  :hook (org-mode . citeproc-org-setup)
-  )
-
 ;;; org-blogging-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-blogging-rcp)
