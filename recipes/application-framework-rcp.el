@@ -118,7 +118,7 @@
   :load-path (lambda () (list (concat user-emacs-directory "popweb")))
   :hook (latex-mode . popweb-latex-mode)
   :custom
-  (popweb-popup-pos "point-bottom-right")
+  (popweb-popup-pos "top-left")
   :config
   ;; LaTeX preview functionality
   (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/latex"))
