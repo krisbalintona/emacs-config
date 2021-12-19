@@ -127,8 +127,19 @@
   (completion-category-overrides
    '((file (styles . (basic-remote ; For `tramp' hostname completion with `vertico'
                       partial-completion ; Kinda like initialism for directory/file names
-                      orderless          ; Of course, default to `orderless'
-                      )))))
+                      ;; Of course, then default to `orderless'
+                      orderless-initialism
+                      orderless-literal
+                      orderless-flex
+                      )))
+     (command (styles orderless+kb))
+     (symbol (styles orderless+kb))
+     (variable (styles orderless+kb))
+     (consult-multi (styles . (orderless-literal
+                               orderless-regexp
+                               orderless-flex
+                               )))
+     ))
 
   (orderless-component-separator   ; What separates components
    ;; " +"                            ; Default
@@ -136,11 +147,11 @@
    'orderless-escapable-split-on-space  ; Use backslash for literal space
    )
   (orderless-matching-styles
-   '(orderless-literal
-     orderless-initialism
-     orderless-prefixes
+   '(orderless-initialism
      orderless-regexp
+     orderless-literal
      orderless-flex
+     ;; orderless-prefixes
      ;; orderless-strict-leading-initialism
      ;; orderless-strict-initialism
      ;; orderless-strict-full-initialism
@@ -172,6 +183,14 @@ It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
     (when (string-suffix-p "~" pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
+:config
+  ;; Custom orderless style definitions
+  (orderless-define-completion-style orderless+kb
+    (orderless-matching-styles '(orderless-initialism
+                                 orderless-literal
+                                 orderless-regexp
+                                 orderless-flex
+                                 )))
   )
 
 ;;; completion-default-rcp.el ends here
