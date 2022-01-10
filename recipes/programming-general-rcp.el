@@ -269,12 +269,6 @@
   :config (sudo-edit-indicator-mode)
   )
 
-;;;; Tramp
-(use-package tramp
-  :custom
-  (tramp-default-method "ssh")
-  )
-
 ;;; Modes
 ;;;; Conf-mode
 ;; For Unix config files
