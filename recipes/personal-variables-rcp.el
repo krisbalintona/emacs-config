@@ -48,7 +48,7 @@
   (interactive)
   (concat
    (if sudo "sudo ")
-   (cond (kb/linux-arch "yay")
+   (cond (kb/linux-arch "paru")
          (kb/linux-fedora "dnf")
          (kb/linux-ubuntu "apt")
          (t "Unsupported distribution!"))

@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Make sure any external programs (e.g. pip and python) are installed here and
+;; Make sure any external programs (e.g. pip and python) are -Sed here and
 ;; are available in my PATH.
 ;;
 ;; TODO 2021-08-20: These statements currently only work with Fedora. Change
@@ -14,25 +14,25 @@
 
 ;;; Python
 (unless (executable-find "python")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " install python")))
+  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S python")))
 (unless (executable-find "pip")
-  (async-shell-command "sudo " (kb/which-package-manager) " install pip"))
+  (async-shell-command "sudo " (kb/which-package-manager) " -S pip"))
 
 ;;; Javascript
 (unless (executable-find "npm")
-  (async-shell-command "sudo " (kb/which-package-manager) " install npm"))
+  (async-shell-command "sudo " (kb/which-package-manager) " -S npm"))
 (unless (executable-find "yarn")
-  (async-shell-command "sudo npm install yarn -g"))
+  (async-shell-command "sudo npm -S yarn -g"))
 
 ;;; Rust
 (unless (executable-find "rustc")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " install rust")))
+  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S rust")))
 (unless (executable-find "cargo")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " install cargo")))
+  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S cargo")))
 
 ;;; Java
 (unless (executable-find "java")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " install java-latest-openjdk")))
+  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S jre-openjdk")))
 
 ;;; external-programs-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
