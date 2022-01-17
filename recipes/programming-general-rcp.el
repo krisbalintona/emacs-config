@@ -183,9 +183,12 @@
 ;; thus selectrum!)
 (use-package embark
   :demand t               ; Other packages depend on this
-  :after which-key ; Because I replace its value of `prefix-help-command'
+  :after which-key        ; Because I replace its value of `prefix-help-command'
   :general
-  (:keymaps 'general-override-mode-map
+  (:states '(normal insert visual motion)
+           "C-." 'embark-act
+           )
+  (:keymaps 'vertico-map
             "C-." 'embark-act
             "C->" 'embark-dwim
             )
