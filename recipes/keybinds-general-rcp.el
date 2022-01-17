@@ -96,7 +96,7 @@
   "g" '(:ignore t :which-key "Magit")
   "h" '(:ignore t :which-key "Help")
   "i" '(:ignore t :which-key "Yank and kill")
-  "l" '(:ignore t :which-key "Navigation")
+  "j" '(:ignore t :which-key "Navigation")
   "m" '(:ignore t :which-key "Marks")
   "n" '(:ignore t :which-key "Notes")
   "o" '(:ignore t :which-key "Open...")
