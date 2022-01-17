@@ -128,17 +128,12 @@
    '((file (styles . (basic-remote ; For `tramp' hostname completion with `vertico'
                       partial-completion ; Kinda like initialism for directory/file names
                       ;; Of course, then default to `orderless'
-                      orderless-initialism
-                      orderless-literal
-                      orderless-flex
+                      orderless
                       )))
      (command (styles orderless+kb))
      (symbol (styles orderless+kb))
      (variable (styles orderless+kb))
-     (consult-multi (styles . (orderless-literal
-                               orderless-regexp
-                               orderless-flex
-                               )))
+     (consult-multi (styles orderless))
      ))
 
   (orderless-component-separator   ; What separates components
@@ -183,7 +178,7 @@ It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
     (when (string-suffix-p "~" pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
-:config
+  :config
   ;; Custom orderless style definitions
   (orderless-define-completion-style orderless+kb
     (orderless-matching-styles '(orderless-initialism
