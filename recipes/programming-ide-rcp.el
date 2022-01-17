@@ -186,11 +186,11 @@
 ;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia
-  :ensure-system-package (("~/.local/bin/black" . "pip install git+git://github.com/psf/black")
-                          ("~/node_modules/prettier". "sudo npm install prettier")
-                          ("~/.local/bin/clang-format" . "pip install clang-format")
-                          (latexindent . "sudo dnf install texlive-latexindent")
-                          (luafmt . "npm install --global lua-fmt")
+  :ensure-system-package ((black . python-black)
+                          (prettier)
+                          (clang-format . clang-format-all-git)
+                          (latexindent . texlive-latexindent-meta)
+                          (luafmt . nodejs-lua-fmt)
                           )
   :hook (after-init . apheleia-global-mode)
   :custom
