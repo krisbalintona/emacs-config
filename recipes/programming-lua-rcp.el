@@ -15,6 +15,7 @@
 ;; https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
 ;; NOTE: For lsp-mode support, install lua-language-server, a separate system package
 (use-package lua-mode
+  :ensure-system-package (lua-language-server)
   :hook (lua-mode . lsp-deferred)
   :general
   (:keymaps 'lua-mode-map
