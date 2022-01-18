@@ -64,7 +64,7 @@
   (evil-respect-visual-line-mode t)     ; Don't skip lines in visual-line-mode
 
   (evil-want-fine-undo t)               ; More granular undos
-  (evil-show-paren-range 3)
+  (evil-show-paren-range 0)
   (evil-kill-on-visual-paste nil)       ; Add replaced text to kill ring?
 
   (evil-esc-mode t)
