@@ -174,15 +174,18 @@
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.15)
 
-  (corfu-count 13)
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)
+  (corfu-count 13)
   (corfu-cycle nil)
 
-  (corfu-echo-documentation t)
+  (corfu-echo-documentation 0.5)
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
-  (corfu-quit-no-match 1.2) ; Quit if 0 matches, assuming completion started within this integer
-  (corfu-commit-predicate t)
+  (corfu-quit-no-match 1) ; Quit if 0 matches, assuming completion started within this integer
+  (corfu-commit-predicate 'corfu-candidate-previewed-p)
+
+  (corfu-preview-current t)             ; Preview current candidate?
+  (corfu-preselect-first nil)           ; Preselect first candidate?
   :config (corfu-global-mode)
   )
 
