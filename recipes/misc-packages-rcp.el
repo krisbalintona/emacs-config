@@ -108,6 +108,33 @@
   :general ("C-x Q" '(restart-emacs :which-key "Restart emacs"))
   )
 
+;;; Tempel
+;; Small and simple snippet/template system compatible with corfu.
+(use-package tempel
+  :general
+  ("M-+" 'tempel-complete               ; List all available templates
+   "M-*" 'tempel-insert                 ; Insert typed template
+   )
+  (:keymaps 'tempel-map
+            "C-c C-c" 'tempel-done
+            )
+  :hook ((prog-mode text-mode) . tempel-setup-capf)
+  :custom
+  (tempel-file (no-littering-expand-var-file-name "tempel-templates"))
+  :init
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; The depth is set to -1, such that `tempel-expand' is tried *before* the
+    ;; programming mode Capf. If a template name can be completed it takes
+    ;; precedence over the programming mode completion. `tempel-expand' only
+    ;; triggers on exact matches. Alternatively use `tempel-complete' if you
+    ;; want to see all matches, but then Tempel will probably trigger too
+    ;; often when you don't expect it.
+    (add-hook 'completion-at-point-functions #'tempel-expand -1 'local))
+  :config
+  (tempel-global-abbrev-mode)
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
