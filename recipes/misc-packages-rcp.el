@@ -131,6 +131,7 @@
 
     "eb" '(eval-buffer :which-key "Eval buffer")
     "ee" '(eval-last-sexp :which-key "Eval last sexp")
+    "ed" '(eval-defun :which-key "Eval top-level form")
     "er" '(eval-region :which-key "Eval region")
 
     "hi" '(info :which-key "Info pages")
