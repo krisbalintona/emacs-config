@@ -51,6 +51,7 @@
 
 ;;; Vertico
 (use-package vertico
+  :demand t                             ; Otherwise won't get loaded immediately
   :straight (vertico :files (:defaults "extensions/*") ; Special recipe to load extensions conveniently
                      :includes (vertico-indexed
                                 vertico-flat
