@@ -14,7 +14,6 @@
 (use-package avy
   :general ("M-a" 'avy-goto-word-1
             "M-A" 'avy-goto-char
-            "M-r" 'avy-resume
             )
   :custom
   (avy-all-windows nil)                 ; Scope

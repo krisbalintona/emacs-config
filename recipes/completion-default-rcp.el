@@ -51,23 +51,27 @@
 ;;; Vertico
 (use-package vertico
   :general
+  ("M-r" #'vertico-repeat)
   (:keymaps 'vertico-map
             "?" #'minibuffer-completion-help
             "C-<return>" #'vertico-quick-insert
             "M-<return>" #'vertico-quick-exit
+            [remap backward-kill-word] #'vertico-directory-delete-word ; If not typing a file name, delete directory
+            ;; Multiform toggles
+            "M-G" #'vertico-multiform-grid
+            "M-F" #'vertico-multiform-flat
+            "M-R" #'vertico-multiform-reverse
+            "M-U" #'vertico-multiform-unobtrusive
             )
+  :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
+         (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
+         )
   :custom
   ;; Workaround for problem with `org-refile'. See
   ;; https://github.com/minad/vertico#org-refile
   (org-refile-use-outline-path 'file)
   (org-outline-path-complete-in-steps nil)
   :init
-  (load (concat user-emacs-directory "straight/build/vertico/extensions/vertico-quick.el"))
-  (load (concat user-emacs-directory "straight/build/vertico/extensions/vertico-repeat.el"))
-  (load (concat user-emacs-directory "straight/build/vertico/extensions/vertico-indexed.el"))
-  :config
-  (vertico-mode)
-
   ;; Workaround for problem with `tramp' hostname completions. This overrides
   ;; the completion style specifically for remote files! See
   ;; https://github.com/minad/vertico#tramp-hostname-completion
@@ -80,6 +84,28 @@
   (add-to-list 'completion-styles-alist
                '(basic-remote           ; Name of `completion-style'
                  kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+
+  ;; Extensions
+  (mapc 'load (file-expand-wildcards    ; Load all extensions
+               (concat user-emacs-directory "straight/build/vertico/extensions/*.el")))
+
+  (vertico-indexed-mode)
+  (vertico-reverse-mode)
+  (vertico-multiform-mode)
+
+  (setq vertico-grid-min-columns 1)
+  (setq vertico-grid-max-columns 8)
+  (setq vertico-multiform-categories
+   '((file grid reverse)
+     (consult-grep buffer)
+     (imenu buffer)
+     (t reverse)
+     ))
+  (setq vertico-multiform-commands
+   '(;; (project-switch-project flat)
+     ))
+  :config
+  (vertico-mode)
   )
 
 ;;; Selectrum
