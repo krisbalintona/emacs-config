@@ -16,12 +16,12 @@
   :custom
   (history-length 10000)
   (history-delete-duplicates t)
+  (savehist-save-minibuffer-history t)
   (savehist-autosave-interval 30)
   (savehist-save-minibuffer-history t)
   :config
-  (add-to-list 'savehist-additional-variables 'recentf-list) ; Save recent files
   (add-to-list 'savehist-additional-variables 'kill-ring)    ; Save kill ring
-  :config (savehist-mode)
+  (savehist-mode)
   )
 
 ;;; Recentf
