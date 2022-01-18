@@ -20,6 +20,8 @@
 ;; Overlay lisp evaluations into the current buffer (near cursor)
 (use-package eros
   :ghook 'emacs-lisp-mode-hook
+  :custom
+  (eros-eval-result-prefix "⟹  ")       ; Fancy!
   )
 
 ;;; Syntax highlighting
