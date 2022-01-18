@@ -246,7 +246,6 @@
 ;;;; Consult-lsp
 (use-package consult-lsp
   :after lsp-mode
-  :gfhook consult-lsp-marginalia-mode
   :general
   (:keymaps 'lsp-mode-map
             [remap consult-flycheck] '(consult-lsp-diagnostics :which-key "Consult lsp diagnostics")
@@ -256,6 +255,8 @@
             "gs" '(consult-lsp-symbols :which-key "Consult lsp symbols regexp")
             "gf" '(consult-lsp-file-symbols :which-key "Consult lsp file symbols list")
             )
+  :config
+  (consult-lsp-marginalia-mode)
   )
 
 ;;;; Devdocs
@@ -320,9 +321,9 @@ update `builtin-dash--docset-elements'."
     (let* ((docset-results (dash-docs-search (concat docset " ")))
            )
       (setq builtin-dash--docset-elements docset-results)
-      (mapcar '(lambda (elt)
-                 (substring (car elt) (+ 1 (length docset)))
-                 )
+      (mapcar #'(lambda (elt)
+                  (substring (car elt) (+ 1 (length docset)))
+                  )
               docset-results)
       ))
 

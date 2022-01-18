@@ -30,7 +30,7 @@
   (eaf-browser-blank-page-url "https://duckduckgo.com")
   (eaf-browser-download-path "/tmp")
   (eaf-browser-default-zoom 1.25)
-  
+
   ;; PDF
   (eaf-pdf-notify-file-changed nil)
 
@@ -114,8 +114,8 @@
 (use-package popweb
   :demand t
   :after eaf
-  :straight nil
   :load-path (lambda () (list (concat user-emacs-directory "popweb")))
+  :straight nil
   :hook (latex-mode . popweb-latex-mode)
   :custom
   (popweb-popup-pos "top-left")
