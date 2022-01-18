@@ -29,12 +29,12 @@
   :hook (after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
-            :prefix "C-c"
-            "p" 'hl-todo-previous
-            "n" 'hl-todo-next
-            "o" 'hl-todo-occur
-            "i" 'hl-todo-insert
-            )
+             :prefix "C-c"
+             "p" 'hl-todo-previous
+             "n" 'hl-todo-next
+             "o" 'hl-todo-occur
+             "i" 'hl-todo-insert
+             )
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(text-mode org-mode))
@@ -131,11 +131,13 @@
   ("P" consult-yank-pop)
   :general
   (:keymaps 'help-map
-            [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
-  (:keymaps 'global-map
-            "C-x b" 'consult-buffer
-            "C-x B" 'consult-buffer-other-window
-            )
+             [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
+  ([remap switch-to-buffer] '(consult-buffer :which-key "Consult buffer")
+   "C-x B" '(consult-buffer-other-window :which-key "Consult buffer other window")
+   )
+  (:keymaps 'vertico-map
+             "M-r" 'consult-history
+             )
   (kb/nav-keys
     "h" '(consult-outline :which-key "Consult outline")
     "j" '(consult-line :which-key "Consult line")
@@ -194,12 +196,12 @@
   :after which-key        ; Because I replace its value of `prefix-help-command'
   :general
   (:states '(normal insert visual motion)
-           "C-." 'embark-act
-           )
-  (:keymaps 'vertico-map
             "C-." 'embark-act
-            "C->" 'embark-dwim
             )
+  (:keymaps 'vertico-map
+             "C-." 'embark-act
+             "C->" 'embark-dwim
+             )
   (kb/help-keys
     "B" '(embark-bindings :which-key "Embark-bindings")
     )
@@ -302,11 +304,11 @@
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
-            "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+             "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
   (:keymaps 'outshine-mode-map
-            :states 'normal
-            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
-            "C-<return>" 'outshine-insert-heading)
+             :states 'normal
+             "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
+             "C-<return>" 'outshine-insert-heading)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
