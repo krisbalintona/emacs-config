@@ -172,6 +172,15 @@
          (python-mode . (lambda () (setq-local evilmi-always-simple-jump t))))
   )
 
+;;; Evil-exchange
+;; Swap marked regions
+(use-package evil-exchange
+  :demand t
+  :after evil evil-collection
+  :config
+  (evil-exchange-install)
+  )
+
 ;;; keybinds-evil-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybinds-evil-rcp)
