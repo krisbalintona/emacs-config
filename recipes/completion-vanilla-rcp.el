@@ -1,8 +1,9 @@
-;;; completion-default-rcp.el --- Summary
+;;; completion-vanilla-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
-;; Selectrum completion framework and its cousin packages.
+;; Completion framework and cousin packages which are lightweight and faithful
+;; to the base Emacs architecture.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -214,6 +215,6 @@ parses its input."
                                  )))
   )
 
-;;; completion-default-rcp.el ends here
+;;; completion-vanilla-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'completion-default-rcp)
+(provide 'completion-vanilla-rcp)

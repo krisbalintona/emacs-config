@@ -103,7 +103,7 @@
   :custom
   (project-x-window-list-file
    (no-littering-expand-var-file-name "project-x/project-window-list.el"))
-  (project-x-save-interval 300)
+  (project-x-save-interval nil)         ; I'll save myself
   (project-x-local-identifier ".project") ; File name(s) which indicate that a directory is a project
   )
 
