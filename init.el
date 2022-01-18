@@ -12,10 +12,12 @@
 ;; meaning chemacs2 gets in the way.
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
-;;; Defer garbage collection
-;; Set as high as possible threshold for GC as early as possible in order to
-;; reduce load time. This value is then lowered to a normal threshold later
+;;; Garbage collection
+;; Defer garbage collection. Set as high as possible threshold for GC as early
+;; as possible in order to reduce load time. This value is then lowered to a
+;; normal threshold later.
 (setq gc-cons-threshold most-positive-fixnum)
+(setq garbage-collection-messages t)
 
 ;;; Load elisp config path
 ;; Add elisp directory that contains configuration files to load path
