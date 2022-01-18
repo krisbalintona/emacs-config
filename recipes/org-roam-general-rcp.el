@@ -12,7 +12,6 @@
 
 ;;; Org-roam
 (use-package org-roam
-  :straight (org-roam :type git :host github :repo "org-roam/org-roam")
   :ghook ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general

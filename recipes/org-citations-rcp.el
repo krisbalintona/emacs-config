@@ -59,6 +59,7 @@
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
   :demand t
+  :after org-roam org-roam-bibtex
   :general (:prefix "C-c b"
                     "b" '(citar-insert-citation :which-key "Insert citation")
                     "r" '(citar-insert-reference :which-key "Insert reference")
@@ -72,6 +73,8 @@
      (suffix . "     ${=type=:20}    ${tags keywords keywords:*}")
      (note . "#+title: Notes on ${author editor}, ${title}") ; For new notes
      ))
+  (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
+  (citar-notes-paths org-roam-directory)
   :config
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
