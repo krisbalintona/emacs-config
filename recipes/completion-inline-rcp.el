@@ -1,8 +1,8 @@
-;;; completion-text-rcp.el --- Summary
+;;; completion-inline-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
-;; Packages that configure the company completion backend.
+;; Packages that configure inline completion.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -306,6 +306,6 @@
     (push expansion org-structure-template-alist))
   )
 
-;;; completion-text-rcp.el ends here
+;;; completion-inline-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'completion-text-rcp)
+(provide 'completion-inline-rcp)

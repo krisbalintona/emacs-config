@@ -64,7 +64,7 @@
   :ghook 'counsel-mode-hook
   )
 
-;;;; Project.el
+;;;; Project
 (use-package project
   :general
   (kb/project-keys
@@ -89,6 +89,22 @@
      (project-dired "Open dired")
      (project-eshell "Eshell")
      ))
+  )
+
+;;;; Project-x
+;; Companion to project.el. Saves window configurations for projects.
+(use-package project-x
+  :straight (project-x :type git :host github :repo "karthink/project-x")
+  :hook (after-init . project-x-mode)   ; Adds hooks and keybinds
+  :general (kb/project-keys
+             "w" '(project-x-window-state-save :which-key "Project-x save")
+             "j" '(project-x-window-state-load :which-key "Project-x load")
+             )
+  :custom
+  (project-x-window-list-file
+   (no-littering-expand-var-file-name "project-x/project-window-list.el"))
+  (project-x-save-interval 300)
+  (project-x-local-identifier ".project") ; File name(s) which indicate that a directory is a project
   )
 
 ;;;; Xref

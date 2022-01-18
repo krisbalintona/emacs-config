@@ -64,7 +64,7 @@
 ;;;; Completion frameworks
 (require 'completion-general-rcp)
 (require 'completion-default-rcp)
-(require 'completion-text-rcp)
+(require 'completion-inline-rcp)
 (require 'completion-ivy-rcp)
 (require 'completion-helm-rcp)
 
