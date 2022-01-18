@@ -189,6 +189,18 @@
   :config (corfu-global-mode)
   )
 
+;;;; Kind-icon
+;; Icons for corfu!
+(use-package kind-icon
+  :demand t
+  :after corfu
+  :custom
+  (kind-icon-blend-background nil)  ; Mix foreground and background ("blended")?
+  (kind-icon-default-face 'corfu-default) ; To compute blended backgrounds correctly
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+  )
+
 ;;;; Custom completions
 (autoload 'ffap-file-at-point "ffap")
 (defun kb/complete-path-at-point ()
