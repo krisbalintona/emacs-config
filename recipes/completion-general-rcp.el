@@ -39,13 +39,13 @@
 ;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
-  :straight (marginalia :type git :host github :repo "minad/marginalia")
   :ghook 'window-setup-hook
   :general
   (:keymaps 'minibuffer-local-map
             "M-A" '(marginalia-cycle :which-key "Marginalia cycle"))
   :custom
   (marginalia-max-relative-age 0)       ; Don't show relative ages
+  (marginalia-align 'right)
   )
 
 ;;; completion-general-rcp.el ends here
