@@ -112,6 +112,7 @@
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
+  :disabled                             ; Doesn't work for now...
   :demand t
   :after eaf
   :load-path (lambda () (list (concat user-emacs-directory "popweb")))
