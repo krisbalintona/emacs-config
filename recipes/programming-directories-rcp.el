@@ -10,6 +10,7 @@
 (require 'keybinds-general-rcp)
 
 ;;; Dired
+;;;; Dired
 ;; Emacs' file manager
 (use-package dired
   :straight nil
@@ -31,7 +32,7 @@
   (dired-create-destination-dirs 'ask)
   )
 
-;;; All-the-icons-dired
+;;;; All-the-icons-dired
 ;; Add icons which represent file types
 (use-package all-the-icons-dired
   :ghook 'dired-mode-hook
@@ -40,7 +41,7 @@
   (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
   )
 
-;;; Dired-git
+;;;; Dired-git
 ;; Show git information in dired
 (use-package dired-git
   :ghook 'dired-mode-hook
@@ -49,7 +50,7 @@
   (dired-git-parallel 7)                ; Number of parallel processes
   )
 
-;;; Dired-open
+;;;; Dired-open
 ;; Override how dired opens files with certain extensions
 (use-package dired-open
   :demand t
@@ -65,7 +66,7 @@
   ;; (add-to-list 'dired-open-functions #'dired-open-xdg t) ; Doesn't work as expected!
   )
 
-;;; Dired-rsync
+;;;; Dired-rsync
 ;; This package adds a single command `dired-rsync' which allows the user to
 ;; copy marked files in a dired buffer via rsync. This is useful, especially for
 ;; large files, because the copy happens in the background and doesn’t lock up
@@ -80,7 +81,7 @@
   (dired-rsync-unmark-on-completion t)
   )
 
-;;; Fd-dired
+;;;; Fd-dired
 ;; Show `find' results in a Dired buffer. Replaces the default `find-dired'
 ;; command.
 (use-package fd-dired
@@ -89,7 +90,7 @@
   :general ([remap find-dired] #'(fd-dired :which-key "Fd-dired"))
   )
 
-;;; Dired-single
+;;;; Dired-single
 ;; Use the same dired buffer for every directory you open using `dired'.
 (use-package dired-single
   :general (:keymaps 'dired-mode-map
@@ -97,7 +98,7 @@
                      [remap dired-find-file] 'dired-single-buffer)
   )
 
-;;; Dired-hide-dotfiles
+;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
   :ghook 'dired-mode-hook
@@ -106,6 +107,21 @@
                      "H" 'dired-hide-dotfiles-mode)
   :custom
   (dired-hide-dotfiles-verbose nil) ; No annoying announcements in echo area anymore
+  )
+
+;;; Misc
+;;;; Consult-dir
+;; Convenient directory selection. Good synergy with dired and embark.
+(use-package consult-dir
+  :after embark
+  :general
+  ("C-x C-d" '(consult-dir :which-key "Consult dir"))
+  (:keymaps 'vertico-map
+            "C-x C-d" 'consult-dir           ; Fancy directory selection
+            "C-x C-j" 'consult-dir-jump-file ; Regexp for file in current directory
+            )
+  :custom
+  (consult-dir-default-command 'find-file) ; What do I do once I choose a directory from `consult-dir'?
   )
 
 ;;; programming-directories-rcp.el ends here
