@@ -179,7 +179,7 @@
   (corfu-count 13)
   (corfu-cycle nil)
 
-  (corfu-echo-documentation 0.5)
+  (corfu-echo-documentation nil)        ; Already use corfu-doc
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
   (corfu-quit-no-match 1) ; Quit if 0 matches, assuming completion started within this integer
   (corfu-commit-predicate 'corfu-candidate-previewed-p)
@@ -199,6 +199,24 @@
   (kind-icon-default-face 'corfu-default) ; To compute blended backgrounds correctly
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+  )
+
+;;;; Corfu-doc
+;; Documentation window for corfu!
+(use-package corfu-doc
+  :straight (corfu-doc :type git :host github :repo "galeo/corfu-doc")
+  :after corfu
+  :hook (corfu-mode . corfu-doc-mode)
+  :general (:keymaps 'corfu-map
+                     [remap corfu-show-documentation] #'corfu-doc-toggle
+                     ;; Scroll in the documentation window
+                     "M-n" #'corfu-doc-scroll-up
+                     "M-p" #'corfu-doc-scroll-down
+                     )
+  :custom
+  (corfu-doc-delay 0.75)
+  (corfu-doc-max-width 70)
+  (corfu-doc-max-height 20)
   )
 
 ;;;; Custom completions
