@@ -111,6 +111,14 @@
   :hook (prog-mode . adaptive-wrap-prefix-mode)
   )
 
+;;;; Goggles
+;; Pretty and unobtrusive modified-region-highlighter
+(use-package goggles
+  :ghook ('prog-mode 'text-mode)
+  :config
+  (setq-default goggles-pulse t)        ; Enable pulsing by default
+  )
+
 ;;; General utility
 ;;;; Consult
 ;; Counsel equivalent for default Emacs completion. It provides many useful
