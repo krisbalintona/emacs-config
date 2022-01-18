@@ -177,7 +177,7 @@
 
   ;; Performance-related variables
   (magit-refresh-status-buffer t) ; Change to nil as last resort
-  (magit-refresh-verbose t) ; Help troubleshoot bottlenecks (check `*Messages*' buffer)
+  (magit-refresh-verbose nil) ; Help troubleshoot bottlenecks (check `*Messages*' buffer)?
   ;; Prefer these to be nil for performance boosts
   (magit-diff-highlight-indentation t) ; Highlight wrong indentation?
   (magit-diff-highlight-trailing t) ; Highlight trailing spaces?
