@@ -95,6 +95,11 @@
 (setq read-buffer-completion-ignore-case t
       read-file-name-completion-ignore-case t)
 
+;;; Have window-setup hooks run on server-make-frame-hook
+;; Otherwise those `window-setup-hook's won't be run at startup for Emacs
+;; daemons.
+(add-hook 'server-after-make-frame-hook '(lambda () (run-hooks 'window-setup-hook)))
+
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
