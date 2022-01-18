@@ -9,20 +9,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Unicode-fonts
-;; Support unicode characters
-(use-package unicode-fonts
-  ;; When `unicode-fonts-setup' is run it rebuilds the disk cache during Emacs
-  ;; startup whenever a font is added or removed, or any relevant configuration
-  ;; variables are changed.
-  :hook ((window-setup server-after-make-frame) . unicode-fonts-setup)
-  :preface
-  ;; Dependencies, though other packages have probably already installed them.
-  (use-package font-utils :demand t)
-  (use-package ucs-utils :demand t)
-  (use-package list-utils :demand t)
-  )
-
 ;;; All-the-icons
 ;; Provides a bunch of unicode icons which many other packages leverage
 (use-package all-the-icons
