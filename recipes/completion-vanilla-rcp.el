@@ -54,6 +54,7 @@
   :general
   ("M-r" #'vertico-repeat)
   (:keymaps 'vertico-map
+            "<escape>" #'minibuffer-keyboard-quit
             "?" #'minibuffer-completion-help
             "C-<return>" #'vertico-quick-insert
             "M-<return>" #'vertico-quick-exit
