@@ -20,6 +20,10 @@
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
   (eaf-buffer-background-color "#282C34") ; Set background color to uninspiring-dark background's
+  (eaf-preview-display-function-alist
+   '(("org-previewer" . eaf--org-preview-display)
+     ("markdown-previewer" . eaf--markdown-preview-display)
+     ))
 
   ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   ;; Browser

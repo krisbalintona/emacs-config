@@ -77,9 +77,11 @@
   :init
   ;; Use EAF to open PDFs
   (defun eaf-org-open-file (file &optional link)
-    "An wrapper function on `eaf-open'."
-    (evil-window-vsplit)
-    (evil-window-right 1)
+    "A wrapper function on `eaf-open'. Open in another window and
+move to that window."
+    (when (< (length (window-list)) 2)
+      (split-window-right))
+    (other-window 1)
     (eaf-open file)
     )
   )
