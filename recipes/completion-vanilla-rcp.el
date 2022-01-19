@@ -73,6 +73,8 @@
             "?" #'minibuffer-completion-help
             "C-<return>" #'vertico-quick-insert
             "M-<return>" #'vertico-quick-exit
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group
             [remap backward-kill-word] #'vertico-directory-delete-word ; If not typing a file name, delete directory
             ;; Multiform toggles
             "M-G" #'vertico-multiform-grid
