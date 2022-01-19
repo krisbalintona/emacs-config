@@ -110,9 +110,9 @@
 ;;; Toggle visiting of image files as images (Auto Image File mode).
 (auto-image-file-mode t)
 
-;;; Show unfinished keystrokes immediately
-;; Echo keystrokes (of unfinished commands) immediately
-(setq echo-keystrokes 0.01)
+;;; Show unfinished keystrokes quickly
+;; Echo keystrokes (of unfinished commands) much quicker
+(setq echo-keystrokes 0.5)
 
 ;;; Window sizing and splitting
 (setq window-resize-pixelwise t
