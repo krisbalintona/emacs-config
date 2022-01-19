@@ -157,7 +157,8 @@
   (magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside
      magit-diff-highlight-hunk-region-using-overlays
-     magit-diff-highlight-hunk-region-using-face))
+     magit-diff-highlight-hunk-region-using-face
+     ))
 
   ;; Sections
   (magit-module-sections-nested t)
@@ -184,12 +185,27 @@
   (magit-diff-paint-whitespace nil) ; Where to highlight whitespace errors?
   (magit-diff-highlight-hunk-body t) ; Highlight hunks?
   (magit-diff-refine-hunk t) ; Extra-highlight word-level differences?
+
+  ;; Removes functions ran in `magit-status-sections-hook'. Can also improve
+  ;; performance. Use `magit-refresh-verbose' to diagnose which of these should
+  ;; be removed.
+  (magit-disabled-section-inserters
+   '(magit-insert-upstream-branch-header
+     ;; magit-insert-tags-header
+     ;; magit-insert-status-headers
+     ;; magit-insert-unpushed-to-pushremote
+     ;; magit-insert-unpushed-to-upstream-or-recent
+     ;; magit-insert-unpulled-from-upstream
+     ;; magit-insert-unpulled-from-pushremote
+     ;; magit-insert-push-branch-header
+     ))
   :config
   (evil-set-initial-state 'git-commit-mode 'insert)
 
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
   (require 'magit-extras) ; Load the remaining magit libraries
 
+  ;; Adds hooks to `magit-status-sections-hook'.
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules-overview ; Have modules section
                           'magit-insert-status-headers ; Insert header sections for `magit-status'
