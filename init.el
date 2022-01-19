@@ -8,14 +8,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;; Native-compilations settings
-;; Allow async compilations occupy all the cores minus 1
-(setq native-comp-async-jobs-number (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1))
-
-;; Make sure `eln-cache' is set. Sometimes gets set to .emacs.d directory,
-;; meaning chemacs2 gets in the way.
-(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
-
 ;;; Garbage collection
 ;; Defer garbage collection. Set as high as possible threshold for GC as early
 ;; as possible in order to reduce load time. This value is then lowered to a
