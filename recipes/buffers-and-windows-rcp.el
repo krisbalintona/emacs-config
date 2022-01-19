@@ -188,6 +188,44 @@
              )
   )
 
+;;;; Popper
+;; "Tame ephemeral windows"
+(use-package popper
+  :general ("C-'" 'popper-toggle-latest
+            "M-'" 'popper-cycle
+            "C-\"" 'popper-kill-latest-popup
+            "C-M-'" 'popper-toggle-type
+            )
+  :custom
+  (popper-reference-buffers
+   '("\\*Messages\\*"
+
+     "Output\\*$"
+     "\\*Async Shell Command\\*"
+     compilation-mode
+
+     ;; To consistently match shells, supply both the buffer name and major mode
+     "^\\*eshell.*\\*$"
+     eshell-mode
+     "^\\*shell.*\\*$"
+     shell-mode
+     "^\\*term.*\\*$"
+     term-mode
+     "^\\*vterm.*\\*$"
+     vterm-mode
+     "^\\*IPython3.*\\*$"
+     py-shell-mode
+     ))
+  (popper-display-control 'user)
+  (popper-display-function 'popper-select-popup-at-bottom) ; Group by project.el
+  (popper-group-function 'popper-group-by-project)
+  (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-emphasis)))
+  (popper-echo-transform-function nil)
+  :config
+  (popper-mode)
+  (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
+  )
+
 ;;; Buffers
 ;;;; Bookmark
 (use-package bookmark
