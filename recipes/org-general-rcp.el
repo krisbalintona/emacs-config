@@ -232,15 +232,26 @@ move to that window."
      (org-agenda-files :regexp . "tnaoirnta") ; This random string will remove all headlines
      ("/home/krisbalintona/Documents/org-database/roam/inbox.org" :level . 0) ; Inbox file
      ))
-  (org-refile-use-outline-path 'file)
   (org-refile-use-cache nil)
   ;; (org-refile-history t) ; FIXME 2021-10-09: For some reason makes `org-refile' not work
   (org-refile-allow-creating-parent-nodes 'confirm)
-  :config
+  :init
   (defun kb/find-blog-files-org ()
     "Return a list of files which are within the blog directory of org-roam."
-    (directory-files-recursively (concat org-roam-directory "blog") "")
+    (org-roam--directory-files-recursively (concat org-roam-directory "blog") "")
     )
+  :config
+  ;; Workaround for orderless issue with `org-refile'. See
+  ;; https://github.com/minad/vertico#org-refile
+  (setq org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps t)
+  (when (featurep 'vertico)
+    (advice-add #'org-olpath-completing-read :around
+                (lambda (&rest args)
+                  (minibuffer-with-setup-hook
+                      (lambda () (setq-local completion-styles '(basic)))
+                    (apply args)))
+                ))
   )
 
 ;;; Aesthetics

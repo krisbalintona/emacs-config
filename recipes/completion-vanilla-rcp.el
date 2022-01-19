@@ -84,11 +84,6 @@
          (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
          )
   :custom
-  ;; Workaround for problem with `org-refile'. See
-  ;; https://github.com/minad/vertico#org-refile
-  (org-refile-use-outline-path 'file)
-  (org-outline-path-complete-in-steps nil)
-
   ;; Extensions
   (vertico-multiform-categories
    '((file grid reverse indexed)
@@ -98,6 +93,7 @@
      ))
   (vertico-multiform-commands
    '((flyspell-correct-previous grid)
+     (org-refile grid reverse indexed)
      ))
   :init
   ;; Workaround for problem with `tramp' hostname completions. This overrides
@@ -161,11 +157,9 @@
   (completion-styles '(orderless))
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
-   '((file (styles . (basic-remote ; For `tramp' hostname completion with `vertico'
-                      partial-completion ; Kinda like initialism for directory/file names
-                      ;; Of course, then default to `orderless'
-                      orderless
-                      )))
+   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+                   partial-completion ; Kinda like initialism for directory/file names
+                   ))
      (command (styles orderless+kb))
      (symbol (styles orderless+kb))
      (variable (styles orderless+kb))
