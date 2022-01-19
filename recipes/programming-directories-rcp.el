@@ -124,6 +124,22 @@
   (consult-dir-default-command 'find-file) ; What do I do once I choose a directory from `consult-dir'?
   )
 
+;;;; Affe
+;; Blazing fast fuzzy finder
+(use-package affe
+  :after orderless
+  :general ("M-s M-f" #'affe-find
+            "M-s M-g" #'affe-grep)
+  :custom
+  (affe-regexp-compiler
+   #'(lambda (input type)                ; Use orderless instead of consult to regexp
+       (setq text (orderless-pattern-compiler input))
+       (cons text (lambda (str) (orderless--highlight text str)))
+       ))
+  :config
+  (consult-customize affe-grep :preview-key "C-'")
+  )
+
 ;;; programming-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-directories-rcp)
