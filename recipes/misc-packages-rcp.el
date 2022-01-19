@@ -135,6 +135,22 @@
   (tempel-global-abbrev-mode)
   )
 
+;;; Ffap
+;; Find file at point
+(use-package ffap
+  :general (:states '(normal motion)
+                    "g F" '(ffap-menu :which-key "FFAP menu")
+                    )
+  :config
+  (when (featurep 'vertico)
+    ;; Use Vertico (and orderless) instead of a completions buffer
+    (advice-add #'ffap-menu-ask :around #'(lambda (&rest args)
+                                            (cl-letf (((symbol-function #'minibuffer-completion-help)
+                                                       #'ignore))
+                                              (apply args)))
+                ))
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
