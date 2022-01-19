@@ -47,11 +47,15 @@ here: https://github.com/TheVaffel/emacs"
 
 ;;; Themes and toggling
 ;;;; Install themes
+(setq custom-theme-load-path load-path)
+
+;; Dark
 ;; (use-package atom-one-dark-theme :demand t)
 ;; (use-package apropospriate-theme :demand t)
-
-(setq custom-theme-load-path load-path)
+(use-package nano-theme)
 (require 'uninspiring-dark-theme)
+
+;; Light
 (use-package modus-themes
   :custom
   (modus-themes-mixed-fonts t)
@@ -63,10 +67,12 @@ here: https://github.com/TheVaffel/emacs"
   )
 
 ;;;; Variable declarations
-(defvar kb/themes-light 'modus-operandi
-  "My chosen light theme.")
+;; (defvar kb/themes-dark 'nano-dark
+;;   "My chosen dark theme.")
 (defvar kb/themes-dark 'uninspiring-dark
   "My chosen dark theme.")
+(defvar kb/themes-light 'modus-operandi
+  "My chosen light theme.")
 
 (defvar kb/themes-hooks nil
   "Hook that runs after the `kb/proper-load-theme-light' and
