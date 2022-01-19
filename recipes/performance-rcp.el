@@ -19,41 +19,62 @@
 
 ;;; Set GC threshold
 ;; Set the GC threshold (for our Emacs session) higher than the default
-(defvar better-gc-cons-threshold (round (* 1024 1024 200)) ; In mb
+(defvar better-gc-cons-threshold (round (* 1024 1024 225)) ; In mb
   "The default value to use for `gc-cons-threshold'.
 
   If you experience freezing, decrease this. If you experience stuttering,
   increase this.")
-(add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold better-gc-cons-threshold)))
+(add-hook 'emacs-startup-hook #'(lambda () (setq gc-cons-threshold better-gc-cons-threshold)))
 
 ;;; Increasing GC threshold
 ;;;; Minibuffer
 ;; Garbage Collect when Emacs is out of focus and try to avoid garbage
 ;; collection when using minibuffer
-(defun gc-minibuffer-setup-hook ()
-  "GC threshold for when minibuffer opened."
-  (setq gc-cons-threshold (* better-gc-cons-threshold 4)))
-(defun gc-minibuffer-exit-hook ()
-  "GC threshold for when minibuffer closed."
-  (garbage-collect)
-  (setq gc-cons-threshold better-gc-cons-threshold))
+(defvar kb/gc-allow-minibuffer-gc t
+  "Helper variable to make sure `gc-cons-threshold' isn't lowered in Magit by
+  opening minibuffer.")
 
-(add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
-(add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
+(defun kb/gc-minibuffer-setup-hook ()
+  "GC threshold for when minibuffer opened."
+  (interactive)
+  (when kb/gc-allow-minibuffer-gc
+    (setq gc-cons-threshold (* better-gc-cons-threshold 4))
+    ))
+(defun kb/gc-minibuffer-exit-hook ()
+  "GC threshold for when minibuffer closed."
+  (interactive)
+  (garbage-collect)
+  (when kb/gc-allow-minibuffer-gc
+    (setq gc-cons-threshold better-gc-cons-threshold)
+    ))
+
+(add-hook 'minibuffer-setup-hook #'kb/gc-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'kb/gc-minibuffer-exit-hook)
 
 ;;;; Magit
 ;; Makes large repo changes in magit bearable.
-(defun gc-magit-enter-hook ()
-  "GC threshold for when magit opened."
-  (setq gc-cons-threshold (* better-gc-cons-threshold 10)))
-(defun gc-magit-exit-hook ()
-  "GC threshold for when magit closed."
-  (interactive)
-  (garbage-collect)
-  (setq gc-cons-threshold better-gc-cons-threshold))
+(with-eval-after-load 'magit
+  (defun kb/gc-magit-enter-hook ()
+    "GC threshold for when magit opened."
+    (interactive)
+    ;; (message (concat "ENTER BEGIN: " (number-to-string gc-cons-threshold)))
+    (setq kb/gc-allow-minibuffer-gc nil)
+    (setq gc-cons-threshold (* better-gc-cons-threshold 10))
+    ;; (message (concat "ENTER END: " (number-to-string gc-cons-threshold)))
+    )
+  (defun kb/gc-magit-exit-hook (&optional KILL-BUFFER)
+    "GC threshold for when magit closed."
+    (interactive)
+    ;; (message (concat "EXIT BEGIN: " (number-to-string gc-cons-threshold)))
+    (setq kb/gc-allow-minibuffer-gc t)
+    (garbage-collect)
+    (unless KILL-BUFFER (setq gc-cons-threshold better-gc-cons-threshold))
+    ;; (message (concat "EXIT END: " (number-to-string gc-cons-threshold)))
+    )
 
-(add-hook 'magit-pre-display-buffer-hook #'gc-magit-enter-hook)
-(advice-add 'magit-mode-bury-buffer :after #'gc-magit-exit-hook)
+  (add-hook 'magit-pre-display-buffer-hook #'kb/gc-magit-enter-hook)
+  (advice-add magit-bury-buffer-function :after #'kb/gc-magit-exit-hook)
+  )
 
 ;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk

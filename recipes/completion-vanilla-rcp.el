@@ -182,7 +182,7 @@
      orderless-literal
      orderless-prefixes
      orderless-regexp
-     ;; orderless-flex
+     orderless-flex
      ;; orderless-strict-leading-initialism
      ;; orderless-strict-initialism
      ;; orderless-strict-full-initialism
