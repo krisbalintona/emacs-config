@@ -133,7 +133,7 @@
   (kb/nav-keys
     "h" '(consult-outline :which-key "Consult outline")
     "j" '(consult-line :which-key "Consult line")
-    "i" '(consult-imenu :which-key "Consult imenu")
+    "i" '(kb/consult-imenu-versatile :which-key "Consult imenu")
     "O" '(consult-multi-occur :which-key "Consult multi-occur")
     )
   (kb/nav-keys
@@ -155,13 +155,28 @@
     "r" '(consult-mark :which-key "Consult mark-ring")
     )
   :custom
-  (consult-mode-histories ; What variable consult-history looks at for history
+  (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode . eshell-history-ring)
      (comint-mode . comint-input-ring)
-     (term-mode . term-input-ring))
-   )
-  (consult-project-root-function #'vc-root-dir)
+     (term-mode . term-input-ring)
+     ))
+  (consult-project-root-function #'(lambda ()
+                                     (cond
+                                      ((project-current) ; Project.el
+                                       (project-root (project-current)))
+                                      (t default-directory) ; Default directory
+                                      )))
+  :init
+  (defun kb/consult-imenu-versatile (&optional arg)
+    "Call `consult-imenu'. With prefix-command ARG, call
+    `consult-imenu-multi'."
+    (interactive "P")
+    (if arg (consult-imenu-multi) (consult-imenu)))
   :config
+  ;; Use the faster locate rather than locate
+  (when (executable-find "plocate")
+    (setq consult-locate-args "plocate --ignore-case --existing --regexp"))
+
   ;; Enhanced multiple selection experience. Replaced the built-in method
   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
