@@ -4,7 +4,7 @@
 ;;
 ;; Faster Emacs startup and session.
 ;; Other things that can help:
-;; 1) Native compilation (GCCemacs)
+;; 1) Native compilation (`libgccjit')
 ;; 2) Native (`libjansson') JSON support (alternative Elisp parser)
 ;;
 ;; The flags I use when manually compiling Emacs are:
@@ -19,14 +19,15 @@
 
 ;;; Set GC threshold
 ;; Set the GC threshold (for our Emacs session) higher than the default
-(defvar better-gc-cons-threshold (round (* 1024 1024 300)) ; In mb
+(defvar better-gc-cons-threshold (round (* 1024 1024 200)) ; In mb
   "The default value to use for `gc-cons-threshold'.
 
   If you experience freezing, decrease this. If you experience stuttering,
   increase this.")
 (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold better-gc-cons-threshold)))
 
-;;; Increase GC threshold for minibuffer
+;;; Increasing GC threshold
+;;;; Minibuffer
 ;; Garbage Collect when Emacs is out of focus and try to avoid garbage
 ;; collection when using minibuffer
 (defun gc-minibuffer-setup-hook ()
@@ -40,14 +41,27 @@
 (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)
 
+;;;; Magit
+;; Makes large repo changes in magit bearable.
+(defun gc-magit-enter-hook ()
+  "GC threshold for when magit opened."
+  (setq gc-cons-threshold (* better-gc-cons-threshold 10)))
+(defun gc-magit-exit-hook ()
+  "GC threshold for when magit closed."
+  (interactive)
+  (garbage-collect)
+  (setq gc-cons-threshold better-gc-cons-threshold))
+
+(add-hook 'magit-pre-display-buffer-hook #'gc-magit-enter-hook)
+(advice-add 'magit-mode-bury-buffer :after #'gc-magit-exit-hook)
+
 ;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk
 (setq read-process-output-max (* 1024 1024)) ; 1mb
 
 ;;; Native-compilations settings
 ;; Allow async compilations occupy all the cores minus 1
-;; (setq native-comp-async-jobs-number (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1))
-(setq native-comp-async-jobs-number 0)  ; Don't compile asynchronously
+(setq native-comp-async-jobs-number (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1))
 
 ;;; performance-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
