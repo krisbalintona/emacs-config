@@ -316,6 +316,33 @@ If buffer-or-name is nil return current buffer's mode."
   :config
   (popper-mode)
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
+
+  ;; Modified version of toggle which selects buffer
+  (defun kb/popper-open-latest (&optional group)
+    "Open the last closed popup and select buffer.
+
+Optional argument GROUP is called with no arguments to select
+a popup buffer to open."
+    (unless popper-mode (user-error "Popper-mode not active!"))
+    (let* ((identifier (when popper-group-function group))
+           (no-popup-msg (format "No buried popups for group %s"
+                                 (if (symbolp identifier)
+                                     (symbol-name identifier)
+                                   identifier))))
+      (if (null (alist-get identifier popper-buried-popup-alist
+                           nil 'remove 'equal))
+          (message (if identifier no-popup-msg "No buried popups"))
+        (if-let* ((new-popup (pop (alist-get identifier popper-buried-popup-alist
+                                             nil 'remove 'equal)))
+                  (buf (cdr new-popup)))
+            (if (not (buffer-live-p buf))
+                (popper-open-latest)
+              ;; (display-buffer buf)
+              (pop-to-buffer buf)
+              (with-current-buffer buf
+                (run-hooks 'popper-open-popup-hook)))
+          (message no-popup-msg)))))
+  (advice-add 'popper-open-latest :override #'kb/popper-open-latest)
   )
 
 ;;; Buffers
