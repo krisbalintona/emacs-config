@@ -181,10 +181,10 @@
    )
   (orderless-matching-styles
    '(orderless-initialism
-     orderless-regexp
      orderless-literal
-     orderless-flex
-     ;; orderless-prefixes
+     orderless-prefixes
+     orderless-regexp
+     ;; orderless-flex
      ;; orderless-strict-leading-initialism
      ;; orderless-strict-initialism
      ;; orderless-strict-full-initialism
@@ -220,8 +220,8 @@ parses its input."
   ;; Custom orderless style definitions
   (orderless-define-completion-style orderless+kb
     (orderless-matching-styles '(orderless-initialism
-                                 orderless-literal
                                  orderless-regexp
+                                 orderless-literal
                                  orderless-flex
                                  )))
   )
