@@ -17,9 +17,26 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;;; Diagnose memory usage
+;; See how Emacs is using memory. From
+;; https://www.reddit.com/r/emacs/comments/ck4zb3/comment/evji1n7/?utm_source=share&utm_medium=web2x&context=3
+(defun kb/diagnose-garbage-collect ()
+  "Run `garbage-collect' and print stats about memory usage."
+  (interactive)
+  (message (cl-loop for (type size used free) in (garbage-collect)
+                    for used = (* used size)
+                    for free = (* (or free 0) size)
+                    for total = (file-size-human-readable (+ used free))
+                    for used = (file-size-human-readable used)
+                    for free = (file-size-human-readable free)
+                    concat (format "%s: %s + %s = %s\n" type used free total))))
+
 ;;; Set GC threshold
-;; Set the GC threshold (for our Emacs session) higher than the default
-(defvar better-gc-cons-threshold (round (* 1024 1024 225)) ; In mb
+;; Set the GC threshold (for our Emacs session) higher than the default. The
+;; default is 800 kilobytes. This variable's units is in bytes.
+(defvar better-gc-cons-threshold (round (* 1024 1024
+                                           50 ; Number of megabytes
+                                           ))
   "The default value to use for `gc-cons-threshold'.
 
   If you experience freezing, decrease this. If you experience stuttering,
