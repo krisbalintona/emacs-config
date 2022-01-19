@@ -16,12 +16,11 @@
 (use-package python-mode
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode)
-  ;; :after python
   :hook (py-shell-mode . (lambda ()
                            (hide-mode-line-mode)
                            (setq-local scroll-margin 0)
                            ))
-  :ensure-system-package ("~/.local/bin/pytest" . "pip install --user pytest")
+  :ensure-system-package (pytest . python-pytest-pacman)
   :gfhook
   'lsp-deferred
   'dap-mode
@@ -54,7 +53,7 @@
 (use-package dap-python
   :demand t
   :after dap-mode
-  :ensure-system-package ("/home/krisbalintona/.local/lib/python3.9/site-packages/debugpy" . "pip install debugpy") ; For debugging in python using dap
+  :ensure-system-package debugpy-run ; For debugging in python using dap
   :straight nil
   :custom
   (dap-python-executable "ipython3")
@@ -119,9 +118,9 @@
 ;;; Pyimport
 ;; Functions which conveniently add or remove import statements when appropriate.
 (use-package pyimport
-  :ensure-system-package (pyflakes . "pip install pyflakes")
+  :ensure-system-package (pyflakes . flake8)
   :after python
-  :custom (pyimport-pyflakes-path (expand-file-name "~/.local/lib/python3.9/site-packages"))
+  :custom (pyimport-pyflakes-path (executable-find "pyflakes"))
   )
 
 ;;; Pylookup
