@@ -86,6 +86,9 @@
          (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
          )
   :custom
+  (vertico-count 13)
+  (vertico-resize t)
+  (vertico-cycle nil)
   ;; Extensions
   (vertico-multiform-categories
    '((file grid reverse indexed)
