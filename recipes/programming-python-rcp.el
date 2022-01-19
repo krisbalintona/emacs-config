@@ -33,7 +33,12 @@
   'display-fill-column-indicator-mode
   :general (:keymaps 'python-mode-map
                      :states '(normal insert)
-                     "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1))) ; Python oddly replaces the normal C-<backspace>
+                     "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1)) ; Python oddly replaces the normal C-<backspace>
+                     "M-[" 'python-nav-backward-block
+                     "M-]" 'python-nav-forward-block
+                     "M-{" 'python-nav-beginning-of-block
+                     "M-}" 'python-nav-end-of-block
+                     )
   :custom
   (py-shell-name "ipython3")
   (py-session-p t)
