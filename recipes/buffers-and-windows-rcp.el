@@ -41,7 +41,7 @@
   (shackle-select-reused-windows t)     ; Reuse windows by default
   )
 
-;;;; Display-buffer-alist
+;;;; Window
 (use-package window
   :straight nil
   :general
@@ -69,6 +69,19 @@
       (display-buffer-same-window))
      ("\\*devdocs\\*"
       (display-buffer-same-window))
+     ;; To the left
+     ("\\*Faces\\*"
+      (display-buffer-in-side-window)
+      (window-width . 0.25)
+      (side . left)
+      (slot . -2)
+      (window-parameters . ((no-other-window . t))))
+     ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
+                       (string-match-p "^\\*Customize" (buffer-name))))
+      (kb/select-buffer-in-side-window)
+      (window-width . 74)
+      (side . left)
+      (slot . 5))
      ;; To the right
      ("\\*org-roam\\*"
       (display-buffer-in-side-window)
@@ -90,10 +103,29 @@
       (window-height . 0.3)
       (side . top)
       (slot . 2))
+     ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
+      (kb/select-buffer-in-side-window)
+      (window-height . (lambda (win) (fit-window-to-buffer win)))
+      (side . top)
+      (slot . -2)
+      (preserve-size . (nil . t))
+      (window-parameters . ((mode-line-format . nil))))
      ;; To the bottom
      ("\\*Flycheck errors\\*"
       (display-buffer-reuse-mode-window display-buffer-in-side-window)
       (window-height . 0.33))
+     ("\\(?:[Oo]utput\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . (lambda (win)
+                         (fit-window-to-buffer win (floor (frame-height) 3))))
+      (side . bottom)
+      (slot . -4))
+     ("\\*Async Shell Command\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.20)
+      (side . bottom)
+      (slot . -4)
+      (window-parameters . ((no-other-window . t))))
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
@@ -117,6 +149,20 @@
       (slot . -1)
       (window-height . 0.27))
      ))
+  :init
+  ;; Helper functions for `display-buffer-alist'
+  (defun kb/select-buffer-in-side-window (buffer alist)
+    "Display buffer in a side window and select it"
+    (let ((window (display-buffer-in-side-window buffer alist)))
+      (select-window window)
+      ))
+  (defun kb/buffer-major-mode (&optional buffer-or-name)
+    "Returns the major mode associated with a buffer.
+If buffer-or-name is nil return current buffer's mode."
+    (buffer-local-value 'major-mode
+                        (if buffer-or-name
+                            (get-buffer buffer-or-name)
+                          (current-buffer))))
   )
 
 ;;;; Eyebrowse
