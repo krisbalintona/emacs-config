@@ -97,7 +97,7 @@
      (t reverse)
      ))
   (vertico-multiform-commands
-   '(;; (project-switch-project flat)
+   '((flyspell-correct-previous grid)
      ))
   :init
   ;; Workaround for problem with `tramp' hostname completions. This overrides
