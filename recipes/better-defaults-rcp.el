@@ -18,6 +18,10 @@
 ;;; Reenable these disabled commands
 (put 'narrow-to-region 'disabled nil) ; `narrow-to-region'
 
+;;; Disable startup echo message
+;; See `startup-echo-area-message'
+(fset #'display-startup-echo-area-message #'ignore)
+
 ;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               large-file-warning-threshold nil                                                    ; Don't warn when opening large files
@@ -26,6 +30,7 @@
 
               inhibit-startup-screen t                                                            ; Disable start-up screen
               initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n"  ; Set a cringe scratch buffer message
+              inhibit-default-init t
 
               x-stretch-cursor t                                                                  ; Stretch cursor to the glyph width
               cursor-in-non-selected-windows nil                                                  ; Hide the cursor in inactive windows
@@ -99,6 +104,26 @@
 ;; Otherwise those `window-setup-hook's won't be run at startup for Emacs
 ;; daemons.
 (add-hook 'server-after-make-frame-hook '(lambda () (run-hooks 'window-setup-hook)))
+
+;;; Middle-click paste at point, not at cursor.
+(setq mouse-yank-at-point t)
+
+;;; Toggle visiting of image files as images (Auto Image File mode).
+(auto-image-file-mode t)
+
+;;; Show unfinished keystrokes immediately
+;; Echo keystrokes (of unfinished commands) immediately
+(setq echo-keystrokes 0.01)
+
+;;; Window sizing and splitting
+(setq window-resize-pixelwise t
+      fit-window-to-buffer-horizontally t
+      fit-frame-to-buffer t
+
+      ;; Favor vertical splits over horizontal ones
+      split-width-threshold 180
+      split-height-threshold 80
+      )
 
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
