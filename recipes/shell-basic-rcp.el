@@ -9,12 +9,14 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Comint
-;; Derived mode for all shells in Emacs
-(use-package comint
+;;; Shell
+;; Built-in shell
+(use-package shell
   :straight nil
   :general (kb/open-keys
              "s" '(shell :which-key "Shell-mode"))
+  :custom
+  (async-shell-command-buffer 'new-buffer) ; Don't ask, just do
   )
 
 ;;; shell-basic-rcp.el ends here
