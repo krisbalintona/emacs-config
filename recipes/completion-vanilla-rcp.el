@@ -91,10 +91,10 @@
 
   ;; Extensions
   (vertico-multiform-categories
-   '((file grid reverse)
+   '((file grid reverse indexed)
      (consult-grep buffer)
      (imenu buffer)
-     (t reverse)
+     (t reverse indexed)
      ))
   (vertico-multiform-commands
    '((flyspell-correct-previous grid)
@@ -115,8 +115,6 @@
   :config
   (vertico-mode)
   ;; Extensions
-  (vertico-indexed-mode)
-  (vertico-reverse-mode)
   (vertico-multiform-mode)
   )
 
