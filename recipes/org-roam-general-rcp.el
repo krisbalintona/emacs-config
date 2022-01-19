@@ -16,23 +16,16 @@
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
   (:keymaps 'org-mode-map
-            "C-c i" '(org-id-get-create :which-key "Add ID")
-            "C-c tt" '(org-roam-tag-add :which-key "Add tag")
-            "C-c tr" '(org-roam-tag-remove :which-key "Remove tag")
+            :prefix "C-c"
+            "i" '(org-id-get-create :which-key "Add ID")
+            "tt" '(org-roam-tag-add :which-key "Add tag")
+            "tr" '(org-roam-tag-remove :which-key "Remove tag")
             )
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/note-keys
-    "f" '((lambda ()
-            (interactive)
-            (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node t)))
-            )
-          :which-key "Find file")
-    "F" '((lambda ()
-            (interactive)
-            (org-roam-node-find t nil (lambda (node) (kb/roam-filter-journals node t)))
-            )
-          :which-key "Find file other window")
+    "f" '(org-roam-node-find :which-key "Find file")
+    "F" '(org-roam-node-find t :which-key "Find file other window")
 
     "i" '(org-roam-node-insert :which-key "Insert note")
 
@@ -40,22 +33,12 @@
             (interactive)
             (find-file "~/Documents/org-database/roam/inbox.org")
             )
-          :which-key "Go to index")
+          :which-key "Go home")
 
     "l" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
     "L" '(org-roam-buffer-display-dedicated :which-key "New Roam buffer")
 
     "b" '(org-roam-db-sync :which-key "Build cache")
-
-    "d" '(:ignore t :which-key "Roam dailies")
-    "dd" '((lambda ()
-             (interactive)
-             (org-roam-node-find nil nil (lambda (node) (kb/roam-filter-journals node nil)))
-             )
-           :which-key "Find date")
-    "dt" '(org-roam-dailies-goto-today :which-key "Today")
-    "dn" '(org-roam-dailies-goto-tomorrow :which-key "Tomorrow")
-    "dp" '(org-roam-dailies-goto-yesterday :which-key "Yesterday")
     )
   :custom
   (org-roam-directory kb/roam-dir)
@@ -120,29 +103,6 @@ targets and targets."
         nil)
        (t
         (org-export-get-reference datum info)))))
-
-  ;; Custom functions
-  (defun kb/roam-filter-journals (node binary)
-    "Takes NODE. If BINARY is `t', then return all nodes that aren't in the
-journals directory."
-    (if binary
-        (not (string-equal
-              (concat
-               (expand-file-name kb/roam-dir)
-               "journals/"
-               (format-time-string "%Y" (current-time))
-               ".org")
-              (org-roam-node-file node))
-             )
-      (string-equal
-       (concat
-        (expand-file-name kb/roam-dir)
-        "journals/"
-        (format-time-string "%Y" (current-time))
-        ".org")
-       (org-roam-node-file node))
-      )
-    )
   :config
   ;; Org roam buffer section visibility
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
