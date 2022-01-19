@@ -30,6 +30,8 @@
   (dired-recursive-deletes 'top)
   ;; Ask whether destination dirs should get created when copying/removing files.
   (dired-create-destination-dirs 'ask)
+  :config
+  (general-unbind '(normal visual motion) dired-mode-map "SPC") ; Unbind SPC so leader key is avaiable
   )
 
 ;;;; All-the-icons-dired
