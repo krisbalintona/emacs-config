@@ -77,6 +77,9 @@
             "C-M-p" #'vertico-previous-group
             [remap backward-kill-word] #'vertico-directory-delete-word ; If not typing a file name, delete directory
             ;; Multiform toggles
+            "C-i" #'vertico-quick-insert
+            "C-o" #'vertico-quick-exit
+            "M-i" 'kb/vertico-quick-embark ; Don't #
             "M-G" #'vertico-multiform-grid
             "M-F" #'vertico-multiform-flat
             "M-R" #'vertico-multiform-reverse
@@ -117,6 +120,11 @@
     (if vertico-flat-mode
         (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
       (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
+  (defun kb/vertico-quick-embark (&optional arg)
+    "Embark on candidate using quick keys."
+    (interactive)
+    (when (vertico-quick-jump)
+      (embark-act arg)))
 
   ;; Workaround for problem with `tramp' hostname completions. This overrides
   ;; the completion style specifically for remote files! See
