@@ -114,9 +114,7 @@
 ;;;; Goggles
 ;; Pretty and unobtrusive modified-region-highlighter
 (use-package goggles
-  :ghook ('prog-mode 'text-mode)
-  :config
-  (setq-default goggles-pulse t)        ; Enable pulsing by default
+  :ghook 'prog-mode-hook 'text-mode-hook
   )
 
 ;;; General utility
