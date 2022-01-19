@@ -66,8 +66,9 @@
                                 vertico-unobtrusive
                                 ))
   :general
-  (:keymaps 'general-override-mode-map
-            "M-r" #'vertico-repeat)
+  (:keymaps '(normal insert visual motion)
+            "M-." #'vertico-repeat
+            )
   (:keymaps 'vertico-map
             "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
             "<escape>" #'minibuffer-keyboard-quit

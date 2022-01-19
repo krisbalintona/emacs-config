@@ -127,7 +127,7 @@
   ([remap switch-to-buffer] '(consult-buffer :which-key "Consult buffer")
    "C-x B" '(consult-buffer-other-window :which-key "Consult buffer other window")
    )
-  (:keymaps 'vertico-map
+  (:keymaps 'minibuffer-local-map
             "M-r" 'consult-history
             )
   (kb/nav-keys
