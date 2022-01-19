@@ -66,7 +66,8 @@
                                 vertico-unobtrusive
                                 ))
   :general
-  ("M-r" #'vertico-repeat)
+  (:keymaps 'general-override-mode-map
+            "M-r" #'vertico-repeat)
   (:keymaps 'vertico-map
             "<escape>" #'minibuffer-keyboard-quit
             "?" #'minibuffer-completion-help
