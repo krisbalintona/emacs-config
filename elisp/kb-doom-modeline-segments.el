@@ -38,29 +38,31 @@ icon."
   )
 
 ;;; VCS
-(doom-modeline-def-segment kb/vcs
-  "Standard `vcs' but don't show branch if it's 'master'."
-  (let ((active (doom-modeline--active)))
-    (when-let ((icon doom-modeline--vcs-icon)
-               (text doom-modeline--vcs-text))
-      (concat
-       (doom-modeline-spc)
-       (propertize
+(with-eval-after-load 'project ; Otherwise throw one minor warning at startup sometimes
+  (doom-modeline-def-segment kb/vcs
+    "Standard `vcs' but don't show branch if it's 'master'."
+    (let ((active (doom-modeline--active)))
+      (when-let ((icon doom-modeline--vcs-icon)
+                 (text doom-modeline--vcs-text))
         (concat
-         (if active
-             icon
-           (doom-modeline-propertize-icon icon 'mode-line-inactive))
-         (doom-modeline-vspc))
-        'mouse-face 'mode-line-highlight
-        'help-echo (get-text-property 1 'help-echo vc-mode)
-        'local-map (get-text-property 1 'local-map vc-mode))
+         (doom-modeline-spc)
+         (propertize
+          (concat
+           (if active
+               icon
+             (doom-modeline-propertize-icon icon 'mode-line-inactive))
+           (doom-modeline-vspc))
+          'mouse-face 'mode-line-highlight
+          'help-echo (get-text-property 1 'help-echo vc-mode)
+          'local-map (get-text-property 1 'local-map vc-mode))
 
-       ;; If the current branch is the main one, then don't show in modeline
-       (if (string= (substring-no-properties (substring vc-mode (+ (if (eq (vc-backend buffer-file-name) 'Hg) 2 3) 2))) (magit-main-branch))
-           ""
-         text)
-       (doom-modeline-spc))
-      )))
+         ;; If the current branch is the main one, then don't show in modeline
+         (if (string= (substring-no-properties (substring vc-mode (+ (if (eq (vc-backend buffer-file-name) 'Hg) 2 3) 2))) (magit-main-branch))
+             ""
+           text)
+         (doom-modeline-spc))
+        )))
+  )
 
 ;;; Eyebrowse
 (doom-modeline-def-segment kb/eyebrowse
