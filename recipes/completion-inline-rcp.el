@@ -195,8 +195,13 @@
   :demand t
   :after corfu
   :custom
+  (kind-icon-use-icons t)
   (kind-icon-blend-background nil)  ; Mix foreground and background ("blended")?
+  (kind-icon-blend-frac 0.08)
   (kind-icon-default-face 'corfu-default) ; To compute blended backgrounds correctly
+
+  ;; Svg-lib dependency
+  (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/")) ; Change cache dir
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
   )
