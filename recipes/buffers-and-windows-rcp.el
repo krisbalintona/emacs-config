@@ -203,12 +203,21 @@
             )
   :custom
   (popper-reference-buffers
-   '("\\*Messages\\*"
+   '(;; General
+     "\\*Messages\\*"
+     "^\\*Warnings\\*$"
+     "^\\*Backtrace\\*"
 
-     "Output\\*$"
+     ;; Coding
+     "[Oo]utput\\*"
+     "\\*Shell Command Output\\*"
      "\\*Async Shell Command\\*"
+     "^\\*Compile-Log\\*$"
      compilation-mode
 
+     "^Calc:"
+
+     ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
      "^\\*eshell.*\\*$"
      eshell-mode
@@ -222,10 +231,42 @@
      py-shell-mode
      ))
   (popper-display-control 'user)
-  (popper-display-function 'popper-select-popup-at-bottom) ; Group by project.el
-  (popper-group-function 'popper-group-by-project)
-  (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-emphasis)))
-  (popper-echo-transform-function nil)
+  (popper-display-function 'popper-select-popup-at-bottom)
+  (popper-group-function
+   #'(lambda ()
+       (let ((dd (abbreviate-file-name default-directory)))
+         (cond
+          ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" dd)
+           'Config)
+          ((locate-dominating-file dd "init.el") 'Emacs)
+          (t (popper-group-by-project)) ; Default to project.el
+          ))
+       ))
+  (popper-mode-line nil)                ; Remove modeline
+
+  ;; Popper-echo
+  (popper-echo-dispatch-keys '(?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
+  (popper-echo-dispatch-actions t)
+  (popper-echo-transform-function
+   #'(lambda (name)
+       (cond
+        ((string-match "^\\*vterm:? ?\\(.*\\)\\*$" name)
+         (concat (match-string 1 name)
+                 (if (string-empty-p (match-string 1 name)) "shell(V)" "(V)")))
+        ((string-match "^\\*eshell:? ?\\(.*\\)\\*$" name)
+         (concat (match-string 1 name)
+                 (if (string-empty-p (match-string 1 name)) "shell(E)" "(E)")))
+        ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
+         (concat (match-string 1 name)
+                 "(O)"))
+        ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
+         (concat (match-string 1 name)
+                 "(L)"))
+        ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
+         (concat (match-string 1 name)
+                 "(C)"))
+        (t name))
+       ))
   :config
   (popper-mode)
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
