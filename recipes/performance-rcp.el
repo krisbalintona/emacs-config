@@ -97,10 +97,6 @@
 ;; Let Emacs subprocesses read more data per chunk
 (setq read-process-output-max (* 1024 1024)) ; 1mb
 
-;;; Native-compilations settings
-;; Allow async compilations occupy all the cores minus 1
-(setq native-comp-async-jobs-number (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1))
-
 ;;; performance-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'performance-rcp)
