@@ -69,10 +69,9 @@
   (:keymaps 'general-override-mode-map
             "M-r" #'vertico-repeat)
   (:keymaps 'vertico-map
+            "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
             "<escape>" #'minibuffer-keyboard-quit
             "?" #'minibuffer-completion-help
-            "C-<return>" #'vertico-quick-insert
-            "M-<return>" #'vertico-quick-exit
             "C-M-n" #'vertico-next-group
             "C-M-p" #'vertico-previous-group
             ;; Multiform toggles
@@ -82,7 +81,7 @@
             "RET" #'vertico-directory-enter
             "C-i" #'vertico-quick-insert
             "C-o" #'vertico-quick-exit
-            "M-i" 'kb/vertico-quick-embark ; Don't #
+            "M-i" #'kb/vertico-quick-embark
             "M-G" #'vertico-multiform-grid
             "M-F" #'vertico-multiform-flat
             "M-R" #'vertico-multiform-reverse
@@ -97,7 +96,7 @@
   (vertico-resize t)
   (vertico-cycle nil)
   ;; Extensions
-  (vertico-grid-separator "     ")
+  (vertico-grid-separator "       ")
   (vertico-grid-lookahead 50)
   (vertico-buffer-display-action '(display-buffer-reuse-window))
   (vertico-multiform-categories
