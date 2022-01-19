@@ -68,8 +68,7 @@
 (use-package project
   :general
   (kb/project-keys
-    "f" '(project-find-file :which-key "Project find file")
-    "F" '(consult-find :which-key "Consult find file")
+    "f" '(affe-find :which-key "Project find file")
     "r" '(consult-ripgrep :which-key "Consult rg")
     "b" '(project-switch-to-buffer :which-key "Project switch to buffer")
     "p" '(project-switch-project :which-key "Project.el switch project")
@@ -80,7 +79,7 @@
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
-   '((project-find-file "Find file")
+   '((affe-find "Find file")
      (consult-ripgrep "Regexp" "r")
      (magit-project-status "Magit")
      (project-switch-to-buffer "Buffer" "b")
