@@ -13,7 +13,7 @@
 ;; Quickly jump to any character
 (use-package avy
   :general ("M-a" 'avy-goto-word-1
-            "M-A" 'avy-goto-char
+            "M-C-a" 'avy-goto-char
             )
   :custom
   (avy-all-windows nil)                 ; Scope
