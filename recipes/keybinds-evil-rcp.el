@@ -181,6 +181,16 @@
   (evil-exchange-install)
   )
 
+;;; Evil-goggles
+;; Pulse modified regions.
+(use-package evil-goggles
+  :after evll
+  :custom
+  (evil-goggles-duration 0.1)
+  :config
+  (evil-goggles-mode)
+  )
+
 ;;; keybinds-evil-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybinds-evil-rcp)
