@@ -81,6 +81,7 @@
             "M-F" #'vertico-multiform-flat
             "M-R" #'vertico-multiform-reverse
             "M-U" #'vertico-multiform-unobtrusive
+            "C-l" #'kb/vertico-multiform-flat-toggle
             )
   :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
          (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
@@ -93,14 +94,30 @@
   (vertico-multiform-categories
    '((file grid reverse indexed)
      (consult-grep buffer)
+     (consult-location reverse)
      (imenu buffer)
-     (t reverse indexed)
+     ;; (t reverse indexed)
+     (t flat)
      ))
   (vertico-multiform-commands
    '((flyspell-correct-previous grid)
      (org-refile grid reverse indexed)
+     (load-theme grid reverse indexed)
+     (execute-extended-command reverse indexed)
+     (consult-yank-pop reverse indexed)
+     (org-roam-node-find reverse indexed)
+     (consult-buffer reverse)
+     ;; (project-switch-project reverse indexed)
      ))
   :init
+  (defun kb/vertico-multiform-flat-toggle ()
+    "Toggle between flat and reverse."
+    (interactive)
+    (vertico-multiform--display-toggle 'vertico-flat-mode)
+    (if vertico-flat-mode
+        (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
+      (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
+
   ;; Workaround for problem with `tramp' hostname completions. This overrides
   ;; the completion style specifically for remote files! See
   ;; https://github.com/minad/vertico#tramp-hostname-completion
