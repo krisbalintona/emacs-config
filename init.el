@@ -69,6 +69,7 @@
 ;;;; Buffers, text, and windows
 (require 'persistence-rcp)
 (require 'buffers-and-windows-rcp)
+(require 'kb-comment)
 (require 'undoing-rcp)
 (require 'buffer-nav-rcp)
 
