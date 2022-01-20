@@ -22,12 +22,17 @@
      (buffer-face-mode t)
      (face-remap-add-relative 'default :height 107)) ; Change default face size
   'hide-mode-line-mode
-  :general 
+  :general
   (:keymaps 'vterm-mode-map
             :states 'insert
             "<tab>" 'vterm-send-tab)
   (kb/open-keys
-             "t" '(vterm :which-key "Vterm"))
+    "t" '((lambda ()            ; Unique vterm buffer with current directory appended
+            (interactive)
+            (vterm (concat "*vterm* "
+                           (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
+                           )))
+          :which-key "Vterm"))
   :custom
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)
