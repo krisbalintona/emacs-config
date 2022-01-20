@@ -110,6 +110,7 @@
      ))
   (vertico-multiform-commands
    '((flyspell-correct-previous grid reverse)
+     (flyspell-correct-next grid reverse)
      (org-refile grid reverse indexed)
      (load-theme grid reverse indexed)
      (execute-extended-command reverse indexed)
@@ -121,6 +122,7 @@
      (affe-find reverse)
      (project-switch-to-buffer reverse indexed)
      (consult-history reverse indexed)
+     (ffap-menu reverse indexed)
      ))
   :init
   (defun kb/vertico-multiform-flat-toggle ()
