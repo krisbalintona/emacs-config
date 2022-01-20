@@ -315,12 +315,6 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-transform-function
    #'(lambda (name)
        (cond
-        ((string-match "^\\*vterm:? ?\\(.*\\)\\*$" name)
-         (concat (match-string 1 name)
-                 (if (string-empty-p (match-string 1 name)) "shell(V)" "(V)")))
-        ((string-match "^\\*eshell:? ?\\(.*\\)\\*$" name)
-         (concat (match-string 1 name)
-                 (if (string-empty-p (match-string 1 name)) "shell(E)" "(E)")))
         ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
          (concat (match-string 1 name)
                  "(O)"))
