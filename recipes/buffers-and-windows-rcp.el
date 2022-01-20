@@ -59,12 +59,11 @@
   (window-sides-vertical t)
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
-   `(;; No window
-     ("\\`\\*Async Shell Command\\*\\'"
-      (display-buffer-no-window))
+   `(;; Automatically hide
      ;; Same window
      ("\\*helpful *"
-      (display-buffer-reuse-mode-window display-buffer-same-window))
+      (display-buffer-reuse-mode-window 
+       display-buffer-same-window))
      ("*Flycheck errors*"
       (display-buffer-same-window))
      ("\\*devdocs\\*"
@@ -110,7 +109,8 @@
       (side . top)
       (slot . 1))
      ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
-      (display-buffer-in-side-window)
+      (display-buffer-reuse-window
+       kb/select-buffer-in-side-window)
       (window-height . 0.3)
       (side . top)
       (slot . 2))
