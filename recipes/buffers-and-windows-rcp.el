@@ -82,6 +82,16 @@
       (window-width . 74)
       (side . left)
       (slot . 5))
+     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'help-mode))
+      (display-buffer-reuse-window
+       ;; +select-buffer-in-side-window
+       display-buffer-in-side-window
+       display-buffer-in-direction)
+      (window-width . 74)
+      (side . left)
+      (direction . left)
+      (slot . 2)
+      (window-parameters . ((split-window . #'ignore))))
      ;; To the right
      ("\\*org-roam\\*"
       (display-buffer-in-side-window)
@@ -261,6 +271,7 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*Compile-Log\\*$"
      compilation-mode
 
+     help-mode
      "^Calc:"
 
      ;; Shells
