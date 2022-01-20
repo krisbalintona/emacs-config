@@ -185,7 +185,7 @@
   (corfu-commit-predicate 'corfu-candidate-previewed-p)
 
   (corfu-preview-current t)             ; Preview current candidate?
-  (corfu-preselect-first nil)           ; Preselect first candidate?
+  (corfu-preselect-first t)             ; Preselect first candidate?
   :config (corfu-global-mode)
   )
 
