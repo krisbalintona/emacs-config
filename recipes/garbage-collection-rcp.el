@@ -53,13 +53,11 @@
 
 (defun kb/gc-minibuffer-setup-hook ()
   "GC threshold for when minibuffer opened."
-  (interactive)
   (when kb/gc-allow-minibuffer-gc
     (setq gc-cons-threshold (* better-gc-cons-threshold 4))
     ))
 (defun kb/gc-minibuffer-exit-hook ()
   "GC threshold for when minibuffer closed."
-  (interactive)
   (garbage-collect)
   (when kb/gc-allow-minibuffer-gc
     (setq gc-cons-threshold better-gc-cons-threshold)
@@ -73,7 +71,6 @@
 (with-eval-after-load 'magit
   (defun kb/gc-magit-enter-hook ()
     "GC threshold for when magit opened."
-    (interactive)
     ;; (message (concat "ENTER BEGIN: " (number-to-string gc-cons-threshold)))
     (setq kb/gc-allow-minibuffer-gc nil)
     (setq gc-cons-threshold (* better-gc-cons-threshold 10))
@@ -81,15 +78,15 @@
     )
   (defun kb/gc-magit-exit-hook (&optional KILL-BUFFER)
     "GC threshold for when magit closed."
-    (interactive)
-    ;; (message (concat "EXIT BEGIN: " (number-to-string gc-cons-threshold)))
-    (setq kb/gc-allow-minibuffer-gc t)
-    (garbage-collect)
-    (unless KILL-BUFFER (setq gc-cons-threshold better-gc-cons-threshold))
-    ;; (message (concat "EXIT END: " (number-to-string gc-cons-threshold)))
-    )
+    (when (string-match (rx (and "magit: " (*? anything) eol)) (buffer-name))
+      ;; (message (concat "EXIT BEGIN: " (number-to-string gc-cons-threshold)))
+      (setq kb/gc-allow-minibuffer-gc t)
+      (garbage-collect)
+      (setq gc-cons-threshold better-gc-cons-threshold)
+      ;; (message (concat "EXIT END: " (number-to-string gc-cons-threshold)))
+      ))
 
-  (add-hook 'magit-pre-display-buffer-hook #'kb/gc-magit-enter-hook)
+  (add-hook 'magit-status-mode-hook #'kb/gc-magit-enter-hook)
   (advice-add magit-bury-buffer-function :after #'kb/gc-magit-exit-hook)
   )
 
