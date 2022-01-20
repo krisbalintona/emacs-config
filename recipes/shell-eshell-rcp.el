@@ -26,7 +26,12 @@
             [remap eshell-previous-matching-input] '(consult-history :which-key "Command history")
             "<return>" 'eshell-send-input)
   (kb/open-keys
-    "e" '(eshell :which-key "Eshell"))
+    "e" '((lambda ()            ; Unique vterm buffer with current directory appended
+            (interactive)
+            (eshell (concat "*eshell* "
+                            (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
+                            )))
+          :which-key "Eshell"))
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)
@@ -50,6 +55,43 @@
      eshell-term
      eshell-tramp
      eshell-unix))
+  :init
+  ;; NOTE 2022-01-19: I changed the functionality when passed a nonnumerical
+  ;; prefix argument.
+  (defun kb/eshell (&optional arg)
+    "Create an interactive Eshell buffer. Start a new Eshell session, or switch
+to an already active session. Return the buffer selected (or created).
+
+With a string prefix arg, create a new session with arg as its name.
+
+With a nonnumeric, nonstring prefix arg, create a new session.
+
+With a numeric prefix arg (as in `\\[universal-argument] 42 \\[eshell]'), switch
+to the session with that number, or create it if it doesn't already exist.
+
+The buffer name used for Eshell sessions is determined by the value of
+`eshell-buffer-name', which see.
+
+Eshell is a shell-like command interpreter. For more information on Eshell, see
+Info node `(eshell)Top'."
+    (interactive "P")
+    (cl-assert eshell-buffer-name)
+    (let ((buf (cond ((numberp arg)
+                      (get-buffer-create (format "%s<%d>"
+                                                 eshell-buffer-name
+                                                 arg)))
+                     ((stringp arg)     ; If arg is string
+                      (generate-new-buffer arg))
+                     (arg
+                      (generate-new-buffer eshell-buffer-name))
+                     (t
+                      (get-buffer-create eshell-buffer-name))
+                     )))
+      (cl-assert (and buf (buffer-live-p buf)))
+      (pop-to-buffer-same-window buf)
+      (unless (derived-mode-p 'eshell-mode)
+        (eshell-mode))
+      buf))
   :config
   ;; Eshell modules should be loaded manually
   ;; Taken from
