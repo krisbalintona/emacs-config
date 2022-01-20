@@ -183,15 +183,15 @@
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
-   consult-buffer :preview-key (kbd "C-'")
+   consult-buffer :preview-key (kbd "C-;")
    consult-buffer :prompt "Can use b, m, f, p..."
    ;; For `consult-ripgrep'
-   consult-ripgrep :preview-key (kbd "C-'")
+   consult-ripgrep :preview-key (kbd "C-;")
    ;; For `consult-fdfind'. Make sure this is after the definition of
    ;; `consult-recent-file'
-   consult-recent-file :preview-key (kbd "C-'")
+   consult-recent-file :preview-key (kbd "C-;")
    ;; `consult-find'
-   consult-find :preview-key (kbd "C-'")
+   consult-find :preview-key (kbd "C-;")
    )
   )
 

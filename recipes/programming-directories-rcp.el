@@ -138,8 +138,6 @@
        (setq text (orderless-pattern-compiler input))
        (cons text (lambda (str) (orderless--highlight text str)))
        ))
-  :config
-  (consult-customize affe-grep :preview-key "C-'")
   )
 
 ;;; programming-directories-rcp.el ends here
