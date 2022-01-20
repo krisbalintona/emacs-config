@@ -84,8 +84,7 @@
       (slot . 5))
      ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'help-mode))
       (display-buffer-reuse-window
-       ;; +select-buffer-in-side-window
-       display-buffer-in-side-window
+       kb/select-buffer-in-side-window
        display-buffer-in-direction)
       (window-width . 74)
       (side . left)
@@ -99,7 +98,8 @@
       (side . right)
       (window-width . 0.2))
      ("\\*.*\\(e?shell\\|v?term\\).*"
-      (display-buffer-reuse-mode-window display-buffer-in-side-window)
+      (display-buffer-reuse-mode-window
+       kb/select-buffer-in-side-window)
       (side . right)
       (window-width . 0.4))
      ;; To the top
@@ -122,7 +122,8 @@
       (window-parameters . ((mode-line-format . nil))))
      ;; To the bottom
      ("\\*Flycheck errors\\*"
-      (display-buffer-reuse-mode-window display-buffer-in-side-window)
+      (display-buffer-reuse-mode-window
+       display-buffer-in-side-window)
       (window-height . 0.33))
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
@@ -131,14 +132,15 @@
       (side . bottom)
       (slot . -4))
      ("\\*Async Shell Command\\*"
-      (display-buffer-in-side-window)
+      (kb/select-buffer-in-side-window)
       (window-height . 0.20)
       (side . bottom)
       (slot . -4)
       (window-parameters . ((no-other-window . t))))
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
-      (display-buffer-reuse-mode-window display-buffer-below-selected)
+      (display-buffer-reuse-mode-window
+       display-buffer-below-selected)
       (window-height . fit-window-to-buffer))
      ("\\*Embark Actions.*"
       (display-buffer-in-side-window)
@@ -154,18 +156,14 @@
       (window-parameters . ((no-other-window . t)
                             (mode-line-format . none))))
      ("\\*\\(I?Python3\\|Python3\\)\\*"
-      (display-buffer-reuse-mode-window display-buffer-in-side-window)
+      (display-buffer-reuse-mode-window
+       kb/select-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
       (window-height . 0.27))
      ))
   :init
   ;; Helper functions for `display-buffer-alist'
-  (defun kb/select-buffer-in-side-window (buffer alist)
-    "Display buffer in a side window and select it"
-    (let ((window (display-buffer-in-side-window buffer alist)))
-      (select-window window)
-      ))
   (defun kb/buffer-major-mode (&optional buffer-or-name)
     "Returns the major mode associated with a buffer.
 If buffer-or-name is nil return current buffer's mode."
@@ -173,6 +171,16 @@ If buffer-or-name is nil return current buffer's mode."
                         (if buffer-or-name
                             (get-buffer buffer-or-name)
                           (current-buffer))))
+  (defun kb/select-buffer-in-side-window (buffer alist)
+    "Display buffer in a side window and select it"
+    (let ((window (display-buffer-in-side-window buffer alist)))
+      (select-window window)
+      ))
+  (defun kb/select-buffer-in-side-window (buffer alist)
+    "Display buffer in a side window and select it"
+    (let ((window (display-buffer-in-side-window buffer alist)))
+      (select-window window)
+      ))
   )
 
 ;;;; Eyebrowse
@@ -327,33 +335,6 @@ If buffer-or-name is nil return current buffer's mode."
   :config
   (popper-mode)
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
-
-  ;; Modified version of toggle which selects buffer
-  (defun kb/popper-open-latest (&optional group)
-    "Open the last closed popup and select buffer.
-
-Optional argument GROUP is called with no arguments to select
-a popup buffer to open."
-    (unless popper-mode (user-error "Popper-mode not active!"))
-    (let* ((identifier (when popper-group-function group))
-           (no-popup-msg (format "No buried popups for group %s"
-                                 (if (symbolp identifier)
-                                     (symbol-name identifier)
-                                   identifier))))
-      (if (null (alist-get identifier popper-buried-popup-alist
-                           nil 'remove 'equal))
-          (message (if identifier no-popup-msg "No buried popups"))
-        (if-let* ((new-popup (pop (alist-get identifier popper-buried-popup-alist
-                                             nil 'remove 'equal)))
-                  (buf (cdr new-popup)))
-            (if (not (buffer-live-p buf))
-                (popper-open-latest)
-              ;; (display-buffer buf)
-              (pop-to-buffer buf)
-              (with-current-buffer buf
-                (run-hooks 'popper-open-popup-hook)))
-          (message no-popup-msg)))))
-  (advice-add 'popper-open-latest :override #'kb/popper-open-latest)
   )
 
 ;;; Buffers
