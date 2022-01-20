@@ -218,7 +218,16 @@
     "B" '(embark-bindings :which-key "Embark-bindings")
     )
   :custom
-  (prefix-help-command #'embark-prefix-help-command) ; Optionally replace the key help with a completing-read interface
+  ;; Embark Actions menu
+  (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
+  (embark-prompter 'embark-completing-read-prompter) ; Use completing-read interface as well
+  (embark-indicators            ; How the (unedited) Embark Actions menu appears
+   '(;; embark-mixed-indicator
+     embark-highlight-indicator
+     embark-isearch-highlight-indicator
+     ))
+
+  ;; Misc
   (embark-collect-live-update-delay 0.5)
   )
 

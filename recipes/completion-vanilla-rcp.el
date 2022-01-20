@@ -123,6 +123,8 @@
      (project-switch-to-buffer reverse indexed)
      (consult-history reverse indexed)
      (ffap-menu reverse indexed)
+     (embark-act grid reverse indexed)
+     (embark-prefix-help-command grid reverse indexed)
      ))
   :init
   (defun kb/vertico-multiform-flat-toggle ()
