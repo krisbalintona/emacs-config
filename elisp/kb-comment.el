@@ -12,12 +12,14 @@
 (require 'keybinds-general-rcp)
 
 ;;; Variables
+;;;; Comment lists
 (defvar kb/comment-keywords-writing
   '("TODO" "COMMENT" "REVIEW" "FIXME")
   "List of strings with comment keywords.
 
 Make sure these words have a matching face listed in `hl-todo-keyword-faces',
 otherwise those words will not appear in any calls to `kb/comment-dwim'.")
+
 (defvar kb/comment-keywords-coding
   '("TODO" "NOTE" "REVIEW" "FIXME")
   "List of strings with comment keywords.
@@ -25,20 +27,21 @@ otherwise those words will not appear in any calls to `kb/comment-dwim'.")
 Make sure these words have a matching face listed in `hl-todo-keyword-faces',
 otherwise those words will not appear in any calls to `kb/comment-dwim'.")
 
-(defvar kb/comment-dwim--timestamp-format-concise "%F"
-  "Specifier for date in `kb/comment-dwim'.
-Refer to the doc string of `format-time-string' for the available
-options.")
-(defvar kb/comment-dwim--timestamp-format-verbose "%F %T %z"
-  "Like `kb/comment-dwim-timestamp-format-concise', but longer.")
-
+;;;; Other
 (defvar kb/comment-dwim--keyword-hist '()
   "Input history of selected comment keywords.")
+
+;;; Helper functions
 (defun kb/comment-dwim-timestamp--keyword-prompt (keywords)
   "Prompt for candidate among KEYWORDS."
-  (let ((def (car kb/comment-dwim--keyword-hist)))
+  (let ((last-used (car kb/comment-dwim--keyword-hist)))
     (completing-read
-     "Select keyword: "
+     (concat "Select keyword ["
+             (propertize last-used 'face
+                         (hl-todo--combine-face
+                          (alist-get last-used hl-todo-keyword-faces nil nil #'equal)
+                          ))
+             "]: ")
      (if (featurep 'hl-todo)
          (cl-mapcan (pcase-lambda (`(,keyword . ,face))
                       (and (equal (regexp-quote keyword) keyword)
@@ -47,16 +50,16 @@ options.")
                     (cl-remove-if (lambda (row)
                                     (not (cl-member (car row) keywords
                                                     :test #'string-match)))
-                                  hl-todo-keyword-faces))
+                                  hl-todo-keyword-faces)) ;
        keywords)
-     nil nil nil 'kb/comment-dwim--keyword-hist def)))
+     nil nil nil 'kb/comment-dwim--keyword-hist last-used
+     )))
 
-;;; Helper functions
 (defun kb/comment-insert-timestamp ()
   "Insert a timestamp at point, preceded by a keyword, defined in
 `kb/comment-keywords-writing' and `kb/comment-keywords-coding', depending on
 major-mode."
-  (let* ((date-style kb/comment-dwim--timestamp-format-concise)) ; An alternative date-style is `kb/comment-dwim--timestamp-format-verbose'
+  (let* ((date-style "%F"))
     (insert
      (format "%s %s: "
              (kb/comment-dwim-timestamp--keyword-prompt
