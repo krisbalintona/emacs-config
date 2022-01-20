@@ -103,7 +103,7 @@
       (side . right)
       (window-width . 0.4))
      ;; To the top
-     ("\\*Messages.*"
+     ("\\*Messages\\*"
       (display-buffer-in-side-window)
       (window-height . 0.16)
       (side . top)

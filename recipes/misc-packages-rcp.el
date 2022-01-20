@@ -180,6 +180,10 @@
     "hi" '(info :which-key "Info pages")
 
     "oc" '(calc :which-key "Open calculator")
+    "om" '((lambda ()
+             (interactive)
+             (pop-to-buffer "*Messages*"))
+           :which-key "Open *Messages*")
     )
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more
