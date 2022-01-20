@@ -188,6 +188,8 @@
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more
             )
+  :config
+  (general-unbind 'normal help-mode-map "SPC")
   )
 
 ;;; misc-packages-rcp.el ends here
