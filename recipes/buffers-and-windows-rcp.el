@@ -104,8 +104,9 @@
       (window-width . 0.4))
      ;; To the top
      ("\\*Messages\\*"
-      (display-buffer-in-side-window)
-      (window-height . 0.16)
+      (display-buffer-reuse-window
+       kb/select-buffer-in-side-window)
+      (window-height . 0.36)
       (side . top)
       (slot . 1))
      ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
