@@ -138,6 +138,8 @@
        (setq text (orderless-pattern-compiler input))
        (cons text (lambda (str) (orderless--highlight text str)))
        ))
+  (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
+  (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .") ; Include hidden files
   )
 
 ;;; programming-directories-rcp.el ends here
