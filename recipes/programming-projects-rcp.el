@@ -79,7 +79,7 @@
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
-   '((affe-find "Find file")
+   '((affe-find "Find file" "f")
      (consult-ripgrep "Regexp" "r")
      (magit-project-status "Magit")
      (project-switch-to-buffer "Buffer" "b")
