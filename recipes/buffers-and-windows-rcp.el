@@ -299,15 +299,14 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-display-function 'popper-select-popup-at-bottom)
   (popper-group-function
    #'(lambda ()
-       (let ((dd (abbreviate-file-name default-directory)))
-         (cond
-          ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" dd)
-           'Config)
-          ((locate-dominating-file dd "init.el") 'Emacs)
-          (t (popper-group-by-project)) ; Default to project.el
-          ))
-       ))
-  (popper-mode-line nil)                ; Remove modeline
+       (cond
+        ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
+         'Config)
+        ((locate-dominating-file default-directory "init.el") 'Emacs)
+        ((project-current) (project-root (project-current)))
+        (t nil)                         ; No group
+        )))
+  (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-emphasis)))
 
   ;; Popper-echo
   (popper-echo-dispatch-keys '(?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
