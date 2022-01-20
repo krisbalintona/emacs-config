@@ -260,10 +260,10 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;; Popper
 ;; "Tame ephemeral windows"
 (use-package popper
-  :general ("C-'" 'popper-toggle-latest
-            "M-'" 'popper-cycle
-            "C-\"" 'popper-kill-latest-popup
-            "C-M-'" 'popper-toggle-type
+  :general ("C-;" 'popper-toggle-latest
+            "M-;" 'popper-cycle
+            "C-'" 'popper-kill-latest-popup
+            "C-M-;" 'popper-toggle-type
             )
   :custom
   (popper-reference-buffers
