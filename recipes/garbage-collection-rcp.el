@@ -1,4 +1,4 @@
-;;; performance-rcp.el --- Summary
+;;; garbage-collection-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
@@ -93,10 +93,6 @@
   (advice-add magit-bury-buffer-function :after #'kb/gc-magit-exit-hook)
   )
 
-;;; More leeway for Emacs subprocesses
-;; Let Emacs subprocesses read more data per chunk
-(setq read-process-output-max (* 1024 1024)) ; 1mb
-
-;;; performance-rcp.el ends here
+;;; garbage-collection-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'performance-rcp)
+(provide 'garbage-collection-rcp)

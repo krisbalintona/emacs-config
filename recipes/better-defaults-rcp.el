@@ -124,6 +124,10 @@
       split-height-threshold 80
       )
 
+;;; More leeway for Emacs subprocesses
+;; Let Emacs subprocesses read more data per chunk
+(setq read-process-output-max (* 1024 1024)) ; 1mb
+
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering

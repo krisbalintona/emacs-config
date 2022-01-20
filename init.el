@@ -39,7 +39,7 @@
 ;;;; Configuration prerequisites
 ;; These are packages which come before others because their config files rely
 ;; on them.
-(require 'performance-rcp)
+(require 'garbage-collection-rcp)
 (require 'straight-package-management-rcp)
 (require 'better-defaults-rcp)
 (require 'personal-variables-rcp)
