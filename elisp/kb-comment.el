@@ -9,6 +9,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+;; (require 'smartparens)
+;; (require 'hl-todo)
 (require 'keybinds-general-rcp)
 
 ;;; Variables
@@ -42,16 +44,14 @@ otherwise those words will not appear in any calls to `kb/comment-dwim'.")
                           (alist-get last-used hl-todo-keyword-faces nil nil #'equal)
                           ))
              "]: ")
-     (if (featurep 'hl-todo)
-         (cl-mapcan (pcase-lambda (`(,keyword . ,face))
-                      (and (equal (regexp-quote keyword) keyword)
-                           (list (propertize keyword 'face
-                                             (hl-todo--combine-face face)))))
-                    (cl-remove-if (lambda (row)
-                                    (not (cl-member (car row) keywords
-                                                    :test #'string-match)))
-                                  hl-todo-keyword-faces)) ;
-       keywords)
+     (cl-mapcan (pcase-lambda (`(,keyword . ,face))
+                  (and (equal (regexp-quote keyword) keyword)
+                       (list (propertize keyword 'face
+                                         (hl-todo--combine-face face)))))
+                (cl-remove-if (lambda (row)
+                                (not (cl-member (car row) keywords
+                                                :test #'string-match)))
+                              hl-todo-keyword-faces)) ;
      nil nil nil 'kb/comment-dwim--keyword-hist last-used
      )))
 
