@@ -15,8 +15,13 @@
   :ensure-system-package (aspell . "sudo apt install aspell aspell-en")
   :hook ((text-mode . flyspell-mode)
          (prog-mode . flyspell-prog-mode))
-  :general (kb/general-keys
-             "/" '(flyspell-buffer :which-key "Spellcheck buffer"))
+  :general 
+  (kb/general-keys
+             "/" '(flyspell-buffer :which-key "Spellcheck buffer")
+             )
+  (:keymaps 'flyspell-mode-map
+            "C-;" nil
+            )
   :custom
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
