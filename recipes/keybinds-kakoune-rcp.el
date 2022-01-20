@@ -177,10 +177,10 @@
 ;; that
 (use-package phi-search
   :after kakoune
-  :bind (("C-s" . phi-search)
-         ("C-r" . phi-search-backward))
+  :general (:states 'visual
+                    "C-s" 'phi-search
+                    "C-r" 'phi-search-backward)
   )
-
 
 ;;; keybinds-kakoune-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
