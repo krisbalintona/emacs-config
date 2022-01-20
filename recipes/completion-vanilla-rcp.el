@@ -118,7 +118,7 @@
      (org-roam-node-find reverse)
      (consult-buffer reverse)
      ("helpful-*" reverse indexed)
-     ("straight-*" grid indexed)
+     ("straight-*" grid reverse indexed)
      (affe-find reverse)
      (project-switch-to-buffer reverse indexed)
      (consult-history reverse indexed)
