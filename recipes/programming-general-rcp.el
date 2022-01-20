@@ -29,11 +29,10 @@
   :hook (after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
-            :prefix "C-c"
-            "p" 'hl-todo-previous
-            "n" 'hl-todo-next
-            "o" 'hl-todo-occur
-            "i" 'hl-todo-insert
+            :prefix "M-g"
+            "n" '(hl-todo-next :which-key "Hl-todo-next")
+            "p" '(hl-todo-previous :which-key "Hl-todo-previous")
+            "o" '(hl-todo-occur :which-key "Hl-todo-occur")
             )
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
