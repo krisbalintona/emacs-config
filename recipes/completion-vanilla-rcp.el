@@ -82,7 +82,7 @@
             "RET" #'vertico-directory-enter
             "C-i" #'vertico-quick-insert
             "C-o" #'vertico-quick-exit
-            "M-i" #'kb/vertico-quick-embark
+            "M-o" #'kb/vertico-quick-embark
             "M-G" #'vertico-multiform-grid
             "M-F" #'vertico-multiform-flat
             "M-R" #'vertico-multiform-reverse
