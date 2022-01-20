@@ -100,10 +100,16 @@
   ;; Variables
   (defvar kb/comment-keywords-writing
     '("TODO" "COMMENT" "REVIEW" "FIXME")
-    "List of strings with comment keywords.")
+    "List of strings with comment keywords.
+
+Make sure these words have a matching face listed in `hl-todo-keyword-faces',
+otherwise those words will not appear in any calls to `kb/comment-dwim'.")
   (defvar kb/comment-keywords-coding
     '("TODO" "NOTE" "REVIEW" "FIXME")
-    "List of strings with comment keywords.")
+    "List of strings with comment keywords.
+
+Make sure these words have a matching face listed in `hl-todo-keyword-faces',
+otherwise those words will not appear in any calls to `kb/comment-dwim'.")
 
   (defvar kb/comment-dwim--timestamp-format-concise "%F"
     "Specifier for date in `kb/comment-dwim'.
@@ -118,8 +124,18 @@ options.")
     "Prompt for candidate among KEYWORDS."
     (let ((def (car kb/comment-dwim--keyword-hist)))
       (completing-read
-       (format "Select keyword [%s]: " def)
-       keywords nil nil nil 'kb/comment-dwim--keyword-hist def)))
+       "Select keyword: "
+       (if (featurep 'hl-todo)
+           (cl-mapcan (pcase-lambda (`(,keyword . ,face))
+                        (and (equal (regexp-quote keyword) keyword)
+                             (list (propertize keyword 'face
+                                               (hl-todo--combine-face face)))))
+                      (cl-remove-if (lambda (row)
+                                      (not (cl-member (car row) keywords
+                                                      :test #'string-match)))
+                                    hl-todo-keyword-faces))
+         keywords)
+       nil nil nil 'kb/comment-dwim--keyword-hist def)))
 
   ;; Functions
   (defun kb/comment-insert-timestamp ()

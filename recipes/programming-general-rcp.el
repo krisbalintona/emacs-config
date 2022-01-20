@@ -39,6 +39,9 @@
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(text-mode org-mode))
   (hl-todo-exclude-modes nil)
+  ;; Make sure to have all words in `kb/comment-keywords-coding' and
+  ;; `kb/comment-keywords-writing' in this list, otherwise those words will not
+  ;; appear in any calls to `kb/comment-dwim'.
   (hl-todo-keyword-faces
    '(("TODO" . "orange")
      ("FIXME" error bold)
@@ -46,6 +49,7 @@
      ("NOTE" success bold)
      ("BUG" error bold)
      ("DEPRECATED" font-lock-doc-face bold)
+     ("COMMENT" . "cornflower blue")
      ))
   )
 
