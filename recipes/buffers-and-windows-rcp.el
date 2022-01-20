@@ -268,8 +268,8 @@ If buffer-or-name is nil return current buffer's mode."
   :custom
   (popper-reference-buffers
    '(;; General
-     "\\*Messages\\*"
-     "^\\*Warnings\\*$"
+     "^\\*Messages\\*"
+     "^\\*Warnings\\*"
      "^\\*Backtrace\\*"
 
      ;; Coding
@@ -318,6 +318,15 @@ If buffer-or-name is nil return current buffer's mode."
         ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
          (concat (match-string 1 name)
                  "(O)"))
+        ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
+         (concat (match-string 1 name)
+                 "(H)"))
+        ((string-match "^\\*Warnings\\*" name)
+         (concat (match-string 1 name)
+                 "(W)"))
+        ((string-match "^\\*Backtrace\\*" name)
+         (concat (match-string 1 name)
+                 "(B)"))
         ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
          (concat (match-string 1 name)
                  "(L)"))
