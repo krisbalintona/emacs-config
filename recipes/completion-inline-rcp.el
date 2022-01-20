@@ -219,7 +219,7 @@
                      "M-p" #'corfu-doc-scroll-down
                      )
   :custom
-  (corfu-doc-delay 0.75)
+  (corfu-doc-delay 1.2)
   (corfu-doc-max-width 70)
   (corfu-doc-max-height 20)
   )
