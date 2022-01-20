@@ -72,9 +72,6 @@
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
               )
 
-;;; Save replaced text into kill ring
-(setq save-interprogram-paste-before-kill t)
-
 ;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
 
