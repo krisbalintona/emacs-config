@@ -103,7 +103,7 @@
   (vertico-multiform-categories
    '((file grid reverse indexed)
      (consult-grep buffer)
-     (consult-location reverse)
+     (consult-location)
      (imenu buffer)
      (library reverse indexed)
      (t flat)
