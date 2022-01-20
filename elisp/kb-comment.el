@@ -34,59 +34,102 @@ otherwise those words will not appear in any calls to `kb/comment-dwim'.")
   "Input history of selected comment keywords.")
 
 ;;; Helper functions
-(defun kb/comment-dwim-timestamp--keyword-prompt (keywords)
-  "Prompt for candidate among KEYWORDS."
-  (let ((last-used (car kb/comment-dwim--keyword-hist)))
-    (completing-read
-     (concat "Select keyword ["
-             (propertize last-used 'face
-                         (hl-todo--combine-face
-                          (alist-get last-used hl-todo-keyword-faces nil nil #'equal)
-                          ))
-             "]: ")
-     (cl-mapcan (pcase-lambda (`(,keyword . ,face))
-                  (and (equal (regexp-quote keyword) keyword)
-                       (list (propertize keyword 'face
-                                         (hl-todo--combine-face face)))))
-                (cl-remove-if (lambda (row)
-                                (not (cl-member (car row) keywords
-                                                :test #'string-match)))
-                              hl-todo-keyword-faces)) ;
-     nil nil nil 'kb/comment-dwim--keyword-hist last-used
-     )))
-
-(defun kb/comment-insert-timestamp ()
-  "Insert a timestamp at point, preceded by a keyword, defined in
-`kb/comment-keywords-writing' and `kb/comment-keywords-coding', depending on
-major-mode."
-  (let* ((date-style "%F"))
-    (insert
-     (format "%s %s: "
-             (kb/comment-dwim-timestamp--keyword-prompt
-              (cond ((derived-mode-p 'prog-mode) kb/comment-keywords-coding)
-                    ((derived-mode-p 'org-mode) kb/comment-keywords-writing)
-                    (t nil)))
-             (format-time-string date-style))
-     )))
-
-(defun kb/comment-dwim-insert-comment ()
+;;;; Base comment insertion
+(defun kb/comment-insert--insertion-base (&rest args)
   "A helper function for `kb/comment-dwim'.
 
-If in the middle of a line, then append comment. If on blank
-line, then comment. End in `evil-insert-state'."
-  (if comment-insert-comment-function
-      (funcall comment-insert-comment-function)
-    (progn
-      (indent-according-to-mode)
-      (insert (comment-padright comment-start (comment-add nil)))
-      (save-excursion
-        (unless (string= "" comment-end)
-          (insert (comment-padleft comment-end (comment-add nil))))
-        (indent-according-to-mode)
-        )))
-  ;; Finally, end in insert state
-  (evil-insert-state)
+If in the middle of a line, then append comment. If on blank line, then comment.
+End in `evil-insert-state'."
+  (comment-normalize-vars)    ; Check comment-related variables first
+  (indent-according-to-mode)  ; Ensure you begin at the proper indentation level
+  (insert
+   (comment-padright comment-start (comment-add nil)) ; Insert comment delimiter
+   (mapconcat 'identity                 ; Any additional appendages
+              (cl-remove-if-not (lambda (elt) (stringp elt)) args)) ; Remove non-strings from args
+   )
+  (save-excursion ; Ensuring enclosing comment delimiter is inserted if it exists
+    (unless (string= "" comment-end)
+      (insert (comment-padleft comment-end (comment-add nil))))
+    (indent-according-to-mode))
   )
+
+;;;; Timestamp insertion
+(defun kb/comment-insert--insertion-timestamp ()
+  "Insert a timestamp at point, preceded by a keyword, defined in
+`kb/comment-keywords-writing' and `kb/comment-keywords-coding',
+depending on major-mode."
+  (let* ((last-used (car kb/comment-dwim--keyword-hist))
+         (keywords-list (cond ((derived-mode-p 'prog-mode) kb/comment-keywords-coding)
+                              ((derived-mode-p 'org-mode) kb/comment-keywords-writing)
+                              (t nil)))
+         (keyword (completing-read                  ; Query for keyword
+                   (concat "Select keyword ["
+                           (propertize last-used 'face
+                                       (hl-todo--combine-face
+                                        (alist-get last-used hl-todo-keyword-faces nil nil #'equal)))
+                           "]: ")
+                   (cl-mapcan (pcase-lambda (`(,word . ,face))
+                                (and (equal (regexp-quote word) word)
+                                     (list (propertize word 'face
+                                                       (hl-todo--combine-face face)))))
+                              (cl-remove-if (lambda (row)
+                                              (not (cl-member (car row) keywords-list
+                                                              :test #'string-match)))
+                                            hl-todo-keyword-faces))
+                   nil nil nil 'kb/comment-dwim--keyword-hist last-used))
+         )
+    (kb/comment-insert--insertion-base (format "%s %s: " keyword (format-time-string "%F")))
+    ))
+
+;;;; Versatile comment insertion
+(defun kb/comment-insert--insertion-versatile (prefix timestamp)
+  "Call the comment command you want (Do What I Mean).
+
+If in visual-mode, comment region. If with `C-u', then uncomment region.
+If called without prefix argument, then append comment to the end of the line.
+If called with `C-u', then comment in new line above.
+
+If called with `C-u' `C-u', then comment in new line below.
+
+Additionally, append a timestamp preceded by a chosen keyword if
+TIMESTAMP is t."
+  (let ((comment-func (if timestamp
+                          'kb/comment-insert--insertion-timestamp
+                        'kb/comment-insert--insertion-base))
+        )
+    ;; Choose which case I'm in
+    (cond
+     ;; First, check if highlighting a region (visual-mode). If so, comment
+     ;; those lines. However, uncomment if also called with universal argument.
+     ((use-region-p)
+      (comment-or-uncomment-region (region-beginning) (region-end) arg))
+     ;; Next, check case when on empty line with no comment
+     ((save-excursion (beginning-of-line) (looking-at "\\s-*$"))
+      (funcall comment-func))
+     ;; Then go onto non-empty line cases. Reliant on (interactive "*p")
+     ;; C-u = Comment above
+     ((= prefix 4)
+      (beginning-of-line)
+      (newline)
+      (forward-line -1)
+      (funcall comment-func))
+     ;; C-u C-u = Comment below
+     ((= prefix 16)
+      (end-of-line)
+      (newline)
+      (funcall comment-func))
+     ;; C-u C-u C-u = Remove any comments from line
+     ((= prefix 64)
+      (comment-kill (and (integerp prefix) prefix)))
+     ;; If without universal argument. Default by commenting at the end of the
+     ;; current line
+     (t
+      (comment-indent)
+      (when (looking-at "\\s-*$")
+        (insert " ")
+        (evil-insert-state)
+        ))
+     )))
 
 ;;; Commands
 (defun kb/comment-dwim (arg timestamp)
@@ -107,37 +150,42 @@ TIMESTAMP is t."
       (cond (t
              (comment-or-uncomment-region (region-beginning) (region-end) arg))) ; If with arg then uncomment
     ;; If in the middle of a line with no comment
-    (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
-        (cond (;; If with C-u
-               (equal arg '(4)) ; Comment above
-               (beginning-of-line)
-               (insert "\n")
-               (forward-line -1)
-               (kb/comment-dwim-insert-comment))
-              ;; If with C-u C-u
-              ((equal arg '(16)) ; Comment below
-               (end-of-line)
-               (insert "\n")
-               (kb/comment-dwim-insert-comment))
-              ;; If with C-u C-u C-u
-              ((equal arg '(64)) ; Remove any comments from line
-               (comment-kill (and (integerp arg) arg)))
-              ;; If without universal argument
-              (t ; Comment at the end of the current line
-               (comment-indent)
-               (when (looking-at "\\s-*$")
-                 (insert " ")
-                 (evil-insert-state))))
-      ;; When in an empty line
-      (kb/comment-dwim-insert-comment))
-    ;; When timestamp is t
-    (if timestamp (kb/comment-insert-timestamp))
+    (save-excursion
+      (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
+          (cond (;; If with C-u
+                 (equal arg '(4)) ; Comment above
+                 (beginning-of-line)
+                 (insert "\n")
+                 (forward-line -1)
+                 (kb/comment-insert--base-insertion))
+                ;; If with C-u C-u
+                ((equal arg '(16)) ; Comment below
+                 (end-of-line)
+                 (insert "\n")
+                 (kb/comment-insert--base-insertion))
+                ;; If with C-u C-u C-u
+                ((equal arg '(64)) ; Remove any comments from line
+                 (comment-kill (and (integerp arg) arg)))
+                ;; If without universal argument
+                (t ; Comment at the end of the current line
+                 (comment-indent)
+                 (when (looking-at "\\s-*$")
+                   (insert " ")
+                   (evil-insert-state)
+                   )))
+        ;; When in an empty line
+        (kb/comment-insert--insertion))
+      ;; When timestamp is t
+      (if timestamp (kb/comment-insert-timestamp))
+      )
     ))
 
 ;;; Keybinds
 (general-define-key
- "M-;" '((lambda (arg) (interactive "P") (kb/comment-dwim arg nil)) :which-key "Comment no timestamp")
- "M-:" '((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
+ ;; "M-;" '((lambda (arg) (interactive "P") (kb/comment-dwim arg nil)) :which-key "Comment no timestamp")
+ ;; "M-:" '((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
+ "M-;" '(kb/comment-dwim-regular :which-key "Comment no timestamp")
+ "M-:" '(kb/comment-dwim-timestamp :which-key "Comment with timestamp")
  )
 
 ;;; kb-comment.el ends here
