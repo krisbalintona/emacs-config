@@ -105,6 +105,14 @@
        kb/select-buffer-in-side-window)
       (side . right)
       (window-width . 0.4))
+     ("\\*Async Shell Command\\*"
+      (kb/select-buffer-in-side-window
+       display-buffer-in-direction)
+      (window-width . 0.20)
+      (side . right)
+      (direction . right)
+      (slot . 4)
+      (window-parameters . ((no-other-window . t))))
      ;; To the top
      ("\\*Messages\\*"
       (display-buffer-reuse-window
@@ -136,12 +144,6 @@
                          (fit-window-to-buffer win (floor (frame-height) 3))))
       (side . bottom)
       (slot . -4))
-     ("\\*Async Shell Command\\*"
-      (kb/select-buffer-in-side-window)
-      (window-height . 0.20)
-      (side . bottom)
-      (slot . -4)
-      (window-parameters . ((no-other-window . t))))
      ("\\*Embark Actions\\*"
       (display-buffer-reuse-mode-window
        display-buffer-at-bottom)
