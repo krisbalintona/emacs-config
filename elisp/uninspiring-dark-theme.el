@@ -111,10 +111,18 @@
    `(font-lock-negation-char-face ((t (:foreground ,atom-one-dark-cyan :bold t))))
 
 ;;;; Mode-line
-   `(mode-line ((t (:family "NotoSans Nerd Font" :height 0.77 :background ,atom-one-dark-black :foreground ,atom-one-dark-silver :box (:color ,atom-one-dark-border :line-width 1)))))
-   `(mode-line-buffer-id ((t (:weight bold))))
-   `(mode-line-emphasis ((t (:weight bold))))
-   `(mode-line-inactive ((t (:inherit mode-line))))
+   ;; `(mode-line ((t (:family "NotoSans Nerd Font" :height 0.77 :background ,atom-one-dark-black :foreground ,atom-one-dark-silver :box (:color ,atom-one-dark-border :line-width 1)))))
+   ;; ;; `(mode-line-buffer-id ((t (:weight bold))))
+   ;; `(mode-line-emphasis ((t (:weight bold))))
+   ;; `(mode-line-inactive ((t (:inherit mode-line))))
+
+   ;; Heavily based on mood-one theme
+   `(mode-line ((,class (:family "NotoSans Nerd Font" :height 0.77 :background "#1c2024" :foreground "#c0c4d2" :box (:line-width 5 :color "#1c2024")))))
+   `(mode-line-inactive ((,class (:inherit mode-line :background "#212428" :foreground "#5b6265" :box (:line-width 5 :color "#212428")))))
+   `(mode-line-emphasis ((,class (:foreground "#51afef"))))
+   `(mode-line-highlight ((,class (:inherit 'highlight))))
+   `(mode-line-buffer-id ((,class (:foreground "#a9a1e1" :weight bold))))
+   ;; `(header-line ((,class (:inherit 'mode-line))))
 
 ;;;; Window-divider
    `(window-divider ((t (:foreground ,atom-one-dark-border))))
