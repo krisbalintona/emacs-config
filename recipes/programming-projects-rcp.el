@@ -200,6 +200,8 @@
      ;; magit-insert-push-branch-header
      ))
   :config
+  (magit-auto-revert-mode)
+
   (evil-set-initial-state 'git-commit-mode 'insert)
 
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
