@@ -73,7 +73,7 @@
     "GC threshold for when magit opened."
     ;; (message (concat "ENTER BEGIN: " (number-to-string gc-cons-threshold)))
     (setq kb/gc-allow-minibuffer-gc nil)
-    (setq gc-cons-threshold (* better-gc-cons-threshold 10))
+    (setq gc-cons-threshold most-positive-fixnum)
     ;; (message (concat "ENTER END: " (number-to-string gc-cons-threshold)))
     )
   (defun kb/gc-magit-exit-hook (&optional KILL-BUFFER)
