@@ -118,11 +118,11 @@
 
    ;; Heavily based on mood-one theme
    `(mode-line ((,class (:family "NotoSans Nerd Font" :height 0.77 :background "#1c2024" :foreground "#c0c4d2" :box (:line-width 5 :color "#1c2024")))))
-   `(mode-line-inactive ((,class (:inherit mode-line :background "#212428" :foreground "#5b6265" :box (:line-width 5 :color "#212428")))))
-   `(mode-line-emphasis ((,class (:foreground "#51afef"))))
-   `(mode-line-highlight ((,class (:inherit 'highlight))))
-   `(mode-line-buffer-id ((,class (:foreground "#a9a1e1" :weight bold))))
-   ;; `(header-line ((,class (:inherit 'mode-line))))
+   `(mode-line-inactive ((t (:inherit mode-line :background "#212428" :foreground "#5b6265" :box (:line-width 5 :color "#212428")))))
+   `(mode-line-emphasis ((t (:foreground "#51afef"))))
+   `(mode-line-highlight ((t (:inherit 'highlight))))
+   `(mode-line-buffer-id ((t (:foreground "#a9a1e1" :weight bold))))
+   ;; `(header-line ((t (:inherit 'mode-line))))
 
 ;;;; Window-divider
    `(window-divider ((t (:foreground ,atom-one-dark-border))))
@@ -401,8 +401,8 @@
    `(rainbow-delimiters-unmatched-face ((t (:foreground ,atom-one-dark-red-1 :weight bold))))
 
 ;;;; Show-paren
-   `(show-paren-match ((,class (:foreground ,atom-one-dark-purple :inherit bold :underline t))))
-   `(show-paren-mismatch ((,class (:foreground ,atom-one-dark-red-1 :inherit bold :underline t))))
+   `(show-paren-match ((t (:foreground ,atom-one-dark-purple :inherit bold :underline t))))
+   `(show-paren-mismatch ((t (:foreground ,atom-one-dark-red-1 :inherit bold :underline t))))
 
 ;;;; Sh-mode
    `(sh-heredoc ((t (:inherit font-lock-string-face :slant italic))))
@@ -493,11 +493,6 @@
    `(realgud-bp-line-disabled-face ((t (:box (:color ,atom-one-dark-gray)))))
    `(realgud-line-number           ((t (:foreground ,atom-one-dark-mono-2))))
    `(realgud-backtrace-number      ((t (:inherit (secondary-selection)))))
-   ))
-
-(atom-one-dark-with-color-variables
-  (custom-theme-set-variables
-   'uninspiring-dark
 
 ;;;; Fill-column-indicator
    `(fci-rule-color ,atom-one-dark-gray)
@@ -528,7 +523,7 @@
 
 ;;;; Lsp
    ;; Doesn't work for some reason
-   ;; `(lsp-face-highlight-textual ((t (:inherit nil :underline (:style 'line)))))
+   `(lsp-face-highlight-textual ((t (:inherit nil :underline (:style 'line)))))
 
 ;;;; End
    ))
