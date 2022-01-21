@@ -28,7 +28,18 @@
 ;;;; Lisp-extra-font-lock
 ;; Give faces to elisp symbols
 (use-package lisp-extra-font-lock
+  :disabled t         ; Doesn't work for now, so I've substituted with `elispfl'
   :ghook 'emacs-lisp-mode-hook
+  )
+
+;;;; Elispfl
+;; Alternative to `lisp-extra-font-lock'
+;; FIXME 2022-01-21: I'm only relying on this package because
+;; `lisp-extra-font-lock' broke for some unknown reason.
+(use-package elispfl
+  :straight (elispfl :type git :host github :repo "cireu/elispfl")
+  :init
+  (elispfl-mode)
   )
 
 ;;;; Highlight-function-calls
