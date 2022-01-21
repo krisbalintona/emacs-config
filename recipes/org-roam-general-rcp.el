@@ -25,7 +25,11 @@
             [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/note-keys
     "f" '(org-roam-node-find :which-key "Find file")
-    "F" '(org-roam-node-find t :which-key "Find file other window")
+    "F" '((lambda ()
+            (interactive)
+            (org-roam-node-find t)
+            )
+          :which-key "Find file other window")
 
     "i" '(org-roam-node-insert :which-key "Insert note")
 

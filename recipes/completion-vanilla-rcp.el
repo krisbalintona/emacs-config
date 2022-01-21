@@ -106,6 +106,7 @@
      (consult-location)
      (imenu buffer)
      (library reverse indexed)
+     (org-roam-node reverse indexed)
      (t flat)
      ))
   (vertico-multiform-commands
@@ -115,7 +116,6 @@
      (load-theme grid reverse indexed)
      (execute-extended-command reverse indexed)
      (consult-yank-pop indexed)
-     (org-roam-node-find reverse)
      (consult-buffer reverse)
      ("helpful-*" reverse indexed)
      ("straight-*" grid reverse indexed)
