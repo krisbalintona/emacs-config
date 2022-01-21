@@ -190,6 +190,7 @@
             )
   :config
   (general-unbind 'normal help-mode-map "SPC")
+  (general-unbind 'normal custom-mode-map "SPC")
   )
 
 ;;; misc-packages-rcp.el ends here
