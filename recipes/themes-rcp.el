@@ -45,6 +45,20 @@ here: https://github.com/TheVaffel/emacs"
     ))
 (general-define-key "<f7>" 'kb/toggle-transparency)
 
+;;;; Solaire-mode
+;; Have "non-real" (by my own predicate) buffers and other faces swapped.
+(use-package solaire-mode
+  :custom
+  (solaire-mode-real-buffer-fn
+   #'(lambda ()
+       (and (buffer-name (buffer-base-buffer)) ; Not connected to file
+            (not (string-match "\*Echo Area" (buffer-name (buffer-base-buffer)))) ; Not...?
+            )))
+  (solaire-mode-themes-to-face-swap '("uninspiring-dark"))
+  :init
+  (solaire-global-mode)
+  )
+
 ;;; Themes and toggling
 ;;;; Install themes
 (setq custom-theme-load-path load-path)

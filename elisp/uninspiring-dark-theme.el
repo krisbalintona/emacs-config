@@ -525,6 +525,11 @@
    ;; Doesn't work for some reason
    `(lsp-face-highlight-textual ((t (:inherit nil :underline (:style 'line)))))
 
+;;;; Solaire
+   ;; From mood-one theme
+   `(solaire-default-face ((t (:inherit 'default :background "#212428"))))
+   `(solaire-hl-line-face ((t (:inherit 'hl-line :background "#282c30"))))
+
 ;;;; End
    ))
 ;;; Themes added for hooks
