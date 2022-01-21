@@ -77,10 +77,14 @@
       (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
                        (string-match-p "^\\*Customize" (buffer-name))))
-      (kb/select-buffer-in-side-window)
-      (window-width . 74)
+
+      (display-buffer-reuse-window
+       kb/select-buffer-in-side-window
+       display-buffer-in-direction)
+      (window-width . 0.4)
       (side . left)
-      (slot . 5))
+      (direction . left)
+      (slot . 1))
      ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'help-mode))
       (display-buffer-reuse-window
        kb/select-buffer-in-side-window
@@ -271,6 +275,7 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*Messages\\*"
      "^\\*Warnings\\*"
      "^\\*Backtrace\\*"
+     "^\\*Customize"
 
      ;; Coding
      "[Oo]utput\\*"
@@ -332,6 +337,10 @@ If buffer-or-name is nil return current buffer's mode."
         ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
          (concat (match-string 1 name)
                  "(C)"))
+        ((string-match "^\\*Customize" name)
+         (concat (match-string 1 name)
+                 (concat "(CG)" (substring name 18 (- (length name) 1)))
+                 ))
         (t name))
        ))
   :config
