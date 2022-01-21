@@ -131,7 +131,7 @@ Additionally, run `kb/themes-hooks'."
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
   :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
-  :ghook 'emacs-startup-hook
+  ;; :ghook 'emacs-startup-hook
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
@@ -157,6 +157,11 @@ Additionally, run `kb/themes-hooks'."
   :config (require 'kb-doom-modeline-segments)
   )
 
+;;;; Mood-line
+(use-package mood-line
+  :ghook 'after-init-hook
+  )
+
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
@@ -180,13 +185,13 @@ Additionally, run `kb/themes-hooks'."
 ;; Display batter percentage
 (use-package battery
   :straight nil
-  :ghook ('doom-modeline-mode-hook 'display-battery-mode)
+  :hook (window-setup . display-battery-mode)
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
   )
 
-;;; Display-line-numbers-mode
+;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ghook 'prog-mode-hook 'LaTeX-mode-hook
