@@ -365,10 +365,11 @@ afterward."
   )
 
 ;;;; Anzu
-;; Adds highlight face during replace and regexp
+;; Search Mode Info Display
 (use-package anzu
   :demand t
-  :general ([remap query-replace] 'anzu-query-replace-regexp)
+  :general ("M-g r" '(anzu-query-replace-regexp :wk "Query replace")
+            [remap query-replace] 'anzu-query-replace-regexp)
   :custom
   (anzu-cons-mode-line-p nil)
   :config (global-anzu-mode)
