@@ -50,9 +50,17 @@ here: https://github.com/TheVaffel/emacs"
 (setq custom-theme-load-path load-path)
 
 ;; Dark
-;; (use-package atom-one-dark-theme :demand t)
-;; (use-package apropospriate-theme :demand t)
+(use-package atom-one-dark-theme)
+(use-package apropospriate-theme)
 (use-package nano-theme)
+(use-package mood-one-theme
+  :after uninspiring-dark-theme
+  :config
+  (mood-one-theme-arrow-fringe-bmp-enable)
+  (setq diff-hl-fringe-bmp-function #'mood-one-theme-diff-hl-fringe-bmp-function)
+  (eval-after-load 'flycheck #'mood-one-theme-flycheck-fringe-bmp-enable)
+  (eval-after-load 'flymake #'mood-one-theme-flymake-fringe-bmp-enable)
+  )
 (require 'uninspiring-dark-theme)
 
 ;; Light
