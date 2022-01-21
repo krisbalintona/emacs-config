@@ -11,7 +11,10 @@
 ;; Set all variables before bootstrapping straight.el
 (defvar straight-use-package-by-default t) ; Automatically :straight t for use-package
 (defvar straight-repository-branch "develop") ; Use development branch
-(defvar straight-check-for-modifications nil) ; I'll upgrade myself
+(defvar straight-check-for-modifications
+  '(find-at-startup find-when-checking))
+;; Start after path from `exec-path-from-shell' is set
+(add-hook 'emacs-startup-hook 'straight-watcher-start)
 
 ;;; Bootstrap (install straight.el)
 (defvar bootstrap-version)

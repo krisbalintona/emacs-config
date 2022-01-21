@@ -29,6 +29,8 @@
   (async-shell-command (concat "sudo " (kb/which-package-manager) " -S rust")))
 (unless (executable-find "cargo")
   (async-shell-command (concat "sudo " (kb/which-package-manager) " -S cargo")))
+(unless (executable-find "watchexec")   ; For straight.el
+  (async-shell-command (concat "cargo install watchexec-cli")))
 
 ;;; Java
 (unless (executable-find "java")
