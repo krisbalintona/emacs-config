@@ -114,7 +114,7 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
      ;; First, check if highlighting a region (visual-mode). If so, comment
      ;; those lines. However, uncomment if also called with universal argument.
      ((use-region-p)
-      (comment-or-uncomment-region (region-beginning) (region-end) arg))
+      (comment-or-uncomment-region (region-beginning) (region-end)))
      ;; Next, check case when on empty line with no comment
      ((save-excursion (beginning-of-line) (looking-at "\\s-*$"))
       (funcall comment-func))
