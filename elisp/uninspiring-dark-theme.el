@@ -522,8 +522,7 @@
    `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
 
 ;;;; Lsp
-   ;; Doesn't work for some reason
-   `(lsp-face-highlight-textual ((t (:inherit nil :underline (:style 'line)))))
+   `(lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
 
 ;;;; Solaire
    ;; From mood-one theme

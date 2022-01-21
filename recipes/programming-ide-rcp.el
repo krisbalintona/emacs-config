@@ -92,10 +92,6 @@
   ;; When you hover over a symbol
   (lsp-enable-symbol-highlighting t)
   (lsp-symbol-highlighting-skip-current nil) ; When highlighting, don't highlight symbol on point
-  :custom-face
-  (lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
-  ;; (lsp-face-highlight-textual ((t (:inherit nil :box t))))
-  ;; (lsp-face-highlight-write ((t (:inherit nil :box t))))
   )
 
 ;;; Lsp-ui
