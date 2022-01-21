@@ -34,12 +34,9 @@ otherwise those words will not appear in any calls to `kb/comment-dwim'.")
   "Input history of selected comment keywords.")
 
 ;;; Helper functions
-;;;; Base comment insertion
 (defun kb/comment-insert--insertion-base (&rest args)
-  "A helper function for `kb/comment-dwim'.
-
-If in the middle of a line, then append comment. If on blank line, then comment.
-End in `evil-insert-state'."
+  "Inserts a comment at point with args appended. End in
+`evil-insert-state' if `evil-mode' is enabled."
   (comment-normalize-vars)    ; Check comment-related variables first
   (indent-according-to-mode)  ; Ensure you begin at the proper indentation level
   (insert
@@ -56,16 +53,15 @@ End in `evil-insert-state'."
     (evil-insert-state))
   )
 
-;;;; Timestamp insertion
 (defun kb/comment-insert--insertion-timestamp ()
-  "Insert a timestamp at point, preceded by a keyword, defined in
-`kb/comment-keywords-writing' and `kb/comment-keywords-coding',
-depending on major-mode."
-  (let* ((last-used (car kb/comment-dwim--keyword-hist))
-         (keywords-list (cond ((derived-mode-p 'prog-mode) kb/comment-keywords-coding)
+  "Insert a comment at point with a selected keyword in either
+`kb/comment-keywords-coding' or `kb/comment-keywords-writing'
+using `completing-read'. Additionally, append timestamp as well."
+  (let* ((last-used (car kb/comment-dwim--keyword-hist)) ; Command history
+         (keywords-list (cond ((derived-mode-p 'prog-mode) kb/comment-keywords-coding) ; Based on major-mode
                               ((derived-mode-p 'org-mode) kb/comment-keywords-writing)
                               (t nil)))
-         (keyword (completing-read                  ; Query for keyword
+         (keyword (completing-read      ; Query for keyword
                    (concat "Select keyword ["
                            (propertize last-used 'face
                                        (hl-todo--combine-face
@@ -84,18 +80,19 @@ depending on major-mode."
     (kb/comment-insert--insertion-base (format "%s %s: " keyword (format-time-string "%F")))
     ))
 
-;;;; Versatile comment insertion
 (defun kb/comment-insert--insertion-versatile (prefix timestamp)
-  "Call the comment command you want (Do What I Mean).
+  "Insert either a normal comment or a comment with a timestamp.
 
-If in visual-mode, comment region. If with `C-u', then uncomment region.
-If called without prefix argument, then append comment to the end of the line.
+If in visual-mode, comment region. If also with `C-u', then uncomment region.
+
 If called with `C-u', then comment in new line above.
 
 If called with `C-u' `C-u', then comment in new line below.
 
-Additionally, append a timestamp preceded by a chosen keyword if
-TIMESTAMP is t."
+If called without prefix argument, then add comment to the end of current line.
+If comment already exists, then move point to the beginning of the comment.
+
+Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
   (let ((comment-func (if timestamp
                           'kb/comment-insert--insertion-timestamp
                         'kb/comment-insert--insertion-base))
@@ -140,13 +137,13 @@ TIMESTAMP is t."
 
 ;;; Commands
 (defun kb/comment-dwim-simple (prefix)
-  " TODO "
+  "Function to insert a regular comment in a dwim fashion."
   (interactive "*p")            ; Show prefix arg as number rather than raw form
   (kb/comment-insert--insertion-versatile prefix nil)
   )
 
 (defun kb/comment-dwim-timestamp (prefix)
-  " TODO "
+  "Function to insert a timestamped comment in a dwim fashion."
   (interactive "*p")            ; Show prefix arg as number rather than raw form
   (kb/comment-insert--insertion-versatile prefix t)
   )
