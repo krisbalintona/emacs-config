@@ -114,7 +114,7 @@
      (org-refile grid reverse indexed)
      (load-theme grid reverse indexed)
      (execute-extended-command reverse indexed)
-     (consult-yank-pop reverse indexed)
+     (consult-yank-pop indexed)
      (org-roam-node-find reverse)
      (consult-buffer reverse)
      ("helpful-*" reverse indexed)
@@ -125,6 +125,7 @@
      (ffap-menu reverse indexed)
      (embark-act grid reverse indexed)
      (embark-prefix-help-command grid reverse indexed)
+     (consult-flycheck)
      ))
   :init
   (defun kb/vertico-multiform-flat-toggle ()
