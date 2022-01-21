@@ -14,23 +14,35 @@
 (require 'keybinds-general-rcp)
 
 ;;; Variables
-;;;; Comment lists
 (defvar kb/comment-keywords-writing
   '("TODO" "COMMENT" "REVIEW" "FIXME")
   "List of strings with comment keywords.
 
-Make sure these words have a matching face listed in `hl-todo-keyword-faces',
-otherwise those words will not appear in any calls to `kb/comment-dwim'.")
+Make sure these words have a matching face listed in
+`kb/comment-keyword-faces', otherwise those words will not appear
+in any calls to `kb/comment-dwim'.")
 
 (defvar kb/comment-keywords-coding
   '("TODO" "NOTE" "REVIEW" "FIXME")
   "List of strings with comment keywords.
 
-Make sure these words have a matching face listed in `hl-todo-keyword-faces',
-otherwise those words will not appear in any calls to `kb/comment-dwim'.")
+Make sure these words have a matching face listed in
+`kb/comment-keyword-faces', otherwise those words will not appear
+in any calls to `kb/comment-dwim'.")
 
-;;;; Other
-(defvar kb/comment-dwim--keyword-hist '()
+(defvar kb/comment-keyword-faces
+  '(("TODO" . "orange")
+    ("FIXME" error bold)
+    ("REVIEW" . "orchid")
+    ("NOTE" success bold)
+    ("BUG" error bold)
+    ("DEPRECATED" font-lock-doc-face bold)
+    ("COMMENT" . "cornflower blue")
+    )
+  "An alist of the colors which correspond to the keywords in
+`kb/comment-keywords-coding' and `kb/comment-keywords-writing'.")
+
+(defvar kb/comment-dwim--keyword-hist nil
   "Input history of selected comment keywords.")
 
 ;;; Helper functions
@@ -65,7 +77,7 @@ using `completing-read'. Additionally, append timestamp as well."
                    (concat "Select keyword ["
                            (propertize last-used 'face
                                        (hl-todo--combine-face
-                                        (alist-get last-used hl-todo-keyword-faces nil nil #'equal)))
+                                        (alist-get last-used kb/comment-keyword-faces nil nil #'equal)))
                            "]: ")
                    (cl-mapcan (pcase-lambda (`(,word . ,face))
                                 (and (equal (regexp-quote word) word)
@@ -74,7 +86,7 @@ using `completing-read'. Additionally, append timestamp as well."
                               (cl-remove-if (lambda (row)
                                               (not (cl-member (car row) keywords-list
                                                               :test #'string-match)))
-                                            hl-todo-keyword-faces))
+                                            kb/comment-keyword-faces))
                    nil nil nil 'kb/comment-dwim--keyword-hist last-used))
          )
     (kb/comment-insert--insertion-base (format "%s %s: " keyword (format-time-string "%F")))
@@ -97,12 +109,8 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
                           'kb/comment-insert--insertion-timestamp
                         'kb/comment-insert--insertion-base))
         )
-<<<<<<< variant A
     ;; Choose which case I'm in
     (cond
->>>>>>> variant B
-    (cond ; Choose which case I'm in
-======= end
      ;; First, check if highlighting a region (visual-mode). If so, comment
      ;; those lines. However, uncomment if also called with universal argument.
      ((use-region-p)

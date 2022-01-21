@@ -26,6 +26,7 @@
 
 ;;;; Hl-todo
 (use-package hl-todo
+  :after kb-comment
   :hook (after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
@@ -41,15 +42,7 @@
   ;; Make sure to have all words in `kb/comment-keywords-coding' and
   ;; `kb/comment-keywords-writing' in this list, otherwise those words will not
   ;; appear in any calls to `kb/comment-dwim'.
-  (hl-todo-keyword-faces
-   '(("TODO" . "orange")
-     ("FIXME" error bold)
-     ("REVIEW" . "orchid")
-     ("NOTE" success bold)
-     ("BUG" error bold)
-     ("DEPRECATED" font-lock-doc-face bold)
-     ("COMMENT" . "cornflower blue")
-     ))
+  (hl-todo-keyword-faces kb/comment-keyword-faces)
   )
 
 ;;;; Highlight-indent-guides
