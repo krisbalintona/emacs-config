@@ -186,7 +186,20 @@
 
   (corfu-preview-current t)             ; Preview current candidate?
   (corfu-preselect-first t)             ; Preselect first candidate?
-  :config (corfu-global-mode)
+  :config
+  (corfu-global-mode)
+
+  ;; Enable Corfu more generally for every minibuffer, as long as no other
+  ;; completion UI is active. If you use Mct or Vertico as your main minibuffer
+  ;; completion UI. From
+  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
+  (defun corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+    (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
+                (bound-and-true-p vertico--input))
+      (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   )
 
 ;;;; Kind-icon
