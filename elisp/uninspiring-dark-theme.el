@@ -117,7 +117,7 @@
    ;; `(mode-line-inactive ((t (:inherit mode-line))))
 
    ;; Heavily based on mood-one theme
-   `(mode-line ((,class (:family "NotoSans Nerd Font" :height 0.77 :background "#1c2024" :foreground "#c0c4d2" :box (:line-width 5 :color "#1c2024")))))
+   `(mode-line ((t (:family "NotoSans Nerd Font" :height 105 :background "#1c2024" :foreground "#c0c4d2" :box (:line-width 5 :color "#1c2024")))))
    `(mode-line-inactive ((t (:inherit mode-line :background "#212428" :foreground "#5b6265" :box (:line-width 5 :color "#212428")))))
    `(mode-line-emphasis ((t (:foreground "#51afef"))))
    `(mode-line-highlight ((t (:inherit 'highlight))))
