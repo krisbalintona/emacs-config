@@ -409,6 +409,14 @@ given."
     )
   )
 
+;;;; Tree-sitter-indent
+;; Replaces `indent-line-function' with a tree-sitter indent function.
+(use-package tree-sitter-indent
+  :disabled                             ; Not much support right now...
+  :after tree-sitter
+  :hook ((js2-mode rustic-mode) . tree-sitter-indent-mode)
+  )
+
 ;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
 (use-package lsp-treemacs
