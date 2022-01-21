@@ -41,7 +41,7 @@
                      )
   :custom
   (py-shell-name "ipython3")
-  (py-session-p t)
+  (py-session-p nil)
   (py-dedicated-process-p nil)
 
   ;; When using `py-execute-' commands

@@ -163,7 +163,7 @@
                             (mode-line-format . none))))
      ("\\*\\(I?Python3\\|Python3\\)\\*"
       (display-buffer-reuse-mode-window
-       kb/select-buffer-in-side-window)
+       display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
       (window-height . 0.27))
@@ -177,11 +177,6 @@ If buffer-or-name is nil return current buffer's mode."
                         (if buffer-or-name
                             (get-buffer buffer-or-name)
                           (current-buffer))))
-  (defun kb/select-buffer-in-side-window (buffer alist)
-    "Display buffer in a side window and select it"
-    (let ((window (display-buffer-in-side-window buffer alist)))
-      (select-window window)
-      ))
   (defun kb/select-buffer-in-side-window (buffer alist)
     "Display buffer in a side window and select it"
     (let ((window (display-buffer-in-side-window buffer alist)))
