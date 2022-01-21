@@ -65,10 +65,9 @@ in any calls to `kb/comment-dwim'.")
     (evil-insert-state))
   )
 
-(defun kb/comment-insert--insertion-timestamp ()
-  "Insert a comment at point with a selected keyword in either
-`kb/comment-keywords-coding' or `kb/comment-keywords-writing'
-using `completing-read'. Additionally, append timestamp as well."
+(defun kb/comment--timestamp-select-todo ()
+  "Select and return a keyword based on major-mode using the
+`completing-read' interface."
   (let* ((last-used (car kb/comment-dwim--keyword-hist)) ; Command history
          (keywords-list (cond ((derived-mode-p 'prog-mode) kb/comment-keywords-coding) ; Based on major-mode
                               ((derived-mode-p 'org-mode) kb/comment-keywords-writing)
@@ -89,8 +88,13 @@ using `completing-read'. Additionally, append timestamp as well."
                                             kb/comment-keyword-faces))
                    nil nil nil 'kb/comment-dwim--keyword-hist last-used))
          )
-    (kb/comment-insert--insertion-base (format "%s %s: " keyword (format-time-string "%F")))
+    (format "%s %s: " keyword (format-time-string "%F"))
     ))
+
+(defun kb/comment-insert--insertion-timestamp ()
+  "Insert a comment at point with an appended keyword,an element in `kb/comment-keywords-coding' or `kb/comment-keywords-writing', alongside a timestamp."
+  (kb/comment-insert--insertion-base (kb/comment--timestamp-select-todo))
+  )
 
 (defun kb/comment-insert--insertion-versatile (prefix timestamp)
   "Insert either a normal comment or a comment with a timestamp.
@@ -137,9 +141,11 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
      ;; current line
      (t
       (comment-indent) ; Insert comment, or move point to comment if it already exists on line
-      (when (looking-at "\\s-*$") ; If comment doesn't already exists on line, then go into insert mode
-        (insert " ")
-        (when (bound-and-true-p evil-mode) ; Finally, end in the insert state, but only if evil mode is active
+      (when (looking-at "\\s-*$")
+        ;; If comment doesn't already exists on line, then...
+        (insert " ")            ; Have space between comment delimiter and point
+        (when timestamp (insert (kb/comment--timestamp-select-todo))) ; If I want a timestamp
+        (when (bound-and-true-p evil-mode) ; End in the insert state, but only if evil mode is active
           (evil-insert-state))))
      )))
 
