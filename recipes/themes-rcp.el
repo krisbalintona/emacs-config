@@ -158,8 +158,56 @@ Additionally, run `kb/themes-hooks'."
   )
 
 ;;;; Mood-line
+;; Mode line which accompanies the mood-one theme
 (use-package mood-line
+  :hook (mood-line-mode . (lambda ()
+                            (setq-default mode-line-format
+                                          '((:eval
+                                             (mood-line--format
+                                              (format-mode-line
+                                               '("    "
+                                                 (:eval
+                                                  (eyebrowse-mode-line-indicator))
+                                                 "    "
+                                                 (:eval
+                                                  (mood-line-segment-modified))
+                                                 (:eval
+                                                  (mood-line-segment-vc))
+                                                 (:eval
+                                                  (mood-line-segment-buffer-name))
+                                                 (:eval
+                                                  (kb/mood-line-segment-position))
+                                                 (:eval
+                                                  (mood-line-segment-anzu))
+                                                 (:eval
+                                                  (mood-line-segment-multiple-cursors))
+                                                 ))
+                                              (format-mode-line
+                                               '((:eval
+                                                  (mood-line-segment-eol))
+                                                 (:eval
+                                                  (mood-line-segment-encoding))
+                                                 (:eval
+                                                  (mood-line-segment-major-mode))
+                                                 ;; (:eval
+                                                 ;;  (mood-line-segment-misc-info))
+                                                 (:eval
+                                                  (mood-line-segment-flycheck))
+                                                 ;; (:eval
+                                                 ;;  (mood-line-segment-flymake))
+                                                 (:eval
+                                                  (mood-line-segment-process))
+                                                 ))
+                                              ))
+                                            ))
+                            ))
   :ghook 'after-init-hook
+  :config
+  (defun kb/mood-line-segment-position ()
+    "Displays the current cursor position in the mode-line."
+    (concat "%l:%c"
+            (when mood-line-show-cursor-point (propertize (format ":%d" (point)) 'face 'mood-line-unimportant))
+            ))
   )
 
 ;;;; Time
