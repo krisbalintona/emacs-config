@@ -14,6 +14,7 @@
 (use-package eaf
   :demand t
   :after browse-url
+  :ensure-system-package gdb         ; For debugging purposes, if I ever need to
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
   :load-path (lambda () (list (concat user-emacs-directory "site-lisp/emacs-application-framework"))) ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :hook (eaf-pdf-viewer . hide-mode-line-mode)
@@ -43,6 +44,9 @@
   (eaf-terminal-dark-mode "follow")
   (eaf-mindmap-dark-mode "follow")
   (eaf-pdf-dark-mode "ignore")
+
+
+  (eaf-enable-debug t)
   :init
   ;; Have `find-file' use `eaf-open'
   (defun adviser-find-file (orig-fn file &rest args)
@@ -57,27 +61,25 @@
   (require 'eaf-all-the-icons)
 
   ;; All modules
-  (require 'eaf-airshare)
-  (require 'eaf-browser)
-  (require 'eaf-camera)
-  (require 'eaf-demo)
-  (require 'eaf-file-browser)
-  (require 'eaf-file-manager)
-  (require 'eaf-file-sender)
-  (require 'eaf-image-viewer)
-  (require 'eaf-jupyter)
-  (require 'eaf-markdown-previewer)
-  ;; (require 'eaf-mermaid)
-  (require 'eaf-mindmap)
-  (require 'eaf-music-player)
   (require 'eaf-org-previewer)
-  (require 'eaf-pdf-viewer)
+  (require 'eaf-image-viewer)
+  (require 'eaf-music-player)
+  (require 'eaf-file-sender)
+  (require 'eaf-file-browser)
+  (require 'eaf-airshare)
   (require 'eaf-system-monitor)
-  (require 'eaf-terminal)
+  (require 'eaf-browser)
+  (require 'eaf-jupyter)
+  (require 'eaf-pdf-viewer)
   (require 'eaf-video-player)
-  (require 'eaf-vue-demo)
+  (require 'eaf-demo)
   (require 'eaf-netease-cloud-music)
-  (require 'eaf-rss-reader)
+  (require 'eaf-mindmap)
+  (require 'eaf-terminal)
+  (require 'eaf-markdown-previewer)
+  (require 'eaf-vue-demo)
+  (require 'eaf-file-manager)
+  (require 'eaf-camera)
 
   ;; Bindings
   ;; Compatibility with Evil's normal mode
@@ -116,8 +118,6 @@
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
-  :disabled                             ; Doesn't work for now...
-  :demand t
   :after eaf
   :load-path (lambda () (list (concat user-emacs-directory "popweb")))
   :straight nil
