@@ -49,12 +49,7 @@ here: https://github.com/TheVaffel/emacs"
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 (use-package solaire-mode
   :custom
-  (solaire-mode-real-buffer-fn
-   #'(lambda ()
-       (and (buffer-name (buffer-base-buffer)) ; Not connected to file
-            (not (string-match "\*Echo Area" (buffer-name (buffer-base-buffer)))) ; Not...?
-            )))
-  (solaire-mode-themes-to-face-swap '("uninspiring-dark"))
+  (solaire-mode-themes-to-face-swap '("uninspiring-dark" "modus-operandi"))
   :init
   (solaire-global-mode)
   )
@@ -130,7 +125,9 @@ Additionally, run `kb/themes-hooks'."
   "Switch between the light and dark themes specified in `kb/themes-list'."
   (interactive)
   (kb/ensure-themes-loaded)
-  (let* ((current (car custom-enabled-themes)))
+  ;; For this let clause to function, dark and light themes need to be in
+  ;; `solaire-mode-themes-to-face-swap', assuming `solaire-mode' is active
+  (let* ((current (cadr custom-enabled-themes)))
     (cond ((equal kb/themes-light current) (kb/proper-load-theme-dark))
           ((equal kb/themes-dark current) (kb/proper-load-theme-light))
           ))
