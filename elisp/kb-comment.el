@@ -51,6 +51,9 @@ End in `evil-insert-state'."
     (unless (string= "" comment-end)
       (insert (comment-padleft comment-end (comment-add nil))))
     (indent-according-to-mode))
+  ;; Finally, end in the insert state, but only if evil mode is active
+  (when (bound-and-true-p evil-mode)
+    (evil-insert-state))
   )
 
 ;;;; Timestamp insertion
@@ -97,8 +100,12 @@ TIMESTAMP is t."
                           'kb/comment-insert--insertion-timestamp
                         'kb/comment-insert--insertion-base))
         )
+<<<<<<< variant A
     ;; Choose which case I'm in
     (cond
+>>>>>>> variant B
+    (cond ; Choose which case I'm in
+======= end
      ;; First, check if highlighting a region (visual-mode). If so, comment
      ;; those lines. However, uncomment if also called with universal argument.
      ((use-region-p)
@@ -120,72 +127,34 @@ TIMESTAMP is t."
       (funcall comment-func))
      ;; C-u C-u C-u = Remove any comments from line
      ((= prefix 64)
-      (comment-kill (and (integerp prefix) prefix)))
+      (comment-kill (and (stringp prefix) prefix)))
      ;; If without universal argument. Default by commenting at the end of the
      ;; current line
      (t
-      (comment-indent)
-      (when (looking-at "\\s-*$")
+      (comment-indent) ; Insert comment, or move point to comment if it already exists on line
+      (when (looking-at "\\s-*$") ; If comment doesn't already exists on line, then go into insert mode
         (insert " ")
-        (evil-insert-state)
-        ))
+        (when (bound-and-true-p evil-mode) ; Finally, end in the insert state, but only if evil mode is active
+          (evil-insert-state))))
      )))
 
 ;;; Commands
-(defun kb/comment-dwim (arg timestamp)
-  "Call the comment command you want (Do What I Mean).
+(defun kb/comment-dwim-simple (prefix)
+  " TODO "
+  (interactive "*p")            ; Show prefix arg as number rather than raw form
+  (kb/comment-insert--insertion-versatile prefix nil)
+  )
 
-If in visual-mode, comment region. If with `C-u', then uncomment region.
-If called without prefix argument, then append comment to the end of the line.
-If called with `C-u', then comment in new line above.
-
-If called with `C-u' `C-u', then comment in new line below.
-
-Additionally, append a timestamp preceded by a chosen keyword if
-TIMESTAMP is t."
-  (interactive "*P")
-  (comment-normalize-vars)
-  (if (use-region-p)
-      ;; If highlighting a region (visual-mode) then comment those lines
-      (cond (t
-             (comment-or-uncomment-region (region-beginning) (region-end) arg))) ; If with arg then uncomment
-    ;; If in the middle of a line with no comment
-    (save-excursion
-      (if (save-excursion (beginning-of-line) (not (looking-at "\\s-*$")))
-          (cond (;; If with C-u
-                 (equal arg '(4)) ; Comment above
-                 (beginning-of-line)
-                 (insert "\n")
-                 (forward-line -1)
-                 (kb/comment-insert--base-insertion))
-                ;; If with C-u C-u
-                ((equal arg '(16)) ; Comment below
-                 (end-of-line)
-                 (insert "\n")
-                 (kb/comment-insert--base-insertion))
-                ;; If with C-u C-u C-u
-                ((equal arg '(64)) ; Remove any comments from line
-                 (comment-kill (and (integerp arg) arg)))
-                ;; If without universal argument
-                (t ; Comment at the end of the current line
-                 (comment-indent)
-                 (when (looking-at "\\s-*$")
-                   (insert " ")
-                   (evil-insert-state)
-                   )))
-        ;; When in an empty line
-        (kb/comment-insert--insertion))
-      ;; When timestamp is t
-      (if timestamp (kb/comment-insert-timestamp))
-      )
-    ))
+(defun kb/comment-dwim-timestamp (prefix)
+  " TODO "
+  (interactive "*p")            ; Show prefix arg as number rather than raw form
+  (kb/comment-insert--insertion-versatile prefix t)
+  )
 
 ;;; Keybinds
 (general-define-key
- ;; "M-;" '((lambda (arg) (interactive "P") (kb/comment-dwim arg nil)) :which-key "Comment no timestamp")
- ;; "M-:" '((lambda (arg) (interactive "P") (kb/comment-dwim arg t)) :which-key "Comment with timestamp")
- "M-;" '(kb/comment-dwim-regular :which-key "Comment no timestamp")
- "M-:" '(kb/comment-dwim-timestamp :which-key "Comment with timestamp")
+ "M-;" '(kb/comment-dwim-simple :which-key "Comment-dwim-simple")
+ "M-:" '(kb/comment-dwim-timestamp :which-key "Comment-dwim-timestamp")
  )
 
 ;;; kb-comment.el ends here
