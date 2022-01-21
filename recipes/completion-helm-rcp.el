@@ -20,8 +20,8 @@
             "M-o"  'helm-select-action ; List actions
             )
   (kb/leader-keys
-    "oh" '(helm-command-prefix :which-key "Helm prefix")
-    "oha" '(helm-apropos :which-key "Helm-apropos")
+    "oh" '(helm-command-prefix :wk "Helm prefix")
+    "oha" '(helm-apropos :wk "Helm-apropos")
     ;; "bb" 'helm-mini
     ;; "ff" 'helm-find-files
     )
@@ -53,7 +53,7 @@
   (:keymaps '(helm-find-files-map helm-read-file-map)
             "C-<backspace>" 'helm-find-files-up-one-level) ; This overwrites auto expansion toggle?
   (kb/leader-keys
-    "shs" '(helm-swoop :which-key "Helm-swoop")
+    "shs" '(helm-swoop :wk "Helm-swoop")
     )
   :custom
   (helm-swoop-split-with-multiple-windows nil) ; If this value is t, split window inside the current window

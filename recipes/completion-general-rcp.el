@@ -42,7 +42,7 @@
   :ghook 'window-setup-hook
   :general
   (:keymaps 'minibuffer-local-map
-            "M-A" '(marginalia-cycle :which-key "Marginalia cycle"))
+            "M-A" '(marginalia-cycle :wk "Marginalia cycle"))
   :custom
   (marginalia-max-relative-age 0)       ; Don't show relative ages
   (marginalia-align 'right)

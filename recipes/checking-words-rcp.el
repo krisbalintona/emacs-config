@@ -29,8 +29,8 @@
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
-  :general ("C-c l" '(powerthesaurus-lookup-synonyms-dwim :which-key "Synonyms")
-            "C-c L" '(powerthesaurus-lookup-dwim :which-key "Advanced word lookup"))
+  :general ("C-c l" '(powerthesaurus-lookup-synonyms-dwim :wk "Synonyms")
+            "C-c L" '(powerthesaurus-lookup-dwim :wk "Advanced word lookup"))
   )
 
 ;;; Offline
@@ -43,8 +43,8 @@
   :config
   (unless (featurep 'define-word)
     (general-define-key
-     "C-c d" '(wordnut-lookup-current-word :which-key "Wordnut lookup this word")
-     "C-c D" '(wordnut-search :which-key "Wordnut search")))
+     "C-c d" '(wordnut-lookup-current-word :wk "Wordnut lookup this word")
+     "C-c D" '(wordnut-search :wk "Wordnut search")))
   )
 
 ;;;; Synosaurus
@@ -60,8 +60,8 @@
   (unless (featurep 'powerthesaurus)
     (synosaurus-mode)
     (general-define-key
-     "C-c l" '(synosaurus-choose-and-replace :which-key "Synosaurus at point")
-     "C-c L" '(synosaurus-choose-and-insert :which-key "Synosaurus lookup")))
+     "C-c l" '(synosaurus-choose-and-replace :wk "Synosaurus at point")
+     "C-c L" '(synosaurus-choose-and-insert :wk "Synosaurus lookup")))
   )
 
 ;;; checking-words-rcp.el ends here

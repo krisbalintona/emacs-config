@@ -15,7 +15,7 @@
   ;; NOTE 2021-08-19: Can't use `ensure-system-package' becuase the installation
   ;; of `languagetool' involves many steps (unless on Arch).
   :if (system-packages-package-installed-p "languagetool")
-  :general ("C-c g" '(hydra:langtool/body :which-key "Langtool"))
+  :general ("C-c g" '(hydra:langtool/body :wk "Langtool"))
   :custom
   (langtool-default-language "en-US")
   (langtool-autoshow-message-function 'langtool-autoshow-detail-popup)

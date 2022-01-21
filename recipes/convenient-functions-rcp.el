@@ -30,7 +30,7 @@
     (message "File moved to %S" (abbreviate-file-name new-path))))
 
 (kb/file-keys
-  "R" '(kb/move-this-file :which-key "Rename current file")
+  "R" '(kb/move-this-file :wk "Rename current file")
   )
 
 ;;; Aj-toggle-fold
@@ -46,7 +46,7 @@
       ))
   )
 (kb/toggle-keys
-  "f" '(aj-toggle-fold :which-key "aj-toggle-fold"))
+  "f" '(aj-toggle-fold :wk "aj-toggle-fold"))
 
 ;;; Indent whole buffer
 (defun kb/format-buffer-indentation--base ()
@@ -90,7 +90,7 @@
         (t (kb/format-buffer-indentation--base))
         ))
 (kb/general-keys
-  "TAB" '(kb/format-buffer-indentation :which-key "Format buffer's indentation"))
+  "TAB" '(kb/format-buffer-indentation :wk "Format buffer's indentation"))
 
 ;;; Insert date
 (defun kb/insert-date (prefix)
@@ -115,7 +115,7 @@ Mainly used for `ledger-mode'."
     (error "Couldn't find filename in current buffer")))
 
 (kb/yank-kill-keys
-  "f" '(kb/yank-buffer-filename :which-key "Yank file-path")
+  "f" '(kb/yank-buffer-filename :wk "Yank file-path")
   )
 
 ;;; Delete this file
@@ -149,7 +149,7 @@ Mainly used for `ledger-mode'."
           (message "Deleted %S" short-path))))))
 
 (kb/file-keys
-  "D" '(kb/delete-this-file :which-key "Delete current file")
+  "D" '(kb/delete-this-file :wk "Delete current file")
   )
 
 ;;; Idle quote

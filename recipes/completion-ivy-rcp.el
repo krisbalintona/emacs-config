@@ -168,22 +168,22 @@
   :after ivy
   :general
   (:keymaps 'minibuffer-local-map
-            "C-r" '(counsel-minibuffer-history :which-key "Minibuffer history"))
+            "C-r" '(counsel-minibuffer-history :wk "Minibuffer history"))
   (kb/leader-keys
-    ;; "ff" '(counsel-find-file :which-key "Find file")
-    ;; "fF" '(counsel-file-jump :which-key "Fuzzy find file")
-    ;; "fr" '(counsel-recentf :which-key "Recent files")
+    ;; "ff" '(counsel-find-file :wk "Find file")
+    ;; "fF" '(counsel-file-jump :wk "Fuzzy find file")
+    ;; "fr" '(counsel-recentf :wk "Recent files")
 
-    ;; "hf" '(counsel-describe-function :which-key "Desc func")
-    ;; "hv" '(counsel-describe-variable :which-key "Desc var")
-    ;; "ho" '(counsel-describe-symbol :which-key "Desc sym")
-    ;; "ht" '(counsel-load-theme :which-key "Change theme")
+    ;; "hf" '(counsel-describe-function :wk "Desc func")
+    ;; "hv" '(counsel-describe-variable :wk "Desc var")
+    ;; "ho" '(counsel-describe-symbol :wk "Desc sym")
+    ;; "ht" '(counsel-load-theme :wk "Change theme")
 
-    "bc" '(counsel-switch-buffer :which-key "Counsel switch buffer")
+    "bc" '(counsel-switch-buffer :wk "Counsel switch buffer")
 
-    "ms" '(bookmark-set :which-key "Set bookmark")
+    "ms" '(bookmark-set :wk "Set bookmark")
 
-    ;; "iy" '(counsel-yank-pop :which-key "Paste")
+    ;; "iy" '(counsel-yank-pop :wk "Paste")
     )
   :custom
   (counsel-outline-face-style 'org)      ; Have faces match org's

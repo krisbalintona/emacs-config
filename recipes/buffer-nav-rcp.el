@@ -84,7 +84,7 @@ argument, query for word to search."
 ;; Open links easily
 (use-package ace-link
   :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map org-mode-map)
-                     "M-/" '(ace-link :which-key "Ace-link")
+                     "M-/" '(ace-link :wk "Ace-link")
                      )
   )
 
@@ -217,7 +217,7 @@ is only tested on \"insert\" action."
   :demand t
   :after imenu
   :general (kb/nav-keys
-             "I" '(imenu-list :which-key "Imenu list"))
+             "I" '(imenu-list :wk "Imenu list"))
   :hook (imenu-list-major-mode . visual-line-mode)
   )
 
@@ -226,7 +226,7 @@ is only tested on \"insert\" action."
 (use-package occur
   :straight nil
   :general (kb/nav-keys
-             "o" '(occur :which-key "Occur"))
+             "o" '(occur :wk "Occur"))
   )
 
 ;;; Goto-line-preview

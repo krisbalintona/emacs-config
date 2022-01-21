@@ -164,8 +164,8 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
 
 ;;; Keybinds
 (general-define-key
- "M-;" '(kb/comment-dwim-simple :which-key "Comment-dwim-simple")
- "M-:" '(kb/comment-dwim-timestamp :which-key "Comment-dwim-timestamp")
+ "M-;" '(kb/comment-dwim-simple :wk "Comment-dwim-simple")
+ "M-:" '(kb/comment-dwim-timestamp :wk "Comment-dwim-timestamp")
  )
 
 ;;; kb-comment.el ends here

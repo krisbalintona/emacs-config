@@ -17,7 +17,7 @@
          (prog-mode . flyspell-prog-mode))
   :general 
   (kb/general-keys
-             "/" '(flyspell-buffer :which-key "Spellcheck buffer")
+             "/" '(flyspell-buffer :wk "Spellcheck buffer")
              )
   (:keymaps 'flyspell-mode-map
             "C-;" nil
@@ -43,7 +43,7 @@
          (prog-mode . wucuo-start)
          )
   :general (kb/general-keys
-             [remap flyspell-buffer] '(wucuo-spell-check-visible-region :which-key "Spellcheck buffer"))
+             [remap flyspell-buffer] '(wucuo-spell-check-visible-region :wk "Spellcheck buffer"))
   :custom
   (wucuo-flyspell-start-mode "fast")
   ;; (ispell-extra-args "--run-together")  ; Faster aspell?
@@ -68,8 +68,8 @@
 (use-package flyspell-correct
   :after flyspell
   :general (kb/general-keys
-             "." '(flyspell-correct-next :which-key "Flyspell next")
-             "," '(flyspell-correct-previous :which-key "Flyspell prev")
+             "." '(flyspell-correct-next :wk "Flyspell next")
+             "," '(flyspell-correct-previous :wk "Flyspell prev")
              )
   :custom
   (flyspell-correct-interface 'flyspell-correct-completing-read)
