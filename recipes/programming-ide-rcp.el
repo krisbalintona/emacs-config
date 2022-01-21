@@ -399,16 +399,13 @@ given."
 ;; Rust
 ;; TypeScript
 (use-package tree-sitter
-  :straight (tree-sitter :type git :host github :repo "emacs-tree-sitter/elisp-tree-sitter")
-  :demand t
   :hook (tree-sitter-after-on . tree-sitter-hl-mode) ; Enable syntax highlighting whenever possible
-  :config
+  :init
   (global-tree-sitter-mode)     ; Enable for all supported tree-sitter languages
-
+  :config
   ;; Supported language bundle for tree-sitter
   (use-package tree-sitter-langs
-    :demand t
-    :config
+    :init
     (tree-sitter-langs-install-grammars
      t
      tree-sitter-langs--bundle-version
