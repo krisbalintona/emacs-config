@@ -58,6 +58,7 @@
 ;;;; Aethetics
 (require 'fonts-rcp)
 (require 'themes-rcp)
+(require 'kb-themes)
 
 ;;;; Completion frameworks
 (require 'completion-general-rcp)

@@ -10,6 +10,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'fonts-rcp)
+(require 'kb-themes)
 
 ;;; UI
 ;;;; Hide-mode-line
@@ -48,94 +49,48 @@ here: https://github.com/TheVaffel/emacs"
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 (use-package solaire-mode
+  :hook (window-configuration-change . turn-on-solaire-mode)
   :custom
-  (solaire-mode-themes-to-face-swap '("uninspiring-dark" "modus-operandi"))
-  :init
-  (solaire-global-mode)
+  (solaire-mode-remap-alist             ; Local face changes
+   '(;; Defaults
+     (default . solaire-default-face)
+     (hl-line . solaire-hl-line-face)
+     (region . solaire-region-face)
+     (org-hide . solaire-org-hide-face)
+     (org-indent . solaire-org-hide-face)
+     (linum . solaire-line-number-face)
+     (line-number . solaire-line-number-face)
+     (header-line . solaire-header-line-face)
+     (mode-line . solaire-mode-line-face)
+     (mode-line-active . solaire-mode-line-active-face)
+     (mode-line-inactive . solaire-mode-line-inactive-face)
+     (highlight-indentation-face . solaire-hl-line-face)
+     (fringe . solaire-fringe-face)
+     ))
+  (solaire-mode-themes-to-face-swap `(,kb/themes-dark ,kb/themes-light)) ; Global
+  (solaire-mode-swap-alist              ; Global face changes
+   '(;; Defaults
+     (default . solaire-default-face)
+     (hl-line . solaire-hl-line-face)
+     (region . solaire-region-face)
+     (org-hide . solaire-org-hide-face)
+     (org-indent . solaire-org-hide-face)
+     (linum . solaire-line-number-face)
+     (line-number . solaire-line-number-face)
+     (header-line . solaire-header-line-face)
+     (mode-line . solaire-mode-line-face)
+     (mode-line-active . solaire-mode-line-active-face)
+     (mode-line-inactive . solaire-mode-line-inactive-face)
+     (highlight-indentation-face . solaire-hl-line-face)
+     (fringe . solaire-fringe-face)
+     ))
+  ;; NOTE 2022-01-21: Either enable the global mode, relying on SWAPS, or
+  ;; locally enable solaire consistently (e.g. the hook I have) and rely on
+  ;; REMAPS. The latter is preferable since other packages may change faces, the
+  ;; former potentially interrupting the process.
+  ;; :init
+  ;; (solaire-global-mode)
   )
-
-;;; Themes and toggling
-;;;; Install themes
-(setq custom-theme-load-path load-path)
-
-;; Dark
-(use-package atom-one-dark-theme)
-(use-package apropospriate-theme)
-(use-package nano-theme)
-(use-package mood-one-theme
-  :after uninspiring-dark-theme
-  :config
-  (mood-one-theme-arrow-fringe-bmp-enable)
-  (setq diff-hl-fringe-bmp-function #'mood-one-theme-diff-hl-fringe-bmp-function)
-  (eval-after-load 'flycheck #'mood-one-theme-flycheck-fringe-bmp-enable)
-  (eval-after-load 'flymake #'mood-one-theme-flymake-fringe-bmp-enable)
-  )
-(require 'uninspiring-dark-theme)
-
-;; Light
-(use-package modus-themes
-  :custom
-  (modus-themes-mixed-fonts t)
-  :config
-  ;; Set foundational faces
-  (set-face-attribute 'default nil :font uninspiring-dark-default :height 136)
-  (set-face-attribute 'modus-themes-variable-pitch nil :font uninspiring-dark-variable-pitch :height 140)
-  (set-face-attribute 'modus-themes-fixed-pitch nil :font uninspiring-dark-fixed-pitch :height 158)
-  )
-
-;;;; Variable declarations
-;; (defvar kb/themes-dark 'nano-dark
-;;   "My chosen dark theme.")
-(defvar kb/themes-dark 'uninspiring-dark
-  "My chosen dark theme.")
-(defvar kb/themes-light 'modus-operandi
-  "My chosen light theme.")
-
-(defvar kb/themes-hooks nil
-  "Hook that runs after the `kb/proper-load-theme-light' and
-`kb/proper-load-theme-dark'.")
-
-;;;; Function definitions
-(defun kb/ensure-themes-loaded ()
-  "Ensure that the themes in `kb/themes-list' are loaded."
-  (unless (or (custom-theme-p kb/themes-dark)
-              (custom-theme-p kb/themes-light))
-    (load-theme kb/themes-dark t t)
-    (load-theme kb/themes-light t t))
-  )
-(defun kb/proper-load-theme-light ()
-  "Properly load `kb/theme-light' theme by disabling its dark counterpart as well.
-Additionally, run `kb/themes-hooks'."
-  (interactive)
-  (disable-theme kb/themes-dark)
-  (load-theme kb/themes-light t)
-  (run-hooks 'kb/themes-hooks)
-  )
-(defun kb/proper-load-theme-dark ()
-  "Properly load `kb/theme-dark' theme by disabling its light counterpart as well.
-Additionally, run `kb/themes-hooks'."
-  (interactive)
-  (disable-theme kb/themes-light)
-  (load-theme kb/themes-dark t)
-  (run-hooks 'kb/themes-hooks)
-  )
-
-;;;; Theme switcher
-(defun kb/theme-switcher ()
-  "Switch between the light and dark themes specified in `kb/themes-list'."
-  (interactive)
-  (kb/ensure-themes-loaded)
-  ;; For this let clause to function, dark and light themes need to be in
-  ;; `solaire-mode-themes-to-face-swap', assuming `solaire-mode' is active
-  (let* ((current (cadr custom-enabled-themes)))
-    (cond ((equal kb/themes-light current) (kb/proper-load-theme-dark))
-          ((equal kb/themes-dark current) (kb/proper-load-theme-light))
-          ))
-  )
-(general-define-key "<f6>" 'kb/theme-switcher)
-
-;;;; Load default theme
-(kb/proper-load-theme-dark)
 
 ;;; Modeline
 ;;;; Doom-modeline
