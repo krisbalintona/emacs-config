@@ -212,14 +212,17 @@
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
-  (embark-prompter 'embark-completing-read-prompter) ; Use completing-read interface as well
-  (embark-indicators            ; How the (unedited) Embark Actions menu appears
-   '(;; embark-mixed-indicator
+  (embark-prompter 'embark-keymap-prompter) ; What interface do I want to use for Embark Actions?
+  (embark-indicators                    ; How the Embark Actions menu appears
+   '(embark-mixed-indicator
      embark-highlight-indicator
-     embark-isearch-highlight-indicator
+     ;; embark-isearch-highlight-indicator
+     ;; embark-verbose-indicator
      ))
+  (embark-mixed-indicator-delay 1.5)
 
   ;; Misc
+  (embark-collect-live-initial-delay 0.8)
   (embark-collect-live-update-delay 0.5)
   )
 

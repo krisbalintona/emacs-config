@@ -62,7 +62,7 @@
    `(;; Automatically hide
      ;; Same window
      ("\\*helpful *"
-      (display-buffer-reuse-mode-window 
+      (display-buffer-reuse-mode-window
        display-buffer-same-window))
      ("*Flycheck errors*"
       (display-buffer-same-window))
@@ -138,18 +138,17 @@
       (side . bottom)
       (slot . -4)
       (window-parameters . ((no-other-window . t))))
+     ("\\*Embark Actions\\*"
+      (display-buffer-reuse-mode-window
+       display-buffer-at-bottom)
+      (window-height . fit-window-to-buffer)
+      (window-parameters . ((no-other-window . t)
+                            (mode-line-format . none))))
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-reuse-mode-window
        display-buffer-below-selected)
       (window-height . fit-window-to-buffer))
-     ("\\*Embark Actions.*"
-      (display-buffer-in-side-window)
-      (side . bottom)
-      (slot . -1)
-      (window-height . fit-window-to-buffer)
-      (window-parameters . ((no-other-window . t)
-                            (mode-line-format . none))))
      ("\\*\\(Embark\\)?.*Completions.*"
       (display-buffer-in-side-window)
       (side . bottom)
