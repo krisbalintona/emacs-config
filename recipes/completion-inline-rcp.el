@@ -150,6 +150,7 @@
 ;; the Emacs infrastructure
 (use-package corfu
   :demand t
+  :hook (lsp-completion-mode . kb/lsp-mode-setup-completion) ; Use corfu for lsp completion
   :general
   (:keymaps 'global-map
             :states 'insert
@@ -186,6 +187,9 @@
 
   (corfu-preview-current t)             ; Preview current candidate?
   (corfu-preselect-first t)             ; Preselect first candidate?
+
+  ;; Other
+  (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
   :config
   (corfu-global-mode)
 
@@ -200,6 +204,13 @@
       (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
       (corfu-mode 1)))
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+
+  ;; Setup lsp to use corfu for lsp completion
+  (defun kb/lsp-mode-setup-completion ()
+    "Use orderless completion style with lsp-capf instead of the
+default lsp-passthrough."
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
   )
 
 ;;;; Kind-icon
