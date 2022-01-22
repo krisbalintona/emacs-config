@@ -152,7 +152,7 @@ here: https://github.com/TheVaffel/emacs"
                                                   (kb/mood-line-segment-remote-host))
                                                  "  "
                                                  (:eval
-                                                  (mood-line-segment-modified))
+                                                  (kb/mood-line-segment-modified))
                                                  "  "
                                                  (:eval
                                                   (kb/mood-line-segment-position))
@@ -179,6 +179,7 @@ here: https://github.com/TheVaffel/emacs"
                                                  ;;  mode-line-misc-info)
                                                  " "
                                                  display-time-string
+                                                 " "
                                                  battery-mode-line-string
                                                  "  "
                                                  (:eval
@@ -373,6 +374,17 @@ main branch of repository."
               text
             (propertize text 'face 'mode-line-inactive))))
        " ")
+      ))
+  (defun kb/mood-line-segment-modified ()
+    "Displays a color-coded buffer modification/read-only indicator in the mode-line."
+    (if (not (string-match-p "\\*.*\\*" (buffer-name)))
+        (if (buffer-modified-p)
+            (propertize "● " 'face 'mood-line-modified)
+          (if (and buffer-read-only (buffer-file-name))
+              (propertize "■ " 'face 'mood-line-unimportant)
+            "  "
+            ))
+      "   "
       ))
   )
 
