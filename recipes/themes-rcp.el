@@ -188,6 +188,8 @@ here: https://github.com/TheVaffel/emacs"
                                                  (:eval
                                                   (kb/mood-line-segment-lsp))
                                                  (:eval
+                                                  (kb/mood-line-segment-debug))
+                                                 (:eval
                                                   (mood-line-segment-process))
                                                  ;; (:eval             ; Shows number of errors like flycheck?
                                                  ;;  (lsp-modeline--diagnostics-update-modeline))
@@ -385,6 +387,33 @@ main branch of repository."
             "  "
             ))
       "   "
+      ))
+  (defun kb/mood-line-segment-debug ()
+    "The current debug state from debugger (i.e. edebug,
+dap)."
+    (let* ((dap doom-modeline--debug-dap)
+           (edebug (doom-modeline--debug-edebug))
+           (on-error (doom-modeline--debug-on-error))
+           (on-quit (doom-modeline--debug-on-quit))
+           (vsep " ")
+           (sep (and
+                 (or dap edebug on-error on-quit)
+                 " "))
+           (text (concat sep
+                         (and dap (concat dap (and (or edebug on-error on-quit) vsep))) ; For dap
+                         (and edebug (concat edebug (and (or on-error on-quit) vsep))) ; For edebug
+                         ;; When neither are running, insert whitespace to maintain
+                         ;; spacing
+                         (unless (dab edebug)
+                           "  ")
+                         (and on-error (concat on-error (and on-quit vsep)))
+                         on-quit
+                         sep
+                         ))
+           )
+      (if (doom-modeline--active)
+          text
+        (propertize text 'face 'mode-line-inactive))
       ))
   )
 
