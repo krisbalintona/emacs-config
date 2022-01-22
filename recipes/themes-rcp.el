@@ -242,8 +242,10 @@ fallback. "
 If mode line is inactive, use a the `mode-line-inactive' face
 instead."
     (let* ((active (doom-modeline--active)) ; `doom-modeline' dependency
-           (face (if active 'mood-line-buffer-name 'mode-line-inactive))
-           )
+           (face (if active
+                     'mood-line-buffer-name
+                   '(t (:inherit (mode-line-inactive mood-line-buffer-name)))
+                   )))
       ;; TODO 2021-09-03: Add support for org-roam node titles.
       (propertize "%b" 'face face)))
   (defun kb/mood-line-segment-vc (&rest _)
