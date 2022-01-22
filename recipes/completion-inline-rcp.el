@@ -293,9 +293,9 @@ default lsp-passthrough."
         (eq (char-after (car completion-in-region--data)) ?:)))
   (defun kb/cape-capf-setup-elisp ()
     "Replace the default `elisp-completion-at-point'
-completion-at-point-function. Doing it this way will prevent disrupting the
-addition of other capfs (e.g. merely setting the variable entirely, or adding to
-list).
+completion-at-point-function. Doing it this way will prevent
+disrupting the addition of other capfs (e.g. merely setting the
+variable entirely, or adding to list).
 
 Additionally, add `cape-file' as early as possible to the list."
     ;; (setq-local completion-at-point-functions
@@ -312,8 +312,9 @@ Additionally, add `cape-file' as early as possible to the list."
 
   ;; LSP
   (defun kb/cape-capf-setup-lsp ()
-    "Replace the default `lsp-completion-at-point' with its `cape-capf-buster'
-version. Additionally, add `cape-file' to the list of capfs."
+    "Replace the default `lsp-completion-at-point' with its
+`cape-capf-buster' version. Additionally, add `cape-file' to the
+list of capfs."
     (setq-local completion-at-point-functions
                 (list #'cape-file
                       (cape-capf-buster #'lsp-completion-at-point)

@@ -318,7 +318,7 @@ If buffer-or-name is nil return current buffer's mode."
         ((project-current) (project-root (project-current)))
         (t nil)                         ; No group
         )))
-  (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-emphasis)))
+  (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-buffer-id)))
 
   ;; Popper-echo
   (popper-echo-dispatch-keys '(?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
