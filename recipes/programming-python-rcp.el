@@ -86,30 +86,34 @@
 ;; Install packages to a local directory rather than globally call
 ;; `pyvenv-activate' and select a directory with virtual environment packages
 (use-package pyvenv
-  :after (python lsp-mode)
   :hook (python-mode . kb/pyvenv-auto-activate)
   :ghook 'python-mode-hook
-  :gfhook 'pyvenv-tracking-mode
+  :gfhook
+  'pyvenv-tracking-mode
+  'kb/pyvenv-setup-variables
   :general (kb/lsp-keys
              :keymaps 'python-mode-map
              "v" '(pyvenv-activate :which-key "Pyvenv activate"))
   :init
   (defun kb/pyvenv-auto-activate ()
-    "Activate virtual environment, checking present directory then project root."
-    (interactive)
+    "Activate virtual environment, checking present directory then
+project root."
     (require 'pyvenv)               ; Functions require the package to be loaded
-    (if (project-current) ; Set virtual environment to ./venv/ if currently in a project
-        (let* ((venv-root (concat (project-root (project-current)) pyvenv-default-virtual-env-name))
-               (venv-dir (concat default-directory pyvenv-default-virtual-env-name))
-               )
-          (cond ((file-exists-p venv-dir) (pyvenv-activate venv-dir)) ; Check present directory
-                ((file-exists-p venv-root) (pyvenv-activate venv-root)) ; Then project root
-                (t (message "No virtual environment found."))
-                ))
-      ))
-  :custom
-  (pyvenv-default-virtual-env-name ".venv")
-  (pyvenv-mode-line-indicator '(pyvenv-virtual-env-name ("[venv:" pyvenv-virtual-env-name "]")))
+    (let* ((venv-dir (concat default-directory pyvenv-default-virtual-env-name))
+           (venv-root (concat (project-root (project-current)) pyvenv-default-virtual-env-name))
+           )
+      (cond ((file-exists-p venv-dir) (pyvenv-activate venv-dir)) ; Check present directory
+            ((file-exists-p venv-root) (pyvenv-activate venv-root)) ; Then project root
+            (t (message "No virtual environment found."))
+            )))
+  (defun kb/pyvenv-setup-variables ()
+    "Set up pyvenv variables.
+
+Set here since :custom declaration doesn't work for some reason."
+    (setq pyvenv-default-virtual-env-name ".venv"
+          pyvenv-mode-line-indicator 
+          (concat "[V] " (format-mode-line pyvenv-virtual-env-name 'mode-line-emphasis))
+          ))
   )
 
 ;;; Anaconda
