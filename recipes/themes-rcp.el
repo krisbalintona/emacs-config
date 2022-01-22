@@ -169,32 +169,32 @@ here: https://github.com/TheVaffel/emacs"
                                                   (mood-line-segment-eol))
                                                  (:eval
                                                   (mood-line-segment-encoding))
+                                                 " "
+                                                 display-time-string
+                                                 " "
+                                                 battery-mode-line-string
+                                                 "   "
+                                                 (:eval
+                                                  (kb/mood-line-segment-flycheck))
+                                                 lsp-modeline--code-actions-string
+                                                 (:eval
+                                                  (mood-line-segment-process))
+                                                 (:eval
+                                                  (kb/mood-line-segment-lsp))
+                                                 (:eval
+                                                  (lsp--progress-status))
+                                                 (:eval
+                                                  (kb/mood-line-segment-debug))
                                                  (:eval
                                                   (mood-line-segment-major-mode))
+                                                 ;; (:eval             ; Shows number of errors like flycheck?
+                                                 ;;  (lsp-modeline--diagnostics-update-modeline))
                                                  ;; Occasionally check this to see if any new packages have added
                                                  ;; anything interesting here to add manually. In particular, make
                                                  ;; sure to check `global-mode-string'.
                                                  ;; (:eval
                                                  ;;  ;; (mood-line-segment-misc-info))
                                                  ;;  mode-line-misc-info)
-                                                 " "
-                                                 display-time-string
-                                                 " "
-                                                 battery-mode-line-string
-                                                 "  "
-                                                 (:eval
-                                                  (kb/mood-line-segment-checker))
-                                                 lsp-modeline--code-actions-string
-                                                 (:eval
-                                                  (kb/mood-line-segment-lsp))
-                                                 (:eval
-                                                  (kb/mood-line-segment-debug))
-                                                 (:eval
-                                                  (mood-line-segment-process))
-                                                 ;; (:eval             ; Shows number of errors like flycheck?
-                                                 ;;  (lsp-modeline--diagnostics-update-modeline))
-                                                 (:eval
-                                                  (lsp--progress-status))
                                                  ))
                                               ))))
                             ))
@@ -346,17 +346,18 @@ main branch of repository."
         )))
   (defun kb/mood-line-segment-lsp ()
     "The LSP server state."
-    ;; NOTE 2022-01-22: Taken basically verbatim from the Doom Modeline LSP
-    ;; segment.
-    (when-let ((icon doom-modeline--lsp)) ; Only when lsp is active
-      (concat
-       " "
-       (if (doom-modeline--active)
-           icon
-         (doom-modeline-propertize-icon icon 'mode-line-inactive))
-       " "
-       )))
-  (defun kb/mood-line-segment-checker ()
+    ;; NOTE 2022-01-22: Mostly taken from the Doom Modeline LSP segment.
+    (concat
+     " "
+     (if lsp-mode
+         (let ((icon doom-modeline--lsp))
+           (if (doom-modeline--active)
+               icon
+             (doom-modeline-propertize-icon icon 'mode-line-inactive)))
+       " ")                               ; To preserve spacing
+     " "
+     ))
+  (defun kb/mood-line-segment-flycheck ()
     "Displays color-coded error status in the current buffer with pretty icons."
     (let* ((active (doom-modeline--active))
            (seg `(,doom-modeline--flycheck-icon . ,doom-modeline--flycheck-text))
@@ -406,7 +407,7 @@ dap)."
                          (and edebug (concat edebug (and (or on-error on-quit) vsep))) ; For edebug
                          ;; When neither are running, insert whitespace to maintain
                          ;; spacing
-                         (unless (dab edebug)
+                         (unless (and dap edebug)
                            "  ")
                          (and on-error (concat on-error (and on-quit vsep)))
                          on-quit
@@ -448,7 +449,7 @@ dap)."
   (battery-load-low 25)
   (battery-mode-line-limit 100)
   ;; (battery-mode-line-format "%cmAh")
-  (battery-mode-line-format "  %p%% ")
+  (battery-mode-line-format "  %p%%")
   :init
   (display-battery-mode)
   )
