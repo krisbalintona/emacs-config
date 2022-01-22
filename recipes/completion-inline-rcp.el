@@ -251,12 +251,9 @@ default lsp-passthrough."
 ;;;; Cape
 ;; Expand capf functionality with corfu!
 (use-package cape
-  :hook (lsp-completion-mode . (lambda ()    ;; Ensure capf-buster is used as well
-                                 (setq-local completion-at-point-functions
-                                             (list #'cape-file
-                                                   (cape-capf-buster #'lsp-completion-at-point)
-                                                   ))
-                                 ))
+  :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
+         (lsp-completion-mode . kb/cape-capf-setup-lsp)
+         )
   :general (:prefix "M-c"               ; Particular completion function
                     "p" 'completion-at-point
                     "t" 'complete-tag   ; etags
@@ -287,6 +284,40 @@ default lsp-passthrough."
   (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-symbol)
   (add-to-list 'completion-at-point-functions #'cape-line)
+  :init
+  ;; Elisp
+  (defun kb/cape-capf-ignore-keywords-elisp (cand)
+    "Ignore keywords with forms that begin with \":\" (e.g.
+:history)."
+    (or (not (keywordp cand))
+        (eq (char-after (car completion-in-region--data)) ?:)))
+  (defun kb/cape-capf-setup-elisp ()
+    "Replace the default `elisp-completion-at-point'
+completion-at-point-function. Doing it this way will prevent disrupting the
+addition of other capfs (e.g. merely setting the variable entirely, or adding to
+list).
+
+Additionally, add `cape-file' as early as possible to the list."
+    ;; (setq-local completion-at-point-functions
+    (setf (elt (cl-member 'elisp-completion-at-point completion-at-point-functions) 0)
+          (cape-super-capf
+           (cape-capf-predicate
+            #'elisp-completion-at-point
+            #'kb/cape-capf-ignore-keywords-elisp)
+           #'cape-abbrev
+           ))
+    ;; I prefer this being early/first in the list
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    )
+
+  ;; LSP
+  (defun kb/cape-capf-setup-lsp ()
+    "Replace the default `lsp-completion-at-point' with its `cape-capf-buster'
+version. Additionally, add `cape-file' to the list of capfs."
+    (setq-local completion-at-point-functions
+                (list #'cape-file
+                      (cape-capf-buster #'lsp-completion-at-point)
+                      )))
   )
 
 ;;;; Custom completions
