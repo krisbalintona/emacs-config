@@ -340,6 +340,11 @@ If buffer-or-name is nil return current buffer's mode."
                  ))
         (t name))
        ))
+
+  ;; Mode line
+  (popper-mode-line-position 0)
+  (popper-mode-line '(:eval
+                      (propertize "   (P)" 'face 'mode-line-emphasis)))
   :config
   (popper-mode)
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
