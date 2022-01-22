@@ -250,6 +250,19 @@ default lsp-passthrough."
 
 ;;;; Cape
 ;; Expand capf functionality with corfu!
+;; Defines the following capf functions:
+;; `cape-file' - File name
+;; `cape-tex' - Unicode char in TeX (e.g. \hbar)
+;; `cape-dabbrev' - From open buffers
+;; `cape-keyword' - Programming language keyword
+;; `cape-sgml' - Unicode char from Sgml entity (e.g., &alpha)
+;; `cape-rfc1345' - Unicode chars using RFC 1345 mnemonics.
+;; `cape-abbrev' - Complete abbreviation (i.e. `add-global-abbrev', `add-mode-abbrev')
+;; `cape-ispell' - Word from ispell
+;; `cape-dict' - Word from dictionary file
+;; `cape-symbol' - Elisp symbol
+;; `cape-line' - From line in file
+
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
@@ -271,19 +284,6 @@ default lsp-passthrough."
                     "&" 'cape-sgml
                     "r" 'cape-rfc1345
                     )
-  :config
-  ;; Add functions to `completion-at-point'
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-tex)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-sgml)
-  (add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev)
-  (add-to-list 'completion-at-point-functions #'cape-ispell)
-  (add-to-list 'completion-at-point-functions #'cape-dict)
-  (add-to-list 'completion-at-point-functions #'cape-symbol)
-  (add-to-list 'completion-at-point-functions #'cape-line)
   :init
   ;; Elisp
   (defun kb/cape-capf-ignore-keywords-elisp (cand)
