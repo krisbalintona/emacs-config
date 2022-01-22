@@ -139,9 +139,7 @@ here: https://github.com/TheVaffel/emacs"
                                                  "  "
                                                  (:eval
                                                   (eyebrowse-mode-line-indicator))
-                                                 "  "
-                                                 (:eval
-                                                  (mood-line-segment-modified))
+                                                 "   "
                                                  (:eval
                                                   (kb/mood-line-segment-vc))
                                                  (:eval
@@ -152,6 +150,9 @@ here: https://github.com/TheVaffel/emacs"
                                                   (kb/mood-line-segment-buffer-name))
                                                  (:eval
                                                   (kb/mood-line-segment-remote-host))
+                                                 "  "
+                                                 (:eval
+                                                  (mood-line-segment-modified))
                                                  "  "
                                                  (:eval
                                                   (kb/mood-line-segment-position))
@@ -181,13 +182,14 @@ here: https://github.com/TheVaffel/emacs"
                                                  battery-mode-line-string
                                                  "  "
                                                  (:eval
-                                                  (mood-line-segment-flycheck))
+                                                  (kb/mood-line-segment-checker))
+                                                 lsp-modeline--code-actions-string
+                                                 (:eval
+                                                  (kb/mood-line-segment-lsp))
                                                  (:eval
                                                   (mood-line-segment-process))
-                                                 (:eval
-                                                  lsp-modeline--code-actions-string)
-                                                 (:eval
-                                                  (lsp-modeline--diagnostics-update-modeline))
+                                                 ;; (:eval             ; Shows number of errors like flycheck?
+                                                 ;;  (lsp-modeline--diagnostics-update-modeline))
                                                  (:eval
                                                   (lsp--progress-status))
                                                  ))
@@ -337,6 +339,41 @@ main branch of repository."
                       '(t (:inherit (mode-line-inactive mode-line-emphasis) :slant italic))
                       ))
         )))
+  (defun kb/mood-line-segment-lsp ()
+    "The LSP server state."
+    ;; NOTE 2022-01-22: Taken basically verbatim from the Doom Modeline LSP
+    ;; segment.
+    (when-let ((icon doom-modeline--lsp)) ; Only when lsp is active
+      (concat
+       " "
+       (if (doom-modeline--active)
+           icon
+         (doom-modeline-propertize-icon icon 'mode-line-inactive))
+       " "
+       )))
+  (defun kb/mood-line-segment-checker ()
+    "Displays color-coded error status in the current buffer with pretty icons."
+    (let* ((active (doom-modeline--active))
+           (seg `(,doom-modeline--flycheck-icon . ,doom-modeline--flycheck-text))
+           (icon (car seg))
+           (text (cdr seg))
+           )
+      (concat
+       (when icon
+         (concat
+          " "
+          (if active
+              icon
+            (doom-modeline-propertize-icon icon 'mode-line-inactive))
+          ))
+       (when text
+         (concat
+          " "
+          (if active
+              text
+            (propertize text 'face 'mode-line-inactive))))
+       " ")
+      ))
   )
 
 ;;;; Time

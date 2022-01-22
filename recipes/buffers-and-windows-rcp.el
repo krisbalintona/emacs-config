@@ -150,6 +150,9 @@
       (window-height . fit-window-to-buffer)
       (window-parameters . ((no-other-window . t)
                             (mode-line-format . none))))
+     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'special-mode))
+      (kb/select-buffer-at-bottom)
+      (window-height . 0.35))
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-reuse-mode-window
@@ -180,6 +183,11 @@ If buffer-or-name is nil return current buffer's mode."
   (defun kb/select-buffer-in-side-window (buffer alist)
     "Display buffer in a side window and select it"
     (let ((window (display-buffer-in-side-window buffer alist)))
+      (select-window window)
+      ))
+  (defun kb/select-buffer-at-bottom (buffer alist)
+    "Display buffer in a side window and select it"
+    (let ((window (display-buffer-at-bottom buffer alist)))
       (select-window window)
       ))
   )
@@ -282,6 +290,7 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*Compile-Log\\*$"
      compilation-mode
 
+     special-mode
      help-mode
      "^Calc:"
 
