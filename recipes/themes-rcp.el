@@ -381,15 +381,18 @@ main branch of repository."
       ))
   (defun kb/mood-line-segment-modified ()
     "Displays a color-coded buffer modification/read-only indicator in the mode-line."
-    (if (not (string-match-p "\\*.*\\*" (buffer-name)))
-        (if (buffer-modified-p)
-            (propertize "● " 'face 'mood-line-modified)
-          (if (and buffer-read-only (buffer-file-name))
-              (propertize "■ " 'face 'mood-line-unimportant)
-            "  "
-            ))
-      "   "
-      ))
+    (cond
+     ((string-match-p "\\*.*\\*" (buffer-name))
+      (doom-modeline-vspc))
+     ((buffer-modified-p)
+      (propertize "●" 'face 'mood-line-modified)
+      )
+     ((and buffer-read-only (buffer-file-name))
+      (propertize "■" 'face 'mood-line-unimportant))
+     (t
+      (doom-modeline-vspc)
+      (doom-modeline-vspc))
+     ))
   (defun kb/mood-line-segment-debug ()
     "The current debug state from debugger (i.e. edebug,
 dap)."
