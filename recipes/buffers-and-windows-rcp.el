@@ -70,10 +70,10 @@
       (display-buffer-same-window))
      ;; To the left
      ("\\*Faces\\*"
-      (display-buffer-in-side-window)
-      (window-width . 0.25)
+      (kb/select-buffer-in-side-window)
+      (window-width . 0.33)
       (side . left)
-      (slot . -2)
+      (slot . 2)
       (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
                        (string-match-p "^\\*Customize" (buffer-name))))
