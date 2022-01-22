@@ -171,6 +171,10 @@
 
     "bn" '(next-buffer :which-key "Next buffer")
     "bp" '(previous-buffer :which-key "Prev buffer")
+    "br" '((lambda ()
+             (interactive)
+             (revert-buffer nil t))
+           :which-key "Revert buffer")
 
     "eb" '(eval-buffer :which-key "Eval buffer")
     "ee" '(eval-last-sexp :which-key "Eval last sexp")
