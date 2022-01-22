@@ -127,6 +127,7 @@
      (embark-prefix-help-command grid reverse indexed)
      (consult-flycheck)
      (consult-lsp-diagnostics)
+     ("describe-*")
      ))
   :init
   (defun kb/vertico-multiform-flat-toggle ()
