@@ -528,6 +528,7 @@
    ;; From mood-one theme
    `(solaire-default-face ((t (:inherit 'default :background "#212428"))))
    `(solaire-hl-line-face ((t (:inherit 'hl-line :background "#282c30"))))
+   `(solaire-line-number-face ((t (:inherit 'solaire-default-face))))
 
 ;;;; End
    ))
