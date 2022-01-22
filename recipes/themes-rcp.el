@@ -49,9 +49,9 @@ here: https://github.com/TheVaffel/emacs"
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 (use-package solaire-mode
-  :hook (window-configuration-change . turn-on-solaire-mode)
+  :hook ((change-major-mode window-configuration-change) . turn-on-solaire-mode)
   :custom
-  (solaire-mode-remap-alist             ; Local face changes
+  (solaire-mode-remap-alist
    '(;; Defaults
      (default . solaire-default-face)
      (hl-line . solaire-hl-line-face)
@@ -67,8 +67,8 @@ here: https://github.com/TheVaffel/emacs"
      (highlight-indentation-face . solaire-hl-line-face)
      (fringe . solaire-fringe-face)
      ))
-  (solaire-mode-themes-to-face-swap `(,kb/themes-dark ,kb/themes-light)) ; Global
-  (solaire-mode-swap-alist              ; Global face changes
+  (solaire-mode-themes-to-face-swap `(,kb/themes-dark ,kb/themes-light))
+  (solaire-mode-swap-alist
    '(;; Defaults
      (default . solaire-default-face)
      (hl-line . solaire-hl-line-face)
@@ -84,11 +84,10 @@ here: https://github.com/TheVaffel/emacs"
      (highlight-indentation-face . solaire-hl-line-face)
      (fringe . solaire-fringe-face)
      ))
-  ;; NOTE 2022-01-21: Either enable the global mode, relying on SWAPS, or
-  ;; locally enable solaire consistently (e.g. the hook I have) and rely on
-  ;; REMAPS. The latter is preferable since other packages may change faces, the
-  ;; former potentially interrupting the process.
-  ;; :init
+  :init
+  ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I want to swap the
+  ;; background faces which solaire remaps, e.g., non-real buffers dark and real
+  ;; light to non-real light and real dark.
   ;; (solaire-global-mode)
   )
 
