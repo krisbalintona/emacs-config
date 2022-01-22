@@ -266,6 +266,7 @@ default lsp-passthrough."
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
+         (org-mode . kb/cape-capf-setup-org)
          )
   :general (:prefix "M-c"               ; Particular completion function
                     "p" 'completion-at-point
@@ -298,13 +299,10 @@ disrupting the addition of other capfs (e.g. merely setting the
 variable entirely, or adding to list).
 
 Additionally, add `cape-file' as early as possible to the list."
-    ;; (setq-local completion-at-point-functions
     (setf (elt (cl-member 'elisp-completion-at-point completion-at-point-functions) 0)
           (cape-super-capf
-           (cape-capf-predicate
-            #'elisp-completion-at-point
-            #'kb/cape-capf-ignore-keywords-elisp)
-           #'cape-abbrev
+           #'elisp-completion-at-point
+           #'tempel-complete ; Prefer this over the exact match from `tempel-expand'
            ))
     ;; I prefer this being early/first in the list
     (add-to-list 'completion-at-point-functions #'cape-file)
@@ -319,6 +317,13 @@ list of capfs."
                 (list #'cape-file
                       (cape-capf-buster #'lsp-completion-at-point)
                       )))
+
+  ;; Org
+  (defun kb/cape-capf-setup-org ()
+    (let ((result))
+      (dolist (element '(cape-ispell tempel-complete) result)
+        (push element completion-at-point-functions))
+      ))
   )
 
 ;;;; Custom completions
