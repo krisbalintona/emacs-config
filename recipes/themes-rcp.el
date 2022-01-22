@@ -125,6 +125,8 @@ here: https://github.com/TheVaffel/emacs"
 
 ;;;; Mood-line
 ;; Mode line which accompanies the mood-one theme
+;; TODO 2022-01-22: Would like to remove all Doom Modeline dependency from this
+;; modeline config one day, but it will take some time...
 (use-package mood-line
   :hook (mood-line-mode . (lambda ()
                             (setq-default mode-line-format
@@ -133,16 +135,29 @@ here: https://github.com/TheVaffel/emacs"
                                               (format-mode-line
                                                '("    "
                                                  (:eval
+                                                  (doom-modeline--buffer-mode-icon))
+                                                 "  "
+                                                 (:eval
                                                   (eyebrowse-mode-line-indicator))
-                                                 "    "
+                                                 "  "
                                                  (:eval
                                                   (mood-line-segment-modified))
                                                  (:eval
-                                                  (mood-line-segment-vc))
+                                                  (kb/mood-line-segment-vc))
                                                  (:eval
-                                                  (mood-line-segment-buffer-name))
+                                                  (kb/mood-line-segment-pyvenv-indicator))
+                                                 (:eval
+                                                  (kb/mood-line-segment-default-directory))
+                                                 (:eval
+                                                  (kb/mood-line-segment-buffer-name))
+                                                 (:eval
+                                                  (kb/mood-line-segment-remote-host))
+                                                 "  "
                                                  (:eval
                                                   (kb/mood-line-segment-position))
+                                                 " "
+                                                 (:eval
+                                                  (kb/mood-line-segment-selection-info))
                                                  (:eval
                                                   (mood-line-segment-anzu))
                                                  (:eval
@@ -155,35 +170,182 @@ here: https://github.com/TheVaffel/emacs"
                                                   (mood-line-segment-encoding))
                                                  (:eval
                                                   (mood-line-segment-major-mode))
+                                                 ;; Occasionally check this to see if any new packages have added
+                                                 ;; anything interesting here to add manually. In particular, make
+                                                 ;; sure to check `global-mode-string'.
                                                  ;; (:eval
-                                                 ;;  (mood-line-segment-misc-info))
+                                                 ;;  ;; (mood-line-segment-misc-info))
+                                                 ;;  mode-line-misc-info)
+                                                 " "
+                                                 display-time-string
+                                                 battery-mode-line-string
+                                                 "  "
                                                  (:eval
                                                   (mood-line-segment-flycheck))
-                                                 ;; (:eval
-                                                 ;;  (mood-line-segment-flymake))
                                                  (:eval
                                                   (mood-line-segment-process))
+                                                 (:eval
+                                                  lsp-modeline--code-actions-string)
+                                                 (:eval
+                                                  (lsp-modeline--diagnostics-update-modeline))
+                                                 (:eval
+                                                  (lsp--progress-status))
                                                  ))
-                                              ))
-                                            ))
+                                              ))))
                             ))
   :ghook 'after-init-hook
   :config
   (defun kb/mood-line-segment-position ()
     "Displays the current cursor position in the mode-line."
-    (concat "%l:%c"
-            (when mood-line-show-cursor-point (propertize (format ":%d" (point)) 'face 'mood-line-unimportant))
-            ))
+    (concat "%l:%c" (when mood-line-show-cursor-point
+                      (propertize (format ":%d" (point))
+                                  'face 'mood-line-unimportant))))
+  (defun kb/mood-line-segment-pyvenv-indicator ()
+    "Display the current python virtual environment from `pyvenv'.
+Only displays if in a python buffer which has a currently active
+virtual environment."
+    (when (and (equal major-mode 'python-mode) ; Only show in python-mode
+               (not (string-empty-p ; Only if buffer is actually using the current virtual env
+                     (file-name-nondirectory
+                      (directory-file-name
+                       (file-name-directory
+                        (directory-file-name default-directory))))
+                     )))
+      (concat
+       "  "
+       (mood-line--string-trim (format-mode-line pyvenv-mode-line-indicator))
+       "  ")))
+  (defun kb/mood-line-segment-default-directory ()
+    "Display directory.
+
+Don't display if not visiting a real file. Display project root
+if in project. Display current directory (`default-directory') as
+fallback. "
+    (let* ((active (doom-modeline--active)) ; `doom-modeline' dependency
+           (face (if active 'mode-line 'mode-line-inactive))
+           )
+      (propertize (cond ((not buffer-file-name) ; Not visiting file
+                         "")
+                        ((project-current) ; Project root
+                         (abbreviate-file-name (vc-git-root (buffer-file-name))))
+                        (buffer-file-name ; Current directory
+                         default-directory))
+                  'face face)))
+  (defun kb/mood-line-segment-buffer-name ()
+    "Display buffer name.
+
+If mode line is inactive, use a the `mode-line-inactive' face
+instead."
+    (let* ((active (doom-modeline--active)) ; `doom-modeline' dependency
+           (face (if active 'mood-line-buffer-name 'mode-line-inactive))
+           )
+      ;; TODO 2021-09-03: Add support for org-roam node titles.
+      (propertize "%b" 'face face)))
+  (defun kb/mood-line-segment-vc (&rest _)
+    "TODO"
+    ;; NOTE 2022-01-22: Almost all of this function is taken from my modified
+    ;; version of Doom Modeline's VC modeline segment.
+    (let ((backend (vc-backend buffer-file-name))
+          ;; Hard `doom-modeline' dependency
+          (icon doom-modeline--vcs-icon)
+          (text doom-modeline--vcs-text)
+          ;; (text mood-line--vc-text)
+          )
+      (concat
+       (propertize
+        (if (doom-modeline--active)
+            icon
+          (doom-modeline-propertize-icon icon 'mode-line-inactive)
+          ))
+       " "
+       ;; If the current branch is the main one, then don't show in modeline
+       (unless (equal (substring-no-properties (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2)))
+                      (magit-main-branch))
+         (if (doom-modeline--active)
+             (concat " " text)
+           (propertize text 'face 'mode-line-inactive)
+           ))
+       "  "
+       )))
+  (defun kb/mood-line-segment-vc (&rest _)
+    "Print git information (e.g. branch, conflicts). Hide text if on
+main branch of repository."
+    ;; NOTE 2022-01-22: Almost all of this function is taken from my modified
+    ;; version of Doom Modeline's VC modeline segment.
+    (let ((backend (vc-backend buffer-file-name))
+          ;; Hard `doom-modeline' dependency
+          (icon (concat doom-modeline--vcs-icon "  "))
+          (text (concat doom-modeline--vcs-text "  "))
+          ;; (text (concat mood-line--vc-text "  "))
+          )
+      (concat
+       (propertize
+        (if (doom-modeline--active)
+            icon
+          (doom-modeline-propertize-icon icon 'mode-line-inactive)
+          ))
+       ;; If the current branch is the main one, then don't show in modeline
+       (unless (equal (substring-no-properties (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2)))
+                      (magit-main-branch))
+         (if (doom-modeline--active)
+             text
+           (propertize text 'face 'mode-line-inactive)
+           ))
+       )))
+  (defun kb/mood-line-segment-selection-info ()
+    "Show selection info of region."
+    ;; NOTE 2022-01-22: Basically verbatim taken from Doom Modeline's
+    ;; selection-info segment.
+    (when (and (or mark-active (and (bound-and-true-p evil-local-mode)
+                                    (eq evil-state 'visual)))
+               (doom-modeline--active))
+      (cl-destructuring-bind (beg . end)
+          (if (and (bound-and-true-p evil-local-mode) (eq evil-state 'visual))
+              (cons evil-visual-beginning evil-visual-end)
+            (cons (region-beginning) (region-end)))
+        (propertize
+         (let ((lines (count-lines beg (min end (point-max)))))
+           (concat " "
+                   (cond
+                    ((or (bound-and-true-p rectangle-mark-mode) ; Block/rectangle selection
+                         (and (bound-and-true-p evil-visual-selection)
+                              (eq 'block evil-visual-selection)))
+                     (let ((cols (abs (- (doom-modeline-column end)
+                                         (doom-modeline-column beg)))))
+                       (format "%dx%dB" lines cols)))
+                    ((and (bound-and-true-p evil-visual-selection) ; Regular, line selection
+                          (eq evil-visual-selection 'line))
+                     (format "%dL" lines))
+                    ((> lines 1)
+                     (format "%dC %dL" (- end beg) lines))
+                    (t
+                     (format "%dC" (- end beg)))
+                    )
+                   ;; Append word count, regardless of case
+                   (format " %dW" (count-words beg end))
+                   " "
+                   ))
+         'face 'mode-line-emphasis))
+      ))
+  (defun kb/mood-line-segment-remote-host ()
+    "Hostname for remote buffers."
+    (when default-directory
+      (when-let ((host (file-remote-p default-directory 'host)))
+        (propertize (concat "@" host) 'face
+                    (if (doom-modeline--active)
+                        '(t (:inherit mode-line-emphasis :slant italic))
+                      '(t (:inherit (mode-line-inactive mode-line-emphasis) :slant italic))
+                      ))
+        )))
   )
 
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  :after doom-modeline
-  :hook (window-setup . display-time-mode)
+  ;; :hook (window-setup . display-time-mode)
   :custom
   (display-time-format "%H:%M") ; Use 24hr format
-  (display-time-default-load-average 1) ; Don't show load average along with time
+  (display-time-default-load-average nil) ; Don't show load average
   (world-clock-list
    '(("America/Los_Angeles" "Seattle")
      ("America/New_York" "New York")
@@ -193,16 +355,22 @@ here: https://github.com/TheVaffel/emacs"
      ("Asia/Calcutta" "Bangalore")
      ("Asia/Tokyo" "Tokyo")
      ))
+  :init
+  (display-time-mode)
   )
 
 ;;;; Battery
 ;; Display batter percentage
 (use-package battery
-  :straight nil
-  :hook (window-setup . display-battery-mode)
+  ;; :hook (window-setup . display-battery-mode)
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
+  (battery-mode-line-limit 100)
+  ;; (battery-mode-line-format "%cmAh")
+  (battery-mode-line-format "  %p%% ")
+  :init
+  (display-battery-mode)
   )
 
 ;;;; Display-line-numbers-mode
