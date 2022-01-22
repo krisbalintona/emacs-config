@@ -251,11 +251,16 @@ default lsp-passthrough."
 ;;;; Cape
 ;; Expand capf functionality with corfu!
 (use-package cape
-  ;; If I want a particular completion function
-  :general (:prefix "M-c"
+  :hook (lsp-completion-mode . (lambda ()    ;; Ensure capf-buster is used as well
+                                 (setq-local completion-at-point-functions
+                                             (list #'cape-file
+                                                   (cape-capf-buster #'lsp-completion-at-point)
+                                                   ))
+                                 ))
+  :general (:prefix "M-c"               ; Particular completion function
                     "p" 'completion-at-point
-                    "t" 'complete-tag  ; etags
-                    "d" 'cape-dabbrev  ; or dabbrev-completion
+                    "t" 'complete-tag   ; etags
+                    "d" 'cape-dabbrev   ; or dabbrev-completion
                     "f" 'cape-file
                     "k" 'cape-keyword
                     "s" 'cape-symbol
