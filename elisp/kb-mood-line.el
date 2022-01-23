@@ -117,10 +117,14 @@ instead."
 
 (defun kb/mood-line-segment-position ()
   "Displays the current cursor position in the mode-line."
-  (concat "%l:%c" (when mood-line-show-cursor-point
-                    (propertize (format ":%d" (point))
-                                'face 'mood-line-unimportant))
-          ))
+  (let ((face (if (doom-modeline--active)
+                  'mood-line-unimportant
+                'mode-line-inactive)))
+    (propertize
+     (concat "%l:%c" (when mood-line-show-cursor-point (format ":%d" (point))))
+     'face
+     `(t (:inherit ,face :height 0.9))
+     )))
 
 (defun kb/mood-line-segment-selection-info ()
   "Show selection info of region."
