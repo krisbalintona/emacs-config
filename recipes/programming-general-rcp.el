@@ -61,7 +61,7 @@
 ;;;; Rainbow-mode
 ;; Colorify color codes
 (use-package rainbow-mode
-  :ghook 'text-mode-hook 'prog-mode-hook
+  :ghook 'text-mode-hook 'prog-mode-hook 'help-mode-hook
   )
 
 ;;;; Highlight-defined
