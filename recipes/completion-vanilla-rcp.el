@@ -212,23 +212,16 @@
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
-  (completion-styles '(orderless))
+  (completion-styles '(orderless flex))
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
    '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
                    orderless
                    ))
-     (command (styles orderless+kb))
-     (symbol (styles orderless+kb))
-     (variable (styles orderless+kb))
-     (consult-multi (styles orderless))
      ))
 
-  (orderless-component-separator   ; What separates components
-   ;; " +"                            ; Default
-   ;; 'split-string-and-unquote       ; "for shell-like double-quotable space"
-   'orderless-escapable-split-on-space  ; Use backslash for literal space
-   )
+  (orderless-component-separator
+   'orderless-escapable-split-on-space) ; Use backslash for literal space
   (orderless-matching-styles
    '(orderless-literal
      orderless-prefixes
@@ -266,14 +259,6 @@ It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
     (when (string-suffix-p "~" pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
-  :config
-  ;; Custom orderless style definitions
-  (orderless-define-completion-style orderless+kb
-    (orderless-matching-styles '(orderless-initialism
-                                 orderless-regexp
-                                 orderless-literal
-                                 orderless-flex
-                                 )))
   )
 
 ;;; completion-vanilla-rcp.el ends here
