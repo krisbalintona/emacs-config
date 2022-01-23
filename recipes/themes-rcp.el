@@ -170,8 +170,8 @@ here: https://github.com/TheVaffel/emacs"
                                                   (mood-line-segment-encoding))
                                                  " "
                                                  display-time-string
-                                                 " "
-                                                 battery-mode-line-string
+                                                 (:eval
+                                                  (fancy-battery-default-mode-line))
                                                  "  "
                                                  (:eval
                                                   ;; (kb/mood-line-segment-flycheck)
@@ -414,7 +414,6 @@ dap)."
 ;;;; Battery
 ;; Display batter percentage
 (use-package battery
-  ;; :hook (window-setup . display-battery-mode)
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
@@ -425,11 +424,18 @@ dap)."
   (display-battery-mode)
   )
 
+;;;; Fancy-battery
+(use-package fancy-battery
+  :custom
+  (fancy-battery-show-percentage t)
+  :init
+  (fancy-battery-mode)
+  )
+
 ;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ghook 'prog-mode-hook 'LaTeX-mode-hook
-  ;; :ghook 'prog-mode-hook
   :gfhook 'column-number-mode ; Column number in modeline
   :general (kb/toggle-keys
              "l" '(display-line-numbers-mode :which-key "Line numbers"))
