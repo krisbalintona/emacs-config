@@ -22,7 +22,7 @@
 ;; Set the GC threshold (for our Emacs session) higher than the default. The
 ;; default is 800 kilobytes. This variable's units is in bytes.
 (defvar better-gc-cons-threshold (round (* 1024 1024
-                                           150 ; Number of megabytes
+                                           40 ; Number of megabytes
                                            ))
   "The default value to use for `gc-cons-threshold'.
 
