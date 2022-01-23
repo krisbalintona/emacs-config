@@ -206,6 +206,7 @@
   (completion-category-overrides
    '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
                    partial-completion ; Kinda like initialism for directory/file names
+                   orderless
                    ))
      (command (styles orderless+kb))
      (symbol (styles orderless+kb))
@@ -219,9 +220,9 @@
    'orderless-escapable-split-on-space  ; Use backslash for literal space
    )
   (orderless-matching-styles
-   '(orderless-initialism
-     orderless-literal
+   '(orderless-literal
      orderless-prefixes
+     orderless-initialism
      orderless-regexp
      orderless-flex
      ;; orderless-strict-leading-initialism
