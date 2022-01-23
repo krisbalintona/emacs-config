@@ -165,12 +165,16 @@ instead."
 ;;;; Right
 (defun kb/mood-line-segment-which-func ()
   "Display a propertized `which-function-mode' indicator."
-  (if (doom-modeline--active)
-      (propertize (format-mode-line which-func-format) 'face
-                  '(t (:inherit mood-line-unimportant :height 0.85)))
+  (cond
+   ;; ((not (derived-mode-p 'prog-mode))   ; Only show in...
+   ;;  "")
+   ((doom-modeline--active)
     (propertize (format-mode-line which-func-format) 'face
-                '(t (:inherit mode-line-inactive :height 0.85)))
-    ))
+                '(t (:inherit mood-line-unimportant :height 0.85))))
+   (t
+    (propertize (format-mode-line which-func-format) 'face
+                '(t (:inherit mode-line-inactive :height 0.85))))
+   ))
 
 (defun kb/mood-line-segment-flycheck-doom ()
   "Displays color-coded error status in the current buffer with
