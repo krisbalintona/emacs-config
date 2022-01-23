@@ -205,11 +205,10 @@
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
   (require 'magit-extras) ; Load the remaining magit libraries
 
-  ;; Adds hooks to `magit-status-sections-hook'.
+  ;; Adds hooks to `magit-status-sections-hook'. Should be a separate call for
+  ;; each.
   (magit-add-section-hook 'magit-status-sections-hook
-                          'magit-insert-modules-overview ; Have modules section
-                          'magit-insert-status-headers ; Insert header sections for `magit-status'
-                          t)
+                          'magit-insert-modules-overview nil t)
   )
 
 ;;;; Magit-log date headers
