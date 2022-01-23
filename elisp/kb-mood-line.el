@@ -221,8 +221,7 @@ dap)."
          (sep (and
                (or dap edebug on-error on-quit)
                " "))
-         (text (concat sep
-                       (and dap (concat dap (and (or edebug on-error on-quit) vsep))) ; For dap
+         (text (concat (and dap (concat dap (and (or edebug on-error on-quit) vsep))) ; For dap
                        (and edebug (concat edebug (and (or on-error on-quit) vsep))) ; For edebug
                        (and on-error (concat on-error (and on-quit vsep)))
                        on-quit
@@ -300,12 +299,12 @@ dap)."
                                                       (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                                                         lsp-modeline--code-actions-string)
                                                       (mood-line-segment-process)
-                                                      (kb/mood-line-segment-debug)
                                                       (kb/mood-line-segment-lsp)
                                                       (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                                                         (lsp--progress-status))
-                                                      (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
-                                                        (lsp-modeline--diagnostics-update-modeline)) ; Shows number of errors like flycheck?
+                                                      ;; (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
+                                                      ;;   (lsp-modeline--diagnostics-update-modeline)) ; Shows number of errors like flycheck?
+                                                      (kb/mood-line-segment-debug)
                                                       (kb/mood-line-segment-major-mode)
                                                       " "
                                                       (mood-line-segment-encoding)
