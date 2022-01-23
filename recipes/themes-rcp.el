@@ -137,8 +137,10 @@ here: https://github.com/TheVaffel/emacs"
 (use-package time
   ;; :hook (window-setup . display-time-mode)
   :custom
-  (display-time-format "%H:%M:%S")     ; Use 24hr format with seconds
-  (display-time-interval 1)            ; Update every since if I'm using seconds
+  ;; (display-time-format "%H:%M:%S")     ; Use 24hr format with seconds
+  ;; (display-time-interval 1)            ; Update every since if I'm using seconds
+  (display-time-format "%H:%M")     ; Use 24hr format with seconds
+  (display-time-interval 60)            ; Update every since if I'm using seconds
   (display-time-default-load-average nil) ; Don't show load average
   (world-clock-list
    '(("America/Los_Angeles" "Seattle")
