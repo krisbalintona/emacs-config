@@ -159,6 +159,15 @@ instead."
     ))
 
 ;;;; Right
+(defun kb/mood-line-segment-which-func ()
+  "Display a propertized `which-function-mode' indicator."
+  (if (doom-modeline--active)
+      (propertize (format-mode-line which-func-format) 'face
+                  '(t (:inherit mood-line-unimportant :height 0.85)))
+    (propertize (format-mode-line which-func-format) 'face
+                '(t (:inherit mode-line-inactive :height 0.85)))
+    ))
+
 (defun kb/mood-line-segment-flycheck-doom ()
   "Displays color-coded error status in the current buffer with
 pretty icons -- Doom modeline style."
@@ -246,71 +255,72 @@ dap)."
       )))
 
 ;;; Setting the mode line
-(add-hook 'mood-line-mode-hook '(lambda ()
-                                  (setq-default mode-line-format
-                                                '((:eval
-                                                   (mood-line--format
-                                                    (concat
-                                                     "  "
-                                                     (doom-modeline--buffer-mode-icon)
-                                                     " "
-                                                     (let ((text (eyebrowse-mode-line-indicator)))
-                                                       (if (doom-modeline--active)
-                                                           text
-                                                         (propertize text 'face 'mode-line-inactive)))
-                                                     " "
-                                                     (kb/mood-line-segment-vc)
-                                                     (kb/mood-line-segment-pyvenv-indicator)
-                                                     (kb/mood-line-segment-default-directory)
-                                                     (kb/mood-line-segment-buffer-name)
-                                                     (kb/mood-line-segment-remote-host)
-                                                     " "
-                                                     (kb/mood-line-segment-modified)
-                                                     " "
-                                                     (kb/mood-line-segment-position)
-                                                     " "
-                                                     (kb/mood-line-segment-selection-info)
-                                                     (mood-line-segment-anzu)
-                                                     (mood-line-segment-multiple-cursors)
-                                                     )
-                                                    (concat
-                                                     (mood-line-segment-eol)
-                                                     " "
-                                                     display-time-string
-                                                     (let ((text (fancy-battery-default-mode-line)))
-                                                       (if (doom-modeline--active)
-                                                           text
-                                                         (propertize text 'face 'mode-line-inactive)))
-                                                     " "
-                                                     ;; (kb/mood-line-segment-flycheck-doom))
-                                                     (let ((text (mood-line-segment-flycheck)))
-                                                       (if (doom-modeline--active)
-                                                           text
-                                                         (propertize text 'face 'mode-line-inactive)))
-                                                     (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
-                                                       lsp-modeline--code-actions-string)
-                                                     (mood-line-segment-process)
-                                                     (kb/mood-line-segment-debug)
-                                                     (kb/mood-line-segment-lsp)
-                                                     (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
-                                                       (lsp--progress-status))
-                                                     (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
-                                                       (lsp-modeline--diagnostics-update-modeline)) ; Shows number of errors like flycheck?
-                                                     (kb/mood-line-segment-major-mode)
-                                                     " "
-                                                     (mood-line-segment-encoding)
-                                                     ;; Occasionally check this to see
-                                                     ;; if any new packages have added
-                                                     ;; anything interesting here to
-                                                     ;; add manually. In particular,
-                                                     ;; make sure to check
-                                                     ;; `global-mode-string'.
-                                                     ;; (:eval
-                                                     ;;  ;; (mood-line-segment-misc-info))
-                                                     ;;  mode-line-misc-info)
-                                                     ))
-                                                   )))
-                                  ))
+(add-hook 'mood-line-mode-hook #'(lambda ()
+                                   (setq-default mode-line-format
+                                                 '((:eval
+                                                    (mood-line--format
+                                                     (concat
+                                                      "  "
+                                                      (doom-modeline--buffer-mode-icon)
+                                                      " "
+                                                      (let ((text (eyebrowse-mode-line-indicator)))
+                                                        (if (doom-modeline--active)
+                                                            text
+                                                          (propertize text 'face 'mode-line-inactive)))
+                                                      " "
+                                                      (kb/mood-line-segment-vc)
+                                                      (kb/mood-line-segment-pyvenv-indicator)
+                                                      (kb/mood-line-segment-default-directory)
+                                                      (kb/mood-line-segment-buffer-name)
+                                                      (kb/mood-line-segment-remote-host)
+                                                      " "
+                                                      (kb/mood-line-segment-modified)
+                                                      " "
+                                                      (kb/mood-line-segment-position)
+                                                      " "
+                                                      (kb/mood-line-segment-selection-info)
+                                                      (mood-line-segment-anzu)
+                                                      (mood-line-segment-multiple-cursors)
+                                                      )
+                                                     (concat
+                                                      (kb/mood-line-segment-which-func)
+                                                      (mood-line-segment-eol)
+                                                      " "
+                                                      display-time-string
+                                                      (let ((text (fancy-battery-default-mode-line)))
+                                                        (if (doom-modeline--active)
+                                                            text
+                                                          (propertize text 'face 'mode-line-inactive)))
+                                                      " "
+                                                      ;; (kb/mood-line-segment-flycheck-doom))
+                                                      (let ((text (mood-line-segment-flycheck)))
+                                                        (if (doom-modeline--active)
+                                                            text
+                                                          (propertize text 'face 'mode-line-inactive)))
+                                                      (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
+                                                        lsp-modeline--code-actions-string)
+                                                      (mood-line-segment-process)
+                                                      (kb/mood-line-segment-debug)
+                                                      (kb/mood-line-segment-lsp)
+                                                      (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
+                                                        (lsp--progress-status))
+                                                      (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
+                                                        (lsp-modeline--diagnostics-update-modeline)) ; Shows number of errors like flycheck?
+                                                      (kb/mood-line-segment-major-mode)
+                                                      " "
+                                                      (mood-line-segment-encoding)
+                                                      ;; Occasionally check this to see
+                                                      ;; if any new packages have added
+                                                      ;; anything interesting here to
+                                                      ;; add manually. In particular,
+                                                      ;; make sure to check
+                                                      ;; `global-mode-string'.
+                                                      ;; (:eval
+                                                      ;;  ;; (mood-line-segment-misc-info))
+                                                      ;;  mode-line-misc-info)
+                                                      ))
+                                                    )))
+                                   ))
 
 ;;; kb-mood-line.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

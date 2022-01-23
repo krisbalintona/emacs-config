@@ -187,6 +187,13 @@ here: https://github.com/TheVaffel/emacs"
   (display-line-numbers-type 'relative)
   )
 
+;;;; Which-function
+;; Display the name of the function I am currently under
+(use-package which-func
+  :init
+  (which-func-mode)
+  )
+
 ;;; themes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'themes-rcp)
