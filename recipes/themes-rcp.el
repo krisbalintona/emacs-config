@@ -186,6 +186,9 @@ here: https://github.com/TheVaffel/emacs"
                                                   (lsp--progress-status))
                                                  (:eval
                                                   (kb/mood-line-segment-debug))
+                                                  (if (bound-and-true-p lsp-mode) ; Check or else warnings will be outputted
+                                                      (lsp--progress-status)
+                                                    ""))
                                                  (:eval
                                                   (mood-line-segment-major-mode))
                                                  ;; (:eval             ; Shows number of errors like flycheck?
@@ -348,15 +351,12 @@ main branch of repository."
   (defun kb/mood-line-segment-lsp ()
     "The LSP server state."
     ;; NOTE 2022-01-22: Mostly taken from the Doom Modeline LSP segment.
-    (when lsp-mode
-      (concat
-       (let ((icon doom-modeline--lsp))
-         (if (doom-modeline--active)
-             icon
-           (doom-modeline-propertize-icon icon 'mode-line-inactive)))
-       " ")))
-  (defun kb/mood-line-segment-flycheck ()
-    "Displays color-coded error status in the current buffer with pretty icons."
+    (if-let ((icon (concat doom-modeline--lsp " ")))
+        (if (doom-modeline--active)
+            icon
+          (doom-modeline-propertize-icon icon 'mode-line-inactive))
+      ""
+      ))
     (let* ((active (doom-modeline--active))
            (seg `(,doom-modeline--flycheck-icon . ,doom-modeline--flycheck-text))
            (icon (car seg))
