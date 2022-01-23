@@ -49,47 +49,13 @@ here: https://github.com/TheVaffel/emacs"
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 (use-package solaire-mode
-  :hook ((window-state-change window-configuration-change) . turn-on-solaire-mode)
+  :hook ((window-configuration-change buffer-list-update) . turn-on-solaire-mode)
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
       (or (buffer-file-name)                         ; Connected to a file
           (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
-          )
-      ))
-  (solaire-mode-remap-alist
-   '(;; Defaults
-     (default . solaire-default-face)
-     (hl-line . solaire-hl-line-face)
-     (region . solaire-region-face)
-     (org-hide . solaire-org-hide-face)
-     (org-indent . solaire-org-hide-face)
-     (linum . solaire-line-number-face)
-     (line-number . solaire-line-number-face)
-     (header-line . solaire-header-line-face)
-     (mode-line . solaire-mode-line-face)
-     (mode-line-active . solaire-mode-line-active-face)
-     (mode-line-inactive . solaire-mode-line-inactive-face)
-     (highlight-indentation-face . solaire-hl-line-face)
-     (fringe . solaire-fringe-face)
-     ))
-  (solaire-mode-themes-to-face-swap `(,kb/themes-dark ,kb/themes-light))
-  (solaire-mode-swap-alist
-   '(;; Defaults
-     (default . solaire-default-face)
-     (hl-line . solaire-hl-line-face)
-     (region . solaire-region-face)
-     (org-hide . solaire-org-hide-face)
-     (org-indent . solaire-org-hide-face)
-     (linum . solaire-line-number-face)
-     (line-number . solaire-line-number-face)
-     (header-line . solaire-header-line-face)
-     (mode-line . solaire-mode-line-face)
-     (mode-line-active . solaire-mode-line-active-face)
-     (mode-line-inactive . solaire-mode-line-inactive-face)
-     (highlight-indentation-face . solaire-hl-line-face)
-     (fringe . solaire-fringe-face)
-     ))
+          )))
   :init
   ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I want to swap the
   ;; background faces which solaire remaps, e.g., non-real buffers dark and real
