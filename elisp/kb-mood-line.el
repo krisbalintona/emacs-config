@@ -279,6 +279,7 @@ dap)."
                                                       (kb/mood-line-segment-position)
                                                       " "
                                                       (kb/mood-line-segment-selection-info)
+                                                      " "
                                                       (mood-line-segment-anzu)
                                                       (mood-line-segment-multiple-cursors)
                                                       )
