@@ -132,7 +132,7 @@ here: https://github.com/TheVaffel/emacs"
                                           '((:eval
                                              (mood-line--format
                                               (concat
-                                               " "
+                                               "  "
                                                (doom-modeline--buffer-mode-icon)
                                                " "
                                                (eyebrowse-mode-line-indicator)
@@ -157,7 +157,7 @@ here: https://github.com/TheVaffel/emacs"
                                                display-time-string
                                                (fancy-battery-default-mode-line)
                                                " "
-                                               ;; (kb/mood-line-segment-flycheck-doom)
+                                               ;; (kb/mood-line-segment-flycheck-doom))
                                                (mood-line-segment-flycheck)
                                                (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                                                  lsp-modeline--code-actions-string)
@@ -307,9 +307,9 @@ main branch of repository."
   (defun kb/mood-line-segment-lsp ()
     "The LSP server state."
     ;; NOTE 2022-01-22: Mostly taken from the Doom Modeline LSP segment.
-    (if-let ((icon (concat doom-modeline--lsp " ")))
+    (if-let ((icon doom-modeline--lsp))
         (if (doom-modeline--active)
-            icon
+            (concat icon " ")
           (doom-modeline-propertize-icon icon 'mode-line-inactive))
       ""
       ))
