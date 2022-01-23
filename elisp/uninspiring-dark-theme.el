@@ -526,18 +526,19 @@
 
 ;;;; Solaire
    ;; From mood-one theme
-   `(solaire-default-face ((t (:inherit 'default :background "#212428"))))
-   `(solaire-hl-line-face ((t (:inherit 'hl-line :background "#282c30"))))
-   `(solaire-line-number-face ((t (:inherit 'solaire-default-face))))
+   `(solaire-default-face ((t (:inherit default :background "#212428"))))
+   `(solaire-hl-line-face ((t (:inherit hl-line :background "#282c30"))))
+   `(solaire-line-number-face ((t (:inherit solaire-default-face))))
+
+;;;; Eyebrowse
+   `(eyebrowse-mode-line-inactive ((t (:inherit mood-line-unimportant))))
+   `(eyebrowse-mode-line-delimiters ((t (:inherit mood-line-unimportant))))
+
+;;;; Marginalia
+   `(marginalia-documentation ((t (:inherit font-lock-string-face :slant italic))))
 
 ;;;; End
    ))
-;;; Themes added for hooks
-;;;; Marginalia
-(add-hook 'marginalia-mode-hook
-          #'(lambda ()
-              (set-face-attribute 'marginalia-documentation nil :inherit nil :foreground "#98C379" :slant 'italic)))
-
 ;;; Force faces for certain modes
 (defvar atom-one-dark-theme-force-faces-for-mode t
   "If t, atom-one-dark-theme will use Face Remapping to alter the theme faces for

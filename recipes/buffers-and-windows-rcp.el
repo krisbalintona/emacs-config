@@ -195,7 +195,6 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
 (use-package eyebrowse
-  :ghook 'after-init-hook
   :general
   ("M-`" 'eyebrowse-switch-to-window-config-0
    "M-1" 'eyebrowse-switch-to-window-config-1
@@ -215,7 +214,7 @@ If buffer-or-name is nil return current buffer's mode."
            "gv" 'eyebrowse-last-window-config
            )
   (:keymaps 'eyebrowse-mode-map
-            :prefix "C-c C-w"
+            :prefix eyebrowse-keymap-prefix
             "r" 'eyebrowse-rename-window-config
             "c" 'eyebrowse-close-window-config
             )
@@ -229,6 +228,8 @@ If buffer-or-name is nil return current buffer's mode."
   (eyebrowse-tagged-slot-format "%t")  ; Only show workspace name (tag) if avail
   (eyebrowse-wrap-around t) ; Cycle back to beginning when at the end and vice versa
   (eyebrowse-switch-back-and-forth t) ; Select current workspace to go to last used one
+  :init
+  (eyebrowse-mode)
   )
 
 ;;;; Ace-window
