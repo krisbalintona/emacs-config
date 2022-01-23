@@ -412,7 +412,7 @@ given."
 ;;;; Tree-sitter-indent
 ;; Replaces `indent-line-function' with a tree-sitter indent function.
 (use-package tree-sitter-indent
-  :disabled                             ; Not much support right now...
+  :disabled t                           ; Not much support right now...
   :after tree-sitter
   :hook ((js2-mode rustic-mode) . tree-sitter-indent-mode)
   )

@@ -49,7 +49,7 @@ here: https://github.com/TheVaffel/emacs"
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 (use-package solaire-mode
-  :hook ((change-major-mode window-configuration-change) . turn-on-solaire-mode)
+  :hook ((window-state-change window-configuration-change) . turn-on-solaire-mode)
   :custom
   (solaire-mode-remap-alist
    '(;; Defaults
