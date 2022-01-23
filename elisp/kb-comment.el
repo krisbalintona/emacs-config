@@ -91,11 +91,6 @@ in any calls to `kb/comment-dwim'.")
     (format "%s %s: " keyword (format-time-string "%F"))
     ))
 
-(defun kb/comment-insert--insertion-timestamp ()
-  "Insert a comment at point with an appended keyword,an element in `kb/comment-keywords-coding' or `kb/comment-keywords-writing', alongside a timestamp."
-  (kb/comment-insert--insertion-base (kb/comment--timestamp-select-todo))
-  )
-
 (defun kb/comment-insert--insertion-versatile (prefix timestamp)
   "Insert either a normal comment or a comment with a timestamp.
 
@@ -109,10 +104,7 @@ If called without prefix argument, then add comment to the end of current line.
 If comment already exists, then move point to the beginning of the comment.
 
 Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
-  (let ((comment-func (if timestamp
-                          'kb/comment-insert--insertion-timestamp
-                        'kb/comment-insert--insertion-base))
-        )
+  (let ((keyword (when timestamp (kb/comment--timestamp-select-todo))))
     ;; Choose which case I'm in
     (cond
      ;; First, check if highlighting a region (visual-mode). If so, comment
@@ -121,19 +113,19 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
       (comment-or-uncomment-region (region-beginning) (region-end)))
      ;; Next, check case when on empty line with no comment
      ((save-excursion (beginning-of-line) (looking-at "\\s-*$"))
-      (funcall comment-func))
+      (funcall 'kb/comment-insert--insertion-base keyword))
      ;; Then go onto non-empty line cases. Reliant on (interactive "*p")
      ;; C-u = Comment above
      ((= prefix 4)
       (beginning-of-line)
       (newline)
       (forward-line -1)
-      (funcall comment-func))
+      (funcall 'kb/comment-insert--insertion-base keyword))
      ;; C-u C-u = Comment below
      ((= prefix 16)
       (end-of-line)
       (newline)
-      (funcall comment-func))
+      (funcall 'kb/comment-insert--insertion-base keyword))
      ;; C-u C-u C-u = Remove any comments from line
      ((= prefix 64)
       (comment-kill (and (stringp prefix) prefix)))
@@ -141,10 +133,10 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
      ;; current line
      (t
       (comment-indent) ; Insert comment, or move point to comment if it already exists on line
-      (when (looking-at "\\s-*$")
+      (when (looking-at "\\s-*$")       ;  Is there anything in front of point?
         ;; If comment doesn't already exists on line, then...
         (insert " ")            ; Have space between comment delimiter and point
-        (when timestamp (insert (kb/comment--timestamp-select-todo))) ; If I want a timestamp
+        (when timestamp (insert keyword)) ; If I want a timestamp
         (when (bound-and-true-p evil-mode) ; End in the insert state, but only if evil mode is active
           (evil-insert-state))))
      )))
