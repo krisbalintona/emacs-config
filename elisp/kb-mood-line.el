@@ -69,7 +69,8 @@ fallback. "
     (propertize (cond ((not buffer-file-name) ; Not visiting file
                        "")
                       ((project-current) ; Project root
-                       (abbreviate-file-name (vc-git-root (buffer-file-name))))
+                       (concat (abbreviate-file-name (vc-git-root (buffer-file-name)))
+                               ".../"))
                       (buffer-file-name ; Current directory
                        default-directory))
                 'face face)
