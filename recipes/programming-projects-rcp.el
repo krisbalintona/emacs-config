@@ -164,10 +164,11 @@
   (magit-module-sections-nested t)
   (magit-section-show-child-count t)
   (magit-refs-show-commit-count 'all) ; Show branches and tags
-  (magit-section-initial-visibility-alist '((modules . show)
+  (magit-section-initial-visibility-alist '((modules . hide) ; Modules overview
                                             (stashes . show)
                                             (unpulled . show)
-                                            (unpushed . show)))
+                                            (unpushed . show)
+                                            ))
   (transient-mode-line-format nil)
 
   ;; Save transient changes to a different location (since I changed the
