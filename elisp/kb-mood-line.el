@@ -83,7 +83,7 @@ instead."
   (let* ((active (doom-modeline--active)) ; `doom-modeline' dependency
          (face (if active
                    'mood-line-buffer-name
-                 '(t (:inherit (mode-line-inactive mood-line-buffer-name)))
+                 '(:inherit (mode-line-inactive mood-line-buffer-name))
                  )))
     ;; TODO 2021-09-03: Add support for org-roam node titles.
     (propertize "%b" 'face face)
@@ -91,14 +91,14 @@ instead."
 
 (defun kb/mood-line-segment-remote-host ()
   "Hostname for remote buffers."
-  (when default-directory
-    (when-let ((host (file-remote-p default-directory 'host)))
-      (propertize (concat "@" host) 'face
-                  (if (doom-modeline--active)
-                      '(t (:inherit mode-line-emphasis :slant italic))
-                    '(t (:inherit (mode-line-inactive mode-line-emphasis) :slant italic))
-                    ))
-      )))
+  (when-let ((default-directory)
+             (host (file-remote-p default-directory 'host)))
+    (propertize (concat "@" host) 'face
+                (if (doom-modeline--active)
+                    '(:inherit mode-line-emphasis :slant italic)
+                  '(:inherit (mode-line-inactive mode-line-emphasis) :slant italic)
+                  ))
+    ))
 
 (defun kb/mood-line-segment-modified ()
   "Displays a color-coded buffer modification/read-only indicator in the mode-line."
@@ -123,7 +123,7 @@ instead."
     (propertize
      (concat "%l:%c" (when mood-line-show-cursor-point (format ":%d" (point))))
      'face
-     `(t (:inherit ,face :height 0.9))
+     `(:inherit ,face :height 0.9)
      )))
 
 (defun kb/mood-line-segment-selection-info ()
@@ -159,22 +159,31 @@ instead."
                  (format " %dW" (count-words beg end))
                  " "
                  ))
-       'face '(t (:inherit mode-line-emphasis :height 0.85))))
+       'face '(:inherit mode-line-emphasis :height 0.85)))
     ))
 
 ;;;; Right
 (defun kb/mood-line-segment-which-func ()
   "Display a propertized `which-function-mode' indicator."
-  (cond
-   ;; ((not (derived-mode-p 'prog-mode))   ; Only show in...
-   ;;  "")
-   ((doom-modeline--active)
-    (propertize (format-mode-line which-func-format) 'face
-                '(t (:inherit mood-line-unimportant :height 0.85))))
-   (t
-    (propertize (format-mode-line which-func-format) 'face
-                '(t (:inherit mode-line-inactive :height 0.85))))
-   ))
+  (let ((text (concat "("
+                      (string-replace "%" "%%" ; Check `which-func-current'
+                                      (or
+                                       (gethash
+                                        (selected-window)
+                                        which-func-table)
+                                       which-func-unknown))
+                      ")"))
+        )
+    (cond
+     ;; ((not (derived-mode-p 'prog-mode))   ; Only show in...
+     ;;  "")
+     ((doom-modeline--active)
+      (propertize text 'face
+                  '(:inherit mood-line-unimportant :height 0.85)))
+     (t
+      (propertize text 'face
+                  '(:inherit mode-line-inactive :height 0.85)))
+     )))
 
 (defun kb/mood-line-segment-flycheck-doom ()
   "Displays color-coded error status in the current buffer with
@@ -271,7 +280,7 @@ dap)."
                                                       "  "
                                                       (doom-modeline--buffer-mode-icon)
                                                       " "
-                                                      (let ((text (eyebrowse-mode-line-indicator)))
+                                                      (when-let ((text (eyebrowse-mode-line-indicator)))
                                                         (if (doom-modeline--active)
                                                             text
                                                           (propertize text 'face 'mode-line-inactive)))
@@ -296,13 +305,13 @@ dap)."
                                                       (mood-line-segment-eol)
                                                       " "
                                                       display-time-string
-                                                      (let ((text (fancy-battery-default-mode-line)))
+                                                      (when-let ((text (fancy-battery-default-mode-line)))
                                                         (if (doom-modeline--active)
                                                             text
                                                           (propertize text 'face 'mode-line-inactive)))
                                                       " "
-                                                      ;; (kb/mood-line-segment-flycheck-doom))
-                                                      (let ((text (mood-line-segment-flycheck)))
+                                                      ;; ;; (kb/mood-line-segment-flycheck-doom))
+                                                      (when-let ((text (mood-line-segment-flycheck)))
                                                         (if (doom-modeline--active)
                                                             text
                                                           (propertize text 'face 'mode-line-inactive)))
