@@ -14,11 +14,15 @@
   :gfhook
   ;; UI enhancements
   'visual-line-mode
-  '(lambda () (set-display-table-slot standard-display-table 0 ?\ )
+  '(lambda ()
+     (set-display-table-slot standard-display-table 0 ?\ )
      ;; Text-wrap
      (face-remap-add-relative 'default :height 127) ; Change default face size
      (setq-local scroll-margin 3                    ; Scroll-margin
                  line-spacing 0)
+     ;; `consult-outline' support for eshell prompts. See
+     ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
+     (setq outline-regexp eshell-prompt-regexp)
      )
   'hide-mode-line-mode
   :general
