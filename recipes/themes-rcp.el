@@ -253,56 +253,32 @@ instead."
       ;; TODO 2021-09-03: Add support for org-roam node titles.
       (propertize "%b" 'face face)))
   (defun kb/mood-line-segment-vc (&rest _)
-    "TODO"
-    ;; NOTE 2022-01-22: Almost all of this function is taken from my modified
-    ;; version of Doom Modeline's VC modeline segment.
-    (let ((backend (vc-backend buffer-file-name))
-          ;; Hard `doom-modeline' dependency
-          (icon doom-modeline--vcs-icon)
-          (text doom-modeline--vcs-text)
-          ;; (text mood-line--vc-text)
-          )
-      (concat
-       (propertize
-        (if (doom-modeline--active)
-            icon
-          (doom-modeline-propertize-icon icon 'mode-line-inactive)
-          ))
-       " "
-       ;; If the current branch is the main one, then don't show in modeline
-       (unless (equal (substring-no-properties (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2)))
-                      (magit-main-branch))
-         (if (doom-modeline--active)
-             (concat " " text)
-           (propertize text 'face 'mode-line-inactive)
-           ))
-       "  "
-       )))
-  (defun kb/mood-line-segment-vc (&rest _)
     "Print git information (e.g. branch, conflicts). Hide text if on
 main branch of repository."
     ;; NOTE 2022-01-22: Almost all of this function is taken from my modified
     ;; version of Doom Modeline's VC modeline segment.
-    (let ((backend (vc-backend buffer-file-name))
-          ;; Hard `doom-modeline' dependency
-          (icon (concat doom-modeline--vcs-icon "  "))
-          (text (concat doom-modeline--vcs-text "  "))
-          ;; (text (concat mood-line--vc-text "  "))
-          )
-      (concat
-       (propertize
-        (if (doom-modeline--active)
-            icon
-          (doom-modeline-propertize-icon icon 'mode-line-inactive)
-          ))
-       ;; If the current branch is the main one, then don't show in modeline
-       (unless (equal (substring-no-properties (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2)))
-                      (magit-main-branch))
-         (if (doom-modeline--active)
-             text
-           (propertize text 'face 'mode-line-inactive)
-           ))
-       )))
+    (if-let ((backend (vc-backend buffer-file-name))
+             ;; Hard `doom-modeline' dependency
+             (icon (concat doom-modeline--vcs-icon " "))
+             (text (concat doom-modeline--vcs-text " "))
+             ;; (text (concat mood-line--vc-text "  "))
+             )
+        (concat
+         (propertize
+          (if (doom-modeline--active)
+              icon
+            (doom-modeline-propertize-icon icon 'mode-line-inactive)
+            ))
+         ;; If the current branch is the main one, then don't show in modeline
+         (unless (equal (substring-no-properties (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2)))
+                        (magit-main-branch))
+           (if (doom-modeline--active)
+               text
+             (propertize text 'face 'mode-line-inactive)
+             ))
+         )
+      ""
+      ))
   (defun kb/mood-line-segment-selection-info ()
     "Show selection info of region."
     ;; NOTE 2022-01-22: Basically verbatim taken from Doom Modeline's
