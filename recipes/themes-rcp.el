@@ -132,13 +132,13 @@ here: https://github.com/TheVaffel/emacs"
                                           '((:eval
                                              (mood-line--format
                                               (format-mode-line
-                                               '("    "
+                                               '("  "
                                                  (:eval
                                                   (doom-modeline--buffer-mode-icon))
-                                                 "  "
+                                                 " "
                                                  (:eval
                                                   (eyebrowse-mode-line-indicator))
-                                                 "   "
+                                                 " "
                                                  (:eval
                                                   (kb/mood-line-segment-vc))
                                                  (:eval
@@ -149,10 +149,10 @@ here: https://github.com/TheVaffel/emacs"
                                                   (kb/mood-line-segment-buffer-name))
                                                  (:eval
                                                   (kb/mood-line-segment-remote-host))
-                                                 "  "
+                                                 " "
                                                  (:eval
                                                   (kb/mood-line-segment-modified))
-                                                 "  "
+                                                 " "
                                                  (:eval
                                                   (kb/mood-line-segment-position))
                                                  " "
@@ -172,9 +172,11 @@ here: https://github.com/TheVaffel/emacs"
                                                  display-time-string
                                                  " "
                                                  battery-mode-line-string
-                                                 "   "
+                                                 "  "
                                                  (:eval
-                                                  (kb/mood-line-segment-flycheck))
+                                                  ;; (kb/mood-line-segment-flycheck)
+                                                  (mood-line-segment-flycheck)
+                                                  )
                                                  lsp-modeline--code-actions-string
                                                  (:eval
                                                   (mood-line-segment-process))
@@ -346,16 +348,13 @@ main branch of repository."
   (defun kb/mood-line-segment-lsp ()
     "The LSP server state."
     ;; NOTE 2022-01-22: Mostly taken from the Doom Modeline LSP segment.
-    (concat
-     " "
-     (if lsp-mode
-         (let ((icon doom-modeline--lsp))
-           (if (doom-modeline--active)
-               icon
-             (doom-modeline-propertize-icon icon 'mode-line-inactive)))
-       " ")                               ; To preserve spacing
-     " "
-     ))
+    (when lsp-mode
+      (concat
+       (let ((icon doom-modeline--lsp))
+         (if (doom-modeline--active)
+             icon
+           (doom-modeline-propertize-icon icon 'mode-line-inactive)))
+       " ")))
   (defun kb/mood-line-segment-flycheck ()
     "Displays color-coded error status in the current buffer with pretty icons."
     (let* ((active (doom-modeline--active))
@@ -365,20 +364,17 @@ main branch of repository."
            )
       (concat
        (when icon
-         (concat
-          " "
-          (if active
-              icon
-            (doom-modeline-propertize-icon icon 'mode-line-inactive))
-          ))
+         (if active
+             icon
+           (doom-modeline-propertize-icon icon 'mode-line-inactive)))
        (when text
          (concat
           " "
           (if active
               text
-            (propertize text 'face 'mode-line-inactive))))
-       " ")
-      ))
+            (propertize text 'face 'mode-line-inactive))
+          ))
+       )))
   (defun kb/mood-line-segment-modified ()
     "Displays a color-coded buffer modification/read-only indicator in the mode-line."
     (cond
@@ -407,10 +403,6 @@ dap)."
            (text (concat sep
                          (and dap (concat dap (and (or edebug on-error on-quit) vsep))) ; For dap
                          (and edebug (concat edebug (and (or on-error on-quit) vsep))) ; For edebug
-                         ;; When neither are running, insert whitespace to maintain
-                         ;; spacing
-                         (unless (and dap edebug)
-                           "  ")
                          (and on-error (concat on-error (and on-quit vsep)))
                          on-quit
                          sep
