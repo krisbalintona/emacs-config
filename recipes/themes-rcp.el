@@ -174,9 +174,8 @@ here: https://github.com/TheVaffel/emacs"
                                                   (fancy-battery-default-mode-line))
                                                  "  "
                                                  (:eval
-                                                  ;; (kb/mood-line-segment-flycheck)
-                                                  (mood-line-segment-flycheck)
-                                                  )
+                                                  ;; (kb/mood-line-segment-flycheck-doom))
+                                                  (mood-line-segment-flycheck))
                                                  lsp-modeline--code-actions-string
                                                  (:eval
                                                   (mood-line-segment-process))
@@ -333,6 +332,28 @@ main branch of repository."
           (doom-modeline-propertize-icon icon 'mode-line-inactive))
       ""
       ))
+  (defun kb/mood-line--update-flycheck-segment (&optional status)
+    "Update `mood-line--flycheck-text' against the reported flycheck STATUS."
+    ;; Changed text of the original
+    (setq mood-line--flycheck-text
+          (pcase status
+            ('finished (if flycheck-current-errors
+                           (let-alist (flycheck-count-errors flycheck-current-errors)
+                             (let ((sum (+ (or .error 0) (or .warning 0))))
+                               (propertize (concat " " (number-to-string sum) " ")
+                                           'face (if .error
+                                                     'mood-line-status-error
+                                                   'mood-line-status-warning))))
+                         (propertize " " 'face 'mood-line-status-success)))
+            ('running (propertize "  " 'face 'mood-line-status-info))
+            ('errored (propertize " " 'face 'mood-line-status-error))
+            ('interrupted (propertize "⏸ " 'face 'mood-line-status-neutral))
+            ('no-checker ""))
+          ))
+  (advice-add 'mood-line--update-flycheck-segment :override #'kb/mood-line--update-flycheck-segment)
+  (defun kb/mood-line-segment-flycheck-doom ()
+    "Displays color-coded error status in the current buffer with
+pretty icons -- Doom modeline style."
     (let* ((active (doom-modeline--active))
            (seg `(,doom-modeline--flycheck-icon . ,doom-modeline--flycheck-text))
            (icon (car seg))
