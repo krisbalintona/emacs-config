@@ -198,7 +198,8 @@ pretty icons -- Doom modeline style."
           ('finished (if flycheck-current-errors
                          (let-alist (flycheck-count-errors flycheck-current-errors)
                            (let ((sum (+ (or .error 0) (or .warning 0))))
-                             (propertize (concat " " (number-to-string sum) " ")
+                             ;; (propertize (concat " " (number-to-string sum) " ")
+                             (propertize " "
                                          'face (if .error
                                                    'mood-line-status-error
                                                  'mood-line-status-warning))))
