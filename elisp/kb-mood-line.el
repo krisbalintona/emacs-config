@@ -159,7 +159,7 @@ instead."
                  (format " %dW" (count-words beg end))
                  " "
                  ))
-       'face 'mode-line-emphasis))
+       'face '(t (:inherit mode-line-emphasis :height 0.85))))
     ))
 
 ;;;; Right
