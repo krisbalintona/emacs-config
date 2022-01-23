@@ -235,7 +235,6 @@ default lsp-passthrough."
 (use-package corfu-doc
   :straight (corfu-doc :type git :host github :repo "galeo/corfu-doc")
   :after corfu
-  :hook (corfu-mode . corfu-doc-mode)
   :general (:keymaps 'corfu-map
                      [remap corfu-show-documentation] #'corfu-doc-toggle
                      ;; Scroll in the documentation window
