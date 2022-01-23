@@ -31,9 +31,9 @@
   :general
   (:keymaps 'hl-todo-mode-map
             :prefix "M-g"
-            "n" '(hl-todo-next :which-key "Hl-todo-next")
-            "p" '(hl-todo-previous :which-key "Hl-todo-previous")
-            "o" '(hl-todo-occur :which-key "Hl-todo-occur")
+            "n" '(hl-todo-next :wk "Hl-todo-next")
+            "p" '(hl-todo-previous :wk "Hl-todo-previous")
+            "o" '(hl-todo-occur :wk "Hl-todo-occur")
             )
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
@@ -119,36 +119,36 @@
   ("P" consult-yank-pop)
   :general
   (:keymaps 'help-map
-            [remap apropos-command] '(consult-apropos :which-key "Consult apropos"))
-  ([remap switch-to-buffer] '(consult-buffer :which-key "Consult buffer")
-   "C-x B" '(consult-buffer-other-window :which-key "Consult buffer other window")
+            [remap apropos-command] '(consult-apropos :wk "Consult apropos"))
+  ([remap switch-to-buffer] '(consult-buffer :wk "Consult buffer")
+   "C-x B" '(consult-buffer-other-window :wk "Consult buffer other window")
    )
   (:keymaps 'minibuffer-local-map
             "M-r" 'consult-history
             )
   (kb/nav-keys
-    "h" '(consult-outline :which-key "Consult outline")
-    "j" '(consult-line :which-key "Consult line")
-    "i" '(kb/consult-imenu-versatile :which-key "Consult imenu")
-    "O" '(consult-multi-occur :which-key "Consult multi-occur")
+    "h" '(consult-outline :wk "Consult outline")
+    "j" '(consult-line :wk "Consult line")
+    "i" '(kb/consult-imenu-versatile :wk "Consult imenu")
+    "O" '(consult-multi-occur :wk "Consult multi-occur")
     )
   (kb/nav-keys
     :keymaps 'org-mode-map
     :states '(normal visual insert motion)
-    [remap consult-outline] '(consult-org-heading :which-key "Consult outline"))
+    [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
   (kb/yank-kill-keys
-    "y" '(consult-yank-pop :which-key "Consult yank-pop")
+    "y" '(consult-yank-pop :wk "Consult yank-pop")
     )
   (kb/buffer-keys
     "b" 'consult-buffer
     "B" 'consult-buffer-other-window
     )
   (kb/file-keys
-    "r" '(consult-recent-file :which-key "Consult recent file")
+    "r" '(consult-recent-file :wk "Consult recent file")
     )
   (kb/mark-keys
-    "m" '(consult-bookmark :which-key "Consult bookmark")
-    "r" '(consult-mark :which-key "Consult mark-ring")
+    "m" '(consult-bookmark :wk "Consult bookmark")
+    "r" '(consult-mark :wk "Consult mark-ring")
     )
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
@@ -207,7 +207,7 @@
             ">" 'embark-become
             )
   (kb/help-keys
-    "B" '(embark-bindings :which-key "Embark-bindings")
+    "B" '(embark-bindings :wk "Embark-bindings")
     )
   :custom
   ;; Embark Actions menu
@@ -241,15 +241,15 @@
   :hook ((prog-mode conf-mode text-mode) . hs-minor-mode)
   :general
   (:prefix "C-c h"
-           "t" '(hs-hide-block :which-key "Toggle hide")
-           "l" '(hs-hide-level :which-key "Hide level")
-           "h" '(hs-hide-block :which-key "Hide block")
-           "s" '(hs-show-block :which-key "show block")
-           "H" '(hs-hide-all :which-key "Hide all")
-           "S" '(hs-show-all :which-key "show all")
+           "t" '(hs-hide-block :wk "Toggle hide")
+           "l" '(hs-hide-level :wk "Hide level")
+           "h" '(hs-hide-block :wk "Hide block")
+           "s" '(hs-show-block :wk "show block")
+           "H" '(hs-hide-all :wk "Hide all")
+           "S" '(hs-show-all :wk "show all")
            )
   (kb/toggle-keys
-    "t" '(hs-toggle-hiding :which-key "Toggle hide")
+    "t" '(hs-toggle-hiding :wk "Toggle hide")
     )
   )
 ;;; File or buffer utilities
@@ -292,8 +292,8 @@
 ;; Utilities to edit files as root
 (use-package sudo-edit
   :general (kb/file-keys
-             "U" '(sudo-edit-find-file :which-key "Sudo find-file")
-             "u" '(sudo-edit :which-key "Sudo this file")
+             "U" '(sudo-edit-find-file :wk "Sudo find-file")
+             "u" '(sudo-edit :wk "Sudo this file")
              )
   :config (sudo-edit-indicator-mode)
   )
@@ -320,10 +320,10 @@
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
-            "C-x n s" '(outshine-narrow-to-subtree :which-key "Outshine narrow to subtree"))
+            "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
   (:keymaps 'outshine-mode-map
             :states 'normal
-            "<tab>" '(outshine-kbd-TAB :which-key "Outshine TAB")
+            "<tab>" '(outshine-kbd-TAB :wk "Outshine TAB")
             "C-<return>" 'outshine-insert-heading)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)

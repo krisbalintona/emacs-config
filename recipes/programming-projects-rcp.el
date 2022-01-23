@@ -16,8 +16,8 @@
   :disabled t ; In favor of `project.el'
   :general
   (kb/general-keys
-    "p" '(:ignore t :which-key "Projectile")
-    "p?" '(hydra:selectrum-projectile/body :which-key "Help menu")
+    "p" '(:ignore t :wk "Projectile")
+    "p?" '(hydra:selectrum-projectile/body :wk "Help menu")
     ;; "pf"  'projectile-find-file
     "pp"  'projectile-switch-project
     ;; "ps"  'counsel-projectile-rg
@@ -68,11 +68,11 @@
 (use-package project
   :general
   (kb/project-keys
-    "f" '(affe-find :which-key "Project find file")
-    "r" '(consult-ripgrep :which-key "Consult rg")
-    "b" '(project-switch-to-buffer :which-key "Project switch to buffer")
-    "p" '(project-switch-project :which-key "Project.el switch project")
-    "d" '(project-dired :which-key "Project dired")
+    "f" '(affe-find :wk "Project find file")
+    "r" '(consult-ripgrep :wk "Consult rg")
+    "b" '(project-switch-to-buffer :wk "Project switch to buffer")
+    "p" '(project-switch-project :wk "Project.el switch project")
+    "d" '(project-dired :wk "Project dired")
     )
   (:keymaps 'project-prefix-map
             "m" #'magit-project-status)
@@ -97,8 +97,8 @@
   :straight (project-x :type git :host github :repo "karthink/project-x")
   :hook (after-init . project-x-mode)   ; Adds hooks and keybinds
   :general (kb/project-keys
-             "w" '(project-x-window-state-save :which-key "Project-x save")
-             "j" '(project-x-window-state-load :which-key "Project-x load")
+             "w" '(project-x-window-state-save :wk "Project-x save")
+             "j" '(project-x-window-state-load :wk "Project-x load")
              )
   :custom
   (project-x-window-list-file
@@ -128,21 +128,21 @@
             "C-<tab>" 'magit-section-toggle-children)
   (:keymaps 'magit-mode-map
             :states '(normal visual motion)
-            "D" '(magit-cherry-donate :which-key "Cherry conate"))
+            "D" '(magit-cherry-donate :wk "Cherry conate"))
   (kb/magit-keys
     "F"  'magit-fetch-all
-    "P"  '(magit-push-current :which-key "Push")
+    "P"  '(magit-push-current :wk "Push")
     "b"  'magit-branch
     "c"  'magit-branch-or-checkout
     "d"  'magit-diff-unstaged
     "f"  'magit-fetch
-    "g"  '(magit-status :which-key "Status")
-    "l"   '(:ignore t :which-key "Logs")
+    "g"  '(magit-status :wk "Status")
+    "l"   '(:ignore t :wk "Logs")
     "lc" 'magit-log-current
     "lf" 'magit-log-buffer-file
     "p"  'magit-pull-branch
-    "r"  '(magit-rebase :which-key "Rebase")
-    "s"  '(magit-status :which-key "Status")
+    "r"  '(magit-rebase :wk "Rebase")
+    "s"  '(magit-status :wk "Status")
     )
   :custom
   ;; How opened magit buffers (e.g. commit) are shown

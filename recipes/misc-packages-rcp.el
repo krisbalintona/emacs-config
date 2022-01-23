@@ -14,7 +14,7 @@
 (use-package scratch
   ;; :demand t ; For the initial scratch buffer at startup
   :hook (scratch-create-buffer . kb/scratch-buffer-setup)
-  :general ("C-c s" '(scratch :which-key "Create scratch"))
+  :general ("C-c s" '(scratch :wk "Create scratch"))
   :preface
   (defun kb/scratch-buffer-setup ()
     "Add contents to `scratch' buffer and name it accordingly. Taken from https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
@@ -79,8 +79,8 @@
 ;; Timer package/library from Prot
 (use-package tmr
   :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
-  :general ("C-c T t" '(tmr :which-key "Tmr")
-            "C-c T c" '(tmr-cancel :which-key "Tmr cancel"))
+  :general ("C-c T t" '(tmr :wk "Tmr")
+            "C-c T c" '(tmr-cancel :wk "Tmr cancel"))
   )
 
 ;;; Emojify
@@ -105,7 +105,7 @@
 
 ;;; Restart-emacs
 (use-package restart-emacs
-  :general ("C-x Q" '(restart-emacs :which-key "Restart emacs"))
+  :general ("C-x Q" '(restart-emacs :wk "Restart emacs"))
   )
 
 ;;; Tempel
@@ -126,7 +126,7 @@
 ;; Find file at point
 (use-package ffap
   :general (:states '(normal motion)
-                    "g F" '(ffap-menu :which-key "FFAP menu")
+                    "g F" '(ffap-menu :wk "FFAP menu")
                     )
   :config
   (when (featurep 'vertico)
@@ -149,32 +149,32 @@
             "SPC" nil ; For my leader key
             [remap evil-ret] 'Info-follow-nearest-node)
   (kb/general-keys
-    "u" '(universal-argument :which-key "Universal argument")
+    "u" '(universal-argument :wk "Universal argument")
 
-    "fF" '(find-file-other-window :which-key "Find file other window")
-    "fS" '(save-some-buffers :which-key "Save most buffers")
-    "ff" '(find-file :which-key "Find file")
-    "fs" '(save-buffer :which-key "Save buffer")
+    "fF" '(find-file-other-window :wk "Find file other window")
+    "fS" '(save-some-buffers :wk "Save most buffers")
+    "ff" '(find-file :wk "Find file")
+    "fs" '(save-buffer :wk "Save buffer")
 
-    "bn" '(next-buffer :which-key "Next buffer")
-    "bp" '(previous-buffer :which-key "Prev buffer")
+    "bn" '(next-buffer :wk "Next buffer")
+    "bp" '(previous-buffer :wk "Prev buffer")
     "br" '((lambda ()
              (interactive)
              (revert-buffer nil t))
-           :which-key "Revert buffer")
+           :wk "Revert buffer")
 
-    "eb" '(eval-buffer :which-key "Eval buffer")
-    "ee" '(eval-last-sexp :which-key "Eval last sexp")
-    "ed" '(eval-defun :which-key "Eval top-level form")
-    "er" '(eval-region :which-key "Eval region")
+    "eb" '(eval-buffer :wk "Eval buffer")
+    "ee" '(eval-last-sexp :wk "Eval last sexp")
+    "ed" '(eval-defun :wk "Eval top-level form")
+    "er" '(eval-region :wk "Eval region")
 
-    "hi" '(info :which-key "Info pages")
+    "hi" '(info :wk "Info pages")
 
-    "oc" '(calc :which-key "Open calculator")
+    "oc" '(calc :wk "Open calculator")
     "om" '((lambda ()
              (interactive)
              (pop-to-buffer "*Messages*"))
-           :which-key "Open *Messages*")
+           :wk "Open *Messages*")
     )
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more

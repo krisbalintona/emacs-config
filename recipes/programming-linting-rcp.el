@@ -17,10 +17,10 @@
   ;; :demand t
   :general
   (kb/nav-keys
-    "E" '(flycheck-list-errors :which-key "List flycheck errors")
+    "E" '(flycheck-list-errors :wk "List flycheck errors")
     )
   (kb/general-keys
-    "?" '(flycheck-buffer :which-key "Flycheck buffer")
+    "?" '(flycheck-buffer :wk "Flycheck buffer")
     )
   :custom
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
@@ -52,7 +52,7 @@
 (use-package consult-flycheck
   :after (consult flycheck)
   :general (kb/nav-keys
-             "e" '(consult-flycheck :which-key "Consult flycheck"))
+             "e" '(consult-flycheck :wk "Consult flycheck"))
   )
 
 ;;; programming-linting-rcp.el ends here

@@ -14,7 +14,7 @@
 (use-package shell
   :straight nil
   :general (kb/open-keys
-             "s" '(shell :which-key "Shell-mode"))
+             "s" '(shell :wk "Shell-mode"))
   :custom
   (async-shell-command-buffer 'new-buffer) ; Don't ask, just do
   )

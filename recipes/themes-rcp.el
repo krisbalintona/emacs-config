@@ -182,7 +182,7 @@ here: https://github.com/TheVaffel/emacs"
   :ghook 'prog-mode-hook 'LaTeX-mode-hook
   :gfhook 'column-number-mode ; Column number in modeline
   :general (kb/toggle-keys
-             "l" '(display-line-numbers-mode :which-key "Line numbers"))
+             "l" '(display-line-numbers-mode :wk "Line numbers"))
   :custom
   (display-line-numbers-type 'relative)
   )

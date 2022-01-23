@@ -32,7 +32,7 @@
             (vterm (concat "*vterm* "
                            (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
                            )))
-          :which-key "Vterm"))
+          :wk "Vterm"))
   :custom
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)

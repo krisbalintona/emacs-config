@@ -93,7 +93,7 @@
   'kb/pyvenv-setup-variables
   :general (kb/lsp-keys
              :keymaps 'python-mode-map
-             "v" '(pyvenv-activate :which-key "Pyvenv activate"))
+             "v" '(pyvenv-activate :wk "Pyvenv activate"))
   :init
   (defun kb/pyvenv-auto-activate ()
     "Activate virtual environment, checking present directory then

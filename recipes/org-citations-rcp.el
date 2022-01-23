@@ -17,7 +17,7 @@
   :after citar
   :general
   (:keymaps 'org-mode-map
-            [remap citar-insert-citation] '(org-cite-insert :which-key "Insert citation"))
+            [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
   :custom
   (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (expand-file-name (concat user-emacs-directory "locales/")))
@@ -61,9 +61,9 @@
   :demand t
   :after org-roam org-roam-bibtex
   :general (:prefix "C-c b"
-                    "b" '(citar-insert-citation :which-key "Insert citation")
-                    "r" '(citar-insert-reference :which-key "Insert reference")
-                    "o" '(citar-open-notes :which-key "Open note")
+                    "b" '(citar-insert-citation :wk "Insert citation")
+                    "r" '(citar-insert-reference :wk "Insert reference")
+                    "o" '(citar-open-notes :wk "Open note")
                     )
   :custom
   (citar-bibliography kb/bib-files)

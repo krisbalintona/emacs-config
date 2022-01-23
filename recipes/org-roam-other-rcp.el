@@ -32,7 +32,7 @@
   (:keymaps 'org-noter-doc-mode-map
             "M-o" 'org-noter-insert-note)
   (kb/open-keys
-    "n" '(org-noter :which-key "Org-noter")
+    "n" '(org-noter :wk "Org-noter")
     )
   :custom
   (org-noter-notes-search-path kb/roam-dir)
@@ -54,13 +54,13 @@
   :general
   (kb/toggle-keys
     :keymaps 'org-mode-map
-    "c" '(org-transclusion-mode :which-key "Toggle mode")
-    "R" '(org-transclusion-refresh :which-key "Refresh")
-    "m" '(org-transclusion-make-from-link :which-key "Make")
-    "a" '(org-transclusion-add :which-key "Add")
-    "r" '(org-transclusion-remove :which-key "Remove")
-    "s" '(org-transclusion-live-sync-start :which-key "Edit start")
-    "e" '(org-transclusion-live-sync-exit :which-key "Edit exit")
+    "c" '(org-transclusion-mode :wk "Toggle mode")
+    "R" '(org-transclusion-refresh :wk "Refresh")
+    "m" '(org-transclusion-make-from-link :wk "Make")
+    "a" '(org-transclusion-add :wk "Add")
+    "r" '(org-transclusion-remove :wk "Remove")
+    "s" '(org-transclusion-live-sync-start :wk "Edit start")
+    "e" '(org-transclusion-live-sync-exit :wk "Edit exit")
     )
   :custom
   (org-transclusion-include-first-section t)

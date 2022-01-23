@@ -17,32 +17,32 @@
   :general
   (:keymaps 'org-mode-map
             :prefix "C-c"
-            "i" '(org-id-get-create :which-key "Add ID")
-            "tt" '(org-roam-tag-add :which-key "Add tag")
-            "tr" '(org-roam-tag-remove :which-key "Remove tag")
+            "i" '(org-id-get-create :wk "Add ID")
+            "tt" '(org-roam-tag-add :wk "Add tag")
+            "tr" '(org-roam-tag-remove :wk "Remove tag")
             )
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/note-keys
-    "f" '(org-roam-node-find :which-key "Find file")
+    "f" '(org-roam-node-find :wk "Find file")
     "F" '((lambda ()
             (interactive)
             (org-roam-node-find t)
             )
-          :which-key "Find file other window")
+          :wk "Find file other window")
 
-    "i" '(org-roam-node-insert :which-key "Insert note")
+    "i" '(org-roam-node-insert :wk "Insert note")
 
     "h" '((lambda ()
             (interactive)
             (find-file "~/Documents/org-database/roam/inbox.org")
             )
-          :which-key "Go home")
+          :wk "Go home")
 
-    "l" '(org-roam-buffer-toggle :which-key "Toggle Roam buffer")
-    "L" '(org-roam-buffer-display-dedicated :which-key "New Roam buffer")
+    "l" '(org-roam-buffer-toggle :wk "Toggle Roam buffer")
+    "L" '(org-roam-buffer-display-dedicated :wk "New Roam buffer")
 
-    "b" '(org-roam-db-sync :which-key "Build cache")
+    "b" '(org-roam-db-sync :wk "Build cache")
     )
   :custom
   (org-roam-directory kb/roam-dir)

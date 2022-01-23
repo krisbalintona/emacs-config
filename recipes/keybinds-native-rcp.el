@@ -12,7 +12,7 @@
 ;;; Ctl-x
 (general-define-key
  :keymaps 'ctl-x-map
- "K" '(kill-this-buffer :which-key "Kill this buffer")
+ "K" '(kill-this-buffer :wk "Kill this buffer")
  )
 
 ;;; Everywhere

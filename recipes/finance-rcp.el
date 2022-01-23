@@ -27,8 +27,8 @@
      )
   :general
   (:keymaps 'ledger-mode-map
-            "C-c C-t" '(ledger-toggle-current :which-key "Toggle check on current")
-            [remap consult-flycheck] '(list-flycheck-errors :which-key "List flycheck errors")
+            "C-c C-t" '(ledger-toggle-current :wk "Toggle check on current")
+            [remap consult-flycheck] '(list-flycheck-errors :wk "List flycheck errors")
             )
   (:keymaps 'ledger-mode-map
             :states 'insert
@@ -36,16 +36,16 @@
   (kb/yank-kill-keys
     :keymaps 'ledger-mode-map
     :states '(normal insert)
-    "d" '(kb/insert-date :which-key "Insert date")
-    "e" '(ledger-insert-effective-date :which-key "Insert effective date")
+    "d" '(kb/insert-date :wk "Insert date")
+    "e" '(ledger-insert-effective-date :wk "Insert effective date")
     )
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual motion)
             "q" nil) ; Doesn't kill window as it would normally
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual)
-            "RET" '(ledger-report-visit-source :which-key "Visit transaction")
-            "C-c C-o C-k" '(ledger-report-quit :which-key "Quit")
+            "RET" '(ledger-report-visit-source :wk "Visit transaction")
+            "C-c C-o C-k" '(ledger-report-quit :wk "Quit")
             )
   :custom
   ;; Administration

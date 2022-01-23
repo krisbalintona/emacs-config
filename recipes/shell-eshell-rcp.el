@@ -23,7 +23,7 @@
   'hide-mode-line-mode
   :general
   (:keymaps 'eshell-mode-map
-            [remap eshell-previous-matching-input] '(consult-history :which-key "Command history")
+            [remap eshell-previous-matching-input] '(consult-history :wk "Command history")
             "<return>" 'eshell-send-input)
   (kb/open-keys
     "e" '((lambda ()            ; Unique vterm buffer with current directory appended
@@ -31,7 +31,7 @@
             (eshell (concat "*eshell* "
                             (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
                             )))
-          :which-key "Eshell"))
+          :wk "Eshell"))
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)

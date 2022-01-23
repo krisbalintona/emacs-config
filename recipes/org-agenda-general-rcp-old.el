@@ -252,9 +252,9 @@
 
 ;;;; Keybindings
 (kb/leader-keys
-  "oa" '(org-agenda :which-key "Org-agenda")
+  "oa" '(org-agenda :wk "Org-agenda")
 
-  "mn" '(org-capture-goto-last-stored :which-key "Goto last note captured")
+  "mn" '(org-capture-goto-last-stored :wk "Goto last note captured")
   )
 
 (general-define-key ; Eyebrowse keybindings overwrite this so I reset it

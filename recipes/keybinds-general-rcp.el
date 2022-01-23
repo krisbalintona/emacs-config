@@ -90,19 +90,19 @@
 
 ;;; Keybinding labels
 (kb/general-keys
-  "b" '(:ignore t :which-key "Buffers")
-  "e" '(:ignore t :which-key "Evaluation")
-  "f" '(:ignore t :which-key "Files")
-  "g" '(:ignore t :which-key "Magit")
-  "h" '(:ignore t :which-key "Help")
-  "i" '(:ignore t :which-key "Yank and kill")
-  "j" '(:ignore t :which-key "Navigation")
-  "m" '(:ignore t :which-key "Marks")
-  "n" '(:ignore t :which-key "Notes")
-  "o" '(:ignore t :which-key "Open...")
-  "p" '(:ignore t :which-key "Project")
-  "t" '(:ignore t :which-key "Toggles")
-  "w" '(:ignore t :which-key "Windows")
+  "b" '(:ignore t :wk "Buffers")
+  "e" '(:ignore t :wk "Evaluation")
+  "f" '(:ignore t :wk "Files")
+  "g" '(:ignore t :wk "Magit")
+  "h" '(:ignore t :wk "Help")
+  "i" '(:ignore t :wk "Yank and kill")
+  "j" '(:ignore t :wk "Navigation")
+  "m" '(:ignore t :wk "Marks")
+  "n" '(:ignore t :wk "Notes")
+  "o" '(:ignore t :wk "Open...")
+  "p" '(:ignore t :wk "Project")
+  "t" '(:ignore t :wk "Toggles")
+  "w" '(:ignore t :wk "Windows")
   )
 
 ;;; Unbinding leader key prefix

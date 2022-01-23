@@ -35,11 +35,11 @@
             "M-J" 'org-shiftmetadown
             "C-a" 'org-beginning-of-line)
   (kb/note-keys
-    "c" '(org-capture :which-key "Org-capture")
+    "c" '(org-capture :wk "Org-capture")
     )
   (kb/mark-keys
-    "g" '(org-mark-ring-goto :which-key "Goto last mark")
-    "a" '(org-mark-ring-push :which-key "Push to mark-ring")
+    "g" '(org-mark-ring-goto :wk "Goto last mark")
+    "a" '(org-mark-ring-push :wk "Push to mark-ring")
     )
   :custom
   ;; Aesthetics
@@ -201,7 +201,7 @@ move to that window."
   :straight nil
   :after org
   :general (:keymaps 'org-mode-map
-                     "C-x f" '(org-footnote-new :which-key "New footnote"))
+                     "C-x f" '(org-footnote-new :wk "New footnote"))
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)          ; Automatically renumber
@@ -224,7 +224,7 @@ move to that window."
   :after org-roam
   :straight nil
   :general (kb/note-keys
-             "r" '(org-refile :which-key "Org-refile"))
+             "r" '(org-refile :wk "Org-refile"))
   :custom
   (org-refile-targets
    `((kb/find-blog-files-org :maxlevel . 1)
@@ -570,7 +570,7 @@ re-align the table if necessary. (Necessary because org-mode has a
 (general-define-key
  :keymaps 'org-mode-map
  :states '(normal visual motion)
- "RET" '(+org/dwim-at-point :which-key "RET-DWIM at point")
+ "RET" '(+org/dwim-at-point :wk "RET-DWIM at point")
  )
 
 ;;;; Better C-RET
@@ -658,7 +658,7 @@ re-align the table if necessary. (Necessary because org-mode has a
 (use-package org-cliplink
   :general
   (kb/yank-kill-keys
-    "b" '(org-cliplink :which-key "Paste https"))
+    "b" '(org-cliplink :wk "Paste https"))
   )
 
 ;;;; Org-download
@@ -667,7 +667,7 @@ re-align the table if necessary. (Necessary because org-mode has a
   :gfhook ('org-mode-hook 'org-download-enable)
   :general
   (kb/yank-kill-keys
-    "i" '(org-download-clipboard :which-key "Paste image from clipboard")
+    "i" '(org-download-clipboard :wk "Paste image from clipboard")
     )
   :custom
   (org-download-method 'attach)

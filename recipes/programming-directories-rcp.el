@@ -78,7 +78,7 @@
   :after dired
   :general
   (:keymaps 'dired-mode-map
-            "C-c C-r" '(dired-rsync :which-key "Copy marked files with dired-rsync"))
+            "C-c C-r" '(dired-rsync :wk "Copy marked files with dired-rsync"))
   :custom
   (dired-rsync-unmark-on-completion t)
   )
@@ -89,7 +89,7 @@
 (use-package fd-dired
   :ensure-system-package (find)
   :after dired
-  :general ([remap find-dired] #'(fd-dired :which-key "Fd-dired"))
+  :general ([remap find-dired] #'(fd-dired :wk "Fd-dired"))
   )
 
 ;;;; Dired-single
@@ -117,7 +117,7 @@
 (use-package consult-dir
   :after embark
   :general
-  ("C-x C-d" '(consult-dir :which-key "Consult dir"))
+  ("C-x C-d" '(consult-dir :wk "Consult dir"))
   (:keymaps 'vertico-map
             "C-x C-d" 'consult-dir           ; Fancy directory selection
             "C-x C-j" 'consult-dir-jump-file ; Regexp for file in current directory

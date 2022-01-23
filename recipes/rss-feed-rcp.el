@@ -20,14 +20,14 @@
   :general
   (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
             :states 'normal
-            [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :which-key "Add tag")
+            [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :wk "Add tag")
             "L" '((lambda ()
                     (interactive)
                     (elfeed-goodies/toggle-logs)
                     (other-window 1))
-                  :which-key "Elfeed logs"))
+                  :wk "Elfeed logs"))
   (kb/open-keys
-    "r" '(elfeed :which-key "Elfeed"))
+    "r" '(elfeed :wk "Elfeed"))
   :custom
   ;; Give time for long updates to complete
   (elfeed-use-curl t)
@@ -110,7 +110,7 @@ fail on poorly-designed websites."
 (general-define-key
  :keymaps 'elfeed-show-mode-map
  :states 'normal
- "e" '(prot-elfeed-show-eww :which-key "Show in EWW")
+ "e" '(prot-elfeed-show-eww :wk "Show in EWW")
  )
 
 (add-hook 'eww-mode-hook #'(lambda () (visual-fill-column-mode) (mixed-pitch-mode)))
@@ -251,7 +251,7 @@ minibuffer with something like `exit-minibuffer'."
 (general-define-key
  :keymaps 'elfeed-search-mode-map
  :states 'normal
- "C-s" '(prot-elfeed-search-tag-filter :which-key "Prot tag completion"))
+ "C-s" '(prot-elfeed-search-tag-filter :wk "Prot tag completion"))
 
 ;;;; Toggle custom tag keybinds
 (with-eval-after-load 'elfeed
@@ -292,17 +292,17 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (general-define-key
    :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
    :states '(visual normal motion)
-   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :which-key "Toggle junk tag")
-   "a"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'archive))   :which-key "Toggle archive tag")
-   "i"   '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :which-key "Toggle input tag")
-   "d"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :which-key "Toggle done tag")
-   "c"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :which-key "Toggle canceled tag")
+   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
+   "a"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'archive))   :wk "Toggle archive tag")
+   "i"   '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :wk "Toggle input tag")
+   "d"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :wk "Toggle done tag")
+   "c"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
    )
   (general-define-key
    :keymaps 'elfeed-show-mode-map
    :states '(visual normal motion)
-   "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread))                               :which-key "Toggle unread tag")
-   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :which-key "Toggle junk tag")
+   "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread))                               :wk "Toggle unread tag")
+   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
    )
   )
 

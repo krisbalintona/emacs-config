@@ -189,7 +189,7 @@
                 (`unflag (mu4e-action-retag-message msg "-\\Starred")))))
 
   (kb/general-keys
-    "om" '(mu4e :which-key "Email")
+    "om" '(mu4e :wk "Email")
     )
   )
 
