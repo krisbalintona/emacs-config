@@ -47,20 +47,20 @@
 ;;;; Minibuffer
 ;; Garbage Collect when Emacs is out of focus and try to avoid garbage
 ;; collection when using minibuffer
-(defvar kb/gc-allow-minibuffer-gc t
-  "Helper variable to make sure `gc-cons-threshold' isn't lowered in Magit by
-  opening minibuffer.")
-
 (defun kb/gc-minibuffer-setup-hook ()
   "GC threshold for when minibuffer opened."
-  (when kb/gc-allow-minibuffer-gc
+  (if (boundp 'magit-previous-window-configuration)
+      (unless magit-previous-window-configuration
+        (setq gc-cons-threshold (* better-gc-cons-threshold 4)))
     (setq gc-cons-threshold (* better-gc-cons-threshold 4))
     ))
 (defun kb/gc-minibuffer-exit-hook ()
   "GC threshold for when minibuffer closed."
-  (garbage-collect)
-  (when kb/gc-allow-minibuffer-gc
+  (if (boundp 'magit-previous-window-configuration)
+      (unless magit-previous-window-configuration
+        (setq gc-cons-threshold better-gc-cons-threshold))
     (setq gc-cons-threshold better-gc-cons-threshold)
+    (garbage-collect)
     ))
 
 (add-hook 'minibuffer-setup-hook #'kb/gc-minibuffer-setup-hook)
@@ -72,7 +72,6 @@
   (defun kb/gc-magit-enter-hook ()
     "GC threshold for when magit opened."
     ;; (message (concat "ENTER BEGIN: " (number-to-string gc-cons-threshold)))
-    (setq kb/gc-allow-minibuffer-gc nil)
     (setq gc-cons-threshold most-positive-fixnum)
     ;; (message (concat "ENTER END: " (number-to-string gc-cons-threshold)))
     )
@@ -80,10 +79,9 @@
     "GC threshold for when magit closed."
     (when (string-match (rx (and "magit: " (*? anything) eol)) (buffer-name))
       ;; (message (concat "EXIT BEGIN: " (number-to-string gc-cons-threshold)))
-      (setq kb/gc-allow-minibuffer-gc t)
-      (garbage-collect)
       (setq gc-cons-threshold better-gc-cons-threshold)
       ;; (message (concat "EXIT END: " (number-to-string gc-cons-threshold)))
+      (garbage-collect)
       ))
 
   (add-hook 'magit-status-mode-hook #'kb/gc-magit-enter-hook)
