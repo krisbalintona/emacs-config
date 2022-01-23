@@ -8,6 +8,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;; Defer garbage collection
+(setq gc-cons-threshold most-positive-fixnum)
+
 ;; Inhibit resizing frame
 (setq frame-inhibit-implied-resize t)
 

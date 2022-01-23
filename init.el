@@ -8,13 +8,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;; Garbage collection
-;; Defer garbage collection. Set as high as possible threshold for GC as early
-;; as possible in order to reduce load time. This value is then lowered to a
-;; normal threshold later.
-(setq gc-cons-threshold most-positive-fixnum)
-(setq garbage-collection-messages t)
-
 ;;; Load elisp config path
 ;; Add elisp directory that contains configuration files to load path
 (defun update-to-load-path (folder)

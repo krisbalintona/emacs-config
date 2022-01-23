@@ -205,7 +205,6 @@
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
    '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
-                   partial-completion ; Kinda like initialism for directory/file names
                    orderless
                    ))
      (command (styles orderless+kb))
