@@ -166,8 +166,6 @@ here: https://github.com/TheVaffel/emacs"
                                               (format-mode-line
                                                '((:eval
                                                   (mood-line-segment-eol))
-                                                 (:eval
-                                                  (mood-line-segment-encoding))
                                                  " "
                                                  display-time-string
                                                  (:eval
@@ -180,16 +178,17 @@ here: https://github.com/TheVaffel/emacs"
                                                  (:eval
                                                   (mood-line-segment-process))
                                                  (:eval
+                                                  (kb/mood-line-segment-debug))
+                                                 (:eval
                                                   (kb/mood-line-segment-lsp))
                                                  (:eval
-                                                  (lsp--progress-status))
-                                                 (:eval
-                                                  (kb/mood-line-segment-debug))
                                                   (if (bound-and-true-p lsp-mode) ; Check or else warnings will be outputted
                                                       (lsp--progress-status)
                                                     ""))
                                                  (:eval
                                                   (mood-line-segment-major-mode))
+                                                 (:eval
+                                                  (mood-line-segment-encoding))
                                                  ;; (:eval             ; Shows number of errors like flycheck?
                                                  ;;  (lsp-modeline--diagnostics-update-modeline))
                                                  ;; Occasionally check this to see if any new packages have added
