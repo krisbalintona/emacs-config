@@ -235,6 +235,10 @@ dap)."
     ""
     ))
 
+(defun kb/mood-line-segment-major-mode ()
+  "Displays the current major mode in the mode-line."
+  (format-mode-line mode-name 'mood-line-major-mode))
+
 ;;; Setting the mode line
 (setq-default mode-line-format
               '((:eval
@@ -263,6 +267,7 @@ dap)."
                    (mood-line-segment-eol)
                    " "
                    display-time-string
+                   ;; battery-mode-line-string
                    (fancy-battery-default-mode-line)
                    " "
                    ;; (kb/mood-line-segment-flycheck-doom))
@@ -276,7 +281,9 @@ dap)."
                      (lsp--progress-status))
                    (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                      (lsp-modeline--diagnostics-update-modeline)) ; Shows number of errors like flycheck?
-                   (mood-line-segment-major-mode)
+                   " "
+                   (kb/mood-line-segment-major-mode)
+                   " "
                    (mood-line-segment-encoding)
                    ;; Occasionally check this to see
                    ;; if any new packages have added
