@@ -67,6 +67,9 @@
      (directory . emacs)
      (auto-mode . emacs)
      ))
+
+  ;; Misc
+  (org-ctrl-k-protect-subtree t)
   :config
   (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
 
@@ -690,8 +693,7 @@ re-align the table if necessary. (Necessary because org-mode has a
 
 If used with a numeric prefix argument N, N typewriter apostrophes
 will be inserted."
-    ("'" "’")                           ; Swapped these two
-    )
+    ("'" "’"))                          ; Swapped these two
   )
 
 ;;; org-general-rcp.el ends here
