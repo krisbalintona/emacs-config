@@ -51,6 +51,12 @@ here: https://github.com/TheVaffel/emacs"
 (use-package solaire-mode
   :hook ((window-state-change window-configuration-change) . turn-on-solaire-mode)
   :custom
+  (solaire-mode-real-buffer-fn
+   '(lambda ()                  ; Real buffers have at least one of these properties:
+      (or (buffer-file-name)                         ; Connected to a file
+          (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
+          )
+      ))
   (solaire-mode-remap-alist
    '(;; Defaults
      (default . solaire-default-face)
