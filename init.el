@@ -8,6 +8,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;;; Ensure I can create server
+;; FIXME 2022-01-23: For some reason, I need to manually require this for the
+;; Emacs systemd daemon to work.
+(require 'server)
+
 ;;; Load elisp config path
 ;; Add elisp directory that contains configuration files to load path
 (defun update-to-load-path (folder)
