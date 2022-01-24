@@ -271,6 +271,31 @@
   (ediff-highlight-all-diffs nil) ; Only highlight currently selected diff
   )
 
+;;;; Magit-todos
+(use-package magit-todos
+  :after magit
+  :custom
+  (magit-todos-item-cache t)
+  (magit-todos-keywords 'kb/comment-keyword-faces)
+  (magit-todos-insert-at 'bottom)
+  (magit-todos-keyword-suffix (rx " ")) ; Match the type of comments I make
+  (magit-todos-branch-list 'branch)
+  (magit-todos-branch-list-merge-base-ref (magit-main-branch))
+  (magit-todos-auto-group-items 10)
+  (magit-todos-group-by
+   '(magit-todos-item-keyword
+     magit-todos-item-filename
+     ))
+  (magit-todos-max-items 5)
+  (magit-todos-sort-order
+   '(magit-todos--sort-by-keyword
+     magit-todos--sort-by-filename
+     magit-todos--sort-by-position
+     ))
+  :init
+  (magit-todos-mode)
+  )
+
 ;;; QoL
 ;;;; Git-gutter-fringes
 ;; Indicate diff areas in fringe
