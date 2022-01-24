@@ -24,6 +24,34 @@
   (eros-eval-result-prefix "⟹  ")       ; Fancy!
   )
 
+;;; Lispyville
+(use-package lispyville
+  :hook ((emacs-lisp-mode lisp-mode) . lispyville-mode)
+  :config
+  (lispyville-set-key-theme
+   '(;; Just the theme symbol will apply to normal and visual mode, unless there
+     ;; is a corresponding set of default modes
+     operators
+     ;; c-w
+     prettify
+     text-objects
+     (atom-movement t)
+     ;; (escape insert)
+     commentary
+     slurp/barf-cp
+     (additional-movement normal visual motion)
+     wrap
+     additional
+     additional-insert
+     ;; arrows
+     ))
+
+  ;; Commentary
+  (evil-define-key 'normal lispyville-mode-map
+    "gc" #'lispyville-comment-or-uncomment
+    "gy" #'lispyville-comment-and-clone-dwim
+    (kbd "g/") #'lispyville-comment-or-uncomment-line))
+
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock
 ;; Give faces to elisp symbols
