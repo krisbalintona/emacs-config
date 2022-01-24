@@ -192,7 +192,9 @@ instead."
                       ")"))
         )
     (cond
-     ((not (or (derived-mode-p 'prog-mode)  ; Only show in...
+     ((equal text "(???)")              ; Don't show if empty
+      "")
+     ((not (or (derived-mode-p 'prog-mode) ; Only show in these major modes
                (derived-mode-p 'text-mode)
                ))
       "")
