@@ -12,21 +12,12 @@
 ;;; Evil
 ;; Emacs vim integration layer
 (use-package evil
-  :demand t
-  :ghook 'after-init-hook
   :gfhook 'general-evil-setup    ; Set up `general.el' infrastructure for `evil'
   :general
   ([remap undo] 'evil-undo
    [remap undo-redo] 'evil-redo)
   (:states 'insert
-           "<escape>" 'evil-force-normal-state)
-  (:keymaps 'evil-visual-state-map
-            "a" 'exchange-point-and-mark
-            "o" evil-outer-text-objects-map
-            "i" evil-inner-text-objects-map)
-  (:states '(normal insert visual motion)
-           "C-i" 'evil-jump-backward
-           "C-o" 'evil-jump-forward)
+           "<escape>" 'evil-normal-state)
   (kb/window-keys
     "w" 'evil-window-mru
 
@@ -77,18 +68,18 @@
         evil-visual-state-cursor 'hollow
         evil-emacs-state-cursor 'hbar
         evil-want-Y-yank-to-eol t)      ; Must be set here for some reason
+  (evil-mode)
   )
 
 ;;; Evil-collection
 ;; Evil keybinds for many other modes
 (use-package evil-collection
-  :demand t ; Load now or it won't
+  :after evil
   :custom
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
   (evil-collection-mode-list
-   '(2048-game ag alchemist ;; anaconda
-               -mode apropos arc-mode auto-package-update bm bookmark
+   '(2048-game ag alchemist anaconda-mode apropos arc-mode auto-package-update bm bookmark
                (buff-menu "buff-menu")
                calc calendar cider cmake-mode comint company compile consult
                (custom cus-edit)
@@ -106,10 +97,10 @@
                (term term ansi-term multi-term)
                tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff view vlf vterm w3m wdired wgrep which-key woman xref youtube-dl
                (ztree ztree-diff)
-               xwidget)
-   )
-  :config
-  ;; Load immediately (rather than hook) so other keybind calls won't be overridden in config
+               xwidget))
+  :init
+  ;; Load immediately (rather than hook) so other keybind calls won't be
+  ;; overridden in config
   (evil-collection-init)
   )
 
