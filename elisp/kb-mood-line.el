@@ -192,8 +192,10 @@ instead."
                       ")"))
         )
     (cond
-     ;; ((not (derived-mode-p 'prog-mode))   ; Only show in...
-     ;;  "")
+     ((not (or (derived-mode-p 'prog-mode)  ; Only show in...
+               (derived-mode-p 'text-mode)
+               ))
+      "")
      ((doom-modeline--active)
       (propertize text 'face
                   '(:inherit mood-line-unimportant :height 0.85)))
