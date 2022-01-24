@@ -104,16 +104,15 @@ instead."
 (defun kb/mood-line-segment-modified ()
   "Displays a color-coded buffer modification/read-only indicator in the mode-line."
   (cond
-   ((string-match-p "\\*.*\\*" (buffer-name))
-    (doom-modeline-vspc))
+   ((or (string-match-p "\\*.*\\*" (buffer-name))
+        (not (buffer-file-name)))       ; Don't care if not a real file
+    " ")
    ((buffer-modified-p)
     (propertize "●" 'face 'mood-line-modified)
     )
    ((and buffer-read-only (buffer-file-name))
     (propertize "■" 'face 'mood-line-unimportant))
-   (t
-    (doom-modeline-vspc)
-    (doom-modeline-vspc))
+   (t " ")
    ))
 
 (defun kb/mood-line-segment-position ()
