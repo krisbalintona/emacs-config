@@ -89,12 +89,42 @@
   :custom
   (emojify-composed-text-p t)
   (emojify-emoji-styles '(ascii unicode github))
+  )
+
+;;; Unicode-fonts
+;; NOTE 2022-01-24: See https://github.com/rolandwalker/unicode-fonts#testing
+;; for how to test for its success. Also see the very recommended font
+;; installations in the same README. Notably, the following are the listed
+;; bare-minimum fonts:
+;; DejaVu Sans
+;; DejaVu Sans Mono
+;; Quivira
+;; Symbola
+;; Noto Sans
+;; Noto Sans Symbols
+(use-package unicode-fonts
+  :hook (emacs-startup . unicode-fonts-setup)
   :config
-  ;; NOTE 2021-11-12: This isn't related to emojify but it does relate to how
-  ;; emojis are shown in Emacs. Taken from
+  ;; Taken from
   ;; https://github.com/alphapapa/ement.el#displaying-symbols-and-emojis
   (setf use-default-font-for-symbols nil)
-  (set-fontset-font t 'unicode "Noto Emoji" nil 'append)
+  (set-fontset-font t 'unicode "Noto Emoji" nil 'append) ; Set font for unicode
+
+  ;; Taken from http://xahlee.info/emacs/misc/emacs_macos_emoji.html
+  (set-fontset-font                     ; Set font for symbols
+   t
+   'symbol
+   (cond
+    ((member "Symbola" (font-family-list)) "Symbola")))
+  (set-fontset-font     ; Set font for emoji (should come after setting symbols)
+   t
+   '(#x1f300 . #x1fad0)
+   (cond
+    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+    ((member "Symbola" (font-family-list)) "Symbola")))
   )
 
 ;;; Copy-as-format
