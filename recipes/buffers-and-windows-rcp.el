@@ -206,11 +206,12 @@ If buffer-or-name is nil return current buffer's mode."
    "M-8" 'eyebrowse-switch-to-window-config-8
    "M-9" 'eyebrowse-switch-to-window-config-9
    "M-0" 'eyebrowse-switch-to-window-config-0
-   "M-]" 'eyebrowse-next-window-config
-   "M-[" 'eyebrowse-prev-window-config
-   "M-'" 'eyebrowse-last-window-config
-   "M-\"" 'eyebrowse-close-window-config
    )
+  (:states '(visual normal motion)
+           "gt" 'eyebrowse-next-window-config
+           "ga" 'eyebrowse-prev-window-config
+           "gv" 'eyebrowse-last-window-config
+           )
   (:keymaps 'eyebrowse-mode-map
             :prefix eyebrowse-keymap-prefix
             "r" 'eyebrowse-rename-window-config
