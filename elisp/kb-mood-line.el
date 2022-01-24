@@ -63,17 +63,34 @@ virtual environment."
 Don't display if not visiting a real file. Display project root
 if in project. Display current directory (`default-directory') as
 fallback. "
-  (let* ((active (doom-modeline--active)) ; `doom-modeline' dependency
-         (face (if active 'mode-line 'mode-line-inactive))
-         )
-    (propertize (cond ((not buffer-file-name) ; Not visiting file
-                       "")
-                      ((project-current) ; Project root
-                       (concat (abbreviate-file-name (vc-git-root (buffer-file-name)))
-                               ".../"))
-                      (buffer-file-name ; Current directory
-                       default-directory))
-                'face face)
+  (when-let* ((active
+               (doom-modeline--active))
+              (face
+               (if active 'doom-modeline-project-dir 'mode-line-inactive))
+              (file-name
+               (file-local-name (or (buffer-file-name (buffer-base-buffer)) "")))
+              (root
+               (if-let (project (project-current))
+                   (project-root project) ""))
+              (relative-path
+               (file-relative-name default-directory root))
+              )
+    (propertize
+     (cond
+      ((not (buffer-file-name))         ; If not visiting file
+       "")
+      ((project-current)                ; If in project root
+       ;; Modified version of the truncate-with-project style in
+       ;; `doom-modeline-buffer-file-name'
+       (concat
+        (concat (file-name-nondirectory (directory-file-name root)) "/") ; Add project root
+        (unless (string= relative-path "./") ; Add relative path
+          (substring (shrink-path--dirs-internal relative-path t) 1))
+        ))
+      (file-name                     ; Default to current directory, abbreviated
+       (abbreviate-file-name default-directory))
+      )
+     'face face)
     ))
 
 (defun kb/mood-line-segment-buffer-name ()
