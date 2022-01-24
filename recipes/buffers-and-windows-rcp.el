@@ -196,8 +196,7 @@ If buffer-or-name is nil return current buffer's mode."
 ;; Provide a simple way to have workspaces
 (use-package eyebrowse
   :general
-  ("M-`" 'eyebrowse-switch-to-window-config-0
-   "M-1" 'eyebrowse-switch-to-window-config-1
+  ("M-1" 'eyebrowse-switch-to-window-config-1
    "M-2" 'eyebrowse-switch-to-window-config-2
    "M-3" 'eyebrowse-switch-to-window-config-3
    "M-4" 'eyebrowse-switch-to-window-config-4
@@ -207,12 +206,11 @@ If buffer-or-name is nil return current buffer's mode."
    "M-8" 'eyebrowse-switch-to-window-config-8
    "M-9" 'eyebrowse-switch-to-window-config-9
    "M-0" 'eyebrowse-switch-to-window-config-0
+   "M-]" 'eyebrowse-next-window-config
+   "M-[" 'eyebrowse-prev-window-config
+   "M-'" 'eyebrowse-last-window-config
+   "M-\"" 'eyebrowse-close-window-config
    )
-  (:states '(visual normal motion)
-           "gt" 'eyebrowse-next-window-config
-           "ga" 'eyebrowse-prev-window-config
-           "gv" 'eyebrowse-last-window-config
-           )
   (:keymaps 'eyebrowse-mode-map
             :prefix eyebrowse-keymap-prefix
             "r" 'eyebrowse-rename-window-config
@@ -220,7 +218,7 @@ If buffer-or-name is nil return current buffer's mode."
             )
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
-  (eyebrowse-keymap-prefix (kbd "C-c C-w"))
+  (eyebrowse-keymap-prefix (kbd "M-e"))
   (eyebrowse-mode-line-style t)         ; Always show
   (eyebrowse-mode-line-left-delimiter "[")
   (eyebrowse-mode-line-right-delimiter "]")
