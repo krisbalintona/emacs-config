@@ -12,15 +12,19 @@
 ;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
-  :ensure-system-package (aspell . "sudo apt install aspell aspell-en")
-  :hook ((text-mode . flyspell-mode)
-         (prog-mode . flyspell-prog-mode))
-  :general 
+  :ensure-system-package aspell
+  :hook ((text-mode . (lambda ()             ; Prevent conflicts
+                        (unless wucuo-mode
+                          (flyspell-mode))))
+         (prog-mode . (lambda ()             ; Prevent conflicts
+                        (unless wucuo-mode
+                          (flyspell-prog-mode)))))
+  :general
   (kb/general-keys
-             "/" '(flyspell-buffer :wk "Spellcheck buffer")
-             )
+    "/" '(flyspell-buffer :wk "Spellcheck buffer")
+    )
   (:keymaps 'flyspell-mode-map
-            "C-;" nil
+            "C-;" nil       ; I don't like `flyspell-auto-correct-previous-word'
             )
   :custom
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
@@ -31,25 +35,25 @@
 
   (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (`abbrev-mode')
   ;; Personal dictionary
-  (ispell-personal-dictionary (concat no-littering-var-directory "flyspell/flyspell-ispell-personal-dict-en"))
-  )
+  (ispell-personal-dictionary (no-littering-expand-var-file-name "flyspell/flyspell-ispell-personal-dict-en")))
 
 ;;; Wucuo
 ;; A complete solution to the lag of flyspell
 (use-package wucuo
-  :disabled t
   :after flyspell
-  :hook ((text-mode . wucuo-start)
-         (prog-mode . wucuo-start)
-         )
+  :hook ((text-mode prog-mode) . (lambda ()
+                                   (interactive)
+                                   ;; Make sure this isn't enabled before starting
+                                   ;; wucuo
+                                   (flyspell-mode -1)
+                                   (wucuo-start)))
   :general (kb/general-keys
              [remap flyspell-buffer] '(wucuo-spell-check-visible-region :wk "Spellcheck buffer"))
   :custom
-  (wucuo-flyspell-start-mode "fast")
-  ;; (ispell-extra-args "--run-together")  ; Faster aspell?
+  (wucuo-flyspell-start-mode "normal")
   (wucuo-spell-check-buffer-predicate
-   (lambda ()
-     (not (memq major-mode ; Skip spell checking under these conditions
+   (lambda ()                            ; Skip spell checking under these conditions
+     (not (memq major-mode
                 '(dired-mode
                   log-edit-mode
                   compilation-mode
@@ -59,9 +63,7 @@
                   gud-mode
                   calc-mode
                   Info-mode
-                  ))
-          )))
-  )
+                  ))))))
 
 ;;; Flyspell-correct
 ;; Suggest correct spelling for words flyspell marks as incorrect
