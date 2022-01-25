@@ -71,8 +71,6 @@
      )
    )
   :preface
-  (setq org-roam-v2-ack t) ; Remove startup message which warns that this is v2
-
   ;; Exporting with links included
   (setq org-id-track-globally t)
   (defun org-html--reference (datum info &optional named-only)
