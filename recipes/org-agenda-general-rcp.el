@@ -18,6 +18,8 @@
              )
   :custom
   (org-agenda-files nil) ; Instead , dynamically generate agenda list with vulpea
+  (kb/vulpea-excluded-tags '("paper"))
+
   (org-agenda-window-setup 'current-window)
   (org-use-fast-todo-selection 'auto)
   (org-todo-keywords
@@ -40,10 +42,9 @@
      (search . " %i %(vulpea-agenda-category 22) ")
      ))
   :config
-  ;; This loads my vulpea functions to dynamically set
-  ;; `org-agenda-files'. I put here since this relies on org-roam, but I don't
-  ;; want to explicitly load since that would increase startup time. Thus, I put
-  ;; it here to load when I first open org-agenda.
+  ;; This loads my vulpea functions to dynamically set `org-agenda-files'. I set
+  ;; to load after org-agenda since it relies on org-roam, and I don't want to
+  ;; explicitly load since that would increase startup time.
   (require 'kb-vulpea)
 
   ;; (add-to-list 'org-tags-exclude-from-inheritance "blog")

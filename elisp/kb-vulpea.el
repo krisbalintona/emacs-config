@@ -10,6 +10,10 @@
 ;;; Code:
 (require 'org-roam)
 
+;;; Variables
+(defcustom kb/vulpea-excluded-tags '()
+  "Tags which are excluded from vulpea adding a project tag.")
+
 ;;; Helper functions borrowed from `vulpea' library
 ;; See https://github.com/d12frosted/vulpea/blob/6a735c34f1f64e1f70da77989e9ce8da7864e5ff/vulpea-buffer.el
 
@@ -164,9 +168,14 @@ tasks."
       (goto-char (point-min))
       (let* ((tags (vulpea-buffer-tags-get))
              (original-tags tags))
-        (if (vulpea-project-p)
-            (setq tags (cons "project" tags))
-          (setq tags (remove "project" tags)))
+
+        ;; Remove project tag then add if appropriate
+        (setq tags (remove "project" tags))
+        (when (and (vulpea-project-p)
+                   ;; Check if `kb/vulpea-excluded-tags' and `tags' share any
+                   ;; elements
+                   (not (seq-intersection kb/vulpea-excluded-tags tags)))
+          (setq tags (cons "project" tags)))
 
         ;; cleanup duplicates
         (setq tags (seq-uniq tags))
@@ -203,6 +212,22 @@ tasks."
 (add-hook 'before-save-hook #'vulpea-project-update-tag)
 
 (advice-add 'org-agenda :before #'vulpea-agenda-files-update)
+
+;;; Migration
+;; From
+;; https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html
+
+(defun kb/vulpea-rebuild ()
+  "Set the tags of all the nodes I have to their appropriate
+value."
+  (interactive)
+  (dolist (file (org-roam-list-files))
+    (message "processing %s" file)
+    (with-current-buffer (or (find-buffer-visiting file)
+                             (find-file-noselect file))
+      (vulpea-project-update-tag)
+      (save-buffer)))
+  (message "Done processing files!"))
 
 ;;; kb-vulpea.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
