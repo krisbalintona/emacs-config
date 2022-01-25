@@ -111,10 +111,7 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
      ;; those lines. However, uncomment if also called with universal argument.
      ((use-region-p)
       (comment-or-uncomment-region (region-beginning) (region-end)))
-     ;; Next, check case when on empty line with no comment
-     ((save-excursion (beginning-of-line) (looking-at "\\s-*$"))
-      (funcall 'kb/comment-insert--insertion-base keyword))
-     ;; Then go onto non-empty line cases. Reliant on (interactive "*p")
+     ;; Next go onto non-empty line cases. Reliant on (interactive "*p")
      ;; C-u = Comment above
      ((= prefix 4)
       (beginning-of-line)
@@ -129,8 +126,11 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
      ;; C-u C-u C-u = Remove any comments from line
      ((= prefix 64)
       (comment-kill (and (stringp prefix) prefix)))
-     ;; If without universal argument. Default by commenting at the end of the
-     ;; current line
+     ;; If without universal argument. 
+     ;; Next, check case when on empty line with no comment
+     ((save-excursion (beginning-of-line) (looking-at "\\s-*$"))
+      (funcall 'kb/comment-insert--insertion-base keyword))
+     ;;Default by commenting at the end of the current line
      (t
       (comment-indent) ; Insert comment, or move point to comment if it already exists on line
       (when (looking-at "\\s-*$")       ;  Is there anything in front of point?
