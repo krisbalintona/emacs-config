@@ -43,6 +43,11 @@
 (setq exec-path-from-shell-arguments nil)
 (setq exec-path-from-shell-variables '("PATH" "MANPATH" "BROWSER"))
 (exec-path-from-shell-initialize)
+;; Found here:
+;; https://www.reddit.com/r/emacs/comments/s6zkb6/comment/ht794j7/?utm_source=share&utm_medium=web2x&context=3
+(exec-path-from-shell-copy-env "GOPATH")
+(when (eq (length (getenv "NODE_PATH")) 0) ; For npm
+  (setenv "NODE_PATH" "/usr/local/lib/node_modules"))
 
 ;;; System-packages
 ;; Install system packages within Emacs. Necessary for use-package's
