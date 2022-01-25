@@ -12,7 +12,6 @@
 
 ;;; Org-roam
 (use-package org-roam
-  :ghook ('org-mode-hook 'org-roam-db-autosync-enable nil nil t)
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
   (:keymaps 'org-mode-map
@@ -108,6 +107,8 @@ targets and targets."
        (t
         (org-export-get-reference datum info)))))
   :config
+  (org-roam-db-autosync-mode)
+
   ;; Org roam buffer section visibility
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
