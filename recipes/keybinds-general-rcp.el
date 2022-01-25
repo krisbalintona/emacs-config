@@ -37,8 +37,8 @@
   :global-prefix "M-SPC p"
   )
 (general-create-definer kb/lsp-keys     ; For all lsp-related commands
-  :keymaps '(normal visual insert motion ryo-modal-mode-map)
-  :keymaps 'lsp-mode-map
+  :keymaps '(lsp-mode-map ryo-modal-mode-map)
+  :states '(normal visual insert motion)
   :prefix "\\"
   :global-prefix "M-SPC \\"
   )
