@@ -303,6 +303,7 @@ Additionally, add `cape-file' as early as possible to the list."
            #'elisp-completion-at-point
            #'tempel-complete ; Prefer this over the exact match from `tempel-expand'
            ))
+    (add-to-list 'completion-at-point-functions #'cape-symbol)
     ;; I prefer this being early/first in the list
     (add-to-list 'completion-at-point-functions #'cape-file)
     )
