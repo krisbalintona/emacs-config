@@ -91,7 +91,6 @@ argument, query for word to search."
 ;; Accompanies `evil-jumper' very well. Some of the smart stuff is taken from
 ;; https://www.reddit.com/r/emacs/comments/ntnhkc/how_i_jump_around_emacs_with_betterjumper/
 (use-package better-jumper
-  :demand t
   :after (evil consult)
   :general (:states '(normal visual normal insert)
                     "C-i" 'better-jumper-jump-backward
@@ -115,9 +114,9 @@ argument, query for word to search."
     (better-jumper-jump-backward 1)
     (better-jumper-set-jump (point))
     )
-  :config
+  :init
   (better-jumper-mode)
-
+  :config
   ;; Set a jump point using `better-jumper-set-jump'
   (general-advice-add '(evil-first-non-blank evil-end-of-visual-line
                                              evil-org-beginning-of-line evil-org-end-of-line
@@ -138,7 +137,6 @@ argument, query for word to search."
 ;;; Smartparens
 ;; Auto pairing parentheses
 (use-package smartparens
-  :demand t
   :gfhook 'show-smartparens-mode        ; Subtly highlight matching parentheses
   :general (:keymaps 'prog-mode-map
                      :states '(visual normal motion)
@@ -154,9 +152,9 @@ argument, query for word to search."
   (sp-autodelete-pair t)
   (sp-autodelete-opening-pair t)
   (sp-autodelete-closing-pair t)
-  :config
+  :init
   (smartparens-global-mode)
-
+  :config
   ;; For python
   (require 'smartparens-python)
 
@@ -214,7 +212,6 @@ is only tested on \"insert\" action."
 ;;; Imenu-list
 ;; Side buffer with imenu items
 (use-package imenu-list
-  :demand t
   :after imenu
   :general (kb/nav-keys
              "I" '(imenu-list :wk "Imenu list"))
