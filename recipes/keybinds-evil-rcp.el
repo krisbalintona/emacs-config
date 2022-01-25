@@ -143,41 +143,43 @@
 ;;; Evil-surround
 ;; Surround a selection with any pair of characters
 (use-package evil-surround
-  :ghook ('evil-mode-hook 'global-evil-surround-mode)
+  :init
+  (global-evil-surround-mode)
   )
 
 ;;; Evil-visualstar
 ;; Situational convenient isearch
 (use-package evil-visualstar
-  :hook (evil-mode . global-evil-visualstar-mode)
+  :hook (evil-mode . evil-visualstar-mode)
   :custom
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
   )
 
 ;;; Evil-matchit
-;; Use `%' to jump to matching tags in different major modes (e.g., "<div>" and
-;; "</div>" in HTML).
+;; Use `%' to jump to matching tags in different major modes (e.g. quotation
+;; marks, "<div>" and "</div>" in HTML).
 (use-package evil-matchit
-  :hook ((evil-mode . global-evil-matchit-mode)
-         (python-mode . (lambda () (setq-local evilmi-always-simple-jump t))))
+  :after evil
+  :hook (python-mode . (lambda () (setq-local evilmi-always-simple-jump t)))
+  :init
+  (global-evil-matchit-mode)
   )
 
 ;;; Evil-exchange
 ;; Swap marked regions
 (use-package evil-exchange
-  :demand t
   :after evil evil-collection
-  :config
+  :init
   (evil-exchange-install)
   )
 
 ;;; Evil-goggles
 ;; Pulse modified regions.
 (use-package evil-goggles
-  :after evll
+  :after evil
   :custom
   (evil-goggles-duration 0.1)
-  :config
+  :init
   (evil-goggles-mode)
   )
 
