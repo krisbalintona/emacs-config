@@ -34,15 +34,16 @@
    '(;; Just the theme symbol will apply to normal and visual mode, unless there
      ;; is a corresponding set of default modes
      (operators normal)
-     ;; c-w
+     c-w
      prettify
      text-objects
      (atom-movement t)
      (escape insert)
      commentary
+     c-u
      ;; slurp/barf-cp
      slurp/barf-lispy
-     (additional-movement normal visual motion)
+     additional-movement
      ;; wrap
      additional-wrap
      additional
