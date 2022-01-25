@@ -42,10 +42,12 @@
      (search . " %i %(vulpea-agenda-category 22) ")
      ))
   :config
-  ;; This loads my vulpea functions to dynamically set `org-agenda-files'. I set
-  ;; to load after org-agenda since it relies on org-roam, and I don't want to
-  ;; explicitly load since that would increase startup time.
-  (require 'kb-vulpea)
+  ;; I set to load only the first time I need it since it relies on org-roam,
+  ;; and I don't want to explicitly load since that would increase startup time.
+  (general-advice-add 'org-agenda :before #'(lambda (r)
+                                              (require 'kb-vulpea)
+                                              (vulpea-agenda-files-update))
+                      nil t)
 
   ;; (add-to-list 'org-tags-exclude-from-inheritance "blog")
   )
