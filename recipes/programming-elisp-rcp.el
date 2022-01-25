@@ -33,7 +33,7 @@
   (lispyville-key-theme
    '(;; Just the theme symbol will apply to normal and visual mode, unless there
      ;; is a corresponding set of default modes
-     (operators normal)
+     ;; (operators normal)
      c-w
      prettify
      text-objects
