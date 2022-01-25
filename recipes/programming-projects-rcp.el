@@ -209,7 +209,8 @@
   ;; Adds hooks to `magit-status-sections-hook'. Should be a separate call for
   ;; each.
   (magit-add-section-hook 'magit-status-sections-hook
-                          'magit-insert-modules-overview nil t)
+                          'magit-insert-modules-overview
+                          'magit-insert-staged-changes t)
   )
 
 ;;;; Magit-log date headers
