@@ -214,12 +214,12 @@ If buffer-or-name is nil return current buffer's mode."
            )
   (:keymaps 'eyebrowse-mode-map
             :prefix eyebrowse-keymap-prefix
-            "r" 'eyebrowse-rename-window-config
-            "c" 'eyebrowse-close-window-config
+            "r" 'eyebrowse-rename-window-config :wk "Rename"
+            "d" 'eyebrowse-close-window-config :wk "Close"
             )
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
-  (eyebrowse-keymap-prefix (kbd "M-e"))
+  (eyebrowse-keymap-prefix (kbd "M-\\"))
   (eyebrowse-mode-line-style t)         ; Always show
   (eyebrowse-mode-line-left-delimiter "[")
   (eyebrowse-mode-line-right-delimiter "]")
