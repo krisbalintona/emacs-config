@@ -127,6 +127,7 @@ argument, query for word to search."
                                              evilmi-jump-items
                                              back-to-indentation end-of-visual-line
                                              consult-line consult-outline consult-ripgrep consult-imenu
+                                             evil-search-previous evil-search-next
                                              )
                       :before 'better-jumper-set-jump)
 
