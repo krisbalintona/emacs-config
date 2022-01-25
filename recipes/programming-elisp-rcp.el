@@ -27,24 +27,32 @@
 ;;; Lispyville
 (use-package lispyville
   :hook ((emacs-lisp-mode lisp-mode) . lispyville-mode)
+  :ghook 'turn-off-smartparens-mode
+  :custom
+  (lispy-close-quotes-at-end-p t)
   :config
   (lispyville-set-key-theme
    '(;; Just the theme symbol will apply to normal and visual mode, unless there
      ;; is a corresponding set of default modes
-     operators
+     (operators normal)
      ;; c-w
      prettify
      text-objects
      (atom-movement t)
-     ;; (escape insert)
+     (escape insert)
      commentary
-     slurp/barf-cp
+     ;; slurp/barf-cp
+     slurp/barf-lispy
      (additional-movement normal visual motion)
-     wrap
+     ;; wrap
+     additional-wrap
      additional
      additional-insert
      ;; arrows
      ))
+
+  (evil-define-key 'insert lispyville-mode-map
+    (kbd "C-g") #'lispyville-normal-state)
 
   ;; Commentary
   (evil-define-key 'normal lispyville-mode-map
@@ -89,8 +97,8 @@
    [remap apropos-command] '(helpful-command :wk "Helpful command")
    )
   (:states '(visual normal motion)
-           "f" 'helpful-at-point
-           )
+            "f" 'helpful-at-point
+            )
   (kb/help-keys
     "K" '(describe-key-briefly :wk "Desc key echo")
     "a" '(apropos-command :wk "Apropos command")
