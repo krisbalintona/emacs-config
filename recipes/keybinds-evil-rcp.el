@@ -48,7 +48,7 @@
   (evil-want-C-u-scroll t)              ; `C-u' scroll up?
   (evil-want-C-u-delete t)       ; `C-u' in insert state deletes to indentation?
   (evil-want-C-i-jump t)         ; `C-i' for evil-jump-backward?
-  (evil-want-C-w-delete nil)     ; `C-w' deletes word in insert state?
+  (evil-want-C-w-delete t)       ; `C-w' deletes word in insert state?
 
   (evil-move-cursor-back nil)
   (evil-backspace-join-lines t) ; Join lines when deleting newline char from backward delete?
