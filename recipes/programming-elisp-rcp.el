@@ -27,7 +27,7 @@
 ;;; Lispyville
 (use-package lispyville
   :hook ((emacs-lisp-mode lisp-mode) . lispyville-mode)
-  :ghook 'turn-off-smartparens-mode
+  :gfhook 'turn-off-smartparens-mode
   :custom
   (lispy-close-quotes-at-end-p t)
   (lispyville-key-theme
@@ -108,13 +108,14 @@
    "g/" #'lispyville-comment-or-uncomment-line)
 
   ;; Additional-movement
-  (general-define-key
-   :keymaps '(lispyville-mode-map general-override-mode-map)
-   :states '(normal visual motion)
-   "[" #'lispyville-previous-opening
-   "]" #'lispyville-next-closing
-   "M-h" #'lispyville-beginning-of-defun
-   "M-l" #'lispyville-end-of-defun))
+  (add-hook 'lispyville-mode-hook '(lambda ()
+                                     (general-define-key
+                                      :keymaps '(lispyville-mode-map local)
+                                      :states '(normal visual motion)
+                                      "[" #'lispyville-previous-opening
+                                      "]" #'lispyville-next-closing
+                                      "M-h" #'lispyville-beginning-of-defun
+                                      "M-l" #'lispyville-end-of-defun))))
 
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock
