@@ -30,8 +30,7 @@
   :ghook 'turn-off-smartparens-mode
   :custom
   (lispy-close-quotes-at-end-p t)
-  :config
-  (lispyville-set-key-theme
+  (lispyville-key-theme
    '(;; Just the theme symbol will apply to normal and visual mode, unless there
      ;; is a corresponding set of default modes
      (operators normal)
@@ -50,6 +49,8 @@
      additional-insert
      ;; arrows
      ))
+  :config
+  (lispyville-set-key-theme)
 
   ;; Evil-collection-unimpaired-mode conflicts with the additional-movement
   ;; them. So Move those prefix elsewhere when lispyville-mode-map is active.
@@ -147,8 +148,8 @@
    [remap apropos-command] '(helpful-command :wk "Helpful command")
    )
   (:states '(visual normal motion)
-            "f" 'helpful-at-point
-            )
+           "f" 'helpful-at-point
+           )
   (kb/help-keys
     "K" '(describe-key-briefly :wk "Desc key echo")
     "a" '(apropos-command :wk "Apropos command")
