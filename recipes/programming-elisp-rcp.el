@@ -38,7 +38,7 @@
      prettify
      text-objects
      (atom-movement t)
-     (escape insert)
+     ;; (escape insert)     ; But where it inserts "l" if point is before an l char
      commentary
      c-u
      ;; slurp/barf-cp
@@ -56,7 +56,7 @@
   ;; Evil-collection-unimpaired-mode conflicts with the additional-movement
   ;; them. So Move those prefix elsewhere when lispyville-mode-map is active.
   (general-define-key
-   :keymaps '(lispyville-mode-map general-override-mode-map)
+   :keymaps 'lispyville-mode-map
    :states 'normal
    ", b" 'evil-prev-buffer
    ". b" 'evil-next-buffer
@@ -94,14 +94,18 @@
    ". 6" 'evil-collection-unimpaired-b64-decode)
 
   ;; General
-  (evil-define-key 'insert lispyville-mode-map
-    (kbd "C-g") #'lispyville-normal-state)
+  (general-define-key
+   :keymaps 'lispyville-mode-map
+   :states 'insert
+   "C-g" #'lispyville-normal-state)
 
   ;; Commentary
-  (evil-define-key 'normal lispyville-mode-map
-    "gc" #'lispyville-comment-or-uncomment
-    "gy" #'lispyville-comment-and-clone-dwim
-    (kbd "g/") #'lispyville-comment-or-uncomment-line)
+  (general-define-key
+   :keymaps 'lispyville-mode-map
+   :states 'normal
+   "gc" #'lispyville-comment-or-uncomment
+   "gy" #'lispyville-comment-and-clone-dwim
+   "g/" #'lispyville-comment-or-uncomment-line)
 
   ;; Additional-movement
   (general-define-key
