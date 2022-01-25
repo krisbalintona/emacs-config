@@ -95,8 +95,8 @@ argument, query for word to search."
   :demand t
   :after (evil consult)
   :general (:states '(normal visual normal insert)
-                    [remap evil-jump-backward] 'better-jumper-jump-backward
-                    [remap evil-jump-forward] 'better-jumper-jump-forward
+                    "C-i" 'better-jumper-jump-backward
+                    "C-o" 'better-jumper-jump-forward
                     "C-p" 'better-jumper-jump-toggle)
   :custom
   ;; This is THE key to avoiding conflict with evils' jumping functionality
