@@ -51,6 +51,47 @@
      ;; arrows
      ))
 
+  ;; Evil-collection-unimpaired-mode conflicts with the additional-movement
+  ;; them. So Move those prefix elsewhere when lispyville-mode-map is active.
+  (general-define-key
+   :keymaps '(lispyville-mode-map general-override-mode-map)
+   :states 'normal
+   ", b" 'evil-prev-buffer
+   ". b" 'evil-next-buffer
+   ", e" 'evil-collection-unimpaired-move-text-up
+   ". e" 'evil-collection-unimpaired-move-text-down
+   ", l" 'evil-collection-unimpaired-previous-error
+   ". l" 'evil-collection-unimpaired-next-error
+   ", L" 'evil-collection-unimpaired-first-error
+   ". L" 'evil-collection-unimpaired-last-error
+   ", q" 'evil-collection-unimpaired-previous-error
+   ". q" 'evil-collection-unimpaired-next-error
+   ", Q" 'evil-collection-unimpaired-first-error
+   ". Q" 'evil-collection-unimpaired-last-error
+   ", n" 'evil-collection-unimpaired-previous-SCM-conflict-marker
+   ". n" 'evil-collection-unimpaired-next-SCM-conflict-marker
+   ", p" 'evil-collection-unimpaired-paste-above
+   ". p" 'evil-collection-unimpaired-paste-below
+   ", P" 'evil-collection-unimpaired-paste-above
+   ". P" 'evil-collection-unimpaired-paste-below
+   ", SPC" 'evil-collection-unimpaired-insert-newline-above
+   ". SPC" 'evil-collection-unimpaired-insert-newline-below)
+  (general-define-key
+   :keymaps 'lispyville-mode-map
+   :states 'motion
+   ", e" 'evil-collection-unimpaired-move-text-up
+   ". e" 'evil-collection-unimpaired-move-text-down
+   ", n" 'evil-collection-unimpaired-previous-SCM-conflict-marker
+   ". n" 'evil-collection-unimpaired-next-SCM-conflict-marker)
+  (general-define-key
+   :keymaps 'lispyville-mode-map
+   :states 'normal
+   ", u" 'evil-collection-unimpaired-url-encode
+   ". u" 'evil-collection-unimpaired-url-decode
+   ", 6" 'evil-collection-unimpaired-b64-encode
+   ". 6" 'evil-collection-unimpaired-b64-decode)
+
+  ;; General
   (evil-define-key 'insert lispyville-mode-map
     (kbd "C-g") #'lispyville-normal-state)
 
@@ -58,7 +99,16 @@
   (evil-define-key 'normal lispyville-mode-map
     "gc" #'lispyville-comment-or-uncomment
     "gy" #'lispyville-comment-and-clone-dwim
-    (kbd "g/") #'lispyville-comment-or-uncomment-line))
+    (kbd "g/") #'lispyville-comment-or-uncomment-line)
+
+  ;; Additional-movement
+  (general-define-key
+   :keymaps '(lispyville-mode-map general-override-mode-map)
+   :states '(normal visual motion)
+   "[" #'lispyville-previous-opening
+   "]" #'lispyville-next-closing
+   "M-h" #'lispyville-beginning-of-defun
+   "M-l" #'lispyville-end-of-defun))
 
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock

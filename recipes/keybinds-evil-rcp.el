@@ -101,8 +101,7 @@
   :init
   ;; Load immediately (rather than hook) so other keybind calls won't be
   ;; overridden in config
-  (evil-collection-init)
-  )
+  (evil-collection-init))
 
 ;;; Evil-commentary
 ;; Comment in evil-mode
