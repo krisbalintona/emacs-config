@@ -252,6 +252,12 @@
     "t" '(hs-toggle-hiding :wk "Toggle hide")
     )
   )
+
+;;;; Expand-region
+(use-package expand-region
+  :general ("M-e" 'er/expand-region)
+  )
+
 ;;; File or buffer utilities
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
