@@ -12,7 +12,8 @@
 
 ;;; Variables
 (defcustom kb/vulpea-excluded-tags '()
-  "Tags which are excluded from vulpea adding a project tag.")
+  "Tags which are excluded from vulpea adding a project tag."
+  :type 'list)
 
 ;;; Helper functions borrowed from `vulpea' library
 ;; See https://github.com/d12frosted/vulpea/blob/6a735c34f1f64e1f70da77989e9ce8da7864e5ff/vulpea-buffer.el
