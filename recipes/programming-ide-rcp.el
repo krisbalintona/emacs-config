@@ -187,6 +187,7 @@
                           (clang-format . clang-format-all-git)
                           (latexindent . texlive-latexindent-meta)
                           (luafmt . nodejs-lua-fmt)
+                          (google-java-format)
                           )
   :hook (after-init . apheleia-global-mode)
   :custom
@@ -201,7 +202,7 @@
      (clang-format "clang-format")
      (mix-format "mix" "format" "-")
      (gofmt "gofmt")
-     (google-java-format "google-java-format" "-")
+     (google-java-format "google-java-format" "--aosp" "-") ; 4 space indent
      (isort "isort" "--stdout" "-")
      (ocamlformat "ocamlformat" "-" "--name" filepath)
      (prettier npx "prettier" "--stdin-filepath" filepath)
