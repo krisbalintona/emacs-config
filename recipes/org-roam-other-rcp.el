@@ -76,7 +76,7 @@
   :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
   :custom
-  (org-roam-ui-browser-function 'browse-url-firefox) ; Open in my actual browser, to avoid opening in EAF
+  (org-roam-ui-browser-function 'browse-url-default-browser) ; Open in my actual browser, to avoid opening in EAF
   (org-roam-ui-open-on-start nil) ; Don't open graph on startup
   (org-roam-ui-sync-theme t)
   (org-roam-ui-follow t)

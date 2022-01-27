@@ -30,7 +30,6 @@
   ;; Browser
   (eaf-browser-continue-where-left-off t) ; Also note `eaf-browser-restore-buffers'
   (eaf-browser-enable-adblocker t)
-  (browse-url-browser-function 'eaf-open-browser) ; Set EAF to open WWW links
   (eaf-browser-default-search-engine "duckduckgo")
   (eaf-browser-blank-page-url "https://duckduckgo.com")
   (eaf-browser-download-path "/tmp")
