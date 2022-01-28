@@ -220,9 +220,11 @@ move to that window."
   :straight nil
   :custom
   (org-attach-id-dir "attachments/")
-  (org-attach-dir-relative t)        ; Use relative file paths
+  (org-attach-dir-relative nil)         ; Use relative file paths
+  (org-attach-preferred-new-method 'dir)
   (org-attach-method 'cp)            ; Attach copies of files
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
+  (org-attach-auto-tag nil)
   )
 
 ;;; Org-refile
