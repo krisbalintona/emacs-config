@@ -65,10 +65,18 @@
      ,@body))
 
 ;;; Define font families
-(defvar uninspiring-dark-default "Iosevka Term SS04")
-(defvar uninspiring-dark-fixed-pitch "Hack Nerd Font Mono")
-;; (defvar uninspiring-dark-variable-pitch "LiterationSerif Nerd Font") ; Variable
-(defvar uninspiring-dark-variable-pitch "Latin Modern Mono Prop") ; Monospace
+(defvar uninspiring-dark-default
+  "Iosevka Term SS04"
+  )
+(defvar uninspiring-dark-fixed-pitch
+  "Hack Nerd Font Mono"
+  )
+(defvar uninspiring-dark-variable-pitch
+  ;; "LiterationSerif Nerd Font"           ; Variable
+  ;; "Latin Modern Mono Prop"              ; Monospace
+  ;; "Sans Serif"
+  "Open Sans"
+  )
 
 ;;; Bind variables to colors
 (atom-one-dark-with-color-variables
