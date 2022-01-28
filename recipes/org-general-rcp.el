@@ -16,6 +16,8 @@
   'variable-pitch-mode
   'visual-line-mode
   '(lambda ()
+     (eldoc-mode -1))
+  '(lambda ()
      (require 'prog-mode)
      (push '("->" . ?➡) prettify-symbols-alist)
      (prettify-symbols-mode))
