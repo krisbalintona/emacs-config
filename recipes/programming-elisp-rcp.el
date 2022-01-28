@@ -108,14 +108,14 @@
    "g/" #'lispyville-comment-or-uncomment-line)
 
   ;; Additional-movement
-  (add-hook 'lispyville-mode-hook '(lambda ()
-                                     (general-define-key
-                                      :keymaps '(lispyville-mode-map local)
-                                      :states '(normal visual motion)
-                                      "[" #'lispyville-previous-opening
-                                      "]" #'lispyville-next-closing
-                                      "M-h" #'lispyville-beginning-of-defun
-                                      "M-l" #'lispyville-end-of-defun))))
+  (add-hook 'lispyville-mode-hook #'(lambda ()
+                                      (general-define-key
+                                       :keymaps '(lispyville-mode-map local)
+                                       :states '(normal visual motion)
+                                       "[" #'lispyville-previous-opening
+                                       "]" #'lispyville-next-closing
+                                       "M-h" #'lispyville-beginning-of-defun
+                                       "M-l" #'lispyville-end-of-defun))))
 
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock
