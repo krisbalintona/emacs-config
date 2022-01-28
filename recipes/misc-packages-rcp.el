@@ -85,7 +85,6 @@
 
 ;;; Emojify
 (use-package emojify
-  :hook (text-mode . emojify-mode)
   :custom
   (emojify-composed-text-p t)
   (emojify-emoji-styles '(ascii unicode github))
