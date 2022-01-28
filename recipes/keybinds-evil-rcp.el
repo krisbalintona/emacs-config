@@ -106,7 +106,13 @@
 ;;; Evil-commentary
 ;; Comment in evil-mode
 (use-package evil-commentary
-  :ghook 'evil-mode-hook
+  :general
+  (:keymaps 'evil-commentary-mode-map
+            :states 'normal
+            "g/" 'evil-commentary-line)
+  :init
+  (evil-commentary-mode)
+  )
   )
 
 ;;; Evil-org
