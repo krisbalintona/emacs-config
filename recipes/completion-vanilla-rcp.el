@@ -107,7 +107,7 @@
      (imenu buffer)
      (library reverse indexed)
      (org-roam-node reverse indexed)
-     (t flat)
+     (t reverse)
      ))
   (vertico-multiform-commands
    '((flyspell-correct-previous grid reverse)
