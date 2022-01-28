@@ -106,6 +106,7 @@
 ;;; Evil-commentary
 ;; Comment in evil-mode
 (use-package evil-commentary
+  :disabled t
   :general
   (:keymaps 'evil-commentary-mode-map
             :states 'normal
@@ -113,7 +114,39 @@
   :init
   (evil-commentary-mode)
   )
-  )
+
+;;; Evil-nerd-commenter
+;; Comment in evil-mode
+(use-package evil-nerd-commenter
+  :after evil
+  :general
+  (:states 'normal                      ; Evil mode keybindings
+           "gcc" 'evilnc-comment-or-uncomment-lines
+           "g/" 'evilnc-comment-or-uncomment-lines
+           ;; (define-key evil-normal-state-map ",cl" 'evilnc-quick-comment-or-uncomment-to-the-line)
+           ;; (define-key evil-normal-state-map ",ll" 'evilnc-quick-comment-or-uncomment-to-the-line)
+           ;; (define-key evil-normal-state-map ",cp" 'evilnc-comment-or-uncomment-paragraphs)
+           ;; (define-key evil-normal-state-map ",cr" 'comment-or-uncomment-region)
+           ;; (define-key evil-normal-state-map ",cv" 'evilnc-toggle-invert-comment-line-by-line)
+           "gy" 'evilnc-copy-and-comment-lines)
+  (:states 'visual
+           "gcc" 'evilnc-comment-or-uncomment-lines
+           "g/" 'evilnc-comment-or-uncomment-lines
+           "gy" 'evilnc-copy-and-comment-lines)
+  (:keymaps 'evil-inner-text-objects-map ; Comment itself is text object
+            "c" 'evilnc-inner-commenter
+            "c" 'evilnc-outer-commenter)
+  :config
+  (when evilnc-use-comment-object-setup
+    ;; Install operator for evil text objects
+    (general-define-key
+     :states 'normal
+     "g." 'evilnc-copy-and-comment-operator
+     "g," 'evilnc-comment-operator)
+    (general-define-key
+     :states 'visual
+     "g." 'evilnc-copy-and-comment-operator
+     "g," 'evilnc-comment-operator)))
 
 ;;; Evil-org
 ;; Additional evil keybinds in org-mode
