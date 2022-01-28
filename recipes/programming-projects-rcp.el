@@ -89,6 +89,8 @@
      (project-find-dir "Open directory in dired")
      (project-eshell "Eshell")
      ))
+
+  (project-vc-merge-submodules nil)  ; Consider submodules as their own projects
   )
 
 ;;;; Project-x
