@@ -128,6 +128,8 @@
      (consult-flycheck)
      (consult-lsp-diagnostics)
      ("describe-*")
+     (lsp-execute-code-action)
+     ("consult-lsp-*")
      ))
   :init
   (defun kb/vertico-multiform-flat-toggle ()
