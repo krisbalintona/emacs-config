@@ -87,6 +87,7 @@
      (project-dired "Open dired")
      (project-query-replace-regexp "Replace regexp" "R")
      (project-find-dir "Open directory in dired")
+     (project-compile "Compile")
      (project-eshell "Eshell")
      ))
 
