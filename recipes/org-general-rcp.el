@@ -11,19 +11,20 @@
 
 ;;; Org-mode itself
 (use-package org
-  :mode (("\\.docx\\'" . doc-view-mode)
-         ("\\.odt\\'" . doc-view-mode))
   :gfhook
   'prettify-symbols-mode
   'variable-pitch-mode
   'visual-line-mode
+  '(lambda ()
+     (require 'prog-mode)
+     (push '("->" . ?➡) prettify-symbols-alist)
+     (prettify-symbols-mode))
   :general
   (:keymaps 'org-mode-map
             "M-u" 'org-up-element
             "M-d" 'org-down-element
             "M-n" 'org-forward-heading-same-level
-            "M-p" 'org-backward-heading-same-level
-            )
+            "M-p" 'org-backward-heading-same-level)
   (:keymaps 'org-mode-map
             :states '(normal visual motion)
             "zi" 'org-toggle-inline-images)
@@ -86,8 +87,7 @@ move to that window."
       (split-window-right))
     (other-window 1)
     (eaf-open file)
-    )
-  )
+    ))
 
 ;;; Related to org-export
 ;;;; Org-export
