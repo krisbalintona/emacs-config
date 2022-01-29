@@ -76,16 +76,12 @@
   :after org-agenda
   :general (:keymaps 'org-super-agenda-header-map
                      "h" nil            ; Keybinds for org-super-agenda
-                     "h" nil
-                     "j" nil
                      "j" nil
                      "k" nil
-                     "k" nil
-                     "l" nil
                      "l" nil)
   :custom
   (org-agenda-custom-commands
-   '(("t" "Time sensitive"
+   '(("T" "Time sensitive"
       ((alltodo ""
                 ((org-agenda-overriding-header)
                  (org-super-agenda-groups
@@ -96,18 +92,37 @@
        ))
      ("p" "Priority"
       ((alltodo ""
-                ((org-agenda-overriding-header "Priority")
+                ((org-agenda-overriding-header "Now")
                  (org-super-agenda-groups
-                  '((:name "Now"
-                           :and (:todo ("TODAY" "PROG") :tag ("cs200" "juds1155" "phil1360" "phil1155")))
-                    (:name "Soon"
-                           :and (:todo "NEXT" :tag ("cs200" "juds1155" "phil1360" "phil1155")))
-                    (:name "Flagged"
-                           :tag ("FLAGGED"))
+                  '((:name "Flagged"
+                           :tag "FLAGGED")
+                    (:name none
+                           :todo "PROG")
+                    (:name none
+                           :todo "TODAY")
                     (:discard (:anything t))
                     ))
                  ))
+       (alltodo ""
+                ((org-agenda-overriding-header "Soon")
+                 (org-super-agenda-groups
+                  '((:discard (:not (:todo "NEXT")))
+                    (:auto-tags t
+                                :order 1)
+                    ))
+                 ))
        ))
+     ("P" "Processing"
+      ((alltodo ""
+                ((org-agenda-overriding-header "")
+                 (org-super-agenda-groups
+                  '((:discard (:not (:todo "TODO")))
+                    (:discard (:scheduled t :deadline t))
+                    (:auto-tags t)
+                    ))
+                 ))
+       ))
+     ("A" "Archive" todo "DONE|CANCELLED")
      ))
   :init
   (org-super-agenda-mode)
