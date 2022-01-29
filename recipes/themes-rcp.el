@@ -49,7 +49,7 @@ here: https://github.com/TheVaffel/emacs"
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 (use-package solaire-mode
-  :hook ((window-configuration-change buffer-list-update) . turn-on-solaire-mode)
+  :hook (after-change-major-mode . turn-on-solaire-mode)
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
