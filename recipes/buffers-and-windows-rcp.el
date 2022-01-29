@@ -281,7 +281,8 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*Messages\\*"
      "^\\*Warnings\\*"
      "^\\*Backtrace\\*"
-     "^\\*Customize"
+     "^\\*Customize\\*"
+     "^\\*compilation\\*"
 
      ;; Coding
      "[Oo]utput\\*"
