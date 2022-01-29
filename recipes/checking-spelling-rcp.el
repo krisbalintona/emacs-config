@@ -50,7 +50,7 @@
   :general (kb/general-keys
              [remap flyspell-buffer] '(wucuo-spell-check-visible-region :wk "Spellcheck buffer"))
   :custom
-  (wucuo-flyspell-start-mode "normal")
+  (wucuo-flyspell-start-mode "fast")
   (wucuo-spell-check-buffer-predicate
    (lambda ()                            ; Skip spell checking under these conditions
      (not (memq major-mode

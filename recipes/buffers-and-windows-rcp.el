@@ -76,8 +76,7 @@
       (slot . 2)
       (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
-                            (string-match-p "^\\*Customize" (buffer-name))))
-
+                       (string-match-p "^\\*Customize" (buffer-name))))
       (display-buffer-reuse-window
        kb/select-buffer-in-side-window
        display-buffer-in-direction)
@@ -169,8 +168,7 @@
        display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
-      (window-height . 0.27))
-     ))
+      (window-height . 0.27))))
   :init
   ;; Helper functions for `display-buffer-alist'
   (defun kb/buffer-major-mode (&optional buffer-or-name)
