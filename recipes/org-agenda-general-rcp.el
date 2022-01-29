@@ -38,12 +38,21 @@
   (org-log-done nil)       ; Inactive timestamp already added to logbook
   (org-log-into-drawer t)
 
+  (org-agenda-custom-commands
+   '(("n" "Agenda and all TODOs"
+      ((agenda "")
+       (alltodo "")))
+     ("p" "Priority" todo "PROG")
+     ("w" "Working" todo "PROG|NEXT")
+     ("d" "Done" todo "DONE|CANCELLED")
+     ))
   (org-agenda-prefix-format
    '((agenda . " %i %(vulpea-agenda-category 22)%?-12t% s")
      (todo . " %i %(vulpea-agenda-category 22) ")
      (tags . " %i %(vulpea-agenda-category 22) ")
      (search . " %i %(vulpea-agenda-category 22) ")
      ))
+
   :config
   ;; I set to load only the first time I need it since it relies on org-roam,
   ;; and I don't want to explicitly load since that would increase startup time.
