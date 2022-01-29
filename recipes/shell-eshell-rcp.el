@@ -29,6 +29,9 @@
   (:keymaps 'eshell-mode-map
             [remap eshell-previous-matching-input] '(consult-history :wk "Command history")
             "<return>" 'eshell-send-input)
+  (:keymaps 'eshell-mode-map
+            :states 'insert
+            "<tab>" 'completion-at-point)
   (kb/open-keys
     "e" '((lambda ()            ; Unique vterm buffer with current directory appended
             (interactive)
