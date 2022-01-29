@@ -101,7 +101,7 @@
   (vertico-grid-lookahead 50)
   (vertico-buffer-display-action '(display-buffer-reuse-window))
   (vertico-multiform-categories
-   '((file grid reverse indexed)
+   '((file grid reverse)
      (consult-grep buffer)
      (consult-location)
      (imenu buffer)
