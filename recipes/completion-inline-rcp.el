@@ -170,6 +170,7 @@
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
   (tab-always-indent 'complete)
+  (completion-cycle-threshold nil)      ; Always show candidates in menu
 
   (corfu-auto nil)
   (corfu-auto-prefix 2)
@@ -182,7 +183,7 @@
 
   (corfu-echo-documentation nil)        ; Already use corfu-doc
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
-  (corfu-quit-no-match 1) ; Quit if 0 matches, assuming completion started within this integer
+  (corfu-quit-no-match 1.0) ; Quit if 0 matches, assuming completion started within this integer
   (corfu-commit-predicate 'corfu-candidate-previewed-p)
 
   (corfu-preview-current t)             ; Preview current candidate?

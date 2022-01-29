@@ -222,7 +222,7 @@
      ;; orderless-strict-leading-initialism
      ;; orderless-strict-initialism
      ;; orderless-strict-full-initialism
-     ;; orderless-without-literal          ; Recommended for dispatches instaed
+     ;; orderless-without-literal          ; Recommended for dispatches instead
      ))
   (orderless-style-dispatchers
    '(prot-orderless-literal-dispatcher    ; = suffix for literal
