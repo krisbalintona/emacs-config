@@ -203,7 +203,7 @@
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
-  (completion-styles '(orderless flex))
+  (completion-styles '(orderless))
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
    '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
