@@ -277,6 +277,7 @@
 
 ;;;; Magit-todos
 (use-package magit-todos
+  :disabled t                           ; Not very useful for now
   :after magit
   :custom
   (magit-todos-item-cache t)
