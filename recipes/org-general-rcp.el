@@ -47,7 +47,7 @@
     )
   :custom
   (org-directory kb/org-dir)
-  
+
   ;; Aesthetics
   (org-startup-indented t) ; Start with `org-indent-mode'?
   (org-startup-folded 'nofold)
@@ -293,9 +293,13 @@ move to that window."
 
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
   (org-superstar-todo-bullet-alist
-   '(("TODO" . 9744)
-     ("[ ]"  . 9744)
+   '(("TODAY" . 9744)
+     ("PROG" . 9744)
+     ("NEXT" . 9744)
+     ("TODO" . 9744)
      ("DONE" . 9745)
+     ("CANCELLED" . 9745)
+     ("[ ]"  . 9744)
      ("[X]"  . 9745)))
   (org-superstar-headline-bullets-list '("⚝" "●" "◉" "○"))
   (org-superstar-special-todo-items t)  ; Cool todo headlines?
@@ -370,8 +374,8 @@ re-align the table if necessary. (Necessary because org-mode has a
              in (cl-remove-if-not #'listp org-todo-keywords)
              for keywords =
              (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                (match-string 1 x)
-                              x))
+                                     (match-string 1 x)
+                                   x))
                      keyword-spec)
              if (eq type 'sequence)
              if (member keyword keywords)

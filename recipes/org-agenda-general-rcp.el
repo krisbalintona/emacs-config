@@ -26,15 +26,15 @@
   (org-agenda-restore-windows-after-quit t)
 
   (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
+   '((sequence "TODAY(i)" "PROG(p)" "NEXT(n)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
      ))
   (org-todo-keyword-faces
-   '(("TODO" :foreground "orange" :underline t)
-     ("NEXT" :foreground "orchid" :weight bold)
-     ("PROG" :foreground "turquoise" :underline t)
-     ("DONE" :foreground "chartreuse" :weight normal)
-     ("CANCELLED" :foreground "deep pink" :weight normal)
-     ))
+   '(("TODAY" :foreground "chocolate1")
+     ("PROG" :foreground "turquoise")
+     ("NEXT" :foreground "orchid")
+     ("TODO" :foreground "orange")
+     ("DONE" :foreground "chartreuse")
+     ("CANCELLED" :foreground "deep pink")))
   (org-log-done nil)       ; Inactive timestamp already added to logbook
   (org-log-into-drawer t)
 
