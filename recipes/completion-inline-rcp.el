@@ -268,6 +268,7 @@ default lsp-passthrough."
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
          (org-mode . kb/cape-capf-setup-org)
          (eshell-mode . kb/cape-capf-setup-eshell)
+         (git-commit-mode . kb/cape-capf-setup-git-commit)
          )
   :general (:prefix "M-c"               ; Particular completion function
                     "p" 'completion-at-point
@@ -320,6 +321,13 @@ list of capfs."
                       (cape-capf-buster #'lsp-completion-at-point)
                       )))
 
+  ;; Org
+  (defun kb/cape-capf-setup-org ()
+    (let ((result))
+      (dolist (element '(cape-ispell tempel-complete) result)
+        (push element completion-at-point-functions))
+      ))
+
   ;; Eshell
   (defun kb/cape-capf-setup-eshell ()
     (let ((result))
@@ -327,10 +335,14 @@ list of capfs."
         (add-to-list 'completion-at-point-functions element))
       ))
 
-  ;; Org
-  (defun kb/cape-capf-setup-org ()
+  ;; Git-commit
+  (defun kb/cape-capf-setup-git-commit ()
+    (general-define-key
+     :keymaps 'local
+     :states 'insert
+     "<tab>" 'completion-at-point)      ; Keybinding for `completion-at-point'
     (let ((result))
-      (dolist (element '(cape-ispell tempel-complete) result)
+      (dolist (element '(cape-symbol) result)
         (push element completion-at-point-functions))
       ))
   )
