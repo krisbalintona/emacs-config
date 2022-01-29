@@ -336,10 +336,9 @@ dap)."
                                                         (if (doom-modeline--active)
                                                             text
                                                           (propertize text 'face 'mode-line-inactive)))
+                                                      (kb/mood-line-segment-lsp)
                                                       (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                                                         lsp-modeline--code-actions-string)
-                                                      (mood-line-segment-process)
-                                                      (kb/mood-line-segment-lsp)
                                                       (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                                                         (lsp--progress-status))
                                                       ;; (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
@@ -347,6 +346,7 @@ dap)."
                                                       (kb/mood-line-segment-debug)
                                                       (kb/mood-line-segment-major-mode)
                                                       " "
+                                                      (mood-line-segment-process)
                                                       (mood-line-segment-encoding)
                                                       ;; Occasionally check this to see
                                                       ;; if any new packages have added
