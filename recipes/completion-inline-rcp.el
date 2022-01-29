@@ -267,6 +267,7 @@ default lsp-passthrough."
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
          (org-mode . kb/cape-capf-setup-org)
+         (eshell-mode . kb/cape-capf-setup-eshell)
          )
   :general (:prefix "M-c"               ; Particular completion function
                     "p" 'completion-at-point
@@ -318,6 +319,13 @@ list of capfs."
                 (list #'cape-file
                       (cape-capf-buster #'lsp-completion-at-point)
                       )))
+
+  ;; Eshell
+  (defun kb/cape-capf-setup-eshell ()
+    (let ((result))
+      (dolist (element '(pcomplete-completions-at-point cape-file) result)
+        (add-to-list 'completion-at-point-functions element))
+      ))
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
