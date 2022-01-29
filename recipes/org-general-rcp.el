@@ -262,6 +262,20 @@ move to that window."
                 ))
   )
 
+;;; Org-visibility
+;; Persist org headline folded/unfolded states
+(use-package org-visibility
+  :ghook 'org-mode-hook
+  :custom
+  (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
+  (org-visibility-include-paths nil)
+  (org-visibility-include-regexps '("\\.org\\'")) ; Persist all org files regardless of location
+  (org-visibility-exclude-paths nil)
+  (org-visibility-maximum-tracked-files 500)
+  (org-visibility-maximum-tracked-days 60)
+  (org-visibility-display-messages nil) ; Annoying echo area updates
+  )
+
 ;;; Aesthetics
 ;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
