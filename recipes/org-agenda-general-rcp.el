@@ -41,14 +41,7 @@
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE")) ; Inherit these properties
   (org-archive-subtree-save-file-p t)   ; Save archive file always
 
-  (org-agenda-custom-commands
-   '(("n" "Agenda and all TODOs"
-      ((agenda "")
-       (alltodo "")))
-     ("p" "Priority" todo "PROG")
-     ("w" "Working" todo "PROG|NEXT")
-     ("d" "Done" todo "DONE|CANCELLED")
-     ))
+  (org-agenda-tags-column 170)
   (org-agenda-prefix-format
    '((agenda . " %i %(vulpea-agenda-category 22)%?-12t% s")
      (todo . " %i %(vulpea-agenda-category 22) ")
@@ -56,6 +49,11 @@
      (search . " %i %(vulpea-agenda-category 22) ")
      ))
 
+  (org-capture-templates
+   `(("t" "Todo" entry
+      (file ,(expand-file-name "todo.org" kb/agenda-dir))
+      "* TODO %?   %^g\n" :empty-lines 1)
+     ))
   :config
   ;; I set to load only the first time I need it since it relies on org-roam,
   ;; and I don't want to explicitly load since that would increase startup time.
@@ -65,6 +63,54 @@
                       nil t)
 
   ;; (add-to-list 'org-tags-exclude-from-inheritance "blog")
+  )
+
+;;; Org-ql
+;; More powerful searching and selecting of todo headlines
+(use-package org-ql
+  :after org-agenda
+  )
+
+;;; Org-super-agenda
+(use-package org-super-agenda
+  :after org-agenda
+  :general (:keymaps 'org-super-agenda-header-map
+                     "h" nil            ; Keybinds for org-super-agenda
+                     "h" nil
+                     "j" nil
+                     "j" nil
+                     "k" nil
+                     "k" nil
+                     "l" nil
+                     "l" nil)
+  :custom
+  (org-agenda-custom-commands
+   '(("t" "Time sensitive"
+      ((alltodo ""
+                ((org-agenda-overriding-header)
+                 (org-super-agenda-groups
+                  '((:auto-planning t)
+                    (:discard (:anything t))
+                    ))
+                 ))
+       ))
+     ("p" "Priority"
+      ((alltodo ""
+                ((org-agenda-overriding-header "Priority")
+                 (org-super-agenda-groups
+                  '((:name "Now"
+                           :and (:todo ("TODAY" "PROG") :tag ("cs200" "juds1155" "phil1360" "phil1155")))
+                    (:name "Soon"
+                           :and (:todo "NEXT" :tag ("cs200" "juds1155" "phil1360" "phil1155")))
+                    (:name "Flagged"
+                           :tag ("FLAGGED"))
+                    (:discard (:anything t))
+                    ))
+                 ))
+       ))
+     ))
+  :init
+  (org-super-agenda-mode)
   )
 
 ;;; Org-agenda-property
