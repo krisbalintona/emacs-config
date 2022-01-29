@@ -81,7 +81,7 @@
   (make-face 'kb/org-roam-link-to-node)
   (modify-face 'kb/org-roam-link-to-node "goldenrod3" nil nil nil t nil nil nil)
   (org-link-set-parameters "id" :follow 'org-id-open :face 'kb/org-roam-link-to-node)
-  :init
+  :config
   ;; Use EAF to open PDFs
   (defun eaf-org-open-file (file &optional link)
     "A wrapper function on `eaf-open'. Open in another window and
@@ -104,8 +104,6 @@ move to that window."
 (use-package ox-odf
   :after (ox org)
   :straight nil
-  :custom
-  (org-odt-preferred-output-format "docx") ; Automatically create a `.docx' version
   )
 
 ;;;; Ox-latex
