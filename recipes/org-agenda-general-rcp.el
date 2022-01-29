@@ -55,6 +55,14 @@
   ;; (add-to-list 'org-tags-exclude-from-inheritance "blog")
   )
 
+;;; Org-agenda-property
+;; Display org-agenda entries' properties alongside them
+(use-package org-agenda-property
+  :after org-agenda
+  :custom
+  (org-agenda-property-list '("LOCATION" "Effort"))
+  )
+
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-agenda-general-rcp)
