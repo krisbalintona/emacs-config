@@ -127,6 +127,10 @@ argument, query for word to search."
                                              back-to-indentation end-of-visual-line
                                              consult-line consult-outline consult-ripgrep consult-imenu
                                              evil-search-previous evil-search-next
+                                             lispyville-previous-opening lispyville-next-closing
+                                             lispyville-next-opening lispyville-previous-closing
+                                             lispyville-backward-sexp lispyville-forward-sexp
+                                             lispyville-backward-up-list lispyville-up-list
                                              )
                       :before 'better-jumper-set-jump)
 
