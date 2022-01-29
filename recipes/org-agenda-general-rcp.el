@@ -20,8 +20,11 @@
   (org-agenda-files nil) ; Instead , dynamically generate agenda list with vulpea
   (kb/vulpea-excluded-tags '("paper"))
 
-  (org-agenda-window-setup 'current-window)
+  (org-agenda-window-setup 'only-window)
   (org-use-fast-todo-selection 'auto)
+  (org-agenda-sticky nil)
+  (org-agenda-restore-windows-after-quit t)
+
   (org-todo-keywords
    '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
      ))
