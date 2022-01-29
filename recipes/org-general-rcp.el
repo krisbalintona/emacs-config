@@ -46,6 +46,8 @@
     "a" '(org-mark-ring-push :wk "Push to mark-ring")
     )
   :custom
+  (org-directory kb/org-dir)
+  
   ;; Aesthetics
   (org-startup-indented t) ; Start with `org-indent-mode'?
   (org-startup-folded 'nofold)

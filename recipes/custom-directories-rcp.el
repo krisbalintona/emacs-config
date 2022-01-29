@@ -9,15 +9,14 @@
 ;;; Code:
 
 ;;; For org and org-agenda
-(setq org-directory "~/Documents/org-database/")
-(defvar kb/agenda-dir (concat org-directory "agenda/"))
-(defvar kb/roam-dir (concat org-directory "roam/"))
-(defvar kb/library-dir (concat org-directory "library/"))
+(defvar kb/org-dir (expand-file-name "~/Documents/org-database/"))
+(defvar kb/roam-dir (concat kb/org-dir "roam/"))
+(defvar kb/agenda-dir (concat kb/roam-dir "agenda/"))
 
 (defvar kb/all-org-dir-files (cl-remove-if
                               (lambda (it)
                                 (string-match-p (rx "archive.org") it))
-                              (directory-files-recursively org-directory ".org$")))
+                              (directory-files-recursively kb/org-dir ".org$")))
 (defvar kb/all-agenda-dir-files (cl-remove-if
                                  (lambda (it)
                                    (string-match-p (rx "archive.org") it))
@@ -29,7 +28,7 @@
                                              (directory-files-recursively kb/agenda-dir ".org$")))
 
 ;;; For my frequently visited directories and files
-(defvar kb/library-dir (concat org-directory "library"))
+(defvar kb/library-dir (concat kb/org-dir "library"))
 (defvar kb/emacs-etc-config-file (concat user-emacs-directory "configs/etc-config.org"))
 (defvar kb/emacs-config-dir (concat user-emacs-directory "configs/"))
 
