@@ -297,9 +297,8 @@ move to that window."
      ("[ ]"  . 9744)
      ("DONE" . 9745)
      ("[X]"  . 9745)))
-  (org-superstar-headline-bullets-list
-   '("⚝" "●" "◉" "○"))
-  (org-superstar-special-todo-items t)  ; Cool todo items
+  (org-superstar-headline-bullets-list '("⚝" "●" "◉" "○"))
+  (org-superstar-special-todo-items t)  ; Cool todo headlines?
 
   (org-superstar-prettify-item-bullets t)
   ;; org-superstar-item-bullet-alist ; For plainlist todo items

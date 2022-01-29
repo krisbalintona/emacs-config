@@ -227,7 +227,7 @@
   (orderless-style-dispatchers
    '(prot-orderless-literal-dispatcher    ; = suffix for literal
      prot-orderless-initialism-dispatcher ; , suffix for initialism
-     prot-orderless-flex-dispatcher       ; ~ suffix for flex
+     prot-orderless-flex-dispatcher       ; . suffix for flex
      ))
   :init
   (defun prot-orderless-literal-dispatcher (pattern _index _total)
@@ -248,7 +248,7 @@ parses its input."
     "Flex  dispatcher using the tilde suffix.
 It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
-    (when (string-suffix-p "~" pattern)
+    (when (string-suffix-p "." pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
   )
 
