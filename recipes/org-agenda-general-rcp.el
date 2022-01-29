@@ -38,6 +38,9 @@
   (org-log-done nil)       ; Inactive timestamp already added to logbook
   (org-log-into-drawer t)
 
+  (org-use-property-inheritance '("CATEGORY" "ARCHIVE")) ; Inherit these properties
+  (org-archive-subtree-save-file-p t)   ; Save archive file always
+
   (org-agenda-custom-commands
    '(("n" "Agenda and all TODOs"
       ((agenda "")
