@@ -14,6 +14,8 @@
 ;;; Lsp-java
 (use-package lsp-java
   :hook (java-mode . lsp-deferred)
+  :general (:keymaps 'java-mode-map
+                     "C-c C-c" '(lsp-java-build-project :wk "Lsp build project"))
   )
 
 ;;; Dap-java
