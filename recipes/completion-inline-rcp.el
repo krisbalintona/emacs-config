@@ -317,7 +317,8 @@ Additionally, add `cape-file' as early as possible to the list."
 `cape-capf-buster' version. Additionally, add `cape-file' to the
 list of capfs."
     (setq-local completion-at-point-functions
-                (list #'cape-file
+                (list #'tempel-complete
+                      #'cape-file
                       (cape-capf-buster #'lsp-completion-at-point)
                       )))
 
