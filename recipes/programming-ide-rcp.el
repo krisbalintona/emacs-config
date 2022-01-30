@@ -78,7 +78,7 @@
              "Gs" '(lsp-ui-peek-find-workspace-symbol :wk "peek workspace symbol")
              )
   :custom
-  (lsp-keymap-prefix nil)
+  (lsp-keymap-prefix "C-x l")           ; Also have this be a prefix
   (lsp-auto-guess-root nil)
   (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't fontify headline breadcrumb text (janky fix)
@@ -113,26 +113,26 @@
 
   ;; Lsp-ui-sideline - Info at the side
   (lsp-ui-sideline-enable t)
-  (lsp-ui-sideline-show-diagnostics t)  ; Show diagnostics messages in sideline?
-  (lsp-ui-sideline-show-hover nil)      ; Show hover messages in sideline?
-  (lsp-ui-sideline-show-code-actions t) ; Show code actions in sideline?
+  (lsp-ui-sideline-show-diagnostics nil) ; Show diagnostics messages in sideline?
+  (lsp-ui-sideline-show-hover nil)       ; Show hover messages in sideline?
+  (lsp-ui-sideline-show-code-actions nil) ; Show code actions in sideline?
   ;; When set to 'line' the information will be updated when user changes
   ;; current line otherwise the information will be updated when user changes
   ;; current point
   (lsp-ui-sideline-update-mode 'point)
-  (lsp-ui-sideline-delay 0.5)          ; Seconds to wait before showing sideline
+  (lsp-ui-sideline-delay 3)            ; Seconds to wait before showing sideline
 
   ;; Lsp-eldoc - Info in the echo area
   (lsp-eldoc-hook nil)
-  (lsp-eldoc-render-all t)
+  (lsp-eldoc-render-all nil)
 
   ;; Lsp-ui-doc - Show documentation
-  (lsp-ui-doc-enable t)
-  (lsp-ui-doc-delay 1.5)
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-delay 0.2)
   (lsp-ui-doc-show-with-cursor t)       ; Point hover (alongside cursor!)
-  (lsp-ui-doc-show-with-mouse t)        ; Point hover (alongside cursor!)
+  (lsp-ui-doc-show-with-mouse nil)      ; Mouse hover (alongside cursor!)
   ;; Appearance
-  (lsp-ui-doc-alignment 'frame)
+  (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-position 'top)
   (lsp-ui-doc-header nil)
   (lsp-ui-doc-max-height 10)
