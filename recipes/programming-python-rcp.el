@@ -92,7 +92,6 @@
   'pyvenv-tracking-mode
   'kb/pyvenv-setup-variables
   :general (kb/lsp-keys
-             :keymaps 'python-mode-map
              "v" '(pyvenv-activate :wk "Pyvenv activate"))
   :init
   (defun kb/pyvenv-auto-activate ()
