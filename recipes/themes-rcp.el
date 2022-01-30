@@ -95,9 +95,6 @@ here: https://github.com/TheVaffel/emacs"
   )
 
 ;;;; Mood-line
-;; Mode line which accompanies the mood-one theme
-;; TODO 2022-01-22: Would like to remove all Doom Modeline dependency from this
-;; modeline config one day, but it will take some time...
 (use-package mood-line
   :ghook 'after-init-hook
   :config

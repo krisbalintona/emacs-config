@@ -3,12 +3,11 @@
 ;;; Commentary:
 ;;
 ;; My custom configuration for my Mood mode-line.
+;; TODO 2022-01-22: Would like to remove all Doom Modeline dependency from this
+;; modeline config one day, but it will take some time...
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'vc)
-(require 'doom-modeline-segments)
-(require 'magit)
 
 ;;; Segments
 ;;;; Left
@@ -306,7 +305,8 @@ dap)."
                                                             text
                                                           (propertize text 'face 'mode-line-inactive)))
                                                       " "
-                                                      (kb/mood-line-segment-vc)
+                                                      (when (bound-and-true-p magit) ; Error if I don't check for its existence
+                                                        (kb/mood-line-segment-vc))
                                                       (kb/mood-line-segment-pyvenv-indicator)
                                                       (kb/mood-line-segment-default-directory)
                                                       (kb/mood-line-segment-buffer-name)
