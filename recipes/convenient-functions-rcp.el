@@ -52,9 +52,10 @@
 (defun kb/format-buffer-indentation--base ()
   "Basic indentation fix using `indent-region'."
   (interactive)
-  (untabify (point-min) (point-max))
-  (delete-trailing-whitespace)
-  (indent-region (point-min) (point-max) nil)
+  (save-excursion
+    (delete-trailing-whitespace)
+    (indent-region (point-min) (point-max) nil)
+    (untabify (point-min) (point-max)))
   )
 (defun kb/format-buffer-indentation--fill-column ()
   "Basic indentation fix and wrap comments."
