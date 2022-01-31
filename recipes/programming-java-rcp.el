@@ -23,6 +23,8 @@
   :straight nil
   :general (:keymaps 'java-mode-map
                      "C-c C-c" '(dap-java-debug :wk "Dap-java-debug"))
+  )
+
 ;;; Helm-lsp
 ;; Helm interface -- really the only option...
 (use-package helm-lsp
