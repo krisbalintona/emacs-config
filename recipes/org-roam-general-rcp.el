@@ -21,6 +21,7 @@
             "tr" '(org-roam-tag-remove :wk "Remove tag")
             )
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
+            "<tab>" 'magit-section-toggle
             [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/note-keys
     "f" '(org-roam-node-find :wk "Find file")
