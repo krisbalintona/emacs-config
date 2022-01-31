@@ -149,7 +149,6 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
-  :demand t
   :hook (lsp-completion-mode . kb/lsp-mode-setup-completion) ; Use corfu for lsp completion
   :general
   (:keymaps 'global-map
@@ -191,9 +190,9 @@
 
   ;; Other
   (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
-  :config
+  :init
   (corfu-global-mode)
-
+  :config
   ;; Enable Corfu more generally for every minibuffer, as long as no other
   ;; completion UI is active. If you use Mct or Vertico as your main minibuffer
   ;; completion UI. From
