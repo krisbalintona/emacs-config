@@ -58,14 +58,18 @@
 ;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
-  :demand t
+  :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/citar-capture)
   :after org-roam org-roam-bibtex
-  :general (:keymaps 'org-mode-map
-                     :prefix "C-c b"
-                     "b" '(citar-insert-citation :wk "Insert citation")
-                     "r" '(citar-insert-reference :wk "Insert reference")
-                     "o" '(citar-open-notes :wk "Open note")
-                     )
+  :general
+  (kb/note-keys
+    "C" '(kb/citar-capture :wk "Citar-capture")
+    )
+  (:keymaps 'org-mode-map
+            :prefix "C-c b"
+            "b" '(citar-insert-citation :wk "Insert citation")
+            "r" '(citar-insert-reference :wk "Insert reference")
+            "o" '(citar-open-notes :wk "Open note")
+            )
   :custom
   (citar-bibliography kb/bib-files)
   (citar-templates
@@ -95,7 +99,26 @@
       (((background light)) :foreground "#f0f0f0"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
-  )
+
+  ;; Create a new node from a bibliographic source. Taken from
+  ;; https://jethrokuan.github.io/org-roam-guide/
+  (defun kb/citar-capture (keys-entries)
+    (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
+    (let ((title (citar--format-entry-no-widths (cdr keys-entries)
+                                                "${author editor}${date urldate} :: ${title}")))
+      (org-roam-capture- :templates
+                         '(("r" "reference" plain "%?" :if-new
+                            (file+head "${citekey}.org"
+                                       ":PROPERTIES:
+:ROAM_REFS: [cite:@${citekey}]
+:END:
+#+title: ${title}
+#+filetags: %(kb/insert-lit-category)")
+                            :immediate-finish t
+                            :unnarrowed t))
+                         :info (list :citekey (car keys-entries))
+                         :node (org-roam-node-create :title title)
+                         :props '(:finalize find-file)))))
 
 ;;; Oc-citar
 ;; Citar compatibility with `org-cite'

@@ -238,23 +238,13 @@ targets and targets."
 :ID: %(org-id-new)
 :END:"
          :if-new (file+head "quotes-Jun062021-185530.org"
-                            "#+title: Quotes\n\n\n")
-         )
+                            "#+title: Quotes\n\n\n"))
         ("l" "Lit Note" plain
          ""
          :if-new (file+head "${slug}.org"
                             "#+title: ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: \nDate: %<%b %d, %Y>")
          :immediate-finish t
          :jump-to-captured t)
-        ("r" "Reference without pdf notes" plain
-         ""
-         :if-new (file+head "${citekey}-${slug}.org"
-                            "#+title: ${citekey} ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: ${author}\nDate: %<%b %d, %Y>")
-         :immediate-finish t)
-        ("R" "Reference with pdf notes" plain
-         ""
-         :if-new (file+head "${citekey}-${title}-%(format-time-string \"%b%d%Y-%H%M%S\" (current-time) nil).org"
-                            "#+title: ${citekey} ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: ${author}\nDate: %<%b %d, %Y>\n\n* Notes\n:PROPERTIES:\n:Custom_ID: ${citekey}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")\n:NOTER_PAGE:\n:END:\n\n"))
         )
       )
 
