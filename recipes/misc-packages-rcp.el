@@ -102,12 +102,8 @@
 ;; Noto Sans
 ;; Noto Sans Symbols
 (use-package unicode-fonts
+  :hook (emacs-startup . unicode-fonts-setup)
   :init
-  ;; Taken from
-  ;; https://github.com/alphapapa/ement.el#displaying-symbols-and-emojis
-  (setf use-default-font-for-symbols nil)
-  (set-fontset-font t 'unicode "Noto Emoji" nil 'append) ; Set font for unicode
-
   ;; Taken from http://xahlee.info/emacs/misc/emacs_macos_emoji.html
   (set-fontset-font                     ; Set font for symbols
    t
@@ -122,15 +118,7 @@
     ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
     ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola")))
-
-  (defun kb/fix-fonts ()
-    "Startup warning when I try to call `unicode-fonts-setup' via
-hook so I create this manual command to do the same and a little
-more."
-    (interactive)
-    (shell-command "fc-cache -fv")
-    (unicode-fonts-setup '("fontset-default" "fontset-startup" "fontset-standard") t)))
+    ((member "Symbola" (font-family-list)) "Symbola"))))
 
 ;;; Copy-as-format
 (use-package copy-as-format
