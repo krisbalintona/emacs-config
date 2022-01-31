@@ -60,48 +60,40 @@
 (use-package citar
   :demand t
   :after org-roam org-roam-bibtex
-  :general (:prefix "C-c b"
-                    "b" '(citar-insert-citation :wk "Insert citation")
-                    "r" '(citar-insert-reference :wk "Insert reference")
-                    "o" '(citar-open-notes :wk "Open note")
-                    )
+  :general (:keymaps 'org-mode-map
+                     :prefix "C-c b"
+                     "b" '(citar-insert-citation :wk "Insert citation")
+                     "r" '(citar-insert-reference :wk "Insert reference")
+                     "o" '(citar-open-notes :wk "Open note")
+                     )
   :custom
   (citar-bibliography kb/bib-files)
-  (citar-presets '("has:note")) ; A list of predefined searches
   (citar-templates
-   '((main . "${author editor:40}   ${date year issued:4}    ${title:115}")
+   '((main . "${author editor:30}   ${date year issued:4}    ${title:110}")
      (suffix . "     ${=type=:20}    ${tags keywords keywords:*}")
+     (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
      (note . "#+title: Notes on ${author editor}, ${title}") ; For new notes
      ))
+  (citar-notes-paths `(,org-roam-directory))
   (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
-  (citar-notes-paths org-roam-directory)
+  (citar-at-point-function 'embark-act) ; Use `embark'
   :config
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
   (setq citar-symbols
-        `((pdf . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
-                  ,(all-the-icons-icon-for-file "foo.pdf" :face 'citar-icon-dim)))
-          (note . (,(all-the-icons-icon-for-file "foo.txt") .
-                   ,(all-the-icons-icon-for-file "foo.txt" :face 'citar-icon-dim)))
-          (link .
-                (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
-                 ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'citar-icon-dim)))))
+        `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) .
+                ,(all-the-icons-faicon "file-o" :face 'citar-icon-dim :v-adjust -0.1) )
+          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) .
+                ,(all-the-icons-material "speaker_notes" :face 'citar-icon-dim :v-adjust -0.3))
+          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) .
+                ,(all-the-icons-octicon "link" :face 'citar-icon-dim :v-adjust 0.01))))
+  (setq citar-symbol-separator "  ")
   ;; Here we define a face to dim non 'active' icons, but preserve alignment
   (defface citar-icon-dim
     '((((background dark)) :foreground "#282c34")
       (((background light)) :foreground "#fafafa"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
-
-  ;; Set my own formatting for `citar-insert-reference'
-  (defun kb/bibtex-completion-insert-reference (keys)
-    "Insert references for entries in KEYS without \"-\" on new line."
-    (let* ((refs (--map
-                  (s-word-wrap fill-column (bibtex-completion-apa-format-reference it))
-                  keys)))
-      (insert (s-join "\n" refs))
-      ))
-  (advice-add 'bibtex-completion-insert-reference :override 'kb/bibtex-completion-insert-reference)
   )
 
 ;;; Oc-citar
