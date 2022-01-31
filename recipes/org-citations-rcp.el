@@ -90,8 +90,9 @@
   (setq citar-symbol-separator "  ")
   ;; Here we define a face to dim non 'active' icons, but preserve alignment
   (defface citar-icon-dim
-    '((((background dark)) :foreground "#282c34")
-      (((background light)) :foreground "#fafafa"))
+    ;; Based on solaire's faces
+    '((((background dark)) :foreground "#212428")
+      (((background light)) :foreground "#f0f0f0"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
   )
