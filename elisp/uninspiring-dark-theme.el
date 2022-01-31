@@ -86,12 +86,12 @@
 ;;;; Standard faces broad
    `(default ((t (:font ,uninspiring-dark-default :height 136 :foreground ,atom-one-dark-fg :background ,atom-one-dark-bg))))
    `(fixed-pitch ((t (:font ,uninspiring-dark-fixed-pitch :height 140))))
-   `(variable-pitch ((t (:font ,uninspiring-dark-variable-pitch :height 158))))
+   `(variable-pitch ((t (:font ,uninspiring-dark-variable-pitch :height 160))))
    `(success ((t (:foreground ,atom-one-dark-green))))
    `(warning ((t (:foreground ,atom-one-dark-orange-2))))
    `(error ((t (:foreground ,atom-one-dark-red-1 :weight bold))))
-   `(link ((t (:foreground ,atom-one-dark-blue :underline t :weight bold))))
-   `(link-visited ((t (:foreground ,atom-one-dark-blue :underline t :weight normal))))
+   `(link ((t (:foreground ,atom-one-dark-blue :slant italic :underline t))))
+   `(link-visited ((t (:inherit link))))
    `(cursor ((t (:background ,atom-one-dark-accent))))
    `(fringe ((t (:background ,atom-one-dark-bg))))
    `(region ((t (:background ,atom-one-dark-gray :distant-foreground ,atom-one-dark-mono-2))))
@@ -119,13 +119,8 @@
    `(font-lock-negation-char-face ((t (:foreground ,atom-one-dark-cyan :bold t))))
 
 ;;;; Mode-line
-   ;; `(mode-line ((t (:family "NotoSans Nerd Font" :height 0.77 :background ,atom-one-dark-black :foreground ,atom-one-dark-silver :box (:color ,atom-one-dark-border :line-width 1)))))
-   ;; ;; `(mode-line-buffer-id ((t (:weight bold))))
-   `(mode-line-emphasis ((t (:weight bold))))
-   ;; `(mode-line-inactive ((t (:inherit mode-line))))
-
    ;; Heavily based on mood-one theme
-   `(mode-line ((t (:family "JetBrainsMono Nerd Font" :height 110 :background "#1c2024" :foreground "#c0c4d2" :box (:line-width 2 :color "#1c2024")))))
+   `(mode-line ((t (:family "JetBrainsMono Nerd Font" :height 113 :background "#1c2024" :foreground "#c0c4d2" :box (:line-width 1 :color "#1c2024")))))
    `(mode-line-inactive ((t (:inherit mode-line :background "#212428" :foreground "#5b6265" :box (:line-width 2 :color "#212428")))))
    ;; `(mode-line-emphasis ((t (:foreground "#51afef"))))
    `(mode-line-highlight ((t (:inherit 'highlight))))
@@ -506,7 +501,7 @@
    `(fci-rule-color ,atom-one-dark-gray)
 
 ;;;; Vertico
-   `(vertico-current ((t (:background "#3a3f5a"))))
+   `(vertico-current ((t (:inherit success :background "#3A3F5A"))))
 
 ;;;; Highlight-defined
    `(highlight-defined-variable-name-face ((t (:inherit font-lock-variable-name-face :foreground "#9caabf"))))
