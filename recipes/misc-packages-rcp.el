@@ -180,6 +180,20 @@
   (all-the-icons-completion-mode)
   )
 
+;;; Plantuml-mode
+;; Epic diagrams in org-mode
+(use-package plantuml-mode
+  :ensure-system-package plantuml
+  :mode ("\\.plantuml\\'" . plantuml-mode)
+  :custom
+  (plantuml-executable-path (executable-find "plantuml"))
+  (plantuml-default-exec-mode 'executable)
+  :config
+  ;; Integration with org-mode. See
+  ;; https://github.com/skuro/plantuml-mode#integration-with-org-mode
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
