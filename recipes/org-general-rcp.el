@@ -21,6 +21,7 @@
      (require 'prog-mode)
      (push '("->" . ?➡) prettify-symbols-alist)
      (push '("<-" . ?⬅) prettify-symbols-alist)
+     (setq-local line-spacing 0.1)
      (prettify-symbols-mode))
   :general
   (:keymaps 'org-mode-map
