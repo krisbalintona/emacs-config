@@ -171,6 +171,15 @@
   ;; Settle for only doing comments
   (afp-fill-comments-only-mode-list '(emacs-lisp-mode sh-mode python-mode js-mode org-mode)))
 
+;;; All-the-icons-completion
+;; Add `all-the-icons' icons to minibuffer completion candidates
+(use-package all-the-icons-completion
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode)
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
