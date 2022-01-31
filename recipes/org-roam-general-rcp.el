@@ -212,6 +212,7 @@ targets and targets."
          ""
          :if-new (file+head "${slug}.org"
                             "#+title: ${title}\n")
+         :unnarrowed t
          :immediate-finish t)
         ("b" "Blog" plain
          ""
@@ -223,26 +224,13 @@ targets and targets."
 #+DATE: nil
 #+hugo_custom_front_matter:
 #+hugo_draft: true")
+         :unnarrowed t
          :immediate-finish t)
-        ("e" "Evergreen" plain
-         ""
-         :if-new (file+head "${slug}.org"
-                            "#+title: ${title}\n#+filetags: :new:\nReference: \n\n\n")
-         :jump-to-captured t)
-        ("Q" "Quote" entry
-         "* ${title} :quote:new:
-:PROPERTIES:
-:DATE: %(format-time-string \"%D\" (current-time) nil)
-:TIME: %(format-time-string \"%H:%M:%S\" (current-time) nil)
-:REFERENCE:
-:ID: %(org-id-new)
-:END:"
-         :if-new (file+head "quotes-Jun062021-185530.org"
-                            "#+title: Quotes\n\n\n"))
         ("l" "Lit Note" plain
          ""
          :if-new (file+head "${slug}.org"
                             "#+title: ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: \nDate: %<%b %d, %Y>")
+         :unnarrowed t
          :immediate-finish t
          :jump-to-captured t)
         )
