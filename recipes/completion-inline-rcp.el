@@ -227,7 +227,10 @@ default lsp-passthrough."
   ;; Svg-lib dependency
   (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/")) ; Change cache dir
   :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable
+
+  ;; Add hook to reset cache so the icon colors match my theme
+  (add-hook 'kb/themes-hooks #'(lambda () (interactive) (kind-icon-reset-cache)))
   )
 
 ;;;; Corfu-doc
