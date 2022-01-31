@@ -101,7 +101,7 @@
   (vertico-grid-lookahead 50)
   (vertico-buffer-display-action '(display-buffer-reuse-window))
   (vertico-multiform-categories
-   '((file grid reverse)
+   '((file reverse)
      (consult-grep buffer)
      (consult-location)
      (imenu buffer)
@@ -110,15 +110,11 @@
      (t reverse)
      ))
   (vertico-multiform-commands
-   '((flyspell-correct-previous grid reverse)
-     (flyspell-correct-next grid reverse)
+   '(("flyspell-correct-*" grid reverse)
      (org-refile grid reverse indexed)
      (consult-yank-pop indexed)
      (consult-flycheck)
      (consult-lsp-diagnostics)
-     ("describe-*")
-     (lsp-execute-code-action)
-     ("consult-lsp-*")
      ))
   :init
   (defun kb/vertico-multiform-flat-toggle ()
