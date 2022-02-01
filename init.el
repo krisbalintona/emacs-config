@@ -62,6 +62,7 @@
 (require 'completion-general-rcp)
 (require 'completion-vanilla-rcp)
 (require 'completion-inline-rcp)
+(require 'completion-company-rcp)
 (require 'completion-ivy-rcp)
 (require 'completion-helm-rcp)
 
