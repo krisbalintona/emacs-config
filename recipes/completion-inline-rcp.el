@@ -250,6 +250,14 @@ Additionally, add `cape-file' as early as possible to the list."
   (defun kb/cape-capf-setup-sh ()
     (require 'company-shell)
     (push (cape-company-to-capf #'company-shell) completion-at-point-functions))
+
+  ;; Org-roam
+  (defun kb/cape-capf-setup-org-roam ()
+    (dolist (f `(org-roam-complete-link-at-point
+                 org-roam-complete-everywhere
+                 ,(cape-company-to-capf #'company-yasnippet)))
+      (add-hook 'completion-at-point-functions f nil t)))
+  (advice-add 'org-roam--register-completion-functions-h :override #'kb/cape-capf-setup-org-roam)
   )
 
 ;;; completion-inline-rcp.el ends here
