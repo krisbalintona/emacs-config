@@ -371,36 +371,6 @@ list of capfs."
             "C-M-/" 'dabbrev-expand)
   )
 
-;;; Expansion
-;;;; Yasnippet
-;; Template-expansion system (doesn't include templates)
-(use-package yasnippet
-  :hook (window-setup . yas-global-mode)
-  )
-
-;;;; Doom-snippets
-;; Large library of snippet templates
-(use-package doom-snippets
-  :after yasnippet
-  :straight (doom-snippts :type git :host github :repo "hlissner/doom-snippets")
-  :config (doom-snippets-initialize)
-  )
-
-;;;; Org-tempo
-;; Completion for org-block types. Adds to the functionality of `org-structure'.
-(use-package org-tempo
-  :straight nil
-  :defer 5
-  :config
-  (dolist (expansion '(;; ("sc" . "src scheme")
-                       ;; ("ts" . "src typescript")
-                       ;; ("yaml" . "src yaml")
-                       ;; ("json" . "src json")
-                       )
-                     org-structure-template-alist)
-    (push expansion org-structure-template-alist))
-  )
-
 ;;; completion-inline-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-inline-rcp)

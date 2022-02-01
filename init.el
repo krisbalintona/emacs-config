@@ -123,6 +123,7 @@
 (require 'application-framework-rcp)
 (require 'finance-rcp)
 (require 'convenient-functions-rcp)
+(require 'template-rcp)
 (require 'misc-packages-rcp)
 
 ;;; init.el ends here
