@@ -28,6 +28,8 @@
 ;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
+  :custom
+  (yas-snippet-dirs (list (no-littering-expand-etc-file-name "yasnippet/snippets")))
   :init
   (yas-global-mode)
   )
