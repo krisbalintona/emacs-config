@@ -189,6 +189,8 @@ Additionally, add `cape-file' as early as possible to the list."
     (add-to-list 'completion-at-point-functions #'cape-symbol)
     ;; I prefer this being early/first in the list
     (add-to-list 'completion-at-point-functions #'cape-file)
+    (require 'company-yasnippet)
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
     )
 
   ;; LSP
@@ -198,12 +200,13 @@ Additionally, add `cape-file' as early as possible to the list."
     (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
           (cape-capf-buster #'lsp-completion-at-point))
     (push #'cape-file completion-at-point-functions)
+    (require 'company-yasnippet)
     (push (cape-company-to-capf #'company-yasnippet) completion-at-point-functions))
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
     (let ((result))
-      (dolist (element '(cape-ispell) result)
+      (dolist (element `(cape-ispell ,(cape-company-to-capf #'company-yasnippet)) result)
         (push element completion-at-point-functions))))
 
   ;; Eshell
@@ -229,7 +232,9 @@ Additionally, add `cape-file' as early as possible to the list."
     (require 'company-auctex)
     (let ((result))
       (dolist (element (list
-                        ;; First add `cape-tex'
+                        ;; First add `company-yasnippet'
+                        (cape-company-to-capf #'company-yasnippet)
+                        ;; Then add `cape-tex'
                         #'cape-tex
                         ;; Then add `company-auctex' in the order it adds its
                         ;; backends.
