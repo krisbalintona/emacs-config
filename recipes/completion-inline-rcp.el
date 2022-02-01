@@ -240,19 +240,6 @@ list of capfs."
                        result)
         (push element completion-at-point-functions))))
 
-;;; Custom completions
-(autoload 'ffap-file-at-point "ffap")
-(defun kb/complete-path-at-point ()
-  "Return completion data for UNIX path at point."
-  (let ((fn (ffap-file-at-point))
-        (fap (thing-at-point 'filename)))
-    (when (and (or fn (equal "/" fap))
-               (save-excursion
-                 (search-backward fap (line-beginning-position) t)))
-      (list (match-beginning 0)
-            (match-end 0)
-            #'completion-file-name-table :exclusive 'no))))
-(add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
   ;; Sh
   (defun kb/cape-capf-setup-sh ()
     (require 'company-shell)
