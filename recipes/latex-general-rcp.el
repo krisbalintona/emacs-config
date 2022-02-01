@@ -166,6 +166,7 @@
 
 ;;;; Lsp-latex
 (use-package lsp-latex
+  :disabled t                           ; Not useful, for now
   :ensure-system-package ("~/.cargo/bin/texlab" . "cargo install --git https://github.com/latex-lsp/texlab.git --locked") ; Quite long of an install since compiling from source
   :hook (latex-mode . (lambda ()
                         (require 'lsp-latex)
