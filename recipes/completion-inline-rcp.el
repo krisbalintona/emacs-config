@@ -189,16 +189,18 @@ Additionally, add `cape-file' as early as possible to the list."
     "Replace the default `lsp-completion-at-point' with its
 `cape-capf-buster' version. Additionally, add `cape-file' to the
 list of capfs."
+    (require 'company-yasnippet)
     (setq-local completion-at-point-functions
-                (list #'tempel-complete
+                (list (cape-company-to-capf #'company-yasnippet)
                       #'cape-file
                       (cape-capf-buster #'lsp-completion-at-point)
                       )))
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
+    (require 'company-yasnippet)
     (let ((result))
-      (dolist (element '(cape-ispell tempel-complete) result)
+      (dolist (element `(cape-ispell ,(cape-company-to-capf #'company-yasnippet)) result)
         (push element completion-at-point-functions))
       ))
 

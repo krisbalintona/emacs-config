@@ -134,6 +134,7 @@
 ;;; Tempel
 ;; Small and simple snippet/template system compatible with corfu.
 (use-package tempel
+  :disabled t                           ; Migrate to yasnippet
   :general
   ("M-+" 'tempel-complete               ; List all available templates
    "M-*" 'tempel-insert                 ; Insert typed template
