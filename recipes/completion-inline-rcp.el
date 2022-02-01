@@ -135,13 +135,13 @@ default lsp-passthrough."
 ;; `cape-dict' - Word from dictionary file
 ;; `cape-symbol' - Elisp symbol
 ;; `cape-line' - From line in file
-
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
          (org-mode . kb/cape-capf-setup-org)
          (eshell-mode . kb/cape-capf-setup-eshell)
          (git-commit-mode . kb/cape-capf-setup-git-commit)
+         (LaTeX-mode . kb/cape-capf-setup-latex)
          )
   :general (:prefix "M-c"               ; Particular completion function
                     "p" 'completion-at-point
@@ -221,6 +221,23 @@ list of capfs."
       (dolist (element '(cape-symbol) result)
         (push element completion-at-point-functions))
       ))
+
+  ;; LaTeX
+  (defun kb/cape-capf-setup-latex ()
+    (require 'company-auctex)
+    (let ((result))
+      (dolist (element (list
+                        ;; First add `cape-tex'
+                        #'cape-tex
+                        ;; Then add `company-auctex' in the order it adds its
+                        ;; backends.
+                        (cape-company-to-capf #'company-auctex-bibs)
+                        (cape-company-to-capf #'company-auctex-labels)
+                        (cape-company-to-capf
+                         (apply-partially #'company--multi-backend-adapter
+                                          '(company-auctex-macros company-auctex-symbols company-auctex-environments))))
+                       result)
+        (push element completion-at-point-functions))))
   )
 
 ;;; Custom completions
