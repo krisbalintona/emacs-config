@@ -28,8 +28,10 @@
 ;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
-  :custom
-  (yas-snippet-dirs (list (no-littering-expand-etc-file-name "yasnippet/snippets")))
+  :hook (emacs-startup . (lambda ()
+                           "Ensure my personal snippets dir is first and therefore the
+default when creating snippets"
+                           (push (no-littering-expand-etc-file-name "yasnippet/snippets") yas-snippet-dirs)))
   :init
   (yas-global-mode)
   )
@@ -39,8 +41,6 @@
 (use-package doom-snippets
   :after yasnippet
   :straight (doom-snippets :type git :host github :repo "hlissner/doom-snippets" :files ("*.el" "*"))
-  :config
-  (doom-snippets-initialize)
   )
 
 ;;; template-rcp.el ends here
