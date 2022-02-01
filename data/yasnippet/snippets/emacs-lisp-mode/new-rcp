@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: new-rcp
+# key: <rcp
+# --
+;;; ${1:recipe}-rcp.el --- Summary
+;;
+;;; Commentary:
+;;
+;; ${2:Commentary}
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Code:
+(require 'use-package-rcp)
+(require 'keybinds-general-rcp)
+
+;;; ${3:Package}
+;; $0
+
+;;; $1-rcp.el ends here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide '$1-rcp)
