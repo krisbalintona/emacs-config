@@ -14,7 +14,6 @@
 ;; Built-in citations in org-mode
 (use-package oc
   :straight nil
-  :after citar
   :general
   (:keymaps 'org-mode-map
             [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
@@ -59,7 +58,6 @@
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
   :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/citar-capture)
-  :after org-roam org-roam-bibtex
   :general
   (kb/note-keys
     "C" '(kb/citar-capture :wk "Citar-capture")
