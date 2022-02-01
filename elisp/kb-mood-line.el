@@ -338,8 +338,6 @@ dap)."
                                                           (propertize text 'face 'mode-line-inactive)))
                                                       (kb/mood-line-segment-lsp)
                                                       (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
-                                                        lsp-modeline--code-actions-string)
-                                                      (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                                                         (lsp--progress-status))
                                                       ;; (when (bound-and-true-p lsp-mode) ; Error if I don't check for its existence
                                                       ;;   (lsp-modeline--diagnostics-update-modeline)) ; Shows number of errors like flycheck?
