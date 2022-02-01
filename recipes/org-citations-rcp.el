@@ -49,9 +49,6 @@
 (use-package org-roam-bibtex
   :after (org-roam oc embark)
   :ghook 'org-mode-hook ; FIXME 2021-09-14: Make so that I don't need to call in this way
-  :custom
-  (orb-preformat-keywords '("citekey" "author" "date"))
-  (citar-file-open-note-function 'orb-citar-edit-note)
   )
 
 ;;; Citar
