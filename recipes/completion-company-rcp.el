@@ -134,6 +134,12 @@
   (company-prescient-sort-length-enable nil) ; Don't sort by length since some backends already do this in the background
   )
 
+;;; Company-shell
+;; Company completion in `sh-mode'
+(use-package company-shell
+  :after company
+  )
+
 ;;; completion-company-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-company-rcp)

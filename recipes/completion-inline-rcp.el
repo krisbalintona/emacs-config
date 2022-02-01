@@ -142,6 +142,7 @@ default lsp-passthrough."
          (eshell-mode . kb/cape-capf-setup-eshell)
          (git-commit-mode . kb/cape-capf-setup-git-commit)
          (LaTeX-mode . kb/cape-capf-setup-latex)
+         (sh-mode . kb/cape-capf-setup-sh)
          )
   :general (:prefix "M-c"               ; Particular completion function
                     "p" 'completion-at-point
@@ -238,7 +239,6 @@ list of capfs."
                                           '(company-auctex-macros company-auctex-symbols company-auctex-environments))))
                        result)
         (push element completion-at-point-functions))))
-  )
 
 ;;; Custom completions
 (autoload 'ffap-file-at-point "ffap")
@@ -253,6 +253,11 @@ list of capfs."
             (match-end 0)
             #'completion-file-name-table :exclusive 'no))))
 (add-to-list 'completion-at-point-functions #'kb/complete-path-at-point)
+  ;; Sh
+  (defun kb/cape-capf-setup-sh ()
+    (require 'company-shell)
+    (push (cape-company-to-capf #'company-shell) completion-at-point-functions))
+  )
 
 ;;; completion-inline-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
