@@ -203,8 +203,8 @@ Additionally, add `cape-file' as early as possible to the list."
   ;; Org
   (defun kb/cape-capf-setup-org ()
     (let ((result))
-      (dolist (element `(cape-ispell)) result)
-      (push element completion-at-point-functions)))
+      (dolist (element '(cape-ispell) result)
+        (push element completion-at-point-functions))))
 
   ;; Eshell
   (defun kb/cape-capf-setup-eshell ()

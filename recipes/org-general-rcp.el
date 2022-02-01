@@ -77,6 +77,7 @@
 
   ;; Misc
   (org-ctrl-k-protect-subtree t)
+  (org-element-use-cache t)             ; Testing
   :config
   (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
 
