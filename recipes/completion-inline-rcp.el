@@ -188,14 +188,9 @@ Additionally, add `cape-file' as early as possible to the list."
   ;; LSP
   (defun kb/cape-capf-setup-lsp ()
     "Replace the default `lsp-completion-at-point' with its
-`cape-capf-buster' version. Additionally, add `cape-file' to the
-list of capfs."
-    (require 'company-yasnippet)
-    (setq-local completion-at-point-functions
-                (list (cape-company-to-capf #'company-yasnippet)
-                      #'cape-file
-                      (cape-capf-buster #'lsp-completion-at-point)
-                      )))
+`cape-capf-buster' version."
+    (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
+          (cape-capf-buster #'lsp-completion-at-point)))
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
