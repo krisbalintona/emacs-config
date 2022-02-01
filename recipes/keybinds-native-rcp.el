@@ -57,6 +57,8 @@
  :states '(normal visual motion)
  "K" 'join-line
  "J" '(lambda () (interactive) (join-line 1))
+ "C-a" 'back-to-indentation
+ "C-e" 'move-end-of-line
  )
 
 ;;; keybinds-native-rcp.el ends here
