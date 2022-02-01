@@ -138,6 +138,7 @@ default lsp-passthrough."
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
+         ((lsp-mode prog-mode text-mode) . kb/cape-capf-setup-yasnippet)
          (org-mode . kb/cape-capf-setup-org)
          (eshell-mode . kb/cape-capf-setup-eshell)
          (git-commit-mode . kb/cape-capf-setup-git-commit)
@@ -162,6 +163,11 @@ default lsp-passthrough."
                     "r" 'cape-rfc1345
                     )
   :init
+  ;; Yasnippet
+  (defun kb/cape-capf-setup-yasnippet ()
+    (require 'company-yasnippet)
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
+
   ;; Elisp
   (defun kb/cape-capf-ignore-keywords-elisp (cand)
     "Ignore keywords with forms that begin with \":\" (e.g.
@@ -194,11 +200,9 @@ Additionally, add `cape-file' as early as possible to the list."
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
-    (require 'company-yasnippet)
     (let ((result))
-      (dolist (element `(cape-ispell ,(cape-company-to-capf #'company-yasnippet)) result)
-        (push element completion-at-point-functions))
-      ))
+      (dolist (element `(cape-ispell)) result)
+      (push element completion-at-point-functions)))
 
   ;; Eshell
   (defun kb/cape-capf-setup-eshell ()
