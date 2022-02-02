@@ -285,6 +285,8 @@ move to that window."
 (use-package org-superstar  ;; Improved version of org-bullets
   :ghook 'org-mode-hook
   :custom
+  (inhibit-compacting-font-caches t) ; Stop slowdown
+
   (org-cycle-level-faces nil)
   (org-n-level-faces 5)
 
@@ -304,15 +306,17 @@ move to that window."
      ("CANCELLED" . 9745)
      ("[ ]"  . 9744)
      ("[X]"  . 9745)))
-  (org-superstar-headline-bullets-list '("⚝" "●" "◉" "○"))
   (org-superstar-special-todo-items t)  ; Cool todo headlines?
+  (org-superstar-headline-bullets-list '("⚝" "●" "⊙" "○"))
 
   (org-superstar-prettify-item-bullets t)
-  ;; org-superstar-item-bullet-alist ; For plainlist todo items
   (org-superstar-first-inlinetask-bullet ?▶)
-
-  (inhibit-compacting-font-caches t) ; Stop slowdown
-  )
+  (org-superstar-item-bullet-alist      ; Plain lists
+   '((?* . ?￮)
+     (?+ . ?»)
+     (?- . ?➣)
+     ))
+)
 
 ;;;; Org-bars
 (use-package org-bars
