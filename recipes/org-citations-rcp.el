@@ -77,6 +77,8 @@
   (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
   (citar-at-point-function 'embark-act) ; Use `embark'
   :config
+  (general-advice-add '(citar-insert-citation citar-insert-reference citar-open-notes) :before #'citar-refresh)
+  
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
   (setq citar-symbols
