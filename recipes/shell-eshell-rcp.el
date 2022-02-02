@@ -35,9 +35,12 @@
   (kb/open-keys
     "e" '((lambda ()            ; Unique vterm buffer with current directory appended
             (interactive)
-            (eshell (concat "*eshell* "
-                            (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
-                            )))
+            (let ((buf-name (concat "*eshell* "
+                                    (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
+                                    )))
+              (if (member buf-name (mapcar #'buffer-name (buffer-list)))
+                  (display-buffer buf-name)
+                (kb/eshell buf-name))))
           :wk "Eshell"))
   :custom
   (eshell-kill-processes-on-exit t)
