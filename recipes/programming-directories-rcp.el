@@ -115,7 +115,6 @@
 ;;;; Consult-dir
 ;; Convenient directory selection. Good synergy with dired and embark.
 (use-package consult-dir
-  :after embark
   :general
   ("C-x C-d" '(consult-dir :wk "Consult dir"))
   (:keymaps 'vertico-map
