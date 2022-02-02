@@ -13,6 +13,7 @@
 ;;; Org-agenda
 (use-package org-agenda
   :straight nil
+  :gfhook 'hl-line-mode
   :general (kb/open-keys
              "a" '(org-agenda :wk "Org-agenda")
              )
