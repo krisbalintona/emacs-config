@@ -73,7 +73,7 @@
      (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
      (note . "#+title: Notes on ${author editor}, ${title}") ; For new notes
      ))
-  (citar-notes-paths `(,org-roam-directory))
+  (citar-notes-paths `(,kb/roam-dir))
   (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
   (citar-at-point-function 'embark-act) ; Use `embark'
   :config
