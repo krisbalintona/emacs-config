@@ -6,10 +6,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
-(require 'keybinds-evil-rcp)
-(require 'programming-projects-rcp)
 
 ;;; Lsp-java
 (use-package lsp-java
