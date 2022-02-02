@@ -461,6 +461,7 @@
    `(org-document-title ((t (:weight bold :height 1.7 :foreground "goldenrod"))) t)
    `(org-footnote ((t (:foreground ,atom-one-dark-cyan))))
    `(org-sexp-date ((t (:foreground ,atom-one-dark-cyan))))
+   `(org-ellipsis ((t (:inherit nil :height 0.7))) t)
 
    `(org-level-1 ((t (:inherit outline-1 :height 210 :font ,uninspiring-dark-variable-pitch))) t)
    `(org-level-2 ((t (:inherit outline-2 :height 198 :font ,uninspiring-dark-variable-pitch))) t)

@@ -52,6 +52,7 @@
   ;; Aesthetics
   (org-startup-indented t) ; Start with `org-indent-mode'?
   (org-startup-folded 'nofold)
+  (org-ellipsis " ")
   (org-hide-emphasis-markers t)          ; Remove org-mode markup characters
   (org-fontify-quote-and-verse-blocks t) ; Properly syntax highlight block contents
   (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
