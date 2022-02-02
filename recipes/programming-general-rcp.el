@@ -195,8 +195,8 @@
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
-  :demand t               ; Other packages depend on this
   :after which-key        ; Because I replace its value of `prefix-help-command'
+  :commands embark-act
   :general
   (:states '(normal insert visual motion)
            "C-." 'embark-act
