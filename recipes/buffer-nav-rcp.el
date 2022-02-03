@@ -92,10 +92,9 @@ argument, query for word to search."
 ;; https://www.reddit.com/r/emacs/comments/ntnhkc/how_i_jump_around_emacs_with_betterjumper/
 (use-package better-jumper
   :after (evil consult)
-  :general (:states '(normal visual normal insert)
-                    "C-i" 'better-jumper-jump-backward
-                    "C-o" 'better-jumper-jump-forward
-                    "C-p" 'better-jumper-jump-toggle)
+  :general ("H-i" 'better-jumper-jump-backward
+            "H-o" 'better-jumper-jump-forward
+            "H-p" 'better-jumper-jump-toggle)
   :custom
   ;; This is THE key to avoiding conflict with evils' jumping functionality
   (better-jumper-use-evil-jump-advice nil)
