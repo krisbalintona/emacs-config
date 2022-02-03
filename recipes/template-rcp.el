@@ -30,11 +30,9 @@
 (use-package yasnippet
   :hook (emacs-startup . (lambda ()
                            "Ensure my personal snippets dir is first and therefore the
-default when creating snippets"
-                           (push (no-littering-expand-etc-file-name "yasnippet/snippets") yas-snippet-dirs)))
-  :init
-  (yas-global-mode)
-  )
+default when creating snippets. Then start `yas-global-mode'."
+                           (push (no-littering-expand-etc-file-name "yasnippet/snippets") yas-snippet-dirs)
+                           (yas-global-mode))))
 
 ;;; Doom-snippets
 ;; Large library of yasnippet templates
