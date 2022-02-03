@@ -327,10 +327,6 @@
   :general
   (:keymaps 'outshine-mode-map
             "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
-  (:keymaps 'outshine-mode-map
-            :states 'normal
-            "<tab>" '(outshine-kbd-TAB :wk "Outshine TAB")
-            "C-<return>" 'outshine-insert-heading)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
