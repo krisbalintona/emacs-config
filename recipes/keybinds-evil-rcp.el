@@ -48,7 +48,7 @@
   (evil-want-change-word-to-end nil)    ; `cw' deletes to beginning of next word
   (evil-want-C-u-scroll t)              ; `C-u' scroll up?
   (evil-want-C-u-delete t)       ; `C-u' in insert state deletes to indentation?
-  (evil-want-C-i-jump t)         ; `C-i' for evil-jump-backward?
+  (evil-want-C-i-jump nil)       ; `C-i' for evil-jump-backward?
   (evil-want-C-w-delete t)       ; `C-w' deletes word in insert state?
 
   (evil-move-cursor-back nil)
