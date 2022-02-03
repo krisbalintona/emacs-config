@@ -75,6 +75,7 @@
 ;;; Org-super-agenda
 (use-package org-super-agenda
   :after org-agenda
+  :ghook 'org-agenda-mode-hook
   :general (:keymaps 'org-super-agenda-header-map
                      "h" nil            ; Keybinds for org-super-agenda
                      "j" nil
@@ -124,10 +125,7 @@
                  ))
        ))
      ("A" "Archive" todo "DONE|CANCELLED")
-     ))
-  :init
-  (org-super-agenda-mode)
-  )
+     )))
 
 ;;; Org-agenda-property
 ;; Display org-agenda entries' properties alongside them
