@@ -40,13 +40,13 @@
   (corfu-auto-delay 0.15)
 
   (corfu-min-width 80)
-  (corfu-max-width corfu-min-width)
+  (corfu-max-width corfu-min-width)     ; Always have the same width
   (corfu-count 13)
   (corfu-cycle nil)
 
   (corfu-echo-documentation nil)        ; Already use corfu-doc
   (corfu-quit-at-boundary nil)          ; Necessary for orderless
-  (corfu-quit-no-match 1.0) ; Quit if 0 matches, assuming completion started within this integer
+  (corfu-quit-no-match 3.0) ; Quit if no matches, assuming completion started within this integer
   (corfu-commit-predicate 'corfu-candidate-previewed-p)
 
   (corfu-preview-current t)             ; Preview current candidate?
