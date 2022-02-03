@@ -23,6 +23,9 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
+;; Default coding system to UTF-8
+(set-language-environment "UTF-8")
+
 ;;; Native-compilations settings
 ;; Basic settings
 (setq native-comp-deferred-compilation t
