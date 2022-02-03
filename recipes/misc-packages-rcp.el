@@ -231,8 +231,7 @@
     "om" '((lambda ()
              (interactive)
              (pop-to-buffer "*Messages*"))
-           :wk "Open *Messages*")
-    )
+           :wk "Open *Messages*"))
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more
             )

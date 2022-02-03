@@ -9,13 +9,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Dabbrev
-(use-package dabbrev
-  ;; Swap M-/ and C-M-/
-  :general ("M-/" 'dabbrev-completion
-            "C-M-/" 'dabbrev-expand)
-  )
-
 ;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
@@ -81,8 +74,7 @@
     "Use orderless completion style with lsp-capf instead of the
 default lsp-passthrough."
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless)))
-  )
+          '(orderless))))
 
 ;;; Kind-icon
 ;; Icons for corfu!
@@ -206,7 +198,7 @@ Additionally, add `cape-file' as early as possible to the list."
   ;; Org
   (defun kb/cape-capf-setup-org ()
     (let ((result))
-      (dolist (element `(cape-ispell ,(cape-company-to-capf #'company-yasnippet)) result)
+      (dolist (element (list (cape-super-capf #'cape-ispell #'cape-dabbrev) (cape-company-to-capf #'company-yasnippet)) result)
         (push element completion-at-point-functions))))
 
   ;; Eshell
