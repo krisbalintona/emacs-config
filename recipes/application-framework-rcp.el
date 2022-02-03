@@ -20,7 +20,7 @@
   :hook (eaf-pdf-viewer . hide-mode-line-mode)
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
-  (eaf-buffer-background-color "#282C34") ; Set background color to uninspiring-dark background's
+  (eaf-buffer-background-color (face-attribute 'default :background)) ; Set background color to theme's background's
   (eaf-preview-display-function-alist
    '(("org-previewer" . eaf--org-preview-display)
      ("markdown-previewer" . eaf--markdown-preview-display)
