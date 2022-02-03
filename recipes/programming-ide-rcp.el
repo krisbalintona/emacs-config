@@ -148,8 +148,8 @@
 
 ;;; Dap-mode
 (use-package dap-mode
-  :demand t
   :after lsp-mode
+  :commands dap-debug
   :general (kb/lsp-keys
              "d" '(:ignore t :wk "DAP")
              "dd" '(dap-debug :wk "Debug")
@@ -172,8 +172,8 @@
              )
   :custom (dap-auto-configure-features '(;; sessions
                                          locals
-                                         breakpoints
-                                         expressions
+                                         ;; breakpoints
+                                         ;; expressions
                                          controls
                                          tooltip
                                          ))
