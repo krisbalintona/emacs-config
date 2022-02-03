@@ -25,6 +25,8 @@
 (general-define-key
  :keymaps 'global-map
  :states 'insert
+ "C-p" 'previous-line
+ "C-n" 'next-line
  "S-<return>" '(lambda ()                    ; Go back a line
                  (interactive)
                  (forward-line -1)

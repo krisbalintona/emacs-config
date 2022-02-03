@@ -13,18 +13,11 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
-  :hook (lsp-completion-mode . kb/lsp-mode-setup-completion) ; Use corfu for lsp completion
+  :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
-  (:keymaps 'global-map
-            :states 'insert
-            ;; NOTE 2021-08-31: These keybinds override very annoying bindings.
-            ;; This should be set later in the config (after evil) other wise
-            ;; evil will overwrite those bindings
-            "C-n" #'next-line                ; `corfu-next'
-            "C-p" #'previous-line            ; `corfu-previous'
-            "<tab>" #'indent-for-tab-command ; `completion-at-point' or `indent-relative'
-            )
   (:keymaps 'corfu-map
+            "C-n" #'corfu-next
+            "C-p" #'corfu-previous
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
             "M-d" #'corfu-show-documentation
@@ -70,7 +63,7 @@
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 
   ;; Setup lsp to use corfu for lsp completion
-  (defun kb/lsp-mode-setup-completion ()
+  (defun kb/corfu-setup-lsp ()
     "Use orderless completion style with lsp-capf instead of the
 default lsp-passthrough."
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))

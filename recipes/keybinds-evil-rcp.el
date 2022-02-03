@@ -12,6 +12,7 @@
 ;;; Evil
 ;; Emacs vim integration layer
 (use-package evil
+  :ghook 'after-init-hook
   :gfhook 'general-evil-setup    ; Set up `general.el' infrastructure for `evil'
   :general
   ([remap undo] 'evil-undo
@@ -68,7 +69,6 @@
         evil-visual-state-cursor 'hollow
         evil-emacs-state-cursor 'hbar
         evil-want-Y-yank-to-eol t)      ; Must be set here for some reason
-  (evil-mode)
   )
 
 ;;; Evil-collection
