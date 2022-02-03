@@ -35,6 +35,7 @@
   (kb/open-keys
     "e" '((lambda ()            ; Unique vterm buffer with current directory appended
             (interactive)
+            (require 'eshell)
             (let ((buf-name (concat "*eshell* "
                                     (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
                                     )))
