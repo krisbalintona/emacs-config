@@ -334,6 +334,12 @@ newlines."
 (with-eval-after-load 'org-roam-general-rcp
   (add-hook 'before-save-hook (lambda ()
                                 (if (and
+                                     ;; NOTE 2022-02-03: This next line is a very
+                                     ;; important check. It fixes a persistent
+                                     ;; and annoying bug when using
+                                     ;; `org-roam-capture' and sometimes its
+                                     ;; variants.
+                                     (file-exists-p (buffer-file-name (current-buffer)))
                                      (eq major-mode 'org-mode) ; Org-mode
                                      (not (string-equal default-directory (expand-file-name kb/agenda-dir)))) ; Not agenda-dir
                                     (let ((current-prefix-arg 4)) ; Emulate C-u
