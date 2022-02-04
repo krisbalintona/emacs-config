@@ -35,6 +35,7 @@
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)     ; Always have the same width
   (corfu-count 13)
+  (corfu-scroll-margin 4)
   (corfu-cycle nil)
 
   (corfu-echo-documentation nil)        ; Already use corfu-doc
