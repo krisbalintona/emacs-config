@@ -242,6 +242,12 @@ Info node `(eshell)Top'."
   :config (eshell-syntax-highlighting-global-mode)
   )
 
+;;; Pcmpl-args
+;; Extend pcomplete to another level. Pcomplete is what eshell relies on for completion
+(use-package pcmpl-args
+  :after eshell
+  )
+
 ;;; Esh-autosuggest
 ;; Has shadowed suggestions from shell history (like in zsh)
 (use-package esh-autosuggest

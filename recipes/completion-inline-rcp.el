@@ -76,9 +76,9 @@ default lsp-passthrough."
   :after corfu
   :custom
   (kind-icon-use-icons t)
+  (kind-icon-default-face 'corfu-default) ; To unify background color
   (kind-icon-blend-background nil)  ; Mix foreground and background ("blended")?
   (kind-icon-blend-frac 0.08)
-  (kind-icon-default-face 'corfu-default) ; To compute blended backgrounds correctly
 
   ;; Svg-lib dependency
   (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/")) ; Change cache dir
@@ -243,6 +243,16 @@ Additionally, add `cape-file' as early as possible to the list."
                  ,(cape-company-to-capf #'company-yasnippet)))
       (add-hook 'completion-at-point-functions f nil t)))
   (advice-add 'org-roam--register-completion-functions-h :override #'kb/cape-capf-setup-org-roam)
+  :config
+  ;; For pcomplete. For now these two advices are strongly recommended to
+  ;; achieve a sane Eshell experience. See
+  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-shell-or-eshell
+
+  ;; Silence the pcomplete capf, no errors or messages!
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  ;; Ensure that pcomplete does not write to the buffer and behaves as a pure
+  ;; `completion-at-point-function'.
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
   )
 
 ;;; completion-inline-rcp.el ends here
