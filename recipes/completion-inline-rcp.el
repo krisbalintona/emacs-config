@@ -172,16 +172,12 @@ variable entirely, or adding to list).
 
 Additionally, add `cape-file' as early as possible to the list."
     (setf (elt (cl-member 'elisp-completion-at-point completion-at-point-functions) 0)
-          (cape-super-capf
-           #'elisp-completion-at-point
-           #'tempel-complete ; Prefer this over the exact match from `tempel-expand'
-           ))
+          #'elisp-completion-at-point)
     (add-to-list 'completion-at-point-functions #'cape-symbol)
     ;; I prefer this being early/first in the list
     (add-to-list 'completion-at-point-functions #'cape-file)
     (require 'company-yasnippet)
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
-    )
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
 
   ;; LSP
   (defun kb/cape-capf-setup-lsp ()
@@ -189,15 +185,17 @@ Additionally, add `cape-file' as early as possible to the list."
 `cape-capf-buster' version."
     (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
           (cape-capf-buster #'lsp-completion-at-point))
-    (push #'cape-file completion-at-point-functions)
+    (add-to-list 'completion-at-point-functions #'cape-file)
     (require 'company-yasnippet)
-    (push (cape-company-to-capf #'company-yasnippet) completion-at-point-functions))
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
+
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
     (let ((result))
       (dolist (element (list (cape-super-capf #'cape-ispell #'cape-dabbrev) (cape-company-to-capf #'company-yasnippet)) result)
-        (push element completion-at-point-functions))))
+        (add-to-list 'completion-at-point-functions element))))
+
 
   ;; Eshell
   (defun kb/cape-capf-setup-eshell ()
@@ -214,8 +212,7 @@ Additionally, add `cape-file' as early as possible to the list."
      "<tab>" 'completion-at-point)      ; Keybinding for `completion-at-point'
     (let ((result))
       (dolist (element '(cape-symbol) result)
-        (push element completion-at-point-functions))
-      ))
+        (add-to-list 'completion-at-point-functions element))))
 
   ;; LaTeX
   (defun kb/cape-capf-setup-latex ()
@@ -234,12 +231,14 @@ Additionally, add `cape-file' as early as possible to the list."
                          (apply-partially #'company--multi-backend-adapter
                                           '(company-auctex-macros company-auctex-symbols company-auctex-environments))))
                        result)
-        (push element completion-at-point-functions))))
+        (add-to-list 'completion-at-point-functions element))))
+
 
   ;; Sh
   (defun kb/cape-capf-setup-sh ()
     (require 'company-shell)
-    (push (cape-company-to-capf #'company-shell) completion-at-point-functions))
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-shell)))
+
 
   ;; Org-roam
   (defun kb/cape-capf-setup-org-roam ()
