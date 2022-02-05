@@ -380,35 +380,23 @@ given."
 ;;;; Tree-sitter
 ;; Create a syntax tree (e.g. the role of each piece of code) and add syntax
 ;; highlighting from it (rather than regex and indentation). Additionally, the
-;; syntax tree itself can help debug and quick editing in some cases. The
-;; following are the currently supported languages (provided by
-;; `tree-sitter-langs')
-;; C
-;; C++
-;; CSS
-;; Go
-;; HTML
-;; Java
-;; JavaScript
-;; PHP
-;; Python
-;; Ruby
-;; Rust
-;; TypeScript
+;; syntax tree itself can help debug and quick editing in some cases.
 (use-package tree-sitter
   :hook (tree-sitter-after-on . tree-sitter-hl-mode) ; Enable syntax highlighting whenever possible
   :init
   (global-tree-sitter-mode)     ; Enable for all supported tree-sitter languages
-  :config
-  ;; Supported language bundle for tree-sitter
-  (use-package tree-sitter-langs
-    :init
-    (tree-sitter-langs-install-grammars
-     t
-     tree-sitter-langs--bundle-version
-     tree-sitter-langs--os)
-    )
   )
+
+;;;; Tree-sitter-langs
+;; Supported language bundle for tree-sitter
+(use-package tree-sitter-langs
+  :after tree-sitter
+  :defer 5                              ; Best solution I could think of...
+  :config
+  (tree-sitter-langs-install-grammars   ; Install language bundles
+   t
+   tree-sitter-langs--bundle-version
+   tree-sitter-langs--os))
 
 ;;;; Tree-sitter-indent
 ;; Replaces `indent-line-function' with a tree-sitter indent function.
