@@ -14,7 +14,7 @@
 ;; Built-in for sh-mode
 (use-package sh-script
   :after (flycheck lsp)
-  :ensure-system-package (shellcheck . ShellCheck)
+  :ensure-system-package shellcheck
   :mode (("\\.bats\\'" . sh-mode)
          ("\\.\\(?:zunit\\|env\\)\\'" . sh-mode)
          ("/bspwmrc\\'" . sh-mode))
