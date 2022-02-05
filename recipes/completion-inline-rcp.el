@@ -13,7 +13,11 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
-  :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+  :hook ((lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+         (lsp-mode . (lambda ()
+                       (setq-local corfu-auto t
+                                   corfu-quit-at-boundary t)
+                       )))
   :general
   (:keymaps 'corfu-map
             "C-n" #'corfu-next
@@ -29,12 +33,12 @@
   (completion-cycle-threshold nil)      ; Always show candidates in menu
 
   (corfu-auto nil)
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.15)
+  (corfu-auto-prefix 3)
+  (corfu-auto-delay 0.5)
 
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)     ; Always have the same width
-  (corfu-count 13)
+  (corfu-count 14)
   (corfu-scroll-margin 4)
   (corfu-cycle nil)
 
