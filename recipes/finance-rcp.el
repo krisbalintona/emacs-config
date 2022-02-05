@@ -36,7 +36,18 @@
   (kb/yank-kill-keys
     :keymaps 'ledger-mode-map
     :states '(normal insert)
-    "d" '(kb/insert-date :wk "Insert date")
+    "d" '((lambda (prefix)
+            "Insert the current date. Accepts a PREFIX to change date format.
+Mainly used for `ledger-mode'."
+            (interactive "P")
+            (let ((format (cond
+                           ((not prefix) "%Y/%m/%d")
+                           ((equal prefix '(4)) "%d/%m/%Y"))) ; Other format
+                  (system-time-locale "de_DE"))
+              (insert (format-time-string format)))
+            (insert " ")
+            (evil-insert-state))
+          :wk "Insert date")
     "e" '(ledger-insert-effective-date :wk "Insert effective date")
     )
   (:keymaps 'ledger-report-mode-map

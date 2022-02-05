@@ -93,20 +93,6 @@
 (kb/general-keys
   "TAB" '(kb/format-buffer-indentation :wk "Format buffer's indentation"))
 
-;;; Insert date
-(defun kb/insert-date (prefix)
-  "Insert the current date. Accepts a PREFIX to change date format.
-Mainly used for `ledger-mode'."
-  (interactive "P")
-  (let ((format (cond
-                 ((not prefix) "%Y/%m/%d")
-                 ((equal prefix '(4)) "%d/%m/%Y"))) ; Other format
-        (system-time-locale "de_DE"))
-    (insert (format-time-string format)))
-  (insert " ")
-  (evil-insert-state)
-  )
-
 ;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
   "Copy the current buffer's path to the kill ring."
@@ -152,45 +138,6 @@ Mainly used for `ledger-mode'."
 (kb/file-keys
   "D" '(kb/delete-this-file :wk "Delete current file")
   )
-
-;;; Idle quote
-;; Display a random quote in the minibuffer after a certain amount of idle time.
-;; It's useful to get inspiration when stuck writing
-(defconst kb/quotes
-  '("You can't see paradise, if you don't pedal.  - Chicken Run "
-    "He who who says he can and he who says he can’t are both usually right ― Confucius"
-    "Why waste time proving over and over how great you are when you could be getting better? - Dweck The Mindset"
-    "You’re not a failure until you start to assign blame. - The legendary basketball coach John Wooden"
-    "I could hear my heart beating. I could hear everyone's heart. I could hear the human noise we sat there making, not one of us moving, not even when the room went dark. - Raymond Carver"
-    "A writer is a sum of their experiences. Go get some - Stuck in Love (2012)"
-    "If there is any one secret of success, it lies in the ability to get the other person's point of view and see things from that person's angle as well as from your own. - Henry Ford"
-    "People who can put themselves in the place of other people who can understand the workings of their minds, need never worry about what the future has in store for them. - Owen D. Young"
-    "Good quotes they can be useful for creative writers as well."
-    ))
-
-(defun kb/show-random-quotes ()
-  "Show random quotes to minibuffer."
-  (interactive)
-  (message "%s" (nth (random (length kb/quotes))
-                     kb/quotes)
-           ))
-
-(run-with-idle-timer 300 t 'kb/show-random-quotes)
-
-;;; Run command and return output as string without newlines
-(defun kb/shell-command-to-string (command)
-  "Execute shell command COMMAND and return its output as a string, removing any
-newlines."
-  (let* ((str (with-output-to-string
-                (with-current-buffer
-                    standard-output
-                  (shell-command command t))))
-         (len (length str)))
-    (cond
-     ((and (> len 0) (eql (aref str (- len 1)) ?\n))
-      (substring str 0 (- len 1)))
-     (t str))
-    ))
 
 ;;; Empty trash
 (defun kb/empty-trash ()
@@ -252,46 +199,6 @@ newlines."
       (dolist (feature package-features)
         (require feature))
       (message "Reloaded: %s" (mapconcat #'symbol-name package-features " ")))))
-
-;;;; Font-compare
-(defvar lorem-ipsum-text)
-
-  ;;;###autoload
-(defun unpackaged/font-compare (text fonts)
-  "Compare TEXT displayed in FONTS.
-
-  If TEXT is nil, use `lorem-ipsum' text. FONTS is a list of font
-  family strings and/or font specs.
-
-  Interactively, prompt for TEXT, using `lorem-ipsum' if left
-  empty, and select FONTS with `x-select-font', pressing Cancel to
-  stop selecting fonts."
-  (interactive (list (pcase (read-string "Text: ")
-                       ("" nil)
-                       (else else))
-                     ;; `x-select-font' calls quit() when Cancel is pressed, so we use
-                     ;; `inhibit-quit', `with-local-quit', and `quit-flag' to avoid that.
-                     (let ((inhibit-quit t))
-                       (cl-loop for font = (with-local-quit
-                                             (x-select-font))
-                                while font
-                                collect font into fonts
-                                finally do (setf quit-flag nil)
-                                finally return fonts))))
-  (setq text (or text (s-word-wrap 80 (s-join " " (progn
-                                                    (require 'lorem-ipsum)
-                                                    (seq-random-elt lorem-ipsum-text))))))
-  (with-current-buffer (get-buffer-create "*Font Compare*")
-    (erase-buffer)
-    (--each fonts
-      (let ((family (cl-typecase it
-                      (font (symbol-name (font-get it :family)))
-                      (string it))))
-        (insert family ": "
-                (propertize text
-                            'face (list :family family))
-                "\n\n")))
-    (pop-to-buffer (current-buffer))))
 
 ;;;; Org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer

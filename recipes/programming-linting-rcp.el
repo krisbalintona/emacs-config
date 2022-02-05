@@ -9,7 +9,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'personal-variables-rcp)
-(require 'convenient-functions-rcp)     ; For `kb/shell-command-to-string'
 
 ;;; Flycheck
 ;; Check your code

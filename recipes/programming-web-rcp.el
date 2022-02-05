@@ -33,7 +33,20 @@
   (web-mode-comment-style 2)
 
   (flycheck-handlebars-executable (kb/shell-command-to-string "which handlebars"))
-  )
+  :init
+  (defun kb/shell-command-to-string (command)
+    "Execute shell command COMMAND and return its output as a string,
+removing any newlines."
+    (let* ((str (with-output-to-string
+                  (with-current-buffer
+                      standard-output
+                    (shell-command command t))))
+           (len (length str)))
+      (cond
+       ((and (> len 0) (eql (aref str (- len 1)) ?\n))
+        (substring str 0 (- len 1)))
+       (t str))
+      )))
 
 ;;; CSS-mode
 (use-package css-mode
