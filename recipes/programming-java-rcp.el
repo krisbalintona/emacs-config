@@ -25,7 +25,7 @@
 ;;; Helm-lsp
 ;; Helm interface -- really the only option...
 (use-package helm-lsp
-  :after 'lsp
+  :after lsp-mode
   )
 
 ;;; programming-java-rcp.el ends here
