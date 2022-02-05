@@ -235,24 +235,22 @@
                    t (if prefix
                          nil
                        'tree)))
-
-;; Call this function before every save in an org file. Don't do this for
-;; org-agenda files - it makes it ugly
-(with-eval-after-load 'org-roam-general-rcp
-  (add-hook 'before-save-hook (lambda ()
-                                (if (and
-                                     ;; NOTE 2022-02-03: This next line is a very
-                                     ;; important check. It fixes a persistent
-                                     ;; and annoying bug when using
-                                     ;; `org-roam-capture' and sometimes its
-                                     ;; variants.
-                                     (file-exists-p (buffer-file-name (current-buffer)))
-                                     (eq major-mode 'org-mode) ; Org-mode
-                                     (not (string-equal default-directory (expand-file-name kb/agenda-dir)))) ; Not agenda-dir
-                                    (let ((current-prefix-arg 4)) ; Emulate C-u
-                                      (call-interactively 'unpackaged/org-add-blank-lines)))
-                                ))
-  )
+(defun kb/org-add-blank-lines ()
+  "Call `unpackaged/org-add-blank-lines' before saving in org files
+which are not in `kb/agenda-dir'."
+  (when (and
+         ;; NOTE 2022-02-03: This next line is a very
+         ;; important check. It fixes a persistent
+         ;; and annoying bug when using
+         ;; `org-roam-capture' and sometimes its
+         ;; variants.
+         (buffer-file-name)
+         (eq major-mode 'org-mode) ; Org-mode
+         (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
+         )
+    (let ((current-prefix-arg 4)) ; Emulate C-u
+      (call-interactively 'unpackaged/org-add-blank-lines))))
+;; (add-hook 'before-save-hook #'kb/org-add-blank-lines)
 
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
