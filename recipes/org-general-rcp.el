@@ -268,6 +268,7 @@ move to that window."
 ;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
+  :disabled t                           ; Buggy
   :ghook 'org-mode-hook
   :custom
   (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
