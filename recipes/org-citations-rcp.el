@@ -78,7 +78,7 @@
   (citar-at-point-function 'embark-act) ; Use `embark'
   :config
   (general-advice-add '(citar-insert-citation citar-insert-reference citar-open-notes) :before #'citar-refresh)
-  
+
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
   (setq citar-symbols
@@ -101,6 +101,7 @@
   ;; https://jethrokuan.github.io/org-roam-guide/
   (defun kb/citar-capture (keys-entries)
     (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
+    (citar-refresh)                     ; Make sure citar updates its cache
     (let ((title (citar--format-entry-no-widths (cdr keys-entries)
                                                 "${author editor}${date urldate} :: ${title}")))
       (org-roam-capture- :templates
