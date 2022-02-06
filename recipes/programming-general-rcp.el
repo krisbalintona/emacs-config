@@ -238,7 +238,7 @@
 
 ;;;; Hideshow
 (use-package hideshow
-  :hook ((prog-mode conf-mode text-mode) . hs-minor-mode)
+  :hook ((prog-mode conf-mode) . hs-minor-mode)
   :general
   (:prefix "C-c h"
            "t" '(hs-hide-block :wk "Toggle hide")
