@@ -255,8 +255,8 @@
 
 ;;;; Expand-region
 (use-package expand-region
-  :general ("M-e" 'er/expand-region)
-  )
+  :general (:states '(normal visual)
+                    "M-e" 'er/expand-region))
 
 ;;; File or buffer utilities
 ;;;; Autorevert

@@ -18,7 +18,8 @@
   ([remap undo] 'evil-undo
    [remap undo-redo] 'evil-redo)
   (:states 'insert
-           "<escape>" 'evil-normal-state)
+           "<escape>" 'evil-normal-state
+           "M-e" 'evil-normal-state)
   (kb/window-keys
     "w" 'evil-window-mru
 
