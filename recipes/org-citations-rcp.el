@@ -121,8 +121,8 @@
 ;;; Oc-citar
 ;; Citar compatibility with `org-cite'
 (use-package citar-org
-  :demand t                            ; Otherwise it won't be required anywhere
   :straight nil
+  :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/citar-capture)
   :after (citar oc)
   :custom
   ;; Use `citar'
@@ -134,7 +134,7 @@
 ;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
-  :defer 15
+  :commands org-export-dispatch
   :after ox
   :ensure-system-package pandoc
   )

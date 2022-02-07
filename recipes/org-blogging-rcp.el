@@ -12,7 +12,6 @@
 ;;; Ox-hugo
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
-  :demand t
   :after (ox org-roam)
   :ensure-system-package hugo
   :custom
@@ -21,8 +20,6 @@
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lasfmod if modified at least a week later
   :config
-  (org-roam-update-org-id-locations)    ; Necessary for id's to be recognized for exports
-
   ;; NOTE 2021-09-12: To ensure that anchor links directly to the headline are
   ;; functional, we need to patch `ox-html` to respect the ID property as the
   ;; anchor tag. From
@@ -66,6 +63,7 @@ targets and targets."
   (defun kb/org-hugo-org-roam-sync-all()
     "Export all org-roam files to Hugo in my blogging directory."
     (interactive)
+    (org-roam-update-org-id-locations) ; Necessary for id's to be recognized for exports
     (let* ((buffers (buffer-list)))
       (dolist (fil (org-roam--list-files (expand-file-name (concat org-roam-directory "blog"))))
         (with-current-buffer (find-file-noselect fil)
