@@ -43,6 +43,10 @@
   ;; `kb/comment-keywords-writing' in this list, otherwise those words will not
   ;; appear in any calls to `kb/comment-dwim'.
   (hl-todo-keyword-faces kb/comment-keyword-faces)
+  ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
+  ;; hl-todo's punctuation highlighting.
+  (hl-todo-require-punctuation nil)
+  (hl-todo-highlight-punctuation "")
   )
 
 ;;;; Highlight-indent-guides

@@ -105,6 +105,14 @@ move to that window."
   (org-export-with-sub-superscripts nil)
   )
 
+;;;; Org-contrib
+(use-package org-contrib
+  :after org
+  :init
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines)) ; The ignore tag will export contents but ignore heading
+  )
+
 ;;;; Ox-odt
 (use-package ox-odf
   :after (ox org)
@@ -194,15 +202,6 @@ move to that window."
           ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
           )
         org-latex-classes)
-  )
-
-;;;; Org-contrib
-(use-package org-contrib
-  :demand t
-  :after org
-  :config
-  (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines)) ; The ignore tag will export contents but ignore heading
   )
 
 ;;; Org-footnote
