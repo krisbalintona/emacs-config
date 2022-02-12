@@ -10,6 +10,9 @@
 (require 'keybinds-general-rcp)
 
 ;;; Helm
+;; NOTE 2022-02-11: This fixes a breaking commit. See
+;; https://github.com/emacs-helm/helm/issues/2481
+(use-package helm-core :straight t)
 ;; Feature-rich version of Ivy completion
 ;; NOTE: With the experimental minor mode selectrum-helm-mode, Helm defaults
 ;; to using complete-read (and thus Selectrum when selectrum-mode is active)
