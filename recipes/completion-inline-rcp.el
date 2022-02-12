@@ -13,11 +13,7 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
-  :hook ((lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
-         (lsp-mode . (lambda ()
-                       (setq-local corfu-auto t
-                                   corfu-quit-at-boundary t)
-                       )))
+  :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
             "C-n" #'corfu-next
@@ -26,6 +22,10 @@
             "<return>" #'corfu-insert
             "M-d" #'corfu-show-documentation
             "M-l" #'corfu-show-location)
+  (:keymaps '(corfu-map general-override-mode-map)
+            :states 'insert
+            "H-SPC" #'corfu-insert-separator
+            "SPC" #'corfu-insert-separator)
   :custom
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
@@ -33,8 +33,8 @@
   (completion-cycle-threshold nil)      ; Always show candidates in menu
 
   (corfu-auto nil)
-  (corfu-auto-prefix 3)
-  (corfu-auto-delay 0.5)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.25)
 
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)     ; Always have the same width
@@ -43,11 +43,10 @@
   (corfu-cycle nil)
 
   (corfu-echo-documentation nil)        ; Already use corfu-doc
-  (corfu-quit-at-boundary nil)          ; Necessary for orderless
-  (corfu-quit-no-match 3.0) ; Quit if no matches, assuming completion started within this integer
-  (corfu-commit-predicate 'corfu-candidate-previewed-p)
+  (corfu-separator ?\s)                 ; Necessary for use with orderless
+  (corfu-quit-no-match 'separator)
 
-  (corfu-preview-current t)             ; Preview current candidate?
+  (corfu-preview-current 'insert)       ; Preview current candidate?
   (corfu-preselect-first t)             ; Preselect first candidate?
 
   ;; Other
