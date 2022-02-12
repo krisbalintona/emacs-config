@@ -117,7 +117,7 @@
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
-  :after eaf
+  :after (eaf org-transclusion)
   :load-path (lambda () (list (concat user-emacs-directory "popweb")))
   :straight nil
   :hook (latex-mode . popweb-latex-mode)
@@ -132,6 +132,9 @@
   (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/dict"))
   (require 'popweb-dict-bing)           ; Translation using Bing
   (require 'popweb-dict-youdao)         ; Translation using Youdao
+  ;; Org-roam
+  (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/org-roam"))
+  (require 'popweb-org-roam-link)
   )
 
 ;;; application-framework-rcp.el ends here
