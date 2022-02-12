@@ -71,11 +71,12 @@
 (defun kb/format-buffer-indentation ()
   "Properly indent the entire buffer."
   (interactive)
-  (cond ((eq major-mode 'latex-mode)
+  (require 'apheleia)
+  (cond ((eq major-mode 'latex-mode)    ; LaTeX
          (kb/format-buffer-indentation--base)
          (require 'latex-general-rcp)
          (kb/tabular-magic))
-        ((eq major-mode 'org-mode)
+        ((eq major-mode 'org-mode)      ; Org-mode
          (let* ((modified-before (buffer-modified-p)))
            (kb/format-buffer-indentation--base)
            ;; Save buffer if modified and in `org-mode' because drawers are
@@ -83,10 +84,13 @@
            (if (and (not modified-before) (buffer-modified-p))
                (save-buffer))
            ))
-        ((or (eq major-mode 'emacs-lisp-mode)
+        ((or (eq major-mode 'emacs-lisp-mode) ; Emacs-lisp
              (eq major-mode 'lisp-interaction-mode))
          (kb/format-buffer-indentation--base))
-        ((derived-mode-p 'prog-mode)
+        ((apheleia--get-formatters)     ; If available apheleia formatter
+         (let* ((apheleia-mode t))      ; Save silently
+           (apheleia--format-after-save)))
+        ((derived-mode-p 'prog-mode)    ; Prog-mode
          (kb/format-buffer-indentation--fill-column))
         (t (kb/format-buffer-indentation--base))
         ))

@@ -194,7 +194,6 @@
                           (luafmt . nodejs-lua-fmt)
                           (google-java-format)
                           )
-  :hook (after-init . apheleia-global-mode)
   :custom
   ;; Take a look at the `format-all' package for how to install particular
   ;; formatters as well as their proper CLI commands. Namely, inspect
