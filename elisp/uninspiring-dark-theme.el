@@ -105,7 +105,7 @@
    `(tooltip ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg-1 :inherit variable-pitch))))
 
    `(font-lock-builtin-face ((t (:foreground ,atom-one-dark-cyan))))
-   `(font-lock-comment-face ((t (:foreground ,atom-one-dark-mono-3 :slant italic))))
+   `(font-lock-comment-face ((t (:foreground ,atom-one-dark-mono-3))))
    `(font-lock-comment-delimiter-face ((default (:inherit (font-lock-comment-face)))))
    `(font-lock-doc-face ((t (:inherit (font-lock-string-face)))))
    `(font-lock-function-name-face ((t (:foreground ,atom-one-dark-blue))))
@@ -526,7 +526,9 @@
    `(selectrum-prescient-secondary-highlight ((t (:foreground "#E5C07B"))))
 
 ;;;; Lsp
+   `(lsp-face-semhl-comment ((t (:inherit font-lock-comment-face :underline t))))
    `(lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
+   `(lsp-face-highlight-write ((t (:inherit nil :underline t))))
 
 ;;;; Solaire
    ;; From mood-one theme
