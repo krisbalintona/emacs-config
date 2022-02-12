@@ -47,13 +47,10 @@
 ;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
-  :disabled t ; Issue with org-roam-node-capture
-  :straight (org-transclusion :type git :host github :repo "nobiot/org-transclusion")
   :after org-roam
-  :ghook ('org-mode-hook 'org-transclusion-activate)
+  :hook (org-mode . org-transclusion-activate)
   :general
   (kb/toggle-keys
-    :keymaps 'org-mode-map
     "c" '(org-transclusion-mode :wk "Toggle mode")
     "R" '(org-transclusion-refresh :wk "Refresh")
     "m" '(org-transclusion-make-from-link :wk "Make")
@@ -65,9 +62,6 @@
   :custom
   (org-transclusion-include-first-section t)
   (org-transclusion-exclude-elements '(property-drawer keyword))
-  :config
-  ;; Currently need to look through Roam directory, not just agenda files
-  (org-id-update-id-locations (org-roam--list-all-files))
   )
 
 ;;; Org-roam-ui
