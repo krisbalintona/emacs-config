@@ -17,7 +17,11 @@
   :gfhook
   'lsp-enable-which-key-integration
   'lsp-headerline-breadcrumb-mode
-  :general (kb/lsp-keys ; Remap all the keys from `lsp-command-map'
+  :general 
+  (:keymaps 'lsp-mode-map
+            :states 'insert
+            "<tab>" 'indent-for-tab-command)
+  (kb/lsp-keys ; Remap all the keys from `lsp-command-map'
              "w" '(ignore t :wk "Workspaces")
              "wD" '(lsp-disconnect :wk "disconnect")
              "wd" '(lsp-describe-session :wk "describe session")
