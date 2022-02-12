@@ -206,7 +206,7 @@
      (clang-format "clang-format")
      (mix-format "mix" "format" "-")
      (gofmt "gofmt")
-     (google-java-format "google-java-format" "--aosp" "--skip-javadoc-formatting" "--skip-removing-unused-imports" "-")
+     (google-java-format "google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
      (isort "isort" "--stdout" "-")
      (ocamlformat "ocamlformat" "-" "--name" filepath)
      (prettier npx "prettier" "--stdin-filepath" filepath)
