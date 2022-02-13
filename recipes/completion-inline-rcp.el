@@ -130,7 +130,6 @@ default lsp-passthrough."
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
-         ((lsp-mode prog-mode text-mode) . kb/cape-capf-setup-yasnippet)
          (org-mode . kb/cape-capf-setup-org)
          (eshell-mode . kb/cape-capf-setup-eshell)
          (git-commit-mode . kb/cape-capf-setup-git-commit)
@@ -155,11 +154,6 @@ default lsp-passthrough."
                     "r" 'cape-rfc1345
                     )
   :init
-  ;; Yasnippet
-  (defun kb/cape-capf-setup-yasnippet ()
-    (require 'company-yasnippet)
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
-
   ;; Elisp
   (defun kb/cape-capf-ignore-keywords-elisp (cand)
     "Ignore keywords with forms that begin with \":\" (e.g.
@@ -184,10 +178,12 @@ Additionally, add `cape-file' as early as possible to the list."
   ;; LSP
   (defun kb/cape-capf-setup-lsp ()
     "Replace the default `lsp-completion-at-point' with its
-`cape-capf-buster' version."
+`cape-capf-buster' version. Also add `cape-file' and
+`company-yasnippet' backends."
     (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
           (cape-capf-buster #'lsp-completion-at-point))
-    (add-to-list 'completion-at-point-functions #'cape-file))
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
 
 
   ;; Org
