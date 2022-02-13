@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: @throws
+# key: throws
+# condition: (sp-point-in-comment)
+# --
+@throws ${1:RuntimeException} $0
