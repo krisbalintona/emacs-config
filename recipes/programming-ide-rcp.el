@@ -95,7 +95,7 @@
 
   ;; When you hover over a symbol
   (lsp-enable-symbol-highlighting t)
-  (lsp-symbol-highlighting-skip-current nil) ; When highlighting, don't highlight symbol on point
+  (lsp-symbol-highlighting-skip-current nil) ; When highlighting, don't highlight symbol at point?
   )
 
 ;;; Lsp-ui
