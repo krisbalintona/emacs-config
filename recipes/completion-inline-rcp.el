@@ -16,11 +16,14 @@
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
+            :states 'insert
             "C-n" #'corfu-next
             "C-p" #'corfu-previous
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
             "M-d" #'corfu-show-documentation
+            "C-g" #'corfu-quit
+            "SPC" #'corfu-insert-separator
             "M-l" #'corfu-show-location)
   (:keymaps '(corfu-map general-override-mode-map)
             :states 'insert
