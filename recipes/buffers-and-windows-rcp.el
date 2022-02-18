@@ -281,6 +281,7 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*Backtrace\\*"
      "^\\*Customize*"
      "^\\*compilation\\*"
+     comint-mode
 
      ;; Coding
      "[Oo]utput\\*"
