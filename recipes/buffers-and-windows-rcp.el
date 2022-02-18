@@ -313,8 +313,7 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*IPython3.*\\*$"
      py-shell-mode
      ))
-  (popper-display-control 'user)
-  (popper-display-function 'popper-select-popup-at-bottom)
+  (popper-display-control nil)
   (popper-group-function
    #'(lambda ()
        (cond
