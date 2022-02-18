@@ -82,16 +82,18 @@
     "Gs" '(lsp-ui-peek-find-workspace-symbol :wk "peek workspace symbol")
     )
   :custom
-  (lsp-keymap-prefix "C-x l")           ; Also have this be a prefix
+  (lsp-keymap-prefix "H-l")             ; Also have this be a prefix
   (lsp-auto-guess-root nil)
   (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't fontify headline breadcrumb text (janky fix)
-  (lsp-semantic-tokens-enable t)
   (lsp-modeline-diagnostics-scope :file)
   (lsp-modeline-code-actions-segments '(count icon name))
   (lsp-enable-file-watchers t) ; Affects performance. Enable if I do actual programming
   (lsp-file-watch-threshold 5000) ; Increase number of watched files until prompt emerges
   (lsp-log-io nil)                ; If set to true can cause a performance hit
+
+  ;; Semantic tokens - font locking based on word's role
+  (lsp-semantic-tokens-enable t)
 
   ;; When you hover over a symbol
   (lsp-enable-symbol-highlighting t)
