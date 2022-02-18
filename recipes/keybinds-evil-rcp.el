@@ -44,7 +44,6 @@
     )
   :custom
   (evil-want-integration t)
-  (evil-want-keybinding nil)    ; Add more keybinds for other modes I don't want
 
   (evil-want-change-word-to-end nil)    ; `cw' deletes to beginning of next word
   (evil-want-C-u-scroll t)              ; `C-u' scroll up?
@@ -99,6 +98,9 @@
                tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff view vlf vterm w3m wdired wgrep which-key woman xref youtube-dl
                (ztree ztree-diff)
                xwidget))
+  :preface
+  ;; Put here to be extra sure that this variable is set before evil-collection
+  (setq evil-want-keybinding nil)
   :init
   ;; Load immediately (rather than hook) so other keybind calls won't be
   ;; overridden in config
