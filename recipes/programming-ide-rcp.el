@@ -213,7 +213,7 @@
                                  tooltip
                                  ))
 
-  ;; Setting windows positions to be on the left side
+  ;; Dap-ui window configurations
   (dap-ui-buffer-configurations
    `((,dap-ui--sessions-buffer
       (side . right)

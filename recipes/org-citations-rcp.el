@@ -130,14 +130,6 @@
   (org-cite-activate-processor 'citar)
   )
 
-;;; Ox-pandoc
-;; Export to whatever file format pandoc can export to
-(use-package ox-pandoc
-  :commands org-export-dispatch
-  :after ox
-  :ensure-system-package pandoc
-  )
-
 ;;; org-citations-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-citations-rcp)
