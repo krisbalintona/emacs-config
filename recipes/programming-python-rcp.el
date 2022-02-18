@@ -63,8 +63,6 @@
   :custom
   (dap-python-executable "ipython3")
   (dap-python-debugger 'debugpy)        ; Updated version of ptvsd
-  (dap-debug-compilation-keep t)        ; Keep output window in success?
-  (dap-debug-restart-keep-session nil)  ; Delete previous sessions
   )
 
 ;;; Lsp-pyright

@@ -157,33 +157,86 @@
 (use-package dap-mode
   :after lsp-mode
   :commands dap-debug
-  :general (kb/lsp-keys
-             "d" '(:ignore t :wk "DAP")
-             "dd" '(dap-debug :wk "Debug")
-             "dl" '(dap-debug-last :wk "Debug last")
-             "dh" '(dap-hydra :wk "Hydra")
-             "dq" '(dap-disconnect :wk "Quit")
-             "dr" '(dap-ui-repl :wk "REPL")
+  :general
+  (:keymaps 'lsp-mode-map
+            :prefix "H-d"
+            "d" '(dap-debug :wk "Debug")
+            "l" '(dap-debug-last :wk "Debug last")
+            "h" '(dap-hydra :wk "Hydra")
+            "q" '(dap-disconnect :wk "Quit")
+            "r" '(dap-ui-repl :wk "REPL")
 
-             "db" '(:ignore t :wk "Breakpoints")
-             "dbt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
-             "dba" '(dap-breakpoint-toggle :wk "Add breakpoint")
-             "dbd" '(dap-breakpoint-delete :wk "Delete breakpoint")
-             "dbD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
-             "dbl" '(dap-breakpoint-log-message :wk "Breakpoint log")
-             "dbc" '(dap-breakpoint-condition :wk "Breakpoint condition")
+            "b" '(:ignore t :wk "Breakpoints")
+            "bt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
+            "ba" '(dap-breakpoint-toggle :wk "Add breakpoint")
+            "bd" '(dap-breakpoint-delete :wk "Delete breakpoint")
+            "bD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
+            "bl" '(dap-breakpoint-log-message :wk "Breakpoint log")
+            "bc" '(dap-breakpoint-condition :wk "Breakpoint condition")
 
-             "de" '(:ignore t :wk "Expressions")
-             "dea" '(dap-ui-expressions-add :wk "Expression add")
-             "der" '(dap-ui-expressions-add :wk "Expression add")
-             )
-  :custom (dap-auto-configure-features '(;; sessions
-                                         locals
-                                         ;; breakpoints
-                                         ;; expressions
-                                         controls
-                                         tooltip
-                                         ))
+            "e" '(:ignore t :wk "Expressions")
+            "ea" '(dap-ui-expressions-add :wk "Expression add")
+            "er" '(dap-ui-expressions-remove :wk "Expression add")
+            )
+  (:keymaps 'lsp-mode-map
+            "H-c" 'dap-debug-last
+            "H-C" 'dap-debug-recent
+            )
+  (kb/dap-keys
+    "d" '(dap-debug :wk "Debug")
+    "l" '(dap-debug-last :wk "Debug last")
+    "h" '(dap-hydra :wk "Hydra")
+    "q" '(dap-disconnect :wk "Quit")
+    "r" '(dap-ui-repl :wk "REPL")
+
+    "b" '(:ignore t :wk "Breakpoints")
+    "bt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
+    "ba" '(dap-breakpoint-toggle :wk "Add breakpoint")
+    "bd" '(dap-breakpoint-delete :wk "Delete breakpoint")
+    "bD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
+    "bl" '(dap-breakpoint-log-message :wk "Breakpoint log")
+    "bc" '(dap-breakpoint-condition :wk "Breakpoint condition")
+
+    "e" '(:ignore t :wk "Expressions")
+    "ea" '(dap-ui-expressions-add :wk "Expression add")
+    "er" '(dap-ui-expressions-remove :wk "Expression add")
+    )
+  :custom
+  (dap-debug-compilation-keep t)        ; Keep output window in success?
+  (dap-debug-restart-keep-session nil)  ; Delete previous sessions
+
+  (dap-auto-configure-features '(;; sessions
+                                 locals
+                                 breakpoints
+                                 expressions
+                                 controls
+                                 tooltip
+                                 ))
+
+  ;; Setting windows positions to be on the left side
+  (dap-ui-buffer-configurations
+   `((,dap-ui--sessions-buffer
+      (side . right)
+      (slot . 2)
+      (window-width . 0.12))
+     (,dap-ui--breakpoints-buffer
+      (side . right)
+      (slot . 3)
+      (window-width . 0.12))
+     (,dap-ui--locals-buffer
+      (side . left)
+      (slot . 1)
+      (window-width . 0.15))
+     (,dap-ui--expressions-buffer
+      (side . left)
+      (slot . 2)
+      (window-width . 0.15))
+     (,dap-ui--repl-buffer
+      (side . bottom)
+      (slot . 2)
+      (window-height . 0.12)
+      (window-parameters . ((mode-line-format . none))))
+     ))
   )
 
 ;;; Apheleia

@@ -149,6 +149,11 @@
       (window-height . fit-window-to-buffer)
       (window-parameters . ((no-other-window . t)
                             (mode-line-format . none))))
+     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'dap-ui-repl-mode))
+      (display-buffer-reuse-mode-window
+       display-buffer-at-bottom)
+      (window-height . 12)
+      (window-parameters . ((mode-line-format . none))))
      ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'special-mode))
       (kb/select-buffer-at-bottom)
       (window-height . 0.35))
@@ -293,6 +298,7 @@ If buffer-or-name is nil return current buffer's mode."
      special-mode
      help-mode
      "^Calc:"
+     dap-ui-repl-mode
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
@@ -344,6 +350,10 @@ If buffer-or-name is nil return current buffer's mode."
         ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
          (concat (match-string 1 name)
                  "(C)"))
+        ((string-match "^\\*Java Run" name)
+         (concat (match-string 1 name)
+                 (concat "(CG)" (substring name 18 (- (length name) 1)))
+                 ))
         ((string-match "^\\*Customize" name)
          (concat (match-string 1 name)
                  (concat "(CG)" (substring name 18 (- (length name) 1)))

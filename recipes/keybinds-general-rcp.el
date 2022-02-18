@@ -42,6 +42,12 @@
   :prefix "\\"
   :global-prefix "M-SPC \\"
   )
+(general-create-definer kb/dap-keys     ; For all dap commands
+  :keymaps '(lsp-mode-map ryo-modal-mode-map)
+  :states '(normal visual insert motion)
+  :prefix "|"
+  :global-prefix "M-SPC |"
+  )
 (general-create-definer kb/buffer-keys  ; Buffers
   :keymaps '(normal visual insert motion ryo-modal-mode-map)
   :prefix "SPC b"
