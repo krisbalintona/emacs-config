@@ -105,6 +105,32 @@ targets and targets."
         nil)
        (t
         (org-export-get-reference datum info)))))
+
+  ;; Rename files to match their node titles
+  ;; FIXME 2022-02-19: Leaves the opened buffers alive
+  (defun org-rename-to-new-title ()
+    "Rename an org-roam file to its file-level org-roam node title."
+    (when-let*
+        ((old-file (buffer-file-name))
+         (is-roam-file (org-roam-file-p old-file))
+         (file-node (save-excursion
+                      (goto-char 1)
+                      (org-roam-node-at-point)))
+         (slug (org-roam-node-slug file-node))
+         (new-file (expand-file-name (concat slug ".org")))
+         (different-name? (not (string-equal old-file new-file))))
+      (rename-file old-file new-file)
+      (rename-buffer new-file)
+      (set-visited-file-name new-file)
+      (set-buffer-modified-p nil)
+      ))
+  (defun kb/org-roam-all--rename-to-new-title ()
+    "Export all org-roam files to Hugo in my blogging directory."
+    (interactive)
+    (dolist (fil (org-roam--list-files kb/roam-dir))
+      (with-current-buffer (find-file-noselect fil)
+        (org-rename-to-new-title))
+      ))
   :config
   (org-roam-db-autosync-mode)
 
