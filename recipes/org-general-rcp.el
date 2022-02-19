@@ -160,8 +160,8 @@ move to that window."
      ))
   (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
   :config
-  (push '("mla"
-          " % * Preamble
+  (add-to-list 'org-latex-classes '("mla"
+                                    " % * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
 % * Default packages
@@ -169,7 +169,7 @@ move to that window."
 
 % ** MLA package
 \\usepackage{ifpdf}
-\\usepackage{mla}
+\\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/mla}
 
 % ** Font (Garamond)
 \\usepackage[urw-garamond]{mathdesign}
@@ -196,14 +196,24 @@ move to that window."
 \\usepackage{lipsum}
 
 % ** Custom title
-\\renewcommand{\\maketitle}{\\begin{mla}{Kristoffer}{Balintona}{\\orgprofessor}{\\orgclass}{\\today}{\\orgtitle}}"
-          ("\\section*{%s}" . "\\section*{%s}")
-          ("\\subsection*{%s}" . "\\subsection*{%s}")
-          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-          ("\\paragraph{%s}" . "\\paragraph*{%s}")
-          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-          )
-        org-latex-classes)
+\\renewcommand{\\maketitle}{
+  \\begin{flushleft}
+    Kristoffer Balintona  \\\\
+    \\orgprofessor        \\\\
+    \\orgclass            \\\\
+    \\daymonthyeardate
+  \\end{flushleft}
+
+  \\begin{center}
+    \\orgtitle
+  \\end{center}
+}"
+                                    ("\\section*{%s}" . "\\section*{%s}")
+                                    ("\\subsection*{%s}" . "\\subsection*{%s}")
+                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+                                    ))
   )
 
 ;;;; Ox-pandoc
