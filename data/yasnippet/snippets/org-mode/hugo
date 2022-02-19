@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: hugo
+# key: hugo
+# --
+#+filetags: :blog:
+#+hugo_tags: 
+#+hugo_categories: 
+#+hugo_publishdate:
+#+hugo_custom_front_matter:
+#+hugo_draft: true
