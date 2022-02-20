@@ -246,7 +246,7 @@
                           (prettier)
                           (clang-format . clang-format-all-git)
                           (latexindent . texlive-latexindent-meta)
-                          (luafmt . nodejs-lua-fmt)
+                          (luafmt . "sudo npm install -g lua-fmt")
                           (google-java-format)
                           )
   :custom
