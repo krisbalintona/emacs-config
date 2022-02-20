@@ -162,7 +162,6 @@
                 ))
   )
 
-
 ;;; Aggressive-fill-paragraph
 ;; Fill paragraph as I type.
 (use-package aggressive-fill-paragraph

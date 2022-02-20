@@ -121,7 +121,7 @@
 ;;;; Mode-line
    ;; Heavily based on mood-one theme
    `(mode-line ((t (:family "JetBrainsMono Nerd Font" :height 113 :background "#1c2024" :foreground "#c0c4d2" :box (:line-width 1 :color "#1c2024")))))
-   `(mode-line-inactive ((t (:inherit mode-line :background "#212428" :foreground "#5b6265" :box (:line-width 2 :color "#212428")))))
+   `(mode-line-inactive ((t (:inherit mode-line :background "#212428" :foreground "#5b6265"))))
    ;; `(mode-line-emphasis ((t (:foreground "#51afef"))))
    `(mode-line-highlight ((t (:inherit 'highlight))))
    `(mode-line-buffer-id ((t (:foreground "#a9a1e1" :weight bold))))
