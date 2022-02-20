@@ -13,6 +13,9 @@
 (require 'kb-themes)
 
 ;;; UI
+;;;; Fringes
+(set-fringe-style 1)               ; Equivalent to the "minimal" `fringe-styles'
+
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
