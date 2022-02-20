@@ -77,13 +77,12 @@
          (require 'latex-general-rcp)
          (kb/tabular-magic))
         ((eq major-mode 'org-mode)      ; Org-mode
-         (let* ((modified-before (buffer-modified-p)))
+         (let* ((modified-before (buffer-modified-p))
+                (save-silently t))      ; Don't write to echo area when saving
            (kb/format-buffer-indentation--base)
            ;; Save buffer if modified and in `org-mode' because drawers are
            ;; annoying.
-           (if (and (not modified-before) (buffer-modified-p))
-               (save-buffer))
-           ))
+           (save-buffer)))
         ((or (eq major-mode 'emacs-lisp-mode) ; Emacs-lisp
              (eq major-mode 'lisp-interaction-mode))
          (kb/format-buffer-indentation--base))
