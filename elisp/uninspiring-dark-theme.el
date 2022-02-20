@@ -504,9 +504,6 @@
 ;;;; Vertico
    `(vertico-current ((t (:inherit success :background "#3A3F5A"))))
 
-;;;; Highlight-defined
-   `(highlight-defined-variable-name-face ((t (:inherit font-lock-variable-name-face :foreground "#9caabf"))))
-
 ;;;; Ledger
    `(ledger-font-xact-highlight-face ((t (:inherit nil))))
 
@@ -529,7 +526,13 @@
    `(lsp-face-semhl-comment ((t (:inherit font-lock-comment-face :underline t))))
    `(lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
    `(lsp-face-highlight-write ((t (:inherit nil :underline t))))
+   `(lsp-face-semhl-property ((t (:inherit font-lock-builtin-face :foreground "#E05D68"))))
 
+;;;; Tree-sitter
+   `(tree-sitter-hl-face:constant.builtin ((t (:inherit font-lock-builtin-face :foreground "#EFA161"))))
+   `(tree-sitter-hl-face:number ((t (:inherit tree-sitter-hl-face:constant.builtin))))
+   
+   
 ;;;; Solaire
    ;; From mood-one theme
    `(solaire-default-face ((t (:inherit default :background "#212428"))))
