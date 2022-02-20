@@ -12,9 +12,9 @@
 ;;; Avy
 ;; Quickly jump to any character
 (use-package avy
-  :general ("M-/" 'avy-goto-word-1
-            "M-C-/" 'avy-goto-char
-            )
+  :general (:states '(normal visual)
+                    "'" 'avy-goto-word-1
+                    "\"" 'avy-goto-char)
   :custom
   (avy-all-windows nil)                 ; Scope
   (avy-keys                             ; Used for letter combinations
@@ -84,7 +84,7 @@ argument, query for word to search."
 ;; Open links easily
 (use-package ace-link
   :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map org-mode-map)
-                     "M-?" 'ace-link :wk "Ace-link")
+                     "M-'" 'ace-link :wk "Ace-link")
   )
 
 ;;; Better-jumper
