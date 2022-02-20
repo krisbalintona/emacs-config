@@ -95,7 +95,7 @@
         (t (kb/format-buffer-indentation--base))
         ))
 (kb/general-keys
-  "TAB" '(kb/format-buffer-indentation :wk "Format buffer's indentation"))
+  "SPC" '(kb/format-buffer-indentation :wk "Format indentation"))
 
 ;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
