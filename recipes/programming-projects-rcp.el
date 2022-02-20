@@ -133,20 +133,7 @@
             :states '(normal visual motion)
             "D" '(magit-cherry-donate :wk "Cherry conate"))
   (kb/magit-keys
-    "F"  'magit-fetch-all
-    "P"  '(magit-push-current :wk "Push")
-    "b"  'magit-branch
-    "c"  'magit-branch-or-checkout
-    "d"  'magit-diff-unstaged
-    "f"  'magit-fetch
-    "g"  '(magit-status :wk "Status")
-    "l"   '(:ignore t :wk "Logs")
-    "lc" 'magit-log-current
-    "lf" 'magit-log-buffer-file
-    "p"  'magit-pull-branch
-    "r"  '(magit-rebase :wk "Rebase")
-    "s"  '(magit-status :wk "Status")
-    )
+    "g"  '(magit-status :wk "Status"))
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)

@@ -196,6 +196,31 @@
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   )
 
+;;; Blamer
+;; Git blame interface (see a line's corresponding commit)
+(use-package blamer
+  :after magit
+  :commands blamer-show-commit-info
+  :general (kb/magit-keys
+             "b" '(blamer-show-commit-info :wk "Git blame"))
+  :custom
+  ;; (blamer-author-formatter " ✎ %s ")
+  (blamer-author-formatter "")
+  (blamer-datetime-formatter "[%s] ")
+  (blamer-commit-formatter "%s")
+  (blamer-uncommitted-changes-message "N/A")
+
+  (blamer-max-commit-message-length 71) ; Consider length of acceptable length of git commit
+  (blamer-max-lines 30)
+  (blamer-min-offset 70)
+
+  (blamer-prettify-time-p t)
+  (blamer-idle-time 0.3)
+  (blamer-type 'overlay-popup)
+  (blamer-view 'overlay)
+  (blamer--overlay-popup-position 'smart)
+  )
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
