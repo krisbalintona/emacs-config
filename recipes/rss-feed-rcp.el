@@ -290,19 +290,22 @@ The list of tags is provided by `prot-elfeed-search-tags'."
     )
 
   (general-define-key
-   :keymaps '(elfeed-search-mode-map elfeed-show-mode-map)
+   :keymaps 'elfeed-search-mode-map
    :states '(visual normal motion)
-   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
-   "a"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'archive))   :wk "Toggle archive tag")
-   "i"   '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :wk "Toggle input tag")
-   "d"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :wk "Toggle done tag")
-   "c"   '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
+   "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :wk "Toggle unread tag")
+   "H-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk)) :wk "Toggle junk tag")
+   "H-i" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'junk)) (prot-elfeed-toggle-tag 'input)) :wk "Toggle input tag")
+   "H-d" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'done)) :wk "Toggle done tag")
+   "H-c" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
    )
   (general-define-key
    :keymaps 'elfeed-show-mode-map
    :states '(visual normal motion)
    "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread))                               :wk "Toggle unread tag")
-   "C-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
+   "H-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
+   "H-i" '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :wk "Toggle input tag")
+   "H-d" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :wk "Toggle done tag")
+   "H-c" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
    )
   )
 
