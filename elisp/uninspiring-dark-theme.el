@@ -104,7 +104,7 @@
    `(minibuffer-prompt ((t (:foreground ,atom-one-dark-silver))))
    `(tooltip ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg-1 :inherit variable-pitch))))
 
-   `(font-lock-builtin-face ((t (:foreground ,atom-one-dark-cyan))))
+   `(font-lock-builtin-face ((t (:foreground "#90DD78"))))
    `(font-lock-comment-face ((t (:foreground ,atom-one-dark-mono-3))))
    `(font-lock-comment-delimiter-face ((default (:inherit (font-lock-comment-face)))))
    `(font-lock-doc-face ((t (:inherit (font-lock-string-face)))))
@@ -531,8 +531,7 @@
 ;;;; Tree-sitter
    `(tree-sitter-hl-face:constant.builtin ((t (:inherit font-lock-builtin-face :foreground "#EFA161"))))
    `(tree-sitter-hl-face:number ((t (:inherit tree-sitter-hl-face:constant.builtin))))
-   
-   
+
 ;;;; Solaire
    ;; From mood-one theme
    `(solaire-default-face ((t (:inherit default :background "#212428"))))
