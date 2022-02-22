@@ -220,6 +220,9 @@
   (blamer--overlay-popup-position 'smart)
   )
 
+;;; Cycle-at-point
+(use-package cycle-at-point)
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
