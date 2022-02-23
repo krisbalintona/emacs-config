@@ -16,7 +16,6 @@
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
-            :states 'insert
             "C-n" #'corfu-next
             "C-p" #'corfu-previous
             "<escape>" #'corfu-quit
@@ -105,10 +104,9 @@ default lsp-passthrough."
                      [remap corfu-show-documentation] #'corfu-doc-toggle
                      ;; Scroll in the documentation window
                      "M-n" #'corfu-doc-scroll-up
-                     "M-p" #'corfu-doc-scroll-down
-                     )
+                     "M-p" #'corfu-doc-scroll-down)
   :custom
-  (corfu-doc-delay 1.2)
+  (corfu-doc-delay 0.5)
   (corfu-doc-max-width 70)
   (corfu-doc-max-height 20)
   )
