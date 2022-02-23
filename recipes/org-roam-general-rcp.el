@@ -46,31 +46,30 @@
     )
   :custom
   (org-roam-directory kb/roam-dir)
+  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
   (org-roam-file-exclude-regexp nil)
   (org-roam-db-node-include-function
    (lambda ()
      "Exclude nodes with ATTACH tag"
      (not (member "ATTACH" (org-get-tags)))))
-  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
-  (org-roam-verbose nil) ; Don't echo messages that aren't errors
-  (org-roam-completion-everywhere t) ; Org-roam completion everywhere
-  (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
+
+  (org-roam-verbose nil)                ; Don't echo messages that aren't errors
+  (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
   (org-roam-db-gc-threshold most-positive-fixnum) ; Minimize GC pauses while updating the database
-  (org-roam-completion-functions nil)             ; I set this myself in `cape'
 
   (org-roam-node-default-sort 'file-atime)
-  (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
-
-  ;; Format of `org-roam-node-find'
   (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:26} " "${othertags:47} " "${hierarchy:138}"))
 
-  ;; Roam buffer format
+  (org-roam-completion-everywhere t)    ; Org-roam completion everywhere
+  (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
+  (org-roam-completion-functions
+   '(org-roam-complete-link-at-point
+     org-roam-complete-everywhere))
   (org-roam-mode-section-functions
    '(org-roam-backlinks-section
      org-roam-reflinks-section
      org-roam-unlinked-references-section
-     )
-   )
+     ))
   :preface
   ;; Exporting with links included
   (setq org-id-track-globally t)

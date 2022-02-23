@@ -185,13 +185,24 @@ Additionally, add `cape-file' as early as possible to the list."
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
 
-
   ;; Org
   (defun kb/cape-capf-setup-org ()
-    (let ((result))
-      (dolist (element (list (cape-super-capf #'cape-ispell #'cape-dabbrev) (cape-company-to-capf #'company-yasnippet)) result)
-        (add-to-list 'completion-at-point-functions element))))
+    (let (result)
+      (dolist (element (list
+                        (cape-super-capf #'cape-ispell #'cape-abbrev)
+                        (cape-company-to-capf #'company-yasnippet))
+                       result)
+        (add-to-list 'completion-at-point-functions element)))
+    (require 'org-roam)
+    (when (org-roam-file-p)             ; Add org-roam capfs if in roam file
+      (org-roam--register-completion-functions-h)))
 
+  ;; Org-roam
+  (defun kb/cape-capf-setup-org-roam ()
+    (dolist (f (nconc (list (cape-company-to-capf #'company-yasnippet))
+                      org-roam-completion-functions))
+      (add-hook 'completion-at-point-functions f nil t)))
+  (advice-add 'org-roam--register-completion-functions-h :override #'kb/cape-capf-setup-org-roam)
 
   ;; Eshell
   (defun kb/cape-capf-setup-eshell ()
@@ -234,15 +245,6 @@ Additionally, add `cape-file' as early as possible to the list."
   (defun kb/cape-capf-setup-sh ()
     (require 'company-shell)
     (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-shell)))
-
-
-  ;; Org-roam
-  (defun kb/cape-capf-setup-org-roam ()
-    (dolist (f `(org-roam-complete-link-at-point
-                 org-roam-complete-everywhere
-                 ,(cape-company-to-capf #'company-yasnippet)))
-      (add-hook 'completion-at-point-functions f nil t)))
-  (advice-add 'org-roam--register-completion-functions-h :override #'kb/cape-capf-setup-org-roam)
   :config
   ;; For pcomplete. For now these two advices are strongly recommended to
   ;; achieve a sane Eshell experience. See
