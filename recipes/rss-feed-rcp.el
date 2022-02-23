@@ -293,7 +293,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
    :keymaps 'elfeed-search-mode-map
    :states '(visual normal motion)
    "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :wk "Toggle unread tag")
-   "H-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk)) :wk "Toggle junk tag")
+   "H-j" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'unread)) (prot-elfeed-toggle-tag 'junk)) :wk "Toggle junk tag")
    "H-i" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'junk)) (prot-elfeed-toggle-tag 'input)) :wk "Toggle input tag")
    "H-d" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'done)) :wk "Toggle done tag")
    "H-c" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
