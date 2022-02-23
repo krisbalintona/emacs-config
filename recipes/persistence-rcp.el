@@ -27,12 +27,12 @@
 ;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
-  :demand t
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)
-  :config
+  :init
   (recentf-mode)
+  :config
   (run-at-time nil (* 3 60) 'recentf-save-list) ; Save every 3 minutes
   )
 

@@ -33,7 +33,6 @@
   :custom
   (evil-undo-system 'undo-fu)
   ;; Store more undo history to prevent loss of data
-  (undo-limit (* 100 1024))
   (undo-strong-limit 3000000)
   (undo-outer-limit 3000000)
   )
@@ -42,13 +41,13 @@
 ;; Keep undo history across sessions
 (use-package undo-fu-session
   :demand t
-  :after undo-fu                        ; Needs undo-fu
+  :after undo-fu                        ; Depends on undo-fu
   :custom
   (undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
-  (undo-fu-session-directory (concat no-littering-var-directory "undo-fu-session/"))
+  (undo-fu-session-directory (no-littering-expand-var-file-name "undo-fu-session/"))
   (undo-fu-session-file-limit 15000)
-  :config 
-  (global-undo-fu-session-mode)
+  :config
+  (global-undo-fu-session-mode)         ; FIXME 2022-02-23: Doesn't work?
   )
 
 ;;; undoing-rcp.el ends here
