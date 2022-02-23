@@ -108,28 +108,32 @@ targets and targets."
 
   ;; Rename files to match their node titles
   ;; FIXME 2022-02-19: Leaves the opened buffers alive
-  (defun org-rename-to-new-title ()
-    "Rename an org-roam file to its file-level org-roam node title."
-    (when-let*
-        ((old-file (buffer-file-name))
-         (is-roam-file (org-roam-file-p old-file))
-         (file-node (save-excursion
-                      (goto-char 1)
-                      (org-roam-node-at-point)))
-         (slug (org-roam-node-slug file-node))
-         (new-file (expand-file-name (concat slug ".org")))
-         (different-name? (not (string-equal old-file new-file))))
-      (rename-file old-file new-file)
-      (rename-buffer new-file)
-      (set-visited-file-name new-file)
-      (set-buffer-modified-p nil)
-      ))
+  (defun kb/org-roam-rename-to-new-title ()
+    "Rename an org-roam file to its file-level org-roam node title.
+Taken from
+https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-filename/2018/6"
+    (interactive)
+    (org-with-wide-buffer ; Widen first in order to properly work in existing buffers which are narrowed
+     (when-let*
+         ((old-file (buffer-file-name))
+          (is-roam-file (org-roam-file-p old-file))
+          (file-node (save-excursion
+                       (goto-char 1)
+                       (org-roam-node-at-point)))
+          (slug (org-roam-node-slug file-node))
+          (new-file (expand-file-name (concat slug ".org")))
+          (different-name? (not (string-equal old-file new-file))))
+       (rename-file old-file new-file)
+       (rename-buffer new-file)
+       (set-visited-file-name new-file)
+       (set-buffer-modified-p nil)
+       )))
   (defun kb/org-roam-all--rename-to-new-title ()
     "Export all org-roam files to Hugo in my blogging directory."
     (interactive)
     (dolist (fil (org-roam--list-files kb/roam-dir))
       (with-current-buffer (find-file-noselect fil)
-        (org-rename-to-new-title))
+        (kb/org-roam-rename-to-new-title))
       ))
   :config
   (org-roam-db-autosync-mode)
