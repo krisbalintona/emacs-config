@@ -240,12 +240,12 @@ move to that window."
 (use-package org-attach
   :straight nil
   :custom
+  (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
+  (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
   (org-attach-id-dir "attachments/")
-  (org-attach-dir-relative nil)         ; Use relative file paths
-  (org-attach-preferred-new-method 'dir)
+  (org-attach-dir-relative t)        ; Use relative file paths?
   (org-attach-method 'cp)            ; Attach copies of files
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
-  (org-attach-auto-tag nil)
   )
 
 ;;; Org-refile
@@ -400,8 +400,8 @@ re-align the table if necessary. (Necessary because org-mode has a
              in (cl-remove-if-not #'listp org-todo-keywords)
              for keywords =
              (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                (match-string 1 x)
-                              x))
+                                     (match-string 1 x)
+                                   x))
                      keyword-spec)
              if (eq type 'sequence)
              if (member keyword keywords)
@@ -715,20 +715,17 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download
-  :gfhook ('org-mode-hook 'org-download-enable)
-  :general
-  (kb/yank-kill-keys
-    "i" '(org-download-clipboard :wk "Paste image from clipboard")
-    )
+  :hook (org-mode . org-download-enable)
+  :general (kb/yank-kill-keys
+             "i" '(org-download-clipboard :wk "Paste image from clipboard"))
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "scrot -s %s") ; Use scrot
   (org-download-link-format "[[download:%s]]\n")
   (org-download-annotate-function (lambda (_link) ""))
-  :config
-  (setq-default org-download-image-dir (concat org-directory "resources/")
-                org-download-heading-lvl nil
-                org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
+  (org-download-image-dir org-attach-id-dir)
+  (org-download-heading-lvl nil)
+  (org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
   )
 
 ;;;; Typo-mode

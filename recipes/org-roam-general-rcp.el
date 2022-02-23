@@ -48,7 +48,8 @@
   (org-roam-directory kb/roam-dir)
   (org-roam-file-exclude-regexp nil)
   (org-roam-db-node-include-function
-   (lambda ()                           ; Exclude nodes with ATTACH tag
+   (lambda ()
+     "Exclude nodes with ATTACH tag"
      (not (member "ATTACH" (org-get-tags)))))
   (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
   (org-roam-verbose nil) ; Don't echo messages that aren't errors
