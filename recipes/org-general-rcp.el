@@ -331,9 +331,9 @@ move to that window."
   (org-superstar-prettify-item-bullets t)
   (org-superstar-first-inlinetask-bullet ?▶)
   (org-superstar-item-bullet-alist      ; Plain lists
-   '((?* . ?￮)
-     (?+ . ?»)
-     (?- . ?➣)
+   '((?+ . ?➣)
+     (?- . ?»)
+     (?* . ?￮)
      ))
   )
 
