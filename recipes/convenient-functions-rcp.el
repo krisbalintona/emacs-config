@@ -72,27 +72,30 @@
   "Properly indent the entire buffer."
   (interactive)
   (require 'apheleia)
-  (cond ((eq major-mode 'latex-mode)    ; LaTeX
-         (kb/format-buffer-indentation--base)
-         (require 'latex-general-rcp)
-         (kb/tabular-magic))
-        ((eq major-mode 'org-mode)      ; Org-mode
-         (let* ((modified-before (buffer-modified-p))
-                (save-silently t))      ; Don't write to echo area when saving
-           (kb/format-buffer-indentation--base)
-           ;; Save buffer if modified and in `org-mode' because drawers are
-           ;; annoying.
-           (save-buffer)))
-        ((or (eq major-mode 'emacs-lisp-mode) ; Emacs-lisp
-             (eq major-mode 'lisp-interaction-mode))
-         (kb/format-buffer-indentation--base))
-        ((apheleia--get-formatters)     ; If available apheleia formatter
-         (let* ((apheleia-mode t))      ; Save silently
-           (apheleia--format-after-save)))
-        ((derived-mode-p 'prog-mode)    ; Prog-mode
-         (kb/format-buffer-indentation--fill-column))
-        (t (kb/format-buffer-indentation--base))
-        ))
+  (cond
+   ((not (buffer-file-name))
+    (kb/format-buffer-indentation--base))
+   ((eq major-mode 'latex-mode)    ; LaTeX
+    (kb/format-buffer-indentation--base)
+    (require 'latex-general-rcp)
+    (kb/tabular-magic))
+   ((eq major-mode 'org-mode)      ; Org-mode
+    (let* ((modified-before (buffer-modified-p))
+           (save-silently t))      ; Don't write to echo area when saving
+      (kb/format-buffer-indentation--base)
+      ;; Save buffer if modified and in `org-mode' because drawers are
+      ;; annoying.
+      (save-buffer)))
+   ((or (eq major-mode 'emacs-lisp-mode) ; Emacs-lisp
+        (eq major-mode 'lisp-interaction-mode))
+    (kb/format-buffer-indentation--base))
+   ((apheleia--get-formatters)     ; If available apheleia formatter
+    (let* ((apheleia-mode t))      ; Save silently
+      (apheleia--format-after-save)))
+   ((derived-mode-p 'prog-mode)    ; Prog-mode
+    (kb/format-buffer-indentation--fill-column))
+   (t (kb/format-buffer-indentation--base))
+   ))
 (kb/general-keys
   "SPC" '(kb/format-buffer-indentation :wk "Format indentation"))
 
