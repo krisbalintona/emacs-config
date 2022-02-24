@@ -41,6 +41,7 @@
   :gfhook '(lambda () (setq-local all-the-icons-scale-factor 0.95))
   :custom
   (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
+  (dired-kill-when-opening-new-dired-buffer t) ; Kill dired buffer when opening new directory
   )
 
 ;;;; Dired-git
