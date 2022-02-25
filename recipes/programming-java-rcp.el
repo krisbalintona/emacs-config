@@ -10,10 +10,20 @@
 
 ;;; Lsp-java
 (use-package lsp-java
-  :hook (java-mode . lsp-deferred)
+  :hook ((java-mode . lsp-deferred)
+         (java-mode . lsp-java-boot-lens-mode))
   :general (:keymaps 'java-mode-map
-                     "H-b" 'lsp-java-build-project)
+                     "H-b" 'lsp-java-build-project
+                     "H-l j" '(lsp-jt-browser :wk "Lsp-jt"))
   :custom
+  (lsp-java-inhibit-message t) ; Inhibit java messages echo via `inhibit-message'.
+  (lsp-java-content-provider-preferred "fernflower")
+  (lsp-java-signature-help-enabled t)
+
+  ;; Code lenses
+  (lsp-java-references-code-lens-enabled t)
+  (lsp-java-implementations-code-lens-enabled t)
+
   ;; Current VSCode arguments; larger heap size to increase speed in larger
   ;; projects. According to https://github.com/emacs-lsp/lsp-java#faq
   (lsp-java-vmargs '("-XX:+UseParallelGC" "-XX:GCTimeRatio=4" "-XX:AdaptiveSizePolicyWeight=90" "-Dsun.zip.disableMemoryMapping=true" "-Xmx2G" "-Xms100m"))

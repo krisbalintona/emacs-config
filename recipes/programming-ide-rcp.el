@@ -17,6 +17,7 @@
   :gfhook
   'lsp-enable-which-key-integration
   'lsp-headerline-breadcrumb-mode
+  'lsp-lens-mode
   :general
   (:keymaps 'lsp-mode-map
             :states 'insert
