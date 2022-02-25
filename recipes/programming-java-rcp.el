@@ -49,6 +49,7 @@
 ;;; Helm-lsp
 ;; Helm interface -- really the only option...
 (use-package helm-lsp
+  :defer 4
   :after lsp-mode
   :config
   (require 'helm)
