@@ -27,11 +27,10 @@
   'hide-mode-line-mode
   :general
   (:keymaps 'eshell-mode-map
-            [remap eshell-previous-matching-input] '(consult-history :wk "Command history")
-            "<return>" 'eshell-send-input)
+            [remap eshell-previous-matching-input] '(consult-history :wk "Command history"))
   (:keymaps 'eshell-mode-map
             :states 'insert
-            "<tab>" 'completion-at-point)
+            [remap back-to-indentation] 'eshell-bol)
   (kb/open-keys
     "e" '((lambda ()            ; Unique vterm buffer with current directory appended
             (interactive)
