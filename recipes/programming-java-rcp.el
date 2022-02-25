@@ -14,6 +14,9 @@
   :general (:keymaps 'java-mode-map
                      "H-b" 'lsp-java-build-project)
   :custom
+  ;; Current VSCode arguments; larger heap size to increase speed in larger
+  ;; projects. According to https://github.com/emacs-lsp/lsp-java#faq
+  (lsp-java-vmargs '("-XX:+UseParallelGC" "-XX:GCTimeRatio=4" "-XX:AdaptiveSizePolicyWeight=90" "-Dsun.zip.disableMemoryMapping=true" "-Xmx2G" "-Xms100m"))
   (lsp-java-project-referenced-libraries ["lib/**/*.jar" "src/**/*.jar"])
   )
 
