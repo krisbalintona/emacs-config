@@ -126,7 +126,7 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
      ;; C-u C-u C-u = Remove any comments from line
      ((= prefix 64)
       (comment-kill (and (stringp prefix) prefix)))
-     ;; If without universal argument. 
+     ;; If without universal argument.
      ;; Next, check case when on empty line with no comment
      ((save-excursion (beginning-of-line) (looking-at "\\s-*$"))
       (funcall 'kb/comment-insert--insertion-base keyword))
@@ -135,7 +135,8 @@ Additionally, if TIMESTAMP is t, append a timestamp to the comment. "
       (comment-indent) ; Insert comment, or move point to comment if it already exists on line
       (when (looking-at "\\s-*$")       ;  Is there anything in front of point?
         ;; If comment doesn't already exists on line, then...
-        (insert " ")            ; Have space between comment delimiter and point
+        (unless (equal (-slice (string-to-list comment-start) -1) '(32)) ; Don't add space when space already exists
+          (insert " "))         ; Have space between comment delimiter and point
         (when timestamp (insert keyword)) ; If I want a timestamp
         (when (bound-and-true-p evil-mode) ; End in the insert state, but only if evil mode is active
           (evil-insert-state))))
