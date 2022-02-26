@@ -225,6 +225,7 @@ is only tested on \"insert\" action."
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur
   :straight nil
+  :gfhook 'visual-line-mode
   :general (kb/nav-keys
              "o" '(occur :wk "Occur"))
   )
