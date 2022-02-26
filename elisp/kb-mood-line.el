@@ -274,12 +274,15 @@ dap)."
 (defun kb/mood-line-segment-lsp ()
   "The LSP server state."
   ;; NOTE 2022-01-22: Mostly taken from the Doom Modeline LSP segment.
-  (if-let ((icon doom-modeline--lsp))
-      (if (doom-modeline--active)
-          (concat icon " ")
-        (doom-modeline-propertize-icon icon 'mode-line-inactive))
-    ""
-    ))
+  (if (bound-and-true-p lsp-mode)
+      (concat
+       (if-let ((icon doom-modeline--lsp))
+           (if (doom-modeline--active)
+               icon
+             (doom-modeline-propertize-icon icon 'mode-line-inactive))
+         ""
+         )
+       " ")))
 
 (defun kb/mood-line-segment-major-mode ()
   "Displays the current major mode in the mode-line."
