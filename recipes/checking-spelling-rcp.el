@@ -13,6 +13,7 @@
 ;; Feature-rich spell-checker
 (use-package flyspell
   :ensure-system-package aspell
+  :commands flyspell-detect-ispell-args
   :hook ((text-mode . (lambda ()             ; Prevent conflicts
                         (unless wucuo-mode
                           (flyspell-mode))))
@@ -33,7 +34,36 @@
 
   (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (`abbrev-mode')
   ;; Personal dictionary
-  (ispell-personal-dictionary (no-littering-expand-var-file-name "flyspell/flyspell-ispell-personal-dict-en")))
+  (ispell-personal-dictionary (no-littering-expand-var-file-name "flyspell/flyspell-ispell-personal-dict-en"))
+  (ispell-extra-args (flyspell-detect-ispell-args t))
+  :init
+  ;; Taken from https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs/
+  (defun flyspell-detect-ispell-args (&optional run-together)
+    "if RUN-TOGETHER is true, spell check the CamelCase words."
+    (let (args)
+      (cond
+       ((string-match  "aspell$" ispell-program-name)
+        ;; Force the English dictionary for aspell
+        ;; Support Camel Case spelling check (tested with aspell 0.6)
+        (setq args (list "--sug-mode=ultra" "--lang=en_US"))
+        (when run-together
+          (cond
+           ;; Kevin Atkinson said now aspell supports camel case directly
+           ;; https://github.com/redguardtoo/emacs.d/issues/796
+           ((string-match-p "--camel-case"
+                            (shell-command-to-string (concat ispell-program-name " --help")))
+            (setq args (append args '("--camel-case"))))
+
+           ;; old aspell uses "--run-together". Please note we are not dependent on this option
+           ;; to check camel case word. wucuo is the final solution. This aspell options is just
+           ;; some extra check to speed up the whole process.
+           (t
+            (setq args (append args '("--run-together" "--run-together-limit=16")))))))
+
+       ((string-match "hunspell$" ispell-program-name)
+        ;; Force the English dictionary for hunspell
+        (setq args "-d en_US")))
+      args)))
 
 ;;; Wucuo
 ;; A complete solution to the lag of flyspell
