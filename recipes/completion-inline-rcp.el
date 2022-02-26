@@ -151,6 +151,8 @@ default lsp-passthrough."
                     "&" 'cape-sgml
                     "r" 'cape-rfc1345
                     )
+  :custom
+  (cape-dabbrev-min-length 3)
   :init
   ;; Elisp
   (defun kb/cape-capf-ignore-keywords-elisp (cand)
@@ -182,7 +184,8 @@ Additionally, add `cape-file' as early as possible to the list."
           ;; (cape-capf-buster #'lsp-completion-at-point)
           (cape-super-capf
            (cape-company-to-capf #'company-yasnippet)
-           (cape-capf-buster #'lsp-completion-at-point))))
+           (cape-capf-buster #'lsp-completion-at-point)))
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
