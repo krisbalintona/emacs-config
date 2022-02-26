@@ -179,9 +179,10 @@ Additionally, add `cape-file' as early as possible to the list."
 `cape-capf-buster' version. Also add `cape-file' and
 `company-yasnippet' backends."
     (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
-          (cape-capf-buster #'lsp-completion-at-point))
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
+          ;; (cape-capf-buster #'lsp-completion-at-point)
+          (cape-super-capf
+           (cape-company-to-capf #'company-yasnippet)
+           (cape-capf-buster #'lsp-completion-at-point))))
 
   ;; Org
   (defun kb/cape-capf-setup-org ()

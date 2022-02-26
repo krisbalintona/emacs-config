@@ -21,11 +21,9 @@
                           (flyspell-prog-mode)))))
   :general
   (kb/general-keys
-    "/" '(flyspell-buffer :wk "Spellcheck buffer")
-    )
+    "/" '(flyspell-buffer :wk "Spellcheck buffer"))
   (:keymaps 'flyspell-mode-map
-            "C-;" nil       ; I don't like `flyspell-auto-correct-previous-word'
-            )
+            "C-;" nil)      ; I don't like `flyspell-auto-correct-previous-word'
   :custom
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
