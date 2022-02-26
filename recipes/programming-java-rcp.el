@@ -11,7 +11,8 @@
 ;;; Lsp-java
 (use-package lsp-java
   :hook ((java-mode . lsp-deferred)
-         (java-mode . lsp-java-boot-lens-mode))
+         (java-mode . lsp-java-lens-mode)       ; For run/debug overlays
+         (java-mode . lsp-java-boot-lens-mode)) ; For code-lens overlays
   :general (:keymaps 'java-mode-map
                      "H-b" 'lsp-java-build-project
                      "H-l j" '(lsp-jt-browser :wk "Lsp-jt"))
