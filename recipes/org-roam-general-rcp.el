@@ -107,8 +107,7 @@ targets and targets."
         (org-export-get-reference datum info)))))
 
   ;; Rename files to match their node titles
-  ;; FIXME 2022-02-19: Leaves the opened buffers alive
-  (defun kb/org-roam-rename-to-new-title ()
+  (defun kb/org-roam-rename-to-new-title--single ()
     "Rename an org-roam file to its file-level org-roam node title.
 Taken from
 https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-filename/2018/6"
@@ -128,12 +127,13 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
        (set-visited-file-name new-file)
        (set-buffer-modified-p nil)
        )))
-  (defun kb/org-roam-all--rename-to-new-title ()
+  ;; FIXME 2022-02-19: Leaves the opened buffers alive
+  (defun kb/org-roam-rename-to-new-title-all ()
     "Export all org-roam files to Hugo in my blogging directory."
     (interactive)
     (dolist (fil (org-roam--list-files kb/roam-dir))
       (with-current-buffer (find-file-noselect fil)
-        (kb/org-roam-rename-to-new-title))
+        (kb/org-roam-rename-to-new-title--single))
       ))
   :config
   (org-roam-db-autosync-mode)
