@@ -256,24 +256,22 @@ move to that window."
              "r" '(org-refile :wk "Org-refile"))
   :custom
   (org-refile-targets
-   `((kb/find-blog-files-org :maxlevel . 1)
-     ;; `((kb/find-blog-files-org :tag . "blog")
-     (org-agenda-files :regexp . "tnaoirnta") ; This random string will remove all headlines
-     ("/home/krisbalintona/Documents/org-database/roam/inbox.org" :level . 0) ; Inbox file
+   `((kb/find-blog-files-org . (:maxlevel . 4))
+     (org-agenda-files . (:regexp . "tnaoirnta")) ; This random string will remove all headlines
+     ("/home/krisbalintona/Documents/org-database/roam/inbox.org" . (:level . 0)) ; Inbox file
+     (nil . (:level . 1))
      ))
   (org-refile-use-cache nil)
-  ;; (org-refile-history t) ; FIXME 2021-10-09: For some reason makes `org-refile' not work
   (org-refile-allow-creating-parent-nodes 'confirm)
   :init
   (defun kb/find-blog-files-org ()
-    "Return a list of files which are within the blog directory of org-roam."
-    (org-roam--directory-files-recursively (concat org-roam-directory "blog") "")
-    )
+    "Return a list of org files which are within the blog directory of org-roam."
+    (org-roam--list-files (concat kb/roam-dir "blog")))
   :config
   ;; Workaround for orderless issue with `org-refile'. See
   ;; https://github.com/minad/vertico#org-refile
   (setq org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps t)
+        org-outline-path-complete-in-steps nil)
   (when (featurep 'vertico)
     (advice-add #'org-olpath-completing-read :around
                 (lambda (&rest args)

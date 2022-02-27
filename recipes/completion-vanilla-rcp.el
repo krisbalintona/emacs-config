@@ -111,7 +111,6 @@
      ))
   (vertico-multiform-commands
    '(("flyspell-correct-*" grid reverse)
-     (org-refile grid reverse indexed)
      (consult-yank-pop indexed)
      (consult-flycheck)
      (consult-lsp-diagnostics)
