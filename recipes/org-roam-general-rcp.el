@@ -63,8 +63,10 @@
   (org-roam-completion-everywhere t)    ; Org-roam completion everywhere
   (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
   (org-roam-completion-functions
-   '(org-roam-complete-link-at-point
-     org-roam-complete-everywhere))
+   `(org-roam-complete-link-at-point
+     org-roam-complete-everywhere
+     ,(cape-company-to-capf #'company-yasnippet) ; Requires `cape'
+     ))
   (org-roam-mode-section-functions
    '(org-roam-backlinks-section
      org-roam-reflinks-section
@@ -127,9 +129,9 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
        (set-visited-file-name new-file)
        (set-buffer-modified-p nil)
        )))
-  ;; FIXME 2022-02-19: Leaves the opened buffers alive
   (defun kb/org-roam-rename-to-new-title-all ()
     "Export all org-roam files to Hugo in my blogging directory."
+    ;; FIXME 2022-02-19: Leaves the opened buffers alive
     (interactive)
     (dolist (fil (org-roam--list-files kb/roam-dir))
       (with-current-buffer (find-file-noselect fil)

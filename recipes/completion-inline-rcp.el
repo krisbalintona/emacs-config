@@ -189,22 +189,16 @@ Additionally, add `cape-file' as early as possible to the list."
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
-    (let (result)
-      (dolist (element (list
-                        (cape-super-capf #'cape-ispell #'cape-abbrev)
-                        (cape-company-to-capf #'company-yasnippet))
-                       result)
-        (add-to-list 'completion-at-point-functions element)))
     (require 'org-roam)
-    (when (org-roam-file-p)             ; Add org-roam capfs if in roam file
-      (org-roam--register-completion-functions-h)))
-
-  ;; Org-roam
-  (defun kb/cape-capf-setup-org-roam ()
-    (dolist (f (nconc (list (cape-company-to-capf #'company-yasnippet))
-                      org-roam-completion-functions))
-      (add-hook 'completion-at-point-functions f nil t)))
-  (advice-add 'org-roam--register-completion-functions-h :override #'kb/cape-capf-setup-org-roam)
+    (if (org-roam-file-p)
+        (org-roam--register-completion-functions-h)
+      (let (result)
+        (dolist (element (list
+                          (cape-super-capf #'cape-ispell #'cape-abbrev)
+                          (cape-company-to-capf #'company-yasnippet))
+                         result)
+          (add-to-list 'completion-at-point-functions element)))
+      ))
 
   ;; Eshell
   (defun kb/cape-capf-setup-eshell ()
