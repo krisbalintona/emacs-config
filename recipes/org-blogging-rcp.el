@@ -20,7 +20,7 @@
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
-  (defvar kb/org-hugo-exclude-tags '("blog" "project")
+  (defvar kb/org-hugo-exclude-tags '("blog" "project" "ATTACH")
     "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   :config
   ;; Org-export all files in an org-roam subdirectory. Modified from
@@ -39,8 +39,7 @@
 
   (defun kb/org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list info)
     "Ignore tags which match a string found in `kb/org-hugo-exclude-tags'."
-    (cl-set-difference tag-list kb/org-hugo-exclude-tags :test #'equal)
-    )
+    (cl-set-difference tag-list kb/org-hugo-exclude-tags :test #'equal))
   (add-to-list 'org-hugo-tag-processing-functions #'kb/org-hugo--tag-processing-fn-ignore-tags-maybe)
   )
 

@@ -22,7 +22,6 @@
             "<return>" #'corfu-insert
             "M-d" #'corfu-show-documentation
             "C-g" #'corfu-quit
-            "SPC" #'corfu-insert-separator
             "M-l" #'corfu-show-location)
   (:keymaps '(corfu-map general-override-mode-map)
             :states 'insert
