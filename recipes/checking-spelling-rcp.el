@@ -36,8 +36,9 @@
   ;; Personal dictionary
   (ispell-personal-dictionary (no-littering-expand-var-file-name "flyspell/flyspell-ispell-personal-dict-en"))
   (ispell-extra-args (flyspell-detect-ispell-args t))
-  :init
-  ;; Taken from https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs/
+  :preface
+  ;; Taken from
+  ;; https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs/
   (defun flyspell-detect-ispell-args (&optional run-together)
     "if RUN-TOGETHER is true, spell check the CamelCase words."
     (let (args)
