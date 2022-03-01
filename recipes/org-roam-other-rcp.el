@@ -44,6 +44,24 @@
   (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
   )
 
+;;; Org-remark
+(use-package org-remark
+  :after org
+  :general (:keymaps 'org-remark-mode-map
+                     :prefix "C-c r"
+                     "m" #'org-remark-mark
+                     "r" #'org-remark-remove
+                     "c" #'org-remark-change
+                     "t" #'org-remark-toggle
+                     "o" #'org-remark-open
+                     "v" #'org-remark-view
+                     "n" #'org-remark-view-next
+                     "p" #'org-remark-view-prev)
+  :config
+  (org-remark-mode)
+  (require 'org-remark-global-tracking)
+  (org-remark-global-tracking-mode))
+
 ;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
