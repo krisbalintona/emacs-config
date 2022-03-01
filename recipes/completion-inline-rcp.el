@@ -16,17 +16,16 @@
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
+            :states 'insert
             "C-n" #'corfu-next
             "C-p" #'corfu-previous
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
+            "H-SPC" #'corfu-insert-separator
+            "SPC" #'corfu-insert-separator
             "M-d" #'corfu-show-documentation
             "C-g" #'corfu-quit
             "M-l" #'corfu-show-location)
-  (:keymaps '(corfu-map general-override-mode-map)
-            :states 'insert
-            "H-SPC" #'corfu-insert-separator
-            "SPC" #'corfu-insert-separator)
   :custom
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
@@ -55,6 +54,13 @@
   :init
   (corfu-global-mode)
   :config
+  ;; NOTE 2022-03-01: See
+  ;; https://github.com/minad/corfu/issues/12#issuecomment-869037519
+  ;; (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
+  ;; (advice-add 'corfu--teardown :after 'evil-normalize-keymaps)
+  (evil-make-overriding-map corfu-map)
+  (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
+
   ;; Enable Corfu more generally for every minibuffer, as long as no other
   ;; completion UI is active. If you use Mct or Vertico as your main minibuffer
   ;; completion UI. From
