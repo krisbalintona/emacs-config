@@ -33,8 +33,10 @@
   :init
   (recentf-mode)
   :config
-  (run-at-time nil (* 3 60) 'recentf-save-list) ; Save every 3 minutes
-  )
+  (run-at-time nil (* 3 60) ; Save every 3 minutes
+               #'(lambda ()
+                   (let ((save-silently t))
+                     (recentf-save-list)))))
 
 ;;; Saveplace
 ;; Save and restore the point's location in files
