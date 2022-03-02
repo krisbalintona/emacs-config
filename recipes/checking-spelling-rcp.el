@@ -35,12 +35,12 @@
   (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (`abbrev-mode')
   ;; Personal dictionary
   (ispell-personal-dictionary (no-littering-expand-var-file-name "flyspell/flyspell-ispell-personal-dict-en"))
-  (ispell-extra-args (flyspell-detect-ispell-args t))
+  (ispell-extra-args (flyspell-detect-ispell-args nil)) ; `t' makes `flyspell-correct' have weird suggestions
   :preface
   ;; Taken from
   ;; https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs/
   (defun flyspell-detect-ispell-args (&optional run-together)
-    "if RUN-TOGETHER is true, spell check the CamelCase words."
+    "If RUN-TOGETHER is true, spell check the CamelCase words."
     (let (args)
       (cond
        ((string-match  "aspell$" ispell-program-name)
@@ -55,9 +55,10 @@
                             (shell-command-to-string (concat ispell-program-name " --help")))
             (setq args (append args '("--camel-case"))))
 
-           ;; old aspell uses "--run-together". Please note we are not dependent on this option
-           ;; to check camel case word. wucuo is the final solution. This aspell options is just
-           ;; some extra check to speed up the whole process.
+           ;; old aspell uses "--run-together". Please note we are not dependent
+           ;; on this option to check camel case word. wucuo is the final
+           ;; solution. This aspell options is just some extra check to speed up
+           ;; the whole process.
            (t
             (setq args (append args '("--run-together" "--run-together-limit=16")))))))
 
