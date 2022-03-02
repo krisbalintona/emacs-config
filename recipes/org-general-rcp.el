@@ -284,7 +284,6 @@ move to that window."
 ;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
-  :disabled t                           ; Buggy
   :ghook 'org-mode-hook
   :custom
   (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
@@ -293,8 +292,7 @@ move to that window."
   (org-visibility-exclude-paths nil)
   (org-visibility-maximum-tracked-files 500)
   (org-visibility-maximum-tracked-days 60)
-  (org-visibility-display-messages nil) ; Annoying echo area updates
-  )
+  (org-visibility-display-messages nil)) ; Annoying echo area updates
 
 ;;; Aesthetics
 ;;;; Org-superstar
