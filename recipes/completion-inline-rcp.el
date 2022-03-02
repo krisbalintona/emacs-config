@@ -105,6 +105,7 @@ default lsp-passthrough."
 (use-package corfu-doc
   :straight (corfu-doc :type git :host github :repo "galeo/corfu-doc")
   :after corfu
+  :hook (corfu-mode . corfu-doc-mode)
   :general (:keymaps 'corfu-map
                      [remap corfu-show-documentation] #'corfu-doc-toggle
                      ;; Scroll in the documentation window
@@ -113,8 +114,7 @@ default lsp-passthrough."
   :custom
   (corfu-doc-delay 0.5)
   (corfu-doc-max-width 70)
-  (corfu-doc-max-height 20)
-  )
+  (corfu-doc-max-height 20))
 
 ;;; Cape
 ;; Expand capf functionality with corfu!
