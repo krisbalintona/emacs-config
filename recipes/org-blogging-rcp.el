@@ -12,7 +12,8 @@
 ;;; Ox-hugo
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
-  :commands org-export-dispatch kb/org-hugo-org-roam-sync-all
+  :defer 7
+  :commands kb/org-hugo-org-roam-sync-all
   :ensure-system-package hugo
   :custom
   (org-hugo-base-dir (concat org-directory "hugo/"))
