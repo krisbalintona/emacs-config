@@ -13,6 +13,7 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
+  :straight (corfu :type git :host github :repo "minad/corfu")
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
@@ -22,7 +23,7 @@
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
             "H-SPC" #'corfu-insert-separator
-            "SPC" #'corfu-insert-separator
+            ;; "SPC" #'corfu-insert-separator ; Used when `corfu-quit-at-boundary' is non-nil
             "M-d" #'corfu-show-documentation
             "C-g" #'corfu-quit
             "M-l" #'corfu-show-location)
@@ -42,24 +43,32 @@
   (corfu-scroll-margin 4)
   (corfu-cycle nil)
 
-  (corfu-echo-documentation nil)        ; Already use corfu-doc
-  (corfu-separator ?\s)                 ; Necessary for use with orderless
-  (corfu-quit-no-match 'separator)
-
-  (corfu-preview-current 'insert)       ; Preview current candidate?
-  (corfu-preselect-first t)             ; Preselect first candidate?
+  ;; `nil' means to ignore `corfu-separator' behavior, that is, use the older
+  ;; `corfu-quit-at-boundary' = nil behavior. Set this to separator if using
+  ;; `corfu-auto' = `t' workflow (in that case, make sure you also set up
+  ;; `corfu-separator' and a keybind for `corfu-insert-separator', which my
+  ;; configuration already has pre-prepared). Necessary for manual corfu usage with
+  ;; orderless, otherwise first component is ignored, unless `corfu-separator'
+  ;; is inserted.
+  (corfu-quit-at-boundary nil)
+  (corfu-separator ?\s)            ; Use space
+  (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
+  (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
+  (corfu-preselect-first t)        ; Preselect first candidate?
 
   ;; Other
+  (corfu-echo-documentation nil)        ; Already use corfu-doc
   (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
   :init
   (corfu-global-mode)
   :config
   ;; NOTE 2022-03-01: See
   ;; https://github.com/minad/corfu/issues/12#issuecomment-869037519
+  ;; Alternatively, add advice without general.el:
   ;; (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
   ;; (advice-add 'corfu--teardown :after 'evil-normalize-keymaps)
-  (evil-make-overriding-map corfu-map)
   (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
+  (evil-make-overriding-map corfu-map)
 
   ;; Enable Corfu more generally for every minibuffer, as long as no other
   ;; completion UI is active. If you use Mct or Vertico as your main minibuffer
