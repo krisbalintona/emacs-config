@@ -14,7 +14,7 @@
 (use-package ox-hugo
   :defer 7
   :commands kb/org-hugo-org-roam-sync-all
-  :ensure-system-package hugo
+  :ensure-system-package (hugo go)
   :custom
   (org-hugo-base-dir (concat org-directory "hugo/"))
   (org-hugo-section "posts")
