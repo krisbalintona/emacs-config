@@ -140,7 +140,7 @@
             "i i" 'zetteldesk-insert-info-contents
             )
   (:keymaps 'org-mode-map
-            :states '(normal visual insert motion)
+            :states '(normal visual motion)
             :prefix ", z"
             "i" 'zetteldesk-node-insert
             "r" 'zetteldesk-remove-backlinks-from-desktop
