@@ -200,6 +200,12 @@ is only tested on \"insert\" action."
                    :when '(sp-in-comment-p sp-in-string-p))
     )
 
+  ;; Org-mode
+  (sp-with-modes 'org-mode
+    (sp-local-pair "(" ")" :actions '(insert autoskip navigate)
+                   :unless '(kb/sp-point-before-letter-digit-p kb/sp-point-before-closing-paren-p))
+    )
+
   ;; Sh-mode
   (sp-local-pair 'sh-mode "`" "`"
                  :unless '(sp-point-before-word-p sp-point-before-same-p))
