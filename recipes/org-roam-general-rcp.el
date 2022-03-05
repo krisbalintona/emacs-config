@@ -253,9 +253,9 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
 #+filetags: :blog:
 #+hugo_tags:
 #+hugo_categories:
-#+DATE: nil
+#+hugo_publishdate:
 #+hugo_custom_front_matter:
-#+hugo_draft: true")
+#+hugo_draft: true ")
          :unnarrowed t
          :immediate-finish t)
         ("l" "Lit Note" plain
