@@ -191,6 +191,7 @@ move to that window."
 
 % ** Paragraph indentation
 \\setlength{\\parindent}{0.5in}
+\\usepackage{indentfirst}    % Indent first paragraph after section
 
 % ** Dummy text
 \\usepackage{lipsum}
