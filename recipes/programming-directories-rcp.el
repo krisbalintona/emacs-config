@@ -134,10 +134,11 @@
             "M-s M-g" #'affe-grep)
   :custom
   (affe-regexp-compiler
-   #'(lambda (input type)                ; Use orderless instead of consult to regexp
-       (setq text (orderless-pattern-compiler input))
-       (cons text (lambda (str) (orderless--highlight text str)))
-       ))
+   #'(lambda (input type ignore-case)                ; Use orderless instead of consult to regexp
+       (let ((case-fold-search ignore-case))
+         (setq text (orderless-pattern-compiler input))
+         (cons text (lambda (str) (orderless--highlight text str)))
+         )))
   (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
   (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .") ; Include hidden files
   )
