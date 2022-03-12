@@ -251,9 +251,12 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
          :if-new (file+head "blog/${slug}.org"
                             "#+title: ${title}
 #+filetags: :blog:
-#+hugo_tags:
-#+hugo_categories:
+#+hugo_bundle: 
+#+export_file_name: index
+#+hugo_tags: 
+#+hugo_categories: 
 #+hugo_publishdate:
+#+hugo_lastmod: 
 #+hugo_custom_front_matter:
 #+hugo_draft: true ")
          :unnarrowed t
