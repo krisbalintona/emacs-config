@@ -85,8 +85,8 @@
 
 ;;;; Standard faces broad
    `(default ((t (:font ,uninspiring-dark-default :height 136 :foreground ,uninspiring-dark-fg :background ,uninspiring-dark-bg))))
-   `(fixed-pitch ((t (:font ,uninspiring-dark-fixed-pitch :height 140))))
-   `(variable-pitch ((t (:font ,uninspiring-dark-variable-pitch :height 140))))
+   `(fixed-pitch ((t (:font ,uninspiring-dark-fixed-pitch :height 1.03))))
+   `(variable-pitch ((t (:font ,uninspiring-dark-variable-pitch :height 1.03))))
    `(success ((t (:foreground ,uninspiring-dark-green))))
    `(warning ((t (:foreground ,uninspiring-dark-orange-2))))
    `(error ((t (:foreground ,uninspiring-dark-red-1 :weight bold))))
