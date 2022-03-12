@@ -3,6 +3,8 @@
 # key: <hugo
 # --
 #+filetags: :blog:
+#+hugo_bundle: 
+#+export_file_name: index
 #+hugo_tags: 
 #+hugo_categories: 
 #+hugo_publishdate:

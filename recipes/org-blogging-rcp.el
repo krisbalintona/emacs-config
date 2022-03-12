@@ -18,6 +18,9 @@
   :custom
   (org-hugo-base-dir (concat org-directory "hugo/"))
   (org-hugo-section "posts")
+  ;; `nil' if you don't want to export to the static directory. This is
+  ;; desirable if, for instance, you leverage page bundles for each post.
+  (org-hugo-default-static-subdirectory-for-externals nil)
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
