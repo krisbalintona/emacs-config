@@ -13,7 +13,6 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
-  :straight (corfu :type git :host github :repo "minad/corfu")
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
@@ -23,7 +22,7 @@
             "<escape>" #'corfu-quit
             "<return>" #'corfu-insert
             "H-SPC" #'corfu-insert-separator
-            ;; "SPC" #'corfu-insert-separator ; Used when `corfu-quit-at-boundary' is non-nil
+            ;; "SPC" #'corfu-insert-separator ; Use when `corfu-quit-at-boundary' is non-nil
             "M-d" #'corfu-show-documentation
             "C-g" #'corfu-quit
             "M-l" #'corfu-show-location)
@@ -62,9 +61,11 @@
   :init
   (corfu-global-mode)
   :config
-  ;; NOTE 2022-03-01: See
+  ;; NOTE 2022-03-01: This allows for a more evil-esque way to have
+  ;; `corfu-insert-separator' work with space in insert mode without resorting to
+  ;; overriding keybindings with `general-override-mode-map'. See
   ;; https://github.com/minad/corfu/issues/12#issuecomment-869037519
-  ;; Alternatively, add advice without general.el:
+  ;; Alternatively, add advice without `general.el':
   ;; (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
   ;; (advice-add 'corfu--teardown :after 'evil-normalize-keymaps)
   (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
