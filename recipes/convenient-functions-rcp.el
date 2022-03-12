@@ -15,7 +15,8 @@
 (defun kb/move-this-file (new-path &optional force-p)
   "Move current buffer's file to NEW-PATH.
 
-      If FORCE-P, overwrite the destination file if it exists, without confirmation."
+      If FORCE-P, overwrite the destination file if it exists,
+      without confirmation."
   (interactive
    (list (read-file-name "Move file to: ")
          current-prefix-arg))
@@ -35,7 +36,9 @@
 
 ;;; Aj-toggle-fold
 (defun aj-toggle-fold ()
-  "Toggle fold all lines larger than indentation on current line. Taken from https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159."
+  "Toggle fold all lines larger than indentation on current line.
+Taken from
+https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159."
   (interactive)
   (let ((col 1))
     (save-excursion
@@ -244,15 +247,17 @@
 (defun kb/org-add-blank-lines (&optional ARG)
   "Call `unpackaged/org-add-blank-lines' before saving in org files
 which are not in `kb/agenda-dir'."
+  (require 'org-capture)
   (when (and
          ;; NOTE 2022-02-03: This next line is a very important check. It fixes
          ;; a persistent and annoying bug when using `org-roam-capture' and
          ;; sometimes its variants.
+         (not org-capture-mode)
          (buffer-file-name)
          (eq major-mode 'org-mode) ; Org-mode
          (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
          )
-    (let ((org-element-use-cache nil)) ; NOTE 2022-02-05: This is a shoddy fix for hanging when calling in buffer with no headlines
+    (let ((org-element-use-cache nil)) ; NOTE 2022-02-05: This is a shoddy fix for hanging when invoking in buffer with no headlines
       (funcall-interactively 'unpackaged/org-add-blank-lines '(4)) ; Emulate universal argument
       )))
 (add-hook 'before-save-hook #'kb/org-add-blank-lines)
