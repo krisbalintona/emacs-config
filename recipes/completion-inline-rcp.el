@@ -209,7 +209,7 @@ Additionally, add `cape-file' as early as possible to the list."
         (org-roam--register-completion-functions-h)
       (let (result)
         (dolist (element (list
-                          (cape-super-capf #'cape-ispell #'cape-abbrev)
+                          (cape-super-capf #'cape-ispell #'cape-dabbrev)
                           (cape-company-to-capf #'company-yasnippet))
                          result)
           (add-to-list 'completion-at-point-functions element)))
@@ -229,7 +229,7 @@ Additionally, add `cape-file' as early as possible to the list."
      :states 'insert
      "<tab>" 'completion-at-point)      ; Keybinding for `completion-at-point'
     (let ((result))
-      (dolist (element '(cape-symbol) result)
+      (dolist (element '(cape-dabbrev cape-symbol) result)
         (add-to-list 'completion-at-point-functions element))))
 
   ;; LaTeX
