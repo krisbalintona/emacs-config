@@ -247,6 +247,11 @@ move to that window."
   (org-attach-dir-relative t)        ; Use relative file paths?
   (org-attach-method 'cp)            ; Attach copies of files
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
+  ;; Use timestamps as UUIDs and in attachment directory hierarchy
+  (org-id-method 'ts)
+  (org-attach-id-to-path-function-list
+   '(org-attach-id-ts-folder-format
+     org-attach-id-uuid-folder-format))
   )
 
 ;;; Org-refile
