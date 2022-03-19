@@ -160,7 +160,7 @@ default lsp-passthrough."
                     "i" 'cape-ispell
                     "l" 'cape-line
                     "w" 'cape-dict
-                    "\\"' cape-tex
+                    "\\" 'cape-tex
                     "_" 'cape-tex
                     "^" 'cape-tex
                     "&" 'cape-sgml
