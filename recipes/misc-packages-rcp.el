@@ -274,7 +274,11 @@
     "fF" '(find-file-other-window :wk "Find file other window")
     "fS" '(save-some-buffers :wk "Save most buffers")
     "ff" '(find-file :wk "Find file")
-    "fs" '(save-buffer :wk "Save buffer")
+    "fs" '((lambda ()
+             (interactive)
+             (let ((save-silently t))
+               (save-buffer)))
+           :wk "Save buffer")
 
     "bn" '(next-buffer :wk "Next buffer")
     "bp" '(previous-buffer :wk "Prev buffer")
