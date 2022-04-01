@@ -36,7 +36,7 @@
   :custom
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)
-  (vterm-timer-delay 0.01)              ; Make vterm appear less "slow"
+  (vterm-timer-delay nil)      ; Make vterm appear less "slow" by removing delay
   )
 
 ;;; shell-vterm-rcp.el ends here
