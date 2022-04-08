@@ -80,39 +80,6 @@
   ;; lsp-pyright-venv-directory
   )
 
-;;; Pyvenv
-;; Install packages to a local directory rather than globally call
-;; `pyvenv-activate' and select a directory with virtual environment packages
-(use-package pyvenv
-  :hook (python-mode . kb/pyvenv-auto-activate)
-  :ghook 'python-mode-hook
-  :gfhook
-  'pyvenv-tracking-mode
-  'kb/pyvenv-setup-variables
-  :general (kb/lsp-keys
-             "v" '(pyvenv-activate :wk "Pyvenv activate"))
-  :init
-  (defun kb/pyvenv-auto-activate ()
-    "Activate virtual environment, checking present directory then
-project root."
-    (require 'pyvenv)               ; Functions require the package to be loaded
-    (let* ((venv-dir (concat default-directory pyvenv-default-virtual-env-name))
-           (venv-root (concat (project-root (project-current)) pyvenv-default-virtual-env-name))
-           )
-      (cond ((file-exists-p venv-dir) (pyvenv-activate venv-dir)) ; Check present directory
-            ((file-exists-p venv-root) (pyvenv-activate venv-root)) ; Then project root
-            (t (message "No virtual environment found."))
-            )))
-  (defun kb/pyvenv-setup-variables ()
-    "Set up pyvenv variables.
-
-Set here since :custom declaration doesn't work for some reason."
-    (setq pyvenv-default-virtual-env-name ".venv"
-          pyvenv-mode-line-indicator 
-          (concat "[V] " (format-mode-line pyvenv-virtual-env-name 'mode-line-emphasis))
-          ))
-  )
-
 ;;; Anaconda
 ;; More IDE features to Python
 (use-package anaconda-mode
@@ -130,17 +97,56 @@ Set here since :custom declaration doesn't work for some reason."
             )
   )
 
+;;; Pyvenv
+;; Install packages to a local directory rather than globally call
+;; `pyvenv-activate' and select a directory with virtual environment packages
+(use-package pyvenv
+  :hook (python-mode . kb/pyvenv-auto-activate)
+  :ghook 'python-mode-hook
+  :gfhook
+  'pyvenv-tracking-mode
+  'kb/pyvenv-setup-variables
+  :general (kb/lsp-keys
+             "v" '(ignore :wk "Pyvenv")
+             "vv" '(pyvenv-activate :wk "Activate")
+             "vV" '(pyvenv-workon :wk "Workon")
+             "vc" '(pyvenv-create :wk "Create"))
+  :init
+  (defun kb/pyvenv-auto-activate ()
+    "Activate virtual environment, checking present directory then
+project root."
+    (require 'pyvenv)               ; Functions require the package to be loaded
+    (let* ((venv-dir (concat default-directory pyvenv-default-virtual-env-name))
+           (venv-root (concat (project-root (project-current)) pyvenv-default-virtual-env-name))
+           )
+      (cond ((file-exists-p venv-dir) (pyvenv-activate venv-dir)) ; Check present directory
+            ((file-exists-p venv-root) (pyvenv-activate venv-root)) ; Then project root
+            (t (message "No virtual environment found."))
+            )))
+  (defun kb/pyvenv-setup-variables ()
+    "Set up pyvenv variables.
+
+Set here since :custom declaration doesn't work for some reason."
+    (setq pyvenv-default-virtual-env-name ".venv"
+          pyvenv-mode-line-indicator
+          (concat "[V] " (format-mode-line pyvenv-virtual-env-name 'mode-line-emphasis))
+          ))
+  )
+
+;;; Python-pytest
+(use-package python-pytest
+  :general (kb/lsp-keys
+             "t" '(ignore :wk "Pyvenv")
+             "tt" '(python-pytest-file :wk "Pyvenv activate")
+             "tT" '(python-pytest-dispatch :wk "Pyvenv activate"))
+  )
+
 ;;; Pyimport
 ;; Functions which conveniently add or remove import statements when appropriate.
 (use-package pyimport
   :ensure-system-package (pyflakes . flake8)
   :after python
   :custom (pyimport-pyflakes-path (executable-find "pyflakes"))
-  )
-
-;;; Pylookup
-;; See python documentation
-(use-package pylookup
   )
 
 ;;; programming-python-rcp.el ends here

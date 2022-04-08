@@ -350,7 +350,7 @@
              )
   :custom
   (dash-docs-docsets-path (expand-file-name "dash-docs-docsets" no-littering-var-directory))
-  (dash-docs-browser-func 'browse-url)
+  (dash-docs-browser-func 'eww)
 
   (dash-docs-enable-debugging nil) ; Get rid of annoying messages when searching
   (dash-docs-min-length 2)
