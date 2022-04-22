@@ -164,8 +164,8 @@ move to that window."
                                     " % * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
-% * Default packages
-[DEFAULT-PACKAGES]
+% * Default packages?
+[NO-DEFAULT-PACKAGES]
 
 % ** MLA package
 \\usepackage{ifpdf}
