@@ -170,29 +170,6 @@ move to that window."
 % ** MLA package
 \\usepackage{ifpdf}
 \\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/mla}
-
-% ** Font (Garamond)
-\\usepackage[urw-garamond]{mathdesign}
-\\usepackage[T1]{fontenc}
-
-% ** Fancy quotes
-\\usepackage[american]{babel}
-\\usepackage[style=american, debug=true, strict=true, threshold=4]{csquotes}
-\\SetCiteCommand{\\autocite} % Tell csquotes to use biblatex's \\autocite for citations
-
-% ** Line and after-sentence spacing
-\\usepackage{setspace}
-\\setstretch{2}%
-\\frenchspacing% Single spaces after sentences
-
-% ** Page header
-% 12pt is one-sixth of an inch. Subtract this from 0.5in to get headsep value
-\\setlength\\headsep{0.333in}
-
-% ** Paragraph indentation
-\\setlength{\\parindent}{0.5in}
-\\usepackage{indentfirst}    % Indent first paragraph after section
-
 % ** Dummy text
 \\usepackage{lipsum}
 
