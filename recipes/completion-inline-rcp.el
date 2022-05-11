@@ -59,7 +59,7 @@
   (corfu-echo-documentation nil)        ; Already use corfu-doc
   (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
   :init
-  (corfu-global-mode)
+  (global-corfu-mode)
   :config
   ;; NOTE 2022-03-01: This allows for a more evil-esque way to have
   ;; `corfu-insert-separator' work with space in insert mode without resorting to
