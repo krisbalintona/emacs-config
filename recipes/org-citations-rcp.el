@@ -23,7 +23,7 @@
   (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles"))
   (org-cite-export-processors
    '((md csl "chicago-fullnote-bibliography.csl")   ; Footnote reliant
-     (latex csl "chicago-author-date.csl")          ; For philosophy
+     (latex biblatex)                               ; For humanities
      (odt csl "chicago-fullnote-bibliography.csl")  ; Footnote reliant
      (docx csl "chicago-fullnote-bibliography.csl") ; Footnote reliant
      (t csl "modern-language-association.csl")

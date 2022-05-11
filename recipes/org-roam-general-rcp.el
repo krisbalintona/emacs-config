@@ -246,6 +246,17 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
                             "#+title: ${title}\n")
          :unnarrowed t
          :immediate-finish t)
+        ("p" "Paper" plain
+         ""
+         :if-new (file+head "${slug}.org"
+                            "#+title: ${title}
+#+filetags: :paper:
+#+latex_class: mla
+#+cite_export: biblatex
+#+creator: PROFESSOR
+#+keywords: COURSE\n")
+         :unnarrowed t
+         :immediate-finish t)
         ("b" "Blog" plain
          ""
          :if-new (file+head "blog/${slug}.org"

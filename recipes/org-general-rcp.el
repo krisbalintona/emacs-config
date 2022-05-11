@@ -130,7 +130,11 @@ move to that window."
   (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
   ;; Templates
   (org-latex-title-command
-   " \\newcommand{\\orgprofessor}{%c}
+   "\\newdateformat{UKvardate}{
+\\THEDAY\\ \\monthname[\\THEMONTH], \\THEYEAR}
+\\UKvardate
+
+\\newcommand{\\orgprofessor}{%c}
 \\newcommand{\\orgclass}{%k}
 \\newcommand{\\orgtitle}{%t}
 \\maketitle")
@@ -156,12 +160,12 @@ move to that window."
      ("" "amsmath" t)
      ("" "amssymb" t)
      ("" "capt-of" nil)
-     ("hidelinks" "hyperref" nil)
+     ("hidelinks" "hyperref" nil)       ; Don't be annoying with links!
      ))
   (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
   :config
   (add-to-list 'org-latex-classes '("mla"
-                                    " % * Preamble
+                                    "% * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
 % * Default packages?
@@ -170,6 +174,7 @@ move to that window."
 % ** MLA package
 \\usepackage{ifpdf}
 \\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/mla}
+
 % ** Dummy text
 \\usepackage{lipsum}
 
@@ -179,12 +184,13 @@ move to that window."
     Kristoffer Balintona  \\\\
     \\orgprofessor        \\\\
     \\orgclass            \\\\
-    \\daymonthyeardate
+    \\today
   \\end{flushleft}
 
   \\begin{center}
     \\orgtitle
-  \\end{center}
+  \\end{center}  % Keep the following newline here so first paragraph is indented
+
 }"
                                     ("\\section*{%s}" . "\\section*{%s}")
                                     ("\\subsection*{%s}" . "\\subsection*{%s}")
