@@ -77,6 +77,37 @@
   (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
   (citar-at-point-function 'embark-act) ; Use `embark'
   :config
+  ;; Add prefix and suffix text immediately after insertion
+  (defun kb/citar-org-update-pre-suffix ()
+    "Change the pre/suffix text of the reference at point. My version
+that also adds a space in the suffix so I don't always have to
+manually add one myself."
+    (interactive)
+    (let* ((datum (org-element-context))
+           (datum-type (org-element-type datum))
+           (ref (if (eq datum-type 'citation-reference) datum
+                  (error "Not on a citation reference")))
+           (key (org-element-property :key ref))
+           ;; TODO handle space delimiter elegantly.
+           (pre (read-string "Prefix text: " (org-element-property :prefix ref)))
+           (post (read-string "Suffix text: " (org-element-property :suffix ref))))
+      (setf (buffer-substring (org-element-property :begin ref)
+                              (org-element-property :end ref))
+            (org-element-interpret-data
+             `(citation-reference
+               (:key ,key :prefix ,pre :suffix ,(if (equal post "") ; Added this if block
+                                                    post
+                                                  (concat " " post))))))
+      ))
+  (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-pre-suffix)
+  (advice-add 'org-cite-insert :after #'(lambda (args)
+                                          (require 'embark) ; Annoying to call `embark-act' first
+                                          (require 'typo)
+                                          (add-hook 'minibuffer-mode-hook 'typo-mode) ; Enable dashes
+                                          (save-excursion ; End with point after citation
+                                            (left-char)
+                                            (citar-org-update-pre-suffix))
+                                          (remove-hook 'minibuffer-mode-hook 'typo-mode)))
 
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
