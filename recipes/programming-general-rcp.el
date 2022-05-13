@@ -177,9 +177,6 @@
   (when (executable-find "plocate")
     (setq consult-locate-args "plocate --ignore-case --existing --regexp"))
 
-  ;; Enhanced multiple selection experience. Replaced the built-in method
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
