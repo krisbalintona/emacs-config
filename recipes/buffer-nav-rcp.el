@@ -120,7 +120,7 @@ argument, query for word to search."
   (general-advice-add '(evil-first-non-blank evil-end-of-visual-line
                                              evil-org-beginning-of-line evil-org-end-of-line
                                              org-beginning-of-line org-end-of-line
-                                             evil-goto-first-line evil-goto-line evil-goto-mark evil-goto-definition
+                                             evil-goto-first-line evil-goto-line evil-goto-definition
                                              evil-search-next evil-search-previous
                                              evilmi-jump-items
                                              back-to-indentation end-of-visual-line
