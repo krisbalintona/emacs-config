@@ -719,6 +719,35 @@ re-align the table if necessary. (Necessary because org-mode has a
 (use-package typo
   :ghook 'org-mode-hook
   :config
+  (defvar kb/typo-cycle-message t
+    "Whether beginning a `typo' cycle echos to the minibuffer.")
+  (defun kb/typo-insert-cycle (cycle)
+    "Insert the strings in CYCLE"
+    (let ((i 0)
+          (repeat-key last-input-event)
+          repeat-key-str)
+      (insert (nth i cycle))
+      (setq repeat-key-str (format-kbd-macro (vector repeat-key) nil))
+      (while repeat-key
+        (if kb/typo-cycle-message       ; Wrapped in if statement
+            (message "(Inserted %s; type %s for other options)"
+                     (typo-char-name (nth i cycle))
+                     repeat-key-str))
+        (if (equal repeat-key (read-event))
+            (progn
+              (clear-this-command-keys t)
+              (delete-char (- (length (nth i cycle))))
+              (setq i (% (+ i 1)
+                         (length cycle)))
+              (insert (nth i cycle))
+              (setq last-input-event nil))
+          (setq repeat-key nil)))
+      (when last-input-event
+        (clear-this-command-keys t)
+        (setq unread-command-events (list last-input-event)))))
+  (advice-add 'typo-insert-cycle :override #'kb/typo-insert-cycle)
+
+  ;; My own cycles
   (define-typo-cycle typo-cycle-right-single-quotation-mark
     "Cycle through the typewriter apostrophe and the right quotation mark.
 

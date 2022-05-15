@@ -108,6 +108,9 @@ manually add one myself."
                                             (left-char)
                                             (citar-org-update-pre-suffix))
                                           (remove-hook 'minibuffer-mode-hook 'typo-mode)))
+  (advice-add 'org-cite-insert :around #'(lambda (orig-fun &rest args)
+                                           (let ((kb/typo-cycle-message nil)) ; Disable annoying echos
+                                             (apply orig-fun args))))
 
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
