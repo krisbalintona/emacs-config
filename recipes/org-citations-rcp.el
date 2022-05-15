@@ -91,14 +91,16 @@ manually add one myself."
            ;; TODO handle space delimiter elegantly.
            (pre (read-string "Prefix text: " (org-element-property :prefix ref)))
            (post (read-string "Suffix text: " (org-element-property :suffix ref))))
+      (setq post
+            (if (string= (replace-regexp-in-string "\s-*" "" post) "")
+                ""       ; If there is nothing of substance (e.g. just a string)
+              (replace-regexp-in-string "^[\s-]*" " " post) ; Only begin with one space
+              ))
       (setf (buffer-substring (org-element-property :begin ref)
                               (org-element-property :end ref))
             (org-element-interpret-data
              `(citation-reference
-               (:key ,key :prefix ,pre :suffix ,(if (equal post "") ; Added this if block
-                                                    post
-                                                  (concat " " post))))))
-      ))
+               (:key ,key :prefix ,pre :suffix ,post))))))
   (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-pre-suffix)
   (advice-add 'org-cite-insert :after #'(lambda (args)
                                           (require 'embark) ; Annoying to call `embark-act' first
