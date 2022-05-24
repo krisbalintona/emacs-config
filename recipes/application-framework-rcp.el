@@ -117,7 +117,8 @@
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
-  :after (eaf org-transclusion)
+  :ensure-system-package ("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
+  :after eaf
   :load-path (lambda () (list (concat user-emacs-directory "popweb")))
   :straight nil
   :hook (latex-mode . popweb-latex-mode)
