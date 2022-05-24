@@ -299,6 +299,28 @@
      ))
   )
 
+;;; Lsp-bridge
+;; Asynchronous LSP client
+(use-package lsp-bridge
+  :straight (lsp-bridge :type git
+                        :host github
+                        :repo "manateelazycat/lsp-bridge"
+                        :files (:defaults "*.py"))
+  :after lsp-mode
+  :gfhook '(lambda () ; For Xref support
+             (add-hook 'xref-backend-functions #'lsp-bridge-xref-backend nil t))
+  :custom
+  (lsp-bridge-completion-provider 'corfu) ; Use corfu
+  :config
+  (require 'lsp-bridge-jdtls) ; Provide Java third-party library jump and -data directory support, optional
+  (require 'lsp-bridge-icon)  ; Show icons for completion items, optional
+  (require 'lsp-bridge-orderless) ; Make lsp-bridge support fuzzy match, optional
+  (global-lsp-bridge-mode)
+
+  ;; For corfu users with HiDPI screen
+  (when (> (frame-pixel-width) 3000) (custom-set-faces '(corfu-default ((t (:height 1.3))))))
+  )
+
 ;;; Ancillary
 ;;;; Consult-lsp
 (use-package consult-lsp
