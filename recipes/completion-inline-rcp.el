@@ -13,6 +13,10 @@
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 (use-package corfu
+  :straight (corfu :files (:defaults "extensions/*")
+                   :includes (corfu-history
+                              corfu-info
+                              ))
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
@@ -27,6 +31,13 @@
             "C-g" #'corfu-quit
             "M-l" #'corfu-show-location)
   :custom
+  ;; Enable extensions
+  (require 'corfu-info)
+  (require 'corfu-history)
+  (corfu-history-mode t)
+  ;; Save the history across Emacs sessions
+  (add-to-list 'savehist-additional-variables 'corfu-history)
+
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
   (tab-always-indent 'complete)
@@ -35,6 +46,7 @@
   (corfu-auto nil)
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.25)
+  (corfu-on-exact-match nil)         ; Don't do anything fancy for exact matches
 
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)     ; Always have the same width
