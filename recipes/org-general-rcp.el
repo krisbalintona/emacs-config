@@ -130,11 +130,7 @@ move to that window."
   (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
   ;; Templates
   (org-latex-title-command
-   "\\newdateformat{UKvardate}{
-\\THEDAY\\ \\monthname[\\THEMONTH], \\THEYEAR}
-\\UKvardate
-
-\\newcommand{\\orgprofessor}{%c}
+   "\\newcommand{\\orgprofessor}{%c}
 \\newcommand{\\orgclass}{%k}
 \\newcommand{\\orgtitle}{%t}
 \\maketitle")
@@ -162,7 +158,14 @@ move to that window."
      ("" "capt-of" nil)
      ("hidelinks" "hyperref" nil)       ; Don't be annoying with links!
      ))
-  (org-latex-with-hyperref nil) ; Don't use the hyperref LaTeX package when exporting from org-mode
+  (org-latex-hyperref-template
+   "\\hypersetup{
+  pdfauthor={%a},
+  pdftitle={%t},
+  pdfkeywords={%k},
+  pdfsubject={%d},
+  pdfcreator={%c},
+  pdflang={%L}}\n")
   :config
   (add-to-list 'org-latex-classes '("mla"
                                     "% * Preamble
