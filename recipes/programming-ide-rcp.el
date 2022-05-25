@@ -305,21 +305,30 @@
   :straight (lsp-bridge :type git
                         :host github
                         :repo "manateelazycat/lsp-bridge"
-                        :files (:defaults "*.py"))
+                        :files (:defaults "*.py")
+                        ;; Have to manually symlink for now...
+                        :post-build ("ln" "-s" "/home/krisbalintona/main-emacs/straight/repos/lsp-bridge/langserver/" "/home/krisbalintona/main-emacs/straight/build/lsp-bridge/"))
   :after lsp-mode
+  :hook (lsp-mode . (lambda ()   ; Don't rely on the scuffed `global-lsp-bridge-mode'
+                      (lsp-bridge-mode 1)
+                      ;; Change `corfu' settings for this buffer
+                      (setq-local corfu-auto t
+                                  corfu-quit-at-boundary t
+                                  corfu-separator ?/
+                                  orderless-component-separator "/")))
   :gfhook '(lambda () ; For Xref support
              (add-hook 'xref-backend-functions #'lsp-bridge-xref-backend nil t))
   :custom
   (lsp-bridge-completion-provider 'corfu) ; Use corfu
+  :init
+  (autoload 'lsp-bridge-mode (locate-library "lsp-bridge") "Enable `lsp-bridge-mode'")
   :config
+  ;; Enable extension
   (require 'lsp-bridge-jdtls) ; Provide Java third-party library jump and -data directory support, optional
-  (require 'lsp-bridge-icon)  ; Show icons for completion items, optional
-  (require 'lsp-bridge-orderless) ; Make lsp-bridge support fuzzy match, optional
-  (global-lsp-bridge-mode)
+  (require 'lsp-bridge-icon)  ; Show icons for completion items
 
   ;; For corfu users with HiDPI screen
-  (when (> (frame-pixel-width) 3000) (custom-set-faces '(corfu-default ((t (:height 1.3))))))
-  )
+  (when (> (frame-pixel-width) 3000) (custom-set-faces '(corfu-default ((t (:height 1.3)))))))
 
 ;;; Ancillary
 ;;;; Consult-lsp

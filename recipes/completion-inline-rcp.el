@@ -116,6 +116,8 @@ default lsp-passthrough."
   ;; Svg-lib dependency
   (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/")) ; Change cache dir
   :config
+  ;; TODO 2022-05-24: See if I can use the cooler icons from
+  ;; `lsp-bridge-icon--icons' without requiring the package
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable
 
   ;; Add hook to reset cache so the icon colors match my theme
