@@ -320,9 +320,7 @@
   :straight (lsp-bridge :type git
                         :host github
                         :repo "manateelazycat/lsp-bridge"
-                        :files (:defaults "*.py")
-                        ;; Have to manually symlink for now...
-                        :post-build ("ln" "-s" "/home/krisbalintona/main-emacs/straight/repos/lsp-bridge/langserver/" "/home/krisbalintona/main-emacs/straight/build/lsp-bridge/"))
+                        :files (:defaults "*.py" "langserver"))
   :after lsp-mode
   :hook (lsp-mode . (lambda ()   ; Don't rely on the scuffed `global-lsp-bridge-mode'
                       (lsp-bridge-mode 1)

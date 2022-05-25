@@ -118,23 +118,22 @@
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
   :ensure-system-package ("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
+  :straight (popweb :type git
+                    :host github
+                    :repo "manateelazycat/popweb"
+                    :files (:defaults "*.py" "*.js" "extension/*"))
   :after eaf
-  :load-path (lambda () (list (concat user-emacs-directory "popweb")))
-  :straight nil
   :hook (latex-mode . popweb-latex-mode)
   :custom
   (popweb-popup-pos "top-left")
   :config
   ;; LaTeX preview functionality
-  (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/latex"))
   (require 'popweb-latex)
   (popweb-latex-mode)
   ;; Chinese-English translation popup
-  (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/dict"))
   (require 'popweb-dict-bing)           ; Translation using Bing
   (require 'popweb-dict-youdao)         ; Translation using Youdao
   ;; Org-roam
-  (add-to-list 'load-path (concat user-emacs-directory "popweb/extension/org-roam"))
   (require 'popweb-org-roam-link)
   )
 
