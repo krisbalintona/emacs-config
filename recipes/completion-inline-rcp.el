@@ -179,6 +179,7 @@ default lsp-passthrough."
                     "^" 'cape-tex
                     "&" 'cape-sgml
                     "r" 'cape-rfc1345
+                    "y" (cape-interactive-capf (cape-company-to-capf #'company-yasnippet))
                     )
   :custom
   (cape-dabbrev-min-length 3)
@@ -208,7 +209,6 @@ Additionally, add `cape-file' as early as possible to the list."
                           completion-at-point-functions))
     ;; TODO 2022-02-28: Maybe use `cape-wrap-predicate' to have candidates
     ;; listed when I want?
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
     (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
     )
 
