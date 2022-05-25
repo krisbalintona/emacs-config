@@ -18,6 +18,21 @@
   'lsp-enable-which-key-integration
   'lsp-headerline-breadcrumb-mode
   'lsp-lens-mode
+  '(lambda ()
+     ;; Change `corfu' settings for LSP buffers
+     (general-define-key ; Insert special separator character
+      :keymaps 'local
+      :states 'insert
+      "C-SPC" '(lambda () (interactive) (insert corfu-separator)))
+     (setq-local corfu-auto t
+                 corfu-auto-delay 0.8
+                 corfu-auto-prefix 1
+                 corfu-quit-at-boundary t
+                 corfu-separator ?·
+                 orderless-component-separator "·")
+     ;; Force re-enable `corfu-mode' in order for it to be
+     ;; aware of the local change to `corfu-auto'
+     (corfu-mode 1))
   :general
   (:keymaps 'lsp-mode-map
             :states 'insert
@@ -311,11 +326,7 @@
   :after lsp-mode
   :hook (lsp-mode . (lambda ()   ; Don't rely on the scuffed `global-lsp-bridge-mode'
                       (lsp-bridge-mode 1)
-                      ;; Change `corfu' settings for this buffer
-                      (setq-local corfu-auto t
-                                  corfu-quit-at-boundary t
-                                  corfu-separator ?/
-                                  orderless-component-separator "/")))
+                      ))
   :gfhook '(lambda () ; For Xref support
              (add-hook 'xref-backend-functions #'lsp-bridge-xref-backend nil t))
   :custom
