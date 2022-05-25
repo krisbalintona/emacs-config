@@ -156,7 +156,8 @@ move to that window."
      ("" "amsmath" t)
      ("" "amssymb" t)
      ("" "capt-of" nil)
-     ("hidelinks" "hyperref" nil)       ; Don't be annoying with links!
+     ("" "hyperref" nil)
+     ("" "lipsum" nil)                  ; Sample text
      ))
   (org-latex-hyperref-template
    "\\hypersetup{
