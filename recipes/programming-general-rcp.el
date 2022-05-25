@@ -283,11 +283,29 @@
   (super-save-idle-duration 10) ; Wait 10 seconds for idle trigger
   (super-save-remote-files t) ; Turn on saving of remote files (those pulled from git repo?)
   (super-save-exclude nil) ; Don't exclude anything from being saved
+  (super-save-predicates
+   '((lambda nil buffer-file-name)
+     (lambda nil
+       (buffer-modified-p
+        (current-buffer)))
+     (lambda nil
+       (file-writable-p buffer-file-name))
+     ;; Removed this predicate to go back to previous functionality
+     ;; (lambda nil
+     ;;   (<
+     ;;    (buffer-size)
+     ;;    super-save-max-buffer-size))
+     (lambda nil
+       (if
+           (file-remote-p buffer-file-name)
+           super-save-remote-files t))
+     (lambda nil
+       (super-save-include-p buffer-file-name))))
   :config
+  (super-save-mode)
+
   (add-to-list 'super-save-triggers 'evil-window-next)
-  (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
-  :config (super-save-mode)
-  )
+  (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook))
 
 ;;;; Whitespace
 ;; Remove whitespace on save
