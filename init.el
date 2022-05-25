@@ -83,6 +83,10 @@
 ;; (require 'org-agenda-views-rcp)
 ;; (require 'org-agenda-other-rcp)
 
+;; FIXME 2022-05-24: For some reaosn, I have to load the `org-macs' library late
+;; into startup - perhaps after the window is loaded?
+(with-eval-after-load 'org-roam (load "org-macs"))
+
 ;;;; LaTeX
 (require 'latex-general-rcp)
 (require 'latex-pdf-rcp)
