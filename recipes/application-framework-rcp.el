@@ -13,6 +13,7 @@
 ;; The Emacs application framework.
 (use-package eaf
   :demand t
+  :ensure-system-package ("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
   :after browse-url
   :ensure-system-package gdb         ; For debugging purposes, if I ever need to
   :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
@@ -117,25 +118,28 @@
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
-  :ensure-system-package ("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
+  :commands popweb-org-roam-link-show popweb-org-roam-link-preview-select
   :straight (popweb :type git
                     :host github
                     :repo "manateelazycat/popweb"
-                    :files (:defaults "*.py" "*.js" "extension/*"))
-  :after eaf
-  :hook (latex-mode . popweb-latex-mode)
+                    :files (:defaults "*.py" "*.js" "extension/*/*"))
+  :hook ((latex-mode . (lambda ()
+                         (popweb-latex-mode)
+                         (setq-local popweb-popup-pos "top-left")
+                         )))
   :custom
-  (popweb-popup-pos "top-left")
+  (popweb-popup-pos "point-bottom")
   :config
-  ;; LaTeX preview functionality
+  ;; LaTeX previews
   (require 'popweb-latex)
-  (popweb-latex-mode)
   ;; Chinese-English translation popup
   (require 'popweb-dict-bing)           ; Translation using Bing
   (require 'popweb-dict-youdao)         ; Translation using Youdao
-  ;; Org-roam
+  ;; Org-roam link previews
   (require 'popweb-org-roam-link)
-  )
+  (advice-add 'popweb-org-roam-link-show :around #'(lambda (orig-fun &rest args)
+                                                     ;; Needs to see the entire buffer for some reason...
+                                                     (org-with-wide-buffer (apply orig-fun args)))))
 
 ;;; application-framework-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

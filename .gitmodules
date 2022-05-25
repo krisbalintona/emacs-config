@@ -4,9 +4,6 @@
 [submodule "locales"]
     path = locales
     url = https://github.com/citation-style-language/locales.git
-[submodule "popweb"]
-    path = popweb
-    url = https://github.com/manateelazycat/popweb.git
 [submodule "emacs-application-framework"]
     path = site-lisp/emacs-application-framework
     url = https://github.com/emacs-eaf/emacs-application-framework.git
