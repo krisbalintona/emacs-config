@@ -196,25 +196,26 @@ disrupting the addition of other capfs (e.g. merely setting the
 variable entirely, or adding to list).
 
 Additionally, add `cape-file' as early as possible to the list."
-    (setf (elt (cl-member 'elisp-completion-at-point completion-at-point-functions) 0)
-          #'elisp-completion-at-point)
     (add-to-list 'completion-at-point-functions #'cape-symbol)
     ;; I prefer this being early/first in the list
     (add-to-list 'completion-at-point-functions #'cape-file)
     (require 'company-yasnippet)
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
+    )
 
   ;; LSP
   (defun kb/cape-capf-setup-lsp ()
     "Replace the default `lsp-completion-at-point' with its
 `cape-capf-buster' version. Also add `cape-file' and
 `company-yasnippet' backends."
-    (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
-          (cape-capf-buster #'lsp-completion-at-point))
+    (setq completion-at-point-functions
+          (-replace-first 'lsp-completion-at-point (cape-capf-buster #'lsp-completion-at-point)
+                          completion-at-point-functions))
     ;; TODO 2022-02-28: Maybe use `cape-wrap-predicate' to have candidates
     ;; listed when I want?
     (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
+    )
 
   ;; Org
   (defun kb/cape-capf-setup-org ()
