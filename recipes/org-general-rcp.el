@@ -26,7 +26,6 @@
      (require 'prog-mode)
      (push '("->" . ?➡) prettify-symbols-alist)
      (push '("<-" . ?⬅) prettify-symbols-alist)
-     (setq-local line-spacing 0.1)
      (prettify-symbols-mode))
   :general
   (:keymaps 'org-mode-map
@@ -327,9 +326,15 @@ move to that window."
 ;;;; Org-bars
 (use-package org-bars
   :after org
+  :commands org-bars-mode
   :straight (org-bars :type git :host github :repo "tonyaldon/org-bars")
-  :config
-  (add-hook 'org-mode-hook 'org-bars-mode 100) ; Doesn't work if it is added to the beginning of the hook
+  :custom
+  (org-bars-with-dynamic-stars-p nil)   ; Custom headline stars?
+  :preface            ; Should be in preface or else the package won't be loaded
+  (add-hook 'org-mode-hook #'(lambda ()
+                               (setq-local line-spacing 0) ; For smooth lines
+                               (org-bars-mode))
+            100)      ; Doesn't work if it is added to the beginning of the hook
   )
 
 ;;;; Visual-fill-column
