@@ -13,6 +13,7 @@
 ;; Integration with `latexmk' for more compilation support (particularly
 ;; citations)
 (use-package auctex-latexmk
+  :disabled t                   ; I think my `kb/latexmk-mode' is enough for me?
   :demand t
   :after latex
   :custom
@@ -22,32 +23,20 @@
 
 ;;; Latexmk-mode
 ;; My own minor-mode creating automatically updating pdf-tools LaTeX preview
-(with-eval-after-load 'auctex-latexmk
-  (define-minor-mode latexmk-mode
-    "Toggle LatexMK mode."
-    :init-value nil
-    :lighter " LatexMK "
-    )
+(define-minor-mode kb/latexmk-mode
+  "Toggle LatexMK mode."
+  :init-value nil
+  :lighter " LatexMK "
+  (cond
+   (kb/latexmk-mode (add-hook 'after-save-hook 'kb/run-latexmk 0 t))
+   (t (remove-hook 'after-save-hook 'kb/run-latexmk t)))
+  )
+(add-hook 'latex-mode-hook #'kb/latexmk-mode)
 
-  (defun kb/run-latexmk ()
-    "Start external latexmk process and run in current buffer."
-    (interactive)
-    (start-process "latexmk" "latexmk output" "latexmk" "--silent" "--pdf" (buffer-file-name (current-buffer)))
-    )
-
-  (defun kb/try-run-latexmk ()
-    "Try to execute kb/run-latexmk."
-    (if (and (bound-and-true-p latexmk-mode) (eql major-mode 'latex-mode))
-        (kb/run-latexmk))
-    )
-
-  (add-hook 'find-file-hook
-            (lambda ()
-              "Enable `latexmk-mode' in files whose extension is `.tex'."
-              (when (string= (file-name-extension buffer-file-name) "tex")
-                (latexmk-mode))
-              ))
-  (add-hook 'after-save-hook #'kb/try-run-latexmk)
+(defun kb/run-latexmk ()
+  "Start external latexmk process and run in current buffer."
+  (interactive)
+  (start-process "latexmk" "latexmk output" "latexmk" "--silent" "--pdf" (buffer-file-name (current-buffer)))
   )
 
 ;;; latex-pdf-rcp.el ends here
