@@ -184,11 +184,6 @@ default lsp-passthrough."
   (cape-dabbrev-min-length 3)
   :init
   ;; Elisp
-  (defun kb/cape-capf-ignore-keywords-elisp (cand)
-    "Ignore keywords with forms that begin with \":\" (e.g.
-:history)."
-    (or (not (keywordp cand))
-        (eq (char-after (car completion-in-region--data)) ?:)))
   (defun kb/cape-capf-setup-elisp ()
     "Replace the default `elisp-completion-at-point'
 completion-at-point-function. Doing it this way will prevent
@@ -265,7 +260,6 @@ Additionally, add `cape-file' as early as possible to the list."
                                           '(company-auctex-macros company-auctex-symbols company-auctex-environments))))
                        result)
         (add-to-list 'completion-at-point-functions element))))
-
 
   ;; Sh
   (defun kb/cape-capf-setup-sh ()
