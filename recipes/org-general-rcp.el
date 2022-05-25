@@ -11,6 +11,11 @@
 
 ;;; Org-mode itself
 (use-package org
+  :straight (org-mode :type git
+                      :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
+                      :pre-build ("make" "oldorg" "EMACS=/usr/local/bin/emacs")
+                      :files (:defaults "lisp")
+                      :includes (ox ox-odt ox-latex org-footnote org-attach org-refile))
   :gfhook
   'prettify-symbols-mode
   'variable-pitch-mode
@@ -99,32 +104,19 @@ move to that window."
 
 ;;; Related to org-export
 ;;;; Org-export
-(use-package org-export
-  :straight nil
+(use-package ox
   :custom
   (org-export-with-sub-superscripts nil)
   )
 
-;;;; Org-contrib
-(use-package org-contrib
-  :after org
-  :init
-  (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines)) ; The ignore tag will export contents but ignore heading
-  )
-
 ;;;; Ox-odt
-(use-package ox-odf
-  :after (ox org)
-  :straight nil
+(use-package ox-odt
   :custom
   (org-odt-preferred-output-format "docx") ; Convert to docx at the end of conversion
   )
 
 ;;;; Ox-latex
 (use-package ox-latex
-  :after (ox org)
-  :straight nil
   :custom
   (org-latex-compiler "xelatex")
   (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
@@ -204,6 +196,14 @@ move to that window."
                                     ))
   )
 
+;;;; Org-contrib
+(use-package org-contrib
+  :after org
+  :init
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines)) ; The ignore tag will export contents but ignore heading
+  )
+
 ;;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
@@ -213,7 +213,6 @@ move to that window."
 
 ;;; Org-footnote
 (use-package org-footnote
-  :straight nil
   :after org
   :general (:keymaps 'org-mode-map
                      "C-x f" '(org-footnote-new :wk "New footnote"))
@@ -226,7 +225,6 @@ move to that window."
 
 ;;; Org-attach
 (use-package org-attach
-  :straight nil
   :custom
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
   (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
@@ -244,7 +242,6 @@ move to that window."
 ;;; Org-refile
 (use-package org-refile
   :after org-roam
-  :straight nil
   :general (kb/note-keys
              "r" '(org-refile :wk "Org-refile"))
   :custom
