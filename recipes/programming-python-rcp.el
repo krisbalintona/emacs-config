@@ -71,6 +71,7 @@
   :demand t
   :after lsp-mode
   :custom
+  (lsp-pyright-multi-root nil)          ; Useful!
   (lsp-pyright-python-executable-cmd "python3")
   (lsp-pyright-disable-language-services nil)
   (lsp-pyright-disable-organize-imports nil)
