@@ -16,8 +16,12 @@
   :ensure-system-package ("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
   :after browse-url
   :ensure-system-package gdb         ; For debugging purposes, if I ever need to
-  :straight (eaf :type git :host github :repo "emacs-eaf/emacs-application-framework")
-  :load-path (lambda () (list (concat user-emacs-directory "site-lisp/emacs-application-framework"))) ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :straight (eaf :type git
+                 :host github
+                 :repo "emacs-eaf/emacs-application-framework"
+                 :files (:defaults "*.py" "*.json" "app" "core" "extension" "img")
+                 :pre-build (unless (file-exists-p (straight--repos-dir "emacs-application-framework/app"))
+                              (async-shell-command "./install-eaf.py --install-all-apps" "*eaf installing all apps*")))
   :hook (eaf-pdf-viewer . hide-mode-line-mode)
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
@@ -61,25 +65,28 @@
   (require 'eaf-all-the-icons)
 
   ;; All modules
-  (require 'eaf-org-previewer)
-  (require 'eaf-image-viewer)
-  (require 'eaf-music-player)
-  (require 'eaf-file-sender)
-  (require 'eaf-file-browser)
   (require 'eaf-airshare)
-  (require 'eaf-system-monitor)
   (require 'eaf-browser)
-  (require 'eaf-jupyter)
-  (require 'eaf-pdf-viewer)
-  (require 'eaf-video-player)
-  (require 'eaf-demo)
-  (require 'eaf-netease-cloud-music)
-  (require 'eaf-mindmap)
-  (require 'eaf-terminal)
-  (require 'eaf-markdown-previewer)
-  (require 'eaf-vue-demo)
-  (require 'eaf-file-manager)
   (require 'eaf-camera)
+  (require 'eaf-demo)
+  (require 'eaf-file-browser)
+  (require 'eaf-file-manager)
+  (require 'eaf-file-sender)
+  (require 'eaf-image-viewer)
+  (require 'eaf-jupyter)
+  (require 'eaf-markdown-previewer)
+  ;; (require 'eaf-mermaid) ; NOTE 2022-05-25: Dependency error with eslint currently
+  (require 'eaf-mindmap)
+  (require 'eaf-music-player)
+  (require 'eaf-org-previewer)
+  (require 'eaf-pdf-viewer)
+  (require 'eaf-system-monitor)
+  (require 'eaf-terminal)
+  (require 'eaf-video-player)
+  (require 'eaf-vue-demo)
+  (require 'eaf-netease-cloud-music)
+  (require 'eaf-rss-reader)
+  (require 'eaf-git)
 
   ;; Bindings
   ;; Compatibility with Evil's normal mode
