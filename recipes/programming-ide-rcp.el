@@ -334,18 +334,16 @@
 ;;;; Consult-lsp
 (use-package consult-lsp
   :after lsp-mode
+  :hook (lsp-mode . (lambda () ; Need to do it this way since adding to `lsp-mode-map' doesn't work
+                      (general-define-key
+                       :keymaps 'local
+                       :states '(normal visual)
+                       "gs" '(consult-lsp-symbols :wk "Consult lsp symbols regexp")
+                       "gf" '(consult-lsp-file-symbols :wk "Consult lsp file symbols list")
+                       )))
   :general
   (:keymaps 'lsp-mode-map
-            [remap consult-flycheck] '(consult-lsp-diagnostics :wk "Consult lsp diagnostics")
-            )
-  (:keymaps 'lsp-mode-map
-            :states '(normal motion visual)
-            "gs" '(consult-lsp-symbols :wk "Consult lsp symbols regexp")
-            "gf" '(consult-lsp-file-symbols :wk "Consult lsp file symbols list")
-            )
-  :config
-  (consult-lsp-marginalia-mode)
-  )
+            [remap consult-flycheck] '(consult-lsp-diagnostics :wk "Consult lsp diagnostics")))
 
 ;;;; Devdocs
 ;; Viewing documentation within Emacs. Requires internet connection.
