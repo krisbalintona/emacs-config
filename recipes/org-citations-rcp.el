@@ -20,7 +20,7 @@
   :custom
   (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (expand-file-name (concat user-emacs-directory "locales/")))
-  (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles"))
+  (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles/"))
   (org-cite-export-processors
    '((md csl "chicago-fullnote-bibliography.csl")   ; Footnote reliant
      (latex biblatex)                               ; For humanities

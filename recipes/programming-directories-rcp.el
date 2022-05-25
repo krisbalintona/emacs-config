@@ -97,9 +97,8 @@
 ;; Use the same dired buffer for every directory you open using `dired'.
 (use-package dired-single
   :general (:keymaps 'dired-mode-map
-                     [remap dired-up-directory] 'dired-single-up-directory
-                     [remap dired-find-file] 'dired-single-buffer)
-  )
+                     ;; [remap dired-find-file] 'dired-single-buffer
+                     [remap dired-up-directory] 'dired-single-up-directory))
 
 ;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
