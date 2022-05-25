@@ -89,7 +89,6 @@
 
 ;;;; LaTeX
 (require 'latex-general-rcp)
-(require 'latex-pdf-rcp)
 
 ;;;; Programmming
 (require 'programming-profiling-and-debug-rcp)
