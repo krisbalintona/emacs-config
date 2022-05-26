@@ -47,7 +47,7 @@
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
 ;; org-roam (provides templates and modifies edit notes action)
 (use-package org-roam-bibtex
-  :after (org-roam oc embark)
+  :after (org-roam oc)
   :ghook 'org-mode-hook ; FIXME 2021-09-14: Make so that I don't need to call in this way
   )
 
@@ -103,7 +103,6 @@ manually add one myself."
                (:key ,key :prefix ,pre :suffix ,post))))))
   (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-pre-suffix)
   (advice-add 'org-cite-insert :after #'(lambda (args)
-                                          (require 'embark) ; Annoying to call `embark-act' first
                                           (require 'typo)
                                           (add-hook 'minibuffer-mode-hook 'typo-mode) ; Enable dashes
                                           (save-excursion ; End with point after citation
