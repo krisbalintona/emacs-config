@@ -111,43 +111,17 @@
   (use-package f :demand t)
   )
 
-;;; Zettelkdask
-(use-package zetteldesk
-  :straight (zetteldesk :type git :host github :repo "Vidianos-Giannitsis/zetteldesk.el")
+;;; Delve
+(use-package delve
+  :straight (delve :type git :host github :repo "publicimageltd/delve")
   :after org-roam
-  :general
-  (:keymaps '(normal visual insert motion)
-            :prefix "SPC n z"
-            :global-prefix "M-SPC n z"
-            "b" 'zetteldesk-switch-to-buffer
-            "a" '(:ignore t :which-key "Add to Zetteldesk")
-            "a b" 'zetteldesk-add-to-desktop
-            "a n" 'zetteldesk-add-node-to-desktop
-            "a i" 'zetteldesk-add-info-node-to-desktop
-            "r" '(:ignore t :which-key "Remove from Zetteldesk")
-            "r b" 'zetteldesk-remove-from-desktop
-            "r n" 'zetteldesk-remove-node-from-desktop
-            "r i" 'zetteldesk-remove-info-node-from-desktop
-            "n" 'zetteldesk-node-find
-            "s" 'zetteldesk-switch-to-scratch-buffer
-            "i" '(:ignore t :which-key "Insert to Scratch Buffer")
-            "i n" 'zetteldesk-insert-node-contents
-            "i N" 'zetteldesk-insert-node-contents-without-link
-            "i o" 'zetteldesk-insert-org-file-contents
-            "i p" 'zetteldesk-insert-link-to-pdf
-            "i i" 'zetteldesk-insert-info-contents
-            )
-  (:keymaps 'org-mode-map
-            :states '(normal visual motion)
-            :prefix ", z"
-            "i" 'zetteldesk-node-insert
-            "r" 'zetteldesk-remove-backlinks-from-desktop
-            "b" 'zetteldesk-add-backlinks-to-desktop
-            "p" 'zetteldesk-node-insert-if-poi-or-moc
-            "s" 'zetteldesk-node-insert-sort-backlinks
-            )
+  :gfhook #'delve-compact-view-mode
+  :general ("<f12>" 'delve)
+  :custom
+  (delve-storage-paths `(,(concat kb/roam-dir "delve-storage/")))
+  (delve-dashboard-tags '("working"))
   :config
-  (zetteldesk-mode))
+  (delve-global-minor-mode))
 
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
