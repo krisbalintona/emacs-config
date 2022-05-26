@@ -163,24 +163,31 @@ default lsp-passthrough."
          (LaTeX-mode . kb/cape-capf-setup-latex)
          (sh-mode . kb/cape-capf-setup-sh)
          )
-  :general (:prefix "M-c"               ; Particular completion function
-                    "p" 'completion-at-point
-                    "t" 'complete-tag   ; etags
-                    "d" 'cape-dabbrev   ; or dabbrev-completion
-                    "f" 'cape-file
-                    "k" 'cape-keyword
-                    "s" 'cape-symbol
-                    "a" 'cape-abbrev
-                    "i" 'cape-ispell
-                    "l" 'cape-line
-                    "w" 'cape-dict
-                    "\\" 'cape-tex
-                    "_" 'cape-tex
-                    "^" 'cape-tex
-                    "&" 'cape-sgml
-                    "r" 'cape-rfc1345
-                    "y" (cape-interactive-capf (cape-company-to-capf #'company-yasnippet))
-                    )
+  :general
+  (:prefix "M-c"               ; Particular completion function
+           "p" 'completion-at-point
+           "t" 'complete-tag   ; etags
+           "d" 'cape-dabbrev   ; or dabbrev-completion
+           [remap dabbrev-expand] 'cape-dabbrev
+           "f" 'cape-file
+           "k" 'cape-keyword
+           "s" 'cape-symbol
+           "a" 'cape-abbrev
+           "i" 'cape-ispell
+           "l" 'cape-line
+           "w" 'cape-dict
+           "\\" 'cape-tex
+           "_" 'cape-tex
+           "^" 'cape-tex
+           "&" 'cape-sgml
+           "r" 'cape-rfc1345
+           "y" (cape-interactive-capf (cape-company-to-capf #'company-yasnippet))
+           )
+  ([remap dabbrev-expand] '(lambda ()
+                             (interactive)
+                             (evil-insert-state)
+                             (cape-dabbrev t)
+                             ))
   :custom
   (cape-dabbrev-min-length 3)
   :init
