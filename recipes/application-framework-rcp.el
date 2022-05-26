@@ -95,11 +95,11 @@
   (eaf-bind-key clear_focus "<escape>" eaf-browser-keybinding)
   (eaf-bind-key nil "M-q" eaf-browser-keybinding) ;; unbind, see more in the Wiki
   ;; PDF
-  (eaf-bind-key rotate_counterclockwise "C-<up>" eaf-pdf-viewer-keybinding) ; Close buffer and window
-  (eaf-bind-key rotate_clockwise "C-<down>" eaf-pdf-viewer-keybinding) ; Close buffer and window
-  (eaf-bind-key winner-undo "C-<left>" eaf-pdf-viewer-keybinding) ; Close buffer and window
-  (eaf-bind-key winner-redo "C-<right>" eaf-pdf-viewer-keybinding) ; Close buffer and window
-  (eaf-bind-key evil-delete-buffer "x" eaf-pdf-viewer-keybinding) ; Close buffer and window
+  (eaf-bind-key rotate_counterclockwise "C-<up>" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key rotate_clockwise "C-<down>" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key winner-undo "C-<left>" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key winner-redo "C-<right>" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key evil-switch-to-windows-last-buffer "x" eaf-pdf-viewer-keybinding) ; Go to last buffer
   (eaf-bind-key scroll_down_page "C-u" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_up_page "C-d" eaf-pdf-viewer-keybinding)
   (eaf-bind-key nil "SPC" eaf-pdf-viewer-keybinding)
