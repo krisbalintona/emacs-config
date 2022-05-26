@@ -117,7 +117,7 @@ move to that window."
 (use-package ox-latex
   :custom
   (org-latex-compiler "xelatex")
-  (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+  ;; (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
   ;; Templates
   (org-latex-title-command "\\maketitle")
   (org-latex-toc-command
@@ -170,6 +170,23 @@ move to that window."
                                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
                                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
                                     ))
+  (add-to-list 'org-latex-classes '("review"
+                                    "% * Preamble
+\\documentclass[a4paper,landscape]{article}
+
+% * Default packages?
+[NO-DEFAULT-PACKAGES]
+
+% ** Review package
+\\usepackage{ifpdf}
+\\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/review}"
+                                    ("\\section{%s}" . "\\section*{%s}")
+                                    ("\\subsection{%s}" . "\\subsection*{%s}")
+                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+                                    ))
+
   ;; Support more file keywords for MLA papers
   (org-export-define-backend 'latex     ; Recognize the professor and course keywords
     '((bold . org-latex-bold)
