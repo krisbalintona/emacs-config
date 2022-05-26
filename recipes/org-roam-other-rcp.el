@@ -65,7 +65,6 @@
 ;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
-  :after org-roam
   :hook (org-mode . org-transclusion-activate)
   :general
   (kb/toggle-keys
@@ -79,8 +78,7 @@
     )
   :custom
   (org-transclusion-include-first-section t)
-  (org-transclusion-exclude-elements '(property-drawer keyword))
-  )
+  (org-transclusion-exclude-elements '(property-drawer keyword)))
 
 ;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.

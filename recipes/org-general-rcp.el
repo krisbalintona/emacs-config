@@ -105,7 +105,10 @@ move to that window."
 (use-package ox
   :custom
   (org-export-with-sub-superscripts nil)
-  )
+  ;; Async export
+  (org-export-in-background nil)          ; Have it be default?
+  (org-export-async-debug t)
+  (org-export-async-init-file (locate-library "quickstart")))
 
 ;;;; Ox-odt
 (use-package ox-odt
