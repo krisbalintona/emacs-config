@@ -168,6 +168,8 @@
             ;; Use the initial versions of the functions for these
             "M-K" 'lister-mode-up
             "M-J" 'lister-mode-down
+            "M-H" 'kb/lister-mode-left-sublist
+            "M-L" 'kb/lister-mode-right-sublist
             "m" 'lister-mode-mark
             "u" 'lister-mode-unmark
             "U" 'lister-mode-unmark-all
@@ -179,19 +181,7 @@
   :init
   (require 'lister-mode) ; Require since this proves the "core" definitions for the functions below
   :config
-  ;; Helper functions
-  (cl-defun kb/lister--exists-top-level-node (ewoc node)
-    "Return the first matching top-level node in EWOC. If it does not exist,
-return nil."
-    (lister--next-node-matching ewoc node
-                                #'(lambda (node)
-                                    (and
-                                     (lister-node-visible-p node)
-                                     (= 0 (lister-node-get-level node)))
-                                    )
-                                #'ewoc-prev))
-
-  ;; Movement vertically
+  ;; Helpers: movement vertically
   (defun kb/lister-move-item-up (ewoc pos)
     "Move item and its sublist one up, preserving `org-mode'-like indentation."
     (let* ((move-fn 'lister--prev-visible-node)
@@ -223,31 +213,19 @@ return nil."
       (kb/lister-move-item-up ewoc target-node)
       ))
 
-  ;; Movement horizontally
-  (defun kb/lister-move-item-right (ewoc pos)
+  ;; Helpers: movement horizontally
+  (defun kb/lister-move-item-right (ewoc pos node)
     "In EWOC, increase indentation level of the item at POS.
 
 But don't indent if indenting breaks the structure of the tree."
     ;; TODO 2022-05-26: Deal with edge case of being at the bottom of the buffer
     ;; already
-    (let ((indentation-above (save-excursion
-                               (let ((column (current-column)))
-                                 (move-to-column column)
-                                 (forward-line -1)
-                                 (lister-get-level-at ewoc pos)
-                                 )))
-          (indentation-current (lister-get-level-at ewoc pos))
-          (exists-top-level-node
-           (kb/lister--exists-top-level-node ewoc (ewoc-locate ewoc))))
-      ;; Only indent if the indentation level of the above node
-      ;; (indentation-above) is at least one indentation level greater than
-      ;; indentation-current. Also make sure there is at least one top-level
-      ;; node somewhere above the current node.
-      (when (and (>= indentation-above indentation-current) exists-top-level-node)
+    (let ((indentation-current (lister-get-level-at ewoc pos))
+          (first-node (lister--parse-position ewoc :first)))
+      ;; Don't indent if it's the first node
+      (unless (equal node first-node)
         (lister-set-level-at ewoc pos (1+ indentation-current)))
       ))
-  ;; TODO 2022-05-27: Add keybinds for changing the indentation of an idem and
-  ;; its entire sublist
 
   ;; New keybinds
   (lister-defkey kb/lister-mode-up (ewoc pos prefix node)
@@ -261,7 +239,24 @@ structure."
   (lister-defkey kb/lister-mode-right (ewoc pos prefix node)
     "Move the item at point to the right, preserving `org-mode'-like
 tree structure."
-    (kb/lister-move-item-right ewoc pos)))
+    (kb/lister-move-item-right ewoc pos node))
+  (lister-defkey kb/lister-mode-left-sublist (ewoc pos prefix node)
+    "Move the node at point and its sublist, if any, to the left."
+    (if (lister-sublist-below-p ewoc node)
+        (progn
+          (lister-set-node-level ewoc node (1- (lister-node-get-level node)))
+          (lister-move-sublist-left ewoc (ewoc-next ewoc node))
+          )
+      (lister-move-item-left ewoc pos)))
+  (lister-defkey kb/lister-mode-right-sublist (ewoc pos prefix node)
+    "Move the node at point and its sublist, if any, to the right."
+    (if (lister-sublist-below-p ewoc node)
+        (progn
+          (lister-move-sublist-right ewoc (ewoc-next ewoc node))
+          ;; Move sublist before current node because the current node becomes
+          ;; part of the sublist if indented first
+          (lister-set-node-level ewoc node (1+ (lister-node-get-level node))))
+      (kb/lister-move-item-right ewoc pos node))))
 
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
