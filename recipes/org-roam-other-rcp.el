@@ -183,8 +183,12 @@
   (defun kb/lister--check-if-has-sublist (ewoc node)
     "Return `t' if NODE has a sublist (of proper indentation, that is, with a
 level one greater than NODE) right below it. Otherwise, return `nil'."
-    (= (1+ (lister-node-get-level node))
-       (lister-node-get-level (ewoc-next ewoc node))))
+    (let ((next (ewoc-next ewoc node)))
+      (when next
+        (= (1+ (lister-node-get-level node))
+           (lister-node-get-level next)
+           ))
+      ))
   (cl-defun kb/lister--prev-visible-node-same-indentation-no-sublist (ewoc node)
     "In EWOC, move from NODE to previous visible node of the same indentation
     level as EWOC.
@@ -232,7 +236,7 @@ return nil."
                                      (= 0 (lister-node-get-level node)))
                                     )
                                 #'ewoc-prev))
-  (defun kb/lister-move-sublist-up (ewoc old-pos new-pos after-target)
+  (defun kb/lister-move-sublist-up (ewoc old-pos new-pos &optional after-target)
     "In EWOC, move sublist at OLD-POS up to right after the node at
 NEW-POS."
     (when (lister-filter-active-p ewoc)
@@ -244,13 +248,20 @@ NEW-POS."
             (error "Cannot move sublist further up")
           (lister--move-list ewoc beg end target after-target))
         )))
-  (defun kb/lister-move-sublist-down (ewoc old-pos new-pos after-target)
+  (defun kb/lister-move-sublist-down (ewoc old-pos new-pos &optional after-target)
     "In EWOC, move sublist at OLD-POS down to right after the node at
 NEW-POS."
     (when (lister-filter-active-p ewoc)
       (error "Cannot move sublists when filter is active"))
+
+    ;; Handle special case when old-pos is the last node in EWOC by forcing it
+    ;; to go after the target.
+    (unless (equal old-pos (ewoc--last-node ewoc))
+      (setq after-target t))
+
     (lister-with-sublist-at ewoc old-pos beg end
-      (let ((target (ewoc-next ewoc new-pos)))
+      ;; (let ((target (ewoc-next ewoc new-pos)))
+      (let ((target new-pos))
         (if (not target)
             (error "Cannot move sublist further down")
           (lister--move-list ewoc beg end target after-target))
@@ -312,7 +323,7 @@ move within the same indentation level unless IGNORE-LEVEL is non-nil."
         (lister--move-list ewoc from from to up))
       ;; Move node's sublist, if any, down with it
       (if (kb/lister--check-if-has-sublist ewoc from)
-          (kb/lister-move-sublist-down ewoc (ewoc-next ewoc from) to nil))
+          (kb/lister-move-sublist-down ewoc (ewoc-next ewoc from) to))
       ))
 
   ;; Movement horizontally
