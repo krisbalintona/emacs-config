@@ -156,6 +156,14 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))
   )
 
+;;; Advice-unadvice
+;; Thanks to https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
+(defun advice-unadvice (sym)
+  "Remove all advices from symbol SYM."
+  (interactive "aFunction symbol: ")
+  (advice-mapc (lambda (advice _props)
+                 (advice-remove sym advice)) sym))
+
 ;;; Unpackaged.el
 ;; These are a bunch of functions taken from
 ;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
