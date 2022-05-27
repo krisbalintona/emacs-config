@@ -114,12 +114,23 @@
 ;;; Delve
 (use-package delve
   :straight (delve :type git :host github :repo "publicimageltd/delve")
-  :after org-roam
   :gfhook #'delve-compact-view-mode
+  ;; NOTE 2022-05-27: Very necessary to prevent cmacro compiler error for
+  ;; `kb/delve--key--toggle-preview'. However, I would like to find a workaround
+  ;; eventually because it greatly increases startup time I think
+  :commands delve--zettel-preview
   :general
   ("<f12>" 'delve)
   (:keymaps 'delve-mode-map
+            "<backtab>" 'kb/delve--key-backtab
+            )
+  (:keymaps 'delve-mode-map
+            :states 'visual
+            "d" 'delve--key--multi-delete
+            )
+  (:keymaps 'delve-mode-map
             :states 'normal
+            "q" 'bury-buffer
             "dd" '(lambda ()
                     (interactive)
                     (kill-line)
@@ -141,7 +152,7 @@
             "v" 'delve-compact-view-mode
             "f" 'delve--key--fromlinks
             "b" 'delve--key--backlinks
-            "RET" 'delve--key--toggle-preview
+            "RET" 'kb/delve--key--toggle-preview
             "C-o" 'delve--key--open-zettel
             "o" 'delve--key--open-zettel
             "+" 'delve--key--add-tags
@@ -154,7 +165,52 @@
   ;; Must be loaded before delve
   (setq delve-minor-mode-prefix-key (kbd "M-n"))
   :config
-  (delve-global-minor-mode))
+  (delve-global-minor-mode)
+
+  ;; My own functions below
+  (lister-defkey kb/delve--key--toggle-preview (ewoc pos prefix node)
+    "Toggle the display of the preview of ZETTEL."
+    (let ((zettel (delve--current-item-or-error 'delve--zettel ewoc pos)))
+      ;; Unhide the sublist first
+      (lister-with-sublist-below ewoc pos beg end
+        (lister--outline-hide-show ewoc beg end nil))
+      ;; Then show preview
+      (let ((preview (and (not (delve--zettel-preview zettel))
+                          (or (delve--get-preview-contents zettel)
+                              "No preview available"))))
+        (setf (delve--zettel-preview zettel) preview)
+        (lister-refresh-at lister-local-ewoc :point))
+      ))
+
+  (defvar kb/delve-cycle-global-contents t
+    "Are all the contents of the given delve buffer (EWOC)
+        shown or hidden? nil if hidden, t if shown.")
+  (defun kb/delve--key-backtab (ewoc &optional prefix)
+    "In EWOC, toggle hiding or showing all sublists.
+
+When called with PREFIX, hide all previews."
+    (interactive (list lister-local-ewoc current-prefix-arg))
+    (lister-walk-nodes ewoc
+                       #'(lambda (ewoc new-node)
+                           (let* ((current-item (delve--current-item nil ewoc new-node))
+                                  (is-zettel (cl-typep current-item 'delve--zettel))
+                                  (has-preview (when is-zettel (delve--zettel-preview current-item)))
+                                  )
+                             ;; Hide only when...
+                             (when (and (not (lister-sublist-below-p ewoc new-node)) ; Non-parents
+                                        (not has-preview) ; No preview
+                                        (< 0 (lister-node-get-level new-node)) ; Not top-level
+                                        )
+                               (lister--outline-hide-show ewoc new-node new-node kb/delve-cycle-global-contents))
+                             ;; Then hide if with prefix, hide all previews
+                             (when (and prefix has-preview)
+                               (setf (delve--zettel-preview current-item) nil)
+                               (lister-refresh-at ewoc new-node)) ; Refresh to update visually
+                             ))
+                       :first :last)
+    (if (lister--outline-invisible-p ewoc :point) ; End a non-invisible node
+        (lister-goto ewoc (lister-parent-node ewoc :point)))
+    (setq-local kb/delve-cycle-global-contents (not kb/delve-cycle-global-contents))))
 
 ;;; Lister
 ;; Interactive list library for `delve'
@@ -166,8 +222,12 @@
             "M-h" 'lister-mode-left
             "M-l" 'kb/lister-mode-right
             ;; Use the initial versions of the functions for these
-            "M-K" 'lister-mode-up
-            "M-J" 'lister-mode-down
+            "M-K" '(lambda ()
+                     (interactive) ; Ignore constraint of same indentation level
+                     (funcall-interactively 'lister-mode-up lister-local-ewoc :point '(4)))
+            "M-J" '(lambda ()
+                     (interactive) ; Ignore constraint of same indentation level
+                     (funcall-interactively 'lister-mode-down lister-local-ewoc :point '(4)))
             "M-H" 'kb/lister-mode-left-sublist
             "M-L" 'kb/lister-mode-right-sublist
             "m" 'lister-mode-mark
@@ -242,12 +302,12 @@ tree structure."
     (kb/lister-move-item-right ewoc pos node))
   (lister-defkey kb/lister-mode-left-sublist (ewoc pos prefix node)
     "Move the node at point and its sublist, if any, to the left."
-    (if (lister-sublist-below-p ewoc node)
-        (progn
-          (lister-set-node-level ewoc node (1- (lister-node-get-level node)))
-          (lister-move-sublist-left ewoc (ewoc-next ewoc node))
-          )
-      (lister-move-item-left ewoc pos)))
+    (let ((indentation-current (lister-node-get-level node)))
+      (if (and (> 0 indentation-current) (lister-sublist-below-p ewoc node))
+          (progn
+            (lister-set-node-level ewoc node (1- indentation-current))
+            (lister-move-sublist-left ewoc (ewoc-next ewoc node)))
+        (lister-move-item-left ewoc pos))))
   (lister-defkey kb/lister-mode-right-sublist (ewoc pos prefix node)
     "Move the node at point and its sublist, if any, to the right."
     (if (lister-sublist-below-p ewoc node)
