@@ -116,12 +116,217 @@
   :straight (delve :type git :host github :repo "publicimageltd/delve")
   :after org-roam
   :gfhook #'delve-compact-view-mode
-  :general ("<f12>" 'delve)
+  :general
+  ("<f12>" 'delve)
+  (:keymaps 'delve-mode-map
+            :states 'normal
+            "dd" '(lambda ()
+                    (interactive)
+                    (kill-line)
+                    (forward-line -1))
+            "P" 'delve--key--yank       ; Paste above
+            "p" '(lambda ()                  ; Paste below
+                   (interactive)
+                   (save-excursion
+                     (next-line)
+                     (delve--key--yank))
+                   (next-line))
+            )
   :custom
-  (delve-storage-paths `(,(concat kb/roam-dir "delve-storage/")))
+  (delve-storage-paths (concat kb/roam-dir "delve-storage/"))
   (delve-dashboard-tags '("working"))
   :config
   (delve-global-minor-mode))
+
+;;; Lister
+;; Interactive list library for `delve'
+(use-package lister
+  :general
+  (:keymaps 'lister-mode-map
+            "M-k" 'kb/lister-mode-up
+            "M-j" 'kb/lister-mode-down
+            "M-h" 'lister-mode-left
+            "M-l" 'kb/lister-mode-right
+            ;; Use the initial versions of the functions for these
+            "M-K" 'lister-mode-up
+            "M-J" 'lister-mode-down
+            )
+  :init
+  (require 'lister-mode) ; Require since this proves the "core" definitions for the functions below
+  :config
+  ;; Helper functions
+  (defun kb/lister--check-if-has-sublist (ewoc node)
+    "Return `t' if NODE has a sublist (of proper indentation, that is, with a
+level one greater than NODE) right below it. Otherwise, return `nil'."
+    (= (1+ (lister-node-get-level node))
+       (lister-node-get-level (ewoc-next ewoc node))))
+  (cl-defun kb/lister--prev-visible-node-same-indentation-no-sublist (ewoc node)
+    "In EWOC, move from NODE to previous visible node of the same indentation
+    level as EWOC.
+
+Return that node or nil if there is none."
+    (let ((indentation-current (lister-node-get-level node)))
+      (condition-case nil        ; Catch error if no movement is possible anyway
+          (lister--next-node-matching ewoc node
+                                      #'(lambda (new-node)
+                                          (and (lister-node-visible-p new-node) ; Visible
+                                               (= indentation-current ; Same indentation
+                                                  (lister-node-get-level new-node))
+                                               (not (kb/lister--check-if-has-sublist ewoc new-node)) ; Skip nodes with sublists
+
+                                               ))
+                                      #'ewoc-prev ; Check upwards
+                                      (lister-parent-node ewoc pos)) ; Don't check beyond the parent, if existent
+        (error nil))))
+  (cl-defun kb/lister--next-visible-node-same-indentation-no-sublist (ewoc node &optional
+                                                                           (move-fn #'ewoc-next))
+    "In EWOC, move from NODE to next visible node that is of the same
+    indentation level as EWOC via MOVE-FN.
+
+Return that node or nil if there is none. To move backwards, set MOVE-FN to
+`ewoc-prev'."
+    (let ((indentation-current (lister-node-get-level node)))
+      (condition-case nil        ; Catch error if no movement is possible anyway
+          (lister--next-node-matching ewoc node
+                                      #'(lambda (new-node)
+                                          (and (lister-node-visible-p new-node) ; Visible
+                                               (= indentation-current ; Same indentation
+                                                  (lister-node-get-level new-node))
+                                               (not (kb/lister--check-if-has-sublist ewoc new-node)) ; Skip nodes with sublists
+                                               ))
+                                      move-fn ; Check downwards
+                                      (lister-parent-node ewoc pos)) ; Don't check beyond the parent, if existent
+        (error nil))))
+  (cl-defun kb/lister--exists-top-level-node (ewoc node)
+    "Return the first matching top-level node in EWOC. If it does not exist,
+return nil."
+    (lister--next-node-matching ewoc node
+                                #'(lambda (node)
+                                    (and
+                                     (lister-node-visible-p node)
+                                     (= 0 (lister-node-get-level node)))
+                                    )
+                                #'ewoc-prev))
+  (defun kb/lister-move-sublist-up (ewoc old-pos new-pos after-target)
+    "In EWOC, move sublist at OLD-POS up to right after the node at
+NEW-POS."
+    (when (lister-filter-active-p ewoc)
+      (error "Cannot move sublists when filter is active"))
+    (lister-with-sublist-at ewoc old-pos beg end
+      (let ((target (ewoc-prev ewoc new-pos)))
+        (if (or (not target)
+                (eq target (ewoc-nth ewoc 0)))
+            (error "Cannot move sublist further up")
+          (lister--move-list ewoc beg end target after-target))
+        )))
+  (defun kb/lister-move-sublist-down (ewoc old-pos new-pos after-target)
+    "In EWOC, move sublist at OLD-POS down to right after the node at
+NEW-POS."
+    (when (lister-filter-active-p ewoc)
+      (error "Cannot move sublists when filter is active"))
+    (lister-with-sublist-at ewoc old-pos beg end
+      (let ((target (ewoc-next ewoc new-pos)))
+        (if (not target)
+            (error "Cannot move sublist further down")
+          (lister--move-list ewoc beg end target after-target))
+        )))
+
+  ;; Movement vertically
+  (defun kb/lister-move-item-up (ewoc pos &optional ignore-level)
+    "Move item and its sublist one up.
+
+Move the item at POS in EWOC up to the next visible item, swapping both. Only
+move within the same indentation level unless IGNORE-LEVEL is non-nil."
+    (let* ((move-fn 'kb/lister--prev-visible-node-same-indentation-no-sublist)
+           (up nil)
+           (keep-level (not ignore-level))
+           ;; The above are the last three args that would be provided to
+           ;; `lister--move-item'
+           (from   (lister--parse-position ewoc pos))
+           (next   (funcall move-fn ewoc from))
+           (to     (if keep-level
+                       (lister--next-node-same-level ewoc from move-fn)
+                     next)))
+      ;; Move current node up
+      (unless to
+        (error "No movement possible"))
+      (if (eq next to)
+          (lister--swap-item ewoc from to)
+        (lister--move-list ewoc from from to up))
+      ;; Move node's sublist, if any, up with it
+      (if (kb/lister--check-if-has-sublist ewoc from)
+          (kb/lister-move-sublist-up ewoc
+                                     (ewoc-next ewoc from) ; From first node of sublist
+                                     ;; Just put it the list right after the current
+                                     ;; node, which has moved to the correct spot
+                                     from t))
+      ))
+  (defun kb/lister-move-item-down (ewoc pos &optional ignore-level)
+    "Move item and its sublist one down.
+
+Move the item at POS in EWOC down to the next visible item, swapping both. Only
+move within the same indentation level unless IGNORE-LEVEL is non-nil."
+    ;; NOTE 2022-05-26: I initially changed `lister-move-item-down', but had to
+    ;; resort to using most of the code from `lister--move-item' to move the
+    ;; contained sublist with it (namely, I needed access to `to').
+    (let* ((move-fn 'kb/lister--next-visible-node-same-indentation-no-sublist)
+           (up nil)
+           (keep-level (not ignore-level))
+           ;; The above are the last three args that would be provided to
+           ;; `lister--move-item'
+           (from   (lister--parse-position ewoc pos))
+           (next   (funcall move-fn ewoc from))
+           (to     (if keep-level
+                       (lister--next-node-same-level ewoc from move-fn)
+                     next)))
+      ;; Move current node down
+      (unless to
+        (error "No movement possible"))
+      (if (eq next to)
+          (lister--swap-item ewoc from to)
+        (lister--move-list ewoc from from to up))
+      ;; Move node's sublist, if any, down with it
+      (if (kb/lister--check-if-has-sublist ewoc from)
+          (kb/lister-move-sublist-down ewoc (ewoc-next ewoc from) to nil))
+      ))
+
+  ;; Movement horizontally
+  (defun kb/lister-move-item-right (ewoc pos)
+    "In EWOC, increase indentation level of the item at POS.
+
+But don't indent if indenting breaks the structure of the tree."
+    ;; TODO 2022-05-26: Deal with edge case of being at the bottom of the buffer
+    ;; already
+    (let ((indentation-above (save-excursion
+                               (let ((column (current-column)))
+                                 (move-to-column column)
+                                 (forward-line -1)
+                                 (lister-get-level-at ewoc pos)
+                                 )))
+          (indentation-current (lister-get-level-at ewoc pos))
+          (exists-top-level-node
+           (kb/lister--exists-top-level-node ewoc (ewoc-locate ewoc))))
+      ;; Only indent if the indentation level of the above node
+      ;; (indentation-above) is at least one indentation level greater than
+      ;; indentation-current. Also make sure there is at least one top-level
+      ;; node somewhere above the current node.
+      (when (and (>= indentation-above indentation-current) exists-top-level-node)
+        (lister-set-level-at ewoc pos (1+ indentation-current)))
+      ))
+
+  ;; New keybinds
+  (lister-defkey kb/lister-mode-up (ewoc pos prefix node)
+    "Move the item at point one up, preserving `org-mode'-like tree
+structure."
+    (kb/lister-move-item-up ewoc pos prefix))
+  (lister-defkey kb/lister-mode-down (ewoc pos prefix node)
+    "Move the item at point one down, preserving `org-mode'-like tree
+structure."
+    (kb/lister-move-item-down ewoc pos prefix))
+  (lister-defkey kb/lister-mode-right (ewoc pos prefix node)
+    "Move the item at point to the right, preserving `org-mode'-like
+tree structure."
+    (kb/lister-move-item-right ewoc pos)))
 
 ;;; org-roam-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
