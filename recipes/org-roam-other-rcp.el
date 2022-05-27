@@ -131,10 +131,28 @@
                      (next-line)
                      (delve--key--yank))
                    (next-line))
+            "r" 'delve--key--sync
+            "gr" 'delve--key--sync
+            "h" 'delve--key--insert-heading
+            "n" 'delve--node-transient-key
+            "s" 'delve--key--sort
+            "C-p" 'delve--key--collect-into-pile
+            "I" 'delve--key--insert-query-or-pile
+            "v" 'delve-compact-view-mode
+            "f" 'delve--key--fromlinks
+            "b" 'delve--key--backlinks
+            "RET" 'delve--key--toggle-preview
+            "C-o" 'delve--key--open-zettel
+            "o" 'delve--key--open-zettel
+            "+" 'delve--key--add-tags
+            "-" 'delve--key--remove-tags
             )
   :custom
   (delve-storage-paths (concat kb/roam-dir "delve-storage/"))
   (delve-dashboard-tags '("working"))
+  :init
+  ;; Must be loaded before delve
+  (setq delve-minor-mode-prefix-key (kbd "M-n"))
   :config
   (delve-global-minor-mode))
 
@@ -150,6 +168,13 @@
             ;; Use the initial versions of the functions for these
             "M-K" 'lister-mode-up
             "M-J" 'lister-mode-down
+            "m" 'lister-mode-mark
+            "u" 'lister-mode-unmark
+            "U" 'lister-mode-unmark-all
+            "gk" 'lister-mode-forward-same-level
+            "gj" 'lister-mode-backward-same-level
+            "zu" 'lister-mode-up-parent
+            "gh" 'lister-mode-up-parent
             )
   :init
   (require 'lister-mode) ; Require since this proves the "core" definitions for the functions below
