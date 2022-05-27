@@ -110,7 +110,7 @@ manually add one myself."
                                             (citar-org-update-pre-suffix))
                                           (remove-hook 'minibuffer-mode-hook 'typo-mode)))
   (advice-add 'org-cite-insert :around #'(lambda (orig-fun &rest args)
-                                           (let ((kb/typo-cycle-message nil)) ; Disable annoying echos
+                                           (let ((kb/typo-cycle-message nil)) ; Disable annoying echos when in minibuffer
                                              (apply orig-fun args))))
 
   ;; Configuring all-the-icons. From
