@@ -131,6 +131,8 @@
   (:keymaps 'delve-mode-map
             :states 'normal
             "q" 'bury-buffer
+            "t" 'delve--key--insert-tagged
+            "T" 'delve--key--insert-node-by-tags
             "dd" '(lambda ()
                     (interactive)
                     (kill-line)
