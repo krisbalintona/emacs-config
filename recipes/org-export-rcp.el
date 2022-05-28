@@ -97,9 +97,12 @@
                                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
                                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
                                     ))
+  )
 
-  ;; Support more file keywords for MLA papers
-  (org-export-define-backend 'latex     ; Recognize the professor and course keywords
+;;;; Org-export latex backend
+;; Support more file keywords for MLA papers
+(with-eval-after-load 'org-export
+  (org-export-define-backend 'latex ; Recognize the professor and course keywords
     '((bold . org-latex-bold)
       (center-block . org-latex-center-block)
       (clock . org-latex-clock)
@@ -220,6 +223,10 @@
       (:latex-compiler "LATEX_COMPILER" nil org-latex-compiler)
       ;; Redefine regular options.
       (:date "DATE" nil "\\today" parse)))
+  )
+
+;;;; kb/org-latex-template
+(with-eval-after-load 'org-latex
   (defun kb/org-latex-template (contents info) ; Parse the professor and course keywords
     "Return complete document string after LaTeX conversion.
 CONTENTS is the transcoded contents string.  INFO is a plist
@@ -313,7 +320,25 @@ holding export options."
             (concat (plist-get info :creator) "\n"))
        ;; Document end.
        "\\end{document}")))
-  (advice-add 'org-latex-template :override #'kb/org-latex-template))
+  (advice-add 'org-latex-template :override #'kb/org-latex-template)
+  )
+
+;;;; Custom links
+(with-eval-after-load 'ol
+;;;;; Colored text
+  (defun kb/org-latex-color-export (link description format)
+    "TODO"
+    (let ((desc (or description link)))
+      (cond
+       ((eq format 'latex) (format "\\textcolor{%s}{%s}" link desc))
+       (t desc))
+      ))
+  (org-link-set-parameters "color"
+                           :face #'(lambda (path) `(:foreground ,path))
+                           :export #'kb/org-latex-color-export)
+
+;;;;; [ end ]
+  )
 
 ;;; Org-contrib
 (use-package org-contrib

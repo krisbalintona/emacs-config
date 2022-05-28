@@ -38,6 +38,7 @@
 
 ;;;; Org
 (require 'org-general-rcp)
+(require 'org-export-rcp)
 (require 'org-citations-rcp)
 (use-package org-transclusion :demand t) ; Org-transclusion is needed for some reason?
 
