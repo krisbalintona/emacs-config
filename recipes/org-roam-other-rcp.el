@@ -159,6 +159,7 @@
             "o" 'delve--key--open-zettel
             "+" 'delve--key--add-tags
             "-" 'delve--key--remove-tags
+            "M-d" 'kb/delve-mark-duplicates
             )
   :custom
   (delve-storage-paths (concat kb/roam-dir "delve-storage/"))
@@ -212,7 +213,22 @@ When called with PREFIX, hide all previews."
                        :first :last)
     (if (lister--outline-invisible-p ewoc :point) ; End a non-invisible node
         (lister-goto ewoc (lister-parent-node ewoc :point)))
-    (setq-local kb/delve-cycle-global-contents (not kb/delve-cycle-global-contents))))
+    (setq-local kb/delve-cycle-global-contents (not kb/delve-cycle-global-contents)))
+
+  (lister-defkey kb/delve-mark-duplicates (ewoc pos prefix node)
+    "Mark duplicate org-roam nodes in the current delve buffer."
+    (let ((id-tracker (list)))
+      (lister-save-current-node ewoc
+          (lister-walk-nodes ewoc
+                             #'(lambda (ewoc new-node)
+                                 (let ((id (delve--zettel-id (delve--current-item nil ewoc new-node))))
+                                   (if (member id id-tracker)
+                                       ;; (lister-delete-at ewoc new-node)
+                                       (lister-mode-mark ewoc new-node)
+                                     (setq id-tracker (append id-tracker (list id))))))
+                             :first :last
+                             #'(lambda (new-node) (cl-typep (delve--current-item nil ewoc new-node) 'delve--zettel))))))
+  )
 
 ;;; Lister
 ;; Interactive list library for `delve'
@@ -232,13 +248,16 @@ When called with PREFIX, hide all previews."
                      (funcall-interactively 'lister-mode-down lister-local-ewoc :point '(4)))
             "M-H" 'kb/lister-mode-left-sublist
             "M-L" 'kb/lister-mode-right-sublist
-            "m" 'lister-mode-mark
-            "u" 'lister-mode-unmark
-            "U" 'lister-mode-unmark-all
             "gk" 'lister-mode-forward-same-level
             "gj" 'lister-mode-backward-same-level
             "zu" 'lister-mode-up-parent
             "gh" 'lister-mode-up-parent
+            )
+  (:keymaps 'lister-mode-map
+            :states '(normal visual)
+            "m" 'lister-mode-mark
+            "u" 'lister-mode-unmark
+            "U" 'lister-mode-unmark-all
             )
   :init
   (require 'lister-mode) ; Require since this proves the "core" definitions for the functions below
