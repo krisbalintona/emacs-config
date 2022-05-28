@@ -127,9 +127,12 @@
   (:keymaps 'delve-mode-map
             :states 'visual
             "d" 'delve--key--multi-delete
+            "DEL" 'delve--key--multi-delete
+            "y" 'kb/delve-visual-copy-nodes
             )
   (:keymaps 'delve-mode-map
             :states 'normal
+            "DEL" 'delve--key--multi-delete
             "q" 'bury-buffer
             "t" 'delve--key--insert-tagged
             "T" 'delve--key--insert-node-by-tags
@@ -157,9 +160,12 @@
             "RET" 'kb/delve--key--toggle-preview
             "C-o" 'delve--key--open-zettel
             "o" 'delve--key--open-zettel
+            "go" 'delve--key--open-zettel
             "+" 'delve--key--add-tags
             "-" 'delve--key--remove-tags
             "M-d" 'kb/delve-mark-duplicates
+            "Y" 'kb/delve-copy-zettel-title
+            "yy" 'evil-yank-line
             )
   :custom
   (delve-storage-paths (concat kb/roam-dir "delve-storage/"))
@@ -228,7 +234,17 @@ When called with PREFIX, hide all previews."
                                      (setq id-tracker (append id-tracker (list id))))))
                              :first :last
                              #'(lambda (new-node) (cl-typep (delve--current-item nil ewoc new-node) 'delve--zettel))))))
-  )
+  (lister-defkey kb/delve-visual-copy-nodes (ewoc pos prefix node)
+    "Copy current node(s) when region is active."
+    (when (region-active-p)
+      (copy-region-as-kill (mark) (point) 'region)))
+  (lister-defkey kb/delve-copy-zettel-title (ewoc pos prefix node)
+    "Copy current org-roam node's (delve--zettel) title."
+    (let* ((item (delve--current-item-or-error 'delve--zettel ewoc node))
+           (title (delve--zettel-title item))
+           (file (delve--zettel-file item)))
+      (kill-new title)
+      (message (format "The node title \"%s\" from %s has been copied" title file)))))
 
 ;;; Lister
 ;; Interactive list library for `delve'
