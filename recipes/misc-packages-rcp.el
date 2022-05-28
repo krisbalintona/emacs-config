@@ -258,6 +258,30 @@
                         :inherit    unspecified ))))
   )
 
+;;; Good-scroll
+;; Good-enough smooth scrolling
+(use-package good-scroll
+  :after evil
+  :ghook 'evil-mode-hook
+  :gfhook '(lambda ()
+             (if good-scroll-mode
+                 (progn
+                   (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
+                   (advice-add 'evil-scroll-down :override #'kb/good-scroll-down))
+               (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
+               (advice-remove 'evil-scroll-down #'kb/good-scroll-down)))
+  :custom
+  (good-scroll-step 80)
+  (scroll-margin 0)                     ; No scroll margin with good-scroll
+  :init
+  ;; My own scroll functions
+  (defun kb/good-scroll-up (&rest lines)
+    "Scroll up."
+    (good-scroll-move (- (/ (good-scroll--window-usable-height) 2))))
+  (defun kb/good-scroll-down (&rest lines)
+    "Scroll down."
+    (good-scroll-move (/ (good-scroll--window-usable-height) 2))))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
