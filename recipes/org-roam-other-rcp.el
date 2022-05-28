@@ -315,8 +315,6 @@ When called with PREFIX, hide all previews."
     "In EWOC, increase indentation level of the item at POS.
 
 But don't indent if indenting breaks the structure of the tree."
-    ;; TODO 2022-05-26: Deal with edge case of being at the bottom of the buffer
-    ;; already
     (let ((indentation-current (lister-get-level-at ewoc pos))
           (first-node (lister--parse-position ewoc :first)))
       ;; Don't indent if it's the first node
@@ -340,7 +338,7 @@ tree structure."
   (lister-defkey kb/lister-mode-left-sublist (ewoc pos prefix node)
     "Move the node at point and its sublist, if any, to the left."
     (let ((indentation-current (lister-node-get-level node)))
-      (if (and (> 0 indentation-current) (lister-sublist-below-p ewoc node))
+      (if (and (< 0 indentation-current) (lister-sublist-below-p ewoc node))
           (progn
             (lister-set-node-level ewoc node (1- indentation-current))
             (lister-move-sublist-left ewoc (ewoc-next ewoc node)))
