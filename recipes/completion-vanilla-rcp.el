@@ -50,6 +50,7 @@
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;;; Vertico
+;;;; Itself
 (use-package vertico
   :demand t                             ; Otherwise won't get loaded immediately
   :straight (vertico :files (:defaults "extensions/*") ; Special recipe to load extensions conveniently
@@ -96,11 +97,50 @@
   (vertico-count 13)
   (vertico-resize t)
   (vertico-cycle nil)
-  ;; Extensions
+  :init
+  ;; Workaround for problem with `tramp' hostname completions. This overrides
+  ;; the completion style specifically for remote files! See
+  ;; https://github.com/minad/vertico#tramp-hostname-completion
+  (defun kb/basic-remote-try-completion (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-try-completion string table pred point)))
+  (defun kb/basic-remote-all-completions (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-all-completions string table pred point)))
+  (add-to-list 'completion-styles-alist
+               '(basic-remote           ; Name of `completion-style'
+                 kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+  :config
+  (vertico-mode)
+  (vertico-multiform-mode)              ; Extensions
+
+  ;; Prefix the current candidate with “» ”. From
+  ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
+  (advice-add #'vertico--format-candidate :around
+              (lambda (orig cand prefix suffix index _start)
+                (setq cand (funcall orig cand prefix suffix index _start))
+                (concat
+                 (if (= vertico--index index)
+                     (propertize "» " 'face 'vertico-current)
+                   "  ")
+                 cand))))
+
+;;;; Vertico-grid
+(use-package vertico-grid
+  :custom
   (vertico-grid-separator "       ")
-  (vertico-grid-lookahead 50)
-  (vertico-buffer-display-action '(display-buffer-reuse-window))
-  (setq vertico-multiform-categories
+  (vertico-grid-lookahead 50))
+
+;;;; Vertico-buffer
+(use-package vertico-buffer
+  :custom
+  (vertico-buffer-display-action '(display-buffer-reuse-window)))
+
+;;;; Vertico-multiform
+;; Extensions
+(use-package vertico-multiform
+  :custom
+  (vertico-multiform-categories
    '((file reverse)
      (consult-grep buffer)
      (consult-location)
@@ -126,36 +166,7 @@
     "Embark on candidate using quick keys."
     (interactive)
     (when (vertico-quick-jump)
-      (embark-act arg)))
-
-  ;; Workaround for problem with `tramp' hostname completions. This overrides
-  ;; the completion style specifically for remote files! See
-  ;; https://github.com/minad/vertico#tramp-hostname-completion
-  (defun kb/basic-remote-try-completion (string table pred point)
-    (and (vertico--remote-p string)
-         (completion-basic-try-completion string table pred point)))
-  (defun kb/basic-remote-all-completions (string table pred point)
-    (and (vertico--remote-p string)
-         (completion-basic-all-completions string table pred point)))
-  (add-to-list 'completion-styles-alist
-               '(basic-remote           ; Name of `completion-style'
-                 kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
-  :config
-  (vertico-mode)
-  ;; Extensions
-  (vertico-multiform-mode)
-
-  ;; Prefix the current candidate with “» ”. From
-  ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
-  (advice-add #'vertico--format-candidate :around
-              (lambda (orig cand prefix suffix index _start)
-                (setq cand (funcall orig cand prefix suffix index _start))
-                (concat
-                 (if (= vertico--index index)
-                     (propertize "» " 'face 'vertico-current)
-                   "  ")
-                 cand)))
-  )
+      (embark-act arg))))
 
 ;;; Selectrum
 ;; Advanced complete-read
