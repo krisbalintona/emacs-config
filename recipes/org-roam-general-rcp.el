@@ -33,12 +33,6 @@
 
     "i" '(org-roam-node-insert :wk "Insert note")
 
-    "h" '((lambda ()
-            (interactive)
-            (find-file "~/Documents/org-database/roam/inbox.org")
-            )
-          :wk "Go home")
-
     "l" '(org-roam-buffer-toggle :wk "Toggle Roam buffer")
     "L" '(org-roam-buffer-display-dedicated :wk "New Roam buffer")
 
@@ -49,16 +43,17 @@
   (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
   (org-roam-file-exclude-regexp nil)
   (org-roam-db-node-include-function
-   (lambda ()
-     "Exclude nodes with ATTACH tag"
-     (not (member "ATTACH" (org-get-tags)))))
+   #'(lambda ()
+       "Exclude nodes with the ATTACH tag"
+       (not (member "ATTACH" (org-get-tags)))))
 
   (org-roam-verbose nil)                ; Don't echo messages that aren't errors
   (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
   (org-roam-db-gc-threshold most-positive-fixnum) ; Minimize GC pauses while updating the database
 
   (org-roam-node-default-sort 'file-atime)
-  (org-roam-node-display-template (concat "${backlinkscount:16} " "${functiontag:26} " "${othertags:47} " "${hierarchy:138}"))
+  (org-roam-node-display-template ; Taken from https://jethrokuan.github.io/org-roam-guide/
+   (concat " ${type:13}" "${comma-tags:35}" "${hierarchy:*}"))
 
   (org-roam-completion-everywhere t)    ; Org-roam completion everywhere
   (org-roam-link-auto-replace t) ; Replace roam link type with file link type when possible
@@ -67,7 +62,7 @@
      org-roam-complete-everywhere
      ,(cape-company-to-capf #'company-yasnippet) ; Requires `cape'
      ))
-  (org-roam-mode-section-functions
+  (org-roam-mode-sections
    '(org-roam-backlinks-section
      org-roam-reflinks-section
      org-roam-unlinked-references-section
@@ -150,60 +145,25 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
 (with-eval-after-load 'org-roam
   (cl-defmethod org-roam-node-filetitle ((node org-roam-node))
     "Return the file TITLE for the node."
-    (org-roam-get-keyword "TITLE" (org-roam-node-file node))
-    )
+    (org-roam-get-keyword "TITLE" (org-roam-node-file node)))
 
-  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
-    (let* ((count (caar (org-roam-db-query
-                         [:select (funcall count source)
-                                  :from links
-                                  :where (= dest $s1)
-                                  :and (= type "id")]
-                         (org-roam-node-id node))))
-           )
-      (if (> count 0)
-          (concat (propertize "=has:backlinks=" 'display (all-the-icons-material "link" :face 'all-the-icons-dblue :height 0.9)) (format "%d" count))
-        (concat (propertize "=not-backlinks=" 'display (all-the-icons-material "link" :face 'org-roam-dim :height 0.9))  " ")
-        )
-      ))
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+    "Return the TYPE of NODE.
 
-  (cl-defmethod org-roam-node-functiontag ((node org-roam-node))
-    "The first tag of notes are used to denote note type"
-    (let* ((specialtags kb/lit-categories)
-           (tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
-           (functiontag (seq-intersection specialtags tags 'string=))
-           )
-      (concat
-       ;; (if functiontag
-       ;;     (propertize "=has:functions=" 'display (all-the-icons-octicon "gear" :face 'all-the-icons-silver :v-adjust 0.02 :height 0.8))
-       ;;   (propertize "=not-functions=" 'display (all-the-icons-octicon "gear" :face 'org-roam-dim :v-adjust 0.02 :height 0.8))
-       ;;   )
-       (if functiontag
-           (propertize "=@=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
-         (propertize "= =" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.7))
-         )
-       " "
-       (string-join functiontag ", "))
-      ))
+Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
+    (condition-case nil
+        (propertize
+         (file-name-nondirectory
+          (directory-file-name
+           (file-name-directory
+            (file-relative-name (org-roam-node-file node) org-roam-directory))))
+         'face 'all-the-icons-orange)
+      (error "")))
 
-  (cl-defmethod org-roam-node-othertags ((node org-roam-node))
-    "Return the file TITLE for the node."
-    (let* ((tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node)))
-           (specialtags kb/lit-categories)
-           (othertags (seq-difference tags specialtags 'string=))
-           )
-      (concat
-       ;; " "
-       ;; (if othertags
-       ;;     (propertize "=has:tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
-       ;;   (propertize "=not-tags=" 'display (all-the-icons-faicon "tags" :face 'all-the-icons-dgreen :v-adjust 0.02 :height 0.8))
-       ;;   )
-       ;; " "
-       (if othertags
-           (propertize "=@=" 'display "")
-         (propertize "= =" 'display "")
-         )
-       (propertize (string-join othertags ", ") 'face 'all-the-icons-dgreen))
+  (cl-defmethod org-roam-node-comma-tags ((node org-roam-node))
+    "Return the TAGS of the node."
+    (let* ((tags (seq-filter (lambda (tag) (not (string= tag "ATTACH"))) (org-roam-node-tags node))))
+      (propertize (string-join tags ", ") 'face 'all-the-icons-dgreen)
       ))
 
   (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
@@ -216,27 +176,21 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
            (separator (concat " " (all-the-icons-material "chevron_right") " "))
            )
       (cond
-       ((>= level 1) (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "list" :face 'all-the-icons-blue))
-                             " "
-                             (propertize shortentitle 'face 'org-roam-dim)
-                             (propertize separator 'face 'org-roam-dim)
-                             title))
-       (t (concat (propertize (format "=level:%d=" level) 'display (all-the-icons-material "insert_drive_file" :face 'all-the-icons-yellow))
-                  " "
-                  title))
-       )
-      ))
-  )
+       ((>= level 1)
+        (concat (propertize shortentitle 'face 'org-roam-dim)
+                (propertize separator 'face 'org-roam-dim)
+                title))
+       (t title)))))
 
 ;;; Capture templates
 ;;;; Org-roam-capture-templates
-(defvar kb/lit-categories
+(defvar kb/org-roam-node-types
   '("working" "video" "book" "podcast" "article" "website" "journal" "quote" "structure" "musing")
   "The main categories of inputs I process.")
 
 (defun kb/insert-lit-category ()
   "Insert type of literature note sources."
-  (completing-read "Category: " kb/lit-categories)
+  (completing-read "Category: " kb/org-roam-node-types)
   )
 
 (setq org-roam-capture-templates

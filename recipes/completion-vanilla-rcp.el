@@ -100,13 +100,12 @@
   (vertico-grid-separator "       ")
   (vertico-grid-lookahead 50)
   (vertico-buffer-display-action '(display-buffer-reuse-window))
-  (vertico-multiform-categories
+  (setq vertico-multiform-categories
    '((file reverse)
      (consult-grep buffer)
      (consult-location)
      (imenu buffer)
      (library reverse indexed)
-     (org-roam-node reverse indexed)
      (t reverse)
      ))
   (vertico-multiform-commands

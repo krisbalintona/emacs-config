@@ -54,10 +54,10 @@
 ;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
-  :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/citar-capture)
+  :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/org-roam-node-from-cite)
   :general
   (kb/note-keys
-    "C" '(kb/citar-capture :wk "Citar-capture")
+    "C" '(kb/org-roam-node-from-cite :wk "Citar-capture")
     )
   (:keymaps 'org-mode-map
             :prefix "C-c b"
@@ -133,7 +133,7 @@ manually add one myself."
 
   ;; Create a new node from a bibliographic source. Taken from
   ;; https://jethrokuan.github.io/org-roam-guide/
-  (defun kb/citar-capture (keys-entries)
+  (defun kb/org-roam-node-from-cite (keys-entries)
     (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
     (let ((title (citar--format-entry-no-widths (cdr keys-entries)
                                                 "${author editor}${date urldate} :: ${title}")))
@@ -155,7 +155,7 @@ manually add one myself."
 ;; Citar compatibility with `org-cite'
 (use-package citar-org
   :straight nil
-  :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/citar-capture)
+  :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/org-roam-node-from-cite)
   :after (citar oc)
   :custom
   ;; Use `citar'
