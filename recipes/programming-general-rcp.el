@@ -303,6 +303,7 @@
        (super-save-include-p buffer-file-name))))
   :config
   (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
+  (add-to-list 'super-save-triggers 'evil-window-mru)
   ;; Make sure this goes after adding hooks, since the hooks are manually added once `super-save-mode' is enable
   (super-save-mode))
 
