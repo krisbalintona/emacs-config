@@ -24,7 +24,7 @@
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
-  (defvar kb/org-hugo-exclude-tags '("blog" "project" "ATTACH")
+  (defvar kb/org-hugo-exclude-tags '("project" "ATTACH")
     "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   :config
   ;; Org-export all files in an org-roam subdirectory. Modified from
@@ -34,12 +34,23 @@
     (interactive)
     (require 'org-roam)
     (org-roam-update-org-id-locations) ; Necessary for id's to be recognized for exports
-    (dolist (fil (org-roam--list-files (expand-file-name (concat kb/roam-dir "blog/"))))
-      (with-current-buffer (find-file-noselect fil)
+    (dolist (files
+             (cl-remove-if-not
+              (lambda (file)
+                (org-roam-with-temp-buffer file
+                  (let* ((check-keywords '("title" "hugo_bundle"))
+                         (collected-keywords (org-collect-keywords check-keywords)))
+                    ;; Remove from list of files if file has an empty
+                    ;; value for one of check-keywords or doesn't have
+                    ;; that keyword at all
+                    (and
+                     (not (rassoc '("") collected-keywords))
+                     (= (length check-keywords) (length collected-keywords))))))
+              (kb/find-blog-files-org)))
+      (with-current-buffer (find-file-noselect files)
         (org-hugo-export-wim-to-md)
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-          (kill-buffer))
-        )))
+          (kill-buffer)))))
 
   (defun kb/org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list info)
     "Ignore tags which match a string found in `kb/org-hugo-exclude-tags'."
