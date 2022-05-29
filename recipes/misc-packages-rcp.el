@@ -267,20 +267,82 @@
              (if good-scroll-mode
                  (progn
                    (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
-                   (advice-add 'evil-scroll-down :override #'kb/good-scroll-down))
+                   (advice-add 'evil-scroll-down :override #'kb/good-scroll-down)
+                   (advice-add 'good-scroll--render :after #'kb/good-scroll--update-point-position))
                (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
-               (advice-remove 'evil-scroll-down #'kb/good-scroll-down)))
+               (advice-remove 'evil-scroll-down #'kb/good-scroll-down)
+               (advice-remove 'good-scroll--render #'kb/good-scroll--update-point-position)))
   :custom
   (good-scroll-step 80)
   (scroll-margin 0)                     ; No scroll margin with good-scroll
   :init
   ;; My own scroll functions
-  (defun kb/good-scroll-up (&rest lines)
-    "Scroll up."
-    (good-scroll-move (- (/ (good-scroll--window-usable-height) 2))))
-  (defun kb/good-scroll-down (&rest lines)
+  (defvar kb/good-scroll--posn-x 0
+    "Store the posn-x coordinate.")
+  (defvar kb/good-scroll--posn-y 0
+    "Store the posn-y coordinate.")
+  (defvar kb/good-scroll--inhibit-scroll nil
+    "Allow the input of another kb/scroll command?")
+
+  (defun kb/good-scroll--convert-line-to-step (line)
+    "Convert number of lines to number of pixels. Credit to
+https://github.com/io12/good-scroll.el/issues/28#issuecomment-1117887861"
+    (cl-typecase line
+      (integer (* line (line-pixel-height)))
+      ((or null (member -))
+       (- (good-scroll--window-usable-height)
+          (* next-screen-context-lines (line-pixel-height))))
+      (t (line-pixel-height))))
+
+  (defun kb/good-scroll--move (lines)
+    "Scroll FACTOR up or down (down if FACTOR is negative) the screen."
+    ;; TODO 2022-05-30: When at the edges of the screen, don't save the x-y
+    ;; position (so that when leaving the edges, the non-edge x-y position is
+    ;; restored). But make sure that if the point is moved after reaching the
+    ;; edge, that x-y position is used instead for the next
+    ;; kb/good-scroll--move. Additionally, though you can't good-scroll at the
+    ;; edges, still move the point to the edges.
+    (let* ((xy (evil-posn-x-y (posn-at-point)))
+           (x (car xy))
+           (y (cdr xy))
+           (down (cl-plusp lines))
+           (scroll-pixels (kb/good-scroll--convert-line-to-step lines))
+           (distance-to-end-line (- (line-number-at-pos (point-max))
+                                    (line-number-at-pos)))
+           (too-far-down (and down (>= (/ lines 2) distance-to-end-line))))
+      (setq-local kb/good-scroll--posn-x x
+                  kb/good-scroll--posn-y y)
+      (unless kb/good-scroll--inhibit-scroll
+        (if too-far-down
+            (goto-line (+ (line-number-at-pos) lines) (current-buffer) t)
+          (good-scroll-move scroll-pixels)))))
+  (defun kb/good-scroll--update-point-position ()
+    "Update the posn position of point to what it was prior to the
+scroll command."
+    (if (and (window-valid-p good-scroll--window)
+             (not (zerop good-scroll-destination)))
+        (progn
+          (goto-char
+           (posn-point
+            (posn-at-x-y kb/good-scroll--posn-x kb/good-scroll--posn-y)))
+          ;; Don't allow for more scrolling commands when in the process of
+          ;; scrolling
+          (setq-local kb/good-scroll--inhibit-scroll t))
+      (setq-local kb/good-scroll--inhibit-scroll nil)))
+
+  (defun kb/good-scroll-up (&optional lines)
+    "Scroll up half the screen."
+    (interactive)
+    (let* ((entire-screen (window-height))
+           (half-screen (- (/ entire-screen 2))))
+      (kb/good-scroll--move (or lines half-screen))))
+
+  (defun kb/good-scroll-down (&optional lines)
     "Scroll down."
-    (good-scroll-move (/ (good-scroll--window-usable-height) 2))))
+    (interactive)
+    (let* ((entire-screen (window-height))
+           (half-screen (/ entire-screen 2)))
+      (kb/good-scroll--move (or lines half-screen)))))
 
 ;;; Built-in Emacs modes/packages
 (use-package emacs
