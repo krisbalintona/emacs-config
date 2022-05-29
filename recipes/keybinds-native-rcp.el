@@ -50,15 +50,23 @@
  "C-e" 'move-end-of-line
  "C-k" 'kill-visual-line
  "C-y" 'yank
- "C-S-k" 'join-line
- "C-S-j" '(lambda () (interactive) (join-line 1))
+ "C-S-k" '(lambda ()
+            (interactive)
+            (save-excursion (join-line)))
+ "C-S-j" '(lambda ()
+            (interactive)
+            (save-excursion (join-line 1)))
  )
 
 (general-define-key
  :keymaps '(global-map general-override-mode-map)
  :states '(normal visual motion)
- "K" 'join-line
- "J" '(lambda () (interactive) (join-line 1))
+ "K" '(lambda ()
+        (interactive)
+        (save-excursion (join-line)))
+ "J" '(lambda ()
+        (interactive)
+        (save-excursion (join-line 1)))
  "C-a" 'back-to-indentation
  "C-e" 'move-end-of-line
  )
