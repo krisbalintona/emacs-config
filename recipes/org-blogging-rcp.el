@@ -13,7 +13,7 @@
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
   :defer 7
-  :commands kb/org-hugo-org-roam-sync-all
+  :commands kb/ox-hugo-org-roam-sync-all
   :ensure-system-package (hugo go)
   :custom
   (org-hugo-base-dir (concat org-directory "hugo/"))
@@ -25,20 +25,51 @@
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
   (defvar kb/org-hugo-exclude-tags '("project" "ATTACH")
-    "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
+    "Tags to exclude. Look at
+`kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   :config
+  ;; Set the value of the hugo_bundle keyword (for blog post org files) if it is
+  ;; empty. Inspired by `vulpea-project-update-tag'
+  (defun kb/ox-hugo--add-hugo-metadata-maybe ()
+    "Update the hugo_bundle, export_file_name, and hugo_draft file
+propteries in the current buffer hugo buffer if they do not
+exist."
+    (when (and (not (active-minibuffer-window))
+               (member buffer-file-name (kb/find-blog-files-org)))
+      (save-excursion
+        (let* ((save-silently t)    ; Because this is added to `after-save-hook'
+               (keywords (org-collect-keywords '("hugo_bundle" "export_file_name" "hugo_draft")))
+               (default-bundle (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
+               (default-export-file-name "index")
+               (default-hugo-draft "true")
+               (empty-pairs
+                (cl-remove-if-not
+                 (lambda (pair) (string= (car (cdr pair)) ""))
+                 (org-collect-keywords '("hugo_bundle" "export_file_name" "hugo_draft"))))
+               (new-value))
+          (dolist (keyword (mapcar 'car empty-pairs))
+            (setq new-value (cond
+                             ((string= "HUGO_BUNDLE" keyword) default-bundle)
+                             ((string= "EXPORT_FILE_NAME" keyword) default-export-file-name)
+                             ((string= "HUGO_DRAFT" keyword) default-hugo-draft)))
+            (org-roam-set-keyword keyword new-value))
+          (save-buffer)))))
+  ;; NOTE 2022-05-29: For some reason the point isn't properly saved if I add
+  ;; this to `after-save-hook'...
+  (add-hook 'after-save-hook #'kb/ox-hugo--add-hugo-metadata-maybe)
+
   ;; Org-export all files in an org-roam subdirectory. Modified from
   ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/
-  (defun kb/org-hugo-org-roam-sync-all ()
+  (defun kb/ox-hugo-org-roam-sync-all ()
     "Export all org-roam files to Hugo in my blogging directory."
     (interactive)
     (require 'org-roam)
     (org-roam-update-org-id-locations) ; Necessary for id's to be recognized for exports
-    (dolist (files
+    (dolist (file
              (cl-remove-if-not
               (lambda (file)
                 (org-roam-with-temp-buffer file
-                  (let* ((check-keywords '("title" "hugo_bundle"))
+                  (let* ((check-keywords '("title" "hugo_bundle" "export_file_name" "hugo_draft"))
                          (collected-keywords (org-collect-keywords check-keywords)))
                     ;; Remove from list of files if file has an empty
                     ;; value for one of check-keywords or doesn't have
@@ -47,7 +78,7 @@
                      (not (rassoc '("") collected-keywords))
                      (= (length check-keywords) (length collected-keywords))))))
               (kb/find-blog-files-org)))
-      (with-current-buffer (find-file-noselect files)
+      (with-current-buffer (find-file-noselect file)
         (org-hugo-export-wim-to-md)
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
           (kill-buffer)))))
