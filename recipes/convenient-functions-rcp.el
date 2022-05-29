@@ -265,8 +265,9 @@ which are not in `kb/agenda-dir'."
          (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
          )
     (save-excursion
-      (let ((org-element-use-cache nil)) ; NOTE 2022-02-05: This is a shoddy fix for hanging when invoking in buffer with no headlines
-        (funcall-interactively 'unpackaged/org-add-blank-lines '(4))) ; Emulate universal argument
+      (org-with-wide-buffer
+       (let ((org-element-use-cache nil)) ; NOTE 2022-02-05: This is a shoddy fix for hanging when invoking in buffer with no headlines
+         (funcall-interactively 'unpackaged/org-add-blank-lines '(4)))) ; Emulate universal argument
       (save-buffer))))
 ;; NOTE 2022-05-29: For some reason the point isn't properly saved if I add
 ;; this to `after-save-hook'...

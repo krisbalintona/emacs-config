@@ -54,6 +54,7 @@
 ;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
+  :straight (citar :type git :host github :repo "emacs-citar/citar" :includes citar-org)
   :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/org-roam-node-from-cite)
   :general
   (kb/note-keys
@@ -151,10 +152,9 @@ manually add one myself."
                          :node (org-roam-node-create :title title)
                          :props '(:finalize find-file)))))
 
-;;; Oc-citar
+;;; Citar-org
 ;; Citar compatibility with `org-cite'
 (use-package citar-org
-  :straight nil
   :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/org-roam-node-from-cite)
   :after (citar oc)
   :custom
