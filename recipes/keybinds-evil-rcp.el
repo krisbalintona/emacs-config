@@ -79,7 +79,8 @@
   (evil-collection-setup-minibuffer nil)
   (evil-collection-outline-bind-tab-p nil)
   (evil-collection-mode-list
-   '(2048-game ag alchemist anaconda-mode apropos arc-mode auto-package-update bm bookmark
+   '(2048-game ag alchemist ;; anaconda-mode
+               apropos arc-mode auto-package-update bm bookmark
                (buff-menu "buff-menu")
                calc calendar cider cmake-mode comint company compile consult
                (custom cus-edit)
@@ -93,7 +94,8 @@
                (pdf pdf-view)
                popup proced
                (process-menu simple)
-               prodigy profiler python quickrun racer racket-describe realgud reftex restclient rg ripgrep rjsx-mode robe rtags ruby-mode scroll-lock sh-script simple slime sly speedbar tab-bar tablist tabulated-list tar-mode telega
+               prodigy profiler ;; python
+               quickrun racer racket-describe realgud reftex restclient rg ripgrep rjsx-mode robe rtags ruby-mode scroll-lock sh-script simple slime sly speedbar tab-bar tablist tabulated-list tar-mode telega
                (term term ansi-term multi-term)
                tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff view vlf vterm w3m wdired wgrep which-key woman xref youtube-dl
                (ztree ztree-diff)

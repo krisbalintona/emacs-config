@@ -14,13 +14,11 @@
 ;;; Python-mode
 ;; A little better than the built-in python package
 (use-package python-mode
-  :mode ("\\.py\\'" . python-mode)
-  :interpreter ("python" . python-mode)
+  :demand t
+  :ensure-system-package (pytest . python-pytest-pacman)
   :hook (py-shell-mode . (lambda ()
                            (hide-mode-line-mode)
-                           (setq-local scroll-margin 0)
-                           ))
-  :ensure-system-package (pytest . python-pytest-pacman)
+                           (setq-local scroll-margin 0)))
   :gfhook
   'lsp-deferred
   'dap-mode
@@ -28,8 +26,7 @@
      (require 'prog-mode)
      (push '("->" . ?») prettify-symbols-alist)
      (push '("lambda" . ?λ) prettify-symbols-alist)
-     (prettify-symbols-mode)
-     )
+     (prettify-symbols-mode))
   'display-fill-column-indicator-mode
   :general (:keymaps 'python-mode-map
                      :states '(normal insert)
@@ -40,7 +37,8 @@
                      "M-}" 'python-nav-end-of-block
                      )
   :custom
-  (py-shell-name "ipython3")
+  (py-python-command "ipython3")
+  (py-shell-fontify-p 'all)             ; Fontify shell
   (py-session-p nil)
   (py-dedicated-process-p nil)
 
@@ -49,27 +47,25 @@
   (py-split-window-on-execute-threshold 1) ; Number of current displayed windows until no splitting
   (py-keep-windows-configuration nil)   ; Retain current window configuration?
   (py-split-window-on-execute t)        ; Reuse existing windows?
-  (py-switch-buffers-on-execute-p nil)  ; Switch to buffer?
-  :config (evil-set-initial-state 'py-shell-mode 'normal)
-  )
+  (py-switch-buffers-on-execute-p nil) ; Switch to buffer?
+  :config
+  (evil-set-initial-state 'py-shell-mode 'normal))
 
 ;;; Dap-python
 ;; Compatibility with dap
 (use-package dap-python
   :demand t
-  :after dap-mode
+  :after (python-mode dap-mode)
   :ensure-system-package debugpy-run    ; For debugging in python using dap
   :straight nil
   :custom
   (dap-python-executable "ipython3")
-  (dap-python-debugger 'debugpy)        ; Updated version of ptvsd
-  )
+  (dap-python-debugger 'debugpy))       ; Updated version of ptvsd
 
 ;;; Lsp-pyright
 ;; Best python language server
 (use-package lsp-pyright
-  :demand t
-  :after lsp-mode
+  :after (python-mode lsp-mode)
   :custom
   (lsp-pyright-multi-root nil)          ; Useful!
   (lsp-pyright-python-executable-cmd "python3")
@@ -84,12 +80,9 @@
 ;;; Anaconda
 ;; More IDE features to Python
 (use-package anaconda-mode
-  :after python-mode
   :hook (python-mode . anaconda-mode)
   :gfhook 'anaconda-eldoc-mode
   :general
-  (:keymaps 'python-mode-map
-            [remap completion-at-point] 'anaconda-mode-complete)
   (:keymaps 'anaconda-mode-map        ; The bindings I want from evil-collection
             :states 'normal
             "gd" 'anaconda-mode-find-definitions
@@ -140,14 +133,6 @@ Set here since :custom declaration doesn't work for some reason."
              "t" '(ignore :wk "Pyvenv")
              "tt" '(python-pytest-file :wk "Pyvenv activate")
              "tT" '(python-pytest-dispatch :wk "Pyvenv activate"))
-  )
-
-;;; Pyimport
-;; Functions which conveniently add or remove import statements when appropriate.
-(use-package pyimport
-  :ensure-system-package (pyflakes . flake8)
-  :after python
-  :custom (pyimport-pyflakes-path (executable-find "pyflakes"))
   )
 
 ;;; programming-python-rcp.el ends here
