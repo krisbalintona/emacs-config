@@ -265,54 +265,17 @@
                           (luafmt . "sudo npm install -g lua-fmt")
                           (google-java-format)
                           )
-  :custom
-  ;; Take a look at the `format-all' package for how to install particular
-  ;; formatters as well as their proper CLI commands. Namely, inspect
-  ;; `format-all--install-table' and `format-all--executable-table'.
-  (apheleia-formatters
-   '((luafmt "luafmt" "--stdin")
-     (latexindent "latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
-     (black "black" "-l 80" "-")
-     (brittany "brittany")
-     (clang-format "clang-format")
-     (mix-format "mix" "format" "-")
-     (gofmt "gofmt")
-     (google-java-format "google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
-     (isort "isort" "--stdout" "-")
-     (ocamlformat "ocamlformat" "-" "--name" filepath)
-     (prettier npx "prettier" "--stdin-filepath" filepath)
-     (rustfmt "rustfmt" "--unstable-features" "--skip-children" "--quiet" "--emit" "stdout")
-     (terraform "terraform" "fmt" "-")
-     ))
-  (apheleia-mode-alist
-   '((cc-mode . clang-format)
-     (c-mode . clang-format)
-     (c++-mode . clang-format)
-     (css-mode . prettier)
-     (elixir-mode . mix-format)
-     (go-mode . gofmt)
-     (haskell-mode . brittany)
-     (html-mode . prettier)
-     (java-mode . google-java-format)
-     (js3-mode . prettier)
-     (js-mode . prettier)
-     (json-mode . prettier)
-     (lua-mode . luafmt)
-     (php-mode)
-     (python-mode . black)
-     (ruby-mode . prettier)
-     (rustic-mode . rustfmt)
-     (rust-mode . rustfmt)
-     (sass-mode . prettier)
-     (terraform-mode . terraform)
-     (TeX-latex-mode . latexindent)
-     (TeX-mode . latexindent)
-     (tuareg-mode . ocamlformat)
-     (typescript-mode . prettier)
-     (web-mode . prettier)
-     (yaml-mode . prettier)
-     ))
-  )
+  :config
+  ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
+  ;; instead of defining the variables directly so that it is agnostic to any
+  ;; package changes. Take a look at the `format-all' package for how to install
+  ;; particular formatters as well as their proper CLI commands. Namely, inspect
+  (setf (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
+        (alist-get 'google-java-format apheleia-formatters)
+        '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
+        (alist-get 'luafmt apheleia-formatters) '("luafmt" "--stdin")
+        (alist-get 'latexindent apheleia-formatters)
+        '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")))
 
 ;;; Lsp-bridge
 ;; Asynchronous LSP client
