@@ -479,16 +479,16 @@ given."
   )
 
 ;;;; Tree-sitter
+;;;;; Itself
 ;; Create a syntax tree (e.g. the role of each piece of code) and add syntax
 ;; highlighting from it (rather than regex and indentation). Additionally, the
 ;; syntax tree itself can help debug and quick editing in some cases.
 (use-package tree-sitter
   :hook (tree-sitter-after-on . tree-sitter-hl-mode) ; Enable syntax highlighting whenever possible
   :init
-  (global-tree-sitter-mode)     ; Enable for all supported tree-sitter languages
-  )
+  (global-tree-sitter-mode))    ; Enable for all supported tree-sitter languages
 
-;;;; Tree-sitter-langs
+;;;;; Tree-sitter-langs
 ;; Supported language bundle for tree-sitter
 (use-package tree-sitter-langs
   :after tree-sitter
@@ -499,13 +499,39 @@ given."
    tree-sitter-langs--bundle-version
    tree-sitter-langs--os))
 
-;;;; Tree-sitter-indent
-;; Replaces `indent-line-function' with a tree-sitter indent function.
-(use-package tree-sitter-indent
-  :disabled t                           ; Not much support right now...
-  :after tree-sitter
-  :hook ((js2-mode rustic-mode) . tree-sitter-indent-mode)
-  )
+;;;;; Evil-textobj-tree-sitter
+;; Navigation of text objects with tree-sitter
+(use-package evil-textobj-tree-sitter
+  :straight (evil-textobj-tree-sitter :type git
+                                      :host github
+                                      :repo "meain/evil-textobj-tree-sitter"
+                                      :files (:defaults "queries"))
+  :general
+  (:keymaps 'evil-inner-text-objects-map
+            "f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+            )
+  (:keymaps 'evil-outer-text-objects-map
+            "f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+            ;; You can also bind multiple items and we will match the first one
+            ;; we can find
+            "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))
+            )
+  (:keymaps 'prog-mode-map
+            :states 'normal
+            "[f" '(lambda ()                 ; Goto start of previous/this function
+                    (interactive)
+                    (evil-textobj-tree-sitter-goto-textobj "function.outer" t))
+
+            "]f" '(lambda ()                 ; Goto start of next function
+                    (interactive)
+                    (evil-textobj-tree-sitter-goto-textobj "function.outer"))
+            "]F" '(lambda ()                 ; Goto end of next function
+                    (interactive)
+                    (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t))
+            "[F" '(lambda ()                 ; Goto end of previous/this function
+                    (interactive)
+                    (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))
+            ))
 
 ;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
