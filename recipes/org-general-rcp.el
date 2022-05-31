@@ -117,16 +117,15 @@ move to that window."
   :custom
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
   (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
-  (org-attach-id-dir "attachments/")
-  (org-attach-dir-relative t)        ; Use relative file paths?
+  (org-attach-dir-relative nil)        ; Use relative file paths?
+  (org-attach-id-dir (concat org-directory "resources/"))
   (org-attach-method 'cp)            ; Attach copies of files
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
   ;; Use timestamps as UUIDs and in attachment directory hierarchy
   (org-id-method 'ts)
   (org-attach-id-to-path-function-list
    '(org-attach-id-ts-folder-format
-     org-attach-id-uuid-folder-format))
-  )
+     org-attach-id-uuid-folder-format)))
 
 ;;; Org-refile
 (use-package org-refile
@@ -603,12 +602,9 @@ re-align the table if necessary. (Necessary because org-mode has a
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "scrot -s %s") ; Use scrot
-  (org-download-link-format "[[download:%s]]\n")
-  (org-download-annotate-function (lambda (_link) ""))
   (org-download-image-dir org-attach-id-dir)
   (org-download-heading-lvl nil)
-  (org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
-  )
+  (org-download-timestamp "%Y-%m-%d_%H-%M-%S_")) ; Default
 
 ;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
