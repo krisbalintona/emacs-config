@@ -68,20 +68,15 @@ exist."
     (interactive)
     (require 'org-roam)
     (org-roam-update-org-id-locations) ; Necessary for id's to be recognized for exports
-    (dolist (file
-             (cl-remove-if-not
-              (lambda (file)
-                (org-roam-with-temp-buffer file
-                  (let* ((check-keywords '("title" "hugo_bundle" "export_file_name" "hugo_draft"))
-                         (collected-keywords (org-collect-keywords check-keywords)))
-                    ;; Remove from list of files if file has an empty
-                    ;; value for one of check-keywords or doesn't have
-                    ;; that keyword at all
-                    (and
-                     (not (rassoc '("") collected-keywords))
-                     (= (length check-keywords) (length collected-keywords))))))
-              (kb/find-blog-files-org)))
+    (dolist (file (cl-remove-if
+                   (lambda (file)
+                     (org-roam-with-temp-buffer file
+                       (let* ((collected-title (org-collect-keywords '("title")))
+                              (title-value (cadr (assoc "TITLE" collected-title))))
+                         (or (not title-value) (string= title-value "")))))
+                   (kb/find-blog-files-org)))
       (with-current-buffer (find-file-noselect file)
+        (kb/ox-hugo--add-hugo-metadata-maybe)
         (org-hugo-export-wim-to-md)
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
           (kill-buffer)))))
