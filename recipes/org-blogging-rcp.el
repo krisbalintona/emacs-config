@@ -35,25 +35,28 @@
 propteries in the current buffer hugo buffer if they do not
 exist."
     (when (and (not (active-minibuffer-window))
-               (member buffer-file-name (kb/find-blog-files-org)))
+               (member buffer-file-name (kb/find-blog-files-org))
+               (assoc "TITLE" (org-collect-keywords '("title"))))
       (save-excursion
-        (let* ((save-silently t)    ; Because this is added to `after-save-hook'
-               (keywords (org-collect-keywords '("hugo_bundle" "export_file_name" "hugo_draft")))
+        (let* ((keywords '("hugo_bundle" "export_file_name" "hugo_draft"))
+               (keywords (mapcar '(lambda (elt) (upcase elt)) keywords))
+               (collected-keywords (org-collect-keywords keywords))
+               (non-existent-keywords (cl-remove-if
+                                       (lambda (keyword) (assoc keyword collected-keywords))
+                                       keywords))
+               (empty-keywords (cl-remove-if-not
+                                (lambda (keyword) (string= (cadr (assoc keyword collected-keywords)) ""))
+                                keywords))
                (default-bundle (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
                (default-export-file-name "index")
                (default-hugo-draft "true")
-               (empty-pairs
-                (cl-remove-if-not
-                 (lambda (pair) (string= (car (cdr pair)) ""))
-                 (org-collect-keywords '("hugo_bundle" "export_file_name" "hugo_draft"))))
                (new-value))
-          (dolist (keyword (mapcar 'car empty-pairs))
-            (setq new-value (cond
-                             ((string= "HUGO_BUNDLE" keyword) default-bundle)
-                             ((string= "EXPORT_FILE_NAME" keyword) default-export-file-name)
-                             ((string= "HUGO_DRAFT" keyword) default-hugo-draft)))
-            (org-roam-set-keyword keyword new-value))
-          (save-buffer)))))
+          (dolist (keyword (append non-existent-keywords empty-keywords))
+            (setq new-value (pcase keyword
+                              ("HUGO_BUNDLE" default-bundle)
+                              ("EXPORT_FILE_NAME" default-export-file-name)
+                              ("HUGO_DRAFT" default-hugo-draft)))
+            (org-roam-set-keyword keyword new-value))))))
   ;; NOTE 2022-05-29: For some reason the point isn't properly saved if I add
   ;; this to `after-save-hook'...
   (add-hook 'after-save-hook #'kb/ox-hugo--add-hugo-metadata-maybe)
