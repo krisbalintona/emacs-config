@@ -275,8 +275,8 @@ holding export options."
        (let ((last-name (org-export-data (plist-get info :professor) info)))
          (format "\\newcommand{\\professor}{%s}\n"
                  (if (string= last-name "")
-                     "PROFESSOR")
-                 (concat "Professor" last-name)))
+                     "PROFESSOR"
+                   (concat "Professor " last-name))))
 
        ;; Course
        (let ((course (org-export-data (plist-get info :course) info)))
