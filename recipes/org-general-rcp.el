@@ -214,17 +214,11 @@ move to that window."
 
 ;;;; Org-bars
 (use-package org-bars
-  :after org
-  :commands org-bars-mode
   :straight (org-bars :type git :host github :repo "tonyaldon/org-bars")
-  :custom
-  (org-bars-with-dynamic-stars-p nil)   ; Custom headline stars?
-  :preface            ; Should be in preface or else the package won't be loaded
-  (add-hook 'org-mode-hook #'(lambda ()
-                               (setq-local line-spacing 0) ; For smooth lines
-                               (org-bars-mode))
-            100)      ; Doesn't work if it is added to the beginning of the hook
-  )
+  :ghook 'org-mode-hook
+  :init
+  ;; Set these in init for some reason
+  (setq org-bars-with-dynamic-stars-p nil)) ; Custom headline stars?
 
 ;;;; Visual-fill-column
 ;; Soft wrap lines at fill-column
@@ -281,8 +275,8 @@ re-align the table if necessary. (Necessary because org-mode has a
              in (cl-remove-if-not #'listp org-todo-keywords)
              for keywords =
              (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                     (match-string 1 x)
-                                   x))
+                                (match-string 1 x)
+                              x))
                      keyword-spec)
              if (eq type 'sequence)
              if (member keyword keywords)
