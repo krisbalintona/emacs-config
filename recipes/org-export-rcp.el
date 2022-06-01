@@ -66,30 +66,30 @@
   pdfcreator={%c},
   pdflang={%L}}\n")
   :config
-  (add-to-list 'org-latex-classes '("mla"
-                                    "% * Preamble
+  (add-to-list 'org-latex-classes `("mla"
+                                    ,(concat "% * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
 % * Default packages?
 [NO-DEFAULT-PACKAGES]
 
 % ** MLA package
-\\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/mla}"
+\\usepackage{" org-directory "latex/packages/mla}")
                                     ("\\section*{%s}" . "\\section*{%s}")
                                     ("\\subsection*{%s}" . "\\subsection*{%s}")
                                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
                                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
                                     ))
-  (add-to-list 'org-latex-classes '("review"
-                                    "% * Preamble
+  (add-to-list 'org-latex-classes `("review"
+                                    ,(concat "% * Preamble
 \\documentclass[a4paper,landscape]{article}
 
 % * Default packages?
 [NO-DEFAULT-PACKAGES]
 
 % ** Review package
-\\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/review}"
+\\usepackage{" org-directory "latex/packages/review}")
                                     ("\\section{%s}" . "\\section*{%s}")
                                     ("\\subsection{%s}" . "\\subsection*{%s}")
                                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
