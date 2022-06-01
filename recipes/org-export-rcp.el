@@ -25,6 +25,7 @@
   )
 
 ;;; Ox-latex
+;;;; Itself
 (use-package ox-latex
   :custom
   (org-latex-compiler "xelatex")
@@ -101,7 +102,7 @@
 
 ;;;; Org-export latex backend
 ;; Support more file keywords for MLA papers
-(with-eval-after-load 'org-export
+(with-eval-after-load 'ox
   (org-export-define-backend 'latex ; Recognize the professor and course keywords
     '((bold . org-latex-bold)
       (center-block . org-latex-center-block)
@@ -226,7 +227,7 @@
   )
 
 ;;;; kb/org-latex-template
-(with-eval-after-load 'org-latex
+(with-eval-after-load 'ox-latex
   (defun kb/org-latex-template (contents info) ; Parse the professor and course keywords
     "Return complete document string after LaTeX conversion.
 CONTENTS is the transcoded contents string.  INFO is a plist
