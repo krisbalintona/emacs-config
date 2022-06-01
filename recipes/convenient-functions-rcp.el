@@ -85,7 +85,6 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
    ((eq major-mode 'org-mode)      ; Org-mode
     (let* ((save-silently t))      ; Don't write to echo area when saving
       (kb/format-buffer-indentation--base)
-      (kb/org-add-blank-lines)
       ;; Save buffer if modified and in `org-mode' because drawers are annoying.
       (save-buffer)))
    ((or (eq major-mode 'emacs-lisp-mode) ; Emacs-lisp
@@ -216,7 +215,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
         (require feature))
       (message "Reloaded: %s" (mapconcat #'symbol-name package-features " ")))))
 
-;;;; Org-add-blank-lines
+;;;; kb/org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
 (defun unpackaged/org-add-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
@@ -265,10 +264,13 @@ which are not in `kb/agenda-dir'."
          (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
          )
     (save-excursion
-      (org-with-wide-buffer
-       (let ((org-element-use-cache nil)) ; NOTE 2022-02-05: This is a shoddy fix for hanging when invoking in buffer with no headlines
-         (funcall-interactively 'unpackaged/org-add-blank-lines '(4)))) ; Emulate universal argument
-      (save-buffer))))
+      ;; NOTE 2022-02-05: This is a shoddy fix for hanging when invoking in
+      ;; buffer with no space before the first headline
+      (let ((org-element-use-cache nil))
+        (org-with-wide-buffer
+         (funcall-interactively 'unpackaged/org-add-blank-lines '(4))) ; Emulate universal argument
+        ))))
+(add-hook 'before-save-hook #'kb/org-add-blank-lines)
 
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
