@@ -66,8 +66,8 @@
   pdfcreator={%c},
   pdflang={%L}}\n")
   :config
-  (add-to-list 'org-latex-classes `("mla"
-                                    ,(concat "% * Preamble
+  (setf (alist-get "mla" org-latex-classes nil nil #'string=)
+        `(,(concat "% * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
 % * Default packages?
@@ -75,14 +75,15 @@
 
 % ** MLA package
 \\usepackage{" org-directory "latex/packages/mla}")
-                                    ("\\section*{%s}" . "\\section*{%s}")
-                                    ("\\subsection*{%s}" . "\\subsection*{%s}")
-                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-                                    ))
-  (add-to-list 'org-latex-classes `("review"
-                                    ,(concat "% * Preamble
+          ("\\section*{%s}" . "\\section*{%s}")
+          ("\\subsection*{%s}" . "\\subsection*{%s}")
+          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+          ("\\paragraph{%s}" . "\\paragraph*{%s}")
+          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+          )
+        (alist-get "remove" org-latex-classes nil nil #'string=)
+        `("review"
+          ,(concat "% * Preamble
 \\documentclass[a4paper,landscape]{article}
 
 % * Default packages?
@@ -90,12 +91,12 @@
 
 % ** Review package
 \\usepackage{" org-directory "latex/packages/review}")
-                                    ("\\section{%s}" . "\\section*{%s}")
-                                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-                                    ))
+          ("\\section{%s}" . "\\section*{%s}")
+          ("\\subsection{%s}" . "\\subsection*{%s}")
+          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+          ("\\paragraph{%s}" . "\\paragraph*{%s}")
+          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+          ))
   )
 
 ;;;; Org-export latex backend
