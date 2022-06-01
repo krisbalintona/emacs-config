@@ -35,23 +35,15 @@ draft tag for nodes with a value of true for hugo_draft."
                (assoc "TITLE" (org-collect-keywords '("title"))))
       (save-excursion
         (let* ((keywords '("filetags" "hugo_draft"))
-               (collected-keywords (org-collect-keywords keywords))
-               (current-tags (split-string
-                              (or (cadr (assoc "FILETAGS" collected-keywords))
-                                  "")   ; Empty string if no tags
-                              ":"))
-               (has-draft-tag (member "draft" current-tags)))
+               (collected-keywords (org-collect-keywords keywords)))
           (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
             ("false"
-             (when has-draft-tag
-               (org-roam-tag-remove '("draft"))))
+             (org-roam-tag-remove '("draft")))
             ("true"
-             (when (and (not has-draft-tag) current-tags)
-               (org-roam-tag-add '("draft"))))
+             (org-roam-tag-add '("draft")))
             )))))
-  ;; NOTE 2022-05-29: For some reason the point isn't properly saved if I add
-  ;; this to `after-save-hook'...
-  (add-hook 'after-save-hook #'kb/ox-hugo--add-tag-maybe)
+  ;; FIXME 2022-06-01: Point isn't preserved if added to `before-save-hook'
+  (add-hook 'before-save-hook #'kb/ox-hugo--add-tag-maybe)
 
   ;; Set the value of the hugo_bundle keyword (for blog post org files) if it is
   ;; empty. Inspired by `vulpea-project-update-tag'
@@ -82,9 +74,8 @@ exist."
                               ("EXPORT_FILE_NAME" default-export-file-name)
                               ("HUGO_DRAFT" default-hugo-draft)))
             (org-roam-set-keyword keyword new-value))))))
-  ;; NOTE 2022-05-29: For some reason the point isn't properly saved if I add
-  ;; this to `after-save-hook'...
-  (add-hook 'after-save-hook #'kb/ox-hugo--add-hugo-metadata-maybe)
+  ;; FIXME 2022-06-01: Point isn't preserved if added to `before-save-hook'
+  (add-hook 'before-save-hook #'kb/ox-hugo--add-hugo-metadata-maybe)
 
   ;; Org-export all files in an org-roam subdirectory. Modified from
   ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/
