@@ -25,14 +25,39 @@
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
   (defvar kb/org-hugo-exclude-tags '("project" "ATTACH" "draft")
-    "Tags to exclude. Look at
-`kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
+    "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   :config
+  (defun kb/ox-hugo--add-tag-maybe ()
+    "Add a FILETAGS value if necessary. Right now I only need the
+draft tag for nodes with a value of true for hugo_draft."
+    (when (and (not (active-minibuffer-window))
+               (member buffer-file-name (kb/find-blog-files-org))
+               (assoc "TITLE" (org-collect-keywords '("title"))))
+      (save-excursion
+        (let* ((keywords '("filetags" "hugo_draft"))
+               (collected-keywords (org-collect-keywords keywords))
+               (current-tags (split-string
+                              (or (cadr (assoc "FILETAGS" collected-keywords))
+                                  "")   ; Empty string if no tags
+                              ":"))
+               (has-draft-tag (member "draft" current-tags)))
+          (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
+            ("false"
+             (when has-draft-tag
+               (org-roam-tag-remove '("draft"))))
+            ("true"
+             (when (and (not has-draft-tag) current-tags)
+               (org-roam-tag-add '("draft"))))
+            )))))
+  ;; NOTE 2022-05-29: For some reason the point isn't properly saved if I add
+  ;; this to `after-save-hook'...
+  (add-hook 'after-save-hook #'kb/ox-hugo--add-tag-maybe)
+
   ;; Set the value of the hugo_bundle keyword (for blog post org files) if it is
   ;; empty. Inspired by `vulpea-project-update-tag'
   (defun kb/ox-hugo--add-hugo-metadata-maybe ()
     "Update the hugo_bundle, export_file_name, and hugo_draft file
-propteries in the current buffer hugo buffer if they do not
+properties in the current buffer hugo buffer if they do not
 exist."
     (when (and (not (active-minibuffer-window))
                (member buffer-file-name (kb/find-blog-files-org))
@@ -93,6 +118,7 @@ exist."
                          )))
                    (kb/find-blog-files-org)))
       (with-current-buffer (find-file-noselect file)
+        (kb/ox-hugo--add-tag-maybe)
         (kb/ox-hugo--add-hugo-metadata-maybe)
         (org-hugo-export-wim-to-md)
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
