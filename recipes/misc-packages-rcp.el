@@ -268,10 +268,10 @@
                  (progn
                    (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
                    (advice-add 'evil-scroll-down :override #'kb/good-scroll-down)
-                   (advice-add 'good-scroll--render :after #'kb/good-scroll--update-point-position))
+                   (advice-add 'good-scroll--render :override #'kb/good-scroll--render))
                (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
                (advice-remove 'evil-scroll-down #'kb/good-scroll-down)
-               (advice-remove 'good-scroll--render #'kb/good-scroll--update-point-position)))
+               (advice-remove 'good-scroll--render #'kb/good-scroll--render)))
   :custom
   (good-scroll-step 80)
   (scroll-margin 0)                     ; No scroll margin with good-scroll
@@ -283,6 +283,7 @@
     "Store the posn-y coordinate.")
   (defvar kb/good-scroll--inhibit-scroll nil
     "Allow the input of another kb/scroll command?")
+  (setq good-scroll-destination 0)      ; Because it's nil at startup
 
   (defun kb/good-scroll--convert-line-to-step (line)
     "Convert number of lines to number of pixels. Credit to
@@ -314,22 +315,61 @@ https://github.com/io12/good-scroll.el/issues/28#issuecomment-1117887861"
                   kb/good-scroll--posn-y y)
       (unless kb/good-scroll--inhibit-scroll
         (if too-far-down
-            (goto-line (+ (line-number-at-pos) lines) (current-buffer) t)
+            (forward-line lines)
           (good-scroll-move scroll-pixels)))))
-  (defun kb/good-scroll--update-point-position ()
-    "Update the posn position of point to what it was prior to the
-scroll command."
-    (if (and (window-valid-p good-scroll--window)
-             (not (zerop good-scroll-destination)))
-        (progn
-          (goto-char
-           (posn-point
-            (posn-at-x-y kb/good-scroll--posn-x kb/good-scroll--posn-y)))
-          ;; Don't allow for more scrolling commands when in the process of
-          ;; scrolling
-          (setq-local kb/good-scroll--inhibit-scroll t))
+  (defun kb/good-scroll--render ()
+    "Render an in-progress scroll.
+Update the window's vscroll and position in the buffer based on the scroll
+progress. This is called by the timer `good-scroll--timer' every
+`good-scroll-render-rate' seconds."
+    ;; Check if the window that recieved the scroll event still exists and
+    ;; if there is distance to scroll.
+    (when (and (window-valid-p good-scroll--window)
+               (not (zerop good-scroll-destination)))
+      (let ((inhibit-redisplay t)) ; TODO: Does this do anything?
+        ;; Switch to the window that recieved the scroll event,
+        ;; which might be different from the previously selected window.
+        (with-selected-window good-scroll--window
+          (let ((position-next-try
+                 (funcall good-scroll-algorithm))
+                (position-next-actual))
+            (cl-assert (<= (abs position-next-try)
+                           (abs good-scroll-destination)))
+            (when (good-scroll--cached-point-top-dirty-p)
+              (setq good-scroll--cached-point-top nil))
+            (setq position-next-actual (good-scroll--go-to position-next-try))
+            (setq good-scroll-traveled (+ good-scroll-traveled
+                                          position-next-actual)
+                  good-scroll-destination (- good-scroll-destination
+                                             position-next-actual)
+                  good-scroll--prev-point (point)
+                  good-scroll--prev-window-start (window-start)
+                  good-scroll--prev-vscroll (window-vscroll nil t))
+
+            ;; NOTE 2022-06-01: Put this here so that the final non-zero
+            ;; good-scroll-destination value is used to update point's posn
+            ;; position. If it is put after the liens below (e.g. via :after
+            ;; advice), then this function will set the value of
+            ;; good-scroll-destination to zero and the point won't be updated
+            ;; one more time (leading to the bug where the point is one line
+            ;; above where it should be when scrolling down.)
+            (goto-char
+             (posn-point
+              (posn-at-x-y kb/good-scroll--posn-x kb/good-scroll--posn-y)))
+            ;; Don't allow for more scrolling commands when in the process of
+            ;; scrolling
+            (setq-local kb/good-scroll--inhibit-scroll t)
+
+            ;; If we didn't jump the position as much as we wanted,
+            ;; then we must be trying to scroll past the edge of the buffer.
+            ;; This interrupts the scroll, so reset the destination to zero.
+            (when (/= position-next-try position-next-actual)
+              (setq good-scroll-destination 0))))))
+    ;; NOTE 2022-06-01: Then stop inhibitting scrolling when done
+    (unless (not (zerop good-scroll-destination))
       (setq-local kb/good-scroll--inhibit-scroll nil)))
 
+  ;; Keybinds
   (defun kb/good-scroll-up (&optional lines)
     "Scroll up half the screen."
     (interactive)
