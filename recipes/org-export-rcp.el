@@ -74,7 +74,6 @@
 [NO-DEFAULT-PACKAGES]
 
 % ** MLA package
-\\usepackage{ifpdf}
 \\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/mla}"
                                     ("\\section*{%s}" . "\\section*{%s}")
                                     ("\\subsection*{%s}" . "\\subsection*{%s}")
@@ -90,7 +89,6 @@
 [NO-DEFAULT-PACKAGES]
 
 % ** Review package
-\\usepackage{ifpdf}
 \\usepackage{/home/krisbalintona/Documents/org-database/latex/packages/review}"
                                     ("\\section{%s}" . "\\section*{%s}")
                                     ("\\subsection{%s}" . "\\subsection*{%s}")
