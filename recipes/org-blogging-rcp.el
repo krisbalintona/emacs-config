@@ -68,12 +68,29 @@ exist."
     (interactive)
     (require 'org-roam)
     (org-roam-update-org-id-locations) ; Necessary for id's to be recognized for exports
-    (dolist (file (cl-remove-if
+    (dolist (file (cl-remove-if-not
                    (lambda (file)
+                     ;; Don't look at files without the title, hugo_publishdate,
+                     ;; or hugo_draft keywords or with an empty value. The
+                     ;; criterion of having a hugo_publishdate is ignored if the
+                     ;; value of hugo_draft is true
                      (org-roam-with-temp-buffer file
-                       (let* ((collected-title (org-collect-keywords '("title")))
-                              (title-value (cadr (assoc "TITLE" collected-title))))
-                         (or (not title-value) (string= title-value "")))))
+                       (let* ((keywords '("title" "hugo_publishdate" "hugo_draft"))
+                              (collected-keywords (org-collect-keywords keywords))
+                              )
+                         (and
+                          (assoc "TITLE" collected-keywords)      ; Has title
+                          ;; If hugo_draft is false, then the hugo_publishdate
+                          ;; should exist and have a value. If hugo_draft
+                          ;; doesn't exist, then it'll return nil.
+                          (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
+                            ("false"
+                             (let* ((publish-pair (assoc "HUGO_PUBLISHDATE" collected-keywords))
+                                    (date (cadr publish-pair)))
+                               (and (stringp date)
+                                    (not (string= date "")))))
+                            ("true" t)))
+                         )))
                    (kb/find-blog-files-org)))
       (with-current-buffer (find-file-noselect file)
         (kb/ox-hugo--add-hugo-metadata-maybe)
