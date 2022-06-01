@@ -275,7 +275,7 @@
   :custom
   (good-scroll-step 80)
   (scroll-margin 0)                     ; No scroll margin with good-scroll
-  :init
+  :config
   ;; My own scroll functions
   (defvar kb/good-scroll--posn-x 0
     "Store the posn-x coordinate.")

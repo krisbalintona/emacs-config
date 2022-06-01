@@ -39,7 +39,7 @@ exist."
                (assoc "TITLE" (org-collect-keywords '("title"))))
       (save-excursion
         (let* ((keywords '("hugo_bundle" "export_file_name" "hugo_draft"))
-               (keywords (mapcar '(lambda (elt) (upcase elt)) keywords))
+               (keywords (mapcar #'(lambda (elt) (upcase elt)) keywords))
                (collected-keywords (org-collect-keywords keywords))
                (non-existent-keywords (cl-remove-if
                                        (lambda (keyword) (assoc keyword collected-keywords))

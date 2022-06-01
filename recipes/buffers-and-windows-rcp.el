@@ -372,6 +372,7 @@ If buffer-or-name is nil return current buffer's mode."
 ;;; Buffers
 ;;;; Bookmark
 (use-package bookmark
+  :hook (kill-emacs . kb/bookmark-cleanup)
   :custom
   (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
   :config
@@ -399,9 +400,8 @@ startup and popup bookmark menu to fix it"
         (message "Fix fileless file bookmarks, press C-M-c when done.")
         (recursive-edit)
         (when (derived-mode-p 'bookmark-bmenu-mode)
-          (quit-window)))))
-  (add-hook 'emacs-startup-hook #'kb/bookmark-cleanup)
-  )
+          (quit-window))))
+    (bookmark-save)))
 
 ;;;; Dogears
 ;; Save and return to exact locations when you want, where you want

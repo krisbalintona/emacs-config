@@ -27,16 +27,12 @@
 ;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
+  :hook (kill-emacs . recentf-save-list)
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)
   :init
-  (recentf-mode)
-  :config
-  (run-at-time nil (* 3 60) ; Save every 3 minutes
-               #'(lambda ()
-                   (let ((save-silently t))
-                     (recentf-save-list)))))
+  (recentf-mode))
 
 ;;; Saveplace
 ;; Save and restore the point's location in files
