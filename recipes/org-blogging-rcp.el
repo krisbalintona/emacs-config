@@ -24,7 +24,7 @@
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
-  (defvar kb/org-hugo-exclude-tags '("project" "ATTACH")
+  (defvar kb/org-hugo-exclude-tags '("project" "ATTACH" "draft")
     "Tags to exclude. Look at
 `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   :config
