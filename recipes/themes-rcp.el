@@ -16,6 +16,9 @@
 ;;;; Fringes
 (set-fringe-style 1)               ; Equivalent to the "minimal" `fringe-styles'
 
+;;;; Line-spacing
+(setq line-spacing 1)
+
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
@@ -165,6 +168,60 @@ here: https://github.com/TheVaffel/emacs"
 (use-package which-func
   :init
   (which-func-mode)
+  )
+
+;;; Other
+;;;; Fontaine
+;; Test faces without restart Emacs!
+(use-package fontaine
+  :init
+  (setq fontaine-presets
+        '((regular
+           :default-family "Hack"
+           :default-weight normal
+           :default-height 100
+           :fixed-pitch-family "Fira Code"
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "Noto Sans"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.0
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family "Source Code Pro"
+           :italic-slant italic
+           :line-spacing 1)
+          (large
+           :default-family "Iosevka"
+           :default-weight normal
+           :default-height 150
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil ; use whatever the underlying face has
+           :italic-slant italic
+           :line-spacing 1)
+          ;; Mine
+          (test
+           :default-family "Iosevka Term SS04"
+           :default-weight normal
+           :default-height 140
+           :fixed-pitch-family "Iosevka Comfy"
+           :fixed-pitch-weight nil
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "Open Sans"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.10
+           :bold-family nil
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing 1)))
   )
 
 ;;; themes-rcp.el ends here

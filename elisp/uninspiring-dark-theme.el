@@ -69,7 +69,8 @@
   "Iosevka Term SS04"
   )
 (defvar uninspiring-dark-fixed-pitch
-  "Hack Nerd Font Mono"
+  ;; "Hack Nerd Font Mono"
+  "Iosevka Comfy"
   )
 (defvar uninspiring-dark-variable-pitch
   ;; "LiterationSerif Nerd Font"           ; Variable
@@ -84,9 +85,9 @@
    'uninspiring-dark
 
 ;;;; Standard faces broad
-   `(default ((t (:font ,uninspiring-dark-default :height 136 :foreground ,uninspiring-dark-fg :background ,uninspiring-dark-bg))))
-   `(fixed-pitch ((t (:font ,uninspiring-dark-fixed-pitch :height 1.03))))
-   `(variable-pitch ((t (:font ,uninspiring-dark-variable-pitch :height 1.03))))
+   `(default ((t (:font ,uninspiring-dark-default :height 140 :foreground ,uninspiring-dark-fg :background ,uninspiring-dark-bg))))
+   `(fixed-pitch ((t (:font ,uninspiring-dark-fixed-pitch :height 1.0))))
+   `(variable-pitch ((t (:font ,uninspiring-dark-variable-pitch :height 1.1))))
    `(success ((t (:foreground ,uninspiring-dark-green))))
    `(warning ((t (:foreground ,uninspiring-dark-orange-2))))
    `(error ((t (:foreground ,uninspiring-dark-red-1 :weight bold))))
