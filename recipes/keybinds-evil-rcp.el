@@ -80,26 +80,28 @@
   (evil-collection-outline-bind-tab-p nil)
   (evil-collection-mode-list
    '(2048-game ag alchemist ;; anaconda-mode
-               apropos arc-mode auto-package-update bm bookmark
+               apropos arc-mode atomic-chrome auto-package-update beginend bm bookmark
                (buff-menu "buff-menu")
-               calc calendar cider cmake-mode comint company compile consult
+               calc calendar cider cmake-mode comint company compile consult corfu
                (custom cus-edit)
-               cus-theme dashboard daemons deadgrep debbugs debug devdocs dictionary diff-mode dired dired-sidebar disk-usage distel doc-view docker ebib edbi edebug ediff eglot explain-pause-mode elfeed elisp-mode elisp-refs elisp-slime-nav embark emms epa ert eshell eval-sexp-fu evil-mc eww fanyi finder flycheck flymake free-keys geiser ggtags git-timemachine gnus go-mode grep guix hackernews helm help helpful hg-histedit hungry-delete ibuffer image image-dired image+ imenu imenu-list
+               cus-theme dashboard daemons deadgrep debbugs debug devdocs dictionary diff-hl diff-mode dired dired-sidebar disk-usage distel doc-view docker ebib ebuku edbi edebug ediff eglot explain-pause-mode eldoc elfeed elisp-mode elisp-refs elisp-slime-nav embark emms emoji epa ert eshell eval-sexp-fu evil-mc eww fanyi finder flycheck flymake forge free-keys geiser ggtags git-timemachine gnus go-mode grep guix hackernews helm help helpful hg-histedit hungry-delete ibuffer image image-dired image+ imenu imenu-list
                (indent "indent")
-               indium info ivy js2-mode leetcode lispy log-edit log-view lsp-ui-imenu lua-mode kotlin-mode macrostep man magit magit-todos monky mpdel mu4e mu4e-conversation neotree newsticker notmuch nov
+               indium info ivy js2-mode leetcode lispy log-edit log-view lsp-ui-imenu lua-mode kotlin-mode macrostep man
+               (magit magit-repos magit-submodule)
+               magit-section magit-todos markdown-mode monky mpc mpdel mu4e mu4e-conversation neotree newsticker notmuch nov
                (occur replace)
-               omnisharp org-present zmusic osx-dictionary outline p4
+               omnisharp org org-present org-roam osx-dictionary outline p4
                (package-menu package)
                pass
                (pdf pdf-view)
                popup proced
                (process-menu simple)
                prodigy profiler ;; python
-               quickrun racer racket-describe realgud reftex restclient rg ripgrep rjsx-mode robe rtags ruby-mode scroll-lock sh-script simple slime sly speedbar tab-bar tablist tabulated-list tar-mode telega
+               quickrun racer racket-describe realgud reftex restclient rg ripgrep rjsx-mode robe rtags ruby-mode scheme scroll-lock selectrum sh-script shortdoc simple simple-mpc slime sly speedbar tab-bar tablist tabulated-list tar-mode telega
                (term term ansi-term multi-term)
-               tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff view vlf vterm w3m wdired wgrep which-key woman xref youtube-dl
-               (ztree ztree-diff)
-               xwidget))
+               tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff vertico view vlf vterm vundo w3m wdired wgrep which-key woman xref xwidget yaml-mode youtube-dl zmusic
+               (ztree ztree-diff ztree-dir)
+               ))
   :preface
   ;; Put here to be extra sure that this variable is set before evil-collection
   (setq evil-want-keybinding nil)
