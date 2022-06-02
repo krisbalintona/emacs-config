@@ -41,7 +41,11 @@
 ;; instead of `~/.bashrc' or `~/.zshrc'. See here for more:
 ;; https://github.com/purcell/exec-path-from-shell
 (setq exec-path-from-shell-arguments nil)
-(setq exec-path-from-shell-variables '("PATH" "MANPATH" "BROWSER"))
+(setq exec-path-from-shell-variables
+      '("PATH" "MANPATH" "BROWSER"
+        ;; For `ssh-agent'. Also reliant on systemd service. See
+        ;; https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
+        "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
 (exec-path-from-shell-initialize)
 ;; Found here:
 ;; https://www.reddit.com/r/emacs/comments/s6zkb6/comment/ht794j7/?utm_source=share&utm_medium=web2x&context=3
