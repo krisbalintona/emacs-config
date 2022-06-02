@@ -10,7 +10,7 @@
 (require 'keybinds-general-rcp)
 
 ;;; Dired
-;;;; Dired
+;;;; This
 ;; Emacs' file manager
 (use-package dired
   :straight nil
@@ -32,7 +32,24 @@
   (dired-create-destination-dirs 'ask)
   :config
   (general-unbind '(normal visual motion) dired-mode-map "SPC") ; Unbind SPC so leader key is avaiable
-  )
+
+  ;; Mark files and do a sexp in their buffers. Based off
+  ;; https://superuser.com/a/176629
+  (defun kb/dired-do-sexp (sexp &optional prefix)
+    "Run SEXP in marked dired files. If called with
+PREFIX (`universal-argument' if interactively), run a particular
+command."
+    (interactive (list (if current-prefix-arg
+                           (read-extended-command) ; Command
+                         (read--expression "Run expression on marked files: ")) ; Sexp
+                       current-prefix-arg))
+    (save-window-excursion
+      (mapc #'(lambda (filename)
+                (with-current-buffer (find-file-noselect filename)
+                  (if prefix
+                      (call-interactively (intern sexp))             ; Command
+                    (funcall-interactively 'eval-expression sexp)))) ; Sexp
+            (dired-get-marked-files)))))
 
 ;;;; All-the-icons-dired
 ;; Add icons which represent file types

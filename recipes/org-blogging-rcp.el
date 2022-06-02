@@ -92,8 +92,7 @@ exist."
                      ;; value of hugo_draft is true
                      (org-roam-with-temp-buffer file
                        (let* ((keywords '("title" "hugo_publishdate" "hugo_draft"))
-                              (collected-keywords (org-collect-keywords keywords))
-                              )
+                              (collected-keywords (org-collect-keywords keywords)))
                          (and
                           (assoc "TITLE" collected-keywords)      ; Has title
                           ;; If hugo_draft is false, then the hugo_publishdate
