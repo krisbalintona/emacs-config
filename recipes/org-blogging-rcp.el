@@ -13,7 +13,7 @@
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
   :defer 7
-  :commands kb/ox-hugo-org-roam-sync-all
+  :commands kb/org-hugo-org-roam-sync-all
   :ensure-system-package (hugo go)
   :custom
   (org-hugo-base-dir (concat org-directory "hugo/"))
@@ -27,7 +27,7 @@
   (defvar kb/org-hugo-exclude-tags '("project" "ATTACH" "draft")
     "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   :config
-  (defun kb/ox-hugo--add-tag-maybe ()
+  (defun kb/org-hugo--add-tag-maybe ()
     "Add a FILETAGS value if necessary. Right now I only need the
 draft tag for nodes with a value of true for hugo_draft."
     (when (and (not (active-minibuffer-window))
@@ -46,11 +46,11 @@ draft tag for nodes with a value of true for hugo_draft."
              (org-roam-tag-add '("draft")))
             )))))
   ;; FIXME 2022-06-01: Point isn't preserved if added to `before-save-hook'
-  (add-hook 'before-save-hook #'kb/ox-hugo--add-tag-maybe)
+  (add-hook 'before-save-hook #'kb/org-hugo--add-tag-maybe)
 
   ;; Set the value of the hugo_bundle keyword (for blog post org files) if it is
   ;; empty. Inspired by `vulpea-project-update-tag'
-  (defun kb/ox-hugo--add-hugo-metadata-maybe ()
+  (defun kb/org-hugo--add-hugo-metadata-maybe ()
     "Update the hugo_bundle, export_file_name, and hugo_draft file
 properties in the current buffer hugo buffer if they do not
 exist."
@@ -78,11 +78,11 @@ exist."
                               ("HUGO_DRAFT" default-hugo-draft)))
             (org-roam-set-keyword keyword new-value))))))
   ;; FIXME 2022-06-01: Point isn't preserved if added to `before-save-hook'
-  (add-hook 'before-save-hook #'kb/ox-hugo--add-hugo-metadata-maybe)
+  (add-hook 'before-save-hook #'kb/org-hugo--add-hugo-metadata-maybe)
 
   ;; Org-export all files in an org-roam subdirectory. Modified from
   ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/
-  (defun kb/ox-hugo-org-roam-sync-all ()
+  (defun kb/org-hugo-org-roam-sync-all ()
     "Export all org-roam files to Hugo in my blogging directory."
     (interactive)
     (require 'org-roam)
@@ -112,8 +112,8 @@ exist."
                    (kb/find-blog-files-org)))
       (with-current-buffer (find-file-noselect file)
         (read-only-mode -1)
-        (kb/ox-hugo--add-tag-maybe)
-        (kb/ox-hugo--add-hugo-metadata-maybe)
+        (kb/org-hugo--add-tag-maybe)
+        (kb/org-hugo--add-hugo-metadata-maybe)
         (org-hugo-export-wim-to-md)
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
           (kill-buffer)))))
