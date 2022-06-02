@@ -264,6 +264,7 @@
                           (latexindent . texlive-latexindent-meta)
                           (luafmt . "sudo npm install -g lua-fmt")
                           (google-java-format)
+                          (shfmt)
                           )
   :config
   ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
