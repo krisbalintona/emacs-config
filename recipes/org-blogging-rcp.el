@@ -24,8 +24,12 @@
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
-  (defvar kb/org-hugo-exclude-tags '("project" "ATTACH" "draft")
+  (defvar kb/org-hugo-exclude-tags '("project" "ATTACH" "draft" "series")
     "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
+  (defvar kb/org-hugo-bundle-workflow t
+    "Whether I am using a Hugo bundle workflow. Relevant for my
+`kb/org-hugo--get-pub-dir'. A non-nil value means bundles are
+given a default name; see `kb/org-hugo--get-pub-dir'.")
   :config
   (defun kb/org-hugo--add-tag-maybe ()
     "Add a FILETAGS value if necessary. Right now I only need the
@@ -51,14 +55,13 @@ draft tag for nodes with a value of true for hugo_draft."
   ;; Set the value of the hugo_bundle keyword (for blog post org files) if it is
   ;; empty. Inspired by `vulpea-project-update-tag'
   (defun kb/org-hugo--add-hugo-metadata-maybe ()
-    "Update the hugo_bundle, export_file_name, and hugo_draft file
-properties in the current buffer hugo buffer if they do not
-exist."
+    "Update the export_file_name and hugo_draft file properties in
+the current buffer hugo buffer if they do not exist."
     (when (and (not (active-minibuffer-window))
                (member buffer-file-name (kb/find-blog-files-org))
                (assoc "TITLE" (org-collect-keywords '("title"))))
       (save-excursion
-        (let* ((keywords '("hugo_bundle" "export_file_name" "hugo_draft"))
+        (let* ((keywords '("export_file_name" "hugo_draft"))
                (keywords (mapcar #'(lambda (elt) (upcase elt)) keywords))
                (collected-keywords (org-collect-keywords keywords))
                (non-existent-keywords (cl-remove-if
@@ -67,13 +70,11 @@ exist."
                (empty-keywords (cl-remove-if-not
                                 (lambda (keyword) (string= (cadr (assoc keyword collected-keywords)) ""))
                                 keywords))
-               (default-bundle (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
                (default-export-file-name "index")
                (default-hugo-draft "true")
                (new-value))
           (dolist (keyword (append non-existent-keywords empty-keywords))
             (setq new-value (pcase keyword
-                              ("HUGO_BUNDLE" default-bundle)
                               ("EXPORT_FILE_NAME" default-export-file-name)
                               ("HUGO_DRAFT" default-hugo-draft)))
             (org-roam-set-keyword keyword new-value))))))
@@ -121,6 +122,11 @@ exist."
     (cl-set-difference tag-list kb/org-hugo-exclude-tags :test #'equal))
   (add-to-list 'org-hugo-tag-processing-functions #'kb/org-hugo--tag-processing-fn-ignore-tags-maybe)
 
+  (defun kb/org-hugo-title-slug (title)
+    "Turn an org-roam processed slug into a hyphenated slug, that is,
+replacing underscores with hyphens. Returns a string."
+    (file-name-as-directory (string-replace "_" "-" title)))
+
   ;; NOTE 2022-03-12: This is a janky way to use page bundles with ox-hugo.
   ;; Requires the bundle name of each post to match the post's file name.
   (defun kb/org-hugo-link (link desc info)
@@ -165,8 +171,13 @@ and rewrite link paths to make blogging more seamless."
                            ;; (message "[org-hugo-link DBG] title %s" (plist-get info :title))
                            ;; Treat links to `file.org' as links to `file.md'.
                            (if (string= ".org" (downcase (file-name-extension destination ".")))
-                               (if (plist-get info :hugo-bundle)
-                                   (concat (file-name-sans-extension destination) "/index.md")
+                               ;; NOTE 2022-06-02: I made changes here to have
+                               ;; links to bundle pages to work. If the
+                               ;; hugo_bundle file property exists, then change
+                               ;; the destination appropriately.
+                               (if (and kb/org-hugo-bundle-workflow (plist-get info :hugo-bundle))
+                                   (concat (kb/org-hugo-title-slug (file-name-sans-extension destination))
+                                           "index.md")
                                  (concat (file-name-sans-extension destination) ".md"))
                              destination))))
                ;; (message "[org-hugo-link DBG] plain-text path: %s" path)
@@ -516,7 +527,46 @@ and rewrite link paths to make blogging more seamless."
             (if (string-prefix-p "{{< relref " path)
                 (format "[%s](%s)" path path)
               (format "<%s>" path)))))))))
-  (advice-add 'org-hugo-link :override #'kb/org-hugo-link))
+  (advice-add 'org-hugo-link :override #'kb/org-hugo-link)
+
+  ;; Have a default bundle name
+  (defun kb/org-hugo--get-pub-dir (info)
+    "Return the post publication directory path.
+
+The publication directory is created if it does not exist.
+
+INFO is a plist used as a communication channel.
+
+My version of this function sets the default bundle-dir to be the
+slug of the file's title (according to `org-roam-node-slug') with
+underscores replaced for hyphens."
+    (let* ((base-dir (if (plist-get info :hugo-base-dir)
+                         (file-name-as-directory (plist-get info :hugo-base-dir))
+                       (user-error "It is mandatory to set the HUGO_BASE_DIR property or the `org-hugo-base-dir' local variable")))
+           (content-dir "content/")
+           (section-path (org-hugo--get-section-path info))
+           ;; Use the bundle path if its value exists (with underscores replaced
+           ;; with hyphens). If it doesn't, then defer to using the file's title
+           ;; slug as a default value, but only if `kb/org-hugo-bundle-workflow'
+           ;; is non-nil. Otherwise, have bundle-dir be an empty string.
+           (bundle-dir (let (
+                             (bundle-path (or ; Hugo bundle set in the post subtree gets higher precedence
+                                           (org-hugo--entry-get-concat nil "EXPORT_HUGO_BUNDLE" "/")
+                                           (plist-get info :hugo-bundle))) ;This is mainly to support per-file flow
+                             (slug (org-roam-node-slug
+                                    (org-roam-node-create :title (car (plist-get info :title))))))
+                         (cond
+                          ((and bundle-path ; Keyword has to exist
+                                (not (string= bundle-path ""))) ; But value can't be an empty string
+                           (kb/org-hugo-title-slug bundle-path))
+                          (kb/org-hugo-bundle-workflow
+                           (kb/org-hugo-title-slug slug))
+                          (t ""))))
+           (pub-dir (let ((dir (concat base-dir content-dir section-path bundle-dir)))
+                      (make-directory dir :parents) ;Create the directory if it does not exist
+                      dir)))
+      (file-truename pub-dir)))
+  (advice-add 'org-hugo--get-pub-dir :override #'kb/org-hugo--get-pub-dir))
 
 ;;; org-blogging-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
