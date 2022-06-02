@@ -605,8 +605,6 @@ re-align the table if necessary. (Necessary because org-mode has a
 (use-package typo
   :ghook 'org-mode-hook
   :config
-  (defvar kb/typo-cycle-message t
-    "Whether beginning a `typo' cycle echos to the minibuffer.")
   (defun kb/typo-insert-cycle (cycle)
     "Insert the strings in CYCLE"
     (let ((i 0)
@@ -615,10 +613,14 @@ re-align the table if necessary. (Necessary because org-mode has a
       (insert (nth i cycle))
       (setq repeat-key-str (format-kbd-macro (vector repeat-key) nil))
       (while repeat-key
-        (if kb/typo-cycle-message       ; Wrapped in if statement
-            (message "(Inserted %s; type %s for other options)"
-                     (typo-char-name (nth i cycle))
-                     repeat-key-str))
+
+        ;; Don't show the echo messages about cycling when typing in the
+        ;; minibuffer
+        (unless (minibufferp (current-buffer))
+          (message "(Inserted %s; type %s for other options)"
+                   (typo-char-name (nth i cycle))
+                   repeat-key-str))
+
         (if (equal repeat-key (read-event))
             (progn
               (clear-this-command-keys t)
@@ -637,10 +639,9 @@ re-align the table if necessary. (Necessary because org-mode has a
   (define-typo-cycle typo-cycle-right-single-quotation-mark
     "Cycle through the typewriter apostrophe and the right quotation mark.
 
-If used with a numeric prefix argument N, N typewriter apostrophes
-will be inserted."
-    ("'" "’"))                          ; Swapped these two
-  )
+If used with a numeric prefix argument N, N typewriter
+apostrophes will be inserted."
+    ("'" "’")))                         ; Swapped these two
 
 ;;; org-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
