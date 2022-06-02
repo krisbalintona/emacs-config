@@ -24,13 +24,15 @@
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :init
+  ;; Variables
   (defvar kb/org-hugo-exclude-tags '("project" "ATTACH" "draft" "series")
     "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   (defvar kb/org-hugo-bundle-workflow t
     "Whether I am using a Hugo bundle workflow. Relevant for my
 `kb/org-hugo--get-pub-dir'. A non-nil value means bundles are
 given a default name; see `kb/org-hugo--get-pub-dir'.")
-  :config
+
+  ;; Functions
   (defun kb/org-hugo--add-tag-maybe ()
     "Add a FILETAGS value if necessary. Right now I only need the
 draft tag for nodes with a value of true for hugo_draft."
@@ -120,11 +122,6 @@ the current buffer hugo buffer if they do not exist."
         (org-hugo-export-wim-to-md)
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
           (kill-buffer)))))
-
-  (defun kb/org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list info)
-    "Ignore tags which match a string found in `kb/org-hugo-exclude-tags'."
-    (cl-set-difference tag-list kb/org-hugo-exclude-tags :test #'equal))
-  (add-to-list 'org-hugo-tag-processing-functions #'kb/org-hugo--tag-processing-fn-ignore-tags-maybe)
 
   (defun kb/org-hugo-title-slug (title)
     "Turn an org-roam processed slug into a hyphenated slug, that is,
@@ -570,7 +567,12 @@ underscores replaced for hyphens."
                       (make-directory dir :parents) ;Create the directory if it does not exist
                       dir)))
       (file-truename pub-dir)))
-  (advice-add 'org-hugo--get-pub-dir :override #'kb/org-hugo--get-pub-dir))
+  (advice-add 'org-hugo--get-pub-dir :override #'kb/org-hugo--get-pub-dir)
+  :config
+  (defun kb/org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list info)
+    "Ignore tags which match a string found in `kb/org-hugo-exclude-tags'."
+    (cl-set-difference tag-list kb/org-hugo-exclude-tags :test #'equal))
+  (add-to-list 'org-hugo-tag-processing-functions #'kb/org-hugo--tag-processing-fn-ignore-tags-maybe))
 
 ;;; org-blogging-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
