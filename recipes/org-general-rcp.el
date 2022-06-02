@@ -15,7 +15,7 @@
                       :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
                       :pre-build ("make" "oldorg" "EMACS=/usr/local/bin/emacs")
                       :files (:defaults "lisp")
-                      :includes (ox ox-odt ox-latex org-footnote org-attach org-refile))
+                      :includes (ox ox-odt ox-latex org-footnote org-attach org-refile oc))
   :gfhook
   'prettify-symbols-mode
   'variable-pitch-mode

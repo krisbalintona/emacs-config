@@ -13,7 +13,6 @@
 ;;; Org-cite
 ;; Built-in citations in org-mode
 (use-package oc
-  :straight nil
   :general
   (:keymaps 'org-mode-map
             [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
