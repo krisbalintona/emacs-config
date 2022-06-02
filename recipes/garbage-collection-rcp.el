@@ -28,7 +28,7 @@
 
   If you experience freezing, decrease this. If you experience stuttering,
   increase this.")
-(add-hook 'emacs-startup-hook #'(lambda () (setq gc-cons-threshold better-gc-cons-threshold)))
+(add-hook 'after-init-hook #'(lambda () (setq gc-cons-threshold better-gc-cons-threshold)) 100)
 
 ;;; Increasing GC threshold
 ;;;; Minibuffer
