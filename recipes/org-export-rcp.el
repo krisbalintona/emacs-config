@@ -74,23 +74,22 @@
 [NO-DEFAULT-PACKAGES]
 
 % ** MLA package
-\\usepackage{" org-directory "latex/packages/mla}")
+\\usepackage{" org-directory "latex/packages/mla}\n")
           ("\\section*{%s}" . "\\section*{%s}")
           ("\\subsection*{%s}" . "\\subsection*{%s}")
           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
           ("\\paragraph{%s}" . "\\paragraph*{%s}")
           ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
           )
-        (alist-get "remove" org-latex-classes nil nil #'string=)
-        `("review"
-          ,(concat "% * Preamble
+        (alist-get "review" org-latex-classes nil nil #'string=)
+        `(,(concat "% * Preamble
 \\documentclass[a4paper,landscape]{article}
 
 % * Default packages?
 [NO-DEFAULT-PACKAGES]
 
 % ** Review package
-\\usepackage{" org-directory "latex/packages/review}")
+\\usepackage{" org-directory "latex/packages/review}\n")
           ("\\section{%s}" . "\\section*{%s}")
           ("\\subsection{%s}" . "\\subsection*{%s}")
           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
