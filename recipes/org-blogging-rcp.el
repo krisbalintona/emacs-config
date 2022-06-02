@@ -77,8 +77,6 @@ exist."
                               ("EXPORT_FILE_NAME" default-export-file-name)
                               ("HUGO_DRAFT" default-hugo-draft)))
             (org-roam-set-keyword keyword new-value))))))
-  ;; FIXME 2022-06-01: Point isn't preserved if added to `before-save-hook'
-  (add-hook 'before-save-hook #'kb/org-hugo--add-hugo-metadata-maybe)
 
   ;; Org-export all files in an org-roam subdirectory. Modified from
   ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/
