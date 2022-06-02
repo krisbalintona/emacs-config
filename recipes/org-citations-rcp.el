@@ -139,13 +139,14 @@ manually add one myself."
     (let ((title (citar--format-entry-no-widths (cdr keys-entries)
                                                 "${author editor}${date urldate} :: ${title}")))
       (org-roam-capture- :templates
-                         '(("r" "reference" plain "%?" :if-new
-                            (file+head "${citekey}.org"
-                                       ":PROPERTIES:
+                         '(("r" "reference" plain
+                            "%?"
+                            :if-new (file+head "references/${citekey}.org"
+                                               ":PROPERTIES:
 :ROAM_REFS: [cite:@${citekey}]
 :END:
 #+title: ${title}
-#+filetags: %(kb/insert-lit-category)")
+#+filetags: %(kb/insert-lit-category)\n")
                             :immediate-finish t
                             :unnarrowed t))
                          :info (list :citekey (car keys-entries))

@@ -37,7 +37,7 @@
 
 ;;; Other
 (defvar kb/bib-files
-  (list (expand-file-name (concat kb/roam-dir "reference/master-lib.bib"))))
+  (list (expand-file-name (concat kb/roam-dir "references/master-lib.bib"))))
 
 ;;; custom-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -202,39 +202,30 @@ Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
          :immediate-finish t)
         ("p" "Paper" plain
          ""
-         :if-new (file+head "${slug}.org"
+         :if-new (file+head "papers/${slug}.org"
                             "#+title: ${title}
-#+filetags: :paper:
+#+filetags: %^{Course}
 #+latex_class: mla
-#+cite_export: biblatex
-#+creator: PROFESSOR
-#+keywords: COURSE\n")
+#+professor:
+#+course:\n")
          :unnarrowed t
          :immediate-finish t)
         ("b" "Blog" plain
          ""
          :if-new (file+head "blog/${slug}.org"
                             "#+title: ${title}
-#+filetags: :blog:
-#+hugo_bundle: 
+#+filetags: 
+#+hugo_bundle:
 #+export_file_name: index
-#+hugo_tags: 
-#+hugo_categories: 
+#+hugo_tags:
+#+hugo_categories:
 #+hugo_publishdate:
-#+hugo_lastmod: 
+#+hugo_lastmod:
 #+hugo_custom_front_matter:
-#+hugo_draft: true ")
+#+hugo_draft: true\n")
          :unnarrowed t
          :immediate-finish t)
-        ("l" "Lit Note" plain
-         ""
-         :if-new (file+head "${slug}.org"
-                            "#+title: ${title}\n#+filetags: %(kb/insert-lit-category)\nSource: \nDate: %<%b %d, %Y>")
-         :unnarrowed t
-         :immediate-finish t
-         :jump-to-captured t)
-        )
-      )
+        ))
 
 ;;;; Org-roam-dailies-capture-templates
 (with-eval-after-load 'org-roam
