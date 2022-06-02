@@ -120,13 +120,11 @@ command."
 ;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
-  :ghook 'dired-mode-hook
   :general (:keymaps 'dired-mode-map
                      :states 'normal
                      "H" 'dired-hide-dotfiles-mode)
   :custom
-  (dired-hide-dotfiles-verbose nil) ; No annoying announcements in echo area anymore
-  )
+  (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
 ;;; Misc
 ;;;; Consult-dir
