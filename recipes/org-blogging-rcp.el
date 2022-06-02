@@ -91,23 +91,27 @@ the current buffer hugo buffer if they do not exist."
                      ;; Don't look at files without the title, hugo_publishdate,
                      ;; or hugo_draft keywords or with an empty value. The
                      ;; criterion of having a hugo_publishdate is ignored if the
-                     ;; value of hugo_draft is true
+                     ;; value of hugo_draft is true. The criteria of a
+                     ;; hugo_pubishdate and hugo_draft are ignored if there is a
+                     ;; "series" filetag.
                      (org-roam-with-temp-buffer file
-                       (let* ((keywords '("title" "hugo_publishdate" "hugo_draft"))
-                              (collected-keywords (org-collect-keywords keywords)))
-                         (and
-                          (assoc "TITLE" collected-keywords)      ; Has title
-                          ;; If hugo_draft is false, then the hugo_publishdate
-                          ;; should exist and have a value. If hugo_draft
-                          ;; doesn't exist, then it'll return nil.
-                          (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
-                            ("false"
-                             (let* ((publish-pair (assoc "HUGO_PUBLISHDATE" collected-keywords))
-                                    (date (cadr publish-pair)))
-                               (and (stringp date)
-                                    (not (string= date "")))))
-                            ("true" t)))
-                         )))
+                       (let* ((keywords '("title" "filetags" "hugo_publishdate" "hugo_draft"))
+                              (collected-keywords (org-collect-keywords keywords))
+                              (has-title-p (assoc "TITLE" collected-keywords))
+                              (is-series-p (string-match-p "series" (or (cadr (assoc "FILETAGS" collected-keywords)) ""))))
+                         ;; If hugo_draft is false, then the hugo_publishdate
+                         ;; should exist and have a value. If hugo_draft doesn't
+                         ;; exist, then it'll return nil.
+                         (cond
+                          ((and has-title-p is-series-p))
+                          (has-title-p
+                           (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
+                             ("false"
+                              (let* ((publish-pair (assoc "HUGO_PUBLISHDATE" collected-keywords))
+                                     (date (cadr publish-pair)))
+                                (and (stringp date)
+                                     (not (string= date "")))))
+                             ("true" t)))))))
                    (kb/find-blog-files-org)))
       (with-current-buffer (find-file-noselect file)
         (read-only-mode -1)
