@@ -35,10 +35,13 @@ draft tag for nodes with a value of true for hugo_draft."
                (assoc "TITLE" (org-collect-keywords '("title"))))
       (save-excursion
         (let* ((keywords '("filetags" "hugo_draft"))
-               (collected-keywords (org-collect-keywords keywords)))
-          (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
+               (collected-keywords (org-collect-keywords keywords))
+               (hugo_draft_value (cadr (assoc "HUGO_DRAFT" collected-keywords)))
+               (filetags_value (cadr (assoc "FILETAGS" collected-keywords))))
+          (pcase hugo_draft_value
             ("false"
-             (org-roam-tag-remove '("draft")))
+             (when (stringp filetags_value)
+               (org-roam-tag-remove '("draft"))))
             ("true"
              (org-roam-tag-add '("draft")))
             )))))
