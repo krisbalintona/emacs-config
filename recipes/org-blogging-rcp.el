@@ -111,6 +111,7 @@ exist."
                          )))
                    (kb/find-blog-files-org)))
       (with-current-buffer (find-file-noselect file)
+        (read-only-mode -1)
         (kb/ox-hugo--add-tag-maybe)
         (kb/ox-hugo--add-hugo-metadata-maybe)
         (org-hugo-export-wim-to-md)
