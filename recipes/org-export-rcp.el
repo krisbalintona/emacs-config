@@ -98,10 +98,102 @@
           ))
   )
 
-;;;; Org-export latex backend
-;; Support more file keywords for MLA papers
+;;;; Custom org-export latex backend
+;; Support more file keywords; used for my papers
 (with-eval-after-load 'ox
-  (org-export-define-backend 'latex ; Recognize the professor and course keywords
+  (defun kb/org-latex-template (contents info)
+    "This is my custom definition of `org-latex-template' which also
+processes the professor and course file properties."
+    (let ((title (org-export-data (plist-get info :title) info))
+          (spec (org-latex--format-spec info)))
+      (concat
+       ;; Time-stamp.
+       (and (plist-get info :time-stamp-file)
+            (format-time-string "%% Created %Y-%m-%d %a %H:%M\n"))
+       ;; LaTeX compiler.
+       (org-latex--insert-compiler info)
+       ;; Document class and packages.
+       (org-latex-make-preamble info)
+       ;; Possibly limit depth for headline numbering.
+       (let ((sec-num (plist-get info :section-numbers)))
+         (when (integerp sec-num)
+           (format "\\setcounter{secnumdepth}{%d}\n" sec-num)))
+       ;; Author.
+       (let ((author (and (plist-get info :with-author)
+                          (let ((auth (plist-get info :author)))
+                            (and auth (org-export-data auth info)))))
+             (email (and (plist-get info :with-email)
+                         (org-export-data (plist-get info :email) info))))
+         (cond ((and author email (not (string= "" email)))
+                (format "\\author{%s\\thanks{%s}}\n" author email))
+               ((or author email) (format "\\author{%s}\n" (or author email)))))
+       ;; Date.
+       (let ((date (and (plist-get info :with-date) (org-export-get-date info))))
+         (format "\\date{%s}\n" (org-export-data date info)))
+       ;; Title and subtitle.
+       (let* ((subtitle (plist-get info :subtitle))
+              (formatted-subtitle
+               (when subtitle
+                 (format (plist-get info :latex-subtitle-format)
+                         (org-export-data subtitle info))))
+              (separate (plist-get info :latex-subtitle-separate)))
+         (concat
+          (format "\\title{%s%s}\n" title
+                  (if separate "" (or formatted-subtitle "")))
+          (when (and separate subtitle)
+            (concat formatted-subtitle "\n"))))
+
+       ;; Process the professor and course keywords
+       (let ((last-name (org-export-data (plist-get info :professor) info)))
+         (format "\\newcommand{\\professor}{%s}\n"
+                 (if (string= last-name "")
+                     "PROFESSOR"        ; When empty or nil
+                   (concat "Professor " last-name))))
+       (let ((course (org-export-data (plist-get info :course) info)))
+         (format "\\newcommand{\\course}{%s}\n"
+                 (if (string= course "")
+                     "COURSE"           ; When empty or nil
+                   course)))
+
+       ;; Hyperref options.
+       (let ((template (plist-get info :latex-hyperref-template)))
+         (and (stringp template)
+              (format-spec template spec)))
+       ;; engrave-faces-latex preamble
+       (when (and (eq org-latex-src-block-backend 'engraved)
+                  (org-element-map (plist-get info :parse-tree)
+                      '(src-block inline-src-block) #'identity
+                      info t))
+         (org-latex-generate-engraved-preamble info t))
+       ;; Document start.
+       "\\begin{document}\n\n"
+       ;; Title command.
+       (let* ((title-command (plist-get info :latex-title-command))
+              (command (and (stringp title-command)
+                            (format-spec title-command spec))))
+         (org-element-normalize-string
+          (cond ((not (plist-get info :with-title)) nil)
+                ((string= "" title) nil)
+                ((not (stringp command)) nil)
+                ((string-match "\\(?:[^%]\\|^\\)%s" command)
+                 (format command title))
+                (t command))))
+       ;; Table of contents.
+       (let ((depth (plist-get info :with-toc)))
+         (when depth
+           (concat (when (integerp depth)
+                     (format "\\setcounter{tocdepth}{%d}\n" depth))
+                   (plist-get info :latex-toc-command))))
+       ;; Document's body.
+       contents
+       ;; Creator.
+       (and (plist-get info :with-creator)
+            (concat (plist-get info :creator) "\n"))
+       ;; Document end.
+       "\\end{document}")))
+
+  ;; Recognize the professor and course keywords
+  (org-export-define-backend 'latex
     '((bold . org-latex-bold)
       (center-block . org-latex-center-block)
       (clock . org-latex-clock)
@@ -145,7 +237,8 @@
       (table-cell . org-latex-table-cell)
       (table-row . org-latex-table-row)
       (target . org-latex-target)
-      (template . org-latex-template)
+      ;; Use template which processes professor and course keywords
+      (template . kb/org-latex-template)
       (timestamp . org-latex-timestamp)
       (underline . org-latex-underline)
       (verbatim . org-latex-verbatim)
@@ -221,106 +314,7 @@
       (:latex-toc-command nil nil org-latex-toc-command)
       (:latex-compiler "LATEX_COMPILER" nil org-latex-compiler)
       ;; Redefine regular options.
-      (:date "DATE" nil "\\today" parse)))
-  )
-
-;;;; kb/org-latex-template
-(with-eval-after-load 'ox-latex
-  (defun kb/org-latex-template (contents info) ; Parse the professor and course keywords
-    "Return complete document string after LaTeX conversion.
-CONTENTS is the transcoded contents string.  INFO is a plist
-holding export options."
-    (let ((title (org-export-data (plist-get info :title) info))
-          (spec (org-latex--format-spec info)))
-      (concat
-       ;; Time-stamp.
-       (and (plist-get info :time-stamp-file)
-            (format-time-string "%% Created %Y-%m-%d %a %H:%M\n"))
-       ;; LaTeX compiler.
-       (org-latex--insert-compiler info)
-       ;; Document class and packages.
-       (org-latex-make-preamble info)
-       ;; Possibly limit depth for headline numbering.
-       (let ((sec-num (plist-get info :section-numbers)))
-         (when (integerp sec-num)
-           (format "\\setcounter{secnumdepth}{%d}\n" sec-num)))
-       ;; Author.
-       (let ((author (and (plist-get info :with-author)
-                          (let ((auth (plist-get info :author)))
-                            (and auth (org-export-data auth info)))))
-             (email (and (plist-get info :with-email)
-                         (org-export-data (plist-get info :email) info))))
-         (cond ((and author email (not (string= "" email)))
-                (format "\\author{%s\\thanks{%s}}\n" author email))
-               ((or author email) (format "\\author{%s}\n" (or author email)))))
-       ;; Date.
-       (let ((date (and (plist-get info :with-date) (org-export-get-date info))))
-         (format "\\date{%s}\n" (org-export-data date info)))
-       ;; Title and subtitle.
-       (let* ((subtitle (plist-get info :subtitle))
-              (formatted-subtitle
-               (when subtitle
-                 (format (plist-get info :latex-subtitle-format)
-                         (org-export-data subtitle info))))
-              (separate (plist-get info :latex-subtitle-separate)))
-         (concat
-          (format "\\title{%s%s}\n" title
-                  (if separate "" (or formatted-subtitle "")))
-          (when (and separate subtitle)
-            (concat formatted-subtitle "\n"))))
-
-       ;; Professor
-       (let ((last-name (org-export-data (plist-get info :professor) info)))
-         (format "\\newcommand{\\professor}{%s}\n"
-                 (if (string= last-name "")
-                     "PROFESSOR"
-                   (concat "Professor " last-name))))
-
-       ;; Course
-       (let ((course (org-export-data (plist-get info :course) info)))
-         (format "\\newcommand{\\course}{%s}\n"
-                 (if (string= course "")
-                     "COURSE"
-                   course)))
-
-       ;; Hyperref options.
-       (let ((template (plist-get info :latex-hyperref-template)))
-         (and (stringp template)
-              (format-spec template spec)))
-       ;; engrave-faces-latex preamble
-       (when (and (eq org-latex-src-block-backend 'engraved)
-                  (org-element-map (plist-get info :parse-tree)
-                      '(src-block inline-src-block) #'identity
-                      info t))
-         (org-latex-generate-engraved-preamble info t))
-       ;; Document start.
-       "\\begin{document}\n\n"
-       ;; Title command.
-       (let* ((title-command (plist-get info :latex-title-command))
-              (command (and (stringp title-command)
-                            (format-spec title-command spec))))
-         (org-element-normalize-string
-          (cond ((not (plist-get info :with-title)) nil)
-                ((string= "" title) nil)
-                ((not (stringp command)) nil)
-                ((string-match "\\(?:[^%]\\|^\\)%s" command)
-                 (format command title))
-                (t command))))
-       ;; Table of contents.
-       (let ((depth (plist-get info :with-toc)))
-         (when depth
-           (concat (when (integerp depth)
-                     (format "\\setcounter{tocdepth}{%d}\n" depth))
-                   (plist-get info :latex-toc-command))))
-       ;; Document's body.
-       contents
-       ;; Creator.
-       (and (plist-get info :with-creator)
-            (concat (plist-get info :creator) "\n"))
-       ;; Document end.
-       "\\end{document}")))
-  (advice-add 'org-latex-template :override #'kb/org-latex-template)
-  )
+      (:date "DATE" nil "\\today" parse))))
 
 ;;;; Custom links
 (with-eval-after-load 'ol
