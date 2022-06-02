@@ -190,6 +190,10 @@
      ;; magit-insert-unpulled-from-pushremote
      ;; magit-insert-push-branch-header
      ))
+  :preface
+  ;; NOTE 2022-06-01: Set this to `nil' before `magit' is loaded so when `forge'
+  ;; is loaded it does not add keybinds which conflict with `evil-collection'
+  (setq forge-add-default-bindings nil)
   :config
   (evil-set-initial-state 'git-commit-mode 'insert)
 
@@ -257,7 +261,11 @@
 
 ;;;; Forge
 ;; Support for git forges (e.g. GitLab and GitHub).
+;; NOTE 2022-06-01: Make sure a gitlab token is stored in either ~/.authinfo,
+;; ~/.authinfo.gpg, or ~/.netrc. See
+;; https://magit.vc/manual/ghub/Storing-a-Token.html
 (use-package forge
+  :demand t
   :after magit
   )
 
