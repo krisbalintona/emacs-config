@@ -27,20 +27,10 @@
      (docx csl "chicago-fullnote-bibliography.csl") ; Footnote reliant
      (t csl "modern-language-association.csl")
      ))
-  :config
-  ;; NOTE 2021-10-11: Need org-export to be loaded for org files to properly be
-  ;; loaded without calling `org-export-dispatch'.
-  (require 'ox)
-  ;; NOTE 2021-10-11: For some reason these aren't being loaded?
-  (require 'oc-csl)
-  (require 'oc-basic)
-  (require 'oc-bibtex)
-  (require 'oc-biblatex)
-
-  ;; Have citation links be as they were for `org-ref'
-  (set-face-attribute 'org-cite nil :foreground "DarkSeaGreen4")
-  (set-face-attribute 'org-cite-key nil :foreground "forest green")
-  )
+  :custom-face
+  ;; Have citation link faces look closer to as they were for `org-ref'
+  (org-cite ((t (:foreground "DarkSeaGreen4"))))
+  (org-cite-key ((t (:foreground "forest green" :slant italic)))))
 
 ;;; Org-roam-bibtex
 ;; Ivy/helm-bibtex (which integrates with bibtex-completion) integration with
