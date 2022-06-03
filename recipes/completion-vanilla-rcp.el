@@ -67,9 +67,7 @@
                                 vertico-unobtrusive
                                 ))
   :general
-  (:keymaps '(normal insert visual motion)
-            "M-." #'vertico-repeat
-            )
+  ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
             "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
             "<escape>" #'minibuffer-keyboard-quit
@@ -91,8 +89,7 @@
             "C-l" #'kb/vertico-multiform-flat-toggle
             )
   :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
-         (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
-         )
+         (minibuffer-setup . vertico-repeat-save)) ; Make sure vertico state is saved
   :custom
   (vertico-count 13)
   (vertico-resize t)
