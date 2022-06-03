@@ -19,11 +19,10 @@
                      "j" 'undo-tree-visualize-redo
                      "k" 'undo-tree-visualize-undo
                      "l" 'undo-tree-visualize-switch-branch-right)
-  :config
+  :custom
   (evil-undo-system 'undo-tree)
-  :config
-  (global-undo-tree-mode)
-  )
+  :init
+  (global-undo-tree-mode))
 
 ;;; Undo-fu
 ;; Easy and simple undoing
@@ -34,21 +33,18 @@
   (evil-undo-system 'undo-fu)
   ;; Store more undo history to prevent loss of data
   (undo-strong-limit 3000000)
-  (undo-outer-limit 3000000)
-  )
+  (undo-outer-limit 3000000))
 
 ;;; Undo-fu-session
 ;; Keep undo history across sessions
 (use-package undo-fu-session
-  :demand t
   :after undo-fu                        ; Depends on undo-fu
   :custom
   (undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
   (undo-fu-session-directory (no-littering-expand-var-file-name "undo-fu-session/"))
   (undo-fu-session-file-limit 15000)
-  :config
-  (global-undo-fu-session-mode)         ; FIXME 2022-02-23: Doesn't work?
-  )
+  :init
+  (global-undo-fu-session-mode))
 
 ;;; undoing-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
