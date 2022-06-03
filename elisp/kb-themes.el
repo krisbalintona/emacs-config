@@ -42,7 +42,7 @@
 ;;; Variable declarations
 (defvar kb/themes-dark 'modus-vivendi
   "My chosen dark theme.")
-(defvar kb/themes-light 'kaolin-light
+(defvar kb/themes-light 'modus-operandi
   "My chosen light theme.")
 
 (defvar kb/themes-hooks nil
