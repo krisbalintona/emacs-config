@@ -23,9 +23,15 @@
   :general
   (kb/general-keys
     "/" '(flyspell-buffer :wk "Spellcheck buffer"))
+  ;; Unbind all the keys from the mode-map because they're all annoying...
   (:keymaps 'flyspell-mode-map
-            "C-;" nil)      ; I don't like `flyspell-auto-correct-previous-word'
+            "C-," nil
+            "C-." nil
+            "C-;" nil
+            "C-M-i" nil
+            "C-c $" nil)
   :custom
+  (flyspell-use-meta-tab nil)           ; Dumb...
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
 
