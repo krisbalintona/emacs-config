@@ -12,14 +12,12 @@
 ;;; Avy
 ;; Quickly jump to any character
 (use-package avy
-  :general (:states '(normal visual)
-                    "'" 'avy-goto-word-1
-                    "\"" 'avy-goto-char)
+  :chords (("//" .  avy-goto-word-1)
+           ("''" . avy-goto-char))
   :custom
   (avy-all-windows nil)                 ; Scope
   (avy-keys                             ; Used for letter combinations
-   '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
-   )
+   '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (avy-dispatch-alist ; Avy actions (first narrow so letter combinations appear)
    '((?x . avy-action-kill-move)
      (?X . avy-action-kill-stay)
