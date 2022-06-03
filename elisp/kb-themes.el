@@ -40,9 +40,7 @@
 (use-package kaolin-themes)
 
 ;;; Variable declarations
-;; (defvar kb/themes-dark 'nano-dark
-;;   "My chosen dark theme.")
-(defvar kb/themes-dark 'uninspiring-dark
+(defvar kb/themes-dark 'modus-vivendi
   "My chosen dark theme.")
 (defvar kb/themes-light 'kaolin-light
   "My chosen light theme.")
