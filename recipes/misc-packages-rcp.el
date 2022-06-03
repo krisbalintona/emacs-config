@@ -128,8 +128,7 @@
 
 ;;; Restart-emacs
 (use-package restart-emacs
-  :general ("C-x Q" '(restart-emacs :wk "Restart emacs"))
-  )
+  :general ("H-q" '(restart-emacs :wk "Restart emacs")))
 
 ;;; Tempel
 ;; Small and simple snippet/template system compatible with corfu.
