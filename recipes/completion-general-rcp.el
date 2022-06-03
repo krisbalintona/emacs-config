@@ -14,6 +14,9 @@
 ;; Sorting and filtering of minibuffer candidates. Big benefit is having most
 ;; recent candidate shown on top
 (use-package prescient
+  :if (or (bound-and-true-p ivy-mode)
+          (bound-and-true-p selectrum-mode)
+          (bound-and-true-p company-mode))
   :ghook ('window-setup-hook 'prescient-persist-mode)
   :custom
   ;; How does it filter?
@@ -33,18 +36,14 @@
 
   (prescient-history-length 200)
   (prescient-frequency-decay 0.999)
-  (prescient-frequency-threshold 0.10)
-  )
+  (prescient-frequency-threshold 0.10))
 
 ;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
-  :general
-  (:keymaps 'minibuffer-local-map
-            "M-A" 'marginalia-cycle)
   :custom
   (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
+  (marginalia-align 'center)
   :init
   (marginalia-mode))
 
