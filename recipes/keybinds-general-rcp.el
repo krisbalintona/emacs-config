@@ -119,6 +119,9 @@
 ;;  :keymaps '(normal visual motion)
 ;;  "SPC" '(:ignore t))
 
+;;; Key-chord
+(use-package key-chord)
+
 ;;; Which-key
 ;; Show keybind tooltips
 (use-package which-key
