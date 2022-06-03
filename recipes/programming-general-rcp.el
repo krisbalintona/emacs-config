@@ -197,17 +197,12 @@
   :after which-key        ; Because I replace its value of `prefix-help-command'
   :commands embark-act
   :general
-  (:states '(normal insert visual motion)
-           "C-." 'embark-act
-           )
+  ("C-." 'embark-act)
   (:keymaps 'vertico-map
             "C-." 'embark-act
-            "C->" 'embark-become
-            ">" 'embark-become
-            )
+            "C->" 'embark-become)
   (kb/help-keys
-    "B" '(embark-bindings :wk "Embark-bindings")
-    )
+    "B" '(embark-bindings :wk "Embark-bindings"))
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
