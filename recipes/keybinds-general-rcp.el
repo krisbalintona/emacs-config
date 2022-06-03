@@ -21,10 +21,7 @@
   :global-prefix "M-SPC"
   )
 (general-create-definer kb/note-keys    ; For all lsp-related commands
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC n"
-  :global-prefix "M-SPC n"
-  )
+  :prefix "C-c n")
 (general-create-definer kb/magit-keys   ; Magit et al.
   :keymaps '(normal visual insert motion)
   :prefix "SPC g"
