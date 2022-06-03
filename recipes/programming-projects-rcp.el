@@ -129,9 +129,6 @@
   :general
   (:keymaps 'magit-mode-map
             "C-<tab>" 'magit-section-toggle-children)
-  (:keymaps 'magit-mode-map
-            :states '(normal visual motion)
-            "D" '(magit-cherry-donate :wk "Cherry conate"))
   (kb/magit-keys
     "g"  '(magit-status :wk "Status"))
   :custom
