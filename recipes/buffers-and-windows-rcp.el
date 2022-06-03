@@ -99,7 +99,7 @@
       (dedicated . t)
       (side . right)
       (window-width . 0.2))
-     ("\\*.*\\(e?shell\\|v?term\\).*"
+     ("\\*.*\\(e?shell\\).*"
       (display-buffer-reuse-mode-window
        kb/select-buffer-in-side-window)
       (side . right)
@@ -306,10 +306,6 @@ If buffer-or-name is nil return current buffer's mode."
      eshell-mode
      "^\\*shell.*\\*$"
      shell-mode
-     "^\\*term.*\\*$"
-     term-mode
-     "^\\*vterm.*\\*$"
-     vterm-mode
      "^\\*IPython3.*\\*$"
      py-shell-mode
      ))
