@@ -32,8 +32,7 @@
   (:keymaps 'org-noter-doc-mode-map
             "M-o" 'org-noter-insert-note)
   (kb/open-keys
-    "n" '(org-noter :wk "Org-noter")
-    )
+    "n" '(org-noter :wk "Org-noter"))
   :custom
   (org-noter-notes-search-path kb/roam-dir)
   (org-noter-separate-notes-from-heading t) ; Add blank line betwwen note heading and content

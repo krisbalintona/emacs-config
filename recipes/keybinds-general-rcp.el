@@ -67,10 +67,7 @@
   :global-prefix "M-SPC i"
   )
 (general-create-definer kb/open-keys    ; Open certain things
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC o"
-  :global-prefix "M-SPC o"
-  )
+  :prefix "C-c o")
 (general-create-definer kb/toggle-keys  ; Toggles
   :keymaps '(normal visual insert motion)
   :prefix "SPC t"

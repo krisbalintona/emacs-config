@@ -27,17 +27,15 @@
             :states 'insert
             "<tab>" 'vterm-send-tab)
   (kb/open-keys
-    "t" '((lambda ()            ; Unique vterm buffer with current directory appended
+    "v" '((lambda ()
             (interactive)
             (vterm (concat "*vterm* "
-                           (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
-                           )))
+                           (file-name-nondirectory (directory-file-name (file-name-directory default-directory))))))
           :wk "Vterm"))
   :custom
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)
-  (vterm-timer-delay nil)      ; Make vterm appear less "slow" by removing delay
-  )
+  (vterm-timer-delay nil))     ; Make vterm appear less "slow" by removing delay
 
 ;;; shell-vterm-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

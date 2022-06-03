@@ -32,12 +32,11 @@
             :states 'insert
             [remap back-to-indentation] 'eshell-bol)
   (kb/open-keys
-    "e" '((lambda ()            ; Unique vterm buffer with current directory appended
+    "e" '((lambda ()
             (interactive)
             (require 'eshell)
             (let ((buf-name (concat "*eshell* "
-                                    (file-name-nondirectory (directory-file-name (file-name-directory default-directory)))
-                                    )))
+                                    (file-name-nondirectory (directory-file-name (file-name-directory default-directory))))))
               (if (member buf-name (mapcar #'buffer-name (buffer-list)))
                   (display-buffer buf-name)
                 (kb/eshell buf-name))))

@@ -15,8 +15,7 @@
   :straight nil
   :gfhook 'hl-line-mode
   :general (kb/open-keys
-             "a" '(org-agenda :wk "Org-agenda")
-             )
+             "a" '(org-agenda :wk "Org-agenda"))
   :custom
   (org-agenda-files nil) ; Instead , dynamically generate agenda list with vulpea
   (kb/vulpea-excluded-tags '("paper"))
