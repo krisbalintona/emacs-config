@@ -67,13 +67,11 @@ command."
   :ghook 'dired-mode-hook
   :custom
   (dired-git-disable-dirs '("~/"))
-  (dired-git-parallel 7)                ; Number of parallel processes
-  )
+  (dired-git-parallel 7))               ; Number of parallel processes
 
 ;;;; Dired-open
 ;; Override how dired opens files with certain extensions
 (use-package dired-open
-  :demand t
   :after dired
   :custom
   (dired-open-extensions '(("odt" . "soffice -writer")
@@ -82,33 +80,9 @@ command."
                            ("mp3" . "vlc")
                            ("mkv" . "vlc")
                            ))
-  ;; ;; Try to use `xdg-open' before anything else
-  ;; (add-to-list 'dired-open-functions #'dired-open-xdg t) ; Doesn't work as expected!
-  )
-
-;;;; Dired-rsync
-;; This package adds a single command `dired-rsync' which allows the user to
-;; copy marked files in a dired buffer via rsync. This is useful, especially for
-;; large files, because the copy happens in the background and doesn’t lock up
-;; Emacs. It is also more efficient than using tramps own encoding methods for
-;; moving data between systems.
-(use-package dired-rsync
-  :after dired
-  :general
-  (:keymaps 'dired-mode-map
-            "C-c C-r" '(dired-rsync :wk "Copy marked files with dired-rsync"))
-  :custom
-  (dired-rsync-unmark-on-completion t)
-  )
-
-;;;; Fd-dired
-;; Show `find' results in a Dired buffer. Replaces the default `find-dired'
-;; command.
-(use-package fd-dired
-  :ensure-system-package (find)
-  :after dired
-  :general ([remap find-dired] #'(fd-dired :wk "Fd-dired"))
-  )
+  :config
+  ;; Try to use `xdg-open' before anything else
+  (add-to-list 'dired-open-functions #'dired-open-xdg t)) ; Doesn't work as expected!
 
 ;;;; Dired-single
 ;; Use the same dired buffer for every directory you open using `dired'.
@@ -127,19 +101,6 @@ command."
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
 ;;; Misc
-;;;; Consult-dir
-;; Convenient directory selection. Good synergy with dired and embark.
-(use-package consult-dir
-  :general
-  ("C-x C-d" '(consult-dir :wk "Consult dir"))
-  (:keymaps 'vertico-map
-            "C-x C-d" 'consult-dir           ; Fancy directory selection
-            "C-x C-j" 'consult-dir-jump-file ; Regexp for file in current directory
-            )
-  :custom
-  (consult-dir-default-command 'find-file) ; What do I do once I choose a directory from `consult-dir'?
-  )
-
 ;;;; Affe
 ;; Blazing fast fuzzy finder
 (use-package affe
