@@ -15,10 +15,10 @@
   :ensure-system-package aspell
   :commands flyspell-detect-ispell-args
   :hook ((text-mode . (lambda ()             ; Prevent conflicts
-                        (unless wucuo-mode
+                        (unless (featurep 'wucuo)
                           (flyspell-mode))))
          (prog-mode . (lambda ()             ; Prevent conflicts
-                        (unless wucuo-mode
+                        (unless (featurep 'wucuo)
                           (flyspell-prog-mode)))))
   :general
   (kb/general-keys
