@@ -109,6 +109,12 @@
   :init
   (key-chord-mode))
 
+;;; Use-package-chords
+;; Use-package integration with `key-chord'
+(use-package use-package-chords
+  :demand t
+  :requires key-chord)
+
 ;;; Which-key
 ;; Show keybind tooltips
 (use-package which-key
