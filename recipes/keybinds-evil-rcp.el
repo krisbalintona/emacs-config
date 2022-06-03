@@ -12,6 +12,7 @@
 ;;; Evil
 ;; Emacs vim integration layer
 (use-package evil
+  :disabled t                           ; Trying out native emacs
   :ghook 'after-init-hook
   :gfhook 'general-evil-setup    ; Set up `general.el' infrastructure for `evil'
   :general
@@ -74,6 +75,7 @@
 ;;; Evil-collection
 ;; Evil keybinds for many other modes
 (use-package evil-collection
+  :disabled t                           ; Trying out native emacs
   :after evil
   :custom
   (evil-collection-setup-minibuffer nil)
@@ -113,6 +115,7 @@
 ;;; Evil-commentary
 ;; Comment in evil-mode
 (use-package evil-commentary
+  :disabled t                           ; Trying out native emacs
   :disabled t
   :general
   (:keymaps 'evil-commentary-mode-map
@@ -125,6 +128,7 @@
 ;;; Evil-nerd-commenter
 ;; Comment in evil-mode
 (use-package evil-nerd-commenter
+  :disabled t                           ; Trying out native emacs
   :after evil
   :general
   (:states 'normal                      ; Evil mode keybindings
@@ -158,6 +162,7 @@
 ;;; Evil-org
 ;; Additional evil keybinds in org-mode
 (use-package evil-org
+  :disabled t                           ; Trying out native emacs
   :ghook 'org-mode-hook
   :general
   (:keymaps 'org-mode-map
@@ -189,13 +194,14 @@
 ;;; Evil-surround
 ;; Surround a selection with any pair of characters
 (use-package evil-surround
+  :disabled t                           ; Trying out native emacs
   :init
-  (global-evil-surround-mode)
-  )
+  (global-evil-surround-mode))
 
 ;;; Evil-visualstar
 ;; Situational convenient isearch
 (use-package evil-visualstar
+  :disabled t                           ; Trying out native emacs
   :hook (evil-mode . evil-visualstar-mode)
   :custom
   (evil-visualstar/persistent t) ; Allow visual-mode to remain in affect to allow repeating searches
@@ -205,15 +211,16 @@
 ;; Use `%' to jump to matching tags in different major modes (e.g. quotation
 ;; marks, "<div>" and "</div>" in HTML).
 (use-package evil-matchit
+  :disabled t                           ; Trying out native emacs
   :after evil
   :hook (python-mode . (lambda () (setq-local evilmi-always-simple-jump t)))
   :init
-  (global-evil-matchit-mode)
-  )
+  (global-evil-matchit-mode))
 
 ;;; Evil-exchange
 ;; Swap marked regions
 (use-package evil-exchange
+  :disabled t                           ; Trying out native emacs
   :after evil evil-collection
   :init
   (evil-exchange-install)
@@ -222,12 +229,12 @@
 ;;; Evil-goggles
 ;; Pulse modified regions.
 (use-package evil-goggles
+  :disabled t                           ; Trying out native emacs
   :after evil
   :custom
   (evil-goggles-duration 0.1)
   :init
-  (evil-goggles-mode)
-  )
+  (evil-goggles-mode))
 
 ;;; keybinds-evil-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

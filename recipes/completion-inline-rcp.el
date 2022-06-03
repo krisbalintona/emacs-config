@@ -80,8 +80,9 @@
   ;; Alternatively, add advice without `general.el':
   ;; (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
   ;; (advice-add 'corfu--teardown :after 'evil-normalize-keymaps)
-  (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
-  (evil-make-overriding-map corfu-map)
+  (when (featurep 'evil)
+    (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
+    (evil-make-overriding-map corfu-map))
 
   ;; Enable Corfu more generally for every minibuffer, as long as no other
   ;; completion UI is active. If you use Mct or Vertico as your main minibuffer

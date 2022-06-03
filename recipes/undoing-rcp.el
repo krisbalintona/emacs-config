@@ -7,7 +7,6 @@
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
-(require 'keybinds-kakoune-rcp)
 
 ;;; Undo-tree
 ;; Probably the first thing you'd miss is undo and redo, which requires an extra
@@ -28,7 +27,6 @@
 ;; Easy and simple undoing
 (use-package undo-fu
   :if (not (featurep 'undo-tree))       ; Only when undo-tree isn't active
-  :after evil
   :custom
   (evil-undo-system 'undo-fu)
   ;; Store more undo history to prevent loss of data
