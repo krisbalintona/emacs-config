@@ -82,10 +82,7 @@
   :global-prefix "M-SPC t"
   )
 (general-create-definer kb/window-keys  ; Windows
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC w"
-  :global-prefix "M-SPC w"
-  )
+  :prefix "C-c w")
 
 ;;; Keybinding labels
 (kb/general-keys

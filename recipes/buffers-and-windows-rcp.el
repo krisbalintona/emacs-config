@@ -44,13 +44,9 @@
 ;;;; Window
 (use-package window
   :straight nil
-  :general
-  (:keymaps 'ctl-x-map
-            "q" '(kill-buffer-and-window :wk "Kill buffer and window")
-            )
-  (kb/general-keys
-    "wt" '(window-toggle-side-windows :wk "Toggle side windows")
-    )
+  :general (kb/window-keys
+             "t" '(window-toggle-side-windows :wk "Toggle side windows"))
+  :chords (("ww" . other-window))
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
   (split-width-threshold 160)        ; Threshold for horizontal window splitting
@@ -192,8 +188,7 @@ If buffer-or-name is nil return current buffer's mode."
     "Display buffer in a side window and select it"
     (let ((window (display-buffer-at-bottom buffer alist)))
       (select-window window)
-      ))
-  )
+      )))
 
 ;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
