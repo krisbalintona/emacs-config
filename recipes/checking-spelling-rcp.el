@@ -21,8 +21,6 @@
                         (unless (featurep 'wucuo)
                           (flyspell-prog-mode)))))
   :general
-  (kb/general-keys
-    "/" '(flyspell-buffer :wk "Spellcheck buffer"))
   ;; Unbind all the keys from the mode-map because they're all annoying...
   (:keymaps 'flyspell-mode-map
             "C-," nil
