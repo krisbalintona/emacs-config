@@ -190,7 +190,8 @@
   :preface
   ;; NOTE 2022-06-01: Set this to `nil' before `magit' is loaded so when `forge'
   ;; is loaded it does not add keybinds which conflict with `evil-collection'
-  (setq forge-add-default-bindings nil)
+  (when (featurep 'evil)
+    (setq forge-add-default-bindings nil))
   :config
   (evil-set-initial-state 'git-commit-mode 'insert)
 
@@ -201,8 +202,7 @@
   ;; each.
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules-overview
-                          'magit-insert-staged-changes t)
-  )
+                          'magit-insert-staged-changes t))
 
 ;;;; Magit-log date headers
 (with-eval-after-load 'magit
