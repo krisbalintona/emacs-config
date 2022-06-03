@@ -13,11 +13,8 @@
 ;; Built-in shell
 (use-package shell
   :straight nil
-  :general (kb/open-keys
-             "s" '(shell :wk "Shell-mode"))
   :custom
-  (async-shell-command-buffer 'new-buffer) ; Don't ask, just do
-  )
+  (async-shell-command-buffer 'new-buffer)) ; Don't ask, just do
 
 ;;; shell-basic-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
