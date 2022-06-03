@@ -35,15 +35,16 @@
   ;; Set foundational faces
   (set-face-attribute 'default nil :font uninspiring-dark-default :height 136)
   (set-face-attribute 'modus-themes-variable-pitch nil :font uninspiring-dark-variable-pitch :height 140)
-  (set-face-attribute 'modus-themes-fixed-pitch nil :font uninspiring-dark-fixed-pitch :height 158)
-  )
+  (set-face-attribute 'modus-themes-fixed-pitch nil :font uninspiring-dark-fixed-pitch :height 158))
+(use-package solo-jazz-theme)
+(use-package kaolin-themes)
 
 ;;; Variable declarations
 ;; (defvar kb/themes-dark 'nano-dark
 ;;   "My chosen dark theme.")
 (defvar kb/themes-dark 'uninspiring-dark
   "My chosen dark theme.")
-(defvar kb/themes-light 'modus-operandi
+(defvar kb/themes-light 'kaolin-light
   "My chosen light theme.")
 
 (defvar kb/themes-hooks nil
