@@ -26,6 +26,7 @@
 
 ;;; Lispyville
 (use-package lispyville
+  :if (bound-and-true-p evil-mode)
   :hook ((emacs-lisp-mode lisp-mode) . lispyville-mode)
   :gfhook 'turn-off-smartparens-mode
   :custom
@@ -116,6 +117,15 @@
                                        "]" #'lispyville-next-closing
                                        "M-h" #'lispyville-beginning-of-defun
                                        "M-l" #'lispyville-end-of-defun))))
+
+;;; Lispy
+(use-package lispy
+  :if (not (bound-and-true-p evil-mode))
+  :ghook 'emacs-lisp-mode-hook
+  :hook (emacs-lisp-mode . (lambda ()        ; Use lispy for `eval-expression'
+                             (when (eq this-command 'eval-expression)
+                               (lispy-mode 1))))
+  :gfhook 'turn-off-smartparens-mode)
 
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock

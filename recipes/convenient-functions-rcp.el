@@ -259,7 +259,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
          ;; sometimes its variants.
          (not org-capture-mode)
          (buffer-file-name)
-         (eq major-mode 'org-mode) ; Org-mode
+         (eq major-mode 'org-mode)      ; Org-mode
          (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
          )
     (save-excursion

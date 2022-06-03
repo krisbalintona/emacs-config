@@ -166,10 +166,10 @@
       (embark-act arg))))
 
 ;;; Selectrum
+;;;; Itself
 ;; Advanced complete-read
 (use-package selectrum
   :disabled t                           ; Trying out `vertico'
-  :demand t
   :custom
   (selectrum-num-candidates-displayed 'auto)
   (selectrum-max-window-height 10)                 ; Maximum candidates shown
@@ -177,19 +177,17 @@
   (selectrum-extend-current-candidate-highlight t) ; Highlight entire line
   (selectrum-count-style 'current/matches)
   (selectrum-show-indices nil)
-  :config
+  :init
   (selectrum-mode)
-
+  
   ;; Optional performance optimization for `selectrum' by highlighting only the
   ;; visible candidates.
   (setq orderless-skip-highlighting (lambda () selectrum-is-active)
-        selectrum-highlight-candidates-function #'orderless-highlight-matches)
-  )
+        selectrum-highlight-candidates-function #'orderless-highlight-matches))
 
 ;;;; Selectrum-prescient
 ;; Selectrum with `prescient' completion style
 (use-package selectrum-prescient
-  :demand t
   :after prescient
   :ghook 'selectrum-mode-hook
   :custom
@@ -198,8 +196,7 @@
   ;; NOTE `Prescient' and `orderless' can both work with `selectrum'
   ;; simultaneously.
   (selectrum-prescient-enable-filtering t)
-  (selectrum-prescient-enable-sorting t)
-  )
+  (selectrum-prescient-enable-sorting t))
 
 ;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)

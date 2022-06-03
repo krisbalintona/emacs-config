@@ -203,8 +203,7 @@ If buffer-or-name is nil return current buffer's mode."
    "M-7" 'eyebrowse-switch-to-window-config-7
    "M-8" 'eyebrowse-switch-to-window-config-8
    "M-9" 'eyebrowse-switch-to-window-config-9
-   "M-0" 'eyebrowse-switch-to-window-config-0
-   )
+   "Mx?-0" 'eyebrowse-switch-to-window-config-0)
   (:states '(visual normal motion)
            "gt" 'eyebrowse-next-window-config
            "ga" 'eyebrowse-prev-window-config
@@ -226,8 +225,7 @@ If buffer-or-name is nil return current buffer's mode."
   (eyebrowse-wrap-around t) ; Cycle back to beginning when at the end and vice versa
   (eyebrowse-switch-back-and-forth t) ; Select current workspace to go to last used one
   :init
-  (eyebrowse-mode)
-  )
+  (eyebrowse-mode))
 
 ;;;; Ace-window
 (use-package ace-window
