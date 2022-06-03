@@ -97,8 +97,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
     (kb/format-buffer-indentation--fill-column))
    (t (kb/format-buffer-indentation--base))
    ))
-(kb/general-keys
-  "SPC" '(kb/format-buffer-indentation :wk "Format indentation"))
+(general-define-key (general-chord ";;") 'kb/format-buffer-indentation)
 
 ;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
@@ -116,9 +115,9 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
 (defun kb/delete-this-file (&optional path force-p)
   "Delete PATH, kill its buffers and expunge it from vc/magit cache.
 
-      If PATH is not specified, default to the current buffer's file.
+  If PATH is not specified, default to the current buffer's file.
 
-      If FORCE-P, delete without confirmation."
+  If FORCE-P, delete without confirmation."
   (interactive
    (list (buffer-file-name (buffer-base-buffer))
          current-prefix-arg))
@@ -252,7 +251,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
                        'tree)))
 (defun kb/org-add-blank-lines (&optional ARG)
   "Call `unpackaged/org-add-blank-lines' before saving in org files
-which are not in `kb/agenda-dir'."
+  which are not in `kb/agenda-dir'."
   (require 'org-capture)
   (when (and
          ;; NOTE 2022-02-03: This next line is a very important check. It fixes
