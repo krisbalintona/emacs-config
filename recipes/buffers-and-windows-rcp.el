@@ -236,7 +236,7 @@ If buffer-or-name is nil return current buffer's mode."
 
 ;;;; Ace-window
 (use-package ace-window
-  :general ("M-w" '(ace-window :wk "Ace window"))
+  ;; :general ("M-w" '(ace-window :wk "Ace window"))
   :custom
   (aw-scope 'frame)
   (aw-background t)
