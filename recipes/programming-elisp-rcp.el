@@ -141,8 +141,6 @@
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :gfhook 'visual-line-mode
-  :ryo
-  ("f" helpful-at-point)
   :general
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
