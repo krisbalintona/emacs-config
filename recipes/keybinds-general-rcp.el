@@ -53,10 +53,7 @@
   :global-prefix "M-SPC b"
   )
 (general-create-definer kb/file-keys    ; File-related
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC f"
-  :global-prefix "M-SPC f"
-  )
+  :prefix "C-c f")
 (general-create-definer kb/mark-keys    ; Marks (e.g. bookmarks)
   :keymaps '(normal visual insert motion)
   :prefix "SPC m"
@@ -68,10 +65,7 @@
   :global-prefix "M-SPC h"
   )
 (general-create-definer kb/nav-keys     ; Navigation in buffers
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC j"
-  :global-prefix "M-SPC j"
-  )
+  :prefix "C-c c")
 (general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping
   :keymaps '(normal visual insert motion)
   :prefix "SPC i"
@@ -110,17 +104,10 @@
   "w" '(:ignore t :wk "Windows")
   )
 
-;;; Unbinding leader key prefix
-;; (general-define-key
-;;  :keymaps '(Info-mode-map help-mode-map calc-mode-map Man-mode-map woman-mode-map custom-mode-map dired-mode-map pdf-view-mode-map debugger-mode-map
-;;                           ;; Magit modes
-;;                           magit-mode-map magit-log-mode-map magit-diff-mode-map magit-process-mode-map
-;;                           )
-;;  :keymaps '(normal visual motion)
-;;  "SPC" '(:ignore t))
-
 ;;; Key-chord
-(use-package key-chord)
+(use-package key-chord
+  :init
+  (key-chord-mode))
 
 ;;; Which-key
 ;; Show keybind tooltips

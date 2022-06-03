@@ -28,6 +28,8 @@
 ;; Enable logging of recent files
 (use-package recentf
   :hook (kill-emacs . recentf-save-list)
+  :general (kb/file-keys
+             "r" '(recentf-open-files :wk "Recentf open file"))
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)

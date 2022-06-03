@@ -116,42 +116,26 @@
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
-  :demand t
   :ensure-system-package ((fd . fd-find)
                           (rg . ripgrep))
   :general
+  ([remap switch-to-buffer] '(consult-buffer :wk "Consult buffer")
+   [remap switch-to-buffer-other-window] '(consult-buffer-other-window :wk "Consult buffer other window")
+   [remap bookmark-jump] '(consult-bookmark :wk "Consult bookmark")
+   [remap yank-pop] '(consult-yank-pop :wk "Consult yank-pop"))
   (:keymaps 'help-map
             [remap apropos-command] '(consult-apropos :wk "Consult apropos"))
-  ([remap switch-to-buffer] '(consult-buffer :wk "Consult buffer")
-   "C-x B" '(consult-buffer-other-window :wk "Consult buffer other window")
-   )
   (:keymaps 'minibuffer-local-map
-            "M-r" 'consult-history
-            )
+            "M-r" 'consult-history)
   (kb/nav-keys
-    "h" '(consult-outline :wk "Consult outline")
+    "o" '(consult-outline :wk "Consult outline")
     "j" '(consult-line :wk "Consult line")
-    "i" '(kb/consult-imenu-versatile :wk "Consult imenu")
-    "O" '(consult-multi-occur :wk "Consult multi-occur")
-    )
+    "i" '(kb/consult-imenu-versatile :wk "Consult imenu"))
   (kb/nav-keys
     :keymaps 'org-mode-map
-    :states '(normal visual insert motion)
     [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
-  (kb/yank-kill-keys
-    "y" '(consult-yank-pop :wk "Consult yank-pop")
-    )
-  (kb/buffer-keys
-    "b" 'consult-buffer
-    "B" 'consult-buffer-other-window
-    )
   (kb/file-keys
-    "r" '(consult-recent-file :wk "Consult recent file")
-    )
-  (kb/mark-keys
-    "m" '(consult-bookmark :wk "Consult bookmark")
-    "r" '(consult-mark :wk "Consult mark-ring")
-    )
+    [remap recentf-open-files] '(consult-recent-file :wk "Consult recent file"))
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode . eshell-history-ring)
@@ -178,17 +162,14 @@
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
-   consult-buffer :preview-key (kbd "C-M-;")
-   consult-buffer :prompt "Can use b, m, f, p..."
+   consult-buffer :prompt "Can use b, m, f, p..." :preview-key (kbd "C-M-;")
    ;; For `consult-ripgrep'
    consult-ripgrep :preview-key (kbd "C-M-;")
    ;; For `consult-fdfind'. Make sure this is after the definition of
    ;; `consult-recent-file'
    consult-recent-file :preview-key (kbd "C-M-;")
    ;; `consult-find'
-   consult-find :preview-key (kbd "C-M-;")
-   )
-  )
+   consult-find :preview-key (kbd "C-M-;")))
 
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
