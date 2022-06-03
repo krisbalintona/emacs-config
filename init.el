@@ -44,7 +44,7 @@
 
 ;;;; Keybind infrastructure
 (require 'keybinds-general-rcp)
-;; (require 'keybinds-native-rcp)
+(require 'keybinds-native-rcp)
 (require 'keybinds-evil-rcp)
 
 ;;;; Aethetics
