@@ -105,13 +105,10 @@
 ;; Suggest correct spelling for words flyspell marks as incorrect
 (use-package flyspell-correct
   :after flyspell
-  :general (kb/general-keys
-             "." '(flyspell-correct-next :wk "Flyspell next")
-             "," '(flyspell-correct-previous :wk "Flyspell prev")
-             )
+  :chords (("<<" . flyspell-correct-previous)
+           (">>" . flyspell-correct-next))
   :custom
-  (flyspell-correct-interface 'flyspell-correct-completing-read)
-  )
+  (flyspell-correct-interface 'flyspell-correct-completing-read))
 
 ;;; Abbrev-mode
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
