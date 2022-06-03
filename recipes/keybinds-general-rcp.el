@@ -107,7 +107,6 @@
 ;;; Which-key
 ;; Show keybind tooltips
 (use-package which-key
-  :demand t
   :custom
   ;; These variables should be set before which-key-mode is activated
   (which-key-idle-delay 1.6)
@@ -119,7 +118,7 @@
   (which-key-popup-type 'side-window)
   (which-key-side-window-location 'right)
   (which-key-side-window-max-width 0.23)
-  :config
+  :init
   (which-key-mode)
 
   ;; Don't display C-u, digit, and other numeric keypad bindings
