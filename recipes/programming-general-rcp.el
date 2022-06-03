@@ -123,6 +123,8 @@
    [remap switch-to-buffer-other-window] '(consult-buffer-other-window :wk "Consult buffer other window")
    [remap bookmark-jump] '(consult-bookmark :wk "Consult bookmark")
    [remap yank-pop] '(consult-yank-pop :wk "Consult yank-pop"))
+  (:keymaps 'project-prefix-map
+            [remap project-find-regexp] 'consult-ripgrep)
   (:keymaps 'help-map
             [remap apropos-command] '(consult-apropos :wk "Consult apropos"))
   (:keymaps 'minibuffer-local-map

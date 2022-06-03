@@ -66,49 +66,36 @@
 
 ;;;; Project
 (use-package project
-  :general
-  (kb/project-keys
-    "f" '(affe-find :wk "Project find file")
-    "r" '(consult-ripgrep :wk "Consult rg")
-    "b" '(project-switch-to-buffer :wk "Project switch to buffer")
-    "p" '(project-switch-project :wk "Project.el switch project")
-    "d" '(project-dired :wk "Project dired")
-    )
-  (:keymaps 'project-prefix-map
-            "m" #'magit-project-status)
+  :general (:keymaps 'project-prefix-map
+                     "m" #'magit-project-status)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
    '((affe-find "Find file" "f")
-     (consult-ripgrep "Regexp" "r")
+     (consult-ripgrep "Regexp" "g")
      (magit-project-status "Magit")
      (project-switch-to-buffer "Buffer" "b")
-     (project-find-regexp "Xref regexp")
+     (project-query-replace-regexp "Replace regexp")
      (project-dired "Open dired")
-     (project-query-replace-regexp "Replace regexp" "R")
      (project-find-dir "Open directory in dired")
      (project-compile "Compile")
      (project-eshell "Eshell")
      ))
-
-  (project-vc-merge-submodules nil)  ; Consider submodules as their own projects
-  )
+  (project-vc-merge-submodules nil)) ; Consider submodules as their own projects?
 
 ;;;; Project-x
 ;; Companion to project.el. Saves window configurations for projects.
 (use-package project-x
   :straight (project-x :type git :host github :repo "karthink/project-x")
   :hook (after-init . project-x-mode)   ; Adds hooks and keybinds
-  :general (kb/project-keys
-             "w" '(project-x-window-state-save :wk "Project-x save")
-             "j" '(project-x-window-state-load :wk "Project-x load")
-             )
+  :general (:keymaps 'project-prefix-mapproject-prefix-map
+                     "w" '(project-x-window-state-save :wk "Project-x save")
+                     "j" '(project-x-window-state-load :wk "Project-x load"))
   :custom
   (project-x-window-list-file
    (no-littering-expand-var-file-name "project-x/project-window-list.el"))
   (project-x-save-interval nil)         ; I'll save myself
-  (project-x-local-identifier ".project") ; File name(s) which indicate that a directory is a project
-  )
+  (project-x-local-identifier ".project")) ; File name(s) which indicate that a directory is a project
 
 ;;;; Xref
 (use-package xref

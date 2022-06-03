@@ -144,8 +144,8 @@ command."
 ;; Blazing fast fuzzy finder
 (use-package affe
   :after orderless
-  :general ("M-s M-f" #'affe-find
-            "M-s M-g" #'affe-grep)
+  :general (:keymaps 'project-prefix-map
+                     [remap project-find-file] 'affe-find)
   :custom
   (affe-regexp-compiler
    #'(lambda (input type ignore-case)                ; Use orderless instead of consult to regexp
@@ -154,8 +154,7 @@ command."
          (cons text (lambda (str) (orderless--highlight text str)))
          )))
   (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
-  (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .") ; Include hidden files
-  )
+  (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .")) ; Include hidden files
 
 ;;; programming-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

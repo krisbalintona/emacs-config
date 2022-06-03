@@ -30,11 +30,6 @@
   :prefix "SPC g"
   :global-prefix "M-SPC g"
   )
-(general-create-definer kb/project-keys ; Projects
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC p"
-  :global-prefix "M-SPC p"
-  )
 (general-create-definer kb/lsp-keys     ; For all lsp-related commands
   :keymaps '(lsp-mode-map)
   :states '(normal visual insert motion)
