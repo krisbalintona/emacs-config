@@ -203,17 +203,14 @@ If buffer-or-name is nil return current buffer's mode."
    "M-7" 'eyebrowse-switch-to-window-config-7
    "M-8" 'eyebrowse-switch-to-window-config-8
    "M-9" 'eyebrowse-switch-to-window-config-9
-   "Mx?-0" 'eyebrowse-switch-to-window-config-0)
-  (:states '(visual normal motion)
-           "gt" 'eyebrowse-next-window-config
-           "ga" 'eyebrowse-prev-window-config
-           "gv" 'eyebrowse-last-window-config
-           )
+   "M-0" 'eyebrowse-switch-to-window-config-0)
   (:keymaps 'eyebrowse-mode-map
             :prefix eyebrowse-keymap-prefix
-            "r" 'eyebrowse-rename-window-config :wk "Rename"
-            "d" 'eyebrowse-close-window-config :wk "Close"
-            )
+            "r" '(eyebrowse-rename-window-config :wk "Rename")
+            "d" '(eyebrowse-close-window-config :wk "Close"))
+  :chords (("[[" . eyebrowse-prev-window-config)
+           ("]]" . eyebrowse-next-window-config)
+           ("\\\\" . eyebrowse-last-window-config))
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
   (eyebrowse-keymap-prefix (kbd "M-\\"))
