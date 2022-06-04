@@ -52,8 +52,6 @@
 
 ;;;; Org-footnote
 (use-package org-footnote
-  :general (:keymaps 'org-mode-map
-                     "H-f" 'org-footnote-new)
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)          ; Automatically renumber
