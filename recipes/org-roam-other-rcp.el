@@ -114,10 +114,9 @@
 (use-package delve
   :straight (delve :type git :host github :repo "publicimageltd/delve")
   :gfhook #'delve-compact-view-mode
-  ;; NOTE 2022-05-27: Very necessary to prevent cmacro compiler error for
-  ;; `kb/delve--key--toggle-preview'. However, I would like to find a workaround
-  ;; eventually because it greatly increases startup time I think
-  :commands delve--zettel-preview
+  ;; FIXME 2022-05-27: `delve--zettel-preview' seems necessary to prevent cmacro
+  ;; compiler error for `kb/delve--key--toggle-preview'.
+  :commands delve delve--zettel-preview
   :general
   ("<f12>" 'delve)
   (:keymaps 'delve-mode-map
