@@ -171,6 +171,11 @@
   :config
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
 
+;;; Suggest
+;; Query `suggest' for elisp coding suggestions!
+(use-package suggest
+  :general ("C-c S" '(suggest :wk "Suggest.el buffer")))
+
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-elisp-rcp)
