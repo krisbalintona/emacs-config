@@ -80,6 +80,42 @@
      "C-c L" '(synosaurus-choose-and-insert :wk "Synosaurus lookup")))
   )
 
+;;;; kb/{dictionary,thesaurus}-at-point kb/{dictionary,thesaurus}-lookup
+;; Change which packages are used depending on internet connection
+(defun kb/internet-up-p (&optional host)
+  "Return `t' if the device has internet access, and `nil'
+otherwise. Credit to https://emacs.stackexchange.com/a/18515"
+  (= 0 (call-process "ping" nil nil nil "-c" "1" "-W" "1"
+                     (if host host "www.google.com"))))
+
+(defun kb/dictionary-at-point ()
+  "Use `dictionary' if online, and `wordnet' if offline."
+  (interactive)
+  (if (kb/internet-up-p)
+      (dictionary-lookup-definition)
+    (wordnut-lookup-current-word)))
+
+(defun kb/thesaurus-at-point ()
+  "Use `powerthesaurus' if online, and `synosaurus' if offline."
+  (interactive)
+  (if (kb/internet-up-p)
+      (powerthesaurus-lookup-synonyms-dwim)
+    (synosaurus-choose-and-replace)))
+
+(defun kb/dictionary-lookup ()
+  "Use `dictionary' if online, and `wordnet' if offline."
+  (interactive)
+  (if (kb/internet-up-p)
+      (dictionary-search)
+    (wordnut-search)))
+
+(defun kb/dictionary-lookup ()
+  "Use `powerthesaurus' if online, and `synosaurus' if offline."
+  (interactive)
+  (if (kb/internet-up-p)
+      (powerthesaurus-lookup-dwim)
+    (synosaurus-choose-and-insert)))
+
 ;;; checking-words-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-words-rcp)
