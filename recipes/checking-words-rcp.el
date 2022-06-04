@@ -55,13 +55,13 @@
 (use-package wordnut
   :after define-word
   ;; TODO 2021-08-20: Have this changed depending on Linux distribution
-  :ensure-system-package (wn . wordnet) ; Make sure English dictionary is also installed
+  ;; Make sure the install a dictnary, in case it is a separate package
+  :ensure-system-package (wn . wordnet-cli)
   :config
   (unless (featurep 'define-word)
     (general-define-key
      "C-c d" '(wordnut-lookup-current-word :wk "Wordnut lookup this word")
-     "C-c D" '(wordnut-search :wk "Wordnut search")))
-  )
+     "C-c D" '(wordnut-search :wk "Wordnut search"))))
 
 ;;;; Synosaurus
 ;; Offline thesaurus
