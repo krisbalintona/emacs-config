@@ -161,16 +161,6 @@
                 ))
   )
 
-;;; Aggressive-fill-paragraph
-;; Fill paragraph as I type.
-(use-package aggressive-fill-paragraph
-  :hook ((text-mode . aggressive-fill-paragraph-mode)
-         (prog-mode . aggressive-fill-paragraph-mode)
-         (lsp-mode . (lambda () (aggressive-fill-paragraph-mode -1))))
-  :custom
-  ;; Settle for only doing comments
-  (afp-fill-comments-only-mode-list '(emacs-lisp-mode sh-mode python-mode js-mode org-mode)))
-
 ;;; All-the-icons-completion
 ;; Add `all-the-icons' icons to minibuffer completion candidates
 (use-package all-the-icons-completion
