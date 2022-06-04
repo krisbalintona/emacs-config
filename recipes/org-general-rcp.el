@@ -9,7 +9,8 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Org-mode itself
+;;; Org
+;;;; Itself
 (use-package org
   :straight (org-mode :type git
                       :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
@@ -34,67 +35,32 @@
     "c" '(org-capture :wk "Org-capture"))
   :custom
   (org-directory kb/org-dir)
-
-  ;; Aesthetics
-  (org-startup-indented t) ; Start with `org-indent-mode'?
-  (org-startup-folded 'nofold)
-  (org-ellipsis " ")
-  (org-hide-emphasis-markers t)          ; Remove org-mode markup characters
-  (org-fontify-quote-and-verse-blocks t) ; Properly syntax highlight block contents
-  (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
-  (org-pretty-entities-include-sub-superscripts nil) ; Show super- and subscripts?
-  (org-hidden-keywords '(title)) ; hide #+TITLE:
-  (org-highlight-sparse-tree-matches nil) ; Don't highlight spare tree matches
-
-  ;; For writing
-  (org-special-ctrl-a/e t) ; Make ^ and $ ignore tags and leading stars
-  (org-src-tab-acts-natively t) ; Treat tabs in src blocks the same as if it
+  (org-special-ctrl-a/e t)
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
 
-  ;; For opening files based on extension
-  (org-file-apps
-   '(("\\.docx\\'" . eaf-org-open-file)
-     ("\\.odt\\'" . eaf-org-open-file)
-     ("\\.mm\\'" . default)
-     ("\\.x?html?\\'" . eaf-org-open-file)
-     ("\\.pdf\\'" . eaf-org-open-file)
-     (directory . emacs)
-     (auto-mode . emacs)
-     ))
-
-  ;; Misc
-  (org-ctrl-k-protect-subtree t)
-  (org-element-use-cache t)             ; Testing
+  (org-startup-indented t)
+  (org-startup-folded 'nofold)
+  (org-ellipsis " ")
+  (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
+  (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
+  (org-pretty-entities-include-sub-superscripts nil) ; Show super- and subscripts?
+  (org-hidden-keywords '(title))                     ; hide #+TITLE:
+  (org-ctrl-k-protect-subtree 'error)
   :config
-  (advice-add 'org-ctrl-c-ret :after #'evil-insert-state) ; Entire insert-state after M-RET
+  (when (bound-and-true-p evil-mode)
+    (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
 
-  ;; Org link parameters (good for modifying faces)
-  (make-face 'kb/org-roam-link-to-node)
-  (modify-face 'kb/org-roam-link-to-node "goldenrod3" nil nil nil t nil nil nil)
-  (org-link-set-parameters "id" :follow 'org-id-open :face 'kb/org-roam-link-to-node)
-  :config
-  ;; Use EAF to open PDFs
-  (defun eaf-org-open-file (file &optional link)
-    "A wrapper function on `eaf-open'. Open in another window and
-move to that window."
-    (when (< (length (window-list)) 2)
-      (split-window-right))
-    (other-window 1)
-    (eaf-open file)))
-
-;;; Org-footnote
+;;;; Org-footnote
 (use-package org-footnote
-  :after org
   :general (:keymaps 'org-mode-map
-                     "C-x f" '(org-footnote-new :wk "New footnote"))
+                     "H-f" 'org-footnote-new)
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)          ; Automatically renumber
   (org-footnote-define-inline t) ; Write footnote content where you declare rather in a particular section (i.e. `org-footnote-section')?
-  (org-footnote-fill-after-inline-note-extraction t) ; Not sure what this does
-  )
+  (org-footnote-fill-after-inline-note-extraction t)) ; Not sure what this does
 
-;;; Org-attach
+;;;; Org-attach
 (use-package org-attach
   :custom
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
@@ -109,11 +75,9 @@ move to that window."
    '(org-attach-id-ts-folder-format
      org-attach-id-uuid-folder-format)))
 
-;;; Org-refile
+;;;; Org-refile
 (use-package org-refile
   :after org-roam
-  :general (kb/note-keys
-             "r" '(org-refile :wk "Org-refile"))
   :custom
   (org-refile-targets
    `((kb/find-blog-files-org . (:maxlevel . 4))
@@ -134,10 +98,9 @@ move to that window."
                   (minibuffer-with-setup-hook
                       (lambda () (setq-local completion-styles '(basic)))
                     (apply args)))
-                ))
-  )
+                )))
 
-;;; Org-visibility
+;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
   :disabled t                           ; Still buggy
@@ -210,18 +173,6 @@ move to that window."
   (split-window-preferred-function 'visual-fill-column-split-window-sensibly) ; Be able to vertically split windows that have wide margins
   )
 
-;;;; Org-fancy-priorities
-;; Icons for org priorities
-(use-package org-fancy-priorities
-  :ghook 'org-mode-hook
-  :custom
-  (org-fancy-priorities-list '((?A . "💀")
-                               (?B . "🔥")
-                               (?C . "🌟")
-                               (?D . "🏃")
-                               (?E . "👍")
-                               (?F . "🧋")))
-  )
 ;;; Custom functions
 ;;;; Better RET
 ;; Alter RET to behave more usefully (like in Doom)
@@ -253,8 +204,8 @@ re-align the table if necessary. (Necessary because org-mode has a
              in (cl-remove-if-not #'listp org-todo-keywords)
              for keywords =
              (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                     (match-string 1 x)
-                                   x))
+                                (match-string 1 x)
+                              x))
                      keyword-spec)
              if (eq type 'sequence)
              if (member keyword keywords)

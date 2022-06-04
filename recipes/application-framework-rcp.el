@@ -120,7 +120,27 @@
   (eaf-bind-key eyebrowse-last-window-config "gv" eaf-pdf-viewer-keybinding)
   (eaf-bind-key eyebrowse-prev-window-config "ga" eaf-pdf-viewer-keybinding)
   (eaf-bind-key eyebrowse-next-window-config "gt" eaf-pdf-viewer-keybinding)
-  )
+
+  ;; Use EAF to open PDFs
+  (defun eaf-org-open-file (file &optional link)
+    "A wrapper function on `eaf-open'. Open in another window and
+move to that window."
+    (when (< (length (window-list)) 2)
+      (split-window-right))
+    (other-window 1)
+    (eaf-open file))
+
+  (with-eval-after-load 'org-mode
+    ;; For opening files based on extension
+    (setq org-file-apps
+          '(("\\.docx\\'" . eaf-org-open-file)
+            ("\\.odt\\'" . eaf-org-open-file)
+            ("\\.mm\\'" . default)
+            ("\\.x?html?\\'" . eaf-org-open-file)
+            ("\\.pdf\\'" . eaf-org-open-file)
+            (directory . emacs)
+            (auto-mode . emacs)
+            ))))
 
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
