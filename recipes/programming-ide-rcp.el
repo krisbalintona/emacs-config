@@ -271,7 +271,8 @@
   ;; instead of defining the variables directly so that it is agnostic to any
   ;; package changes. Take a look at the `format-all' package for how to install
   ;; particular formatters as well as their proper CLI commands. Namely, inspect
-  (setf (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
+  (setf (alist-get 'lua-mode apheleia-mode-alist) '(luafmt)
+        (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
         (alist-get 'google-java-format apheleia-formatters)
         '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
         (alist-get 'luafmt apheleia-formatters) '("luafmt" "--stdin")
