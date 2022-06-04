@@ -43,7 +43,7 @@
 (use-package marginalia
   :custom
   (marginalia-max-relative-age 0)
-  (marginalia-align 'center)
+  (marginalia-align 'right)             ; Otherwise, text may get cut off
   :init
   (marginalia-mode))
 
