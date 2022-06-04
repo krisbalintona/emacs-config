@@ -151,32 +151,17 @@
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :gfhook 'visual-line-mode
-  :general
+  :chords (:map prog-mode-map
+                ("jj" . helpful-at-point))
+  :init
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
-  ([remap describe-function] '(helpful-callable :wk "Helpful function")
-   [remap describe-command] '(helpful-command :wk "Helpful command")
-   [remap describe-variable] '(helpful-variable :wk "Helpful variable")
-   [remap describe-symbol] '(helpful-symbol :wk "Helpful symbol")
-   [remap describe-key] '(helpful-key :wk "Helpful key")
-   [remap apropos-command] '(helpful-command :wk "Helpful command")
-   )
-  (:states '(visual normal motion)
-           "f" 'helpful-at-point
-           )
-  (kb/help-keys
-    "K" '(describe-key-briefly :wk "Desc key echo")
-    "a" '(apropos-command :wk "Apropos command")
-    "f" '(describe-function :wk "Desc func")
-    "ha" '(consult-apropos :wk "Consult apropos")
-    "k" '(helpful-key :wk "Desc key")
-    "o" '(describe-symbol :wk "Desc sym")
-    "v" '(describe-variable :wk "Desc var")
-    "w" '(where-is :wk "Where is...?")
-    )
-  :custom
-  (describe-bindings-outline t) ; Include interactive outline headings for each major mode in `describe-keys' buffer
-  )
+  (advice-add 'describe-function :override 'helpful-callable)
+  (advice-add 'describe-command :override 'helpful-command)
+  (advice-add 'describe-variable :override 'helpful-variable)
+  (advice-add 'describe-symbol :override 'helpful-symbol)
+  (advice-add 'describe-key :override 'helpful-key)
+  (advice-add 'apropos-command :override 'helpful-command))
 
 ;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
@@ -184,8 +169,7 @@
   :demand t
   :after helpful
   :config
-  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
-  )
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
 
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
