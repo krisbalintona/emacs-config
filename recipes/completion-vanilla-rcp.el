@@ -179,7 +179,7 @@
   (selectrum-show-indices nil)
   :init
   (selectrum-mode)
-  
+
   ;; Optional performance optimization for `selectrum' by highlighting only the
   ;; visible candidates.
   (setq orderless-skip-highlighting (lambda () selectrum-is-active)
@@ -202,13 +202,13 @@
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
-  (completion-styles '(orderless))
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
    '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
                    orderless
                    ))
      ))
+  (completion-styles '(orderless))
 
   (orderless-component-separator 'orderless-escapable-split-on-space)
   (orderless-matching-styles
@@ -274,6 +274,64 @@ It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
     (when (string-suffix-p "." pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
+  )
+
+;;; Fussy
+;; Instead of just filtering (e.g. like `orderless' alone), also score the
+;; filtered candidates afterward!
+;;;; Flx-rs
+(use-package flx-rs
+  :straight (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
+  :commands flx-rs-score
+  :config (flx-rs-load-dyn))
+
+;;;; Liquidmetal
+(use-package liquidmetal
+  :commands fussy-liquidmetal-score)
+
+;;;; Fuz-bin
+(use-package fuz-bin
+  :straight (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
+  :commands fussy-fuz-score
+  :config (fuz-bin-load-dyn))
+
+;;;; Fuz-native
+(use-package fzf-native
+  :straight (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
+  :commands fussy-fzf-native-score
+  :config (fzf-native-load-dyn))
+
+;;;; Subline-fuzzy
+(use-package sublime-fuzzy
+  :straight (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
+  :commands fussy-sublime-fuzzy-score
+  :config (sublime-fuzzy-load-dyn))
+
+;;;; Hotfuzz
+(use-package hotfuzz
+  :commands fussy-hotfuzz-score)
+
+;;;; Itself
+(use-package fussy
+  :straight (fussy :type git :host github :repo "jojojames/fussy")
+  :commands fussy-all-completions
+  :custom
+  (completion-category-defaults nil)
+  (completion-category-overrides nil)
+  (completion-styles '(fussy))
+  :config
+  (setq
+   fussy-filter-fn 'fussy-filter-fast   ; See `fussy-fast-regex-fn'
+   fussy-filter-fn 'fussy-filter-orderless
+   )
+  (setq
+   fussy-score-fn 'fussy-sublime-fuzzy-score ; Doesn't work with orderless components
+   fussy-score-fn 'fussy-liquidmetal-score
+   fussy-score-fn 'fussy-hotfuzz-score
+   fussy-score-fn 'fussy-fuz-bin-score
+   fussy-score-fn 'fussy-fzf-native-score
+   fussy-score-fn 'flx-rs-score
+   )
   )
 
 ;;; completion-vanilla-rcp.el ends here
