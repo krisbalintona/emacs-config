@@ -141,10 +141,6 @@ move to that window."
      ))
   (org-refile-use-cache nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
-  :init
-  (defun kb/find-blog-files-org ()
-    "Return a list of org files which are within the blog directory of org-roam."
-    (org-roam--list-files (concat kb/roam-dir "blog")))
   :config
   ;; Workaround for orderless issue with `org-refile'. See
   ;; https://github.com/minad/vertico#org-refile

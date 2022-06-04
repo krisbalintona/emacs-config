@@ -289,10 +289,8 @@
 (use-package sudo-edit
   :general (kb/file-keys
              "U" '(sudo-edit-find-file :wk "Sudo find-file")
-             "u" '(sudo-edit :wk "Sudo this file")
-             )
-  :config (sudo-edit-indicator-mode)
-  )
+             "u" '(sudo-edit :wk "Sudo this file"))
+  :config (sudo-edit-indicator-mode))
 
 ;;; Modes
 ;;;; Conf-mode

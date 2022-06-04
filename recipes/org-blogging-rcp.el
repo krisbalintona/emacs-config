@@ -156,7 +156,7 @@ and rewrite link paths to make blogging more seamless."
        ;; Link type is handled by a special function.
        ((org-export-custom-protocol-maybe link desc 'md))
        ((member type '("custom-id" "id"
-                       "fuzzy")) ;<<target>>, #+name, heading links
+                       "fuzzy"))        ;<<target>>, #+name, heading links
         (let ((destination (if (string= type "fuzzy")
                                (org-export-resolve-fuzzy-link link info)
                              (org-export-resolve-id-link link info))))
@@ -276,7 +276,7 @@ and rewrite link paths to make blogging more seamless."
                (caption (or
                          ;; Caption set using #+caption takes higher precedence.
                          (org-string-nw-p
-                          (org-export-data  ;Look for caption set using #+caption
+                          (org-export-data ;Look for caption set using #+caption
                            (org-export-get-caption (org-export-get-parent-element link))
                            info))
                          (plist-get attr :caption)))
@@ -357,7 +357,7 @@ and rewrite link paths to make blogging more seamless."
                 (plist-put attr :target nil)
                 (plist-put attr :rel nil)
                 (org-html--format-image source attr info))
-               (t ;Else use the Hugo `figure' shortcode.
+               (t     ;Else use the Hugo `figure' shortcode.
                 ;; Hugo `figure' shortcode named parameters.
                 ;; https://gohugo.io/content-management/shortcodes/#figure
                 (let ((figure-params `((src . ,source)

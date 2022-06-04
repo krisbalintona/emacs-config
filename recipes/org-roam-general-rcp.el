@@ -12,14 +12,14 @@
 
 ;;; Org-roam
 (use-package org-roam
+  :commands kb/find-blog-files-org
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
   (:keymaps 'org-mode-map
             :prefix "C-c"
             "i" '(org-id-get-create :wk "Add ID")
             "tt" '(org-roam-tag-add :wk "Add tag")
-            "tr" '(org-roam-tag-remove :wk "Remove tag")
-            )
+            "tr" '(org-roam-tag-remove :wk "Remove tag"))
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             "<tab>" 'magit-section-toggle
             [mouse-1] #'org-roam-buffer-visit-thing)
@@ -27,8 +27,7 @@
     "f" '(org-roam-node-find :wk "Find file")
     "F" '((lambda ()
             (interactive)
-            (org-roam-node-find t)
-            )
+            (org-roam-node-find t))
           :wk "Find file other window")
 
     "i" '(org-roam-node-insert :wk "Insert note")
@@ -36,8 +35,7 @@
     "l" '(org-roam-buffer-toggle :wk "Toggle Roam buffer")
     "L" '(org-roam-buffer-display-dedicated :wk "New Roam buffer")
 
-    "b" '(org-roam-db-sync :wk "Build cache")
-    )
+    "b" '(org-roam-db-sync :wk "Build cache"))
   :custom
   (org-roam-directory kb/roam-dir)
   (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
@@ -122,22 +120,26 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
        (rename-file old-file new-file)
        (rename-buffer new-file)
        (set-visited-file-name new-file)
-       (set-buffer-modified-p nil)
-       )))
+       (set-buffer-modified-p nil))))
   (defun kb/org-roam-rename-to-new-title-all ()
     "Export all org-roam files to Hugo in my blogging directory."
     ;; FIXME 2022-02-19: Leaves the opened buffers alive
     (interactive)
     (dolist (fil (org-roam--list-files kb/roam-dir))
       (with-current-buffer (find-file-noselect fil)
-        (kb/org-roam-rename-to-new-title--single))
-      ))
+        (kb/org-roam-rename-to-new-title--single))))
   :config
   (org-roam-db-autosync-mode)
 
   ;; Org roam buffer section visibility
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
-  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide)))
+  (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
+
+  (defun kb/find-blog-files-org ()
+    "Return a list of org files which are within the blog directory
+of `org-roam'."
+    (org-roam--list-files (concat kb/roam-dir "blog"))))
+
 
 ;;; Customized `org-roam-node-find' functions
 ;; From https://github.com/hieutkt/.doom.d/blob/master/config.el#L690-L745 or
