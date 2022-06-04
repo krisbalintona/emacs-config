@@ -359,8 +359,6 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;; Bookmark
 (use-package bookmark
   :hook (kill-emacs . kb/bookmark-cleanup)
-  :custom
-  (bookmark-save-flag 1) ; Save bookmarks file every time there is a changed or added bookmark
   :config
   (bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
 
