@@ -36,7 +36,7 @@
 ;;; Undo-fu-session
 ;; Keep undo history across sessions
 (use-package undo-fu-session
-  :after undo-fu                        ; Depends on undo-fu
+  :if (not (featurep 'undo-tree))       ; Only when undo-tree isn't active
   :custom
   (undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
   (undo-fu-session-directory (no-littering-expand-var-file-name "undo-fu-session/"))
