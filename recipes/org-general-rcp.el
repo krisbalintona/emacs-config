@@ -57,8 +57,7 @@
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)          ; Automatically renumber
-  (org-footnote-define-inline t) ; Write footnote content where you declare rather in a particular section (i.e. `org-footnote-section')?
-  (org-footnote-fill-after-inline-note-extraction t)) ; Not sure what this does
+  (org-footnote-define-inline t)) ; Write footnote content where you declare rather in a particular section (i.e. `org-footnote-section')?
 
 ;;;; Org-attach
 (use-package org-attach
