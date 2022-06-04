@@ -14,20 +14,40 @@
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
   :gfhook 'hide-mode-line-mode
-  :general (:keymaps 'dictionary-mode-map
-                     "q" 'dictionary-close)
-  :chords (:map text-mode-map
-                ("jj" . dictionary-lookup-definition)
-                ("JJ" . dictionary-search))
+  :general  ; `:chords' doesn't have support for multiple keymaps per expression
+  (:keymaps 'dictionary-mode-map
+            "q" 'dictionary-close)
+  (:keymaps 'text-mode-map
+            (general-chord "jj") 'dictionary-lookup-definition
+            (general-chord "JJ") 'dictionary-search)
+  (:keymaps 'prog-mode-map
+            (general-chord "jj") '(lambda () ; Only when in comment
+                                    (interactive)
+                                    (when (nth 4 (syntax-ppss))
+                                      (dictionary-lookup-definition)))
+            (general-chord "JJ") '(lambda () ; Only when in comment
+                                    (interactive)
+                                    (when (nth 4 (syntax-ppss))
+                                      (dictionary-search))))
   :custom
   (dictionary-use-single-buffer t))     ; Reuse dictionary buffers
 
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
-  :chords (:map text-mode-map
-                ("kk" . powerthesaurus-lookup-synonyms-dwim)
-                ("KK" . powerthesaurus-lookup-dwim)))
+  :general  ; `:chords' doesn't have support for multiple keymaps per expression
+  (:keymaps 'text-mode-map
+            (general-chord "kk") 'powerthesaurus-lookup-synonyms-dwim
+            (general-chord "KK") 'powerthesaurus-lookup-dwim)
+  (:keymaps 'prog-mode-map
+            (general-chord "kk") '(lambda () ; Only when in comment
+                                    (interactive)
+                                    (when (nth 4 (syntax-ppss))
+                                      (powerthesaurus-lookup-synonyms-dwim)))
+            (general-chord "KK") '(lambda () ; Only when in comment
+                                    (interactive)
+                                    (when (nth 4 (syntax-ppss))
+                                      (powerthesaurus-lookup-dwim)))))
 
 ;;; Offline
 ;;;; Wordnut
