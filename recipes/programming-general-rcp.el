@@ -92,8 +92,7 @@
   (show-paren-style 'parenthesis)
   (show-paren-when-point-in-periphery t)
   (show-paren-when-point-inside-paren t)
-  :config (show-paren-mode)
-  )
+  :config (show-paren-mode))
 
 ;;;; Display-fill-column-indicator
 (use-package display-fill-column-indicator
@@ -176,7 +175,6 @@
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
-  :after which-key        ; Because I replace its value of `prefix-help-command'
   :commands embark-act
   :general
   ("C-." 'embark-act)
@@ -185,6 +183,9 @@
             "C->" 'embark-become)
   (kb/help-keys
     "B" '(embark-bindings :wk "Embark-bindings"))
+  ;; (:keymaps '(embark-symbol-map embark-command-map)
+  (:keymaps 'embark-symbol-map
+            "R" '(raise-sexp :wk "Raise sexp"))
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
@@ -200,7 +201,8 @@
   ;; Misc
   (embark-collect-live-initial-delay 0.8)
   (embark-collect-live-update-delay 0.5)
-  )
+  :config
+  (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
 
 ;;;;; Embark-consult
 ;; Companion package for embark
@@ -209,8 +211,7 @@
   ;; if you want to have consult previews as you move around an
   ;; auto-updating embark collect buffer
   :after (embark consult)
-  :hook (embark-collect-mode . consult-preview-at-point-mode)
-  )
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;;; Hideshow
 (use-package hideshow
