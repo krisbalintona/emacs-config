@@ -250,31 +250,16 @@
 ;;; Good-scroll
 ;; Good-enough smooth scrolling
 (use-package good-scroll
-  :after evil
-  :ghook 'evil-mode-hook
-  :gfhook '(lambda ()
-             (cond (good-scroll-mode
-                    (when (bound-and-true-p evil-mode)
-                      (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
-                      (advice-add 'evil-scroll-down :override #'kb/good-scroll-down))
-                    (advice-add 'scroll-down-command :override #'kb/good-scroll-up)
-                    (advice-add 'scroll-up-command :override #'kb/good-scroll-down)
-                    (advice-add 'good-scroll--render :override #'kb/good-scroll--render))
-                   (t                   ; When `good-scroll-mode' is nil
-                    (when (bound-and-true-p evil-mode)
-                      (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
-                      (advice-remove 'evil-scroll-down #'kb/good-scroll-down))
-                    (advice-remove 'scroll-down-command #'kb/good-scroll-up)
-                    (advice-remove 'scroll-up-command #'kb/good-scroll-down)
-                    (advice-remove 'good-scroll--render #'kb/good-scroll--render))))
+  :ghook 'after-init-hook
+  :gfhook 'kb/good-scroll-toggle
   :custom
   (good-scroll-step 80)
   ;; FIXME 2022-06-03: This is also motivated by the current buggy behavior of
   ;; when the point is at the very edge of the window (i.e. when `scroll-margin'
   ;; is 0).
   (scroll-margin 2)              ; Have a smaller scroll-margin with good-scroll
-  :config
-  ;; My own scroll functions
+  :init
+  ;; Variables
   (defvar kb/good-scroll--posn-x 0
     "Store the posn-x coordinate.")
   (defvar kb/good-scroll--posn-y 0
@@ -283,6 +268,7 @@
     "Allow the input of another kb/scroll command?")
   (setq good-scroll-destination 0)      ; Because it's nil at startup
 
+  ;; Functions
   (defun kb/good-scroll--convert-line-to-step (line)
     "Convert number of lines to number of pixels. Credit to
 https://github.com/io12/good-scroll.el/issues/28#issuecomment-1117887861"
@@ -301,7 +287,7 @@ https://github.com/io12/good-scroll.el/issues/28#issuecomment-1117887861"
     ;; edge, that x-y position is used instead for the next
     ;; kb/good-scroll--move. Additionally, though you can't good-scroll at the
     ;; edges, still move the point to the edges.
-    (let* ((xy (evil-posn-x-y (posn-at-point)))
+    (let* ((xy (posn-x-y (posn-at-point)))
            (x (car xy))
            (y (cdr xy))
            (down (cl-plusp lines))
@@ -324,7 +310,7 @@ progress. This is called by the timer `good-scroll--timer' every
     ;; if there is distance to scroll.
     (when (and (window-valid-p good-scroll--window)
                (not (zerop good-scroll-destination)))
-      (let ((inhibit-redisplay t)) ; TODO: Does this do anything?
+      (let ((inhibit-redisplay t))      ; TODO: Does this do anything?
         ;; Switch to the window that recieved the scroll event,
         ;; which might be different from the previously selected window.
         (with-selected-window good-scroll--window
@@ -380,7 +366,25 @@ progress. This is called by the timer `good-scroll--timer' every
     (interactive)
     (let* ((entire-screen (window-height))
            (half-screen (/ entire-screen 2)))
-      (kb/good-scroll--move (or lines half-screen)))))
+      (kb/good-scroll--move (or lines half-screen))))
+
+  ;; Setup
+  (defun kb/good-scroll-toggle ()
+    "Enable or disable my own `good-scroll' functions."
+    (cond (good-scroll-mode
+           (when (bound-and-true-p evil-mode)
+             (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
+             (advice-add 'evil-scroll-down :override #'kb/good-scroll-down))
+           (advice-add 'scroll-down-command :override #'kb/good-scroll-up)
+           (advice-add 'scroll-up-command :override #'kb/good-scroll-down)
+           (advice-add 'good-scroll--render :override #'kb/good-scroll--render))
+          (t                   ; When `good-scroll-mode' is nil
+           (when (bound-and-true-p evil-mode)
+             (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
+             (advice-remove 'evil-scroll-down #'kb/good-scroll-down))
+           (advice-remove 'scroll-down-command #'kb/good-scroll-up)
+           (advice-remove 'scroll-up-command #'kb/good-scroll-down)
+           (advice-remove 'good-scroll--render #'kb/good-scroll--render)))))
 
 ;;; Built-in Emacs modes/packages
 (use-package emacs
