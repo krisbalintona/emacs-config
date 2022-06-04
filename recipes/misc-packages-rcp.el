@@ -253,17 +253,26 @@
   :after evil
   :ghook 'evil-mode-hook
   :gfhook '(lambda ()
-             (if good-scroll-mode
-                 (progn
-                   (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
-                   (advice-add 'evil-scroll-down :override #'kb/good-scroll-down)
-                   (advice-add 'good-scroll--render :override #'kb/good-scroll--render))
-               (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
-               (advice-remove 'evil-scroll-down #'kb/good-scroll-down)
-               (advice-remove 'good-scroll--render #'kb/good-scroll--render)))
+             (cond (good-scroll-mode
+                    (when (bound-and-true-p evil-mode)
+                      (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
+                      (advice-add 'evil-scroll-down :override #'kb/good-scroll-down))
+                    (advice-add 'scroll-down-command :override #'kb/good-scroll-up)
+                    (advice-add 'scroll-up-command :override #'kb/good-scroll-down)
+                    (advice-add 'good-scroll--render :override #'kb/good-scroll--render))
+                   (t                   ; When `good-scroll-mode' is nil
+                    (when (bound-and-true-p evil-mode)
+                      (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
+                      (advice-remove 'evil-scroll-down #'kb/good-scroll-down))
+                    (advice-remove 'scroll-down-command #'kb/good-scroll-up)
+                    (advice-remove 'scroll-up-command #'kb/good-scroll-down)
+                    (advice-remove 'good-scroll--render #'kb/good-scroll--render))))
   :custom
   (good-scroll-step 80)
-  (scroll-margin 0)                     ; No scroll margin with good-scroll
+  ;; FIXME 2022-06-03: This is also motivated by the current buggy behavior of
+  ;; when the point is at the very edge of the window (i.e. when `scroll-margin'
+  ;; is 0).
+  (scroll-margin 2)              ; Have a smaller scroll-margin with good-scroll
   :config
   ;; My own scroll functions
   (defvar kb/good-scroll--posn-x 0
