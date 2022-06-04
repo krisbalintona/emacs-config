@@ -87,12 +87,7 @@
 ;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
-  :demand t
-  :custom
-  (show-paren-style 'parenthesis)
-  (show-paren-when-point-in-periphery t)
-  (show-paren-when-point-inside-paren t)
-  :config (show-paren-mode))
+  :init (show-paren-mode))
 
 ;;;; Display-fill-column-indicator
 (use-package display-fill-column-indicator
