@@ -46,11 +46,6 @@
   )
 (general-create-definer kb/file-keys    ; File-related
   :prefix "C-c f")
-(general-create-definer kb/mark-keys    ; Marks (e.g. bookmarks)
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC m"
-  :global-prefix "M-SPC m"
-  )
 (general-create-definer kb/nav-keys     ; Navigation in buffers
   :prefix "C-c c")
 (general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping

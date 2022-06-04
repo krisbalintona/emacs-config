@@ -44,12 +44,7 @@
             "M-J" 'org-shiftmetadown
             "C-a" 'org-beginning-of-line)
   (kb/note-keys
-    "c" '(org-capture :wk "Org-capture")
-    )
-  (kb/mark-keys
-    "g" '(org-mark-ring-goto :wk "Goto last mark")
-    "a" '(org-mark-ring-push :wk "Push to mark-ring")
-    )
+    "c" '(org-capture :wk "Org-capture"))
   :custom
   (org-directory kb/org-dir)
 
