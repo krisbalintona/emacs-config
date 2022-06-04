@@ -126,11 +126,9 @@
     "o" '(consult-outline :wk "Consult outline")
     "j" '(consult-line :wk "Consult line")
     "i" '(kb/consult-imenu-versatile :wk "Consult imenu"))
-  (kb/nav-keys
-    :keymaps 'org-mode-map
-    [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
-  (kb/file-keys
-    [remap recentf-open-files] '(consult-recent-file :wk "Consult recent file"))
+  (:keymaps 'org-mode-map
+            [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
+  ([remap recentf-open-files] '(consult-recent-file :wk "Consult recent file"))
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode . eshell-history-ring)
