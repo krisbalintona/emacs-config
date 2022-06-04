@@ -44,9 +44,8 @@
 ;;;; Window
 (use-package window
   :straight nil
-  :general (kb/window-keys
-             "t" '(window-toggle-side-windows :wk "Toggle side windows"))
-  :chords (("ww" . other-window))
+  :general ((general-chord "wt") 'window-toggle-side-windows
+            (general-chord "ww") 'other-window)
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
   (split-width-threshold 160)        ; Threshold for horizontal window splitting

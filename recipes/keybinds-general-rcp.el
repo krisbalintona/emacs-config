@@ -60,8 +60,6 @@
   :prefix "SPC t"
   :global-prefix "M-SPC t"
   )
-(general-create-definer kb/window-keys  ; Windows
-  :prefix "C-c w")
 
 ;;; Keybinding labels
 (kb/general-keys
