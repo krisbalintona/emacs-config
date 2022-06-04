@@ -29,20 +29,7 @@
      (prettify-symbols-mode))
   :general
   (:keymaps 'org-mode-map
-            "M-u" 'org-up-element
-            "M-d" 'org-down-element
-            "M-n" 'org-forward-heading-same-level
-            "M-p" 'org-backward-heading-same-level)
-  (:keymaps 'org-mode-map
-            :states '(normal visual motion)
-            "zi" 'org-toggle-inline-images)
-  (:keymaps 'org-mode-map
-            :states 'insert
-            "M-k" 'org-metaup
-            "M-j" 'org-metadown
-            "M-K" 'org-shiftmetaup
-            "M-J" 'org-shiftmetadown
-            "C-a" 'org-beginning-of-line)
+            "H-s" 'org-store-link)
   (kb/note-keys
     "c" '(org-capture :wk "Org-capture"))
   :custom
