@@ -14,24 +14,20 @@
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
   :gfhook 'hide-mode-line-mode
-  :general
-  (:keymaps 'dictionary-mode-map
-            "q" 'dictionary-close)
-  ("C-c d" 'dictionary-lookup-definition
-   "C-c D" 'dictionary-search)
+  :general (:keymaps 'dictionary-mode-map
+                     "q" 'dictionary-close)
+  :chords (:map text-mode-map
+                ("jj" . dictionary-lookup-definition)
+                ("JJ" . dictionary-search))
   :custom
-  (dictionary-use-single-buffer t)      ; Resure dictionary buffers
-  ;; (dictionary-default-dictionary "wn")
-  (dictionary-default-dictionary "*")
-  :config (global-dictionary-tooltip-mode)
-  )
+  (dictionary-use-single-buffer t))     ; Reuse dictionary buffers
 
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
-  :general ("C-c l" '(powerthesaurus-lookup-synonyms-dwim :wk "Synonyms")
-            "C-c L" '(powerthesaurus-lookup-dwim :wk "Advanced word lookup"))
-  )
+  :chords (:map text-mode-map
+                ("kk" . powerthesaurus-lookup-synonyms-dwim)
+                ("KK" . powerthesaurus-lookup-dwim)))
 
 ;;; Offline
 ;;;; Wordnut
