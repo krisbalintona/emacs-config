@@ -151,8 +151,8 @@
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :gfhook 'visual-line-mode
-  :chords (:map prog-mode-map
-                ("jj" . helpful-at-point))
+  :general (:keymaps '(helpful-mode-map prog-mode-map)
+                     "jj" 'helpful-at-point)
   :init
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
