@@ -395,7 +395,6 @@ progress. This is called by the timer `good-scroll--timer' every
   :straight nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
-  ("<f10>" '(save-buffers-kill-emacs :wk "Kill-emacs"))
   (kb/general-keys
     "u" '(universal-argument :wk "Universal argument")
 
