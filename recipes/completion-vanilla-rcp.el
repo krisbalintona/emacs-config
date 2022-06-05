@@ -316,9 +316,12 @@ parses its input."
   :straight (fussy :type git :host github :repo "jojojames/fussy")
   :commands fussy-all-completions
   :custom
-  (completion-category-defaults nil)
-  (completion-category-overrides nil)
-  (completion-styles '(fussy))
+  (completion-styles '(fussy orderless))
+
+  (fussy-max-candidate-limit 100)     ; Score only the top N shortest candidates
+  (fussy-compare-same-score-fn 'fussy-histlen->strlen<)
+
+  (orderless-matching-styles '(orderless-regexp)) ; Only use orderless to access its regexp feature
   :config
   (setq
    fussy-filter-fn 'fussy-filter-fast   ; See `fussy-fast-regex-fn'
