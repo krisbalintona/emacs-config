@@ -360,6 +360,7 @@
 
   (dash-docs-enable-debugging nil) ; Get rid of annoying messages when searching
   (dash-docs-min-length 2)
+  (dash-enable-fontlock t)
   :config
   ;; My own interface for accessing docsets via `completing-read'.
   (require 'cl-lib)

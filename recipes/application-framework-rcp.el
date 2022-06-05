@@ -140,7 +140,11 @@ move to that window."
             ("\\.pdf\\'" . eaf-org-open-file)
             (directory . emacs)
             (auto-mode . emacs)
-            ))))
+            )))
+
+  (with-eval-after-load 'dash-docs
+    (setq dash-docs-browser-func 'eaf-open-browser)))
+
 
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
