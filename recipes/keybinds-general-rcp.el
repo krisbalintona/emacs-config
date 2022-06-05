@@ -57,9 +57,7 @@
   :prefix "C-c o")
 (general-create-definer kb/toggle-keys  ; Toggles
   :keymaps '(normal visual insert motion)
-  :prefix "SPC t"
-  :global-prefix "M-SPC t"
-  )
+  :prefix "H-t")
 
 ;;; Keybinding labels
 (kb/general-keys
