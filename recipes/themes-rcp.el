@@ -25,30 +25,22 @@
   :commands hide-mode-line-mode)
 
 ;;;; Transparency
-(defun kb/set-default-transparency ()
-  "Sets default transparency of current and default frame alist."
-  (unless kb/linux-ubuntu
-    (set-frame-parameter (selected-frame) 'alpha '(98 . 98))
-    (add-to-list 'default-frame-alist   '(alpha . (98 . 98)))
-    ))
+(unless kb/linux-ubuntu
+  (set-frame-parameter nil 'alpha '(98 . 98))
+  (add-to-list 'default-frame-alist '(alpha . (98 . 98)))
+  ;; Set the alpha-background parameter. Requires a particular patch of Emacs
+  ;; 29.0.50: https://github.com/TheVaffel/emacs
+  (set-frame-parameter nil 'alpha-background 100)
+  (add-to-list 'default-frame-alist '(alpha-background . 100)))
 
-(defvar alpha-background-transparency t
-  "Enable background transparency? Meant for the `alpha-background' parameter.")
-
-(defun kb/toggle-transparency ()
-  "Toggle transparency. Requires a patched version of Emacs found
-here: https://github.com/TheVaffel/emacs"
+(defun kb/toggle-window-transparency ()
+  "Toggle transparency. Requires an patched older version of Emacs
+found here: https://github.com/TheVaffel/emacs"
   (interactive)
-  (if alpha-background-transparency
-      (progn (set-frame-parameter (selected-frame) 'alpha-background 75)
-             (setq alpha-background-transparency nil)
-             (kb/set-default-transparency)
-             )
-    (progn (set-frame-parameter (selected-frame) 'alpha-background 100)
-           (setq alpha-background-transparency t)
-           (kb/set-default-transparency))
-    ))
-(general-define-key "<f12>" 'kb/toggle-transparency)
+  (pcase (frame-parameter nil 'alpha-background)
+    (75 (set-frame-parameter nil 'alpha-background 100))
+    (100 (set-frame-parameter nil 'alpha-background 75))))
+(general-define-key "<f12>" 'kb/toggle-window-transparency)
 
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
