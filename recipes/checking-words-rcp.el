@@ -89,8 +89,8 @@ exist,then throw an error message."
   "Use `dictionary' if online, and `wordnet' if offline."
   (interactive)
   (if (kb/internet-up-p)
-      (funcall 'dictionary-search)
-    (wordnut-search)))
+      (call-interactively 'dictionary-search)
+    (call-interactively 'wordnut-search)))
 
 (defun kb/thesuarus-lookup ()
   "Use `powerthesaurus' if online, and `synosaurus' if offline."
