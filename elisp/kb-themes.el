@@ -206,11 +206,11 @@ Additionally, run `kb/themes-hooks'."
 (general-define-key "<f6>" 'kb/theme-switcher)
 
 ;;; Load appropriate theme based on time of day
-(current-time-string)
-(if (<= 18                              ; 6 PM
-        (string-to-number (format-time-string "%H")))
-    (kb/proper-load-theme-dark)
-  (kb/proper-load-theme-light))
+(let ((hour (string-to-number (format-time-string "%H"))))
+  ;; Dark theme between 6 PM or 6 AM
+  (if (or (<= 18 hour) (>= 6))
+      (kb/proper-load-theme-dark)
+    (kb/proper-load-theme-light)))
 
 ;;; kb-themes.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
