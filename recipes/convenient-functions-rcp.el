@@ -12,27 +12,23 @@
 (require 'custom-directories-rcp)
 
 ;;; Rename/move current file
-(defun kb/move-this-file (new-path &optional force-p)
-  "Move current buffer's file to NEW-PATH.
-
-      If FORCE-P, overwrite the destination file if it exists,
-      without confirmation."
-  (interactive
-   (list (read-file-name "Move file to: ")
-         current-prefix-arg))
-  (unless (and buffer-file-name (file-exists-p buffer-file-name))
-    (user-error "Buffer is not visiting any file"))
-  (let ((old-path (buffer-file-name (buffer-base-buffer)))
-        (new-path (expand-file-name new-path)))
-    (make-directory (file-name-directory new-path) 't)
-    (rename-file old-path new-path (or force-p 1))
-    (set-visited-file-name new-path t t)
-    ;; (doom--update-files old-path new-path)
-    (message "File moved to %S" (abbreviate-file-name new-path))))
-
-(kb/file-keys
-  "R" '(kb/move-this-file :wk "Rename current file")
-  )
+(defun kb/rename-file-and-buffer ()
+  "Rename current buffer and if the buffer is visiting a file,
+rename it too. Identical to to `crux''s
+`crux-rename-file-and-buffer'."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
+      (let* ((new-name (read-file-name "New name: " (file-name-directory filename)))
+             (containing-dir (file-name-directory new-name)))
+        (make-directory containing-dir t)
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
+(kb/file-keys "R" '(kb/rename-file-and-buffer :wk "Rename current file"))
 
 ;;; Aj-toggle-fold
 (defun aj-toggle-fold ()
@@ -48,8 +44,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
        (if selective-display nil (or col 1)))
       ))
   )
-(kb/toggle-keys
-  "f" '(aj-toggle-fold :wk "aj-toggle-fold"))
+(kb/toggle-keys "f" '(aj-toggle-fold :wk "aj-toggle-fold"))
 
 ;;; Indent whole buffer
 (defun kb/format-buffer-indentation--base ()
@@ -106,10 +101,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
   (if-let (filename (or buffer-file-name (bound-and-true-p list-buffers-directory)))
       (message (kill-new (abbreviate-file-name filename)))
     (error "Couldn't find filename in current buffer")))
-
-(kb/yank-kill-keys
-  "f" '(kb/yank-buffer-filename :wk "Yank file-path")
-  )
+(kb/yank-kill-keys "f" '(kb/yank-buffer-filename :wk "Yank file-path"))
 
 ;;; Delete this file
 (defun kb/delete-this-file (&optional path force-p)
@@ -140,18 +132,14 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
           ;; (doom--update-files path)
           (kill-this-buffer)
           (message "Deleted %S" short-path))))))
-
-(kb/file-keys
-  "D" '(kb/delete-this-file :wk "Delete current file")
-  )
+(kb/file-keys "D" '(kb/delete-this-file :wk "Delete current file"))
 
 ;;; Empty trash
 (defun kb/empty-trash ()
   "Empty the trash directory."
   (interactive)
   (if delete-by-moving-to-trash
-      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))
-  )
+      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
 
 ;;; Advice-unadvice
 ;; Thanks to https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
@@ -161,60 +149,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
   (advice-mapc (lambda (advice _props)
                  (advice-remove sym advice)) sym))
 
-;;; Unpackaged.el
-;; These are a bunch of functions taken from
-;; https://github.com/alphapapa/unpackaged.el. These are things which are useful
-;; but don't warrant an entire package.
-
-;;;; Reload-package
-;; Simple function for reloading an entire package and all its feature. Useful
-;; after upgrading
-(defun unpackaged/reload-package (package &optional allp)
-  "Reload PACKAGE's features.
-
-  If ALLP is non-nil (interactively, with prefix), load all of its
-  features; otherwise only load ones that were already loaded.
-
-  This is useful to reload a package after upgrading it.  Since a
-  package may provide multiple features, to reload it properly
-  would require either restarting Emacs or manually unloading and
-  reloading each loaded feature.  This automates that process.
-
-  Note that this unloads all of the package's symbols before
-  reloading.  Any data stored in those symbols will be lost, so if
-  the package would normally save that data, e.g. when a mode is
-  deactivated or when Emacs exits, the user should do so before
-  using this command."
-  (interactive
-   (list (intern (completing-read "Package: "
-                                  (mapcar #'car package-alist) nil t))
-         current-prefix-arg))
-  ;; This finds features in the currently installed version of PACKAGE, so if
-  ;; it provided other features in an older version, those are not unloaded.
-  (when (yes-or-no-p (format "Unload all of %s's symbols and reload its features? " package))
-    (let* ((package-name (symbol-name package))
-           (package-dir (file-name-directory
-                         (locate-file package-name load-path (get-load-suffixes))))
-           (package-files (directory-files package-dir 'full (rx ".el" eos)))
-           (package-features
-            (cl-loop for file in package-files
-                     when (with-temp-buffer
-                            (insert-file-contents file)
-                            (when (re-search-forward (rx bol "(provide" (1+ space)) nil t)
-                              (goto-char (match-beginning 0))
-                              (cadadr (read (current-buffer)))))
-                     collect it)))
-      (unless allp
-        (setf package-features (seq-intersection package-features features)))
-      (dolist (feature package-features)
-        (ignore-errors
-          ;; Ignore error in case it's not loaded.
-          (unload-feature feature 'force)))
-      (dolist (feature package-features)
-        (require feature))
-      (message "Reloaded: %s" (mapconcat #'symbol-name package-features " ")))))
-
-;;;; kb/org-add-blank-lines
+;;; kb/org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
 (defun unpackaged/org-add-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
