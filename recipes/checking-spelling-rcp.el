@@ -81,8 +81,7 @@
                                    ;; wucuo
                                    (flyspell-mode -1)
                                    (wucuo-start)))
-  :general (kb/general-keys
-             [remap flyspell-buffer] '(wucuo-spell-check-visible-region :wk "Spellcheck buffer"))
+  :general ([remap flyspell-buffer] 'wucuo-spell-check-visible-region)
   :custom
   (wucuo-flyspell-start-mode "fast")
   (wucuo-spell-check-buffer-predicate

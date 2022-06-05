@@ -18,9 +18,6 @@
   (kb/nav-keys
     "E" '(flycheck-list-errors :wk "List flycheck errors")
     )
-  (kb/general-keys
-    "?" '(flycheck-buffer :wk "Flycheck buffer")
-    )
   :custom
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 

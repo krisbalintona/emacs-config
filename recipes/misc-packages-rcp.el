@@ -114,8 +114,7 @@
 (use-package blamer
   :after magit
   :commands blamer-show-commit-info
-  :general (kb/magit-keys
-             "b" '(blamer-show-commit-info :wk "Git blame"))
+  :general ("H-b" 'blamer-show-commit-info)
   :custom
   ;; (blamer-author-formatter " ✎ %s ")
   (blamer-author-formatter "")
@@ -318,29 +317,6 @@ progress. This is called by the timer `good-scroll--timer' every
   :straight nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
-  (kb/general-keys
-    "u" '(universal-argument :wk "Universal argument")
-
-    "fF" '(find-file-other-window :wk "Find file other window")
-    "fS" '(save-some-buffers :wk "Save most buffers")
-    "ff" '(find-file :wk "Find file")
-    "fs" '((lambda ()
-             (interactive)
-             (let ((save-silently t))
-               (save-buffer)))
-           :wk "Save buffer")
-
-    "bn" '(next-buffer :wk "Next buffer")
-    "bp" '(previous-buffer :wk "Prev buffer")
-    "br" '((lambda ()
-             (interactive)
-             (revert-buffer nil t))
-           :wk "Revert buffer")
-
-    "eb" '(eval-buffer :wk "Eval buffer")
-    "ee" '(eval-last-sexp :wk "Eval last sexp")
-    "ed" '(eval-defun :wk "Eval top-level form")
-    "er" '(eval-region :wk "Eval region"))
   (kb/open-keys
     "c" '(calc :wk "Open calculator")
     "m" '((lambda ()

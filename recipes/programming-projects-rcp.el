@@ -116,8 +116,6 @@
   :general
   (:keymaps 'magit-mode-map
             "C-<tab>" 'magit-section-toggle-children)
-  (kb/magit-keys
-    "g"  '(magit-status :wk "Status"))
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
