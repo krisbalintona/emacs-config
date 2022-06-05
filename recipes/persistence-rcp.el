@@ -12,17 +12,16 @@
 ;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist
-  :demand t
   :custom
   (history-length 10000)
   (history-delete-duplicates t)
   (savehist-save-minibuffer-history t)
   (savehist-autosave-interval 30)
-  (savehist-save-minibuffer-history t)
-  :config
-  (add-to-list 'savehist-additional-variables 'kill-ring)    ; Save kill ring
+  :init
   (savehist-mode)
-  )
+  :config
+  (add-to-list 'savehist-additional-variables 'kill-ring))    ; Save kill ring
+
 
 ;;; Recentf
 ;; Enable logging of recent files

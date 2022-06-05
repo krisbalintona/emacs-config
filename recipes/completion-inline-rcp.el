@@ -12,6 +12,7 @@
 ;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
+;;;; Itself
 (use-package corfu
   :straight (corfu :files (:defaults "extensions/*")
                    :includes (corfu-history
@@ -31,13 +32,6 @@
             "C-g" #'corfu-quit
             "M-l" #'corfu-show-location)
   :custom
-  ;; Enable extensions
-  (require 'corfu-info)
-  (require 'corfu-history)
-  (corfu-history-mode t)
-  ;; Save the history across Emacs sessions
-  (add-to-list 'savehist-additional-variables 'corfu-history)
-
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
   (tab-always-indent 'complete)
@@ -102,6 +96,14 @@
 default lsp-passthrough."
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
           '(orderless))))
+
+;;;; Corfu-history
+;; Save the history across Emacs sessions
+(use-package corfu-history
+  :ghook 'corfu-mode-hook
+  :config
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'corfu-history-mode)))
 
 ;;; Kind-icon
 ;; Icons for corfu!
