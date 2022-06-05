@@ -135,7 +135,8 @@ sets since lispy changes the local values."
        (setq-local outline-level #'outshine-calc-outline-level
                    outline-regexp ";;[;]\\{1,8\\} ")))
   :general (:keymaps 'lispy-mode-map
-                     [remap lispy-shifttab] 'outshine-kbd-<backtab>))
+                     [remap lispy-shifttab] 'outshine-kbd-<backtab>
+                     [remap lispy-meta-return] 'outshine-insert-heading))
 
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock
