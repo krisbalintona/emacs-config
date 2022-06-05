@@ -349,8 +349,8 @@ afterward."
         (end-of-line)
         (insert "\n")))
     (evil-insert-state))
-  (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)
-  )
+  (when (bound-and-true-p evil-mode)
+    (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)))
 
 ;;;; Anzu
 ;; Search Mode Info Display
