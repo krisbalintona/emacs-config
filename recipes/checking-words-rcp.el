@@ -58,7 +58,10 @@ internet connection.
 
 If not (i.e. in a prog-mode derived major mode), then call
 `helpful-at-point' instead. If the sexp at point does not
-exist,then throw an error message."
+exist,then throw an error message.
+
+If in `lsp-mode' and `dash-docs-completing-read' is a feature,
+then call `dash-docs-completing-read-at-point'."
   (interactive)
   (let ((dict-function (if (kb/internet-up-p)
                            'dictionary-lookup-definition
@@ -70,6 +73,8 @@ exist,then throw an error message."
     (cond
      ((derived-mode-p 'text-mode)
       (funcall dict-function))
+     ((and (bound-and-true-p lsp-mode) (featurep 'dash-docs-completing-read))
+      (dash-docs-completing-read-at-point))
      (valid-symbol-p
       (helpful-at-point))
      ((or in-comment-p in-string-p)
