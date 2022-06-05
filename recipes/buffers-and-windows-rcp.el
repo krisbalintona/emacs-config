@@ -17,29 +17,9 @@
             "C-<right>" 'winner-redo)
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
-  (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*"))
+  (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*" ))
   (winner-boring-buffers-regexp "\\*helpful variable:\\|\\*helpful command:\\|magit:") ; Skip `magit' and `helpful' buffers
-  :init (winner-mode)
-  )
-
-;;;; Shackle
-;; Control the behavior of popup and side windows
-(use-package shackle
-  :disabled t
-  :ghook 'after-init-hook
-  :custom
-  (shackle-rules '((flycheck-verify-mode :inhibit-window-quit t :same t)
-                   (helpful-mode :inhibit-window-quit t :same t)
-                   ;; (help-mode :inhibit-window-quit t :same t) ; Messes with org-roam-doctor buffer
-                   (process-menu-mode :inhibit-window-quit t :same t)
-                   ;; ("magit:" :regexp t :inhibit-window-quit t :align t :same t) ; Replaced by creating `kb/magit-mode-quit-window'
-                   ("\\*org-roam\\*" :regexp t :align right :same nil :size 0.2)
-                   ("*Flycheck errors*" :select t :align below :size 0.33)
-                   ("\\*devdocs\\*" :select t :same nil)
-                   ("\\*Dogears List\\*" :regexp t :align below :same t :inhibit-window-quit t :size 0.3)
-                   ))
-  (shackle-select-reused-windows t)     ; Reuse windows by default
-  )
+  :init (winner-mode))
 
 ;;;; Window
 (use-package window
@@ -249,17 +229,6 @@ If buffer-or-name is nil return current buffer's mode."
    )
   )
 
-;;;; Burly
-(use-package burly
-  :disabled t ; NOTE 2021-08-30: For some reason, burly bookmarks can't be deleted by `bookmark-delete'
-  :general (kb/general-keys
-             "Bw" '(burly-bookmark-windows :wk "Burly windows")
-             "Bm" '(burly-open-bookmark :wk "Open burly bookmark")
-             "BM" '(burly-open-last-bookmark :wk "Open last bookmark")
-             "Bo" '(burly-open-url :wk "Open url at point")
-             )
-  )
-
 ;;;; Popper
 ;; "Tame ephemeral windows"
 (use-package popper
@@ -386,63 +355,6 @@ startup and popup bookmark menu to fix it"
         (when (derived-mode-p 'bookmark-bmenu-mode)
           (quit-window))))
     (bookmark-save)))
-
-;;;; Dogears
-;; Save and return to exact locations when you want, where you want
-(use-package dogears
-  :disabled t ; For now
-  :straight (dogears :type git :host github :repo "alphapapa/dogears.el")
-  :after bookmark
-  :ghook 'after-init-hook
-  :general
-  (:keymaps 'dogears-list-mode-map
-            :states '(motion normal visual)
-            "dd" 'dogears-list-delete
-            "RET" 'dogears-list-go
-            )
-  (kb/buffer-keys
-    "d" '(dogears-go :wk "Dogears go")
-    "D" '(dogears-list :wk "Dogears list")
-    )
-  :custom
-  (dogears-limit 200)
-  (dogears-line-width 40)
-  (dogears-ignore-places-functions
-   '(dogears--ignored-mode-p
-     minibufferp
-     (lambda () (string-match "^/tmp/" (expand-file-name buffer-file-truename)))
-     )
-   )
-  (dogears-ignore-modes
-   '(fundamental-mode special-mode helm-major-mode
-                      dogears-list-mode messages-buffer-mode custom-mode helpful-mode elfeed-search-mode elfeed-show-mode org-roam-mode embark-collect-mode man-mode flycheck-error-list-mode ledger-report-mode
-
-                      magit-status-mode magit-log-mode magit-wip-mode magit-diff-mode magit-blob-mode magit-refs-mode magit-stash-mode magit-blame-mode magit-reflog-mode magit-cherry-mode magit-proces-mode magit-section-mode magit-stashes-mode magit-repolist-mode magit-revision-mode magit-log-select-mode magit-merge-preview-mode magit-wip-after-save-mode magit-submodule-list-mode magit-blame-read-only-mode magit-wip-after-apply-mode magit-wip-before-apply-mode magit-wip-initial-backup-mode magit-wip-after-save-local-mode unpackaged/magit-log-date-headers-mode
-
-                      )
-   )
-  (dogears-functions
-   '(
-     ))
-  (dogears-hooks
-   '(imenu-after-jump-hook
-     change-major-mode-hook
-     eyebrowse-pre-window-switch-hook
-     window-configuration-change-hook
-     ))
-  )
-
-;;;; Ibuffer
-;; Manage buffer list
-(use-package ibuffer
-  :general (kb/buffer-keys
-             "l" '(ibuffer :wk "Ibuffer")
-             "L" '(ibuffer-other-window :wk "Ibuffer other window"))
-  :custom
-  (ibuffer-expert nil)
-  (ibuffer-truncate-lines nil)
-  (ibuffer-default-directory (cdr (project-current)))
-  )
 
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
