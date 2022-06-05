@@ -131,7 +131,7 @@
   :general ("<f11>" '((lambda ()             ; With "--debug-init"
                         (interactive)
                         (let ((current-prefix-arg '(4)))
-                          restart-emacs))
+                          (restart-emacs)))
                       :wk "Restart emacs")))
 
 ;;; Tempel
