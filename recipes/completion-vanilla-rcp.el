@@ -313,7 +313,7 @@ parses its input."
 ;;;; Itself
 (use-package fussy
   :straight (fussy :type git :host github :repo "jojojames/fussy")
-  :commands fussy-all-completions
+  :commands fussy-all-completions fussy-try-completions
   :custom
   (completion-styles '(fussy orderless))
 
