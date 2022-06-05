@@ -44,8 +44,9 @@
 ;;;; Window
 (use-package window
   :straight nil
-  :general ((general-chord "wt") 'window-toggle-side-windows
-            (general-chord "ww") 'other-window)
+  :general (:keymaps 'global-map ; For some reason, this needs to be explicitly set?
+                     (general-chord "wt") 'window-toggle-side-windows
+                     (general-chord "ww") 'other-window)
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
   (split-width-threshold 160)        ; Threshold for horizontal window splitting
