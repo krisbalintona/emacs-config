@@ -123,7 +123,7 @@
 (use-package lispy
   :if (not (bound-and-true-p evil-mode))
   :ghook 'emacs-lisp-mode-hook
-  :hook (emacs-lisp-mode . (lambda ()        ; Also use lispy for `eval-expression'
+  :hook (minibuffer-setup . (lambda ()        ; Also use lispy for `eval-expression'
                              (when (eq this-command 'eval-expression)
                                (lispy-mode 1))))
   :gfhook
