@@ -35,7 +35,17 @@
   :custom
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)
-  (vterm-timer-delay nil))     ; Make vterm appear less "slow" by removing delay
+  (vterm-timer-delay nil)      ; Make vterm appear less "slow" by removing delay
+
+  :config
+  (defun kb/kill-vterm-process-maybe ()
+    "If the current buffer has a vterm process running, kill both the
+process and its buffer without confirmation."
+    (let ((kill-buffer-query-functions  ; Suppress asking for confirmation
+           (delq 'process-kill-buffer-query-function kill-buffer-query-functions)))
+      (when (string= major-mode 'vterm-mode)
+        (kill-buffer))))
+  (add-to-list 'delete-frame-functions #'kb/kill-vterm-process-maybe))
 
 ;;; shell-vterm-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
