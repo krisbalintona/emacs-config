@@ -45,6 +45,12 @@
 (use-package tmr
   :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
   :general ("C-c t" '(tmr-dispatch :wk "Tmr dispatch"))
+  :custom
+  ;; Useful variables
+  (tmr-descriptions-list
+   '("Stop working!" "Work time 😄"))
+  (tmr-notification-urgency 'normal)
+  (tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
   :init
   (require 'transient)
   (transient-define-prefix tmr-dispatch ()
