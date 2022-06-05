@@ -102,7 +102,7 @@
 
 ;;; Restart-emacs
 (use-package restart-emacs
-  :general ("<f10>" '((lambda ()             ; With "--debug-init"
+  :general ("<f11>" '((lambda ()             ; With "--debug-init"
                         (interactive)
                         (let ((current-prefix-arg '(4)))
                           (restart-emacs)))

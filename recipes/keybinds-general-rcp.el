@@ -31,11 +31,10 @@
 (general-create-definer kb/toggle-keys  ; Toggles
   :prefix "H-t")
 
-;;; Use-package-chords
-;; Use-package integration with `key-chord'
+;;; Key-chords
 (use-package use-package-chords
   :demand t
-  :requires key-chord)
+  :init (key-chord-mode))
 
 ;;; Which-key
 ;; Show keybind tooltips
