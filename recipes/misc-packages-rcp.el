@@ -26,42 +26,7 @@
           (goto-char (point-min))
           (comment-region (point-at-bol) (point-at-eol)))
         (forward-line 2))
-      (rename-buffer (concat "*Scratch for " mode "*") t))
-    )
-  )
-
-;;; Keyfreq
-;; See a heatmap of your keypresses.
-;; Use =keyfreq-show= to see how many times you used a command. Use =keyfreq-html= to get the original rendered HTML page. Use =keyfreq-html-v2= to get the keyboard heat map.
-(use-package keyfreq
-  :straight (keyfreq :type git :host github :repo "KirmTwinty/keyfreq")
-  :gfhook 'keyfreq-autosave-mode
-  :custom
-  (keyfreq-folder (concat no-littering-var-directory "keyfreq"))
-  ;; Commands not to be logged
-  (keyfreq-excluded-commands '(self-insert-command
-                               org-self-insert-command
-                               ;; forward-char
-                               ;; backward-char
-                               ;; previous-line
-                               ;; next-line
-                               ))
-  :config (keyfreq-mode)
-  )
-
-;;; Disable-mouse
-;; Disable mouse interaction within Emacs
-(use-package disable-mouse
-  :disabled t ; I actually want to use my mouse when on laptop
-  :ghook ('window-setup-hook 'global-disable-mouse-mode)
-  :config
-  ;; For evil states
-  (mapc #'disable-mouse-in-keymap
-        (list evil-motion-state-map
-              evil-normal-state-map
-              evil-visual-state-map
-              evil-insert-state-map))
-  )
+      (rename-buffer (concat "*Scratch for " mode "*") t))))
 
 ;;; Proced
 ;; Built in process monitor
@@ -79,16 +44,24 @@
 ;; Timer package/library from Prot
 (use-package tmr
   :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
-  :general ("C-c T t" '(tmr :wk "Tmr")
-            "C-c T c" '(tmr-cancel :wk "Tmr cancel"))
-  )
+  :general ("C-c t" 'tmr-dispatch)
+  :init
+  (transient-define-prefix tmr-dispatch ()
+    "Invoke a transient menu for tmr"p
+    ["Create or remove timers"
+     [("t" "Create a timer" tmr)
+      ("C" "Clone a timer" tmr-clone)
+      ("T" "Create a timer with description" tmr-with-description)]
+     [("r" "Remove finished" tmr-remove-finished)
+      ("c" "Cancel timer" tmr-cancel)]]
+    ["View timers"
+     [("v" "Tabulated view" tmr-tabulated-view)]]))
 
 ;;; Emojify
 (use-package emojify
   :custom
   (emojify-composed-text-p t)
-  (emojify-emoji-styles '(ascii unicode github))
-  )
+  (emojify-emoji-styles '(ascii unicode github)))
 
 ;;; Unicode-fonts
 ;; NOTE 2022-01-24: See https://github.com/rolandwalker/unicode-fonts#testing
@@ -120,12 +93,6 @@
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
     ((member "Symbola" (font-family-list)) "Symbola"))))
 
-;;; Copy-as-format
-(use-package copy-as-format
-  :custom
-  (copy-as-format-default "slack")
-  )
-
 ;;; Restart-emacs
 (use-package restart-emacs
   :general ("<f11>" '((lambda ()             ; With "--debug-init"
@@ -149,44 +116,12 @@
   (tempel-file (no-littering-expand-var-file-name "tempel-templates"))
   )
 
-;;; Ffap
-;; Find file at point
-(use-package ffap
-  :general (:states '(normal motion)
-                    "g F" '(ffap-menu :wk "FFAP menu")
-                    )
-  :config
-  (when (featurep 'vertico)
-    ;; Use Vertico (and orderless) instead of a completions buffer
-    (advice-add #'ffap-menu-ask :around #'(lambda (&rest args)
-                                            (cl-letf (((symbol-function #'minibuffer-completion-help)
-                                                       #'ignore))
-                                              (apply args)))
-                ))
-  )
-
 ;;; All-the-icons-completion
 ;; Add `all-the-icons' icons to minibuffer completion candidates
 (use-package all-the-icons-completion
   :after (marginalia all-the-icons)
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
-  (all-the-icons-completion-mode)
-  )
-
-;;; Plantuml-mode
-;; Epic diagrams in org-mode
-(use-package plantuml-mode
-  :ensure-system-package plantuml
-  :mode ("\\.plantuml\\'" . plantuml-mode)
-  :custom
-  (plantuml-executable-path (executable-find "plantuml"))
-  (plantuml-default-exec-mode 'executable)
-  :config
-  ;; Integration with org-mode. See
-  ;; https://github.com/skuro/plantuml-mode#integration-with-org-mode
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  )
+  :init (all-the-icons-completion-mode))
 
 ;;; Blamer
 ;; Git blame interface (see a line's corresponding commit)
@@ -212,9 +147,6 @@
   (blamer-view 'overlay)
   (blamer--overlay-popup-position 'smart)
   )
-
-;;; Cycle-at-point
-(use-package cycle-at-point)
 
 ;;; Demap
 (use-package demap
