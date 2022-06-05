@@ -418,22 +418,19 @@ progress. This is called by the timer `good-scroll--timer' every
     "eb" '(eval-buffer :wk "Eval buffer")
     "ee" '(eval-last-sexp :wk "Eval last sexp")
     "ed" '(eval-defun :wk "Eval top-level form")
-    "er" '(eval-region :wk "Eval region")
-
-    "hi" '(info :wk "Info pages")
-
-    "oc" '(calc :wk "Open calculator")
-    "om" '((lambda ()
-             (interactive)
-             (pop-to-buffer "*Messages*"))
-           :wk "Open *Messages*"))
+    "er" '(eval-region :wk "Eval region"))
+  (kb/open-keys
+    "c" '(calc :wk "Open calculator")
+    "m" '((lambda ()
+            (interactive)
+            (pop-to-buffer "*Messages*"))
+          :wk "Open *Messages*"))
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
-            "u" 'universal-argument-more
-            )
+            "u" 'universal-argument-more)
   :config
-  (general-unbind 'normal help-mode-map "SPC")
-  (general-unbind 'normal custom-mode-map "SPC")
-  )
+  (when (bound-and-true-p evil-mode)
+    (general-unbind 'normal help-mode-map "SPC")
+    (general-unbind 'normal custom-mode-map "SPC")))
 
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
