@@ -390,6 +390,11 @@ progress. This is called by the timer `good-scroll--timer' every
            (advice-remove 'scroll-up-command #'kb/good-scroll-down)
            (advice-remove 'good-scroll--render #'kb/good-scroll--render)))))
 
+;;; Ctrlf
+;; Better `isearch'
+(use-package ctrlf
+  :init (ctrlf-mode))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
@@ -426,7 +431,7 @@ progress. This is called by the timer `good-scroll--timer' every
           :wk "Open *Messages*"))
   (:keymaps 'Info-mode-map
             :states '(visual normal motion)
-            "SPC" nil ; For my leader key
+            "SPC" nil                   ; For my leader key
             [remap evil-ret] 'Info-follow-nearest-node)
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more)
