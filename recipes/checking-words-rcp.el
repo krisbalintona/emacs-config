@@ -48,24 +48,34 @@ otherwise. Credit to https://emacs.stackexchange.com/a/18515"
   (= 0 (call-process "ping" nil nil nil "-c" "1" "-W" "1"
                      (if host host "www.google.com"))))
 
-;; TODO 2022-06-04: Better integrate `helpful' somehow
+;; TODO 2022-06-04: Better integrate bindings with other packages
 (defun kb/dictionary-at-point ()
-  "When in a text-mode major mode, use `dictionary' if online, and
-`wordnet' if offline. Also do this when in a comment or string in
-a prog-mode derived mode; otherwise call `helpful-at-point'."
+  "Call a dictionary command or `helpful-at-point'.
+
+If the major-mode is derived from text-mode, then call a
+dictionary command for the word at point depending on the
+internet connection.
+
+If not (i.e. in a prog-mode derived major mode), then call
+`helpful-at-point' instead. If the sexp at point does not
+exist,then throw an error message."
   (interactive)
-  (cond
-   ((derived-mode-p 'text-mode)
-    (if (kb/internet-up-p)
-        (dictionary-lookup-definition)
-      (wordnut-lookup-current-word)))
-   ((derived-mode-p 'prog-mode)
-    (if (or (nth 4 (syntax-ppss))       ; In comment
-            (nth 3 (syntax-ppss)))      ; In string
-        (if (kb/internet-up-p)
-            (dictionary-lookup-definition)
-          (wordnut-lookup-current-word))
-      (helpful-at-point)))))
+  (let ((dict-function (if (kb/internet-up-p)
+                           'dictionary-lookup-definition
+                         'wordnut-lookup-current-word))
+        (in-comment-p (nth 4 (syntax-ppss)))
+        (in-string-p (nth 3 (syntax-ppss)))
+        (valid-symbol-p (or (fboundp (symbol-at-point))
+                            (boundp (symbol-at-point)))))
+    (cond
+     ((derived-mode-p 'text-mode)
+      (funcall dict-function))
+     (valid-symbol-p
+      (helpful-at-point))
+     ((or in-comment-p in-string-p)
+      (funcall dict-function))
+     (t
+      (error "Not a valid symbol!")))))
 
 (defun kb/thesaurus-at-point ()
   "Use `powerthesaurus' if online, and `synosaurus' if offline."
@@ -91,7 +101,6 @@ a prog-mode derived mode; otherwise call `helpful-at-point'."
 
 ;; TODO 2022-06-04: Integrate devdocs
 (general-define-key
- :keymaps '(prog-mode-map text-mode-map)
  (general-chord "jj") 'kb/dictionary-at-point
  (general-chord "JJ") 'kb/dictionary-lookup
  (general-chord "kk") 'kb/thesaurus-at-point
