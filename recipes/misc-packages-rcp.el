@@ -102,21 +102,6 @@
                           (restart-emacs)))
                       :wk "Restart emacs")))
 
-;;; Tempel
-;; Small and simple snippet/template system compatible with corfu.
-(use-package tempel
-  :disabled t                           ; Migrate to yasnippet
-  :general
-  ("M-+" 'tempel-complete               ; List all available templates
-   "M-*" 'tempel-insert                 ; Insert typed template
-   )
-  (:keymaps 'tempel-map
-            "C-M-c" 'tempel-done
-            )
-  :custom
-  (tempel-file (no-littering-expand-var-file-name "tempel-templates"))
-  )
-
 ;;; All-the-icons-completion
 ;; Add `all-the-icons' icons to minibuffer completion candidates
 (use-package all-the-icons-completion

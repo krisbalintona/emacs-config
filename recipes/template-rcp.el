@@ -42,6 +42,18 @@ default when creating snippets. Then start `yas-global-mode'."
 (use-package doom-snippets
   :straight (doom-snippets :type git :host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
+;;; Tempel
+;; Small and simple snippet/template system compatible with corfu.
+(use-package tempel
+  :disabled t                           ; Migrate to yasnippet
+  :general
+  ("M-+" 'tempel-complete               ; List all available templates
+   "M-*" 'tempel-insert)                 ; Insert typed template
+  (:keymaps 'tempel-map
+            "C-M-c" 'tempel-done)
+  :custom
+  (tempel-file (no-littering-expand-var-file-name "tempel-templates")))
+
 ;;; template-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'template-rcp)
