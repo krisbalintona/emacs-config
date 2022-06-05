@@ -33,12 +33,12 @@
 (use-package proced
   :straight nil
   :gfhook 'evil-emacs-state
+  :general ("C-c p" '(proced :wk "Proced"))
   :custom
-  (proced-auto-update-flag t)      ; Update live
+  (proced-auto-update-flag t)           ; Update live
   (proced-auto-update-interval 1)
-  (proced-descend t)                ; Descending order?
-  (proced-filter 'all)      ; Which processes are shown?
-  )
+  (proced-descend t)                    ; Descending order?
+  (proced-filter 'all))                 ; Which processes are shown?
 
 ;;; Tmr
 ;; Timer package/library from Prot
