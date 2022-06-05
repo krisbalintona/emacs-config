@@ -44,14 +44,15 @@
 ;; Timer package/library from Prot
 (use-package tmr
   :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
-  :general ("C-c t" 'tmr-dispatch)
+  :general ("C-c t" '(tmr-dispatch :wk "Tmr dispatch"))
   :init
+  (require 'transient)
   (transient-define-prefix tmr-dispatch ()
-    "Invoke a transient menu for tmr"p
+    "Invoke a transient menu for tmr"
     ["Create or remove timers"
      [("t" "Create a timer" tmr)
-      ("C" "Clone a timer" tmr-clone)
-      ("T" "Create a timer with description" tmr-with-description)]
+      ("T" "Create a timer with description" tmr-with-description)
+      ("C" "Clone a timer" tmr-clone)]
      [("r" "Remove finished" tmr-remove-finished)
       ("c" "Cancel timer" tmr-cancel)]]
     ["View timers"
