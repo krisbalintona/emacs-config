@@ -18,17 +18,8 @@
 (general-create-definer kb/note-keys    ; For all lsp-related commands
   :prefix "C-c n")
 (general-create-definer kb/lsp-keys     ; For all lsp-related commands
-  :keymaps '(lsp-mode-map)
-  :states '(normal visual insert motion)
-  :prefix "\\"
-  :global-prefix "M-SPC \\"
-  )
-(general-create-definer kb/dap-keys     ; For all dap commands
-  :keymaps '(lsp-mode-map)
-  :states '(normal visual insert motion)
-  :prefix "|"
-  :global-prefix "M-SPC |"
-  )
+  :keymaps 'lsp-mode-map
+  :prefix "C-c l")
 (general-create-definer kb/file-keys    ; File-related
   :prefix "C-c f")
 (general-create-definer kb/nav-keys     ; Navigation in buffers
