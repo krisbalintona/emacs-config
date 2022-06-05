@@ -27,7 +27,7 @@
   (eaf-config-location (concat no-littering-var-directory "eaf"))
   (eaf-buffer-background-color (face-attribute 'default :background)) ; Set background color to theme's background's
   (eaf-preview-display-function-alist
-   '(("org-previewer" . eaf--org-preview-display)
+   '(;; ("org-previewer" . eaf--org-preview-display)
      ("markdown-previewer" . eaf--markdown-preview-display)
      ))
 
@@ -78,7 +78,7 @@
   ;; (require 'eaf-mermaid) ; NOTE 2022-05-25: Dependency error with eslint currently
   (require 'eaf-mindmap)
   (require 'eaf-music-player)
-  (require 'eaf-org-previewer)
+  ;; (require 'eaf-org-previewer)
   (require 'eaf-pdf-viewer)
   (require 'eaf-system-monitor)
   (require 'eaf-terminal)
