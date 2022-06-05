@@ -49,14 +49,10 @@
 (general-create-definer kb/nav-keys     ; Navigation in buffers
   :prefix "C-c c")
 (general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping
-  :keymaps '(normal visual insert motion)
-  :prefix "SPC i"
-  :global-prefix "M-SPC i"
-  )
+  :prefix "C-c i")
 (general-create-definer kb/open-keys    ; Open certain things
   :prefix "C-c o")
 (general-create-definer kb/toggle-keys  ; Toggles
-  :keymaps '(normal visual insert motion)
   :prefix "H-t")
 
 ;;; Keybinding labels
