@@ -128,7 +128,11 @@
 
 ;;; Restart-emacs
 (use-package restart-emacs
-  :general ("H-q" '(restart-emacs :wk "Restart emacs")))
+  :general ("<f11>" '((lambda ()             ; With "--debug-init"
+                        (interactive)
+                        (let ((current-prefix-arg '(4)))
+                          restart-emacs))
+                      :wk "Restart emacs")))
 
 ;;; Tempel
 ;; Small and simple snippet/template system compatible with corfu.
@@ -391,11 +395,7 @@ progress. This is called by the timer `good-scroll--timer' every
   :straight nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
-  ;; Info-mode
-  (:keymaps 'Info-mode-map
-            :states '(visual normal motion)
-            "SPC" nil ; For my leader key
-            [remap evil-ret] 'Info-follow-nearest-node)
+  ("<f10>" '(save-buffers-kill-emacs :wk "Kill-emacs"))
   (kb/general-keys
     "u" '(universal-argument :wk "Universal argument")
 
@@ -425,6 +425,10 @@ progress. This is called by the timer `good-scroll--timer' every
             (interactive)
             (pop-to-buffer "*Messages*"))
           :wk "Open *Messages*"))
+  (:keymaps 'Info-mode-map
+            :states '(visual normal motion)
+            "SPC" nil ; For my leader key
+            [remap evil-ret] 'Info-follow-nearest-node)
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more)
   :config

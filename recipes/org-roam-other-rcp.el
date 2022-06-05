@@ -118,7 +118,7 @@
   ;; compiler error for `kb/delve--key--toggle-preview'.
   :commands delve delve--zettel-preview
   :general
-  ("<f12>" 'delve)
+  ("<f2>" 'delve)
   (:keymaps 'delve-mode-map
             "<backtab>" 'kb/delve--key-backtab
             )

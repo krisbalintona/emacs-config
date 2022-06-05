@@ -22,16 +22,14 @@
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
-  :commands hide-mode-line-mode
-  :general ("<f8>" 'hide-mode-line-mode)
-  )
+  :commands hide-mode-line-mode)
 
 ;;;; Transparency
 (defun kb/set-default-transparency ()
   "Sets default transparency of current and default frame alist."
   (unless kb/linux-ubuntu
-    (set-frame-parameter (selected-frame) 'alpha '(98 .98))
-    (add-to-list 'default-frame-alist   '(alpha . (98 .98)))
+    (set-frame-parameter (selected-frame) 'alpha '(98 . 98))
+    (add-to-list 'default-frame-alist   '(alpha . (98 . 98)))
     ))
 
 (defvar alpha-background-transparency t
@@ -50,7 +48,7 @@ here: https://github.com/TheVaffel/emacs"
            (setq alpha-background-transparency t)
            (kb/set-default-transparency))
     ))
-(general-define-key "<f7>" 'kb/toggle-transparency)
+(general-define-key "<f12>" 'kb/toggle-transparency)
 
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.

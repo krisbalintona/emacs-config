@@ -339,7 +339,7 @@ command was called, go to its unstaged changes section."
 ;;;; Deadgrep
 ;; Grep but with a convenient magit-like interface (with visibility toggles)
 (use-package deadgrep
-  :general ("<f5>" 'deadgrep)
+  :general ("<f1>" 'deadgrep)
   )
 
 ;;; programming-projects-rcp.el ends here
