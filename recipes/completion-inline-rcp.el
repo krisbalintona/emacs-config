@@ -21,16 +21,19 @@
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
+            "M-d" 'corfu-show-documentation
+            "H-SPC" 'corfu-insert-separator)
+  (:keymaps 'corfu-map
             :states 'insert
-            "C-n" #'corfu-next
-            "C-p" #'corfu-previous
-            "<escape>" #'corfu-quit
-            "<return>" #'corfu-insert
-            "H-SPC" #'corfu-insert-separator
-            ;; "SPC" #'corfu-insert-separator ; Use when `corfu-quit-at-boundary' is non-nil
-            "M-d" #'corfu-show-documentation
-            "C-g" #'corfu-quit
-            "M-l" #'corfu-show-location)
+            "C-n" 'corfu-next
+            "C-p" 'corfu-previous
+            "<escape>" 'corfu-quit
+            "<return>" 'corfu-insert
+            "H-SPC" 'corfu-insert-separator
+            ;; "SPC" 'corfu-insert-separator ; Use when `corfu-quit-at-boundary' is non-nil
+            "M-d" 'corfu-show-documentation
+            "C-g" 'corfu-quit
+            "M-l" 'corfu-show-location)
   :custom
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
@@ -124,8 +127,7 @@ default lsp-passthrough."
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable
 
   ;; Add hook to reset cache so the icon colors match my theme
-  (add-hook 'kb/themes-hooks #'(lambda () (interactive) (kind-icon-reset-cache)))
-  )
+  (add-hook 'kb/themes-hooks #'(lambda () (interactive) (kind-icon-reset-cache))))
 
 ;;; Corfu-doc
 ;; Documentation window for corfu!
@@ -134,10 +136,11 @@ default lsp-passthrough."
   :after corfu
   :hook (corfu-mode . corfu-doc-mode)
   :general (:keymaps 'corfu-map
-                     [remap corfu-show-documentation] #'corfu-doc-toggle
+                     [remap corfu-show-documentation] 'corfu-doc-toggle
+                     [remap corfu-info-documentation] 'corfu-doc-toggle
                      ;; Scroll in the documentation window
-                     "M-n" #'corfu-doc-scroll-up
-                     "M-p" #'corfu-doc-scroll-down)
+                     "M-n" 'corfu-doc-scroll-up
+                     "M-p" 'corfu-doc-scroll-down)
   :custom
   (corfu-doc-delay 0.5)
   (corfu-doc-max-width 70)
