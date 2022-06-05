@@ -17,7 +17,6 @@
   :general
   (:keymaps 'org-mode-map
             :prefix "C-c"
-            "i" '(org-id-get-create :wk "Add ID")
             "tt" '(org-roam-tag-add :wk "Add tag")
             "tr" '(org-roam-tag-remove :wk "Remove tag"))
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer

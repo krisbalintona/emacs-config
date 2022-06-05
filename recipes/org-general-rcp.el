@@ -510,8 +510,7 @@ re-align the table if necessary. (Necessary because org-mode has a
 (use-package org-cliplink
   :general
   (kb/yank-kill-keys
-    "b" '(org-cliplink :wk "Paste https"))
-  )
+    "b" '(org-cliplink :wk "Paste https")))
 
 ;;;; Org-download
 ;; Insert images and screenshots into select modes
