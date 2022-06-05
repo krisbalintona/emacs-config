@@ -205,9 +205,8 @@
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
    '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
-                   orderless
-                   ))
-     ))
+                   partial-completion   ; Partial completion for file paths!
+                   orderless))))
   (completion-styles '(orderless))
 
   (orderless-component-separator 'orderless-escapable-split-on-space)
