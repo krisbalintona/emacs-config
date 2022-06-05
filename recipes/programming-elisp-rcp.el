@@ -119,13 +119,23 @@
                                        "M-l" #'lispyville-end-of-defun))))
 
 ;;; Lispy
+;; TODO 2022-06-04: Also get `special-lispy-shifttab' working
 (use-package lispy
   :if (not (bound-and-true-p evil-mode))
   :ghook 'emacs-lisp-mode-hook
-  :hook (emacs-lisp-mode . (lambda ()        ; Use lispy for `eval-expression'
+  :hook (emacs-lisp-mode . (lambda ()        ; Also use lispy for `eval-expression'
                              (when (eq this-command 'eval-expression)
                                (lispy-mode 1))))
-  :gfhook 'turn-off-smartparens-mode)
+  :gfhook
+  'turn-off-smartparens-mode
+  '(lambda ()
+     "Set `outline-level' and `outline-regexp' to the values outshine
+sets since lispy changes the local values."
+     (when (bound-and-true-p outshine-mode)
+       (setq-local outline-level #'outshine-calc-outline-level
+                   outline-regexp ";;[;]\\{1,8\\} ")))
+  :general (:keymaps 'lispy-mode-map
+                     [remap lispy-shifttab] 'outshine-kbd-<backtab>))
 
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock
