@@ -29,6 +29,10 @@
   "Open Sans"
   "Font for the variable-pitch face.")
 
+(defvar kb/themes-mode-line-font
+  "JetBrainsMono Nerd Font"
+  "Font for the mode line.")
+
 ;;; Install themes
 (setq custom-theme-load-path load-path)
 
@@ -132,13 +136,7 @@
         '((bg-main . "#1d2021")
           (fg-main . "#c2c2c2")))
   :config
-  (modus-themes-load-themes)
-
-  ;; Set foundational faces
-  ;; (set-face-attribute 'default nil :font uninspiring-dark-default :height 136)
-  ;; (set-face-attribute 'modus-themes-variable-pitch nil :font uninspiring-dark-variable-pitch :height 140)
-  ;; (set-face-attribute 'modus-themes-fixed-pitch nil :font uninspiring-dark-fixed-pitch :height 158)
-  )
+  (modus-themes-load-themes))
 (use-package solo-jazz-theme)
 (use-package kaolin-themes)
 
@@ -165,7 +163,19 @@ faces."
                       :height 1.0)
   (set-face-attribute 'variable-pitch nil
                       :font kb/themes-variable-pitch-font
-                      :height 1.1))
+                      :height 1.1)
+  
+  ;; TODO 2022-06-05: Kind of different heights between the active and inactive
+  ;; mode line. Take a look at `modus-themes--mode-line-attrs', the modus-theme
+  ;; background changes depending on `modus-themes-vivendi-colors' and
+  ;; `modus-themes-operandi-colors'
+  (set-face-attribute 'mode-line nil
+                      :font kb/themes-mode-line-font
+                      :height 113)
+  (set-face-attribute 'mode-line-inactive nil
+                      :inherit 'mode-line))
+;; Set faces properly for the first frame
+(general-add-hook 'server-after-make-frame-hook #'kb/themes-setup-base-faces t nil t)
 
 (defun kb/ensure-themes-loaded ()
   "Ensure that the themes in `kb/themes-list' are loaded."
