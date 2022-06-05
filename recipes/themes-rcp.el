@@ -175,13 +175,12 @@ found here: https://github.com/TheVaffel/emacs"
 ;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
-  :ghook 'prog-mode-hook 'LaTeX-mode-hook
+  :ghook 'prog-mode-hook 'LaTeX-mode-hook 'conf-mode-hook
   :gfhook 'column-number-mode ; Column number in modeline
   :general (kb/toggle-keys
              "l" '(display-line-numbers-mode :wk "Line numbers"))
   :custom
-  (display-line-numbers-type 'relative)
-  )
+  (display-line-numbers-type 'relative))
 
 ;;;; Which-function
 ;; Display the name of the function I am currently under
