@@ -323,6 +323,8 @@ progress. This is called by the timer `good-scroll--timer' every
   :straight nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
+  (:keymaps 'global-map
+            (general-chord "xf") 'find-file)
   (kb/open-keys
     "c" '(calc :wk "Open calculator")
     "m" '((lambda ()

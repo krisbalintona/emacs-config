@@ -114,6 +114,8 @@
   :straight (magit :type git :host github :repo "magit/magit")
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general
+  (:keymaps 'global-map
+            (general-chord "xg") 'magit-status)
   (:keymaps 'magit-mode-map
             "C-<tab>" 'magit-section-toggle-children)
   :custom
