@@ -213,7 +213,7 @@ Additionally, run `kb/themes-hooks'."
           ((equal kb/themes-dark current)
            (kb/proper-load-theme-light))
           )))
-(general-define-key "<f12>" 'kb/theme-switcher)
+(general-define-key "<f11>" 'kb/theme-switcher)
 
 ;;; Load appropriate theme based on time of day
 (let ((hour (string-to-number (format-time-string "%H"))))
