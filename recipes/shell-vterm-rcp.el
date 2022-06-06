@@ -20,8 +20,7 @@
   '(lambda ()
      (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
      (buffer-face-mode t)
-     (face-remap-add-relative 'default :height 107)) ; Change default face size
-  'hide-mode-line-mode
+     (face-remap-add-relative 'default :height 1.1))
   :general
   (:keymaps 'vterm-mode-map
             :states 'insert
@@ -36,7 +35,6 @@
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)
   (vterm-timer-delay nil)      ; Make vterm appear less "slow" by removing delay
-
   :config
   (defun kb/kill-vterm-process-maybe ()
     "If the current buffer has a vterm process running, kill both the
