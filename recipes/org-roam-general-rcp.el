@@ -101,7 +101,7 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
   (defun kb/find-blog-files-org ()
     "Return a list of org files which are within the blog directory
 of `org-roam'."
-    (org-roam--list-files (concat kb/roam-dir "blog")))
+    (org-roam--list-files kb/blog-dir))
 
   ;; Org ID link face
   (defface kb/org-roam-link

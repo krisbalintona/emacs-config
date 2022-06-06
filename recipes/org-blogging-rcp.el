@@ -16,7 +16,7 @@
   :commands kb/org-hugo-org-roam-sync-all
   :ensure-system-package (hugo go)
   :custom
-  (org-hugo-base-dir (concat org-directory "hugo/"))
+  (org-hugo-base-dir kb/blog-dir)
   (org-hugo-section "posts")
   ;; `nil' if you don't want to export to the static directory. This is
   ;; desirable if, for instance, you leverage page bundles for each post.

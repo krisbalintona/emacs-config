@@ -11,6 +11,7 @@
 ;;; For org and org-agenda
 (defvar kb/org-dir (expand-file-name "~/Documents/org-database/"))
 (defvar kb/roam-dir (concat kb/org-dir "roam/"))
+(defvar kb/blog-dir (concat kb/roam-dir "blog/"))
 (defvar kb/agenda-dir (concat kb/roam-dir "agenda/"))
 
 (defvar kb/all-org-dir-files (cl-remove-if
