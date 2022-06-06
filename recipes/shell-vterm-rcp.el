@@ -36,7 +36,7 @@
   (vterm-copy-exclude-prompt t)
   (vterm-timer-delay nil)      ; Make vterm appear less "slow" by removing delay
   :config
-  (defun kb/kill-vterm-process-maybe ()
+  (defun kb/kill-vterm-process-maybe (&optional frame)
     "If the current buffer has a vterm process running, kill both the
 process and its buffer without confirmation."
     (let ((kill-buffer-query-functions  ; Suppress asking for confirmation
