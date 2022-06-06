@@ -40,7 +40,8 @@
   (interactive)
   (let ((alpha-transparency 75))
     (pcase (frame-parameter nil 'alpha-background)
-      (alpha-transparency (set-frame-parameter nil 'alpha-background 100))
+      ((pred (lambda (n) (= n alpha-transparency)))
+       (set-frame-parameter nil 'alpha-background 100))
       (t (set-frame-parameter nil 'alpha-background alpha-transparency)))))
 (general-define-key "<f12>" 'kb/toggle-window-transparency)
 
