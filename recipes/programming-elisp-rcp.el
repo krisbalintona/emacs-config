@@ -162,17 +162,17 @@ sets since lispy changes the local values."
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :gfhook 'visual-line-mode
-  :general (:keymaps '(helpful-mode-map prog-mode-map)
-                     "jj" 'helpful-at-point)
-  :init
+  :general
+  (:keymaps 'helpful-mode-map
+            (general-chord "jj") 'helpful-at-point)
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
-  (advice-add 'describe-function :override 'helpful-callable)
-  (advice-add 'describe-command :override 'helpful-command)
-  (advice-add 'describe-variable :override 'helpful-variable)
-  (advice-add 'describe-symbol :override 'helpful-symbol)
-  (advice-add 'describe-key :override 'helpful-key)
-  (advice-add 'apropos-command :override 'helpful-command))
+  ([remap describe-function] 'helpful-command
+   [remap describe-command] 'helpful-command
+   [remap describe-variable] 'helpful-variable
+   [remap describe-symbol] 'helpful-symbol
+   [remap describe-key] 'helpful-key
+   [remap apropos-command] 'helpful-command))
 
 ;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
