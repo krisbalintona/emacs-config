@@ -167,7 +167,7 @@ sets since lispy changes the local values."
             (general-chord "jj") 'helpful-at-point)
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
-  ([remap describe-function] 'helpful-command
+  ([remap describe-function] 'helpful-function
    [remap describe-command] 'helpful-command
    [remap describe-variable] 'helpful-variable
    [remap describe-symbol] 'helpful-symbol
