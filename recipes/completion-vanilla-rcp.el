@@ -330,9 +330,9 @@ parses its input."
    fussy-score-fn 'fussy-sublime-fuzzy-score ; Doesn't work with orderless components
    fussy-score-fn 'fussy-liquidmetal-score
    fussy-score-fn 'fussy-hotfuzz-score
-   fussy-score-fn 'fussy-fuz-bin-score
    fussy-score-fn 'fussy-fzf-native-score
    fussy-score-fn 'flx-rs-score
+   fussy-score-fn 'fussy-fuz-bin-score
    )
   )
 

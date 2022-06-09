@@ -103,8 +103,7 @@
   (xref-show-definitions-function #'xref-show-definitions-completing-read)
   (xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
   (xref-file-name-display 'project-relative)
-  (xref-search-program 'ripgrep)
-  )
+  (xref-search-program 'ripgrep))
 
 ;;; Version control
 ;;;; Magit
