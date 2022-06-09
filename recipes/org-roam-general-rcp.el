@@ -38,7 +38,7 @@
   :custom
   (org-roam-directory kb/roam-dir)
   (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
-  (org-roam-file-exclude-regexp nil)
+  (org-roam-file-exclude-regexp (rx (one-or-more ".draft")))
   (org-roam-db-node-include-function
    #'(lambda ()
        "Exclude nodes with the ATTACH tag"

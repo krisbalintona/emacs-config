@@ -206,6 +206,67 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
         ))))
 (add-hook 'before-save-hook #'kb/org-add-blank-lines)
 
+;;; kb/draft-subtree-to-file
+;; Inspired by Palimpsest: https://github.com/danielsz/Palimpsest
+(defvar kb/drafts-directory nil
+  "Directory for drafts.")
+(with-eval-after-load 'org-roam
+  (setq kb/drafts-directory (expand-file-name "drafts/" org-roam-directory)))
+
+(defun kb/draft--draft-filename (filename &optional additional-suffix)
+  "Provide FILENAME and return the trash file's name.
+
+When ADDITIONAL-SUFFIX is provided, append it to the file base."
+  (let ((draft-file-base (file-name-nondirectory (file-name-sans-extension filename)))
+        (draft-extension (concat ".draft." (file-name-extension filename))))
+    (if additional-suffix
+        (concat draft-file-base additional-suffix draft-extension)
+      (concat draft-file-base draft-extension))))
+
+(defun kb/draft-send-region-to-trash (start end &optional filename)
+  "Move text between START and END to associated trash FILENAME.
+
+If FILENAME is not provided, the region's file name will be used
+instead."
+  (interactive "r")
+  (if buffer-file-truename
+      (let* ((draft-buffer (if filename
+                               filename
+                             (kb/draft--draft-filename (buffer-file-name))))
+             (draft-file (expand-file-name draft-buffer kb/drafts-directory))
+             (oldbuf (current-buffer)))
+        (delay-mode-hooks
+          (save-excursion
+            (if (file-exists-p draft-file) (find-file draft-file))
+            (set-buffer (get-buffer-create draft-buffer))
+            (set-visited-file-name draft-file)
+            (goto-char (point-min))
+            (insert-buffer-substring oldbuf start end)
+            (newline)
+            (save-buffer)
+            (write-file buffer-file-truename))
+          (kill-region start end)
+          (switch-to-buffer oldbuf)))
+    (message "Please save buffer first")))
+
+;; Much credit to https://hungyi.net/posts/org-mode-subtree-contents/
+(defun kb/draft-subtree-to-file ()
+  "Move current org subtree into a trash file.
+
+The file name will be the file name of the current file with
+\"--HEADING_TITLE\" appended to the file base. Its extension will
+be \".draft.org\"."
+  (interactive)
+  (require 'org)
+  (save-excursion
+    (org-back-to-heading)
+    (let ((beg-subtree (org-element-property :begin (org-element-at-point)))
+          (end-subtree (org-element-property :end (org-element-at-point)))
+          (draft-filename (kb/draft--draft-filename
+                           (buffer-file-name)
+                           (concat "--" (nth 4 (org-heading-components))))))
+      (kb/draft--send-region-to-trash beg-subtree end-subtree draft-filename))))
+
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'convenient-functions-rcp)
