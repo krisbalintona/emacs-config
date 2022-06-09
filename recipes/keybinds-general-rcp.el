@@ -60,6 +60,7 @@
 ;;; Meow
 ;; Trying out an alternative modal editing package
 (use-package meow
+  :disabled t                       ; I think I'm sticking with vanilla bindings
   :hook (after-init . meow-global-mode)
   :config
   (defun meow-setup ()
