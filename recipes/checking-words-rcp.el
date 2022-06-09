@@ -104,19 +104,19 @@ then call `dash-docs-completing-read-at-point'."
       (powerthesaurus-lookup-dwim)
     (synosaurus-choose-and-insert)))
 
-(if (and (bound-and-true-p evil-mode)
-         (bound-and-true-p meow-mode))
+(if (or (bound-and-true-p evil-mode)
+        (bound-and-true-p meow-mode))
     (general-define-key
-     (general-chord "jj") 'kb/dictionary-at-point
-     (general-chord "JJ") 'kb/dictionary-lookup
-     (general-chord "kk") 'kb/thesaurus-at-point
-     (general-chord "KK") 'kb/thesuarus-lookup)
+     :prefix "C-c"
+     "d" 'kb/dictionary-at-point
+     "D" 'kb/dictionary-lookup
+     "l" 'kb/thesaurus-at-point
+     "L" 'kb/thesuarus-lookup)
   (general-define-key
-   :prefix "C-c"
-   "d" 'kb/dictionary-at-point
-   "D" 'kb/dictionary-lookup
-   "l" 'kb/thesaurus-at-point
-   "L" 'kb/thesuarus-lookup))
+   (general-chord "jj") 'kb/dictionary-at-point
+   (general-chord "JJ") 'kb/dictionary-lookup
+   (general-chord "kk") 'kb/thesaurus-at-point
+   (general-chord "KK") 'kb/thesuarus-lookup))
 
 ;;; checking-words-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
