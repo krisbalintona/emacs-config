@@ -78,12 +78,12 @@ argument, query for word to search."
     t)
   )
 
-;;; Ace-link
-;; Open links easily
-(use-package ace-link
-  :general (:keymaps '(Info-mode-map helpful-mode-map help-mode-map woman-mode-map eww-mode-map compilation-mode-map mu4e-view-mode-map custom-mode-map org-mode-map)
-                     "M-'" 'ace-link :wk "Ace-link")
-  )
+;;; Link-hint
+;; Open links quickly
+(use-package link-hint
+  :general (:prefix "C-c l"
+                    "o" 'link-hint-open-link
+                    "c" 'link-hint-copy-link))
 
 ;;; Better-jumper
 ;; Accompanies `evil-jumper' very well. Some of the smart stuff is taken from
