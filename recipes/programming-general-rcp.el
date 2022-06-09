@@ -223,8 +223,7 @@
 
 ;;;; Expand-region
 (use-package expand-region
-  :general (:states '(normal visual)
-                    "M-e" 'er/expand-region)
+  :general ("C-=" 'er/expand-region)
   :custom
   (expand-region-subword-enabled t))
 
