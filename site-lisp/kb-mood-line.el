@@ -62,35 +62,33 @@ virtual environment."
 Don't display if not visiting a real file. Display project root
 if in project. Display current directory (`default-directory') as
 fallback. "
-  (when-let* ((active
-               (doom-modeline--active))
-              (face
-               (if active 'doom-modeline-project-dir 'mode-line-inactive))
-              (file-name
-               (file-local-name (or (buffer-file-name (buffer-base-buffer)) "")))
-              (root
-               (if-let (project (project-current))
-                   (project-root project) ""))
-              (relative-path
-               (file-relative-name default-directory root))
-              )
-    (propertize
-     (cond
-      ((not (buffer-file-name))         ; If not visiting file
-       "")
-      ((project-current)                ; If in project root
-       ;; Modified version of the truncate-with-project style in
-       ;; `doom-modeline-buffer-file-name'
-       (concat
-        (concat (file-name-nondirectory (directory-file-name root)) "/") ; Add project root
-        (unless (string= relative-path "./") ; Add relative path
-          (substring (shrink-path--dirs-internal relative-path t) 1))
-        ))
-      (file-name                     ; Default to current directory, abbreviated
-       (abbreviate-file-name default-directory))
-      )
-     'face face)
-    ))
+  (let* ((active
+          (doom-modeline--active))
+         (face
+          (if active 'doom-modeline-project-dir 'mode-line-inactive))
+         (file-name
+          (file-local-name (or (buffer-name (buffer-base-buffer)) ; Indirect buffers
+                               (buffer-file-name)                 ; Real buffers
+                               "")))    ; Nothing if neither
+         (root
+          (or (project-root (project-current)) ""))
+         (relative-path
+          (file-relative-name default-directory root))
+         directory)
+    (setq directory
+          (cond ((string= file-name "")
+                 "")
+                ((project-current)      ; If in project root
+                 ;; Modified version of the truncate-with-project style in
+                 ;; `doom-modeline-buffer-file-name'
+                 (concat
+                  (file-name-nondirectory (directory-file-name root)) ; Add project root
+                  "/"
+                  (unless (string= relative-path "./") ; Add relative path
+                    (substring (shrink-path--dirs-internal relative-path t) 1))))
+                (t                   ; Default to current directory, abbreviated
+                 (abbreviate-file-name default-directory))))
+    (propertize directory 'face face)))
 
 (defun kb/mood-line-segment-buffer-name ()
   "Display buffer name.
