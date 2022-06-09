@@ -115,6 +115,13 @@ the current buffer hugo buffer if they do not exist."
                                      (not (string= date "")))))
                              ("true" t)))))))
                    (kb/find-blog-files-org)))
+      ;; First delete all old posts; only works if `kb/org-hugo-bundle-workflow'
+      ;; is non-nil. Useful for if I renamed a node.
+      (when-let ((kb/org-hugo-bundle-workflow)
+                 (subdirs (cdr (ffap-all-subdirs (file-name-concat org-hugo-base-dir "content/" org-hugo-section) 1))))
+        (dolist (post-dir subdirs "Deleted old posts")
+          (delete-directory post-dir t t)))
+      ;; Then export all the files
       (with-current-buffer (find-file-noselect file)
         (read-only-mode -1)
         (kb/org-hugo--add-tag-maybe)
