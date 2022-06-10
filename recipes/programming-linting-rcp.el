@@ -13,11 +13,9 @@
 ;;; Flycheck
 ;; Check your code
 (use-package flycheck
-  ;; :demand t
   :general
   (kb/nav-keys
-    "E" '(flycheck-list-errors :wk "List flycheck errors")
-    )
+    "E" '(flycheck-list-errors :wk "List flycheck errors"))
   :custom
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
@@ -29,11 +27,17 @@
   (flycheck-temp-prefix "/tmp/flycheck")
 
   (flycheck-relevant-error-other-file-show nil) ; Errors from other files?
-  (flycheck-display-errors-delay 0.5) ; Time to show an error on point
+  (flycheck-display-errors-delay 0.5)           ; Time to show an error on point
   (flycheck-indication-mode 'right-margin)
   (flycheck-highlighting-mode 'symbols)
-  :config (global-flycheck-mode)
-  )
+  :config
+  ;; Set prefix map
+  (define-key flycheck-mode-map flycheck-keymap-prefix nil)
+  (setq flycheck-keymap-prefix (kbd "H-f"))
+  (define-key flycheck-mode-map flycheck-keymap-prefix
+              flycheck-command-map)
+  
+  (global-flycheck-mode))
 
 ;;; Flycheck-pos-tip-mode
 ;; Shows flycheck errors in pos-tip popup
