@@ -15,10 +15,6 @@
   :commands kb/find-blog-files-org
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
-  (:keymaps 'org-mode-map
-            :prefix "C-c"
-            "tt" '(org-roam-tag-add :wk "Add tag")
-            "tr" '(org-roam-tag-remove :wk "Remove tag"))
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             "<tab>" 'magit-section-toggle
             [mouse-1] #'org-roam-buffer-visit-thing)
