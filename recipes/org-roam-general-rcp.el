@@ -399,6 +399,19 @@ files if called with universal argument."
     (message "Done!")
     ))
 
+;;;; Copy node's file
+(with-eval-after-load 'org-roam
+  (defun kb/org-roam-copy-node-file ()
+    (interactive)
+    (let* ((node (org-roam-node-read))
+           (file-path (org-roam-node-file node))
+           (file-directory (file-name-directory file-path))
+           (file-name-base (file-name-base (file-name-nondirectory file-path)))
+           (new-file-name (concat file-name-base "-copy.org"))
+           (new-file-path (file-name-concat file-directory new-file-name)))
+      (copy-file file-path new-file-path)
+      (find-file new-file-path))))
+
 ;;; org-roam-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-roam-general-rcp)
