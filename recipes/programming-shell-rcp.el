@@ -20,8 +20,12 @@
          ("/bspwmrc\\'" . sh-mode))
   :hook (sh-mode . lsp-deferred)
   :custom
-  (flycheck-sh-shellcheck-executable "shellcheck")
-  )
+  (flycheck-sh-shellcheck-executable "shellcheck"))
+
+;;; Ssh-config-mode
+;; For ~/.ssh/config
+(use-package ssh-config-mode
+  :gfhook 'display-line-numbers-mode)
 
 ;;; programming-shell-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
