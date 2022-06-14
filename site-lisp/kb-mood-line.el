@@ -61,7 +61,7 @@ virtual environment."
 
 Don't display if not visiting a real file. Display project root
 if in project. Display current directory (`default-directory') as
-fallback. "
+fallback."
   (let* ((active
           (doom-modeline--active))
          (face
@@ -118,16 +118,14 @@ instead."
 (defun kb/mood-line-segment-modified ()
   "Displays a color-coded buffer modification/read-only indicator in the mode-line."
   (cond
-   ((or (string-match-p "\\*.*\\*" (buffer-name))
-        (not (buffer-file-name)))       ; Don't care if not a real file
+   ((string-match-p "\\*.*\\*" (buffer-name))
     " ")
-   ((buffer-modified-p)
+   ((buffer-modified-p (get-buffer (buffer-file-name (buffer-base-buffer))))
     (propertize "●" 'face 'mood-line-modified)
     )
    ((and buffer-read-only (buffer-file-name))
     (propertize "■" 'face 'mood-line-unimportant))
-   (t " ")
-   ))
+   (t " ")))
 
 (defun kb/mood-line-segment-position ()
   "Displays the current cursor position in the mode-line."
