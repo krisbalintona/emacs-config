@@ -76,7 +76,8 @@ fallback."
           (file-relative-name default-directory root))
          directory)
     (setq directory
-          (cond ((string= file-name "")
+          (cond ((or (string-match-p "\\*.*\\*" (buffer-name))
+                     (string= file-name ""))
                  "")
                 ((project-current)      ; If in project root
                  ;; Modified version of the truncate-with-project style in
