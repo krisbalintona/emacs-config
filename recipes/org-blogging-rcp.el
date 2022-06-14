@@ -88,6 +88,12 @@ the current buffer hugo buffer if they do not exist."
     (interactive)
     (require 'org-roam)
     (org-roam-update-org-id-locations) ; Necessary for id's to be recognized for exports
+    ;; First delete all old posts; only works if `kb/org-hugo-bundle-workflow'
+    ;; is non-nil. Useful for if I renamed a node.
+    (when-let ((kb/org-hugo-bundle-workflow)
+               (subdirs (cdr (ffap-all-subdirs (file-name-concat org-hugo-base-dir "content/" org-hugo-section) 1))))
+      (dolist (post-dir subdirs "Deleted old posts")
+        (delete-directory post-dir t t)))
     (dolist (file (cl-remove-if-not
                    (lambda (file)
                      ;; Don't look at files without the title, hugo_publishdate,
@@ -115,13 +121,7 @@ the current buffer hugo buffer if they do not exist."
                                      (not (string= date "")))))
                              ("true" t)))))))
                    (kb/find-blog-files-org)))
-      ;; First delete all old posts; only works if `kb/org-hugo-bundle-workflow'
-      ;; is non-nil. Useful for if I renamed a node.
-      (when-let ((kb/org-hugo-bundle-workflow)
-                 (subdirs (cdr (ffap-all-subdirs (file-name-concat org-hugo-base-dir "content/" org-hugo-section) 1))))
-        (dolist (post-dir subdirs "Deleted old posts")
-          (delete-directory post-dir t t)))
-      ;; Then export all the files
+      ;; Export all the files
       (with-current-buffer (find-file-noselect file)
         (read-only-mode -1)
         (kb/org-hugo--add-tag-maybe)
