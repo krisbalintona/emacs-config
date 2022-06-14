@@ -63,35 +63,35 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
     (goto-char (point-min))
     (while (re-search-forward comment-start nil t)
       (call-interactively 'fill-paragraph)
-      (forward-line 1)
-      ))
-  )
+      (forward-line 1))))
 (defun kb/format-buffer-indentation ()
   "Properly indent the entire buffer."
   (interactive)
   (require 'apheleia)
   (cond
-   ((not (buffer-file-name))
+   ((eq major-mode 'emacs-lisp-mode)
     (kb/format-buffer-indentation--base))
-   ((eq major-mode 'latex-mode)    ; LaTeX
+   ((eq major-mode 'conf-mode)
+    (conf-align-assignments)
+    (kb/format-buffer-indentation--base))
+   ((eq major-mode 'web-mode)
+    (require 'web-mode)
+    (web-mode-buffer-indent))
+   ((eq major-mode 'latex-mode)
     (kb/format-buffer-indentation--base)
     (require 'latex-general-rcp)
     (kb/tabular-magic))
-   ((eq major-mode 'org-mode)      ; Org-mode
-    (let* ((save-silently t))      ; Don't write to echo area when saving
+   ((eq major-mode 'org-mode)
+    (let* ((save-silently t))           ; Don't write to echo area when saving
       (kb/format-buffer-indentation--base)
       ;; Save buffer if modified and in `org-mode' because drawers are annoying.
       (save-buffer)))
-   ((or (eq major-mode 'emacs-lisp-mode) ; Emacs-lisp
-        (eq major-mode 'lisp-interaction-mode))
-    (kb/format-buffer-indentation--base))
-   ((apheleia--get-formatters)     ; If available apheleia formatter
-    (let* ((apheleia-mode t))      ; Save silently
+   ((apheleia--get-formatters)          ; If available apheleia formatter
+    (let* ((apheleia-mode t))           ; Save silently
       (apheleia--format-after-save)))
-   ((derived-mode-p 'prog-mode)    ; Prog-mode
+   ((derived-mode-p 'prog-mode)
     (kb/format-buffer-indentation--fill-column))
-   (t (kb/format-buffer-indentation--base))
-   ))
+   (t (kb/format-buffer-indentation--base))))
 (general-define-key (general-chord ";;") 'kb/format-buffer-indentation)
 
 ;;; Yank current buffer's file-path

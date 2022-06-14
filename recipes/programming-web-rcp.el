@@ -79,14 +79,13 @@
   (flycheck-javascript-eslint-executable (kb/shell-command-to-string "which eslint"))
   )
 
-;;; Json
+;;; Json-mode
 (use-package json-mode
   :ensure-system-package (jsonlint . "sudo npm install --global jsonlint")
   :custom
-  (flycheck-json-jsonlint-executable (kb/shell-command-to-string "which jsonlint"))
-  )
+  (flycheck-json-jsonlint-executable (kb/shell-command-to-string "which jsonlint")))
 
-;;; Yaml
+;;; Yaml-mode
 (use-package yaml-mode
   :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
   :gfhook
@@ -96,8 +95,7 @@
   :general (:keymaps 'yaml-mode-map
                      [remap evil-indent] 'yaml-indent-line)
   :custom
-  (flycheck-yaml-jsyaml-executable (kb/shell-command-to-string "which js-yaml"))
-  )
+  (flycheck-yaml-jsyaml-executable (kb/shell-command-to-string "which js-yaml")))
 
 ;;; programming-web-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
