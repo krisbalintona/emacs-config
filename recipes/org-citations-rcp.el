@@ -17,14 +17,14 @@
                      [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
   :custom
   (org-cite-global-bibliography kb/bib-files)
-  (org-cite-csl-locales-dir (expand-file-name (concat user-emacs-directory "locales/")))
+  (org-cite-csl-locales-dir (file-name-concat user-emacs-directory "locales/"))
   (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles/"))
   (org-cite-export-processors
-   '((md csl "chicago-fullnote-bibliography.csl")   ; Footnote reliant
-     (latex biblatex)                               ; For humanities
-     (odt csl "chicago-fullnote-bibliography.csl")  ; Footnote reliant
-     (docx csl "chicago-fullnote-bibliography.csl") ; Footnote reliant
-     (t csl "modern-language-association.csl")
+   '((md . (csl "chicago-fullnote-bibliography.csl"))   ; Footnote reliant
+     (latex . biblatex)                                 ; For humanities
+     (odt . (csl "chicago-fullnote-bibliography.csl"))  ; Footnote reliant
+     (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+     (t . (csl "modern-language-association.csl"))      ; Fallback
      ))
   :custom-face
   ;; Have citation link faces look closer to as they were for `org-ref'
