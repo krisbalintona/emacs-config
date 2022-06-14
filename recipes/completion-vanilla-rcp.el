@@ -225,6 +225,7 @@
    '(prot-orderless-literal-dispatcher
      prot-orderless-strict-initialism-dispatcher
      prot-orderless-flex-dispatcher
+     kb/orderless-without-literal-dispatcher
      ))
   :init
   (defun orderless--strict-*-initialism (component &optional anchored)
@@ -273,7 +274,13 @@ It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
     (when (string-suffix-p "." pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
-  )
+  
+  (defun kb/orderless-without-literal-dispatcher (pattern _index _total)
+    "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "!" pattern)
+      `(orderless-without-literal . ,(substring pattern 0 -1)))))
 
 ;;; Fussy
 ;; Instead of just filtering (e.g. like `orderless' alone), also score the
@@ -320,7 +327,7 @@ parses its input."
   (fussy-max-candidate-limit 100)     ; Score only the top N shortest candidates
   (fussy-compare-same-score-fn 'fussy-histlen->strlen<)
 
-  (orderless-matching-styles '(orderless-regexp)) ; Only use orderless to access its regexp feature
+  (orderless-matching-styles '(orderless-initialism orderless-regexp))
   :config
   (setq
    fussy-filter-fn 'fussy-filter-fast   ; See `fussy-fast-regex-fn'
