@@ -151,7 +151,15 @@ to manually add one myself."
   (advice-add 'org-cite-insert :after #'(lambda (args)
                                           (save-excursion
                                             (left-char) ; First move point inside citation
-                                            (citar-org-update-pre-suffix)))))
+                                            (citar-org-update-pre-suffix))))
+
+  ;; Add file watcher for global and local bibliography files to refresh cache
+  ;; on modification. Taken from
+  ;; https://github.com/emacs-citar/citar#refreshing-the-library-display
+  (citar-filenotify-setup '(org-mode-hook))
+  (setq citar-filenotify-callback 'refresh-cache)) ; Because my bib file rarely changes
+
+
 
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
