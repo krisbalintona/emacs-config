@@ -46,14 +46,12 @@
   :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/org-roam-node-from-cite)
   :general
   (kb/note-keys
-    "C" '(kb/org-roam-node-from-cite :wk "Citar-capture")
-    )
+    "C" '(kb/org-roam-node-from-cite :wk "Citar-capture"))
   (:keymaps 'org-mode-map
             :prefix "C-c b"
             "b" '(citar-insert-citation :wk "Insert citation")
             "r" '(citar-insert-reference :wk "Insert reference")
-            "o" '(citar-open-notes :wk "Open note")
-            )
+            "o" '(citar-open-notes :wk "Open note"))
   :custom
   (citar-bibliography kb/bib-files)
   (citar-templates
@@ -73,9 +71,9 @@
            ,(all-the-icons-octicon "link" :face 'kb/citar-icon-dim :v-adjust 0.01))))
   (citar-symbol-separator "  ")
 
-  (citar-notes-paths `(,kb/roam-dir))
+  (citar-notes-paths (list kb/roam-dir))
   (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
-  (citar-at-point-function 'embark-act) ; Use `embark'
+  (citar-at-point-function 'embark-act)           ; Use `embark'
   :init
   ;; Here we define a face to dim non 'active' icons, but preserve alignment.
   ;; Change to your own theme's background(s)
@@ -83,7 +81,8 @@
     ;; Based on solaire's faces
     '((((background dark)) :foreground "#212428")
       (((background light)) :foreground "#f0f0f0"))
-    "Face for obscuring/dimming icons")
+    "Face for having icons' color be identical to the theme
+  background when \"not shown\".")
   :config
   ;; Create a new node from a bibliographic source. Taken from
   ;; https://jethrokuan.github.io/org-roam-guide/
@@ -108,13 +107,15 @@
 
   ;; Add prefix and suffix text immediately after insertion
   (defun kb/citar-org-update-pre-suffix ()
-    "Change the pre/suffix text of the reference at point. My
-version that also adds a space in the suffix so I don't always
-have to manually add one myself."
+    "Change the pre/suffix text of the reference at point.
+
+My version also adds a space in the suffix so I don't always have
+to manually add one myself."
     (interactive)
 
     ;; Enable `typo' typographic character cycling in minibuffer. Particularly
-    ;; useful in adding en-dashes in citation suffixes (e.g. for page ranges)
+    ;; useful in adding en- and em-dashes in citation suffixes (e.g. for page
+    ;; ranges)
     (when (featurep 'typo)
       (add-hook 'minibuffer-mode-hook 'typo-mode)) ; Enable dashes
 
@@ -126,15 +127,20 @@ have to manually add one myself."
            ;; TODO handle space delimiter elegantly.
            (pre (read-string "Prefix text: " (org-element-property :prefix ref)))
            (post (read-string "Suffix text: " (org-element-property :suffix ref))))
+
+      ;; Change post to automatically have one space prior to any user-inputted
+      ;; suffix
       (setq post
             (if (string= (replace-regexp-in-string "\s-*" "" post) "")
-                ""       ; If there is nothing of substance (e.g. just a string)
+                ""     ; If there is nothing of substance (e.g. an empty string)
               (replace-regexp-in-string "^[\s-]*" " " post))) ; Only begin with one space
+
       (setf (buffer-substring (org-element-property :begin ref)
                               (org-element-property :end ref))
             (org-element-interpret-data
              `(citation-reference
                (:key ,key :prefix ,pre :suffix ,post)))))
+
     ;; Remove hook if it was added earlier
     (remove-hook 'minibuffer-mode-hook 'typo-mode))
   (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-pre-suffix)
