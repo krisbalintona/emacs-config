@@ -71,16 +71,17 @@ then call `dash-docs-completing-read-at-point'."
         (valid-symbol-p (or (fboundp (symbol-at-point))
                             (boundp (symbol-at-point)))))
     (cond
-     ((derived-mode-p 'text-mode)
-      (funcall dict-function))
      ((and (bound-and-true-p lsp-mode) (featurep 'dash-docs-completing-read))
+      (require 'dash-docs)
       (dash-docs-completing-read-at-point))
      (valid-symbol-p
       (helpful-at-point))
      ((or in-comment-p in-string-p)
       (funcall dict-function))
+     ((derived-mode-p 'text-mode)
+      (funcall dict-function))
      (t
-      (error "Not a valid symbol!")))))
+      (error "I can't do anything here!")))))
 
 (defun kb/thesaurus-at-point ()
   "Use `powerthesaurus' if online, and `synosaurus' if offline."
