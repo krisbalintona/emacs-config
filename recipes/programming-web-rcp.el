@@ -3,7 +3,6 @@
 ;;; Commentary:
 ;;
 ;; These are packages that are relevant to web development.
-;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
@@ -14,39 +13,40 @@
 ;; Compatible with most template engines (e.g. handlebars mode, mustache) and
 ;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
 (use-package web-mode
-  :ensure-system-package (handlebars . "sudo npm --global install handlebars")
-  :mode ("\\.hbs\\'"
-         "\\.yaml\\'")
+  :ensure-system-package (handlebars . "sudo npm --global install handlebars") ; For
+                                                                               ; ghost
+  :mode ("\\.hbs\\'"                    ; For ghost
+         "\\.yaml\\'"
+         "\\.html\\'")
   :gfhook
   'electric-pair-mode
   'highlight-indent-guides-mode
   'display-line-numbers-mode
   'visual-line-mode
   :custom
-  (web-mode-comment-formats '(("handlebars" . "{{!")
-                              ("javascript" . "/*")
-                              ("java" . "//")
-                              ("typescript" . "//")
-                              ("php" . "/*")
-                              ("css" . "/*"))
-                            )
-  (web-mode-comment-style 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 4)
+  (web-mode-comment-style 1)
 
-  (flycheck-handlebars-executable (kb/shell-command-to-string "which handlebars"))
-  :init
-  (defun kb/shell-command-to-string (command)
-    "Execute shell command COMMAND and return its output as a string,
-removing any newlines."
-    (let* ((str (with-output-to-string
-                  (with-current-buffer
-                      standard-output
-                    (shell-command command t))))
-           (len (length str)))
-      (cond
-       ((and (> len 0) (eql (aref str (- len 1)) ?\n))
-        (substring str 0 (- len 1)))
-       (t str))
-      )))
+  (web-mode-engines-alist
+   '(("go" . "\\.html\\'")))            ; For hugo
+
+  ;; Features
+  (web-mode-enable-auto-pairing t)
+  (web-mode-enable-css-colorization t) ; CSS colorization
+  (web-mode-enable-block-face t) ; Block face: set blocks background and default
+                                 ; foreground
+  (web-mode-enable-part-face t) ; Part face: set parts background and default
+                                ; foreground
+  (web-mode-enable-comment-interpolation nil) ; Font lock comment keywords
+  (web-mode-enable-heredoc-fontification t) ; Heredoc (cf. PHP strings)
+                                            ; fontification
+
+  ;; Other
+  (flycheck-handlebars-executable (executable-find "handlebars"))
+  :config
+  (setf (alist-get "handlebars" web-mode-comment-formats nil nil 'string=) '("{{!")))
 
 ;;; CSS-mode
 (use-package css-mode
