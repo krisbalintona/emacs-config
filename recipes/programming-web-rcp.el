@@ -24,7 +24,7 @@
   'display-line-numbers-mode
   'visual-line-mode
   :custom
-  (web-mode-markup-indent-offset 2)
+  (web-mode-markup-indent-offset 4)
   (web-mode-css-indent-offset 2)
   (web-mode-code-indent-offset 4)
   (web-mode-comment-style 1)
@@ -55,7 +55,7 @@
   :custom
   (css-indent-offset 2)
 
-  (flycheck-css-stylelint-executable (kb/shell-command-to-string "which stylelint"))
+  (flycheck-css-stylelint-executable (executable-find "stylelint"))
   (flycheck-stylelintrc (concat no-littering-var-directory "flycheck/.stylelintrc.json"))
   (flycheck-stylelint-quiet nil)
   )
@@ -72,18 +72,17 @@
   'display-line-numbers-mode
   'visual-line-mode
   :custom
-  (js-indent-level 2)
+  (js-indent-level 4)
 
   (flycheck-checker-error-threshold 10000)
-  (flycheck-javascript-standard-executable (kb/shell-command-to-string "which semistandard"))
-  (flycheck-javascript-eslint-executable (kb/shell-command-to-string "which eslint"))
-  )
+  (flycheck-javascript-standard-executable (executable-find "semistandard"))
+  (flycheck-javascript-eslint-executable (executable-find "eslint")))
 
 ;;; Json-mode
 (use-package json-mode
   :ensure-system-package (jsonlint . "sudo npm install --global jsonlint")
   :custom
-  (flycheck-json-jsonlint-executable (kb/shell-command-to-string "which jsonlint")))
+  (flycheck-json-jsonlint-executable (executable-find "jsonlint")))
 
 ;;; Yaml-mode
 (use-package yaml-mode
@@ -95,7 +94,7 @@
   :general (:keymaps 'yaml-mode-map
                      [remap evil-indent] 'yaml-indent-line)
   :custom
-  (flycheck-yaml-jsyaml-executable (kb/shell-command-to-string "which js-yaml")))
+  (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 
 ;;; programming-web-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

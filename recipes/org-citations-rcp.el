@@ -159,8 +159,6 @@ to manually add one myself."
   (citar-filenotify-setup '(org-mode-hook))
   (setq citar-filenotify-callback 'refresh-cache)) ; Because my bib file rarely changes
 
-
-
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
