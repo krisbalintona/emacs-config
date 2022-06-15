@@ -105,7 +105,7 @@ then call `dash-docs-completing-read-at-point'."
       (powerthesaurus-lookup-dwim)
     (synosaurus-choose-and-insert)))
 
-(if (or (bound-and-true-p evil-mode)
+(if (or (bound-and-true-p evil-local-mode)
         (bound-and-true-p meow-mode))
     (general-define-key
      :prefix "C-c"

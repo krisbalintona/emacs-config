@@ -348,7 +348,7 @@ afterward."
         (end-of-line)
         (insert "\n")))
     (evil-insert-state))
-  (when (bound-and-true-p evil-mode)
+  (when (bound-and-true-p evil-local-mode)
     (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)))
 
 ;;;; Anzu

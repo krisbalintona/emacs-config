@@ -123,7 +123,7 @@ argument, query for word to search."
                                                 )
                         :before 'better-jumper-set-jump)
 
-    (when (bound-and-true-p evil-mode)
+    (when (bound-and-true-p evil-local-mode)
       (evil-define-motion better-jumper-jump-toggle (count)
         (better-jumper-jump-backward 1)
         (better-jumper-set-jump (point)))

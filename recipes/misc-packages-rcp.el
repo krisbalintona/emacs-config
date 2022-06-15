@@ -299,14 +299,14 @@ progress. This is called by the timer `good-scroll--timer' every
   (defun kb/good-scroll-toggle ()
     "Enable or disable my own `good-scroll' functions."
     (cond (good-scroll-mode
-           (when (bound-and-true-p evil-mode)
+           (when (bound-and-true-p evil-local-mode)
              (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
              (advice-add 'evil-scroll-down :override #'kb/good-scroll-down))
            (advice-add 'scroll-down-command :override #'kb/good-scroll-up)
            (advice-add 'scroll-up-command :override #'kb/good-scroll-down)
            (advice-add 'good-scroll--render :override #'kb/good-scroll--render))
           (t                   ; When `good-scroll-mode' is nil
-           (when (bound-and-true-p evil-mode)
+           (when (bound-and-true-p evil-local-mode)
              (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
              (advice-remove 'evil-scroll-down #'kb/good-scroll-down))
            (advice-remove 'scroll-down-command #'kb/good-scroll-up)
@@ -338,7 +338,7 @@ progress. This is called by the timer `good-scroll--timer' every
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more)
   :config
-  (when (bound-and-true-p evil-mode)
+  (when (bound-and-true-p evil-local-mode)
     (general-unbind 'normal help-mode-map "SPC")
     (general-unbind 'normal custom-mode-map "SPC")))
 

@@ -26,7 +26,7 @@
 
 ;;; Lispyville
 (use-package lispyville
-  :if (bound-and-true-p evil-mode)
+  :if (bound-and-true-p evil-local-mode)
   :hook ((emacs-lisp-mode lisp-mode) . lispyville-mode)
   :gfhook 'turn-off-smartparens-mode
   :custom
@@ -121,7 +121,7 @@
 ;;; Lispy
 ;; TODO 2022-06-04: Also get `special-lispy-shifttab' working
 (use-package lispy
-  :if (not (bound-and-true-p evil-mode))
+  :if (not (bound-and-true-p evil-local-mode))
   :ghook 'emacs-lisp-mode-hook
   :hook (minibuffer-setup . (lambda ()        ; Also use lispy for `eval-expression'
                              (when (eq this-command 'eval-expression)

@@ -47,7 +47,7 @@
   (org-hidden-keywords '(title))                     ; hide #+TITLE:
   (org-ctrl-k-protect-subtree 'error)
   :config
-  (when (bound-and-true-p evil-mode)
+  (when (bound-and-true-p evil-local-mode)
     (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
 
 ;;;; Org-footnote
