@@ -89,7 +89,6 @@ argument, query for word to search."
 ;; Accompanies `evil-jumper' very well. Some of the smart stuff is taken from
 ;; https://www.reddit.com/r/emacs/comments/ntnhkc/how_i_jump_around_emacs_with_betterjumper/
 (use-package better-jumper
-  :after (evil consult)
   :general ("H-i" 'better-jumper-jump-backward
             "H-o" 'better-jumper-jump-forward
             "H-p" 'better-jumper-jump-toggle)
@@ -106,34 +105,45 @@ argument, query for word to search."
   (better-jumper-buffer-savehist-size 50)
   :init
   ;; Toggle between two between current point and last better-jumper set point
-  ;; (inspired by `evil-jump-backward-swap').
-  (evil-define-motion better-jumper-jump-toggle (count)
-    (better-jumper-jump-backward 1)
-    (better-jumper-set-jump (point))
-    )
-  :init
+  ;; Inspired by `evil-jump-backward-swap'.
+  (defun better-jumper-jump-toggle ()
+    "Toggle between current point and the last better-jumper jump."
+    (interactive)
+    (better-jumper-jump-backward)
+    (better-jumper-set-jump))
+
+  ;; Enable mode
   (better-jumper-mode)
   :config
   ;; Set a jump point using `better-jumper-set-jump'
-  (general-advice-add '(evil-first-non-blank evil-end-of-visual-line
-                                             evil-org-beginning-of-line evil-org-end-of-line
-                                             org-beginning-of-line org-end-of-line
-                                             evil-goto-first-line evil-goto-line evil-goto-definition
-                                             evil-search-next evil-search-previous
-                                             evilmi-jump-items
-                                             back-to-indentation end-of-visual-line
-                                             consult-line consult-outline consult-ripgrep consult-imenu
-                                             evil-search-previous evil-search-next
-                                             lispyville-previous-opening lispyville-next-closing
-                                             lispyville-next-opening lispyville-previous-closing
-                                             lispyville-backward-sexp lispyville-forward-sexp
-                                             lispyville-backward-up-list lispyville-up-list
-                                             )
-                      :before 'better-jumper-set-jump)
+  (with-eval-after-load 'consult
+    (general-advice-add '(org-beginning-of-line org-end-of-line
+                                                back-to-indentation end-of-visual-line
+                                                consult-line consult-outline consult-ripgrep consult-imenu
+                                                )
+                        :before 'better-jumper-set-jump)
+
+    (when (bound-and-true-p evil-mode)
+      (evil-define-motion better-jumper-jump-toggle (count)
+        (better-jumper-jump-backward 1)
+        (better-jumper-set-jump (point)))
+
+
+      (general-advice-add '(evil-first-non-blank evil-end-of-visual-line
+                                                 evil-org-beginning-of-line evil-org-end-of-line
+                                                 evil-goto-first-line evil-goto-line evil-goto-definition
+                                                 evil-search-next evil-search-previous
+                                                 evilmi-jump-items
+                                                 evil-search-previous evil-search-next
+                                                 lispyville-previous-opening lispyville-next-closing
+                                                 lispyville-next-opening lispyville-previous-closing
+                                                 lispyville-backward-sexp lispyville-forward-sexp
+                                                 lispyville-backward-up-list lispyville-up-list
+                                                 )
+                          :before 'better-jumper-set-jump)))
 
   ;; Specifically for ace-jump
-  (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump)
-  )
+  (general-add-hook '(ace-jump-mode-before-jump-hook ace-jump-mode-end-hook) 'better-jumper-set-jump))
 
 ;;; Smartparens
 ;; Auto pairing parentheses
