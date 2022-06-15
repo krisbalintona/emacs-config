@@ -274,7 +274,7 @@ It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
     (when (string-suffix-p "." pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
-  
+
   (defun kb/orderless-without-literal-dispatcher (pattern _index _total)
     "Flex  dispatcher using the tilde suffix.
 It matches PATTERN _INDEX and _TOTAL according to how Orderless
@@ -322,7 +322,7 @@ parses its input."
   :straight (fussy :type git :host github :repo "jojojames/fussy")
   :commands fussy-all-completions fussy-try-completions
   :custom
-  (completion-styles '(fussy orderless))
+  (completion-styles '(fussy orderless flex))
 
   (fussy-max-candidate-limit 100)     ; Score only the top N shortest candidates
   (fussy-compare-same-score-fn 'fussy-histlen->strlen<)
@@ -338,8 +338,8 @@ parses its input."
    fussy-score-fn 'fussy-liquidmetal-score
    fussy-score-fn 'fussy-hotfuzz-score
    fussy-score-fn 'fussy-fzf-native-score
-   fussy-score-fn 'flx-rs-score
    fussy-score-fn 'fussy-fuz-bin-score
+   fussy-score-fn 'flx-rs-score
    )
   )
 
