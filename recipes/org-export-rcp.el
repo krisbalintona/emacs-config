@@ -28,8 +28,10 @@
 ;;;; Itself
 (use-package ox-latex
   :custom
-  (org-latex-compiler "xelatex")
-  ;; (org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+  (org-latex-compiler "lualatex")
+  ;; Latexmk makes everything simple
+  (org-latex-pdf-process
+   (list "latexmk -shell-escape  -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
   ;; Templates
   (org-latex-title-command "\\maketitle")
   (org-latex-toc-command
