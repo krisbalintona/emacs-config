@@ -322,7 +322,6 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package kb-comment
   :demand t
   :straight nil
-  :commands kb/comment-dwim kb/comment-dwim-todo-and-timestamp
   :custom
   (kb/comment-keyword-alist
    '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))

@@ -17,7 +17,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;; Variables
-(defvar kb/comment-keyword-alist
+;;;###autoload
+(defgroup kb/comment nil
+  "Customized `comment-dwim'.")
+
+;;;###autoload
+(defcustom kb/comment-keyword-alist
   '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
     (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME")))
   "An alist from major-mode to keyword strings.
@@ -25,7 +30,8 @@
 Can also be parent modes (e.g. `text-mode').")
 
 ;; NOTE 2022-06-15: Some of these faces are taken from `hl-todo-keyword-faces'.
-(defvar kb/comment-keyword-faces
+;;;###autoload
+(defcustom kb/comment-keyword-faces
   '(("TODO" . "orange")
     ("FIXME" . (error bold))
     ("REVIEW" . "orchid")
@@ -40,8 +46,18 @@ If you use `hl-todo', then `hl-todo-keyword-faces' can be set to
 this variable in order to highlight those words in the buffer
 with these faces.")
 
-(defvar kb/comment--keyword-hist nil
-  "Input history of selected comment keywords.")
+;;;###autoload
+(defcustom kb/comment--keyword-hist nil
+  "Input history of selected comment keywords."
+  :group 'kb/comment)
+
+;;;###autoload
+(defcustom kb/comment-use-suggested-keybinds nil
+  "Whether to use the suggested keybinds:
+
+`[remap comment-dwim]' `kb/comment-dwim'
+`C-M-;' `kb/comment-dwim-todo-and-timestamp'"
+  :group 'kb/comment)
 
 ;;; Helper functions
 (defun kb/comment--propertize-keyword (keyword face)
@@ -126,6 +142,7 @@ Leaves point after a the comment and optional STRING-ARGS are
     (indent-according-to-mode)))
 
 ;;; Commands
+;;;###autoload
 (defun kb/comment-dwim (prefix &rest additional-strings)
   "Based on PREFIX, insert either a normal comment or a comment with a timestamp.
 
@@ -202,6 +219,7 @@ current buffer, end in `evil-insert-state'."
       (require 'evil)
       (evil-insert-state))))
 
+;;;###autoload
 (defun kb/comment-dwim-todo-and-timestamp (prefix &optional todo timestamp time-format)
   "Insert a DWIM comment with a keyword and timestamp based on PREFIX.
 
