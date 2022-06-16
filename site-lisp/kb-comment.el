@@ -167,7 +167,8 @@ If called without a universal argument and on an empty line,
 insert a comment on the line.
 
 If a comment already exists on this line, then move point to the
-beginning of that comment's contents.
+beginning of that comment's contents and indent that comment if
+necessary (see `comment-indent').
 
 Additionally, if ADDITIONAL-STRINGS is a string, then append that
 string after the comment is inserted (with a space separating
@@ -225,8 +226,7 @@ current buffer, end in `evil-insert-state'."
 For a description of the DWIM behavior, see `kb/comment-dwim'.
 
 Additionally,if TODO is non-nil, then append a todo keyword based
-on major-mode (see `kb/comment-keywords-coding' and
-`kb/comment-keywords-writing').
+on major-mode (see `kb/comment-keyword-alist').
 
 And if TIMESTAMP is t, also append a timestamp. The format of the
 timestamp follows `format-time-string'. Uses the format
@@ -238,9 +238,68 @@ timestamp."
                 (format-time-string time-format))))
     (kb/comment-dwim prefix keyword " " time ": ")))
 
+;; NOTE 2022-06-16: Taken heavily from `comment-line'
+;;;###autoload
+(defun kb/comment-line (numeric-arg)
+  "Comment line(s) based on NUMERIC-ARG.
+
+The behavior is as follows, with priority in this order:
+
+If region is active, comment or uncomment those lines according
+to the behavior of `comment-or-uncomment-region'.
+
+If called with any number of universal arguments, comment current
+line and yank what was commented to the line below, putting point
+at the beginning of indentation.
+
+If called with numeric argument, then comment the current line
+and that many lines below (or above, if numerical argument is
+negative).
+
+Otherwise, when called with no numerical or universal argument,
+simply comment current line."
+  (interactive "*p")
+  (if (use-region-p)
+      ;; With region
+      (comment-or-uncomment-region
+       (save-excursion
+         (goto-char (region-beginning))
+         (line-beginning-position))
+       (save-excursion
+         (goto-char (region-end))
+         (line-end-position)))
+    ;; Without region
+    (when (and (eq last-command 'comment-line-backward)
+               (natnump numeric-arg))
+      (setq numeric-arg (- numeric-arg)))
+    (let ((range
+           (list (line-beginning-position)
+                 (line-end-position
+                  (cond (current-prefix-arg
+                         nil)
+                        ((< 1 numeric-arg)
+                         (1+ numeric-arg))
+                        (t              ; Below or equal to 1
+                         numeric-arg)))))
+          (line-contents
+           (when current-prefix-arg
+             (kill-ring-save (line-beginning-position) (line-end-position)))))
+      (comment-or-uncomment-region
+       (apply #'min range)
+       (apply #'max range))
+      (when current-prefix-arg
+        (forward-line 1)
+        (save-excursion
+          (move-beginning-of-line 1)
+          (kill-append "\n" nil)
+          (yank))
+        (back-to-indentation))
+      (unless (natnump numeric-arg) (setq this-command 'comment-line-backward)))))
+
 ;;; Keybinds
 (when kb/comment-use-suggested-keybinds
   (define-key global-map [remap comment-dwim] 'kb/comment-dwim)
+  (define-key global-map [remap comment-line] 'kb/comment-line)
   (define-key global-map (kbd "C-M-;") 'kb/comment-dwim-todo-and-timestamp))
 
 ;;; kb-comment.el ends here
