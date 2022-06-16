@@ -318,6 +318,22 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package ctrlf
   :init (ctrlf-mode))
 
+;;; kb-comment
+(use-package kb-comment
+  :demand t
+  :straight nil
+  :commands kb/comment-dwim kb/comment-dwim-todo-and-timestamp
+  :custom
+  (kb/comment-keyword-alist
+   '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
+     (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME"))))
+  (kb/comment-keyword-faces
+   '(("TODO" . "orange")
+     ("FIXME" . (error bold))
+     ("REVIEW" . "orchid")
+     ("NOTE" . (success bold))
+     ("COMMENT" . "cornflower blue"))))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil

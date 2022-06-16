@@ -27,11 +27,9 @@ Can also be parent modes (e.g. `text-mode').")
 ;; NOTE 2022-06-15: Some of these faces are taken from `hl-todo-keyword-faces'.
 (defvar kb/comment-keyword-faces
   '(("TODO" . "orange")
-    ("FIXME"  (error bold))
+    ("FIXME" . (error bold))
     ("REVIEW" . "orchid")
     ("NOTE" . (success bold))
-    ("BUG" . (error bold))
-    ("DEPRECATED" . (font-lock-doc-face bold))
     ("COMMENT" . "cornflower blue"))
   "An alist of todo keyword faces.
 
