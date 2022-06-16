@@ -16,6 +16,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'newcomment)
+
 ;;; Variables
 (defgroup kb/comment nil
   "Customized `comment-dwim'.")
