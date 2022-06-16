@@ -59,6 +59,12 @@ with these faces.")
 `C-M-;' `kb/comment-dwim-todo-and-timestamp'"
   :group 'kb/comment)
 
+(defvar kb/comment-use-suggested-keybinds nil
+  "Whether to use the suggested keybinds:
+
+`[remap comment-dwim]' `kb/comment-dwim'
+`C-M-;' `kb/comment-dwim-todo-and-timestamp'")
+
 ;;; Helper functions
 (defun kb/comment--propertize-keyword (keyword face)
   "Return KEYWORD propertized with FACE.
@@ -240,8 +246,9 @@ timestamp."
     (kb/comment-dwim prefix keyword " " time ": ")))
 
 ;;; Keybinds
-(define-key global-map [remap comment-dwim] 'kb/comment-dwim)
-(define-key global-map (kbd "C-M-;") 'kb/comment-dwim-todo-and-timestamp)
+(when kb/comment-use-suggested-keybinds
+  (define-key global-map [remap comment-dwim] 'kb/comment-dwim)
+  (define-key global-map (kbd "C-M-;") 'kb/comment-dwim-todo-and-timestamp))
 
 ;;; kb-comment.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

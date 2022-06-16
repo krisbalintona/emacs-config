@@ -323,6 +323,7 @@ progress. This is called by the timer `good-scroll--timer' every
   :demand t
   :straight nil
   :custom
+  (kb/comment-use-suggested-keybinds t)
   (kb/comment-keyword-alist
    '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
      (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME"))))
