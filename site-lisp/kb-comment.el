@@ -150,7 +150,11 @@ follows, with priority in this order (Note: when using this
 command elsewhere, PREFIX should be a number, e.g. \"16\", not
 `current-prefix-arg 'in raw-form):
 
-If in visual-mode, follow the behavior of
+If called with any number of postive universal aguments and
+region is active, then kill all comments in the lines the region
+is active in.
+
+If region is active, follow the behavior of
 `comment-or-uncomment-region'.
 
 If called with `C-u', then comment in a new line above.
@@ -180,9 +184,18 @@ current buffer, end in `evil-insert-state'."
   (let ((end-evil-insert (and (not buffer-read-only)
                               (bound-and-true-p evil-local-mode))))
     (cond
-     ;; If marking a region, comment those lines. However, uncomment if there
-     ;; are only comments in the region or if called with universal argument.
-     ;; See `comment-or-uncomment-region' for the behavior.
+     ;; Any number of positive universal arguments and region active = Kill all
+     ;; comments in the lines of that region
+     ((and (< 1 prefix)
+           (use-region-p))
+      (setq end-evil-insert nil) ; In this case, don't force ending in insert-mode
+      (save-excursion
+        (when (equal (point) (region-end))
+          (exchange-point-and-mark))
+        (comment-kill (count-lines (region-beginning) (region-end)))))
+     ;; Region active = Comment those lines. However, uncomment if there are
+     ;; only comments in the region or if called with universal argument. See
+     ;; `comment-or-uncomment-region' for the behavior.
      ((use-region-p)
       (setq end-evil-insert nil) ; In this case, don't force ending in insert-mode
       (comment-or-uncomment-region (region-beginning) (region-end)))
