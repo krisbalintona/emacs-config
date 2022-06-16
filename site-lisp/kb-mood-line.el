@@ -119,14 +119,14 @@ instead."
 (defun kb/mood-line-segment-modified ()
   "Displays a color-coded buffer modification/read-only indicator in the mode-line."
   (cond
-   ((string-match-p "\\*.*\\*" (buffer-name))
-    " ")
-   ((buffer-modified-p (get-buffer (buffer-file-name (buffer-base-buffer))))
-    (propertize "●" 'face 'mood-line-modified)
-    )
    ((and buffer-read-only (buffer-file-name))
     (propertize "■" 'face 'mood-line-unimportant))
-   (t " ")))
+   ((when (or (buffer-file-name)
+              (buffer-base-buffer))
+      (buffer-modified-p))
+    (propertize "●" 'face 'mood-line-modified))
+   (t
+    " ")))
 
 (defun kb/mood-line-segment-position ()
   "Displays the current cursor position in the mode-line."
