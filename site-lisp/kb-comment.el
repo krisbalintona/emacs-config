@@ -17,20 +17,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;; Variables
-;;;###autoload
 (defgroup kb/comment nil
   "Customized `comment-dwim'.")
 
-;;;###autoload
 (defcustom kb/comment-keyword-alist
   '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
     (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME")))
   "An alist from major-mode to keyword strings.
 
-Can also be parent modes (e.g. `text-mode').")
+Can also be parent modes (e.g. `text-mode')."
+  :group 'kb/comment)
 
 ;; NOTE 2022-06-15: Some of these faces are taken from `hl-todo-keyword-faces'.
-;;;###autoload
 (defcustom kb/comment-keyword-faces
   '(("TODO" . "orange")
     ("FIXME" . (error bold))
@@ -44,26 +42,19 @@ possible values.
 
 If you use `hl-todo', then `hl-todo-keyword-faces' can be set to
 this variable in order to highlight those words in the buffer
-with these faces.")
+with these faces."
+  :group 'kb/comment)
 
-;;;###autoload
 (defcustom kb/comment--keyword-hist nil
   "Input history of selected comment keywords."
   :group 'kb/comment)
 
-;;;###autoload
 (defcustom kb/comment-use-suggested-keybinds nil
   "Whether to use the suggested keybinds:
 
 `[remap comment-dwim]' `kb/comment-dwim'
 `C-M-;' `kb/comment-dwim-todo-and-timestamp'"
   :group 'kb/comment)
-
-(defvar kb/comment-use-suggested-keybinds nil
-  "Whether to use the suggested keybinds:
-
-`[remap comment-dwim]' `kb/comment-dwim'
-`C-M-;' `kb/comment-dwim-todo-and-timestamp'")
 
 ;;; Helper functions
 (defun kb/comment--propertize-keyword (keyword face)
