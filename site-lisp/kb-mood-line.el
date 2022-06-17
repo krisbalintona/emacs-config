@@ -8,6 +8,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'doom-modeline)
 
 ;;; Segments
 ;;;; Left
@@ -16,28 +17,18 @@
 main branch of repository."
   ;; NOTE 2022-01-22: Almost all of this function is taken from my modified
   ;; version of Doom Modeline's VC modeline segment.
-  (if-let ((backend (vc-backend buffer-file-name))
-           ;; Hard `doom-modeline' dependency
-           (icon (concat doom-modeline--vcs-icon " "))
-           (text (concat doom-modeline--vcs-text " "))
-           ;; (text (concat mood-line--vc-text "  "))
-           )
-      (concat
-       (propertize
-        (if (doom-modeline--active)
-            icon
-          (doom-modeline-propertize-icon icon 'mode-line-inactive)
-          ))
-       ;; If the current branch is the main one, then don't show in modeline
-       (unless (equal (substring-no-properties (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2)))
-                      (magit-main-branch))
-         (if (doom-modeline--active)
-             text
-           (propertize text 'face 'mode-line-inactive)
-           ))
-       )
-    ""
-    ))
+  (let ((backend (vc-backend buffer-file-name))
+        (icon (concat doom-modeline--vcs-icon " "))
+        (text (concat doom-modeline--vcs-text " ")))
+    (concat
+     (if (doom-modeline--active)
+         icon
+       (doom-modeline-propertize-icon icon 'mode-line-inactive))
+     ;; If the current branch is the main one, then don't show in modeline
+     (unless (= 1 (length (vc-git-branches)))
+       (if (doom-modeline--active)
+           text
+         (propertize text 'face 'mode-line-inactive))))))
 
 (defun kb/mood-line-segment-pyvenv-indicator ()
   "Display the current python virtual environment from `pyvenv'.
@@ -62,33 +53,31 @@ virtual environment."
 Don't display if not visiting a real file. Display project root
 if in project. Display current directory (`default-directory') as
 fallback."
-  (let* ((active
-          (doom-modeline--active))
-         (face
-          (if active 'doom-modeline-project-dir 'mode-line-inactive))
-         (file-name
-          (file-local-name (or (buffer-name (buffer-base-buffer)) ; Indirect buffers
-                               (buffer-file-name)                 ; Real buffers
-                               "")))    ; Nothing if neither
-         (root
-          (or (project-root (project-current)) ""))
-         (relative-path
-          (file-relative-name default-directory root))
-         directory)
-    (setq directory
-          (cond ((or (string-match-p "\\*.*\\*" (buffer-name))
-                     (string= file-name ""))
-                 "")
-                ((project-current)      ; If in project root
-                 ;; Modified version of the truncate-with-project style in
-                 ;; `doom-modeline-buffer-file-name'
-                 (concat
-                  (file-name-nondirectory (directory-file-name root)) ; Add project root
-                  "/"
-                  (unless (string= relative-path "./") ; Add relative path
-                    (substring (shrink-path--dirs-internal relative-path t) 1))))
-                (t                   ; Default to current directory, abbreviated
-                 (abbreviate-file-name default-directory))))
+  (when-let* ((active
+               (doom-modeline--active))
+              (face
+               (if active 'doom-modeline-project-dir 'mode-line-inactive))
+              (file-name
+               (file-local-name (or (buffer-name (buffer-base-buffer)) ; Indirect buffers
+                                    (buffer-file-name)                 ; Real buffers
+                                    "")))    ; Nothing if neither
+              (root (when (project-current)
+                      (project-root (project-current))))
+              (relative-path
+               (file-relative-name default-directory root))
+              (directory (cond ((or (string-match-p "\\*.*\\*" (buffer-name))
+                                    (string= file-name ""))
+                                "")
+                               ((project-current)      ; If in project root
+                                ;; Modified version of the truncate-with-project style in
+                                ;; `doom-modeline-buffer-file-name'
+                                (concat
+                                 (file-name-nondirectory (directory-file-name root)) ; Add project root
+                                 "/"
+                                 (unless (string= relative-path "./") ; Add relative path
+                                   (substring (shrink-path--dirs-internal relative-path t) 1))))
+                               (t                   ; Default to current directory, abbreviated
+                                (abbreviate-file-name default-directory)))))
     (propertize directory 'face face)))
 
 (defun kb/mood-line-segment-buffer-name ()
@@ -329,15 +318,13 @@ dap)."
                                                                      text
                                                                    (propertize text 'face 'mode-line-inactive))))
                                                         ;; (:eval (kb/mood-line-segment-flycheck-doom))
-                                                        (:eval (let ((text (mood-line-segment-flycheck)))
-                                                                 (if (doom-modeline--active)
-                                                                     text
-                                                                   (propertize text 'face 'mode-line-inactive))))
+                                                        (:eval (or (mood-line-segment-flycheck) " "))
                                                         (:eval (kb/mood-line-segment-lsp))
                                                         (:eval (when (bound-and-true-p lsp-mode)
                                                                  (lsp--progress-status)))
                                                         ;; Shows number of errors like flycheck?
-                                                        (:eval (lsp-modeline--diagnostics-update-modeline))
+                                                        (:eval (when (bound-and-true-p lsp-mode)
+                                                                 (lsp-modeline--diagnostics-update-modeline)))
                                                         (:eval (kb/mood-line-segment-debug))
                                                         (:eval (kb/mood-line-segment-major-mode))
                                                         " "
