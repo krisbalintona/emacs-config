@@ -262,20 +262,20 @@
                           (prettier)
                           (clang-format . clang-format-all-git)
                           (latexindent . texlive-latexindent-meta)
-                          (luafmt . "sudo npm install -g lua-fmt")
+                          (stylua)
                           (google-java-format)
-                          (shfmt)
-                          )
+                          (shfmt))
   :config
   ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
   ;; instead of defining the variables directly so that it is agnostic to any
   ;; package changes. Take a look at the `format-all' package for how to install
   ;; particular formatters as well as their proper CLI commands. Namely, inspect
-  (setf (alist-get 'lua-mode apheleia-mode-alist) '(luafmt)
+  (setf (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
         (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
         (alist-get 'google-java-format apheleia-formatters)
         '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
-        (alist-get 'luafmt apheleia-formatters) '("luafmt" "--stdin")
+        (alist-get 'stylua apheleia-formatters)
+        `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
         (alist-get 'latexindent apheleia-formatters)
         '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")))
 
