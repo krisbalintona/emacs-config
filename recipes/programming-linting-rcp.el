@@ -61,6 +61,7 @@
 ;;; Flymake-collection
 (use-package flymake-collection
   :requires flymake
+  :ensure-system-package (proselint . "pip install proselint")
   :hook (after-init . flymake-collection-hook-setup))
 
 ;;; programming-linting-rcp.el ends here
