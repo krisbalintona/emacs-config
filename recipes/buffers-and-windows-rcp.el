@@ -356,6 +356,14 @@ startup and popup bookmark menu to fix it"
           (quit-window))))
     (bookmark-save)))
 
+;;;; Epithet
+(use-package epithet
+  :straight (epithet :type git :host github :repo "oantolin/epithet")
+  :hook ((Info-selection eww-after-render help-mode occur-mode shell-mode) . epithet-rename-buffer)
+  :custom
+  (epithet-suggesters
+   '(epithet-for-eww-title epithet-for-Info epithet-for-help epithet-for-occur epithet-for-shell-command)))
+
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'buffers-and-windows-rcp)
