@@ -13,11 +13,21 @@
 (use-package eglot
   :ensure-system-package (pyright bash-language-server)
   :hook ((python-mode lua-mode sh-mode) . eglot-ensure)
+  :custom
+  (eglot-stay-out-of '("flymake"))
   :config
   (setf (alist-get 'python-mode eglot-server-programs)
-        `("pyright-langserver" "--stdio" "--tcp" "--host" "localhost" "--port" :autoport)
+        `("pyright-langserver" "--stdio")
         (alist-get 'lua-mode eglot-server-programs)
-        '("lua-language-server")))
+        '("lua-language-server"))
+
+  (add-hook 'eglot-managed-mode-hook
+            (lambda ()
+              "Add `eglot-flymake-backend' to `flymake-diagnostic-functions',
+preserving the initial list."
+              (when eglot--managed-mode
+                (setq-local flymake-diagnostic-functions
+                            (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))))
 
 ;;; Languages
 ;;;; Eglot-java
