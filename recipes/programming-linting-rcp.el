@@ -53,6 +53,7 @@
   :general (kb/nav-keys
              "e" '(consult-flymake :wk "Consult flymake"))
   :custom
+  (flymake-fringe-indicator-position nil) ; Disable fringe indicators
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
   (flymake-mode-line-counter-format
