@@ -52,20 +52,11 @@
   :ghook 'prog-mode-hook 'text-mode-hook
   :general (kb/nav-keys
              "e" '(consult-flymake :wk "Consult flymake"))
-  ;; :custom
-  ;; ;; Yes, I want my copies in the same dir as the original.
-  ;; (flymake-run-in-place t)
-
-  ;; ;; Nope, I want my copies in the system temp dir.
-  ;; (flymake-run-in-place nil)
-  ;; ;; This lets me say where my temp dir is.
-  ;; (temporary-file-directory "~/.emacs.d/tmp/")
-
-  ;; (flymake-max-parallel-syntax-checks 8)
-
-  ;; ;; I don't want no steekin' limits.
-  ;; (flymake-max-parallel-syntax-checks nil)
-  )
+  :custom
+  (flymake-mode-line-format
+   '(flymake-mode-line-exception flymake-mode-line-counters))
+  (flymake-mode-line-counter-format
+   '("[" flymake-mode-line-error-counter flymake-mode-line-warning-counter "]")))
 
 ;;; Flymake-collection
 (use-package flymake-collection

@@ -235,9 +235,23 @@ pretty icons -- Doom modeline style."
         ))
 (advice-add 'mood-line--update-flycheck-segment :override #'kb/mood-line--update-flycheck-segment)
 
+(defun kb/mood-line-segment-flymake ()
+  "Displays information about flymake.
+
+Also see `flymake-mode-line-format' and
+`flymake-mode-line-counter-format'."
+  (when (bound-and-true-p flymake-mode)
+    (let ((text (concat " "
+                        (mood-line--string-trim (format-mode-line flymake-mode-line-format))
+                        " ")))
+      (if (doom-modeline--active)
+          text
+        (propertize text 'face 'mode-line-inactive)))))
+
 (defun kb/mood-line-segment-debug ()
-  "The current debug state from debugger (i.e. edebug,
-dap)."
+  "The current debug state from the debugger.
+
+Debuggers include edebug and dap."
   (let* ((dap doom-modeline--debug-dap)
          (edebug (doom-modeline--debug-edebug))
          (on-error (doom-modeline--debug-on-error))
@@ -319,11 +333,10 @@ dap)."
                                     text
                                   (propertize text 'face 'mode-line-inactive))))
                        ;; (:eval (kb/mood-line-segment-flycheck-doom))
-                       " "
                        (:eval (when (bound-and-true-p flycheck-mode)
                                 (or (mood-line-segment-flycheck) " ")))
                        (:eval (when (bound-and-true-p flymake-mode)
-                                (mood-line-segment-flymake)))
+                                (kb/mood-line-segment-flymake)))
                        (:eval (kb/mood-line-segment-lsp))
                        (:eval (when (bound-and-true-p lsp-mode)
                                 (lsp--progress-status)))
