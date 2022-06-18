@@ -12,10 +12,12 @@
 ;;; Eglot
 (use-package eglot
   :ensure-system-package pyright
-  ;; :hook ((python-mode) . eglot-ensure)
+  :hook ((python-mode lua-mode) . eglot-ensure)
   :config
   (setf (alist-get 'python-mode eglot-server-programs)
-        `("pyright-langserver" "--stdio" "--tcp" "--host" "localhost" "--port" :autoport)))
+        `("pyright-langserver" "--stdio" "--tcp" "--host" "localhost" "--port" :autoport)
+        (alist-get 'lua-mode eglot-server-programs)
+        '("lua-language-server")))
 
 ;;; Languages
 ;;;; Eglot-java
@@ -29,7 +31,7 @@
   (eglot-java-prefix-key "C-c e")
   (eglot-java-default-bindings-enabled t) ; See `eglot-java--setup'
   :config
-  (eglot-java-init))
+  (eglot-java-init))                    ; Add to hook to `java-mode-hook'
 
 ;;; Consult-eglot
 ;; Equivalent to `consult-lsp'; adds `consult-eglot-symbols'.

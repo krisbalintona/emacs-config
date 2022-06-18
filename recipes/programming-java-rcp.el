@@ -10,6 +10,7 @@
 
 ;;; Lsp-java
 (use-package lsp-java
+  :requires lsp
   :hook ((java-mode . lsp-deferred)
          (java-mode . lsp-java-lens-mode)       ; For run/debug overlays
          (java-mode . lsp-java-boot-lens-mode)) ; For code-lens overlays
@@ -102,11 +103,11 @@
                                                       (lsp-make-file-system-watcher :glob-pattern "**/settings/*.prefs")))))))
     :completion-in-comments? t
 
-    :download-server-fn #'lsp-java--ensure-server))
-  )
+    :download-server-fn #'lsp-java--ensure-server)))
 
 ;;; Dap-java
 (use-package dap-java
+  :requires dap-mode
   :straight nil
   :general (:keymaps 'java-mode-map
                      "C-c C-c" '(kb/dap-java-debug :wk "Dap-java-debug"))
@@ -137,8 +138,7 @@
   :defer 4
   :after lsp-mode
   :config
-  (require 'helm)
-  )
+  (require 'helm))
 
 ;;; programming-java-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -20,8 +20,9 @@
                            (hide-mode-line-mode)
                            (setq-local scroll-margin 0)))
   :gfhook
-  'lsp-deferred
-  'dap-mode
+  ;; 'lsp-deferred
+  ;; 'dap-mode
+  'eglot-ensure
   '(lambda ()
      (require 'prog-mode)
      (push '("->" . ?») prettify-symbols-alist)
@@ -54,6 +55,7 @@
 ;;; Dap-python
 ;; Compatibility with dap
 (use-package dap-python
+  :requires dap-mode
   :demand t
   :after (python-mode dap-mode)
   :ensure-system-package debugpy-run    ; For debugging in python using dap
@@ -65,7 +67,8 @@
 ;;; Lsp-pyright
 ;; Best python language server
 (use-package lsp-pyright
-  :after (python-mode lsp-mode)
+  :requires lsp
+  :after python-mode
   :custom
   (lsp-pyright-multi-root nil)          ; Useful!
   (lsp-pyright-python-executable-cmd "python3")
@@ -87,9 +90,7 @@
             :states 'normal
             "gd" 'anaconda-mode-find-definitions
             "gA" 'anaconda-mode-find-assignments
-            "gr" 'anaconda-mode-find-references
-            )
-  )
+            "gr" 'anaconda-mode-find-references))
 
 ;;; Pyvenv
 ;; Install packages to a local directory rather than globally call
@@ -124,16 +125,16 @@ Set here since :custom declaration doesn't work for some reason."
     (setq pyvenv-default-virtual-env-name ".venv"
           pyvenv-mode-line-indicator
           (concat "[V] " (format-mode-line pyvenv-virtual-env-name 'mode-line-emphasis))
-          ))
-  )
+          )))
+
 
 ;;; Python-pytest
 (use-package python-pytest
   :general (kb/lsp-keys
              "t" '(ignore :wk "Pyvenv")
              "tt" '(python-pytest-file :wk "Pyvenv activate")
-             "tT" '(python-pytest-dispatch :wk "Pyvenv activate"))
-  )
+             "tT" '(python-pytest-dispatch :wk "Pyvenv activate")))
+
 
 ;;; programming-python-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

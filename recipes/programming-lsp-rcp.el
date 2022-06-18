@@ -12,8 +12,7 @@
 ;;; Lsp-mode
 ;; Use the language server protocol as a backend for Emacs.
 (use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  ;; Lsp-mode only when buffer is visible
+  :disabled t
   :gfhook
   'lsp-enable-which-key-integration
   'lsp-headerline-breadcrumb-mode
@@ -120,6 +119,7 @@
 ;; Fancy frame and sideline overlay which shows useful information about what's
 ;; on the point.
 (use-package lsp-ui
+  :requires lsp
   :ghook 'lsp-mode-hook
   :hook ((lsp-ui-imenu-mode . hide-mode-line-mode)
          (lsp-mode . lsp-ui-mode))
@@ -258,6 +258,7 @@
 ;;; Lsp-bridge
 ;; Asynchronous LSP client
 (use-package lsp-bridge
+  :after lsp
   :straight (lsp-bridge :type git
                         :host github
                         :repo "manateelazycat/lsp-bridge"
@@ -301,7 +302,8 @@
 ;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
 (use-package lsp-treemacs
-  :after treemacs
+  :requires treemacs
+  :after lsp
   :hook ((lsp-mode . lsp-treemacs-sync-mode)
          (lsp-treemacs-generic-mode . hide-mode-line-mode)
          (lsp-treemacs-error-list-mode . hide-mode-line-mode)
@@ -312,8 +314,7 @@
     "Ft" '(lsp-treemacs-symbols :wk "Lsp-treemacs"))
   (:keymaps 'lsp-treemacs-error-list-mode-map
             :states 'normal
-            "x" 'lsp-treemacs-quick-fix)
-  )
+            "x" 'lsp-treemacs-quick-fix))
 
 ;;; programming-lsp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

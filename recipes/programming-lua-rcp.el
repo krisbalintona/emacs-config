@@ -16,23 +16,24 @@
 ;; NOTE: For lsp-mode support, install lua-language-server, a separate system package
 (use-package lua-mode
   :ensure-system-package (lua-language-server)
-  :hook (lua-mode . lsp-deferred)
+  ;; :hook (lua-mode . lsp-deferred)
+  :hook (lua-mode . eglot-ensure)
   :general
   (:keymaps 'lua-mode-map
             :states '(normal visual motion)
             "K" 'join-line)
   :custom
-  (lua-indent-level 4)      ; This is the convention
-  (lua-indent-string-contents t) ; Contents of a multiline string will be indented
-  )
+  (lua-indent-level 4)            ; This is the convention
+  (lua-indent-string-contents t)) ; Contents of a multi-line string will be indented
+
 
 ;;; Company-lua
 ;; Company backend for Lua
 (use-package company-lua
   :after company
   :hook (lua-mode . (lambda ()
-                      (add-to-list 'company-backends 'company-lua)))
-  )
+                      (add-to-list 'company-backends 'company-lua))))
+
 
 ;;; programming-lua-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -65,7 +65,8 @@
   :ensure-system-package ((eslint . "sudo npm install --global --save-dev eslint")
                           (semistandard . "sudo npm install --global semistandard"))
   :mode "\\.js\\'"
-  :hook (js2-mode . lsp-deferred)
+  ;; :hook (js2-mode . lsp-deferred)
+  :hook (js2-mode . eglot-ensure)
   :gfhook
   'electric-pair-mode
   'highlight-indent-guides-mode
