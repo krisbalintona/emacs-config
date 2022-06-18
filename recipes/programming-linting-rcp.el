@@ -13,6 +13,7 @@
 ;;; Flycheck
 ;; Check your code
 (use-package flycheck
+  :disabled t
   :general
   (kb/nav-keys
     "E" '(flycheck-list-errors :wk "List flycheck errors"))
@@ -36,24 +37,40 @@
   (setq flycheck-keymap-prefix (kbd "H-f"))
   (define-key flycheck-mode-map flycheck-keymap-prefix
               flycheck-command-map)
-  
-  (global-flycheck-mode))
 
-;;; Flycheck-pos-tip-mode
-;; Shows flycheck errors in pos-tip popup
-(use-package flycheck-pos-tip
-  :disabled t ; NOTE 2021-11-12: Causes Emacs to crash when using the `alpha-background' patch of Emacs
-  :after flycheck
-  :ghook 'flycheck-mode-hook
-  )
+  (global-flycheck-mode))
 
 ;;; Consult-flycheck
 ;; List flycheck errors in minibuffer with consult
 (use-package consult-flycheck
   :after (consult flycheck)
   :general (kb/nav-keys
-             "e" '(consult-flycheck :wk "Consult flycheck"))
+             "e" '(consult-flycheck :wk "Consult flycheck")))
+
+;;; Flymake
+(use-package flymake
+  :ghook 'prog-mode-hook 'text-mode-hook
+  :general (kb/nav-keys
+             "e" '(consult-flymake :wk "Consult flymake"))
+  ;; :custom
+  ;; ;; Yes, I want my copies in the same dir as the original.
+  ;; (flymake-run-in-place t)
+
+  ;; ;; Nope, I want my copies in the system temp dir.
+  ;; (flymake-run-in-place nil)
+  ;; ;; This lets me say where my temp dir is.
+  ;; (temporary-file-directory "~/.emacs.d/tmp/")
+
+  ;; (flymake-max-parallel-syntax-checks 8)
+
+  ;; ;; I don't want no steekin' limits.
+  ;; (flymake-max-parallel-syntax-checks nil)
   )
+
+;;; Flymake-collection
+(use-package flymake-collection
+  :requires flymake
+  :hook (after-init . flymake-collection-hook-setup))
 
 ;;; programming-linting-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
