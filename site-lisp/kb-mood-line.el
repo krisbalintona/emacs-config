@@ -313,8 +313,8 @@ dap)."
                      '((:eval (kb/mood-line-segment-which-func))
                        (:eval (mood-line-segment-eol))
                        " "
-                       (:eval display-time-string)
-                       (:eval (let ((text (fancy-battery-default-mode-line)))
+                       display-time-string
+                       (:eval (let ((text battery-mode-line-string))
                                 (if (doom-modeline--active)
                                     text
                                   (propertize text 'face 'mode-line-inactive))))
