@@ -61,8 +61,9 @@ fallback."
                (file-local-name (or (buffer-name (buffer-base-buffer)) ; Indirect buffers
                                     (buffer-file-name)                 ; Real buffers
                                     "")))    ; Nothing if neither
-              (root (when (project-current)
-                      (project-root (project-current))))
+              (root (if (project-current)
+                        (project-root (project-current))
+                      default-directory))
               (relative-path
                (file-relative-name default-directory root))
               (directory (cond ((or (string-match-p "\\*.*\\*" (buffer-name))
