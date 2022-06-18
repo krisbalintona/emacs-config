@@ -58,8 +58,29 @@
 ;; `:ensure-system-package' flag
 (straight-use-package 'system-packages)
 (require 'system-packages)
-(setq system-packages-use-sudo t
-      system-packages-noconfirm t)      ; Bypass its prompt
+(setq system-packages-noconfirm t)      ; Bypass its prompt
+(when (executable-find "paru")
+  (setf (cdr (assoc 'pacman system-packages-supported-package-managers))
+        '((default-sudo . t)
+          (install . "paru -S")
+          (search . "paru -Ss")
+          (uninstall . "paru -Rns")
+          (update . "paru -Syu")
+          (clean-cache . "paru -Sc")
+          (change-log . "paru -Qc")
+          (log . "cat /var/log/paru.log")
+          (get-info . "paru -Qi")
+          (get-info-remote . "paru -Si")
+          (list-files-provided-by . "paru -qQl")
+          (owning-file . "paru -Qo")
+          (owning-file-remote . "paru -F")
+          (verify-all-packages . "paru -Qkk")
+          (verify-all-dependencies . "paru -Dk")
+          (remove-orphaned . "paru -Rns $(paru -Qtdq)")
+          (list-installed-packages . "paru -Qe")
+          (list-installed-packages-all . "paru -Q")
+          (list-dependencies-of . "paru -Qi")
+          (noconfirm . "--noconfirm"))))
 
 ;;; straight-package-management-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
