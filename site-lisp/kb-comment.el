@@ -140,6 +140,63 @@ Leaves point after a the comment and optional STRING-ARGS are
       (insert (comment-padleft comment-end (comment-add nil))))
     (indent-according-to-mode)))
 
+(defun kb/comment--region-kill-comments (&optional beg end save-to-kill-ring keep-empty-lines)
+  "Delete all comments in region.
+
+This includes full-line comments, for example,
+
+;; this is a full-line comment
+
+and end-of-line comments, for example,
+
+(message \"This is code!\") ; This is an end-of-line comment
+
+If BEG and END are non-nil, then delete all comments from BEG
+point to END point instead.
+
+Additionally, if SAVE-TO-KILL-RING is non-nil, kill the comments
+rather than delete them. Each line will be its own entry in the
+`kill-ring'.
+
+Finally, unless KEEP-EMPTY-LINES is non-nil, then also
+delete the lines which have become empty as a result of removing
+the comments."
+  ;; TODO 2022-06-17: Have the comments saved to the `kill-ring' with each
+  ;; comment "bunch" in a single entry. A group of comments is a "bunch" when
+  ;; they (i) consist of a single comment block or (ii) when they are
+  ;; end-of-line comments but indented as a paragraph as `fill-paragraph' would
+  ;; arrange.
+  (let* ((rbeg (or beg (region-beginning)))
+         (rend (or end (region-end)))
+         (traverse-lines (count-lines rbeg rend)))
+    ;; Modified `comment-lines'. Considers keep-empty-lines functionality. We
+    ;; do this to go line by line and delete the empty line only when a
+    ;; comment has been removed (rather than removing all empty lines in
+    ;; region entirely). Additionally, we want to delete region rather than
+    ;; kill it
+    (comment-normalize-vars)
+    (save-excursion
+      (goto-char rbeg)     ; Always start at beginning of region, then move down
+      (dotimes (_i traverse-lines)
+        ;; TODO 2022-06-17: When point is on a full-line comment, since it
+        ;; will be deleted, the point is moved rather than restored to the
+        ;; expected location. Fix this if possible.
+        (save-excursion
+          (beginning-of-line)
+          (let ((cs (comment-search-forward (line-end-position) t)))
+            (when cs
+              (goto-char cs)
+              (skip-syntax-backward " ")
+              (setq cs (if (bolp)       ; To delete line when full-line comment
+                           (1- (point))
+                         (point)))
+              (comment-forward)
+              (if save-to-kill-ring
+                  (kill-region cs (if (bolp) (1- (point)) (point)))
+                (delete-region cs (if (bolp) (1- (point)) (point))))
+              (indent-according-to-mode))))
+        (forward-line 1)))))
+
 ;;; Commands
 ;;;###autoload
 (defun kb/comment-dwim (prefix &rest additional-strings)
@@ -181,18 +238,15 @@ ADDITIONAL-STRINGS and the comment delimiter).
 After inserting a comment, if `evil-mode' is enabled in the
 current buffer, end in `evil-insert-state'."
   (interactive "*p")
+  (comment-normalize-vars)
   (let ((end-evil-insert (and (not buffer-read-only)
                               (bound-and-true-p evil-local-mode))))
     (cond
-     ;; Any number of positive universal arguments and region active = Kill all
-     ;; comments in the lines of that region
-     ((and (< 1 prefix)
-           (use-region-p))
+     ;; Any number of positive universal arguments and region active = Call
+     ;; `kb/comment--region-kill-comments'
+     ((and (< 1 prefix) (use-region-p))
       (setq end-evil-insert nil) ; In this case, don't force ending in insert-mode
-      (save-excursion
-        (when (equal (point) (region-end))
-          (exchange-point-and-mark))
-        (comment-kill (count-lines (region-beginning) (region-end)))))
+      (kb/comment--region-kill-comments nil nil nil))
      ;; Region active = Comment those lines. However, uncomment if there are
      ;; only comments in the region or if called with universal argument. See
      ;; `comment-or-uncomment-region' for the behavior.
@@ -253,61 +307,56 @@ timestamp."
 
 ;; NOTE 2022-06-16: Taken heavily from `comment-line'
 ;;;###autoload
-(defun kb/comment-line (numeric-arg)
-  "Comment line(s) based on NUMERIC-ARG.
+(defun kb/comment-line (prefix &optional save-to-kill-ring)
+  "Comment line(s) based on PREFIX.
 
 The behavior is as follows, with priority in this order:
 
-If region is active, comment or uncomment those lines according
-to the behavior of `comment-or-uncomment-region'.
+If called with `C-u' `C-u' and the region is active, then call
+`kb/comment--region-kill-comments' on region. When
+SAVE-TO-KILL-RING is non-nil, also save the deleted text to the
+`kill-ring' with each line as an individual entry (follows the
+behavior of `kb/comment--region-kill-comments').
 
-If called with any number of universal arguments, comment current
-line and yank what was commented to the line below, putting point
-at the beginning of indentation.
+If called with `C-u', insert the region's text as commented lines
+above the current line; if the region is not active, do this with
+the current line instead. When SAVE-TO-KILL-RING is non-nil, also
+save the region to the `kill-ring'.
 
-If called with numeric argument, then comment the current line
-and that many lines below (or above, if numerical argument is
-negative).
-
-Otherwise, when called with no numerical or universal argument,
-simply comment current line."
+If called without a universal argument, call
+`comment-or-uncomment-region' on the region if active or current
+line if not."
   (interactive "*p")
-  (if (use-region-p)
-      ;; With region
-      (comment-or-uncomment-region
-       (save-excursion
-         (goto-char (region-beginning))
-         (line-beginning-position))
-       (save-excursion
-         (goto-char (region-end))
-         (line-end-position)))
-    ;; Without region
-    (when (and (eq last-command 'comment-line-backward)
-               (natnump numeric-arg))
-      (setq numeric-arg (- numeric-arg)))
-    (let ((range
-           (list (line-beginning-position)
-                 (line-end-position
-                  (cond (current-prefix-arg
-                         nil)
-                        ((< 1 numeric-arg)
-                         (1+ numeric-arg))
-                        (t              ; Below or equal to 1
-                         numeric-arg)))))
-          (line-contents
-           (when current-prefix-arg
-             (kill-ring-save (line-beginning-position) (line-end-position)))))
-      (comment-or-uncomment-region
-       (apply #'min range)
-       (apply #'max range))
-      (when current-prefix-arg
-        (forward-line 1)
-        (save-excursion
-          (move-beginning-of-line 1)
-          (kill-append "\n" nil)
-          (yank))
-        (back-to-indentation))
-      (unless (natnump numeric-arg) (setq this-command 'comment-line-backward)))))
+  (let* ((range (if (use-region-p)
+                    (list (save-excursion
+                            (goto-char (region-beginning))
+                            (line-beginning-position))
+                          (save-excursion
+                            (goto-char (region-end))
+                            (line-end-position)))
+                  (list (line-beginning-position)
+                        (line-end-position))))
+         (beg (apply #'min range))
+         (end (apply #'max range))
+         (relevant-contents (buffer-substring beg end))) ; Line or region
+    (cond
+     ;; Any number of universal arguments and region is active = Call
+     ;; `kb/comment--region-kill-comments'
+     ((and (= prefix 16) (use-region-p))
+      (kb/comment--region-kill-comments beg end save-to-kill-ring nil))
+     ;; Active region and C-u = insert region above as commented text
+     ((= prefix 4)
+      (when save-to-kill-ring
+        (kill-new relevant-contents))
+      (save-excursion
+        (goto-char beg)
+        (open-line 1)
+        (insert-for-yank relevant-contents)
+        (comment-or-uncomment-region beg end)))
+     ;; Active region = `comment-or-uncomment-region' on region; if no active
+     ;; region = `comment-or-uncomment-region' on this line
+     (t
+      (comment-or-uncomment-region beg end)))))
 
 ;;; Keybinds
 (when kb/comment-use-suggested-keybinds
