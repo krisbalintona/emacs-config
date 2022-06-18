@@ -334,6 +334,12 @@ progress. This is called by the timer `good-scroll--timer' every
      ("NOTE" . (success bold))
      ("COMMENT" . "cornflower blue"))))
 
+;;; Info-variable-pitch
+;; Mixed pitch in Info pages
+(use-package info-variable-pitch
+  :straight (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
+  :ghook 'Info-mode-hook)
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
