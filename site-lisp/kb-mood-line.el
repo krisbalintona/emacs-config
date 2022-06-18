@@ -8,6 +8,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+(require 'mood-line)
 (require 'doom-modeline)
 
 ;;; Segments
@@ -296,7 +297,8 @@ Debuggers include edebug and dap."
       )))
 
 ;;; Setting the mode line
-(with-eval-after-load 'mood-line
+(defun kb/mood-line-setup ()
+  "Set up `mode-line-format'."
   (setq-default mode-line-format
                 '((:eval
                    (mood-line--format
@@ -354,6 +356,8 @@ Debuggers include edebug and dap."
                        ;; (:eval ;; (mood-line-segment-misc-info))
                        ;; mode-line-misc-info)
                        )))))))
+(with-eval-after-load 'mood-line
+  (add-hook 'mood-line-mode-hook 'kb/mood-line-setup))
 
 ;;; kb-mood-line.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
