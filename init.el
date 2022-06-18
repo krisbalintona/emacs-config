@@ -97,6 +97,7 @@
 (require 'programming-linting-rcp)
 (require 'programming-ide-base-rcp)
 (require 'programming-lsp-rcp)
+(require 'programming-eglot-rcp)
 (require 'programming-elisp-rcp)
 (require 'programming-shell-rcp)
 (require 'programming-lua-rcp)
