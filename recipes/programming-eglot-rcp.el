@@ -11,8 +11,8 @@
 
 ;;; Eglot
 (use-package eglot
-  :ensure-system-package pyright
-  :hook ((python-mode lua-mode) . eglot-ensure)
+  :ensure-system-package (pyright bash-language-server)
+  :hook ((python-mode lua-mode sh-mode) . eglot-ensure)
   :config
   (setf (alist-get 'python-mode eglot-server-programs)
         `("pyright-langserver" "--stdio" "--tcp" "--host" "localhost" "--port" :autoport)
