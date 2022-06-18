@@ -340,6 +340,15 @@ progress. This is called by the timer `good-scroll--timer' every
   :straight (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :ghook 'Info-mode-hook)
 
+;;; All-the-icons-nerd-fonts
+(straight-use-package '(nerd-fonts :type git :host github :repo "mohkale/nerd-fonts.el"))
+(use-package all-the-icons-nerd-fonts
+  :demand t
+  :straight (all-the-icons-nerd-fonts :type git :host github :repo "mohkale/all-the-icons-nerd-fonts")
+  :after all-the-icons nerd-fonts
+  :config
+  (all-the-icons-nerd-fonts-prefer))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
