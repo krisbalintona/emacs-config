@@ -11,30 +11,31 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'personal-variables-rcp)
+(require 'straight-package-management-rcp)
 
 ;;; Python
 (unless (executable-find "python")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S python")))
+  (system-packages-install "python"))
 (unless (executable-find "pip")
-  (async-shell-command "sudo " (kb/which-package-manager) " -S pip"))
+  (system-packages-install "pip"))
 
 ;;; Javascript
 (unless (executable-find "npm")
-  (async-shell-command "sudo " (kb/which-package-manager) " -S npm"))
+  (system-packages-install "npm"))
 (unless (executable-find "yarn")
-  (async-shell-command "sudo npm -S yarn -g"))
+  (system-packages-install "yarn"))
 
 ;;; Rust
 (unless (executable-find "rustc")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S rust")))
+  (system-packages-install "rust"))
 (unless (executable-find "cargo")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S cargo")))
-(unless (executable-find "watchexec")   ; For straight.el
-  (async-shell-command (concat "cargo install watchexec-cli")))
+  (system-packages-install "cargo"))
+(unless (executable-find "watchexec")
+  (system-packages-install "watchexec"))
 
 ;;; Java
 (unless (executable-find "java")
-  (async-shell-command (concat "sudo " (kb/which-package-manager) " -S jre-openjdk")))
+  (system-packages-install "jre-openjdk"))
 
 ;;; external-programs-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

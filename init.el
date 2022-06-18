@@ -33,10 +33,10 @@
 ;; These are packages which come before others because their config files rely
 ;; on them.
 (require 'garbage-collection-rcp)
-(require 'straight-package-management-rcp)
-(require 'better-defaults-rcp)
 (require 'personal-variables-rcp)
+(require 'straight-package-management-rcp)
 (require 'external-programs-rcp)
+(require 'better-defaults-rcp)
 (require 'custom-directories-rcp)
 (require 'use-package-rcp)
 ;; (require 'exwm-rcp)
