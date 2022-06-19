@@ -106,7 +106,7 @@ default lsp-passthrough."
   :ghook 'corfu-mode-hook
   :config
   (with-eval-after-load 'savehist
-    (add-to-list 'savehist-additional-variables 'corfu-history-mode)))
+    (add-to-list 'savehist-additional-variables 'corfu-history)))
 
 ;;; Kind-icon
 ;; Icons for corfu!

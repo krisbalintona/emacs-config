@@ -17,23 +17,12 @@
   :if (or (bound-and-true-p ivy-mode)
           (bound-and-true-p selectrum-mode)
           (bound-and-true-p company-mode))
-  :ghook ('window-setup-hook 'prescient-persist-mode)
+  :hook (after-init . prescient-persist-mode)
   :custom
-  ;; How does it filter?
-  (prescient-filter-alist '((literal . prescient-literal-regexp)
-                            (literal-prefix . prescient-literal-prefix-regexp)
-                            (initialism . prescient-initials-regexp)
-                            (regexp . prescient-regexp-regexp)
-                            (fuzzy . prescient-fuzzy-regexp)
-                            (prefix . prescient-prefix-regexp)
-                            (anchored . prescient-anchored-regexp))
-                          )
-  (prescient-filter-method '(literal regexp anchored initialism))
-
-  (prescient-use-char-folding t)
-  (prescient-use-case-folding t)
+  (prescient-filter-method '(literal initialism regexp anchored))
   (prescient-sort-full-matches-first t)
 
+  (prescient-aggressive-file-save t)
   (prescient-history-length 200)
   (prescient-frequency-decay 0.999)
   (prescient-frequency-threshold 0.10))
@@ -43,7 +32,9 @@
 (use-package marginalia
   :custom
   (marginalia-max-relative-age 0)
-  (marginalia-align 'right)             ; Otherwise, text may get cut off
+  (marginalia-align 'right)
+  (marginalia-field-width 80)
+  (marginalia-align-offset -2)          ; Two to the left
   :init
   (marginalia-mode))
 

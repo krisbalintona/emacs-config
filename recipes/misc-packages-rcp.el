@@ -84,7 +84,6 @@
 ;; Noto Sans
 ;; Noto Sans Symbols
 (use-package unicode-fonts
-  :hook (emacs-startup . unicode-fonts-setup)
   :init
   ;; Taken from http://xahlee.info/emacs/misc/emacs_macos_emoji.html
   (set-fontset-font                     ; Set font for symbols
@@ -100,7 +99,9 @@
     ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
     ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola"))))
+    ((member "Symbola" (font-family-list)) "Symbola")))
+  :config
+  (add-hook 'window-setup-hook #'unicode-fonts-setup 100))
 
 ;;; Restart-emacs
 (use-package restart-emacs
