@@ -206,7 +206,8 @@ If buffer-or-name is nil return current buffer's mode."
 
 ;;;; Ace-window
 (use-package ace-window
-  ;; :general ("M-w" '(ace-window :wk "Ace window"))
+  :general ("C-c w" '(ace-window :wk "Ace window")
+            "C-c W" '(ace-swap-window :wk "Ace swap-window"))
   :custom
   (aw-scope 'frame)
   (aw-background t)
@@ -226,8 +227,7 @@ If buffer-or-name is nil return current buffer's mode."
      (?b aw-split-window-horz "Split Horz Window")
      (?o delete-other-windows "Delete Other Windows")
      (?? aw-show-dispatch-help))
-   )
-  )
+   ))
 
 ;;;; Popper
 ;; "Tame ephemeral windows"
