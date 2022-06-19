@@ -51,8 +51,11 @@
 ;;; Flymake
 (use-package flymake
   :ghook 'prog-mode-hook 'text-mode-hook
-  :general (kb/nav-keys
-             "e" '(consult-flymake :wk "Consult flymake"))
+  :general
+  ("M-n" 'flymake-goto-next-error
+   "M-p" 'flymake-goto-prev-error)
+  (kb/nav-keys
+    "e" '(consult-flymake :wk "Consult flymake"))
   :custom
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
   (flymake-mode-line-format
