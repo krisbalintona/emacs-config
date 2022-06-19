@@ -14,6 +14,7 @@
   :ensure-system-package (pyright bash-language-server)
   :hook ((python-mode lua-mode sh-mode) . eglot-ensure)
   :custom
+  (eglot-autoshutdown t)
   (eglot-stay-out-of '("flymake"))
   :config
   (setf (alist-get 'python-mode eglot-server-programs)
