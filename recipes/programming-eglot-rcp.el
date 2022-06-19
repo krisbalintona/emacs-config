@@ -49,7 +49,7 @@ preserving the initial list."
 (use-package consult-eglot
   :after eglot
   :general (:keymaps 'eglot-mode-map
-                     "C-c e" '(consult-eglot-symbols :wk "Consult-eglot")))
+                     [remap xref-find-apropos] #'consult-eglot-symbols))
 
 ;;; programming-eglot-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
