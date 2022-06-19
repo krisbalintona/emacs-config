@@ -118,29 +118,10 @@
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init (all-the-icons-completion-mode))
 
-;;; Blamer
-;; Git blame interface (see a line's corresponding commit)
-(use-package blamer
-  :after magit
-  :commands blamer-show-commit-info
-  :general ("H-b" 'blamer-show-commit-info)
-  :custom
-  ;; (blamer-author-formatter " ✎ %s ")
-  (blamer-author-formatter "")
-  (blamer-datetime-formatter "[%s] ")
-  (blamer-commit-formatter "%s")
-  (blamer-uncommitted-changes-message "N/A")
-
-  (blamer-max-commit-message-length 71) ; Consider length of acceptable length of git commit
-  (blamer-max-lines 30)
-  (blamer-min-offset 70)
-
-  (blamer-prettify-time-p t)
-  (blamer-idle-time 0.3)
-  (blamer-type 'overlay-popup)
-  (blamer-view 'overlay)
-  (blamer--overlay-popup-position 'smart)
-  )
+;;; Vc-msg
+;; See a line's corresponding commit information (like git blame)
+(use-package vc-msg
+    :general ("H-b" 'vc-msg-show))
 
 ;;; Demap
 (use-package demap
