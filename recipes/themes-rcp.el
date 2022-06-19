@@ -97,14 +97,12 @@
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
-  ;; NOTE 2022-06-17: Removed function?
-  ;; :hook (window-configuration-change . doom-modeline-refresh-font-width-cache) ; Prevent modeline from being cut off
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
   (doom-modeline-project-detection 'project)
   (doom-modeline-buffer-file-name-style 'buffer-name)
-  (doom-modeline-icon (or(display-graphic-p) (server-running-p))) ; Show icons if in Emacs GUI or server
+  (doom-modeline-icon (display-graphic-p)) ; Show icons if in Emacs GUI or server
   (doom-modeline-major-mode-icon t)
   (doom-modeline-major-mode-color-icon t)
   (doom-modeline-buffer-state-icon t)
@@ -121,16 +119,18 @@
   (doom-modeline-height 33)
   (doom-modeline-bar-width 2) ; Width (in number of columns) of window until information (on the right) starts to disappear
   (doom-modeline-window-width-limit 100) ; Width of the bar segment
-  :config (require 'kb-doom-modeline-segments)
-  )
+  :config (require 'kb-doom-modeline-segments))
 
 ;;;; Mood-line
-(use-package mood-line
-  :ghook 'after-init-hook
-  :config
-  (require 'kb-mood-line)
-  )
+(use-package mood-line)
 
+;;;; Kb-mood-line
+(use-package kb-mood-line
+  :straight nil
+  :hook ((window-setup server-after-make-frame) . kb/mood-line-setup)
+  :init
+  (require 'doom-modeline))
+  
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
@@ -138,8 +138,8 @@
   :custom
   ;; (display-time-format "%H:%M:%S")     ; Use 24hr format with seconds
   ;; (display-time-interval 1)            ; Update every since if I'm using seconds
-  (display-time-format "%H:%M")     ; Use 24hr format with seconds
-  (display-time-interval 60)            ; Update every since if I'm using seconds
+  (display-time-format "%H:%M")        ; Use 24hr format with seconds
+  (display-time-interval 60)           ; Update every since if I'm using seconds
   (display-time-default-load-average nil) ; Don't show load average
   (world-clock-list
    '(("America/Los_Angeles" "Seattle")

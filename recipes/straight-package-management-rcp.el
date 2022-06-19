@@ -13,8 +13,6 @@
 (defvar straight-repository-branch "develop") ; Use development branch
 (defvar straight-check-for-modifications
   '(watch-files check-on-save find-when-checking))
-;; Start after path from `exec-path-from-shell' is set
-(add-hook 'emacs-startup-hook 'straight-watcher-start)
 
 ;;; Bootstrap (install straight.el)
 (defvar bootstrap-version)
