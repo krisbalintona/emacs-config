@@ -66,6 +66,10 @@
   :ensure-system-package (proselint . "pip install proselint")
   :hook (after-init . flymake-collection-hook-setup))
 
+;;; Package-lint-flymake
+(use-package package-lint-flymake
+  :hook (emacs-lisp-mode . package-lint-flymake-setup))
+
 ;;; programming-linting-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-linting-rcp)
