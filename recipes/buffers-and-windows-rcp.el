@@ -75,7 +75,7 @@
       (dedicated . t)
       (side . right)
       (window-width . 0.2))
-     ("\\*.*\\(e?shell\\).*"
+     ("\\*.*\\(eshell\\).*"
       (display-buffer-reuse-mode-window
        kb/select-buffer-in-side-window)
       (side . right)
