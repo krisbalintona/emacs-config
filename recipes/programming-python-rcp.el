@@ -80,18 +80,6 @@
   ;; lsp-pyright-venv-directory
   )
 
-;;; Anaconda
-;; More IDE features to Python
-(use-package anaconda-mode
-  :hook (python-mode . anaconda-mode)
-  :gfhook 'anaconda-eldoc-mode
-  :general
-  (:keymaps 'anaconda-mode-map        ; The bindings I want from evil-collection
-            :states 'normal
-            "gd" 'anaconda-mode-find-definitions
-            "gA" 'anaconda-mode-find-assignments
-            "gr" 'anaconda-mode-find-references))
-
 ;;; Pyvenv
 ;; Install packages to a local directory rather than globally call
 ;; `pyvenv-activate' and select a directory with virtual environment packages
