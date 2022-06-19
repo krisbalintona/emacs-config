@@ -130,7 +130,7 @@
   :hook ((window-setup server-after-make-frame) . kb/mood-line-setup)
   :init
   (require 'doom-modeline))
-  
+
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
@@ -179,11 +179,12 @@
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ghook 'prog-mode-hook 'LaTeX-mode-hook 'conf-mode-hook
-  :gfhook 'column-number-mode ; Column number in modeline
+  :gfhook 'column-number-mode           ; Column number in modeline
   :general (kb/toggle-keys
              "l" '(display-line-numbers-mode :wk "Line numbers"))
   :custom
-  (display-line-numbers-type 'relative))
+  (display-line-numbers-type 'relative)
+  (display-line-numbers-width-start t)) ; Keep width consistent in buffer
 
 ;;;; Which-function
 ;; Display the name of the function I am currently under
