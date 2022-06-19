@@ -20,7 +20,8 @@
 
 ;;; Variables
 (defgroup kb/comment nil
-  "Customized `comment-dwim'.")
+  "Customized `comment-dwim'."
+  :group 'comment)
 
 (defcustom kb/comment-keyword-alist
   '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
@@ -28,7 +29,8 @@
   "An alist from major-mode to keyword strings.
 
 Can also be parent modes (e.g. `text-mode')."
-  :group 'kb/comment)
+  :group 'kb/comment
+  :type 'alist)
 
 ;; NOTE 2022-06-15: Some of these faces are taken from `hl-todo-keyword-faces'.
 (defcustom kb/comment-keyword-faces
@@ -45,18 +47,21 @@ possible values.
 If you use `hl-todo', then `hl-todo-keyword-faces' can be set to
 this variable in order to highlight those words in the buffer
 with these faces."
-  :group 'kb/comment)
+  :group 'kb/comment
+  :type 'alist)
 
 (defcustom kb/comment--keyword-hist nil
   "Input history of selected comment keywords."
-  :group 'kb/comment)
+  :group 'kb/comment
+  :type 'list)
 
 (defcustom kb/comment-use-suggested-keybinds nil
   "Whether to use the suggested keybinds:
 
 `[remap comment-dwim]' `kb/comment-dwim'
 `C-M-;' `kb/comment-dwim-todo-and-timestamp'"
-  :group 'kb/comment)
+  :group 'kb/comment
+  :type 'boolean)
 
 ;;; Helper functions
 (defun kb/comment--propertize-keyword (keyword face)
@@ -93,7 +98,7 @@ The keyword selection is based on `kb/comment-keyword-alist'."
                                           (cdr (assoc-string last-used kb/comment-keyword-faces))))
          (keywords-list
           (cl-loop for (key . value) in kb/comment-keyword-alist
-                   thereis (derived-mode-p 'text-mode)
+                   thereis (funcall 'derived-mode-p key)
                    finally return value)))
     (completing-read
      (concat "Select keyword"
@@ -149,7 +154,7 @@ This includes full-line comments, for example,
 
 and end-of-line comments, for example,
 
-(message \"This is code!\") ; This is an end-of-line comment
+\(message \"This is code!\") ; This is an end-of-line comment
 
 If BEG and END are non-nil, then delete all comments from BEG
 point to END point instead.
@@ -282,7 +287,8 @@ current buffer, end in `evil-insert-state'."
 
     ;; End in insert state if evil-mode is enabled and buffer isn't in
     ;; read-only mode
-    (when end-evil-insert
+    (when (and (bound-and-true-p evil-mode)
+               end-evil-insert)
       (require 'evil)
       (evil-insert-state))))
 
