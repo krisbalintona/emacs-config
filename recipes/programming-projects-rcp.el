@@ -100,10 +100,13 @@
 ;;;; Xref
 (use-package xref
   :custom
-  (xref-show-definitions-function #'xref-show-definitions-completing-read)
-  (xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
+  (xref-show-definitions-function #'xref-show-definitions-completing-read) ; Find definitions
+  (xref-show-xrefs-function #'xref-show-definitions-buffer) ; Find refs
   (xref-file-name-display 'project-relative)
-  (xref-search-program 'ripgrep))
+  (xref-search-program 'ripgrep)
+  :config
+  (with-eval-after-load 'consult
+    (setq xref-show-xrefs-function 'consult-xref)))
 
 ;;; Version control
 ;;;; Magit
