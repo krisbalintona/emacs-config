@@ -250,23 +250,17 @@
   (super-save-remote-files t) ; Turn on saving of remote files (those pulled from git repo?)
   (super-save-exclude nil) ; Don't exclude anything from being saved
   (super-save-predicates
-   '((lambda nil buffer-file-name)
-     (lambda nil
-       (buffer-modified-p
-        (current-buffer)))
-     (lambda nil
-       (file-writable-p buffer-file-name))
-     ;; Removed this predicate to go back to previous functionality
-     ;; (lambda nil
-     ;;   (<
-     ;;    (buffer-size)
-     ;;    super-save-max-buffer-size))
-     (lambda nil
-       (if
-           (file-remote-p buffer-file-name)
+   '((lambda ()
+       (stringp (buffer-file-name (buffer-base-buffer))))
+     (lambda ()
+       (buffer-modified-p (current-buffer)))
+     (lambda ()
+       (file-writable-p (buffer-file-name (buffer-base-buffer))))
+     (lambda ()
+       (if (file-remote-p (buffer-file-name (buffer-base-buffer)))
            super-save-remote-files t))
-     (lambda nil
-       (super-save-include-p buffer-file-name))))
+     (lambda ()
+       (super-save-include-p (buffer-file-name (buffer-base-buffer))))))
   :config
   (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
   (add-to-list 'super-save-triggers 'evil-window-mru)
