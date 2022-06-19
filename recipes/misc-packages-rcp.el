@@ -17,7 +17,9 @@
   :general ("C-c s" '(scratch :wk "Create scratch"))
   :preface
   (defun kb/scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly. Taken from https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
+    "Add contents to `scratch' buffer and name it accordingly.
+ Taken from
+ https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
     (let* ((mode (format "%s" major-mode))
            (string (concat "Scratch buffer for: " mode "\n\n")))
       (when scratch-buffer
@@ -339,15 +341,6 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package info-variable-pitch
   :straight (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :ghook 'Info-mode-hook)
-
-;;; All-the-icons-nerd-fonts
-(straight-use-package '(nerd-fonts :type git :host github :repo "mohkale/nerd-fonts.el"))
-(use-package all-the-icons-nerd-fonts
-  :demand t
-  :straight (all-the-icons-nerd-fonts :type git :host github :repo "mohkale/all-the-icons-nerd-fonts")
-  :after all-the-icons nerd-fonts
-  :config
-  (all-the-icons-nerd-fonts-prefer))
 
 ;;; Built-in Emacs modes/packages
 (use-package emacs
