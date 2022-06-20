@@ -152,10 +152,12 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
 ;;; kb/org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
 (defun unpackaged/org-add-blank-lines (&optional prefix)
-  "Ensure that blank lines exist between headings and between headings and their contents.
+  "Ensure blank lines between headings and their contents.
 
-  With PREFIX, operate on whole buffer. Ensures that blank lines
-  exist after each heading's drawers."
+Also ensures that blank lines exist after each heading's drawers.
+
+With PREFIX, operate on whole buffer, otherwise operate on the
+current subtree."
   (interactive "P")
   (org-map-entries (lambda ()
                      (org-with-wide-buffer

@@ -26,9 +26,8 @@
             (lambda ()
               "Add `eglot-flymake-backend' to `flymake-diagnostic-functions',
 preserving the initial list."
-              (when eglot--managed-mode
-                (setq-local flymake-diagnostic-functions
-                            (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))))
+              (when (eglot-managed-p)
+                (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend)))))
 
 ;;; Realgud
 (use-package realgud
