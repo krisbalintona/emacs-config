@@ -84,8 +84,14 @@
 ;; Install packages to a local directory rather than globally call
 ;; `pyvenv-activate' and select a directory with virtual environment packages
 (use-package pyvenv
+  :commands kb/pyvenv-pred-project-root
   :hook (pyvenv-mode . (lambda ()
-                         (if pyvenv-mode
+                         ;; TODO 2022-06-20: `pyvenv-tracking-mode' relies on
+                         ;; `post-command-hook' which is expensive.
+                         ;; Consequently, it would be preferable if we can avoid
+                         ;; using it. Possible solutions may lie in `envrc' and
+                         ;; `buffer-env'
+                         (if (and pyvenv-tracking-mode pyvenv-mode)
                              (add-hook 'python-mode-hook 'kb/pyvenv-auto-activate)
                            (remove-hook 'python-mode-hook 'kb/pyvenv-auto-activate))))
   :ghook 'python-mode-hook
@@ -174,35 +180,42 @@ The directory name we're checking for is determined by
       (when (file-exists-p path)
         (cons path "W"))))
 
-  ;; NOTE 2022-06-20: Activating virtual environments overwrites that the
-  ;; activation of previous virtual environments. This is because
-  ;; `pyvenv-activate' relies on `setenv' for the VIRTUAL_ENV environment
-  ;; variable. As far as I can tell, there is no easy way to bypass this, since
-  ;; `process-environment' is stubbornly global. A potential solution may lie
-  ;; with `direnv' or `buffer-env'.
   (defun kb/pyvenv-auto-activate ()
-    "Automate activation of python virtual environment.
+    "Automate selection of python virtual environment.
 
-Activates if `pyvenv-workon' is non-nil (e.g. from .dir-locals.el
-or `WORKON_HOME' environment variable).
+This function sets the `pyvenv-activate' and/or `pyvenv-workon'
+variable so that the later invocate of `pyvenv-mode' activates
+the virtual environment. Requires `pyvenv-tracking-mode' to be
+enabled. Additionally, this function should be run before
+`pyvenv-mode' since it sets the variables needed to be known pror
+to the mode's activation. Finally, this also sets
+`kb/pyvenv-venv-type', for the mode line, appropriately.
 
-Otherwise, go through the predicates in
-`kb/pyvenv-dir-predicates' in order. Activate a virtual
-environment based on the first non-nil value returned.
+The following is the behavior, in order:
+
+Checks if `pyvenv-activate' or `pyvenv-workon' are non-nil and
+valid. IF so, set `kb/pyvenv-venv-type' appropriately.
+
+Go through the predicates in `kb/pyvenv-dir-predicates' in order.
+A non-nil value sets `pyvenv-activate' and `kb/pyvenv-venv-type'
+to a particular string specified by the first non-nil predicate.
 
 If all returned values are nil, prompt to create a virtual
-environment in `pyvenv-workon-home' and activate it."
+environment in `pyvenv-workon-home' and set `pyvenv-workon' to
+it."
     (interactive)
     ;; Used functions need to be loaded
     (require 'pyvenv)
     (unless (equal major-mode 'python-mode)
       (user-error "[kb/pyvenv-auto-activate] Not in python-mode, can't activate venv!"))
 
-    ;; First check if `pyvenv-workon' is non-nil
+    ;; First check if `pyvenv-workon' or `pyvenv-activate' are non-nil
     (when (and (stringp pyvenv-workon)
                (file-exists-p pyvenv-workon))
-      (pyvenv-activate pyvenv-workon)
       (setq-local kb/pyvenv-venv-type "W"))
+    (when (and (stringp pyvenv-activate)
+               (file-exists-p pyvenv-activate))
+      (setq-local kb/pyvenv-venv-type "A"))
 
     ;; Then go through predicates
     (let* ((preds kb/pyvenv-dir-predicates)
@@ -224,24 +237,16 @@ environment in `pyvenv-workon-home' and activate it."
       ;; create a new venv in `venv-workon-home' and activate it. Also set
       ;; `kb/pyvenv-venv-type' appropriately.
       (if venv-cons
-          (progn (pyvenv-activate (car venv-cons))
-                 (setq-local kb/pyvenv-venv-type (cdr venv-cons))
-                 (message "[kb/pyvenv-auto-activate] Using python venv at %s"
-                          (car venv-cons)))
+          (progn (setq-local pyvenv-activate (car venv-cons))
+                 (setq-local kb/pyvenv-venv-type (cdr venv-cons)))
         (let ((slug (kb/pyvenv--directory-slug))
               (path (expand-file-name slug (pyvenv-workon-home))))
-          (pyvenv-create
-           ;; Taken from when `pyvenv-create' is run interactively
-           (let ((dir (if pyvenv-virtualenvwrapper-python
-                          (file-name-directory pyvenv-virtualenvwrapper-python)
-                        nil))
-                 (initial (if pyvenv-virtualenvwrapper-python
-                              (file-name-base pyvenv-virtualenvwrapper-python)
-                            nil)))
-             (read-file-name "Python interpreter to use: " dir nil nil initial)))
-          (pyvenv-activate path)
-          (setq-local kb/pyvenv-venv-type "W")
-          (message "[kb/pyvenv-auto-activate] Venv created and activated at %s" path))))))
+          (pyvenv-create slug (cl-loop for bin in py-known-shells-extended-commands
+                                       when (and (not (string= bin "ipython"))
+                                                 (executable-find bin))
+                                       return bin))
+          (setq-local pyvenv-workon path)
+          (setq-local kb/pyvenv-venv-type "W"))))))
 
 ;;; Python-pytest
 (use-package python-pytest
