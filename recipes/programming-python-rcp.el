@@ -85,7 +85,7 @@
 ;; `pyvenv-activate' and select a directory with virtual environment packages
 (use-package pyvenv
   :hook (pyvenv-mode . (lambda ()
-                         (if pyvenv-tracking-mode
+                         (if pyvenv-mode
                              (add-hook 'python-mode-hook 'kb/pyvenv-auto-activate)
                            (remove-hook 'python-mode-hook 'kb/pyvenv-auto-activate))))
   :ghook 'python-mode-hook
