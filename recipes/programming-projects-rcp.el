@@ -108,6 +108,18 @@
   (with-eval-after-load 'consult
     (setq xref-show-xrefs-function 'consult-xref)))
 
+;;;; Dumb-jump
+(use-package dumb-jump
+  :custom
+  (dumb-jump-quiet nil)
+  (dumb-jump-default-project user-emacs-directory)
+  ;; See https://github.com/jacktasia/dumb-jump#configuration to see how it
+  ;; behaves
+  (dumb-jump-prefer-searcher 'rg)
+  (dumb-jump-rg-search-args "--hidden --glob '!.git' --pcre2")
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 95)) ; Last
+
 ;;; Version control
 ;;;; Magit
 ;; The best git interface. Mostly taken from Mostly taken from

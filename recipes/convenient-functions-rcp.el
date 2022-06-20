@@ -67,7 +67,6 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
 (defun kb/format-buffer-indentation ()
   "Properly indent the entire buffer."
   (interactive)
-  (require 'apheleia)
   (cond
    ((eq major-mode 'emacs-lisp-mode)
     (kb/format-buffer-indentation--base))
@@ -86,7 +85,8 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
       (kb/format-buffer-indentation--base)
       ;; Save buffer if modified and in `org-mode' because drawers are annoying.
       (save-buffer)))
-   ((apheleia--get-formatters)          ; If available apheleia formatter
+   ((and (require 'apheleia nil t)
+         (apheleia--get-formatters))    ; If available apheleia formatter
     (let* ((apheleia-mode t))           ; Save silently
       (apheleia--format-after-save)))
    ((derived-mode-p 'prog-mode)
