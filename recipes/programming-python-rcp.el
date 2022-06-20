@@ -98,83 +98,150 @@
              "vc" '(pyvenv-create :wk "Create"))
   :custom
   (pyvenv-default-virtual-env-name ".venv")
-  (pyvenv-mode-line-indicator (concat "[" kb/pyvenv-type "]"))
   :config
+  ;; Variables
   (defvar kb/pyvenv-possible-env-names
     `(,pyvenv-default-virtual-env-name "env" ".env" "venv" ".venv" "virtualenv" ".virtualenv"))
-  (defvar kb/pyvenv-type nil)
+  (defvar kb/pyvenv-venv-type nil)
+  (defvar kb/pyvenv-dir-predicates
+    '(kb/pyvenv-pred-default-directory kb/pyvenv-pred-project-root kb/pyvenv-pred-workon)
+    "Predicates that check for the existence of virtual environments.
+
+Each predicate in this list should have a directory as its first
+argument. A non-nil returned value should be a cons whose car is
+a file path and cdr is a string used by `kb/pyvenv-venv-type' in
+the mode line.")
+
+  ;; Functions/commands
+  (defun kb/pyvenv--directory-slug (dir)
+    "Return a pyvenv slug based on DIR.
+
+DIR should be a file path. If DIR is in a project according to
+`project-current', then return the directory name of the
+project's root. Otherwise, return the directory name of DIR."
+    (require 'project)
+    (unless dir
+      (setq dir default-directory))
+    (or (when-let (proj (project-current nil dir))
+          (file-name-nondirectory (directory-file-name (project-root proj))))
+        (file-name-nondirectory (directory-file-name dir))
+        (user-error "[kb/pyvenv--directory-slug] Can't calculate slug!")))
+  (defun kb/pyvenv-pred-default-directory (dir &optional signifier)
+    "Check if a virtual environment exists in DIR.
+
+Go through `kb/pyvenv-possible-env-names' in order, checking if
+there exists a directory within DIR whose name matches any of its
+strings. If so, return a cons whose car is the file path to that
+directory and cdr is SIGNIFIER, if provided. Otherwise, return
+nil.
+
+SIGNIFIER should be a string, and defaults to \"D\" if not
+provided."
+    (when (and signifier
+               (not (stringp signifier)))
+      (user-error "Argument is not a string!"))
+    (let (matches)
+      (dolist (env-name kb/pyvenv-possible-env-names)
+        (when (file-exists-p (file-name-as-directory
+                              (expand-file-name env-name dir)))
+          (add-to-list 'matches env-name t)))
+      (when matches
+        (cons (expand-file-name (car matches) dir)
+              (or signifier "D")))))
+  (defun kb/pyvenv-pred-project-root (dir)
+    "Check if a virtual environment exists in DIR's project root.
+
+If DIR is not within a project according to `project-current',
+then return nil. Otherwise, call
+`kb/pyvenv-pred-default-directory' on this project's root
+directory. This returns car is the `project-root' and cdr is
+\"P\"."
+    (require 'project)
+    (when-let (proj (project-current nil dir))
+      (kb/pyvenv-pred-default-directory (project-root proj) "P")))
+  (defun kb/pyvenv-pred-workon (dir)
+    "Check if DIR has an associated virtual environment in `pyvenv-workon-home'.
+
+If not, return nil. Otherwise, return a cons whose car is the
+path to the virtual environment and whose cdr is \"W\".
+
+The directory name we're checking for is determined by
+`kb/pyvenv--directory-slug'."
+    (when-let ((slug (expand-file-name
+                      (kb/pyvenv--directory-slug dir)
+                      (pyvenv-workon-home)))
+               (path (file-name-as-directory slug)))
+      (when (file-exists-p path)
+        (cons path "W"))))
+
+  ;; NOTE 2022-06-20: Activating virtual environments overwrites that the
+  ;; activation of previous virtual environments. This is because
+  ;; `pyvenv-activate' relies on `setenv' for the VIRTUAL_ENV environment
+  ;; variable. As far as I can tell, there is no easy way to bypass this, since
+  ;; `process-environment' is stubbornly global. A potential solution may lie
+  ;; with `direnv' or `buffer-env'.
   (defun kb/pyvenv-auto-activate ()
     "Automate activation of python virtual environment.
 
 Activates if `pyvenv-workon' is non-nil (e.g. from .dir-locals.el
 or `WORKON_HOME' environment variable).
 
-Otherwise, checks for directories whose names appear in
-`kb/pyvenv-possible-env-names'; the first directory name
-successfully found in this list will be the virtual environment.
-The following is the procedure for checking whether a directory
-exists:
+Otherwise, go through the predicates in
+`kb/pyvenv-dir-predicates' in order. Activate a virtual
+environment based on the first non-nil value returned.
 
-1. Check present directory
-2. Check project root
-3. Check in `pyvenv-workon-home' for a directory matching the
-name of the current project according to `project-current'
-4. Check in `pyvenv-workon-home' for a directory matching the
-name of the `default-directory'
-
-If all of these fail, then create a virtual environment with
-`pyvenv-create' and activate it."
+If all returned values are nil, prompt to create a virtual
+environment in `pyvenv-workon-home' and activate it."
     (interactive)
     ;; Used functions need to be loaded
     (require 'pyvenv)
-    (require 'project)
     (unless (equal major-mode 'python-mode)
       (user-error "[kb/pyvenv-auto-activate] Not in python-mode, can't activate venv!"))
-    (dolist (current-virtual-env (delete-dups kb/pyvenv-possible-env-names))
-      (let* ((venv-in-dir
-              (file-name-as-directory (expand-file-name current-virtual-env default-directory)))
-             (venv-in-project
-              (when (project-current)
-                (expand-file-name current-virtual-env
-                                  (project-root (project-current)))))
-             (venv-expected-name
-              (or (when (project-current)
-                    (file-name-nondirectory (directory-file-name (project-root (project-current)))))
-                  (file-name-nondirectory (directory-file-name default-directory))
-                  (user-error "[kb/pyvenv-auto-activate] Can't calculate `venv-expected-virtualenv-path'!")))
-             (venv-expected-virtualenv-path
-              (file-name-as-directory (expand-file-name venv-expected-name (pyvenv-workon-home))))
-             (venv-chosen
-              (cond ((and (stringp pyvenv-workon)
-                          (file-exists-p pyvenv-workon))
-                     pyvenv-workon
-                     (setq-local kb/pyvenv-type "E"))
-                    ((file-exists-p venv-in-dir)
-                     venv-in-dir
-                     (setq-local kb/pyvenv-type "D"))
-                    ((and (stringp venv-in-project)
-                          (file-exists-p venv-in-project))
-                     venv-in-project
-                     (setq-local kb/pyvenv-type "P"))
-                    ((file-exists-p venv-expected-virtualenv-path)
-                     venv-expected-virtualenv-path
-                     (setq-local kb/pyvenv-type "W")))))
-        (if venv-chosen
-            (progn (pyvenv-activate venv-chosen)
-                   (message "[kb/pyvenv-auto-activate] Using python venv at %s" venv-chosen))
-          (pyvenv-create venv-expected-name
-                         ;; Taken from when `pyvenv-create' is run interactively
-                         (let ((dir (if pyvenv-virtualenvwrapper-python
-                                        (file-name-directory pyvenv-virtualenvwrapper-python)
-                                      nil))
-                               (initial (if pyvenv-virtualenvwrapper-python
-                                            (file-name-base pyvenv-virtualenvwrapper-python)
-                                          nil)))
-                           (read-file-name "Python interpreter to use: " dir nil nil initial)))
-          (pyvenv-activate venv-expected-virtualenv-path)
-          (message "[kb/pyvenv-auto-activate] Venv created and activated at %s"
-                   venv-expected-virtualenv-path)
-          (setq-local kb/pyvenv-type "W"))))))
+
+    ;; First check if `pyvenv-workon' is non-nil
+    (when (and (stringp pyvenv-workon)
+               (file-exists-p pyvenv-workon))
+      (pyvenv-activate pyvenv-workon)
+      (setq-local kb/pyvenv-venv-type "W"))
+
+    ;; Then go through predicates
+    (let* ((preds kb/pyvenv-dir-predicates)
+           venv-cons
+           current-pred)
+      ;; Go through preds and set venv-cons if one of them returns non-nil
+      (while (and (not venv-cons) preds)
+        (setq current-pred (car preds))
+        (setq venv-cons (funcall current-pred default-directory))
+        (setq preds (cdr preds)))
+
+      ;; Ensure venv-cons doesn't have unexpected data types
+      (when (and venv-cons
+                 (not (stringp (car venv-cons)))
+                 (not (stringp (cdr venv-cons))))
+        (user-error "[kb/pyvenv-auto-activate] Something went wrong!"))
+
+      ;; If venv-consp is non-nil at this point, activate that path. Otherwise,
+      ;; create a new venv in `venv-workon-home' and activate it. Also set
+      ;; `kb/pyvenv-venv-type' appropriately.
+      (if venv-cons
+          (progn (pyvenv-activate (car venv-cons))
+                 (setq-local kb/pyvenv-venv-type (cdr venv-cons))
+                 (message "[kb/pyvenv-auto-activate] Using python venv at %s"
+                          (car venv-cons)))
+        (let ((slug (kb/pyvenv--directory-slug))
+              (path (expand-file-name slug (pyvenv-workon-home))))
+          (pyvenv-create
+           ;; Taken from when `pyvenv-create' is run interactively
+           (let ((dir (if pyvenv-virtualenvwrapper-python
+                          (file-name-directory pyvenv-virtualenvwrapper-python)
+                        nil))
+                 (initial (if pyvenv-virtualenvwrapper-python
+                              (file-name-base pyvenv-virtualenvwrapper-python)
+                            nil)))
+             (read-file-name "Python interpreter to use: " dir nil nil initial)))
+          (pyvenv-activate path)
+          (setq-local kb/pyvenv-venv-type "W")
+          (message "[kb/pyvenv-auto-activate] Venv created and activated at %s" path))))))
 
 ;;; Python-pytest
 (use-package python-pytest
