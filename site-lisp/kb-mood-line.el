@@ -17,6 +17,7 @@
 main branch of repository."
   ;; NOTE 2022-01-22: Almost all of this function is taken from my modified
   ;; version of Doom Modeline's VC modeline segment.
+  (require 'vc)
   (let ((backend (vc-backend buffer-file-name))
         (icon (concat doom-modeline--vcs-icon " "))
         (text (concat doom-modeline--vcs-text " ")))
