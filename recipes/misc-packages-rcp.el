@@ -66,43 +66,6 @@
     ["View timers"
      [("v" "Tabulated view" tmr-tabulated-view)]]))
 
-;;; Emojify
-(use-package emojify
-  :custom
-  (emojify-composed-text-p t)
-  (emojify-emoji-styles '(ascii unicode github)))
-
-;;; Unicode-fonts
-;; NOTE 2022-01-24: See https://github.com/rolandwalker/unicode-fonts#testing
-;; for how to test for its success. Also see the very recommended font
-;; installations in the same README. Notably, the following are the listed
-;; bare-minimum fonts:
-;; DejaVu Sans
-;; DejaVu Sans Mono
-;; Quivira
-;; Symbola
-;; Noto Sans
-;; Noto Sans Symbols
-(use-package unicode-fonts
-  :init
-  ;; Taken from http://xahlee.info/emacs/misc/emacs_macos_emoji.html
-  (set-fontset-font                     ; Set font for symbols
-   t
-   'symbol
-   (cond
-    ((member "Symbola" (font-family-list)) "Symbola")))
-  (set-fontset-font     ; Set font for emoji (should come after setting symbols)
-   t
-   '(#x1f300 . #x1fad0)
-   (cond
-    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
-    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
-    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola")))
-  :config
-  (add-hook 'window-setup-hook #'unicode-fonts-setup 100))
-
 ;;; Restart-emacs
 (use-package restart-emacs
   :general ("<f10>" '((lambda ()             ; With "--debug-init"
