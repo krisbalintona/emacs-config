@@ -28,7 +28,7 @@
     (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME")))
   "An alist from major-mode to keyword strings.
 
-Can also be parent modes (e.g. `text-mode')."
+The keys can also be parent modes (e.g. `text-mode')."
   :group 'kb/comment
   :type 'alist)
 
@@ -97,9 +97,9 @@ The keyword selection is based on `kb/comment-keyword-alist'."
           (kb/comment--propertize-keyword last-used
                                           (cdr (assoc-string last-used kb/comment-keyword-faces))))
          (keywords-list
-          (cl-loop for (key . value) in kb/comment-keyword-alist
-                   thereis (funcall 'derived-mode-p key)
-                   finally return value)))
+          (cl-loop for alist in kb/comment-keyword-alist
+                   when (funcall 'derived-mode-p (car alist))
+                   return (cdr alist))))
     (completing-read
      (concat "Select keyword"
              (when last-used
@@ -141,7 +141,7 @@ Leaves point after a the comment and optional STRING-ARGS are
               (flatten-list string-args)))
 
   (save-excursion              ; Insert enclosing comment delimiter if it exists
-    (unless (string= "" comment-end)
+    (unless (string-empty-p comment-end)
       (insert (comment-padleft comment-end (comment-add nil))))
     (indent-according-to-mode)))
 
@@ -246,6 +246,9 @@ current buffer, end in `evil-insert-state'."
   (comment-normalize-vars)
   (let ((end-evil-insert (and (not buffer-read-only)
                               (bound-and-true-p evil-local-mode))))
+    ;; When called from code, prefix will be nil rather than one when no prefix.
+    ;; So manually set the prefix to 1 in that case
+    (unless prefix (setq prefix 1))
     (cond
      ;; Any number of positive universal arguments and region active = Call
      ;; `kb/comment--region-kill-comments'
