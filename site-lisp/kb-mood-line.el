@@ -36,11 +36,14 @@ main branch of repository."
 Only displays if in a python buffer which has a currently active
 virtual environment."
   (when (equal major-mode 'python-mode)
-    (concat
-     "  "
-     (mood-line--string-trim (format-mode-line pyvenv-mode-line-indicator 'mode-line-emphasis))
-     "  ")
-    ))
+    (require 'programming-python-rcp)
+    (let ((text (concat
+                 (mood-line--string-trim
+                  (format-mode-line (concat "[" kb/pyvenv-venv-type "]") 'mode-line-emphasis))
+                 " ")))
+      (if (doom-modeline--active)
+          text
+        (propertize text 'face 'mode-line-inactive)))))
 
 (defun kb/mood-line-segment-default-directory ()
   "Display directory.
