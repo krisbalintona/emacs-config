@@ -34,16 +34,10 @@ main branch of repository."
   "Display the current python virtual environment from `pyvenv'.
 Only displays if in a python buffer which has a currently active
 virtual environment."
-  (when (and (equal major-mode 'python-mode) ; Only show in python-mode
-             (not (string-empty-p ; Only if buffer is actually using the current virtual env
-                   (file-name-nondirectory
-                    (directory-file-name
-                     (file-name-directory
-                      (directory-file-name default-directory))))
-                   )))
+  (when (equal major-mode 'python-mode)
     (concat
      "  "
-     (mood-line--string-trim (format-mode-line pyvenv-mode-line-indicator))
+     (mood-line--string-trim (format-mode-line pyvenv-mode-line-indicator 'mode-line-emphasis))
      "  ")
     ))
 
