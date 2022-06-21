@@ -84,7 +84,7 @@
 ;;; Vc-msg
 ;; See a line's corresponding commit information (like git blame)
 (use-package vc-msg
-    :general ("H-b" 'vc-msg-show))
+  :general ("H-b" 'vc-msg-show))
 
 ;;; Demap
 (use-package demap
@@ -286,6 +286,16 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package info-variable-pitch
   :straight (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :ghook 'Info-selection-hook)
+
+;;; Whole-line-or-region
+(use-package whole-line-or-region
+  :hook (after-init . whole-line-or-region-global-mode)
+  :general
+  ;; Remake the mode map since `whole-line-or-region-yank-handler' relies on the
+  ;; mode being active for full functionality
+  (:keymaps 'whole-line-or-region-local-mode-map
+            "M-;" nil)
+  )
 
 ;;; Built-in Emacs modes/packages
 (use-package emacs
