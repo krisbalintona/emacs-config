@@ -112,7 +112,7 @@
 (use-package dumb-jump
   :custom
   (dumb-jump-quiet nil)
-  (dumb-jump-default-project user-emacs-directory)
+  (dumb-jump-default-project (file-name-concat user-emacs-directory "recipes/"))
   ;; See https://github.com/jacktasia/dumb-jump#configuration to see how it
   ;; behaves
   (dumb-jump-prefer-searcher 'rg)
