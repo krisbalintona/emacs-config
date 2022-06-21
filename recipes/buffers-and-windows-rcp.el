@@ -21,6 +21,13 @@
   (winner-boring-buffers-regexp "\\*helpful variable:\\|\\*helpful command:\\|magit:") ; Skip `magit' and `helpful' buffers
   :init (winner-mode))
 
+;;;; Windmove
+(use-package windmove
+  :hook after-init
+  :config
+  (windmove-default-keybindings)
+  (windmove-swap-states-default-keybindings '(shift hyper)))
+
 ;;;; Window
 (use-package window
   :straight nil
