@@ -17,7 +17,8 @@
   :init
   (puni-global-mode)
   :config
-  (defvar puni-mode-map
+  ;; Remake puni-mode-map
+  (defvar kb/puni-mode-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "DEL") 'puni-backward-delete-char)
       (define-key map (kbd "C-d") 'puni-forward-delete-char)
@@ -32,15 +33,15 @@
       (define-key map (kbd "C-M-b") 'puni-backward-sexp)
       (define-key map (kbd "C-M-a") 'puni-beginning-of-sexp)
       (define-key map (kbd "C-M-e") 'puni-end-of-sexp)
-      ;; (define-key map (kbd "M-(") 'puni-syntactic-backward-punct)
-      ;; (define-key map (kbd "M-)") 'puni-syntactic-forward-punct)
       ;; My additional keybinds
       (define-key map (kbd "C-M-9") 'puni-syntactic-backward-punct)
       (define-key map (kbd "C-M-0") 'puni-syntactic-forward-punct)
       (define-key map (kbd "C-M-r") 'puni-raise)
-      (define-key map (kbd "C-") 'puni-expand-region)
-      map)
-    "Keymap used for `puni-structural-editing-mode'."))
+      (define-key map (kbd "C-=") 'puni-expand-region)
+      map))
+  (define-minor-mode puni-mode
+    "Enable keybindings for Puni commands."
+    :keymap kb/puni-mode-map))
 
 ;;; Avy
 ;; Quickly jump to any character
