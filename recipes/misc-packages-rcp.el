@@ -86,41 +86,6 @@
 (use-package vc-msg
   :general ("H-b" 'vc-msg-show))
 
-;;; Demap
-(use-package demap
-  :straight (demap :type git :host gitlab :repo "sawyerjgardner/demap.el")
-  :hook (demap-minimap-construct . hide-mode-line-mode)
-  :general (kb/toggle-keys
-             "M" '(demap-toggle :wk "Demap toggle"))
-  :custom
-  (demap-minimap-window-side 'right)
-  (demap-minimap-window-width 15)
-  :config
-  ;; NOTE 2022-03-10: Relies on the "minimap" font found here:
-  ;; https://github.com/davestewart/minimap-font
-  (let ((gray1 "#1A1C22")
-        (gray2 "#21242b")
-        (gray3 "#282c34")
-        (gray4 "#2b3038") )
-    (face-spec-set 'demap-minimap-font-face
-                   `((t :background ,gray2
-                        :inherit    unspecified
-                        :family     "minimap"
-                        :height     10          )))
-    (face-spec-set 'demap-visible-region-face
-                   `((t :background ,gray4
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-visible-region-inactive-face
-                   `((t :background ,gray3
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-current-line-face
-                   `((t :background ,gray1
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-current-line-inactive-face
-                   `((t :background ,gray1
-                        :inherit    unspecified ))))
-  )
-
 ;;; Good-scroll
 ;; Good-enough smooth scrolling
 (use-package good-scroll
