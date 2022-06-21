@@ -16,15 +16,15 @@
   :disabled t ; In favor of `project.el'
   :general
   (kb/general-keys
-    "p" '(:ignore t :wk "Projectile")
-    "p?" '(hydra:selectrum-projectile/body :wk "Help menu")
-    ;; "pf"  'projectile-find-file
-    "pp"  'projectile-switch-project
-    ;; "ps"  'counsel-projectile-rg
-    "pb"  'projectile-switch-to-buffer
-    "pD"  'projectile-dired
-    ;; "pc"  'projectile-compile-project
-    )
+   "p" '(:ignore t :wk "Projectile")
+   "p?" '(hydra:selectrum-projectile/body :wk "Help menu")
+   ;; "pf"  'projectile-find-file
+   "pp"  'projectile-switch-project
+   ;; "ps"  'counsel-projectile-rg
+   "pb"  'projectile-switch-to-buffer
+   "pD"  'projectile-dired
+   ;; "pc"  'projectile-compile-project
+   )
   :custom
   (projectile-completion-system 'default) ; Use selectrum
   (projectile-enable-caching t)
@@ -149,7 +149,7 @@
   ;; Sections
   (magit-module-sections-nested t)
   (magit-section-show-child-count t)
-  (magit-refs-show-commit-count 'all) ; Show branches and tags
+  (magit-refs-show-commit-count 'all)   ; Show branches and tags
   (magit-section-initial-visibility-alist '((modules . hide) ; Modules overview
                                             (stashes . show)
                                             (unpulled . show)
@@ -164,14 +164,14 @@
   (transient-levels-file (concat no-littering-var-directory "transient/levels.el"))
 
   ;; Performance-related variables
-  (magit-refresh-status-buffer t) ; Change to nil as last resort
+  (magit-refresh-status-buffer t)       ; Change to nil as last resort
   (magit-refresh-verbose nil) ; Help troubleshoot bottlenecks (check `*Messages*' buffer)?
   ;; Prefer these to be nil for performance boosts
   (magit-diff-highlight-indentation t) ; Highlight wrong indentation?
-  (magit-diff-highlight-trailing t) ; Highlight trailing spaces?
-  (magit-diff-paint-whitespace nil) ; Where to highlight whitespace errors?
-  (magit-diff-highlight-hunk-body t) ; Highlight hunks?
-  (magit-diff-refine-hunk t) ; Extra-highlight word-level differences?
+  (magit-diff-highlight-trailing t)    ; Highlight trailing spaces?
+  (magit-diff-paint-whitespace nil)    ; Where to highlight whitespace errors?
+  (magit-diff-highlight-hunk-body t)   ; Highlight hunks?
+  (magit-diff-refine-hunk t)           ; Extra-highlight word-level differences?
 
   ;; Removes functions ran in `magit-status-sections-hook'. Can also improve
   ;; performance. Use `magit-refresh-verbose' to diagnose which of these should
@@ -195,7 +195,7 @@
   (evil-set-initial-state 'git-commit-mode 'insert)
 
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
-  (require 'magit-extras) ; Load the remaining magit libraries
+  (require 'magit-extras)               ; Load the remaining magit libraries
 
   ;; Adds hooks to `magit-status-sections-hook'. Should be a separate call for
   ;; each.
