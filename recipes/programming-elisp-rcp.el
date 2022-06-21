@@ -28,21 +28,20 @@
 ;;;; Lisp-extra-font-lock
 ;; Give faces to elisp symbols
 (use-package lisp-extra-font-lock
+  :disabled t
   :init
-  (lisp-extra-font-lock-global-mode)
-  )
+  (lisp-extra-font-lock-global-mode))
 
 ;;;; Highlight-function-calls
 ;; Give function calls a special face (default is underline)
 (use-package highlight-function-calls
-  :ghook 'emacs-lisp-mode-hook
-  )
+  :disabled t
+  :ghook 'emacs-lisp-mode-hook)
 
 ;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
-  :ghook 'prog-mode-hook
-  )
+  :ghook 'prog-mode-hook)
 
 ;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
