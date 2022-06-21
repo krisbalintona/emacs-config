@@ -34,24 +34,18 @@
         '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")))
 
 ;;; Devdocs
-;; Viewing documentation within Emacs. Requires internet connection.
-(use-package devdocs
-  :hook ((python-mode   . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
-         (haskell-mode  . (lambda () (setq-local devdocs-current-docs '("haskell~8"))))
-         (js2-mode      . (lambda () (setq-local devdocs-current-docs '("JavaScript"))))
-         (lua-mode      . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
-         (LaTeX-mode    . (lambda () (setq-local devdocs-current-docs '("latex"))))
-         )
-  :general (kb/lsp-keys
-             "D" '(:ignore t :wk "Devdocs")
-             "Di" '(devdocs-install :wk "Install documentation for a language")
-             "Dl" '(devdocs-lookup :wk "Documentation lookup")
-             "DL" '(devdocs-search :wk "Search for docs in site"))
-  )
+;; Viewing documentation within Emacs.
+(use-package devdocs-browser
+  :general (:keymaps 'prog-mode
+                     :prefix "H-d"
+                     "h" '(devdocs-browser-open :wk "Open")
+                     "H" '(devdocs-browser-open-in :wk "Open-in")
+                     "i" '(devdocs-browser-install :wk "Install")
+                     "d" '(devdocs-browser-download-offline-data :wk "Download")
+                     "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade")))
 
 ;;; Dash-docs
-;; Offline viewing of documentation via browser. Doesn't require an internet
-;; connection.
+;; Viewing of documentation via browser.
 (use-package dash-docs
   :hook ((python-mode   . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
          (haskell-mode  . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
