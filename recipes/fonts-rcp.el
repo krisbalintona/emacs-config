@@ -75,6 +75,22 @@
   ;; graphical values are set, e.g. before `window-setup-hook'
   (add-hook 'after-init-hook #'unicode-fonts-setup 100))
 
+;;; Ligature
+;; Ligatures! See for configuration examples: https://github.com/j/wiki
+(use-package ligature
+  :straight (ligature :type git :host github :repo "mickeynp/ligature.el")
+  :hook (window-setup . global-ligature-mode)
+  :config
+  ;; Enables simple HTML ligations for web-related major modes using the string
+  ;; notation to create ligations
+  (ligature-set-ligatures '(html-mode nxml-mode web-mode) '("<!--" "-->" "</>" "</" "/>" "://"))
+  
+  ;; Enable all Iosevka ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
+                                       "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
+                                       "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
+                                       ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++")))
+
 ;;; fonts-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'fonts-rcp)
