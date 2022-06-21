@@ -9,6 +9,39 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Puni
+;; Major-mode agnostic structural editing, faithful to built-ins
+(use-package puni
+  :custom
+  (puni-confirm-when-delete-unbalanced-active-region t)
+  :init
+  (puni-global-mode)
+  :config
+  (defvar puni-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "DEL") 'puni-backward-delete-char)
+      (define-key map (kbd "C-d") 'puni-forward-delete-char)
+      (define-key map (kbd "M-d") 'puni-forward-kill-word)
+      (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
+      (define-key map (kbd "C-k") 'puni-kill-line)
+      (define-key map (kbd "C-S-k") 'puni-backward-kill-line)
+      (unless (featurep 'whole-line-or-region)
+        (define-key map (kbd "C-w") 'puni-kill-active-region))
+      (define-key map (kbd "C-c DEL") 'puni-force-delete)
+      (define-key map (kbd "C-M-f") 'puni-forward-sexp)
+      (define-key map (kbd "C-M-b") 'puni-backward-sexp)
+      (define-key map (kbd "C-M-a") 'puni-beginning-of-sexp)
+      (define-key map (kbd "C-M-e") 'puni-end-of-sexp)
+      ;; (define-key map (kbd "M-(") 'puni-syntactic-backward-punct)
+      ;; (define-key map (kbd "M-)") 'puni-syntactic-forward-punct)
+      ;; My additional keybinds
+      (define-key map (kbd "C-M-9") 'puni-syntactic-backward-punct)
+      (define-key map (kbd "C-M-0") 'puni-syntactic-forward-punct)
+      (define-key map (kbd "C-M-r") 'puni-raise)
+      (define-key map (kbd "C-") 'puni-expand-region)
+      map)
+    "Keymap used for `puni-structural-editing-mode'."))
+
 ;;; Avy
 ;; Quickly jump to any character
 (use-package avy

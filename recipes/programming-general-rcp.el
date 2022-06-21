@@ -221,12 +221,6 @@
     )
   )
 
-;;;; Expand-region
-(use-package expand-region
-  :general ("C-=" 'er/expand-region)
-  :custom
-  (expand-region-subword-enabled t))
-
 ;;; File or buffer utilities
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
