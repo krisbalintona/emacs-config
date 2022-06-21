@@ -93,6 +93,22 @@
    tree-sitter-langs--bundle-version
    tree-sitter-langs--os))
 
+;;;; Turbo-log
+(use-package turbo-log
+  :requires tree-sitter
+  :straight (turbo-log :type git :host github :repo "artawower/turbo-log.el")
+  :general (:prefix "H-l"
+                    "l" 'turbo-log-print
+                    "i" 'turbo-log-print-immediately
+                    "h" 'turbo-log-comment-all-logs
+                    "s" 'turbo-log-uncomment-all-logs
+                    "[" 'turbo-log-paste-as-logger
+                    "]" 'turbo-log-paste-as-logger-immediately
+                    "d" 'turbo-log-delete-all-logs)
+  :custom
+  (turbo-log-msg-format-template "\"🚀: %s\"")
+  (turbo-log-allow-insert-without-tree-sitter-p t))
+
 ;;;; Evil-textobj-tree-sitter
 ;; Navigation of text objects with tree-sitter
 (use-package evil-textobj-tree-sitter
