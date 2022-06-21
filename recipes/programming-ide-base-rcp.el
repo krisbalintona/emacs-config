@@ -109,40 +109,6 @@
   (turbo-log-msg-format-template "\"🚀: %s\"")
   (turbo-log-allow-insert-without-tree-sitter-p t))
 
-;;;; Evil-textobj-tree-sitter
-;; Navigation of text objects with tree-sitter
-(use-package evil-textobj-tree-sitter
-  :straight (evil-textobj-tree-sitter :type git
-                                      :host github
-                                      :repo "meain/evil-textobj-tree-sitter"
-                                      :files (:defaults "queries"))
-  :general
-  (:keymaps 'evil-inner-text-objects-map
-            "f" (evil-textobj-tree-sitter-get-textobj "function.inner")
-            )
-  (:keymaps 'evil-outer-text-objects-map
-            "f" (evil-textobj-tree-sitter-get-textobj "function.outer")
-            ;; You can also bind multiple items and we will match the first one
-            ;; we can find
-            "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))
-            )
-  (:keymaps 'prog-mode-map
-            :states 'normal
-            "[f" '(lambda ()                 ; Goto start of previous/this function
-                    (interactive)
-                    (evil-textobj-tree-sitter-goto-textobj "function.outer" t))
-
-            "]f" '(lambda ()                 ; Goto start of next function
-                    (interactive)
-                    (evil-textobj-tree-sitter-goto-textobj "function.outer"))
-            "]F" '(lambda ()                 ; Goto end of next function
-                    (interactive)
-                    (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t))
-            "[F" '(lambda ()                 ; Goto end of previous/this function
-                    (interactive)
-                    (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))
-            ))
-
 ;;; programming-ide-base-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-ide-base-rcp)
