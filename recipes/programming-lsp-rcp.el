@@ -98,7 +98,7 @@
     )
   :custom
   (lsp-keymap-prefix "H-l")             ; Also have this be a prefix
-  (lsp-auto-guess-root nil)
+  (lsp-auto-guess-root t)
   (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't fontify headline breadcrumb text (janky fix)
   (lsp-modeline-diagnostics-scope :file)
