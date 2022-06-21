@@ -121,6 +121,7 @@
 ;;; Lispy
 ;; TODO 2022-06-04: Also get `special-lispy-shifttab' working
 (use-package lispy
+  :disabled t 
   :if (not (bound-and-true-p evil-local-mode))
   :ghook 'emacs-lisp-mode-hook
   :hook (minibuffer-setup . (lambda ()        ; Also use lispy for `eval-expression'
