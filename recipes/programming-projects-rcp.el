@@ -192,7 +192,8 @@
   (when (featurep 'evil)
     (setq forge-add-default-bindings nil))
   :config
-  (evil-set-initial-state 'git-commit-mode 'insert)
+  (when (bound-and-true-p evil-local-mode)
+    (evil-set-initial-state 'git-commit-mode 'insert))
 
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
   (require 'magit-extras)               ; Load the remaining magit libraries

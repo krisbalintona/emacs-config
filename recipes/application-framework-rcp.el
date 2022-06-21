@@ -13,9 +13,9 @@
 ;; The Emacs application framework.
 (use-package eaf
   :demand t
-  :ensure-system-package ("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
+  :ensure-system-package (("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
+                          (gdb))     ; For debugging purposes, if I ever need to
   :after browse-url
-  :ensure-system-package gdb         ; For debugging purposes, if I ever need to
   :straight (eaf :type git
                  :host github
                  :repo "emacs-eaf/emacs-application-framework"
@@ -89,8 +89,6 @@
   (require 'eaf-git)
 
   ;; Bindings
-  ;; Compatibility with Evil's normal mode
-  (require 'eaf-evil)
   ;; Browser
   (eaf-bind-key clear_focus "<escape>" eaf-browser-keybinding)
   (eaf-bind-key nil "M-q" eaf-browser-keybinding) ;; unbind, see more in the Wiki
@@ -99,27 +97,30 @@
   (eaf-bind-key rotate_clockwise "C-<down>" eaf-pdf-viewer-keybinding)
   (eaf-bind-key winner-undo "C-<left>" eaf-pdf-viewer-keybinding)
   (eaf-bind-key winner-redo "C-<right>" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-switch-to-windows-last-buffer "x" eaf-pdf-viewer-keybinding) ; Go to last buffer
   (eaf-bind-key scroll_down_page "C-u" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_up_page "C-d" eaf-pdf-viewer-keybinding)
   (eaf-bind-key nil "SPC" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-vsplit "SPC wv" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-split "SPC ws" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-next "SPC ww" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-left "SPC wh" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-right "SPC wl" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-up "SPC wk" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-down "SPC wj" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-next "C-w C-w" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-left "C-w h" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-right "C-w l" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-up "C-w k" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key evil-window-down "C-w j" eaf-pdf-viewer-keybinding)
   (eaf-bind-key nil "g" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_to_begin "gg" eaf-pdf-viewer-keybinding)
   (eaf-bind-key eyebrowse-last-window-config "gv" eaf-pdf-viewer-keybinding)
   (eaf-bind-key eyebrowse-prev-window-config "ga" eaf-pdf-viewer-keybinding)
   (eaf-bind-key eyebrowse-next-window-config "gt" eaf-pdf-viewer-keybinding)
+  ;; Compatibility with Evil's normal mode
+  (when (bound-and-true-p evil-local-mode)
+    (require 'eaf-evil)
+    (eaf-bind-key evil-switch-to-windows-last-buffer "x" eaf-pdf-viewer-keybinding) ; Go to last buffer
+    (eaf-bind-key evil-window-vsplit "SPC wv" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-split "SPC ws" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-next "SPC ww" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-left "SPC wh" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-right "SPC wl" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-up "SPC wk" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-down "SPC wj" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-next "C-w C-w" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-left "C-w h" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-right "C-w l" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-up "C-w k" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key evil-window-down "C-w j" eaf-pdf-viewer-keybinding))
 
   ;; Use EAF to open PDFs
   (defun eaf-org-open-file (file &optional link)

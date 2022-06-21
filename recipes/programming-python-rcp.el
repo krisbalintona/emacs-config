@@ -50,7 +50,8 @@
   (py-split-window-on-execute t)        ; Reuse existing windows?
   (py-switch-buffers-on-execute-p nil) ; Switch to buffer?
   :config
-  (evil-set-initial-state 'py-shell-mode 'normal))
+  (when (bound-and-true-p evil-local-mode)
+    (evil-set-initial-state 'py-shell-mode 'normal)))
 
 ;;; Dap-python
 ;; Compatibility with dap
