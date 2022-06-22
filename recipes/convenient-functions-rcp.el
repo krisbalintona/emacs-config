@@ -98,8 +98,10 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
 (defun kb/yank-buffer-filename ()
   "Copy the current buffer's path to the kill ring."
   (interactive)
-  (if-let (filename (or buffer-file-name (bound-and-true-p list-buffers-directory)))
-      (message (kill-new (abbreviate-file-name filename)))
+  (if-let ((filename (or buffer-file-name (bound-and-true-p list-buffers-directory)))
+           (abbreviated (abbreviate-file-name filename)))
+      (progn (kill-new abbreviated)
+             (message "Copied %s" abbreviated))
     (error "Couldn't find filename in current buffer")))
 (kb/yank-kill-keys "f" '(kb/yank-buffer-filename :wk "Yank file-path"))
 
