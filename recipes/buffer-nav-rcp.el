@@ -159,8 +159,8 @@ argument, query for word to search."
 
     (when (bound-and-true-p evil-local-mode)
       (evil-define-motion better-jumper-jump-toggle (count)
-        (better-jumper-jump-backward 1)
-        (better-jumper-set-jump (point)))
+                          (better-jumper-jump-backward 1)
+                          (better-jumper-set-jump (point)))
 
 
       (general-advice-add '(evil-first-non-blank evil-end-of-visual-line

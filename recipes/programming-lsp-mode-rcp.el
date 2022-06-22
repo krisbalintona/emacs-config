@@ -1,4 +1,4 @@
-;;; programming-lsp-rcp.el --- Summary
+;;; programming-lsp-mode-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
@@ -255,35 +255,6 @@
      ))
   )
 
-;;; Lsp-bridge
-;; Asynchronous LSP client
-(use-package lsp-bridge
-  :after lsp
-  :straight (lsp-bridge :type git
-                        :host github
-                        :repo "manateelazycat/lsp-bridge"
-                        :files (:defaults "*.py" "langserver"))
-  :after lsp-mode
-  :gfhook '(lambda ()                        ; For Xref support
-             (add-hook 'xref-backend-functions #'lsp-bridge-xref-backend nil t))
-  :init
-  (defun kb/global-lsp-bridge-mode ()
-    "My own, non-scuffed version of the command."
-    (interactive)
-    (dolist (hook lsp-bridge-default-mode-hooks)
-      (add-hook hook (lambda () (lsp-bridge-mode 1))))
-    (setq lsp-bridge-diagnostics-timer
-          (run-with-idle-timer lsp-bridge-diagnostics-fetch-idle t #'lsp-bridge-diagnostics-fetch)))
-  :config
-  (kb/global-lsp-bridge-mode)
-
-  ;; Enable extension
-  (require 'lsp-bridge-jdtls) ; Provide Java third-party library jump and -data directory support, optional
-  (require 'lsp-bridge-icon)  ; Show icons for completion items
-
-  ;; For corfu users with HiDPI screen
-  (when (> (frame-pixel-width) 3000) (custom-set-faces '(corfu-default ((t (:height 1.3)))))))
-
 ;;; Ancillary
 ;;;; Consult-lsp
 (use-package consult-lsp
@@ -316,6 +287,6 @@
             :states 'normal
             "x" 'lsp-treemacs-quick-fix))
 
-;;; programming-lsp-rcp.el ends here
+;;; programming-lsp-mode-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'programming-lsp-rcp)
+(provide 'programming-lsp-mode-rcp)
