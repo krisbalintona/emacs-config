@@ -12,7 +12,18 @@
 ;;; Eglot
 (use-package eglot
   :ensure-system-package (pyright bash-language-server)
-  :hook ((python-mode lua-mode sh-mode js2-mode) . eglot-ensure)
+  :hook (((python-mode lua-mode sh-mode js2-mode) . eglot-ensure)
+         (eglot-managed-mode . (lambda ()
+                                 (setq-local corfu-auto t
+                                             corfu-auto-delay 0.1
+                                             corfu-auto-prefix 1
+                                             corfu-quit-at-boundary t
+                                             orderless-component-separator "·"
+                                             corfu-separator ?·)
+                                 ;; Force re-enable `corfu-mode' in order for it
+                                 ;; to be aware of the local change to
+                                 ;; `corfu-auto'
+                                 (corfu-mode 1))))
   :custom
   (eglot-autoshutdown t)
   (eglot-stay-out-of '("flymake"))
