@@ -29,11 +29,6 @@ preserving the initial list."
               (when (eglot-managed-p)
                 (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend)))))
 
-;;; Realgud
-(use-package realgud
-  :custom
-  (realgud-window-split-orientation 'horizontal))
-
 ;;; Languages
 ;;;; Eglot-java
 (use-package eglot-java

@@ -90,15 +90,21 @@
 (require 'latex-general-rcp)
 
 ;;;; Programmming
+;;;;; Core
 (require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
 (require 'programming-directories-rcp)
 (require 'programming-projects-rcp)
 (require 'programming-linting-rcp)
+
+;;;;; IDE
 (require 'programming-ide-base-rcp)
 (require 'programming-eglot-rcp)
 (require 'programming-lsp-mode-rcp)
 (require 'programming-lsp-bridge-rcp)
+(require 'programming-debugging-rcp)
+
+;;;;; Langauges
 (require 'programming-elisp-rcp)
 (require 'programming-shell-rcp)
 (require 'programming-lua-rcp)
