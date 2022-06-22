@@ -20,12 +20,9 @@
   ;; Remake puni-mode-map
   (defvar kb/puni-mode-map
     (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "DEL") 'puni-backward-delete-char)
-      (define-key map (kbd "C-d") 'puni-forward-delete-char)
       (define-key map (kbd "M-d") 'puni-forward-kill-word)
       (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
       (define-key map (kbd "C-k") 'puni-kill-line)
-      (define-key map (kbd "C-S-k") 'puni-backward-kill-line)
       (unless (featurep 'whole-line-or-region)
         (define-key map (kbd "C-w") 'puni-kill-active-region))
       (define-key map (kbd "C-c DEL") 'puni-force-delete)
