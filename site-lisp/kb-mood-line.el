@@ -51,22 +51,20 @@ virtual environment."
 Don't display if not visiting a real file. Display project root
 if in project. Display current directory (`default-directory') as
 fallback."
-  (when-let* ((active
-               (doom-modeline--active))
-              (face
-               (if active 'doom-modeline-project-dir 'mode-line-inactive))
+  (when-let* ((active (doom-modeline--active))
+              (face (if active
+                        'doom-modeline-project-dir
+                      'mode-line-inactive))
               (file-name
                (file-local-name (or (buffer-name (buffer-base-buffer)) ; Indirect buffers
-                                    (buffer-file-name)                 ; Real buffers
-                                    "")))    ; Nothing if neither
+                                    (buffer-file-name)))) ; Real buffers
               (root (if (project-current)
                         (project-root (project-current))
                       default-directory))
-              (relative-path
-               (file-relative-name default-directory root))
-              (directory (cond ((or (string-match-p "\\*.*\\*" (buffer-name))
+              (relative-path (file-relative-name default-directory root))
+              (directory (cond ((or (string-match-p "\\*.*\\*" (buffer-name)) ; Special
                                     (string= file-name ""))
-                                "")
+                                nil)
                                ((project-current)      ; If in project root
                                 ;; Modified version of the truncate-with-project style in
                                 ;; `doom-modeline-buffer-file-name'
@@ -75,7 +73,7 @@ fallback."
                                  "/"
                                  (unless (string= relative-path "./") ; Add relative path
                                    (substring (shrink-path--dirs-internal relative-path t) 1))))
-                               (t                   ; Default to current directory, abbreviated
+                               (t    ; Default to current directory, abbreviated
                                 (abbreviate-file-name default-directory)))))
     (propertize directory 'face face)))
 
