@@ -20,9 +20,6 @@
                            (hide-mode-line-mode)
                            (setq-local scroll-margin 0)))
   :gfhook
-  ;; 'lsp-deferred
-  ;; 'dap-mode
-  'eglot-ensure
   '(lambda ()
      (require 'prog-mode)
      (push '("->" . ?») prettify-symbols-alist)

@@ -12,7 +12,7 @@
 ;;; Eglot
 (use-package eglot
   :ensure-system-package (pyright bash-language-server)
-  :hook ((python-mode lua-mode sh-mode) . eglot-ensure)
+  :hook ((python-mode lua-mode sh-mode js2-mode) . eglot-ensure)
   :custom
   (eglot-autoshutdown t)
   (eglot-stay-out-of '("flymake"))
@@ -51,7 +51,7 @@ preserving the initial list."
 ;;; Consult-eglot
 ;; Equivalent to `consult-lsp'; adds `consult-eglot-symbols'.
 (use-package consult-eglot
-  :after eglot
+  :requires eglot
   :general (:keymaps 'eglot-mode-map
                      [remap xref-find-apropos] #'consult-eglot-symbols))
 

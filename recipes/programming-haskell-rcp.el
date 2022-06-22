@@ -12,7 +12,7 @@
 ;;; Haskell-mode
 (use-package haskell-mode
   ;; :hook (haskell-mode . lsp-deferred)
-  :hook (haskell-mode . eglot-ensure)
+  ;; :hook (haskell-mode . eglot-ensure)
   :init (require 'haskell-mode-autoloads))
 
 ;;; programming-haskell-rcp.el ends here

@@ -18,8 +18,6 @@
   :mode (("\\.bats\\'" . sh-mode)
          ("\\.\\(?:zunit\\|env\\)\\'" . sh-mode)
          ("/bspwmrc\\'" . sh-mode))
-  ;; :hook (sh-mode . lsp-deferred)
-  :hook (sh-mode . eglot-ensure)
   :custom
   (flycheck-sh-shellcheck-executable "shellcheck"))
 

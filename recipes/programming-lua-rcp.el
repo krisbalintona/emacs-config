@@ -16,8 +16,6 @@
 ;; NOTE: For lsp-mode support, install lua-language-server, a separate system package
 (use-package lua-mode
   :ensure-system-package (lua-language-server)
-  ;; :hook (lua-mode . lsp-deferred)
-  :hook (lua-mode . eglot-ensure)
   :general
   (:keymaps 'lua-mode-map
             :states '(normal visual motion)
