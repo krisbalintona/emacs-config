@@ -72,10 +72,11 @@
 
 ;;; Package-lint-flymake
 (use-package package-lint-flymake
+  :commands package-lint-flymake
   :hook (emacs-lisp-mode . kb/package-lint-flymake-setup)
-  :init
+  :config
   (defun kb/package-lint-flymake-setup ()
-    (when (string-match-p (expand-file-name "recipes/" user-emacs-directory) default-directory)
+    (unless (string-match-p (expand-file-name "recipes/" user-emacs-directory) default-directory)
       (add-hook 'flymake-diagnostic-functions #'package-lint-flymake nil t))))
 
 ;;; programming-linting-rcp.el ends here
