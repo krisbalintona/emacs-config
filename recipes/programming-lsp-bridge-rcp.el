@@ -12,6 +12,7 @@
 ;;; Lsp-bridge
 ;; Minimal LSP client whose benefit is asynchrony
 (use-package lsp-bridge
+  :disabled t
   :straight (lsp-bridge :type git
                         :host github
                         :repo "manateelazycat/lsp-bridge"
