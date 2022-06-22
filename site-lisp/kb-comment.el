@@ -336,15 +336,16 @@ If called without a universal argument, call
 `comment-or-uncomment-region' on the region if active or current
 line if not."
   (interactive "*p")
-  (let* ((range (if (use-region-p)
-                    (list (save-excursion
-                            (goto-char (region-beginning))
-                            (line-beginning-position))
-                          (save-excursion
-                            (goto-char (region-end))
-                            (line-end-position)))
-                  (list (line-beginning-position)
-                        (line-end-position))))
+  (let* ((range (list
+                 ;; Will get the beg/end of current line if region is not
+                 ;; active. If region is active, will get the beg of line at the
+                 ;; beg of region and the end of line at the end of region
+                 (save-excursion
+                   (goto-char (region-beginning))
+                   (line-beginning-position))
+                 (save-excursion
+                   (goto-char (region-end))
+                   (line-end-position))))
          (beg (apply #'min range))
          (end (apply #'max range))
          (relevant-contents (buffer-substring beg end))) ; Line or region
