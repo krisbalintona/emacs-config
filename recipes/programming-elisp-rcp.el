@@ -64,7 +64,7 @@
   :gfhook 'visual-line-mode
   :general
   (:keymaps 'helpful-mode-map
-            (general-chord "jj") 'helpful-at-point)
+   (general-chord "jj") 'helpful-at-point)
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
   ([remap describe-function] 'helpful-function
