@@ -79,8 +79,8 @@ value of FACE will be ignored."
          (cond ((stringp face)
                 (list
                  ;; Inherit from `hl-todo' face if the mode is enabled. (Copies
-                 ;; behavior of `hl-todo--combine-face'.) Otherwise, don't inherit
-                 ;; nil.
+                 ;; behavior of `hl-todo--combine-face'.) Otherwise, don't
+                 ;; inherit nil.
                  :inherit (when (bound-and-true-p hl-todo-mode) 'hl-todo)
                  :foreground face))
                ((listp face)
@@ -174,18 +174,17 @@ the comments."
   (let* ((rbeg (or beg (region-beginning)))
          (rend (or end (region-end)))
          (traverse-lines (count-lines rbeg rend)))
-    ;; Modified `comment-lines'. Considers keep-empty-lines functionality. We
-    ;; do this to go line by line and delete the empty line only when a
-    ;; comment has been removed (rather than removing all empty lines in
-    ;; region entirely). Additionally, we want to delete region rather than
-    ;; kill it
+    ;; Modified `comment-lines'. Considers keep-empty-lines functionality. We do
+    ;; this to go line by line and delete the empty line only when a comment has
+    ;; been removed (rather than removing all empty lines in region entirely).
+    ;; Additionally, we want to delete region rather than kill it
     (comment-normalize-vars)
     (save-excursion
       (goto-char rbeg)     ; Always start at beginning of region, then move down
       (dotimes (_i traverse-lines)
-        ;; TODO 2022-06-17: When point is on a full-line comment, since it
-        ;; will be deleted, the point is moved rather than restored to the
-        ;; expected location. Fix this if possible.
+        ;; TODO 2022-06-17: When point is on a full-line comment, since it will
+        ;; be deleted, the point is moved rather than restored to the expected
+        ;; location. Fix this if possible.
         (save-excursion
           (beginning-of-line)
           (let ((cs (comment-search-forward (line-end-position) t)))
@@ -205,14 +204,14 @@ the comments."
 ;;; Commands
 ;;;###autoload
 (defun kb/comment-dwim (prefix &rest additional-strings)
-  "Based on PREFIX, insert either a normal comment or a comment with a timestamp.
+  "Based on PREFIX, insert either a normal comment.
 
 This function is inspired by `comment-dwim'. The behavior is as
 follows, with priority in this order (Note: when using this
 command elsewhere, PREFIX should be a number, e.g. \"16\", not
 `current-prefix-arg 'in raw-form):
 
-If called with any number of postive universal aguments and
+If called with any number of positive universal arguments and
 region is active, then kill all comments in the lines the region
 is active in.
 
@@ -288,8 +287,8 @@ current buffer, end in `evil-insert-state'."
      (t
       (error "Something has gone wrong in `kb/comment-dwim'! The prefix is %s" prefix)))
 
-    ;; End in insert state if evil-mode is enabled and buffer isn't in
-    ;; read-only mode
+    ;; End in insert state if evil-mode is enabled and buffer isn't in read-only
+    ;; mode
     (when (and (bound-and-true-p evil-mode)
                end-evil-insert)
       (require 'evil)
@@ -370,9 +369,10 @@ line if not."
 
 ;;; Keybinds
 (when kb/comment-use-suggested-keybinds
-  (define-key global-map [remap comment-dwim] 'kb/comment-dwim)
-  (define-key global-map [remap comment-line] 'kb/comment-line)
-  (define-key global-map (kbd "C-M-;") 'kb/comment-dwim-todo-and-timestamp))
+  (let ((map global-map))
+    (define-key global-map [remap comment-dwim] 'kb/comment-dwim)
+    (define-key global-map [remap comment-line] 'kb/comment-line)
+    (define-key global-map (kbd "C-M-;") 'kb/comment-dwim-todo-and-timestamp)))
 
 ;;; kb-comment.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
