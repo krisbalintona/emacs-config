@@ -14,20 +14,18 @@
 ;; Better keyword, cl-defun, and cl-loop indenting. See
 ;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
 (use-package lisp-keyword-indent
+  :demand t
   :straight (lisp-keyword-indent :type git
                                  :host github
                                  :repo "twlz0ne/lisp-keyword-indent.el")
   :config
   (defvar-local kb/lisp-keyword-indent-allow nil
     "Whether to allow `lisp-keyword-indent-mode' in current buffer.")
-  (define-minor-mode lisp-keyword-indent-mode
-    "Minor mode for keyword indent of Emacs Lisp."
-    :init-value nil
-    :lighter ""
-    :keymap nil
-    (if (and lisp-keyword-indent-mode kb/lisp-keyword-indent-allow)
-        (advice-add 'lisp-indent-function :override #'lisp-keyword-indent)
-      (advice-remove 'lisp-indent-function #'lisp-keyword-indent)))
+  (define-globalized-minor-mode global-lisp-keyword-indent-mode
+    lisp-keyword-indent-mode
+    (lambda ()
+      (when kb/lisp-keyword-indent-allow
+        (lisp-keyword-indent-mode 1))))
 
   (global-lisp-keyword-indent-mode))
 
