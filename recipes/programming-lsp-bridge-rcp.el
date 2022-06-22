@@ -12,13 +12,13 @@
 ;;; Lsp-bridge
 ;; Minimal LSP client whose benefit is asynchrony
 (use-package lsp-bridge
-  :disabled t
   :straight (lsp-bridge :type git
                         :host github
                         :repo "manateelazycat/lsp-bridge"
                         :files (:defaults "*.py" "langserver" "acm"))
   :config
-  (global-lsp-bridge-mode))
+  ;; (global-lsp-bridge-mode)
+  )
 
 ;;; programming-lsp-bridge-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
