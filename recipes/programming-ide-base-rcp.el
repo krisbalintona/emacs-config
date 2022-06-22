@@ -37,16 +37,21 @@
 ;; Viewing documentation within Emacs.
 (use-package devdocs-browser
   :general (:keymaps 'prog-mode
-                     :prefix "H-d"
-                     "h" '(devdocs-browser-open :wk "Open")
-                     "H" '(devdocs-browser-open-in :wk "Open-in")
-                     "i" '(devdocs-browser-install :wk "Install")
-                     "d" '(devdocs-browser-download-offline-data :wk "Download")
-                     "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade")))
+            :prefix "H-d"
+            "h" '(devdocs-browser-open :wk "Open")
+            "H" '(devdocs-browser-open-in :wk "Open-in")
+            "i" '(devdocs-browser-install :wk "Install")
+            "d" '(devdocs-browser-download-offline-data :wk "Download")
+            "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade")))
 
 ;;; Dash-docs
 ;; Viewing of documentation via browser.
 (use-package dash-docs
+  :straight  (dash-docs :type git
+                        :host github
+                        :repo "dash-docs-el/dash-docs"
+                        :fork (:host github
+                               :repo "krisbalintona/dash-docs"))
   :hook ((python-mode   . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
          (haskell-mode  . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
          (js2-mode      . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))
@@ -98,13 +103,13 @@
   :requires tree-sitter
   :straight (turbo-log :type git :host github :repo "artawower/turbo-log.el")
   :general (:prefix "H-l"
-                    "l" 'turbo-log-print
-                    "i" 'turbo-log-print-immediately
-                    "h" 'turbo-log-comment-all-logs
-                    "s" 'turbo-log-uncomment-all-logs
-                    "[" 'turbo-log-paste-as-logger
-                    "]" 'turbo-log-paste-as-logger-immediately
-                    "d" 'turbo-log-delete-all-logs)
+            "l" 'turbo-log-print
+            "i" 'turbo-log-print-immediately
+            "h" 'turbo-log-comment-all-logs
+            "s" 'turbo-log-uncomment-all-logs
+            "[" 'turbo-log-paste-as-logger
+            "]" 'turbo-log-paste-as-logger-immediately
+            "d" 'turbo-log-delete-all-logs)
   :custom
   (turbo-log-msg-format-template "\"🚀: %s\"")
   (turbo-log-allow-insert-without-tree-sitter-p t))
