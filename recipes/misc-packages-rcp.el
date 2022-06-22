@@ -294,7 +294,15 @@ progress. This is called by the timer `good-scroll--timer' every
             [remap evil-ret] 'Info-follow-nearest-node)
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
             "u" 'universal-argument-more)
+  :custom
+  (kill-do-not-save-duplicates t)
   :config
+  (defun kb/kill-remove-blanks (str)
+    "Prevent empty strings from being added to the `kill-ring'."
+    (unless (string-match-p "\\`\\s-*$" (substring-no-properties str))
+      str))
+  (setq kill-transform-function 'kb/kill-remove-blanks)
+
   (when (bound-and-true-p evil-local-mode)
     (general-unbind 'normal help-mode-map "SPC")
     (general-unbind 'normal custom-mode-map "SPC")))
