@@ -10,11 +10,26 @@
 (require 'keybinds-general-rcp)
 (require 'buffers-and-windows-rcp)
 
-;;; Elisp-mode
-;; Elisp-mode overwrites my eyebrowse-last-window-config binding
-(use-package elisp-mode
-  :straight nil
-  )
+;;; Lisp-keyword-indent
+;; Better keyword, cl-defun, and cl-loop indenting. See
+;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
+(use-package lisp-keyword-indent
+  :straight (lisp-keyword-indent :type git
+                                 :host github
+                                 :repo "twlz0ne/lisp-keyword-indent.el")
+  :config
+  (defvar-local kb/lisp-keyword-indent-allow nil
+    "Whether to allow `lisp-keyword-indent-mode' in current buffer.")
+  (define-minor-mode lisp-keyword-indent-mode
+    "Minor mode for keyword indent of Emacs Lisp."
+    :init-value nil
+    :lighter ""
+    :keymap nil
+    (if (and lisp-keyword-indent-mode kb/lisp-keyword-indent-allow)
+        (advice-add 'lisp-indent-function :override #'lisp-keyword-indent)
+      (advice-remove 'lisp-indent-function #'lisp-keyword-indent)))
+
+  (global-lisp-keyword-indent-mode))
 
 ;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
