@@ -19,10 +19,6 @@
   'lsp-lens-mode
   '(lambda ()
      ;; Change `corfu' settings for LSP buffers
-     (general-define-key ; Insert special separator character
-      :keymaps 'local
-      :states 'insert
-      "C-SPC" '(lambda () (interactive) (insert corfu-separator)))
      (setq-local corfu-auto t
                  corfu-auto-delay 0.8
                  corfu-auto-prefix 1
