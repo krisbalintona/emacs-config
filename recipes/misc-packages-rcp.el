@@ -230,12 +230,16 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package ctrlf
   :init (ctrlf-mode))
 
-;;; kb-comment
-(use-package kb-comment
-  :demand t
-  :straight nil
+;;; alt-comment-dwim
+(use-package alt-comment-dwim
+  :straight (alt-comment-dwim :type git
+                              :host gitlab
+                              :repo "PreciousPudding/alt-comment-dwim")
+  :general
+  ([remap comment-dwim] 'alt-comment-dwim
+   [remap comment-line] 'alt-comment-line
+   "C-M-;" 'alt-comment-dwim-todo-and-timestamp)
   :custom
-  (kb/comment-use-suggested-keybinds t)
   (kb/comment-keyword-alist
    '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
      (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME"))))

@@ -1,9 +1,9 @@
-;;; kb-comment.el --- Summary
+;;; alt-comment-dwim.el --- Summary
 ;;
 ;;; Commentary:
 ;;
-;; This package defines the main command `kb/comment-dwim' (also see
-;; `kb/comment-dwim-todo-and-timestamp'). The DWIM functionality of the command
+;; This package defines the main command `alt-comment-dwim' (also see
+;; `alt-comment-dwim-todo-and-timestamp'). The DWIM functionality of the command
 ;; relies (i) on how many universal arguments are used and (ii) whether the
 ;; region is active or not.
 ;;
@@ -19,21 +19,21 @@
 (require 'newcomment)
 
 ;;; Variables
-(defgroup kb/comment nil
-  "Customized `comment-dwim'."
+(defgroup alt-comment nil
+  "A C-u based alternative to the built-in `comment-*' commands."
   :group 'comment)
 
-(defcustom kb/comment-keyword-alist
+(defcustom alt-comment-keyword-alist
   '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
     (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME")))
   "An alist from major-mode to keyword strings.
 
 The keys can also be parent modes (e.g. `text-mode')."
-  :group 'kb/comment
+  :group 'alt-comment
   :type 'alist)
 
 ;; NOTE 2022-06-15: Some of these faces are taken from `hl-todo-keyword-faces'.
-(defcustom kb/comment-keyword-faces
+(defcustom alt-comment-keyword-faces
   '(("TODO" . "orange")
     ("FIXME" . (error bold))
     ("REVIEW" . "orchid")
@@ -41,30 +41,20 @@ The keys can also be parent modes (e.g. `text-mode')."
     ("COMMENT" . "cornflower blue"))
   "An alist of todo keyword faces.
 
-Read `kb/comment--propertize-keyword' for a description of
+Read `alt-comment--propertize-keyword' for a description of
 possible values.
 
 If you use `hl-todo', then `hl-todo-keyword-faces' can be set to
 this variable in order to highlight those words in the buffer
 with these faces."
-  :group 'kb/comment
+  :group 'alt-comment
   :type 'alist)
 
-(defcustom kb/comment--keyword-hist nil
-  "Input history of selected comment keywords."
-  :group 'kb/comment
-  :type 'list)
-
-(defcustom kb/comment-use-suggested-keybinds nil
-  "Whether to use the suggested keybinds:
-
-`[remap comment-dwim]' `kb/comment-dwim'
-`C-M-;' `kb/comment-dwim-todo-and-timestamp'"
-  :group 'kb/comment
-  :type 'boolean)
+(defvar alt-comment--keyword-hist nil
+  "Input history of selected comment keywords.")
 
 ;;; Helper functions
-(defun kb/comment--propertize-keyword (keyword face)
+(defun alt-comment--propertize-keyword (keyword face)
   "Return KEYWORD propertized with FACE.
 
 Returns nil if KEYWORD is nil.
@@ -88,16 +78,16 @@ value of FACE will be ignored."
     (when keyword
       (propertize keyword 'face face-properties))))
 
-(defun kb/comment--select-todo-completing-read ()
+(defun alt-comment--select-todo-completing-read ()
   "Use `completing-read' to select a todo keyword.
 
-The keyword selection is based on `kb/comment-keyword-alist'."
-  (let* ((last-used (car kb/comment--keyword-hist)) ; Command history
+The keyword selection is based on `alt-comment-keyword-alist'."
+  (let* ((last-used (car alt-comment--keyword-hist)) ; Command history
          (propertized-last-used
-          (kb/comment--propertize-keyword last-used
-                                          (cdr (assoc-string last-used kb/comment-keyword-faces))))
+          (alt-comment--propertize-keyword last-used
+                                           (cdr (assoc-string last-used alt-comment-keyword-faces))))
          (keywords-list
-          (cl-loop for alist in kb/comment-keyword-alist
+          (cl-loop for alist in alt-comment-keyword-alist
                    when (funcall 'derived-mode-p (car alist))
                    return (cdr alist))))
     (completing-read
@@ -108,15 +98,15 @@ The keyword selection is based on `kb/comment-keyword-alist'."
              ": ")
      (mapcar
       (lambda (keyword)
-        (let ((keyword-face (cdr (assoc-string keyword kb/comment-keyword-faces))))
-          (kb/comment--propertize-keyword keyword keyword-face)))
+        (let ((keyword-face (cdr (assoc-string keyword alt-comment-keyword-faces))))
+          (alt-comment--propertize-keyword keyword keyword-face)))
       keywords-list)
-     nil nil nil 'kb/comment--keyword-hist last-used)))
+     nil nil nil 'alt-comment--keyword-hist last-used)))
 
-(defun kb/comment-insert--insertion-base (&rest string-args)
+(defun alt-comment-insert--insertion-base (&rest string-args)
   "Insert a comment at point with STRING-ARGS appended, space-separated.
 
-For example, `(kb/comment-insert--insertion-base \"hi\"
+For example, `(alt-comment-insert--insertion-base \"hi\"
 \"there\")' in an elisp buffer will insert:
 
 ;; hi there
@@ -125,8 +115,8 @@ This function is intended to be used on empty lines (not for
 end-of-line comments).
 
 Leaves point after a the comment and optional STRING-ARGS are
- inserted, ensuring that there is a space between the comment
- delimiter and STRING-ARGS text."
+inserted, ensuring that there is a space between the comment
+delimiter and STRING-ARGS text."
   (comment-normalize-vars)              ; Check comment-related variables
 
   (indent-according-to-mode)
@@ -136,7 +126,7 @@ Leaves point after a the comment and optional STRING-ARGS are
    (mapconcat 'identity
               ;; Flatten list in order to bypass inner lists. This is necessary,
               ;; for instance, when passing additional-strings from
-              ;; `kb/comment-dwim' as an argument here (which would result in a
+              ;; `alt-comment-dwim' as an argument here (which would result in a
               ;; list within a list.
               (flatten-list string-args)))
 
@@ -145,7 +135,7 @@ Leaves point after a the comment and optional STRING-ARGS are
       (insert (comment-padleft comment-end (comment-add nil))))
     (indent-according-to-mode)))
 
-(defun kb/comment--region-kill-comments (&optional beg end save-to-kill-ring keep-empty-lines)
+(defun alt-comment--region-kill-comments (&optional beg end save-to-kill-ring keep-empty-lines)
   "Delete all comments in region.
 
 This includes full-line comments, for example,
@@ -163,9 +153,9 @@ Additionally, if SAVE-TO-KILL-RING is non-nil, kill the comments
 rather than delete them. Each line will be its own entry in the
 `kill-ring'.
 
-Finally, unless KEEP-EMPTY-LINES is non-nil, then also
-delete the lines which have become empty as a result of removing
-the comments."
+Finally, unless KEEP-EMPTY-LINES is non-nil, then also delete the
+lines which have become empty as a result of removing the
+comments."
   ;; TODO 2022-06-17: Have the comments saved to the `kill-ring' with each
   ;; comment "bunch" in a single entry. A group of comments is a "bunch" when
   ;; they (i) consist of a single comment block or (ii) when they are
@@ -203,7 +193,7 @@ the comments."
 
 ;;; Commands
 ;;;###autoload
-(defun kb/comment-dwim (prefix &rest additional-strings)
+(defun alt-comment-dwim (prefix &rest additional-strings)
   "Based on PREFIX, insert either a normal comment.
 
 This function is inspired by `comment-dwim'. The behavior is as
@@ -250,10 +240,10 @@ current buffer, end in `evil-insert-state'."
     (unless prefix (setq prefix 1))
     (cond
      ;; Any number of positive universal arguments and region active = Call
-     ;; `kb/comment--region-kill-comments'
+     ;; `alt-comment--region-kill-comments'
      ((and (< 1 prefix) (use-region-p))
       (setq end-evil-insert nil) ; In this case, don't force ending in insert-mode
-      (kb/comment--region-kill-comments nil nil nil))
+      (alt-comment--region-kill-comments nil nil nil))
      ;; Region active = Comment those lines. However, uncomment if there are
      ;; only comments in the region or if called with universal argument. See
      ;; `comment-or-uncomment-region' for the behavior.
@@ -265,19 +255,19 @@ current buffer, end in `evil-insert-state'."
       (beginning-of-line)
       (newline)
       (forward-line -1)
-      (kb/comment-insert--insertion-base additional-strings))
+      (alt-comment-insert--insertion-base additional-strings))
      ;; C-u C-u = Comment below
      ((equal prefix 16)
       (end-of-line)
       (newline)
-      (kb/comment-insert--insertion-base additional-strings))
+      (alt-comment-insert--insertion-base additional-strings))
      ;; C-u C-u C-u = Kill comment on line
      ((equal prefix 64)
       (comment-kill nil))
      ;; No universal argument and empty line with no comment = Insert comment,
      ;; or move point to comment if it already exists
      ((save-excursion (beginning-of-line) (looking-at "\\s-*$"))
-      (kb/comment-insert--insertion-base additional-strings))
+      (alt-comment-insert--insertion-base additional-strings))
      ;; No universal argument and on non-empty line = Insert comment at
      ;; `comment-column', or move point to comment if it already exists on line.
      ((equal prefix 1)
@@ -285,7 +275,7 @@ current buffer, end in `evil-insert-state'."
       (just-one-space) ; Ensure only one space is between comment delimiter and point.
       (insert (mapconcat 'identity additional-strings)))
      (t
-      (error "Something has gone wrong in `kb/comment-dwim'! The prefix is %s" prefix)))
+      (error "Something has gone wrong in `alt-comment-dwim'! The prefix is %s" prefix)))
 
     ;; End in insert state if evil-mode is enabled and buffer isn't in read-only
     ;; mode
@@ -295,36 +285,36 @@ current buffer, end in `evil-insert-state'."
       (evil-insert-state))))
 
 ;;;###autoload
-(defun kb/comment-dwim-todo-and-timestamp (prefix &optional todo timestamp time-format)
+(defun alt-comment-dwim-todo-and-timestamp (prefix &optional todo timestamp time-format)
   "Insert a DWIM comment with a keyword and timestamp based on PREFIX.
 
-For a description of the DWIM behavior, see `kb/comment-dwim'.
+For a description of the DWIM behavior, see `alt-comment-dwim'.
 
 Additionally,if TODO is non-nil, then append a todo keyword based
-on major-mode (see `kb/comment-keyword-alist').
+on major-mode (see `alt-comment-keyword-alist').
 
 And if TIMESTAMP is t, also append a timestamp. The format of the
 timestamp follows `format-time-string'. Uses the format
 TIME-FORMAT if provided, otherwise \"%F\" is used to format the
 timestamp."
   (interactive (list (car current-prefix-arg) t t "%F"))
-  (let ((keyword (when todo (kb/comment--select-todo-completing-read)))
+  (let ((keyword (when todo (alt-comment--select-todo-completing-read)))
         (time (when timestamp
                 (format-time-string time-format))))
-    (kb/comment-dwim prefix keyword " " time ": ")))
+    (alt-comment-dwim prefix keyword " " time ": ")))
 
 ;; NOTE 2022-06-16: Taken heavily from `comment-line'
 ;;;###autoload
-(defun kb/comment-line (prefix &optional save-to-kill-ring)
+(defun alt-comment-line (prefix &optional save-to-kill-ring)
   "Comment line(s) based on PREFIX.
 
 The behavior is as follows, with priority in this order:
 
 If called with `C-u' `C-u' and the region is active, then call
-`kb/comment--region-kill-comments' on region. When
+`alt-comment--region-kill-comments' on region. When
 SAVE-TO-KILL-RING is non-nil, also save the deleted text to the
 `kill-ring' with each line as an individual entry (follows the
-behavior of `kb/comment--region-kill-comments').
+behavior of `alt-comment--region-kill-comments').
 
 If called with `C-u', insert the region's text as commented lines
 above the current line; if the region is not active, do this with
@@ -350,9 +340,9 @@ line if not."
          (relevant-contents (buffer-substring beg end))) ; Line or region
     (cond
      ;; Any number of universal arguments and region is active = Call
-     ;; `kb/comment--region-kill-comments'
+     ;; `alt-comment--region-kill-comments'
      ((and (= prefix 16) (use-region-p))
-      (kb/comment--region-kill-comments beg end save-to-kill-ring nil))
+      (alt-comment--region-kill-comments beg end save-to-kill-ring nil))
      ;; Active region and C-u = insert region above as commented text
      ((= prefix 4)
       (when save-to-kill-ring
@@ -367,13 +357,6 @@ line if not."
      (t
       (comment-or-uncomment-region beg end)))))
 
-;;; Keybinds
-(when kb/comment-use-suggested-keybinds
-  (let ((map global-map))
-    (define-key global-map [remap comment-dwim] 'kb/comment-dwim)
-    (define-key global-map [remap comment-line] 'kb/comment-line)
-    (define-key global-map (kbd "C-M-;") 'kb/comment-dwim-todo-and-timestamp)))
-
-;;; kb-comment.el ends here
+;;; alt-comment-dwim.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'kb-comment)
+(provide 'alt-comment-dwim)
