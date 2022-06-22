@@ -103,7 +103,6 @@
 (require 'programming-shell-rcp)
 (require 'programming-lua-rcp)
 (require 'programming-web-rcp)
-(require 'programming-haskell-rcp)
 (require 'programming-python-rcp)
 (require 'programming-java-rcp)
 
