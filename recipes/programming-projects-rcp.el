@@ -192,11 +192,13 @@
   (when (featurep 'evil)
     (setq forge-add-default-bindings nil))
   :config
-  (when (bound-and-true-p evil-local-mode)
-    (evil-set-initial-state 'git-commit-mode 'insert))
-
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
   (require 'magit-extras)               ; Load the remaining magit libraries
+
+  (magit-auto-revert-mode)
+
+  (when (bound-and-true-p evil-local-mode)
+    (evil-set-initial-state 'git-commit-mode 'insert))
 
   ;; Adds hooks to `magit-status-sections-hook'. Should be a separate call for
   ;; each.
