@@ -269,7 +269,7 @@ be \".draft.org\"."
           (draft-filename (kb/draft--draft-filename
                            (buffer-file-name)
                            (concat "--" (nth 4 (org-heading-components))))))
-      (kb/draft--send-region-to-trash beg-subtree end-subtree draft-filename))))
+      (kb/draft-send-region-to-trash beg-subtree end-subtree draft-filename))))
 
 ;;; convenient-functions-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
