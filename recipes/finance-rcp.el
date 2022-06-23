@@ -12,8 +12,7 @@
 ;;; Ledger-mode
 (use-package ledger-mode
   :ensure-system-package (ledger . "sudo dnf install ledger")
-  :hook ((before-save . kb/ledger-add-blank-lines) ; Add a blank line to the end of every xact
-         (calc-mode . evil-emacs-state))
+  :hook (before-save . kb/ledger-add-blank-lines)
   :gfhook
   'outshine-mode
   '(lambda () (mixed-pitch-mode 0)
