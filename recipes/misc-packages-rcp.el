@@ -237,7 +237,7 @@ progress. This is called by the timer `good-scroll--timer' every
                               :repo "PreciousPudding/alt-comment-dwim")
   :general
   ([remap comment-dwim] 'alt-comment-dwim
-   [remap comment-line] 'alt-comment-line
+   [remap comment-line] 'alt-comment-dwim-line
    "C-M-;" 'alt-comment-dwim-todo-and-timestamp)
   :custom
   (kb/comment-keyword-alist
