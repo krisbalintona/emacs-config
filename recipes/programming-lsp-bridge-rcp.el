@@ -16,6 +16,11 @@
                         :host github
                         :repo "manateelazycat/lsp-bridge"
                         :files (:defaults "*.py" "langserver" "acm"))
+  :hook (lsp-bridge-mode . (lambda ()
+                             "Disable `eglot' and `corfu' when enabling `lsp-bridge-mode'."
+                             (when (bound-and-true-p eglot--managed-mode)
+                               (corfu-mode 0)
+                               (eglot-shutdown (eglot-current-server)))))
   :config
   ;; (global-lsp-bridge-mode)
   )
