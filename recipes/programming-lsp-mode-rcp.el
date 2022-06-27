@@ -18,20 +18,20 @@
   'lsp-headerline-breadcrumb-mode
   'lsp-lens-mode
   '(lambda ()
-     ;; Change `corfu' settings for LSP buffers
-     (setq-local corfu-auto t
-                 corfu-auto-delay 0.8
-                 corfu-auto-prefix 1
-                 corfu-quit-at-boundary t
-                 corfu-separator ?·
-                 orderless-component-separator "·")
-     ;; Force re-enable `corfu-mode' in order for it to be
-     ;; aware of the local change to `corfu-auto'
-     (corfu-mode 1))
+      ;; Change `corfu' settings for LSP buffers
+      (setq-local corfu-auto t
+                  corfu-auto-delay 0.8
+                  corfu-auto-prefix 1
+                  corfu-quit-at-boundary t
+                  corfu-separator ?·
+                  orderless-component-separator "·")
+      ;; Force re-enable `corfu-mode' in order for it to be
+      ;; aware of the local change to `corfu-auto'
+      (corfu-mode 1))
   :general
   (:keymaps 'lsp-mode-map
-            :states 'insert
-            "<tab>" 'indent-for-tab-command)
+   :states 'insert
+   "<tab>" 'indent-for-tab-command)
   (kb/lsp-keys ; Remap all the keys from `lsp-command-map'
     "w" '(ignore t :wk "Workspaces")
     "wD" '(lsp-disconnect :wk "disconnect")
@@ -93,23 +93,53 @@
     "Gs" '(lsp-ui-peek-find-workspace-symbol :wk "peek workspace symbol")
     )
   :custom
+  ;; core
   (lsp-keymap-prefix "H-l")             ; Also have this be a prefix
-  (lsp-auto-guess-root t)
-  (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't fontify headline breadcrumb text (janky fix)
-  (lsp-modeline-diagnostics-scope :file)
-  (lsp-modeline-code-actions-segments '(count icon name))
-  (lsp-enable-file-watchers t) ; Affects performance. Enable if I do actual programming
+  (lsp-keep-workspace-alive nil)
+  (lsp-auto-guess-root nil)
+  (lsp-log-io nil)                  ; If set to true can cause a performance hit
+  (lsp-idle-delay 0.05)
+  (lsp-enable-xref t)
+  (lsp-eldoc-enable-hover t)
+  (lsp-enable-dap-auto-configure nil)
+  (lsp-enable-file-watchers t)
   (lsp-file-watch-threshold 5000) ; Increase number of watched files until prompt emerges
-  (lsp-log-io nil)                ; If set to true can cause a performance hit
-
-  ;; Semantic tokens - font locking based on word's role
-  (lsp-semantic-tokens-enable t)
-
-  ;; When you hover over a symbol
+  (lsp-enable-folding t)
+  (lsp-enable-imenu t)
+  (lsp-enable-indentation nil)
+  (lsp-enable-links nil)
+  (lsp-enable-on-type-formatting nil)
+  (lsp-enable-suggest-server-download t)
   (lsp-enable-symbol-highlighting t)
   (lsp-symbol-highlighting-skip-current nil) ; When highlighting, don't highlight symbol at point?
-  )
+  (lsp-enable-text-document-color nil)
+
+  ;; completion
+  (lsp-completion-enable t)
+  (lsp-completion-provider :none) ; Don't use company
+  (lsp-completion-enable-additional-text-edit nil)
+  (lsp-enable-snippet t)
+  (lsp-completion-show-kind t)
+
+  ;; headerline
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't fontify headline breadcrumb text (janky fix)
+  (lsp-headerline-breadcrumb-enable-symbol-numbers t)
+  (lsp-headerline-breadcrumb-icons-enable t)
+
+  ;; modeline
+  (lsp-modeline-code-actions-enable t)
+  (lsp-modeline-diagnostics-enable nil)
+  (lsp-modeline-diagnostics-scope :file)
+  (lsp-modeline-code-actions-segments '(count icon name))
+  (lsp-modeline-workspace-status-enable nil)
+
+  ;; lens
+  (lsp-lens-enable t)
+
+  ;; semantic
+  (lsp-semantic-tokens-enable nil))
 
 ;;; Lsp-ui
 ;; Fancy frame and sideline overlay which shows useful information about what's
