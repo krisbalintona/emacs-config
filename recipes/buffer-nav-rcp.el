@@ -13,8 +13,7 @@
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
   :general
-  (:keymaps 'prog-mode
-   "M-d" 'puni-forward-kill-word
+  ("M-d" 'puni-forward-kill-word
    "M-DEL" 'puni-backward-kill-word
    "C-k" 'puni-kill-line
    "C-w" 'puni-kill-active-region
