@@ -26,7 +26,11 @@
                                  (corfu-mode 1))))
   :custom
   (eglot-autoshutdown t)
+  (eglot-send-changes-idle-time 0.05)
+  (eglot-extend-to-xref t)              ; Testing to see what this does
   (eglot-stay-out-of '("flymake"))
+  :custom-face
+  (eglot-highlight-symbol-face ((t (:underline t :inherit bold))))
   :config
   (setf (alist-get 'python-mode eglot-server-programs)
         `("pyright-langserver" "--stdio")
