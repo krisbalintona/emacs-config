@@ -13,7 +13,6 @@
 ;; Feature-rich spell-checker
 (use-package flyspell
   :ensure-system-package aspell
-  :commands flyspell-detect-ispell-args
   :hook ((text-mode . (lambda ()             ; Prevent conflicts
                         (unless (featurep 'wucuo)
                           (flyspell-mode))))
@@ -23,11 +22,11 @@
   :general
   ;; Unbind all the keys from the mode-map because they're all annoying...
   (:keymaps 'flyspell-mode-map
-            "C-," nil
-            "C-." nil
-            "C-;" nil
-            "C-M-i" nil
-            "C-c $" nil)
+   "C-," nil
+   "C-." nil
+   "C-;" nil
+   "C-M-i" nil
+   "C-c $" nil)
   :custom
   (flyspell-use-meta-tab nil)           ; Dumb...
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
@@ -36,40 +35,19 @@
   (flyspell-delay 1)                    ; Time to wait
   (flyspell-sort-corrections t)         ; Sort candidates?
 
-  (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev_defs file (`abbrev-mode')
+  (flyspell-prog-text-faces '(font-lock-string-face
+                              font-lock-comment-face
+                              font-lock-doc-face
+                              tree-sitter-hl-face:string
+                              ;; tree-sitter-hl-face:string.special ; For things like regexps
+                              tree-sitter-hl-face:comment
+                              tree-sitter-hl-face:doc
+                              ))
+
   ;; Personal dictionary
+  (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev file (`abbrev-mode')
   (ispell-personal-dictionary (no-littering-expand-var-file-name "flyspell/flyspell-ispell-personal-dict-en"))
-  (ispell-extra-args (flyspell-detect-ispell-args nil)) ; `t' makes `flyspell-correct' have weird suggestions
-  :preface
-  ;; Taken from
-  ;; https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs/
-  (defun flyspell-detect-ispell-args (&optional run-together)
-    "If RUN-TOGETHER is true, spell check the CamelCase words."
-    (let (args)
-      (cond
-       ((string-match  "aspell$" ispell-program-name)
-        ;; Force the English dictionary for aspell
-        ;; Support Camel Case spelling check (tested with aspell 0.6)
-        (setq args (list "--sug-mode=ultra" "--lang=en_US"))
-        (when run-together
-          (cond
-           ;; Kevin Atkinson said now aspell supports camel case directly
-           ;; https://github.com/redguardtoo/emacs.d/issues/796
-           ((string-match-p "--camel-case"
-                            (shell-command-to-string (concat ispell-program-name " --help")))
-            (setq args (append args '("--camel-case"))))
-
-           ;; old aspell uses "--run-together". Please note we are not dependent
-           ;; on this option to check camel case word. wucuo is the final
-           ;; solution. This aspell options is just some extra check to speed up
-           ;; the whole process.
-           (t
-            (setq args (append args '("--run-together" "--run-together-limit=16")))))))
-
-       ((string-match "hunspell$" ispell-program-name)
-        ;; Force the English dictionary for hunspell
-        (setq args "-d en_US")))
-      args)))
+  (ispell-extra-args (list "--sug-mode=ultra" "--lang=en_US" "--camel-case")))
 
 ;;; Wucuo
 ;; A complete solution to the lag of flyspell
@@ -77,26 +55,41 @@
   :after flyspell
   :hook ((text-mode prog-mode) . (lambda ()
                                    (interactive)
-                                   ;; Make sure this isn't enabled before starting
-                                   ;; wucuo
+                                   ;; `wucuo' is incompatible with `flyspell'
                                    (flyspell-mode -1)
                                    (wucuo-start)))
   :general ([remap flyspell-buffer] 'wucuo-spell-check-visible-region)
   :custom
-  (wucuo-flyspell-start-mode "fast")
+  (wucuo-flyspell-start-mode "normal")
+  (wucuo-personal-font-faces-to-check flyspell-prog-text-faces)
+  (wucuo-double-check-font-faces '(font-lock-string-face
+                                   tree-sitter-hl-face:string
+                                   ))
+  (wucuo-modes-whose-predicate-ignored nil)
   (wucuo-spell-check-buffer-predicate
-   (lambda ()                            ; Skip spell checking under these conditions
-     (not (memq major-mode
-                '(dired-mode
-                  log-edit-mode
-                  compilation-mode
-                  help-mode
-                  profiler-report-mode
-                  speedbar-mode
-                  gud-mode
-                  calc-mode
-                  Info-mode
-                  ))))))
+   '(lambda ()                           ; Skip spell checking under these conditions
+       (not (memq major-mode
+                  '(dired-mode
+                    log-edit-mode
+                    compilation-mode
+                    help-mode
+                    helpful-mode
+                    profiler-report-mode
+                    speedbar-mode
+                    gud-mode
+                    calc-mode
+                    Info-mode
+                    )))))
+  :config
+  (defun kb/wucuo-mode-on ()
+    "Turn wucuo mode on.  Do not use this; use `wucuo-mode' instead."
+    (if flyspell-mode
+        (message "Please turn off `flyspell-mode' and `flyspell-prog-mode' before wucuo starts!")
+      (wucuo-enhance-flyspell)
+      ;; Add to `before-save-hook' instead so it is compatible with `super-save'
+      ;; + `eyebrowse-pre-window-switch-hook'
+      (add-hook 'before-save-hook #'wucuo-spell-check-buffer nil t)))
+  (advice-add 'wucuo-mode-on :override #'kb/wucuo-mode-on))
 
 ;;; Flyspell-correct
 ;; Suggest correct spelling for words flyspell marks as incorrect
