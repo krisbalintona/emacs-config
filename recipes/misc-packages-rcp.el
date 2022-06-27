@@ -275,6 +275,15 @@ progress. This is called by the timer `good-scroll--timer' every
     "Minor mode map for `whole-line-or-region-mode'.")
   )
 
+;;; Eldoc
+(use-package eldoc
+  :custom
+  (eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
+  (eldoc-print-after-edit nil)
+  (eldoc-echo-area-display-truncation-message t)
+  (eldoc-idle-delay 0.1)
+  (eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)) ; Respects `max-mini-window-height'
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil

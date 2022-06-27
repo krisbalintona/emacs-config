@@ -52,7 +52,7 @@
 
               truncate-string-ellipsis "…"                                                        ; For all ellipsis
 
-              max-mini-window-height 0.15                                                         ; Minibuffer height
+              max-mini-window-height 0.3                                                          ; Max minibuffer height
 
               auto-save-default nil                                                               ; Don't auto save, prevents transitory files from being saved
               auto-save-list-file-prefix nil                                                      ; Prevent tracking for auto-saves
