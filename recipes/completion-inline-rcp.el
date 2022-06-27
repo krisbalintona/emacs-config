@@ -142,7 +142,7 @@ default lsp-passthrough."
                      "M-n" 'corfu-doc-scroll-up
                      "M-p" 'corfu-doc-scroll-down)
   :custom
-  (corfu-doc-delay 0.5)
+  (corfu-doc-delay 0.3)
   (corfu-doc-max-width 70)
   (corfu-doc-max-height 20))
 
