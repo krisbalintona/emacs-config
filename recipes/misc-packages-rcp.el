@@ -240,15 +240,13 @@ progress. This is called by the timer `good-scroll--timer' every
    [remap comment-line] 'alt-comment-dwim-line
    "C-M-;" 'alt-comment-dwim-todo-and-timestamp)
   :custom
-  (kb/comment-keyword-alist
-   '((org-mode . ("TODO" "COMMENT" "REVIEW" "FIXME"))
-     (prog-mode . ("TODO" "NOTE" "REVIEW" "FIXME"))))
-  (kb/comment-keyword-faces
+  (alt-comment-dwim-keyword-faces
    '(("TODO" . "orange")
-     ("FIXME" . (error bold))
+     ("HACK" . (error bold))
+     ("NOTE" . "cornflower blue")
      ("REVIEW" . "orchid")
-     ("NOTE" . (success bold))
-     ("COMMENT" . "cornflower blue"))))
+     ("FIXME" . (error bold))
+     ("OPTIMIZE" . "SandyBrown"))))
 
 ;;; Info-variable-pitch
 ;; Mixed pitch in Info pages
