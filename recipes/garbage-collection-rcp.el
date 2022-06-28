@@ -28,7 +28,7 @@
   (gcmh-high-cons-threshold (* 1        ; mb
                                1024 1024))
   (gcmh-idle-delay 6)
-  (gcmh-verbose t)
+  (gcmh-verbose nil)
   :config
   (setq garbage-collection-messages nil))
 
