@@ -127,7 +127,7 @@ default lsp-passthrough."
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable
 
   ;; Add hook to reset cache so the icon colors match my theme
-  (add-hook 'kb/themes-hooks #'(lambda () (call-interactively 'kind-icon-reset-cache))))
+  (add-hook 'kb/themes-hooks (lambda () (call-interactively 'kind-icon-reset-cache))))
 
 ;;; Corfu-doc
 ;; Documentation window for corfu!
