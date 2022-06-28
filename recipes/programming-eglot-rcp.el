@@ -14,6 +14,8 @@
   :ensure-system-package (pyright bash-language-server)
   :hook (((python-mode lua-mode sh-mode js2-mode java-mode) . eglot-ensure)
          (eglot-managed-mode . (lambda ()
+                                 (setq-local eldoc-box-cleanup-interval 2)))
+         (eglot-managed-mode . (lambda ()
                                  (setq-local corfu-auto t
                                              corfu-auto-delay 0.1
                                              corfu-auto-prefix 1
@@ -26,7 +28,7 @@
                                  (corfu-mode 1))))
   :custom
   (eglot-autoshutdown t)
-  (eglot-send-changes-idle-time 0.05)
+  (eglot-send-changes-idle-time 0.3)
   (eglot-extend-to-xref t)              ; Testing to see what this does
   (eglot-stay-out-of '("flymake"))
   :custom-face

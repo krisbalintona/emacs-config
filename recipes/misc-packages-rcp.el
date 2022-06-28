@@ -275,7 +275,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Eldoc
 (use-package eldoc
   :custom
-  (eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
+  (eldoc-documentation-strategy 'eldoc-documentation-compose)
   (eldoc-print-after-edit nil)
   (eldoc-echo-area-display-truncation-message t)
   (eldoc-idle-delay 0.1)
@@ -286,7 +286,7 @@ progress. This is called by the timer `good-scroll--timer' every
   :custom
   (eldoc-box-max-pixel-width 650)
   (eldoc-box-max-pixel-height 400)
-  (eldoc-box-cleanup-interval 0.1)
+  (eldoc-box-cleanup-interval 0.5)
   (eldoc-box-only-multi-line t)
   (eldoc-box-fringe-use-same-bg t)
   (eldoc-box-self-insert-command-list '(self-insert-command outshine-self-insert-command))
