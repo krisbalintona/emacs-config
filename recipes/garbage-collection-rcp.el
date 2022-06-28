@@ -75,6 +75,18 @@
   (advice-add magit-bury-buffer-function :after #'kb/gc-magit-exit-hook)
   )
 
+;;;; GCMH
+(use-package gcmh
+  :custom
+  ;; See
+  ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3
+  (gcmh-high-cons-threshold (* 1        ; mb
+                             1024 1024))
+  (gcmh-idle-delay 6)
+  (gcmh-verbose t)
+  :init
+  (gcmh-mode))
+
 ;;; Diagnose memory usage
 ;; See how Emacs is using memory. From
 ;; https://www.reddit.com/r/emacs/comments/ck4zb3/comment/evji1n7/?utm_source=share&utm_medium=web2x&context=3
