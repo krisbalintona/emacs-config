@@ -30,7 +30,7 @@
   (eglot-extend-to-xref t)              ; Testing to see what this does
   (eglot-stay-out-of '("flymake"))
   :custom-face
-  (eglot-highlight-symbol-face ((t (:underline t :inherit bold))))
+  (eglot-highlight-symbol-face ((t (:box (:line-width -1 :style nil)))))
   :config
   (setf (alist-get 'python-mode eglot-server-programs)
         `("pyright-langserver" "--stdio")
@@ -63,7 +63,7 @@ preserving the initial list."
 (use-package consult-eglot
   :requires eglot
   :general (:keymaps 'eglot-mode-map
-                     [remap xref-find-apropos] #'consult-eglot-symbols))
+            [remap xref-find-apropos] #'consult-eglot-symbols))
 
 ;;; programming-eglot-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
