@@ -44,7 +44,39 @@
               "Add `eglot-flymake-backend' to `flymake-diagnostic-functions',
 preserving the initial list."
               (when (eglot-managed-p)
-                (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend)))))
+                (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))
+
+  ;; Workaround for many hyphen characters wrapping in an ugly way in
+  ;; `eldoc-box' frame
+  (defun kb/eglot--format-markup (markup)
+    "Format MARKUP according to LSP's spec."
+    (pcase-let ((`(,string ,mode)
+                 (if (stringp markup) (list markup 'gfm-view-mode)
+                   (list (plist-get markup :value)
+                         (pcase (plist-get markup :kind)
+                           ("markdown" 'gfm-view-mode)
+                           ("plaintext" 'text-mode)
+                           (_ major-mode))))))
+      (with-temp-buffer
+        (setq-local markdown-fontify-code-blocks-natively t)
+
+        ;; Replace the horizontal rule, which is three hyphens in the markup,
+        ;; with X number of hyphens-like characters, with X being enough to
+        ;; cover the width of `eldoc-box-max-pixel-width'. We can't simply
+        ;; replace with more hyphens since `gfm-view-mode' renders any set of
+        ;; three hyphens as a horizontal rule
+        (setq string (string-replace "---"
+                                     (make-string (floor (/ eldoc-box-max-pixel-width (window-font-width))) ?⎺)
+                                     string))
+
+        (insert string)
+        (delete-trailing-whitespace) ; Also remove trailing whitespace while we're here
+        (let ((inhibit-message t)
+              (message-log-max nil))
+          (ignore-errors (delay-mode-hooks (funcall mode))))
+        (font-lock-ensure)
+        (string-trim (buffer-string)))))
+  (advice-add 'eglot--format-markup :override #'kb/eglot--format-markup))
 
 ;;; Languages
 ;;;; Eglot-java
