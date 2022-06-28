@@ -26,6 +26,7 @@
   ;; particular formatters as well as their proper CLI commands. Namely, inspect
   (setf (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
         (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
+        (alist-get 'clang-format apheleia-formatters) '("clang-format" "--style=GNU")
         (alist-get 'google-java-format apheleia-formatters)
         '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
         (alist-get 'stylua apheleia-formatters)
@@ -36,8 +37,7 @@
 ;;; Devdocs
 ;; Viewing documentation within Emacs.
 (use-package devdocs-browser
-  :general (:keymaps 'prog-mode
-            :prefix "H-d"
+  :general (:prefix "H-d"
             "h" '(devdocs-browser-open :wk "Open")
             "H" '(devdocs-browser-open-in :wk "Open-in")
             "i" '(devdocs-browser-install :wk "Install")
