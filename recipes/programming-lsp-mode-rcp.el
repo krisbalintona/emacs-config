@@ -14,7 +14,6 @@
 (use-package lsp-mode
   :gfhook
   'lsp-enable-which-key-integration
-  'lsp-headerline-breadcrumb-mode
   'lsp-lens-mode
   '(lambda ()
       ;; Change `corfu' settings for LSP buffers
@@ -99,7 +98,6 @@
   (lsp-log-io nil)                  ; If set to true can cause a performance hit
   (lsp-idle-delay 0.05)
   (lsp-enable-xref t)
-  (lsp-eldoc-enable-hover t)
   (lsp-enable-dap-auto-configure nil)
   (lsp-enable-file-watchers t)
   (lsp-file-watch-threshold 5000) ; Increase number of watched files until prompt emerges
@@ -111,7 +109,7 @@
   (lsp-enable-suggest-server-download t)
   (lsp-enable-symbol-highlighting t)
   (lsp-symbol-highlighting-skip-current nil) ; When highlighting, don't highlight symbol at point?
-  (lsp-enable-text-document-color nil)
+  (lsp-enable-text-document-color t)
 
   ;; completion
   (lsp-completion-enable t)
@@ -171,11 +169,11 @@
 
   ;; Lsp-eldoc - Info in the echo area
   (lsp-eldoc-hook '(lsp-hover))
-  (lsp-eldoc-enable-hover nil)          ; Show eldoc info when hovering?
+  (lsp-eldoc-enable-hover t)            ; Show eldoc info when hovering?
   (lsp-eldoc-render-all t)              ; Take as much space as needed?
 
   ;; Lsp-ui-doc - Show documentation
-  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-enable t)
   (lsp-ui-doc-delay 0.2)
   (lsp-ui-doc-show-with-cursor t)       ; Point hover (alongside cursor!)
   (lsp-ui-doc-show-with-mouse nil)      ; Mouse hover (alongside cursor!)
