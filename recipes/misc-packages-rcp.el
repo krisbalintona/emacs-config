@@ -282,13 +282,25 @@ progress. This is called by the timer `good-scroll--timer' every
   (eldoc-idle-delay 0.1)
   (eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)) ; Respects `max-mini-window-height'
 
+;;; Eldoc-box
+(use-package eldoc-box
+  :custom
+  (eldoc-box-max-pixel-width 650)
+  (eldoc-box-max-pixel-height 400)
+  (eldoc-box-cleanup-interval 0.1)
+  (eldoc-box-only-multi-line t)
+  (eldoc-box-fringe-use-same-bg t)
+  (eldoc-box-self-insert-command-list '(self-insert-command outshine-self-insert-command))
+  :init
+  (add-hook 'eldoc-mode-hook 'eldoc-box-hover-mode t))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
   (:keymaps 'global-map
-            (general-chord "xf") 'find-file)
+   (general-chord "xf") 'find-file)
   (kb/open-keys
     "c" '(calc :wk "Open calculator")
     "m" '((lambda ()
@@ -296,11 +308,11 @@ progress. This is called by the timer `good-scroll--timer' every
             (pop-to-buffer "*Messages*"))
           :wk "Open *Messages*"))
   (:keymaps 'Info-mode-map
-            :states '(visual normal motion)
-            "SPC" nil                   ; For my leader key
-            [remap evil-ret] 'Info-follow-nearest-node)
+   :states '(visual normal motion)
+   "SPC" nil                   ; For my leader key
+   [remap evil-ret] 'Info-follow-nearest-node)
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
-            "u" 'universal-argument-more)
+   "u" 'universal-argument-more)
   :custom
   (kill-do-not-save-duplicates t)
   :config
