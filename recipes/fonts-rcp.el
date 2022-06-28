@@ -67,13 +67,13 @@
    (cond
     ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
     ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+    ((member "NotoEmoji Nerd Font" (font-family-list)) "Noto Emoji")
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
     ((member "Symbola" (font-family-list)) "Symbola")))
   :config
-  ;; NOTE 2022-06-20: Ensure that `unicode-fonts-setup' is run BEFORE the
-  ;; graphical values are set, e.g. before `window-setup-hook'
-  (add-hook 'after-init-hook #'unicode-fonts-setup 100))
+  ;; NOTE 2022-06-20: Ensure that `unicode-fonts-setup' is run BEFORE anything
+  ;; requiring unicode characters or emojis is used
+  (add-hook 'after-init-hook #'unicode-fonts-setup -100))
 
 ;;; Ligature
 ;; Ligatures! See for configuration examples: https://github.com/j/wiki
