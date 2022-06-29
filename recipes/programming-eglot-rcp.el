@@ -96,6 +96,7 @@ preserving the initial list."
 ;;; Consult-eglot
 ;; Equivalent to `consult-lsp'; adds `consult-eglot-symbols'.
 (use-package consult-eglot
+  :demand t
   :requires consult
   :after eglot
   :general (:keymaps 'eglot-mode-map
