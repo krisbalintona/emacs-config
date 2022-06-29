@@ -12,11 +12,11 @@
 ;;; Eglot
 (use-package eglot
   :ensure-system-package (pyright bash-language-server)
-  :hook (((python-mode lua-mode sh-mode js2-mode java-mode) . eglot-ensure)
+  :hook (((python-mode lua-mode sh-mode js2-mode) . eglot-ensure)
          (eglot-managed-mode . (lambda ()
                                  (setq-local eldoc-box-cleanup-interval 2)))
          (eglot-managed-mode . (lambda ()
-                                 (setq-local corfu-auto t
+                                 (setq-local corfu-auto nil
                                              corfu-auto-delay 0.1
                                              corfu-auto-prefix 1
                                              corfu-quit-at-boundary t
@@ -83,6 +83,7 @@ preserving the initial list."
 (use-package eglot-java
   :ensure-system-package jdtls
   :requires eglot
+  :hook ((java-mode . eglot-ensure))
   :custom
   (eglot-java-server-install-dir (no-littering-expand-var-file-name "eglot-java/"))
   (eglot-java-workspace-folder (expand-file-name eglot-java-server-install-dir "workspace/"))
@@ -95,7 +96,8 @@ preserving the initial list."
 ;;; Consult-eglot
 ;; Equivalent to `consult-lsp'; adds `consult-eglot-symbols'.
 (use-package consult-eglot
-  :requires eglot
+  :requires consult
+  :after eglot
   :general (:keymaps 'eglot-mode-map
             [remap xref-find-apropos] #'consult-eglot-symbols))
 
