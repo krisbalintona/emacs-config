@@ -16,8 +16,6 @@
   ("M-d" 'puni-forward-kill-word
    "M-DEL" 'puni-backward-kill-word
    "C-k" 'puni-kill-line
-   "C-w" 'puni-kill-active-region
-   "C-c DEL" 'puni-force-delete
    "C-M-f" 'puni-forward-sexp
    "C-M-b" 'puni-backward-sexp
    "C-M-a" 'puni-beginning-of-sexp
