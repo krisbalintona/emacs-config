@@ -283,6 +283,8 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Eldoc-box
 (use-package eldoc-box
+  :general (:keymaps 'eglot-mode-map
+            "H-h" 'eldoc-box-help-at-point)
   :custom
   (eldoc-box-max-pixel-width 650)
   (eldoc-box-max-pixel-height 400)

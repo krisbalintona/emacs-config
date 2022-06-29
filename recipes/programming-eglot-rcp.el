@@ -12,10 +12,13 @@
 ;;; Eglot
 (use-package eglot
   :ensure-system-package (pyright bash-language-server)
-  :hook (((python-mode lua-mode sh-mode js2-mode) . eglot-ensure)
+  :hook (((python-mode lua-mode sh-mode js2-mode c-mode) . eglot-ensure)
          (eglot-managed-mode . (lambda ()
-                                 (setq-local eldoc-box-cleanup-interval 2)))
+                                 "Configure `eldoc'"
+                                 (setq-local eldoc-box-cleanup-interval 2
+                                             eldoc-echo-area-use-multiline-p nil)))
          (eglot-managed-mode . (lambda ()
+                                 "Configure `corfu'"
                                  (setq-local corfu-auto nil
                                              corfu-auto-delay 0.1
                                              corfu-auto-prefix 1
