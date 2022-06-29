@@ -12,7 +12,8 @@
 ;;; Realgud
 (use-package realgud
   :custom
-  (realgud-window-split-orientation 'horizontal))
+  (realgud-window-split-orientation 'horizontal)
+  (realgud-short-key-on-tracing? t))
 
 ;;; Dap-mode
 (use-package dap-mode
