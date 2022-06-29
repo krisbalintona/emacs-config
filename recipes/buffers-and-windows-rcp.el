@@ -265,6 +265,7 @@ If buffer-or-name is nil return current buffer's mode."
      help-mode
      "^Calc:"
      dap-ui-repl-mode
+     quickrun--mode
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode

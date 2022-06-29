@@ -9,6 +9,12 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Quickrun
+(use-package quickrun
+  :general ("<f2>" 'quickrun)
+  :custom
+  (quickrun-focus-p nil))
+
 ;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia
