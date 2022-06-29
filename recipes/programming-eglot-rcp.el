@@ -16,19 +16,7 @@
          (eglot-managed-mode . (lambda ()
                                  "Configure `eldoc'"
                                  (setq-local eldoc-box-cleanup-interval 2
-                                             eldoc-echo-area-use-multiline-p nil)))
-         (eglot-managed-mode . (lambda ()
-                                 "Configure `corfu'"
-                                 (setq-local corfu-auto nil
-                                             corfu-auto-delay 0.1
-                                             corfu-auto-prefix 1
-                                             corfu-quit-at-boundary t
-                                             orderless-component-separator "·"
-                                             corfu-separator ?·)
-                                 ;; Force re-enable `corfu-mode' in order for it
-                                 ;; to be aware of the local change to
-                                 ;; `corfu-auto'
-                                 (corfu-mode 1))))
+                                             eldoc-echo-area-use-multiline-p nil))))
   :custom
   (eglot-autoshutdown t)
   (eglot-send-changes-idle-time 0.3)
