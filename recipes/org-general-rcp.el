@@ -505,12 +505,12 @@ re-align the table if necessary. (Necessary because org-mode has a
  )
 
 ;;; Ancillary functionality
-;;;; Org-cliplink
+;;;; Org-web-tools
 ;; Paste https links with automatic descriptions
-(use-package org-cliplink
+(use-package org-web-tools
   :general
   (kb/yank-kill-keys
-    "b" '(org-cliplink :wk "Paste https")))
+    "b" '(org-web-tools-insert-link-for-url :wk "Paste https")))
 
 ;;;; Org-download
 ;; Insert images and screenshots into select modes
