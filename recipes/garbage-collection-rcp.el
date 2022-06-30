@@ -23,11 +23,11 @@
 (use-package gcmh
   :hook (after-init . gcmh-mode)
   :custom
-  ;; See
+  ;; Set to Doom's threshold. For a related discussion, see
   ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3
-  (gcmh-high-cons-threshold (* 1        ; mb
+  (gcmh-high-cons-threshold (* 138        ; mb
                                1024 1024))
-  (gcmh-idle-delay 6)
+  (gcmh-idle-delay 0.5)
   (gcmh-verbose nil)
   :config
   (setq garbage-collection-messages nil))
