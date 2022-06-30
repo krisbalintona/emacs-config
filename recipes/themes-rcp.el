@@ -186,7 +186,7 @@
   :general (kb/toggle-keys
              "l" '(display-line-numbers-mode :wk "Line numbers"))
   :custom
-  (display-line-numbers-type 'relative)
+  (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
 
 ;;;; Which-function
