@@ -11,7 +11,12 @@
 
 ;;; Quickrun
 (use-package quickrun
-  :general ("<f2>" 'quickrun)
+  :general (:prefix "<f2>"
+            "<f2>" 'quickrun
+            "<f3>" '(lambda ()
+                       (interactive)
+                       (let ((quickrun-focus-p t))
+                         (quickrun-shell))))
   :custom
   (quickrun-focus-p nil))
 
