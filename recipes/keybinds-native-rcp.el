@@ -45,14 +45,26 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 (defun kb/join-line-above ()
   "Join the current line with the line above."
   (interactive)
-  (save-excursion
-    (join-line)))
+  (let ((emptyp (save-excursion
+                  (previous-line)
+                  (beginning-of-line)
+                  (looking-at-p "[[:blank:]]*$"))))
+    (save-excursion
+      (join-line))
+    (when emptyp
+      (funcall indent-line-function))))
 
 (defun kb/join-line-below ()
   "Join the current line with the line below."
   (interactive)
-  (save-excursion
-    (join-line 1)))
+  (let ((emptyp (save-excursion
+                  (next-line)
+                  (beginning-of-line)
+                  (looking-at-p "[[:blank:]]*$"))))
+    (save-excursion
+      (join-line 1))
+    (when (bolp)
+      (funcall indent-line-function))))
 
 ;;; Text editing
 (general-define-key
