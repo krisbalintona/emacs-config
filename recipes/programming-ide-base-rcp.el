@@ -47,7 +47,7 @@
 ;;; Devdocs
 ;; Viewing documentation within Emacs.
 (use-package devdocs-browser
-  :general (:keymaps 'prog-mode
+  :general (:keymaps '(eglot-mode-map lsp-mode-map lsp-bridge-mode-map)
             :prefix "H-d"
             "h" '(devdocs-browser-open :wk "Open")
             "H" '(devdocs-browser-open-in :wk "Open-in")
