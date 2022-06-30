@@ -305,6 +305,39 @@ progress. This is called by the timer `good-scroll--timer' every
   :init
   (pulsar-global-mode))
 
+;;; Pocket-reader
+;; View my Pocket
+(use-package pocket-reader
+  :straight (pocket-reader :type git
+                           :host github
+                           :repo "alphapapa/pocket-reader.el")
+  :general
+  (kb/open-keys
+    "p" '(pocket-reader :wk "Open pocket"))
+  (general-define-key
+   :keymaps 'pocket-reader-mode-map
+   "TAB" 'kb/pocket-reader-cycle-view
+   "+" 'pocket-reader-more
+   "o" 'pocket-reader-pop-to-url)
+  :custom
+  (pocket-reader-default-queries (list ":all"))
+  :config
+  (defun kb/pocket-reader-cycle-view ()
+    "Cycle between showing unread entries and all entries."
+    (interactive)
+    (let ((all-query ":all")
+          (unread-query ":unread"))
+      (pcase (car pocket-reader-queries)
+        ((pred (equal all-query))
+         (message "Showing unread")
+         (pocket-reader-search unread-query))
+        ((pred (equal unread-query))
+         (message "Showing all")
+         (pocket-reader-search all-query))
+        (_
+         (message "Showing default")
+         (pocket-reader-search pocket-reader-default-queries))
+        ))))
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
