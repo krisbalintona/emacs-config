@@ -61,7 +61,7 @@
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
   (flymake-mode-line-counter-format
-   '("[" flymake-mode-line-error-counter flymake-mode-line-warning-counter "]")))
+   '("[" flymake-mode-line-error-counter flymake-mode-line-warning-counter flymake-mode-line-note-counter "]")))
 
 ;;; Flymake-collection
 (use-package flymake-collection
