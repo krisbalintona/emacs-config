@@ -39,10 +39,6 @@
 
               find-file-visit-truename t                                                          ; Follow symlink to actual file
 
-              scroll-preserve-screen-position 'always                                             ; Preserve the posn-position of the point after scrolling
-              scroll-conservatively most-positive-fixnum                                          ; Always scroll by one line
-              scroll-margin 7                                                                     ; Add a margin when scrolling vertically
-
               select-enable-clipboard t                                                           ; Merge system's and Emacs' clipboard
 
               sentence-end-double-space nil                                                       ; Single space after period denotes end of sentence
@@ -120,6 +116,14 @@
 ;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk
 (setq read-process-output-max (* 1024 1024)) ; 1mb
+
+;;; Scrolling behavior
+(setq scroll-preserve-screen-position 'always ; Preserve the posn-position of the point after scrolling
+      scroll-error-top-bottom nil      ; Point shouldn't be at bottom of buffer
+      scroll-margin 0                  ; Add a margin when scrolling vertically
+      scroll-conservatively 0
+      scroll-up-aggressively nil       ; Center
+      scroll-down-aggressively nil)    ; Center
 
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.

@@ -89,13 +89,9 @@
 ;; Good-enough smooth scrolling
 (use-package good-scroll
   :ghook 'after-init-hook
-  :gfhook 'kb/good-scroll-toggle
+  ;; :gfhook 'kb/good-scroll-toggle
   :custom
   (good-scroll-step 80)
-  ;; FIXME 2022-06-03: This is also motivated by the current buggy behavior of
-  ;; when the point is at the very edge of the window (i.e. when `scroll-margin'
-  ;; is 0).
-  (scroll-margin 2)              ; Have a smaller scroll-margin with good-scroll
   :init
   ;; Variables
   (defvar kb/good-scroll--posn-x 0
@@ -207,8 +203,10 @@ progress. This is called by the timer `good-scroll--timer' every
       (kb/good-scroll--move (or lines half-screen))))
 
   ;; Setup
+  (advice-add 'good-scroll--render :override #'kb/good-scroll--render)
   (defun kb/good-scroll-toggle ()
     "Enable or disable my own `good-scroll' functions."
+    (interactive)
     (cond (good-scroll-mode
            (when (bound-and-true-p evil-local-mode)
              (advice-add 'evil-scroll-up :override #'kb/good-scroll-up)
@@ -221,8 +219,7 @@ progress. This is called by the timer `good-scroll--timer' every
              (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
              (advice-remove 'evil-scroll-down #'kb/good-scroll-down))
            (advice-remove 'scroll-down-command #'kb/good-scroll-up)
-           (advice-remove 'scroll-up-command #'kb/good-scroll-down)
-           (advice-remove 'good-scroll--render #'kb/good-scroll--render)))))
+           (advice-remove 'scroll-up-command #'kb/good-scroll-down)))))
 
 ;;; Ctrlf
 ;; Better `isearch'
@@ -294,6 +291,19 @@ progress. This is called by the timer `good-scroll--timer' every
   (eldoc-box-self-insert-command-list '(self-insert-command outshine-self-insert-command))
   :init
   (add-hook 'eldoc-mode-hook 'eldoc-box-hover-mode t))
+
+;;; Pulsar
+(use-package pulsar
+  :hook
+  (consult-after-jump . pulsar-recenter-top)
+  (consult-after-jump . pulsar-reveal-entry)
+  (imenu-after-jump . pulsar-recenter-top)
+  (imenu-after-jump . pulsar-reveal-entry)
+  :custom
+  (pulsar-iterations 3)
+  (pulsar-delay 0.1)
+  :init
+  (pulsar-global-mode))
 
 ;;; Built-in Emacs modes/packages
 (use-package emacs
