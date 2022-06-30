@@ -338,6 +338,18 @@ progress. This is called by the timer `good-scroll--timer' every
          (message "Showing default")
          (pocket-reader-search pocket-reader-default-queries))
         ))))
+
+;;; Ansi-color
+;; Apply ANSI terminal color escape codes.
+;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
+(use-package ansi-color
+  :hook (compilation-filter . endless/colorize-compilation)
+  :config
+  (defun endless/colorize-compilation ()
+    "Colorize from `compilation-filter-start' to `point'."
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point)))))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
