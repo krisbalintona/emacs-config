@@ -32,8 +32,8 @@
 (use-package window
   :straight nil
   :general (:keymaps 'global-map ; For some reason, this needs to be explicitly set?
-                     (general-chord "wt") 'window-toggle-side-windows
-                     (general-chord "ww") 'other-window)
+            (general-chord "wt") 'window-toggle-side-windows
+            (general-chord "ww") 'other-window)
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
   (split-width-threshold 160)        ; Threshold for horizontal window splitting
@@ -43,6 +43,7 @@
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
    `(;; Automatically hide
+
      ;; Same window
      ("\\*helpful *"
       (display-buffer-reuse-mode-window
@@ -51,6 +52,7 @@
       (display-buffer-same-window))
      ("\\*devdocs\\*"
       (display-buffer-same-window))
+     
      ;; To the left
      ("\\*Faces\\*"
       (kb/select-buffer-in-side-window)
@@ -76,6 +78,7 @@
       (direction . left)
       (slot . 2)
       (window-parameters . ((split-window . #'ignore))))
+
      ;; To the right
      ("\\*org-roam\\*"
       (display-buffer-in-side-window)
@@ -95,6 +98,7 @@
       (direction . right)
       (slot . 4)
       (window-parameters . ((no-other-window . t))))
+
      ;; To the top
      ("\\*Messages\\*"
       (display-buffer-reuse-window
@@ -115,6 +119,7 @@
       (slot . -2)
       (preserve-size . (nil . t))
       (window-parameters . ((mode-line-format . nil))))
+
      ;; To the bottom
      ("\\*Flycheck errors\\*"
       (display-buffer-reuse-mode-window
@@ -140,6 +145,7 @@
      ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'special-mode))
       (kb/select-buffer-at-bottom)
       (window-height . 0.35))
+
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-reuse-mode-window
@@ -192,9 +198,9 @@ If buffer-or-name is nil return current buffer's mode."
    "M-9" 'eyebrowse-switch-to-window-config-9
    "M-0" 'eyebrowse-switch-to-window-config-0)
   (:keymaps 'eyebrowse-mode-map
-            :prefix eyebrowse-keymap-prefix
-            "r" '(eyebrowse-rename-window-config :wk "Rename")
-            "d" '(eyebrowse-close-window-config :wk "Close"))
+   :prefix eyebrowse-keymap-prefix
+   "r" '(eyebrowse-rename-window-config :wk "Rename")
+   "d" '(eyebrowse-close-window-config :wk "Close"))
   :chords (("[[" . eyebrowse-prev-window-config)
            ("]]" . eyebrowse-next-window-config)
            ("\\\\" . eyebrowse-last-window-config))
@@ -266,6 +272,7 @@ If buffer-or-name is nil return current buffer's mode."
      "^Calc:"
      dap-ui-repl-mode
      quickrun--mode
+     gud-mode
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
@@ -279,13 +286,13 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-display-control nil)
   (popper-group-function
    #'(lambda ()
-       (cond
-        ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
-         'Config)
-        ((locate-dominating-file default-directory "init.el") 'Emacs)
-        ((project-current) (project-root (project-current)))
-        (t nil)                         ; No group
-        )))
+        (cond
+         ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
+          'Config)
+         ((locate-dominating-file default-directory "init.el") 'Emacs)
+         ((project-current) (project-root (project-current)))
+         (t nil)                         ; No group
+         )))
   (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-buffer-id)))
 
   ;; Popper-echo
@@ -293,35 +300,35 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-dispatch-actions t)
   (popper-echo-transform-function
    #'(lambda (name)
-       (cond
-        ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
-         (concat (match-string 1 name)
-                 "(O)"))
-        ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
-         (concat (match-string 1 name)
-                 "(H)"))
-        ((string-match "^\\*Warnings\\*" name)
-         (concat (match-string 1 name)
-                 "(W)"))
-        ((string-match "^\\*Backtrace\\*" name)
-         (concat (match-string 1 name)
-                 "(B)"))
-        ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
-         (concat (match-string 1 name)
-                 "(L)"))
-        ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
-         (concat (match-string 1 name)
-                 "(C)"))
-        ((string-match "^\\*Java Run" name)
-         (concat (match-string 1 name)
-                 (concat "(CG)" (substring name 18 (- (length name) 1)))
-                 ))
-        ((string-match "^\\*Customize" name)
-         (concat (match-string 1 name)
-                 (concat "(CG)" (substring name 18 (- (length name) 1)))
-                 ))
-        (t name))
-       ))
+        (cond
+         ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
+          (concat (match-string 1 name)
+                  "(O)"))
+         ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
+          (concat (match-string 1 name)
+                  "(H)"))
+         ((string-match "^\\*Warnings\\*" name)
+          (concat (match-string 1 name)
+                  "(W)"))
+         ((string-match "^\\*Backtrace\\*" name)
+          (concat (match-string 1 name)
+                  "(B)"))
+         ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
+          (concat (match-string 1 name)
+                  "(L)"))
+         ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
+          (concat (match-string 1 name)
+                  "(C)"))
+         ((string-match "^\\*Java Run" name)
+          (concat (match-string 1 name)
+                  (concat "(CG)" (substring name 18 (- (length name) 1)))
+                  ))
+         ((string-match "^\\*Customize" name)
+          (concat (match-string 1 name)
+                  (concat "(CG)" (substring name 18 (- (length name) 1)))
+                  ))
+         (t name))
+        ))
 
   ;; Mode line
   (popper-mode-line-position 0)
