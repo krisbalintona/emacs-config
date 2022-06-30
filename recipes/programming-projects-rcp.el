@@ -67,7 +67,7 @@
 ;;;; Project
 (use-package project
   :general (:keymaps 'project-prefix-map
-                     "m" #'magit-project-status)
+            "m" #'magit-project-status)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
@@ -89,8 +89,8 @@
   :straight (project-x :type git :host github :repo "karthink/project-x")
   :hook (after-init . project-x-mode)   ; Adds hooks and keybinds
   :general (:keymaps 'project-prefix-mapproject-prefix-map
-                     "w" '(project-x-window-state-save :wk "Project-x save")
-                     "j" '(project-x-window-state-load :wk "Project-x load"))
+            "w" '(project-x-window-state-save :wk "Project-x save")
+            "j" '(project-x-window-state-load :wk "Project-x load"))
   :custom
   (project-x-window-list-file
    (no-littering-expand-var-file-name "project-x/project-window-list.el"))
@@ -129,7 +129,7 @@
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general
   (:keymaps 'magit-mode-map
-            "C-<tab>" 'magit-section-toggle-children)
+   "C-<tab>" 'magit-section-toggle-children)
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
@@ -302,24 +302,31 @@
   )
 
 ;;; QoL
-;;;; Git-gutter-fringes
-;; Indicate diff areas in fringe
-(use-package git-gutter-fringe
-  :demand t ; Need or this won't load and set bitmaps correctly
+;;;; Git-gutter
+(use-package git-gutter
   :hook (window-configuration-change . git-gutter:update-all-windows)
   :custom
-  (left-fringe-width 16)
-  (right-fringe-width 3)
   (git-gutter-fr:side 'left-fringe)
-  (git-gutter:update-interval 0)
+  ;; 0 is actually on-save, so we put this as low as possible to effectively
+  ;; have real-time updating
+  (git-gutter:update-interval 0.02)     
   (git-gutter:disabled-modes '(org-mode))
-  :config
-  (global-git-gutter-mode)
+  :init
+  (global-git-gutter-mode))
 
+;;;; Git-gutter-fringe
+(use-package git-gutter-fringe
+  ;; :disabled t
+  :demand t
+  :custom-face
+  ;; Colors taken from `uninspiring-dark-theme'
+  (git-gutter-fr:added ((t (:foreground "#98C379" :weight bold :inherit nil))))
+  (git-gutter-fr:deleted ((t (:foreground "#E06C75" :weight bold :inherit nil))))
+  (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
+  :config
   (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
-  )
+  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t)))
 
 ;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history

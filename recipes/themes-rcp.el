@@ -14,7 +14,10 @@
 
 ;;; UI
 ;;;; Fringes
-(set-fringe-style 1)               ; Equivalent to the "minimal" `fringe-styles'
+(fringe-mode '(6 . 6))
+;; Places the fringes outside the margins, closest to the frame edge. Useful for
+;; `git-gutter-fringes'
+(setq-default fringes-outside-margins t)
 
 ;;;; Line-spacing
 (setq line-spacing 1)
