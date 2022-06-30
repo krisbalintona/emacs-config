@@ -17,6 +17,13 @@
                                  "Configure `eldoc'"
                                  (setq-local eldoc-box-cleanup-interval 2
                                              eldoc-echo-area-use-multiline-p nil))))
+  :general (:keymaps 'eglot-mode-map
+            :prefix "<f3>"
+            "r" 'eglot-rename
+            "a" 'eglot-code-actions
+            "=" 'eglot-format
+            "s" 'eglot-shutdown
+            "S" 'eglot-shutdown-all)
   :custom
   (eglot-autoshutdown t)
   (eglot-send-changes-idle-time 0.3)
