@@ -51,7 +51,7 @@
             :prefix "H-d"
             "h" '(devdocs-browser-open :wk "Open")
             "H" '(devdocs-browser-open-in :wk "Open-in")
-            "i" '(devdocs-browser-install :wk "Install")
+            "i" '(devdocs-browser-install-doc :wk "Install")
             "d" '(devdocs-browser-download-offline-data :wk "Download")
             "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade")))
 
