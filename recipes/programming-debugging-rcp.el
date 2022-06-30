@@ -21,48 +21,48 @@
   :commands dap-debug
   :general
   (:keymaps 'lsp-mode-map
-            :prefix "H-d"
-            "d" '(dap-debug :wk "Debug")
-            "l" '(dap-debug-last :wk "Debug last")
-            "h" '(dap-hydra :wk "Hydra")
-            "q" '(dap-disconnect :wk "Quit")
-            "r" '(dap-ui-repl :wk "REPL")
+   :prefix "H-d"
+   "d" '(dap-debug :wk "Debug")
+   "l" '(dap-debug-last :wk "Debug last")
+   "h" '(dap-hydra :wk "Hydra")
+   "q" '(dap-disconnect :wk "Quit")
+   "r" '(dap-ui-repl :wk "REPL")
 
-            "b" '(:ignore t :wk "Breakpoints")
-            "bt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
-            "ba" '(dap-breakpoint-toggle :wk "Add breakpoint")
-            "bd" '(dap-breakpoint-delete :wk "Delete breakpoint")
-            "bD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
-            "bl" '(dap-breakpoint-log-message :wk "Breakpoint log")
-            "bc" '(dap-breakpoint-condition :wk "Breakpoint condition")
+   "b" '(:ignore t :wk "Breakpoints")
+   "bt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
+   "ba" '(dap-breakpoint-toggle :wk "Add breakpoint")
+   "bd" '(dap-breakpoint-delete :wk "Delete breakpoint")
+   "bD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
+   "bl" '(dap-breakpoint-log-message :wk "Breakpoint log")
+   "bc" '(dap-breakpoint-condition :wk "Breakpoint condition")
 
-            "e" '(:ignore t :wk "Expressions")
-            "ea" '(dap-ui-expressions-add :wk "Expression add")
-            "er" '(dap-ui-expressions-remove :wk "Expression add")
-            )
+   "e" '(:ignore t :wk "Expressions")
+   "ea" '(dap-ui-expressions-add :wk "Expression add")
+   "er" '(dap-ui-expressions-remove :wk "Expression add")
+   )
   (:keymaps 'lsp-mode-map
-            "H-c" 'dap-debug-last
-            "H-C" 'dap-debug-recent
-            )
+   "H-c" 'dap-debug-last
+   "H-C" 'dap-debug-recent
+   )
   (:keymaps 'lsp-mode-map
-            :prefix "H-d"
-            "d" '(dap-debug :wk "Debug")
-            "l" '(dap-debug-last :wk "Debug last")
-            "h" '(dap-hydra :wk "Hydra")
-            "q" '(dap-disconnect :wk "Quit")
-            "r" '(dap-ui-repl :wk "REPL")
+   :prefix "H-d"
+   "d" '(dap-debug :wk "Debug")
+   "l" '(dap-debug-last :wk "Debug last")
+   "h" '(dap-hydra :wk "Hydra")
+   "q" '(dap-disconnect :wk "Quit")
+   "r" '(dap-ui-repl :wk "REPL")
 
-            "b" '(:ignore t :wk "Breakpoints")
-            "bt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
-            "ba" '(dap-breakpoint-toggle :wk "Add breakpoint")
-            "bd" '(dap-breakpoint-delete :wk "Delete breakpoint")
-            "bD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
-            "bl" '(dap-breakpoint-log-message :wk "Breakpoint log")
-            "bc" '(dap-breakpoint-condition :wk "Breakpoint condition")
+   "b" '(:ignore t :wk "Breakpoints")
+   "bt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
+   "ba" '(dap-breakpoint-toggle :wk "Add breakpoint")
+   "bd" '(dap-breakpoint-delete :wk "Delete breakpoint")
+   "bD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
+   "bl" '(dap-breakpoint-log-message :wk "Breakpoint log")
+   "bc" '(dap-breakpoint-condition :wk "Breakpoint condition")
 
-            "e" '(:ignore t :wk "Expressions")
-            "ea" '(dap-ui-expressions-add :wk "Expression add")
-            "er" '(dap-ui-expressions-remove :wk "Expression add"))
+   "e" '(:ignore t :wk "Expressions")
+   "ea" '(dap-ui-expressions-add :wk "Expression add")
+   "er" '(dap-ui-expressions-remove :wk "Expression add"))
   :custom
   (dap-debug-compilation-keep t)        ; Keep output window in success?
   (dap-debug-restart-keep-session nil)  ; Delete previous sessions

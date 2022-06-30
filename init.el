@@ -107,6 +107,7 @@
 (require 'programming-web-rcp)
 (require 'programming-python-rcp)
 (require 'programming-java-rcp)
+(require 'programming-c-rcp)
 
 ;;;; Shells
 (require 'shell-basic-rcp)
