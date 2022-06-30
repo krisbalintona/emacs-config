@@ -122,6 +122,8 @@
             [remap apropos-command] '(consult-apropos :wk "Consult apropos"))
   (:keymaps 'minibuffer-local-map
             "M-r" 'consult-history)
+  (:keymaps 'comint-mode-map
+            [remap comint-history-isearch-backward-regexp] 'consult-history)
   (kb/nav-keys
     "o" '(consult-outline :wk "Consult outline")
     "j" '(consult-line :wk "Consult line")
