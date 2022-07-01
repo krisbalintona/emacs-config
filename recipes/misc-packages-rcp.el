@@ -89,7 +89,7 @@
 ;; Good-enough smooth scrolling
 (use-package good-scroll
   :ghook 'after-init-hook
-  ;; :gfhook 'kb/good-scroll-toggle
+  :gfhook 'kb/good-scroll-toggle
   :custom
   (good-scroll-step 80)
   :init
@@ -203,7 +203,7 @@ progress. This is called by the timer `good-scroll--timer' every
       (kb/good-scroll--move (or lines half-screen))))
 
   ;; Setup
-  (advice-add 'good-scroll--render :override #'kb/good-scroll--render)
+
   (defun kb/good-scroll-toggle ()
     "Enable or disable my own `good-scroll' functions."
     (interactive)
@@ -219,7 +219,8 @@ progress. This is called by the timer `good-scroll--timer' every
              (advice-remove 'evil-scroll-up #'kb/good-scroll-up)
              (advice-remove 'evil-scroll-down #'kb/good-scroll-down))
            (advice-remove 'scroll-down-command #'kb/good-scroll-up)
-           (advice-remove 'scroll-up-command #'kb/good-scroll-down)))))
+           (advice-remove 'scroll-up-command #'kb/good-scroll-down)
+           (advice-remove 'good-scroll--render #'kb/good-scroll--render)))))
 
 ;;; Ctrlf
 ;; Better `isearch'
