@@ -237,9 +237,7 @@ pretty icons -- Doom modeline style."
 Also see `flymake-mode-line-format' and
 `flymake-mode-line-counter-format'."
   (when (bound-and-true-p flymake-mode)
-    (let ((text (concat " "
-                        (mood-line--string-trim (format-mode-line flymake-mode-line-format))
-                        " ")))
+    (let ((text (mood-line--string-trim (format-mode-line flymake-mode-line-format))))
       (if (doom-modeline--active)
           text
         (propertize text 'face 'mode-line-inactive)))))
@@ -330,11 +328,12 @@ Debuggers include edebug and dap."
                                 (if (doom-modeline--active)
                                     text
                                   (propertize text 'face 'mode-line-inactive))))
+                       (:eval (when (bound-and-true-p flymake-mode)
+                                (concat " " (kb/mood-line-segment-flymake) " ")))
                        ;; (:eval (kb/mood-line-segment-flycheck-doom))
                        (:eval (when (bound-and-true-p flycheck-mode)
-                                (or (mood-line-segment-flycheck) " ")))
-                       (:eval (when (bound-and-true-p flymake-mode)
-                                (kb/mood-line-segment-flymake)))
+                                (or (concat " " (mood-line-segment-flycheck))
+                                    " ")))
                        (:eval (kb/mood-line-segment-lsp))
                        (:eval (when (bound-and-true-p lsp-mode)
                                 (lsp--progress-status)))
