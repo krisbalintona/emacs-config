@@ -26,7 +26,7 @@
             "S" 'eglot-shutdown-all)
   :custom
   (eglot-autoshutdown t)
-  (eglot-send-changes-idle-time 0.3)
+  (eglot-send-changes-idle-time 0.7)
   (eglot-extend-to-xref t)              ; Testing to see what this does
   (eglot-stay-out-of '("flymake"))
   :custom-face
