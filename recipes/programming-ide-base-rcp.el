@@ -35,14 +35,18 @@
   ;; instead of defining the variables directly so that it is agnostic to any
   ;; package changes. Take a look at the `format-all' package for how to install
   ;; particular formatters as well as their proper CLI commands. Namely, inspect
-  (setf (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
-        (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
-        (alist-get 'google-java-format apheleia-formatters)
-        '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
-        (alist-get 'stylua apheleia-formatters)
-        `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
-        (alist-get 'latexindent apheleia-formatters)
-        '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")))
+  ;; `format-all-formatters'.
+  (setf
+   ;; Major modes
+   (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
+   ;; Formatters
+   (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
+   (alist-get 'google-java-format apheleia-formatters)
+   '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
+   (alist-get 'stylua apheleia-formatters)
+   `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
+   (alist-get 'latexindent apheleia-formatters)
+   '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")))
 
 ;;; Devdocs
 ;; Viewing documentation within Emacs.

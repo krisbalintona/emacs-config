@@ -57,7 +57,6 @@
               find-file-existing-other-name t                                                     ; Visit buffer when finding file if it already exists?
 
               tab-width 4
-              evil-shift-width tab-width
               indent-tabs-mode nil
 
               visible-bell nil
@@ -106,12 +105,10 @@
 ;;; Window sizing and splitting
 (setq window-resize-pixelwise t
       fit-window-to-buffer-horizontally t
-      fit-frame-to-buffer t
 
       ;; Favor vertical splits over horizontal ones
       split-width-threshold 180
-      split-height-threshold 80
-      )
+      split-height-threshold 80)
 
 ;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk
