@@ -226,10 +226,11 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package ctrlf
   :init (ctrlf-mode))
 
-;;; alt-comment-dwim
+;;; Alt-comment-dwim
 (use-package alt-comment-dwim
   :straight (alt-comment-dwim :type git
                               :host gitlab
+                              :protocol ssh
                               :repo "PreciousPudding/alt-comment-dwim")
   :general
   ([remap comment-dwim] 'alt-comment-dwim
