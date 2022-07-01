@@ -31,12 +31,6 @@
   (eglot-stay-out-of '("flymake"))
   :custom-face
   (eglot-highlight-symbol-face ((t (:box (:line-width -1 :style nil)))))
-  :config
-  (setf (alist-get 'python-mode eglot-server-programs)
-        `("pyright-langserver" "--stdio")
-        (alist-get 'lua-mode eglot-server-programs)
-        '("lua-language-server"))
-
   (add-hook 'eglot-managed-mode-hook
             (lambda ()
               "Add `eglot-flymake-backend' to `flymake-diagnostic-functions',

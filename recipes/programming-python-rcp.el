@@ -21,19 +21,19 @@
                            (setq-local scroll-margin 0)))
   :gfhook
   '(lambda ()
-     (require 'prog-mode)
-     (push '("->" . ?») prettify-symbols-alist)
-     (push '("lambda" . ?λ) prettify-symbols-alist)
-     (prettify-symbols-mode))
+      (require 'prog-mode)
+      (push '("->" . ?») prettify-symbols-alist)
+      (push '("lambda" . ?λ) prettify-symbols-alist)
+      (prettify-symbols-mode))
   'display-fill-column-indicator-mode
   :general (:keymaps 'python-mode-map
-                     :states '(normal insert)
-                     "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1)) ; Python oddly replaces the normal C-<backspace>
-                     "M-[" 'python-nav-backward-block
-                     "M-]" 'python-nav-forward-block
-                     "M-{" 'python-nav-beginning-of-block
-                     "M-}" 'python-nav-end-of-block
-                     )
+            :states '(normal insert)
+            "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1)) ; Python oddly replaces the normal C-<backspace>
+            "M-[" 'python-nav-backward-block
+            "M-]" 'python-nav-forward-block
+            "M-{" 'python-nav-beginning-of-block
+            "M-}" 'python-nav-end-of-block
+            )
   :custom
   (py-python-command "ipython3")
   (py-shell-fontify-p 'all)             ; Fontify shell
@@ -48,7 +48,11 @@
   (py-switch-buffers-on-execute-p nil) ; Switch to buffer?
   :config
   (when (bound-and-true-p evil-local-mode)
-    (evil-set-initial-state 'py-shell-mode 'normal)))
+    (evil-set-initial-state 'py-shell-mode 'normal))
+
+  (with-eval-after-load 'eglot
+    (setf (alist-get 'python-mode eglot-server-programs)
+          `("pyright-langserver" "--stdio"))))
 
 ;;; Dap-python
 ;; Compatibility with dap
