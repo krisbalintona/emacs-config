@@ -34,10 +34,11 @@
   :config
   (add-hook 'eglot-managed-mode-hook
             (lambda ()
-              "Add `eglot-flymake-backend' to `flymake-diagnostic-functions',
-preserving the initial list."
+              "Add `eglot-flymake-backend' to the beginning of
+ `flymake-diagnostic-functions', preserving the original
+ functions"
               (when (eglot-managed-p)
-                (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))
+                (add-to-list 'flymake-diagnostic-functions'eglot-flymake-backend))))
 
   ;; Workaround for many hyphen characters wrapping in an ugly way in
   ;; `eldoc-box' frame
