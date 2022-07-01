@@ -43,10 +43,9 @@
 ;;; Consult-flycheck
 ;; List flycheck errors in minibuffer with consult
 (use-package consult-flycheck
-  :disabled t
   :after (consult flycheck)
-  :general (kb/nav-keys
-             "e" '(consult-flycheck :wk "Consult flycheck")))
+  :general (:keymaps 'lsp-mode-map
+            "C-c e" '(consult-flycheck :wk "Consult flycheck")))
 
 ;;; Flymake
 (use-package flymake
@@ -54,9 +53,10 @@
   :general
   ("M-n" 'flymake-goto-next-error
    "M-p" 'flymake-goto-prev-error)
-  (kb/nav-keys
-    "e" '(consult-flymake :wk "Consult flymake"))
+  (:keymaps 'eglot-mode-map
+   "C-c e" '(consult-flymake :wk "Consult flymake"))
   :custom
+  (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
