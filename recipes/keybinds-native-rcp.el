@@ -66,20 +66,38 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
     (when (bolp)
       (funcall indent-line-function))))
 
+;;;; Scrolling
+(defun kb/scroll-up-command ()
+  (interactive)
+  (let ((lines (round (/ (window-height) 2))))
+    (scroll-up-command lines)))
+
+(defun kb/scroll-down-command ()
+  (interactive)
+  (let ((lines (round (/ (window-height) 2))))
+    (scroll-down-command lines)))
+
+(with-eval-after-load 'pulsar
+  (add-to-list 'pulsar-pulse-functions 'kb/scroll-up-command)
+  (add-to-list 'pulsar-pulse-functions 'kb/scroll-down-command))
+
 ;;; Text editing
 (general-define-key
  "C-S-p" 'kb/open-line-above-goto
  "C-S-n" 'kb/open-line-below-goto
  "C-S-k" 'kb/join-line-above
  "C-S-j" 'kb/join-line-below
- )
-
-;;; Key-chords
-(general-define-key
- (general-chord "xx") 'save-buffer
  (general-chord "[ ") 'kb/open-line-above-insert
- (general-chord "] ") 'kb/open-line-below-insert
- )
+ (general-chord "] ") 'kb/open-line-below-insert)
+
+;;; Scrolling
+(general-define-key
+ [remap scroll-up-command] 'kb/scroll-up-command
+ [remap scroll-down-command] 'kb/scroll-down-command)
+
+;;; Other
+(general-define-key
+ (general-chord "xx") 'save-buffer)
 
 ;;; keybinds-native-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
