@@ -39,6 +39,7 @@
   (setf
    ;; Major modes
    (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
+   (alist-get 'ruby-mode apheleia-mode-alist) '(rufo)
    ;; Formatters
    (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
    (alist-get 'google-java-format apheleia-formatters)
@@ -46,7 +47,8 @@
    (alist-get 'stylua apheleia-formatters)
    `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
    (alist-get 'latexindent apheleia-formatters)
-   '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")))
+   '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
+   (alist-get 'rufo apheleia-formatters) '("rufo" "--simple-exit" "--filename" filepath)))
 
 ;;; Devdocs
 ;; Viewing documentation within Emacs.
