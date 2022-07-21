@@ -352,6 +352,39 @@ progress. This is called by the timer `good-scroll--timer' every
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region compilation-filter-start (point)))))
 
+;;; Nov-mode
+;; Epub reader
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode)
+  :hook ((nov-mode . visual-line-mode)
+         (nov-mode . visual-fill-column-mode)))
+
+;;; Justify-kp
+;; Advanced justification of text with the Knuth/Plass algorithm
+(use-package justify-kp
+  :after nov
+  :straight (justify-kp :type git :host github :repo "Fuco1/justify-kp")
+  :hook (nov-post-html-render . kb/nov-post-html-render-hook)
+  :config
+  (defun kb/nov-window-configuration-change-hook ()
+    (kb/nov-post-html-render-hook)
+    (remove-hook 'window-configuration-change-hook 'kb/nov-window-configuration-change-hook t))
+
+  (defun kb/nov-post-html-render-hook ()
+    (if (get-buffer-window)
+        (let ((max-width (pj-line-width))
+              buffer-read-only)
+          (save-excursion
+            (goto-char (point-min))
+            (while (not (eobp))
+              (when (not (looking-at "^[[:space:]]*$"))
+                (goto-char (line-end-position))
+                (when (> (shr-pixel-column) max-width)
+                  (goto-char (line-beginning-position))
+                  (pj-justify)))
+              (forward-line 1))))
+      (add-hook 'window-configuration-change-hook 'kb/nov-window-configuration-change-hook nil t))))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
