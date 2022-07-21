@@ -409,7 +409,11 @@ progress. This is called by the timer `good-scroll--timer' every
   :config
   (when (bound-and-true-p evil-local-mode)
     (general-unbind 'normal help-mode-map "SPC")
-    (general-unbind 'normal custom-mode-map "SPC")))
+    (general-unbind 'normal custom-mode-map "SPC"))
+  :init
+  (global-so-long-mode)
+  (electric-pair-mode)
+  (repeat-mode))
 
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
