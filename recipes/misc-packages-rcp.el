@@ -352,6 +352,18 @@ progress. This is called by the timer `good-scroll--timer' every
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region compilation-filter-start (point)))))
 
+;;; Compile
+(use-package compile
+  :custom
+  (compilation-scroll-output 'first-error))
+
+;;; Fancy-compilation
+(use-package fancy-compilation
+  :straight (fancy-compilation :repo "https://codeberg.org/ideasman42/emacs-fancy-compilation")
+  :custom
+  (fancy-compilation-override-colors nil)
+  (fancy-compilation-quiet-prelude t))
+
 ;;; Nov-mode
 ;; Epub reader
 (use-package nov
