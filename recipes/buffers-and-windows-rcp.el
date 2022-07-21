@@ -25,7 +25,7 @@
 (use-package windmove
   :hook (after-init . windmove-mode)
   :init
-  (windmove-default-keybindings)
+  (windmove-default-keybindings '(hyper))
   (windmove-swap-states-default-keybindings '(shift hyper)))
 
 ;;;; Window
