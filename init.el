@@ -119,6 +119,7 @@
 ;; (require 'email-mu4e-rcp)
 (require 'email-sending-rcp)
 (require 'rss-feed-rcp)
+(require 'epub-rcp)
 (require 'irc-rcp)
 
 ;;;; Other
