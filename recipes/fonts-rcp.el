@@ -9,6 +9,10 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Builtin
+(set-charset-priority 'unicode)
+(prefer-coding-system 'utf-8-unix)
+
 ;;; All-the-icons
 ;; Provides a bunch of unicode icons which many other packages leverage
 (use-package all-the-icons

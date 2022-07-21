@@ -120,7 +120,19 @@
       scroll-margin 0                  ; Add a margin when scrolling vertically
       scroll-conservatively 0
       scroll-up-aggressively nil       ; Center
-      scroll-down-aggressively nil)    ; Center
+      scroll-down-aggressively nil     ; Center
+      fast-but-imprecise-scrolling t)
+
+;;; Prefer loading newer versions of files
+(setq load-prefer-newer t)
+
+;;; Highlight next error
+(setq next-error-message-highlight t)
+
+;;; Delete-selection-mode
+;; When selecting text, if typing new text, replace the selected text with the
+;; new text
+(delete-selection-mode t)
 
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
