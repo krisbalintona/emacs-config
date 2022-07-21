@@ -137,12 +137,8 @@
      (comint-mode . comint-input-ring)
      (term-mode . term-input-ring)
      ))
-  (consult-project-root-function #'(lambda ()
-                                     (cond
-                                      ((project-current) ; Project.el
-                                       (project-root (project-current)))
-                                      (t default-directory) ; Default directory
-                                      )))
+  (consult-ripgrep-args
+   "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /   --smart-case --no-heading --line-number --hidden .")
   :init
   (defun kb/consult-imenu-versatile (&optional arg)
     "Call `consult-imenu'. With prefix-command ARG, call
