@@ -88,6 +88,7 @@
 ;;; Good-scroll
 ;; Good-enough smooth scrolling
 (use-package good-scroll
+  :disabled t
   :ghook 'after-init-hook
   :gfhook 'kb/good-scroll-toggle
   :custom
