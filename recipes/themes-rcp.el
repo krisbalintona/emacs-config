@@ -191,8 +191,7 @@
 ;; Display the name of the function I am currently under
 (use-package which-func
   :init
-  (which-func-mode)
-  )
+  (which-function-mode))
 
 ;;; Other
 ;;;; Fontaine
