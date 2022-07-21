@@ -49,17 +49,7 @@
   (eaf-mindmap-dark-mode "follow")
   (eaf-pdf-dark-mode "ignore")
 
-
   (eaf-enable-debug t)
-  :init
-  ;; Have `find-file' use `eaf-open'
-  (defun adviser-find-file (orig-fn file &rest args)
-    (let ((fn (if (commandp 'eaf-open) 'eaf-open orig-fn)))
-      (pcase (file-name-extension file)
-        ("pdf"  (apply fn file nil))
-        ("epub" (apply fn file nil))
-        (_      (apply orig-fn file args)))))
-  (advice-add #'find-file :around #'adviser-find-file)
   :config
   ;; All-the-icons integration
   (require 'eaf-all-the-icons)
@@ -170,8 +160,8 @@ move to that window."
   ;; Org-roam link previews
   (require 'popweb-org-roam-link)
   (advice-add 'popweb-org-roam-link-show :around #'(lambda (orig-fun &rest args)
-                                                     ;; Needs to see the entire buffer for some reason...
-                                                     (org-with-wide-buffer (apply orig-fun args)))))
+                                                      ;; Needs to see the entire buffer for some reason...
+                                                      (org-with-wide-buffer (apply orig-fun args)))))
 
 ;;; application-framework-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
