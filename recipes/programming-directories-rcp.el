@@ -61,6 +61,10 @@ command."
   (dired-kill-when-opening-new-dired-buffer t) ; Kill dired buffer when opening new directory
   )
 
+;;;; Image-dired
+(use-package image-dired
+  :hook (dired-mode . image-dired-minor-mode))
+
 ;;;; Dired-git
 ;; Show git information in dired
 (use-package dired-git
