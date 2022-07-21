@@ -324,15 +324,15 @@ Debuggers include edebug and dap."
                        (:eval (mood-line-segment-eol))
                        " "
                        display-time-string
-                       (:eval (let ((text battery-mode-line-string))
+                       (:eval (let ((text (concat battery-mode-line-string "  ")))
                                 (if (doom-modeline--active)
                                     text
                                   (propertize text 'face 'mode-line-inactive))))
                        (:eval (when (bound-and-true-p flymake-mode)
-                                (concat " " (kb/mood-line-segment-flymake) " ")))
+                                (concat (kb/mood-line-segment-flymake) " ")))
                        ;; (:eval (kb/mood-line-segment-flycheck-doom))
                        (:eval (when (bound-and-true-p flycheck-mode)
-                                (or (concat " " (mood-line-segment-flycheck))
+                                (or (concat (mood-line-segment-flycheck))
                                     " ")))
                        (:eval (kb/mood-line-segment-lsp))
                        (:eval (when (bound-and-true-p lsp-mode)
