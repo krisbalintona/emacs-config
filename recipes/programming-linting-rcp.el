@@ -14,9 +14,16 @@
 ;; Check your code
 (use-package flycheck
   :disabled t
+  :gfhook
+  '(lambda ()
+      (when flymake-mode
+        (flymake-mode -1)))
   :general
   (kb/nav-keys
     "E" '(flycheck-list-errors :wk "List flycheck errors"))
+  (:keymaps 'flycheck-mode-map
+   "M-n" 'flycheck-next-error
+   "M-p" 'flycheck-previous-error)
   :custom
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
@@ -50,8 +57,13 @@
 ;;; Flymake
 (use-package flymake
   :ghook 'prog-mode-hook 'text-mode-hook
+  :gfhook
+  '(lambda ()
+      (when flycheck-mode
+        (flycheck-mode -1)))
   :general
-  ("M-n" 'flymake-goto-next-error
+  (:keymaps 'flymake-mode-map
+   "M-n" 'flymake-goto-next-error
    "M-p" 'flymake-goto-prev-error)
   (:keymaps 'eglot-mode-map
    "C-c e" '(consult-flymake :wk "Consult flymake"))
