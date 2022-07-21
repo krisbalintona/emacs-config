@@ -15,17 +15,6 @@
   :gfhook
   'lsp-enable-which-key-integration
   'lsp-lens-mode
-  '(lambda ()
-      ;; Change `corfu' settings for LSP buffers
-      (setq-local corfu-auto t
-                  corfu-auto-delay 0.8
-                  corfu-auto-prefix 1
-                  corfu-quit-at-boundary t
-                  corfu-separator ?·
-                  orderless-component-separator "·")
-      ;; Force re-enable `corfu-mode' in order for it to be
-      ;; aware of the local change to `corfu-auto'
-      (corfu-mode 1))
   :general
   (:keymaps 'lsp-mode-map
    :states 'insert
@@ -144,12 +133,15 @@
 (use-package lsp-ui
   :requires lsp
   :ghook 'lsp-mode-hook
-  :hook ((lsp-ui-imenu-mode . hide-mode-line-mode)
-         (lsp-mode . lsp-ui-mode))
+  :hook (lsp-ui-imenu-mode . hide-mode-line-mode)
+  :gfhook
+  '(lambda ()
+      (when (bound-and-true-p eldoc-box-hover-mode)
+        (eldoc-box-hover-mode -1)))
   :general (:keymaps 'lsp-ui-mode-map
-                     [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
-                     [remap xref-find-references] #'lsp-ui-peek-find-references
-                     [remap imenu-list] #'lsp-ui-imenu)
+            [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
+            [remap xref-find-references] #'lsp-ui-peek-find-references
+            [remap imenu-list] #'lsp-ui-imenu)
   :custom
   ;; Lsp-ui-peek - Peek in a child frame
   (lsp-ui-peek-enable t)
@@ -157,7 +149,7 @@
   (lsp-ui-peek-show-directory t)
 
   ;; Lsp-ui-sideline - Info at the side
-  (lsp-ui-sideline-enable t)
+  (lsp-ui-sideline-enable nil)
   (lsp-ui-sideline-show-diagnostics t)  ; Show diagnostics messages in sideline?
   (lsp-ui-sideline-show-hover nil)      ; Show hover messages in sideline?
   (lsp-ui-sideline-show-code-actions nil) ; Show code actions in sideline?
@@ -170,16 +162,16 @@
   ;; Lsp-eldoc - Info in the echo area
   (lsp-eldoc-hook '(lsp-hover))
   (lsp-eldoc-enable-hover t)            ; Show eldoc info when hovering?
-  (lsp-eldoc-render-all t)              ; Take as much space as needed?
+  (lsp-eldoc-render-all nil)            ; Take as much space as needed?
 
   ;; Lsp-ui-doc - Show documentation
-  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-enable nil)
   (lsp-ui-doc-delay 0.2)
   (lsp-ui-doc-show-with-cursor t)       ; Point hover (alongside cursor!)
   (lsp-ui-doc-show-with-mouse nil)      ; Mouse hover (alongside cursor!)
   ;; Appearance
   (lsp-ui-doc-alignment 'window)
-  (lsp-ui-doc-position 'top)
+  (lsp-ui-doc-position 'at-point)
   (lsp-ui-doc-header nil)
   (lsp-ui-doc-max-height 10)
   (lsp-ui-doc-include-signature t)
