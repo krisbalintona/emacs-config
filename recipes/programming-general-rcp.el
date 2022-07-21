@@ -30,11 +30,11 @@
   :hook (after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
-            :prefix "M-g"
-            "n" '(hl-todo-next :wk "Hl-todo-next")
-            "p" '(hl-todo-previous :wk "Hl-todo-previous")
-            "o" '(hl-todo-occur :wk "Hl-todo-occur")
-            )
+   :prefix "M-g"
+   "n" '(hl-todo-next :wk "Hl-todo-next")
+   "p" '(hl-todo-previous :wk "Hl-todo-previous")
+   "o" '(hl-todo-occur :wk "Hl-todo-occur")
+   )
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(text-mode org-mode))
@@ -87,6 +87,8 @@
 ;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
+  :custom
+  (show-paren-context-when-offscreen 'overlay)
   :init (show-paren-mode))
 
 ;;;; Display-fill-column-indicator
@@ -119,17 +121,17 @@
    [remap yank-pop] '(consult-yank-pop :wk "Consult yank-pop"))
   ([remap project-find-regexp] 'consult-ripgrep)
   (:keymaps 'help-map
-            [remap apropos-command] '(consult-apropos :wk "Consult apropos"))
+   [remap apropos-command] '(consult-apropos :wk "Consult apropos"))
   (:keymaps 'minibuffer-local-map
-            "M-r" 'consult-history)
+   "M-r" 'consult-history)
   (:keymaps 'comint-mode-map
-            [remap comint-history-isearch-backward-regexp] 'consult-history)
+   [remap comint-history-isearch-backward-regexp] 'consult-history)
   (kb/nav-keys
     "o" '(consult-outline :wk "Consult outline")
-    "j" '(consult-line :wk "Consult line")
-    "i" '(kb/consult-imenu-versatile :wk "Consult imenu"))
+    "j" '(consult-line :wk "Consult line"))
+  ([remap imenu] '(kb/consult-imenu-versatile :wk "Consult imenu"))
   (:keymaps 'org-mode-map
-            [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
+   [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
   ([remap recentf-open-files] '(consult-recent-file :wk "Consult recent file"))
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
@@ -170,11 +172,11 @@
   :general
   ("C-." 'embark-act)
   (:keymaps 'vertico-map
-            "C-." 'embark-act
-            "C->" 'embark-become)
+   "C-." 'embark-act
+   "C->" 'embark-become)
   ([remap describe-bindings] '(embark-bindings :wk "Embark bindings"))
   (:keymaps 'embark-symbol-map
-            "R" '(raise-sexp :wk "Raise sexp"))
+   "R" '(raise-sexp :wk "Raise sexp"))
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
@@ -207,13 +209,13 @@
   :hook ((prog-mode conf-mode) . hs-minor-mode)
   :general
   (:prefix "C-c h"
-           "t" '(hs-hide-block :wk "Toggle hide")
-           "l" '(hs-hide-level :wk "Hide level")
-           "h" '(hs-hide-block :wk "Hide block")
-           "s" '(hs-show-block :wk "show block")
-           "H" '(hs-hide-all :wk "Hide all")
-           "S" '(hs-show-all :wk "show all")
-           )
+   "t" '(hs-hide-block :wk "Toggle hide")
+   "l" '(hs-hide-level :wk "Hide level")
+   "h" '(hs-hide-block :wk "Hide block")
+   "s" '(hs-show-block :wk "show block")
+   "H" '(hs-hide-all :wk "Hide all")
+   "S" '(hs-show-all :wk "show all")
+   )
   (kb/toggle-keys
     "t" '(hs-toggle-hiding :wk "Toggle hide")
     )
@@ -297,7 +299,7 @@
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
-            "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
+   "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init

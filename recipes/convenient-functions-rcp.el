@@ -11,25 +11,6 @@
 (require 'keybinds-general-rcp)
 (require 'custom-directories-rcp)
 
-;;; Rename/move current file
-(defun kb/rename-file-and-buffer ()
-  "Rename current buffer and if the buffer is visiting a file,
-rename it too. Identical to to `crux''s
-`crux-rename-file-and-buffer'."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
-      (let* ((new-name (read-file-name "New name: " (file-name-directory filename)))
-             (containing-dir (file-name-directory new-name)))
-        (make-directory containing-dir t)
-        (cond
-         ((vc-backend filename) (vc-rename-file filename new-name))
-         (t
-          (rename-file filename new-name t)
-          (set-visited-file-name new-name t t)))))))
-(kb/file-keys "R" '(kb/rename-file-and-buffer :wk "Rename current file"))
-
 ;;; Aj-toggle-fold
 (defun aj-toggle-fold ()
   "Toggle fold all lines larger than indentation on current line.

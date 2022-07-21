@@ -97,7 +97,9 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 
 ;;; Other
 (general-define-key
- (general-chord "xx") 'save-buffer)
+ (general-chord "xx") 'save-buffer
+ "<f10>" 'restart-emacs
+ "C-x x R" 'rename-visited-file)
 
 ;;; keybinds-native-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

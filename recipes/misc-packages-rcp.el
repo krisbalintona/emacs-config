@@ -66,14 +66,6 @@
     ["View timers"
      [("v" "Tabulated view" tmr-tabulated-view)]]))
 
-;;; Restart-emacs
-(use-package restart-emacs
-  :general ("<f10>" '((lambda ()             ; With "--debug-init"
-                        (interactive)
-                        (let ((current-prefix-arg '(4)))
-                          (restart-emacs)))
-                      :wk "Restart emacs")))
-
 ;;; All-the-icons-completion
 ;; Add `all-the-icons' icons to minibuffer completion candidates
 (use-package all-the-icons-completion
