@@ -65,8 +65,7 @@
   (:keymaps 'flymake-mode-map
    "M-n" 'flymake-goto-next-error
    "M-p" 'flymake-goto-prev-error)
-  (:keymaps 'eglot-mode-map
-   "C-c e" '(consult-flymake :wk "Consult flymake"))
+  ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
   :custom
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators

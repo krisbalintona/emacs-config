@@ -132,7 +132,8 @@
   ([remap imenu] '(kb/consult-imenu-versatile :wk "Consult imenu"))
   (:keymaps 'org-mode-map
    [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
-  ([remap recentf-open-files] '(consult-recent-file :wk "Consult recent file"))
+  ([remap recentf-open-files] '(consult-recent-file :wk "Consult recent file")
+   [remap flymake-show-buffer-diagnostics] 'consult-flymake)
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode . eshell-history-ring)
