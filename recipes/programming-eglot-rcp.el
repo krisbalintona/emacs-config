@@ -25,6 +25,7 @@
             "s" 'eglot-shutdown
             "S" 'eglot-shutdown-all)
   :custom
+  (eglot-events-buffer-size 0) ; Don't print json events to buffer to increase performance 
   (eglot-autoshutdown t)
   (eglot-send-changes-idle-time 0.7)
   (eglot-extend-to-xref t)              ; Testing to see what this does
