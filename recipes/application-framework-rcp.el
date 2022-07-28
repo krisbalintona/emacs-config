@@ -49,7 +49,7 @@
   (eaf-mindmap-dark-mode "follow")
   (eaf-pdf-dark-mode "ignore")
 
-  (eaf-enable-debug t)
+  (eaf-enable-debug nil)                ; Enable if there is a seg-fault
   :config
   ;; All-the-icons integration
   (require 'eaf-all-the-icons)
