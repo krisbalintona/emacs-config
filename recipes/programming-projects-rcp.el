@@ -90,7 +90,7 @@
   :hook (after-init . project-x-mode)   ; Adds hooks and keybinds
   :general (:keymaps 'project-prefix-mapproject-prefix-map
             "w" '(project-x-window-state-save :wk "Project-x save")
-            "j" '(project-x-window-state-load :wk "Project-x load"))
+            "l" '(project-x-window-state-load :wk "Project-x load"))
   :custom
   (project-x-window-list-file
    (no-littering-expand-var-file-name "project-x/project-window-list.el"))
