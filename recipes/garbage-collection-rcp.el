@@ -8,10 +8,9 @@
 ;; 2) Native (`libjansson') JSON support (alternative Elisp parser)
 ;;
 ;; The flags I use when manually compiling Emacs are:
-;; ./configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg \
-;; --with-tiff --with-xft --with-xpm --with-gpm=no --with-xwidgets \
-;; --with-modules --with-native-compilation --with-pgtk --with-mailutils \
-;; --with-json
+;; ./configure --with-dbus --with-gif --with-xwidgets --with-modules --with-json \
+;; --with-x-toolkit=gtk3 --with-native-compilation \
+;; --enable-link-time-optimization --with-imagemagick --with-mailutils \
 ;; This follows ./autogen.sh. Then I run make -j$(nproc) and then make install.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
