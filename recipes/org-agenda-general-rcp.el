@@ -26,12 +26,13 @@
   (org-agenda-restore-windows-after-quit t)
 
   (org-todo-keywords
-   '((sequence "TODAY(i)" "PROG(p)" "NEXT(n)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
+   '((sequence "TODAY(i)" "PROG(p)" "NEXT(n)" "WAITING(w)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
      ))
   (org-todo-keyword-faces
    '(("TODAY" :foreground "chocolate1")
      ("PROG" :foreground "turquoise")
      ("NEXT" :foreground "orchid")
+     ("WAITING" :foreground "brown")
      ("TODO" :foreground "orange")
      ("DONE" :foreground "chartreuse")
      ("CANCELLED" :foreground "deep pink")))
@@ -58,9 +59,9 @@
   ;; I set to load only the first time I need it since it relies on org-roam,
   ;; and I don't want to explicitly load since that would increase startup time.
   (general-advice-add 'org-agenda :before #'(lambda (r)
-                                              (require 'kb-vulpea)
-                                              (vulpea-agenda-files-update))
-                      nil t)
+                                               (require 'kb-vulpea)
+                                               (vulpea-agenda-files-update))
+                                  nil t)
 
   ;; (add-to-list 'org-tags-exclude-from-inheritance "blog")
   )
@@ -68,18 +69,17 @@
 ;;; Org-ql
 ;; More powerful searching and selecting of todo headlines
 (use-package org-ql
-  :after org-agenda
-  )
+  :requires org-agenda)
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
   :after org-agenda
   :ghook 'org-agenda-mode-hook
   :general (:keymaps 'org-super-agenda-header-map
-                     "h" nil            ; Keybinds for org-super-agenda
-                     "j" nil
-                     "k" nil
-                     "l" nil)
+            "h" nil            ; Keybinds for org-super-agenda
+            "j" nil
+            "k" nil
+            "l" nil)
   :custom
   (org-agenda-custom-commands
    '(("T" "Time sensitive"
@@ -91,16 +91,18 @@
                     ))
                  ))
        ))
-     ("p" "Priority"
+     ("o" "Overview"
       ((alltodo ""
                 ((org-agenda-overriding-header "Now")
                  (org-super-agenda-groups
                   '((:name "Flagged"
-                           :tag "FLAGGED")
+                     :tag "FLAGGED")
+                    (:name "Normal"
+                     :todo "PROG")
                     (:name none
-                           :todo "PROG")
-                    (:name none
-                           :todo "TODAY")
+                     :todo "TODAY")
+                    (:name "Waiting..."
+                     :todo "WAITING")
                     (:discard (:anything t))
                     ))
                  ))
@@ -109,17 +111,15 @@
                  (org-super-agenda-groups
                   '((:discard (:not (:todo "NEXT")))
                     (:auto-tags t
-                                :order 1)
+                     :order 1)
                     ))
                  ))
-       ))
-     ("P" "Processing"
-      ((alltodo ""
-                ((org-agenda-overriding-header "")
+       (alltodo ""
+                ((org-agenda-overriding-header "Rest")
                  (org-super-agenda-groups
                   '((:discard (:not (:todo "TODO")))
-                    (:discard (:scheduled t :deadline t))
-                    (:auto-tags t)
+                    (:name none
+                     :auto-category t)
                     ))
                  ))
        ))
