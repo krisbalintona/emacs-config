@@ -26,7 +26,7 @@
   (org-agenda-restore-windows-after-quit t)
 
   (org-todo-keywords
-   '((sequence "TODAY(i)" "PROG(p)" "NEXT(n)" "WAITING(w)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
+   '((sequence "TODAY(i)" "PROG(p)" "NEXT(n)" "WAITING(w@/!)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
      ))
   (org-todo-keyword-faces
    '(("TODAY" :foreground "chocolate1")
@@ -96,7 +96,8 @@
                 ((org-agenda-overriding-header "Now")
                  (org-super-agenda-groups
                   '((:name "Flagged"
-                     :tag "FLAGGED")
+                     :and (:tag "FLAGGED"
+                           :todo ("TODAY" "PROG")))
                     (:name "Normal"
                      :todo "PROG")
                     (:name none
