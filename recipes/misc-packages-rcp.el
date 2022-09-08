@@ -359,6 +359,12 @@ progress. This is called by the timer `good-scroll--timer' every
   (fancy-compilation-override-colors nil)
   (fancy-compilation-quiet-prelude t))
 
+;;; Image-popup
+;; Match height of image to line height (?)
+(use-package image-popup
+  :straight (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
+  :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
