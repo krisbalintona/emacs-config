@@ -108,6 +108,7 @@
 (require 'programming-python-rcp)
 (require 'programming-java-rcp)
 (require 'programming-c-rcp)
+(require 'programming-racket-rcp)
 
 ;;;; Shells
 (require 'shell-basic-rcp)

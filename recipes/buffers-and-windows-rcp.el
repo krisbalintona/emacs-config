@@ -272,6 +272,7 @@ If buffer-or-name is nil return current buffer's mode."
      dap-ui-repl-mode
      quickrun--mode
      gud-mode
+     racket-repl-mode
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
