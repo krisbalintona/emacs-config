@@ -304,15 +304,15 @@
 ;;; QoL
 ;;;; Git-gutter
 (use-package git-gutter
-  :hook (window-configuration-change . git-gutter:update-all-windows)
+  :hook ((window-configuration-change . git-gutter:update-all-windows)
+         (prog-mode . git-gutter-mode))
   :custom
   (git-gutter-fr:side 'left-fringe)
   ;; 0 is actually on-save, so we put this as low as possible to effectively
   ;; have real-time updating
-  (git-gutter:update-interval 0.02)     
-  (git-gutter:disabled-modes '(org-mode))
-  :init
-  (global-git-gutter-mode))
+  (git-gutter:update-interval 0.02)
+  ;; (git-gutter:disabled-modes '(org-mode)) ; Using this to disable in modes yields annoying echo messages
+  )
 
 ;;;; Git-gutter-fringe
 (use-package git-gutter-fringe
