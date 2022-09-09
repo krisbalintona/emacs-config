@@ -44,9 +44,10 @@
 ;; Change which packages are used depending on internet connection
 (defun kb/internet-up-p (&optional host)
   "Return `t' if the device has internet access, and `nil'
-otherwise. Credit to https://emacs.stackexchange.com/a/18515"
-  (= 0 (call-process "ping" nil nil nil "-c" "1" "-W" "1"
-                     (if host host "www.google.com"))))
+otherwise. Credit to https://emacs.stackexchange.com/a/18516"
+  (equal 70 (dbus-get-property
+           :system "org.freedesktop.NetworkManager" "/org/freedesktop/NetworkManager"
+           "org.freedesktop.NetworkManager" "State")))
 
 ;; TODO 2022-06-04: Better integrate bindings with other packages
 (defun kb/dictionary-at-point ()
