@@ -20,7 +20,7 @@
 ;;;; Refiling and archiving
 (setq org-refile-targets
       '(;; (nil :maxlevel . 9) ; Consider headlines in the current buffer
-        (kb/all-agenda-dir-files-minus-inbox :maxlevel . 2)
+        (kb/all-agenda-dir-files-minus-inbox :level . 0)
         (kb/all-agenda-dir-files-minus-inbox :tag . "PROJECT")
         ))
 (setq org-refile-use-outline-path 'file) ; Show file name while refiling

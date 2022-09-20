@@ -49,11 +49,17 @@
      (tags . " %i %(vulpea-agenda-category 22) ")
      (search . " %i %(vulpea-agenda-category 22) ")
      ))
+  (org-agenda-sorting-strategy
+   '((agenda category-up time-up habit-down priority-down) ; Sort by category first
+     (todo priority-down category-keep)
+     (tags priority-down category-keep)
+     (search category-keep)
+     ))
 
   (org-capture-templates
    `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      "* TODO %?   %^g\n" :empty-lines 1)
+      "* TODO %?\n" :empty-lines 1)
      ))
   :config
   ;; I set to load only the first time I need it since it relies on org-roam,
@@ -75,11 +81,6 @@
 (use-package org-super-agenda
   :after org-agenda
   :ghook 'org-agenda-mode-hook
-  :general (:keymaps 'org-super-agenda-header-map
-            "h" nil            ; Keybinds for org-super-agenda
-            "j" nil
-            "k" nil
-            "l" nil)
   :custom
   (org-agenda-custom-commands
    '(("T" "Time sensitive"
@@ -93,34 +94,34 @@
        ))
      ("o" "Overview"
       ((alltodo ""
-                ((org-agenda-overriding-header "Now")
+                ((org-agenda-overriding-header "")
                  (org-super-agenda-groups
                   '((:name "Flagged"
-                     :and (:tag "FLAGGED"
-                           :todo ("TODAY" "PROG")))
-                    (:name "Normal"
-                     :todo "PROG")
-                    (:name none
-                     :todo "TODAY")
-                    (:name "Waiting..."
-                     :todo "WAITING")
+                     :tag "FLAGGED")
+                    (:name "Reminders"
+                     :tag "REMIND")
                     (:discard (:anything t))
                     ))
                  ))
        (alltodo ""
-                ((org-agenda-overriding-header "Soon")
+                ((org-agenda-overriding-header "Courses")
                  (org-super-agenda-groups
-                  '((:discard (:not (:todo "NEXT")))
-                    (:auto-tags t
-                     :order 1)
+                  '((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
+                    (:auto-todo t)
                     ))
                  ))
        (alltodo ""
-                ((org-agenda-overriding-header "Rest")
+                ((org-agenda-overriding-header "Extracurriculars")
                  (org-super-agenda-groups
-                  '((:discard (:not (:todo "TODO")))
-                    (:name none
-                     :auto-category t)
+                  '((:discard (:not (:file-path ("crc" "bui" "buoy"))))
+                    (:auto-todo t)
+                    ))
+                 ))
+       (alltodo ""
+                ((org-agenda-overriding-header "Other")
+                 (org-super-agenda-groups
+                  '((:discard (:not (:file-path "todo")))
+                    (:auto-todo t)
                     ))
                  ))
        ))
