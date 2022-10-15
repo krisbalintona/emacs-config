@@ -112,6 +112,14 @@
                     ))
                  ))
        (alltodo ""
+                ((org-agenda-overriding-header "Projects")
+                 (org-super-agenda-groups
+                  '((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
+                    (:auto-parent t)
+                    (:discard (:anything t))
+                    ))
+                 ))
+       (alltodo ""
                 ((org-agenda-overriding-header "Extracurriculars")
                  (org-super-agenda-groups
                   '((:discard (:not (:file-path ("crc" "bui" "buoy"))))
