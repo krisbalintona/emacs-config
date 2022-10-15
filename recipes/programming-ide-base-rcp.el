@@ -29,7 +29,8 @@
                           (latexindent . texlive-latexindent-meta)
                           (stylua)
                           (google-java-format)
-                          (shfmt))
+                          (shfmt)
+                          (rustfmt))
   :config
   ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
   ;; instead of defining the variables directly so that it is agnostic to any

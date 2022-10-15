@@ -109,6 +109,7 @@
 (require 'programming-java-rcp)
 (require 'programming-c-rcp)
 (require 'programming-racket-rcp)
+(require 'programming-rust-rcp)
 
 ;;;; Shells
 (require 'shell-basic-rcp)
