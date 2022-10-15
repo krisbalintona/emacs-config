@@ -134,9 +134,7 @@
   ;; Overrides
   (setq modus-themes-vivendi-color-overrides
         '((bg-main . "#1d2021")
-          (fg-main . "#c2c2c2")))
-  :config
-  (modus-themes-load-themes))
+          (fg-main . "#c2c2c2"))))
 (use-package solo-jazz-theme)
 (use-package kaolin-themes)
 
