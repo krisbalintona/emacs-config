@@ -13,7 +13,7 @@
 ;;; Flycheck
 ;; Check your code
 (use-package flycheck
-  :disabled t
+  :demand t
   :gfhook
   '(lambda ()
       (when flymake-mode

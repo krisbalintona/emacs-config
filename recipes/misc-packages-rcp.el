@@ -354,7 +354,6 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Fancy-compilation
 (use-package fancy-compilation
-  :straight (fancy-compilation :repo "https://codeberg.org/ideasman42/emacs-fancy-compilation")
   :custom
   (fancy-compilation-override-colors nil)
   (fancy-compilation-quiet-prelude t))
