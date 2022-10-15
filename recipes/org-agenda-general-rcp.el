@@ -13,6 +13,7 @@
 ;;; Org-agenda
 (use-package org-agenda
   :straight nil
+  :hook (org-agenda-finalize . (lambda () (goto-char (point-min))))
   :gfhook 'hl-line-mode
   :general (kb/open-keys
              "a" '(org-agenda :wk "Org-agenda"))
@@ -50,7 +51,7 @@
      (search . " %i %(vulpea-agenda-category 22) ")
      ))
   (org-agenda-sorting-strategy
-   '((agenda category-up time-up habit-down priority-down) ; Sort by category first
+   '((agenda category-up scheduled-up deadline-up time-up habit-down priority-down)
      (todo priority-down category-keep)
      (tags priority-down category-keep)
      (search category-keep)
@@ -83,7 +84,7 @@
   :ghook 'org-agenda-mode-hook
   :custom
   (org-agenda-custom-commands
-   '(("T" "Time sensitive"
+   '(("c" "Deadlines and scheduled"
       ((alltodo ""
                 ((org-agenda-overriding-header)
                  (org-super-agenda-groups
