@@ -66,6 +66,9 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
       (kb/format-buffer-indentation--base)
       ;; Save buffer if modified and in `org-mode' because drawers are annoying.
       (save-buffer)))
+   ((eq major-mode 'racket-mode)
+    (kb/format-buffer-indentation--base)
+    (save-buffer))
    ((and (require 'apheleia nil t)
          (apheleia--get-formatters))    ; If available apheleia formatter
     (let* ((apheleia-mode t))           ; Save silently
