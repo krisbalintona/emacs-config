@@ -97,8 +97,7 @@
   :custom
   (display-fill-column-indicator-character ?│)
   :custom-face
-  (fill-column-indicator ((t (:inherit line-number))))
-  )
+  (fill-column-indicator ((t (:inherit line-number)))))
 
 ;;;; Adaptive-wrap
 ;; Wrap lines as if they were hard newlines (like `fill-paragraph'). In other
