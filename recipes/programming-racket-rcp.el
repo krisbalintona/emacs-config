@@ -9,7 +9,8 @@
 (require 'keybinds-general-rcp)
 
 ;;; Racket-mode
-(use-package racket-mode)
+(use-package racket-mode
+  :hook (racket-mode . racket-xp-mode))
 
 ;;; programming-racket-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
