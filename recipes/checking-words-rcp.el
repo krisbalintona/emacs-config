@@ -87,10 +87,9 @@ then call `dash-docs-completing-read-at-point'."
 (defun kb/thesaurus-at-point ()
   "Use `powerthesaurus' if online, and `synosaurus' if offline."
   (interactive)
-  (when (or (derived-mode-p 'text-mode) (nth 4 (syntax-ppss)))
-    (if (kb/internet-up-p)
-        (powerthesaurus-lookup-synonyms-dwim)
-      (synosaurus-choose-and-replace))))
+  (if (kb/internet-up-p)
+      (powerthesaurus-lookup-synonyms-dwim)
+    (synosaurus-choose-and-replace)))
 
 (defun kb/dictionary-lookup ()
   "Use `dictionary' if online, and `wordnet' if offline."
