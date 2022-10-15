@@ -10,8 +10,9 @@
 
 ;;; Racket-mode
 (use-package racket-mode
-  :hook ((racket-mode . racket-xp-mode)
-         (racket-mode . display-fill-column-indicator-mode)))
+  :ensure-system-package ("/home/krisbalintona/.local/share/racket/8.6/pkgs/racket-langserver" . "raco pkg install racket-langserver")
+  :hook ((racket-mode . display-fill-column-indicator-mode)
+         (racket-mode . eglot-ensure)))
 
 ;;; programming-racket-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
