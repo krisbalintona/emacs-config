@@ -47,7 +47,7 @@
 (require 'keybinds-native-rcp)
 (require 'keybinds-evil-rcp)
 
-;;;; Aethetics
+;;;; Aesthetics
 (require 'fonts-rcp)
 (require 'themes-rcp)
 (require 'kb-themes)
@@ -85,7 +85,7 @@
 ;;;; LaTeX
 (require 'latex-general-rcp)
 
-;;;; Programmming
+;;;; Programming
 ;;;;; Core
 (require 'programming-profiling-and-debug-rcp)
 (require 'programming-general-rcp)
@@ -100,7 +100,7 @@
 (require 'programming-lsp-bridge-rcp)
 (require 'programming-debugging-rcp)
 
-;;;;; Langauges
+;;;;; Languages
 (require 'programming-elisp-rcp)
 (require 'programming-shell-rcp)
 (require 'programming-lua-rcp)
