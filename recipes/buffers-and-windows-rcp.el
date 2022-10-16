@@ -168,7 +168,14 @@
        display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
-      (window-height . 0.35))))
+      (window-height . 0.35))
+     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'rustic-cargo-run-mode))
+      (display-buffer-reuse-mode-window
+       display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -1)
+      (window-height . 0.35))
+     ))
   :init
   ;; Helper functions for `display-buffer-alist'
   (defun kb/buffer-major-mode (&optional buffer-or-name)
@@ -279,6 +286,9 @@ If buffer-or-name is nil return current buffer's mode."
      quickrun--mode
      gud-mode
      racket-repl-mode
+     rustic-cargo-run-mode
+     rustic-cargo-test-mode
+     rustic-compilation-mode
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
