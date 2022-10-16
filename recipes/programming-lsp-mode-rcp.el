@@ -97,7 +97,7 @@
   (lsp-enable-on-type-formatting nil)
   (lsp-enable-suggest-server-download t)
   (lsp-enable-symbol-highlighting t)
-  (lsp-symbol-highlighting-skip-current nil) ; When highlighting, don't highlight symbol at point?
+  (lsp-symbol-highlighting-skip-current t) ; When highlighting, don't highlight symbol at point?
   (lsp-enable-text-document-color t)
 
   ;; completion
