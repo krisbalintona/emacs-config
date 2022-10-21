@@ -78,7 +78,7 @@
   :custom
   (org-refile-targets
    `((kb/find-blog-files-org . (:maxlevel . 4))
-     (org-agenda-files . (:regexp . "tnaoirnta")) ; This random string will remove all headlines
+     (org-agenda-files . (:maxlevel . 2))
      ("/home/krisbalintona/Documents/org-database/roam/inbox.org" . (:level . 0)) ; Inbox file
      (nil . (:level . 1))
      ))
