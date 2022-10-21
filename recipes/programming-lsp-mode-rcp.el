@@ -127,7 +127,9 @@
   ;; semantic
   (lsp-semantic-tokens-enable nil)
   :custom-face
-  (lsp-face-highlight-textual ((t (:inherit default :box (:line-width -1 :style nil))))))
+  ;; (lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
+  ;; (lsp-face-highlight-write ((t (:inherit nil :box (:line-width -1 :style nil)))))
+  (lsp-face-highlight-textual ((t (:inherit nil :box (:line-width -1 :style nil))))))
 
 ;;; Lsp-ui
 ;; Fancy frame and sideline overlay which shows useful information about what's
