@@ -27,12 +27,12 @@
   (org-agenda-restore-windows-after-quit t)
 
   (org-todo-keywords
-   '((sequence "TODAY(i)" "PROG(p)" "NEXT(n)" "WAITING(w@/!)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")
-     ))
+   '((sequence "PROG(p)" "TODAY(i)" "NEAR(n)" "HORIZON(h)" "FAR(f)" "WAITING(w@/!)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
   (org-todo-keyword-faces
-   '(("TODAY" :foreground "chocolate1")
-     ("PROG" :foreground "turquoise")
-     ("NEXT" :foreground "orchid")
+   '(("PROG" :foreground "turquoise")
+     ("TODAY" :foreground "chocolate1")
+     ("NEAR" :foreground "orchid")
+     ("HORIZON" :foreground "deep sky blue")
      ("WAITING" :foreground "brown")
      ("TODO" :foreground "orange")
      ("DONE" :foreground "chartreuse")
@@ -95,12 +95,18 @@
        ))
      ("o" "Overview"
       ((alltodo ""
-                ((org-agenda-overriding-header "")
+                ((org-agenda-overriding-header "Revisit")
                  (org-super-agenda-groups
-                  '((:name "Flagged"
-                     :tag "FLAGGED")
-                    (:name "Reminders"
-                     :tag "REMIND")
+                  '((:name "Should be snoozed"
+                     :todo "TODO"
+                     :and (:todo ("FAR" "WAITING")
+                           :scheduled nil))
+                    (:name "Snoozed"
+                     :scheduled past
+                     :scheduled today)
+                    (:name "Stuck projects"
+                     :and (:tag "PROJECT"
+                           :children nil))
                     (:discard (:anything t))
                     ))
                  ))
@@ -108,6 +114,9 @@
                 ((org-agenda-overriding-header "Courses")
                  (org-super-agenda-groups
                   '((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
+                    (:discard (:tag "PROJECT"))
+                    (:discard (:todo "FAR"))
+                    (:discard (:scheduled future))
                     (:auto-todo t)
                     ))
                  ))
@@ -115,6 +124,8 @@
                 ((org-agenda-overriding-header "Projects")
                  (org-super-agenda-groups
                   '((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
+                    (:discard (:todo "FAR"))
+                    (:discard (:scheduled future))
                     (:auto-parent t)
                     (:discard (:anything t))
                     ))
@@ -123,6 +134,8 @@
                 ((org-agenda-overriding-header "Extracurriculars")
                  (org-super-agenda-groups
                   '((:discard (:not (:file-path ("crc" "bui" "buoy"))))
+                    (:discard (:todo "FAR"))
+                    (:discard (:scheduled future))
                     (:auto-todo t)
                     ))
                  ))
@@ -130,6 +143,8 @@
                 ((org-agenda-overriding-header "Other")
                  (org-super-agenda-groups
                   '((:discard (:not (:file-path "todo")))
+                    (:discard (:todo "FAR"))
+                    (:discard (:scheduled future))
                     (:auto-todo t)
                     ))
                  ))
