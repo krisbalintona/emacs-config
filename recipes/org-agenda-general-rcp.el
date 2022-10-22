@@ -45,14 +45,14 @@
 
   (org-agenda-tags-column 170)
   (org-agenda-prefix-format
-   '((agenda . " %i %(vulpea-agenda-category 22)%?-12t% s")
-     (todo . " %i %(vulpea-agenda-category 22) ")
-     (tags . " %i %(vulpea-agenda-category 22) ")
-     (search . " %i %(vulpea-agenda-category 22) ")
+   '((agenda . " %i %(vulpea-agenda-category 14)%?-12t% s")
+     (todo . " %i %(vulpea-agenda-category 14)  %(org-agenda-view--insert-deadline)   ")
+     (tags . " %i %(vulpea-agenda-category 14) ")
+     (search . " %i %(vulpea-agenda-category 14) ")
      ))
   (org-agenda-sorting-strategy
-   '((agenda category-up scheduled-up deadline-up time-up habit-down priority-down)
-     (todo priority-down category-keep)
+   '((agenda category-up deadline-up scheduled-up time-up habit-down priority-down)
+     (todo priority-down deadline-up scheduled-up category-up)
      (tags priority-down category-keep)
      (search category-keep)
      ))
@@ -71,7 +71,14 @@
                                   nil t)
 
   ;; (add-to-list 'org-tags-exclude-from-inheritance "blog")
-  )
+
+  ;; For org-agenda views
+  (defun org-agenda-view--insert-deadline ()
+    (let* ((deadline (org-get-deadline-time (point)))
+           (time-string (format-time-string "%a %m/%d" deadline)))
+      (if deadline
+          time-string
+        (make-string 9 ? )))))
 
 ;;; Org-ql
 ;; More powerful searching and selecting of todo headlines
@@ -104,9 +111,9 @@
                     (:name "Snoozed"
                      :scheduled past
                      :scheduled today)
+                    (:discard (:children todo))
                     (:name "Stuck projects"
-                     :and (:tag "PROJECT"
-                           :children nil))
+                     :tag "PROJECT")
                     (:discard (:anything t))
                     ))
                  ))
