@@ -17,9 +17,8 @@ Position the cursor at it's beginning, according to the current
 mode. Credit to
 https://emacsredux.com/blog/2013/06/15/open-line-above/"
   (interactive)
-  (move-beginning-of-line nil)
-  (newline-and-indent)
-  (forward-line -1)
+  (end-of-line 0)
+  (newline)
   (indent-according-to-mode))
 
 (defun kb/open-line-below-goto ()
@@ -34,7 +33,7 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 (defun kb/open-line-above-insert ()
   "Insert an empty line above the current one without going to it."
   (interactive)
-  (save-excursion (kb/open-line-above-goto)))
+  (save-mark-and-excursion (kb/open-line-above-goto)))
 
 (defun kb/open-line-below-insert ()
   "Insert an empty line above the current one without going to it."
