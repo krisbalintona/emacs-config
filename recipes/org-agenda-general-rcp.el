@@ -21,6 +21,10 @@
   (org-agenda-files nil) ; Instead , dynamically generate agenda list with vulpea
   (kb/vulpea-excluded-tags '("paper"))
 
+  (org-enforce-todo-dependencies t)
+  (org-enforce-todo-checkbox-dependencies nil)
+  (org-agenda-dim-blocked-tasks 'invisible) ; Invisible unless dependencies are done
+
   (org-agenda-window-setup 'only-window)
   (org-use-fast-todo-selection 'auto)
   (org-agenda-sticky nil)
@@ -120,8 +124,13 @@
        (alltodo ""
                 ((org-agenda-overriding-header "Courses")
                  (org-super-agenda-groups
-                  '((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
-                    (:discard (:tag "PROJECT"))
+                  `((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
+                    (:discard (:and (:tag "PROJECT"
+                                     :deadline ; Include only those with deadline 2 days into the future
+                                     ;; Taken from
+                                     ;; https://github.com/alphapapa/org-super-agenda/blob/master/examples.org#concrete-dates
+                                     (after ,(-let* (((sec minute hour day month year dow dst utcoff) (decode-time)))
+                                                (format "%d-%02d-%02d" year month (+ 2 day)))))))
                     (:discard (:todo "FAR"))
                     (:discard (:scheduled future))
                     (:auto-todo t)
@@ -130,8 +139,7 @@
        (alltodo ""
                 ((org-agenda-overriding-header "Projects")
                  (org-super-agenda-groups
-                  '((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
-                    (:discard (:todo "FAR"))
+                  '((:discard (:todo "FAR"))
                     (:discard (:scheduled future))
                     (:auto-parent t)
                     (:discard (:anything t))
