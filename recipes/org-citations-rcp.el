@@ -14,14 +14,14 @@
 ;; Built-in citations in org-mode
 (use-package oc
   :general (:keymaps 'org-mode-map
-                     [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
+            [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
   :custom
   (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (file-name-concat user-emacs-directory "locales/"))
   (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles/"))
   (org-cite-export-processors
    '((md . (csl "chicago-fullnote-bibliography.csl"))   ; Footnote reliant
-     (latex . biblatex)                                 ; For humanities
+     (latex biblatex)                                 ; For humanities
      (odt . (csl "chicago-fullnote-bibliography.csl"))  ; Footnote reliant
      (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
      (t . (csl "modern-language-association.csl"))      ; Fallback
@@ -48,10 +48,10 @@
   (kb/note-keys
     "C" '(kb/org-roam-node-from-cite :wk "Citar-capture"))
   (:keymaps 'org-mode-map
-            :prefix "C-c b"
-            "b" '(citar-insert-citation :wk "Insert citation")
-            "r" '(citar-insert-reference :wk "Insert reference")
-            "o" '(citar-open-notes :wk "Open note"))
+   :prefix "C-c b"
+   "b" '(citar-insert-citation :wk "Insert citation")
+   "r" '(citar-insert-reference :wk "Insert reference")
+   "o" '(citar-open-notes :wk "Open note"))
   :custom
   (citar-bibliography kb/bib-files)
   (citar-templates
@@ -149,9 +149,9 @@ to manually add one myself."
   ;; `kb/citar-org-update-pre-suffix') right after `org-cite-insert' to
   ;; immediately set its prefix and suffix
   (advice-add 'org-cite-insert :after #'(lambda (args)
-                                          (save-excursion
-                                            (left-char) ; First move point inside citation
-                                            (citar-org-update-pre-suffix)))))
+                                           (save-excursion
+                                             (left-char) ; First move point inside citation
+                                             (citar-org-update-pre-suffix)))))
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
