@@ -102,7 +102,7 @@
 
 ;;;; Custom org-export latex backend
 ;; Support more file keywords; used for my papers
-(with-eval-after-load 'ox
+(with-eval-after-load 'ox-latex
   (defun kb/org-latex-template (contents info)
     "This is my custom definition of `org-latex-template' which also
 processes the professor and course file properties."
