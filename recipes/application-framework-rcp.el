@@ -113,25 +113,24 @@
     (eaf-bind-key evil-window-down "C-w j" eaf-pdf-viewer-keybinding))
 
   ;; Use EAF to open PDFs
-  (defun eaf-org-open-file (file &optional link)
-    "A wrapper function on `eaf-open'. Open in another window and
+  (with-eval-after-load 'ox
+    (defun eaf-org-open-file (file &optional link)
+      "A wrapper function on `eaf-open'. Open in another window and
 move to that window."
-    (when (< (length (window-list)) 2)
-      (split-window-right))
-    (other-window 1)
-    (eaf-open file))
+      (when (< (length (window-list)) 2)
+        (split-window-right))
+      (other-window 1)
+      (eaf-open file))
 
-  (with-eval-after-load 'org-mode
     ;; For opening files based on extension
-    (setq org-file-apps
-          '(("\\.docx\\'" . eaf-org-open-file)
-            ("\\.odt\\'" . eaf-org-open-file)
-            ("\\.mm\\'" . default)
-            ("\\.x?html?\\'" . eaf-org-open-file)
-            ("\\.pdf\\'" . eaf-org-open-file)
-            (directory . emacs)
-            (auto-mode . emacs)
-            )))
+    (setf
+     (alist-get "\\.docx\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     (alist-get "\\.odt\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     (alist-get "\\.mm\\'" org-file-apps nil nil #'equal) 'default
+     (alist-get "\\.x?html?\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     (alist-get "\\.pdf\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     (alist-get 'directory org-file-apps nil nil #'equal) 'emacs
+     (alist-get 'auto-mode org-file-apps nil nil #'equal) 'emacs))
 
   (with-eval-after-load 'dash-docs
     (setq dash-docs-browser-func 'eaf-open-browser)))
