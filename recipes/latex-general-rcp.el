@@ -26,10 +26,12 @@
 
   ;; To use pdf-tools with auctex
   (TeX-PDF-mode t)
+  (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
   (TeX-view-program-selection '((output-pdf "pdf-tools")))
   (TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
-  (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
-  )
+  :config
+  (add-to-list 'TeX-command-list
+               '("LuaLaTeX" "%`lualatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t)))
 
 ;;;; Reftex
 ;; Manage references, citations, and labels with AUCTeX
@@ -37,8 +39,7 @@
   :ghook 'LaTeX-mode-hook
   :custom
   (reftex-plug-into-AUCTeX t) ; Plug-in flags for AUCTeX interface.
-  (reftex-cite-prompt-optional-args 'maybe) ; Prompt for empty optional arguments in cite?
-  )
+  (reftex-cite-prompt-optional-args 'maybe)) ; Prompt for empty optional arguments in cite?
 
 ;;;; Company-auctex
 ;; Auctex suggestions using the company backend
@@ -46,8 +47,7 @@
   :after company
   :hook (LaTeX-mode . (lambda () ;; I manually add backends from `company-auctex-init'
                         (add-to-list 'company-backends
-                                     '(company-auctex-labels company-auctex-bibs (company-auctex-macros company-auctex-symbols company-auctex-environments)))))
-  )
+                                     '(company-auctex-labels company-auctex-bibs (company-auctex-macros company-auctex-symbols company-auctex-environments))))))
 
 ;;; LaTeX
 ;;;; Latex
@@ -94,53 +94,51 @@
   :preface (defvaralias 'latex-mode-hook 'LaTeX-mode-hook "For easier use-package declaration.")
   :config
   ;; Add font locked words to latex-mode
-  (font-lock-add-keywords 'latex-mode
-                          '(;; true
-                            ("true" 0 '(t :foreground "green") t)
-                            ;; false
-                            ("false" 0 '(t :foreground "red") t)
-                            ;; For table (tabular) columns
-                            ("\\\\rowmac" 0 'font-latex-math-face t)
-                            ;; For natural deduction tables via `lplfitch'
-                            ("\\\\fitchprf" 0 'font-lock-keyword-face t)
-                            ("\\\\pline" 0 'font-latex-math-face t)
-                            ("\\\\subproof" 0 'font-latex-warning-face t)
-                            ("\\\\boxedsubproof" 0 'font-latex-warning-face t)
-                            ("\\\\brokenform" 0 'font-latex-warning-face t)
-                            ("\\\\formula" 0 'font-latex-math-face t)
-                            ("\\\\fitcharg" 0 'font-lock-keyword-face t)
-                            ("\\\\fitchctx" 0 'font-lock-keyword-face t)
-                            ("\\\\fpline" 0 'font-latex-math-face t)
-                            ("\\\\tpline" 0 'font-latex-math-face t)
-                            ))
+  (with-eval-after-load 'tex
+    (font-lock-add-keywords 'latex-mode
+                            '(;; true
+                              ("true" 0 '(t :foreground "green") t)
+                              ;; false
+                              ("false" 0 '(t :foreground "red") t)
+                              ;; For table (tabular) columns
+                              ("\\\\rowmac" 0 'font-latex-math-face t)
+                              ;; For natural deduction tables via `lplfitch'
+                              ("\\\\fitchprf" 0 'font-lock-keyword-face t)
+                              ("\\\\pline" 0 'font-latex-math-face t)
+                              ("\\\\subproof" 0 'font-latex-warning-face t)
+                              ("\\\\boxedsubproof" 0 'font-latex-warning-face t)
+                              ("\\\\brokenform" 0 'font-latex-warning-face t)
+                              ("\\\\formula" 0 'font-latex-math-face t)
+                              ("\\\\fitcharg" 0 'font-lock-keyword-face t)
+                              ("\\\\fitchctx" 0 'font-lock-keyword-face t)
+                              ("\\\\fpline" 0 'font-latex-math-face t)
+                              ("\\\\tpline" 0 'font-latex-math-face t)
+                              ))
 
-  ;; Using EAF's pdf viewer
-  (require 'eaf)
-  (defun kb/eaf-pdf-synctex-forward-view ()
-    "View the PDF file of Tex synchronously."
-    (interactive)
-    ;; So that the pdf opens in a vsplit
-    (evil-window-vsplit)
-    (evil-window-right 1)
-    (let* ((pdf-url (expand-file-name (TeX-active-master (TeX-output-extension))))
-           (tex-buffer (window-buffer (minibuffer-selected-window)))
-           (tex-file (buffer-file-name tex-buffer))
-           (line-num (progn (set-buffer tex-buffer) (line-number-at-pos)))
-           (opened-buffer (eaf-pdf--find-buffer pdf-url))
-           (synctex-info (eaf-pdf--get-synctex-info tex-file line-num pdf-url)))
-      (if (not opened-buffer)
-          (eaf-open
-           ;; (prin1-to-string pdf-url)    ; This causes an error
-           pdf-url                      ; This fixes the error
-           "pdf-viewer" (format "synctex_info=%s" synctex-info))
-        (pop-to-buffer opened-buffer)
-        (eaf-call-sync "call_function_with_args" eaf--buffer-id
-                       "jump_to_page_synctex" (format "%s" synctex-info)))))
-  (advice-add 'eaf-pdf-synctex-forward-view :override #'kb/eaf-pdf-synctex-forward-view)
-
-  (add-to-list 'TeX-view-program-list '("eaf" eaf-pdf-synctex-forward-view))
-  (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))
-  )
+    ;; Using EAF's pdf viewer
+    (require 'eaf)
+    (defun kb/eaf-pdf-synctex-forward-view ()
+      "View the PDF file of Tex synchronously."
+      (interactive)
+      ;; So that the pdf opens in a vsplit
+      (split-window-right)
+      (windmove-right)
+      (let* ((pdf-url (expand-file-name (TeX-active-master (TeX-output-extension))))
+             (tex-buffer (window-buffer (minibuffer-selected-window)))
+             (tex-file (buffer-file-name tex-buffer))
+             (line-num (progn (set-buffer tex-buffer) (line-number-at-pos)))
+             (opened-buffer (eaf-pdf--find-buffer pdf-url))
+             (synctex-info (eaf-pdf--get-synctex-info tex-file line-num pdf-url)))
+        (if (not opened-buffer)
+            (eaf-open
+             ;; (prin1-to-string pdf-url)    ; This causes an error
+             pdf-url                      ; This fixes the error
+             "pdf-viewer" (format "synctex_info=%s" synctex-info))
+          (pop-to-buffer opened-buffer)
+          (eaf-call-sync "call_function_with_args" eaf--buffer-id
+                         "jump_to_page_synctex" (format "%s" synctex-info)))))
+    (add-to-list 'TeX-view-program-list '("eaf" kb/eaf-pdf-synctex-forward-view))
+    (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))))
 
 ;;;; Cdlatex
 ;; Faster LaTeX inputs
@@ -152,17 +150,14 @@
                          (push '("pline" "\\pline[]{?}[]" nil) cdlatex-env-alist)
                          (push '("fitchproof" "\\fitchprf{\n?\n}\n{\n\n}" nil) cdlatex-env-alist)
                          (push '("subproof" "\\subproof{\n?\n}\n{\n\n}" nil) cdlatex-env-alist)
-                         ))
-         )
-  )
+                         ))))
 
 ;;;; Evil-tex
 (use-package evil-tex
   :after (evil tex)
   :hook (latex-mode . evil-tex-mode)
   :custom
-  (evil-tex-toggle-override-t t)
-  )
+  (evil-tex-toggle-override-t t))
 
 ;;;; Lsp-latex
 (use-package lsp-latex
@@ -174,8 +169,7 @@
                         ))
   :custom
   (lsp-latex-texlab-executable "~/.cargo/bin/texlab")
-  (lsp-latex-texlab-executable-argument-list nil)
-  )
+  (lsp-latex-texlab-executable-argument-list nil))
 
 ;;;; QoL
 ;;;;; Align table cells
@@ -214,8 +208,7 @@
   :after latex
   :custom
   (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
-  :config (auctex-latexmk-setup)
-  )
+  :config (auctex-latexmk-setup))
 
 ;;;;; Kb/latex-mk-mode
 ;; My own minor-mode creating automatically updating pdf-tools LaTeX preview
@@ -225,15 +218,13 @@
   :lighter " LatexMK "
   (cond
    (kb/latexmk-mode (add-hook 'after-save-hook 'kb/run-latexmk 0 t))
-   (t (remove-hook 'after-save-hook 'kb/run-latexmk t)))
-  )
+   (t (remove-hook 'after-save-hook 'kb/run-latexmk t))))
 (add-hook 'latex-mode-hook #'kb/latexmk-mode)
 
 (defun kb/run-latexmk ()
   "Start external latexmk process and run in current buffer."
   (interactive)
-  (start-process "latexmk" "latexmk output" "latexmk" "--silent" "--pdf" (buffer-file-name (current-buffer)))
-  )
+  (start-process "latexmk" "latexmk output" "latexmk" "--silent" "--pdf" (buffer-file-name (current-buffer))))
 
 ;;; latex-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
