@@ -171,10 +171,14 @@ Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
          ""
          :if-new (file+head "papers/${slug}.org"
                             "#+title: ${title}
-#+filetags: %^{Course}
+#+filetags: %^G
 #+latex_class: mla
-#+professor:
-#+course:\n")
+#+professor: %^{Prof}
+#+course: %^{Course (paper header)}\n
+* Works Cited :ignore:\n
+\\newpage
+\\center\n
+#+print_bibliography:")
          :unnarrowed t
          :immediate-finish t)
         ("b" "Blog" plain
