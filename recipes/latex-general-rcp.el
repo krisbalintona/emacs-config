@@ -199,17 +199,6 @@
       (set-marker s nil)
       (set-marker e nil))))
 
-;;;;; Auctex-latexmk
-;; Integration with `latexmk' for more compilation support (particularly
-;; citations)
-(use-package auctex-latexmk
-  :disabled t                   ; I think my `kb/latexmk-mode' is enough for me?
-  :demand t
-  :after latex
-  :custom
-  (auctex-latexmk-inherit-TeX-PDF-mode t) ; Pass -pdf flag if TeX-PDF-mode is active
-  :config (auctex-latexmk-setup))
-
 ;;;;; Kb/latex-mk-mode
 ;; My own minor-mode creating automatically updating pdf-tools LaTeX preview
 (define-minor-mode kb/latexmk-mode
