@@ -112,6 +112,7 @@
 
 ;;; Delve
 (use-package delve
+  :disabled t                           ; Don't use 
   :straight (delve :type git :host github :repo "publicimageltd/delve")
   :gfhook #'delve-compact-view-mode
   ;; FIXME 2022-05-27: `delve--zettel-preview' seems necessary to prevent cmacro
