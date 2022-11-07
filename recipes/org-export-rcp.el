@@ -130,8 +130,9 @@ processes the professor and course file properties."
                 (format "\\author{%s\\thanks{%s}}\n" author email))
                ((or author email) (format "\\author{%s}\n" (or author email)))))
        ;; Date.
-       (let ((date (and (plist-get info :with-date) (org-export-get-date info))))
-         (format "\\date{%s}\n" (org-export-data date info)))
+       (let* ((fmt "%e %B, %Y") ; Or change the value of `org-export-date-timestamp-format'
+              (date (and (plist-get info :with-date) (org-export-get-date info fmt))))
+         (format "\\date{%s}\n" (or date "\\today")))
        ;; Title and subtitle.
        (let* ((subtitle (plist-get info :subtitle))
               (formatted-subtitle
@@ -260,8 +261,8 @@ processes the professor and course file properties."
     :filters-alist '((:filter-options . org-latex-math-block-options-filter)
                      (:filter-paragraph . org-latex-clean-invalid-line-breaks)
                      (:filter-parse-tree org-latex-math-block-tree-filter
-                                         org-latex-matrices-tree-filter
-                                         org-latex-image-link-filter)
+                      org-latex-matrices-tree-filter
+                      org-latex-image-link-filter)
                      (:filter-verse-block . org-latex-clean-invalid-line-breaks))
     :options-alist
     '((:latex-class "LATEX_CLASS" nil org-latex-default-class t)
@@ -314,9 +315,7 @@ processes the professor and course file properties."
       (:latex-text-markup-alist nil nil org-latex-text-markup-alist)
       (:latex-title-command nil nil org-latex-title-command)
       (:latex-toc-command nil nil org-latex-toc-command)
-      (:latex-compiler "LATEX_COMPILER" nil org-latex-compiler)
-      ;; Redefine regular options.
-      (:date "DATE" nil "\\today" parse))))
+      (:latex-compiler "LATEX_COMPILER" nil org-latex-compiler))))
 
 ;;;; Custom links
 (with-eval-after-load 'ol
