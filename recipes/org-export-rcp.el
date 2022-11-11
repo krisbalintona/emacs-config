@@ -83,6 +83,21 @@
           ("\\paragraph{%s}" . "\\paragraph*{%s}")
           ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
           )
+        (alist-get "cms" org-latex-classes nil nil #'string=)
+        `(,(concat "% * Preamble
+\\documentclass[12pt,letterpaper]{article}
+
+% * Default packages?
+[NO-DEFAULT-PACKAGES]
+
+% ** CMS package
+\\usepackage{" org-directory "latex/packages/chicago-manual-style}\n")
+          ("\\section*{%s}" . "\\section*{%s}")
+          ("\\subsection*{%s}" . "\\subsection*{%s}")
+          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+          ("\\paragraph{%s}" . "\\paragraph*{%s}")
+          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+          )
         (alist-get "review" org-latex-classes nil nil #'string=)
         `(,(concat "% * Preamble
 \\documentclass[a4paper,landscape]{article}
