@@ -13,6 +13,7 @@
 (use-package ox
   :custom
   (org-export-with-sub-superscripts nil)
+  (org-export-with-section-numbers nil)
   ;; Async export
   (org-export-in-background nil)          ; Have it be default?
   (org-export-async-debug t)
@@ -77,8 +78,8 @@
 
 % ** MLA package
 \\usepackage{" org-directory "latex/packages/mla}\n")
-          ("\\section*{%s}" . "\\section*{%s}")
-          ("\\subsection*{%s}" . "\\subsection*{%s}")
+          ("\\section{%s}" . "\\section*{%s}")
+          ("\\subsection{%s}" . "\\subsection*{%s}")
           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
           ("\\paragraph{%s}" . "\\paragraph*{%s}")
           ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
@@ -92,8 +93,8 @@
 
 % ** CMS package
 \\usepackage{" org-directory "latex/packages/chicago-manual-style}\n")
-          ("\\section*{%s}" . "\\section*{%s}")
-          ("\\subsection*{%s}" . "\\subsection*{%s}")
+          ("\\section{%s}" . "\\section*{%s}")
+          ("\\subsection{%s}" . "\\subsection*{%s}")
           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
           ("\\paragraph{%s}" . "\\paragraph*{%s}")
           ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
