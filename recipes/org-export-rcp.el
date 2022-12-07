@@ -120,8 +120,10 @@
 ;; Support more file keywords; used for my papers
 (with-eval-after-load 'ox-latex
   (defun kb/org-latex-template (contents info)
-    "This is my custom definition of `org-latex-template' which also
-processes the professor and course file properties."
+    "This is my custom definition of `org-latex-template' which (i)
+processes the professor and course file properties, (ii) formats
+the date according to the style, and (iii) allows the date to be
+chosen."
     (let ((title (org-export-data (plist-get info :title) info))
           (spec (org-latex--format-spec info)))
       (concat
@@ -145,10 +147,16 @@ processes the professor and course file properties."
          (cond ((and author email (not (string= "" email)))
                 (format "\\author{%s\\thanks{%s}}\n" author email))
                ((or author email) (format "\\author{%s}\n" (or author email)))))
-       ;; Date.
-       (let* ((fmt "%e %B, %Y") ; Or change the value of `org-export-date-timestamp-format'
+
+       ;; Customized date
+       (let* ((fmt (or org-export-date-timestamp-format
+                       (pcase (plist-get info :latex-class)
+                         ("mla" "%e %B, %Y")
+                         ("cms" "%B %e, %Y")
+                         (t "%B %e, %Y"))))
               (date (and (plist-get info :with-date) (org-export-get-date info fmt))))
          (format "\\date{%s}\n" (or date "\\today")))
+
        ;; Title and subtitle.
        (let* ((subtitle (plist-get info :subtitle))
               (formatted-subtitle
