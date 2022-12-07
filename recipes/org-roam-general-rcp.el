@@ -164,13 +164,13 @@ Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
       '(("d" "Default" plain
          ""
          :if-new (file+head "${slug}.org"
-                            "#+title: ${title}\n")
+                            "#+title:${title}\n")
          :unnarrowed t
          :immediate-finish t)
         ("p" "Paper" plain
          ""
          :if-new (file+head "papers/${slug}.org"
-                            "#+title: ${title}
+                            "#+title:${title}
 #+filetags: %^G
 #+latex_class: mla
 #+professor: %^{Prof}
@@ -184,7 +184,7 @@ Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
         ("b" "Blog" plain
          ""
          :if-new (file+head "blog/${slug}.org"
-                            "#+title: ${title}
+                            "#+title:${title}
 #+filetags:
 #+hugo_bundle:
 #+export_file_name: index
