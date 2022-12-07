@@ -80,6 +80,10 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (add-to-list 'pulsar-pulse-functions 'kb/scroll-up-command)
   (add-to-list 'pulsar-pulse-functions 'kb/scroll-down-command))
 
+(general-define-key
+ [remap scroll-up-command] 'kb/scroll-up-command
+ [remap scroll-down-command] 'kb/scroll-down-command)
+
 ;;; Text editing
 (general-define-key
  "C-S-p" 'kb/open-line-above-goto
@@ -88,11 +92,6 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  "C-S-j" 'kb/join-line-below
  (general-chord "[ ") 'kb/open-line-above-insert
  (general-chord "] ") 'kb/open-line-below-insert)
-
-;;; Scrolling
-(general-define-key
- [remap scroll-up-command] 'kb/scroll-up-command
- [remap scroll-down-command] 'kb/scroll-down-command)
 
 ;;; Other
 (general-define-key
