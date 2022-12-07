@@ -175,6 +175,7 @@ Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
 #+latex_class: mla
 #+professor: %^{Prof}
 #+course: %^{Course (paper header)}\n
+#+date:
 * Works Cited :ignore:\n
 \\newpage
 \\center\n
