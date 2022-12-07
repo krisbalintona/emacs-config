@@ -171,7 +171,9 @@ chosen."
             (concat formatted-subtitle "\n"))))
 
        ;; Process the professor and course keywords
-       (let ((last-name (org-export-data (plist-get info :professor) info)))
+       (let* ((professor-value (org-export-data (plist-get info :professor) info))
+              ;; Current removes all whitespace and "Professor" substrings
+              (last-name (replace-regexp-in-string (rx (or whitespace "Professor")) "" professor-value)))
          (format "\\newcommand{\\professor}{%s}\n"
                  (if (string= last-name "")
                      "PROFESSOR"        ; When empty or nil
