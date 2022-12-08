@@ -124,11 +124,11 @@ move to that window."
 
     ;; For opening files based on extension
     (setf
-     (alist-get "\\.docx\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
-     (alist-get "\\.odt\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     ;; (alist-get "\\.docx\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     ;; (alist-get "\\.odt\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
      (alist-get "\\.mm\\'" org-file-apps nil nil #'equal) 'default
-     (alist-get "\\.x?html?\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
-     (alist-get "\\.pdf\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     ;; (alist-get "\\.x?html?\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
+     ;; (alist-get "\\.pdf\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
      (alist-get 'directory org-file-apps nil nil #'equal) 'emacs
      (alist-get 'auto-mode org-file-apps nil nil #'equal) 'emacs))
 
