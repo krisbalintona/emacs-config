@@ -34,8 +34,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
   (save-excursion
     (delete-trailing-whitespace)
     (indent-region (point-min) (point-max) nil)
-    (untabify (point-min) (point-max)))
-  )
+    (untabify (point-min) (point-max))))
 (defun kb/format-buffer-indentation--fill-column ()
   "Basic indentation fix and wrap comments."
   (interactive)
@@ -64,11 +63,12 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
    ((eq major-mode 'org-mode)
     (let* ((save-silently t))           ; Don't write to echo area when saving
       (kb/format-buffer-indentation--base)
-      ;; Save buffer if modified and in `org-mode' because drawers are annoying.
-      (save-buffer)))
+      (when (buffer-file-name)
+        (save-buffer))))
    ((eq major-mode 'racket-mode)
     (kb/format-buffer-indentation--base)
-    (save-buffer))
+    (when (buffer-file-name)
+      (save-buffer)))
    ((and (require 'apheleia nil t)
          (apheleia--get-formatters))    ; If available apheleia formatter
     (let* ((apheleia-mode t))           ; Save silently
