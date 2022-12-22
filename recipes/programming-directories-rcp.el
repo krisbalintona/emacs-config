@@ -68,6 +68,7 @@ command."
 ;;;; Dired-git
 ;; Show git information in dired
 (use-package dired-git
+  :disabled
   :ghook 'dired-mode-hook
   :custom
   (dired-git-disable-dirs '("~/"))
