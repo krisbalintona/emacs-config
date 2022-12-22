@@ -108,7 +108,9 @@
       ((alltodo ""
                 ((org-agenda-overriding-header "Revisit")
                  (org-super-agenda-groups
-                  '((:name "Should be snoozed"
+                  '((:name "Stuck projects"
+                     :tag "PROJECT")
+                    (:name "Should be snoozed"
                      :todo "TODO"
                      :and (:todo ("FAR" "WAITING")
                            :scheduled nil))
@@ -116,8 +118,6 @@
                      :scheduled past
                      :scheduled today)
                     (:discard (:children todo))
-                    (:name "Stuck projects"
-                     :tag "PROJECT")
                     (:discard (:anything t))
                     ))
                  ))
