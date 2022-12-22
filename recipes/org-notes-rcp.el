@@ -36,6 +36,8 @@
   ;; Denote
   (consult-notes-denote-display-id nil)
   (consult-notes-denote-dir t)
+  :custom-face
+  (denote-faces-link ((t (:foreground "goldenrod3" :slant italic))))
   :config
   (when (locate-library "org-roam")
     (consult-notes-denote-mode))
