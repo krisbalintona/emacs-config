@@ -33,8 +33,10 @@
 
 If filetags value is already set, replace it."
   (if tags
-      (vulpea-buffer-prop-set
-       "filetags" (concat ":" (string-join tags ":") ":"))
+      (if (featurep 'denote)
+          (denote-keywords-add tags)
+        (vulpea-buffer-prop-set
+         "filetags" (concat ":" (string-join tags ":") ":")))
     (vulpea-buffer-prop-remove "filetags")))
 
 (defun vulpea-buffer-tags-add (tag)
@@ -59,7 +61,26 @@ If the property is already set, replace its value."
                              (point-max) t)
           (replace-match (concat "#+" name ": " value) 'fixedcase)
         (while (and (not (eobp))
-                    (looking-at "^[#:]"))
+                    ;; Consider `denote' front-matter property order (title,
+                    ;; date, filetags, then identifier)
+                    (if (and (featurep 'denote) (denote-file-is-note-p (buffer-file-name)))
+                        (cond
+                         ((vulpea-buffer-prop-get "date")
+                          (re-search-forward (rx bol "#+"
+                                                 (or "D" "d")
+                                                 (or "A" "a")
+                                                 (or "T" "t")
+                                                 (or "E" "e"))
+                                             nil t))
+                         ((vulpea-buffer-prop-get "title")
+                          (re-search-forward (rx bol "#+"
+                                                 (or "T" "t")
+                                                 (or "I" "i")
+                                                 (or "T" "t")
+                                                 (or "L" "l")
+                                                 (or "E" "e"))
+                                             nil t)))
+                      (looking-at "^[#:]")))
           (if (save-excursion (end-of-line) (eobp))
               (progn
                 (end-of-line)
