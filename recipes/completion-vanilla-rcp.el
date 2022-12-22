@@ -319,6 +319,7 @@ parses its input."
 
 ;;;; Itself
 (use-package fussy
+  :disabled              ; Less performant than `orderless' with little benefit 
   :straight (fussy :type git :host github :repo "jojojames/fussy")
   :commands fussy-all-completions fussy-try-completions
   :custom
