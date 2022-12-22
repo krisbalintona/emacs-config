@@ -17,6 +17,7 @@
   :straight (corfu :files (:defaults "extensions/*")
                    :includes (corfu-history
                               corfu-info
+                              corfu-popupinfo
                               ))
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
@@ -108,6 +109,20 @@ default lsp-passthrough."
   (with-eval-after-load 'savehist
     (add-to-list 'savehist-additional-variables 'corfu-history)))
 
+;;; Corfu-popupinfo
+;; Documentation window for corfu!
+(use-package corfu-popupinfo
+  :ghook 'corfu-mode-hook
+  :custom
+  (corfu-popupinfo-delay '(0.7 . 0.3))
+  (corfu-popupinfo-direction '(right left vertical))
+  (corfu-popupinfo-hide t)
+  (corfu-popupinfo-resize t)
+  (corfu-popupinfo-max-height 20)
+  (corfu-popupinfo-max-width 70)
+  (corfu-popupinfo-min-height 1)
+  (corfu-popupinfo-min-width 30))
+
 ;;; Kind-icon
 ;; Icons for corfu!
 (use-package kind-icon
@@ -128,23 +143,6 @@ default lsp-passthrough."
 
   ;; Add hook to reset cache so the icon colors match my theme
   (add-hook 'kb/themes-hooks (lambda () (call-interactively 'kind-icon-reset-cache))))
-
-;;; Corfu-doc
-;; Documentation window for corfu!
-(use-package corfu-doc
-  :straight (corfu-doc :type git :host github :repo "galeo/corfu-doc")
-  :after corfu
-  :hook (corfu-mode . corfu-doc-mode)
-  :general (:keymaps 'corfu-map
-                     [remap corfu-show-documentation] 'corfu-doc-toggle
-                     [remap corfu-info-documentation] 'corfu-doc-toggle
-                     ;; Scroll in the documentation window
-                     "M-n" 'corfu-doc-scroll-up
-                     "M-p" 'corfu-doc-scroll-down)
-  :custom
-  (corfu-doc-delay 0.3)
-  (corfu-doc-max-width 70)
-  (corfu-doc-max-height 20))
 
 ;;; Cape
 ;; Expand capf functionality with corfu!
