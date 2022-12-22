@@ -12,6 +12,7 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
+  :disabled
   :demand t
   :ensure-system-package (("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
                           (gdb))     ; For debugging purposes, if I ever need to
