@@ -2,13 +2,19 @@
 ;;
 ;;; Commentary:
 ;;
-;; These modify `org-agenda' and `org-roam' integration. They dynamically set
-;; the files which are in `org-agenda files'. All of these are from
-;; https://d12frosted.io/
+;; These modify `org-agenda', `denote', and `org-roam' integration. They
+;; dynamically set the files which are in `org-agenda files'. All of these are
+;; from https://d12frosted.io/
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'org-roam)
+(cond
+ ((locate-library "denote")
+  (require 'denote))
+ ((locate-library "org-roam")
+  (require 'org-roam))
+ (t
+  (error "kb-vulpea: neither `org-roam' nor `denote' are present!")))
 
 ;;; Variables
 (defcustom kb/vulpea-excluded-tags '()
@@ -190,20 +196,30 @@ tasks."
   "Return non-nil if the currently visited buffer is a note."
   (and buffer-file-name
        (string-prefix-p
-        (expand-file-name (file-name-as-directory org-roam-directory))
+        (cond
+         ((locate-library "denote")
+          (expand-file-name (file-name-as-directory denote-directory)))
+         ((locate-library "org-roam")
+          (expand-file-name (file-name-as-directory org-roam-directory))))
         (file-name-directory buffer-file-name))))
 
 (defun vulpea-project-files ()
   "Return a list of note files containing 'project' tag." ;
-  (seq-uniq
-   (seq-map
-    #'car
-    (org-roam-db-query
-     [:select [nodes:file]
-              :from tags
-              :left-join nodes
-              :on (= tags:node-id nodes:id)
-              :where (like tag (quote "%\"project\"%"))]))))
+  (cond
+   ((featurep 'org-roam)
+    (seq-uniq
+     (seq-map
+      #'car
+      (org-roam-db-query
+       [:select [nodes:file]
+                :from tags
+                :left-join nodes
+                :on (= tags:node-id nodes:id)
+                :where (like tag (quote "%\"project\"%"))]))))
+   ((featurep 'denote)
+    (append
+     (directory-files-recursively denote-directory "_project") ; Denote project files
+     (directory-files-recursively kb/agenda-dir "org$")))))
 
 (defun vulpea-agenda-files-update (&rest _)
   "Update the value of `org-agenda-files'."
@@ -224,7 +240,11 @@ tasks."
   "Set the tags of all the nodes I have to their appropriate
 value."
   (interactive)
-  (dolist (file (org-roam-list-files))
+  (dolist (file (cond
+                 ((featurep 'org-roam)
+                  (org-roam-list-files))
+                 ((featurep 'denote)
+                  (denote-directory-files))))
     (message "processing %s" file)
     (with-current-buffer (or (find-buffer-visiting file)
                              (find-file-noselect file))

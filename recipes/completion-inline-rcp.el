@@ -229,12 +229,13 @@ Additionally, add `cape-file' as early as possible to the list."
     ;; listed when I want?
     (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
     )
-
+  
+  ;; TODO 2022-12-22: Update now that I've migrated to denote
   ;; Org
   (defun kb/cape-capf-setup-org ()
-    (require 'org-roam)
-    (if (org-roam-file-p)
-        (org-roam--register-completion-functions-h))
+    ;; (require 'org-roam)
+    ;; (if (org-roam-file-p)
+    ;;     (org-roam--register-completion-functions-h))
     (let (result)
       (dolist (element (list
                         (cape-super-capf #'cape-ispell #'cape-dabbrev)

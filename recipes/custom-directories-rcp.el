@@ -9,10 +9,10 @@
 ;;; Code:
 
 ;;; For org and org-agenda
-(defvar kb/org-dir (expand-file-name "~/Documents/org-database/"))
-(defvar kb/roam-dir (concat kb/org-dir "roam/"))
-(defvar kb/blog-dir (concat kb/roam-dir "blog/"))
-(defvar kb/agenda-dir (concat kb/roam-dir "agenda/"))
+(defvar kb/org-dir (expand-file-name "org-database" "~/Documents"))
+(defvar kb/notes-dir (expand-file-name "notes" kb/org-dir))
+(defvar kb/blog-dir (expand-file-name "blog" kb/notes-dir))
+(defvar kb/agenda-dir (expand-file-name "agenda" kb/org-dir))
 
 (defvar kb/all-org-dir-files (cl-remove-if
                               (lambda (it)
@@ -38,7 +38,7 @@
 
 ;;; Other
 (defvar kb/bib-files
-  (list (expand-file-name (concat kb/roam-dir "references/master-lib.bib"))))
+  (list (expand-file-name (concat kb/org-dir "master-lib.bib"))))
 
 ;;; custom-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

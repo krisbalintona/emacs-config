@@ -1,8 +1,8 @@
-;;; org-roam-other-rcp.el --- Summary
+;;; org-notes-other-rcp.el --- Summary
 ;;
 ;;; Commentary:
 ;;
-;; This is all the configuration for packages related to org-roam
+;; Packages indirectly related to my note-taking workflow.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
@@ -43,7 +43,7 @@
   (kb/open-keys
     "n" '(org-noter :wk "Org-noter"))
   :custom
-  (org-noter-notes-search-path kb/roam-dir)
+  (org-noter-notes-search-path kb/notes-dir)
   (org-noter-separate-notes-from-heading t) ; Add blank line betwwen note heading and content
   (org-noter-notes-window-location 'horizontal-split) ; Horizontal split between notes and pdf
   (org-noter-always-create-frame nil) ; Don't open frame
@@ -176,7 +176,7 @@
    "yy" 'evil-yank-line
    )
   :custom
-  (delve-storage-paths (concat kb/roam-dir "delve-storage/"))
+  (delve-storage-paths (concat kb/notes-dir "delve-storage/"))
   (delve-dashboard-tags '("working"))
   :init
   ;; Must be loaded before delve
@@ -361,6 +361,6 @@ tree structure."
           (lister-set-node-level ewoc node (1+ (lister-node-get-level node))))
       (kb/lister-move-item-right ewoc pos node))))
 
-;;; org-roam-other-rcp.el ends here
+;;; org-notes-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'org-roam-other-rcp)
+(provide 'org-notes-other-rcp)

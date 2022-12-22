@@ -12,6 +12,7 @@
 
 ;;; Org-roam
 (use-package org-roam
+  :disabled                             ; In favor of denote 
   :commands kb/find-blog-files-org
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
@@ -32,8 +33,8 @@
 
     "b" '(org-roam-db-sync :wk "Build cache"))
   :custom
-  (org-roam-directory kb/roam-dir)
-  (org-roam-dailies-directory (concat kb/roam-dir "journals/"))
+  (org-roam-directory kb/notes-dir)
+  (org-roam-dailies-directory (concat kb/notes-dir "journals/"))
   (org-roam-file-exclude-regexp (rx (one-or-more ".draft")))
   (org-roam-db-node-include-function
    #'(lambda ()
@@ -84,7 +85,7 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
     "Export all org-roam files to Hugo in my blogging directory."
     ;; FIXME 2022-02-19: Leaves the opened buffers alive
     (interactive)
-    (dolist (fil (org-roam--list-files kb/roam-dir))
+    (dolist (fil (org-roam--list-files kb/notes-dir))
       (with-current-buffer (find-file-noselect fil)
         (kb/org-roam-rename-to-new-title--single))))
   :config

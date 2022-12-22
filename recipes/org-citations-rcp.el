@@ -71,7 +71,7 @@
            ,(all-the-icons-octicon "link" :face 'kb/citar-icon-dim :v-adjust 0.01))))
   (citar-symbol-separator "  ")
 
-  (citar-notes-paths (list kb/roam-dir))
+  (citar-notes-paths (list kb/notes-dir))
   (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
   (citar-at-point-function 'embark-act)           ; Use `embark'
   :init
