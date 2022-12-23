@@ -211,13 +211,13 @@
 
   (orderless-component-separator 'orderless-escapable-split-on-space)
   (orderless-matching-styles
-   '(orderless-literal
-     orderless-prefixes
-     orderless-initialism
+   '(orderless-initialism
      orderless-regexp
      orderless-flex
-     ;; orderless-strict-leading-initialism
+     ;; orderless-literal
+     ;; orderless-prefixes
      ;; orderless-strict-initialism
+     ;; orderless-strict-leading-initialism
      ;; orderless-strict-full-initialism
      ;; orderless-without-literal          ; Recommended for dispatches instead
      ))
@@ -319,7 +319,7 @@ parses its input."
 
 ;;;; Itself
 (use-package fussy
-  :disabled              ; Less performant than `orderless' with little benefit 
+  :disabled              ; Less performant than `orderless' with little benefit
   :straight (fussy :type git :host github :repo "jojojames/fussy")
   :commands fussy-all-completions fussy-try-completions
   :custom
