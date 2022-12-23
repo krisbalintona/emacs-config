@@ -73,11 +73,12 @@
   (defun kb/note-buffer-prop-get (name)
     "Get a buffer property called NAME as a string."
     (org-with-point-at 1
-      (when (re-search-forward (concat "^#\\+" name ": \\(.*\\)")
+      (when (re-search-forward (concat "^#\\+" name ":\\(.*\\)")
                                (point-max) t)
-        (buffer-substring-no-properties
-         (match-beginning 1)
-         (match-end 1)))))
+        (denote-trim-whitespace
+         (buffer-substring-no-properties
+          (match-beginning 1)
+          (match-end 1))))))
   (defun kb/agenda-category (&optional len)
     "Get category of item at point for agenda.
 

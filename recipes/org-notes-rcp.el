@@ -19,7 +19,119 @@
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords '("project"))
-  (denote-prompts '(title keywords)))
+  (denote-prompts '(title keywords))
+  :init
+  (defun kb/denote-insert-identifier-maybe ()
+    (require 'org-agenda-general-rcp)
+    (when (and (denote-file-is-note-p (buffer-file-name))
+               (not (kb/note-buffer-prop-get "identifier")))
+      (save-excursion
+        (beginning-of-buffer)
+        ;; Move cursor until after the first of following
+        ;; properties exists: filetags, date, or title
+        (while (and (not (eobp))
+                    (cond
+                     ((kb/note-buffer-prop-get "filetags")
+                      (re-search-forward (rx bol "#+"
+                                             (or "F" "f")
+                                             (or "I" "i")
+                                             (or "L" "l")
+                                             (or "E" "e")
+                                             (or "T" "t")
+                                             (or "A" "a")
+                                             (or "G" "g")
+                                             (or "S" "s")
+                                             ":")
+                                         (point-max) t))
+                     ((kb/note-buffer-prop-get "date")
+                      (re-search-forward (rx bol "#+"
+                                             (or "D" "d")
+                                             (or "A" "a")
+                                             (or "T" "t")
+                                             (or "E" "e")
+                                             ":")
+                                         (point-max) t))
+                     ((kb/note-buffer-prop-get "title")
+                      (re-search-forward (rx bol "#+"
+                                             (or "T" "t")
+                                             (or "I" "i")
+                                             (or "T" "t")
+                                             (or "L" "l")
+                                             (or "E" "e")
+                                             ":")
+                                         (point-max) t))))
+          (cond
+           ((save-excursion (end-of-line) (eobp))
+            (end-of-line)
+            (insert "\n"))
+           (t
+            (forward-line)
+            (beginning-of-line))))
+        (insert "#+identifier: " (denote-retrieve-filename-identifier (buffer-file-name)) "\n"))))
+  (defun kb/denote-rearrange-keywords-maybe ()
+    (let* ((f (buffer-file-name))
+           (file-type (denote-filetype-heuristics f))
+           (cur-keywords (seq-uniq (denote-retrieve-keywords-value f file-type)))
+           (sorted-keywords (denote-keywords-sort (copy-list cur-keywords))))
+      (denote--rewrite-keywords f sorted-keywords file-type)
+      ;; Add empty filetags property if one isn't already present
+      (unless (kb/note-buffer-prop-get "filetags")
+        (beginning-of-buffer)
+        (while (and (not (eobp))
+                    (cond
+                     ((kb/note-buffer-prop-get "date")
+                      (re-search-forward (rx bol "#+"
+                                             (or "D" "d")
+                                             (or "A" "a")
+                                             (or "T" "t")
+                                             (or "E" "e")
+                                             ":")
+                                         (point-max) t))
+                     ((kb/note-buffer-prop-get "title")
+                      (re-search-forward (rx bol "#+"
+                                             (or "T" "t")
+                                             (or "I" "i")
+                                             (or "T" "t")
+                                             (or "L" "l")
+                                             (or "E" "e")
+                                             ":")
+                                         (point-max) t))))
+          (cond
+           ((save-excursion (end-of-line) (eobp))
+            (end-of-line)
+            (insert "\n"))
+           (t
+            (forward-line)
+            (beginning-of-line))))
+        (insert "#+filetags:\n"))))
+  (defun kb/denote-ensure-title-space ()
+    (save-excursion
+      (beginning-of-buffer)
+      (let ((end-of-title-keyword
+             (re-search-forward (rx bol "#+"
+                                    (or "T" "t")
+                                    (or "I" "i")
+                                    (or "T" "t")
+                                    (or "L" "l")
+                                    (or "E" "e")
+                                    ":")
+                                (point-max) t)))
+        (goto-char end-of-title-keyword)
+        (just-one-space))))
+  (defun kb/denote-standardize-front-matter ()
+    (interactive)
+    (require 'denote)
+    (dolist (file (denote-directory-files))
+      ;; Export all the files
+      (with-current-buffer (find-file-noselect file)
+        (kb/denote-insert-identifier-maybe)
+        (kb/denote-rearrange-keywords-maybe)
+        (kb/denote-ensure-title-space)
+        (kb/format-buffer-indentation)
+        (denote-rename-file-using-front-matter file t)
+
+        (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
+          (kill-buffer))))))
 
 ;;; Consult-notes
 (use-package consult-notes
@@ -29,58 +141,21 @@
              ;; In case using `org-roam'
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
-  :hook (before-save . kb/denote-insert-identifier)
+  :hook (before-save . kb/denote-insert-identifier-maybe)
   :general
   (kb/note-keys "f" '(consult-notes :wk "Consult-notes"))
   :custom
-  (consult-notes-file-dir-sources nil)
+  ;; File paths must have ending slashing. See
+  ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
+  (consult-notes-file-dir-sources
+   `(("Agenda" ?a ,(concat kb/agenda-dir "/"))
+     ("Papers" ?p ,(expand-file-name "papers/" org-directory))
+     ))
   ;; Denote
   (consult-notes-denote-display-id nil)
   (consult-notes-denote-dir t)
   :custom-face
   (denote-faces-link ((t (:foreground "goldenrod3" :slant italic))))
-  :init
-  (defun kb/denote-insert-identifier ()
-    (require 'org-agenda-general-rcp)
-    (when (and (denote-file-is-note-p (buffer-file-name))
-               (not (kb/note-buffer-prop-get "identifier")))
-      ;; Move cursor until after the first of following
-      ;; properties exists: filetags, date, or title
-      (while (and (not (eobp))
-                  (cond
-                   ((kb/note-buffer-prop-get "filetags")
-                    (re-search-forward (rx bol "#+"
-                                           (or "F" "f")
-                                           (or "I" "i")
-                                           (or "L" "l")
-                                           (or "E" "e")
-                                           (or "T" "t")
-                                           (or "A" "a")
-                                           (or "G" "g")
-                                           (or "S" "s"))
-                                       nil t))
-                   ((kb/note-buffer-prop-get "date")
-                    (re-search-forward (rx bol "#+"
-                                           (or "D" "d")
-                                           (or "A" "a")
-                                           (or "T" "t")
-                                           (or "E" "e"))
-                                       nil t))
-                   ((kb/note-buffer-prop-get "title")
-                    (re-search-forward (rx bol "#+"
-                                           (or "T" "t")
-                                           (or "I" "i")
-                                           (or "T" "t")
-                                           (or "L" "l")
-                                           (or "E" "e"))
-                                       nil t))))
-        (if (save-excursion (end-of-line) (eobp))
-            (progn
-              (end-of-line)
-              (insert "\n"))
-          (forward-line)
-          (beginning-of-line)))
-      (insert "#+identifier: " (denote-retrieve-filename-identifier (buffer-file-name)) "\n")))
   :config
   (when (locate-library "org-roam")
     (consult-notes-denote-mode))
@@ -132,9 +207,9 @@
    :preview-key (kbd "C-M-;"))
 
   (advice-add 'denote-rename-file-using-front-matter :around
-              '(lambda (orig-fun &rest args)
-                 (let ((save-silently t))
-                   (apply orig-fun args)))))
+              #'(lambda (orig-fun &rest args)
+                  (let ((save-silently t))
+                    (apply orig-fun args)))))
 
 ;;; org-notes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
