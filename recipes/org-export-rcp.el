@@ -77,7 +77,7 @@
 [NO-DEFAULT-PACKAGES]
 
 % ** MLA package
-\\usepackage{" org-directory "latex/packages/mla}\n")
+\\usepackage{" (directory-file-name org-directory) "/latex/packages/mla}\n")
           ("\\section{%s}" . "\\section*{%s}")
           ("\\subsection{%s}" . "\\subsection*{%s}")
           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -92,7 +92,7 @@
 [NO-DEFAULT-PACKAGES]
 
 % ** CMS package
-\\usepackage{" org-directory "latex/packages/chicago-manual-style}\n")
+\\usepackage{" (directory-file-name org-directory) "/latex/packages/chicago-manual-style}\n")
           ("\\section{%s}" . "\\section*{%s}")
           ("\\subsection{%s}" . "\\subsection*{%s}")
           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
