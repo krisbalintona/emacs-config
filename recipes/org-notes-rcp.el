@@ -41,14 +41,14 @@
   (denote-faces-link ((t (:foreground "goldenrod3" :slant italic))))
   :init
   (defun kb/denote-insert-identifier ()
-    (require 'kb-vulpea)
+    (require 'org-agenda-general-rcp)
     (when (and (denote-file-is-note-p (buffer-file-name))
-               (not (vulpea-buffer-prop-get "identifier")))
+               (not (kb/note-buffer-prop-get "identifier")))
       ;; Move cursor until after the first of following
       ;; properties exists: filetags, date, or title
       (while (and (not (eobp))
                   (cond
-                   ((vulpea-buffer-prop-get "filetags")
+                   ((kb/note-buffer-prop-get "filetags")
                     (re-search-forward (rx bol "#+"
                                            (or "F" "f")
                                            (or "I" "i")
@@ -59,14 +59,14 @@
                                            (or "G" "g")
                                            (or "S" "s"))
                                        nil t))
-                   ((vulpea-buffer-prop-get "date")
+                   ((kb/note-buffer-prop-get "date")
                     (re-search-forward (rx bol "#+"
                                            (or "D" "d")
                                            (or "A" "a")
                                            (or "T" "t")
                                            (or "E" "e"))
                                        nil t))
-                   ((vulpea-buffer-prop-get "title")
+                   ((kb/note-buffer-prop-get "title")
                     (re-search-forward (rx bol "#+"
                                            (or "T" "t")
                                            (or "I" "i")
@@ -129,7 +129,12 @@
   (consult-customize
    consult-notes
    :prompt "Go to..."
-   :preview-key (kbd "C-M-;")))
+   :preview-key (kbd "C-M-;"))
+
+  (advice-add 'denote-rename-file-using-front-matter :around
+              '(lambda (orig-fun &rest args)
+                 (let ((save-silently t))
+                   (apply orig-fun args)))))
 
 ;;; org-notes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -18,8 +18,7 @@
   :general (kb/open-keys
              "a" '(org-agenda :wk "Org-agenda"))
   :custom
-  (org-agenda-files nil) ; Instead , dynamically generate agenda list with vulpea
-  (kb/vulpea-excluded-tags '("paper"))
+  (org-agenda-files `(,kb/agenda-dir))
 
   (org-enforce-todo-dependencies t)
   (org-enforce-todo-checkbox-dependencies nil)
@@ -51,10 +50,10 @@
 
   (org-agenda-tags-column 170)
   (org-agenda-prefix-format
-   '((agenda . " %i %(vulpea-agenda-category 14)%?-12t% s")
-     (todo . " %i %(vulpea-agenda-category 14)  %(org-agenda-view--insert-deadline)   ")
-     (tags . " %i %(vulpea-agenda-category 14) ")
-     (search . " %i %(vulpea-agenda-category 14) ")
+   '((agenda . " %i %(kb/agenda-category 14)%?-12t% s")
+     (todo . " %i %(kb/agenda-category 14)  %(org-agenda-view--insert-deadline)   ")
+     (tags . " %i %(kb/agenda-category 14) ")
+     (search . " %i %(kb/agenda-category 14) ")
      ))
   (org-agenda-sorting-strategy
    '((agenda category-up deadline-up scheduled-up time-up habit-down priority-down)
@@ -69,14 +68,51 @@
       "* TODO %?\n" :empty-lines 1)
      ))
   :config
-  ;; I set to load only the first time I need it since it relies on org-roam,
-  ;; and I don't want to explicitly load since that would increase startup time.
-  (general-advice-add 'org-agenda :before #'(lambda (r)
-                                               (require 'kb-vulpea)
-                                               (vulpea-agenda-files-update))
-                                  nil t)
+  ;; Used in org-agenda to replace the categories with note titles. Taken from
+  ;; `vulpea' library
+  (defun kb/note-buffer-prop-get (name)
+    "Get a buffer property called NAME as a string."
+    (org-with-point-at 1
+      (when (re-search-forward (concat "^#\\+" name ": \\(.*\\)")
+                               (point-max) t)
+        (buffer-substring-no-properties
+         (match-beginning 1)
+         (match-end 1)))))
+  (defun kb/agenda-category (&optional len)
+    "Get category of item at point for agenda.
 
-  ;; (add-to-list 'org-tags-exclude-from-inheritance "blog")
+Category is defined by one of the following items:
+
+- CATEGORY property
+- TITLE keyword
+- TITLE property
+- filename without directory and extension
+
+When LEN is a number, resulting string is padded right with
+spaces and then truncated with ... on the right if result is
+longer than LEN.
+
+Usage example:
+
+  (setq org-agenda-prefix-format
+        '((agenda . \" %(kb/agenda-category) %?-12t %12s\")))
+
+Refer to `org-agenda-prefix-format' for more information."
+    (let* ((file-name (when buffer-file-name
+                        (file-name-sans-extension
+                         (file-name-nondirectory buffer-file-name))))
+           (title (kb/note-buffer-prop-get "title"))
+           (category (org-get-category))
+           (result
+            (or (if (and
+                     title
+                     (string-equal category file-name))
+                    title
+                  category)
+                "")))
+      (if (numberp len)                ; Truncates if too long, according to len
+          (s-truncate len (s-pad-right len " " result))
+        result)))
 
   ;; For org-agenda views
   (defun org-agenda-view--insert-deadline ()
