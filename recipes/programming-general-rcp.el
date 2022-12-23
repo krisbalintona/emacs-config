@@ -155,7 +155,7 @@
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
-   consult-buffer :prompt "Can use b, m, f, p..." :preview-key (kbd "C-M-;")
+   consult-buffer :prompt "Can use b, m, f, p, e..." :preview-key (kbd "C-M-;")
    ;; For `consult-ripgrep'
    consult-ripgrep :preview-key (kbd "C-M-;")
    ;; For `consult-fdfind'. Make sure this is after the definition of

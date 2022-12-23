@@ -32,8 +32,8 @@
 (use-package window
   :straight nil
   :general (:keymaps 'global-map ; For some reason, this needs to be explicitly set?
-            (general-chord "wt") 'window-toggle-side-windows
-            (general-chord "ww") 'other-window)
+                     (general-chord "wt") 'window-toggle-side-windows
+                     (general-chord "ww") 'other-window)
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
   (split-width-threshold 160)        ; Threshold for horizontal window splitting
@@ -52,7 +52,7 @@
       (display-buffer-same-window))
      ("\\*devdocs\\*"
       (display-buffer-same-window))
-     
+
      ;; To the left
      ("\\*Faces\\*"
       (kb/select-buffer-in-side-window)
@@ -85,7 +85,10 @@
       (dedicated . t)
       (side . right)
       (window-width . 0.2))
-     ("\\*.*\\(eshell\\).*"
+     ((lambda (buf act)
+        (or (equal (buffer-local-value 'major-mode buf) 'eshell-mode)
+            (string-match (rx "*" (* any) "eshell" (* any) "*" (* any))
+                          (buffer-name buf))))
       (display-buffer-reuse-mode-window
        kb/select-buffer-in-side-window)
       (side . right)

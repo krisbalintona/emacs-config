@@ -10,6 +10,7 @@
 (require 'keybinds-general-rcp)
 
 ;;; Eshell
+;;;; Itself
 (use-package eshell
   :gfhook
   ;; UI enhancements
@@ -128,10 +129,11 @@ Info node `(eshell)Top'."
         (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t)))))
-  (add-hook 'eshell-post-command-hook #'eshell-append-history)
+  (add-hook 'eshell-post-command-hook #'eshell-append-history))
 
-  ;; Eshell prompt
-  ;; Entirely taken from http://www.modernemacs.com/post/custom-eshell/
+;;;; Eshell-prompt
+;; Entirely taken from http://www.modernemacs.com/post/custom-eshell/
+(with-eval-after-load 'eshell
   (require 'dash)
   (require 's)
 
@@ -214,8 +216,36 @@ Info node `(eshell)Top'."
   (setq eshell-funcs (list esh-dir esh-git esh-clock esh-num))
 
   ;; Enable the new eshell prompt
-  (setq eshell-prompt-function 'esh-prompt-func)
-  )
+  (setq eshell-prompt-function 'esh-prompt-func))
+
+;;;; Consult with eshell
+(with-eval-after-load 'consult
+  ;; For showing eshell sources in `consult-buffer'. Taken from
+  ;; https://github.com/minad/consult#multiple-sources
+  (defvar kb/consult-buffer--eshell-source
+    (list :name     "Eshell Buffer"
+          :category 'buffer
+          :narrow   ?e
+          :face     'consult-buffer
+          :history  'buffer-name-history
+          :annotate '(lambda (cand)
+                       (substring-no-properties
+                        (car (ring-elements
+                              (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
+          :state    'consult--buffer-state
+          :action   'display-buffer
+          :items
+          (lambda ()
+            (mapcar #'buffer-name
+                    (seq-filter
+                     (lambda (x)
+                       (eq (buffer-local-value 'major-mode x) 'eshell-mode))
+                     (buffer-list))))))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append)
+
+  ;; `consult-outline' support for eshell prompts
+  ;; Taken from https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
+  (add-hook 'eshell-mode-hook (lambda () (setq outline-regexp eshell-prompt-regexp))))
 
 ;;; Esh-opt
 (use-package esh-opt ; An eshell module that needs to be loaded

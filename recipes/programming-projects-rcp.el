@@ -79,8 +79,7 @@
      (project-dired "Open dired")
      (project-find-dir "Open directory in dired")
      (project-compile "Compile")
-     (project-eshell "Eshell")
-     ))
+     (project-eshell "Eshell")))
   (project-vc-merge-submodules nil)) ; Consider submodules as their own projects?
 
 ;;;; Xref
