@@ -72,7 +72,7 @@
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
   (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
   (org-attach-dir-relative nil)        ; Use relative file paths?
-  (org-attach-id-dir (concat org-directory "resources/"))
+  (org-attach-id-dir (expand-file-name "resources" org-directory))
   (org-attach-method 'cp)            ; Attach copies of files
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
   ;; Use timestamps as UUIDs and in attachment directory hierarchy

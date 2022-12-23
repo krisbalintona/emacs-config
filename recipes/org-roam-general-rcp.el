@@ -94,12 +94,7 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
   ;; Org roam buffer section visibility
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
-
-  (defun kb/find-blog-files-org ()
-    "Return a list of org files which are within the blog directory
-of `org-roam'."
-    (org-roam--list-files kb/blog-dir))
-
+  
   ;; Org ID link face
   (defface kb/org-roam-link
     '((default :foreground "goldenrod3" :slant italic))
