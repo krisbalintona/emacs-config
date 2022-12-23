@@ -29,6 +29,7 @@
              ;; In case using `org-roam'
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
+  :hook (before-save . kb/denote-insert-identifier)
   :general
   (kb/note-keys "f" '(consult-notes :wk "Consult-notes"))
   :custom
@@ -38,6 +39,48 @@
   (consult-notes-denote-dir t)
   :custom-face
   (denote-faces-link ((t (:foreground "goldenrod3" :slant italic))))
+  :init
+  (defun kb/denote-insert-identifier ()
+    (require 'kb-vulpea)
+    (when (and (denote-file-is-note-p (buffer-file-name))
+               (not (vulpea-buffer-prop-get "identifier")))
+      ;; Move cursor until after the first of following
+      ;; properties exists: filetags, date, or title
+      (while (and (not (eobp))
+                  (cond
+                   ((vulpea-buffer-prop-get "filetags")
+                    (re-search-forward (rx bol "#+"
+                                           (or "F" "f")
+                                           (or "I" "i")
+                                           (or "L" "l")
+                                           (or "E" "e")
+                                           (or "T" "t")
+                                           (or "A" "a")
+                                           (or "G" "g")
+                                           (or "S" "s"))
+                                       nil t))
+                   ((vulpea-buffer-prop-get "date")
+                    (re-search-forward (rx bol "#+"
+                                           (or "D" "d")
+                                           (or "A" "a")
+                                           (or "T" "t")
+                                           (or "E" "e"))
+                                       nil t))
+                   ((vulpea-buffer-prop-get "title")
+                    (re-search-forward (rx bol "#+"
+                                           (or "T" "t")
+                                           (or "I" "i")
+                                           (or "T" "t")
+                                           (or "L" "l")
+                                           (or "E" "e"))
+                                       nil t))))
+        (if (save-excursion (end-of-line) (eobp))
+            (progn
+              (end-of-line)
+              (insert "\n"))
+          (forward-line)
+          (beginning-of-line)))
+      (insert "#+identifier: " (denote-retrieve-filename-identifier (buffer-file-name)) "\n")))
   :config
   (when (locate-library "org-roam")
     (consult-notes-denote-mode))

@@ -37,7 +37,9 @@ If filetags value is already set, replace it."
           (denote-keywords-add tags)
         (vulpea-buffer-prop-set
          "filetags" (concat ":" (string-join tags ":") ":")))
-    (vulpea-buffer-prop-remove "filetags")))
+    (progn (vulpea-buffer-prop-remove "filetags")
+           (when (featurep 'denote)
+             (denote-rename-file-using-front-matter (buffer-file-name) t)))))
 
 (defun vulpea-buffer-tags-add (tag)
   "Add a TAG to filetags in current buffer."
@@ -125,7 +127,9 @@ If nil it defaults to `split-string-default-separators', normally
   (org-with-point-at 1
     (when (re-search-forward (concat "\\(^#\\+" name ":.*\n?\\)")
                              (point-max) t)
-      (replace-match ""))))
+      (if (and (string= "filetags" name) (featurep 'denote))
+          (replace-match (concat "#+" name ":\n"))
+        (replace-match "")))))
 
 ;;; Have category be node title
 (defun vulpea-buffer-prop-get (name)
