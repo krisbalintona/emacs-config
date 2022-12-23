@@ -192,7 +192,7 @@
                                             (format "%18s"
                                                     (if keywords
                                                         (concat (propertize "#" 'face 'consult-notes-name)
-                                                                (propertize (mapconcat 'identity keywords " ") 'face 'consult-notes-name))
+                                                                (propertize (mapconcat 'identity keywords " #") 'face 'consult-notes-name))
                                                       ""))
                                             (when consult-notes-denote-dir (format "%18s" (propertize dirs 'face 'consult-notes-name))))))
                                 cands)))
