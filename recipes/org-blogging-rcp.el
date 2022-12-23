@@ -40,6 +40,7 @@ given a default name; see `kb/org-hugo--get-pub-dir'.")
   (defun kb/org-hugo-title-slug (title)
     "Turn an org-roam processed slug into a hyphenated slug, that is,
 replacing underscores with hyphens. Returns a string."
+    ;; (message "[kb/org-hugo-title-slug DBG] title: %s" title)
     (file-name-as-directory
      (cond
       ((featurep 'denote)
@@ -146,9 +147,12 @@ and rewrite link paths to make blogging more seamless."
                (path
                 (if (string= ".org" (downcase (file-name-extension destination ".")))
                     (if (and kb/org-hugo-bundle-workflow (plist-get info :hugo-bundle))
-                        (concat (kb/org-hugo-title-slug note-file) "index.md")
+                        (concat (file-name-as-directory (kb/org-hugo-title-slug note-file))
+                                "index.md")
                       (concat note-file ".md"))
                   destination)))
+          ;; (message "[org-hugo-link DBG] link path: %s" path)
+          ;; (message "[org-hugo-link DBG] link desc: %s" desc)
           (if desc
               (format "[%s]({{< relref \"%s\" >}})" desc path)
             (format "[%s]({{< relref \"%s\" >}})" path path))))
@@ -547,6 +551,7 @@ draft tag for nodes with a value of true for hugo_draft."
                (member buffer-file-name (kb/find-blog-files-org))
                (assoc "TITLE" (org-collect-keywords '("title"))))
       (save-excursion
+        (beginning-of-buffer)
         (let* ((keywords '("filetags" "hugo_draft"))
                (collected-keywords (org-collect-keywords keywords))
                (hugo_draft_value (cadr (assoc "HUGO_DRAFT" collected-keywords)))
@@ -554,19 +559,36 @@ draft tag for nodes with a value of true for hugo_draft."
           (pcase hugo_draft_value
             ("false"
              (when (stringp filetags_value)
-               (org-roam-tag-remove '("draft"))))
+               (cond
+                ((featurep 'denote)
+                 (let ((tags-list (split-string filetags_value ":" 'omit-nulls)))
+                   (if (< 0 (length tags-list))
+                       (denote--rewrite-keywords (buffer-file-name)
+                                                 (denote-keywords-sort
+                                                  (remove "draft" tags-list))
+                                                 'org)
+                     (delete-region (re-search-forward (denote--keywords-key-regexp 'org) nil t 1) (pos-eol)))))
+                ((featurep 'org-roam)
+                 (org-roam-tag-remove '("draft"))))))
             ("true"
-             (org-roam-tag-add '("draft")))
-            )))))
+             (cond
+              ((featurep 'denote)
+               (denote--rewrite-keywords (buffer-file-name)
+                                         (denote-keywords-sort
+                                          (delete-dups
+                                           (append (list "draft")
+                                                   (split-string filetags_value ":" 'omit-nulls))))
+                                         'org))
+              ((featurep 'org-roam)
+               (org-roam-tag-add '("draft"))))))))))
   ;; FIXME 2022-06-01: Point isn't preserved if added to `before-save-hook'
   (add-hook 'before-save-hook #'kb/org-hugo--add-tag-maybe)
-  (remove-hook 'before-save-hook #'kb/org-hugo--add-tag-maybe)
 
   ;; Set the value of the hugo_bundle keyword (for blog post org files) if it is
   ;; empty. Inspired by `vulpea-project-update-tag'
   (defun kb/org-hugo--add-hugo-metadata-maybe ()
     "Update the export_file_name and hugo_draft file properties in
-the current buffer hugo buffer if they do not exist."
+the current hugo buffer if they do not exist."
     (when (and (not (active-minibuffer-window))
                (member buffer-file-name (kb/find-blog-files-org))
                (assoc "TITLE" (org-collect-keywords '("title"))))
@@ -587,15 +609,36 @@ the current buffer hugo buffer if they do not exist."
             (setq new-value (pcase keyword
                               ("EXPORT_FILE_NAME" default-export-file-name)
                               ("HUGO_DRAFT" default-hugo-draft)))
-            (org-roam-set-keyword keyword new-value))))))
+            (cond
+             ((featurep 'denote)
+              ;; Got lazy and copied `org-roam-set-keyword'
+              (org-with-point-at 1
+                (let ((case-fold-search t))
+                  (if (re-search-forward (concat "^#\\+" keyword ":\\(.*\\)") (point-max) t)
+                      (if (string-blank-p new-value)
+                          (kill-whole-line)
+                        (replace-match (concat " " new-value) 'fixedcase nil nil 1))
+                    ;; Don't think this is necessary, and it'd be too much code
+                    ;; to copy if it were
+                    ;; (org-roam-end-of-meta-data 'drawers)
+                    (if (save-excursion (end-of-line) (eobp))
+                        (progn
+                          (end-of-line)
+                          (insert "\n"))
+                      (forward-line)
+                      (beginning-of-line))
+                    (insert "#+" keyword ": " new-value "\n")))))
+             ((featurep 'org-roam)
+              (org-roam-set-keyword keyword new-value))))))))
 
   ;; Org-export all files in an org-roam subdirectory. Modified from
   ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/
   (defun kb/org-hugo-org-roam-sync-all ()
     "Export all org-roam files to Hugo in my blogging directory."
     (interactive)
-    (require 'org-roam)
-    (org-roam-update-org-id-locations) ; Necessary for id's to be recognized for exports
+    (when (featurep 'org-roam)
+      (require 'org-roam)
+      (org-roam-update-org-id-locations)) ; Necessary for id's to be recognized for exports
     ;; First delete all old posts; only works if `kb/org-hugo-bundle-workflow'
     ;; is non-nil. Useful for if I renamed a node.
     (when-let ((kb/org-hugo-bundle-workflow)
@@ -608,36 +651,39 @@ the current buffer hugo buffer if they do not exist."
                      ;; or hugo_draft keywords or with an empty value. The
                      ;; criterion of having a hugo_publishdate is ignored if the
                      ;; value of hugo_draft is true. The criteria of a
-                     ;; hugo_pubishdate and hugo_draft are ignored if there is a
-                     ;; "series" filetag.
-                     (org-roam-with-temp-buffer file
-                                                (let* ((keywords '("title" "filetags" "hugo_publishdate" "hugo_draft"))
-                                                       (collected-keywords (org-collect-keywords keywords))
-                                                       (has-title-p (assoc "TITLE" collected-keywords))
-                                                       (is-series-p (string-match-p "series" (or (cadr (assoc "FILETAGS" collected-keywords)) ""))))
-                                                  ;; If hugo_draft is false, then the hugo_publishdate
-                                                  ;; should exist and have a value. If hugo_draft doesn't
-                                                  ;; exist, then it'll return nil.
-                                                  (cond
-                                                   ((and has-title-p is-series-p))
-                                                   (has-title-p
-                                                    (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
-                                                      ("false"
-                                                       (let* ((publish-pair (assoc "HUGO_PUBLISHDATE" collected-keywords))
-                                                              (date (cadr publish-pair)))
-                                                         (and (stringp date)
-                                                              (not (string= date "")))))
-                                                      ("true" t)))))))
+                     ;; hugo_publishdate and hugo_draft are ignored if there is
+                     ;; a "series" filetag.
+                     (with-temp-buffer
+                       (delay-mode-hooks (org-mode))
+                       (when file (insert-file-contents file))
+                       (let* ((keywords '("title" "filetags" "hugo_publishdate" "hugo_draft"))
+                              (collected-keywords (org-collect-keywords keywords))
+                              (title-p (assoc "TITLE" collected-keywords))
+                              (series-p
+                               (string-match-p "series" (or (cadr (assoc "FILETAGS" collected-keywords)) ""))))
+                         ;; If hugo_draft is false, then the hugo_publishdate
+                         ;; should exist and have a value. If hugo_draft doesn't
+                         ;; exist, then it'll return nil.
+                         (cond
+                          ((and title-p series-p))
+                          (title-p
+                           (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
+                             ("false"
+                              (let* ((publish-pair (assoc "HUGO_PUBLISHDATE" collected-keywords))
+                                     (date (cadr publish-pair)))
+                                (and (stringp date)
+                                     (not (string= date "")))))
+                             ("true" t)))))))
                    (kb/find-blog-files-org)))
-      ;; Export all the files
       (with-current-buffer (find-file-noselect file)
         (read-only-mode -1)
-        (kb/org-hugo--add-tag-maybe)
         (kb/org-hugo--add-hugo-metadata-maybe)
+        (kb/org-hugo--add-tag-maybe)
+        (kb/format-buffer-indentation)
         (org-hugo-export-wim-to-md)
+
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-          (kill-buffer)))))
-  )
+          (kill-buffer))))))
 
 ;;; org-blogging-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

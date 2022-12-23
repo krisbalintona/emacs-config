@@ -38,7 +38,7 @@
 
 ;;; Other
 (defvar kb/bib-files
-  (list (expand-file-name (concat kb/org-dir "master-lib.bib"))))
+  (list (expand-file-name "master-lib.bib" kb/org-dir)))
 
 ;;; custom-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

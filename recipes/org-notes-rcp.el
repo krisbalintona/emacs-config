@@ -13,7 +13,8 @@
 ;;; Denote
 (use-package denote
   :straight (denote :type git :host github :repo "emacs-straight/denote" :files ("*" (:exclude ".git")))
-  :hook (dired-mode . denote-dired-mode)
+  :hook ((dired-mode . denote-dired-mode)
+         (before-save . kb/denote-insert-identifier-maybe))
   :general
   (kb/note-keys "i" '(denote-link-insert-link :wk "Insert note"))
   :custom
@@ -124,6 +125,7 @@
     (dolist (file (denote-directory-files))
       ;; Export all the files
       (with-current-buffer (find-file-noselect file)
+        (read-only-mode -1)
         (kb/denote-insert-identifier-maybe)
         (kb/denote-rearrange-keywords-maybe)
         (kb/denote-ensure-title-space)
@@ -141,7 +143,6 @@
              ;; In case using `org-roam'
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
-  :hook (before-save . kb/denote-insert-identifier-maybe)
   :general
   (kb/note-keys "f" '(consult-notes :wk "Consult-notes"))
   :custom
