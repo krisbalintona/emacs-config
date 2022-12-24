@@ -11,6 +11,7 @@
 (require 'keybinds-general-rcp)
 
 ;;; Denote
+;;;; This
 (use-package denote
   :functions kb/denote-search-from-id
   :straight (denote :type git :host github :repo "emacs-straight/denote" :files ("*" (:exclude ".git")))
@@ -23,9 +24,19 @@
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords '("project"))
-  (denote-prompts '(title keywords))
-  :init
-  ;; Standardizing note front-matter
+  (denote-prompts '(title keywords)))
+
+;;;; Return denote file path based on ID
+(with-eval-after-load 'denote
+  (defun kb/denote-search-from-id (id)
+    (let* ((full-path (car (cl-remove-if-not
+                            (lambda (f) (string-match-p (rx (literal id)) f))
+                            (denote-directory-files))))
+           (title (denote-retrieve-title-value full-path 'org)))
+      title)))
+
+;;;; Standardizing note front-matter
+(with-eval-after-load 'denote
   (defun kb/denote-insert-identifier-maybe ()
     (require 'org-agenda-general-rcp)
     (when (and (denote-file-is-note-p (buffer-file-name))
@@ -137,15 +148,77 @@
         (denote-rename-file-using-front-matter file t)
 
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-          (kill-buffer)))))
+          (kill-buffer))))))
 
-  ;; Return denote file path based on ID
-  (defun kb/denote-search-from-id (id)
-    (let* ((full-path (car (cl-remove-if-not
-                            (lambda (f) (string-match-p (rx (literal id)) f))
-                            (denote-directory-files))))
-           (title (denote-retrieve-title-value full-path 'org)))
-      title)))
+;;;; Update link descriptions
+(with-eval-after-load 'denote
+  (defun kb/denote--update-buffer-link-descriptions (buffer)
+    "Update the link descriptions for all `denote' links in BUFFER,
+then save.
+
+Returns the number of link descriptions corrected."
+    (with-current-buffer buffer
+      (let ((link-positions
+             ;; Creates a list of lists. Each item on the list represents data
+             ;; from that denote link in the buffer. This data list has four
+             ;; elements: the end property value (in case there is no
+             ;; description, this position is used for help) ID, the
+             ;; contents-begin value, and the contents-end value (i.e.
+             ;; description bounds positions)
+             (org-element-map (org-element-parse-buffer) 'link
+               (lambda (l)
+                 (when (string= (org-element-property :type l) "denote")
+                   (list
+                    ;; ID
+                    (org-element-property :end l)
+                    (org-element-property :path l)
+                    ;; Desc positions
+                    (org-element-property :contents-begin l)
+                    (org-element-property :contents-end l))))))
+            (replaced-count 0))
+        ;; Reverse list so we go backward. Going in order means that our
+        ;; positions in link-positions are misaligned with the actual buffer as
+        ;; we do replacements
+        (save-excursion
+          (dolist (l (reverse link-positions))
+            (let ((note-title (kb/denote-search-from-id (nth 1 l)))
+                  (desc-beg (nth 2 l))
+                  (desc-end (nth 3 l)))
+              ;; Replace link if desc doesn't exist or the desc is not the proper
+              ;; title
+              (unless (and desc-beg (string= note-title (buffer-substring-no-properties desc-beg desc-end)))
+                (when desc-beg (delete-region desc-beg desc-end))
+                (goto-char (or desc-beg (+ 2 (nth 0 l))))
+                (insert note-title)
+                (setq replaced-count (1+ replaced-count))))
+            ))
+        replaced-count)))
+
+  (defun kb/denote-update-link-descriptions (prefix)
+    "Updates all link descriptions in current buffer.
+
+If called with `universal-arg', then replace links in all denote buffers."
+    (interactive "*p")
+    (let* ((files (if prefix
+                      (denote-directory-files)
+                    (if (denote-file-is-note-p (buffer-file-name))
+                        (list (buffer-file-name))
+                      (user-error "Not a `denote-file'!"))))
+           (initial-buffers (buffer-list))
+           (replaced-count 0)
+           (updated-notes 0))
+      (save-excursion
+        (dolist (f files)
+          (let* ((b (find-file-noselect f))
+                 (new-counts (kb/denote--update-buffer-link-descriptions b)))
+            (when (< 0 new-counts)
+              (setq updated-notes (1+ updated-notes))
+              (setq replaced-count (+ replaced-count new-counts))
+              (save-buffer))
+            (unless (member b initial-buffers)
+              (kill-buffer b)))))
+      (message "Done! Replaced a total of %s links across %s files!"
+               replaced-count updated-notes))))
 
 ;;; Consult-notes
 (use-package consult-notes
