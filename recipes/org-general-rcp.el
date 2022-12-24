@@ -55,6 +55,9 @@
      ("\\.pdf\\'" . default)
      ("\\.docx\\'" . system)
      ("\\.odt\\'" . system)))
+
+  ;; Org-babel
+  (org-confirm-babel-evaluate nil)      ; Can be dangerous! Observe for now
   :config
   (when (bound-and-true-p evil-local-mode)
     (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
