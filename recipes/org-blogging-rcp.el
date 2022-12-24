@@ -14,7 +14,7 @@
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
   :defer 7
-  :commands kb/org-hugo-org-roam-sync-all
+  :commands kb/org-hugo-export-all
   :ensure-system-package (hugo go)
   :custom
   (org-hugo-base-dir (expand-file-name "hugo/" org-directory))
@@ -536,13 +536,14 @@ and rewrite link paths to make blogging more seamless."
 
 ;;;; Magic keyword management
 (with-eval-after-load 'ox-hugo
-  (defvar kb/org-hugo-exclude-tags '("project" "ATTACH" "draft" "series")
+  (defvar kb/org-hugo-exclude-tags '("ATTACH" "project" "PROJECT" "draft"
+                                     "section" "series" "tag" "category")
     "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
 
   (defun kb/find-blog-files-org ()
     "Return a list of org files which are within the blog subdirectory
 of `kb/notes-dir'."
-    (directory-files kb/blog-dir t directory-files-no-dot-files-regexp))
+    (directory-files-recursively kb/blog-dir ""))
 
   (defun kb/org-hugo--add-tag-maybe ()
     "Add a FILETAGS value if necessary. Right now I only need the
@@ -633,7 +634,7 @@ the current hugo buffer if they do not exist."
 
   ;; Org-export all files in an org-roam subdirectory. Modified from
   ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/
-  (defun kb/org-hugo-org-roam-sync-all ()
+  (defun kb/org-hugo-export-all ()
     "Export all org-roam files to Hugo in my blogging directory."
     (interactive)
     (when (featurep 'org-roam)
@@ -656,16 +657,15 @@ the current hugo buffer if they do not exist."
                      (with-temp-buffer
                        (delay-mode-hooks (org-mode))
                        (when file (insert-file-contents file))
-                       (let* ((keywords '("title" "filetags" "hugo_publishdate" "hugo_draft"))
+                       (let* ((keywords '("title" "filetags" "hugo_publishdate" "hugo_draft" "hugo_section"))
                               (collected-keywords (org-collect-keywords keywords))
                               (title-p (assoc "TITLE" collected-keywords))
-                              (series-p
-                               (string-match-p "series" (or (cadr (assoc "FILETAGS" collected-keywords)) ""))))
+                              (taxonomy-p (assoc "HUGO_SECTION" collected-keywords)))
                          ;; If hugo_draft is false, then the hugo_publishdate
                          ;; should exist and have a value. If hugo_draft doesn't
                          ;; exist, then it'll return nil.
                          (cond
-                          ((and title-p series-p))
+                          ((and title-p taxonomy-p))
                           (title-p
                            (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
                              ("false"

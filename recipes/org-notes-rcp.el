@@ -141,13 +141,10 @@
 
   ;; Return denote file path based on ID
   (defun kb/denote-search-from-id (id)
-    (when-let ((full-path
-                (seq-contains (denote-directory-files) id
-                              (lambda (id p)
-                                (string-match (rx (literal id)) p)
-                                )))
-               (file-name (file-name-nondirectory full-path))
-               (title (denote--retrieve-title-or-filename file-name 'org)))
+    (let* ((full-path (car (cl-remove-if-not
+                            (lambda (f) (string-match-p (rx (literal id)) f))
+                            (denote-directory-files))))
+           (title (denote-retrieve-title-value full-path 'org)))
       title)))
 
 ;;; Consult-notes
