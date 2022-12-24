@@ -1,8 +1,7 @@
 # -*- mode: snippet -*-
-# name: hugo blog
-# key: <hugo
+# name: hugo post
+# key: <post
 # --
-#+filetags: :blog:
 #+hugo_bundle: 
 #+export_file_name: index
 #+hugo_tags: 
