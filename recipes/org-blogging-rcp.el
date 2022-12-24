@@ -610,27 +610,7 @@ the current hugo buffer if they do not exist."
             (setq new-value (pcase keyword
                               ("EXPORT_FILE_NAME" default-export-file-name)
                               ("HUGO_DRAFT" default-hugo-draft)))
-            (cond
-             ((featurep 'denote)
-              ;; Got lazy and copied `org-roam-set-keyword'
-              (org-with-point-at 1
-                (let ((case-fold-search t))
-                  (if (re-search-forward (concat "^#\\+" keyword ":\\(.*\\)") (point-max) t)
-                      (if (string-blank-p new-value)
-                          (kill-whole-line)
-                        (replace-match (concat " " new-value) 'fixedcase nil nil 1))
-                    ;; Don't think this is necessary, and it'd be too much code
-                    ;; to copy if it were
-                    ;; (org-roam-end-of-meta-data 'drawers)
-                    (if (save-excursion (end-of-line) (eobp))
-                        (progn
-                          (end-of-line)
-                          (insert "\n"))
-                      (forward-line)
-                      (beginning-of-line))
-                    (insert "#+" keyword ": " new-value "\n")))))
-             ((featurep 'org-roam)
-              (org-roam-set-keyword keyword new-value))))))))
+            (kb/org-set-keyword keyword new-value))))))
 
   ;; Org-export all files in an org-roam subdirectory. Modified from
   ;; https://sidhartharya.me/exporting-org-roam-notes-to-hugo/

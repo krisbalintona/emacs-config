@@ -29,61 +29,85 @@
 ;;;; Return denote file path based on ID
 (with-eval-after-load 'denote
   (defun kb/denote-search-from-id (id)
-    (let* ((full-path (car (cl-remove-if-not
-                            (lambda (f) (string-match-p (rx (literal id)) f))
-                            (denote-directory-files))))
-           (title (denote-retrieve-title-value full-path 'org)))
+    (when-let* ((full-path (car (cl-remove-if-not
+                                 (lambda (f) (string-match-p (rx (literal id)) f))
+                                 (denote-directory-files))))
+                (title (denote-retrieve-title-value full-path 'org)))
       title)))
 
 ;;;; Standardizing note front-matter
 (with-eval-after-load 'denote
-  (defun kb/denote-insert-identifier-maybe ()
-    (require 'org-agenda-general-rcp)
-    (when (and (denote-file-is-note-p (buffer-file-name))
-               (not (kb/note-buffer-prop-get "identifier")))
-      (save-excursion
-        (beginning-of-buffer)
-        ;; Move cursor until after the first of following
-        ;; properties exists: filetags, date, or title
-        (while (and (not (eobp))
-                    (cond
-                     ((kb/note-buffer-prop-get "filetags")
-                      (re-search-forward (rx bol "#+"
-                                             (or "F" "f")
-                                             (or "I" "i")
-                                             (or "L" "l")
-                                             (or "E" "e")
-                                             (or "T" "t")
-                                             (or "A" "a")
-                                             (or "G" "g")
-                                             (or "S" "s")
-                                             ":")
-                                         (point-max) t))
-                     ((kb/note-buffer-prop-get "date")
-                      (re-search-forward (rx bol "#+"
-                                             (or "D" "d")
-                                             (or "A" "a")
-                                             (or "T" "t")
-                                             (or "E" "e")
-                                             ":")
-                                         (point-max) t))
-                     ((kb/note-buffer-prop-get "title")
-                      (re-search-forward (rx bol "#+"
-                                             (or "T" "t")
-                                             (or "I" "i")
-                                             (or "T" "t")
-                                             (or "L" "l")
-                                             (or "E" "e")
-                                             ":")
-                                         (point-max) t))))
-          (cond
-           ((save-excursion (end-of-line) (eobp))
-            (end-of-line)
-            (insert "\n"))
-           (t
+  (defun kb/org-set-keyword (keyword value)
+    ;; Got lazy and copied `org-roam-set-keyword'
+    (org-with-point-at 1
+      (let ((case-fold-search t))
+        (if (re-search-forward (concat "^#\\+" keyword ":\\(.*\\)") (point-max) t)
+            (if (string-blank-p value)
+                (kill-whole-line)
+              (replace-match (concat " " value) 'fixedcase nil nil 1))
+          ;; Don't think this is necessary, and it'd be too much code
+          ;; to copy if it were
+          ;; (org-roam-end-of-meta-data 'drawers)
+          (if (save-excursion (end-of-line) (eobp))
+              (progn
+                (end-of-line)
+                (insert "\n"))
             (forward-line)
-            (beginning-of-line))))
-        (insert "#+identifier: " (denote-retrieve-filename-identifier (buffer-file-name)) "\n"))))
+            (beginning-of-line))
+          (insert "#+" keyword ": " value "\n")))))
+
+  (defun kb/denote-insert-identifier-maybe ()
+    (when (denote-file-is-note-p (buffer-file-name))
+      (cond
+       ;; ID doesn't exist
+       ((not (kb/note-buffer-prop-get "identifier"))
+        (save-excursion
+          (beginning-of-buffer)
+          ;; Move cursor until after the first of following
+          ;; properties exists: filetags, date, or title
+          (while (and (not (eobp))
+                      (cond
+                       ((kb/note-buffer-prop-get "filetags")
+                        (re-search-forward (rx bol "#+"
+                                               (or "F" "f")
+                                               (or "I" "i")
+                                               (or "L" "l")
+                                               (or "E" "e")
+                                               (or "T" "t")
+                                               (or "A" "a")
+                                               (or "G" "g")
+                                               (or "S" "s")
+                                               ":")
+                                           (point-max) t))
+                       ((kb/note-buffer-prop-get "date")
+                        (re-search-forward (rx bol "#+"
+                                               (or "D" "d")
+                                               (or "A" "a")
+                                               (or "T" "t")
+                                               (or "E" "e")
+                                               ":")
+                                           (point-max) t))
+                       ((kb/note-buffer-prop-get "title")
+                        (re-search-forward (rx bol "#+"
+                                               (or "T" "t")
+                                               (or "I" "i")
+                                               (or "T" "t")
+                                               (or "L" "l")
+                                               (or "E" "e")
+                                               ":")
+                                           (point-max) t))))
+            (cond
+             ((save-excursion (end-of-line) (eobp))
+              (end-of-line)
+              (insert "\n"))
+             (t
+              (forward-line)
+              (beginning-of-line))))
+          (insert "#+identifier: " (denote-retrieve-filename-identifier (buffer-file-name)) "\n")))
+       ;; When file name ID and identifier property value differ
+       ((not (string= (denote-retrieve-filename-identifier (buffer-file-name))
+                      (kb/note-buffer-prop-get "identifier")))
+        (kb/org-set-keyword "identifier" (denote-retrieve-filename-identifier (buffer-file-name)))))))
   (defun kb/denote-rearrange-keywords-maybe ()
     (let* ((f (buffer-file-name))
            (file-type (denote-filetype-heuristics f))
@@ -137,18 +161,19 @@
   (defun kb/denote-standardize-front-matter ()
     (interactive)
     (require 'denote)
-    (dolist (file (denote-directory-files))
-      ;; Export all the files
-      (with-current-buffer (find-file-noselect file)
-        (read-only-mode -1)
-        (kb/denote-insert-identifier-maybe)
-        (kb/denote-rearrange-keywords-maybe)
-        (kb/denote-ensure-title-space)
-        (kb/format-buffer-indentation)
-        (denote-rename-file-using-front-matter file t)
+    (save-excursion
+      (dolist (file (denote-directory-files))
+        ;; Export all the files
+        (with-current-buffer (find-file-noselect file)
+          (read-only-mode -1)
+          (kb/denote-insert-identifier-maybe)
+          (kb/denote-rearrange-keywords-maybe)
+          (kb/denote-ensure-title-space)
+          (kb/format-buffer-indentation)
+          (denote-rename-file-using-front-matter file t)
 
-        (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-          (kill-buffer))))))
+          (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
+            (kill-buffer)))))))
 
 ;;;; Update link descriptions
 (with-eval-after-load 'denote
@@ -181,7 +206,10 @@ Returns the number of link descriptions corrected."
         ;; we do replacements
         (save-excursion
           (dolist (l (reverse link-positions))
-            (let ((note-title (kb/denote-search-from-id (nth 1 l)))
+            (let ((note-title
+                   (or (kb/denote-search-from-id (nth 1 l))
+                       (user-error "Denote link at position %s in file %s does not have a corresponding note!"
+                                   (nth 0 l) buffer)))
                   (desc-beg (nth 2 l))
                   (desc-end (nth 3 l)))
               ;; Replace link if desc doesn't exist or the desc is not the proper
