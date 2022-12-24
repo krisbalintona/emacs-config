@@ -105,6 +105,24 @@ command."
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
+;;;; Consult integration
+(with-eval-after-load 'consult
+  (defvar kb/consult-buffer--dired-source
+    (list :name     "Dired Buffers"
+          :category 'buffer
+          :narrow   ?d
+          :face     'consult-buffer
+          :history  'buffer-name-history
+          :state    'consult--buffer-state
+          :action   'consult--buffer-action
+          :items (lambda ()
+                   (mapcar #'buffer-name
+                           (seq-filter
+                            (lambda (x)
+                              (eq (buffer-local-value 'major-mode x) 'dired-mode))
+                            (buffer-list))))))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--dired-source 'append))
+
 ;;; Misc
 ;;;; Affe
 ;; Blazing fast fuzzy finder

@@ -223,7 +223,7 @@ Info node `(eshell)Top'."
   ;; For showing eshell sources in `consult-buffer'. Taken from
   ;; https://github.com/minad/consult#multiple-sources
   (defvar kb/consult-buffer--eshell-source
-    (list :name     "Eshell Buffer"
+    (list :name     "Eshell Buffers"
           :category 'buffer
           :narrow   ?e
           :face     'consult-buffer
@@ -234,13 +234,12 @@ Info node `(eshell)Top'."
                               (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
           :state    'consult--buffer-state
           :action   'display-buffer
-          :items
-          (lambda ()
-            (mapcar #'buffer-name
-                    (seq-filter
-                     (lambda (x)
-                       (eq (buffer-local-value 'major-mode x) 'eshell-mode))
-                     (buffer-list))))))
+          :items (lambda ()
+                   (mapcar #'buffer-name
+                           (seq-filter
+                            (lambda (x)
+                              (eq (buffer-local-value 'major-mode x) 'eshell-mode))
+                            (buffer-list))))))
   (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append)
 
   ;; `consult-outline' support for eshell prompts
