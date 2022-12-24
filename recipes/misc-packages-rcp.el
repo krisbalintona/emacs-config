@@ -278,7 +278,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Eldoc-box
 (use-package eldoc-box
   :general (:keymaps 'eglot-mode-map
-            "H-h" 'eldoc-box-help-at-point)
+                     "H-h" 'eldoc-box-help-at-point)
   :custom
   (eldoc-box-max-pixel-width 650)
   (eldoc-box-max-pixel-height 400)
@@ -318,10 +318,36 @@ progress. This is called by the timer `good-scroll--timer' every
    "o" 'pocket-reader-pop-to-url)
   :custom
   (pocket-reader-default-queries (list ":unread"))
+  (pocket-reader-site-column-max-width 22)
   :custom-face
   (pocket-reader-unread ((t (:weight bold))))
   (pocket-reader-archived ((t (:strike-through t))))
   :init
+  (defun kb/pocket-reader--set-tabulated-list-format ()
+    "Set `tabulated-list-format'.
+
+Sets according to the maximum width of items about to be
+displayed."
+    (when-let* ((added-width 10)
+                (domain-width (min pocket-reader-site-column-max-width
+                                   (cl-loop for item being the hash-values of pocket-reader-items
+                                            maximizing (length (ht-get item 'domain)))))
+                (tags-width (cl-loop for item being the hash-values of pocket-reader-items
+                                     maximizing (length (string-join (ht-get item 'tags) ","))))
+                (title-width (- (window-text-width)
+                                5                   ; Idk why this is needed...
+                                (+ 1 added-width)   ; Added
+                                (+ 2 1)             ; Favorite
+                                (+ 3 domain-width)  ; Site
+                                (+ 1 tags-width)))) ; Tags
+      (setq tabulated-list-format (vector (list "Added" (1+ added-width) pocket-reader-added-column-sort-function)
+                                          (list "*" (+ 2 1) t)
+                                          (list "Title" (+ 2 title-width) t)
+                                          (list "Site" (+ 3 domain-width) t)
+                                          (list "Tags" (+ 1 tags-width) t)))))
+  (advice-add 'pocket-reader--set-tabulated-list-format
+              :override #'kb/pocket-reader--set-tabulated-list-format)
+
   (defun kb/pocket-reader-cycle-view ()
     "Cycle between showing unread entries and all entries."
     (interactive)
@@ -376,7 +402,7 @@ progress. This is called by the timer `good-scroll--timer' every
   :hook (messages-buffer-mode . visual-line-mode)
   :general
   (:keymaps 'global-map
-   (general-chord "xf") 'find-file)
+            (general-chord "xf") 'find-file)
   (kb/open-keys
     "c" '(calc :wk "Open calculator")
     "m" '((lambda ()
@@ -384,11 +410,11 @@ progress. This is called by the timer `good-scroll--timer' every
             (pop-to-buffer "*Messages*"))
           :wk "Open *Messages*"))
   (:keymaps 'Info-mode-map
-   :states '(visual normal motion)
-   "SPC" nil                   ; For my leader key
-   [remap evil-ret] 'Info-follow-nearest-node)
+            :states '(visual normal motion)
+            "SPC" nil                   ; For my leader key
+            [remap evil-ret] 'Info-follow-nearest-node)
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
-   "u" 'universal-argument-more)
+            "u" 'universal-argument-more)
   :custom
   (kill-do-not-save-duplicates t)
   :config
