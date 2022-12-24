@@ -317,8 +317,10 @@ progress. This is called by the timer `good-scroll--timer' every
    "+" 'pocket-reader-more
    "o" 'pocket-reader-pop-to-url)
   :custom
-  (pocket-reader-default-queries (list ":unread"))
   (pocket-reader-site-column-max-width 22)
+  (pocket-reader-archive-on-open nil)
+  (pocket-reader-default-queries (list ":unread"))
+  (pocket-reader-open-url-default-function #'org-web-tools-read-url-as-org)
   :custom-face
   (pocket-reader-unread ((t (:weight bold))))
   (pocket-reader-archived ((t (:strike-through t))))
