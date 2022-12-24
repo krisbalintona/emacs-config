@@ -317,24 +317,27 @@ progress. This is called by the timer `good-scroll--timer' every
    "+" 'pocket-reader-more
    "o" 'pocket-reader-pop-to-url)
   :custom
-  (pocket-reader-default-queries (list ":all"))
-  :config
+  (pocket-reader-default-queries (list ":unread"))
+  :init
   (defun kb/pocket-reader-cycle-view ()
     "Cycle between showing unread entries and all entries."
     (interactive)
     (let ((all-query ":all")
+          (archive-query ":archive")
           (unread-query ":unread"))
-      (pcase (car pocket-reader-queries)
-        ((pred (equal all-query))
+      (pcase pocket-reader-queries
+        ((pred (member all-query))
          (message "Showing unread")
          (pocket-reader-search unread-query))
-        ((pred (equal unread-query))
+        ((pred (member unread-query))
+         (message "Showing archived")
+         (pocket-reader-search archive-query))
+        ((pred (member archive-query))
          (message "Showing all")
          (pocket-reader-search all-query))
         (_
          (message "Showing default")
-         (pocket-reader-search pocket-reader-default-queries))
-        ))))
+         (pocket-reader-search pocket-reader-default-queries))))))
 
 ;;; Ansi-color
 ;; Apply ANSI terminal color escape codes.
