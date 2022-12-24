@@ -20,6 +20,8 @@
    "C-M-b" 'puni-backward-sexp
    "C-M-a" 'puni-beginning-of-sexp
    "C-M-e" 'puni-end-of-sexp
+   "C-M-n" 'puni-forward-sexp-or-up-list
+   "C-M-p" 'puni-backward-sexp-or-up-list
    ;; My additional keybinds
    "C-M-9" 'puni-syntactic-backward-punct
    "C-M-0" 'puni-syntactic-forward-punct
