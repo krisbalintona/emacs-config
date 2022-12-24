@@ -12,6 +12,7 @@
 
 ;;; Denote
 (use-package denote
+  :functions kb/denote-search-from-id
   :straight (denote :type git :host github :repo "emacs-straight/denote" :files ("*" (:exclude ".git")))
   :hook ((dired-mode . denote-dired-mode)
          (before-save . kb/denote-insert-identifier-maybe))
@@ -24,6 +25,7 @@
   (denote-known-keywords '("project"))
   (denote-prompts '(title keywords))
   :init
+  ;; Standardizing note front-matter
   (defun kb/denote-insert-identifier-maybe ()
     (require 'org-agenda-general-rcp)
     (when (and (denote-file-is-note-p (buffer-file-name))
@@ -135,7 +137,18 @@
         (denote-rename-file-using-front-matter file t)
 
         (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-          (kill-buffer))))))
+          (kill-buffer)))))
+
+  ;; Return denote file path based on ID
+  (defun kb/denote-search-from-id (id)
+    (when-let ((full-path
+                (seq-contains (denote-directory-files) id
+                              (lambda (id p)
+                                (string-match (rx (literal id)) p)
+                                )))
+               (file-name (file-name-nondirectory full-path))
+               (title (denote--retrieve-title-or-filename file-name 'org)))
+      title)))
 
 ;;; Consult-notes
 (use-package consult-notes
