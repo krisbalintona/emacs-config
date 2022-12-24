@@ -318,6 +318,9 @@ progress. This is called by the timer `good-scroll--timer' every
    "o" 'pocket-reader-pop-to-url)
   :custom
   (pocket-reader-default-queries (list ":unread"))
+  :custom-face
+  (pocket-reader-unread ((t (:weight bold))))
+  (pocket-reader-archived ((t (:strike-through t))))
   :init
   (defun kb/pocket-reader-cycle-view ()
     "Cycle between showing unread entries and all entries."
