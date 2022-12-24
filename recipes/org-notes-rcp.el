@@ -15,8 +15,10 @@
   :straight (denote :type git :host github :repo "emacs-straight/denote" :files ("*" (:exclude ".git")))
   :hook ((dired-mode . denote-dired-mode)
          (before-save . kb/denote-insert-identifier-maybe))
-  :general
-  (kb/note-keys "i" '(denote-link-insert-link :wk "Insert note"))
+  :general (kb/note-keys
+             "i" 'denote-link-insert-link
+             "ta" 'denote-keywords-add
+             "tr" 'denote-keywords-remove)
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords '("project"))
