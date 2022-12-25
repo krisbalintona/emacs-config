@@ -227,7 +227,7 @@ Returns the number of link descriptions corrected."
 
 If called with `universal-arg', then replace links in all denote buffers."
     (interactive "*p")
-    (let* ((files (if prefix
+    (let* ((files (if (not (equal 0 prefix))
                       (denote-directory-files)
                     (if (denote-file-is-note-p (buffer-file-name))
                         (list (buffer-file-name))
@@ -241,8 +241,8 @@ If called with `universal-arg', then replace links in all denote buffers."
                  (new-counts (kb/denote--update-buffer-link-descriptions b)))
             (when (< 0 new-counts)
               (setq updated-notes (1+ updated-notes))
-              (setq replaced-count (+ replaced-count new-counts))
-              (save-buffer))
+              (setq replaced-count (+ replaced-count new-counts)))
+            (save-buffer)
             (unless (member b initial-buffers)
               (kill-buffer b)))))
       (message "Done! Replaced a total of %s links across %s files!"
@@ -263,7 +263,7 @@ If called with `universal-arg', then replace links in all denote buffers."
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
   (consult-notes-file-dir-sources
    `(("Agenda" ?a ,(concat kb/agenda-dir "/"))
-     ("Papers" ?p ,(expand-file-name "papers/" org-directory))
+     ("Papers" ?p ,(expand-file-name "papers/" denote-directory))
      ))
   ;; Denote
   (consult-notes-denote-display-id nil)
