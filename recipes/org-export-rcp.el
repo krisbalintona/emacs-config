@@ -14,10 +14,24 @@
   :custom
   (org-export-with-sub-superscripts nil)
   (org-export-with-section-numbers nil)
+  (org-time-stamp-formats '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
+  (org-display-custom-times t)
+  (org-time-stamp-custom-formats '("<%b %d, %Y" . "<%a %b %d, %Y %H:%M>"))
   ;; Async export
   (org-export-in-background nil)          ; Have it be default?
   (org-export-async-debug t)
-  (org-export-async-init-file (locate-library "quickstart")))
+  (org-export-async-init-file (locate-library "quickstart"))
+  :config
+  ;; Taken from
+  ;; https://endlessparentheses.com/better-time-stamps-in-org-export.html
+  (defun kb/org-export-filter-timestamp-reformat (timestamp backend info)
+    "Remove <> or [] around time-stamps."
+    (cond
+     ((org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "[<>]\\|[][]" "" timestamp))
+     ((org-export-derived-backend-p backend 'html)
+      (replace-regexp-in-string "&[lg]t;\\|[][]" "" timestamp))))
+  (add-to-list 'org-export-filter-timestamp-functions #'kb/org-export-filter-timestamp-reformat))
 
 ;;; Ox-odt
 (use-package ox-odt
@@ -287,8 +301,8 @@ chosen."
     :filters-alist '((:filter-options . org-latex-math-block-options-filter)
                      (:filter-paragraph . org-latex-clean-invalid-line-breaks)
                      (:filter-parse-tree org-latex-math-block-tree-filter
-                      org-latex-matrices-tree-filter
-                      org-latex-image-link-filter)
+                                         org-latex-matrices-tree-filter
+                                         org-latex-image-link-filter)
                      (:filter-verse-block . org-latex-clean-invalid-line-breaks))
     :options-alist
     '((:latex-class "LATEX_CLASS" nil org-latex-default-class t)
