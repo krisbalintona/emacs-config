@@ -227,7 +227,7 @@ Returns the number of link descriptions corrected."
 
 If called with `universal-arg', then replace links in all denote buffers."
     (interactive "*p")
-    (let* ((files (if (not (equal 0 prefix))
+    (let* ((files (if (< 1 prefix)
                       (denote-directory-files)
                     (if (denote-file-is-note-p (buffer-file-name))
                         (list (buffer-file-name))
