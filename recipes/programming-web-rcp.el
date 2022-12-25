@@ -95,6 +95,9 @@
   :custom
   (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 
+;;; Toml-mode
+(use-package toml-mode)
+
 ;;; programming-web-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-web-rcp)
