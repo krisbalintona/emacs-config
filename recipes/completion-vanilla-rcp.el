@@ -211,10 +211,10 @@
 
   (orderless-component-separator 'orderless-escapable-split-on-space)
   (orderless-matching-styles
-   '(orderless-initialism
-     orderless-regexp
+   '(orderless-regexp
      orderless-flex
      ;; orderless-literal
+     ;; orderless-initialism
      ;; orderless-prefixes
      ;; orderless-strict-initialism
      ;; orderless-strict-leading-initialism
