@@ -24,7 +24,19 @@
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords '("project"))
-  (denote-prompts '(title keywords)))
+  (denote-prompts '(title keywords))
+  :config
+  (defun kb/denote-report-duplicates ()
+    (interactive)
+    (let* ((ids (mapcar (lambda (f) (denote-retrieve-filename-identifier f))
+                        (denote-directory-files)))
+           (dups (delete-dups (seq-filter
+                               (lambda (id) (member id (cdr (member id ids))))
+                               ids))))
+      (if dups
+          (message "The following are duplicated denote IDs: %s"
+                   (string-join dups ", "))
+        (message "No duplicates found. Hooray!!!")))))
 
 ;;;; Return denote file path based on ID
 (with-eval-after-load 'denote
