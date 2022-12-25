@@ -626,44 +626,48 @@ the current hugo buffer if they do not exist."
                (subdirs (cdr (ffap-all-subdirs (file-name-concat org-hugo-base-dir "content/" org-hugo-section) 1))))
       (dolist (post-dir subdirs "Deleted old posts")
         (delete-directory post-dir t t)))
-    (dolist (file (cl-remove-if-not
-                   (lambda (file)
-                     ;; Don't look at files without the title, hugo_publishdate,
-                     ;; or hugo_draft keywords or with an empty value. The
-                     ;; criterion of having a hugo_publishdate is ignored if the
-                     ;; value of hugo_draft is true. The criteria of a
-                     ;; hugo_publishdate and hugo_draft are ignored if there is
-                     ;; a "series" filetag.
-                     (with-temp-buffer
-                       (delay-mode-hooks (org-mode))
-                       (when file (insert-file-contents file))
-                       (let* ((keywords '("title" "filetags" "hugo_publishdate" "hugo_draft" "hugo_section"))
-                              (collected-keywords (org-collect-keywords keywords))
-                              (title-p (assoc "TITLE" collected-keywords))
-                              (taxonomy-p (assoc "HUGO_SECTION" collected-keywords)))
-                         ;; If hugo_draft is false, then the hugo_publishdate
-                         ;; should exist and have a value. If hugo_draft doesn't
-                         ;; exist, then it'll return nil.
-                         (cond
-                          ((and title-p taxonomy-p))
-                          (title-p
-                           (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
-                             ("false"
-                              (let* ((publish-pair (assoc "HUGO_PUBLISHDATE" collected-keywords))
-                                     (date (cadr publish-pair)))
-                                (and (stringp date)
-                                     (not (string= date "")))))
-                             ("true" t)))))))
-                   (kb/find-blog-files-org)))
-      (with-current-buffer (find-file-noselect file)
-        (read-only-mode -1)
-        (kb/org-hugo--add-hugo-metadata-maybe)
-        (kb/org-hugo--add-tag-maybe)
-        (kb/format-buffer-indentation)
-        (org-hugo-export-wim-to-md)
+    (let ((post-count 0))
+      (dolist (file (cl-remove-if-not
+                     (lambda (file)
+                       ;; Don't look at files without the title,
+                       ;; hugo_publishdate, or hugo_draft keywords or with an
+                       ;; empty value. The criterion of having a
+                       ;; hugo_publishdate is ignored if the value of hugo_draft
+                       ;; is true. The criteria of a hugo_publishdate and
+                       ;; hugo_draft are ignored if there is a "series" filetag.
+                       (with-temp-buffer
+                         (delay-mode-hooks (org-mode))
+                         (when file (insert-file-contents file))
+                         (let* ((keywords '("title" "filetags" "hugo_publishdate" "hugo_draft" "hugo_section"))
+                                (collected-keywords (org-collect-keywords keywords))
+                                (title-p (assoc "TITLE" collected-keywords))
+                                (taxonomy-p (assoc "HUGO_SECTION" collected-keywords)))
+                           ;; If hugo_draft is false, then the hugo_publishdate
+                           ;; should exist and have a value. If hugo_draft doesn't
+                           ;; exist, then it'll return nil.
+                           (cond
+                            ((and title-p taxonomy-p))
+                            (title-p
+                             (pcase (cadr (assoc "HUGO_DRAFT" collected-keywords))
+                               ("false"
+                                (let* ((publish-pair (assoc "HUGO_PUBLISHDATE" collected-keywords))
+                                       (date (cadr publish-pair)))
+                                  (and (stringp date)
+                                       (not (string= date "")))))
+                               ("true" t)))))))
+                     (kb/find-blog-files-org)))
+        (let ((inhibit-message t))          ; Don't show the messages in Echo area
+          (with-current-buffer (find-file-noselect file)
+            (read-only-mode -1)
+            (kb/org-hugo--add-hugo-metadata-maybe)
+            (kb/org-hugo--add-tag-maybe)
+            (kb/format-buffer-indentation)
+            (org-hugo-export-wim-to-md)
+            (setq post-count (1+ post-count))
 
-        (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-          (kill-buffer))))))
+            (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
+              (kill-buffer)))))
+      (message "Done - Exported %s blog notes!" post-count))))
 
 ;;;; Fix TOC including tags
 (with-eval-after-load 'ox-hugo
