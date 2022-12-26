@@ -24,7 +24,7 @@
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords '("project"))
-  (denote-prompts '(title keywords))
+  (denote-prompts '(subdirectory title keywords))
   :config
   (defun kb/denote-report-duplicates ()
     (interactive)
@@ -268,13 +268,12 @@ If called with `universal-arg', then replace links in all denote buffers."
              ;; In case using `org-roam'
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
-  :general
-  (kb/note-keys "f" '(consult-notes :wk "Consult-notes"))
+  :general (kb/note-keys "f" '(consult-notes :wk "Consult-notes"))
   :custom
   ;; File paths must have ending slashing. See
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
   (consult-notes-file-dir-sources
-   `(("Agenda" ?a ,(concat kb/agenda-dir "/"))
+   `(("Agenda" ?a ,(file-name-as-directory kb/agenda-dir))
      ("Papers" ?p ,(expand-file-name "papers/" kb/notes-dir))
      ))
   ;; Denote

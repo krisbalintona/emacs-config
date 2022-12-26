@@ -1,0 +1,12 @@
+# key: <paper
+# name: paper
+# --
+#+latex_class: mla
+#+professor: %^{Prof}
+#+course: %^{Course (paper header)}\n
+
+* Works Cited :ignore:\n
+
+\\newpage
+\\center\n
+#+print_bibliography:
