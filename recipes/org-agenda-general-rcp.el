@@ -75,7 +75,7 @@
     (org-with-point-at 1
       (when (re-search-forward (concat "^#\\+" name ":\\(.*\\)")
                                (point-max) t)
-        (denote-trim-whitespace
+        (string-trim
          (buffer-substring-no-properties
           (match-beginning 1)
           (match-end 1))))))
