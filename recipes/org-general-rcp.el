@@ -86,12 +86,10 @@
 
 ;;;; Org-refile
 (use-package org-refile
-  :after org-roam
   :custom
   (org-refile-targets
    `((kb/find-blog-files-org . (:maxlevel . 4))
      (org-agenda-files . (:maxlevel . 2))
-     ("/home/krisbalintona/Documents/org-database/roam/inbox.org" . (:level . 0)) ; Inbox file
      (nil . (:level . 1))
      ))
   (org-refile-use-cache nil)
@@ -106,8 +104,7 @@
                 (lambda (&rest args)
                   (minibuffer-with-setup-hook
                       (lambda () (setq-local completion-styles '(basic)))
-                    (apply args)))
-                )))
+                    (apply args))))))
 
 ;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
