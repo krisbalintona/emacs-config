@@ -275,7 +275,7 @@ If called with `universal-arg', then replace links in all denote buffers."
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
   (consult-notes-file-dir-sources
    `(("Agenda" ?a ,(concat kb/agenda-dir "/"))
-     ("Papers" ?p ,(expand-file-name "papers/" denote-directory))
+     ("Papers" ?p ,(expand-file-name "papers/" kb/notes-dir))
      ))
   ;; Denote
   (consult-notes-denote-display-id nil)
