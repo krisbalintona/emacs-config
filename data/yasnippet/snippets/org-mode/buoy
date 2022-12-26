@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: buoy interview
-# key: buoy
+# name: buoy
+# key: <buoy
 # --
 
 * Potential titles                                                 :noexport:
@@ -22,10 +22,6 @@
 + Mind recommending 1 other Brown student that we should feature in the Buoy Positivity Pics?
 + Your Instagram handle?
 
-* Highlights                                                       :noexport:
-
 * Drafts                                                           :noexport:
-
-** Raw transcript                                                  :noexport:
 
 * 1 Draft                                                          :noexport:
