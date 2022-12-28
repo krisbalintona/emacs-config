@@ -23,7 +23,8 @@
   (dired-auto-revert-buffer t)          ; Automatically revert buffer
   (dired-dwim-target t)                 ; Guess default target directory?
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
-  (dired-listing-switches "-agho --group-directories-first") ; Flags `dired' passes to `ls'
+  (dired-kill-when-opening-new-dired-buffer t)  ; Basically `dired-single'
+  (dired-listing-switches "-alhg")              ; Flags `dired' passes to `ls'
   (image-dired-thumb-size 150)                               ; Slightly larger thumbnails
   ;; Always copy/delete recursively?
   (dired-recursive-copies  'always)
@@ -92,6 +93,7 @@ command."
 ;;;; Dired-single
 ;; Use the same dired buffer for every directory you open using `dired'.
 (use-package dired-single
+  :disabled             ; Parity of `dired-kill-when-opening-new-dired-buffer'? 
   :general (:keymaps 'dired-mode-map
                      ;; [remap dired-find-file] 'dired-single-buffer
                      [remap dired-up-directory] 'dired-single-up-directory))
