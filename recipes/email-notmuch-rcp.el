@@ -81,8 +81,8 @@
      (:name "[uni] sent" :query "from:kristoffer_balintona@brown.edu* tag:sent" :key "s")
      (:name "[personal] drafts" :query "from:krisbalintona@gmail.com* tag:draft -tag:trash -tag:deleted" :key "D")
      (:name "[uni] drafts" :query "from:kristoffer_balintona@brown.edu* tag:draft -tag:trash  -tag:deleted" :key "d")
-     (:name "[personal] all mail" :query "path:personal/** -tag:trash" :key "A")
-     (:name "[uni] all mail" :query "path:uni/** -tag:trash" :key "a")
+     (:name "[personal] all mail" :query "path:personal/** -tag:trash" :key "a")
+     (:name "[uni] all mail" :query "path:uni/** -tag:trash" :key "A")
      (:name "trash" :query "tag:trash" :key "T")))
 
   ;; Tree
