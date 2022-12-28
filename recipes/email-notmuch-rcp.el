@@ -139,6 +139,20 @@
   (notmuch-message-headers '("To" "Cc" "Date" "Subject"))
   (notmuch-message-headers-visible t))
 
+;;; Notmuch-indicator
+(use-package notmuch-indicator
+  :custom
+  ;; OPTIMIZE 2022-12-28: This breaks when using the path query term, but that
+  ;; seems to capture more than just using the to keyword
+  (notmuch-indicator-args
+   '((:terms "to:krisbalintona@gmail.com and tag:inbox and tag:unread" :label "")
+     (:terms "to:kristoffer_balintona@brown.edu and tag:inbox and tag:unread" :label "")
+     ))
+  (notmuch-indicator-refresh-count (* 60 3))
+  ;; (notmuch-indicator-hide-empty-counters t)
+  (notmuch-indicator-hide-empty-counters nil)
+  (notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer)))
+
 ;;; Mu4e
 (use-package mu4e
   :general (kb/open-keys

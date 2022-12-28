@@ -320,7 +320,9 @@ Debuggers include edebug and dap."
                        (:eval (mood-line-segment-multiple-cursors))
                        ))
                     (format-mode-line
-                     '((:eval (kb/mood-line-segment-which-func))
+                     '((:eval (when (and (featurep 'notmuch-indicator) (eq 'notmuch-user-agent mail-user-agent))
+                                notmuch-indicator-string))
+                       (:eval (kb/mood-line-segment-which-func))
                        (:eval (mood-line-segment-eol))
                        " "
                        display-time-string
@@ -340,9 +342,10 @@ Debuggers include edebug and dap."
                        ;; Shows number of errors like flycheck?
                        (:eval (when (bound-and-true-p lsp-mode)
                                 (lsp-modeline--diagnostics-update-modeline)))
-                       (:eval (kb/mood-line-segment-debug))
                        (:eval (kb/mood-line-segment-major-mode))
                        " "
+                       ;; Icon if there `debug-on-error' is non-nil
+                       (:eval (kb/mood-line-segment-debug))
                        (:eval (mood-line-segment-process))
                        (:eval (mood-line-segment-encoding))
                        ;; Occasionally check this to see if any new packages have
