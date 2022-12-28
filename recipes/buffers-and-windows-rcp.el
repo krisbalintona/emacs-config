@@ -358,6 +358,13 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
   )
 
+;;;; Transpose-frame
+;; Rotate window configuration
+(use-package transpose-frame
+  :general
+  ("C-S-f" 'rotate-frame-clockwise
+   "C-S-b" 'rotate-frame-anticlockwise))
+
 ;;; Buffers
 ;;;; Bookmark
 (use-package bookmark
