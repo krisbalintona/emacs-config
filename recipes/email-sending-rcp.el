@@ -12,7 +12,8 @@
 ;;; Message
 (use-package message
   :straight nil
-  :hook (message-setup . message-sort-headers)
+  :hook ((message-setup . message-sort-headers)
+         (message-mode . visual-fill-column-mode))
   :custom
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
@@ -64,21 +65,24 @@
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)
   (smtpmail-stream-type 'starttls)
-  (smtpmail-queue-mail t)
+  (smtpmail-queue-mail nil)
   (smtpmail-queue-dir  "~/Documents/emails/queue/"))
 
 ;;; Org-msg
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
   :custom
-  (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
-  (org-msg-startup "hidestars indent inlineimages")
+  ;; (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
+  (org-msg-options "html-postamble:nil toc:nil author:nil email:nil")
+  ;; (org-msg-startup "hidestars indent inlineimages")
+  (org-msg-startup nil)
   (org-msg-greeting-fmt nil)
-  (org-msg-greeting-name-limit 3)
+  (org-msg-greeting-name-limit 1)
   (org-msg-default-alternatives
    '((new     . (text html))
      (reply-to-html   . (text html))
-     (reply-to-text   . (text))))
+     ;; (reply-to-text   . (text))
+     ))
   (org-msg-convert-citation t)
   (org-msg-signature "
 ----

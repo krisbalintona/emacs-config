@@ -21,13 +21,13 @@
   :ensure-system-package (notmuch
                           (mbsync . isync)
                           (gmi . "pip install lieer"))
-  :hook (notmuch-mua-send . notmuch-mua-attachment-check)
+  :hook ((notmuch-mua-send . notmuch-mua-attachment-check)
+         (notmuch-show-mode . visual-fill-column-mode))
   :general
   (kb/open-keys
     "n" '(notmuch :wk "Notmuch"))
   ([remap compose-mail] #'notmuch-mua-new-mail)
   (:keymaps 'notmuch-search-mode-map
-            "/" 'notmuch-search-filter          ; Alias for l
             "r" 'notmuch-search-reply-to-thread ; Easier to reply to all by default
             "R" 'notmuch-search-reply-to-thread-sender)
   (:keymaps 'notmuch-show-mode-map
@@ -35,14 +35,14 @@
             "R" 'notmuch-show-reply-sender)
   :custom
   ;; Account settings
-  (notmuch-identities nil)              ; Defer to notmuch-config file data
+  (notmuch-identities nil)              ; Defer to notmuch-config's file data
   (notmuch-fcc-dirs                     ; Set sent mail directories
-   '(("krisbalintona@gmail.com" . "\"personal/[Gmail].Sent Mail\"")
-     ("kristoffer_balintona@brown.com" . "\"uni/[Gmail].Sent Mail\"")))
+   '(("krisbalintona@gmail.com" . "personal/[Gmail].Sent Mail")
+     ("kristoffer_balintona@brown.com" . "personal/[Gmail].Sent Mail")))
 
   ;; General UI
   (notmuch-show-logo nil)
-  (notmuch-column-control 1.0)
+  (notmuch-column-control t)
   (notmuch-hello-auto-refresh t)
   (notmuch-hello-recent-searches-max 20)
   (notmuch-hello-thousands-separator ",")
@@ -69,19 +69,24 @@
    '(("unread" . notmuch-search-unread-face)
      ("flagged" . notmuch-search-flagged-face)))
   (notmuch-show-empty-saved-searches t)
-  ;; See `man' for mbsync and notmuch to see valid search terms
+  ;; See `man' for mbsync and notmuch to see valid search terms. See
+  ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 how to expunge local files
+  ;; via cli
   (notmuch-saved-searches
    '((:name "[personal] inbox" :query "path:personal/** tag:inbox" :key "I")
      (:name "[uni] inbox" :query "path:uni/** tag:inbox" :key "i")
      (:name "[personal] flagged" :query "path:personal/** tag:flagged" :key "F")
      (:name "[uni] flagged" :query "path:uni/** tag:flagged" :key "f")
-     (:name "[personal] sent" :query "path:personal/** tag:sent" :key "ps")
-     (:name "[uni] sent" :query "path:uni/** tag:sent" :key "S")
-     (:name "[personal] drafts" :query "tag:draft -tag:trash" :key "D")
-     (:name "[uni] drafts" :query "tag:draft -tag:trash" :key "d")
-     (:name "[personal] all mail" :query "path:personal/** -tag:trash" :key "a")
-     (:name "[uni] all mail" :query "path:uni/** -tag:trash" :key "A")
+     (:name "[personal] sent" :query "from:krisbalintona@gmail.com* tag:sent" :key "S")
+     (:name "[uni] sent" :query "from:kristoffer_balintona@brown.edu* tag:sent" :key "s")
+     (:name "[personal] drafts" :query "from:krisbalintona@gmail.com* tag:draft -tag:trash -tag:deleted" :key "D")
+     (:name "[uni] drafts" :query "from:kristoffer_balintona@brown.edu* tag:draft -tag:trash  -tag:deleted" :key "d")
+     (:name "[personal] all mail" :query "path:personal/** -tag:trash" :key "A")
+     (:name "[uni] all mail" :query "path:uni/** -tag:trash" :key "a")
      (:name "trash" :query "tag:trash" :key "T")))
+
+  ;; Tree
+  (notmuch-tree-show-out t)
 
   ;; Tags
   (notmuch-archive-tags '("-inbox"))
