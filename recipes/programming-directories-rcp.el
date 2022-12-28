@@ -107,7 +107,11 @@ command."
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
-;;;; Consult integration
+;;;; Consult-dir
+(use-package consult-dir
+  :general ([remap dired] 'consult-dir))
+
+;;;; Consult-buffer integration
 (with-eval-after-load 'consult
   (defvar kb/consult-buffer--dired-source
     (list :name     "Dired Buffers"
