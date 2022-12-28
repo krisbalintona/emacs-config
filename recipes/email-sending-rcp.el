@@ -70,11 +70,10 @@
 ;;; Org-msg
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
-  :disabled
   :custom
   (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
   (org-msg-startup "hidestars indent inlineimages")
-  (org-msg-greeting-fmt "\nHi %s,\n\n")
+  (org-msg-greeting-fmt nil)
   (org-msg-greeting-name-limit 3)
   (org-msg-default-alternatives
    '((new     . (text html))
@@ -85,7 +84,7 @@
 ----
 #+begin_signature
 Kind regards,
-Kristoffern
+Kristoffer
 #+end_signature"))
 
 ;;; email-sending-rcp.el ends here

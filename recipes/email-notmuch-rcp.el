@@ -37,8 +37,8 @@
   ;; Account settings
   (notmuch-identities nil)              ; Defer to notmuch-config file data
   (notmuch-fcc-dirs                     ; Set sent mail directories
-   '(("krisbalintona@gmail.com" . "\"personal/[Gmail]/Sent Mail\"")
-     ("kristoffer_balintona@brown.com" . "\"uni/[Gmail]/Sent Mail\"")))
+   '(("krisbalintona@gmail.com" . "\"personal/[Gmail].Sent Mail\"")
+     ("kristoffer_balintona@brown.com" . "\"uni/[Gmail].Sent Mail\"")))
 
   ;; General UI
   (notmuch-show-logo nil)
@@ -69,39 +69,39 @@
    '(("unread" . notmuch-search-unread-face)
      ("flagged" . notmuch-search-flagged-face)))
   (notmuch-show-empty-saved-searches t)
+  ;; See `man' for mbsync and notmuch to see valid search terms
   (notmuch-saved-searches
-   '((:name "inbox" :query "tag:inbox" :key "i" :sort-order newest-first)
-     (:name "flagged" :query "tag:flagged" :key "f") ;flagged messages
-     (:name "sent" :query "tag:sent -tag:work" :key "S" :sort-order newest-first)
-     (:name "drafts" :query "tag:draft" :key "d")
-     (:name "trash" :query "tag:trash" :key "T")
-     (:name "all mail" :query "*" :key "a" :sort-order newest-first)))
+   '((:name "[personal] inbox" :query "path:personal/** tag:inbox" :key "I")
+     (:name "[uni] inbox" :query "path:uni/** tag:inbox" :key "i")
+     (:name "[personal] flagged" :query "path:personal/** tag:flagged" :key "F")
+     (:name "[uni] flagged" :query "path:uni/** tag:flagged" :key "f")
+     (:name "[personal] sent" :query "path:personal/** tag:sent" :key "ps")
+     (:name "[uni] sent" :query "path:uni/** tag:sent" :key "S")
+     (:name "[personal] drafts" :query "tag:draft -tag:trash" :key "D")
+     (:name "[uni] drafts" :query "tag:draft -tag:trash" :key "d")
+     (:name "[personal] all mail" :query "path:personal/** -tag:trash" :key "a")
+     (:name "[uni] all mail" :query "path:uni/** -tag:trash" :key "A")
+     (:name "trash" :query "tag:trash" :key "T")))
 
   ;; Tags
-  (notmuch-archive-tags '("-inbox" "+archived"))
+  (notmuch-archive-tags '("-inbox"))
   (notmuch-message-replied-tags '("+replied"))
   (notmuch-message-forwarded-tags '("+forwarded"))
   (notmuch-show-mark-read-tags '("-unread"))
   (notmuch-draft-tags '("+draft"))
   (notmuch-draft-folder "drafts")
   (notmuch-draft-save-plaintext 'ask)
-  ;; ;; NOTE 2021-06-18: See an updated version in the `prot-notmuch'
-  ;; ;; section below.
   (notmuch-tagging-keys
    '(("a" notmuch-archive-tags "Archive")
-     ("u" notmuch-show-mark-read-tags "Mark read")
-     ("f"
-      ("+flagged")
-      "Flag")
-     ("s"
-      ("+spam" "-inbox")
-      "Mark as spam")
-     ("d"
-      ("+deleted" "-inbox")
-      "Delete")))
+     ("r" notmuch-show-mark-read-tags "Mark read")
+     ("f" ("+flagged") "Flag")
+     ("s" ("+spam" "-inbox") "Mark as spam")
+     ("d" ("+trash" "-inbox") "Trash")))
   (notmuch-tag-formats
    '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-     ("flag" (propertize tag 'face 'notmuch-tag-flagged))))
+     ("flagged"
+      (propertize tag 'face 'notmuch-tag-flagged)
+      (notmuch-tag-format-image-data tag (notmuch-tag-star-icon)))))
   (notmuch-tag-deleted-formats
    '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
      (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
@@ -142,18 +142,18 @@
   :custom
   (mail-user-agent 'mu4e-user-agent)
   (mu4e-get-mail-command "mbsync -a")
-  (mu4e-drafts-folder "/personal/[Gmail]/Drafts")
-  (mu4e-sent-folder "/personal/[Gmail]/Sent Mail")
-  (mu4e-trash-folder "/personal/[Gmail]/Trash")
+  (mu4e-drafts-folder "/personal/[Gmail].Drafts")
+  (mu4e-sent-folder "/personal/[Gmail].Sent Mail")
+  (mu4e-trash-folder "/personal/[Gmail].Trash")
 
   ;; Don't save message to Sent Messages, Gmail/IMAP takes care of this
   (mu4e-sent-messages-behavior 'delete)
 
   (mu4e-maildir-shortcuts
    '((:maildir "/personal/Index"              :key ?i)
-     (:maildir "/personal/[Gmail]/Sent Mail"  :key ?s)
-     (:maildir "/personal/[Gmail]Trash"       :key ?t)
-     (:maildir "/personal/[Gmail]/All Mail"   :key ?a)))
+     (:maildir "/personal/[Gmail].Sent Mail"  :key ?s)
+     (:maildir "/personal/[Gmail].Trash"       :key ?t)
+     (:maildir "/personal/[Gmail].All Mail"   :key ?a)))
   )
 
 ;;; email-notmuch-rcp.el ends here
