@@ -17,7 +17,6 @@
   :custom
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
-  (mail-user-agent 'message-user-agent)
   (message-send-mail-function 'message-use-send-mail-function)
   (compose-mail-user-agent-warnings t)
 
@@ -25,8 +24,7 @@
   (mail-specify-envelope-from t)
   (mail-header-separator (purecopy "*****"))
   (message-elide-ellipsis "\n> [... %l lines elided]\n")
-  (mail-signature nil)
-  (message-signature "Kind regards,\nKristoffer\n")
+  (message-signature "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")
   (message-signature-insert-empty-line t)
   (message-citation-line-function #'message-insert-formatted-citation-line)
   (message-citation-line-format (concat "> From: %f\n"
@@ -41,8 +39,6 @@
   ;; TODO 2022-12-26: Revisit these two variables
   ;; (message-sendmail-extra-arguments '("--read-envelope-from")) ; Tell msmtp to choose the SMTP server according to the from field in the outgoing email
   ;; (message-sendmail-f-is-evil 't)
-  :config
-  (org-msg-mode)
   )
 
 ;;; Sendmail
@@ -51,7 +47,8 @@
   :disabled
   :custom
   (send-mail-function 'sendmail-send-it)
-  (sendmail-program (executable-find "sendmail")))
+  (sendmail-program (executable-find "sendmail"))
+  (mail-signature nil))
 
 ;;; Smtpmail
 ;; Use `msmtp' program to send emails?
@@ -66,28 +63,30 @@
   (smtpmail-smtp-service 587)
   (smtpmail-stream-type 'starttls)
   (smtpmail-queue-mail nil)
-  (smtpmail-queue-dir  "~/Documents/emails/queue/"))
+  (smtpmail-queue-dir  "~/Documents/emails/smtp-queue/"))
 
 ;;; Org-msg
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
+  :straight (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
+  :hook (org-msg-edit-mode . (lambda ()
+                               (setq-local org-download-method 'directory
+                                           org-download-image-dir (expand-file-name "attachments" message-directory))))
   :custom
-  ;; (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil")
-  ;; (org-msg-startup "hidestars indent inlineimages")
-  (org-msg-startup nil)
+  (org-msg-startup "hidestars indent inlineimages")
   (org-msg-greeting-fmt nil)
   (org-msg-greeting-name-limit 1)
   (org-msg-default-alternatives
-   '((new     . (text html))
-     (reply-to-html   . (text html))
-     ;; (reply-to-text   . (text))
-     ))
+   '((new . (text html))
+     (reply-to-html . (text html))
+     (reply-to-text . (text))))
   (org-msg-convert-citation t)
+  (message-signature nil)
   (org-msg-signature "
-----
-#+begin_signature
+⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼
 Kind regards,
+#+begin_signature
 Kristoffer
 #+end_signature"))
 
