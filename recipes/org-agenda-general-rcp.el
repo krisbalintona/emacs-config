@@ -65,8 +65,15 @@
   (org-capture-templates
    `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      "* TODO %?\n" :empty-lines 1)
-     ))
+      "* TODO %?\n"
+      :empty-lines 1)
+     ("e" "Email" entry
+      (file ,(expand-file-name "todo.org" kb/agenda-dir))
+      "* TODO Respond to%? [[%L][\"%:subject\" from %:fromname on %:date]]\n"
+      :empty-lines 1)))
+  (org-capture-templates-contexts
+   '(("e" ((in-mode . "mu4e-headers-mode")))
+     ("e" ((in-mode . "mu4e-view-mode")))))
   :config
   ;; Used in org-agenda to replace the categories with note titles. Taken from
   ;; `vulpea' library
