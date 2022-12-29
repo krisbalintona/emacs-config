@@ -74,7 +74,7 @@
     ((member "NotoEmoji Nerd Font" (font-family-list)) "Noto Emoji")
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
     ((member "Symbola" (font-family-list)) "Symbola")))
-  :config
+  
   ;; NOTE 2022-06-20: Ensure that `unicode-fonts-setup' is run BEFORE anything
   ;; requiring unicode characters or emojis is used
   (add-hook 'after-init-hook #'unicode-fonts-setup -100))
