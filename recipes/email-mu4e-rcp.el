@@ -46,6 +46,9 @@
   ([remap compose-mail] 'mu4e-compose-new)
   :custom
   (mail-user-agent 'mu4e-user-agent)
+  (mu4e-bookmarks
+   '((:name "All inboxs" :query "maildir:/peresonal/Inbox OR maildir:/uni/Inbox" :key ?u)
+     ))
 
   ;; Contexts
   (mu4e-context-policy 'ask-if-none)
@@ -75,9 +78,9 @@
   ;; View
   (mu4e-view-fields
    '(:from :to :cc :bcc
-           :subject :flags :date
-           :maildir :mailing-list
-           :tags :attachments :signature))
+     :subject :flags :date
+     :maildir :mailing-list
+     :tags :attachments :signature))
   (mu4e-view-scroll-to-next t)
   ;; Also see 5.3 of the mu4e info manual
   (gnus-unbuttonized-mime-types nil) ; Visible buttons for email's type (e.g. plain, html)
@@ -135,9 +138,6 @@
                     (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
                     (mu4e-refile-folder . "/uni/[Gmail].All Mail")
                     (mu4e-trash-folder . "/uni/[Gmail].Trash")
-                    ;; Bookmarks
-                    (mu4e-bookmarks . ((:name "Inbox unread" :query "flag:unread AND maildir:/uni/Inbox" :key ?u)
-                                       ))
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
                                                (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
@@ -158,9 +158,6 @@
                     (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
                     (mu4e-refile-folder . "/personal/[Gmail].All Mail")
                     (mu4e-trash-folder . "/personal/[Gmail].Trash")
-                    ;; Bookmarks
-                    (mu4e-bookmarks . ((:name "Inbox unread" :query "flag:unread AND maildir:/personal/Inbox" :key ?u)
-                                       ))
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
                                                (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
@@ -177,7 +174,7 @@
         ;; from the maildir (all mail is already in the "All Mail" maildir)
         '(
           ;; Refile will be my "archive" function.
-          (refile :char '("r" . "▶")
+          (refile :char ("r" . "▶")
                   :prompt "archive"
                   :show-target
                   (lambda (target) "archive")
@@ -279,7 +276,7 @@
                     (docid msg target)
                     (mu4e--server-move docid nil "-S+u-N")))
           (unmark :char " " :prompt "unmark" :action
-                  (mu4e-error "No action for unmarking"))
+                                             (mu4e-error "No action for unmarking"))
           (action :char
                   ("a" . "◯")
                   :prompt "action" :ask-target
@@ -370,11 +367,11 @@ will also be the width of all other printable characters."
   :straight (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
   :general
   (:keymaps 'mu4e-headers-mode-map
-            "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
-            "M-n" 'mu4e-views-cursor-msg-view-window-down ; From headers window scroll the email view
-            "M-p" 'mu4e-views-cursor-msg-view-window-up ; From headers window scroll the email view
-            "f" 'mu4e-views-toggle-auto-view-selected-message ; Toggle opening messages automatically when moving in the headers view
-            "i" 'mu4e-views-mu4e-view-as-nonblocked-html) ; Show currently selected email with all remote content
+   "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
+   "M-n" 'mu4e-views-cursor-msg-view-window-down ; From headers window scroll the email view
+   "M-p" 'mu4e-views-cursor-msg-view-window-up ; From headers window scroll the email view
+   "f" 'mu4e-views-toggle-auto-view-selected-message ; Toggle opening messages automatically when moving in the headers view
+   "i" 'mu4e-views-mu4e-view-as-nonblocked-html) ; Show currently selected email with all remote content
   :custom
   (mu4e-views-auto-view-selected-message nil)
   (mu4e-views-next-previous-message-behaviour 'stick-to-current-window)
