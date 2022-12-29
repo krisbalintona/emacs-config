@@ -229,16 +229,15 @@ Additionally, add `cape-file' as early as possible to the list."
     ;; listed when I want?
     (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
     )
-  
-  ;; TODO 2022-12-22: Update now that I've migrated to denote
-  ;; Org
+
   (defun kb/cape-capf-setup-org ()
-    (let (result)
-      (dolist (element (list
-                        (cape-super-capf #'cape-ispell #'cape-dabbrev)
-                        (cape-company-to-capf #'company-yasnippet))
-                       result)
-        (add-to-list 'completion-at-point-functions element))))
+    (unless (string= major-mode 'org-msg-edit-mode)
+      (let (result)
+        (dolist (element (list
+                          (cape-super-capf #'cape-ispell #'cape-dabbrev)
+                          (cape-company-to-capf #'company-yasnippet))
+                         result)
+          (add-to-list 'completion-at-point-functions element)))))
 
   ;; Eshell
   (defun kb/cape-capf-setup-eshell ()
