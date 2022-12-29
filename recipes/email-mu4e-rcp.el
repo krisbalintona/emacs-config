@@ -19,21 +19,24 @@
 
 ;;; Mu4e
 (use-package mu4e
-  :hook ((window-setup . (lambda ()        ; Won't take effect until window is loaded
-                           (setq mu4e-headers-personal-mark  '("p" . " ")
-                                 mu4e-headers-unread-mark    '("u" . "📩 ")
-                                 mu4e-headers-draft-mark     '("D" . "🖎 ")
-                                 mu4e-headers-flagged-mark   '("F" . "🚩 ")
-                                 mu4e-headers-new-mark       '("N" . "✨ ")
-                                 mu4e-headers-passed-mark    '("P" . "↪ ")
-                                 mu4e-headers-replied-mark   '("R" . "↩ ")
-                                 mu4e-headers-seen-mark      '("S" . " ")
-                                 mu4e-headers-trashed-mark   '("T" . "🗑️")
-                                 mu4e-headers-attach-mark    '("a" . "📎 ")
-                                 mu4e-headers-encrypted-mark '("x" . "🔑 ")
-                                 mu4e-headers-signed-mark    '("s" . "🖊 ")
-                                 ;; Taken from Doom Emacs
-                                 mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶")
+  :hook ((window-setup . (lambda ()
+                           (setq mu4e-headers-personal-mark  '("p" . " ")) ; Always set this
+                           (unless (bound-and-true-p kb/mu4e-initialise-icons)
+                             (setq mu4e-headers-personal-mark  '("p" . "  ")
+                                   mu4e-headers-unread-mark    '("u" . "📩 ")
+                                   mu4e-headers-draft-mark     '("D" . "🖎 ")
+                                   mu4e-headers-flagged-mark   '("F" . "🚩 ")
+                                   mu4e-headers-new-mark       '("N" . "✨ ")
+                                   mu4e-headers-passed-mark    '("P" . "⮡ ")
+                                   mu4e-headers-replied-mark   '("R" . "↵ ")
+                                   mu4e-headers-seen-mark      '("S" . "  ")
+                                   mu4e-headers-list-mark      '("s" . "🔉 ")
+                                   mu4e-headers-trashed-mark   '("T" . "🗑️")
+                                   mu4e-headers-attach-mark    '("a" . "📎 ")
+                                   mu4e-headers-encrypted-mark '("x" . "🔑 ")
+                                   mu4e-headers-signed-mark    '("s" . "🖊 ")))
+                           ;; Taken from Doom Emacs
+                           (setq mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶")
                                  mu4e-headers-thread-orphan-prefix '("┬>" . "┬▶ ")
                                  mu4e-headers-thread-last-child-prefix '("└>" . "╰▶")
                                  mu4e-headers-thread-child-prefix '("├>" . "├▶")
@@ -126,8 +129,8 @@
    ;; the maildir (all mail is already in the "All Mail" maildir)
    '(
      ;; Refile will be my "archive" function.
-     (refile :char '("r" . "▶")
-             :prompt "refile"
+     (refile :char '("a" . "▶")
+             :prompt "archive"
              :dyn-target
              (lambda (_target msg) (mu4e-get-refile-folder msg))
              :action
@@ -312,6 +315,54 @@
 
   ;; Sending and composition
   (org-msg-mode))
+
+;;; Mu4e header icons (from Doom Emacs)
+(with-eval-after-load 'mu4e
+  (defun kb/mu4e--get-string-width (str)
+    "Return the width in pixels of a string in the current
+window's default font. If the font is mono-spaced, this
+will also be the width of all other printable characters."
+    (let ((window (selected-window))
+          (remapping face-remapping-alist))
+      (with-temp-buffer
+        (make-local-variable 'face-remapping-alist)
+        (setq face-remapping-alist remapping)
+        (set-window-buffer window (current-buffer))
+        (insert str)
+        (car (window-text-pixel-size)))))
+
+  (cl-defun kb/mu4e-normalised-icon (name &key set color height v-adjust)
+    "Convert :icon declaration to icon"
+    (let* ((icon-set (intern (concat "all-the-icons-" (or set "faicon"))))
+           (v-adjust (or v-adjust 0.02))
+           (height (or height 0.8))
+           (icon (if color
+                     (apply icon-set `(,name :face ,(intern (concat "all-the-icons-" color)) :height ,height :v-adjust ,v-adjust))
+                   (apply icon-set `(,name  :height ,height :v-adjust ,v-adjust))))
+           (icon-width (kb/mu4e--get-string-width icon))
+           (space-width (kb/mu4e--get-string-width " "))
+           (space-factor (- 2 (/ (float icon-width) space-width))))
+      (concat (propertize " " 'display `(space . (:width ,space-factor))) icon)))
+
+  ;; FIXME 2022-12-29: Icons are too large...
+  (defun kb/mu4e-initialise-icons ()
+    (setq mu4e-headers-draft-mark      (cons "D" (kb/mu4e-normalised-icon "pencil"))
+          mu4e-headers-flagged-mark    (cons "F" (kb/mu4e-normalised-icon "flag"))
+          ;; mu4e-headers-new-mark        (cons "N" (kb/mu4e-normalised-icon "sync" :set "material" :height 0.8 :v-adjust -0.10))
+          mu4e-headers-passed-mark     (cons "P" (kb/mu4e-normalised-icon "arrow-right"))
+          mu4e-headers-replied-mark    (cons "R" (kb/mu4e-normalised-icon "arrow-right"))
+          mu4e-headers-seen-mark       (cons "S" "") ;(kb/mu4e-normalised-icon "eye" :height 0.6 :v-adjust 0.07 :color "dsilver"))
+          mu4e-headers-trashed-mark    (cons "T" (kb/mu4e-normalised-icon "trash"))
+          mu4e-headers-attach-mark     (cons "a" (kb/mu4e-normalised-icon "file-text-o" :color "silver"))
+          mu4e-headers-encrypted-mark  (cons "x" (kb/mu4e-normalised-icon "lock"))
+          mu4e-headers-signed-mark     (cons "s" (kb/mu4e-normalised-icon "certificate" :height 0.7 :color "dpurple"))
+          mu4e-headers-unread-mark     (cons "u" (kb/mu4e-normalised-icon "eye-slash" :v-adjust 0.05))
+          ;; Mine
+          mu4e-headers-new-mark        (cons "N" (kb/mu4e-normalised-icon "plus" :height 0.4))
+          mu4e-headers-list-mark       (cons "s" (kb/mu4e-normalised-icon "repeat" :height 0.5))))
+
+  ;; (add-hook 'window-setup-hook #'kb/mu4e-initialise-icons)
+  )
 
 ;;; Mu4e-column-faces
 (use-package mu4e-column-faces
