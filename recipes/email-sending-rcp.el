@@ -45,8 +45,7 @@
   (send-mail-function 'sendmail-send-it)
   (sendmail-program (executable-find "sendmail"))
 
-  (mail-specify-envelope-from t)
-  (mail-header-separator "--text follows this line--"))
+  (mail-specify-envelope-from t))
 
 ;;; Smtpmail
 ;; Use `msmtp' program to send emails?
@@ -69,7 +68,7 @@
   :straight (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :hook (org-msg-edit-mode . (lambda ()
                                (setq-local org-download-method 'directory
-                                           org-download-image-dir (expand-file-name "attachments" message-directory))))
+                                           org-download-image-dir mu4e-attachment-dir)))
   :general
   ;; Get access to the `message' header editing commands in `org-msg-edit-mode'
   (:keymaps 'org-msg-edit-mode-map
