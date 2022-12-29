@@ -70,6 +70,17 @@
   :hook (org-msg-edit-mode . (lambda ()
                                (setq-local org-download-method 'directory
                                            org-download-image-dir (expand-file-name "attachments" message-directory))))
+  :general
+  ;; Get access to the `message' header editing commands in `org-msg-edit-mode'
+  (:keymaps 'org-msg-edit-mode-map
+            :prefix "C-c C-m"
+            "C-t" 'message-goto-to
+            "C-s" 'message-goto-subject
+            "C-c" 'message-goto-cc
+            "C-b" 'message-goto-bcc
+            "C-r" 'message-goto-reply-to
+            "C-f" 'message-goto-followup-to
+            "C-w" 'message-goto-fcc)
   :custom
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil")
   (org-msg-startup "hidestars indent inlineimages hideblocks")
