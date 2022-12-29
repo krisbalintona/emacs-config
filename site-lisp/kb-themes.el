@@ -52,89 +52,29 @@
 (use-package modus-themes
   :init
   ;; Also make sure these are set before `modus-themes-load-themes' is called
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-custom-auto-reload t ; only applies to `customize-set-variable' and related
+        modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers nil
-        modus-themes-deuteranopia nil
-        modus-themes-fringes nil
-        modus-themes-tabs-accented nil
-        modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        ;; Options for `modus-themes-lang-checkers' are either nil (the
-        ;; default), or a list of properties that may include any of those
-        ;; symbols: `straight-underline', `text-also', `background',
-        ;; `intense'
-        modus-themes-lang-checkers '(faint)
-
-        ;; Options for `modus-themes-mode-line' are either nil, or a list
-        ;; that can combine any of `3d' OR `moody', `borderless',
-        ;; `accented', `padded'.
-        modus-themes-mode-line '(borderless)
-
-        ;; Options for `modus-themes-syntax' are either nil (the default),
-        ;; or a list of properties that may include any of those symbols:
-        ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(faint green-strings)
-
-        ;; Options for `modus-themes-hl-line' are either nil (the default),
-        ;; or a list of properties that may include any of those symbols:
-        ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(accented)
-
-        ;; Options for `modus-themes-paren-match' are either nil (the
-        ;; default), or a list of properties that may include any of those
-        ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold intense)
-
-        ;; Options for `modus-themes-links' are either nil (the default),
-        ;; or a list of properties that may include any of those symbols:
-        ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
-        ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline italic)
-
-        ;; Options for `modus-themes-prompts' are either nil (the
-        ;; default), or a list of properties that may include any of those
-        ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(intense bold)
-
-        modus-themes-completions
-        (quote ((matches . (extrabold background intense))
-                (selection . (semibold accented intense))
-                (popup . (accented))))
-
-        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
-
-        ;; Options for `modus-themes-region' are either nil (the default),
-        ;; or a list of properties that may include any of those symbols:
-        ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(accented)
-
-        ;; Options for `modus-themes-diffs': nil, 'desaturated,
-        ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs nil
-
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
-
-        modus-themes-org-agenda ; this is an alist: read the manual or its doc string
-        (quote ((header-block . (variable-pitch 1.2 semibold))
-                (header-date . (grayscale workaholic bold-today 1.2))
-                (event . (accented italic varied))
-                (scheduled . uniform)
-                (habit . traffic-light)))
-
+        modus-themes-prompts '(semibold)
+        modus-themes-completions '(((matches . (heavy))
+                                    (selection . (semibold))))
+        modus-themes-region '(bg-only)
+        modus-themes-org-blocks 'gray-background
         modus-themes-variable-pitch-ui nil
-        ;; (modus-themes-headings
-        ;;  (quote ((1 . (1.1))
-        ;;          (2 . (1.15))
-        ;;          (3 . (1))
-        ;;          (t . (monochrome)))))
         )
 
   ;; Overrides
-  (setq modus-themes-vivendi-color-overrides
-        '((bg-main . "#1d2021")
-          (fg-main . "#c2c2c2"))))
+  (setq modus-themes-common-palette-overrides 
+        '((fg-completion-match-0 fg-main) ; See 4.11.2.5 Make completion matches more or less colorful 
+          (fg-completion-match-1 fg-main)
+          (fg-completion-match-2 fg-main)
+          (fg-completion-match-3 fg-main)
+          (bg-completion-match-0 bg-blue-intense)
+          (bg-completion-match-1 bg-yellow-intense)
+          (bg-completion-match-2 bg-cyan-intense)
+          (bg-completion-match-3 bg-red-intense))))
 (use-package solo-jazz-theme)
 (use-package kaolin-themes)
 

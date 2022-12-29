@@ -303,11 +303,11 @@
 (use-package git-gutter-fringe
   ;; :disabled t
   :demand t
-  :custom-face
-  ;; Colors taken from `uninspiring-dark-theme'
-  (git-gutter-fr:added ((t (:foreground "#98C379" :weight bold :inherit nil))))
-  (git-gutter-fr:deleted ((t (:foreground "#E06C75" :weight bold :inherit nil))))
-  (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
+  ;; :custom-face
+  ;; ;; Colors taken from `uninspiring-dark-theme'
+  ;; (git-gutter-fr:added ((t (:foreground "#98C379" :weight bold :inherit nil))))
+  ;; (git-gutter-fr:deleted ((t (:foreground "#E06C75" :weight bold :inherit nil))))
+  ;; (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t))

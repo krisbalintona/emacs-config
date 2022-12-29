@@ -106,6 +106,22 @@
                       (lambda () (setq-local completion-styles '(basic)))
                     (apply args))))))
 
+;;;; Org-faces
+(use-package org-faces
+  :straight nil
+  :custom
+  (org-fontify-whole-block-delimiter-line t)
+  (org-fontify-quote-and-verse-blocks t)
+  )
+
+;;;; Org-src
+(use-package org-src
+  :straight nil
+  :custom
+  (org-src-fontify-natively t)
+  (org-src-block-faces nil)
+  )
+
 ;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
