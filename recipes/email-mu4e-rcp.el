@@ -47,7 +47,7 @@
   :custom
   (mail-user-agent 'mu4e-user-agent)
   (mu4e-bookmarks
-   '((:name "All inboxs" :query "maildir:/peresonal/Inbox OR maildir:/uni/Inbox" :key ?u)
+   '((:name "All inboxes" :query "maildir:/personal/Inbox OR maildir:/uni/Inbox" :key ?u)
      ))
 
   ;; Contexts
@@ -78,9 +78,9 @@
   ;; View
   (mu4e-view-fields
    '(:from :to :cc :bcc
-     :subject :flags :date
-     :maildir :mailing-list
-     :tags :attachments :signature))
+           :subject :flags :date
+           :maildir :mailing-list
+           :tags :attachments :signature))
   (mu4e-view-scroll-to-next t)
   ;; Also see 5.3 of the mu4e info manual
   (gnus-unbuttonized-mime-types nil) ; Visible buttons for email's type (e.g. plain, html)
@@ -276,7 +276,7 @@
                     (docid msg target)
                     (mu4e--server-move docid nil "-S+u-N")))
           (unmark :char " " :prompt "unmark" :action
-                                             (mu4e-error "No action for unmarking"))
+                  (mu4e-error "No action for unmarking"))
           (action :char
                   ("a" . "◯")
                   :prompt "action" :ask-target
@@ -302,7 +302,11 @@
     (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
   ;; Sending and composition
-  (org-msg-mode))
+  (org-msg-mode)
+  (setq mu4e-compose-signature
+        (if (bound-and-true-p org-msg-mode)
+            ""
+          "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")))
 
 ;;; Mu4e header icons (from Doom Emacs)
 (with-eval-after-load 'mu4e
