@@ -405,11 +405,6 @@ displayed."
   :general
   (:keymaps 'global-map
             (general-chord "xf") 'find-file)
-  (kb/open-keys
-    "m" '((lambda ()
-            (interactive)
-            (pop-to-buffer "*Messages*"))
-          :wk "Open *Messages*"))
   (:keymaps 'Info-mode-map
             :states '(visual normal motion)
             "SPC" nil                   ; For my leader key

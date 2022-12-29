@@ -42,7 +42,7 @@
          (dired-mode . turn-on-gnus-dired-mode)) ; Attachment integration with dired
   :general
   (kb/open-keys
-    "M" '(mu4e :wk "Mu4e"))
+    "m" '(mu4e :wk "Mu4e"))
   ([remap compose-mail] 'mu4e-compose-new)
   :custom
   (mail-user-agent 'mu4e-user-agent)
