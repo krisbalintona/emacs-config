@@ -44,8 +44,7 @@
   :demand t
   :custom
   (save-place-forget-unreadable-files t)
-  :config (save-place-mode)
-  )
+  :config (save-place-mode))
 
 ;;; Desktop
 ;; Save buffers across Emacs sessions

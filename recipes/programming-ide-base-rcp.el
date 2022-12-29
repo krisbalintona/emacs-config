@@ -12,11 +12,11 @@
 ;;; Quickrun
 (use-package quickrun
   :general (:prefix "<f2>"
-            "<f2>" 'quickrun
-            "<f3>" '(lambda ()
-                       (interactive)
-                       (let ((quickrun-focus-p t))
-                         (quickrun-shell))))
+                    "<f2>" 'quickrun
+                    "<f3>" '(lambda ()
+                              (interactive)
+                              (let ((quickrun-focus-p t))
+                                (quickrun-shell))))
   :custom
   (quickrun-focus-p nil))
 
@@ -55,12 +55,12 @@
 ;; Viewing documentation within Emacs.
 (use-package devdocs-browser
   :general (:keymaps '(eglot-mode-map lsp-mode-map lsp-bridge-mode-map)
-            :prefix "H-d"
-            "h" '(devdocs-browser-open :wk "Open")
-            "H" '(devdocs-browser-open-in :wk "Open-in")
-            "i" '(devdocs-browser-install-doc :wk "Install")
-            "d" '(devdocs-browser-download-offline-data :wk "Download")
-            "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade")))
+                     :prefix "H-d"
+                     "h" '(devdocs-browser-open :wk "Open")
+                     "H" '(devdocs-browser-open-in :wk "Open-in")
+                     "i" '(devdocs-browser-install-doc :wk "Install")
+                     "d" '(devdocs-browser-download-offline-data :wk "Download")
+                     "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade")))
 
 ;;; Dash-docs
 ;; Viewing of documentation via browser.
@@ -69,7 +69,7 @@
                         :host github
                         :repo "dash-docs-el/dash-docs"
                         :fork (:host github
-                               :repo "krisbalintona/dash-docs"))
+                                     :repo "krisbalintona/dash-docs"))
   :hook ((python-mode   . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
          (haskell-mode  . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
          (js2-mode      . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))
@@ -121,16 +121,30 @@
   :requires tree-sitter
   :straight (turbo-log :type git :host github :repo "artawower/turbo-log.el")
   :general (:prefix "H-l"
-            "l" 'turbo-log-print
-            "i" 'turbo-log-print-immediately
-            "h" 'turbo-log-comment-all-logs
-            "s" 'turbo-log-uncomment-all-logs
-            "[" 'turbo-log-paste-as-logger
-            "]" 'turbo-log-paste-as-logger-immediately
-            "d" 'turbo-log-delete-all-logs)
+                    "l" 'turbo-log-print
+                    "i" 'turbo-log-print-immediately
+                    "h" 'turbo-log-comment-all-logs
+                    "s" 'turbo-log-uncomment-all-logs
+                    "[" 'turbo-log-paste-as-logger
+                    "]" 'turbo-log-paste-as-logger-immediately
+                    "d" 'turbo-log-delete-all-logs)
   :custom
   (turbo-log-msg-format-template "\"🚀: %s\"")
   (turbo-log-allow-insert-without-tree-sitter-p t))
+
+;;; Treesit (built-in)
+;; Taken from https://github.com/casouri/tree-sitter-module/issues/13
+(use-package tree-sitter-module
+  :straight (tree-sitter-module
+             :type git :host github
+             :repo "casouri/tree-sitter-module"
+             :pre-build (("./batch.sh"))
+             :files ("dist/*.so" "dist/*.dll" "dist/*.dylib"))
+  :init
+  ;; Search for tree-sitter modules in this packages build directory.
+  (with-eval-after-load 'treesit
+    (add-to-list 'treesit-extra-load-path
+                 (straight--build-dir "tree-sitter-module"))))
 
 ;;; programming-ide-base-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
