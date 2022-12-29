@@ -46,7 +46,7 @@
   (sendmail-program (executable-find "sendmail"))
 
   (mail-specify-envelope-from t)
-  (mail-header-separator (purecopy "*****")))
+  (mail-header-separator "--text follows this line--"))
 
 ;;; Smtpmail
 ;; Use `msmtp' program to send emails?
