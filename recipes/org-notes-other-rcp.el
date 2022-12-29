@@ -14,20 +14,10 @@
 ;;;; Pdf-tools
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
-(use-package image-roll
-  :demand t
-  :straight (image-roll :type git :host github :repo "dalanicolai/image-roll.el"))
 (use-package pdf-tools
-  ;; Image roll version. See
-  ;; https://github.com/dalanicolai/image-roll.el#pdf-tools
-  :straight (pdf-tools :type git :host github :repo "dalanicolai/pdf-tools" :branch "pdf-roll"
-                       :files ("lisp/*.el"
-                               "README"
-                               ("build" "Makefile")
-                               ("build" "server")
-                               (:exclude "lisp/tablist.el" "lisp/tablist-filter.el")))
+
   :hook (after-init . pdf-tools-install)
-  :gfhook 'pdf-view-themed-minor-mode 'pdf-view-roll-minor-mode
+  :gfhook 'pdf-view-themed-minor-mode
   :custom
   (pdf-view-display-size 'fit-page)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
