@@ -18,7 +18,6 @@
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*" ))
-  (winner-boring-buffers-regexp "\\*helpful variable:\\|\\*helpful command:\\|magit:") ; Skip `magit' and `helpful' buffers
   :init (winner-mode))
 
 ;;;; Windmove
@@ -69,15 +68,15 @@
       (side . left)
       (direction . left)
       (slot . 1))
-     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'help-mode))
-      (display-buffer-reuse-window
-       kb/select-buffer-in-side-window
-       display-buffer-in-direction)
-      (window-width . 74)
-      (side . left)
-      (direction . left)
-      (slot . 2)
-      (window-parameters . ((split-window . #'ignore))))
+     ;; ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'help-mode))
+     ;;  (display-buffer-reuse-window
+     ;;   kb/select-buffer-in-side-window
+     ;;   display-buffer-in-direction)
+     ;;  (window-width . 74)
+     ;;  (side . left)
+     ;;  (direction . left)
+     ;;  (slot . 2)
+     ;;  (window-parameters . ((split-window . #'ignore))))
 
      ;; To the right
      ("\\*org-roam\\*"
@@ -372,7 +371,8 @@ If buffer-or-name is nil return current buffer's mode."
   :config
   (bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
 
-  ;; From https://www.reddit.com/r/emacs/comments/e1uyvk/weekly_tipstricketc_thread/f8v4re2?utm_source=share&utm_medium=web2x&context=3
+  ;; From
+  ;; https://www.reddit.com/r/emacs/comments/e1uyvk/weekly_tipstricketc_thread/f8v4re2?utm_source=share&utm_medium=web2x&context=3
   (defun kb/bookmark-cleanup ()
     "Check for bookmarks which point to deleted/moved files at
 startup and popup bookmark menu to fix it"
