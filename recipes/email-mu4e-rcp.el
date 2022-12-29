@@ -89,8 +89,20 @@
 
   ;; Headers
   (mu4e-split-view 'horizontal)
-  (mu4e-headers-visible-lines 9)
+  (mu4e-headers-visible-lines 13)
   (mu4e-use-fancy-chars t)
+  (mu4e-headers-personal-mark  '("p" . " "))
+  (mu4e-headers-unread-mark    '("u" . "📩 "))
+  (mu4e-headers-draft-mark     '("D" . "🚧 "))
+  (mu4e-headers-flagged-mark   '("F" . "🚩 "))
+  (mu4e-headers-new-mark       '("N" . "✨ "))
+  (mu4e-headers-passed-mark    '("P" . "↪ "))
+  (mu4e-headers-replied-mark   '("R" . "↩ "))
+  (mu4e-headers-seen-mark      '("S" . " "))
+  (mu4e-headers-trashed-mark   '("T" . "🗑️"))
+  (mu4e-headers-attach-mark    '("a" . "📎 "))
+  (mu4e-headers-encrypted-mark '("x" . "🔑 "))
+  (mu4e-headers-signed-mark    '("s" . "🖊 "))
 
   ;; View
   ;; Also see 5.3 of the mu4e info manual
@@ -119,6 +131,31 @@
   (with-eval-after-load 'mm-decode
     (add-to-list 'mm-discouraged-alternatives "text/html")
     (add-to-list 'mm-discouraged-alternatives "text/richtext")))
+
+;;; Mu4e-column-faces
+(use-package mu4e-column-faces
+  :after mu4e
+  :init
+  (mu4e-column-faces-mode))
+
+;;; Mu4e-views
+(use-package mu4e-views
+  :after mu4e
+  :ensure-system-package wkhtmltopdf    ; HTML to PDF CLI command
+  ;; This branch for support of new version of `mu'
+  :straight (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
+  :general
+  (:keymaps 'mu4e-headers-mode-map
+            "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
+            "M-n" 'mu4e-views-cursor-msg-view-window-down ; From headers window scroll the email view
+            "M-p" 'mu4e-views-cursor-msg-view-window-up ; From headers window scroll the email view
+            "f" 'mu4e-views-toggle-auto-view-selected-message ; Toggle opening messages automatically when moving in the headers view
+            "i" 'mu4e-views-mu4e-view-as-nonblocked-html) ; Show currently selected email with all remote content
+  :custom
+  (mu4e-views-auto-view-selected-message nil)
+  (mu4e-views-next-previous-message-behaviour 'stick-to-current-window)
+  (mu4e-views-default-view-method "html-nonblock")
+  (mu4e-views-html-to-pdf-command "wkhtmltopdf %h %p"))
 
 ;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
