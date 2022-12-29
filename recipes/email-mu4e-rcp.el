@@ -6,6 +6,9 @@
 ;; the `mu' backend. Syncing from remote servers can be done via `mbsync' (from
 ;; the `mu' utility set).
 ;;
+;; I also have configuration taken from Doom Emacs that pertain to Gmail
+;; integration. I have marked those code snippets accordingly.
+;;
 ;; Protesilaos provides a wonderful guide here:
 ;; https://protesilaos.com/emacs/dotemacs#h:5ad80664-3163-4d9d-be65-462637d77903
 ;;
@@ -16,19 +19,26 @@
 
 ;;; Mu4e
 (use-package mu4e
-  :hook (window-setup . (lambda ()        ; Won't take effect until window is loaded
-                          (setq mu4e-headers-personal-mark  '("p" . " ")
-                                mu4e-headers-unread-mark    '("u" . "📩 ")
-                                mu4e-headers-draft-mark     '("D" . "🖎 ")
-                                mu4e-headers-flagged-mark   '("F" . "🚩 ")
-                                mu4e-headers-new-mark       '("N" . "✨ ")
-                                mu4e-headers-passed-mark    '("P" . "↪ ")
-                                mu4e-headers-replied-mark   '("R" . "↩ ")
-                                mu4e-headers-seen-mark      '("S" . " ")
-                                mu4e-headers-trashed-mark   '("T" . "🗑️")
-                                mu4e-headers-attach-mark    '("a" . "📎 ")
-                                mu4e-headers-encrypted-mark '("x" . "🔑 ")
-                                mu4e-headers-signed-mark    '("s" . "🖊 "))))
+  :hook ((window-setup . (lambda ()        ; Won't take effect until window is loaded
+                           (setq mu4e-headers-personal-mark  '("p" . " ")
+                                 mu4e-headers-unread-mark    '("u" . "📩 ")
+                                 mu4e-headers-draft-mark     '("D" . "🖎 ")
+                                 mu4e-headers-flagged-mark   '("F" . "🚩 ")
+                                 mu4e-headers-new-mark       '("N" . "✨ ")
+                                 mu4e-headers-passed-mark    '("P" . "↪ ")
+                                 mu4e-headers-replied-mark   '("R" . "↩ ")
+                                 mu4e-headers-seen-mark      '("S" . " ")
+                                 mu4e-headers-trashed-mark   '("T" . "🗑️")
+                                 mu4e-headers-attach-mark    '("a" . "📎 ")
+                                 mu4e-headers-encrypted-mark '("x" . "🔑 ")
+                                 mu4e-headers-signed-mark    '("s" . "🖊 ")
+                                 ;; Taken from Doom Emacs
+                                 mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶")
+                                 mu4e-headers-thread-orphan-prefix '("┬>" . "┬▶ ")
+                                 mu4e-headers-thread-last-child-prefix '("└>" . "╰▶")
+                                 mu4e-headers-thread-child-prefix '("├>" . "├▶")
+                                 mu4e-headers-thread-connection-prefix '("│" . "│ "))))
+         (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h))
   :general
   (kb/open-keys
     "M" '(mu4e :wk "Mu4e"))
@@ -41,31 +51,6 @@
   (mu4e-compose-context-policy 'ask)
   (mu4e-contexts
    `(,(make-mu4e-context
-       :name "Personal"
-       :enter-func (lambda () (mu4e-message "Entering Personal context"))
-       :leave-func (lambda () (mu4e-message "Leaving Personal context"))
-       :match-func (lambda (msg)
-                     (when msg
-                       (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-       :vars '((user-mail-address . "krisbalintona@gmail.com")
-               ;; Directories
-               (mu4e-drafts-folder . "/personal/[Gmail].Drafts")
-               (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
-               (mu4e-refile-folder . "/personal/[Gmail].All Mail")
-               (mu4e-trash-folder . "/personal/[Gmail].Trash")
-               ;; Bookmarks
-               (mu4e-bookmarks . ((:name "Inbox unread" :query "flag:unread AND maildir:/personal/Inbox" :key ?u)
-                                  (:name "Sent" :query "maildir:\"/personal/[Gmail].Sent Mail\"" :key ?s)
-                                  (:name "Drafts" :query "maildir:/personal/[Gmail].Drafts" :key ?d)
-                                  (:name "All mail" :query "maildir:\"/personal/[Gmail].All Mail\"" :key ?a)
-                                  ))
-               ;; Maildirs
-               (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
-                                          (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
-                                          (:maildir "/personal/[Gmail].Trash" :key ?t)
-                                          (:maildir "/personal/[Gmail].All Mail" :key ?a)
-                                          ))))
-     ,(make-mu4e-context
        :name "Uni"
        :enter-func (lambda () (mu4e-message "Entering Uni context"))
        :leave-func (lambda () (mu4e-message "Leaving Uni context"))
@@ -89,6 +74,31 @@
                                           (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
                                           (:maildir "/uni/[Gmail].Trash" :key ?t)
                                           (:maildir "/uni/[Gmail].All Mail" :key ?a)
+                                          ))))
+     ,(make-mu4e-context
+       :name "Personal"
+       :enter-func (lambda () (mu4e-message "Entering Personal context"))
+       :leave-func (lambda () (mu4e-message "Leaving Personal context"))
+       :match-func (lambda (msg)
+                     (when msg
+                       (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+       :vars '((user-mail-address . "krisbalintona@gmail.com")
+               ;; Directories
+               (mu4e-drafts-folder . "/personal/[Gmail].Drafts")
+               (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
+               (mu4e-refile-folder . "/personal/[Gmail].All Mail")
+               (mu4e-trash-folder . "/personal/[Gmail].Trash")
+               ;; Bookmarks
+               (mu4e-bookmarks . ((:name "Inbox unread" :query "flag:unread AND maildir:/personal/Inbox" :key ?u)
+                                  (:name "Sent" :query "maildir:\"/personal/[Gmail].Sent Mail\"" :key ?s)
+                                  (:name "Drafts" :query "maildir:/personal/[Gmail].Drafts" :key ?d)
+                                  (:name "All mail" :query "maildir:\"/personal/[Gmail].All Mail\"" :key ?a)
+                                  ))
+               ;; Maildirs
+               (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
+                                          (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
+                                          (:maildir "/personal/[Gmail].Trash" :key ?t)
+                                          (:maildir "/personal/[Gmail].All Mail" :key ?a)
                                           ))))))
 
   ;; Indexing
@@ -100,38 +110,60 @@
   ;; (mu4e-index-cleanup nil)              ; Don't do a full cleanup check
   ;; (mu4e-index-lazy-check t)             ; Don't consider up-to-date dirs
   (mu4e-index-update-in-background t)
-  (mu4e-hide-index-messages nil)        ; Hide "indexing" message in minibuffer?
+  (mu4e-hide-index-messages t)          ; Hide "indexing" message in echo area?
 
   ;; Headers
   (mu4e-split-view 'horizontal)
   (mu4e-headers-visible-lines 13)
   (mu4e-use-fancy-chars t)
   (mu4e-headers-fields
-   '((:from . 25)
-     (:flags . 8)
-     (:subject . 83)
-     (:human-date . 13)
-     (:account . 13)))
+   '((:from-or-to . 25)
+     (:human-date . 12)
+     (:flags . 6)                       ; 3 icon flags
+     (:subject)))
   (mu4e-marks
    ;; Refile is identical to delete now, since GMail "archives" by removing from
    ;; the maildir (all mail is already in the "All Mail" maildir)
-   '((refile :char
-             ("a" . "▶")
-             :prompt "archive"
-             :show-target (lambda (target)
-                            "archive")
-             :action (lambda (docid msg target)
-                       (mu4e--server-remove docid)))
-     (delete :char
-             ("D" . "x")
-             :prompt "Delete" :show-target
-             (lambda
-               (target)
-               "delete")
+   '(
+     ;; Refile will be my "archive" function.
+     (refile :char '("r" . "▶")
+             :prompt "refile"
+             :dyn-target
+             (lambda (_target msg) (mu4e-get-refile-folder msg))
              :action
-             (lambda
-               (docid msg target)
-               (mu4e--server-remove docid)))
+             (lambda (docid msg target)
+               (if (kb/mu4e-msg-gmail-p msg)
+                   (kb/mu4e--mark-seen docid msg target)
+                 (mu4e--server-move docid (mu4e--mark-check-target target) "-N")))
+             #'kb/mu4e--mark-seen)
+     ;; In my workflow, emails won't be moved at all. Only their flags/labels
+     ;; are changed. So we redefine the trash and refile marks not to do any
+     ;; moving. However, the real magic happens in `kb/mu4e-gmail-fix-flags-h'.
+     ;;
+     ;; Gmail will handle the rest.
+     (delete :char ("D" . "x")
+             :prompt "Delete"
+             :show-target
+             (lambda (_target) "delete")
+             :action
+             (lambda (docid msg target)
+               (if (kb/mu4e-msg-gmail-p msg)
+                   (progn
+                     (message "The delete operation is invalid for Gmail accounts. Trashing instead.")
+                     (kb/mu4e--mark-seen docid msg target)
+                     (when (< 2 (- (float-time) kb/mu4e--last-invalid-gmail-action))
+                       (sit-for 1))
+                     (setq kb/mu4e--last-invalid-gmail-action (float-time)))
+                 (mu4e--server-remove docid))))
+     (trash :char '("d" . "▼")
+            :prompt "dtrash"
+            :dyn-target
+            (lambda (_target msg) (mu4e-get-trash-folder msg))
+            :action
+            (lambda (docid msg target)
+              (if (kb/mu4e-msg-gmail-p msg)
+                  (kb/mu4e--mark-seen docid msg target)
+                (mu4e--server-move docid (mu4e--mark-check-target target) "+T-N"))))
      (flag :char
            ("+" . "✚")
            :prompt "+flag" :show-target
@@ -196,7 +228,7 @@
                (target)
                "unread")
              :action
-         (lambda
+             (lambda
                (docid msg target)
                (mu4e--server-move docid nil "-S+u-N")))
      (unmark :char " " :prompt "unmark" :action
@@ -234,25 +266,52 @@
 
   ;; Composing and sending
   ;; Don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (mu4e-sent-messages-behavior 'delete)
+  (mu4e-sent-messages-behavior
+   (lambda ()                                ; Taken from Doom
+     (if (string-match-p "@gmail.com\\'" (message-sendmail-envelope-from))
+         'delete 'sent)))
+  (mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))
+  (mu4e-compose-signature-auto-include (lambda () (not org-msg-mode)))
   ;; (mu4e-compose-format-flowed t)        ; Not sure if needed yet
-  (mu4e-compose-signature-auto-include nil)
-  (mu4e-attachment-dir (expand-file-name "attachments" (expand-file-name "attachments" message-directory)))
 
   ;; Other
   (mu4e-completing-read-function 'completing-read)
   (mu4e-change-filenames-when-moving t) ; Prevent duplication
   (mu4e-confirm-quit nil)
-
+  :init
+  ;; Gmail integration is taken from Doom
+  ;; Check if msg is being called from a gmail account
+  (defun kb/mu4e-msg-gmail-p (msg)
+    t)                     ; Just return t for now since all my emails are gmail
+  (defun kb/mu4e--mark-seen (docid _msg target)
+    (mu4e--server-move docid (mu4e--mark-check-target target) "+S-u-N"))
+  (defvar kb/mu4e--last-invalid-gmail-action 0)
+  ;; This hook correctly modifies gmail flags on emails when they are marked.
+  ;; Without it, refiling (archiving), trashing, and flagging (starring) email
+  ;; won't properly result in the corresponding gmail action, since the marks
+  ;; are ineffectual otherwise.
+  (defun kb/mu4e-gmail-fix-flags-h (mark msg)
+    (when (kb/mu4e-msg-gmail-p msg)
+      (pcase mark
+        (`trash  (mu4e-action-retag-message msg "-\\Inbox,+\\Trash,-\\Draft"))
+        (`delete (mu4e-action-retag-message msg "-\\Inbox,+\\Trash,-\\Draft"))
+        (`refile (mu4e-action-retag-message msg "-\\Inbox"))
+        (`flag   (mu4e-action-retag-message msg "+\\Starred"))
+        (`unflag (mu4e-action-retag-message msg "-\\Starred")))))
   :config
-  (org-msg-mode)
+  ;; Headers
+  ;; Taken from Doom
+  (plist-put (cdr (assoc :flags mu4e-header-info)) :shortname " Flags") ; default=Flgs
 
   ;; View
   ;; Discourage viewing messages in html or richtext. See 5.3 of the mu4e
   ;; info manual
   (with-eval-after-load 'mm-decode
     (add-to-list 'mm-discouraged-alternatives "text/html")
-    (add-to-list 'mm-discouraged-alternatives "text/richtext")))
+    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
+  ;; Sending and composition
+  (org-msg-mode))
 
 ;;; Mu4e-column-faces
 (use-package mu4e-column-faces
@@ -262,6 +321,7 @@
 
 ;;; Mu4e-views
 (use-package mu4e-views
+  :disabled
   :after mu4e
   :ensure-system-package wkhtmltopdf    ; HTML to PDF CLI command
   ;; This branch for support of new version of `mu'
