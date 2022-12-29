@@ -9,9 +9,6 @@
 ;; I also have configuration taken from Doom Emacs that pertain to Gmail
 ;; integration. I have marked those code snippets accordingly.
 ;;
-;; Protesilaos provides a wonderful guide here:
-;; https://protesilaos.com/emacs/dotemacs#h:5ad80664-3163-4d9d-be65-462637d77903
-;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'general)
@@ -144,7 +141,7 @@
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
                                                (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/uni/[Gmail].Drafts" :key ?a)
+                                               (:maildir "/uni/[Gmail].Drafts" :key ?d)
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)
                                                ))))
@@ -167,7 +164,7 @@
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
                                                (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/personal/[Gmail].Drafts" :key ?a)
+                                               (:maildir "/personal/[Gmail].Drafts" :key ?d)
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)
                                                ))))))
