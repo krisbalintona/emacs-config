@@ -406,7 +406,6 @@ displayed."
   (:keymaps 'global-map
             (general-chord "xf") 'find-file)
   (kb/open-keys
-    "c" '(calc :wk "Open calculator")
     "m" '((lambda ()
             (interactive)
             (pop-to-buffer "*Messages*"))
