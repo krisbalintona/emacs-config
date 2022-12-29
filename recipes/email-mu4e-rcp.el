@@ -69,6 +69,7 @@
   (mu4e-split-view 'horizontal)
   (mu4e-headers-visible-lines 13)
   (mu4e-use-fancy-chars t)
+  (mu4e-headers-precise-alignment t) ; Reduces performance but aligns everything
   (mu4e-headers-fields
    '((:from-or-to . 25)
      (:human-date . 12)
@@ -78,9 +79,9 @@
   ;; View
   (mu4e-view-fields
    '(:from :to :cc :bcc
-           :subject :flags :date
-           :maildir :mailing-list
-           :tags :attachments :signature))
+     :subject :flags :date
+     :maildir :mailing-list
+     :tags :attachments :signature))
   (mu4e-view-scroll-to-next t)
   ;; Also see 5.3 of the mu4e info manual
   (gnus-unbuttonized-mime-types nil) ; Visible buttons for email's type (e.g. plain, html)
@@ -276,7 +277,7 @@
                     (docid msg target)
                     (mu4e--server-move docid nil "-S+u-N")))
           (unmark :char " " :prompt "unmark" :action
-                  (mu4e-error "No action for unmarking"))
+                                             (mu4e-error "No action for unmarking"))
           (action :char
                   ("a" . "◯")
                   :prompt "action" :ask-target

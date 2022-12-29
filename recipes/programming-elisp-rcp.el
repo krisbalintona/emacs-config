@@ -25,7 +25,7 @@
     lisp-keyword-indent-mode
     (lambda ()
       (when kb/lisp-keyword-indent-allow
-        (lisp-keyword-indent-mode 1))))
+        (lisp-keyword-indent-mode))))
 
   (global-lisp-keyword-indent-mode))
 
