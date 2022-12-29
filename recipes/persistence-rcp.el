@@ -12,17 +12,19 @@
 ;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist
+  :demand
   :hook (kill-emacs . savehist-save)
   :custom
   (history-length 10000)
   (history-delete-duplicates t)
   (savehist-save-minibuffer-history t)
   (savehist-autosave-interval 30)
-  :init
-  ;; This is where savehist loads the previous session's variables
-  (savehist-mode)
   :config
-  (add-to-list 'savehist-additional-variables 'kill-ring))    ; Save kill ring
+  (add-to-list 'savehist-additional-variables 'kill-ring)
+  (add-to-list 'savehist-additional-variables 'Info-history-list)
+
+  ;; This is where savehist loads the previous session's variables
+  (savehist-mode))
 
 ;;; Recentf
 ;; Enable logging of recent files

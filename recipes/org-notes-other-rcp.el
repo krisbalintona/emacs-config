@@ -15,7 +15,6 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
-
   :hook (after-init . pdf-tools-install)
   :gfhook 'pdf-view-themed-minor-mode
   :custom
