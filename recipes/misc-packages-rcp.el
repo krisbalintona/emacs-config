@@ -404,6 +404,8 @@ displayed."
   :custom
   (page-break-lines-modes
    '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode org-mode))
+  (page-break-lines-char ?—)
+  (page-break-lines-max-width nil)
   :init
   (global-page-break-lines-mode)
   :config
@@ -413,6 +415,16 @@ displayed."
   (set-fontset-font "fontset-default"
                     (cons page-break-lines-char page-break-lines-char)
                     (face-attribute 'default :family)))
+
+;;; Logos
+;; Package that encourages focused writing
+(use-package logos
+  :general
+  ([remap narrow-to-region] 'logos-narrow-dwim
+   [remap forward-page] 'logos-forward-page-dwim
+   [remap backward-page] 'logos-backward-page-dwim)
+  :custom
+  (logos-outlines-are-pages nil))
 
 ;;; Built-in Emacs modes/packages
 (use-package emacs
