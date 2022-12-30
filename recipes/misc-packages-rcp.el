@@ -398,6 +398,22 @@ displayed."
   :straight (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
+;;; Page-break-lines
+;; Turn page breaks (i.e. ^L) into horizontal rules
+(use-package page-break-lines
+  :custom
+  (page-break-lines-modes
+   '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode org-mode))
+  :init
+  (global-page-break-lines-mode)
+  :config
+  ;; On some systems, Emacs may erroneously choose a different font for the page
+  ;; break symbol. Taken from
+  ;; https://github.com/purcell/page-break-lines#issues-and-limitations
+  (set-fontset-font "fontset-default"
+                    (cons page-break-lines-char page-break-lines-char)
+                    (face-attribute 'default :family)))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
