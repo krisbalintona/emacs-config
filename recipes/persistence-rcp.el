@@ -13,7 +13,6 @@
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist
   :demand
-  :hook (kill-emacs . savehist-save)
   :custom
   (history-length 10000)
   (history-delete-duplicates t)
@@ -23,8 +22,12 @@
   (add-to-list 'savehist-additional-variables 'kill-ring)
   (add-to-list 'savehist-additional-variables 'Info-history-list)
 
-  ;; This is where savehist loads the previous session's variables
-  (savehist-mode))
+  ;; This is where savehist loads the previous session's variables, but only do
+  ;; so when running in server to avoid saved variables being overwritten across
+  ;; Emacs instances.
+  (when (daemonp)
+    (savehist-mode)
+    (add-hook 'kill-emacs #'savehist-save)))
 
 ;;; Recentf
 ;; Enable logging of recent files
