@@ -280,7 +280,7 @@ progress. This is called by the timer `good-scroll--timer' every
   :general
   ("H-h" 'eldoc-box-help-at-point)
   (:keymaps 'eglot-mode-map
-            [remap eldoc-box-help-at-point] 'eldoc-box-eglot-help-at-point)
+   [remap eldoc-box-help-at-point] 'eldoc-box-eglot-help-at-point)
   :custom
   (eldoc-box-max-pixel-width 650)
   (eldoc-box-max-pixel-height 400)
@@ -335,9 +335,9 @@ displayed."
     (when-let* ((added-width 10)
                 (domain-width (min pocket-reader-site-column-max-width
                                    (cl-loop for item being the hash-values of pocket-reader-items
-                                            maximizing (length (ht-get item 'domain)))))
+                                              maximizing (length (ht-get item 'domain)))))
                 (tags-width (cl-loop for item being the hash-values of pocket-reader-items
-                                     maximizing (length (string-join (ht-get item 'tags) ","))))
+                                       maximizing (length (string-join (ht-get item 'tags) ","))))
                 (title-width (- (window-text-width)
                                 5                   ; Idk why this is needed...
                                 (+ 1 added-width)   ; Added
@@ -455,13 +455,13 @@ displayed."
   :hook (messages-buffer-mode . visual-line-mode)
   :general
   (:keymaps 'global-map
-            (general-chord "xf") 'find-file)
+   (general-chord "xf") 'find-file)
   (:keymaps 'Info-mode-map
-            :states '(visual normal motion)
-            "SPC" nil                   ; For my leader key
-            [remap evil-ret] 'Info-follow-nearest-node)
+   :states '(visual normal motion)
+   "SPC" nil                   ; For my leader key
+   [remap evil-ret] 'Info-follow-nearest-node)
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
-            "u" 'universal-argument-more)
+   "u" 'universal-argument-more)
   :custom
   (kill-do-not-save-duplicates t)
   :config

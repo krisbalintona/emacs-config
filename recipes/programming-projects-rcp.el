@@ -67,7 +67,7 @@
 ;;;; Project
 (use-package project
   :general (:keymaps 'project-prefix-map
-                     "m" #'magit-project-status)
+            "m" #'magit-project-status)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
@@ -116,7 +116,7 @@
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general
   (:keymaps 'magit-mode-map
-            "C-<tab>" 'magit-section-toggle-children)
+   "C-<tab>" 'magit-section-toggle-children)
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
@@ -291,7 +291,7 @@
 ;;;; Diff-mode
 (use-package diff-mode
   :custom
-  (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language
+  (diff-font-lock-syntax 'hunk-only)) ; Fontify diffs with syntax highlighting of the language
 
 ;;; QoL
 ;;;; Git-gutter
