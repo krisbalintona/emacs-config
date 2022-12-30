@@ -14,7 +14,7 @@
 ;; Emacs' file manager
 (use-package dired
   :straight nil
-  :gfhook 'dired-hide-details-mode
+  :gfhook 'dired-hide-details-mode 'dired-omit-mode
   :general
   (:keymaps 'dired-mode-map
    :states 'normal
