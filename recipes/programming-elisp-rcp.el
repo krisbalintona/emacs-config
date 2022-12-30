@@ -71,13 +71,29 @@
   (help-enable-variable-value-editing t)
   (help-window-keep-selected t))
 
+;;; Help+
+;;  The following bindings are made here:
+;;
+;;    `C-h u'      `man'
+;;    `C-h C-a'    `apropos'
+;;    `C-h C-l'    `locate-library'
+;;    `C-h RET'    `help-on-click/key'
+;;    `C-h M-a'    `apropos-documentation'
+;;    `C-h M-o'    `pop-to-help-toggle'
+;;    `C-h C-M-a'  `tags-apropos'
+;;    [mouse-1]    `mouse-help-on-click' (non-mode-line)
+;;    [mouse-1]    `mouse-help-on-mode-line-click' (mode-line)
+(use-package help+
+  :demand t)
+
 ;;; Help-find
 ;; Provides `help-find-function' and `help-find-keybinding'
 (use-package help-find
   :general
   (:keymaps 'help-map
-   "uu" 'help-find-function
-   "ui" 'help-find-keybinding))
+   :prefix "M-f"
+   "f" 'help-find-function
+   "r" 'help-find-keybinding))
 
 ;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
