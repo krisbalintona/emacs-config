@@ -15,7 +15,7 @@
   (general-auto-unbind-keys))       ; Overwrite keybinds without returning error
 
 ;;; Leader keys
-(general-create-definer kb/note-keys    ; For all lsp-related commands
+(general-create-definer kb/note-keys    ; For all note-taking needs
   :prefix "C-c n")
 (general-create-definer kb/lsp-keys     ; For all lsp-related commands
   :keymaps 'lsp-mode-map

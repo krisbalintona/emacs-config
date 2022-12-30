@@ -191,7 +191,6 @@
   :custom
   (visual-fill-column-width 120)
   (visual-fill-column-center-text t)
-  :custom
   (split-window-preferred-function 'visual-fill-column-split-window-sensibly) ; Be able to vertically split windows that have wide margins
   )
 
@@ -533,15 +532,16 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;;;; Org-web-tools
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
-  :general
-  (kb/yank-kill-keys
-    "b" '(org-web-tools-insert-link-for-url :wk "Paste https")))
+  :general (kb/yank-kill-keys
+             :keymaps 'org-mode-map
+             "b" '(org-web-tools-insert-link-for-url :wk "Paste https")))
 
 ;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download
   :hook (org-mode . org-download-enable)
   :general (kb/yank-kill-keys
+             :keymaps 'org-mode-map
              "i" '(org-download-clipboard :wk "Paste image from clipboard"))
   :custom
   (org-download-method 'attach)
