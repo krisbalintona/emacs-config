@@ -43,9 +43,7 @@
   (define-key flycheck-mode-map flycheck-keymap-prefix nil)
   (setq flycheck-keymap-prefix (kbd "H-f"))
   (define-key flycheck-mode-map flycheck-keymap-prefix
-              flycheck-command-map)
-
-  (global-flycheck-mode))
+              flycheck-command-map))
 
 ;;; Consult-flycheck
 ;; List flycheck errors in minibuffer with consult
