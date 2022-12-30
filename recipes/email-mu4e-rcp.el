@@ -89,7 +89,7 @@
   ;; Don't save message to Sent Messages, Gmail/IMAP takes care of this
   (mu4e-sent-messages-behavior 'delete)
   (mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))
-  (mu4e-compose-signature-auto-include (lambda () (not org-msg-mode)))
+  (mu4e-compose-signature-auto-include nil)
   ;; (mu4e-compose-format-flowed t)        ; Not sure if needed yet
 
   ;; Other
