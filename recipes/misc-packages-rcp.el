@@ -401,8 +401,9 @@ displayed."
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
 ;;; Page breaks as horizontal rules
-;; Turn page breaks (i.e. ^L) into horizontal rules. Simply uses the extend face
-;; attribute. Taken from https://www.emacswiki.org/emacs/OverlayControlL
+;; Turn page breaks (i.e. ^L) into horizontal rules. Simply uses an overlay and
+;; the extend face attribute. Taken from
+;; https://www.emacswiki.org/emacs/OverlayControlL
 (define-minor-mode kb/page-break-horizontal-rule-mode
   "Minor mode for replacing page breaks with horizontal rules"
   :init-value nil
@@ -420,7 +421,7 @@ displayed."
                                  (line-beginning-position 2))))
           ;; :background has to be different from the background color
           ;; gray1 here is just a little different from black
-          (overlay-put pdl 'face '(:extend t :underline "gray30" :background "gray1"))
+          (overlay-put pdl 'face '(:extend t :underline "gray30"))
           (overlay-put pdl 'modification-hooks
                        ;; these arguments are received from modification-hooks
                        '((lambda (overlay after-p begin end &optional length)
@@ -436,8 +437,6 @@ displayed."
                 help-mode-hook
                 org-mode-hook))
   (add-hook mode 'kb/page-break-horizontal-rule-mode))
-
-
 
 ;;; Logos
 ;; Package that encourages focused writing
