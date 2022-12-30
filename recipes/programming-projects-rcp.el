@@ -290,7 +290,8 @@
 ;;;; Git-gutter
 (use-package git-gutter
   :hook ((window-configuration-change . git-gutter:update-all-windows)
-         (prog-mode . git-gutter-mode))
+         ;; (prog-mode . git-gutter-mode) ; NOTE 2022-12-29: Trying `diff-hl' for now
+         )
   :custom
   (git-gutter-fr:side 'left-fringe)
   ;; 0 is actually on-save, so we put this as low as possible to effectively
@@ -301,17 +302,29 @@
 
 ;;;; Git-gutter-fringe
 (use-package git-gutter-fringe
-  ;; :disabled t
-  :demand t
-  ;; :custom-face
-  ;; ;; Colors taken from `uninspiring-dark-theme'
-  ;; (git-gutter-fr:added ((t (:foreground "#98C379" :weight bold :inherit nil))))
-  ;; (git-gutter-fr:deleted ((t (:foreground "#E06C75" :weight bold :inherit nil))))
-  ;; (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
+  :after git-gutter
+  :custom-face
+  ;; Colors taken from `uninspiring-dark-theme'
+  (git-gutter-fr:added ((t (:foreground "#98C379" :weight bold :inherit nil))))
+  (git-gutter-fr:deleted ((t (:foreground "#E06C75" :weight bold :inherit nil))))
+  (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t)))
+
+;;;; Diff-hl
+;; Diff information in the margins. Also provides commands for navigating and
+;; viewing diff info of the current file
+(use-package diff-hl
+  :hook ((prog-mode . diff-hl-mode)
+         ;; Magit integration
+         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :custom
+  (diff-hl-draw-borders nil)
+  :init
+  (global-diff-hl-mode))
 
 ;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history
