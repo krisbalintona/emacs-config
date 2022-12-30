@@ -23,7 +23,8 @@
   :general
   (:keymaps 'corfu-map
             "M-d" 'corfu-show-documentation
-            "H-SPC" 'corfu-insert-separator)
+            ;; "H-SPC" 'corfu-insert-separator
+            )
   (:keymaps 'corfu-map
             :states 'insert
             "C-n" 'corfu-next

@@ -14,7 +14,9 @@
 ;; Reverting and traversing window configurations across time
 (use-package winner
   :general ("C-<left>" 'winner-undo
-            "C-<right>" 'winner-redo)
+            "C-<right>" 'winner-redo
+            "H-<" 'winner-undo
+            "H->" 'winner-redo)
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*" ))
@@ -22,10 +24,16 @@
 
 ;;;; Windmove
 (use-package windmove
-  :hook (after-init . windmove-mode)
   :init
   (windmove-default-keybindings '(hyper))
-  (windmove-swap-states-default-keybindings '(shift hyper)))
+  (windmove-swap-states-default-keybindings '(shift hyper))
+  (windmove-mode))
+
+;;;; Transpose-frame
+;; Rotate window configuration
+(use-package transpose-frame
+  :general ("H-r" 'rotate-frame-anticlockwise
+            "H-l" 'rotate-frame-clockwise))
 
 ;;;; Window
 (use-package window
@@ -358,13 +366,6 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-mode)
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
   )
-
-;;;; Transpose-frame
-;; Rotate window configuration
-(use-package transpose-frame
-  :general
-  ("C-S-f" 'rotate-frame-clockwise
-   "C-S-b" 'rotate-frame-anticlockwise))
 
 ;;; Buffers
 ;;;; Bookmark

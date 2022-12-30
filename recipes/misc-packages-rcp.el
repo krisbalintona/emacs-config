@@ -77,7 +77,7 @@
 ;;; Vc-msg
 ;; See a line's corresponding commit information (like git blame)
 (use-package vc-msg
-  :general ("H-b" 'vc-msg-show))
+  :general ("H-v" 'vc-msg-show))
 
 ;;; Good-scroll
 ;; Good-enough smooth scrolling
@@ -277,8 +277,10 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Eldoc-box
 (use-package eldoc-box
-  :general (:keymaps 'eglot-mode-map
-                     "H-h" 'eldoc-box-help-at-point)
+  :general
+  ("H-h" 'eldoc-box-help-at-point)
+  (:keymaps 'eglot-mode-map
+            [remap eldoc-box-help-at-point] 'eldoc-box-eglot-help-at-point)
   :custom
   (eldoc-box-max-pixel-width 650)
   (eldoc-box-max-pixel-height 400)

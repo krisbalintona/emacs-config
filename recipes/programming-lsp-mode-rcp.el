@@ -81,7 +81,7 @@
     )
   :custom
   ;; core
-  (lsp-keymap-prefix "H-l")             ; Also have this be a prefix
+  (lsp-keymap-prefix "H-c")             ; Also have this be a prefix
   (lsp-keep-workspace-alive nil)
   (lsp-auto-guess-root nil)
   (lsp-log-io nil)                  ; If set to true can cause a performance hit

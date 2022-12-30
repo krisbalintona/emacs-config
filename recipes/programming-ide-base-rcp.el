@@ -120,8 +120,8 @@
 (use-package turbo-log
   :requires tree-sitter
   :straight (turbo-log :type git :host github :repo "artawower/turbo-log.el")
-  :general (:prefix "H-l"
-                    "l" 'turbo-log-print
+  :general (:prefix "H-;"
+                    ";" 'turbo-log-print
                     "i" 'turbo-log-print-immediately
                     "h" 'turbo-log-comment-all-logs
                     "s" 'turbo-log-uncomment-all-logs
@@ -129,7 +129,7 @@
                     "]" 'turbo-log-paste-as-logger-immediately
                     "d" 'turbo-log-delete-all-logs)
   :custom
-  (turbo-log-msg-format-template "\"🚀: %s\"")
+  (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
   (turbo-log-allow-insert-without-tree-sitter-p t))
 
 ;;; Treesit (built-in)
