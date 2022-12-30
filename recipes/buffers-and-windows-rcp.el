@@ -368,9 +368,12 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;; Bookmark
 (use-package bookmark
   :hook (kill-emacs . kb/bookmark-cleanup)
+  :custom
+  (bookmark-save-flag 1)                 ; Save bookmarks file every new entry 
+  (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query 
   :config
-  (bookmark-maybe-load-default-file) ; Load bookmarks immediately for access
-
+  (bookmark-maybe-load-default-file)    ; Load bookmarks immediately for access
+  
   ;; From
   ;; https://www.reddit.com/r/emacs/comments/e1uyvk/weekly_tipstricketc_thread/f8v4re2?utm_source=share&utm_medium=web2x&context=3
   (defun kb/bookmark-cleanup ()
