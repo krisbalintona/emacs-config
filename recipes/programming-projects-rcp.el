@@ -74,6 +74,7 @@
    '((affe-find "Find file" "f")
      (consult-ripgrep "Regexp" "g")
      (magit-project-status "Magit")
+     (project-vc-dir "VC" "v")
      (project-switch-to-buffer "Buffer" "b")
      (project-query-replace-regexp "Replace regexp")
      (project-dired "Open dired")
@@ -285,6 +286,11 @@
   :init
   (magit-todos-mode)
   )
+
+;;;; Diff-mode
+(use-package diff-mode
+  :custom
+  (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language
 
 ;;; QoL
 ;;;; Git-gutter
