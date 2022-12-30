@@ -59,6 +59,7 @@
 ;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
+  :after org-roam
   :hook (org-mode . org-transclusion-activate)
   :general
   (kb/toggle-keys
