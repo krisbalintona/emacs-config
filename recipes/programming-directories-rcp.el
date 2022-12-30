@@ -14,23 +14,24 @@
 ;; Emacs' file manager
 (use-package dired
   :straight nil
+  :gfhook 'dired-hide-details-mode
   :general
   (:keymaps 'dired-mode-map
-            :states 'normal
-            "h" 'dired-up-directory
-            "l" 'dired-find-file)
+   :states 'normal
+   "h" 'dired-up-directory
+   "l" 'dired-find-file)
   :custom
   (dired-auto-revert-buffer t)          ; Automatically revert buffer
   (dired-dwim-target t)                 ; Guess default target directory?
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
   (dired-kill-when-opening-new-dired-buffer t)  ; Basically `dired-single'
   (dired-listing-switches "-alhg")              ; Flags `dired' passes to `ls'
-  (image-dired-thumb-size 150)                               ; Slightly larger thumbnails
   ;; Always copy/delete recursively?
   (dired-recursive-copies  'always)
   (dired-recursive-deletes 'top)
   ;; Ask whether destination dirs should get created when copying/removing files.
   (dired-create-destination-dirs 'ask)
+  (dired-vc-rename-file t)
   :config
   (general-unbind '(normal visual motion) dired-mode-map "SPC") ; Unbind SPC so leader key is avaiable
 
@@ -46,10 +47,10 @@ command."
                        current-prefix-arg))
     (save-window-excursion
       (mapc #'(lambda (filename)
-                (with-current-buffer (find-file-noselect filename)
-                  (if prefix
-                      (call-interactively (intern sexp))             ; Command
-                    (funcall-interactively 'eval-expression sexp)))) ; Sexp
+                 (with-current-buffer (find-file-noselect filename)
+                   (if prefix
+                       (call-interactively (intern sexp))             ; Command
+                     (funcall-interactively 'eval-expression sexp)))) ; Sexp
             (dired-get-marked-files)))))
 
 ;;;; All-the-icons-dired
@@ -64,7 +65,12 @@ command."
 
 ;;;; Image-dired
 (use-package image-dired
-  :hook (dired-mode . image-dired-minor-mode))
+  :hook (dired-mode . image-dired-minor-mode)
+  :custom
+  (image-dired-thumb-size 150)          ; Slightly larger thumbnails
+  (image-dired-external-viewer "xdg-open")
+  (image-dired-thumb-relief 0)
+  (dired-mouse-drag-files t))
 
 ;;;; Dired-git
 ;; Show git information in dired
@@ -93,17 +99,17 @@ command."
 ;;;; Dired-single
 ;; Use the same dired buffer for every directory you open using `dired'.
 (use-package dired-single
-  :disabled             ; Parity of `dired-kill-when-opening-new-dired-buffer'? 
+  :disabled             ; Parity of `dired-kill-when-opening-new-dired-buffer'?
   :general (:keymaps 'dired-mode-map
-                     ;; [remap dired-find-file] 'dired-single-buffer
-                     [remap dired-up-directory] 'dired-single-up-directory))
+            ;; [remap dired-find-file] 'dired-single-buffer
+            [remap dired-up-directory] 'dired-single-up-directory))
 
 ;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
   :general (:keymaps 'dired-mode-map
-                     :states 'normal
-                     "H" 'dired-hide-dotfiles-mode)
+            :states 'normal
+            "H" 'dired-hide-dotfiles-mode)
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
@@ -135,14 +141,14 @@ command."
 (use-package affe
   :after orderless
   :general (:keymaps 'project-prefix-map
-                     [remap project-find-file] 'affe-find)
+            [remap project-find-file] 'affe-find)
   :custom
   (affe-regexp-compiler
    #'(lambda (input type ignore-case)                ; Use orderless instead of consult to regexp
-       (let ((case-fold-search ignore-case))
-         (setq text (orderless-pattern-compiler input))
-         (cons text (lambda (str) (orderless--highlight text str)))
-         )))
+        (let ((case-fold-search ignore-case))
+          (setq text (orderless-pattern-compiler input))
+          (cons text (lambda (str) (orderless--highlight text str)))
+          )))
   (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
   (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .")) ; Include hidden files
 
