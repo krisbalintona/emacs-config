@@ -74,13 +74,14 @@
    '((affe-find "Find file" "f")
      (consult-ripgrep "Regexp" "g")
      (magit-project-status "Magit")
-     (project-vc-dir "VC" "v")
+     (project-vc-dir "VC-git")
      (project-switch-to-buffer "Buffer" "b")
      (project-query-replace-regexp "Replace regexp")
      (project-dired "Open dired")
      (project-find-dir "Open directory in dired")
      (project-compile "Compile")
-     (project-eshell "Eshell")))
+     (project-eshell "Eshell")
+     (project-shell "Shell")))
   (project-vc-merge-submodules nil)) ; Consider submodules as their own projects?
 
 ;;;; Xref
