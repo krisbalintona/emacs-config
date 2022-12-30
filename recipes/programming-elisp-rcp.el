@@ -14,11 +14,12 @@
 ;; Better keyword, cl-defun, and cl-loop indenting. See
 ;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
 (use-package lisp-keyword-indent
-  :demand t
+  :demand
   :straight (lisp-keyword-indent :type git
                                  :host github
                                  :repo "twlz0ne/lisp-keyword-indent.el")
-  :config
+  :functions kb/lisp-keyword-indent-mode
+  :init
   (defvar-local kb/lisp-keyword-indent-allow nil
     "Whether to allow `lisp-keyword-indent-mode' in current buffer.")
   (define-minor-mode kb/lisp-keyword-indent-mode
@@ -28,9 +29,11 @@
     :keymap nil
     :global t
     (if kb/lisp-keyword-indent-mode
-        (advice-add 'lisp-indent-function :override #'lisp-keyword-indent)
+        (advice-add 'lisp-indent-function :override 'lisp-keyword-indent)
       (when kb/lisp-keyword-indent-allow
-        (advice-remove 'lisp-indent-function #'lisp-keyword-indent)))))
+        (advice-remove 'lisp-indent-function 'lisp-keyword-indent))))
+  :config
+  (kb/lisp-keyword-indent-mode))
 
 ;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
