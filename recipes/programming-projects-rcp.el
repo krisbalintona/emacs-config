@@ -330,6 +330,7 @@
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :custom
   (diff-hl-draw-borders nil)
+  (diff-hl-show-staged-changes nil)
   :init
   (global-diff-hl-mode))
 
