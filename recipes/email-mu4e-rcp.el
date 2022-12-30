@@ -83,12 +83,7 @@
      :maildir :mailing-list
      :tags :attachments :signature))
   (mu4e-view-scroll-to-next t)
-  ;; Also see 5.3 of the mu4e info manual
-  (gnus-unbuttonized-mime-types nil) ; Visible buttons for email's type (e.g. plain, html)
-  (shr-color-visible-luminance-min 80)  ; Better viewing for dark theme
-  ;; Show inline images and inhibit loading of external ones. See
-  ;; https://github.com/djcb/mu/issues/1434#issuecomment-579412427
-  (gnus-blocked-images "http")
+  (shr-color-visible-luminance-min 80)   ; Better viewing for dark theme
 
   ;; Composing and sending
   ;; Don't save message to Sent Messages, Gmail/IMAP takes care of this
@@ -295,12 +290,13 @@
                      :prompt "*something" :action
                      (mu4e-error "No action for deferred mark"))))
 
-  ;; View
-  ;; Discourage viewing messages in html or richtext. See 5.3 of the mu4e
-  ;; info manual
+  ;; See 5.3 of the mu4e info manual. Also see 1.5 Display Customization of the
+  ;; emacs-mime info entry
   (with-eval-after-load 'mm-decode
-    (add-to-list 'mm-discouraged-alternatives "text/html")
-    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+    (setq gnus-blocked-images (rx unmatchable) ; Don't block images
+          gnus-inhibit-mime-unbuttonizing t    ; Show all MIME buttons
+          mm-discouraged-alternatives '("text/html" "text/richtext" "image/.*")
+          mm-automatic-display (remove "text/html" mm-automatic-display))) ; If I really don't want to see HTML
 
   ;; Sending and composition
   (org-msg-mode)
