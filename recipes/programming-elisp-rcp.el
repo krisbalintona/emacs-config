@@ -21,13 +21,16 @@
   :config
   (defvar-local kb/lisp-keyword-indent-allow nil
     "Whether to allow `lisp-keyword-indent-mode' in current buffer.")
-  (define-globalized-minor-mode global-lisp-keyword-indent-mode
-    lisp-keyword-indent-mode
-    (lambda ()
+  (define-minor-mode kb/lisp-keyword-indent-mode
+    "Minor mode for keyword indent of Emacs Lisp."
+    :init-value nil
+    :lighter ""
+    :keymap nil
+    :global t
+    (if kb/lisp-keyword-indent-mode
+        (advice-add 'lisp-indent-function :override #'lisp-keyword-indent)
       (when kb/lisp-keyword-indent-allow
-        (lisp-keyword-indent-mode))))
-
-  (global-lisp-keyword-indent-mode))
+        (advice-remove 'lisp-indent-function #'lisp-keyword-indent)))))
 
 ;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
@@ -70,8 +73,8 @@
 (use-package help-find
   :general
   (:keymaps 'help-map
-            "uu" 'help-find-function
-            "ui" 'help-find-keybinding))
+   "uu" 'help-find-function
+   "ui" 'help-find-keybinding))
 
 ;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
@@ -80,7 +83,7 @@
   :gfhook 'visual-line-mode
   :general
   (:keymaps 'helpful-mode-map
-            (general-chord "jj") 'helpful-at-point)
+   (general-chord "jj") 'helpful-at-point)
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
   ([remap describe-function] 'helpful-function
