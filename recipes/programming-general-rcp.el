@@ -340,13 +340,12 @@ afterward."
 ;;;; Anzu
 ;; Search Mode Info Display
 (use-package anzu
-  :demand t
-  :general ("M-g r" '(anzu-query-replace-regexp :wk "Query replace")
-            [remap query-replace] 'anzu-query-replace-regexp)
+  :general ([remap query-replace] 'anzu-query-replace
+            [remap query-replace-regexp] 'anzu-query-replace-regexp)
   :custom
   (anzu-cons-mode-line-p nil)
-  :config (global-anzu-mode)
-  )
+  :init
+  (global-anzu-mode))
 
 ;;; programming-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
