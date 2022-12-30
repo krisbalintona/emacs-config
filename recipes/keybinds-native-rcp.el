@@ -66,12 +66,12 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
       (funcall indent-line-function))))
 
 ;;;; Scrolling
-(defun kb/scroll-up-command ()
+(defun kb/scroll-up-command (&optional _arg)
   (interactive)
   (let ((lines (round (/ (window-height) 2))))
     (scroll-up-command lines)))
 
-(defun kb/scroll-down-command ()
+(defun kb/scroll-down-command (&optional _arg)
   (interactive)
   (let ((lines (round (/ (window-height) 2))))
     (scroll-down-command lines)))
