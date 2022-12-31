@@ -86,14 +86,14 @@
   :general
   ;; Get access to the `message' header editing commands in `org-msg-edit-mode'
   (:keymaps 'org-msg-edit-mode-map
-            :prefix "C-c C-m"
-            "C-t" 'message-goto-to
-            "C-s" 'message-goto-subject
-            "C-c" 'message-goto-cc
-            "C-b" 'message-goto-bcc
-            "C-r" 'message-goto-reply-to
-            "C-f" 'message-goto-followup-to
-            "C-w" 'message-goto-fcc)
+   :prefix "C-c C-m"
+   "C-t" 'message-goto-to
+   "C-s" 'message-goto-subject
+   "C-c" 'message-goto-cc
+   "C-b" 'message-goto-bcc
+   "C-r" 'message-goto-reply-to
+   "C-f" 'message-goto-followup-to
+   "C-w" 'message-goto-fcc)
   :custom
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil")
   (org-msg-startup "hidestars indent inlineimages hideblocks")
@@ -110,8 +110,8 @@
 (\\(?:attached\\|enclosed\\))\\|\
 \\(?:attached\\|enclosed\\)[ \t\n]\\(?:for\\|is\\)[ \t\n]")
   :config
-  ;; Copied from Doom. I know this influences at least the foreground color of
-  ;; hyperlinks.
+  ;; Copied from Doom. Influences the foreground color of hyperlinks (used to
+  ;; also be applied to headline foregrounds).
   (defvar kb/org-msg-accent-color (face-attribute 'link :foreground nil t)
     "Accent color to use in org-msg's generated CSS.
 Must be set before org-msg is loaded to take effect.")
@@ -132,8 +132,8 @@ Must be set before org-msg is loaded to take effect.")
                         ))
                (ftl-number `(,color ,bold (text-align . "left")))
                (inline-modes '(asl c c++ conf cpp csv diff ditaa emacs-lisp
-                                   fundamental ini json makefile man org plantuml
-                                   python sh xml))
+                                                                 fundamental ini json makefile man org plantuml
+                                                                 python sh xml))
                (inline-src `((background-color . "rgba(27,31,35,.05)")
                              (border-radius . "3px")
                              (padding . ".2em .4em")
@@ -232,11 +232,11 @@ Must be set before org-msg is loaded to take effect.")
             (div outline-4 ((margin-left . "10px")))
             (h4 nil ((margin-bottom . "0px") (font-size . "11pt")))
             (h3 nil ((margin-bottom . "0px")
-                     ,color (font-size . "14pt")))
+                     (font-size . "14pt")))
             (h2 nil ((margin-top . "20px") (margin-bottom . "20px")
-                     ,color (font-size . "18pt")))
+                     (font-size . "18pt")))
             (h1 nil ((margin-top . "20px") (margin-bottom . "0px")
-                     ,color (font-size . "24pt")))
+                     (font-size . "24pt")))
             (p nil ((text-decoration . "none") (line-height . "1.4")
                     (margin-top . "10px") (margin-bottom . "0px")
                     ,font-size (max-width . "50em")))
