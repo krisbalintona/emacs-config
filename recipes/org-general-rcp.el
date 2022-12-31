@@ -20,6 +20,7 @@
   :gfhook
   'prettify-symbols-mode
   'variable-pitch-mode
+  'visual-line-mode
   'visual-fill-column-mode
   '(lambda ()
       (eldoc-mode -1))
