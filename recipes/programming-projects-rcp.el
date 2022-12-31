@@ -86,6 +86,7 @@
 
 ;;;; Xref
 (use-package xref
+  :general ("H-?" 'xref-find-references-and-replace) ; Emacs 29.1
   :custom
   (xref-show-definitions-function #'xref-show-definitions-completing-read) ; Find definitions
   (xref-show-xrefs-function #'xref-show-definitions-buffer) ; Find refs
