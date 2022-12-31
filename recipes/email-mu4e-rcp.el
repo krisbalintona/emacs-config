@@ -129,9 +129,18 @@
             :name "Uni"
             :enter-func (lambda () (mu4e-message "Entering Uni context"))
             :leave-func (lambda () (mu4e-message "Leaving Uni context"))
-            :match-func (lambda (msg)
+            :match-func (lambda (msg)        ; Function called when composing
                           (when msg
-                            (string-prefix-p "/uni" (mu4e-message-field msg :maildir))))
+                            (or         ; If this email is in to, cc, or from
+                             (dolist (line (mu4e-message-field msg :to) result)
+                               (setq result
+                                     (string= "kristoffer_balintona@brown.edu" (plist-get line :email))))
+                             (dolist (line (mu4e-message-field msg :cc) result)
+                               (setq result
+                                     (string= "kristoffer_balintona@brown.edu" (plist-get line :email))))
+                             (dolist (line (mu4e-message-field msg :from) result)
+                               (setq result
+                                     (string= "kristoffer_balintona@brown.edu" (plist-get line :email)))))))
             :vars '((user-mail-address . "kristoffer_balintona@brown.edu")
                     ;; Directories
                     (mu4e-drafts-folder . "/uni/[Gmail].Drafts")
@@ -149,9 +158,18 @@
             :name "Personal"
             :enter-func (lambda () (mu4e-message "Entering Personal context"))
             :leave-func (lambda () (mu4e-message "Leaving Personal context"))
-            :match-func (lambda (msg)
+            :match-func (lambda (msg)        ; Function called when composing
                           (when msg
-                            (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+                            (or         ; If this email is in to, cc, or from
+                             (dolist (line (mu4e-message-field msg :to) result)
+                               (setq result
+                                     (string= "krisbalintona@gmail.com" (plist-get line :email))))
+                             (dolist (line (mu4e-message-field msg :cc) result)
+                               (setq result
+                                     (string= "krisbalintona@gmail.com" (plist-get line :email))))
+                             (dolist (line (mu4e-message-field msg :from) result)
+                               (setq result
+                                     (string= "krisbalintona@gmail.com" (plist-get line :email)))))))
             :vars '((user-mail-address . "krisbalintona@gmail.com")
                     ;; Directories
                     (mu4e-drafts-folder . "/personal/[Gmail].Drafts")
