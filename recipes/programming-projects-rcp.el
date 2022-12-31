@@ -107,7 +107,7 @@
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 95)) ; Last
 
-;;; Version control
+;;; Magit
 ;;;; Magit
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
@@ -255,13 +255,6 @@
   :after magit
   )
 
-;;;; Ediff
-(use-package ediff
-  :custom
-  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
-  (ediff-highlight-all-diffs nil) ; Only highlight currently selected diff
-  )
-
 ;;;; Magit-todos
 (use-package magit-todos
   :disabled t                           ; Not very useful for now
@@ -288,10 +281,47 @@
   (magit-todos-mode)
   )
 
+;;;;; VC
+;;;; Itself
+(use-package vc
+  :general (:keymaps 'vc-dir-mode-map
+            "G" 'vc-revert)
+  :custom
+  (vc-git-log-edit-summary-max-len 70)
+  (vc-git-log-edit-summary-target-len 50)
+  (vc-git-diff-switches '("--patch-with-stat" "--histogram"))
+  (vc-git-root-log-format               ; Taken from Prot
+   `("%d %h %ai %an: %s"
+     ;; The first shy group matches the characters drawn by --graph.
+     ;; We use numbered groups because `log-view-message-re' wants the
+     ;; revision number to be group 1.
+     ,(concat "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?"
+              "\\(?2: ([^)]+) \\)?\\(?1:[0-9a-z]+\\) "
+              "\\(?4:[0-9]\\{4\\}-[0-9-]\\{4\\}[0-9\s+:-]\\{16\\}\\) "
+              "\\(?3:.*?\\):")
+     ((1 'log-view-message)
+      (2 'change-log-list nil lax)
+      (3 'change-log-name)
+      (4 'change-log-date)))))
+
+;;;; Log-edit
+(use-package log-edit
+  :general (:keymaps 'log-edit-mode-map
+            [remap log-edit-comment-search-backward] 'consult-history))
+
 ;;;; Diff-mode
 (use-package diff-mode
+  :general (:keymaps 'diff-mode-map
+            "L" 'vc-print-root-log
+            "v" 'vc-next-action)
   :custom
-  (diff-font-lock-syntax 'hunk-only)) ; Fontify diffs with syntax highlighting of the language
+  (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language
+
+;;;; Ediff
+(use-package ediff
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
+  (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
 
 ;;; QoL
 ;;;; Git-gutter
