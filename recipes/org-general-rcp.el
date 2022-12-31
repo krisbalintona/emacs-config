@@ -20,17 +20,17 @@
   :gfhook
   'prettify-symbols-mode
   'variable-pitch-mode
-  'visual-line-mode
+  'visual-fill-column-mode
   '(lambda ()
-     (eldoc-mode -1))
+      (eldoc-mode -1))
   '(lambda ()
-     (require 'prog-mode)
-     (push '("->" . ?➡) prettify-symbols-alist)
-     (push '("<-" . ?⬅) prettify-symbols-alist)
-     (prettify-symbols-mode))
+      (require 'prog-mode)
+      (push '("->" . ?➡) prettify-symbols-alist)
+      (push '("<-" . ?⬅) prettify-symbols-alist)
+      (prettify-symbols-mode))
   :general
   (:keymaps 'org-mode-map
-            "H-s" 'org-store-link)
+   "H-s" 'org-store-link)
   (kb/note-keys
     "c" '(org-capture :wk "Org-capture"))
   :custom
@@ -101,10 +101,10 @@
         org-outline-path-complete-in-steps nil)
   (when (featurep 'vertico)
     (advice-add #'org-olpath-completing-read :around
-                (lambda (&rest args)
-                  (minibuffer-with-setup-hook
-                      (lambda () (setq-local completion-styles '(basic)))
-                    (apply args))))))
+                                             (lambda (&rest args)
+                                               (minibuffer-with-setup-hook
+                                                   (lambda () (setq-local completion-styles '(basic)))
+                                                 (apply args))))))
 
 ;;;; Org-faces
 (use-package org-faces
@@ -187,12 +187,10 @@
 ;; Soft wrap lines at fill-column
 (use-package visual-fill-column
   :straight (visual-fill-column :type git :host github :repo "joostkremers/visual-fill-column")
-  :ghook 'org-mode-hook 'mu4e-view-mode-hook
   :custom
   (visual-fill-column-width 120)
   (visual-fill-column-center-text t)
-  (split-window-preferred-function 'visual-fill-column-split-window-sensibly) ; Be able to vertically split windows that have wide margins
-  )
+  (split-window-preferred-function 'visual-fill-column-split-window-sensibly)) ; Be able to vertically split windows that have wide margins
 
 ;;; Custom functions
 ;;;; Better RET
@@ -222,15 +220,15 @@ re-align the table if necessary. (Necessary because org-mode has a
   "Returns the list of todo keywords that KEYWORD belongs to."
   (when keyword
     (cl-loop for (type . keyword-spec)
-             in (cl-remove-if-not #'listp org-todo-keywords)
-             for keywords =
-             (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                (match-string 1 x)
-                              x))
-                     keyword-spec)
-             if (eq type 'sequence)
-             if (member keyword keywords)
-             return keywords)))
+               in (cl-remove-if-not #'listp org-todo-keywords)
+               for keywords =
+               (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
+                                  (match-string 1 x)
+                                x))
+                       keyword-spec)
+               if (eq type 'sequence)
+               if (member keyword keywords)
+               return keywords)))
 (defun +org--insert-item (direction)
   (let ((context (org-element-lineage
                   (org-element-context)

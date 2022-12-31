@@ -39,7 +39,8 @@
                                  mu4e-headers-thread-child-prefix '("├>" . "├▶")
                                  mu4e-headers-thread-connection-prefix '("│" . "│ "))))
          (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h)
-         (dired-mode . turn-on-gnus-dired-mode)) ; Attachment integration with dired
+         (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
+         (mu4e-view-mode . visual-fill-column-mode))
   :general
   (kb/open-keys
     "m" '(mu4e :wk "Mu4e"))
