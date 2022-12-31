@@ -17,8 +17,8 @@
   (org-time-stamp-formats '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
   (org-display-custom-times t)
   (org-time-stamp-custom-formats '("%b %d, %Y" . "%a %b %d, %Y %H:%M"))
-  (org-image-actual-width 700)          ; Image widths on export 
-  
+  (org-image-actual-width 700)          ; Image widths on export
+
   ;; Async export
   (org-export-in-background nil)          ; Have it be default?
   (org-export-async-debug t)
@@ -303,8 +303,8 @@ chosen."
     :filters-alist '((:filter-options . org-latex-math-block-options-filter)
                      (:filter-paragraph . org-latex-clean-invalid-line-breaks)
                      (:filter-parse-tree org-latex-math-block-tree-filter
-                                         org-latex-matrices-tree-filter
-                                         org-latex-image-link-filter)
+                      org-latex-matrices-tree-filter
+                      org-latex-image-link-filter)
                      (:filter-verse-block . org-latex-clean-invalid-line-breaks))
     :options-alist
     '((:latex-class "LATEX_CLASS" nil org-latex-default-class t)
@@ -381,15 +381,13 @@ chosen."
   :after org
   :init
   (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines)) ; The ignore tag will export contents but ignore heading
-  )
+  (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
 
 ;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
   :commands org-export-dispatch
-  :ensure-system-package pandoc
-  )
+  :ensure-system-package pandoc)
 
 ;;; org-export-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

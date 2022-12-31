@@ -24,9 +24,6 @@
   (message-signature "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")
   (message-signature-insert-empty-line t)
   (message-citation-line-function #'message-insert-formatted-citation-line)
-  (message-citation-line-format (concat "> From: %f\n"
-                                        "> Date: %a, %e %b %Y %T %z\n"
-                                        ">"))
   (message-ignored-cited-headers nil)   ; Default is "." for all headers
   (message-confirm-send nil)
   (message-kill-buffer-on-exit t)
@@ -37,8 +34,8 @@
   ;; (message-sendmail-extra-arguments '("--read-envelope-from")) ; Tell msmtp to choose the SMTP server according to the from field in the outgoing email
   ;; (message-sendmail-f-is-evil 't)
   :init
-  ;; Taken from Doom. Detect empty subjects, and give users an opotunity to fill
-  ;; something in
+  ;; Taken from Doom. Detect empty subjects, and give users an opportunity to
+  ;; fill something in
   (defun kb/mu4e-check-for-subject ()
     "Check that a subject is present, and prompt for a subject if not."
     (save-excursion
@@ -94,6 +91,8 @@
    "C-r" 'message-goto-reply-to
    "C-f" 'message-goto-followup-to
    "C-w" 'message-goto-fcc)
+  (:keymaps 'org-msg-edit-mode-map
+   "C-c C-w" 'kb/mu4e-compose-insert-signature)
   :custom
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil")
   (org-msg-startup "hidestars indent inlineimages hideblocks")
@@ -243,56 +242,194 @@ Must be set before org-msg is loaded to take effect.")
             (b nil ((font-weight . "500") (color . ,theme-color)))
             (div nil (,@font (line-height . "12pt")))))))
 
-;;;; Signature
+;;;; Custom signatures
 (with-eval-after-load 'org-msg
+  (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
+    "Separator between email body and its signature.")
   (setq message-signature nil
-        message-signature-separator "^⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼ *$"
-        org-msg-signature "
-#+begin_signature
-⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼
+        message-signature-separator (format "^%s *$" kb/signature-separator))
+  (defvar kb/signature-alist
+    `(("Take care" . ,(format "%s\n\nTake care,\n\nKristoffer" kb/signature-separator))
+      ("In gratitude" . ,(format "%s\n\nIn gratitude,\n\nKristoffer" kb/signature-separator))
+      ("With appreciation" . ,(format "%s\n\nWith appreciation,\n\nKristoffer" kb/signature-separator))
+      ("Brown banner" . ,(concat kb/signature-separator "\n\n"
+                                 "With appreciation,\n\nKristoffer\n\n"
+                                 "#+begin_export html
+<br />
+<table
+  style='color: rgb(136, 136, 136); border: none; border-collapse: collapse'
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://clipground.com/images/brown-university-logo-png-1.png'
+          alt='Brown logo'
+          style='border: none'
+          height='100'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 6pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-family: garamond;
+              font-size: 11pt;
+              font-weight: 700;
+              white-space: pre-wrap;
+            '
+            >Kristoffer Balintona</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              font-family: garamond;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >B.A. Philosophy</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              font-family: garamond;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Class of 2024</span
+          >
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-family: garamond;
+              font-size: 10pt;
+              white-space: pre-wrap;
+            '
+            >Tel: (773) 677-9699</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='
+            font-size: 10pt;
+            line-height: 1.2;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+          '
+        >
+          <span
+            style='
+              font-size: 10pt;
+              font-family: garamond;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Box: 6327</span
+          >
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export")))
+    "Alist of aliases their corresponding email signatures.")
 
-In gratitude,
+  (defun kb/mu4e-compose-insert-signature (alias)
+    "Insert one of the signatures from `kb/signature-alist'."
+    (interactive (list (completing-read
+                        "Insert signature:"
+                        (cl-loop for (key . value) in kb/signature-alist
+                                 collect key))))
+    (save-excursion
+      (insert
+       "#+begin_signature\n"
+       (or (alist-get alias kb/signature-alist nil nil #'string=) "")
+       "\n#+end_signature"))))
 
-Kristoffer
-
-#+begin_export html
-   <br>
-      <table style='color:rgb(136,136,136);border:none;border-collapse:collapse'>
-        <tbody>
-          <tr style='height:81.25pt'>
-            <td style='border-right: 0.75pt dotted rgb(135, 127, 116); vertical-align: top; padding: 5pt 11pt 5pt 5pt;' title=''>
-              <img src='https://clipground.com/images/brown-university-logo-png-1.png' alt='Brown logo' style='border:none;' height='100'>
-            </td>
-            <td style='border-left:0.75pt dotted rgb(135,127,116);vertical-align:top;padding:5pt 5pt 5pt 11pt'>
-              <p dir='ltr' style='line-height:1.38;margin-top:6pt;margin-bottom:0pt'>
-                <span style='color:rgb(0,0,0);font-family:&quot;Times New Roman&quot;;font-size:11pt;font-weight:700;white-space:pre-wrap'>Kristoffer Balintona</span>
-                <br>
-              </p>
-              <p dir='ltr' style='line-height:1.38;margin-top:0pt;margin-bottom:0pt'>
-                <span style='font-size:10pt;font-family:&quot;Times New Roman&quot;;color:rgb(0,0,0);vertical-align:baseline;white-space:pre-wrap'>B.A. Philosophy</span>
-                <br>
-              </p>
-              <p dir='ltr' style='line-height:1.38;margin-top:0pt;margin-bottom:0pt'>
-                <span style='font-size:10pt;font-family:&quot;Times New Roman&quot;;color:rgb(0,0,0);vertical-align:baseline;white-space:pre-wrap'>Class of 2024</span>
-              </p>
-              <p dir='ltr' style='line-height:1.38;margin-top:0pt;margin-bottom:0pt'>
-                <span style='color:rgb(153,153,153);font-family:garamond;font-size:8pt;white-space:pre-wrap'>Tel: (773) 677-9699</span>
-                <br>
-              </p>
-              <p dir='ltr' style='color:rgb(34,34,34);font-size:12.8px;line-height:1.2;margin-top:0pt;margin-bottom:0pt'>
-                <span style='font-size:8pt;font-family:garamond;color:rgb(153,153,153);vertical-align:baseline;white-space:pre-wrap'>Box: 6327</span>
-                <span style='font-size:8pt;font-family:garamond;color:rgb(136,136,136);vertical-align:baseline;white-space:pre-wrap'> &nbsp;
-                </span>
-              </p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-#+end_export
-#+end_signature"))
+;;;; Custom creation of `org-msg' buffer
+(with-eval-after-load 'org-msg
+  (defun kb/org-msg-post-setup (&rest _args)
+    "Transform the current `message' buffer into a OrgMsg buffer.
+If the current `message' buffer is a reply, the
+`org-msg-separator' string is inserted at the end of the editing
+area. If the current buffer contains MML tags,
+`org-msg-edit-mode' is not activated as OrgMsg does not support
+MML tags."
+    (unless (eq major-mode 'org-msg-edit-mode)
+      (message-goto-body)
+      (let* ((type (cond ((not (org-msg-message-fetch-field "subject")) 'new)
+                         ((org-msg-mua-call 'article-htmlp) 'reply-to-html)
+                         ('reply-to-text)))
+             (alternatives (org-msg-get-alternatives type)))
+        (when alternatives
+          (let-alist (org-msg-composition-parameters type alternatives)
+            (unless (search-forward org-msg-options nil t)
+              (insert (org-msg-header (when (eq .style 'top-posting)
+                                        (org-msg-mua-call 'save-article-for-reply))
+                                      alternatives))
+              (when .greeting-fmt
+                (insert (format .greeting-fmt
+                                (if (eq type 'new)
+                                    ""
+                                  (concat " " (org-msg-get-to-name))))))
+              ;; Where I customize how and when a signature is inserted
+              (insert "\n")
+              (when message-signature-insert-empty-line
+                (insert "\n"))
+              (save-excursion
+                (insert "\n"))
+              (call-interactively 'kb/mu4e-compose-insert-signature)
+              (when (eq .style 'top-posting)
+                (save-excursion
+                  (insert "\n\n" org-msg-separator "\n")
+                  (delete-region (line-beginning-position) (1+ (line-end-position)))
+                  (dolist (rep '(("^>+ *" . "") ("___+" . "---")))
+                    (save-excursion
+                      (while (re-search-forward (car rep) nil t)
+                        (replace-match (cdr rep)))))
+                  (org-escape-code-in-region (point) (point-max))))
+              (unless (eq .style 'top-posting)
+                (goto-char (point-max))))
+            (if (org-msg-message-fetch-field "to")
+                (org-msg-goto-body)
+              (message-goto-to))
+            (org-msg-edit-mode))
+          (set-buffer-modified-p nil)))))
+  (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup))
 
 ;;; email-sending-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

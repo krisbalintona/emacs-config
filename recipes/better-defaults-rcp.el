@@ -16,7 +16,7 @@
       no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
 
 ;;; Enable these disabled commands
-(put 'narrow-to-region 'disabled nil) ; `narrow-to-region'
+(put 'narrow-to-region 'disabled nil)
 (put 'help-fns-edit-variable 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 
