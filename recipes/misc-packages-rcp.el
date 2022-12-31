@@ -400,43 +400,13 @@ displayed."
   :straight (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
-;;; Page breaks as horizontal rules
-;; Turn page breaks (i.e. ^L) into horizontal rules. Simply uses an overlay and
-;; the extend face attribute. Taken from
-;; https://www.emacswiki.org/emacs/OverlayControlL
-(define-minor-mode kb/page-break-horizontal-rule-mode
-  "Minor mode for replacing page breaks with horizontal rules"
-  :init-value nil
-  :lighter ""
-  :keymap nil
-  (font-lock-add-keywords
-   nil
-   `((,page-delimiter ;; variable with the regexp (usually "^\f" or "^^L")
-      0
-      (prog1 nil
-        ;; don't display ^L
-        (compose-region (match-beginning 0) (match-end 0) "")
-        ;; make an overlay (like in hl-line)
-        (let ((pdl (make-overlay (line-beginning-position)
-                                 (line-beginning-position 2))))
-          ;; :background has to be different from the background color
-          ;; gray1 here is just a little different from black
-          (overlay-put pdl 'face '(:extend t :underline "gray30"))
-          (overlay-put pdl 'modification-hooks
-                       ;; these arguments are received from modification-hooks
-                       '((lambda (overlay after-p begin end &optional length)
-                           (delete-overlay overlay))))
-          (overlay-put pdl 'insert-in-front-hooks
-                       '((lambda (overlay after-p begin end &optional length)
-                           (delete-overlay overlay))))))
-      t))))
-(dolist (mode '(emacs-lisp-mode-hook
-                lisp-mode-hook
-                compilation-mode-hook
-                outline-mode-hook
-                help-mode-hook
-                org-mode-hook))
-  (add-hook mode 'kb/page-break-horizontal-rule-mode))
+;;; Form-feed
+;; Display  fancily. Visit the readme for alternatives and their differences
+(use-package form-feed
+  :custom
+  (form-feed-exclude-modes nil)
+  :init
+  (global-form-feed-mode))
 
 ;;; Logos
 ;; Package that encourages focused writing
