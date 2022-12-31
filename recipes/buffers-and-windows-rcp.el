@@ -297,7 +297,6 @@ If buffer-or-name is nil return current buffer's mode."
 
      ;; Other
      special-mode
-     help-mode
      "^Calc:"
      dap-ui-repl-mode
      quickrun--mode
