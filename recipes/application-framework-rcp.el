@@ -12,8 +12,6 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
-  :disabled
-  :demand t
   :ensure-system-package (("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
                           (gdb))     ; For debugging purposes, if I ever need to
   :after browse-url
@@ -113,29 +111,8 @@
     (eaf-bind-key evil-window-up "C-w k" eaf-pdf-viewer-keybinding)
     (eaf-bind-key evil-window-down "C-w j" eaf-pdf-viewer-keybinding))
 
-  ;; Use EAF to open PDFs
-  (with-eval-after-load 'ox
-    (defun eaf-org-open-file (file &optional link)
-      "A wrapper function on `eaf-open'. Open in another window and
-move to that window."
-      (when (< (length (window-list)) 2)
-        (split-window-right))
-      (other-window 1)
-      (eaf-open file))
-
-    ;; For opening files based on extension
-    (setf
-     ;; (alist-get "\\.docx\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
-     ;; (alist-get "\\.odt\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
-     (alist-get "\\.mm\\'" org-file-apps nil nil #'equal) 'default
-     ;; (alist-get "\\.x?html?\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
-     ;; (alist-get "\\.pdf\\'" org-file-apps nil nil #'equal) 'eaf-org-open-file
-     (alist-get 'directory org-file-apps nil nil #'equal) 'emacs
-     (alist-get 'auto-mode org-file-apps nil nil #'equal) 'emacs))
-
   (with-eval-after-load 'dash-docs
     (setq dash-docs-browser-func 'eaf-open-browser)))
-
 
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
