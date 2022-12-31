@@ -290,7 +290,8 @@
   :custom
   (vc-git-log-edit-summary-max-len 70)
   (vc-git-log-edit-summary-target-len 50)
-  (vc-git-diff-switches '("--patch-with-stat" "--histogram"))
+  (vc-git-diff-switches              ; Have diff headers look similar to Magit's
+   '("--patch-with-stat" "--histogram"))
   (vc-git-root-log-format               ; Taken from Prot
    `("%d %h %ai %an: %s"
      ;; The first shy group matches the characters drawn by --graph.
