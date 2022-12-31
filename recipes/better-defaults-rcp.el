@@ -15,8 +15,10 @@
 (setq no-littering-etc-directory (expand-file-name "data/" user-emacs-directory) ; Config files
       no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
 
-;;; Reenable these disabled commands
+;;; Enable these disabled commands
 (put 'narrow-to-region 'disabled nil) ; `narrow-to-region'
+(put 'help-fns-edit-variable 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
 
 ;;; Disable startup echo message
 ;; See `startup-echo-area-message'
