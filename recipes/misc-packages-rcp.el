@@ -413,8 +413,10 @@ displayed."
 (use-package logos
   :general
   ([remap narrow-to-region] 'logos-narrow-dwim
+   [remap backward-page] 'logos-backward-page-dwim
    [remap forward-page] 'logos-forward-page-dwim
-   [remap backward-page] 'logos-backward-page-dwim)
+   "H-p" 'backward-page
+   "H-n" 'forward-page)
   :custom
   (logos-outlines-are-pages nil))
 
