@@ -313,7 +313,10 @@
 
 ;;;; Diff-mode
 (use-package diff-mode
-  :gfhook 'outshine-mode
+  :gfhook
+  'outshine-mode
+  '(lambda ()                  ; FIXME 2022-12-30: Not sure why this doesn't work...
+      (display-line-numbers-mode -1))
   :general (:keymaps 'diff-mode-map
             "S-<iso-lefttab>" 'outshine-cycle-buffer
             "<tab>" 'outshine-cycle
@@ -321,6 +324,7 @@
             "L" 'vc-print-root-log
             "v" 'vc-next-action)
   :custom
+  (diff-refine 'navigation) ; FIXME 2022-12-30: Now exactly sure what this does...
   (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language
 
 ;;;; Ediff
@@ -366,9 +370,7 @@
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :custom
   (diff-hl-draw-borders nil)
-  (diff-hl-show-staged-changes nil)
-  :init
-  (global-diff-hl-mode))
+  (diff-hl-show-staged-changes nil))
 
 ;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history
