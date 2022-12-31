@@ -442,7 +442,9 @@ displayed."
   :init
   (global-so-long-mode)
   (electric-pair-mode)
-  (repeat-mode))
+  (repeat-mode)
+  ;; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
+  (find-function-setup-keys))
 
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
