@@ -187,6 +187,7 @@
 ;; Soft wrap lines at fill-column
 (use-package visual-fill-column
   :straight (visual-fill-column :type git :host github :repo "joostkremers/visual-fill-column")
+  :ghook 'emacs-news-mode-hook
   :custom
   (visual-fill-column-width 120)
   (visual-fill-column-center-text t)
