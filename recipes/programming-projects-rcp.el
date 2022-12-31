@@ -312,7 +312,11 @@
 
 ;;;; Diff-mode
 (use-package diff-mode
+  :gfhook 'outshine-mode
   :general (:keymaps 'diff-mode-map
+            "S-<iso-lefttab>" 'outshine-cycle-buffer
+            "<tab>" 'outshine-cycle
+            "C-x n s" 'outshine-narrow-to-subtree
             "L" 'vc-print-root-log
             "v" 'vc-next-action)
   :custom
