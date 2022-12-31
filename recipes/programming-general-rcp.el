@@ -119,7 +119,6 @@
    [remap bookmark-jump] 'consult-bookmark
    [remap yank-pop] 'consult-yank-pop
    [remap goto-line] 'consult-goto-line
-   [remap recentf-open-files] 'consult-recent-file
    [remap repeat-complex-command] 'consult-complex-command
    [remap flymake-show-buffer-diagnostics] 'consult-flymake
    [remap project-find-regexp] 'consult-ripgrep
