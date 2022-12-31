@@ -131,12 +131,6 @@ argument, query for word to search."
              "o" '(occur :wk "Occur"))
   )
 
-;;; Goto-line-preview
-;; Preview line before you jump to it with `goto-line'
-(use-package goto-line-preview
-  :general ([remap goto-line] 'goto-line-preview)
-  )
-
 ;;; buffer-nav-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'buffer-nav-rcp)
