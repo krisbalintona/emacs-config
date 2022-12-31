@@ -100,7 +100,8 @@
   (mu4e-completing-read-function 'completing-read)
   (mu4e-change-filenames-when-moving t) ; Prevent duplication
   (mu4e-confirm-quit nil)
-  (mu4e-headers-eldoc-format "In %m on %d with flags %F")
+  (mu4e-headers-eldoc-format (concat (mu4e-context-name (mu4e-context-current))
+                                     ": In %m with flags %F"))
   :init
   ;; Gmail integration is taken from Doom
   ;; Check if msg is being called from a gmail account
