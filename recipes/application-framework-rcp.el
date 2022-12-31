@@ -117,28 +117,26 @@
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
-  :commands popweb-org-roam-link-show popweb-org-roam-link-preview-select
   :straight (popweb :type git
                     :host github
                     :repo "manateelazycat/popweb"
                     :files (:defaults "*.py" "*.js" "extension/*/*"))
-  :hook ((latex-mode . (lambda ()
-                         (popweb-latex-mode)
-                         (setq-local popweb-popup-pos "top-left")
-                         )))
+  :hook (latex-mode . popweb-latex-mode)
+  :general ("H-s" 'popweb-latex-show)
   :custom
   (popweb-popup-pos "point-bottom")
   :config
   ;; LaTeX previews
   (require 'popweb-latex)
   ;; Chinese-English translation popup
-  (require 'popweb-dict-bing)           ; Translation using Bing
-  (require 'popweb-dict-youdao)         ; Translation using Youdao
+  ;; (require 'popweb-dict-bing)           ; Translation using Bing
+  ;; (require 'popweb-dict-youdao)         ; Translation using Youdao
   ;; Org-roam link previews
-  (require 'popweb-org-roam-link)
-  (advice-add 'popweb-org-roam-link-show :around #'(lambda (orig-fun &rest args)
-                                                      ;; Needs to see the entire buffer for some reason...
-                                                      (org-with-wide-buffer (apply orig-fun args)))))
+  ;; (require 'popweb-org-roam-link)
+  ;; (advice-add 'popweb-org-roam-link-show :around #'(lambda (orig-fun &rest args)
+  ;;                                                     ;; Needs to see the entire buffer for some reason...
+  ;;                                                     (org-with-wide-buffer (apply orig-fun args))))
+  )
 
 ;;; application-framework-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
