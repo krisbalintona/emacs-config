@@ -54,16 +54,16 @@
 
 ;;; Flymake
 (use-package flymake
-  :ghook 'prog-mode-hook 'text-mode-hook
+  :ghook 'prog-mode-hook
   :gfhook
   '(lambda ()
       (when flycheck-mode
         (flycheck-mode -1)))
   :general
+  ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
   (:keymaps 'flymake-mode-map
    "M-n" 'flymake-goto-next-error
    "M-p" 'flymake-goto-prev-error)
-  ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
   :custom
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
