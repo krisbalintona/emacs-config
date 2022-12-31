@@ -115,30 +115,38 @@
                           (rg . ripgrep))
   :general
   ([remap switch-to-buffer] '(consult-buffer :wk "Consult buffer")
-   [remap switch-to-buffer-other-window] '(consult-buffer-other-window :wk "Consult buffer other window")
-   [remap bookmark-jump] '(consult-bookmark :wk "Consult bookmark")
-   [remap yank-pop] '(consult-yank-pop :wk "Consult yank-pop"))
-  ([remap project-find-regexp] 'consult-ripgrep)
+   [remap switch-to-buffer-other-window] 'consult-buffer-other-window
+   [remap bookmark-jump] 'consult-bookmark
+   [remap yank-pop] 'consult-yank-pop
+   [remap goto-line] 'consult-goto-line
+   [remap recentf-open-files] 'consult-recent-file
+   [remap repeat-complex-command] 'consult-complex-command
+   [remap flymake-show-buffer-diagnostics] 'consult-flymake
+   [remap project-find-regexp] 'consult-ripgrep
+   [remap imenu] 'kb/consult-imenu-versatile
+   [remap jump-to-register] 'consult-register
+   "C-x M-m" 'consult-minor-mode-menu
+   "C-x M-k" 'consult-kmacro
+   "M-s M-g" 'consult-grep
+   "M-s M-f" 'consult-find
+   "M-s M-l" 'consult-line
+   "M-s M-m" 'consult-mark
+   "M-s M-s" 'consult-outline
+   "M-s M-l" 'consult-line)
   (:keymaps 'help-map
-   [remap apropos-command] '(consult-apropos :wk "Consult apropos"))
+   [remap apropos-command] 'consult-apropos)
+  (:keymaps 'org-mode-map
+   [remap consult-outline] 'consult-org-heading)
   (:keymaps 'minibuffer-local-map
    "M-r" 'consult-history)
   (:keymaps 'comint-mode-map
    [remap comint-history-isearch-backward-regexp] 'consult-history)
-  (kb/nav-keys
-    "o" '(consult-outline :wk "Consult outline")
-    "j" '(consult-line :wk "Consult line"))
-  ([remap imenu] '(kb/consult-imenu-versatile :wk "Consult imenu"))
-  (:keymaps 'org-mode-map
-   [remap consult-outline] '(consult-org-heading :wk "Consult outline"))
-  ([remap recentf-open-files] '(consult-recent-file :wk "Consult recent file")
-   [remap flymake-show-buffer-diagnostics] 'consult-flymake)
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
-   '((eshell-mode . eshell-history-ring)
-     (comint-mode . comint-input-ring)
-     (term-mode . term-input-ring)
-     ))
+   '((eshell-mode eshell-history-ring eshell-history-index)
+     (comint-mode comint-input-ring comint-input-ring-index)
+     (term-mode term-input-ring term-input-ring-index)
+     (log-edit-mode log-edit-comment-ring log-edit-comment-ring-index)))
   (consult-ripgrep-args
    "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /   --smart-case --no-heading --line-number --hidden .")
   :init
