@@ -427,7 +427,11 @@ Interactively select signature via `kb/mu4e-compose-insert-signature'."
                              (not (org-msg-has-mml-tags)))
                     org-msg-posting-style)))
       (greeting-fmt . ,org-msg-greeting-fmt)
-      (signature . ,(call-interactively 'kb/mu4e-compose-insert-signature))))
+      (signature . ,(unless (save-excursion ; Don't interactively select signature if one already present
+                              (save-match-data
+                                (goto-char (point-min))
+                                (search-forward "#+begin_signature" nil t)))
+                      (call-interactively 'kb/mu4e-compose-insert-signature)))))
   (advice-add 'org-msg-composition-parameters :override 'kb/org-msg-composition-parameters)
 
   (defun kb/org-msg-post-setup (&rest _args)
