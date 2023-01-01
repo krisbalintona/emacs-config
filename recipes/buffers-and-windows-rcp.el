@@ -48,6 +48,11 @@
   (display-buffer-alist
    `(;; Automatically hide
 
+     ;; Full frame
+     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'org-msg-edit-mode))
+      (display-buffer-full-frame
+       display-buffer-same-window))
+
      ;; Same window
      ("\\*helpful *"
       (display-buffer-reuse-mode-window
