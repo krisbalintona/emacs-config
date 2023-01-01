@@ -28,17 +28,18 @@
     "n" '(notmuch :wk "Notmuch"))
   ([remap compose-mail] #'notmuch-mua-new-mail)
   (:keymaps 'notmuch-search-mode-map
-            "r" 'notmuch-search-reply-to-thread ; Easier to reply to all by default
-            "R" 'notmuch-search-reply-to-thread-sender)
+   "r" 'notmuch-search-reply-to-thread ; Easier to reply to all by default
+   "R" 'notmuch-search-reply-to-thread-sender)
   (:keymaps 'notmuch-show-mode-map
-            "r" 'notmuch-show-reply     ; Easier to reply to all by default
-            "R" 'notmuch-show-reply-sender)
+   "r" 'notmuch-show-reply     ; Easier to reply to all by default
+   "R" 'notmuch-show-reply-sender)
   :custom
   ;; Account settings
   (notmuch-identities nil)              ; Defer to notmuch-config's file data
   (notmuch-fcc-dirs                     ; Set sent mail directories
-   '(("krisbalintona@gmail.com" . "personal/[Gmail].Sent Mail")
-     ("kristoffer_balintona@brown.com" . "personal/[Gmail].Sent Mail")))
+   '(("kristoffer_balintona@brown.com" . "drafts/uni")
+     ("krisbalintona@gmail.com" . "drafts/personal")))
+
 
   ;; General UI
   (notmuch-show-logo nil)
@@ -83,7 +84,8 @@
      (:name "[uni] drafts" :query "from:kristoffer_balintona@brown.edu* tag:draft -tag:trash  -tag:deleted" :key "d")
      (:name "[personal] all mail" :query "path:personal/** -tag:trash" :key "a")
      (:name "[uni] all mail" :query "path:uni/** -tag:trash" :key "A")
-     (:name "trash" :query "tag:trash" :key "T")))
+     (:name "[personal] trash" :query "path:personal/** tag:trash" :key "T")
+     (:name "[uni] trash" :query "path:uni/** tag:trash" :key "t")))
 
   ;; Tree
   (notmuch-tree-show-out t)
@@ -137,7 +139,11 @@
   ;; (notmuch-wash-wrap-lines-length 100)
   (notmuch-unthreaded-show-out nil)
   (notmuch-message-headers '("To" "Cc" "Date" "Subject"))
-  (notmuch-message-headers-visible t))
+  (notmuch-message-headers-visible t)
+  :config
+  ;; Recentering causes jittery window behavior in notmuch-view-mode for me.
+  (defun kb/notmuch-show-message-adjust () nil)
+  (advice-add 'notmuch-show-message-adjust :override #'kb/notmuch-show-message-adjust))
 
 ;;; Notmuch-indicator
 (use-package notmuch-indicator
