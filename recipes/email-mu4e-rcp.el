@@ -52,7 +52,7 @@
   (mu4e-bookmarks
    '((:name "All inboxes" :query "maildir:/personal/Inbox OR maildir:/uni/Inbox" :key ?u)
      (:name "All drafts" :query "maildir:/personal/[Gmail].Drafts OR maildir:/uni/[Gmail].Drafts" :key ?d)
-     ))
+     (:name "All sent" :query "maildir:\"/personal/[Gmail].Sent Mail\" OR maildir:\"/uni/[Gmail].Sent Mail\"" :key ?s)))
 
   ;; Contexts
   (mu4e-context-policy 'ask-if-none)
