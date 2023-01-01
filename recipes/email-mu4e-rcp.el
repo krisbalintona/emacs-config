@@ -62,7 +62,7 @@
 
   ;; Indexing
   (mu4e-get-mail-command "mbsync -a")
-  (mu4e-update-interval 300)
+  (mu4e-update-interval nil) ; Already run my own systemd service to update in the background 
   (mu4e-index-update-error-continue t)
   ;; Speed up indexing. See 2.9.4 Speeding up indexing of the Mu4e info manual.
   ;; Also note `mu4e-update-index-nonlazy'
