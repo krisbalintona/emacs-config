@@ -97,6 +97,7 @@
   (mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))
   (mu4e-compose-signature-auto-include nil)
   ;; (mu4e-compose-format-flowed t)        ; Not sure if needed yet
+  (mu4e-compose-hidden-headers nil)
 
   ;; Other
   (mu4e-completing-read-function 'completing-read)
