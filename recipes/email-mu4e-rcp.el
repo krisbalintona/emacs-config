@@ -41,7 +41,8 @@
          (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h)
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
          (mu4e-view-mode . visual-fill-column-mode)
-         (message-send . kb/message-check-mismatched-context))
+         (message-send . kb/message-check-mismatched-emails)
+         (message-send . kb/message-check-mismatched-path))
   :general
   (kb/open-keys
     "m" '(mu4e :wk "Mu4e"))
@@ -57,7 +58,7 @@
 
   ;; Contexts
   (mu4e-context-policy 'ask-if-none)
-  (mu4e-compose-context-policy 'ask)
+  (mu4e-compose-context-policy 'ask-if-none)
 
   ;; Indexing
   (mu4e-get-mail-command "mbsync -a")
@@ -103,15 +104,23 @@
   (mu4e-confirm-quit nil)
   (mu4e-headers-eldoc-format "In %m with flags %F")
   :init
-  (defun kb/message-check-mismatched-context ()
+  (defun kb/message-check-mismatched-emails ()
     "Check that the from header email matches the email of the current
 Mu4e context."
     (let ((email-header-raw (message-field-value "From" t))
           (email-context
            (alist-get 'user-mail-address (mu4e-context-vars (mu4e-context-current)))))
       (unless (string-match-p (rx (literal email-context)) email-header-raw)
-        (error "[kb/message-check-mismatched-context]: Mismatched emails! %s header versus %s context"
+        (error "[kb/message-check-mismatched-emails]: Mismatched emails! %s header versus %s context"
                email-header-raw email-context))))
+  (defun kb/message-check-mismatched-path ()
+    "Check that the path of the email matches the Mu4e context."
+    (let ((path-header-raw (file-name-parent-directory
+                            (file-name-parent-directory (buffer-file-name))))
+          (path-context (downcase (mu4e-context-name (mu4e-context-current)))))
+      (unless (string-match-p (rx (literal path-context)) path-header-raw)
+        (error "[kb/message-check-mismatched-paths]: Mismatched context with path! %s actual versus %s context"
+               path-header-raw path-context))))
 
   ;; Gmail integration is taken from Doom
   ;; Check if msg is being called from a gmail account
@@ -418,7 +427,7 @@ will also be the width of all other printable characters."
 (use-package mu4e-folding
   :after mu4e
   :straight (mu4e-folding :type git :host github :repo "rougier/mu4e-folding")
-  :ghook 'mu4e-headers-mode
+  :ghook 'mu4e-headers-mode-hook
   :custom
   (mu4e-folding-default-view 'folded))
 
