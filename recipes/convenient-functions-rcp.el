@@ -198,7 +198,7 @@ current subtree."
 (defvar kb/drafts-directory nil
   "Directory for drafts.")
 (with-eval-after-load 'org-roam
-  (setq kb/drafts-directory (expand-file-name "drafts/" org-roam-directory)))
+  (setq kb/drafts-directory (expand-file-name "drafts/" org-directory)))
 
 (defun kb/draft--draft-filename (filename &optional additional-suffix)
   "Provide FILENAME and return the trash file's name.
