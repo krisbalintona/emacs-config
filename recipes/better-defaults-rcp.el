@@ -7,6 +7,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;;; Custom
+;; Show variable names in their lisp form
+(setq custom-unlispify-tag-names nil)
+
 ;;; No-littering
 ;; Set better default package paths
 (require 'recentf)
