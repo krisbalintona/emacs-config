@@ -475,6 +475,16 @@ displayed."
   (defengine youtube
     "https://www.youtube.com/results?aq=f&oq=&search_query=%s"))
 
+;;; Electric
+(use-package electric
+  :custom
+  (electric-quote-comment nil)
+  (electric-quote-string nil)
+  (electric-quote-replace-double t)
+  :init
+  (electric-pair-mode)
+  (electric-quote-mode))                ; For quotes in text mode
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
@@ -496,7 +506,6 @@ displayed."
     (general-unbind 'normal custom-mode-map "SPC"))
   :init
   (global-so-long-mode)
-  (electric-pair-mode)
   (repeat-mode)
   ;; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
   (find-function-setup-keys))

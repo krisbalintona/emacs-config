@@ -19,7 +19,6 @@
          "\\.yaml\\'"
          "\\.html\\'")
   :gfhook
-  'electric-pair-mode
   'highlight-indent-guides-mode
   'display-line-numbers-mode
   'visual-line-mode
@@ -51,7 +50,6 @@
 ;;; CSS-mode
 (use-package css-mode
   :ensure-system-package (stylelint . "sudo npm install --global --save-dev stylelint stylelint-config-standard")
-  :gfhook 'electric-pair-mode
   :custom
   (css-indent-offset 2)
 
@@ -66,7 +64,6 @@
                           (semistandard . "sudo npm install --global semistandard"))
   :mode "\\.js\\'"
   :gfhook
-  'electric-pair-mode
   'highlight-indent-guides-mode
   'display-line-numbers-mode
   'visual-line-mode
