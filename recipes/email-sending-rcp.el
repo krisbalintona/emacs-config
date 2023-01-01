@@ -63,7 +63,7 @@
 (use-package smtpmail
   :ensure-system-package (msmtp)
   :custom
-  (send-mail-function 'smtpmail-send-it)
+  ;; (send-mail-function 'smtpmail-send-it)
 
   (smtpmail-default-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-server "smtp.gmail.com")
