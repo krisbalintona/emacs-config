@@ -295,7 +295,10 @@
        (if (file-remote-p (buffer-file-name (buffer-base-buffer)))
            super-save-remote-files t))
      (lambda ()
-       (super-save-include-p (buffer-file-name (buffer-base-buffer))))))
+       (super-save-include-p (buffer-file-name (buffer-base-buffer))))
+     (lambda ()                              ; Don't save Email drafts 
+       (not (or (derived-mode-p 'message-mode)
+                (eq major-mode 'org-msg-edit-mode))))))
   :config
   (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
   (add-to-list 'super-save-triggers 'evil-window-mru)
