@@ -14,7 +14,7 @@
   :straight nil
   :hook ((message-setup . message-sort-headers)
          (message-mode . visual-fill-column-mode)
-         (message-send . kb/mu4e-check-for-subject))
+         (message-send . kb/message-check-for-subject))
   :custom
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
@@ -36,7 +36,7 @@
   :init
   ;; Taken from Doom. Detect empty subjects, and give users an opportunity to
   ;; fill something in
-  (defun kb/mu4e-check-for-subject ()
+  (defun kb/message-check-for-subject ()
     "Check that a subject is present, and prompt for a subject if not."
     (save-excursion
       (goto-char (point-min))
