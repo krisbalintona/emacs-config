@@ -92,7 +92,7 @@
    "C-f" 'message-goto-followup-to
    "C-w" 'message-goto-fcc)
   (:keymaps 'org-msg-edit-mode-map
-   "C-c C-w" 'kb/mu4e-compose-insert-signature)
+   "C-c C-w" 'kb/mu4e-insert-signature)
   :custom
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil")
   (org-msg-startup "hidestars indent inlineimages hideblocks")
@@ -368,8 +368,8 @@ Must be set before org-msg is loaded to take effect.")
 #+end_export")))
     "Alist of aliases their corresponding email signatures.")
 
-  (defun kb/mu4e-compose-insert-signature (alias)
-    "Insert one of the signatures from `kb/signature-alist'."
+  (defun kb/mu4e-select-signature (alias)
+    "Select one of the signatures from `kb/signature-alist'."
     (interactive (list (completing-read
                         "Insert signature:"
                         (cl-loop for (key . value) in kb/signature-alist
@@ -378,7 +378,11 @@ Must be set before org-msg is loaded to take effect.")
                        (or (alist-get alias kb/signature-alist nil nil #'string=) "")
                        "\n#+end_signature")))
       (setq-local org-msg-signature sig)
-      sig)))
+      sig))
+  (defun kb/mu4e-insert-signature ()
+    "Insert a selection from `kb/signature-alist'."
+    (interactive)
+    (insert (call-interactively 'kb/mu4e-select-signature))))
 
 ;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
@@ -418,7 +422,7 @@ Specially exports verse org-blocks as processed plain text."
 Always use return `style' as `org-msg-posting-style' if its value
 is `gmail'. See `kb/org-msg-export-as-html' for why this is.
 
-Interactively select signature via `kb/mu4e-compose-insert-signature'."
+Interactively select signature via `kb/mu4e-select-signature'."
     `((style . ,(if (equal org-msg-posting-style 'gmail)
                     'gmail
                   (when (and (eq type 'reply-to-html)
@@ -431,7 +435,7 @@ Interactively select signature via `kb/mu4e-compose-insert-signature'."
                               (save-match-data
                                 (goto-char (point-min))
                                 (search-forward "#+begin_signature" nil t)))
-                      (call-interactively 'kb/mu4e-compose-insert-signature)))))
+                      (call-interactively 'kb/mu4e-select-signature)))))
   (advice-add 'org-msg-composition-parameters :override 'kb/org-msg-composition-parameters)
 
   (defun kb/org-msg-post-setup (&rest _args)
@@ -489,9 +493,7 @@ MML tags."
               (message-goto-to))
             (org-msg-edit-mode))
           (set-buffer-modified-p nil)))))
-  (advice-remove 'org-msg-post-setup 'kb/org-msg-post-setup)
-  (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup)
-  )
+  (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup))
 
 ;;; email-sending-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
