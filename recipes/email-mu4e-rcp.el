@@ -163,13 +163,14 @@ Mu4e context."
                                      (string= "kristoffer_balintona@brown.edu" (plist-get line :email)))))))
             :vars '((user-mail-address . "kristoffer_balintona@brown.edu")
                     ;; Directories
-                    (mu4e-drafts-folder . "/uni/[Gmail].Drafts")
+                    (mu4e-drafts-folder . "/drafts/uni/")
                     (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
                     (mu4e-refile-folder . "/uni/[Gmail].All Mail")
                     (mu4e-trash-folder . "/uni/[Gmail].Trash")
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
                                                (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
+                                               (:maildir "/uni/[Gmail].Drafts" :key ?d)
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)
                                                ))))
@@ -191,13 +192,14 @@ Mu4e context."
                                      (string= "krisbalintona@gmail.com" (plist-get line :email)))))))
             :vars '((user-mail-address . "krisbalintona@gmail.com")
                     ;; Directories
-                    (mu4e-drafts-folder . "/personal/[Gmail].Drafts")
+                    (mu4e-drafts-folder . "/drafts/personal")
                     (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
                     (mu4e-refile-folder . "/personal/[Gmail].All Mail")
                     (mu4e-trash-folder . "/personal/[Gmail].Trash")
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
                                                (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
+                                               (:maildir "/personal/[Gmail].Drafts" :key ?d)
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)
                                                ))))))
