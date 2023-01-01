@@ -70,7 +70,11 @@
   (smtpmail-smtp-service 587)
   (smtpmail-stream-type 'starttls)
   (smtpmail-queue-mail nil)
-  (smtpmail-queue-dir  "~/Documents/emails/.smtp-queue/"))
+  :config
+  (if (eq send-mail-function 'smtpmail-send-it)
+      (setq smtpmail-queue-dir
+            (file-name-as-directory (expand-file-name ".smtp-queue" message-directory)))
+    (setq smtpmail-queue-dir "")))
 
 ;;; Org-msg
 ;;;; Itself
