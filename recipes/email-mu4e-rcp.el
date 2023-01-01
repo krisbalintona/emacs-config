@@ -57,12 +57,12 @@
      (:name "All sent" :query "maildir:\"/personal/[Gmail].Sent Mail\" OR maildir:\"/uni/[Gmail].Sent Mail\"" :key ?s)))
 
   ;; Contexts
-  (mu4e-context-policy 'ask-if-none)
+  (mu4e-context-policy 'pick-first)
   (mu4e-compose-context-policy 'ask-if-none)
 
   ;; Indexing
   (mu4e-get-mail-command "mbsync -a")
-  (mu4e-update-interval nil) ; Already run my own systemd service to update in the background 
+  (mu4e-update-interval nil) ; Already run my own systemd service to update in the background
   (mu4e-index-update-error-continue t)
   ;; Speed up indexing. See 2.9.4 Speeding up indexing of the Mu4e info manual.
   ;; Also note `mu4e-update-index-nonlazy'
@@ -149,18 +149,6 @@ Mu4e context."
             :name "Uni"
             :enter-func (lambda () (mu4e-message "Entering Uni context"))
             :leave-func (lambda () (mu4e-message "Leaving Uni context"))
-            :match-func (lambda (msg)        ; Function called when composing
-                          (when msg
-                            (or         ; If this email is in to, cc, or from
-                             (dolist (line (mu4e-message-field msg :to) result)
-                               (setq result
-                                     (string= "kristoffer_balintona@brown.edu" (plist-get line :email))))
-                             (dolist (line (mu4e-message-field msg :cc) result)
-                               (setq result
-                                     (string= "kristoffer_balintona@brown.edu" (plist-get line :email))))
-                             (dolist (line (mu4e-message-field msg :from) result)
-                               (setq result
-                                     (string= "kristoffer_balintona@brown.edu" (plist-get line :email)))))))
             :vars '((user-mail-address . "kristoffer_balintona@brown.edu")
                     ;; Directories
                     (mu4e-drafts-folder . "/drafts/uni/")
@@ -179,18 +167,6 @@ Mu4e context."
             :name "Personal"
             :enter-func (lambda () (mu4e-message "Entering Personal context"))
             :leave-func (lambda () (mu4e-message "Leaving Personal context"))
-            :match-func (lambda (msg)        ; Function called when composing
-                          (when msg
-                            (or         ; If this email is in to, cc, or from
-                             (dolist (line (mu4e-message-field msg :to) result)
-                               (setq result
-                                     (string= "krisbalintona@gmail.com" (plist-get line :email))))
-                             (dolist (line (mu4e-message-field msg :cc) result)
-                               (setq result
-                                     (string= "krisbalintona@gmail.com" (plist-get line :email))))
-                             (dolist (line (mu4e-message-field msg :from) result)
-                               (setq result
-                                     (string= "krisbalintona@gmail.com" (plist-get line :email)))))))
             :vars '((user-mail-address . "krisbalintona@gmail.com")
                     ;; Directories
                     (mu4e-drafts-folder . "/drafts/personal")
