@@ -18,7 +18,10 @@
                       :files (:defaults "lisp")
                       :includes (ox ox-odt ox-latex org-footnote org-attach org-refile oc))
   :gfhook
-  'prettify-symbols-mode
+  '(lambda ()
+      (push '("--" . ?—) prettify-symbols-alist)
+      (push '("---" . ?—) prettify-symbols-alist)
+      (prettify-symbols-mode))
   'variable-pitch-mode
   'visual-line-mode
   'visual-fill-column-mode
@@ -553,6 +556,7 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
+  :disbled          ; Opt for `electric-quote-mode' and `prettify-symbols-mode'
   :ghook 'org-mode-hook
   :config
   (defun kb/typo-insert-cycle (cycle)
