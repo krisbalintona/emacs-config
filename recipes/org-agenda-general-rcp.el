@@ -72,12 +72,22 @@
       "* %?\n%U"
       :empty-lines 1)
      ("e" "Email" entry
-      (file ,(expand-file-name "todo.org" kb/agenda-dir))
+      (file ,(expand-file-name "emails.org" kb/agenda-dir))
       "* TODO Respond to%? [[%L][\"%:subject\" from %:fromname on %:date]]\n"
+      :empty-lines 1)
+     ;; NOTE 2023-01-01: Also see `mu4e--org-store-link-message' from mu4e-org
+     ("E" "Mu4e-captured email" entry
+      (file ,(expand-file-name "emails.org" kb/agenda-dir))
+      ,(concat "* TODO Respond to%? "
+               "[[mu4e:msgid:%(plist-get mu4e-captured-message :message-id)]"
+               "[\"%(plist-get mu4e-captured-message :subject)\" "
+               "from %(plist-get (car (plist-get mu4e-captured-message :from)) :name) "
+               "on %(format-time-string \"%F\" (plist-get mu4e-captured-message :date))]]\n")
       :empty-lines 1)))
   (org-capture-templates-contexts
    '(("e" ((in-mode . "mu4e-headers-mode")))
-     ("e" ((in-mode . "mu4e-view-mode")))))
+     ("e" ((in-mode . "mu4e-view-mode")))
+     ("E" ((lambda () mu4e-captured-message)))))
   :config
   ;; Used in org-agenda to replace the categories with note titles. Taken from
   ;; `vulpea' library
@@ -180,7 +190,7 @@ Refer to `org-agenda-prefix-format' for more information."
                                      ;; Taken from
                                      ;; https://github.com/alphapapa/org-super-agenda/blob/master/examples.org#concrete-dates
                                      (after ,(-let* (((sec minute hour day month year dow dst utcoff) (decode-time)))
-                                                (format "%d-%02d-%02d" year month (+ 2 day)))))))
+                                               (format "%d-%02d-%02d" year month (+ 2 day)))))))
                     (:discard (:todo "FAR"))
                     (:discard (:scheduled future))
                     (:auto-todo t)
