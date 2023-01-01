@@ -159,28 +159,6 @@
   (notmuch-indicator-hide-empty-counters nil)
   (notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer)))
 
-;;; Mu4e
-(use-package mu4e
-  :general (kb/open-keys
-             "M" '(mu4e :wk "Mu4e"))
-  ([remap compose-mail] 'mu4e-compose-new)
-  :custom
-  (mail-user-agent 'mu4e-user-agent)
-  (mu4e-get-mail-command "mbsync -a")
-  (mu4e-drafts-folder "/personal/[Gmail].Drafts")
-  (mu4e-sent-folder "/personal/[Gmail].Sent Mail")
-  (mu4e-trash-folder "/personal/[Gmail].Trash")
-
-  ;; Don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (mu4e-sent-messages-behavior 'delete)
-
-  (mu4e-maildir-shortcuts
-   '((:maildir "/personal/Index"              :key ?i)
-     (:maildir "/personal/[Gmail].Sent Mail"  :key ?s)
-     (:maildir "/personal/[Gmail].Trash"       :key ?t)
-     (:maildir "/personal/[Gmail].All Mail"   :key ?a)))
-  )
-
 ;;; email-notmuch-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'email-notmuch-rcp)
