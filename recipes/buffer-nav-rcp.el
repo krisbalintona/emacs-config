@@ -51,7 +51,7 @@
      (?z . avy-action-zap-to-char)
      ;; New, custom actions
      (?. . avy-action-embark)
-     (?H . avy-action-helpful)
+     (?H . avy-action-help)
      (?D . avy-action-define)
      ))
   :init
@@ -68,12 +68,15 @@
     t)
 
   ;; Helpful
-  (defun avy-action-helpful (pt)
+  (defun avy-action-help (pt)
     (save-excursion
       (goto-char pt)
-      (helpful-at-point))
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
+      (if (featurep 'helpful)
+          (helpful-at-point)
+        (describe-symbol (symbol-at-point))))
+    (when (featurep 'helpful)
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
     t)
 
   ;; Dictionary
