@@ -74,18 +74,18 @@
   ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 how to expunge local files
   ;; via cli
   (notmuch-saved-searches
-   '((:name "[personal] inbox" :query "path:personal/** tag:inbox" :key "I")
-     (:name "[uni] inbox" :query "path:uni/** tag:inbox" :key "i")
-     (:name "[personal] flagged" :query "path:personal/** tag:flagged" :key "F")
-     (:name "[uni] flagged" :query "path:uni/** tag:flagged" :key "f")
-     (:name "[personal] sent" :query "from:krisbalintona@gmail.com* tag:sent" :key "S")
-     (:name "[uni] sent" :query "from:kristoffer_balintona@brown.edu* tag:sent" :key "s")
-     (:name "[personal] drafts" :query "from:krisbalintona@gmail.com* tag:draft -tag:trash -tag:deleted" :key "D")
-     (:name "[uni] drafts" :query "from:kristoffer_balintona@brown.edu* tag:draft -tag:trash  -tag:deleted" :key "d")
-     (:name "[personal] all mail" :query "path:personal/** -tag:trash" :key "a")
-     (:name "[uni] all mail" :query "path:uni/** -tag:trash" :key "A")
-     (:name "[personal] trash" :query "path:personal/** tag:trash" :key "T")
-     (:name "[uni] trash" :query "path:uni/** tag:trash" :key "t")))
+   '((:name "[personal] inbox" :query "path:personal/Inbox/**" :key "I")
+     (:name "[uni] inbox" :query "path:uni/Inbox/**" :key "i")
+     (:name "[personal] flagged" :query "path:personal/[Gmail].Starred/**" :key "F")
+     (:name "[uni] flagged" :query "path:uni/[Gmail].Starred/**" :key "f")
+     (:name "[personal] sent" :query "path:\"personal/[Gmail].Sent Mail/**\"" :key "S")
+     (:name "[uni] sent" :query "path:\"uni/[Gmail].Sent Mail/**\"" :key "s")
+     (:name "[personal] drafts" :query "path:drafts/personal/** OR path:personal/[Gmail].Drafts/**" :key "D")
+     (:name "[uni] drafts" :query "path:drafts/uni/** OR path:uni/[Gmail].Drafts/**" :key "d")
+     (:name "[personal] all mail" :query "path:\"personal/[Gmail].All Mail/**\"" :key "a")
+     (:name "[uni] all mail" :query "path:\"uni/[Gmail].All Mail/**\"" :key "A")
+     (:name "[personal] trash" :query "path:personal/[Gmail].Trash/**" :key "T")
+     (:name "[uni] trash" :query "path:uni/[Gmail].Trash/**" :key "t")))
 
   ;; Tree
   (notmuch-tree-show-out t)
@@ -98,6 +98,8 @@
   (notmuch-draft-tags '("+draft"))
   (notmuch-draft-folder "drafts")
   (notmuch-draft-save-plaintext 'ask)
+  ;; NOTE 2023-01-01: These tags are equivalents to Gmail's default mailboxes
+  ;; (according to lieer's translation between tags and labels).
   (notmuch-tagging-keys
    '(("a" notmuch-archive-tags "Archive")
      ("r" notmuch-show-mark-read-tags "Mark read")

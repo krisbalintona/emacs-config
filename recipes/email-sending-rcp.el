@@ -73,7 +73,7 @@
   :config
   (if (eq send-mail-function 'smtpmail-send-it)
       (setq smtpmail-queue-dir
-            (file-name-as-directory (expand-file-name ".smtp-queue" message-directory)))
+            (file-name-as-directory (expand-file-name "/drafts/.smtp-queue" message-directory)))
     (setq smtpmail-queue-dir "")))
 
 ;;; Org-msg
