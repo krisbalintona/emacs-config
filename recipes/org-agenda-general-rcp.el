@@ -155,11 +155,15 @@ Refer to `org-agenda-prefix-format' for more information."
   :ghook 'org-agenda-mode-hook
   :custom
   (org-agenda-custom-commands
-   '(("c" "Deadlines and scheduled"
+   '(("E" "Emails"
       ((alltodo ""
-                ((org-agenda-overriding-header)
+                ((org-agenda-overriding-header "Emails")
                  (org-super-agenda-groups
-                  '((:auto-planning t)
+                  '((:and (:file-path "emails"
+                           :deadline t))
+                    (:and (:file-path "emails"
+                           :scheduled t))
+                    (:file-path "emails")
                     (:discard (:anything t))
                     ))
                  ))
