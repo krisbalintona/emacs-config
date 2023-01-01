@@ -54,33 +54,6 @@
 (use-package latex
   :straight nil
   :ensure-system-package (latex . texlive-full)
-  :after (tex prog-mode)
-  :hook (latex-mode . (lambda ()
-                        (require 'prog-mode)
-                        (push '("\\Dashv" . ?⫤) prettify-symbols-alist)
-                        (push '("\\DashVDash" . ?⟚) prettify-symbols-alist)
-                        (push '("\\dashVdash" . ?⊢) prettify-symbols-alist)
-                        (delete '("--" . 8211) prettify-symbols-alist)
-                        (delete '("---" . 8212) prettify-symbols-alist)
-                        ;; For `lplfitch'. Slightly higher than `\vdots'. Using
-                        ;; the `\pline{\vdots}' results in the ellipses not
-                        ;; being centered on the line.
-                        (push '("\\ellipsesline" . ?⋮) prettify-symbols-alist)
-                        ;; Circled numbers from the pifont package
-                        (push '("\\ding{192}" . ?①) prettify-symbols-alist)
-                        (push '("\\ding{193}" . ?②) prettify-symbols-alist)
-                        (push '("\\ding{194}" . ?③) prettify-symbols-alist)
-                        (push '("\\ding{195}" . ?④) prettify-symbols-alist)
-                        (push '("\\ding{196}" . ?⑤) prettify-symbols-alist)
-                        (push '("\\ding{197}" . ?⑥) prettify-symbols-alist)
-                        (push '("\\ding{198}" . ?⑦) prettify-symbols-alist)
-                        (push '("\\ding{199}" . ?⑧) prettify-symbols-alist)
-                        (push '("\\ding{200}" . ?⑨) prettify-symbols-alist)
-                        (push '("\\ding{201}" . ?⑩) prettify-symbols-alist)
-                        ;; Angle brackets for text (non-math)
-                        (push '("\\textlangle" . ?⟨) prettify-symbols-alist)
-                              (push '("\\textrangle" . ?⟩) prettify-symbols-alist)
-                        ))
   :gfhook
   'prettify-symbols-mode
   'reftex-isearch-minor-mode

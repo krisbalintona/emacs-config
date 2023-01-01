@@ -18,20 +18,11 @@
                       :files (:defaults "lisp")
                       :includes (ox ox-odt ox-latex org-footnote org-attach org-refile oc))
   :gfhook
-  '(lambda ()
-      (push '("--" . ?—) prettify-symbols-alist)
-      (push '("---" . ?—) prettify-symbols-alist)
-      (prettify-symbols-mode))
   'variable-pitch-mode
   'visual-line-mode
   'visual-fill-column-mode
   '(lambda ()
       (eldoc-mode -1))
-  '(lambda ()
-      (require 'prog-mode)
-      (push '("->" . ?➡) prettify-symbols-alist)
-      (push '("<-" . ?⬅) prettify-symbols-alist)
-      (prettify-symbols-mode))
   :general
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link)
