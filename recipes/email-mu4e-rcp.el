@@ -170,7 +170,8 @@ Mu4e context."
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
                                                (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/uni/[Gmail].Drafts" :key ?d)
+                                               (:maildir "/drafts/uni/" :key ?d)
+                                               (:maildir "/uni/[Gmail].Drafts" :key ?D)
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)
                                                ))))
@@ -199,7 +200,8 @@ Mu4e context."
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
                                                (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/personal/[Gmail].Drafts" :key ?d)
+                                               (:maildir "/drafts/personal/" :key ?d)
+                                               (:maildir "/personal[Gmail].Drafts/[Gmail].Drafts" :key ?D)
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)
                                                ))))))
