@@ -110,9 +110,8 @@ instead."
    ((when (or (buffer-file-name)
               (buffer-base-buffer))
       (buffer-modified-p))
-    (propertize "●" 'face 'mood-line-modified))
-   (t
-    " ")))
+    (propertize "●" 'face '(warning bold)))
+   (t " ")))
 
 (defun kb/mood-line-segment-position ()
   "Displays the current cursor position in the mode-line."
