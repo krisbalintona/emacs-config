@@ -170,7 +170,6 @@ Mu4e context."
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
                                                (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/uni/[Gmail].Drafts" :key ?d)
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)
                                                ))))
@@ -199,7 +198,6 @@ Mu4e context."
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
                                                (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/personal/[Gmail].Drafts" :key ?d)
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)
                                                ))))))
@@ -255,6 +253,17 @@ Mu4e context."
                    (if (kb/mu4e-msg-gmail-p msg)
                        (kb/mu4e--mark-seen docid msg target)
                      (mu4e--server-move docid (mu4e--mark-check-target target) "+T-N"))))
+          (label :char ("l" . "↗")
+                 :prompt "label"
+                 :show-target
+                 (lambda (target) "labeled")
+                 :ask-target mu4e--mark-get-move-target
+                 :action
+                 (lambda (docid msg target)
+                   (if (kb/mu4e-msg-gmail-p msg)
+                       (mu4e-action-retag-message msg (format "+\\Inbox,+\\%s" (f-filename target)))
+                     (mu4e--server-move docid (mu4e--mark-check-target target) "-N"))))
+          ;; Default commands
           (flag :char
                 ("+" . "✚")
                 :prompt "+flag" :show-target
@@ -331,6 +340,11 @@ Mu4e context."
                      ("*" . "✱")
                      :prompt "*something" :action
                      (mu4e-error "No action for deferred mark"))))
+  ;; NOTE 2023-01-01: Have to do this for any new marks (i.e. marks with new
+  ;; names, not redefinitions of extant marks) I create
+  (mu4e--view-defun-mark-for label)
+  (general-define-key :keymaps 'mu4e-headers-mode-map "l" 'mu4e-headers-mark-for-label)
+  (general-define-key :keymaps 'mu4e-view-mode-map "l" 'mu4e-view-mark-for-label)
 
   ;; See 5.3 of the mu4e info manual. Also see 1.5 Display Customization of the
   ;; emacs-mime info entry
