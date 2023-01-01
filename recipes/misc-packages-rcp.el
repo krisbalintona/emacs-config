@@ -418,7 +418,10 @@ displayed."
    "H-p" 'backward-page
    "H-n" 'forward-page)
   :custom
-  (logos-outlines-are-pages nil))
+  (logos-outlines-are-pages t)
+  (logos-outline-regexp-alist
+      `((emacs-lisp-mode . "^;;; ")
+        (org-mode . "^\\* +"))))
 
 ;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
@@ -481,6 +484,21 @@ displayed."
   (electric-quote-comment nil)
   (electric-quote-string nil)
   (electric-quote-replace-double t)
+  ;; (electric-quote-inhibit-functions
+  ;;  '((lambda () (not (looking-at-p (rx (any whitespace)))))))
+  (electric-pair-inhibit-predicate
+   '(lambda ()
+       (or
+        ;; I find it more often preferable not to pair when the
+        ;; same char is next.
+        (eq char (char-after))
+        ;; Don't pair up when we insert the second of "" or of ((.
+        (and (eq char (char-before))
+             (eq char (char-before (1- (point)))))
+        ;; I also find it often preferable not to pair next to a word.
+        (eq (char-syntax (following-char)) ?w))))
+  ;; (electric-quote-inhibit-functions (list electric-pair-inhibit-predicate))
+  (electric-quote-inhibit-functions nil)
   :init
   (electric-pair-mode)
   (electric-quote-mode))                ; For quotes in text mode
