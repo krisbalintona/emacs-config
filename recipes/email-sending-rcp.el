@@ -19,6 +19,7 @@
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
   (compose-mail-user-agent-warnings t)
+  (message-hidden-headers nil)          ; Show everything!
 
   (message-elide-ellipsis "\n> [... %l lines elided]\n")
   (message-signature "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")
@@ -53,9 +54,9 @@
 (use-package sendmail
   :custom
   ;; If I want to use `sendmail' over `msmtp'/`smtpmail'
-  (send-mail-function 'sendmail-send-it)
+  ;; (send-mail-function 'sendmail-send-it)
   (sendmail-program (executable-find "sendmail"))
-
+  (mail-default-directory (expand-file-name "drafts/" message-directory))
   (mail-specify-envelope-from t))
 
 ;;; Smtpmail
@@ -63,8 +64,7 @@
 (use-package smtpmail
   :ensure-system-package (msmtp)
   :custom
-  ;; (send-mail-function 'smtpmail-send-it)
-
+  (send-mail-function 'smtpmail-send-it)
   (smtpmail-default-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)

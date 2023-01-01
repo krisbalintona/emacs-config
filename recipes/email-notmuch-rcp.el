@@ -18,6 +18,7 @@
 
 ;;; Notmuch
 (use-package notmuch
+  :disabled
   :ensure-system-package (notmuch
                           (mbsync . isync)
                           (gmi . "pip install lieer"))
@@ -80,8 +81,13 @@
      (:name "[uni] flagged" :query "path:uni/[Gmail].Starred/**" :key "f")
      (:name "[personal] sent" :query "path:\"personal/[Gmail].Sent Mail/**\"" :key "S")
      (:name "[uni] sent" :query "path:\"uni/[Gmail].Sent Mail/**\"" :key "s")
-     (:name "[personal] drafts" :query "path:drafts/personal/** OR path:personal/[Gmail].Drafts/**" :key "D")
-     (:name "[uni] drafts" :query "path:drafts/uni/** OR path:uni/[Gmail].Drafts/**" :key "d")
+     ;; (:name "[personal] drafts" :query "from:krisbalintona**@gmail.com tag:draft" :key "D")
+     ;; (:name "[uni] drafts" :query "from:kristoffer_balintona**@brown.edu tag:draft" :key "d")
+     ;; (:name "[personal] drafts" :query "path:drafts/ OR path:personal/[Gmail].Drafts/**" :key "D")
+     ;; (:name "[uni] drafts" :query "path:drafts/uni/** OR path:uni/[Gmail].Drafts/**" :key "d")
+     ;; (:name "[personal] drafts" :query "path:drafts/** AND from:krisbalintona**@gmail.com OR path:personal/[Gmail].Drafts/**" :key "D")
+     ;; (:name "[uni] drafts" :query "path:drafts/** AND from:kristoffer_balintona**@brown.edu OR path:uni/[Gmail].Drafts/**" :key "d")
+     (:name "drafts" :query "path:drafts/** OR path:personal/[Gmail].Drafts/** OR path:uni/[Gmail].Drafts/**" :key "d")
      (:name "[personal] all mail" :query "path:\"personal/[Gmail].All Mail/**\"" :key "a")
      (:name "[uni] all mail" :query "path:\"uni/[Gmail].All Mail/**\"" :key "A")
      (:name "[personal] trash" :query "path:personal/[Gmail].Trash/**" :key "T")
