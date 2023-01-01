@@ -18,6 +18,7 @@
   :config
   (add-hook 'org-mode-hook
             '(lambda ()
+                (add-to-list 'prettify-symbols-alist '("..." . ?…))
                 (add-to-list 'prettify-symbols-alist '("--" . ?—))
                 (add-to-list 'prettify-symbols-alist '("---" . ?—))
                 (add-to-list 'prettify-symbols-alist '("->" . ?➡))
