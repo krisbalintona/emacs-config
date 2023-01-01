@@ -374,14 +374,62 @@ Must be set before org-msg is loaded to take effect.")
                         "Insert signature:"
                         (cl-loop for (key . value) in kb/signature-alist
                                  collect key))))
-    (save-excursion
-      (insert
-       "#+begin_signature\n"
-       (or (alist-get alias kb/signature-alist nil nil #'string=) "")
-       "\n#+end_signature"))))
+    (let ((sig (concat "#+begin_signature\n"
+                       (or (alist-get alias kb/signature-alist nil nil #'string=) "")
+                       "\n#+end_signature")))
+      (setq-local org-msg-signature sig)
+      sig)))
 
 ;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
+  ;; This makes email citations buttonized in the Gmail interface
+  (setq org-msg-posting-style 'gmail
+        message-cite-style message-cite-style-gmail
+        message-cite-function 'message-cite-original-without-signature
+        message-citation-line-function 'message-insert-formatted-citation-line
+        message-citation-line-format "On %e %B %Y %R, %f wrote:\n"
+        message-cite-reply-position 'above
+        ;; These spaces are the magic!
+        message-yank-prefix  "    "
+        message-yank-cited-prefix  "    "
+        message-yank-empty-prefix  "    ")
+
+  (defun kb/org-msg-export-as-html (str)
+    "Transform the Org STR into html.
+
+Specially exports verse org-blocks as processed plain text."
+    (prog2
+        (org-export-define-derived-backend 'org-msg-html 'html
+          :translate-alist `((special-block . org-msg--html-special-block)
+                             (quote-block . org-msg--html-quote-block)
+                             (verse-block . (lambda (verse-block contents info)
+                                              contents)) ; Export contents raw
+                             ,@(org-export-get-all-transcoders 'html)))
+        (org-msg-xml-to-str (org-msg-build str))
+      (setq org-export-registered-backends
+            (cl-delete-if (apply-partially 'eq 'org-msg-html)
+                          org-export-registered-backends
+                          :key 'org-export-backend-name))))
+  (advice-add 'org-msg-export-as-html :override 'kb/org-msg-export-as-html)
+
+  (defun kb/org-msg-composition-parameters (type alternatives)
+    "My won composition parameter settings.
+
+Always use return `style' as `org-msg-posting-style' if its value
+is `gmail'. See `kb/org-msg-export-as-html' for why this is.
+
+Interactively select signature via `kb/mu4e-compose-insert-signature'."
+    `((style . ,(if (equal org-msg-posting-style 'gmail)
+                    'gmail
+                  (when (and (eq type 'reply-to-html)
+                             (memq 'html alternatives)
+                             (not (= (point) (point-max)))
+                             (not (org-msg-has-mml-tags)))
+                    org-msg-posting-style)))
+      (greeting-fmt . ,org-msg-greeting-fmt)
+      (signature . ,(call-interactively 'kb/mu4e-compose-insert-signature))))
+  (advice-add 'org-msg-composition-parameters :override 'kb/org-msg-composition-parameters)
+
   (defun kb/org-msg-post-setup (&rest _args)
     "Transform the current `message' buffer into a OrgMsg buffer.
 If the current `message' buffer is a reply, the
@@ -407,12 +455,20 @@ MML tags."
                                     ""
                                   (concat " " (org-msg-get-to-name))))))
               ;; Where I customize how and when a signature is inserted
-              (insert "\n")
               (when message-signature-insert-empty-line
-                (insert "\n"))
-              (save-excursion
-                (insert "\n"))
-              (call-interactively 'kb/mu4e-compose-insert-signature)
+                (insert "\n\n"))
+              (when .signature
+                (insert .signature))
+              ;; For Gmail-formatted citations
+              (when (and (not (eq type 'new)) (eq .style 'gmail))
+                (insert "\n")
+                (insert"\n#+begin_verse\n")
+                (delete-char 2)        ; Remove next two empty lines
+                (save-excursion
+                  (goto-char (point-max))
+                  (delete-char -2)      ; Delete two empty lines
+                  (insert"\n#+end_verse")))
+              ;; The default top-posting org-msg citation style
               (when (eq .style 'top-posting)
                 (save-excursion
                   (insert "\n\n" org-msg-separator "\n")
@@ -429,7 +485,9 @@ MML tags."
               (message-goto-to))
             (org-msg-edit-mode))
           (set-buffer-modified-p nil)))))
-  (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup))
+  (advice-remove 'org-msg-post-setup 'kb/org-msg-post-setup)
+  (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup)
+  )
 
 ;;; email-sending-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

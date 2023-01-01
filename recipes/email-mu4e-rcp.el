@@ -324,7 +324,7 @@
   (org-msg-mode)
   (setq mu4e-compose-signature
         (if (bound-and-true-p org-msg-mode)
-            ""
+            nil
           "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")))
 
 ;;; Mu4e header icons (from Doom Emacs)
