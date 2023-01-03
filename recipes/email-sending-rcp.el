@@ -49,7 +49,7 @@
 (use-package sendmail
   :custom
   ;; If I want to use `sendmail' over `msmtp'/`smtpmail'
-  ;; (send-mail-function 'sendmail-send-it)
+  (send-mail-function 'sendmail-send-it)
   (sendmail-program (executable-find "sendmail"))
   (mail-default-directory (expand-file-name "drafts/" message-directory))
   ;; These two messages make sure that emails are sent from the email address
@@ -63,7 +63,7 @@
 (use-package smtpmail
   :ensure-system-package (msmtp)
   :custom
-  (send-mail-function 'smtpmail-send-it)
+  ;; (send-mail-function 'smtpmail-send-it)
   (smtpmail-default-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)
