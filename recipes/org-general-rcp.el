@@ -164,11 +164,9 @@
   (org-superstar-prettify-item-bullets t)
   (org-superstar-first-inlinetask-bullet ?▶)
   (org-superstar-item-bullet-alist      ; Plain lists
-   '((?+ . ?➣)
-     (?- . ?»)
-     (?* . ?￮)
-     ))
-  )
+   '((?+ . ?•)
+     (?- . ?➣)
+     (?* . ?￮))))
 
 ;;;; Org-bars
 (use-package org-bars
@@ -582,11 +580,11 @@ re-align the table if necessary. (Necessary because org-mode has a
 
   ;; My own cycles
   (define-typo-cycle typo-cycle-right-single-quotation-mark
-    "Cycle through the typewriter apostrophe and the right quotation mark.
+                     "Cycle through the typewriter apostrophe and the right quotation mark.
 
 If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
-    ("'" "’")))                         ; Swapped these two
+                     ("'" "’")))        ; Swapped these two
 
 ;;; org-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

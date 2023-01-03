@@ -7,4 +7,4 @@
 #+hugo_custom_front_matter:
 #+options: author:nil
 #+hugo_draft: false
-#+hugo_section: tags
+#+hugo_section: $0

@@ -370,7 +370,7 @@ Must be set before org-msg is loaded to take effect.")
   </tbody>
 </table>
 #+end_export")))
-    "Alist of aliases their corresponding email signatures.")
+    "Alist of aliases and their corresponding email signatures.")
 
   (defun kb/mu4e-select-signature (alias)
     "Select one of the signatures from `kb/signature-alist'."
@@ -425,12 +425,7 @@ Interactively select signature via `kb/mu4e-select-signature'."
   (advice-add 'org-msg-composition-parameters :override 'kb/org-msg-composition-parameters)
 
   (defun kb/org-msg-post-setup (&rest _args)
-    "Transform the current `message' buffer into a OrgMsg buffer.
-If the current `message' buffer is a reply, the
-`org-msg-separator' string is inserted at the end of the editing
-area. If the current buffer contains MML tags,
-`org-msg-edit-mode' is not activated as OrgMsg does not support
-MML tags."
+    "Add citations last in the email."
     (unless (eq major-mode 'org-msg-edit-mode)
       (message-goto-body)
       (let* ((type (cond ((not (org-msg-message-fetch-field "subject")) 'new)
