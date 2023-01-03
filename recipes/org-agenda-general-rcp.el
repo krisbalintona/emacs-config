@@ -87,7 +87,7 @@
   (org-capture-templates-contexts
    '(("e" ((in-mode . "mu4e-headers-mode")))
      ("e" ((in-mode . "mu4e-view-mode")))
-     ("E" ((lambda () mu4e-captured-message)))))
+     ("E" ((lambda () (bound-and-true-p mu4e-captured-message))))))
   :config
   ;; Used in org-agenda to replace the categories with note titles. Taken from
   ;; `vulpea' library

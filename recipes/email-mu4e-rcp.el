@@ -40,9 +40,7 @@
                                  mu4e-headers-thread-connection-prefix '("│" . "│ "))))
          (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h)
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
-         (mu4e-view-mode . visual-fill-column-mode)
-         (message-send . kb/message-check-mismatched-emails)
-         (message-send . kb/message-check-mismatched-path))
+         (mu4e-view-mode . visual-fill-column-mode))
   :general
   (kb/open-keys
     "m" '(mu4e :wk "Mu4e"))
@@ -105,24 +103,6 @@
   (mu4e-confirm-quit nil)
   (mu4e-headers-eldoc-format "In %m with flags %F")
   :init
-  (defun kb/message-check-mismatched-emails ()
-    "Check that the from header email matches the email of the current
-Mu4e context."
-    (let ((email-header-raw (message-field-value "From" t))
-          (email-context
-           (alist-get 'user-mail-address (mu4e-context-vars (mu4e-context-current)))))
-      (unless (string-match-p (rx (literal email-context)) email-header-raw)
-        (error "[kb/message-check-mismatched-emails]: Mismatched emails! %s header versus %s context"
-               email-header-raw email-context))))
-  (defun kb/message-check-mismatched-path ()
-    "Check that the path of the email matches the Mu4e context."
-    (let ((path-header-raw (file-name-parent-directory
-                            (file-name-parent-directory (buffer-file-name))))
-          (path-context (downcase (mu4e-context-name (mu4e-context-current)))))
-      (unless (string-match-p (rx (literal path-context)) path-header-raw)
-        (error "[kb/message-check-mismatched-paths]: Mismatched context with path! %s actual versus %s context"
-               path-header-raw path-context))))
-
   ;; Gmail integration is taken from Doom
   ;; Check if msg is being called from a gmail account
   (defun kb/mu4e-msg-gmail-p (msg)
