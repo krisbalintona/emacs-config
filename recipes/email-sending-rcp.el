@@ -393,7 +393,7 @@ Must be set before org-msg is loaded to take effect.")
   ;; This makes email citations buttonized in the Gmail interface
   (setq org-msg-posting-style 'gmail
         message-cite-style message-cite-style-gmail
-        message-cite-function 'message-cite-original-without-signature
+        message-cite-function 'message-cite-original
         message-citation-line-function 'message-insert-formatted-citation-line
         message-citation-line-format "On %e %B %Y %R, %f wrote:\n"
         message-cite-reply-position 'above
@@ -401,24 +401,6 @@ Must be set before org-msg is loaded to take effect.")
         message-yank-prefix  "    "
         message-yank-cited-prefix  "    "
         message-yank-empty-prefix  "    ")
-
-  (defun kb/org-msg-export-as-html (str)
-    "Transform the Org STR into html.
-
-Specially exports verse org-blocks as processed plain text."
-    (prog2
-        (org-export-define-derived-backend 'org-msg-html 'html
-          :translate-alist `((special-block . org-msg--html-special-block)
-                             (quote-block . org-msg--html-quote-block)
-                             (verse-block . (lambda (verse-block contents info)
-                                              contents)) ; Export contents raw
-                             ,@(org-export-get-all-transcoders 'html)))
-        (org-msg-xml-to-str (org-msg-build str))
-      (setq org-export-registered-backends
-            (cl-delete-if (apply-partially 'eq 'org-msg-html)
-                          org-export-registered-backends
-                          :key 'org-export-backend-name))))
-  (advice-add 'org-msg-export-as-html :override 'kb/org-msg-export-as-html)
 
   (defun kb/org-msg-composition-parameters (type alternatives)
     "My won composition parameter settings.
