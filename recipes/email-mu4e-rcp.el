@@ -75,7 +75,8 @@
   (mu4e-use-fancy-chars t)
   (mu4e-headers-precise-alignment t) ; Reduces performance but aligns everything
   (mu4e-headers-fields
-   '((:from-or-to . 25)
+   '((:maildir . 35)
+     (:from-or-to . 25)
      (:human-date . 12)
      (:flags . 10)                      ; The max width of 3 icon flags
      (:subject)))
@@ -94,8 +95,8 @@
   (mu4e-sent-messages-behavior 'delete)
   (mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))
   (mu4e-compose-signature-auto-include nil)
-  ;; (mu4e-compose-format-flowed t)        ; Not sure if needed yet
   (mu4e-compose-hidden-headers nil)
+  ;; (mu4e-compose-format-flowed t)    ; REVIEW 2023-01-02: Not sure what this does
 
   ;; Other
   (mu4e-completing-read-function 'completing-read)
@@ -311,7 +312,7 @@
   ;; emacs-mime info entry
   (with-eval-after-load 'mm-decode
     (setq gnus-blocked-images (rx unmatchable) ; Don't block images
-          gnus-inhibit-mime-unbuttonizing t    ; Show all MIME buttons
+          ;; gnus-inhibit-mime-unbuttonizing t    ; Show all MIME buttons?
           mm-discouraged-alternatives '("text/html" "text/richtext" "image/.*")
           mm-automatic-display (remove "text/html" mm-automatic-display))) ; If I really don't want to see HTML
 
