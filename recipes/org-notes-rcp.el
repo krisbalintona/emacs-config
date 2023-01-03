@@ -280,7 +280,8 @@ If called with `universal-arg', then replace links in all denote buffers."
   (consult-notes-denote-display-id nil)
   (consult-notes-denote-dir t)
   :custom-face
-  (denote-faces-link ((t (:foreground "goldenrod3" :slant italic))))
+  (org-link ((t (:slant italic))))
+  (denote-faces-link ((t (:foreground "goldenrod3" :underline nil :slant italic))))
   :config
   (when (locate-library "org-roam")
     (consult-notes-denote-mode))
