@@ -175,7 +175,7 @@
   (defun kb/denote-standardize-front-matter ()
     (interactive)
     (require 'denote)
-    (save-excursion
+    (save-mark-and-excursion
       (dolist (file (denote-directory-files))
         ;; Export all the files
         (with-current-buffer (find-file-noselect file)
