@@ -104,7 +104,7 @@
   (org-msg-default-alternatives
    '((new . (text html))
      (reply-to-html . (text html))
-     (reply-to-text . (text))))
+     (reply-to-text . (text html))))
   (org-msg-convert-citation t)
   ;; Taken from Doom
   (org-msg-attached-file-reference
