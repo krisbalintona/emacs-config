@@ -109,7 +109,7 @@
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 95)) ; Last
 
 ;;; Magit
-;;;; Magit
+;;;; Itself
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit

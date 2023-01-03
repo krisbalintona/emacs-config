@@ -50,7 +50,7 @@
 
      ;; Full frame
      ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'org-msg-edit-mode))
-      (display-buffer-full-frame
+      (display-buffer-pop-up-window
        display-buffer-same-window))
 
      ;; Same window
@@ -226,8 +226,8 @@ If buffer-or-name is nil return current buffer's mode."
    "M-[" 'eyebrowse-prev-window-config
    "M-]" 'eyebrowse-next-window-config)
   (:keymaps 'eyebrowse-mode-map
-            :prefix eyebrowse-keymap-prefix
-            "d" 'eyebrowse-close-window-config)
+   :prefix eyebrowse-keymap-prefix
+   "d" 'eyebrowse-close-window-config)
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c M-w"))
@@ -315,13 +315,13 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-display-control nil)
   (popper-group-function
    #'(lambda ()
-       (cond
-        ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
-         'Config)
-        ((locate-dominating-file default-directory "init.el") 'Emacs)
-        ((project-current) (project-root (project-current)))
-        (t nil)                         ; No group
-        )))
+        (cond
+         ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
+          'Config)
+         ((locate-dominating-file default-directory "init.el") 'Emacs)
+         ((project-current) (project-root (project-current)))
+         (t nil)                         ; No group
+         )))
   (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-buffer-id)))
 
   ;; Popper-echo
@@ -329,35 +329,35 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-dispatch-actions t)
   (popper-echo-transform-function
    #'(lambda (name)
-       (cond
-        ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
-         (concat (match-string 1 name)
-                 "(O)"))
-        ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
-         (concat (match-string 1 name)
-                 "(H)"))
-        ((string-match "^\\*Warnings\\*" name)
-         (concat (match-string 1 name)
-                 "(W)"))
-        ((string-match "^\\*Backtrace\\*" name)
-         (concat (match-string 1 name)
-                 "(B)"))
-        ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
-         (concat (match-string 1 name)
-                 "(L)"))
-        ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
-         (concat (match-string 1 name)
-                 "(C)"))
-        ((string-match "^\\*Java Run" name)
-         (concat (match-string 1 name)
-                 (concat "(CG)" (substring name 18 (- (length name) 1)))
-                 ))
-        ((string-match "^\\*Customize" name)
-         (concat (match-string 1 name)
-                 (concat "(CG)" (substring name 18 (- (length name) 1)))
-                 ))
-        (t name))
-       ))
+        (cond
+         ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
+          (concat (match-string 1 name)
+                  "(O)"))
+         ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
+          (concat (match-string 1 name)
+                  "(H)"))
+         ((string-match "^\\*Warnings\\*" name)
+          (concat (match-string 1 name)
+                  "(W)"))
+         ((string-match "^\\*Backtrace\\*" name)
+          (concat (match-string 1 name)
+                  "(B)"))
+         ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
+          (concat (match-string 1 name)
+                  "(L)"))
+         ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
+          (concat (match-string 1 name)
+                  "(C)"))
+         ((string-match "^\\*Java Run" name)
+          (concat (match-string 1 name)
+                  (concat "(CG)" (substring name 18 (- (length name) 1)))
+                  ))
+         ((string-match "^\\*Customize" name)
+          (concat (match-string 1 name)
+                  (concat "(CG)" (substring name 18 (- (length name) 1)))
+                  ))
+         (t name))
+        ))
 
   ;; Mode line
   (popper-mode-line-position 0)
