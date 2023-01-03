@@ -25,15 +25,10 @@
   (message-signature "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")
   (message-signature-insert-empty-line t)
   (message-citation-line-function #'message-insert-formatted-citation-line)
-  (message-ignored-cited-headers nil)   ; Default is "." for all headers
+  (message-ignored-cited-headers "") ; Don't include any headers when citing emails
   (message-confirm-send nil)
   (message-kill-buffer-on-exit t)
   (message-wide-reply-confirm-recipients t)
-  (message-sendmail-envelope-from 'header)
-
-  ;; TODO 2022-12-26: Revisit these two variables
-  ;; (message-sendmail-extra-arguments '("--read-envelope-from")) ; Tell msmtp to choose the SMTP server according to the from field in the outgoing email
-  ;; (message-sendmail-f-is-evil 't)
   :init
   ;; Taken from Doom. Detect empty subjects, and give users an opportunity to
   ;; fill something in
@@ -57,7 +52,11 @@
   ;; (send-mail-function 'sendmail-send-it)
   (sendmail-program (executable-find "sendmail"))
   (mail-default-directory (expand-file-name "drafts/" message-directory))
-  (mail-specify-envelope-from t))
+  ;; These two messages make sure that emails are sent from the email address
+  ;; specified in the "from" header field!
+  ;; (mail-specify-envelope-from t)
+  (mail-specify-envelope-from nil)
+  (mail-envelope-from 'header))
 
 ;;; Smtpmail
 ;; Use `msmtp' program to send emails?
@@ -475,7 +474,7 @@ MML tags."
               (when (and (not (eq type 'new)) (eq .style 'gmail))
                 (insert "\n")
                 (insert"\n#+begin_verse\n")
-                (delete-char 2)        ; Remove next two empty lines
+                (delete-char 1)         ; Remove following (empty) line
                 (save-excursion
                   (goto-char (point-max))
                   (delete-char -2)      ; Delete two empty lines
