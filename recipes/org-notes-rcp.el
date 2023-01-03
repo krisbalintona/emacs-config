@@ -159,17 +159,19 @@
   (defun kb/denote-ensure-title-space ()
     (save-excursion
       (beginning-of-buffer)
-      (let ((end-of-title-keyword
-             (re-search-forward (rx bol "#+"
-                                    (or "T" "t")
-                                    (or "I" "i")
-                                    (or "T" "t")
-                                    (or "L" "l")
-                                    (or "E" "e")
-                                    ":")
-                                (point-max) t)))
-        (goto-char end-of-title-keyword)
-        (just-one-space))))
+      (if-let ((end-of-title-keyword
+                (re-search-forward (rx bol "#+"
+                                       (or "T" "t")
+                                       (or "I" "i")
+                                       (or "T" "t")
+                                       (or "L" "l")
+                                       (or "E" "e")
+                                       ":")
+                                   (point-max) t)))
+          (progn
+            (goto-char end-of-title-keyword)
+            (just-one-space))
+        (error "No title in %s!" (buffer-file-name)))))
   (defun kb/denote-standardize-front-matter ()
     (interactive)
     (require 'denote)
@@ -178,10 +180,12 @@
         ;; Export all the files
         (with-current-buffer (find-file-noselect file)
           (read-only-mode -1)
-          (kb/denote-insert-identifier-maybe)
-          (kb/denote-rearrange-keywords-maybe)
-          (kb/denote-ensure-title-space)
-          (kb/format-buffer-indentation)
+          (save-restriction
+            (widen)
+            (kb/denote-insert-identifier-maybe)
+            (kb/denote-rearrange-keywords-maybe)
+            (kb/denote-ensure-title-space)
+            (kb/format-buffer-indentation))
           (denote-rename-file-using-front-matter file t)
 
           (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
