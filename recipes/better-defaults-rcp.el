@@ -140,6 +140,9 @@
 ;; new text
 (delete-selection-mode t)
 
+;;; Repeatedly popping mark 
+(setq set-mark-command-repeat-pop t)
+
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
