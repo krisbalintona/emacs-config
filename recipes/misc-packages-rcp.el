@@ -502,6 +502,27 @@ displayed."
   (electric-pair-mode)
   (electric-quote-mode))                ; For quotes in text mode
 
+;;; Sentence-navigation
+(use-package sentence-navigation
+  :general ("M-A" 'sentence-nav-backward-end
+            "M-E" 'sentence-nav-forward-end)
+  :custom
+  (sentence-nav-hard-wrapping t)
+  (sentence-nav-jump-to-syntax t)
+  (sentence-nav-syntax-text-objects nil) ; Only for evil users
+  (sentence-nav-abbreviation-list
+   '("[ABCDIMPSUabcdegimpsv]"
+     "l[ab]" "[eRr]d" "Ph" "[Ccp]l" "[Ll]n" "[c]o"
+     "[Oe]p" "[DJMSh]r" "[MVv]s" "[CFMPScfpw]t"
+     "alt" "[Ee]tc" "div" "es[pt]" "[Ll]td" "min"
+     "[MD]rs" "[Aa]pt" "[Aa]ve?" "[Ss]tr?"
+     "[Aa]ssn" "[Bb]lvd" "[Dd]ept" "incl" "Inst" "Prof" "Univ"
+     ;; My most common
+     "e\\.g" "i\\.e"))
+  :init
+  (advice-add 'forward-sentence :override #'sentence-nav-forward)
+  (advice-add 'backward-sentence :override #'sentence-nav-backward))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
