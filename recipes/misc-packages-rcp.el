@@ -491,11 +491,13 @@ displayed."
 ;;; Electric
 (use-package electric
   :custom
+  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+  (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
   (electric-quote-comment nil)
   (electric-quote-string nil)
+  (electric-quote-context-sensitive t)
   (electric-quote-replace-double t)
   (electric-quote-inhibit-functions nil)
-  (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
   :init
   (electric-pair-mode)
   (electric-quote-mode))                ; For quotes in text mode
