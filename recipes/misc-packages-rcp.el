@@ -222,8 +222,18 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package ctrlf
   :init (ctrlf-mode))
 
+;;; Newcomment
+(use-package new-comment
+  :straight nil
+  :custom
+  (comment-empty-lines t)
+  (comment-fill-column nil)
+  (comment-multi-line t)
+  (comment-style 'multi-line))
+
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
+  :disabled                             ; Try built-ins for now
   :straight (alt-comment-dwim :type git
                               :host gitlab
                               :protocol ssh
@@ -420,8 +430,8 @@ displayed."
   :custom
   (logos-outlines-are-pages t)
   (logos-outline-regexp-alist
-      `((emacs-lisp-mode . "^;;; ")
-        (org-mode . "^\\* +"))))
+   `((emacs-lisp-mode . "^;;; ")
+     (org-mode . "^\\* +"))))
 
 ;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
