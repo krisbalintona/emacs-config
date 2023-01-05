@@ -169,7 +169,7 @@ default lsp-passthrough."
          (sh-mode . kb/cape-capf-setup-sh)
          )
   :general
-  (:prefix "M-c"               ; Particular completion function
+  (:prefix "H-c"               ; Particular completion function
            "p" 'completion-at-point
            "t" 'complete-tag   ; etags
            "d" 'cape-dabbrev   ; or dabbrev-completion
