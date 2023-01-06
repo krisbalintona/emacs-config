@@ -20,7 +20,6 @@
 
 ;;; Lsp-haskell
 (use-package lsp-haskell
-  :after lsp-mode
   :hook ((haskell-mode . lsp)
          (haskell-literate-mode . lsp)))
 
