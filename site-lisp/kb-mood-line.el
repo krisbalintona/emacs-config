@@ -331,16 +331,15 @@ Debuggers include edebug and dap."
                                   (propertize text 'face 'mode-line-inactive))))
                        (:eval (when (bound-and-true-p flymake-mode)
                                 (concat (kb/mood-line-segment-flymake) " ")))
-                       ;; (:eval (kb/mood-line-segment-flycheck-doom))
-                       (:eval (when (bound-and-true-p flycheck-mode)
-                                (or (concat (mood-line-segment-flycheck))
-                                    " ")))
                        (:eval (kb/mood-line-segment-lsp))
                        (:eval (when (bound-and-true-p lsp-mode)
                                 (lsp--progress-status)))
                        ;; Shows number of errors like flycheck?
                        (:eval (when (bound-and-true-p lsp-mode)
                                 (lsp-modeline--diagnostics-update-modeline)))
+                       ;; (:eval (kb/mood-line-segment-flycheck-doom))
+                       (:eval (when (bound-and-true-p flycheck-mode)
+                                (or (mood-line-segment-checker-flycheck) " ")))
                        (:eval (kb/mood-line-segment-major-mode))
                        " "
                        ;; Icon if there `debug-on-error' is non-nil
