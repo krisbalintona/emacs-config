@@ -349,40 +349,26 @@
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init
   ;; More convenient `outline-insert-heading'
-  (defun kb/outline-insert-heading ()
+  (defun kb/around-outline-insert-heading (orig_fun &rest args)
     "Insert a new heading at same depth at point.
 
-I've customized it such that it ensures there are newlines before
-and after the heading that that insert mode is entered
-afterward."
-    (interactive)
+Also insert newline before if an empty line isn’t there already.
+
+Also end in `evil-insert-state’ if `evil-local-mode’ is active in
+this buffer."
     ;; Check for if previous line is empty
-    (unless (sp--looking-back "[[:space:]]*$")
+    (unless (save-excursion
+              (previous-line)
+              (beginning-of-line)
+              (looking-at-p "[[:blank:]]*$"))
       (insert "\n"))
-    (let ((head (save-excursion
-                  (condition-case nil
-                      (outline-back-to-heading)
-                    (error (outline-next-heading)))
-                  (if (eobp)
-                      (or (caar outline-heading-alist) "")
-                    (match-string 0)))))
-      (unless (or (string-match "[ \t]\\'" head)
-                  (not (string-match (concat "\\`\\(?:" outline-regexp "\\)")
-                                     (concat head " "))))
-        (setq head (concat head " ")))
-      (unless (bolp) (end-of-line) (newline))
-      (insert head)
-      (unless (eolp)
-        (save-excursion (newline-and-indent)))
-      (run-hooks 'outline-insert-heading-hook))
-    ;; Check for if next line is empty
-    (unless (sp--looking-at-p "[[:space:]]*$")
-      (save-excursion
-        (end-of-line)
-        (insert "\n")))
-    (evil-insert-state))
-  (when (bound-and-true-p evil-local-mode)
-    (advice-add 'outline-insert-heading :override 'kb/outline-insert-heading)))
+
+    (apply orig_fun args)
+
+    ;; Enter evil insert
+    (when (bound-and-true-p evil-local-mode)
+      (evil-insert-state)))
+  (advice-add 'outline-insert-heading :around 'kb/around-outline-insert-heading))
 
 ;;;; Anzu
 ;; Search Mode Info Display
