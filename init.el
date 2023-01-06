@@ -110,6 +110,7 @@
 (require 'programming-c-rcp)
 (require 'programming-racket-rcp)
 (require 'programming-rust-rcp)
+(require 'programming-haskell-rcp)
 
 ;;;; Shells
 (require 'shell-basic-rcp)
