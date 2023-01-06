@@ -62,7 +62,16 @@
             "H" '(devdocs-browser-open-in :wk "Open-in")
             "i" '(devdocs-browser-install-doc :wk "Install")
             "d" '(devdocs-browser-download-offline-data :wk "Download")
-            "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade")))
+            "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade"))
+  :custom
+  (devdocs-browser-major-mode-docs-alist
+   '((c++-mode "cpp")
+     (c-mode "c")
+     (go-mode "go")
+     (python-mode "Python")
+     (emacs-lisp-mode "elisp")
+     (cmake-mode "CMake")
+     (haskell-mode "Haskell"))))
 
 ;;; Dash-docs
 ;; Viewing of documentation via browser.
