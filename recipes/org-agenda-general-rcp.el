@@ -244,6 +244,18 @@ Refer to `org-agenda-prefix-format' for more information."
   (org-agenda-property-list '("LOCATION" "Effort"))
   )
 
+;;; Org-pomodoro
+(use-package org-pomodoro
+  :general (:keymaps 'org-agenda-mode-map "P" 'org-pomodoro)
+  :custom
+  (org-pomodoro-length 25)
+  (org-pomodoro-long-break-length 20)
+  (org-pomodoro-short-break-length 5)
+  (org-pomodoro-clock-break nil)
+  (org-pomodoro-ask-upon-killing t)
+  (org-pomodoro-keep-killed-pomodoro-time t)
+  (org-pomodoro-manual-break t))     ; Allows for a workflow of going "overtime"
+
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-agenda-general-rcp)
