@@ -276,9 +276,7 @@ If called with `universal-arg', then replace links in all denote buffers."
   :custom
   ;; File paths must have ending slashing. See
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
-  (consult-notes-file-dir-sources
-   `(("Agenda" ?a ,(file-name-as-directory kb/agenda-dir))
-     ))
+  (consult-notes-file-dir-sources `())
   ;; Denote
   (consult-notes-denote-display-id nil)
   (consult-notes-denote-dir t)
@@ -345,6 +343,22 @@ If called with `universal-arg', then replace links in all denote buffers."
           :state  #'consult-notes-denote--state)
     "For my papers.")
   (add-to-list 'consult-notes-all-sources 'kb/consult-notes-papers--source 'append)
+
+  (defconst kb/consult-notes-agenda--source
+    (list :name     (propertize "Agenda" 'face 'consult-notes-sep)
+          :narrow   ?a
+          :category 'consult-notes-category
+          :items    (lambda ()
+                      (let* ((max-width 0)
+                             (cands (mapcar (lambda (f)
+                                              (when (string= (file-name-extension f) "org")
+                                                (denote-retrieve-title-value f (denote-filetype-heuristics f))))
+                                            (directory-files-recursively kb/agenda-dir ""))))
+                        cands))
+          ;; Custom preview
+          :state  #'consult-notes-denote--state)
+    "For my agenda files.")
+  (add-to-list 'consult-notes-all-sources 'kb/consult-notes-agenda--source 'append)
 
   (consult-customize
    consult-notes
