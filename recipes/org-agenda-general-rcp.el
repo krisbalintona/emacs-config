@@ -69,8 +69,9 @@
       :empty-lines 1)
      ("i" "Inbox" entry
       (file ,(expand-file-name "garden/20221011T101254--inbox.org" kb/notes-dir))
-      "* %?\n%U"
-      :empty-lines 1)
+      "* %U %?\n"
+      :empty-lines 1
+      :jump-to-captured t)
      ("e" "Email" entry
       (file ,(expand-file-name "emails.org" kb/agenda-dir))
       "* TODO Respond to%? [[%L][\"%:subject\" from %:fromname on %:date]]\n"
