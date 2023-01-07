@@ -278,7 +278,6 @@ If called with `universal-arg', then replace links in all denote buffers."
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
   (consult-notes-file-dir-sources
    `(("Agenda" ?a ,(file-name-as-directory kb/agenda-dir))
-     ("Papers" ?p ,(expand-file-name "papers/" kb/notes-dir))
      ))
   ;; Denote
   (consult-notes-denote-display-id nil)
@@ -331,15 +330,31 @@ If called with `universal-arg', then replace links in all denote buffers."
           ;; Create new note on match fail
           :new     #'consult-notes-denote--new-note))
 
+  (defconst kb/consult-notes-papers--source
+    (list :name     (propertize "Papers" 'face 'consult-notes-sep)
+          :narrow   ?p
+          :category 'consult-notes-category
+          :items    (lambda ()
+                      (let* ((max-width 0)
+                             (cands (mapcar (lambda (f)
+                                              (when (string= (file-name-extension f) "org")
+                                                (denote-retrieve-title-value f (denote-filetype-heuristics f))))
+                                            (directory-files-recursively (expand-file-name "papers/" kb/notes-dir) ""))))
+                        cands))
+          ;; Custom preview
+          :state  #'consult-notes-denote--state)
+    "For my papers.")
+  (add-to-list 'consult-notes-all-sources 'kb/consult-notes-papers--source 'append)
+
   (consult-customize
    consult-notes
    :prompt "Go to..."
    :preview-key (kbd "C-M-;"))
 
   (advice-add 'denote-rename-file-using-front-matter :around
-              #'(lambda (orig-fun &rest args)
-                  (let ((save-silently t))
-                    (apply orig-fun args)))))
+                                                     #'(lambda (orig-fun &rest args)
+                                                          (let ((save-silently t))
+                                                            (apply orig-fun args)))))
 
 ;;; org-notes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
