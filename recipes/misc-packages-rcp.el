@@ -257,6 +257,11 @@ progress. This is called by the timer `good-scroll--timer' every
   :straight (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :ghook 'Info-selection-hook)
 
+;;; Info-colors
+;; Fontify useful parts of info buffers
+(use-package info-colors
+  :hook (Info-selection . info-colors-fontify-node))
+
 ;;; Whole-line-or-region
 (use-package whole-line-or-region
   :hook (after-init . whole-line-or-region-global-mode)
