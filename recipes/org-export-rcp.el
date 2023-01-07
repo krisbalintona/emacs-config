@@ -18,6 +18,7 @@
   (org-display-custom-times t)
   (org-time-stamp-custom-formats '("%b %d, %Y" . "%a %b %d, %Y %H:%M"))
   (org-image-actual-width 700)          ; Image widths on export
+  (org-export-coding-system 'utf-8)
 
   ;; Async export
   (org-export-in-background nil)          ; Have it be default?

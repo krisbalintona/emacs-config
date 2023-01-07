@@ -40,13 +40,17 @@
      ("TODO" :foreground "orange")
      ("DONE" :foreground "chartreuse")
      ("CANCELLED" :foreground "deep pink")))
-  (org-log-done nil)       ; Inactive timestamp already added to logbook
+  (org-log-done t)
   (org-log-into-drawer t)
+
+  (org-fold-catch-invisible-edits 'show)
+  (org-edit-timestamp-down-means-later t)
 
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
   (org-use-tag-inheritance t)
   (org-tags-exclude-from-inheritance '("project" "PROJECT"))
   (org-archive-subtree-save-file-p t)   ; Save archive file always
+  (org-fast-tag-selection-single-key 'expert)
 
   (org-agenda-tags-column 170)
   (org-agenda-prefix-format
