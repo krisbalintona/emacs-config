@@ -13,6 +13,7 @@
 ;;;; Prog-mode
 (use-package prog-mode
   :straight nil
+  :hook (prog-mode . goto-address-prog-mode)
   :init
   (global-prettify-symbols-mode)
   :config
