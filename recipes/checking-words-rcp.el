@@ -76,7 +76,9 @@ then call `dash-docs-completing-read-at-point'."
       (require 'dash-docs)
       (dash-docs-completing-read-at-point))
      (valid-symbol-p
-      (helpful-at-point))
+      (if (featurep 'helpful)
+          (helpful-at-point)
+        (describe-symbol (symbol-at-point))))
      ((or in-comment-p in-string-p)
       (funcall dict-function))
      ((derived-mode-p 'text-mode)
