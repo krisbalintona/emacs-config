@@ -79,6 +79,22 @@
                           (luacheck))
   :hook (after-init . flymake-collection-hook-setup))
 
+;;; Flymake-flycheck
+;; For extending flycheck checkers into flymake. Config taken from Purcell Emacs
+(use-package flymake-flycheck
+  :hook (flymake-mode . kb/enable-flymake-flycheck)
+  :init
+  (defun kb/enable-flymake-flycheck ()
+    (setq-local flymake-diagnostic-functions
+                (append flymake-diagnostic-functions
+                        (flymake-flycheck-all-chained-diagnostic-functions))))
+  :config
+  ;; Disable flycheck checkers for which we have flymake equivalents
+  (with-eval-after-load 'flycheck
+    (setq-default flycheck-disabled-checkers
+                  (append (default-value 'flycheck-disabled-checkers)
+                          '(emacs-lisp emacs-lisp-checkdoc emacs-lisp-package)))))
+
 ;;; Package-lint-flymake
 (use-package package-lint-flymake
   :commands package-lint-flymake
