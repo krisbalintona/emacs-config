@@ -252,12 +252,12 @@ Must be set before org-msg is loaded to take effect.")
   (setq message-signature nil
         message-signature-separator (format "^%s *$" kb/signature-separator))
   (defvar kb/signature-alist
-    `(("Take care" . ,(format "%s\n\nTake care,\nKristoffer" kb/signature-separator))
-      ("In gratitude" . ,(format "%s\n\nIn gratitude,\nKristoffer" kb/signature-separator))
-      ("Best" . ,(format "%s\n\nBest,\nKristoffer" kb/signature-separator))
-      ("With appreciation" . ,(format "%s\n\nWith appreciation,\nKristoffer" kb/signature-separator))
+    `(("Take care" . ,(format "%s\n\nTake care,\\\\\nKristoffer" kb/signature-separator))
+      ("In gratitude" . ,(format "%s\n\nIn gratitude,\\\\\nKristoffer" kb/signature-separator))
+      ("Best" . ,(format "%s\n\nBest,\\\\\nKristoffer" kb/signature-separator))
+      ("With appreciation" . ,(format "%s\n\nWith appreciation,\\\\\nKristoffer" kb/signature-separator))
       ("Brown banner" . ,(concat kb/signature-separator "\n\n"
-                                 "With appreciation,\nKristoffer\n\n"
+                                 "With appreciation,\\\\\nKristoffer\n\n"
                                  "#+begin_export html
 <br />
 <table
