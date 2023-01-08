@@ -42,7 +42,7 @@
   (undo-fu-session-directory (no-littering-expand-var-file-name "undo-fu-session/"))
   (undo-fu-session-file-limit 15000)
   :init
-  (global-undo-fu-session-mode))
+  (undo-fu-session-global-mode))
 
 ;;; undoing-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
