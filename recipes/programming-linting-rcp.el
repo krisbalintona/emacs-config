@@ -82,6 +82,9 @@
 ;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. Config taken from Purcell Emacs
 (use-package flymake-flycheck
+  ;; As the readme staess, "Flycheck UI packages will have no idea of what the
+  ;; checkers are doing, because they are run without flycheck's coordination."
+  :disabled
   :hook (flymake-mode . kb/enable-flymake-flycheck)
   :init
   (defun kb/enable-flymake-flycheck ()
