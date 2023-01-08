@@ -24,8 +24,10 @@
   (org-enforce-todo-checkbox-dependencies nil)
   (org-agenda-dim-blocked-tasks 'invisible) ; Invisible unless dependencies are done
 
+  (org-agenda-start-on-weekday nil)     ; Start with today
+
   (org-agenda-window-setup 'only-window)
-  (org-use-fast-todo-selection 'auto)
+  (org-use-fast-todo-selection 'expert)
   (org-agenda-sticky nil)
   (org-agenda-restore-windows-after-quit t)
 
@@ -42,6 +44,8 @@
      ("CANCELLED" :foreground "deep pink")))
   (org-log-done t)
   (org-log-into-drawer t)
+
+  (org-clock-out-when-done t)
 
   (org-fold-catch-invisible-edits 'show)
   (org-edit-timestamp-down-means-later t)
