@@ -15,61 +15,67 @@
   :straight nil
   :hook (org-agenda-finalize . (lambda () (goto-char (point-min))))
   :gfhook 'hl-line-mode
-  :general (kb/open-keys
-             "a" '(org-agenda :wk "Org-agenda"))
+  :general (kb/open-keys "a" 'org-agenda)
   :custom
-  (org-agenda-files `(,kb/agenda-dir))
+  (org-agenda-files (list kb/agenda-dir))
 
-  (org-enforce-todo-dependencies t)
+  ;; Todos
+  (org-enforce-todo-dependencies nil)
   (org-enforce-todo-checkbox-dependencies nil)
-  (org-agenda-dim-blocked-tasks 'invisible) ; Invisible unless dependencies are done
-
-  (org-agenda-start-on-weekday nil)     ; Start with today
-
-  (org-agenda-window-setup 'only-window)
-  (org-use-fast-todo-selection 'expert)
-  (org-agenda-sticky nil)
-  (org-agenda-restore-windows-after-quit t)
-
+  (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "PROG(p)" "TODAY(i)" "NEAR(n)" "HORIZON(h)" "FAR(f)" "WAITING(w@/!)" "TODO(t)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
+   '((sequence "ACTIVE(a)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
   (org-todo-keyword-faces
-   '(("PROG" :foreground "turquoise")
-     ("TODAY" :foreground "chocolate1")
-     ("NEAR" :foreground "orchid")
-     ("HORIZON" :foreground "deep sky blue")
-     ("WAITING" :foreground "brown")
-     ("TODO" :foreground "orange")
-     ("DONE" :foreground "chartreuse")
-     ("CANCELLED" :foreground "deep pink")))
+   '(("ACTIVE" . '(bold org-todo))
+     ("TODO" . 'org-todo)
+     ("WAITING" . '(shadow error))
+     ("MAYBE" . '(shadow org-todo))
+     ("DONE" . '(bold org-done))
+     ("CANCEL" . 'error)))
   (org-log-done t)
   (org-log-into-drawer t)
+  (org-highest-priority ?A)
+  (org-lowest-priority ?E)
+  (org-default-priority ?D)
+  (org-priority-faces
+   '((?A . '(bold org-priority))
+     (?B . org-priority)
+     (?C . org-priority)
+     (?D . '(shadow org-priority))
+     (?E . '(shadow org-priority))))
 
+  ;; Clocking in and out
   (org-clock-out-when-done t)
+  (org-clock-persist t)
 
-  (org-fold-catch-invisible-edits 'show)
-  (org-edit-timestamp-down-means-later t)
-
-  (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
+  ;; Inheritance
   (org-use-tag-inheritance t)
-  (org-tags-exclude-from-inheritance '("project" "PROJECT"))
-  (org-archive-subtree-save-file-p t)   ; Save archive file always
-  (org-fast-tag-selection-single-key 'expert)
+  (org-tags-exclude-from-inheritance '("project"))
+  (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
+  (org-agenda-show-inherited-tags nil)
 
-  (org-agenda-tags-column 170)
+  ;; Org agenda
+  (org-agenda-file-regexp "\\`[^.].*\\.org\\'")
+  (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
+  (org-agenda-window-setup 'only-window)
+  (org-use-fast-todo-selection 'expert)
+  (org-agenda-dim-blocked-tasks 'invisible) ; Invisible unless dependencies are done
+  (org-agenda-restore-windows-after-quit t)
+  (org-agenda-tags-column 'auto)
+  (org-agenda-start-on-weekday nil)     ; Start with today
   (org-agenda-prefix-format
-   '((agenda . " %i %(kb/agenda-category 14)%?-12t% s")
-     (todo . " %i %(kb/agenda-category 14)  %(org-agenda-view--insert-deadline)   ")
-     (tags . " %i %(kb/agenda-category 14) ")
-     (search . " %i %(kb/agenda-category 14) ")
-     ))
+   '((agenda . " %i %-12:c%?-12t% s")
+     (todo . " %i %-12:c %b ")
+     (tags . " %i %-12:c %b ")
+     (search . " %i %-12:c")))
   (org-agenda-sorting-strategy
-   '((agenda category-up deadline-up scheduled-up time-up habit-down priority-down)
-     (todo priority-down deadline-up scheduled-up category-up)
-     (tags priority-down category-keep)
-     (search category-keep)
-     ))
+   '((agenda habit-down time-up ts-up priority-down category-keep)
+     (todo priority-down todo-state-up category-keep)
+     (tags priority-down todo-state-up category-keep)
+     (search category-keep)))
+  (org-archive-subtree-save-file-p t)   ; Save archive file always
 
+  ;; Capture templates
   (org-capture-templates
    `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
@@ -98,147 +104,61 @@
      ("e" ((in-mode . "mu4e-view-mode")))
      ("E" ((lambda () (bound-and-true-p mu4e-captured-message))))))
   :config
-  ;; Used in org-agenda to replace the categories with note titles. Taken from
-  ;; `vulpea' library
-  (defun kb/note-buffer-prop-get (name)
-    "Get a buffer property called NAME as a string."
-    (org-with-point-at 1
-      (when (re-search-forward (concat "^#\\+" name ":\\(.*\\)")
-                               (point-max) t)
-        (string-trim
-         (buffer-substring-no-properties
-          (match-beginning 1)
-          (match-end 1))))))
-  (defun kb/agenda-category (&optional len)
-    "Get category of item at point for agenda.
-
-Category is defined by one of the following items:
-
-- CATEGORY property
-- TITLE keyword
-- TITLE property
-- filename without directory and extension
-
-When LEN is a number, resulting string is padded right with
-spaces and then truncated with ... on the right if result is
-longer than LEN.
-
-Usage example:
-
-  (setq org-agenda-prefix-format
-        '((agenda . \" %(kb/agenda-category) %?-12t %12s\")))
-
-Refer to `org-agenda-prefix-format' for more information."
-    (let* ((file-name (when buffer-file-name
-                        (file-name-sans-extension
-                         (file-name-nondirectory buffer-file-name))))
-           (title (kb/note-buffer-prop-get "title"))
-           (category (org-get-category))
-           (result
-            (or (if (and
-                     title
-                     (string-equal category file-name))
-                    title
-                  category)
-                "")))
-      (if (numberp len)                ; Truncates if too long, according to len
-          (s-truncate len (s-pad-right len " " result))
-        result)))
-
-  ;; For org-agenda views
-  (defun org-agenda-view--insert-deadline ()
-    (let* ((deadline (org-get-deadline-time (point)))
-           (time-string (format-time-string "%a %m/%d" deadline)))
-      (if deadline
-          time-string
-        (make-string 9 ? )))))
-
-;;; Org-ql
-;; More powerful searching and selecting of todo headlines
-(use-package org-ql
-  :requires org-agenda)
+  (org-clock-persistence-insinuate))
 
 ;;; Org-super-agenda
-(use-package org-super-agenda
-  :after org-agenda
-  :ghook 'org-agenda-mode-hook
-  :custom
-  (org-agenda-custom-commands
-   '(("E" "Emails"
-      ((alltodo ""
-                ((org-agenda-overriding-header "Emails")
-                 (org-super-agenda-groups
-                  '((:and (:file-path "emails"
-                           :deadline t))
-                    (:and (:file-path "emails"
-                           :scheduled t))
-                    (:file-path "emails")
-                    (:discard (:anything t))
-                    ))
-                 ))
-       ))
-     ("o" "Overview"
-      ((alltodo ""
-                ((org-agenda-overriding-header "Revisit")
-                 (org-super-agenda-groups
-                  '((:name "Stuck projects"
-                     :tag "PROJECT")
-                    (:name "Should be snoozed"
-                     :todo "TODO"
-                     :and (:todo ("FAR" "WAITING")
-                           :scheduled nil))
-                    (:name "Snoozed"
-                     :scheduled past
-                     :scheduled today)
-                    (:discard (:children todo))
-                    (:discard (:anything t))
-                    ))
-                 ))
-       (alltodo ""
-                ((org-agenda-overriding-header "Courses")
-                 (org-super-agenda-groups
-                  `((:discard (:not (:file-path ("cs1730" "hist1974i" "hist0244" "phil1340"))))
-                    (:discard (:and (:tag "PROJECT"
-                                     :deadline ; Include only those with deadline 2 days into the future
-                                     ;; Taken from
-                                     ;; https://github.com/alphapapa/org-super-agenda/blob/master/examples.org#concrete-dates
-                                     (after ,(-let* (((sec minute hour day month year dow dst utcoff) (decode-time)))
-                                               (format "%d-%02d-%02d" year month (+ 2 day)))))))
-                    (:discard (:todo "FAR"))
-                    (:discard (:scheduled future))
-                    (:auto-todo t)
-                    ))
-                 ))
-       (alltodo ""
-                ((org-agenda-overriding-header "Projects")
-                 (org-super-agenda-groups
-                  '((:discard (:todo "FAR"))
-                    (:discard (:scheduled future))
-                    (:auto-parent t)
-                    (:discard (:anything t))
-                    ))
-                 ))
-       (alltodo ""
-                ((org-agenda-overriding-header "Extracurriculars")
-                 (org-super-agenda-groups
-                  '((:discard (:not (:file-path ("crc" "bui" "buoy"))))
-                    (:discard (:todo "FAR"))
-                    (:discard (:scheduled future))
-                    (:auto-todo t)
-                    ))
-                 ))
-       (alltodo ""
-                ((org-agenda-overriding-header "Other")
-                 (org-super-agenda-groups
-                  '((:discard (:not (:file-path "todo")))
-                    (:discard (:todo "FAR"))
-                    (:discard (:scheduled future))
-                    (:auto-todo t)
-                    ))
-                 ))
-       ))
-     ("A" "Archive" todo "DONE|CANCELLED")
-     )))
+(with-eval-after-load 'org-agenda
+  (setq org-agenda-custom-commands
+        '(("j" "At a glance"
+           ((tags-todo "+snooze"
+                       ((org-agenda-overriding-header "Snoozed without date")
+                        (org-use-tag-inheritance nil)
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'scheduled))))
+            (tags-todo "+snooze"
+                       ((org-agenda-overriding-header "Snoozed")
+                        (org-use-tag-inheritance nil)
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'notscheduled))
+                        (org-agenda-tags-todo-honor-ignore-options t)
+                        (org-agenda-todo-ignore-scheduled 'future)))
+            (tags-todo "+course-snooze/-MAYBE"
+                       ((org-agenda-overriding-header "Courses")
+                        (org-agenda-tags-todo-honor-ignore-options t)
+                        (org-agenda-todo-ignore-scheduled 'future)))
+            (tags-todo "+work-snooze/-MAYBE"
+                       ((org-agenda-overriding-header "Work")
+                        (org-agenda-tags-todo-honor-ignore-options t)
+                        (org-agenda-todo-ignore-scheduled 'future)))
+            (tags-todo "+org-snooze/-MAYBE"
+                       ((org-agenda-overriding-header "Extracurriculars")
+                        (org-agenda-tags-todo-honor-ignore-options t)
+                        (org-agenda-todo-ignore-scheduled 'future)))
+            (tags-todo "-snooze/-MAYBE"
+                       ((org-agenda-overriding-header "Other")
+                        (org-agenda-files (list (expand-file-name "todo.org" kb/agenda-dir)))
+                        (org-agenda-tags-todo-honor-ignore-options t)
+                        (org-agenda-todo-ignore-scheduled 'future)))
+            (agenda ""
+                    ((org-agenda-overriding-header "Upcoming deadlines")
+                     (org-agenda-start-day "-3d")
+                     (org-agenda-span 24)
+                     (org-agenda-show-all-dates nil)
+                     (org-deadline-warning-days 0)
+                     (org-agenda-entry-types '(:deadline))
+                     (org-agenda-include-diary t)))
+            (tags-todo "+project-snooze/-MAYBE"
+                       ((org-agenda-overriding-header "Projects")))
+            (tags-todo "-snooze/+MAYBE"
+                       ((org-agenda-overriding-header "Maybes")))))
+          ("E" "Emails"
+           ((agenda ""
+                    ((org-agenda-overriding-header "Emails")
+                     (org-agenda-start-day "-1w")
+                     (org-agenda-span 21)
+                     (org-agenda-show-all-dates nil)
+                     (org-agenda-files (list (expand-file-name "emails.org" kb/agenda-dir)))))))
+          ("A" "Archive" todo "DONE|CANCELLED"))))
 
 ;;; Org-agenda-property
 ;; Display org-agenda entries' properties alongside them

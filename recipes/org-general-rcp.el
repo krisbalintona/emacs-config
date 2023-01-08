@@ -52,6 +52,9 @@
      ("\\.docx\\'" . system)
      ("\\.odt\\'" . system)))
 
+  (org-fold-catch-invisible-edits 'show)
+  (org-edit-timestamp-down-means-later t)
+
   ;; Org-babel
   (org-confirm-babel-evaluate nil)      ; Can be dangerous! Observe for now
   :config
@@ -84,10 +87,7 @@
 (use-package org-refile
   :custom
   (org-refile-targets
-   `((kb/find-blog-files-org . (:maxlevel . 4))
-     (org-agenda-files . (:maxlevel . 2))
-     (nil . (:level . 1))
-     ))
+   `((nil . (:level . 2))))
   (org-refile-use-cache nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
@@ -561,7 +561,7 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
-  :disbled          ; Opt for `electric-quote-mode' and `prettify-symbols-mode'
+  :disabled          ; Opt for `electric-quote-mode' and `prettify-symbols-mode'
   :ghook 'org-mode-hook
   :config
   (defun kb/typo-insert-cycle (cycle)
