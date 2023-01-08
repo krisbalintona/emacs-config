@@ -264,17 +264,15 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Whole-line-or-region
 (use-package whole-line-or-region
   :hook (after-init . whole-line-or-region-global-mode)
-  :config
-  (setq whole-line-or-region-local-mode-map
-        (let ((map (make-sparse-keymap)))
-          (define-key map [remap kill-region] 'whole-line-or-region-kill-region)
-          (define-key map [remap kill-ring-save] 'whole-line-or-region-kill-ring-save)
-          (define-key map [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill)
-          (define-key map [remap delete-region] 'whole-line-or-region-delete-region)
-          (define-key map [remap comment-dwim] 'whole-line-or-region-comment-dwim-2)
-          (define-key map [remap comment-region] 'whole-line-or-region-comment-region)
-          (define-key map [remap uncomment-region] 'whole-line-or-region-uncomment-region)
-          map)))
+  :general (:keymaps 'whole-line-or-region-local-mode-map
+            [remap kill-region] 'whole-line-or-region-kill-region
+            [remap kill-ring-save] 'whole-line-or-region-kill-ring-save
+            [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill
+            [remap delete-region] 'whole-line-or-region-delete-region
+;;             [remap comment-dwim] 'whole-line-or-region-comment-dwim-2
+            [remap comment-dwim] nil
+            [remap comment-region] 'whole-line-or-region-comment-region
+            [remap uncomment-region] 'whole-line-or-region-uncomment-region))
 
 ;;; Eldoc
 (use-package eldoc
