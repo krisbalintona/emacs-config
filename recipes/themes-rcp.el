@@ -193,12 +193,20 @@ Also alters `global-mode-string’."
 
 ;;;; Minions
 (use-package minions
+  :ghook 'window-setup-hook
   :custom
   (minions-mode-line-lighter "…")
   (minions-mode-line-delimiters '("[" . "]"))
-  (minions-prominent-modes nil)
-  :init
-  (minions-mode))
+  (minions-prominent-modes
+   '(kb/lisp-keyword-indent-mode tree-sitter-mode)))
+
+;;;; Diminish
+(use-package diminish
+  :demand t
+  :config
+  (diminish 'tree-sitter-mode "TS")
+  (diminish 'kb/lisp-keyword-indent-mode
+            '(kb/lisp-keyword-indent-allow (:propertize " LKI" face '(:slant italic)))))
 
 ;;;; Time
 ;; Enable time in the mode-line
