@@ -229,11 +229,10 @@ progress. This is called by the timer `good-scroll--timer' every
   (comment-empty-lines t)
   (comment-fill-column nil)
   (comment-multi-line nil)
-  (comment-style '(t t nil til "My preferred comment style")))
+  (comment-style '(t t nil t "My preferred comment style")))
 
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
-  :disabled                             ; Try built-ins for now
   :straight (alt-comment-dwim :type git
                               :host gitlab
                               :protocol ssh
@@ -265,21 +264,17 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Whole-line-or-region
 (use-package whole-line-or-region
   :hook (after-init . whole-line-or-region-global-mode)
-  :init
-  ;; Manually redefine the mode map since `whole-line-or-region-yank-handler'
-  ;; relies on the mode being active for functionality
-  (defvar whole-line-or-region-local-mode-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map [remap kill-region] 'whole-line-or-region-kill-region)
-      (define-key map [remap kill-ring-save] 'whole-line-or-region-kill-ring-save)
-      (define-key map [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill)
-      (define-key map [remap delete-region] 'whole-line-or-region-delete-region)
-      ;; (define-key map [remap comment-dwim] 'whole-line-or-region-comment-dwim-2)
-      (define-key map [remap comment-region] 'whole-line-or-region-comment-region)
-      (define-key map [remap uncomment-region] 'whole-line-or-region-uncomment-region)
-      map)
-    "Minor mode map for `whole-line-or-region-mode'.")
-  )
+  :config
+  (setq whole-line-or-region-local-mode-map
+        (let ((map (make-sparse-keymap)))
+          (define-key map [remap kill-region] 'whole-line-or-region-kill-region)
+          (define-key map [remap kill-ring-save] 'whole-line-or-region-kill-ring-save)
+          (define-key map [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill)
+          (define-key map [remap delete-region] 'whole-line-or-region-delete-region)
+          (define-key map [remap comment-dwim] 'whole-line-or-region-comment-dwim-2)
+          (define-key map [remap comment-region] 'whole-line-or-region-comment-region)
+          (define-key map [remap uncomment-region] 'whole-line-or-region-uncomment-region)
+          map)))
 
 ;;; Eldoc
 (use-package eldoc
