@@ -523,6 +523,26 @@ displayed."
   (advice-add 'forward-sentence :override #'sentence-nav-forward)
   (advice-add 'backward-sentence :override #'sentence-nav-backward))
 
+;;; Recursion-indicator
+(use-package recursion-indicator
+  ;;   :custom
+  ;;   (recursion-indicator-general "&")
+  ;;   (recursion-indicator-minibuffer "@")
+  :init
+  (minibuffer-depth-indicate-mode)
+  (recursion-indicator-mode)
+  :config
+  ;; Thanks to Daniel Mendler for this! It removes the square brackets that
+  ;; denote recursive edits in the modeline. I do not need them because I am
+  ;; using Daniel's `recursion-indicator':
+  ;; <https://github.com/minad/recursion-indicator>.
+  (setq-default mode-line-modes
+                (seq-filter (lambda (s)
+                              (not (and (stringp s)
+                                        (string-match-p
+                                         "^\\(%\\[\\|%\\]\\)$" s))))
+                            mode-line-modes)))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil

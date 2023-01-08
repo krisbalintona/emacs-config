@@ -124,23 +124,56 @@
   (doom-modeline-window-width-limit 100) ; Width of the bar segment
   :config (require 'kb-doom-modeline-segments))
 
-;;;; Mood-line
-(use-package mood-line)
-
 ;;;; Kb-mood-line
 (use-package kb-mood-line
+  :disabled                             ; Trying built-ins for now
   :straight nil
   :hook ((window-setup server-after-make-frame) . kb/mood-line-setup)
+  :preface
+  (use-package mood-line)
   :init
   (require 'doom-modeline))
+
+;;;; Default mode line
+;; Based off of Prot's
+(unless (bound-and-true-p mood-line-mode)
+  (setq mode-line-percent-position '(-3 "%p")
+        mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
+        mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
+        mode-line-compact 'long         ; Emacs 28
+        global-mode-string
+        '("" display-time-string battery-mode-line-string))
+
+  (setq-default mode-line-format
+                '("%e"
+                  mode-line-front-space
+                  mode-line-mule-info
+                  mode-line-client
+                  mode-line-modified
+                  mode-line-remote
+                  mode-line-frame-identification
+                  mode-line-buffer-identification
+                  "  "
+                  mode-line-modes
+                  "  "
+                  (vc-mode vc-mode)
+                  "  "
+                  mode-line-misc-info
+                  mode-line-end-spaces)))
+
+;;;; Minions
+(use-package minions
+  :custom
+  (minions-mode-line-lighter "…")
+  (minions-mode-line-delimiters '("[" . "]"))
+  (minions-prominent-modes nil)
+  :init
+  (minions-mode))
 
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  ;; :hook (window-setup . display-time-mode)
   :custom
-  ;; (display-time-format "%H:%M:%S")     ; Use 24hr format with seconds
-  ;; (display-time-interval 1)            ; Update every since if I'm using seconds
   (display-time-format "%H:%M")        ; Use 24hr format with seconds
   (display-time-interval 60)           ; Update every since if I'm using seconds
   (display-time-default-load-average nil) ; Don't show load average
@@ -151,11 +184,9 @@
      ("Europe/Paris" "Paris")
      ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
      ("Asia/Calcutta" "Bangalore")
-     ("Asia/Tokyo" "Tokyo")
-     ))
+     ("Asia/Tokyo" "Tokyo")))
   :init
-  (display-time-mode)
-  )
+  (display-time-mode))
 
 ;;;; Battery
 ;; Display batter percentage
@@ -167,16 +198,7 @@
   ;; (battery-mode-line-format "%cmAh")
   (battery-mode-line-format "  %p%%")
   :init
-  (display-battery-mode)
-  )
-
-;;;; Fancy-battery
-(use-package fancy-battery
-  :custom
-  (fancy-battery-show-percentage t)
-  :init
-  (fancy-battery-mode)
-  )
+  (display-battery-mode))
 
 ;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
@@ -191,7 +213,8 @@
 ;; Display the name of the function I am currently under
 (use-package which-func
   :init
-  (which-function-mode))
+  ;; (which-function-mode)
+  )
 
 ;;; Other
 ;;;; Fontaine

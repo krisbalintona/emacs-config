@@ -232,8 +232,8 @@ If buffer-or-name is nil return current buffer's mode."
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c M-w"))
   (eyebrowse-mode-line-style t)         ; Always show
-  (eyebrowse-mode-line-left-delimiter "[")
-  (eyebrowse-mode-line-right-delimiter "]")
+  (eyebrowse-mode-line-left-delimiter " [")
+  (eyebrowse-mode-line-right-delimiter "] ")
   (eyebrowse-mode-line-separator "|")
   (eyebrowse-tagged-slot-format "%t")  ; Only show workspace name (tag) if avail
   (eyebrowse-wrap-around t) ; Cycle back to beginning when at the end and vice versa
