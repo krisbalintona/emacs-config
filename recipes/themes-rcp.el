@@ -55,10 +55,10 @@
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
-            (or (buffer-file-name)                         ; Connected to a file
-                ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
-                (string-match "*Minimap*" (buffer-name)) ; Demap minimap
-                )))
+       (or (buffer-file-name)                         ; Connected to a file
+           ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
+           (string-match "*Minimap*" (buffer-name)) ; Demap minimap
+           )))
   :init
   ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I want to swap the
   ;; background faces which solaire remaps, e.g., non-real buffers dark and real
@@ -126,13 +126,11 @@
 
 ;;;; Kb-mood-line
 (use-package kb-mood-line
-  :disabled                             ; Trying built-ins for now
   :straight nil
-  :hook ((window-setup server-after-make-frame) . kb/mood-line-setup)
-  :preface
-  (use-package mood-line)
+  ;; :hook ((window-setup server-after-make-frame) . kb/mood-line-setup)
   :init
-  (require 'doom-modeline))
+  (require 'doom-modeline)
+  (use-package mood-line))
 
 ;;;; Default mode line
 ;; Based off of Prot's
@@ -174,29 +172,25 @@ the mode line. Also alters `global-mode-string’ based on
                   (:eval
                    (let* ((active (eq (frame-selected-window) (selected-window)))
                           (face (if active 'mode-line-buffer-id 'mode-line-buffer-id-inactive))
-                          (lhs (list
-                                (powerline-raw mode-line-front-space)
-                                (powerline-raw (eyebrowse-mode-line-indicator))
-                                (powerline-raw mode-line-client)
-                                (powerline-raw mode-line-modified)
-                                (powerline-raw mode-line-remote)
-                                (powerline-raw vc-mode)
-                                " "
-                                (powerline-raw mode-line-buffer-identification)
-                                " %p "
-                                (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)))))
-                          (rhs (list
-                                (powerline-raw '(:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))))
-                                " "
-                                (powerline-raw (kb/mode-line-misc-info-wrapper))
-                                (powerline-raw mode-line-modes)
-                                (powerline-raw (if (display-graphic-p) "  " "-%-"))))) ; Modified `mode-line-end-spaces'
+                          (lhs
+                           (list (powerline-raw mode-line-front-space)
+                                 (powerline-raw (eyebrowse-mode-line-indicator))
+                                 (powerline-raw mode-line-client)
+                                 (powerline-raw mode-line-modified)
+                                 (powerline-raw mode-line-remote)
+                                 (powerline-raw vc-mode face 'r)
+                                 (powerline-raw mode-line-buffer-identification face 'r)
+                                 "%p"
+                                 (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)) face 'l)))
+                          (rhs
+                           (list (powerline-raw '(:eval (lsp--progress-status)) face 'r)
+                                 (powerline-raw '(:eval flymake-mode-line-format) face 'r)
+                                 (powerline-raw (kb/mode-line-misc-info-wrapper))
+                                 (powerline-raw mode-line-modes)
+                                 (if (display-graphic-p) "  " "-%-")))) ; Modified `mode-line-end-spaces'
                      (concat
-                      ;; Left
                       (powerline-render lhs)
-                      ;; Center
                       (powerline-fill face (powerline-width rhs))
-                      ;; Right
                       (powerline-render rhs)))))))
 
 ;;;; Minions
