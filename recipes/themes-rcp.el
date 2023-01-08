@@ -144,21 +144,28 @@
         global-mode-string
         '("" display-time-string battery-mode-line-string))
 
-  (defun kb/mode-line-misc-info-wrapper (misc-info)
-    "Return a modified version of MISC-INFO without certain elements.
+  (defun kb/global-mode-string-wrapper ()
+    "Return a modified version of `global-mode-string’ without certain
+elements.
 
-MISC-INFO is expected to be `mode-line-misc-info’. I use this
-function to remove elements that I put elsewhere in the mode
-line.
+I use this function to remove elements that I put elsewhere in
+the mode line."
+    (let ((removed-global-mode-string
+           '((t (:eval (lsp--progress-status))))))
+      (seq-difference global-mode-string removed-global-mode-string)))
 
-Also alters `global-mode-string’."
-    (let* ((removed-misc-info
-            '((eyebrowse-mode (:eval (eyebrowse-mode-line-indicator)))))
-           (removed-global-mode-string
-            '((t (:eval (lsp--progress-status))))))
-      (seq-difference (setf (alist-get global-mode-string misc-info)
-                            (seq-difference global-mode-string removed-global-mode-string))
-                      removed-misc-info)))
+  (defun kb/mode-line-misc-info-wrapper ()
+    "Return a modified version of `mode-line-misc-info’ without
+certain elements.
+
+I use this function to remove elements that I put elsewhere in
+the mode line. Also alters `global-mode-string’ based on
+`kb/global-mode-string-wrapper’."
+    (let ((removed-misc-info
+           '((global-mode-string ("" global-mode-string))
+             (eyebrowse-mode (:eval (eyebrowse-mode-line-indicator))))))
+      (append (seq-difference mode-line-misc-info removed-misc-info)
+              (kb/global-mode-string-wrapper))))
 
   ;; This leverages powerline's functions to right-align the modeline
   (use-package powerline)
@@ -178,10 +185,10 @@ Also alters `global-mode-string’."
                                 (powerline-raw mode-line-buffer-identification)
                                 " %p"))
                           (rhs (list
-                                (concat (powerline-raw (lsp--progress-status)) " ")
+                                (powerline-raw '(:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))))
+                                " "
+                                (powerline-raw (kb/mode-line-misc-info-wrapper))
                                 (powerline-raw mode-line-modes)
-                                (powerline-raw
-                                 (kb/mode-line-misc-info-wrapper mode-line-misc-info))
                                 (powerline-raw (if (display-graphic-p) "  " "-%-"))))) ; Modified `mode-line-end-spaces'
                      (concat
                       ;; Left
