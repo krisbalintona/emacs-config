@@ -228,8 +228,8 @@ progress. This is called by the timer `good-scroll--timer' every
   :custom
   (comment-empty-lines t)
   (comment-fill-column nil)
-  (comment-multi-line t)
-  (comment-style 'multi-line))
+  (comment-multi-line nil)
+  (comment-style '(t t nil til "My preferred comment style")))
 
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
