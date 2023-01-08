@@ -144,22 +144,52 @@
         global-mode-string
         '("" display-time-string battery-mode-line-string))
 
+  (defun kb/mode-line-misc-info-wrapper (misc-info)
+    "Return a modified version of MISC-INFO without certain elements.
+
+MISC-INFO is expected to be `mode-line-misc-info’. I use this
+function to remove elements that I put elsewhere in the mode
+line.
+
+Also alters `global-mode-string’."
+    (let* ((removed-misc-info
+            '((eyebrowse-mode (:eval (eyebrowse-mode-line-indicator)))))
+           (removed-global-mode-string
+            '((t (:eval (lsp--progress-status))))))
+      (seq-difference (setf (alist-get global-mode-string misc-info)
+                            (seq-difference global-mode-string removed-global-mode-string))
+                      removed-misc-info)))
+
+  ;; This leverages powerline's functions to right-align the modeline
+  (use-package powerline)
   (setq-default mode-line-format
                 '("%e"
-                  mode-line-front-space
-                  mode-line-mule-info
-                  mode-line-client
-                  mode-line-modified
-                  mode-line-remote
-                  mode-line-frame-identification
-                  mode-line-buffer-identification
-                  "  "
-                  mode-line-modes
-                  "  "
-                  (vc-mode vc-mode)
-                  "  "
-                  mode-line-misc-info
-                  mode-line-end-spaces)))
+                  (:eval
+                   (let* ((active (eq (frame-selected-window) (selected-window)))
+                          (face (if active 'mode-line-buffer-id 'mode-line-buffer-id-inactive))
+                          (lhs (list
+                                (powerline-raw mode-line-front-space)
+                                (powerline-raw (eyebrowse-mode-line-indicator))
+                                (powerline-raw mode-line-client)
+                                (powerline-raw mode-line-modified)
+                                (powerline-raw mode-line-remote)
+                                (powerline-raw vc-mode)
+                                "%n "
+                                (powerline-raw mode-line-buffer-identification)
+                                " %p"))
+                          (rhs (list
+                                (concat (powerline-raw (lsp--progress-status)) " ")
+                                (powerline-raw mode-line-modes)
+                                (powerline-raw
+                                 (kb/mode-line-misc-info-wrapper mode-line-misc-info))
+                                (powerline-raw (if (display-graphic-p) "  " "-%-"))))) ; Modified `mode-line-end-spaces'
+                     (concat
+                      ;; Left
+                      (powerline-render lhs)
+                      ;; Center
+                      (powerline-fill face (powerline-width rhs))
+                      ;; Right
+                      (powerline-render rhs)))))))
 
 ;;;; Minions
 (use-package minions
@@ -194,9 +224,10 @@
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
-  (battery-mode-line-limit 100)
+  (battery-mode-line-limit 95)
   ;; (battery-mode-line-format "%cmAh")
-  (battery-mode-line-format "  %p%%")
+  ;; (battery-mode-line-format "  %p%%")
+  (battery-mode-line-format "%b%p%% ")
   :init
   (display-battery-mode))
 
