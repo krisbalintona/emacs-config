@@ -229,7 +229,7 @@ progress. This is called by the timer `good-scroll--timer' every
   (comment-empty-lines t)
   (comment-fill-column nil)
   (comment-multi-line nil)
-  (comment-style '(t t nil t "My preferred comment style")))
+  (comment-style 'indent))
 
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
@@ -269,7 +269,7 @@ progress. This is called by the timer `good-scroll--timer' every
             [remap kill-ring-save] 'whole-line-or-region-kill-ring-save
             [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill
             [remap delete-region] 'whole-line-or-region-delete-region
-;;             [remap comment-dwim] 'whole-line-or-region-comment-dwim-2
+            ;; [remap comment-dwim] 'whole-line-or-region-comment-dwim-2
             [remap comment-dwim] nil
             [remap comment-region] 'whole-line-or-region-comment-region
             [remap uncomment-region] 'whole-line-or-region-uncomment-region))
