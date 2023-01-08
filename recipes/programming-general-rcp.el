@@ -359,8 +359,8 @@ Also end in `evil-insert-state’ if `evil-local-mode’ is active in
 this buffer."
     ;; Check for if previous line is empty
     (unless (save-excursion
-              (previous-line)
-              (beginning-of-line)
+              (widen)
+              (forward-line -1)
               (looking-at-p "[[:blank:]]*$"))
       (insert "\n"))
 
