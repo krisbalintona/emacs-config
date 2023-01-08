@@ -132,6 +132,44 @@
   (require 'doom-modeline)
   (use-package mood-line))
 
+;;;; Minions
+(use-package minions
+  ;; :ghook 'window-setup-hook
+  :custom
+  (minions-mode-line-lighter "…")
+  (minions-mode-line-delimiters '("[" . "]"))
+  (minions-prominent-modes
+   '(kb/lisp-keyword-indent-mode tree-sitter-mode)))
+
+;;;; Diminish
+(use-package diminish
+  :defines 'kb/diminish-setup
+  :init
+  (defun kb/diminish-setup ()
+    "Set up my `diminish’ lighters."
+    (diminish 'rainbow-mode)
+    (diminish 'outshine-mode)
+    (diminish 'outline-minor-mode)
+    (diminish 'flymake-mode)
+    (diminish 'abbrev-mode)
+    (diminish 'subword-mode)
+    (diminish 'visual-line-mode)
+    (diminish 'eldoc-mode)
+    (diminish 'eldoc-box-hover-mode)
+    (diminish 'anzu-mode)
+    (diminish 'super-save-mode)
+    (diminish 'which-key-mode)
+    (diminish 'hs-minor-mode)
+    (diminish 'form-feed-mode)
+    (diminish 'gcmh-mode)
+    (diminish 'yas-minor-mode)
+    (diminish 'highlight-indent-guides-mode)
+    (diminish 'whole-line-or-region-local-mode)
+    (diminish 'wucuo-mode)
+    (diminish 'tree-sitter-mode "TS")
+    (diminish 'kb/lisp-keyword-indent-mode
+              '(kb/lisp-keyword-indent-allow (:propertize " LKI" face '(:slant italic))))))
+
 ;;;; Default mode line
 ;; Based off of Prot's
 (unless (bound-and-true-p mood-line-mode)
@@ -141,6 +179,36 @@
         mode-line-compact 'long         ; Emacs 28
         global-mode-string
         '("" display-time-string battery-mode-line-string))
+
+
+  (defvar kb/mode-line-modes
+    (let ((recursive-edit-help-echo
+           "Recursive edit, type M-C-c to get out"))
+      (list (propertize "%[" 'help-echo recursive-edit-help-echo)
+            "["                         ; Begin delimiter
+            `(:propertize ("" mode-name)
+              help-echo "Major mode\n\
+mouse-1: Display major mode menu\n\
+mouse-2: Show help for major mode\n\
+mouse-3: Toggle minor modes"
+              mouse-face mode-line-highlight
+              local-map ,mode-line-major-mode-keymap)
+            '("" mode-line-process)
+            ;; (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
+            ;;             'mouse-face 'mode-line-highlight
+            ;;             'local-map (make-mode-line-mouse-map
+            ;;                         'mouse-2 #'mode-line-widen))
+            `(:propertize ("" minor-mode-alist)
+              mouse-face mode-line-highlight
+              help-echo "Minor mode\n\
+mouse-1: Display minor mode menu\n\
+mouse-2: Show help for minor mode\n\
+mouse-3: Toggle minor modes"
+              local-map ,mode-line-minor-mode-keymap)
+            "]"                         ; End delimiter
+            (propertize "%]" 'help-echo recursive-edit-help-echo)
+            " "))
+    "Replace the default `mode-line-modes' similar to how `minions' does it")
 
   (defun kb/global-mode-string-wrapper ()
     "Return a modified version of `global-mode-string’ without certain
@@ -178,37 +246,24 @@ the mode line. Also alters `global-mode-string’ based on
                                  (powerline-raw mode-line-client)
                                  (powerline-raw mode-line-modified)
                                  (powerline-raw mode-line-remote)
-                                 (powerline-raw vc-mode face 'r)
+                                 (powerline-raw vc-mode face)
+                                 "%n "
                                  (powerline-raw mode-line-buffer-identification face 'r)
-                                 "%p"
-                                 (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)) face 'l)))
+                                 "%p "
+                                 (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)))))
                           (rhs
                            (list (powerline-raw '(:eval (lsp--progress-status)) face 'r)
-                                 (powerline-raw '(:eval flymake-mode-line-format) face 'r)
+                                 (powerline-raw '(:eval flymake-mode-line-format) face 'r) ; FIXME 2023-01-08: Throw a bunch of user-errors...
                                  (powerline-raw (kb/mode-line-misc-info-wrapper))
-                                 (powerline-raw mode-line-modes)
-                                 (if (display-graphic-p) "  " "-%-")))) ; Modified `mode-line-end-spaces'
+                                 (powerline-raw kb/mode-line-modes)
+                                 (if (display-graphic-p) " " "-%-")))) ; Modified `mode-line-end-spaces'
                      (concat
                       (powerline-render lhs)
                       (powerline-fill face (powerline-width rhs))
-                      (powerline-render rhs)))))))
+                      (powerline-render rhs))))))
 
-;;;; Minions
-(use-package minions
-  :ghook 'window-setup-hook
-  :custom
-  (minions-mode-line-lighter "…")
-  (minions-mode-line-delimiters '("[" . "]"))
-  (minions-prominent-modes
-   '(kb/lisp-keyword-indent-mode tree-sitter-mode)))
-
-;;;; Diminish
-(use-package diminish
-  :demand t
-  :config
-  (diminish 'tree-sitter-mode "TS")
-  (diminish 'kb/lisp-keyword-indent-mode
-            '(kb/lisp-keyword-indent-allow (:propertize " LKI" face '(:slant italic)))))
+  ;; Diminished lighters
+  (add-hook 'window-setup-hook 'kb/diminish-setup))
 
 ;;;; Time
 ;; Enable time in the mode-line
