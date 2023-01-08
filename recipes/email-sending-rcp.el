@@ -51,7 +51,8 @@
   ;; If I want to use `sendmail' over `msmtp'/`smtpmail'
   (send-mail-function 'sendmail-send-it)
   (sendmail-program (executable-find "sendmail"))
-  (mail-default-directory (expand-file-name "drafts/" message-directory))
+  (mail-default-directory (progn (require 'message)
+                                 (expand-file-name "drafts/" message-directory)))
   ;; These two messages make sure that emails are sent from the email address
   ;; specified in the "from" header field!
   ;; (mail-specify-envelope-from t)
