@@ -13,11 +13,6 @@
 ;;; Flycheck
 ;; Check your code
 (use-package flycheck
-  :demand t
-  :gfhook
-  '(lambda ()
-      (when flymake-mode
-        (flymake-mode -1)))
   :general
   (kb/nav-keys
     "E" '(flycheck-list-errors :wk "List flycheck errors"))
@@ -55,10 +50,6 @@
 ;;; Flymake
 (use-package flymake
   :ghook 'prog-mode-hook
-  :gfhook
-  '(lambda ()
-      (when flycheck-mode
-        (flycheck-mode -1)))
   :general
   ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
   (:keymaps 'flymake-mode-map
@@ -80,14 +71,20 @@
   :hook (after-init . flymake-collection-hook-setup))
 
 ;;; Flymake-flycheck
-;; For extending flycheck checkers into flymake. Config taken from Purcell Emacs
+;; For extending flycheck checkers into flymake. This allows flymake to use
+;; flycheck backends; check readme on how to do so. I use this when only
+;; flycheck is available (e.g. `lsp-mode'), otherwise I try to rely on
+;; `flymake-collection'.
 (use-package flymake-flycheck
-  ;; As the readme staess, "Flycheck UI packages will have no idea of what the
+  ;; As the readme warns, "Flycheck UI packages will have no idea of what the
   ;; checkers are doing, because they are run without flycheck's coordination."
-  :disabled
-  :hook (flymake-mode . kb/enable-flymake-flycheck)
+  :hook (flycheck-mode . kb/enable-flymake-flycheck)
   :init
   (defun kb/enable-flymake-flycheck ()
+    (when flycheck-mode (flycheck-mode -1))
+    (flymake-mode 1)
+    ;; Existing flymake backends take precedence over the flycheck ones here.
+    ;; Reverse order of the append if this isn't desired
     (setq-local flymake-diagnostic-functions
                 (append flymake-diagnostic-functions
                         (flymake-flycheck-all-chained-diagnostic-functions))))
