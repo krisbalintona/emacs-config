@@ -183,7 +183,8 @@ the mode line. Also alters `global-mode-string’ based on
                                 (powerline-raw vc-mode)
                                 " "
                                 (powerline-raw mode-line-buffer-identification)
-                                " %p"))
+                                " %p "
+                                (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)))))
                           (rhs (list
                                 (powerline-raw '(:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))))
                                 " "
