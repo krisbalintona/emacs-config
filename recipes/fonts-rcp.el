@@ -42,9 +42,14 @@
 
 ;;; Emojify
 (use-package emojify
+  :demand t
   :custom
   (emojify-composed-text-p t)
-  (emojify-emoji-styles '(ascii unicode github)))
+  ;; Check out https://ianyepan.github.io/posts/emacs-emojis/
+  (emojify-emoji-styles '(unicode ascii github))
+  (emojify-display-style 'unicode)
+  :config
+  (emojify-mode))
 
 ;;; Unicode-fonts
 ;; NOTE 2022-01-24: See https://github.com/rolandwalker/unicode-fonts#testing
@@ -58,26 +63,23 @@
 ;; Noto Sans
 ;; Noto Sans Symbols
 (use-package unicode-fonts
+  :demand
+  ;; OPTIMIZE 2023-01-08: Breaks emojis???!!! Perhaps a clue will be found in
+  ;; `unicode-fonts-block-font-mapping'
   :init
+  ;; (add-hook 'after-init-hook #'unicode-fonts-setup -100)
+  :config
   ;; Taken from http://xahlee.info/emacs/misc/emacs_macos_emoji.html
-  (set-fontset-font                     ; Set font for symbols
-   t
-   'symbol
-   (cond
-    ((member "Symbola" (font-family-list)) "Symbola")))
   (set-fontset-font     ; Set font for emoji (should come after setting symbols)
-   t
-   '(#x1f300 . #x1fad0)
-   (cond
-    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
-    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-    ((member "NotoEmoji Nerd Font" (font-family-list)) "Noto Emoji")
-    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola")))
-  
-  ;; NOTE 2022-06-20: Ensure that `unicode-fonts-setup' is run BEFORE anything
-  ;; requiring unicode characters or emojis is used
-  (add-hook 'after-init-hook #'unicode-fonts-setup -100))
+   t 'symbol
+   (font-spec
+    :family (cond
+             ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+             ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+             ((member "NotoEmoji Nerd Font" (font-family-list)) "NotoEmoji Nerd Font")
+             ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+             ((member "Symbola" (font-family-list)) "Symbola")))
+   nil 'prepend))
 
 ;;; Ligature
 ;; Ligatures! See for configuration examples: https://github.com/j/wiki
