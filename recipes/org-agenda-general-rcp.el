@@ -70,10 +70,17 @@
      (search . " %i %-12:c")))
   (org-agenda-sorting-strategy
    '((agenda habit-down time-up ts-up priority-down category-keep)
-     (todo priority-down todo-state-up category-keep)
-     (tags priority-down todo-state-up category-keep)
+     (todo todo-state-up priority-down category-keep)
+     (tags todo-state-up priority-down category-keep)
      (search category-keep)))
   (org-archive-subtree-save-file-p t)   ; Save archive file always
+  (org-agenda-block-separator ?─)
+  (org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
+  (org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
 
   ;; Capture templates
   (org-capture-templates
