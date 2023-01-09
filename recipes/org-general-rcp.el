@@ -185,7 +185,12 @@
   :ghook 'org-mode-hook
   :init
   ;; Set these in init for some reason
-  (setq org-bars-with-dynamic-stars-p nil)) ; Custom headline stars?
+  (setq org-bars-with-dynamic-stars-p nil ; Custom headline stars?
+        org-bars-org-indent-mode t
+        org-bars-extra-pixels-height 6 ; Use when headline font is larger than 1.0 
+        org-bars-color-options
+        '(:desaturate-level-faces 30
+          :darken-level-faces 15)))
 
 ;;;; Visual-fill-column
 ;; Soft wrap lines at fill-column
