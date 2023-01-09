@@ -255,7 +255,7 @@ the mode line. Also alters `global-mode-string’ based on
                            (list (powerline-raw '(:eval (lsp--progress-status)) face 'r)
                                  (powerline-raw '(:eval flymake-mode-line-format) face 'r) ; FIXME 2023-01-08: Throw a bunch of user-errors...
                                  (powerline-raw (kb/mode-line-misc-info-wrapper))
-                                 (powerline-raw kb/mode-line-modes)
+                                 (powerline-raw kb/mode-line-modes face 'l)
                                  (if (display-graphic-p) " " "-%-")))) ; Modified `mode-line-end-spaces'
                      (concat
                       (powerline-render lhs)
@@ -290,7 +290,7 @@ the mode line. Also alters `global-mode-string’ based on
   (battery-mode-line-limit 95)
   ;; (battery-mode-line-format "%cmAh")
   ;; (battery-mode-line-format "  %p%%")
-  (battery-mode-line-format "%b%p%%  ")
+  (battery-mode-line-format "%b%p%% ")
   :init
   (display-battery-mode))
 
