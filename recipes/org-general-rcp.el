@@ -27,6 +27,9 @@
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link
    "C-M-<up>" 'org-up-element)
+  (kb/toggle-keys
+    :keymaps 'org-mode-map
+    "n" 'org-num-mode)
   (kb/note-keys
     "c" '(org-capture :wk "Org-capture"))
   :custom
