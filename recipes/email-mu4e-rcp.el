@@ -304,6 +304,7 @@
                      (mu4e-error "No action for deferred mark"))))
   ;; NOTE 2023-01-01: Have to do this for any new marks (i.e. marks with new
   ;; names, not redefinitions of extant marks) I create
+  (mu4e~headers-defun-mark-for label)
   (mu4e--view-defun-mark-for label)
   (general-define-key :keymaps 'mu4e-headers-mode-map "l" 'mu4e-headers-mark-for-label)
   (general-define-key :keymaps 'mu4e-view-mode-map "l" 'mu4e-view-mark-for-label)
