@@ -166,7 +166,13 @@
     (diminish 'highlight-indent-guides-mode)
     (diminish 'whole-line-or-region-local-mode)
     (diminish 'wucuo-mode)
-    (diminish 'tree-sitter-mode "TS")
+    (diminish 'org-indent-mode)
+    (diminish 'org-num-mode)
+    (diminish 'buffer-face-mode)
+    (diminish 'mixed-pitch-mode)
+    (diminish 'tree-sitter-mode "TSitter")
+    (diminish 'lsp-mode "LSP")
+    (diminish 'lsp-lens-mode "Lens")
     (diminish 'kb/lisp-keyword-indent-mode
               '(kb/lisp-keyword-indent-allow (:propertize " LKI" face '(:slant italic))))))
 
