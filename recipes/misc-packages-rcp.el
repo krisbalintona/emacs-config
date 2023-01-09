@@ -541,6 +541,10 @@ displayed."
                                          "^\\(%\\[\\|%\\]\\)$" s))))
                             mode-line-modes)))
 
+;;; Lorem-ipsum
+;; Sample text
+(use-package lorem-ipsum)
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
