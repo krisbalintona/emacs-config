@@ -266,6 +266,7 @@ the mode line. Also alters `global-mode-string’ based on
 ;; Enable time in the mode-line
 (use-package time
   :custom
+  (display-time-24hr-format t)
   (display-time-format "%H:%M")        ; Use 24hr format with seconds
   (display-time-interval 60)           ; Update every since if I'm using seconds
   (display-time-default-load-average nil) ; Don't show load average
@@ -289,7 +290,7 @@ the mode line. Also alters `global-mode-string’ based on
   (battery-mode-line-limit 95)
   ;; (battery-mode-line-format "%cmAh")
   ;; (battery-mode-line-format "  %p%%")
-  (battery-mode-line-format "%b%p%% ")
+  (battery-mode-line-format "%b%p%%  ")
   :init
   (display-battery-mode))
 
