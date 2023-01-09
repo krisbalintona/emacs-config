@@ -125,6 +125,8 @@
    '(("e" ((in-mode . "mu4e-headers-mode")))
      ("e" ((in-mode . "mu4e-view-mode")))
      ("E" ((lambda () (bound-and-true-p mu4e-captured-message))))))
+  :custom-face
+  (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :init
   ;; Taken from
   ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L133
