@@ -160,7 +160,7 @@ This function makes sure that dates are aligned for easy reading."
   :config
   (org-clock-persistence-insinuate))
 
-;;; Org-super-agenda
+;;; Org-agenda-custom-commands
 (with-eval-after-load 'org-agenda
   (setq org-agenda-custom-commands
         '(("j" "At a glance"
@@ -172,8 +172,9 @@ This function makes sure that dates are aligned for easy reading."
             (agenda ""
                     ((org-agenda-overriding-header "Snoozed")
                      (org-use-tag-inheritance nil)
-                     (org-agenda-start-day "-1d")
-                     (org-agenda-span 3)
+                     (org-agenda-show-all-dates nil)
+                     (org-agenda-start-day "-30d")
+                     (org-agenda-span 32)
                      (org-agenda-skip-function
                       '(org-agenda-skip-entry-if 'notscheduled))
                      (org-agenda-skip-scheduled-if-done t)
