@@ -62,6 +62,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
     (kb/tabular-magic))
    ((eq major-mode 'org-mode)
     (let* ((save-silently t))           ; Don't write to echo area when saving
+      (org-align-tags t)
       (kb/format-buffer-indentation--base)
       (when (buffer-file-name)
         (save-buffer))))
