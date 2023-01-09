@@ -42,6 +42,7 @@
   (org-pretty-entities-include-sub-superscripts nil) ; Show super- and subscripts?
   (org-hidden-keywords nil)
   (org-ctrl-k-protect-subtree 'error)
+  (org-insert-heading-respect-content t)
 
   (org-file-apps
    '((auto-mode . emacs)
@@ -201,6 +202,22 @@
   (org-appear-autoentities t)
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
+
+;;;; Org-modern
+(use-package org-modern
+  :custom
+  (org-modern-label-border 1)
+  (org-modern-timestamp t)
+  (org-modern-keyword nil)
+  (org-modern-table t)
+  (org-modern-table-vertical 1)
+  (org-modern-table-horizontal 0)
+  (org-modern-list ; I swap the defaults for + and *
+        '((?+ . "•")
+          (?- . "–")
+          (?* . "◦")))
+  :init
+  (global-org-modern-mode))
 
 ;;; Custom functions
 ;;;; Better RET
