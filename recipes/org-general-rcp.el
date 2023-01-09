@@ -88,7 +88,16 @@
 (use-package org-refile
   :custom
   (org-refile-targets
-   `((nil . (:level . 2))))
+   `((org-agenda-files . (:level . 0))
+     (org-agenda-files . (:tag . "project"))
+     (kb/find-blog-files-org . (:level . 0))
+     (kb/find-blog-files-org . (:tag . "project"))
+     ;; OPTIMIZE 2023-01-08: Right now I manually add a refile target entry for
+     ;; each of my working todos. Is there a way to avoid this?
+     (kb/find-blog-files-org . (:todo . "ACTIVE"))
+     (kb/find-blog-files-org . (:todo . "TODO"))
+     (kb/find-blog-files-org . (:todo . "MAYBE"))
+     (nil . (:level . 3))))
   (org-refile-use-cache nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
@@ -213,9 +222,9 @@
   (org-modern-table-vertical 1)
   (org-modern-table-horizontal 0)
   (org-modern-list ; I swap the defaults for + and *
-        '((?+ . "•")
-          (?- . "–")
-          (?* . "◦")))
+   '((?+ . "•")
+     (?- . "–")
+     (?* . "◦")))
   :init
   (global-org-modern-mode))
 
