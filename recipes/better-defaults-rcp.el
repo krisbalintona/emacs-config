@@ -31,11 +31,9 @@
 ;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
-              large-file-warning-threshold nil                                                    ; Don't warn when opening large files
 
               inhibit-startup-screen t                                                            ; Disable start-up screen
               initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n"  ; Set a cringe scratch buffer message
-              inhibit-default-init t
 
               x-stretch-cursor t                                                                  ; Stretch cursor to the glyph width
               cursor-in-non-selected-windows nil                                                  ; Hide the cursor in inactive windows
@@ -44,23 +42,17 @@
               delete-by-moving-to-trash t                                                         ; Delete files to trash
 
               find-file-visit-truename t                                                          ; Follow symlink to actual file
+              create-lockfiles nil                                                                ; Don't create lockfiles
 
               select-enable-clipboard t                                                           ; Merge system's and Emacs' clipboard
 
               sentence-end-double-space nil                                                       ; Single space after period denotes end of sentence
 
-              help-window-select t                                                                ; Focus new help windows when opened
               fill-column 80                                                                      ; Set width for automatic line breaks
 
               truncate-string-ellipsis "…"                                                        ; For all ellipsis
 
               max-mini-window-height 0.3                                                          ; Max minibuffer height
-
-              auto-save-default nil                                                               ; Don't auto save, prevents transitory files from being saved
-              auto-save-list-file-prefix nil                                                      ; Prevent tracking for auto-saves
-              make-backup-files nil                                                               ; Don't make backups
-              create-lockfiles nil                                                                ; Don't create lockfiles
-              find-file-existing-other-name t                                                     ; Visit buffer when finding file if it already exists?
 
               tab-width 4
               indent-tabs-mode nil
@@ -140,7 +132,7 @@
 ;; new text
 (delete-selection-mode t)
 
-;;; Repeatedly popping mark 
+;;; Repeatedly popping mark
 (setq set-mark-command-repeat-pop t)
 
 ;;; Load custom file

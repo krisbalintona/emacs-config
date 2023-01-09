@@ -67,6 +67,7 @@
   :straight nil
   :general ("C-h M-k" 'describe-keymap)
   :custom
+  (help-window-select t)
   (describe-bindings-outline t)
   (help-enable-variable-value-editing t)
   (help-window-keep-selected t))

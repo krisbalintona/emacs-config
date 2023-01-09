@@ -76,6 +76,69 @@
   ;; (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
   )
 
+;;; Super-save
+;; Automatically save buffers when you do certain things
+(use-package super-save
+  :disabled                             ; Opting for built in auto-save
+  :demand t
+  :custom
+  (super-save-auto-save-when-idle t) ; Save buffer if Emacs is idle
+  (super-save-idle-duration 10) ; Wait 10 seconds for idle trigger
+  (super-save-remote-files t) ; Turn on saving of remote files (those pulled from git repo?)
+  (super-save-exclude nil) ; Don't exclude anything from being saved
+  (super-save-predicates
+   '((lambda ()
+       (stringp (buffer-file-name (buffer-base-buffer))))
+     (lambda ()
+       (buffer-modified-p (current-buffer)))
+     (lambda ()
+       (file-writable-p (buffer-file-name (buffer-base-buffer))))
+     (lambda ()
+       (if (file-remote-p (buffer-file-name (buffer-base-buffer)))
+           super-save-remote-files t))
+     (lambda ()
+       (super-save-include-p (buffer-file-name (buffer-base-buffer))))
+     (lambda ()                              ; Don't save Email drafts
+       (not (or (derived-mode-p 'message-mode)
+                (eq major-mode 'org-msg-edit-mode))))))
+  :config
+  (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
+  (add-to-list 'super-save-triggers 'evil-window-mru)
+  ;; Make sure this goes after adding hooks, since the hooks are manually added once `super-save-mode' is enable
+  (super-save-mode))
+
+;;; Built-in auto save and backup
+;; Make recovery files
+(use-package files
+  :straight nil
+  :custom
+  ;; NOTE 2023-01-09: `auto-save-list-file-prefix' and `backup-directory-alist'
+  ;; are set by `no-littering'
+  
+  ;; Auto save
+  (auto-save-default t) ; Only a local minor mode exists; this variable influences the global value
+  (auto-save-file-name-transforms
+   `((".*" ,(file-name-as-directory (no-littering-expand-var-file-name "auto-save")) t)))
+  (auto-save-interval 150)
+  (auto-save-timeout 8)
+  (delete-auto-save-files nil)
+  (kill-buffer-delete-auto-save-files nil)
+  (auto-save-no-message t)
+
+  ;; Save buffer after idle time
+  (remote-file-name-inhibit-auto-save-visited nil)
+  (auto-save-visited-interval 15)
+
+  ;; Backups
+  (make-backup-files t)
+  (backup-by-copying t)                 ; Don't clobber symlinks
+  (version-control t)
+  (kept-new-versions 6)
+  (kept-old-versions 2)
+  (delete-old-versions t)
+  :init
+  (auto-save-visited-mode))
+
 ;;; persistence-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'persistence-rcp)
