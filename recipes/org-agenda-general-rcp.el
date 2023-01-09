@@ -207,7 +207,7 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-deadline-leaders
                       '("" "In %3d d.: " "%2d d. ago: "))
                      (org-agenda-include-diary t)))
-            (tags-todo "+project-snooze/-MAYBE"
+            (tags-todo "+project/-MAYBE"
                        ((org-agenda-overriding-header "Projects")))
             (tags-todo "-snooze/+MAYBE"
                        ((org-agenda-overriding-header "Maybes")))))
