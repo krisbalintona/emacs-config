@@ -27,7 +27,7 @@
   (org-todo-keywords
    '((sequence "ACTIVE(a)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
   (org-todo-keyword-faces
-   '(("ACTIVE" . '(bold org-todo))
+   '(("ACTIVE" . '(bold org-warning))
      ("TODO" . 'org-todo)
      ("WAITING" . '(shadow error))
      ("MAYBE" . '(shadow org-todo))
