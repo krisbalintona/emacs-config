@@ -45,7 +45,7 @@
   (org-pretty-entities-include-sub-superscripts nil) ; Show super- and subscripts?
   (org-hidden-keywords nil)
   (org-ctrl-k-protect-subtree 'error)
-  (org-insert-heading-respect-content t)
+  (org-insert-heading-respect-content nil) ; Let M-RET make heading in place 
 
   (org-file-apps
    '((auto-mode . emacs)
