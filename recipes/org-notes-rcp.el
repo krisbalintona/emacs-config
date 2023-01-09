@@ -68,6 +68,16 @@
             (beginning-of-line))
           (insert "#+" keyword ": " value "\n")))))
 
+  (defun kb/note-buffer-prop-get (name)
+    "Get a buffer property called NAME as a string."
+    (org-with-point-at 1
+      (when (re-search-forward (concat "^#\\+" name ":\\(.*\\)")
+                               (point-max) t)
+        (denote-trim-whitespace
+         (buffer-substring-no-properties
+          (match-beginning 1)
+          (match-end 1))))))
+
   (defun kb/denote-insert-identifier-maybe ()
     (when (denote-file-is-note-p (buffer-file-name))
       (cond
