@@ -13,7 +13,8 @@
 ;;; Org-agenda
 (use-package org-agenda
   :straight nil
-  :hook (org-agenda-finalize . (lambda () (goto-char (point-min))))
+  :hook ((org-agenda-finalize . (lambda () (goto-char (point-min))))
+         (org-capture-before-finalize . kb/add-property-with-date-captured))
   :gfhook 'hl-line-mode
   :general (kb/open-keys "a" 'org-agenda)
   :custom
@@ -63,6 +64,7 @@
   (org-agenda-restore-windows-after-quit t)
   (org-agenda-tags-column 'auto)
   (org-agenda-start-on-weekday nil)     ; Start with today
+  (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
   (org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
      (todo . " %i %-12:c %b ")
@@ -81,6 +83,19 @@
      " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
   (org-agenda-current-time-string
    "⭠ now ─────────────────────────────────────────────────")
+  (org-agenda-breadcrumbs-separator " ❱ ")
+
+  ;; Org habit
+  ;; REVIEW 2023-01-08: The following is untested. I just copied from
+  ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L239
+  (org-habit-today-glyph ?◌)
+  (org-habit-graph-column 40)
+  (org-habit-following-days 1)
+  (org-habit-show-habits t)
+  (org-habit-completed-glyph ?●)
+  (org-habit-preceding-days 10)
+  (org-habit-show-habits-only-for-today t)
+  (org-habit-missed-glyph ?○)
 
   ;; Capture templates
   (org-capture-templates
@@ -110,6 +125,38 @@
    '(("e" ((in-mode . "mu4e-headers-mode")))
      ("e" ((in-mode . "mu4e-view-mode")))
      ("E" ((lambda () (bound-and-true-p mu4e-captured-message))))))
+  :init
+  ;; Taken from
+  ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L133
+  (defun kb/add-property-with-date-captured ()
+    "Add DATE_CAPTURED property to the current item."
+    (interactive)
+    (org-set-property "CREATED" (format-time-string "%F")))
+
+  ;; Taken from
+  ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L213
+  (defun kb/org-agenda-format-date-aligned (date)
+    "Format a DATE string for display in the daily/weekly agenda, or timeline.
+This function makes sure that dates are aligned for easy reading."
+    (require 'cal-iso)
+    (let* ((dayname (calendar-day-name date 1 nil))
+           (day (cadr date))
+           (day-of-week (calendar-day-of-week date))
+           (month (car date))
+           (monthname (calendar-month-name month 1))
+           (year (nth 2 date))
+           (iso-week (org-days-to-iso-week
+                      (calendar-absolute-from-gregorian date)))
+           (weekyear (cond ((and (= month 1) (>= iso-week 52))
+                            (1- year))
+                           ((and (= month 12) (<= iso-week 1))
+                            (1+ year))
+                           (t year)))
+           (weekstring (if (= day-of-week 1)
+                           (format " W%02d" iso-week)
+                         "")))
+      (format " %-2s. %2d %s"
+              dayname day monthname)))
   :config
   (org-clock-persistence-insinuate))
 
@@ -122,13 +169,16 @@
                         (org-use-tag-inheritance nil)
                         (org-agenda-skip-function
                          '(org-agenda-skip-entry-if 'scheduled))))
-            (tags-todo "+snooze"
-                       ((org-agenda-overriding-header "Snoozed")
-                        (org-use-tag-inheritance nil)
-                        (org-agenda-skip-function
-                         '(org-agenda-skip-entry-if 'notscheduled))
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)))
+            (agenda ""
+                    ((org-agenda-overriding-header "Snoozed")
+                     (org-use-tag-inheritance nil)
+                     (org-agenda-start-day "-1d")
+                     (org-agenda-span 3)
+                     (org-agenda-skip-function
+                      '(org-agenda-skip-entry-if 'notscheduled))
+                     (org-agenda-skip-scheduled-if-done t)
+                     (org-agenda-scheduled-leaders '("" ""))
+                     (org-agenda-include-diary nil)))
             (tags-todo "+course-snooze/-MAYBE"
                        ((org-agenda-overriding-header "Courses")
                         (org-agenda-tags-todo-honor-ignore-options t)
@@ -153,6 +203,9 @@
                      (org-agenda-show-all-dates nil)
                      (org-deadline-warning-days 0)
                      (org-agenda-entry-types '(:deadline))
+                     (org-agenda-skip-deadline-if-done t)
+                     (org-agenda-deadline-leaders
+                      '("" "In %3d d.: " "%2d d. ago: "))
                      (org-agenda-include-diary t)))
             (tags-todo "+project-snooze/-MAYBE"
                        ((org-agenda-overriding-header "Projects")))
