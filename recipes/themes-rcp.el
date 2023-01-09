@@ -143,7 +143,7 @@
 
 ;;;; Diminish
 (use-package diminish
-  :defines 'kb/diminish-setup
+  :hook ((window-setup server-after-make-frame) . kb/diminish-setup)
   :init
   (defun kb/diminish-setup ()
     "Set up my `diminish’ lighters."
@@ -260,10 +260,7 @@ the mode line. Also alters `global-mode-string’ based on
                      (concat
                       (powerline-render lhs)
                       (powerline-fill face (powerline-width rhs))
-                      (powerline-render rhs))))))
-
-  ;; Diminished lighters
-  (add-hook 'window-setup-hook 'kb/diminish-setup))
+                      (powerline-render rhs)))))))
 
 ;;;; Time
 ;; Enable time in the mode-line
