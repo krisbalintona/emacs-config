@@ -42,14 +42,16 @@
 
 ;;; Emojify
 (use-package emojify
-  :demand t
+  :hook (after-init . global-emojify-mode)
   :custom
+  ;; See
+  ;; https://github.com/iqbalansari/emacs-emojify#displaying-composed-text-as-emojis
+  ;; for a description of this setting
   (emojify-composed-text-p t)
   ;; Check out https://ianyepan.github.io/posts/emacs-emojis/
   (emojify-emoji-styles '(unicode ascii github))
-  (emojify-display-style 'unicode)
-  :config
-  (emojify-mode))
+  ;; (emojify-emoji-styles 'unicode)
+  (emojify-display-style 'unicode))
 
 ;;; Unicode-fonts
 ;; NOTE 2022-01-24: See https://github.com/rolandwalker/unicode-fonts#testing
@@ -69,16 +71,20 @@
   :init
   ;; (add-hook 'after-init-hook #'unicode-fonts-setup -100)
   :config
-  ;; Taken from http://xahlee.info/emacs/misc/emacs_macos_emoji.html
-  (set-fontset-font     ; Set font for emoji (should come after setting symbols)
-   t 'symbol
-   (font-spec
-    :family (cond
-             ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
-             ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-             ((member "NotoEmoji Nerd Font" (font-family-list)) "NotoEmoji Nerd Font")
-             ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-             ((member "Symbola" (font-family-list)) "Symbola")))
+  ;; See https://ianyepan.github.io/posts/emacs-emojis/
+  (set-fontset-font
+   t 'symbol (font-spec
+              :family (cond
+                       ;; FIXME 2023-01-10: Right now I don't install the Noto
+                       ;; Color Emoji system package because, though it works in
+                       ;; Emacs, it ruins Firefox's fonts (i.e. much too wide).
+                       ;; Instead, I use the Apple Emoji font (though I don't
+                       ;; prefer its appearance over Noto Emojis)
+                       ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+                       ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+                       ((member "NotoEmoji Nerd Font" (font-family-list)) "NotoEmoji Nerd Font")
+                       ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+                       ((member "Symbola" (font-family-list)) "Symbola")))
    nil 'prepend))
 
 ;;; Ligature
