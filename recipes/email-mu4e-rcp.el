@@ -64,8 +64,8 @@
   (mu4e-index-update-error-continue t)
   ;; Speed up indexing. See 2.9.4 Speeding up indexing of the Mu4e info manual.
   ;; Also note `mu4e-update-index-nonlazy'
-  (mu4e-index-cleanup nil)              ; Don't do a full cleanup check
-  (mu4e-index-lazy-check t)             ; Don't consider up-to-date dirs
+  (mu4e-index-cleanup t)                ; Don't do a full cleanup check?
+  (mu4e-index-lazy-check nil)           ; Don't consider up-to-date dirs?
   (mu4e-index-update-in-background t)
   (mu4e-hide-index-messages t)          ; Hide "indexing" message in echo area?
 
