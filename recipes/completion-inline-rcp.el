@@ -188,11 +188,7 @@ default lsp-passthrough."
            "r" 'cape-rfc1345
            "y" (cape-interactive-capf (cape-company-to-capf #'company-yasnippet))
            )
-  ([remap dabbrev-expand] '(lambda ()
-                             (interactive)
-                             (evil-insert-state)
-                             (cape-dabbrev t)
-                             ))
+  ([remap dabbrev-expand] 'cape-dabbrev)
   (:keymaps 'corfu-map
             :states 'insert
             [remap evil-normal-state] '(lambda ()
