@@ -94,23 +94,19 @@
   "Set up the default, fixed-pitch, and variable-pitch
 faces."
   (set-face-attribute 'default nil
-                      :font kb/themes-default-font
+                      :family kb/themes-default-font
                       :height 140)
   (set-face-attribute 'fixed-pitch nil
-                      :font kb/themes-fixed-pitch-font
+                      :family kb/themes-fixed-pitch-font
                       :height 1.0)
   (set-face-attribute 'variable-pitch nil
-                      :font kb/themes-variable-pitch-font
+                      :family kb/themes-variable-pitch-font
                       :height 1.1)
 
   (set-face-background 'fringe (face-attribute 'default :background))
 
-  ;; TODO 2022-06-05: Kind of different heights between the active and inactive
-  ;; mode line. Take a look at `modus-themes--mode-line-attrs', the modus-theme
-  ;; background changes depending on `modus-themes-vivendi-colors' and
-  ;; `modus-themes-operandi-colors'
   (set-face-attribute 'mode-line nil
-                      :font kb/themes-mode-line-font
+                      :family kb/themes-mode-line-font
                       :height 113)
   (set-face-attribute 'mode-line-inactive nil
                       :inherit 'mode-line))

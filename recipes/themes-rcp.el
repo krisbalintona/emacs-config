@@ -55,10 +55,10 @@
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
-       (or (buffer-file-name)                         ; Connected to a file
-           ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
-           (string-match "*Minimap*" (buffer-name)) ; Demap minimap
-           )))
+            (or (buffer-file-name)                         ; Connected to a file
+                ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
+                (string-match "*Minimap*" (buffer-name)) ; Demap minimap
+                )))
   :init
   ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I want to swap the
   ;; background faces which solaire remaps, e.g., non-real buffers dark and real
