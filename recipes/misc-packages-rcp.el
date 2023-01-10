@@ -394,7 +394,7 @@ displayed."
 ;;; Compile
 (use-package compile
   :custom
-  (compilation-scroll-output 'first-error))
+  (compilation-scroll-output t))        ; Scroll with compile buffer
 
 ;;; Fancy-compilation
 (use-package fancy-compilation
