@@ -184,13 +184,14 @@
 
 ;;;; Org-bars
 (use-package org-bars
+  :disabled                    ; Not much value, and sometimes even distracting
   :straight (org-bars :type git :host github :repo "tonyaldon/org-bars")
   :ghook 'org-mode-hook
   :init
   ;; Set these in init for some reason
   (setq org-bars-with-dynamic-stars-p nil ; Custom headline stars?
         org-bars-org-indent-mode t
-        org-bars-extra-pixels-height 6 ; Use when headline font is larger than 1.0 
+        org-bars-extra-pixels-height 6 ; Use when headline font is larger than 1.0
         org-bars-color-options
         '(:desaturate-level-faces 30
           :darken-level-faces 15)))
