@@ -49,9 +49,20 @@
                          ("d" #'langtool-check-done "Done"))
                         )))
 
-;;; Lsp-grammarly
+-;;; Lsp-grammarly
 (use-package lsp-grammarly
+  :after lsp-mode
   :hook (lsp-grammarly-ls-after-open . (lambda () (lsp-ui-mode -1))))
+
+;;; Eglot-grammarly
+;; NOTE 2023-01-10: As reported here
+;; (https://github.com/emacs-grammarly/eglot-grammarly/issues/7),
+;; eglot-grammarly doesn't execute code actions. Thus, though I prefer this
+;; package in every other way over lsp-grammarly, it is not usable
+(use-package eglot-grammarly
+  :demand
+  :after eglot
+  :ensure-system-package (grammarly-languageserver . "npm install -g @emacs-grammarly/grammarly-languageserver"))
 
 ;;; checking-grammar-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
