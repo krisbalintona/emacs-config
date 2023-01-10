@@ -161,10 +161,7 @@
   (setq mode-line-percent-position '(-3 "%p")
         mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
         mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
-        mode-line-compact 'long         ; Emacs 28
-        global-mode-string
-        '("" display-time-string battery-mode-line-string))
-
+        mode-line-compact 'long)        ; Emacs 28
 
   (defvar kb/mode-line-modes
     (let ((recursive-edit-help-echo
@@ -203,7 +200,10 @@ I use this function to remove elements that I put elsewhere in
 the mode line."
     (let ((removed-global-mode-string
            '((t (:eval (lsp--progress-status))))))
-      (seq-difference global-mode-string removed-global-mode-string)))
+      ;; FIXME 2023-01-10: `display-time-string' is duplicated for some
+      ;; reason... so I workaround by deleting duplicates
+      (delete-dups
+       (seq-difference global-mode-string removed-global-mode-string))))
 
   (defun kb/mode-line-misc-info-wrapper ()
     "Return a modified version of `mode-line-misc-info’ without
@@ -287,13 +287,6 @@ the mode line. Also alters `global-mode-string’ based on
   :custom
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
-
-;;;; Which-function
-;; Display the name of the function I am currently under
-(use-package which-func
-  :init
-  ;; (which-function-mode)
-  )
 
 ;;; Other
 ;;;; Fontaine
