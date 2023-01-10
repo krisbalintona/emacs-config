@@ -103,6 +103,8 @@ faces."
                       :font kb/themes-variable-pitch-font
                       :height 1.1)
 
+  (set-face-background 'fringe (face-attribute 'default :background))
+
   ;; TODO 2022-06-05: Kind of different heights between the active and inactive
   ;; mode line. Take a look at `modus-themes--mode-line-attrs', the modus-theme
   ;; background changes depending on `modus-themes-vivendi-colors' and
