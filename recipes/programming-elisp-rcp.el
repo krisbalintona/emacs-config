@@ -25,7 +25,7 @@
   (define-minor-mode kb/lisp-keyword-indent-mode
     "Minor mode for keyword indent of Emacs Lisp."
     :init-value nil
-    :lighter ""
+    :lighter (:propertize " LKI" face '(:inherit shadow))
     :keymap nil
     :global t
     (if kb/lisp-keyword-indent-mode

@@ -20,6 +20,7 @@
 ;;;; GCMH
 ;; Garbage collect on when idle
 (use-package gcmh
+  :diminish
   :hook (after-init . gcmh-mode)
   :custom
   ;; Set to Doom's threshold. For a related discussion, see

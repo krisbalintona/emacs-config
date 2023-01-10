@@ -51,8 +51,8 @@
                  (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217))))
   (add-hook 'python-mode-hook
             #'(lambda ()
-                      (add-to-list 'prettify-symbols-alist '("->" . ?»))
-                      (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
+                 (add-to-list 'prettify-symbols-alist '("->" . ?»))
+                 (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
 
 ;;;; Hl-line
 (use-package hl-line
@@ -90,6 +90,7 @@
 ;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package highlight-indent-guides
+  :diminish
   :ghook
   'prog-mode-hook
   'conf-mode-hook
@@ -103,8 +104,8 @@
 ;;;; Rainbow-mode
 ;; Colorify color codes
 (use-package rainbow-mode
-  :ghook 'text-mode-hook 'prog-mode-hook 'help-mode-hook
-  )
+  :diminish
+  :ghook 'text-mode-hook 'prog-mode-hook 'help-mode-hook)
 
 ;;;; Highlight-defined
 ;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
@@ -247,23 +248,6 @@
   :requires (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
-;;;; Hideshow
-(use-package hideshow
-  :hook ((prog-mode conf-mode) . hs-minor-mode)
-  :general
-  (:prefix "C-c h"
-   "t" '(hs-hide-block :wk "Toggle hide")
-   "l" '(hs-hide-level :wk "Hide level")
-   "h" '(hs-hide-block :wk "Hide block")
-   "s" '(hs-show-block :wk "show block")
-   "H" '(hs-hide-all :wk "Hide all")
-   "S" '(hs-show-all :wk "show all")
-   )
-  (kb/toggle-keys
-    "t" '(hs-toggle-hiding :wk "Toggle hide")
-    )
-  )
-
 ;;; File or buffer utilities
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
@@ -311,6 +295,8 @@
 ;; Outline-minor-mode but with better keybindings and more support
 ;; Demand to properly set outline-minor-mode-prefix
 (use-package outshine
+  :diminish (outshine-mode
+             outline-minor-mode)
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'display-line-numbers-mode 'visual-line-mode
   :general
@@ -344,6 +330,7 @@ this buffer."
 ;;;; Anzu
 ;; Search Mode Info Display
 (use-package anzu
+  :diminish anzu-mode
   :general ([remap query-replace] 'anzu-query-replace
             [remap query-replace-regexp] 'anzu-query-replace-regexp)
   :custom

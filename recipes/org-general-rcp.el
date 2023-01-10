@@ -12,6 +12,8 @@
 ;;; Org
 ;;;; Itself
 (use-package org
+  :diminish ((org-indent-mode . "")
+             (org-num-mode . ""))
   :straight (org-mode :type git
                       :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
                       :pre-build ("make" "oldorg" "EMACS=/usr/local/bin/emacs")

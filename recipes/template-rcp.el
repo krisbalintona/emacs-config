@@ -28,13 +28,14 @@
 ;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
+  :diminish (yas-minor-mode . "")
   :hook (after-init . yas-global-mode)
   :config
   (advice-add 'doom-snippets-initialize
               :after #'(lambda ()
-                         "Ensure my personal snippets dir is first and therefore the
+                          "Ensure my personal snippets dir is first and therefore the
 default when creating snippets. Then start `yas-global-mode'."
-                         (add-to-list 'yas-snippet-dirs (no-littering-expand-etc-file-name "yasnippet/snippets")))))
+                          (add-to-list 'yas-snippet-dirs (no-littering-expand-etc-file-name "yasnippet/snippets")))))
 
 
 ;;; Doom-snippets
@@ -50,7 +51,7 @@ default when creating snippets. Then start `yas-global-mode'."
   ("M-+" 'tempel-complete               ; List all available templates
    "M-*" 'tempel-insert)                 ; Insert typed template
   (:keymaps 'tempel-map
-            "C-M-c" 'tempel-done)
+   "C-M-c" 'tempel-done)
   :custom
   (tempel-file (no-littering-expand-var-file-name "tempel-templates")))
 

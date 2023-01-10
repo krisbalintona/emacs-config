@@ -146,35 +146,14 @@
   :hook ((window-setup server-after-make-frame) . kb/diminish-setup)
   :init
   (defun kb/diminish-setup ()
-    "Set up my `diminish’ lighters."
-    (diminish 'rainbow-mode)
-    (diminish 'outshine-mode)
-    (diminish 'outline-minor-mode)
-    (diminish 'flymake-mode)
-    (diminish 'abbrev-mode)
-    (diminish 'subword-mode)
-    (diminish 'visual-line-mode)
-    (diminish 'eldoc-mode)
-    (diminish 'eldoc-box-hover-mode)
-    (diminish 'anzu-mode)
-    (diminish 'super-save-mode)
-    (diminish 'which-key-mode)
-    (diminish 'hs-minor-mode)
-    (diminish 'form-feed-mode)
-    (diminish 'gcmh-mode)
-    (diminish 'yas-minor-mode)
-    (diminish 'highlight-indent-guides-mode)
-    (diminish 'whole-line-or-region-local-mode)
-    (diminish 'wucuo-mode)
-    (diminish 'org-indent-mode)
-    (diminish 'org-num-mode)
-    (diminish 'buffer-face-mode)
-    (diminish 'mixed-pitch-mode)
-    (diminish 'tree-sitter-mode "TSitter")
-    (diminish 'lsp-mode "LSP")
-    (diminish 'lsp-lens-mode "Lens")
-    (diminish 'kb/lisp-keyword-indent-mode
-              '(kb/lisp-keyword-indent-allow (:propertize " LKI" face '(:slant italic))))))
+    "Set up `diminish’ lighters for pre-loaded packages."
+    (with-eval-after-load 'subword
+      (diminish 'subword-mode))
+    (with-eval-after-load 'simple
+      (diminish 'visual-line-mode))
+    ;; (with-eval-after-load (diminish 'hs-minor-mode))
+    (with-eval-after-load 'face-remap
+      (diminish 'buffer-face-mode))))
 
 ;;;; Default mode line
 ;; Based off of Prot's

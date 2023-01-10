@@ -49,6 +49,7 @@
 
 ;;; Flymake
 (use-package flymake
+  :diminish
   :ghook 'prog-mode-hook
   :general
   ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))

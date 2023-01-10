@@ -112,6 +112,7 @@
 ;; highlighting from it (rather than regex and indentation). Additionally, the
 ;; syntax tree itself can help debug and quick editing in some cases.
 (use-package tree-sitter
+  :diminish "TSitter"
   :hook (tree-sitter-after-on . tree-sitter-hl-mode) ; Enable syntax highlighting whenever possible
   :init
   (global-tree-sitter-mode))    ; Enable for all supported tree-sitter languages

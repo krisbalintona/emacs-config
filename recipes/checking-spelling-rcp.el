@@ -52,6 +52,7 @@
 ;;; Wucuo
 ;; A complete solution to the lag of flyspell
 (use-package wucuo
+  :diminish
   :after flyspell
   :hook ((text-mode prog-mode) . (lambda ()
                                    (interactive)
@@ -103,13 +104,13 @@
 ;;; Abbrev-mode
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
 ;; spelling mistakes as they are made.
-(use-package abbrev-mode
+(use-package abbrev
   :straight nil
+  :diminish
   :ghook 'text-mode-hook 'prog-mode-hook
   :custom
   (abbrev-file-name (concat no-littering-var-directory "abbrev-mode/abbrev.el"))
-  (save-abbrevs 'silently)
-  )
+  (save-abbrevs 'silently))
 
 ;;; Languagetool
 (use-package languagetool

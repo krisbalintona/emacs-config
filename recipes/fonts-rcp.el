@@ -25,7 +25,7 @@
 ;; NOTE Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
 (use-package mixed-pitch
-  :demand t                             ; Won't get loaded otherwise
+  :diminish
   :ghook 'text-mode-hook
   :config
   (add-to-list 'mixed-pitch-fixed-pitch-faces

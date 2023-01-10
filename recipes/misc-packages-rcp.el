@@ -263,6 +263,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Whole-line-or-region
 (use-package whole-line-or-region
+  :diminish whole-line-or-region-local-mode
   :hook (after-init . whole-line-or-region-global-mode)
   :general (:keymaps 'whole-line-or-region-local-mode-map
             [remap kill-region] 'whole-line-or-region-kill-region
@@ -276,6 +277,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Eldoc
 (use-package eldoc
+  :diminish
   :custom
   (eldoc-documentation-strategy 'eldoc-documentation-compose)
   (eldoc-print-after-edit nil)
@@ -285,6 +287,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Eldoc-box
 (use-package eldoc-box
+  :diminish eldoc-box-hover-mode
   :general
   ("H-h" 'eldoc-box-help-at-point)
   (:keymaps 'eglot-mode-map
@@ -411,6 +414,7 @@ displayed."
 ;;; Form-feed
 ;; Display  fancily. Visit the readme for alternatives and their differences
 (use-package form-feed
+  :diminish
   :custom
   (form-feed-exclude-modes nil)
   :init
