@@ -258,8 +258,8 @@ the mode line. Also alters `global-mode-string’ based on
                                  "%p "
                                  (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)))))
                           (rhs
-                           (list (powerline-raw '(:eval (lsp--progress-status)) face 'r)
-                                 (powerline-raw '(:eval flymake-mode-line-format) face 'r) ; FIXME 2023-01-08: Throw a bunch of user-errors...
+                           (list (powerline-raw '(:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))) face 'r)
+                                 (powerline-raw '(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format)) face 'r) ; FIXME 2023-01-08: Throw a bunch of user-errors...
                                  (powerline-raw (kb/mode-line-misc-info-wrapper))
                                  (powerline-raw kb/mode-line-modes face 'l)
                                  (if (display-graphic-p) " " "-%-")))) ; Modified `mode-line-end-spaces'
