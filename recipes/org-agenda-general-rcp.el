@@ -51,7 +51,7 @@
 
   ;; Inheritance
   (org-use-tag-inheritance t)
-  (org-tags-exclude-from-inheritance '("project"))
+  (org-tags-exclude-from-inheritance '("project" "type"))
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
   (org-agenda-show-inherited-tags nil)
 
@@ -179,26 +179,10 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-span 32)
                      (org-agenda-skip-function
                       '(org-agenda-skip-entry-if 'notscheduled))
+                     (org-agenda-skip-deadline-prewarning-if-scheduled t)
                      (org-agenda-skip-scheduled-if-done t)
                      (org-agenda-scheduled-leaders '("" ""))
                      (org-agenda-include-diary nil)))
-            (tags-todo "+course-snooze/-MAYBE"
-                       ((org-agenda-overriding-header "Courses")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "+work-snooze/-MAYBE"
-                       ((org-agenda-overriding-header "Work")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "+org-snooze/-MAYBE"
-                       ((org-agenda-overriding-header "Extracurriculars")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "-snooze/-MAYBE"
-                       ((org-agenda-overriding-header "Other")
-                        (org-agenda-files (list (expand-file-name "todo.org" kb/agenda-dir)))
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)))
             (agenda ""
                     ((org-agenda-overriding-header "Upcoming deadlines")
                      (org-agenda-start-day "-3d")
@@ -210,22 +194,27 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-deadline-leaders
                       '("" "In %3d d.: " "%2d d. ago: "))
                      (org-agenda-include-diary t)))
+            (tags-todo "-snooze-project+PRIORITY=\"A\"/+ACTIVE"
+                       ((org-agenda-overriding-header "High priority")
+                        (org-agenda-tags-todo-honor-ignore-options t)
+                        (org-agenda-todo-ignore-scheduled 'future)))
             (tags-todo "+project/-MAYBE"
                        ((org-agenda-overriding-header "Projects")))
             (tags-todo "-snooze/+MAYBE"
                        ((org-agenda-overriding-header "Maybes")))))
           ("E" "Emails"
-           ((todo ""
-                  ((org-agenda-overriding-header "Unscheduled")
-                   (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'scheduled))
-                   (org-agenda-files (list (expand-file-name "emails.org" kb/agenda-dir)))))
+           ((tags-todo "-snooze+email"
+                       ((org-agenda-overriding-header "Unscheduled")
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'scheduled))))
             (agenda ""
                     ((org-agenda-overriding-header "Scheduled")
                      (org-agenda-start-day "-1w")
                      (org-agenda-span 21)
                      (org-agenda-show-all-dates nil)
-                     (org-agenda-files (list (expand-file-name "emails.org" kb/agenda-dir)))))))
+                     (org-agenda-scheduled-leaders '("" ""))
+                     (org-agenda-skip-function ; Only works for explicit tags
+                      '(org-agenda-skip-entry-if 'notregexp ":email:"))))))
           ("A" "Archive" todo "DONE|CANCELLED"))))
 
 ;;; Org-agenda-property

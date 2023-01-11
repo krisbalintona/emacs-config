@@ -95,7 +95,7 @@
 (use-package org-refile
   :custom
   (org-refile-targets
-   `((org-agenda-files . (:level . 0))
+   `((org-agenda-files . (:tag . "type"))
      (org-agenda-files . (:tag . "project"))
      (kb/find-blog-files-org . (:level . 0))
      (kb/find-blog-files-org . (:tag . "project"))
@@ -272,8 +272,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                       (match-string 1 x)
-                                     x))
+                                  (match-string 1 x)
+                                x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)
