@@ -40,8 +40,7 @@
 (use-package eros
   :ghook 'emacs-lisp-mode-hook
   :custom
-  (eros-eval-result-prefix "⟹  ")       ; Fancy!
-  )
+  (eros-eval-result-prefix "⟹  "))      ; Fancy!
 
 ;;; Syntax highlighting
 ;;;; Lisp-extra-font-lock
@@ -116,7 +115,7 @@
 ;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
-  :demand t
+  :demand
   :after helpful
   :config
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
@@ -124,6 +123,7 @@
 ;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!
 (use-package suggest
+  :disabled
   :general ("C-c S" '(suggest :wk "Suggest.el buffer")))
 
 ;;; programming-elisp-rcp.el ends here
