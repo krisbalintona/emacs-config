@@ -12,13 +12,11 @@
 ;;; Org
 ;;;; Itself
 (use-package org
-  :diminish ((org-indent-mode . "")
-             (org-num-mode . ""))
   :straight (org-mode :type git
                       :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
                       :pre-build ("make" "oldorg" "EMACS=/usr/local/bin/emacs")
                       :files (:defaults "lisp")
-                      :includes (ox ox-odt ox-latex org-footnote org-attach org-refile oc))
+                      :includes (org-num org-indent ox ox-odt ox-latex org-footnote org-attach org-refile oc))
   :gfhook
   'variable-pitch-mode
   'visual-line-mode
@@ -29,9 +27,6 @@
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link
    "C-M-<up>" 'org-up-element)
-  (kb/toggle-keys
-    :keymaps 'org-mode-map
-    "n" 'org-num-mode)
   (kb/note-keys
     "c" '(org-capture :wk "Org-capture"))
   :custom
@@ -39,7 +34,6 @@
   (org-special-ctrl-a/e t)
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
 
-  (org-startup-indented t)
   (org-startup-folded 'nofold)
   (org-ellipsis " ")
   (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
@@ -68,6 +62,21 @@
   :config
   (when (bound-and-true-p evil-local-mode)
     (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
+
+;;;; Org-num
+(use-package org-num
+  :straight nil
+  :diminish
+  :general (kb/toggle-keys
+             :keymaps 'org-mode-map
+             "n" 'org-num-mode))
+
+;;;; Org-indent
+(use-package org-indent
+  :straight nil
+  :diminish
+  :custom
+  (org-startup-indented t))
 
 ;;;; Org-footnote
 (use-package org-footnote
