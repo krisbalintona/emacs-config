@@ -1,4 +1,4 @@
-;;; org-notes-rcp.el --- Summary
+;;; org-notes-rcp.el --- Summary -*- lexical-binding: t -*-
 ;;
 ;;; Commentary:
 ;;
@@ -286,7 +286,7 @@ If called with `universal-arg', then replace links in all denote buffers."
   :custom
   ;; File paths must have ending slashing. See
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
-  (consult-notes-file-dir-sources `())
+  (consult-notes-file-dir-sources nil)
   ;; Denote
   (consult-notes-denote-display-id nil)
   (consult-notes-denote-dir t)
@@ -297,8 +297,8 @@ If called with `universal-arg', then replace links in all denote buffers."
   (when (locate-library "org-roam")
     (consult-notes-denote-mode))
 
-  ;; Customize `consult-notes' interface for `denote'. Made GitHub issue here:
-  ;; https://github.com/mclear-tools/consult-notes/issues/27
+
+  ;; Custom `consult--multi' sections
   (defconst consult-notes-denote--source
     (list :name     (propertize "Notes" 'face 'consult-notes-sep)
           :narrow   ?n
@@ -308,17 +308,20 @@ If called with `universal-arg', then replace links in all denote buffers."
                       (let* ((max-width 0)
                              (cands (mapcar (lambda (f)
                                               (let* ((id (denote-retrieve-filename-identifier f))
-                                                     (title-value (denote-retrieve-title-value f (denote-filetype-heuristics f)))
                                                      (title (if consult-notes-denote-display-id
-                                                                (concat id " " title-value)
-                                                              title-value))
+                                                                (concat id " " (denote-retrieve-title-value f (denote-filetype-heuristics f)))
+                                                              (denote-retrieve-title-value f (denote-filetype-heuristics f))))
                                                      (dir (file-relative-name (file-name-directory f) denote-directory))
                                                      (keywords (denote-extract-keywords-from-path f)))
                                                 (let ((current-width (string-width title)))
                                                   (when (> current-width max-width)
                                                     (setq max-width (+ 24 current-width))))
                                                 (propertize title 'denote-path f 'denote-keywords keywords)))
-                                            (denote-directory-files))))
+                                            ;; Exclude papers directory
+                                            (remove-if
+                                             (lambda (f)
+                                               (string-match-p (rx (literal (expand-file-name "papers" kb/notes-dir))) f))
+                                             (denote-directory-files)))))
                         (mapcar (lambda (c)
                                   (let* ((keywords (get-text-property 0 'denote-keywords c))
                                          (path (get-text-property 0 'denote-path c))
@@ -329,9 +332,9 @@ If called with `universal-arg', then replace links in all denote buffers."
                                             (format "%18s"
                                                     (if keywords
                                                         (concat (propertize "#" 'face 'consult-notes-name)
-                                                                (propertize (mapconcat 'identity keywords " #") 'face 'consult-notes-name))
+                                                                (propertize (mapconcat 'identity keywords " ") 'face 'consult-notes-name))
                                                       ""))
-                                            (when consult-notes-denote-dir (format "%18s" (propertize dirs 'face 'consult-notes-name))))))
+                                            (when consult-notes-denote-dir (format "%18s" (propertize (concat "/" dirs) 'face 'consult-notes-name))))))
                                 cands)))
           ;; Custom preview
           :state  #'consult-notes-denote--state
@@ -342,31 +345,65 @@ If called with `universal-arg', then replace links in all denote buffers."
     (list :name     (propertize "Papers" 'face 'consult-notes-sep)
           :narrow   ?p
           :category 'consult-notes-category
+          :annotate #'consult-notes-denote--annotate
           :items    (lambda ()
                       (let* ((max-width 0)
                              (cands (mapcar (lambda (f)
-                                              (when (string= (file-name-extension f) "org")
-                                                (denote-retrieve-title-value f (denote-filetype-heuristics f))))
-                                            (directory-files-recursively (expand-file-name "papers/" kb/notes-dir) ""))))
-                        cands))
+                                              (let* ((id (denote-retrieve-filename-identifier f))
+                                                     (title (if consult-notes-denote-display-id
+                                                                (concat id " " (denote-retrieve-title-value f (denote-filetype-heuristics f)))
+                                                              (denote-retrieve-title-value f (denote-filetype-heuristics f))))
+                                                     (dir (file-relative-name (file-name-directory f) denote-directory))
+                                                     (keywords (denote-extract-keywords-from-path f)))
+                                                (let ((current-width (string-width title)))
+                                                  (when (> current-width max-width)
+                                                    (setq max-width (+ 24 current-width))))
+                                                (propertize title 'denote-path f 'denote-keywords keywords)))
+                                            (remove-if-not (lambda (f) (string-match-p (rx (literal ".org") eol) f))
+                                                           (directory-files-recursively
+                                                            (expand-file-name "papers" kb/notes-dir)
+                                                            consult-notes-file-match)))))
+                        (mapcar (lambda (c)
+                                  (let* ((keywords (get-text-property 0 'denote-keywords c))
+                                         (path (get-text-property 0 'denote-path c))
+                                         (dirs (directory-file-name (file-relative-name (file-name-directory path) denote-directory))))
+                                    (concat c
+                                            ;; align keywords
+                                            (propertize " " 'display `(space :align-to (+ left ,(+ 2 max-width))))
+                                            (format "%18s"
+                                                    (if keywords
+                                                        (concat (propertize "#" 'face 'consult-notes-name)
+                                                                (propertize (mapconcat 'identity keywords " ") 'face 'consult-notes-name))
+                                                      ""))
+                                            (when consult-notes-denote-dir (format "%18s" (propertize (concat "/" dirs) 'face 'consult-notes-name))))))
+                                cands)))
           ;; Custom preview
-          :state  #'consult-notes-denote--state)
+          :state  #'consult-notes-denote--state
+          ;; Create new note on match fail
+          :new     #'consult-notes-denote--new-note)
     "For my papers.")
   (add-to-list 'consult-notes-all-sources 'kb/consult-notes-papers--source 'append)
 
   (defconst kb/consult-notes-agenda--source
-    (list :name     (propertize "Agenda" 'face 'consult-notes-sep)
-          :narrow   ?a
-          :category 'consult-notes-category
-          :items    (lambda ()
-                      (let* ((max-width 0)
-                             (cands (mapcar (lambda (f)
-                                              (when (string= (file-name-extension f) "org")
-                                                (denote-retrieve-title-value f (denote-filetype-heuristics f))))
-                                            (directory-files-recursively kb/agenda-dir ""))))
-                        cands))
-          ;; Custom preview
-          :state  #'consult-notes-denote--state)
+    (let ((name "Agenda")
+          (dir (file-name-as-directory kb/agenda-dir)))
+      (list :name     (propertize name 'face 'consult-notes-sep)
+            :narrow   ?a
+            :category consult-notes-category
+            :face     'consult-file
+            :annotate (apply-partially consult-notes-file-dir-annotate-function name dir)
+            :items    (lambda ()
+                        (let* ((files
+                                (remove-if-not (lambda (f) (string-match-p (rx (literal ".org") eol) f))
+                                               (directory-files-recursively dir consult-notes-file-match))))
+                          (mapcar #'file-name-nondirectory files)))
+            :state    (lambda ()
+                        (let ((open (consult--temporary-files))
+                              (state (consult--file-state)))
+                          (lambda (action cand)
+                            (unless cand
+                              (funcall open))
+                            (funcall state action (and cand (concat (file-name-as-directory dir) cand))))))))
     "For my agenda files.")
   (add-to-list 'consult-notes-all-sources 'kb/consult-notes-agenda--source 'append)
 
