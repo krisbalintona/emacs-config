@@ -300,7 +300,7 @@ If called with `universal-arg', then replace links in all denote buffers."
 
   ;; Custom `consult--multi' sections
   (defconst consult-notes-denote--source
-    (list :name     (propertize "Notes" 'face 'consult-notes-sep)
+    (list :name     "Notes"
           :narrow   ?n
           :category 'consult-notes-category
           :annotate #'consult-notes-denote--annotate
@@ -342,7 +342,7 @@ If called with `universal-arg', then replace links in all denote buffers."
           :new     #'consult-notes-denote--new-note))
 
   (defconst kb/consult-notes-papers--source
-    (list :name     (propertize "Papers" 'face 'consult-notes-sep)
+    (list :name     "Papers"
           :narrow   ?p
           :category 'consult-notes-category
           :annotate #'consult-notes-denote--annotate
@@ -387,7 +387,7 @@ If called with `universal-arg', then replace links in all denote buffers."
   (defconst kb/consult-notes-agenda--source
     (let ((name "Agenda")
           (dir (file-name-as-directory kb/agenda-dir)))
-      (list :name     (propertize name 'face 'consult-notes-sep)
+      (list :name     name
             :narrow   ?a
             :category consult-notes-category
             :face     'consult-file
