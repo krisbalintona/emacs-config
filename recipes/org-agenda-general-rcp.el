@@ -215,8 +215,13 @@ This function makes sure that dates are aligned for easy reading."
             (tags-todo "-snooze/+MAYBE"
                        ((org-agenda-overriding-header "Maybes")))))
           ("E" "Emails"
-           ((agenda ""
-                    ((org-agenda-overriding-header "Emails")
+           ((todo ""
+                  ((org-agenda-overriding-header "Unscheduled")
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'scheduled))
+                   (org-agenda-files (list (expand-file-name "emails.org" kb/agenda-dir)))))
+            (agenda ""
+                    ((org-agenda-overriding-header "Scheduled")
                      (org-agenda-start-day "-1w")
                      (org-agenda-span 21)
                      (org-agenda-show-all-dates nil)
