@@ -220,7 +220,6 @@
   (:keymaps 'vertico-map
    "C-." 'embark-act
    "C->" 'embark-become)
-  ([remap describe-bindings] '(embark-bindings :wk "Embark bindings"))
   (:keymaps 'embark-symbol-map
    "R" '(raise-sexp :wk "Raise sexp"))
   :custom
