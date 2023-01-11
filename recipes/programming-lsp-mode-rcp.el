@@ -83,7 +83,7 @@
     )
   :custom
   ;; core
-  (lsp-keymap-prefix "H-c")             ; Also have this be a prefix
+  (lsp-keymap-prefix "H-l")             ; Also have this be a prefix
   (lsp-keep-workspace-alive nil)
   (lsp-auto-guess-root nil)
   (lsp-log-io nil)                  ; If set to true can cause a performance hit
@@ -95,7 +95,7 @@
   (lsp-enable-folding t)
   (lsp-enable-imenu t)
   (lsp-enable-indentation nil)
-  (lsp-enable-links nil)
+  (lsp-enable-links t)
   (lsp-enable-on-type-formatting nil)
   (lsp-enable-suggest-server-download t)
   (lsp-enable-symbol-highlighting t)
@@ -120,14 +120,14 @@
   (lsp-modeline-code-actions-enable t)
   (lsp-modeline-diagnostics-enable nil)
   (lsp-modeline-diagnostics-scope :file)
-  (lsp-modeline-code-actions-segments '(count icon name))
+  (lsp-modeline-code-actions-segments '(count icon))
   (lsp-modeline-workspace-status-enable nil)
 
   ;; lens
   (lsp-lens-enable t)
 
   ;; semantic
-  (lsp-semantic-tokens-enable nil)
+  (lsp-semantic-tokens-enable t)
   :custom-face
   ;; (lsp-face-highlight-read ((t (:inherit nil :box (:line-width -1 :style nil)))))
   ;; (lsp-face-highlight-write ((t (:inherit nil :box (:line-width -1 :style nil)))))
