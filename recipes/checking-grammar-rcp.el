@@ -21,6 +21,8 @@
   (langtool-autoshow-message-function 'langtool-autoshow-detail-popup)
   ;; (langtool-java-classpath "~/Downloads/LanguageTool-5.3-stable")
 
+  ;; See https://github.com/languagetool-org/languagetool for installation
+  ;; instructions
   (langtool-bin "~/Downloads/LanguageTool-5.3-stable/languagetool.jar")
   (langtool-language-tool-jar "~/Downloads/LanguageTool-5.3-stable/languagetool-commandline.jar")
   (langtool-language-tool-server-jar "~/Downloads/LanguageTool-5.3-stable/languagetool-server.jar")
@@ -48,6 +50,21 @@
                          ("c" #'langtool-correct-buffer "Correct")
                          ("d" #'langtool-check-done "Done"))
                         )))
+
+;;; Flymake-languagetool
+(use-package flymake-languagetool
+  :general (:keymaps 'flymake-mode-map
+            (general-chord "``") 'flymake-languagetool-correct-dwim)
+  :custom
+  ;; See https://github.com/languagetool-org/languagetool for installation
+  ;; instructions
+  (flymake-languagetool-server-jar
+   (expand-file-name "languagetool.jar" "~/Downloads/languagetool/LanguageTool-6.0-stable/"))
+
+  :config
+  ;; See https://community.languagetool.org/rule/list?lang=en for IDs
+  (add-to-list 'flymake-languagetool-disabled-rules "WHITESPACE_RULE")
+  (add-to-list 'flymake-languagetool-disabled-rules "DATE_NEW_YEAR"))
 
 -;;; Lsp-grammarly
 (use-package lsp-grammarly
