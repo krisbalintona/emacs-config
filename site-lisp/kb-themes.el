@@ -50,6 +50,7 @@
 
 ;;;; Light
 (use-package modus-themes
+  :hook (modus-themes-after-load-theme . kb/themes-setup-base-faces)
   :init
   ;; Also make sure these are set before `modus-themes-load-themes' is called
   (setq modus-themes-custom-auto-reload t ; only applies to `customize-set-variable' and related
