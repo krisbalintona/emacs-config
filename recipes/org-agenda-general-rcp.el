@@ -44,6 +44,8 @@
      (?C . org-priority)
      (?D . '(shadow org-priority))
      (?E . '(shadow org-priority))))
+  (org-stuck-projects
+   '("+project/-DONE-CANCELLED" ("*") nil ""))
 
   ;; Clocking in and out
   (org-clock-out-when-done t)
