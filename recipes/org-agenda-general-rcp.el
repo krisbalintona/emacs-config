@@ -67,11 +67,13 @@
   (org-agenda-tags-column 'auto)
   (org-agenda-start-on-weekday nil)     ; Start with today
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
+  (org-agenda-remove-times-when-in-prefix t)
+  (org-agenda-remove-tags t)
   (org-agenda-prefix-format
    '((agenda . " %i %-12:c%?-12t% s")
-     (todo . " %i %-12:c %b ")
-     (tags . " %i %-12:c %b ")
-     (search . " %i %-12:c")))
+     (todo . " %i %-15T %s %b")
+     (tags . " %i %-15T %s %b")
+     (search . " %i %-15T %s %b")))
   (org-agenda-sorting-strategy
    '((agenda habit-down time-up ts-up priority-down category-keep)
      (todo todo-state-up priority-down category-keep)
@@ -187,8 +189,8 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-include-diary nil)))
             (agenda ""
                     ((org-agenda-overriding-header "Upcoming deadlines")
-                     (org-agenda-start-day "-3d")
-                     (org-agenda-span 24)
+                     (org-agenda-start-day "+0d")
+                     (org-agenda-span 14)
                      (org-agenda-show-all-dates nil)
                      (org-deadline-warning-days 0)
                      (org-agenda-entry-types '(:deadline))
