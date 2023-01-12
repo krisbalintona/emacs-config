@@ -18,10 +18,10 @@
 (setq package-enable-at-startup nil)
 
 ;; Faster to disable these graphical elements before they've been initialized
-(menu-bar-mode -1)
-(push '(menu-bar-lines . 0) default-frame-alist)
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
+;; (menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(pixel-scroll-precision-mode 1)
 
 ;; Default coding system to UTF-8
 (set-language-environment "UTF-8")
