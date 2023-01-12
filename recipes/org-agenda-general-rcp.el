@@ -67,6 +67,8 @@
   (org-agenda-tags-column 'auto)
   (org-agenda-start-on-weekday nil)     ; Start with today
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
+  (org-agenda-tags-todo-honor-ignore-options t)
+  (org-agenda-todo-ignore-scheduled 'future) ; This is for my own workflow
   (org-agenda-remove-times-when-in-prefix t)
   (org-agenda-remove-tags t)
   (org-agenda-prefix-format
@@ -105,7 +107,7 @@
   (org-capture-templates
    `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      "* TODO %?\n"
+      "* TODO %? %^g\n"
       :empty-lines 1)
      ("i" "Inbox" entry
       (file ,(expand-file-name "garden/20221011T101254--inbox.org" kb/notes-dir))
@@ -113,12 +115,12 @@
       :empty-lines 1
       :jump-to-captured t)
      ("e" "Email" entry
-      (file ,(expand-file-name "emails.org" kb/agenda-dir))
-      "* TODO Respond to%? [[%L][\"%:subject\" from %:fromname on %:date]]\n"
+      (file ,(expand-file-name "todo.org" kb/agenda-dir))
+      "* TODO Respond to%? [[%L][\"%:subject\" from %:fromto]] :email:\n"
       :empty-lines 1)
      ;; NOTE 2023-01-01: Also see `mu4e--org-store-link-message' from mu4e-org
      ("E" "Mu4e-captured email" entry
-      (file ,(expand-file-name "emails.org" kb/agenda-dir))
+      (file ,(expand-file-name "todo.org" kb/agenda-dir))
       ,(concat "* TODO Respond to%? "
                "[[mu4e:msgid:%(plist-get mu4e-captured-message :message-id)]"
                "[\"%(plist-get mu4e-captured-message :subject)\" "
