@@ -217,9 +217,20 @@ progress. This is called by the timer `good-scroll--timer' every
            (advice-remove 'scroll-up-command #'kb/good-scroll-down)
            (advice-remove 'good-scroll--render #'kb/good-scroll--render)))))
 
+;;; Iseach
+;; Incremental search
+(use-package isearch
+  :straight nil
+  :custom
+  (isearch-repeat-on-direction-change t)
+  (isearch-allow-scroll t)
+  (isearch-allow-motion t)
+  (isearch-lazy-count t))
+
 ;;; Ctrlf
-;; Better `isearch'
+;; Feature-ful `isearch'
 (use-package ctrlf
+  :disabled
   :init (ctrlf-mode))
 
 ;;; Newcomment
