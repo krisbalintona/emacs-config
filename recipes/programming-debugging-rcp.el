@@ -11,6 +11,7 @@
 
 ;;; Realgud
 (use-package realgud
+  :hook (realgud-srcbuf-mode . tool-bar-mode)
   :custom
   (realgud-window-split-orientation 'horizontal)
   (realgud-short-key-on-tracing? t))
