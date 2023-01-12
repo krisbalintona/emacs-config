@@ -90,6 +90,7 @@
 ;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package highlight-indent-guides
+  :disabled
   :diminish
   :ghook
   'prog-mode-hook
@@ -98,8 +99,7 @@
   :custom
   (highlight-indent-guides-method 'column)
   (highlight-indent-guides-character ?⏐)
-  (highlight-indent-guides-suppress-auto-error t)
-  )
+  (highlight-indent-guides-suppress-auto-error t))
 
 ;;;; Rainbow-mode
 ;; Colorify color codes

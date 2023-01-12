@@ -19,7 +19,6 @@
          "\\.yaml\\'"
          "\\.html\\'")
   :gfhook
-  'highlight-indent-guides-mode
   'display-line-numbers-mode
   'visual-line-mode
   :custom
@@ -64,7 +63,6 @@
                           (semistandard . "sudo npm install --global semistandard"))
   :mode "\\.js\\'"
   :gfhook
-  'highlight-indent-guides-mode
   'display-line-numbers-mode
   'visual-line-mode
   :custom
@@ -84,7 +82,6 @@
 (use-package yaml-mode
   :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
   :gfhook
-  'highlight-indent-guides-mode
   'display-line-numbers-mode
   'visual-line-mode
   :general (:keymaps 'yaml-mode-map
