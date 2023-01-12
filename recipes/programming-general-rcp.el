@@ -327,9 +327,10 @@ this buffer."
   (advice-add 'outline-insert-heading :around 'kb/around-outline-insert-heading))
 
 ;;;; Anzu
-;; Search Mode Info Display
+;; Display search information in mode-line.
 (use-package anzu
-  :diminish anzu-mode
+  :disabled
+  :diminish
   :general ([remap query-replace] 'anzu-query-replace
             [remap query-replace-regexp] 'anzu-query-replace-regexp)
   :custom
