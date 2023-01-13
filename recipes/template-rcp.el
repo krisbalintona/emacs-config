@@ -29,8 +29,10 @@
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
   :diminish (yas-minor-mode . "")
-  :hook (after-init . yas-global-mode)
+  :defer 5
   :config
+  (yas-global-mode)
+  
   (advice-add 'doom-snippets-initialize
               :after #'(lambda ()
                           "Ensure my personal snippets dir is first and therefore the
