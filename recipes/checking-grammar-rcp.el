@@ -55,6 +55,7 @@
 (use-package flymake-languagetool
   :general (:keymaps 'flymake-mode-map
             (general-chord "``") 'flymake-languagetool-correct-dwim)
+  :hook (org-mode . flymake-languagetool-maybe-load)
   :custom
   ;; See https://github.com/languagetool-org/languagetool for installation
   ;; instructions
