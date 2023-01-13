@@ -183,7 +183,7 @@
   (org-superstar-remove-leading-stars nil)
 
   ;; Headlines
-  (org-superstar-headline-bullets-list '("◈" "⊙" "●" "○"))
+  (org-superstar-headline-bullets-list '("◈" "◉" "●" "◇" "✳")) ; List inspired from `org-modern'
   (org-n-level-faces 5)
   (org-cycle-level-faces nil)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
