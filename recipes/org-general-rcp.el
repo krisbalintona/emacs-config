@@ -176,6 +176,8 @@
   (org-hide-leading-stars nil)          ; Must be `nil' according to readme
   (org-superstar-remove-leading-stars t) ; non-`nil' results in more consistent headline indentation
   (org-superstar-headline-bullets-list '("⚝" "●" "⊙" "○"))
+  ;; Headlines
+  (org-superstar-headline-bullets-list '("◈" "⊙" "●" "○"))
   (org-n-level-faces 5)
   (org-cycle-level-faces nil)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
