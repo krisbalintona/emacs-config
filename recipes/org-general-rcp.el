@@ -83,7 +83,74 @@
   (org-indent-mode-turns-off-org-adapt-indentation t)
   ;; This is overridden by `org-superstar'
   (org-startup-indented t)
-  (org-indent-mode-turns-on-hiding-stars t))
+  (org-indent-mode-turns-on-hiding-stars t)
+  :config
+  ;; The following to overrides change the character org-indent uses to indent
+  ;; headlines from an asterisk to a space, meaning they are not seen even when
+  ;; `alpha-background' frame parameter causes the background to become
+  ;; transparent, leaving the indent character visible
+  (defun kb/org-indent--compute-prefixes ()
+    "Compute prefix strings for regular text and headlines."
+    (setq org-indent--heading-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--inlinetask-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--text-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (when (> org-indent-indentation-per-level 0)
+      (dotimes (n org-indent--deepest-level)
+        (let ((indentation (if (<= n 1) 0
+                             (* (1- org-indent-indentation-per-level)
+                                (1- n)))))
+          ;; Headlines line prefixes.
+          ;; Change from an asterisk (i.e. ?*)
+          (let ((heading-prefix (make-string indentation ?\s)))
+            (aset org-indent--heading-line-prefixes
+                  n
+                  (org-add-props heading-prefix nil 'face 'org-indent))
+            ;; Inline tasks line prefixes
+            (aset org-indent--inlinetask-line-prefixes
+                  n
+                  (cond ((<= n 1) "")
+                        ((bound-and-true-p org-inlinetask-show-first-star)
+                         (concat org-indent-inlinetask-first-star
+                                 (substring heading-prefix 1)))
+                        (t (org-add-props heading-prefix nil 'face 'org-indent)))))
+          ;; Text line prefixes.
+          (aset org-indent--text-line-prefixes
+                n
+                (org-add-props
+                    (concat (make-string (+ n indentation) ?\s)
+                            (and (> n 0)
+                                 (char-to-string org-indent-boundary-char)))
+                    nil 'face 'org-indent))))))
+  (defun kb/org-indent-set-line-properties (level indentation &optional heading)
+    "Set prefix properties on current line an move to next one.
+
+LEVEL is the current level of heading.  INDENTATION is the
+expected indentation when wrapping line.
+
+When optional argument HEADING is non-nil, assume line is at
+a heading.  Moreover, if it is `inlinetask', the first star will
+have `org-warning' face."
+    (let* ((line (aref (pcase heading
+                         (`nil org-indent--text-line-prefixes)
+                         (`inlinetask org-indent--inlinetask-line-prefixes)
+                         (_ org-indent--heading-line-prefixes))
+                       level))
+           (wrap
+            (org-add-props
+                (concat line
+                        ;; Change from an asterisk (i.e. ?*)
+                        (if heading (concat (make-string level ?\s) " ")
+                          (make-string indentation ?\s)))
+                nil 'face 'org-indent)))
+      ;; Add properties down to the next line to indent empty lines.
+      (add-text-properties (line-beginning-position) (line-beginning-position 2)
+                           `(line-prefix ,line wrap-prefix ,wrap)))
+    (forward-line))
+  (advice-add 'org-indent--compute-prefixes :override 'kb/org-indent--compute-prefixes)
+  (advice-add 'org-indent-set-line-properties :override 'kb/org-indent-set-line-properties))
 
 ;;;; Org-footnote
 (use-package org-footnote
@@ -211,7 +278,7 @@
      (?* . "•")))
   :custom-face
   ;; Ensure headlines are aligned with headline content
-  (org-superstar-leading ((t (:inherit fixed-pitch))))
+  (org-superstar-leading ((t (:inherit org-indent))))
   :init
   ;; See https://github.com/emacsmirror/org-superstar#fast-plain-list-items
   (defun kb/org-superstar-auto-lightweight-mode ()
