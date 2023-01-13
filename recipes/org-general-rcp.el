@@ -163,37 +163,50 @@
 ;; Descendant of (and thus superior to) org-bullets
 (use-package org-superstar  ;; Improved version of org-bullets
   :ghook 'org-mode-hook
+  :gfhook 'kb/org-superstar-auto-lightweight-mode
   :custom
   (inhibit-compacting-font-caches t) ; Stop slowdown
 
-  (org-cycle-level-faces nil)
+  ;; Headlines
+  (org-superstar-leading-bullet ?\s)          ; Render leading stars as spaces!
+  (org-indent-mode-turns-on-hiding-stars nil) ; `nil' if I use `org-indent'
+  (org-hide-leading-stars nil)          ; Must be `nil' according to readme
+  (org-superstar-remove-leading-stars t) ; non-`nil' results in more consistent headline indentation
+  (org-superstar-headline-bullets-list '("⚝" "●" "⊙" "○"))
   (org-n-level-faces 5)
-
-  (org-superstar-leading-bullet ?\s)    ; Render leading stars as spaces!
-  (org-superstar-leading-fallback ?\s)  ; Hide away leading stars on terminal.
-  (org-indent-mode-turns-on-hiding-stars nil) ; Nil according to readme
-  (org-hide-leading-stars nil)                ; Nil according to readme
-  (org-superstar-remove-leading-stars nil)    ; Keep indentation from `org-indent'
-
+  (org-cycle-level-faces nil)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
+
+  ;; Todos
+  (org-superstar-special-todo-items t)
+  ;; Update when I change `org-todo-keywords'
   (org-superstar-todo-bullet-alist
-   '(("TODAY" . 9744)
-     ("PROG" . 9744)
-     ("NEXT" . 9744)
+   '(("PROG" . 9744)
+     ("ACTIVE" . 9744)
      ("TODO" . 9744)
+     ("WAITING" . 9745)
+     ("MAYBE" . 9745)
      ("DONE" . 9745)
      ("CANCELLED" . 9745)
      ("[ ]"  . 9744)
      ("[X]"  . 9745)))
-  (org-superstar-special-todo-items t)  ; Cool todo headlines?
-  (org-superstar-headline-bullets-list '("⚝" "●" "⊙" "○"))
 
+  ;; Plain lists
   (org-superstar-prettify-item-bullets t)
   (org-superstar-first-inlinetask-bullet ?▶)
-  (org-superstar-item-bullet-alist      ; Plain lists
-   '((?+ . ?•)
-     (?- . ?➣)
-     (?* . ?￮))))
+  (org-superstar-item-bullet-alist
+   '((?+ . "◦")                         ; List taken from `org-modern'
+     (?- . "–")
+     (?* . "•")))
+  :init
+  ;; See https://github.com/emacsmirror/org-superstar#fast-plain-list-items
+  (defun kb/org-superstar-auto-lightweight-mode ()
+    "Start Org Superstar differently depending on the number of lists items."
+    (let ((list-items
+           (count-matches "^[ \t]*?\\([+-]\\|[ \t]\\*\\)"
+                          (point-min) (point-max))))
+      (unless (< list-items 100)
+        (org-superstar-toggle-lightweight-lists)))))
 
 ;;;; Org-bars
 (use-package org-bars
@@ -236,6 +249,7 @@
 
 ;;;; Org-modern
 (use-package org-modern
+  :disable
   :custom
   (org-modern-label-border 1)
   (org-modern-timestamp t)
