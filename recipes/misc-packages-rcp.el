@@ -562,6 +562,12 @@ displayed."
 ;; Sample text
 (use-package lorem-ipsum)
 
+;;; Re-builder
+;; Interactively build regexps
+(use-package re-builder
+  :custom
+  (reb-re-syntax 'rx))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
