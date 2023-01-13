@@ -25,9 +25,10 @@
   (org-enforce-todo-checkbox-dependencies nil)
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "ACTIVE(a)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
+   '((sequence "PROG(p)" "ACTIVE(a)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
   (org-todo-keyword-faces
-   '(("ACTIVE" . '(bold org-warning))
+   '(("PROG" . '(bold success))
+     ("ACTIVE" . 'org-warning)
      ("TODO" . 'org-todo)
      ("WAITING" . '(shadow error))
      ("MAYBE" . '(shadow org-todo))
