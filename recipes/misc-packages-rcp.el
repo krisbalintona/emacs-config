@@ -225,7 +225,8 @@ progress. This is called by the timer `good-scroll--timer' every
   (isearch-repeat-on-direction-change t)
   (isearch-allow-scroll t)
   (isearch-allow-motion t)
-  (isearch-lazy-count t))
+  (isearch-lazy-count t)
+  (isearch-wrap-pause 'no))
 
 ;;; Ctrlf
 ;; Feature-ful `isearch'
