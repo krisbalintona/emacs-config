@@ -142,8 +142,7 @@
 ;; Wrap lines as if they were hard newlines (like `fill-paragraph'). In other
 ;; words, lines preserve indentation.
 (use-package adaptive-wrap
-  :hook (prog-mode . adaptive-wrap-prefix-mode)
-  )
+  :hook (prog-mode . adaptive-wrap-prefix-mode))
 
 ;;; General utility
 ;;;; Consult

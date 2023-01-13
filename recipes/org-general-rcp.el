@@ -23,7 +23,6 @@
   :gfhook
   'variable-pitch-mode
   'visual-line-mode
-  'visual-fill-column-mode
   '(lambda ()
       (eldoc-mode -1))
   :general
@@ -37,6 +36,7 @@
   (org-special-ctrl-a/e t)
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
 
+  (org-hide-leading-stars t)
   (org-startup-folded 'nofold)
   (org-ellipsis " ")
   (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
@@ -79,7 +79,11 @@
   :straight nil
   :diminish
   :custom
-  (org-startup-indented t))
+  (org-indent-indentation-per-level 2)
+  (org-indent-mode-turns-off-org-adapt-indentation t)
+  ;; This is overridden by `org-superstar'
+  (org-startup-indented t)
+  (org-indent-mode-turns-on-hiding-stars t))
 
 ;;;; Org-footnote
 (use-package org-footnote
@@ -170,12 +174,14 @@
   :custom
   (inhibit-compacting-font-caches t) ; Stop slowdown
 
-  ;; Headlines
+  ;; Indentation
+  ;; The following ensures consistent indentation, overriding `org-indent'
+  ;; variables set elsewhere
   (org-superstar-leading-bullet ?\s)          ; Render leading stars as spaces!
-  (org-indent-mode-turns-on-hiding-stars nil) ; `nil' if I use `org-indent'
-  (org-hide-leading-stars nil)          ; Must be `nil' according to readme
-  (org-superstar-remove-leading-stars t) ; non-`nil' results in more consistent headline indentation
-  (org-superstar-headline-bullets-list '("⚝" "●" "⊙" "○"))
+  (org-hide-leading-stars nil)
+  (org-indent-mode-turns-on-hiding-stars nil)
+  (org-superstar-remove-leading-stars nil)
+
   ;; Headlines
   (org-superstar-headline-bullets-list '("◈" "⊙" "●" "○"))
   (org-n-level-faces 5)
@@ -203,6 +209,9 @@
    '((?+ . "◦")                         ; List taken from `org-modern'
      (?- . "–")
      (?* . "•")))
+  :custom-face
+  ;; Ensure headlines are aligned with headline content
+  (org-superstar-leading ((t (:inherit fixed-pitch))))
   :init
   ;; See https://github.com/emacsmirror/org-superstar#fast-plain-list-items
   (defun kb/org-superstar-auto-lightweight-mode ()
@@ -230,7 +239,7 @@
 ;;;; Visual-fill-column
 ;; Soft wrap lines at fill-column
 (use-package visual-fill-column
-  :ghook 'emacs-news-mode-hook
+  :ghook 'emacs-news-mode-hook 'org-mode-hook
   :custom
   (visual-fill-column-width 120)
   (visual-fill-column-center-text t)
