@@ -12,11 +12,14 @@
 ;;; Org
 ;;;; Itself
 (use-package org
-  :straight (org-mode :type git
-                      :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
-                      :pre-build ("make" "oldorg" "EMACS=/usr/local/bin/emacs")
-                      :files (:defaults "lisp")
-                      :includes (org-num org-indent ox ox-odt ox-latex org-footnote org-attach org-refile oc))
+  :straight (org :type git
+                 :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
+                 :local-repo "org"
+                 :depth full
+                 :pre-build (straight-recipes-org-elpa--build)
+                 :build (:not autoloads)
+                 :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*"))
+                 :includes (org-num org-indent ox ox-odt ox-latex org-footnote org-attach org-refile oc))
   :gfhook
   'variable-pitch-mode
   'visual-line-mode
@@ -225,7 +228,6 @@
 ;;;; Visual-fill-column
 ;; Soft wrap lines at fill-column
 (use-package visual-fill-column
-  :straight (visual-fill-column :type git :host github :repo "joostkremers/visual-fill-column")
   :ghook 'emacs-news-mode-hook
   :custom
   (visual-fill-column-width 120)
