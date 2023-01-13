@@ -48,7 +48,8 @@
 ;; Timer package/library from Prot
 (use-package tmr
   :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
-  :general ("C-c t" '(tmr-dispatch :wk "Tmr dispatch"))
+  :general (kb/open-keys
+             "t" '(tmr-dispatch :wk "Tmr dispatch"))
   :custom
   ;; Useful variables
   (tmr-descriptions-list
