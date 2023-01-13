@@ -262,7 +262,7 @@
 
 ;;;; Org-modern
 (use-package org-modern
-  :disable
+  :disabled
   :custom
   (org-modern-label-border 1)
   (org-modern-timestamp t)
