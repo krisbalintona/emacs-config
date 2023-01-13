@@ -396,7 +396,7 @@ Must be set before org-msg is loaded to take effect.")
         message-cite-style message-cite-style-gmail
         message-cite-function 'message-cite-original
         message-citation-line-function 'message-insert-formatted-citation-line
-        message-citation-line-format "On %e %B %Y %R, %f wrote:\n"
+        message-citation-line-format "On %d %b %Y at %R, %f wrote:\n"
         message-cite-reply-position 'above
         ;; These spaces are the magic!
         message-yank-prefix  "    "
