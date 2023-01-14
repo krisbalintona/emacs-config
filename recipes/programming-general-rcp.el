@@ -64,19 +64,18 @@
 
 ;;;; Hl-todo
 (use-package hl-todo
-  :after kb-comment
+  :after alt-comment-dwim
   :hook (after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
    :prefix "M-g"
    "n" '(hl-todo-next :wk "Hl-todo-next")
    "p" '(hl-todo-previous :wk "Hl-todo-previous")
-   "o" '(hl-todo-occur :wk "Hl-todo-occur")
-   )
+   "o" '(hl-todo-occur :wk "Hl-todo-occur"))
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(text-mode org-mode))
-  (hl-todo-exclude-modes '(org-mode))
+  (hl-todo-exclude-modes nil)
   ;; Make sure to have all words in `kb/comment-keywords-coding' and
   ;; `kb/comment-keywords-writing' in this list, otherwise those words will not
   ;; appear in any calls to `kb/comment-dwim'.
@@ -84,8 +83,7 @@
   ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
   ;; hl-todo's punctuation highlighting.
   (hl-todo-require-punctuation nil)
-  (hl-todo-highlight-punctuation "")
-  )
+  (hl-todo-highlight-punctuation ""))
 
 ;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)
