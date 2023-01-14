@@ -225,23 +225,23 @@ the mode line. Also alters `global-mode-string’ based on
                   (:eval
                    (let* ((active (eq (frame-selected-window) (selected-window)))
                           (face (if active 'mode-line-buffer-id 'mode-line-buffer-id-inactive))
-                          (lhs
-                           (list (powerline-raw mode-line-front-space)
-                                 (powerline-raw (eyebrowse-mode-line-indicator))
-                                 (powerline-raw mode-line-client)
-                                 (powerline-raw mode-line-modified)
-                                 (powerline-raw mode-line-remote)
-                                 (powerline-raw vc-mode face)
-                                 "%n "
-                                 (powerline-raw mode-line-buffer-identification face 'r)
-                                 "%p "
-                                 (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)))))
-                          (rhs
-                           (list (powerline-raw '(:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))) face 'r)
-                                 (powerline-raw '(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format)) face 'r) ; FIXME 2023-01-08: Throw a bunch of user-errors...
-                                 (powerline-raw (kb/mode-line-misc-info-wrapper))
-                                 (powerline-raw kb/mode-line-modes face 'l)
-                                 (if (display-graphic-p) " " "-%-")))) ; Modified `mode-line-end-spaces'
+                          (lhs (list (powerline-raw mode-line-front-space)
+                                     (powerline-raw (eyebrowse-mode-line-indicator) face)
+                                     (powerline-raw mode-line-client face)
+                                     (powerline-raw mode-line-modified face)
+                                     (powerline-raw mode-line-remote face)
+                                     (powerline-raw vc-mode face)
+                                     (powerline-raw "%n" face)
+                                     (powerline-raw mode-line-buffer-identification face 'l)
+                                     " "
+                                     (powerline-raw mode-line-position face 'r)
+                                     (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)) face)))
+                          (rhs (list (powerline-raw '(:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))) face 'r)
+                                     (powerline-raw '(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format)) face 'r)
+                                     (powerline-raw (kb/mode-line-misc-info-wrapper) face 'r)
+                                     (powerline-raw kb/mode-line-modes face)
+                                     (powerline-raw mode-line-process face)
+                                     (if (display-graphic-p) " " "-%-")))) ; Modified `mode-line-end-spaces'
                      (concat
                       (powerline-render lhs)
                       (powerline-fill face (powerline-width rhs))
