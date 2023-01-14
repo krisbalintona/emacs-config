@@ -294,7 +294,7 @@
   :diminish (outshine-mode
              outline-minor-mode)
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
-  :gfhook 'display-line-numbers-mode 'visual-line-mode
+  :gfhook 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
    "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
