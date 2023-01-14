@@ -49,7 +49,7 @@
   ;; for a description of this setting
   (emojify-composed-text-p t)
   ;; Check out https://ianyepan.github.io/posts/emacs-emojis/
-  (emojify-emoji-styles '(unicode ascii github))
+  (emojify-emoji-styles '(unicode))
   ;; (emojify-emoji-styles 'unicode)
   (emojify-display-style 'unicode))
 
