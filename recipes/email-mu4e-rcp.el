@@ -420,7 +420,8 @@ will also be the width of all other printable characters."
    (concat "maildir:/personal/Inbox"
            " OR maildir:/uni/Inbox"
            " AND NOT flag:draft"))
-  (mu4e-alert-email-notification-types '(count))
+  (mu4e-alert-group-by :maildir)
+  (mu4e-alert-email-notification-types '(count subjects))
   (mu4e-alert-notify-repeated-mails nil)
   (mu4e-alert-set-window-urgency t)
   :config
