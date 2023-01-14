@@ -21,7 +21,7 @@
                            (unless (bound-and-true-p kb/mu4e-initialise-icons)
                              (setq mu4e-headers-personal-mark  '("p" . "  ")
                                    mu4e-headers-unread-mark    '("u" . "📩 ")
-                                   mu4e-headers-draft-mark     '("D" . "🖎 ")
+                                   mu4e-headers-draft-mark     '("D" . "✏️ ")
                                    mu4e-headers-flagged-mark   '("F" . "🚩 ")
                                    mu4e-headers-new-mark       '("N" . "✨ ")
                                    mu4e-headers-passed-mark    '("P" . "⮡ ")
