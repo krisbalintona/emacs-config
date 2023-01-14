@@ -406,6 +406,7 @@ will also be the width of all other printable characters."
 ;;; Mu4e-folding
 (use-package mu4e-folding
   :after mu4e
+  :diminish
   :straight (mu4e-folding :type git :host github :repo "rougier/mu4e-folding")
   :ghook 'mu4e-headers-mode-hook
   :custom
