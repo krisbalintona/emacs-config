@@ -425,7 +425,6 @@ will also be the width of all other printable characters."
   (mu4e-alert-email-notification-types '(count subjects))
   (mu4e-alert-notify-repeated-mails nil)
   (mu4e-alert-set-window-urgency t)
-  (mu4e-alert-modeline-formatter 'kb/mu4e-alert-mode-line-formatter)
   :config
   (mu4e-alert-set-default-style 'libnotify)
 
@@ -435,19 +434,19 @@ mode-line.
 
 MAIL-COUNT is the count of mails for which the string is to displayed."
     (when (not (zerop mail-count))
-      (concat " "
-              (propertize
-               (format "!%d" mail-count)
-               'help-echo (concat (if (= mail-count 1)
-                                      "You have an unread email"
-                                    (format "You have %s unread emails" mail-count))
-                                  "\nClick here to view "
-                                  (if (= mail-count 1) "it" "them"))
-               'mouse-face 'mode-line-highlight
-               'keymap '(mode-line keymap
-                                   (mouse-1 . mu4e-alert-view-unread-mails)
-                                   (mouse-2 . mu4e-alert-view-unread-mails)
-                                   (mouse-3 . mu4e-alert-view-unread-mails)))))))
+      (propertize
+       (format "!%d" mail-count)
+       'help-echo (concat (if (= mail-count 1)
+                              "You have an unread email"
+                            (format "You have %s unread emails" mail-count))
+                          "\nClick here to view "
+                          (if (= mail-count 1) "it" "them"))
+       'mouse-face 'mode-line-highlight
+       'keymap '(mode-line keymap
+                           (mouse-1 . mu4e-alert-view-unread-mails)
+                           (mouse-2 . mu4e-alert-view-unread-mails)
+                           (mouse-3 . mu4e-alert-view-unread-mails)))))
+  (setq mu4e-alert-modeline-formatter 'kb/mu4e-alert-mode-line-formatter))
 
 ;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
