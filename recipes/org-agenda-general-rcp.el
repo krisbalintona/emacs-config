@@ -21,8 +21,6 @@
   (org-agenda-files (list kb/agenda-dir))
 
   ;; Todos
-  (org-enforce-todo-dependencies nil)
-  (org-enforce-todo-checkbox-dependencies nil)
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
    '((sequence "PROG(p)" "ACTIVE(a)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
@@ -58,12 +56,16 @@
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
   (org-agenda-show-inherited-tags nil)
 
+  ;; Dependencies
+  (org-enforce-todo-dependencies t)
+  (org-enforce-todo-checkbox-dependencies t)
+  (org-agenda-dim-blocked-tasks t)
+  
   ;; Org agenda
   (org-agenda-file-regexp "\\`[^.].*\\.org\\'")
   (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
   (org-agenda-window-setup 'only-window)
   (org-use-fast-todo-selection 'expert)
-  (org-agenda-dim-blocked-tasks 'invisible) ; Invisible unless dependencies are done
   (org-agenda-restore-windows-after-quit t)
   (org-agenda-tags-column 'auto)
   (org-agenda-start-on-weekday nil)     ; Start with today
