@@ -568,6 +568,20 @@ displayed."
   :custom
   (reb-re-syntax 'rx))
 
+;;; Writeroom-mode
+(use-package writeroom-mode
+  :custom
+  (writeroom-major-modes '(org-mode))
+  (writeroom-width 100)
+  (writeroom-global-effects
+   '(writeroom-set-fullscreen
+     ;; writeroom-set-alpha
+     writeroom-set-menu-bar-lines
+     writeroom-set-tool-bar-lines
+     writeroom-set-vertical-scroll-bars
+     writeroom-set-bottom-divider-width
+     )))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
