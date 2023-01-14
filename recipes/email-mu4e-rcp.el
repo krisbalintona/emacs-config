@@ -42,6 +42,9 @@
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
          (mu4e-view-mode . visual-fill-column-mode))
   :general
+  (:keymaps 'mu4e-main-mode-map
+   "q" 'bury-buffer
+   "Q" 'mu4e-quit)
   (kb/open-keys
     "m" '(mu4e :wk "Mu4e"))
   ([remap compose-mail] 'mu4e-compose-new)
