@@ -445,8 +445,8 @@ displayed."
   :custom
   (logos-outlines-are-pages t)
   (logos-outline-regexp-alist
-   `((emacs-lisp-mode . "^;;; ")
-     (org-mode . "^\\* +"))))
+   `((emacs-lisp-mode . ,(rx bol (or (literal ";;; ") ?)))
+     (org-mode . ,(rx bol (or (literal "* ") ?))))))
 
 ;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
