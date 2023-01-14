@@ -169,7 +169,14 @@ This function makes sure that dates are aligned for easy reading."
       (format " %-2s. %2d %s"
               dayname day monthname)))
   :config
-  (org-clock-persistence-insinuate))
+  (org-clock-persistence-insinuate)
+
+  (advice-add 'org-clock-get-clock-string
+              :around (lambda (orig_fun &rest args)
+                        "Truncate `org-clock-heading’."
+                        (let ((org-clock-heading
+                               (truncate-string-to-width org-clock-heading 40 nil nil (truncate-string-ellipsis))))
+                          (apply orig_fun args)))))
 
 ;;; Org-agenda-custom-commands
 (with-eval-after-load 'org-agenda
