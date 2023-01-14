@@ -408,6 +408,21 @@ will also be the width of all other printable characters."
   :custom
   (mu4e-folding-default-view 'folded))
 
+;;; Mu4e-alert
+(use-package mu4e-alert
+  :hook ((after-init . mu4e-alert-enable-mode-line-display)
+         (after-init . mu4e-alert-enable-notifications))
+  :custom
+  (mu4e-alert-interesting-mail-query
+   (concat "maildir:/personal/Inbox"
+           " OR maildir:/uni/Inbox"
+           " AND NOT flag:draft"))
+  (mu4e-alert-email-notification-types '(count))
+  (mu4e-alert-notify-repeated-mails nil)
+  (mu4e-alert-set-window-urgency t)
+  :config
+  (mu4e-alert-set-default-style 'libnotify))
+
 ;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'email-mu4e-rcp)
