@@ -23,7 +23,7 @@
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "PROG(p)" "ACTIVE(a)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
+   '((sequence "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "TODO(t)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
   (org-todo-keyword-faces
    '(("PROG" . (bold success))
      ("ACTIVE" . org-warning)
@@ -32,7 +32,7 @@
      ("MAYBE" . (shadow org-todo))
      ("DONE" . (bold org-done))
      ("CANCEL" . error)))
-  (org-log-done t)
+  (org-log-done 'time)
   (org-log-into-drawer t)
   (org-highest-priority ?A)
   (org-lowest-priority ?E)
