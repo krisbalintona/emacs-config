@@ -60,7 +60,7 @@
   (org-enforce-todo-dependencies t)
   (org-enforce-todo-checkbox-dependencies t)
   (org-agenda-dim-blocked-tasks t)
-  
+
   ;; Org agenda
   (org-agenda-file-regexp "\\`[^.].*\\.org\\'")
   (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
@@ -73,17 +73,17 @@
   (org-agenda-tags-todo-honor-ignore-options t)
   (org-agenda-todo-ignore-scheduled 'future) ; This is for my own workflow
   (org-agenda-remove-times-when-in-prefix t)
-  (org-agenda-remove-tags t)
+  (org-agenda-remove-tags 'prefix)
   (org-agenda-prefix-format
-   '((agenda . " %i %-12:c%?-12t% s")
-     (todo . " %i %-15T %s %b")
-     (tags . " %i %-15T %s %b")
-     (search . " %i %-15T %s %b")))
+   '((agenda . "%2i %-12:c%?-12t% s")
+     (todo . "%2i %s %b")
+     (tags . "%2i %s %b")
+     (search . "%2i %s %b")))
   (org-agenda-sorting-strategy
    '((agenda habit-down time-up ts-up priority-down category-keep)
      (todo todo-state-up priority-down category-keep)
      (tags todo-state-up priority-down category-keep)
-     (search category-keep)))
+     (search todo-state-up priority-down category-keep)))
   (org-archive-subtree-save-file-p t)   ; Save archive file always
   (org-agenda-block-separator ?─)
   (org-agenda-time-grid
