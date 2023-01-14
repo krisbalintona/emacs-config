@@ -252,7 +252,7 @@ the mode line. Also alters `global-mode-string’ based on
 (use-package time
   :custom
   (display-time-24hr-format t)
-  (display-time-format "%a %d, %R")
+  (display-time-format "(%a %d, %R)")
   (display-time-interval 60)           ; Update every since if I'm using seconds
   (display-time-default-load-average nil) ; Don't show load average
   (world-clock-list
