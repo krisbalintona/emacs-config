@@ -61,7 +61,9 @@
   ;; instructions
   (flymake-languagetool-server-jar
    (expand-file-name "languagetool.jar" "~/Downloads/languagetool/LanguageTool-6.0-stable/"))
-
+  (flymake-languagetool-active-modes
+   '(text-mode latex-mode org-mode markdown-mode message-mode))
+  (flymake-languagetool-check-spelling nil)
   :config
   ;; See https://community.languagetool.org/rule/list?lang=en for IDs
   (add-to-list 'flymake-languagetool-disabled-rules "WHITESPACE_RULE")

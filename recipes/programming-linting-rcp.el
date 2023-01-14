@@ -50,7 +50,7 @@
 ;;; Flymake
 (use-package flymake
   :diminish
-  :ghook 'prog-mode-hook
+  :ghook 'prog-mode-hook 'org-mode-hook
   :general
   ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
   (:keymaps 'flymake-mode-map
