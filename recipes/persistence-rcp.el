@@ -114,7 +114,7 @@
   :custom
   ;; NOTE 2023-01-09: `auto-save-list-file-prefix' and `backup-directory-alist'
   ;; are set by `no-littering'
-  
+
   ;; Auto save
   (auto-save-default t) ; Only a local minor mode exists; this variable influences the global value
   (auto-save-file-name-transforms
@@ -128,6 +128,11 @@
   ;; Save buffer after idle time
   (remote-file-name-inhibit-auto-save-visited nil)
   (auto-save-visited-interval 15)
+  (auto-save-visited-predicate
+   ;; Inspired by `super-save'
+   (lambda ()
+     (< (save-restriction (widen) (count-lines (point-min) (point-max)))
+        5000)))
 
   ;; Backups
   (make-backup-files t)
