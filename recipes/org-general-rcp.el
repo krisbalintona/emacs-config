@@ -751,7 +751,7 @@ apostrophes will be inserted."
 (with-eval-after-load 'org
   ;; See `org-edit-indirect-generic-block' from `org-edit-indirect' if I want to
   ;; expand this function to be more versatile
-  (defun kb/org-edit-paragraph-block ()
+  (defun kb/org-edit-paragraph-block (&optional split)
     "Edit paragraph block at point.
 
 Like `org-edit-comment-block’.
@@ -766,11 +766,13 @@ Throw an error when not at a paragraph block."
         (user-error "Not in a paragraph block"))
       (org-src--edit-element
        element
-       (org-src--construct-edit-buffer-name (buffer-name) "org")
+       (org-src--construct-edit-buffer-name (buffer-name) "paragraph")
        'org-mode
        (lambda () (org-escape-code-in-region (point-min) (point-max)))
-       ;; (org-unescape-code-in-string (org-element-property :value element)))
        (org-unescape-code-in-string (buffer-substring beg end)))
+      ;; I don't think I can do this with `org-src-mode-hook' only when
+      ;; `kb/org-edit-paragraph-block', so I hardcode it here instead
+      (when split (kb/para-split-sentences))
       t))
 
 
@@ -853,7 +855,7 @@ Otherwise, return a user error."
                              (call-interactively #'org-time-stamp-inactive)
                            (call-interactively #'org-time-stamp)))
              (`link (call-interactively #'ffap))
-             (`paragraph (kb/org-edit-paragraph-block))
+             (`paragraph (kb/org-edit-paragraph-block arg))
              (_ (user-error "No special environment to edit here"))))))))
   (advice-add 'org-edit-special :override 'kb/org-edit-special))
 

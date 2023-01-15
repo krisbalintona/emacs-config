@@ -627,7 +627,7 @@ sentences.  Also, every paragraph boundary terminates sentences as well."
 
 ;;; Kb/para-split-sentences and kb/para-merge-sentences
 ;; Modified from https://stackoverflow.com/a/43360152
-(defun Kb/para-split-sentences ()
+(defun kb/para-split-sentences ()
   "Separate sentences of paragraph with newlines."
   (interactive)
   (unless buffer-read-only
