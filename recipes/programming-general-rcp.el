@@ -14,9 +14,9 @@
 (use-package prog-mode
   :straight nil
   :hook (prog-mode . goto-address-prog-mode)
-  :init
-  (global-prettify-symbols-mode)
   :config
+  (global-prettify-symbols-mode)
+  
   (add-hook 'org-mode-hook
             #'(lambda ()
                  (add-to-list 'prettify-symbols-alist '("..." . ?…))
