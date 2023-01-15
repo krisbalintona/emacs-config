@@ -166,6 +166,7 @@
    "M-s M-f" 'consult-find
    "M-s M-l" 'consult-line
    "M-s M-m" 'consult-mark
+   "M-s M-M" 'consult-global-mark
    "M-s M-s" 'consult-outline
    "M-s M-l" 'consult-line)
   (:keymaps 'help-map
