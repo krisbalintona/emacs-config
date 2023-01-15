@@ -27,12 +27,7 @@
    "C-M-9" 'puni-syntactic-backward-punct
    "C-M-0" 'puni-syntactic-forward-punct
    "C-M-r" 'puni-raise
-   "C-M-m" 'puni-split
-   "C-M-M" 'puni-splice
-   "C-M-[" 'puni-slurp-forward
-   "C-M-]" 'puni-barf-forward
-   "C-M-{" 'puni-barf-backward
-   "C-M-}" 'puni-slurp-backward
+   "C-M-m" 'puni-squeeze
    "C-=" 'puni-expand-region
    [remap forward-word] 'toki-forward-word
    [remap backward-word] 'toki-backward-word)
@@ -43,19 +38,94 @@
   :custom
   (puni-confirm-when-delete-unbalanced-active-region t)
   :config
-  ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands
-  (defun kb/puni-smart-kill-line ()
+  ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands. Also
+  ;; made to retain the default prefix argument behavior
+  (defun kb/puni-smart-kill-line (&optional n)
     "Kill a line forward while keeping expressions balanced.
 If nothing can be deleted, kill backward. If still nothing can be
 deleted, kill the pairs around point."
-    (interactive)
+    (interactive "P")
     (let ((bounds (puni-bounds-of-list-around-point)))
       (if (eq (car bounds) (cdr bounds))
           (when-let ((sexp-bounds (puni-bounds-of-sexp-around-point)))
             (puni-delete-region (car sexp-bounds) (cdr sexp-bounds) 'kill))
         (if (eq (point) (cdr bounds))
-            (puni-backward-kill-line)
-          (puni-kill-line))))))
+            (puni-backward-kill-line n)
+          (puni-kill-line n)))))
+
+  ;; The following are movement and editing related commands I found interesting
+  ;; from Toki's `toki-editing' module from his personal config:
+  ;; /home/krisbalintona/emacs-repos/toki-emacs/site-lisp/toki-editing.el. I've
+  ;; also added prefix argument support for some many of theses commands
+
+  ;; Errors (ancillary)
+  (defun toki/bob-error ()
+    "Signal an error if point is at the beginning of buffer."
+    (when (bobp)
+      (signal 'beginning-of-buffer nil)))
+
+  (defun toki/eob-error ()
+    "Signal an error if point is and the end of buffer."
+    (when (eobp)
+      (signal 'end-of-buffer nil)))
+
+  ;; Syntax (not commands)
+  (defun toki/forward-block ()
+    "Go forward a block.
+Return the point if success.
+
+A block is a continuous region with the same syntax, which
+contains no more than 1 word.  See the implementation for
+details."
+    (unless (eobp)
+      ;; A word may actually end at a position where the syntax on both sides are
+      ;; "word", e.g., when subword-mode is enabled.
+      (let ((word-end (save-excursion (when (forward-word) (point)))))
+        (puni--forward-same-syntax word-end))))
+
+  (defun toki/backward-block ()
+    "Backward version of `toki/forward-block'."
+    (unless (bobp)
+      (let ((word-beg (save-excursion (when (forward-word -1) (point)))))
+        (puni--backward-same-syntax word-beg))))
+
+  ;; Word movement and deletion
+  (defun toki-forward-word ()
+    "A finer version of `forward-word'.
+If there's *only one* non-word char between point and next word,
+move after it.  Then jump forward by a block.  A block is a
+continuous region with the same syntax, like a word, a bunch of
+whitespaces/punctuations, etc.
+
+This doesn't fly over most punctuations, while `forward-word'
+does."
+    (interactive)
+    (toki/eob-error)
+    (when (eq (puni--syntax-char-after (1+ (point))) ?w)
+      (forward-char))
+    (toki/forward-block))
+
+  (defun toki-forward-delete-word ()
+    "Delete word forward while keeping expressions balanced."
+    (interactive)
+    (if (use-region-p)
+        (puni-delete-active-region)
+      (puni-soft-delete-by-move #'toki-forward-word nil nil nil 'jump-and-reverse-delete)))
+
+  (defun toki-backward-word ()
+    "Backward version of `toki-forward-word'."
+    (interactive)
+    (toki/bob-error)
+    (when (eq (puni--syntax-char-after (- (point) 2)) ?w)
+      (backward-char))
+    (toki/backward-block))
+
+  (defun toki-backward-delete-word ()
+    "Delete word backward while keeping expressions balanced."
+    (interactive)
+    (if (use-region-p)
+        (puni-delete-active-region)
+      (puni-soft-delete-by-move #'toki-backward-word nil nil nil 'jump-and-reverse-delete))))
 
 ;;; Avy
 ;; Quickly jump to any character
