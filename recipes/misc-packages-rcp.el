@@ -517,26 +517,69 @@ displayed."
   (electric-pair-mode)
   (electric-quote-mode))                ; For quotes in text mode
 
-;;; Sentence-navigation
-(use-package sentence-navigation
-  :general ("M-A" 'sentence-nav-backward-end
-            "M-E" 'sentence-nav-forward-end)
+;;; Segment
+;; Alternative to `sentence-navigation'. Provides sentence navigation commands
+;; that respect abbreviations, etc.
+(use-package segment
+  :straight (segment :type git :host codeberg :repo "martianh/segment")
   :custom
-  (sentence-nav-hard-wrapping t)
-  (sentence-nav-jump-to-syntax t)
-  (sentence-nav-syntax-text-objects nil) ; Only for evil users
-  (sentence-nav-abbreviation-list
-   '("[ABCDIMPSUabcdegimpsv]"
-     "l[ab]" "[eRr]d" "Ph" "[Ccp]l" "[Ll]n" "[c]o"
-     "[Oe]p" "[DJMSh]r" "[MVv]s" "[CFMPScfpw]t"
-     "alt" "[Ee]tc" "div" "es[pt]" "[Ll]td" "min"
-     "[MD]rs" "[Aa]pt" "[Aa]ve?" "[Ss]tr?"
-     "[Aa]ssn" "[Bb]lvd" "[Dd]ept" "incl" "Inst" "Prof" "Univ"
-     ;; My most common
-     "e\\.g" "i\\.e"))
+  ;; (segment-ruleset-framework 'icu4j)
+  (segment-ruleset-framework 'omegat)  ; Best one in my experience
+  ;; (segment-ruleset-framework 'okapi-alt)
   :init
-  (advice-add 'forward-sentence :override #'sentence-nav-forward)
-  (advice-add 'backward-sentence :override #'sentence-nav-backward))
+  (defun kb/forward-sentence-function (&optional arg)
+    "Move forward to next end of sentence.  With argument, repeat.
+When ARG is negative, move backward repeatedly to start of sentence.
+
+The variable `sentence-end' is a regular expression that matches ends of
+sentences.  Also, every paragraph boundary terminates sentences as well."
+    (or arg (setq arg 1))
+    (let ((opoint (point))
+          (sentence-end (sentence-end)))
+      ;; Going backward
+      (while (< arg 0)
+        (let ((pos (point))
+              par-beg par-text-beg)
+          (save-excursion
+            (start-of-paragraph-text)
+            (setq par-text-beg (point))
+            (beginning-of-line)
+            (setq par-beg (point)))
+          (if (and (re-search-backward sentence-end par-beg t)
+                   (or (< (match-end 0) pos)
+                       (re-search-backward sentence-end par-beg t)))
+              (goto-char (match-end 0))
+            (goto-char par-text-beg)))
+        ;; Added this unless clause. From the `segment' package. This makes it
+        ;; so that, if the point moved to a non-valid point, don't consider this
+        ;; move valid (by not incrementing arg)
+        (unless (segment--looking-back-forward-map segment-current-language :moving-backward)
+          (setq arg (1+ arg))))
+
+      ;; Going forward
+      (while (> arg 0)
+        (let ((par-end (save-excursion (end-of-paragraph-text) (point))))
+          (if (re-search-forward sentence-end par-end t)
+              (progn
+                (skip-chars-backward " \t\n")
+                ;; Also modified such that point ends right behind the first
+                ;; character of the next sentence
+                (unless (eq par-end (save-excursion (skip-chars-forward " \t\n" par-end) (point)))
+                  ;; `skip-chars-forward' used instead of `forward-char' to
+                  ;; accommodate more than one whitespace separating the
+                  ;; sentences
+                  (skip-chars-forward " \t\n")))
+            (goto-char par-end)))
+        (unless (save-excursion
+                  ;; Consider point having been moved behind the first character
+                  ;; of the sentence
+                  (skip-chars-backward " \t\n")
+                  (segment--looking-back-forward-map segment-current-language))
+          (setq arg (1- arg))))
+
+      (let ((npoint (constrain-to-field nil opoint t)))
+        (not (= npoint opoint)))))
+  (setq forward-sentence-function 'kb/forward-sentence-function))
 
 ;;; Recursion-indicator
 (use-package recursion-indicator
