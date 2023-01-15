@@ -204,18 +204,24 @@
   :custom
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
-   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
-                   partial-completion   ; Partial completion for file paths!
-                   orderless))))
+   '((file (styles . (basic
+                      basic-remote ; For `tramp' hostname completion with `vertico'
+                      partial-completion  ; Partial completion for file paths!
+                      orderless)))
+     ;; NOTE 2023-01-14: These are taken from Prot's config
+     (project-file (styles . (basic substring partial-completion orderless)))
+     (imenu (styles . (basic substring orderless)))
+     (kill-ring (styles . (basic substring orderless)))
+     (consult-location (styles . (basic substring orderless)))))
   (completion-styles '(orderless))
 
   (orderless-component-separator 'orderless-escapable-split-on-space)
   (orderless-matching-styles
-   '(orderless-regexp
+   '(orderless-prefixes
      orderless-flex
+     orderless-regexp
      ;; orderless-literal
      ;; orderless-initialism
-     ;; orderless-prefixes
      ;; orderless-strict-initialism
      ;; orderless-strict-leading-initialism
      ;; orderless-strict-full-initialism
@@ -225,8 +231,7 @@
    '(prot-orderless-literal-dispatcher
      prot-orderless-strict-initialism-dispatcher
      prot-orderless-flex-dispatcher
-     kb/orderless-without-literal-dispatcher
-     ))
+     kb/orderless-without-literal-dispatcher))
   :init
   (defun orderless--strict-*-initialism (component &optional anchored)
     "Match a COMPONENT as a strict initialism, optionally ANCHORED.
