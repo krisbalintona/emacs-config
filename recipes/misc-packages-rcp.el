@@ -582,6 +582,27 @@ displayed."
      writeroom-set-bottom-divider-width
      )))
 
+;;; Kb/para-split-sentences and kb/para-merge-sentences
+;; Modified from https://stackoverflow.com/a/43360152
+(defun Kb/para-split-sentences ()
+  "Separate sentences of paragraph with newlines."
+  (interactive)
+  (unless buffer-read-only
+    (save-excursion
+      (start-of-paragraph-text)
+      (while (< (point) (point-max))
+        (forward-sentence)
+        ;; Delete spaces between sentences before making new new line
+        (delete-horizontal-space)
+        ;; Don't add a new line, if already at the end of the line
+        (unless (= (line-end-position) (point))
+          (newline 2))))))
+
+(defun kb/para-merge-sentences (&optional beg end)
+  "In the active region"
+  (interactive "r")
+  (replace-regexp "\n" " " nil beg end))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil

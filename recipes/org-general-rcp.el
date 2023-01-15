@@ -744,6 +744,119 @@ If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
                      ("'" "’")))        ; Swapped these two
 
+;;;; Custom org-src-block
+;; Also see package `org-edit-indirect'. Does something similar but more
+;; versatile, relying on `edit-indirect'. However, this doesn't use native
+;; `org-src' infrastructure
+(with-eval-after-load 'org
+  ;; See `org-edit-indirect-generic-block' from `org-edit-indirect' if I want to
+  ;; expand this function to be more versatile
+  (defun kb/org-edit-paragraph-block ()
+    "Edit paragraph block at point.
+
+Like `org-edit-comment-block’.
+
+Throw an error when not at a paragraph block."
+    (interactive)
+    (let* ((element (org-element-at-point))
+           (beg (org-element-property :contents-begin element))
+           (end (org-element-property :contents-end element)))
+      (unless (and (eq (org-element-type element) 'paragraph)
+                   (org-src--on-datum-p element))
+        (user-error "Not in a paragraph block"))
+      (org-src--edit-element
+       element
+       (org-src--construct-edit-buffer-name (buffer-name) "org")
+       'org-mode
+       (lambda () (org-escape-code-in-region (point-min) (point-max)))
+       ;; (org-unescape-code-in-string (org-element-property :value element)))
+       (org-unescape-code-in-string (buffer-substring beg end)))
+      t))
+
+
+  ;; Override initial
+  (defun kb/org-edit-special (&optional arg)
+    "Call a special editor for the element at point.
+When at a table, call the formula editor with `org-table-edit-formulas'.
+When in a source code block, call `org-edit-src-code'.
+When in a fixed-width region, call `org-edit-fixed-width-region'.
+When in an export block, call `org-edit-export-block'.
+When in a comment block, call `org-edit-comment-block'.
+When in a LaTeX environment, call `org-edit-latex-environment'.
+When at an INCLUDE, SETUPFILE or BIBLIOGRAPHY keyword, visit the included file.
+When at a footnote reference, call `org-edit-footnote-reference'.
+When at a planning line call, `org-deadline' and/or `org-schedule'.
+When at an active timestamp, call `org-time-stamp'.
+When at an inactive timestamp, call `org-time-stamp-inactive'.
+On a link, call `ffap' to visit the link at point.
+
+On a paragraph, call `kb/org-edit-paragraph-block’.
+
+Otherwise, return a user error."
+    (interactive "P")
+    (let ((element (org-element-at-point)))
+      (barf-if-buffer-read-only)
+      (pcase (org-element-type element)
+        (`src-block
+         (if (not arg) (org-edit-src-code)
+           (let* ((info (org-babel-get-src-block-info))
+                  (lang (nth 0 info))
+                  (params (nth 2 info))
+                  (session (cdr (assq :session params))))
+             (if (not session) (org-edit-src-code)
+               ;; At a source block with a session and function called
+               ;; with an ARG: switch to the buffer related to the
+               ;; inferior process.
+               (switch-to-buffer
+                (funcall (intern (concat "org-babel-prep-session:" lang))
+                         session params))))))
+        (`keyword
+         (unless (member (org-element-property :key element)
+                         '("BIBLIOGRAPHY" "INCLUDE" "SETUPFILE"))
+           (user-error "No special environment to edit here"))
+         (let ((value (org-element-property :value element)))
+           (unless (org-string-nw-p value) (user-error "No file to edit"))
+           (let ((file (and (string-match "\\`\"\\(.*?\\)\"\\|\\S-+" value)
+                            (or (match-string 1 value)
+                                (match-string 0 value)))))
+             (when (org-url-p file)
+               (user-error "Files located with a URL cannot be edited"))
+             (org-link-open-from-string
+              (format "[[%s]]" (expand-file-name file))))))
+        (`table
+         (if (eq (org-element-property :type element) 'table.el)
+             (org-edit-table.el)
+           (call-interactively 'org-table-edit-formulas)))
+        ;; Only Org tables contain `table-row' type elements.
+        (`table-row (call-interactively 'org-table-edit-formulas))
+        (`example-block (org-edit-src-code))
+        (`export-block (org-edit-export-block))
+        (`comment-block (org-edit-comment-block))
+        (`fixed-width (org-edit-fixed-width-region))
+        (`latex-environment (org-edit-latex-environment))
+        (`planning
+         (let ((proplist (cadr element)))
+           (mapc #'call-interactively
+                 (remq nil
+                       (list
+                        (when (plist-get proplist :deadline) #'org-deadline)
+                        (when (plist-get proplist :scheduled) #'org-schedule))))))
+        (_
+         ;; No notable element at point.  Though, we may be at a link or
+         ;; a footnote reference, which are objects.  Thus, scan deeper.
+         (let ((context (org-element-context element)))
+           (pcase (org-element-type context)
+             (`footnote-reference (org-edit-footnote-reference))
+             (`inline-src-block (org-edit-inline-src-code))
+             (`latex-fragment (org-edit-latex-fragment))
+             (`timestamp (if (eq 'inactive (org-element-property :type context))
+                             (call-interactively #'org-time-stamp-inactive)
+                           (call-interactively #'org-time-stamp)))
+             (`link (call-interactively #'ffap))
+             (`paragraph (kb/org-edit-paragraph-block))
+             (_ (user-error "No special environment to edit here"))))))))
+  (advice-add 'org-edit-special :override 'kb/org-edit-special))
+
 ;;; org-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-general-rcp)

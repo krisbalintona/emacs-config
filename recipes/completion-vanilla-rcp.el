@@ -69,25 +69,24 @@
   :general
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
-            "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
-            "<escape>" #'minibuffer-keyboard-quit
-            "?" #'minibuffer-completion-help
-            "C-M-n" #'vertico-next-group
-            "C-M-p" #'vertico-previous-group
-            ;; Multiform toggles
-            "<backspace>" #'vertico-directory-delete-char
-            "C-w" #'vertico-directory-delete-word
-            "C-<backspace>" #'vertico-directory-delete-word
-            "RET" #'vertico-directory-enter
-            "C-i" #'vertico-quick-insert
-            "C-o" #'vertico-quick-exit
-            "M-o" #'kb/vertico-quick-embark
-            "M-G" #'vertico-multiform-grid
-            "M-F" #'vertico-multiform-flat
-            "M-R" #'vertico-multiform-reverse
-            "M-U" #'vertico-multiform-unobtrusive
-            "C-l" #'kb/vertico-multiform-flat-toggle
-            )
+   "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
+   "<escape>" #'minibuffer-keyboard-quit
+   "?" #'minibuffer-completion-help
+   "C-M-n" #'vertico-next-group
+   "C-M-p" #'vertico-previous-group
+   ;; Multiform toggles
+   "<backspace>" #'vertico-directory-delete-char
+   "C-w" #'vertico-directory-delete-word
+   "C-<backspace>" #'vertico-directory-delete-word
+   "RET" #'vertico-directory-enter
+   "C-i" #'vertico-quick-insert
+   "C-o" #'vertico-quick-exit
+   "M-o" #'kb/vertico-quick-embark
+   "M-G" #'vertico-multiform-grid
+   "M-F" #'vertico-multiform-flat
+   "M-R" #'vertico-multiform-reverse
+   "M-U" #'vertico-multiform-unobtrusive
+   "C-l" #'kb/vertico-multiform-flat-toggle)
   :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
          (minibuffer-setup . vertico-repeat-save)) ; Make sure vertico state is saved
   :custom
@@ -114,13 +113,13 @@
   ;; Prefix the current candidate with “» ”. From
   ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
   (advice-add #'vertico--format-candidate :around
-              (lambda (orig cand prefix suffix index _start)
-                (setq cand (funcall orig cand prefix suffix index _start))
-                (concat
-                 (if (= vertico--index index)
-                     (propertize "» " 'face 'vertico-current)
-                   "  ")
-                 cand))))
+                                          (lambda (orig cand prefix suffix index _start)
+                                            (setq cand (funcall orig cand prefix suffix index _start))
+                                            (concat
+                                             (if (= vertico--index index)
+                                                 (propertize "» " 'face 'vertico-current)
+                                               "  ")
+                                             cand))))
 
 ;;;; Vertico-grid
 (use-package vertico-grid
