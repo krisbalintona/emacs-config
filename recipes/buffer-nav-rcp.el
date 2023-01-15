@@ -13,22 +13,49 @@
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
   :general
+  ;; See `puni-mode-map'
   ("M-d" 'puni-forward-kill-word
    "M-DEL" 'puni-backward-kill-word
-   "C-k" 'puni-kill-line
+   "C-k" 'kb/puni-smart-kill-line
    "C-M-f" 'puni-forward-sexp
    "C-M-b" 'puni-backward-sexp
    "C-M-a" 'puni-beginning-of-sexp
    "C-M-e" 'puni-end-of-sexp
    "C-M-n" 'puni-forward-sexp-or-up-list
    "C-M-p" 'puni-backward-sexp-or-up-list
-   ;; My additional keybinds
+   ;; My additional keybinds or rebindings
    "C-M-9" 'puni-syntactic-backward-punct
    "C-M-0" 'puni-syntactic-forward-punct
    "C-M-r" 'puni-raise
-   "C-=" 'puni-expand-region)
+   "C-M-m" 'puni-split
+   "C-M-M" 'puni-splice
+   "C-M-[" 'puni-slurp-forward
+   "C-M-]" 'puni-barf-forward
+   "C-M-{" 'puni-barf-backward
+   "C-M-}" 'puni-slurp-backward
+   "C-=" 'puni-expand-region
+   [remap forward-word] 'toki-forward-word
+   [remap backward-word] 'toki-backward-word)
+  ;; From `toki-editing'
+  (:keymaps 'text-mode-map
+   [remap puni-forward-kill-word] 'toki-forward-delete-word
+   [remap puni-backward-kill-word] 'toki-backward-delete-word)
   :custom
-  (puni-confirm-when-delete-unbalanced-active-region t))
+  (puni-confirm-when-delete-unbalanced-active-region t)
+  :config
+  ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands
+  (defun kb/puni-smart-kill-line ()
+    "Kill a line forward while keeping expressions balanced.
+If nothing can be deleted, kill backward. If still nothing can be
+deleted, kill the pairs around point."
+    (interactive)
+    (let ((bounds (puni-bounds-of-list-around-point)))
+      (if (eq (car bounds) (cdr bounds))
+          (when-let ((sexp-bounds (puni-bounds-of-sexp-around-point)))
+            (puni-delete-region (car sexp-bounds) (cdr sexp-bounds) 'kill))
+        (if (eq (point) (cdr bounds))
+            (puni-backward-kill-line)
+          (puni-kill-line))))))
 
 ;;; Avy
 ;; Quickly jump to any character
