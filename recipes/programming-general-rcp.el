@@ -16,7 +16,7 @@
   :hook (prog-mode . goto-address-prog-mode)
   :config
   (global-prettify-symbols-mode)
-  
+
   (add-hook 'org-mode-hook
             #'(lambda ()
                  (add-to-list 'prettify-symbols-alist '("..." . ?…))
@@ -64,7 +64,6 @@
 
 ;;;; Hl-todo
 (use-package hl-todo
-  :after alt-comment-dwim
   :hook (after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
@@ -74,16 +73,18 @@
    "o" '(hl-todo-occur :wk "Hl-todo-occur"))
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
-  (hl-todo-text-modes '(text-mode org-mode))
-  (hl-todo-exclude-modes nil)
-  ;; Make sure to have all words in `kb/comment-keywords-coding' and
-  ;; `kb/comment-keywords-writing' in this list, otherwise those words will not
-  ;; appear in any calls to `kb/comment-dwim'.
-  (hl-todo-keyword-faces kb/comment-keyword-faces)
+  (hl-todo-text-modes '(markdown-mode text-mode))
+  (hl-todo-exclude-modes '(org-mode))   ; Interferes with org todos
   ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
   ;; hl-todo's punctuation highlighting.
   (hl-todo-require-punctuation nil)
-  (hl-todo-highlight-punctuation ""))
+  (hl-todo-highlight-punctuation "")
+  :config
+  (with-eval-after-load 'alt-comment-dwim
+    ;; Make sure to have all words in `alt-comment-dwim-keywords-coding' and
+    ;; `alt-comment-dwim-keywords-writing' in this list, otherwise those words will not
+    ;; appear in any calls to `alt-comment-dwim-dwim'.
+    (setq hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
 
 ;;;; Highlight-indent-guides
 ;; Show indicator for indentation levels (like in VS Code)

@@ -262,7 +262,7 @@
   :after magit
   :custom
   (magit-todos-item-cache t)
-  (magit-todos-keywords 'kb/comment-keyword-faces)
+  (magit-todos-keywords 'alt-comment-dwim-keyword-faces)
   (magit-todos-insert-at 'bottom)
   (magit-todos-keyword-suffix (rx " ")) ; Match the type of comments I make
   (magit-todos-branch-list 'branch)
