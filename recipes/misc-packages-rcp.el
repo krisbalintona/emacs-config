@@ -521,18 +521,29 @@ displayed."
 ;; Alternative to `sentence-navigation'. Provides sentence navigation commands
 ;; that respect abbreviations, etc.
 (use-package segment
+  :demand
   :straight (segment :type git :host codeberg :repo "martianh/segment")
+  :commands kb/forward-sentence-function
   :custom
   ;; (segment-ruleset-framework 'icu4j)
   (segment-ruleset-framework 'omegat)  ; Best one in my experience
   ;; (segment-ruleset-framework 'okapi-alt)
-  :init
+  :preface
+  (use-package pcre2el :demand)
+  :config
   (defun kb/forward-sentence-function (&optional arg)
-    "Move forward to next end of sentence.  With argument, repeat.
+    "Move forward to next end of sentence. With argument, repeat.
 When ARG is negative, move backward repeatedly to start of sentence.
 
 The variable `sentence-end' is a regular expression that matches ends of
-sentences.  Also, every paragraph boundary terminates sentences as well."
+sentences.  Also, every paragraph boundary terminates sentences as well.
+
+Uses `segment’s regexps to ignore common abbreviations (see
+`segment-ruleset-framework’).
+
+Also, when moving forward sentences, will jump the whitespace
+between the current and next sentence, i.e,leave the point before
+the first character of the next sentence."
     (or arg (setq arg 1))
     (let ((opoint (point))
           (sentence-end (sentence-end)))
