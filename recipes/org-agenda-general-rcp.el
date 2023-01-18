@@ -20,31 +20,15 @@
   :custom
   (org-agenda-files (list kb/agenda-dir))
 
-  ;; Todos
-  (org-fast-tag-selection-single-key 'expert)
-  (org-todo-keywords
-   '((sequence "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "TODO(t)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)")))
-  (org-todo-keyword-faces
-   '(("PROG" . (bold success))
-     ("ACTIVE" . org-warning)
-     ("TODO" . org-todo)
-     ("WAITING" . (shadow error))
-     ("MAYBE" . (shadow org-todo))
-     ("DONE" . (bold org-done))
-     ("CANCEL" . error)))
-  (org-log-done 'time)
-  (org-log-into-drawer t)
-  (org-highest-priority ?A)
-  (org-lowest-priority ?E)
-  (org-default-priority ?D)
-  (org-priority-faces
-   '((?A . (bold org-priority))
-     (?B . org-priority)
-     (?C . org-priority)
-     (?D . (shadow org-priority))
-     (?E . (shadow org-priority))))
-  (org-stuck-projects
-   '("+project/-DONE-CANCELLED" ("*") nil ""))
+  ;; Effort
+  (org-agenda-sort-noeffort-is-high nil)
+  (org-effort-durations
+   '(("m" . 1)
+     ("h" . 60)
+     ("d" . 1440)
+     ("w" . 10080)
+     ("mon" . 43200)
+     ("y" . 525960.0)))
 
   ;; Clocking in and out
   (org-clock-out-when-done t)
@@ -86,6 +70,10 @@
      (search todo-state-up priority-down category-keep)))
   (org-archive-subtree-save-file-p t)   ; Save archive file always
   (org-agenda-block-separator ?─)
+  (org-agenda-scheduled-leaders
+   '("Scheduled: " "Sched.%2dx: "))
+  (org-agenda-deadline-leaders
+   '("DEADLINE:  " "In %3d d.: " "%2d d. ago: "))
   (org-agenda-time-grid
    '((daily today require-timed)
      (800 1000 1200 1400 1600 1800 2000)
@@ -137,6 +125,34 @@
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :init
+  ;; Todos
+  (with-eval-after-load 'org
+    ;; Needs to be loaded after `org' to take effect
+    (setq org-fast-tag-selection-single-key 'expert
+          org-todo-keywords
+          '((sequence "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "TODO(t)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)"))
+          org-todo-keyword-faces
+          '(("PROG" . (bold success))
+            ("ACTIVE" . org-warning)
+            ("TODO" . org-todo)
+            ("WAITING" . (shadow error))
+            ("MAYBE" . (shadow org-todo))
+            ("DONE" . (bold org-done))
+            ("CANCEL" . error))
+          org-log-done 'time
+          org-log-into-drawer t
+          org-highest-priority ?A
+          org-lowest-priority ?E
+          org-default-priority ?D
+          org-priority-faces
+          '((?A . (bold org-priority))
+            (?B . org-priority)
+            (?C . org-priority)
+            (?D . (shadow org-priority))
+            (?E . (shadow org-priority)))
+          org-stuck-projects
+          '("+project/-DONE-CANCELLED" ("*") nil "")))
+
   ;; Taken from
   ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L133
   (defun kb/add-property-with-date-captured ()
