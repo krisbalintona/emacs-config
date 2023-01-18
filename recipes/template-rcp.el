@@ -32,13 +32,19 @@
   :defer 5
   :config
   (yas-global-mode)
-  
+
   (advice-add 'doom-snippets-initialize
               :after #'(lambda ()
                           "Ensure my personal snippets dir is first and therefore the
 default when creating snippets. Then start `yas-global-mode'."
                           (add-to-list 'yas-snippet-dirs (no-littering-expand-etc-file-name "yasnippet/snippets")))))
 
+;;; Consult-yasnippet
+(use-package consult-yasnippet
+  :after yasnippet
+  :general
+  ([remap yas-insert-snippet] 'consult-yasnippet
+   [remap yas-visit-snippet-file] 'consult-yasnippet-visit-snippet-file))
 
 ;;; Doom-snippets
 ;; Large library of yasnippet templates
