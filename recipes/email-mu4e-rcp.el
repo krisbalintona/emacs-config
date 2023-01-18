@@ -40,7 +40,15 @@
                                  mu4e-headers-thread-connection-prefix '("│" . "│ "))))
          (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h)
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
-         (mu4e-view-mode . visual-fill-column-mode))
+         (mu4e-view-mode . visual-fill-column-mode)
+         (after-init . (lambda ()
+                         (when (daemonp) (mu4e t))
+                         (when (require 'mu4e-alert nil t)
+                           (mu4e-alert-enable-notifications)
+                           (mu4e-alert-enable-mode-line-display)
+                           (setq mu4e-alert-modeline-formatter
+                                 'kb/mu4e-alert-mode-line-formatter)
+                           (mu4e-alert-update-mail-count-modeline)))))
   :general
   (:keymaps 'mu4e-main-mode-map
    "q" 'bury-buffer
@@ -414,8 +422,6 @@ will also be the width of all other printable characters."
 
 ;;; Mu4e-alert
 (use-package mu4e-alert
-  :hook ((after-init . mu4e-alert-enable-mode-line-display)
-         (after-init . mu4e-alert-enable-notifications))
   :custom
   (mu4e-alert-interesting-mail-query
    (concat "maildir:/personal/Inbox"
@@ -426,8 +432,6 @@ will also be the width of all other printable characters."
   (mu4e-alert-notify-repeated-mails nil)
   (mu4e-alert-set-window-urgency t)
   :config
-  (mu4e-alert-set-default-style 'libnotify)
-
   (defun kb/mu4e-alert-mode-line-formatter (mail-count)
     "Default formatter used to get the string to be displayed in the
 mode-line.
@@ -446,7 +450,8 @@ MAIL-COUNT is the count of mails for which the string is to displayed."
                            (mouse-1 . mu4e-alert-view-unread-mails)
                            (mouse-2 . mu4e-alert-view-unread-mails)
                            (mouse-3 . mu4e-alert-view-unread-mails)))))
-  (setq mu4e-alert-modeline-formatter 'kb/mu4e-alert-mode-line-formatter))
+  :config
+  (mu4e-alert-set-default-style 'libnotify))
 
 ;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
