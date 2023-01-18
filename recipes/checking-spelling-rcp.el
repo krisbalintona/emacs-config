@@ -13,6 +13,7 @@
 ;; Feature-rich spell-checker
 (use-package flyspell
   :ensure-system-package aspell
+  :diminish
   :hook ((text-mode . (lambda ()             ; Prevent conflicts
                         (unless (featurep 'wucuo)
                           (flyspell-mode))))
@@ -32,7 +33,7 @@
   (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
   (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
 
-  (flyspell-delay 1)                    ; Time to wait
+  (flyspell-delay 3)                    ; Time to wait
   (flyspell-sort-corrections t)         ; Sort candidates?
 
   (flyspell-prog-text-faces '(font-lock-string-face
@@ -52,6 +53,7 @@
 ;;; Wucuo
 ;; A complete solution to the lag of flyspell
 (use-package wucuo
+  :disabled
   :diminish
   :after flyspell
   :hook ((text-mode prog-mode) . (lambda ()
@@ -69,18 +71,18 @@
   (wucuo-modes-whose-predicate-ignored nil)
   (wucuo-spell-check-buffer-predicate
    '(lambda ()                           ; Skip spell checking under these conditions
-       (not (memq major-mode
-                  '(dired-mode
-                    log-edit-mode
-                    compilation-mode
-                    help-mode
-                    helpful-mode
-                    profiler-report-mode
-                    speedbar-mode
-                    gud-mode
-                    calc-mode
-                    Info-mode
-                    )))))
+            (not (memq major-mode
+                       '(dired-mode
+                         log-edit-mode
+                         compilation-mode
+                         help-mode
+                         helpful-mode
+                         profiler-report-mode
+                         speedbar-mode
+                         gud-mode
+                         calc-mode
+                         Info-mode
+                         )))))
   :config
   (defun kb/wucuo-mode-on ()
     "Turn wucuo mode on.  Do not use this; use `wucuo-mode' instead."
