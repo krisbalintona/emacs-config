@@ -49,6 +49,7 @@ default when creating snippets. Then start `yas-global-mode'."
 ;;; Doom-snippets
 ;; Large library of yasnippet templates
 (use-package doom-snippets
+  :disabled
   :straight (doom-snippets :type git :host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
 ;;; Tempel

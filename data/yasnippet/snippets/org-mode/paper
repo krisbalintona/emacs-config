@@ -7,6 +7,8 @@
 
 * Works Cited :ignore:\n
 
-\\newpage
-\\center\n
+#+begin_export LaTeX
+\newpage
+\center
+#+end_export
 #+print_bibliography:
