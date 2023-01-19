@@ -560,8 +560,41 @@ displayed."
        (,(rx (literal "Dist.")) ,(rx (any space) (any upper)) :break nil)
        (,(rx (seq (any punct) (any punct))) ,(rx (any space) (any lower)) :break nil)
        ;; Breaks
-       (,(rx (seq (any alnum) (literal ":"))) ,(rx (any space) (any upper)) :break t)))))
+       (,(rx (seq (any alnum) (literal ":"))) ,(rx (any space) (any upper)) :break t)
+       ((lambda () (rx bol (regexp (string-trim comment-start nil " ")))) ,(rx (any space)) :break t)))))
   :config
+  (defun kb/segment-reg-pair-car (reg-pair)
+    "Return the before-break-regexp for REG-PAIR."
+    (if (functionp (car reg-pair))
+        (funcall (car reg-pair))
+      (car reg-pair)))
+
+  (defun kb/segment-reg-pair-cadr (reg-pair)
+    "Return the after-break-regexp for REG-PAIR."
+    (if (functionp (cadr reg-pair))
+        (funcall (cadr reg-pair))
+      (cadr reg-pair)))
+
+  (defun kb/segment--test-rule-pairs (regex-alist &optional moving-backward)
+    "Return non-nil when when point is surrounded by an element in REGEX-ALIST.
+MOVING-BACKWARD makes adjustments based on where `backward-sentence' places point."
+    (cl-dolist (reg-pair regex-alist)
+      (when (and
+             (looking-back
+              (if moving-backward
+                  (concat (kb/segment-reg-pair-car reg-pair) "[[:blank:]]*")
+                (kb/segment-reg-pair-car reg-pair)))
+
+             (if moving-backward
+                 (save-excursion
+                   (forward-whitespace -1)
+                   (looking-at (kb/segment-reg-pair-cadr reg-pair)))
+               (looking-at (kb/segment-reg-pair-cadr reg-pair)))
+
+             (not (plist-get reg-pair :break)))
+        (cl-return reg-pair))))
+  (advice-add 'segment--test-rule-pairs :override #'kb/segment--test-rule-pairs)
+
   (defun kb/forward-sentence-function (&optional arg)
     "Move forward to next end of sentence. With argument, repeat.
 When ARG is negative, move backward repeatedly to start of sentence.
@@ -592,7 +625,7 @@ first character of the next sentence."
             (beginning-of-line)
             (setq par-beg (point)))
 
-          ;; The strategy here is to first find the sentence end based on the
+          ;; the strategy here is to first find the sentence end based on the
           ;; `sentence-end' regexp then `segment-current-break-rules'.
           ;; Afterwards, we compare them and `goto-char' the one closer to the
           ;; point.
@@ -607,17 +640,17 @@ first character of the next sentence."
                 (let ((closest-break-point most-negative-fixnum))
                   (cl-dolist (reg-pair segment-current-break-rules)
                     (save-excursion
-                      (when (and (re-search-backward (rx (seq (regexp (car reg-pair))
-                                                              (regexp (cadr reg-pair))))
+                      (when (and (re-search-backward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
+                                                              (regexp (kb/segment-reg-pair-cadr reg-pair))))
                                                      (or default-break-point par-beg) t)
                                  (or (< (match-end 0) pos)
-                                     (re-search-backward (rx (seq (regexp (car reg-pair))
-                                                                  (regexp (cadr reg-pair))))
+                                     (re-search-backward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
+                                                                  (regexp (kb/segment-reg-pair-cadr reg-pair))))
                                                          (or default-break-point par-beg) t))
                                  (< closest-break-point (match-end 0)))
                         ;; Change the following lines depending on where we want
                         ;; the point to end for our custom line breaks
-                        (re-search-forward (rx (any space)))
+                        (re-search-forward (rx (any space)) nil t)
                         (setq closest-break-point (match-end 0)))))
                   closest-break-point))
           (goto-char (max default-break-point segment-break-point)))
@@ -659,13 +692,14 @@ first character of the next sentence."
                 (let ((closest-break-point most-positive-fixnum))
                   (cl-dolist (reg-pair segment-current-break-rules)
                     (save-excursion
-                      (when (re-search-forward (rx (seq (regexp (car reg-pair))
-                                                        (regexp (cadr reg-pair))))
+                      (when (re-search-forward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
+                                                        (regexp (kb/segment-reg-pair-cadr reg-pair))))
                                                (or default-break-point par-end) t)
                         ;; Change the following lines depending on where we want
                         ;; the point to end
-                        (re-search-backward (rx (seq (regexp (car reg-pair))
-                                                     (any space))))
+                        (re-search-backward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
+                                                     (any space)))
+                                            nil t)
                         (setq closest-break-point (match-end 0)))))
                   closest-break-point))
           (goto-char (min default-break-point segment-break-point)))
