@@ -125,8 +125,9 @@
 ;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!
 (use-package suggest
-  :disabled
-  :general ("C-c S" '(suggest :wk "Suggest.el buffer")))
+  :general ("C-c S" '(suggest :wk "Suggest.el buffer"))
+  :custom
+  (suggest-insert-example-on-start nil))
 
 ;;; programming-elisp-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
