@@ -186,18 +186,16 @@ default lsp-passthrough."
    "^" 'cape-tex
    "&" 'cape-sgml
    "r" 'cape-rfc1345
-   "y" (cape-interactive-capf (cape-company-to-capf #'company-yasnippet))
-   )
+   "y" (cape-interactive-capf (cape-company-to-capf #'company-yasnippet)))
   ([remap dabbrev-expand] 'cape-dabbrev)
   (:keymaps 'corfu-map
    :states 'insert
    [remap evil-normal-state] '(lambda ()
                                  (interactive)
                                  (evil-normal-state)
-                                 (corfu-quit)
-                                 ))
+                                 (corfu-quit)))
   :custom
-  (cape-dabbrev-min-length 3)
+  (cape-dabbrev-min-length 2)
   :init
   ;; Elisp
   (defun kb/cape-capf-setup-elisp ()
@@ -211,8 +209,7 @@ Additionally, add `cape-file' as early as possible to the list."
     ;; I prefer this being early/first in the list
     (add-to-list 'completion-at-point-functions #'cape-file)
     (require 'company-yasnippet)
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
-    )
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
 
   ;; LSP
   (defun kb/cape-capf-setup-lsp ()
@@ -224,9 +221,9 @@ Additionally, add `cape-file' as early as possible to the list."
                           completion-at-point-functions))
     ;; TODO 2022-02-28: Maybe use `cape-wrap-predicate' to have candidates
     ;; listed when I want?
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
-    )
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
 
+  ;; Org
   (defun kb/cape-capf-setup-org ()
     (unless (string= major-mode 'org-msg-edit-mode)
       (let (result)
@@ -240,15 +237,17 @@ Additionally, add `cape-file' as early as possible to the list."
   (defun kb/cape-capf-setup-eshell ()
     (let ((result))
       (dolist (element '(pcomplete-completions-at-point cape-file) result)
-        (add-to-list 'completion-at-point-functions element))
-      ))
+        (add-to-list 'completion-at-point-functions element))))
 
   ;; Git-commit
   (defun kb/cape-capf-setup-git-commit ()
     (general-define-key
      :keymaps 'local
      :states 'insert
-     "<tab>" 'completion-at-point)      ; Keybinding for `completion-at-point'
+     "<tab>" 'completion-at-point)
+    (general-define-key
+     :keymaps 'local
+     "<tab>" 'completion-at-point)
     (let ((result))
       (dolist (element '(cape-dabbrev cape-symbol) result)
         (add-to-list 'completion-at-point-functions element))))
