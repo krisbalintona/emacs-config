@@ -520,16 +520,47 @@ displayed."
 ;;; Segment
 ;; Alternative to `sentence-navigation'. Provides sentence navigation commands
 ;; that respect abbreviations, etc.
+(use-package pcre2el)
 (use-package segment
-  :demand
   :straight (segment :type git :host codeberg :repo "martianh/segment")
   :commands kb/forward-sentence-function
   :custom
+  ;; NOTE 2023-01-18: icu4j has many more rules, but is "too thorough" for my
+  ;; tastes, so I stick with the more modest omegat and add more rules
   ;; (segment-ruleset-framework 'icu4j)
-  (segment-ruleset-framework 'omegat)  ; Best one in my experience
+  (segment-ruleset-framework 'omegat)
   ;; (segment-ruleset-framework 'okapi-alt)
-  :preface
-  (use-package pcre2el :demand)
+  (segment-custom-rules-regex-list
+   `(("English"
+      (("[JS]r\\." "[[:space:]][[:lower:]]" :break nil)
+       ("U\\.S\\." "[[:space:]][[:lower:]]" :break nil)
+       ("[[:lower:]]+\\.[])}]" "[[:space:]][[:lower:]]" :break nil)
+       ("[^\\.][[:space:]][\"“]?[A-Z]\\." "[[:space:]]" :break nil)
+       ("[Oo]p\\." "[[:space:]][[:digit:]]" :break nil)
+       ;; My regexps
+       (,(rx (seq (any space) (or (literal "p.") (literal "pp.")))) ,(rx (any space) (any digit)) :break nil)
+       (,(rx (literal "...")) ,(rx (any space) (any lower)) :break nil)
+       (,(rx (literal "etc.")) ,(rx (any space) (any lower)) :break nil)
+       (,(rx (literal "Rev.")) ,(rx (any space) (any upper)) :break nil)
+       (,(rx (literal "Jan.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Feb.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Mar.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Apr.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "May.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Jun.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Jul.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Aug.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Sep.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Oct.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Nov.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Dec.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
+       (,(rx (literal "Jr.")) ,(rx (any space) (any upper)) :break nil)
+       (,(rx (literal "J.")) ,(rx (any space) (any upper)) :break nil)
+       (,(rx (literal "Gen.")) ,(rx (any space) (any upper)) :break nil)
+       (,(rx (literal "Dist.")) ,(rx (any space) (any upper)) :break nil)
+       (,(rx (seq (any punct) (any punct))) ,(rx (any space) (any lower)) :break nil)
+       ;; Breaks
+       (,(rx (seq (any alnum) (literal ":"))) ,(rx (any space) (any upper)) :break t)))))
   :config
   (defun kb/forward-sentence-function (&optional arg)
     "Move forward to next end of sentence. With argument, repeat.
@@ -539,51 +570,109 @@ The variable `sentence-end' is a regular expression that matches ends of
 sentences.  Also, every paragraph boundary terminates sentences as well.
 
 Uses `segment’s regexps to ignore common abbreviations (see
-`segment-ruleset-framework’).
+`segment-ruleset-framework’) as well as define custom
+sentence-breaks (see `segment-custom-rules-regex-list').
 
 Also, when moving forward sentences, will jump the whitespace
-between the current and next sentence, i.e,leave the point before
-the first character of the next sentence."
+between the current and next sentence, i.e,leave the point on the
+first character of the next sentence."
     (or arg (setq arg 1))
-    (let ((opoint (point))
+    (let ((case-fold-search nil)
+          (opoint (point))
           (sentence-end (sentence-end)))
+
       ;; Going backward
       (while (< arg 0)
         (let ((pos (point))
-              par-beg par-text-beg)
+              par-beg par-text-beg
+              default-break-point segment-break-point)
           (save-excursion
             (start-of-paragraph-text)
             (setq par-text-beg (point))
             (beginning-of-line)
             (setq par-beg (point)))
-          (if (and (re-search-backward sentence-end par-beg t)
-                   (or (< (match-end 0) pos)
-                       (re-search-backward sentence-end par-beg t)))
-              (goto-char (match-end 0))
-            (goto-char par-text-beg)))
+
+          ;; The strategy here is to first find the sentence end based on the
+          ;; `sentence-end' regexp then `segment-current-break-rules'.
+          ;; Afterwards, we compare them and `goto-char' the one closer to the
+          ;; point.
+          (setq default-break-point
+                (save-excursion
+                  (if (and (re-search-backward sentence-end par-beg t)
+                           (or (< (match-end 0) pos)
+                               (re-search-backward sentence-end par-beg t)))
+                      (match-end 0)
+                    par-text-beg)))
+          (setq segment-break-point
+                (let ((closest-break-point most-negative-fixnum))
+                  (cl-dolist (reg-pair segment-current-break-rules)
+                    (save-excursion
+                      (when (and (re-search-backward (rx (seq (regexp (car reg-pair))
+                                                              (regexp (cadr reg-pair))))
+                                                     (or default-break-point par-beg) t)
+                                 (or (< (match-end 0) pos)
+                                     (re-search-backward (rx (seq (regexp (car reg-pair))
+                                                                  (regexp (cadr reg-pair))))
+                                                         (or default-break-point par-beg) t))
+                                 (< closest-break-point (match-end 0)))
+                        ;; Change the following lines depending on where we want
+                        ;; the point to end for our custom line breaks
+                        (re-search-forward (rx (any space)))
+                        (setq closest-break-point (match-end 0)))))
+                  closest-break-point))
+          (goto-char (max default-break-point segment-break-point)))
+
         ;; Added this unless clause. From the `segment' package. This makes it
-        ;; so that, if the point moved to a non-valid point, don't consider this
-        ;; move valid (by not incrementing arg)
+        ;; so that, if the point moved to a non-valid point, don't increment arg
         (unless (segment--looking-back-forward-map segment-current-language :moving-backward)
           (setq arg (1+ arg))))
 
       ;; Going forward
       (while (> arg 0)
-        (let ((par-end (save-excursion (end-of-paragraph-text) (point))))
-          (if (re-search-forward sentence-end par-end t)
-              (progn
-                (skip-chars-backward " \t\n")
-                ;; Also modified such that point ends right behind the first
-                ;; character of the next sentence
-                (unless (eq par-end (save-excursion (skip-chars-forward " \t\n" par-end) (point)))
-                  ;; `skip-chars-forward' used instead of `forward-char' to
-                  ;; accommodate more than one whitespace separating the
-                  ;; sentences
-                  (skip-chars-forward " \t\n")))
-            (goto-char par-end)))
+        (let ((par-end (save-excursion (end-of-paragraph-text) (point)))
+              default-break-point segment-break-point)
+
+          (setq default-break-point
+                (if (and
+                     (progn
+                       (re-search-forward sentence-end par-end t)
+                       ;; `forward-sentence-default-function' leaves the point
+                       ;; at the end of a line when in the middle of a paragraph
+                       ;; there is a newline character after a sentence. Without
+                       ;; the following line, the point will end after any
+                       ;; whitespace, neglecting any newline characters. The
+                       ;; only case where this shouldn't be done is when we are
+                       ;; at the beginning of the paragraph, in which case this
+                       ;; would lead to going backward a line
+                       (unless (eq (save-excursion (start-of-paragraph-text) (point))
+                                   (point))
+                         (skip-chars-backward "\n")))
+                     ;; If the point hasn't moved, and the above is non-nil,
+                     ;; then we are in between the final full sentence and the
+                     ;; end of the paragraph (i.e. ahead of us is an incomplete
+                     ;; sentence followed by the end of a paragraph). In this
+                     ;; case, then just go to the end of the paragraph
+                     (not (eq (point) opoint)))
+                    (point)
+                  par-end))
+          (setq segment-break-point
+                (let ((closest-break-point most-positive-fixnum))
+                  (cl-dolist (reg-pair segment-current-break-rules)
+                    (save-excursion
+                      (when (re-search-forward (rx (seq (regexp (car reg-pair))
+                                                        (regexp (cadr reg-pair))))
+                                               (or default-break-point par-end) t)
+                        ;; Change the following lines depending on where we want
+                        ;; the point to end
+                        (re-search-backward (rx (seq (regexp (car reg-pair))
+                                                     (any space))))
+                        (setq closest-break-point (match-end 0)))))
+                  closest-break-point))
+          (goto-char (min default-break-point segment-break-point)))
+
         (unless (save-excursion
                   ;; Consider point having been moved behind the first character
-                  ;; of the sentence
+                  ;; of the sentence by moving back
                   (skip-chars-backward " \t\n")
                   (segment--looking-back-forward-map segment-current-language))
           (setq arg (1- arg))))
