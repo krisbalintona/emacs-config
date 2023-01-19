@@ -26,27 +26,29 @@
    "C-," nil
    "C-." nil
    "C-;" nil
-   "C-M-i" nil
    "C-c $" nil)
   :custom
-  (flyspell-use-meta-tab nil)           ; Dumb...
-  (flyspell-issue-message-flag nil)     ; Disable to prevent massive slowdown
-  (flyspell-issue-welcome-flag nil)     ; Don't display welcome message
+  (flyspell-use-meta-tab nil)
 
-  (flyspell-delay 3)                    ; Time to wait
-  (flyspell-sort-corrections t)         ; Sort candidates?
+  (flyspell-issue-message-flag nil)
+  (flyspell-issue-welcome-flag nil)
+  (flyspell-consider-dash-as-word-delimiter-flag t)
+
+  (flyspell-delay 3)
+  (flyspell-sort-corrections t)
 
   (flyspell-prog-text-faces '(font-lock-string-face
                               font-lock-comment-face
                               font-lock-doc-face
                               tree-sitter-hl-face:string
-                              ;; tree-sitter-hl-face:string.special ; For things like regexps
+                              tree-sitter-hl-face:string.special ; For things like regexps
                               tree-sitter-hl-face:comment
                               tree-sitter-hl-face:doc
                               ))
 
   ;; Personal dictionary
-  (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev file (`abbrev-mode')
+  (flyspell-abbrev-p t) ; Save changes made by flyspell to abbrev file
+  (flyspell-use-global-abbrev-table-p nil)
   (ispell-personal-dictionary (no-littering-expand-var-file-name "flyspell/flyspell-ispell-personal-dict-en"))
   (ispell-extra-args (list "--sug-mode=ultra" "--lang=en_US" "--camel-case")))
 
