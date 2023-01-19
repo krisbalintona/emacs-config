@@ -560,8 +560,11 @@ displayed."
        (,(rx (literal "Dist.")) ,(rx (any space) (any upper)) :break nil)
        (,(rx (seq (any punct) (any punct))) ,(rx (any space) (any lower)) :break nil)
        ;; Breaks
-       (,(rx (seq (any alnum) (literal ":"))) ,(rx (any space) (any upper)) :break t)
-       ((lambda () (rx bol (regexp (string-trim comment-start nil " ")))) ,(rx (any space)) :break t)))))
+       (,(rx (seq (or (any alnum) (any punct)) (literal ":"))) ,(rx (any space) (any upper)) :break t)
+       ((lambda () (rx (regexp (string-trim comment-start nil " "))))
+        ,(rx (seq (any space) (or (any alnum) (any punct)))) :break t)
+       (,(rx bol (or (literal "+") (literal "-") (literal "*"))) ,(rx (seq (any space) (any alnum))) :break t)
+       ))))
   :config
   (defun kb/segment-reg-pair-car (reg-pair)
     "Return the before-break-regexp for REG-PAIR."
@@ -666,37 +669,38 @@ first character of the next sentence."
               default-break-point segment-break-point)
 
           (setq default-break-point
-                (if (and
-                     (progn
+                (save-excursion
+                  (if (and
                        (re-search-forward sentence-end par-end t)
-                       ;; `forward-sentence-default-function' leaves the point
-                       ;; at the end of a line when in the middle of a paragraph
-                       ;; there is a newline character after a sentence. Without
-                       ;; the following line, the point will end after any
-                       ;; whitespace, neglecting any newline characters. The
-                       ;; only case where this shouldn't be done is when we are
-                       ;; at the beginning of the paragraph, in which case this
-                       ;; would lead to going backward a line
-                       (unless (eq (save-excursion (start-of-paragraph-text) (point))
-                                   (point))
-                         (skip-chars-backward "\n")))
-                     ;; If the point hasn't moved, and the above is non-nil,
-                     ;; then we are in between the final full sentence and the
-                     ;; end of the paragraph (i.e. ahead of us is an incomplete
-                     ;; sentence followed by the end of a paragraph). In this
-                     ;; case, then just go to the end of the paragraph
-                     (not (eq (point) opoint)))
-                    (point)
-                  par-end))
+                       ;; If the point hasn't moved, and the above is non-nil,
+                       ;; then we are in between the final full sentence and the
+                       ;; end of the paragraph (i.e. ahead of us is an
+                       ;; incomplete sentence followed by the end of a
+                       ;; paragraph). In this case, then just go to the end of
+                       ;; the paragraph
+                       (not (eq (point) opoint)))
+                      ;; The only case when I want to leave the point at the end
+                      ;; of the current sentence is when a newline lies between
+                      ;; two sentences in the same paragraph. With this, ensure
+                      ;; point is left at the end of the current sentence rather
+                      ;; at the beginning of the next sentence. If the default
+                      ;; behavior is desired, remove the wrapping when clause;
+                      ;; if the point should always be left at the beginning of
+                      ;; the next sentence, replace the progn with (point)
+                      (progn (when (bolp) (skip-chars-backward " \t\n")) (point))
+                    par-end)))
           (setq segment-break-point
                 (let ((closest-break-point most-positive-fixnum))
                   (cl-dolist (reg-pair segment-current-break-rules)
                     (save-excursion
-                      (when (re-search-forward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
-                                                        (regexp (kb/segment-reg-pair-cadr reg-pair))))
-                                               (or default-break-point par-end) t)
+                      (when (and (re-search-forward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
+                                                             (regexp (kb/segment-reg-pair-cadr reg-pair))))
+                                                    (or default-break-point par-end) t)
+                                 (> closest-break-point (match-end 0)))
                         ;; Change the following lines depending on where we want
-                        ;; the point to end
+                        ;; the point to end. The following is for my own
+                        ;; preference in behavior. Leave the point at the
+                        ;; beginning of the next sentence.
                         (re-search-backward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
                                                      (any space)))
                                             nil t)
