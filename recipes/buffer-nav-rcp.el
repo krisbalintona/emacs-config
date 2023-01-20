@@ -34,6 +34,7 @@
    "C-M-[" 'puni-slurp-backward
    "C-M-{" 'puni-barf-backward
    "C-=" 'puni-expand-region
+   [remap transpose-sexps] 'puni-transpose
    [remap forward-word] 'toki-forward-word
    [remap backward-word] 'toki-backward-word)
   ;; From `toki-editing'
