@@ -15,9 +15,9 @@
 ;; Set better default package paths
 (require 'recentf)
 (straight-use-package 'no-littering)
-(require 'no-littering)
 (setq no-littering-etc-directory (expand-file-name "data/" user-emacs-directory) ; Config files
       no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
+(require 'no-littering)                 ; Put after setting the variables I want
 
 ;;; Enable all disabled commands
 (customize-set-variable disabled-command-function nil "Enable all commands")
