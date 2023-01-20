@@ -94,7 +94,6 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  (general-chord "] ") 'kb/open-line-below-insert)
 
 ;;; Other
-
 (defun kb/restart-or-save-and-kill (arg)
   "Restart Emacs.
 If called with `universal-argument’, just
@@ -106,7 +105,8 @@ If called with `universal-argument’, just
 
 (general-define-key
  (general-chord "xx") 'save-buffer
- [remap save-buffers-kill-terminal] 'kb/restart-or-save-and-kill)
+ [remap save-buffers-kill-terminal] 'kb/restart-or-save-and-kill
+ "C-z" 'goto-last-change)
 
 ;;; keybinds-native-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
