@@ -15,7 +15,6 @@
   ;; NOTE 2021-08-19: Can't use `ensure-system-package' becuase the installation
   ;; of `languagetool' involves many steps (unless on Arch).
   :if (system-packages-package-installed-p "languagetool")
-  :general ("C-c g" '(hydra:langtool/body :wk "Langtool"))
   :custom
   (langtool-default-language "en-US")
   (langtool-autoshow-message-function 'langtool-autoshow-detail-popup)
@@ -48,11 +47,11 @@
                        ("Correct grammar"
                         (("b" #'langtool-check-buffer "Check")
                          ("c" #'langtool-correct-buffer "Correct")
-                         ("d" #'langtool-check-done "Done"))
-                        )))
+                         ("d" #'langtool-check-done "Done")))))
 
 ;;; Flymake-languagetool
 (use-package flymake-languagetool
+  :hook ((text-mode LaTeX-mode org-mode markdown-mode) . flymake-languagetool-load)
   :general (:keymaps 'flymake-mode-map
             (general-chord "``") 'flymake-languagetool-correct-dwim)
   :custom
@@ -63,10 +62,19 @@
   (flymake-languagetool-active-modes
    '(text-mode latex-mode org-mode markdown-mode message-mode))
   (flymake-languagetool-check-spelling nil)
-  :config
   ;; See https://community.languagetool.org/rule/list?lang=en for IDs
-  (add-to-list 'flymake-languagetool-disabled-rules "WHITESPACE_RULE")
-  (add-to-list 'flymake-languagetool-disabled-rules "DATE_NEW_YEAR"))
+  (flymake-languagetool-disabled-rules
+   '("DATE_NEW_YEAR" "WHITESPACE_RULE" "ARROWS"))
+  :config
+  ;; This fixes the errors that come in narrowed buffers
+  (defun kb/flymake-languagetool--ignore-at-pos-p (pos src-buf
+                                                       faces-to-ignore)
+    "Return non-nil if faces at POS in SRC-BUF intersect FACES-TO-IGNORE."
+    (when (and (<= (point-min) pos) (<= pos (point-max)))
+      (let ((x (get-text-property pos 'face src-buf)))
+        (cl-intersection faces-to-ignore (ensure-list x)))))
+  (advice-add 'flymake-languagetool--ignore-at-pos-p
+              :override 'kb/flymake-languagetool--ignore-at-pos-p))
 
 ;;; Lsp-grammarly
 (use-package lsp-grammarly
