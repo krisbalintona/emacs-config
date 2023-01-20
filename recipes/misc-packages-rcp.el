@@ -522,7 +522,9 @@ displayed."
 ;; that respect abbreviations, etc.
 (use-package pcre2el)
 (use-package segment
-  :straight (segment :type git :host codeberg :repo "martianh/segment")
+  :straight (segment :type git :host codeberg :repo "martianh/segment"
+                     ;; Need more than just elisp files
+                     :files ("*"))
   :commands kb/forward-sentence-function
   :custom
   ;; NOTE 2023-01-18: icu4j has many more rules, but is "too thorough" for my
@@ -560,22 +562,47 @@ displayed."
        (,(rx (literal "Dist.")) ,(rx (any space) (any upper)) :break nil)
        (,(rx (seq (any punct) (any punct))) ,(rx (any space) (any lower)) :break nil)
        ;; Breaks
-       (,(rx (seq (or (any alnum) (any punct)) (literal ":"))) ,(rx (any space) (any upper)) :break t)
-       ((lambda () (rx (regexp (string-trim comment-start comment-padding))))
-        ,(rx (seq (regexp comment-padding) (or (any alnum) (any punct)))) :break t)
+       (,(rx (seq (or (any alnum) (any punct)) (literal ":"))) ,(rx (seq (any space) (any upper))) :break t)
+       ((lambda () (rx (regexp comment-start)))
+        (lambda () (rx (seq (regexp comment-padding) (or (any alnum) (any punct))))) :break t)
        (,(rx bol (or (literal "+") (literal "-") (literal "*"))) ,(rx (seq (any space) (any alnum))) :break t)
-       ))))
+       (,(rx (seq bol (or (literal "+") (literal "-") (literal "*")) (any space))) ,(rx anychar) :break t)
+       (,(rx (seq bol (any digit) (or (literal ".") (literal ")")) (any space))) ,(rx anychar) :break t)))))
+  :init
+  (setq forward-sentence-function 'kb/forward-sentence-function)
   :config
+  ;; Without manual reevaluation of `segment--get-ruleset-by-lang', things break
+  ;; for some reason on startup...
+  (defun segment--get-ruleset-by-lang (language converted-file-set)
+    "Get ruleset for LANGUAGE from CONVERTED-FILE-SET."
+    (dolist (x converted-file-set)
+      (when (equal language
+                   (car x))
+        (cl-return x))))
+
+  ;; Do this to make sure ruleset is up to date upon first invocation of a
+  ;; sentence movement command
+  (segment--build-rule-list)
+
+  ;; My own code below
   (defun kb/segment-reg-pair-car (reg-pair)
-    "Return the before-break-regexp for REG-PAIR."
+    "Return the before-break-regexp for REG-PAIR.
+REG-PAIR can either be a regexp or a function that returns a
+regexp. If the function returns nil, then nothing is matched
+instead."
     (if (functionp (car reg-pair))
-        (funcall (car reg-pair))
+        ;; If function returns nil, match nothing instead
+        (or (funcall (car reg-pair)) (rx unmatchable))
       (car reg-pair)))
 
   (defun kb/segment-reg-pair-cadr (reg-pair)
-    "Return the after-break-regexp for REG-PAIR."
+    "Return the after-break-regexp for REG-PAIR.
+REG-PAIR can either be a regexp or a function that returns a
+regexp. If the function returns nil, then nothing is matched
+instead."
     (if (functionp (cadr reg-pair))
-        (funcall (cadr reg-pair))
+        ;; If function returns nil, match nothing instead
+        (or (funcall (cadr reg-pair)) (rx unmatchable))
       (cadr reg-pair)))
 
   (defun kb/segment--test-rule-pairs (regex-alist &optional moving-backward)
@@ -612,6 +639,7 @@ sentence-breaks (see `segment-custom-rules-regex-list').
 Also, when moving forward sentences, will jump the whitespace
 between the current and next sentence, i.e,leave the point on the
 first character of the next sentence."
+    (require 'segment)
     (or arg (setq arg 1))
     (let ((case-fold-search nil)
           (opoint (point))
@@ -667,9 +695,10 @@ first character of the next sentence."
                                  (< closest-break-point (match-end 0)))
                         ;; Change the following lines depending on where we want
                         ;; the point to end for our custom line breaks
-                        (re-search-forward (rx (any space))
-                                           (save-excursion (forward-word) (point)) t)
-                        (setq closest-break-point (match-end 0)))))
+                        (re-search-forward (rx (regexp (kb/segment-reg-pair-car reg-pair))) nil t)
+                        (goto-char (match-end 0))
+                        (skip-chars-forward " \t")
+                        (setq closest-break-point (point)))))
                   closest-break-point))
           (goto-char (max default-break-point segment-break-point)))
 
@@ -724,18 +753,17 @@ first character of the next sentence."
                         ;; the point to end. The following is for my own
                         ;; preference in behavior. Leave the point at the
                         ;; beginning of the next sentence.
-                        (re-search-backward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
-                                                     (any space)))
-                                            nil t)
-                        (setq closest-break-point (match-end 0)))))
+                        (re-search-backward (rx (regexp (kb/segment-reg-pair-car reg-pair))) nil t)
+                        (goto-char (match-end 0))
+                        (skip-chars-forward " \t")
+                        (setq closest-break-point (point)))))
                   closest-break-point))
           (goto-char (min default-break-point segment-break-point)))
 
         (setq arg (1- arg)))
 
       (let ((npoint (constrain-to-field nil opoint t)))
-        (not (= npoint opoint)))))
-  (setq forward-sentence-function 'kb/forward-sentence-function))
+        (not (= npoint opoint))))))
 
 ;;; Recursion-indicator
 (use-package recursion-indicator
