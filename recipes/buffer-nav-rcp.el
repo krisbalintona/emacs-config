@@ -135,12 +135,19 @@ does."
 ;;; Avy
 ;; Quickly jump to any character
 (use-package avy
-  :chords (("//" .  avy-goto-word-1)
-           ("''" . avy-goto-char))
+  :commands kb/avy-goto-parens
+  :general
+  ;; Also consider `avy-goto-char-timer'
+  ("C-;" 'avy-goto-word-or-subword-1
+   "C-:" 'avy-goto-char-2)
+  (:keymaps '(emacs-lisp-mode-map lisp-interaction-mode-map)
+   "C-:" 'kb/avy-goto-parens)
   :custom
   (avy-all-windows nil)                 ; Scope
-  (avy-keys                             ; Used for letter combinations
-   '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (avy-case-fold-search nil)
+  (avy-single-candidate-jump nil)
+  (avy-style 'at-full)
+  (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (avy-dispatch-alist ; Avy actions (first narrow so letter combinations appear)
    '((?x . avy-action-kill-move)
      (?X . avy-action-kill-stay)
@@ -153,12 +160,32 @@ does."
      (?z . avy-action-zap-to-char)
      ;; New, custom actions
      (?. . avy-action-embark)
-     (?H . avy-action-help)
-     (?D . avy-action-define)
-     ))
-  :init
-  ;; Additional avy actions. Inspired or taken from
+     (? . avy-action-help)
+     (? . avy-action-define)))
+  (avy-orders-alist
+   '((avy-goto-char . kb/avy-order-farthest)
+     (avy-goto-char-2 . kb/avy-order-farthest)
+     (avy-goto-word-0 . kb/avy-order-farthest)
+     (avy-goto-word-1 . kb/avy-order-farthest)
+     (avy-goto-char-timer . kb/avy-order-farthest)
+     (kb/avy-goto-parens . kb/avy-order-farthest)))
+  :config
+  (defun kb/avy-order-farthest (x)
+    (- (abs (- (if (numberp (car x))
+                   (car x)
+                 (caar x))
+               (point)))))
+
+  ;; Taken from the avy wiki
+  (defun kb/avy-goto-parens ()
+    "Go to an open or close parens."
+    (interactive)
+    (let ((avy-command this-command))   ; for look up in avy-orders-alist
+      (avy-jump (rx (+ (or (literal "(") (literal ")")))))))
+
+  ;; Additional avy dispatch actions. Most are inspired or taken from
   ;; https://karthinks.com/software/avy-can-do-anything/
+
   ;; Embark
   (defun avy-action-embark (pt)
     (unwind-protect
@@ -182,28 +209,23 @@ does."
     t)
 
   ;; Dictionary
-  (defun dictionary-search-dwim (&optional arg)
-    "Search for definition of word at point. If region is active,
-search for contents of region instead. If called with a prefix
-argument, query for word to search."
-    (interactive "P")
-    (if arg
-        (dictionary-search nil)
-      (if (use-region-p)
-          (dictionary-search (buffer-substring-no-properties
-                              (region-beginning)
-                              (region-end)))
-        (if (thing-at-point 'word)
-            (dictionary-lookup-definition)
-          (dictionary-search-dwim '(4))))))
   (defun avy-action-define (pt)
+    (require 'checking-words-rcp)
     (goto-char pt)
-    (dictionary-search-dwim)
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
+    (kb/dictionary-at-point)
+    ;; If with `universal-arg', don't switch to help buffer
+    (when current-prefix-arg
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
     t)
-  )
 
+  ;; Faces
+  (when (featurep 'modus-themes)
+    ;; Don't bold so text isn't shifted much
+    (set-face-attribute 'avy-lead-face nil :inherit 'modus-themes-reset-soft)
+    (set-face-attribute 'avy-lead-face-0 nil :inherit 'modus-themes-reset-soft)
+    (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
+    (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft)))
 ;;; Link-hint
 ;; Open links quickly
 (use-package link-hint
