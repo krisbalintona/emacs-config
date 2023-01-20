@@ -13,46 +13,51 @@
 ;;;; Prog-mode
 (use-package prog-mode
   :straight nil
-  :hook (prog-mode . goto-address-prog-mode)
+  :hook ((prog-mode . goto-address-prog-mode)
+         ((window-setup after-make-frame) . global-prettify-symbols-mode)
+         ((text-mode markdown-mode org-mode) .
+          (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
+  :init
+  (defun kb/prettify-symbols-compose-p (_start _end _match)
+    "Compose the MATCH in all but comments or strings."
+    (not (nth 8 (syntax-ppss))))
   :config
-  (global-prettify-symbols-mode)
-
   (add-hook 'org-mode-hook
-            #'(lambda ()
-                 (add-to-list 'prettify-symbols-alist '("..." . ?…))
-                 (add-to-list 'prettify-symbols-alist '("--" . ?–))
-                 (add-to-list 'prettify-symbols-alist '("---" . ?—))
-                 (add-to-list 'prettify-symbols-alist '("->" . ?➡))
-                 (add-to-list 'prettify-symbols-alist '("<-" . ?⬅))))
+            (lambda ()
+              (add-to-list 'prettify-symbols-alist '("..." . ?…))
+              (add-to-list 'prettify-symbols-alist '("--" . ?–))
+              (add-to-list 'prettify-symbols-alist '("---" . ?—))
+              (add-to-list 'prettify-symbols-alist '("->" . ?➡))
+              (add-to-list 'prettify-symbols-alist '("<-" . ?⬅))))
   (add-hook 'latex-mode-hook
-            #'(lambda ()
-                 (add-to-list 'prettify-symbols-alist '("\\Dashv" . ?⫤))
-                 (add-to-list 'prettify-symbols-alist '("\\DashVDash" . ?⟚))
-                 (add-to-list 'prettify-symbols-alist '("\\dashVdash" . ?⊢))
-                 (delete '("--" . 8211) prettify-symbols-alist)
-                 (delete '("---" . 8212) prettify-symbols-alist)
-                 ;; For `lplfitch'. Slightly higher than `\vdots'. Using the
-                 ;; `\pline{\vdots}' results in the ellipses not being centered
-                 ;; on the line.
-                 (add-to-list 'prettify-symbols-alist '("\\ellipsesline" . ?⋮))
-                 ;; Circled numbers from the pifont package
-                 (add-to-list 'prettify-symbols-alist '("\\ding{192}" . ?①))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{193}" . ?②))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{194}" . ?③))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{195}" . ?④))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{196}" . ?⑤))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{197}" . ?⑥))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{198}" . ?⑦))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{199}" . ?⑧))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{200}" . ?⑨))
-                 (add-to-list 'prettify-symbols-alist '("\\ding{201}" . ?⑩))
-                 ;; Angle brackets for text (non-math)
-                 (add-to-list 'prettify-symbols-alist '("\\textlangle" . 10216))
-                 (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217))))
+            (lambda ()
+              (add-to-list 'prettify-symbols-alist '("\\Dashv" . ?⫤))
+              (add-to-list 'prettify-symbols-alist '("\\DashVDash" . ?⟚))
+              (add-to-list 'prettify-symbols-alist '("\\dashVdash" . ?⊢))
+              (delete '("--" . 8211) prettify-symbols-alist)
+              (delete '("---" . 8212) prettify-symbols-alist)
+              ;; For `lplfitch'. Slightly higher than `\vdots'. Using the
+              ;; `\pline{\vdots}' results in the ellipses not being centered
+              ;; on the line.
+              (add-to-list 'prettify-symbols-alist '("\\ellipsesline" . ?⋮))
+              ;; Circled numbers from the pifont package
+              (add-to-list 'prettify-symbols-alist '("\\ding{192}" . ?①))
+              (add-to-list 'prettify-symbols-alist '("\\ding{193}" . ?②))
+              (add-to-list 'prettify-symbols-alist '("\\ding{194}" . ?③))
+              (add-to-list 'prettify-symbols-alist '("\\ding{195}" . ?④))
+              (add-to-list 'prettify-symbols-alist '("\\ding{196}" . ?⑤))
+              (add-to-list 'prettify-symbols-alist '("\\ding{197}" . ?⑥))
+              (add-to-list 'prettify-symbols-alist '("\\ding{198}" . ?⑦))
+              (add-to-list 'prettify-symbols-alist '("\\ding{199}" . ?⑧))
+              (add-to-list 'prettify-symbols-alist '("\\ding{200}" . ?⑨))
+              (add-to-list 'prettify-symbols-alist '("\\ding{201}" . ?⑩))
+              ;; Angle brackets for text (non-math)
+              (add-to-list 'prettify-symbols-alist '("\\textlangle" . 10216))
+              (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217))))
   (add-hook 'python-mode-hook
-            #'(lambda ()
-                 (add-to-list 'prettify-symbols-alist '("->" . ?»))
-                 (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
+            (lambda ()
+              (add-to-list 'prettify-symbols-alist '("->" . ?»))
+              (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
 
 ;;;; Hl-line
 (use-package hl-line
