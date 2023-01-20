@@ -27,8 +27,8 @@
    "C-M-9" 'puni-syntactic-backward-punct
    "C-M-0" 'puni-syntactic-forward-punct
    "C-M-r" 'puni-raise
-   "C-M-m" 'puni-split
-   "C-M-S-m" 'puni-splice
+   "C-M-S-m" 'puni-split
+   "C-M-m" 'puni-splice
    "C-M-]" 'puni-slurp-forward
    "C-M-}" 'puni-barf-forward
    "C-M-[" 'puni-slurp-backward
