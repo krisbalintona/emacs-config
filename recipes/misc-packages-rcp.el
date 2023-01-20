@@ -561,8 +561,8 @@ displayed."
        (,(rx (seq (any punct) (any punct))) ,(rx (any space) (any lower)) :break nil)
        ;; Breaks
        (,(rx (seq (or (any alnum) (any punct)) (literal ":"))) ,(rx (any space) (any upper)) :break t)
-       ((lambda () (rx (regexp (string-trim comment-start nil " "))))
-        ,(rx (seq (any space) (or (any alnum) (any punct)))) :break t)
+       ((lambda () (rx (regexp (string-trim comment-start comment-padding))))
+        ,(rx (seq (regexp comment-padding) (or (any alnum) (any punct)))) :break t)
        (,(rx bol (or (literal "+") (literal "-") (literal "*"))) ,(rx (seq (any space) (any alnum))) :break t)
        ))))
   :config
@@ -628,17 +628,31 @@ first character of the next sentence."
             (beginning-of-line)
             (setq par-beg (point)))
 
-          ;; the strategy here is to first find the sentence end based on the
+          ;; The strategy here is to first find the sentence end based on the
           ;; `sentence-end' regexp then `segment-current-break-rules'.
           ;; Afterwards, we compare them and `goto-char' the one closer to the
           ;; point.
           (setq default-break-point
                 (save-excursion
-                  (if (and (re-search-backward sentence-end par-beg t)
-                           (or (< (match-end 0) pos)
-                               (re-search-backward sentence-end par-beg t)))
-                      (match-end 0)
-                    par-text-beg)))
+                  (let ((final-pos
+                         (if (and (re-search-backward sentence-end par-beg t)
+                                  (or (< (match-end 0) pos)
+                                      (re-search-backward sentence-end par-beg t)))
+                             (match-end 0)
+                           par-text-beg)))
+                    ;; The following while loop causes further movement if the
+                    ;; initial movement landed us on a non-breaking sentence end
+                    ;; regexp (e.g. and abbreviation) recognized by
+                    ;; `segment--looking-back-forward-map'
+                    (while (save-excursion
+                             (goto-char final-pos)
+                             (segment--looking-back-forward-map segment-current-language :moving-backward))
+                      (if (and (re-search-backward sentence-end par-beg t)
+                               (or (< (match-end 0) pos)
+                                   (re-search-backward sentence-end par-beg t)))
+                          (setq final-pos (match-end 0))
+                        (setq final-pos par-text-beg)))
+                    final-pos)))
           (setq segment-break-point
                 (let ((closest-break-point most-negative-fixnum))
                   (cl-dolist (reg-pair segment-current-break-rules)
@@ -653,15 +667,13 @@ first character of the next sentence."
                                  (< closest-break-point (match-end 0)))
                         ;; Change the following lines depending on where we want
                         ;; the point to end for our custom line breaks
-                        (re-search-forward (rx (any space)) nil t)
+                        (re-search-forward (rx (any space))
+                                           (save-excursion (forward-word) (point)) t)
                         (setq closest-break-point (match-end 0)))))
                   closest-break-point))
           (goto-char (max default-break-point segment-break-point)))
 
-        ;; Added this unless clause. From the `segment' package. This makes it
-        ;; so that, if the point moved to a non-valid point, don't increment arg
-        (unless (segment--looking-back-forward-map segment-current-language :moving-backward)
-          (setq arg (1+ arg))))
+        (setq arg (1+ arg)))
 
       ;; Going forward
       (while (> arg 0)
@@ -679,15 +691,26 @@ first character of the next sentence."
                        ;; paragraph). In this case, then just go to the end of
                        ;; the paragraph
                        (not (eq (point) opoint)))
-                      ;; The only case when I want to leave the point at the end
-                      ;; of the current sentence is when a newline lies between
-                      ;; two sentences in the same paragraph. With this, ensure
-                      ;; point is left at the end of the current sentence rather
-                      ;; at the beginning of the next sentence. If the default
-                      ;; behavior is desired, remove the wrapping when clause;
-                      ;; if the point should always be left at the beginning of
-                      ;; the next sentence, replace the progn with (point)
-                      (progn (when (bolp) (skip-chars-backward " \t\n")) (point))
+                      (progn
+                        ;; Continue moving forward sentences (defined by
+                        ;; `sentence-end') until
+                        ;; `segment--looking-back-forward-map' considers the
+                        ;; sentence break a valid one
+                        (while (save-excursion
+                                 ;; Consider point having been moved to the
+                                 ;; first character of the sentence by moving
+                                 ;; backward
+                                 (skip-chars-backward " \t\n")
+                                 (segment--looking-back-forward-map segment-current-language))
+                          (re-search-forward sentence-end par-end t))
+                        ;; The only case when I want to leave the point at the
+                        ;; end of the current sentence is when a newline lies
+                        ;; between two sentences in the same paragraph. With the
+                        ;; following when clause, ensure point is left at the
+                        ;; end of the current sentence rather than at the
+                        ;; beginning of the next sentence.
+                        (when (bolp) (skip-chars-backward " \t\n"))
+                        (point))
                     par-end)))
           (setq segment-break-point
                 (let ((closest-break-point most-positive-fixnum))
@@ -708,12 +731,7 @@ first character of the next sentence."
                   closest-break-point))
           (goto-char (min default-break-point segment-break-point)))
 
-        (unless (save-excursion
-                  ;; Consider point having been moved behind the first character
-                  ;; of the sentence by moving back
-                  (skip-chars-backward " \t\n")
-                  (segment--looking-back-forward-map segment-current-language))
-          (setq arg (1- arg))))
+        (setq arg (1- arg)))
 
       (let ((npoint (constrain-to-field nil opoint t)))
         (not (= npoint opoint)))))
