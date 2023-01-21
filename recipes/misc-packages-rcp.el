@@ -731,7 +731,11 @@ first character of the next sentence."
                                  ;; backward
                                  (skip-chars-backward " \t\n")
                                  (segment--looking-back-forward-map segment-current-language))
-                          (re-search-forward sentence-end par-end t))
+                          (unless (re-search-forward sentence-end par-end t)
+                            ;; If no other sentence is found in the rest of the
+                            ;; paragraph, then just leave the point at the end
+                            ;; of the paragraph
+                            (goto-char par-end)))
                         ;; The only case when I want to leave the point at the
                         ;; end of the current sentence is when a newline lies
                         ;; between two sentences in the same paragraph. With the
