@@ -563,8 +563,8 @@ displayed."
        (,(rx (seq (any punct) (any punct))) ,(rx (any space) (any lower)) :break nil)
        ;; Breaks
        (,(rx (seq (or (any alnum) (any punct)) (literal ":"))) ,(rx (seq (any space) (any upper))) :break t)
-       ((lambda () (rx (regexp comment-start)))
-        (lambda () (rx (seq (regexp comment-padding) (or (any alnum) (any punct))))) :break t)
+       ((lambda () (rx (regexp (when comment-start (string-trim comment-start (or comment-padding " "))))))
+        (lambda () (when comment-start (rx (seq (* (regexp (or comment-padding " "))) (any alnum))))) :break t)
        (,(rx bol (or (literal "+") (literal "-") (literal "*"))) ,(rx (seq (any space) (any alnum))) :break t)
        (,(rx (seq bol (or (literal "+") (literal "-") (literal "*")) (any space))) ,(rx anychar) :break t)
        (,(rx (seq bol (any digit) (or (literal ".") (literal ")")) (any space))) ,(rx anychar) :break t)))))
