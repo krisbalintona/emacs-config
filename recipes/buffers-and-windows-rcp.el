@@ -70,7 +70,7 @@
       (slot . 2)
       (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
-                       (string-match-p "^\\*Customize" (buffer-name))))
+                            (string-match-p "^\\*Customize" (buffer-name))))
       (display-buffer-reuse-window
        kb/select-buffer-in-side-window
        display-buffer-in-direction)
@@ -314,13 +314,13 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-display-control nil)
   (popper-group-function
    #'(lambda ()
-        (cond
-         ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
-          'Config)
-         ((locate-dominating-file default-directory "init.el") 'Emacs)
-         ((project-current) (project-root (project-current)))
-         (t nil)                         ; No group
-         )))
+             (cond
+              ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
+               'Config)
+              ((locate-dominating-file default-directory "init.el") 'Emacs)
+              ((project-current) (project-root (project-current)))
+              (t nil)                         ; No group
+              )))
   (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-buffer-id)))
 
   ;; Popper-echo
@@ -328,35 +328,35 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-dispatch-actions t)
   (popper-echo-transform-function
    #'(lambda (name)
-        (cond
-         ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
-          (concat (match-string 1 name)
-                  "(O)"))
-         ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
-          (concat (match-string 1 name)
-                  "(H)"))
-         ((string-match "^\\*Warnings\\*" name)
-          (concat (match-string 1 name)
-                  "(W)"))
-         ((string-match "^\\*Backtrace\\*" name)
-          (concat (match-string 1 name)
-                  "(B)"))
-         ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
-          (concat (match-string 1 name)
-                  "(L)"))
-         ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
-          (concat (match-string 1 name)
-                  "(C)"))
-         ((string-match "^\\*Java Run" name)
-          (concat (match-string 1 name)
-                  (concat "(CG)" (substring name 18 (- (length name) 1)))
-                  ))
-         ((string-match "^\\*Customize" name)
-          (concat (match-string 1 name)
-                  (concat "(CG)" (substring name 18 (- (length name) 1)))
-                  ))
-         (t name))
-        ))
+             (cond
+              ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
+               (concat (match-string 1 name)
+                       "(O)"))
+              ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
+               (concat (match-string 1 name)
+                       "(H)"))
+              ((string-match "^\\*Warnings\\*" name)
+               (concat (match-string 1 name)
+                       "(W)"))
+              ((string-match "^\\*Backtrace\\*" name)
+               (concat (match-string 1 name)
+                       "(B)"))
+              ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
+               (concat (match-string 1 name)
+                       "(L)"))
+              ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
+               (concat (match-string 1 name)
+                       "(C)"))
+              ((string-match "^\\*Java Run" name)
+               (concat (match-string 1 name)
+                       (concat "(CG)" (substring name 18 (- (length name) 1)))
+                       ))
+              ((string-match "^\\*Customize" name)
+               (concat (match-string 1 name)
+                       (concat "(CG)" (substring name 18 (- (length name) 1)))
+                       ))
+              (t name))
+             ))
 
   ;; Mode line
   (popper-mode-line-position 0)
@@ -375,6 +375,13 @@ If buffer-or-name is nil return current buffer's mode."
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
   :config
   (bookmark-maybe-load-default-file))   ; Load bookmarks immediately for access
+
+;;;; Bufler
+(use-package bufler
+  :general ([remap list-buffers] 'bufler))
+
+;;;; Burly
+(use-package burly)
 
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
