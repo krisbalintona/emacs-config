@@ -64,17 +64,7 @@
   (flymake-languagetool-check-spelling nil)
   ;; See https://community.languagetool.org/rule/list?lang=en for IDs
   (flymake-languagetool-disabled-rules
-   '("DATE_NEW_YEAR" "WHITESPACE_RULE" "ARROWS"))
-  :config
-  ;; This fixes the errors that come in narrowed buffers
-  (defun kb/flymake-languagetool--ignore-at-pos-p (pos src-buf
-                                                       faces-to-ignore)
-    "Return non-nil if faces at POS in SRC-BUF intersect FACES-TO-IGNORE."
-    (when (and (<= (point-min) pos) (<= pos (point-max)))
-      (let ((x (get-text-property pos 'face src-buf)))
-        (cl-intersection faces-to-ignore (ensure-list x)))))
-  (advice-add 'flymake-languagetool--ignore-at-pos-p
-              :override 'kb/flymake-languagetool--ignore-at-pos-p))
+   '("DATE_NEW_YEAR" "WHITESPACE_RULE" "ARROWS")))
 
 ;;; Lsp-grammarly
 (use-package lsp-grammarly
