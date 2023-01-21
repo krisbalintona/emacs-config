@@ -767,7 +767,44 @@ first character of the next sentence."
         (setq arg (1- arg)))
 
       (let ((npoint (constrain-to-field nil opoint t)))
-        (not (= npoint opoint))))))
+        (not (= npoint opoint)))))
+
+  ;; Benchmarking the performance of my function
+  (defun kb/forward-sentence-function-benchmark ()
+    "Benchmarks the difference in time between the current and default
+value of `forward-sentence-function'."
+    (interactive)
+    (save-restriction
+      (save-excursion
+        (let ((orig-func forward-sentence-function)
+              my-time-beg my-time-end my-time-diff
+              default-time-beg default-time-end default-time-diff)
+          ;; Benchmark my function
+          (setq forward-sentence-function 'kb/forward-sentence-function)
+          (setq my-time-beg (current-time))
+          (count-sentences (point-min) (point-max))
+          (setq my-time-end (current-time)
+                my-time-diff
+                (time-to-seconds (time-subtract my-time-end my-time-beg)))
+
+          ;; Benchmark the default function
+          (setq forward-sentence-function 'forward-sentence-default-function)
+          (setq default-time-beg (current-time))
+          (
+           (point-min) (point-max))
+          count-sentences        (setq default-time-end (current-time)
+                                       default-time-diff
+                                       (time-to-seconds (time-subtract default-time-end default-time-beg)))
+
+          ;; Report the difference
+          (message "My function took %s seconds
+ whereas the default function took %s seconds.
+This is a difference in multitude of %s."
+                   my-time-diff default-time-diff
+                   (number-to-string (/ my-time-diff default-time-diff)))
+
+          ;; Restore original `forward-sentence-function'
+          (setq forward-sentence-function orig-func))))))
 
 ;;; Recursion-indicator
 (use-package recursion-indicator
