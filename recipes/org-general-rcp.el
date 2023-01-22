@@ -60,9 +60,67 @@
   (org-fold-catch-invisible-edits 'show)
   (org-edit-timestamp-down-means-later t)
 
-  ;; Org-babel
-  (org-confirm-babel-evaluate nil)      ; Can be dangerous! Observe for now
+  ;; Org-babel et. al
+  (org-confirm-babel-evaluate nil)
+  (org-ditaa-jar-path                   ; EAF happens to install it...
+   "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
   :config
+  ;; Org-babel
+  (use-package mermaid-mode)
+  (use-package ob-mermaid
+    :custom
+    (ob-mermaid-cli-path (executable-find "mmdc"))
+    :config
+    (defun kb/org-babel-execute:mermaid (body params)
+      (let* ((out-file (or (cdr (assoc :file params))
+                           (error "mermaid requires a \":file\" header argument")))
+             (theme (cdr (assoc :theme params)))
+             (width (cdr (assoc :width params)))
+             (height (cdr (assoc :height params)))
+             (scale (cdr (assoc :scale params)))
+             (pdffit (cdr (assoc :scale params)))
+             (background-color (cdr (assoc :background-color params)))
+             (mermaid-config-file (cdr (assoc :mermaid-config-file params)))
+             (css-file (cdr (assoc :css-file params)))
+             (pupeteer-config-file (cdr (assoc :pupeteer-config-file params)))
+             (temp-file (org-babel-temp-file "mermaid-"))
+             (mmdc (or ob-mermaid-cli-path
+                       (executable-find "mmdc")
+                       (error "`ob-mermaid-cli-path' is not set and mmdc is not in `exec-path'")))
+             (cmd (concat (shell-quote-argument (expand-file-name mmdc))
+                          " -i " (org-babel-process-file-name temp-file)
+                          " -o " (org-babel-process-file-name out-file)
+                          (when theme
+                            (concat " -t " theme))
+                          (when width
+                            (concat " -w " width))
+                          (when height
+                            (concat " -H " height))
+                          (when scale   ; Add support for scale
+                            (concat " -s " (number-to-string scale)))
+                          (when pdffit " -f ") ; Add support for pdffit
+                          (when mermaid-config-file
+                            (concat " -c " (org-babel-process-file-name mermaid-config-file)))
+                          (when css-file
+                            (concat " -C " (org-babel-process-file-name css-file)))
+                          (when pupeteer-config-file
+                            (concat " -p " (org-babel-process-file-name pupeteer-config-file))))))
+        (unless (file-executable-p mmdc)
+          ;; cannot happen with `executable-find', so we complain about
+          ;; `ob-mermaid-cli-path'
+          (error "Cannot find or execute %s, please check `ob-mermaid-cli-path'" mmdc))
+        (with-temp-file temp-file (insert body))
+        (message "%s" cmd)
+        (org-babel-eval cmd "")
+        nil)))
+  (advice-add 'org-babel-execute:mermaid :override 'kb/org-babel-execute:mermaid)
+  (org-babel-do-load-languages          ; Activate languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (mermaid . t)
+     (ditaa . t)))
+
   (when (bound-and-true-p evil-local-mode)
     (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
 
