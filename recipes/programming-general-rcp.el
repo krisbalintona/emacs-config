@@ -18,9 +18,13 @@
          ((text-mode markdown-mode org-mode) .
           (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
   :init
-  (defun kb/prettify-symbols-compose-p (_start _end _match)
-    "Compose the MATCH in all but comments or strings."
-    (not (nth 8 (syntax-ppss))))
+  (defun kb/prettify-symbols-compose-p (start end _match)
+    "Returns nil if the character before and after MATCH isn't a
+punctuation."
+    (let ((before (or (char-before start) ? ))
+          (after (or (char-after end) ? )))
+      (not (or (string-match-p (rx (any punct)) (char-to-string before))
+               (string-match-p (rx (any punct)) (char-to-string after))))))
   :config
   (add-hook 'org-mode-hook
             (lambda ()
