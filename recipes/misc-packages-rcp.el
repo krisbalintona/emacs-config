@@ -514,8 +514,7 @@ displayed."
   (electric-quote-replace-double t)
   (electric-quote-inhibit-functions nil)
   :init
-  (electric-pair-mode)
-  (electric-quote-mode))                ; For quotes in text mode
+  (electric-pair-mode))
 
 ;;; Segment
 ;; Alternative to `sentence-navigation'. Provides sentence navigation commands

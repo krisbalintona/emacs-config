@@ -433,8 +433,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                  (match-string 1 x)
-                                x))
+                                       (match-string 1 x)
+                                     x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)
@@ -761,7 +761,7 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
-  :disabled          ; Opt for `electric-quote-mode' and `prettify-symbols-mode'
+  :disabled        ; Opt for compatibility of regular quotes with other packages
   :ghook 'org-mode-hook
   :config
   (defun kb/typo-insert-cycle (cycle)
