@@ -207,7 +207,8 @@
                   (lambda (target) "delete")
                   :action
                   (lambda (docid msg target)
-                    (if (kb/mu4e-msg-gmail-p msg)
+                    (if (and (kb/mu4e-msg-gmail-p msg)
+                             (not (file-in-directory-p (mu4e-message-field msg :path) mail-default-directory)))
                         (progn
                           (message "The delete operation is invalid for Gmail accounts. Trashing instead.")
                           (kb/mu4e--mark-seen docid msg target)
