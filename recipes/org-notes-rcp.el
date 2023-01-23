@@ -396,29 +396,6 @@ If called with `universal-arg', then replace links in all denote buffers."
     "For my papers.")
   (add-to-list 'consult-notes-all-sources 'kb/consult-notes-papers--source 'append)
 
-  (defconst kb/consult-notes-agenda--source
-    (let ((name "Agenda")
-          (dir (file-name-as-directory kb/agenda-dir)))
-      (list :name     name
-            :narrow   ?a
-            :category consult-notes-category
-            :face     'consult-file
-            :annotate (apply-partially consult-notes-file-dir-annotate-function name dir)
-            :items    (lambda ()
-                        (let* ((files
-                                (remove-if-not (lambda (f) (string-match-p (rx (literal ".org") eol) f))
-                                               (directory-files-recursively dir consult-notes-file-match))))
-                          (mapcar #'file-name-nondirectory files)))
-            :state    (lambda ()
-                        (let ((open (consult--temporary-files))
-                              (state (consult--file-state)))
-                          (lambda (action cand)
-                            (unless cand
-                              (funcall open))
-                            (funcall state action (and cand (concat (file-name-as-directory dir) cand))))))))
-    "For my agenda files.")
-  (add-to-list 'consult-notes-all-sources 'kb/consult-notes-agenda--source 'append)
-
   (consult-customize
    consult-notes
    :prompt "Go to..."
