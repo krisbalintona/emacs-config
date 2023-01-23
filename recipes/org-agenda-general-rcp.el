@@ -18,7 +18,7 @@
   :gfhook 'hl-line-mode
   :general (kb/open-keys "a" 'org-agenda)
   :custom
-  (org-agenda-files (list kb/agenda-dir))
+  (org-agenda-files (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
 
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
@@ -36,16 +36,17 @@
 
   ;; Inheritance
   (org-use-tag-inheritance t)
-  (org-tags-exclude-from-inheritance '("project" "type"))
+  (org-tags-exclude-from-inheritance '("type"))
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
-  (org-agenda-show-inherited-tags nil)
+  (org-agenda-show-inherited-tags t)
 
   ;; Dependencies
   (org-enforce-todo-dependencies t)
-  (org-enforce-todo-checkbox-dependencies t)
+  (org-enforce-todo-checkbox-dependencies nil)
   (org-agenda-dim-blocked-tasks t)
 
   ;; Org agenda
+  (org-extend-today-until 3)
   (org-agenda-file-regexp "\\`[^.].*\\.org\\'")
   (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
   (org-agenda-window-setup 'only-window)
@@ -55,7 +56,7 @@
   (org-agenda-start-on-weekday nil)     ; Start with today
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
   (org-agenda-tags-todo-honor-ignore-options t)
-  (org-agenda-todo-ignore-scheduled 'future) ; This is for my own workflow
+  (org-agenda-todo-ignore-scheduled nil)
   (org-agenda-remove-times-when-in-prefix t)
   (org-agenda-remove-tags 'prefix)
   (org-agenda-prefix-format
@@ -64,7 +65,7 @@
      (tags . "%2i %s %b")
      (search . "%2i %s %b")))
   (org-agenda-sorting-strategy
-   '((agenda habit-down time-up ts-up priority-down category-keep)
+   '((agenda habit-down deadline-up scheduled-up todo-state-up time-up ts-up priority-down category-keep)
      (todo todo-state-up priority-down category-keep)
      (tags todo-state-up priority-down category-keep)
      (search todo-state-up priority-down category-keep)))
@@ -82,18 +83,6 @@
    "⭠ now ─────────────────────────────────────────────────")
   (org-agenda-breadcrumbs-separator " ❱ ")
 
-  ;; Org habit
-  ;; REVIEW 2023-01-08: The following is untested. I just copied from
-  ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L239
-  (org-habit-today-glyph ?◌)
-  (org-habit-graph-column 40)
-  (org-habit-following-days 1)
-  (org-habit-show-habits t)
-  (org-habit-completed-glyph ?●)
-  (org-habit-preceding-days 10)
-  (org-habit-show-habits-only-for-today t)
-  (org-habit-missed-glyph ?○)
-
   ;; Capture templates
   (org-capture-templates
    `(("t" "Todo" entry
@@ -107,7 +96,7 @@
       :jump-to-captured t)
      ("e" "Email" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      "* TODO Respond to%? [[%L][\"%:subject\" from %:fromto]] :email:\n"
+      "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
       :empty-lines 1)
      ;; NOTE 2023-01-01: Also see `mu4e--org-store-link-message' from mu4e-org
      ("E" "Mu4e-captured email" entry
@@ -194,48 +183,71 @@ This function makes sure that dates are aligned for easy reading."
                                (truncate-string-to-width org-clock-heading 40 nil nil (truncate-string-ellipsis))))
                           (apply orig_fun args)))))
 
-;;; Org-agenda-custom-commands
-(with-eval-after-load 'org-agenda
+;;; Org-super-agenda
+(use-package org-super-agenda
+  :after org-agenda
+  :custom
+  (org-super-agenda-hide-empty-groups t)
+  (org-super-agenda-keep-order nil)
+  :init
+  (org-super-agenda-mode)
+  :config
   (setq org-agenda-custom-commands
         '(("j" "At a glance"
-           ((tags-todo "+snooze"
-                       ((org-agenda-overriding-header "Snoozed without date")
-                        (org-use-tag-inheritance nil)
-                        (org-agenda-skip-function
-                         '(org-agenda-skip-entry-if 'scheduled))))
-            (agenda ""
-                    ((org-agenda-overriding-header "Snoozed")
-                     (org-use-tag-inheritance nil)
+           ((agenda ""
+                    ((org-agenda-overriding-header "Schedule")
+                     (org-agenda-show-inherited-tags t)
+                     (org-agenda-use-tag-inheritance t)
                      (org-agenda-show-all-dates nil)
-                     (org-agenda-start-day "-30d")
-                     (org-agenda-span 32)
-                     (org-agenda-skip-function
-                      '(org-agenda-skip-entry-if 'notscheduled))
-                     (org-agenda-skip-deadline-prewarning-if-scheduled t)
-                     (org-agenda-skip-scheduled-if-done t)
-                     (org-agenda-scheduled-leaders '("" ""))
-                     (org-agenda-include-diary nil)))
-            (agenda ""
-                    ((org-agenda-overriding-header "Upcoming deadlines")
                      (org-agenda-start-day "+0d")
-                     (org-agenda-span 14)
-                     (org-agenda-show-all-dates nil)
-                     (org-deadline-warning-days 0)
-                     (org-agenda-entry-types '(:deadline))
+                     (org-agenda-span 3)
+                     (org-agenda-entry-types
+                      '(:deadline :scheduled :timestamp :sexp))
+                     (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                     (org-deadline-warning-days 2)
+                     (org-agenda-skip-scheduled-if-done t)
                      (org-agenda-skip-deadline-if-done t)
-                     (org-agenda-deadline-leaders
-                      '("" "In %3d d.: " "%2d d. ago: "))
-                     (org-agenda-include-diary t)))
-            (tags-todo "-snooze-project+PRIORITY=\"A\"/+ACTIVE"
-                       ((org-agenda-overriding-header "High priority")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "+project/-MAYBE"
-                       ((org-agenda-overriding-header "Projects")))
-            (tags-todo "-snooze/+MAYBE"
-                       ((org-agenda-overriding-header "Maybes")))))
+                     (org-agenda-scheduled-leaders '("" "%2dx: "))
+                     (org-habit-show-all-today t)
+                     (org-habit-show-habits-only-for-today nil)
+                     (org-agenda-include-diary t)
+                     (org-agenda-insert-diary-extract-time t)))
+            (tags-todo "-habit-reminder/-WAITING"
+                       ((org-agenda-overriding-header "Unscheduled")
+                        (org-agenda-show-inherited-tags t)
+                        (org-agenda-use-tag-inheritance t)
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'scheduled 'deadline))
+                        (org-super-agenda-groups
+                         '((:discard (:scheduled t))
+                           (:discard (:deadline t))
+                           (:discard (:and (:children t :tag "project")))
+                           (:and (:todo ("PROG" "ACTIVE") :not (:tag "project")))
+                           (:name "Unscheduled project tasks"
+                            :auto-parent t)
+                           (:discard (:anything t))))))
+            (tags-todo "-habit"
+                       ((org-agenda-overriding-header "To process")
+                        (org-agenda-use-tag-inheritance t)
+                        (org-agenda-show-inherited-tags t)
+                        (org-super-agenda-groups
+                         '((:discard (:scheduled t))
+                           (:discard (:deadline t))
+                           (:todo "WAITING")
+                           (:discard (:not (:todo "TODO")))
+                           (:discard (:not (:tag "project")))
+                           (:auto-parent t)
+                           (:discard (:anything t))))))
+            (alltodo ""
+                     ((org-agenda-overriding-header "Projects")
+                      (org-agenda-show-inherited-tags t)
+                      (org-agenda-prefix-format
+                       '((todo . "%2i %s ")))
+                      (org-super-agenda-groups
+                       '((:auto-parent t)
+                         (:discard (:anything t))))))))
           ("E" "Emails"
-           ((tags-todo "-snooze+email"
+           ((tags-todo "-reminder+email"
                        ((org-agenda-overriding-header "Unscheduled")
                         (org-agenda-skip-function
                          '(org-agenda-skip-entry-if 'scheduled))))
@@ -244,18 +256,26 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-start-day "-1w")
                      (org-agenda-span 21)
                      (org-agenda-show-all-dates nil)
-                     (org-agenda-scheduled-leaders '("" ""))
+                     (org-agenda-scheduled-leaders '("" "%2dx: "))
                      (org-agenda-skip-function ; Only works for explicit tags
                       '(org-agenda-skip-entry-if 'notregexp ":email:"))))))
           ("A" "Archive" todo "DONE|CANCELLED"))))
 
-;;; Org-agenda-property
-;; Display org-agenda entries' properties alongside them
-(use-package org-agenda-property
+;;; Org-habit
+(use-package org-habit
   :after org-agenda
+  :straight nil
   :custom
-  (org-agenda-property-list '("LOCATION" "Effort"))
-  )
+  (org-habit-show-habits t)
+  (org-habit-following-days 1)
+  (org-habit-preceding-days 14)
+  (org-habit-show-habits-only-for-today t)
+  (org-habit-graph-column 60)
+  (org-habit-today-glyph ?◌)
+  (org-habit-completed-glyph ?●)
+  (org-habit-missed-glyph ?○)
+  :config
+  (add-to-list 'org-modules 'habit))
 
 ;;; Org-pomodoro
 (use-package org-pomodoro
@@ -267,7 +287,29 @@ This function makes sure that dates are aligned for easy reading."
   (org-pomodoro-clock-break nil)
   (org-pomodoro-ask-upon-killing t)
   (org-pomodoro-keep-killed-pomodoro-time t)
-  (org-pomodoro-manual-break t))     ; Allows for a workflow of going "overtime"
+  (org-pomodoro-manual-break t) ; Allows for a workflow of going "overtime"
+  (org-pomodoro-format "Pomodoro: %s")
+  :config
+  (defun kb/org-pomodoro-update-mode-line ()
+    "Set the modeline accordingly to the current state."
+    (let ((s (cl-case org-pomodoro-state
+               (:pomodoro
+                (propertize org-pomodoro-format 'face 'org-pomodoro-mode-line))
+               (:overtime
+                (propertize org-pomodoro-overtime-format
+                            'face 'org-pomodoro-mode-line-overtime))
+               (:short-break
+                (propertize org-pomodoro-short-break-format
+                            'face 'org-pomodoro-mode-line-break))
+               (:long-break
+                (propertize org-pomodoro-long-break-format
+                            'face 'org-pomodoro-mode-line-break)))))
+      (setq org-pomodoro-mode-line
+            (when (and (org-pomodoro-active-p) (> (length s) 0))
+              ;; Add space where I want it
+              (list " [" (format s (org-pomodoro-format-seconds)) "]"))))
+    (force-mode-line-update t))
+  (advice-add 'org-pomodoro-update-mode-line :override 'kb/org-pomodoro-update-mode-line))
 
 ;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.
@@ -326,7 +368,7 @@ MATCH is a query sent to `org-map-entries’."
             (error "Not on an `org-todo’ heading!")
           ;; Add and ID to the dependency if necessary
           (save-excursion
-            (consult-org-agenda match)
+            (consult-org-agenda (or match "/-DONE-CANCELLED"))
             (setq dependency (org-get-heading))
             (when (equal current-heading dependency)
               (error "Cannot depend on the same `org-todo’!"))
@@ -355,12 +397,41 @@ See `kb/consult-org-depend’."
               ;; `recenter' hook then an error will be returned since it'll be
               ;; attempting to `recenter' a non-present buffer
               (let ((consult-after-jump-hook nil))
-                (setq dependency (funcall 'kb/consult-org-depend nil match))))))))
+                (setq dependency (funcall 'kb/consult-org-depend match))))))))
 
     (consult-customize kb/consult-org-depend
                        :prompt "Select dependency for the heading at point: "
                        kb/consult-org-agenda-depend
                        :prompt "Select dependency for this agenda item: ")))
+
+;;; Org-gcal
+(use-package org-gcal
+  :custom
+  ;; NOTE 2023-01-22: If syncing broke for some reason, try
+  ;; `org-gcal-sync-tokens-clear'
+  (org-gcal-client-id "477180658883-q2ok2j39ko4bfp88e2tqd9qi6c1r6ebm.apps.googleusercontent.com")
+  (org-gcal-client-secret "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")
+  (org-gcal-fetch-file-alist
+   `(("v7tpr3s152ao11tlf93lu3don4@group.calendar.google.com" . ,(expand-file-name "gcal/brown.org" kb/agenda-dir))
+     ("ic4ecccdo60mub7raqhear02vg@group.calendar.google.com" . ,(expand-file-name "gcal/birthdays.org" kb/agenda-dir))
+     ("brown.edu_d61gju3thc3a7e58k84qbn1nc8@group.calendar.google.com" . ,(expand-file-name "gcal/crc_events.org" kb/agenda-dir))
+     ("c_8ri64bp98ab1oj28704npqhig4@group.calendar.google.com" . ,(expand-file-name "gcal/assignments.org" kb/agenda-dir))
+     ("c_g2s8uc0cufru3ruq7g7tbd1a7k@group.calendar.google.com" . ,(expand-file-name "gcal/bui.org" kb/agenda-dir))
+     ("c_pr2pb1gdf5dkogh3h13kvs8uf0@group.calendar.google.com" . ,(expand-file-name "gcal/office_hours.org" kb/agenda-dir))
+     ("independent_study@brown.edu" . ,(expand-file-name "gcal/independent_study.org" kb/agenda-dir))
+     ("kristoffer_balintona@brown.edu" . ,(expand-file-name "gcal/kristoffer_balintona_events.org" kb/agenda-dir))))
+  (org-gcal-up-days 62)
+  (org-gcal-down-days 62)
+  (org-gcal-recurring-events-mode 'nested)
+  (org-gcal-notify-p t)
+  ;; Time zone
+  ;; (org-gcal-local-timezone "America/Chicago")
+  (org-gcal-local-timezone "America/New_York")
+
+  ;; Plstore (used for authorization). o avoid getting prompted all the time for
+  ;; the password to your plstore Recommended here
+  ;; https://github.com/kidd/org-gcal.el#note
+  (plstore-cache-passphrase-for-symmetric-encryption t))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
