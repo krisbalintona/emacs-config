@@ -274,6 +274,28 @@ If called with `universal-arg', then replace links in all denote buffers."
       (message "Done! Replaced a total of %s links across %s files!"
                replaced-count updated-notes))))
 
+;;;; New note from region
+;; Taken from
+;; https://protesilaos.com/emacs/denote#h:d0c7cb79-21e5-4176-a6af-f4f68578c8dd
+(with-eval-after-load 'denote
+  (defun kb/denote-org-extract-subtree ()
+    "Create new Denote note using current Org subtree.
+Make the new note use the Org file type, regardless of the value
+of `denote-file-type'.
+
+Use the subtree title as the note's title. If available, use the
+tags of the heading are used as note keywords.
+
+Delete the original subtree."
+    (interactive)
+    (if-let ((text (org-get-entry))
+             (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
+        (progn
+          (delete-region (org-entry-beginning-position) (org-entry-end-position))
+          (denote heading (org-get-tags) 'org)
+          (insert text))
+      (user-error "No subtree to extract; aborting"))))
+
 ;;; Denote-menu
 (use-package denote-menu
   :straight (:type git :host github :repo "namilus/denote-menu")
