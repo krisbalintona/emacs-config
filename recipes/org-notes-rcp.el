@@ -274,6 +274,18 @@ If called with `universal-arg', then replace links in all denote buffers."
       (message "Done! Replaced a total of %s links across %s files!"
                replaced-count updated-notes))))
 
+;;; Denote-menu
+(use-package denote-menu
+  :straight (:type git :host github :repo "namilus/denote-menu")
+  :general
+  (kb/note-keys "d" 'denote-menu-list-notes)
+  (:keymaps 'denote-menu-mode-map
+   "|" 'denote-menu-clear-filters
+   "/ r" 'denote-menu-filter
+   "/ /" 'denote-menu-filter
+   "/ k" 'denote-menu-filter-by-keyword
+   "e" 'denote-menu-export-to-dired))
+
 ;;; Consult-notes
 (use-package consult-notes
   :straight (consult-notes :type git :host github :repo "mclear-tools/consult-notes")
