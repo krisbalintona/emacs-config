@@ -275,7 +275,7 @@ the mode line. Also alters `global-mode-string’ based on
   (battery-mode-line-limit 95)
   ;; (battery-mode-line-format "%cmAh")
   ;; (battery-mode-line-format "  %p%%")
-  (battery-mode-line-format "%b%p%% ")
+  (battery-mode-line-format " %b%p%%")
   :init
   (display-battery-mode))
 
