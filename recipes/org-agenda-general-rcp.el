@@ -53,7 +53,7 @@
   (org-use-fast-todo-selection 'expert)
   (org-agenda-restore-windows-after-quit t)
   (org-agenda-tags-column 'auto)
-  (org-agenda-start-on-weekday nil)     ; Start with today
+  (org-agenda-start-on-weekday 3)
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
   (org-agenda-tags-todo-honor-ignore-options t)
   (org-agenda-todo-ignore-scheduled nil)
@@ -65,7 +65,7 @@
      (tags . "%2i %s %b")
      (search . "%2i %s %b")))
   (org-agenda-sorting-strategy
-   '((agenda habit-down deadline-up scheduled-up todo-state-up time-up ts-up priority-down category-keep)
+   '((agenda time-up habit-down deadline-up scheduled-up todo-state-up ts-up priority-down category-keep)
      (todo todo-state-up priority-down category-keep)
      (tags todo-state-up priority-down category-keep)
      (search todo-state-up priority-down category-keep)))
@@ -140,7 +140,9 @@
             (?D . (shadow org-priority))
             (?E . (shadow org-priority)))
           org-stuck-projects
-          '("+project/-DONE-CANCELLED" ("*") nil "")))
+          ;; FIXME 2023-01-23: Currently limits "projects" to top-level
+          ;; headlines
+          '("+LEVEL=1+project/-DONE-CANCELLED" ("PROG" "ACTIVE") nil "")))
 
   ;; Taken from
   ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L133
@@ -203,6 +205,8 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-span 3)
                      (org-agenda-entry-types
                       '(:deadline :scheduled :timestamp :sexp))
+                     (org-agenda-prefix-format
+                      '((agenda . "%2i %-12:c%?-12t% s %b")))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
                      (org-deadline-warning-days 2)
                      (org-agenda-skip-scheduled-if-done t)
@@ -214,6 +218,7 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-insert-diary-extract-time t)))
             (tags-todo "-habit-reminder/-WAITING"
                        ((org-agenda-overriding-header "Unscheduled")
+                        (org-agenda-dim-blocked-tasks 'invisible)
                         (org-agenda-show-inherited-tags t)
                         (org-agenda-use-tag-inheritance t)
                         (org-agenda-skip-function
@@ -222,7 +227,8 @@ This function makes sure that dates are aligned for easy reading."
                          '((:discard (:scheduled t))
                            (:discard (:deadline t))
                            (:discard (:and (:children t :tag "project")))
-                           (:and (:todo ("PROG" "ACTIVE") :not (:tag "project")))
+                           (:name ""
+                            :and (:todo ("PROG" "ACTIVE") :not (:tag "project")))
                            (:name "Unscheduled project tasks"
                             :auto-parent t)
                            (:discard (:anything t))))))
@@ -233,9 +239,9 @@ This function makes sure that dates are aligned for easy reading."
                         (org-super-agenda-groups
                          '((:discard (:scheduled t))
                            (:discard (:deadline t))
-                           (:todo "WAITING")
-                           (:discard (:not (:todo "TODO")))
-                           (:discard (:not (:tag "project")))
+                           (:discard (:not (:todo ("TODO" "WAITING"))))
+                           (:name ""
+                            :not (:tag "project"))
                            (:auto-parent t)
                            (:discard (:anything t))))))
             (alltodo ""
@@ -412,15 +418,17 @@ See `kb/consult-org-depend’."
   (org-gcal-client-id "477180658883-q2ok2j39ko4bfp88e2tqd9qi6c1r6ebm.apps.googleusercontent.com")
   (org-gcal-client-secret "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")
   (org-gcal-fetch-file-alist
-   `(("v7tpr3s152ao11tlf93lu3don4@group.calendar.google.com" . ,(expand-file-name "gcal/brown.org" kb/agenda-dir))
-     ("ic4ecccdo60mub7raqhear02vg@group.calendar.google.com" . ,(expand-file-name "gcal/birthdays.org" kb/agenda-dir))
+   `(;; University
+     ("v7tpr3s152ao11tlf93lu3don4@group.calendar.google.com" . ,(expand-file-name "gcal/brown.org" kb/agenda-dir))
      ("brown.edu_d61gju3thc3a7e58k84qbn1nc8@group.calendar.google.com" . ,(expand-file-name "gcal/crc_events.org" kb/agenda-dir))
      ("c_8ri64bp98ab1oj28704npqhig4@group.calendar.google.com" . ,(expand-file-name "gcal/assignments.org" kb/agenda-dir))
      ("c_g2s8uc0cufru3ruq7g7tbd1a7k@group.calendar.google.com" . ,(expand-file-name "gcal/bui.org" kb/agenda-dir))
      ("c_pr2pb1gdf5dkogh3h13kvs8uf0@group.calendar.google.com" . ,(expand-file-name "gcal/office_hours.org" kb/agenda-dir))
      ("independent_study@brown.edu" . ,(expand-file-name "gcal/independent_study.org" kb/agenda-dir))
-     ("kristoffer_balintona@brown.edu" . ,(expand-file-name "gcal/kristoffer_balintona_events.org" kb/agenda-dir))))
-  (org-gcal-up-days 62)
+     ("kristoffer_balintona@brown.edu" . ,(expand-file-name "gcal/kristoffer_balintona_events.org" kb/agenda-dir))
+     ;; Personal
+     ("ic4ecccdo60mub7raqhear02vg@group.calendar.google.com" . ,(expand-file-name "gcal/birthdays.org" kb/agenda-dir))))
+  (org-gcal-up-days 31)
   (org-gcal-down-days 62)
   (org-gcal-recurring-events-mode 'nested)
   (org-gcal-notify-p t)
