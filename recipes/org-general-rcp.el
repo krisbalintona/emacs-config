@@ -761,7 +761,6 @@ re-align the table if necessary. (Necessary because org-mode has a
 ;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
-  :disabled        ; Opt for compatibility of regular quotes with other packages
   :ghook 'org-mode-hook
   :config
   (defun kb/typo-insert-cycle (cycle)
