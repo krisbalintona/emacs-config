@@ -119,7 +119,7 @@
     ;; Needs to be loaded after `org' to take effect
     (setq org-fast-tag-selection-single-key 'expert
           org-todo-keywords
-          '((sequence "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "TODO(t)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELLED(c@/!)"))
+          '((sequence "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "TODO(t)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)"))
           org-todo-keyword-faces
           '(("PROG" . (bold success))
             ("ACTIVE" . org-warning)
@@ -142,7 +142,7 @@
           org-stuck-projects
           ;; FIXME 2023-01-23: Currently limits "projects" to top-level
           ;; headlines
-          '("+LEVEL=1+project/-DONE-CANCELLED" ("PROG" "ACTIVE") nil "")))
+          '("+LEVEL=1+project/-DONE-CANCELED" ("PROG" "ACTIVE") nil "")))
 
   ;; Taken from
   ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L133
@@ -265,7 +265,7 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-scheduled-leaders '("" "%2dx: "))
                      (org-agenda-skip-function ; Only works for explicit tags
                       '(org-agenda-skip-entry-if 'notregexp ":email:"))))))
-          ("A" "Archive" todo "DONE|CANCELLED"))))
+          ("A" "Archive" todo "DONE|CANCELED"))))
 
 ;;; Org-habit
 (use-package org-habit
@@ -374,7 +374,7 @@ MATCH is a query sent to `org-map-entries’."
             (error "Not on an `org-todo’ heading!")
           ;; Add and ID to the dependency if necessary
           (save-excursion
-            (consult-org-agenda (or match "/-DONE-CANCELLED"))
+            (consult-org-agenda (or match "/-DONE-CANCELED"))
             (setq dependency (org-get-heading))
             (when (equal current-heading dependency)
               (error "Cannot depend on the same `org-todo’!"))
