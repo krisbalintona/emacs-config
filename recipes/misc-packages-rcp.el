@@ -540,7 +540,7 @@ displayed."
        ("[Oo]p\\." "[[:space:]][[:digit:]]" :break nil)
        ;; My regexps
        (,(rx (seq (any space) (or (literal "p.") (literal "pp.")))) ,(rx (any space) (any digit)) :break nil)
-       (,(rx (literal "...")) ,(rx (any space) (any lower)) :break nil)
+       (,(rx (or (literal "...") (literal "…"))) ,(rx (any space) (any lower)) :break nil)
        (,(rx (literal "etc.")) ,(rx (any space) (any lower)) :break nil)
        (,(rx (literal "Rev.")) ,(rx (any space) (any upper)) :break nil)
        (,(rx (literal "Jan.")) ,(rx (seq (any space) (or (any lower) (any digit)))) :break nil)
