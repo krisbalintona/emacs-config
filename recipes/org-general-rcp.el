@@ -238,6 +238,7 @@ have `org-warning' face."
   (org-refile-targets
    `((org-agenda-files . (:tag . "type"))
      (org-agenda-files . (:tag . "project"))
+     (,(directory-files-recursively (expand-file-name "garden" kb/notes-dir) (rx anychar)) . (:maxlevel . 2))
      (kb/find-blog-files-org . (:level . 0))
      (kb/find-blog-files-org . (:tag . "project"))
      ;; OPTIMIZE 2023-01-08: Right now I manually add a refile target entry for
