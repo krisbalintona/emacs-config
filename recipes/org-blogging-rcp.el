@@ -536,8 +536,10 @@ and rewrite link paths to make blogging more seamless."
 
 ;;;; Magic keyword management
 (with-eval-after-load 'ox-hugo
-  (defvar kb/org-hugo-exclude-tags '("ATTACH" "project" "PROJECT" "draft"
-                                     "section" "series" "tag" "category")
+  (defvar kb/org-hugo-exclude-tags
+    '("ATTACH" "project" "PROJECT" "draft"
+      "section" "series" "tag" "category"
+      "creative-writing")
     "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
 
   (defun kb/find-blog-files-org ()
