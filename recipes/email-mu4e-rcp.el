@@ -440,7 +440,7 @@ mode-line.
 MAIL-COUNT is the count of mails for which the string is to displayed."
     (when (not (zerop mail-count))
       (propertize
-       (format "!%d" mail-count)
+       (format "!%d " mail-count)
        'help-echo (concat (if (= mail-count 1)
                               "You have an unread email"
                             (format "You have %s unread emails" mail-count))
