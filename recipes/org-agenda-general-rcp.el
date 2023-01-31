@@ -280,6 +280,9 @@ This function makes sure that dates are aligned for easy reading."
   (org-habit-today-glyph ?◌)
   (org-habit-completed-glyph ?●)
   (org-habit-missed-glyph ?○)
+
+  ;; Useful
+  (org-todo-repeat-to-state "ACTIVE")
   :config
   (add-to-list 'org-modules 'habit))
 
