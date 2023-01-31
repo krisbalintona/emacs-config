@@ -17,8 +17,9 @@ Position the cursor at it's beginning, according to the current
 mode. Credit to
 https://emacsredux.com/blog/2013/06/15/open-line-above/"
   (interactive)
-  (end-of-line 0)
+  (beginning-of-line)
   (newline)
+  (previous-line)
   (indent-according-to-mode))
 
 (defun kb/open-line-below-goto ()
