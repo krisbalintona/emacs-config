@@ -186,7 +186,7 @@
     (interactive)
     (require 'denote)
     (save-mark-and-excursion
-      (dolist (file (denote-directory-files))
+      (dolist (file (denote-directory-files-matching-regexp (rx (literal ".org") eol)))
         ;; Export all the files
         (with-current-buffer (find-file-noselect file)
           (read-only-mode -1)
@@ -425,8 +425,8 @@ Delete the original subtree."
 
   (advice-add 'denote-rename-file-using-front-matter :around
                                                      #'(lambda (orig-fun &rest args)
-                                                          (let ((save-silently t))
-                                                            (apply orig-fun args)))))
+                                                               (let ((save-silently t))
+                                                                 (apply orig-fun args)))))
 
 ;;; org-notes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
