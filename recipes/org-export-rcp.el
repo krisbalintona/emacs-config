@@ -365,15 +365,17 @@ chosen."
 (with-eval-after-load 'ol
 ;;;;; Colored text
   (defun kb/org-latex-color-export (link description format)
-    "TODO"
     (let ((desc (or description link)))
       (cond
        ((eq format 'latex) (format "\\textcolor{%s}{%s}" link desc))
-       (t desc))
-      ))
+       (t desc))))
+
   (org-link-set-parameters "color"
-                           :face #'(lambda (path) `(:foreground ,path))
-                           :export #'kb/org-latex-color-export)
+                           :face (lambda (path) `(:foreground ,path))
+                           :export #'kb/org-latex-color-export
+                           :complete (lambda (&optional _)
+                                       (concat "color:"
+                                               (completing-read "Choose color: " (list-colors-duplicates (defined-colors))))))
 
 ;;;;; [ end ]
   )
