@@ -331,7 +331,6 @@ Delete the original subtree."
   (when (locate-library "org-roam")
     (consult-notes-denote-mode))
 
-
   ;; Custom `consult--multi' sections
   (defconst consult-notes-denote--source
     (list :name     "Notes"
@@ -351,11 +350,9 @@ Delete the original subtree."
                                                   (when (> current-width max-width)
                                                     (setq max-width (+ 24 current-width))))
                                                 (propertize title 'denote-path f 'denote-keywords keywords)))
-                                            ;; Exclude papers directory
-                                            (remove-if
-                                             (lambda (f)
-                                               (string-match-p (rx (literal (expand-file-name "papers" kb/notes-dir))) f))
-                                             (denote-directory-files)))))
+                                            (denote-directory-files-matching-regexp
+                                             (rx (or (literal (expand-file-name "papers" kb/notes-dir)) ; Exclude papers directory
+                                                     (group (literal ".org") eol))))))) ; Only org files
                         (mapcar (lambda (c)
                                   (let* ((keywords (get-text-property 0 'denote-keywords c))
                                          (path (get-text-property 0 'denote-path c))
