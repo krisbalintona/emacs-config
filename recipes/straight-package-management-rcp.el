@@ -12,7 +12,7 @@
 (defvar straight-use-package-by-default t) ; Automatically :straight t for use-package
 (defvar straight-repository-branch "master") ; Use development branch
 (defvar straight-check-for-modifications
-  '(watch-files check-on-save find-when-checking))
+  '(check-on-save find-when-checking))
 
 ;;; Bootstrap (install straight.el)
 (defvar bootstrap-version)
