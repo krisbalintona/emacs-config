@@ -855,15 +855,16 @@ This is a difference in multitude of %s."
   "Separate sentences of paragraph with newlines."
   (interactive)
   (unless buffer-read-only
-    (save-excursion
-      (start-of-paragraph-text)
-      (while (< (point) (point-max))
-        (forward-sentence)
-        ;; Delete spaces between sentences before making new new line
-        (delete-horizontal-space)
-        ;; Don't add a new line, if already at the end of the line
-        (unless (= (line-end-position) (point))
-          (newline 2))))))
+    (let ((end-para (save-excursion (end-of-paragraph-text) (point))))
+      (save-excursion
+        (start-of-paragraph-text)
+        (while (< (point) end-para)
+          (forward-sentence)
+          ;; Delete spaces between sentences before making new new line
+          (delete-horizontal-space)
+          ;; Don't add a new line, if already at the end of the line
+          (unless (= (line-end-position) (point))
+            (newline 2)))))))
 
 (defun kb/para-merge-sentences (&optional beg end)
   "In the active region"
