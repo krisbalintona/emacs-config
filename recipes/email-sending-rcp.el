@@ -78,13 +78,15 @@ from."
 (use-package smtpmail
   :ensure-system-package (msmtp)
   :custom
-  (send-mail-function 'sendmail-send-it)
-  (sendmail-program (executable-find "msmtp"))
+  (send-mail-function 'smtpmail-send-it)
   (smtpmail-default-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)
   (smtpmail-stream-type 'starttls)
   (smtpmail-queue-mail nil)
+  ;; Make sure email details that are used are not the current (when flushing)
+  ;; variables, but the variables used when writing the email
+  (smtpmail-store-queue-variables t)
   (smtpmail-queue-dir (expand-file-name "drafts/.smtp-queue" message-directory)))
 
 ;;; Org-msg

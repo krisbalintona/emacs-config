@@ -154,8 +154,9 @@
                                                (:maildir "/drafts/uni/" :key ?d)
                                                (:maildir "/uni/[Gmail].Drafts" :key ?D)
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
-                                               (:maildir "/uni/[Gmail].All Mail" :key ?a)
-                                               ))))
+                                               (:maildir "/uni/[Gmail].All Mail" :key ?a)))
+                    ;; Smtpmail
+                    (smtpmail-smtp-user "kristoffer_balintona@brown.edu"))) ; Send from this address
           ,(make-mu4e-context
             :name "Personal"
             :enter-func (lambda () (mu4e-message "Entering Personal context"))
@@ -172,8 +173,9 @@
                                                (:maildir "/drafts/personal/" :key ?d)
                                                (:maildir "/personal[Gmail].Drafts/[Gmail].Drafts" :key ?D)
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
-                                               (:maildir "/personal/[Gmail].All Mail" :key ?a)
-                                               ))))))
+                                               (:maildir "/personal/[Gmail].All Mail" :key ?a)))
+                    ;; Smtpmail
+                    (smtpmail-smtp-user "krisbalintona@gmail.com"))))) ; Send from this address
 
   ;; Headers
   ;; Taken from Doom
