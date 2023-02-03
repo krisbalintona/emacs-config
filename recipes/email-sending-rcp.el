@@ -14,7 +14,8 @@
   :straight nil
   :hook ((message-setup . message-sort-headers)
          (message-mode . visual-fill-column-mode)
-         (message-send . kb/message-check-for-subject))
+         (message-send . kb/message-check-for-subject)
+         (message-send . kb/message-confirm-from))
   :custom
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
@@ -41,8 +42,20 @@
       (let ((subject (string-trim (substring (thing-at-point 'line) 8))))
         (when (string-empty-p subject)
           (end-of-line)
-          (insert (read-string "Subject (optional): "))
-          (message "Sending..."))))))
+          (insert (read-string "Subject (optional): "))))))
+
+  ;; Confirm that this is the desired address I want to send the email from
+  (defun kb/message-confirm-from ()
+    "Confirm that this is the desired address I want to send the email
+from."
+    (save-excursion
+      (goto-char (point-min))
+      (search-forward "--text follows this line--")
+      (re-search-backward "^From:")
+      (let ((from (string-trim (substring (thing-at-point 'line) 5))))
+        (unless (yes-or-no-p
+                 (concat "Is this really the address you want to send from?: " from))
+          (keyboard-quit))))))
 
 ;;; Sendmail
 ;; Use `sendmail' program to send emails?
@@ -54,9 +67,10 @@
   (mail-default-directory (progn (require 'message)
                                  (expand-file-name "drafts/" message-directory)))
   ;; These two messages make sure that emails are sent from the email address
-  ;; specified in the "from" header field!
-  ;; (mail-specify-envelope-from t)
-  (mail-specify-envelope-from nil)
+  ;; specified in the "from" header field! Taken from
+  ;; https://jonathanchu.is/posts/emacs-notmuch-isync-msmtp-setup/
+  (mail-specify-envelope-from t)
+  (message-sendmail-envelope-from 'header)
   (mail-envelope-from 'header))
 
 ;;; Smtpmail
