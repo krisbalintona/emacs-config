@@ -132,8 +132,7 @@ Must be set before org-msg is loaded to take effect.")
                  (table `((margin-top . "6px") (margin-bottom . "6px")
                           (border-left . "none") (border-right . "none")
                           (border-top . "2px solid #222222")
-                          (border-bottom . "2px solid #222222")
-                          ))
+                          (border-bottom . "2px solid #222222")))
                  (ftl-number `(,color ,bold (text-align . "left")))
                  (inline-modes '(asl c c++ conf cpp csv diff ditaa emacs-lisp
                                                                    fundamental ini json makefile man org plantuml
@@ -264,7 +263,7 @@ Must be set before org-msg is loaded to take effect.")
                                  "#+begin_export html
 <br />
 <table
-  style='color: rgb(136, 136, 136); border: none; border-collapse: collapse'
+  style='color: rgb(136, 136, 136); border: none; border-collapse: collapse; font-family: garamond'
 >
   <tbody>
     <tr style='height: 81.25pt'>
@@ -296,7 +295,6 @@ Must be set before org-msg is loaded to take effect.")
         >
           <span
             style='
-              font-family: garamond;
               font-size: 11pt;
               font-weight: 700;
               white-space: pre-wrap;
@@ -312,7 +310,6 @@ Must be set before org-msg is loaded to take effect.")
           <span
             style='
               font-size: 10pt;
-              font-family: garamond;
               vertical-align: baseline;
               white-space: pre-wrap;
             '
@@ -327,7 +324,6 @@ Must be set before org-msg is loaded to take effect.")
           <span
             style='
               font-size: 10pt;
-              font-family: garamond;
               vertical-align: baseline;
               white-space: pre-wrap;
             '
@@ -340,7 +336,6 @@ Must be set before org-msg is loaded to take effect.")
         >
           <span
             style='
-              font-family: garamond;
               font-size: 10pt;
               white-space: pre-wrap;
             '
@@ -360,7 +355,6 @@ Must be set before org-msg is loaded to take effect.")
           <span
             style='
               font-size: 10pt;
-              font-family: garamond;
               vertical-align: baseline;
               white-space: pre-wrap;
             '
