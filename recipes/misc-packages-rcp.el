@@ -728,7 +728,14 @@ first character of the next sentence."
                                  ;; Consider point having been moved to the
                                  ;; first character of the sentence by moving
                                  ;; backward
-                                 (skip-chars-backward " \t\n")
+                                 (unless (eq (point) par-end)
+                                   ;; This is only done if the point isn't
+                                   ;; already at the end of the paragraph.
+                                   ;; Without this, there will be an infinite
+                                   ;; loop when the final sentence break in the
+                                   ;; paragraph should be skipped and there is
+                                   ;; whitespace after the sentence end.
+                                   (skip-chars-backward " \t\n"))
                                  (segment--looking-back-forward-map segment-current-language))
                           (unless (re-search-forward sentence-end par-end t)
                             ;; If no other sentence is found in the rest of the
