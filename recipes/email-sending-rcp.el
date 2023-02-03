@@ -64,17 +64,14 @@
 (use-package smtpmail
   :ensure-system-package (msmtp)
   :custom
-  ;; (send-mail-function 'smtpmail-send-it)
+  (send-mail-function 'sendmail-send-it)
+  (sendmail-program (executable-find "msmtp"))
   (smtpmail-default-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)
   (smtpmail-stream-type 'starttls)
   (smtpmail-queue-mail nil)
-  :config
-  (if (eq send-mail-function 'smtpmail-send-it)
-      (setq smtpmail-queue-dir
-            (file-name-as-directory (expand-file-name "/drafts/.smtp-queue" message-directory)))
-    (setq smtpmail-queue-dir "")))
+  (smtpmail-queue-dir (expand-file-name "drafts/.smtp-queue" message-directory)))
 
 ;;; Org-msg
 ;;;; Itself
@@ -360,6 +357,64 @@ Must be set before org-msg is loaded to take effect.")
             '
             >Box: 6327</span
           >
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export"))
+      ("BUI banner" . ,(concat kb/signature-separator "\n\n"
+                               "Warmly,\\\\\nBrown University Interviews Executive Committee\n\n"
+                               "#+begin_export html
+<br />
+<table
+  style='
+    color: rgb(136, 136, 136);
+    border: none;
+    border-collapse: collapse;
+    font-family: garamond;
+  '
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://browninterviews.org/wp-content/uploads/2020/06/bu-small-logo.png'
+          alt='Brown logo'
+          style='border: none'
+          height='70'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Kristoffer Balintona ('24)</span>
+          <span> | Editor in Chief</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Charles Alaimo ('25)</span>
+          <span> | Senior Interviews Coordinator</span>
+          <br />
         </p>
         <br />
       </td>
