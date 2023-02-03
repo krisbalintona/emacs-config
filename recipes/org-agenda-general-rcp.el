@@ -65,7 +65,7 @@
      (tags . "%2i %s %b")
      (search . "%2i %s %b")))
   (org-agenda-sorting-strategy
-   '((agenda time-up habit-down deadline-up scheduled-up todo-state-up ts-up priority-down category-keep)
+   '((agenda time-up habit-down ts-up deadline-up scheduled-up todo-state-up priority-down category-keep)
      (todo todo-state-up priority-down category-keep)
      (tags todo-state-up priority-down category-keep)
      (search todo-state-up priority-down category-keep)))
@@ -206,8 +206,9 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-entry-types
                       '(:deadline :scheduled :timestamp :sexp))
                      (org-agenda-prefix-format
-                      '((agenda . "%2i %-12:c%?-12t% s %b")))
+                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                     (org-agenda-skip-scheduled-if-deadline-is-shown t)
                      (org-deadline-warning-days 2)
                      (org-agenda-skip-scheduled-if-done t)
                      (org-agenda-skip-deadline-if-done t)
@@ -222,13 +223,12 @@ This function makes sure that dates are aligned for easy reading."
                         (org-agenda-show-inherited-tags t)
                         (org-agenda-use-tag-inheritance t)
                         (org-agenda-skip-function
-                         '(org-agenda-skip-entry-if 'scheduled 'deadline))
+                         '(org-agenda-skip-entry-if 'scheduled))
                         (org-super-agenda-groups
-                         '((:discard (:scheduled t))
-                           (:discard (:deadline t))
-                           (:discard (:and (:children t :tag "project")))
+                         '((:discard (:and (:children t :tag "project")))
+                           (:discard (:not (:todo ("PROG" "ACTIVE"))))
                            (:name ""
-                            :and (:todo ("PROG" "ACTIVE") :not (:tag "project")))
+                            :not (:tag "project"))
                            (:name "Unscheduled project tasks"
                             :auto-parent t)
                            (:discard (:anything t))))))
@@ -239,7 +239,7 @@ This function makes sure that dates are aligned for easy reading."
                         (org-super-agenda-groups
                          '((:discard (:scheduled t))
                            (:discard (:deadline t))
-                           (:discard (:not (:todo ("TODO" "WAITING"))))
+                           (:discard (:todo ("PROG" "ACTIVE")))
                            (:name ""
                             :not (:tag "project"))
                            (:auto-parent t)
@@ -276,7 +276,7 @@ This function makes sure that dates are aligned for easy reading."
   (org-habit-following-days 1)
   (org-habit-preceding-days 14)
   (org-habit-show-habits-only-for-today t)
-  (org-habit-graph-column 60)
+  (org-habit-graph-column 70)
   (org-habit-today-glyph ?◌)
   (org-habit-completed-glyph ?●)
   (org-habit-missed-glyph ?○)
@@ -319,6 +319,14 @@ This function makes sure that dates are aligned for easy reading."
               (list " [" (format s (org-pomodoro-format-seconds)) "]"))))
     (force-mode-line-update t))
   (advice-add 'org-pomodoro-update-mode-line :override 'kb/org-pomodoro-update-mode-line))
+
+;;; Org-pomodoro-third-time
+(use-package org-pomodoro-third-time
+  :after org-agenda org-pomodoro
+  :custom
+  (org-pomodoro-third-time-break-to-work-ratio (/ 1.0 4.0))
+  :init
+  (org-pomodoro-third-time-mode))
 
 ;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.
