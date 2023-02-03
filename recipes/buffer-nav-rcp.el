@@ -50,7 +50,7 @@
     "Kill a line forward while keeping expressions balanced.
 If nothing can be deleted, kill backward. If still nothing can be
 deleted, kill the pairs around point."
-    (interactive "P")
+    (interactive "p")
     (let ((bounds (puni-bounds-of-list-around-point)))
       (if (eq (car bounds) (cdr bounds))
           (when-let ((sexp-bounds (puni-bounds-of-sexp-around-point)))
