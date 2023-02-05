@@ -46,9 +46,9 @@
   (org-agenda-dim-blocked-tasks t)
 
   ;; Org agenda
-  (org-extend-today-until 3)
   (org-agenda-file-regexp "\\`[^.].*\\.org\\'")
   (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
+  (org-archive-subtree-save-file-p t)   ; Save archive file always
   (org-agenda-window-setup 'only-window)
   (org-use-fast-todo-selection 'expert)
   (org-agenda-restore-windows-after-quit t)
@@ -69,7 +69,10 @@
      (todo todo-state-up priority-down category-keep)
      (tags todo-state-up priority-down category-keep)
      (search todo-state-up priority-down category-keep)))
-  (org-archive-subtree-save-file-p t)   ; Save archive file always
+  ;; See
+  ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
+  (org-extend-today-until 3)
+  (org-use-effective-time t)
   (org-agenda-block-separator ?─)
   (org-agenda-scheduled-leaders
    '("Scheduled: " "Sched.%2dx: "))
