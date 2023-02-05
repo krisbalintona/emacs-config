@@ -441,16 +441,11 @@ See `kb/consult-org-depend’."
      ("ic4ecccdo60mub7raqhear02vg@group.calendar.google.com" . ,(expand-file-name "gcal/birthdays.org" kb/agenda-dir))))
   (org-gcal-up-days 31)
   (org-gcal-down-days 62)
-  (org-gcal-recurring-events-mode 'nested)
+  (org-gcal-recurring-events-mode 'top-level)
   (org-gcal-notify-p t)
   ;; Time zone
   ;; (org-gcal-local-timezone "America/Chicago")
-  (org-gcal-local-timezone "America/New_York")
-
-  ;; Plstore (used for authorization). o avoid getting prompted all the time for
-  ;; the password to your plstore Recommended here
-  ;; https://github.com/kidd/org-gcal.el#note
-  (plstore-cache-passphrase-for-symmetric-encryption t))
+  (org-gcal-local-timezone "America/New_York"))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
