@@ -14,8 +14,7 @@
   :straight nil
   :hook ((message-setup . message-sort-headers)
          (message-mode . visual-fill-column-mode)
-         (message-send . kb/message-check-for-subject)
-         (message-send . kb/message-confirm-from))
+         (message-send . kb/message-check-for-subject))
   :custom
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
@@ -42,20 +41,7 @@
       (let ((subject (string-trim (substring (thing-at-point 'line) 8))))
         (when (string-empty-p subject)
           (end-of-line)
-          (insert (read-string "Subject (optional): "))))))
-
-  ;; Confirm that this is the desired address I want to send the email from
-  (defun kb/message-confirm-from ()
-    "Confirm that this is the desired address I want to send the email
-from."
-    (save-excursion
-      (goto-char (point-min))
-      (search-forward "--text follows this line--")
-      (re-search-backward "^From:")
-      (let ((from (string-trim (substring (thing-at-point 'line) 5))))
-        (unless (yes-or-no-p
-                 (concat "Is this really the address you want to send from?: " from))
-          (keyboard-quit))))))
+          (insert (read-string "Subject (optional): ")))))))
 
 ;;; Sendmail
 ;; Use `sendmail' program to send emails?
@@ -543,6 +529,42 @@ Interactively select signature via `kb/mu4e-select-signature'."
             (org-msg-edit-mode))
           (set-buffer-modified-p nil)))))
   (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup))
+
+;;;; Mu4e-send-delay
+(use-package mu4e-send-delay
+  :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
+  :straight (:type git :host github :repo "bennyandresen/mu4e-send-delay")
+  :hook ((mu4e-compose-mode . mu4e-send-delay-draft-refresh-header)
+         (mu4e-main-mode . mu4e-send-delay-initialize-send-queue-timer))
+  :general ([remap message-send-and-exit] 'mu4e-send-delay-send-and-exit)
+  :custom
+  (mu4e-send-delay-default-delay "10m")
+  (mu4e-send-delay-default-hour "8")
+  (mu4e-send-delay-timer 60)
+  :config
+  (defun kb/mu4e-send-delay-send-and-exit (&optional delay)
+    "Send this email.
+ If DELAY, then delay sending this email."
+    (interactive "P")
+    (if delay
+        (mu4e-send-delay-postpone-and-exit)
+      (message-remove-header mu4e-send-delay-header nil)
+      (message-send-and-exit)))
+  (advice-add 'mu4e-send-delay-send-and-exit :override 'kb/mu4e-send-delay-send-and-exit)
+
+  (with-eval-after-load 'org-msg
+    ;; Use `mu4e-send-delay-send-and-exit' instead. Also pass prefix arg to it
+    (defun kb/org-msg-ctrl-c-ctrl-c ()
+      "Send message like `message-send-and-exit'.
+If the current buffer is OrgMsg buffer and OrgMsg is enabled (see
+`org-msg-toggle'), it calls `message-send-and-exit'. With the
+universal prefix argument, it calls `message-send'."
+      (when (eq major-mode 'org-msg-edit-mode)
+        (org-msg-sanity-check)
+        (if current-prefix-arg
+            (org-msg-mua-call 'send 'mu4e-send-delay-send-and-exit current-prefix-arg)
+          (org-msg-mua-call 'send-and-exit 'mu4e-send-delay-send-and-exit current-prefix-arg))))
+    (advice-add 'org-msg-ctrl-c-ctrl-c :override 'kb/org-msg-ctrl-c-ctrl-c)))
 
 ;;; email-sending-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
