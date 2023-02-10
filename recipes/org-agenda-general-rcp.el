@@ -446,6 +446,8 @@ See `kb/consult-org-depend’."
   (org-gcal-down-days 62)
   (org-gcal-recurring-events-mode 'top-level)
   (org-gcal-notify-p t)
+  (org-gcal-update-cancelled-events-with-todo t)
+  (org-gcal-remove-api-cancelled-events t)
   ;; Time zone
   ;; (org-gcal-local-timezone "America/Chicago")
   (org-gcal-local-timezone "America/New_York")
