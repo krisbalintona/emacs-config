@@ -448,7 +448,12 @@ See `kb/consult-org-depend’."
   (org-gcal-notify-p t)
   ;; Time zone
   ;; (org-gcal-local-timezone "America/Chicago")
-  (org-gcal-local-timezone "America/New_York"))
+  (org-gcal-local-timezone "America/New_York")
+  :config
+  (use-package plstore
+    :demand
+    :custom
+    (plstore-cache-passphrase-for-symmetric-encryption t)))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
