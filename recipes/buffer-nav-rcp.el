@@ -212,7 +212,9 @@ does."
   ;; Dictionary
   (defun avy-action-define (pt)
     (require 'checking-words-rcp)
-    (kb/dictionary-at-point)
+    (save-excursion
+      (goto-char pt)
+      (kb/dictionary-at-point))
     ;; If with `universal-arg', don't switch to help buffer
     (when current-prefix-arg
       (select-window
