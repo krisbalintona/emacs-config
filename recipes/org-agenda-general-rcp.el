@@ -16,7 +16,11 @@
   :hook ((org-agenda-finalize . (lambda () (goto-char (point-min))))
          (org-capture-before-finalize . kb/add-property-with-date-captured))
   :gfhook 'hl-line-mode
-  :general (kb/open-keys "a" 'org-agenda)
+  :general
+  (kb/open-keys "a" 'org-agenda)
+  (:keymaps 'org-agenda-keymap
+   "S" '(lambda () (interactive)
+              (org-agenda-change-time-span (string-to-number (read-from-minibuffer "Span: ")))))
   :custom
   (org-agenda-files (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
 
