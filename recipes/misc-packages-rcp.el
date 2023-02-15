@@ -520,18 +520,18 @@ displayed."
 ;; Alternative to `sentence-navigation'. Provides sentence navigation commands
 ;; that respect abbreviations, etc.
 (use-package pcre2el)
-(use-package segment
-  :straight (segment :type git :host codeberg :repo "martianh/segment"
-                     ;; Need more than just elisp files
-                     :files ("*"))
+(use-package sentex
+  :straight (sentex :type git :host codeberg :repo "martianh/sentex"
+                    ;; Need more than just elisp files
+                    :files ("*"))
   :commands kb/forward-sentence-function
   :custom
   ;; NOTE 2023-01-18: icu4j has many more rules, but is "too thorough" for my
   ;; tastes, so I stick with the more modest omegat and add more rules
-  ;; (segment-ruleset-framework 'icu4j)
-  (segment-ruleset-framework 'omegat)
-  ;; (segment-ruleset-framework 'okapi-alt)
-  (segment-custom-rules-regex-list
+  ;; (sentex-ruleset-framework 'icu4j)
+  (sentex-ruleset-framework 'omegat)
+  ;; (sentex-ruleset-framework 'okapi-alt)
+  (sentex-custom-rules-regex-list
    `(("English"
       (("[JS]r\\." "[[:space:]][[:lower:]]" :break nil)
        ("U\\.S\\." "[[:space:]][[:lower:]]" :break nil)
@@ -570,9 +570,9 @@ displayed."
   :init
   (setq forward-sentence-function 'kb/forward-sentence-function)
   :config
-  ;; Without manual reevaluation of `segment--get-ruleset-by-lang', things break
+  ;; Without manual reevaluation of `sentex--get-ruleset-by-lang', things break
   ;; for some reason on startup...
-  (defun segment--get-ruleset-by-lang (language converted-file-set)
+  (defun sentex--get-ruleset-by-lang (language converted-file-set)
     "Get ruleset for LANGUAGE from CONVERTED-FILE-SET."
     (dolist (x converted-file-set)
       (when (equal language
@@ -581,10 +581,10 @@ displayed."
 
   ;; Do this to make sure ruleset is up to date upon first invocation of a
   ;; sentence movement command
-  (segment--build-rule-list)
+  (sentex--build-rule-list)
 
   ;; My own code below
-  (defun kb/segment-reg-pair-car (reg-pair)
+  (defun kb/sentex-reg-pair-car (reg-pair)
     "Return the before-break-regexp for REG-PAIR.
 REG-PAIR can either be a regexp or a function that returns a
 regexp. If the function returns nil, then nothing is matched
@@ -594,7 +594,7 @@ instead."
         (or (funcall (car reg-pair)) (rx unmatchable))
       (car reg-pair)))
 
-  (defun kb/segment-reg-pair-cadr (reg-pair)
+  (defun kb/sentex-reg-pair-cadr (reg-pair)
     "Return the after-break-regexp for REG-PAIR.
 REG-PAIR can either be a regexp or a function that returns a
 regexp. If the function returns nil, then nothing is matched
@@ -604,25 +604,25 @@ instead."
         (or (funcall (cadr reg-pair)) (rx unmatchable))
       (cadr reg-pair)))
 
-  (defun kb/segment--test-rule-pairs (regex-alist &optional moving-backward)
+  (defun kb/sentex--test-rule-pairs (regex-alist &optional moving-backward)
     "Return non-nil when when point is surrounded by an element in REGEX-ALIST.
 MOVING-BACKWARD makes adjustments based on where `backward-sentence' places point."
     (cl-dolist (reg-pair regex-alist)
       (when (and
              (looking-back
               (if moving-backward
-                  (concat (kb/segment-reg-pair-car reg-pair) "[[:blank:]]*")
-                (kb/segment-reg-pair-car reg-pair)))
+                  (concat (kb/sentex-reg-pair-car reg-pair) "[[:blank:]]*")
+                (kb/sentex-reg-pair-car reg-pair)))
 
              (if moving-backward
                  (save-excursion
                    (forward-whitespace -1)
-                   (looking-at (kb/segment-reg-pair-cadr reg-pair)))
-               (looking-at (kb/segment-reg-pair-cadr reg-pair)))
+                   (looking-at (kb/sentex-reg-pair-cadr reg-pair)))
+               (looking-at (kb/sentex-reg-pair-cadr reg-pair)))
 
              (not (plist-get reg-pair :break)))
         (cl-return reg-pair))))
-  (advice-add 'segment--test-rule-pairs :override #'kb/segment--test-rule-pairs)
+  (advice-add 'sentex--test-rule-pairs :override #'kb/sentex--test-rule-pairs)
 
   (defun kb/forward-sentence-function (&optional arg)
     "Move forward to next end of sentence. With argument, repeat.
@@ -631,14 +631,14 @@ When ARG is negative, move backward repeatedly to start of sentence.
 The variable `sentence-end' is a regular expression that matches ends of
 sentences.  Also, every paragraph boundary terminates sentences as well.
 
-Uses `segment’s regexps to ignore common abbreviations (see
-`segment-ruleset-framework’) as well as define custom
-sentence-breaks (see `segment-custom-rules-regex-list').
+Uses `sentex’s regexps to ignore common abbreviations (see
+`sentex-ruleset-framework’) as well as define custom
+sentence-breaks (see `sentex-custom-rules-regex-list').
 
 Also, when moving forward sentences, will jump the whitespace
 between the current and next sentence, i.e,leave the point on the
 first character of the next sentence."
-    (require 'segment)
+    (require 'sentex)
     (or arg (setq arg 1))
     (let ((case-fold-search nil)
           (opoint (point))
@@ -648,7 +648,7 @@ first character of the next sentence."
       (while (< arg 0)
         (let ((pos (point))
               par-beg par-text-beg
-              default-break-point segment-break-point)
+              default-break-point sentex-break-point)
           (save-excursion
             (start-of-paragraph-text)
             (setq par-text-beg (point))
@@ -656,7 +656,7 @@ first character of the next sentence."
             (setq par-beg (point)))
 
           ;; The strategy here is to first find the sentence end based on the
-          ;; `sentence-end' regexp then `segment-current-break-rules'.
+          ;; `sentence-end' regexp then `sentex-current-break-rules'.
           ;; Afterwards, we compare them and `goto-char' the one closer to the
           ;; point.
           (setq default-break-point
@@ -670,43 +670,43 @@ first character of the next sentence."
                     ;; The following while loop causes further movement if the
                     ;; initial movement landed us on a non-breaking sentence end
                     ;; regexp (e.g. and abbreviation) recognized by
-                    ;; `segment--looking-back-forward-map'
+                    ;; `sentex--looking-back-forward-map'
                     (while (save-excursion
                              (goto-char final-pos)
-                             (segment--looking-back-forward-map segment-current-language :moving-backward))
+                             (sentex--looking-back-forward-map sentex-current-language :moving-backward))
                       (if (and (re-search-backward sentence-end par-beg t)
                                (or (< (match-end 0) pos)
                                    (re-search-backward sentence-end par-beg t)))
                           (setq final-pos (match-end 0))
                         (setq final-pos par-text-beg)))
                     final-pos)))
-          (setq segment-break-point
+          (setq sentex-break-point
                 (let ((closest-break-point most-negative-fixnum))
-                  (cl-dolist (reg-pair segment-current-break-rules)
+                  (cl-dolist (reg-pair sentex-current-break-rules)
                     (save-excursion
-                      (when (and (re-search-backward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
-                                                              (regexp (kb/segment-reg-pair-cadr reg-pair))))
+                      (when (and (re-search-backward (rx (seq (regexp (kb/sentex-reg-pair-car reg-pair))
+                                                              (regexp (kb/sentex-reg-pair-cadr reg-pair))))
                                                      (or default-break-point par-beg) t)
                                  (or (< (match-end 0) pos)
-                                     (re-search-backward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
-                                                                  (regexp (kb/segment-reg-pair-cadr reg-pair))))
+                                     (re-search-backward (rx (seq (regexp (kb/sentex-reg-pair-car reg-pair))
+                                                                  (regexp (kb/sentex-reg-pair-cadr reg-pair))))
                                                          (or default-break-point par-beg) t))
                                  (< closest-break-point (match-end 0)))
                         ;; Change the following lines depending on where we want
                         ;; the point to end for our custom line breaks
-                        (re-search-forward (rx (regexp (kb/segment-reg-pair-car reg-pair))) nil t)
+                        (re-search-forward (rx (regexp (kb/sentex-reg-pair-car reg-pair))) nil t)
                         (goto-char (match-end 0))
                         (skip-chars-forward " \t")
                         (setq closest-break-point (point)))))
                   closest-break-point))
-          (goto-char (max default-break-point segment-break-point)))
+          (goto-char (max default-break-point sentex-break-point)))
 
         (setq arg (1+ arg)))
 
       ;; Going forward
       (while (> arg 0)
         (let ((par-end (save-excursion (end-of-paragraph-text) (point)))
-              default-break-point segment-break-point)
+              default-break-point sentex-break-point)
 
           (setq default-break-point
                 (save-excursion
@@ -722,7 +722,7 @@ first character of the next sentence."
                       (progn
                         ;; Continue moving forward sentences (defined by
                         ;; `sentence-end') until
-                        ;; `segment--looking-back-forward-map' considers the
+                        ;; `sentex--looking-back-forward-map' considers the
                         ;; sentence break a valid one
                         (while (save-excursion
                                  ;; Consider point having been moved to the
@@ -736,7 +736,7 @@ first character of the next sentence."
                                    ;; paragraph should be skipped and there is
                                    ;; whitespace after the sentence end.
                                    (skip-chars-backward " \t\n"))
-                                 (segment--looking-back-forward-map segment-current-language))
+                                 (sentex--looking-back-forward-map sentex-current-language))
                           (unless (re-search-forward sentence-end par-end t)
                             ;; If no other sentence is found in the rest of the
                             ;; paragraph, then just leave the point at the end
@@ -751,24 +751,24 @@ first character of the next sentence."
                         (when (bolp) (skip-chars-backward " \t\n"))
                         (point))
                     par-end)))
-          (setq segment-break-point
+          (setq sentex-break-point
                 (let ((closest-break-point most-positive-fixnum))
-                  (cl-dolist (reg-pair segment-current-break-rules)
+                  (cl-dolist (reg-pair sentex-current-break-rules)
                     (save-excursion
-                      (when (and (re-search-forward (rx (seq (regexp (kb/segment-reg-pair-car reg-pair))
-                                                             (regexp (kb/segment-reg-pair-cadr reg-pair))))
+                      (when (and (re-search-forward (rx (seq (regexp (kb/sentex-reg-pair-car reg-pair))
+                                                             (regexp (kb/sentex-reg-pair-cadr reg-pair))))
                                                     (or default-break-point par-end) t)
                                  (> closest-break-point (match-end 0)))
                         ;; Change the following lines depending on where we want
                         ;; the point to end. The following is for my own
                         ;; preference in behavior. Leave the point at the
                         ;; beginning of the next sentence.
-                        (re-search-backward (rx (regexp (kb/segment-reg-pair-car reg-pair))) nil t)
+                        (re-search-backward (rx (regexp (kb/sentex-reg-pair-car reg-pair))) nil t)
                         (goto-char (match-end 0))
                         (skip-chars-forward " \t")
                         (setq closest-break-point (point)))))
                   closest-break-point))
-          (goto-char (min default-break-point segment-break-point)))
+          (goto-char (min default-break-point sentex-break-point)))
 
         (setq arg (1- arg)))
 
