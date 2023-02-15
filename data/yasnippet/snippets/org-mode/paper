@@ -2,13 +2,14 @@
 # name: paper
 # --
 #+latex_class: mla
-#+professor: %^{Prof}
-#+course: %^{Course (paper header)}\n
+#+professor: 
+#+course: 
 
-* Works Cited :ignore:\n
+* Works Cited :ignore:
 
 #+begin_export LaTeX
 \newpage
 \center
 #+end_export
+
 #+print_bibliography:
