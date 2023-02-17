@@ -254,6 +254,7 @@ This function makes sure that dates are aligned for easy reading."
             (alltodo ""
                      ((org-agenda-overriding-header "Projects")
                       (org-agenda-show-inherited-tags t)
+                      (org-agenda-dim-blocked-tasks t)
                       (org-agenda-prefix-format
                        '((todo . "%2i %s ")))
                       (org-super-agenda-groups
@@ -282,6 +283,7 @@ This function makes sure that dates are aligned for easy reading."
   (org-habit-show-habits t)
   (org-habit-following-days 1)
   (org-habit-preceding-days 14)
+  (org-habit-show-done-always-green t)
   (org-habit-show-habits-only-for-today t)
   (org-habit-graph-column 70)
   (org-habit-today-glyph ?◌)
