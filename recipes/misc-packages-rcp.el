@@ -796,11 +796,11 @@ value of `forward-sentence-function'."
           ;; Benchmark the default function
           (setq forward-sentence-function 'forward-sentence-default-function)
           (setq default-time-beg (current-time))
-          (
+          (count-sentences
            (point-min) (point-max))
-          count-sentences        (setq default-time-end (current-time)
-                                       default-time-diff
-                                       (time-to-seconds (time-subtract default-time-end default-time-beg)))
+          (setq default-time-end (current-time)
+                default-time-diff
+                (time-to-seconds (time-subtract default-time-end default-time-beg)))
 
           ;; Report the difference
           (message "My function took %s seconds
