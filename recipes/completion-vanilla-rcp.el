@@ -212,15 +212,15 @@
      (imenu (styles . (basic substring orderless)))
      (kill-ring (styles . (basic substring orderless)))
      (consult-location (styles . (basic substring orderless)))))
-  (completion-styles '(orderless))
+  (completion-styles '(orderless flex))
 
   (orderless-component-separator 'orderless-escapable-split-on-space)
   (orderless-matching-styles
-   '(orderless-prefixes
-     orderless-flex
+   '(orderless-literal
+     orderless-prefixes
+     orderless-initialism
      orderless-regexp
-     ;; orderless-literal
-     ;; orderless-initialism
+     ;; orderless-flex
      ;; orderless-strict-initialism
      ;; orderless-strict-leading-initialism
      ;; orderless-strict-full-initialism
