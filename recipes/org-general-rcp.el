@@ -388,9 +388,10 @@ have `org-warning' face."
 
 ;;;; Org-modern
 (use-package org-modern
-  :disabled
+  :hook (org-mode . org-modern-mode)
   :custom
-  (org-modern-label-border 1)
+  (org-modern-hide-stars nil)           ; Adds extra indentation
+  (org-modern-label-border 'auto)
   (org-modern-timestamp t)
   (org-modern-keyword nil)
   (org-modern-table t)
@@ -399,9 +400,15 @@ have `org-warning' face."
   (org-modern-list ; I swap the defaults for + and *
    '((?+ . "•")
      (?- . "–")
-     (?* . "◦")))
-  :init
-  (global-org-modern-mode))
+     (?* . "‣"))))
+
+;;;; Org-modern-indent
+(use-package org-modern-indent
+  :after org
+  :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
+  :config
+  ;; Add late to hook
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
 ;;; Custom functions
 ;;;; Better RET
@@ -434,8 +441,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                       (match-string 1 x)
-                                     x))
+                                  (match-string 1 x)
+                                x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)
@@ -796,11 +803,11 @@ re-align the table if necessary. (Necessary because org-mode has a
 
   ;; My own cycles
   (define-typo-cycle typo-cycle-right-single-quotation-mark
-                     "Cycle through the typewriter apostrophe and the right quotation mark.
+    "Cycle through the typewriter apostrophe and the right quotation mark.
 
 If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
-                     ("'" "’")))        ; Swapped these two
+    ("'" "’")))        ; Swapped these two
 
 ;;;; Custom org-src-block
 ;; Also see package `org-edit-indirect'. Does something similar but more

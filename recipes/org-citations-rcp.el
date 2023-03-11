@@ -148,10 +148,10 @@ to manually add one myself."
   ;; Run `citar-org-update-pre-suffix' (which is overridden by my
   ;; `kb/citar-org-update-pre-suffix') right after `org-cite-insert' to
   ;; immediately set its prefix and suffix
-  (advice-add 'org-cite-insert :after #'(lambda (args)
-                                           (save-excursion
-                                             (left-char) ; First move point inside citation
-                                             (citar-org-update-pre-suffix)))))
+  (advice-add 'org-cite-insert :after '(lambda (args)
+                                          (save-excursion
+                                            (left-char) ; First move point inside citation
+                                            (citar-org-update-pre-suffix)))))
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
