@@ -14,7 +14,8 @@
 (use-package scratch
   ;; :demand t ; For the initial scratch buffer at startup
   :hook (scratch-create-buffer . kb/scratch-buffer-setup)
-  :general ("C-c s" '(scratch :wk "Create scratch"))
+  :general (kb/open-keys
+             "s" 'scratch)
   :preface
   (defun kb/scratch-buffer-setup ()
     "Add contents to `scratch' buffer and name it accordingly.
@@ -883,6 +884,8 @@ This is a difference in multitude of %s."
   :straight nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
+  (kb/open-keys
+    "c" 'calendar)
   (:keymaps 'global-map
    (general-chord "xf") 'find-file)
   (:keymaps 'Info-mode-map
