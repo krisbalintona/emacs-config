@@ -67,7 +67,12 @@
                flymake-mode-line-error-counter
                flymake-mode-line-warning-counter
                flymake-mode-line-note-counter
-               "]")))))
+               "]"))))
+  (elisp-flymake-byte-compile-load-path
+   (append (list
+            "./"
+            (when (featurep 'straight) (straight--dir)))
+           load-path)))
 
 ;;; Flymake-collection
 (use-package flymake-collection
