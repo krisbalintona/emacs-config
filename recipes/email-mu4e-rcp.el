@@ -91,6 +91,7 @@
      (:human-date . 12)
      (:flags . 10)                      ; The max width of 3 icon flags
      (:subject)))
+  (mu4e-maildir-initial-input "")       ; Annoying "/" by default
 
   ;; View
   (mu4e-view-fields
