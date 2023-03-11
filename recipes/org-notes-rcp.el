@@ -418,7 +418,7 @@ Delete the original subtree."
   (consult-customize
    consult-notes
    :prompt "Go to..."
-   :preview-key (kbd "C-M-;"))
+   :preview-key "C-M-;")
 
   (advice-add 'denote-rename-file-using-front-matter :around
                                                      #'(lambda (orig-fun &rest args)

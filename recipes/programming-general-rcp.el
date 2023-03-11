@@ -208,14 +208,14 @@ punctuation."
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
-   consult-buffer :prompt "Can use b, m, f, p, e..." :preview-key (kbd "C-M-;")
+   consult-buffer :prompt "Can use b, m, f, p, e..." :preview-key "C-M-;"
    ;; For `consult-ripgrep'
-   consult-ripgrep :preview-key (kbd "C-M-;")
+   consult-ripgrep :preview-key "C-M-;"
    ;; For `consult-fdfind'. Make sure this is after the definition of
    ;; `consult-recent-file'
-   consult-recent-file :preview-key (kbd "C-M-;")
+   consult-recent-file :preview-key "C-M-;"
    ;; `consult-find'
-   consult-find :preview-key (kbd "C-M-;")))
+   consult-find :preview-key "C-M-;"))
 
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
