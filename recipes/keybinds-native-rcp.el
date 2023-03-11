@@ -100,9 +100,7 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 If called with `universal-argument’, just
 `save-buffers-kill-terminal’ instead."
   (interactive "p")
-  (if (< 1 arg)
-      (restart-emacs)
-    (save-buffers-kill-terminal)))
+  (save-buffers-kill-emacs t (< 1 arg)))
 
 (general-define-key
  (general-chord "xx") 'save-buffer
