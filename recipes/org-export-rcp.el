@@ -13,7 +13,7 @@
 (use-package ox
   :custom
   (org-export-with-tags t)
-  (org-export-with-sub-superscripts nil)
+  (org-export-with-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
   (org-export-with-section-numbers nil)
   (org-time-stamp-formats '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
   (org-display-custom-times t)
