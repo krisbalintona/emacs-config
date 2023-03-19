@@ -335,7 +335,7 @@ have `org-warning' face."
   (org-superstar-item-bullet-alist
    '((?+ . "◦")                         ; List taken from `org-modern'
      (?- . "–")
-     (?* . "•")))
+     (?* . "‣")))
   :custom-face
   ;; Ensure headlines are aligned with headline content
   (org-superstar-leading ((t (:inherit org-indent))))
@@ -398,10 +398,8 @@ have `org-warning' face."
   (org-modern-table t)
   (org-modern-table-vertical 1)
   (org-modern-table-horizontal 0)
-  (org-modern-list ; I swap the defaults for + and *
-   '((?+ . "•")
-     (?- . "–")
-     (?* . "‣"))))
+  (org-modern-list nil)
+  (org-modern-priority nil))
 
 ;;;; Org-modern-indent
 (use-package org-modern-indent
