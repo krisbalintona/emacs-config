@@ -409,6 +409,39 @@ have `org-warning' face."
   ;; Add late to hook
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
+;;;; Org-extra-emphasis
+;; Easier addition and modification of emphasis markers in org. Also has many
+;; built-in faces and markup
+(use-package org-extra-emphasis
+  ;; :demand t
+  :after org
+  :custom
+  (org-extra-emphasis-alist
+   '(("!!" org-extra-emphasis-01)
+     ("!@" org-extra-emphasis-02)
+     ("!%" org-extra-emphasis-03)
+     ("!&" org-extra-emphasis-04)
+     ("@!" org-extra-emphasis-05)
+     ("@@" org-extra-emphasis-06)
+     ("@%" org-extra-emphasis-07)
+     ("@&" org-extra-emphasis-08)
+     ("%!" org-extra-emphasis-09)
+     ("%@" org-extra-emphasis-10)
+     ("%%" org-extra-emphasis-11)
+     ("%&" org-extra-emphasis-12)
+     ("&!" org-extra-emphasis-13)
+     ("&@" org-extra-emphasis-14)
+     ("&%" org-extra-emphasis-15)
+     ("&&" org-extra-emphasis-16)
+     ;; my own
+     ("&"
+      (:box t))))
+  :custom-face
+  (org-extra-emphasis-01 ((t (:foreground "red" :background nil :inherit org-extra-emphasis))))
+  :config
+  ;; This command isn't autoloaded...
+  (org-extra-emphasis-mode 1))
+
 ;;; Custom functions
 ;;;; Better RET
 ;; Alter RET to behave more usefully (like in Doom)
