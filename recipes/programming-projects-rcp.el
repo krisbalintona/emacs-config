@@ -31,24 +31,24 @@
   (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
   ;; Hydra menu
   (pretty-hydra-define hydra:selectrum-projectile
-                       (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
-                       ("Projectile"
-                        (("i" projectile-invalidate-cache :color red)
-                         ("n" projectile-add-known-project))
-                        "Buffers"
-                        (("b" projectile-switch-to-buffer)
-                         ("K" projectile-kill-buffers)
-                         ("S" projectile-save-project-buffers))
-                        "Find"
-                        (("d" projectile-find-dir)
-                         ("D" projectile-dired)
-                         ("f" projectile-find-file)
-                         ("p" projectile-switch-project))
-                        "Search"
-                        (("r" projectile-replace)
-                         ("R" projectile-replace-regexp)
-                         ("s" counsel-projectile-rg))
-                        ))
+    (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
+    ("Projectile"
+     (("i" projectile-invalidate-cache :color red)
+      ("n" projectile-add-known-project))
+     "Buffers"
+     (("b" projectile-switch-to-buffer)
+      ("K" projectile-kill-buffers)
+      ("S" projectile-save-project-buffers))
+     "Find"
+     (("d" projectile-find-dir)
+      ("D" projectile-dired)
+      ("f" projectile-find-file)
+      ("p" projectile-switch-project))
+     "Search"
+     (("r" projectile-replace)
+      ("R" projectile-replace-regexp)
+      ("s" counsel-projectile-rg))
+     ))
   :config
   (projectile-mode)
 
@@ -281,6 +281,13 @@
   :init
   (magit-todos-mode)
   )
+
+;;;; Abdridge-diff
+(use-package abridge-diff
+  :after magit
+  :diminish
+  :init
+  (abridge-diff-mode))
 
 ;;;;; VC
 ;;;; Itself
