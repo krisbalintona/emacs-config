@@ -55,10 +55,10 @@
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
-            (or (buffer-file-name)                         ; Connected to a file
-                ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
-                (string-match "*Minimap*" (buffer-name)) ; Demap minimap
-                )))
+       (or (buffer-file-name)                         ; Connected to a file
+           ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
+           (string-match "*Minimap*" (buffer-name)) ; Demap minimap
+           )))
   :init
   ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I want to swap the
   ;; background faces which solaire remaps, e.g., non-real buffers dark and real
@@ -155,6 +155,12 @@
     (with-eval-after-load 'face-remap
       (diminish 'buffer-face-mode))))
 
+;;;; Mlscroll
+(use-package mlscroll
+  :hook (server-after-make-frame . mlscroll-mode)
+  :init
+  (mlscroll-mode))
+
 ;;;; Default mode line
 ;; Based off of Prot's
 (unless (bound-and-true-p mood-line-mode)
@@ -241,7 +247,8 @@ the mode line. Also alters `global-mode-string’ based on
                                      (powerline-raw (kb/mode-line-misc-info-wrapper) nil 'r)
                                      (powerline-raw kb/mode-line-modes)
                                      (powerline-raw mode-line-process)
-                                     (if (display-graphic-p) " " "-%-")))) ; Modified `mode-line-end-spaces'
+                                     ;; (if (display-graphic-p) " " "-%-") ; Modified `mode-line-end-spaces'
+                                     (powerline-raw mode-line-end-spaces)))) ; REVIEW 2023-03-13: Experimenting with `mlscroll'
                      (concat
                       (powerline-render lhs)
                       (powerline-fill face (powerline-width rhs))
