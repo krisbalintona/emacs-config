@@ -281,12 +281,16 @@ have `org-warning' face."
 ;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
-  :disabled t                           ; Still buggy
   :ghook 'org-mode-hook
+  :general
+  (:keymaps 'org-visibility-mode-map
+   :prefix "C-x"
+   "C-v" 'org-visibility-force-save ; Originally bound to `find-alternative-file'
+   "M-v" 'org-visibility-remove)
   :custom
   (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
-  (org-visibility-include-paths nil)
-  (org-visibility-include-regexps '("\\.org\\'")) ; Persist all org files regardless of location
+  (org-visibility-include-paths `(,org-directory))
+  (org-visibility-include-regexps '("\\.org\\'"))
   (org-visibility-exclude-paths nil)
   (org-visibility-maximum-tracked-files 500)
   (org-visibility-maximum-tracked-days 60)
