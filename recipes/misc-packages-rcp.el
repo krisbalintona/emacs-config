@@ -879,6 +879,16 @@ This is a difference in multitude of %s."
   (interactive "r")
   (replace-regexp "\n" " " nil beg end))
 
+;;; Chatgpt-shell
+(use-package chatgpt-shell
+  :disabled
+  :straight (chatgpt-shell :type git :host github :repo "xenodium/chatgpt-shell")
+  :general (kb/open-keys
+             "C" 'chatgpt-shell
+             "D" 'dall-e-shell)
+  :custom
+  (chatgpt-shell-openai-key "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"))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
