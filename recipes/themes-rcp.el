@@ -97,6 +97,10 @@
   (lin-global-mode))
 
 ;;; Modeline
+;;;; Nerd-icons
+(use-package nerd-icons
+  :demand)
+
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
