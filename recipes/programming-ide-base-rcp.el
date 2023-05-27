@@ -118,45 +118,45 @@
   (global-tree-sitter-mode))    ; Enable for all supported tree-sitter languages
 
 ;;;; Tree-sitter-langs
-;; Supported language bundle for tree-sitter
-(use-package tree-sitter-langs
-  :after tree-sitter
-  :defer 5                              ; Best solution I could think of...
-  :config
-  (tree-sitter-langs-install-grammars   ; Install language bundles
-   t
-   tree-sitter-langs--bundle-version
-   tree-sitter-langs--os))
-
+;; ;; Supported language bundle for tree-sitter
+;; (use-package tree-sitter-langs
+;;   :after tree-sitter
+;;   :defer 5                              ; Best solution I could think of...
+;;   :config
+;;   (tree-sitter-langs-install-grammars   ; Install language bundles
+;;    t
+;;    tree-sitter-langs--bundle-version
+;;    tree-sitter-langs--os))
+;; 
 ;;;; Turbo-log
-(use-package turbo-log
-  :requires tree-sitter
-  :straight (turbo-log :type git :host github :repo "artawower/turbo-log.el")
-  :general (:prefix "H-;"
-            ";" 'turbo-log-print
-            "i" 'turbo-log-print-immediately
-            "h" 'turbo-log-comment-all-logs
-            "s" 'turbo-log-uncomment-all-logs
-            "[" 'turbo-log-paste-as-logger
-            "]" 'turbo-log-paste-as-logger-immediately
-            "d" 'turbo-log-delete-all-logs)
-  :custom
-  (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
-  (turbo-log-allow-insert-without-tree-sitter-p t))
+;; (use-package turbo-log
+;;   :requires tree-sitter
+;;   :straight (turbo-log :type git :host github :repo "artawower/turbo-log.el")
+;;   :general (:prefix "H-;"
+;;             ";" 'turbo-log-print
+;;             "i" 'turbo-log-print-immediately
+;;             "h" 'turbo-log-comment-all-logs
+;;             "s" 'turbo-log-uncomment-all-logs
+;;             "[" 'turbo-log-paste-as-logger
+;;             "]" 'turbo-log-paste-as-logger-immediately
+;;             "d" 'turbo-log-delete-all-logs)
+  ;; :custom
+  ;; (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
+  ;; (turbo-log-allow-insert-without-tree-sitter-p t))
 
 ;;; Treesit (built-in)
 ;; Taken from https://github.com/casouri/tree-sitter-module/issues/13
-(use-package tree-sitter-module
-  :straight (tree-sitter-module
-             :type git :host github
-             :repo "casouri/tree-sitter-module"
-             :pre-build (("./batch.sh"))
-             :files ("dist/*.so" "dist/*.dll" "dist/*.dylib"))
-  :init
-  ;; Search for tree-sitter modules in this packages build directory.
-  (with-eval-after-load 'treesit
-    (add-to-list 'treesit-extra-load-path
-                 (straight--build-dir "tree-sitter-module"))))
+;; (use-package tree-sitter-module
+;;   :straight (tree-sitter-module
+;;              :type git :host github
+;;              :repo "casouri/tree-sitter-module"
+;;              :pre-build (("./batch.sh"))
+;;              :files ("dist/*.so" "dist/*.dll" "dist/*.dylib"))
+;;   :init
+;;   ;; Search for tree-sitter modules in this packages build directory.
+;;   (with-eval-after-load 'treesit
+;;     (add-to-list 'treesit-extra-load-path
+;;                  (straight--build-dir "tree-sitter-module"))))
 
 ;;; programming-ide-base-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

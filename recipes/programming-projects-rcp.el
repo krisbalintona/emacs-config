@@ -252,9 +252,9 @@
 ;; ~/.authinfo.gpg, or ~/.netrc. See
 ;; https://magit.vc/manual/ghub/Storing-a-Token.html
 (use-package forge
+  :disabled
   :demand t
-  :after magit
-  )
+  :after magit)
 
 ;;;; Magit-todos
 (use-package magit-todos
