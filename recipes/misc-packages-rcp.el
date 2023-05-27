@@ -50,7 +50,7 @@
 (use-package tmr
   :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
   :general (kb/open-keys
-             "t" '(tmr-dispatch :wk "Tmr dispatch"))
+             "t" 'tmr-prefix-map)
   :custom
   ;; Useful variables
   (tmr-descriptions-list
@@ -540,7 +540,7 @@ displayed."
        ("[^\\.][[:space:]][\"“]?[A-Z]\\." "[[:space:]]" :break nil)
        ("[Oo]p\\." "[[:space:]][[:digit:]]" :break nil)
        ;; My regexps
-       (,(rx (seq (any space) (or (literal "p.") (literal "pp.")))) ,(rx (any space) (any digit)) :break nil)
+       (,(rx (or (literal "p.") (literal "pp."))) ,(rx (any space) (any digit)) :break nil)
        (,(rx (or (literal "...") (literal "…"))) ,(rx (any space) (any lower)) :break nil)
        (,(rx (literal "etc.")) ,(rx (any space) (any lower)) :break nil)
        (,(rx (literal "Rev.")) ,(rx (any space) (any upper)) :break nil)

@@ -83,7 +83,9 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 
 (general-define-key
  [remap scroll-up-command] 'kb/scroll-up-command
- [remap scroll-down-command] 'kb/scroll-down-command)
+ [remap scroll-down-command] 'kb/scroll-down-command
+ "H-P" 'scroll-down-line
+ "H-N" 'scroll-up-line)
 
 ;;; Text editing
 (general-define-key

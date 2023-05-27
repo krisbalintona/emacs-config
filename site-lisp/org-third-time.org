@@ -10,6 +10,8 @@ In practice, ~org-third-time~ can be used exactly like ~org-pomodoro~ but with t
 3. Target work and break duration are flexibly determined (i.e. from a user-defined predicate).
 4. Customizable mode line format.
 
+* On ~org-timer~
+
 * Predicates
 
 So, in theory, you should be able to have any workflow you like, as long as they follow the following structure:

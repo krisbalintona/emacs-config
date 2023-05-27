@@ -78,6 +78,7 @@
   (org-extend-today-until 3)
   (org-use-effective-time t)
   (org-agenda-block-separator ?─)
+  (org-deadline-warning-days 0)
   (org-agenda-scheduled-leaders
    '("Scheduled: " "Sched.%2dx: "))
   (org-agenda-deadline-leaders
@@ -185,12 +186,54 @@ This function makes sure that dates are aligned for easy reading."
   :config
   (org-clock-persistence-insinuate)
 
-  (advice-add 'org-clock-get-clock-string
-              :around (lambda (orig_fun &rest args)
-                        "Truncate `org-clock-heading’."
-                        (let ((org-clock-heading
-                               (truncate-string-to-width org-clock-heading 40 nil nil (truncate-string-ellipsis))))
-                          (apply orig_fun args)))))
+  ;; Mode line string
+  (defun kb/org-clock-get-clock-string ()
+    "Form a clock-string, that will be shown in the mode line.
+If an effort estimate was defined for the current item, use
+01:30/01:50 format (clocked/estimated).
+If not, show simply the clocked time like 01:50."
+    (let ((org-clock-heading
+           (truncate-string-to-width org-clock-heading 40 nil nil (truncate-string-ellipsis)))
+          (clocked-time (org-clock-get-clocked-time)))
+      (if org-clock-effort
+          (let* ((effort-in-minutes (org-duration-to-minutes org-clock-effort))
+                 (work-done-str
+                  (propertize (org-duration-from-minutes clocked-time)
+                              'face
+                              (if (and org-clock-task-overrun
+                                       (not org-clock-task-overrun-text))
+                                  'org-mode-line-clock-overrun
+                                'org-mode-line-clock)))
+                 (effort-str (org-duration-from-minutes effort-in-minutes)))
+            (format (propertize " [%s/%s] (%s) " 'face 'org-mode-line-clock)
+                    work-done-str effort-str org-clock-heading))
+        (format (propertize " [%s] (%s) " 'face 'org-mode-line-clock)
+                (org-duration-from-minutes clocked-time)
+                org-clock-heading))))
+  (advice-add 'org-clock-get-clock-string :override #'kb/org-clock-get-clock-string)
+
+  ;; Change program for playing sound
+  (defun kb/org-clock-play-sound (&optional clock-sound)
+    "Play sound as configured by `org-clock-sound'.
+Use alsa's aplay tool if available.
+If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
+    (let ((org-clock-sound (or clock-sound org-clock-sound))
+          (program (cond ((executable-find "cvlc") "cvlc")
+                         ((executable-find "aplay") "aplay"))))
+      (cond
+       ((not org-clock-sound))
+       ((eq org-clock-sound t) (beep t) (beep t))
+       ((stringp org-clock-sound)
+        (let ((file (expand-file-name org-clock-sound)))
+          (if (file-exists-p file)
+              ;; Change aplay to cvlc which supports more audio files
+              (if program
+                  (start-process "org-clock-play-notification" nil
+                                 program file)
+                (condition-case nil
+                    (play-sound-file file)
+                  (error (beep t) (beep t))))))))))
+  (advice-add 'org-clock-play-sound :override 'kb/org-clock-play-sound))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
@@ -251,15 +294,16 @@ This function makes sure that dates are aligned for easy reading."
                             :not (:tag "project"))
                            (:auto-parent t)
                            (:discard (:anything t))))))
-            (alltodo ""
-                     ((org-agenda-overriding-header "Projects")
-                      (org-agenda-show-inherited-tags t)
-                      (org-agenda-dim-blocked-tasks t)
-                      (org-agenda-prefix-format
-                       '((todo . "%2i %s ")))
-                      (org-super-agenda-groups
-                       '((:auto-parent t)
-                         (:discard (:anything t))))))))
+            ;; (alltodo ""
+            ;;          ((org-agenda-overriding-header "Projects")
+            ;;           (org-agenda-show-inherited-tags t)
+            ;;           (org-agenda-dim-blocked-tasks t)
+            ;;           (org-agenda-prefix-format
+            ;;            '((todo . "%2i %s ")))
+            ;;           (org-super-agenda-groups
+            ;;            '((:auto-parent t)
+            ;;              (:discard (:anything t))))))
+            ))
           ("E" "Emails"
            ((tags-todo "-reminder+email"
                        ((org-agenda-overriding-header "Unscheduled")
@@ -285,7 +329,7 @@ This function makes sure that dates are aligned for easy reading."
   (org-habit-preceding-days 14)
   (org-habit-show-done-always-green t)
   (org-habit-show-habits-only-for-today t)
-  (org-habit-graph-column 70)
+  (org-habit-graph-column 110)
   (org-habit-today-glyph ?◌)
   (org-habit-completed-glyph ?●)
   (org-habit-missed-glyph ?○)
@@ -301,6 +345,7 @@ This function makes sure that dates are aligned for easy reading."
   :custom
   (org-pomodoro-length 25)
   (org-pomodoro-long-break-length 20)
+  (org-pomodoro-third-time--long-break-frequency 4)
   (org-pomodoro-short-break-length 5)
   (org-pomodoro-clock-break nil)
   (org-pomodoro-ask-upon-killing t)

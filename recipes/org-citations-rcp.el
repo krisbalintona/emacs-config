@@ -55,11 +55,10 @@
   :custom
   (citar-bibliography kb/bib-files)
   (citar-templates
-   '((main . "${author editor:30}   ${date year issued:4}    ${title:110}")
-     (suffix . "     ${=type=:20}    ${tags keywords keywords:*}")
+   '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:95}")
+     (suffix . "  ${=type=:10}  ${tags keywords keywords:20}")
      (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
-     (note . "#+title: Notes on ${author editor}, ${title}") ; For new notes
-     ))
+     (note . "#+title: Notes on ${author editor}, ${title}"))) ; For new notes
   ;; Configuring all-the-icons. From
   ;; https://github.com/bdarcus/citar#rich-ui
   (citar-symbols

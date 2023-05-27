@@ -281,6 +281,7 @@ have `org-warning' face."
 ;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
+  :diminish
   :ghook 'org-mode-hook
   :general
   (:keymaps 'org-visibility-mode-map
@@ -417,7 +418,7 @@ have `org-warning' face."
 ;; Easier addition and modification of emphasis markers in org. Also has many
 ;; built-in faces and markup
 (use-package org-extra-emphasis
-  ;; :demand t
+  :demand t
   :after org
   :custom
   (org-extra-emphasis-alist
