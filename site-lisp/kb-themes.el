@@ -19,7 +19,7 @@
 
 (defvar kb/themes-fixed-pitch-font
   ;; "Hack Nerd Font Mono"
-  "Iosevka Comfy"
+  "Iosevka"
   "Font for fixed-pitch face.")
 
 (defvar kb/themes-variable-pitch-font
