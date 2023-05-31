@@ -70,7 +70,7 @@
       (slot . 2)
       (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
-                            (string-match-p "^\\*Customize" (buffer-name))))
+                       (string-match-p "^\\*Customize" (buffer-name))))
       (display-buffer-reuse-window
        kb/select-buffer-in-side-window
        display-buffer-in-direction)
@@ -78,15 +78,6 @@
       (side . left)
       (direction . left)
       (slot . 1))
-     ;; ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'help-mode))
-     ;;  (display-buffer-reuse-window
-     ;;   kb/select-buffer-in-side-window
-     ;;   display-buffer-in-direction)
-     ;;  (window-width . 74)
-     ;;  (side . left)
-     ;;  (direction . left)
-     ;;  (slot . 2)
-     ;;  (window-parameters . ((split-window . #'ignore))))
 
      ;; To the right
      ("\\*org-roam\\*"
@@ -95,9 +86,9 @@
       (side . right)
       (window-width . 0.2))
      ((lambda (buf act)
-        (or (equal (buffer-local-value 'major-mode buf) 'eshell-mode)
+        (or (equal (kb/buffer-major-mode buf) 'eshell-mode)
             (string-match (rx "*" (* any) "eshell" (* any) "*" (* any))
-                          (buffer-name buf))))
+                          (buffer-name (get-buffer buf)))))
       (display-buffer-reuse-mode-window
        kb/select-buffer-in-side-window)
       (side . right)
