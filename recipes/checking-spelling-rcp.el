@@ -12,7 +12,7 @@
 ;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
-  :ensure-system-package aspell
+  :ensure-system-package aspell aspell-en
   :diminish
   :hook ((text-mode . (lambda ()             ; Prevent conflicts
                         (unless (featurep 'wucuo)
