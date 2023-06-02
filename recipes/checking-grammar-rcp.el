@@ -79,7 +79,7 @@
 (use-package eglot-grammarly
   :demand
   :after eglot
-  :ensure-system-package (grammarly-languageserver . "npm install -g @emacs-grammarly/grammarly-languageserver")
+  :ensure-system-package ("~/node_modules/@emacs-grammarly" . "npm install @emacs-grammarly/grammarly-languageserver")
   :straight (:host github :repo "emacs-grammarly/eglot-grammarly"))
 
 ;;; checking-grammar-rcp.el ends here
