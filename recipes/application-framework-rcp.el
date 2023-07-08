@@ -58,8 +58,8 @@
   (require 'eaf-browser)
   (require 'eaf-camera)
   (require 'eaf-demo)
-  (require 'eaf-file-browser)
-  (require 'eaf-file-manager)
+  ;; (require 'eaf-file-browser)
+  ;; (require 'eaf-file-manager)
   (require 'eaf-file-sender)
   (require 'eaf-image-viewer)
   (require 'eaf-jupyter)
@@ -70,12 +70,12 @@
   ;; (require 'eaf-org-previewer)
   (require 'eaf-pdf-viewer)
   (require 'eaf-system-monitor)
-  (require 'eaf-terminal)
+  ;; (require 'eaf-terminal)
   (require 'eaf-video-player)
   (require 'eaf-vue-demo)
   (require 'eaf-netease-cloud-music)
   (require 'eaf-rss-reader)
-  (require 'eaf-git)
+  ;; (require 'eaf-git)
 
   ;; Bindings
   ;; Browser
