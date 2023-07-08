@@ -41,15 +41,7 @@
                                  mu4e-headers-thread-connection-prefix '("│" . "│ "))))
          (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h)
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
-         (mu4e-view-mode . visual-fill-column-mode)
-         (after-init . (lambda ()
-                         (when (daemonp) (mu4e t))
-                         (when (require 'mu4e-alert nil t)
-                           (mu4e-alert-enable-notifications)
-                           (mu4e-alert-enable-mode-line-display)
-                           (setq mu4e-alert-modeline-formatter
-                                 'kb/mu4e-alert-mode-line-formatter)
-                           (mu4e-alert-update-mail-count-modeline)))))
+         (mu4e-view-mode . visual-fill-column-mode))
   :general
   (:keymaps 'mu4e-main-mode-map
    "q" 'bury-buffer
@@ -65,6 +57,10 @@
    '((:name "All inboxes" :query "maildir:/personal/Inbox OR maildir:/uni/Inbox" :key ?u)
      (:name "All drafts" :query "maildir:/personal/[Gmail].Drafts OR maildir:/uni/[Gmail].Drafts" :key ?d)
      (:name "All sent" :query "maildir:\"/personal/[Gmail].Sent Mail\" OR maildir:\"/uni/[Gmail].Sent Mail\"" :key ?s)))
+
+  ;; Modeline and notifications
+  (mu4e-modeline-support t)
+  (mu4e-notification-support t)
 
   ;; Contexts
   (mu4e-context-policy 'pick-first)
@@ -137,6 +133,13 @@
         (`flag   (mu4e-action-retag-message msg "+\\Starred"))
         (`unflag (mu4e-action-retag-message msg "-\\Starred")))))
   :config
+  ;; Modeline
+  ;; Force using regular characters rather than the fancy ones
+  (advice-add 'mu4e--bookmarks-modeline-item :around
+                                             (lambda (orig-fun &rest args)
+                                               (let ((mu4e-use-fancy-chars nil))
+                                                 (apply orig-fun args))))
+
   ;; FIXME 2022-12-29: For some reason putting these in the :custom section
   ;; doesn't load it
   (setq mu4e-contexts
@@ -423,40 +426,6 @@ will also be the width of all other printable characters."
   :ghook 'mu4e-headers-mode-hook
   :custom
   (mu4e-folding-default-view 'folded))
-
-;;; Mu4e-alert
-(use-package mu4e-alert
-  :custom
-  (mu4e-alert-interesting-mail-query
-   (concat "maildir:/personal/Inbox"
-           " OR maildir:/uni/Inbox"
-           " AND NOT flag:draft"))
-  (mu4e-alert-group-by :maildir)
-  (mu4e-alert-email-notification-types '(count subjects))
-  (mu4e-alert-notify-repeated-mails nil)
-  (mu4e-alert-set-window-urgency t)
-  (mu4e-alert-modeline-formatter 'kb/mu4e-alert-mode-line-formatter)
-  :init
-  (defun kb/mu4e-alert-mode-line-formatter (mail-count)
-    "Default formatter used to get the string to be displayed in the
-mode-line.
-
-MAIL-COUNT is the count of mails for which the string is to displayed."
-    (when (not (zerop mail-count))
-      (propertize
-       (format " !%d" mail-count)
-       'help-echo (concat (if (= mail-count 1)
-                              "You have an unread email"
-                            (format "You have %s unread emails" mail-count))
-                          "\nClick here to view "
-                          (if (= mail-count 1) "it" "them"))
-       'mouse-face 'mode-line-highlight
-       'keymap '(mode-line keymap
-                           (mouse-1 . mu4e-alert-view-unread-mails)
-                           (mouse-2 . mu4e-alert-view-unread-mails)
-                           (mouse-3 . mu4e-alert-view-unread-mails)))))
-  :config
-  (mu4e-alert-set-default-style 'libnotify))
 
 ;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
