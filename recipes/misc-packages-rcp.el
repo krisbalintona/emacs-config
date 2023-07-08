@@ -773,8 +773,8 @@ first character of the next sentence."
 
         (setq arg (1- arg)))
 
-      (let ((npoint (constrain-to-field nil opoint t)))
-        (not (= npoint opoint)))))
+      ;; Return point
+      (constrain-to-field nil opoint t)))
 
   ;; Benchmarking the performance of my function
   (defun kb/forward-sentence-function-benchmark ()
