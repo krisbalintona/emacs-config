@@ -26,12 +26,11 @@
 (use-package browse-url
   :custom
   (browse-url-generic-program (executable-find (getenv "BROWSER")))
-  (browse-url-browser-function 'browse-url-generic)       ; Primary browser
+  (browse-url-browser-function 'browse-url-generic) ; Primary browser
+  (browse-url-generic-args (list "--new-window")) ; Opens new Firefox window (i.e. "frame")
+  (browse-url-new-window-flag t) ; NOTE 2023-07-08: Not sufficient for Firefox to open new frame
   (browse-url-secondary-browser-function 'eww-browse-url) ; Secondary browser
-  (browse-url-handlers nil)
-
-  (browse-url-new-window-flag t)        ; Always open new browser window
-  )
+  (browse-url-handlers nil))
 
 ;;; Eww
 ;; Emacs' web browser

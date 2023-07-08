@@ -289,7 +289,7 @@
   :init
   (abridge-diff-mode))
 
-;;;;; VC
+;;; VC
 ;;;; Itself
 (use-package vc
   :general (:keymaps 'vc-dir-mode-map

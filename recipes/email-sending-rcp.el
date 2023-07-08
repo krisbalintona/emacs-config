@@ -62,7 +62,7 @@
 ;;; Smtpmail
 ;; Use `msmtp' program to send emails?
 (use-package smtpmail
-  :ensure-system-package (msmtp)
+  :ensure-system-package msmtp
   :custom
   (send-mail-function 'smtpmail-send-it)
   (smtpmail-default-smtp-server "smtp.gmail.com")
