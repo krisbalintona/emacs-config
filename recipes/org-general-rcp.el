@@ -442,7 +442,7 @@ have `org-warning' face."
      ("&"
       (:box t))))
   :custom-face
-  (org-extra-emphasis-01 ((t (:foreground "red" :background nil :inherit org-extra-emphasis))))
+  (org-extra-emphasis-01 ((t (:foreground "red" :background unspecified :inherit org-extra-emphasis))))
   :config
   ;; This command isn't autoloaded...
   (org-extra-emphasis-mode 1))

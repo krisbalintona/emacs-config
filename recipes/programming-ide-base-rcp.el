@@ -127,7 +127,7 @@
 ;;    t
 ;;    tree-sitter-langs--bundle-version
 ;;    tree-sitter-langs--os))
-;; 
+;;
 ;;;; Turbo-log
 ;; (use-package turbo-log
 ;;   :requires tree-sitter
@@ -140,9 +140,9 @@
 ;;             "[" 'turbo-log-paste-as-logger
 ;;             "]" 'turbo-log-paste-as-logger-immediately
 ;;             "d" 'turbo-log-delete-all-logs)
-  ;; :custom
-  ;; (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
-  ;; (turbo-log-allow-insert-without-tree-sitter-p t))
+;; :custom
+;; (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
+;; (turbo-log-allow-insert-without-tree-sitter-p t))
 
 ;;; Treesit (built-in)
 ;; Taken from https://github.com/casouri/tree-sitter-module/issues/13

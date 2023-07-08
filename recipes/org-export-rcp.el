@@ -171,7 +171,7 @@ chosen."
                        (pcase (plist-get info :latex-class)
                          ("mla" "%e %B, %Y")
                          ("cms" "%B %e, %Y")
-                         (t "%B %e, %Y"))))
+                         (_ "%B %e, %Y"))))
               (date (and (plist-get info :with-date) (org-export-get-date info fmt))))
          (format "\\date{%s}\n" (or date "\\today")))
 
