@@ -13,6 +13,7 @@
 ;;;; Define-word
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
+  :straight nil
   :gfhook 'hide-mode-line-mode
   :custom
   (dictionary-use-single-buffer t))     ; Reuse dictionary buffers
@@ -46,8 +47,8 @@
   "Return `t' if the device has internet access, and `nil'
 otherwise. Credit to https://emacs.stackexchange.com/a/18516"
   (equal 70 (dbus-get-property
-           :system "org.freedesktop.NetworkManager" "/org/freedesktop/NetworkManager"
-           "org.freedesktop.NetworkManager" "State")))
+             :system "org.freedesktop.NetworkManager" "/org/freedesktop/NetworkManager"
+             "org.freedesktop.NetworkManager" "State")))
 
 ;; TODO 2022-06-04: Better integrate bindings with other packages
 (defun kb/dictionary-at-point ()
