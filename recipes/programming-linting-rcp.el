@@ -59,6 +59,7 @@
   :custom
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
+  (flymake-show-diagnostics-at-end-of-line t)
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
   (flymake-mode-line-counter-format
