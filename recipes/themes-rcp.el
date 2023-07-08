@@ -160,7 +160,10 @@
       (diminish 'buffer-face-mode))))
 
 ;;;; Mlscroll
+;; Adds an interactive indicator for the view's position in the current buffer
+;; to the modeline
 (use-package mlscroll
+  :disabled                         ; Messes with `mode-line-format-right-align'
   :hook (server-after-make-frame . mlscroll-mode)
   :init
   (mlscroll-mode))
@@ -228,35 +231,24 @@ the mode line. Also alters `global-mode-string’ based on
       (append (seq-difference mode-line-misc-info removed-misc-info)
               (kb/global-mode-string-wrapper))))
 
-  ;; This leverages powerline's functions to right-align the modeline
-  (use-package powerline)
   (setq-default mode-line-format
-                '("%e"
-                  (:eval
-                   (let* ((active (eq (frame-selected-window) (selected-window)))
-                          (face (if active 'mode-line-buffer-id 'mode-line-buffer-id-inactive))
-                          (lhs (list (powerline-raw mode-line-front-space)
-                                     (powerline-raw (eyebrowse-mode-line-indicator))
-                                     (powerline-raw mode-line-client)
-                                     (powerline-raw mode-line-modified)
-                                     (powerline-raw mode-line-remote)
-                                     (powerline-raw vc-mode)
-                                     (powerline-raw "%n")
-                                     (powerline-raw mode-line-buffer-identification face 'l)
-                                     " "
-                                     (powerline-raw mode-line-position face 'r)
-                                     (powerline-raw '(:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format)))))
-                          (rhs (list (powerline-raw '(:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))) nil 'r)
-                                     (powerline-raw '(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format)) nil 'r)
-                                     (powerline-raw (kb/mode-line-misc-info-wrapper) nil 'r)
-                                     (powerline-raw kb/mode-line-modes)
-                                     (powerline-raw mode-line-process)
-                                     ;; (if (display-graphic-p) " " "-%-") ; Modified `mode-line-end-spaces'
-                                     (powerline-raw mode-line-end-spaces)))) ; REVIEW 2023-03-13: Experimenting with `mlscroll'
-                     (concat
-                      (powerline-render lhs)
-                      (powerline-fill face (powerline-width rhs))
-                      (powerline-render rhs)))))))
+                '("%e" mode-line-front-space
+                  (:eval (eyebrowse-mode-line-indicator))
+                  mode-line-client
+                  mode-line-modified
+                  mode-line-remote
+                  vc-mode
+                  "%n" " "
+                  mode-line-buffer-identification " "
+                  mode-line-position " "
+                  (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
+                  mode-line-format-right-align
+                  (:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))) " "
+                  (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format)) " "
+                  (:eval (kb/mode-line-misc-info-wrapper)) " "
+                  (:eval kb/mode-line-modes)
+                  mode-line-process
+                  mode-line-end-spaces)))
 
 ;;;; Time
 ;; Enable time in the mode-line
