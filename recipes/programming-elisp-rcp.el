@@ -71,7 +71,9 @@
   (help-window-select t)
   (describe-bindings-outline t)
   (help-enable-variable-value-editing t)
-  (help-window-keep-selected t))
+  (help-window-keep-selected t)
+  :config
+  (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function))
 
 ;;; Help+
 ;;  The following bindings are made here:
