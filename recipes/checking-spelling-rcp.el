@@ -12,7 +12,8 @@
 ;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
-  :ensure-system-package aspell aspell-en
+  :ensure-system-package (aspell
+                          ("/usr/share/licenses/aspell-en/" . aspell-en))
   :diminish
   :hook ((text-mode . (lambda ()             ; Prevent conflicts
                         (unless (featurep 'wucuo)
@@ -73,18 +74,18 @@
   (wucuo-modes-whose-predicate-ignored nil)
   (wucuo-spell-check-buffer-predicate
    '(lambda ()                           ; Skip spell checking under these conditions
-            (not (memq major-mode
-                       '(dired-mode
-                         log-edit-mode
-                         compilation-mode
-                         help-mode
-                         helpful-mode
-                         profiler-report-mode
-                         speedbar-mode
-                         gud-mode
-                         calc-mode
-                         Info-mode
-                         )))))
+       (not (memq major-mode
+                  '(dired-mode
+                    log-edit-mode
+                    compilation-mode
+                    help-mode
+                    helpful-mode
+                    profiler-report-mode
+                    speedbar-mode
+                    gud-mode
+                    calc-mode
+                    Info-mode
+                    )))))
   :config
   (defun kb/wucuo-mode-on ()
     "Turn wucuo mode on.  Do not use this; use `wucuo-mode' instead."
