@@ -16,7 +16,11 @@
   :straight nil
   :gfhook 'hide-mode-line-mode
   :custom
-  (dictionary-use-single-buffer t))     ; Reuse dictionary buffers
+  (dictionary-use-single-buffer t)
+  (dictionary-create-buttons nil)
+  (dictionary-read-word-function 'dictionary-read-word-default)
+  (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
+  (dictionary-search-interface nil))
 
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
