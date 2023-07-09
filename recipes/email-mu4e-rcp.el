@@ -161,7 +161,8 @@
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)))
                     ;; Smtpmail
-                    (smtpmail-smtp-user "kristoffer_balintona@brown.edu"))) ; Send from this address
+                    (smtpmail-smtp-user "kristoffer_balintona@brown.edu") ; Send from this address
+                    (smtpmail-mail-address "kristoffer_balintona@brown.edu")))
           ,(make-mu4e-context
             :name "Personal"
             :enter-func (lambda () (mu4e-message "Entering Personal context"))
@@ -180,8 +181,8 @@
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)))
                     ;; Smtpmail
-                    (smtpmail-smtp-user "krisbalintona@gmail.com"))))) ; Send from this address
-
+                    (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
+                    (smtpmail-mail-address "krisbalintona@gmail.com")))))
   ;; Headers
   ;; Taken from Doom
   (plist-put (cdr (assoc :flags mu4e-header-info)) :shortname " Flags") ; default=Flgs
