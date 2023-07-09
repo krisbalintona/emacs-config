@@ -533,32 +533,21 @@ Interactively select signature via `kb/mu4e-select-signature'."
 ;;;; Mu4e-send-delay
 (use-package mu4e-send-delay
   :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
-  :straight (:type git :host github :repo "bennyandresen/mu4e-send-delay")
-  :hook ((mu4e-compose-mode . mu4e-send-delay-draft-refresh-header)
-         (mu4e-main-mode . mu4e-send-delay-initialize-send-queue-timer))
+  :straight (:type git :host github :protocol ssh :repo "krisbalintona/mu4e-send-delay")
+  :hook (mu4e-main-mode . mu4e-send-delay-setup)
   :general ([remap message-send-and-exit] 'mu4e-send-delay-send-and-exit)
   :custom
   (mu4e-send-delay-default-delay "10m")
   (mu4e-send-delay-default-hour "8")
   (mu4e-send-delay-timer 60)
   :config
-  (defun kb/mu4e-send-delay-send-and-exit (&optional delay)
-    "Send this email.
- If DELAY, then delay sending this email."
-    (interactive "P")
-    (if delay
-        (mu4e-send-delay-postpone-and-exit)
-      (message-remove-header mu4e-send-delay-header nil)
-      (message-send-and-exit)))
-  (advice-add 'mu4e-send-delay-send-and-exit :override 'kb/mu4e-send-delay-send-and-exit)
-
   (with-eval-after-load 'org-msg
     ;; Use `mu4e-send-delay-send-and-exit' instead. Also pass prefix arg to it
     (defun kb/org-msg-ctrl-c-ctrl-c ()
       "Send message like `message-send-and-exit'.
-If the current buffer is OrgMsg buffer and OrgMsg is enabled (see
-`org-msg-toggle'), it calls `message-send-and-exit'. With the
-universal prefix argument, it calls `message-send'."
+If the current buffer is an OrgMsg buffer and OrgMsg is
+enabled (see `org-msg-toggle'), it calls `message-send-and-exit'.
+With the universal prefix argument, it calls `message-send'."
       (when (eq major-mode 'org-msg-edit-mode)
         (org-msg-sanity-check)
         (if current-prefix-arg
