@@ -105,7 +105,7 @@
   (mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))
   (mu4e-compose-signature-auto-include nil)
   (mu4e-compose-hidden-headers nil)
-  ;; (mu4e-compose-format-flowed t)    ; REVIEW 2023-01-02: Not sure what this does
+  (mu4e-compose-format-flowed t) ; Not sure, but I think this setting helps
 
   ;; Other
   (mu4e-completing-read-function 'completing-read)

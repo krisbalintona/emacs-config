@@ -545,6 +545,7 @@ Interactively select signature via `kb/mu4e-select-signature'."
     ;; Use `mu4e-send-delay-send-and-exit' instead. Also pass prefix arg to it
     (defun kb/org-msg-ctrl-c-ctrl-c ()
       "Send message like `message-send-and-exit'.
+
 If the current buffer is an OrgMsg buffer and OrgMsg is
 enabled (see `org-msg-toggle'), it calls `message-send-and-exit'.
 With the universal prefix argument, it calls `message-send'."
