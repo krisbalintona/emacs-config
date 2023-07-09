@@ -19,8 +19,9 @@
   (dictionary-use-single-buffer t)
   (dictionary-create-buttons nil)
   (dictionary-read-word-function 'dictionary-read-word-default)
+  (dictionary-search-interface nil)
   (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
-  (dictionary-search-interface nil))
+  (dictionary-server "dict.org"))       ; To avoid the prompt
 
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
