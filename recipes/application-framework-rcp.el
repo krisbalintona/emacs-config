@@ -12,7 +12,7 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
-  :ensure-system-package (("/home/krisbalintona/.local/lib/python3.10/site-packages/opencv_python.libs" . "pip3 install opencv-python")
+  :ensure-system-package (("/usr/share/licenses/python-opencv/" . python-opencv)
                           (gdb))     ; For debugging purposes, if I ever need to
   :after browse-url
   :straight (eaf :type git
