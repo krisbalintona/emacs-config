@@ -29,6 +29,17 @@
    '(;; ("org-previewer" . eaf--org-preview-display)
      ("markdown-previewer" . eaf--markdown-preview-display)
      ))
+  ;; Applications
+  (eaf-app-extensions-alist
+   '(("video-player" . eaf-video-extension-list)
+     ;; ("office" . eaf-office-extension-list)
+     ("pdf-viewer" . eaf-pdf-extension-list)
+     ("music-player" . eaf-music-extension-list)
+     ("mindmap" . eaf-mindmap-extension-list)
+     ("markdown-previewer" . eaf-markdown-extension-list)
+     ("image-viewer" . eaf-image-extension-list)
+     ;; ("browser" . eaf-browser-extension-list)
+     ))
 
   ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   ;; Browser
