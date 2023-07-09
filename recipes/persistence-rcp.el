@@ -117,8 +117,6 @@
 
   ;; Auto save
   (auto-save-default t) ; Only a local minor mode exists; this variable influences the global value
-  (auto-save-file-name-transforms
-   `((".*" ,(file-name-as-directory (no-littering-expand-var-file-name "auto-save")) t)))
   (auto-save-interval 150)
   (auto-save-timeout 8)
   (delete-auto-save-files nil)
