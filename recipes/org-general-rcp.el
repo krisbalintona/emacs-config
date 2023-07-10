@@ -409,10 +409,8 @@ have `org-warning' face."
 ;;;; Org-modern-indent
 (use-package org-modern-indent
   :after org
-  :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
-  :config
-  ;; Add late to hook
-  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+  :hook (org-mode . org-modern-indent-mode)
+  :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
 
 ;;;; Org-extra-emphasis
 ;; Easier addition and modification of emphasis markers in org. Also has many

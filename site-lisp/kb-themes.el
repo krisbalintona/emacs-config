@@ -92,8 +92,7 @@
 
 ;;; Function definitions
 (defun kb/themes-setup-base-faces ()
-  "Set up the default, fixed-pitch, and variable-pitch
-faces."
+  "Set up the default, fixed-pitch, and variable-pitch faces."
   (set-face-attribute 'default nil
                       :family kb/themes-default-font
                       :height 140)
