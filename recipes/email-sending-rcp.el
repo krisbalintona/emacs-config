@@ -244,7 +244,15 @@ Must be set before org-msg is loaded to take effect.")
                       ,font-size (max-width . "50em")))
               (b nil ((font-weight . "500") (color . ,theme-color)))
               (div nil (,@font (line-height . "12pt")))))))
-  (add-hook 'kb/themes-hooks 'kb/org-msg-set-faces))
+  (add-hook 'kb/themes-hooks 'kb/org-msg-set-faces)
+
+  ;; Don't show exported buffers after sending emails. Inspired by
+  ;; https://github.com/jeremy-compostella/org-msg/issues/169#issuecomment-1627375688
+  (add-hook 'message-sent-hook
+            #'(lambda ()
+                 (when (bound-and-true-p org-msg-mode)
+                   (switch-to-buffer "*Org ASCII Export*")
+                   (kill-buffer-and-window)))))
 
 ;;;; Custom signatures
 (with-eval-after-load 'org-msg
