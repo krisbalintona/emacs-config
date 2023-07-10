@@ -48,10 +48,10 @@ command."
                        current-prefix-arg))
     (save-window-excursion
       (mapc #'(lambda (filename)
-                 (with-current-buffer (find-file-noselect filename)
-                   (if prefix
-                       (call-interactively (intern sexp))             ; Command
-                     (funcall-interactively 'eval-expression sexp)))) ; Sexp
+                      (with-current-buffer (find-file-noselect filename)
+                        (if prefix
+                            (call-interactively (intern sexp))             ; Command
+                          (funcall-interactively 'eval-expression sexp)))) ; Sexp
             (dired-get-marked-files)))))
 
 ;;;; All-the-icons-dired
@@ -152,6 +152,19 @@ command."
           )))
   (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
   (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .")) ; Include hidden files
+
+;;;; Dwim-shell-command
+;; Many convenient wrappers involving shell commands in and out of `dired' (with
+;; the ability to easily create my own)
+(use-package dwim-shell-command
+  :general
+  ([remap shell-command] 'dwim-shell-command)
+  (:keymaps 'dired-mode-map
+   [remap dired-do-async-shell-command] 'dwim-shell-command
+   [remap dired-do-shell-command] 'dwim-shell-command
+   [remap dired-smart-shell-command] 'dwim-shell-command)
+  :init
+  (require 'dwim-shell-commands))       ; Set of command line utilities
 
 ;;; programming-directories-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
