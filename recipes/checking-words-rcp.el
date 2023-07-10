@@ -14,6 +14,11 @@
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
   :straight nil
+  :ensure-system-package ((dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
+                          ("/usr/share/dictd/wn.index" . dict-wn)
+                          ("/usr/share/dictd/gcide.index" . dict-gcide)
+                          ("/usr/share/dictd/moby-thesaurus.index" . dict-moby-thesaurus)
+                          ("/usr/share/dictd/foldoc.index" . dict-foldoc))
   :gfhook 'hide-mode-line-mode
   :custom
   (dictionary-use-single-buffer t)
@@ -21,7 +26,7 @@
   (dictionary-read-word-function 'dictionary-read-word-default)
   (dictionary-search-interface nil)
   (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
-  (dictionary-server "dict.org"))       ; To avoid the prompt
+  (dictionary-server nil))
 
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
@@ -31,6 +36,7 @@
 ;;;; Wordnut
 ;; Offline dictionary
 (use-package wordnut
+  :disabled                             ; Use dictionary localhost now
   :after define-word
   ;; TODO 2021-08-20: Have this changed depending on Linux distribution
   ;; Make sure the install a dictnary, in case it is a separate package
@@ -70,9 +76,7 @@ exist,then throw an error message.
 If in `lsp-mode' and `dash-docs-completing-read' is a feature,
 then call `dash-docs-completing-read-at-point'."
   (interactive)
-  (let ((dict-function (if (kb/internet-up-p)
-                           'dictionary-lookup-definition
-                         'wordnut-lookup-current-word))
+  (let ((dict-function 'dictionary-lookup-definition)
         (in-comment-p (nth 4 (syntax-ppss)))
         (in-string-p (nth 3 (syntax-ppss)))
         (valid-symbol-p (or (fboundp (symbol-at-point))
