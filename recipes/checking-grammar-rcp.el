@@ -51,9 +51,9 @@
 
 ;;; Flymake-languagetool
 (use-package flymake-languagetool
-  :hook ((text-mode LaTeX-mode org-mode markdown-mode) . flymake-languagetool-load)
-  :general (:keymaps 'flymake-mode-map
-            (general-chord "``") 'flymake-languagetool-correct-dwim)
+  ;; :hook ((text-mode LaTeX-mode org-mode markdown-mode) . flymake-languagetool-load) ; Using eglot-grammarly now
+  ;; :general (:keymaps 'flymake-mode-map
+  ;;           (general-chord "``") 'flymake-languagetool-correct-dwim)
   :custom
   ;; See https://github.com/languagetool-org/languagetool for installation
   ;; instructions
