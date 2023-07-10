@@ -12,6 +12,75 @@
 (require 'fonts-rcp)
 (require 'kb-themes)
 
+;;; Fonts
+;;;; Fontaine
+;; Test faces without restart Emacs!
+(use-package fontaine
+  :init
+  (setq fontaine-presets
+        '((regular
+           :default-family "Hack"
+           :default-weight normal
+           :default-height 100
+           :fixed-pitch-family "Fira Code"
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "Noto Sans"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.0
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family "Source Code Pro"
+           :italic-slant italic
+           :line-spacing 1)
+          (large
+           :default-family "Iosevka"
+           :default-weight normal
+           :default-height 150
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil ; use whatever the underlying face has
+           :italic-slant italic
+           :line-spacing 1)
+          ;; Mine
+          (test
+           :default-family "Iosevka Term SS04"
+           :default-weight normal
+           :default-height 140
+           :fixed-pitch-family "Iosevka Comfy"
+           :fixed-pitch-weight nil
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "Open Sans"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.10
+           :bold-family nil
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing 1)))
+  )
+
+;;;; Lighter minibuffer and echo area
+;; Make minibuffer and echo fonts a little lighter. Taken from
+;; https://www.reddit.com/r/emacs/comments/14q399t/comment/jqm6zr3/?utm_source=share&utm_medium=web2x&context=3
+(dolist (buffer (list " *Minibuf-0*" " *Echo Area 0*"
+                      " *Minibuf-1*" " *Echo Area 1*"))
+  (when (get-buffer buffer)
+    (with-current-buffer buffer
+      (face-remap-add-relative 'bold :weight 'normal)
+      (face-remap-add-relative 'default :weight 'light))))
+
+(add-hook 'minibuffer-setup-hook
+          '(lambda ()
+             (face-remap-add-relative 'bold :weight 'normal)
+             (face-remap-add-relative 'default :weight 'light)))
+
 ;;; UI
 ;;;; Fringes
 (fringe-mode '(6 . 6))
@@ -291,60 +360,6 @@ the mode line. Also alters `global-mode-string’ based on
   :custom
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
-
-;;; Other
-;;;; Fontaine
-;; Test faces without restart Emacs!
-(use-package fontaine
-  :init
-  (setq fontaine-presets
-        '((regular
-           :default-family "Hack"
-           :default-weight normal
-           :default-height 100
-           :fixed-pitch-family "Fira Code"
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "Noto Sans"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.0
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
-           :italic-family "Source Code Pro"
-           :italic-slant italic
-           :line-spacing 1)
-          (large
-           :default-family "Iosevka"
-           :default-weight normal
-           :default-height 150
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
-           :italic-family nil ; use whatever the underlying face has
-           :italic-slant italic
-           :line-spacing 1)
-          ;; Mine
-          (test
-           :default-family "Iosevka Term SS04"
-           :default-weight normal
-           :default-height 140
-           :fixed-pitch-family "Iosevka Comfy"
-           :fixed-pitch-weight nil
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "Open Sans"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.10
-           :bold-family nil
-           :bold-weight bold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing 1)))
-  )
 
 ;;; themes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
