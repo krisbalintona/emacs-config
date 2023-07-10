@@ -339,6 +339,18 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
   :config
   (add-to-list 'org-modules 'habit))
 
+;;; Org-heatmap
+;; Heatmap in agenda for tracked habits. Also highlighted calendar dates
+(use-package org-heatmap
+  :disabled  ; REVIEW 2023-07-10: Doesn't work for me right now. Return to later
+  :after org
+  :straight (:type git :host github :repo "Elilif/org-heatmap")
+  :custom
+  (org-heatmap-db-location (no-littering-expand-var-file-name "org-heatmap/"))
+  (org-heatmap-enable-habit-statics t)
+  :init
+  (org-heatmap-mode))
+
 ;;; Org-pomodoro
 (use-package org-pomodoro
   :general (:keymaps 'org-agenda-mode-map "P" 'org-pomodoro)
