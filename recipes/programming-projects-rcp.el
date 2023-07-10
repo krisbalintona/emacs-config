@@ -247,13 +247,11 @@
   )
 
 ;;;; Forge
-;; Support for git forges (e.g. GitLab and GitHub).
-;; NOTE 2022-06-01: Make sure a gitlab token is stored in either ~/.authinfo,
-;; ~/.authinfo.gpg, or ~/.netrc. See
-;; https://magit.vc/manual/ghub/Storing-a-Token.html
+;; Support for git forges (e.g. GitLab and GitHub). NOTE 2022-06-01: Make sure a
+;; github and/or gitlab token is stored in either ~/.authinfo, ~/.authinfo.gpg,
+;; or ~/.netrc. See https://magit.vc/manual/ghub/Storing-a-Token.html
 (use-package forge
-  :disabled
-  :demand t
+  :demand
   :after magit)
 
 ;;;; Magit-todos
@@ -323,7 +321,7 @@
   :gfhook
   'outshine-mode
   '(lambda ()                  ; FIXME 2022-12-30: Not sure why this doesn't work...
-      (display-line-numbers-mode -1))
+           (display-line-numbers-mode -1))
   :general (:keymaps 'diff-mode-map
             "S-<iso-lefttab>" 'outshine-cycle-buffer
             "<tab>" 'outshine-cycle
