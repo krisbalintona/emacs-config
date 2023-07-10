@@ -48,6 +48,19 @@
                     for free = (file-size-human-readable free)
                     concat (format "%s: %s + %s = %s\n" type used free total))))
 
+;;; Emacs-gc-stats
+;; Collect GC statistics. Requested by someone who'd like GC statistics:
+;; https://www.reddit.com/r/emacs/comments/14dej62/please_help_collecting_statistics_to_optimize/.
+;; Also see https://elpa.gnu.org/packages/emacs-gc-stats.html
+(use-package emacs-gc-stats
+  :custom
+  ;; Optionally reset Emacs GC settings to default values (recommended)
+  (emacs-gc-stats-gc-defaults 'emacs-defaults)
+  (emacs-gc-stats-remind (* 7))  ; Optionally set reminder to upload the stats
+  (emacs-gc-stats-inhibit-command-name-logging nil)
+  :init
+  (emacs-gc-stats-mode))
+
 ;;; garbage-collection-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'garbage-collection-rcp)
