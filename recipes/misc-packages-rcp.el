@@ -889,6 +889,13 @@ This is a difference in multitude of %s."
   :custom
   (chatgpt-shell-openai-key "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"))
 
+;;; Clippety
+;; Nearly system-wide mutual clipboard support
+(use-package clipetty
+  :diminish
+  :init
+  (global-clipetty-mode))
+
 ;;; Built-in Emacs modes/packages
 (use-package emacs
   :straight nil
