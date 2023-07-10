@@ -164,6 +164,16 @@
     (when (vertico-quick-jump)
       (embark-act arg))))
 
+;;;; Vertico-truncate
+;; Truncate long lines while leaving match visible
+(use-package vertico-truncate
+  :after vertico
+  :straight (:type git
+             :host github
+             :repo "jdtsmith/vertico-truncate")
+  :config
+  (vertico-truncate-mode))
+
 ;;; Selectrum
 ;;;; Itself
 ;; Advanced complete-read
