@@ -193,7 +193,11 @@ punctuation."
      (term-mode term-input-ring term-input-ring-index)
      (log-edit-mode log-edit-comment-ring log-edit-comment-ring-index)))
   (consult-ripgrep-args
-   "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /   --smart-case --no-heading --line-number --hidden .")
+   (concat
+    "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+   --smart-case --no-heading --with-filename --line-number --search-zip"
+    ;; Additional args
+    " --line-number --hidden"))
   :init
   (defun kb/consult-imenu-versatile (&optional arg)
     "Call `consult-imenu'. With prefix-command ARG, call
