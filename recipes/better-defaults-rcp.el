@@ -120,7 +120,7 @@
       scroll-down-aggressively nil     ; Center
       fast-but-imprecise-scrolling t)
 
-;;; Prefer loading newer versions of files
+;;; Do not load outdated byte code files
 (setq load-prefer-newer t)
 
 ;;; Highlight next error
@@ -133,6 +133,12 @@
 
 ;;; Repeatedly popping mark
 (setq set-mark-command-repeat-pop t)
+
+;;; Case insensitive `auto-mode'
+;; A second, case-insensitive pass over `auto-mode-alist' is time wasted, and
+;; indicates misconfiguration (or that the user needs to stop relying on case
+;; insensitivity).
+(setq auto-mode-case-fold nil)
 
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
