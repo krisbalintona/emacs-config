@@ -51,6 +51,12 @@
 (use-package flymake
   :diminish
   :ghook 'prog-mode-hook 'org-mode-hook
+  :hook (eglot-managed-mode . (lambda ()
+                                (cond
+                                 (eglot--managed-mode
+                                  (setq-local flymake-show-diagnostics-at-end-of-line nil))
+                                 (t
+                                  (setq-local flymake-show-diagnostics-at-end-of-line t)))))
   :general
   ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
   (:keymaps 'flymake-mode-map
@@ -59,7 +65,7 @@
   :custom
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
-  (flymake-show-diagnostics-at-end-of-line t)
+  (flymake-show-diagnostics-at-end-of-line nil) ; I enable this selectively via a hook
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
   (flymake-mode-line-counter-format
