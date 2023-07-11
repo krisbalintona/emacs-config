@@ -13,10 +13,21 @@
 (use-package eglot
   :ensure-system-package (pyright bash-language-server)
   :hook (((python-mode lua-mode sh-mode js2-mode c-mode) . eglot-ensure)
+         (eglot-managed-mode . eglot-inlay-hints-mode) ; Only available if server supports it
          (eglot-managed-mode . (lambda ()
-                                 "Configure `eldoc'"
-                                 (setq-local eldoc-box-cleanup-interval 2
-                                             eldoc-echo-area-use-multiline-p nil))))
+                                 "Configure `eldoc';;"
+                                 ;; Use `eglot--setq-saving' to restore original
+                                 ;; values. Make sure "eldoc," or a similar
+                                 ;; regexp, isn't in `eglot-stay-out-of'
+                                 (eglot--setq-saving eldoc-box-cleanup-interval 2)
+                                 (eglot--setq-saving eldoc-echo-area-use-multiline-p nil)))
+         (eglot-managed-mode . (lambda ()
+                                 "Add `eglot-flymake-backend' to the beginning of
+`flymake-diagnostic-functions', appending to the original
+functions."
+                                 (push (cons 'flymake-diagnostic-functions flymake-diagnostic-functions)
+                                       eglot--saved-bindings) ; Manually add to saved values
+                                 (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))
   :general
   (:keymaps 'eglot-mode-map
    :prefix "<f3>"
@@ -28,21 +39,21 @@
   (:keymaps 'eglot-mode-map
    (general-chord "``") 'eglot-code-actions)
   :custom
-  (eglot-events-buffer-size 0) ; Don't print json events to buffer to increase performance
+  ;; NOTE 2023-07-11: Set to 0 if I want no events printed to a buffer so that
+  ;; performance is increased
+  (eglot-events-buffer-size 2000000)
+  (eglot-connect-timeout 10)
+  (eglot-autoreconnect 3)
+  (eglot-sync-connect 3)
   (eglot-autoshutdown t)
   (eglot-send-changes-idle-time 0.7)
-  (eglot-extend-to-xref t)              ; Testing to see what this does
-  (eglot-stay-out-of '("flymake"))
+  (eglot-extend-to-xref nil)
+  (eglot-report-progress t)
   :custom-face
   (eglot-highlight-symbol-face ((t (:box (:line-width -1 :style nil)))))
   :config
-  (add-hook 'eglot-managed-mode-hook
-            (lambda ()
-              "Add `eglot-flymake-backend' to the beginning of
- `flymake-diagnostic-functions', preserving the original
- functions"
-              (when (eglot-managed-p)
-                (add-to-list 'flymake-diagnostic-functions'eglot-flymake-backend))))
+  ;; Not a `defcustom', so use `setq'
+  (setq eglot-stay-out-of '("flymake"))
 
   ;; Workaround for many hyphen characters wrapping in an ugly way in
   ;; `eldoc-box' frame
@@ -58,22 +69,30 @@
       (with-temp-buffer
         (setq-local markdown-fontify-code-blocks-natively t)
 
-        ;; Replace the horizontal rule, which is three hyphens in the markup,
-        ;; with X number of hyphens-like characters, with X being enough to
-        ;; cover the width of `eldoc-box-max-pixel-width'. We can't simply
-        ;; replace with more hyphens since `gfm-view-mode' renders any set of
-        ;; three hyphens as a horizontal rule
-        (setq string (string-replace "---"
-                                     (make-string (floor (/ eldoc-box-max-pixel-width (window-font-width))) ?⎺)
-                                     string))
+        ;; In markdown, replace the horizontal rule, which is three hyphens in
+        ;; the markup, with X number of hyphens-like characters, with X being
+        ;; enough to cover the width of `eldoc-box-max-pixel-width'. We can't
+        ;; simply replace with more hyphens since `gfm-view-mode' renders any
+        ;; set of three hyphens as a horizontal rule
+        (setq string (string-replace
+                      "---"
+                      (make-string (floor (/ eldoc-box-max-pixel-width (window-font-width))) ?⎺)
+                      string))
 
         (insert string)
         (delete-trailing-whitespace) ; Also remove trailing whitespace while we're here
         (let ((inhibit-message t)
-              (message-log-max nil))
-          (ignore-errors (delay-mode-hooks (funcall mode))))
-        (font-lock-ensure)
-        (string-trim (buffer-string)))))
+              (message-log-max nil)
+              match)
+          (ignore-errors (delay-mode-hooks (funcall mode)))
+          (font-lock-ensure)
+          (goto-char (point-min))
+          (let ((inhibit-read-only t))
+            (when (fboundp 'text-property-search-forward) ;; FIXME: use compat
+              (while (setq match (text-property-search-forward 'invisible))
+                (delete-region (prop-match-beginning match)
+                               (prop-match-end match)))))
+          (string-trim (buffer-string))))))
   (advice-add 'eglot--format-markup :override #'kb/eglot--format-markup))
 
 ;;; Languages

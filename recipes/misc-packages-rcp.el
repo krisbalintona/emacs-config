@@ -426,7 +426,8 @@ displayed."
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
 ;;; Form-feed
-;; Display  fancily. Visit the readme for alternatives and their differences
+;; Display  (page breaks) fancily. Visit the readme for alternatives and their
+;; differences
 (use-package form-feed
   :diminish
   :custom

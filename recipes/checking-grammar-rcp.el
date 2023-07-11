@@ -78,7 +78,8 @@
   (unless (system-packages-package-installed-p "grammarly-languageserver")
     (system-packages-ensure "sudo npm install -g @emacs-grammarly/grammarly-languageserver"))
   (add-to-list 'eglot-server-programs
-               `((text-mode latex-mode org-mode markdown-mode) "grammarly-languageserver" "--stdio"
+               `((text-mode latex-mode org-mode markdown-mode)
+                 "grammarly-languageserver" "--stdio"
                  :initializationOptions (:clientId "client_BaDkMgx4X19X9UxxYRCXZo"))))
 
 ;;; checking-grammar-rcp.el ends here
