@@ -65,10 +65,7 @@ punctuation."
 ;;;; Hl-line
 (use-package hl-line
   :straight nil
-  :ghook
-  'prog-mode-hook
-  'conf-mode-hook
-  )
+  :ghook 'prog-mode-hook 'conf-mode-hook)
 
 ;;;; Hl-todo
 (use-package hl-todo
@@ -120,15 +117,13 @@ punctuation."
 (use-package highlight-defined
   :ghook 'prog-mode-hook
   :custom
-  (highlight-defined-face-use-itself t)
-  )
+  (highlight-defined-face-use-itself t))
 
 ;;;; Highlight-quoted
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
-  :ghook 'emacs-lisp-mode-hook
-  )
+  :ghook 'emacs-lisp-mode-hook)
 
 ;;;; Paren
 ;; Highlight matching delimiters
@@ -268,16 +263,14 @@ punctuation."
   (auto-revert-check-vc-info t)
   (global-auto-revert-non-file-buffers t)
   (auto-revert-verbose t)
-  :config (global-auto-revert-mode)
-  )
+  :config (global-auto-revert-mode))
 
 ;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace
   :hook (before-save . whitespace-cleanup)
   :custom
-  (whitespace-style '(face empty indentation::space tab))
-  )
+  (whitespace-style '(face empty indentation::space tab)))
 
 ;;;; Sudo-edit
 ;; Utilities to edit files as root
@@ -291,14 +284,12 @@ punctuation."
 ;;;; Conf-mode
 ;; For Unix config files
 (use-package conf-mode
-  :mode (".rc$" . conf-mode)
-  :gfhook 'outshine-mode
-  )
+  :mode ("\\.rs\\'" . conf-mode)
+  :gfhook 'outshine-mode)
 
 ;;;; Vimrc-mode
 ;; For editing vim/nvim config files
-(use-package vimrc-mode
-  )
+(use-package vimrc-mode)
 
 ;;; Other
 ;;;; Outshine
