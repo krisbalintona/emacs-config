@@ -123,9 +123,12 @@ to manually add one myself."
            (ref (if (eq datum-type 'citation-reference) datum
                   (error "Not on a citation reference")))
            (key (org-element-property :key ref))
-           ;; TODO handle space delimiter elegantly.
-           (pre (read-string "Prefix text: " (org-element-property :prefix ref)))
-           (post (read-string "Suffix text: " (org-element-property :suffix ref))))
+         
+           (post (read-string "Suffix text: " (org-element-property :suffix ref)))
+           (v1
+            (org-element-property :begin ref))
+           (v2
+            (org-element-property :end ref)))
 
       ;; Change post to automatically have one space prior to any user-inputted
       ;; suffix
@@ -134,11 +137,10 @@ to manually add one myself."
                 ""     ; If there is nothing of substance (e.g. an empty string)
               (replace-regexp-in-string "^[\s-]*" " " post))) ; Only begin with one space
 
-      (setf (buffer-substring (org-element-property :begin ref)
-                              (org-element-property :end ref))
-            (org-element-interpret-data
-             `(citation-reference
-               (:key ,key :prefix ,pre :suffix ,post)))))
+      (cl--set-buffer-substring v1 v2
+                                (org-element-interpret-data
+                                 `(citation-reference
+                                   (:key ,key :prefix ,pre :suffix ,post)))))
 
     ;; Remove hook if it was added earlier
     (remove-hook 'minibuffer-mode-hook 'typo-mode))
