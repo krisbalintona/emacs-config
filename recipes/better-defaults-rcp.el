@@ -57,8 +57,7 @@
               indent-tabs-mode nil
 
               visible-bell nil
-              ring-bell-function 'ignore                                                          ; Disable annoying error sound on Windows 10
-              )
+              ring-bell-function 'ignore)
 
 ;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))

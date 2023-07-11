@@ -30,7 +30,8 @@
   "Font for the variable-pitch face.")
 
 (defvar kb/themes-mode-line-font
-  "JetBrainsMono Nerd Font"
+  ;; "JetBrainsMono Nerd Font"
+  "Iosevka Aile"
   "Font for the mode line.")
 
 ;;; Install themes
@@ -67,8 +68,8 @@
         )
 
   ;; Overrides
-  (setq modus-themes-common-palette-overrides 
-        '((fg-completion-match-0 fg-main) ; See 4.11.2.5 Make completion matches more or less colorful 
+  (setq modus-themes-common-palette-overrides
+        '((fg-completion-match-0 fg-main) ; See 4.11.2.5 Make completion matches more or less colorful
           (fg-completion-match-1 fg-main)
           (fg-completion-match-2 fg-main)
           (fg-completion-match-3 fg-main)
@@ -107,7 +108,8 @@
 
   (set-face-attribute 'mode-line nil
                       :family kb/themes-mode-line-font
-                      :height 113)
+                      ;; :height 113)      ; JetBrainsMono Nerd Font
+                      :height 117)      ; Iosevka Aile
   (set-face-attribute 'mode-line-inactive nil
                       :inherit 'mode-line))
 ;; Set faces properly for the first frame
