@@ -72,52 +72,14 @@
   :hook (lsp-grammarly-ls-after-open . (lambda () (lsp-ui-mode -1))))
 
 ;;; Eglot-grammarly
-(use-package eglot-grammarly
-  :demand
-  :after eglot
-  :ensure-system-package (grammarly-languageserver . "sudo npm install -g @emacs-grammarly/grammarly-languageserver")
-  :straight (:type git :host github :repo "emacs-grammarly/eglot-grammarly")
-  :config
-  ;; Copied from
-  ;; https://github.com/emacs-grammarly/eglot-grammarly/issues/7#issuecomment-1548616325
-  (defun eglot--read-execute-code-action@override (actions server &optional action-kind)
-    "Support for codeAction/resolve."
-    (let* ((menu-items
-            (or (cl-loop for a in actions
-                         collect (cons (plist-get a :title) a))
-                (apply #'eglot--error
-                       (if action-kind `("No \"%s\" code actions here" ,action-kind)
-                         `("No code actions here")))))
-           (preferred-action (cl-find-if
-                              (lambda (menu-item)
-                                (plist-get (cdr menu-item) :isPreferred))
-                              menu-items))
-           (default-action (car (or preferred-action (car menu-items))))
-           (chosen (if (and action-kind (null (cadr menu-items)))
-                       (cdr (car menu-items))
-                     (if (listp last-nonmenu-event)
-                         (x-popup-menu last-nonmenu-event `("Eglot code actions:"
-                                                            ("dummy" ,@menu-items)))
-                       (cdr (assoc (completing-read
-                                    (format "[eglot] Pick an action (default %s): "
-                                            default-action)
-                                    menu-items nil t nil nil default-action)
-                                   menu-items))))))
-      (cl-labels ((apply-code-action (chosen first-p)
-                    (eglot--dcase chosen
-                      (((Command) command arguments)
-                       (eglot-execute-command server (intern command) arguments))
-                      (((CodeAction) edit command)
-                       (when edit (eglot--apply-workspace-edit edit))
-                       (when command
-                         (eglot--dbind ((Command) command arguments) command
-                           (eglot-execute-command server (intern command) arguments)))
-                       (when (and (eglot--server-capable :codeActionProvider
-                                                         :resolveProvider)
-                                  first-p)
-                         (apply-code-action (eglot--request server :codeAction/resolve chosen) nil))))))
-        (apply-code-action chosen t))))
-  (advice-add #'eglot--read-execute-code-action :override #'eglot--read-execute-code-action@override))
+;; The formal `eglot-grammarly' package is useless; the following code is
+;; basically the package
+(with-eval-after-load 'eglot
+  (unless (system-packages-package-installed-p "grammarly-languageserver")
+    (system-packages-ensure "sudo npm install -g @emacs-grammarly/grammarly-languageserver"))
+  (add-to-list 'eglot-server-programs
+               `((text-mode latex-mode org-mode markdown-mode) "grammarly-languageserver" "--stdio"
+                 :initializationOptions (:clientId "client_BaDkMgx4X19X9UxxYRCXZo"))))
 
 ;;; checking-grammar-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
