@@ -28,7 +28,7 @@
    "C-M-0" 'puni-syntactic-forward-punct
    "C-M-r" 'puni-raise
    "C-M-S-m" 'puni-split
-   "C-M-m" 'puni-splice
+   "C-M-m" 'puni-splice    ; FIXME 2023-07-11: This gets bound to `M-RET' too...
    "C-M-]" 'puni-slurp-forward
    "C-M-}" 'puni-barf-forward
    "C-M-[" 'puni-slurp-backward
@@ -45,12 +45,12 @@
   (puni-confirm-when-delete-unbalanced-active-region t)
   :config
   ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands. Also
-  ;; made to retain the default prefix argument behavior
+  ;; made to retain the typical prefix argument behavior of built-in
   (defun kb/puni-smart-kill-line (&optional n)
     "Kill a line forward while keeping expressions balanced.
 If nothing can be deleted, kill backward. If still nothing can be
 deleted, kill the pairs around point."
-    (interactive "p")
+    (interactive "P")
     (let ((bounds (puni-bounds-of-list-around-point)))
       (if (eq (car bounds) (cdr bounds))
           (when-let ((sexp-bounds (puni-bounds-of-sexp-around-point)))
