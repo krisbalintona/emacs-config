@@ -70,7 +70,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
     (kb/format-buffer-indentation--base)
     (when (buffer-file-name)
       (save-buffer)))
-   ((and (require 'apheleia nil t)
+   ((and (require 'apheleia-core nil t)
          (apheleia--get-formatters))    ; If available apheleia formatter
     (let* ((apheleia-mode t))           ; Save silently
       (apheleia--format-after-save)))
