@@ -26,7 +26,7 @@
   :ensure-system-package ((black . python-black)
                           (prettier)
                           (clang-format . clang-format-all-git)
-                          (latexindent . texlive-latexindent-meta)
+                          (latexindent . texlive-binextra)
                           (stylua)
                           (google-java-format)
                           (shfmt)
