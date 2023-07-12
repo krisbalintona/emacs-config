@@ -205,6 +205,10 @@ punctuation."
   (when (executable-find "plocate")
     (setq consult-locate-args "plocate --ignore-case --existing --regexp"))
 
+  ;; Have line centered in previews. Make sure `recenter' is called after
+  ;; `consult--maybe-recenter'
+  (add-to-list 'consult-after-jump-hook 'recenter t)
+
   ;; Customize consult commands
   (consult-customize
    ;; For `consult-buffer'
