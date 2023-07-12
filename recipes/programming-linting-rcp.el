@@ -84,7 +84,7 @@
 ;;; Flymake-collection
 (use-package flymake-collection
   :requires flymake
-  :ensure-system-package ((proselint . "pip install proselint")
+  :ensure-system-package ((proselint . "pipx install proselint")
                           (luacheck))
   :hook (elpaca-after-init . flymake-collection-hook-setup)
   :custom
