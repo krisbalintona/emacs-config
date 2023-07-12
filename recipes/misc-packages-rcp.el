@@ -417,6 +417,7 @@ displayed."
 
 ;;; Fancy-compilation
 (use-package fancy-compilation
+  :ghook 'compilation-mode
   :custom
   (fancy-compilation-override-colors nil)
   (fancy-compilation-quiet-prelude t))
