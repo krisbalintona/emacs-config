@@ -54,7 +54,7 @@
   ;; Compilation
   (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
   (TeX-command-extra-options "-shell-escape") ; Enables system commands? (because we're out of the shell?)
-  (TeX-show-compilation t)
+  (TeX-show-compilation nil)
 
   ;; Other
   (TeX-electric-sub-and-superscript t)
@@ -79,7 +79,6 @@
             "C-<return>" 'LaTeX-insert-item)
   :hook (LaTeX-mode . (lambda ()
                         (TeX-PDF-mode)
-                        (TeX-interactive-mode)
                         (TeX-source-correlate-mode) ; Minor mode for forward and inverse search.
                         (TeX-fold-mode)
                         (LaTeX-math-mode) ; Math macros
@@ -286,15 +285,23 @@ blacklist, this is mostly for \\section etc."
 ;; Quicker insertion and filling-out of macros. Taken from Doom
 (use-package auctex-latexmk
   :after tex-site
-  :hook (LaTeX-mode . (lambda ()
-                        "Set LatexMk as the default command"
-                        (setq TeX-command-default "LatexMk")))
+  :hook (LaTeX-mode . kb/auctex-latexmk-mode)
   :custom
+  (TeX-command-default "LatexMk")
   ;; Pass the -pdf flag when TeX-PDF-mode is active.
   (auctex-latexmk-inherit-TeX-PDF-mode t)
   :init
-  ;; Add LatexMk as a TeX target
-  (auctex-latexmk-setup))
+  ;; Add LatexMk as a TeX command
+  (auctex-latexmk-setup)
+
+  (define-minor-mode kb/auctex-latexmk-mode
+    "Compiles on buffer save using LatexMk command."
+    :init-value nil
+    :lighter " LMk"
+    (let ((cmd (lambda () (TeX-command "LatexMk" #'TeX-master-file))))
+      (if kb/auctex-latexmk-mode
+          (add-hook 'after-save-hook cmd nil t)
+        (remove-hook 'after-save-hook cmd t)))))
 
 ;;; Preview
 ;; "Seamless" embedding of generated images (i.e. preview) into LaTeX source
@@ -355,22 +362,6 @@ blacklist, this is mostly for \\section etc."
       (align-regexp s e "\\(\\s-*\\)\\\\\\\\")
       (set-marker s nil)
       (set-marker e nil))))
-
-;;;; Kb/latex-mk-mode
-;; My own minor-mode creating automatically updating pdf-tools LaTeX preview
-(define-minor-mode kb/latexmk-mode
-  "Toggle LatexMK mode."
-  :init-value nil
-  :lighter " LatexMK"
-  (cond
-   (kb/latexmk-mode (add-hook 'after-save-hook 'kb/run-latexmk 0 t))
-   (t (remove-hook 'after-save-hook 'kb/run-latexmk t))))
-(add-hook 'latex-mode-hook #'kb/latexmk-mode)
-
-(defun kb/run-latexmk ()
-  "Start external latexmk process and run in current buffer."
-  (interactive)
-  (start-process "latexmk" "latexmk output" "latexmk" "--silent" "--pdf" (buffer-file-name (current-buffer))))
 
 ;;; latex-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
