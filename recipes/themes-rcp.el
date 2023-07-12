@@ -349,7 +349,7 @@ the mode line. Also alters `global-mode-string’ based on
   ;; (battery-mode-line-format "%cmAh")
   ;; (battery-mode-line-format "  %p%%")
   (battery-mode-line-format "%b%p%% ")
-  :config
+  :init
   (display-battery-mode))
 
 ;;;; Display-line-numbers-mode
