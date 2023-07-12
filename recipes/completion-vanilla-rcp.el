@@ -52,7 +52,7 @@
 ;;; Vertico
 ;;;; Itself
 (use-package vertico
-  :demand t                             ; Otherwise won't get loaded immediately
+  :demand                               ; Otherwise won't get loaded immediately
   :elpaca (vertico :files (:defaults "extensions/*"))
   :general
   ("H-." #'vertico-repeat)

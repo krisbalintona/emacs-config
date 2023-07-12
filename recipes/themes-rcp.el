@@ -88,9 +88,6 @@
 ;; `git-gutter-fringes'
 (setq-default fringes-outside-margins t)
 
-;;;; Line-spacing
-(setq-default line-spacing 1)
-
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line

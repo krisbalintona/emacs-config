@@ -205,9 +205,7 @@ default lsp-passthrough."
          (org-mode . kb/cape-capf-setup-org)
          (eshell-mode . kb/cape-capf-setup-eshell)
          (git-commit-mode . kb/cape-capf-setup-git-commit)
-         (LaTeX-mode . kb/cape-capf-setup-latex)
-         (sh-mode . kb/cape-capf-setup-sh)
-         )
+         (sh-mode . kb/cape-capf-setup-sh))
   :general
   (:prefix "H-c"               ; Particular completion function
    "p" 'completion-at-point
@@ -290,25 +288,6 @@ Additionally, add `cape-file' as early as possible to the list."
      "<tab>" 'completion-at-point)
     (let ((result))
       (dolist (element '(cape-dabbrev cape-symbol) result)
-        (add-to-list 'completion-at-point-functions element))))
-
-  ;; LaTeX
-  (defun kb/cape-capf-setup-latex ()
-    (require 'company-auctex)
-    (let ((result))
-      (dolist (element (list
-                        ;; First add `company-yasnippet'
-                        (cape-company-to-capf #'company-yasnippet)
-                        ;; Then add `cape-tex'
-                        #'cape-tex
-                        ;; Then add `company-auctex' in the order it adds its
-                        ;; backends.
-                        (cape-company-to-capf #'company-auctex-bibs)
-                        (cape-company-to-capf #'company-auctex-labels)
-                        (cape-company-to-capf
-                         (apply-partially #'company--multi-backend-adapter
-                                          '(company-auctex-macros company-auctex-symbols company-auctex-environments))))
-                       result)
         (add-to-list 'completion-at-point-functions element))))
 
   ;; Sh

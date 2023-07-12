@@ -2,95 +2,223 @@
 ;;
 ;;; Commentary:
 ;;
-;; Basic TeX (auctex) configuration
+;; My LaTeX configuration. Lot's taken from Doom Emacs
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; TeX
-;;;; AucTeX
-;; A lot taken from https://github.com/MatthewZMD/.emacs.d#auctex
+;;; Tex-site (auctex)
+;;;; This
+;; Collection for most of the following packages. **Package name should be
+;; loaded as `tex-site' for elpaca, according to my testing**
+;; NOTE 2023-07-12: If I haven't already, download the `texlive' and
+;; `texlive-langs' package groups
+(use-package tex-site
+  ;; NOTE 2023-07-12: I had trouble with the recipe with elpaca, but I found the
+  ;; proper one here (and in Doom):
+  ;; https://github.com/radian-software/radian/blob/f403244e244ccca695ff6c73c62b1265e521afa7/emacs/radian.el#L3386-L3506
+  :elpaca (auctex :type git
+                  :host github
+                  :repo "emacs-straight/auctex"
+                  :files ("*.el" "*.info" "dir"
+                          "doc" "etc" "images" "latex" "style")
+                  :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh")))
+  :ensure-system-package biber)
+
+;;;; Tex
 (use-package tex
-  :elpaca auctex
-  :after prog-mode
+  :elpaca nil
+  :after tex-site
+  :hook ((TeX-mode . (lambda ()
+                       ;; Tell Emacs how to parse TeX files
+                       (setq ispell-parser 'tex)
+                       ;; Don't auto-fill in math blocks
+                       (setq fill-nobreak-predicate
+                             (cons #'texmathp fill-nobreak-predicate))
+                       (visual-line-mode)))
+         (TeX-update-style . rainbow-delimiters-mode))
   :custom
-  (TeX-source-correlate-start-server t)
+  (TeX-command-default "LuaLaTeX")
+  (TeX-source-correlate-start-server nil)
   (TeX-source-correlate-method 'synctex)
 
-  ;; For multi-file documents and external style files
+  (TeX-master t)                        ; Do not prompt for a master file
   (TeX-parse-self t)
   (TeX-auto-save t)
   (TeX-master t)
+  (TeX-save-query nil)            ; Just save, don't ask before each compilation
 
   ;; To use pdf-tools with auctex
-  (TeX-PDF-mode t)
   (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
   (TeX-view-program-selection '((output-pdf "pdf-tools")))
   (TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
+
+  (TeX-electric-sub-and-superscript t)
   :config
   (add-to-list 'TeX-command-list
-               '("LuaLaTeX" "%`lualatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t)))
+               '("LuaLaTeX" "%`lualatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
 
-;;;; Reftex
-;; Manage references, citations, and labels with AUCTeX
-(use-package reftex
+  ;; Set-up chktex
+  (setcar (cdr (assoc "Check" TeX-command-list)) "chktex -v6 -H %s"))
+
+;;;; Tex-fold
+(use-package tex-fold
   :elpaca nil
-  :ghook 'LaTeX-mode-hook
-  :custom
-  (reftex-plug-into-AUCTeX t) ; Plug-in flags for AUCTeX interface.
-  (reftex-cite-prompt-optional-args 'maybe)) ; Prompt for empty optional arguments in cite?
+  :after tex-site
+  :hook ((TeX-mode . TeX-fold-mode)
+         (mixed-pitch-mode . (lambda ()
+                               "Fix folded things invariably getting fixed pitch when using
+mixed-pitch. Math faces should stay fixed by the mixed-pitch
+blacklist, this is mostly for \\section etc."
+                               (when mixed-pitch-mode
+                                 ;; Adding to this list makes mixed-pitch clean
+                                 ;; the face remaps after us
+                                 (add-to-list 'mixed-pitch-fixed-cookie
+                                              (face-remap-add-relative
+                                               'TeX-fold-folded-face
+                                               :family (face-attribute 'variable-pitch :family)
+                                               :height (face-attribute 'variable-pitch :height))))))))
 
-;;;; Company-auctex
-;; Auctex suggestions using the company backend
-(use-package company-auctex
-  :after company
-  :hook (LaTeX-mode . (lambda () ;; I manually add backends from `company-auctex-init'
-                        (add-to-list 'company-backends
-                                     '(company-auctex-labels company-auctex-bibs (company-auctex-macros company-auctex-symbols company-auctex-environments))))))
-
-;;; LaTeX
 ;;;; Latex
 (use-package latex
   :elpaca nil
-  :ensure-system-package (latex . texlive-full)
-  :gfhook
-  'prettify-symbols-mode
-  'reftex-isearch-minor-mode
-  'TeX-source-correlate-mode ; Minor mode for forward and inverse search.
-  'display-line-numbers-mode
-  'LaTeX-math-mode ; Access to math macros
-  'visual-line-mode ; So evil can respect true lines
-  '(lambda () (mixed-pitch-mode -1))
-  'hl-line-mode
-  '(lambda () (flycheck-mode -1))
-  :preface (defvaralias 'latex-mode-hook 'LaTeX-mode-hook "For easier use-package declaration.")
-  :config
-  ;; Add font locked words to latex-mode
-  (with-eval-after-load 'tex
-    (font-lock-add-keywords 'latex-mode
-                            '(;; true
-                              ("true" 0 '(t :foreground "green") t)
-                              ;; false
-                              ("false" 0 '(t :foreground "red") t)
-                              ;; For table (tabular) columns
-                              ("\\\\rowmac" 0 'font-latex-math-face t)
-                              ;; For natural deduction tables via `lplfitch'
-                              ("\\\\fitchprf" 0 'font-lock-keyword-face t)
-                              ("\\\\pline" 0 'font-latex-math-face t)
-                              ("\\\\subproof" 0 'font-latex-warning-face t)
-                              ("\\\\boxedsubproof" 0 'font-latex-warning-face t)
-                              ("\\\\brokenform" 0 'font-latex-warning-face t)
-                              ("\\\\formula" 0 'font-latex-math-face t)
-                              ("\\\\fitcharg" 0 'font-lock-keyword-face t)
-                              ("\\\\fitchctx" 0 'font-lock-keyword-face t)
-                              ("\\\\fpline" 0 'font-latex-math-face t)
-                              ("\\\\tpline" 0 'font-latex-math-face t)
-                              ))
+  :after tex-site
+  :mode ("\\.[tT]e[xX]\\'" . LaTeX-mode)
+  :hook (LaTeX-mode . (lambda ()
+                        (TeX-PDF-mode)
+                        (TeX-source-correlate-mode) ; Minor mode for forward and inverse search.
+                        (TeX-fold-mode)
+                        (LaTeX-math-mode) ; Math macros
+                        (visual-line-mode)
+                        (display-line-numbers-mode)
+                        (hl-line-mode)
+                        (prettify-symbols-mode)
+                        (outshine-mode)
+                        (flymake-mode)))
+  :custom
+  ;; Add the TOC entry to the sectioning hooks
+  (LaTeX-section-hook
+   '(LaTeX-section-heading
+     LaTeX-section-title
+     LaTeX-section-toc
+     LaTeX-section-section
+     LaTeX-section-label))
+  (LaTeX-fill-break-at-separators nil) ; Don't be afraid to break inline math between lines
+  (LaTeX-item-indent 0)
+  (LaTeX-math-menu-unicode t)
 
+  ;; Fontification taken from https://tex.stackexchange.com/a/86119/81279, which
+  ;; I discovered from Doom
+  (font-latex-match-reference-keywords
+   '(;; BibLaTeX.
+     ("printbibliography" "[{")
+     ("addbibresource" "[{")
+     ;; Standard commands.
+     ("cite" "[{")
+     ("citep" "[{")
+     ("citet" "[{")
+     ("Cite" "[{")
+     ("parencite" "[{")
+     ("Parencite" "[{")
+     ("footcite" "[{")
+     ("footcitetext" "[{")
+     ;; Style-specific commands.
+     ("textcite" "[{")
+     ("Textcite" "[{")
+     ("smartcite" "[{")
+     ("Smartcite" "[{")
+     ("cite*" "[{")
+     ("parencite*" "[{")
+     ("supercite" "[{")
+     ;; Qualified citation lists.
+     ("cites" "[{")
+     ("Cites" "[{")
+     ("parencites" "[{")
+     ("Parencites" "[{")
+     ("footcites" "[{")
+     ("footcitetexts" "[{")
+     ("smartcites" "[{")
+     ("Smartcites" "[{")
+     ("textcites" "[{")
+     ("Textcites" "[{")
+     ("supercites" "[{")
+     ;; Style-independent commands.
+     ("autocite" "[{")
+     ("Autocite" "[{")
+     ("autocite*" "[{")
+     ("Autocite*" "[{")
+     ("autocites" "[{")
+     ("Autocites" "[{")
+     ;; Text commands.
+     ("citeauthor" "[{")
+     ("Citeauthor" "[{")
+     ("citetitle" "[{")
+     ("citetitle*" "[{")
+     ("citeyear" "[{")
+     ("citedate" "[{")
+     ("citeurl" "[{")
+     ;; Special commands.
+     ("fullcite" "[{")
+     ;; Cleveref.
+     ("cref" "{")
+     ("Cref" "{")
+     ("cpageref" "{")
+     ("Cpageref" "{")
+     ("cpagerefrange" "{")
+     ("Cpagerefrange" "{")
+     ("crefrange" "{")
+     ("Crefrange" "{")
+     ("labelcref" "{")))
+
+  (font-latex-match-textual-keywords
+   '(;; BibLaTeX brackets.
+     ("parentext" "{")
+     ("brackettext" "{")
+     ("hybridblockquote" "[{")
+     ;; Auxiliary commands.
+     ("textelp" "{")
+     ("textelp*" "{")
+     ("textins" "{")
+     ("textins*" "{")
+     ;; Subcaption.
+     ("subcaption" "[{")))
+
+  (font-latex-match-variable-keywords
+   '(;; Amsmath.
+     ("numberwithin" "{")
+     ;; Enumitem.
+     ("setlist" "[{")
+     ("setlist*" "[{")
+     ("newlist" "{")
+     ("renewlist" "{")
+     ("setlistdepth" "{")
+     ("restartlist" "{")
+     ("crefname" "{")))
+  :config
+  ;; Font locking for personal convenience
+  (font-lock-add-keywords 'latex-mode
+                          '(;; True
+                            ("true" 0 '(t :foreground "green") t)
+                            ;; False
+                            ("false" 0 '(t :foreground "red") t)
+                            ;; For table (tabular) columns
+                            ("\\\\rowmac" 0 'font-latex-math-face t)
+                            ;; For natural deduction tables via `lplfitch'
+                            ("\\\\fitchprf" 0 'font-lock-keyword-face t)
+                            ("\\\\pline" 0 'font-latex-math-face t)
+                            ("\\\\subproof" 0 'font-latex-warning-face t)
+                            ("\\\\boxedsubproof" 0 'font-latex-warning-face t)
+                            ("\\\\brokenform" 0 'font-latex-warning-face t)
+                            ("\\\\formula" 0 'font-latex-math-face t)
+                            ("\\\\fitcharg" 0 'font-lock-keyword-face t)
+                            ("\\\\fitchctx" 0 'font-lock-keyword-face t)
+                            ("\\\\fpline" 0 'font-latex-math-face t)
+                            ("\\\\tpline" 0 'font-latex-math-face t)))
+
+  (with-eval-after-load 'eaf
     ;; Using EAF's pdf viewer
-    (require 'eaf)
     (defun kb/eaf-pdf-synctex-forward-view ()
       "View the PDF file of Tex synchronously."
       (interactive)
@@ -114,39 +242,84 @@
     (add-to-list 'TeX-view-program-list '("eaf" kb/eaf-pdf-synctex-forward-view))
     (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))))
 
-;;;; Cdlatex
+;;; Cdlatex
 ;; Faster LaTeX inputs
 (use-package cdlatex
-  :demand t
-  :after latex
-  :hook ((LaTeX-mode . turn-on-cdlatex)
-         (LaTeX-mode . (lambda ()
-                         (push '("pline" "\\pline[]{?}[]" nil) cdlatex-env-alist)
-                         (push '("fitchproof" "\\fitchprf{\n?\n}\n{\n\n}" nil) cdlatex-env-alist)
-                         (push '("subproof" "\\subproof{\n?\n}\n{\n\n}" nil) cdlatex-env-alist)
-                         ))))
-
-;;;; Evil-tex
-(use-package evil-tex
-  :after (evil tex)
-  :hook (latex-mode . evil-tex-mode)
+  :after tex-site
+  :hook ((LaTeX-mode . cdlatex-mode)
+         (org-mode . org-cdlatex-mode))
+  :general
+  (:keymaps 'cdlatex-mode-map
+   ;; Other packages take care of inserting closing delimiters
+   "$" nil
+   "(" nil
+   "{" nil
+   "[" nil
+   "|" nil
+   "<" nil
+   ;; AUCTeX takes care of auto-inserting {} on _^ if you want, with
+   ;; `TeX-electric-sub-and-superscript'.
+   "^" nil
+   "_" nil
+   ;; Don't affect tab behavior
+   "TAB" nil
+   ;; AUCTeX already provides this functionality with `LaTeX-insert-item'
+   ;; (albeit in another binding; at least was reserve this one)
+   [(control return)] nil)
   :custom
-  (evil-tex-toggle-override-t t))
+  (cdlatex-env-alist
+   '(("pline" "\\pline[]{?}[]" nil)
+     ("fitchproof" "\\fitchprf{\n?\n}\n{\n\n}" nil)
+     ("subproof" "\\subproof{\n?\n}\n{\n\n}" nil))))
 
-;;;; Lsp-latex
-(use-package lsp-latex
-  :disabled t                           ; Not useful, for now
-  :ensure-system-package ("~/.cargo/bin/texlab" . "cargo install --git https://github.com/latex-lsp/texlab.git --locked") ; Quite long of an install since compiling from source
-  :hook (latex-mode . (lambda ()
-                        (require 'lsp-latex)
-                        (lsp-deferred)
-                        ))
+;;; Auctex-latexmk
+;; Quicker insertion and filling-out of macros. Taken from Doom
+(use-package auctex-latexmk
+  :after tex-site
+  :hook (LaTeX-mode . (lambda ()
+                        "Set LatexMk as the default command"
+                        (setq TeX-command-default "LatexMk")))
   :custom
-  (lsp-latex-texlab-executable "~/.cargo/bin/texlab")
-  (lsp-latex-texlab-executable-argument-list nil))
+  ;; Pass the -pdf flag when TeX-PDF-mode is active.
+  (auctex-latexmk-inherit-TeX-PDF-mode t)
+  :init
+  ;; Add LatexMk as a TeX target
+  (auctex-latexmk-setup))
 
-;;;; QoL
-;;;;; Align table cells
+;;; Preview
+;; "Seamless" embedding of generated images (i.e. preview) into LaTeX source
+;; code. Taken from Doom
+(use-package preview
+  :elpaca nil
+  :after tex-site
+  :hook (LaTeX-mode . LaTeX-preview-setup)
+  :config
+  (setq-default preview-scale 1.4
+                preview-scale-function
+                (lambda () (* (/ 10.0 (preview-document-pt)) preview-scale)))
+  ;; Don't cache preamble, it creates issues with SyncTeX. Let users enable
+  ;; caching if they have compilation times that long.
+  (setq preview-auto-cache-preamble nil))
+
+;;; Popweb
+;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations.
+;; **Don't forget to install the dependencies found on the README.** (And don't
+;; forget that `pipx' is an option)
+(use-package popweb
+  :elpaca (:type git
+           :host github
+           :repo "manateelazycat/popweb"
+           :files (:defaults "*.py" "*.js" "extension/*/*"))
+  :hook (LaTeX-mode . popweb-latex-mode)
+  :general (:keymaps '(LaTeX-mode-map org-mode-map)
+            "H-'" 'popweb-latex-show)
+  :custom
+  (popweb-popup-pos "point-bottom")
+  :config
+  (require 'popweb-latex))
+
+;;; QoL
+;;;; Align table cells
 ;; From
 ;; https://tex.stackexchange.com/questions/557959/emacs-auctex-tabular-vertical-alignment-of-cells
 (defun kb/tabular-magic ()
@@ -173,12 +346,12 @@
       (set-marker s nil)
       (set-marker e nil))))
 
-;;;;; Kb/latex-mk-mode
+;;;; Kb/latex-mk-mode
 ;; My own minor-mode creating automatically updating pdf-tools LaTeX preview
 (define-minor-mode kb/latexmk-mode
   "Toggle LatexMK mode."
   :init-value nil
-  :lighter " LatexMK "
+  :lighter " LatexMK"
   (cond
    (kb/latexmk-mode (add-hook 'after-save-hook 'kb/run-latexmk 0 t))
    (t (remove-hook 'after-save-hook 'kb/run-latexmk t))))
