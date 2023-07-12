@@ -15,7 +15,7 @@
 ;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
 (use-package lisp-keyword-indent
   :demand
-  :straight (lisp-keyword-indent :type git
+  :elpaca (lisp-keyword-indent :type git
                                  :host github
                                  :repo "twlz0ne/lisp-keyword-indent.el")
   :functions kb/lisp-keyword-indent-mode
@@ -65,7 +65,7 @@
 
 ;;; Help
 (use-package help
-  :straight nil
+  :elpaca nil
   :general ("C-h M-k" 'describe-keymap)
   :custom
   (help-window-select t)
@@ -74,21 +74,6 @@
   (help-window-keep-selected t)
   :config
   (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function))
-
-;;; Help+
-;;  The following bindings are made here:
-;;
-;;    `C-h u'      `man'
-;;    `C-h C-a'    `apropos'
-;;    `C-h C-l'    `locate-library'
-;;    `C-h RET'    `help-on-click/key'
-;;    `C-h M-a'    `apropos-documentation'
-;;    `C-h M-o'    `pop-to-help-toggle'
-;;    `C-h C-M-a'  `tags-apropos'
-;;    [mouse-1]    `mouse-help-on-click' (non-mode-line)
-;;    [mouse-1]    `mouse-help-on-mode-line-click' (mode-line)
-(use-package help+
-  :demand t)
 
 ;;; Help-find
 ;; Provides `help-find-function' and `help-find-keybinding'

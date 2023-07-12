@@ -9,8 +9,9 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Org-export
+;;; Ox (org-export)
 (use-package ox
+  :elpaca nil
   :custom
   (org-export-with-tags t)
   (org-export-with-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
@@ -39,13 +40,14 @@
 
 ;;; Ox-odt
 (use-package ox-odt
+  :elpaca nil
   :custom
-  (org-odt-preferred-output-format "docx") ; Convert to docx at the end of conversion
-  )
+  (org-odt-preferred-output-format "docx")) ; Convert to docx at the end of conversion
 
 ;;; Ox-latex
 ;;;; Itself
 (use-package ox-latex
+  :elpaca nil
   :custom
   (org-latex-compiler "lualatex")
   ;; Latexmk makes everything simple

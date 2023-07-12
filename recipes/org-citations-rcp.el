@@ -10,9 +10,10 @@
 (require 'keybinds-general-rcp)
 (require 'org-general-rcp)
 
-;;; Org-cite
+;;; Oc (org-cite)
 ;; Built-in citations in org-mode
 (use-package oc
+  :elpaca nil
   :general (:keymaps 'org-mode-map
             [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
   :custom
@@ -42,7 +43,7 @@
 ;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
-  :straight (citar :type git :host github :repo "emacs-citar/citar" :includes (citar-org))
+  :elpaca (citar :type git :host github :repo "emacs-citar/citar" :includes (citar-org))
   :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/org-roam-node-from-cite)
   :general
   (kb/note-keys
@@ -156,6 +157,7 @@ to manually add one myself."
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
+  :elpaca nil
   :after oc
   :custom
   (org-cite-insert-processor 'citar)

@@ -15,7 +15,7 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
-  :hook (after-init . pdf-tools-install)
+  :hook (elpaca-after-init . pdf-tools-install)
   :gfhook 'pdf-view-themed-minor-mode
   :custom
   (pdf-view-display-size 'fit-page)
@@ -78,7 +78,7 @@
 ;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
 (use-package org-roam-ui
-  :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :elpaca (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
   :custom
   (org-roam-ui-browser-function 'browse-url-default-browser) ; Open in my actual browser, to avoid opening in EAF
@@ -109,7 +109,7 @@
 ;;; Delve
 (use-package delve
   :disabled t                           ; Don't use
-  :straight (delve :type git :host github :repo "publicimageltd/delve")
+  :elpaca (delve :type git :host github :repo "publicimageltd/delve")
   :gfhook #'delve-compact-view-mode
   ;; FIXME 2022-05-27: `delve--zettel-preview' seems necessary to prevent cmacro
   ;; compiler error for `kb/delve--key--toggle-preview'.

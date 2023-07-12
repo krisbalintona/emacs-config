@@ -55,7 +55,7 @@
   :demand t
   :after (python-mode dap-mode)
   :ensure-system-package debugpy-run    ; For debugging in python using dap
-  :straight nil
+  :elpaca nil
   :custom
   (dap-python-executable "ipython3")
   (dap-python-debugger 'debugpy))       ; Updated version of ptvsd

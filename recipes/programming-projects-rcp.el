@@ -113,7 +113,7 @@
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
-  :straight (magit :type git :host github :repo "magit/magit")
+  :elpaca (magit :type git :host github :repo "magit/magit")
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general
   (:keymaps 'magit-mode-map
@@ -197,7 +197,7 @@
 ;;;; Magit-log date headers
 (with-eval-after-load 'magit
   ;; Add dates to magit-logs
-  (straight-use-package 'ov) ; Dependency
+  (use-package ov :demand) ; Dependency
 
   (defun unpackaged/magit-log--add-date-headers (&rest _ignore)
     "Add date headers to Magit log buffers."
@@ -290,6 +290,7 @@
 ;;; VC
 ;;;; Itself
 (use-package vc
+  :elpaca nil
   :general (:keymaps 'vc-dir-mode-map
             "G" 'vc-revert)
   :custom
@@ -313,15 +314,17 @@
 
 ;;;; Log-edit
 (use-package log-edit
+  :elpaca nil
   :general (:keymaps 'log-edit-mode-map
             [remap log-edit-comment-search-backward] 'consult-history))
 
 ;;;; Diff-mode
 (use-package diff-mode
+  :elpaca nil
   :gfhook
   'outshine-mode
   '(lambda ()                  ; FIXME 2022-12-30: Not sure why this doesn't work...
-           (display-line-numbers-mode -1))
+      (display-line-numbers-mode -1))
   :general (:keymaps 'diff-mode-map
             "S-<iso-lefttab>" 'outshine-cycle-buffer
             "<tab>" 'outshine-cycle
@@ -334,6 +337,7 @@
 
 ;;;; Ediff
 (use-package ediff
+  :elpaca nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
   (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff

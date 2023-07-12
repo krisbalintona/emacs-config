@@ -10,12 +10,14 @@
 
 ;;; C-mode
 (use-package cc-mode
+  :elpaca nil
   :general (:keymaps 'c-mode-map
             "TAB" 'indent-for-tab-command))
 
 ;;; Gdb-mi
 ;; Built-in GDB
 (use-package gdb-mi
+  :elpaca nil
   :custom
   (gdb-many-windows t)
   (gdb-show-main t)
@@ -40,6 +42,7 @@ regarding \"target-async\"."
 
 ;;; Gdb-bp-session
 (use-package gdb-bp-session
+  :elpaca (:type git :host github :repo "emacsmirror/gdb-bp-session")
   :requires no-littering gud
   :hook (gdb-inferior-io-mode . kb/gdb-bp-session-ask-restore-breakpoints)
   :config

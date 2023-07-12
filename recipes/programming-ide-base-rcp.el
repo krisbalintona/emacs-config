@@ -76,7 +76,7 @@
 ;;; Dash-docs
 ;; Viewing of documentation via browser.
 (use-package dash-docs
-  :straight  (dash-docs :type git
+  :elpaca  (dash-docs :type git
                         :host github
                         :repo "dash-docs-el/dash-docs"
                         :fork (:host github
@@ -97,7 +97,7 @@
 ;;;; Dash-docs-completing-read
 ;; My own interface for accessing docsets via `completing-read'.
 (use-package dash-docs-completing-read
-  :straight nil
+  :elpaca nil
   :after dash-docs
   :general (kb/lsp-keys
              "D" '(:ignore t :wk "Dashdocs")
@@ -131,7 +131,7 @@
 ;;;; Turbo-log
 ;; (use-package turbo-log
 ;;   :requires tree-sitter
-;;   :straight (turbo-log :type git :host github :repo "artawower/turbo-log.el")
+;;   :elpaca (turbo-log :type git :host github :repo "artawower/turbo-log.el")
 ;;   :general (:prefix "H-;"
 ;;             ";" 'turbo-log-print
 ;;             "i" 'turbo-log-print-immediately
@@ -147,7 +147,7 @@
 ;;; Treesit (built-in)
 ;; Taken from https://github.com/casouri/tree-sitter-module/issues/13
 ;; (use-package tree-sitter-module
-;;   :straight (tree-sitter-module
+;;   :elpaca (tree-sitter-module
 ;;              :type git :host github
 ;;              :repo "casouri/tree-sitter-module"
 ;;              :pre-build (("./batch.sh"))

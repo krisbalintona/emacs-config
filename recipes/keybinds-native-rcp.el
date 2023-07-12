@@ -2,7 +2,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; General.el setup and very broad keybindings.
+;; Miscellaneous keybindings.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:

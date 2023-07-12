@@ -19,7 +19,7 @@
 (use-package markdown-xwidget
   :after markdown-mode
   :ensure-system-package pandoc
-  :straight (:type git
+  :elpaca (:type git
              :host github
              :repo "cfclrk/markdown-xwidget"
              :files (:defaults "resources"))

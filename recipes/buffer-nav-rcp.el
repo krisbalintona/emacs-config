@@ -237,10 +237,10 @@ does."
 
 ;;; Imenu
 (use-package imenu
+  :elpaca nil
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
-  (imenu-auto-rescan t)
-  )
+  (imenu-auto-rescan t))
 
 ;;; Imenu-list
 ;; Side buffer with imenu items
@@ -254,11 +254,10 @@ does."
 ;;; Occur
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur
-  :straight nil
+  :elpaca nil
   :gfhook 'visual-line-mode
   :general (kb/nav-keys
-             "o" '(occur :wk "Occur"))
-  )
+             "o" '(occur :wk "Occur")))
 
 ;;; buffer-nav-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

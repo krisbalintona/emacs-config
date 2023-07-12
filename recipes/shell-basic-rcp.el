@@ -12,14 +12,14 @@
 ;;; Shell
 ;; Built-in shell
 (use-package shell
-  :straight nil
+  :elpaca nil
   :custom
   (async-shell-command-buffer 'new-buffer)) ; Don't ask, just do
 
 ;;; Sticky-shell
 
 (use-package sticky-shell
-  :straight (:type git :host github :repo "andyjda/sticky-shell")
+  :elpaca (:type git :host github :repo "andyjda/sticky-shell")
   :init
   (sticky-shell-global-mode))
 

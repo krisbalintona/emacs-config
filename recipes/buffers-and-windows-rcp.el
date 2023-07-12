@@ -13,6 +13,7 @@
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
+  :elpaca nil
   :general ("C-<left>" 'winner-undo
             "C-<right>" 'winner-redo
             "H-<" 'winner-undo
@@ -24,6 +25,7 @@
 
 ;;;; Windmove
 (use-package windmove
+  :elpaca nil
   :init
   (windmove-default-keybindings '(hyper))
   (windmove-swap-states-default-keybindings '(shift hyper))
@@ -37,7 +39,7 @@
 
 ;;;; Window
 (use-package window
-  :straight nil
+  :elpaca nil
   :custom
   (split-height-threshold nil)       ; Threshold for vertical window splitting
   (split-width-threshold 160)        ; Threshold for horizontal window splitting
@@ -361,6 +363,7 @@ If buffer-or-name is nil return current buffer's mode."
 ;;; Buffers
 ;;;; Bookmark
 (use-package bookmark
+  :elpaca nil
   :custom
   (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query

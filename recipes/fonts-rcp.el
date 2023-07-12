@@ -17,8 +17,7 @@
 ;; Provides a bunch of unicode icons which many other packages leverage
 (use-package all-the-icons
   :custom
-  (all-the-icons-scale-factor 1.1)
-  )
+  (all-the-icons-scale-factor 1.1))
 
 ;;; Mixed-pitch
 ;; Allow the same buffer to have both fixed- and variable-pitch
@@ -33,8 +32,7 @@
                  ;; Ace-jump
                  ace-jump-face-foreground
                  ace-jump-face-background
-                 ))
-  )
+                 )))
 
 ;;; Default-text-scale
 ;; Text-scale-mode but Emacs-wide
@@ -42,7 +40,7 @@
 
 ;;; Emojify
 (use-package emojify
-  :hook (after-init . global-emojify-mode)
+  :hook (elpaca-after-init . global-emojify-mode)
   :custom
   ;; See
   ;; https://github.com/iqbalansari/emacs-emojify#displaying-composed-text-as-emojis
@@ -69,7 +67,7 @@
   ;; OPTIMIZE 2023-01-08: Breaks emojis???!!! Perhaps a clue will be found in
   ;; `unicode-fonts-block-font-mapping'
   :init
-  ;; (add-hook 'after-init-hook #'unicode-fonts-setup -100)
+  ;; (add-hook 'elpaca-after-init-hook #'unicode-fonts-setup -100)
   :config
   ;; See https://ianyepan.github.io/posts/emacs-emojis/
   (set-fontset-font
@@ -90,7 +88,7 @@
 ;;; Ligature
 ;; Ligatures! See for configuration examples: https://github.com/j/wiki
 (use-package ligature
-  :straight (ligature :type git :host github :repo "mickeynp/ligature.el")
+  :elpaca (ligature :type git :host github :repo "mickeynp/ligature.el")
   :hook (window-setup . global-ligature-mode)
   :config
   ;; Enables simple HTML ligations for web-related major modes using the string

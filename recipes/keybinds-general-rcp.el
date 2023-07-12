@@ -10,9 +10,9 @@
 
 ;;; General itself
 ;; Leader key capabilities and more convenient key definitions and bindings.
-(use-package general
-  :config
-  (general-auto-unbind-keys))       ; Overwrite keybinds without returning error
+(use-package general :demand)
+(elpaca-wait)
+(general-auto-unbind-keys)         ; Overwrite keybinds without returning error
 
 ;;; Leader keys
 (general-create-definer kb/note-keys    ; For all note-taking needs
@@ -33,7 +33,7 @@
 
 ;;; Key-chords
 (use-package use-package-chords
-  :demand t
+  :demand
   :init (key-chord-mode))
 
 ;;; Which-key
@@ -58,12 +58,13 @@
   ;; Don't display C-u, digit, and other numeric keypad bindings
   (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
         which-key-replacement-alist))
+;; (elpaca-wait)
 
 ;;; Meow
 ;; Trying out an alternative modal editing package
 (use-package meow
   :disabled t                       ; I think I'm sticking with vanilla bindings
-  :hook (after-init . meow-global-mode)
+  :hook (elpaca-after-init . meow-global-mode)
   :config
   (defun meow-setup ()
     ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)

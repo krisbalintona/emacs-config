@@ -86,7 +86,7 @@
   :requires flymake
   :ensure-system-package ((proselint . "pip install proselint")
                           (luacheck))
-  :hook (after-init . flymake-collection-hook-setup)
+  :hook (elpaca-after-init . flymake-collection-hook-setup)
   :custom
   (flymake-collection-config
    '((python-mode flymake-collection-pycodestyle

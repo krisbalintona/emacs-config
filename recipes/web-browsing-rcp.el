@@ -12,6 +12,7 @@
 ;;; Shr
 ;; Simple HTML Renderer (Shr)
 (use-package shr
+  :elpaca nil
   :custom
   ;; (shr-use-colors nil)                  ; t is bad for accessibility
   (shr-use-fonts nil)                   ; Proportional fonts?
@@ -24,6 +25,7 @@
 
 ;;; Browse-url
 (use-package browse-url
+  :elpaca nil
   :custom
   (browse-url-browser-function 'browse-url-generic) ; Primary browser
   (browse-url-secondary-browser-function 'eww-browse-url) ; Secondary browser
@@ -39,6 +41,7 @@
 ;;; Eww
 ;; Emacs' web browser
 (use-package eww
+  :elpaca nil
   :gfhook 'hl-line-mode
   :custom
   (eww-restore-desktop t)               ; Restore eww pages from `desktop-restore'

@@ -12,14 +12,6 @@
 ;;; Org
 ;;;; Itself
 (use-package org
-  :straight (org :type git
-                 :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
-                 :local-repo "org"
-                 :depth full
-                 :pre-build (straight-recipes-org-elpa--build)
-                 :build (:not autoloads)
-                 :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*"))
-                 :includes (org-num org-indent ox ox-odt ox-latex org-footnote org-attach org-refile oc))
   :gfhook
   'variable-pitch-mode
   'visual-line-mode
@@ -66,68 +58,12 @@
   (org-ditaa-jar-path                   ; EAF happens to install it...
    "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
   :config
-  ;; Org-babel
-  (use-package mermaid-mode)
-  (use-package ob-mermaid
-    :custom
-    (ob-mermaid-cli-path (executable-find "mmdc"))
-    :config
-    (defun kb/org-babel-execute:mermaid (body params)
-      (let* ((out-file (or (cdr (assoc :file params))
-                           (error "mermaid requires a \":file\" header argument")))
-             (theme (cdr (assoc :theme params)))
-             (width (cdr (assoc :width params)))
-             (height (cdr (assoc :height params)))
-             (scale (cdr (assoc :scale params)))
-             (pdffit (cdr (assoc :scale params)))
-             (background-color (cdr (assoc :background-color params)))
-             (mermaid-config-file (cdr (assoc :mermaid-config-file params)))
-             (css-file (cdr (assoc :css-file params)))
-             (pupeteer-config-file (cdr (assoc :pupeteer-config-file params)))
-             (temp-file (org-babel-temp-file "mermaid-"))
-             (mmdc (or ob-mermaid-cli-path
-                       (executable-find "mmdc")
-                       (error "`ob-mermaid-cli-path' is not set and mmdc is not in `exec-path'")))
-             (cmd (concat (shell-quote-argument (expand-file-name mmdc))
-                          " -i " (org-babel-process-file-name temp-file)
-                          " -o " (org-babel-process-file-name out-file)
-                          (when theme
-                            (concat " -t " theme))
-                          (when width
-                            (concat " -w " width))
-                          (when height
-                            (concat " -H " height))
-                          (when scale   ; Add support for scale
-                            (concat " -s " (number-to-string scale)))
-                          (when pdffit " -f ") ; Add support for pdffit
-                          (when mermaid-config-file
-                            (concat " -c " (org-babel-process-file-name mermaid-config-file)))
-                          (when css-file
-                            (concat " -C " (org-babel-process-file-name css-file)))
-                          (when pupeteer-config-file
-                            (concat " -p " (org-babel-process-file-name pupeteer-config-file))))))
-        (unless (file-executable-p mmdc)
-          ;; cannot happen with `executable-find', so we complain about
-          ;; `ob-mermaid-cli-path'
-          (error "Cannot find or execute %s, please check `ob-mermaid-cli-path'" mmdc))
-        (with-temp-file temp-file (insert body))
-        (message "%s" cmd)
-        (org-babel-eval cmd "")
-        nil)))
-  (advice-add 'org-babel-execute:mermaid :override 'kb/org-babel-execute:mermaid)
-  (org-babel-do-load-languages          ; Activate languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (mermaid . t)
-     (ditaa . t)))
-
   (when (bound-and-true-p evil-local-mode)
     (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
 
 ;;;; Org-num
 (use-package org-num
-  :straight nil
+  :elpaca nil
   :diminish
   :general (kb/toggle-keys
              :keymaps 'org-mode-map
@@ -135,7 +71,7 @@
 
 ;;;; Org-indent
 (use-package org-indent
-  :straight nil
+  :elpaca nil
   :diminish
   :custom
   (org-indent-indentation-per-level 2)
@@ -213,6 +149,7 @@ have `org-warning' face."
 
 ;;;; Org-footnote
 (use-package org-footnote
+  :elpaca nil
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)          ; Automatically renumber
@@ -220,6 +157,7 @@ have `org-warning' face."
 
 ;;;; Org-attach
 (use-package org-attach
+  :elpaca nil
   :custom
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
   (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
@@ -235,6 +173,7 @@ have `org-warning' face."
 
 ;;;; Org-refile
 (use-package org-refile
+  :elpaca nil
   :custom
   (org-refile-targets
    `((org-agenda-files . (:tag . "type"))
@@ -264,19 +203,17 @@ have `org-warning' face."
 
 ;;;; Org-faces
 (use-package org-faces
-  :straight nil
+  :elpaca nil
   :custom
   (org-fontify-whole-block-delimiter-line t)
-  (org-fontify-quote-and-verse-blocks t)
-  )
+  (org-fontify-quote-and-verse-blocks t))
 
 ;;;; Org-src
 (use-package org-src
-  :straight nil
+  :elpaca nil
   :custom
   (org-src-fontify-natively t)
-  (org-src-block-faces nil)
-  )
+  (org-src-block-faces nil))
 
 ;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
@@ -296,6 +233,70 @@ have `org-warning' face."
   (org-visibility-maximum-tracked-files 500)
   (org-visibility-maximum-tracked-days 60)
   (org-visibility-display-messages nil)) ; Annoying echo area updates
+
+;;; Org-babel
+;;;; Itself
+(use-package ob
+  :elpaca nil
+  :hook (elpaca-after-init . (lambda ()
+                               "Activate languages"
+                               (org-babel-do-load-languages
+                                'org-babel-load-languages
+                                '((emacs-lisp . t)
+                                  (python . t)
+                                  (mermaid . t)
+                                  (ditaa . t))))))
+
+;;;; Ob-mermaid
+(use-package mermaid-mode)
+(use-package ob-mermaid
+  :after ob
+  :custom
+  (ob-mermaid-cli-path (executable-find "mmdc"))
+  :config
+  (defun kb/org-babel-execute:mermaid (body params)
+    (let* ((out-file (or (cdr (assoc :file params))
+                         (error "mermaid requires a \":file\" header argument")))
+           (theme (cdr (assoc :theme params)))
+           (width (cdr (assoc :width params)))
+           (height (cdr (assoc :height params)))
+           (scale (cdr (assoc :scale params)))
+           (pdffit (cdr (assoc :scale params)))
+           (background-color (cdr (assoc :background-color params)))
+           (mermaid-config-file (cdr (assoc :mermaid-config-file params)))
+           (css-file (cdr (assoc :css-file params)))
+           (pupeteer-config-file (cdr (assoc :pupeteer-config-file params)))
+           (temp-file (org-babel-temp-file "mermaid-"))
+           (mmdc (or ob-mermaid-cli-path
+                     (executable-find "mmdc")
+                     (error "`ob-mermaid-cli-path' is not set and mmdc is not in `exec-path'")))
+           (cmd (concat (shell-quote-argument (expand-file-name mmdc))
+                        " -i " (org-babel-process-file-name temp-file)
+                        " -o " (org-babel-process-file-name out-file)
+                        (when theme
+                          (concat " -t " theme))
+                        (when width
+                          (concat " -w " width))
+                        (when height
+                          (concat " -H " height))
+                        (when scale   ; Add support for scale
+                          (concat " -s " (number-to-string scale)))
+                        (when pdffit " -f ") ; Add support for pdffit
+                        (when mermaid-config-file
+                          (concat " -c " (org-babel-process-file-name mermaid-config-file)))
+                        (when css-file
+                          (concat " -C " (org-babel-process-file-name css-file)))
+                        (when pupeteer-config-file
+                          (concat " -p " (org-babel-process-file-name pupeteer-config-file))))))
+      (unless (file-executable-p mmdc)
+        ;; cannot happen with `executable-find', so we complain about
+        ;; `ob-mermaid-cli-path'
+        (error "Cannot find or execute %s, please check `ob-mermaid-cli-path'" mmdc))
+      (with-temp-file temp-file (insert body))
+      (message "%s" cmd)
+      (org-babel-eval cmd "")
+      nil))
+  (advice-add 'org-babel-execute:mermaid :override 'kb/org-babel-execute:mermaid))
 
 ;;; Aesthetics
 ;;;; Org-superstar
@@ -357,7 +358,7 @@ have `org-warning' face."
 ;;;; Org-bars
 (use-package org-bars
   :disabled                    ; Not much value, and sometimes even distracting
-  :straight (org-bars :type git :host github :repo "tonyaldon/org-bars")
+  :elpaca (org-bars :type git :host github :repo "tonyaldon/org-bars")
   :ghook 'org-mode-hook
   :init
   ;; Set these in init for some reason
@@ -410,14 +411,18 @@ have `org-warning' face."
 (use-package org-modern-indent
   :after org
   :hook (org-mode . org-modern-indent-mode)
-  :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
+  :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
 
 ;;;; Org-extra-emphasis
 ;; Easier addition and modification of emphasis markers in org. Also has many
 ;; built-in faces and markup
 (use-package org-extra-emphasis
-  :demand t
-  :after org
+  ;; Too much of a pain with elpaca, poorly maintained; if I want to enable
+  ;; again, remove the `ox-odt' dependency manually
+  :disabled
+  :elpaca (:type git :host github :repo "QiangF/org-extra-emphasis")
+  :demand
+  :after ox-odt
   :custom
   (org-extra-emphasis-alist
    '(("!!" org-extra-emphasis-01)
@@ -436,7 +441,7 @@ have `org-warning' face."
      ("&@" org-extra-emphasis-14)
      ("&%" org-extra-emphasis-15)
      ("&&" org-extra-emphasis-16)
-     ;; my own
+     ;; My own
      ("&"
       (:box t))))
   :custom-face

@@ -12,7 +12,7 @@
 ;;; Aesthetics
 ;;;; Prog-mode
 (use-package prog-mode
-  :straight nil
+  :elpaca nil
   :hook ((prog-mode . goto-address-prog-mode)
          ((window-setup after-make-frame) . global-prettify-symbols-mode)
          (org-mode . (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
@@ -64,12 +64,12 @@ punctuation."
 
 ;;;; Hl-line
 (use-package hl-line
-  :straight nil
+  :elpaca nil
   :ghook 'prog-mode-hook 'conf-mode-hook)
 
 ;;;; Hl-todo
 (use-package hl-todo
-  :hook (after-init . global-hl-todo-mode)
+  :hook (elpaca-after-init . global-hl-todo-mode)
   :general
   (:keymaps 'hl-todo-mode-map
    :prefix "M-g"
@@ -128,13 +128,14 @@ punctuation."
 ;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
+  :elpaca nil
   :custom
   (show-paren-context-when-offscreen 'overlay)
   :init (show-paren-mode))
 
 ;;;; Display-fill-column-indicator
 (use-package display-fill-column-indicator
-  :straight nil
+  :elpaca nil
   :custom
   (display-fill-column-indicator-character ?│)
   :custom-face
@@ -257,17 +258,18 @@ punctuation."
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
-  :demand t
+  :elpaca nil
   :custom
   (auto-revert-interval 7)
   (auto-revert-check-vc-info t)
   (global-auto-revert-non-file-buffers t)
   (auto-revert-verbose t)
-  :config (global-auto-revert-mode))
+  :init (global-auto-revert-mode))
 
 ;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace
+  :elpaca nil
   :hook (before-save . whitespace-cleanup)
   :custom
   (whitespace-style '(face empty indentation::space tab)))
@@ -284,6 +286,7 @@ punctuation."
 ;;;; Conf-mode
 ;; For Unix config files
 (use-package conf-mode
+  :elpaca nil
   :mode ("\\.rs\\'" . conf-mode)
   :gfhook 'outshine-mode)
 

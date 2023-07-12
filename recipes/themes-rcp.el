@@ -89,7 +89,7 @@
 (setq-default fringes-outside-margins t)
 
 ;;;; Line-spacing
-(setq line-spacing 1)
+(setq-default line-spacing 1)
 
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
@@ -173,6 +173,7 @@
 ;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
 (use-package doom-modeline
+  :disabled
   :custom
   ;; Modeline settings
   (doom-modeline-window-width-limit fill-column) ; The limit of the window width.
@@ -199,7 +200,8 @@
 
 ;;;; Kb-mood-line
 (use-package kb-mood-line
-  :straight nil
+  :disabled
+  :elpaca nil
   ;; :hook ((window-setup server-after-make-frame) . kb/mood-line-setup)
   :init
   (require 'doom-modeline)
@@ -322,6 +324,7 @@ the mode line. Also alters `global-mode-string’ based on
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
+  :elpaca nil
   :custom
   (display-time-24hr-format t)
   (display-time-format "(%a %d, %R)")
@@ -341,7 +344,7 @@ the mode line. Also alters `global-mode-string’ based on
 ;;;; Battery
 ;; Display batter percentage
 (use-package battery
-  :demand
+  :elpaca nil
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
@@ -355,6 +358,7 @@ the mode line. Also alters `global-mode-string’ based on
 ;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
+  :elpaca nil
   :general (kb/toggle-keys
              "l" '(display-line-numbers-mode :wk "Line numbers"))
   :custom

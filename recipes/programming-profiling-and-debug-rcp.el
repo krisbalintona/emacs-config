@@ -20,7 +20,7 @@
 ;;; Explain-pause-mode
 ;; Profile what's causing your Emacs to slow down
 (use-package explain-pause-mode
-  :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
+  :elpaca (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
   )
 
 ;;; Bug-hunter

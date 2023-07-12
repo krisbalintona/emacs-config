@@ -32,13 +32,15 @@
 ;;;; Configuration prerequisites
 ;; These are packages which come before others because their config files rely
 ;; on them.
-(require 'straight-package-management-rcp)
+;; (require 'straight-package-management-rcp)
+(require 'elpaca-package-management-rcp)
+(require 'use-package-rcp)
+(require 'system-packages-rcp)
+(require 'garbage-collection-rcp)
 (require 'personal-variables-rcp)
 (require 'external-programs-rcp)
 (require 'better-defaults-rcp)
 (require 'custom-directories-rcp)
-(require 'use-package-rcp)
-(require 'garbage-collection-rcp)
 ;; (require 'exwm-rcp)
 ;; (require 'exwm-extras-rcp)
 
@@ -49,8 +51,8 @@
 
 ;;;; Aesthetics
 (require 'fonts-rcp)
-(require 'themes-rcp)
 (require 'kb-themes)
+(require 'themes-rcp)
 
 ;;;; Completion frameworks
 (require 'completion-general-rcp)

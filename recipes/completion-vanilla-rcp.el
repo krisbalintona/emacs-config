@@ -53,19 +53,7 @@
 ;;;; Itself
 (use-package vertico
   :demand t                             ; Otherwise won't get loaded immediately
-  :straight (vertico :files (:defaults "extensions/*") ; Special recipe to load extensions conveniently
-                     :includes (vertico-indexed
-                                vertico-flat
-                                vertico-grid
-                                vertico-mouse
-                                vertico-quick
-                                vertico-buffer
-                                vertico-repeat
-                                vertico-reverse
-                                vertico-directory
-                                vertico-multiform
-                                vertico-unobtrusive
-                                ))
+  :elpaca (vertico :files (:defaults "extensions/*"))
   :general
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
@@ -123,18 +111,21 @@
 
 ;;;; Vertico-grid
 (use-package vertico-grid
+  :elpaca nil
   :custom
   (vertico-grid-separator "       ")
   (vertico-grid-lookahead 50))
 
 ;;;; Vertico-buffer
 (use-package vertico-buffer
+  :elpaca nil
   :custom
   (vertico-buffer-display-action '(display-buffer-reuse-window)))
 
 ;;;; Vertico-multiform
 ;; Extensions
 (use-package vertico-multiform
+  :elpaca nil
   :custom
   (vertico-multiform-categories
    '((file reverse)
@@ -168,9 +159,9 @@
 ;; Truncate long lines while leaving match visible
 (use-package vertico-truncate
   :after vertico
-  :straight (:type git
-             :host github
-             :repo "jdtsmith/vertico-truncate")
+  :elpaca (:type git
+           :host github
+           :repo "jdtsmith/vertico-truncate")
   :config
   (vertico-truncate-mode))
 
@@ -301,7 +292,7 @@ parses its input."
 ;; filtered candidates afterward!
 ;;;; Flx-rs
 (use-package flx-rs
-  :straight (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
+  :elpaca (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
   :commands flx-rs-score
   :config (flx-rs-load-dyn))
 
@@ -311,19 +302,19 @@ parses its input."
 
 ;;;; Fuz-bin
 (use-package fuz-bin
-  :straight (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
+  :elpaca (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
   :commands fussy-fuz-score
   :config (fuz-bin-load-dyn))
 
 ;;;; Fuz-native
 (use-package fzf-native
-  :straight (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
+  :elpaca (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
   :commands fussy-fzf-native-score
   :config (fzf-native-load-dyn))
 
 ;;;; Subline-fuzzy
 (use-package sublime-fuzzy
-  :straight (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
+  :elpaca (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
   :commands fussy-sublime-fuzzy-score
   :config (sublime-fuzzy-load-dyn))
 
@@ -334,7 +325,7 @@ parses its input."
 ;;;; Itself
 (use-package fussy
   :disabled              ; Less performant than `orderless' with little benefit
-  :straight (fussy :type git :host github :repo "jojojames/fussy")
+  :elpaca (fussy :type git :host github :repo "jojojames/fussy")
   :commands fussy-all-completions fussy-try-completions
   :custom
   (completion-styles '(fussy orderless flex))

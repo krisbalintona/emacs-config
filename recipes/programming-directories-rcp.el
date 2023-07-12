@@ -13,7 +13,7 @@
 ;;;; This
 ;; Emacs' file manager
 (use-package dired
-  :straight nil
+  :elpaca nil
   :gfhook 'dired-hide-details-mode 'dired-omit-mode
   :general
   (:keymaps 'dired-mode-map
@@ -66,6 +66,7 @@ command."
 
 ;;;; Image-dired
 (use-package image-dired
+  :elpaca nil
   :hook (dired-mode . image-dired-minor-mode)
   :custom
   (image-dired-thumb-size 150)          ; Slightly larger thumbnails

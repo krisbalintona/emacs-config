@@ -14,7 +14,7 @@
 ;;;; This
 (use-package denote
   :functions kb/denote-search-from-id
-  :straight (denote :type git :host github :repo "emacs-straight/denote" :files ("*" (:exclude ".git")))
+  :elpaca (denote :type git :host github :repo "emacs-straight/denote" :files ("*" (:exclude ".git")))
   :hook ((dired-mode . denote-dired-mode)
          (before-save . kb/denote-insert-identifier-maybe))
   :general (kb/note-keys
@@ -298,7 +298,7 @@ Delete the original subtree."
 
 ;;; Denote-menu
 (use-package denote-menu
-  :straight (:type git :host github :repo "namilus/denote-menu")
+  :elpaca (:type git :host github :repo "namilus/denote-menu")
   :general
   (kb/note-keys "d" 'denote-menu-list-notes)
   (:keymaps 'denote-menu-mode-map
@@ -310,7 +310,7 @@ Delete the original subtree."
 
 ;;; Consult-notes
 (use-package consult-notes
-  :straight (consult-notes :type git :host github :repo "mclear-tools/consult-notes")
+  :elpaca (consult-notes :type git :host github :repo "mclear-tools/consult-notes")
   :commands (consult-notes
              consult-notes-search-in-all-notes
              ;; In case using `org-roam'

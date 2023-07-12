@@ -12,7 +12,7 @@
 ;;; Org-tempo
 ;; Completion for org-block types. Adds to the functionality of `org-structure'.
 (use-package org-tempo
-  :straight nil
+  :elpaca nil
   :after org
   :config
   ;; Add additional org-block types
@@ -50,7 +50,7 @@ default when creating snippets. Then start `yas-global-mode'."
 ;; Large library of yasnippet templates
 (use-package doom-snippets
   :disabled
-  :straight (doom-snippets :type git :host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
+  :elpaca (doom-snippets :type git :host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
 ;;; Tempel
 ;; Small and simple snippet/template system compatible with corfu.

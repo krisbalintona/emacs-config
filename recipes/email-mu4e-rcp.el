@@ -16,6 +16,7 @@
 
 ;;; Mu4e
 (use-package mu4e
+  :elpaca nil
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
   :hook ((window-setup . (lambda ()
                            (setq mu4e-headers-personal-mark  '("p" . " ")) ; Always set this
@@ -408,7 +409,7 @@ will also be the width of all other printable characters."
   :after mu4e
   :ensure-system-package wkhtmltopdf    ; HTML to PDF CLI command
   ;; This branch for support of new version of `mu'
-  :straight (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
+  :elpaca (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
   :general
   (:keymaps 'mu4e-headers-mode-map
    "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
@@ -428,7 +429,7 @@ will also be the width of all other printable characters."
 (use-package mu4e-folding
   :after mu4e
   :diminish
-  :straight (mu4e-folding :type git :host github :repo "rougier/mu4e-folding")
+  :elpaca (mu4e-folding :type git :host github :repo "rougier/mu4e-folding")
   :ghook 'mu4e-headers-mode-hook
   :custom
   (mu4e-folding-default-view 'folded))

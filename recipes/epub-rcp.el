@@ -23,7 +23,7 @@
 ;; Advanced justification of text with the Knuth/Plass algorithm
 (use-package justify-kp
   :after nov
-  :straight (justify-kp :type git :host github :repo "Fuco1/justify-kp")
+  :elpaca (justify-kp :type git :host github :repo "Fuco1/justify-kp")
   :hook (nov-post-html-render . kb/nov-post-html-render-hook)
   :config
   (defun kb/nov-window-configuration-change-hook ()

@@ -13,7 +13,7 @@
 ;; Point auto-completion backend
 (use-package company
   :after evil
-  ;; :hook after-init                      ; Use `corfu' now
+  ;; :hook elpaca-after-init                      ; Use `corfu' now
   :gfhook
   'evil-normalize-keymaps
   :general (:keymaps 'company-active-map

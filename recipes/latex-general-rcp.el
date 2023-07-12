@@ -13,7 +13,7 @@
 ;;;; AucTeX
 ;; A lot taken from https://github.com/MatthewZMD/.emacs.d#auctex
 (use-package tex
-  :straight auctex
+  :elpaca auctex
   :after prog-mode
   :custom
   (TeX-source-correlate-start-server t)
@@ -36,6 +36,7 @@
 ;;;; Reftex
 ;; Manage references, citations, and labels with AUCTeX
 (use-package reftex
+  :elpaca nil
   :ghook 'LaTeX-mode-hook
   :custom
   (reftex-plug-into-AUCTeX t) ; Plug-in flags for AUCTeX interface.
@@ -52,7 +53,7 @@
 ;;; LaTeX
 ;;;; Latex
 (use-package latex
-  :straight nil
+  :elpaca nil
   :ensure-system-package (latex . texlive-full)
   :gfhook
   'prettify-symbols-mode

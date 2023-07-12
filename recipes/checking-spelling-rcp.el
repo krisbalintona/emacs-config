@@ -12,6 +12,7 @@
 ;;; Flyspell
 ;; Feature-rich spell-checker
 (use-package flyspell
+  :elpaca nil
   :ensure-system-package (aspell
                           ("/usr/share/licenses/aspell-en/" . aspell-en))
   :diminish
@@ -110,7 +111,7 @@
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
 ;; spelling mistakes as they are made.
 (use-package abbrev
-  :straight nil
+  :elpaca nil
   :diminish
   :ghook 'text-mode-hook 'prog-mode-hook
   :custom

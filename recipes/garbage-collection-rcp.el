@@ -15,13 +15,14 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
+
 (setq garbage-collection-messages t)
 
 ;;;; GCMH
 ;; Garbage collect on when idle
 (use-package gcmh
   :diminish
-  :hook (after-init . gcmh-mode)
+  :hook (elpaca-after-init . gcmh-mode)
   :custom
   ;; Set to Doom's threshold. For a related discussion, see
   ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3

@@ -12,7 +12,7 @@
 
 ;;; Org-agenda
 (use-package org-agenda
-  :straight nil
+  :elpaca nil
   :hook ((org-agenda-finalize . (lambda () (goto-char (point-min))))
          (org-capture-before-finalize . kb/add-property-with-date-captured))
   :gfhook 'hl-line-mode
@@ -322,7 +322,7 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
 ;;; Org-habit
 (use-package org-habit
   :after org-agenda
-  :straight nil
+  :elpaca nil
   :custom
   (org-habit-show-habits t)
   (org-habit-following-days 1)
@@ -335,16 +335,14 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
   (org-habit-missed-glyph ?○)
 
   ;; Useful
-  (org-todo-repeat-to-state "ACTIVE")
-  :config
-  (add-to-list 'org-modules 'habit))
+  (org-todo-repeat-to-state "ACTIVE"))
 
 ;;; Org-heatmap
 ;; Heatmap in agenda for tracked habits. Also highlighted calendar dates
 (use-package org-heatmap
   :disabled  ; REVIEW 2023-07-10: Doesn't work for me right now. Return to later
   :after org
-  :straight (:type git :host github :repo "Elilif/org-heatmap")
+  :elpaca (:type git :host github :repo "Elilif/org-heatmap")
   :custom
   (org-heatmap-db-location (no-littering-expand-var-file-name "org-heatmap/"))
   (org-heatmap-enable-habit-statics t)
@@ -388,6 +386,7 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
 
 ;;; Org-pomodoro-third-time
 (use-package org-pomodoro-third-time
+  :elpaca nil
   :after org-agenda org-pomodoro
   :custom
   (org-pomodoro-third-time-break-to-work-ratio (/ 1.0 4.0))
@@ -397,6 +396,8 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
 ;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.
 (use-package org-depend
+  :elpaca nil
+  :after org-contrib
   :demand
   :after org-agenda
   :commands kb/consult-org-id-get-create)

@@ -46,16 +46,16 @@
   :config
   (setf (alist-get "handlebars" web-mode-comment-formats nil nil 'string=) '("{{!")))
 
-;;; CSS-mode
+;;; Css-mode
 (use-package css-mode
+  :elpaca nil
   :ensure-system-package (stylelint . "sudo npm install --global --save-dev stylelint stylelint-config-standard")
   :custom
   (css-indent-offset 2)
 
   (flycheck-css-stylelint-executable (executable-find "stylelint"))
   (flycheck-stylelintrc (concat no-littering-var-directory "flycheck/.stylelintrc.json"))
-  (flycheck-stylelint-quiet nil)
-  )
+  (flycheck-stylelint-quiet nil))
 
 ;;; Js2-mode
 (use-package js2-mode

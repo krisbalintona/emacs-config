@@ -14,11 +14,7 @@
 ;; the Emacs infrastructure
 ;;;; Itself
 (use-package corfu
-  :straight (corfu :files (:defaults "extensions/*")
-                   :includes (corfu-history
-                              corfu-info
-                              corfu-popupinfo
-                              ))
+  :elpaca (corfu :files (:defaults "extensions/*"))
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
@@ -105,14 +101,16 @@ default lsp-passthrough."
 ;;;; Corfu-history
 ;; Save the history across Emacs sessions
 (use-package corfu-history
+  :elpaca nil
   :ghook 'corfu-mode-hook
   :config
   (with-eval-after-load 'savehist
     (add-to-list 'savehist-additional-variables 'corfu-history)))
 
-;;; Corfu-popupinfo
+;;;; Corfu-popupinfo
 ;; Documentation window for corfu!
 (use-package corfu-popupinfo
+  :elpaca nil
   :ghook 'corfu-mode-hook
   :custom
   (corfu-popupinfo-delay '(0.7 . 0.3))
@@ -233,9 +231,9 @@ default lsp-passthrough."
   (:keymaps 'corfu-map
    :states 'insert
    [remap evil-normal-state] '(lambda ()
-                                 (interactive)
-                                 (evil-normal-state)
-                                 (corfu-quit)))
+                                      (interactive)
+                                      (evil-normal-state)
+                                      (corfu-quit)))
   :custom
   (cape-dabbrev-min-length 2)
   :init

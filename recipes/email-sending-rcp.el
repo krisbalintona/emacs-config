@@ -11,7 +11,7 @@
 
 ;;; Message
 (use-package message
-  :straight nil
+  :elpaca nil
   :hook ((message-setup . message-sort-headers)
          (message-mode . visual-fill-column-mode)
          (message-send . kb/message-check-for-subject))
@@ -46,6 +46,7 @@
 ;;; Sendmail
 ;; Use `sendmail' program to send emails?
 (use-package sendmail
+  :elpaca nil
   :custom
   ;; If I want to use `sendmail' over `msmtp'/`smtpmail'
   (send-mail-function 'sendmail-send-it)
@@ -62,6 +63,7 @@
 ;;; Smtpmail
 ;; Use `msmtp' program to send emails?
 (use-package smtpmail
+  :elpaca nil
   :ensure-system-package msmtp
   :custom
   (send-mail-function 'smtpmail-send-it)
@@ -79,7 +81,7 @@
 ;;;; Itself
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
-  :straight (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
+  :elpaca (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :hook (org-msg-edit-mode . (lambda ()
                                (setq-local org-download-method 'directory
                                            org-download-image-dir mu4e-attachment-dir)))
@@ -541,7 +543,7 @@ Interactively select signature via `kb/mu4e-select-signature'."
 ;;;; Mu4e-send-delay
 (use-package mu4e-send-delay
   :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
-  :straight (:type git :host github :protocol ssh :repo "krisbalintona/mu4e-send-delay")
+  :elpaca (:type git :host github :protocol ssh :repo "krisbalintona/mu4e-send-delay")
   :hook (mu4e-main-mode . mu4e-send-delay-setup)
   :general ([remap message-send-and-exit] 'mu4e-send-delay-send-and-exit)
   :custom

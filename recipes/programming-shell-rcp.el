@@ -13,6 +13,7 @@
 ;;; Sh-script
 ;; Built-in for sh-mode
 (use-package sh-script
+  :elpaca nil
   :after flycheck
   :ensure-system-package shellcheck
   :mode (("\\.bats\\'" . sh-mode)

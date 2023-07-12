@@ -13,12 +13,13 @@
 
 ;;; No-littering
 ;; Set better default package paths
-(require 'recentf)
-(straight-use-package 'no-littering)
+(use-package no-littering)
+;; Set these variables prior to loading the feature
 (setq no-littering-etc-directory (expand-file-name "data/" user-emacs-directory) ; Config files
       no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-(require 'no-littering)                 ; Put after setting the variables I want
-(no-littering-theme-backups)            ; Sets various built-in variables 
+(elpaca-wait)
+(require 'no-littering)
+(no-littering-theme-backups)            ; Sets various built-in variables
 
 ;;; Enable all disabled commands
 (customize-set-variable disabled-command-function nil "Enable all commands")

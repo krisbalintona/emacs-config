@@ -10,8 +10,6 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'personal-variables-rcp)
-(require 'straight-package-management-rcp)
 
 ;;; Python
 (unless (executable-find "python")

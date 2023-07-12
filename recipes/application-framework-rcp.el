@@ -14,13 +14,15 @@
 (use-package eaf
   :ensure-system-package (("/usr/share/licenses/python-opencv/" . python-opencv)
                           (gdb))     ; For debugging purposes, if I ever need to
-  :after browse-url
-  :straight (eaf :type git
-                 :host github
-                 :repo "emacs-eaf/emacs-application-framework"
-                 :files (:defaults "*.py" "*.json" "app" "core" "extension" "img")
-                 :pre-build (unless (file-exists-p (straight--repos-dir "emacs-application-framework/app"))
-                              (async-shell-command "./install-eaf.py --install-all-apps" "*eaf installing all apps*")))
+  :elpaca (eaf :type git
+               :host github
+               :repo "emacs-eaf/emacs-application-framework"
+               :files (:defaults "*.py" "*.json" "app" "core" "extension" "img")
+               ;; FIXME 2023-07-12: Haven't found a way to get :pre-build
+               ;; working with elpaca
+               ;; :pre-build (unless (file-exists-p (expand-file-name "eaf/app" elpaca-builds-directory))
+               ;;              (async-shell-command "./install-eaf.py --install-all-apps" "*eaf installing all apps*"))
+               )
   :hook (eaf-pdf-viewer . hide-mode-line-mode)
   :custom
   (eaf-config-location (concat no-littering-var-directory "eaf"))
@@ -65,27 +67,27 @@
   (require 'eaf-all-the-icons)
 
   ;; All modules
-  (require 'eaf-airshare)
+  ;; (require 'eaf-airshare)
   (require 'eaf-browser)
-  (require 'eaf-camera)
-  (require 'eaf-demo)
+  ;; (require 'eaf-camera)
+  ;; (require 'eaf-demo)
   ;; (require 'eaf-file-browser)
   ;; (require 'eaf-file-manager)
-  (require 'eaf-file-sender)
-  (require 'eaf-image-viewer)
-  (require 'eaf-jupyter)
+  ;; (require 'eaf-file-sender)
+  ;; (require 'eaf-image-viewer)
+  ;; (require 'eaf-jupyter)
   (require 'eaf-markdown-previewer)
   ;; (require 'eaf-mermaid) ; NOTE 2022-05-25: Dependency error with eslint currently
-  (require 'eaf-mindmap)
-  (require 'eaf-music-player)
+  ;; (require 'eaf-mindmap)
+  ;; (require 'eaf-music-player)
   ;; (require 'eaf-org-previewer)
   (require 'eaf-pdf-viewer)
-  (require 'eaf-system-monitor)
+  ;; (require 'eaf-system-monitor)
   ;; (require 'eaf-terminal)
-  (require 'eaf-video-player)
-  (require 'eaf-vue-demo)
-  (require 'eaf-netease-cloud-music)
-  (require 'eaf-rss-reader)
+  ;; (require 'eaf-video-player)
+  ;; (require 'eaf-vue-demo)
+  ;; (require 'eaf-netease-cloud-music)
+  ;; (require 'eaf-rss-reader)
   ;; (require 'eaf-git)
 
   ;; Bindings
@@ -128,10 +130,10 @@
 ;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations
 (use-package popweb
-  :straight (popweb :type git
-                    :host github
-                    :repo "manateelazycat/popweb"
-                    :files (:defaults "*.py" "*.js" "extension/*/*"))
+  :elpaca (popweb :type git
+                  :host github
+                  :repo "manateelazycat/popweb"
+                  :files (:defaults "*.py" "*.js" "extension/*/*"))
   :hook (latex-mode . popweb-latex-mode)
   :general ("H-s" 'popweb-latex-show)
   :custom

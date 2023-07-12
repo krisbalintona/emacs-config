@@ -34,7 +34,7 @@
 ;;; Proced
 ;; Built in process monitor
 (use-package proced
-  :straight nil
+  :elpaca nil
   :general ("C-c p" '(proced :wk "Proced"))
   :custom
   (proced-auto-update-flag t)           ; Update live
@@ -48,7 +48,7 @@
 ;;; Tmr
 ;; Timer package/library from Prot
 (use-package tmr
-  :straight (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
+  :elpaca (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
   :general (kb/open-keys
              "t" 'tmr-prefix-map)
   :custom
@@ -85,7 +85,7 @@
 ;; Good-enough smooth scrolling
 (use-package good-scroll
   :disabled t
-  :ghook 'after-init-hook
+  :ghook 'elpaca-after-init-hook
   :gfhook 'kb/good-scroll-toggle
   :custom
   (good-scroll-step 80)
@@ -222,7 +222,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Iseach
 ;; Incremental search
 (use-package isearch
-  :straight nil
+  :elpaca nil
   :custom
   (isearch-repeat-on-direction-change t)
   (isearch-allow-scroll t)
@@ -238,7 +238,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Newcomment
 (use-package new-comment
-  :straight nil
+  :elpaca nil
   :custom
   (comment-empty-lines t)
   (comment-fill-column nil)
@@ -247,7 +247,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
-  :straight (alt-comment-dwim :type git
+  :elpaca (alt-comment-dwim :type git
                               :host gitlab
                               :protocol ssh
                               :repo "PreciousPudding/alt-comment-dwim")
@@ -267,7 +267,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Info-variable-pitch
 ;; Mixed pitch in Info pages
 (use-package info-variable-pitch
-  :straight (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
+  :elpaca (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :ghook 'Info-selection-hook)
 
 ;;; Info-colors
@@ -278,7 +278,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Whole-line-or-region
 (use-package whole-line-or-region
   :diminish whole-line-or-region-local-mode
-  :hook (after-init . whole-line-or-region-global-mode)
+  :hook (elpaca-after-init . whole-line-or-region-global-mode)
   :general (:keymaps 'whole-line-or-region-local-mode-map
             [remap kill-region] 'whole-line-or-region-kill-region
             [remap kill-ring-save] 'whole-line-or-region-kill-ring-save
@@ -332,7 +332,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Pocket-reader
 ;; View my Pocket
 (use-package pocket-reader
-  :straight (pocket-reader :type git
+  :elpaca (pocket-reader :type git
                            :host github
                            :repo "alphapapa/pocket-reader.el")
   :general
@@ -401,6 +401,7 @@ displayed."
 ;; Apply ANSI terminal color escape codes.
 ;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
 (use-package ansi-color
+  :elpaca nil
   :hook (compilation-filter . endless/colorize-compilation)
   :config
   (defun endless/colorize-compilation ()
@@ -410,6 +411,7 @@ displayed."
 
 ;;; Compile
 (use-package compile
+  :elpaca nil
   :custom
   (compilation-scroll-output t))        ; Scroll with compile buffer
 
@@ -422,7 +424,7 @@ displayed."
 ;;; Image-popup
 ;; Match height of image to line height (?)
 (use-package image-popup
-  :straight (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
+  :elpaca (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
 ;;; Form-feed
@@ -507,6 +509,7 @@ displayed."
 
 ;;; Electric
 (use-package electric
+  :elpaca nil
   :custom
   (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
@@ -523,7 +526,7 @@ displayed."
 ;; that respect abbreviations, etc.
 (use-package pcre2el)
 (use-package sentex
-  :straight (sentex :type git :host codeberg :repo "martianh/sentex"
+  :elpaca (sentex :type git :host codeberg :repo "martianh/sentex"
                     ;; Need more than just elisp files
                     :files ("*"))
   :commands kb/forward-sentence-function
@@ -816,9 +819,6 @@ This is a difference in multitude of %s."
 
 ;;; Recursion-indicator
 (use-package recursion-indicator
-  ;;   :custom
-  ;;   (recursion-indicator-general "&")
-  ;;   (recursion-indicator-minibuffer "@")
   :init
   (minibuffer-depth-indicate-mode)
   (recursion-indicator-mode)
@@ -841,6 +841,7 @@ This is a difference in multitude of %s."
 ;;; Re-builder
 ;; Interactively build regexps
 (use-package re-builder
+  :elpaca nil
   :custom
   (reb-re-syntax 'rx))
 
@@ -883,7 +884,7 @@ This is a difference in multitude of %s."
 ;;; Chatgpt-shell
 (use-package chatgpt-shell
   :disabled
-  :straight (chatgpt-shell :type git :host github :repo "xenodium/chatgpt-shell")
+  :elpaca (chatgpt-shell :type git :host github :repo "xenodium/chatgpt-shell")
   :general (kb/open-keys
              "C" 'chatgpt-shell
              "D" 'dall-e-shell)
@@ -897,9 +898,9 @@ This is a difference in multitude of %s."
   :init
   (global-clipetty-mode))
 
-;;; Built-in Emacs modes/packages
+;;; Other built-in Emacs modes/packages
 (use-package emacs
-  :straight nil
+  :elpaca nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
   (kb/open-keys

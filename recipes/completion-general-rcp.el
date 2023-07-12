@@ -17,7 +17,7 @@
   :if (or (bound-and-true-p ivy-mode)
           (bound-and-true-p selectrum-mode)
           (bound-and-true-p company-mode))
-  :hook (after-init . prescient-persist-mode)
+  :hook (elpaca-after-init . prescient-persist-mode)
   :custom
   (prescient-filter-method '(literal initialism regexp anchored))
   (prescient-sort-full-matches-first t)

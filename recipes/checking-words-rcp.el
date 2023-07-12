@@ -13,7 +13,7 @@
 ;;;; Define-word
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
-  :straight nil
+  :elpaca nil
   :ensure-system-package ((dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
                           ("/usr/share/dictd/wn.index" . dict-wn)
                           ("/usr/share/dictd/gcide.index" . dict-gcide)

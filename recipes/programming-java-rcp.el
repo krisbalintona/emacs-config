@@ -108,7 +108,7 @@
 ;;; Dap-java
 (use-package dap-java
   :requires dap-mode
-  :straight nil
+  :elpaca nil
   :general (:keymaps 'java-mode-map
                      "C-c C-c" '(kb/dap-java-debug :wk "Dap-java-debug"))
   :config

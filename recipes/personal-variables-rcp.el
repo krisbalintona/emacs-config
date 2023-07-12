@@ -51,8 +51,7 @@
    (cond (kb/linux-arch "paru")
          (kb/linux-fedora "dnf")
          (kb/linux-ubuntu "apt")
-         (t "Unsupported distribution!"))
-   ))
+         (t "Unsupported distribution!"))))
 
 ;;; personal-variables-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

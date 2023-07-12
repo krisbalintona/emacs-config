@@ -79,6 +79,7 @@
           (bg-completion-match-3 bg-red-intense))))
 (use-package solo-jazz-theme)
 (use-package kaolin-themes)
+(elpaca-wait)
 
 ;;; Variable declarations
 (defvar kb/themes-dark 'modus-vivendi
@@ -159,6 +160,7 @@ Additionally, run `kb/themes-hooks'."
   (if (or (<= 18 hour) (>= 6))
       (kb/proper-load-theme-dark)
     (kb/proper-load-theme-light)))
+(elpaca-wait)
 
 ;;; kb-themes.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
