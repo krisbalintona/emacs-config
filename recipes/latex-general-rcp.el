@@ -40,54 +40,46 @@
                        (visual-line-mode)))
          (TeX-update-style . rainbow-delimiters-mode))
   :custom
+  ;; Base settings
+  (TeX-engine 'luatex)
   (TeX-command-default "LuaLaTeX")
   (TeX-source-correlate-start-server nil)
   (TeX-source-correlate-method 'synctex)
-
   (TeX-master t)                        ; Do not prompt for a master file
   (TeX-parse-self t)
   (TeX-auto-save t)
   (TeX-master t)
   (TeX-save-query nil)            ; Just save, don't ask before each compilation
 
-  ;; To use pdf-tools with auctex
+  ;; Compilation
   (TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; Revert PDF after compilation
-  (TeX-view-program-selection '((output-pdf "pdf-tools")))
-  (TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
+  (TeX-command-extra-options "-shell-escape") ; Enables system commands? (because we're out of the shell?)
+  (TeX-show-compilation t)
 
+  ;; Other
   (TeX-electric-sub-and-superscript t)
+  (TeX-electric-math '("\\(" . ""))
   :config
-  (add-to-list 'TeX-command-list
-               '("LuaLaTeX" "%`lualatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
+  ;; Viewing
+  (add-to-list 'TeX-view-program-list '("pdf-tools" TeX-pdf-tools-sync-view))
+  (add-to-list 'TeX-view-program-selection '(output-pdf "pdf-tools"))
 
-  ;; Set-up chktex
-  (setcar (cdr (assoc "Check" TeX-command-list)) "chktex -v6 -H %s"))
+  ;; Command list
+  (add-to-list 'TeX-command-list '("LuaLaTeX" "lualatex --synctex=%(mode)% %t" TeX-run-TeX nil t))
+  (add-to-list 'TeX-command-list '("View (Evince)" "evince %(O?pdf)" TeX-run-TeX nil t))
 
-;;;; Tex-fold
-(use-package tex-fold
-  :elpaca nil
-  :after tex-site
-  :hook ((TeX-mode . TeX-fold-mode)
-         (mixed-pitch-mode . (lambda ()
-                               "Fix folded things invariably getting fixed pitch when using
-mixed-pitch. Math faces should stay fixed by the mixed-pitch
-blacklist, this is mostly for \\section etc."
-                               (when mixed-pitch-mode
-                                 ;; Adding to this list makes mixed-pitch clean
-                                 ;; the face remaps after us
-                                 (add-to-list 'mixed-pitch-fixed-cookie
-                                              (face-remap-add-relative
-                                               'TeX-fold-folded-face
-                                               :family (face-attribute 'variable-pitch :family)
-                                               :height (face-attribute 'variable-pitch :height))))))))
+  (setcar (cdr (assoc "Check" TeX-command-list)) "chktex -v6 -H %s")) ; Set-up chktex (syntax checking utility)
 
 ;;;; Latex
 (use-package latex
   :elpaca nil
   :after tex-site
   :mode ("\\.[tT]e[xX]\\'" . LaTeX-mode)
+  :general (:keymaps 'LaTeX-mode-map
+            "C-<return>" 'LaTeX-insert-item)
   :hook (LaTeX-mode . (lambda ()
                         (TeX-PDF-mode)
+                        (TeX-interactive-mode)
                         (TeX-source-correlate-mode) ; Minor mode for forward and inverse search.
                         (TeX-fold-mode)
                         (LaTeX-math-mode) ; Math macros
@@ -242,6 +234,24 @@ blacklist, this is mostly for \\section etc."
     (add-to-list 'TeX-view-program-list '("eaf" kb/eaf-pdf-synctex-forward-view))
     (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))))
 
+;;;; Tex-fold
+(use-package tex-fold
+  :elpaca nil
+  :after tex-site
+  :hook ((TeX-mode . TeX-fold-mode)
+         (mixed-pitch-mode . (lambda ()
+                               "Fix folded things invariably getting fixed pitch when using
+mixed-pitch. Math faces should stay fixed by the mixed-pitch
+blacklist, this is mostly for \\section etc."
+                               (when mixed-pitch-mode
+                                 ;; Adding to this list makes mixed-pitch clean
+                                 ;; the face remaps after us
+                                 (add-to-list 'mixed-pitch-fixed-cookie
+                                              (face-remap-add-relative
+                                               'TeX-fold-folded-face
+                                               :family (face-attribute 'variable-pitch :family)
+                                               :height (face-attribute 'variable-pitch :height))))))))
+
 ;;; Cdlatex
 ;; Faster LaTeX inputs
 (use-package cdlatex
@@ -265,7 +275,7 @@ blacklist, this is mostly for \\section etc."
    "TAB" nil
    ;; AUCTeX already provides this functionality with `LaTeX-insert-item'
    ;; (albeit in another binding; at least was reserve this one)
-   [(control return)] nil)
+   "C-<return>" nil)
   :custom
   (cdlatex-env-alist
    '(("pline" "\\pline[]{?}[]" nil)
