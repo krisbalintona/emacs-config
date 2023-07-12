@@ -14,7 +14,7 @@
 (use-package prog-mode
   :elpaca nil
   :hook ((prog-mode . goto-address-prog-mode)
-         ((window-setup after-make-frame) . global-prettify-symbols-mode)
+         (window-setup . global-prettify-symbols-mode)
          (org-mode . (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
   :init
   (defun kb/prettify-symbols-compose-p (start end _match)
