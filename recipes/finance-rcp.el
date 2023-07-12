@@ -16,22 +16,22 @@
   :gfhook
   'outshine-mode
   '(lambda () (mixed-pitch-mode 0)
-     (display-line-numbers-mode 0)
-     (setq-local tab-always-indent nil ; Indent first then complete
-                 completion-cycle-threshold t
-                 fill-column 90
-                 comment-column fill-column)
-     (setq-default ledger-master-file
-                   (concat no-littering-var-directory "ledger/master.ledger"))
-     )
+              (display-line-numbers-mode 0)
+              (setq-local tab-always-indent nil ; Indent first then complete
+                          completion-cycle-threshold t
+                          fill-column 90
+                          comment-column fill-column)
+              (setq-default ledger-master-file
+                            (concat no-littering-var-directory "ledger/master.ledger"))
+              )
   :general
   (:keymaps 'ledger-mode-map
-            "C-c C-t" '(ledger-toggle-current :wk "Toggle check on current")
-            [remap consult-flycheck] '(list-flycheck-errors :wk "List flycheck errors")
-            )
+   "C-c C-t" '(ledger-toggle-current :wk "Toggle check on current")
+   [remap consult-flycheck] '(list-flycheck-errors :wk "List flycheck errors")
+   )
   (:keymaps 'ledger-mode-map
-            :states 'insert
-            "TAB" 'tab-to-tab-stop)
+   :states 'insert
+   "TAB" 'tab-to-tab-stop)
   (kb/yank-kill-keys
     :keymaps 'ledger-mode-map
     :states '(normal insert)
@@ -50,13 +50,13 @@ Mainly used for `ledger-mode'."
     "e" '(ledger-insert-effective-date :wk "Insert effective date")
     )
   (:keymaps 'ledger-report-mode-map
-            :states '(normal visual motion)
-            "q" nil) ; Doesn't kill window as it would normally
+   :states '(normal visual motion)
+   "q" nil) ; Doesn't kill window as it would normally
   (:keymaps 'ledger-report-mode-map
-            :states '(normal visual)
-            "RET" '(ledger-report-visit-source :wk "Visit transaction")
-            "C-c C-o C-k" '(ledger-report-quit :wk "Quit")
-            )
+   :states '(normal visual)
+   "RET" '(ledger-report-visit-source :wk "Visit transaction")
+   "C-c C-o C-k" '(ledger-report-quit :wk "Quit")
+   )
   :custom
   ;; Administration
   ;; (ledger-source-directory (concat no-littering-var-directory "ledger/source/"))

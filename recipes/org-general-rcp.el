@@ -16,7 +16,7 @@
   'variable-pitch-mode
   'visual-line-mode
   '(lambda ()
-      (eldoc-mode -1))
+           (eldoc-mode -1))
   :general
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link
@@ -481,8 +481,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                  (match-string 1 x)
-                                x))
+                                       (match-string 1 x)
+                                     x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)

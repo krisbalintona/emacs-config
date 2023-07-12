@@ -19,13 +19,13 @@
          )
   :general
   (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-            :states 'normal
-            [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :wk "Add tag")
-            "L" '((lambda ()
-                    (interactive)
-                    (elfeed-goodies/toggle-logs)
-                    (other-window 1))
-                  :wk "Elfeed logs"))
+   :states 'normal
+   [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :wk "Add tag")
+   "L" '((lambda ()
+           (interactive)
+           (elfeed-goodies/toggle-logs)
+           (other-window 1))
+         :wk "Elfeed logs"))
   (kb/open-keys
     "r" '(elfeed :wk "Elfeed"))
   :custom
@@ -72,9 +72,9 @@
   :demand t
   :after elfeed ; Can't figure out how to have this work other than this and demanding it
   :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-                     :states 'normal
-                     "p" 'elfeed-goodies/split-show-prev
-                     "n" 'elfeed-goodies/split-show-next)
+            :states 'normal
+            "p" 'elfeed-goodies/split-show-prev
+            "n" 'elfeed-goodies/split-show-next)
   :custom
   (elfeed-goodies/feed-source-column-width 25)
   (elfeed-goodies/tag-column-width 40)

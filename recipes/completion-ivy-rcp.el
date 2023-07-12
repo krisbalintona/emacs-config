@@ -15,13 +15,13 @@
   :demand t
   :general
   (:keymaps 'ivy-minibuffer-map
-            "TAB" 'ivy-alt-done
-            "C-l" 'ivy-alt-done)
+   "TAB" 'ivy-alt-done
+   "C-l" 'ivy-alt-done)
   (:keymaps 'ivy-switch-buffer-map
-            "C-l" 'ivy-done
-            "C-d" 'ivy-switch-buffer-kill)
+   "C-l" 'ivy-done
+   "C-d" 'ivy-switch-buffer-kill)
   (:keymaps 'ivy-reverse-i-search-map
-            "C-d" 'ivy-reverse-i-search-kill)
+   "C-d" 'ivy-reverse-i-search-kill)
   :custom
   (ivy-initial-inputs-alist nil) ; Remove "^" when entering a ivy completion buffer
   (ivy-extra-directories nil) ; Remove ./ and ../
@@ -168,23 +168,23 @@
   :after ivy
   :general
   (:keymaps 'minibuffer-local-map
-            "C-r" '(counsel-minibuffer-history :wk "Minibuffer history"))
+   "C-r" '(counsel-minibuffer-history :wk "Minibuffer history"))
   (kb/leader-keys
-    ;; "ff" '(counsel-find-file :wk "Find file")
-    ;; "fF" '(counsel-file-jump :wk "Fuzzy find file")
-    ;; "fr" '(counsel-recentf :wk "Recent files")
+   ;; "ff" '(counsel-find-file :wk "Find file")
+   ;; "fF" '(counsel-file-jump :wk "Fuzzy find file")
+   ;; "fr" '(counsel-recentf :wk "Recent files")
 
-    ;; "hf" '(counsel-describe-function :wk "Desc func")
-    ;; "hv" '(counsel-describe-variable :wk "Desc var")
-    ;; "ho" '(counsel-describe-symbol :wk "Desc sym")
-    ;; "ht" '(counsel-load-theme :wk "Change theme")
+   ;; "hf" '(counsel-describe-function :wk "Desc func")
+   ;; "hv" '(counsel-describe-variable :wk "Desc var")
+   ;; "ho" '(counsel-describe-symbol :wk "Desc sym")
+   ;; "ht" '(counsel-load-theme :wk "Change theme")
 
-    "bc" '(counsel-switch-buffer :wk "Counsel switch buffer")
+   "bc" '(counsel-switch-buffer :wk "Counsel switch buffer")
 
-    "ms" '(bookmark-set :wk "Set bookmark")
+   "ms" '(bookmark-set :wk "Set bookmark")
 
-    ;; "iy" '(counsel-yank-pop :wk "Paste")
-    )
+   ;; "iy" '(counsel-yank-pop :wk "Paste")
+   )
   :custom
   (counsel-outline-face-style 'org)      ; Have faces match org's
   (counsel-outline-path-separator " / ") ; More distinct outline paths

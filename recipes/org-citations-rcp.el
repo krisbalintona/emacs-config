@@ -124,7 +124,7 @@ to manually add one myself."
            (ref (if (eq datum-type 'citation-reference) datum
                   (error "Not on a citation reference")))
            (key (org-element-property :key ref))
-         
+
            (post (read-string "Suffix text: " (org-element-property :suffix ref)))
            (v1
             (org-element-property :begin ref))
@@ -151,9 +151,9 @@ to manually add one myself."
   ;; `kb/citar-org-update-pre-suffix') right after `org-cite-insert' to
   ;; immediately set its prefix and suffix
   (advice-add 'org-cite-insert :after '(lambda (args)
-                                          (save-excursion
-                                            (left-char) ; First move point inside citation
-                                            (citar-org-update-pre-suffix)))))
+                                               (save-excursion
+                                                 (left-char) ; First move point inside citation
+                                                 (citar-org-update-pre-suffix)))))
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org

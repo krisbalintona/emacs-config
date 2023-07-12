@@ -36,7 +36,7 @@
    "R" 'notmuch-show-reply-sender)
   :custom
   (mail-user-agent 'notmuch-user-agent)
-  
+
   ;; Account settings
   (notmuch-identities nil)              ; Defer to notmuch-config's file data
   (notmuch-fcc-dirs                     ; Set sent mail directories
@@ -151,7 +151,7 @@
   (notmuch-message-headers-visible t)
   :config
   (org-msg-mode)
-  
+
   ;; Recentering causes jittery window behavior in notmuch-view-mode for me.
   (defun kb/notmuch-show-message-adjust () nil)
   (advice-add 'notmuch-show-message-adjust :override #'kb/notmuch-show-message-adjust))

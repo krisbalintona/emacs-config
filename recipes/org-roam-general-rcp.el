@@ -12,7 +12,7 @@
 
 ;;; Org-roam
 (use-package org-roam
-  :disabled                             ; In favor of denote 
+  :disabled                             ; In favor of denote
   :commands kb/find-blog-files-org
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
@@ -38,8 +38,8 @@
   (org-roam-file-exclude-regexp (rx (one-or-more ".draft")))
   (org-roam-db-node-include-function
    #'(lambda ()
-        "Exclude nodes with the ATTACH tag"
-        (not (member "ATTACH" (org-get-tags)))))
+             "Exclude nodes with the ATTACH tag"
+             (not (member "ATTACH" (org-get-tags)))))
 
   (org-roam-verbose nil)                ; Don't echo messages that aren't errors
   (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
@@ -94,7 +94,7 @@ https://org-roam.discourse.group/t/does-renaming-title-no-longer-renames-the-fil
   ;; Org roam buffer section visibility
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-backlinks . show))
   (add-to-list 'magit-section-initial-visibility-alist '(org-roam-node-section . hide))
-  
+
   ;; Org ID link face
   (defface kb/org-roam-link
     '((default :foreground "goldenrod3" :slant italic))

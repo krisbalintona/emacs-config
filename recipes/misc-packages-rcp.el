@@ -248,9 +248,9 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
   :elpaca (alt-comment-dwim :type git
-                              :host gitlab
-                              :protocol ssh
-                              :repo "PreciousPudding/alt-comment-dwim")
+                            :host gitlab
+                            :protocol ssh
+                            :repo "PreciousPudding/alt-comment-dwim")
   :general
   ([remap comment-dwim] 'alt-comment-dwim
    [remap comment-line] 'alt-comment-dwim-line
@@ -333,8 +333,8 @@ progress. This is called by the timer `good-scroll--timer' every
 ;; View my Pocket
 (use-package pocket-reader
   :elpaca (pocket-reader :type git
-                           :host github
-                           :repo "alphapapa/pocket-reader.el")
+                         :host github
+                         :repo "alphapapa/pocket-reader.el")
   :general
   (kb/open-keys
     "p" '(pocket-reader :wk "Open pocket"))
@@ -527,8 +527,8 @@ displayed."
 (use-package pcre2el)
 (use-package sentex
   :elpaca (sentex :type git :host codeberg :repo "martianh/sentex"
-                    ;; Need more than just elisp files
-                    :files ("*"))
+                  ;; Need more than just elisp files
+                  :files ("*"))
   :commands kb/forward-sentence-function
   :custom
   ;; NOTE 2023-01-18: icu4j has many more rules, but is "too thorough" for my

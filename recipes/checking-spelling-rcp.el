@@ -75,18 +75,18 @@
   (wucuo-modes-whose-predicate-ignored nil)
   (wucuo-spell-check-buffer-predicate
    '(lambda ()                           ; Skip spell checking under these conditions
-       (not (memq major-mode
-                  '(dired-mode
-                    log-edit-mode
-                    compilation-mode
-                    help-mode
-                    helpful-mode
-                    profiler-report-mode
-                    speedbar-mode
-                    gud-mode
-                    calc-mode
-                    Info-mode
-                    )))))
+            (not (memq major-mode
+                       '(dired-mode
+                         log-edit-mode
+                         compilation-mode
+                         help-mode
+                         helpful-mode
+                         profiler-report-mode
+                         speedbar-mode
+                         gud-mode
+                         calc-mode
+                         Info-mode
+                         )))))
   :config
   (defun kb/wucuo-mode-on ()
     "Turn wucuo mode on.  Do not use this; use `wucuo-mode' instead."

@@ -14,9 +14,9 @@
   :general (:prefix "<f2>"
             "<f2>" 'quickrun
             "<f3>" '(lambda ()
-                       (interactive)
-                       (let ((quickrun-focus-p t))
-                         (quickrun-shell))))
+                            (interactive)
+                            (let ((quickrun-focus-p t))
+                              (quickrun-shell))))
   :custom
   (quickrun-focus-p nil))
 
@@ -77,10 +77,10 @@
 ;; Viewing of documentation via browser.
 (use-package dash-docs
   :elpaca  (dash-docs :type git
-                        :host github
-                        :repo "dash-docs-el/dash-docs"
-                        :fork (:host github
-                               :repo "krisbalintona/dash-docs"))
+                      :host github
+                      :repo "dash-docs-el/dash-docs"
+                      :fork (:host github
+                             :repo "krisbalintona/dash-docs"))
   :hook ((python-mode   . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
          (haskell-mode  . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
          (js2-mode      . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))

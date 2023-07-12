@@ -14,7 +14,7 @@
 ;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
 (use-package web-mode
   :ensure-system-package (handlebars . "sudo npm --global install handlebars") ; For
-                                                                               ; ghost
+                                        ; ghost
   :mode ("\\.hbs\\'"                    ; For ghost
          "\\.yaml\\'"
          "\\.html\\'")
@@ -34,12 +34,12 @@
   (web-mode-enable-auto-pairing t)
   (web-mode-enable-css-colorization t) ; CSS colorization
   (web-mode-enable-block-face t) ; Block face: set blocks background and default
-                                 ; foreground
+                                        ; foreground
   (web-mode-enable-part-face t) ; Part face: set parts background and default
-                                ; foreground
+                                        ; foreground
   (web-mode-enable-comment-interpolation nil) ; Font lock comment keywords
   (web-mode-enable-heredoc-fontification t) ; Heredoc (cf. PHP strings)
-                                            ; fontification
+                                        ; fontification
 
   ;; Other
   (flycheck-handlebars-executable (executable-find "handlebars"))
@@ -85,7 +85,7 @@
   'display-line-numbers-mode
   'visual-line-mode
   :general (:keymaps 'yaml-mode-map
-                     [remap evil-indent] 'yaml-indent-line)
+            [remap evil-indent] 'yaml-indent-line)
   :custom
   (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 

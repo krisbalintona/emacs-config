@@ -13,9 +13,9 @@
 ;; Minimal LSP client whose benefit is asynchrony
 (use-package lsp-bridge
   :elpaca (lsp-bridge :type git
-                        :host github
-                        :repo "manateelazycat/lsp-bridge"
-                        :files (:defaults "*.py" "langserver" "acm"))
+                      :host github
+                      :repo "manateelazycat/lsp-bridge"
+                      :files (:defaults "*.py" "langserver" "acm"))
   :hook (lsp-bridge-mode . (lambda ()
                              "Disable `eglot' and `corfu' when enabling `lsp-bridge-mode'."
                              (when (bound-and-true-p eglot--managed-mode)

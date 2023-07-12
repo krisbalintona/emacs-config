@@ -252,9 +252,9 @@ Must be set before org-msg is loaded to take effect.")
   ;; https://github.com/jeremy-compostella/org-msg/issues/169#issuecomment-1627375688
   (add-hook 'message-sent-hook
             #'(lambda ()
-                 (when (bound-and-true-p org-msg-mode)
-                   (switch-to-buffer "*Org ASCII Export*")
-                   (kill-buffer-and-window)))))
+                      (when (bound-and-true-p org-msg-mode)
+                        (switch-to-buffer "*Org ASCII Export*")
+                        (kill-buffer-and-window)))))
 
 ;;;; Custom signatures
 (with-eval-after-load 'org-msg

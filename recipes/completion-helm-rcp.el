@@ -15,9 +15,9 @@
 ;; to using complete-read (and thus Selectrum when selectrum-mode is active)
 (use-package helm
   :general (:keymaps 'helm-map
-                     "M-o"  'helm-select-action        ; List actions
-                     "<tab>" 'helm-toggle-visible-mark ; Toggle mark
-                     )
+            "M-o"  'helm-select-action        ; List actions
+            "<tab>" 'helm-toggle-visible-mark ; Toggle mark
+            )
   :custom
   (helm-autoresize-mode t)
 

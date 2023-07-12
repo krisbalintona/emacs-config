@@ -35,9 +35,9 @@
 
   (advice-add 'doom-snippets-initialize
               :after #'(lambda ()
-                          "Ensure my personal snippets dir is first and therefore the
+                               "Ensure my personal snippets dir is first and therefore the
 default when creating snippets. Then start `yas-global-mode'."
-                          (add-to-list 'yas-snippet-dirs (no-littering-expand-etc-file-name "yasnippet/snippets")))))
+                               (add-to-list 'yas-snippet-dirs (no-littering-expand-etc-file-name "yasnippet/snippets")))))
 
 ;;; Consult-yasnippet
 (use-package consult-yasnippet

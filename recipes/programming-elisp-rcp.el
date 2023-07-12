@@ -16,8 +16,8 @@
 (use-package lisp-keyword-indent
   :demand
   :elpaca (lisp-keyword-indent :type git
-                                 :host github
-                                 :repo "twlz0ne/lisp-keyword-indent.el")
+                               :host github
+                               :repo "twlz0ne/lisp-keyword-indent.el")
   :functions kb/lisp-keyword-indent-mode
   :init
   (defvar-local kb/lisp-keyword-indent-allow nil

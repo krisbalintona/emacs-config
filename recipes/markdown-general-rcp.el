@@ -20,9 +20,9 @@
   :after markdown-mode
   :ensure-system-package pandoc
   :elpaca (:type git
-             :host github
-             :repo "cfclrk/markdown-xwidget"
-             :files (:defaults "resources"))
+           :host github
+           :repo "cfclrk/markdown-xwidget"
+           :files (:defaults "resources"))
   :general (:keymaps 'markdown-mode-command-map
             "x" 'markdown-xwidget-preview-mode)
   :custom

@@ -15,8 +15,8 @@
          (java-mode . lsp-java-lens-mode)       ; For run/debug overlays
          (java-mode . lsp-java-boot-lens-mode)) ; For code-lens overlays
   :general (:keymaps 'java-mode-map
-                     "H-b" 'lsp-java-build-project
-                     "H-l j" '(lsp-jt-browser :wk "Lsp-jt"))
+            "H-b" 'lsp-java-build-project
+            "H-l j" '(lsp-jt-browser :wk "Lsp-jt"))
   :custom
   (lsp-java-inhibit-message t) ; Inhibit java messages echo via `inhibit-message'.
   (lsp-java-content-provider-preferred "fernflower")
@@ -88,19 +88,19 @@
                                                              (buffer-string))))))
     :initialized-fn (lambda (workspace)
                       (with-lsp-workspace workspace
-                        (lsp--set-configuration (lsp-configuration-section "java"))
-                        (lsp--server-register-capability
-                         (lsp-make-registration
-                          :id "test-id"
-                          :method "workspace/didChangeWatchedFiles"
-                          :register-options? (lsp-make-did-change-watched-files-registration-options
-                                              :watchers
-                                              (vector (lsp-make-file-system-watcher :glob-pattern "**/*.java")
-                                                      (lsp-make-file-system-watcher :glob-pattern "**/pom.xml")
-                                                      (lsp-make-file-system-watcher :glob-pattern "**/*.gradle")
-                                                      (lsp-make-file-system-watcher :glob-pattern "**/.project")
-                                                      (lsp-make-file-system-watcher :glob-pattern "**/.classpath")
-                                                      (lsp-make-file-system-watcher :glob-pattern "**/settings/*.prefs")))))))
+                                          (lsp--set-configuration (lsp-configuration-section "java"))
+                                          (lsp--server-register-capability
+                                           (lsp-make-registration
+                                            :id "test-id"
+                                            :method "workspace/didChangeWatchedFiles"
+                                            :register-options? (lsp-make-did-change-watched-files-registration-options
+                                                                :watchers
+                                                                (vector (lsp-make-file-system-watcher :glob-pattern "**/*.java")
+                                                                        (lsp-make-file-system-watcher :glob-pattern "**/pom.xml")
+                                                                        (lsp-make-file-system-watcher :glob-pattern "**/*.gradle")
+                                                                        (lsp-make-file-system-watcher :glob-pattern "**/.project")
+                                                                        (lsp-make-file-system-watcher :glob-pattern "**/.classpath")
+                                                                        (lsp-make-file-system-watcher :glob-pattern "**/settings/*.prefs")))))))
     :completion-in-comments? t
 
     :download-server-fn #'lsp-java--ensure-server)))
@@ -110,7 +110,7 @@
   :requires dap-mode
   :elpaca nil
   :general (:keymaps 'java-mode-map
-                     "C-c C-c" '(kb/dap-java-debug :wk "Dap-java-debug"))
+            "C-c C-c" '(kb/dap-java-debug :wk "Dap-java-debug"))
   :config
   (defun kb/dap-java-debug ()
     "`dap-java-debug' but with the \"enable-preview\" vmArg."
