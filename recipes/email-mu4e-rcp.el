@@ -425,15 +425,6 @@ will also be the width of all other printable characters."
   :config
   (mu4e-views-mu4e-use-view-msg-method "html"))
 
-;;; Mu4e-folding
-(use-package mu4e-folding
-  :after mu4e
-  :diminish
-  :elpaca (mu4e-folding :type git :host github :repo "rougier/mu4e-folding")
-  :ghook 'mu4e-headers-mode-hook
-  :custom
-  (mu4e-folding-default-view 'folded))
-
 ;;; email-mu4e-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'email-mu4e-rcp)
