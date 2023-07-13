@@ -53,10 +53,10 @@
   :ghook 'prog-mode-hook 'org-mode-hook
   :hook (eglot-managed-mode . (lambda ()
                                 (cond
-                                 (eglot--managed-mode
-                                  (setq-local flymake-show-diagnostics-at-end-of-line nil))
+                                 ((eglot--managed-mode)
+                                  (setq-local flymake-show-diagnostics-at-end-of-line t))
                                  (t
-                                  (setq-local flymake-show-diagnostics-at-end-of-line t)))))
+                                  (setq-local flymake-show-diagnostics-at-end-of-line nil)))))
   :general
   ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
   (:keymaps 'flymake-mode-map

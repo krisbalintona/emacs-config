@@ -15,7 +15,7 @@
   :hook (((python-base-mode lua-mode sh-mode js2-mode c-mode) . eglot-ensure)
          (eglot-managed-mode . eglot-inlay-hints-mode) ; Only available if server supports it
          (eglot-managed-mode . (lambda ()
-                                 "Configure `eldoc';;"
+                                 "Configure `eldoc'"
                                  ;; Use `eglot--setq-saving' to restore original
                                  ;; values. Make sure "eldoc," or a similar
                                  ;; regexp, isn't in `eglot-stay-out-of'
