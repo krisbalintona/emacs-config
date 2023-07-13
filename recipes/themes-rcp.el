@@ -278,8 +278,24 @@ mouse-3: Toggle minor modes"
 
   (setq-default mode-line-format
                 '("%e" mode-line-front-space
-                  (:eval (when (bound-and-true-p eyebrowse-mode)
-                           (eyebrowse-mode-line-indicator)))
+                  (:eval
+                   (when (mode-line-window-selected-p)
+                     (cond
+                      ((bound-and-true-p eyebrowse-mode)
+                       (eyebrowse-mode-line-indicator))
+                      ((bound-and-true-p tab-bar-mode)
+                       ;; Snippet taken from `doom-modeline'
+                       (let* ((current-tab (tab-bar--current-tab))
+                              (tab-index (tab-bar--current-tab-index))
+                              (explicit-name (alist-get 'explicit-name current-tab))
+                              (tab-name (alist-get 'name current-tab))
+                              (mode-line-string
+                               (if explicit-name
+                                   tab-name
+                                 (number-to-string (+ 1 tab-index)))))
+                         (concat
+                          (propertize mode-line-string 'face '(:inherit mode-line-emphasis))
+                          " "))))))
                   mode-line-client
                   mode-line-modified
                   mode-line-remote
