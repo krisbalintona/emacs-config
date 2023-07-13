@@ -16,7 +16,7 @@
   'variable-pitch-mode
   'visual-line-mode
   '(lambda ()
-           (eldoc-mode -1))
+      (eldoc-mode -1))
   :general
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link
@@ -47,6 +47,7 @@
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . default)
      ("\\.pdf\\'" . default)
+     ;; My own
      ("\\.docx\\'" . system)
      ("\\.odt\\'" . system)))
 
@@ -417,8 +418,8 @@ have `org-warning' face."
 ;; Easier addition and modification of emphasis markers in org. Also has many
 ;; built-in faces and markup
 (use-package org-extra-emphasis
-  ;; Too much of a pain with elpaca, poorly maintained; if I want to enable
-  ;; again, remove the `ox-odt' dependency manually
+  ;; FIXME 2023-07-12: Too much of a pain with elpaca, poorly maintained; if I
+  ;; want to enable again, remove the `ox-odt' dependency manually
   :disabled
   :elpaca (:type git :host github :repo "QiangF/org-extra-emphasis")
   :demand
@@ -481,8 +482,8 @@ re-align the table if necessary. (Necessary because org-mode has a
                in (cl-remove-if-not #'listp org-todo-keywords)
                for keywords =
                (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                       (match-string 1 x)
-                                     x))
+                                  (match-string 1 x)
+                                x))
                        keyword-spec)
                if (eq type 'sequence)
                if (member keyword keywords)

@@ -14,9 +14,9 @@
   :general (:prefix "<f2>"
             "<f2>" 'quickrun
             "<f3>" '(lambda ()
-                            (interactive)
-                            (let ((quickrun-focus-p t))
-                              (quickrun-shell))))
+                       (interactive)
+                       (let ((quickrun-focus-p t))
+                         (quickrun-shell))))
   :custom
   (quickrun-focus-p nil))
 

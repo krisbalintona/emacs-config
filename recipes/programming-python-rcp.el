@@ -80,6 +80,7 @@
 ;; Install packages to a local directory rather than globally call
 ;; `pyvenv-activate' and select a directory with virtual environment packages
 (use-package pyvenv
+  :disabled                             ; FIXME 2023-07-12: Buggy. Fix later
   :commands kb/pyvenv-pred-project-root
   :hook (pyvenv-mode . (lambda ()
                          ;; TODO 2022-06-20: `pyvenv-tracking-mode' relies on
