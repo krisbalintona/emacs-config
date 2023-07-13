@@ -111,12 +111,15 @@
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
 ;; spelling mistakes as they are made.
 (use-package abbrev
+  :demand
   :elpaca nil
   :diminish
   :ghook 'text-mode-hook 'prog-mode-hook
   :custom
   (abbrev-file-name (concat no-littering-var-directory "abbrev-mode/abbrev.el"))
-  (save-abbrevs 'silently))
+  (save-abbrevs 'silently)
+  :config
+  (setq-default abbrev-mode t))
 
 ;;; Languagetool
 (use-package languagetool
