@@ -299,15 +299,28 @@ mouse-3: Toggle minor modes"
                   mode-line-client
                   mode-line-modified
                   mode-line-remote
-                  vc-mode
-                  "%n" " "
+                  (vc-mode vc-mode) " "
+                  (:eval                ; Taken from prot
+                   (when (and (mode-line-window-selected-p)
+                              (buffer-narrowed-p)
+                              (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
+                     (propertize "Narrow " 'face 'mode-line-emphasis)))
                   mode-line-buffer-identification " "
-                  mode-line-position " "
-                  (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
+                  mode-line-position
+                  (:eval
+                   (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
+                  (:eval
+                   (when (and (mode-line-window-selected-p) defining-kbd-macro)
+                     (concat (propertize "KMacro" 'face 'mode-line-highlight) " ")))
                   mode-line-format-right-align
-                  (:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))) " "
-                  (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format)) " "
-                  mode-line-misc-info " "
+                  (:eval
+                   (when (and (bound-and-true-p flymake-mode)
+                              (mode-line-window-selected-p))
+                     flymake-mode-line-format))
+                  " "
+                  (:eval
+                   (when (mode-line-window-selected-p)
+                     mode-line-misc-info))
                   (:eval kb/mode-line-modes)
                   mode-line-process
                   mode-line-end-spaces)))
