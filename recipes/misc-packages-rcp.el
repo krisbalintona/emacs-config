@@ -228,7 +228,12 @@ progress. This is called by the timer `good-scroll--timer' every
   (isearch-allow-scroll t)
   (isearch-allow-motion t)
   (isearch-lazy-count t)
-  (isearch-wrap-pause 'no))
+  (isearch-wrap-pause 'no)
+  ;; Make regular Isearch interpret the empty space as a regular expression that
+  ;; matches any character between the words you give it. Learned from
+  ;; Protesilaos. Also be aware of `isearch-toggle-lax-whitespace'
+  (isearch-lax-whitespace t)
+  (search-whitespace-regexp ".*?"))
 
 ;;; Ctrlf
 ;; Feature-ful `isearch'
