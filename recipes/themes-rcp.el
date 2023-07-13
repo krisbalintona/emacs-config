@@ -206,7 +206,7 @@
 
 ;;;; Minions
 (use-package minions
-  ;; :ghook 'window-setup-hook
+  :ghook 'elpaca-after-init-hook
   :custom
   (minions-mode-line-lighter "…")
   (minions-mode-line-delimiters '("[" . "]"))
@@ -215,17 +215,20 @@
 
 ;;;; Diminish
 (use-package diminish
-  :hook ((window-setup server-after-make-frame) . kb/diminish-setup)
+  :hook (elpaca-after-init . kb/diminish-setup)
   :init
   (defun kb/diminish-setup ()
-    "Set up `diminish’ lighters for pre-loaded packages."
+    "Set up `diminish’ lighters for pre-loaded packages (packages that
+are troublesome)."
     (with-eval-after-load 'subword
       (diminish 'subword-mode))
     (with-eval-after-load 'simple
       (diminish 'visual-line-mode))
     ;; (with-eval-after-load (diminish 'hs-minor-mode))
     (with-eval-after-load 'face-remap
-      (diminish 'buffer-face-mode))))
+      (diminish 'buffer-face-mode))
+    (with-eval-after-load 'abbrev
+      (diminish 'abbrev-mode))))
 
 ;;;; Mlscroll
 ;; Adds an interactive indicator for the view's position in the current buffer
@@ -248,7 +251,7 @@
     (let ((recursive-edit-help-echo
            "Recursive edit, type M-C-c to get out"))
       (list (propertize "%[" 'help-echo recursive-edit-help-echo)
-            "["                         ; Begin delimiter
+            "["                         ; Changed delimiter
             `(:propertize ("" mode-name)
               help-echo "Major mode\n\
 mouse-1: Display major mode menu\n\
@@ -257,10 +260,6 @@ mouse-3: Toggle minor modes"
               mouse-face mode-line-highlight
               local-map ,mode-line-major-mode-keymap)
             '("" mode-line-process)
-            ;; (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
-            ;;             'mouse-face 'mode-line-highlight
-            ;;             'local-map (make-mode-line-mouse-map
-            ;;                         'mouse-2 #'mode-line-widen))
             `(:propertize ("" minor-mode-alist)
               mouse-face mode-line-highlight
               help-echo "Minor mode\n\
@@ -268,36 +267,14 @@ mouse-1: Display minor mode menu\n\
 mouse-2: Show help for minor mode\n\
 mouse-3: Toggle minor modes"
               local-map ,mode-line-minor-mode-keymap)
-            "]"                         ; End delimiter
+            (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
+                        'mouse-face 'mode-line-highlight
+                        'local-map (make-mode-line-mouse-map
+                                    'mouse-2 #'mode-line-widen))
+            "]"                         ; Changed delimiter
             (propertize "%]" 'help-echo recursive-edit-help-echo)
             " "))
-    "Replace the default `mode-line-modes' similar to how `minions' does it")
-
-  (defun kb/global-mode-string-wrapper ()
-    "Return a modified version of `global-mode-string’ without certain
-elements.
-
-I use this function to remove elements that I put elsewhere in
-the mode line."
-    (let ((removed-global-mode-string
-           '((t (:eval (lsp--progress-status))))))
-      ;; FIXME 2023-01-10: `display-time-string' is duplicated for some
-      ;; reason... so I workaround by deleting duplicates
-      (delete-dups
-       (seq-difference global-mode-string removed-global-mode-string))))
-
-  (defun kb/mode-line-misc-info-wrapper ()
-    "Return a modified version of `mode-line-misc-info’ without
-certain elements.
-
-I use this function to remove elements that I put elsewhere in
-the mode line. Also alters `global-mode-string’ based on
-`kb/global-mode-string-wrapper’."
-    (let ((removed-misc-info
-           '((global-mode-string ("" global-mode-string))
-             (eyebrowse-mode (:eval (eyebrowse-mode-line-indicator))))))
-      (append (seq-difference mode-line-misc-info removed-misc-info)
-              (kb/global-mode-string-wrapper))))
+    "Mode line construct for displaying major and minor modes.")
 
   (setq-default mode-line-format
                 '("%e" mode-line-front-space
@@ -314,7 +291,7 @@ the mode line. Also alters `global-mode-string’ based on
                   mode-line-format-right-align
                   (:eval (when (bound-and-true-p lsp-mode) (lsp--progress-status))) " "
                   (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format)) " "
-                  (:eval (kb/mode-line-misc-info-wrapper)) " "
+                  mode-line-misc-info " "
                   (:eval kb/mode-line-modes)
                   mode-line-process
                   mode-line-end-spaces)))

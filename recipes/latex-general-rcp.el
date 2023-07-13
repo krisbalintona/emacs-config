@@ -257,6 +257,7 @@ blacklist, this is mostly for \\section etc."
   :after tex-site
   :hook ((LaTeX-mode . cdlatex-mode)
          (org-mode . org-cdlatex-mode))
+  :diminish (org-cdlatex-mode . "")
   :general
   (:keymaps 'cdlatex-mode-map
    ;; Other packages take care of inserting closing delimiters
