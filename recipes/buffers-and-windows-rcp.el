@@ -204,9 +204,11 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
 (use-package eyebrowse
+  :disabled                             ; Testing out `tab-bar'
   :demand
   :general
-  ("M-1" 'eyebrowse-switch-to-window-config-1
+  (:keymaps 'eyebrowse-mode-map
+   "M-1" 'eyebrowse-switch-to-window-config-1
    "M-2" 'eyebrowse-switch-to-window-config-2
    "M-3" 'eyebrowse-switch-to-window-config-3
    "M-4" 'eyebrowse-switch-to-window-config-4
@@ -236,6 +238,20 @@ If buffer-or-name is nil return current buffer's mode."
   (eyebrowse-mode)
   ;; Immediately remove from mode line so I can manually place it
   (delete '(eyebrowse-mode (:eval (eyebrowse-mode-line-indicator))) mode-line-misc-info))
+
+;;;; Tab-bar
+(use-package tab-bar
+  :elpaca nil
+  :demand
+  :custom
+  (tab-bar-close-button-show nil)
+  (tab-bar-new-tab-choice 'clone)
+  (tab-bar-select-tab-modifiers '(meta))
+  (tab-bar-tab-hints t)
+  (tab-bar-show 1)
+  :config
+  (tab-bar-mode)
+  (tab-bar-history-mode))
 
 ;;;; Ace-window
 (use-package ace-window
@@ -310,13 +326,13 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-display-control nil)
   (popper-group-function
    #'(lambda ()
-        (cond
-         ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
-          'Config)
-         ((locate-dominating-file default-directory "init.el") 'Emacs)
-         ((project-current) (project-root (project-current)))
-         (t nil)                         ; No group
-         )))
+             (cond
+              ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
+               'Config)
+              ((locate-dominating-file default-directory "init.el") 'Emacs)
+              ((project-current) (project-root (project-current)))
+              (t nil)                         ; No group
+              )))
   (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-buffer-id)))
 
   ;; Popper-echo
@@ -324,35 +340,35 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-dispatch-actions t)
   (popper-echo-transform-function
    #'(lambda (name)
-        (cond
-         ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
-          (concat (match-string 1 name)
-                  "(O)"))
-         ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
-          (concat (match-string 1 name)
-                  "(H)"))
-         ((string-match "^\\*Warnings\\*" name)
-          (concat (match-string 1 name)
-                  "(W)"))
-         ((string-match "^\\*Backtrace\\*" name)
-          (concat (match-string 1 name)
-                  "(B)"))
-         ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
-          (concat (match-string 1 name)
-                  "(L)"))
-         ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
-          (concat (match-string 1 name)
-                  "(C)"))
-         ((string-match "^\\*Java Run" name)
-          (concat (match-string 1 name)
-                  (concat "(CG)" (substring name 18 (- (length name) 1)))
-                  ))
-         ((string-match "^\\*Customize" name)
-          (concat (match-string 1 name)
-                  (concat "(CG)" (substring name 18 (- (length name) 1)))
-                  ))
-         (t name))
-        ))
+             (cond
+              ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
+               (concat (match-string 1 name)
+                       "(O)"))
+              ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
+               (concat (match-string 1 name)
+                       "(H)"))
+              ((string-match "^\\*Warnings\\*" name)
+               (concat (match-string 1 name)
+                       "(W)"))
+              ((string-match "^\\*Backtrace\\*" name)
+               (concat (match-string 1 name)
+                       "(B)"))
+              ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
+               (concat (match-string 1 name)
+                       "(L)"))
+              ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
+               (concat (match-string 1 name)
+                       "(C)"))
+              ((string-match "^\\*Java Run" name)
+               (concat (match-string 1 name)
+                       (concat "(CG)" (substring name 18 (- (length name) 1)))
+                       ))
+              ((string-match "^\\*Customize" name)
+               (concat (match-string 1 name)
+                       (concat "(CG)" (substring name 18 (- (length name) 1)))
+                       ))
+              (t name))
+             ))
 
   ;; Mode line
   (popper-mode-line-position 0)
