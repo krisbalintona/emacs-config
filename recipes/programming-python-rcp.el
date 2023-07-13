@@ -12,22 +12,13 @@
 (require 'programming-projects-rcp)
 
 ;;; Python-mode
-;; A little better than the built-in python package
-(use-package python-mode
-  :demand t
-  :ensure-system-package (pytest . python-pytest-pacman)
+(use-package python
+  :ensure-system-package ((pylsp . python-lsp-server)
+                          (pyright-langserver . pyright)
+                          (pytest . python-pytest))
   :hook (py-shell-mode . (lambda ()
                            (hide-mode-line-mode)
                            (setq-local scroll-margin 0)))
-  'display-fill-column-indicator-mode
-  :general (:keymaps 'python-mode-map
-            :states '(normal insert)
-            "C-<backspace>" '(lambda () (interactive) (backward-kill-word 1)) ; Python oddly replaces the normal C-<backspace>
-            "M-[" 'python-nav-backward-block
-            "M-]" 'python-nav-forward-block
-            "M-{" 'python-nav-beginning-of-block
-            "M-}" 'python-nav-end-of-block
-            )
   :custom
   (py-python-command "ipython3")
   (py-shell-fontify-p 'all)             ; Fontify shell
@@ -42,18 +33,14 @@
   (py-switch-buffers-on-execute-p nil) ; Switch to buffer?
   :config
   (when (bound-and-true-p evil-local-mode)
-    (evil-set-initial-state 'py-shell-mode 'normal))
-
-  (with-eval-after-load 'eglot
-    (setf (alist-get 'python-mode eglot-server-programs)
-          `("pyright-langserver" "--stdio"))))
+    (evil-set-initial-state 'py-shell-mode 'normal)))
 
 ;;; Dap-python
 ;; Compatibility with dap
 (use-package dap-python
   :requires dap-mode
-  :demand t
-  :after (python-mode dap-mode)
+  :demand
+  :after python dap-mode
   :ensure-system-package debugpy-run    ; For debugging in python using dap
   :elpaca nil
   :custom
@@ -61,10 +48,9 @@
   (dap-python-debugger 'debugpy))       ; Updated version of ptvsd
 
 ;;; Lsp-pyright
-;; Best python language server
 (use-package lsp-pyright
   :requires lsp
-  :after python-mode
+  :after python
   :custom
   (lsp-pyright-multi-root nil)          ; Useful!
   (lsp-pyright-python-executable-cmd "python3")
@@ -89,9 +75,9 @@
                          ;; using it. Possible solutions may lie in `envrc' and
                          ;; `buffer-env'
                          (if (and pyvenv-tracking-mode pyvenv-mode)
-                             (add-hook 'python-mode-hook 'kb/pyvenv-auto-activate)
-                           (remove-hook 'python-mode-hook 'kb/pyvenv-auto-activate))))
-  :ghook 'python-mode-hook
+                             (add-hook 'python-base-mode-hook 'kb/pyvenv-auto-activate)
+                           (remove-hook 'python-base-mode-hook 'kb/pyvenv-auto-activate))))
+  :ghook 'python-base-mode-hook
   :gfhook
   'pyvenv-tracking-mode
   :general (kb/lsp-keys
@@ -203,7 +189,7 @@ it."
     (interactive)
     ;; Used functions need to be loaded
     (require 'pyvenv)
-    (unless (equal major-mode 'python-mode)
+    (unless (derived-mode-p major-mode 'python-base-mode)
       (user-error "[kb/pyvenv-auto-activate] Not in python-mode, can't activate venv!"))
 
     ;; First check if `pyvenv-workon' or `pyvenv-activate' are non-nil

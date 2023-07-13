@@ -68,7 +68,7 @@
    '((c++-mode "cpp")
      (c-mode "c")
      (go-mode "go")
-     (python-mode "Python")
+     (python-base-mode "Python")
      (emacs-lisp-mode "elisp")
      (cmake-mode "CMake")
      (haskell-mode "Haskell"))))
@@ -81,11 +81,11 @@
                       :repo "dash-docs-el/dash-docs"
                       :fork (:host github
                              :repo "krisbalintona/dash-docs"))
-  :hook ((python-mode   . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
-         (haskell-mode  . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
-         (js2-mode      . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))
-         (lua-mode      . (lambda () (setq-local dash-docs-common-docsets '("Lua"))))
-         (LaTeX-mode    . (lambda () (setq-local dash-docs-common-docsets '("LaTeX")))))
+  :hook ((python-base-mode . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
+         (haskell-mode . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
+         (js2-mode . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))
+         (lua-mode . (lambda () (setq-local dash-docs-common-docsets '("Lua"))))
+         (LaTeX-mode . (lambda () (setq-local dash-docs-common-docsets '("LaTeX")))))
   :custom
   (dash-docs-docsets-path (expand-file-name "dash-docs-docsets" no-littering-var-directory))
   (dash-docs-browser-func 'eww)

@@ -12,7 +12,7 @@
 ;;; Eglot
 (use-package eglot
   :ensure-system-package (pyright bash-language-server)
-  :hook (((python-mode lua-mode sh-mode js2-mode c-mode) . eglot-ensure)
+  :hook (((python-base-mode lua-mode sh-mode js2-mode c-mode) . eglot-ensure)
          (eglot-managed-mode . eglot-inlay-hints-mode) ; Only available if server supports it
          (eglot-managed-mode . (lambda ()
                                  "Configure `eldoc';;"

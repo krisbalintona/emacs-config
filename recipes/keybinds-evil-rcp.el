@@ -213,7 +213,7 @@
 (use-package evil-matchit
   :disabled t                           ; Trying out native emacs
   :after evil
-  :hook (python-mode . (lambda () (setq-local evilmi-always-simple-jump t)))
+  :hook (python-base-mode . (lambda () (setq-local evilmi-always-simple-jump t)))
   :init
   (global-evil-matchit-mode))
 

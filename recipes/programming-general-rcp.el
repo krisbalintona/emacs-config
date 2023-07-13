@@ -57,7 +57,7 @@ punctuation."
               ;; Angle brackets for text (non-math)
               (add-to-list 'prettify-symbols-alist '("\\textlangle" . 10216))
               (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217))))
-  (add-hook 'python-mode-hook
+  (add-hook 'python-base-mode-hook
             (lambda ()
               (add-to-list 'prettify-symbols-alist '("->" . ?»))
               (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
