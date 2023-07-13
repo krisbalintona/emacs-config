@@ -9,35 +9,20 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Org-tempo
-;; Completion for org-block types. Adds to the functionality of `org-structure'.
-(use-package org-tempo
-  :elpaca nil
-  :after org
-  :config
-  ;; Add additional org-block types
-  (dolist (expansion '(;; ("sc" . "src scheme")
-                       ;; ("ts" . "src typescript")
-                       ;; ("yaml" . "src yaml")
-                       ;; ("json" . "src json")
-                       )
-                     org-structure-template-alist)
-    (push expansion org-structure-template-alist))
-  )
-
 ;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
-  :diminish (yas-minor-mode . "")
-  :defer 5
-  :config
-  (yas-global-mode)
-
-  (advice-add 'doom-snippets-initialize
-              :after #'(lambda ()
-                               "Ensure my personal snippets dir is first and therefore the
-default when creating snippets. Then start `yas-global-mode'."
-                               (add-to-list 'yas-snippet-dirs (no-littering-expand-etc-file-name "yasnippet/snippets")))))
+  :diminish yas-minor-mode
+  :custom
+  (yas-alias-to-yas/prefix-p nil)
+  (yas-also-auto-indent-first-line t)
+  (yas-also-indent-empty-lines nil)
+  (yas-choose-tables-first t)
+  (yas-inhibit-overlay-modification-protection nil)
+  (yas-snippet-revival t)
+  (yas-triggers-in-field nil)
+  :init
+  (yas-global-mode))
 
 ;;; Consult-yasnippet
 (use-package consult-yasnippet
@@ -46,19 +31,13 @@ default when creating snippets. Then start `yas-global-mode'."
   ([remap yas-insert-snippet] 'consult-yasnippet
    [remap yas-visit-snippet-file] 'consult-yasnippet-visit-snippet-file))
 
-;;; Doom-snippets
-;; Large library of yasnippet templates
-(use-package doom-snippets
-  :disabled
-  :elpaca (doom-snippets :type git :host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
-
 ;;; Tempel
 ;; Small and simple snippet/template system compatible with corfu.
 (use-package tempel
-  :disabled t                           ; Migrate to yasnippet
+  :disabled                             ; Migrate to yasnippet
   :general
   ("M-+" 'tempel-complete               ; List all available templates
-   "M-*" 'tempel-insert)                 ; Insert typed template
+   "M-*" 'tempel-insert)                ; Insert typed template
   (:keymaps 'tempel-map
    "C-M-c" 'tempel-done)
   :custom
