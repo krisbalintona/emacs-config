@@ -107,56 +107,30 @@
              ))
 
 ;;; Tree-sitter
-;;;; Itself
-;; Create a syntax tree (e.g. the role of each piece of code) and add syntax
-;; highlighting from it (rather than regex and indentation). Additionally, the
-;; syntax tree itself can help debug and quick editing in some cases.
-(use-package tree-sitter
-  :diminish "TSitter"
-  :hook (tree-sitter-after-on . tree-sitter-hl-mode) ; Enable syntax highlighting whenever possible
-  :init
-  (global-tree-sitter-mode))    ; Enable for all supported tree-sitter languages
+;;;; Treesit-auto
+(use-package treesit-auto
+  :demand
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (global-treesit-auto-mode))
 
-;;;; Tree-sitter-langs
-;; ;; Supported language bundle for tree-sitter
-;; (use-package tree-sitter-langs
-;;   :after tree-sitter
-;;   :defer 5                              ; Best solution I could think of...
-;;   :config
-;;   (tree-sitter-langs-install-grammars   ; Install language bundles
-;;    t
-;;    tree-sitter-langs--bundle-version
-;;    tree-sitter-langs--os))
-;;
 ;;;; Turbo-log
-;; (use-package turbo-log
-;;   :requires tree-sitter
-;;   :elpaca (turbo-log :type git :host github :repo "artawower/turbo-log.el")
-;;   :general (:prefix "H-;"
-;;             ";" 'turbo-log-print
-;;             "i" 'turbo-log-print-immediately
-;;             "h" 'turbo-log-comment-all-logs
-;;             "s" 'turbo-log-uncomment-all-logs
-;;             "[" 'turbo-log-paste-as-logger
-;;             "]" 'turbo-log-paste-as-logger-immediately
-;;             "d" 'turbo-log-delete-all-logs)
-;; :custom
-;; (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
-;; (turbo-log-allow-insert-without-tree-sitter-p t))
-
-;;; Treesit (built-in)
-;; Taken from https://github.com/casouri/tree-sitter-module/issues/13
-;; (use-package tree-sitter-module
-;;   :elpaca (tree-sitter-module
-;;              :type git :host github
-;;              :repo "casouri/tree-sitter-module"
-;;              :pre-build (("./batch.sh"))
-;;              :files ("dist/*.so" "dist/*.dll" "dist/*.dylib"))
-;;   :init
-;;   ;; Search for tree-sitter modules in this packages build directory.
-;;   (with-eval-after-load 'treesit
-;;     (add-to-list 'treesit-extra-load-path
-;;                  (straight--build-dir "tree-sitter-module"))))
+(use-package turbo-log
+  :disabled                             ; Used old tree-sitter package
+  :requires tree-sitter
+  :elpaca (turbo-log :type git :host github :repo "artawower/turbo-log.el")
+  :general (:prefix "H-;"
+            ";" 'turbo-log-print
+            "i" 'turbo-log-print-immediately
+            "h" 'turbo-log-comment-all-logs
+            "s" 'turbo-log-uncomment-all-logs
+            "[" 'turbo-log-paste-as-logger
+            "]" 'turbo-log-paste-as-logger-immediately
+            "d" 'turbo-log-delete-all-logs)
+  :custom
+  (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
+  (turbo-log-allow-insert-without-tree-sitter-p t))
 
 ;;; programming-ide-base-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
