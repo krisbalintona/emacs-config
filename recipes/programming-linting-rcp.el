@@ -84,40 +84,11 @@
 ;;; Flymake-collection
 (use-package flymake-collection
   :requires flymake
-  :ensure-system-package ((proselint . "pipx install proselint")
-                          (luacheck))
+  :ensure-system-package luacheck
   :hook (elpaca-after-init . flymake-collection-hook-setup)
-  :custom
-  (flymake-collection-config
-   '((python-mode flymake-collection-pycodestyle
-                  (flymake-mypy :disabled t)
-                  (flymake-collection-pylint :disabled t)
-                  (flymake-collection-flake8 :disabled t)
-                  (flymake-collection-ruff :disabled t))
-     (awk-mode flymake-collection-awk-gawk)
-     (c-mode flymake-collection-clang
-             (flymake-collection-gcc :disabled t))
-     (c++-mode flymake-collection-clang
-               (flymake-collection-gcc :disabled t))
-     (haskell-mode flymake-collection-hlint)
-     (js-mode flymake-collection-eslint)
-     (js2-mode flymake-collection-eslint)
-     (typescript-mode flymake-collection-eslint)
-     (json-mode flymake-collection-jq
-                (flymake-collection-jsonlint :disabled t))
-     (less-mode flymake-collection-less)
-     (markdown-mode flymake-collection-markdownlint)
-     (lua-mode flymake-collection-luacheck
-               (flymake-collection-lua :disabled t))
-     (sql-mode flymake-collection-sql-lint
-               (flymake-collection-sqlint :disabled t))
-     (ruby-mode flymake-collection-rubocop)
-     (sh-mode flymake-collection-shellcheck)
-     (yaml-mode flymake-collection-yamllint)
-     (web-mode flymake-collection-html-tidy)
-     ;; (org-mode flymake-collection-proselint)
-     (notmuch-message-mode flymake-collection-proselint)
-     (nxml-mode flymake-collection-xmllint))))
+  :config
+  (setcdr (assoc 'org-mode flymake-collection-hook-config)
+          '((flymake-collection-proselint :disabled t))))
 
 ;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use
