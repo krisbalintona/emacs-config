@@ -301,7 +301,8 @@ the mode line. Also alters `global-mode-string’ based on
 
   (setq-default mode-line-format
                 '("%e" mode-line-front-space
-                  (:eval (eyebrowse-mode-line-indicator))
+                  (:eval (when (bound-and-true-p eyebrowse-mode)
+                           (eyebrowse-mode-line-indicator)))
                   mode-line-client
                   mode-line-modified
                   mode-line-remote
