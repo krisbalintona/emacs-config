@@ -70,7 +70,7 @@
   :custom
   (help-window-select t)
   (help-window-keep-selected t)
-  
+
   (help-enable-variable-value-editing t)
   (help-clean-buttons t)
 
@@ -109,9 +109,10 @@
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
   :demand
-  :after helpful
   :config
-  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+  (add-hook 'help-fns-describe-function-functions #'elisp-demos-advice-describe-function-1)
+  (with-eval-after-load 'helpful
+    (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 
 ;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!
