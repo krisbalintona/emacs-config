@@ -107,7 +107,18 @@
                                              (if (= vertico--index index)
                                                  (propertize "» " 'face 'vertico-current)
                                                "  ")
-                                             cand))))
+                                             cand)))
+  ;; Add prompt indicator to `completing-read-multiple'. We display
+  ;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
+  ;; https://github.com/minad/vertico
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
 ;;;; Vertico-grid
 (use-package vertico-grid
