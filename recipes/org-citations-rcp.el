@@ -175,6 +175,7 @@ the citation at point."
 ;;; Citar-embark
 (use-package citar-embark
   :demand
+  :diminish
   :general (:keymaps 'citar-embark-citation-map
             "p" 'kb/citar-open-pdf-in-zotero)
   :config
