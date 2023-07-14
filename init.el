@@ -84,8 +84,9 @@
 ;; (require 'org-agenda-views-rcp)
 ;; (require 'org-agenda-other-rcp)
 
-;;;; LaTeX
+;;;; Other major modes
 (require 'latex-general-rcp)
+(require 'markdown-general-rcp)
 
 ;;;; Programming
 ;;;;; Core

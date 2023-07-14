@@ -6,18 +6,16 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
-(require 'use-package-rcp)
-(require 'keybinds-frameworks-rcp)
 
 ;;;; Markdown-mode
 (use-package markdown-mode
-  :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'"))
+  :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")
+  :gfhook 'visual-line-mode)
 
 ;;; Markdown-xwidget
 ;; Similar to `grip-mode' but avoids sending many requests to GitHub's API and
 ;; more customization. However, `grip-mode' shows exactly what GitHub would show
 (use-package markdown-xwidget
-  :after markdown-mode
   :ensure-system-package pandoc
   :elpaca (:type git
            :host github
