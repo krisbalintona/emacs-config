@@ -252,10 +252,11 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
-  :elpaca (alt-comment-dwim :type git
-                            :host gitlab
-                            :protocol ssh
-                            :repo "PreciousPudding/alt-comment-dwim")
+  :elpaca (:type git
+           :host gitlab
+           :protocol ssh
+           :repo "PreciousPudding/alt-comment-dwim"
+           :depth nil)
   :general
   ([remap comment-dwim] 'alt-comment-dwim
    [remap comment-line] 'alt-comment-dwim-line

@@ -541,7 +541,11 @@ Interactively select signature via `kb/mu4e-select-signature'."
 ;;; Mu4e-send-delay
 (use-package mu4e-send-delay
   :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
-  :elpaca (:type git :host github :protocol ssh :repo "krisbalintona/mu4e-send-delay")
+  :elpaca (:type git
+           :host github
+           :protocol ssh
+           :repo "krisbalintona/mu4e-send-delay"
+           :depth nil)
   :hook (mu4e-main-mode . mu4e-send-delay-setup)
   :general ([remap message-send-and-exit] 'mu4e-send-delay-send-and-exit)
   :custom
