@@ -116,7 +116,8 @@
 ;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!
 (use-package suggest
-  :general ("C-c S" '(suggest :wk "Suggest.el buffer"))
+  :general (kb/open-keys
+             "S" 'suggest)
   :custom
   (suggest-insert-example-on-start nil))
 
