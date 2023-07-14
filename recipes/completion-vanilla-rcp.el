@@ -14,10 +14,8 @@
 ;; A lot of this is taken from
 ;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
 (setq completion-styles '(basic initials partial-completion flex)
-      completion-category-overrides     ; partial-completion is easier for files
-      '((file (styles . (partial-completion orderless))))
       completion-cycle-threshold 2 ; Number of candidates until cycling turns off
-      completion-flex-nospace nil
+      completion-flex-nospace t
       completion-pcm-complete-word-inserts-delimiters nil
       completion-pcm-word-delimiters "-_./:| " ; Word delimiters
       completion-show-help nil
@@ -29,13 +27,6 @@
       completions-detailed t ; Show more details in completion minibuffer (inspired by `marginalia')
       ;; Grouping of completions for Emacs 28
       completions-group t
-      completions-group-sort nil
-      completions-group-format
-      (concat
-       (propertize "    " 'face 'completions-group-separator)
-       (propertize " %s " 'face 'completions-group-title)
-       (propertize " " 'face 'completions-group-separator
-                   'display '(space :align-to right)))
 
       read-buffer-completion-ignore-case t
       read-file-name-completion-ignore-case t
@@ -49,6 +40,18 @@
       '(read-only t cursor-intangible t face minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
+;; Add prompt indicator to `completing-read-multiple'. We display
+;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
+;; https://github.com/minad/vertico
+(defun crm-indicator (args)
+  (cons (format "[CRM%s] %s"
+                (replace-regexp-in-string
+                 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                 crm-separator)
+                (car args))
+        (cdr args)))
+(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
 ;;; Vertico
 ;;;; Itself
 (use-package vertico
@@ -61,24 +64,11 @@
    "?" #'minibuffer-completion-help
    "C-M-n" #'vertico-next-group
    "C-M-p" #'vertico-previous-group
-   ;; Multiform toggles
-   "<backspace>" #'vertico-directory-delete-char
-   "C-w" #'vertico-directory-delete-word
-   "C-<backspace>" #'vertico-directory-delete-word
-   "RET" #'vertico-directory-enter
-   "C-i" #'vertico-quick-insert
-   "C-o" #'vertico-quick-exit
-   "M-o" #'kb/vertico-quick-embark
-   "M-G" #'vertico-multiform-grid
-   "M-F" #'vertico-multiform-flat
-   "M-R" #'vertico-multiform-reverse
-   "M-U" #'vertico-multiform-unobtrusive
-   "C-l" #'kb/vertico-multiform-flat-toggle)
-  :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
-         (minibuffer-setup . vertico-repeat-save)) ; Make sure vertico state is saved
+   "M-o" #'kb/vertico-quick-embark)
+  :hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
   :custom
   (vertico-count 13)
-  (vertico-resize t)
+  (vertico-resize 'grow-only)
   (vertico-cycle nil)
   :init
   ;; Workaround for problem with `tramp' hostname completions. This overrides
@@ -95,118 +85,58 @@
                  kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
   :config
   (vertico-mode)
-  (vertico-multiform-mode)              ; Extensions
 
-  ;; Prefix the current candidate with “» ”. From
-  ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
-  (advice-add #'vertico--format-candidate :around
-                                          (lambda (orig cand prefix suffix index _start)
-                                            (setq cand (funcall orig cand prefix suffix index _start))
-                                            (concat
-                                             (if (= vertico--index index)
-                                                 (propertize "» " 'face 'vertico-current)
-                                               "  ")
-                                             cand)))
-  ;; Add prompt indicator to `completing-read-multiple'. We display
-  ;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
-  ;; https://github.com/minad/vertico
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
+  (defun kb/vertico-quick-embark (&optional _)
+    "Embark on candidate using quick keys."
+    (interactive)
+    (when (vertico-quick-jump))))
 
-;;;; Vertico-grid
-(use-package vertico-grid
+
+;;;; Vertico-directory
+(use-package vertico-directory
+  :elpaca nil
+  ;; More convenient directory navigation commands
+  :general (:keymaps 'vertico-map
+            "RET" 'vertico-directory-enter
+            "DEL" 'vertico-directory-delete-char
+            "M-DEL" 'vertico-directory-delete-word)
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+;;;; Vertico-multiform
+(use-package vertico-multiform
+  :demand
+  :after vertico
   :elpaca nil
   :custom
-  (vertico-grid-separator "       ")
-  (vertico-grid-lookahead 50))
+  (vertico-multiform-categories
+   '((consult-grep buffer)
+     (imenu buffer)))
+  (vertico-multiform-commands
+   '(("flyspell-correct-*" grid)))
+  :config
+  (vertico-multiform-mode))
 
 ;;;; Vertico-buffer
 (use-package vertico-buffer
   :elpaca nil
+  :after vertico
   :custom
-  (vertico-buffer-display-action '(display-buffer-reuse-window)))
-
-;;;; Vertico-multiform
-;; Extensions
-(use-package vertico-multiform
-  :elpaca nil
-  :custom
-  (vertico-multiform-categories
-   '((file reverse)
-     (consult-grep buffer)
-     (consult-location)
-     (imenu buffer)
-     (library reverse indexed)
-     (t reverse)
-     ))
-  (vertico-multiform-commands
-   '(("flyspell-correct-*" grid reverse)
-     (consult-yank-pop indexed)
-     (consult-flycheck)
-     (consult-lsp-diagnostics)
-     ))
-  :init
-  (defun kb/vertico-multiform-flat-toggle ()
-    "Toggle between flat and reverse."
-    (interactive)
-    (vertico-multiform--display-toggle 'vertico-flat-mode)
-    (if vertico-flat-mode
-        (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
-      (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
-  (defun kb/vertico-quick-embark (&optional arg)
-    "Embark on candidate using quick keys."
-    (interactive)
-    (when (vertico-quick-jump)
-      (embark-act arg))))
+  (vertico-buffer-display-action
+   '(display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.3))))
 
 ;;;; Vertico-truncate
 ;; Truncate long lines while leaving match visible
 (use-package vertico-truncate
+  :demand
   :after vertico
   :elpaca (:type git
            :host github
            :repo "jdtsmith/vertico-truncate")
-  :init
+  :config
   (vertico-truncate-mode))
-
-;;; Selectrum
-;;;; Itself
-;; Advanced complete-read
-(use-package selectrum
-  :disabled t                           ; Trying out `vertico'
-  :custom
-  (selectrum-num-candidates-displayed 'auto)
-  (selectrum-max-window-height 10)                 ; Maximum candidates shown
-  (selectrum-fix-vertical-window-height t)         ; Fixed height?
-  (selectrum-extend-current-candidate-highlight t) ; Highlight entire line
-  (selectrum-count-style 'current/matches)
-  (selectrum-show-indices nil)
-  :init
-  (selectrum-mode)
-
-  ;; Optional performance optimization for `selectrum' by highlighting only the
-  ;; visible candidates.
-  (setq orderless-skip-highlighting (lambda () selectrum-is-active)
-        selectrum-highlight-candidates-function #'orderless-highlight-matches))
-
-;;;; Selectrum-prescient
-;; Selectrum with `prescient' completion style
-(use-package selectrum-prescient
-  :after prescient
-  :ghook 'selectrum-mode-hook
-  :custom
-  ;; Use `prescient' to sort and filter in `selectrum-mode' This can be nil if
-  ;; with `orderless' and want that to be the one filtering.
-  ;; NOTE `Prescient' and `orderless' can both work with `selectrum'
-  ;; simultaneously.
-  (selectrum-prescient-enable-filtering t)
-  (selectrum-prescient-enable-sorting t))
 
 ;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
@@ -300,41 +230,9 @@ parses its input."
 ;;; Fussy
 ;; Instead of just filtering (e.g. like `orderless' alone), also score the
 ;; filtered candidates afterward!
-;;;; Flx-rs
-(use-package flx-rs
-  :elpaca (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
-  :commands flx-rs-score
-  :config (flx-rs-load-dyn))
-
-;;;; Liquidmetal
-(use-package liquidmetal
-  :commands fussy-liquidmetal-score)
-
-;;;; Fuz-bin
-(use-package fuz-bin
-  :elpaca (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
-  :commands fussy-fuz-score
-  :config (fuz-bin-load-dyn))
-
-;;;; Fuz-native
-(use-package fzf-native
-  :elpaca (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
-  :commands fussy-fzf-native-score
-  :config (fzf-native-load-dyn))
-
-;;;; Subline-fuzzy
-(use-package sublime-fuzzy
-  :elpaca (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
-  :commands fussy-sublime-fuzzy-score
-  :config (sublime-fuzzy-load-dyn))
-
-;;;; Hotfuzz
-(use-package hotfuzz
-  :commands fussy-hotfuzz-score)
-
 ;;;; Itself
 (use-package fussy
-  :disabled              ; Less performant than `orderless' with little benefit
+  :disabled               ; Less performant than `orderless' with little benefit
   :elpaca (fussy :type git :host github :repo "jojojames/fussy")
   :commands fussy-all-completions fussy-try-completions
   :custom
@@ -356,8 +254,45 @@ parses its input."
    fussy-score-fn 'fussy-fzf-native-score
    fussy-score-fn 'fussy-fuz-bin-score
    fussy-score-fn 'flx-rs-score
-   )
-  )
+   ))
+
+;;;; Flx-rs
+(use-package flx-rs
+  :elpaca (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
+  :after flx-rs
+  :commands fussy-score
+  :config (flx-rs-load-dyn))
+
+;;;; Liquidmetal
+(use-package liquidmetal
+  :after fussy
+  :commands fussy-liquidmetal-score)
+
+;;;; Fuz-bin
+(use-package fuz-bin
+  :elpaca (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
+  :after fussy
+  :commands fussy-fuz-score
+  :config (fuz-bin-load-dyn))
+
+;;;; Fuz-native
+(use-package fzf-native
+  :elpaca (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
+  :after fussy
+  :commands fussy-fzf-native-score
+  :config (fzf-native-load-dyn))
+
+;;;; Subline-fuzzy
+(use-package sublime-fuzzy
+  :elpaca (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
+  :after fussy
+  :commands fussy-sublime-fuzzy-score
+  :config (sublime-fuzzy-load-dyn))
+
+;;;; Hotfuzz
+(use-package hotfuzz
+  :after fussy
+  :commands fussy-hotfuzz-score)
 
 ;;; completion-vanilla-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
