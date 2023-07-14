@@ -12,7 +12,6 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
-  :demand
   :elpaca (:type git
            :host github
            :repo "emacs-eaf/emacs-application-framework"
@@ -66,6 +65,12 @@
   (eaf-pdf-dark-mode "ignore")
 
   (eaf-enable-debug nil)                ; Enable if there is a seg-fault
+  :init
+  ;; HACK 2023-07-14: Don't demand since EAF can't be loaded while Emacs is
+  ;; non-GUI. See, e.g.,
+  ;; https://github.com/emacs-eaf/emacs-application-framework/issues/1042
+  (add-hook (if (daemonp) 'server-after-make-frame-hook 'elpaca-after-init-hook)
+            #'(lambda () (require 'eaf)))
   :config
   ;; All-the-icons integration
   (require 'eaf-all-the-icons)
