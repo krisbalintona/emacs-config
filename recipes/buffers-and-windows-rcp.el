@@ -249,6 +249,10 @@ If buffer-or-name is nil return current buffer's mode."
   (tab-bar-select-tab-modifiers '(meta))
   (tab-bar-tab-hints t)
   (tab-bar-show 1)
+  (tab-bar-format
+   '(tab-bar-format-tabs-groups
+     tab-bar-format-align-right
+     tab-bar-format-global))
   :config
   (tab-bar-mode)
   (tab-bar-history-mode))
