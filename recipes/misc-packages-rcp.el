@@ -929,7 +929,8 @@ This is a difference in multitude of %s."
   (global-so-long-mode)
   (repeat-mode)
   ;; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
-  (find-function-setup-keys))
+  (find-function-setup-keys)
+  (minibuffer-electric-default-mode))
 
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
