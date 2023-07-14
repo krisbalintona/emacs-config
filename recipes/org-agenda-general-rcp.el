@@ -19,7 +19,7 @@
   (kb/open-keys "a" 'org-agenda)
   (:keymaps 'org-agenda-keymap
    "S" '(lambda () (interactive)
-                   (org-agenda-change-time-span (string-to-number (read-from-minibuffer "Span: ")))))
+              (org-agenda-change-time-span (string-to-number (read-from-minibuffer "Span: ")))))
   :custom
   (org-agenda-files (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
 
@@ -488,6 +488,10 @@ See `kb/consult-org-depend’."
                        :prompt "Select dependency for this agenda item: ")))
 
 ;;; Org-gcal
+(use-package plstore                    ; Dependency
+  :elpaca nil
+  :custom
+  (plstore-cache-passphrase-for-symmetric-encryption t))
 (use-package org-gcal
   :custom
   ;; NOTE 2023-01-22: If syncing broke for some reason, try
@@ -517,11 +521,8 @@ See `kb/consult-org-depend’."
   ;; Time zone
   ;; (org-gcal-local-timezone "America/Chicago")
   (org-gcal-local-timezone "America/New_York")
-  :config
-  (use-package plstore
-    :demand
-    :custom
-    (plstore-cache-passphrase-for-symmetric-encryption t)))
+  :init
+  (require 'plstore))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

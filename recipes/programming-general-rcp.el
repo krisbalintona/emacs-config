@@ -68,6 +68,8 @@ punctuation."
   :ghook 'prog-mode-hook 'conf-mode-hook)
 
 ;;;; Hl-todo
+;; OPTIMIZE 2023-07-14: Also consider synergy with
+;; https://codeberg.org/ideasman42/emacs-prog-face-refine
 (use-package hl-todo
   :hook (elpaca-after-init . global-hl-todo-mode)
   :general
