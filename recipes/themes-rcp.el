@@ -306,14 +306,14 @@ mouse-3: Toggle minor modes"
                   mode-line-client
                   mode-line-modified
                   mode-line-remote
-                  (vc-mode vc-mode) " "
+                  vc-mode " "
                   (:eval                ; Taken from prot
                    (when (and (mode-line-window-selected-p)
                               (buffer-narrowed-p)
                               (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
                      (propertize "Narrow " 'face 'mode-line-emphasis)))
                   mode-line-buffer-identification " "
-                  mode-line-position
+                  "%l "
                   (:eval
                    (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   (:eval
