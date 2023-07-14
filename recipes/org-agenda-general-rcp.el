@@ -495,6 +495,9 @@ See `kb/consult-org-depend’."
   ;; `org-gcal-sync-tokens-clear'
   (org-gcal-client-id "477180658883-q2ok2j39ko4bfp88e2tqd9qi6c1r6ebm.apps.googleusercontent.com")
   (org-gcal-client-secret "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")
+  (oauth2-auto-plstore (expand-file-name "oauth2-auto.plist" org-gcal-dir)) ; File used by `plstore'
+  (org-generic-id-locations-file        ; File for org IDs
+   (convert-standard-filename (expand-file-name ".org-generic-id-locations" org-gcal-dir)))
   (org-gcal-fetch-file-alist
    `(;; University
      ("v7tpr3s152ao11tlf93lu3don4@group.calendar.google.com" . ,(expand-file-name "gcal/brown.org" kb/agenda-dir))

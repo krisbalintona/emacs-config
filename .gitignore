@@ -1,8 +1,4 @@
-/configs/*.el
 /elpa/
 /straight/
-/url/
 /eln-cache/
 /elpaca/
-/popweb/
-/tree-sitter/

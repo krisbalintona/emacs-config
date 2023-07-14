@@ -332,6 +332,7 @@ blacklist, this is mostly for \\section etc."
   :general (:keymaps '(LaTeX-mode-map org-mode-map)
             "H-'" 'popweb-latex-show)
   :custom
+  (popweb-config-location (no-littering-expand-var-file-name "popweb"))
   (popweb-popup-pos "point-bottom")
   :config
   (require 'popweb-latex))
