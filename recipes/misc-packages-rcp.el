@@ -281,6 +281,11 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package info-colors
   :hook (Info-selection . info-colors-fontify-node))
 
+;;; Inform
+;; Package `inform’ provides links from elisp symbols (quoted functions, variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
+(use-package inform
+  :demand)
+
 ;;; Whole-line-or-region
 (use-package whole-line-or-region
   :diminish whole-line-or-region-local-mode
