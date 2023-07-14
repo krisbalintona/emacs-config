@@ -14,9 +14,9 @@
   :general (:prefix "<f2>"
             "<f2>" 'quickrun
             "<f3>" '(lambda ()
-                            (interactive)
-                            (let ((quickrun-focus-p t))
-                              (quickrun-shell))))
+                       (interactive)
+                       (let ((quickrun-focus-p t))
+                         (quickrun-shell))))
   :custom
   (quickrun-focus-p nil))
 
@@ -113,7 +113,9 @@
   (treesit-auto-install 'prompt)
   (treesit-extra-load-path              ; Where language files are found
    (list (no-littering-expand-var-file-name "tree-sitter")))
-  :init
+  :config
+  (global-treesit-auto-mode)
+
   ;; `Treesit-auto' doesn't allow us to set the installation path yet because
   ;; Emacs 29 `treesit-install-language-grammar' didn't have a parameter for it
   ;; (whereas the master branch of Emacs does). See
@@ -140,9 +142,7 @@ Non-nil only if installation completed without any errors."
                                              ;; path I added to
                                              ;; "/home/krisbalintona/.emacs.d/var/tree-sitter"
                                              (no-littering-expand-var-file-name "tree-sitter")))))
-  (advice-add 'treesit-auto--prompt-to-install-package :override #'kb/treesit-auto--prompt-to-install-package)
-  :config
-  (global-treesit-auto-mode))
+  (advice-add 'treesit-auto--prompt-to-install-package :override #'kb/treesit-auto--prompt-to-install-package))
 
 ;;;; Turbo-log
 (use-package turbo-log
