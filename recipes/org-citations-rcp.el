@@ -22,58 +22,38 @@
   (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles/"))
   (org-cite-export-processors
    '((md . (csl "chicago-fullnote-bibliography.csl"))   ; Footnote reliant
-     (latex biblatex)                                 ; For humanities
+     (latex biblatex)                                   ; For humanities
      (odt . (csl "chicago-fullnote-bibliography.csl"))  ; Footnote reliant
      (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
-     (t . (csl "modern-language-association.csl"))      ; Fallback
-     ))
+     (t . (csl "modern-language-association.csl"))))    ; Fallback
   :custom-face
   ;; Have citation link faces look closer to as they were for `org-ref'
   (org-cite ((t (:foreground "DarkSeaGreen4"))))
-  (org-cite-key ((t (:foreground "forest green" :slant italic)))))
-
-;;; Org-roam-bibtex
-;; Integrate citation backends with latex's citation management systems like
-;; `org-cite'
-(use-package org-roam-bibtex
-  :after (org-roam oc)
-  :ghook 'org-mode-hook ; FIXME 2021-09-14: Make so that I don't need to call in this way
-  )
+  (org-cite-key ((t (:foreground "forest green" :slant italic))))
+  :config
+  ;; NOTE 2023-07-14: Require all `oc-*' packages so that I don't run into the
+  ;; issue where the package associated with a style (e.g. `oc-biblatex' for the
+  ;; biblatex style) in `org-cite-export-processors' is used
+  (require 'oc-natbib)
+  (require 'oc-csl)
+  (require 'oc-basic)
+  (require 'oc-bibtex)
+  (require 'oc-biblatex))
 
 ;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
-  :elpaca (citar :type git :host github :repo "emacs-citar/citar" :includes (citar-org))
-  :commands (citar-insert-citation citar-insert-reference citar-open-notes kb/org-roam-node-from-cite)
-  :general
-  (kb/note-keys
-    "C" '(kb/org-roam-node-from-cite :wk "Citar-capture"))
-  (:keymaps 'org-mode-map
-   :prefix "C-c b"
-   "b" '(citar-insert-citation :wk "Insert citation")
-   "r" '(citar-insert-reference :wk "Insert reference")
-   "o" '(citar-open-notes :wk "Open note"))
+  :after all-the-icons
+  :general (:keymaps 'org-mode-map
+            :prefix "C-c b"
+            "b" 'citar-insert-citation
+            "r" 'citar-insert-reference
+            "f" 'citar-open-files
+            "o" 'citar-open-notes
+            "p" 'kb/citar-open-pdf-in-zotero)
   :custom
   (citar-bibliography kb/bib-files)
-  (citar-templates
-   '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:95}")
-     (suffix . "  ${=type=:10}  ${tags keywords keywords:20}")
-     (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
-     (note . "#+title: Notes on ${author editor}, ${title}"))) ; For new notes
-  ;; Configuring all-the-icons. From
-  ;; https://github.com/bdarcus/citar#rich-ui
-  (citar-symbols
-   `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) .
-           ,(all-the-icons-faicon "file-o" :face 'kb/citar-icon-dim :v-adjust -0.1) )
-     (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) .
-           ,(all-the-icons-material "speaker_notes" :face 'kb/citar-icon-dim :v-adjust -0.3))
-     (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) .
-           ,(all-the-icons-octicon "link" :face 'kb/citar-icon-dim :v-adjust 0.01))))
-  (citar-symbol-separator "  ")
-
   (citar-notes-paths (list kb/notes-dir))
-  (citar-open-note-function 'orb-citar-edit-note) ; Open notes in `org-roam'
-  (citar-at-point-function 'embark-act)           ; Use `embark'
   :init
   ;; Here we define a face to dim non 'active' icons, but preserve alignment.
   ;; Change to your own theme's background(s)
@@ -83,27 +63,6 @@
       (((background light)) :foreground "#f0f0f0"))
     "Face for having icons' color be identical to the theme
   background when \"not shown\".")
-  :config
-  ;; Create a new node from a bibliographic source. Taken from
-  ;; https://jethrokuan.github.io/org-roam-guide/
-  (defun kb/org-roam-node-from-cite (keys-entries)
-    (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
-    (let ((title (citar--format-entry-no-widths (cdr keys-entries)
-                                                "${author editor}${date urldate} :: ${title}")))
-      (org-roam-capture- :templates
-                         '(("r" "reference" plain
-                            "%?"
-                            :if-new (file+head "references/${citekey}.org"
-                                               ":PROPERTIES:
-:ROAM_REFS: [cite:@${citekey}]
-:END:
-#+title: ${title}
-#+filetags: %(kb/insert-lit-category)\n")
-                            :immediate-finish t
-                            :unnarrowed t))
-                         :info (list :citekey (car keys-entries))
-                         :node (org-roam-node-create :title title)
-                         :props '(:finalize find-file))))
 
   ;; Add prefix and suffix text immediately after insertion
   (defun kb/citar-org-update-pre-suffix ()
@@ -124,14 +83,14 @@ to manually add one myself."
            (ref (if (eq datum-type 'citation-reference) datum
                   (error "Not on a citation reference")))
            (key (org-element-property :key ref))
-
+           (pre (read-string "Prefix text: " (org-element-property :prefix ref)))
            (post (read-string "Suffix text: " (org-element-property :suffix ref)))
            (v1
             (org-element-property :begin ref))
            (v2
             (org-element-property :end ref)))
 
-      ;; Change post to automatically have one space prior to any user-inputted
+      ;; Change p;;ost to automatically have one space prior to any user-inputted
       ;; suffix
       (setq post
             (if (string= (replace-regexp-in-string "\s-*" "" post) "")
@@ -151,18 +110,85 @@ to manually add one myself."
   ;; `kb/citar-org-update-pre-suffix') right after `org-cite-insert' to
   ;; immediately set its prefix and suffix
   (advice-add 'org-cite-insert :after '(lambda (args)
-                                               (save-excursion
-                                                 (left-char) ; First move point inside citation
-                                                 (citar-org-update-pre-suffix)))))
+                                          (save-excursion
+                                            (left-char) ; First move point inside citation
+                                            (citar-org-update-pre-suffix))))
+  :config
+  ;; Original function by me. Was able to discover the appropriate link here:
+  ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
+  ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
+  ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
+  ;; for a different solution
+  (defun kb/citar-open-pdf-in-zotero (citekey)
+    "Open the PDF of an item with CITEKEY in Zotero."
+    (interactive (list (citar-select-ref)))
+    (let* ((files-hash (hash-table-values (citar-get-files citekey)))
+           (files-list (delete-dups (apply #'append files-hash)))
+           (pdf (car (-filter
+                      (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
+           (zotero-key (f-base (f-parent pdf))))
+      (citar-file-open-external
+       (concat "zotero://open-pdf/library/items/" zotero-key))))
+
+  ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
+  (defvar citar-indicator-files-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-faicon
+              "file-o"
+              :face 'all-the-icons-green
+              :v-adjust -0.1)
+     :function #'citar-has-files
+     :padding "  " ; need this because the default padding is too low for these icons
+     :tag "has:files"))
+  (defvar citar-indicator-links-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-octicon
+              "link"
+              :face 'all-the-icons-orange
+              :v-adjust 0.01)
+     :function #'citar-has-links
+     :padding "  "
+     :tag "has:links"))
+  (defvar citar-indicator-notes-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-material
+              "speaker_notes"
+              :face 'all-the-icons-blue
+              :v-adjust -0.3)
+     :function #'citar-has-notes
+     :padding "  "
+     :tag "has:notes"))
+  (defvar citar-indicator-cited-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-faicon
+              "circle-o"
+              :face 'all-the-icon-green)
+     :function #'citar-is-cited
+     :padding "  "
+     :tag "is:cited"))
+  (setq citar-indicators
+        (list citar-indicator-files-icons
+              citar-indicator-links-icons
+              citar-indicator-notes-icons
+              citar-indicator-cited-icons)))
+
+;;; Citar-embark
+(use-package citar-embark
+  :demand
+  :config
+  (citar-embark-mode))
+
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
   :elpaca nil
-  :after oc
+  :hook (org-mode . citar-capf-setup)
   :custom
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar))
+  (org-cite-activate-processor 'citar)
+  ;; (citar-org-styles-format 'short)
+  )
 
 ;;; org-citations-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
