@@ -84,7 +84,6 @@
                         (LaTeX-math-mode) ; Math macros
                         (visual-line-mode)
                         (display-line-numbers-mode)
-                        (hl-line-mode)
                         (prettify-symbols-mode)
                         (outshine-mode)
                         (flymake-mode)))

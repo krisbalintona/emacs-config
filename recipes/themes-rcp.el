@@ -135,6 +135,7 @@
   (solaire-global-mode))
 
 ;;;; Lin
+;; `hl-line-mode' but contextual based on mode (e.g. more visible)
 (use-package lin
   :custom
   (lin-face 'kb/lin-face)
@@ -152,7 +153,11 @@
      occur-mode-hook
      org-agenda-mode-hook
      proced-mode-hook
-     tabulated-list-mode-hook))
+     tabulated-list-mode-hook
+     ;; My hooks
+     LaTeX-mode-hook
+     org-mode-hook
+     eww-mode-hook))
   :init
   (defface kb/lin-face
     '((default :foreground unspecified :underline nil :extend t)
