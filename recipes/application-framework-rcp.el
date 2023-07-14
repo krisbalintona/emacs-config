@@ -12,8 +12,7 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
-  :ensure-system-package (("/usr/share/licenses/python-opencv/" . python-opencv)
-                          (gdb))     ; For debugging purposes, if I ever need to
+  :demand
   :elpaca (:type git
            :host github
            :repo "emacs-eaf/emacs-application-framework"
@@ -23,6 +22,8 @@
            ;; :pre-build (unless (file-exists-p (expand-file-name "eaf/app" elpaca-builds-directory))
            ;;              (async-shell-command "./install-eaf.py --install-all-apps" "*eaf installing all apps*"))
            )
+  :ensure-system-package (("/usr/share/licenses/python-opencv/" . python-opencv)
+                          (gdb))     ; For debugging purposes, if I ever need to
   :hook (eaf-pdf-viewer . hide-mode-line-mode)
   :custom
   ;; Install desired modules
