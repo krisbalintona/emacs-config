@@ -82,9 +82,16 @@
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
   :elpaca (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
-  :hook (org-msg-edit-mode . (lambda ()
-                               (setq-local org-download-method 'directory
-                                           org-download-image-dir mu4e-attachment-dir)))
+  :hook ((org-msg-edit-mode . (lambda ()
+                                (setq-local org-download-method 'directory
+                                            org-download-image-dir mu4e-attachment-dir)))
+         (kb/themes . kb/org-msg-set-faces)
+         ;; Don't show exported buffers after sending emails. Inspired by
+         ;; https://github.com/jeremy-compostella/org-msg/issues/169#issuecomment-1627375688
+         (message-sent . (lambda ()
+                           (when (bound-and-true-p org-msg-mode)
+                             (switch-to-buffer "*Org ASCII Export*")
+                             (kill-buffer-and-window)))))
   :general
   ;; Get access to the `message' header editing commands in `org-msg-edit-mode'
   (:keymaps 'org-msg-edit-mode-map
@@ -245,16 +252,7 @@ Must be set before org-msg is loaded to take effect.")
                       (margin-top . "10px") (margin-bottom . "0px")
                       ,font-size (max-width . "50em")))
               (b nil ((font-weight . "500") (color . ,theme-color)))
-              (div nil (,@font (line-height . "12pt")))))))
-  (add-hook 'kb/themes-hooks 'kb/org-msg-set-faces)
-
-  ;; Don't show exported buffers after sending emails. Inspired by
-  ;; https://github.com/jeremy-compostella/org-msg/issues/169#issuecomment-1627375688
-  (add-hook 'message-sent-hook
-            #'(lambda ()
-                      (when (bound-and-true-p org-msg-mode)
-                        (switch-to-buffer "*Org ASCII Export*")
-                        (kill-buffer-and-window)))))
+              (div nil (,@font (line-height . "12pt"))))))))
 
 ;;;; Custom signatures
 (with-eval-after-load 'org-msg
@@ -540,7 +538,7 @@ Interactively select signature via `kb/mu4e-select-signature'."
           (set-buffer-modified-p nil)))))
   (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup))
 
-;;;; Mu4e-send-delay
+;;; Mu4e-send-delay
 (use-package mu4e-send-delay
   :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
   :elpaca (:type git :host github :protocol ssh :repo "krisbalintona/mu4e-send-delay")
