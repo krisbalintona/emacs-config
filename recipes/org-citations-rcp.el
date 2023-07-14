@@ -55,64 +55,63 @@
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))
   :init
-  ;; Here we define a face to dim non 'active' icons, but preserve alignment.
-  ;; Change to your own theme's background(s)
-  (defface kb/citar-icon-dim
-    ;; Based on solaire's faces
-    '((((background dark)) :foreground "#212428")
-      (((background light)) :foreground "#f0f0f0"))
-    "Face for having icons' color be identical to the theme
-  background when \"not shown\".")
-
-  ;; Add prefix and suffix text immediately after insertion
-  (defun kb/citar-org-update-pre-suffix ()
+  ;; Minor customizations to `citar-org--update-prefix-suffix'; just changed
+  ;; prompts
+  (defun kb/citar-org--update-prefix-suffix ()
+    "Change the pre/suffix text of the reference at point."
+    (let* ((ref (org-element-context))
+           (key (org-element-property :key ref))
+           (pre (string-trim-right
+                 (read-string
+                  (concat "Prefix for "
+                          (propertize (concat key ": ") 'face 'mode-line-emphasis))
+                  (org-element-property :prefix ref))))
+           (post (string-trim-left
+                  (read-string
+                   (concat "Suffix for "
+                           (propertize (concat key ": ") 'face 'mode-line-emphasis))
+                   (org-element-property :suffix ref))))
+           (v1 (org-element-property :begin ref))
+           (v2 (org-element-property :end ref)))
+      ;; Change post to automatically have one space prior to any user-inputted
+      ;; suffix
+      (setq post (concat (if (length> post 0) " " "") post))
+      (cl--set-buffer-substring v1 v2
+                                (org-element-interpret-data
+                                 `(citation-reference
+                                   (:key ,key :prefix ,pre :suffix ,post))))))
+  ;; Gave `kb/citar-org-update-prefix-suffix' the ability to set the
+  ;; pre/suffixes for all references in reference
+  (defun kb/citar-org-update-prefix-suffix (&optional arg)
     "Change the pre/suffix text of the reference at point.
-
-My version also adds a space in the suffix so I don't always have
-to manually add one myself."
-    (interactive)
-
+If given ARG, change the prefix and suffix for every reference in
+the citation at point."
+    (interactive "P")
     ;; Enable `typo' typographic character cycling in minibuffer. Particularly
     ;; useful in adding en- and em-dashes in citation suffixes (e.g. for page
     ;; ranges)
     (when (featurep 'typo)
       (add-hook 'minibuffer-mode-hook 'typo-mode)) ; Enable dashes
-
-    (let* ((datum (org-element-context))
-           (datum-type (org-element-type datum))
-           (ref (if (eq datum-type 'citation-reference) datum
-                  (error "Not on a citation reference")))
-           (key (org-element-property :key ref))
-           (pre (read-string "Prefix text: " (org-element-property :prefix ref)))
-           (post (read-string "Suffix text: " (org-element-property :suffix ref)))
-           (v1
-            (org-element-property :begin ref))
-           (v2
-            (org-element-property :end ref)))
-
-      ;; Change p;;ost to automatically have one space prior to any user-inputted
-      ;; suffix
-      (setq post
-            (if (string= (replace-regexp-in-string "\s-*" "" post) "")
-                ""     ; If there is nothing of substance (e.g. an empty string)
-              (replace-regexp-in-string "^[\s-]*" " " post))) ; Only begin with one space
-
-      (cl--set-buffer-substring v1 v2
-                                (org-element-interpret-data
-                                 `(citation-reference
-                                   (:key ,key :prefix ,pre :suffix ,post)))))
-
+    (save-excursion
+      (let* ((citation (or (citar-org-citation-at-point)
+                           (error "Not on a citation reference")))
+             (refs (if (or arg (not (car (citar-org-key-at-point))))
+                       (car citation)
+                     (list (car (citar-org-key-at-point)))))
+             (beg (cadr citation)))
+        (dolist (ref refs)
+          (goto-char beg)
+          (re-search-forward ref (cddr (citar-org-citation-at-point)))
+          (setq beg (point))
+          (kb/citar-org--update-prefix-suffix))))
     ;; Remove hook if it was added earlier
     (remove-hook 'minibuffer-mode-hook 'typo-mode))
-  (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-pre-suffix)
+  (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-prefix-suffix)
 
   ;; Run `citar-org-update-pre-suffix' (which is overridden by my
   ;; `kb/citar-org-update-pre-suffix') right after `org-cite-insert' to
   ;; immediately set its prefix and suffix
-  (advice-add 'org-cite-insert :after '(lambda (args)
-                                          (save-excursion
-                                            (left-char) ; First move point inside citation
-                                            (citar-org-update-pre-suffix))))
+  (advice-add 'org-cite-insert :after '(lambda (_) (citar-org-update-pre-suffix)))
   :config
   ;; Original function by me. Was able to discover the appropriate link here:
   ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
@@ -122,13 +121,14 @@ to manually add one myself."
   (defun kb/citar-open-pdf-in-zotero (citekey)
     "Open the PDF of an item with CITEKEY in Zotero."
     (interactive (list (citar-select-ref)))
-    (let* ((files-hash (hash-table-values (citar-get-files citekey)))
-           (files-list (delete-dups (apply #'append files-hash)))
-           (pdf (car (-filter
-                      (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
-           (zotero-key (f-base (f-parent pdf))))
-      (citar-file-open-external
-       (concat "zotero://open-pdf/library/items/" zotero-key))))
+    (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
+              (files-list (delete-dups (apply #'append files-hash)))
+              (pdf (car (-filter
+                         (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
+              (zotero-key (f-base (f-parent pdf))))
+        (citar-file-open-external
+         (concat "zotero://open-pdf/library/items/" zotero-key))
+      (user-error "No PDF for %s!" citekey)))
 
   ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
   (defvar citar-indicator-files-icons
@@ -175,6 +175,8 @@ to manually add one myself."
 ;;; Citar-embark
 (use-package citar-embark
   :demand
+  :general (:keymaps 'citar-embark-citation-map
+            "p" 'kb/citar-open-pdf-in-zotero)
   :config
   (citar-embark-mode))
 
@@ -187,8 +189,7 @@ to manually add one myself."
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
-  ;; (citar-org-styles-format 'short)
-  )
+  (citar-org-styles-format 'long))
 
 ;;; org-citations-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
