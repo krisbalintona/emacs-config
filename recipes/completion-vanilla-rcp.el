@@ -162,7 +162,7 @@
   :elpaca (:type git
            :host github
            :repo "jdtsmith/vertico-truncate")
-  :config
+  :init
   (vertico-truncate-mode))
 
 ;;; Selectrum
