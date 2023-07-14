@@ -9,8 +9,6 @@
 (require 'keybinds-general-rcp)
 
 ;;; Undo-tree
-;; Probably the first thing you'd miss is undo and redo, which requires an extra
-;; package to work like it does in kakoune (and almost every other editor).
 (use-package undo-tree
   :disabled t
   :general (:keymaps 'undo-tree-visualizer-mode-map

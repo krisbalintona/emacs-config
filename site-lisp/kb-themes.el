@@ -42,12 +42,11 @@
 (use-package apropospriate-theme)
 (use-package nano-theme)
 (use-package mood-one-theme
-  ;; :after uninspiring-dark-theme
+  :disabled
   :init
   (mood-one-theme-arrow-fringe-bmp-enable)
-  (eval-after-load 'flycheck #'mood-one-theme-flycheck-fringe-bmp-enable)
-  )
-(require 'uninspiring-dark-theme)
+  (eval-after-load 'flycheck #'mood-one-theme-flycheck-fringe-bmp-enable))
+(require 'uninspiring-dark-theme :disabled)
 
 ;;;; Light
 (use-package modus-themes
@@ -64,8 +63,7 @@
                                     (selection . (semibold))))
         modus-themes-region '(bg-only)
         modus-themes-org-blocks 'gray-background
-        modus-themes-variable-pitch-ui nil
-        )
+        modus-themes-variable-pitch-ui nil)
 
   ;; Overrides
   (setq modus-themes-common-palette-overrides
@@ -77,8 +75,8 @@
           (bg-completion-match-1 bg-yellow-intense)
           (bg-completion-match-2 bg-cyan-intense)
           (bg-completion-match-3 bg-red-intense))))
-(use-package solo-jazz-theme)
-(use-package kaolin-themes)
+(use-package solo-jazz-theme :disabled)
+(use-package kaolin-themes  :disabled)
 (elpaca-wait)
 
 ;;; Variable declarations

@@ -238,9 +238,21 @@ does."
 ;;; Imenu
 (use-package imenu
   :elpaca nil
+  :hook (emacs-lisp-mode . (lambda ()
+                             ;; Copied from https://gist.github.com/jordonbiondo/6385874a70420b05de18
+                             (add-to-list 'imenu-generic-expression
+                                          '("Use-packages"
+                                            "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2))))
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
-  (imenu-auto-rescan t))
+  (imenu-auto-rescan t)
+  :config
+  ;; Add narrowing of "Use-packages" to `consult-imenu'
+  (with-eval-after-load 'consult-imenu
+    (plist-put (cdr (assoc 'emacs-lisp-mode consult-imenu-config))
+               :types (append
+                       (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types)
+                       '((?u "Use-packages" font-lock-constant-face))))))
 
 ;;; Imenu-list
 ;; Side buffer with imenu items
@@ -248,8 +260,7 @@ does."
   :after imenu
   :general (kb/nav-keys
              "I" '(imenu-list :wk "Imenu list"))
-  :hook (imenu-list-major-mode . visual-line-mode)
-  )
+  :hook (imenu-list-major-mode . visual-line-mode))
 
 ;;; Occur
 ;; Narrow current buffer to lines which match a regexp
