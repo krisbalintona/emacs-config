@@ -116,21 +116,23 @@
 
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
+;; NOTE 2023-07-13: Make sure you set solaire's faces if my theme does not
+;; already set them
 (use-package solaire-mode
-  :hook ((after-change-major-mode dictionary-mode) . turn-on-solaire-mode)
+  :disabled
+  ;; :hook ((after-change-major-mode dictionary-mode) . turn-on-solaire-mode)
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
-            (or (buffer-file-name)                         ; Connected to a file
-                ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
-                (string-match "*Minimap*" (buffer-name)) ; Demap minimap
-                )))
+       (or (buffer-file-name (buffer-base-buffer)) ; Connected to a file
+           ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
+           (string-match "*Minimap*" (buffer-name)) ; Demap minimap
+           )))
   :init
-  ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I want to swap the
-  ;; background faces which solaire remaps, e.g., non-real buffers dark and real
+  ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I'm okay swapping the
+  ;; background faces which solaire remaps, i.e., non-real buffers dark and real
   ;; light to non-real light and real dark.
-  ;; (solaire-global-mode)
-  )
+  (solaire-global-mode))
 
 ;;;; Lin
 (use-package lin

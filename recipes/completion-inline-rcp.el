@@ -141,7 +141,7 @@ default lsp-passthrough."
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable
 
   ;; Add hook to reset cache so the icon colors match my theme
-  (add-hook 'kb/themes-hooks (lambda () (call-interactively 'kind-icon-reset-cache)))
+  (add-hook 'kb/themes-hook (lambda () (call-interactively 'kind-icon-reset-cache)))
 
   ;; Use VSCode's icons. Taken from
   ;; https://github.com/jdtsmith/kind-icon/wiki#using-vs-code-icons-as-an-alternative

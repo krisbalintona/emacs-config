@@ -38,19 +38,20 @@
 (setq custom-theme-load-path load-path)
 
 ;;;; Dark
-(use-package atom-one-dark-theme)
-(use-package apropospriate-theme)
+(use-package atom-one-dark-theme :disabled)
+(use-package apropospriate-theme :disabled)
 (use-package nano-theme)
 (use-package mood-one-theme
   :disabled
   :init
   (mood-one-theme-arrow-fringe-bmp-enable)
   (eval-after-load 'flycheck #'mood-one-theme-flycheck-fringe-bmp-enable))
-(require 'uninspiring-dark-theme :disabled)
+(require 'uninspiring-dark-theme)
 
 ;;;; Light
 (use-package modus-themes
-  :hook (modus-themes-after-load-theme . kb/themes-setup-base-faces)
+  :hook ((modus-themes-after-load-theme . kb/themes-setup-base-faces)
+         ((modus-themes-after-load-theme kb/themes-hook) . kb/modus-themes-solaire-faces))
   :init
   ;; Also make sure these are set before `modus-themes-load-themes' is called
   (setq modus-themes-custom-auto-reload t ; only applies to `customize-set-variable' and related
@@ -74,7 +75,16 @@
           (bg-completion-match-0 bg-blue-intense)
           (bg-completion-match-1 bg-yellow-intense)
           (bg-completion-match-2 bg-cyan-intense)
-          (bg-completion-match-3 bg-red-intense))))
+          (bg-completion-match-3 bg-red-intense)))
+  :config
+  ;; Taken from (info "(modus-themes) Add support for solaire-mode")
+  (defun kb/modus-themes-solaire-faces ()
+    (modus-themes-with-colors
+      (custom-set-faces
+       `(solaire-default-face ((,c :inherit default :background ,bg-dim :foreground ,fg-dim)))
+       `(solaire-line-number-face ((,c :inherit solaire-default-face :foreground ,fg-line-number-inactive)))
+       `(solaire-hl-line-face ((,c :background ,bg-active)))
+       `(solaire-org-hide-face ((,c :background ,bg-dim :foreground ,bg-dim)))))))
 (use-package solo-jazz-theme :disabled)
 (use-package kaolin-themes  :disabled)
 (elpaca-wait)
@@ -86,7 +96,7 @@
 (defvar kb/themes-light 'modus-operandi
   "My chosen light theme.")
 
-(defvar kb/themes-hooks '(kb/themes-setup-base-faces)
+(defvar kb/themes-hook '(kb/themes-setup-base-faces)
   "Hook that runs after the `kb/proper-load-theme-light' and
 `kb/proper-load-theme-dark'.")
 
@@ -123,19 +133,19 @@
 
 (defun kb/proper-load-theme-light ()
   "Properly load `kb/theme-light' theme by disabling its dark counterpart as well.
-Additionally, run `kb/themes-hooks'."
+Additionally, run `kb/themes-hook'."
   (interactive)
   (disable-theme kb/themes-dark)
   (load-theme kb/themes-light t)
-  (run-hooks 'kb/themes-hooks))
+  (run-hooks 'kb/themes-hook))
 
 (defun kb/proper-load-theme-dark ()
   "Properly load `kb/theme-dark' theme by disabling its light counterpart as well.
-Additionally, run `kb/themes-hooks'."
+Additionally, run `kb/themes-hook'."
   (interactive)
   (disable-theme kb/themes-light)
   (load-theme kb/themes-dark t)
-  (run-hooks 'kb/themes-hooks))
+  (run-hooks 'kb/themes-hook))
 
 ;;; Theme switcher
 (defun kb/theme-switcher ()
