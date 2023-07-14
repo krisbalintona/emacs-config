@@ -57,7 +57,6 @@
   :general
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
-   "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
    "<escape>" #'minibuffer-keyboard-quit
    "?" #'minibuffer-completion-help
    "C-M-n" #'vertico-next-group
