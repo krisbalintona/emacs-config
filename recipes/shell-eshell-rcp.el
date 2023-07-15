@@ -17,15 +17,15 @@
   ;; UI enhancements
   'visual-line-mode
   '(lambda ()
-           (set-display-table-slot standard-display-table 0 ?\ )
-           ;; Text-wrap
-           (face-remap-add-relative 'default :height 127) ; Change default face size
-           (setq-local scroll-margin 3                    ; Scroll-margin
-                       line-spacing 0)
-           ;; `consult-outline' support for eshell prompts. See
-           ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
-           (setq outline-regexp eshell-prompt-regexp)
-           )
+      (set-display-table-slot standard-display-table 0 ?\ )
+      ;; Text-wrap
+      (face-remap-add-relative 'default :height 127) ; Change default face size
+      (setq-local scroll-margin 3                    ; Scroll-margin
+                  line-spacing 0)
+      ;; `consult-outline' support for eshell prompts. See
+      ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
+      (setq outline-regexp eshell-prompt-regexp)
+      )
   'hide-mode-line-mode
   :general
   (:keymaps 'eshell-mode-map
@@ -146,9 +146,9 @@ Info node `(eshell)Top'."
     "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
     `(setq ,NAME
            (lambda () (when ,FORM
-                        (-> ,ICON
-                            (concat esh-section-delim ,FORM)
-                            (with-face ,@PROPS))))))
+                   (-> ,ICON
+                       (concat esh-section-delim ,FORM)
+                       (with-face ,@PROPS))))))
 
   (defun esh-acc (acc x)
     "Accumulator for evaluating and concatenating esh-sections."
@@ -230,9 +230,9 @@ Info node `(eshell)Top'."
           :face     'consult-buffer
           :history  'buffer-name-history
           :annotate '(lambda (cand)
-                             (substring-no-properties
-                              (car (ring-elements
-                                    (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
+                        (substring-no-properties
+                         (car (ring-elements
+                               (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
           :state    'consult--buffer-state
           :action   'display-buffer
           :items (lambda ()
@@ -267,12 +267,12 @@ Info node `(eshell)Top'."
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
   :ghook ('eshell-mode-hook 'eshell-syntax-highlighting-global-mode nil nil t)
-  :config (eshell-syntax-highlighting-global-mode)
-  )
+  :config (eshell-syntax-highlighting-global-mode))
 
 ;;; Pcmpl-args
-;; Extend pcomplete to another level. Pcomplete is what eshell relies on for completion
+;; Extend the build in `pcomplete' to another level.
 (use-package pcmpl-args
+  :demand
   :after eshell)
 
 ;;; Esh-autosuggest
@@ -282,14 +282,6 @@ Info node `(eshell)Top'."
   :ghook 'eshell-mode-hook
   :custom
   (esh-autosuggest-delay 0.25))
-
-;;; Fish-completion
-;; Fall back on fish when Emacs does not find any completion candidate with its
-;; native completion support (pcomplete).
-(use-package fish-completion
-  :ensure-system-package (fish)
-  :after eshell
-  :config (global-fish-completion-mode))
 
 ;;; shell-eshell-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
