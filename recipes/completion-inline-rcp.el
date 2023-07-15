@@ -18,7 +18,7 @@
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
-   "M-d" 'corfu-show-documentation
+   "M-d" 'corfu-info-documentation
    ;; "H-SPC" 'corfu-insert-separator
    )
   (:keymaps 'corfu-map
