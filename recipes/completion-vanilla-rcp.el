@@ -122,10 +122,7 @@
   :elpaca nil
   :after vertico
   :custom
-  (vertico-buffer-display-action
-   '(display-buffer-in-side-window
-     (side . right)
-     (window-width . 0.3))))
+  (vertico-buffer-display-action '(display-buffer-reuse-window)))
 
 ;;;; Vertico-truncate
 ;; Truncate long lines while leaving match visible
