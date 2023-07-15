@@ -72,7 +72,7 @@
       (slot . 2)
       (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
-                            (string-match-p "^\\*Customize" (buffer-name))))
+                       (string-match-p "^\\*Customize" (buffer-name))))
       (display-buffer-reuse-window
        kb/select-buffer-in-side-window
        display-buffer-in-direction)
@@ -398,7 +398,18 @@ If buffer-or-name is nil return current buffer's mode."
   :general ([remap list-buffers] 'bufler))
 
 ;;;; Burly
-(use-package burly)
+(use-package burly
+  :elpaca (:depth 1
+           :fetcher github
+           ;; NOTE 2023-07-15: See
+           ;; https://github.com/alphapapa/burly.el/issues/28 for details on
+           ;; this branch
+           :repo "alphapapa/burly.el"
+           :branch "wip/readablep"
+           :files ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+                   (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
+  :init
+  (burly-tabs-mode))
 
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
