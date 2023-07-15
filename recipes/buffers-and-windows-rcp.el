@@ -248,7 +248,7 @@ If buffer-or-name is nil return current buffer's mode."
   (tab-bar-new-tab-choice 'clone)
   (tab-bar-select-tab-modifiers '(meta))
   (tab-bar-tab-hints t)
-  (tab-bar-show 1)
+  (tab-bar-show t)
   (tab-bar-format
    '(tab-bar-format-tabs-groups
      tab-bar-format-align-right
