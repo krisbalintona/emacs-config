@@ -43,6 +43,13 @@
 ;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
+  :elpaca (:fetcher github
+           :protocol https
+           :repo "emacs-citar/citar"
+           :remotes ("remote" :protocol ssh
+                              :repo "krisbalintona/citar"
+                              :branch "citation-prefix-suffix")
+           :depth nil)
   :after all-the-icons
   :general (:keymaps 'org-mode-map
             :prefix "C-c b"
@@ -54,66 +61,21 @@
   :custom
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))
-  :init
-  ;; Minor customizations to `citar-org--update-prefix-suffix'; just changed
-  ;; prompts
-  (defun kb/citar-org--update-prefix-suffix ()
-    "Change the pre/suffix text of the reference at point."
-    (let* ((ref (org-element-context))
-           (key (org-element-property :key ref))
-           (citekey-str (propertize key 'face 'mode-line-emphasis))
-           (pre (read-string (concat "Prefix for " citekey-str ": ")
-                             (org-element-property :prefix ref)))
-           (post (string-trim-left      ; Always want this I think
-                  (read-string (concat "Suffix for " citekey-str ": ")
-                               (org-element-property :suffix ref))))
-           ;; Change post to automatically have one space prior to any
-           ;; user-inputted suffix, unless post is already blank or whitespace
-           (post-processed (concat (when (string-empty-p post) " ") post))
-           (v1 (org-element-property :begin ref))
-           (v2 (org-element-property :end ref)))
-      (cl--set-buffer-substring v1 v2
-                                (org-element-interpret-data
-                                 `(citation-reference
-                                   (:key ,key :prefix ,pre :suffix ,post-processed))))))
-  ;; Gave `kb/citar-org-update-prefix-suffix' the ability to set the
-  ;; pre/suffixes for all references in reference
-  (defun kb/citar-org-update-prefix-suffix (&optional arg)
-    "Change the pre/suffix text of the reference at point.
-If given ARG, change the prefix and suffix for every reference in
-the citation at point."
-    (interactive "P")
-    ;; Enable `typo' typographic character cycling in minibuffer. Particularly
-    ;; useful in adding en- and em-dashes in citation suffixes (e.g. for page
-    ;; ranges)
-    (when (featurep 'typo)
-      (add-hook 'minibuffer-mode-hook 'typo-mode)) ; Enable dashes
-
-    (let* ((datum (org-element-context))
-           (citation-p (eq 'citation (org-element-type datum)))
-           (current-citation (if citation-p datum (org-element-property :parent datum)))
-           (refs (org-cite-get-references current-citation)))
-      (save-excursion
-        (if (or arg citation-p)
-            (dotimes (ref-index (length refs))
-              (goto-char (org-element-property :begin (nth ref-index refs)))
-              (kb/citar-org--update-prefix-suffix)
-              ;; Update refs since the begins and ends for the following
-              ;; reference could have changed
-              (setq refs (org-cite-get-references
-                          (org-element-property :parent (org-element-context)))))
-          (kb/citar-org--update-prefix-suffix))))
-
-    ;; Remove hook if it was added earlier
-    (remove-hook 'minibuffer-mode-hook 'typo-mode))
-  (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-prefix-suffix)
-
-  ;; Run `citar-org-update-pre-suffix' (which is overridden by my
-  ;; `kb/citar-org-update-pre-suffix') right after `org-cite-insert' to
-  ;; immediately set its prefix and suffix
-  (advice-add 'org-cite-insert :after '(lambda (_) (citar-org-update-pre-suffix)))
   :config
-  ;; Original function by me. Was able to discover the appropriate link here:
+  ;; Immediately set citation prefix and suffix and enable `typo-mode'
+  ;; temporarily while inserting
+  (advice-add 'org-cite-insert :after
+                               #'(lambda (&rest _)
+                                    (when (eq org-cite-insert-processor 'citar)
+                                      (citar-org-update-prefix-suffix))))
+  (advice-add 'citar-org-update-prefix-suffix :around
+                                              #'(lambda (orig-fun &rest args)
+                                                   (when (featurep 'typo)
+                                                     (add-hook 'minibuffer-mode-hook 'typo-mode))
+                                                   (apply orig-fun args)
+                                                   (remove-hook 'minibuffer-mode-hook 'typo-mode)))
+
+  ;; Original function. Was able to discover the appropriate link here:
   ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
   ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
   ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
@@ -174,7 +136,9 @@ the citation at point."
 
 ;;; Citar-embark
 (use-package citar-embark
-  :demand
+  :after citar
+  :elpaca nil
+  :commands embark-act
   :diminish
   :general (:keymaps 'citar-embark-citation-map
             "p" 'kb/citar-open-pdf-in-zotero)
