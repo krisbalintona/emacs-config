@@ -124,10 +124,10 @@
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
-       (or (buffer-file-name (buffer-base-buffer)) ; Connected to a file
-           ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
-           (string-match "*Minimap*" (buffer-name)) ; Demap minimap
-           )))
+            (or (buffer-file-name (buffer-base-buffer)) ; Connected to a file
+                ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
+                (string-match "*Minimap*" (buffer-name)) ; Demap minimap
+                )))
   :init
   ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I'm okay swapping the
   ;; background faces which solaire remaps, i.e., non-real buffers dark and real
@@ -294,12 +294,15 @@ mouse-3: Toggle minor modes"
                        ;; Snippet taken from `doom-modeline'
                        (let* ((current-tab (tab-bar--current-tab))
                               (tab-index (tab-bar--current-tab-index))
+                              (tab-group-name
+                               (funcall tab-bar-tab-group-function current-tab))
                               (explicit-name (alist-get 'explicit-name current-tab))
                               (tab-name (alist-get 'name current-tab))
                               (mode-line-string
-                               (if explicit-name
-                                   tab-name
-                                 (number-to-string (+ 1 tab-index)))))
+                               (cond
+                                (tab-group-name tab-group-name)
+                                (explicit-name tab-name)
+                                (t (number-to-string (+ 1 tab-index))))))
                          (concat
                           (propertize mode-line-string 'face '(:inherit mode-line-emphasis))
                           " "))))))
