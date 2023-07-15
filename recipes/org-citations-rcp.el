@@ -61,25 +61,21 @@
     "Change the pre/suffix text of the reference at point."
     (let* ((ref (org-element-context))
            (key (org-element-property :key ref))
-           (pre (string-trim-right
-                 (read-string
-                  (concat "Prefix for "
-                          (propertize (concat key ": ") 'face 'mode-line-emphasis))
-                  (org-element-property :prefix ref))))
-           (post (string-trim-left
-                  (read-string
-                   (concat "Suffix for "
-                           (propertize (concat key ": ") 'face 'mode-line-emphasis))
-                   (org-element-property :suffix ref))))
+           (citekey-str (propertize key 'face 'mode-line-emphasis))
+           (pre (read-string (concat "Prefix for " citekey-str ": ")
+                             (org-element-property :prefix ref)))
+           (post (string-trim-left      ; Always want this I think
+                  (read-string (concat "Suffix for " citekey-str ": ")
+                               (org-element-property :suffix ref))))
+           ;; Change post to automatically have one space prior to any
+           ;; user-inputted suffix, unless post is already blank or whitespace
+           (post-processed (concat (when (string-empty-p post) " ") post))
            (v1 (org-element-property :begin ref))
            (v2 (org-element-property :end ref)))
-      ;; Change post to automatically have one space prior to any user-inputted
-      ;; suffix
-      (setq post (concat (if (length> post 0) " " "") post))
       (cl--set-buffer-substring v1 v2
                                 (org-element-interpret-data
                                  `(citation-reference
-                                   (:key ,key :prefix ,pre :suffix ,post))))))
+                                   (:key ,key :prefix ,pre :suffix ,post-processed))))))
   ;; Gave `kb/citar-org-update-prefix-suffix' the ability to set the
   ;; pre/suffixes for all references in reference
   (defun kb/citar-org-update-prefix-suffix (&optional arg)
@@ -92,18 +88,22 @@ the citation at point."
     ;; ranges)
     (when (featurep 'typo)
       (add-hook 'minibuffer-mode-hook 'typo-mode)) ; Enable dashes
-    (save-excursion
-      (let* ((citation (or (citar-org-citation-at-point)
-                           (error "Not on a citation reference")))
-             (refs (if (or arg (not (car (citar-org-key-at-point))))
-                       (car citation)
-                     (list (car (citar-org-key-at-point)))))
-             (beg (cadr citation)))
-        (dolist (ref refs)
-          (goto-char beg)
-          (re-search-forward ref (cddr (citar-org-citation-at-point)))
-          (setq beg (point))
+
+    (let* ((datum (org-element-context))
+           (citation-p (eq 'citation (org-element-type datum)))
+           (current-citation (if citation-p datum (org-element-property :parent datum)))
+           (refs (org-cite-get-references current-citation)))
+      (save-excursion
+        (if (or arg citation-p)
+            (dotimes (ref-index (length refs))
+              (goto-char (org-element-property :begin (nth ref-index refs)))
+              (kb/citar-org--update-prefix-suffix)
+              ;; Update refs since the begins and ends for the following
+              ;; reference could have changed
+              (setq refs (org-cite-get-references
+                          (org-element-property :parent (org-element-context)))))
           (kb/citar-org--update-prefix-suffix))))
+
     ;; Remove hook if it was added earlier
     (remove-hook 'minibuffer-mode-hook 'typo-mode))
   (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-prefix-suffix)
