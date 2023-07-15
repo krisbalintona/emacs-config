@@ -140,7 +140,7 @@ does."
   :general
   ;; Also consider `avy-goto-char-timer'
   ("C-;" 'avy-goto-word-or-subword-1
-   "C-:" 'avy-goto-char-2)
+   "C-M-;" 'avy-goto-char-2)
   (:keymaps '(emacs-lisp-mode-map lisp-interaction-mode-map)
    "C-:" 'kb/avy-goto-parens)
   :custom
