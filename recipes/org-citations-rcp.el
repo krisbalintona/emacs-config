@@ -43,13 +43,6 @@
 ;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
-  :elpaca (:fetcher github
-           :protocol https
-           :repo "emacs-citar/citar"
-           :remotes ("remote" :protocol ssh
-                              :repo "krisbalintona/citar"
-                              :branch "citation-prefix-suffix")
-           :depth nil)
   :after all-the-icons
   :general (:keymaps 'org-mode-map
             :prefix "C-c b"

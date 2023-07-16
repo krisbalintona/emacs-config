@@ -229,9 +229,9 @@ default lsp-passthrough."
   (:keymaps 'corfu-map
    :states 'insert
    [remap evil-normal-state] '(lambda ()
-                                      (interactive)
-                                      (evil-normal-state)
-                                      (corfu-quit)))
+                                 (interactive)
+                                 (evil-normal-state)
+                                 (corfu-quit)))
   :custom
   (cape-dabbrev-min-length 2)
   :init
