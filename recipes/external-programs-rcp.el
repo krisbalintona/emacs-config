@@ -35,6 +35,10 @@
 (unless (executable-find "java")
   (system-packages-install "jre-openjdk"))
 
+;;; Racket
+(unless (executable-find "racket")
+  (system-packages-install "racket"))
+
 ;;; external-programs-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'external-programs-rcp)

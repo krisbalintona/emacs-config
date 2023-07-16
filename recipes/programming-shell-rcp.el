@@ -13,6 +13,7 @@
 ;;; Sh-script
 ;; Built-in for sh-mode
 (use-package sh-script
+  :disabled                  ; FIXME 2023-07-16: Can't find spellcheck package?
   :elpaca nil
   :after flycheck
   :ensure-system-package shellcheck

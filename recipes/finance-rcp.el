@@ -11,7 +11,7 @@
 
 ;;; Ledger-mode
 (use-package ledger-mode
-  :ensure-system-package (ledger . "sudo dnf install ledger")
+  :ensure-system-package (ledger)
   :hook (before-save . kb/ledger-add-blank-lines)
   :gfhook
   'outshine-mode

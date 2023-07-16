@@ -12,9 +12,8 @@
 ;;; Vterm
 ;; Full-fledged terminal emulator
 (use-package vterm
-  :ensure-system-package (("/usr/lib64/libvterm01/" . libvterm) ; Specifically for Fedora
+  :ensure-system-package (("/usr/share/licenses/libvterm/" . libvterm) ; Specifically for Fedora
                           (libtool)
-                          ("/usr/include/libvterm01/" . "libvterm-devel")
                           (cmake))
   :gfhook
   '(lambda ()

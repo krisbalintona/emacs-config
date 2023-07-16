@@ -10,7 +10,7 @@
 (require 'keybinds-general-rcp)
 
 ;;; Online
-;;;; Define-word
+;;;; Dictionary
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
   :elpaca nil
@@ -47,7 +47,7 @@
 (use-package synosaurus
   :after powerthesaurus
   ;; TODO 2021-08-20: Have this changed depending on Linux distribution
-  :ensure-system-package (wn . wordnet) ; Make sure English dictionary is also installed
+  :ensure-system-package (wn . wordnet-cli) ; Make sure English dictionary is also installed
   :custom
   (synosaurus-backend 'synosaurus-backend-wordnet) ; Offline thesaurus that relies on `wordnet'
   (synosaurus-choose-method 'default))
