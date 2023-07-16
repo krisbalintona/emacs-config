@@ -202,26 +202,6 @@ KEY."
   ;; NOTE 2023-07-16: Can also directly add to `jinx--save-keys' directly
   (setf (alist-get ?* jinx--save-keys) #'kb/jinx-save-as-ispell-localword))
 
-;;; Languagetool
-(use-package languagetool
-  :commands (languagetool-check
-             languagetool-clear-suggestions
-             languagetool-correct-at-point
-             languagetool-correct-buffer
-             languagetool-set-language
-             languagetool-server-mode
-             languagetool-server-start
-             languagetool-server-stop)
-  :custom
-  (languagetool-java-arguments '("-Dfile.encoding=UTF-8"))
-  ;; NOTE 2022-02-13: Necessary so languagetool doesn't stop when not sure which
-  ;; English dialect to use
-  (languagetool-correction-language "en-US")
-  (languagetool-console-command (concat kb/langtool-install-dir "languagetool-commandline.jar"))
-  (languagetool-server-command (concat kb/langtool-install-dir "languagetool-server.jar"))
-  :preface
-  (defvar kb/langtool-install-dir (no-littering-expand-var-file-name "languagetool/")))
-
 ;;; checking-spelling-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-spelling-rcp)
