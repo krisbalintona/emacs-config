@@ -15,9 +15,7 @@
 (use-package winner
   :elpaca nil
   :general ("C-<left>" 'winner-undo
-            "C-<right>" 'winner-redo
-            "H-<" 'winner-undo
-            "H->" 'winner-redo)
+            "C-<right>" 'winner-redo)
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*" ))
