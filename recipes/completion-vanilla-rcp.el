@@ -91,7 +91,6 @@
     (interactive)
     (when (vertico-quick-jump))))
 
-
 ;;;; Vertico-directory
 (use-package vertico-directory
   :elpaca nil
@@ -139,6 +138,24 @@
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
+  (completion-styles '(orderless flex))
+  (orderless-matching-styles
+   '(orderless-prefixes
+     orderless-initialism
+     orderless-regexp
+     orderless-literal
+     ;; orderless-flex
+     ;; orderless-strict-initialism
+     ;; orderless-strict-leading-initialism
+     ;; orderless-strict-full-initialism
+     ;; orderless-without-literal          ; Recommended for dispatches instead
+     ))
+  (orderless-component-separator 'orderless-escapable-split-on-space)
+  (orderless-style-dispatchers
+   '(prot-orderless-literal-dispatcher
+     prot-orderless-strict-initialism-dispatcher
+     prot-orderless-flex-dispatcher
+     kb/orderless-without-literal-dispatcher))
   (completion-category-defaults nil)    ; I want to be in control!
   (completion-category-overrides
    '((file (styles . (basic
@@ -150,25 +167,6 @@
      (imenu (styles . (basic substring orderless)))
      (kill-ring (styles . (basic substring orderless)))
      (consult-location (styles . (basic substring orderless)))))
-  (completion-styles '(orderless flex))
-
-  (orderless-component-separator 'orderless-escapable-split-on-space)
-  (orderless-matching-styles
-   '(orderless-literal
-     orderless-prefixes
-     orderless-initialism
-     orderless-regexp
-     ;; orderless-flex
-     ;; orderless-strict-initialism
-     ;; orderless-strict-leading-initialism
-     ;; orderless-strict-full-initialism
-     ;; orderless-without-literal          ; Recommended for dispatches instead
-     ))
-  (orderless-style-dispatchers
-   '(prot-orderless-literal-dispatcher
-     prot-orderless-strict-initialism-dispatcher
-     prot-orderless-flex-dispatcher
-     kb/orderless-without-literal-dispatcher))
   :init
   (defun orderless--strict-*-initialism (component &optional anchored)
     "Match a COMPONENT as a strict initialism, optionally ANCHORED.
