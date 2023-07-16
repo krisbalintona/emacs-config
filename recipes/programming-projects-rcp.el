@@ -117,7 +117,6 @@
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
-  :elpaca (magit :type git :host github :repo "magit/magit")
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general
   (:keymaps 'magit-mode-map
