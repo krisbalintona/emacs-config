@@ -149,6 +149,9 @@
 ;; insensitivity).
 (setq auto-mode-case-fold nil)
 
+;;; Keep all logged messages
+(setq message-log-max t)
+
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
