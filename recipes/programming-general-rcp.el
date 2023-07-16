@@ -234,12 +234,14 @@ punctuation."
 (use-package embark
   :commands embark-act
   :general
-  ("C-." 'embark-act)
+  ("C-." 'embark-act
+   "M-." 'embark-dwim ; Check README for why it's sensible to overwrite `xref-find-definitions'
+   "C-h B" 'embark-bindings)
   (:keymaps 'vertico-map
    "C-." 'embark-act
    "C->" 'embark-become)
   (:keymaps 'embark-symbol-map
-   "R" '(raise-sexp :wk "Raise sexp"))
+   "R" 'raise-sexp)
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
@@ -261,7 +263,7 @@ punctuation."
 ;;;;; Embark-consult
 ;; Companion package for embark
 (use-package embark-consult
-  :demand t
+  :demand
   :requires (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
