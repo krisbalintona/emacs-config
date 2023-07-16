@@ -132,6 +132,9 @@
 ;;; Highlight next error
 (setq next-error-message-highlight t)
 
+;;; Recenter upon `next-error'
+(setq next-error-recenter '(4))
+
 ;;; Delete-selection-mode
 ;; When selecting text, if typing new text, replace the selected text with the
 ;; new text
