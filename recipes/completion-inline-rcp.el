@@ -125,8 +125,7 @@ default lsp-passthrough."
 ;;; Kind-icon
 ;; Icons for corfu!
 (use-package kind-icon
-  :demand t
-  :after corfu
+  :demand
   :custom
   (kind-icon-use-icons t)
   (kind-icon-default-face 'corfu-default) ; To unify background color
@@ -138,7 +137,8 @@ default lsp-passthrough."
   :config
   ;; TODO 2022-05-24: See if I can use the cooler icons from
   ;; `lsp-bridge-icon--icons' without requiring the package
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable
+  (with-eval-after-load 'corfu          ; Enable
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
   ;; Add hook to reset cache so the icon colors match my theme
   (add-hook 'kb/themes-hook (lambda () (call-interactively 'kind-icon-reset-cache)))
