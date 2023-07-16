@@ -166,7 +166,6 @@ punctuation."
    [remap flymake-show-buffer-diagnostics] 'consult-flymake
    [remap project-find-regexp] 'consult-ripgrep
    [remap imenu] 'kb/consult-imenu-versatile
-   [remap jump-to-register] 'consult-register
    "C-x M-m" 'consult-minor-mode-menu
    "C-x M-k" 'consult-kmacro
    "M-s M-g" 'consult-grep
@@ -193,6 +192,7 @@ punctuation."
    --smart-case --no-heading --with-filename --line-number --search-zip"
     ;; Additional args
     " --line-number --hidden"))
+  (register-preview-function #'consult-register-format) ; Better than `consult-register'
   :init
   (defun kb/consult-imenu-versatile (&optional arg)
     "Call `consult-imenu'. With prefix-command ARG, call

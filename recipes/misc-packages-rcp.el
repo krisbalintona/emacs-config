@@ -910,6 +910,13 @@ This is a difference in multitude of %s."
   :init
   (global-clipetty-mode))
 
+;;; Register
+(use-package register
+  :elpaca nil
+  :custom
+  (register-preview-delay 0)
+  (register-separator " "))
+
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
   :elpaca nil
