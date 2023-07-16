@@ -19,9 +19,15 @@
   (history-delete-duplicates t)
   (savehist-save-minibuffer-history t)
   :config
-  (add-to-list 'savehist-additional-variables 'kill-ring)
-  (add-to-list 'savehist-additional-variables 'Info-history-list)
+  (dolist (var '(kill-ring
+                 Info-history-list
+                 last-kbd-macro
+                 kmacro-ring
+                 shell-command-history
+                 register-alist))
+    (add-to-list 'savehist-additional-variables var))
 
+  ;; Only `savehist-save'
   (when (daemonp)
     (setq savehist-autosave-interval 30)
     (add-hook 'kill-emacs-hook #'savehist-save))
