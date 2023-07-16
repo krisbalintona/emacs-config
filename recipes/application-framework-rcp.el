@@ -12,15 +12,10 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
-  :elpaca (:type git
-           :host github
-           :repo "emacs-eaf/emacs-application-framework"
-           :files (:defaults "*.py" "*.json" "app" "core" "extension" "img")
-           ;; FIXME 2023-07-12: Haven't found a way to get :pre-build
-           ;; working with elpaca
-           ;; :pre-build (unless (file-exists-p (expand-file-name "eaf/app" elpaca-builds-directory))
-           ;;              (async-shell-command "./install-eaf.py --install-all-apps" "*eaf installing all apps*"))
-           )
+  ;; HACK 2023-07-16: Easier to install this package as a submodule since
+  ;; managing external scripts with elpaca is currently a pain...
+  :load-path "./site-lisp/emacs-application-framework/"
+  :elpaca nil
   :ensure-system-package (("/usr/share/licenses/python-opencv/" . python-opencv)
                           (gdb))     ; For debugging purposes, if I ever need to
   :hook (eaf-pdf-viewer . hide-mode-line-mode)
@@ -29,7 +24,7 @@
   ;; NOTE 2023-07-14: These names are the module names minus the "eaf-" prefix.
   ;; "eaf-airshare" is "airshare," for example
   (eaf-apps-to-install
-   '(video-player pdf-viewer markdown-viewer image-viewer browser))
+   '(video-player pdf-viewer markdown-previewer image-viewer browser))
   (eaf-app-extensions-alist
    '(("video-player" . eaf-video-extension-list)
      ;; ("office" . eaf-office-extension-list)
@@ -45,6 +40,8 @@
   (eaf-preview-display-function-alist
    '(;; ("org-previewer" . eaf--org-preview-display)
      ("markdown-previewer" . eaf--markdown-preview-display)))
+
+  ;; Modules config
 
   ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   ;; Browser
@@ -100,38 +97,22 @@
   ;; (require 'eaf-git)
 
   ;; Bindings
-  ;; Browser
-  (eaf-bind-key clear_focus "<escape>" eaf-browser-keybinding)
-  (eaf-bind-key nil "M-q" eaf-browser-keybinding) ;; unbind, see more in the Wiki
-  ;; PDF
-  (eaf-bind-key rotate_counterclockwise "C-<up>" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key rotate_clockwise "C-<down>" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key winner-undo "C-<left>" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key winner-redo "C-<right>" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_down_page "C-u" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_up_page "C-d" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key nil "SPC" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key nil "g" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_to_begin "gg" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key eyebrowse-last-window-config "gv" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key eyebrowse-prev-window-config "ga" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key eyebrowse-next-window-config "gt" eaf-pdf-viewer-keybinding)
-  ;; Compatibility with Evil's normal mode
-  (when (bound-and-true-p evil-local-mode)
-    (require 'eaf-evil)
-    (eaf-bind-key evil-switch-to-windows-last-buffer "x" eaf-pdf-viewer-keybinding) ; Go to last buffer
-    (eaf-bind-key evil-window-vsplit "SPC wv" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-split "SPC ws" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-next "SPC ww" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-left "SPC wh" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-right "SPC wl" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-up "SPC wk" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-down "SPC wj" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-next "C-w C-w" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-left "C-w h" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-right "C-w l" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-up "C-w k" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key evil-window-down "C-w j" eaf-pdf-viewer-keybinding))
+  (with-eval-after-load 'eaf-browser
+    (eaf-bind-key clear_focus "<escape>" eaf-browser-keybinding)
+    (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+  (with-eval-after-load 'eaf-pdf-viewer
+    (eaf-bind-key rotate_counterclockwise "C-<up>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key rotate_clockwise "C-<down>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key winner-undo "C-<left>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key winner-redo "C-<right>" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_down_page "C-u" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_up_page "C-d" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key nil "SPC" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key nil "g" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_to_begin "gg" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key eyebrowse-last-window-config "gv" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key eyebrowse-prev-window-config "ga" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key eyebrowse-next-window-config "gt" eaf-pdf-viewer-keybinding))
 
   (with-eval-after-load 'dash-docs
     (setq dash-docs-browser-func 'eaf-open-browser)))

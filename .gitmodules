@@ -1,3 +1,6 @@
 [submodule "emacs-data"]
     path = var
     url = git@gitlab.com:PreciousPudding/emacs-data.git
+[submodule "site-lisp/emacs-application-framework"]
+	path = site-lisp/emacs-application-framework
+	url = https://github.com/emacs-eaf/emacs-application-framework.git
