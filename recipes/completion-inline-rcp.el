@@ -202,10 +202,7 @@ default lsp-passthrough."
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
-         (org-mode . kb/cape-capf-setup-org)
-         (eshell-mode . kb/cape-capf-setup-eshell)
-         (git-commit-mode . kb/cape-capf-setup-git-commit)
-         (sh-mode . kb/cape-capf-setup-sh))
+         (git-commit-mode . kb/cape-capf-setup-git-commit))
   :general
   (:prefix "H-c"               ; Particular completion function
    "p" 'completion-at-point
@@ -245,15 +242,12 @@ variable entirely, or adding to list).
 Additionally, add `cape-file' as early as possible to the list."
     (add-to-list 'completion-at-point-functions #'cape-symbol)
     ;; I prefer this being early/first in the list
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (require 'company-yasnippet)
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
+    (add-to-list 'completion-at-point-functions #'cape-file))
 
   ;; LSP
   (defun kb/cape-capf-setup-lsp ()
     "Replace the default `lsp-completion-at-point' with its
-`cape-capf-buster' version. Also add `cape-file' and
-`company-yasnippet' backends."
+`cape-capf-buster' version."
     (setq completion-at-point-functions
           (-replace-first 'lsp-completion-at-point (cape-capf-buster #'lsp-completion-at-point)
                           completion-at-point-functions))
@@ -261,39 +255,11 @@ Additionally, add `cape-file' as early as possible to the list."
     ;; listed when I want?
     (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
 
-  ;; Org
-  (defun kb/cape-capf-setup-org ()
-    (unless (string= major-mode 'org-msg-edit-mode)
-      (let (result)
-        (dolist (element (list
-                          (cape-super-capf #'cape-ispell #'cape-dabbrev)
-                          (cape-company-to-capf #'company-yasnippet))
-                         result)
-          (add-to-list 'completion-at-point-functions element)))))
-
-  ;; Eshell
-  (defun kb/cape-capf-setup-eshell ()
-    (let ((result))
-      (dolist (element '(pcomplete-completions-at-point cape-file) result)
-        (add-to-list 'completion-at-point-functions element))))
-
   ;; Git-commit
   (defun kb/cape-capf-setup-git-commit ()
-    (general-define-key
-     :keymaps 'local
-     :states 'insert
-     "<tab>" 'completion-at-point)
-    (general-define-key
-     :keymaps 'local
-     "<tab>" 'completion-at-point)
     (let ((result))
       (dolist (element '(cape-dabbrev cape-symbol) result)
         (add-to-list 'completion-at-point-functions element))))
-
-  ;; Sh
-  (defun kb/cape-capf-setup-sh ()
-    (require 'company-shell)
-    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-shell)))
   :config
   ;; For pcomplete. For now these two advices are strongly recommended to
   ;; achieve a sane Eshell experience. See
