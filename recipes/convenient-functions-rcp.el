@@ -77,7 +77,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
    ((derived-mode-p 'prog-mode)
     (kb/format-buffer-indentation--fill-column))
    (t (kb/format-buffer-indentation--base))))
-(general-define-key (general-chord ";;") 'kb/format-buffer-indentation)
+(general-define-key [remap indent-region] 'kb/format-buffer-indentation)
 
 ;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
