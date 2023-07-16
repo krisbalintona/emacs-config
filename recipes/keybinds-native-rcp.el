@@ -82,8 +82,8 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (add-to-list 'pulsar-pulse-functions 'kb/scroll-down-command))
 
 (general-define-key
- [remap scroll-up-command] 'kb/scroll-up-command
- [remap scroll-down-command] 'kb/scroll-down-command
+ ;; [remap scroll-up-command] 'kb/scroll-up-command
+ ;; [remap scroll-down-command] 'kb/scroll-down-command
  "H-P" 'scroll-down-line
  "H-N" 'scroll-up-line)
 
