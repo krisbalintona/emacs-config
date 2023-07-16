@@ -14,7 +14,11 @@
 ;;;; This
 (use-package denote
   :functions kb/denote-search-from-id
-  :elpaca (denote :type git :host github :repo "emacs-straight/denote" :files ("*" (:exclude ".git")))
+  :elpaca (:type git
+           :host github
+           :repo "emacs-straight/denote"
+           :depth nil
+           :files ("*" (:exclude ".git")))
   :hook ((dired-mode . denote-dired-mode)
          (before-save . kb/denote-insert-identifier-maybe))
   :general (kb/note-keys
