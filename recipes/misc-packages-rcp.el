@@ -915,7 +915,14 @@ This is a difference in multitude of %s."
   :elpaca nil
   :custom
   (register-preview-delay 0)
-  (register-separator " "))
+  (register-separator " ")
+  :config
+  (with-eval-after-load 'consult
+    ;; Better than `consult-register'
+    (setq register-preview-function #'consult-register-format)
+    ;; Adds thin lines, sorting and hides the mode line of the register preview
+    ;; window. Copied from https://github.com/minad/consult#use-package-example
+    (advice-add #'register-preview :override #'consult-register-window)))
 
 ;;; Other built-in Emacs modes/packages
 (use-package emacs

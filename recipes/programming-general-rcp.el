@@ -192,7 +192,6 @@ punctuation."
    --smart-case --no-heading --with-filename --line-number --search-zip"
     ;; Additional args
     " --line-number --hidden"))
-  (register-preview-function #'consult-register-format) ; Better than `consult-register'
   :init
   (defun kb/consult-imenu-versatile (&optional arg)
     "Call `consult-imenu'. With prefix-command ARG, call
