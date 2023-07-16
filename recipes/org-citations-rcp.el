@@ -54,6 +54,30 @@
   :custom
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))
+  (citar-open-entry-function #'citar-open-entry-in-file)
+  (citar-default-action 'kb/citar-open-pdf-in-zotero)
+  :init
+  ;; Original function. Was able to discover the appropriate link here:
+  ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
+  ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
+  ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
+  ;; for a different solution
+  (defun kb/citar-open-pdf-in-zotero (citekeys)
+    "Open PDFs associated with CITEKEYS in Zotero."
+    (interactive (list (citar-select-ref)))
+    (dolist (citekey citekeys)
+      (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
+                (files-list (delete-dups (apply #'append files-hash)))
+                ;; OPTIMIZE 2023-07-16: The following line of code only works if
+                ;; there is only one PDF attached to the item, and that PDF is
+                ;; the document. For progress on differentiating mere
+                ;; attachments to PDF documents, see the issue linked above
+                (pdf (car (-filter
+                           (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
+                (zotero-key (f-base (f-parent pdf))))
+          (citar-file-open-external
+           (concat "zotero://open-pdf/library/items/" zotero-key))
+        (message "No PDF for %s!" citekey))))
   :config
   ;; Immediately set citation prefix and suffix and enable `typo-mode'
   ;; temporarily while inserting
@@ -67,23 +91,6 @@
                                                      (add-hook 'minibuffer-mode-hook 'typo-mode))
                                                    (apply orig-fun args)
                                                    (remove-hook 'minibuffer-mode-hook 'typo-mode)))
-
-  ;; Original function. Was able to discover the appropriate link here:
-  ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
-  ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
-  ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
-  ;; for a different solution
-  (defun kb/citar-open-pdf-in-zotero (citekey)
-    "Open the PDF of an item with CITEKEY in Zotero."
-    (interactive (list (citar-select-ref)))
-    (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
-              (files-list (delete-dups (apply #'append files-hash)))
-              (pdf (car (-filter
-                         (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
-              (zotero-key (f-base (f-parent pdf))))
-        (citar-file-open-external
-         (concat "zotero://open-pdf/library/items/" zotero-key))
-      (user-error "No PDF for %s!" citekey)))
 
   ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
   (defvar citar-indicator-files-icons
