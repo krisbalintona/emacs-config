@@ -242,6 +242,9 @@ If buffer-or-name is nil return current buffer's mode."
 (use-package tab-bar
   :elpaca nil
   :demand
+  :general
+  (:keymaps 'tab-prefix-map
+   "w" 'tab-bar-move-window-to-tab)
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)
