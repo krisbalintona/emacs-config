@@ -256,6 +256,11 @@ If buffer-or-name is nil return current buffer's mode."
   (tab-bar-mode)
   (tab-bar-history-mode))
 
+;;;; Project-tab-groups
+(use-package project-tab-groups
+  :init
+  (project-tab-groups-mode))
+
 ;;;; Ace-window
 (use-package ace-window
   :general ("C-c w" '(ace-window :wk "Ace window")
