@@ -41,30 +41,7 @@
 ;; `:ensure-system-package' flag
 (use-package system-packages
   :custom
-  (system-packages-noconfirm t)        ; Bypass its prompt
-  :config
-  (when (executable-find "paru")
-    (setf (cdr (assoc 'pacman system-packages-supported-package-managers))
-          '((default-sudo . t)
-            (install . "paru -S")
-            (search . "paru -Ss")
-            (uninstall . "paru -Rns")
-            (update . "paru -Syu")
-            (clean-cache . "paru -Sc")
-            (change-log . "paru -Qc")
-            (log . "cat /var/log/paru.log")
-            (get-info . "paru -Qi")
-            (get-info-remote . "paru -Si")
-            (list-files-provided-by . "paru -qQl")
-            (owning-file . "paru -Qo")
-            (owning-file-remote . "paru -F")
-            (verify-all-packages . "paru -Qkk")
-            (verify-all-dependencies . "paru -Dk")
-            (remove-orphaned . "paru -Rns $(paru -Qtdq)")
-            (list-installed-packages . "paru -Qe")
-            (list-installed-packages-all . "paru -Q")
-            (list-dependencies-of . "paru -Qi")
-            (noconfirm . "--noconfirm")))))
+  (system-packages-noconfirm t))        ; Bypass its prompt
 (elpaca-wait)
 
 ;;; system-packages-rcp.el ends here
