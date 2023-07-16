@@ -20,12 +20,15 @@
   :general (kb/note-keys
              "i" 'denote-link-insert-link
              "ta" 'denote-keywords-add
-             "tr" 'denote-keywords-remove)
+             "tr" 'denote-keywords-remove
+             "D" 'kb/denote-report-duplicates)
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords '("project"))
   (denote-prompts '(subdirectory title keywords))
   :config
+  (denote-rename-buffer-mode)
+  
   (defun kb/denote-report-duplicates ()
     (interactive)
     (let* ((ids (mapcar (lambda (f) (denote-retrieve-filename-identifier f))
