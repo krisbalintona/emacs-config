@@ -130,12 +130,10 @@
 ;;; Citar-embark
 (use-package citar-embark
   :after citar
-  :elpaca nil
-  :commands embark-act
   :diminish
   :general (:keymaps 'citar-embark-citation-map
             "p" 'kb/citar-open-pdf-in-zotero)
-  :config
+  :init
   (citar-embark-mode))
 
 ;;; Citar-org
