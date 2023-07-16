@@ -66,8 +66,10 @@
 
 ;;;; Project
 (use-package project
-  :general (:keymaps 'project-prefix-map
-            "m" #'magit-project-status)
+  :general
+  ([remap project-find-regexp] 'consult-ripgrep)
+  (:keymaps 'project-prefix-map
+   "m" #'magit-project-status)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands

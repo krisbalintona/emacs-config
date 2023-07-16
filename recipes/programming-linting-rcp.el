@@ -58,7 +58,7 @@
                                  (t
                                   (setq-local flymake-show-diagnostics-at-end-of-line nil)))))
   :general
-  ("C-c e" '(flymake-show-buffer-diagnostics :wk "Consult flymake"))
+  ([remap flymake-show-buffer-diagnostics] 'consult-flymake)
   (:keymaps 'flymake-mode-map
    "M-n" 'flymake-goto-next-error
    "M-p" 'flymake-goto-prev-error)

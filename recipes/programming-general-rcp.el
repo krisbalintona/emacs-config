@@ -158,29 +158,37 @@ punctuation."
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
+  ;; Put remaps here
   ([remap switch-to-buffer] '(consult-buffer :wk "Consult buffer")
    [remap switch-to-buffer-other-window] 'consult-buffer-other-window
    [remap bookmark-jump] 'consult-bookmark
    [remap yank-pop] 'consult-yank-pop
-   [remap goto-line] 'consult-goto-line
    [remap repeat-complex-command] 'consult-complex-command
-   [remap flymake-show-buffer-diagnostics] 'consult-flymake
-   [remap project-find-regexp] 'consult-ripgrep
-   [remap imenu] 'kb/consult-imenu-versatile
-   "C-x M-m" 'consult-minor-mode-menu
-   "C-x M-k" 'consult-kmacro
-   "M-s M-g" 'consult-grep
-   "M-s M-f" 'consult-find
-   "M-s M-l" 'consult-line
-   "M-s M-m" 'consult-mark
-   "M-s M-M" 'consult-global-mark
-   "M-s M-s" 'consult-outline
-   "M-s M-l" 'consult-line)
+   [remap goto-line] 'consult-goto-line
+   [remap imenu] 'kb/consult-imenu-versatile)
+  (:keymaps 'goto-map
+   ;; Uses the `M-g' prefix
+   "e" 'consult-compile-error
+   "f" 'consult-flymake
+   "o" 'consult-outline
+   "m" 'consult-mark
+   "M" 'consult-global-mark
+   "I" 'consult-imenu-multi)
+  (:keymaps 'search-map
+   ;; Uses the `M-s' prefix
+   "g" 'consult-grep
+   "G" 'consult-git-grep
+   "r" 'consult-ripgrep
+   "f" 'consult-find
+   "F" 'consult-locate
+   "l" 'consult-line)
   (:keymaps 'consult-narrow-map "?" 'consult-narrow-help) ; Show available narrow keys
   (:keymaps 'help-map [remap apropos-command] 'consult-apropos)
   (:keymaps 'org-mode-map [remap consult-outline] 'consult-org-heading)
-  (:keymaps 'minibuffer-local-map "M-r" 'consult-history)
   (:keymaps 'comint-mode-map [remap comint-history-isearch-backward-regexp] 'consult-history)
+  (:keymaps 'minibuffer-local-map
+   [remap next-matching-history-element] 'consult-history
+   [remap previous-matching-history-element] 'consult-history)
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode eshell-history-ring eshell-history-index)
