@@ -13,14 +13,17 @@
 (use-package ox
   :elpaca nil
   :custom
+  (org-export-coding-system 'utf-8)
   (org-export-with-tags t)
   (org-export-with-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
   (org-export-with-section-numbers nil)
-  (org-time-stamp-formats '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
-  (org-display-custom-times t)
-  (org-time-stamp-custom-formats '("%b %d, %Y" . "%a %b %d, %Y %H:%M"))
+  (org-time-stamp-formats               ; Format of time stamps in the file
+   '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
+  (org-display-custom-times t)          ; Export with custom time stamps?
+  (org-time-stamp-custom-formats        ; Format of exported time stamps
+   '("%B, %d" . "%B, %d, %I %P"))
+
   (org-image-actual-width 700)          ; Image widths on export
-  (org-export-coding-system 'utf-8)
 
   ;; Async export
   (org-export-in-background nil)          ; Have it be default?
