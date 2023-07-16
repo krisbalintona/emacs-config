@@ -176,14 +176,11 @@ punctuation."
    "M-s M-M" 'consult-global-mark
    "M-s M-s" 'consult-outline
    "M-s M-l" 'consult-line)
-  (:keymaps 'help-map
-   [remap apropos-command] 'consult-apropos)
-  (:keymaps 'org-mode-map
-   [remap consult-outline] 'consult-org-heading)
-  (:keymaps 'minibuffer-local-map
-   "M-r" 'consult-history)
-  (:keymaps 'comint-mode-map
-   [remap comint-history-isearch-backward-regexp] 'consult-history)
+  (:keymaps 'consult-narrow-map "?" 'consult-narrow-help) ; Show available narrow keys
+  (:keymaps 'help-map [remap apropos-command] 'consult-apropos)
+  (:keymaps 'org-mode-map [remap consult-outline] 'consult-org-heading)
+  (:keymaps 'minibuffer-local-map "M-r" 'consult-history)
+  (:keymaps 'comint-mode-map [remap comint-history-isearch-backward-regexp] 'consult-history)
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode eshell-history-ring eshell-history-index)
