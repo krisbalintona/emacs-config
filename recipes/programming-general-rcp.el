@@ -154,8 +154,9 @@ punctuation."
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
-  :ensure-system-package ((fd . fd-find)
-                          (rg . ripgrep))
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
   ([remap switch-to-buffer] '(consult-buffer :wk "Consult buffer")
    [remap switch-to-buffer-other-window] 'consult-buffer-other-window
