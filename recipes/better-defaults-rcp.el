@@ -118,7 +118,12 @@
       scroll-conservatively 0
       scroll-up-aggressively nil       ; Center
       scroll-down-aggressively nil     ; Center
-      fast-but-imprecise-scrolling t)
+      ;; These are the three ways to increase scrolling performance. See (info
+      ;; "(emacs) Scrolling") scrolling performance
+      ;; fast-but-imprecise-scrolling t
+      jit-lock-defer-time 0.2
+      ;; redisplay-skip-fontification-on-input t
+      )
 
 ;;; Do not load outdated byte code files
 (setq load-prefer-newer t)
