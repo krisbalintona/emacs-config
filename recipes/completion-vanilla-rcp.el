@@ -113,7 +113,7 @@
    '((consult-grep buffer)
      (imenu buffer)))
   (vertico-multiform-commands
-   '(("flyspell-correct-*" grid)))
+   '(("flyspell-correct-*" grid (vertico-grid-annotate . 20))))
   :config
   (vertico-multiform-mode))
 
