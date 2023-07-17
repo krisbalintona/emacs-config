@@ -103,18 +103,18 @@
   (wucuo-modes-whose-predicate-ignored nil)
   (wucuo-spell-check-buffer-predicate
    '(lambda ()                           ; Skip spell checking under these conditions
-       (not (memq major-mode
-                  '(dired-mode
-                    log-edit-mode
-                    compilation-mode
-                    help-mode
-                    helpful-mode
-                    profiler-report-mode
-                    speedbar-mode
-                    gud-mode
-                    calc-mode
-                    Info-mode
-                    )))))
+            (not (memq major-mode
+                       '(dired-mode
+                         log-edit-mode
+                         compilation-mode
+                         help-mode
+                         helpful-mode
+                         profiler-report-mode
+                         speedbar-mode
+                         gud-mode
+                         calc-mode
+                         Info-mode
+                         )))))
   :config
   (defun kb/wucuo-mode-on ()
     "Turn wucuo mode on.  Do not use this; use `wucuo-mode' instead."
@@ -128,17 +128,18 @@
 
 ;;; Jinx
 (use-package jinx
-  :ensure-system-package (enchant-2 . enchant)
-  :ensure-system-package (pkgconf)
+  :ensure-system-package ((enchant-2 . enchant)
+                          (pkgconf))
   :elpaca (:depth nil
            :repo "minad/jinx"
            :files (:defaults "jinx-mod.c" "emacs-module.h"))
+  :diminish
   :general (:keymaps 'jinx-mode-map
             [remap ispell-word] 'jinx-correct
             "C-," 'jinx-correct)
-  :config
+  :init
   (global-jinx-mode)
-
+  :config
   ;; Use veritco's grid display such that more suggestions fit on the screen and
   ;; enable annotations. Taken from
   ;; https://github.com/minad/jinx#correcting-misspellings
