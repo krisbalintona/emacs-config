@@ -36,8 +36,8 @@
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
   (tab-always-indent 'complete)
-  (completion-cycle-threshold nil)      ; Always show candidates in menu
-
+  (tab-first-completion 'word)
+  
   (corfu-auto nil)
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.25)
@@ -48,6 +48,7 @@
   (corfu-count 14)
   (corfu-scroll-margin 4)
   (corfu-cycle nil)
+  (completion-cycle-threshold nil)
 
   ;; `nil' means to ignore `corfu-separator' behavior, that is, use the older
   ;; `corfu-quit-at-boundary' = nil behavior. Set this to separator if using

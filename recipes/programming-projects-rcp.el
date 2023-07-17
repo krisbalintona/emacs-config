@@ -129,7 +129,6 @@
   (magit-bury-buffer-function 'magit-restore-window-configuration) ; Restore the window configuration used before calling magit when closing it
 
   ;; Displaying hunks
-  ;; (magit-diff-highlight-hunk-body nil)
   (magit-diff-highlight-hunk-body t)
   (magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside
