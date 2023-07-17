@@ -71,13 +71,11 @@ punctuation."
 ;; OPTIMIZE 2023-07-14: Also consider synergy with
 ;; https://codeberg.org/ideasman42/emacs-prog-face-refine
 (use-package hl-todo
-  :hook (elpaca-after-init . global-hl-todo-mode)
-  :general
-  (:keymaps 'hl-todo-mode-map
-   :prefix "M-g"
-   "n" '(hl-todo-next :wk "Hl-todo-next")
-   "p" '(hl-todo-previous :wk "Hl-todo-previous")
-   "o" '(hl-todo-occur :wk "Hl-todo-occur"))
+  :general (:keymaps 'hl-todo-mode-map
+            :prefix "M-s t"
+            "n" 'hl-todo-next
+            "p" 'hl-todo-previous
+            "o" 'hl-todo-occur)
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(markdown-mode text-mode))
@@ -86,6 +84,8 @@ punctuation."
   ;; hl-todo's punctuation highlighting.
   (hl-todo-require-punctuation nil)
   (hl-todo-highlight-punctuation "")
+  :init
+  (global-hl-todo-mode)
   :config
   (with-eval-after-load 'alt-comment-dwim
     ;; Make sure to have all words in `alt-comment-dwim-keywords-coding' and
