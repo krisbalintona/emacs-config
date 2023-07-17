@@ -15,6 +15,7 @@
 (require 'keybinds-general-rcp)
 
 ;;; Mu4e
+;;;; Itself
 (use-package mu4e
   :elpaca nil
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
@@ -147,49 +148,6 @@
                                                (let ((mu4e-use-fancy-chars nil))
                                                  (apply orig-fun args))))
 
-  ;; FIXME 2022-12-29: For some reason putting these in the :custom section
-  ;; doesn't load it
-  (setq mu4e-contexts
-        `(,(make-mu4e-context
-            :name "Uni"
-            :enter-func (lambda () (mu4e-message "Entering Uni context"))
-            :leave-func (lambda () (mu4e-message "Leaving Uni context"))
-            :vars '((user-mail-address . "kristoffer_balintona@brown.edu")
-                    ;; Directories
-                    (mu4e-drafts-folder . "/drafts/uni/")
-                    (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
-                    (mu4e-refile-folder . "/uni/[Gmail].All Mail")
-                    (mu4e-trash-folder . "/uni/[Gmail].Trash")
-                    ;; Maildirs
-                    (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
-                                               (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/drafts/uni/" :key ?d)
-                                               (:maildir "/uni/[Gmail].Drafts" :key ?D)
-                                               (:maildir "/uni/[Gmail].Trash" :key ?t)
-                                               (:maildir "/uni/[Gmail].All Mail" :key ?a)))
-                    ;; Smtpmail
-                    (smtpmail-smtp-user "kristoffer_balintona@brown.edu") ; Send from this address
-                    (smtpmail-mail-address "kristoffer_balintona@brown.edu")))
-          ,(make-mu4e-context
-            :name "Personal"
-            :enter-func (lambda () (mu4e-message "Entering Personal context"))
-            :leave-func (lambda () (mu4e-message "Leaving Personal context"))
-            :vars '((user-mail-address . "krisbalintona@gmail.com")
-                    ;; Directories
-                    (mu4e-drafts-folder . "/drafts/personal")
-                    (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
-                    (mu4e-refile-folder . "/personal/[Gmail].All Mail")
-                    (mu4e-trash-folder . "/personal/[Gmail].Trash")
-                    ;; Maildirs
-                    (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
-                                               (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/drafts/personal/" :key ?d)
-                                               (:maildir "/personal[Gmail].Drafts/[Gmail].Drafts" :key ?D)
-                                               (:maildir "/personal/[Gmail].Trash" :key ?t)
-                                               (:maildir "/personal/[Gmail].All Mail" :key ?a)))
-                    ;; Smtpmail
-                    (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
-                    (smtpmail-mail-address "krisbalintona@gmail.com")))))
   ;; Headers
   ;; Taken from Doom
   (plist-put (cdr (assoc :flags mu4e-header-info)) :shortname " Flags") ; default=Flgs
@@ -349,6 +307,227 @@
   (setq mu4e-compose-signature
         (unless (bound-and-true-p org-msg-mode)
           "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")))
+
+;;;; Mu4e-contexts
+(with-eval-after-load 'mu4e
+  (setq mu4e-contexts
+        `(,(make-mu4e-context
+            :name "Uni"
+            :enter-func (lambda () (mu4e-message "Entering Uni context"))
+            :leave-func (lambda () (mu4e-message "Leaving Uni context"))
+            :vars `((user-mail-address . "kristoffer_balintona@brown.edu")
+                    ;; Directories
+                    (mu4e-drafts-folder . "/drafts/uni/")
+                    (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
+                    (mu4e-refile-folder . "/uni/[Gmail].All Mail")
+                    (mu4e-trash-folder . "/uni/[Gmail].Trash")
+                    ;; Maildirs
+                    (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
+                                               (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
+                                               (:maildir "/drafts/uni/" :key ?d)
+                                               (:maildir "/uni/[Gmail].Drafts" :key ?D)
+                                               (:maildir "/uni/[Gmail].Trash" :key ?t)
+                                               (:maildir "/uni/[Gmail].All Mail" :key ?a)))
+                    (kb/signature-alist .
+                                        (("Take care" . ,(format "%s\n\nTake care,\\\\\nKristoffer" kb/signature-separator))
+                                         ("In gratitude" . ,(format "%s\n\nIn gratitude,\\\\\nKristoffer" kb/signature-separator))
+                                         ("Best" . ,(format "%s\n\nBest,\\\\\nKristoffer" kb/signature-separator))
+                                         ("With appreciation" . ,(format "%s\n\nWith appreciation,\\\\\nKristoffer" kb/signature-separator))
+                                         ("Brown banner" . ,(concat kb/signature-separator "\n\n"
+                                                                    "With appreciation,\\\\\nKristoffer\n\n"
+                                                                    "#+begin_export html
+<br />
+<table
+  style='color: rgb(136, 136, 136); border: none; border-collapse: collapse; font-family: garamond'
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://clipground.com/images/brown-university-logo-png-1.png'
+          alt='Brown logo'
+          style='border: none'
+          height='100'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 6pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 11pt;
+              font-weight: 700;
+              white-space: pre-wrap;
+            '
+            >Kristoffer Balintona</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >B.A. Philosophy</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Class of 2024</span
+          >
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              white-space: pre-wrap;
+            '
+            >Tel: (773) 677-9699</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='
+            font-size: 10pt;
+            line-height: 1.2;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+          '
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Box: 6327</span
+          >
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export"))
+                                         ("BUI banner" . ,(concat kb/signature-separator "\n\n"
+                                                                  "Warmly,\\\\\nBrown University Interviews Executive Committee\n\n"
+                                                                  "#+begin_export html
+<br />
+<table
+  style='
+    color: rgb(136, 136, 136);
+    border: none;
+    border-collapse: collapse;
+    font-family: garamond;
+  '
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://browninterviews.org/wp-content/uploads/2020/06/bu-small-logo.png'
+          alt='Brown logo'
+          style='border: none'
+          height='70'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Kristoffer Balintona ('24)</span>
+          <span> | Editor in Chief</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Charles Alaimo ('25)</span>
+          <span> | Senior Interviews Coordinator</span>
+          <br />
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export"))))
+                    ;; Smtpmail
+                    (smtpmail-smtp-user "kristoffer_balintona@brown.edu") ; Send from this address
+                    (smtpmail-mail-address "kristoffer_balintona@brown.edu")))
+          ,(make-mu4e-context
+            :name "Personal"
+            :enter-func (lambda () (mu4e-message "Entering Personal context"))
+            :leave-func (lambda () (mu4e-message "Leaving Personal context"))
+            :vars `((user-mail-address . "krisbalintona@gmail.com")
+                    ;; Directories
+                    (mu4e-drafts-folder . "/drafts/personal")
+                    (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
+                    (mu4e-refile-folder . "/personal/[Gmail].All Mail")
+                    (mu4e-trash-folder . "/personal/[Gmail].Trash")
+                    ;; Maildirs
+                    (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
+                                               (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
+                                               (:maildir "/drafts/personal/" :key ?d)
+                                               (:maildir "/personal[Gmail].Drafts/[Gmail].Drafts" :key ?D)
+                                               (:maildir "/personal/[Gmail].Trash" :key ?t)
+                                               (:maildir "/personal/[Gmail].All Mail" :key ?a)))
+                    (kb/signature-alist .
+                                        (("Take care" . ,(format "%s\n\nTake care,\\\\\nKristoffer" kb/signature-separator))
+                                         ("In gratitude" . ,(format "%s\n\nIn gratitude,\\\\\nKristoffer" kb/signature-separator))
+                                         ("Best" . ,(format "%s\n\nBest,\\\\\nKristoffer" kb/signature-separator))
+                                         ("With appreciation" . ,(format "%s\n\nWith appreciation,\\\\\nKristoffer" kb/signature-separator))))
+                    ;; Smtpmail
+                    (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
+                    (smtpmail-mail-address "krisbalintona@gmail.com"))))))
 
 ;;; Mu4e header icons (from Doom Emacs)
 (with-eval-after-load 'mu4e
