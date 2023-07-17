@@ -70,7 +70,7 @@
       (slot . 2)
       (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
-                       (string-match-p "^\\*Customize" (buffer-name))))
+                            (string-match-p "^\\*Customize" (buffer-name))))
       (display-buffer-reuse-window
        kb/select-buffer-in-side-window
        display-buffer-in-direction)
@@ -259,6 +259,7 @@ If buffer-or-name is nil return current buffer's mode."
 
 ;;;; Project-tab-groups
 (use-package project-tab-groups
+  :disabled                             ; Intrusive for me
   :init
   (project-tab-groups-mode))
 
