@@ -114,12 +114,15 @@
   (mu4e-compose-signature-auto-include nil)
   (mu4e-compose-hidden-headers nil)
   (mu4e-compose-format-flowed t) ; Not sure, but I think this setting helps
+  (mu4e-compose-dont-reply-to-self t)
 
   ;; Other
-  (mu4e-completing-read-function 'completing-read)
   (mu4e-change-filenames-when-moving t) ; Prevent duplication
   (mu4e-confirm-quit nil)
   (mu4e-headers-eldoc-format "In %m with flags %F")
+  ;; The following two options have mu4e use vanilla completion (e.g. Vertico)
+  (mu4e-read-option-use-builtin t)
+  (mu4e-completing-read-function 'completing-read)
   :init
   ;; Gmail integration is taken from Doom
   ;; Check if msg is being called from a gmail account
