@@ -258,7 +258,7 @@ Additionally, add `cape-file' as early as possible to the list."
 
   ;; Git-commit
   (defun kb/cape-capf-setup-git-commit ()
-    (local-set-key (kbd "<tab>") 'completion-at-point)
+    (define-key git-commit-mode-map (kbd "<tab>") 'completion-at-point)
     (let ((result))
       (dolist (element '(cape-dabbrev cape-symbol) result)
         (add-to-list 'completion-at-point-functions element))))
