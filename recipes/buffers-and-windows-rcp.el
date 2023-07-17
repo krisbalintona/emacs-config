@@ -69,15 +69,6 @@
       (side . left)
       (slot . 2)
       (window-parameters . ((no-other-window . t))))
-     ((lambda (buf act) (or (equal (kb/buffer-major-mode buf) 'Custom-mode)
-                            (string-match-p "^\\*Customize" (buffer-name))))
-      (display-buffer-reuse-window
-       kb/select-buffer-in-side-window
-       display-buffer-in-direction)
-      (window-width . 0.4)
-      (side . left)
-      (direction . left)
-      (slot . 1))
 
      ;; To the right
      ("\\*org-roam\\*"
@@ -301,7 +292,6 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*Messages\\*"
      "^\\*Warnings\\*"
      "^\\*Backtrace\\*"
-     "^\\*Customize*"
      "^\\*compilation\\*"
      comint-mode
 
@@ -370,10 +360,6 @@ If buffer-or-name is nil return current buffer's mode."
                (concat (match-string 1 name)
                        "(C)"))
               ((string-match "^\\*Java Run" name)
-               (concat (match-string 1 name)
-                       (concat "(CG)" (substring name 18 (- (length name) 1)))
-                       ))
-              ((string-match "^\\*Customize" name)
                (concat (match-string 1 name)
                        (concat "(CG)" (substring name 18 (- (length name) 1)))
                        ))
