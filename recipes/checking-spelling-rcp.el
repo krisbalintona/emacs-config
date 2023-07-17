@@ -133,7 +133,8 @@
   :elpaca (:depth nil
            :repo "minad/jinx"
            :files (:defaults "jinx-mod.c" "emacs-module.h"))
-  :general ([remap ispell-word] 'jinx-correct
+  :general (:keymaps 'jinx-mode-map
+            [remap ispell-word] 'jinx-correct
             "C-," 'jinx-correct)
   :config
   (global-jinx-mode)
