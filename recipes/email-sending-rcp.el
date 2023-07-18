@@ -14,7 +14,8 @@
   :elpaca nil
   :hook ((message-setup . message-sort-headers)
          (message-mode . visual-fill-column-mode)
-         (message-send . kb/message-check-for-subject))
+         (message-send . kb/message-check-for-subject)
+         (message-send . kb/message-check-correct-from))
   :custom
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
@@ -37,11 +38,28 @@
     (save-excursion
       (goto-char (point-min))
       (search-forward "--text follows this line--")
-      (re-search-backward "^Subject:") ; this should be present no matter what
+      (re-search-backward "^Subject:")
       (let ((subject (string-trim (substring (thing-at-point 'line) 8))))
         (when (string-empty-p subject)
           (end-of-line)
-          (insert (read-string "Subject (optional): ")))))))
+          (insert (read-string "Subject (optional): "))))))
+
+  (defun kb/message-check-correct-from ()
+    "Prompt user to confirm to send from this email."
+    (save-excursion
+      (goto-char (point-min))
+      (search-forward "--text follows this line--")
+      (re-search-backward "^From:")
+      (let ((from (string-trim (substring (thing-at-point 'line) 5))))
+        (when (and (not (string-match-p (rx (literal user-mail-address)) from))
+                   (not (yes-or-no-p (concat
+                                      "Are you sure you want to send from "
+                                      (propertize from 'face 'highlight)
+                                      "?"))))
+          (cl--set-buffer-substring (pos-bol) (pos-eol)
+                                    (concat
+                                     "From: "
+                                     (read-string "Set FROM to: " user-mail-address))))))))
 
 ;;; Sendmail
 ;; Use `sendmail' program to send emails?
