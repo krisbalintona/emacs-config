@@ -53,6 +53,9 @@
   :elpaca nil
   :custom
   (org-latex-compiler "lualatex")
+  ;; Beautiful source block exports to latex. Read help buffer for much more
+  ;; info on how this is done, requirements, and options
+  (org-latex-src-block-backend 'engraved)
   ;; Latexmk makes everything simple
   (org-latex-pdf-process
    (list "latexmk -shell-escape  -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))

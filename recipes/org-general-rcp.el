@@ -516,7 +516,7 @@ If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
     ("'" "’")))        ; Swapped these two
 
-;;;; Custom org-src-block
+;;;; Custom org-src-block for paragraphs
 ;; Also see package `org-edit-indirect'. Does something similar but more
 ;; versatile, relying on `edit-indirect'. However, this doesn't use native
 ;; `org-src' infrastructure
