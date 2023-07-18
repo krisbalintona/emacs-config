@@ -65,9 +65,6 @@
 ;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
 
-;;; Make asking "Y or N"
-(fset 'yes-or-no-p 'y-or-n-p)
-
 ;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 
