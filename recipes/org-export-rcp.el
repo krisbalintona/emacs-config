@@ -247,127 +247,54 @@ chosen."
        ;; Document end.
        "\\end{document}")))
 
-  ;; Recognize the professor and course keywords
-  (org-export-define-backend 'latex
-    '((bold . org-latex-bold)
-      (center-block . org-latex-center-block)
-      (clock . org-latex-clock)
-      (code . org-latex-code)
-      (drawer . org-latex-drawer)
-      (dynamic-block . org-latex-dynamic-block)
-      (entity . org-latex-entity)
-      (example-block . org-latex-example-block)
-      (export-block . org-latex-export-block)
-      (export-snippet . org-latex-export-snippet)
-      (fixed-width . org-latex-fixed-width)
-      (footnote-definition . org-latex-footnote-definition)
-      (footnote-reference . org-latex-footnote-reference)
-      (headline . org-latex-headline)
-      (horizontal-rule . org-latex-horizontal-rule)
-      (inline-src-block . org-latex-inline-src-block)
-      (inlinetask . org-latex-inlinetask)
-      (italic . org-latex-italic)
-      (item . org-latex-item)
-      (keyword . org-latex-keyword)
-      (latex-environment . org-latex-latex-environment)
-      (latex-fragment . org-latex-latex-fragment)
-      (line-break . org-latex-line-break)
-      (link . org-latex-link)
-      (node-property . org-latex-node-property)
-      (paragraph . org-latex-paragraph)
-      (plain-list . org-latex-plain-list)
-      (plain-text . org-latex-plain-text)
-      (planning . org-latex-planning)
-      (property-drawer . org-latex-property-drawer)
-      (quote-block . org-latex-quote-block)
-      (radio-target . org-latex-radio-target)
-      (section . org-latex-section)
-      (special-block . org-latex-special-block)
-      (src-block . org-latex-src-block)
-      (statistics-cookie . org-latex-statistics-cookie)
-      (strike-through . org-latex-strike-through)
-      (subscript . org-latex-subscript)
-      (superscript . org-latex-superscript)
-      (table . org-latex-table)
-      (table-cell . org-latex-table-cell)
-      (table-row . org-latex-table-row)
-      (target . org-latex-target)
-      ;; Use template which processes professor and course keywords
-      (template . kb/org-latex-template)
-      (timestamp . org-latex-timestamp)
-      (underline . org-latex-underline)
-      (verbatim . org-latex-verbatim)
-      (verse-block . org-latex-verse-block)
-      ;; Pseudo objects and elements.
-      (latex-math-block . org-latex-math-block)
-      (latex-matrices . org-latex-matrices))
+  (defun org-latex-paper-export-as-latex
+      (&optional async subtreep visible-only body-only ext-plist)
+    "Export current buffer as a LaTeX buffer.
+
+Uses my 'latex-paper' backend. See the original
+`org-latex-export-as-latex' for more details."
+    (interactive)
+    (org-export-to-buffer 'latex-paper "*Org LATEX Export*"
+      async subtreep visible-only body-only ext-plist (lambda () (LaTeX-mode))))
+
+  (defun org-latex-paper-export-to-latex
+      (&optional async subtreep visible-only body-only ext-plist)
+    "Export current buffer to a LaTeX file.
+
+Uses my 'latex-paper' backend. See the original
+`org-latex-export-to-latex' for more details."
+    (interactive)
+    (let ((outfile (org-export-output-file-name ".tex" subtreep)))
+      (org-export-to-file 'latex-paper outfile
+        async subtreep visible-only body-only ext-plist)))
+
+  (defun org-latex-paper-export-to-pdf
+      (&optional async subtreep visible-only body-only ext-plist)
+    "Export current buffer to LaTeX then process through to PDF.
+
+Uses my 'latex-paper' backend. See the original
+`org-latex-export-to-pdf' for more details."
+    (interactive)
+    (let ((outfile (org-export-output-file-name ".tex" subtreep)))
+      (org-export-to-file 'latex-paper outfile
+        async subtreep visible-only body-only ext-plist
+        #'org-latex-compile)))
+
+  ;; Recognize the 'professor' and 'course' keywords
+  (org-export-define-derived-backend 'latex-paper 'latex
+    :translate-alist '((template . kb/org-latex-template))
     :menu-entry
-    '(?l "Export to LaTeX"
-         ((?L "As LaTeX buffer" org-latex-export-as-latex)
-          (?l "As LaTeX file" org-latex-export-to-latex)
-          (?p "As PDF file" org-latex-export-to-pdf)
+    '(?p "Export to LaTeX (Paper)"
+         ((?L "As LaTeX buffer" org-latex-paper-export-as-latex)
+          (?l "As LaTeX file" org-latex-paper-export-to-latex)
+          (?p "As PDF file" org-latex-paper-export-to-pdf)
           (?o "As PDF file and open"
               (lambda (a s v b)
-                (if a (org-latex-export-to-pdf t s v b)
-                  (org-open-file (org-latex-export-to-pdf nil s v b)))))))
-    :filters-alist '((:filter-options . org-latex-math-block-options-filter)
-                     (:filter-paragraph . org-latex-clean-invalid-line-breaks)
-                     (:filter-parse-tree org-latex-math-block-tree-filter
-                      org-latex-matrices-tree-filter
-                      org-latex-image-link-filter)
-                     (:filter-verse-block . org-latex-clean-invalid-line-breaks))
+                (if a (org-latex-paper-export-to-pdf t s v b)
+                  (org-open-file (org-latex-paper-export-to-pdf nil s v b)))))))
     :options-alist
-    '((:latex-class "LATEX_CLASS" nil org-latex-default-class t)
-      (:latex-class-options "LATEX_CLASS_OPTIONS" nil nil t)
-      (:latex-header "LATEX_HEADER" nil nil newline)
-      (:latex-header-extra "LATEX_HEADER_EXTRA" nil nil newline)
-      (:description "DESCRIPTION" nil nil parse)
-      (:keywords "KEYWORDS" nil nil parse)
-      (:subtitle "SUBTITLE" nil nil parse)
-      ;; MLA file keywords
-      (:professor "PROFESSOR" nil nil parse)
-      (:course "COURSE" nil nil parse)
-      ;; Other variables.
-      (:latex-active-timestamp-format nil nil org-latex-active-timestamp-format)
-      (:latex-caption-above nil nil org-latex-caption-above)
-      (:latex-classes nil nil org-latex-classes)
-      (:latex-default-figure-position nil nil org-latex-default-figure-position)
-      (:latex-default-table-environment nil nil org-latex-default-table-environment)
-      (:latex-default-quote-environment nil nil org-latex-default-quote-environment)
-      (:latex-default-table-mode nil nil org-latex-default-table-mode)
-      (:latex-diary-timestamp-format nil nil org-latex-diary-timestamp-format)
-      (:latex-engraved-options nil nil org-latex-engraved-options)
-      (:latex-engraved-preamble nil nil org-latex-engraved-preamble)
-      (:latex-engraved-theme "LATEX_ENGRAVED_THEME" nil org-latex-engraved-theme)
-      (:latex-footnote-defined-format nil nil org-latex-footnote-defined-format)
-      (:latex-footnote-separator nil nil org-latex-footnote-separator)
-      (:latex-format-drawer-function nil nil org-latex-format-drawer-function)
-      (:latex-format-headline-function nil nil org-latex-format-headline-function)
-      (:latex-format-inlinetask-function nil nil org-latex-format-inlinetask-function)
-      (:latex-hyperref-template nil nil org-latex-hyperref-template t)
-      (:latex-image-default-scale nil nil org-latex-image-default-scale)
-      (:latex-image-default-height nil nil org-latex-image-default-height)
-      (:latex-image-default-option nil nil org-latex-image-default-option)
-      (:latex-image-default-width nil nil org-latex-image-default-width)
-      (:latex-images-centered nil nil org-latex-images-centered)
-      (:latex-inactive-timestamp-format nil nil org-latex-inactive-timestamp-format)
-      (:latex-inline-image-rules nil nil org-latex-inline-image-rules)
-      (:latex-link-with-unknown-path-format nil nil org-latex-link-with-unknown-path-format)
-      (:latex-src-block-backend nil nil org-latex-src-block-backend)
-      (:latex-listings-langs nil nil org-latex-listings-langs)
-      (:latex-listings-options nil nil org-latex-listings-options)
-      (:latex-minted-langs nil nil org-latex-minted-langs)
-      (:latex-minted-options nil nil org-latex-minted-options)
-      (:latex-prefer-user-labels nil nil org-latex-prefer-user-labels)
-      (:latex-subtitle-format nil nil org-latex-subtitle-format)
-      (:latex-subtitle-separate nil nil org-latex-subtitle-separate)
-      (:latex-table-scientific-notation nil nil org-latex-table-scientific-notation)
-      (:latex-tables-booktabs nil nil org-latex-tables-booktabs)
-      (:latex-tables-centered nil nil org-latex-tables-centered)
-      (:latex-text-markup-alist nil nil org-latex-text-markup-alist)
-      (:latex-title-command nil nil org-latex-title-command)
-      (:latex-toc-command nil nil org-latex-toc-command)
-      (:latex-compiler "LATEX_COMPILER" nil org-latex-compiler))))
+    '((:professor "PROFESSOR" nil nil parse)
+      (:course "COURSE" nil nil parse))))
 
 ;;;; Custom links
 (with-eval-after-load 'ol
