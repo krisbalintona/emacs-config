@@ -78,8 +78,8 @@
 
 (add-hook 'minibuffer-setup-hook
           '(lambda ()
-                   (face-remap-add-relative 'bold :weight 'normal)
-                   (face-remap-add-relative 'default :weight 'light)))
+              (face-remap-add-relative 'bold :weight 'normal)
+              (face-remap-add-relative 'default :weight 'light)))
 
 ;;; UI
 ;;;; Fringes
@@ -285,6 +285,32 @@ mouse-3: Toggle minor modes"
 
   (setq-default mode-line-format
                 '("%e" mode-line-front-space
+                  mode-line-client
+                  mode-line-modified
+                  mode-line-remote
+                  vc-mode " "
+                  (:eval                ; Taken from prot
+                   (when (and (mode-line-window-selected-p)
+                              (buffer-narrowed-p)
+                              (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
+                     (propertize "Narrow " 'face 'mode-line-emphasis)))
+                  mode-line-buffer-identification " "
+                  "%l "
+                  (:eval
+                   (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
+                  (:eval
+                   (when (and (mode-line-window-selected-p) defining-kbd-macro)
+                     (concat (propertize "KMacro" 'face 'mode-line-highlight) " ")))
+                  mode-line-format-right-align
+                  mode-line-process
+                  (:eval
+                   (when (and (bound-and-true-p flymake-mode)
+                              (mode-line-window-selected-p))
+                     flymake-mode-line-format))
+                  " "
+                  (:eval
+                   (when (mode-line-window-selected-p)
+                     mode-line-misc-info))
                   (:eval
                    (when (mode-line-window-selected-p)
                      (cond
@@ -306,33 +332,7 @@ mouse-3: Toggle minor modes"
                          (concat
                           (propertize mode-line-string 'face '(:inherit mode-line-emphasis))
                           " "))))))
-                  mode-line-client
-                  mode-line-modified
-                  mode-line-remote
-                  vc-mode " "
-                  (:eval                ; Taken from prot
-                   (when (and (mode-line-window-selected-p)
-                              (buffer-narrowed-p)
-                              (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
-                     (propertize "Narrow " 'face 'mode-line-emphasis)))
-                  mode-line-buffer-identification " "
-                  "%l "
-                  (:eval
-                   (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
-                  (:eval
-                   (when (and (mode-line-window-selected-p) defining-kbd-macro)
-                     (concat (propertize "KMacro" 'face 'mode-line-highlight) " ")))
-                  mode-line-format-right-align
-                  (:eval
-                   (when (and (bound-and-true-p flymake-mode)
-                              (mode-line-window-selected-p))
-                     flymake-mode-line-format))
-                  " "
-                  (:eval
-                   (when (mode-line-window-selected-p)
-                     mode-line-misc-info))
                   (:eval kb/mode-line-modes)
-                  mode-line-process
                   mode-line-end-spaces)))
 
 ;;;; Time
