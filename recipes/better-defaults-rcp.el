@@ -99,14 +99,6 @@
 ;; Echo keystrokes (of unfinished commands) much quicker
 (setq echo-keystrokes 0.5)
 
-;;; Window sizing and splitting
-(setq window-resize-pixelwise t
-      fit-window-to-buffer-horizontally t
-
-      ;; Favor vertical splits over horizontal ones
-      split-width-threshold 180
-      split-height-threshold 80)
-
 ;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk
 (setq read-process-output-max (* 1024 1024)) ; 1mb

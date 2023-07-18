@@ -377,7 +377,7 @@ have `org-warning' face."
   :custom
   (visual-fill-column-width 120)
   (visual-fill-column-center-text t)
-  (split-window-preferred-function 'visual-fill-column-split-window-sensibly)) ; Be able to vertically split windows that have wide margins
+  (visual-fill-column-enable-sensible-window-split t)) ; Be able to vertically split windows that have wide margins
 
 ;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
