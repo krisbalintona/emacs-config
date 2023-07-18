@@ -35,10 +35,7 @@
               inhibit-startup-screen t                                                            ; Disable start-up screen
               initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n"  ; Set a cringe scratch buffer message
 
-              x-stretch-cursor t                                                                  ; Stretch cursor to the glyph width
-              cursor-in-non-selected-windows nil                                                  ; Hide the cursor in inactive windows
-
-              trash-directory (concat no-littering-var-directory "trash")                         ; Trash directory
+              trash-directory (no-littering-expand-var-file-name "trash")                         ; Trash directory
               delete-by-moving-to-trash t                                                         ; Delete files to trash
 
               find-file-visit-truename t                                                          ; Follow symlink to actual file
@@ -59,6 +56,11 @@
 
               visible-bell nil
               ring-bell-function 'ignore)
+
+;;; Cursor settings
+(setq-default cursor-type 'bar
+              cursor-in-non-selected-windows 'hollow
+              x-stretch-cursor t)       ; Stretch cursor to the glyph width
 
 ;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
