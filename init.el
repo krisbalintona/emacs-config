@@ -8,23 +8,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-;;; Load elisp config path
-;; Add elisp directory that contains configuration files to load path
-(defun update-to-load-path (folder)
-  "Update FOLDER and its subdirectories to `load-path'."
-  (let ((base folder))
-    (unless (member base load-path)
-      (add-to-list 'load-path base))
-    (dolist (f (directory-files base))
-      (let ((name (concat base "/" f)))
-        (when (and (file-directory-p name)
-                   (not (equal f ".."))
-                   (not (equal f ".")))
-          (unless (member base load-path)
-            (add-to-list 'load-path name)))))))
-(update-to-load-path (expand-file-name "recipes" user-emacs-directory))
-(update-to-load-path (expand-file-name "site-lisp" user-emacs-directory))
-(update-to-load-path (expand-file-name "exwm" user-emacs-directory))
+;;; Recursively add files to `load-path'
+(normal-top-level-add-to-load-path (list (expand-file-name "recipes" user-emacs-directory)
+                                         (expand-file-name "site-lisp" user-emacs-directory)
+                                         (expand-file-name "exwm" user-emacs-directory)))
 
 ;;; Load packages
 ;; Load all elisp and org configuration files
