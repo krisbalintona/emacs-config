@@ -351,7 +351,8 @@ mouse-3: Toggle minor modes"
      ("Europe/Paris" "Paris")
      ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
      ("Asia/Calcutta" "Bangalore")
-     ("Asia/Tokyo" "Tokyo")))
+     ("Asia/Tokyo" "Tokyo")
+     ("Asia/Shanghai" "Beijing")))
   :init
   (display-time-mode))
 
