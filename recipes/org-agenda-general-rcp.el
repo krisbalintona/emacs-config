@@ -292,17 +292,7 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
                            (:name ""
                             :not (:tag "project"))
                            (:auto-parent t)
-                           (:discard (:anything t))))))
-            ;; (alltodo ""
-            ;;          ((org-agenda-overriding-header "Projects")
-            ;;           (org-agenda-show-inherited-tags t)
-            ;;           (org-agenda-dim-blocked-tasks t)
-            ;;           (org-agenda-prefix-format
-            ;;            '((todo . "%2i %s ")))
-            ;;           (org-super-agenda-groups
-            ;;            '((:auto-parent t)
-            ;;              (:discard (:anything t))))))
-            ))
+                           (:discard (:anything t))))))))
           ("E" "Emails"
            ((tags-todo "-reminder+email"
                        ((org-agenda-overriding-header "Unscheduled")
@@ -384,13 +374,8 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
   (advice-add 'org-pomodoro-update-mode-line :override 'kb/org-pomodoro-update-mode-line))
 
 ;;; Org-pomodoro-third-time
-(use-package org-pomodoro-third-time
-  :elpaca nil
-  :after org-agenda org-pomodoro
-  :custom
-  (org-pomodoro-third-time-break-to-work-ratio (/ 1.0 4.0))
-  :init
-  (org-pomodoro-third-time-mode))
+(use-package org-work-timer
+  :elpaca nil)
 
 ;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.

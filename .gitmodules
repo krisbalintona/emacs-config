@@ -4,3 +4,6 @@
 [submodule "site-lisp/emacs-application-framework"]
 	path = site-lisp/emacs-application-framework
 	url = https://github.com/emacs-eaf/emacs-application-framework.git
+[submodule "site-lisp/org-work-timer"]
+	path = site-lisp/org-work-timer
+	url = git@github.com:krisbalintona/org-work-timer.git
