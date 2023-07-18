@@ -138,15 +138,14 @@ does."
 (use-package avy
   :commands kb/avy-goto-parens
   :general
-  ;; Also consider `avy-goto-char-timer'
-  ("C-;" 'avy-goto-word-or-subword-1
-   "C-M-;" 'avy-goto-char-2)
+  ("C-;" 'avy-goto-char-timer)
   (:keymaps '(emacs-lisp-mode-map lisp-interaction-mode-map)
    "C-:" 'kb/avy-goto-parens)
   :custom
   (avy-all-windows nil)                 ; Scope
   (avy-case-fold-search nil)
   (avy-single-candidate-jump nil)
+  (avy-timeout-seconds 0.3)
   (avy-style 'at-full)
   (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (avy-dispatch-alist ; Avy actions (first narrow so letter combinations appear)
