@@ -78,6 +78,7 @@
   (org-use-effective-time t)
   (org-agenda-block-separator ?─)
   (org-deadline-warning-days 0)
+  (org-agenda-skip-scheduled-delay-if-deadline 'post-deadline)
   (org-agenda-scheduled-leaders
    '("Scheduled: " "Sched.%2dx: "))
   (org-agenda-deadline-leaders
