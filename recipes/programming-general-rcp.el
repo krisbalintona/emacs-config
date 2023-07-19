@@ -271,13 +271,14 @@ punctuation."
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
+  :demand
   :elpaca nil
   :custom
-  (auto-revert-interval 7)
+  (auto-revert-interval 3)
   (auto-revert-check-vc-info t)
-  (global-auto-revert-non-file-buffers t)
   (auto-revert-verbose t)
-  :init (global-auto-revert-mode))
+  :config
+  (global-auto-revert-mode))
 
 ;;;; Whitespace
 ;; Remove whitespace on save
