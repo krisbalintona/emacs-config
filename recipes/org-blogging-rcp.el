@@ -14,8 +14,8 @@
 ;;;; Itself
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
-  :defer 7
-  :commands kb/org-hugo-export-all
+  :demand
+  :after ox
   :ensure-system-package (hugo go)
   :custom
   (org-hugo-base-dir (expand-file-name "hugo/" org-directory))
@@ -26,6 +26,11 @@
   (org-hugo-auto-set-lastmod nil)       ; Use lastmod?
   (org-hugo-suppress-lastmod-period 604800) ; Only use lastmod if modified at least a week later
   :config
+  (defvar kb/org-hugo-exclude-tags
+    '("ATTACH" "project" "PROJECT" "draft"
+      "section" "series" "tag" "category"
+      "creative-writing")
+    "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
   (defun kb/org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list info)
     "Ignore tags which match a string found in `kb/org-hugo-exclude-tags'."
     (cl-set-difference tag-list kb/org-hugo-exclude-tags :test #'equal))
@@ -159,9 +164,8 @@ and rewrite link paths to make blogging more seamless."
             (format "[%s]({{< relref \"%s\" >}})" path path))))
        ;; Link type is handled by a special function.
        ((org-export-custom-protocol-maybe link desc 'md))
-       ;; Link type that is id-based
        ((member type '("custom-id" "id"
-                       "fuzzy"))        ;<<target>>, #+name, heading links
+                       "fuzzy")) ;<<target>>, #+name, heading links
         (let ((destination (if (string= type "fuzzy")
                                (org-export-resolve-fuzzy-link link info)
                              (org-export-resolve-id-link link info))))
@@ -189,14 +193,15 @@ and rewrite link paths to make blogging more seamless."
                ;; (message "[org-hugo-link DBG] plain-text path: %s" path)
                (if (org-id-find-id-file raw-path)
                    (let* ((anchor (org-hugo-link--heading-anchor-maybe link info))
-                          (anchor-str (if (org-string-nw-p anchor)
-                                          (concat "#" anchor)
-                                        "")))
+                          (ref (if (and (org-string-nw-p anchor)
+                                        (not (string-prefix-p "#" anchor)))
+                                   ;; If the "anchor" doesn't begin with
+                                   ;; "#", it's a direct reference to a
+                                   ;; post subtree.
+                                   anchor
+                                 (concat path anchor))))
                      ;; (message "[org-hugo-link DBG] plain-text org-id anchor: %S" anchor)
-                     ;; (message "[org-hugo-link DBG] plain-text org-id anchor-str: %S" anchor-str)
-                     (if desc
-                         (format "[%s]({{< relref \"%s%s\" >}})" desc path anchor-str)
-                       (format "[%s]({{< relref \"%s%s\" >}})" path path anchor-str)))
+                     (format "[%s]({{< relref \"%s\" >}})" (or desc path) ref))
                  (if desc
                      (format "[%s](%s)" desc path)
                    (format "<%s>" path)))))
@@ -281,7 +286,7 @@ and rewrite link paths to make blogging more seamless."
                (caption (or
                          ;; Caption set using #+caption takes higher precedence.
                          (org-string-nw-p
-                          (org-export-data ;Look for caption set using #+caption
+                          (org-export-data  ;Look for caption set using #+caption
                            (org-export-get-caption (org-export-get-parent-element link))
                            info))
                          (plist-get attr :caption)))
@@ -362,7 +367,7 @@ and rewrite link paths to make blogging more seamless."
                 (plist-put attr :target nil)
                 (plist-put attr :rel nil)
                 (org-html--format-image source attr info))
-               (t     ;Else use the Hugo `figure' shortcode.
+               (t ;Else use the Hugo `figure' shortcode.
                 ;; Hugo `figure' shortcode named parameters.
                 ;; https://gohugo.io/content-management/shortcodes/#figure
                 (let ((figure-params `((src . ,source)
@@ -416,7 +421,7 @@ and rewrite link paths to make blogging more seamless."
                   (org-blackfriday--get-ref-prefix 'radio)
                   (org-blackfriday--valid-html-anchor-name
                    (org-element-property :value destination)))))
-       (t ;[[file:foo.png]], [[file:foo.org::* Heading]], [[file:foo.org::#custom-id]],
+       (t ;[[file:foo.png]], [[file:foo.org::* Heading]], [[file:foo.org::#custom-id]], link type: file
         (let* ((link-param-str "")
                (path (cond
                       (link-is-url
@@ -481,8 +486,19 @@ and rewrite link paths to make blogging more seamless."
                                  ;; (message "[org-hugo-link DBG] link-search-str: %s" link-search-str)
                                  (when link-search-str
                                    (setq anchor (org-hugo--search-and-get-anchor raw-path link-search-str info)))))
-                             ;; (message "[org-hugo-link DBG] link search anchor: %S" anchor)
-                             (format "{{< relref \"%s%s\" >}}" ref anchor)))
+                             ;; (message "[org-hugo-link file.org::*Heading DBG] ref    = %s" ref)
+                             ;; (message "[org-hugo-link file.org::*Heading DBG] anchor = %s" anchor)
+                             (cond
+                              ;; Link to a post subtree.  In this case,
+                              ;; the "anchor" is actually the post's
+                              ;; slug.
+                              ((and (org-string-nw-p anchor) (not (string-prefix-p "#" anchor)))
+                               (format "{{< relref \"%s\" >}}" anchor))
+                              ;; Link to a non-post subtree, like a subheading in a post.
+                              ((or (org-string-nw-p ref) (org-string-nw-p anchor))
+                               (format "{{< relref \"%s%s\" >}}" ref anchor))
+                              (t
+                               ""))))
                           (t ;; attachments like foo.png
                            (org-hugo--attachment-rewrite-maybe path1 info)))))
                       (t
@@ -537,12 +553,6 @@ and rewrite link paths to make blogging more seamless."
 
 ;;;; Magic keyword management
 (with-eval-after-load 'ox-hugo
-  (defvar kb/org-hugo-exclude-tags
-    '("ATTACH" "project" "PROJECT" "draft"
-      "section" "series" "tag" "category"
-      "creative-writing")
-    "Tags to exclude. Look at `kb/org-hugo--tag-processing-fn-ignore-tags-maybe'.")
-
   (defun kb/find-blog-files-org ()
     "Return a list of org files which are within the blog subdirectory
 of `kb/notes-dir'."
