@@ -144,7 +144,7 @@ does."
   :custom
   (avy-all-windows nil)                 ; Scope
   (avy-case-fold-search nil)
-  (avy-single-candidate-jump nil)
+  (avy-single-candidate-jump t)
   (avy-timeout-seconds 0.3)
   (avy-style 'at-full)
   (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
