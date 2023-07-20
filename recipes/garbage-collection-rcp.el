@@ -54,6 +54,7 @@
 ;; https://www.reddit.com/r/emacs/comments/14dej62/please_help_collecting_statistics_to_optimize/.
 ;; Also see https://elpa.gnu.org/packages/emacs-gc-stats.html
 (use-package emacs-gc-stats
+  :disabled
   :custom
   ;; Optionally reset Emacs GC settings to default values (recommended)
   (emacs-gc-stats-gc-defaults 'emacs-defaults)

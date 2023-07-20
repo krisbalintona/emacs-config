@@ -29,10 +29,10 @@
 
 ;;; Native-compilations settings
 ;; Basic settings
-(setq native-comp-deferred-compilation t
+(setq native-comp-jit-compilation t
       native-comp-async-report-warnings-errors 'silent ; Show in *Warnings*  buffer but don't show buffer
-      native-comp-async-jobs-number (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1) ; Use as many cores as possible
-      )
+      native-comp-async-jobs-number
+      (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1)) ; Use as many cores as possible
 
 ;; Make sure `eln-cache' is set. Sometimes gets set to .emacs.d directory,
 ;; meaning chemacs2 gets in the way.
