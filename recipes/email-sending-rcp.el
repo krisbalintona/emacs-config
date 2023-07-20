@@ -399,21 +399,7 @@ Interactively select signature via `kb/mu4e-select-signature'."
   (mu4e-send-delay-default-delay "10m")
   (mu4e-send-delay-default-hour "8")
   (mu4e-send-delay-timer 60)
-  :config
-  (with-eval-after-load 'org-msg
-    ;; Use `mu4e-send-delay-send-and-exit' instead. Also pass prefix arg to it
-    (defun kb/org-msg-ctrl-c-ctrl-c ()
-      "Send message like `message-send-and-exit'.
-
-If the current buffer is an OrgMsg buffer and OrgMsg is
-enabled (see `org-msg-toggle'), it calls `message-send-and-exit'.
-With the universal prefix argument, it calls `message-send'."
-      (when (eq major-mode 'org-msg-edit-mode)
-        (org-msg-sanity-check)
-        (if current-prefix-arg
-            (org-msg-mua-call 'send 'mu4e-send-delay-send-and-exit current-prefix-arg)
-          (org-msg-mua-call 'send-and-exit 'mu4e-send-delay-send-and-exit current-prefix-arg))))
-    (advice-add 'org-msg-ctrl-c-ctrl-c :override 'kb/org-msg-ctrl-c-ctrl-c)))
+  (mu4e-send-delay-enable-org-msg t))
 
 ;;; email-sending-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
