@@ -30,10 +30,6 @@
      ("mon" . 43200)
      ("y" . 525960.0)))
 
-  ;; Clocking in and out
-  (org-clock-out-when-done t)
-  (org-clock-persist t)
-
   ;; Inheritance
   (org-use-tag-inheritance t)
   (org-tags-exclude-from-inheritance '("type"))
@@ -171,35 +167,7 @@ This function makes sure that dates are aligned for easy reading."
                            (format " W%02d" iso-week)
                          "")))
       (format " %-2s. %2d %s"
-              dayname day monthname)))
-  :config
-  (org-clock-persistence-insinuate)
-
-  ;; Mode line string
-  (defun kb/org-clock-get-clock-string ()
-    "Form a clock-string, that will be shown in the mode line.
-If an effort estimate was defined for the current item, use
-01:30/01:50 format (clocked/estimated).
-If not, show simply the clocked time like 01:50."
-    (let ((org-clock-heading
-           (truncate-string-to-width org-clock-heading 40 nil nil (truncate-string-ellipsis)))
-          (clocked-time (org-clock-get-clocked-time)))
-      (if org-clock-effort
-          (let* ((effort-in-minutes (org-duration-to-minutes org-clock-effort))
-                 (work-done-str
-                  (propertize (org-duration-from-minutes clocked-time)
-                              'face
-                              (if (and org-clock-task-overrun
-                                       (not org-clock-task-overrun-text))
-                                  'org-mode-line-clock-overrun
-                                'org-mode-line-clock)))
-                 (effort-str (org-duration-from-minutes effort-in-minutes)))
-            (format (propertize " [%s/%s] (%s) " 'face 'org-mode-line-clock)
-                    work-done-str effort-str org-clock-heading))
-        (format (propertize " [%s] (%s) " 'face 'org-mode-line-clock)
-                (org-duration-from-minutes clocked-time)
-                org-clock-heading))))
-  (advice-add 'org-clock-get-clock-string :override #'kb/org-clock-get-clock-string))
+              dayname day monthname))))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
@@ -312,6 +280,40 @@ If not, show simply the clocked time like 01:50."
                          (:name "" :anything t)))))
             (todo "MAYBE"
                   ((org-agenda-overriding-header "Maybes"))))))))
+
+;;; Org-clock
+(use-package org-clock
+  :demand
+  :elpaca nil
+  :after org-agenda
+  :custom
+  (org-clock-persist t)
+  (org-clock-out-when-done t)
+  (org-clock-history-length 10)
+  (org-clock-in-resume nil)
+  (org-clock-persist-query-resume t)
+  (org-clock-into-drawer t)
+  (org-clock-out-remove-zero-time-clocks t)
+  (org-clock-report-include-clocking-task t)
+  (org-show-notification-handler #'(lambda (str)
+                                      (notifications-notify
+                                       :title "Org-agenda task overrun!"
+                                       :body str
+                                       :app-name "GNU Emacs"
+                                       :urgency 'normal)))
+  ;; Mode line
+  (org-clock-string-limit 0)
+  (org-clock-heading-function 'kb/org-clock-get-heading-string)
+  :config
+  (org-clock-persistence-insinuate)
+  ;; Mode line string
+  (defun kb/org-clock-get-heading-string ()
+    "Get truncated org heading string.
+
+Same as default but truncates with `truncate-string-ellipsis'."
+    (let ((heading (org-link-display-format
+                    (org-no-properties (org-get-heading t t t t)))))
+      (truncate-string-to-width heading 40 nil nil (truncate-string-ellipsis)))))
 
 ;;; Org-habit
 (use-package org-habit
