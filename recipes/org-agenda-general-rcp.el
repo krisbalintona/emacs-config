@@ -258,7 +258,7 @@ If CLOCK-SOUND is non-nil, it overrides `org-clock-sound'."
                      (org-agenda-prefix-format
                       '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
-                     (org-agenda-skip-scheduled-if-deadline-is-shown t)
+                     (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
                      (org-deadline-warning-days 2)
                      (org-agenda-skip-scheduled-if-done t)
                      (org-agenda-skip-deadline-if-done t)
