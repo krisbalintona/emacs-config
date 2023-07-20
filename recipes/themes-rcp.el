@@ -247,7 +247,6 @@ are troublesome)."
   (mlscroll-mode))
 
 ;;;; Default mode line
-;; Based off of Prot's
 (unless (bound-and-true-p mood-line-mode)
   (setq mode-line-percent-position '(-3 "%p")
         mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
@@ -285,6 +284,27 @@ mouse-3: Toggle minor modes"
 
   (setq-default mode-line-format
                 '("%e" mode-line-front-space
+                  ;; (:eval
+                  ;;  (when (mode-line-window-selected-p)
+                  ;;    (cond
+                  ;;     ((bound-and-true-p eyebrowse-mode)
+                  ;;      (eyebrowse-mode-line-indicator))
+                  ;;     ((bound-and-true-p tab-bar-mode)
+                  ;;      ;; Snippet taken from `doom-modeline'
+                  ;;      (let* ((current-tab (tab-bar--current-tab))
+                  ;;             (tab-index (tab-bar--current-tab-index))
+                  ;;             (tab-group-name
+                  ;;              (funcall tab-bar-tab-group-function current-tab))
+                  ;;             (explicit-name (alist-get 'explicit-name current-tab))
+                  ;;             (tab-name (alist-get 'name current-tab))
+                  ;;             (mode-line-string
+                  ;;              (cond
+                  ;;               (tab-group-name tab-group-name)
+                  ;;               (explicit-name tab-name)
+                  ;;               (t (number-to-string (+ 1 tab-index))))))
+                  ;;        (concat
+                  ;;         (propertize mode-line-string 'face '(:inherit mode-line-emphasis))
+                  ;;         " "))))))
                   mode-line-client
                   mode-line-modified
                   mode-line-remote
@@ -303,27 +323,6 @@ mouse-3: Toggle minor modes"
                   (:eval
                    (when (mode-line-window-selected-p)
                      mode-line-misc-info))
-                  (:eval
-                   (when (mode-line-window-selected-p)
-                     (cond
-                      ((bound-and-true-p eyebrowse-mode)
-                       (eyebrowse-mode-line-indicator))
-                      ((bound-and-true-p tab-bar-mode)
-                       ;; Snippet taken from `doom-modeline'
-                       (let* ((current-tab (tab-bar--current-tab))
-                              (tab-index (tab-bar--current-tab-index))
-                              (tab-group-name
-                               (funcall tab-bar-tab-group-function current-tab))
-                              (explicit-name (alist-get 'explicit-name current-tab))
-                              (tab-name (alist-get 'name current-tab))
-                              (mode-line-string
-                               (cond
-                                (tab-group-name tab-group-name)
-                                (explicit-name tab-name)
-                                (t (number-to-string (+ 1 tab-index))))))
-                         (concat
-                          (propertize mode-line-string 'face '(:inherit mode-line-emphasis))
-                          " "))))))
                   (:eval kb/mode-line-modes)
                   mode-line-end-spaces)))
 
