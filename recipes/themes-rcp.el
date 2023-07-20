@@ -289,18 +289,10 @@ mouse-3: Toggle minor modes"
                   mode-line-modified
                   mode-line-remote
                   vc-mode " "
-                  (:eval                ; Taken from prot
-                   (when (and (mode-line-window-selected-p)
-                              (buffer-narrowed-p)
-                              (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
-                     (propertize "Narrow " 'face 'mode-line-emphasis)))
                   mode-line-buffer-identification " "
                   "%l "
                   (:eval
                    (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
-                  (:eval
-                   (when (and (mode-line-window-selected-p) defining-kbd-macro)
-                     (concat (propertize "KMacro" 'face 'mode-line-highlight) " ")))
                   mode-line-format-right-align
                   mode-line-process
                   (:eval
