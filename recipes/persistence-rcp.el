@@ -18,6 +18,7 @@
   (history-length 10000)
   (history-delete-duplicates t)
   (savehist-save-minibuffer-history t)
+  (savehist-autosave-interval 30)
   :config
   (dolist (var '(kill-ring
                  Info-history-list
@@ -26,12 +27,10 @@
                  shell-command-history
                  register-alist))
     (add-to-list 'savehist-additional-variables var))
+  (savehist-mode)
 
-  ;; Only `savehist-save'
-  (when (daemonp)
-    (setq savehist-autosave-interval 30)
-    (add-hook 'kill-emacs-hook #'savehist-save))
-  (savehist-mode))
+  (unless (daemonp)
+    (load savehist-file nil (not (called-interactively-p 'interactive)))))
 
 ;;; Recentf
 ;; Enable logging of recent files
