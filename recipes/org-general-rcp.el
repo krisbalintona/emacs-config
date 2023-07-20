@@ -38,6 +38,12 @@
   (org-hidden-keywords nil)
   (org-ctrl-k-protect-subtree 'error)
 
+  (org-blank-before-new-entry
+   '((heading . auto)
+     ;; Don't let Emacs make decisions about where to insert newlines
+     (plain-list-item . nil)))
+  (org-cycle-separator-lines 2)
+
   (org-return-follows-link t)
   (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
 
