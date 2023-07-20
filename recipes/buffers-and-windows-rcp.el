@@ -83,14 +83,6 @@
       (dedicated . t)
       (side . right)
       (window-width . 0.2))
-     ((lambda (buf act)
-        (or (equal (kb/buffer-major-mode buf) 'eshell-mode)
-            (string-match (rx "*" (* any) "eshell" (* any) "*" (* any))
-                          (buffer-name (get-buffer buf)))))
-      (display-buffer-reuse-mode-window
-       kb/select-buffer-in-side-window)
-      (side . right)
-      (window-width . 0.4))
      ("\\*Async Shell Command\\*"
       (kb/select-buffer-in-side-window
        display-buffer-in-direction)
@@ -311,8 +303,6 @@ If buffer-or-name is nil return current buffer's mode."
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
-     "^\\*eshell.*\\*$"
-     eshell-mode
      "^\\*shell.*\\*$"
      shell-mode
      "^\\*IPython3.*\\*$"

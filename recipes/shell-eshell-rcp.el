@@ -132,94 +132,7 @@ Info node `(eshell)Top'."
           (eshell-write-history eshell-history-file-name t)))))
   (add-hook 'eshell-post-command-hook #'eshell-append-history))
 
-;;;; Eshell-prompt
-;; Entirely taken from http://www.modernemacs.com/post/custom-eshell/
-(with-eval-after-load 'eshell
-  (require 'dash)
-  (require 's)
-
-  (defmacro with-face (STR &rest PROPS)
-    "Return STR propertized with PROPS."
-    `(propertize ,STR 'face (list ,@PROPS)))
-
-  (defmacro esh-section (NAME ICON FORM &rest PROPS)
-    "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
-    `(setq ,NAME
-           (lambda () (when ,FORM
-                   (-> ,ICON
-                       (concat esh-section-delim ,FORM)
-                       (with-face ,@PROPS))))))
-
-  (defun esh-acc (acc x)
-    "Accumulator for evaluating and concatenating esh-sections."
-    (--if-let (funcall x)
-        (if (s-blank? acc)
-            it
-          (concat acc esh-sep it))
-      acc))
-
-  (defun esh-prompt-func ()
-    "Build `eshell-prompt-function'"
-    (concat esh-header
-            (-reduce-from 'esh-acc "" eshell-funcs)
-            "\n"
-            eshell-prompt-string))
-
-  ;; Separator between esh-sections
-  (setq esh-sep " | ")  ; or " | "
-
-  ;; Separator between an esh-section icon and form
-  (setq esh-section-delim " ")
-
-  ;; Eshell prompt header
-  (setq esh-header "\n┌─")  ; or "\n┌─"
-
-  ;; Eshell prompt regexp and string. Unless you are varying the prompt by eg.
-  ;; your login, these can be the same.
-  (setq eshell-prompt-regexp "└─> λ ")   ; or "└─> "
-  (setq eshell-prompt-string "└─> λ ")   ; or "└─> "
-
-  (esh-section esh-dir
-               " \xf07c "  ;  (favicon folder)
-               (if (featurep 'shrink-path) ; This is where shrink-path is used
-                   (concat (car (shrink-path-prompt (eshell/pwd)))
-                           (cdr (shrink-path-prompt (eshell/pwd))))
-                 (abbreviate-file-name (eshell/pwd))) ; Fallback to default if no shrink-path
-               '(:foreground "gold" :weight bold))
-
-  (require 'magit) ; Need `magit' to load `magit-get-current-branch'
-  (esh-section esh-git
-               "ᛦ"  ;  (git icon)
-               (magit-get-current-branch)
-               '(:foreground "pink"))
-
-  ;; (esh-section esh-python
-  ;;              "\xe928"  ;  (python icon)
-  ;;              pyvenv-virtual-env-name)
-
-  (esh-section esh-clock
-               "\xf017 "  ;  (clock icon)
-               (format-time-string "%H:%M" (current-time))
-               '(:foreground "forest green"))
-
-  ;; Below I implement a "prompt number" section
-  (setq esh-prompt-num 0)
-  (add-hook 'eshell-exit-hook (lambda () (setq esh-prompt-num 0)))
-  (advice-add 'eshell-send-input :before
-                                 (lambda (&rest args) (setq esh-prompt-num (cl-incf esh-prompt-num))))
-
-  (esh-section esh-num
-               "\xf0c9 "  ;  (list icon)
-               (number-to-string esh-prompt-num)
-               '(:foreground "brown"))
-
-  ;; Choose which eshell-funcs to enable
-  (setq eshell-funcs (list esh-dir esh-git esh-clock esh-num))
-
-  ;; Enable the new eshell prompt
-  (setq eshell-prompt-function 'esh-prompt-func))
-
-;;;; Consult with eshell
+;;;; `consult-outine' with eshell
 (with-eval-after-load 'consult
   ;; For showing eshell sources in `consult-buffer'. Taken from
   ;; https://github.com/minad/consult#multiple-sources
@@ -247,21 +160,11 @@ Info node `(eshell)Top'."
   ;; Taken from https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
   (add-hook 'eshell-mode-hook (lambda () (setq outline-regexp eshell-prompt-regexp))))
 
-;;; Esh-opt
-(use-package esh-opt ; An eshell module that needs to be loaded
-  :elpaca nil
-  :after eshell
-  :custom
-  (eshell-history-buffer-when-process-dies t)
-  (eshell-visual-commands '("htop" "vi" "vim" "nvim" "btm")) ; Commands to run in term buffer to properly display from eshell
-  )
-
 ;;; Shrink-path
-;; Truncate eshell directory path (has to be configured in mycustom eshell
+;; Truncate eshell directory path (has to be configured in my custom eshell
 ;; prompt)
 (use-package shrink-path
-  :after eshell
-  )
+  :after eshell)
 
 ;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell

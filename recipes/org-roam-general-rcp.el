@@ -253,8 +253,7 @@ Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
 
 (general-define-key
  :keymaps 'org-mode-map
- "C-c p t" '(kb/org-toggle-properties :wk "Toggle property drawer visibility")
- )
+ "C-c p t" '(kb/org-toggle-properties :wk "Toggle property drawer visibility"))
 
 ;;;; Find a node which links to any other given node
 ;; From
