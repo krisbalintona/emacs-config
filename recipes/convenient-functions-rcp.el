@@ -62,6 +62,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
     (kb/tabular-magic))
    ((eq major-mode 'org-mode)
     (let* ((save-silently t))           ; Don't write to echo area when saving
+      (kb/org-add-blank-lines)
       (org-align-tags t)
       (kb/format-buffer-indentation--base)
       (when (buffer-file-name)
@@ -192,7 +193,6 @@ current subtree."
         (org-with-wide-buffer
          (funcall-interactively 'unpackaged/org-add-blank-lines '(4))) ; Emulate universal argument
         ))))
-(add-hook 'before-save-hook #'kb/org-add-blank-lines)
 
 ;;; kb/draft-subtree-to-file
 ;; Inspired by Palimpsest: https://github.com/danielsz/Palimpsest
