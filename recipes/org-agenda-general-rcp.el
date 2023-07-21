@@ -225,22 +225,17 @@ This function makes sure that dates are aligned for easy reading."
                        '((:discard (:scheduled t))
                          (:name "" :priority>= "B")
                          (:discard (:anything t))))))
-            (alltodo ""
-                     ((org-agenda-overriding-header "Nearby deadlines")
-                      (org-agenda-show-inherited-tags t)
-                      (org-agenda-dim-blocked-tasks t)
-                      (org-agenda-sorting-strategy
-                       '((todo time-up habit-down priority-down deadline-up todo-state-up)))
-                      (org-agenda-prefix-format
-                       '((todo . "%2i %-14c%?-12t %-7s %-7e %b")))
-                      (org-super-agenda-groups
-                       `((:name ""
-                          :deadline (before
-                                     ;; See https://stackoverflow.com/a/67741229
-                                     ,(-let* (((sec minute hour day month year dow dst utcoff)
-                                               (decode-time (+ (* 3 86400) (float-time))))) ; 4 days ahead
-                                        (format "%d-%02d-%02d" year month day)))) ; Before X days
-                         (:discard (:anything t))))))))
+            (agenda ""
+                    ((org-agenda-overriding-header "Upcoming deadlines")
+                     (org-agenda-start-day "+1d")
+                     (org-agenda-span 14)
+                     (org-agenda-show-inherited-tags t)
+                     (org-agenda-dim-blocked-tasks t)
+                     (org-agenda-sorting-strategy
+                      '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
+                     (org-agenda-prefix-format
+                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
+                     (org-agenda-entry-types '(:deadline))))))
           ("p" "Planning"
            ((tags-todo "+project"
                        ((org-agenda-overriding-header "Projects")
