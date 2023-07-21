@@ -341,7 +341,10 @@ progress. This is called by the timer `good-scroll--timer' every
   (pulsar-iterations 3)
   (pulsar-delay 0.1)
   :init
-  (pulsar-global-mode))
+  (pulsar-global-mode)
+  :config
+  (add-to-list 'pulsar-pulse-functions 'scroll-up-command)
+  (add-to-list 'pulsar-pulse-functions 'scroll-down-command))
 
 ;;; Pocket-reader
 ;; View my Pocket

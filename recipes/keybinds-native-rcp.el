@@ -67,23 +67,7 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
       (funcall indent-line-function))))
 
 ;;;; Scrolling
-(defun kb/scroll-up-command (&optional _arg)
-  (interactive)
-  (let ((lines (round (/ (window-height) 2))))
-    (scroll-up-command lines)))
-
-(defun kb/scroll-down-command (&optional _arg)
-  (interactive)
-  (let ((lines (round (/ (window-height) 2))))
-    (scroll-down-command lines)))
-
-(with-eval-after-load 'pulsar
-  (add-to-list 'pulsar-pulse-functions 'kb/scroll-up-command)
-  (add-to-list 'pulsar-pulse-functions 'kb/scroll-down-command))
-
 (general-define-key
- ;; [remap scroll-up-command] 'kb/scroll-up-command
- ;; [remap scroll-down-command] 'kb/scroll-down-command
  "H-P" 'scroll-down-line
  "H-N" 'scroll-up-line)
 
