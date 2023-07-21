@@ -12,6 +12,10 @@
 ;;; Ox (org-export)
 (use-package ox
   :elpaca nil
+  ;; Call after `org' since some of the options below are from `org', not
+  ;; `org-export', so they will be overwritten if this use-package loads before
+  ;; `org' does
+  :after org
   :custom
   (org-export-coding-system 'utf-8)
   (org-export-with-tags t)
