@@ -468,7 +468,11 @@ displayed."
   (logos-outlines-are-pages t)
   (logos-outline-regexp-alist
    `((emacs-lisp-mode . ,(rx bol (or (literal ";;; ") ?)))
-     (org-mode . ,(rx bol (or (literal "* ") ?))))))
+     (org-mode . ,(rx bol (or (literal "* ") ?)))))
+  (logos-outline-regexp-alist
+   `((emacs-lisp-mode . "^\\(?:;;; \\|\\)")
+     (org-mode . "^\\(?:\\* \\|\\)")
+     (org-agenda-mode . ,(rx bol (literal (char-to-string org-agenda-block-separator)))))))
 
 ;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
