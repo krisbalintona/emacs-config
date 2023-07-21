@@ -436,22 +436,23 @@ A dependency is defined by `org-depend’s `BLOCKER’ property. IDs
 are created in the todo dependency with `org-id-get-create’.
 MATCH is a query sent to `org-map-entries’."
       (interactive)
-      (let ((current-heading (org-get-heading))
-            new-id dependency)
-        (if (not (org-entry-is-todo-p))
-            ;; Error if not currently on an `org-todo'
-            (error "Not on an `org-todo’ heading!")
-          ;; Add and ID to the dependency if necessary
-          (save-excursion
-            (consult-org-agenda (or match "/-DONE-CANCELED"))
-            (setq dependency (org-get-heading))
-            (when (equal current-heading dependency)
-              (error "Cannot depend on the same `org-todo’!"))
-            (setq new-id (org-id-get-create)))
-          ;; Modify the BLOCKER property of the current todo
-          (kb/consult-org-depend--add-id new-id)
-          (message "‘%s’ added as a dependency to this todo"
-                   (substring-no-properties dependency)))))
+      (save-window-excursion
+        (let ((current-heading (org-get-heading))
+              new-id dependency)
+          (if (not (org-entry-is-todo-p))
+              ;; Error if not currently on an `org-todo'
+              (error "Not on an `org-todo’ heading!")
+            ;; Add and ID to the dependency if necessary
+            (save-excursion
+              (consult-org-agenda (or match "/-DONE-CANCELED"))
+              (setq dependency (org-get-heading))
+              (when (equal current-heading dependency)
+                (error "Cannot depend on the same `org-todo’!"))
+              (setq new-id (org-id-get-create)))
+            ;; Modify the BLOCKER property of the current todo
+            (kb/consult-org-depend--add-id new-id)
+            (message "‘%s’ added as a dependency to this todo"
+                     (substring-no-properties dependency))))))
 
     (defun kb/consult-org-agenda-depend (&optional match)
       "Create a dependency for the `org-agenda’ item at point.
