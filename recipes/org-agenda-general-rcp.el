@@ -13,6 +13,10 @@
 ;;; Org-agenda
 (use-package org-agenda
   :elpaca nil
+  ;; Call after `org' since some of the options below are from `org', not
+  ;; `org-export', so they will be overwritten if this use-package loads before
+  ;; `org' does
+  :after org
   :hook ((org-agenda-finalize . (lambda () (goto-char (point-min))))
          (org-capture-before-finalize . kb/add-property-with-date-captured))
   :general
