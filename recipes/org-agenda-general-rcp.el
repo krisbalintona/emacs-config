@@ -180,6 +180,15 @@ This function makes sure that dates are aligned for easy reading."
   :custom
   (org-super-agenda-hide-empty-groups t)
   (org-super-agenda-keep-order t)
+  :init
+  (defun kb/org-agenda-breadcrumb (len)
+    "Formatted breadcrumb for current `org-agenda' item."
+    (org-with-point-at (org-get-at-bol 'org-marker)
+      (let ((s (org-format-outline-path (org-get-outline-path)
+                                        (1- (frame-width))
+                                        nil org-agenda-breadcrumbs-separator)))
+        (if (equal "" s) ""
+          (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
   (org-super-agenda-mode)
   (setq org-agenda-custom-commands
@@ -189,9 +198,10 @@ This function makes sure that dates are aligned for easy reading."
                       (org-agenda-dim-blocked-tasks nil)
                       (org-super-agenda-groups
                        '((:discard (:not (:and (:children t :todo "PROG"))))
-                         (:name "Dated" :scheduled t)
-                         (:name "Undated" :scheduled nil)
-                         (:discard (:anything t))))))
+                         (:name "Dated"
+                          :scheduled t
+                          :deadline t)
+                         (:name "Undated" :anything t)))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Waiting")))
             (agenda ""
@@ -201,8 +211,9 @@ This function makes sure that dates are aligned for easy reading."
                       '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
                      (org-agenda-start-day "+0d")
                      (org-agenda-span 1)
+                     (org-agenda-remove-tags t)
                      (org-agenda-prefix-format
-                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
+                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?s%?-10t")))
                      (org-agenda-scheduled-leaders '("" "%2dx: "))
                      (org-agenda-deadline-leaders '("" "In %3d d.: " "%2d d. ago: "))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
@@ -212,16 +223,20 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-dim-blocked-tasks t)
                      (org-agenda-include-diary t)
                      (org-agenda-insert-diary-extract-time t)
-                     (org-agenda-skip-function
-                      '(org-agenda-skip-entry-if 'nottodo '("PROG" "ACTIVE" "WAITING")))))
+                     (org-super-agenda-groups
+                      '((:name "Individual"
+                         :not (:children t))
+                        (:name "Projects"
+                         :children t)
+                        (:discard (:anything t))))))
             (alltodo ""
                      ((org-agenda-overriding-header "Expedited")
                       (org-super-agenda-groups
                        '((:discard (:scheduled t))
                          (:name ""
-                          :and (:not (:scheduled today :scheduled future)
-                                :not (:and (:children t :todo "PROG"))
-                                :todo "PROG"))
+                          :and (:not (:scheduled today)
+                                :not (:and (:children t :todo ("PROG" "ACTIVE")))
+                                :todo ("PROG" "ACTIVE")))
                          (:discard (:anything t))))))
             (alltodo ""
                      ((org-agenda-overriding-header "High priority but unscheduled")
@@ -245,6 +260,8 @@ This function makes sure that dates are aligned for easy reading."
                        ((org-agenda-overriding-header "Projects")
                         (org-agenda-show-inherited-tags t)
                         (org-agenda-dim-blocked-tasks nil)
+                        (org-agenda-prefix-format
+                         '((tags . "%-25(kb/org-agenda-breadcrumb 21)%?s")))
                         (org-super-agenda-groups
                          '((:discard (:todo "PROG"))
                            (:name "" :children t)
@@ -257,7 +274,7 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-entry-types
                       '(:deadline :scheduled :timestamp :sexp))
                      (org-agenda-prefix-format
-                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
+                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?s%?-10t")))
                      (org-agenda-scheduled-leaders '("" "%2dx: "))
                      (org-agenda-deadline-leaders '("" "In %3d d.: " "%2d d. ago: "))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
@@ -270,15 +287,22 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-insert-diary-extract-time t)))
             (alltodo ""
                      ((org-agenda-overriding-header "Unscheduled")
+                      (org-agenda-prefix-format
+                       '((todo . "%-25(kb/org-agenda-breadcrumb 21)%?s")))
                       (org-super-agenda-groups
-                       '((:discard (:todo ("PROG" "WAITING" "MAYBE")))
+                       '((:discard (:todo ("PROG" "ACTIVE" "WAITING" "MAYBE")))
                          (:discard (:not (:scheduled nil)))
                          ;; FIXME 2023-07-20: Would like to use :auto-priority,
                          ;; but this is erroring for me. Perhaps the issue is on
                          ;; the package side, e.g., unsupported version of org?
+                         (:discard (:children t))
                          (:name "" :anything t)))))
             (todo "MAYBE"
-                  ((org-agenda-overriding-header "Maybes"))))))))
+                  ((org-agenda-overriding-header "Maybes")
+                   (org-agenda-dim-blocked-tasks 'invisible)
+                   (org-super-agenda-groups
+                    '((:discard (:scheduled t))
+                      (:name "" :anything t))))))))))
 
 ;;; Org-clock
 (use-package org-clock
