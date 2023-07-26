@@ -16,7 +16,7 @@
   'variable-pitch-mode
   'visual-line-mode
   '(lambda ()
-      (eldoc-mode -1))
+           (eldoc-mode -1))
   :general
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link
@@ -48,14 +48,14 @@
   (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
 
   (org-file-apps
-   '((auto-mode . emacs)
-     (directory . emacs)
+   '((directory . emacs)
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . default)
      ("\\.pdf\\'" . default)
-     ;; My own
      ("\\.docx\\'" . system)
-     ("\\.odt\\'" . system)))
+     ("\\.odt\\'" . system)
+     ;; Default to `auto-mode-alist'
+     (auto-mode . emacs)))
 
   (org-fold-catch-invisible-edits 'show)
   (org-edit-timestamp-down-means-later t)
@@ -183,17 +183,8 @@ have `org-warning' face."
   :elpaca nil
   :custom
   (org-refile-targets
-   `((org-agenda-files . (:tag . "type"))
-     (org-agenda-files . (:tag . "project"))
-     (,(directory-files-recursively (expand-file-name "garden" kb/notes-dir) (rx anychar)) . (:maxlevel . 2))
-     (kb/find-blog-files-org . (:level . 0))
-     (kb/find-blog-files-org . (:tag . "project"))
-     ;; OPTIMIZE 2023-01-08: Right now I manually add a refile target entry for
-     ;; each of my working todos. Is there a way to avoid this?
-     (kb/find-blog-files-org . (:todo . "ACTIVE"))
-     (kb/find-blog-files-org . (:todo . "TODO"))
-     (kb/find-blog-files-org . (:todo . "MAYBE"))
-     (nil . (:level . 3))))
+   `((,(directory-files-recursively (expand-file-name "garden" kb/notes-dir) (rx anychar)) . (:maxlevel . 2))
+     (nil . (:maxlevel . 2))))
   (org-refile-use-cache nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
