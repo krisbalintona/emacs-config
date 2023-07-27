@@ -74,33 +74,21 @@
 \\tableofcontents
 \\newpage")
   (org-export-with-toc nil)
-  (org-latex-default-packages-alist
-   '(("AUTO" "inputenc" t
-      ("pdflatex"))
-     ("T1" "fontenc" t
-      ("pdflatex"))
-     ("" "graphicx" t)
-     ("" "longtable" nil)
-     ("" "wrapfig" nil)
-     ("" "rotating" nil)
-     ("normalem" "ulem" t)
-     ("" "amsmath" t)
-     ("" "amssymb" t)
-     ("" "capt-of" nil)
-     ("" "hyperref" nil)
-     ("" "lipsum" nil)                  ; Sample text
-     ))
+  (org-latex-packages-alist
+   '(("" "lipsum" nil)))                ; Sample text
   (org-latex-hyperref-template
    "\\hypersetup{
-  pdfauthor={%a},
-  pdftitle={%t},
-  pdfkeywords={%k},
-  pdfsubject={%d},
-  pdfcreator={%c},
-  pdflang={%L}}\n")
+pdfauthor={%a},
+pdftitle={%t},
+pdfkeywords={%k},
+pdfsubject={%d},
+pdfcreator={%c},
+pdflang={%L}
+colorlinks={true},
+hidelinks={true}}\n")                   ; Hide hyperlinks
   :config
-  (setf (alist-get "mla" org-latex-classes nil nil #'string=)
-        `(,(concat "% * Preamble
+  (add-to-list 'org-latex-classes
+               `("mla" ,(concat "% * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
 % * Default packages?
@@ -108,14 +96,13 @@
 
 % ** MLA package
 \\usepackage{" (directory-file-name org-directory) "/latex/packages/mla}\n")
-          ("\\section{%s}" . "\\section*{%s}")
-          ("\\subsection{%s}" . "\\subsection*{%s}")
-          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-          ("\\paragraph{%s}" . "\\paragraph*{%s}")
-          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-          )
-        (alist-get "cms" org-latex-classes nil nil #'string=)
-        `(,(concat "% * Preamble
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               `("cms" ,(concat "% * Preamble
 \\documentclass[12pt,letterpaper]{article}
 
 % * Default packages?
@@ -123,14 +110,13 @@
 
 % ** CMS package
 \\usepackage{" (directory-file-name org-directory) "/latex/packages/chicago-manual-style}\n")
-          ("\\section{%s}" . "\\section*{%s}")
-          ("\\subsection{%s}" . "\\subsection*{%s}")
-          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-          ("\\paragraph{%s}" . "\\paragraph*{%s}")
-          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-          )
-        (alist-get "review" org-latex-classes nil nil #'string=)
-        `(,(concat "% * Preamble
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               `("review" ,(concat "% * Preamble
 \\documentclass[a4paper,landscape]{article}
 
 % * Default packages?
@@ -138,13 +124,11 @@
 
 % ** Review package
 \\usepackage{" org-directory "latex/packages/review}\n")
-          ("\\section{%s}" . "\\section*{%s}")
-          ("\\subsection{%s}" . "\\subsection*{%s}")
-          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-          ("\\paragraph{%s}" . "\\paragraph*{%s}")
-          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-          ))
-  )
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;;;; Custom org-export latex backend
 ;; Support more file keywords; used for my papers
@@ -288,7 +272,7 @@ Uses my 'latex-paper' backend. See the original
   (org-export-define-derived-backend 'latex-paper 'latex
     :translate-alist '((template . kb/org-latex-template))
     :menu-entry
-    '(?p "Export to LaTeX (Paper)"
+    '(?j "Export to LaTeX (Paper)"
          ((?L "As LaTeX buffer" org-latex-paper-export-as-latex)
           (?l "As LaTeX file" org-latex-paper-export-to-latex)
           (?p "As PDF file" org-latex-paper-export-to-pdf)
@@ -329,7 +313,8 @@ Uses my 'latex-paper' backend. See the original
 ;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
-  :commands org-export-dispatch
+  :after ox
+  :demand
   :ensure-system-package pandoc)
 
 ;;; org-export-rcp.el ends here
