@@ -14,12 +14,11 @@
 ;; Built-in citations in org-mode
 (use-package oc
   :elpaca nil
-  :general (:keymaps 'org-mode-map
-            [remap citar-insert-citation] '(org-cite-insert :wk "Insert citation"))
+  :general (:keymaps 'org-mode-map [remap citar-insert-citation] 'org-cite-insert)
   :custom
   (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (file-name-concat user-emacs-directory "locales/"))
-  (org-cite-csl-styles-dir (expand-file-name "~/Documents/Zotero/styles/"))
+  (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
   (org-cite-export-processors
    '((md . (csl "chicago-fullnote-bibliography.csl"))   ; Footnote reliant
      (latex biblatex)                                   ; For humanities
@@ -33,7 +32,8 @@
   :config
   ;; NOTE 2023-07-14: Require all `oc-*' packages so that I don't run into the
   ;; issue where the package associated with a style (e.g. `oc-biblatex' for the
-  ;; biblatex style) in `org-cite-export-processors' is used
+  ;; biblatex style) in `org-cite-export-processors' is used prior to its
+  ;; loading
   (require 'oc-natbib)
   (require 'oc-csl)
   (require 'oc-basic)
