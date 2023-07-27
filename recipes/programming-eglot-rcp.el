@@ -18,7 +18,8 @@
                                  ;; Use `eglot--setq-saving' to restore original
                                  ;; values. Make sure "eldoc," or a similar
                                  ;; regexp, isn't in `eglot-stay-out-of'
-                                 (eglot--setq-saving eldoc-box-cleanup-interval 2)
+                                 (when (bound-and-true-p eldoc-box-hover-mode)
+                                  (eglot--setq-saving eldoc-box-cleanup-interval 2))
                                  (eglot--setq-saving eldoc-echo-area-use-multiline-p nil)))
          (eglot-managed-mode . (lambda ()
                                  "Add `eglot-flymake-backend' to the beginning of
