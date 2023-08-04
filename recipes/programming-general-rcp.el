@@ -93,19 +93,20 @@ punctuation."
     ;; appear in any calls to `alt-comment-dwim-dwim'.
     (setq hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
 
-;;;; Highlight-indent-guides
+;;;; Indent-bars
 ;; Show indicator for indentation levels (like in VS Code)
-(use-package highlight-indent-guides
-  :disabled
-  :diminish
+(use-package indent-bars
+  :elpaca (:type git :host github :repo "jdtsmith/indent-bars")
   :ghook
   'prog-mode-hook
   'conf-mode-hook
-  :gfhook 'highlight-indent-guides-auto-set-faces ; Set faces based on theme
   :custom
-  (highlight-indent-guides-method 'column)
-  (highlight-indent-guides-character ?⏐)
-  (highlight-indent-guides-suppress-auto-error t))
+  (indent-bars-pattern ".")
+  (indent-bars-width-frac 0.25)
+  (indent-bars-pad-frac 0.25)
+  (indent-bars-color-by-depth nil)
+  (indent-bars-highlight-current-depth '(:face default :blend 0.4))
+  (indent-bars-display-on-blank-lines t))
 
 ;;;; Rainbow-mode
 ;; Colorify color codes
