@@ -69,7 +69,7 @@
 (require 'org-notes-other-rcp)
 (require 'org-agenda-general-rcp)
 ;; (require 'org-agenda-views-rcp)
-;; (require 'org-agenda-other-rcp)
+(require 'org-agenda-other-rcp)
 
 ;;;; Other major modes
 (require 'latex-general-rcp)
