@@ -29,7 +29,7 @@
   :custom
   (browse-url-browser-function 'browse-url-generic) ; Primary browser
   (browse-url-secondary-browser-function 'eww-browse-url) ; Secondary browser
-  (browse-url-generic-program (executable-find (getenv "BROWSER")))
+  (browse-url-generic-program (executable-find "firefox"))
   (browse-url-generic-args (list "--new-window")) ; Opens new Firefox window (i.e. "frame")
   (browse-url-new-window-flag nil) ; NOTE 2023-07-08: Not sufficient for Firefox to open new frame
   (browse-url-handlers
