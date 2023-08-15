@@ -397,8 +397,9 @@ have `org-warning' face."
   :custom
   (org-modern-hide-stars nil)           ; Adds extra indentation
   (org-modern-label-border 'auto)
-  (org-modern-timestamp t)
+  (org-modern-todo nil)
   (org-modern-keyword nil)
+  (org-modern-timestamp t)
   (org-modern-table t)
   (org-modern-table-vertical 1)
   (org-modern-table-horizontal 0)
