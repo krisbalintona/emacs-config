@@ -202,10 +202,30 @@ This function makes sure that dates are aligned for easy reading."
                           :scheduled t
                           :deadline t)
                          (:name "Undated" :anything t)))))
+            (alltodo ""
+                     ((org-agenda-overriding-header "High priority but unscheduled")
+                      (org-super-agenda-groups
+                       '((:discard (:todo ("PROG" "ACTIVE" "WAITING")))
+                         (:discard (:scheduled t))
+                         (:discard (:children t))
+                         (:name ""
+                          :priority>= "B")
+                         (:discard (:anything t))))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Unscheduled waiting")
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'scheduled))))
+            (alltodo ""
+                     ((org-agenda-overriding-header "Expedited")
+                      (org-agenda-prefix-format
+                      '((todo . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?-10t")))
+                      (org-super-agenda-groups
+                       '((:discard (:scheduled t))
+                         (:name ""
+                          :and (:not (:scheduled today)
+                                :not (:and (:children t :todo ("PROG" "ACTIVE")))
+                                :todo ("PROG" "ACTIVE")))
+                         (:discard (:anything t))))))
             (agenda ""
                     ((org-agenda-overriding-header "Tasks")
                      (org-agenda-show-inherited-tags t)
@@ -226,27 +246,11 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-include-diary t)
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
-                      '((:name "Orphans"
-                         :not (:children t))
-                        (:name "Projects"
+                      '((:name "Projects"
                          :children t)
+                        (:name "Orphans"
+                         :not (:children t))
                         (:discard (:anything t))))))
-            (alltodo ""
-                     ((org-agenda-overriding-header "Expedited")
-                      (org-super-agenda-groups
-                       '((:discard (:scheduled t))
-                         (:name ""
-                          :and (:not (:scheduled today)
-                                :not (:and (:children t :todo ("PROG" "ACTIVE")))
-                                :todo ("PROG" "ACTIVE")))
-                         (:discard (:anything t))))))
-            (alltodo ""
-                     ((org-agenda-overriding-header "High priority but unscheduled")
-                      (org-super-agenda-groups
-                       '((:name ""
-                          :and (:not (:scheduled t)
-                                :priority>= "B"))
-                         (:discard (:anything t))))))
             (agenda ""
                     ((org-agenda-overriding-header "Upcoming deadlines")
                      (org-agenda-start-day "+1d")
