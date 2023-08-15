@@ -97,9 +97,11 @@ punctuation."
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package indent-bars
   :elpaca (:type git :host github :repo "jdtsmith/indent-bars")
-  :ghook
-  'prog-mode-hook
-  'conf-mode-hook
+  ;; OPTIMIZE 2023-08-15: Have to add to `after-init-hook' because of issues
+  ;; with daemon
+  :hook (elpaca-after-init . (lambda ()
+                               (dolist (hook '(prog-mode-hook conf-mode-hook))
+                                 (add-hook hook 'indent-bars-mode))))
   :custom
   (indent-bars-pattern ".")
   (indent-bars-width-frac 0.25)
