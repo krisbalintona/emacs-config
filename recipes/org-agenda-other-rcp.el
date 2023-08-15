@@ -106,8 +106,10 @@ See `kb/consult-org-depend’."
 ;;; Org-gcal
 (use-package plstore                    ; Dependency
   :elpaca nil
-  :custom
-  (plstore-cache-passphrase-for-symmetric-encryption t))
+  :config
+  ;; Don't get prompted for password so much. Has to be with `setq' since it
+  ;; isn't a customizable variable. See https://github.com/kidd/org-gcal.el#note
+  (setq plstore-cache-passphrase-for-symmetric-encryption t))
 (use-package org-gcal
   :custom
   ;; NOTE 2023-01-22: If syncing broke for some reason, try
