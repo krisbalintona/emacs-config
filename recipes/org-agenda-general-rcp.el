@@ -215,9 +215,9 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-span 1)
                      (org-agenda-remove-tags t)
                      (org-agenda-prefix-format
-                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?s%?-10t")))
-                     (org-agenda-scheduled-leaders '("" "%2dx: "))
-                     (org-agenda-deadline-leaders '("" "In %3d d.: " "%2d d. ago: "))
+                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-10t")))
+                     (org-agenda-scheduled-leaders '("" "%2dx:"))
+                     (org-agenda-deadline-leaders '("" "In %3d d.:" "%2d d. ago:"))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
                      (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
                      (org-habit-show-all-today nil)
@@ -277,7 +277,7 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-entry-types
                       '(:deadline :scheduled :timestamp :sexp))
                      (org-agenda-prefix-format
-                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?s%?-10t")))
+                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-10t")))
                      (org-agenda-scheduled-leaders '("" "%2dx: "))
                      (org-agenda-deadline-leaders '("" "In %3d d.: " "%2d d. ago: "))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
@@ -291,7 +291,7 @@ This function makes sure that dates are aligned for easy reading."
             (alltodo ""
                      ((org-agenda-overriding-header "Unscheduled")
                       (org-agenda-prefix-format
-                       '((todo . "%-25(kb/org-agenda-breadcrumb 21)%?s")))
+                       '((todo . "%-25(kb/org-agenda-breadcrumb 21)%-5s")))
                       (org-super-agenda-groups
                        '((:discard (:todo ("PROG" "ACTIVE" "WAITING" "MAYBE")))
                          (:discard (:not (:scheduled nil)))
