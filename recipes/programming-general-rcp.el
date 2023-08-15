@@ -159,9 +159,9 @@ punctuation."
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
+  ("C-x B" 'consult-buffer)
   ;; Put remaps here
-  ([remap switch-to-buffer] '(consult-buffer :wk "Consult buffer")
-   [remap switch-to-buffer-other-window] 'consult-buffer-other-window
+  ([remap switch-to-buffer-other-window] 'consult-buffer-other-window
    [remap bookmark-jump] 'consult-bookmark
    [remap yank-pop] 'consult-yank-pop
    [remap repeat-complex-command] 'consult-complex-command
