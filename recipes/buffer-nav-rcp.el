@@ -237,12 +237,6 @@ does."
 ;;; Imenu
 (use-package imenu
   :elpaca nil
-  :hook (emacs-lisp-mode . (lambda ()
-                             ;; Copied from
-                             ;; https://gist.github.com/jordonbiondo/6385874a70420b05de18
-                             (add-to-list 'imenu-generic-expression
-                                          '("Use-packages"
-                                            "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2))))
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
   (imenu-auto-rescan t)
