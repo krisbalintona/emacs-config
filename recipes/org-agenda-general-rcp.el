@@ -203,7 +203,9 @@ This function makes sure that dates are aligned for easy reading."
                           :deadline t)
                          (:name "Undated" :anything t)))))
             (todo "WAITING"
-                  ((org-agenda-overriding-header "Waiting")))
+                  ((org-agenda-overriding-header "Unscheduled waiting")
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'scheduled))))
             (agenda ""
                     ((org-agenda-overriding-header "Tasks")
                      (org-agenda-show-inherited-tags t)
@@ -224,7 +226,7 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-include-diary t)
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
-                      '((:name "Individual"
+                      '((:name "Orphans"
                          :not (:children t))
                         (:name "Projects"
                          :children t)
@@ -241,8 +243,9 @@ This function makes sure that dates are aligned for easy reading."
             (alltodo ""
                      ((org-agenda-overriding-header "High priority but unscheduled")
                       (org-super-agenda-groups
-                       '((:discard (:scheduled t))
-                         (:name "" :priority>= "B")
+                       '((:name ""
+                          :and (:not (:scheduled t)
+                                :priority>= "B"))
                          (:discard (:anything t))))))
             (agenda ""
                     ((org-agenda-overriding-header "Upcoming deadlines")
