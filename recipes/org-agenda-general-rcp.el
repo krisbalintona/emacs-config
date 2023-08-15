@@ -36,7 +36,7 @@
 
   ;; Inheritance
   (org-use-tag-inheritance t)
-  (org-tags-exclude-from-inheritance '("type"))
+  (org-tags-exclude-from-inheritance '("project"))
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
   (org-agenda-show-inherited-tags t)
 
@@ -197,7 +197,8 @@ This function makes sure that dates are aligned for easy reading."
                      ((org-agenda-overriding-header "Current projects")
                       (org-agenda-dim-blocked-tasks nil)
                       (org-super-agenda-groups
-                       '((:discard (:not (:and (:children t :todo "PROG"))))
+                       '((:discard (:not (:tag "project")))
+                         (:discard (:not (:todo "PROG")))
                          (:name "Dated"
                           :scheduled t
                           :deadline t)
@@ -207,7 +208,7 @@ This function makes sure that dates are aligned for easy reading."
                       (org-super-agenda-groups
                        '((:discard (:todo ("PROG" "ACTIVE" "WAITING")))
                          (:discard (:scheduled t))
-                         (:discard (:children t))
+                         (:discard (:tag "project"))
                          (:name ""
                           :priority>= "B")
                          (:discard (:anything t))))))
@@ -218,12 +219,12 @@ This function makes sure that dates are aligned for easy reading."
             (alltodo ""
                      ((org-agenda-overriding-header "Expedited")
                       (org-agenda-prefix-format
-                      '((todo . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?-10t")))
+                       '((todo . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?-10t")))
                       (org-super-agenda-groups
                        '((:discard (:scheduled t))
                          (:name ""
                           :and (:not (:scheduled today)
-                                :not (:and (:children t :todo ("PROG" "ACTIVE")))
+                                :not (:tag "project")
                                 :todo ("PROG" "ACTIVE")))
                          (:discard (:anything t))))))
             (agenda ""
@@ -247,10 +248,9 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
                       '((:name "Projects"
-                         :children t)
+                         :tag "project")
                         (:name "Orphans"
-                         :not (:children t))
-                        (:discard (:anything t))))))
+                         :anything t)))))
             (agenda ""
                     ((org-agenda-overriding-header "Upcoming deadlines")
                      (org-agenda-start-day "+1d")
@@ -271,7 +271,8 @@ This function makes sure that dates are aligned for easy reading."
                          '((tags . "%-25(kb/org-agenda-breadcrumb 21)%?s")))
                         (org-super-agenda-groups
                          '((:discard (:todo "PROG"))
-                           (:name "" :children t)
+                           (:name ""
+                            :tag "project")
                            (:discard (:anything t))))))
             (agenda ""
                     ((org-agenda-overriding-header "Timeline")
@@ -309,7 +310,8 @@ This function makes sure that dates are aligned for easy reading."
                    (org-agenda-dim-blocked-tasks 'invisible)
                    (org-super-agenda-groups
                     '((:discard (:scheduled t))
-                      (:name "" :anything t))))))))))
+                      (:name ""
+                       :anything t))))))))))
 
 ;;; Org-clock
 (use-package org-clock
