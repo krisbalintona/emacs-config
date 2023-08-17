@@ -10,7 +10,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 (require 'use-package-rcp)
-(require 'keybinds-general-rcp)
 
 ;;; Font famlies
 (defvar kb/themes-default-font
@@ -101,8 +100,10 @@
 `kb/proper-load-theme-dark'.")
 
 ;;; Function definitions
-(defun kb/themes-setup-base-faces ()
-  "Set up the default, fixed-pitch, and variable-pitch faces."
+(defun kb/themes-setup-base-faces (&optional frame)
+  "Set up the default, fixed-pitch, and variable-pitch faces in FRAME."
+  (setq frame (or frame (selected-frame)))
+  (select-frame frame)
   (set-face-attribute 'default nil
                       :family kb/themes-default-font
                       :height 140)
@@ -120,9 +121,10 @@
                       ;; :height 113)      ; JetBrainsMono Nerd Font
                       :height 117)      ; Iosevka Aile
   (set-face-attribute 'mode-line-inactive nil
-                      :inherit 'mode-line))
-;; Set faces properly for the first frame
-(general-add-hook 'server-after-make-frame-hook #'kb/themes-setup-base-faces t nil t)
+                      :inherit 'mode-line)
+  (remove-hook 'after-make-frame-functions #'kb/themes-setup-base-faces))
+(add-hook 'after-make-frame-functions #'kb/themes-setup-base-faces)
+(kb/themes-setup-base-faces)            ; For non-daemon frames
 
 (defun kb/ensure-themes-loaded ()
   "Ensure that the themes in `kb/themes-list' are loaded."
@@ -158,9 +160,8 @@ Additionally, run `kb/themes-hook'."
     (cond ((equal kb/themes-light current)
            (kb/proper-load-theme-dark))
           ((equal kb/themes-dark current)
-           (kb/proper-load-theme-light))
-          )))
-(general-define-key "<f11>" 'kb/theme-switcher)
+           (kb/proper-load-theme-light)))))
+(define-key global-map (kbd "<f11>") 'kb/theme-switcher)
 
 ;;; Load appropriate theme based on time of day
 (let ((hour (string-to-number (format-time-string "%H"))))
