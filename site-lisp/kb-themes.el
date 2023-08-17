@@ -165,8 +165,8 @@ Additionally, run `kb/themes-hook'."
 
 ;;; Load appropriate theme based on time of day
 (let ((hour (string-to-number (format-time-string "%H"))))
-  ;; Dark theme between 6 PM or 6 AM
-  (if (or (<= 18 hour) (>= 6))
+  ;; Dark theme between 10 PM or 8 AM
+  (if (or (<= 22 hour) (<= hour 8))
       (kb/proper-load-theme-dark)
     (kb/proper-load-theme-light)))
 (elpaca-wait)
