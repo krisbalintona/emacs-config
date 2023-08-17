@@ -39,17 +39,8 @@
 (use-package window
   :elpaca nil
   :custom
-  ;; (fit-window-to-buffer-horizontally t)
-  ;; (split-height-threshold 80)
-  ;; (split-width-threshold 125)
-  ;; (window-min-height 3)
-  ;; (window-min-width 30)
-  ;; (split-height-threshold nil)       ; Threshold for vertical window splitting
-  ;; (split-width-threshold 160)        ; Threshold for horizontal window splitting
-  ;; (window-combination-resize t)
-  ;; (window-resize-pixelwise t)
-  ;; (window-sides-vertical t)
-  ;; (even-window-sizes 'height-only)      ; Or `t' or ``width-only''
+  (window-resize-pixelwise t)
+  (window-sides-vertical t)
   
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
