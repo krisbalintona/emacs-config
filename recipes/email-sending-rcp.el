@@ -286,7 +286,9 @@
     "Alist of aliases and their corresponding email signatures.")
 
   (defun kb/mu4e-select-signature (alias)
-    "Select one of the signatures from `kb/signature-alist'."
+    "Select one of the signatures from `kb/signature-alist'.
+
+Also set `org-msg-signature' to the selected signature."
     (interactive (list (completing-read
                         "Insert signature:"
                         (cl-loop for (key . value) in kb/signature-alist
@@ -297,9 +299,32 @@
       (setq-local org-msg-signature sig)
       sig))
   (defun kb/mu4e-insert-signature ()
-    "Insert a selection from `kb/signature-alist'."
+    "Insert a selection from `kb/signature-alist'.
+
+Replaces existing signature if present in buffer. Relies on
+signatures being contained in special \"signature\" org-blocks."
     (interactive)
-    (insert (call-interactively 'kb/mu4e-select-signature))))
+    (save-excursion
+      (let ((sig (call-interactively 'kb/mu4e-select-signature))
+            (existing-sig-beg
+             (save-excursion
+               (save-match-data
+                 (goto-char (point-min))
+                 (when (search-forward "\n\n#+begin_signature\n" nil t)
+                   (match-beginning 0)))))
+            (existing-sig-end
+             (save-excursion
+               (save-match-data
+                 (goto-char (point-min))
+                 (search-forward "\n#+end_signature" nil t)))))
+        (if (and existing-sig-beg existing-sig-end)
+            ;; Replace existing signature
+            (progn
+              (goto-char existing-sig-beg)
+              (delete-region existing-sig-beg existing-sig-end)
+              (insert sig))
+          ;; Remove leading whitespace from sig if inserting
+          (insert (string-trim-left sig)))))))
 
 ;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
