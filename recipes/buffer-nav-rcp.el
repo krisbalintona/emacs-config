@@ -240,13 +240,7 @@ does."
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
   (imenu-auto-rescan t)
-  :config
-  ;; Add narrowing of "Use-packages" to `consult-imenu'
-  (with-eval-after-load 'consult-imenu
-    (plist-put (cdr (assoc 'emacs-lisp-mode consult-imenu-config))
-               :types (append
-                       (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types)
-                       '((?u "Use-packages" font-lock-constant-face))))))
+  (use-package-enable-imenu-support t))
 
 ;;; Imenu-list
 ;; Side buffer with imenu items

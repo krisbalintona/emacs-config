@@ -12,7 +12,6 @@
   ;; (use-package-always-ensure t)   ; Causes issues with external package managers
   ;; (use-package-expand-minimally t)      ; Less verbose
   (use-package-always-defer t)          ; Always defer
-  (use-package-enable-imenu-support t)
 
   ;; Set use-package-verbose to t for interpreted .emacs, and to nil for
   ;; byte-compiled .emacs.elc.
