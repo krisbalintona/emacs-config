@@ -333,12 +333,12 @@
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)))
                     (kb/signature-alist .
-                                        (("Take care" . ,(format "%s\n\nTake care,\\\\\nKristoffer" kb/signature-separator))
-                                         ("In gratitude" . ,(format "%s\n\nIn gratitude,\\\\\nKristoffer" kb/signature-separator))
-                                         ("Best" . ,(format "%s\n\nBest,\\\\\nKristoffer" kb/signature-separator))
-                                         ("With appreciation" . ,(format "%s\n\nWith appreciation,\\\\\nKristoffer" kb/signature-separator))
-                                         ("Brown banner" . ,(concat kb/signature-separator "\n\n"
-                                                                    "With appreciation,\\\\\nKristoffer\n\n"
+                                        (("Take care" . ,(format "%s\nTake care,\nKristoffer" kb/signature-separator))
+                                         ("In gratitude" . ,(format "%s\nIn gratitude,\nKristoffer" kb/signature-separator))
+                                         ("Best" . ,(format "%s\nBest,\nKristoffer" kb/signature-separator))
+                                         ("With appreciation" . ,(format "%s\nWith appreciation,\nKristoffer" kb/signature-separator))
+                                         ("Brown banner" . ,(concat kb/signature-separator "\n"
+                                                                    "With appreciation,\nKristoffer\n\n"
                                                                     "#+begin_export html
 <br />
 <table
@@ -447,7 +447,7 @@
 </table>
 #+end_export"))
                                          ("BUI banner" . ,(concat kb/signature-separator "\n\n"
-                                                                  "Warmly,\\\\\nBrown University Interviews Executive Committee\n\n"
+                                                                  "Warmly,\nBrown University Interviews Executive Committee\n\n"
                                                                   "#+begin_export html
 <br />
 <table
@@ -526,10 +526,10 @@
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)))
                     (kb/signature-alist .
-                                        (("Take care" . ,(format "%s\n\nTake care,\\\\\nKristoffer" kb/signature-separator))
-                                         ("In gratitude" . ,(format "%s\n\nIn gratitude,\\\\\nKristoffer" kb/signature-separator))
-                                         ("Best" . ,(format "%s\n\nBest,\\\\\nKristoffer" kb/signature-separator))
-                                         ("With appreciation" . ,(format "%s\n\nWith appreciation,\\\\\nKristoffer" kb/signature-separator))))
+                                        (("Take care" . ,(format "%s\nTake care,\nKristoffer" kb/signature-separator))
+                                         ("In gratitude" . ,(format "%s\nIn gratitude,\nKristoffer" kb/signature-separator))
+                                         ("Best" . ,(format "%s\nBest,\nKristoffer" kb/signature-separator))
+                                         ("With appreciation" . ,(format "%s\nWith appreciation,\nKristoffer" kb/signature-separator))))
                     ;; Smtpmail
                     (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
                     (smtpmail-mail-address "krisbalintona@gmail.com"))))))

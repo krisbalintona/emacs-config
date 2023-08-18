@@ -25,7 +25,7 @@
   (message-elide-ellipsis "\n> [... %l lines elided]\n")
   (message-signature "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")
   (message-signature-insert-empty-line t)
-  (message-citation-line-function #'message-insert-formatted-citation-line)
+  (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-ignored-cited-headers "") ; Don't include any headers when citing emails
   (message-confirm-send nil)
   (message-kill-buffer-on-exit t)
@@ -84,12 +84,16 @@
   :elpaca nil
   :ensure-system-package msmtp
   :custom
+  ;; I set this in my sendmail configuration too so that if smtpmail isn't use,
+  ;; the above configuration works still
   (send-mail-function 'smtpmail-send-it)
+  (smtpmail-queue-mail nil)
+  ;; Below are settings for Gmail. See
+  ;; https://support.google.com/mail/answer/7126229?hl=en#zippy=%2Cstep-change-smtp-other-settings-in-your-email-client
   (smtpmail-default-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)
   (smtpmail-stream-type 'starttls)
-  (smtpmail-queue-mail nil)
   ;; Make sure email details that are used are not the current (when flushing)
   ;; variables, but the variables used when writing the email
   (smtpmail-store-queue-variables t)
@@ -124,7 +128,7 @@
   (:keymaps 'org-msg-edit-mode-map
    "C-c C-w" 'kb/mu4e-insert-signature)
   :custom
-  (org-msg-options "html-postamble:nil toc:nil author:nil email:nil")
+  (org-msg-options "html-postamble:nil toc:nil author:nil email:nil \\n:t")
   (org-msg-startup "hidestars indent inlineimages hideblocks")
   (org-msg-greeting-fmt nil)
   (org-msg-greeting-name-limit 1)
@@ -139,19 +143,18 @@
 (\\(?:attached\\|enclosed\\))\\|\
 \\(?:attached\\|enclosed\\)[ \t\n]\\(?:for\\|is\\)[ \t\n]")
   :config
-  ;; Copied from Doom. Influences the foreground color of hyperlinks (used to
-  ;; also be applied to headline foregrounds).
+  ;; Copied from Doom (then modified). Influences the foreground color of
+  ;; hyperlinks (used to also be applied to headline foregrounds).
   (defun kb/org-msg-set-faces ()
     (defvar kb/org-msg-accent-color (face-attribute 'link :foreground nil t)
-      "Accent color to use in org-msg's generated CSS.
-Must be set before org-msg is loaded to take effect.")
+      "Accent color to use in org-msg's generated CSS.")
     (setq org-msg-enforce-css
           (let* ((font-family '(font-family . "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell,\
         \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\";"))
                  (monospace-font '(font-family . "SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;"))
-                 (font-size '(font-size . "11pt"))
+                 (font-size '(font-size . "10pt"))
                  (font `(,font-family ,font-size))
-                 (line-height '(line-height . "1.2"))
+                 (line-height '(line-height . "1.1"))
                  (theme-color kb/org-msg-accent-color)
                  (bold '(font-weight . "bold"))
                  (color `(color . ,theme-color))
@@ -161,8 +164,8 @@ Must be set before org-msg is loaded to take effect.")
                           (border-bottom . "2px solid #222222")))
                  (ftl-number `(,color ,bold (text-align . "left")))
                  (inline-modes '(asl c c++ conf cpp csv diff ditaa emacs-lisp
-                                                                   fundamental ini json makefile man org plantuml
-                                                                   python sh xml))
+                                     fundamental ini json makefile man org plantuml
+                                     python sh xml))
                  (inline-src `((background-color . "rgba(27,31,35,.05)")
                                (border-radius . "3px")
                                (padding . ".2em .4em")
@@ -174,8 +177,7 @@ Must be set before org-msg is loaded to take effect.")
                                    ,inline-src))
                           inline-modes))
                  (base-quote '((padding-left . "5px") (margin-left . "10px")
-                               (margin-top . "20px") (margin-bottom . "0")
-                               (font-style . "italic") (background . "#f9f9f9")))
+                               (margin-top . "20px") (margin-bottom . "0")))
                  (quote-palette '("#6A8FBF" "#bf8f6a" "#6abf8a" "#906abf"
                                   "#6aaebf" "#bf736a" "#bfb66a" "#bf6a94"
                                   "#6abf9b" "#bf6a7d" "#acbf6a" "#6a74bf"))
@@ -187,7 +189,8 @@ Must be set before org-msg is loaded to take effect.")
                                      (color . ,c)
                                      (border-left . ,(concat "3px solid "
                                                              (org-msg-lighten c)))))))
-                          (number-sequence 0 (1- (length quote-palette))))))
+                          ;; I set quote0 manually below
+                          (number-sequence 1 (1- (length quote-palette))))))
             `((del nil ((color . "grey") (border-left . "none")
                         (text-decoration . "line-through") (margin-bottom . "0px")
                         (margin-top . "10px") (line-height . "11pt")))
@@ -205,13 +208,14 @@ Must be set before org-msg is loaded to take effect.")
                                   (margin-top . "0px") (margin-left . "30px")
                                   (padding-top . "0px") (padding-left . "5px")))
               (nil signature (,@font (margin-bottom . "20px")))
-              (blockquote nil ((padding . "2px 12px") (margin-left . "10px")
-                               (margin-top . "10px") (margin-bottom . "0")
-                               (border-left . "3px solid #ccc")
-                               (font-style . "italic")
-                               (background . "#f9f9f9")))
-              (p blockquote  ((margin . "0") (padding . "4px 0")))
+              (blockquote quote0 ,(append base-quote '((border-left . "3px solid #ccc")
+                                                       (padding-bottom . "2px"))))
               ,@quotes
+
+              (p blockquote  ((margin . "0") (padding . "4px 0")))
+              (blockquote gmail_quote ((margin . "0 0 0 0.8ex")
+                                       (border-left . "1px #ccc solid")
+                                       (padding-left . "1ex")))
               (code nil (,font-size ,monospace-font (background . "#f9f9f9")))
               ,@code-src
               (nil linenr ((padding-right . "1em")
@@ -270,14 +274,16 @@ Must be set before org-msg is loaded to take effect.")
                       (margin-top . "10px") (margin-bottom . "0px")
                       ,font-size (max-width . "50em")))
               (b nil ((font-weight . "500") (color . ,theme-color)))
-              (div nil (,@font (line-height . "12pt"))))))))
+              ;; Applies to entire body
+              (div ,(intern org-html-content-class) (,@font (line-height . "12pt")))))))
+  (kb/org-msg-set-faces))
 
 ;;;; Custom signatures
 (with-eval-after-load 'org-msg
   (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
     "Separator between email body and its signature.")
   (setq message-signature nil
-        message-signature-separator (format "^%s *$" kb/signature-separator))
+        message-signature-separator (format "^%s *" (read kb/signature-separator)))
   (defvar kb/signature-alist nil
     "Alist of aliases and their corresponding email signatures.")
 
@@ -299,37 +305,38 @@ Must be set before org-msg is loaded to take effect.")
 
 ;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
-  ;; This makes email citations buttonized in the Gmail interface
-  (setq org-msg-posting-style 'gmail
-        message-cite-style message-cite-style-gmail
+  (defun kb/org-msg--html-special-block (special-block contents info)
+    "Similar to `org-html-special-block' but treat specially the
+blocks of type \"quote...\" generated by `org-msg-ascii-blockquote'."
+    (let ((block-type (org-element-property :type special-block)))
+      (cond
+       ((string-match "quote[0-9]+" block-type)
+        (let* ((contents (or contents ""))
+               (a (org-html--make-attribute-string '(:class "gmail_quote"))))
+          (format "<blockquote %s>\n%s\n</blockquote>" a contents)))
+       (t (org-html-special-block special-block contents info)))))
+  (advice-add 'org-msg--html-special-block :override #'kb/org-msg--html-special-block)
+
+  (setq org-msg-posting-style 'gmail ; My own value which I leverage in `kb/org-msg-post-setup'
+        message-cite-reply-position 'above ; I also leverage in `kb/org-msg-post-setup'
         message-cite-function 'message-cite-original
         message-citation-line-function 'message-insert-formatted-citation-line
-        message-citation-line-format "On %d %b %Y at %R, %f wrote:\n"
-        message-cite-reply-position 'above
-        ;; These spaces are the magic!
-        message-yank-prefix  "    "
-        message-yank-cited-prefix  "    "
-        message-yank-empty-prefix  "    ")
+        message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
 
   (defun kb/org-msg-composition-parameters (type alternatives)
-    "My won composition parameter settings.
-
-Always use return `style' as `org-msg-posting-style' if its value
-is `gmail'. See `kb/org-msg-export-as-html' for why this is.
+    "My own composition parameter settings.
 
 Interactively select signature via `kb/mu4e-select-signature'."
-    `((style . ,(if (equal org-msg-posting-style 'gmail)
-                    'gmail
-                  (when (and (eq type 'reply-to-html)
-                             (memq 'html alternatives)
-                             (not (= (point) (point-max)))
-                             (not (org-msg-has-mml-tags)))
-                    org-msg-posting-style)))
+    `((style . ,(when (and (eq type 'reply-to-html)
+                           (memq 'html alternatives)
+                           (not (= (point) (point-max)))
+                           (not (org-msg-has-mml-tags)))
+                  org-msg-posting-style))
       (greeting-fmt . ,org-msg-greeting-fmt)
-      (signature . ,(unless (save-excursion ; Don't interactively select signature if one already present
+      (signature . ,(unless (save-excursion ; Don't interactively insert signature if one already present
                               (save-match-data
                                 (goto-char (point-min))
-                                (search-forward "#+begin_signature" nil t)))
+                                (re-search-forward message-signature-separator nil t)))
                       (call-interactively 'kb/mu4e-select-signature)))))
   (advice-add 'org-msg-composition-parameters :override 'kb/org-msg-composition-parameters)
 
@@ -352,21 +359,19 @@ Interactively select signature via `kb/mu4e-select-signature'."
                                 (if (eq type 'new)
                                     ""
                                   (concat " " (org-msg-get-to-name))))))
-              ;; Where I customize how and when a signature is inserted
-              (when message-signature-insert-empty-line
-                (insert "\n\n"))
-              (when .signature
-                (insert .signature))
-              ;; For Gmail-formatted citations
+              ;; The default top-posting org-msg citation style. Add it before
+              ;; citation if certain criteria are met
+              (when (and .signature
+                         (eq .style 'gmail)
+                         (eq message-cite-reply-position 'above))
+                (when message-signature-insert-empty-line (insert "\n"))
+                (insert "\n" .signature "\n"))
+              ;; for Gmail-formatted citations
               (when (and (not (eq type 'new)) (eq .style 'gmail))
-                (insert "\n")
-                (insert"\n#+begin_verse\n")
-                (delete-char 1)         ; Remove following (empty) line
+                (insert"\n#+begin_gmail_quote\n")
                 (save-excursion
                   (goto-char (point-max))
-                  (delete-char -2)      ; Delete two empty lines
-                  (insert"\n#+end_verse")))
-              ;; The default top-posting org-msg citation style
+                  (insert"#+end_gmail_quote")))
               (when (eq .style 'top-posting)
                 (save-excursion
                   (insert "\n\n" org-msg-separator "\n")
@@ -376,8 +381,11 @@ Interactively select signature via `kb/mu4e-select-signature'."
                       (while (re-search-forward (car rep) nil t)
                         (replace-match (cdr rep)))))
                   (org-escape-code-in-region (point) (point-max))))
-              (unless (eq .style 'top-posting)
-                (goto-char (point-max))))
+              ;; When .style is nil
+              (when .signature
+                (unless .style
+                  (goto-char (point-max)))
+                (insert "\n\n" .signature)))
             (if (org-msg-message-fetch-field "to")
                 (org-msg-goto-body)
               (message-goto-to))
