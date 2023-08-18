@@ -163,8 +163,7 @@ punctuation."
   :general
   ("C-x B" 'consult-buffer)
   ;; Put remaps here
-  ([remap switch-to-buffer-other-window] 'consult-buffer-other-window
-   [remap bookmark-jump] 'consult-bookmark
+  ([remap bookmark-jump] 'consult-bookmark
    [remap yank-pop] 'consult-yank-pop
    [remap repeat-complex-command] 'consult-complex-command
    [remap goto-line] 'consult-goto-line
