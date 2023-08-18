@@ -146,8 +146,6 @@
   ;; Copied from Doom (then modified). Influences the foreground color of
   ;; hyperlinks (used to also be applied to headline foregrounds).
   (defun kb/org-msg-set-faces ()
-    (defvar kb/org-msg-accent-color (face-attribute 'link :foreground nil t)
-      "Accent color to use in org-msg's generated CSS.")
     (setq org-msg-enforce-css
           (let* ((font-family '(font-family . "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell,\
         \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\";"))
@@ -155,7 +153,7 @@
                  (font-size '(font-size . "10pt"))
                  (font `(,font-family ,font-size))
                  (line-height '(line-height . "1.1"))
-                 (theme-color kb/org-msg-accent-color)
+                 (theme-color (face-attribute 'link :foreground nil t))
                  (bold '(font-weight . "bold"))
                  (color `(color . ,theme-color))
                  (table `((margin-top . "6px") (margin-bottom . "6px")
