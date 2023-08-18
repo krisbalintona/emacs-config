@@ -24,6 +24,7 @@
 
   (message-elide-ellipsis "\n> [... %l lines elided]\n")
   (message-signature "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")
+  (message-signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼")
   (message-signature-insert-empty-line t)
   (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-ignored-cited-headers "") ; Don't include any headers when citing emails
@@ -280,8 +281,7 @@
 (with-eval-after-load 'org-msg
   (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
     "Separator between email body and its signature.")
-  (setq message-signature nil
-        message-signature-separator (format "^%s *" (read kb/signature-separator)))
+  (setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
   (defvar kb/signature-alist nil
     "Alist of aliases and their corresponding email signatures.")
 
