@@ -281,28 +281,40 @@
 (with-eval-after-load 'org-msg
   (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
     "Separator between email body and its signature.")
+  (defvar kb/signature-open "\n\n#+begin_signature\n"
+    "String meant to begin email signatures.")
+  (defvar kb/signature-close "\n#+end_signature"
+    "String meant to end email signatures.")
   (setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
   (defvar kb/signature-alist nil
     "Alist of aliases and their corresponding email signatures.")
 
   (defun kb/mu4e-select-signature (alias)
-    "Select one of the signatures from `kb/signature-alist'.
-
-Also set `org-msg-signature' to the selected signature."
+    "Select one of the signatures from `kb/signature-alist'."
     (interactive (list (completing-read
-                        "Insert signature:"
+                        "Insert signature: "
                         (cl-loop for (key . value) in kb/signature-alist
                                  collect key))))
-    (let ((sig (concat "\n\n#+begin_signature\n"
-                       (or (alist-get alias kb/signature-alist nil nil #'string=) "")
-                       "\n#+end_signature")))
-      (setq-local org-msg-signature sig)
-      sig))
+    (or (alist-get alias kb/signature-alist nil nil #'string=)
+        ;; If a signature was manually typed rather than an alias
+        ;; chosen. Example: if "Test" is typed, the result will be:
+        ;; "#+begin_signature (kb/signature-open)
+        ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (kb/signature-separator)
+        ;; Test,
+        ;; Kristoffer
+        ;; #+end_signature    (kb/signature-close)"
+        (format "%s%s\n%s%s%s"
+                kb/signature-open
+                kb/signature-separator
+                alias
+                ",\nKristoffer"
+                kb/signature-close)))
   (defun kb/mu4e-insert-signature ()
     "Insert a selection from `kb/signature-alist'.
 
 Replaces existing signature if present in buffer. Relies on
-signatures being contained in special \"signature\" org-blocks."
+signatures being wrapped in `kb/signature-open' and
+`kb/signature-close'."
     (interactive)
     (save-excursion
       (let ((sig (call-interactively 'kb/mu4e-select-signature))
@@ -310,13 +322,13 @@ signatures being contained in special \"signature\" org-blocks."
              (save-excursion
                (save-match-data
                  (goto-char (point-min))
-                 (when (search-forward "\n\n#+begin_signature\n" nil t)
+                 (when (search-forward kb/signature-open nil t)
                    (match-beginning 0)))))
             (existing-sig-end
              (save-excursion
                (save-match-data
                  (goto-char (point-min))
-                 (search-forward "\n#+end_signature" nil t)))))
+                 (search-forward kb/signature-close nil t)))))
         (if (and existing-sig-beg existing-sig-end)
             ;; Replace existing signature
             (progn

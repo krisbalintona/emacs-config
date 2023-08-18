@@ -333,12 +333,29 @@
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)))
                     (kb/signature-alist .
-                                        (("Take care" . ,(format "%s\nTake care,\nKristoffer" kb/signature-separator))
-                                         ("In gratitude" . ,(format "%s\nIn gratitude,\nKristoffer" kb/signature-separator))
-                                         ("Best" . ,(format "%s\nBest,\nKristoffer" kb/signature-separator))
-                                         ("With appreciation" . ,(format "%s\nWith appreciation,\nKristoffer" kb/signature-separator))
-                                         ("Brown banner" . ,(concat kb/signature-separator "\n"
-                                                                    "With appreciation,\nKristoffer\n\n"
+                                        (("Take care" . ,(format "%s%s\n%s%s"
+                                                                 kb/signature-open
+                                                                 kb/signature-separator
+                                                                 "Take care,\nKristoffer"
+                                                                 kb/signature-close))
+                                         ("In gratitude" . ,(format "%s%s\n%s%s"
+                                                                    kb/signature-open
+                                                                    kb/signature-separator
+                                                                    "In gratitude,\nKristoffer"
+                                                                    kb/signature-close))
+                                         ("Best" . ,(format "%s%s\n%s%s"
+                                                            kb/signature-open
+                                                            kb/signature-separator
+                                                            "Best,\nKristoffer"
+                                                            kb/signature-close))
+                                         ("With appreciation" . ,(format "%s%s\n%s%s"
+                                                                         kb/signature-open
+                                                                         kb/signature-separator
+                                                                         "With appreciation,\nKristoffer"
+                                                                         kb/signature-close))
+                                         ("Brown banner" . ,(concat kb/signature-open
+                                                                    kb/signature-separator
+                                                                    "\nWith appreciation,\nKristoffer\n\n"
                                                                     "#+begin_export html
 <br />
 <table
@@ -445,9 +462,11 @@
     </tr>
   </tbody>
 </table>
-#+end_export"))
-                                         ("BUI banner" . ,(concat kb/signature-separator "\n\n"
-                                                                  "Warmly,\nBrown University Interviews Executive Committee\n\n"
+#+end_export"
+                                                                    kb/signature-close))
+                                         ("BUI banner" . ,(concat kb/signature-open
+                                                                  kb/signature-separator
+                                                                  "\n\nWarmly,\nBrown University Interviews Executive Committee\n\n"
                                                                   "#+begin_export html
 <br />
 <table
@@ -503,7 +522,8 @@
     </tr>
   </tbody>
 </table>
-#+end_export"))))
+#+end_export"
+                                                                  kb/signature-close))))
                     ;; Smtpmail
                     (smtpmail-smtp-user "kristoffer_balintona@brown.edu") ; Send from this address
                     (smtpmail-mail-address "kristoffer_balintona@brown.edu")))
@@ -526,10 +546,26 @@
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)))
                     (kb/signature-alist .
-                                        (("Take care" . ,(format "%s\nTake care,\nKristoffer" kb/signature-separator))
-                                         ("In gratitude" . ,(format "%s\nIn gratitude,\nKristoffer" kb/signature-separator))
-                                         ("Best" . ,(format "%s\nBest,\nKristoffer" kb/signature-separator))
-                                         ("With appreciation" . ,(format "%s\nWith appreciation,\nKristoffer" kb/signature-separator))))
+                                        (("Take care" . ,(format "%s%s\n%s%s"
+                                                                 kb/signature-open
+                                                                 kb/signature-separator
+                                                                 "Take care,\nKristoffer"
+                                                                 kb/signature-close))
+                                         ("In gratitude" . ,(format "%s%s\n%s%s"
+                                                                    kb/signature-open
+                                                                    kb/signature-separator
+                                                                    "In gratitude,\nKristoffer"
+                                                                    kb/signature-close))
+                                         ("Best" . ,(format "%s%s\n%s%s"
+                                                            kb/signature-open
+                                                            kb/signature-separator
+                                                            "Best,\nKristoffer"
+                                                            kb/signature-close))
+                                         ("With appreciation" . ,(format "%s%s\n%s%s"
+                                                                         kb/signature-open
+                                                                         kb/signature-separator
+                                                                         "With appreciation,\nKristoffer"
+                                                                         kb/signature-close))))
                     ;; Smtpmail
                     (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
                     (smtpmail-mail-address "krisbalintona@gmail.com"))))))
