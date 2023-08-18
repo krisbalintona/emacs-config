@@ -105,7 +105,13 @@
              "Dl" '(dash-docs-completing-read-at-point :wk "At-point search")
              "DL" '(dash-docs-completing-read :wk "Manual search")))
 
-;;; Tree-sitter
+;;; Treesit
+;;;; Itself
+(use-package treesit
+  :elpaca nil
+  :custom
+  (treesit-font-lock-level 4))
+
 ;;;; Treesit-auto
 (use-package treesit-auto
   :demand
