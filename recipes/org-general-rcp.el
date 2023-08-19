@@ -174,6 +174,7 @@ have `org-warning' face."
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
   ;; Use timestamps as UUIDs and in attachment directory hierarchy
   (org-id-method 'ts)
+  (org-id-link-to-org-use-id 'use-existing)
   (org-attach-id-to-path-function-list
    '(org-attach-id-ts-folder-format
      org-attach-id-uuid-folder-format)))
