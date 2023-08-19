@@ -108,7 +108,6 @@
   :hook ((org-msg-edit-mode . (lambda ()
                                 (setq-local org-download-method 'directory
                                             org-download-image-dir mu4e-attachment-dir)))
-         (kb/themes . kb/org-msg-set-faces)
          ;; Don't show exported buffers after sending emails. Inspired by
          ;; https://github.com/jeremy-compostella/org-msg/issues/169#issuecomment-1627375688
          (message-sent . (lambda ()
