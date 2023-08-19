@@ -126,8 +126,10 @@
    "C-f" 'message-goto-followup-to
    "C-w" 'message-goto-fcc)
   (:keymaps 'org-msg-edit-mode-map
+   ;; This keybinding is fine since we wouldn't want to call `org-refile' anyway
    "C-c C-w" 'kb/mu4e-insert-signature)
   :custom
+  (mu4e-compose-signature-auto-include nil)
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil \\n:t")
   (org-msg-startup "hidestars indent inlineimages hideblocks")
   (org-msg-greeting-fmt nil)
@@ -135,10 +137,9 @@
   (org-msg-default-alternatives
    '((new . (text html))
      (reply-to-html . (text html))
-     (reply-to-text . (text html))))
+     (reply-to-text . text)))
   (org-msg-convert-citation t)
-  ;; Taken from Doom
-  (org-msg-attached-file-reference
+  (org-msg-attached-file-reference      ; Taken from Doom
    "see[ \t\n]\\(?:the[ \t\n]\\)?\\(?:\\w+[ \t\n]\\)\\{0,3\\}\\(?:attached\\|enclosed\\)\\|\
 (\\(?:attached\\|enclosed\\))\\|\
 \\(?:attached\\|enclosed\\)[ \t\n]\\(?:for\\|is\\)[ \t\n]")
@@ -159,7 +160,7 @@ inserted within a \"gmail_attr\" org-block."
               message-citation-line-format)))
        (message-insert-formatted-citation-line from date tz))))
   (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
-  ;; CSS for emails
+  ;; CSS for emails. Taken initially from Doom Emacs then modified.
   (org-msg-enforce-css
    ;; Avoid styling that applies to all blockquotes (i.e. (blockquotes nil ...))
    ;; and blockquotes whose class is gmail_quote since this overrides the
