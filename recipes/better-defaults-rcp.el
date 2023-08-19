@@ -103,13 +103,14 @@
 (setq read-process-output-max (* 1024 1024)) ; 1mb
 
 ;;; Scrolling behavior
-(setq scroll-error-top-bottom nil
-      scroll-preserve-screen-position t
-      next-screen-context-lines 6
+(setq scroll-preserve-screen-position t
+      scroll-error-top-bottom nil
       scroll-margin 0
-      scroll-conservatively 1      ; affects `scroll-step'
-      scroll-up-aggressively nil   ; Center after point leaves window
-      scroll-down-aggressively nil ; Center after point leaves window
+      next-screen-context-lines 8
+      scroll-conservatively 0           ; Affects `scroll-step'
+      scroll-minibuffer-conservatively t
+      scroll-up-aggressively nil        ; Center after point leaves window
+      scroll-down-aggressively nil      ; Center after point leaves window
       ;; These are the three ways to increase scrolling performance.
       ;; See (info "(emacs) Scrolling") for details
       fast-but-imprecise-scrolling t
