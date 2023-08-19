@@ -96,19 +96,22 @@ punctuation."
 ;;;; Indent-bars
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package indent-bars
+  :disabled t                           ; FIXME 2023-08-18: Causes errors I think... 
   :elpaca (:type git :host github :repo "jdtsmith/indent-bars")
   ;; OPTIMIZE 2023-08-15: Have to add to `after-init-hook' because of issues
   ;; with daemon
-  :hook (elpaca-after-init . (lambda ()
-                               (dolist (hook '(prog-mode-hook conf-mode-hook))
-                                 (add-hook hook 'indent-bars-mode))))
+  :hook (kb/themes . indent-bars-reset)
   :custom
   (indent-bars-pattern ".")
   (indent-bars-width-frac 0.25)
   (indent-bars-pad-frac 0.25)
   (indent-bars-color-by-depth nil)
   (indent-bars-highlight-current-depth '(:face default :blend 0.4))
-  (indent-bars-display-on-blank-lines t))
+  (indent-bars-display-on-blank-lines t)
+  :init
+  (add-hook 'server-after-make-frame-hook (lambda ()
+                                            (dolist (hook '(prog-mode-hook conf-mode-hook))
+                                              (add-hook hook 'indent-bars-mode)))))
 
 ;;;; Rainbow-mode
 ;; Colorify color codes
