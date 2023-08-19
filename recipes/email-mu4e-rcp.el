@@ -108,13 +108,12 @@
   (shr-color-visible-luminance-min 80)   ; Better viewing for dark theme
 
   ;; Composing and sending
-  ;; Don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (mu4e-sent-messages-behavior 'delete)
+  (mu4e-sent-messages-behavior 'delete) ; Don't save message to Sent Messages, Gmail/IMAP takes care of this
   (mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))
   (mu4e-compose-signature-auto-include t)
-  (mu4e-compose-hidden-headers nil)
-  (mu4e-compose-format-flowed t) ; Not sure, but I think this setting helps
+  (mu4e-compose-hidden-headers nil)   ; See all headers
   (mu4e-compose-dont-reply-to-self t)
+  (mu4e-compose-signature message-signature)
 
   ;; Other
   (mu4e-change-filenames-when-moving t) ; Prevent duplication
@@ -306,10 +305,7 @@
           mm-automatic-display (remove "text/html" mm-automatic-display))) ; If I really don't want to see HTML
 
   ;; Sending and composition
-  (org-msg-mode)
-  (setq mu4e-compose-signature
-        (unless (bound-and-true-p org-msg-mode)
-          "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")))
+  (org-msg-mode))
 
 ;;;; Mu4e-contexts
 (with-eval-after-load 'mu4e

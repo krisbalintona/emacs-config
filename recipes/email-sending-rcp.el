@@ -23,8 +23,8 @@
   (message-hidden-headers nil)          ; Show everything!
 
   (message-elide-ellipsis "\n> [... %l lines elided]\n")
-  (message-signature "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼\nKind regards,\nKristoffer\n")
-  (message-signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼")
+  (message-signature "Kind regards,\nKristoffer\n")
+  (message-signature-separator "^-- $")
   (message-signature-insert-empty-line t)
   (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-ignored-cited-headers "") ; Don't include any headers when citing emails
