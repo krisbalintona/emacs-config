@@ -858,7 +858,9 @@ This is a difference in multitude of %s."
 
 ;;; Lorem-ipsum
 ;; Sample text
-(use-package lorem-ipsum)
+(use-package lorem-ipsum
+  :init
+  (setq-default lorem-ipsum-list-bullet "- "))
 
 ;;; Re-builder
 ;; Interactively build regexps
