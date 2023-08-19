@@ -469,7 +469,8 @@ have `org-warning' face."
   (org-download-screenshot-method "scrot -s %s") ; Use scrot
   (org-download-image-dir org-attach-id-dir)
   (org-download-heading-lvl nil)
-  (org-download-timestamp "%Y-%m-%d_%H-%M-%S_")) ; Default
+  (org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
+  (org-download-image-html-width 700))
 
 ;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
