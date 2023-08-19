@@ -143,139 +143,155 @@
    "see[ \t\n]\\(?:the[ \t\n]\\)?\\(?:\\w+[ \t\n]\\)\\{0,3\\}\\(?:attached\\|enclosed\\)\\|\
 (\\(?:attached\\|enclosed\\))\\|\
 \\(?:attached\\|enclosed\\)[ \t\n]\\(?:for\\|is\\)[ \t\n]")
-  :config
-  ;; Copied from Doom (then modified). Influences the foreground color of
-  ;; hyperlinks (used to also be applied to headline foregrounds).
-  (defun kb/org-msg-set-faces ()
-    (setq org-msg-enforce-css
-          (let* ((font-family '(font-family . "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell,\
+  ;; Settings for Gmail-formatted HTML citations
+  (org-msg-posting-style 'gmail) ; My own value which I leverage in `kb/org-msg-post-setup'
+  (message-cite-function 'message-cite-original)
+  (message-citation-line-function
+   (lambda (&optional from date tz)
+     "Situationally change `message-citation-line-format'.
+
+If `org-msg-mode' is active,`message-citation-line-format' is
+inserted within a \"gmail_attr\" org-block."
+     (let ((message-citation-line-format
+            (if org-msg-mode
+                (concat "#+begin_gmail_attr\n"
+                        message-citation-line-format
+                        "#+end_gmail_attr\n")
+              message-citation-line-format)))
+       (message-insert-formatted-citation-line from date tz))))
+  (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
+  ;; CSS for emails
+  (org-msg-enforce-css
+   ;; Avoid styling that applies to all blockquotes (i.e. (blockquotes nil ...))
+   ;; and blockquotes whose class is gmail_quote since this overrides the
+   ;; styling we do in `kb/org-msg--html-special-block' which sets the class to
+   ;; gmail_quote and adds styling. We style there rather than here since we
+   ;; cannot add both a class and style property; the class property is
+   ;; overwritten if we use `org-msg-enforce-css'.
+   (let* ((font-family '(font-family . "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell,\
         \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\";"))
-                 (monospace-font '(font-family . "SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;"))
-                 (font-size '(font-size . "10pt"))
-                 (font `(,font-family ,font-size))
-                 (line-height '(line-height . "1.1"))
-                 (theme-color (face-attribute 'link :foreground nil t))
-                 (bold '(font-weight . "bold"))
-                 (color `(color . ,theme-color))
-                 (table `((margin-top . "6px") (margin-bottom . "6px")
-                          (border-left . "none") (border-right . "none")
-                          (border-top . "2px solid #222222")
-                          (border-bottom . "2px solid #222222")))
-                 (ftl-number `(,color ,bold (text-align . "left")))
-                 (inline-modes '(asl c c++ conf cpp csv diff ditaa emacs-lisp
-                                     fundamental ini json makefile man org plantuml
-                                     python sh xml))
-                 (inline-src `((background-color . "rgba(27,31,35,.05)")
-                               (border-radius . "3px")
-                               (padding . ".2em .4em")
-                               (font-size . "90%") ,monospace-font
-                               (margin . 0)))
-                 (code-src
-                  (mapcar (lambda (mode)
-                            `(code ,(intern (concat "src src-" (symbol-name mode)))
-                                   ,inline-src))
-                          inline-modes))
-                 (base-quote '((padding-left . "5px") (margin-left . "10px")
-                               (margin-top . "20px") (margin-bottom . "0")))
-                 (quote-palette '("#6A8FBF" "#bf8f6a" "#6abf8a" "#906abf"
-                                  "#6aaebf" "#bf736a" "#bfb66a" "#bf6a94"
-                                  "#6abf9b" "#bf6a7d" "#acbf6a" "#6a74bf"))
-                 (quotes
-                  (mapcar (lambda (x)
-                            (let ((c (nth x quote-palette)))
-                              `(div ,(intern (format "quote%d" (1+ x)))
-                                    (,@base-quote
-                                     (color . ,c)
-                                     (border-left . ,(concat "3px solid "
-                                                             (org-msg-lighten c)))))))
-                          ;; I set quote0 manually below
-                          (number-sequence 1 (1- (length quote-palette))))))
-            `((del nil ((color . "grey") (border-left . "none")
-                        (text-decoration . "line-through") (margin-bottom . "0px")
-                        (margin-top . "10px") (line-height . "11pt")))
-              (a nil (,color))
-              (a reply-header ((color . "black") (text-decoration . "none")))
-              (div reply-header ((padding . "3.0pt 0in 0in 0in")
-                                 (border-top . "solid #e1e1e1 1.0pt")
-                                 (margin-bottom . "20px")))
-              (span underline ((text-decoration . "underline")))
-              (li nil (,line-height (margin-bottom . "0px")
-                                    (margin-top . "2px")
-                                    (max-width . "47em")))
-              (nil org-ul ((list-style-type . "disc")))
-              (nil org-ol (,@font ,line-height (margin-bottom . "0px")
-                                  (margin-top . "0px") (margin-left . "30px")
-                                  (padding-top . "0px") (padding-left . "5px")))
-              (nil signature (,@font (margin-bottom . "20px")))
-              (blockquote quote0 ,(append base-quote '((border-left . "3px solid #ccc")
-                                                       (padding-bottom . "2px"))))
-              ,@quotes
+          (monospace-font '(font-family . "SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;"))
+          (font-size '(font-size . "10pt"))
+          (font `(,font-family ,font-size))
+          (line-height '(line-height . "1.1"))
+          (theme-color (face-attribute 'link :foreground nil t))
+          (bold '(font-weight . "bold"))
+          (color `(color . ,theme-color))
+          (table `((margin-top . "6px") (margin-bottom . "6px")
+                   (border-left . "none") (border-right . "none")
+                   (border-top . "2px solid #222222")
+                   (border-bottom . "2px solid #222222")))
+          (ftl-number `(,color ,bold (text-align . "left")))
+          (inline-modes '(asl c c++ conf cpp csv diff ditaa emacs-lisp
+                              fundamental ini json makefile man org plantuml
+                              python sh xml))
+          (inline-src `((background-color . "rgba(27,31,35,.05)")
+                        (border-radius . "3px")
+                        (padding . ".2em .4em")
+                        (font-size . "90%") ,monospace-font
+                        (margin . 0)))
+          (code-src
+           (mapcar (lambda (mode)
+                     `(code ,(intern (concat "src src-" (symbol-name mode)))
+                            ,inline-src))
+                   inline-modes))
+          (base-quote '((padding-left . "5px") (margin-left . "10px")
+                        (margin-top . "20px") (margin-bottom . "0")))
+          (quote-palette '("#6A8FBF" "#bf8f6a" "#6abf8a" "#906abf"
+                           "#6aaebf" "#bf736a" "#bfb66a" "#bf6a94"
+                           "#6abf9b" "#bf6a7d" "#acbf6a" "#6a74bf"))
+          (quotes                   ; Styles divs with class quote1, quote2, ...
+           (mapcar (lambda (x)
+                     (let ((c (nth x quote-palette)))
+                       `(div ,(intern (format "quote%d" (1+ x)))
+                             (,@base-quote
+                              (color . ,c)
+                              (border-left . ,(concat "3px solid "
+                                                      (org-msg-lighten c)))))))
+                   ;; Begin at 1 since I set quote0 manually below, which is the
+                   ;; class for all quote blocks. See
+                   ;; `org-msg--html-quote-block'
+                   (number-sequence 1 (1- (length quote-palette))))))
+     `((del nil ((color . "grey") (border-left . "none")
+                 (text-decoration . "line-through") (margin-bottom . "0px")
+                 (margin-top . "10px") (line-height . "11pt")))
+       (a nil (,color))
+       (a reply-header ((color . "black") (text-decoration . "none")))
+       (div reply-header ((padding . "3.0pt 0in 0in 0in")
+                          (border-top . "solid #e1e1e1 1.0pt")
+                          (margin-bottom . "20px")))
+       (span underline ((text-decoration . "underline")))
+       (li nil (,line-height (margin-bottom . "0px")
+                             (margin-top . "2px")
+                             (max-width . "47em")))
+       (nil org-ul ((list-style-type . "disc")))
+       (nil org-ol (,@font ,line-height (margin-bottom . "0px")
+                           (margin-top . "0px") (margin-left . "30px")
+                           (padding-top . "0px") (padding-left . "5px")))
+       (nil signature (,@font (margin-bottom . "20px")))
+       (blockquote quote0 ,(append base-quote '((border-left . "3px solid #ccc")
+                                                (padding-bottom . "2px"))))
+       ,@quotes
+       (p blockquote  ((margin . "0") (padding . "4px 0")))
+       (code nil (,font-size ,monospace-font (background . "#f9f9f9")))
+       ,@code-src
+       (nil linenr ((padding-right . "1em")
+                    (color . "black")
+                    (background-color . "#aaaaaa")))
+       (pre nil ((line-height . "1.2")
+                 (color . ,(face-foreground 'default))
+                 (background-color . ,(face-background 'default))
+                 (margin . "4px 0px 8px 0px")
+                 (padding . "8px 12px")
+                 (width . "max-content")
+                 (min-width . "50em")
+                 (border-radius . "5px")
+                 (font-size . "0.9em")
+                 (font-weight . "500")
+                 ,monospace-font))
+       (div org-src-container ((margin-top . "10px")))
+       (nil figure-number ,ftl-number)
+       (nil table-number)
+       (caption nil ((text-align . "left")
+                     (background . ,theme-color)
+                     (color . "white")
+                     ,bold))
+       (nil t-above ((caption-side . "top")))
+       (nil t-bottom ((caption-side . "bottom")))
+       (nil listing-number ,ftl-number)
+       (nil figure ,ftl-number)
+       (nil org-src-name ,ftl-number)
+       (img nil ((vertical-align . "middle")
+                 (max-width . "100%")))
+       (img latex-fragment-inline ((margin . "0 0.1em")))
+       (table nil (,@table ,line-height (border-collapse . "collapse")))
+       (th nil ((border . "none") (border-bottom . "1px solid #222222")
+                (background-color . "#EDEDED") (font-weight . "500")
+                (padding . "3px 10px")))
+       (td nil (,@table (padding . "1px 10px")
+                        (background-color . "#f9f9f9") (border . "none")))
+       (td org-left ((text-align . "left")))
 
-              (p blockquote  ((margin . "0") (padding . "4px 0")))
-              (blockquote gmail_quote ((margin . "0 0 0 0.8ex")
-                                       (border-left . "1px #ccc solid")
-                                       (padding-left . "1ex")))
-              (code nil (,font-size ,monospace-font (background . "#f9f9f9")))
-              ,@code-src
-              (nil linenr ((padding-right . "1em")
-                           (color . "black")
-                           (background-color . "#aaaaaa")))
-              (pre nil ((line-height . "1.2")
-                        (color . ,(face-foreground 'default))
-                        (background-color . ,(face-background 'default))
-                        (margin . "4px 0px 8px 0px")
-                        (padding . "8px 12px")
-                        (width . "max-content")
-                        (min-width . "50em")
-                        (border-radius . "5px")
-                        (font-size . "0.9em")
-                        (font-weight . "500")
-                        ,monospace-font))
-              (div org-src-container ((margin-top . "10px")))
-              (nil figure-number ,ftl-number)
-              (nil table-number)
-              (caption nil ((text-align . "left")
-                            (background . ,theme-color)
-                            (color . "white")
-                            ,bold))
-              (nil t-above ((caption-side . "top")))
-              (nil t-bottom ((caption-side . "bottom")))
-              (nil listing-number ,ftl-number)
-              (nil figure ,ftl-number)
-              (nil org-src-name ,ftl-number)
-              (img nil ((vertical-align . "middle")
-                        (max-width . "100%")))
-              (img latex-fragment-inline ((margin . "0 0.1em")))
-              (table nil (,@table ,line-height (border-collapse . "collapse")))
-              (th nil ((border . "none") (border-bottom . "1px solid #222222")
-                       (background-color . "#EDEDED") (font-weight . "500")
-                       (padding . "3px 10px")))
-              (td nil (,@table (padding . "1px 10px")
-                               (background-color . "#f9f9f9") (border . "none")))
-              (td org-left ((text-align . "left")))
-
-              (td org-center ((text-align . "center")))
-              (kbd nil ((border . "1px solid #d1d5da") (border-radius . "3px")
-                        (box-shadow . "inset 0 -1px 0 #d1d5da")
-                        (background-color . "#fafbfc") (color . "#444d56")
-                        (font-size . "0.85em")
-                        (padding . "1px 4px") (display . "inline-block")))
-              (div outline-text-4 ((margin-left . "15px")))
-              (div outline-4 ((margin-left . "10px")))
-              (h4 nil ((margin-bottom . "0px") (font-size . "11pt")))
-              (h3 nil ((margin-bottom . "0px")
-                       (font-size . "14pt")))
-              (h2 nil ((margin-top . "20px") (margin-bottom . "20px")
-                       (font-size . "18pt")))
-              (h1 nil ((margin-top . "20px") (margin-bottom . "0px")
-                       (font-size . "24pt")))
-              (p nil ((text-decoration . "none") (line-height . "1.4")
-                      (margin-top . "10px") (margin-bottom . "0px")
-                      ,font-size (max-width . "50em")))
-              (b nil ((font-weight . "500") (color . ,theme-color)))
-              ;; Applies to entire body
-              (div ,(intern org-html-content-class) (,@font (line-height . "12pt")))))))
-  (kb/org-msg-set-faces))
+       (td org-center ((text-align . "center")))
+       (kbd nil ((border . "1px solid #d1d5da") (border-radius . "3px")
+                 (box-shadow . "inset 0 -1px 0 #d1d5da")
+                 (background-color . "#fafbfc") (color . "#444d56")
+                 (font-size . "0.85em")
+                 (padding . "1px 4px") (display . "inline-block")))
+       (div outline-text-4 ((margin-left . "15px")))
+       (div outline-4 ((margin-left . "10px")))
+       (h4 nil ((margin-bottom . "0px") (font-size . "11pt")))
+       (h3 nil ((margin-bottom . "0px")
+                (font-size . "14pt")))
+       (h2 nil ((margin-top . "20px") (margin-bottom . "20px")
+                (font-size . "18pt")))
+       (h1 nil ((margin-top . "20px") (margin-bottom . "0px")
+                (font-size . "24pt")))
+       (p nil ((text-decoration . "none") (line-height . "1.4")
+               (margin-top . "10px") (margin-bottom . "0px")
+               ,font-size))
+       ;; Applies to entire body
+       (div ,(intern org-html-content-class) (,@font (line-height . "12pt")))))))
 
 ;;;; Custom signatures
 (with-eval-after-load 'org-msg
@@ -347,24 +363,38 @@ blocks of type \"quote...\" generated by `org-msg-ascii-blockquote'."
       (cond
        ((string-match "quote[0-9]+" block-type)
         (let* ((contents (or contents ""))
-               (a (org-html--make-attribute-string '(:class "gmail_quote"))))
+               (a (org-html--make-attribute-string
+                   '(:class "gmail_quote"
+                     :style "margin:0 0 0.8ex;border-left:1px #ccc solid;padding-left:1ex"))))
           (format "<blockquote %s>\n%s\n</blockquote>" a contents)))
        (t (org-html-special-block special-block contents info)))))
-  (advice-add 'org-msg--html-special-block :override #'kb/org-msg--html-special-block)
-
-  (setq org-msg-posting-style 'gmail ; My own value which I leverage in `kb/org-msg-post-setup'
-        message-cite-function 'message-cite-original
-        message-citation-line-function 'message-insert-formatted-citation-line
-        message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
+  (advice-add 'org-msg--html-special-block :override 'kb/org-msg--html-special-block)
 
   (defun kb/org-msg-composition-parameters (type alternatives)
-    "My own composition parameter settings.
+    "Return the posting-style, greeting format and signature.
+TYPE is a one of the keys of `org-msg-default-alternatives'.
+ALTERNATIVES is a list of alternative symbols included as defined
+in `org-msg-alternative-exporters'.
 
-Interactively select signature via `kb/mu4e-select-signature'."
+This function returns the value of the `org-msg-posting-style',
+`org-msg-greeting-fmt' and `org-msg-posting-style' customization
+variables as an association list with `style', `greeting-fmt' and
+`signature' as their respective keys. The goal of this function
+is to offer a anchor point for advanced configuration: it can be
+advised to implement more complex behaviors such as change the
+signature and posting style when replying to a particular mail
+address or tweak the signature when replying with plain text
+email."
     `((style . ,(when (and (eq type 'reply-to-html)
                            (memq 'html alternatives)
                            (not (= (point) (point-max)))
-                           (not (org-msg-has-mml-tags)))
+                           ;; NOTE 2023-08-18: I have commented the line below
+                           ;; in order to allow attachments to be forwarded.
+                           ;; However, I haven't tested this well so I'm not
+                           ;; 100% sure if this is okay, especially since OrgMsg
+                           ;; says that MML tags are not supported, supposedly.
+                           ;; (not (org-msg-has-mml-tags))
+                           )
                   org-msg-posting-style))
       (greeting-fmt . ,org-msg-greeting-fmt)
       (signature . ,(unless (save-excursion ; Don't interactively insert signature if one already present
