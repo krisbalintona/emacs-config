@@ -288,6 +288,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Whole-line-or-region
 (use-package whole-line-or-region
+  :disabled                             ; Trying life without this package
   :diminish whole-line-or-region-local-mode
   :hook (elpaca-after-init . whole-line-or-region-global-mode)
   :general (:keymaps 'whole-line-or-region-local-mode-map
@@ -952,17 +953,18 @@ This is a difference in multitude of %s."
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
    "u" 'universal-argument-more)
   :custom
+  (save-interprogram-paste-before-kill t)
+  ;; Killing
   (kill-do-not-save-duplicates t)
+  (kill-ring-deindent-mode nil)
   :config
-  (when (bound-and-true-p evil-local-mode)
-    (general-unbind 'normal help-mode-map "SPC")
-    (general-unbind 'normal custom-mode-map "SPC"))
-  :init
   (global-so-long-mode)
   (repeat-mode)
-  ;; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
-  (find-function-setup-keys)
-  (minibuffer-electric-default-mode))
+  (find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
+  (minibuffer-electric-default-mode)
+  (when (bound-and-true-p evil-local-mode)
+    (general-unbind 'normal help-mode-map "SPC")
+    (general-unbind 'normal custom-mode-map "SPC")))
 
 ;;; misc-packages-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
