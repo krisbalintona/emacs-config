@@ -174,7 +174,7 @@ inserted within a \"gmail_attr\" org-block."
           (font-size '(font-size . "10pt"))
           (font `(,font-family ,font-size))
           (line-height '(line-height . "1.1"))
-          (theme-color (face-attribute 'link :foreground nil t))
+          (theme-color "#000")
           (bold '(font-weight . "bold"))
           (color `(color . ,theme-color))
           (table `((margin-top . "6px") (margin-bottom . "6px")
