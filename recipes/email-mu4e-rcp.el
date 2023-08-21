@@ -104,7 +104,7 @@
      :subject :flags :date
      :maildir :mailing-list
      :tags :attachments :signature))
-  (mu4e-view-scroll-to-next t)
+  (mu4e-view-scroll-to-next nil)
   (shr-color-visible-luminance-min 80)   ; Better viewing for dark theme
 
   ;; Composing and sending
