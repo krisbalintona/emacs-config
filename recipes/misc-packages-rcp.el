@@ -937,6 +937,10 @@ This is a difference in multitude of %s."
     ;; window. Copied from https://github.com/minad/consult#use-package-example
     (advice-add #'register-preview :override #'consult-register-window)))
 
+;;; Goto-last-change
+(use-package goto-chg
+  :general ("C-z" 'goto-last-change))
+
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
   :elpaca nil

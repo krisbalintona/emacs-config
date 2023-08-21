@@ -80,8 +80,7 @@ If called with `universal-argument’, just
 
 (general-define-key
  (general-chord "xx") 'save-buffer
- [remap save-buffers-kill-terminal] 'kb/restart-or-save-and-kill
- "C-z" 'goto-last-change)
+ [remap save-buffers-kill-terminal] 'kb/restart-or-save-and-kill)
 
 ;;; keybinds-native-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
