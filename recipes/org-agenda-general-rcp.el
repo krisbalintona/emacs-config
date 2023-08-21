@@ -136,9 +136,12 @@
      (?D . (shadow org-priority))
      (?E . (shadow org-priority))))
   (org-stuck-projects
-   ;; FIXME 2023-01-23: Currently limits "projects" to top-level
-   ;; headlines
-   '("+LEVEL=1+project/-DONE-CANCELED" ("PROG" "ACTIVE" "TODO") nil "SCHEDULED:"))
+   ;; Stuck projects are those that...
+   ;; 1. Have the "project" tag
+   ;; 2. Do not have the DONE or CANCELED todo keywords
+   ;; 3. Do not have todos that have the PROG or ACTIVE keywords
+   ;; 4. Do not have tasks that match the regexp "SCHEDULED:"
+   '("+project/-DONE-CANCELED" ("PROG" "ACTIVE") nil "SCHEDULED:"))
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :config
@@ -329,7 +332,12 @@ Side effects occur if the parent of the current headline has a
                      (org-habit-show-habits-only-for-today nil)
                      (org-agenda-dim-blocked-tasks t)
                      (org-agenda-include-diary t)
-                     (org-agenda-insert-diary-extract-time t)))
+                     (org-agenda-insert-diary-extract-time t)
+                     (org-super-agenda-groups
+                      '((:name "Projects"
+                         :tag "project")
+                        (:name "Orphans"
+                         :anything t)))))
             (alltodo ""
                      ((org-agenda-overriding-header "Unscheduled")
                       (org-agenda-prefix-format
