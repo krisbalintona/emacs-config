@@ -18,7 +18,8 @@
   ;; `org' does
   :after org
   :hook ((org-agenda-finalize . (lambda () (goto-char (point-min))))
-         (org-capture-before-finalize . kb/add-property-with-date-captured))
+         (org-capture-before-finalize . kb/add-property-with-date-captured)
+         (org-after-todo-state-change . kb/org-todo-project-prog))
   :general
   (kb/open-keys "a" 'org-agenda)
   :custom
@@ -171,7 +172,20 @@ This function makes sure that dates are aligned for easy reading."
                            (format " W%02d" iso-week)
                          "")))
       (format " %-2s. %2d %s"
-              dayname day monthname))))
+              dayname day monthname)))
+
+  (defun kb/org-todo-project-prog ()
+    "Project is set to \"PROG\" under certain conditions.
+Side effects occur if the parent of the current headline has a
+\"project\" tag. The parent headline's todo-keyword is changed to
+\"PROG\" if the current headline's todo-keyword is \"PROG\"."
+    (let* ((parent (org-element-property :parent (org-element-at-point)))
+           (parent-tags (org-element-property :tags parent)))
+      (when (member "project" parent-tags)
+        (save-excursion
+          (goto-char (org-element-property :begin parent))
+          (when (string= org-state "PROG")
+            (org-todo "PROG")))))))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
@@ -335,11 +349,11 @@ This function makes sure that dates are aligned for easy reading."
   (org-clock-out-remove-zero-time-clocks t)
   (org-clock-report-include-clocking-task t)
   (org-show-notification-handler #'(lambda (str)
-                                      (notifications-notify
-                                       :title "Org-agenda task overrun!"
-                                       :body str
-                                       :app-name "GNU Emacs"
-                                       :urgency 'normal)))
+                                     (notifications-notify
+                                      :title "Org-agenda task overrun!"
+                                      :body str
+                                      :app-name "GNU Emacs"
+                                      :urgency 'normal)))
   ;; Mode line
   (org-clock-string-limit 0)
   (org-clock-heading-function 'kb/org-clock-get-heading-string)
