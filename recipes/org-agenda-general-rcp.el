@@ -174,6 +174,7 @@ This function makes sure that dates are aligned for easy reading."
       (format " %-2s. %2d %s"
               dayname day monthname)))
 
+  ;; For `org-agenda'
   (defun kb/org-todo-project-prog ()
     "Project is set to \"PROG\" under certain conditions.
 Side effects occur if the parent of the current headline has a
@@ -185,7 +186,22 @@ Side effects occur if the parent of the current headline has a
         (save-excursion
           (goto-char (org-element-property :begin parent))
           (when (string= org-state "PROG")
-            (org-todo "PROG")))))))
+            (org-todo "PROG"))))))
+  (defun kb/org-agenda-skip-if-not-stuck-project ()
+    "tk"
+    (let* ((top-level-p (org-edna-finder/parent 'todo-only))
+           (siblings (org-edna-finder/rest-of-siblings 'from-top 'todo-only))
+           todos)
+      (when top-level-p                   ; Don't skip if top-level todo
+        (setq todos (cl-loop
+                     for sibling in siblings
+                     collect (save-excursion
+                               (save-window-excursion
+                                 (org-goto-marker-or-bmk sibling)
+                                 (org-element-property :todo-keyword (org-element-at-point))))))
+        ;; Ignore if there is a PROG or ACTIVE todo keyword among siblings
+        (when (or (member "PROG" todos) (member "ACTIVE" todos))
+          (org-entry-end-position))))))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
@@ -318,6 +334,7 @@ Side effects occur if the parent of the current headline has a
                      ((org-agenda-overriding-header "Unscheduled")
                       (org-agenda-prefix-format
                        '((todo . "%-25(kb/org-agenda-breadcrumb 21)%-5s")))
+                      (org-agenda-skip-function 'kb/org-agenda-skip-if-not-stuck-project)
                       (org-super-agenda-groups
                        '((:discard (:todo ("PROG" "ACTIVE" "WAITING" "MAYBE")))
                          (:discard (:not (:scheduled nil)))
