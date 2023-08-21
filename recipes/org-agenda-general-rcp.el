@@ -446,7 +446,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
     (force-mode-line-update t))
   (advice-add 'org-pomodoro-update-mode-line :override 'kb/org-pomodoro-update-mode-line))
 
-;;; Org-third-time
+;;; Org-work-timer
 (use-package org-work-timer
   :elpaca nil)
 

@@ -12,17 +12,11 @@
 ;;; Org
 ;;;; Itself
 (use-package org
-  ;; Use latest stable release
-  :elpaca (:repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
-            :pre-build (progn (require 'elpaca-menu-org) (elpaca-menu-org--build))
-            :build (:not elpaca--generate-autoloads-async)
-            :files (:defaults ("etc/styles/" "etc/styles/*" "doc/*.texi"))
-            :tag "release_9.6.7")
   :gfhook
   'variable-pitch-mode
   'visual-line-mode
   '(lambda ()
-           (eldoc-mode -1))
+     (eldoc-mode -1))
   :general
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link
