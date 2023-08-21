@@ -10,6 +10,13 @@
 (require 'keybinds-general-rcp)
 (require 'buffers-and-windows-rcp)
 
+;;; Ielm
+(use-package ielm
+  :elpaca nil
+  :custom
+  (ielm-noisy nil)
+  (ielm-dynamic-return nil))
+
 ;;; Lisp-keyword-indent
 ;; Better keyword, cl-defun, and cl-loop indenting. See
 ;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
