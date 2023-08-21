@@ -199,10 +199,12 @@ This function makes sure that dates are aligned for easy reading."
                       (org-super-agenda-groups
                        '((:discard (:not (:tag "project")))
                          (:discard (:not (:todo "PROG")))
+                         (:name "Undated"
+                          :and (:not (:scheduled t)
+                                :not (:deadline t)))
                          (:name "Dated"
                           :scheduled t
-                          :deadline t)
-                         (:name "Undated" :anything t)))))
+                          :deadline t)))))
             (alltodo ""
                      ((org-agenda-overriding-header "High priority but unscheduled")
                       (org-super-agenda-groups
@@ -271,8 +273,13 @@ This function makes sure that dates are aligned for easy reading."
                          '((tags . "%-25(kb/org-agenda-breadcrumb 21)%?s")))
                         (org-super-agenda-groups
                          '((:discard (:todo "PROG"))
-                           (:name ""
-                            :tag "project")
+                           (:discard (:not (:tag "project")))
+                           (:name "Undated"
+                            :and (:not (:scheduled t)
+                                  :not (:deadline t)))
+                           (:name "Dated"
+                            :scheduled t
+                            :deadline t)
                            (:discard (:anything t))))))
             (agenda ""
                     ((org-agenda-overriding-header "Timeline")
@@ -400,7 +407,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
     (force-mode-line-update t))
   (advice-add 'org-pomodoro-update-mode-line :override 'kb/org-pomodoro-update-mode-line))
 
-;;; Org-pomodoro-third-time
+;;; Org-third-time
 (use-package org-work-timer
   :elpaca nil)
 
