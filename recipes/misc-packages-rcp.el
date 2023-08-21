@@ -469,10 +469,7 @@ displayed."
   (logos-outlines-are-pages t)
   (logos-outline-regexp-alist
    `((emacs-lisp-mode . ,(rx bol (or (literal ";;; ") ?)))
-     (org-mode . ,(rx bol (or (literal "* ") ?)))))
-  (logos-outline-regexp-alist
-   `((emacs-lisp-mode . "^\\(?:;;; \\|\\)")
-     (org-mode . "^\\(?:\\* \\|\\)")
+     (org-mode . ,(rx bol (or (literal "* ") ?)))
      (org-agenda-mode . ,(rx bol (literal (char-to-string org-agenda-block-separator)))))))
 
 ;;; Engine-mode
