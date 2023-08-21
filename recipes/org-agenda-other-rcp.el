@@ -137,8 +137,8 @@ See `kb/consult-org-depend’."
   (org-gcal-update-cancelled-events-with-todo t)
   (org-gcal-remove-api-cancelled-events t)
   ;; Time zone
-  (org-gcal-local-timezone "America/Chicago")
-  ;; (org-gcal-local-timezone "America/New_York")
+  ;; (org-gcal-local-timezone "America/Chicago")
+  (org-gcal-local-timezone "America/New_York")
   :init
   (require 'plstore))
 
