@@ -356,6 +356,7 @@ Side effects occur if the parent of the current headline has a
                    (org-agenda-dim-blocked-tasks 'invisible)
                    (org-super-agenda-groups
                     '((:discard (:scheduled t))
+                      (:discard (:tag "project"))
                       (:name ""
                        :anything t))))))))))
 
