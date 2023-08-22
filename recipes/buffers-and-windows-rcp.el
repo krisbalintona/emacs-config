@@ -275,7 +275,7 @@ If buffer-or-name is nil return current buffer's mode."
   :general ("M-`" 'popper-toggle-latest
             "C-`" 'popper-cycle
             "H-`" 'popper-kill-latest-popup
-            "C-S-`" 'popper-toggle-type)
+            "C-~" 'popper-toggle-type)
   :custom
   (popper-reference-buffers
    '(;; General
