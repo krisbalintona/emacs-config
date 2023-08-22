@@ -454,7 +454,32 @@ Same as default but truncates with `truncate-string-ellipsis'."
 
 ;;; Org-work-timer
 (use-package org-work-timer
-  :elpaca nil)
+  :elpaca nil
+  :hook (kb/themes . kb/org-work-timer-set-faces)
+  :general (kb/open-keys
+             "w" org-work-timer-prefix-map)
+  :custom
+  (org-work-timer-time-format "%.2m:%.2s")
+  (org-work-timer-default-work-duration 25)
+  (org-work-timer-default-break-duration 5)
+  (org-work-timer-work-duration-function 'org-work-timer-work-duration-fractional)
+  (org-work-timer-break-duration-function 'org-work-timer-break-duration-fractional)
+  ;; (org-work-timer-work-duration-function 'org-work-timer-work-duration-pomodoro)
+  ;; (org-work-timer-break-duration-function 'org-work-timer-break-duration-pomodoro)
+  ;; (org-work-timer-fractional-work-duration 1)
+  (org-work-timer-fractional-work-duration 25)
+  (org-work-timer-fractional-break-duration-fraction 0.25)
+  :init
+  (defun kb/org-work-timer-set-faces ()
+    "Set `org-work-timer-mode-line' according to dark or light theme."
+    (let* ((dark-p
+            (color-dark-p (color-name-to-rgb (face-attribute 'default :background))))
+           (initial-color "DarkOrange")
+           (foreground
+            (if dark-p
+                initial-color
+              (color-darken-name initial-color 15))))
+      (set-face-foreground 'org-work-timer-mode-line foreground))))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
