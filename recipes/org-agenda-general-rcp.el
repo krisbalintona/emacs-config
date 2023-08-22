@@ -140,8 +140,13 @@
    ;; 1. Have the "project" tag
    ;; 2. Do not have the DONE or CANCELED todo keywords
    ;; 3. Do not have todos that have the PROG or ACTIVE keywords
-   ;; 4. Do not have tasks that match the regexp "SCHEDULED:"
-   '("+project/-DONE-CANCELED" ("PROG" "ACTIVE") nil "SCHEDULED:"))
+   ;; 4. Do not have tasks that match the `org-not-done-heading-regexp' followed
+   ;; by the `org-scheduled-time-regexp' regexp
+   `("+project/-DONE-CANCELED"
+     ("PROG" "ACTIVE")
+     nil
+     ,(rx (regexp org-not-done-heading-regexp)
+          (regexp org-scheduled-time-regexp))))
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :config
