@@ -567,21 +567,22 @@
                     (smtpmail-mail-address "krisbalintona@gmail.com"))))))
 
 ;;;; Integration with `logos.el'
-(with-eval-after-load 'logos
-  (defun kb/mu4e-view-set-outline-regexp ()
-    "tk"
-    (let* ((from (message-field-value "FROM"))
-           (regexp
-            ;; According to FROM field
-            (pcase from
-              ("emacs-orgmode-request@gnu.org" ; Org-mode digest
-               (rx bol
-                   "------------------------------"
-                   eol
-                   "\n")))))
-      (when regexp
-        (setq-local outline-regexp regexp))))
-  (add-hook 'mu4e-view-rendered-hook #'kb/mu4e-view-set-outline-regexp))
+(defun kb/mu4e-view-set-outline-regexp ()
+  "Set `outline-regexp' according to FROM field.
+Useful for `consult-outline' and `logos.el'."
+  (let* ((from (message-field-value "FROM"))
+         (regexp
+          ;; According to FROM field
+          (pcase from
+            ("emacs-orgmode-request@gnu.org" ; Org-mode digest
+             (rx bol
+                 (literal "------------------------------")
+                 (zero-or-more "-")
+                 eol
+                 "\n")))))
+    (when regexp
+      (setq-local outline-regexp regexp))))
+(add-hook 'mu4e-view-rendered-hook #'kb/mu4e-view-set-outline-regexp)
 
 ;;; Mu4e header icons (from Doom Emacs)
 (with-eval-after-load 'mu4e
