@@ -137,7 +137,7 @@
   (org-msg-default-alternatives
    '((new . (text html))
      (reply-to-html . (text html))
-     (reply-to-text . text)))
+     (reply-to-text . (text))))
   (org-msg-convert-citation t)
   (org-msg-attached-file-reference      ; Taken from Doom
    "see[ \t\n]\\(?:the[ \t\n]\\)?\\(?:\\w+[ \t\n]\\)\\{0,3\\}\\(?:attached\\|enclosed\\)\\|\
