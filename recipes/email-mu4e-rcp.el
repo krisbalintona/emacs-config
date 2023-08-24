@@ -44,7 +44,8 @@
                                  mu4e-headers-thread-connection-prefix '("│" . "│ "))))
          (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h)
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
-         (mu4e-view-mode . visual-fill-column-mode))
+         (mu4e-view-mode . visual-fill-column-mode)
+         (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
   :general
   (:keymaps 'mu4e-main-mode-map
    "q" 'bury-buffer
@@ -142,6 +143,24 @@
         (`refile (mu4e-action-retag-message msg "-\\Inbox"))
         (`flag   (mu4e-action-retag-message msg "+\\Starred"))
         (`unflag (mu4e-action-retag-message msg "-\\Starred")))))
+
+  ;; Respect the value of `message-deletable-headers'; mu4e doesn't do so by
+  ;; default. See https://github.com/djcb/mu/issues/2502
+  (defun fraolt-mu4e-mark-deletable-headers ()
+    "Set deletable headers as deletable."
+    (save-restriction
+      (message-narrow-to-headers)
+      (let ((headers message-deletable-headers))
+        (unless (buffer-modified-p)
+          (setq headers (delq 'Message-ID (copy-sequence headers))))
+        (while headers
+          (goto-char (point-min))
+          (if (re-search-forward
+               (concat "^" (symbol-name (car headers)) ": *") nil t)
+              (add-text-properties
+               (match-beginning 0) (match-end 0)
+               '(message-deletable t face italic) (current-buffer)))
+          (pop headers)))))
   :config
   ;; Modeline
   ;; Force using regular characters rather than the fancy ones
