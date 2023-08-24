@@ -300,8 +300,8 @@
                         (cl-loop for (key . value) in kb/signature-alist
                                  collect key))))
     (or (alist-get alias kb/signature-alist nil nil #'string=)
-        ;; If a signature was manually typed rather than an alias
-        ;; chosen. Example: if "Test" is typed, the result will be:
+        ;; If a signature was manually typed rather than an alias chosen.
+        ;; Example: if "Test" is typed, the result will be:
         ;; "#+begin_signature (kb/signature-open)
         ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (kb/signature-separator)
         ;; Test,
@@ -340,7 +340,16 @@ signatures being wrapped in `kb/signature-open' and
               (delete-region existing-sig-beg existing-sig-end)
               (insert sig))
           ;; Remove leading whitespace from sig if inserting
-          (insert (string-trim-left sig)))))))
+          (insert (string-trim-left sig)))))
+    ;; Change email signature separator to the conventional "--" for text-only
+    ;; emails
+    (when (and (equal major-mode 'org-msg-edit-mode)
+               (equal (org-msg-get-prop "alternatives")
+                      '(text)))
+      (save-excursion
+        (goto-char (point-min))
+        (when (search-forward kb/signature-separator nil t)
+          (replace-match "--" 1))))))
 
 ;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
