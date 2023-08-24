@@ -452,26 +452,30 @@ Same as default but truncates with `truncate-string-ellipsis'."
     (force-mode-line-update t))
   (advice-add 'org-pomodoro-update-mode-line :override 'kb/org-pomodoro-update-mode-line))
 
-;;; Org-work-timer
-(use-package org-work-timer
+;;; Work-timer
+(use-package work-timer
+  :demand
+  :load-path "/home/krisbalintona/.emacs.d/site-lisp/work-timer/"
   :elpaca nil
-  :hook (kb/themes . kb/org-work-timer-set-faces)
+  :hook (kb/themes . kb/work-timer-set-faces)
   :general (kb/open-keys
-             "w" org-work-timer-prefix-map)
+             "w" work-timer-prefix-map)
   :custom
-  (org-work-timer-time-format "%.2m:%.2s")
-  (org-work-timer-default-work-duration 25)
-  (org-work-timer-default-break-duration 5)
-  (org-work-timer-work-duration-function 'org-work-timer-work-duration-fractional)
-  (org-work-timer-break-duration-function 'org-work-timer-break-duration-fractional)
-  ;; (org-work-timer-work-duration-function 'org-work-timer-work-duration-pomodoro)
-  ;; (org-work-timer-break-duration-function 'org-work-timer-break-duration-pomodoro)
-  ;; (org-work-timer-fractional-work-duration 1)
-  (org-work-timer-fractional-work-duration 25)
-  (org-work-timer-fractional-break-duration-fraction 0.25)
+  (work-timer-debug t)
+  (work-timer-time-format "%.2m:%.2s")
+  (work-timer-default-work-duration 25)
+  (work-timer-default-break-duration 5)
+  (work-timer-work-duration-function 'work-timer-work-duration-fractional)
+  (work-timer-break-duration-function 'work-timer-break-duration-fractional)
+  ;; (work-timer-work-duration-function 'work-timer-work-duration-pomodoro)
+  ;; (work-timer-break-duration-function 'work-timer-break-duration-pomodoro)
+  ;; (work-timer-fractional-work-duration 0.5)
+  ;; (work-timer-fractional-break-duration-fraction 1)
+  (work-timer-fractional-work-duration 25)
+  (work-timer-fractional-break-duration-fraction 0.25)
   :init
-  (defun kb/org-work-timer-set-faces ()
-    "Set `org-work-timer-mode-line' according to dark or light theme."
+  (defun kb/work-timer-set-faces ()
+    "Set `work-timer-mode-line' according to dark or light theme."
     (let* ((dark-p
             (color-dark-p (color-name-to-rgb (face-attribute 'default :background))))
            (initial-color "DarkOrange")
@@ -479,7 +483,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
             (if dark-p
                 initial-color
               (color-darken-name initial-color 15))))
-      (set-face-foreground 'org-work-timer-mode-line foreground))))
+      (set-face-foreground 'work-timer-mode-line foreground))))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
