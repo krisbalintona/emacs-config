@@ -28,13 +28,18 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
 (kb/toggle-keys "f" '(aj-toggle-fold :wk "aj-toggle-fold"))
 
 ;;; Indent whole buffer
-(defun kb/format-buffer-indentation--base ()
-  "Basic indentation fix using `indent-region'."
+(defun kb/format-buffer-indentation--base (&optional beg end)
+  "Basic indentation fix using `indent-region'.
+By default, indents entire buffer. If BEG and END are specified,
+act upon that region instead."
   (interactive)
-  (save-excursion
-    (delete-trailing-whitespace)
-    (indent-region (point-min) (point-max) nil)
-    (untabify (point-min) (point-max))))
+  (let ((beg (or beg (point-min)))
+        (end (or end (point-max))))
+    (save-excursion
+      (delete-trailing-whitespace)
+      (indent-region beg end nil)
+      (untabify beg end))))
+
 (defun kb/format-buffer-indentation--fill-column ()
   "Basic indentation fix and wrap comments."
   (interactive)
@@ -44,12 +49,15 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
     (while (re-search-forward comment-start nil t)
       (call-interactively 'fill-paragraph)
       (forward-line 1))))
+
 (defun kb/format-buffer-indentation ()
   "Properly indent the entire buffer."
   (interactive)
   (cond
    ((eq major-mode 'emacs-lisp-mode)
     (kb/format-buffer-indentation--base))
+   ((eq major-mode 'inferior-emacs-lisp-mode)
+    (kb/format-buffer-indentation--base (save-excursion (comint-bol))))
    ((eq major-mode 'conf-mode)
     (conf-align-assignments)
     (kb/format-buffer-indentation--base))
@@ -129,7 +137,8 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
 
 ;;; Advice-unadvice
-;; Thanks to https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
+;; Thanks to
+;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
 (defun advice-unadvice (sym)
   "Remove all advices from symbol SYM."
   (interactive "aFunction symbol: ")
@@ -137,7 +146,8 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
                  (advice-remove sym advice)) sym))
 
 ;;; kb/org-add-blank-lines
-;; Ensure that there are blank lines before and after org heading. Use with =universal-argument= to apply to whole buffer
+;; Ensure that there are blank lines before and after org heading. Use with
+;; =universal-argument= to apply to whole buffer
 (defun unpackaged/org-add-blank-lines (&optional prefix)
   "Ensure blank lines between headings and their contents.
 
@@ -148,8 +158,9 @@ current subtree."
   (interactive "P")
   (org-map-entries (lambda ()
                      (org-with-wide-buffer
-                      ;; `org-map-entries' narrows the buffer, which prevents us from seeing
-                      ;; newlines before the current heading, so we do this part widened.
+                      ;; `org-map-entries' narrows the buffer, which prevents us
+                      ;; from seeing newlines before the current heading, so we
+                      ;; do this part widened.
                       (while (not (looking-back "\n\n" nil))
                         ;; Insert blank lines before heading.
                         (insert "\n")))
@@ -161,9 +172,10 @@ current subtree."
                          ;; Skip planning lines
                          (forward-line))
                        (while (re-search-forward org-drawer-regexp end t)
-                         ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
-                         ;; for some reason it doesn't work correctly when operating on hidden text.
-                         ;; This works, taken from `org-agenda-get-some-entry-text'.
+                         ;; Skip drawers. You might think that `org-at-drawer-p'
+                         ;; would suffice, but for some reason it doesn't work
+                         ;; correctly when operating on hidden text. This works,
+                         ;; taken from `org-agenda-get-some-entry-text'.
                          (re-search-forward "^[ \t]*:END:.*\n?" end t)
                          (goto-char (match-end 0)))
                        (unless (or (= (point) (point-max))
