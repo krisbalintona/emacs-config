@@ -476,6 +476,7 @@ have `org-warning' face."
 ;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
+  :hook (typo-mode . kb/typo-modify-syntax-table)
   :ghook 'org-mode-hook
   :config
   (defun kb/typo-insert-cycle (cycle)
@@ -514,7 +515,16 @@ have `org-warning' face."
 
 If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
-    ("'" "’")))        ; Swapped these two
+    ("'" "’"))                          ; Swapped these two
+
+  ;; Add characters (e.g. curly quotes) to syntax table
+  (defun kb/typo-modify-syntax-table ()
+    "Locally modify the current buffer's syntax table.
+Allows our special characters to be recognized as delimiters."
+    (modify-syntax-entry (string-to-char "“") "(”")
+    (modify-syntax-entry (string-to-char "”") ")“")
+    (modify-syntax-entry (string-to-char "‘") "(’")
+    (modify-syntax-entry (string-to-char "’") ")‘")))
 
 ;;;; Custom org-src-block for paragraphs
 ;; Also see package `org-edit-indirect'. Does something similar but more
