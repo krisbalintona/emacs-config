@@ -145,7 +145,7 @@
 \\(?:attached\\|enclosed\\)[ \t\n]\\(?:for\\|is\\)[ \t\n]")
   ;; Settings for Gmail-formatted HTML citations
   (org-msg-posting-style 'gmail) ; My own value which I leverage in `kb/org-msg-post-setup'
-  (message-cite-function 'message-cite-original)
+  (message-cite-function 'message-cite-original-without-signature)
   (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
   ;; CSS for emails. Taken initially from Doom Emacs then modified.
