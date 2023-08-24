@@ -146,19 +146,7 @@
   ;; Settings for Gmail-formatted HTML citations
   (org-msg-posting-style 'gmail) ; My own value which I leverage in `kb/org-msg-post-setup'
   (message-cite-function 'message-cite-original)
-  (message-citation-line-function
-   (lambda (&optional from date tz)
-     "Situationally change `message-citation-line-format'.
-
-If `org-msg-mode' is active,`message-citation-line-format' is
-inserted within a \"gmail_attr\" org-block."
-     (let ((message-citation-line-format
-            (if org-msg-mode
-                (concat "#+begin_gmail_attr\n"
-                        message-citation-line-format
-                        "#+end_gmail_attr\n")
-              message-citation-line-format)))
-       (message-insert-formatted-citation-line from date tz))))
+  (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
   ;; CSS for emails. Taken initially from Doom Emacs then modified.
   (org-msg-enforce-css
@@ -416,7 +404,12 @@ MML tags."
       (let* ((type (cond ((not (org-msg-message-fetch-field "subject")) 'new)
                          ((org-msg-mua-call 'article-htmlp) 'reply-to-html)
                          ('reply-to-text)))
-             (alternatives (org-msg-get-alternatives type)))
+             (alternatives (org-msg-get-alternatives type))
+             ;; Insert the value of `message-citation-line-format' into a
+             ;; "gmail_attr" org block
+             (message-citation-line-format (concat "#+begin_gmail_attr\n"
+                                                   message-citation-line-format
+                                                   "#+end_gmail_attr\n")))
         (when alternatives
           (let-alist (org-msg-composition-parameters type alternatives)
             (unless (search-forward org-msg-options nil t)
