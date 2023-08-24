@@ -413,12 +413,7 @@ MML tags."
       (let* ((type (cond ((not (org-msg-message-fetch-field "subject")) 'new)
                          ((org-msg-mua-call 'article-htmlp) 'reply-to-html)
                          ('reply-to-text)))
-             (alternatives (org-msg-get-alternatives type))
-             ;; Insert the value of `message-citation-line-format' into a
-             ;; "gmail_attr" org block
-             (message-citation-line-format (concat "#+begin_gmail_attr\n"
-                                                   message-citation-line-format
-                                                   "#+end_gmail_attr\n")))
+             (alternatives (org-msg-get-alternatives type)))
         (when alternatives
           (let-alist (org-msg-composition-parameters type alternatives)
             (unless (search-forward org-msg-options nil t)
@@ -431,7 +426,8 @@ MML tags."
                                     ""
                                   (concat " " (org-msg-get-to-name))))))
               ;; Get a chance to modify the inserted citation according to
-              ;; `org-msg-posting-style'
+              ;; `org-msg-posting-style'. Point begins at the start of the
+              ;; citation
               (save-excursion
                 (pcase .style
                   ('top-posting
@@ -443,9 +439,13 @@ MML tags."
                          (replace-match (cdr rep)))))
                    (org-escape-code-in-region (point) (point-max)))
                   ('gmail
-                   (insert"#+begin_gmail_quote")
+                   (insert "#+begin_gmail_quote\n#+begin_gmail_attr")
+                   (save-match-data
+                     (re-search-forward (rx "\n" bol (literal message-yank-prefix)))
+                     (goto-char (match-beginning 0)))
+                   (insert "#+end_gmail_attr\n")
                    (goto-char (point-max))
-                   (insert"#+end_gmail_quote"))))
+                   (insert "#+end_gmail_quote"))))
               ;; Insert signature at the proper place according to
               ;; `org-msg-posting-style'
               (when .signature
