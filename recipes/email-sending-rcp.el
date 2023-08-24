@@ -447,7 +447,10 @@ MML tags."
                    (insert .signature "\n\n"))
                   (t
                    (goto-char (point-max))
-                   (insert .signature)))))
+                   (save-excursion (insert .signature))
+                   ;; Convenient formatting: Ensure only one blank line
+                   ;; separates the email signature from the email citation
+                   (delete-blank-lines)))))
             (if (org-msg-message-fetch-field "to")
                 (org-msg-goto-body)
               (message-goto-to))
