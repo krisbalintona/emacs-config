@@ -243,6 +243,24 @@ Side effects occur if the parent of the current headline has a
                          (:name "Dated"
                           :scheduled t
                           :deadline t)))))
+            (agenda ""
+                    ((org-agenda-overriding-header "Upcoming dates")
+                     (org-agenda-start-day "+0d")
+                     (org-agenda-span 9)
+                     (org-agenda-show-inherited-tags t)
+                     (org-agenda-dim-blocked-tasks t)
+                     (org-agenda-sorting-strategy
+                      '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
+                     (org-agenda-prefix-format
+                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
+                     (org-agenda-entry-types '(:scheduled :deadline))
+                     (org-super-agenda-groups
+                      '((:name ""
+                         :and (:scheduled t
+                               :tag "project"))
+                        (:name ""
+                         :deadline t)
+                        (:discard (:anything t))))))
             (alltodo ""
                      ((org-agenda-overriding-header "High priority but unscheduled")
                       (org-super-agenda-groups
@@ -290,18 +308,7 @@ Side effects occur if the parent of the current headline has a
                       '((:name "Projects"
                          :tag "project")
                         (:name "Orphans"
-                         :anything t)))))
-            (agenda ""
-                    ((org-agenda-overriding-header "Upcoming deadlines")
-                     (org-agenda-start-day "+1d")
-                     (org-agenda-span 14)
-                     (org-agenda-show-inherited-tags t)
-                     (org-agenda-dim-blocked-tasks t)
-                     (org-agenda-sorting-strategy
-                      '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
-                     (org-agenda-prefix-format
-                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
-                     (org-agenda-entry-types '(:deadline))))))
+                         :anything t)))))))
           ("p" "Planning"
            ((tags-todo "+project"
                        ((org-agenda-overriding-header "Projects")
