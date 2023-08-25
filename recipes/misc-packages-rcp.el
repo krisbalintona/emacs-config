@@ -531,7 +531,6 @@ displayed."
 (use-package electric
   :elpaca nil
   :custom
-  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
   (electric-quote-comment nil)
   (electric-quote-string nil)
