@@ -397,7 +397,14 @@ email."
       (signature . ,(unless (save-excursion ; Don't interactively insert signature if one already present
                               (save-match-data
                                 (goto-char (point-min))
-                                (re-search-forward message-signature-separator nil t)))
+                                ;; We don't use `message-signature-separator'
+                                ;; because the separator may be replaced
+                                ;; conditionally. See
+                                ;; `kb/mu4e-insert-signature'.
+                                (re-search-forward (rx (literal kb/signature-open)
+                                                       (+ anychar)
+                                                       (literal kb/signature-close))
+                                                   nil t)))
                       (call-interactively 'kb/mu4e-select-signature)))))
   (advice-add 'org-msg-composition-parameters :override 'kb/org-msg-composition-parameters)
 
