@@ -152,7 +152,7 @@
   (org-msg-enforce-css
    ;; Avoid styling that applies to all blockquotes (i.e. (blockquotes nil ...))
    ;; and blockquotes whose class is gmail_quote since this overrides the
-   ;; styling we do in `kb/org-msg--html-special-block' which sets the class to
+   ;; styling done in `kb/org-msg--html-special-block', which sets the class to
    ;; gmail_quote and adds styling. We style there rather than here since we
    ;; cannot add both a class and style property; the class property is
    ;; overwritten if we use `org-msg-enforce-css'.
@@ -162,7 +162,7 @@
           (font-size '(font-size . "10pt"))
           (font `(,font-family ,font-size))
           (line-height '(line-height . "1.1"))
-          (theme-color "#000")
+          (theme-color "#0071c5")
           (bold '(font-weight . "bold"))
           (color `(color . ,theme-color))
           (table `((margin-top . "6px") (margin-bottom . "6px")
