@@ -18,7 +18,7 @@
 ;;;; Itself
 (use-package mu4e
   :elpaca nil
-  :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
   :hook ((elpaca-after-init . (lambda () (when (daemonp) (mu4e t))))
          (window-setup . (lambda ()
                            (setq mu4e-headers-personal-mark  '("p" . " ")) ; Always set this
