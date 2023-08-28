@@ -14,11 +14,9 @@
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
   :elpaca nil
-  :ensure-system-package ((dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
-                          ("/usr/share/dictd/wn.index" . dict-wn)
-                          ("/usr/share/dictd/gcide.index" . dict-gcide)
-                          ("/usr/share/dictd/moby-thesaurus.index" . dict-moby-thesaurus)
-                          ("/usr/share/dictd/foldoc.index" . dict-foldoc))
+  ;; Don't forget to install the following packages from the AUR:
+  ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
+  :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
   :gfhook 'hide-mode-line-mode
   :custom
   (dictionary-use-single-buffer t)
