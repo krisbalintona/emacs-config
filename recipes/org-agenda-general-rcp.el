@@ -490,7 +490,9 @@ Same as default but truncates with `truncate-string-ellipsis'."
             (if dark-p
                 initial-color
               (color-darken-name initial-color 15))))
-      (set-face-foreground 'work-timer-mode-line foreground))))
+      (set-face-foreground 'work-timer-mode-line foreground)))
+  :config
+  (work-timer-with-org-clock-mode))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
