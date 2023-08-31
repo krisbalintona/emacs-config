@@ -83,14 +83,21 @@
   ;; temporarily while inserting
   (advice-add 'org-cite-insert :after
                                #'(lambda (&rest _)
-                                    (when (eq org-cite-insert-processor 'citar)
-                                      (citar-org-update-prefix-suffix))))
-  (advice-add 'citar-org-update-prefix-suffix :around
-                                              #'(lambda (orig-fun &rest args)
-                                                   (when (featurep 'typo)
-                                                     (add-hook 'minibuffer-mode-hook 'typo-mode))
-                                                   (apply orig-fun args)
-                                                   (remove-hook 'minibuffer-mode-hook 'typo-mode)))
+                                   (when (eq org-cite-insert-processor 'citar)
+                                     (citar-org-update-prefix-suffix))))
+  (advice-add 'citar-org-update-prefix-suffix
+              :around (lambda (orig-fun &rest args)
+                        (when (featurep 'typo)
+                          (add-hook 'minibuffer-mode-hook 'typo-mode))
+                        (condition-case err
+                            (apply orig-fun args)
+                          (quit
+                           ;; Remove from minibuffer-mode-hook when user
+                           ;; interrupts with keyboard-quit (C-g)
+                           (when (featurep 'typo)
+                             (remove-hook 'minibuffer-mode-hook 'typo-mode))))
+                        (when (featurep 'typo)
+                          (remove-hook 'minibuffer-mode-hook 'typo-mode))))
 
   ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
   (defvar citar-indicator-files-icons
