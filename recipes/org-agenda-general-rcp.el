@@ -462,8 +462,11 @@ Same as default but truncates with `truncate-string-ellipsis'."
 ;;; Work-timer
 (use-package work-timer
   :demand
-  :load-path "/home/krisbalintona/.emacs.d/site-lisp/work-timer/"
-  :elpaca nil
+  :elpaca (:type git
+           :host github
+           :protocol ssh
+           :repo "krisbalintona/work-timer"
+           :depth nil)
   :hook (kb/themes . kb/work-timer-set-faces)
   :general (kb/open-keys
              "w" work-timer-prefix-map)
