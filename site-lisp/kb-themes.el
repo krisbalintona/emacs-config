@@ -106,8 +106,12 @@
   (select-frame frame)
   (set-face-attribute 'default nil
                       :family kb/themes-default-font
-                      ;; :height 140)      ; 1920x1080 display
-                      :height 186)      ; 2560x1600 display
+                      ;; 1920x1080 display
+                      ;; :height 140)
+                      ;; 2560x1600 display
+                      ;; :height 186)
+                      ;; 2560x1600 display, with DPI set to 118
+                      :height 150)
   (set-face-attribute 'fixed-pitch nil
                       :family kb/themes-fixed-pitch-font
                       :height 1.0)
