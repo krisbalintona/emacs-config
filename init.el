@@ -104,6 +104,7 @@
 
 ;;;; Shells
 (require 'shell-basic-rcp)
+(require 'shell-fish-rcp)
 (require 'shell-eshell-rcp)
 (require 'shell-vterm-rcp)
 
