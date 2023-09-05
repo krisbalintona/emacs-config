@@ -468,7 +468,8 @@ Same as default but truncates with `truncate-string-ellipsis'."
            :host github
            :protocol ssh
            :repo "krisbalintona/work-timer"
-           :depth nil)
+           :depth nil
+           :files (:defaults "*.mp3"))
   :hook (kb/themes . kb/work-timer-set-faces)
   :general (kb/open-keys
              "w" work-timer-prefix-map)
