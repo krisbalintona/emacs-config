@@ -370,7 +370,9 @@ Side effects occur if the parent of the current headline has a
                     '((:discard (:scheduled t))
                       (:discard (:tag "project"))
                       (:name ""
-                       :anything t))))))))))
+                       :anything t)))))))
+          ("d" "Done and cancelled"
+           ((tags "TODO=\"DONE\"&LEVEL=1|TODO=\"CANCELED\"&LEVEL=1"))))))
 
 ;;; Org-clock
 (use-package org-clock
