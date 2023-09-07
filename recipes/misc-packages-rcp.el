@@ -937,6 +937,15 @@ This is a difference in multitude of %s."
 (use-package goto-chg
   :general ("C-z" 'goto-last-change))
 
+;;; Fontify-patch
+(use-package fontify-patch
+  :elpaca (:type git
+           :host github
+           :repo "whame/fontify-patch")
+  :config
+  ;; To fontify mail containing patches with the email client
+  (add-hook 'gnus-part-display-hook 'fontify-patch-buffer))
+
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
   :elpaca nil
