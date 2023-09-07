@@ -253,14 +253,7 @@ Side effects occur if the parent of the current headline has a
                       '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
                      (org-agenda-prefix-format
                       '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
-                     (org-agenda-entry-types '(:scheduled :deadline))
-                     (org-super-agenda-groups
-                      '((:name ""
-                         :and (:scheduled t
-                               :tag "project"))
-                        (:name ""
-                         :deadline t)
-                        (:discard (:anything t))))))
+                     (org-agenda-entry-types '(:deadline))))
             (alltodo ""
                      ((org-agenda-overriding-header "High priority but unscheduled")
                       (org-super-agenda-groups
