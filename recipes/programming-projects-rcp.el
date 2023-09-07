@@ -289,6 +289,14 @@
   :init
   (abridge-diff-mode))
 
+;;;; Keychain-environment
+(use-package keychain-environment
+  ;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated when committing since
+  ;; their values may change (ever since I started using keychain in the Fish
+  ;; shell to call ssh-agent). Requires the "keychain" package; sources
+  ;; appropriate file in ~/.keychain/ to update environment variables
+  :hook (git-commit-post-finish . keychain-refresh-environment))
+
 ;;; VC
 ;;;; Itself
 (use-package vc
@@ -326,7 +334,7 @@
   :gfhook
   'outshine-mode
   '(lambda ()                  ; FIXME 2022-12-30: Not sure why this doesn't work...
-           (display-line-numbers-mode -1))
+     (display-line-numbers-mode -1))
   :general (:keymaps 'diff-mode-map
             "S-<iso-lefttab>" 'outshine-cycle-buffer
             "<tab>" 'outshine-cycle

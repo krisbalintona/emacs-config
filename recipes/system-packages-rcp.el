@@ -21,7 +21,7 @@
   (exec-path-from-shell-arguments nil)
   (exec-path-from-shell-variables
    '("PATH" "MANPATH" "BROWSER"
-     ;; For `ssh-agent'. Also reliant on systemd service. See
+     ;; `ssh-agent' environment variables. See
      ;; https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
      "SSH_AGENT_PID" "SSH_AUTH_SOCK"
      ;; For LSP-mode. See
