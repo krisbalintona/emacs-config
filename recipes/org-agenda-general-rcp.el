@@ -298,7 +298,8 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
                       '((:name "Projects"
-                         :tag "project")
+                         :and (:tag "project"
+                               :scheduled t))
                         (:name "Orphans"
                          :anything t)))))))
           ("p" "Planning"
@@ -339,7 +340,8 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
                       '((:name "Projects"
-                         :tag "project")
+                         :and (:tag "project"
+                               :scheduled t))
                         (:name "Orphans"
                          :anything t)))))
             (alltodo ""
