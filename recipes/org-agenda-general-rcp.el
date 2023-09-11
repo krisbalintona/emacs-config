@@ -285,7 +285,6 @@ Side effects occur if the parent of the current headline has a
                       '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
                      (org-agenda-start-day "+0d")
                      (org-agenda-span 1)
-                     (org-agenda-remove-tags t)
                      (org-agenda-prefix-format
                       '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-10t")))
                      (org-agenda-scheduled-leaders '("" "%2dx:"))
