@@ -355,7 +355,7 @@ Side effects occur if the parent of the current headline has a
                          ;; FIXME 2023-07-20: Would like to use :auto-priority,
                          ;; but this is erroring for me. Perhaps the issue is on
                          ;; the package side, e.g., unsupported version of org?
-                         (:discard (:children t))
+                         (:discard (:tag "project"))
                          (:name "" :anything t)))))
             (todo "MAYBE"
                   ((org-agenda-overriding-header "Maybes")
