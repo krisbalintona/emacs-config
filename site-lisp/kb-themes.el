@@ -111,7 +111,7 @@
                       ;; 2560x1600 display
                       ;; :height 186)
                       ;; 2560x1600 display, with DPI set to 118
-                      :height 150)
+                      :height 161)
   (set-face-attribute 'fixed-pitch nil
                       :family kb/themes-fixed-pitch-font
                       :height 1.0)
