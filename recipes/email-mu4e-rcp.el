@@ -532,6 +532,22 @@
           <span> | Senior Interviews Coordinator</span>
           <br />
         </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Dana Toneva ('24)</span>
+          <span> | Senior Editor</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Riley Stevenson ('27)</span>
+          <span> | Senior Editor</span>
+          <br />
+        </p>
         <br />
       </td>
     </tr>
