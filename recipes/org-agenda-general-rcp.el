@@ -270,7 +270,7 @@ Side effects occur if the parent of the current headline has a
             (alltodo ""
                      ((org-agenda-overriding-header "Expedited")
                       (org-agenda-prefix-format
-                       '((todo . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%?-10t")))
+                       '((todo . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%?-10t")))
                       (org-super-agenda-groups
                        '((:discard (:scheduled t))
                          (:name ""
@@ -286,7 +286,7 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-start-day "+0d")
                      (org-agenda-span 1)
                      (org-agenda-prefix-format
-                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-10t")))
+                      '((agenda . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-10t")))
                      (org-agenda-scheduled-leaders '("" "%2dx:"))
                      (org-agenda-deadline-leaders '("" "In %3d d.:" "%2d d. ago:"))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
@@ -327,7 +327,7 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-entry-types
                       '(:deadline :scheduled :timestamp :sexp))
                      (org-agenda-prefix-format
-                      '((agenda . "  %-5e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-10t")))
+                      '((agenda . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-10t")))
                      (org-agenda-scheduled-leaders '("" "%2dx: "))
                      (org-agenda-deadline-leaders '("" "In %3d d.: " "%2d d. ago: "))
                      (org-agenda-skip-deadline-prewarning-if-scheduled t)
