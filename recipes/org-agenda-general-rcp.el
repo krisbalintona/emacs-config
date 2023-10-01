@@ -468,7 +468,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :general (kb/open-keys
              "w" work-timer-prefix-map)
   :custom
-  (work-timer-debug t)
+  (work-timer-debug nil)
   (work-timer-time-format "%.2m:%.2s")
   (work-timer-default-work-duration 25)
   (work-timer-default-break-duration 5)
