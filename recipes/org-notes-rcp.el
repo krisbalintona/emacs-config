@@ -32,7 +32,7 @@
   (denote-prompts '(subdirectory title keywords))
   :config
   (denote-rename-buffer-mode)
-  
+
   (defun kb/denote-report-duplicates ()
     (interactive)
     (let* ((ids (mapcar (lambda (f) (denote-retrieve-filename-identifier f))
@@ -399,21 +399,17 @@ Delete the original subtree."
                                                 (propertize title 'denote-path f 'denote-keywords keywords)))
                                             (remove-if-not (lambda (f) (string-match-p (rx (literal ".org") eol) f))
                                                            (directory-files-recursively
-                                                            (expand-file-name "papers" kb/notes-dir)
+                                                            (expand-file-name "papers" org-directory)
                                                             consult-notes-file-match)))))
                         (mapcar (lambda (c)
-                                  (let* ((keywords (get-text-property 0 'denote-keywords c))
-                                         (path (get-text-property 0 'denote-path c))
-                                         (dirs (directory-file-name (file-relative-name (file-name-directory path) denote-directory))))
+                                  (let* ((keywords (get-text-property 0 'denote-keywords c)))
                                     (concat c
                                             ;; align keywords
                                             (propertize " " 'display `(space :align-to (+ left ,(+ 2 max-width))))
-                                            (format "%18s"
-                                                    (if keywords
-                                                        (concat (propertize "#" 'face 'consult-notes-name)
-                                                                (propertize (mapconcat 'identity keywords " ") 'face 'consult-notes-name))
-                                                      ""))
-                                            (when consult-notes-denote-dir (format "%18s" (propertize (concat "/" dirs) 'face 'consult-notes-name))))))
+                                            (format "%18s" (if keywords
+                                                               (concat (propertize "#" 'face 'consult-notes-name)
+                                                                       (propertize (mapconcat 'identity keywords " ") 'face 'consult-notes-name))
+                                                             "")))))
                                 cands)))
           ;; Custom preview
           :state  #'consult-notes-denote--state
@@ -429,8 +425,8 @@ Delete the original subtree."
 
   (advice-add 'denote-rename-file-using-front-matter :around
                                                      #'(lambda (orig-fun &rest args)
-                                                               (let ((save-silently t))
-                                                                 (apply orig-fun args)))))
+                                                         (let ((save-silently t))
+                                                           (apply orig-fun args)))))
 
 ;;; org-notes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
