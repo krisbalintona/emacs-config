@@ -82,6 +82,7 @@
   (org-agenda-skip-deadline-if-done t)
   (org-agenda-skip-scheduled-if-done t)
   (org-agenda-skip-timestamp-if-done t)
+  (org-agenda-auto-exclude-function #'kb/org-agenda-auto-exclude)
 
   ;; Capture templates
   (org-capture-templates
@@ -209,7 +210,15 @@ Side effects occur if the parent of the current headline has a
                                  (org-element-property :todo-keyword (org-element-at-point))))))
         ;; Ignore if there is a PROG or ACTIVE todo keyword among siblings
         (when (or (member "PROG" todos) (member "ACTIVE" todos))
-          (org-entry-end-position))))))
+          (org-entry-end-position)))))
+
+  (defun kb/org-agenda-auto-exclude (tag)
+    "Set tags based on time. See (org) Filtering/limiting agenda items"
+    (when (cond ((member tag '("@home"))
+                 (let ((hr (nth 2 (decode-time))))
+                   ;; After 10 or before 21
+                   (or (> hr 10) (< hr 21)))))
+      (concat "-" tag))))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
