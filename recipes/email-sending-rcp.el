@@ -161,7 +161,7 @@
           (monospace-font '(font-family . "SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;"))
           (font-size '(font-size . "10pt"))
           (font `(,font-family ,font-size))
-          (line-height '(line-height . "1.2"))
+          (line-height '(line-height . "1.5"))
           (theme-color "#0071c5")
           (bold '(font-weight . "bold"))
           (color `(color . ,theme-color))
@@ -209,7 +209,7 @@
                           (border-top . "solid #e1e1e1 1.0pt")
                           (margin-bottom . "20px")))
        (span underline ((text-decoration . "underline")))
-       (li nil ((line-height . "1.5")
+       (li nil ((line-height . "1.7")
                 (margin-bottom . "5px")
                 (margin-top . "7px")
                 (max-width . "47em")))
@@ -260,7 +260,7 @@
                 (padding . "3px 10px")))
        (td nil (,@table (padding . "1px 10px")
                         (background-color . "#f9f9f9") (border . "none")))
-       (td org-left ((text-align . "left")))
+          
 
        (td org-center ((text-align . "center")))
        (kbd nil ((border . "1px solid #d1d5da") (border-radius . "3px")
@@ -277,7 +277,7 @@
                 (font-size . "18pt")))
        (h1 nil ((margin-top . "20px") (margin-bottom . "0px")
                 (font-size . "24pt")))
-       (p nil ((text-decoration . "none") (line-height . "1.4")
+       (p nil ((text-decoration . "none") ,line-height
                (margin-top . "10px") (margin-bottom . "0px")
                ,font-size))
        ;; Applies to entire body
