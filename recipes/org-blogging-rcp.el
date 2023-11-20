@@ -78,11 +78,8 @@ slug of the file's title with underscores replaced for hyphens."
                                            (plist-get info :hugo-bundle))) ;This is mainly to support per-file flow
                              (default-bundle-path
                               (cond
-                               ((featurep 'denote)
-                                (kb/org-hugo-title-slug (car (plist-get info :title))))
-                               ((featurep 'org-roam)
-                                (org-roam-node-slug
-                                 (org-roam-node-create :title (car (plist-get info :title))))))))
+                               ((featurep 'denote) (car (plist-get info :title)))
+                               ((featurep 'org-roam) (org-roam-node-create :title (car (plist-get info :title)))))))
                          (cond
                           ;; If hugo_bundle is set
                           ((and bundle-path ; Keyword must exist unless error
