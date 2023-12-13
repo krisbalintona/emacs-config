@@ -95,7 +95,7 @@ hidelinks={true}}\n")                   ; Hide hyperlinks
 [NO-DEFAULT-PACKAGES]
 
 % ** MLA package
-\\usepackage{" (directory-file-name org-directory) "/latex/packages/mla}\n")
+\\usepackage{" (directory-file-name org-directory) "/latex/packages/mla}\n\\usepackage[style=mla-new]{biblatex}")
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -109,7 +109,7 @@ hidelinks={true}}\n")                   ; Hide hyperlinks
 [NO-DEFAULT-PACKAGES]
 
 % ** CMS package
-\\usepackage{" (directory-file-name org-directory) "/latex/packages/chicago-manual-style}\n")
+\\usepackage{" (directory-file-name org-directory) "/latex/packages/chicago-manual-style}\n\\usepackage[notes,short,backend=biber]{biblatex}")
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
