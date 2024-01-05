@@ -103,18 +103,18 @@
   (wucuo-modes-whose-predicate-ignored nil)
   (wucuo-spell-check-buffer-predicate
    '(lambda ()                           ; Skip spell checking under these conditions
-            (not (memq major-mode
-                       '(dired-mode
-                         log-edit-mode
-                         compilation-mode
-                         help-mode
-                         helpful-mode
-                         profiler-report-mode
-                         speedbar-mode
-                         gud-mode
-                         calc-mode
-                         Info-mode
-                         )))))
+      (not (memq major-mode
+                 '(dired-mode
+                   log-edit-mode
+                   compilation-mode
+                   help-mode
+                   helpful-mode
+                   profiler-report-mode
+                   speedbar-mode
+                   gud-mode
+                   calc-mode
+                   Info-mode
+                   )))))
   :config
   (defun kb/wucuo-mode-on ()
     "Turn wucuo mode on.  Do not use this; use `wucuo-mode' instead."
@@ -191,9 +191,7 @@ Those are the words following `ispell-words-keyword' (usually
   ;; https://github.com/minad/jinx/wiki#make-jinx-write-localwords
   (defun kb/jinx-save-as-ispell-localword (save key word)
     "Save WORD using ispell's `ispell-words-keyword'.
-
-If SAVE is non-nil save, otherwise format candidate given action
-KEY."
+If SAVE is non-nil save, otherwise format candidate given action KEY."
     (if save
         (progn
           (require 'ispell)
@@ -205,7 +203,7 @@ KEY."
                         (cons word (split-string jinx-local-words)))
                        #'string<)
                  " "))))
-    (jinx--save-action key word "File (LocalWords)"))
+    (list key word "File (LocalWords)"))
   ;; NOTE 2023-07-16: Can also directly add to `jinx--save-keys' directly
   (setf (alist-get ?* jinx--save-keys) #'kb/jinx-save-as-ispell-localword))
 
