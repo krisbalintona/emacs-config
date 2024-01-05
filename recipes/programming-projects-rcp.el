@@ -116,6 +116,12 @@
 ;;;; Itself
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
+
+;; NOTE 2024-01-05: Temporarily update seq library to avoid dependency errors.
+;; See https://github.com/progfolio/elpaca/issues/216
+(elpaca '(seq :type git :host nil :repo "https://git.savannah.gnu.org/git/emacs/elpa.git" :branch "externals/seq")
+  (progn (unload-feature 'seq t) (require 'seq)))
+
 (use-package magit
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general

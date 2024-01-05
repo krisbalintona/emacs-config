@@ -368,14 +368,17 @@ have `org-warning' face."
         '(:desaturate-level-faces 30
           :darken-level-faces 15)))
 
-;;;; Visual-fill-column
-;; Soft wrap lines at fill-column
-(use-package visual-fill-column
-  :ghook 'emacs-news-mode-hook 'org-mode-hook
+;;;; Olivetti
+;; Better writing environment
+(use-package olivetti
+  :hook (org-mode . olivetti-mode)
   :custom
-  (visual-fill-column-width 120)
-  (visual-fill-column-center-text t)
-  (visual-fill-column-enable-sensible-window-split t)) ; Be able to vertically split windows that have wide margins
+  (olivetti-lighter nil)
+  (olivetti-margin-width 8)
+  ;; (olivetti-body-width 120)
+  (olivetti-style 'fancy) ; NOTE 2024-01-05: "Fancy" works well with org-margin
+  :custom-face
+  (olivetti-fringe ((t (:background unspecified :inherit default)))))
 
 ;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
@@ -394,6 +397,7 @@ have `org-warning' face."
 
 ;;;; Org-modern
 (use-package org-modern
+  :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-hide-stars nil)           ; Adds extra indentation
@@ -409,6 +413,7 @@ have `org-warning' face."
 
 ;;;; Org-modern-indent
 (use-package org-modern-indent
+  :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
   :after org
   :hook (org-mode . org-modern-indent-mode)
   :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
@@ -449,6 +454,52 @@ have `org-warning' face."
   :config
   ;; This command isn't autoloaded...
   (org-extra-emphasis-mode 1))
+
+;;;; Svg-lib
+;; Common dependency for Rougier's packages
+(use-package svg-lib
+  :custom
+  (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/"))) ; Change cache dir
+
+;;;; Org-margin
+(use-package org-margin
+  :elpaca (:type git :host github :repo "rougier/org-margin")
+  :hook (org-mode . org-margin-mode)
+  :custom
+  (org-startup-indented nil)            ; Not compatible
+  (org-margin-headers
+   (list (cons 'stars (list (propertize "▸     " 'face '(org-level-1 fixed-pitch))
+                            (propertize " ▸    " 'face '(org-level-2 fixed-pitch))
+                            (propertize "  ▸   " 'face '(org-level-3 fixed-pitch))
+                            (propertize "   ▸  " 'face '(org-level-4 fixed-pitch))
+                            (propertize "    ▸ " 'face '(org-level-5 fixed-pitch))
+                            (propertize "     ▸" 'face '(org-level-6 fixed-pitch))))
+         (cons 'H-txt (list (propertize "H1" 'face '(org-level-1 fixed-pitch))
+                            (propertize "H2" 'face '(org-level-2 fixed-pitch))
+                            (propertize "H3" 'face '(org-level-3 fixed-pitch))
+                            (propertize "H4" 'face '(org-level-4 fixed-pitch))
+                            (propertize "H5" 'face '(org-level-5 fixed-pitch))
+                            (propertize "H6" 'face '(org-level-6 fixed-pitch))))
+         (cons 'H-svg (list (svg-lib-tag "H1" 'org-level-1)
+                            (svg-lib-tag "H2" 'org-level-2)
+                            (svg-lib-tag "H3" 'org-level-3)
+                            (svg-lib-tag "H4" 'org-level-4)
+                            (svg-lib-tag "H5" 'org-level-5)
+                            (svg-lib-tag "H6" 'org-level-6)))))
+  (org-margin-headers-set 'stars)
+  ;; (org-margin-headers-set 'H-txt)
+  ;; (org-margin-headers-set 'H-svg)
+  (org-margin-markers
+   (list (cons "\\(#\\+begin_src\\)"
+               (propertize "     " 'face '(font-lock-comment-face bold fixed-pitch)))
+         (cons "\\(#\\+begin_quote\\)"
+               (propertize "     " 'face '(font-lock-comment-face bold fixed-pitch)))
+         (cons "\\(#\\+begin_comment\\)"
+               (propertize "    C " 'face '(font-lock-comment-face bold fixed-pitch)))
+         (cons "\\(# TODO\\)"
+               (propertize "    T " 'face '(font-lock-comment-face bold fixed-pitch)))
+         (cons "\\(# NOTE\\)"
+               (propertize "    N " 'face '(font-lock-comment-face bold fixed-pitch))))))
 
 ;;; Ancillary functionality
 ;;;; Org-web-tools

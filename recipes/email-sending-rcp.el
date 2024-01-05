@@ -13,7 +13,7 @@
 (use-package message
   :elpaca nil
   :hook ((message-setup . message-sort-headers)
-         (message-mode . visual-fill-column-mode)
+         (message-mode . olivetti-mode)
          (message-send . kb/message-check-for-subject)
          (message-send . kb/message-check-correct-from))
   :custom
@@ -131,7 +131,8 @@
   :custom
   (mu4e-compose-signature-auto-include nil)
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil \\n:t")
-  (org-msg-startup "hidestars indent inlineimages hideblocks")
+  ;; (org-msg-startup "hidestars indent inlineimages hideblocks")
+  (org-msg-startup "hidestars inlineimages hideblocks") ; NOTE 2024-01-05: Don't include "indent" with org-margin
   (org-msg-greeting-fmt nil)
   (org-msg-greeting-name-limit 1)
   (org-msg-default-alternatives

@@ -44,7 +44,7 @@
                                  mu4e-headers-thread-connection-prefix '("│" . "│ "))))
          (mu4e-mark-execute-pre . kb/mu4e-gmail-fix-flags-h)
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
-         (mu4e-view-mode . visual-fill-column-mode)
+         (mu4e-view-mode . olivetti-mode)
          (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
   :general
   (:keymaps 'mu4e-main-mode-map

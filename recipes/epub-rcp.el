@@ -14,7 +14,7 @@
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
   :hook ((nov-mode . visual-line-mode)
-         (nov-mode . visual-fill-column-mode))
+         (nov-mode . olivetti-mode))
   :config
   (with-eval-after-load 'eaf
     (add-to-list 'eaf-find-file-ext-blacklist "epub")))

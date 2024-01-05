@@ -23,7 +23,7 @@
                           (mbsync . isync)
                           (gmi . "pip install lieer"))
   :hook ((notmuch-mua-send . notmuch-mua-attachment-check)
-         (notmuch-show-mode . visual-fill-column-mode))
+         (notmuch-show-mode . olivetti-mode))
   :general
   (kb/open-keys
     "n" '(notmuch :wk "Notmuch"))

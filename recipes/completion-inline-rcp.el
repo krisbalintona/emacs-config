@@ -37,7 +37,7 @@
   ;; want to perform completion
   (tab-always-indent 'complete)
   (tab-first-completion 'word)
-  
+
   (corfu-auto nil)
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.25)
@@ -132,9 +132,6 @@ default lsp-passthrough."
   (kind-icon-default-face 'corfu-default) ; To unify background color
   (kind-icon-blend-background nil)  ; Mix foreground and background ("blended")?
   (kind-icon-blend-frac 0.08)
-
-  ;; Svg-lib dependency
-  (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/")) ; Change cache dir
   :config
   ;; TODO 2022-05-24: See if I can use the cooler icons from
   ;; `lsp-bridge-icon--icons' without requiring the package
@@ -222,14 +219,14 @@ default lsp-passthrough."
    "^" 'cape-tex
    "&" 'cape-sgml
    "r" 'cape-rfc1345
-   "y" (cape-interactive-capf (cape-company-to-capf #'company-yasnippet)))
+   "y" (cape-capf-interactive (cape-company-to-capf #'company-yasnippet)))
   ([remap dabbrev-expand] 'cape-dabbrev)
   (:keymaps 'corfu-map
    :states 'insert
    [remap evil-normal-state] '(lambda ()
-                                 (interactive)
-                                 (evil-normal-state)
-                                 (corfu-quit)))
+                                (interactive)
+                                (evil-normal-state)
+                                (corfu-quit)))
   :custom
   (cape-dabbrev-min-length 2)
   :init

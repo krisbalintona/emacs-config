@@ -115,7 +115,7 @@ fail on poorly-designed websites."
  :keymaps 'elfeed-show-mode-map
  "e" 'prot-elfeed-show-eww)
 
-(add-hook 'eww-mode-hook #'(lambda () (visual-fill-column-mode) (mixed-pitch-mode)))
+(add-hook 'eww-mode-hook #'(lambda () (olivetti-mode) (mixed-pitch-mode)))
 
 ;;;; Language-detection
 ;; Detects language of current buffer
