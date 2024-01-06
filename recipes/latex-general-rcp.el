@@ -45,10 +45,9 @@
   (TeX-command-default "LuaLaTeX")
   (TeX-source-correlate-start-server nil)
   (TeX-source-correlate-method 'synctex)
-  (TeX-master t)                        ; Do not prompt for a master file
+  (TeX-master 'dwim)
   (TeX-parse-self t)
   (TeX-auto-save t)
-  (TeX-master t)
   (TeX-save-query nil)            ; Just save, don't ask before each compilation
 
   ;; Compilation
