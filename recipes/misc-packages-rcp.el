@@ -235,12 +235,6 @@ progress. This is called by the timer `good-scroll--timer' every
   (isearch-lax-whitespace t)
   (search-whitespace-regexp ".*?"))
 
-;;; Ctrlf
-;; Feature-ful `isearch'
-(use-package ctrlf
-  :disabled
-  :init (ctrlf-mode))
-
 ;;; Newcomment
 (use-package new-comment
   :elpaca nil
