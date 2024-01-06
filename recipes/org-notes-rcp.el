@@ -348,9 +348,10 @@ Delete the original subtree."
                       (let* ((max-width 0)
                              (cands (mapcar (lambda (f)
                                               (let* ((id (denote-retrieve-filename-identifier f))
-                                                     (title (if consult-notes-denote-display-id
-                                                                (concat id " " (denote-retrieve-title-value f (denote-filetype-heuristics f)))
-                                                              (denote-retrieve-title-value f (denote-filetype-heuristics f))))
+                                                     (title (org-fontify-like-in-org-mode
+                                                             (if consult-notes-denote-display-id
+                                                                 (concat id " " (denote-retrieve-title-value f (denote-filetype-heuristics f)))
+                                                               (denote-retrieve-title-value f (denote-filetype-heuristics f)))))
                                                      (dir (file-relative-name (file-name-directory f) denote-directory))
                                                      (keywords (denote-extract-keywords-from-path f)))
                                                 (let ((current-width (string-width title)))
@@ -388,9 +389,10 @@ Delete the original subtree."
                       (let* ((max-width 0)
                              (cands (mapcar (lambda (f)
                                               (let* ((id (denote-retrieve-filename-identifier f))
-                                                     (title (if consult-notes-denote-display-id
-                                                                (concat id " " (denote-retrieve-title-value f (denote-filetype-heuristics f)))
-                                                              (denote-retrieve-title-value f (denote-filetype-heuristics f))))
+                                                     (title (org-fontify-like-in-org-mode
+                                                             (if consult-notes-denote-display-id
+                                                                 (concat id " " (denote-retrieve-title-value f (denote-filetype-heuristics f)))
+                                                               (denote-retrieve-title-value f (denote-filetype-heuristics f)))))
                                                      (dir (file-relative-name (file-name-directory f) denote-directory))
                                                      (keywords (denote-extract-keywords-from-path f)))
                                                 (let ((current-width (string-width title)))
