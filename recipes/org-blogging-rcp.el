@@ -666,17 +666,19 @@ the current hugo buffer if they do not exist."
                                        (not (string= date "")))))
                                ("true" t)))))))
                      (kb/find-blog-files-org)))
-        (let ((inhibit-message t))          ; Don't show the messages in Echo area
-          (with-current-buffer (find-file-noselect file)
-            (read-only-mode -1)
-            (kb/org-hugo--add-hugo-metadata-maybe)
-            (kb/org-hugo--add-tag-maybe)
-            (kb/format-buffer-indentation)
-            (org-hugo-export-wim-to-md)
-            (setq post-count (1+ post-count))
+        (condition-case nil
+            (let ((inhibit-message t))  ; Don't show the messages in Echo area
+              (with-current-buffer (find-file-noselect file)
+                (read-only-mode -1)
+                (kb/org-hugo--add-hugo-metadata-maybe)
+                (kb/org-hugo--add-tag-maybe)
+                (kb/format-buffer-indentation)
+                (org-hugo-export-wim-to-md)
+                (setq post-count (1+ post-count))
 
-            (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-              (kill-buffer)))))
+                (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
+                  (kill-buffer))))
+          (error (message "[kb/org-hugo-export-all]: error exporting %s" file))))
       (message "Done - Exported %s blog notes!" post-count))))
 
 ;;;; Fix TOC including tags
