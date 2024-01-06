@@ -195,7 +195,7 @@ default lsp-passthrough."
 ;; `cape-abbrev' - Complete abbreviation (i.e. `add-global-abbrev', `add-mode-abbrev')
 ;; `cape-ispell' - Word from ispell
 ;; `cape-dict' - Word from dictionary file
-;; `cape-symbol' - Elisp symbol
+;; `cape-elisp-symbol' - Elisp symbol
 ;; `cape-line' - From line in file
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
@@ -209,7 +209,7 @@ default lsp-passthrough."
    [remap dabbrev-expand] 'cape-dabbrev
    "f" 'cape-file
    "k" 'cape-keyword
-   "s" 'cape-symbol
+   "s" 'cape-elisp-symbol
    "a" 'cape-abbrev
    "i" 'cape-ispell
    "l" 'cape-line
@@ -238,7 +238,7 @@ disrupting the addition of other capfs (e.g. merely setting the
 variable entirely, or adding to list).
 
 Additionally, add `cape-file' as early as possible to the list."
-    (add-to-list 'completion-at-point-functions #'cape-symbol)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
     ;; I prefer this being early/first in the list
     (add-to-list 'completion-at-point-functions #'cape-file))
 
@@ -257,7 +257,7 @@ Additionally, add `cape-file' as early as possible to the list."
   (defun kb/cape-capf-setup-git-commit ()
     (define-key git-commit-mode-map (kbd "<tab>") 'completion-at-point)
     (let ((result))
-      (dolist (element '(cape-dabbrev cape-symbol) result)
+      (dolist (element '(cape-dabbrev cape-elisp-symbol) result)
         (add-to-list 'completion-at-point-functions element))))
   :config
   ;; For pcomplete. For now these two advices are strongly recommended to
