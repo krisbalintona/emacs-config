@@ -241,29 +241,6 @@ Side effects occur if the parent of the current headline has a
   (setq org-agenda-custom-commands
         '(("n" "Now"
            ((alltodo ""
-                     ((org-agenda-overriding-header "Current projects")
-                      (org-agenda-dim-blocked-tasks nil)
-                      (org-super-agenda-groups
-                       '((:discard (:not (:tag "project")))
-                         (:discard (:not (:todo "PROG")))
-                         (:name "Undated"
-                          :and (:not (:scheduled t)
-                                :not (:deadline t)))
-                         (:name "Dated"
-                          :scheduled t
-                          :deadline t)))))
-            (agenda ""
-                    ((org-agenda-overriding-header "Upcoming dates")
-                     (org-agenda-start-day "+0d")
-                     (org-agenda-span 9)
-                     (org-agenda-show-inherited-tags t)
-                     (org-agenda-dim-blocked-tasks t)
-                     (org-agenda-sorting-strategy
-                      '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
-                     (org-agenda-prefix-format
-                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
-                     (org-agenda-entry-types '(:deadline))))
-            (alltodo ""
                      ((org-agenda-overriding-header "High priority but unscheduled")
                       (org-super-agenda-groups
                        '((:discard (:todo ("PROG" "ACTIVE" "WAITING")))
@@ -306,7 +283,10 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-include-diary t)
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
-                      '((:name "Projects"
+                      '((:name "Projects due"
+                         :and (:tag "project"
+                               :deadline t))
+                        (:name "Projects in need of delegation"
                          :and (:tag "project"
                                :scheduled t))
                         (:name "Orphans"
@@ -374,6 +354,22 @@ Side effects occur if the parent of the current headline has a
                       (:discard (:tag "project"))
                       (:name ""
                        :anything t)))))))
+          ("u" "Upcoming due dates and ongoing projects"
+           ((agenda ""
+                    ((org-agenda-overriding-header "Upcoming dates")
+                     (org-agenda-start-day "+0d")
+                     (org-agenda-span 9)
+                     (org-agenda-show-inherited-tags t)
+                     (org-agenda-dim-blocked-tasks t)
+                     (org-agenda-sorting-strategy
+                      '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
+                     (org-agenda-prefix-format
+                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
+                     (org-agenda-entry-types '(:deadline))))
+            (tags-todo "+project"
+                       ((org-agenda-overriding-header "Ongoing projects")
+                        (org-agenda-dim-blocked-tasks t)
+                        (org-agenda-use-tag-inheritance nil)))))
           ("d" "Done and cancelled"
            ((tags "TODO=\"DONE\"&LEVEL=1|TODO=\"CANCELED\"&LEVEL=1"))))))
 
@@ -477,7 +473,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :general (kb/open-keys
              "w" work-timer-prefix-map)
   :custom
-  (work-timer-debug nil)
+  (work-timer-debug t)
   (work-timer-time-format "%.2m:%.2s")
   (work-timer-default-work-duration 25)
   (work-timer-default-break-duration 5)
