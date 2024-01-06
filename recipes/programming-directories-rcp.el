@@ -48,10 +48,10 @@ command."
                        current-prefix-arg))
     (save-window-excursion
       (mapc #'(lambda (filename)
-                      (with-current-buffer (find-file-noselect filename)
-                        (if prefix
-                            (call-interactively (intern sexp))             ; Command
-                          (funcall-interactively 'eval-expression sexp)))) ; Sexp
+                (with-current-buffer (find-file-noselect filename)
+                  (if prefix
+                      (call-interactively (intern sexp))             ; Command
+                    (funcall-interactively 'eval-expression sexp)))) ; Sexp
             (dired-get-marked-files)))))
 
 ;;;; All-the-icons-dired
@@ -145,12 +145,11 @@ command."
   :general (:keymaps 'project-prefix-map
             [remap project-find-file] 'affe-find)
   :custom
+  ;; Found in readme: https://github.com/minad/affe
   (affe-regexp-compiler
-   #'(lambda (input type ignore-case)                ; Use orderless instead of consult to regexp
-             (let ((case-fold-search ignore-case))
-               (setq text (orderless-pattern-compiler input))
-               (cons text (lambda (str) (orderless--highlight text str)))
-               )))
+   (lambda (input _type _ignorecase)      ; Use orderless instead of consult to regexp
+     (setq input (orderless-pattern-compiler input))
+     (cons input (apply-partially #'orderless--highlight input t))))
   (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
   (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .")) ; Include hidden files
 
