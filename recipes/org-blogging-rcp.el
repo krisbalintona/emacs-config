@@ -50,7 +50,7 @@ replacing underscores with hyphens. Returns a string."
     (file-name-as-directory
      (cond
       ((featurep 'denote)
-       (denote-sluggify title))
+       (denote-sluggify 'title title))
       ((featurep 'org-roam)
        (string-replace "_" "-" title)))))
 
