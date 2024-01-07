@@ -372,9 +372,9 @@ displayed."
     (when-let* ((added-width 10)
                 (domain-width (min pocket-reader-site-column-max-width
                                    (cl-loop for item being the hash-values of pocket-reader-items
-                                              maximizing (length (ht-get item 'domain)))))
+                                            maximizing (length (ht-get item 'domain)))))
                 (tags-width (cl-loop for item being the hash-values of pocket-reader-items
-                                       maximizing (length (string-join (ht-get item 'tags) ","))))
+                                     maximizing (length (string-join (ht-get item 'tags) ","))))
                 (title-width (- (window-text-width)
                                 5                   ; Idk why this is needed...
                                 (+ 1 added-width)   ; Added
@@ -540,8 +540,8 @@ displayed."
 (use-package pcre2el)
 (use-package sentex
   :elpaca (sentex :type git :host codeberg :repo "martianh/sentex"
-                  ;; Need more than just elisp files
-                  :files ("*"))
+                                           ;; Need more than just elisp files
+                                           :files ("*"))
   :commands kb/forward-sentence-function
   :custom
   ;; NOTE 2023-01-18: icu4j has many more rules, but is "too thorough" for my
@@ -939,6 +939,13 @@ This is a difference in multitude of %s."
   :config
   ;; To fontify mail containing patches with the email client
   (add-hook 'gnus-part-display-hook 'fontify-patch-buffer))
+
+;;; Smog-mode
+;; Report statistics on writing style, word use and readability of prose
+(use-package smog
+  :ensure-system-package diction
+  :custom
+  (smog-command "style -L en --print-nom-passive"))
 
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
