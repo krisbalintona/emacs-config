@@ -14,9 +14,9 @@
   :general (:prefix "<f2>"
             "<f2>" 'quickrun
             "<f3>" '(lambda ()
-                       (interactive)
-                       (let ((quickrun-focus-p t))
-                         (quickrun-shell))))
+                      (interactive)
+                      (let ((quickrun-focus-p t))
+                        (quickrun-shell))))
   :custom
   (quickrun-focus-p nil))
 
@@ -120,6 +120,7 @@
   (treesit-extra-load-path              ; Where language files are found
    (list (no-littering-expand-var-file-name "tree-sitter")))
   :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode)
 
   ;; `Treesit-auto' doesn't allow us to set the installation path yet because
