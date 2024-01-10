@@ -41,6 +41,7 @@
   :custom
   (window-resize-pixelwise t)
   (window-sides-vertical t)
+  (split-width-threshold 80)
   
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
