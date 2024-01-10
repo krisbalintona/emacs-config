@@ -20,18 +20,22 @@
            :depth nil
            :files ("*" (:exclude ".git")))
   :hook ((dired-mode . denote-dired-mode)
-         (before-save . kb/denote-insert-identifier-maybe))
+         (before-save . kb/denote-insert-identifier-maybe)
+         (after-save . kb/denote-auto-rename))
   :general (kb/note-keys
+             "f" 'denote-open-or-create
              "i" 'denote-link-insert-link
              "ta" 'denote-keywords-add
              "tr" 'denote-keywords-remove
              "D" 'kb/denote-report-duplicates)
   :custom
   (denote-directory kb/notes-dir)
+  (denote-modules '(xref ffap))
   (denote-known-keywords '("project"))
   (denote-prompts '(subdirectory title keywords))
   :config
   (denote-rename-buffer-mode)
+  (denote-modules-global-mode)
 
   (defun kb/denote-report-duplicates ()
     (interactive)
@@ -43,7 +47,13 @@
       (if dups
           (message "The following are duplicated denote IDs: %s"
                    (string-join dups ", "))
-        (message "No duplicates found. Hooray!!!")))))
+        (message "No duplicates found. Hooray!!!"))))
+
+  (defun kb/denote-auto-rename ()
+    "Auto rename denote file."
+    (let ((f (buffer-file-name)))
+      (when (denote-file-is-writable-and-supported-p f)
+        (denote-rename-file-using-front-matter f :auto-confirm)))))
 
 ;;;; Return denote file path based on ID
 (with-eval-after-load 'denote
@@ -317,14 +327,14 @@ Delete the original subtree."
 
 ;;; Consult-notes
 (use-package consult-notes
-  ;; :disabled                             ; Over-engineered; made my own solution
+  :disabled                             ; Trying without
   :elpaca (consult-notes :type git :host github :repo "mclear-tools/consult-notes")
   :commands (consult-notes
              consult-notes-search-in-all-notes
              ;; In case using `org-roam'
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
-  :general (kb/note-keys "f" '(consult-notes :wk "Consult-notes"))
+  :general (kb/note-keys "f" 'consult-notes)
   :custom
   ;; File paths must have ending slashing. See
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
