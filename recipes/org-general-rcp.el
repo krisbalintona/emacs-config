@@ -205,8 +205,10 @@ have `org-warning' face."
 (use-package org-faces
   :elpaca nil
   :custom
-  (org-fontify-whole-block-delimiter-line t)
-  (org-fontify-quote-and-verse-blocks t))
+  (org-fontify-todo-headline nil)
+  (org-fontify-done-headline nil)
+  (org-fontify-whole-block-delimiter-line nil)
+  (org-fontify-quote-and-verse-blocks nil))
 
 ;;;; Org-src
 (use-package org-src

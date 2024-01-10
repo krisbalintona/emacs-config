@@ -51,7 +51,7 @@
 (use-package modus-themes
   :hook ((modus-themes-after-load-theme . kb/themes-setup-base-faces)
          ((modus-themes-after-load-theme kb/themes) . kb/modus-themes-solaire-faces))
-  :init
+  :config
   ;; Also make sure these are set before `modus-themes-load-themes' is called
   (setq modus-themes-custom-auto-reload t ; only applies to `customize-set-variable' and related
         modus-themes-italic-constructs t
@@ -62,20 +62,28 @@
         modus-themes-completions '(((matches . (heavy))
                                     (selection . (semibold))))
         modus-themes-region '(bg-only)
-        modus-themes-org-blocks 'gray-background
-        modus-themes-variable-pitch-ui nil)
+        modus-themes-org-blocks 'tinted-background
+        modus-themes-variable-pitch-ui nil
+
+        modus-themes-headings
+        '((t . (variable-pitch semibold))))
 
   ;; Overrides
   (setq modus-themes-common-palette-overrides
-        '((fg-completion-match-0 fg-main) ; See 4.11.2.5 Make completion matches more or less colorful
+        `(;; Completion
+          (fg-completion-match-0 fg-main) ; See (modus-themes) Make headings more or less colorful
           (fg-completion-match-1 fg-main)
           (fg-completion-match-2 fg-main)
           (fg-completion-match-3 fg-main)
           (bg-completion-match-0 bg-blue-intense)
           (bg-completion-match-1 bg-yellow-intense)
           (bg-completion-match-2 bg-cyan-intense)
-          (bg-completion-match-3 bg-red-intense)))
-  :config
+          (bg-completion-match-3 bg-red-intense)
+
+          ;; Headings
+          (fg-heading-1 red-faint)
+          (fg-heading-6 rainbow-0)))
+
   ;; Taken from (info "(modus-themes) Add support for solaire-mode")
   (defun kb/modus-themes-solaire-faces ()
     (modus-themes-with-colors

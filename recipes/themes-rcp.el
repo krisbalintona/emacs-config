@@ -78,12 +78,13 @@
 
 (add-hook 'minibuffer-setup-hook
           '(lambda ()
-              (face-remap-add-relative 'bold :weight 'normal)
-              (face-remap-add-relative 'default :weight 'light)))
+             (face-remap-add-relative 'bold :weight 'normal)
+             (face-remap-add-relative 'default :weight 'light)))
 
 ;;; UI
 ;;;; Fringes
-(fringe-mode '(6 . 6))
+;; Default left fringe, 0 pixels for right fringe
+(fringe-mode '(nil . 0))
 ;; Places the fringes outside the margins, closest to the frame edge. Useful for
 ;; `git-gutter-fringes'
 (setq-default fringes-outside-margins t)
@@ -124,10 +125,10 @@
   :custom
   (solaire-mode-real-buffer-fn
    '(lambda ()                  ; Real buffers have at least one of these properties:
-            (or (buffer-file-name (buffer-base-buffer)) ; Connected to a file
-                ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
-                (string-match "*Minimap*" (buffer-name)) ; Demap minimap
-                )))
+      (or (buffer-file-name (buffer-base-buffer)) ; Connected to a file
+          ;; (string-match "*[Ss]cratch" (buffer-name)) ; Is a scratch buffer
+          (string-match "*Minimap*" (buffer-name)) ; Demap minimap
+          )))
   :init
   ;; NOTE 2022-01-21: Enable `solaire-global-mode' if I'm okay swapping the
   ;; background faces which solaire remaps, i.e., non-real buffers dark and real
