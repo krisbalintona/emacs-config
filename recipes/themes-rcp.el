@@ -87,7 +87,7 @@
 (fringe-mode '(nil . 0))
 ;; Places the fringes outside the margins, closest to the frame edge. Useful for
 ;; `git-gutter-fringes'
-(setq-default fringes-outside-margins t)
+;; (setq-default fringes-outside-margins t)
 
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
@@ -252,7 +252,8 @@ are troublesome)."
   (setq mode-line-percent-position '(-3 "%p")
         mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
         mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
-        mode-line-compact 'long)        ; Emacs 28
+        mode-line-compact 'long        ; Emacs 28
+        mode-line-right-align-edge 'window)
 
   (defvar kb/mode-line-modes
     (let ((recursive-edit-help-echo
