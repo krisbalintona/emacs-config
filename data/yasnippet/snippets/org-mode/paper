@@ -2,11 +2,15 @@
 # name: paper
 # --
 #+latex_class: mla
-#+professor: 
-#+course: 
-#+EXPORT_FILE_NAME: 
+#+professor:
+#+course:
+#+EXPORT_FILE_NAME:
 
-* Works Cited :ignore:
+* Potential titles
+
+* 1 Draft                                                            :export:
+
+* Works Cited                                                 :ignore:export:
 
 #+begin_export LaTeX
 \newpage
