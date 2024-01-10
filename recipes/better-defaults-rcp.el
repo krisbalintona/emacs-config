@@ -51,7 +51,7 @@
 
               max-mini-window-height 0.3                                                          ; Max minibuffer height
 
-              tab-width 4
+              tab-width 8
               indent-tabs-mode nil
 
               visible-bell nil
