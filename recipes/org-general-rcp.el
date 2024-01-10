@@ -320,7 +320,7 @@ have `org-warning' face."
   ;; Headlines
   (org-superstar-headline-bullets-list '("◈" "●" "◉" "◇" "✳")) ; List inspired from `org-modern'
   (org-n-level-faces 5)
-  (org-cycle-level-faces nil)
+  (org-cycle-level-faces t)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
 
   ;; Todos
@@ -470,19 +470,20 @@ have `org-warning' face."
   :hook (org-mode . org-margin-mode)
   :custom
   (org-startup-indented nil)            ; Not compatible
+  (org-margin-max-level 8)
   (org-margin-headers
-   (list (cons 'stars (list (propertize "▸     " 'face '(org-level-1 fixed-pitch))
-                            (propertize " ▸    " 'face '(org-level-2 fixed-pitch))
-                            (propertize "  ▸   " 'face '(org-level-3 fixed-pitch))
-                            (propertize "   ▸  " 'face '(org-level-4 fixed-pitch))
-                            (propertize "    ▸ " 'face '(org-level-5 fixed-pitch))
-                            (propertize "     ▸" 'face '(org-level-6 fixed-pitch))))
-         (cons 'H-txt (list (propertize "    H1" 'face '(org-level-1 fixed-pitch))
-                            (propertize "    H2" 'face '(org-level-2 fixed-pitch))
-                            (propertize "    H3" 'face '(org-level-3 fixed-pitch))
-                            (propertize "    H4" 'face '(org-level-4 fixed-pitch))
-                            (propertize "    H5" 'face '(org-level-5 fixed-pitch))
-                            (propertize "    H6" 'face '(org-level-6 fixed-pitch))))
+   (list (cons 'stars (list (propertize "▸     " 'face '(fixed-pitch org-level-1))
+                            (propertize " ▸    " 'face '(fixed-pitch org-level-2))
+                            (propertize "  ▸   " 'face '(fixed-pitch org-level-3))
+                            (propertize "   ▸  " 'face '(fixed-pitch org-level-4))
+                            (propertize "    ▸ " 'face '(fixed-pitch org-level-5))
+                            (propertize "     ▸" 'face '(fixed-pitch org-level-6))))
+         (cons 'H-txt (list (propertize "    H1" 'face '(fixed-pitch org-level-1))
+                            (propertize "    H2" 'face '(fixed-pitch org-level-2))
+                            (propertize "    H3" 'face '(fixed-pitch org-level-3))
+                            (propertize "    H4" 'face '(fixed-pitch org-level-4))
+                            (propertize "    H5" 'face '(fixed-pitch org-level-5))
+                            (propertize "    H6" 'face '(fixed-pitch org-level-6))))
          (cons 'H-svg (list (svg-lib-tag "H1" 'org-level-1)
                             (svg-lib-tag "H2" 'org-level-2)
                             (svg-lib-tag "H3" 'org-level-3)
@@ -494,15 +495,15 @@ have `org-warning' face."
   ;; (org-margin-headers-set 'H-svg)
   (org-margin-markers
    (list (cons "\\(#\\+begin_src\\)"
-               (propertize "     " 'face '(font-lock-comment-face bold fixed-pitch)))
+               (propertize "     " 'face '(fixed-pitch font-lock-comment-face)))
          (cons "\\(#\\+begin_quote\\)"
-               (propertize "     " 'face '(font-lock-comment-face bold fixed-pitch)))
+               (propertize "     " 'face '(fixed-pitch font-lock-comment-face)))
          (cons "\\(#\\+begin_comment\\)"
-               (propertize "    C " 'face '(font-lock-comment-face bold fixed-pitch)))
+               (propertize "    C " 'face '(fixed-pitch font-lock-comment-face)))
          (cons "\\(# TODO\\)"
-               (propertize "    T " 'face '(font-lock-comment-face bold fixed-pitch)))
+               (propertize "    T " 'face '(fixed-pitch font-lock-comment-face)))
          (cons "\\(# NOTE\\)"
-               (propertize "    N " 'face '(font-lock-comment-face bold fixed-pitch))))))
+               (propertize "    N " 'face '(fixed-pitch font-lock-comment-face))))))
 
 ;;; Ancillary functionality
 ;;;; Org-web-tools
