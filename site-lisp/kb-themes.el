@@ -103,7 +103,7 @@
 (defvar kb/themes-light 'modus-operandi
   "My chosen light theme.")
 
-(defvar kb/themes-hook '(kb/themes-setup-base-faces)
+(defvar kb/themes-hook nil
   "Hook that runs after the `kb/proper-load-theme-light' and
 `kb/proper-load-theme-dark'.")
 
@@ -127,17 +127,22 @@
                       :family kb/themes-variable-pitch-font
                       :height 1.1)
 
-  (set-face-background 'fringe (face-attribute 'default :background))
-
   (set-face-attribute 'mode-line nil
                       :family kb/themes-mode-line-font
                       ;; :height 113)      ; JetBrainsMono Nerd Font
                       :height 117)      ; Iosevka Aile
   (set-face-attribute 'mode-line-inactive nil
                       :inherit 'mode-line)
+
+  (set-face-background 'fringe (face-attribute 'default :background))
+  ;; Note that the vertical border is distinct from the window divider when
+  ;; `window-divider-mode' is enabled.
+  (set-face-attribute 'vertical-border nil
+                      :foreground (face-attribute 'default :background))
+
   (remove-hook 'after-make-frame-functions #'kb/themes-setup-base-faces))
 (add-hook 'after-make-frame-functions #'kb/themes-setup-base-faces)
-(kb/themes-setup-base-faces)            ; For non-daemon frames
+(add-hook 'kb/themes-hook #'kb/themes-setup-base-faces)
 
 (defun kb/ensure-themes-loaded ()
   "Ensure that the themes in `kb/themes-list' are loaded."
@@ -182,6 +187,7 @@ Additionally, run `kb/themes-hook'."
   (if (or (<= 19 hour) (<= hour 8))
       (kb/proper-load-theme-dark)
     (kb/proper-load-theme-light)))
+(kb/themes-setup-base-faces)
 (elpaca-wait)
 
 ;;; kb-themes.el ends here
