@@ -32,6 +32,7 @@
   (org-startup-folded 'nofold)
   (org-ellipsis " ⮷")
   (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
+  (org-hide-macro-markers t)
   (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
   (org-pretty-entities-include-sub-superscripts t) ; Show superscripts and subscripts? Also see `org-export-with-sub-superscripts'
   (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
