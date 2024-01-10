@@ -303,170 +303,6 @@ Delete the original subtree."
           (insert text))
       (user-error "No subtree to extract; aborting"))))
 
-;;;; Consult interface
-;; Lighter weight alternative to consult-notes
-(with-eval-after-load 'denote
-  (defun kb/consult-notes-denote--file (cand)
-    (format "%s" (get-text-property 0 'denote-path cand)))
-
-  (defconst kb/consult-notes--time-relative
-    `((100 "sec" 1)
-      (,(* 60 100) "min" 60.0)
-      (,(* 3600 30) "hour" 3600.0)
-      (,(* 3600 24 400) "day" ,(* 3600.0 24.0))
-      (nil "year" ,(* 365.25 24 3600)))
-    "Formatting used by the function `consult-notes--time-relative'.")
-
-  (defun kb/consult-notes--time-relative (time)
-    "Format TIME as a relative age."
-    (setq time (max 0 (float-time (time-since time))))
-    (let ((sts kb/consult-notes--time-relative) here)
-      (while (and (car (setq here (pop sts))) (<= (car here) time)))
-      (setq time (round time (caddr here)))
-      (format "%s %s%s ago" time (cadr here) (if (= time 1) "" "s"))))
-
-  (defun kb/consult-notes--time-absolute (time)
-    "Format TIME as an absolute age."
-    (let ((system-time-locale "C"))
-      (format-time-string
-       (if (> (decoded-time-year (decode-time (current-time)))
-              (decoded-time-year (decode-time time)))
-           " %Y %b %d"
-         "%b %d %H:%M")
-       time)))
-
-  (defun kb/consult-notes--time (time)
-    "Format file age TIME, suitably for use in annotations."
-    (if (< (float-time (time-since time)) (* 60 60 24 14))
-        (kb/consult-notes--time-relative time)
-      (kb/consult-notes--time-absolute time)))
-
-  (defun kb/consult-notes-denote--annotate (cand)
-    "Annotate CAND in `consult-notes-denote'."
-    (let* ((path (get-text-property 0 'denote-path cand))
-           (attrs (file-attributes path))
-           (ftime (kb/consult-notes--time (file-attribute-modification-time attrs)))
-           (fsize (file-size-human-readable (file-attribute-size attrs))))
-      (put-text-property 0 (length fsize) 'face '(:inherit (warning) :weight light) fsize)
-      (put-text-property 0 (length ftime) 'face '(:inherit (warning) :weight light) ftime)
-      (format "%8s  %8s" fsize ftime)))
-
-  (defun kb/consult-notes-denote--state ()
-    "File preview for denote files."
-    (let ((open (consult--temporary-files))
-          (state (consult--file-state)))
-      (lambda (action cand)
-        (unless cand
-          (funcall open))
-        (funcall state action (and cand
-                                   (kb/consult-notes-denote--file cand))))))
-
-  (defun kb/consult-notes-denote--new-note (cand)
-    "Create new note with Denote with title CAND.
-
-Input \"foo\", then create \"id-foo\", file type is determined by
-`denote-file-type', choose manually when `denote-prompts' includes
-'file-type, or simply include the extension; \"foo.txt\", creates
-\"id-foo.txt\."
-    (let* ((f (expand-file-name cand denote-directory))
-           (f-dir (file-name-directory f))
-           (f-name-base (file-name-base f))
-           (file-type (pcase (file-name-extension f)
-                        ("org" "org")
-                        ("md" "markdown-toml")
-                        ("txt" "text")))
-           keywords date subdirectory template)
-      (dolist (prompt denote-prompts)
-        (pcase prompt
-          ('keywords (setq keywords (denote-keywords-prompt)))
-          ('file-type (setq file-type (denote-file-type-prompt)))
-          ('subdirectory (setq subdirectory (denote-subdirectory-prompt)))
-          ('date (setq date (denote-date-prompt)))
-          ('template (setq template (denote-template-prompt)))))
-      (denote (string-trim f-name-base) keywords file-type subdirectory date template)))
-
-  (defconst kb/denote-consult--source
-    (list :name     "Notes"
-          :narrow   ?n
-          :category 'kb/denote-consult
-          :annotate #'kb/consult-notes-denote--annotate
-          :items    (lambda ()
-                      (let* ((max-width 0)
-                             (cands (mapcar (lambda (f)
-                                              (let* ((id (denote-retrieve-filename-identifier f))
-                                                     (title (org-fontify-like-in-org-mode
-                                                             (denote-retrieve-title-value f (denote-filetype-heuristics f))))
-                                                     (dir (file-relative-name (file-name-directory f) denote-directory))
-                                                     (keywords (denote-extract-keywords-from-path f)))
-                                                (let ((current-width (string-width title)))
-                                                  (when (> current-width max-width)
-                                                    (setq max-width (+ 24 current-width))))
-                                                (propertize title 'denote-path f 'denote-keywords keywords)))
-                                            (-difference
-                                             (denote-directory-files nil nil t) ; See `denote-file-is-note-p'
-                                             (denote-directory-files "papers/"))))) ; Exclude papers directory
-                        (mapcar (lambda (c)
-                                  (let* ((keywords (get-text-property 0 'denote-keywords c))
-                                         (path (get-text-property 0 'denote-path c))
-                                         (dirs (directory-file-name (file-relative-name (file-name-directory path) denote-directory))))
-                                    (concat c
-                                            ;; align keywords
-                                            (propertize " " 'display `(space :align-to (+ left ,(+ 2 max-width))))
-                                            (format "%18s"
-                                                    (if keywords
-                                                        (concat (propertize "#" 'face '(:inherit (warning) :weight light))
-                                                                (propertize (mapconcat 'identity keywords " ") 'face '(:inherit (warning) :weight light)))
-                                                      ""))
-                                            (format "%18s" (propertize (concat "/" dirs) 'face '(:inherit (warning) :weight light))))))
-                                cands)))
-          ;; Custom preview
-          :state  #'kb/consult-notes-denote--state
-          ;; Create new note on match fail
-          :new     #'kb/consult-notes-denote--new-note))
-
-  (defconst kb/denote-consult-papers--source
-    (list :name     "Papers"
-          :narrow   ?p
-          :category 'kb/denote-consult
-          :annotate #'kb/consult-notes-denote--annotate
-          :items    (lambda ()
-                      (let* ((max-width 0)
-                             (cands (mapcar (lambda (f)
-                                              (let* ((id (denote-retrieve-filename-identifier f))
-                                                     (title (org-fontify-like-in-org-mode
-                                                             (denote-retrieve-title-value f (denote-filetype-heuristics f))))
-                                                     (dir (file-relative-name (file-name-directory f) denote-directory))
-                                                     (keywords (denote-extract-keywords-from-path f)))
-                                                (let ((current-width (string-width title)))
-                                                  (when (> current-width max-width)
-                                                    (setq max-width (+ 24 current-width))))
-                                                (propertize title 'denote-path f 'denote-keywords keywords)))
-                                            (denote-directory-files (rx (literal "papers/"))))))
-                        (mapcar (lambda (c)
-                                  (let* ((keywords (get-text-property 0 'denote-keywords c)))
-                                    (concat c
-                                            ;; align keywords
-                                            (propertize " " 'display `(space :align-to (+ left ,(+ 2 max-width))))
-                                            (format "%18s" (if keywords
-                                                               (concat (propertize "#" 'face '(:inherit (warning) :weight light))
-                                                                       (propertize (mapconcat 'identity keywords " ") 'face '(:inherit (warning) :weight light)))
-                                                             "")))))
-                                cands)))
-          ;; Custom preview
-          :state  #'kb/consult-notes-denote--state
-          ;; Create new note on match fail
-          :new     #'kb/consult-notes-denote--new-note))
-
-  (defun kb/denote-consult ()
-    "Consult interface for denote notes."
-    (interactive)
-    (consult--multi '(kb/denote-consult--source kb/denote-consult-papers--source)))
-  (kb/note-keys "f" 'kb/denote-consult)
-
-  (consult-customize kb/denote-consult
-                     :prompt "Go to..."
-                     :preview-key "C-M-;"))
-
 ;;; Denote-menu
 (use-package denote-menu
   :elpaca (:type git :host github :repo "namilus/denote-menu")
@@ -481,7 +317,7 @@ Input \"foo\", then create \"id-foo\", file type is determined by
 
 ;;; Consult-notes
 (use-package consult-notes
-  :disabled                             ; Over-engineered; made my own solution
+  ;; :disabled                             ; Over-engineered; made my own solution
   :elpaca (consult-notes :type git :host github :repo "mclear-tools/consult-notes")
   :commands (consult-notes
              consult-notes-search-in-all-notes
@@ -523,11 +359,10 @@ Input \"foo\", then create \"id-foo\", file type is determined by
                                                   (when (> current-width max-width)
                                                     (setq max-width (+ 24 current-width))))
                                                 (propertize title 'denote-path f 'denote-keywords keywords)))
-                                            (cl-set-difference
-                                             (denote-directory-files-matching-regexp
-                                              (rx (group (literal ".org") eol))) ; Only org files
-                                             (directory-files-recursively (expand-file-name "papers" kb/notes-dir)
-                                                                          consult-notes-file-match))))) ; Exclude papers directory
+                                            (remove-if-not (lambda (f) (equal (file-name-extension f) "org"))
+                                                           (cl-set-difference
+                                                            (denote-directory-files) ; See `denote-file-is-note-p'
+                                                            (denote-directory-files "papers/")))))) ; Exclude papers directory
                         (mapcar (lambda (c)
                                   (let* ((keywords (get-text-property 0 'denote-keywords c))
                                          (path (get-text-property 0 'denote-path c))
@@ -566,10 +401,10 @@ Input \"foo\", then create \"id-foo\", file type is determined by
                                                   (when (> current-width max-width)
                                                     (setq max-width (+ 24 current-width))))
                                                 (propertize title 'denote-path f 'denote-keywords keywords)))
-                                            (remove-if-not (lambda (f) (string-match-p (rx (literal ".org") eol) f))
+                                            (remove-if-not (lambda (f) (equal (file-name-extension f) "org"))
                                                            (directory-files-recursively
                                                             (expand-file-name "papers" kb/notes-dir)
-                                                            consult-notes-file-match)))))
+                                                            denote-id-regexp)))))
                         (mapcar (lambda (c)
                                   (let* ((keywords (get-text-property 0 'denote-keywords c)))
                                     (concat c
