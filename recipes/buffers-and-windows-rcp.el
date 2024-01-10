@@ -41,7 +41,6 @@
   :custom
   (window-resize-pixelwise t)
   (window-sides-vertical t)
-  (split-width-threshold 80)
 
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
@@ -410,7 +409,27 @@ If buffer-or-name is nil return current buffer's mode."
     (global-set-key (kbd (concat margin "<mouse-3>")) 'ignore)
     (dolist (multiple '("" "double-" "triple-"))
       (global-set-key (kbd (concat margin "<" multiple "wheel-up>")) 'mwheel-scroll)
-      (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll))))
+      (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll)))
+
+  ;; In order to split windows sensibly (horizontally when desirable). Inspired
+  ;; by `visual-fill-column-split-window-sensibly'. A relevant issue might be
+  ;; found at https://github.com/mpwang/perfect-margin/issues/9
+  (defun kb/split-window-sensibly (&optional window)
+    "tk"
+    (let ((margins (window-margins window))
+          (fringes (window-fringes window))
+          new)
+      ;; Unset the margins and try to split the window. I choose to set fringes
+      ;; and margins both to 0, though adapting this to depend on the value of
+      ;; `olivetti-style' would remove undesirable behavior in edge cases
+      (set-window-margins window 0 0)
+      (set-window-fringes window 0 0)
+      (unwind-protect
+          (setq new (split-window-sensibly window))
+        (when (not new)
+          (set-window-margins window (car margins) (cdr margins))
+          (set-window-fringes window (car fringes) (cdr fringes))))))
+  (setq split-window-preferred-function 'kb/split-window-sensibly))
 
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
