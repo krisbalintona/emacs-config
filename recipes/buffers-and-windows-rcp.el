@@ -42,7 +42,7 @@
   (window-resize-pixelwise t)
   (window-sides-vertical t)
   (split-width-threshold 80)
-  
+
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
    `(;; Automatically hide
@@ -315,13 +315,13 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-display-control nil)
   (popper-group-function
    #'(lambda ()
-             (cond
-              ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
-               'Config)
-              ((locate-dominating-file default-directory "init.el") 'Emacs)
-              ((project-current) (project-root (project-current)))
-              (t nil)                         ; No group
-              )))
+       (cond
+        ((string-match-p "\\(?:~/\\.config/\\|~/dotfiles/\\)" default-directory)
+         'Config)
+        ((locate-dominating-file default-directory "init.el") 'Emacs)
+        ((project-current) (project-root (project-current)))
+        (t nil)                         ; No group
+        )))
   (popper-mode-line '(:eval (propertize " POP" 'face 'mode-line-buffer-id)))
 
   ;; Popper-echo
@@ -329,31 +329,31 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-dispatch-actions t)
   (popper-echo-transform-function
    #'(lambda (name)
-             (cond
-              ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
-               (concat (match-string 1 name)
-                       "(O)"))
-              ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
-               (concat (match-string 1 name)
-                       "(H)"))
-              ((string-match "^\\*Warnings\\*" name)
-               (concat (match-string 1 name)
-                       "(W)"))
-              ((string-match "^\\*Backtrace\\*" name)
-               (concat (match-string 1 name)
-                       "(B)"))
-              ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
-               (concat (match-string 1 name)
-                       "(L)"))
-              ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
-               (concat (match-string 1 name)
-                       "(C)"))
-              ((string-match "^\\*Java Run" name)
-               (concat (match-string 1 name)
-                       (concat "(CG)" (substring name 18 (- (length name) 1)))
-                       ))
-              (t name))
-             ))
+       (cond
+        ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
+         (concat (match-string 1 name)
+                 "(O)"))
+        ((string-match "^\\*\\(.*?\\)\\(?:Help\\|helpful\\)\\*$" name)
+         (concat (match-string 1 name)
+                 "(H)"))
+        ((string-match "^\\*Warnings\\*" name)
+         (concat (match-string 1 name)
+                 "(W)"))
+        ((string-match "^\\*Backtrace\\*" name)
+         (concat (match-string 1 name)
+                 "(B)"))
+        ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
+         (concat (match-string 1 name)
+                 "(L)"))
+        ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
+         (concat (match-string 1 name)
+                 "(C)"))
+        ((string-match "^\\*Java Run" name)
+         (concat (match-string 1 name)
+                 (concat "(CG)" (substring name 18 (- (length name) 1)))
+                 ))
+        (t name))
+       ))
 
   ;; Mode line
   (popper-mode-line-position 0)
@@ -391,6 +391,26 @@ If buffer-or-name is nil return current buffer's mode."
                    (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
   :init
   (burly-tabs-mode))
+
+;;;; Perfect-margin
+(use-package perfect-margin
+  :hook (elpaca-after-init . perfect-margin-mode)
+  :custom
+  (perfect-margin-visible-width 128)
+  (perfect-margin-only-set-left-margin nil)
+  (perfect-margin-ignore-filters
+   '(window-minibuffer-p
+     (lambda (window)
+       (with-selected-window window (bound-and-true-p olivetti-mode)))))
+  :config
+  ;; Additional mouse bindings for now wider margins. Taken from
+  ;; https://github.com/mpwang/perfect-margin#additional-binding-on-margin-area
+  (dolist (margin '("<left-margin> " "<right-margin> "))
+    (global-set-key (kbd (concat margin "<mouse-1>")) 'ignore)
+    (global-set-key (kbd (concat margin "<mouse-3>")) 'ignore)
+    (dolist (multiple '("" "double-" "triple-"))
+      (global-set-key (kbd (concat margin "<" multiple "wheel-up>")) 'mwheel-scroll)
+      (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll))))
 
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
