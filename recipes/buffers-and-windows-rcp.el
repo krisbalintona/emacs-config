@@ -393,6 +393,7 @@ If buffer-or-name is nil return current buffer's mode."
 
 ;;;; Perfect-margin
 (use-package perfect-margin
+  :diminish
   :hook (elpaca-after-init . perfect-margin-mode)
   :custom
   (perfect-margin-visible-width 128)
