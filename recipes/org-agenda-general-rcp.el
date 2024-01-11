@@ -231,9 +231,14 @@ Side effects occur if the parent of the current headline has a
   (defun kb/org-agenda-breadcrumb (len)
     "Formatted breadcrumb for current `org-agenda' item."
     (org-with-point-at (org-get-at-bol 'org-marker)
-      (let ((s (org-format-outline-path (org-get-outline-path)
-                                        (1- (frame-width))
-                                        nil org-agenda-breadcrumbs-separator)))
+      (let ((s (if (derived-mode-p 'org-mode)
+                   (org-format-outline-path (org-get-outline-path)
+                                            (1- (frame-width))
+                                            nil org-agenda-breadcrumbs-separator)
+                 ;; Not in Org buffer. This can happen, for example, in
+                 ;; `org-agenda-add-time-grid-maybe' where time grid does not
+                 ;; correspond to a particular heading.
+                 "")))
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
