@@ -112,6 +112,52 @@
    [remap describe-key] 'helpful-key
    [remap apropos-command] 'helpful-command))
 
+;;; Edebug
+(use-package edebug
+  :elpaca nil
+  :custom
+  (edebug-initial-mode 'go)
+  :init
+  ;; The following is taken from
+  ;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/.
+  ;; Better indication for evaluated sexps in during edebugging.
+
+  (defun adviced:edebug-previous-result (_ &rest r)
+    "Adviced `edebug-previous-result'."
+    (require 'eros)
+    (eros--make-result-overlay edebug-previous-result
+                               :where (point)
+                               :duration eros-eval-result-duration))
+
+  (defun edebug-compute-previous-result (previous-value)
+    (if edebug-unwrap-results
+        (setq previous-value
+              (edebug-unwrap* previous-value)))
+    (setq edebug-previous-result
+          (concat "Result: "
+                  (edebug-safe-prin1-to-string previous-value)
+                  (eval-expression-print-format previous-value))))
+
+  (defun edebug-previous-result ()
+    "Print the previous result."
+    (interactive)
+    (message "%s" edebug-previous-result))
+
+  (defun adviced:edebug-compute-previous-result (_ &rest r)
+    "Adviced `edebug-compute-previous-result'."
+    (let ((previous-value (nth 0 r)))
+      (if edebug-unwrap-results
+          (setq previous-value
+                (edebug-unwrap* previous-value)))
+      (setq edebug-previous-result
+            (edebug-safe-prin1-to-string previous-value))))
+
+  (advice-add #'edebug-compute-previous-result
+              :around #'adviced:edebug-compute-previous-result)
+
+  (advice-add #'edebug-previous-result
+              :around #'adviced:edebug-previous-result))
+
 ;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
