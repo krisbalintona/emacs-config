@@ -96,7 +96,7 @@
           (match-end 1))))))
 
   (defun kb/denote-insert-identifier-maybe ()
-    (when (denote-file-is-note-p (buffer-file-name))
+    (when (and (buffer-file-name) (denote-file-is-note-p (buffer-file-name)))
       (cond
        ;; ID doesn't exist
        ((not (kb/note-buffer-prop-get "identifier"))
@@ -272,7 +272,7 @@ If called with `universal-arg', then replace links in all denote buffers."
     (interactive "*p")
     (let* ((files (if (< 1 prefix)
                       (denote-directory-files)
-                    (if (denote-file-is-note-p (buffer-file-name))
+                    (if (and (buffer-file-name) (denote-file-is-note-p (buffer-file-name)))
                         (list (buffer-file-name))
                       (user-error "Not a `denote-file'!"))))
            (initial-buffers (buffer-list))
