@@ -381,6 +381,15 @@ have `org-warning' face."
   (olivetti-margin-width 8)
   ;; (olivetti-body-width 120)
   (olivetti-style 'fancy) ; NOTE 2024-01-05: "Fancy" works well with org-margin
+
+  ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's changing of
+  ;; margins and fringes messes with the calculation of
+  ;; `mode--line-format-right-align'.
+  (mode-line-format-right-align
+   '(:eval (if (eq major-mode 'org-mode)
+               (let ((mode-line-right-align-edge 'right-fringe))
+                 (mode--line-format-right-align))
+             (mode--line-format-right-align))))
   :custom-face
   (olivetti-fringe ((t (:background unspecified :inherit default)))))
 
