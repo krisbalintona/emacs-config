@@ -82,6 +82,27 @@
       (window-parameters . ((mode-line-format . none))))
      )))
 
+;;; Dape
+;; Dap-mode but without LSP-mode
+;; FIXME 2024-01-10: UNTESTED
+(use-package dape
+  :elpaca (:type git :host github :repo "svaante/dape")
+  :custom
+  ;; To use window configuration like gud (gdb-mi)
+  (dape-buffer-window-arrangement 'gud)
+  :config
+  ;; To display info and/or repl buffers on stopped
+  (add-hook 'dape-on-stopped-hooks 'dape-info)
+  (add-hook 'dape-on-stopped-hooks 'dape-repl)
+
+  ;; Kill compile buffer on build success
+  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
+
+  ;; Save buffers on startup, useful for interpreted languages
+  (add-hook 'dape-on-start-hooks
+            (defun dape--save-on-start ()
+              (save-some-buffers t t))))
+
 ;;; programming-debugging-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-debugging-rcp)
