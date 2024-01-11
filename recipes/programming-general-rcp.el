@@ -186,7 +186,8 @@ punctuation."
    "r" 'consult-ripgrep
    "f" 'consult-find
    "F" 'consult-locate
-   "l" 'consult-line)
+   "l" 'consult-line
+   "i" 'consult-info)
   (:keymaps 'consult-narrow-map "?" 'consult-narrow-help) ; Show available narrow keys
   (:keymaps 'help-map [remap apropos-command] 'consult-apropos)
   (:keymaps 'org-mode-map [remap consult-outline] 'consult-org-heading)
