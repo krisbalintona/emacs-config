@@ -9,6 +9,12 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Breadcrumb
+(use-package breadcrumb
+  :hook ((lsp-ui-mode eglot-managed-mode) . breadcrumb-local-mode)
+  :custom
+  (which-func-functions '(breadcrumb-imenu-crumbs)))
+
 ;;; Quickrun
 (use-package quickrun
   :general (:prefix "<f2>"
