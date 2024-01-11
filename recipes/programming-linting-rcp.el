@@ -85,10 +85,7 @@
 (use-package flymake-collection
   :requires flymake
   :ensure-system-package luacheck
-  :hook (elpaca-after-init . flymake-collection-hook-setup)
-  :init
-  (setcdr (assoc 'org-mode flymake-collection-hook-config)
-          '((flymake-collection-proselint :disabled t))))
+  :hook (elpaca-after-init . flymake-collection-hook-setup))
 
 ;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use
