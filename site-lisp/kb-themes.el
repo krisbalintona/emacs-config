@@ -61,7 +61,6 @@
         modus-themes-prompts '(semibold)
         modus-themes-completions '(((matches . (heavy))
                                     (selection . (semibold))))
-        modus-themes-region '(bg-only)
         modus-themes-org-blocks 'tinted-background
         modus-themes-variable-pitch-ui nil
 
