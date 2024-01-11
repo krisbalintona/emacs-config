@@ -378,8 +378,9 @@ have `org-warning' face."
   :hook (org-mode . olivetti-mode)
   :custom
   (olivetti-lighter nil)
+  (olivetti-body-width 0.55)
+  (olivetti-minimum-body-width 80)
   (olivetti-margin-width 8)
-  ;; (olivetti-body-width 120)
   (olivetti-style 'fancy) ; NOTE 2024-01-05: "Fancy" works well with org-margin
 
   ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's changing of
