@@ -79,6 +79,10 @@
           (bg-completion-match-2 bg-cyan-intense)
           (bg-completion-match-3 bg-red-intense)
 
+          ;; No border in mode line. See (modus-themes) Make the mode line borderless
+          (border-mode-line-active bg-mode-line-active)
+          (border-mode-line-inactive bg-mode-line-inactive)
+
           ;; Headings
           (fg-heading-1 red-faint)
           (fg-heading-6 rainbow-0)))
