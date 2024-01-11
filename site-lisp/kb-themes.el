@@ -66,7 +66,7 @@
         modus-themes-variable-pitch-ui nil
 
         modus-themes-headings
-        '((t . (variable-pitch semibold))))
+        '((t . (semibold))))
 
   ;; Overrides
   (setq modus-themes-common-palette-overrides
@@ -104,8 +104,7 @@
   "My chosen light theme.")
 
 (defvar kb/themes-hook nil
-  "Hook that runs after the `kb/proper-load-theme-light' and
-`kb/proper-load-theme-dark'.")
+  "Hook that runs after the `kb/proper-load-theme-*'.")
 
 ;;; Function definitions
 (defun kb/themes-setup-base-faces (&optional frame)
