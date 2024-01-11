@@ -311,6 +311,7 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package eldoc-box
   :disabled                             ; Only intrusive
   :diminish eldoc-box-hover-mode
+  :hook (eldoc-mode . eldoc-box-hover-mode)
   :general
   ([remap eldoc-doc-buffer] 'eldoc-box-help-at-point)
   (:keymaps 'eglot-mode-map
@@ -322,8 +323,46 @@ progress. This is called by the timer `good-scroll--timer' every
   (eldoc-box-only-multi-line t)
   (eldoc-box-fringe-use-same-bg t)
   (eldoc-box-self-insert-command-list '(self-insert-command outshine-self-insert-command))
-  :init
-  (add-hook 'eldoc-mode-hook 'eldoc-box-hover-mode t))
+  :config
+  ;; Workaround for many hyphen characters wrapping in an ugly way in
+  ;; `eldoc-box' frame
+  (defun kb/eglot--format-markup (markup)
+    "Format MARKUP according to LSP's spec."
+    (pcase-let ((`(,string ,mode)
+                 (if (stringp markup) (list markup 'gfm-view-mode)
+                   (list (plist-get markup :value)
+                         (pcase (plist-get markup :kind)
+                           ("markdown" 'gfm-view-mode)
+                           ("plaintext" 'text-mode)
+                           (_ major-mode))))))
+      (with-temp-buffer
+        (setq-local markdown-fontify-code-blocks-natively t)
+
+        ;; In markdown, replace the horizontal rule, which is three hyphens in
+        ;; the markup, with X number of hyphens-like characters, with X being
+        ;; enough to cover the width of `eldoc-box-max-pixel-width'. We can't
+        ;; simply replace with more hyphens since `gfm-view-mode' renders any
+        ;; set of three hyphens as a horizontal rule
+        (setq string (string-replace
+                      "---"
+                      (make-string (floor (/ eldoc-box-max-pixel-width (window-font-width))) ?⎺)
+                      string))
+
+        (insert string)
+        (delete-trailing-whitespace) ; Also remove trailing whitespace while we're here
+        (let ((inhibit-message t)
+              (message-log-max nil)
+              match)
+          (ignore-errors (delay-mode-hooks (funcall mode)))
+          (font-lock-ensure)
+          (goto-char (point-min))
+          (let ((inhibit-read-only t))
+            (when (fboundp 'text-property-search-forward) ;; FIXME: use compat
+              (while (setq match (text-property-search-forward 'invisible))
+                (delete-region (prop-match-beginning match)
+                               (prop-match-end match)))))
+          (string-trim (buffer-string))))))
+  (advice-add 'eglot--format-markup :override #'kb/eglot--format-markup))
 
 ;;; Pulsar
 (use-package pulsar

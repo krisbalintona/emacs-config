@@ -18,7 +18,7 @@
                                  ;; values. Make sure "eldoc," or a similar
                                  ;; regexp, isn't in `eglot-stay-out-of'
                                  (when (bound-and-true-p eldoc-box-hover-mode)
-                                  (eglot--setq-saving eldoc-box-cleanup-interval 2))
+                                   (eglot--setq-saving eldoc-box-cleanup-interval 2))
                                  (eglot--setq-saving eldoc-echo-area-use-multiline-p nil)))
          (eglot-managed-mode . (lambda ()
                                  "Add `eglot-flymake-backend' to the beginning of
@@ -52,47 +52,18 @@ functions."
   (eglot-highlight-symbol-face ((t (:box (:line-width -1 :style nil)))))
   :config
   ;; Not a `defcustom', so use `setq'
-  (setq eglot-stay-out-of '("flymake"))
+  (setq eglot-stay-out-of '("flymake")))
 
-  ;; Workaround for many hyphen characters wrapping in an ugly way in
-  ;; `eldoc-box' frame
-  (defun kb/eglot--format-markup (markup)
-    "Format MARKUP according to LSP's spec."
-    (pcase-let ((`(,string ,mode)
-                 (if (stringp markup) (list markup 'gfm-view-mode)
-                   (list (plist-get markup :value)
-                         (pcase (plist-get markup :kind)
-                           ("markdown" 'gfm-view-mode)
-                           ("plaintext" 'text-mode)
-                           (_ major-mode))))))
-      (with-temp-buffer
-        (setq-local markdown-fontify-code-blocks-natively t)
-
-        ;; In markdown, replace the horizontal rule, which is three hyphens in
-        ;; the markup, with X number of hyphens-like characters, with X being
-        ;; enough to cover the width of `eldoc-box-max-pixel-width'. We can't
-        ;; simply replace with more hyphens since `gfm-view-mode' renders any
-        ;; set of three hyphens as a horizontal rule
-        (setq string (string-replace
-                      "---"
-                      (make-string (floor (/ eldoc-box-max-pixel-width (window-font-width))) ?⎺)
-                      string))
-
-        (insert string)
-        (delete-trailing-whitespace) ; Also remove trailing whitespace while we're here
-        (let ((inhibit-message t)
-              (message-log-max nil)
-              match)
-          (ignore-errors (delay-mode-hooks (funcall mode)))
-          (font-lock-ensure)
-          (goto-char (point-min))
-          (let ((inhibit-read-only t))
-            (when (fboundp 'text-property-search-forward) ;; FIXME: use compat
-              (while (setq match (text-property-search-forward 'invisible))
-                (delete-region (prop-match-beginning match)
-                               (prop-match-end match)))))
-          (string-trim (buffer-string))))))
-  (advice-add 'eglot--format-markup :override #'kb/eglot--format-markup))
+;;; Eglot-booster
+;; Boosts Eglot's communication with the server. There's also a version for LSP.
+;; FIXME 2024-01-10: UNTESTED
+(use-package eglot-booster
+  ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
+  ;; https://github.com/blahgeek/emacs-lsp-booster/releases
+  :elpaca (:type git :host github :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :init
+  (eglot-booster-mode))
 
 ;;; Languages
 ;;;; Eglot-java
