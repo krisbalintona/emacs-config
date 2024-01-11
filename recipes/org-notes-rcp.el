@@ -52,7 +52,8 @@
   (defun kb/denote-auto-rename ()
     "Auto rename denote file."
     (let ((f (buffer-file-name)))
-      (when (denote-file-is-writable-and-supported-p f)
+      (when (and (file-in-directory-p f denote-directory)
+                 (denote-file-is-writable-and-supported-p f))
         (denote-rename-file-using-front-matter f :auto-confirm)))))
 
 ;;;; Return denote file path based on ID
