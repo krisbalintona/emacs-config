@@ -128,7 +128,7 @@
   (set-face-attribute 'mode-line nil
                       :family kb/themes-mode-line-font
                       ;; :height 113)      ; JetBrainsMono Nerd Font
-                      :height 117)      ; Iosevka Aile
+                      :height 135)      ; Iosevka Aile
   (set-face-attribute 'mode-line-inactive nil
                       :inherit 'mode-line)
 
