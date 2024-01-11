@@ -86,7 +86,7 @@
   :requires flymake
   :ensure-system-package luacheck
   :hook (elpaca-after-init . flymake-collection-hook-setup)
-  :config
+  :init
   (setcdr (assoc 'org-mode flymake-collection-hook-config)
           '((flymake-collection-proselint :disabled t))))
 
