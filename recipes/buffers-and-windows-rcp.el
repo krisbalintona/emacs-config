@@ -398,6 +398,8 @@ If buffer-or-name is nil return current buffer's mode."
   :custom
   (perfect-margin-visible-width 128)
   (perfect-margin-only-set-left-margin nil)
+  (perfect-margin-ignore-modes
+   '(exwm-mode doc-view-mode nov-mode pdf-view-mode))
   (perfect-margin-ignore-filters
    '(window-minibuffer-p
      (lambda (window)
