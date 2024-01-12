@@ -375,7 +375,11 @@ have `org-warning' face."
 ;;;; Olivetti
 ;; Better writing environment
 (use-package olivetti
-  :hook (org-mode . olivetti-mode)
+  :hook ((org-mode . olivetti-mode)
+         (kb/themes . (lambda ()
+                        (set-face-attribute 'olivetti-fringe nil
+                                            :background (modus-themes-with-colors bg-dim)
+                                            :inherit 'unspecified))))
   :custom
   (olivetti-lighter nil)
   (olivetti-body-width 0.55)
@@ -390,10 +394,7 @@ have `org-warning' face."
    '(:eval (if (eq major-mode 'org-mode)
                (let ((mode-line-right-align-edge 'right-fringe))
                  (mode--line-format-right-align))
-             (mode--line-format-right-align))))
-  :custom-face
-  (olivetti-fringe ((t (:background (modus-themes-with-colors bg-dim)
-                        :inherit unspecified)))))
+             (mode--line-format-right-align)))))
 
 ;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
