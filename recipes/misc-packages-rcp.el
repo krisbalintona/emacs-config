@@ -388,9 +388,8 @@ progress. This is called by the timer `good-scroll--timer' every
                          :repo "alphapapa/pocket-reader.el")
   :general
   (kb/open-keys
-    "p" '(pocket-reader :wk "Open pocket"))
-  (general-define-key
-   :keymaps 'pocket-reader-mode-map
+    "p" 'pocket-reader)
+  (:keymaps 'pocket-reader-mode-map
    "TAB" 'kb/pocket-reader-cycle-view
    "+" 'pocket-reader-more
    "o" 'pocket-reader-pop-to-url)
@@ -420,12 +419,12 @@ displayed."
                                 (+ 1 added-width)   ; Added
                                 (+ 2 1)             ; Favorite
                                 (+ 3 domain-width)  ; Site
-                                (+ 1 tags-width)))) ; Tags
+                                (+ 2 tags-width)))) ; Tags
       (setq tabulated-list-format (vector (list "Added" (1+ added-width) pocket-reader-added-column-sort-function)
                                           (list "*" (+ 2 1) t)
                                           (list "Title" (+ 2 title-width) t)
                                           (list "Site" (+ 3 domain-width) t)
-                                          (list "Tags" (+ 1 tags-width) t)))))
+                                          (list "Tags" (+ 2 tags-width) t)))))
   (advice-add 'pocket-reader--set-tabulated-list-format
               :override #'kb/pocket-reader--set-tabulated-list-format)
 
