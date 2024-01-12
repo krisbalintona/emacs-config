@@ -103,14 +103,19 @@
   (set-frame-parameter nil 'alpha-background 100)
   (add-to-list 'default-frame-alist '(alpha-background . 100)))
 
-(defun kb/toggle-window-transparency ()
-  "Toggle transparency."
-  (interactive)
-  (let ((alpha-transparency 75))
-    (pcase (frame-parameter nil 'alpha-background)
-      ((pred (lambda (n) (= n alpha-transparency)))
-       (set-frame-parameter nil 'alpha-background 100))
-      (_ (set-frame-parameter nil 'alpha-background alpha-transparency)))))
+(defun kb/toggle-window-transparency (&optional arg)
+  "Toggle the value of `alpha-background'.
+
+Toggles between 100 and 72 by default. Can choose which value to
+change to if called with ARG."
+  (interactive "P")
+  (set-frame-parameter nil 'alpha-background
+                       (if arg
+                           (read-number "Change the transparency to which value (0-100)? ")
+                         (cl-case (frame-parameter nil 'alpha-background)
+                           (72 100)
+                           (100 72)
+                           (t 100)))))
 (general-define-key "<f12>" 'kb/toggle-window-transparency)
 
 ;;;; Solaire-mode
