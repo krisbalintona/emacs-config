@@ -59,6 +59,17 @@
   :config
   (org-noter-enable-update-renames))
 
+;;;; Zotxt
+;; Integration between Emacs and Zotero
+(use-package zotxt
+  :custom
+  (zotxt-default-bibliography-style "modern-language-association")
+  :config
+  (with-eval-after-load 'org-noter
+    (require 'org-zotxt-noter)
+    (advice-add 'org-noter :override #'org-zotxt-noter))
+  (org-zotxt-mode))
+
 ;;; Org-remark
 (use-package org-remark
   :after org
