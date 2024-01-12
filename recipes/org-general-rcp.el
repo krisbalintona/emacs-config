@@ -392,7 +392,8 @@ have `org-warning' face."
                  (mode--line-format-right-align))
              (mode--line-format-right-align))))
   :custom-face
-  (olivetti-fringe ((t (:background unspecified :inherit default)))))
+  (olivetti-fringe ((t (:background (modus-themes-with-colors bg-dim)
+                        :inherit unspecified)))))
 
 ;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
