@@ -12,13 +12,13 @@
 ;;; EAF
 ;; The Emacs application framework.
 (use-package eaf
+  :disabled
   ;; HACK 2023-07-16: Easier to install this package as a submodule since
   ;; managing external scripts with elpaca is currently a pain...
   :load-path "./site-lisp/emacs-application-framework/"
   :elpaca nil
   :ensure-system-package (("/usr/share/licenses/python-opencv/" . python-opencv)
                           (gdb))     ; For debugging purposes, if I ever need to
-  :hook (eaf-pdf-viewer . hide-mode-line-mode)
   :custom
   ;; Install desired modules
   ;; NOTE 2023-07-14: These names are the module names minus the "eaf-" prefix.
