@@ -82,11 +82,6 @@
 ;;; Dash-docs
 ;; Viewing of documentation via browser.
 (use-package dash-docs
-  :elpaca  (dash-docs :type git
-                      :host github
-                      :repo "dash-docs-el/dash-docs"
-                      :fork (:host github
-                             :repo "krisbalintona/dash-docs"))
   :hook ((python-base-mode . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
          (haskell-mode . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
          (js2-mode . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))

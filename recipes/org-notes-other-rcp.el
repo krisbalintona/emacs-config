@@ -25,17 +25,39 @@
 
 ;;;; Org-noter
 (use-package org-noter
-  :general
+  :elpaca (:protocol ssh
+           :fetcher github
+           :repo "org-noter/org-noter"
+           :remotes ("remote" :repo "krisbalintona/org-noter"))
+  :general (:keymaps 'org-noter-doc-mode-map
+            "i" 'org-noter-insert-precise-note
+            "I" 'org-noter-insert-precise-note-toggle-no-questions
+            "C-i" 'org-noter-insert-note
+            "C-I" 'org-noter-insert-note-toggle-no-questions
+            "C-M-i" nil
+            "M-i" nil)
   :custom
-  (org-noter-notes-search-path kb/notes-dir)
-  (org-noter-separate-notes-from-heading t) ; Add blank line betwwen note heading and content
-  (org-noter-notes-window-location 'horizontal-split) ; Horizontal split between notes and pdf
-  (org-noter-always-create-frame nil)                 ; Don't open frame
-  (org-noter-hide-other nil) ; Show notes that aren't synced with (you're on)
-  (org-noter-auto-save-last-location t) ; Go to last location
+  (org-noter-notes-search-path `(,kb/notes-dir))
+  ;; FIXME 2024-01-12: I am not currently using org-noter, but when I do, I can
+  ;; create a notes file and set it here like thus
+  ;; (org-noter-default-notes-file-names
+  ;;  (list (file-relative-name (car (directory-files-recursively
+  ;;                                  kb/notes-dir "20240111T235139"))
+  ;;                            kb/notes-dir)))
+  (org-noter-always-create-frame nil)
+  (org-noter-use-indirect-buffer t)
+  (org-noter-hide-other nil)
+  (org-noter-auto-save-last-location t)
   (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
-  :preface
-  (use-package djvu :demand))           ; Dependency...
+  (org-noter-separate-notes-from-heading t)
+  (org-noter-highlight-selected-text t)
+  (org-noter-arrow-foreground-color "red")
+  (org-noter-arrow-background-color "black")
+  (org-noter-doc-property-in-notes t)   ; Why not...
+  (org-noter-insert-note-no-questions nil) ; Activate this setting if I rarely type my own titles
+  (org-noter-max-short-selected-text-length 0) ; Always enclose in quote block
+  :config
+  (org-noter-enable-update-renames))
 
 ;;; Org-remark
 (use-package org-remark
@@ -131,16 +153,16 @@
    "t" 'delve--key--insert-tagged
    "T" 'delve--key--insert-node-by-tags
    "dd" '(lambda ()
-            (interactive)
-            (kill-line)
-            (forward-line -1))
+           (interactive)
+           (kill-line)
+           (forward-line -1))
    "P" 'delve--key--yank       ; Paste above
    "p" '(lambda ()                  ; Paste below
-           (interactive)
-           (save-excursion
-             (next-line)
-             (delve--key--yank))
-           (next-line))
+          (interactive)
+          (save-excursion
+            (next-line)
+            (delve--key--yank))
+          (next-line))
    "r" 'delve--key--sync
    "gr" 'delve--key--sync
    "h" 'delve--key--insert-heading
@@ -195,21 +217,21 @@ When called with PREFIX, hide all previews."
     (interactive (list lister-local-ewoc current-prefix-arg))
     (lister-walk-nodes ewoc
                        #'(lambda (ewoc new-node)
-                            (let* ((current-item (delve--current-item nil ewoc new-node))
-                                   (is-zettel (cl-typep current-item 'delve--zettel))
-                                   (has-preview (when is-zettel (delve--zettel-preview current-item)))
-                                   )
-                              ;; Hide only when...
-                              (when (and (not (lister-sublist-below-p ewoc new-node)) ; Non-parents
-                                         (not has-preview) ; No preview
-                                         (< 0 (lister-node-get-level new-node)) ; Not top-level
-                                         )
-                                (lister--outline-hide-show ewoc new-node new-node kb/delve-cycle-global-contents))
-                              ;; Then hide if with prefix, hide all previews
-                              (when (and prefix has-preview)
-                                (setf (delve--zettel-preview current-item) nil)
-                                (lister-refresh-at ewoc new-node)) ; Refresh to update visually
-                              ))
+                           (let* ((current-item (delve--current-item nil ewoc new-node))
+                                  (is-zettel (cl-typep current-item 'delve--zettel))
+                                  (has-preview (when is-zettel (delve--zettel-preview current-item)))
+                                  )
+                             ;; Hide only when...
+                             (when (and (not (lister-sublist-below-p ewoc new-node)) ; Non-parents
+                                        (not has-preview) ; No preview
+                                        (< 0 (lister-node-get-level new-node)) ; Not top-level
+                                        )
+                               (lister--outline-hide-show ewoc new-node new-node kb/delve-cycle-global-contents))
+                             ;; Then hide if with prefix, hide all previews
+                             (when (and prefix has-preview)
+                               (setf (delve--zettel-preview current-item) nil)
+                               (lister-refresh-at ewoc new-node)) ; Refresh to update visually
+                             ))
                        :first :last)
     (if (lister--outline-invisible-p ewoc :point) ; End a non-invisible node
         (lister-goto ewoc (lister-parent-node ewoc :point)))
@@ -221,11 +243,11 @@ When called with PREFIX, hide all previews."
       (lister-save-current-node ewoc
           (lister-walk-nodes ewoc
                              #'(lambda (ewoc new-node)
-                                  (let ((id (delve--zettel-id (delve--current-item nil ewoc new-node))))
-                                    (if (member id id-tracker)
-                                        ;; (lister-delete-at ewoc new-node)
-                                        (lister-mode-mark ewoc new-node)
-                                      (setq id-tracker (append id-tracker (list id))))))
+                                 (let ((id (delve--zettel-id (delve--current-item nil ewoc new-node))))
+                                   (if (member id id-tracker)
+                                       ;; (lister-delete-at ewoc new-node)
+                                       (lister-mode-mark ewoc new-node)
+                                     (setq id-tracker (append id-tracker (list id))))))
                              :first :last
                              #'(lambda (new-node) (cl-typep (delve--current-item nil ewoc new-node) 'delve--zettel))))))
   (lister-defkey kb/delve-visual-copy-nodes (ewoc pos prefix node)
@@ -251,11 +273,11 @@ When called with PREFIX, hide all previews."
    "M-l" 'kb/lister-mode-right
    ;; Use the initial versions of the functions for these
    "M-K" '(lambda ()
-             (interactive) ; Ignore constraint of same indentation level
-             (funcall-interactively 'lister-mode-up lister-local-ewoc :point '(4)))
+            (interactive) ; Ignore constraint of same indentation level
+            (funcall-interactively 'lister-mode-up lister-local-ewoc :point '(4)))
    "M-J" '(lambda ()
-             (interactive) ; Ignore constraint of same indentation level
-             (funcall-interactively 'lister-mode-down lister-local-ewoc :point '(4)))
+            (interactive) ; Ignore constraint of same indentation level
+            (funcall-interactively 'lister-mode-down lister-local-ewoc :point '(4)))
    "M-H" 'kb/lister-mode-left-sublist
    "M-L" 'kb/lister-mode-right-sublist
    "gk" 'lister-mode-forward-same-level

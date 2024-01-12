@@ -255,9 +255,10 @@
   )
 
 ;;;; Forge
-;; Support for git forges (e.g. GitLab and GitHub). NOTE 2022-06-01: Make sure a
-;; github and/or gitlab token is stored in either ~/.authinfo, ~/.authinfo.gpg,
-;; or ~/.netrc. See https://magit.vc/manual/ghub/Storing-a-Token.html
+;; Support for git forges (e.g. GitLab and GitHub).
+;; NOTE 2022-06-01: Make sure a github and/or gitlab token is stored in either
+;; ~/.authinfo, ~/.authinfo.gpg, or ~/.netrc. See
+;; https://magit.vc/manual/ghub/Storing-a-Token.html
 (use-package forge
   :demand
   :after magit)
