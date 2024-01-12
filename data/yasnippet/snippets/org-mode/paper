@@ -2,6 +2,7 @@
 # name: paper
 # --
 #+latex_class: mla
+#+cite_export: biblatex mla-new
 #+professor:
 #+course:
 #+EXPORT_FILE_NAME:
