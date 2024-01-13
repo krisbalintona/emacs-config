@@ -21,7 +21,127 @@
   (pdf-view-display-size 'fit-page)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
-  (pdf-view-use-imagemagick t))
+  (pdf-view-use-imagemagick t)
+  (pdf-annot-color-history              ; "Default" colors
+   '("yellow" "red" "green" "blue" "purple")))
+
+;;;; Avy keys to highlight region in PDF
+;; Use an avy-like interface to highlight region in pdf-view-mode. Heavily based
+;; off of
+;; https://github.com/dalanicolai/dala-emacs-lisp/blob/master/pdf-avy-highlight.el
+;; with modifications
+(with-eval-after-load 'pdf-view
+  (require 'avy)
+
+  (defcustom kb/avy-pdf-links-convert-pointsize-scale 0.02
+    "The scale factor for the -pointsize convert command.
+
+This determines the relative size of the font, when interactively
+reading links."
+    :group 'pdf-links
+    :type '(restricted-sexp :match-alternatives
+                            ((lambda (x) (and (numberp x)
+                                         (<= x 1)
+                                         (>= x 0))))))
+
+  (defun kb/avy-pdf-links-read-char-action (query prompt)
+    "Using PROMPT, interactively read a link-action.
+BORROWED FROM `pdf-links-read-link-action'.
+See `pdf-links-action-perform' for the interface."
+    (pdf-util-assert-pdf-window)
+    (let* ((links (pdf-info-search-string
+                   query
+                   (pdf-view-current-page)
+                   (current-buffer)))
+           (keys (pdf-links-read-link-action--create-keys
+                  (length links)))
+           (key-strings (mapcar (apply-partially 'apply 'string)
+                                keys))
+           (alist (cl-mapcar 'cons keys links))
+           (size (pdf-view-image-size))
+           (colors (pdf-util-face-colors 'pdf-links-read-link pdf-view-dark-minor-mode))
+           (args (list
+                  :foreground (plist-get (pdf-info-getoptions) :render/foreground)
+                  :background (plist-get (pdf-info-getoptions) :render/background)
+                  :formats
+                  `((?c . ,(lambda (_edges) (pop key-strings)))
+                    (?P . ,(number-to-string
+                            (max 1 (* (cdr size)
+                                      kb/avy-pdf-links-convert-pointsize-scale)))))
+                  :commands pdf-links-read-link-convert-commands
+                  :apply (pdf-util-scale-relative-to-pixel
+                          (mapcar (lambda (l) (car (cdr (assq 'edges l))))
+                                  links)))))
+      (unless links
+        (error "No links on this page"))
+      (unwind-protect
+          (let ((image-data nil))
+            (unless image-data
+              (setq image-data (apply 'pdf-util-convert-page args ))
+              (pdf-cache-put-image
+               (pdf-view-current-page)
+               (car size) image-data 'pdf-links-read-link-action))
+            (pdf-view-display-image
+             (create-image image-data (pdf-view-image-type) t))
+            (pdf-links-read-link-action--read-chars prompt alist))
+        (pdf-view-redisplay))))
+
+  (defun kb/avy-pdf-timed-input ()
+    "BORROWED FORM `avy--read-candidates'"
+    (let ((str "")
+          char break)
+      (while (and (not break)
+                  (setq char
+                        (read-char (format "char%s: "
+                                           (if (string= str "")
+                                               str
+                                             (format " (%s)" str)))
+                                   t
+                                   (and (not (string= str ""))
+                                        avy-timeout-seconds))))
+        ;; Unhighlight
+        (cond
+         ;; Handle RET
+         ((= char 13)
+          (if avy-enter-times-out
+              (setq break t)
+            (setq str (concat str (list ?\n)))))
+         ;; Handle C-h, DEL
+         ((memq char avy-del-last-char-by)
+          (let ((l (length str)))
+            (when (>= l 1)
+              (setq str (substring str 0 (1- l))))))
+         ;; Handle ESC
+         ((= char 27)
+          (keyboard-quit))
+         (t
+          (setq str (concat str (list char))))))
+      str))
+
+  (defun kb/avy-pdf-get-coordinates (end)
+    "Prompt for PDF coordinates using avy-like interface."
+    (let* ((query (kb/avy-pdf-timed-input))
+           (coords
+            (list (or (kb/avy-pdf-links-read-char-action query
+                                                         (format "Please specify %s (SPC scrolls): "
+                                                                 (if end "region end" "region beginning")))
+                      (error "No char selected")))))
+      (car (alist-get 'edges (car coords)))))
+
+  (defun kb/avy-pdf-highlight (&optional activate)
+    "Use an avy-like interface to highlight region in PDF.
+
+If called with ACTIVATE, then also activate the created
+annotation immediately after creation."
+    (interactive "P")
+    (let* ((start (kb/avy-pdf-get-coordinates nil))
+           (end (kb/avy-pdf-get-coordinates :end))
+           (edges (append (cl-subseq start 0 2) (cl-subseq end 2 4)))
+           (pdf-annot-activate-created-annotations activate))
+      (pdf-annot-add-markup-annotation edges 'highlight)))
+
+  (general-define-key :keymaps 'pdf-view-mode-map
+                      [remap avy-goto-char-timer] #'kb/avy-pdf-highlight))
 
 ;;;; Org-noter
 (use-package org-noter
@@ -36,7 +156,9 @@
             "C-i" 'org-noter-insert-note
             "C-S-i" 'org-noter-insert-note-toggle-no-questions
             "C-M-i" nil
-            "M-i" nil)
+            "M-i" nil
+            ;; FIXME 2024-01-13: Choose better keybind
+            "H-\"" 'org-noter-pdf--create-missing-annotation)
   :custom
   (org-noter-notes-search-path `(,kb/notes-dir))
   ;; FIXME 2024-01-12: I am not currently using org-noter, but when I do, I can
