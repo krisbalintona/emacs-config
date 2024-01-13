@@ -48,7 +48,7 @@
          (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
   :general
   (:keymaps 'mu4e-main-mode-map
-   "q" 'bury-buffer
+   "q" 'kb/mu4e-main-bury-buffer
    "Q" 'mu4e-quit)
   (kb/open-keys
     "m" '(mu4e :wk "Mu4e"))
@@ -124,6 +124,22 @@
   (mu4e-read-option-use-builtin t)
   (mu4e-completing-read-function 'completing-read)
   :init
+  ;; Restore window configuration when closing Mu4e main window like you can
+  ;; with org-agenda via the `org-agenda-restore-windows-after-quit' user option
+  (defvar kb/mu4e-main-pre-window-conf nil)
+
+  (defun kb/mu4e-main-set-window-conf (&rest r)
+    "Set the value of `kb/mu4e-main-pre-window-conf'."
+    (setq kb/mu4e-main-pre-window-conf (current-window-configuration)))
+  (advice-add 'mu4e :before #'kb/mu4e-main-set-window-conf)
+
+  (defun kb/mu4e-main-bury-buffer ()
+    "Restore window configuration."
+    (interactive)
+    (set-window-configuration kb/mu4e-main-pre-window-conf)
+    (setq kb/mu4e-main-pre-window-conf nil))
+
+
   ;; Gmail integration is taken from Doom
   ;; Check if msg is being called from a gmail account
   (defun kb/mu4e-msg-gmail-p (msg)

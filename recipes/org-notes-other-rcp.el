@@ -242,6 +242,7 @@ See `org-noter' for details and ARG usage."
 ;;; Org-remark
 (use-package org-remark
   :after org
+  :ghook 'org-mode-hook
   :general (:keymaps 'org-remark-mode-map
             :prefix "C-c r"
             "m" #'org-remark-mark
@@ -253,7 +254,6 @@ See `org-noter' for details and ARG usage."
             "n" #'org-remark-view-next
             "p" #'org-remark-view-prev)
   :config
-  (org-remark-mode)
   (require 'org-remark-global-tracking)
   (org-remark-global-tracking-mode))
 
