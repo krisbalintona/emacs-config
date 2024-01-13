@@ -33,6 +33,44 @@
   (denote-modules '(xref ffap))
   (denote-known-keywords '("project"))
   (denote-prompts '(subdirectory title keywords))
+  (denote-org-front-matter "#+title: %s
+#+date: %s
+#+filetags: %s
+#+identifier: %s
+")
+  (denote-templates
+   '((default . "\n")
+     (paper . "#+latex_class: mla
+#+cite_export: biblatex mla-new
+#+professor:
+#+course:
+#+export_file_name:
+
+* Potential titles
+
+* 1 Draft                                                            :export:
+
+* Works Cited                                                 :ignore:export:
+
+#+begin_export LaTeX
+\\newpage
+\center
+#+end_export
+
+#+print_bibliography:")
+     (buoy . "* Responses
+
+* Biographical information
+
++ Buoy nominations :: tk
++ Instagram handle :: tk
+
+* Potential titles
+
+1.
+
+* 1 Draft                                                     :ignore:export:
+")))
   :config
   (denote-rename-buffer-mode)
   (denote-modules-global-mode)
@@ -454,7 +492,7 @@ Delete the original subtree."
   (citar-denote-title-format-andstr "and")
   (citar-denote-keyword "bib")
   (citar-denote-use-bib-keywords nil)
-  (citar-denote-template nil)
+  (citar-denote-template t)
   :general (kb/note-keys
              "b b" 'citar-denote-dwim
              "b c" 'citar-create-note
@@ -467,7 +505,36 @@ Delete the original subtree."
              "b r F" 'citar-denote-nocite
              "b r l" 'citar-denote-link-reference)
   :init
-  (citar-denote-mode))
+  (citar-denote-mode)
+
+  ;; Keep the reference keyword after Denote's identifier keyword
+  (defun kb/citar-denote--add-reference (citekey file-type)
+    "Add reference with CITEKEY in front matter of the file with FILE-TYPE.
+
+`citar-denote-add-citekey' is the interactive version of this function."
+    (save-excursion
+      (goto-char (point-min))
+      (re-search-forward (rx bol (literal "#+identifier:")) nil t)
+      (if (eq (or file-type 'org) 'org)
+          (forward-line 1)
+        (forward-line -2))
+      (insert
+       (format (citar-denote--reference-format file-type) citekey))))
+  (advice-add 'citar-denote--add-reference :override #'kb/citar-denote--add-reference)
+  :config
+  (setq citar-denote-file-types
+        `((org
+           :reference-format "#+reference: %s\n" ; Keep single space
+           :reference-regex "^#\\+reference\\s-*:")
+          (markdown-yaml
+           :reference-format "reference:  %s\n"
+           :reference-regex "^reference\\s-*:")
+          (markdown-toml
+           :reference-format "reference  = %s\n"
+           :reference-regex "^reference\\s-*=")
+          (text
+           :reference-format "reference:  %s\n"
+           :reference-regex "^reference\\s-*:"))))
 
 ;;; org-notes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
