@@ -46,10 +46,11 @@
   ;;                                  kb/notes-dir "20240111T235139"))
   ;;                            kb/notes-dir)))
   (org-noter-always-create-frame nil)
+  (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
   (org-noter-use-indirect-buffer t)
   (org-noter-hide-other nil)
   (org-noter-auto-save-last-location nil)
-  (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
+  (org-noter-disable-narrowing t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-highlight-selected-text t) ; Always leave highlights from annotations
   (org-noter-arrow-foreground-color "red")

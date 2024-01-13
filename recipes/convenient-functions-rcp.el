@@ -23,8 +23,7 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
       (setq col (+ 1 (current-column)))
       (set-selective-display
        (if selective-display nil (or col 1)))
-      ))
-  )
+      )))
 (kb/toggle-keys "f" '(aj-toggle-fold :wk "aj-toggle-fold"))
 
 ;;; Indent whole buffer
@@ -32,7 +31,6 @@ https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in
   "Basic indentation fix using `indent-region'.
 By default, indents entire buffer. If BEG and END are specified,
 act upon that region instead."
-  (interactive)
   (let ((beg (or beg (point-min)))
         (end (or end (point-max))))
     (save-excursion
@@ -42,50 +40,55 @@ act upon that region instead."
 
 (defun kb/format-buffer-indentation--fill-column ()
   "Basic indentation fix and wrap comments."
-  (interactive)
-  (kb/format-buffer-indentation--base)
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward comment-start nil t)
-      (call-interactively 'fill-paragraph)
-      (forward-line 1))))
+  (kb/format-buffer-indentation--base (or beg (point-min)) (or end (point-max)))
+  (unless (region-active-p)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward comment-start nil t)
+        (call-interactively 'fill-paragraph)
+        (forward-line 1)))))
 
 (defun kb/format-buffer-indentation ()
   "Properly indent the entire buffer."
   (interactive)
-  (cond
-   ((eq major-mode 'emacs-lisp-mode)
-    (kb/format-buffer-indentation--base))
-   ((eq major-mode 'inferior-emacs-lisp-mode)
-    (kb/format-buffer-indentation--base (save-excursion (comint-bol))))
-   ((eq major-mode 'conf-mode)
-    (conf-align-assignments)
-    (kb/format-buffer-indentation--base))
-   ((eq major-mode 'web-mode)
-    (require 'web-mode)
-    (web-mode-buffer-indent))
-   ((eq major-mode 'latex-mode)
-    (kb/format-buffer-indentation--base)
-    (require 'latex-general-rcp)
-    (kb/tabular-magic))
-   ((eq major-mode 'org-mode)
-    (let* ((save-silently t))           ; Don't write to echo area when saving
-      (kb/org-add-blank-lines)
-      (org-align-tags t)
-      (kb/format-buffer-indentation--base)
+  (let ((beg (if (region-active-p) (region-beginning) (point-min)))
+        (end (if (region-active-p) (region-end) (point-max)))
+        (start-time (current-time)))
+    (message "Formatting buffer...")
+    (cond
+     ((eq major-mode 'emacs-lisp-mode)
+      (kb/format-buffer-indentation--base beg end))
+     ((eq major-mode 'inferior-emacs-lisp-mode)
+      (kb/format-buffer-indentation--base
+       (save-excursion (end-of-buffer) (comint-bol))
+       (save-excursion (end-of-buffer) (comint-next-prompt 1))))
+     ((eq major-mode 'conf-mode)
+      (conf-align-assignments)
+      (kb/format-buffer-indentation--base beg end))
+     ((eq major-mode 'latex-mode)
+      (kb/format-buffer-indentation--base beg end)
+      (require 'latex-general-rcp)
+      (kb/tabular-magic))
+     ((eq major-mode 'org-mode)
+      (kb/org-add-blank-lines (unless (region-active-p) :whole-buffer))
+      (org-align-tags (not (region-active-p)))
+      (kb/format-buffer-indentation--base beg end)
       (when (buffer-file-name)
-        (save-buffer))))
-   ((eq major-mode 'racket-mode)
-    (kb/format-buffer-indentation--base)
-    (when (buffer-file-name)
-      (save-buffer)))
-   ((and (require 'apheleia-core nil t)
-         (apheleia--get-formatters))    ; If available apheleia formatter
-    (let* ((apheleia-mode t))           ; Save silently
-      (apheleia--format-after-save)))
-   ((derived-mode-p 'prog-mode)
-    (kb/format-buffer-indentation--fill-column))
-   (t (kb/format-buffer-indentation--base))))
+        (save-buffer)))
+     ((eq major-mode 'racket-mode)
+      (kb/format-buffer-indentation--base beg end)
+      (when (buffer-file-name)
+        (save-buffer)))
+     ((and (require 'apheleia-core nil t)
+           (apheleia--get-formatters))    ; If available apheleia formatter
+      (let* ((apheleia-mode t))           ; Save silently
+        (apheleia-format-after-save)))
+     ((derived-mode-p 'prog-mode)
+      (kb/format-buffer-indentation--fill-column beg end))
+     (t
+      (kb/format-buffer-indentation--base beg end)))
+    (message (format-time-string "Formatting buffer... Done. Took %3N milliseconds."
+                                 (float-time (time-subtract start-time (current-time)))))))
 (general-define-key [remap indent-region] 'kb/format-buffer-indentation)
 
 ;;; Yank current buffer's file-path
@@ -185,26 +188,22 @@ current subtree."
                    t (if prefix
                          nil
                        'tree)))
-(defun kb/org-add-blank-lines (&optional ARG)
-  "Call `unpackaged/org-add-blank-lines' before saving in org files
-  which are not in `kb/agenda-dir'."
-  (require 'org-capture)
+(defun kb/org-add-blank-lines (&optional whole-buffer)
+  "Call `unpackaged/org-add-blank-lines'.
+
+Called before saving in org files which are not in
+`kb/agenda-dir'."
   (when (and
          ;; NOTE 2022-02-03: This next line is a very important check. It fixes
          ;; a persistent and annoying bug when using `org-roam-capture' and
          ;; sometimes its variants.
-         (not org-capture-mode)
-         (buffer-file-name)
-         (eq major-mode 'org-mode)      ; Org-mode
-         (not (string-equal default-directory (expand-file-name kb/agenda-dir))) ; Not agenda-dir
-         )
+         (bound-and-true-p org-capture-mode) ; Not in org-capture buffer
+         (buffer-file-name)                  ; In file
+         (derived-mode-p 'org-mode)          ; Org-mode
+         (not (file-in-directory-p (buffer-file-name) kb/agenda-dir))) ; Not agenda-dir
     (save-excursion
-      ;; NOTE 2022-02-05: This is a shoddy fix for hanging when invoking in
-      ;; buffer with no space before the first headline
-      (let ((org-element-use-cache nil))
-        (org-with-wide-buffer
-         (funcall-interactively 'unpackaged/org-add-blank-lines '(4))) ; Emulate universal argument
-        ))))
+      (org-with-wide-buffer
+       (funcall-interactively 'unpackaged/org-add-blank-lines whole-buffer)))))
 
 ;;; kb/draft-subtree-to-file
 ;; Inspired by Palimpsest: https://github.com/danielsz/Palimpsest
