@@ -42,6 +42,7 @@
 ;; Emacs' web browser
 (use-package eww
   :elpaca nil
+  :hook (eww-after-render . eww-readable)
   :custom
   (eww-restore-desktop t)               ; Restore eww pages from `desktop-restore'
   (eww-desktop-remove-duplicates t)     ; Don't duplicate pages in history
