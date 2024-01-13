@@ -15,8 +15,15 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
+  ;; FIXME 2024-01-13: This is a pull request fork that implements continuous
+  ;; scrolling (`pdf-view-roll-minor-mode'). Revert to upstream once the pull
+  ;; request is merged. See https://github.com/vedang/pdf-tools/pull/224
+  :elpaca (:type git
+           :host github
+           :repo "aikrahguzar/pdf-tools"
+           :branch "upstream-pdf-roll")
   :hook (elpaca-after-init . pdf-tools-install)
-  :gfhook 'pdf-view-themed-minor-mode
+  :gfhook 'pdf-view-themed-minor-mode 'pdf-view-roll-minor-mode
   :custom
   (pdf-view-display-size 'fit-page)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
