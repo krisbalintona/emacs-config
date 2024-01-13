@@ -48,9 +48,10 @@
             :prefix "C-c b"
             "b" 'citar-insert-citation
             "r" 'citar-insert-reference
+            "o" 'citar-open
             "f" 'citar-open-files
-            "o" 'citar-open-notes
-            "p" 'kb/citar-open-pdf-in-zotero)
+            "n" 'citar-open-notes
+            "z" 'kb/citar-open-pdfs-in-zotero)
   :custom
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))
@@ -62,22 +63,25 @@
   ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
   ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
   ;; for a different solution
-  (defun kb/citar-open-pdf-in-zotero (citekeys)
+  (defun kb/citar-open-pdf-in-zotero (citekey)
+    "Open PDF associated with CITEKEY in Zotero."
+    (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
+              (files-list (delete-dups (apply #'append files-hash)))
+              ;; OPTIMIZE 2023-07-16: The following line of code only works if
+              ;; there is only one PDF attached to the item, and that PDF is
+              ;; the document. For progress on differentiating mere
+              ;; attachments to PDF documents, see the issue linked above
+              (pdf (car (-filter
+                         (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
+              (zotero-key (f-base (f-parent pdf))))
+        (citar-file-open-external
+         (concat "zotero://open-pdf/library/items/" zotero-key))
+      (message "No PDF for %s!" citekey)))
+  (defun kb/citar-open-pdfs-in-zotero (citekeys)
     "Open PDFs associated with CITEKEYS in Zotero."
-    (interactive (list (citar-select-ref)))
+    (interactive (list (citar-select-refs)))
     (dolist (citekey citekeys)
-      (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
-                (files-list (delete-dups (apply #'append files-hash)))
-                ;; OPTIMIZE 2023-07-16: The following line of code only works if
-                ;; there is only one PDF attached to the item, and that PDF is
-                ;; the document. For progress on differentiating mere
-                ;; attachments to PDF documents, see the issue linked above
-                (pdf (car (-filter
-                           (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
-                (zotero-key (f-base (f-parent pdf))))
-          (citar-file-open-external
-           (concat "zotero://open-pdf/library/items/" zotero-key))
-        (message "No PDF for %s!" citekey))))
+      (kb/citar-open-pdf-in-zotero citekey)))
   :config
   ;; Immediately set citation prefix and suffix and enable `typo-mode'
   ;; temporarily while inserting
@@ -146,7 +150,9 @@
   :after citar
   :diminish
   :general (:keymaps 'citar-embark-citation-map
-            "p" 'kb/citar-open-pdf-in-zotero)
+            "z" 'kb/citar-open-pdfs-in-zotero)
+  :custom
+  (citar-at-point-function 'embark-act)
   :init
   (citar-embark-mode))
 
