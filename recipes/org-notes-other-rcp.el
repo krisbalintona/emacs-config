@@ -22,8 +22,8 @@
            :host github
            :repo "aikrahguzar/pdf-tools"
            :branch "upstream-pdf-roll")
-  :hook (elpaca-after-init . pdf-tools-install)
-  :gfhook 'pdf-view-themed-minor-mode 'pdf-view-roll-minor-mode
+  :hook ((elpaca-after-init . pdf-tools-install)
+         (pdf-view-mode . pdf-view-roll-minor-mode))
   :custom
   (pdf-view-display-size 'fit-page)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
