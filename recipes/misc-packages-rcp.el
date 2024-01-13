@@ -596,6 +596,7 @@ displayed."
        ("[^\\.][[:space:]][\"“]?[A-Z]\\." "[[:space:]]" :break nil)
        ("[Oo]p\\." "[[:space:]][[:digit:]]" :break nil)
        ;; My regexps
+       (,(rx "tk" (1+ (any punct)) ")") ,(rx (any space) (any alnum)) :break nil)
        (,(rx (or (literal "p.") (literal "pp."))) ,(rx (any space) (any digit)) :break nil)
        (,(rx (or (literal "...") (literal "…"))) ,(rx (any space) (any lower)) :break nil)
        (,(rx (literal "etc.")) ,(rx (any space) (any lower)) :break nil)

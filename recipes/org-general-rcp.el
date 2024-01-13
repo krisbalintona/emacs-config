@@ -527,7 +527,10 @@ have `org-warning' face."
 (use-package org-web-tools
   :general (kb/yank-kill-keys
              :keymaps 'org-mode-map
-             "b" '(org-web-tools-insert-link-for-url :wk "Paste https")))
+             "b" '(org-web-tools-insert-link-for-url :wk "Paste https"))
+  :config
+  ;; Immediately enter view mode
+  (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode))))
 
 ;;;; Org-download
 ;; Insert images and screenshots into select modes
@@ -582,11 +585,11 @@ have `org-warning' face."
 
   ;; My own cycles
   (define-typo-cycle typo-cycle-right-single-quotation-mark
-                     "Cycle through the typewriter apostrophe and the right quotation mark.
+    "Cycle through the typewriter apostrophe and the right quotation mark.
 
 If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
-                     ("'" "’"))                          ; Swapped these two
+    ("'" "’"))                          ; Swapped these two
 
   ;; Add characters (e.g. curly quotes) to syntax table
   (defun kb/typo-modify-syntax-table ()
