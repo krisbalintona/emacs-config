@@ -318,7 +318,7 @@ Delete the original subtree."
 (use-package denote-menu
   :elpaca (:type git :host github :repo "namilus/denote-menu")
   :general
-  (kb/note-keys "d" 'denote-menu-list-notes)
+  (kb/note-keys "m" 'denote-menu-list-notes)
   (:keymaps 'denote-menu-mode-map
    "|" 'denote-menu-clear-filters
    "/ r" 'denote-menu-filter
@@ -442,6 +442,32 @@ Delete the original subtree."
                                                      #'(lambda (orig-fun &rest args)
                                                          (let ((save-silently t))
                                                            (apply orig-fun args)))))
+
+;;; Citar-denote
+(use-package citar-denote
+  :after denote
+  :custom
+  (citar-denote-subdir t)
+  (citar-denote-signature nil)
+  (citar-denote-title-format nil)       ; Use citekey as title
+  (citar-denote-title-format-authors 2)
+  (citar-denote-title-format-andstr "and")
+  (citar-denote-keyword "bib")
+  (citar-denote-use-bib-keywords nil)
+  (citar-denote-template nil)
+  :general (kb/note-keys
+             "b b" 'citar-denote-dwim
+             "b c" 'citar-create-note
+             "b o" 'citar-denote-open-note
+             "b f" 'citar-denote-find-citation
+             "b e" 'citar-denote-open-reference-entry
+             "b k a" 'citar-denote-add-citekey
+             "b k r" 'citar-denote-remove-citekey
+             "b r f" 'citar-denote-find-reference
+             "b r F" 'citar-denote-nocite
+             "b r l" 'citar-denote-link-reference)
+  :init
+  (citar-denote-mode))
 
 ;;; org-notes-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
