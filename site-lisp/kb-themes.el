@@ -189,7 +189,7 @@ Additionally, run `kb/themes-hook'."
   (if (or (<= 19 hour) (<= hour 8))
       (kb/proper-load-theme-dark)
     (kb/proper-load-theme-light)))
-(kb/themes-setup-base-faces)
+(add-hook 'elpaca-after-init-hook #'kb/themes-setup-base-faces)
 (elpaca-wait)
 
 ;;; kb-themes.el ends here
