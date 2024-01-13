@@ -91,7 +91,7 @@
     "Auto rename denote file."
     (let ((f (buffer-file-name)))
       (when (and (file-in-directory-p f denote-directory)
-                 (denote-file-is-writable-and-supported-p f))
+                 (denote-filename-is-note-p f))
         (denote-rename-file-using-front-matter f :auto-confirm)))))
 
 ;;;; Return denote file path based on ID
