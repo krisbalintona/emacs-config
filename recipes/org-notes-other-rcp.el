@@ -28,12 +28,13 @@
   :elpaca (:protocol ssh
            :fetcher github
            :repo "org-noter/org-noter"
+           :files ("*.el" "modules" (:exclude "*-test-utils.el" "*-devel.el"))
            :remotes ("remote" :repo "krisbalintona/org-noter"))
   :general (:keymaps 'org-noter-doc-mode-map
             "i" 'org-noter-insert-precise-note
             "I" 'org-noter-insert-precise-note-toggle-no-questions
             "C-i" 'org-noter-insert-note
-            "C-I" 'org-noter-insert-note-toggle-no-questions
+            "C-S-i" 'org-noter-insert-note-toggle-no-questions
             "C-M-i" nil
             "M-i" nil)
   :custom
@@ -47,13 +48,13 @@
   (org-noter-always-create-frame nil)
   (org-noter-use-indirect-buffer t)
   (org-noter-hide-other nil)
-  (org-noter-auto-save-last-location t)
+  (org-noter-auto-save-last-location nil)
   (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
   (org-noter-separate-notes-from-heading t)
-  (org-noter-highlight-selected-text t)
+  (org-noter-highlight-selected-text t) ; Always leave highlights from annotations
   (org-noter-arrow-foreground-color "red")
   (org-noter-arrow-background-color "black")
-  (org-noter-doc-property-in-notes t)   ; Why not...
+  (org-noter-doc-property-in-notes nil)
   (org-noter-insert-note-no-questions nil) ; Activate this setting if I rarely type my own titles
   (org-noter-max-short-selected-text-length 0) ; Always enclose in quote block
   :config
