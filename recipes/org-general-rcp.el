@@ -379,9 +379,10 @@ have `org-warning' face."
 (use-package olivetti
   :hook ((org-mode . olivetti-mode)
          (kb/themes . (lambda ()
-                        (set-face-attribute 'olivetti-fringe nil
-                                            :background (modus-themes-with-colors bg-dim)
-                                            :inherit 'unspecified))))
+                        (with-eval-after-load 'olivetti
+                          (set-face-attribute 'olivetti-fringe nil
+                                              :background (modus-themes-with-colors bg-dim)
+                                              :inherit 'unspecified)))))
   :custom
   (olivetti-lighter nil)
   (olivetti-body-width 0.55)
@@ -581,11 +582,11 @@ have `org-warning' face."
 
   ;; My own cycles
   (define-typo-cycle typo-cycle-right-single-quotation-mark
-    "Cycle through the typewriter apostrophe and the right quotation mark.
+                     "Cycle through the typewriter apostrophe and the right quotation mark.
 
 If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
-    ("'" "’"))                          ; Swapped these two
+                     ("'" "’"))                          ; Swapped these two
 
   ;; Add characters (e.g. curly quotes) to syntax table
   (defun kb/typo-modify-syntax-table ()
