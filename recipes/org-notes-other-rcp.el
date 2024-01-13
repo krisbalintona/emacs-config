@@ -66,6 +66,7 @@
   :custom
   (zotxt-default-bibliography-style "modern-language-association")
   :init
+  (require 'org-zotxt-noter)
   (org-zotxt-mode)
 
   ;; Allow for file-level org-noter sessions

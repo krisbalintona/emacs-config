@@ -38,7 +38,9 @@
   (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
   (org-hidden-keywords nil)
   (org-ctrl-k-protect-subtree 'error)
+
   (org-list-allow-alphabetical t)
+  (org-list-use-circular-motion t)
 
   (org-blank-before-new-entry
    '((heading . auto)
