@@ -484,6 +484,7 @@ Delete the original subtree."
 ;;; Citar-denote
 (use-package citar-denote
   :after denote
+  :diminish
   :custom
   (citar-denote-subdir t)
   (citar-denote-signature nil)
