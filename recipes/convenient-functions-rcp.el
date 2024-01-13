@@ -34,9 +34,13 @@ act upon that region instead."
   (let ((beg (or beg (point-min)))
         (end (or end (point-max))))
     (save-excursion
-      (delete-trailing-whitespace)
+      (untabify beg end)           ; Untabify before the following alters points
+      ;; FIXME 2024-01-13: Because untabify could potentially increase the
+      ;; number of tabs in the region, indent-region could potentially fail to
+      ;; indent in the edge case that characters near the end of the region need
+      ;; to be indented.
       (indent-region beg end nil)
-      (untabify beg end))))
+      (delete-trailing-whitespace))))
 
 (defun kb/format-buffer-indentation--fill-column ()
   "Basic indentation fix and wrap comments."
