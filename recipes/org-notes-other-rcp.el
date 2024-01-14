@@ -282,7 +282,8 @@ See `org-noter' for details and ARG usage."
             "p" #'org-remark-view-prev)
   :config
   (require 'org-remark-global-tracking)
-  (org-remark-global-tracking-mode))
+  (org-remark-global-tracking-mode)
+  (diminish 'org-remark-global-tracking-mode))
 
 ;;; Org-transclusion
 ;; Enable transclusion of org files
