@@ -103,7 +103,7 @@ act upon that region instead."
       (progn (kill-new filename)
              (message "Copied %s" filename))
     (error "Couldn't find filename in current buffer")))
-(kb/yank-kill-keys "f" '(kb/yank-buffer-filename :wk "Yank file-path"))
+(kb/file-keys "w" 'kb/yank-buffer-filename)
 
 ;;; Delete this file
 (defun kb/delete-this-file (&optional path force-p)

@@ -24,8 +24,6 @@
   :prefix "C-c f")
 (general-create-definer kb/nav-keys     ; Navigation in buffers
   :prefix "C-c c")
-(general-create-definer kb/yank-kill-keys ; Killing, yanking, and popping
-  :prefix "C-c i")
 (general-create-definer kb/open-keys    ; Open certain things
   :prefix "C-c o")
 (general-create-definer kb/toggle-keys  ; Toggles
