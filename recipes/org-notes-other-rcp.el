@@ -157,15 +157,19 @@ annotation immediately after creation."
            :repo "org-noter/org-noter"
            :files ("*.el" "modules" (:exclude "*-test-utils.el" "*-devel.el"))
            :remotes ("remote" :repo "krisbalintona/org-noter"))
-  :general (:keymaps 'org-noter-doc-mode-map
-            "i" 'org-noter-insert-precise-note
-            "I" 'org-noter-insert-precise-note-toggle-no-questions
-            "C-i" 'org-noter-insert-note
-            "C-S-i" 'org-noter-insert-note-toggle-no-questions
-            "C-M-i" nil
-            "M-i" nil
-            ;; FIXME 2024-01-13: Choose better keybind
-            "H-\"" 'org-noter-pdf--create-missing-annotation)
+  :general
+  (:keymaps 'pdf-misc-minor-mode-map
+   "I" nil
+   "M" 'pdf-misc-display-metadata)
+  (:keymaps 'org-noter-doc-mode-map
+   "i" 'org-noter-insert-precise-note
+   "I" 'org-noter-insert-precise-note-toggle-no-questions
+   "C-i" 'org-noter-insert-note
+   "C-S-i" 'org-noter-insert-note-toggle-no-questions
+   "C-M-i" nil
+   "M-i" nil
+   ;; FIXME 2024-01-13: Choose better keybind
+   "H-\"" 'org-noter-pdf--create-missing-annotation)
   :custom
   (org-noter-notes-search-path `(,kb/notes-dir))
   ;; FIXME 2024-01-12: I am not currently using org-noter, but when I do, I can
