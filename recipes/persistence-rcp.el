@@ -38,7 +38,7 @@
   :elpaca nil
   :hook (kill-emacs . recentf-save-list)
   :general (kb/file-keys
-             "r" '(recentf-open-files :wk "Recentf open file"))
+             "r" 'recentf-open-files)
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)

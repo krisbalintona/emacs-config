@@ -170,7 +170,8 @@ punctuation."
    [remap yank-pop] 'consult-yank-pop
    [remap repeat-complex-command] 'consult-complex-command
    [remap goto-line] 'consult-goto-line
-   [remap imenu] 'kb/consult-imenu-versatile)
+   [remap imenu] 'kb/consult-imenu-versatile
+   [remap recentf-open-files] 'consult-recent-file)
   (:keymaps 'goto-map
    ;; Uses the `M-g' prefix
    "e" 'consult-compile-error
