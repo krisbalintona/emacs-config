@@ -39,6 +39,11 @@
   (pdf-annot-color-history              ; "Default" colors
    '("yellow" "red" "green" "blue" "purple")))
 
+;;;; Saveplace-pdf-view
+;; Save place in pdf-view buffers
+(use-package saveplace-pdf-view
+  :after (saveplace pdf-tools))
+
 ;;;; Avy keys to highlight region in PDF
 ;; Use an avy-like interface to highlight region in pdf-view-mode. Heavily based
 ;; off of
