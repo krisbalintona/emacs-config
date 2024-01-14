@@ -74,7 +74,8 @@
 ;;; Require pin-entry for passowrds
 ;; Pinentry is responsible for querying passphrases
 (require 'epg)
-(setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
+(setq epg-pinentry-mode 'loopback ; Ask through the minibuffer, instead of external Pinentry program
+      epa-file-cache-passphrase-for-symmetric-encryption t)
 
 ;;; Don't confirm when killing a process
 (setq confirm-kill-processes nil)
