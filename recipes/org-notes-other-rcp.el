@@ -30,14 +30,26 @@
          ;; FIXME 2024-01-13: Uncomment this once the above issues between the
          ;; official release and pending pull request are resolved.
          ;; (pdf-view-mode . pdf-view-roll-minor-mode)
-         )
+         (pdf-view-mode . (lambda ()
+                            (add-hook 'kill-buffer-hook #'kb/pdf-cleanup-windows-h nil t))))
   :custom
   (pdf-view-display-size 'fit-page)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick t)
   (pdf-annot-color-history              ; "Default" colors
-   '("yellow" "red" "green" "blue" "purple")))
+   '("yellow" "red" "green" "blue" "purple"))
+  :init
+  ;; Taken from Doom
+  (defun kb/pdf-cleanup-windows-h ()
+    "Kill left-over annotation buffers when the document is killed."
+    (when (buffer-live-p pdf-annot-list-document-buffer)
+      (pdf-info-close pdf-annot-list-document-buffer))
+    (when (buffer-live-p pdf-annot-list-buffer)
+      (kill-buffer pdf-annot-list-buffer))
+    (let ((contents-buffer (get-buffer "*Contents*")))
+      (when (and contents-buffer (buffer-live-p contents-buffer))
+        (kill-buffer contents-buffer)))))
 
 ;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
