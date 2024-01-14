@@ -15,15 +15,22 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
+  ;; FIXME 2024-01-13: There is an issue between `org-noter-insert-precise-note'
+  ;; and this fork. I've even tried merging this fork to upstream/master to no
+  ;; avail. I like continuous scrolling so I'll return to this at a later date.
   ;; FIXME 2024-01-13: This is a pull request fork that implements continuous
   ;; scrolling (`pdf-view-roll-minor-mode'). Revert to upstream once the pull
   ;; request is merged. See https://github.com/vedang/pdf-tools/pull/224
-  :elpaca (:type git
-           :host github
-           :repo "aikrahguzar/pdf-tools"
-           :branch "upstream-pdf-roll")
+  ;; :elpaca (:type git
+  ;;          :host github
+  ;;          :repo "aikrahguzar/pdf-tools"
+  ;;          :branch "upstream-pdf-roll"
+  ;;          :remotes ("upstream" :repo "vedang/pdf-tools"))
   :hook ((elpaca-after-init . pdf-tools-install)
-         (pdf-view-mode . pdf-view-roll-minor-mode))
+         ;; FIXME 2024-01-13: Uncomment this once the above issues between the
+         ;; official release and pending pull request are resolved.
+         ;; (pdf-view-mode . pdf-view-roll-minor-mode)
+         )
   :custom
   (pdf-view-display-size 'fit-page)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
