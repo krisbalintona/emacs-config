@@ -16,7 +16,8 @@
   'variable-pitch-mode
   'visual-line-mode
   '(lambda ()
-     (eldoc-mode -1))
+     (eldoc-mode -1)
+     (setq-local line-spacing 0.2))
   :general
   (:keymaps 'org-mode-map
    "H-s" 'org-store-link
@@ -68,6 +69,8 @@
   (org-confirm-babel-evaluate nil)
   (org-ditaa-jar-path                   ; EAF happens to install it...
    "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
+  :custom-face
+  (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
   :config
   (when (bound-and-true-p evil-local-mode)
     (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
