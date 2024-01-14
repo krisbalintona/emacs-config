@@ -252,11 +252,12 @@ are troublesome)."
 
 ;;;; Default mode line
 (unless (bound-and-true-p mood-line-mode)
-  (setq mode-line-percent-position '(-3 "%p")
-        mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
-        mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
+  (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
         mode-line-compact 'long        ; Emacs 28
-        mode-line-right-align-edge 'window)
+        mode-line-right-align-edge 'window
+        mode-line-percent-position nil ; Don't show percentage of position in buffer
+        mode-line-position-line-format '(" %l ")
+        mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
 
   (defvar kb/mode-line-modes
     (let ((recursive-edit-help-echo
@@ -293,8 +294,8 @@ mouse-3: Toggle minor modes"
                   mode-line-modified
                   mode-line-remote
                   vc-mode " "
-                  mode-line-buffer-identification " "
-                  "%l "
+                  mode-line-buffer-identification
+                  mode-line-position
                   (:eval
                    (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   mode-line-format-right-align
