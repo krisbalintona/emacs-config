@@ -49,7 +49,17 @@
       (kill-buffer pdf-annot-list-buffer))
     (let ((contents-buffer (get-buffer "*Contents*")))
       (when (and contents-buffer (buffer-live-p contents-buffer))
-        (kill-buffer contents-buffer)))))
+        (kill-buffer contents-buffer))))
+
+  (defun kb/org-noter-pdf--get-selected-text (mode)
+    (when (and (eq mode 'pdf-view-mode)
+               (pdf-view-active-region-p))
+      (let* ((raw-text (mapconcat 'identity (pdf-view-active-region-text) ? ))
+             (process-text-1 (replace-regexp-in-string "-\n" "" raw-text))
+             (process-text-2 (replace-regexp-in-string "\n" " " no-hyphen-line-breaks)))
+        process-text-2)))
+  (advice-add 'org-noter-pdf--get-selected-text
+              :override #'kb/org-noter-pdf--get-selected-text))
 
 ;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
