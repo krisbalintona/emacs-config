@@ -21,12 +21,14 @@
 ;; Better keyword, cl-defun, and cl-loop indenting. See
 ;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
 (use-package lisp-keyword-indent
+  :disabled                             ; Change of heart...?
   :demand
   :elpaca (lisp-keyword-indent :type git
                                :host github
                                :repo "twlz0ne/lisp-keyword-indent.el")
   :functions kb/lisp-keyword-indent-mode
   :init
+  ;; FIXME 2024-01-14: kb/lisp-keyword-indent-allow isn't being set properly
   (defvar-local kb/lisp-keyword-indent-allow nil
     "Whether to allow `lisp-keyword-indent-mode' in current buffer.")
   (define-minor-mode kb/lisp-keyword-indent-mode
@@ -126,8 +128,8 @@
     "Adviced `edebug-previous-result'."
     (require 'eros)
     (eros--make-result-overlay edebug-previous-result
-                               :where (point)
-                               :duration eros-eval-result-duration))
+      :where (point)
+      :duration eros-eval-result-duration))
 
   (defun edebug-compute-previous-result (previous-value)
     (if edebug-unwrap-results
