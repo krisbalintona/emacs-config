@@ -186,6 +186,63 @@ annotation immediately after creation."
   (general-define-key :keymaps 'pdf-view-mode-map
                       [remap avy-goto-char-timer] #'kb/avy-pdf-highlight))
 
+;;;; Pdf-annot-list custom (tablist) filter
+(with-eval-after-load 'pdf-tools
+  (defun kb/pdf-annot-list-filter-color-regexp ()
+    "Regexp search the text after selecting a color.
+The offered colors are those already present in the document's
+highlights."
+    (interactive)
+    (unless (derived-mode-p 'tabulated-list-mode)
+      (error "Buffer is not in Tabulated List Mode"))
+    (let ((unique-colors
+           (cl-remove-duplicates
+            (mapcar
+             '(lambda (e)
+                (substring-no-properties (elt (cadr e) 1)))
+             (pdf-annot-list-entries))
+            :test #'string=))
+          (nearby-color)
+          (color-alist))
+      ;; Scrape unique colors and closest neighboring defined color name
+      (let ((lowest-dist most-positive-fixnum)
+            (dist))
+        (dolist (uc unique-colors)
+          (dolist (c (defined-colors))
+            (setq dist (color-distance c uc))
+            (when (< dist lowest-dist)
+              (setq nearby-color c
+                    lowest-dist dist)))
+          (push (list (propertize (format "%s (%s)" nearby-color uc)
+                                  ;; Taken from pdf-annot.el
+                                  'face `(:foreground ,(if (> (color-distance uc "black")
+                                                              292485)
+                                                           "black" "white")
+                                          :background ,uc))
+                      uc)
+                color-alist)
+          (setq lowest-dist most-positive-fixnum)))
+
+      ;; Select color filter and regexp filter
+      (let* ((selections (completing-read-multiple "Select color: "
+                                                   (mapcar 'car color-alist)
+                                                   nil t))
+             (color-filter (concat "("
+                                   (string-join
+                                    (cl-loop for s in selections
+                                             collect (concat "Color == " (cadr (assoc-string s color-alist))))
+                                    " || ")
+                                   ")"))
+             (regexp-filter (if (string-empty-p (read-string "Regexp to search: "))
+                                ""
+                              (concat " && Text =~ " regexp-string))))
+        (setq tablist-current-filter
+              (tablist-filter-parse (concat color-filter regexp-filter)))
+        (tablist-apply-filter))))
+
+  (general-define-key :keymaps 'pdf-annot-list-mode-map
+                      "/ c" 'kb/pdf-annot-list-filter-color-regexp))
+
 ;;;; Org-noter
 (use-package org-noter
   :elpaca (:protocol ssh
