@@ -242,7 +242,6 @@ See `org-noter' for details and ARG usage."
 ;;; Org-remark
 (use-package org-remark
   :after org
-  :ghook 'org-mode-hook
   :general (:keymaps 'org-remark-mode-map
             :prefix "C-c r"
             "m" #'org-remark-mark
