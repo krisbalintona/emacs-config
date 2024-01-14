@@ -31,7 +31,9 @@
          ;; official release and pending pull request are resolved.
          ;; (pdf-view-mode . pdf-view-roll-minor-mode)
          (pdf-view-mode . (lambda ()
-                            (add-hook 'kill-buffer-hook #'kb/pdf-cleanup-windows-h nil t))))
+                            (add-hook 'kill-buffer-hook #'kb/pdf-cleanup-windows-h nil t)))
+         (pdf-annot-list-mode . (lambda ()
+                                  (hl-line-mode -1))))
   :custom
   (pdf-view-display-size 'fit-page)
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
