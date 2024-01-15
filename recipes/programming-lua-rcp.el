@@ -18,8 +18,8 @@
   :ensure-system-package (lua-language-server)
   :general
   (:keymaps 'lua-mode-map
-   :states '(normal visual motion)
-   "K" 'join-line)
+            :states '(normal visual motion)
+            "K" 'join-line)
   :custom
   (lua-indent-level 4)           ; This is the convention
   (lua-indent-string-contents t) ; Contents of a multi-line string will be indented

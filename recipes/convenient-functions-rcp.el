@@ -52,12 +52,12 @@ act upon that region instead."
         (call-interactively 'fill-paragraph)
         (forward-line 1)))))
 
-(defun kb/format-buffer-indentation ()
+(defun kb/format-buffer-indentation (beg end)
   "Properly indent the entire buffer."
-  (interactive)
-  (let ((beg (if (region-active-p) (region-beginning) (point-min)))
-        (end (if (region-active-p) (region-end) (point-max)))
-        (start-time (current-time)))
+  (interactive (list
+                (if (region-active-p) (region-beginning) (point-min))
+                (if (region-active-p) (region-end) (point-max))))
+  (let ((start-time (current-time)))
     (message "Formatting buffer...")
     (cond
      ((eq major-mode 'emacs-lisp-mode)

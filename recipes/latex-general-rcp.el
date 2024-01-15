@@ -75,7 +75,7 @@
   :after tex-site
   :mode ("\\.[tT]e[xX]\\'" . LaTeX-mode)
   :general (:keymaps 'LaTeX-mode-map
-            "C-<return>" 'LaTeX-insert-item)
+                     "C-<return>" 'LaTeX-insert-item)
   :hook (LaTeX-mode . (lambda ()
                         (TeX-PDF-mode)
                         (TeX-source-correlate-mode) ; Minor mode for forward and inverse search.
@@ -258,22 +258,22 @@ blacklist, this is mostly for \\section etc."
   :diminish (org-cdlatex-mode . "")
   :general
   (:keymaps 'cdlatex-mode-map
-   ;; Other packages take care of inserting closing delimiters
-   "$" nil
-   "(" nil
-   "{" nil
-   "[" nil
-   "|" nil
-   "<" nil
-   ;; AUCTeX takes care of auto-inserting {} on _^ if you want, with
-   ;; `TeX-electric-sub-and-superscript'.
-   "^" nil
-   "_" nil
-   ;; Don't affect tab behavior
-   "TAB" nil
-   ;; AUCTeX already provides this functionality with `LaTeX-insert-item'
-   ;; (albeit in another binding; at least was reserve this one)
-   "C-<return>" nil)
+            ;; Other packages take care of inserting closing delimiters
+            "$" nil
+            "(" nil
+            "{" nil
+            "[" nil
+            "|" nil
+            "<" nil
+            ;; AUCTeX takes care of auto-inserting {} on _^ if you want, with
+            ;; `TeX-electric-sub-and-superscript'.
+            "^" nil
+            "_" nil
+            ;; Don't affect tab behavior
+            "TAB" nil
+            ;; AUCTeX already provides this functionality with `LaTeX-insert-item'
+            ;; (albeit in another binding; at least was reserve this one)
+            "C-<return>" nil)
   :custom
   (cdlatex-env-alist
    '(("pline" "\\pline[]{?}[]" nil)
@@ -322,12 +322,12 @@ blacklist, this is mostly for \\section etc."
 ;; forget that `pipx' is an option)
 (use-package popweb
   :elpaca (:type git
-           :host github
-           :repo "manateelazycat/popweb"
-           :files (:defaults "*.py" "*.js" "extension/*/*"))
+                 :host github
+                 :repo "manateelazycat/popweb"
+                 :files (:defaults "*.py" "*.js" "extension/*/*"))
   :hook (LaTeX-mode . popweb-latex-mode)
   :general (:keymaps '(LaTeX-mode-map org-mode-map)
-            "H-'" 'popweb-latex-show)
+                     "H-'" 'popweb-latex-show)
   :custom
   (popweb-config-location (no-littering-expand-var-file-name "popweb"))
   (popweb-popup-pos "point-bottom")

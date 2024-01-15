@@ -39,7 +39,7 @@
   ("M-+" 'tempel-complete               ; List all available templates
    "M-*" 'tempel-insert)                ; Insert typed template
   (:keymaps 'tempel-map
-   "C-M-c" 'tempel-done)
+            "C-M-c" 'tempel-done)
   :custom
   (tempel-file (no-littering-expand-var-file-name "tempel-templates")))
 

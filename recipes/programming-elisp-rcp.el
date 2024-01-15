@@ -93,9 +93,9 @@
 (use-package help-find
   :general
   (:keymaps 'help-map
-   :prefix "M-f"
-   "f" 'help-find-function
-   "r" 'help-find-keybinding))
+            :prefix "M-f"
+            "f" 'help-find-function
+            "r" 'help-find-keybinding))
 
 ;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
@@ -104,7 +104,7 @@
   :gfhook 'visual-line-mode
   :general
   (:keymaps 'helpful-mode-map
-   (general-chord "jj") 'helpful-at-point)
+            (general-chord "jj") 'helpful-at-point)
   ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
   ;; macros
   ([remap describe-function] 'helpful-function

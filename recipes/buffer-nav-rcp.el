@@ -39,8 +39,8 @@
    [remap backward-word] 'toki-backward-word)
   ;; From `toki-editing'
   (:keymaps 'text-mode-map
-   [remap puni-forward-kill-word] 'toki-forward-delete-word
-   [remap puni-backward-kill-word] 'toki-backward-delete-word)
+            [remap puni-forward-kill-word] 'toki-forward-delete-word
+            [remap puni-backward-kill-word] 'toki-backward-delete-word)
   :custom
   (puni-confirm-when-delete-unbalanced-active-region t)
   :config
@@ -140,7 +140,7 @@ does."
   :general
   ("C-;" 'avy-goto-char-timer)
   (:keymaps '(emacs-lisp-mode-map lisp-interaction-mode-map)
-   "C-:" 'kb/avy-goto-parens)
+            "C-:" 'kb/avy-goto-parens)
   :custom
   (avy-all-windows nil)                 ; Scope
   (avy-case-fold-search nil)

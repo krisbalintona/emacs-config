@@ -48,13 +48,13 @@
          (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
   :general
   (:keymaps 'mu4e-main-mode-map
-   "q" 'kb/mu4e-main-bury-buffer
-   "Q" 'mu4e-quit)
+            "q" 'kb/mu4e-main-bury-buffer
+            "Q" 'mu4e-quit)
   (kb/open-keys
     "m" '(mu4e :wk "Mu4e"))
   ([remap compose-mail] 'mu4e-compose-new)
   (:keymaps '(mu4e-main-mode-map mu4e-headers-mode-map mu4e-view-mode-map)
-   "M-U" 'mu4e-update-index-nonlazy)
+            "M-U" 'mu4e-update-index-nonlazy)
   :custom
   (mail-user-agent 'mu4e-user-agent)
   (mu4e-bookmarks
@@ -102,9 +102,9 @@
   ;; View
   (mu4e-view-fields
    '(:from :to :cc :bcc
-     :subject :flags :date
-     :maildir :mailing-list
-     :tags :attachments :signature))
+           :subject :flags :date
+           :maildir :mailing-list
+           :tags :attachments :signature))
   (mu4e-view-scroll-to-next nil)
   (shr-color-visible-luminance-min 80)   ; Better viewing for dark theme
 
@@ -181,9 +181,9 @@
   ;; Modeline
   ;; Force using regular characters rather than the fancy ones
   (advice-add 'mu4e--bookmarks-modeline-item :around
-                                             (lambda (orig-fun &rest args)
-                                               (let ((mu4e-use-fancy-chars nil))
-                                                 (apply orig-fun args))))
+              (lambda (orig-fun &rest args)
+                (let ((mu4e-use-fancy-chars nil))
+                  (apply orig-fun args))))
 
   ;; Headers
   ;; Taken from Doom
@@ -307,7 +307,7 @@
                     (docid msg target)
                     (mu4e--server-move docid nil "-S+u-N")))
           (unmark :char " " :prompt "unmark" :action
-                                             (mu4e-error "No action for unmarking"))
+                  (mu4e-error "No action for unmarking"))
           (action :char
                   ("a" . "◯")
                   :prompt "action" :ask-target
@@ -698,11 +698,11 @@ will also be the width of all other printable characters."
   :elpaca (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
   :general
   (:keymaps 'mu4e-headers-mode-map
-   "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
-   "M-n" 'mu4e-views-cursor-msg-view-window-down ; From headers window scroll the email view
-   "M-p" 'mu4e-views-cursor-msg-view-window-up ; From headers window scroll the email view
-   "f" 'mu4e-views-toggle-auto-view-selected-message ; Toggle opening messages automatically when moving in the headers view
-   "i" 'mu4e-views-mu4e-view-as-nonblocked-html) ; Show currently selected email with all remote content
+            "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
+            "M-n" 'mu4e-views-cursor-msg-view-window-down ; From headers window scroll the email view
+            "M-p" 'mu4e-views-cursor-msg-view-window-up ; From headers window scroll the email view
+            "f" 'mu4e-views-toggle-auto-view-selected-message ; Toggle opening messages automatically when moving in the headers view
+            "i" 'mu4e-views-mu4e-view-as-nonblocked-html) ; Show currently selected email with all remote content
   :custom
   (mu4e-views-auto-view-selected-message nil)
   (mu4e-views-next-previous-message-behaviour 'stick-to-current-window)

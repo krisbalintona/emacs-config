@@ -17,22 +17,22 @@
   ;; UI enhancements
   'visual-line-mode
   '(lambda ()
-      (set-display-table-slot standard-display-table 0 ?\ )
-      ;; Text-wrap
-      (face-remap-add-relative 'default :height 127) ; Change default face size
-      (setq-local scroll-margin 3                    ; Scroll-margin
-                  line-spacing 0)
-      ;; `consult-outline' support for eshell prompts. See
-      ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
-      (setq outline-regexp eshell-prompt-regexp)
-      )
+     (set-display-table-slot standard-display-table 0 ?\ )
+     ;; Text-wrap
+     (face-remap-add-relative 'default :height 127) ; Change default face size
+     (setq-local scroll-margin 3                    ; Scroll-margin
+                 line-spacing 0)
+     ;; `consult-outline' support for eshell prompts. See
+     ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
+     (setq outline-regexp eshell-prompt-regexp)
+     )
   'hide-mode-line-mode
   :general
   (:keymaps 'eshell-mode-map
-   [remap eshell-previous-matching-input] '(consult-history :wk "Command history"))
+            [remap eshell-previous-matching-input] '(consult-history :wk "Command history"))
   (:keymaps 'eshell-mode-map
-   :states 'insert
-   [remap back-to-indentation] 'eshell-bol)
+            :states 'insert
+            [remap back-to-indentation] 'eshell-bol)
   (kb/open-keys
     "e" '((lambda ()
             (interactive)
@@ -143,9 +143,9 @@ Info node `(eshell)Top'."
           :face     'consult-buffer
           :history  'buffer-name-history
           :annotate '(lambda (cand)
-                        (substring-no-properties
-                         (car (ring-elements
-                               (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
+                       (substring-no-properties
+                        (car (ring-elements
+                              (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
           :state    'consult--buffer-state
           :action   'display-buffer
           :items (lambda ()

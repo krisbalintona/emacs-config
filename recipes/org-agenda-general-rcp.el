@@ -252,7 +252,7 @@ Side effects occur if the parent of the current headline has a
                          (:discard (:scheduled t))
                          (:discard (:tag "project"))
                          (:name ""
-                          :priority>= "B")
+                                :priority>= "B")
                          (:discard (:anything t))))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Unscheduled waiting")
@@ -265,9 +265,9 @@ Side effects occur if the parent of the current headline has a
                       (org-super-agenda-groups
                        '((:discard (:scheduled t))
                          (:name ""
-                          :and (:not (:scheduled today)
-                                :not (:tag "project")
-                                :todo ("PROG" "ACTIVE")))
+                                :and (:not (:scheduled today)
+                                           :not (:tag "project")
+                                           :todo ("PROG" "ACTIVE")))
                          (:discard (:anything t))))))
             (agenda ""
                     ((org-agenda-overriding-header "Tasks")
@@ -289,13 +289,13 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
                       '((:name "Projects due"
-                         :and (:tag "project"
-                               :deadline t))
+                               :and (:tag "project"
+                                          :deadline t))
                         (:name "Projects in need of delegation"
-                         :and (:tag "project"
-                               :scheduled t))
+                               :and (:tag "project"
+                                          :scheduled t))
                         (:name "Orphans"
-                         :anything t)))))))
+                               :anything t)))))))
           ("p" "Planning"
            ((tags-todo "+project"
                        ((org-agenda-overriding-header "Projects")
@@ -307,11 +307,11 @@ Side effects occur if the parent of the current headline has a
                          '((:discard (:todo "PROG"))
                            (:discard (:not (:tag "project")))
                            (:name "Undated"
-                            :and (:not (:scheduled t)
-                                  :not (:deadline t)))
+                                  :and (:not (:scheduled t)
+                                             :not (:deadline t)))
                            (:name "Dated"
-                            :scheduled t
-                            :deadline t)
+                                  :scheduled t
+                                  :deadline t)
                            (:discard (:anything t))))))
             (agenda ""
                     ((org-agenda-overriding-header "Timeline")
@@ -334,10 +334,10 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
                       '((:name "Projects"
-                         :and (:tag "project"
-                               :scheduled t))
+                               :and (:tag "project"
+                                          :scheduled t))
                         (:name "Orphans"
-                         :anything t)))))
+                               :anything t)))))
             (alltodo ""
                      ((org-agenda-overriding-header "Unscheduled")
                       (org-agenda-prefix-format
@@ -358,7 +358,7 @@ Side effects occur if the parent of the current headline has a
                     '((:discard (:scheduled t))
                       (:discard (:tag "project"))
                       (:name ""
-                       :anything t)))))))
+                             :anything t)))))))
           ("u" "Upcoming due dates and ongoing projects"
            ((agenda ""
                     ((org-agenda-overriding-header "Upcoming dates")
@@ -469,11 +469,11 @@ Same as default but truncates with `truncate-string-ellipsis'."
 (use-package work-timer
   :demand
   :elpaca (:type git
-           :host github
-           :protocol ssh
-           :repo "krisbalintona/work-timer"
-           :depth nil
-           :files (:defaults "*.mp3"))
+                 :host github
+                 :protocol ssh
+                 :repo "krisbalintona/work-timer"
+                 :depth nil
+                 :files (:defaults "*.mp3"))
   :hook (kb/themes . kb/work-timer-set-faces)
   :general (kb/open-keys
              "w" work-timer-prefix-map)

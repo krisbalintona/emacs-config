@@ -18,11 +18,11 @@
 ;;; Quickrun
 (use-package quickrun
   :general (:prefix "<f2>"
-            "<f2>" 'quickrun
-            "<f3>" '(lambda ()
-                      (interactive)
-                      (let ((quickrun-focus-p t))
-                        (quickrun-shell))))
+                    "<f2>" 'quickrun
+                    "<f3>" '(lambda ()
+                              (interactive)
+                              (let ((quickrun-focus-p t))
+                                (quickrun-shell))))
   :custom
   (quickrun-focus-p nil))
 
@@ -63,12 +63,12 @@
 ;; Viewing documentation within Emacs.
 (use-package devdocs-browser
   :general (:keymaps '(eglot-mode-map lsp-mode-map lsp-bridge-mode-map)
-            :prefix "H-d"
-            "h" '(devdocs-browser-open :wk "Open")
-            "H" '(devdocs-browser-open-in :wk "Open-in")
-            "i" '(devdocs-browser-install-doc :wk "Install")
-            "d" '(devdocs-browser-download-offline-data :wk "Download")
-            "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade"))
+                     :prefix "H-d"
+                     "h" '(devdocs-browser-open :wk "Open")
+                     "H" '(devdocs-browser-open-in :wk "Open-in")
+                     "i" '(devdocs-browser-install-doc :wk "Install")
+                     "d" '(devdocs-browser-download-offline-data :wk "Download")
+                     "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade"))
   :custom
   (devdocs-browser-major-mode-docs-alist
    '((c++-mode "cpp")
@@ -158,13 +158,13 @@ Non-nil only if installation completed without any errors."
   :requires tree-sitter
   :elpaca (turbo-log :type git :host github :repo "artawower/turbo-log.el")
   :general (:prefix "H-;"
-            ";" 'turbo-log-print
-            "i" 'turbo-log-print-immediately
-            "h" 'turbo-log-comment-all-logs
-            "s" 'turbo-log-uncomment-all-logs
-            "[" 'turbo-log-paste-as-logger
-            "]" 'turbo-log-paste-as-logger-immediately
-            "d" 'turbo-log-delete-all-logs)
+                    ";" 'turbo-log-print
+                    "i" 'turbo-log-print-immediately
+                    "h" 'turbo-log-comment-all-logs
+                    "s" 'turbo-log-uncomment-all-logs
+                    "[" 'turbo-log-paste-as-logger
+                    "]" 'turbo-log-paste-as-logger-immediately
+                    "d" 'turbo-log-delete-all-logs)
   :custom
   (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
   (turbo-log-allow-insert-without-tree-sitter-p t))

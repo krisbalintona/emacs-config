@@ -15,10 +15,10 @@
 (use-package denote
   :functions kb/denote-search-from-id
   :elpaca (:type git
-           :host github
-           :repo "emacs-straight/denote"
-           :depth nil
-           :files ("*" (:exclude ".git")))
+                 :host github
+                 :repo "emacs-straight/denote"
+                 :depth nil
+                 :files ("*" (:exclude ".git")))
   :hook ((dired-mode . denote-dired-mode)
          (before-save . kb/denote-insert-identifier-maybe)
          (after-save . kb/denote-auto-rename))
@@ -358,11 +358,11 @@ Delete the original subtree."
   :general
   (kb/note-keys "m" 'denote-menu-list-notes)
   (:keymaps 'denote-menu-mode-map
-   "|" 'denote-menu-clear-filters
-   "/ r" 'denote-menu-filter
-   "/ /" 'denote-menu-filter
-   "/ k" 'denote-menu-filter-by-keyword
-   "e" 'denote-menu-export-to-dired))
+            "|" 'denote-menu-clear-filters
+            "/ r" 'denote-menu-filter
+            "/ /" 'denote-menu-filter
+            "/ k" 'denote-menu-filter-by-keyword
+            "e" 'denote-menu-export-to-dired))
 
 ;;; Consult-notes
 (use-package consult-notes
@@ -477,9 +477,9 @@ Delete the original subtree."
    :preview-key "C-M-;")
 
   (advice-add 'denote-rename-file-using-front-matter :around
-                                                     #'(lambda (orig-fun &rest args)
-                                                         (let ((save-silently t))
-                                                           (apply orig-fun args)))))
+              #'(lambda (orig-fun &rest args)
+                  (let ((save-silently t))
+                    (apply orig-fun args)))))
 
 ;;; Citar-denote
 (use-package citar-denote

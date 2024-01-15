@@ -46,10 +46,10 @@
   :general
   ;; Unbind all the keys from the mode-map because they're all annoying...
   (:keymaps 'flyspell-mode-map
-   "C-," nil
-   "C-." nil
-   "C-;" nil
-   "C-c $" nil)
+            "C-," nil
+            "C-." nil
+            "C-;" nil
+            "C-c $" nil)
   :custom
   (flyspell-use-meta-tab nil)
 
@@ -131,12 +131,12 @@
   :ensure-system-package ((enchant-2 . enchant)
                           (pkgconf))
   :elpaca (:depth nil
-           :repo "minad/jinx"
-           :files (:defaults "jinx-mod.c" "emacs-module.h"))
+                  :repo "minad/jinx"
+                  :files (:defaults "jinx-mod.c" "emacs-module.h"))
   :diminish
   :general (:keymaps 'jinx-mode-map
-            [remap ispell-word] 'jinx-correct
-            "C-," 'jinx-correct)
+                     [remap ispell-word] 'jinx-correct
+                     "C-," 'jinx-correct)
   :init
   (global-jinx-mode)
   :config

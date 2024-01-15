@@ -247,10 +247,10 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
   :elpaca (:type git
-           :host gitlab
-           :protocol ssh
-           :repo "PreciousPudding/alt-comment-dwim"
-           :depth nil)
+                 :host gitlab
+                 :protocol ssh
+                 :repo "PreciousPudding/alt-comment-dwim"
+                 :depth nil)
   :general
   ([remap comment-dwim] 'alt-comment-dwim
    [remap comment-line] 'alt-comment-dwim-line
@@ -286,14 +286,14 @@ progress. This is called by the timer `good-scroll--timer' every
   :diminish whole-line-or-region-local-mode
   :hook (elpaca-after-init . whole-line-or-region-global-mode)
   :general (:keymaps 'whole-line-or-region-local-mode-map
-            [remap kill-region] 'whole-line-or-region-kill-region
-            [remap kill-ring-save] 'whole-line-or-region-kill-ring-save
-            [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill
-            [remap delete-region] 'whole-line-or-region-delete-region
-            ;; [remap comment-dwim] 'whole-line-or-region-comment-dwim-2
-            [remap comment-dwim] nil
-            [remap comment-region] 'whole-line-or-region-comment-region
-            [remap uncomment-region] 'whole-line-or-region-uncomment-region))
+                     [remap kill-region] 'whole-line-or-region-kill-region
+                     [remap kill-ring-save] 'whole-line-or-region-kill-ring-save
+                     [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill
+                     [remap delete-region] 'whole-line-or-region-delete-region
+                     ;; [remap comment-dwim] 'whole-line-or-region-comment-dwim-2
+                     [remap comment-dwim] nil
+                     [remap comment-region] 'whole-line-or-region-comment-region
+                     [remap uncomment-region] 'whole-line-or-region-uncomment-region))
 
 ;;; Eldoc
 (use-package eldoc
@@ -315,7 +315,7 @@ progress. This is called by the timer `good-scroll--timer' every
   :general
   ([remap eldoc-doc-buffer] 'eldoc-box-help-at-point)
   (:keymaps 'eglot-mode-map
-   [remap eldoc-box-help-at-point] 'eldoc-box-eglot-help-at-point)
+            [remap eldoc-box-help-at-point] 'eldoc-box-eglot-help-at-point)
   :custom
   (eldoc-box-max-pixel-width 650)
   (eldoc-box-max-pixel-height 400)
@@ -390,9 +390,9 @@ progress. This is called by the timer `good-scroll--timer' every
   (kb/open-keys
     "p" 'pocket-reader)
   (:keymaps 'pocket-reader-mode-map
-   "TAB" 'kb/pocket-reader-cycle-view
-   "+" 'pocket-reader-more
-   "o" 'pocket-reader-pop-to-url)
+            "TAB" 'kb/pocket-reader-cycle-view
+            "+" 'pocket-reader-more
+            "o" 'pocket-reader-pop-to-url)
   :custom
   (pocket-reader-site-column-max-width 22)
   (pocket-reader-archive-on-open nil)
@@ -579,8 +579,8 @@ displayed."
 (use-package pcre2el)
 (use-package sentex
   :elpaca (sentex :type git :host codeberg :repo "martianh/sentex"
-                                           ;; Need more than just elisp files
-                                           :files ("*"))
+                  ;; Need more than just elisp files
+                  :files ("*"))
   :commands kb/forward-sentence-function
   :custom
   ;; NOTE 2023-01-18: icu4j has many more rules, but is "too thorough" for my
@@ -974,8 +974,8 @@ This is a difference in multitude of %s."
 ;;; Fontify-patch
 (use-package fontify-patch
   :elpaca (:type git
-           :host github
-           :repo "whame/fontify-patch")
+                 :host github
+                 :repo "whame/fontify-patch")
   :config
   ;; To fontify mail containing patches with the email client
   (add-hook 'gnus-part-display-hook 'fontify-patch-buffer))
@@ -995,13 +995,13 @@ This is a difference in multitude of %s."
   (kb/open-keys
     "c" 'calendar)
   (:keymaps 'global-map
-   (general-chord "xf") 'find-file)
+            (general-chord "xf") 'find-file)
   (:keymaps 'Info-mode-map
-   :states '(visual normal motion)
-   "SPC" nil                   ; For my leader key
-   [remap evil-ret] 'Info-follow-nearest-node)
+            :states '(visual normal motion)
+            "SPC" nil                   ; For my leader key
+            [remap evil-ret] 'Info-follow-nearest-node)
   (:keymaps 'universal-argument-map     ; Multiple universal arguments
-   "u" 'universal-argument-more)
+            "u" 'universal-argument-more)
   :custom
   (save-interprogram-paste-before-kill t)
   ;; Killing

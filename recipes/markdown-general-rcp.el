@@ -18,11 +18,11 @@
 (use-package markdown-xwidget
   :ensure-system-package pandoc
   :elpaca (:type git
-           :host github
-           :repo "cfclrk/markdown-xwidget"
-           :files (:defaults "resources"))
+                 :host github
+                 :repo "cfclrk/markdown-xwidget"
+                 :files (:defaults "resources"))
   :general (:keymaps 'markdown-mode-command-map
-            "x" 'markdown-xwidget-preview-mode)
+                     "x" 'markdown-xwidget-preview-mode)
   :custom
   (markdown-xwidget-command "pandoc")
   (markdown-xwidget-github-theme "dark")

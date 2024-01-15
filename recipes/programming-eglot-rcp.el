@@ -29,14 +29,14 @@ functions."
                                  (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))
   :general
   (:keymaps 'eglot-mode-map
-   :prefix "<f3>"
-   "r" 'eglot-rename
-   "a" 'eglot-code-actions
-   "=" 'eglot-format
-   "s" 'eglot-shutdown
-   "S" 'eglot-shutdown-all)
+            :prefix "<f3>"
+            "r" 'eglot-rename
+            "a" 'eglot-code-actions
+            "=" 'eglot-format
+            "s" 'eglot-shutdown
+            "S" 'eglot-shutdown-all)
   (:keymaps 'eglot-mode-map
-   (general-chord "``") 'eglot-code-actions)
+            (general-chord "``") 'eglot-code-actions)
   :custom
   ;; NOTE 2023-07-11: Set to 0 if I want no events printed to a buffer so that
   ;; performance is increased
@@ -87,7 +87,7 @@ functions."
   :requires consult
   :after eglot
   :general (:keymaps 'eglot-mode-map
-            [remap xref-find-apropos] #'consult-eglot-symbols))
+                     [remap xref-find-apropos] #'consult-eglot-symbols))
 
 ;;; programming-eglot-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

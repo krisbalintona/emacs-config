@@ -17,9 +17,9 @@
   :gfhook 'dired-hide-details-mode 'dired-omit-mode
   :general
   (:keymaps 'dired-mode-map
-   :states 'normal
-   "h" 'dired-up-directory
-   "l" 'dired-find-file)
+            :states 'normal
+            "h" 'dired-up-directory
+            "l" 'dired-find-file)
   :custom
   (dired-auto-revert-buffer t)          ; Automatically revert buffer
   (dired-dwim-target t)                 ; Guess default target directory?
@@ -103,15 +103,15 @@ command."
 (use-package dired-single
   :disabled             ; Parity of `dired-kill-when-opening-new-dired-buffer'?
   :general (:keymaps 'dired-mode-map
-            ;; [remap dired-find-file] 'dired-single-buffer
-            [remap dired-up-directory] 'dired-single-up-directory))
+                     ;; [remap dired-find-file] 'dired-single-buffer
+                     [remap dired-up-directory] 'dired-single-up-directory))
 
 ;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
   :general (:keymaps 'dired-mode-map
-            :states 'normal
-            "H" 'dired-hide-dotfiles-mode)
+                     :states 'normal
+                     "H" 'dired-hide-dotfiles-mode)
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
@@ -143,7 +143,7 @@ command."
 (use-package affe
   :after orderless
   :general (:keymaps 'project-prefix-map
-            [remap project-find-file] 'affe-find)
+                     [remap project-find-file] 'affe-find)
   :custom
   ;; Found in readme: https://github.com/minad/affe
   (affe-regexp-compiler
@@ -160,9 +160,9 @@ command."
   :general
   ([remap shell-command] 'dwim-shell-command)
   (:keymaps 'dired-mode-map
-   [remap dired-do-async-shell-command] 'dwim-shell-command
-   [remap dired-do-shell-command] 'dwim-shell-command
-   [remap dired-smart-shell-command] 'dwim-shell-command)
+            [remap dired-do-async-shell-command] 'dwim-shell-command
+            [remap dired-do-shell-command] 'dwim-shell-command
+            [remap dired-smart-shell-command] 'dwim-shell-command)
   :init
   (require 'dwim-shell-commands))       ; Set of command line utilities
 

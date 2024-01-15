@@ -19,8 +19,8 @@
   'lsp-lens-mode
   :general
   (:keymaps 'lsp-mode-map
-   :states 'insert
-   "<tab>" 'indent-for-tab-command)
+            :states 'insert
+            "<tab>" 'indent-for-tab-command)
   (kb/lsp-keys ; Remap all the keys from `lsp-command-map'
     "w" '(ignore t :wk "Workspaces")
     "wD" '(lsp-disconnect :wk "disconnect")
@@ -142,12 +142,12 @@
   :hook (lsp-ui-imenu-mode . hide-mode-line-mode)
   :gfhook
   '(lambda ()
-           (when (bound-and-true-p eldoc-box-hover-mode)
-             (eldoc-box-hover-mode -1)))
+     (when (bound-and-true-p eldoc-box-hover-mode)
+       (eldoc-box-hover-mode -1)))
   :general (:keymaps 'lsp-ui-mode-map
-            [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
-            [remap xref-find-references] #'lsp-ui-peek-find-references
-            [remap imenu-list] #'lsp-ui-imenu)
+                     [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
+                     [remap xref-find-references] #'lsp-ui-peek-find-references
+                     [remap imenu-list] #'lsp-ui-imenu)
   :custom
   ;; Lsp-ui-peek - Peek in a child frame
   (lsp-ui-peek-enable t)
@@ -203,7 +203,7 @@
                        )))
   :general
   (:keymaps 'lsp-mode-map
-   [remap consult-flycheck] '(consult-lsp-diagnostics :wk "Consult lsp diagnostics")))
+            [remap consult-flycheck] '(consult-lsp-diagnostics :wk "Consult lsp diagnostics")))
 
 ;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
@@ -219,8 +219,8 @@
   (kb/lsp-keys
     "Ft" '(lsp-treemacs-symbols :wk "Lsp-treemacs"))
   (:keymaps 'lsp-treemacs-error-list-mode-map
-   :states 'normal
-   "x" 'lsp-treemacs-quick-fix))
+            :states 'normal
+            "x" 'lsp-treemacs-quick-fix))
 
 ;;; programming-lsp-mode-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

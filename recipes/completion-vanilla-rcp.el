@@ -60,11 +60,11 @@
   :general
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
-   "<escape>" #'minibuffer-keyboard-quit
-   "?" #'minibuffer-completion-help
-   "C-M-n" #'vertico-next-group
-   "C-M-p" #'vertico-previous-group
-   "M-o" #'kb/vertico-quick-embark)
+            "<escape>" #'minibuffer-keyboard-quit
+            "?" #'minibuffer-completion-help
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group
+            "M-o" #'kb/vertico-quick-embark)
   :hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
   :custom
   (vertico-count 13)
@@ -96,9 +96,9 @@
   :elpaca nil
   ;; More convenient directory navigation commands
   :general (:keymaps 'vertico-map
-            "RET" 'vertico-directory-enter
-            "DEL" 'vertico-directory-delete-char
-            "M-DEL" 'vertico-directory-delete-word)
+                     "RET" 'vertico-directory-enter
+                     "DEL" 'vertico-directory-delete-char
+                     "M-DEL" 'vertico-directory-delete-word)
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -129,8 +129,8 @@
   :demand
   :after vertico
   :elpaca (:type git
-           :host github
-           :repo "jdtsmith/vertico-truncate")
+                 :host github
+                 :repo "jdtsmith/vertico-truncate")
   :config
   (vertico-truncate-mode))
 

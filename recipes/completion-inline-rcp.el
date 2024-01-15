@@ -18,20 +18,20 @@
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
-   "M-d" 'corfu-info-documentation
-   ;; "H-SPC" 'corfu-insert-separator
-   )
+            "M-d" 'corfu-info-documentation
+            ;; "H-SPC" 'corfu-insert-separator
+            )
   (:keymaps 'corfu-map
-   :states 'insert
-   "C-n" 'corfu-next
-   "C-p" 'corfu-previous
-   "<escape>" 'corfu-quit
-   "<return>" 'corfu-insert
-   "H-SPC" 'corfu-insert-separator
-   ;; "SPC" 'corfu-insert-separator ; Use when `corfu-quit-at-boundary' is non-nil
-   "M-d" 'corfu-show-documentation
-   "C-g" 'corfu-quit
-   "M-l" 'corfu-show-location)
+            :states 'insert
+            "C-n" 'corfu-next
+            "C-p" 'corfu-previous
+            "<escape>" 'corfu-quit
+            "<return>" 'corfu-insert
+            "H-SPC" 'corfu-insert-separator
+            ;; "SPC" 'corfu-insert-separator ; Use when `corfu-quit-at-boundary' is non-nil
+            "M-d" 'corfu-show-documentation
+            "C-g" 'corfu-quit
+            "M-l" 'corfu-show-location)
   :custom
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
@@ -203,30 +203,30 @@ default lsp-passthrough."
          (git-commit-mode . kb/cape-capf-setup-git-commit))
   :general
   (:prefix "H-c"               ; Particular completion function
-   "p" 'completion-at-point
-   "t" 'complete-tag   ; etags
-   "d" 'cape-dabbrev   ; or dabbrev-completion
-   [remap dabbrev-expand] 'cape-dabbrev
-   "f" 'cape-file
-   "k" 'cape-keyword
-   "s" 'cape-elisp-symbol
-   "a" 'cape-abbrev
-   "i" 'cape-ispell
-   "l" 'cape-line
-   "w" 'cape-dict
-   "\\" 'cape-tex
-   "_" 'cape-tex
-   "^" 'cape-tex
-   "&" 'cape-sgml
-   "r" 'cape-rfc1345
-   "y" (cape-capf-interactive (cape-company-to-capf #'company-yasnippet)))
+           "p" 'completion-at-point
+           "t" 'complete-tag   ; etags
+           "d" 'cape-dabbrev   ; or dabbrev-completion
+           [remap dabbrev-expand] 'cape-dabbrev
+           "f" 'cape-file
+           "k" 'cape-keyword
+           "s" 'cape-elisp-symbol
+           "a" 'cape-abbrev
+           "i" 'cape-ispell
+           "l" 'cape-line
+           "w" 'cape-dict
+           "\\" 'cape-tex
+           "_" 'cape-tex
+           "^" 'cape-tex
+           "&" 'cape-sgml
+           "r" 'cape-rfc1345
+           "y" (cape-capf-interactive (cape-company-to-capf #'company-yasnippet)))
   ([remap dabbrev-expand] 'cape-dabbrev)
   (:keymaps 'corfu-map
-   :states 'insert
-   [remap evil-normal-state] '(lambda ()
-                                (interactive)
-                                (evil-normal-state)
-                                (corfu-quit)))
+            :states 'insert
+            [remap evil-normal-state] '(lambda ()
+                                         (interactive)
+                                         (evil-normal-state)
+                                         (corfu-quit)))
   :custom
   (cape-dabbrev-min-length 2)
   :init

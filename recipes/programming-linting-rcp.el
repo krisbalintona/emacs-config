@@ -17,8 +17,8 @@
   (kb/nav-keys
     "E" '(flycheck-list-errors :wk "List flycheck errors"))
   (:keymaps 'flycheck-mode-map
-   "M-n" 'flycheck-next-error
-   "M-p" 'flycheck-previous-error)
+            "M-n" 'flycheck-next-error
+            "M-p" 'flycheck-previous-error)
   :custom
   (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
 
@@ -45,7 +45,7 @@
 (use-package consult-flycheck
   :after (consult flycheck)
   :general (:keymaps 'lsp-mode-map
-            "C-c e" '(consult-flycheck :wk "Consult flycheck")))
+                     "C-c e" '(consult-flycheck :wk "Consult flycheck")))
 
 ;;; Flymake
 (use-package flymake
@@ -60,8 +60,8 @@
   :general
   ([remap flymake-show-buffer-diagnostics] 'consult-flymake)
   (:keymaps 'flymake-mode-map
-   "M-n" 'flymake-goto-next-error
-   "M-p" 'flymake-goto-prev-error)
+            "M-n" 'flymake-goto-next-error
+            "M-p" 'flymake-goto-prev-error)
   :custom
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators

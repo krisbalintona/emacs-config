@@ -19,8 +19,8 @@
   ([remap undo] 'evil-undo
    [remap undo-redo] 'evil-redo)
   (:states 'insert
-   "<escape>" 'evil-normal-state
-   "M-e" 'evil-normal-state)
+           "<escape>" 'evil-normal-state
+           "M-e" 'evil-normal-state)
   (kb/window-keys
    "w" 'evil-window-mru
 
@@ -82,28 +82,28 @@
   (evil-collection-outline-bind-tab-p nil)
   (evil-collection-mode-list
    '(2048-game ag alchemist ;; anaconda-mode
-                  apropos arc-mode atomic-chrome auto-package-update beginend bm bookmark
-                  (buff-menu "buff-menu")
-                  calc calendar cider cmake-mode comint company compile consult corfu
-                  (custom cus-edit)
-                  cus-theme dashboard daemons deadgrep debbugs debug devdocs dictionary diff-hl diff-mode dired dired-sidebar disk-usage distel doc-view docker ebib ebuku edbi edebug ediff eglot explain-pause-mode eldoc elfeed elisp-mode elisp-refs elisp-slime-nav embark emms emoji epa ert eshell eval-sexp-fu evil-mc eww fanyi finder flycheck flymake forge free-keys geiser ggtags git-timemachine gnus go-mode grep guix hackernews helm help helpful hg-histedit hungry-delete ibuffer image image-dired image+ imenu imenu-list
-                  (indent "indent")
-                  indium info ivy js2-mode leetcode lispy log-edit log-view lsp-ui-imenu lua-mode kotlin-mode macrostep man
-                  (magit magit-repos magit-submodule)
-                  magit-section magit-todos markdown-mode monky mpc mpdel mu4e mu4e-conversation neotree newsticker notmuch nov
-                  (occur replace)
-                  omnisharp org org-present org-roam osx-dictionary outline p4
-                  (package-menu package)
-                  pass
-                  (pdf pdf-view)
-                  popup proced
-                  (process-menu simple)
-                  prodigy profiler ;; python
-                  quickrun racer racket-describe realgud reftex restclient rg ripgrep rjsx-mode robe rtags ruby-mode scheme scroll-lock selectrum sh-script shortdoc simple simple-mpc slime sly speedbar tab-bar tablist tabulated-list tar-mode telega
-                  (term term ansi-term multi-term)
-                  tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff vertico view vlf vterm vundo w3m wdired wgrep which-key woman xref xwidget yaml-mode youtube-dl zmusic
-                  (ztree ztree-diff ztree-dir)
-                  ))
+               apropos arc-mode atomic-chrome auto-package-update beginend bm bookmark
+               (buff-menu "buff-menu")
+               calc calendar cider cmake-mode comint company compile consult corfu
+               (custom cus-edit)
+               cus-theme dashboard daemons deadgrep debbugs debug devdocs dictionary diff-hl diff-mode dired dired-sidebar disk-usage distel doc-view docker ebib ebuku edbi edebug ediff eglot explain-pause-mode eldoc elfeed elisp-mode elisp-refs elisp-slime-nav embark emms emoji epa ert eshell eval-sexp-fu evil-mc eww fanyi finder flycheck flymake forge free-keys geiser ggtags git-timemachine gnus go-mode grep guix hackernews helm help helpful hg-histedit hungry-delete ibuffer image image-dired image+ imenu imenu-list
+               (indent "indent")
+               indium info ivy js2-mode leetcode lispy log-edit log-view lsp-ui-imenu lua-mode kotlin-mode macrostep man
+               (magit magit-repos magit-submodule)
+               magit-section magit-todos markdown-mode monky mpc mpdel mu4e mu4e-conversation neotree newsticker notmuch nov
+               (occur replace)
+               omnisharp org org-present org-roam osx-dictionary outline p4
+               (package-menu package)
+               pass
+               (pdf pdf-view)
+               popup proced
+               (process-menu simple)
+               prodigy profiler ;; python
+               quickrun racer racket-describe realgud reftex restclient rg ripgrep rjsx-mode robe rtags ruby-mode scheme scroll-lock selectrum sh-script shortdoc simple simple-mpc slime sly speedbar tab-bar tablist tabulated-list tar-mode telega
+               (term term ansi-term multi-term)
+               tetris thread tide timer-list transmission trashed tuareg typescript-mode vc-annotate vc-dir vc-git vdiff vertico view vlf vterm vundo w3m wdired wgrep which-key woman xref xwidget yaml-mode youtube-dl zmusic
+               (ztree ztree-diff ztree-dir)
+               ))
   :preface
   ;; Put here to be extra sure that this variable is set before evil-collection
   (setq evil-want-keybinding nil)
@@ -119,8 +119,8 @@
   :disabled t
   :general
   (:keymaps 'evil-commentary-mode-map
-   :states 'normal
-   "g/" 'evil-commentary-line)
+            :states 'normal
+            "g/" 'evil-commentary-line)
   :init
   (evil-commentary-mode)
   )
@@ -132,21 +132,21 @@
   :after evil
   :general
   (:states 'normal                      ; Evil mode keybindings
-   "gcc" 'evilnc-comment-or-uncomment-lines
-   "g/" 'evilnc-comment-or-uncomment-lines
-   ;; (define-key evil-normal-state-map ",cl" 'evilnc-quick-comment-or-uncomment-to-the-line)
-   ;; (define-key evil-normal-state-map ",ll" 'evilnc-quick-comment-or-uncomment-to-the-line)
-   ;; (define-key evil-normal-state-map ",cp" 'evilnc-comment-or-uncomment-paragraphs)
-   ;; (define-key evil-normal-state-map ",cr" 'comment-or-uncomment-region)
-   ;; (define-key evil-normal-state-map ",cv" 'evilnc-toggle-invert-comment-line-by-line)
-   "gy" 'evilnc-copy-and-comment-lines)
+           "gcc" 'evilnc-comment-or-uncomment-lines
+           "g/" 'evilnc-comment-or-uncomment-lines
+           ;; (define-key evil-normal-state-map ",cl" 'evilnc-quick-comment-or-uncomment-to-the-line)
+           ;; (define-key evil-normal-state-map ",ll" 'evilnc-quick-comment-or-uncomment-to-the-line)
+           ;; (define-key evil-normal-state-map ",cp" 'evilnc-comment-or-uncomment-paragraphs)
+           ;; (define-key evil-normal-state-map ",cr" 'comment-or-uncomment-region)
+           ;; (define-key evil-normal-state-map ",cv" 'evilnc-toggle-invert-comment-line-by-line)
+           "gy" 'evilnc-copy-and-comment-lines)
   (:states 'visual
-   "gcc" 'evilnc-comment-or-uncomment-lines
-   "g/" 'evilnc-comment-or-uncomment-lines
-   "gy" 'evilnc-copy-and-comment-lines)
+           "gcc" 'evilnc-comment-or-uncomment-lines
+           "g/" 'evilnc-comment-or-uncomment-lines
+           "gy" 'evilnc-copy-and-comment-lines)
   (:keymaps 'evil-inner-text-objects-map ; Comment itself is text object
-   "c" 'evilnc-inner-commenter
-   "c" 'evilnc-outer-commenter)
+            "c" 'evilnc-inner-commenter
+            "c" 'evilnc-outer-commenter)
   :config
   (when evilnc-use-comment-object-setup
     ;; Install operator for evil text objects
@@ -166,25 +166,25 @@
   :ghook 'org-mode-hook
   :general
   (:keymaps 'org-mode-map
-   [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; Respect visual-line-mode
+            [remap evil-first-non-blank] 'evil-org-beginning-of-line) ; Respect visual-line-mode
   (:keymaps 'org-mode-map
-   :states 'insert
-   "M-l" 'org-metaright
-   "M-h" 'org-metaleft
-   "C-<return>" 'evil-org-return
-   )
+            :states 'insert
+            "M-l" 'org-metaright
+            "M-h" 'org-metaleft
+            "C-<return>" 'evil-org-return
+            )
   ;; Since I changed the binding for `evil-outer-text-objects-map' and
   ;; `exchange-point-and-mark', I bind these myself.
   (:keymaps 'evil-outer-text-objects-map
-   "e" 'evil-org-an-object
-   "E" 'evil-org-an-element
-   "r" 'evil-org-a-greater-element
-   "R" 'evil-org-a-subtree)
+            "e" 'evil-org-an-object
+            "E" 'evil-org-an-element
+            "r" 'evil-org-a-greater-element
+            "R" 'evil-org-a-subtree)
   (:keymaps 'evil-inner-text-objects-map
-   "e" 'evil-org-inner-object
-   "E" 'evil-org-inner-element
-   "r" 'evil-org-inner-greater-element
-   "R" 'evil-org-inner-subtree)
+            "e" 'evil-org-inner-object
+            "E" 'evil-org-inner-element
+            "r" 'evil-org-inner-greater-element
+            "R" 'evil-org-inner-subtree)
   :config
   (evil-org-set-key-theme '(navigation shift todo calendar additional))
   (require 'evil-org-agenda)

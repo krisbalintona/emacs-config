@@ -17,13 +17,13 @@
   :gfhook
   'evil-normalize-keymaps
   :general (:keymaps 'company-active-map
-            "<escape>" '(lambda () (interactive) (company-abort) (evil-normal-state))
-            "<return>" '(lambda () (interactive) (company-abort) (newline) (indent-according-to-mode))
-            "<tab>" 'company-complete-selection
-            "C-j" 'company-select-next-or-abort
-            "C-k" 'company-select-previous-or-abort
-            "C-n" 'company-select-next-or-abort
-            "C-p" 'company-select-previous-or-abort)
+                     "<escape>" '(lambda () (interactive) (company-abort) (evil-normal-state))
+                     "<return>" '(lambda () (interactive) (company-abort) (newline) (indent-according-to-mode))
+                     "<tab>" 'company-complete-selection
+                     "C-j" 'company-select-next-or-abort
+                     "C-k" 'company-select-previous-or-abort
+                     "C-n" 'company-select-next-or-abort
+                     "C-p" 'company-select-previous-or-abort)
   :custom
   (company-idle-delay 0.3)
   (company-tooltip-idle-delay 0.2)
@@ -50,8 +50,8 @@
   ;; `company-abbrev' because it slows down the performance significantly and I
   ;; don't use it.
   (company-backends '(company-bbdb company-yasnippet company-files
-                                                     (company-gtags company-etags company-keywords)
-                                                     company-capf))
+                                   (company-gtags company-etags company-keywords)
+                                   company-capf))
   ;; NOTE 2021-08-25: Uncomment the code below if `company-box' isn't being used
   ;; (company-frontends
   ;;  '(company-preview-common-frontend ; Preview common part of candidates

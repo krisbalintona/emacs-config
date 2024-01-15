@@ -85,7 +85,7 @@
   'display-line-numbers-mode
   'visual-line-mode
   :general (:keymaps 'yaml-mode-map
-            [remap evil-indent] 'yaml-indent-line)
+                     [remap evil-indent] 'yaml-indent-line)
   :custom
   (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 

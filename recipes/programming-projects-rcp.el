@@ -69,7 +69,7 @@
   :general
   ([remap project-find-regexp] 'consult-ripgrep)
   (:keymaps 'project-prefix-map
-   "m" #'magit-project-status)
+            "m" #'magit-project-status)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
@@ -126,7 +126,7 @@
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :general
   (:keymaps 'magit-mode-map
-   "C-<tab>" 'magit-section-toggle-children)
+            "C-<tab>" 'magit-section-toggle-children)
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
@@ -309,7 +309,7 @@
 (use-package vc
   :elpaca nil
   :general (:keymaps 'vc-dir-mode-map
-            "G" 'vc-revert)
+                     "G" 'vc-revert)
   :custom
   (vc-git-log-edit-summary-max-len 70)
   (vc-git-log-edit-summary-target-len 50)
@@ -333,7 +333,7 @@
 (use-package log-edit
   :elpaca nil
   :general (:keymaps 'log-edit-mode-map
-            [remap log-edit-comment-search-backward] 'consult-history))
+                     [remap log-edit-comment-search-backward] 'consult-history))
 
 ;;;; Diff-mode
 (use-package diff-mode
@@ -343,11 +343,11 @@
   '(lambda ()                  ; FIXME 2022-12-30: Not sure why this doesn't work...
      (display-line-numbers-mode -1))
   :general (:keymaps 'diff-mode-map
-            "S-<iso-lefttab>" 'outshine-cycle-buffer
-            "<tab>" 'outshine-cycle
-            "C-x n s" 'outshine-narrow-to-subtree
-            "L" 'vc-print-root-log
-            "v" 'vc-next-action)
+                     "S-<iso-lefttab>" 'outshine-cycle-buffer
+                     "<tab>" 'outshine-cycle
+                     "C-x n s" 'outshine-narrow-to-subtree
+                     "L" 'vc-print-root-log
+                     "v" 'vc-next-action)
   :custom
   (diff-refine 'navigation) ; FIXME 2022-12-30: Now exactly sure what this does...
   (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language

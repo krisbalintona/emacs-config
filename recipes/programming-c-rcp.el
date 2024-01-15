@@ -12,7 +12,7 @@
 (use-package cc-mode
   :elpaca nil
   :general (:keymaps 'c-mode-map
-            "TAB" 'indent-for-tab-command))
+                     "TAB" 'indent-for-tab-command))
 
 ;;; Gdb-mi
 ;; Built-in GDB

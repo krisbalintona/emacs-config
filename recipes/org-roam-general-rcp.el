@@ -17,8 +17,8 @@
   :gfhook 'hide-mode-line-mode 'visual-line-mode
   :general
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
-   "<tab>" 'magit-section-toggle
-   [mouse-1] #'org-roam-buffer-visit-thing)
+            "<tab>" 'magit-section-toggle
+            [mouse-1] #'org-roam-buffer-visit-thing)
   (kb/note-keys
     "f" '(org-roam-node-find :wk "Find file")
     "F" '((lambda ()
@@ -38,8 +38,8 @@
   (org-roam-file-exclude-regexp (rx (one-or-more ".draft")))
   (org-roam-db-node-include-function
    #'(lambda ()
-             "Exclude nodes with the ATTACH tag"
-             (not (member "ATTACH" (org-get-tags)))))
+       "Exclude nodes with the ATTACH tag"
+       (not (member "ATTACH" (org-get-tags)))))
 
   (org-roam-verbose nil)                ; Don't echo messages that aren't errors
   (org-use-tag-inheritance nil) ; For the way I use lit notes not to transfer source type to evergreen note status
@@ -320,9 +320,9 @@ name to include number of backlinks for the node."
          (annotation))
     (setq count (caar (org-roam-db-query
                        [:select (funcall count source)
-                        :from links
-                        :where (= dest $s1)
-                        :and (= type "id")]
+                                :from links
+                                :where (= dest $s1)
+                                :and (= type "id")]
                        (org-roam-node-id node))))
     (concat annotation
             (when tags (format " (%s)" (string-join tags ", ")))

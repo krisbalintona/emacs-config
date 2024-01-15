@@ -29,11 +29,11 @@
     "n" '(notmuch :wk "Notmuch"))
   ([remap compose-mail] #'notmuch-mua-new-mail)
   (:keymaps 'notmuch-search-mode-map
-   "r" 'notmuch-search-reply-to-thread ; Easier to reply to all by default
-   "R" 'notmuch-search-reply-to-thread-sender)
+            "r" 'notmuch-search-reply-to-thread ; Easier to reply to all by default
+            "R" 'notmuch-search-reply-to-thread-sender)
   (:keymaps 'notmuch-show-mode-map
-   "r" 'notmuch-show-reply     ; Easier to reply to all by default
-   "R" 'notmuch-show-reply-sender)
+            "r" 'notmuch-show-reply     ; Easier to reply to all by default
+            "R" 'notmuch-show-reply-sender)
   :custom
   (mail-user-agent 'notmuch-user-agent)
 

@@ -27,9 +27,9 @@
   :diminish
   :general
   (:keymaps 'org-mode-map
-   "C-c d" 'kb/consult-org-depend)
+            "C-c d" 'kb/consult-org-depend)
   (:keymaps 'org-agenda-mode-map
-   "C-c d" 'kb/consult-org-agenda-depend)
+            "C-c d" 'kb/consult-org-agenda-depend)
   :init
   (org-edna-mode)
   :config

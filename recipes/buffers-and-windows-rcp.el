@@ -186,22 +186,22 @@ If buffer-or-name is nil return current buffer's mode."
   :demand
   :general
   (:keymaps 'eyebrowse-mode-map
-   "M-1" 'eyebrowse-switch-to-window-config-1
-   "M-2" 'eyebrowse-switch-to-window-config-2
-   "M-3" 'eyebrowse-switch-to-window-config-3
-   "M-4" 'eyebrowse-switch-to-window-config-4
-   "M-5" 'eyebrowse-switch-to-window-config-5
-   "M-6" 'eyebrowse-switch-to-window-config-6
-   "M-7" 'eyebrowse-switch-to-window-config-7
-   "M-8" 'eyebrowse-switch-to-window-config-8
-   "M-9" 'eyebrowse-switch-to-window-config-9
-   "M-0" 'eyebrowse-switch-to-window-config-0
-   "M-\\" 'eyebrowse-last-window-config
-   "M-[" 'eyebrowse-prev-window-config
-   "M-]" 'eyebrowse-next-window-config)
+            "M-1" 'eyebrowse-switch-to-window-config-1
+            "M-2" 'eyebrowse-switch-to-window-config-2
+            "M-3" 'eyebrowse-switch-to-window-config-3
+            "M-4" 'eyebrowse-switch-to-window-config-4
+            "M-5" 'eyebrowse-switch-to-window-config-5
+            "M-6" 'eyebrowse-switch-to-window-config-6
+            "M-7" 'eyebrowse-switch-to-window-config-7
+            "M-8" 'eyebrowse-switch-to-window-config-8
+            "M-9" 'eyebrowse-switch-to-window-config-9
+            "M-0" 'eyebrowse-switch-to-window-config-0
+            "M-\\" 'eyebrowse-last-window-config
+            "M-[" 'eyebrowse-prev-window-config
+            "M-]" 'eyebrowse-next-window-config)
   (:keymaps 'eyebrowse-mode-map
-   :prefix eyebrowse-keymap-prefix
-   "d" 'eyebrowse-close-window-config)
+            :prefix eyebrowse-keymap-prefix
+            "d" 'eyebrowse-close-window-config)
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c M-w"))
@@ -223,7 +223,7 @@ If buffer-or-name is nil return current buffer's mode."
   :demand
   :general
   (:keymaps 'tab-prefix-map
-   "w" 'tab-bar-move-window-to-tab)
+            "w" 'tab-bar-move-window-to-tab)
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)
@@ -380,14 +380,14 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;; Burly
 (use-package burly
   :elpaca (:depth 1
-           :fetcher github
-           ;; NOTE 2023-07-15: See
-           ;; https://github.com/alphapapa/burly.el/issues/28 for details on
-           ;; this branch
-           :repo "alphapapa/burly.el"
-           :branch "wip/readablep"
-           :files ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-                   (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
+                  :fetcher github
+                  ;; NOTE 2023-07-15: See
+                  ;; https://github.com/alphapapa/burly.el/issues/28 for details on
+                  ;; this branch
+                  :repo "alphapapa/burly.el"
+                  :branch "wip/readablep"
+                  :files ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+                          (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
   :init
   (burly-tabs-mode))
 

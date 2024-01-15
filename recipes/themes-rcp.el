@@ -265,20 +265,20 @@ are troublesome)."
       (list (propertize "%[" 'help-echo recursive-edit-help-echo)
             "["                         ; Changed delimiter
             `(:propertize ("" mode-name)
-              help-echo "Major mode\n\
+                          help-echo "Major mode\n\
 mouse-1: Display major mode menu\n\
 mouse-2: Show help for major mode\n\
 mouse-3: Toggle minor modes"
-              mouse-face mode-line-highlight
-              local-map ,mode-line-major-mode-keymap)
+                          mouse-face mode-line-highlight
+                          local-map ,mode-line-major-mode-keymap)
             '("" mode-line-process)
             `(:propertize ("" minor-mode-alist)
-              mouse-face mode-line-highlight
-              help-echo "Minor mode\n\
+                          mouse-face mode-line-highlight
+                          help-echo "Minor mode\n\
 mouse-1: Display minor mode menu\n\
 mouse-2: Show help for minor mode\n\
 mouse-3: Toggle minor modes"
-              local-map ,mode-line-minor-mode-keymap)
+                          local-map ,mode-line-minor-mode-keymap)
             (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
                         'mouse-face 'mode-line-highlight
                         'local-map (make-mode-line-mouse-map

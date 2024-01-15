@@ -20,8 +20,8 @@
      (setq-local line-spacing 0.2))
   :general
   (:keymaps 'org-mode-map
-   "H-s" 'org-store-link
-   "C-M-<up>" 'org-up-element)
+            "H-s" 'org-store-link
+            "C-M-<up>" 'org-up-element)
   (kb/note-keys
     "c" '(org-capture :wk "Org-capture"))
   :custom
@@ -202,10 +202,10 @@ have `org-warning' face."
         org-outline-path-complete-in-steps nil)
   (when (featurep 'vertico)
     (advice-add #'org-olpath-completing-read :around
-                                             (lambda (&rest args)
-                                               (minibuffer-with-setup-hook
-                                                   (lambda () (setq-local completion-styles '(basic)))
-                                                 (apply args))))))
+                (lambda (&rest args)
+                  (minibuffer-with-setup-hook
+                      (lambda () (setq-local completion-styles '(basic)))
+                    (apply args))))))
 
 ;;;; Org-faces
 (use-package org-faces
@@ -230,9 +230,9 @@ have `org-warning' face."
   :ghook 'org-mode-hook
   :general
   (:keymaps 'org-visibility-mode-map
-   :prefix "C-x"
-   "C-v" 'org-visibility-force-save ; Originally bound to `find-alternative-file'
-   "M-v" 'org-visibility-remove)
+            :prefix "C-x"
+            "C-v" 'org-visibility-force-save ; Originally bound to `find-alternative-file'
+            "M-v" 'org-visibility-remove)
   :custom
   (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
   (org-visibility-include-paths `(,org-directory))
@@ -375,7 +375,7 @@ have `org-warning' face."
         org-bars-extra-pixels-height 6 ; Use when headline font is larger than 1.0
         org-bars-color-options
         '(:desaturate-level-faces 30
-          :darken-level-faces 15)))
+                                  :darken-level-faces 15)))
 
 ;;;; Olivetti
 ;; Better writing environment
@@ -529,8 +529,8 @@ have `org-warning' face."
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
   :general (kb/yank-kill-keys
-             :keymaps 'org-mode-map
-             "b" '(org-web-tools-insert-link-for-url :wk "Paste https"))
+            :keymaps 'org-mode-map
+            "b" '(org-web-tools-insert-link-for-url :wk "Paste https"))
   :config
   ;; Immediately enter view mode
   (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode))))
@@ -540,8 +540,8 @@ have `org-warning' face."
 (use-package org-download
   :hook (org-mode . org-download-enable)
   :general (kb/yank-kill-keys
-             :keymaps 'org-mode-map
-             "i" '(org-download-clipboard :wk "Paste image from clipboard"))
+            :keymaps 'org-mode-map
+            "i" '(org-download-clipboard :wk "Paste image from clipboard"))
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "scrot -s %s") ; Use scrot

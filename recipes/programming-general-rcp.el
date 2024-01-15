@@ -72,10 +72,10 @@ punctuation."
 ;; https://codeberg.org/ideasman42/emacs-prog-face-refine
 (use-package hl-todo
   :general (:keymaps 'hl-todo-mode-map
-            :prefix "M-s t"
-            "n" 'hl-todo-next
-            "p" 'hl-todo-previous
-            "o" 'hl-todo-occur)
+                     :prefix "M-s t"
+                     "n" 'hl-todo-next
+                     "p" 'hl-todo-previous
+                     "o" 'hl-todo-occur)
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(markdown-mode text-mode))
@@ -96,7 +96,7 @@ punctuation."
 ;;;; Indent-bars
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package indent-bars
-  :disabled t                           ; FIXME 2023-08-18: Causes errors I think... 
+  :disabled t                           ; FIXME 2023-08-18: Causes errors I think...
   :elpaca (:type git :host github :repo "jdtsmith/indent-bars")
   ;; OPTIMIZE 2023-08-15: Have to add to `after-init-hook' because of issues
   ;; with daemon
@@ -173,29 +173,29 @@ punctuation."
    [remap imenu] 'kb/consult-imenu-versatile
    [remap recentf-open-files] 'consult-recent-file)
   (:keymaps 'goto-map
-   ;; Uses the `M-g' prefix
-   "e" 'consult-compile-error
-   "f" 'consult-flymake
-   "o" 'consult-outline
-   "m" 'consult-mark
-   "M" 'consult-global-mark
-   "I" 'consult-imenu-multi)
+            ;; Uses the `M-g' prefix
+            "e" 'consult-compile-error
+            "f" 'consult-flymake
+            "o" 'consult-outline
+            "m" 'consult-mark
+            "M" 'consult-global-mark
+            "I" 'consult-imenu-multi)
   (:keymaps 'search-map
-   ;; Uses the `M-s' prefix
-   "g" 'consult-grep
-   "G" 'consult-git-grep
-   "r" 'consult-ripgrep
-   "f" 'consult-find
-   "F" 'consult-locate
-   "l" 'consult-line
-   "i" 'consult-info)
+            ;; Uses the `M-s' prefix
+            "g" 'consult-grep
+            "G" 'consult-git-grep
+            "r" 'consult-ripgrep
+            "f" 'consult-find
+            "F" 'consult-locate
+            "l" 'consult-line
+            "i" 'consult-info)
   (:keymaps 'consult-narrow-map "?" 'consult-narrow-help) ; Show available narrow keys
   (:keymaps 'help-map [remap apropos-command] 'consult-apropos)
   (:keymaps 'org-mode-map [remap consult-outline] 'consult-org-heading)
   (:keymaps 'comint-mode-map [remap comint-history-isearch-backward-regexp] 'consult-history)
   (:keymaps 'minibuffer-local-map
-   [remap next-matching-history-element] 'consult-history
-   [remap previous-matching-history-element] 'consult-history)
+            [remap next-matching-history-element] 'consult-history
+            [remap previous-matching-history-element] 'consult-history)
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode eshell-history-ring eshell-history-index)
@@ -245,10 +245,10 @@ punctuation."
    "M-." 'embark-dwim ; Check README for why it's sensible to overwrite `xref-find-definitions'
    "C-h B" 'embark-bindings)
   (:keymaps 'vertico-map
-   "C-." 'embark-act
-   "C->" 'embark-become)
+            "C-." 'embark-act
+            "C->" 'embark-become)
   (:keymaps 'embark-symbol-map
-   "R" 'raise-sexp)
+            "R" 'raise-sexp)
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
@@ -326,7 +326,7 @@ punctuation."
   :gfhook 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
-   "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
+            "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :init

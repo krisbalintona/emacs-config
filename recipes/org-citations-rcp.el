@@ -45,13 +45,13 @@
 (use-package citar
   :after all-the-icons
   :general (:keymaps 'org-mode-map
-            :prefix "C-c b"
-            "b" 'citar-insert-citation
-            "r" 'citar-insert-reference
-            "o" 'citar-open
-            "f" 'citar-open-files
-            "n" 'citar-open-notes
-            "z" 'kb/citar-open-pdfs-in-zotero)
+                     :prefix "C-c b"
+                     "b" 'citar-insert-citation
+                     "r" 'citar-insert-reference
+                     "o" 'citar-open
+                     "f" 'citar-open-files
+                     "n" 'citar-open-notes
+                     "z" 'kb/citar-open-pdfs-in-zotero)
   :custom
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))
@@ -86,9 +86,9 @@
   ;; Immediately set citation prefix and suffix and enable `typo-mode'
   ;; temporarily while inserting
   (advice-add 'org-cite-insert :after
-                               #'(lambda (&rest _)
-                                   (when (eq org-cite-insert-processor 'citar)
-                                     (citar-org-update-prefix-suffix))))
+              #'(lambda (&rest _)
+                  (when (eq org-cite-insert-processor 'citar)
+                    (citar-org-update-prefix-suffix))))
   (advice-add 'citar-org-update-prefix-suffix
               :around (lambda (orig-fun &rest args)
                         (when (featurep 'typo)
@@ -150,7 +150,7 @@
   :after citar
   :diminish
   :general (:keymaps 'citar-embark-citation-map
-            "z" 'kb/citar-open-pdfs-in-zotero)
+                     "z" 'kb/citar-open-pdfs-in-zotero)
   :custom
   (citar-at-point-function 'embark-act)
   :init

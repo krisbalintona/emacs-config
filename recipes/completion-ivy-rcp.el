@@ -15,13 +15,13 @@
   :demand t
   :general
   (:keymaps 'ivy-minibuffer-map
-   "TAB" 'ivy-alt-done
-   "C-l" 'ivy-alt-done)
+            "TAB" 'ivy-alt-done
+            "C-l" 'ivy-alt-done)
   (:keymaps 'ivy-switch-buffer-map
-   "C-l" 'ivy-done
-   "C-d" 'ivy-switch-buffer-kill)
+            "C-l" 'ivy-done
+            "C-d" 'ivy-switch-buffer-kill)
   (:keymaps 'ivy-reverse-i-search-map
-   "C-d" 'ivy-reverse-i-search-kill)
+            "C-d" 'ivy-reverse-i-search-kill)
   :custom
   (ivy-initial-inputs-alist nil) ; Remove "^" when entering a ivy completion buffer
   (ivy-extra-directories nil) ; Remove ./ and ../
@@ -168,7 +168,7 @@
   :after ivy
   :general
   (:keymaps 'minibuffer-local-map
-   "C-r" '(counsel-minibuffer-history :wk "Minibuffer history"))
+            "C-r" '(counsel-minibuffer-history :wk "Minibuffer history"))
   (kb/leader-keys
    ;; "ff" '(counsel-find-file :wk "Find file")
    ;; "fF" '(counsel-file-jump :wk "Fuzzy find file")
