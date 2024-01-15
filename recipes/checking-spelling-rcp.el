@@ -127,16 +127,26 @@
   (advice-add 'wucuo-mode-on :override #'kb/wucuo-mode-on))
 
 ;;; Jinx
+;; JIT spell checker that uses `enchant'. The executable is enchant-2. See the
+;; manual for more information:
+;; https://abiword.github.io/enchant/src/enchant.html
 (use-package jinx
   :ensure-system-package ((enchant-2 . enchant)
-                          (pkgconf))
+                          (pkgconf)
+                          ;; Don't forget to install spell checker libraries!
+                          (hunspell)
+                          ("/usr/share/hunspell/en_US-large.dic" . hunspell-en_us)
+                          (hspell)      ; Hebrew
+                          (nuspell) ; Newest spell checker to be used by Firefox, Thunderbird, etc.
+                          (voikkospell . libvoikko)) ; Finish
   :elpaca (:depth nil
                   :repo "minad/jinx"
                   :files (:defaults "jinx-mod.c" "emacs-module.h"))
   :diminish
   :general (:keymaps 'jinx-mode-map
                      [remap ispell-word] 'jinx-correct
-                     "C-," 'jinx-correct)
+                     "C-," 'jinx-correct
+                     "C-M-$" #'jinx-languages)
   :init
   (global-jinx-mode)
   :config
