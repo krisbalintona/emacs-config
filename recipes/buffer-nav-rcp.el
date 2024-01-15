@@ -227,12 +227,6 @@ does."
     (set-face-attribute 'avy-lead-face-0 nil :inherit 'modus-themes-reset-soft)
     (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
     (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft)))
-;;; Link-hint
-;; Open links quickly
-(use-package link-hint
-  :general (:prefix "C-c l"
-            "o" 'link-hint-open-link
-            "c" 'link-hint-copy-link))
 
 ;;; Imenu
 (use-package imenu
