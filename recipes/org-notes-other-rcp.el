@@ -104,8 +104,8 @@ See `pdf-links-action-perform' for the interface."
            (size (pdf-view-image-size))
            (colors (pdf-util-face-colors 'pdf-links-read-link pdf-view-dark-minor-mode))
            (args (list
-                  :foreground (plist-get (pdf-info-getoptions) :render/foreground)
-                  :background (plist-get (pdf-info-getoptions) :render/background)
+                  :foreground (car colors)
+                  :background (cdr colors)
                   :formats
                   `((?c . ,(lambda (_edges) (pop key-strings)))
                     (?P . ,(number-to-string
