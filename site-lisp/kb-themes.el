@@ -204,6 +204,7 @@ Additionally, run `kb/themes-hook'."
       (kb/proper-load-theme-dark)
     (kb/proper-load-theme-light)))
 (add-hook 'elpaca-after-init-hook #'kb/themes-setup-base-faces)
+(add-hook 'server-after-make-frame-hook #'kb/themes-setup-base-faces)
 (elpaca-wait)
 
 ;;; kb-themes.el ends here
