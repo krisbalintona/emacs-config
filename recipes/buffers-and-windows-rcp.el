@@ -19,15 +19,6 @@
   :custom
   (server-client-instructions nil))
 
-;;; Desktop
-(use-package desktop
-  :elpaca nil
-  :hook (server-mode . (lambda ()
-                         (desktop-save-mode)
-                         (desktop-read)))
-  :custom
-  (desktop-load-locked-desktop 'check-pid))
-
 ;;; Window configurations
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time

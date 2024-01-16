@@ -49,41 +49,20 @@
 ;;; Saveplace
 ;; Save and restore the point's location in files
 (use-package saveplace
-  :demand
   :elpaca nil
   :custom
   (save-place-forget-unreadable-files t)
-  :config (save-place-mode))
+  :init
+  (save-place-mode))
 
 ;;; Desktop
 ;; Save buffers across Emacs sessions
 (use-package desktop
-  :disabled t
   :elpaca nil
-  :hook ((window-setup . desktop-save-mode)
-         (desktop-save-mode . desktop-read))
+  :hook ((server-mode . desktop-save-mode)
+         (window-setup . (lambda () (when desktop-save-mode (desktop-read)))))
   :custom
-  (desktop-dirname (no-littering-expand-var-file-name "desktop/"))
-  (desktop-base-file-name "emacs.desktop")
-  (desktop-path (list desktop-dirname))
-  (desktop-auto-save)
-  (desktop-save 'ask-if-new)
-  (desktop-files-not-to-save "^$")      ; Reload tramp paths
-  (desktop-load-locked-desktop 'ask)
-  (desktop-auto-save-timeout 20)
-  (desktop-buffers-not-to-save
-   (concat "\\("
-           "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
-           "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
-           "\\)$"))
-
-  ;; Lazy loading
-  (desktop-lazy-idle-delay 5)
-  (desktop-restore-eager nil)
-  (desktop-lazy-verbose nil)
-  ;; :config
-  ;; (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-  )
+  (desktop-load-locked-desktop 'check-pid))
 
 ;;; Super-save
 ;; Automatically save buffers when you do certain things
