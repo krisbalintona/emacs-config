@@ -970,7 +970,8 @@ This is a difference in multitude of %s."
 
 ;;; Goto-last-change
 (use-package goto-chg
-  :general ("C-z" 'goto-last-change))
+  :general ("H-(" 'goto-last-change
+            "H-)" 'goto-last-change-reverse))
 
 ;;; Fontify-patch
 (use-package fontify-patch
