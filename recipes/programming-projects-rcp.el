@@ -313,7 +313,7 @@ With a prefix argument, show NLINES of context."
   ;; their values may change (ever since I started using keychain in the Fish
   ;; shell to call ssh-agent). Requires the "keychain" package; sources
   ;; appropriate file in ~/.keychain/ to update environment variables
-  :hook (git-commit-post-finish . keychain-refresh-environment))
+  :hook ((elpaca-after-init git-commit-post-finish) . keychain-refresh-environment))
 
 ;;; VC
 ;;;; Itself
