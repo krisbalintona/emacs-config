@@ -9,10 +9,24 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Server
+;; Prefer Emacs server over Emacs daemon
+(use-package server
+  :demand
+  :elpaca nil
+  :hook (elpaca-after-init . (lambda () (unless (server-running-p)
+                                     (server-mode))))
+  :custom
+  (server-client-instructions nil))
+
 ;;; Desktop
-(require 'desktop)
-(desktop-save-mode t)
-(setq desktop-load-locked-desktop 'check-pid)
+(use-package desktop
+  :elpaca nil
+  :hook (server-mode . (lambda ()
+                         (desktop-save-mode)
+                         (desktop-read)))
+  :custom
+  (desktop-load-locked-desktop 'check-pid))
 
 ;;; Window configurations
 ;;;; Winner-mode
@@ -23,8 +37,9 @@
             "C-<right>" 'winner-redo)
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
-  (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*" ))
-  :init (winner-mode))
+  (winner-boring-buffers '("*Completions*"))
+  :init
+  (winner-mode))
 
 ;;;; Windmove
 (use-package windmove

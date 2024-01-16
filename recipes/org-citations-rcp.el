@@ -145,6 +145,18 @@
               citar-indicator-notes-icons
               citar-indicator-cited-icons)))
 
+;;; Citar-org
+;; Use `citar' with `org-cite'
+(use-package citar-org
+  :elpaca nil
+  :after citar
+  :hook (org-mode . citar-capf-setup)
+  :custom
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-org-styles-format 'long))
+
 ;;; Citar-embark
 (use-package citar-embark
   :after citar
@@ -155,17 +167,6 @@
   (citar-at-point-function 'embark-act)
   :init
   (citar-embark-mode))
-
-;;; Citar-org
-;; Use `citar' with `org-cite'
-(use-package citar-org
-  :elpaca nil
-  :hook (org-mode . citar-capf-setup)
-  :custom
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
-  (citar-org-styles-format 'long))
 
 ;;; org-citations-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

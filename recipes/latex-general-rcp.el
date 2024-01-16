@@ -44,7 +44,6 @@
   (TeX-engine 'luatex)
   (TeX-command-default "LuaLaTeX")
   (TeX-source-correlate-start-server nil)
-  (TeX-source-correlate-method 'synctex)
   (TeX-master 'dwim)
   (TeX-parse-self t)
   (TeX-auto-save t)

@@ -285,74 +285,73 @@
        (div ,(intern org-html-content-class) (,@font (line-height . "12pt")))))))
 
 ;;;; Custom signatures
-(with-eval-after-load 'org-msg
-  (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
-    "Separator between email body and its signature.")
-  (defvar kb/signature-open "\n\n#+begin_signature\n"
-    "String meant to begin email signatures.")
-  (defvar kb/signature-close "\n#+end_signature"
-    "String meant to end email signatures.")
-  (setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
-  (defvar kb/signature-alist nil
-    "Alist of aliases and their corresponding email signatures.")
+(defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
+  "Separator between email body and its signature.")
+(defvar kb/signature-open "\n\n#+begin_signature\n"
+  "String meant to begin email signatures.")
+(defvar kb/signature-close "\n#+end_signature"
+  "String meant to end email signatures.")
+(setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
+(defvar kb/signature-alist nil
+  "Alist of aliases and their corresponding email signatures.")
 
-  (defun kb/mu4e-select-signature (alias)
-    "Select one of the signatures from `kb/signature-alist'."
-    (interactive (list (completing-read
-                        "Insert signature: "
-                        (cl-loop for (key . value) in kb/signature-alist
-                                 collect key))))
-    (or (alist-get alias kb/signature-alist nil nil #'string=)
-        ;; If a signature was manually typed rather than an alias chosen.
-        ;; Example: if "Test" is typed, the result will be:
-        ;; "#+begin_signature (kb/signature-open)
-        ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (kb/signature-separator)
-        ;; Test,
-        ;; Kristoffer
-        ;; #+end_signature    (kb/signature-close)"
-        (format "%s%s\n%s%s%s"
-                kb/signature-open
-                kb/signature-separator
-                alias
-                ",\nKristoffer"
-                kb/signature-close)))
-  (defun kb/mu4e-insert-signature ()
-    "Insert a selection from `kb/signature-alist'.
+(defun kb/mu4e-select-signature (alias)
+  "Select one of the signatures from `kb/signature-alist'."
+  (interactive (list (completing-read
+                      "Insert signature: "
+                      (cl-loop for (key . value) in kb/signature-alist
+                               collect key))))
+  (or (alist-get alias kb/signature-alist nil nil #'string=)
+      ;; If a signature was manually typed rather than an alias chosen.
+      ;; Example: if "Test" is typed, the result will be:
+      ;; "#+begin_signature (kb/signature-open)
+      ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (kb/signature-separator)
+      ;; Test,
+      ;; Kristoffer
+      ;; #+end_signature    (kb/signature-close)"
+      (format "%s%s\n%s%s%s"
+              kb/signature-open
+              kb/signature-separator
+              alias
+              ",\nKristoffer"
+              kb/signature-close)))
+(defun kb/mu4e-insert-signature ()
+  "Insert a selection from `kb/signature-alist'.
 
 Replaces existing signature if present in buffer. Relies on
 signatures being wrapped in `kb/signature-open' and
 `kb/signature-close'."
-    (interactive)
+  (interactive)
+  (save-excursion
+    (let ((sig (call-interactively 'kb/mu4e-select-signature))
+          (existing-sig-beg
+           (save-excursion
+             (save-match-data
+               (goto-char (point-min))
+               (when (search-forward kb/signature-open nil t)
+                 (match-beginning 0)))))
+          (existing-sig-end
+           (save-excursion
+             (save-match-data
+               (goto-char (point-min))
+               (search-forward kb/signature-close nil t)))))
+      (if (and existing-sig-beg existing-sig-end)
+          ;; Replace existing signature
+          (progn
+            (goto-char existing-sig-beg)
+            (delete-region existing-sig-beg existing-sig-end)
+            (insert sig))
+        ;; Remove leading whitespace from sig if inserting
+        (insert (string-trim-left sig)))))
+  ;; Change email signature separator to the conventional "--" for text-only
+  ;; emails
+  (when (and (equal major-mode 'org-msg-edit-mode)
+             (equal (org-msg-get-prop "alternatives")
+                    '(text)))
     (save-excursion
-      (let ((sig (call-interactively 'kb/mu4e-select-signature))
-            (existing-sig-beg
-             (save-excursion
-               (save-match-data
-                 (goto-char (point-min))
-                 (when (search-forward kb/signature-open nil t)
-                   (match-beginning 0)))))
-            (existing-sig-end
-             (save-excursion
-               (save-match-data
-                 (goto-char (point-min))
-                 (search-forward kb/signature-close nil t)))))
-        (if (and existing-sig-beg existing-sig-end)
-            ;; Replace existing signature
-            (progn
-              (goto-char existing-sig-beg)
-              (delete-region existing-sig-beg existing-sig-end)
-              (insert sig))
-          ;; Remove leading whitespace from sig if inserting
-          (insert (string-trim-left sig)))))
-    ;; Change email signature separator to the conventional "--" for text-only
-    ;; emails
-    (when (and (equal major-mode 'org-msg-edit-mode)
-               (equal (org-msg-get-prop "alternatives")
-                      '(text)))
-      (save-excursion
-        (goto-char (point-min))
-        (when (search-forward kb/signature-separator nil t)
-          (replace-match "--" 1))))))
+      (goto-char (point-min))
+      (when (search-forward kb/signature-separator nil t)
+        (replace-match "--" 1)))))
 
 ;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg

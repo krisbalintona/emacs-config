@@ -20,6 +20,7 @@
   :elpaca nil
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :hook ((elpaca-after-init . (lambda () (when (daemonp) (mu4e t))))
+         (server-mode . (lambda () (mu4e t)))
          (window-setup . (lambda ()
                            (setq mu4e-headers-personal-mark  '("p" . " ")) ; Always set this
                            (unless (bound-and-true-p kb/mu4e-initialise-icons)
@@ -340,7 +341,8 @@
           mm-automatic-display (remove "text/html" mm-automatic-display))) ; If I really don't want to see HTML
 
   ;; Sending and composition
-  (org-msg-mode))
+  (with-eval-after-load 'org-msg
+    (org-msg-mode)))
 
 ;;;; Mu4e-contexts
 (with-eval-after-load 'mu4e

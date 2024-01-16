@@ -29,6 +29,7 @@
     (add-to-list 'savehist-additional-variables var))
   (savehist-mode)
 
+  ;; REVIEW 2024-01-16: Not sure what this does...
   (unless (daemonp)
     (load savehist-file nil (not (called-interactively-p 'interactive)))))
 
