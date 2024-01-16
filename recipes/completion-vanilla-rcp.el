@@ -44,10 +44,12 @@
 ;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
 ;; https://github.com/minad/vertico
 (defun crm-indicator (args)
-  (cons (format "[CRM%s] %s"
-                (replace-regexp-in-string
-                 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                 crm-separator)
+  (cons (format "[completing-read-multiple: %s]  %s"
+                (propertize
+                 (replace-regexp-in-string
+                  "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                  crm-separator)
+                 'face 'error)
                 (car args))
         (cdr args)))
 (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
@@ -138,12 +140,12 @@
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
-  (completion-styles '(orderless flex))
+  (completion-styles '(basic initials substring flex orderless))
   (orderless-matching-styles
    '(orderless-prefixes
-     orderless-initialism
+     ;; orderless-initialism
      orderless-regexp
-     orderless-literal
+     ;; orderless-literal
      ;; orderless-flex
      ;; orderless-strict-initialism
      ;; orderless-strict-leading-initialism
@@ -161,12 +163,7 @@
    '((file (styles . (basic
                       basic-remote ; For `tramp' hostname completion with `vertico'
                       partial-completion  ; Partial completion for file paths!
-                      orderless)))
-     ;; NOTE 2023-01-14: These are taken from Prot's config
-     (project-file (styles . (basic substring partial-completion orderless)))
-     (imenu (styles . (basic substring orderless)))
-     (kill-ring (styles . (basic substring orderless)))
-     (consult-location (styles . (basic substring orderless)))))
+                      orderless)))))
   :init
   (defun orderless--strict-*-initialism (component &optional anchored)
     "Match a COMPONENT as a strict initialism, optionally ANCHORED.
