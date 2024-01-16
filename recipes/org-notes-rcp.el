@@ -348,7 +348,10 @@ Delete the original subtree."
              (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
         (progn
           (delete-region (org-entry-beginning-position) (org-entry-end-position))
-          (denote heading (org-get-tags) 'org)
+          (denote heading
+                  (denote-keywords-prompt nil (mapconcat 'identity (org-get-tags) ","))
+                  'org
+                  (denote-subdirectory-prompt))
           (insert text))
       (user-error "No subtree to extract; aborting"))))
 
