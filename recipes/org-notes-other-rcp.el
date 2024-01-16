@@ -84,8 +84,8 @@ reading links."
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                              (<= x 1)
-                                              (>= x 0))))))
+                                         (<= x 1)
+                                         (>= x 0))))))
 
   (defun kb/avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.
@@ -181,7 +181,9 @@ annotation immediately after creation."
            (end (kb/avy-pdf-get-coordinates :end))
            (edges (append (cl-subseq start 0 2) (cl-subseq end 2 4)))
            (pdf-annot-activate-created-annotations activate))
-      (pdf-annot-add-markup-annotation edges 'highlight)))
+      (pdf-annot-add-markup-annotation edges
+                                       'highlight
+                                       (completing-read "Annotation color: " pdf-annot-color-history))))
 
   (general-define-key :keymaps 'pdf-view-mode-map
                       [remap avy-goto-char-timer] #'kb/avy-pdf-highlight))
