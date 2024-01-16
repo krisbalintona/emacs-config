@@ -58,7 +58,7 @@
                (pdf-view-active-region-p))
       (let* ((raw-text (mapconcat 'identity (pdf-view-active-region-text) ? ))
              (process-text-1 (replace-regexp-in-string "-\n" "" raw-text))
-             (process-text-2 (replace-regexp-in-string "\n" " " no-hyphen-line-breaks)))
+             (process-text-2 (replace-regexp-in-string "\n" " " process-text-1)))
         process-text-2)))
   (advice-add 'org-noter-pdf--get-selected-text
               :override #'kb/org-noter-pdf--get-selected-text))
