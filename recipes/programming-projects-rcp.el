@@ -69,22 +69,33 @@
   :general
   ([remap project-find-regexp] 'consult-ripgrep)
   (:keymaps 'project-prefix-map
-            "m" #'magit-project-status)
+            "m" 'magit-project-status
+            "o" 'kb/project-multi-occur)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-switch-commands
    '((affe-find "Find file" "f")
      (consult-ripgrep "Regexp" "g")
      (magit-project-status "Magit")
-     (project-vc-dir "VC-git")
      (project-switch-to-buffer "Buffer" "b")
      (project-query-replace-regexp "Replace regexp")
+     (kb/project-multi-occur "Multi-occur" "o")
      (project-dired "Open dired")
      (project-find-dir "Open directory in dired")
      (project-compile "Compile")
      (project-eshell "Eshell")
      (project-shell "Shell")))
-  (project-vc-merge-submodules nil)) ; Consider submodules as their own projects?
+  (project-vc-merge-submodules nil) ; Consider submodules as their own projects?
+  :init
+  ;; Inspired by `projectile-multi-occur'
+  (defun kb/project-multi-occur (&optional nlines)
+    "Do a `multi-occur' in the project's buffers.
+With a prefix argument, show NLINES of context."
+    (interactive "P")
+    (let ((project (project-current)))
+      (multi-occur (project-buffers project)
+                   (car (occur-read-primary-args))
+                   nlines))))
 
 ;;;; Xref
 (use-package xref
