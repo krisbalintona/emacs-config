@@ -158,6 +158,15 @@ See `kb/consult-org-depend’."
 (use-package org-timeblock
   :elpaca (:type git :host github :repo "ichernyshovvv/org-timeblock"))
 
+;;; Custom org-tags-view org-link type
+(with-eval-after-load 'org
+  (defun kb/org-tag-link (tag)
+    "Display a list of TODO headlines with tag TAG.
+With prefix argument, also display headlines without a TODO keyword."
+    (org-tags-view (null current-prefix-arg) tag))
+
+  (org-add-link-type "tag" 'kb/org-tag-link))
+
 ;;; org-agenda-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-agenda-other-rcp)
