@@ -220,7 +220,6 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;; Tab-bar
 (use-package tab-bar
   :elpaca nil
-  :demand
   :general
   (:keymaps 'tab-prefix-map
             "w" 'tab-bar-move-window-to-tab)
@@ -234,7 +233,7 @@ If buffer-or-name is nil return current buffer's mode."
    '(tab-bar-format-tabs-groups
      tab-bar-format-align-right
      tab-bar-format-global))
-  :config
+  :init
   (tab-bar-mode)
   (tab-bar-history-mode))
 

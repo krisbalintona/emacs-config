@@ -70,11 +70,9 @@
    '(flymake-mode-line-exception flymake-mode-line-counters))
   (flymake-mode-line-counter-format
    '(:eval (when (cl-plusp (length (flymake-diagnostics)))
-             '("["
-               flymake-mode-line-error-counter
+             '(flymake-mode-line-error-counter
                flymake-mode-line-warning-counter
-               flymake-mode-line-note-counter
-               "]"))))
+               flymake-mode-line-note-counter))))
   (elisp-flymake-byte-compile-load-path
    (append (list
             "./"

@@ -132,9 +132,23 @@
   (set-face-attribute 'mode-line nil
                       :family kb/themes-mode-line-font
                       ;; :height 113)      ; JetBrainsMono Nerd Font
-                      :height 135)      ; Iosevka Aile
+                      :height 135       ; Iosevka Aile
+                      :box `(:line-width 4
+                                         :color
+                                         ,(face-background 'mode-line)
+                                         :style nil))
   (set-face-attribute 'mode-line-inactive nil
+                      :box `(:line-width 4
+                                         :color ,(face-background 'mode-line-inactive)
+                                         :style nil)
                       :inherit 'mode-line)
+
+  (dolist (face (list 'tab-bar-tab
+                      'tab-bar-tab-inactive
+                      'tab-bar-tab-group-current
+                      'tab-bar-tab-group-inactive))
+    (set-face-attribute face nil
+                        :family (face-attribute 'variable-pitch :family)))
 
   (set-face-background 'fringe (face-attribute 'default :background))
   ;; Note that the vertical border is distinct from the window divider when

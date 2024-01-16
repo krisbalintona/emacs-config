@@ -873,19 +873,20 @@ This is a difference in multitude of %s."
 ;;; Recursion-indicator
 (use-package recursion-indicator
   :init
-  (minibuffer-depth-indicate-mode)
   (recursion-indicator-mode)
+  (minibuffer-depth-indicate-mode -1)
   :config
   ;; Thanks to Daniel Mendler for this! It removes the square brackets that
   ;; denote recursive edits in the modeline. I do not need them because I am
   ;; using Daniel's `recursion-indicator':
   ;; <https://github.com/minad/recursion-indicator>.
-  (setq-default mode-line-modes
-                (seq-filter (lambda (s)
-                              (not (and (stringp s)
-                                        (string-match-p
-                                         "^\\(%\\[\\|%\\]\\)$" s))))
-                            mode-line-modes)))
+  (with-eval-after-load 'themes-rcp
+    (setq-default kb/mode-line-modes
+                  (seq-filter (lambda (s)
+                                (not (and (stringp s)
+                                          (string-match-p
+                                           "^\\(%\\[\\|%\\]\\)$" s))))
+                              kb/mode-line-modes))))
 
 ;;; Lorem-ipsum
 ;; Sample text
