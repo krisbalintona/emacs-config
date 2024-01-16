@@ -9,6 +9,11 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Desktop
+(require 'desktop)
+(desktop-save-mode t)
+(setq desktop-load-locked-desktop 'check-pid)
+
 ;;; Window configurations
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
