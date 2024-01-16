@@ -89,7 +89,7 @@
 
   (defun kb/denote-auto-rename ()
     "Auto rename denote file."
-    (let ((f (buffer-file-name)))
+    (when-let ((f (buffer-file-name)))
       (when (and (file-in-directory-p f denote-directory)
                  (denote-filename-is-note-p f))
         (denote-rename-file-using-front-matter f :auto-confirm)))))
