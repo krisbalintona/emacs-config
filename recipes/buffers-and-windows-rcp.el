@@ -392,9 +392,53 @@ If buffer-or-name is nil return current buffer's mode."
   :config
   (bookmark-maybe-load-default-file))   ; Load bookmarks immediately for access
 
-;;;; Bufler
-(use-package bufler
-  :general ([remap list-buffers] 'bufler))
+;;;; Ibuffer
+(use-package ibuffer
+  :elpaca nil
+  :general ([remap list-buffers] 'ibuffer)
+  :custom
+  (ibuffer-save-with-custom nil)
+  (ibuffer-default-sorting-mode 'recency)
+  (ibuffer-directory-abbrev-alist
+   `((,(file-name-as-directory (expand-file-name kb/notes-dir)) . ,(propertize "Notes/" 'face 'bold))
+     (,(expand-file-name user-emacs-directory) . ,(propertize "Emacs/" 'face 'bold))))
+  (ibuffer-eliding-string "…")
+  (ibuffer-jump-offer-only-visible-buffers t)
+  (ibuffer-old-time 48)
+  (ibuffer-expert nil)
+  (ibuffer-show-empty-filter-groups t)
+  (ibuffer-formats
+   `((mark modified read-only locked
+           " " (icon 2 2 :left :elide)
+           " " (name 18 18 :left :elide)
+           " " (size 9 -1 :right)
+           " " (mode 16 16 :left :elide)
+           " " filename-and-process)
+     (mark " " (name 16 -1) " " filename)))
+  (ibuffer-filter-group-name-face '(:inherit (success bold)))
+  (ibuffer-saved-filter-groups
+   `(("Basic"
+      ("Help" ,(-flatten `(or ,(mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes))))
+      ("Notes" (directory . ,(expand-file-name kb/notes-dir)))
+      ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
+  :config
+  ;; The following columns are taken from Doom Emacs.
+  ;; Display buffer icons on GUI
+  (define-ibuffer-column icon (:name "   ")
+    (let ((icon (if (and (buffer-file-name)
+                         (nerd-icons-auto-mode-match?))
+                    (nerd-icons-icon-for-file (file-name-nondirectory (buffer-file-name)) :v-adjust -0.05)
+                  (nerd-icons-icon-for-mode major-mode :v-adjust -0.05))))
+      (if (symbolp icon)
+          (setq icon (nerd-icons-faicon "nf-fa-file_o" :face 'nerd-icons-dsilver :height 0.8 :v-adjust 0.0))
+        icon)))
+
+  ;; Redefine size column to display human readable size
+  (define-ibuffer-column size
+    (:name "Size"
+           :inline t
+           :header-mouse-map ibuffer-size-header-map)
+    (file-size-human-readable (buffer-size))))
 
 ;;;; Burly
 (use-package burly
