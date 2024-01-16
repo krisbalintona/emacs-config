@@ -528,9 +528,9 @@ have `org-warning' face."
 ;;;; Org-web-tools
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
-  :general (kb/yank-kill-keys
+  :general (kb/yank-keys
             :keymaps 'org-mode-map
-            "b" '(org-web-tools-insert-link-for-url :wk "Paste https"))
+            "b" 'org-web-tools-insert-link-for-url)
   :config
   ;; Immediately enter view mode
   (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode))))
@@ -538,10 +538,11 @@ have `org-warning' face."
 ;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download
+  :ensure-system-package (scrot)
   :hook (org-mode . org-download-enable)
-  :general (kb/yank-kill-keys
+  :general (kb/yank-keys
             :keymaps 'org-mode-map
-            "i" '(org-download-clipboard :wk "Paste image from clipboard"))
+            "i" 'org-download-clipboard)
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "scrot -s %s") ; Use scrot

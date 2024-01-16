@@ -32,7 +32,7 @@
   (:keymaps 'ledger-mode-map
             :states 'insert
             "TAB" 'tab-to-tab-stop)
-  (kb/yank-kill-keys
+  (kb/yank-keys
    :keymaps 'ledger-mode-map
    :states '(normal insert)
    "d" '((lambda (prefix)
