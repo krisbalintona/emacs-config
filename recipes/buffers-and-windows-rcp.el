@@ -35,9 +35,16 @@
 ;;;; Windmove
 (use-package windmove
   :elpaca nil
+  :general (:keymaps 'windmove-mode-map
+                     "H-h" 'windmove-left
+                     "H-j" 'windmove-down
+                     "H-k" 'windmove-up
+                     "H-l" 'windmove-right
+                     "H-<left>" 'windmove-left
+                     "H-<down>" 'windmove-down
+                     "H-<up>" 'windmove-up
+                     "H-<right>" 'windmove-right)
   :init
-  (windmove-default-keybindings '(hyper))
-  (windmove-swap-states-default-keybindings '(shift hyper))
   (windmove-mode))
 
 ;;;; Transpose-frame
