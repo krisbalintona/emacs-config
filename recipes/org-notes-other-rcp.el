@@ -343,20 +343,32 @@ See `org-noter' for details and ARG usage."
 ;;; Org-remark
 (use-package org-remark
   :after org
+  :hook ((Info-mode eww-mode) . org-remark-mode)
   :general (:keymaps 'org-remark-mode-map
                      :prefix "C-c r"
-                     "m" #'org-remark-mark
-                     "r" #'org-remark-remove
-                     "c" #'org-remark-change
-                     "t" #'org-remark-toggle
-                     "o" #'org-remark-open
-                     "v" #'org-remark-view
-                     "n" #'org-remark-view-next
-                     "p" #'org-remark-view-prev)
+                     "m" 'org-remark-mark
+                     "r" 'org-remark-remove
+                     "c" 'org-remark-change
+                     "t" 'org-remark-toggle
+                     "o" 'org-remark-open
+                     "v" 'org-remark-view
+                     "n" 'org-remark-view-next
+                     "p" 'org-remark-view-prev)
+  :custom
+  (org-remark-notes-auto-delete :auto-delete)
+  (org-remark-source-file-name 'abbreviate-file-name)
+  (org-remark-notes-file-name
+   (no-littering-expand-var-file-name "org-remark/marginalia.org"))
   :config
-  (require 'org-remark-global-tracking)
   (org-remark-global-tracking-mode)
-  (diminish 'org-remark-global-tracking-mode))
+  (diminish 'org-remark-global-tracking-mode)
+
+  (with-eval-after-load 'eww
+    (org-remark-eww-mode 1))
+  (with-eval-after-load 'nov
+    (org-remark-nov-mode 1))
+  (with-eval-after-load 'info
+    (org-remark-info-mode 1)))
 
 ;;; Org-transclusion
 ;; Enable transclusion of org files
