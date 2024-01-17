@@ -330,6 +330,19 @@ The list of tags is provided by `prot-elfeed-search-tags'."
    )
   )
 
+;;; Wombag
+(use-package wombag
+  :elpaca (:host github :repo "karthink/wombag")
+  :general (kb/open-keys "W" 'wombag)
+  :custom
+  (wombag-dir (no-littering-expand-var-file-name "wombag"))
+  (wombag-host "https://app.wallabag.it")
+  (wombag-username "krisbalintona")
+  (wombag-password (auth-source-pick-first-password :host "app.wallabag.it"))
+  (wombag-client-id "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
+  (wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
+  (wombag-search-filter ""))
+
 ;;; rss-feed-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'rss-feed-rcp)
