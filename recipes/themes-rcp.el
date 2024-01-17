@@ -142,36 +142,11 @@ change to if called with ARG."
 ;; `hl-line-mode' but contextual based on mode (e.g. more visible)
 (use-package lin
   :custom
-  (lin-face 'kb/lin-face)
-  (lin-mode-hooks
-   '(prog-mode-hook
-     dired-mode-hook
-     elfeed-search-mode-hook
-     git-rebase-mode-hook
-     grep-mode-hook
-     log-view-mode-hook
-     magit-log-mode-hook
-     mu4e-headers-mode
-     notmuch-search-mode-hook
-     notmuch-tree-mode-hook
-     occur-mode-hook
-     org-agenda-mode-hook
-     proced-mode-hook
-     tabulated-list-mode-hook
-     ;; My hooks
-     LaTeX-mode-hook
-     org-mode-hook
-     eww-mode-hook))
+  (lin-face 'lin-cyan)
   :init
-  (defface kb/lin-face
-    '((default :foreground unspecified :underline nil :extend t)
-      (((class color) (min-colors 88) (background light))
-       :background "#c0e4ff")
-      (((class color) (min-colors 88) (background dark))
-       :background "#212428")
-      (t :background "blue"))
-    "My face for `lin-face'.")
-  (lin-global-mode))
+  (lin-global-mode)
+  :config
+  (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
 
 ;;; Modeline
 ;;;; Nerd-icons
