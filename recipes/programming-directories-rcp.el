@@ -98,14 +98,6 @@ command."
   ;; Try to use `xdg-open' before anything else
   (add-to-list 'dired-open-functions #'dired-open-xdg t)) ; Doesn't work as expected!
 
-;;;; Dired-single
-;; Use the same dired buffer for every directory you open using `dired'.
-(use-package dired-single
-  :disabled             ; Parity of `dired-kill-when-opening-new-dired-buffer'?
-  :general (:keymaps 'dired-mode-map
-                     ;; [remap dired-find-file] 'dired-single-buffer
-                     [remap dired-up-directory] 'dired-single-up-directory))
-
 ;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
@@ -114,6 +106,18 @@ command."
                      "H" 'dired-hide-dotfiles-mode)
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
+
+;;;; Dired-hist
+;; History for dired buffers
+(use-package dired-hist
+  :elpaca (:host github :repo "karthink/dired-hist")
+  :after dired
+  :general
+  (:keymaps 'dired-mode-map
+            "l" 'dired-hist-go-back
+            "r" 'dired-hist-go-forward)
+  :init
+  (dired-hist-mode))
 
 ;;;; Consult-dir
 (use-package consult-dir

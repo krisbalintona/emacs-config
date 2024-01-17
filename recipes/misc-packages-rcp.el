@@ -974,7 +974,7 @@ This is a difference in multitude of %s."
                  :host github
                  :repo "whame/fontify-patch")
   ;; To fontify mail containing patches with the email client
-  :hook (gnus-part-display . 'fontify-patch-buffer))
+  :hook (gnus-part-display . fontify-patch-buffer))
 
 ;;; Smog-mode
 ;; Report statistics on writing style, word use and readability of prose
@@ -1012,6 +1012,7 @@ This is a difference in multitude of %s."
   ;; Killing
   (kill-do-not-save-duplicates t)
   (kill-ring-deindent-mode nil)
+  (window-divider-default-places 'bottom-only)
   :config
   (global-so-long-mode)
   (repeat-mode)
