@@ -40,7 +40,7 @@
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick t)
   (pdf-annot-color-history              ; "Default" colors
-   '("yellow" "red" "green" "blue" "purple"))
+   '("yellow" "SteelBlue1" "SeaGreen3" "LightSalmon1" "MediumPurple1"))
   :init
   ;; Taken from Doom
   (defun kb/pdf-cleanup-windows-h ()
@@ -183,12 +183,12 @@ annotation immediately after creation."
            (pdf-annot-activate-created-annotations activate))
       (pdf-annot-add-markup-annotation edges
                                        'highlight
-                                       (completing-read "Annotation color: " pdf-annot-color-history))))
+                                       (pdf-annot-read-color "Annotation color: "))))
 
   (general-define-key :keymaps 'pdf-view-mode-map
                       [remap avy-goto-char-timer] #'kb/avy-pdf-highlight))
 
-;;;; Pdf-annot-list custom (tablist) filter
+;;;; Pdf-annot-list custom (tablist) color filter
 (with-eval-after-load 'pdf-tools
   (defun kb/pdf-annot-list-filter-color-regexp ()
     "Regexp search the text after selecting a color.
@@ -276,9 +276,9 @@ highlights."
   (org-noter-always-create-frame nil)
   (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
   (org-noter-use-indirect-buffer t)
-  (org-noter-hide-other nil)
+  (org-noter-disable-narrowing nil)
+  (org-noter-hide-other t)
   (org-noter-auto-save-last-location nil)
-  (org-noter-disable-narrowing t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-highlight-selected-text t) ; Always leave highlights from annotations
   (org-noter-arrow-foreground-color "red")
