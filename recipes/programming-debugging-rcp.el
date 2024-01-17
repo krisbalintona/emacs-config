@@ -84,24 +84,19 @@
 
 ;;; Dape
 ;; Dap-mode but without LSP-mode
-;; FIXME 2024-01-10: UNTESTED
 (use-package dape
+  :demand ; FIXME 2024-01-17: Right now I need this unless I want to manually call `dape' to load package
   :elpaca (:type git :host github :repo "svaante/dape")
   :custom
-  ;; To use window configuration like gud (gdb-mi)
-  (dape-buffer-window-arrangement 'gud)
+  (dape-key-prefix (kbd "H-d"))
+  (dape-buffer-window-arrangement 'right)
+  (dape-stepping-granularity 'instruction)
+  (dape-info-variable-table-aligned t)
   :config
-  ;; To display info and/or repl buffers on stopped
-  (add-hook 'dape-on-stopped-hooks 'dape-info)
-  (add-hook 'dape-on-stopped-hooks 'dape-repl)
-
-  ;; Kill compile buffer on build success
-  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
-
-  ;; Save buffers on startup, useful for interpreted languages
-  (add-hook 'dape-on-start-hooks
-            (defun dape--save-on-start ()
-              (save-some-buffers t t))))
+  (defun kb/dape--save-on-start ()
+    "Save buffers on startup."
+    (save-some-buffers nil t))
+  (add-hook 'dape-on-start-hooks 'kb/dape--save-on-start))
 
 ;;; programming-debugging-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
