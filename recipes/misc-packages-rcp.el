@@ -973,9 +973,8 @@ This is a difference in multitude of %s."
   :elpaca (:type git
                  :host github
                  :repo "whame/fontify-patch")
-  :config
   ;; To fontify mail containing patches with the email client
-  (add-hook 'gnus-part-display-hook 'fontify-patch-buffer))
+  :hook (gnus-part-display . 'fontify-patch-buffer))
 
 ;;; Smog-mode
 ;; Report statistics on writing style, word use and readability of prose
@@ -983,6 +982,15 @@ This is a difference in multitude of %s."
   :ensure-system-package diction
   :custom
   (smog-command "style -L en --print-nom-passive"))
+
+;;; Selection-highlight-mode
+(use-package selection-highlight-mode
+  :elpaca (:host github
+                 :repo "balloneij/selection-highlight-mode")
+  :custom
+  (selection-highlight-mode-min-length 3)
+  :init
+  (selection-highlight-mode))
 
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
