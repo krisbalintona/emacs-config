@@ -294,6 +294,7 @@ highlights."
 (use-package zotxt
   :custom
   (zotxt-default-bibliography-style "modern-language-association")
+  (org-zotxt-link-description-style :citekey)
   :init
   (require 'org-zotxt-noter)
   (org-zotxt-mode)
