@@ -49,6 +49,7 @@
 ;;;; Window
 (use-package window
   :elpaca nil
+  :general ("M-o" 'other-window)
   :custom
   (window-resize-pixelwise t)
   (window-sides-vertical t)
