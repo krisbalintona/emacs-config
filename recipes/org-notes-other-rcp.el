@@ -36,6 +36,7 @@
                                   (hl-line-mode -1))))
   :custom
   (pdf-view-display-size 'fit-page)
+  (pdf-view-continuous nil) ; REVIEW 2024-01-16: Change this when I get to use image-roll?
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick t)
