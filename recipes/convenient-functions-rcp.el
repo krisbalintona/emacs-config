@@ -42,7 +42,7 @@ act upon that region instead."
       (indent-region beg end nil)
       (delete-trailing-whitespace))))
 
-(defun kb/format-buffer-indentation--fill-column ()
+(defun kb/format-buffer-indentation--fill-column (beg end)
   "Basic indentation fix and wrap comments."
   (kb/format-buffer-indentation--base (or beg (point-min)) (or end (point-max)))
   (unless (region-active-p)
