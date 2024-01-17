@@ -366,19 +366,14 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Pulsar
 (use-package pulsar
-  :hook
-  (consult-after-jump . pulsar-recenter-top)
-  (consult-after-jump . pulsar-reveal-entry)
-  (imenu-after-jump . pulsar-recenter-top)
-  (imenu-after-jump . pulsar-reveal-entry)
+  :hook ((consult-after-jump . pulsar-recenter-top)
+         (consult-after-jump . pulsar-reveal-entry)
+         (imenu-after-jump . pulsar-recenter-top)
+         (imenu-after-jump . pulsar-reveal-entry))
   :custom
-  (pulsar-iterations 3)
-  (pulsar-delay 0.1)
+  (pulsar-pulse nil)
   :init
-  (pulsar-global-mode)
-  :config
-  (add-to-list 'pulsar-pulse-functions 'scroll-up-command)
-  (add-to-list 'pulsar-pulse-functions 'scroll-down-command))
+  (pulsar-global-mode))
 
 ;;; Pocket-reader
 ;; View my Pocket
