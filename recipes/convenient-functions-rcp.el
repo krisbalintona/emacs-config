@@ -91,8 +91,8 @@ act upon that region instead."
       (kb/format-buffer-indentation--fill-column beg end))
      (t
       (kb/format-buffer-indentation--base beg end)))
-    (message (format-time-string "Formatting buffer... Done. Took %3N milliseconds."
-                                 (float-time (time-subtract start-time (current-time)))))))
+    (message (format-time-string "Formatting buffer... Done. Took %s.%3N seconds."
+                                 (float-time (time-subtract (current-time) start-time))))))
 (general-define-key [remap indent-region] 'kb/format-buffer-indentation)
 
 ;;; Yank current buffer's file-path
