@@ -131,7 +131,8 @@
 
   (defun kb/mu4e-main-set-window-conf (&rest r)
     "Set the value of `kb/mu4e-main-pre-window-conf'."
-    (setq kb/mu4e-main-pre-window-conf (current-window-configuration)))
+    (unless (derived-mode-p '(mu4e-main-mode mu4e-view-mode mu4e-headers-mode))
+      (setq kb/mu4e-main-pre-window-conf (current-window-configuration))))
   (advice-add 'mu4e :before #'kb/mu4e-main-set-window-conf)
 
   (defun kb/mu4e-main-bury-buffer ()
