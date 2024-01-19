@@ -502,10 +502,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
               (color-darken-name initial-color 15))))
       (set-face-foreground 'work-timer-mode-line foreground)))
   :config
-  (work-timer-with-org-clock-mode)
-
-  (with-eval-after-load 'savehist
-    (add-to-list 'savehist-additional-variables 'work-timer-history)))
+  (work-timer-with-org-clock-mode))
 
 ;;; org-agenda-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
