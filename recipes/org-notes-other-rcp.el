@@ -232,18 +232,20 @@ highlights."
       (let* ((selections (completing-read-multiple "Select color: "
                                                    (mapcar 'car color-alist)
                                                    nil t))
-             (color-filter (concat "("
-                                   (string-join
-                                    (cl-loop for s in selections
-                                             collect (concat "Type-Color =~ " (cadr (assoc-string s color-alist))))
-                                    " || ")
-                                   ")"))
+             (color-filter (when selections
+                             (concat "("
+                                     (string-join
+                                      (cl-loop for s in selections
+                                               collect (concat "Type-Color =~ " (cadr (assoc-string s color-alist))))
+                                      " || ")
+                                     ")")))
              (regexp-string (read-string "Regexp to search: "))
-             (regexp-filter (if (string-empty-p regexp-string)
-                                ""
-                              (concat " && Text =~ " regexp-string))))
+             (regexp-filter (unless (string-empty-p regexp-string)
+                              (format "Text =~ \"%s\"" regexp-string))))
         (setq tablist-current-filter
-              (tablist-filter-parse (concat color-filter regexp-filter)))
+              (tablist-filter-parse (concat color-filter
+                                            (when color-filter " && ")
+                                            regexp-filter)))
         (tablist-apply-filter))))
 
   (general-define-key :keymaps 'pdf-annot-list-mode-map
