@@ -200,11 +200,12 @@ highlights."
       (error "Buffer is not in Tabulated List Mode"))
     (let ((unique-colors
            ;; Get unique colors directly from PDF
-           (cl-remove-duplicates
-            (mapcar
-             (lambda (a) (pdf-annot-get a 'color))
-             (pdf-annot-getannots nil nil pdf-annot-list-document-buffer))
-            :test #'string=))
+           (-non-nil
+            (cl-remove-duplicates
+             (mapcar
+              (lambda (a) (pdf-annot-get a 'color))
+              (pdf-annot-getannots nil nil pdf-annot-list-document-buffer))
+             :test #'string=)))
           (nearby-color)
           (color-alist))
       ;; Scrape unique colors and closest neighboring defined color name
