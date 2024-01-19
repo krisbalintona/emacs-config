@@ -1,4 +1,4 @@
-;;; org-notes-other-rcp.el --- Summary
+;;; org-notes-other-rcp.el --- Summary  -*- lexical-binding: t; -*-
 ;;
 ;;; Commentary:
 ;;
@@ -10,7 +10,7 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Note-taking
+;;; PDFs
 ;;;; Pdf-tools
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
@@ -42,6 +42,10 @@
   (pdf-view-use-imagemagick t)
   (pdf-annot-color-history              ; "Default" colors
    '("yellow" "SteelBlue1" "SeaGreen3" "LightSalmon1" "MediumPurple1"))
+  (pdf-annot-list-format '((page . 3)
+                           (color . 8)
+                           (text . 68)
+                           (type . 10)))
   :init
   ;; Taken from Doom
   (defun kb/pdf-cleanup-windows-h ()
@@ -64,10 +68,69 @@
   (advice-add 'org-noter-pdf--get-selected-text
               :override #'kb/org-noter-pdf--get-selected-text))
 
-;;;; Saveplace-pdf-view
-;; Save place in pdf-view buffers
-(use-package saveplace-pdf-view
-  :demand)
+;;;; Custom entry formatter
+(with-eval-after-load 'pdf-tools
+  (defun kb/pdf-annot--make-entry-formatter (a)
+    "Return a formatter function for annotation A.
+
+A formatter function takes a format cons-cell and returns
+pretty-printed output."
+    (lambda (fmt)
+      (let ((entry-type (car fmt))
+            (entry-width (cdr fmt))
+            ;; Taken from css-mode.el
+            (contrasty-color
+             (lambda (name)
+               (if (> (color-distance name "black") 292485)
+                   "black" "white")))
+            (prune-newlines
+             (lambda (str)
+               (replace-regexp-in-string "\n" " " str t t))))
+        (cl-ecase entry-type
+          (date (propertize (pdf-annot-print-property a 'modified)
+                            'date
+                            (pdf-annot-get a 'modified)))
+          (page (pdf-annot-print-property a 'page))
+          (label (funcall prune-newlines
+                          (pdf-annot-print-property a 'label)))
+          (contents
+           (truncate-string-to-width
+            (funcall prune-newlines
+                     (pdf-annot-print-property a 'contents))
+            entry-width))
+          (type
+           (let ((color (pdf-annot-get a 'color))
+                 (type (pdf-annot-print-property a 'type)))
+             (if (and pdf-annot-list-highlight-type color)
+                 (propertize
+                  type 'face
+                  `(:background ,color
+                                :foreground ,(funcall contrasty-color color)))
+               type)))
+          (color
+           (let* ((color (pdf-annot-get a 'color)))
+             (propertize
+              color 'face
+              `(:background ,color
+                            :foreground ,(funcall contrasty-color color)))))
+          (text
+           (let* ((page (pdf-annot-get a 'page))
+                  (edges (or (when (featurep 'org-noter)
+                               (org-noter-pdf--edges-to-region (alist-get 'markup-edges a)))
+                             (pdf-annot-get a 'edges)))
+                  (raw-text
+                   (pdf-info-gettext page
+                                     edges
+                                     pdf-view-selection-style
+                                     pdf-annot-list-document-buffer))
+                  (processed-text
+                   (replace-regexp-in-string "\n" " "
+                                             (replace-regexp-in-string "-\n" "" raw-text)))
+                  (text-length (length processed-text)))
+             (when (< entry-width text-length)
+               (add-text-properties entry-width text-length '(display "…") processed-text))
+             processed-text))))))
+  (advice-add 'pdf-annot--make-entry-formatter :override 'kb/pdf-annot--make-entry-formatter))
 
 ;;;; Avy keys to highlight region in PDF
 ;; Use an avy-like interface to highlight region in pdf-view-mode. Heavily based
@@ -252,6 +315,11 @@ highlights."
   (general-define-key :keymaps 'pdf-annot-list-mode-map
                       "/ c" 'kb/pdf-annot-list-filter-color-regexp))
 
+;;;; Saveplace-pdf-view
+;; Save place in pdf-view buffers
+(use-package saveplace-pdf-view
+  :demand)
+
 ;;;; Org-noter
 (use-package org-noter
   :elpaca (:protocol ssh
@@ -296,7 +364,7 @@ highlights."
   :config
   (org-noter-enable-update-renames))
 
-;;;; Zotxt
+;;; Zotxt
 ;; Integration between Emacs and Zotero
 (use-package zotxt
   :custom
