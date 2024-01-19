@@ -985,6 +985,7 @@ This is a difference in multitude of %s."
 
 ;;; Selection-highlight-mode
 (use-package selection-highlight-mode
+  :disabled
   :elpaca (:host github
                  :repo "balloneij/selection-highlight-mode")
   :custom
