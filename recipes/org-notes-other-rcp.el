@@ -455,6 +455,7 @@ See `org-noter' for details and ARG usage."
   (org-remark-notes-file-name
    (no-littering-expand-var-file-name "org-remark/marginalia.org"))
   :config
+  (diminish 'org-remark-mode)
   (org-remark-global-tracking-mode)
   (diminish 'org-remark-global-tracking-mode)
 
