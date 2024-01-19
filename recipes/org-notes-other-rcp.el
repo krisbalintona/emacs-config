@@ -199,11 +199,11 @@ highlights."
     (unless (derived-mode-p 'tabulated-list-mode)
       (error "Buffer is not in Tabulated List Mode"))
     (let ((unique-colors
+           ;; Get unique colors directly from PDF
            (cl-remove-duplicates
             (mapcar
-             '(lambda (e)
-                (substring-no-properties (elt (cadr e) 1)))
-             (pdf-annot-list-entries))
+             (lambda (a) (pdf-annot-get a 'color))
+             (pdf-annot-getannots nil nil pdf-annot-list-document-buffer))
             :test #'string=))
           (nearby-color)
           (color-alist))
@@ -226,6 +226,8 @@ highlights."
                 color-alist)
           (setq lowest-dist most-positive-fixnum)))
 
+      ;; TODO 2024-01-18: Have this not depend on an existing color string in a
+      ;; column
       ;; Select color filter and regexp filter
       (let* ((selections (completing-read-multiple "Select color: "
                                                    (mapcar 'car color-alist)
@@ -233,10 +235,11 @@ highlights."
              (color-filter (concat "("
                                    (string-join
                                     (cl-loop for s in selections
-                                             collect (concat "Color == " (cadr (assoc-string s color-alist))))
+                                             collect (concat "Type-Color =~ " (cadr (assoc-string s color-alist))))
                                     " || ")
                                    ")"))
-             (regexp-filter (if (string-empty-p (read-string "Regexp to search: "))
+             (regexp-string (read-string "Regexp to search: "))
+             (regexp-filter (if (string-empty-p regexp-string)
                                 ""
                               (concat " && Text =~ " regexp-string))))
         (setq tablist-current-filter
