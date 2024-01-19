@@ -46,7 +46,28 @@
                            (color . 8)
                            (text . 68)
                            (type . 10)))
+  (pdf-annot-list-highlight-type nil)
   :init
+  ;; Fit the "contents" window to buffer height
+  (defun kb/pdf-annot-list-context-function (id buffer)
+    "Show the contents of an Annotation.
+
+For an annotation identified by ID, belonging to PDF in BUFFER,
+get the contents and display them on demand."
+    (with-current-buffer (get-buffer-create "*Contents*")
+      (set-window-buffer nil (current-buffer))
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (when id
+          (save-excursion
+            (insert
+             (pdf-annot-print-annotation
+              (pdf-annot-getannot id buffer)))))
+        (read-only-mode 1))
+      (fit-window-to-buffer)))
+  (advice-add 'pdf-annot-list-context-function
+              :override 'kb/pdf-annot-list-context-function)
+
   ;; Taken from Doom
   (defun kb/pdf-cleanup-windows-h ()
     "Kill left-over annotation buffers when the document is killed."
@@ -300,7 +321,7 @@ highlights."
                              (concat "("
                                      (string-join
                                       (cl-loop for s in selections
-                                               collect (concat "Type-Color =~ " (cadr (assoc-string s color-alist))))
+                                               collect (concat "Color =~ " (cadr (assoc-string s color-alist))))
                                       " || ")
                                      ")")))
              (regexp-string (read-string "Regexp to search: "))
@@ -308,7 +329,7 @@ highlights."
                               (format "Text =~ \"%s\"" regexp-string))))
         (setq tablist-current-filter
               (tablist-filter-parse (concat color-filter
-                                            (when color-filter " && ")
+                                            (when (and color-filter regexp-filter) " && ")
                                             regexp-filter)))
         (tablist-apply-filter))))
 
