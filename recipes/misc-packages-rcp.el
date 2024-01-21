@@ -1003,6 +1003,13 @@ This is a difference in multitude of %s."
   :init
   (pixel-scroll-precision-mode))
 
+;;; Reverso
+;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
+(use-package reverso
+  :elpaca (:host github :repo "SqrtMinusOne/reverso.el")
+  :config
+  (reverso-history-mode))
+
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
   :elpaca nil
