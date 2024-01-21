@@ -22,7 +22,6 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(pixel-scroll-precision-mode 1)
 
 ;; Default coding system to UTF-8
 (set-language-environment "UTF-8")

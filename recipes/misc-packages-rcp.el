@@ -1017,8 +1017,6 @@ This is a difference in multitude of %s."
   :general
   (kb/open-keys
     "c" 'calendar)
-  (:keymaps 'global-map
-            (general-chord "xf") 'find-file)
   (:keymaps 'Info-mode-map
             :states '(visual normal motion)
             "SPC" nil                   ; For my leader key

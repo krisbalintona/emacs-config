@@ -169,8 +169,8 @@ reading links."
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                         (<= x 1)
-                                         (>= x 0))))))
+                                              (<= x 1)
+                                              (>= x 0))))))
 
   (defun kb/avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.
@@ -441,8 +441,9 @@ See `org-noter' for details and ARG usage."
   :hook ((Info-mode eww-mode) . org-remark-mode)
   :general (:keymaps 'org-remark-mode-map
                      :prefix "C-c r"
+                     "r" '(lambda () (interactive) (org-remark-highlights-load))
                      "m" 'org-remark-mark
-                     "r" 'org-remark-remove
+                     "d" 'org-remark-delete
                      "c" 'org-remark-change
                      "t" 'org-remark-toggle
                      "o" 'org-remark-open
