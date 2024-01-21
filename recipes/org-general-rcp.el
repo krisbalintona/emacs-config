@@ -226,6 +226,7 @@ have `org-warning' face."
 ;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
+  :disabled
   :diminish
   :ghook 'org-mode-hook
   :general
