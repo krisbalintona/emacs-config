@@ -14,36 +14,45 @@
 (use-package puni
   :general
   ;; See `puni-mode-map'
-  ("M-d" 'puni-forward-kill-word
-   "M-DEL" 'puni-backward-kill-word
-   "C-k" 'kb/puni-smart-kill-line
-   "C-M-f" 'puni-forward-sexp
-   "C-M-b" 'puni-backward-sexp
-   "C-M-a" 'puni-beginning-of-sexp
-   "C-M-e" 'puni-end-of-sexp
-   "C-M-n" 'puni-forward-sexp-or-up-list
-   "C-M-p" 'puni-backward-sexp-or-up-list
-   ;; My additional keybinds or rebindings
-   "C-M-9" 'puni-syntactic-backward-punct
-   "C-M-0" 'puni-syntactic-forward-punct
-   "C-M-r" 'puni-raise
-   "C-M-S-m" 'puni-split
-   "C-M-m" 'puni-splice    ; FIXME 2023-07-11: This gets bound to `M-RET' too...
-   "C-M-]" 'puni-slurp-forward
-   "C-M-}" 'puni-barf-forward
-   "C-M-[" 'puni-slurp-backward
-   "C-M-{" 'puni-barf-backward
-   "C-=" 'puni-expand-region
-   ;; [remap transpose-sexps] 'puni-transpose
-   [remap forward-word] 'toki-forward-word
-   [remap backward-word] 'toki-backward-word)
+  ;; (;; [remap transpose-sexps] 'puni-transpose
+  ;;  [remap forward-word] 'toki-forward-word
+  ;;  [remap backward-word] 'toki-backward-word)
   ;; From `toki-editing'
-  (:keymaps 'text-mode-map
-            [remap puni-forward-kill-word] 'toki-forward-delete-word
-            [remap puni-backward-kill-word] 'toki-backward-delete-word)
+  ;; (:keymaps 'text-mode-map
+  ;;           [remap puni-forward-kill-word] 'toki-forward-delete-word
+  ;;           [remap puni-backward-kill-word] 'toki-backward-delete-word)
   :custom
   (puni-confirm-when-delete-unbalanced-active-region t)
+  :init
+  (puni-global-mode)
   :config
+  (defvar kb/puni-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "M-d") 'puni-forward-kill-word)
+      (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
+      (define-key map (kbd "C-k") 'kb/puni-smart-kill-line)
+      (define-key map (kbd "C-M-f") 'puni-forward-sexp)
+      (define-key map (kbd "C-M-b") 'puni-backward-sexp)
+      (define-key map (kbd "C-M-a") 'puni-beginning-of-sexp)
+      (define-key map (kbd "C-M-e") 'puni-end-of-sexp)
+      (define-key map (kbd "C-M-e") 'puni-end-of-sexp)
+      (define-key map (kbd "C-M-n") 'puni-forward-sexp-or-up-list)
+      (define-key map (kbd "C-M-p") 'puni-backward-sexp-or-up-list)
+      (define-key map (kbd "C-M-9") 'puni-syntactic-backward-punct)
+      (define-key map (kbd "C-M-0") 'puni-syntactic-forward-punct)
+      (define-key map (kbd "C-M-r") 'puni-raise)
+      (define-key map (kbd "C-M-m") 'puni-splice)
+      (define-key map (kbd "C-M-S-m") 'puni-split)
+      (define-key map (kbd "C-M-[") 'puni-slurp-backward)
+      (define-key map (kbd "C-M-]") 'puni-slurp-forward)
+      (define-key map (kbd "C-M-{") 'puni-barf-backward)
+      (define-key map (kbd "C-M-}") 'puni-barf-forward)
+      map)
+    "My own Puni keymap.")
+  (define-minor-mode puni-mode
+    "Enable keybindings for Puni commands."
+    :keymap kb/puni-mode-map)
+
   ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands. Also
   ;; made to retain the typical prefix argument behavior of built-in
   (defun kb/puni-smart-kill-line (&optional n)
