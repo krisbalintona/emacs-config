@@ -102,7 +102,7 @@
 (setq scroll-preserve-screen-position t
       scroll-error-top-bottom nil
       scroll-margin 0
-      next-screen-context-lines 8
+      next-screen-context-lines 12
       scroll-conservatively 0           ; Affects `scroll-step'
       scroll-minibuffer-conservatively t
       scroll-up-aggressively nil        ; Center after point leaves window
