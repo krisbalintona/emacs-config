@@ -993,6 +993,16 @@ This is a difference in multitude of %s."
   :init
   (selection-highlight-mode))
 
+;;; Pixel-scroll
+(use-package pixel-scroll
+  :elpaca nil
+  :general ([remap scroll-up-command] 'pixel-scroll-interpolate-down
+            [remap scroll-down-command] 'pixel-scroll-interpolate-up)
+  :custom
+  (pixel-scroll-precision-interpolate-page t)
+  :init
+  (pixel-scroll-precision-mode))
+
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
   :elpaca nil
