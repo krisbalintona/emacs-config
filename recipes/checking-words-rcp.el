@@ -24,7 +24,7 @@
   (dictionary-read-word-function 'dictionary-read-word-default)
   (dictionary-search-interface nil)
   (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
-  (dictionary-server nil))
+  (dictionary-server nil))              ; "Automatic"
 
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
