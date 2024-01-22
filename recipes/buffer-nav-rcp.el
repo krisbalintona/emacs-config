@@ -25,7 +25,7 @@
   :custom
   (puni-confirm-when-delete-unbalanced-active-region t)
   :init
-  (defvar puni-mode-map
+  (defvar kb/puni-mode-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-d") 'puni-forward-kill-word)
       (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
