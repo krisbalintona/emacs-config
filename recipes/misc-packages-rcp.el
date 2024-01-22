@@ -1011,6 +1011,15 @@ This is a difference in multitude of %s."
   :config
   (reverso-history-mode))
 
+;;; Hi-lock
+(use-package hi-lock
+  :elpaca nil
+  :custom
+  (hi-lock-file-patterns-policy
+   '(lambda (_pattern) t))
+  :init
+  (global-hi-lock-mode 1))
+
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
   :elpaca nil
