@@ -92,7 +92,8 @@
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
-  :commands hide-mode-line-mode)
+  :commands hide-mode-line-mode
+  :general ("C-c <f12>" 'hide-mode-line-mode))
 
 ;;;; Transparency toggle
 ;; Set the alpha-background parameter. Initially arose from a patch of Emacs
