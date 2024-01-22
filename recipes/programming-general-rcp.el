@@ -79,7 +79,7 @@ punctuation."
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(markdown-mode text-mode))
-  (hl-todo-exclude-modes '(org-mode))   ; Interferes with org todos
+  (hl-todo-exclude-modes nil)
   ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
   ;; hl-todo's punctuation highlighting.
   (hl-todo-require-punctuation nil)
