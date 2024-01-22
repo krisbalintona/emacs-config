@@ -81,7 +81,9 @@
   :diminish
   :general (kb/toggle-keys
              :keymaps 'org-mode-map
-             "n" 'org-num-mode))
+             "n" 'org-num-mode)
+  :custom
+  (org-num-face 'fixed-pitch))
 
 ;;;; Org-indent
 (use-package org-indent
