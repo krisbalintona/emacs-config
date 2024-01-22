@@ -30,6 +30,9 @@
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus)
 
+;;;; Le-thesaurus
+(use-package le-thesaurus)
+
 ;;; Offline
 ;;;; Wordnut
 ;; Offline dictionary
@@ -98,7 +101,9 @@ then call `dash-docs-completing-read-at-point'."
   "Use `powerthesaurus' if online, and `synosaurus' if offline."
   (interactive)
   (if (kb/internet-up-p)
-      (powerthesaurus-lookup-synonyms-dwim)
+      ;; (powerthesaurus-lookup-synonyms-dwim)
+      ;; (powerthesaurus-lookup-dwim '(4) :synonyms)
+      (le-thesaurus-get-synonyms)
     (synosaurus-choose-and-replace)))
 
 (defun kb/dictionary-lookup ()
