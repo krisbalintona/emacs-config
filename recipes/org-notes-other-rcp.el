@@ -47,6 +47,12 @@
                            (text . 68)
                            (type . 10)))
   (pdf-annot-list-highlight-type nil)
+  (tablist-context-window-display-action ; For context buffer
+   '((display-buffer-reuse-window tablist-display-buffer-split-below-and-attach)
+     (window-height . 0.25)
+     (inhibit-same-window . t)
+     (window-parameters (no-other-window . t)
+                        (mode-line-format . none))))
   :init
   ;; Fit the "contents" window to buffer height
   (defun kb/pdf-annot-list-context-function (id buffer)
@@ -169,8 +175,8 @@ reading links."
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                              (<= x 1)
-                                              (>= x 0))))))
+                                         (<= x 1)
+                                         (>= x 0))))))
 
   (defun kb/avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.
