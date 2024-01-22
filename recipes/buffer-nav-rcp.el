@@ -12,6 +12,7 @@
 ;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
+  :defines 'kb/puni-global-mode
   :general
   ;; See `puni-mode-map'
   ;; (;; [remap transpose-sexps] 'puni-transpose
@@ -24,35 +25,34 @@
   :custom
   (puni-confirm-when-delete-unbalanced-active-region t)
   :init
-  (puni-global-mode)
-  :config
   (defvar kb/puni-mode-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-d") 'puni-forward-kill-word)
       (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
-      (define-key map (kbd "C-k") 'kb/puni-smart-kill-line)
-      (define-key map (kbd "C-M-f") 'puni-forward-sexp)
-      (define-key map (kbd "C-M-b") 'puni-backward-sexp)
-      (define-key map (kbd "C-M-a") 'puni-beginning-of-sexp)
-      (define-key map (kbd "C-M-e") 'puni-end-of-sexp)
-      (define-key map (kbd "C-M-e") 'puni-end-of-sexp)
-      (define-key map (kbd "C-M-n") 'puni-forward-sexp-or-up-list)
-      (define-key map (kbd "C-M-p") 'puni-backward-sexp-or-up-list)
+      (define-key map [remap kill-line] 'kb/puni-smart-kill-line)
+      (define-key map [remap backward-sexp] 'puni-backward-sexp)
+      (define-key map [remap forward-sexp] 'puni-forward-sexp)
+      (define-key map [remap beginning-of-defun] 'puni-beginning-of-sexp)
+      (define-key map [remap end-of-defun] 'puni-end-of-sexp)
+      (define-key map [remap backward-list] 'puni-backward-sexp-or-up-list)
+      (define-key map [remap forward-list] 'puni-forward-sexp-or-up-list)
       (define-key map (kbd "C-M-9") 'puni-syntactic-backward-punct)
       (define-key map (kbd "C-M-0") 'puni-syntactic-forward-punct)
       (define-key map (kbd "C-M-r") 'puni-raise)
-      (define-key map (kbd "C-M-m") 'puni-splice)
-      (define-key map (kbd "C-M-S-m") 'puni-split)
+      (define-key map (kbd "C-M-=") 'puni-splice)
+      (define-key map (kbd "C-M-S-o") 'puni-split)
       (define-key map (kbd "C-M-[") 'puni-slurp-backward)
       (define-key map (kbd "C-M-]") 'puni-slurp-forward)
       (define-key map (kbd "C-M-{") 'puni-barf-backward)
       (define-key map (kbd "C-M-}") 'puni-barf-forward)
       map)
     "My own Puni keymap.")
-  (define-minor-mode puni-mode
-    "Enable keybindings for Puni commands."
+  (define-globalized-minor-mode kb/puni-global-mode
+    puni-mode
+    (lambda () (puni-mode 1))
     :keymap kb/puni-mode-map)
-
+  (kb/puni-global-mode)
+  :config
   ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands. Also
   ;; made to retain the typical prefix argument behavior of built-in
   (defun kb/puni-smart-kill-line (&optional n)
@@ -66,81 +66,7 @@ deleted, kill the pairs around point."
             (puni-delete-region (car sexp-bounds) (cdr sexp-bounds) 'kill))
         (if (eq (point) (cdr bounds))
             (puni-backward-kill-line n)
-          (puni-kill-line n)))))
-
-  ;; The following are movement and editing related commands I found interesting
-  ;; from Toki's `toki-editing' module from his personal config:
-  ;; /home/krisbalintona/emacs-repos/toki-emacs/site-lisp/toki-editing.el. I've
-  ;; also added prefix argument support for some many of theses commands
-
-  ;; Errors (ancillary)
-  (defun toki/bob-error ()
-    "Signal an error if point is at the beginning of buffer."
-    (when (bobp)
-      (signal 'beginning-of-buffer nil)))
-
-  (defun toki/eob-error ()
-    "Signal an error if point is and the end of buffer."
-    (when (eobp)
-      (signal 'end-of-buffer nil)))
-
-  ;; Syntax (not commands)
-  (defun toki/forward-block ()
-    "Go forward a block.
-Return the point if success.
-
-A block is a continuous region with the same syntax, which
-contains no more than 1 word.  See the implementation for
-details."
-    (unless (eobp)
-      ;; A word may actually end at a position where the syntax on both sides are
-      ;; "word", e.g., when subword-mode is enabled.
-      (let ((word-end (save-excursion (when (forward-word) (point)))))
-        (puni--forward-same-syntax word-end))))
-
-  (defun toki/backward-block ()
-    "Backward version of `toki/forward-block'."
-    (unless (bobp)
-      (let ((word-beg (save-excursion (when (forward-word -1) (point)))))
-        (puni--backward-same-syntax word-beg))))
-
-  ;; Word movement and deletion
-  (defun toki-forward-word ()
-    "A finer version of `forward-word'.
-If there's *only one* non-word char between point and next word,
-move after it.  Then jump forward by a block.  A block is a
-continuous region with the same syntax, like a word, a bunch of
-whitespaces/punctuations, etc.
-
-This doesn't fly over most punctuations, while `forward-word'
-does."
-    (interactive)
-    (toki/eob-error)
-    (when (eq (puni--syntax-char-after (1+ (point))) ?w)
-      (forward-char))
-    (toki/forward-block))
-
-  (defun toki-forward-delete-word ()
-    "Delete word forward while keeping expressions balanced."
-    (interactive)
-    (if (use-region-p)
-        (puni-delete-active-region)
-      (puni-soft-delete-by-move #'toki-forward-word nil nil nil 'jump-and-reverse-delete)))
-
-  (defun toki-backward-word ()
-    "Backward version of `toki-forward-word'."
-    (interactive)
-    (toki/bob-error)
-    (when (eq (puni--syntax-char-after (- (point) 2)) ?w)
-      (backward-char))
-    (toki/backward-block))
-
-  (defun toki-backward-delete-word ()
-    "Delete word backward while keeping expressions balanced."
-    (interactive)
-    (if (use-region-p)
-        (puni-delete-active-region)
-      (puni-soft-delete-by-move #'toki-backward-word nil nil nil 'jump-and-reverse-delete))))
+          (puni-kill-line n))))))
 
 ;;; Avy
 ;; Quickly jump to any character
