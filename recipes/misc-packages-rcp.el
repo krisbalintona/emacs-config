@@ -997,19 +997,50 @@ This is a difference in multitude of %s."
 ;;; Pixel-scroll
 (use-package pixel-scroll
   :elpaca nil
-  :general ([remap scroll-up-command] 'pixel-scroll-interpolate-down
-            [remap scroll-down-command] 'pixel-scroll-interpolate-up)
+  :hook (pixel-scroll-precision-mode . (lambda ()
+                                         (cond (pixel-scroll-precision-mode
+                                                (advice-add 'scroll-up :override 'kb/pixel-scroll-up)
+                                                (advice-add 'scroll-down :override 'kb/pixel-scroll-down))
+                                               (t
+                                                (advice-remove 'scroll-up 'kb/pixel-scroll-up)
+                                                (advice-remove 'scroll-down 'kb/pixel-scroll-down)))))
   :custom
   (pixel-scroll-precision-interpolate-page t)
+  (pixel-scroll-precision-interpolation-factor 1)
   :init
-  (pixel-scroll-precision-mode))
+  (pixel-scroll-mode 1)
+  (pixel-scroll-precision-mode 1)
+  :config
+  ;; FIXME 2024-01-22: Seems to be off a few lines in e.g. Info-mode?
+  (defun kb/pixel-scroll-up (&optional arg)
+    "(Nearly) drop-in replacement for `scroll-up'."
+    (cond
+     ((eq this-command 'scroll-up-line)
+      (funcall (ad-get-orig-definition 'scroll-up) (or arg 1)))
+     (t
+      (pixel-scroll-precision-interpolate
+       (- (* (line-pixel-height)
+             (or arg (- (window-text-height) next-screen-context-lines))))
+       nil 1))))
+
+  (defun kb/pixel-scroll-down (&optional arg)
+    "(Nearly) drop-in replacement for `scroll-down'."
+    (cond
+     ((eq this-command 'scroll-down-line)
+      (funcall (ad-get-orig-definition 'scroll-down) (or arg 1)))
+     (t
+      (pixel-scroll-precision-interpolate
+       (* (line-pixel-height)
+          (or arg (- (window-text-height) next-screen-context-lines)))
+       nil 1)))))
 
 ;;; Reverso
 ;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
 (use-package reverso
   :elpaca (:host github :repo "SqrtMinusOne/reverso.el")
   :config
-  (reverso-history-mode))
+  (reverso-history-mode)
+  (diminish 'reverso-history-mode))
 
 ;;; Hi-lock
 (use-package hi-lock
