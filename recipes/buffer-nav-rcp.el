@@ -25,7 +25,7 @@
   :custom
   (puni-confirm-when-delete-unbalanced-active-region t)
   :init
-  (defvar kb/puni-mode-map
+  (defvar puni-mode-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-d") 'puni-forward-kill-word)
       (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
@@ -47,10 +47,12 @@
       (define-key map (kbd "C-M-}") 'puni-barf-forward)
       map)
     "My own Puni keymap.")
-  (define-globalized-minor-mode kb/puni-global-mode
-    puni-mode
-    (lambda () (puni-mode 1))
+  (define-minor-mode kb/puni-mode
+    "Enable keybindings for Puni commands."
     :keymap kb/puni-mode-map)
+  (define-globalized-minor-mode kb/puni-global-mode
+    kb/puni-mode
+    (lambda () (kb/puni-mode 1)))
   (kb/puni-global-mode)
   :config
   ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands. Also
