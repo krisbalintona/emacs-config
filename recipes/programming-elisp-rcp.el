@@ -76,6 +76,7 @@
 (use-package help
   :elpaca nil
   :general ("C-h M-k" 'describe-keymap)
+  :gfhook 'hide-mode-line-mode
   :custom
   (help-window-select t)
   (help-window-keep-selected t)
