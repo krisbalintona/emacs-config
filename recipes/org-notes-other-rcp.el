@@ -317,9 +317,6 @@ highlights."
                 color-alist)
           (setq lowest-dist most-positive-fixnum)))
 
-      ;; TODO 2024-01-18: Have this not depend on an existing color string in a
-      ;; column
-      ;; Select color filter and regexp filter
       (let* ((selections (completing-read-multiple "Select color: "
                                                    (mapcar 'car color-alist)
                                                    nil t))
