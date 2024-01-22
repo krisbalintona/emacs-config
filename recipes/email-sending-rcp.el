@@ -104,6 +104,7 @@
 ;;;; Itself
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
+  :commands 'mu4e-compose-new
   :elpaca (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :hook ((org-msg-edit-mode . (lambda ()
                                 (setq-local org-download-method 'directory
