@@ -1000,16 +1000,41 @@ This is a difference in multitude of %s."
   :hook (pixel-scroll-precision-mode . (lambda ()
                                          (cond (pixel-scroll-precision-mode
                                                 (advice-add 'scroll-up :override 'kb/pixel-scroll-up)
-                                                (advice-add 'scroll-down :override 'kb/pixel-scroll-down))
+                                                (advice-add 'scroll-down :override 'kb/pixel-scroll-down)
+                                                (advice-add 'recenter :override 'kb/pixel-recenter))
                                                (t
                                                 (advice-remove 'scroll-up 'kb/pixel-scroll-up)
-                                                (advice-remove 'scroll-down 'kb/pixel-scroll-down)))))
+                                                (advice-remove 'scroll-down 'kb/pixel-scroll-down)
+                                                (advice-remove 'recenter 'kb/pixel-recenter)))))
   :custom
   (pixel-scroll-precision-interpolate-page t)
   (pixel-scroll-precision-interpolation-factor 1)
   :init
   (pixel-scroll-mode 1)
   (pixel-scroll-precision-mode 1)
+
+  (defun kb/pixel-recenter (&optional arg redisplay)
+    "Similar to `recenter' but with pixel scrolling.
+ARG and REDISPLAY are identical to the original function."
+    ;; See the links in line 6676 in window.c for
+    (when-let* ((current-pixel (pixel-posn-y-at-point))
+                (target-pixel (or (when arg (* (line-pixel-height) arg))
+                                  (* 0.5 (window-body-height nil t))))
+                (distance-in-pixels 0)
+                (pixel-scroll-precision-interpolation-total-time
+                 (/ pixel-scroll-precision-interpolation-total-time 2.0)))
+      (setq target-pixel
+            (* (line-pixel-height)
+               (round (/ (if (<= 0 target-pixel) target-pixel (- (window-body-height nil t) (abs target-pixel)))
+                         (line-pixel-height)))))
+      (setq distance-in-pixels (- target-pixel current-pixel))
+      ;; FIXME 2024-01-23: `pixel-scroll-precision-interpolate' seems to have a
+      ;; bug where occasionally trying to go to pixel 0 (top of buffer) will
+      ;; move point forward by one line. I've confirmed that this is an issue
+      ;; not with my function but with `pixel-scroll'. This might also apply to
+      ;; non-first line cases. I'll see...
+      (pixel-scroll-precision-interpolate distance-in-pixels nil 1)
+      (when redisplay (redisplay t))))
   :config
   ;; FIXME 2024-01-22: Seems to be off a few lines in e.g. Info-mode?
   (defun kb/pixel-scroll-up (&optional arg)
