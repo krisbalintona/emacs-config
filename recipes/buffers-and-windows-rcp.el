@@ -61,6 +61,8 @@
   (window-resize-pixelwise t)
   (window-sides-vertical t)
 
+  ;; As per suggestion of Mastering Emacs
+  (switch-to-buffer-obey-display-actions t)
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
    `(;; Automatically hide
