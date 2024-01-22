@@ -288,12 +288,12 @@ Side effects occur if the parent of the current headline has a
                      (org-agenda-include-diary t)
                      (org-agenda-insert-diary-extract-time t)
                      (org-super-agenda-groups
-                      '((:name "Projects due"
-                               :and (:tag "project"
-                                          :deadline t))
-                        (:name "Projects in need of delegation"
+                      '((:name "Projects in need of delegation"
                                :and (:tag "project"
                                           :scheduled t))
+                        (:name "Projects due"
+                               :and (:tag "project"
+                                          :deadline t))
                         (:name "Orphans"
                                :anything t)))))))
           ("p" "Planning"
