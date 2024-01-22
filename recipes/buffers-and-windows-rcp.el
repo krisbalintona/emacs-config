@@ -147,9 +147,10 @@
        display-buffer-at-bottom)
       (window-height . 12)
       (window-parameters . ((mode-line-format . none))))
-     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'special-mode))
+     ("^\\*eldoc for"
       (kb/select-buffer-at-bottom)
-      (window-height . 0.35))
+      (window-height . shrink-window-if-larger-than-buffer)
+      (window-parameters . ((mode-line-format . none))))
 
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
