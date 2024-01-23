@@ -48,12 +48,6 @@
                            (text . 68)
                            (type . 10)))
   (pdf-annot-list-highlight-type nil)
-  (tablist-context-window-display-action ; For context buffer
-   '((display-buffer-reuse-window tablist-display-buffer-split-below-and-attach)
-     (window-height . 0.25)
-     (inhibit-same-window . t)
-     (window-parameters (no-other-window . t)
-                        (mode-line-format . none))))
   :init
   ;; Fit the "contents" window to buffer height
   (defun kb/pdf-annot-list-context-function (id buffer)
@@ -94,7 +88,14 @@ get the contents and display them on demand."
              (process-text-2 (replace-regexp-in-string "\n" " " process-text-1)))
         process-text-2)))
   (advice-add 'org-noter-pdf--get-selected-text
-              :override #'kb/org-noter-pdf--get-selected-text))
+              :override #'kb/org-noter-pdf--get-selected-text)
+  :config
+  (setq tablist-context-window-display-action ; For context buffer
+        '((display-buffer-reuse-window tablist-display-buffer-split-below-and-attach)
+          (window-height . 0.25)
+          (inhibit-same-window . t)
+          (window-parameters (no-other-window . t)
+                             (mode-line-format . none)))))
 
 ;;;; Custom entry formatter
 (with-eval-after-load 'pdf-tools
