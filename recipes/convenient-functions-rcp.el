@@ -83,7 +83,7 @@ act upon that region instead."
       (kb/format-buffer-indentation--base beg end)
       (when (buffer-file-name)
         (save-buffer)))
-     ((and (require 'apheleia-core nil t)
+     ((and (require 'apheleia nil t)
            (apheleia--get-formatters))    ; If available apheleia formatter
       (let* ((apheleia-mode t))           ; Save silently
         (apheleia-format-after-save)))

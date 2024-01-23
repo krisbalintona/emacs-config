@@ -67,10 +67,7 @@
    `(;; Automatically hide
 
      ;; Full frame
-     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'org-msg-edit-mode))
-      (display-buffer-pop-up-window
-       display-buffer-same-window))
-
+  
      ;; Same window
      ("\\*helpful *"
       (display-buffer-reuse-mode-window
