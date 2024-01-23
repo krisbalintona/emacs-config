@@ -287,7 +287,7 @@ annotation immediately after creation."
 ;;;; Pdf-annot-list custom (tablist) color filter
 (with-eval-after-load 'pdf-tools
   (defun kb/pdf-annot-list-filter-color-regexp ()
-    "Regexp search the text after selecting a color.
+    "Get a prompt to filter for the color column's colors.
 The offered colors are those already present in the document's
 highlights."
     (interactive)
@@ -335,8 +335,17 @@ highlights."
         (tablist-push-filter (tablist-filter-parse color-filter)
                              (called-interactively-p 'any)))))
 
+  (defun kb/pdf-annot-list-filter-regexp ()
+    "Drop-in replacement for `tablist-push-regexp-filter'.
+Calls `kb/pdf-annot-list-filter-color-regexp' when point is in
+the color column."
+    (interactive)
+    (if (string= "Color" (tablist-read-column-name nil))
+        (kb/pdf-annot-list-filter-color-regexp)
+      (call-interactively 'tablist-push-regexp-filter)))
+
   (general-define-key :keymaps 'pdf-annot-list-mode-map
-                      "/ c" 'kb/pdf-annot-list-filter-color-regexp))
+                      [remap tablist-push-regexp-filter] 'kb/pdf-annot-list-filter-regexp))
 
 ;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
