@@ -339,11 +339,7 @@
     (setq gnus-blocked-images (rx unmatchable) ; Don't block images
           ;; gnus-inhibit-mime-unbuttonizing t    ; Show all MIME buttons?
           mm-discouraged-alternatives '("text/html" "text/richtext" "image/.*")
-          mm-automatic-display (remove "text/html" mm-automatic-display))) ; If I really don't want to see HTML
-
-  ;; Sending and composition
-  (with-eval-after-load 'org-msg
-    (org-msg-mode)))
+          mm-automatic-display (remove "text/html" mm-automatic-display)))) ; If I really don't want to see HTML
 
 ;;;; Mu4e-contexts
 (with-eval-after-load 'mu4e

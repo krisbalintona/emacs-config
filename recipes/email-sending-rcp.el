@@ -104,7 +104,6 @@
 ;;;; Itself
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
-  :commands 'mu4e-compose-new
   :elpaca (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :hook ((org-msg-edit-mode . (lambda ()
                                 (setq-local org-download-method 'directory
@@ -283,7 +282,10 @@
                (margin-top . "10px") (margin-bottom . "0px")
                ,font-size))
        ;; Applies to entire body
-       (div ,(intern org-html-content-class) (,@font (line-height . "12pt")))))))
+       (div ,(intern org-html-content-class) (,@font (line-height . "12pt"))))))
+  :init
+  (with-eval-after-load 'mu4e
+    (org-msg-mode)))
 
 ;;;; Custom signatures
 (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
