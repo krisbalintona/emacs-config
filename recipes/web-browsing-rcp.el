@@ -15,9 +15,9 @@
   :elpaca nil
   :custom
   ;; (shr-use-colors nil)                  ; t is bad for accessibility
-  (shr-use-fonts nil)                   ; Proportional fonts?
+  (shr-use-fonts t)                     ; Proportional fonts?
   (shr-max-image-proportion 0.6)        ; How big are images?
-  (shr-image-animate nil)               ; GIFs?
+  (shr-image-animate t)               ; GIFs?
   (shr-width nil)
   ;; (shr-discard-aria-hidden t)
   ;; (shr-cookie-policy nil)               ; When to use cookies
