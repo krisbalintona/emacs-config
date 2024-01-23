@@ -331,15 +331,9 @@ highlights."
                                       (cl-loop for s in selections
                                                collect (concat "Color =~ " (cadr (assoc-string s color-alist))))
                                       " || ")
-                                     ")")))
-             (regexp-string (read-string "Regexp to search: "))
-             (regexp-filter (unless (string-empty-p regexp-string)
-                              (format "Text =~ \"%s\"" regexp-string))))
-        (tablist-push-filter
-         (tablist-filter-parse (concat color-filter
-                                       (when (and color-filter regexp-filter) " && ")
-                                       regexp-filter))
-         (called-interactively-p 'any)))))
+                                     ")"))))
+        (tablist-push-filter (tablist-filter-parse color-filter)
+                             (called-interactively-p 'any)))))
 
   (general-define-key :keymaps 'pdf-annot-list-mode-map
                       "/ c" 'kb/pdf-annot-list-filter-color-regexp))
