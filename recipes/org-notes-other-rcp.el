@@ -275,7 +275,10 @@ annotation immediately after creation."
            (edges (append (cl-subseq start 0 2) (cl-subseq end 2 4)))
            (pdf-annot-activate-created-annotations activate))
       (pdf-annot-add-markup-annotation edges
-                                       'highlight
+                                       (let ((type (completing-read "Markup type (default highlight): "
+                                                                    '("squiggly" "highlight" "underline" "strike-out")
+                                                                    nil t)))
+                                         (if (equal type "") 'highlight (intern type)))
                                        (pdf-annot-read-color "Annotation color: "))))
 
   (general-define-key :keymaps 'pdf-view-mode-map
