@@ -205,8 +205,8 @@ default lsp-passthrough."
   (:prefix "H-c"               ; Particular completion function
            "p" 'completion-at-point
            "t" 'complete-tag   ; etags
-           "d" 'cape-dabbrev   ; or dabbrev-completion
-           [remap dabbrev-expand] 'cape-dabbrev
+           "d" 'cape-dabbrev
+           [remap dabbrev-completion] 'cape-dabbrev
            "f" 'cape-file
            "k" 'cape-keyword
            "s" 'cape-elisp-symbol
