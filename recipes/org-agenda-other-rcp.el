@@ -103,45 +103,6 @@ See `kb/consult-org-depend’."
                        kb/consult-org-agenda-depend
                        :prompt "Select dependency for this agenda item: ")))
 
-;;; Org-gcal
-(use-package plstore                    ; Dependency
-  :elpaca nil
-  :config
-  ;; Don't get prompted for password so much. Has to be with `setq' since it
-  ;; isn't a customizable variable. See https://github.com/kidd/org-gcal.el#note
-  (setq plstore-cache-passphrase-for-symmetric-encryption t))
-(use-package org-gcal
-  :custom
-  ;; NOTE 2023-01-22: If syncing broke for some reason, try
-  ;; `org-gcal-sync-tokens-clear'
-  (org-gcal-client-id "477180658883-q2ok2j39ko4bfp88e2tqd9qi6c1r6ebm.apps.googleusercontent.com")
-  (org-gcal-client-secret "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")
-  (oauth2-auto-plstore (expand-file-name "oauth2-auto.plist" org-gcal-dir)) ; File used by `plstore'
-  (org-generic-id-locations-file        ; File for org IDs
-   (convert-standard-filename (expand-file-name ".org-generic-id-locations" org-gcal-dir)))
-  (org-gcal-fetch-file-alist
-   `(;; University
-     ("v7tpr3s152ao11tlf93lu3don4@group.calendar.google.com" . ,(expand-file-name "gcal/brown.org" kb/agenda-dir))
-     ("brown.edu_d61gju3thc3a7e58k84qbn1nc8@group.calendar.google.com" . ,(expand-file-name "gcal/crc_events.org" kb/agenda-dir))
-     ("c_8ri64bp98ab1oj28704npqhig4@group.calendar.google.com" . ,(expand-file-name "gcal/assignments.org" kb/agenda-dir))
-     ("c_g2s8uc0cufru3ruq7g7tbd1a7k@group.calendar.google.com" . ,(expand-file-name "gcal/bui.org" kb/agenda-dir))
-     ("c_pr2pb1gdf5dkogh3h13kvs8uf0@group.calendar.google.com" . ,(expand-file-name "gcal/office_hours.org" kb/agenda-dir))
-     ("independent_study@brown.edu" . ,(expand-file-name "gcal/independent_study.org" kb/agenda-dir))
-     ("kristoffer_balintona@brown.edu" . ,(expand-file-name "gcal/kristoffer_balintona_events.org" kb/agenda-dir))
-     ;; Personal
-     ("ic4ecccdo60mub7raqhear02vg@group.calendar.google.com" . ,(expand-file-name "gcal/birthdays.org" kb/agenda-dir))))
-  (org-gcal-up-days 31)
-  (org-gcal-down-days 62)
-  (org-gcal-recurring-events-mode 'top-level)
-  (org-gcal-notify-p t)
-  (org-gcal-update-cancelled-events-with-todo t)
-  (org-gcal-remove-api-cancelled-events t)
-  ;; Time zone
-  ;; (org-gcal-local-timezone "America/Chicago")
-  (org-gcal-local-timezone "America/New_York")
-  :init
-  (require 'plstore))
-
 ;;; Org-heatmap
 ;; Heatmap in agenda for tracked habits. Also highlighted calendar dates
 (use-package org-heatmap
@@ -166,6 +127,27 @@ With prefix argument, also display headlines without a TODO keyword."
     (org-tags-view (null current-prefix-arg) tag))
 
   (org-add-link-type "tag" 'kb/org-tag-link))
+
+;;; Ical2orgpy script
+;; NOTE 2024-01-24: Make sure ical2orgpy is installed via `pipx install
+;; ical2orgpy'
+(defun kb/org-gcal (&optional arg)
+  "Run my emacs-gcal script.
+If called with ARG, then show output buffer. Else, keep output
+buffer hidden."
+  (interactive "P")
+  (let* ((buf-name "*emacs-gcal*")
+         (buf (get-buffer-create buf-name))
+         (script (expand-file-name "emacs-gcal.sh" "~/Scripts/"))
+         (display-buffer-alist (if arg
+                                   display-buffer-alist
+                                 `((,buf-name display-buffer-no-window)))))
+    ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
+    ;; `async-shell-command'
+    (async-shell-command script buf)))
+
+;; Timer every 30 min
+(run-with-timer (* 60 30) (* 60 30) 'kb/org-gcal)
 
 ;;; org-agenda-other-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
