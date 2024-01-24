@@ -138,8 +138,11 @@
   (defun kb/mu4e-main-bury-buffer ()
     "Restore window configuration."
     (interactive)
-    (set-window-configuration kb/mu4e-main-pre-window-conf)
-    (setq kb/mu4e-main-pre-window-conf nil))
+    (if kb/mu4e-main-pre-window-conf
+        (progn
+          (set-window-configuration kb/mu4e-main-pre-window-conf)
+          (setq kb/mu4e-main-pre-window-conf nil))
+      (bury-buffer)))
 
 
   ;; Gmail integration is taken from Doom
