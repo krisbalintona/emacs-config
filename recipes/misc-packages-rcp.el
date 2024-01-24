@@ -485,22 +485,6 @@ displayed."
   :init
   (global-form-feed-mode))
 
-;;; Logos
-;; Package that encourages focused writing
-(use-package logos
-  :general
-  ([remap narrow-to-region] 'logos-narrow-dwim
-   [remap backward-page] 'logos-backward-page-dwim
-   [remap forward-page] 'logos-forward-page-dwim
-   "H-p" 'backward-page
-   "H-n" 'forward-page)
-  :custom
-  (logos-outlines-are-pages t)
-  (logos-outline-regexp-alist
-   `((emacs-lisp-mode . ,(rx bol (or (literal ";;; ") ?)))
-     (org-mode . ,(rx bol (or (literal "* ") ?)))
-     (org-agenda-mode . ,(rx bol (literal (char-to-string org-agenda-block-separator)))))))
-
 ;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode
