@@ -83,8 +83,8 @@
 
 ;;; UI
 ;;;; Fringes
-;; Default left fringe, 0 pixels for right fringe
-(fringe-mode '(nil . 0))
+;; 1 pixel for left and right fringes
+(fringe-mode '(1 . 1))
 ;; Places the fringes outside the margins, closest to the frame edge. Useful for
 ;; `git-gutter-fringes'
 ;; (setq-default fringes-outside-margins t)
