@@ -468,8 +468,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
 ;;; Work-timer
 (use-package work-timer
   :demand
-  :elpaca (:type git
-                 :host github
+  :elpaca (:host github
                  :protocol ssh
                  :repo "krisbalintona/work-timer"
                  :depth nil
@@ -489,7 +488,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
   ;; (work-timer-fractional-work-duration 0.5)
   ;; (work-timer-fractional-break-duration-fraction 1)
   (work-timer-fractional-work-duration 25)
-  (work-timer-fractional-break-duration-fraction 0.25)
+  (work-timer-fractional-break-duration-fraction 0.15)
   :init
   (defun kb/work-timer-set-faces ()
     "Set `work-timer-mode-line' according to dark or light theme."
