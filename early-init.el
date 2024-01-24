@@ -13,7 +13,7 @@
 
 ;; Inhibit resizing frame. Reduces startup time. See
 ;; https://github.com/doomemacs/doomemacs/blob/58af4aef56469f3f495129b4e7d947553f420fca/core/core.el#L323
-(setq frame-inhibit-implied-resize t)
+(setq frame-inhibit-implied-resize '(font))
 
 ;; Preview loading any packages prior to init.el being loading
 (setq package-enable-at-startup nil)
