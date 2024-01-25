@@ -456,6 +456,12 @@ Same as default but truncates with `truncate-string-ellipsis'."
   (work-timer-fractional-work-duration 25)
   (work-timer-fractional-break-duration-fraction 0.15)
   :init
+  ;; Save relevant current timer variables to resume timer across Emacs sessions
+  (dolist (var '(work-timer-start-time
+                 work-timer-duration
+                 work-timer-type))
+    (add-to-list 'savehist-additional-variables var))
+
   (defun kb/work-timer-set-faces ()
     "Set `work-timer-mode-line' according to dark or light theme."
     (let* ((dark-p
@@ -466,6 +472,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
                 initial-color
               (color-darken-name initial-color 15))))
       (set-face-foreground 'work-timer-mode-line foreground)))
+
   :config
   (work-timer-with-org-clock-mode))
 
