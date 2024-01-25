@@ -995,9 +995,6 @@ This is a difference in multitude of %s."
   (pixel-scroll-precision-interpolate-page t)
   (pixel-scroll-precision-interpolation-factor 1)
   :init
-  (pixel-scroll-mode 1)
-  (pixel-scroll-precision-mode 1)
-
   (defun kb/pixel-recenter (&optional arg redisplay)
     "Similar to `recenter' but with pixel scrolling.
 ARG and REDISPLAY are identical to the original function."
@@ -1020,7 +1017,7 @@ ARG and REDISPLAY are identical to the original function."
       ;; non-first line cases. I'll see...
       (pixel-scroll-precision-interpolate distance-in-pixels nil 1)
       (when redisplay (redisplay t))))
-  :config
+
   ;; FIXME 2024-01-22: Seems to be off a few lines in e.g. Info-mode?
   (defun kb/pixel-scroll-up (&optional arg)
     "(Nearly) drop-in replacement for `scroll-up'."
@@ -1042,7 +1039,10 @@ ARG and REDISPLAY are identical to the original function."
       (pixel-scroll-precision-interpolate
        (* (line-pixel-height)
           (or arg (- (window-text-height) next-screen-context-lines)))
-       nil 1)))))
+       nil 1))))
+
+  (pixel-scroll-mode 1)
+  (pixel-scroll-precision-mode 1))
 
 ;;; Reverso
 ;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
