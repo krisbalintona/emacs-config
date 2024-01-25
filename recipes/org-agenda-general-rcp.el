@@ -430,40 +430,6 @@ Same as default but truncates with `truncate-string-ellipsis'."
   ;; Useful
   (org-todo-repeat-to-state "ACTIVE"))
 
-;;; Org-pomodoro
-(use-package org-pomodoro
-  :general (:keymaps 'org-agenda-mode-map "P" 'org-pomodoro)
-  :custom
-  (org-pomodoro-length 25)
-  (org-pomodoro-long-break-length 20)
-  (org-pomodoro-third-time--long-break-frequency 4)
-  (org-pomodoro-short-break-length 5)
-  (org-pomodoro-clock-break nil)
-  (org-pomodoro-ask-upon-killing t)
-  (org-pomodoro-keep-killed-pomodoro-time t)
-  (org-pomodoro-manual-break t) ; Allows for a workflow of going "overtime"
-  (org-pomodoro-format "Pomodoro: %s")
-  :config
-  (defun kb/org-pomodoro-update-mode-line ()
-    "Set the modeline accordingly to the current state."
-    (let ((s (cl-case org-pomodoro-state
-               (:pomodoro
-                (propertize org-pomodoro-format 'face 'org-pomodoro-mode-line))
-               (:overtime
-                (propertize org-pomodoro-overtime-format
-                            'face 'org-pomodoro-mode-line-overtime))
-               (:short-break
-                (propertize org-pomodoro-short-break-format
-                            'face 'org-pomodoro-mode-line-break))
-               (:long-break
-                (propertize org-pomodoro-long-break-format
-                            'face 'org-pomodoro-mode-line-break)))))
-      (setq org-pomodoro-mode-line
-            (when (and (org-pomodoro-active-p) (> (length s) 0))
-              ;; Add space where I want it
-              (list " [" (format s (org-pomodoro-format-seconds)) "]"))))
-    (force-mode-line-update t))
-  (advice-add 'org-pomodoro-update-mode-line :override 'kb/org-pomodoro-update-mode-line))
 
 ;;; Work-timer
 (use-package work-timer
