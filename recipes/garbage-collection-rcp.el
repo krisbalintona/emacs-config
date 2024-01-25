@@ -24,11 +24,11 @@
   :diminish
   :hook (elpaca-after-init . gcmh-mode)
   :custom
-  ;; Set to Doom's threshold. For a related discussion, see
+  ;; For a related discussion, see
   ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3
-  ;; (gcmh-high-cons-threshold (* 138        ; mb
+  ;; (gcmh-high-cons-threshold (* 50        ; mb
   ;;                              1024 1024))
-  (gcmh-high-cons-threshold (* 50        ; mb
+  (gcmh-high-cons-threshold (* 100      ; mb
                                1024 1024))
   (gcmh-idle-delay 3)
   (gcmh-verbose nil)
