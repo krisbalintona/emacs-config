@@ -459,13 +459,14 @@ See `org-noter' for details and ARG usage."
                      "t" 'org-remark-toggle
                      "o" 'org-remark-open
                      "v" 'org-remark-view
-                     "n" 'org-remark-view-next
-                     "p" 'org-remark-view-prev)
+                     "n" 'org-remark-next
+                     "p" 'org-remark-prev)
   :custom
   (org-remark-notes-auto-delete :auto-delete)
   (org-remark-source-file-name 'abbreviate-file-name)
   (org-remark-notes-file-name
    (no-littering-expand-var-file-name "org-remark/marginalia.org"))
+  (org-remark-create-default-pen-set nil) ; Make my own pens
   :config
   (diminish 'org-remark-mode)
   (org-remark-global-tracking-mode)
@@ -476,7 +477,21 @@ See `org-noter' for details and ARG usage."
   (with-eval-after-load 'nov
     (org-remark-nov-mode 1))
   (with-eval-after-load 'info
-    (org-remark-info-mode 1)))
+    (org-remark-info-mode 1))
+
+  ;; My pens
+  (org-remark-create "red"
+                     `(:background "PaleVioletRed4")
+                     `(CATEGORY "amazing" help-echo "Wow!"))
+  (org-remark-create "red-line"
+                     `(:underline "PaleVioletRed4")
+                     `(CATEGORY "amazing" help-echo "Wow!"))
+  (org-remark-create "yellow"
+                     `(:background "yellow3")
+                     `(CATEGORY "important"))
+  (org-remark-create "green"
+                     `(:underline (:color "lawn green" :style wave))
+                     `(CATEGORY "outline")))
 
 ;;; Org-transclusion
 ;; Enable transclusion of org files
