@@ -982,15 +982,6 @@ This is a difference in multitude of %s."
 ;;; Pixel-scroll
 (use-package pixel-scroll
   :elpaca nil
-  :hook (pixel-scroll-precision-mode . (lambda ()
-                                         (cond (pixel-scroll-precision-mode
-                                                (advice-add 'scroll-up :override 'kb/pixel-scroll-up)
-                                                (advice-add 'scroll-down :override 'kb/pixel-scroll-down)
-                                                (advice-add 'recenter :override 'kb/pixel-recenter))
-                                               (t
-                                                (advice-remove 'scroll-up 'kb/pixel-scroll-up)
-                                                (advice-remove 'scroll-down 'kb/pixel-scroll-down)
-                                                (advice-remove 'recenter 'kb/pixel-recenter)))))
   :custom
   (pixel-scroll-precision-interpolate-page t)
   (pixel-scroll-precision-interpolation-factor 1)
@@ -1040,6 +1031,18 @@ ARG and REDISPLAY are identical to the original function."
        (* (line-pixel-height)
           (or arg (- (window-text-height) next-screen-context-lines)))
        nil 1))))
+
+  (add-hook 'pixel-scroll-precision-mode-hook
+            (lambda ()
+              (cond
+               (pixel-scroll-precision-mode
+                (advice-add 'scroll-up :override 'kb/pixel-scroll-up)
+                (advice-add 'scroll-down :override 'kb/pixel-scroll-down)
+                (advice-add 'recenter :override 'kb/pixel-recenter))
+               (t
+                (advice-remove 'scroll-up 'kb/pixel-scroll-up)
+                (advice-remove 'scroll-down 'kb/pixel-scroll-down)
+                (advice-remove 'recenter 'kb/pixel-recenter)))))
 
   (pixel-scroll-mode 1)
   (pixel-scroll-precision-mode 1))
