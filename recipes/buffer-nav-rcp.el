@@ -29,7 +29,7 @@
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-d") 'puni-forward-kill-word)
       (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
-      (define-key map [remap kill-line] 'kb/puni-smart-kill-line)
+      (define-key map [remap kill-line] 'kb/puni-kill-line)
       (define-key map [remap backward-sexp] 'puni-backward-sexp)
       (define-key map [remap forward-sexp] 'puni-forward-sexp)
       (define-key map [remap beginning-of-defun] 'puni-beginning-of-sexp)
@@ -55,20 +55,13 @@
     (lambda () (kb/puni-mode 1)))
   (kb/puni-global-mode)
   :config
-  ;; Taken from https://github.com/AmaiKinono/puni/wiki/Useful-commands. Also
-  ;; made to retain the typical prefix argument behavior of built-in
-  (defun kb/puni-smart-kill-line (&optional n)
-    "Kill a line forward while keeping expressions balanced.
-If nothing can be deleted, kill backward. If still nothing can be
-deleted, kill the pairs around point."
-    (interactive "P")
-    (let ((bounds (puni-bounds-of-list-around-point)))
-      (if (eq (car bounds) (cdr bounds))
-          (when-let ((sexp-bounds (puni-bounds-of-sexp-around-point)))
-            (puni-delete-region (car sexp-bounds) (cdr sexp-bounds) 'kill))
-        (if (eq (point) (cdr bounds))
-            (puni-backward-kill-line n)
-          (puni-kill-line n))))))
+  (defun kb/puni-kill-line ()
+    "A wrapper around `puni-kill-line'.
+Call `org-kill-line' instead when in org-mode."
+    (interactive)
+    (if (derived-mode-p 'org-mode)
+        (org-kill-line)
+      (puni-kill-line))))
 
 ;;; Avy
 ;; Quickly jump to any character
