@@ -206,7 +206,7 @@ default lsp-passthrough."
            "p" 'completion-at-point
            "t" 'complete-tag   ; etags
            "d" 'cape-dabbrev
-           [remap dabbrev-completion] 'cape-dabbrev
+
            "f" 'cape-file
            "k" 'cape-keyword
            "s" 'cape-elisp-symbol
@@ -220,7 +220,7 @@ default lsp-passthrough."
            "&" 'cape-sgml
            "r" 'cape-rfc1345
            "y" (cape-capf-interactive (cape-company-to-capf #'company-yasnippet)))
-  ([remap dabbrev-expand] 'cape-dabbrev)
+  ([remap dabbrev-completion] 'cape-dabbrev)
   (:keymaps 'corfu-map
             :states 'insert
             [remap evil-normal-state] '(lambda ()
