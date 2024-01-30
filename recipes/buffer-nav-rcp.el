@@ -47,21 +47,21 @@
       (define-key map (kbd "C-M-}") 'puni-barf-forward)
       map)
     "My own Puni keymap.")
-  (define-minor-mode kb/puni-mode
-    "Enable keybindings for Puni commands."
-    :keymap kb/puni-mode-map)
-  (define-globalized-minor-mode kb/puni-global-mode
-    kb/puni-mode
-    (lambda () (kb/puni-mode 1)))
-  (kb/puni-global-mode)
-  :config
   (defun kb/puni-kill-line ()
     "A wrapper around `puni-kill-line'.
 Call `org-kill-line' instead when in org-mode."
     (interactive)
     (if (derived-mode-p 'org-mode)
         (org-kill-line)
-      (puni-kill-line))))
+      (puni-kill-line)))
+
+  (define-minor-mode kb/puni-mode
+    "Enable keybindings for Puni commands."
+    :keymap kb/puni-mode-map)
+  (define-globalized-minor-mode kb/puni-global-mode
+    kb/puni-mode
+    (lambda () (kb/puni-mode 1)))
+  (kb/puni-global-mode))
 
 ;;; Avy
 ;; Quickly jump to any character
