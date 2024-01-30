@@ -484,8 +484,8 @@ See `org-noter' for details and ARG usage."
                      `(:background "PaleVioletRed4")
                      `(CATEGORY "amazing" help-echo "Wow!"))
   (org-remark-create "red-line"
-                     `(:underline "PaleVioletRed4")
-                     `(CATEGORY "amazing" help-echo "Wow!"))
+                     `(:underline '(:color "PaleVioletRed4" :style wave))
+                     `(CATEGORY "surprise" help-echo "Wow!"))
   (org-remark-create "yellow"
                      `(:background "yellow3")
                      `(CATEGORY "important"))
