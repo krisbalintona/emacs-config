@@ -271,15 +271,14 @@ This version removes delimiters.")
                   vc-mode " "
                   mode-line-buffer-identification
                   mode-line-position
-                  (:eval
-                   (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
+                  (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   mode-line-format-right-align
                   mode-line-process
-                  flymake-mode-line-format
+                  (:eval (when (bound-and-true-p flymake-mode)
+                           flymake-mode-line-format))
                   " "
-                  (:eval
-                   (when (mode-line-window-selected-p)
-                     mode-line-misc-info))
+                  (:eval (when (mode-line-window-selected-p)
+                           mode-line-misc-info))
                   (:eval kb/mode-line-modes)
                   mode-line-end-spaces)))
 

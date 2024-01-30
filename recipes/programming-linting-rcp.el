@@ -68,11 +68,10 @@
   (flymake-show-diagnostics-at-end-of-line nil) ; I enable this selectively via a hook
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
-  (flymake-mode-line-counter-format
-   '(:eval (when (cl-plusp (length (flymake-diagnostics)))
-             '(flymake-mode-line-error-counter
-               flymake-mode-line-warning-counter
-               flymake-mode-line-note-counter))))
+  (flymake-mode-line-counter-format     ; Remove surrounding brackets
+   '(flymake-mode-line-error-counter
+     flymake-mode-line-warning-counter
+     flymake-mode-line-note-counter))
   (flymake-suppress-zero-counters t))
 
 ;;; Flymake-collection
