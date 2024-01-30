@@ -17,10 +17,10 @@
   (yas-alias-to-yas/prefix-p nil)
   (yas-also-auto-indent-first-line t)
   (yas-also-indent-empty-lines nil)
-  (yas-choose-tables-first t)
   (yas-inhibit-overlay-modification-protection nil)
   (yas-snippet-revival t)
   (yas-triggers-in-field nil)
+  (yas-choose-tables-first nil)         ; Fewer things to select!
   :init
   (yas-global-mode))
 
