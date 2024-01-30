@@ -32,7 +32,6 @@
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
 
-              inhibit-startup-screen t                                                            ; Disable start-up screen
               initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n"  ; Set a cringe scratch buffer message
 
               trash-directory (no-littering-expand-var-file-name "trash")                         ; Trash directory
