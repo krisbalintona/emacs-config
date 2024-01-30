@@ -139,6 +139,9 @@
 ;;; Keep all logged messages
 (setq message-log-max t)
 
+;;; Don't do anything with inactive mark
+(setq mark-even-if-inactive nil)
+
 ;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
