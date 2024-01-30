@@ -448,7 +448,7 @@ See `org-noter' for details and ARG usage."
 
 ;;; Org-remark
 (use-package org-remark
-  :after org
+  :demand
   :hook ((Info-mode eww-mode) . org-remark-mode)
   :general (:keymaps 'org-remark-mode-map
                      :prefix "C-c r"
