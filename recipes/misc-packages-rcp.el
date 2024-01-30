@@ -1065,6 +1065,12 @@ ARG and REDISPLAY are identical to the original function."
   :init
   (global-hi-lock-mode 1))
 
+;;; Midnight
+(use-package midnight
+  :elpaca nil
+  :init
+  (midnight-mode 1))
+
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
   :elpaca nil
