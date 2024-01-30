@@ -214,7 +214,7 @@ Side effects occur if the parent of the current headline has a
 
   (defun kb/org-agenda-auto-exclude (tag)
     "Set tags based on time. See (org) Filtering/limiting agenda items"
-    (when (cond ((member tag '("@home"))
+    (when (cond ((member tag '("@home" "@hobbies"))
                  (let ((hr (nth 2 (decode-time))))
                    ;; After 10 or before 21
                    (or (> hr 10) (< hr 21)))))
