@@ -460,7 +460,8 @@ displayed."
 (use-package compile
   :elpaca nil
   :custom
-  (compilation-scroll-output t))        ; Scroll with compile buffer
+  (compilation-scroll-output 'first-error) ; Scroll with compile buffer
+  (compilation-auto-jump-to-first-error t))
 
 ;;; Fancy-compilation
 (use-package fancy-compilation
