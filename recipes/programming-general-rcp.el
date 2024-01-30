@@ -168,7 +168,8 @@ punctuation."
    [remap repeat-complex-command] 'consult-complex-command
    [remap goto-line] 'consult-goto-line
    [remap imenu] 'kb/consult-imenu-versatile
-   [remap recentf-open-files] 'consult-recent-file)
+   [remap recentf-open-files] 'consult-recent-file
+   [remap flymake-show-buffer-diagnostics] 'consult-flymake)
   (:keymaps 'goto-map
             ;; Uses the `M-g' prefix
             "e" 'consult-compile-error

@@ -58,7 +58,6 @@
                                  (t
                                   (setq-local flymake-show-diagnostics-at-end-of-line nil)))))
   :general
-  ([remap flymake-show-buffer-diagnostics] 'consult-flymake)
   (:keymaps 'flymake-mode-map
             "M-n" 'flymake-goto-next-error
             "M-p" 'flymake-goto-prev-error)
@@ -73,11 +72,7 @@
              '(flymake-mode-line-error-counter
                flymake-mode-line-warning-counter
                flymake-mode-line-note-counter))))
-  (elisp-flymake-byte-compile-load-path
-   (append (list
-            "./"
-            (when (featurep 'straight) (straight--dir)))
-           load-path)))
+  (elisp-flymake-byte-compile-load-path (append '("./") load-path)))
 
 ;;; Flymake-collection
 (use-package flymake-collection
