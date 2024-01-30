@@ -239,7 +239,6 @@ are troublesome)."
     (let ((recursive-edit-help-echo
            "Recursive edit, type M-C-c to get out"))
       (list (propertize "%[" 'help-echo recursive-edit-help-echo)
-            "["                         ; Changed delimiter
             `(:propertize ("" mode-name)
                           help-echo "Major mode\n\
 mouse-1: Display major mode menu\n\
@@ -259,10 +258,10 @@ mouse-3: Toggle minor modes"
                         'mouse-face 'mode-line-highlight
                         'local-map (make-mode-line-mouse-map
                                     'mouse-2 #'mode-line-widen))
-            "]"                         ; Changed delimiter
             (propertize "%]" 'help-echo recursive-edit-help-echo)
             " "))
-    "Mode line construct for displaying major and minor modes.")
+    "Mode line construct for displaying major and minor modes.
+This version removes delimiters.")
 
   (setq-default mode-line-format
                 '("%e" mode-line-front-space
