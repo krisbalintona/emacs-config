@@ -459,7 +459,8 @@ Same as default but truncates with `truncate-string-ellipsis'."
   ;; Save relevant current timer variables to resume timer across Emacs sessions
   (dolist (var '(work-timer-start-time
                  work-timer-duration
-                 work-timer-type))
+                 work-timer-type
+                 work-timer-pauses))
     (add-to-list 'savehist-additional-variables var))
 
   (defun kb/work-timer-set-faces ()
