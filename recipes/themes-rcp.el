@@ -275,10 +275,7 @@ This version removes delimiters.")
                    (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   mode-line-format-right-align
                   mode-line-process
-                  (:eval
-                   (when (and (bound-and-true-p flymake-mode)
-                              (mode-line-window-selected-p))
-                     flymake-mode-line-format))
+                  flymake-mode-line-format
                   " "
                   (:eval
                    (when (mode-line-window-selected-p)

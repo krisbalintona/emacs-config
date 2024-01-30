@@ -62,6 +62,7 @@
             "M-n" 'flymake-goto-next-error
             "M-p" 'flymake-goto-prev-error)
   :custom
+  (elisp-flymake-byte-compile-load-path (append '("./") load-path)) ; Recognizes this I know about
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
   (flymake-show-diagnostics-at-end-of-line nil) ; I enable this selectively via a hook
@@ -72,7 +73,7 @@
              '(flymake-mode-line-error-counter
                flymake-mode-line-warning-counter
                flymake-mode-line-note-counter))))
-  (elisp-flymake-byte-compile-load-path (append '("./") load-path)))
+  (flymake-suppress-zero-counters t))
 
 ;;; Flymake-collection
 (use-package flymake-collection
