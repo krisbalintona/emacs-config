@@ -143,7 +143,7 @@
        display-buffer-at-bottom)
       (window-height . 12)
       (window-parameters . ((mode-line-format . none))))
-     ("^\\*eldoc for"
+     ("^\\*eldoc"
       (kb/select-buffer-at-bottom)
       (window-height . shrink-window-if-larger-than-buffer)
       (window-parameters . ((mode-line-format . none))))
