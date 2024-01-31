@@ -11,9 +11,8 @@
 ;; Defer garbage collection
 (setq gc-cons-threshold most-positive-fixnum)
 
-;; Inhibit resizing frame. Reduces startup time. See
-;; https://github.com/doomemacs/doomemacs/blob/58af4aef56469f3f495129b4e7d947553f420fca/core/core.el#L323
-(setq frame-inhibit-implied-resize '(font))
+;; Better?
+(setq frame-resize-pixelwise t)
 
 ;; Preview loading any packages prior to init.el being loading
 (setq package-enable-at-startup nil)
