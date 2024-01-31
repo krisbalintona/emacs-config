@@ -15,17 +15,6 @@
   :custom
   (which-func-functions '(breadcrumb-imenu-crumbs)))
 
-;;; Quickrun
-(use-package quickrun
-  :general (:prefix "<f2>"
-                    "<f2>" 'quickrun
-                    "<f3>" '(lambda ()
-                              (interactive)
-                              (let ((quickrun-focus-p t))
-                                (quickrun-shell))))
-  :custom
-  (quickrun-focus-p nil))
-
 ;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia
