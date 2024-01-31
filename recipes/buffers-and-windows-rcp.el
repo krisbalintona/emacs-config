@@ -67,7 +67,7 @@
    `(;; Automatically hide
 
      ;; Full frame
-  
+
      ;; Same window
      ("\\*helpful *"
       (display-buffer-reuse-mode-window
@@ -115,7 +115,7 @@
       (slot . 2))
      ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
       (kb/select-buffer-in-side-window)
-      (window-height . (lambda (win) (fit-window-to-buffer win)))
+      (window-height . fit-window-to-buffer)
       (side . top)
       (slot . -2)
       (preserve-size . (nil . t))
@@ -128,8 +128,7 @@
       (window-height . 0.33))
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
-      (window-height . (lambda (win)
-                         (fit-window-to-buffer win (floor (frame-height) 3))))
+      (window-height . fit-window-to-buffer)
       (side . bottom)
       (slot . -4))
      ("\\*Embark Actions\\*"
@@ -144,7 +143,9 @@
       (window-height . 12)
       (window-parameters . ((mode-line-format . none))))
      ("^\\*eldoc"
-      (kb/select-buffer-at-bottom)
+      ((lambda (buffer alist)
+         (let ((window (display-buffer-at-bottom buffer alist)))
+           (select-window window))))
       (window-height . shrink-window-if-larger-than-buffer)
       (window-parameters . ((mode-line-format . none))))
 
@@ -186,16 +187,11 @@ If buffer-or-name is nil return current buffer's mode."
                         (if buffer-or-name
                             (get-buffer buffer-or-name)
                           (current-buffer))))
+
   (defun kb/select-buffer-in-side-window (buffer alist)
-    "Display buffer in a side window and select it"
+    "Display buffer in a side window then select it."
     (let ((window (display-buffer-in-side-window buffer alist)))
-      (select-window window)
-      ))
-  (defun kb/select-buffer-at-bottom (buffer alist)
-    "Display buffer in a side window and select it"
-    (let ((window (display-buffer-at-bottom buffer alist)))
-      (select-window window)
-      )))
+      (select-window window))))
 
 ;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
