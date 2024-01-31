@@ -459,6 +459,7 @@ displayed."
 ;;; Compile
 (use-package compile
   :elpaca nil
+  :general ("<f5>" 'recompile)
   :custom
   (compilation-scroll-output 'first-error) ; Scroll with compile buffer
   (compilation-auto-jump-to-first-error t))

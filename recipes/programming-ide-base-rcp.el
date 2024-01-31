@@ -115,12 +115,11 @@
 
 ;;;; Treesit-auto
 (use-package treesit-auto
-  :demand
   :custom
   (treesit-auto-install 'prompt)
   (treesit-extra-load-path              ; Where language files are found
    (list (no-littering-expand-var-file-name "tree-sitter")))
-  :config
+  :init
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode)
 
