@@ -29,7 +29,7 @@ functions."
                                  (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))
   :general
   (:keymaps 'eglot-mode-map
-            :prefix "<f3>"
+            :prefix "C-c e"
             "r" 'eglot-rename
             "a" 'eglot-code-actions
             "=" 'eglot-format
