@@ -945,6 +945,7 @@ This is a difference in multitude of %s."
   :custom
   (register-preview-delay 0)
   (register-separator " ")
+  (register-use-preview 'traditional)
   :config
   (with-eval-after-load 'consult
     ;; Better than `consult-register'
