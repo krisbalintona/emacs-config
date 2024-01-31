@@ -38,16 +38,16 @@ functions."
   (:keymaps 'eglot-mode-map
             (general-chord "``") 'eglot-code-actions)
   :custom
-  ;; NOTE 2023-07-11: Set to 0 if I want no events printed to a buffer so that
-  ;; performance is increased
-  (eglot-events-buffer-size 2000000)
-  (eglot-connect-timeout 10)
+  ;; NOTE 2023-07-11: Set to 0 if I want performance in exchange for no events
+  ;; printed to a buffer
+  (eglot-events-buffer-config '(:size 2000000 :format full))
+  (eglot-connect-timeout 15)
   (eglot-autoreconnect 3)
   (eglot-sync-connect 3)
   (eglot-autoshutdown t)
-  (eglot-send-changes-idle-time 0.7)
-  (eglot-extend-to-xref nil)
-  (eglot-report-progress t)
+  (eglot-send-changes-idle-time 0.5)
+  (eglot-extend-to-xref t)
+  (eglot-report-progress 'messages)
   :custom-face
   (eglot-highlight-symbol-face ((t (:box (:line-width -1 :style nil)))))
   :config
