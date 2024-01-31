@@ -31,24 +31,24 @@
   (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
   ;; Hydra menu
   (pretty-hydra-define hydra:selectrum-projectile
-    (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
-    ("Projectile"
-     (("i" projectile-invalidate-cache :color red)
-      ("n" projectile-add-known-project))
-     "Buffers"
-     (("b" projectile-switch-to-buffer)
-      ("K" projectile-kill-buffers)
-      ("S" projectile-save-project-buffers))
-     "Find"
-     (("d" projectile-find-dir)
-      ("D" projectile-dired)
-      ("f" projectile-find-file)
-      ("p" projectile-switch-project))
-     "Search"
-     (("r" projectile-replace)
-      ("R" projectile-replace-regexp)
-      ("s" counsel-projectile-rg))
-     ))
+                       (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
+                       ("Projectile"
+                        (("i" projectile-invalidate-cache :color red)
+                         ("n" projectile-add-known-project))
+                        "Buffers"
+                        (("b" projectile-switch-to-buffer)
+                         ("K" projectile-kill-buffers)
+                         ("S" projectile-save-project-buffers))
+                        "Find"
+                        (("d" projectile-find-dir)
+                         ("D" projectile-dired)
+                         ("f" projectile-find-file)
+                         ("p" projectile-switch-project))
+                        "Search"
+                        (("r" projectile-replace)
+                         ("R" projectile-replace-regexp)
+                         ("s" counsel-projectile-rg))
+                        ))
   :config
   (projectile-mode)
 
@@ -70,21 +70,24 @@
   ([remap project-find-regexp] 'consult-ripgrep)
   (:keymaps 'project-prefix-map
             "m" 'magit-project-status
+            "a" 'project-any-command
             "o" 'kb/project-multi-occur)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
-  (project-switch-commands
-   '((affe-find "Find file" "f")
-     (consult-ripgrep "Regexp" "g")
-     (magit-project-status "Magit")
-     (project-switch-to-buffer "Buffer" "b")
-     (project-query-replace-regexp "Replace regexp")
-     (kb/project-multi-occur "Multi-occur" "o")
-     (project-dired "Open dired")
-     (project-find-dir "Open directory in dired")
-     (project-compile "Compile")
-     (project-eshell "Eshell")
-     (project-shell "Shell")))
+  (project-file-history-behavior 'relativize)
+  ;; NOTE 2024-01-31: Replace via project-switch-commands to project-prefix-or-any-command
+  ;; (project-switch-commands
+  ;;  '((affe-find "Find file" "f")
+  ;;    (consult-ripgrep "Regexp" "g")
+  ;;    (magit-project-status "Magit")
+  ;;    (project-switch-to-buffer "Buffer" "b")
+  ;;    (project-query-replace-regexp "Replace regexp")
+  ;;    (kb/project-multi-occur "Multi-occur" "o")
+  ;;    (project-dired "Open dired")
+  ;;    (project-find-dir "Open directory in dired")
+  ;;    (project-compile "Compile")
+  ;;    (project-eshell "Eshell")
+  ;;    (project-shell "Shell")))
   (project-vc-merge-submodules nil) ; Consider submodules as their own projects?
   :init
   ;; Inspired by `projectile-multi-occur'
@@ -95,7 +98,10 @@ With a prefix argument, show NLINES of context."
     (let ((project (project-current)))
       (multi-occur (project-buffers project)
                    (car (occur-read-primary-args))
-                   nlines))))
+                   nlines)))
+  :config
+  ;; Found in Emacs News
+  (setopt project-switch-commands #'project-prefix-or-any-command))
 
 ;;;; Xref
 (use-package xref
