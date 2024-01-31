@@ -119,7 +119,7 @@
       (side . top)
       (slot . -2)
       (preserve-size . (nil . t))
-      (window-parameters . ((mode-line-format . nil))))
+      (window-parameters . ((mode-line-format . none))))
 
      ;; To the bottom
      ("\\*Flycheck errors\\*"
