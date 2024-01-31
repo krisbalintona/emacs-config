@@ -483,6 +483,8 @@ displayed."
 (use-package form-feed
   :diminish
   :custom
+  (form-feed-include-modes
+   '(prog-mode text-mode help-mode emacs-news-view-mode))
   (form-feed-exclude-modes nil)
   :init
   (global-form-feed-mode))
