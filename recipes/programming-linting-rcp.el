@@ -53,8 +53,8 @@
   :ghook 'prog-mode-hook 'org-mode-hook
   :hook (eglot-managed-mode . (lambda ()
                                 (cond
-                                 ((eglot--managed-mode)
-                                  (setq-local flymake-show-diagnostics-at-end-of-line t))
+                                 ((eglot-managed-p)
+                                  (setq-local flymake-show-diagnostics-at-end-of-line 'short))
                                  (t
                                   (setq-local flymake-show-diagnostics-at-end-of-line nil)))))
   :general
