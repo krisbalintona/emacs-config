@@ -9,6 +9,12 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;; Gud
+(use-package gud
+  :elpaca nil
+  :custom
+  (gud-highlight-current-line t))
+
 ;;; Realgud
 (use-package realgud
   :hook (realgud-srcbuf-mode . tool-bar-mode)
