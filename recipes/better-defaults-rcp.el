@@ -58,7 +58,7 @@
 
 ;;; Cursor settings
 (setq-default cursor-type 'bar
-              cursor-in-non-selected-windows 'hollow
+              cursor-in-non-selected-windows 'box
               x-stretch-cursor t)       ; Stretch cursor to the glyph width
 
 ;;; Kill child processes without confirm

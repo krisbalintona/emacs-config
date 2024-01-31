@@ -312,7 +312,7 @@ progress. This is called by the timer `good-scroll--timer' every
 (use-package eldoc-box
   :disabled                             ; Only intrusive
   :diminish eldoc-box-hover-mode
-  :hook (eldoc-mode . eldoc-box-hover-mode)
+  ;; :hook (eldoc-mode . eldoc-box-hover-mode)
   :general
   ([remap eldoc-doc-buffer] 'eldoc-box-help-at-point)
   (:keymaps 'eglot-mode-map
@@ -323,7 +323,8 @@ progress. This is called by the timer `good-scroll--timer' every
   (eldoc-box-cleanup-interval 0.5)
   (eldoc-box-only-multi-line t)
   (eldoc-box-fringe-use-same-bg t)
-  (eldoc-box-self-insert-command-list '(self-insert-command outshine-self-insert-command))
+  (eldoc-box-self-insert-command-list
+   '(self-insert-command outshine-self-insert-command))
   :config
   ;; Workaround for many hyphen characters wrapping in an ugly way in
   ;; `eldoc-box' frame
