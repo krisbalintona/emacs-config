@@ -86,6 +86,10 @@
       (window-parameters . ((no-other-window . t))))
 
      ;; To the right
+     ("\\*Help\\*"
+      (display-buffer-reuse-mode-window
+       display-buffer-in-previous-window)
+      (window-parameters . ((mode-line-format . none))))
      ("\\*org-roam\\*"
       (display-buffer-in-side-window)
       (dedicated . t)
