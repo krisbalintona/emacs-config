@@ -100,18 +100,16 @@
 (use-package treesit
   :elpaca nil
   :custom
-  (treesit-font-lock-level 4))
+  (treesit-font-lock-level 3))
 
 ;;;; Treesit-auto
 (use-package treesit-auto
+  :demand
   :custom
   (treesit-auto-install 'prompt)
   (treesit-extra-load-path              ; Where language files are found
    (list (no-littering-expand-var-file-name "tree-sitter")))
   :init
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode)
-
   ;; `Treesit-auto' doesn't allow us to set the installation path yet because
   ;; Emacs 29 `treesit-install-language-grammar' didn't have a parameter for it
   ;; (whereas the master branch of Emacs does). See
@@ -138,7 +136,10 @@ Non-nil only if installation completed without any errors."
                                              ;; path I added to
                                              ;; "/home/krisbalintona/.emacs.d/var/tree-sitter"
                                              (no-littering-expand-var-file-name "tree-sitter")))))
-  (advice-add 'treesit-auto--prompt-to-install-package :override #'kb/treesit-auto--prompt-to-install-package))
+  (advice-add 'treesit-auto--prompt-to-install-package :override #'kb/treesit-auto--prompt-to-install-package)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 ;;;; Turbo-log
 (use-package turbo-log
