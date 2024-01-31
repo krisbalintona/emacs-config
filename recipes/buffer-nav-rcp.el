@@ -47,13 +47,14 @@
       (define-key map (kbd "C-M-}") 'puni-barf-forward)
       map)
     "My own Puni keymap.")
-  (defun kb/puni-kill-line ()
+  (defun kb/puni-kill-line (arg)
     "A wrapper around `puni-kill-line'.
-Call `org-kill-line' instead when in org-mode."
-    (interactive)
+Call `org-kill-line' instead when in org-mode. Passes ARG to
+command."
+    (interactive "P")
     (if (derived-mode-p 'org-mode)
-        (org-kill-line)
-      (puni-kill-line)))
+        (org-kill-line arg)
+      (puni-kill-line arg)))
 
   (define-minor-mode kb/puni-mode
     "Enable keybindings for Puni commands."
