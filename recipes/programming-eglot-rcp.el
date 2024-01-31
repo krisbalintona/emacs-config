@@ -56,14 +56,18 @@ functions."
 
 ;;; Eglot-booster
 ;; Boosts Eglot's communication with the server. There's also a version for LSP.
-;; FIXME 2024-01-10: UNTESTED
+;; FIXME 2024-01-10: UNTESTED. See
+;; https://github.com/jdtsmith/eglot-booster?tab=readme-ov-file#installusage
 (use-package eglot-booster
   ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
   ;; https://github.com/blahgeek/emacs-lsp-booster/releases
   :elpaca (:type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :init
-  (eglot-booster-mode))
+  (eglot-booster-mode)
+  :config
+  (unless (executable-find "emacs-lsp-booster")
+    (message "Please install the `emacs-lsp-booster' executable!")))
 
 ;;; Languages
 ;;;; Eglot-java
