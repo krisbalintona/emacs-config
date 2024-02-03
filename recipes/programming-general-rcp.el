@@ -315,8 +315,8 @@ punctuation."
 
 ;;; Other
 ;;;; Outshine
-;; Outline-minor-mode but with better keybindings and more support
-;; Demand to properly set outline-minor-mode-prefix
+;; Outline-minor-mode but with better keybindings and more support.
+;; `outline-minor-mode-prefix' must be set prior to the package's loading
 (use-package outshine
   :diminish (outshine-mode
              outline-minor-mode)
@@ -324,9 +324,11 @@ punctuation."
   :gfhook 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map
-            "C-x n s" '(outshine-narrow-to-subtree :wk "Outshine narrow to subtree"))
+            "C-x n s" 'outshine-narrow-to-subtree)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
+  :preface
+  (defvar outline-minor-mode-ccprefix (kbd "C-c \\"))
   :init
   ;; More convenient `outline-insert-heading'
   (defun kb/around-outline-insert-heading (orig_fun &rest args)
