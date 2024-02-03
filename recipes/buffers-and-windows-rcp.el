@@ -87,9 +87,7 @@
 
      ;; To the right
      ("\\*Help\\*"
-      (display-buffer-reuse-mode-window
-       display-buffer-in-previous-window)
-      (window-parameters . ((mode-line-format . none))))
+      (display-buffer-in-previous-window))
      ("\\*org-roam\\*"
       (display-buffer-in-side-window)
       (dedicated . t)
@@ -106,14 +104,12 @@
 
      ;; To the top
      ("\\*Messages\\*"
-      (display-buffer-reuse-window
-       kb/select-buffer-in-side-window)
+      (kb/select-buffer-in-side-window)
       (window-height . 0.36)
       (side . top)
       (slot . 1))
      ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
-      (display-buffer-reuse-window
-       kb/select-buffer-in-side-window)
+      (kb/select-buffer-in-side-window)
       (window-height . 0.3)
       (side . top)
       (slot . 2))
@@ -127,8 +123,7 @@
 
      ;; To the bottom
      ("\\*Flycheck errors\\*"
-      (display-buffer-reuse-mode-window
-       display-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (window-height . 0.33))
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
@@ -136,14 +131,11 @@
       (side . bottom)
       (slot . -4))
      ("\\*Embark Actions\\*"
-      (display-buffer-reuse-mode-window
-       display-buffer-at-bottom)
+      (display-buffer-at-bottom)
       (window-height . fit-window-to-buffer)
-      (window-parameters . ((no-other-window . t)
-                            (mode-line-format . none))))
+      (window-parameters . ((no-other-window . t))))
      ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'dap-ui-repl-mode))
-      (display-buffer-reuse-mode-window
-       display-buffer-at-bottom)
+      (display-buffer-at-bottom)
       (window-height . 12)
       (window-parameters . ((mode-line-format . none))))
      ("^\\*eldoc"
@@ -155,8 +147,7 @@
 
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
-      (display-buffer-reuse-mode-window
-       display-buffer-below-selected)
+      (display-buffer-below-selected)
       (window-height . fit-window-to-buffer))
      ("\\*\\(Embark\\)?.*Completions.*"
       (display-buffer-in-side-window)
@@ -164,21 +155,21 @@
       (slot . 0)
       (window-parameters . ((no-other-window . t)
                             (mode-line-format . none))))
+     ("\\*compilation\\*"
+      (display-buffer-in-side-window)
+      (side . bottom))
      ("\\*\\(I?Python3\\|Python3\\)\\*"
-      (display-buffer-reuse-mode-window
-       display-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
       (window-height . 0.27))
      ("\\*Racket REPL"
-      (display-buffer-reuse-mode-window
-       display-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
       (window-height . 0.35))
      ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'rustic-cargo-run-mode))
-      (display-buffer-reuse-mode-window
-       display-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
       (window-height . 0.35))))
@@ -299,7 +290,6 @@ If buffer-or-name is nil return current buffer's mode."
      "^\\*Messages\\*"
      "^\\*Warnings\\*"
      "^\\*Backtrace\\*"
-     "^\\*compilation\\*"
      comint-mode
 
      ;; Coding
@@ -307,7 +297,6 @@ If buffer-or-name is nil return current buffer's mode."
      "\\*Shell Command Output\\*"
      "\\*Async Shell Command\\*"
      "^\\*Compile-Log\\*$"
-     compilation-mode
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
