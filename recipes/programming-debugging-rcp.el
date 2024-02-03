@@ -94,7 +94,7 @@
   :demand ; FIXME 2024-01-17: Right now I need this unless I want to manually call `dape' to load package
   :elpaca (:type git :host github :repo "svaante/dape")
   :custom
-  (dape-key-prefix (kbd "H-d"))
+  (dape-key-prefix (kbd "C-c d"))
   (dape-buffer-window-arrangement 'right)
   (dape-stepping-granularity 'instruction)
   (dape-info-variable-table-aligned t)

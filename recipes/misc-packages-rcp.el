@@ -298,7 +298,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Eldoc
 (use-package eldoc
   :diminish
-  :general ("H-H" 'eldoc-doc-buffer)
+  :general ("H-d" 'eldoc-doc-buffer)
   :custom
   (eldoc-print-after-edit nil)          ; Only show `eldoc' while I'm editing?
   (eldoc-documentation-strategy

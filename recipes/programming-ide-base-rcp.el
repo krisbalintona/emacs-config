@@ -52,12 +52,12 @@
 ;; Viewing documentation within Emacs.
 (use-package devdocs-browser
   :general (:keymaps '(eglot-mode-map lsp-mode-map lsp-bridge-mode-map)
-                     :prefix "H-d"
-                     "h" '(devdocs-browser-open :wk "Open")
-                     "H" '(devdocs-browser-open-in :wk "Open-in")
-                     "i" '(devdocs-browser-install-doc :wk "Install")
-                     "d" '(devdocs-browser-download-offline-data :wk "Download")
-                     "D" '(devdocs-browser-upgrade-all-docs :wk "Upgrade"))
+                     :prefix "C-c D"
+                     "h" 'devdocs-browser-open
+                     "H" 'devdocs-browser-open-in
+                     "i" 'devdocs-browser-install-doc
+                     "d" 'devdocs-browser-download-offline-data
+                     "D" 'devdocs-browser-upgrade-all-docs)
   :custom
   (devdocs-browser-major-mode-docs-alist
    '((c++-mode "cpp")

@@ -28,11 +28,13 @@ functions."
                                        eglot--saved-bindings) ; Manually add to saved values
                                  (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))
   :general
+  ("C-c e e" 'eglot)
   (:keymaps 'eglot-mode-map
             :prefix "C-c e"
             "r" 'eglot-rename
             "a" 'eglot-code-actions
             "=" 'eglot-format
+            "R" 'eglot-reconnect
             "s" 'eglot-shutdown
             "S" 'eglot-shutdown-all)
   (:keymaps 'eglot-mode-map
