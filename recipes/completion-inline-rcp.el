@@ -33,22 +33,16 @@
             "C-g" 'corfu-quit
             "M-l" 'corfu-show-location)
   :custom
-  ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
-  ;; want to perform completion
-  (tab-always-indent 'complete)
-  (tab-first-completion 'word)
-
   (corfu-auto nil)
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.25)
-  (corfu-on-exact-match nil)         ; Don't do anything fancy for exact matches
+  (corfu-on-exact-match 'show)
 
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)     ; Always have the same width
   (corfu-count 14)
   (corfu-scroll-margin 4)
   (corfu-cycle nil)
-  (completion-cycle-threshold nil)
 
   ;; `nil' means to ignore `corfu-separator' behavior, that is, use the older
   ;; `corfu-quit-at-boundary' = nil behavior. Set this to separator if using
@@ -60,11 +54,10 @@
   (corfu-quit-at-boundary nil)
   (corfu-separator ?\s)            ; Use space
   (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
-  (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
-  (corfu-preselect-first t)        ; Preselect first candidate?
+  (corfu-preview-current t)
+  (corfu-preselect 'valid)
 
   ;; Other
-  (corfu-echo-documentation nil)        ; Already use corfu-doc
   (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
   :init
   (global-corfu-mode)

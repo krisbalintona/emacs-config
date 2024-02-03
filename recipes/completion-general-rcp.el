@@ -19,7 +19,7 @@
                          basic-remote ; For `tramp' hostname completion with `vertico'
                          partial-completion)))) ; Partial completion for file paths!
       completion-flex-nospace t
-      completion-cycle-threshold 2 ; Number of candidates until cycling turns off
+      completion-cycle-threshold nil ; Number of candidates until cycling turns off
       completion-lazy-hilit t      ; Performance; added Emacs 30.1
       completion-show-help nil
       completion-auto-help t
@@ -33,6 +33,11 @@
       completions-detailed t ; Show more details in completion minibuffer (inspired by `marginalia')
       ;; Grouping of completions for Emacs 28
       completions-group t
+
+      ;; Functionality of `indent-for-tab-command'. Make sure tab doesn't indent
+      ;; when you want to perform completion
+      tab-always-indent 'complete
+      tab-first-completion 'word
 
       read-buffer-completion-ignore-case t
       read-file-name-completion-ignore-case t
