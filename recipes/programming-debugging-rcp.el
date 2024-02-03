@@ -99,8 +99,10 @@
   (dape-stepping-granularity 'instruction)
   (dape-info-variable-table-aligned t)
   :config
-  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
+  (dape-breakpoint-global-mode)
+
   ;; Kill created compile buffer on build success
+  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
 
   (defun kb/dape--save-on-start ()
     "Save buffers on startup."
