@@ -111,7 +111,7 @@ default lsp-passthrough."
   :elpaca nil
   :ghook 'corfu-mode-hook
   :general
-  (:keymaps 'corfu-mode-map
+  (:keymaps 'corfu-map
             "H-d" 'corfu-popupinfo-toggle
             "H-l" 'corfu-popupinfo-location)
   :custom
