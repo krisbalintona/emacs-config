@@ -10,50 +10,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Built-in
-;; A lot of this is taken from
-;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
-(setq completion-styles '(basic initials partial-completion flex)
-      completion-cycle-threshold 2 ; Number of candidates until cycling turns off
-      completion-flex-nospace t
-      completion-pcm-complete-word-inserts-delimiters nil
-      completion-pcm-word-delimiters "-_./:| " ; Word delimiters
-      completion-show-help nil
-      completion-auto-help t
-      completion-ignore-case t
-      ;; The following two are updated in Emacs 28.  They concern the
-      ;; *Completions* buffer.
-      completions-format 'one-column
-      completions-detailed t ; Show more details in completion minibuffer (inspired by `marginalia')
-      ;; Grouping of completions for Emacs 28
-      completions-group t
-
-      read-buffer-completion-ignore-case t
-      read-file-name-completion-ignore-case t
-
-      enable-recursive-minibuffers t   ; Allow minibuffer commands in minibuffer
-      read-answer-short t           ; also check `use-short-answers' for Emacs28
-      resize-mini-windows t         ; Not sure what this does
-      minibuffer-eldef-shorten-default t) ; Shorten "(default ...)" to "[...]" in minibuffer prompts.
-(setq-default case-fold-search t)         ; For general regexp
-(setq minibuffer-prompt-properties        ; Don't show cursor in the minibuffer
-      '(read-only t cursor-intangible t face minibuffer-prompt))
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-;; Add prompt indicator to `completing-read-multiple'. We display
-;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
-;; https://github.com/minad/vertico
-(defun crm-indicator (args)
-  (cons (format "[completing-read-multiple: %s]  %s"
-                (propertize
-                 (replace-regexp-in-string
-                  "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                  crm-separator)
-                 'face 'error)
-                (car args))
-        (cdr args)))
-(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
 ;;; Vertico
 ;;;; Itself
 (use-package vertico
