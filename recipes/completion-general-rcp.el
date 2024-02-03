@@ -20,11 +20,13 @@
                          partial-completion)))) ; Partial completion for file paths!
       completion-flex-nospace t
       completion-cycle-threshold 2 ; Number of candidates until cycling turns off
-      completion-pcm-complete-word-inserts-delimiters nil
-      completion-pcm-word-delimiters "-_./:| " ; Word delimiters
+      completion-lazy-hilit t      ; Performance; added Emacs 30.1
       completion-show-help nil
       completion-auto-help t
       completion-ignore-case t
+      completion-pcm-complete-word-inserts-delimiters nil
+      completion-pcm-word-delimiters "-_./:| " ; Word delimiters
+
       ;; The following two are updated in Emacs 28.  They concern the
       ;; *Completions* buffer.
       completions-format 'one-column
