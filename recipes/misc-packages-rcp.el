@@ -298,14 +298,13 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Eldoc
 (use-package eldoc
   :diminish
-  :general ("H-d" 'eldoc-doc-buffer)
   :custom
-  (eldoc-print-after-edit nil)          ; Only show `eldoc' while I'm editing?
+  (eldoc-print-after-edit nil)
+  (eldoc-idle-delay 0.2)
   (eldoc-documentation-strategy
    'eldoc-documentation-compose-eagerly) ; Mash multiple sources together and display eagerly
+  (eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit) ; Also respects `max-mini-window-height'
   (eldoc-echo-area-display-truncation-message t)
-  (eldoc-idle-delay 0.2)
-  (eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit) ; Respects `max-mini-window-height'
   (eldoc-echo-area-prefer-doc-buffer t))
 
 ;;; Eldoc-box

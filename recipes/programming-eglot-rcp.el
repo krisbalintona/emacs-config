@@ -57,12 +57,13 @@ functions."
 
 ;;; Eglot-booster
 ;; Boosts Eglot's communication with the server. There's also a version for LSP.
-;; FIXME 2024-01-10: UNTESTED. See
-;; https://github.com/jdtsmith/eglot-booster?tab=readme-ov-file#installusage
+;; FIXME 2024-02-03: Commit 4f017f5f0e breaks eglot-booster because of changes
+;; to `eglot-alternatives'. Maybe check in later.
 (use-package eglot-booster
   ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
   ;; https://github.com/blahgeek/emacs-lsp-booster/releases
   :elpaca (:type git :host github :repo "jdtsmith/eglot-booster")
+  :after eglot
   :init
   (eglot-booster-mode))
 
@@ -84,8 +85,6 @@ functions."
 ;;; Consult-eglot
 ;; Equivalent to `consult-lsp'; adds `consult-eglot-symbols'.
 (use-package consult-eglot
-  :demand t
-  :requires consult
   :after eglot
   :general (:keymaps 'eglot-mode-map
                      [remap xref-find-apropos] #'consult-eglot-symbols))
