@@ -112,24 +112,19 @@ Non-nil only if installation completed without any errors."
   (which-func-functions '(breadcrumb-imenu-crumbs)))
 
 ;;; Devdocs
-;; Viewing documentation within Emacs.
-(use-package devdocs-browser
-  :general (:keymaps '(eglot-mode-map lsp-mode-map lsp-bridge-mode-map)
-                     :prefix "C-c D"
-                     "h" 'devdocs-browser-open
-                     "H" 'devdocs-browser-open-in
-                     "i" 'devdocs-browser-install-doc
-                     "d" 'devdocs-browser-download-offline-data
-                     "D" 'devdocs-browser-upgrade-all-docs)
+(use-package devdocs
+  :general (:keymaps 'prog-mode-map
+                     "C-c D" 'devdocs-lookup)
+  :hook ((python-base-mode
+          . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
+         (c-ts-base-mode
+          . (lambda () (setq-local devdocs-current-docs '("c"))))
+         (lua-mode
+          . (lambda () (setq-local devdocs-current-docs '("lua~5.3"))))
+         (latex-mode
+          . (lambda () (setq-local devdocs-current-docs '("latex")))))
   :custom
-  (devdocs-browser-major-mode-docs-alist
-   '((c++-mode "cpp")
-     (c-mode "c")
-     (go-mode "go")
-     (python-base-mode "Python")
-     (emacs-lisp-mode "elisp")
-     (cmake-mode "CMake")
-     (haskell-mode "Haskell"))))
+  (devdocs-window-select t))
 
 ;;; Dash-docs
 ;; Viewing of documentation via browser.
