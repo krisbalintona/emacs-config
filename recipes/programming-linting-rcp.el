@@ -45,24 +45,17 @@
 (use-package consult-flycheck
   :after (consult flycheck)
   :general (:keymaps 'lsp-mode-map
-                     "C-c e" '(consult-flycheck :wk "Consult flycheck")))
+                     "C-c e" 'consult-flycheck))
 
 ;;; Flymake
 (use-package flymake
   :diminish
   :ghook 'prog-mode-hook 'org-mode-hook
-  :hook (eglot-managed-mode . (lambda ()
-                                (cond
-                                 ((eglot-managed-p)
-                                  (setq-local flymake-show-diagnostics-at-end-of-line 'short))
-                                 (t
-                                  (setq-local flymake-show-diagnostics-at-end-of-line nil)))))
-  :general
-  (:keymaps 'flymake-mode-map
-            "M-n" 'flymake-goto-next-error
-            "M-p" 'flymake-goto-prev-error)
+  :general (:keymaps 'flymake-mode-map
+                     "M-n" 'flymake-goto-next-error
+                     "M-p" 'flymake-goto-prev-error)
   :custom
-  (elisp-flymake-byte-compile-load-path (append '("./") load-path)) ; Recognizes this I know about
+  (elisp-flymake-byte-compile-load-path (append '("./") load-path)) ; Recognizes files I know about
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
   (flymake-show-diagnostics-at-end-of-line nil) ; I enable this selectively via a hook
