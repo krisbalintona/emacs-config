@@ -77,6 +77,7 @@
    '(literal literal-prefix initialism regexp))
   (prescient-sort-full-matches-first t)
   (prescient-history-length 200)
+  (prescient-aggressive-file-save t)
   :config
   (prescient-persist-mode))
 
