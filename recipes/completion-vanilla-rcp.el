@@ -139,6 +139,7 @@
 ;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
+  :disabled
   :custom
   (completion-styles '(basic initials substring flex orderless))
   (orderless-matching-styles
