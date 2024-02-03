@@ -418,9 +418,8 @@ With a prefix argument, show NLINES of context."
   (diff-hl-show-staged-changes nil)
   (diff-hl-update-async t)
   (diff-hl-side 'right)
-  (diff-hl-flydiff-delay 0.5)
+  (diff-hl-flydiff-delay 0.5)           ; See `diff-hl-flydiff-mode'
   :config
-  (diff-hl-flydiff-mode)                ; Highlighting without saving
   (global-diff-hl-show-hunk-mouse-mode))
 
 ;;;; Git-timemachine
