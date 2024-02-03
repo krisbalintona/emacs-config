@@ -126,62 +126,69 @@ default lsp-passthrough."
 ;;; Kind-icon
 ;; Icons for corfu!
 (use-package kind-icon
-  :demand
+  :disabled ; Prefer `nerd-icons-corfu' with its lighter weight icons (doesn't use svgs)
+  :after corfu
+  ;; Add hook to reset cache so the icon colors match my theme
+  :hook (kb/themes . (lambda () (call-interactively 'kind-icon-reset-cache)))
   :custom
   (kind-icon-use-icons t)
   (kind-icon-default-face 'corfu-default) ; To unify background color
   (kind-icon-blend-background nil)  ; Mix foreground and background ("blended")?
   (kind-icon-blend-frac 0.08)
-  :config
+  (kind-icon-default-style ; FIXME 2024-02-03: Keyword annotations get cut off because icons too wide
+   '(:padding 0 :stroke 0 :margin 0 :radius 0 :height 0.8 :scale 1.0))
+  ;; Use VSCode's icons. Taken from
+  ;; https://github.com/jdtsmith/kind-icon/wiki#using-vs-code-icons-as-an-alternative
+  (kind-icon-mapping
+   '((array          "a"   :icon "symbol-array"       :face font-lock-type-face              :collection "vscode")
+     (boolean        "b"   :icon "symbol-boolean"     :face font-lock-builtin-face           :collection "vscode")
+     (color          "#"   :icon "symbol-color"       :face success                          :collection "vscode")
+     (command        "cm"  :icon "chevron-right"      :face default                          :collection "vscode")
+     (constant       "co"  :icon "symbol-constant"    :face font-lock-constant-face          :collection "vscode")
+     (class          "c"   :icon "symbol-class"       :face font-lock-type-face              :collection "vscode")
+     (constructor    "cn"  :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+     (enum           "e"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
+     (enummember     "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
+     (enum-member    "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
+     (event          "ev"  :icon "symbol-event"       :face font-lock-warning-face           :collection "vscode")
+     (field          "fd"  :icon "symbol-field"       :face font-lock-variable-name-face     :collection "vscode")
+     (file           "f"   :icon "symbol-file"        :face font-lock-string-face            :collection "vscode")
+     (folder         "d"   :icon "folder"             :face font-lock-doc-face               :collection "vscode")
+     (function       "f"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+     (interface      "if"  :icon "symbol-interface"   :face font-lock-type-face              :collection "vscode")
+     (keyword        "kw"  :icon "symbol-keyword"     :face font-lock-keyword-face           :collection "vscode")
+     (macro          "mc"  :icon "lambda"             :face font-lock-keyword-face)
+     (magic          "ma"  :icon "lightbulb-autofix"  :face font-lock-builtin-face           :collection "vscode")
+     (method         "m"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+     (module         "{"   :icon "file-code-outline"  :face font-lock-preprocessor-face)
+     (numeric        "nu"  :icon "symbol-numeric"     :face font-lock-builtin-face           :collection "vscode")
+     (operator       "op"  :icon "symbol-operator"    :face font-lock-comment-delimiter-face :collection "vscode")
+     (param          "pa"  :icon "gear"               :face default                          :collection "vscode")
+     (property       "pr"  :icon "symbol-property"    :face font-lock-variable-name-face     :collection "vscode")
+     (reference      "rf"  :icon "library"            :face font-lock-variable-name-face     :collection "vscode")
+     (snippet        "S"   :icon "symbol-snippet"     :face font-lock-string-face            :collection "vscode")
+     (string         "s"   :icon "symbol-string"      :face font-lock-string-face            :collection "vscode")
+     (struct         "%"   :icon "symbol-structure"   :face font-lock-variable-name-face     :collection "vscode")
+     (text           "tx"  :icon "symbol-key"         :face font-lock-doc-face               :collection "vscode")
+     (typeparameter  "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
+     (type-parameter "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
+     (unit           "u"   :icon "symbol-ruler"       :face font-lock-constant-face          :collection "vscode")
+     (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
+     (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
+     (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
+  :init
   ;; TODO 2022-05-24: See if I can use the cooler icons from
   ;; `lsp-bridge-icon--icons' without requiring the package
   (with-eval-after-load 'corfu          ; Enable
-    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
-  ;; Add hook to reset cache so the icon colors match my theme
-  (add-hook 'kb/themes-hook (lambda () (call-interactively 'kind-icon-reset-cache)))
-
-  ;; Use VSCode's icons. Taken from
-  ;; https://github.com/jdtsmith/kind-icon/wiki#using-vs-code-icons-as-an-alternative
-  (setq kind-icon-mapping
-        '((array          "a"   :icon "symbol-array"       :face font-lock-type-face              :collection "vscode")
-          (boolean        "b"   :icon "symbol-boolean"     :face font-lock-builtin-face           :collection "vscode")
-          (color          "#"   :icon "symbol-color"       :face success                          :collection "vscode")
-          (command        "cm"  :icon "chevron-right"      :face default                          :collection "vscode")
-          (constant       "co"  :icon "symbol-constant"    :face font-lock-constant-face          :collection "vscode")
-          (class          "c"   :icon "symbol-class"       :face font-lock-type-face              :collection "vscode")
-          (constructor    "cn"  :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-          (enum           "e"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
-          (enummember     "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
-          (enum-member    "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
-          (event          "ev"  :icon "symbol-event"       :face font-lock-warning-face           :collection "vscode")
-          (field          "fd"  :icon "symbol-field"       :face font-lock-variable-name-face     :collection "vscode")
-          (file           "f"   :icon "symbol-file"        :face font-lock-string-face            :collection "vscode")
-          (folder         "d"   :icon "folder"             :face font-lock-doc-face               :collection "vscode")
-          (function       "f"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-          (interface      "if"  :icon "symbol-interface"   :face font-lock-type-face              :collection "vscode")
-          (keyword        "kw"  :icon "symbol-keyword"     :face font-lock-keyword-face           :collection "vscode")
-          (macro          "mc"  :icon "lambda"             :face font-lock-keyword-face)
-          (magic          "ma"  :icon "lightbulb-autofix"  :face font-lock-builtin-face           :collection "vscode")
-          (method         "m"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-          (module         "{"   :icon "file-code-outline"  :face font-lock-preprocessor-face)
-          (numeric        "nu"  :icon "symbol-numeric"     :face font-lock-builtin-face           :collection "vscode")
-          (operator       "op"  :icon "symbol-operator"    :face font-lock-comment-delimiter-face :collection "vscode")
-          (param          "pa"  :icon "gear"               :face default                          :collection "vscode")
-          (property       "pr"  :icon "symbol-property"    :face font-lock-variable-name-face     :collection "vscode")
-          (reference      "rf"  :icon "library"            :face font-lock-variable-name-face     :collection "vscode")
-          (snippet        "S"   :icon "symbol-snippet"     :face font-lock-string-face            :collection "vscode")
-          (string         "s"   :icon "symbol-string"      :face font-lock-string-face            :collection "vscode")
-          (struct         "%"   :icon "symbol-structure"   :face font-lock-variable-name-face     :collection "vscode")
-          (text           "tx"  :icon "symbol-key"         :face font-lock-doc-face               :collection "vscode")
-          (typeparameter  "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
-          (type-parameter "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
-          (unit           "u"   :icon "symbol-ruler"       :face font-lock-constant-face          :collection "vscode")
-          (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
-          (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
-          (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
-  (plist-put kind-icon-default-style :height 0.9)
-  (plist-put kind-icon-default-style :scale 0.8))
+;;; Nerd-icons-corfu
+;; Use nerd-icons with corfu
+(use-package nerd-icons-corfu
+  :after (nerd-icons corfu)
+  :init
+  (with-eval-after-load 'corfu
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)))
 
 ;;; Cape
 ;; Expand capf functionality with corfu!
