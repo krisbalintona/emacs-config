@@ -83,11 +83,11 @@
 
 ;;; UI
 ;;;; Fringes
-;; 1 pixel for left and right fringes
-(fringe-mode '(1 . 1))
-;; Places the fringes outside the margins, closest to the frame edge. Useful for
-;; `git-gutter-fringes'
-;; (setq-default fringes-outside-margins t)
+
+;; Places the fringes outside the margins, closest to the frame edge. The gutter
+;; looks less cramped with some space between it and buffer. Useful for
+;; `git-gutter-fringes'.
+(setq-default fringes-outside-margins t)
 
 ;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it

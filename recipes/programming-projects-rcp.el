@@ -379,9 +379,9 @@ With a prefix argument, show NLINES of context."
 ;;; QoL
 ;;;; Git-gutter
 (use-package git-gutter
+  :disabled                          ; NOTE 2022-12-29: Trying `diff-hl' for now
   :hook ((window-configuration-change . git-gutter:update-all-windows)
-         ;; (prog-mode . git-gutter-mode) ; NOTE 2022-12-29: Trying `diff-hl' for now
-         )
+         (prog-mode . git-gutter-mode))
   :custom
   (git-gutter-fr:side 'left-fringe)
   ;; 0 is actually on-save, so we put this as low as possible to effectively
@@ -400,20 +400,28 @@ With a prefix argument, show NLINES of context."
   (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t)))
+  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t)))
 
 ;;;; Diff-hl
 ;; Diff information in the margins. Also provides commands for navigating and
-;; viewing diff info of the current file
+;; viewing diff info of the current file. Faster and cleaner than git-gutter and
+;; git-gutter-fringes
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
-         ;; Magit integration
+         (vc-dir-mode . diff-hl-dir-mode)
+         (dired-mode . diff-hl-dired-mode)
          (magit-pre-refresh . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :custom
   (diff-hl-draw-borders nil)
-  (diff-hl-show-staged-changes nil))
+  (diff-hl-show-staged-changes nil)
+  (diff-hl-update-async t)
+  (diff-hl-side 'right)
+  (diff-hl-flydiff-delay 0.5)
+  :config
+  (diff-hl-flydiff-mode)                ; Highlighting without saving
+  (global-diff-hl-show-hunk-mouse-mode))
 
 ;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history
