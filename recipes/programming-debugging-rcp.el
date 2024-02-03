@@ -91,7 +91,7 @@
 ;;; Dape
 ;; Dap-mode but without LSP-mode
 (use-package dape
-  :demand ; FIXME 2024-01-17: Right now I need this unless I want to manually call `dape' to load package
+  :demand ; OPTIMIZE 2024-02-02: Current version needs to me demanded to set dape-key-prefix
   :elpaca (:type git :host github :repo "svaante/dape")
   :custom
   (dape-key-prefix (kbd "C-c d"))
@@ -99,10 +99,17 @@
   (dape-stepping-granularity 'instruction)
   (dape-info-variable-table-aligned t)
   :config
+  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
+  ;; Kill created compile buffer on build success
+
   (defun kb/dape--save-on-start ()
     "Save buffers on startup."
     (save-some-buffers nil t))
-  (add-hook 'dape-on-start-hooks 'kb/dape--save-on-start))
+  (add-hook 'dape-on-start-hooks 'kb/dape--save-on-start)
+
+  ;; To display info and repl buffers on stopped
+  (add-hook 'dape-on-stopped-hooks 'dape-info)
+  (add-hook 'dape-on-stopped-hooks 'dape-repl))
 
 ;;; programming-debugging-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
