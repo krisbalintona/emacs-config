@@ -113,8 +113,12 @@ default lsp-passthrough."
 (use-package corfu-popupinfo
   :elpaca nil
   :ghook 'corfu-mode-hook
+  :general
+  (:keymaps 'corfu-mode-map
+            "H-d" 'corfu-popupinfo-toggle
+            "H-l" 'corfu-popupinfo-location)
   :custom
-  (corfu-popupinfo-delay '(0.7 . 0.3))
+  (corfu-popupinfo-delay '(0.5 . 0.3))
   (corfu-popupinfo-direction '(right left vertical))
   (corfu-popupinfo-hide t)
   (corfu-popupinfo-resize t)
