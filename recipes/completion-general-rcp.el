@@ -14,8 +14,12 @@
 ;; A lot of this is taken from
 ;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
 (setq completion-styles '(basic initials partial-completion flex)
-      completion-cycle-threshold 2 ; Number of candidates until cycling turns off
+      completion-category-overrides
+      '((file (styles . (basic
+                         basic-remote ; For `tramp' hostname completion with `vertico'
+                         partial-completion)))) ; Partial completion for file paths!
       completion-flex-nospace t
+      completion-cycle-threshold 2 ; Number of candidates until cycling turns off
       completion-pcm-complete-word-inserts-delimiters nil
       completion-pcm-word-delimiters "-_./:| " ; Word delimiters
       completion-show-help nil
@@ -63,6 +67,11 @@
 (use-package prescient
   :demand
   :custom
+  ;; NOTE 2024-02-03: Flex is chosen as a backup in case nothing in prescient is
+  ;; matched, which only happens if I'm clueless about what I'm searching for.
+  ;; We prefer this over adding the fuzzy matching in `prescient-filter-method'
+  ;; because we don't want a bunch of random results included in the filtered
+  ;; prescient results and cluttering it
   (completion-styles '(prescient flex))
   (prescient-filter-method
    '(literal literal-prefix initialism regexp))
@@ -78,6 +87,11 @@
   (vertico-prescient-enable-filtering t)
   (vertico-prescient-enable-sorting t)
   (vertico-prescient-override-sorting t)
+  (vertico-prescient-completion-styles '(prescient flex))
+  ;; See also `prescient--completion-recommended-overrides'
+  (vertico-prescient-completion-category-overrides
+   '((file (styles basic basic-remote partial-completion))
+     (eglot (styles prescient flex))))
   :init
   (vertico-prescient-mode))
 
@@ -88,6 +102,11 @@
   (corfu-prescient-enable-filtering t)
   (corfu-prescient-enable-sorting t)
   (corfu-prescient-override-sorting t)
+  (corfu-prescient-completion-styles '(prescient flex))
+  ;; See also `prescient--completion-recommended-overrides'
+  (corfu-prescient-completion-category-overrides
+   '((file (styles basic basic-remote partial-completion))
+     (eglot (styles prescient flex))))
   :init
   (corfu-prescient-mode))
 
