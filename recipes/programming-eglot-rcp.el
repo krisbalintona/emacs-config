@@ -49,6 +49,7 @@ functions."
   (eglot-send-changes-idle-time 0.5)
   (eglot-extend-to-xref t)
   (eglot-report-progress 'messages)
+  (eglot-ignored-server-capabilities '(:inlayHintProvider)) ; Disable inlay hints globally
   :custom-face
   (eglot-highlight-symbol-face ((t (:box (:line-width -1 :style nil)))))
   :config
