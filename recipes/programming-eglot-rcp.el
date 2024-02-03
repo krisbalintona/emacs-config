@@ -11,8 +11,7 @@
 
 ;;; Eglot
 (use-package eglot
-  :hook ((eglot-managed-mode . eglot-inlay-hints-mode) ; Only available if server supports it
-         (eglot-managed-mode . (lambda ()
+  :hook ((eglot-managed-mode . (lambda ()
                                  "Configure `eldoc'"
                                  ;; Use `eglot--setq-saving' to restore original
                                  ;; values. Make sure "eldoc," or a similar
