@@ -240,7 +240,7 @@ punctuation."
   :commands embark-act
   :general
   ("C-." 'embark-act
-   "M-." 'embark-dwim ; Check README for why it's sensible to overwrite `xref-find-definitions'
+   [remap xref-find-definitions] 'embark-dwim ; Check README for why it's sensible to overwrite `xref-find-definitions'
    "C-h B" 'embark-bindings)
   (:keymaps 'vertico-map
             "C-." 'embark-act

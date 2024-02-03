@@ -105,7 +105,7 @@ With a prefix argument, show NLINES of context."
 
 ;;;; Xref
 (use-package xref
-  :general ("H-?" 'xref-find-references-and-replace) ; Emacs 29.1
+  :general ("C-M-?" 'xref-find-references-and-replace) ; Emacs 29.1
   :custom
   (xref-show-definitions-function #'xref-show-definitions-completing-read)
   (xref-show-xrefs-function #'xref-show-definitions-buffer)

@@ -35,6 +35,7 @@
             [remap back-to-indentation] 'eshell-bol)
   (kb/open-keys
     "e" '((lambda ()
+            "Create an eshell buffer per default directory."
             (interactive)
             (require 'eshell)
             (let ((buf-name (concat "*eshell* "
@@ -42,7 +43,7 @@
               (if (member buf-name (mapcar #'buffer-name (buffer-list)))
                   (display-buffer buf-name)
                 (kb/eshell buf-name))))
-          :wk "Eshell"))
+          :wk "My eshell"))
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)
