@@ -9,92 +9,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Breadcrumb
-(use-package breadcrumb
-  :hook ((lsp-ui-mode eglot-managed-mode) . breadcrumb-local-mode)
-  :custom
-  (which-func-functions '(breadcrumb-imenu-crumbs)))
-
-;;; Apheleia
-;; Quality code formatting for (arbitrarily) many languages
-(use-package apheleia
-  :ensure-system-package ((black . python-black)
-                          (prettier)
-                          (clang-format . clang-format-all-git)
-                          (latexindent . texlive-binextra)
-                          (stylua)
-                          (google-java-format)
-                          (shfmt)
-                          (rustfmt))
-  :config
-  ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
-  ;; instead of defining the variables directly so that it is agnostic to any
-  ;; package changes. Take a look at the `format-all' package for how to install
-  ;; particular formatters as well as their proper CLI commands. Namely, inspect
-  ;; `format-all-formatters'.
-  (setf
-   ;; Major modes
-   (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
-   (alist-get 'ruby-mode apheleia-mode-alist) '(rufo)
-   (alist-get 'haskell-mode apheleia-mode-alist) '(fourmolu)
-   ;; Formatters
-   (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
-   (alist-get 'google-java-format apheleia-formatters)
-   '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
-   (alist-get 'stylua apheleia-formatters)
-   `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
-   (alist-get 'latexindent apheleia-formatters)
-   '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
-   (alist-get 'rufo apheleia-formatters) '("rufo" "--simple-exit" "--filename" filepath)
-   (alist-get 'fourmolu apheleia-formatters) '("fourmolu")))
-
-;;; Devdocs
-;; Viewing documentation within Emacs.
-(use-package devdocs-browser
-  :general (:keymaps '(eglot-mode-map lsp-mode-map lsp-bridge-mode-map)
-                     :prefix "C-c D"
-                     "h" 'devdocs-browser-open
-                     "H" 'devdocs-browser-open-in
-                     "i" 'devdocs-browser-install-doc
-                     "d" 'devdocs-browser-download-offline-data
-                     "D" 'devdocs-browser-upgrade-all-docs)
-  :custom
-  (devdocs-browser-major-mode-docs-alist
-   '((c++-mode "cpp")
-     (c-mode "c")
-     (go-mode "go")
-     (python-base-mode "Python")
-     (emacs-lisp-mode "elisp")
-     (cmake-mode "CMake")
-     (haskell-mode "Haskell"))))
-
-;;; Dash-docs
-;; Viewing of documentation via browser.
-(use-package dash-docs
-  :hook ((python-base-mode . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
-         (haskell-mode . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
-         (js2-mode . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))
-         (lua-mode . (lambda () (setq-local dash-docs-common-docsets '("Lua"))))
-         (LaTeX-mode . (lambda () (setq-local dash-docs-common-docsets '("LaTeX")))))
-  :custom
-  (dash-docs-docsets-path (expand-file-name "dash-docs-docsets" no-littering-var-directory))
-  (dash-docs-browser-func 'eww)
-
-  (dash-docs-enable-debugging nil) ; Get rid of annoying messages when searching
-  (dash-docs-min-length 2)
-  (dash-enable-fontlock t))
-
-;;;; Dash-docs-completing-read
-;; My own interface for accessing docsets via `completing-read'.
-(use-package dash-docs-completing-read
-  :elpaca nil
-  :after dash-docs
-  :general (kb/lsp-keys
-             "D" '(:ignore t :wk "Dashdocs")
-             "Di" '(dash-docs-install-docset :wk "Install docs")
-             "Dl" '(dash-docs-completing-read-at-point :wk "At-point search")
-             "DL" '(dash-docs-completing-read :wk "Manual search")))
-
 ;;; Treesit
 ;;;; Itself
 (use-package treesit
@@ -157,6 +71,92 @@ Non-nil only if installation completed without any errors."
   :custom
   (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
   (turbo-log-allow-insert-without-tree-sitter-p t))
+
+;;; Apheleia
+;; Quality code formatting for (arbitrarily) many languages
+(use-package apheleia
+  :ensure-system-package ((black . python-black)
+                          (prettier)
+                          (clang-format . clang-format-all-git)
+                          (latexindent . texlive-binextra)
+                          (stylua)
+                          (google-java-format)
+                          (shfmt)
+                          (rustfmt))
+  :config
+  ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
+  ;; instead of defining the variables directly so that it is agnostic to any
+  ;; package changes. Take a look at the `format-all' package for how to install
+  ;; particular formatters as well as their proper CLI commands. Namely, inspect
+  ;; `format-all-formatters'.
+  (setf
+   ;; Major modes
+   (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
+   (alist-get 'ruby-mode apheleia-mode-alist) '(rufo)
+   (alist-get 'haskell-mode apheleia-mode-alist) '(fourmolu)
+   ;; Formatters
+   (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
+   (alist-get 'google-java-format apheleia-formatters)
+   '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
+   (alist-get 'stylua apheleia-formatters)
+   `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
+   (alist-get 'latexindent apheleia-formatters)
+   '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
+   (alist-get 'rufo apheleia-formatters) '("rufo" "--simple-exit" "--filename" filepath)
+   (alist-get 'fourmolu apheleia-formatters) '("fourmolu")))
+
+;;; Breadcrumb
+(use-package breadcrumb
+  :hook ((lsp-ui-mode eglot-managed-mode) . breadcrumb-local-mode)
+  :custom
+  (which-func-functions '(breadcrumb-imenu-crumbs)))
+
+;;; Devdocs
+;; Viewing documentation within Emacs.
+(use-package devdocs-browser
+  :general (:keymaps '(eglot-mode-map lsp-mode-map lsp-bridge-mode-map)
+                     :prefix "C-c D"
+                     "h" 'devdocs-browser-open
+                     "H" 'devdocs-browser-open-in
+                     "i" 'devdocs-browser-install-doc
+                     "d" 'devdocs-browser-download-offline-data
+                     "D" 'devdocs-browser-upgrade-all-docs)
+  :custom
+  (devdocs-browser-major-mode-docs-alist
+   '((c++-mode "cpp")
+     (c-mode "c")
+     (go-mode "go")
+     (python-base-mode "Python")
+     (emacs-lisp-mode "elisp")
+     (cmake-mode "CMake")
+     (haskell-mode "Haskell"))))
+
+;;; Dash-docs
+;; Viewing of documentation via browser.
+(use-package dash-docs
+  :hook ((python-base-mode . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
+         (haskell-mode . (lambda () (setq-local dash-docs-common-docsets '("Haskell"))))
+         (js2-mode . (lambda () (setq-local dash-docs-common-docsets '("JavaScript"))))
+         (lua-mode . (lambda () (setq-local dash-docs-common-docsets '("Lua"))))
+         (LaTeX-mode . (lambda () (setq-local dash-docs-common-docsets '("LaTeX")))))
+  :custom
+  (dash-docs-docsets-path (expand-file-name "dash-docs-docsets" no-littering-var-directory))
+  (dash-docs-browser-func 'eww)
+
+  (dash-docs-enable-debugging nil) ; Get rid of annoying messages when searching
+  (dash-docs-min-length 2)
+  (dash-enable-fontlock t))
+
+;;;; Dash-docs-completing-read
+;; My own interface for accessing docsets via `completing-read'.
+(use-package dash-docs-completing-read
+  :elpaca nil
+  :after dash-docs
+  :general (kb/lsp-keys
+             "D" '(:ignore t :wk "Dashdocs")
+             "Di" '(dash-docs-install-docset :wk "Install docs")
+             "Dl" '(dash-docs-completing-read-at-point :wk "At-point search")
+             "DL" '(dash-docs-completing-read :wk "Manual search")))
 
 ;;; programming-ide-base-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
