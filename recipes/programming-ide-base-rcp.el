@@ -158,6 +158,25 @@ Non-nil only if installation completed without any errors."
              "Dl" '(dash-docs-completing-read-at-point :wk "At-point search")
              "DL" '(dash-docs-completing-read :wk "Manual search")))
 
+;;; Hideshow
+(use-package hideshow
+  :elpaca nil
+  :hook (prog-mode . hs-minor-mode)
+  :custom
+  (hs-set-up-overlay 'kb/hideshow-display)
+  (hs-isearch-open t)
+  (hs-allow-nesting t)
+  :init
+  (defun kb/hideshow-display (ov)
+    "Text to replace hidden text with."
+    (overlay-put ov 'display
+                 (propertize (format " [%d lines elided…] "
+                                     (1- (count-lines (overlay-start ov)
+                                                      (overlay-end ov))))
+                             'face 'shadow)))
+  :config
+  (diminish 'hs-minor-mode))
+
 ;;; programming-ide-base-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-ide-base-rcp)
