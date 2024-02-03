@@ -195,19 +195,8 @@ default lsp-passthrough."
     (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)))
 
 ;;; Cape
-;; Expand capf functionality with corfu!
-;; Defines the following capf functions:
-;; `cape-file' - File name
-;; `cape-tex' - Unicode char in TeX (e.g. \hbar)
-;; `cape-dabbrev' - From open buffers
-;; `cape-keyword' - Programming language keyword
-;; `cape-sgml' - Unicode char from Sgml entity (e.g., &alpha)
-;; `cape-rfc1345' - Unicode chars using RFC 1345 mnemonics.
-;; `cape-abbrev' - Complete abbreviation (i.e. `add-global-abbrev', `add-mode-abbrev')
-;; `cape-ispell' - Word from ispell
-;; `cape-dict' - Word from dictionary file
-;; `cape-elisp-symbol' - Elisp symbol
-;; `cape-line' - From line in file
+;; Expand capf functionality with corfu! See an updated list of the defined capf
+;; functions in the package's commentary.
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
@@ -215,16 +204,14 @@ default lsp-passthrough."
   :general
   (:prefix "H-c"               ; Particular completion function
            "p" 'completion-at-point
-           "t" 'complete-tag   ; etags
            "d" 'cape-dabbrev
-
+           "h" 'cape-history
            "f" 'cape-file
            "k" 'cape-keyword
            "s" 'cape-elisp-symbol
            "a" 'cape-abbrev
-           "i" 'cape-ispell
-           "l" 'cape-line
            "w" 'cape-dict
+           "l" 'cape-line
            "\\" 'cape-tex
            "_" 'cape-tex
            "^" 'cape-tex
