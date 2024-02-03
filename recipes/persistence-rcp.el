@@ -62,7 +62,12 @@
   :hook ((server-mode . desktop-save-mode)
          (window-setup . (lambda () (when desktop-save-mode (desktop-read)))))
   :custom
-  (desktop-load-locked-desktop 'check-pid))
+  (desktop-load-locked-desktop 'check-pid)
+  (desktop-files-not-to-save
+   (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
+           ;; Don't save files from other Emacs repos because sometimes they
+           ;; have local variables that mess with desktop's loading of files
+           (literal "/home/krisbalintona/emacs-repos/")))))
 
 ;;; Super-save
 ;; Automatically save buffers when you do certain things

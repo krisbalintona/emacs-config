@@ -1094,6 +1094,7 @@ ARG and REDISPLAY are identical to the original function."
   (kill-do-not-save-duplicates t)
   (kill-ring-deindent-mode nil)
   (window-divider-default-places 'bottom-only)
+  (custom-search-field nil)
   :config
   (global-so-long-mode)
   (repeat-mode)
