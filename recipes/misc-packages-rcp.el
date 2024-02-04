@@ -1080,6 +1080,11 @@ ARG and REDISPLAY are identical to the original function."
   :elpaca nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
+  ;; Remap these defaults; they are effectively the same while phasing out the
+  ;; need the *-region binds
+  ([remap upcase-word] 'upcase-dwim
+   [remap downcase-word] 'downcase-dwim
+   [remap capitalize-word] 'capitalize-dwim)
   (kb/open-keys
     "c" 'calendar)
   (:keymaps 'Info-mode-map
