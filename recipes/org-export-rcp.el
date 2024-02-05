@@ -317,6 +317,13 @@ Uses my 'latex-paper' backend. See the original
   :demand
   :ensure-system-package pandoc)
 
+;;; Ox-clip
+(use-package ox-clip
+  :ensure-system-package xclip
+  :general (kb/yank-keys
+             :keymaps 'org-mode-map
+             "x" 'ox-clip-formatted-copy))
+
 ;;; org-export-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-export-rcp)
