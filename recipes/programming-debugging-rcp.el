@@ -99,7 +99,8 @@
   (dape-stepping-granularity 'instruction)
   (dape-info-variable-table-aligned t)
   :config
-  (dape-breakpoint-global-mode)
+  (dape-breakpoint-global-mode 1)
+  (diminish 'dape-breakpoint-global-mode)
 
   ;; Kill created compile buffer on build success
   (add-hook 'dape-compile-compile-hooks 'kill-buffer)
