@@ -23,7 +23,7 @@
 (general-create-definer kb/file-keys    ; File-related
   :prefix "C-c f")
 (general-create-definer kb/yank-keys    ; Yanking
-  :prefix "H-i")
+  :prefix "C-c i")
 (general-create-definer kb/nav-keys     ; Navigation in buffers
   :prefix "C-c c")
 (general-create-definer kb/open-keys    ; Open certain things
