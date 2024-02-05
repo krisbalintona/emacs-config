@@ -443,18 +443,12 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :general (kb/open-keys
              "w" work-timer-prefix-map)
   :custom
-  (work-timer-debug t)
+  (work-timer-debug nil)
   (work-timer-time-format "%.2m:%.2s")
-  (work-timer-default-work-duration 25)
-  (work-timer-default-break-duration 5)
   (work-timer-work-duration-function 'work-timer-work-duration-fractional)
-  (work-timer-break-duration-function 'work-timer-break-duration-fractional)
-  ;; (work-timer-work-duration-function 'work-timer-work-duration-pomodoro)
-  ;; (work-timer-break-duration-function 'work-timer-break-duration-pomodoro)
-  ;; (work-timer-fractional-work-duration 0.5)
-  ;; (work-timer-fractional-break-duration-fraction 1)
   (work-timer-fractional-work-duration 25)
-  (work-timer-fractional-break-duration-fraction 0.15)
+  (work-timer-break-duration-function 'work-timer-break-duration-fractional)
+  (work-timer-fractional-break-duration-fraction 0.25)
   :init
   ;; Save relevant current timer variables to resume timer across Emacs sessions
   (dolist (var '(work-timer-start-time
@@ -473,7 +467,6 @@ Same as default but truncates with `truncate-string-ellipsis'."
                 initial-color
               (color-darken-name initial-color 15))))
       (set-face-foreground 'work-timer-mode-line foreground)))
-
   :config
   (work-timer-with-org-clock-mode))
 
