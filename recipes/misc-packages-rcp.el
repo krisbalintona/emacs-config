@@ -1085,6 +1085,7 @@ ARG and REDISPLAY are identical to the original function."
   ([remap upcase-word] 'upcase-dwim
    [remap downcase-word] 'downcase-dwim
    [remap capitalize-word] 'capitalize-dwim)
+  ([remap dabbrev-expand] 'hippie-expand)
   (kb/open-keys
     "c" 'calendar)
   (:keymaps 'Info-mode-map
