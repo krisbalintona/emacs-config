@@ -370,6 +370,16 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
   )
 
+;;;; Switchy-window
+;; `other-window' by most recently used
+(use-package switchy-window
+  :general (:keymaps 'switchy-window-minor-mode-map
+                     [remap other-window] (defrepeater 'switchy-window-repeat #'switchy-window))
+  :preface
+  (use-package defrepeater :demand)
+  :init
+  (switchy-window-minor-mode))
+
 ;;; Buffers
 ;;;; Bookmark
 (use-package bookmark
