@@ -356,7 +356,7 @@
                     (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
                     (mu4e-refile-folder . "/uni/[Gmail].All Mail")
                     (mu4e-trash-folder . "/uni/[Gmail].Trash")
-                    (mu4e-maildir-initial-input . "/uni/")
+                    (mu4e-maildir-initial-input . "/uni/ ")
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
                                                (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
@@ -585,7 +585,7 @@
                     (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
                     (mu4e-refile-folder . "/personal/[Gmail].All Mail")
                     (mu4e-trash-folder . "/personal/[Gmail].Trash")
-                    (mu4e-maildir-initial-input . "/personal/")
+                    (mu4e-maildir-initial-input . "/personal/ ")
                     ;; Maildirs
                     (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
                                                (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
