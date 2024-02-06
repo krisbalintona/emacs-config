@@ -329,7 +329,7 @@ punctuation."
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
   :preface
-  (defvar outline-minor-mode-ccprefix (kbd "C-c \\"))
+  (defvar outline-minor-mode-prefix (kbd "C-c \\"))
   :init
   ;; More convenient `outline-insert-heading'
   (defun kb/around-outline-insert-heading (orig_fun &rest args)
