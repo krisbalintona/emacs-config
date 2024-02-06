@@ -235,6 +235,7 @@ If buffer-or-name is nil return current buffer's mode."
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)
+  (tab-bar-close-last-tab-choice 'delete-frame)
   (tab-bar-select-tab-modifiers '(meta))
   (tab-bar-tab-hints t)
   (tab-bar-show t)
@@ -483,6 +484,20 @@ If buffer-or-name is nil return current buffer's mode."
           (set-window-margins window (car margins) (cdr margins))
           (set-window-fringes window (car fringes) (cdr fringes))))))
   (setq split-window-preferred-function 'kb/split-window-sensibly))
+
+;;; Activities
+(use-package activities
+  :general (:prefix "C-c a"
+                    "n" 'activities-new
+                    "g" 'activities-revert
+                    "s" 'activities-suspend
+                    "k" 'activities-kill ; Alias for `-suspend'
+                    "a" 'activities-resume
+                    "b" 'activities-switch
+                    "l" 'activities-list)
+  :init
+  (activities-mode 1)
+  (activities-tabs-mode 1))
 
 ;;; buffers-and-windows-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
