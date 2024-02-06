@@ -66,6 +66,7 @@
 (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
 ;;; Prescient
+;;;; Itself
 ;; Sorting and filtering of minibuffer candidates. The difference between
 ;; `orderless' and this package is that `orderless' filters but does not sort -
 ;; it leaves that up to the "candidate source and the completion UI."

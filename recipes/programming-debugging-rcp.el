@@ -28,7 +28,7 @@
   :commands dap-debug
   :general
   (:keymaps 'lsp-mode-map
-            :prefix "<f4>"
+            :prefix "<f6>"
             "d" '(dap-debug :wk "Debug")
             "l" '(dap-debug-last :wk "Debug last")
             "h" '(dap-hydra :wk "Hydra")

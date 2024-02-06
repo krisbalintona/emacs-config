@@ -117,7 +117,7 @@ change to if called with ARG."
                            (72 100)
                            (100 72)
                            (t 100)))))
-(general-define-key "<f12>" 'kb/toggle-window-transparency)
+(general-define-key "<f9>" 'kb/toggle-window-transparency)
 
 ;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.

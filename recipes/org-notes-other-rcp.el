@@ -552,7 +552,7 @@ See `org-noter' for details and ARG usage."
   ;; compiler error for `kb/delve--key--toggle-preview'.
   :commands delve delve--zettel-preview
   :general
-  ("<f2>" 'delve)
+  ("<f6>" 'delve)
   (:keymaps 'delve-mode-map
             "<backtab>" 'kb/delve--key-backtab
             )
