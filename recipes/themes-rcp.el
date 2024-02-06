@@ -229,13 +229,6 @@ are troublesome)."
 
 ;;;; Default mode line
 (unless (bound-and-true-p mood-line-mode)
-  (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
-        mode-line-compact 'long        ; Emacs 28
-        mode-line-right-align-edge 'window
-        mode-line-percent-position nil ; Don't show percentage of position in buffer
-        mode-line-position-line-format '(" %l ")
-        mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
-
   (defvar kb/mode-line-modes
     (let ((recursive-edit-help-echo
            "Recursive edit, type M-C-c to get out"))
@@ -263,6 +256,15 @@ mouse-3: Toggle minor modes"
             " "))
     "Mode line construct for displaying major and minor modes.
 This version removes delimiters.")
+
+  (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
+        mode-line-compact 'long        ; Emacs 28
+        mode-line-right-align-edge 'window
+        mode-line-percent-position nil ; Don't show percentage of position in buffer
+        mode-line-position-line-format '(" %l ")
+        mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
+
+  (set-face-attribute 'vc-edited-state nil :foreground (face-attribute 'shadow :foreground))
 
   (setq-default mode-line-format
                 '("%e" mode-line-front-space

@@ -277,6 +277,7 @@ With a prefix argument, show NLINES of context."
 ;; ~/.authinfo, ~/.authinfo.gpg, or ~/.netrc. See
 ;; https://magit.vc/manual/ghub/Storing-a-Token.html
 (use-package forge
+  :disabled                             ; FIXME 2024-02-05: Main breaks things
   :demand
   :after magit)
 
