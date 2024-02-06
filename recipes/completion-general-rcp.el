@@ -82,7 +82,7 @@
   ;; prescient results and cluttering it
   (completion-styles '(prescient flex))
   (prescient-filter-method
-   '(literal literal-prefix initialism regexp))
+   '(literal initialism regexp))
   (prescient-sort-full-matches-first t)
   (prescient-history-length 200)
   (prescient-aggressive-file-save t)
