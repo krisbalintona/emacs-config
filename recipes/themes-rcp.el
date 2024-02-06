@@ -83,7 +83,7 @@
 
 ;;; UI
 ;;;; Fringes
-(fringe-mode '8)
+(fringe-mode '(8 . 4))
 ;; Places the fringes outside the margins, closest to the frame edge. The gutter
 ;; looks less cramped with some space between it and buffer. Useful for
 ;; `git-gutter-fringes'.
