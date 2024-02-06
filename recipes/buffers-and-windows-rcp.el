@@ -377,7 +377,7 @@ If buffer-or-name is nil return current buffer's mode."
   :custom
   (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
-  (bookmark-fringe-mark nil)             ; No value and intrusive oftentimes 
+  (bookmark-fringe-mark nil)             ; No value and intrusive oftentimes
   :config
   (bookmark-maybe-load-default-file))   ; Load bookmarks immediately for access
 
