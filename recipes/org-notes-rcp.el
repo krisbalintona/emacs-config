@@ -355,6 +355,11 @@ Delete the original subtree."
           (insert text))
       (user-error "No subtree to extract; aborting"))))
 
+;;; Denote-explore
+;; Useful Denote utilities
+(use-package denote-explore
+  :after denote)
+
 ;;; Denote-menu
 (use-package denote-menu
   :elpaca (:type git :host github :repo "namilus/denote-menu")
