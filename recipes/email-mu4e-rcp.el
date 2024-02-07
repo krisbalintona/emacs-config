@@ -626,14 +626,15 @@ Useful for `consult-outline' and `logos.el'."
          (regexp
           ;; According to FROM field
           (pcase from
-            ("emacs-orgmode-request@gnu.org" ; Org-mode digest
+            ((or "emacs-orgmode-request@gnu.org" ; Org-mode devel
+                 "emacs-devel-request@gnu.org")  ; Emacs devel
              (rx bol
                  (literal "------------------------------")
                  (zero-or-more "-")
-                 eol
-                 "\n")))))
+                 eol)))))
     (when regexp
-      (setq-local outline-regexp regexp))))
+      (setq-local outline-regexp regexp
+                  page-delimiter regexp))))
 (add-hook 'mu4e-view-rendered-hook #'kb/mu4e-view-set-outline-regexp)
 
 ;;; Mu4e header icons (from Doom Emacs)
