@@ -67,7 +67,7 @@
 ;;;; Project
 (use-package project
   :general
-  ([remap project-find-regexp] 'consult-ripgrep)
+  ([remap project-find-regexp] 'consult-git-grep)
   (:keymaps 'project-prefix-map
             "m" 'magit-project-status
             "a" 'project-any-command
