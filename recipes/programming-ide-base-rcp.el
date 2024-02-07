@@ -170,7 +170,8 @@ Non-nil only if installation completed without any errors."
                                                       (overlay-end ov))))
                              'face 'shadow)))
   :config
-  (diminish 'hs-minor-mode))
+  (with-eval-after-load 'diminish
+    (diminish 'hs-minor-mode)))
 
 ;;; programming-ide-base-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
