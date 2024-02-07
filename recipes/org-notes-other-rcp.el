@@ -65,7 +65,8 @@ get the contents and display them on demand."
              (pdf-annot-print-annotation
               (pdf-annot-getannot id buffer)))))
         (read-only-mode 1))
-      (fit-window-to-buffer)))
+      (fit-window-to-buffer)
+      (visual-line-mode)))
   (advice-add 'pdf-annot-list-context-function
               :override 'kb/pdf-annot-list-context-function)
 
