@@ -73,6 +73,7 @@
 ;; Additionally, `orderless' has style "dispatchers," i.e., I can define
 ;; predicates for what filtering style to use for which token
 (use-package prescient
+  :disabled
   :demand
   :custom
   ;; NOTE 2024-02-03: Flex is chosen as a backup in case nothing in prescient is
@@ -91,11 +92,11 @@
 
 ;;;; Vertico-prescient
 (use-package vertico-prescient
-  :after vertico
+  :after (prescient vertico)
   :custom
   (vertico-prescient-enable-filtering t)
   (vertico-prescient-enable-sorting t)
-  (vertico-prescient-override-sorting t)
+  (vertico-prescient-override-sorting nil) ; Keep it up to vertico
   (vertico-prescient-completion-styles '(prescient flex))
   ;; See also `prescient--completion-recommended-overrides'
   (vertico-prescient-completion-category-overrides
@@ -106,7 +107,7 @@
 
 ;;;; Corfu-prescient
 (use-package corfu-prescient
-  :after corfu
+  :after (prescient corfu)
   :custom
   (corfu-prescient-enable-filtering t)
   (corfu-prescient-enable-sorting t)

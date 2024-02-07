@@ -225,7 +225,9 @@ punctuation."
   (consult-customize
    ;; For `consult-buffer'
    consult-buffer :prompt "Can use b, m, f, p, e..." :preview-key "C-M-;"
-   ;; For `consult-ripgrep'
+   ;; For `consult-*-grep'
+   consult-grep :preview-key "C-M-;"
+   consult-git-grep :preview-key "C-M-;"
    consult-ripgrep :preview-key "C-M-;"
    ;; For `consult-fdfind'. Make sure this is after the definition of
    ;; `consult-recent-file'

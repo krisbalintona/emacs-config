@@ -19,35 +19,57 @@
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
             "<escape>" #'minibuffer-keyboard-quit
-            "?" #'minibuffer-completion-help
-            "C-M-n" #'vertico-next-group
-            "C-M-p" #'vertico-previous-group
-            "M-o" #'kb/vertico-quick-embark)
+            "?" #'minibuffer-completion-help)
   :hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
   :custom
   (vertico-count 13)
-  (vertico-resize 'grow-only)
+  ;; (vertico-resize 'grow-only)
+  (vertico-resize t)
   (vertico-cycle nil)
-  :init
-  ;; Workaround for problem with `tramp' hostname completions. This overrides
-  ;; the completion style specifically for remote files! See
-  ;; https://github.com/minad/vertico#tramp-hostname-completion
-  (defun kb/basic-remote-try-completion (string table pred point)
-    (and (vertico--remote-p string)
-         (completion-basic-try-completion string table pred point)))
-  (defun kb/basic-remote-all-completions (string table pred point)
-    (and (vertico--remote-p string)
-         (completion-basic-all-completions string table pred point)))
-  (add-to-list 'completion-styles-alist
-               '(basic-remote           ; Name of `completion-style'
-                 kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
   :config
   (vertico-mode)
 
-  (defun kb/vertico-quick-embark (&optional _)
-    "Embark on candidate using quick keys."
-    (interactive)
-    (when (vertico-quick-jump))))
+  ;; Special for `org-agenda-filter' and `org-tags-view'. See
+  ;; https://github.com/minad/vertico?tab=readme-ov-file#org-agenda-filter-and-org-tags-view
+  (defun kb/org-enforce-basic-completion (&rest args)
+    (minibuffer-with-setup-hook
+        (:append
+         (lambda ()
+           (let ((map (make-sparse-keymap)))
+             (define-key map [tab] #'minibuffer-complete)
+             (use-local-map (make-composed-keymap (list map) (current-local-map))))
+           (setq-local completion-styles (cons 'basic completion-styles)
+                       vertico-preselect 'prompt)))
+      (apply args)))
+  (advice-add #'org-make-tags-matcher :around #'kb/org-enforce-basic-completion)
+  (advice-add #'org-agenda-filter :around #'kb/org-enforce-basic-completion)
+
+  ;; Left-truncate recentf filename candidates (e.g. for `consult-buffer'). See
+  ;; https://github.com/minad/vertico/wiki#left-truncate-recentf-filename-candidates-eg-for-consult-buffer
+  (defun kb/vertico-truncate-candidates (args)
+    (if-let ((arg (car args))
+             (type (get-text-property 0 'multi-category arg))
+             ((eq (car-safe type) 'file))
+             (w (max 30 (- (window-width) 38)))
+             (l (length arg))
+             ((> l w)))
+        (setcar args (concat "…" (truncate-string-to-width arg l (- l w)))))
+    args)
+  (advice-add #'vertico--format-candidate :filter-args #'kb/vertico-truncate-candidates)
+
+  ;; Input at bottom of completion list. See
+  ;; https://github.com/minad/vertico/wiki#input-at-bottom-of-completion-list
+  (defun kb/vertico-bottom--display-candidates (lines)
+    "Display LINES in bottom."
+    (move-overlay vertico--candidates-ov (point-min) (point-min))
+    (unless (eq vertico-resize t)
+      (setq lines (nconc (make-list (max 0 (- vertico-count (length lines))) "\n") lines)))
+    (let ((string (apply #'concat lines)))
+      (add-face-text-property 0 (length string) 'default 'append string)
+      (overlay-put vertico--candidates-ov 'before-string string)
+      (overlay-put vertico--candidates-ov 'after-string nil))
+    (vertico--resize-window (length lines)))
+  (advice-add #'vertico--display-candidates :override #'kb/vertico-bottom--display-candidates))
 
 ;;;; Vertico-directory
 (use-package vertico-directory
@@ -70,6 +92,8 @@
    '((consult-grep buffer)
      (imenu buffer)))
   (vertico-multiform-commands
+   ;; I use jinx now, but I think it's better to not apply a grid layout to it
+   ;; since its use of vertico-groups is useful
    '(("flyspell-correct-*" grid (vertico-grid-annotate . 20))))
   :config
   (vertico-multiform-mode))
@@ -79,6 +103,7 @@
   :elpaca nil
   :after vertico
   :custom
+  (vertico-buffer-hide-prompt nil)
   (vertico-buffer-display-action '(display-buffer-reuse-window)))
 
 ;;;; Vertico-truncate
@@ -95,86 +120,53 @@
 ;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
-  :disabled
   :custom
-  (completion-styles '(basic initials substring flex orderless))
+  (completion-styles
+   '(initials substring orderless basic flex))
   (orderless-matching-styles
    '(orderless-prefixes
-     ;; orderless-initialism
+     orderless-initialism
      orderless-regexp
      ;; orderless-literal
      ;; orderless-flex
-     ;; orderless-strict-initialism
-     ;; orderless-strict-leading-initialism
-     ;; orderless-strict-full-initialism
      ;; orderless-without-literal          ; Recommended for dispatches instead
      ))
   (orderless-component-separator 'orderless-escapable-split-on-space)
-  (orderless-style-dispatchers
-   '(prot-orderless-literal-dispatcher
-     prot-orderless-strict-initialism-dispatcher
-     prot-orderless-flex-dispatcher
-     kb/orderless-without-literal-dispatcher))
-  (completion-category-defaults nil)    ; I want to be in control!
+  ;; Sets many defaults unfavorable to `orderless', so I set it to nil to use
+  ;; just the default `completion-styles'
+  (completion-category-defaults nil)
+  ;; Overrides `completion-category-defaults'
   (completion-category-overrides
    '((file (styles . (basic
                       basic-remote ; For `tramp' hostname completion with `vertico'
-                      partial-completion  ; Partial completion for file paths!
-                      orderless)))))
+                      orderless
+                      partial-completion
+                      flex)))))
+  (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
   :init
-  (defun orderless--strict-*-initialism (component &optional anchored)
-    "Match a COMPONENT as a strict initialism, optionally ANCHORED.
-The characters in COMPONENT must occur in the candidate in that
-order at the beginning of subsequent words comprised of letters.
-Only non-letters can be in between the words that start with the
-initials.
-
-If ANCHORED is `start' require that the first initial appear in
-the first word of the candidate.  If ANCHORED is `both' require
-that the first and last initials appear in the first and last
-words of the candidate, respectively."
-    (orderless--separated-by
-        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
-      (cl-loop for char across component collect `(seq word-start ,char))
-      (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
-      (when (eq anchored 'both)
-        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
-
-  (defun orderless-strict-initialism (component)
-    "Match a COMPONENT as a strict initialism.
-This means the characters in COMPONENT must occur in the
-candidate in that order at the beginning of subsequent words
-comprised of letters.  Only non-letters can be in between the
-words that start with the initials."
-    (orderless--strict-*-initialism component))
-
-  (defun prot-orderless-literal-dispatcher (pattern _index _total)
-    "Literal style dispatcher using the equals sign as a suffix.
-It matches PATTERN _INDEX and _TOTAL according to how Orderless
-parses its input."
-    (when (string-suffix-p "=" pattern)
-      `(orderless-literal . ,(substring pattern 0 -1))))
-
-  (defun prot-orderless-strict-initialism-dispatcher (pattern _index _total)
-    "Leading initialism  dispatcher using the comma suffix.
-It matches PATTERN _INDEX and _TOTAL according to how Orderless
-parses its input."
-    (when (string-suffix-p "," pattern)
-      `(orderless-strict-initialism . ,(substring pattern 0 -1))))
-
-  (defun prot-orderless-flex-dispatcher (pattern _index _total)
-    "Flex  dispatcher using the tilde suffix.
-It matches PATTERN _INDEX and _TOTAL according to how Orderless
-parses its input."
-    (when (string-suffix-p "." pattern)
-      `(orderless-flex . ,(substring pattern 0 -1))))
-
-  (defun kb/orderless-without-literal-dispatcher (pattern _index _total)
-    "Flex  dispatcher using the tilde suffix.
-It matches PATTERN _INDEX and _TOTAL according to how Orderless
-parses its input."
-    (when (string-suffix-p "!" pattern)
-      `(orderless-without-literal . ,(substring pattern 0 -1)))))
+  ;; Taken from Doom
+  (defun kb/orderless-consult-dispatch (pattern _index _total)
+    "Basically `orderless-affix-dispatch-alist' but with prefixes too."
+    (cond
+     ;; Ensure $ works with Consult commands, which add disambiguation suffixes
+     ((string-suffix-p "$" pattern)
+      `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x200000-\x300000]*$")))
+     ;; Ignore single !
+     ((string= "!" pattern) `(orderless-literal . ""))
+     ;; Without literal
+     ((string-prefix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1)))
+     ;; Character folding
+     ((string-prefix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 1)))
+     ((string-suffix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 0 -1)))
+     ;; Initialism matching
+     ((string-prefix-p "`" pattern) `(orderless-initialism . ,(substring pattern 1)))
+     ((string-suffix-p "`" pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
+     ;; Literal matching
+     ((string-prefix-p "=" pattern) `(orderless-literal . ,(substring pattern 1)))
+     ((string-suffix-p "=" pattern) `(orderless-literal . ,(substring pattern 0 -1)))
+     ;; Flex matching
+     ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
+     ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
 
 ;;; Fussy
 ;; Instead of just filtering (e.g. like `orderless' alone), also score the
