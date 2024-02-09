@@ -87,6 +87,7 @@
 
 ;;;; Org-indent
 (use-package org-indent
+  :disabled
   :elpaca nil
   :diminish
   :custom
@@ -321,13 +322,15 @@ have `org-warning' face."
   ;; Indentation
   ;; The following ensures consistent indentation, overriding `org-indent'
   ;; variables set elsewhere
-  (org-superstar-leading-bullet ?\s)          ; Render leading stars as spaces!
   (org-hide-leading-stars nil)
   (org-indent-mode-turns-on-hiding-stars nil)
   (org-superstar-remove-leading-stars nil)
+  ;; (org-superstar-leading-bullet ?\s)          ; Render leading stars as spaces!
+  (org-superstar-leading-bullet ?·)
 
   ;; Headlines
-  (org-superstar-headline-bullets-list '("◈" "●" "◉" "◇" "✳")) ; List inspired from `org-modern'
+  ;; (org-superstar-headline-bullets-list '("◈" "●" "◉" "◇" "✳")) ; List inspired from `org-modern'
+  (org-superstar-headline-bullets-list '("◈" "▷" "◉" "◇" "✳")) ; List inspired from `org-modern'
   (org-n-level-faces 5)
   (org-cycle-level-faces t)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
@@ -354,8 +357,9 @@ have `org-warning' face."
      (?- . "–")
      (?* . "‣")))
   :custom-face
-  ;; Ensure headlines are aligned with headline content
-  (org-superstar-leading ((t (:inherit org-indent))))
+  ;; Make a good non-distracting foreground color and ensure headlines are
+  ;; aligned with headline content
+  (org-superstar-leading ((t (:inherit (fixed-pitch org-hide)))))
   :init
   ;; See https://github.com/emacsmirror/org-superstar#fast-plain-list-items
   (defun kb/org-superstar-auto-lightweight-mode ()
@@ -488,6 +492,7 @@ have `org-warning' face."
 
 ;;;; Org-margin
 (use-package org-margin
+  :disabled
   :elpaca (:type git :host github :repo "rougier/org-margin")
   :hook (org-mode . org-margin-mode)
   :custom
