@@ -43,7 +43,11 @@
                      "H-<left>" 'windmove-left
                      "H-<down>" 'windmove-down
                      "H-<up>" 'windmove-up
-                     "H-<right>" 'windmove-right)
+                     "H-<right>" 'windmove-right
+                     "H-H" 'windmove-swap-states-left
+                     "H-J" 'windmove-swap-states-down
+                     "H-K" 'windmove-swap-states-up
+                     "H-L" 'windmove-swap-states-right)
   :init
   (windmove-mode))
 
