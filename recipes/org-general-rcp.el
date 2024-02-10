@@ -325,11 +325,9 @@ have `org-warning' face."
   (org-hide-leading-stars nil)
   (org-indent-mode-turns-on-hiding-stars nil)
   (org-superstar-remove-leading-stars nil)
-  ;; (org-superstar-leading-bullet ?\s)          ; Render leading stars as spaces!
   (org-superstar-leading-bullet ?·)
 
   ;; Headlines
-  ;; (org-superstar-headline-bullets-list '("◈" "●" "◉" "◇" "✳")) ; List inspired from `org-modern'
   (org-superstar-headline-bullets-list '("◈" "▷" "◉" "◇" "✳")) ; List inspired from `org-modern'
   (org-n-level-faces 5)
   (org-cycle-level-faces t)
