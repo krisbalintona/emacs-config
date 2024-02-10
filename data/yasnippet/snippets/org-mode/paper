@@ -1,0 +1,19 @@
+# key: <paper
+# name: paper
+# --
+#+latex_class: mla
+#+professor: $0
+#+course: `(cadar (org-collect-keywords '("filetags")))`
+#+EXPORT_FILE_NAME:
+#+cite_export: biblatex mla-new
+
+* 1 Draft                                                     :ignore:export:
+
+* Works cited                                                 :ignore:export:
+
+#+begin_export LaTeX
+\newpage
+\center
+#+end_export
+
+#+print_bibliography:
