@@ -18,7 +18,6 @@
   ;; `org' does
   :after org
   :hook ((org-agenda-finalize . (lambda () (goto-char (point-min))))
-         (org-capture-before-finalize . kb/add-property-with-date-captured)
          (org-after-todo-state-change . kb/org-todo-project-prog))
   :general
   (kb/open-keys "a" 'org-agenda)
@@ -151,13 +150,6 @@
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :config
-  ;; Taken from
-  ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L133
-  (defun kb/add-property-with-date-captured ()
-    "Add DATE_CAPTURED property to the current item."
-    (interactive)
-    (org-set-property "CREATED" (format-time-string "%F")))
-
   ;; Taken from
   ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L213
   (defun kb/org-agenda-format-date-aligned (date)

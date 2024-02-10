@@ -7,6 +7,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
+;;; Org-expiry
+(use-package org-expiry
+  :elpaca nil
+  :hook (org-capture-before-finalize . org-expiry-insert-created)
+  :custom
+  (org-expiry-inactive-timestamps t))
+
 ;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.
 (use-package org-depend
