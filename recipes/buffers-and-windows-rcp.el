@@ -382,7 +382,66 @@ If buffer-or-name is nil return current buffer's mode."
   :preface
   (use-package defrepeater :demand)
   :init
-  (switchy-window-minor-mode))
+  (switchy-window-minor-mode)
+
+  (defun kb/switchy-window (&optional arg)
+    "Switch to other windows in most-recently-used order.
+If prefix ARG is given, use least-recently-used order.
+
+If the time between consecutive invocations is smaller than
+`switchy-window-delay' seconds, selects one after the other window in
+LRU order and cycles when all windows have been visited.  If
+`switchy-window-delay' has passed, the current switching cycle ends and
+the now selected window gets its tick updated (a kind of
+timestamp)."
+    (interactive)
+
+    (unless switchy-window-minor-mode
+      (user-error "switchy-window requires `switchy-window-minor-mode' being active"))
+
+    ;; Remove dead windows.
+    (setq switchy-window--tick-alist (seq-filter
+                                      (lambda (e)
+                                        (and (or (not (window-parameter (car e) 'no-other-window))
+                                                 ignore-window-parameters)
+                                             (window-live-p (car e))))
+                                      switchy-window--tick-alist))
+    ;; Add windows never selected.
+    (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
+                                        ignore-window-parameters))
+                             (window-list (selected-frame))))
+      (unless (assq win switchy-window--tick-alist)
+        (setf (alist-get win switchy-window--tick-alist) 0)))
+
+    ;; Ensure the current window is marked as visited.
+    (setq switchy-window--visited-windows (cons (selected-window)
+                                                switchy-window--visited-windows))
+
+    (let ((win-entries (seq-filter
+                        (lambda (e)
+                          (let ((win (car e)))
+                            (and (eq (window-frame win) (selected-frame))
+                                 (or (minibuffer-window-active-p win)
+                                     (not (eq win (minibuffer-window
+                                                   (selected-frame)))))
+                                 (not (memq win switchy-window--visited-windows)))))
+                        switchy-window--tick-alist)))
+      (if win-entries
+          (when-let ((win (car (seq-reduce (lambda (x e)
+                                             (if (and x (funcall (if arg #'< #'>)
+                                                                 (cdr x) (cdr e)))
+                                                 x
+                                               e))
+                                           win-entries nil))))
+            (setq switchy-window--visited-windows
+                  (cons win switchy-window--visited-windows))
+            (select-window win))
+        ;; Start a new cycle if we're not at the start already, i.e., we visited
+        ;; just one (the current) window.
+        (when (length> switchy-window--visited-windows 1)
+          (setq switchy-window--visited-windows nil)
+          (switchy-window)))))
+  (advice-add 'switchy-window :override 'kb/switchy-window))
 
 ;;; Buffers
 ;;;; Bookmark
