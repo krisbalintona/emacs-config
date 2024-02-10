@@ -348,6 +348,60 @@ the color column."
   (general-define-key :keymaps 'pdf-annot-list-mode-map
                       [remap tablist-push-regexp-filter] 'kb/pdf-annot-list-filter-regexp))
 
+;;;; Custom org-link type for PDF annotations
+;; NOTE 2024-02-10: Code copied from the code shared on Thu, 08 Feb 2024
+;; 22:13:50 +0000 by Juan Manuel Macías <maciaschain@posteo.net> in the
+;; Emacs-devel mailing list. The original uses the modification date, whereas
+;; this verion uses the annotation ID, which should be unique even upon
+;; deletions and additions of annotations. This is because the annotation IDs
+;; are robust (don't change upon modifying content of annotation). Additionally,
+;; the original version relies on an in-buffer `re-search-forward', meaning it
+;; only worked if you had the current modified date as a column in
+;; `pdf-annot-list-format'; this is avoided if we use ID's like
+;; `pdf-annot-list-display-annotation-from-id' likes.
+(with-eval-after-load 'org
+  (defun kb/org-pdf-annot-store-link ()
+    "Stores link to annotation via its annotate.
+Uses the current annotation at point's ID."
+    (when (equal (format "%s" major-mode) "pdf-annot-list-mode")
+      (let* ((annot-buf pdf-annot-list-document-buffer)
+             (pdf-file (buffer-file-name annot-buf))
+             (annot (pdf-annot-getannot (tabulated-list-get-id) annot-buf))
+             (id (pdf-annot-print-property annot 'id))
+             (page (pdf-annot-print-property annot 'page))
+             (link (concat "pdf-annot:" pdf-file "::" id))
+             (desc (format "%s (annot. on p. %s)" (file-name-nondirectory pdf-file) page)))
+        (org-link-store-props
+         :type "pdf-annot"
+         :link link
+         :description desc))))
+
+  (defun kb/org-pdf-annot-follow-link (path)
+    "Open pdf-tools link."
+    (let ((id (if (string-match "::\\(.+\\)" path)
+                  (match-string 1 path)
+                (error "[kb/org-pdf-annot-follow-link] Not a valid id!")))
+          (file-path (replace-regexp-in-string "::.+" "" path)))
+      (find-file file-path)
+      (pdf-annot-list-annotations)
+      (with-current-buffer (format "*%s's annots*" (file-name-sans-extension (buffer-name)))
+        (goto-line (save-excursion
+                     (goto-char (point-min))
+                     ;; Find line whose tabulated-list-id corresponds to
+                     ;; annotation ID
+                     (let ((row-id (get-text-property (point) 'tabulated-list-id)))
+                       (while (not (or (eq row-id (intern id))
+                                       (= (line-number-at-pos (point)) (line-number-at-pos (point-max)))))
+                         (forward-line)
+                         (setq row-id (get-text-property (point) 'tabulated-list-id))))
+                     (line-number-at-pos)))
+        (pdf-annot-list-display-annotation-from-id id))))
+
+  (org-link-set-parameters
+   "pdf-annot"
+   :follow #'kb/org-pdf-annot-follow-link
+   :store #'kb/org-pdf-annot-store-link))
+
 ;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
 (use-package saveplace-pdf-view
