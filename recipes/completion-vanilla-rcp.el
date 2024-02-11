@@ -23,8 +23,7 @@
   :hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
   :custom
   (vertico-count 13)
-  ;; (vertico-resize 'grow-only)
-  (vertico-resize t)
+  (vertico-resize 'grow-only)
   (vertico-cycle nil)
   :config
   (vertico-mode)
@@ -122,10 +121,10 @@
 (use-package orderless
   :custom
   (completion-styles
-   '(initials substring orderless basic flex))
+   '(initials orderless substring basic flex))
   (orderless-matching-styles
    '(orderless-prefixes
-     orderless-initialism
+     ;; orderless-initialism
      orderless-regexp
      ;; orderless-literal
      ;; orderless-flex
@@ -135,10 +134,8 @@
   ;; Sets many defaults unfavorable to `orderless', so I set it to nil to use
   ;; just the default `completion-styles'
   (completion-category-defaults nil)
-  ;; Overrides `completion-category-defaults'
   (completion-category-overrides
    '((file (styles . (basic
-                      basic-remote ; For `tramp' hostname completion with `vertico'
                       orderless
                       partial-completion
                       flex)))))
@@ -155,12 +152,13 @@
      ((string= "!" pattern) `(orderless-literal . ""))
      ;; Without literal
      ((string-prefix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1)))
+     ((string-suffix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1 -1)))
      ;; Character folding
      ((string-prefix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 1)))
      ((string-suffix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 0 -1)))
      ;; Initialism matching
-     ((string-prefix-p "`" pattern) `(orderless-initialism . ,(substring pattern 1)))
-     ((string-suffix-p "`" pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
+     ((string-prefix-p "," pattern) `(orderless-initialism . ,(substring pattern 1)))
+     ((string-suffix-p "," pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
      ;; Literal matching
      ((string-prefix-p "=" pattern) `(orderless-literal . ,(substring pattern 1)))
      ((string-suffix-p "=" pattern) `(orderless-literal . ,(substring pattern 0 -1)))
