@@ -35,6 +35,7 @@
   :general
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
+            "TAB" #'kb/vertico-insert-unless-tramp
             "<escape>" #'minibuffer-keyboard-quit
             "?" #'minibuffer-completion-help)
   :hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
@@ -85,7 +86,16 @@
       (overlay-put vertico--candidates-ov 'before-string string)
       (overlay-put vertico--candidates-ov 'after-string nil))
     (vertico--resize-window (length lines)))
-  (advice-add #'vertico--display-candidates :override #'kb/vertico-bottom--display-candidates))
+  (advice-add #'vertico--display-candidates :override #'kb/vertico-bottom--display-candidates)
+
+  ;; Restore old TAB behavior when completing TRAMP paths. See
+  ;; https://github.com/minad/vertico/wiki#restore-old-tab-behavior-when-completing-tramp-paths
+  (defun kb/vertico-insert-unless-tramp ()
+    "Insert current candidate in minibuffer, except for tramp."
+    (interactive)
+    (if (vertico--remote-p (vertico--candidate))
+        (minibuffer-complete)
+      (vertico-insert))))
 
 ;;;;; Vertico-directory
 (use-package vertico-directory
