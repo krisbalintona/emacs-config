@@ -114,6 +114,23 @@
   "Set up the default, fixed-pitch, and variable-pitch faces in FRAME."
   (setq frame (or frame (selected-frame)))
   (select-frame frame)
+
+  ;; I like `modus-*-tinted's mode line colors. `border-mode-line-active' and
+  ;; `border-mode-line-inactive' aren't included
+  (dolist (elt (pcase (car custom-enabled-themes)
+                 ('modus-operandi       ; Switch to `modus-vivendi-tinted' faces
+                  '((bg-mode-line-active        "#484d67")
+                    (fg-mode-line-active        "#ffffff")
+                    (bg-mode-line-inactive      "#292d48")
+                    (fg-mode-line-inactive      "#969696")
+                    ))
+                 ('modus-vivendi       ; Switch to `modus-operandi-tinted' faces
+                  '((bg-mode-line-active        "#cab9b2")
+                    (fg-mode-line-active        "#000000")
+                    (bg-mode-line-inactive      "#dfd9cf")
+                    (fg-mode-line-inactive      "#585858")))))
+    (setf (alist-get (car elt) modus-themes-common-palette-overrides) (cdr elt)))
+
   (set-face-attribute 'default nil
                       :family kb/themes-default-font
                       ;; 1920x1080 display
