@@ -151,12 +151,13 @@
 (use-package orderless
   :custom
   (completion-styles
-   '(initials orderless substring basic flex))
+   ;; '(initials orderless substring basic flex))
+   '(orderless flex))
   (orderless-matching-styles
    '(orderless-prefixes
-     ;; orderless-initialism
+     orderless-initialism
      orderless-regexp
-     ;; orderless-literal
+     orderless-literal
      ;; orderless-flex
      ;; orderless-without-literal          ; Recommended for dispatches instead
      ))
