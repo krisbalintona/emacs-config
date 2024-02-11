@@ -501,8 +501,11 @@ timestamp)."
    `(("Basic"
       ("Help" ,(-flatten `(or ,(mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes))))
       ("Notes" (directory . ,(expand-file-name kb/notes-dir)))
-      ("Emacs" (directory . ,(expand-file-name user-emacs-directory)))
-      ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir)) load-path)))))))
+      ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir))
+                                            (remove "/home/krisbalintona/.emacs.d/recipes"
+                                                    (remove "/home/krisbalintona/.emacs.d/site-lisp"
+                                                            (append load-path (list elpaca-repos-directory))))))))
+      ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
   :config
   ;; The following columns are taken from Doom Emacs.
   ;; Display buffer icons on GUI
