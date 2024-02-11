@@ -337,10 +337,10 @@ This version removes delimiters.")
                   mode-line-remote " "
                   mode-line-buffer-identification
                   mode-line-position
+                  (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   (:eval (when (and (bound-and-true-p mlscroll-mode)
                                     (mode-line-window-selected-p))
                            (mlscroll-mode-line)))
-                  (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   mode-line-format-right-align
                   mode-line-process
                   (:eval (when (bound-and-true-p flymake-mode)
