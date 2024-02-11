@@ -482,7 +482,7 @@ command was called, go to its unstaged changes section."
 ;;;;; Deadgrep
 ;; Grep but with a convenient magit-like interface (with visibility toggles)
 (use-package deadgrep
-  :general ("<f7>" 'deadgrep))
+  :general ("<f6>" 'deadgrep))
 
 (provide 'programming-projects-rcp)
 ;;; programming-projects-rcp.el ends here
