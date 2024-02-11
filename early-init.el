@@ -18,24 +18,9 @@
 (setq package-enable-at-startup nil)
 
 ;; Faster to disable these graphical elements before they've been initialized
-(menu-bar-mode -1)
+;; (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-;; Experimenting with toggling the UI just in case I find something useful or
-;; interesting in there
-(defun kb/toggle-ui ()
-  "Toggles UI elements.
-Includes `menu-bar-mode', `tool-bar-mode', and `scroll-bar-mode'."
-  (interactive)
-  (if menu-bar-mode
-      (progn
-        (menu-bar-mode -1)
-        (tool-bar-mode -1)
-        (scroll-bar-mode -1))
-    (menu-bar-mode 1)
-    (tool-bar-mode 1)
-    (scroll-bar-mode 1)))
-(define-key global-map (kbd "<f7>") #'kb/toggle-ui)
 
 ;; Default coding system to UTF-8
 (set-language-environment "UTF-8")
