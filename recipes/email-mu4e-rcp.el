@@ -121,7 +121,7 @@
   (mu4e-change-filenames-when-moving t) ; Prevent duplication
   (mu4e-confirm-quit nil)
   (mu4e-headers-eldoc-format "In %m with flags %F")
-  (mu4e-read-option-use-builtin nil)
+  (mu4e-read-option-use-builtin t)      ; Builtin is unobtrusive
   (mu4e-completing-read-function 'completing-read)
   :init
   ;; Restore window configuration when closing Mu4e main window like you can
