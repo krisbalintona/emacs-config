@@ -41,7 +41,7 @@
          (after-save . kb/denote-auto-rename))
   :general (kb/note-keys
              "f" 'denote-open-or-create
-             "i" 'denote-link-insert-link
+             "i" 'denote-insert-link
              "ta" 'denote-keywords-add
              "tr" 'denote-keywords-remove)
   :custom
