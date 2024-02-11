@@ -37,7 +37,9 @@
 ;; Garbage collect on when idle
 (use-package gcmh
   :diminish
-  :hook (elpaca-after-init . gcmh-mode)
+  :hook ((elpaca-after-init . gcmh-mode)
+         (minibuffer-setup . kb/gcmh-minibuffer-setup)
+         (minibuffer-exit . kb/gcmh-minibuffer-exit))
   :custom
   ;; For a related discussion, see
   ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3
@@ -48,7 +50,19 @@
   (gcmh-idle-delay 3)
   (gcmh-verbose nil)
   :config
-  (setq garbage-collection-messages nil))
+  (setq garbage-collection-messages nil)
+
+  ;; Increase GC threshold when in minibuffer
+  (defvar kb/gc-minibuffer--original gcmh-high-cons-threshold
+    "Temporary variable to hold `gcmh-high-cons-threshold'")
+
+  (defun kb/gcmh-minibuffer-setup ()
+    "Temporarily have \"limitless\" `gc-cons-threshold'."
+    (setq gcmh-high-cons-threshold most-positive-fixnum))
+
+  (defun kb/gcmh-minibuffer-exit ()
+    "Restore value of `gc-cons-threshold'."
+    (setq gcmh-high-cons-threshold kb/gc-minibuffer--original)))
 
 ;;;; Diagnose memory usage
 ;; See how Emacs is using memory. From
