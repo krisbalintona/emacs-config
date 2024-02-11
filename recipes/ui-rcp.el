@@ -73,13 +73,32 @@
           (bg-completion-match-2 bg-cyan-intense)
           (bg-completion-match-3 bg-red-intense)
 
-          ;; No border in mode line. See (info "(modus-themes) Make the mode line borderless")
+          ;; "Invisible" border in mode line. See (info "(modus-themes) Make the
+          ;; mode line borderless")
           (border-mode-line-active bg-mode-line-active)
           (border-mode-line-inactive bg-mode-line-inactive)
 
           ;; Headings
           (fg-heading-1 red-faint)
-          (fg-heading-6 rainbow-0)))
+          (fg-heading-6 rainbow-0))
+        modus-operandi-palette-overrides
+        `(
+          ;; I like `modus-*-tinted's mode line colors. I like to keep
+          ;; `border-mode-line-active' and `border-mode-line-inactive'
+          ;; "invisible" though
+          (bg-mode-line-active        "#cab9b2")
+          (fg-mode-line-active        "#000000")
+          (bg-mode-line-inactive      "#dfd9cf")
+          (fg-mode-line-inactive      "#585858"))
+        modus-vivendi-palette-overrides
+        `(
+          ;; I like `modus-*-tinted's mode line colors. I like to keep
+          ;; `border-mode-line-active' and `border-mode-line-inactive'
+          ;; "invisible" though
+          (bg-mode-line-active        "#484d67")
+          (fg-mode-line-active        "#ffffff")
+          (bg-mode-line-inactive      "#292d48")
+          (fg-mode-line-inactive      "#969696")))
 
   ;; Taken from (info "(modus-themes) Add support for solaire-mode")
   (defun kb/modus-themes-solaire-faces ()
@@ -109,22 +128,6 @@
   "Set up the default, fixed-pitch, and variable-pitch faces in FRAME."
   (setq frame (or frame (selected-frame)))
   (select-frame frame)
-
-  ;; I like `modus-*-tinted's mode line colors. `border-mode-line-active' and
-  ;; `border-mode-line-inactive' aren't included
-  (dolist (elt (pcase (car custom-enabled-themes)
-                 ('modus-operandi       ; Switch to `modus-vivendi-tinted' faces
-                  '((bg-mode-line-active        "#484d67")
-                    (fg-mode-line-active        "#ffffff")
-                    (bg-mode-line-inactive      "#292d48")
-                    (fg-mode-line-inactive      "#969696")
-                    ))
-                 ('modus-vivendi       ; Switch to `modus-operandi-tinted' faces
-                  '((bg-mode-line-active        "#cab9b2")
-                    (fg-mode-line-active        "#000000")
-                    (bg-mode-line-inactive      "#dfd9cf")
-                    (fg-mode-line-inactive      "#585858")))))
-    (setf (alist-get (car elt) modus-themes-common-palette-overrides) (cdr elt)))
 
   (set-face-attribute 'default nil
                       :family kb/themes-default-font
@@ -215,7 +218,7 @@ Additionally, run `kb/themes-hook'."
   (if (or (<= 19 hour) (<= hour 8))
       (kb/proper-load-theme-dark)
     (kb/proper-load-theme-light)))
-(add-hook 'elpaca-after-init-hook #'kb/themes-setup-base-faces)
+(add-hook 'elpaca-after-init-hook #'kb/themes-setup-base-faces) ; Initialize for daemon
 (add-hook 'server-after-make-frame-hook #'kb/themes-setup-base-faces)
 (elpaca-wait)
 
