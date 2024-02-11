@@ -412,11 +412,20 @@ punctuation."
       (ansi-color-apply-on-region compilation-filter-start (point)))))
 
 ;;;;; Fancy-compilation
+;; Better compilation buffers. Has the following features:
+;; * Support color output.
+;; * Support progress updates on a single line (as used by ninja, sphinx and many other build systems).
+;; * Use scrolling behavior similar to most terminals.
+;; * Optionally use foreground & background independent of theme colors.
 (use-package fancy-compilation
-  :ghook 'compilation-mode
   :custom
   (fancy-compilation-override-colors nil)
-  (fancy-compilation-quiet-prelude t))
+  ;; Briefer text
+  (fancy-compilation-quiet-prelude t)
+  (fancy-compilation-quiet-prolog t)
+  :init
+  (with-eval-after-load 'compile
+    (fancy-compilation-mode)))
 
 ;;;;; Indent-bars
 ;; Show indicator for indentation levels (like in VS Code)
