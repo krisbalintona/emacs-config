@@ -31,6 +31,10 @@
 
 ;;; Code:
 
+;; NOTE 2024-02-11: PLEASE REFERENCE https://emacsconf.org/2023/talks/gc/ FOR A
+;; STATISTICALLY-INFORMED RECOMMENDATION FOR GC VARIABLES
+
+(setq gc-cons-percentage 0.25)
 (setq garbage-collection-messages t)
 
 ;;;; GCMH
@@ -43,9 +47,7 @@
   :custom
   ;; For a related discussion, see
   ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3
-  ;; (gcmh-high-cons-threshold (* 50        ; mb
-  ;;                              1024 1024))
-  (gcmh-high-cons-threshold (* 100      ; mb
+  (gcmh-high-cons-threshold (* 16       ; 16 mb, as Doom uses in doom-start.el
                                1024 1024))
   (gcmh-idle-delay 3)
   (gcmh-verbose nil)
@@ -58,10 +60,12 @@
 
   (defun kb/gcmh-minibuffer-setup ()
     "Temporarily have \"limitless\" `gc-cons-threshold'."
+    ;; (message "[kb/gcmh-minibuffer-setup] Increasing GC threshold")
     (setq gcmh-high-cons-threshold most-positive-fixnum))
 
   (defun kb/gcmh-minibuffer-exit ()
     "Restore value of `gc-cons-threshold'."
+    ;; (message "[kb/gcmh-minibuffer-exit] Restoring GC threshold")
     (setq gcmh-high-cons-threshold kb/gc-minibuffer--original)))
 
 ;;;; Diagnose memory usage
