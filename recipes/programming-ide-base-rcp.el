@@ -1,22 +1,39 @@
-;;; programming-ide-base-rcp.el --- Summary
-;;
+;;; programming-ide-base-rcp.el --- Emacs makes a good IDE  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; General IDE features.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; IDE features in Emacs.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Treesit
-;;;; Itself
+;;;; Treesit
+;;;;; Itself
 (use-package treesit
   :ensure nil
   :custom
   (treesit-font-lock-level 3))
 
-;;;; Treesit-auto
+;;;;; Treesit-auto
 (use-package treesit-auto
   :demand
   :custom
@@ -55,7 +72,7 @@ Non-nil only if installation completed without any errors."
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;;;; Turbo-log
+;;;;; Turbo-log
 (use-package turbo-log
   :disabled                             ; Used old tree-sitter package
   :requires tree-sitter
@@ -72,7 +89,7 @@ Non-nil only if installation completed without any errors."
   (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
   (turbo-log-allow-insert-without-tree-sitter-p t))
 
-;;; Apheleia
+;;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia
   :ensure-system-package ((black . python-black)
@@ -105,13 +122,13 @@ Non-nil only if installation completed without any errors."
    (alist-get 'rufo apheleia-formatters) '("rufo" "--simple-exit" "--filename" filepath)
    (alist-get 'fourmolu apheleia-formatters) '("fourmolu")))
 
-;;; Breadcrumb
+;;;; Breadcrumb
 (use-package breadcrumb
   :hook ((lsp-ui-mode eglot-managed-mode) . breadcrumb-local-mode)
   :custom
   (which-func-functions '(breadcrumb-imenu-crumbs)))
 
-;;; Devdocs
+;;;; Devdocs
 (use-package devdocs
   :general (:keymaps 'prog-mode-map
                      "C-c D" 'devdocs-lookup)
@@ -126,7 +143,7 @@ Non-nil only if installation completed without any errors."
   :custom
   (devdocs-window-select t))
 
-;;; Dash-docs
+;;;; Dash-docs
 ;; Viewing of documentation via browser.
 (use-package dash-docs
   :hook ((python-base-mode . (lambda () (setq-local dash-docs-common-docsets '("Python 3"))))
@@ -142,7 +159,7 @@ Non-nil only if installation completed without any errors."
   (dash-docs-min-length 2)
   (dash-enable-fontlock t))
 
-;;;; Dash-docs-completing-read
+;;;;; Dash-docs-completing-read
 ;; My own interface for accessing docsets via `completing-read'.
 (use-package dash-docs-completing-read
   :ensure nil
@@ -153,7 +170,7 @@ Non-nil only if installation completed without any errors."
              "Dl" '(dash-docs-completing-read-at-point :wk "At-point search")
              "DL" '(dash-docs-completing-read :wk "Manual search")))
 
-;;; Hideshow
+;;;; Hideshow
 (use-package hideshow
   :ensure nil
   :hook (prog-mode . hs-minor-mode)
@@ -173,6 +190,5 @@ Non-nil only if installation completed without any errors."
   (with-eval-after-load 'diminish
     (diminish 'hs-minor-mode)))
 
-;;; programming-ide-base-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-ide-base-rcp)
+;;; programming-ide-base-rcp.el ends here

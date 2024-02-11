@@ -1,15 +1,32 @@
-;;; checking-grammar-rcp.el --- Summary
-;;
+;;; checking-grammar-rcp.el --- Grammar checking     -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Packages relevant to checking grammar
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; I don't know grammar either...
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Langtool
+;;;; Langtool
 ;; Use langtool program to check grammar of current buffer
 (use-package langtool
   ;; NOTE 2021-08-19: Can't use `ensure-system-package' becuase the installation
@@ -43,13 +60,13 @@
           (popup-tip msg)))))
   :config
   (pretty-hydra-define hydra:langtool
-    (:color green :hint t :foreign-keys run :quit-key "q" :exit t)
-    ("Correct grammar"
-     (("b" #'langtool-check-buffer "Check")
-      ("c" #'langtool-correct-buffer "Correct")
-      ("d" #'langtool-check-done "Done")))))
+                       (:color green :hint t :foreign-keys run :quit-key "q" :exit t)
+                       ("Correct grammar"
+                        (("b" #'langtool-check-buffer "Check")
+                         ("c" #'langtool-correct-buffer "Correct")
+                         ("d" #'langtool-check-done "Done")))))
 
-;;; Flymake-languagetool
+;;;; Flymake-languagetool
 (use-package flymake-languagetool
   ;; :hook ((text-mode LaTeX-mode org-mode markdown-mode) . flymake-languagetool-load) ; Using eglot-grammarly now
   ;; :general (:keymaps 'flymake-mode-map
@@ -66,12 +83,12 @@
   (flymake-languagetool-disabled-rules
    '("DATE_NEW_YEAR" "WHITESPACE_RULE" "ARROWS")))
 
-;;; Lsp-grammarly
+;;;; Lsp-grammarly
 (use-package lsp-grammarly
   :after lsp-mode
   :hook (lsp-grammarly-ls-after-open . (lambda () (lsp-ui-mode -1))))
 
-;;; Eglot-grammarly
+;;;; Eglot-grammarly
 ;; The formal `eglot-grammarly' package is useless; the following code is
 ;; basically the package
 (with-eval-after-load 'eglot
@@ -82,6 +99,5 @@
                  "grammarly-languageserver" "--stdio"
                  :initializationOptions (:clientId "client_BaDkMgx4X19X9UxxYRCXZo"))))
 
-;;; checking-grammar-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-grammar-rcp)
+;;; checking-grammar-rcp.el ends here

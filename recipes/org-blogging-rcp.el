@@ -1,17 +1,34 @@
-;;; org-blogging-rcp.el --- Summary
-;;
+;;; org-blogging-rcp.el --- Blogging with Org-mode   -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Everything necessary for creating static websites using org-mode.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Everything necessary for creating static websites using Hugo in org-mode.
+
 ;;; Code:
 (require 'cl)
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Ox-hugo
-;;;; Itself
+;;;; Ox-hugo
+;;;;; Itself
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
   :demand
@@ -36,7 +53,7 @@
     (cl-set-difference tag-list kb/org-hugo-exclude-tags :test #'equal))
   (add-to-list 'org-hugo-tag-processing-functions #'kb/org-hugo--tag-processing-fn-ignore-tags-maybe))
 
-;;;; Bundle support
+;;;;; Bundle support
 (with-eval-after-load 'ox-hugo
   (defvar kb/org-hugo-bundle-workflow t
     "Whether I am using a Hugo bundle workflow. Relevant for my
@@ -94,7 +111,7 @@ slug of the file's title with underscores replaced for hyphens."
       (file-truename pub-dir)))
   (advice-add 'org-hugo--get-pub-dir :override #'kb/org-hugo--get-pub-dir))
 
-;;;; Exporting links
+;;;;; Exporting links
 (with-eval-after-load 'ox-hugo
   (defun kb/org-export-resolve-denote-link (link info)
     "Return `denote' file referenced as LINK destination.
@@ -548,7 +565,7 @@ and rewrite link paths to make blogging more seamless."
               (format "<%s>" path)))))))))
   (advice-add 'org-hugo-link :override #'kb/org-hugo-link))
 
-;;;; Magic keyword management
+;;;;; Magic keyword management
 (with-eval-after-load 'ox-hugo
   (defun kb/find-blog-files-org ()
     "Return a list of org files which are within the blog subdirectory
@@ -681,7 +698,7 @@ the current hugo buffer if they do not exist."
           (error (message "[kb/org-hugo-export-all]: error exporting %s" file))))
       (message "Done - Exported %s blog notes!" post-count))))
 
-;;;; Fix TOC including tags
+;;;;; Fix TOC including tags
 (with-eval-after-load 'ox-hugo
   (defun kb/org-hugo--build-toc (info &optional n scope local)
     "Return table of contents as a string.
@@ -794,6 +811,5 @@ TOC."
                   "<!--endtoc-->\n")))))
   (advice-add 'org-hugo--build-toc :override #'kb/org-hugo--build-toc))
 
-;;; org-blogging-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-blogging-rcp)
+;;; org-blogging-rcp.el ends here

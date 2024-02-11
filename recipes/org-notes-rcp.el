@@ -1,17 +1,34 @@
-;;; org-notes-rcp.el --- Summary -*- lexical-binding: t -*-
-;;
+;;; org-notes-rcp.el --- Taking notes in org-mode    -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; This is everything directly used for my note-taking needs.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Everything directly used for my note-taking needs.
+
 ;;; Code:
 (require 'custom-directories-rcp)
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Denote
-;;;; This
+;;;; Denote
+;;;;; This
 (use-package denote
   :functions kb/denote-search-from-id
   :ensure (:type git
@@ -81,7 +98,7 @@
                  (denote-filename-is-note-p f))
         (denote-rename-file-using-front-matter f :auto-confirm)))))
 
-;;;; Return denote file path based on ID
+;;;;; Return denote file path based on ID
 (with-eval-after-load 'denote
   (defun kb/denote-search-from-id (id)
     (when-let* ((full-path (car (cl-remove-if-not
@@ -90,7 +107,7 @@
                 (title (denote-retrieve-title-value full-path 'org)))
       title)))
 
-;;;; Standardizing note front-matter
+;;;;; Standardizing note front-matter
 (with-eval-after-load 'denote
   (defun kb/org-set-keyword (keyword value)
     ;; Got lazy and copied `org-roam-set-keyword'
@@ -244,7 +261,7 @@
           (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
             (kill-buffer)))))))
 
-;;;; Update link descriptions
+;;;;; Update link descriptions
 (with-eval-after-load 'denote
   (defun kb/denote--update-buffer-link-descriptions (buffer)
     "Update the link descriptions for all `denote' links in BUFFER,
@@ -317,7 +334,7 @@ If called with `universal-arg', then replace links in all denote buffers."
       (message "Done! Replaced a total of %s links across %s files!"
                replaced-count updated-notes))))
 
-;;;; New note from region
+;;;;; New note from region
 ;; Taken from
 ;; https://protesilaos.com/emacs/denote#h:d0c7cb79-21e5-4176-a6af-f4f68578c8dd
 (with-eval-after-load 'denote
@@ -342,7 +359,7 @@ Delete the original subtree."
           (insert text))
       (user-error "No subtree to extract; aborting"))))
 
-;;; Denote-explore
+;;;; Denote-explore
 ;; Useful Denote utilities
 (use-package denote-explore
   :after denote
@@ -361,7 +378,7 @@ Delete the original subtree."
                  (mapconcat (lambda (id) id) dups ", "))
       (message "No duplicate identifiers found"))))
 
-;;; Denote-menu
+;;;; Denote-menu
 (use-package denote-menu
   :ensure (:type git :host github :repo "namilus/denote-menu")
   :general
@@ -373,7 +390,7 @@ Delete the original subtree."
             "/ k" 'denote-menu-filter-by-keyword
             "e" 'denote-menu-export-to-dired))
 
-;;; Consult-notes
+;;;; Consult-notes
 (use-package consult-notes
   :disabled                             ; Trying without
   :ensure (consult-notes :type git :host github :repo "mclear-tools/consult-notes")
@@ -490,7 +507,7 @@ Delete the original subtree."
                   (let ((save-silently t))
                     (apply orig-fun args)))))
 
-;;; Citar-denote
+;;;; Citar-denote
 (use-package citar-denote
   :after denote
   :diminish
@@ -546,6 +563,5 @@ Delete the original subtree."
            :reference-format "reference:  %s\n"
            :reference-regex "^reference\\s-*:"))))
 
-;;; org-notes-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-notes-rcp)
+;;; org-notes-rcp.el ends here

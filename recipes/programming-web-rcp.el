@@ -1,15 +1,33 @@
-;;; programming-web-rcp.el --- Summary
-;;
+;;; programming-web-rcp.el --- Web-dev               -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; These are packages that are relevant to web development.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Web-development things.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'convenient-functions-rcp)
 
-;;; Web-mode
+;;;; Web-mode
 ;; Compatible with most template engines (e.g. handlebars mode, mustache) and
 ;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
 (use-package web-mode
@@ -46,7 +64,7 @@
   :config
   (setf (alist-get "handlebars" web-mode-comment-formats nil nil 'string=) '("{{!")))
 
-;;; Css-mode
+;;;; Css-mode
 (use-package css-mode
   :ensure nil
   :ensure-system-package (stylelint . "sudo npm install --global --save-dev stylelint stylelint-config-standard")
@@ -57,7 +75,7 @@
   (flycheck-stylelintrc (concat no-littering-var-directory "flycheck/.stylelintrc.json"))
   (flycheck-stylelint-quiet nil))
 
-;;; Js2-mode
+;;;; Js2-mode
 (use-package js2-mode
   :ensure-system-package ((eslint . "sudo npm install --global --save-dev eslint")
                           (semistandard . "sudo npm install --global semistandard"))
@@ -72,13 +90,13 @@
   (flycheck-javascript-standard-executable (executable-find "semistandard"))
   (flycheck-javascript-eslint-executable (executable-find "eslint")))
 
-;;; Json-mode
+;;;; Json-mode
 (use-package json-mode
   :ensure-system-package (jsonlint . "sudo npm install --global jsonlint")
   :custom
   (flycheck-json-jsonlint-executable (executable-find "jsonlint")))
 
-;;; Yaml-mode
+;;;; Yaml-mode
 (use-package yaml-mode
   :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
   :gfhook
@@ -89,6 +107,5 @@
   :custom
   (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 
-;;; programming-web-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-web-rcp)
+;;; programming-web-rcp.el ends here

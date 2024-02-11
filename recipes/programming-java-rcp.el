@@ -1,14 +1,31 @@
-;;; programming-java-rcp.el --- Summary
-;;
+;;; programming-java-rcp.el --- Java                 -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages related to developing in Java.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'keybinds-general-rcp)
 
-;;; Lsp-java
+;;;; Lsp-java
 (use-package lsp-java
   :requires lsp
   :hook ((java-mode . lsp-deferred)
@@ -105,7 +122,7 @@
 
     :download-server-fn #'lsp-java--ensure-server)))
 
-;;; Dap-java
+;;;; Dap-java
 (use-package dap-java
   :requires dap-mode
   :ensure nil
@@ -132,7 +149,7 @@
                                      :projectName nil
                                      :mainClass nil)))
 
-;;; Helm-lsp
+;;;; Helm-lsp
 ;; Helm interface -- really the only option...
 (use-package helm-lsp
   :defer 4
@@ -140,6 +157,5 @@
   :config
   (require 'helm))
 
-;;; programming-java-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-java-rcp)
+;;; programming-java-rcp.el ends here

@@ -1,15 +1,32 @@
-;;; buffer-nav-rcp.el --- Summary
-;;
+;;; buffer-nav-rcp.el --- Navigating efficiently within buffers  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Configuration of packages whose main functionality is to navigate buffers.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Puni
+;;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
   :defines 'kb/puni-global-mode
@@ -64,7 +81,7 @@ command."
     (lambda () (kb/puni-mode 1)))
   (kb/puni-global-mode))
 
-;;; Avy
+;;;; Avy
 ;; Quickly jump to any character
 (use-package avy
   :commands kb/avy-goto-parens
@@ -159,7 +176,7 @@ command."
     (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
     (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft)))
 
-;;; Imenu
+;;;; Imenu
 (use-package imenu
   :ensure nil
   :custom
@@ -167,7 +184,7 @@ command."
   (imenu-auto-rescan t)
   (use-package-enable-imenu-support t))
 
-;;; Imenu-list
+;;;; Imenu-list
 ;; Side buffer with imenu items
 (use-package imenu-list
   :after imenu
@@ -175,7 +192,7 @@ command."
              "I" '(imenu-list :wk "Imenu list"))
   :hook (imenu-list-major-mode . visual-line-mode))
 
-;;; Occur
+;;;; Occur
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur
   :ensure nil
@@ -183,6 +200,5 @@ command."
   :general (kb/nav-keys
              "o" '(occur :wk "Occur")))
 
-;;; buffer-nav-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'buffer-nav-rcp)
+;;; buffer-nav-rcp.el ends here

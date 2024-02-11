@@ -1,15 +1,32 @@
-;;; org-export-rcp.el --- Summary
-;;
+;;; org-export-rcp.el --- Org-export config          -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Everything related to exporting in org.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Config relaed specifically to `org-export'.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Ox (org-export)
+;;;; Ox (org-export)
 (use-package ox
   :ensure nil
   ;; Call after `org' since some of the options below are from `org', not
@@ -45,14 +62,14 @@
       (replace-regexp-in-string "&[lg]t;\\|[][]" "" timestamp))))
   (add-to-list 'org-export-filter-timestamp-functions #'kb/org-export-filter-timestamp-reformat))
 
-;;; Ox-odt
+;;;; Ox-odt
 (use-package ox-odt
   :ensure nil
   :custom
   (org-odt-preferred-output-format "docx")) ; Convert to docx at the end of conversion
 
-;;; Ox-latex
-;;;; Itself
+;;;; Ox-latex
+;;;;; Itself
 (use-package ox-latex
   :ensure nil
   :custom
@@ -130,7 +147,7 @@ hidelinks={true}}\n")                   ; Hide hyperlinks
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-;;;; Custom org-export latex backend
+;;;;; Custom org-export latex backend
 ;; Support more file keywords; used for my papers
 (with-eval-after-load 'ox-latex
   (defun kb/org-latex-template (contents info)
@@ -284,9 +301,9 @@ Uses my 'latex-paper' backend. See the original
     '((:professor "PROFESSOR" nil nil parse)
       (:course "COURSE" nil nil parse))))
 
-;;;; Custom links
+;;;;; Custom links
 (with-eval-after-load 'ol
-;;;;; Colored text
+;;;;;; Colored text
   (defun kb/org-latex-color-export (link description format)
     (let ((desc (or description link)))
       (cond
@@ -300,30 +317,29 @@ Uses my 'latex-paper' backend. See the original
                                        (concat "color:"
                                                (completing-read "Choose color: " (list-colors-duplicates (defined-colors))))))
 
-;;;;; [ end ]
+;;;;;; [ end ]
   )
 
-;;; Org-contrib
+;;;; Org-contrib
 (use-package org-contrib
   :after org
   :init
   (require 'ox-extra)
   (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
 
-;;; Ox-pandoc
+;;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
   :after ox
   :demand
   :ensure-system-package pandoc)
 
-;;; Ox-clip
+;;;; Ox-clip
 (use-package ox-clip
   :ensure-system-package xclip
   :general (kb/yank-keys
              :keymaps 'org-mode-map
              "x" 'ox-clip-formatted-copy))
 
-;;; org-export-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-export-rcp)
+;;; org-export-rcp.el ends here

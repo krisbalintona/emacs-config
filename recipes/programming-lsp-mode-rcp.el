@@ -1,15 +1,32 @@
-;;; programming-lsp-mode-rcp.el --- Summary
-;;
+;;; programming-lsp-mode-rcp.el --- LSP-mode         -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; All configuration related to LSP-mode.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; All configuration related to lsp-mode.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Lsp-mode
+;;;; Lsp-mode
 ;; Use the language server protocol as a backend for Emacs.
 (use-package lsp-mode
   :diminish ((lsp-mode . "LSP")
@@ -133,7 +150,7 @@
   ;; (lsp-face-highlight-write ((t (:inherit nil :box (:line-width -1 :style nil)))))
   (lsp-face-highlight-textual ((t (:inherit nil :box (:line-width -1 :style nil))))))
 
-;;; Lsp-ui
+;;;; Lsp-ui
 ;; Fancy frame and sideline overlay which shows useful information about what's
 ;; on the point.
 (use-package lsp-ui
@@ -190,8 +207,8 @@
   (lsp-ui-imenu-auto-refresh-delay 1.0)   ; Variable doesn't exist?
   )
 
-;;; Ancillary
-;;;; Consult-lsp
+;;;; Ancillary
+;;;;; Consult-lsp
 (use-package consult-lsp
   :after lsp-mode
   :hook (lsp-mode . (lambda () ; Need to do it this way since adding to `lsp-mode-map' doesn't work
@@ -205,7 +222,7 @@
   (:keymaps 'lsp-mode-map
             [remap consult-flycheck] '(consult-lsp-diagnostics :wk "Consult lsp diagnostics")))
 
-;;;; Lsp-treemacs
+;;;;; Lsp-treemacs
 ;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
 (use-package lsp-treemacs
   :requires treemacs
@@ -222,6 +239,5 @@
             :states 'normal
             "x" 'lsp-treemacs-quick-fix))
 
-;;; programming-lsp-mode-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-lsp-mode-rcp)
+;;; programming-lsp-mode-rcp.el ends here

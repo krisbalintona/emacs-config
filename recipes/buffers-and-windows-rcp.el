@@ -1,15 +1,32 @@
-;;; buffers-and-windows-rcp.el --- Summary
-;;
+;;; buffers-and-windows-rcp.el --- Buffer and window control  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages for traversing and managing windows and buffers.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Server
+;;;; Server
 ;; Prefer Emacs server over Emacs daemon
 (use-package server
   :demand
@@ -19,8 +36,8 @@
   :custom
   (server-client-instructions nil))
 
-;;; Window configurations
-;;;; Winner-mode
+;;;; Window configurations
+;;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
   :ensure nil
@@ -32,7 +49,7 @@
   :init
   (winner-mode))
 
-;;;; Windmove
+;;;;; Windmove
 (use-package windmove
   :ensure nil
   :general (:keymaps 'windmove-mode-map
@@ -51,13 +68,13 @@
   :init
   (windmove-mode))
 
-;;;; Transpose-frame
+;;;;; Transpose-frame
 ;; Rotate window configuration
 (use-package transpose-frame
   :general ("H-r" 'rotate-frame-anticlockwise
             "H-l" 'rotate-frame-clockwise))
 
-;;;; Window
+;;;;; Window
 (use-package window
   :ensure nil
   :general ("M-o" 'other-window)
@@ -192,7 +209,7 @@ If buffer-or-name is nil return current buffer's mode."
     (let ((window (display-buffer-in-side-window buffer alist)))
       (select-window window))))
 
-;;;; Eyebrowse
+;;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
 (use-package eyebrowse
   :disabled                             ; Testing out `tab-bar'
@@ -230,7 +247,7 @@ If buffer-or-name is nil return current buffer's mode."
   ;; Immediately remove from mode line so I can manually place it
   (delete '(eyebrowse-mode (:eval (eyebrowse-mode-line-indicator))) mode-line-misc-info))
 
-;;;; Tab-bar
+;;;;; Tab-bar
 (use-package tab-bar
   :ensure nil
   :general
@@ -251,13 +268,13 @@ If buffer-or-name is nil return current buffer's mode."
   (tab-bar-mode)
   (tab-bar-history-mode))
 
-;;;; Project-tab-groups
+;;;;; Project-tab-groups
 (use-package project-tab-groups
   :disabled                             ; Intrusive for me
   :init
   (project-tab-groups-mode))
 
-;;;; Ace-window
+;;;;; Ace-window
 (use-package ace-window
   :general ("C-c w" '(ace-window :wk "Ace window")
             "C-c W" '(ace-swap-window :wk "Ace swap-window"))
@@ -282,7 +299,7 @@ If buffer-or-name is nil return current buffer's mode."
      (?? aw-show-dispatch-help))
    ))
 
-;;;; Popper
+;;;;; Popper
 ;; "Tame ephemeral windows"
 (use-package popper
   :general ("M-`" 'popper-toggle-latest
@@ -374,7 +391,7 @@ If buffer-or-name is nil return current buffer's mode."
   (popper-echo-mode)              ; Hinting in the echo area when `popper-cycle'
   )
 
-;;;; Switchy-window
+;;;;; Switchy-window
 ;; `other-window' by most recently used
 (use-package switchy-window
   :general (:keymaps 'switchy-window-minor-mode-map
@@ -445,8 +462,8 @@ timestamp)."
           (switchy-window)))))
   (advice-add 'switchy-window :override 'kb/switchy-window))
 
-;;; Buffers
-;;;; Bookmark
+;;;; Buffers
+;;;;; Bookmark
 (use-package bookmark
   :ensure nil
   :custom
@@ -456,7 +473,7 @@ timestamp)."
   :config
   (bookmark-maybe-load-default-file))   ; Load bookmarks immediately for access
 
-;;;; Ibuffer
+;;;;; Ibuffer
 (use-package ibuffer
   :ensure nil
   :general ([remap list-buffers] 'ibuffer)
@@ -504,7 +521,7 @@ timestamp)."
            :header-mouse-map ibuffer-size-header-map)
     (file-size-human-readable (buffer-size))))
 
-;;;; Burly
+;;;;; Burly
 (use-package burly
   :ensure (:depth 1
                   :fetcher github
@@ -518,7 +535,7 @@ timestamp)."
   :init
   (burly-tabs-mode))
 
-;;;; Perfect-margin
+;;;;; Perfect-margin
 (use-package perfect-margin
   :diminish
   :hook (elpaca-after-init . perfect-margin-mode)
@@ -561,7 +578,7 @@ timestamp)."
           (set-window-fringes window (car fringes) (cdr fringes))))))
   (setq split-window-preferred-function 'kb/split-window-sensibly))
 
-;;; Activities
+;;;; Activities
 (use-package activities
   :general (:prefix "C-c a"
                     "n" 'activities-new
@@ -575,6 +592,5 @@ timestamp)."
   (activities-mode 1)
   (activities-tabs-mode 1))
 
-;;; buffers-and-windows-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'buffers-and-windows-rcp)
+;;; buffers-and-windows-rcp.el ends here

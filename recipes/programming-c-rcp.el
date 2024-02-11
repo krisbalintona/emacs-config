@@ -1,20 +1,37 @@
-;;; programming-c-rcp.el --- Summary
-;;
+;;; programming-c-rcp.el --- C                       -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages related to developing in C.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'keybinds-general-rcp)
 
-;;; C-mode
+;;;; C-mode
 (use-package cc-mode
   :ensure nil
   :general (:keymaps 'c-mode-map
                      "TAB" 'indent-for-tab-command))
 
-;;; Gdb-mi
+;;;; Gdb-mi
 ;; Built-in GDB
 (use-package gdb-mi
   :ensure nil
@@ -40,7 +57,7 @@ regarding \"target-async\"."
       (gdb-input "-list-target-features" 'gdb-check-target-async)))
   (advice-add 'gdb-non-stop-handler :override #'kb/gdb-non-stop-handler))
 
-;;; Gdb-bp-session
+;;;; Gdb-bp-session
 (use-package gdb-bp-session
   :ensure (:type git :host github :repo "emacsmirror/gdb-bp-session")
   :requires no-littering gud
@@ -104,6 +121,5 @@ no input, and GDB is waiting for input."
         (delete-char arg))))
   (advice-add 'gdb-delchar-or-quit :override #'kb/gdb-delchar-or-quit))
 
-;;; programming-c-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-c-rcp)
+;;; programming-c-rcp.el ends here

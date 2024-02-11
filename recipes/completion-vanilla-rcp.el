@@ -1,17 +1,34 @@
-;;; completion-vanilla-rcp.el --- Summary
-;;
+;;; completion-vanilla-rcp.el --- Completing-read based completion  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Completion framework and cousin packages which are lightweight and faithful
 ;; to the base Emacs architecture.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Vertico
-;;;; Itself
+;;;; Vertico
+;;;;; Itself
 (use-package vertico
   :demand                               ; Otherwise won't get loaded immediately
   :ensure (vertico :files (:defaults "extensions/*"))
@@ -70,7 +87,7 @@
     (vertico--resize-window (length lines)))
   (advice-add #'vertico--display-candidates :override #'kb/vertico-bottom--display-candidates))
 
-;;;; Vertico-directory
+;;;;; Vertico-directory
 (use-package vertico-directory
   :ensure nil
   ;; More convenient directory navigation commands
@@ -81,7 +98,7 @@
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
-;;;; Vertico-multiform
+;;;;; Vertico-multiform
 (use-package vertico-multiform
   :demand
   :after vertico
@@ -97,7 +114,7 @@
   :config
   (vertico-multiform-mode))
 
-;;;; Vertico-buffer
+;;;;; Vertico-buffer
 (use-package vertico-buffer
   :ensure nil
   :after vertico
@@ -105,7 +122,7 @@
   (vertico-buffer-hide-prompt nil)
   (vertico-buffer-display-action '(display-buffer-reuse-window)))
 
-;;;; Vertico-truncate
+;;;;; Vertico-truncate
 ;; Truncate long lines while leaving match visible
 (use-package vertico-truncate
   :demand
@@ -116,7 +133,7 @@
   :config
   (vertico-truncate-mode))
 
-;;; Orderless
+;;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
@@ -166,10 +183,10 @@
      ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
      ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
 
-;;; Fussy
+;;;; Fussy
 ;; Instead of just filtering (e.g. like `orderless' alone), also score the
 ;; filtered candidates afterward!
-;;;; Itself
+;;;;; Itself
 (use-package fussy
   :disabled               ; Less performant than `orderless' with little benefit
   :ensure (fussy :type git :host github :repo "jojojames/fussy")
@@ -195,44 +212,43 @@
    fussy-score-fn 'flx-rs-score
    ))
 
-;;;; Flx-rs
+;;;;; Flx-rs
 (use-package flx-rs
   :ensure (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
   :after flx-rs
   :commands fussy-score
   :config (flx-rs-load-dyn))
 
-;;;; Liquidmetal
+;;;;; Liquidmetal
 (use-package liquidmetal
   :after fussy
   :commands fussy-liquidmetal-score)
 
-;;;; Fuz-bin
+;;;;; Fuz-bin
 (use-package fuz-bin
   :ensure (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
   :after fussy
   :commands fussy-fuz-score
   :config (fuz-bin-load-dyn))
 
-;;;; Fuz-native
+;;;;; Fuz-native
 (use-package fzf-native
   :ensure (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
   :after fussy
   :commands fussy-fzf-native-score
   :config (fzf-native-load-dyn))
 
-;;;; Subline-fuzzy
+;;;;; Subline-fuzzy
 (use-package sublime-fuzzy
   :ensure (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
   :after fussy
   :commands fussy-sublime-fuzzy-score
   :config (sublime-fuzzy-load-dyn))
 
-;;;; Hotfuzz
+;;;;; Hotfuzz
 (use-package hotfuzz
   :after fussy
   :commands fussy-hotfuzz-score)
 
-;;; completion-vanilla-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-vanilla-rcp)
+;;; completion-vanilla-rcp.el ends here

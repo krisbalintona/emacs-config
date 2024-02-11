@@ -1,32 +1,34 @@
-;;; convenient-functions-rcp.el --- Summary
-;;
+;;; convenient-functions-rcp.el --- Bespoke miscellaneous functions  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; These are small groups of code, many of which are self-defined, that I find
 ;; useful. Most of these functions are taken from elsewhere (e.g. Doom).
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'custom-directories-rcp)
 
-;;; Aj-toggle-fold
-(defun aj-toggle-fold ()
-  "Toggle fold all lines larger than indentation on current line.
-Taken from
-https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159."
-  (interactive)
-  (let ((col 1))
-    (save-excursion
-      (back-to-indentation)
-      (setq col (+ 1 (current-column)))
-      (set-selective-display
-       (if selective-display nil (or col 1)))
-      )))
-(kb/toggle-keys "f" '(aj-toggle-fold :wk "aj-toggle-fold"))
-
-;;; Indent whole buffer
+;;;; Indent whole buffer
 (defun kb/format-buffer-indentation--base (&optional beg end)
   "Basic indentation fix using `indent-region'.
 By default, indents entire buffer. If BEG and END are specified,
@@ -95,7 +97,7 @@ act upon that region instead."
                                  (float-time (time-subtract (current-time) start-time))))))
 (general-define-key [remap indent-region] 'kb/format-buffer-indentation)
 
-;;; Yank current buffer's file-path
+;;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
   "Copy the current buffer's path to the kill ring."
   (interactive)
@@ -105,7 +107,7 @@ act upon that region instead."
     (error "Couldn't find filename in current buffer")))
 (kb/file-keys "w" 'kb/yank-buffer-filename)
 
-;;; Delete this file
+;;;; Delete this file
 (defun kb/delete-this-file (&optional path force-p)
   "Delete PATH, kill its buffers and expunge it from vc/magit cache.
 
@@ -136,14 +138,14 @@ act upon that region instead."
           (message "Deleted %S" short-path))))))
 (kb/file-keys "D" '(kb/delete-this-file :wk "Delete current file"))
 
-;;; Empty trash
+;;;; Empty trash
 (defun kb/empty-trash ()
   "Empty the trash directory."
   (interactive)
   (if delete-by-moving-to-trash
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
 
-;;; Advice-unadvice
+;;;; Advice-unadvice
 ;; Thanks to
 ;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
 (defun advice-unadvice (sym)
@@ -152,7 +154,7 @@ act upon that region instead."
   (advice-mapc (lambda (advice _props)
                  (advice-remove sym advice)) sym))
 
-;;; kb/org-add-blank-lines
+;;;; kb/org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with
 ;; =universal-argument= to apply to whole buffer
 (defun unpackaged/org-add-blank-lines (&optional prefix)
@@ -209,6 +211,5 @@ Called before saving in org files which are not in
       (org-with-wide-buffer
        (funcall-interactively 'unpackaged/org-add-blank-lines whole-buffer)))))
 
-;;; convenient-functions-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'convenient-functions-rcp)
+;;; convenient-functions-rcp.el ends here

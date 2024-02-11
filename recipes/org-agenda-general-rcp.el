@@ -1,16 +1,33 @@
-;;; org-agenda-general-rcp.el --- Summary
-;;
+;;; org-agenda-general-rcp.el --- Todos with org-agenda  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Settings related to org-agenda itself.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'org-general-rcp)
 
-;;; Org-agenda
+;;;; Org-agenda
 (use-package org-agenda
   :ensure nil
   ;; Call after `org' since some of the options below are from `org', not
@@ -211,7 +228,7 @@ Side effects occur if the parent of the current headline has a
                    (or (> hr 10) (< hr 21)))))
       (concat "-" tag))))
 
-;;; Org-super-agenda
+;;;; Org-super-agenda
 (use-package org-super-agenda
   :demand
   :after org-agenda
@@ -369,7 +386,7 @@ Side effects occur if the parent of the current headline has a
           ("d" "Done and cancelled"
            ((tags "TODO=\"DONE\"&LEVEL=1|TODO=\"CANCELED\"&LEVEL=1"))))))
 
-;;; Org-clock
+;;;; Org-clock
 (use-package org-clock
   :demand
   :ensure nil
@@ -403,7 +420,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
                     (org-no-properties (org-get-heading t t t t)))))
       (truncate-string-to-width heading 40 nil nil (truncate-string-ellipsis)))))
 
-;;; Org-habit
+;;;; Org-habit
 (use-package org-habit
   :after org-agenda
   :ensure nil
@@ -422,7 +439,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
   (org-todo-repeat-to-state "ACTIVE"))
 
 
-;;; Work-timer
+;;;; Work-timer
 (use-package work-timer
   :demand
   :ensure (:host github
@@ -462,6 +479,5 @@ Same as default but truncates with `truncate-string-ellipsis'."
   (work-timer-with-org-clock-mode)
   (kb/work-timer-set-faces))
 
-;;; org-agenda-general-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-agenda-general-rcp)
+;;; org-agenda-general-rcp.el ends here

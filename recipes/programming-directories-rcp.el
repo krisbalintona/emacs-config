@@ -1,16 +1,33 @@
-;;; programming-directories-rcp.el --- Summary
-;;
+;;; programming-directories-rcp.el --- Traversing and seeing directories  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Everything to do with navigating and managing directories.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Dired
-;;;; This
+;;;; Dired
+;;;;; This
 ;; Emacs' file manager
 (use-package dired
   :ensure nil
@@ -54,7 +71,7 @@ command."
                     (funcall-interactively 'eval-expression sexp)))) ; Sexp
             (dired-get-marked-files)))))
 
-;;;; All-the-icons-dired
+;;;;; All-the-icons-dired
 ;; Add icons which represent file types
 (use-package all-the-icons-dired
   :ghook 'dired-mode-hook
@@ -64,7 +81,7 @@ command."
   (dired-kill-when-opening-new-dired-buffer t) ; Kill dired buffer when opening new directory
   )
 
-;;;; Image-dired
+;;;;; Image-dired
 (use-package image-dired
   :ensure nil
   :hook (dired-mode . image-dired-minor-mode)
@@ -74,7 +91,7 @@ command."
   (image-dired-thumb-relief 0)
   (dired-mouse-drag-files t))
 
-;;;; Dired-git
+;;;;; Dired-git
 ;; Show git information in dired
 (use-package dired-git
   :disabled
@@ -83,7 +100,7 @@ command."
   (dired-git-disable-dirs '("~/"))
   (dired-git-parallel 7))               ; Number of parallel processes
 
-;;;; Dired-open
+;;;;; Dired-open
 ;; Override how dired opens files with certain extensions
 (use-package dired-open
   :after dired
@@ -98,7 +115,7 @@ command."
   ;; Try to use `xdg-open' before anything else
   (add-to-list 'dired-open-functions #'dired-open-xdg t)) ; Doesn't work as expected!
 
-;;;; Dired-hide-dotfiles
+;;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
   :general (:keymaps 'dired-mode-map
@@ -107,7 +124,7 @@ command."
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
-;;;; Dired-hist
+;;;;; Dired-hist
 ;; History for dired buffers
 (use-package dired-hist
   :ensure (:host github :repo "karthink/dired-hist")
@@ -119,11 +136,11 @@ command."
   :init
   (dired-hist-mode))
 
-;;;; Consult-dir
+;;;;; Consult-dir
 (use-package consult-dir
   :general ([remap dired] 'consult-dir))
 
-;;;; Consult-buffer integration
+;;;;; Consult-buffer integration
 (with-eval-after-load 'consult
   (defvar kb/consult-buffer--dired-source
     (list :name     "Dired Buffers"
@@ -141,8 +158,8 @@ command."
                             (buffer-list))))))
   (add-to-list 'consult-buffer-sources #'kb/consult-buffer--dired-source 'append))
 
-;;; Misc
-;;;; Affe
+;;;; Misc
+;;;;; Affe
 ;; Blazing fast fuzzy finder
 (use-package affe
   :after orderless
@@ -157,7 +174,7 @@ command."
   (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
   (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .")) ; Include hidden files
 
-;;;; Dwim-shell-command
+;;;;; Dwim-shell-command
 ;; Many convenient wrappers involving shell commands in and out of `dired' (with
 ;; the ability to easily create my own)
 (use-package dwim-shell-command
@@ -170,6 +187,5 @@ command."
   :init
   (require 'dwim-shell-commands))       ; Set of command line utilities
 
-;;; programming-directories-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-directories-rcp)
+;;; programming-directories-rcp.el ends here

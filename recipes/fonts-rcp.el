@@ -1,25 +1,74 @@
-;;; fonts-rcp.el --- Summary
-;;
+;;; fonts-rcp.el --- Emacs-wide font config          -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Packages related to fonts and faces.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Packages and settings related to fonts and faces functionality generally
+;; across Emacs.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Builtin
 (set-charset-priority 'unicode)
 (prefer-coding-system 'utf-8-unix)
 
-;;; All-the-icons
-;; Provides a bunch of unicode icons which many other packages leverage
-(use-package all-the-icons
-  :custom
-  (all-the-icons-scale-factor 1.1))
+;;;; Font famlies
+(defvar kb/themes-default-font
+  "Iosevka Term SS04"
+  "Font for default face.")
 
-;;; Mixed-pitch
+(defvar kb/themes-fixed-pitch-font
+  ;; "Hack Nerd Font Mono"
+  "Iosevka"
+  "Font for fixed-pitch face.")
+
+(defvar kb/themes-variable-pitch-font
+  ;; "LiterationSerif Nerd Font"           ; Variable
+  ;; "Latin Modern Mono Prop"              ; Monospace
+  ;; "Sans Serif"
+  "Open Sans"
+  "Font for the variable-pitch face.")
+
+(defvar kb/themes-mode-line-font
+  ;; "JetBrainsMono Nerd Font"
+  "Iosevka Aile"
+  "Font for the mode line.")
+
+;;;;; Lighter minibuffer and echo area
+;; Make minibuffer and echo fonts a little lighter. Taken from
+;; https://www.reddit.com/r/emacs/comments/14q399t/comment/jqm6zr3/?utm_source=share&utm_medium=web2x&context=3
+(dolist (buffer (list " *Minibuf-0*" " *Echo Area 0*"
+                      " *Minibuf-1*" " *Echo Area 1*"))
+  (when (get-buffer buffer)
+    (with-current-buffer buffer
+      (face-remap-add-relative 'bold :weight 'normal)
+      (face-remap-add-relative 'default :weight 'light))))
+
+(add-hook 'minibuffer-setup-hook
+          '(lambda ()
+             (face-remap-add-relative 'bold :weight 'normal)
+             (face-remap-add-relative 'default :weight 'light)))
+
+(provide 'fonts-rcp)
+;;;; Mixed-pitch
 ;; Allow the same buffer to have both fixed- and variable-pitch
 ;; NOTE Changes the family and height of the default face to the family and
 ;; height of the variable-pitch face
@@ -34,11 +83,11 @@
                  ace-jump-face-background
                  )))
 
-;;; Default-text-scale
+;;;; Default-text-scale
 ;; Text-scale-mode but Emacs-wide
 (use-package default-text-scale)
 
-;;; Emojify
+;;;; Emojify
 (use-package emojify
   :hook (elpaca-after-init . global-emojify-mode)
   :custom
@@ -51,7 +100,7 @@
   ;; (emojify-emoji-styles 'unicode)
   (emojify-display-style 'unicode))
 
-;;; Unicode-fonts
+;;;; Unicode-fonts
 ;; NOTE 2022-01-24: See https://github.com/rolandwalker/unicode-fonts#testing
 ;; for how to test for its success. Also see the very recommended font
 ;; installations in the same README. Notably, the following are the listed
@@ -85,7 +134,7 @@
                        ((member "Symbola" (font-family-list)) "Symbola")))
    nil 'prepend))
 
-;;; Ligature
+;;;; Ligature
 ;; Ligatures! See for configuration examples: https://github.com/j/wiki
 (use-package ligature
   :ensure (ligature :type git :host github :repo "mickeynp/ligature.el")
@@ -101,6 +150,63 @@
                                        "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
                                        ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++")))
 
+;;;; Fontaine
+;; Test faces without restart Emacs!
+(use-package fontaine
+  :init
+  (setq fontaine-presets
+        '((regular
+           :default-family "Hack"
+           :default-weight normal
+           :default-height 100
+           :fixed-pitch-family "Fira Code"
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "Noto Sans"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.0
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family "Source Code Pro"
+           :italic-slant italic
+           :line-spacing 1)
+          (large
+           :default-family "Iosevka"
+           :default-weight normal
+           :default-height 150
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil ; use whatever the underlying face has
+           :italic-slant italic
+           :line-spacing 1)
+          ;; Mine
+          (test
+           :default-family "Iosevka Term SS04"
+           :default-weight normal
+           :default-height 140
+           :fixed-pitch-family "Iosevka Comfy"
+           :fixed-pitch-weight nil
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "Open Sans"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.10
+           :bold-family nil
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing 1)))
+  )
+
+;;;; All-the-icons
+;; Provides a bunch of unicode icons which many other packages leverage
+(use-package all-the-icons
+  :custom
+  (all-the-icons-scale-factor 1.1))
+
 ;;; fonts-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'fonts-rcp)

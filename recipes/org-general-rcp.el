@@ -1,16 +1,32 @@
-;;; org-general-rcp.el --- Summary
-;;
+;;; org-general-rcp.el --- Generalized org-mode config  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona(require 'use-package-rcp) <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; All my general org configurations.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Most of my org-mode config.
+
 ;;; Code:
-(require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Org
-;;;; Itself
+;;;; Org
+;;;;; Itself
 (use-package org
   :gfhook
   'variable-pitch-mode
@@ -75,7 +91,7 @@
   (when (bound-and-true-p evil-local-mode)
     (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
 
-;;;; Org-num
+;;;;; Org-num
 (use-package org-num
   :ensure nil
   :diminish
@@ -85,7 +101,7 @@
   :custom
   (org-num-face 'fixed-pitch))
 
-;;;; Org-indent
+;;;;; Org-indent
 (use-package org-indent
   :disabled
   :ensure nil
@@ -164,7 +180,7 @@ have `org-warning' face."
   (advice-add 'org-indent--compute-prefixes :override 'kb/org-indent--compute-prefixes)
   (advice-add 'org-indent-set-line-properties :override 'kb/org-indent-set-line-properties))
 
-;;;; Org-footnote
+;;;;; Org-footnote
 (use-package org-footnote
   :ensure nil
   :custom
@@ -172,7 +188,7 @@ have `org-warning' face."
   (org-footnote-auto-adjust t)          ; Automatically renumber
   (org-footnote-define-inline t)) ; Write footnote content where you declare rather in a particular section (i.e. `org-footnote-section')?
 
-;;;; Org-attach
+;;;;; Org-attach
 (use-package org-attach
   :ensure nil
   :custom
@@ -189,7 +205,7 @@ have `org-warning' face."
    '(org-attach-id-ts-folder-format
      org-attach-id-uuid-folder-format)))
 
-;;;; Org-refile
+;;;;; Org-refile
 (use-package org-refile
   :ensure nil
   :custom
@@ -210,7 +226,7 @@ have `org-warning' face."
                       (lambda () (setq-local completion-styles '(basic)))
                     (apply args))))))
 
-;;;; Org-faces
+;;;;; Org-faces
 (use-package org-faces
   :ensure nil
   :custom
@@ -219,14 +235,14 @@ have `org-warning' face."
   (org-fontify-whole-block-delimiter-line nil)
   (org-fontify-quote-and-verse-blocks nil))
 
-;;;; Org-src
+;;;;; Org-src
 (use-package org-src
   :ensure nil
   :custom
   (org-src-fontify-natively t)
   (org-src-block-faces nil))
 
-;;;; Org-archive
+;;;;; Org-archive
 (use-package org-archive
   :ensure nil
   :custom
@@ -245,8 +261,8 @@ have `org-warning' face."
                  (car args))))
       (apply orig-fun args))))
 
-;;; Org-babel
-;;;; Itself
+;;;; Org-babel
+;;;;; Itself
 (use-package ob
   :ensure nil
   :hook (elpaca-after-init . (lambda ()
@@ -258,7 +274,7 @@ have `org-warning' face."
                                   (mermaid . t)
                                   (ditaa . t))))))
 
-;;;; Ob-mermaid
+;;;;; Ob-mermaid
 (use-package mermaid-mode)
 (use-package ob-mermaid
   :after ob
@@ -309,8 +325,8 @@ have `org-warning' face."
       nil))
   (advice-add 'org-babel-execute:mermaid :override 'kb/org-babel-execute:mermaid))
 
-;;; Aesthetics
-;;;; Org-superstar
+;;;; Aesthetics
+;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
 (use-package org-superstar  ;; Improved version of org-bullets
   :ghook 'org-mode-hook
@@ -367,7 +383,7 @@ have `org-warning' face."
       (unless (< list-items 100)
         (org-superstar-toggle-lightweight-lists)))))
 
-;;;; Org-bars
+;;;;; Org-bars
 (use-package org-bars
   :disabled                    ; Not much value, and sometimes even distracting
   :ensure (org-bars :type git :host github :repo "tonyaldon/org-bars")
@@ -381,7 +397,7 @@ have `org-warning' face."
         '(:desaturate-level-faces 30
                                   :darken-level-faces 15)))
 
-;;;; Olivetti
+;;;;; Olivetti
 ;; Better writing environment
 (use-package olivetti
   :hook (((org-mode Info-mode emacs-news-view-mode) . olivetti-mode)
@@ -406,7 +422,7 @@ have `org-warning' face."
                  (mode--line-format-right-align))
              (mode--line-format-right-align)))))
 
-;;;; Org-appear
+;;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
 ;; over enclosed content
 (use-package org-appear
@@ -421,7 +437,7 @@ have `org-warning' face."
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
 
-;;;; Org-modern
+;;;;; Org-modern
 (use-package org-modern
   :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
   :hook (org-mode . org-modern-mode)
@@ -437,14 +453,14 @@ have `org-warning' face."
   (org-modern-list nil)
   (org-modern-priority nil))
 
-;;;; Org-modern-indent
+;;;;; Org-modern-indent
 (use-package org-modern-indent
   :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
   :after org
   :hook (org-mode . org-modern-indent-mode)
   :ensure (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
 
-;;;; Org-extra-emphasis
+;;;;; Org-extra-emphasis
 ;; Easier addition and modification of emphasis markers in org. Also has many
 ;; built-in faces and markup
 (use-package org-extra-emphasis
@@ -481,13 +497,13 @@ have `org-warning' face."
   ;; This command isn't autoloaded...
   (org-extra-emphasis-mode 1))
 
-;;;; Svg-lib
+;;;;; Svg-lib
 ;; Common dependency for Rougier's packages
 (use-package svg-lib
   :custom
   (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/"))) ; Change cache dir
 
-;;;; Org-margin
+;;;;; Org-margin
 (use-package org-margin
   :disabled
   :ensure (:type git :host github :repo "rougier/org-margin")
@@ -530,8 +546,8 @@ have `org-warning' face."
          (cons "\\(# NOTE\\)"
                (propertize "    N " 'face '(fixed-pitch font-lock-comment-face))))))
 
-;;; Ancillary functionality
-;;;; Org-web-tools
+;;;; Ancillary functionality
+;;;;; Org-web-tools
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
   :general (kb/yank-keys
@@ -541,7 +557,7 @@ have `org-warning' face."
   ;; Immediately enter view mode
   (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode))))
 
-;;;; Org-download
+;;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download
   :ensure-system-package (scrot)
@@ -557,7 +573,7 @@ have `org-warning' face."
   (org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
   (org-download-image-html-width 700))
 
-;;;; Typo-mode
+;;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
   :hook (typo-mode . kb/typo-modify-syntax-table)
@@ -610,7 +626,7 @@ Allows our special characters to be recognized as delimiters."
     (modify-syntax-entry (string-to-char "‘") "(’")
     (modify-syntax-entry (string-to-char "’") ")‘")))
 
-;;;; Custom org-src-block for paragraphs
+;;;;; Custom org-src-block for paragraphs
 ;; Also see package `org-edit-indirect'. Does something similar but more
 ;; versatile, relying on `edit-indirect'. However, this doesn't use native
 ;; `org-src' infrastructure
@@ -725,7 +741,7 @@ Otherwise, return a user error."
              (_ (user-error "No special environment to edit here"))))))))
   (advice-add 'org-edit-special :override 'kb/org-edit-special))
 
-;;;; Org-visibility
+;;;;; Org-visibility
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
   :disabled
@@ -745,6 +761,5 @@ Otherwise, return a user error."
   (org-visibility-maximum-tracked-days 60)
   (org-visibility-display-messages nil)) ; Annoying echo area updates
 
-;;; org-general-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-general-rcp)
+;;; org-general-rcp.el ends here

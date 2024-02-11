@@ -1,16 +1,33 @@
-;;; completion-general-rcp.el --- Summary
-;;
+;;; completion-general-rcp.el --- Emacs-wide completion settings  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; These are settings and/or packages which are package agnostic, some involved
 ;; with the default Emacs completion
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Built-in
+;;;; Built-in
 ;; A lot of this is taken from
 ;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
 (setq completion-styles '(basic initials partial-completion flex)
@@ -65,8 +82,8 @@
         (cdr args)))
 (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
-;;; Prescient
-;;;; Itself
+;;;; Prescient
+;;;;; Itself
 ;; Sorting and filtering of minibuffer candidates. The difference between
 ;; `orderless' and this package is that `orderless' filters but does not sort -
 ;; it leaves that up to the "candidate source and the completion UI."
@@ -90,7 +107,7 @@
   :config
   (prescient-persist-mode))
 
-;;;; Vertico-prescient
+;;;;; Vertico-prescient
 (use-package vertico-prescient
   :after (prescient vertico)
   :custom
@@ -105,7 +122,7 @@
   :init
   (vertico-prescient-mode))
 
-;;;; Corfu-prescient
+;;;;; Corfu-prescient
 (use-package corfu-prescient
   :after (prescient corfu)
   :custom
@@ -120,7 +137,7 @@
   :init
   (corfu-prescient-mode))
 
-;;; Marginalia
+;;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
   :custom
@@ -131,6 +148,5 @@
   :init
   (marginalia-mode))
 
-;;; completion-general-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-general-rcp)
+;;; completion-general-rcp.el ends here

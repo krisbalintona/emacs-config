@@ -1,20 +1,37 @@
-;;; org-agenda-other-rcp.el --- Summary
-;;
+;;; org-agenda-other-rcp.el --- Other org-agenda configs  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Other org-agenda packages
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Other org-agenda packages.
+
 ;;; Code:
 
-;;; Org-expiry
+;;;; Org-expiry
 (use-package org-expiry
   :ensure nil
   :hook (org-capture-before-finalize . org-expiry-insert-created)
   :custom
   (org-expiry-inactive-timestamps t))
 
-;;; Org-depend
+;;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.
 (use-package org-depend
   :ensure nil
@@ -23,7 +40,7 @@
   :after org-agenda
   :commands kb/consult-org-id-get-create)
 
-;;; Org-edna
+;;;; Org-edna
 ;; Also look at `org-edna' with `org-linker-edna'
 ;; (https://github.com/toshism/org-linker-edna) (the second of which requires
 ;; `org-linker': https://github.com/toshism/org-linker). `org-super-links' can
@@ -110,7 +127,7 @@ See `kb/consult-org-depend’."
                        kb/consult-org-agenda-depend
                        :prompt "Select dependency for this agenda item: ")))
 
-;;; Org-heatmap
+;;;; Org-heatmap
 ;; Heatmap in agenda for tracked habits. Also highlighted calendar dates
 (use-package org-heatmap
   :disabled  ; REVIEW 2023-07-10: Doesn't work for me right now. Return to later
@@ -122,11 +139,11 @@ See `kb/consult-org-depend’."
   :init
   (org-heatmap-mode))
 
-;;; Org-timeblock
+;;;; Org-timeblock
 (use-package org-timeblock
   :ensure (:type git :host github :repo "ichernyshovvv/org-timeblock"))
 
-;;; Custom org-tags-view org-link type
+;;;; Custom org-tags-view org-link type
 (with-eval-after-load 'org
   (defun kb/org-tag-link (tag)
     "Display a list of TODO headlines with tag TAG.
@@ -135,7 +152,7 @@ With prefix argument, also display headlines without a TODO keyword."
 
   (org-add-link-type "tag" 'kb/org-tag-link))
 
-;;; Ical2orgpy script
+;;;; Ical2orgpy script
 ;; NOTE 2024-01-24: Make sure ical2orgpy is installed via `pipx install
 ;; ical2orgpy'
 (defun kb/org-gcal (&optional arg)
@@ -156,6 +173,5 @@ buffer hidden."
 ;; Timer every 30 min
 (run-with-timer (* 60 30) (* 60 30) 'kb/org-gcal)
 
-;;; org-agenda-other-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-agenda-other-rcp)
+;;; org-agenda-other-rcp.el ends here

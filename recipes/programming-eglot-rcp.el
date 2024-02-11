@@ -1,15 +1,32 @@
-;;; programming-eglot-rcp.el --- Summary
-;;
+;;; programming-eglot-rcp.el --- Eglot               -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; All configuration related to eglot.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Eglot-related configuration.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Eglot
+;;;; Eglot
 (use-package eglot
   :hook ((eglot-managed-mode . (lambda ()
                                  "Configure `eldoc'"
@@ -56,7 +73,7 @@ functions."
   ;; Not a `defcustom', so use `setq'
   (setq eglot-stay-out-of '("flymake")))
 
-;;; Eglot-booster
+;;;; Eglot-booster
 ;; Boosts Eglot's communication with the server. There's also a version for LSP.
 ;; FIXME 2024-02-03: Commit 4f017f5f0e breaks eglot-booster because of changes
 ;; to `eglot-alternatives'. Maybe check in later.
@@ -68,8 +85,8 @@ functions."
   :init
   (eglot-booster-mode))
 
-;;; Languages
-;;;; Eglot-java
+;;;; Languages
+;;;;; Eglot-java
 (use-package eglot-java
   :ensure-system-package jdtls
   :requires eglot
@@ -83,13 +100,12 @@ functions."
   :config
   (eglot-java-init))                    ; Add to hook to `java-mode-hook'
 
-;;; Consult-eglot
+;;;; Consult-eglot
 ;; Equivalent to `consult-lsp'; adds `consult-eglot-symbols'.
 (use-package consult-eglot
   :after eglot
   :general (:keymaps 'eglot-mode-map
                      [remap xref-find-apropos] #'consult-eglot-symbols))
 
-;;; programming-eglot-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-eglot-rcp)
+;;; programming-eglot-rcp.el ends here

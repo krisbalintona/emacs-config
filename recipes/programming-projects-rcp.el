@@ -1,16 +1,33 @@
-;;; programming-projects-rcp.el --- Summary
-;;
+;;; programming-projects-rcp.el --- Project management  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Everything to do with managing projects.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Project management
-;;;; Projectile
+;;;; Project management
+;;;;; Projectile
 ;; Navigate and manage project directories easier
 (use-package projectile
   :disabled t ; In favor of `project.el'
@@ -57,14 +74,14 @@
   (setq projectile-switch-project-action #'projectile-dired)
   )
 
-;;;; Counsel-projectile
+;;;;; Counsel-projectile
 ;; Use Ivy as projectile interface
 (use-package counsel-projectile
   :after (counsel projectile)
   :ghook 'counsel-mode-hook
   )
 
-;;;; Project
+;;;;; Project
 (use-package project
   :general
   ([remap project-find-regexp] 'consult-git-grep)
@@ -103,7 +120,7 @@ With a prefix argument, show NLINES of context."
   ;; Found in Emacs News
   (setopt project-switch-commands #'project-prefix-or-any-command))
 
-;;;; Xref
+;;;;; Xref
 (use-package xref
   :general ("C-M-?" 'xref-find-references-and-replace) ; Emacs 29.1
   :custom
@@ -117,7 +134,7 @@ With a prefix argument, show NLINES of context."
     (setq xref-show-xrefs-function #'consult-xref
           xref-show-definitions-function #'consult-xref)))
 
-;;;; Dumb-jump
+;;;;; Dumb-jump
 (use-package dumb-jump
   :custom
   (dumb-jump-quiet nil)
@@ -129,8 +146,8 @@ With a prefix argument, show NLINES of context."
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 95)) ; Last
 
-;;; Magit
-;;;; Itself
+;;;; Magit
+;;;;; Itself
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 
@@ -219,7 +236,7 @@ With a prefix argument, show NLINES of context."
                           'magit-insert-modules-overview
                           'magit-insert-staged-changes t))
 
-;;;; Magit-log date headers
+;;;;; Magit-log date headers
 (with-eval-after-load 'magit
   ;; Add dates to magit-logs
   (use-package ov :demand) ; Dependency
@@ -265,13 +282,13 @@ With a prefix argument, show NLINES of context."
   (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
   )
 
-;;;; Magit-lfs
+;;;;; Magit-lfs
 (use-package magit-lfs
   :demand t
   :after magit
   )
 
-;;;; Forge
+;;;;; Forge
 ;; Support for git forges (e.g. GitLab and GitHub).
 ;; NOTE 2022-06-01: Make sure a github and/or gitlab token is stored in either
 ;; ~/.authinfo, ~/.authinfo.gpg, or ~/.netrc. See
@@ -281,7 +298,7 @@ With a prefix argument, show NLINES of context."
   :demand
   :after magit)
 
-;;;; Magit-todos
+;;;;; Magit-todos
 (use-package magit-todos
   :disabled t                           ; Not very useful for now
   :after magit
@@ -307,14 +324,14 @@ With a prefix argument, show NLINES of context."
   (magit-todos-mode)
   )
 
-;;;; Abdridge-diff
+;;;;; Abdridge-diff
 (use-package abridge-diff
   :after magit
   :diminish
   :init
   (abridge-diff-mode))
 
-;;;; Keychain-environment
+;;;;; Keychain-environment
 (use-package keychain-environment
   ;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated when committing since
   ;; their values may change (ever since I started using keychain in the Fish
@@ -322,8 +339,8 @@ With a prefix argument, show NLINES of context."
   ;; appropriate file in ~/.keychain/ to update environment variables
   :hook ((elpaca-after-init git-commit-post-finish) . keychain-refresh-environment))
 
-;;; VC
-;;;; Itself
+;;;; VC
+;;;;; Itself
 (use-package vc
   :ensure nil
   :general (:keymaps 'vc-dir-mode-map
@@ -347,13 +364,13 @@ With a prefix argument, show NLINES of context."
       (3 'change-log-name)
       (4 'change-log-date)))))
 
-;;;; Log-edit
+;;;;; Log-edit
 (use-package log-edit
   :ensure nil
   :general (:keymaps 'log-edit-mode-map
                      [remap log-edit-comment-search-backward] 'consult-history))
 
-;;;; Diff-mode
+;;;;; Diff-mode
 (use-package diff-mode
   :ensure nil
   :gfhook
@@ -370,15 +387,15 @@ With a prefix argument, show NLINES of context."
   (diff-refine 'navigation) ; FIXME 2022-12-30: Now exactly sure what this does...
   (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language
 
-;;;; Ediff
+;;;;; Ediff
 (use-package ediff
   :ensure nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
   (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
 
-;;; QoL
-;;;; Git-gutter
+;;;; QoL
+;;;;; Git-gutter
 (use-package git-gutter
   :disabled                          ; NOTE 2022-12-29: Trying `diff-hl' for now
   :hook ((window-configuration-change . git-gutter:update-all-windows)
@@ -391,7 +408,7 @@ With a prefix argument, show NLINES of context."
   ;; (git-gutter:disabled-modes '(org-mode)) ; Using this to disable in modes yields annoying echo messages
   )
 
-;;;; Git-gutter-fringe
+;;;;; Git-gutter-fringe
 (use-package git-gutter-fringe
   :after git-gutter
   :custom-face
@@ -404,7 +421,7 @@ With a prefix argument, show NLINES of context."
   (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t)))
 
-;;;; Diff-hl
+;;;;; Diff-hl
 ;; Diff information in the margins. Also provides commands for navigating and
 ;; viewing diff info of the current file. Faster and cleaner than git-gutter and
 ;; git-gutter-fringes
@@ -423,11 +440,11 @@ With a prefix argument, show NLINES of context."
   :config
   (global-diff-hl-show-hunk-mouse-mode))
 
-;;;; Git-timemachine
+;;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history
 (use-package git-timemachine)
 
-;;;; Better Magic status
+;;;;; Better Magic status
 ;;;###autoload
 (defun unpackaged/magit-status ()
   "Open a `magit-status' buffer and close the other window so only Magit is visible.
@@ -453,11 +470,10 @@ command was called, go to its unstaged changes section."
     ))
 (general-define-key [remap magit-status] #'unpackaged/magit-status)
 
-;;;; Deadgrep
+;;;;; Deadgrep
 ;; Grep but with a convenient magit-like interface (with visibility toggles)
 (use-package deadgrep
   :general ("<f7>" 'deadgrep))
 
-;;; programming-projects-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-projects-rcp)
+;;; programming-projects-rcp.el ends here

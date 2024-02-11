@@ -1,17 +1,34 @@
-;;; org-notes-other-rcp.el --- Summary  -*- lexical-binding: t; -*-
-;;
+;;; org-notes-other-rcp.el --- Other note-taking things  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages indirectly related to my note-taking workflow.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'custom-directories-rcp)
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; PDFs
-;;;; Pdf-tools
+;;;; PDFs
+;;;;; Pdf-tools
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
@@ -98,7 +115,7 @@ get the contents and display them on demand."
           (window-parameters (no-other-window . t)
                              (mode-line-format . none)))))
 
-;;;; Custom entry formatter
+;;;;; Custom entry formatter
 (with-eval-after-load 'pdf-tools
   (defun kb/pdf-annot--make-entry-formatter (a)
     "Return a formatter function for annotation A.
@@ -162,7 +179,7 @@ pretty-printed output."
              processed-text))))))
   (advice-add 'pdf-annot--make-entry-formatter :override 'kb/pdf-annot--make-entry-formatter))
 
-;;;; Avy keys to highlight region in PDF
+;;;;; Avy keys to highlight region in PDF
 ;; Use an avy-like interface to highlight region in pdf-view-mode. Heavily based
 ;; off of
 ;; https://github.com/dalanicolai/dala-emacs-lisp/blob/master/pdf-avy-highlight.el
@@ -285,7 +302,7 @@ annotation immediately after creation."
   (general-define-key :keymaps 'pdf-view-mode-map
                       [remap avy-goto-char-timer] #'kb/avy-pdf-highlight))
 
-;;;; Pdf-annot-list custom (tablist) color filter
+;;;;; Pdf-annot-list custom (tablist) color filter
 (with-eval-after-load 'pdf-tools
   (defun kb/pdf-annot-list-filter-color-regexp ()
     "Get a prompt to filter for the color column's colors.
@@ -348,7 +365,7 @@ the color column."
   (general-define-key :keymaps 'pdf-annot-list-mode-map
                       [remap tablist-push-regexp-filter] 'kb/pdf-annot-list-filter-regexp))
 
-;;;; Custom org-link type for PDF annotations
+;;;;; Custom org-link type for PDF annotations
 ;; NOTE 2024-02-10: Code copied from the code shared on Thu, 08 Feb 2024
 ;; 22:13:50 +0000 by Juan Manuel Macías <maciaschain@posteo.net> in the
 ;; Emacs-devel mailing list. The original uses the modification date, whereas
@@ -402,12 +419,12 @@ Uses the current annotation at point's ID."
    :follow #'kb/org-pdf-annot-follow-link
    :store #'kb/org-pdf-annot-store-link))
 
-;;;; Saveplace-pdf-view
+;;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
 (use-package saveplace-pdf-view
   :demand)
 
-;;;; Org-noter
+;;;;; Org-noter
 (use-package org-noter
   :ensure (:protocol ssh
                      :fetcher github
@@ -451,7 +468,7 @@ Uses the current annotation at point's ID."
   :config
   (org-noter-enable-update-renames))
 
-;;; Zotxt
+;;;; Zotxt
 ;; Integration between Emacs and Zotero
 (use-package zotxt
   :custom
@@ -501,7 +518,7 @@ See `org-noter' for details and ARG usage."
            (deferred:error it #'zotxt--deferred-handle-error))))))
   (advice-add 'org-zotxt-noter :override #'kb/org-zotxt-noter))
 
-;;; Org-remark
+;;;; Org-remark
 (use-package org-remark
   :demand
   :hook ((Info-mode eww-mode) . org-remark-mode)
@@ -548,7 +565,7 @@ See `org-noter' for details and ARG usage."
                      `(:underline (:color "lawn green" :style wave))
                      `(CATEGORY "outline")))
 
-;;; Org-transclusion
+;;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
   :after org-roam
@@ -567,7 +584,7 @@ See `org-noter' for details and ARG usage."
   (org-transclusion-include-first-section t)
   (org-transclusion-exclude-elements '(property-drawer keyword)))
 
-;;; Org-roam-ui
+;;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
 (use-package org-roam-ui
   :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
@@ -598,7 +615,7 @@ See `org-noter' for details and ARG usage."
   (use-package f :demand t)
   )
 
-;;; Delve
+;;;; Delve
 (use-package delve
   :disabled t                           ; Don't use
   :ensure (delve :type git :host github :repo "publicimageltd/delve")
@@ -733,7 +750,7 @@ When called with PREFIX, hide all previews."
       (kill-new title)
       (message (format "The node title \"%s\" from %s has been copied" title file)))))
 
-;;; Lister
+;;;; Lister
 ;; Interactive list library for `delve'
 (use-package lister
   :general
@@ -840,6 +857,5 @@ tree structure."
           (lister-set-node-level ewoc node (1+ (lister-node-get-level node))))
       (kb/lister-move-item-right ewoc pos node))))
 
-;;; org-notes-other-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-notes-other-rcp)
+;;; org-notes-other-rcp.el ends here

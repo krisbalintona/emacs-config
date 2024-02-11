@@ -1,10 +1,27 @@
-;;; checking-spelling-rcp.el --- Summary
-;;
+;;; checking-spelling-rcp.el --- Spell checking      -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Packages for spell checking.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; I don't know how to spell...
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
@@ -217,6 +234,5 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   ;; NOTE 2023-07-16: Can also directly add to `jinx--save-keys' directly
   (setf (alist-get ?* jinx--save-keys) #'kb/jinx-save-as-ispell-localword))
 
-;;; checking-spelling-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-spelling-rcp)
+;;; checking-spelling-rcp.el ends here

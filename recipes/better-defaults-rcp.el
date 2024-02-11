@@ -1,17 +1,34 @@
-;;; better-defaults-rcp.el --- Summary
-;;
+;;; better-defaults-rcp.el --- Better setq-default settings  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Set more sane Emacs-wide settings and minor QoL changes.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 
-;;; Custom
+;;;; Custom
 ;; Show variable names in their lisp form
 (setq custom-unlispify-tag-names nil)
 
-;;; No-littering
+;;;; No-littering
 ;; Set better default package paths
 (use-package no-littering)
 ;; Set these variables prior to loading the feature
@@ -21,14 +38,14 @@
 (require 'no-littering)
 (no-littering-theme-backups)            ; Sets various built-in variables
 
-;;; Enable all disabled commands
+;;;; Enable all disabled commands
 (customize-set-variable disabled-command-function nil "Enable all commands")
 
-;;; Disable startup echo message
+;;;; Disable startup echo message
 ;; See `startup-echo-area-message'
 (fset #'display-startup-echo-area-message #'ignore)
 
-;;; Buffer-local defaults
+;;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
 
@@ -56,48 +73,48 @@
               visible-bell nil
               ring-bell-function 'ignore)
 
-;;; Cursor settings
+;;;; Cursor settings
 (setq-default cursor-type 'bar
               cursor-in-non-selected-windows 'box
               x-stretch-cursor t)       ; Stretch cursor to the glyph width
 
-;;; Kill child processes without confirm
+;;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))
 
-;;; Aviod cursor collisions
+;;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 
-;;; Recognize camel case as words
+;;;; Recognize camel case as words
 (global-subword-mode t) ; Iterate through CamelCase words
 
-;;; Require pin-entry for passowrds
+;;;; Require pin-entry for passowrds
 ;; Pinentry is responsible for querying passphrases
 (require 'epg)
 (setq epg-pinentry-mode 'loopback ; Ask through the minibuffer, instead of external Pinentry program
       epa-file-cache-passphrase-for-symmetric-encryption t)
 
-;;; Don't confirm when killing a process
+;;;; Don't confirm when killing a process
 (setq confirm-kill-processes nil)
 
-;;; Ignore case for buffer and file names
+;;;; Ignore case for buffer and file names
 (setq read-buffer-completion-ignore-case t
       read-file-name-completion-ignore-case t)
 
-;;; Middle-click paste at point, not at cursor.
+;;;; Middle-click paste at point, not at cursor.
 (setq mouse-yank-at-point t)
 
-;;; Toggle visiting of image files as images (Auto Image File mode).
+;;;; Toggle visiting of image files as images (Auto Image File mode).
 (auto-image-file-mode t)
 
-;;; Show unfinished keystrokes quickly
+;;;; Show unfinished keystrokes quickly
 ;; Echo keystrokes (of unfinished commands) much quicker
 (setq echo-keystrokes 0.5)
 
-;;; More leeway for Emacs subprocesses
+;;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk
 (setq read-process-output-max (* 1024 1024)) ; 1mb
 
-;;; Scrolling behavior
+;;;; Scrolling behavior
 (setq scroll-preserve-screen-position t
       scroll-error-top-bottom nil
       scroll-margin 0
@@ -113,41 +130,40 @@
       ;; redisplay-skip-fontification-on-input t
       )
 
-;;; Do not load outdated byte code files
+;;;; Do not load outdated byte code files
 (setq load-prefer-newer t)
 
-;;; Highlight next error
+;;;; Highlight next error
 (setq next-error-message-highlight t)
 
-;;; Recenter upon `next-error'
+;;;; Recenter upon `next-error'
 (setq next-error-recenter '(4))
 
-;;; Delete-selection-mode
+;;;; Delete-selection-mode
 ;; When selecting text, if typing new text, replace the selected text with the
 ;; new text
 (delete-selection-mode t)
 
-;;; Repeatedly popping mark
+;;;; Repeatedly popping mark
 (setq set-mark-command-repeat-pop t)
 
-;;; Case insensitive `auto-mode'
+;;;; Case insensitive `auto-mode'
 ;; A second, case-insensitive pass over `auto-mode-alist' is time wasted, and
 ;; indicates misconfiguration (or that the user needs to stop relying on case
 ;; insensitivity).
 (setq auto-mode-case-fold nil)
 
-;;; Keep all logged messages
+;;;; Keep all logged messages
 (setq message-log-max t)
 
-;;; Don't do anything with inactive mark
+;;;; Don't do anything with inactive mark
 (setq mark-even-if-inactive nil)
 
-;;; Load custom file
+;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
   (setq custom-file (no-littering-expand-var-file-name "custom.el"))
   (load custom-file))
 
-;;; better-defaults-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'better-defaults-rcp)
+;;; better-defaults-rcp.el ends here

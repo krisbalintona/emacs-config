@@ -29,7 +29,7 @@
 (require 'garbage-collection-rcp)
 (require 'personal-variables-rcp)
 (require 'external-programs-rcp)
-(require 'better-defaults-rcp)
+(require 'better-defaults-rcp)     ; FIXME 2024-02-11: Distribute these settings
 (require 'custom-directories-rcp)
 ;; (require 'exwm-rcp)
 ;; (require 'exwm-extras-rcp)
@@ -37,20 +37,19 @@
 ;;;; Keybind infrastructure
 (require 'keybinds-general-rcp)
 (require 'keybinds-native-rcp)
-(require 'keybinds-evil-rcp)
+;; (require 'keybinds-evil-rcp)
 
 ;;;; Aesthetics
 (require 'fonts-rcp)
-(require 'kb-themes)
-(require 'themes-rcp)
+(require 'ui-rcp)
 
 ;;;; Completion frameworks
 (require 'completion-general-rcp)
 (require 'completion-vanilla-rcp)
 (require 'completion-inline-rcp)
-(require 'completion-company-rcp)
-(require 'completion-ivy-rcp)
-(require 'completion-helm-rcp)
+;; (require 'completion-company-rcp)
+;; (require 'completion-ivy-rcp)
+;; (require 'completion-helm-rcp)
 
 ;;;; Buffers, text, and windows
 (require 'persistence-rcp)
@@ -117,15 +116,14 @@
 (require 'email-sending-rcp)
 (require 'rss-feed-rcp)
 (require 'epub-rcp)
-(require 'irc-rcp)
 
 ;;;; Other
 (require 'web-browsing-rcp)
 (require 'application-framework-rcp)
-(require 'finance-rcp)
+;; (require 'finance-rcp)
 (require 'convenient-functions-rcp)
 (require 'template-rcp)
-(require 'misc-packages-rcp)
+(require 'misc-packages-rcp) ; FIXME 2024-02-11: Distribute these configs elsewhere
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

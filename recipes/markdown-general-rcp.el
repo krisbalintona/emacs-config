@@ -1,10 +1,27 @@
-;;; markdown-general-rcp.el --- Summary
-;;
+;;; markdown-general-rcp.el --- Markdown             -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; My configuration related to markdown-mode.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 
 ;;;; Markdown-mode
@@ -12,7 +29,7 @@
   :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")
   :gfhook 'visual-line-mode)
 
-;;; Markdown-xwidget
+;;;; Markdown-xwidget
 ;; Similar to `grip-mode' but avoids sending many requests to GitHub's API and
 ;; more customization. However, `grip-mode' shows exactly what GitHub would show
 (use-package markdown-xwidget
@@ -29,6 +46,5 @@
   (markdown-xwidget-mermaid-theme "dark")
   (markdown-xwidget-code-block-theme "github-dark"))
 
-;;; markdown-general-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'markdown-general-rcp)
+;;; markdown-general-rcp.el ends here

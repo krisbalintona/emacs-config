@@ -1,16 +1,33 @@
-;;; latex-general-rcp.el --- Summary
-;;
+;;; latex-general-rcp.el --- LaTeX                   -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; My LaTeX configuration. Lot's taken from Doom Emacs
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; My LaTeX configuration.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Tex-site (auctex)
-;;;; This
+;;;; Tex-site (auctex)
+;;;;; This
 ;; Collection for most of the following packages. **Package name should be
 ;; loaded as `tex-site' for elpaca, according to my testing**
 ;; NOTE 2023-07-12: If I haven't already, download the `texlive' and
@@ -27,7 +44,7 @@
                   :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh")))
   :ensure-system-package biber)
 
-;;;; Tex
+;;;;; Tex
 (use-package tex
   :ensure nil
   :after tex-site
@@ -68,7 +85,7 @@
 
   (setcar (cdr (assoc "Check" TeX-command-list)) "chktex -v6 -H %s")) ; Set-up chktex (syntax checking utility)
 
-;;;; Latex
+;;;;; Latex
 (use-package latex
   :ensure nil
   :after tex-site
@@ -230,7 +247,7 @@
     (add-to-list 'TeX-view-program-list '("eaf" kb/eaf-pdf-synctex-forward-view))
     (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))))
 
-;;;; Tex-fold
+;;;;; Tex-fold
 (use-package tex-fold
   :ensure nil
   :after tex-site
@@ -248,7 +265,7 @@ blacklist, this is mostly for \\section etc."
                                                :family (face-attribute 'variable-pitch :family)
                                                :height (face-attribute 'variable-pitch :height))))))))
 
-;;; Cdlatex
+;;;; Cdlatex
 ;; Faster LaTeX inputs
 (use-package cdlatex
   :after tex-site
@@ -279,7 +296,7 @@ blacklist, this is mostly for \\section etc."
      ("fitchproof" "\\fitchprf{\n?\n}\n{\n\n}" nil)
      ("subproof" "\\subproof{\n?\n}\n{\n\n}" nil))))
 
-;;; Auctex-latexmk
+;;;; Auctex-latexmk
 ;; Quicker insertion and filling-out of macros. Taken from Doom
 (use-package auctex-latexmk
   :after tex-site
@@ -300,7 +317,7 @@ blacklist, this is mostly for \\section etc."
           (add-hook 'after-save-hook cmd nil t)
         (remove-hook 'after-save-hook cmd t)))))
 
-;;; Preview
+;;;; Preview
 ;; "Seamless" embedding of generated images (i.e. preview) into LaTeX source
 ;; code. Taken from Doom
 (use-package preview
@@ -315,7 +332,7 @@ blacklist, this is mostly for \\section etc."
   ;; caching if they have compilation times that long.
   (setq preview-auto-cache-preamble nil))
 
-;;; Popweb
+;;;; Popweb
 ;; Use EAF to have popups for LaTeX math and bing/youdao Chinese translations.
 ;; **Don't forget to install the dependencies found on the README.** (And don't
 ;; forget that `pipx' is an option)
@@ -333,8 +350,8 @@ blacklist, this is mostly for \\section etc."
   :config
   (require 'popweb-latex))
 
-;;; QoL
-;;;; Align table cells
+;;;; QoL
+;;;;; Align table cells
 ;; From
 ;; https://tex.stackexchange.com/questions/557959/emacs-auctex-tabular-vertical-alignment-of-cells
 (defun kb/tabular-magic ()
@@ -361,6 +378,5 @@ blacklist, this is mostly for \\section etc."
       (set-marker s nil)
       (set-marker e nil))))
 
-;;; latex-general-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'latex-general-rcp)
+;;; latex-general-rcp.el ends here

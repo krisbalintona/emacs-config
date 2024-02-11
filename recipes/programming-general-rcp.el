@@ -1,16 +1,33 @@
-;;; programming-general-rcp.el --- Summary
-;;
+;;; programming-general-rcp.el --- General programming stuff  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Language-agnostic packages helpful or required for programming.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Aesthetics
-;;;; Prog-mode
+;;;; Aesthetics
+;;;;; Prog-mode
 (use-package prog-mode
   :ensure nil
   :hook ((prog-mode . goto-address-prog-mode)
@@ -62,12 +79,12 @@ punctuation."
               (add-to-list 'prettify-symbols-alist '("->" . ?»))
               (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
 
-;;;; Hl-line
+;;;;; Hl-line
 (use-package hl-line
   :ensure nil
   :ghook 'prog-mode-hook 'conf-mode-hook)
 
-;;;; Hl-todo
+;;;;; Hl-todo
 ;; OPTIMIZE 2023-07-14: Also consider synergy with
 ;; https://codeberg.org/ideasman42/emacs-prog-face-refine
 (use-package hl-todo
@@ -93,7 +110,7 @@ punctuation."
     ;; appear in any calls to `alt-comment-dwim-dwim'.
     (setq hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
 
-;;;; Indent-bars
+;;;;; Indent-bars
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package indent-bars
   :disabled t                           ; FIXME 2023-08-18: Causes errors I think...
@@ -110,13 +127,13 @@ punctuation."
   (indent-bars-highlight-current-depth '(:face default :blend 0.4))
   (indent-bars-display-on-blank-lines t))
 
-;;;; Rainbow-mode
+;;;;; Rainbow-mode
 ;; Colorify color codes
 (use-package rainbow-mode
   :diminish
   :ghook 'text-mode-hook 'prog-mode-hook 'help-mode-hook)
 
-;;;; Highlight-defined
+;;;;; Highlight-defined
 ;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
 ;; text which is the symbol of a face.
 (use-package highlight-defined
@@ -124,13 +141,13 @@ punctuation."
   :custom
   (highlight-defined-face-use-itself t))
 
-;;;; Highlight-quoted
+;;;;; Highlight-quoted
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
   :ghook 'emacs-lisp-mode-hook)
 
-;;;; Paren
+;;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
   :ensure nil
@@ -138,7 +155,7 @@ punctuation."
   (show-paren-context-when-offscreen 'overlay)
   :init (show-paren-mode))
 
-;;;; Display-fill-column-indicator
+;;;;; Display-fill-column-indicator
 (use-package display-fill-column-indicator
   :ensure nil
   :custom
@@ -146,14 +163,14 @@ punctuation."
   :custom-face
   (fill-column-indicator ((t (:inherit line-number)))))
 
-;;;; Adaptive-wrap
+;;;;; Adaptive-wrap
 ;; Wrap lines as if they were hard newlines (like `fill-paragraph'). In other
 ;; words, lines preserve indentation.
 (use-package adaptive-wrap
   :hook (prog-mode . adaptive-wrap-prefix-mode))
 
-;;; General utility
-;;;; Consult
+;;;; General utility
+;;;;; Consult
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
@@ -233,7 +250,7 @@ punctuation."
    ;; `consult-find'
    consult-find :preview-key "C-M-;"))
 
-;;;; Embark
+;;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
@@ -266,15 +283,15 @@ punctuation."
   :config
   (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
 
-;;;;; Embark-consult
+;;;;;; Embark-consult
 ;; Companion package for embark
 (use-package embark-consult
   :demand
   :requires (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
-;;; File or buffer utilities
-;;;; Autorevert
+;;;; File or buffer utilities
+;;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
   :ensure nil
@@ -286,15 +303,14 @@ punctuation."
   :init
   (global-auto-revert-mode))
 
-;;;; Whitespace
+;;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace
   :ensure nil
-  :hook (before-save . whitespace-cleanup)
   :custom
   (whitespace-style '(face empty indentation::space tab)))
 
-;;;; Sudo-edit
+;;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
   :general (kb/file-keys
@@ -302,20 +318,20 @@ punctuation."
              "u" '(sudo-edit :wk "Sudo this file"))
   :config (sudo-edit-indicator-mode))
 
-;;; Modes
-;;;; Conf-mode
+;;;; Modes
+;;;;; Conf-mode
 ;; For Unix config files
 (use-package conf-mode
   :ensure nil
   :mode ("\\.rs\\'" . conf-mode)
   :gfhook 'outshine-mode)
 
-;;;; Vimrc-mode
+;;;;; Vimrc-mode
 ;; For editing vim/nvim config files
 (use-package vimrc-mode)
 
-;;; Other
-;;;; Outshine
+;;;; Other
+;;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support.
 ;; `outline-minor-mode-prefix' must be set prior to the package's loading
 (use-package outshine
@@ -353,7 +369,7 @@ this buffer."
       (evil-insert-state)))
   (advice-add 'outline-insert-heading :around 'kb/around-outline-insert-heading))
 
-;;;; Anzu
+;;;;; Anzu
 ;; Display search information in mode-line.
 (use-package anzu
   :disabled
@@ -365,6 +381,5 @@ this buffer."
   :init
   (global-anzu-mode))
 
-;;; programming-general-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-general-rcp)
+;;; programming-general-rcp.el ends here

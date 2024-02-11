@@ -1,16 +1,33 @@
-;;; org-citations-rcp.el --- Summary
-;;
+;;; org-citations-rcp.el --- Citations in org-mode   -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; This is all the configuration of the org-roam package
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Config for using citations in org-mode.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'org-general-rcp)
 
-;;; Oc (org-cite)
+;;;; Oc (org-cite)
 ;; Built-in citations in org-mode
 (use-package oc
   :ensure nil
@@ -40,7 +57,7 @@
   (require 'oc-bibtex)
   (require 'oc-biblatex))
 
-;;; Citar
+;;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
   :after all-the-icons
@@ -148,7 +165,7 @@
               citar-indicator-notes-icons
               citar-indicator-cited-icons)))
 
-;;; Citar-org
+;;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
   :ensure nil
@@ -160,7 +177,7 @@
   (org-cite-activate-processor 'citar)
   (citar-org-styles-format 'long))
 
-;;; Citar-embark
+;;;; Citar-embark
 (use-package citar-embark
   :after citar
   :diminish
@@ -169,6 +186,5 @@
   :init
   (citar-embark-mode))
 
-;;; org-citations-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-citations-rcp)
+;;; org-citations-rcp.el ends here

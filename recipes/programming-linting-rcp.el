@@ -1,16 +1,33 @@
-;;; programming-linting-rcp.el --- Summary
-;;
+;;; programming-linting-rcp.el --- Linting           -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Everything to do with checking syntax and forseeing errors.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Everything to do with checking syntax and foreseeing errors.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'personal-variables-rcp)
 
-;;; Flycheck
+;;;; Flycheck
 ;; Check your code
 (use-package flycheck
   :general
@@ -40,14 +57,14 @@
   (define-key flycheck-mode-map flycheck-keymap-prefix
               flycheck-command-map))
 
-;;; Consult-flycheck
+;;;; Consult-flycheck
 ;; List flycheck errors in minibuffer with consult
 (use-package consult-flycheck
   :after (consult flycheck)
   :general (:keymaps 'lsp-mode-map
                      "C-c e" 'consult-flycheck))
 
-;;; Flymake
+;;;; Flymake
 (use-package flymake
   :diminish
   :ghook 'prog-mode-hook 'org-mode-hook
@@ -67,13 +84,13 @@
      flymake-mode-line-note-counter))
   (flymake-suppress-zero-counters t))
 
-;;; Flymake-collection
+;;;; Flymake-collection
 (use-package flymake-collection
   :requires flymake
   :ensure-system-package luacheck
   :hook (elpaca-after-init . flymake-collection-hook-setup))
 
-;;; Flymake-flycheck
+;;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use
 ;; flycheck backends; check readme on how to do so. I use this when only
 ;; flycheck is available (e.g. `lsp-mode'), otherwise I try to rely on
@@ -98,7 +115,7 @@
                   (append (default-value 'flycheck-disabled-checkers)
                           '(emacs-lisp emacs-lisp-checkdoc emacs-lisp-package)))))
 
-;;; Package-lint-flymake
+;;;; Package-lint-flymake
 (use-package package-lint-flymake
   :commands package-lint-flymake
   :hook (emacs-lisp-mode . kb/package-lint-flymake-setup)
@@ -107,6 +124,5 @@
     (unless (string-match-p (expand-file-name "recipes/" user-emacs-directory) default-directory)
       (add-hook 'flymake-diagnostic-functions #'package-lint-flymake nil t))))
 
-;;; programming-linting-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-linting-rcp)
+;;; programming-linting-rcp.el ends here

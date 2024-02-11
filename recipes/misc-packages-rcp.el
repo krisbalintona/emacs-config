@@ -1,15 +1,32 @@
-;;; misc-packages-rcp.el --- Summary
-;;
+;;; misc-packages-rcp.el --- Miscellaneous packages  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; This is all the configuration of the org-roam package
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; I dunno where else to put these packages.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Scratch.el
+;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
 (use-package scratch
   ;; :demand t ; For the initial scratch buffer at startup
@@ -31,7 +48,7 @@
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
 
-;;; Proced
+;;;; Proced
 ;; Built in process monitor
 (use-package proced
   :ensure nil
@@ -45,7 +62,7 @@
   (with-eval-after-load 'evil
     (add-hook 'proced-mode-hook #'evil-emacs-state)))
 
-;;; Tmr
+;;;; Tmr
 ;; Timer package/library from Prot
 (use-package tmr
   :ensure (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
@@ -70,18 +87,18 @@
     ["View timers"
      [("v" "Tabulated view" tmr-tabulated-view)]]))
 
-;;; All-the-icons-completion
+;;;; All-the-icons-completion
 ;; Add `all-the-icons' icons to minibuffer completion candidates
 (use-package all-the-icons-completion
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init (all-the-icons-completion-mode))
 
-;;; Vc-msg
+;;;; Vc-msg
 ;; See a line's corresponding commit information (like git blame)
 (use-package vc-msg
   :general ("H-v" 'vc-msg-show))
 
-;;; Good-scroll
+;;;; Good-scroll
 ;; Good-enough smooth scrolling
 (use-package good-scroll
   :disabled t
@@ -219,7 +236,7 @@ progress. This is called by the timer `good-scroll--timer' every
            (advice-remove 'scroll-up-command #'kb/good-scroll-down)
            (advice-remove 'good-scroll--render #'kb/good-scroll--render)))))
 
-;;; Iseach
+;;;; Iseach
 ;; Incremental search
 (use-package isearch
   :ensure nil
@@ -235,7 +252,7 @@ progress. This is called by the timer `good-scroll--timer' every
   (isearch-lax-whitespace t)
   (search-whitespace-regexp ".*?"))
 
-;;; Newcomment
+;;;; Newcomment
 (use-package new-comment
   :ensure nil
   :custom
@@ -244,7 +261,7 @@ progress. This is called by the timer `good-scroll--timer' every
   (comment-multi-line nil)
   (comment-style 'indent))
 
-;;; Alt-comment-dwim
+;;;; Alt-comment-dwim
 (use-package alt-comment-dwim
   :ensure (:type git
                  :host gitlab
@@ -264,23 +281,23 @@ progress. This is called by the timer `good-scroll--timer' every
      ("FIXME" . (error bold))
      ("OPTIMIZE" . "SandyBrown"))))
 
-;;; Info-variable-pitch
+;;;; Info-variable-pitch
 ;; Mixed pitch in Info pages
 (use-package info-variable-pitch
   :ensure (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :ghook 'Info-selection-hook)
 
-;;; Info-colors
+;;;; Info-colors
 ;; Fontify useful parts of info buffers
 (use-package info-colors
   :hook (Info-selection . info-colors-fontify-node))
 
-;;; Inform
+;;;; Inform
 ;; Package `inform’ provides links from elisp symbols (quoted functions, variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
 (use-package inform
   :demand)
 
-;;; Whole-line-or-region
+;;;; Whole-line-or-region
 (use-package whole-line-or-region
   :disabled                             ; Trying life without this package
   :diminish whole-line-or-region-local-mode
@@ -295,7 +312,7 @@ progress. This is called by the timer `good-scroll--timer' every
                      [remap comment-region] 'whole-line-or-region-comment-region
                      [remap uncomment-region] 'whole-line-or-region-uncomment-region))
 
-;;; Eldoc
+;;;; Eldoc
 (use-package eldoc
   :diminish
   :custom
@@ -307,7 +324,7 @@ progress. This is called by the timer `good-scroll--timer' every
   (eldoc-echo-area-display-truncation-message t)
   (eldoc-echo-area-prefer-doc-buffer t))
 
-;;; Eldoc-box
+;;;; Eldoc-box
 (use-package eldoc-box
   :disabled                             ; Only intrusive
   :diminish eldoc-box-hover-mode
@@ -365,7 +382,7 @@ progress. This is called by the timer `good-scroll--timer' every
           (string-trim (buffer-string))))))
   (advice-add 'eglot--format-markup :override #'kb/eglot--format-markup))
 
-;;; Pulsar
+;;;; Pulsar
 (use-package pulsar
   :hook ((consult-after-jump . pulsar-recenter-top)
          (consult-after-jump . pulsar-reveal-entry)
@@ -376,7 +393,7 @@ progress. This is called by the timer `good-scroll--timer' every
   :init
   (pulsar-global-mode))
 
-;;; Pocket-reader
+;;;; Pocket-reader
 ;; View my Pocket
 (use-package pocket-reader
   :ensure (pocket-reader :type git
@@ -444,7 +461,7 @@ displayed."
          (message "Showing default")
          (pocket-reader-search pocket-reader-default-queries))))))
 
-;;; Ansi-color
+;;;; Ansi-color
 ;; Apply ANSI terminal color escape codes.
 ;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
 (use-package ansi-color
@@ -456,7 +473,7 @@ displayed."
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region compilation-filter-start (point)))))
 
-;;; Compile
+;;;; Compile
 (use-package compile
   :ensure nil
   :general ("<f5>" 'recompile)
@@ -464,20 +481,20 @@ displayed."
   (compilation-scroll-output 'first-error) ; Scroll with compile buffer
   (compilation-auto-jump-to-first-error t))
 
-;;; Fancy-compilation
+;;;; Fancy-compilation
 (use-package fancy-compilation
   :ghook 'compilation-mode
   :custom
   (fancy-compilation-override-colors nil)
   (fancy-compilation-quiet-prelude t))
 
-;;; Image-popup
+;;;; Image-popup
 ;; Match height of image to line height (?)
 (use-package image-popup
   :ensure (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
-;;; Form-feed
+;;;; Form-feed
 ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
 ;; differences
 (use-package form-feed
@@ -489,7 +506,7 @@ displayed."
   :init
   (global-form-feed-mode))
 
-;;; Engine-mode
+;;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode
   :custom
@@ -544,7 +561,7 @@ displayed."
   (defengine youtube
     "https://www.youtube.com/results?aq=f&oq=&search_query=%s"))
 
-;;; Electric
+;;;; Electric
 (use-package electric
   :ensure nil
   :custom
@@ -557,7 +574,7 @@ displayed."
   :init
   (electric-pair-mode))
 
-;;; Segment
+;;;; Segment
 ;; Alternative to `sentence-navigation'. Provides sentence navigation commands
 ;; that respect abbreviations, etc.
 (use-package pcre2el)
@@ -855,7 +872,7 @@ This is a difference in multitude of %s."
           ;; Restore original `forward-sentence-function'
           (setq forward-sentence-function orig-func))))))
 
-;;; Recursion-indicator
+;;;; Recursion-indicator
 (use-package recursion-indicator
   :init
   (recursion-indicator-mode)
@@ -873,20 +890,20 @@ This is a difference in multitude of %s."
                                            "^\\(%\\[\\|%\\]\\)$" s))))
                               kb/mode-line-modes))))
 
-;;; Lorem-ipsum
+;;;; Lorem-ipsum
 ;; Sample text
 (use-package lorem-ipsum
   :init
   (setq-default lorem-ipsum-list-bullet "- "))
 
-;;; Re-builder
+;;;; Re-builder
 ;; Interactively build regexps
 (use-package re-builder
   :ensure nil
   :custom
   (reb-re-syntax 'rx))
 
-;;; Writeroom-mode
+;;;; Writeroom-mode
 (use-package writeroom-mode
   :custom
   (writeroom-major-modes '(org-mode))
@@ -900,7 +917,7 @@ This is a difference in multitude of %s."
      writeroom-set-bottom-divider-width
      )))
 
-;;; Kb/para-split-sentences and kb/para-merge-sentences
+;;;; Kb/para-split-sentences and kb/para-merge-sentences
 ;; Modified from https://stackoverflow.com/a/43360152
 (defun kb/para-split-sentences ()
   "Separate sentences of paragraph with newlines."
@@ -922,7 +939,7 @@ This is a difference in multitude of %s."
   (interactive "r")
   (replace-regexp "\n" " " nil beg end))
 
-;;; Chatgpt-shell
+;;;; Chatgpt-shell
 (use-package chatgpt-shell
   :disabled
   :ensure (chatgpt-shell :type git :host github :repo "xenodium/chatgpt-shell")
@@ -932,14 +949,14 @@ This is a difference in multitude of %s."
   :custom
   (chatgpt-shell-openai-key "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"))
 
-;;; Clippety
+;;;; Clippety
 ;; Nearly system-wide mutual clipboard support
 (use-package clipetty
   :diminish
   :init
   (global-clipetty-mode))
 
-;;; Register
+;;;; Register
 (use-package register
   :ensure nil
   :custom
@@ -954,12 +971,12 @@ This is a difference in multitude of %s."
     ;; window. Copied from https://github.com/minad/consult#use-package-example
     (advice-add #'register-preview :override #'consult-register-window)))
 
-;;; Goto-last-change
+;;;; Goto-last-change
 (use-package goto-chg
   :general ("H-(" 'goto-last-change
             "H-)" 'goto-last-change-reverse))
 
-;;; Fontify-patch
+;;;; Fontify-patch
 (use-package fontify-patch
   :ensure (:type git
                  :host github
@@ -967,14 +984,14 @@ This is a difference in multitude of %s."
   ;; To fontify mail containing patches with the email client
   :hook (gnus-part-display . fontify-patch-buffer))
 
-;;; Smog-mode
+;;;; Smog-mode
 ;; Report statistics on writing style, word use and readability of prose
 (use-package smog
   :ensure-system-package diction
   :custom
   (smog-command "style -L en --print-nom-passive"))
 
-;;; Selection-highlight-mode
+;;;; Selection-highlight-mode
 (use-package selection-highlight-mode
   :disabled
   :ensure (:host github
@@ -984,7 +1001,7 @@ This is a difference in multitude of %s."
   :init
   (selection-highlight-mode))
 
-;;; Pixel-scroll
+;;;; Pixel-scroll
 (use-package pixel-scroll
   :ensure nil
   :custom
@@ -1052,7 +1069,7 @@ ARG and REDISPLAY are identical to the original function."
   (pixel-scroll-mode 1)
   (pixel-scroll-precision-mode 1))
 
-;;; Reverso
+;;;; Reverso
 ;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
 (use-package reverso
   :ensure (:host github :repo "SqrtMinusOne/reverso.el")
@@ -1060,7 +1077,7 @@ ARG and REDISPLAY are identical to the original function."
   (reverso-history-mode)
   (diminish 'reverso-history-mode))
 
-;;; Hi-lock
+;;;; Hi-lock
 (use-package hi-lock
   :ensure nil
   :custom
@@ -1069,13 +1086,13 @@ ARG and REDISPLAY are identical to the original function."
   :init
   (global-hi-lock-mode 1))
 
-;;; Midnight
+;;;; Midnight
 (use-package midnight
   :ensure nil
   :init
   (midnight-mode 1))
 
-;;; Other built-in Emacs modes/packages
+;;;; Other built-in Emacs modes/packages
 (use-package emacs
   :ensure nil
   :hook (messages-buffer-mode . visual-line-mode)
@@ -1110,6 +1127,5 @@ ARG and REDISPLAY are identical to the original function."
     (general-unbind 'normal help-mode-map "SPC")
     (general-unbind 'normal custom-mode-map "SPC")))
 
-;;; misc-packages-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'misc-packages-rcp)
+;;; misc-packages-rcp.el ends here

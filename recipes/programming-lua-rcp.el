@@ -1,15 +1,32 @@
-;;; programming-lua-rcp.el --- Summary
-;;
+;;; programming-lua-rcp.el --- Lua                   -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; These are packages that are helpful for programming in elisp
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; These are packages that are helpful for programming in elisp.
+
 ;;; Code:
 (require 'general)
 (require 'keybinds-general-rcp)
 
-;;; Lua-mode
+;;;; Lua-mode
 ;; Major-mode for the Lua language.
 ;; Install directions for system package described here:
 ;; https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
@@ -29,14 +46,12 @@
           '("lua-language-server"))))
 
 
-;;; Company-lua
+;;;; Company-lua
 ;; Company backend for Lua
 (use-package company-lua
   :after company
   :hook (lua-mode . (lambda ()
                       (add-to-list 'company-backends 'company-lua))))
 
-
-;;; programming-lua-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-lua-rcp)
+;;; programming-lua-rcp.el ends here

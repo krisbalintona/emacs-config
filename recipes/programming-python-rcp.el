@@ -1,17 +1,34 @@
-;;; programming-python-rcp.el --- Summary
-;;
+;;; programming-python-rcp.el --- Python             -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages related to developing in Python.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'general)
 (require 'keybinds-general-rcp)
 (require 'keybinds-evil-rcp)
 (require 'programming-projects-rcp)
 
-;;; Python-mode
+;;;; Python-mode
 (use-package python
   :ensure-system-package ((pylsp . python-lsp-server)
                           (pyright-langserver . pyright)
@@ -35,7 +52,7 @@
   (when (bound-and-true-p evil-local-mode)
     (evil-set-initial-state 'py-shell-mode 'normal)))
 
-;;; Dap-python
+;;;; Dap-python
 ;; Compatibility with dap
 (use-package dap-python
   :requires dap-mode
@@ -47,7 +64,7 @@
   (dap-python-executable "ipython3")
   (dap-python-debugger 'debugpy))       ; Updated version of ptvsd
 
-;;; Lsp-pyright
+;;;; Lsp-pyright
 (use-package lsp-pyright
   :requires lsp
   :after python
@@ -62,7 +79,7 @@
   ;; lsp-pyright-venv-directory
   )
 
-;;; Pyvenv
+;;;; Pyvenv
 ;; Install packages to a local directory rather than globally call
 ;; `pyvenv-activate' and select a directory with virtual environment packages
 (use-package pyvenv
@@ -231,7 +248,7 @@ it."
           (setq-local pyvenv-workon path)
           (setq-local kb/pyvenv-venv-type "W"))))))
 
-;;; Python-pytest
+;;;; Python-pytest
 (use-package python-pytest
   :general (kb/lsp-keys
              "t" '(ignore :wk "Pyvenv")
@@ -239,6 +256,5 @@ it."
              "tT" '(python-pytest-dispatch :wk "Pyvenv activate")))
 
 
-;;; programming-python-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-python-rcp)
+;;; programming-python-rcp.el ends here

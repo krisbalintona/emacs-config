@@ -1,23 +1,40 @@
-;;; programming-elisp-rcp.el --- Summary
-;;
+;;; programming-elisp-rcp.el --- Emacs-lisp          -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; These are packages that are helpful for programming or working in elisp.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 (require 'buffers-and-windows-rcp)
 
-;;; Ielm
+;;;; Ielm
 (use-package ielm
   :ensure nil
   :custom
   (ielm-noisy nil)
   (ielm-dynamic-return nil))
 
-;;; Lisp-keyword-indent
+;;;; Lisp-keyword-indent
 ;; Better keyword, cl-defun, and cl-loop indenting. See
 ;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
 (use-package lisp-keyword-indent
@@ -46,33 +63,33 @@
   :config
   (kb/lisp-keyword-indent-mode))
 
-;;; Eros-mode
+;;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
 (use-package eros
   :ghook 'emacs-lisp-mode-hook
   :custom
   (eros-eval-result-prefix "⟹  "))      ; Fancy!
 
-;;; Syntax highlighting
-;;;; Lisp-extra-font-lock
+;;;; Syntax highlighting
+;;;;; Lisp-extra-font-lock
 ;; Give faces to elisp symbols
 (use-package lisp-extra-font-lock
   :disabled t
   :init
   (lisp-extra-font-lock-global-mode))
 
-;;;; Highlight-function-calls
+;;;;; Highlight-function-calls
 ;; Give function calls a special face (default is underline)
 (use-package highlight-function-calls
   :disabled t
   :ghook 'emacs-lisp-mode-hook)
 
-;;;; Rainbow-delimiters
+;;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
   :ghook 'prog-mode-hook)
 
-;;; Help
+;;;; Help
 (use-package help
   :ensure nil
   :general ("C-h M-k" 'describe-keymap)
@@ -88,7 +105,7 @@
   :config
   (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function))
 
-;;; Help-find
+;;;; Help-find
 ;; Provides `help-find-function' and `help-find-keybinding'
 (use-package help-find
   :general
@@ -97,7 +114,7 @@
             "f" 'help-find-function
             "r" 'help-find-keybinding))
 
-;;; Helpful
+;;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :disabled                          ; Trying out built-in `help' functionality
@@ -114,7 +131,7 @@
    [remap describe-key] 'helpful-key
    [remap apropos-command] 'helpful-command))
 
-;;; Edebug
+;;;; Edebug
 (use-package edebug
   :ensure nil
   :custom
@@ -160,7 +177,7 @@
   (advice-add #'edebug-previous-result
               :around #'adviced:edebug-previous-result))
 
-;;; Elisp-demos
+;;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
   :demand
@@ -169,7 +186,7 @@
   (with-eval-after-load 'helpful
     (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 
-;;; Suggest
+;;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!
 (use-package suggest
   :general (kb/open-keys
@@ -177,6 +194,5 @@
   :custom
   (suggest-insert-example-on-start nil))
 
-;;; programming-elisp-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'programming-elisp-rcp)
+;;; programming-elisp-rcp.el ends here

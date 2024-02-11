@@ -1,15 +1,32 @@
-;;; rss-feed-rcp.el --- Summary
-;;
+;;; rss-feed-rcp.el --- RSS                          -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Elfeed RSS reader configuration.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; RSS reader in Emacs.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Elfeed
+;;;; Elfeed
 (use-package elfeed
   :hook ((elfeed-search-mode . (lambda ()
                                  (setq-local display-line-numbers t)
@@ -57,7 +74,7 @@
   (advice-add 'elfeed :after #'elfeed-update)
   )
 
-;;; Elfeed-org
+;;;; Elfeed-org
 (use-package elfeed-org
   :demand t
   :after elfeed
@@ -67,7 +84,7 @@
   :config (general-advice-add 'elfeed :after 'elfeed-org nil t)
   )
 
-;;; Elfeed-goodies
+;;;; Elfeed-goodies
 (use-package elfeed-goodies
   :demand t
   :after elfeed ; Can't figure out how to have this work other than this and demanding it
@@ -90,10 +107,10 @@
   :config (elfeed-goodies/setup)   ; Immediately load in time for first `elfeed'
   )
 
-;;; QoL
+;;;; QoL
 ;; Much is from https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
 
-;;;; View in EWW
+;;;;; View in EWW
 (defun prot-elfeed-show-eww (&optional link)
   "Browse current entry's link or optional LINK in `eww'.
 
@@ -117,7 +134,7 @@ fail on poorly-designed websites."
 
 (add-hook 'eww-mode-hook #'(lambda () (olivetti-mode) (mixed-pitch-mode)))
 
-;;;; Language-detection
+;;;;; Language-detection
 ;; Detects language of current buffer
 (use-package language-detection
   :init
@@ -201,7 +218,7 @@ fail on poorly-designed websites."
         '((pre . eww-tag-pre)))
   )
 
-;;;; Custom search completion
+;;;;; Custom search completion
 (defun prot-common-crm-exclude-selected-p (input)
   "Filter out INPUT from `completing-read-multiple'.
 Hide non-destructively the selected entries from the completion
@@ -258,7 +275,7 @@ minibuffer with something like `exit-minibuffer'."
  :keymaps 'elfeed-search-mode-map
  "H-s" 'prot-elfeed-search-tag-filter)
 
-;;;; Toggle custom tag keybinds
+;;;;; Toggle custom tag keybinds
 (with-eval-after-load 'elfeed
   (defun prot-elfeed-toggle-tag (tag)
     "Toggle TAG for the current item.
@@ -330,7 +347,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
    )
   )
 
-;;; Wombag
+;;;; Wombag
 (use-package wombag
   :ensure (:host github :repo "karthink/wombag")
   :general (kb/open-keys "W" 'wombag)
@@ -343,6 +360,5 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
   (wombag-search-filter ""))
 
-;;; rss-feed-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'rss-feed-rcp)
+;;; rss-feed-rcp.el ends here

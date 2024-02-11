@@ -1,15 +1,32 @@
-;;; epub-rcp.el --- Summary
-;;
+;;; epub-rcp.el --- Epub                             -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; For reading epub files
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Reading .epub files.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Nov-mode
+;;;; Nov-mode
 ;; EPub reader
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
@@ -19,7 +36,7 @@
   (with-eval-after-load 'eaf
     (add-to-list 'eaf-find-file-ext-blacklist "epub")))
 
-;;; Justify-kp
+;;;; Justify-kp
 ;; Advanced justification of text with the Knuth/Plass algorithm
 (use-package justify-kp
   :after nov
@@ -45,6 +62,5 @@
               (forward-line 1))))
       (add-hook 'window-configuration-change-hook 'kb/nov-window-configuration-change-hook nil t))))
 
-;;; epub-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'epub-rcp)
+;;; epub-rcp.el ends here

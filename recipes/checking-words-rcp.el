@@ -1,16 +1,33 @@
-;;; checking-words-rcp.el --- Summary
-;;
+;;; checking-words-rcp.el --- Dictionaries and thesauruses  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages relevant to the dictionaries and thesauruses.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Online
-;;;; Dictionary
+;;;; Online
+;;;;; Dictionary
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
   :ensure nil
@@ -26,15 +43,15 @@
   (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
   (dictionary-server nil))              ; "Automatic"
 
-;;;; Powerthesaurus
+;;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus)
 
-;;;; Le-thesaurus
+;;;;; Le-thesaurus
 (use-package le-thesaurus)
 
-;;; Offline
-;;;; Wordnut
+;;;; Offline
+;;;;; Wordnut
 ;; Offline dictionary
 (use-package wordnut
   :disabled                             ; Use dictionary localhost now
@@ -43,7 +60,7 @@
   ;; Make sure the install a dictnary, in case it is a separate package
   :ensure-system-package (wn . wordnet-cli))
 
-;;;; Synosaurus
+;;;;; Synosaurus
 ;; Offline thesaurus
 (use-package synosaurus
   :after powerthesaurus
@@ -53,7 +70,7 @@
   (synosaurus-backend 'synosaurus-backend-wordnet) ; Offline thesaurus that relies on `wordnet'
   (synosaurus-choose-method 'default))
 
-;;;; kb/{dictionary,thesaurus}-at-point kb/{dictionary,thesaurus}-lookup
+;;;;; kb/{dictionary,thesaurus}-at-point kb/{dictionary,thesaurus}-lookup
 ;; Change which packages are used depending on internet connection
 (defun kb/internet-up-p (&optional host)
   "Return `t' if the device has internet access, and `nil'
@@ -134,6 +151,5 @@ then call `dash-docs-completing-read-at-point'."
    (general-chord "kk") 'kb/thesaurus-at-point
    (general-chord "KK") 'kb/thesuarus-lookup))
 
-;;; checking-words-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'checking-words-rcp)
+;;; checking-words-rcp.el ends here

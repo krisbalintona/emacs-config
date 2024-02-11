@@ -1,13 +1,30 @@
-;;; system-packages-rcp.el --- Summary
-;;
+;;; system-packages-rcp.el --- Configuration for system packages  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Configuration related to installing system packages
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 
-;;; Exec-path-from-shell
+;;;; Exec-path-from-shell
 ;; Ensure Emacs' and system shell have same path
 (use-package exec-path-from-shell
   :demand
@@ -36,7 +53,7 @@
 (when (eq (length (getenv "NODE_PATH")) 0) ; For npm
   (setenv "NODE_PATH" "/usr/local/lib/node_modules"))
 
-;;; System-packages
+;;;; System-packages
 ;; Install system packages within Emacs. Necessary for use-package's
 ;; `:ensure-system-package' flag
 (use-package system-packages
@@ -44,6 +61,5 @@
   (system-packages-noconfirm t))        ; Bypass its prompt
 (elpaca-wait)
 
-;;; system-packages-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'system-packages-rcp)
+;;; system-packages-rcp.el ends here

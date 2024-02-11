@@ -1,16 +1,33 @@
-;;; shell-basic-rcp.el --- Summary
-;;
+;;; shell-basic-rcp.el --- Shell-mode                -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Configuration and packages related to the basic `shell-mode'
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
 
-;;; Comint
+;;;; Comint
 (use-package comint
   :ensure nil
   :custom
@@ -22,7 +39,7 @@
   (setq-default comint-scroll-to-bottom-on-output 'all)
   (setq-default comint-input-autoexpand 'input))
 
-;;; Shell
+;;;; Shell
 ;; Built-in shell
 (use-package shell
   :ensure nil
@@ -36,7 +53,7 @@
   (shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
   (shell-kill-buffer-on-exit t))                     ; Emacs 29.1
 
-;;; Topsy
+;;;; Topsy
 ;; Stick a shell prompt, defun line, etc to the header line
 (use-package topsy
   :hook ((eshell-mode magit-section-mode comint-mode term-mode shell-mode) . topsy-mode)
@@ -70,6 +87,5 @@
                           (buffer-substring (pos-bol) (point-at-eol))))))
      (nil . topsy--beginning-of-defun))))
 
-;;; shell-basic-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'shell-basic-rcp)
+;;; shell-basic-rcp.el ends here

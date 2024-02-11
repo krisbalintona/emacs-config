@@ -1,18 +1,35 @@
-;;; completion-inline-rcp.el --- Summary
-;;
+;;; completion-inline-rcp.el --- Inline completion   -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages that configure the vanilla `completion-at-point' functionality.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Corfu
+;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
-;;;; Itself
+;;;;; Itself
 (use-package corfu
   :ensure (corfu :files (:defaults "extensions/*"))
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
@@ -96,7 +113,7 @@ default lsp-passthrough."
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
           '(orderless))))
 
-;;;; Corfu-history
+;;;;; Corfu-history
 ;; Save the history across Emacs sessions
 (use-package corfu-history
   :ensure nil
@@ -105,7 +122,7 @@ default lsp-passthrough."
   (with-eval-after-load 'savehist
     (add-to-list 'savehist-additional-variables 'corfu-history)))
 
-;;;; Corfu-popupinfo
+;;;;; Corfu-popupinfo
 ;; Documentation window for corfu!
 (use-package corfu-popupinfo
   :ensure nil
@@ -124,7 +141,7 @@ default lsp-passthrough."
   (corfu-popupinfo-min-height 1)
   (corfu-popupinfo-min-width 30))
 
-;;; Kind-icon
+;;;; Kind-icon
 ;; Icons for corfu!
 (use-package kind-icon
   :disabled ; Prefer `nerd-icons-corfu' with its lighter weight icons (doesn't use svgs)
@@ -183,7 +200,7 @@ default lsp-passthrough."
   (with-eval-after-load 'corfu          ; Enable
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
-;;; Nerd-icons-corfu
+;;;; Nerd-icons-corfu
 ;; Use nerd-icons with corfu
 (use-package nerd-icons-corfu
   :after (nerd-icons corfu)
@@ -191,7 +208,7 @@ default lsp-passthrough."
   (with-eval-after-load 'corfu
     (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)))
 
-;;; Cape
+;;;; Cape
 ;; Expand capf functionality with corfu! See an updated list of the defined capf
 ;; functions in the package's commentary.
 (use-package cape
@@ -265,6 +282,5 @@ Additionally, add `cape-file' as early as possible to the list."
   ;; `completion-at-point-function'.
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-;;; completion-inline-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'completion-inline-rcp)
+;;; completion-inline-rcp.el ends here

@@ -1,15 +1,32 @@
-;;; persistence-rcp.el --- Summary
-;;
+;;; persistence-rcp.el --- Persistence across Emacs sessions  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; Packages relevant to saving and loading information across Emacs sessions.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Savehist
+;;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist
   :ensure nil
@@ -33,7 +50,7 @@
   (unless (daemonp)
     (load savehist-file nil (not (called-interactively-p 'interactive)))))
 
-;;; Recentf
+;;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
   :ensure nil
@@ -46,7 +63,7 @@
   :init
   (recentf-mode))
 
-;;; Saveplace
+;;;; Saveplace
 ;; Save and restore the point's location in files
 (use-package saveplace
   :ensure nil
@@ -55,7 +72,7 @@
   :init
   (save-place-mode))
 
-;;; Desktop
+;;;; Desktop
 ;; Save buffers across Emacs sessions
 (use-package desktop
   :ensure nil
@@ -69,7 +86,7 @@
            ;; have local variables that mess with desktop's loading of files
            (literal "/home/krisbalintona/emacs-repos/")))))
 
-;;; Super-save
+;;;; Super-save
 ;; Automatically save buffers when you do certain things
 (use-package super-save
   :disabled                             ; Opting for built in auto-save
@@ -100,7 +117,7 @@
   ;; Make sure this goes after adding hooks, since the hooks are manually added once `super-save-mode' is enable
   (super-save-mode))
 
-;;; Built-in auto save and backup
+;;;; Built-in auto save and backup
 ;; Make recovery files
 (use-package files
   :ensure nil
@@ -135,6 +152,5 @@
   :init
   (auto-save-visited-mode))
 
-;;; persistence-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'persistence-rcp)
+;;; persistence-rcp.el ends here

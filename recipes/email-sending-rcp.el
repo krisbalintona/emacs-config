@@ -1,15 +1,32 @@
-;;; email-sending-rcp.el --- Summary
-;;
+;;; email-sending-rcp.el --- Sending and composing emails  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; This is configuration pertinent to sending emails.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; This is configuration pertinent to composing then sending emails.
+
 ;;; Code:
 (require 'use-package)
 (require 'keybinds-general-rcp)
 
-;;; Message
+;;;; Message
 (use-package message
   :ensure nil
   :hook ((message-setup . message-sort-headers)
@@ -62,7 +79,7 @@
                                      "From: "
                                      (read-string "Set FROM to: " user-mail-address))))))))
 
-;;; Sendmail
+;;;; Sendmail
 ;; Use `sendmail' program to send emails?
 (use-package sendmail
   :ensure nil
@@ -79,7 +96,7 @@
   (message-sendmail-envelope-from 'header)
   (mail-envelope-from 'header))
 
-;;; Smtpmail
+;;;; Smtpmail
 ;; Use `msmtp' program to send emails?
 (use-package smtpmail
   :ensure nil
@@ -100,8 +117,8 @@
   (smtpmail-store-queue-variables t)
   (smtpmail-queue-dir (expand-file-name "drafts/.smtp-queue" message-directory)))
 
-;;; Org-msg
-;;;; Itself
+;;;; Org-msg
+;;;;; Itself
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
   :ensure (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
@@ -287,7 +304,7 @@
   (with-eval-after-load 'mu4e
     (org-msg-mode)))
 
-;;;; Custom signatures
+;;;;; Custom signatures
 (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
   "Separator between email body and its signature.")
 (defvar kb/signature-open "\n\n#+begin_signature\n"
@@ -356,7 +373,7 @@ signatures being wrapped in `kb/signature-open' and
       (when (search-forward kb/signature-separator nil t)
         (replace-match "--" 1)))))
 
-;;;; Custom creation of `org-msg' buffer
+;;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
   (defun kb/org-msg--html-special-block (special-block contents info)
     "Similar to `org-html-special-block' but treat specially the
@@ -479,7 +496,7 @@ MML tags."
           (set-buffer-modified-p nil)))))
   (advice-add 'org-msg-post-setup :override 'kb/org-msg-post-setup))
 
-;;; Mu4e-send-delay
+;;;; Mu4e-send-delay
 (use-package mu4e-send-delay
   :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
   :ensure (:type git
@@ -495,6 +512,5 @@ MML tags."
   (mu4e-send-delay-timer 60)
   (mu4e-send-delay-enable-org-msg t))
 
-;;; email-sending-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'email-sending-rcp)
+;;; email-sending-rcp.el ends here

@@ -1,16 +1,33 @@
-;;; keybinds-native-rcp.el --- Summary
-;;
+;;; keybinds-native-rcp.el --- Miscellaneous keybindings  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
-;; Miscellaneous keybindings.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Keybinds for built-in Emacs commands.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Commands
-;;;; Inserting empty lines
+;;;; Commands
+;;;;; Inserting empty lines
 (defun kb/open-line-above-goto ()
   "Insert an empty line above the current line.
 Position the cursor at it's beginning, according to the current
@@ -41,7 +58,7 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (interactive)
   (save-excursion (kb/open-line-below-goto)))
 
-;;;; Join lines
+;;;;; Join lines
 (defun kb/join-line-above ()
   "Join the current line with the line above."
   (interactive)
@@ -56,12 +73,12 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (when (bolp)
     (funcall indent-line-function)))
 
-;;;; Scrolling
+;;;;; Scrolling
 (general-define-key
  "H-P" 'scroll-down-line
  "H-N" 'scroll-up-line)
 
-;;; Text editing
+;;;; Text editing
 (general-define-key
  "C-S-p" 'kb/open-line-above-goto
  "C-S-n" 'kb/open-line-below-goto
@@ -70,7 +87,7 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  (general-chord "[ ") 'kb/open-line-above-insert
  (general-chord "] ") 'kb/open-line-below-insert)
 
-;;; Other
+;;;; Other
 (defun kb/restart-or-kill-emacs (&optional arg restart)
   "Kill Emacs.
 If called with RESTART or `universal-argument’, restart Emacs
@@ -81,6 +98,5 @@ instead. Passes ARG to `save-buffers-kill-emacs'."
 (general-define-key
  [remap save-buffers-kill-terminal] 'kb/restart-or-kill-emacs)
 
-;;; keybinds-native-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybinds-native-rcp)
+;;; keybinds-native-rcp.el ends here

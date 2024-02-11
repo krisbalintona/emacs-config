@@ -1,7 +1,25 @@
-;;; email-notmuch-rcp.el --- Summary
-;;
+;;; email-notmuch-rcp.el --- Notmuch email client    -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; These are packages pertinent to using the `notmuch' email client. It is also
 ;; important to note that this is only a frontend for the `notmuch' command line
 ;; tool. Syncing from remote servers can be done via `mbsync' (from the `mu'
@@ -10,13 +28,12 @@
 ;;
 ;; Protesilaos provides a wonderful guide here:
 ;; https://protesilaos.com/emacs/dotemacs#h:5ad80664-3163-4d9d-be65-462637d77903
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'general)
 (require 'keybinds-general-rcp)
 
-;;; Notmuch
+;;;; Notmuch
 (use-package notmuch
   :disabled
   :ensure-system-package (notmuch
@@ -156,7 +173,7 @@
   (defun kb/notmuch-show-message-adjust () nil)
   (advice-add 'notmuch-show-message-adjust :override #'kb/notmuch-show-message-adjust))
 
-;;; Notmuch-indicator
+;;;; Notmuch-indicator
 (use-package notmuch-indicator
   :custom
   ;; OPTIMIZE 2022-12-28: This breaks when using the path query term, but that
@@ -170,6 +187,5 @@
   (notmuch-indicator-hide-empty-counters nil)
   (notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer)))
 
-;;; email-notmuch-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'email-notmuch-rcp)
+;;; email-notmuch-rcp.el ends here

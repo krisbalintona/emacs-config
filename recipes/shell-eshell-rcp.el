@@ -1,16 +1,29 @@
-;;; shell-eshell-rcp.el --- Summary
-;;
-;;; Commentary:
-;;
-;; Eshell-related packages and their configuration.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; shell-eshell-rcp.el --- Eshell                   -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Code:
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Eshell
-;;;; Itself
+;;;; Eshell
+;;;;; Itself
 (use-package eshell
   :ensure nil
   :gfhook
@@ -133,7 +146,7 @@ Info node `(eshell)Top'."
           (eshell-write-history eshell-history-file-name t)))))
   (add-hook 'eshell-post-command-hook #'eshell-append-history))
 
-;;;; `consult-outine' with eshell
+;;;;; `consult-outine' with eshell
 (with-eval-after-load 'consult
   ;; For showing eshell sources in `consult-buffer'. Taken from
   ;; https://github.com/minad/consult#multiple-sources
@@ -161,25 +174,25 @@ Info node `(eshell)Top'."
   ;; Taken from https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
   (add-hook 'eshell-mode-hook (lambda () (setq outline-regexp eshell-prompt-regexp))))
 
-;;; Shrink-path
+;;;; Shrink-path
 ;; Truncate eshell directory path (has to be configured in my custom eshell
 ;; prompt)
 (use-package shrink-path
   :after eshell)
 
-;;; Eshell-syntax-highlighting
+;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
   :ghook ('eshell-mode-hook 'eshell-syntax-highlighting-global-mode nil nil t)
   :config (eshell-syntax-highlighting-global-mode))
 
-;;; Pcmpl-args
+;;;; Pcmpl-args
 ;; Extend the build in `pcomplete' to another level.
 (use-package pcmpl-args
   :demand
   :after eshell)
 
-;;; Esh-autosuggest
+;;;; Esh-autosuggest
 ;; Has shadowed suggestions from shell history (like in zsh)
 (use-package esh-autosuggest
   :disabled                  ; FIXME 2023-07-12: Freezes eshell for some reason
@@ -187,6 +200,5 @@ Info node `(eshell)Top'."
   :custom
   (esh-autosuggest-delay 0.25))
 
-;;; shell-eshell-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'shell-eshell-rcp)
+;;; shell-eshell-rcp.el ends here

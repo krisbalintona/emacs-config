@@ -1,21 +1,38 @@
-;;; email-mu4e-rcp.el --- Summary
-;;
+;;; email-mu4e-rcp.el --- Mu4e email client          -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2024  Kristoffer Balintona
+
+;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+;; Keywords:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;
+
 ;; These are packages pertinent to using the `mu4e' email client which leverages
 ;; the `mu' backend. Syncing from remote servers can be done via `mbsync' (from
 ;; the `mu' utility set).
 ;;
 ;; I also have configuration taken from Doom Emacs that pertain to Gmail
 ;; integration. I have marked those code snippets accordingly.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Code:
 (require 'general)
 (require 'keybinds-general-rcp)
 
-;;; Mu4e
-;;;; Itself
+;;;; Mu4e
+;;;;; Itself
 (use-package mu4e
   :ensure nil
   :load-path "/usr/share/emacs/site-lisp/mu4e"
@@ -343,7 +360,7 @@
           mm-discouraged-alternatives '("text/html" "text/richtext" "image/.*")
           mm-automatic-display (remove "text/html" mm-automatic-display)))) ; If I really don't want to see HTML
 
-;;;; Mu4e-contexts
+;;;;; Mu4e-contexts
 (with-eval-after-load 'mu4e
   (setq mu4e-contexts
         `(,(make-mu4e-context
@@ -618,7 +635,7 @@
                     (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
                     (smtpmail-mail-address "krisbalintona@gmail.com"))))))
 
-;;;; Integration with `logos.el'
+;;;;; Integration with `logos.el'
 (defun kb/mu4e-view-set-outline-regexp ()
   "Set `outline-regexp' according to FROM field.
 Useful for `consult-outline' and `logos.el'."
@@ -637,7 +654,7 @@ Useful for `consult-outline' and `logos.el'."
                   page-delimiter regexp))))
 (add-hook 'mu4e-view-rendered-hook #'kb/mu4e-view-set-outline-regexp)
 
-;;; Mu4e header icons (from Doom Emacs)
+;;;; Mu4e header icons (from Doom Emacs)
 (with-eval-after-load 'mu4e
   (defun kb/mu4e--get-string-width (str)
     "Return the width in pixels of a string in the current
@@ -685,13 +702,13 @@ will also be the width of all other printable characters."
   ;; (add-hook 'window-setup-hook #'kb/mu4e-initialise-icons)
   )
 
-;;; Mu4e-column-faces
+;;;; Mu4e-column-faces
 (use-package mu4e-column-faces
   :after mu4e
   :init
   (mu4e-column-faces-mode))
 
-;;; Mu4e-views
+;;;; Mu4e-views
 (use-package mu4e-views
   :disabled
   :after mu4e
@@ -713,6 +730,5 @@ will also be the width of all other printable characters."
   :config
   (mu4e-views-mu4e-use-view-msg-method "html"))
 
-;;; email-mu4e-rcp.el ends here
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'email-mu4e-rcp)
+;;; email-mu4e-rcp.el ends here
