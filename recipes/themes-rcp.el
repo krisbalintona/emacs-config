@@ -288,6 +288,7 @@ This version removes delimiters.")
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
+  :disabled
   :ensure nil
   :custom
   (display-time-24hr-format t)
@@ -304,11 +305,12 @@ This version removes delimiters.")
      ("Asia/Tokyo" "Tokyo")
      ("Asia/Shanghai" "Beijing")))
   :init
-  (display-time-mode))
+  (display-time-mode 1))
 
 ;;;; Battery
 ;; Display batter percentage
 (use-package battery
+  :disabled
   :ensure nil
   :custom
   (battery-load-critical 15)
@@ -318,14 +320,14 @@ This version removes delimiters.")
   ;; (battery-mode-line-format "  %p%%")
   (battery-mode-line-format "%b%p%% ")
   :init
-  (display-battery-mode))
+  (display-battery-mode 1))
 
 ;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ensure nil
   :general (kb/toggle-keys
-             "l" '(display-line-numbers-mode :wk "Line numbers"))
+             "l" 'display-line-numbers-mode)
   :custom
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
