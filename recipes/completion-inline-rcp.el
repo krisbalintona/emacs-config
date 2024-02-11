@@ -36,7 +36,7 @@
   (corfu-auto nil)
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.25)
-  (corfu-on-exact-match 'show)
+  (corfu-on-exact-match 'insert)
 
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)     ; Always have the same width
