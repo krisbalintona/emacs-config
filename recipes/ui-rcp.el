@@ -289,15 +289,6 @@ are troublesome)."
     (with-eval-after-load 'abbrev
       (diminish 'abbrev-mode))))
 
-;;;;; Mlscroll
-;; Adds an interactive indicator for the view's position in the current buffer
-;; to the modeline
-(use-package mlscroll
-  :disabled                         ; Messes with `mode-line-format-right-align'
-  :hook (server-after-make-frame . mlscroll-mode)
-  :init
-  (mlscroll-mode))
-
 ;;;;; Default mode line
 (unless (bound-and-true-p mood-line-mode)
   (defvar kb/mode-line-modes
@@ -332,7 +323,7 @@ This version removes delimiters.")
         mode-line-compact 'long        ; Emacs 28
         mode-line-right-align-edge 'window
         mode-line-percent-position nil ; Don't show percentage of position in buffer
-        mode-line-position-line-format '(" %l ")
+        mode-line-position-line-format '(" %l")
         mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
 
   (set-face-attribute 'vc-edited-state nil :foreground (face-attribute 'shadow :foreground))
@@ -345,6 +336,9 @@ This version removes delimiters.")
                   vc-mode " "
                   mode-line-buffer-identification
                   mode-line-position
+                  (:eval (when (and (bound-and-true-p mlscroll-mode)
+                                    (mode-line-window-selected-p))
+                           (mlscroll-mode-line)))
                   (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   mode-line-format-right-align
                   mode-line-process
@@ -404,6 +398,26 @@ This version removes delimiters.")
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
 
 (provide 'ui-rcp)
+;;;;; Mlscroll
+;; Adds an interactive indicator for the view's position in the current buffer
+;; to the modeline
+(use-package mlscroll
+  :hook (kb/themes . kb/mlscroll-set-colors)
+  :custom
+  (mlscroll-right-align nil) ; Doesn't work well with `mode-line-right-align-edge'
+  (mlscroll-alter-percent-position nil) ; I position it myself
+  :init
+  (mlscroll-mode 1)
+
+  (defun kb/mlscroll-set-colors ()
+    "Set colors for `mlscroll'."
+    (when (bound-and-true-p mlscroll-mode)
+      (mlscroll-mode -1)
+      (customize-set-variable 'mlscroll-in-color (modus-themes-with-colors fg-mode-line-active))
+      (customize-set-variable 'mlscroll-out-color (modus-themes-with-colors bg-mode-line-active))
+      (mlscroll-mode 1)))
+  (kb/mlscroll-set-colors))
+
 ;;;; Other UI
 ;;;;; Fringes
 (fringe-mode '(8 . 4))
