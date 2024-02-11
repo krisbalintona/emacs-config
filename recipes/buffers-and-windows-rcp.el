@@ -378,11 +378,13 @@ If buffer-or-name is nil return current buffer's mode."
 ;; `other-window' by most recently used
 (use-package switchy-window
   :general (:keymaps 'switchy-window-minor-mode-map
-                     [remap other-window] (defrepeater 'switchy-window-repeat #'switchy-window))
-  :preface
-  (use-package defrepeater :demand)
+                     [remap other-window] #'switchy-window)
   :init
   (switchy-window-minor-mode)
+  (defvar-keymap switchy-window-repeat-map
+    :doc "Keymap to repeat `switchy-window'.  Used in `repeat-mode'."
+    :repeat t
+    "o" #'switchy-window)
 
   (defun kb/switchy-window (&optional arg)
     "Switch to other windows in most-recently-used order.
