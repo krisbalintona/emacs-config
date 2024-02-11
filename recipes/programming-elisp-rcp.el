@@ -87,7 +87,7 @@
 ;;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
-  :ghook 'prog-mode-hook)
+  :ghook 'emacs-lisp-mode-hook 'lisp-interaction-mode-hook 'inferior-emacs-lisp-mode-hook)
 
 ;;;; Help
 (use-package help
