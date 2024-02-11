@@ -226,25 +226,24 @@ have `org-warning' face."
   (org-src-fontify-natively t)
   (org-src-block-faces nil))
 
-;;;; Org-visibility
-;; Persist org headline folded/unfolded states
-(use-package org-visibility
-  :disabled
-  :diminish
-  :ghook 'org-mode-hook
-  :general
-  (:keymaps 'org-visibility-mode-map
-            :prefix "C-x"
-            "C-v" 'org-visibility-force-save ; Originally bound to `find-alternative-file'
-            "M-v" 'org-visibility-remove)
+;;;; Org-archive
+(use-package org-archive
+  :ensure nil
   :custom
-  (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
-  (org-visibility-include-paths `(,org-directory))
-  (org-visibility-include-regexps '("\\.org\\'"))
-  (org-visibility-exclude-paths nil)
-  (org-visibility-maximum-tracked-files 500)
-  (org-visibility-maximum-tracked-days 60)
-  (org-visibility-display-messages nil)) ; Annoying echo area updates
+  (org-archive-subtree-save-file-p t)  ; Save archive file always
+  :config
+  (define-advice org-archive--compute-location
+      (:around (orig-fun &rest args) kb/org-archive--compute-location-denote-format-string)
+    "Take LOCATION in `org-archive--compute-location' and expand %D.
+%D is expanded to the denote identifier."
+    ;; Modify LOCATION before normal operations
+    (cl-letf (((car args)
+               (if (fboundp 'denote-retrieve-filename-identifier)
+                   (replace-regexp-in-string "%D"
+                                             (denote-retrieve-filename-identifier (buffer-file-name (buffer-base-buffer)))
+                                             (car args))
+                 (car args))))
+      (apply orig-fun args))))
 
 ;;; Org-babel
 ;;;; Itself
@@ -725,6 +724,26 @@ Otherwise, return a user error."
              (`paragraph (kb/org-edit-paragraph-block arg))
              (_ (user-error "No special environment to edit here"))))))))
   (advice-add 'org-edit-special :override 'kb/org-edit-special))
+
+;;;; Org-visibility
+;; Persist org headline folded/unfolded states
+(use-package org-visibility
+  :disabled
+  :diminish
+  :ghook 'org-mode-hook
+  :general
+  (:keymaps 'org-visibility-mode-map
+            :prefix "C-x"
+            "C-v" 'org-visibility-force-save ; Originally bound to `find-alternative-file'
+            "M-v" 'org-visibility-remove)
+  :custom
+  (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
+  (org-visibility-include-paths `(,org-directory))
+  (org-visibility-include-regexps '("\\.org\\'"))
+  (org-visibility-exclude-paths nil)
+  (org-visibility-maximum-tracked-files 500)
+  (org-visibility-maximum-tracked-days 60)
+  (org-visibility-display-messages nil)) ; Annoying echo area updates
 
 ;;; org-general-rcp.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
