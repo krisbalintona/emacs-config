@@ -361,4 +361,72 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (wombag-search-filter ""))
 
 (provide 'rss-feed-rcp)
+;;;; Pocket-reader
+;; View my Pocket
+(use-package pocket-reader
+  :ensure (pocket-reader :type git
+                         :host github
+                         :repo "alphapapa/pocket-reader.el")
+  :general
+  (kb/open-keys
+    "p" 'pocket-reader)
+  (:keymaps 'pocket-reader-mode-map
+            "TAB" 'kb/pocket-reader-cycle-view
+            "+" 'pocket-reader-more
+            "o" 'pocket-reader-pop-to-url)
+  :custom
+  (pocket-reader-site-column-max-width 22)
+  (pocket-reader-archive-on-open nil)
+  (pocket-reader-default-queries (list ":unread"))
+  (pocket-reader-open-url-default-function #'org-web-tools-read-url-as-org)
+  (pocket-reader-url-open-fn-map '((eww-browse-url "protesilaos.com")))
+  :custom-face
+  (pocket-reader-unread ((t (:weight bold))))
+  (pocket-reader-archived ((t (:strike-through t))))
+  :init
+  (defun kb/pocket-reader--set-tabulated-list-format ()
+    "Set `tabulated-list-format'.
+
+Sets according to the maximum width of items about to be
+displayed."
+    (when-let* ((added-width 10)
+                (domain-width (min pocket-reader-site-column-max-width
+                                   (cl-loop for item being the hash-values of pocket-reader-items
+                                            maximizing (length (ht-get item 'domain)))))
+                (tags-width (cl-loop for item being the hash-values of pocket-reader-items
+                                     maximizing (length (string-join (ht-get item 'tags) ","))))
+                (title-width (- (window-text-width)
+                                5                   ; Idk why this is needed...
+                                (+ 1 added-width)   ; Added
+                                (+ 2 1)             ; Favorite
+                                (+ 3 domain-width)  ; Site
+                                (+ 2 tags-width)))) ; Tags
+      (setq tabulated-list-format (vector (list "Added" (1+ added-width) pocket-reader-added-column-sort-function)
+                                          (list "*" (+ 2 1) t)
+                                          (list "Title" (+ 2 title-width) t)
+                                          (list "Site" (+ 3 domain-width) t)
+                                          (list "Tags" (+ 2 tags-width) t)))))
+  (advice-add 'pocket-reader--set-tabulated-list-format
+              :override #'kb/pocket-reader--set-tabulated-list-format)
+
+  (defun kb/pocket-reader-cycle-view ()
+    "Cycle between showing unread entries and all entries."
+    (interactive)
+    (let ((all-query ":all")
+          (archive-query ":archive")
+          (unread-query ":unread"))
+      (pcase pocket-reader-queries
+        ((pred (member all-query))
+         (message "Showing unread")
+         (pocket-reader-search unread-query))
+        ((pred (member unread-query))
+         (message "Showing archived")
+         (pocket-reader-search archive-query))
+        ((pred (member archive-query))
+         (message "Showing all")
+         (pocket-reader-search all-query))
+        (_
+         (message "Showing default")
+         (pocket-reader-search pocket-reader-default-queries))))))
+
 ;;; rss-feed-rcp.el ends here

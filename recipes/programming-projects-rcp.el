@@ -394,6 +394,11 @@ With a prefix argument, show NLINES of context."
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
   (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
 
+;;;;; Vc-msg
+;; See a line's corresponding commit information (like git blame)
+(use-package vc-msg
+  :general ("H-v" 'vc-msg-show))
+
 ;;;; QoL
 ;;;;; Git-gutter
 (use-package git-gutter

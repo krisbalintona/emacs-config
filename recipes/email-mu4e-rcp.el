@@ -731,4 +731,12 @@ will also be the width of all other printable characters."
   (mu4e-views-mu4e-use-view-msg-method "html"))
 
 (provide 'email-mu4e-rcp)
+;;;; Fontify-patch
+(use-package fontify-patch
+  :ensure (:type git
+                 :host github
+                 :repo "whame/fontify-patch")
+  ;; To fontify mail containing patches with the email client
+  :hook (gnus-part-display . fontify-patch-buffer))
+
 ;;; email-mu4e-rcp.el ends here

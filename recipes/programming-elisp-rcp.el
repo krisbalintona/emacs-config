@@ -195,4 +195,22 @@
   (suggest-insert-example-on-start nil))
 
 (provide 'programming-elisp-rcp)
+;;;; Recursion-indicator
+(use-package recursion-indicator
+  :init
+  (recursion-indicator-mode)
+  (minibuffer-depth-indicate-mode -1)
+  :config
+  ;; Thanks to Daniel Mendler for this! It removes the square brackets that
+  ;; denote recursive edits in the modeline. I do not need them because I am
+  ;; using Daniel's `recursion-indicator':
+  ;; <https://github.com/minad/recursion-indicator>.
+  (with-eval-after-load 'themes-rcp
+    (setq-default kb/mode-line-modes
+                  (seq-filter (lambda (s)
+                                (not (and (stringp s)
+                                          (string-match-p
+                                           "^\\(%\\[\\|%\\]\\)$" s))))
+                              kb/mode-line-modes))))
+
 ;;; programming-elisp-rcp.el ends here

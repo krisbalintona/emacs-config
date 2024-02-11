@@ -209,4 +209,10 @@
   :custom
   (all-the-icons-scale-factor 1.1))
 
+;;;; All-the-icons-completion
+;; Add `all-the-icons' icons to minibuffer completion candidates
+(use-package all-the-icons-completion
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init (all-the-icons-completion-mode))
+
 ;;; fonts-rcp.el ends here

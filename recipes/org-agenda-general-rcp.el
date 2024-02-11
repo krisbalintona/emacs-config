@@ -438,46 +438,5 @@ Same as default but truncates with `truncate-string-ellipsis'."
   ;; Useful
   (org-todo-repeat-to-state "ACTIVE"))
 
-
-;;;; Work-timer
-(use-package work-timer
-  :demand
-  :ensure (:host github
-                 :protocol ssh
-                 :repo "krisbalintona/work-timer"
-                 :depth nil
-                 :files (:defaults "*.mp3"))
-  :hook (kb/themes . kb/work-timer-set-faces)
-  :general (kb/open-keys
-             "w" work-timer-prefix-map)
-  :custom
-  (work-timer-debug nil)
-  (work-timer-time-format "%.2m:%.2s")
-  (work-timer-work-duration-function 'work-timer-work-duration-fractional)
-  (work-timer-fractional-work-duration 25)
-  (work-timer-break-duration-function 'work-timer-break-duration-fractional)
-  (work-timer-fractional-break-duration-fraction 0.25)
-  :init
-  ;; Save relevant current timer variables to resume timer across Emacs sessions
-  (dolist (var '(work-timer-start-time
-                 work-timer-duration
-                 work-timer-type
-                 work-timer-pauses))
-    (add-to-list 'savehist-additional-variables var))
-
-  (defun kb/work-timer-set-faces ()
-    "Set `work-timer-mode-line' according to dark or light theme."
-    (let* ((dark-p
-            (color-dark-p (color-name-to-rgb (face-attribute 'default :background))))
-           (initial-color "DarkOrange")
-           (foreground
-            (if dark-p
-                initial-color
-              (color-darken-name initial-color 15))))
-      (set-face-foreground 'work-timer-mode-line foreground)))
-  :config
-  (work-timer-with-org-clock-mode)
-  (kb/work-timer-set-faces))
-
 (provide 'org-agenda-general-rcp)
 ;;; org-agenda-general-rcp.el ends here

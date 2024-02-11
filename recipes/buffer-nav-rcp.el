@@ -26,6 +26,47 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;;; Isearch
+;; Incremental search
+(use-package isearch
+  :ensure nil
+  :custom
+  (isearch-repeat-on-direction-change t)
+  (isearch-allow-scroll t)
+  (isearch-allow-motion t)
+  (isearch-lazy-count t)
+  (isearch-wrap-pause 'no)
+  ;; Make regular Isearch interpret the empty space as a regular expression that
+  ;; matches any character between the words you give it. Learned from
+  ;; Protesilaos. Also be aware of `isearch-toggle-lax-whitespace'
+  (isearch-lax-whitespace t)
+  (search-whitespace-regexp ".*?"))
+
+;;;; Imenu
+(use-package imenu
+  :ensure nil
+  :custom
+  (org-imenu-depth 7)                   ; Show more than just 2 levels...
+  (imenu-auto-rescan t)
+  (use-package-enable-imenu-support t))
+
+;;;; Imenu-list
+;; Side buffer with imenu items
+(use-package imenu-list
+  :after imenu
+  :general (kb/nav-keys
+             "I" '(imenu-list :wk "Imenu list"))
+  :hook (imenu-list-major-mode . visual-line-mode))
+
+;;;; Occur
+;; Narrow current buffer to lines which match a regexp
+(use-package occur
+  :ensure nil
+  :gfhook 'visual-line-mode
+  :general (kb/nav-keys
+             "o" '(occur :wk "Occur")))
+
+(provide 'buffer-nav-rcp)
 ;;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
@@ -176,29 +217,9 @@ command."
     (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
     (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft)))
 
-;;;; Imenu
-(use-package imenu
-  :ensure nil
-  :custom
-  (org-imenu-depth 7)                   ; Show more than just 2 levels...
-  (imenu-auto-rescan t)
-  (use-package-enable-imenu-support t))
+;;;; Goto-last-change
+(use-package goto-chg
+  :general ("H-(" 'goto-last-change
+            "H-)" 'goto-last-change-reverse))
 
-;;;; Imenu-list
-;; Side buffer with imenu items
-(use-package imenu-list
-  :after imenu
-  :general (kb/nav-keys
-             "I" '(imenu-list :wk "Imenu list"))
-  :hook (imenu-list-major-mode . visual-line-mode))
-
-;;;; Occur
-;; Narrow current buffer to lines which match a regexp
-(use-package occur
-  :ensure nil
-  :gfhook 'visual-line-mode
-  :general (kb/nav-keys
-             "o" '(occur :wk "Occur")))
-
-(provide 'buffer-nav-rcp)
 ;;; buffer-nav-rcp.el ends here

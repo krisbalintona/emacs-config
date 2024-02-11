@@ -152,4 +152,13 @@ then call `dash-docs-completing-read-at-point'."
    (general-chord "KK") 'kb/thesuarus-lookup))
 
 (provide 'checking-words-rcp)
+;;;; Other
+;;;;; Reverso
+;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
+(use-package reverso
+  :ensure (:host github :repo "SqrtMinusOne/reverso.el")
+  :config
+  (reverso-history-mode)
+  (diminish 'reverso-history-mode))
+
 ;;; checking-words-rcp.el ends here
