@@ -591,7 +591,9 @@ ARG and REDISPLAY are identical to the original function."
       ;; move point forward by one line. I've confirmed that this is an issue
       ;; not with my function but with `pixel-scroll'. This might also apply to
       ;; non-first line cases. I'll see...
-      (pixel-scroll-precision-interpolate distance-in-pixels nil 1)
+      (condition-case err ; OPTIMIZE 2024-02-11: I use this to catch errors rather than being spit out into buffer/wherever
+          (pixel-scroll-precision-interpolate distance-in-pixels nil 1)
+        (error (message "[kb/pixel-recenter] %s" (error-message-string err))))
       (when redisplay (redisplay t))))
 
   ;; FIXME 2024-01-22: Seems to be off a few lines in e.g. Info-mode?
@@ -601,10 +603,11 @@ ARG and REDISPLAY are identical to the original function."
      ((eq this-command 'scroll-up-line)
       (funcall (ad-get-orig-definition 'scroll-up) (or arg 1)))
      (t
-      (pixel-scroll-precision-interpolate
-       (- (* (line-pixel-height)
-             (or arg (- (window-text-height) next-screen-context-lines))))
-       nil 1))))
+      (unless (eobp) ; Jittery window if trying to go down when already at bottom
+        (pixel-scroll-precision-interpolate
+         (- (* (line-pixel-height)
+               (or arg (- (window-text-height) next-screen-context-lines))))
+         nil 1)))))
 
   (defun kb/pixel-scroll-down (&optional arg)
     "(Nearly) drop-in replacement for `scroll-down'."
