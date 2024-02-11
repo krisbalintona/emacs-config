@@ -26,8 +26,7 @@
              "f" 'denote-open-or-create
              "i" 'denote-link-insert-link
              "ta" 'denote-keywords-add
-             "tr" 'denote-keywords-remove
-             "D" 'kb/denote-report-duplicates)
+             "tr" 'denote-keywords-remove)
   :custom
   (denote-directory kb/notes-dir)
   (denote-modules '(xref ffap))
@@ -74,18 +73,6 @@
   :config
   (denote-rename-buffer-mode)
   (denote-modules-global-mode)
-
-  (defun kb/denote-report-duplicates ()
-    (interactive)
-    (let* ((ids (mapcar (lambda (f) (denote-retrieve-filename-identifier f))
-                        (denote-directory-files)))
-           (dups (delete-dups (seq-filter
-                               (lambda (id) (member id (cdr (member id ids))))
-                               ids))))
-      (if dups
-          (message "The following are duplicated denote IDs: %s"
-                   (string-join dups ", "))
-        (message "No duplicates found. Hooray!!!"))))
 
   (defun kb/denote-auto-rename ()
     "Auto rename denote file."
@@ -358,7 +345,21 @@ Delete the original subtree."
 ;;; Denote-explore
 ;; Useful Denote utilities
 (use-package denote-explore
-  :after denote)
+  :after denote
+  :init
+  (define-advice denote-explore-identify-duplicate-identifiers
+      (:override nil kb/denote-explore-identify-duplicate-identifiers)
+    "Only look at notes, not all files."
+    (interactive)
+    (if-let* ((notes (denote-directory-files nil nil t))
+              (ids (mapcar #'denote-retrieve-filename-identifier notes))
+              (dups (delete-dups
+                     (cl-remove-if-not
+                      (lambda (id)
+                        (member id (cdr (member id ids)))) ids))))
+        (message "Duplicate identifier(s): %s"
+                 (mapconcat (lambda (id) id) dups ", "))
+      (message "No duplicate identifiers found"))))
 
 ;;; Denote-menu
 (use-package denote-menu

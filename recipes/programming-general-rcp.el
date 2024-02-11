@@ -223,8 +223,6 @@ punctuation."
 
   ;; Customize consult commands
   (consult-customize
-   ;; For `consult-buffer'
-   consult-buffer :prompt "Can use b, m, f, p, e..." :preview-key "C-M-;"
    ;; For `consult-*-grep'
    consult-grep :preview-key "C-M-;"
    consult-git-grep :preview-key "C-M-;"
