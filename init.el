@@ -19,6 +19,12 @@
 ;;; Load packages
 ;; Load all elisp and org configuration files
 
+;; NOTE 2024-02-11: Although I don't use package.el generally,
+;; `package-initialize' is necessary for the installed packages to be loaded,
+;; and sometimes I use the build-in package installer for convenience, e.g.
+;; jsonrpc right now.
+(package-initialize)
+
 ;;;; Configuration prerequisites
 ;; These are packages which come before others because their config files rely
 ;; on them.
