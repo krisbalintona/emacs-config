@@ -22,6 +22,9 @@
 
 ;; Completion framework and cousin packages which are lightweight and faithful
 ;; to the base Emacs architecture.
+;;
+;; Additionally, you can see a benchmark of fuzzy finding completions in Emacs
+;; here: https://github.com/axelf4/emacs-completion-bench#readme
 
 ;;; Code:
 (require 'use-package-rcp)
@@ -193,6 +196,16 @@
      ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
      ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
 
+;;;; Hotfuzz
+(use-package hotfuzz
+  :demand
+  :after orderless              ; Let orderless set up `completion-styles' first
+  :commands fussy-hotfuzz-score
+  :config
+  ;; Replace flex style with hotfuzz style; it's much faster. See
+  ;; https://github.com/axelf4/emacs-completion-bench#readme
+  (setq completion-styles (cl-substitute 'hotfuzz 'flex completion-styles)))
+
 ;;;; Fussy
 ;; Instead of just filtering (e.g. like `orderless' alone), also score the
 ;; filtered candidates afterward!
@@ -254,11 +267,6 @@
   :after fussy
   :commands fussy-sublime-fuzzy-score
   :config (sublime-fuzzy-load-dyn))
-
-;;;;; Hotfuzz
-(use-package hotfuzz
-  :after fussy
-  :commands fussy-hotfuzz-score)
 
 (provide 'completion-vanilla-rcp)
 ;;; completion-vanilla-rcp.el ends here
