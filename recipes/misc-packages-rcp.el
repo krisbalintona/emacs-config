@@ -34,7 +34,7 @@
 ;;; Proced
 ;; Built in process monitor
 (use-package proced
-  :elpaca nil
+  :ensure nil
   :general ("C-c p" '(proced :wk "Proced"))
   :custom
   (proced-auto-update-flag t)           ; Update live
@@ -48,7 +48,7 @@
 ;;; Tmr
 ;; Timer package/library from Prot
 (use-package tmr
-  :elpaca (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
+  :ensure (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
   :general (kb/open-keys
              "t" 'tmr-prefix-map)
   :custom
@@ -222,7 +222,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Iseach
 ;; Incremental search
 (use-package isearch
-  :elpaca nil
+  :ensure nil
   :custom
   (isearch-repeat-on-direction-change t)
   (isearch-allow-scroll t)
@@ -237,7 +237,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Newcomment
 (use-package new-comment
-  :elpaca nil
+  :ensure nil
   :custom
   (comment-empty-lines t)
   (comment-fill-column nil)
@@ -246,7 +246,7 @@ progress. This is called by the timer `good-scroll--timer' every
 
 ;;; Alt-comment-dwim
 (use-package alt-comment-dwim
-  :elpaca (:type git
+  :ensure (:type git
                  :host gitlab
                  :protocol ssh
                  :repo "PreciousPudding/alt-comment-dwim"
@@ -267,7 +267,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Info-variable-pitch
 ;; Mixed pitch in Info pages
 (use-package info-variable-pitch
-  :elpaca (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
+  :ensure (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :ghook 'Info-selection-hook)
 
 ;;; Info-colors
@@ -379,7 +379,7 @@ progress. This is called by the timer `good-scroll--timer' every
 ;;; Pocket-reader
 ;; View my Pocket
 (use-package pocket-reader
-  :elpaca (pocket-reader :type git
+  :ensure (pocket-reader :type git
                          :host github
                          :repo "alphapapa/pocket-reader.el")
   :general
@@ -448,7 +448,7 @@ displayed."
 ;; Apply ANSI terminal color escape codes.
 ;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
 (use-package ansi-color
-  :elpaca nil
+  :ensure nil
   :hook (compilation-filter . endless/colorize-compilation)
   :config
   (defun endless/colorize-compilation ()
@@ -458,7 +458,7 @@ displayed."
 
 ;;; Compile
 (use-package compile
-  :elpaca nil
+  :ensure nil
   :general ("<f5>" 'recompile)
   :custom
   (compilation-scroll-output 'first-error) ; Scroll with compile buffer
@@ -474,7 +474,7 @@ displayed."
 ;;; Image-popup
 ;; Match height of image to line height (?)
 (use-package image-popup
-  :elpaca (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
+  :ensure (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
 ;;; Form-feed
@@ -546,7 +546,7 @@ displayed."
 
 ;;; Electric
 (use-package electric
-  :elpaca nil
+  :ensure nil
   :custom
   (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
   (electric-quote-comment nil)
@@ -562,7 +562,7 @@ displayed."
 ;; that respect abbreviations, etc.
 (use-package pcre2el)
 (use-package sentex
-  :elpaca (sentex :type git :host codeberg :repo "martianh/sentex"
+  :ensure (sentex :type git :host codeberg :repo "martianh/sentex"
                   ;; Need more than just elisp files
                   :files ("*"))
   :commands kb/forward-sentence-function
@@ -882,7 +882,7 @@ This is a difference in multitude of %s."
 ;;; Re-builder
 ;; Interactively build regexps
 (use-package re-builder
-  :elpaca nil
+  :ensure nil
   :custom
   (reb-re-syntax 'rx))
 
@@ -925,7 +925,7 @@ This is a difference in multitude of %s."
 ;;; Chatgpt-shell
 (use-package chatgpt-shell
   :disabled
-  :elpaca (chatgpt-shell :type git :host github :repo "xenodium/chatgpt-shell")
+  :ensure (chatgpt-shell :type git :host github :repo "xenodium/chatgpt-shell")
   :general (kb/open-keys
              "C" 'chatgpt-shell
              "D" 'dall-e-shell)
@@ -941,7 +941,7 @@ This is a difference in multitude of %s."
 
 ;;; Register
 (use-package register
-  :elpaca nil
+  :ensure nil
   :custom
   (register-preview-delay 0)
   (register-separator " ")
@@ -961,7 +961,7 @@ This is a difference in multitude of %s."
 
 ;;; Fontify-patch
 (use-package fontify-patch
-  :elpaca (:type git
+  :ensure (:type git
                  :host github
                  :repo "whame/fontify-patch")
   ;; To fontify mail containing patches with the email client
@@ -977,7 +977,7 @@ This is a difference in multitude of %s."
 ;;; Selection-highlight-mode
 (use-package selection-highlight-mode
   :disabled
-  :elpaca (:host github
+  :ensure (:host github
                  :repo "balloneij/selection-highlight-mode")
   :custom
   (selection-highlight-mode-min-length 3)
@@ -986,7 +986,7 @@ This is a difference in multitude of %s."
 
 ;;; Pixel-scroll
 (use-package pixel-scroll
-  :elpaca nil
+  :ensure nil
   :custom
   (pixel-scroll-precision-interpolate-page t)
   (pixel-scroll-precision-interpolation-factor 1)
@@ -1055,14 +1055,14 @@ ARG and REDISPLAY are identical to the original function."
 ;;; Reverso
 ;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
 (use-package reverso
-  :elpaca (:host github :repo "SqrtMinusOne/reverso.el")
+  :ensure (:host github :repo "SqrtMinusOne/reverso.el")
   :config
   (reverso-history-mode)
   (diminish 'reverso-history-mode))
 
 ;;; Hi-lock
 (use-package hi-lock
-  :elpaca nil
+  :ensure nil
   :custom
   (hi-lock-file-patterns-policy
    '(lambda (_pattern) t))
@@ -1071,13 +1071,13 @@ ARG and REDISPLAY are identical to the original function."
 
 ;;; Midnight
 (use-package midnight
-  :elpaca nil
+  :ensure nil
   :init
   (midnight-mode 1))
 
 ;;; Other built-in Emacs modes/packages
 (use-package emacs
-  :elpaca nil
+  :ensure nil
   :hook (messages-buffer-mode . visual-line-mode)
   :general
   ;; Remap these defaults; they are effectively the same while phasing out the

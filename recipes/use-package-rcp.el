@@ -9,7 +9,7 @@
 
 (use-package use-package
   :custom
-  ;; (use-package-always-ensure t)   ; Causes issues with external package managers
+  (use-package-always-ensure t)
   ;; (use-package-expand-minimally t)      ; Less verbose
   (use-package-always-defer t)          ; Always defer
 

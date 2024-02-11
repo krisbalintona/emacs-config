@@ -11,7 +11,7 @@
 
 ;;; Gud
 (use-package gud
-  :elpaca nil
+  :ensure nil
   :custom
   (gud-highlight-current-line t))
 
@@ -92,7 +92,7 @@
 ;; Dap-mode but without LSP-mode
 (use-package dape
   :demand ; OPTIMIZE 2024-02-02: Current version needs to me demanded to set dape-key-prefix
-  :elpaca (:type git :host github :repo "svaante/dape")
+  :ensure (:type git :host github :repo "svaante/dape")
   :custom
   (dape-key-prefix (kbd "C-c d"))
   (dape-buffer-window-arrangement 'right)

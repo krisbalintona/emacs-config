@@ -332,7 +332,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 
 ;;; Wombag
 (use-package wombag
-  :elpaca (:host github :repo "karthink/wombag")
+  :ensure (:host github :repo "karthink/wombag")
   :general (kb/open-keys "W" 'wombag)
   :custom
   (wombag-dir (no-littering-expand-var-file-name "wombag"))

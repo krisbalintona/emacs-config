@@ -325,7 +325,7 @@ With a prefix argument, show NLINES of context."
 ;;; VC
 ;;;; Itself
 (use-package vc
-  :elpaca nil
+  :ensure nil
   :general (:keymaps 'vc-dir-mode-map
                      "G" 'vc-revert)
   :custom
@@ -349,13 +349,13 @@ With a prefix argument, show NLINES of context."
 
 ;;;; Log-edit
 (use-package log-edit
-  :elpaca nil
+  :ensure nil
   :general (:keymaps 'log-edit-mode-map
                      [remap log-edit-comment-search-backward] 'consult-history))
 
 ;;;; Diff-mode
 (use-package diff-mode
-  :elpaca nil
+  :ensure nil
   :gfhook
   'outshine-mode
   '(lambda ()                  ; FIXME 2022-12-30: Not sure why this doesn't work...
@@ -372,7 +372,7 @@ With a prefix argument, show NLINES of context."
 
 ;;;; Ediff
 (use-package ediff
-  :elpaca nil
+  :ensure nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
   (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff

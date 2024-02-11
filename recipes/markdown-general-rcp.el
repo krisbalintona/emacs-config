@@ -17,7 +17,7 @@
 ;; more customization. However, `grip-mode' shows exactly what GitHub would show
 (use-package markdown-xwidget
   :ensure-system-package pandoc
-  :elpaca (:type git
+  :ensure (:type git
                  :host github
                  :repo "cfclrk/markdown-xwidget"
                  :files (:defaults "resources"))

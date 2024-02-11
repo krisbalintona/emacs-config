@@ -11,10 +11,10 @@
 
 ;;; Ement
 ;; Install `plz' HTTP library (not on MELPA yet).
-(use-package plz :elpaca (plz :type git :host github :repo "alphapapa/plz.el"))
+(use-package plz :ensure (plz :type git :host github :repo "alphapapa/plz.el"))
 ;; Matrix client
 (use-package ement
-  :elpaca (ement :type git :host github :repo "alphapapa/ement.el")
+  :ensure (ement :type git :host github :repo "alphapapa/ement.el")
   :preface
   )
 

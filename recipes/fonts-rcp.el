@@ -88,7 +88,7 @@
 ;;; Ligature
 ;; Ligatures! See for configuration examples: https://github.com/j/wiki
 (use-package ligature
-  :elpaca (ligature :type git :host github :repo "mickeynp/ligature.el")
+  :ensure (ligature :type git :host github :repo "mickeynp/ligature.el")
   :hook (window-setup . global-ligature-mode)
   :config
   ;; Enables simple HTML ligations for web-related major modes using the string

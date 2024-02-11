@@ -14,7 +14,7 @@
 ;; Built-in for sh-mode
 (use-package sh-script
   :disabled                  ; FIXME 2023-07-16: Can't find spellcheck package?
-  :elpaca nil
+  :ensure nil
   :after flycheck
   :ensure-system-package shellcheck
   :mode (("\\.bats\\'" . sh-mode)

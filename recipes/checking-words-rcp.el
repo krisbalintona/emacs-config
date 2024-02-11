@@ -13,7 +13,7 @@
 ;;;; Dictionary
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
-  :elpaca nil
+  :ensure nil
   ;; Don't forget to install the following packages from the AUR:
   ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
   :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service

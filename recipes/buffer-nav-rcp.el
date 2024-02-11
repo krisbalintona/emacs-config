@@ -161,7 +161,7 @@ command."
 
 ;;; Imenu
 (use-package imenu
-  :elpaca nil
+  :ensure nil
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
   (imenu-auto-rescan t)
@@ -178,7 +178,7 @@ command."
 ;;; Occur
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur
-  :elpaca nil
+  :ensure nil
   :gfhook 'visual-line-mode
   :general (kb/nav-keys
              "o" '(occur :wk "Occur")))

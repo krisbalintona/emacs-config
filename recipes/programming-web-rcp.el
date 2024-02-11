@@ -48,7 +48,7 @@
 
 ;;; Css-mode
 (use-package css-mode
-  :elpaca nil
+  :ensure nil
   :ensure-system-package (stylelint . "sudo npm install --global --save-dev stylelint stylelint-config-standard")
   :custom
   (css-indent-offset 2)

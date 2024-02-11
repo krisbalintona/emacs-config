@@ -12,7 +12,7 @@
 
 ;;; Org-agenda
 (use-package org-agenda
-  :elpaca nil
+  :ensure nil
   ;; Call after `org' since some of the options below are from `org', not
   ;; `org-export', so they will be overwritten if this use-package loads before
   ;; `org' does
@@ -373,7 +373,7 @@ Side effects occur if the parent of the current headline has a
 ;;; Org-clock
 (use-package org-clock
   :demand
-  :elpaca nil
+  :ensure nil
   :after org-agenda
   :custom
   (org-clock-persist t)
@@ -407,7 +407,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
 ;;; Org-habit
 (use-package org-habit
   :after org-agenda
-  :elpaca nil
+  :ensure nil
   :custom
   (org-habit-show-habits t)
   (org-habit-following-days 1)
@@ -426,7 +426,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
 ;;; Work-timer
 (use-package work-timer
   :demand
-  :elpaca (:host github
+  :ensure (:host github
                  :protocol ssh
                  :repo "krisbalintona/work-timer"
                  :depth nil

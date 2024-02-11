@@ -63,7 +63,7 @@ functions."
 (use-package eglot-booster
   ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
   ;; https://github.com/blahgeek/emacs-lsp-booster/releases
-  :elpaca (:type git :host github :repo "jdtsmith/eglot-booster")
+  :ensure (:type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :init
   (eglot-booster-mode))

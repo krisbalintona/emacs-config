@@ -11,7 +11,7 @@
 
 ;;; Message
 (use-package message
-  :elpaca nil
+  :ensure nil
   :hook ((message-setup . message-sort-headers)
          (message-mode . olivetti-mode)
          (message-send . kb/message-check-for-subject)
@@ -65,7 +65,7 @@
 ;;; Sendmail
 ;; Use `sendmail' program to send emails?
 (use-package sendmail
-  :elpaca nil
+  :ensure nil
   :custom
   ;; If I want to use `sendmail' over `msmtp'/`smtpmail'
   (send-mail-function 'sendmail-send-it)
@@ -82,7 +82,7 @@
 ;;; Smtpmail
 ;; Use `msmtp' program to send emails?
 (use-package smtpmail
-  :elpaca nil
+  :ensure nil
   :ensure-system-package msmtp
   :custom
   ;; I set this in my sendmail configuration too so that if smtpmail isn't use,
@@ -104,7 +104,7 @@
 ;;;; Itself
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
-  :elpaca (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
+  :ensure (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :hook ((org-msg-edit-mode . (lambda ()
                                 (setq-local org-download-method 'directory
                                             org-download-image-dir mu4e-attachment-dir)))
@@ -482,7 +482,7 @@ MML tags."
 ;;; Mu4e-send-delay
 (use-package mu4e-send-delay
   :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
-  :elpaca (:type git
+  :ensure (:type git
                  :host github
                  :protocol ssh
                  :repo "krisbalintona/mu4e-send-delay"

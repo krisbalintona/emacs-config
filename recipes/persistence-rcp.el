@@ -12,7 +12,7 @@
 ;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist
-  :elpaca nil
+  :ensure nil
   :demand
   :custom
   (history-length 10000)
@@ -36,7 +36,7 @@
 ;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
-  :elpaca nil
+  :ensure nil
   :hook (kill-emacs . recentf-save-list)
   :general (kb/file-keys
              "r" 'recentf-open-files)
@@ -49,7 +49,7 @@
 ;;; Saveplace
 ;; Save and restore the point's location in files
 (use-package saveplace
-  :elpaca nil
+  :ensure nil
   :custom
   (save-place-forget-unreadable-files t)
   :init
@@ -58,7 +58,7 @@
 ;;; Desktop
 ;; Save buffers across Emacs sessions
 (use-package desktop
-  :elpaca nil
+  :ensure nil
   :hook ((server-mode . desktop-save-mode)
          (window-setup . (lambda () (when desktop-save-mode (desktop-read)))))
   :custom
@@ -103,7 +103,7 @@
 ;;; Built-in auto save and backup
 ;; Make recovery files
 (use-package files
-  :elpaca nil
+  :ensure nil
   :custom
   ;; NOTE 2023-01-09: `auto-save-list-file-prefix' and `backup-directory-alist'
   ;; are set by `no-littering'

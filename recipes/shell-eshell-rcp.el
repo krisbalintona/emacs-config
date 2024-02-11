@@ -12,7 +12,7 @@
 ;;; Eshell
 ;;;; Itself
 (use-package eshell
-  :elpaca nil
+  :ensure nil
   :gfhook
   ;; UI enhancements
   'visual-line-mode

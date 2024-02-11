@@ -13,7 +13,7 @@
 ;; Prefer Emacs server over Emacs daemon
 (use-package server
   :demand
-  :elpaca nil
+  :ensure nil
   :hook (elpaca-after-init . (lambda () (unless (server-running-p)
                                      (server-mode))))
   :custom
@@ -23,7 +23,7 @@
 ;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
 (use-package winner
-  :elpaca nil
+  :ensure nil
   :general ("C-<left>" 'winner-undo
             "C-<right>" 'winner-redo)
   :custom
@@ -34,7 +34,7 @@
 
 ;;;; Windmove
 (use-package windmove
-  :elpaca nil
+  :ensure nil
   :general (:keymaps 'windmove-mode-map
                      "H-h" 'windmove-left
                      "H-j" 'windmove-down
@@ -59,7 +59,7 @@
 
 ;;;; Window
 (use-package window
-  :elpaca nil
+  :ensure nil
   :general ("M-o" 'other-window)
   :custom
   (window-resize-pixelwise t)
@@ -232,7 +232,7 @@ If buffer-or-name is nil return current buffer's mode."
 
 ;;;; Tab-bar
 (use-package tab-bar
-  :elpaca nil
+  :ensure nil
   :general
   (:keymaps 'tab-prefix-map
             "w" 'tab-bar-move-window-to-tab)
@@ -448,7 +448,7 @@ timestamp)."
 ;;; Buffers
 ;;;; Bookmark
 (use-package bookmark
-  :elpaca nil
+  :ensure nil
   :custom
   (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
@@ -458,7 +458,7 @@ timestamp)."
 
 ;;;; Ibuffer
 (use-package ibuffer
-  :elpaca nil
+  :ensure nil
   :general ([remap list-buffers] 'ibuffer)
   :custom
   (ibuffer-save-with-custom nil)
@@ -506,7 +506,7 @@ timestamp)."
 
 ;;;; Burly
 (use-package burly
-  :elpaca (:depth 1
+  :ensure (:depth 1
                   :fetcher github
                   ;; NOTE 2023-07-15: See
                   ;; https://github.com/alphapapa/burly.el/issues/28 for details on

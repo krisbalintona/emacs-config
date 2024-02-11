@@ -12,7 +12,7 @@
 
 ;;; Ielm
 (use-package ielm
-  :elpaca nil
+  :ensure nil
   :custom
   (ielm-noisy nil)
   (ielm-dynamic-return nil))
@@ -23,7 +23,7 @@
 (use-package lisp-keyword-indent
   :disabled                             ; Change of heart...?
   :demand
-  :elpaca (lisp-keyword-indent :type git
+  :ensure (lisp-keyword-indent :type git
                                :host github
                                :repo "twlz0ne/lisp-keyword-indent.el")
   :functions kb/lisp-keyword-indent-mode
@@ -74,7 +74,7 @@
 
 ;;; Help
 (use-package help
-  :elpaca nil
+  :ensure nil
   :general ("C-h M-k" 'describe-keymap)
   :custom
   (help-window-select t)
@@ -116,7 +116,7 @@
 
 ;;; Edebug
 (use-package edebug
-  :elpaca nil
+  :ensure nil
   :custom
   (edebug-initial-mode 'go)
   :init

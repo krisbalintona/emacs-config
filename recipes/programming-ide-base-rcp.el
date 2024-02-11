@@ -12,7 +12,7 @@
 ;;; Treesit
 ;;;; Itself
 (use-package treesit
-  :elpaca nil
+  :ensure nil
   :custom
   (treesit-font-lock-level 3))
 
@@ -59,7 +59,7 @@ Non-nil only if installation completed without any errors."
 (use-package turbo-log
   :disabled                             ; Used old tree-sitter package
   :requires tree-sitter
-  :elpaca (turbo-log :type git :host github :repo "artawower/turbo-log.el")
+  :ensure (turbo-log :type git :host github :repo "artawower/turbo-log.el")
   :general (:prefix "H-;"
                     ";" 'turbo-log-print
                     "i" 'turbo-log-print-immediately
@@ -145,7 +145,7 @@ Non-nil only if installation completed without any errors."
 ;;;; Dash-docs-completing-read
 ;; My own interface for accessing docsets via `completing-read'.
 (use-package dash-docs-completing-read
-  :elpaca nil
+  :ensure nil
   :after dash-docs
   :general (kb/lsp-keys
              "D" '(:ignore t :wk "Dashdocs")
@@ -155,7 +155,7 @@ Non-nil only if installation completed without any errors."
 
 ;;; Hideshow
 (use-package hideshow
-  :elpaca nil
+  :ensure nil
   :hook (prog-mode . hs-minor-mode)
   :custom
   (hs-set-up-overlay 'kb/hideshow-display)

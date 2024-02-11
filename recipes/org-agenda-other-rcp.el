@@ -9,7 +9,7 @@
 
 ;;; Org-expiry
 (use-package org-expiry
-  :elpaca nil
+  :ensure nil
   :hook (org-capture-before-finalize . org-expiry-insert-created)
   :custom
   (org-expiry-inactive-timestamps t))
@@ -17,7 +17,7 @@
 ;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.
 (use-package org-depend
-  :elpaca nil
+  :ensure nil
   :after org-contrib
   :demand
   :after org-agenda
@@ -115,7 +115,7 @@ See `kb/consult-org-depend’."
 (use-package org-heatmap
   :disabled  ; REVIEW 2023-07-10: Doesn't work for me right now. Return to later
   :after org
-  :elpaca (:type git :host github :repo "Elilif/org-heatmap")
+  :ensure (:type git :host github :repo "Elilif/org-heatmap")
   :custom
   (org-heatmap-db-location (no-littering-expand-var-file-name "org-heatmap/"))
   (org-heatmap-enable-habit-statics t)
@@ -124,7 +124,7 @@ See `kb/consult-org-depend’."
 
 ;;; Org-timeblock
 (use-package org-timeblock
-  :elpaca (:type git :host github :repo "ichernyshovvv/org-timeblock"))
+  :ensure (:type git :host github :repo "ichernyshovvv/org-timeblock"))
 
 ;;; Custom org-tags-view org-link type
 (with-eval-after-load 'org

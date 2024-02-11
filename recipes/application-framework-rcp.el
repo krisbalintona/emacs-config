@@ -16,7 +16,7 @@
   ;; HACK 2023-07-16: Easier to install this package as a submodule since
   ;; managing external scripts with elpaca is currently a pain...
   :load-path "./site-lisp/emacs-application-framework/"
-  :elpaca nil
+  :ensure nil
   :ensure-system-package (("/usr/share/licenses/python-opencv/" . python-opencv)
                           (gdb))     ; For debugging purposes, if I ever need to
   :custom

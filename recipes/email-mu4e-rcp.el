@@ -17,7 +17,7 @@
 ;;; Mu4e
 ;;;; Itself
 (use-package mu4e
-  :elpaca nil
+  :ensure nil
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :hook ((elpaca-after-init . (lambda () (when (daemonp) (mu4e t))))
          (server-mode . (lambda () (mu4e t)))
@@ -697,7 +697,7 @@ will also be the width of all other printable characters."
   :after mu4e
   :ensure-system-package wkhtmltopdf    ; HTML to PDF CLI command
   ;; This branch for support of new version of `mu'
-  :elpaca (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
+  :ensure (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
   :general
   (:keymaps 'mu4e-headers-mode-map
             "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method

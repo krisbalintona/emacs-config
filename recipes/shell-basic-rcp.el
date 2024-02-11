@@ -12,7 +12,7 @@
 
 ;;; Comint
 (use-package comint
-  :elpaca nil
+  :ensure nil
   :custom
   (comint-prompt-read-only t)
   (comint-buffer-maximum-size 9999)
@@ -25,7 +25,7 @@
 ;;; Shell
 ;; Built-in shell
 (use-package shell
-  :elpaca nil
+  :ensure nil
   :custom
   (async-shell-command-buffer 'confirm-kill-process) ; Don't ask, just do
   (ansi-color-for-comint-mode t)

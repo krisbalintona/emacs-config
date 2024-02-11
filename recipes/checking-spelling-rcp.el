@@ -13,7 +13,7 @@
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
 ;; spelling mistakes as they are made.
 (use-package abbrev
-  :elpaca nil
+  :ensure nil
   :custom
   (abbrev-file-name (expand-file-name "abbrev-mode/abbrev.el" no-littering-var-directory))
   (save-abbrevs 'silently)
@@ -22,7 +22,7 @@
 
 ;;; Ispell
 (use-package ispell
-  :elpaca nil
+  :ensure nil
   :ensure-system-package (aspell
                           ("/usr/share/licenses/aspell-en/" . aspell-en))
   :custom
@@ -35,7 +35,7 @@
 ;; Feature-rich spell-checker
 (use-package flyspell
   :disabled                             ; Switched to `jinx'
-  :elpaca nil
+  :ensure nil
   :diminish
   :hook ((text-mode . (lambda ()             ; Prevent conflicts
                         (unless (featurep 'wucuo)
@@ -139,7 +139,7 @@
                           (hspell)      ; Hebrew
                           (nuspell) ; Newest spell checker to be used by Firefox, Thunderbird, etc.
                           (voikkospell . libvoikko)) ; Finish
-  :elpaca (:depth nil
+  :ensure (:depth nil
                   :repo "minad/jinx"
                   :files (:defaults "jinx-mod.c" "emacs-module.h"))
   :diminish

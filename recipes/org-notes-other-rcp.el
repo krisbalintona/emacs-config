@@ -21,7 +21,7 @@
   ;; FIXME 2024-01-13: This is a pull request fork that implements continuous
   ;; scrolling (`pdf-view-roll-minor-mode'). Revert to upstream once the pull
   ;; request is merged. See https://github.com/vedang/pdf-tools/pull/224
-  ;; :elpaca (:type git
+  ;; :ensure (:type git
   ;;          :host github
   ;;          :repo "aikrahguzar/pdf-tools"
   ;;          :branch "upstream-pdf-roll"
@@ -409,7 +409,7 @@ Uses the current annotation at point's ID."
 
 ;;;; Org-noter
 (use-package org-noter
-  :elpaca (:protocol ssh
+  :ensure (:protocol ssh
                      :fetcher github
                      :repo "org-noter/org-noter"
                      :files ("*.el" "modules" (:exclude "*-test-utils.el" "*-devel.el"))
@@ -570,7 +570,7 @@ See `org-noter' for details and ARG usage."
 ;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
 (use-package org-roam-ui
-  :elpaca (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
   :custom
   (org-roam-ui-browser-function 'browse-url-default-browser) ; Open in my actual browser, to avoid opening in EAF
@@ -601,7 +601,7 @@ See `org-noter' for details and ARG usage."
 ;;; Delve
 (use-package delve
   :disabled t                           ; Don't use
-  :elpaca (delve :type git :host github :repo "publicimageltd/delve")
+  :ensure (delve :type git :host github :repo "publicimageltd/delve")
   :gfhook #'delve-compact-view-mode
   ;; FIXME 2022-05-27: `delve--zettel-preview' seems necessary to prevent cmacro
   ;; compiler error for `kb/delve--key--toggle-preview'.

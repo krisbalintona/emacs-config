@@ -13,7 +13,7 @@
 ;;; Oc (org-cite)
 ;; Built-in citations in org-mode
 (use-package oc
-  :elpaca nil
+  :ensure nil
   :general (:keymaps 'org-mode-map [remap citar-insert-citation] 'org-cite-insert)
   :custom
   (org-cite-global-bibliography kb/bib-files)
@@ -151,7 +151,7 @@
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
-  :elpaca nil
+  :ensure nil
   :after citar
   :hook (org-mode . citar-capf-setup)
   :custom

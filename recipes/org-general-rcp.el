@@ -77,7 +77,7 @@
 
 ;;;; Org-num
 (use-package org-num
-  :elpaca nil
+  :ensure nil
   :diminish
   :general (kb/toggle-keys
              :keymaps 'org-mode-map
@@ -88,7 +88,7 @@
 ;;;; Org-indent
 (use-package org-indent
   :disabled
-  :elpaca nil
+  :ensure nil
   :diminish
   :custom
   (org-indent-indentation-per-level 2)
@@ -166,7 +166,7 @@ have `org-warning' face."
 
 ;;;; Org-footnote
 (use-package org-footnote
-  :elpaca nil
+  :ensure nil
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)          ; Automatically renumber
@@ -174,7 +174,7 @@ have `org-warning' face."
 
 ;;;; Org-attach
 (use-package org-attach
-  :elpaca nil
+  :ensure nil
   :custom
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
   (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
@@ -191,7 +191,7 @@ have `org-warning' face."
 
 ;;;; Org-refile
 (use-package org-refile
-  :elpaca nil
+  :ensure nil
   :custom
   (org-refile-targets
    `((,(directory-files-recursively (expand-file-name "garden" kb/notes-dir) (rx anychar)) . (:maxlevel . 2))
@@ -212,7 +212,7 @@ have `org-warning' face."
 
 ;;;; Org-faces
 (use-package org-faces
-  :elpaca nil
+  :ensure nil
   :custom
   (org-fontify-todo-headline nil)
   (org-fontify-done-headline nil)
@@ -221,7 +221,7 @@ have `org-warning' face."
 
 ;;;; Org-src
 (use-package org-src
-  :elpaca nil
+  :ensure nil
   :custom
   (org-src-fontify-natively t)
   (org-src-block-faces nil))
@@ -249,7 +249,7 @@ have `org-warning' face."
 ;;; Org-babel
 ;;;; Itself
 (use-package ob
-  :elpaca nil
+  :ensure nil
   :hook (elpaca-after-init . (lambda ()
                                "Activate languages"
                                (org-babel-do-load-languages
@@ -371,7 +371,7 @@ have `org-warning' face."
 ;;;; Org-bars
 (use-package org-bars
   :disabled                    ; Not much value, and sometimes even distracting
-  :elpaca (org-bars :type git :host github :repo "tonyaldon/org-bars")
+  :ensure (org-bars :type git :host github :repo "tonyaldon/org-bars")
   :ghook 'org-mode-hook
   :init
   ;; Set these in init for some reason
@@ -443,7 +443,7 @@ have `org-warning' face."
   :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
   :after org
   :hook (org-mode . org-modern-indent-mode)
-  :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
+  :ensure (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
 
 ;;;; Org-extra-emphasis
 ;; Easier addition and modification of emphasis markers in org. Also has many
@@ -452,7 +452,7 @@ have `org-warning' face."
   ;; FIXME 2023-07-12: Too much of a pain with elpaca, poorly maintained; if I
   ;; want to enable again, remove the `ox-odt' dependency manually
   :disabled
-  :elpaca (:type git :host github :repo "QiangF/org-extra-emphasis")
+  :ensure (:type git :host github :repo "QiangF/org-extra-emphasis")
   :demand
   :after ox-odt
   :custom
@@ -491,7 +491,7 @@ have `org-warning' face."
 ;;;; Org-margin
 (use-package org-margin
   :disabled
-  :elpaca (:type git :host github :repo "rougier/org-margin")
+  :ensure (:type git :host github :repo "rougier/org-margin")
   :hook (org-mode . org-margin-mode)
   :custom
   (org-startup-indented nil)            ; Not compatible

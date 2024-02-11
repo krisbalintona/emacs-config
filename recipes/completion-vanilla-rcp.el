@@ -14,7 +14,7 @@
 ;;;; Itself
 (use-package vertico
   :demand                               ; Otherwise won't get loaded immediately
-  :elpaca (vertico :files (:defaults "extensions/*"))
+  :ensure (vertico :files (:defaults "extensions/*"))
   :general
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
@@ -73,7 +73,7 @@
 
 ;;;; Vertico-directory
 (use-package vertico-directory
-  :elpaca nil
+  :ensure nil
   ;; More convenient directory navigation commands
   :general (:keymaps 'vertico-map
                      "RET" 'vertico-directory-enter
@@ -86,7 +86,7 @@
 (use-package vertico-multiform
   :demand
   :after vertico
-  :elpaca nil
+  :ensure nil
   :custom
   (vertico-multiform-categories
    '((consult-grep buffer)
@@ -100,7 +100,7 @@
 
 ;;;; Vertico-buffer
 (use-package vertico-buffer
-  :elpaca nil
+  :ensure nil
   :after vertico
   :custom
   (vertico-buffer-hide-prompt nil)
@@ -111,7 +111,7 @@
 (use-package vertico-truncate
   :demand
   :after vertico
-  :elpaca (:type git
+  :ensure (:type git
                  :host github
                  :repo "jdtsmith/vertico-truncate")
   :config
@@ -174,7 +174,7 @@
 ;;;; Itself
 (use-package fussy
   :disabled               ; Less performant than `orderless' with little benefit
-  :elpaca (fussy :type git :host github :repo "jojojames/fussy")
+  :ensure (fussy :type git :host github :repo "jojojames/fussy")
   :commands fussy-all-completions fussy-try-completions
   :custom
   (completion-styles '(fussy orderless flex))
@@ -199,7 +199,7 @@
 
 ;;;; Flx-rs
 (use-package flx-rs
-  :elpaca (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
+  :ensure (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
   :after flx-rs
   :commands fussy-score
   :config (flx-rs-load-dyn))
@@ -211,21 +211,21 @@
 
 ;;;; Fuz-bin
 (use-package fuz-bin
-  :elpaca (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
+  :ensure (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
   :after fussy
   :commands fussy-fuz-score
   :config (fuz-bin-load-dyn))
 
 ;;;; Fuz-native
 (use-package fzf-native
-  :elpaca (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
+  :ensure (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
   :after fussy
   :commands fussy-fzf-native-score
   :config (fzf-native-load-dyn))
 
 ;;;; Subline-fuzzy
 (use-package sublime-fuzzy
-  :elpaca (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
+  :ensure (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
   :after fussy
   :commands fussy-sublime-fuzzy-score
   :config (sublime-fuzzy-load-dyn))

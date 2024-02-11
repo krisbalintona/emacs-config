@@ -13,7 +13,7 @@
 ;;;; This
 ;; Emacs' file manager
 (use-package dired
-  :elpaca nil
+  :ensure nil
   :gfhook 'dired-hide-details-mode 'dired-omit-mode
   :general
   (:keymaps 'dired-mode-map
@@ -66,7 +66,7 @@ command."
 
 ;;;; Image-dired
 (use-package image-dired
-  :elpaca nil
+  :ensure nil
   :hook (dired-mode . image-dired-minor-mode)
   :custom
   (image-dired-thumb-size 150)          ; Slightly larger thumbnails
@@ -110,7 +110,7 @@ command."
 ;;;; Dired-hist
 ;; History for dired buffers
 (use-package dired-hist
-  :elpaca (:host github :repo "karthink/dired-hist")
+  :ensure (:host github :repo "karthink/dired-hist")
   :after dired
   :general
   (:keymaps 'dired-mode-map

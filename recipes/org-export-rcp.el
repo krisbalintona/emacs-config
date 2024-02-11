@@ -11,7 +11,7 @@
 
 ;;; Ox (org-export)
 (use-package ox
-  :elpaca nil
+  :ensure nil
   ;; Call after `org' since some of the options below are from `org', not
   ;; `org-export', so they will be overwritten if this use-package loads before
   ;; `org' does
@@ -47,14 +47,14 @@
 
 ;;; Ox-odt
 (use-package ox-odt
-  :elpaca nil
+  :ensure nil
   :custom
   (org-odt-preferred-output-format "docx")) ; Convert to docx at the end of conversion
 
 ;;; Ox-latex
 ;;;; Itself
 (use-package ox-latex
-  :elpaca nil
+  :ensure nil
   :custom
   (org-latex-compiler "lualatex")
   ;; Beautiful source block exports to latex. Read help buffer for much more

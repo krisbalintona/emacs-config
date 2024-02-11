@@ -12,7 +12,7 @@
 ;;; Aesthetics
 ;;;; Prog-mode
 (use-package prog-mode
-  :elpaca nil
+  :ensure nil
   :hook ((prog-mode . goto-address-prog-mode)
          (window-setup . global-prettify-symbols-mode)
          (org-mode . (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
@@ -64,7 +64,7 @@ punctuation."
 
 ;;;; Hl-line
 (use-package hl-line
-  :elpaca nil
+  :ensure nil
   :ghook 'prog-mode-hook 'conf-mode-hook)
 
 ;;;; Hl-todo
@@ -97,7 +97,7 @@ punctuation."
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package indent-bars
   :disabled t                           ; FIXME 2023-08-18: Causes errors I think...
-  :elpaca (:type git :host github :repo "jdtsmith/indent-bars")
+  :ensure (:type git :host github :repo "jdtsmith/indent-bars")
   ;; OPTIMIZE 2023-08-15: Have to add to `after-init-hook' because of issues
   ;; with daemon
   :hook ((kb/themes . indent-bars-reset)
@@ -133,14 +133,14 @@ punctuation."
 ;;;; Paren
 ;; Highlight matching delimiters
 (use-package paren
-  :elpaca nil
+  :ensure nil
   :custom
   (show-paren-context-when-offscreen 'overlay)
   :init (show-paren-mode))
 
 ;;;; Display-fill-column-indicator
 (use-package display-fill-column-indicator
-  :elpaca nil
+  :ensure nil
   :custom
   (display-fill-column-indicator-character ?│)
   :custom-face
@@ -279,7 +279,7 @@ punctuation."
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
-  :elpaca nil
+  :ensure nil
   :custom
   (auto-revert-interval 5)
   (auto-revert-avoid-polling t)
@@ -291,7 +291,7 @@ punctuation."
 ;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace
-  :elpaca nil
+  :ensure nil
   :hook (before-save . whitespace-cleanup)
   :custom
   (whitespace-style '(face empty indentation::space tab)))
@@ -308,7 +308,7 @@ punctuation."
 ;;;; Conf-mode
 ;; For Unix config files
 (use-package conf-mode
-  :elpaca nil
+  :ensure nil
   :mode ("\\.rs\\'" . conf-mode)
   :gfhook 'outshine-mode)
 

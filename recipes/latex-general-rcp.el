@@ -19,7 +19,7 @@
   ;; NOTE 2023-07-12: I had trouble with the recipe with elpaca, but I found the
   ;; proper one here (and in Doom):
   ;; https://github.com/radian-software/radian/blob/f403244e244ccca695ff6c73c62b1265e521afa7/emacs/radian.el#L3386-L3506
-  :elpaca (auctex :type git
+  :ensure (auctex :type git
                   :host github
                   :repo "emacs-straight/auctex"
                   :files ("*.el" "*.info" "dir"
@@ -29,7 +29,7 @@
 
 ;;;; Tex
 (use-package tex
-  :elpaca nil
+  :ensure nil
   :after tex-site
   :hook ((TeX-mode . (lambda ()
                        ;; Tell Emacs how to parse TeX files
@@ -70,7 +70,7 @@
 
 ;;;; Latex
 (use-package latex
-  :elpaca nil
+  :ensure nil
   :after tex-site
   :mode ("\\.[tT]e[xX]\\'" . LaTeX-mode)
   :general (:keymaps 'LaTeX-mode-map
@@ -232,7 +232,7 @@
 
 ;;;; Tex-fold
 (use-package tex-fold
-  :elpaca nil
+  :ensure nil
   :after tex-site
   :hook ((TeX-mode . TeX-fold-mode)
          (mixed-pitch-mode . (lambda ()
@@ -304,7 +304,7 @@ blacklist, this is mostly for \\section etc."
 ;; "Seamless" embedding of generated images (i.e. preview) into LaTeX source
 ;; code. Taken from Doom
 (use-package preview
-  :elpaca nil
+  :ensure nil
   :after tex-site
   :hook (LaTeX-mode . LaTeX-preview-setup)
   :config
@@ -320,7 +320,7 @@ blacklist, this is mostly for \\section etc."
 ;; **Don't forget to install the dependencies found on the README.** (And don't
 ;; forget that `pipx' is an option)
 (use-package popweb
-  :elpaca (:type git
+  :ensure (:type git
                  :host github
                  :repo "manateelazycat/popweb"
                  :files (:defaults "*.py" "*.js" "extension/*/*"))

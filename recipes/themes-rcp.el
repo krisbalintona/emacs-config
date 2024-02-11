@@ -186,7 +186,7 @@ change to if called with ARG."
 ;;;; Kb-mood-line
 (use-package kb-mood-line
   :disabled
-  :elpaca nil
+  :ensure nil
   ;; :hook ((window-setup server-after-make-frame) . kb/mood-line-setup)
   :init
   (require 'doom-modeline)
@@ -288,7 +288,7 @@ This version removes delimiters.")
 ;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  :elpaca nil
+  :ensure nil
   :custom
   (display-time-24hr-format t)
   (display-time-format "(%a %d, %R)")
@@ -309,7 +309,7 @@ This version removes delimiters.")
 ;;;; Battery
 ;; Display batter percentage
 (use-package battery
-  :elpaca nil
+  :ensure nil
   :custom
   (battery-load-critical 15)
   (battery-load-low 25)
@@ -323,7 +323,7 @@ This version removes delimiters.")
 ;;;; Display-line-numbers-mode
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
-  :elpaca nil
+  :ensure nil
   :general (kb/toggle-keys
              "l" '(display-line-numbers-mode :wk "Line numbers"))
   :custom
