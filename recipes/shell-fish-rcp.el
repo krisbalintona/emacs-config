@@ -23,6 +23,16 @@
 ;; Configuration and packages related to using the fish shell.
 
 ;;; Code:
+;;;; Fish-completion
+;; Use fish's completions (via `pcomplete') in eshell and shell buffers
+(use-package fish-completion
+  :autoload 'global-fish-completion-mode
+  :custom
+  (fish-completion-fallback-on-bash-p t)
+  :init
+  (when (executable-find "fish")
+    (global-fish-completion-mode)))
+
 ;;;; Fish-mode
 (use-package fish-mode)
 
