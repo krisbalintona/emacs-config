@@ -497,11 +497,12 @@ timestamp)."
            " " filename-and-process)
      (mark " " (name 16 -1) " " filename)))
   (ibuffer-filter-group-name-face '(:inherit (success bold)))
-  (ibuffer-saved-filter-groups
+  (ibuffer-saved-filter-groups      ; NOTE 2024-02-11: Order of entries matters!
    `(("Basic"
       ("Help" ,(-flatten `(or ,(mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes))))
       ("Notes" (directory . ,(expand-file-name kb/notes-dir)))
-      ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
+      ("Emacs" (directory . ,(expand-file-name user-emacs-directory)))
+      ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir)) load-path)))))))
   :config
   ;; The following columns are taken from Doom Emacs.
   ;; Display buffer icons on GUI
