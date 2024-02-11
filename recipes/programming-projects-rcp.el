@@ -362,7 +362,11 @@ With a prefix argument, show NLINES of context."
      ((1 'log-view-message)
       (2 'change-log-list nil lax)
       (3 'change-log-name)
-      (4 'change-log-date)))))
+      (4 'change-log-date))))
+  :config
+  ;; Position in `global-mode-string'
+  (or (member '(:eval vc-mode) global-mode-string)
+      (push '(:eval vc-mode) global-mode-string)))
 
 ;;;;; Log-edit
 (use-package log-edit

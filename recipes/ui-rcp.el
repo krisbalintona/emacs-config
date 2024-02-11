@@ -329,14 +329,12 @@ This version removes delimiters.")
         mode-line-position-line-format '(" %l")
         mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
 
-  (set-face-attribute 'vc-edited-state nil :foreground (face-attribute 'shadow :foreground))
-
-  (setq-default mode-line-format
+  (setq-default mode-line-buffer-identification (propertized-buffer-identification "%20b")
+                mode-line-format
                 '("%e" mode-line-front-space
                   mode-line-client
                   mode-line-modified
-                  mode-line-remote
-                  vc-mode " "
+                  mode-line-remote " "
                   mode-line-buffer-identification
                   mode-line-position
                   (:eval (when (and (bound-and-true-p mlscroll-mode)
