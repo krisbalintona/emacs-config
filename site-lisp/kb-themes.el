@@ -70,7 +70,7 @@
   ;; Overrides
   (setq modus-themes-common-palette-overrides
         `(;; Completion
-          (fg-completion-match-0 fg-main) ; See (modus-themes) Make headings more or less colorful
+          (fg-completion-match-0 fg-main) ; See (info "(modus-themes) Make headings more or less colorful")
           (fg-completion-match-1 fg-main)
           (fg-completion-match-2 fg-main)
           (fg-completion-match-3 fg-main)
@@ -79,7 +79,7 @@
           (bg-completion-match-2 bg-cyan-intense)
           (bg-completion-match-3 bg-red-intense)
 
-          ;; No border in mode line. See (modus-themes) Make the mode line borderless
+          ;; No border in mode line. See (info "(modus-themes) Make the mode line borderless")
           (border-mode-line-active bg-mode-line-active)
           (border-mode-line-inactive bg-mode-line-inactive)
 
