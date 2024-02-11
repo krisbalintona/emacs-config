@@ -198,12 +198,18 @@ have `org-warning' face."
   (org-attach-id-dir (expand-file-name "resources" org-directory))
   (org-attach-method 'cp)            ; Attach copies of files
   (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
-  ;; Use timestamps as UUIDs and in attachment directory hierarchy
-  (org-id-method 'ts)
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   (org-attach-id-to-path-function-list
    '(org-attach-id-ts-folder-format
-     org-attach-id-uuid-folder-format)))
+     org-attach-id-uuid-folder-format
+     org-attach-id-fallback-folder-format)))
+
+;;;;; Org-id
+(use-package org-id
+  :ensure nil
+  :custom
+  (org-clone-delete-id t)
+  (org-id-method 'ts)
+  (org-id-link-to-org-use-id 'create-if-interactive))
 
 ;;;;; Org-refile
 (use-package org-refile
