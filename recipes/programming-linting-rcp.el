@@ -79,9 +79,13 @@
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
   (flymake-mode-line-counter-format     ; Remove surrounding brackets
-   '(flymake-mode-line-error-counter
+   ;; NOTE 2024-02-12: Need to have first and last elements be strings!
+   ;; Otherwise a counter might be hidden
+   '(""
+     flymake-mode-line-error-counter
      flymake-mode-line-warning-counter
-     flymake-mode-line-note-counter))
+     flymake-mode-line-note-counter
+     ""))
   (flymake-suppress-zero-counters t))
 
 ;;;; Flymake-collection
