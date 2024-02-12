@@ -53,6 +53,9 @@
   (shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
   (shell-kill-buffer-on-exit t))                     ; Emacs 29.1
 
+;;;; Bash-completion
+(use-package bash-completion)
+
 ;;;; Topsy
 ;; Stick a shell prompt, defun line, etc to the header line
 (use-package topsy
