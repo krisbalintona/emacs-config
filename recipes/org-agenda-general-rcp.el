@@ -411,6 +411,7 @@ Side effects occur if the parent of the current headline has a
   (org-clock-heading-function 'kb/org-clock-get-heading-string)
   :config
   (org-clock-persistence-insinuate)
+
   ;; Mode line string
   (defun kb/org-clock-get-heading-string ()
     "Get truncated org heading string.
@@ -418,7 +419,12 @@ Side effects occur if the parent of the current headline has a
 Same as default but truncates with `truncate-string-ellipsis'."
     (let ((heading (org-link-display-format
                     (org-no-properties (org-get-heading t t t t)))))
-      (truncate-string-to-width heading 40 nil nil (truncate-string-ellipsis)))))
+      (truncate-string-to-width heading 40 nil nil (truncate-string-ellipsis))))
+
+  ;; Custom `org-clock-get-clock-string'
+  (define-advice org-clock-get-clock-string (:around (orig-fun &rest args) kb/org-clock-get-clock-string)
+    "Have space prepended and remove trailing space."
+    (concat " " (string-trim (apply orig-fun args)))))
 
 ;;;; Org-habit
 (use-package org-habit
