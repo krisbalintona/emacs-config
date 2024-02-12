@@ -523,7 +523,7 @@ This is a difference in multitude of %s."
   (undelete-frame-mode 1)
   (global-so-long-mode 1)
   (repeat-mode 1)
-  (find-function-setup-keys 1) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
+  (find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
   (minibuffer-electric-default-mode 1)
   (when (bound-and-true-p evil-local-mode)
     (general-unbind 'normal help-mode-map "SPC")
