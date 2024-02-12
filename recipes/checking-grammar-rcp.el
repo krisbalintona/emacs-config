@@ -89,16 +89,15 @@
   :after lsp-mode
   :hook (lsp-grammarly-ls-after-open . (lambda () (lsp-ui-mode -1))))
 
-;;;; Eglot-grammarly
+;;;; Grammarly with Eglot
 ;; The formal `eglot-grammarly' package is useless; the following code is
 ;; basically the package
 (with-eval-after-load 'eglot
   (unless (system-packages-package-installed-p "grammarly-languageserver")
     (system-packages-ensure "sudo npm install -g @emacs-grammarly/grammarly-languageserver"))
   (add-to-list 'eglot-server-programs
-               `((text-mode latex-mode org-mode markdown-mode)
-                 "grammarly-languageserver" "--stdio"
-                 :initializationOptions (:clientId "client_BaDkMgx4X19X9UxxYRCXZo"))))
+               '(org-mode "grammarly-languageserver" "--stdio"
+                          :initializationOptions (:clientId "client_BaDkMgx4X19X9UxxYRCXZo"))))
 
 (provide 'checking-grammar-rcp)
 ;;; checking-grammar-rcp.el ends here
