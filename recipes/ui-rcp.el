@@ -413,7 +413,7 @@ This version removes delimiters.")
     "Set colors for `mlscroll'."
     (when (bound-and-true-p mlscroll-mode)
       (mlscroll-mode -1)
-      (customize-set-variable 'mlscroll-in-color (modus-themes-with-colors fg-mode-line-active))
+      (customize-set-variable 'mlscroll-in-color (modus-themes-with-colors bg-mode-line-inactive))
       (customize-set-variable 'mlscroll-out-color (modus-themes-with-colors bg-mode-line-active))
       (mlscroll-mode 1)))
   (kb/mlscroll-set-colors))
