@@ -91,6 +91,7 @@
             "o" 'kb/project-multi-occur)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
+  (project-find-functions '(kb/project-special project-try-vc))
   (project-file-history-behavior 'relativize)
   ;; NOTE 2024-01-31: Replace via project-switch-commands to project-prefix-or-any-command
   ;; (project-switch-commands
@@ -107,6 +108,19 @@
   ;;    (project-shell "Shell")))
   (project-vc-merge-submodules nil) ; Consider submodules as their own projects?
   :init
+  (defun kb/project-special (dir)
+    "Return project if DIR is noticed as special.
+As directory is special if I've decided it is!"
+    (require 'denote)
+    (let ((projectp))
+      (dolist (special (list (expand-file-name "recipes" user-emacs-directory)
+                             (expand-file-name "site-lisp" user-emacs-directory)
+                             (expand-file-name "papers" denote-directory)
+                             (expand-file-name "buoy" denote-directory)))
+        (when (file-in-directory-p dir special)
+          (setq projectp t)))
+      (when projectp (list 'vc 'Git dir))))
+
   ;; Inspired by `projectile-multi-occur'
   (defun kb/project-multi-occur (&optional nlines)
     "Do a `multi-occur' in the project's buffers.
