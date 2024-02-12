@@ -57,8 +57,11 @@ functions."
             (general-chord "``") 'eglot-code-actions)
   :custom
   ;; NOTE 2023-07-11: Set to 0 if I want performance in exchange for no events
-  ;; printed to a buffer
-  (eglot-events-buffer-config '(:size 2000000 :format full))
+  ;; printed to a buffer. Fyi: Pretty printing to lisp is much much slower than
+  ;; keeping it json.
+  ;; (eglot-events-buffer-config '(:size 2000000 :format lisp))
+  ;; (eglot-events-buffer-config '(:size 2000000 :format full))
+  (eglot-events-buffer-config '(:size 0 :format full))
   (eglot-connect-timeout 15)
   (eglot-autoreconnect 3)
   (eglot-sync-connect 3)
