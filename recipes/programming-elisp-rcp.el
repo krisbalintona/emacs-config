@@ -194,7 +194,6 @@
   :custom
   (suggest-insert-example-on-start nil))
 
-(provide 'programming-elisp-rcp)
 ;;;; Recursion-indicator
 (use-package recursion-indicator
   :init
@@ -213,4 +212,5 @@
                                            "^\\(%\\[\\|%\\]\\)$" s))))
                               kb/mode-line-modes))))
 
+(provide 'programming-elisp-rcp)
 ;;; programming-elisp-rcp.el ends here

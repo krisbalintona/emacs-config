@@ -537,11 +537,11 @@ this buffer."
   :init
   (global-anzu-mode))
 
-(provide 'programming-general-rcp)
 ;;;;; Lorem-ipsum
 ;; Sample text
 (use-package lorem-ipsum
   :init
   (setq-default lorem-ipsum-list-bullet "- "))
 
+(provide 'programming-general-rcp)
 ;;; programming-general-rcp.el ends here

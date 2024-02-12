@@ -198,7 +198,6 @@ Info node `(eshell)Top'."
   :custom
   (esh-autosuggest-delay 0.25))
 
-(provide 'shell-eshell-rcp)
 ;;;; Eshell source in `consult-buffer'
 (with-eval-after-load 'consult
   ;; For showing eshell sources in `consult-buffer'. Taken from
@@ -223,4 +222,5 @@ Info node `(eshell)Top'."
                             (buffer-list))))))
   (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append))
 
+(provide 'shell-eshell-rcp)
 ;;; shell-eshell-rcp.el ends here

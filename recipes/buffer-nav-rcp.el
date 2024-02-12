@@ -66,7 +66,6 @@
   :general (kb/nav-keys
              "o" '(occur :wk "Occur")))
 
-(provide 'buffer-nav-rcp)
 ;;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
@@ -222,4 +221,5 @@ command."
   :general ("H-(" 'goto-last-change
             "H-)" 'goto-last-change-reverse))
 
+(provide 'buffer-nav-rcp)
 ;;; buffer-nav-rcp.el ends here

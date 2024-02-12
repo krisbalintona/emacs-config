@@ -360,7 +360,6 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
   (wombag-search-filter ""))
 
-(provide 'rss-feed-rcp)
 ;;;; Pocket-reader
 ;; View my Pocket
 (use-package pocket-reader
@@ -429,4 +428,5 @@ displayed."
          (message "Showing default")
          (pocket-reader-search pocket-reader-default-queries))))))
 
+(provide 'rss-feed-rcp)
 ;;; rss-feed-rcp.el ends here

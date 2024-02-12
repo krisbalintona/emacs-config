@@ -398,7 +398,6 @@ This version removes delimiters.")
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
 
-(provide 'ui-rcp)
 ;;;;; Mlscroll
 ;; Adds an interactive indicator for the view's position in the current buffer
 ;; to the modeline
@@ -508,4 +507,5 @@ change to if called with ARG."
   :init
   (pulsar-global-mode))
 
+(provide 'ui-rcp)
 ;;; ui-rcp.el ends here

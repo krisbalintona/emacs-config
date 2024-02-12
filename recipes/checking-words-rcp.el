@@ -151,7 +151,6 @@ then call `dash-docs-completing-read-at-point'."
    (general-chord "kk") 'kb/thesaurus-at-point
    (general-chord "KK") 'kb/thesuarus-lookup))
 
-(provide 'checking-words-rcp)
 ;;;; Other
 ;;;;; Reverso
 ;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
@@ -161,4 +160,5 @@ then call `dash-docs-completing-read-at-point'."
   (reverso-history-mode)
   (diminish 'reverso-history-mode))
 
+(provide 'checking-words-rcp)
 ;;; checking-words-rcp.el ends here

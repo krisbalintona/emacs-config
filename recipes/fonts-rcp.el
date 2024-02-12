@@ -67,7 +67,6 @@
              (face-remap-add-relative 'bold :weight 'normal)
              (face-remap-add-relative 'default :weight 'light)))
 
-(provide 'fonts-rcp)
 ;;;; Mixed-pitch
 ;; Allow the same buffer to have both fixed- and variable-pitch
 ;; NOTE Changes the family and height of the default face to the family and
@@ -215,4 +214,5 @@
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init (all-the-icons-completion-mode))
 
+(provide 'fonts-rcp)
 ;;; fonts-rcp.el ends here

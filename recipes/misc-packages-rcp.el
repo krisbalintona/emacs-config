@@ -529,7 +529,6 @@ This is a difference in multitude of %s."
     (general-unbind 'normal help-mode-map "SPC")
     (general-unbind 'normal custom-mode-map "SPC")))
 
-(provide 'misc-packages-rcp)
 ;;;;; Register
 (use-package register
   :ensure nil
@@ -742,4 +741,5 @@ ARG and REDISPLAY are identical to the original function."
   :init
   (selection-highlight-mode))
 
+(provide 'misc-packages-rcp)
 ;;; misc-packages-rcp.el ends here
