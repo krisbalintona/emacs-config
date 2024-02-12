@@ -39,10 +39,10 @@
 
   ;; See https://github.com/languagetool-org/languagetool for installation
   ;; instructions
-  (langtool-bin "~/Downloads/LanguageTool-5.3-stable/languagetool.jar")
-  (langtool-language-tool-jar "~/Downloads/LanguageTool-5.3-stable/languagetool-commandline.jar")
-  (langtool-language-tool-server-jar "~/Downloads/LanguageTool-5.3-stable/languagetool-server.jar")
-  (langtool-java-bin "/usr/bin/java")
+  (langtool-bin nil)
+  (langtool-language-tool-jar "~/Downloads/languagetool/LanguageTool-6.3-stable/languagetool-commandline.jar")
+  (langtool-language-tool-server-jar "~/Downloads/languagetool/LanguageTool-6.3-stable/languagetool-server.jar")
+  (langtool-java-bin (executable-find "java"))
 
   (langtool-server-user-arguments '("-p" "8082"))
   (langtool-http-server-host 'nil)
@@ -68,14 +68,15 @@
 
 ;;;; Flymake-languagetool
 (use-package flymake-languagetool
-  ;; :hook ((text-mode LaTeX-mode org-mode markdown-mode) . flymake-languagetool-load) ; Using eglot-grammarly now
-  ;; :general (:keymaps 'flymake-mode-map
-  ;;           (general-chord "``") 'flymake-languagetool-correct-dwim)
+  :disabled
+  :hook ((org-mode LaTeX-mode org-mode markdown-mode) . flymake-languagetool-load)
+  :general (:keymaps 'flymake-mode-map
+                     (general-chord "``") 'flymake-languagetool-correct-dwim)
   :custom
   ;; See https://github.com/languagetool-org/languagetool for installation
   ;; instructions
   (flymake-languagetool-server-jar
-   (expand-file-name "languagetool.jar" "~/Downloads/languagetool/LanguageTool-6.0-stable/"))
+   (expand-file-name "languagetool-server.jar" "~/Downloads/languagetool/LanguageTool-6.3-stable/"))
   (flymake-languagetool-active-modes
    '(text-mode latex-mode org-mode markdown-mode message-mode))
   (flymake-languagetool-check-spelling nil)
