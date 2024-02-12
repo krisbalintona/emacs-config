@@ -519,11 +519,12 @@ This is a difference in multitude of %s."
   (kill-ring-deindent-mode nil)
   (window-divider-default-places 'bottom-only)
   (custom-search-field nil)
-  :config
-  (global-so-long-mode)
-  (repeat-mode)
-  (find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
-  (minibuffer-electric-default-mode)
+  :init
+  (undelete-frame-mode 1)
+  (global-so-long-mode 1)
+  (repeat-mode 1)
+  (find-function-setup-keys 1) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
+  (minibuffer-electric-default-mode 1)
   (when (bound-and-true-p evil-local-mode)
     (general-unbind 'normal help-mode-map "SPC")
     (general-unbind 'normal custom-mode-map "SPC")))
