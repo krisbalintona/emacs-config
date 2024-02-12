@@ -23,26 +23,14 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Eshell
-;;;;; Itself
 (use-package eshell
   :ensure nil
   :gfhook
-  ;; UI enhancements
   'visual-line-mode
-  '(lambda ()
-     (set-display-table-slot standard-display-table 0 ?\ )
-     ;; Text-wrap
-     (face-remap-add-relative 'default :height 127) ; Change default face size
-     (setq-local scroll-margin 3                    ; Scroll-margin
-                 line-spacing 0)
-     ;; `consult-outline' support for eshell prompts. See
-     ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
-     (setq outline-regexp eshell-prompt-regexp)
-     )
-  'hide-mode-line-mode
+  'kb/eshell-setup
   :general
   (:keymaps 'eshell-mode-map
-            [remap eshell-previous-matching-input] '(consult-history :wk "Command history"))
+            [remap eshell-previous-matching-input] 'consult-history)
   (:keymaps 'eshell-mode-map
             :states 'insert
             [remap back-to-indentation] 'eshell-bol)
@@ -117,6 +105,17 @@ Info node `(eshell)Top'."
       (unless (derived-mode-p 'eshell-mode)
         (eshell-mode))
       buf))
+
+  (defun kb/eshell-setup ()
+    "Buffer-local settings for eshell."
+    (set-display-table-slot standard-display-table 0 ?\ )
+    (setq-local scroll-margin 3
+                line-spacing 0
+                ;; `consult-outline' support for eshell prompts. See
+                ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
+                outline-regexp eshell-prompt-regexp
+                ;; Imenu with eshell prompt history
+                imenu-generic-expression `((nil ,eshell-prompt-regexp 0))))
   :config
   ;; Eshell modules should be loaded manually
   ;; Taken from
@@ -130,12 +129,11 @@ Info node `(eshell)Top'."
   (setq password-cache-expiry 600)      ; Seconds passwords are cached
 
   (require 'em-hist)
+  (setq eshell-history-size 20000)
   (setq eshell-hist-ignoredups 'erase)  ; Only keep last duplicate
   (setq eshell-save-history-on-exit t)
-  :config
-  (setenv "PAGER" "cat") ; solves issues, such as with 'git log' and the default 'less'
-
-  ;; Save history on eshell command
+  ;; Fix eshell overwriting history. From
+  ;; https://emacs.stackexchange.com/a/18569/15023.
   (setq eshell-save-history-on-exit nil) ; Useless since only saves upon exiting eshell session
   (defun eshell-append-history ()
     "Call `eshell-write-history' with the `append' parameter set to `t'."
@@ -144,9 +142,64 @@ Info node `(eshell)Top'."
         (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t)))))
-  (add-hook 'eshell-post-command-hook #'eshell-append-history))
+  (add-hook 'eshell-post-command-hook #'eshell-append-history)
 
-;;;;; `consult-outine' with eshell
+  (require 'em-term)
+  (add-to-list 'eshell-visual-options '("git" "--help" "--paginate"))
+  (add-to-list 'eshell-visual-subcommands '("git" "log" "diff" "show"))
+
+  ;; Kill process upon `delete-frame'
+  (defun kb/kill-eshell-process-maybe (&optional frame)
+    "Delete `eshell' buffer when deleting FRAME."
+    (when (and (equal (selected-window) (frame-selected-window frame))
+               (derived-mode-p 'eshell-mode))
+      (kill-buffer (current-buffer))))
+  (add-hook 'delete-frame-functions #'kb/kill-eshell-process-maybe)
+
+  ;; Cat but with Emacs syntax highlighting. Copied from
+  ;; https://www.reddit.com/r/emacs/comments/wp1jit/comment/ikhtjsm/?utm_source=share&utm_medium=web2x&context=3
+  (defun kb/eshell-cat (file)
+    "Like `cat' but output with Emacs syntax highlighting."
+    (with-temp-buffer
+      (insert-file-contents file)
+      (let ((buffer-file-name file))
+        (delay-mode-hooks
+          (set-auto-mode)
+          (if (fboundp 'font-lock-ensure)
+              (font-lock-ensure)
+            (with-no-warnings
+              (font-lock-fontify-buffer)))))
+      (buffer-string)))
+  (eshell/alias "cat" "kb/eshell-cat $1"))
+
+;;;; Shrink-path
+;; Truncate eshell directory path (has to be configured in my custom eshell
+;; prompt)
+(use-package shrink-path
+  :after eshell)
+
+;;;; Eshell-syntax-highlighting
+;; Zsh-esque syntax highlighting in eshell
+(use-package eshell-syntax-highlighting
+  :init
+  (eshell-syntax-highlighting-global-mode 1))
+
+;;;; Pcmpl-args
+;; Extend the build in `pcomplete' to another level.
+(use-package pcmpl-args
+  :demand
+  :after eshell)
+
+;;;; Esh-autosuggest
+;; Has shadowed suggestions from shell history (like in zsh)
+(use-package esh-autosuggest
+  :disabled                  ; FIXME 2023-07-12: Freezes eshell for some reason
+  :ghook 'eshell-mode-hook
+  :custom
+  (esh-autosuggest-delay 0.25))
+
+(provide 'shell-eshell-rcp)
+;;;; Eshell source in `consult-buffer'
 (with-eval-after-load 'consult
   ;; For showing eshell sources in `consult-buffer'. Taken from
   ;; https://github.com/minad/consult#multiple-sources
@@ -168,37 +221,6 @@ Info node `(eshell)Top'."
                             (lambda (x)
                               (eq (buffer-local-value 'major-mode x) 'eshell-mode))
                             (buffer-list))))))
-  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append)
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append))
 
-  ;; `consult-outline' support for eshell prompts
-  ;; Taken from https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
-  (add-hook 'eshell-mode-hook (lambda () (setq outline-regexp eshell-prompt-regexp))))
-
-;;;; Shrink-path
-;; Truncate eshell directory path (has to be configured in my custom eshell
-;; prompt)
-(use-package shrink-path
-  :after eshell)
-
-;;;; Eshell-syntax-highlighting
-;; Zsh-esque syntax highlighting in eshell
-(use-package eshell-syntax-highlighting
-  :ghook ('eshell-mode-hook 'eshell-syntax-highlighting-global-mode nil nil t)
-  :config (eshell-syntax-highlighting-global-mode))
-
-;;;; Pcmpl-args
-;; Extend the build in `pcomplete' to another level.
-(use-package pcmpl-args
-  :demand
-  :after eshell)
-
-;;;; Esh-autosuggest
-;; Has shadowed suggestions from shell history (like in zsh)
-(use-package esh-autosuggest
-  :disabled                  ; FIXME 2023-07-12: Freezes eshell for some reason
-  :ghook 'eshell-mode-hook
-  :custom
-  (esh-autosuggest-delay 0.25))
-
-(provide 'shell-eshell-rcp)
 ;;; shell-eshell-rcp.el ends here
