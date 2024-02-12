@@ -490,6 +490,7 @@ punctuation."
 ;;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support.
 ;; `outline-minor-mode-prefix' must be set prior to the package's loading
+(defvar outline-minor-mode-prefix (kbd "C-c \\"))
 (use-package outshine
   :diminish (outshine-mode outline-minor-mode)
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
@@ -499,8 +500,6 @@ punctuation."
             "C-x n s" 'outshine-narrow-to-subtree)
   :custom
   (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
-  :preface
-  (defvar outline-minor-mode-prefix (kbd "C-c \\"))
   :init
   ;; More convenient `outline-insert-heading'
   (defun kb/around-outline-insert-heading (orig_fun &rest args)

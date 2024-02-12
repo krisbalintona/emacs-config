@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (elpaca-after-init . (lambda () (unless (server-running-p)
-                                     (server-mode))))
+                                          (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -250,9 +250,8 @@ If buffer-or-name is nil return current buffer's mode."
 ;;;;; Tab-bar
 (use-package tab-bar
   :ensure nil
-  :general
-  (:keymaps 'tab-prefix-map
-            "w" 'tab-bar-move-window-to-tab)
+  :general (:keymaps 'tab-prefix-map
+                     "w" 'tab-bar-move-window-to-tab)
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)
@@ -270,14 +269,15 @@ If buffer-or-name is nil return current buffer's mode."
 
 ;;;;; Project-tab-groups
 (use-package project-tab-groups
-  :disabled                             ; Intrusive for me
+  :disabled                             ; Intrusive for my use
   :init
   (project-tab-groups-mode))
 
 ;;;;; Ace-window
 (use-package ace-window
-  :general ("C-c w" '(ace-window :wk "Ace window")
-            "C-c W" '(ace-swap-window :wk "Ace swap-window"))
+  :general (:prefix "C-c"
+                    "w" 'ace-window
+                    "W" 'ace-swap-window)
   :custom
   (aw-scope 'frame)
   (aw-background t)
@@ -427,7 +427,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                        ignore-window-parameters))
+                                             ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
