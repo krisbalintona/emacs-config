@@ -491,8 +491,7 @@ punctuation."
 ;; Outline-minor-mode but with better keybindings and more support.
 ;; `outline-minor-mode-prefix' must be set prior to the package's loading
 (use-package outshine
-  :diminish (outshine-mode
-             outline-minor-mode)
+  :diminish (outshine-mode outline-minor-mode)
   :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
   :gfhook 'visual-line-mode
   :general

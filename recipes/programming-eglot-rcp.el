@@ -86,7 +86,7 @@ functions."
   :ensure (:type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :init
-  (eglot-booster-mode))
+  (eglot-booster-mode 1))
 
 ;;;; Languages
 ;;;;; Eglot-java

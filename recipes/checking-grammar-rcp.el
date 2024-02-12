@@ -20,7 +20,12 @@
 
 ;;; Commentary:
 
-;; I don't know grammar either...
+;; I don't know grammar either... Right now I prefer grammarly via eglot. The
+;; next best alternative with respect to LSPs would be ltex-ls, which is just
+;; LanguageTool put into an LSP that supports more than just straightforward
+;; text files. I suppose the next best thing after that would be
+;; `flymake-languagetool' since it at least has "code actions" via
+;; `flymake-languagetool-correct-dwim'.
 
 ;;; Code:
 (require 'use-package-rcp)
@@ -91,13 +96,25 @@
 
 ;;;; Grammarly with Eglot
 ;; The formal `eglot-grammarly' package is useless; the following code is
-;; basically the package
+;; basically the package. See all settings for the grammarly LSP here:
+;; https://github.com/emacs-grammarly/grammarly-language-server/blob/main/extension/package.json
 (with-eval-after-load 'eglot
   (unless (system-packages-package-installed-p "grammarly-languageserver")
     (system-packages-ensure "sudo npm install -g @emacs-grammarly/grammarly-languageserver"))
   (add-to-list 'eglot-server-programs
                '(org-mode "grammarly-languageserver" "--stdio"
                           :initializationOptions (:clientId "client_BaDkMgx4X19X9UxxYRCXZo"))))
+
+;;;; Eglot-ltex
+;; LanguageTool grammar and spelling errors detected in markup documents. Can
+;; read more about ltex-ls here: https://github.com/valentjn/ltex-ls
+(use-package eglot-ltex
+  :disabled
+  :ensure-system-package (ltex-ls .  ltex-ls-bin)
+  :ensure (:type git :host github :repo "emacs-languagetool/eglot-ltex")
+  :custom
+  ;; Found via paru -Ql ltex-ls-bin
+  (eglot-ltex-server-path "/usr/share/ltex-ls/"))
 
 (provide 'checking-grammar-rcp)
 ;;; checking-grammar-rcp.el ends here
