@@ -34,6 +34,8 @@
   :custom
   (abbrev-file-name (expand-file-name "abbrev-mode/abbrev.el" no-littering-var-directory))
   (save-abbrevs 'silently)
+  (abbrev-suggest t)
+  (abbrev-suggest-hint-threshold 2)
   :config
   (setq-default abbrev-mode t))
 
