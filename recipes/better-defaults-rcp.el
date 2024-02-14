@@ -112,7 +112,10 @@
 
 ;;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk
-(setq read-process-output-max (* 1024 1024)) ; 1mb
+(setq read-process-output-max (* 4 1024 1024)) ; 4mb
+;; Recommend here
+;; https://www.reddit.com/r/emacs/comments/17nl7cw/comment/k7u1ueu/?utm_source=share&utm_medium=web2x&context=3
+(setq process-adaptive-read-buffering nil)
 
 ;;;; Scrolling behavior
 (setq scroll-preserve-screen-position t
