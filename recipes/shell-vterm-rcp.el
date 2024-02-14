@@ -61,5 +61,12 @@ process and its buffer without confirmation."
         (kill-buffer))))
   (add-to-list 'delete-frame-functions #'kb/kill-vterm-process-maybe))
 
+;;;; EAT
+(use-package eat
+  ;; :hook (eshell-first-time-mode . eat-eshell-mode))
+  :init
+  (eat-eshell-mode 1)
+  (eat-eshell-visual-command-mode 1))
+
 (provide 'shell-vterm-rcp)
 ;;; shell-vterm-rcp.el ends here
