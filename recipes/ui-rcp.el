@@ -339,7 +339,8 @@ This version removes delimiters.")
                   mode-line-position
                   (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
                   (:eval (when (and (bound-and-true-p mlscroll-mode)
-                                    (mode-line-window-selected-p))
+                                    (mode-line-window-selected-p)
+                                    (not (derived-mode-p 'pdf-view-mode)))
                            (mlscroll-mode-line)))
                   mode-line-format-right-align
                   mode-line-process
