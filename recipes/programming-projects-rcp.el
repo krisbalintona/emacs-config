@@ -113,11 +113,9 @@
 As directory is special if I've decided it is!"
     (require 'denote)
     (let ((projectp))
-      (dolist (special (list (expand-file-name "recipes" user-emacs-directory)
-                             (expand-file-name "site-lisp" user-emacs-directory)
-                             (expand-file-name "papers" denote-directory)
-                             (expand-file-name "buoy" denote-directory)))
-        (when (file-in-directory-p dir special)
+      (dolist (specialp (list (expand-file-name "papers" denote-directory)
+                              (expand-file-name "buoy" denote-directory)))
+        (when (file-in-directory-p dir specialp)
           (setq projectp t)))
       (when projectp (list 'vc 'Git dir))))
 
