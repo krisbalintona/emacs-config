@@ -139,8 +139,9 @@
   (auto-save-visited-predicate
    ;; Inspired by `super-save'
    (lambda ()
-     (< (save-restriction (widen) (count-lines (point-min) (point-max)))
-        5000)))
+     (or (derived-mode-p 'pdf-view-mode)
+         (< (save-restriction (widen) (count-lines (point-min) (point-max)))
+            5000))))
 
   ;; Backups
   (make-backup-files t)
