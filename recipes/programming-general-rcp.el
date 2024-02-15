@@ -481,10 +481,10 @@ punctuation."
   (fill-column-indicator ((t (:inherit line-number)))))
 
 ;;;;; Adaptive-wrap
-;; Wrap lines as if they were hard newlines (like `fill-paragraph'). In other
-;; words, lines preserve indentation.
+;; Visually indent lines wrapped visually!
 (use-package adaptive-wrap
-  :hook (prog-mode . adaptive-wrap-prefix-mode))
+  ;; NOTE 2024-02-15: This makes long-lines in lists properly indented!
+  :hook ((prog-mode org-mode) . adaptive-wrap-prefix-mode))
 
 ;;;; Other
 ;;;;; Outshine
