@@ -125,10 +125,10 @@
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
-  ("C-x B" 'consult-buffer)
+  ("C-x B" 'consult-buffer
+   "C-x r B" 'consult-bookmark)
   ;; Put remaps here
-  ([remap bookmark-jump] 'consult-bookmark
-   [remap yank-pop] 'consult-yank-pop
+  ([remap yank-pop] 'consult-yank-pop
    [remap repeat-complex-command] 'consult-complex-command
    [remap goto-line] 'consult-goto-line
    [remap imenu] 'kb/consult-imenu-versatile
