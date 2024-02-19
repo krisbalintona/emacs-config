@@ -131,6 +131,15 @@
 (require 'template-rcp)
 (require 'misc-packages-rcp) ; FIXME 2024-02-11: Distribute these configs elsewhere
 
+;; After-init stats
+(add-hook 'window-setup-hook
+          '(lambda ()
+             (when (fboundp 'elpaca--queued)
+               (message "Emacs took %s to start up and load %s packages!"
+                        (format "%f seconds" (float-time (time-subtract elpaca-after-init-time
+                                                                        before-init-time)))
+                        (length (elpaca--queued))))))
+
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'init)
