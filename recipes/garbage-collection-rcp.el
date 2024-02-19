@@ -36,10 +36,15 @@
 
 (setq gc-cons-percentage 0.25)
 (setq garbage-collection-messages t)
+(add-hook (if (featurep 'elpaca)
+              'elpaca-after-init-hook
+            'after-init-hook)
+          (lambda () (setq gc-cons-threshold 800000)))
 
 ;;;; GCMH
 ;; Garbage collect on when idle
 (use-package gcmh
+  :disabled
   :diminish
   :hook ((elpaca-after-init . gcmh-mode)
          (minibuffer-setup . kb/gcmh-minibuffer-setup)
