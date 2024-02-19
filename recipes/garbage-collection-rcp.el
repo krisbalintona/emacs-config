@@ -66,7 +66,14 @@
   (defun kb/gcmh-minibuffer-exit ()
     "Restore value of `gc-cons-threshold'."
     ;; (message "[kb/gcmh-minibuffer-exit] Restoring GC threshold")
-    (setq gcmh-high-cons-threshold kb/gc-minibuffer--original)))
+    (setq gcmh-high-cons-threshold kb/gc-minibuffer--original))
+
+  ;; Increase `gc-cons-threshold' while using corfu (define-advice
+  ;; corfu-complete (:around (orig-fun &rest args) kb/corfu-gc-control)
+  (with-eval-after-load 'corfu
+    (advice-add 'completion-at-point :before (lambda () (kb/gcmh-minibuffer-setup)))
+    (advice-add 'corfu-quit :before (lambda () (kb/gcmh-minibuffer-exit)))
+    (advice-add 'corfu-insert :before (lambda () (kb/gcmh-minibuffer-exit)))))
 
 ;;;; Diagnose memory usage
 ;; See how Emacs is using memory. From

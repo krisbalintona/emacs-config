@@ -111,13 +111,7 @@
     "Use orderless completion style with lsp-capf instead of the
 default lsp-passthrough."
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless)))
-
-  ;; Increase `gc-cons-threshold' while using corfu
-  ;; (define-advice corfu-complete (:around (orig-fun &rest args) kb/corfu-gc-control)
-  (advice-add 'completion-at-point :before (lambda () (kb/gcmh-minibuffer-setup)))
-  (advice-add 'corfu-quit :before (lambda () (kb/gcmh-minibuffer-exit)))
-  (advice-add 'corfu-insert :before (lambda () (kb/gcmh-minibuffer-exit))))
+          '(orderless))))
 
 ;;;;; Corfu-history
 ;; Save the history across Emacs sessions
