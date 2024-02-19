@@ -41,8 +41,7 @@
                  Info-history-list
                  last-kbd-macro
                  kmacro-ring
-                 shell-command-history
-                 register-alist))
+                 shell-command-history))
     (add-to-list 'savehist-additional-variables var))
   (savehist-mode)
 
