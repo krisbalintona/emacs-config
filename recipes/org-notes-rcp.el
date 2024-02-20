@@ -30,12 +30,8 @@
 ;;;; Denote
 ;;;;; This
 (use-package denote
+  :ensure (:type git :host github :repo "protesilaos/denote")
   :functions kb/denote-search-from-id
-  :ensure (:type git
-                 :host github
-                 :repo "emacs-straight/denote"
-                 :depth nil
-                 :files ("*" (:exclude ".git")))
   :hook ((dired-mode . denote-dired-mode)
          (before-save . kb/denote-insert-identifier-maybe)
          (after-save . kb/denote-auto-rename))
@@ -48,7 +44,7 @@
   (denote-directory kb/notes-dir)
   (denote-modules '(xref ffap))
   (denote-known-keywords '("project"))
-  (denote-prompts '(subdirectory title keywords))
+  (denote-prompts '(subdirectory title keywords signature))
   (denote-org-front-matter "#+title: %s
 #+date: %s
 #+filetags: %s
@@ -87,6 +83,33 @@
 
 * 1 Draft                                                     :ignore:export:
 ")))
+  (denote-date-prompt-use-org-read-date t)
+  :init
+  ;; Relative file paths
+  (defun kb/denote-file-prompt (&optional files-matching-regexp)
+    "Prompt for file with identifier in variable `denote-directory'.
+With optional FILES-MATCHING-REGEXP, filter the candidates per
+the given regular expression.
+
+My version shows the file paths relative to the
+`denote-directory'."
+    (let* ((files (denote-directory-files files-matching-regexp :omit-current))
+           (files-rel (mapcar (lambda (f) (file-relative-name f denote-directory)) files)))
+      (expand-file-name
+       (completing-read "Select note: " files-rel nil nil nil 'denote-file-history)
+       denote-directory)))
+  (advice-add 'denote-file-prompt :override 'kb/denote-file-prompt)
+
+  ;; Camel cased keywords
+  (defun kb/denote-sluggify-keyword (str)
+    "Sluggify STR while joining separate words.
+My version camelCases keywords."
+    (s-lower-camel-case
+     (denote--slug-hyphenate (denote--slug-no-punct str))))
+  (setq denote-file-name-slug-functions
+        '((title . denote-sluggify-title)
+          (signature . denote-sluggify-signature)
+          (keyword . kb/denote-sluggify-keyword)))
   :config
   (denote-rename-buffer-mode)
   (denote-modules-global-mode)
@@ -97,7 +120,11 @@
     (when-let ((f (buffer-file-name)))
       (when (and (file-in-directory-p f denote-directory)
                  (denote-filename-is-note-p f))
-        (denote-rename-file-using-front-matter f :auto-confirm)))))
+        (denote-rename-file-using-front-matter f :auto-confirm))))
+
+  ;; Set face parameters
+  (set-face-attribute 'denote-faces-signature nil :weight 'bold)
+  (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic))
 
 ;;;;; Return denote file path based on ID
 (with-eval-after-load 'denote
@@ -335,31 +362,6 @@ If called with `universal-arg', then replace links in all denote buffers."
       (message "Done! Replaced a total of %s links across %s files!"
                replaced-count updated-notes))))
 
-;;;;; New note from region
-;; Taken from
-;; https://protesilaos.com/emacs/denote#h:d0c7cb79-21e5-4176-a6af-f4f68578c8dd
-(with-eval-after-load 'denote
-  (defun kb/denote-org-extract-subtree ()
-    "Create new Denote note using current Org subtree.
-Make the new note use the Org file type, regardless of the value
-of `denote-file-type'.
-
-Use the subtree title as the note's title. If available, use the
-tags of the heading are used as note keywords.
-
-Delete the original subtree."
-    (interactive)
-    (if-let ((text (org-get-entry))
-             (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
-        (progn
-          (delete-region (org-entry-beginning-position) (org-entry-end-position))
-          (denote heading
-                  (denote-keywords-prompt nil (mapconcat 'identity (org-get-tags) ","))
-                  'org
-                  (denote-subdirectory-prompt))
-          (insert text))
-      (user-error "No subtree to extract; aborting"))))
-
 ;;;; Denote-explore
 ;; Useful Denote utilities
 (use-package denote-explore
@@ -513,8 +515,8 @@ Delete the original subtree."
   :after denote
   :diminish
   :custom
-  (citar-denote-subdir t)
-  (citar-denote-signature nil)
+  (citar-denote-subdir nil)
+  (citar-denote-signature t)
   (citar-denote-title-format nil)       ; Use citekey as title
   (citar-denote-title-format-authors 2)
   (citar-denote-title-format-andstr "and")

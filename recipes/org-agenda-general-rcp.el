@@ -105,8 +105,8 @@
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
       "* TODO %? %^g\n"
       :empty-lines 1)
-     ("i" "Inbox" entry
-      (file ,(expand-file-name "garden/20221011T101254--inbox.org" kb/notes-dir))
+     ("i" "Idea Inbox" entry
+      (file ,(car (denote-directory-files "20221011T101254")))
       "* %U %?\n"
       :empty-lines 1
       :jump-to-captured t)

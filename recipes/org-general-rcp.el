@@ -216,7 +216,7 @@ have `org-warning' face."
   :ensure nil
   :custom
   (org-refile-targets
-   `((,(directory-files-recursively (expand-file-name "garden" kb/notes-dir) (rx anychar)) . (:maxlevel . 2))
+   `((,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2))
      (nil . (:maxlevel . 2))))
   (org-refile-use-cache nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
