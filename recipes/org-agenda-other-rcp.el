@@ -166,9 +166,10 @@ buffer hidden."
          (display-buffer-alist (if arg
                                    display-buffer-alist
                                  `((,buf-name display-buffer-no-window)))))
-    ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
-    ;; `async-shell-command'
-    (async-shell-command script buf)))
+    (unless (get-buffer-process buf)
+      ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
+      ;; `async-shell-command'
+      (async-shell-command script buf))))
 
 ;; Timer every 30 min
 (run-with-timer (* 60 30) (* 60 30) 'kb/org-gcal)
