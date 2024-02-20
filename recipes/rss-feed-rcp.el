@@ -343,14 +343,16 @@ The list of tags is provided by `prot-elfeed-search-tags'."
    "H-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
    "H-i" '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :wk "Toggle input tag")
    "H-d" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :wk "Toggle done tag")
-   "H-c" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
-   )
-  )
+   "H-c" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")))
 
 ;;;; Wombag
 (use-package wombag
   :ensure (:host github :repo "karthink/wombag")
   :general (kb/open-keys "W" 'wombag)
+  :hook (wombag-show-mode . (lambda ()
+                              (unless olivetti-mode
+                                (olivetti-mode 1)
+                                (olivetti-set-width 120))))
   :custom
   (wombag-dir (no-littering-expand-var-file-name "wombag"))
   (wombag-host "https://app.wallabag.it")
