@@ -59,6 +59,8 @@ act upon that region instead."
   (interactive (list
                 (if (region-active-p) (region-beginning) (point-min))
                 (if (region-active-p) (region-end) (point-max))))
+  (unless beg (setq beg (point-min)))
+  (unless end (setq end (point-max)))
   (let ((start-time (current-time)))
     (message "Formatting buffer...")
     (cond
