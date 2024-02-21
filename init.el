@@ -129,6 +129,7 @@
 ;; (require 'finance-rcp)
 (require 'convenient-functions-rcp)
 (require 'template-rcp)
+(require 'dungeons-and-dragons-rcp)
 (require 'misc-packages-rcp) ; FIXME 2024-02-11: Distribute these configs elsewhere
 
 ;; After-init stats

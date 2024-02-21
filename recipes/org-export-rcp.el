@@ -304,7 +304,7 @@ Uses my 'latex-paper' backend. See the original
 ;;;;; Custom links
 (with-eval-after-load 'ol
 ;;;;;; Colored text
-  (defun kb/org-latex-color-export (link description format)
+  (defun kb/org-link-color-export (link description format)
     (let ((desc (or description link)))
       (cond
        ((eq format 'latex) (format "\\textcolor{%s}{%s}" link desc))
@@ -312,7 +312,7 @@ Uses my 'latex-paper' backend. See the original
 
   (org-link-set-parameters "color"
                            :face (lambda (path) `(:foreground ,path))
-                           :export #'kb/org-latex-color-export
+                           :export #'kb/org-link-color-export
                            :complete (lambda (&optional _)
                                        (concat "color:"
                                                (completing-read "Choose color: " (list-colors-duplicates (defined-colors))))))
