@@ -113,6 +113,8 @@ slug of the file's title with underscores replaced for hyphens."
 
 ;;;;; Exporting links
 (with-eval-after-load 'ox-hugo
+  (require 'denote)
+
   (defun kb/org-export-resolve-denote-link (link info)
     "Return `denote' file referenced as LINK destination.
 

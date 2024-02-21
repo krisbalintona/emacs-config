@@ -31,7 +31,8 @@
 ;;;;; This
 (use-package denote
   :ensure (:type git :host github :repo "protesilaos/denote")
-  :functions kb/denote-search-from-id
+  :functions 'kb/denote-search-from-id
+  :autoload 'denote-directory-files
   :hook ((dired-mode . denote-dired-mode)
          (before-save . kb/denote-insert-identifier-maybe)
          (after-save . kb/denote-auto-rename))
