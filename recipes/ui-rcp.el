@@ -430,10 +430,9 @@ This version removes delimiters.")
 (define-key global-map (kbd "<f7>") #'kb/toggle-menu-bar)
 
 ;;;;; Fringes
-(fringe-mode '(8 . 4))
 ;; Places the fringes outside the margins, closest to the frame edge. The gutter
 ;; looks less cramped with some space between it and buffer. Useful for
-;; `git-gutter-fringes'.
+;; `diff-hl'.
 (setq-default fringes-outside-margins t)
 
 ;;;;; Hide-mode-line
