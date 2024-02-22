@@ -37,6 +37,7 @@
   :general
   (:keymaps 'org-mode-map
             "H-s" 'org-store-link
+            "H-S" 'org-id-store-link
             "C-M-<up>" 'org-up-element)
   (kb/note-keys
     "c" '(org-capture :wk "Org-capture"))
