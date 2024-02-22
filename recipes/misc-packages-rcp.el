@@ -537,6 +537,8 @@ This is a difference in multitude of %s."
   (register-separator " ")
   (register-use-preview 'traditional)
   :config
+  ;; (make-variable-buffer-local 'register-alist)
+  
   (with-eval-after-load 'consult
     ;; Better than `consult-register'
     (setq register-preview-function #'consult-register-format)
