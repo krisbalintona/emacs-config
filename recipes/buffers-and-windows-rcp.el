@@ -548,10 +548,19 @@ timestamp)."
   (perfect-margin-only-set-left-margin nil)
   (perfect-margin-ignore-modes
    '(exwm-mode doc-view-mode nov-mode pdf-view-mode))
+  (perfect-margin-ignore-regexps
+   '("^minibuf"))
   (perfect-margin-ignore-filters
    '(window-minibuffer-p
      (lambda (window)
-       (with-selected-window window (bound-and-true-p olivetti-mode)))))
+       "Ignore if `olivetti-mode' is active."
+       (with-selected-window window (bound-and-true-p olivetti-mode)))
+     (lambda (window)
+       "Ignore if a special buffer whose major mode isn't...
+- `vc-dir-mode'"
+       (with-selected-window window
+         (and (string-match-p "^[[:space:]]*\\*" (buffer-name))
+              (not (eq major-mode 'vc-dir-mode)))))))
   :config
   ;; Additional mouse bindings for now wider margins. Taken from
   ;; https://github.com/mpwang/perfect-margin#additional-binding-on-margin-area
