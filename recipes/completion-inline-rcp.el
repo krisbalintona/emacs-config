@@ -214,7 +214,7 @@ default lsp-passthrough."
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
-         (git-commit-mode . kb/cape-capf-setup-git-commit))
+         ((git-commit-mode vc-git-log-edit-mode) . kb/cape-capf-setup-git-commit))
   :general
   (:prefix "H-c"               ; Particular completion function
            "p" 'completion-at-point
