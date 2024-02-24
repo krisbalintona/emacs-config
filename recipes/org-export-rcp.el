@@ -42,7 +42,7 @@
    '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
   (org-display-custom-times t)          ; Export with custom time stamps?
   (org-time-stamp-custom-formats        ; Format of exported time stamps
-   '("%B %-d (%a), %Y" . "%B %-d (%a), %Y, %I %P"))
+   '("%a, %b %-d" . "%a, %b %-d (%-H:%M%p)"))
 
   (org-image-actual-width 700)          ; Image widths on export
 

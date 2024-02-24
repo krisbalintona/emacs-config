@@ -123,6 +123,7 @@
 (use-package org-msg
   :ensure (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :hook ((org-msg-edit-mode . (lambda ()
+                                "Set `org-download' directories."
                                 (setq-local org-download-method 'directory
                                             org-download-image-dir mu4e-attachment-dir)))
          ;; Don't show exported buffers after sending emails. Inspired by
@@ -148,8 +149,8 @@
   :custom
   (mu4e-compose-signature-auto-include nil)
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil \\n:t")
-  ;; (org-msg-startup "hidestars indent inlineimages hideblocks")
-  (org-msg-startup "hidestars inlineimages hideblocks") ; NOTE 2024-01-05: Don't include "indent" with org-margin
+  ;; NOTE 2024-01-05: Don't include "indent" with org-margin
+  (org-msg-startup "hidestars inlineimages hideblocks customtime")
   (org-msg-greeting-fmt nil)
   (org-msg-greeting-name-limit 1)
   (org-msg-default-alternatives
