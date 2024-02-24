@@ -97,6 +97,8 @@
       (display-buffer-same-window))
      ("\\*devdocs\\*"
       (display-buffer-same-window))
+     ("\\*vc-diff\\*"
+      (display-buffer-same-window))
 
      ;; To the left
      ("\\*Faces\\*"
