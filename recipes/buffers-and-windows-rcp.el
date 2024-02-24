@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (elpaca-after-init . (lambda () (unless (server-running-p)
-                                          (server-mode))))
+                                     (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -427,7 +427,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                             ignore-window-parameters))
+                                        ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
@@ -541,6 +541,10 @@ timestamp)."
 
 ;;;;; Perfect-margin
 (use-package perfect-margin
+  ;; Trying out `centered-window' because this fancy stuff with the
+  ;; frings/margins messes makes functionality with certain other packages a
+  ;; pain
+  :disabled
   :diminish
   :hook (elpaca-after-init . perfect-margin-mode)
   :custom
@@ -590,6 +594,25 @@ timestamp)."
           (set-window-margins window (car margins) (cdr margins))
           (set-window-fringes window (car fringes) (cdr fringes))))))
   (setq split-window-preferred-function 'kb/split-window-sensibly))
+
+;;;;; Centered-window
+(use-package centered-window
+  :custom
+  (cwm-centered-window-width 128)
+  (cwm-ignore-buffer-predicates
+   '((lambda (buf)
+       "Ignore if `olivetti-mode' is active."
+       (with-current-buffer buf (bound-and-true-p olivetti-mode)))
+     (lambda (buf)
+       "Ignore special buffers unless I like it."
+       (with-current-buffer buf
+         (let ((buf-name (buffer-name)))
+           (or (string-match-p "^[[:space:]]*\\*" buf-name) ; Special buffers
+               (string-match-p "^minibuf" buf-name)         ; Minibuffer
+               (not (derived-mode-p major-mode
+                                    '(exwm-mode doc-view-mode pdf-view-mode vc-dir-mode)))))))))
+  :init
+  (centered-window-mode))
 
 ;;;; Activities
 (use-package activities
