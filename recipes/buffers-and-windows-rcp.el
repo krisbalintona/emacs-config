@@ -614,6 +614,32 @@ timestamp)."
                (not (derived-mode-p major-mode
                                     '(exwm-mode doc-view-mode pdf-view-mode vc-dir-mode)))))))))
   :init
+  ;; My own version
+  (defun kb/window-splittable-p (window &optional horizontal)
+    "Override for `window-splittable-p'.
+Determine if WINDOW is splittable."
+    (when (and (window-live-p window)
+               (not (window-parameter window 'window-side)))
+      (with-current-buffer (window-buffer window)
+        (if horizontal
+            (and (memq window-size-fixed '(nil height))
+                 (numberp split-width-threshold)
+                 (>= (if (bound-and-true-p centered-window-mode)
+                         ;; Added this. Not sure if this is foolproof, since all
+                         ;; it does is take into consideration the margins and
+                         ;; fringes, but for now it's a sufficient approximation
+                         (window-total-width window)
+                       (window-width window))
+                     (max split-width-threshold
+                          (* 2 (max window-min-width 2)))))
+          (and (memq window-size-fixed '(nil width))
+               (numberp split-height-threshold)
+               (>= (window-height window)
+                   (max split-height-threshold
+                        (* 2 (max window-min-height
+                                  (if mode-line-format 2 1))))))))))
+  (advice-add 'window-splittable-p :override #'kb/window-splittable-p)
+
   (centered-window-mode))
 
 ;;;; Activities
@@ -622,7 +648,7 @@ timestamp)."
                     "n" 'activities-new
                     "g" 'activities-revert
                     "s" 'activities-suspend
-                    "k" 'activities-kill ; Alias for `-suspend'
+                    "k" 'activities-kill
                     "a" 'activities-resume
                     "b" 'activities-switch
                     "l" 'activities-list)
