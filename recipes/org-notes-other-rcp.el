@@ -568,21 +568,10 @@ See `org-noter' for details and ARG usage."
 ;;;; Org-transclusion
 ;; Enable transclusion of org files
 (use-package org-transclusion
-  :after org-roam
-  :hook (org-mode . org-transclusion-activate)
-  :general
-  (kb/toggle-keys
-    "c" '(org-transclusion-mode :wk "Toggle mode")
-    "R" '(org-transclusion-refresh :wk "Refresh")
-    "m" '(org-transclusion-make-from-link :wk "Make")
-    "a" '(org-transclusion-add :wk "Add")
-    "r" '(org-transclusion-remove :wk "Remove")
-    "s" '(org-transclusion-live-sync-start :wk "Edit start")
-    "e" '(org-transclusion-live-sync-exit :wk "Edit exit")
-    )
+  :hook (org-mode . org-transclusion-mode)
   :custom
   (org-transclusion-include-first-section t)
-  (org-transclusion-exclude-elements '(property-drawer keyword)))
+  (org-transclusion-exclude-elements '(property-drawer)))
 
 ;;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
