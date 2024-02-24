@@ -214,7 +214,7 @@ default lsp-passthrough."
 (use-package cape
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
-         ((git-commit-mode vc-git-log-edit-mode) . kb/cape-capf-setup-git-commit))
+         ((git-commit-mode vc-git-log-edit-mode) . kb/cape-capf-setup-commit))
   :general
   (:prefix "H-c"               ; Particular completion function
            "p" 'completion-at-point
@@ -266,8 +266,12 @@ Additionally, add `cape-file' as early as possible to the list."
     (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
 
   ;; Git-commit
-  (defun kb/cape-capf-setup-git-commit ()
-    (define-key git-commit-mode-map (kbd "<tab>") 'completion-at-point)
+  (defun kb/cape-capf-setup-commit ()
+    "Set up capfs when committing."
+    (when (boundp 'vc-git-log-edit-mode-map)
+      (define-key vc-git-log-edit-mode-map (kbd "<tab>") 'completion-at-point))
+    (when (boundp 'git-commit-mode-map)
+      (define-key git-commit-mode-map (kbd "<tab>") 'completion-at-point))
     (let ((result))
       (dolist (element '(cape-dabbrev cape-elisp-symbol) result)
         (add-to-list 'completion-at-point-functions element))))
