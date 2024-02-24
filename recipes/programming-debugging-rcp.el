@@ -110,8 +110,10 @@
 (use-package dape
   :demand ; OPTIMIZE 2024-02-02: Current version needs to me demanded to set dape-key-prefix
   :ensure (:type git :host github :repo "svaante/dape")
+  :general (:keymaps 'prog-mode-map
+                     "C-c d" dape-global-map)
   :custom
-  (dape-key-prefix (kbd "C-c d"))
+  (dape-key-prefix nil)                 ; I make my own binding
   (dape-buffer-window-arrangement 'right)
   (dape-stepping-granularity 'instruction)
   (dape-info-variable-table-aligned t)
