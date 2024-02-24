@@ -375,8 +375,12 @@ With a prefix argument, show NLINES of context."
       (2 'change-log-list nil lax)
       (3 'change-log-name)
       (4 'change-log-date))))
+  (vc-annotate-display-mode 'scale)     ; Scale to oldest
+  (log-edit-setup-add-author nil)
+  (add-log-mailing-address "krisbalintona@gmail.com")
+  (add-log-keep-changes-together t)
   :config
-  ;; Position in `global-mode-string'
+  ;; Put in `global-mode-string'
   (or (member '(:eval vc-mode) global-mode-string)
       (push '(:eval vc-mode) global-mode-string)))
 
