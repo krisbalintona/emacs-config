@@ -62,14 +62,13 @@
 (use-package citar
   :after all-the-icons
   :general
-  (:keymaps 'org-mode-map
-            :prefix "C-c b"
-            "b" 'citar-insert-citation
-            "r" 'citar-insert-reference
-            "o" 'citar-open
-            "f" 'citar-open-files
-            "n" 'citar-open-notes
-            "z" 'kb/citar-open-pdfs-in-zotero)
+  (:prefix "C-c b"
+           "b" 'citar-insert-citation
+           "r" 'citar-insert-reference
+           "o" 'citar-open
+           "f" 'citar-open-files
+           "n" 'citar-open-notes
+           "z" 'kb/citar-open-pdfs-in-zotero)
   (:keymaps 'citar-embark-citation-map
             "z" 'kb/citar-open-pdfs-in-zotero)
   :custom
