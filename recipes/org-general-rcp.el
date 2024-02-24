@@ -40,7 +40,7 @@
             "H-S" 'org-id-store-link
             "C-M-<up>" 'org-up-element)
   (kb/note-keys
-    "c" '(org-capture :wk "Org-capture"))
+    "c" 'org-capture)
   :custom
   (org-directory kb/org-dir)
   (org-special-ctrl-a/e t)

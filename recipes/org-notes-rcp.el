@@ -44,7 +44,7 @@
   :custom
   (denote-directory kb/notes-dir)
   (denote-modules '(xref ffap))
-  (denote-known-keywords '("project"))
+  (denote-known-keywords nil)
   (denote-prompts '(subdirectory title keywords signature template))
   (denote-org-front-matter "#+title: %s
 #+date: %s
