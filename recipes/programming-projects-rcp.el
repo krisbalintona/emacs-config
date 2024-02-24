@@ -404,7 +404,8 @@ With a prefix argument, show NLINES of context."
                      "L" 'vc-print-root-log
                      "v" 'vc-next-action)
   :custom
-  (diff-refine 'navigation) ; FIXME 2022-12-30: Now exactly sure what this does...
+  (diff-font-lock-prettify t)
+  (diff-refine 'navigation)             ; Font lock hunk when it is navigated to
   (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language
 
 ;;;;; Ediff
