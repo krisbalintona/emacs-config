@@ -503,7 +503,9 @@ change to if called with ARG."
          (imenu-after-jump . pulsar-recenter-top)
          (imenu-after-jump . pulsar-reveal-entry))
   :custom
-  (pulsar-pulse nil)
+  (pulsar-pulse t)
+  (pulsar-delay 0.05)
+  (pulsar-iterations (/ 2 pulsar-delay))
   :init
   (pulsar-global-mode))
 
