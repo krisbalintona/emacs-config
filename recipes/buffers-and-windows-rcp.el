@@ -158,7 +158,7 @@
       (display-buffer-at-bottom)
       (window-height . fit-window-to-buffer)
       (window-parameters . ((no-other-window . t))))
-     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'dap-ui-repl-mode))
+     ((major-mode . dap-ui-repl-mode)
       (display-buffer-at-bottom)
       (window-height . 12)
       (window-parameters . ((mode-line-format . none))))
@@ -192,7 +192,7 @@
       (side . bottom)
       (slot . -1)
       (window-height . 0.35))
-     ((lambda (buf act) (equal (kb/buffer-major-mode buf) 'rustic-cargo-run-mode))
+     ((major-mode . rustic-cargo-run-mode)
       (display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
@@ -204,14 +204,6 @@
       (preserve-size . (t . t)))))
   :init
   ;; Helper functions for `display-buffer-alist'
-  (defun kb/buffer-major-mode (&optional buffer-or-name)
-    "Returns the major mode associated with a buffer.
-If buffer-or-name is nil return current buffer's mode."
-    (buffer-local-value 'major-mode
-                        (if buffer-or-name
-                            (get-buffer buffer-or-name)
-                          (current-buffer))))
-
   (defun kb/select-buffer-in-side-window (buffer alist)
     "Display buffer in a side window then select it."
     (let ((window (display-buffer-in-side-window buffer alist)))
