@@ -93,7 +93,7 @@
             "o" 'kb/project-multi-occur)
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
-  (project-find-functions '(kb/project-special project-try-vc))
+  (project-find-functions '(kb/project-special-dir project-try-vc))
   (project-file-history-behavior 'relativize)
   ;; NOTE 2024-01-31: Replace via project-switch-commands to project-prefix-or-any-command
   ;; (project-switch-commands
@@ -110,7 +110,7 @@
   ;;    (project-shell "Shell")))
   (project-vc-merge-submodules nil) ; Consider submodules as their own projects?
   :init
-  (defun kb/project-special (dir)
+  (defun kb/project-special-dir (dir)
     "Return project if DIR is noticed as special.
 As directory is special if I've decided it is!"
     (require 'denote)
