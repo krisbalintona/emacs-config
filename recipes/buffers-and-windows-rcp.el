@@ -483,7 +483,10 @@ timestamp)."
 ;;;;; Ibuffer
 (use-package ibuffer
   :ensure nil
-  :general ([remap list-buffers] 'ibuffer)
+  :general
+  ([remap list-buffers] 'ibuffer)
+  (:keymaps 'ibuffer-mode-map
+            "SPC" 'scroll-up-command)
   :custom
   (ibuffer-save-with-custom nil)
   (ibuffer-default-sorting-mode 'recency)
