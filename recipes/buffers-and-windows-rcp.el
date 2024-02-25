@@ -77,7 +77,10 @@
 ;;;;; Window
 (use-package window
   :ensure nil
-  :general ("M-o" 'other-window)
+  :general
+  ("M-o" 'other-window)
+  (:keymaps 'diff-mode-map
+            "M-o" nil)
   :custom
   (window-resize-pixelwise t)
   (window-sides-vertical t)
