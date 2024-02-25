@@ -144,8 +144,8 @@
             "I" 'consult-imenu-multi)
   (:keymaps 'search-map
             ;; Uses the `M-s' prefix
-            "g" 'consult-grep
-            "G" 'consult-git-grep
+            "g" 'consult-git-grep
+            "G" 'consult-grep
             "r" 'consult-ripgrep
             "f" 'consult-find
             "F" 'consult-locate
