@@ -406,7 +406,9 @@ With a prefix argument, show NLINES of context."
   :custom
   (diff-font-lock-prettify t)
   (diff-refine 'navigation)             ; Font lock hunk when it is navigated to
-  (diff-font-lock-syntax 'hunk-also)) ; Fontify diffs with syntax highlighting of the language
+  (diff-font-lock-syntax 'hunk-also) ; Fontify diffs with syntax highlighting of the language
+  :config
+  (set-face-attribute 'diff-header nil :inherit 'modus-themes-prominent-note))
 
 ;;;;; Ediff
 (use-package ediff
