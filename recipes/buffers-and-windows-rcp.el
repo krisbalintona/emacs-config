@@ -195,7 +195,12 @@
       (display-buffer-in-side-window)
       (side . bottom)
       (slot . -1)
-      (window-height . 0.35))))
+      (window-height . 0.35))
+     ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+      (display-buffer-reuse-mode-window display-buffer-below-selected)
+      (window-height . 20)
+      (dedicated . t)
+      (preserve-size . (t . t)))))
   :init
   ;; Helper functions for `display-buffer-alist'
   (defun kb/buffer-major-mode (&optional buffer-or-name)
