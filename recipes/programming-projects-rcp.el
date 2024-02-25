@@ -381,7 +381,23 @@ With a prefix argument, show NLINES of context."
   :config
   ;; Put in `global-mode-string'
   (or (member '(:eval vc-mode) global-mode-string)
-      (push '(:eval vc-mode) global-mode-string)))
+      (push '(:eval vc-mode) global-mode-string))
+
+  ;; Restore window configuration when when making commits with VC like you can
+  ;; with org-agenda via the `org-agenda-restore-windows-after-quit' user option
+  (defvar kb/vc-pre-window-conf nil)
+
+  (defun kb/vc-set-window-conf (&rest _)
+    "Set the value of `kb/vc-pre-window-conf'."
+    (setq kb/vc-pre-window-conf (current-window-configuration)))
+  (advice-add 'vc-next-action :before #'kb/vc-set-window-conf)
+
+  (defun kb/vc-restore-window-conf (&rest _)
+    "Set the value of `kb/vc-pre-window-conf'."
+    (set-window-configuration kb/vc-pre-window-conf)
+    (setq kb/vc-pre-window-conf nil))
+  (advice-add 'log-edit-done :after #'kb/vc-restore-window-conf)
+  (advice-add 'log-edit-kill-buffer :after #'kb/vc-restore-window-conf))
 
 ;;;;; Log-edit
 (use-package log-edit
