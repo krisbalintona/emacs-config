@@ -91,14 +91,15 @@
 
      ;; Same window
      ("\\*helpful *"
-      (display-buffer-reuse-mode-window
-       display-buffer-same-window))
+      (display-buffer-reuse-mode-window display-buffer-same-window))
      ("*Flycheck errors*"
-      (display-buffer-same-window))
+      (display-buffer-reuse-mode-window display-buffer-same-window))
      ("\\*devdocs\\*"
-      (display-buffer-same-window))
-     ("\\*vc-diff\\*"
-      (display-buffer-same-window))
+      (display-buffer-reuse-mode-window display-buffer-same-window))
+     ((or . ("\\*vc-diff\\*"
+             "\\*vc-change-log\\*"
+             (major-mode . vc-annotate-mode)))
+      (display-buffer-reuse-mode-window display-buffer-same-window))
 
      ;; To the left
      ("\\*Faces\\*"
