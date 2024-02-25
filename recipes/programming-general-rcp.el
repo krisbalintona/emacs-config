@@ -301,7 +301,7 @@
 (use-package re-builder
   :ensure nil
   :custom
-  (reb-re-syntax 'rx))
+  (reb-re-syntax 'read))
 
 ;;;; Modes
 ;;;;; Conf-mode
