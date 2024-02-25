@@ -376,7 +376,6 @@ With a prefix argument, show NLINES of context."
       (3 'change-log-name)
       (4 'change-log-date))))
   (vc-annotate-display-mode 'scale)     ; Scale to oldest
-  (log-edit-setup-add-author nil)
   (add-log-mailing-address "krisbalintona@gmail.com")
   (add-log-keep-changes-together t)
   :config
@@ -388,7 +387,9 @@ With a prefix argument, show NLINES of context."
 (use-package log-edit
   :ensure nil
   :general (:keymaps 'log-edit-mode-map
-                     [remap log-edit-comment-search-backward] 'consult-history))
+                     [remap log-edit-comment-search-backward] 'consult-history)
+  :custom
+  (log-edit-setup-add-author nil))
 
 ;;;;; Diff-mode
 (use-package diff-mode

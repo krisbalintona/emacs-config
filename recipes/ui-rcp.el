@@ -420,12 +420,6 @@ This version removes delimiters.")
   (kb/mlscroll-set-colors))
 
 ;;;; Other UI
-;;;;; Fringes
-;; Places the fringes outside the margins, closest to the frame edge. The gutter
-;; looks less cramped with some space between it and buffer. Useful for
-;; `diff-hl'.
-(setq-default fringes-outside-margins t)
-
 ;;;;; Hide-mode-line
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line

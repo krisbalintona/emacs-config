@@ -429,7 +429,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                        ignore-window-parameters))
+                                             ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
@@ -542,14 +542,12 @@ timestamp)."
   (burly-tabs-mode))
 
 ;;;;; Perfect-margin
+;; Center the window contents via setting the margins
 (use-package perfect-margin
-  ;; Trying out `centered-window' because this fancy stuff with the
-  ;; frings/margins messes makes functionality with certain other packages a
-  ;; pain
-  :disabled
   :diminish
   :hook (elpaca-after-init . perfect-margin-mode)
   :custom
+  (fringes-outside-margins nil)
   (perfect-margin-visible-width 128)
   (perfect-margin-only-set-left-margin nil)
   (perfect-margin-ignore-modes
@@ -577,29 +575,40 @@ timestamp)."
       (global-set-key (kbd (concat margin "<" multiple "wheel-up>")) 'mwheel-scroll)
       (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll)))
 
-  ;; In order to split windows sensibly (horizontally when desirable). Inspired
-  ;; by `visual-fill-column-split-window-sensibly'. A relevant issue might be
-  ;; found at https://github.com/mpwang/perfect-margin/issues/9
-  (defun kb/split-window-sensibly (&optional window)
-    "tk"
-    (let ((margins (window-margins window))
-          (fringes (window-fringes window))
-          new)
-      ;; Unset the margins and try to split the window. I choose to set fringes
-      ;; and margins both to 0, though adapting this to depend on the value of
-      ;; `olivetti-style' would remove undesirable behavior in edge cases
-      (set-window-margins window 0 0)
-      (set-window-fringes window 0 0)
-      (unwind-protect
-          (setq new (split-window-sensibly window))
-        (when (not new)
-          (set-window-margins window (car margins) (cdr margins))
-          (set-window-fringes window (car fringes) (cdr fringes))))))
-  (setq split-window-preferred-function 'kb/split-window-sensibly))
+  ;; Fix window splitting
+  (defun kb/window-splittable-p (window &optional horizontal)
+    "Override for `window-splittable-p'.
+Determine if WINDOW is splittable."
+    (when (and (window-live-p window)
+               (not (window-parameter window 'window-side)))
+      (with-current-buffer (window-buffer window)
+        (if horizontal
+            (and (memq window-size-fixed '(nil height))
+                 (numberp split-width-threshold)
+                 (>= (if (bound-and-true-p perfect-margin-mode)
+                         ;; NOTE 2024-02-25: Added this. Not sure if this is
+                         ;; foolproof, since all it does is take into
+                         ;; consideration the margins and fringes, but for now
+                         ;; it's a sufficient approximation
+                         (window-total-width window)
+                       (window-width window))
+                     (max split-width-threshold
+                          (* 2 (max window-min-width 2)))))
+          (and (memq window-size-fixed '(nil width))
+               (numberp split-height-threshold)
+               (>= (window-height window)
+                   (max split-height-threshold
+                        (* 2 (max window-min-height
+                                  (if mode-line-format 2 1))))))))))
+  (advice-add 'window-splittable-p :override #'kb/window-splittable-p))
 
 ;;;;; Centered-window
+;; Center the window contents via setting the fringes
 (use-package centered-window
+  :disabled ; Prefer margins over fringes, since fringes tend to be used more by other packages
   :custom
+  (fringes-outside-margins t) ; REVIEW 2024-02-25: Haven't tested if this is desirable yet
+  (cwm-lighter nil)
   (cwm-centered-window-width 128)
   (cwm-ignore-buffer-predicates
    '((lambda (buf)
