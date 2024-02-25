@@ -389,7 +389,10 @@ With a prefix argument, show NLINES of context."
   :general (:keymaps 'log-edit-mode-map
                      [remap log-edit-comment-search-backward] 'consult-history)
   :custom
-  (log-edit-setup-add-author nil))
+  (log-edit-setup-add-author nil)
+  :config
+  ;; I can see the files from the Diff with C-c C-d
+  (remove-hook 'log-edit-hook #'log-edit-show-files))
 
 ;;;;; Diff-mode
 (use-package diff-mode
