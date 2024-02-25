@@ -584,9 +584,9 @@ ARG and REDISPLAY are identical to the original function."
                 (pixel-scroll-precision-interpolation-total-time
                  (/ pixel-scroll-precision-interpolation-total-time 2.0)))
       (setq target-pixel
-            (* (line-pixel-height)
-               (round (/ (if (<= 0 target-pixel) target-pixel (- (window-body-height nil t) (abs target-pixel)))
-                         (line-pixel-height)))))
+            (if (<= 0 target-pixel)
+                target-pixel
+              (- (window-body-height nil t) (abs target-pixel))))
       (setq distance-in-pixels (- target-pixel current-pixel))
       ;; FIXME 2024-01-23: `pixel-scroll-precision-interpolate' seems to have a
       ;; bug where occasionally trying to go to pixel 0 (top of buffer) will
