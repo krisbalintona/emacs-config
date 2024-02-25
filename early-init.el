@@ -18,7 +18,7 @@
 (setq package-enable-at-startup nil)
 
 ;; Faster to disable these graphical elements before they've been initialized
-;; (menu-bar-mode -1)
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 

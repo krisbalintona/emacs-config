@@ -420,15 +420,6 @@ This version removes delimiters.")
   (kb/mlscroll-set-colors))
 
 ;;;; Other UI
-;;;;; Menu-bar
-;; Experimenting with toggling the UI just in case I find something useful or
-;; interesting in there
-(defun kb/toggle-menu-bar ()
-  "Toggles `menu-bar-mode' elements."
-  (interactive)
-  (if menu-bar-mode (menu-bar-mode -1) (menu-bar-mode 1)))
-(define-key global-map (kbd "<f7>") #'kb/toggle-menu-bar)
-
 ;;;;; Fringes
 ;; Places the fringes outside the margins, closest to the frame edge. The gutter
 ;; looks less cramped with some space between it and buffer. Useful for
