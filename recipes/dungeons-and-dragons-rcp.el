@@ -26,22 +26,39 @@
 
 ;;;; Bespoke keywords
 (with-eval-after-load 'org
-  (defcustom kb/dnd-keywords
-    '(("character" . '((((background light)) (:foreground "PaleVioletRed3"))
-                       (((background dark)) (:foreground "PaleVioletRed1"))))
-      ("place" . '((((background light)) (:foreground "DeepSkyBlue"))
-                   (((background dark)) (:foreground "DeepSkyBlue"))))
-      ("designation" . '((((background light)) (:background "orange2"))
-                         (((background dark)) (:background "orange1")))))
-    "Keywords used for for playing Dungeons and Dragons.
-Is an alist from keyword, as a string, to the foreground of the
-link whose path is that keyword.")
+  (defface kb/dnd-keywords-character
+    '((((background light))
+       :foreground "PaleVioletRed3")
+      (((background dark))
+       :foreground "PaleVioletRed1"))
+    "Face for characters.")
 
-  (defface kb/dnd-faces-missing '((((background light)) (:strike-through "red"))
-                                  (((background dark)) (:strike-through "red")))
+  (defface kb/dnd-keywords-place
+    '((((background light))
+       :foreground "DeepSkyBlue")
+      (((background dark))
+       :foreground "DeepSkyBlue"))
+    "Face for places.")
+
+  (defface kb/dnd-keywords-designation
+    '((((background light))
+       :background "orange2")
+      (((background dark))
+       :background "orange1"))
+    "Face for designations.")
+
+  (defcustom kb/dnd-keywords
+    '(("character" . kb/dnd-keywords-character)
+      ("place" . kb/dnd-keywords-place)
+      ("designation" . kb/dnd-keywords-designation))
+    "Keywords used for for playing Dungeons and Dragons.
+  Is an alist from keyword, as a string, to the foreground of the
+  link whose path is that keyword.")
+
+  (defface kb/dnd-faces-missing `((t :strike-through "red"))
     "Face used when keyword does not exist.
-Is the fallback face when using a keyword that does not exist in
-`kb/dnd-keywords.'")
+  Is the fallback face when using a keyword that does not exist in
+  `kb/dnd-keywords.'")
 
   (defun kb/dnd-link-face (keyword)
     "Calculate face used with `dnd' org link type.
