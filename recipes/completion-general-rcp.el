@@ -62,7 +62,9 @@
       enable-recursive-minibuffers t   ; Allow minibuffer commands in minibuffer
       read-answer-short t           ; also check `use-short-answers' for Emacs28
       resize-mini-windows t         ; Not sure what this does
-      minibuffer-eldef-shorten-default t) ; Shorten "(default ...)" to "[...]" in minibuffer prompts.
+      ;; Truncates the default value part of the minibuffer prompt (often
+      ;; "default ...") to something else
+      minibuffer-default-prompt-format " [%s]")
 (setq-default case-fold-search t)         ; For general regexp
 (setq minibuffer-prompt-properties        ; Don't show cursor in the minibuffer
       '(read-only t cursor-intangible t face minibuffer-prompt))

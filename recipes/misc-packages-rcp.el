@@ -128,13 +128,12 @@
 
   (defun kb/work-timer-set-faces ()
     "Set `work-timer-mode-line' according to dark or light theme."
-    (let* ((dark-p
-            (color-dark-p (color-name-to-rgb (face-attribute 'default :background))))
-           (initial-color "DarkOrange")
-           (foreground
-            (if dark-p
-                initial-color
-              (color-darken-name initial-color 15))))
+    (let* ((dark-p (color-dark-p (color-name-to-rgb (face-attribute 'default :background))))
+           (dark-foreground "DarkOrange")
+           (light-foreground
+            ;; Darken color by 15% if using a light theme
+            (color-darken-name dark-foreground 15))
+           (foreground (if dark-p dark-foreground light-foreground)))
       (set-face-foreground 'work-timer-mode-line foreground)))
   :config
   (work-timer-with-org-clock-mode)
