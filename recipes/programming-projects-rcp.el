@@ -360,8 +360,8 @@ With a prefix argument, show NLINES of context."
   :general (:keymaps 'vc-dir-mode-map
                      "G" 'vc-revert)
   :custom
-  (vc-git-log-edit-summary-target-len 50)
-  (vc-git-log-edit-summary-max-len 70)
+  (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
+  (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
   (vc-git-diff-switches              ; Have diff headers look similar to Magit's
    '("--patch-with-stat" "--histogram"))
   (vc-git-root-log-format               ; Taken from Prot
@@ -407,6 +407,10 @@ With a prefix argument, show NLINES of context."
   :general (:keymaps 'log-edit-mode-map
                      [remap log-edit-comment-search-backward] 'consult-history)
   :custom
+  (log-edit-headers-alist
+   '(("Summary" . log-edit-summary)
+     ("Fixes")
+     ("Author")))
   (log-edit-setup-add-author nil)
   :config
   ;; I can see the files from the Diff with C-c C-d
