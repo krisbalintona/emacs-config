@@ -84,8 +84,10 @@
 ;;;;; Project
 (use-package project
   :general
-  ([remap project-find-regexp] 'consult-git-grep)
   (:keymaps 'project-prefix-map
+            "g" 'consult-git-grep
+            "r" 'consult-ripgrep
+            "R" 'project-query-replace-regexp
             "m" 'magit-project-status
             "a" 'project-any-command
             "o" 'kb/project-multi-occur)
@@ -358,8 +360,8 @@ With a prefix argument, show NLINES of context."
   :general (:keymaps 'vc-dir-mode-map
                      "G" 'vc-revert)
   :custom
-  (vc-git-log-edit-summary-max-len 70)
   (vc-git-log-edit-summary-target-len 50)
+  (vc-git-log-edit-summary-max-len 70)
   (vc-git-diff-switches              ; Have diff headers look similar to Magit's
    '("--patch-with-stat" "--histogram"))
   (vc-git-root-log-format               ; Taken from Prot
