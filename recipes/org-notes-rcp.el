@@ -85,6 +85,7 @@
 * 1 Draft                                                     :ignore:export:
 ")))
   (denote-date-prompt-use-org-read-date t)
+  (denote-backlinks-show-context t)
   :init
   ;; Relative file paths
   (defun kb/denote-file-prompt (&optional files-matching-regexp)
