@@ -62,6 +62,101 @@
       (replace-regexp-in-string "&[lg]t;\\|[][]" "" timestamp))))
   (add-to-list 'org-export-filter-timestamp-functions #'kb/org-export-filter-timestamp-reformat))
 
+;;;; Custom processing of #+INCLUDE keyword
+;; Use denote links or denote:DENOTEID as the file path for #+INCLUDE keywords
+(with-eval-after-load 'ox
+  (require 'denote)
+  (defun kb/org-export-parse-include-value (value &optional dir)
+    "Extract the various parameters from #+include: VALUE.
+
+More specifically, this extracts the following parameters to a
+plist: :file, :coding-system, :location, :only-contents, :lines,
+:env, :minlevel, :args, and :block.
+
+The :file parameter is expanded relative to DIR.
+
+The :file, :block, and :args parameters are extracted
+positionally, while the remaining parameters are extracted as
+plist-style keywords.
+
+Any remaining unmatched content is passed through
+`org-babel-parse-header-arguments' (without evaluation) and
+provided as the :unmatched parameter."
+    (let* (location
+           (coding-system
+            (and (string-match ":coding +\\(\\S-+\\)>" value)
+                 (prog1 (intern (match-string 1 value))
+                   (setq value (replace-match "" nil nil value)))))
+           (file
+            (and (string-match "^\\(\".+?\"\\|\\S-+\\)\\(?:\\s-+\\|$\\)" value)
+                 (let ((matched (match-string 1 value)) stripped)
+                   (setq value (replace-match "" nil nil value))
+                   (when (string-match "\\(::\\(.*?\\)\\)\"?\\'"
+                                       matched)
+                     (setq location (match-string 2 matched))
+                     (setq matched
+                           (replace-match "" nil nil matched 1)))
+                   ;; HACK 2024-02-25: Added the following sexp. Checks if link
+                   ;; has a denote ID, and if so, changes the matched (file) to
+                   ;; the file corresponding to that ID. Allows me to use denote
+                   ;; links as the included file
+                   (when (string-match denote-id-regexp matched)
+                     (setq matched
+                           (denote-get-path-by-id (match-string 0 matched))))
+                   (setq stripped (org-strip-quotes matched))
+                   (if (org-url-p stripped)
+                       stripped
+                     (expand-file-name stripped dir)))))
+           (only-contents
+            (and (string-match ":only-contents *\\([^: \r\t\n]\\S-*\\)?"
+                               value)
+                 (prog1 (org-not-nil (match-string 1 value))
+                   (setq value (replace-match "" nil nil value)))))
+           (lines
+            (and (string-match
+                  ":lines +\"\\([0-9]*-[0-9]*\\)\""
+                  value)
+                 (prog1 (match-string 1 value)
+                   (setq value (replace-match "" nil nil value)))))
+           (env (cond
+                 ((string-match "\\<example\\>" value) 'literal)
+                 ((string-match "\\<export\\(?: +\\(.*\\)\\)?" value)
+                  'literal)
+                 ((string-match "\\<src\\(?: +\\(.*\\)\\)?" value)
+                  'literal)))
+           ;; Minimal level of included file defaults to the
+           ;; child level of the current headline, if any, or
+           ;; one.  It only applies is the file is meant to be
+           ;; included as an Org one.
+           (minlevel
+            (and (not env)
+                 (if (string-match ":minlevel +\\([0-9]+\\)" value)
+                     (prog1 (string-to-number (match-string 1 value))
+                       (setq value (replace-match "" nil nil value)))
+                   (get-text-property (point)
+                                      :org-include-induced-level))))
+           (args (and (eq env 'literal)
+                      (prog1 (match-string 1 value)
+                        (when (match-string 1 value)
+                          (setq value (replace-match "" nil nil value 1))))))
+           (block (and (or (string-match "\"\\(\\S-+\\)\"" value)
+                           (string-match "\\<\\(\\S-+\\)\\>" value))
+                       (or (= (match-beginning 0) 0)
+                           (not (= ?: (aref value (1- (match-beginning 0))))))
+                       (prog1 (match-string 1 value)
+                         (setq value (replace-match "" nil nil value))))))
+      (list :file file
+            :coding-system coding-system
+            :location location
+            :only-contents only-contents
+            :lines lines
+            :env env
+            :minlevel minlevel
+            :args args
+            :block block
+            :unmatched (org-babel-parse-header-arguments value t))))
+  (advice-add 'org-export-parse-include-value :override #'kb/org-export-parse-include-value))
+
 ;;;; Ox-odt
 (use-package ox-odt
   :ensure nil
