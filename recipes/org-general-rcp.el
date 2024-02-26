@@ -100,7 +100,10 @@
              :keymaps 'org-mode-map
              "n" 'org-num-mode)
   :custom
-  (org-num-face 'fixed-pitch))
+  (org-num-face 'fixed-pitch)
+  (org-num-skip-commented t)
+  (org-num-skip-footnotes t)
+  (org-num-skip-unnumbered t))
 
 ;;;;; Org-indent
 (use-package org-indent
