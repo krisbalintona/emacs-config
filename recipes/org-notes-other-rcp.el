@@ -49,6 +49,13 @@
          ;; (pdf-view-mode . pdf-view-roll-minor-mode)
          (pdf-view-mode . (lambda ()
                             (add-hook 'kill-buffer-hook #'kb/pdf-cleanup-windows-h nil t)))
+         (pdf-view-mode . (lambda ()         ; Invert mouse scrolling
+                            (if (boundp 'mwheel-scroll-up-function)
+                                (setq-local mwheel-scroll-up-function
+                                            #'pdf-view-scroll-down-or-previous-page))
+                            (if (boundp 'mwheel-scroll-down-function)
+                                (setq-local mwheel-scroll-down-function
+                                            #'pdf-view-scroll-up-or-next-page))))
          (pdf-annot-list-mode . (lambda ()
                                   (hl-line-mode -1))))
   :custom
@@ -108,7 +115,9 @@ get the contents and display them on demand."
   (advice-add 'org-noter-pdf--get-selected-text
               :override #'kb/org-noter-pdf--get-selected-text)
   :config
-  (setq tablist-context-window-display-action ; For context buffer
+  ;; Set the display action (e.g. window parameters) for the "context buffer"
+  ;; (the buffer that shows annotation contents in `pdf-annot-mode')
+  (setq tablist-context-window-display-action
         '((display-buffer-reuse-window tablist-display-buffer-split-below-and-attach)
           (window-height . 0.25)
           (inhibit-same-window . t)
