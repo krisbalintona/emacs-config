@@ -130,7 +130,44 @@ I currently hard-code the ID to the task that I want to clock in."
 I currently hard-code the ID to the task that I want to clock in."
         (when (equal org-clock-hd-marker
                      (org-id-find "20240225T181303.720440" :marker))
-          (org-clock-out))
+          (org-clock-out t))
+        ;; OPTIMIZE 2024-02-25: Then resume any interrupted timer afterwards.
+        ;; I've tried :clock-resume, but for some reason it doesn't work? I
+        ;; tried debugging this config to see how I'm messing things up, but I
+        ;; couldn't figure it out. So I just do it manually here.
+        ;;
+        ;; Snippet taken from `org-capture-finalize', minus checking for the
+        ;; :clock-resume property via (org-capture-get :clock-resume 'local)
+        (when (and (markerp (org-capture-get :interrupted-clock 'local))
+                   (buffer-live-p (marker-buffer
+                                   (org-capture-get :interrupted-clock 'local))))
+          (let ((clock-in-task (org-capture-get :interrupted-clock 'local)))
+            (org-with-point-at clock-in-task (org-clock-in)))
+          (message "Interrupted clock has been resumed"))))
+     ("I" "Idea with context" entry
+      (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
+      "* %u %?\n\n+ Context: %a"
+      :tree-type month
+      :empty-lines 1
+      :hook
+      (lambda ()                             ; Clock in
+        "Clock-in to my writing/journaling entry.
+I currently hard-code the ID to the task that I want to clock in."
+        ;; Mimics what occurs in `org-capture' to store the currently
+        ;; interrupted clock. I have to do it manually here, I think, because
+        ;; :hook runs prior to the org-capture-mode buffer being opened
+        (when (org-clock-is-active)
+          (org-capture-put :interrupted-clock
+                           (copy-marker org-clock-marker)))
+        (org-with-point-at (org-id-find "20240225T181303.720440" :marker)
+          (org-clock-in)))
+      :before-finalize ; NOTE 2024-02-25: I think this has to be all but :after-finalize
+      (lambda ()            ; Clock out
+        "Clock-out of my writing/journaling entry.
+I currently hard-code the ID to the task that I want to clock in."
+        (when (equal org-clock-hd-marker
+                     (org-id-find "20240225T181303.720440" :marker))
+          (org-clock-out t))
         ;; OPTIMIZE 2024-02-25: Then resume any interrupted timer afterwards.
         ;; I've tried :clock-resume, but for some reason it doesn't work? I
         ;; tried debugging this config to see how I'm messing things up, but I
