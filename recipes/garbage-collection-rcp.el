@@ -33,8 +33,8 @@
 
 ;; NOTE 2024-02-11: PLEASE REFERENCE https://emacsconf.org/2023/talks/gc/ FOR A
 ;; STATISTICALLY-INFORMED RECOMMENDATION FOR GC VARIABLES
-;; (setq garbage-collection-messages t)
-;; (setq gc-cons-percentage 0.15)
+(setq garbage-collection-messages t)
+(setq gc-cons-percentage 0.15)
 
 (add-hook (if (featurep 'elpaca)
               'elpaca-after-init-hook
