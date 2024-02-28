@@ -368,6 +368,7 @@ If called with `universal-arg', then replace links in all denote buffers."
 ;; Useful Denote utilities
 (use-package denote-explore
   :after denote
+  :ensure-system-package (dot . graphviz)
   :init
   (define-advice denote-explore-identify-duplicate-identifiers
       (:override nil kb/denote-explore-identify-duplicate-identifiers)
