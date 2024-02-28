@@ -367,21 +367,15 @@ If called with `universal-arg', then replace links in all denote buffers."
 ;; Useful Denote utilities
 (use-package denote-explore
   :after denote
-  :ensure-system-package (dot . graphviz)
-  :init
-  (define-advice denote-explore-identify-duplicate-identifiers
-      (:override nil kb/denote-explore-identify-duplicate-identifiers)
-    "Only look at notes, not all files."
-    (interactive)
-    (if-let* ((notes (denote-directory-files nil nil t))
-              (ids (mapcar #'denote-retrieve-filename-identifier notes))
-              (dups (delete-dups
-                     (cl-remove-if-not
-                      (lambda (id)
-                        (member id (cdr (member id ids)))) ids))))
-        (message "Duplicate identifier(s): %s"
-                 (mapconcat (lambda (id) id) dups ", "))
-      (message "No duplicate identifiers found"))))
+  ;; NOTE 2024-02-28: Don't forget to install the required dependencies required
+  ;; for my chosen `denote-explore-network-format'
+  :ensure-system-package ((dot . graphviz)
+                          (R . r))
+  :custom
+  (denote-explore-network-directory     ; Have to end path in slash
+   (no-littering-expand-var-file-name "denote-explore/"))
+  (denote-explore-network-format 'd3.js)
+  (denote-explore-network-keywords-ignore '("archive")))
 
 ;;;; Denote-menu
 (use-package denote-menu
