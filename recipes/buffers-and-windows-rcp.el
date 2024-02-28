@@ -514,7 +514,7 @@ timestamp)."
   (ibuffer-saved-filter-groups      ; NOTE 2024-02-11: Order of entries matters!
    `(("Basic"
       ("Help" ,(-flatten `(or ,(mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes))))
-      ("Notes" (directory . ,(expand-file-name kb/notes-dir)))
+      ("Org" (directory . ,org-directory))
       ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir))
                                             (remove "/home/krisbalintona/.emacs.d/recipes"
                                                     (remove "/home/krisbalintona/.emacs.d/site-lisp"
