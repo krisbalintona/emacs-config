@@ -30,7 +30,6 @@
 ;;;; Denote
 ;;;;; This
 (use-package denote
-  :ensure (:type git :host github :repo "protesilaos/denote")
   :functions 'kb/denote-search-from-id
   :autoload 'denote-directory-files
   :hook ((dired-mode . denote-dired-mode)
