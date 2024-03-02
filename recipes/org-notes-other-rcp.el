@@ -484,6 +484,7 @@ Uses the current annotation at point's ID."
 
 ;;;;; Custom MPV notes
 (with-eval-after-load 'org
+  ;; Keymap
   (defvar-keymap kb/mpv-org-map
     :doc "Keymap for my mpv.el commands for use in `org-mode'.
 Commands that control MPV playback mimic MPV keybinds."
@@ -533,7 +534,30 @@ input."
    `(("Downloads" "d" ytdl-download-folder ytdl-download-extra-args)
      ("Music"  "m" ytdl-music-folder ytdl-music-extra-args)
      ("Videos" "v"  ytdl-video-folder ytdl-video-extra-args)
-     ("Temp" "t" ,(expand-file-name "/tmp/") ("-S" "res:720,fps")))))
+     ("Temp" "t" ,(expand-file-name "/tmp/") ("-S" "res:720,fps"))))
+  :config
+  (with-eval-after-load 'org
+    ;; Custom `org-attach' integration
+    (defun kb/ytdl-org-attach (url)
+      "Download and video from URL and attach it to `org-attach-dir'.
+A modified version of `ytdl-download'."
+      (interactive "MProvide URL: ")
+      (when (ytdl--youtube-dl-missing-p)
+        (error "youtube-dl is not installed."))
+      (let* ((dir (org-attach-dir))
+             (destination (expand-file-name (ytdl--get-filename dir url) dir))
+             (extra-ytdl-args '("-S" "res:720,fps"))
+             (dl-type-name "Org-attach"))
+        (ytdl--download-async url
+                              destination
+                              extra-ytdl-args
+                              nil
+                              dl-type-name)))
+
+    (add-to-list 'org-attach-commands
+                 '((?Y ?\C-Y) kb/ytdl-org-attach
+                   "Provide a URL and have \"ytdl\" download the corresponding video and attach that file.")
+                 t)))
 
 ;;;; Zotxt
 ;; Integration between Emacs and Zotero
