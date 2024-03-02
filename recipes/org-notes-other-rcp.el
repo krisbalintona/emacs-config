@@ -521,6 +521,20 @@ input."
   ;; Go to timestamps with `org-open-at-point'
   (add-hook 'org-open-at-point-functions 'mpv-seek-to-position-at-point))
 
+;;;;; Ytdl
+(use-package ytdl
+  :ensure-system-package (yt-dlp)
+  :custom
+  (ytdl-command "yt-dlp")
+  (ytdl-always-query-default-filename 'yes-confirm)
+  (ytdl-music-folder (expand-file-name "~/Music/"))
+  (ytdl-video-folder (expand-file-name "~/Videos/"))
+  (ytdl-download-types
+   `(("Downloads" "d" ytdl-download-folder ytdl-download-extra-args)
+     ("Music"  "m" ytdl-music-folder ytdl-music-extra-args)
+     ("Videos" "v"  ytdl-video-folder ytdl-video-extra-args)
+     ("Temp" "t" ,(expand-file-name "/tmp/") ("-S" "res:720,fps")))))
+
 ;;;; Zotxt
 ;; Integration between Emacs and Zotero
 (use-package zotxt
