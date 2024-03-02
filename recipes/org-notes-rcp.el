@@ -124,7 +124,8 @@ My version camelCases keywords."
 
   ;; Set face parameters
   (set-face-attribute 'denote-faces-signature nil :weight 'bold)
-  (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic))
+  (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
+  (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow))
 
 ;;;;; Return denote file path based on ID
 (with-eval-after-load 'denote
