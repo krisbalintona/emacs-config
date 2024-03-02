@@ -86,21 +86,6 @@
   (denote-date-prompt-use-org-read-date t)
   (denote-backlinks-show-context t)
   :init
-  ;; Relative file paths
-  (defun kb/denote-file-prompt (&optional files-matching-regexp)
-    "Prompt for file with identifier in variable `denote-directory'.
-With optional FILES-MATCHING-REGEXP, filter the candidates per
-the given regular expression.
-
-My version shows the file paths relative to the
-`denote-directory'."
-    (let* ((files (denote-directory-files files-matching-regexp :omit-current))
-           (files-rel (mapcar (lambda (f) (file-relative-name f denote-directory)) files)))
-      (expand-file-name
-       (completing-read "Select note: " files-rel nil nil nil 'denote-file-history)
-       denote-directory)))
-  (advice-add 'denote-file-prompt :override 'kb/denote-file-prompt)
-
   ;; Camel cased keywords
   (defun kb/denote-sluggify-keyword (str)
     "Sluggify STR while joining separate words.
