@@ -413,7 +413,7 @@ have `org-warning' face."
 ;;;;; Olivetti
 ;; Better writing environment
 (use-package olivetti
-  :hook (((org-mode Info-mode emacs-news-view-mode) . olivetti-mode)
+  :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
          (kb/themes . (lambda ()
                         (with-eval-after-load 'olivetti
                           (set-face-attribute 'olivetti-fringe nil
