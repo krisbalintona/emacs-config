@@ -33,6 +33,7 @@
   :functions 'kb/denote-search-from-id
   :autoload 'denote-directory-files
   :hook ((dired-mode . denote-dired-mode)
+         (denote-dired-mode . toggle-truncate-lines)
          (before-save . kb/denote-insert-identifier-maybe)
          (after-save . kb/denote-auto-rename))
   :general (kb/note-keys
