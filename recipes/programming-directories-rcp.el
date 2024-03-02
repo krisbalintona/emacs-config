@@ -43,7 +43,7 @@
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
   (dired-kill-when-opening-new-dired-buffer t)  ; Basically `dired-single'
   (dired-listing-switches "-alhg") ; Flags `dired' passes to `ls'; more useful and readable
-  (dired-omit-verbose nil)
+  (dired-omit-verbose t)
   ;; Always copy/delete recursively?
   (dired-recursive-copies  'always)
   (dired-recursive-deletes 'top)
@@ -51,7 +51,7 @@
   (dired-create-destination-dirs 'ask)
   (dired-vc-rename-file t)
   :config
-  (general-unbind '(normal visual motion) dired-mode-map "SPC") ; Unbind SPC so leader key is avaiable
+  (general-unbind '(normal visual motion) dired-mode-map "SPC") ; Unbind SPC so leader key is available
 
   ;; Mark files and do a sexp in their buffers. Based off
   ;; https://superuser.com/a/176629
