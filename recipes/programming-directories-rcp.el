@@ -38,7 +38,7 @@
             "h" 'dired-up-directory
             "l" 'dired-find-file)
   :custom
-  (dired-auto-revert-buffer t)          ; Automatically revert buffer
+  (dired-auto-revert-buffer t)
   (dired-dwim-target t)                 ; Guess default target directory?
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
   (dired-kill-when-opening-new-dired-buffer t)  ; Basically `dired-single'

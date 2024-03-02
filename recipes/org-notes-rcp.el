@@ -42,7 +42,6 @@
              "tr" 'denote-keywords-remove)
   :custom
   (denote-directory kb/notes-dir)
-  (denote-modules '(xref ffap))
   (denote-known-keywords nil)
   (denote-prompts '(subdirectory title keywords signature template))
   (denote-org-front-matter "#+title: %s
@@ -113,7 +112,6 @@ My version camelCases keywords."
           (keyword . kb/denote-sluggify-keyword)))
   :config
   (denote-rename-buffer-mode)
-  (denote-modules-global-mode)
   (denote-menu-bar-mode -1)
 
   (defun kb/denote-auto-rename ()
