@@ -35,7 +35,8 @@
   :hook ((dired-mode . denote-dired-mode)
          (denote-dired-mode . toggle-truncate-lines)
          (before-save . kb/denote-insert-identifier-maybe)
-         (after-save . kb/denote-auto-rename))
+         (after-save . kb/denote-auto-rename)
+         (kb/themes . kb/kb/themes-setup-denote-faces))
   :general (kb/note-keys
              "f" 'denote-open-or-create
              "i" 'denote-insert-link
@@ -86,6 +87,7 @@
   (denote-date-prompt-use-org-read-date t)
   (denote-backlinks-show-context t)
   :init
+  (require 's)
   ;; Camel cased keywords
   (defun kb/denote-sluggify-keyword (str)
     "Sluggify STR while joining separate words.
@@ -108,9 +110,11 @@ My version camelCases keywords."
         (denote-rename-file-using-front-matter f :auto-confirm))))
 
   ;; Set face parameters
-  (set-face-attribute 'denote-faces-signature nil :weight 'bold)
-  (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
-  (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow))
+  (defun kb/kb/themes-setup-denote-faces ()
+    "Set up denote faces."
+    (set-face-attribute 'denote-faces-signature nil :weight 'bold)
+    (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
+    (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow)))
 
 ;;;;; Return denote file path based on ID
 (with-eval-after-load 'denote
