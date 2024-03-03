@@ -204,8 +204,8 @@ reading links."
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                         (<= x 1)
-                                         (>= x 0))))))
+                                              (<= x 1)
+                                              (>= x 0))))))
 
   (defun kb/avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.
@@ -484,6 +484,8 @@ Uses the current annotation at point's ID."
 
 ;;;;; Custom MPV notes
 (with-eval-after-load 'org
+  (require 'mpv)
+
   ;; Keymap
   (defvar-keymap kb/mpv-org-map
     :doc "Keymap for my mpv.el commands for use in `org-mode'.
@@ -495,12 +497,12 @@ Commands that control MPV playback mimic MPV keybinds."
     "p" #'mpv-pause
     "b" #'mpv-seek-backward
     "f" #'mpv-seek-forward
-    "g" #'(lambda (time)
-            "Prompt user for a time to jump to.
+    "g" (lambda (time)
+          "Prompt user for a time to jump to.
 Takes HH:MM:SS time format. Uses `org-timer-hms-to-secs' to parse user
 input."
-            (interactive "MJump to time (HH:MM:SS format): ")
-            (org-timer-hms-to-secs time))
+          (interactive "MJump to time (HH:MM:SS format): ")
+          (org-timer-hms-to-secs time))
     "9" #'mpv-volume-decrease
     "0" #'mpv-volume-increase
     "[" #'mpv-speed-decrease
