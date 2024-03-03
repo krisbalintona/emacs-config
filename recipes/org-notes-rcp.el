@@ -378,7 +378,53 @@ If called with `universal-arg', then replace links in all denote buffers."
             "/ r" 'denote-menu-filter
             "/ /" 'denote-menu-filter
             "/ k" 'denote-menu-filter-by-keyword
-            "e" 'denote-menu-export-to-dired))
+            "e" 'denote-menu-export-to-dired
+            "RET" 'kb/denote-menu-goto-note
+            "o" 'kb/denote-menu-goto-note-other-window
+            "C-o" 'kb/denote-menu-display-note-other-window
+            "r" 'kb/denote-menu-set-signature
+            "R" 'kb/denote-menu-set-signature)
+  :custom
+  (denote-menu-show-file-signature t)
+  (denote-menu-show-file-type nil)
+  (denote-menu-initial-regex "zettels/[^z-a]*==")
+  :config
+  (defun kb/denote-menu--get-path-at-point ()
+    "Get the file path of the note at point."
+    (let* ((tab-id (tabulated-list-get-id))
+           (denote-id (first (string-split tab-id "-")))
+           (path (denote-get-path-by-id denote-id)))
+      path))
+
+  (defun kb/denote-menu-goto-note ()
+    "Jump to the note corresponding to the entry at point."
+    (interactive)
+    (find-file (kb/denote-menu--get-path-at-point)))
+
+  (defun kb/denote-menu-goto-note-other-window ()
+    "Open in another window the note corresponding to the entry at point."
+    (interactive)
+    (find-file-other-window (kb/denote-menu--get-path-at-point)))
+
+  (defun kb/denote-menu-display-note-other-window ()
+    "Just display the current note in another window."
+    (interactive)
+    (display-buffer (find-file-noselect (kb/denote-menu--get-path-at-point)) t))
+
+  (defun kb/denote-menu-set-signature ()
+    "Set the note at point's signature."
+    (interactive)
+    (let* ((path (kb/denote-menu--get-path-at-point))
+           (file-type (denote-filetype-heuristics path))
+           (title (denote-retrieve-title-value path file-type))
+           (initial-sig (denote-retrieve-filename-signature path))
+           (new-sig (denote-signature-prompt
+                     (unless (string= initial-sig "000") initial-sig) ; 000 is the "unsorted" signature for me
+                     "Choose new signature"))
+           (keywords
+            (denote-retrieve-front-matter-keywords-value path file-type))
+           (denote-rename-no-confirm t)) ; Want it automatic
+      (denote-rename-file path title keywords new-sig))))
 
 ;;;; Consult-notes
 (use-package consult-notes
