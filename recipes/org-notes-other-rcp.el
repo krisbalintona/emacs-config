@@ -491,18 +491,13 @@ Uses the current annotation at point's ID."
     :doc "Keymap for my mpv.el commands for use in `org-mode'.
 Commands that control MPV playback mimic MPV keybinds."
     :repeat (mpv-pause mpv-seek-backward)
-    "o" #'mpv-play
+    "o" #'kb/mpv-play
     "O" #'mpv-play-url
     "i" #'mpv-insert-playback-position
     "p" #'mpv-pause
     "b" #'mpv-seek-backward
     "f" #'mpv-seek-forward
-    "g" (lambda (time)
-          "Prompt user for a time to jump to.
-Takes HH:MM:SS time format. Uses `org-timer-hms-to-secs' to parse user
-input."
-          (interactive "MJump to time (HH:MM:SS format): ")
-          (org-timer-hms-to-secs time))
+    "g" #'kb/mpv-jump-to-playback-position
     "9" #'mpv-volume-decrease
     "0" #'mpv-volume-increase
     "[" #'mpv-speed-decrease
@@ -510,7 +505,7 @@ input."
   (define-key global-map (kbd "H-m") kb/mpv-org-map)
 
   ;; Taken from https://github.com/kljohann/mpv.el/wiki
-  (defun kb/mpvi-org-metareturn-insert-playback-position ()
+  (defun kb/mpv-org-metareturn-insert-playback-position ()
     "When on an `org-timer' formatted list, insert playback position."
     (when-let ((item-beg (org-in-item-p)))
       (when (and (not (bound-and-true-p org-timer-start-time))
@@ -519,7 +514,7 @@ input."
                    (goto-char item-beg)
                    (and (not (org-invisible-p)) (org-at-item-timer-p))))
         (mpv-insert-playback-position t))))
-  (add-hook 'org-metareturn-hook #'kb/mpvi-org-metareturn-insert-playback-position)
+  (add-hook 'org-metareturn-hook #'kb/mpv-org-metareturn-insert-playback-position)
 
   ;; Go to timestamps with `org-open-at-point'
   (add-hook 'org-open-at-point-functions 'mpv-seek-to-position-at-point))
