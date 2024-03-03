@@ -110,6 +110,14 @@ My version camelCases keywords."
                  (denote-filename-is-note-p f))
         (denote-rename-file-using-front-matter f :auto-confirm))))
 
+  ;; HACK 2024-03-03: Temporary fix for org-capture creating CUSTOM_ID
+  ;; properties. See related issue:
+  ;; https://github.com/protesilaos/denote/issues/267
+  (advice-add 'org-capture :around
+              (lambda (orig-fun &rest args)
+                (let ((denote-org-store-link-to-heading nil))
+                  (apply orig-fun args))))
+
   ;; Set face parameters
   (defun kb/themes-setup-denote-faces ()
     "Set up denote faces."
