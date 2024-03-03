@@ -85,6 +85,7 @@
 ")))
   (denote-date-prompt-use-org-read-date t)
   (denote-backlinks-show-context t)
+  (denote-rename-buffer-format "%s %t")
   :init
   (require 's)
   ;; Camel cased keywords
