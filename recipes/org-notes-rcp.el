@@ -35,7 +35,7 @@
          (denote-dired-mode . toggle-truncate-lines)
          (before-save . kb/denote-insert-identifier-maybe)
          (after-save . kb/denote-auto-rename)
-         (kb/themes . kb/kb/themes-setup-denote-faces))
+         (kb/themes . kb/themes-setup-denote-faces))
   :general (kb/note-keys
              "f" 'denote-open-or-create
              "i" 'denote-insert-link
@@ -101,6 +101,7 @@ My version camelCases keywords."
   (denote-rename-buffer-mode)
   (denote-menu-bar-mode -1)
 
+  ;; Rename denote note. Meant to be added to `after-save-hook'
   (defun kb/denote-auto-rename ()
     "Auto rename denote file."
     (when-let ((f (buffer-file-name)))
@@ -109,11 +110,13 @@ My version camelCases keywords."
         (denote-rename-file-using-front-matter f :auto-confirm))))
 
   ;; Set face parameters
-  (defun kb/kb/themes-setup-denote-faces ()
+  (defun kb/themes-setup-denote-faces ()
     "Set up denote faces."
-    (set-face-attribute 'denote-faces-signature nil :weight 'bold)
-    (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
-    (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow)))
+    (modus-themes-with-colors
+      (set-face-attribute 'denote-faces-signature nil :weight 'bold)
+      (set-face-attribute 'denote-faces-title nil :weight 'bold :foreground rainbow-2)
+      (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
+      (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow))))
 
 ;;;;; Standardizing note front-matter
 (with-eval-after-load 'denote
