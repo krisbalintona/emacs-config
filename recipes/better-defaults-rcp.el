@@ -74,7 +74,7 @@
               ring-bell-function 'ignore)
 
 ;;;; Cursor settings
-(setq-default cursor-type 'bar
+(setq-default cursor-type '(bar . 4)
               cursor-in-non-selected-windows 'box
               x-stretch-cursor t)       ; Stretch cursor to the glyph width
 
