@@ -486,6 +486,23 @@ Uses the current annotation at point's ID."
 (with-eval-after-load 'org
   (require 'mpv)
 
+
+  (defun kb/mpv-play ()
+    "Call `mpv-start' from the org-attach directory."
+    (interactive)
+    (if-let ((dir (org-attach-dir)))
+        (mpv-play (read-file-name
+                   "Select video: "
+                   (file-name-as-directory dir)))
+      (call-interactively 'mpv-play)))
+
+  (defun kb/mpv-jump-to-playback-position (time)
+    "Prompt user for a time to jump to.
+Takes HH:MM:SS time format. Uses `org-timer-hms-to-secs' to parse user
+input."
+    (interactive "MJump to time (HH:MM:SS format): ")
+    (org-timer-hms-to-secs time))
+
   ;; Keymap
   (defvar-keymap kb/mpv-org-map
     :doc "Keymap for my mpv.el commands for use in `org-mode'.
