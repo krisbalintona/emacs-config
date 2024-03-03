@@ -135,7 +135,7 @@
 (use-package edebug
   :ensure nil
   :custom
-  (edebug-initial-mode 'go)
+  (edebug-initial-mode 'step)
   :init
   ;; The following is taken from
   ;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/.
