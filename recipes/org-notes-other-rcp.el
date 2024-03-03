@@ -546,7 +546,7 @@ A modified version of `ytdl-download'."
       (interactive "MProvide URL: ")
       (when (ytdl--youtube-dl-missing-p)
         (error "youtube-dl is not installed."))
-      (let* ((dir (org-attach-dir))
+      (let* ((dir (or (org-attach-dir) (org-attach-dir-get-create)))
              (destination (expand-file-name (ytdl--get-filename dir url) dir))
              (extra-ytdl-args '("-S" "res:720,fps"))
              (dl-type-name "Org-attach"))
