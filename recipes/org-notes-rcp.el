@@ -30,7 +30,6 @@
 ;;;; Denote
 ;;;;; This
 (use-package denote
-  :functions 'kb/denote-search-from-id
   :autoload 'denote-directory-files
   :hook ((dired-mode . denote-dired-mode)
          (denote-dired-mode . toggle-truncate-lines)
@@ -115,15 +114,6 @@ My version camelCases keywords."
     (set-face-attribute 'denote-faces-signature nil :weight 'bold)
     (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
     (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow)))
-
-;;;;; Return denote file path based on ID
-(with-eval-after-load 'denote
-  (defun kb/denote-search-from-id (id)
-    (when-let* ((full-path (car (cl-remove-if-not
-                                 (lambda (f) (string-match-p (rx (literal id)) f))
-                                 (denote-directory-files))))
-                (title (denote-retrieve-title-value full-path 'org)))
-      title)))
 
 ;;;;; Standardizing note front-matter
 (with-eval-after-load 'denote
