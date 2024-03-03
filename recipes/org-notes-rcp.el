@@ -375,9 +375,10 @@ If called with `universal-arg', then replace links in all denote buffers."
   (kb/note-keys "m" 'denote-menu-list-notes)
   (:keymaps 'denote-menu-mode-map
             "|" 'denote-menu-clear-filters
-            "/ r" 'denote-menu-filter
-            "/ /" 'denote-menu-filter
-            "/ k" 'denote-menu-filter-by-keyword
+            "/r" 'denote-menu-filter
+            "//" 'denote-menu-filter
+            "/k" 'denote-menu-filter-by-keyword
+            "/e" 'kb/denote-menu-edit-filter
             "e" 'denote-menu-export-to-dired
             "RET" 'kb/denote-menu-goto-note
             "o" 'kb/denote-menu-goto-note-other-window
@@ -387,8 +388,20 @@ If called with `universal-arg', then replace links in all denote buffers."
   :custom
   (denote-menu-show-file-signature t)
   (denote-menu-show-file-type nil)
-  (denote-menu-initial-regex "zettels/[^z-a]*==")
+  (denote-menu-initial-regex (first kb/denote-menu-filter-presets))
+  :preface
+  (defvar kb/denote-menu-filter-presets
+    '("zettels/[^z-a]n*" "bib/[^z-a]*")
+    "The common filters I use.")
   :config
+  (defun kb/denote-menu-edit-filter (show-presets-p)
+    "Edit the currently existing filter."
+    (interactive "P")
+    (setq denote-menu-current-regex
+          (if show-presets-p
+              (completing-read "Filter preset: " kb/denote-menu-filter-presets)
+            (read-from-minibuffer "Filter regex: " denote-menu-current-regex))))
+
   (defun kb/denote-menu--get-path-at-point ()
     "Get the file path of the note at point."
     (let* ((tab-id (tabulated-list-get-id))
