@@ -158,6 +158,9 @@
                                          :style nil)
                       :inherit 'mode-line)
 
+  (modus-themes-with-colors
+    (set-face-attribute 'cursor nil :background magenta-cooler))
+
   (dolist (face (list 'tab-bar-tab
                       'tab-bar-tab-inactive
                       'tab-bar-tab-group-current
