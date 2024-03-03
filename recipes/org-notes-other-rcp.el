@@ -486,7 +486,6 @@ Uses the current annotation at point's ID."
 (with-eval-after-load 'org
   (require 'mpv)
 
-
   (defun kb/mpv-play ()
     "Call `mpv-start' from the org-attach directory."
     (interactive)
@@ -560,7 +559,8 @@ A modified version of `ytdl-download'."
         (error "youtube-dl is not installed."))
       (let* ((dir (or (org-attach-dir) (org-attach-dir-get-create)))
              (destination (expand-file-name (ytdl--get-filename dir url) dir))
-             (extra-ytdl-args '("-S" "res:720,fps"))
+             (extra-ytdl-args '("--write-auto-sub" "--write-sub" "--sub-lang" "en" "--convert-subs" "srt" ; Create .srt file
+                                "-S" "res:720,fps")) ; Set maximum resolution
              (dl-type-name "Org-attach"))
         (ytdl--download-async url
                               destination
