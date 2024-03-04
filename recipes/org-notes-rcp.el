@@ -507,18 +507,21 @@ Note: this function needs to be performant, otherwise `denote-menu'
 loading time suffer greatly."
     (let* ((sig1 (aref (cadr a) 0))
            (sig2 (aref (cadr b) 0)))
+      ;; FIXME 2024-03-04: I have to replace "."s with "=" because in
+      ;; `kb/denote-menu--path-to-entry' I do the reverse. This is quite
+      ;; fragile, so try to find a more robust alternative
+      (setq sig1 (replace-regexp-in-string "\\." "=" sig1)
+            sig2 (replace-regexp-in-string "\\." "=" sig2))
       ;; Use `kb/denote-menu--signature-lessp' if both a and b have signatures.
       ;; If not, then return t if a has a signature, nil if b has a signature,
       ;; and if neither has a signature, then default to `string-collate-lessp'
-      ;; for their dates as returned by `denote-menu-date'
       (cond ((and sig1 sig2)
              (kb/denote-menu--signature-lessp sig1 sig2))
             (sig1 t)
             (sig2 nil)
             (t
-             (string-collate-lessp
-              (denote-menu-date (denote-get-path-by-id (car (split-string (car a) "-"))))
-              (denote-menu-date (denote-get-path-by-id (car (split-string (car b) "-")))))))))
+             (string-collate-lessp (car (split-string (car a) "-"))
+                                   (car (split-string (car b) "-")))))))
 
   (defun kb/denote-menu--next-signature (file)
     "Return the signature following the signature of FILE.
