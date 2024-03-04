@@ -379,6 +379,7 @@ If called with `universal-arg', then replace links in all denote buffers."
             "//" 'denote-menu-filter
             "/k" 'denote-menu-filter-by-keyword
             "/e" 'kb/denote-menu-edit-filter
+            "/E" 'kb/denote-menu-edit-filter-presets
             "e" 'denote-menu-export-to-dired
             "RET" 'kb/denote-menu-goto-note
             "o" 'kb/denote-menu-goto-note-other-window
@@ -394,13 +395,19 @@ If called with `universal-arg', then replace links in all denote buffers."
     '("zettels/[^z-a]n*" "bib/[^z-a]*")
     "The common filters I use.")
   :config
-  (defun kb/denote-menu-edit-filter (show-presets-p)
+  (defun kb/denote-menu-edit-filter ()
     "Edit the currently existing filter."
-    (interactive "P")
+    (interactive)
     (setq denote-menu-current-regex
-          (if show-presets-p
-              (completing-read "Filter preset: " kb/denote-menu-filter-presets)
-            (read-from-minibuffer "Filter regex: " denote-menu-current-regex))))
+          (read-from-minibuffer "Filter regex: " denote-menu-current-regex))
+    (revert-buffer))
+
+  (defun kb/denote-menu-edit-filter-presets ()
+    "Edit the currently existing filter."
+    (interactive)
+    (setq denote-menu-current-regex
+          (completing-read "Filter preset: " kb/denote-menu-filter-presets))
+    (revert-buffer))
 
   (defun kb/denote-menu--get-path-at-point ()
     "Get the file path of the note at point."
