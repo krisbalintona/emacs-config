@@ -495,6 +495,25 @@ Returns t if SIG1 should be sorted before SIG2, nil otherwise."
        ((= index1 index2)
         (kb/denote-menu--signature-lessp tail1 tail2)))))
 
+  (defun kb/denote-menu--signature-sorter (a b)
+    "Tabulated-list sorter for signatures A and B.
+Note: this function needs to be performant, otherwise `denote-menu'
+loading time suffer greatly."
+    (let* ((sig1 (aref (cadr a) 0))
+           (sig2 (aref (cadr b) 0)))
+      ;; Use `kb/denote-menu--signature-lessp' if both a and b have signatures.
+      ;; If not, then return t if a has a signature, nil if b has a signature,
+      ;; and if neither has a signature, then default to `string-collate-lessp'
+      ;; for their dates as returned by `denote-menu-date'
+      (cond ((and sig1 sig2)
+             (kb/denote-menu--signature-lessp sig1 sig2))
+            (sig1 t)
+            (sig2 nil)
+            (t
+             (string-collate-lessp
+              (denote-menu-date (denote-get-path-by-id (car (split-string (car a) "-"))))
+              (denote-menu-date (denote-get-path-by-id (car (split-string (car b) "-")))))))))
+
   (defun kb/denote-menu--next-signature (file)
     "Return the signature following the signature of FILE.
 The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
