@@ -621,12 +621,29 @@ The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
                        ((= 90 char) "aa"))) ; Is "Z"
       (concat (string-remove-suffix tail sig) next)))
 
+  (defun kb/denote-menu--add-group-text-property (text sig)
+    "Add the `denote-menu-sig' text property to TEXT.
+Its value will be SIG.
+
+Call this function for its side effects."
+    (add-text-properties 0
+                         (length text)
+                         (list 'denote-menu-sig (if sig
+                                                    (car (kb/denote-menu--signature-decompose sig))
+                                                  "No signature"))
+                         text))
+
   (defun kb/denote-menu-set-signature-interactively ()
     "Set the note at point's signature by selecting another note.
 Select another note and choose whether to be its the sibling or child."
     (interactive)
     (let* ((file-at-point (kb/denote-menu--get-path-at-point))
            (files (remove file-at-point (denote-menu--entries-to-paths)))
+           (files
+            (cl-loop for file in files collect
+                     (let ((sig (denote-retrieve-filename-signature file)))
+                       (kb/denote-menu--add-group-text-property file sig)
+                       file)))
            (largest-sig-length
             (cl-loop for file in files
                      maximize (length (denote-retrieve-filename-signature file))))
@@ -635,20 +652,28 @@ Select another note and choose whether to be its the sibling or child."
               (cl-sort completions
                        'kb/denote-menu--signature-lessp
                        :key (lambda (c) (denote-retrieve-filename-signature c)))))
+           (group-function
+            (lambda (title transform)
+              (if transform
+                  title
+                (get-text-property 0 'denote-menu-sig title))))
            (affixation-function
             (lambda (cands)
               (cl-loop for cand in cands collect
-                       (list (denote-retrieve-front-matter-title-value cand (denote-filetype-heuristics cand))
-                             (string-pad (denote-retrieve-filename-signature cand)
-                                         (+ largest-sig-length 3))
-                             nil))))
+                       (let ((title (denote-retrieve-front-matter-title-value
+                                     cand (denote-filetype-heuristics cand)))
+                             (sig (denote-retrieve-filename-signature cand)))
+                         (kb/denote-menu--add-group-text-property title sig)
+                         (list title
+                               (string-pad sig (+ largest-sig-length 3))
+                               nil)))))
            (selection
             (completing-read "Choose a note: "
                              (lambda (str pred action)
                                (if (eq action 'metadata)
                                    `(metadata
                                      (display-sort-function . ,display-sort-function)
-                                     (cycle-sort-function . ,#'identity)
+                                     (group-function . ,group-function)
                                      (affixation-function . ,affixation-function))
                                  (complete-with-action action files str pred)))
                              nil t))
