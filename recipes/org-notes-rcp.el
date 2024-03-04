@@ -395,6 +395,7 @@ If called with `universal-arg', then replace links in all denote buffers."
     '("zettels/[^z-a]n*" "bib/[^z-a]*")
     "The common filters I use.")
   :config
+  ;; Custom denote-menu functions and commands
   (defun kb/denote-menu-edit-filter ()
     "Edit the currently existing filter."
     (interactive)
@@ -583,7 +584,69 @@ Select another note and choose whether to be its the sibling or child."
       (denote-rename-file file-at-point
                           (denote-retrieve-front-matter-title-value file-at-point file-type)
                           (denote-retrieve-front-matter-keywords-value file-at-point file-type)
-                          new-sig))))
+                          new-sig)))
+
+  ;; Redefinitions for built-ins
+  (defun kb/denote-menu--path-to-entry (path)
+    "Convert PATH to an entry matching the form of `tabulated-list-entries'."
+    (if denote-menu-show-file-signature
+        `(,(denote-menu--path-to-unique-identifier path)
+          [,(replace-regexp-in-string "=" "." (denote-menu-signature path))
+           ,(denote-menu-title path)
+           ,(propertize (format "%s" (denote-extract-keywords-from-path path)) 'face 'italic)])
+
+      `(,(denote-menu--path-to-unique-identifier path)
+        [(,(denote-menu-date path) . (action ,(lambda (button) (funcall denote-menu-action path))))
+         ,(denote-menu-title path)
+         ,(propertize (format "%s" (denote-extract-keywords-from-path path)) 'face 'italic)])))
+  (advice-add 'denote-menu--path-to-entry :override #'kb/denote-menu--path-to-entry)
+
+  (defun kb/denote-menu-signature (path)
+    "Return file signature from denote PATH identifier."
+    (let ((signature (denote-retrieve-filename-signature path)))
+      (if signature
+          (propertize signature 'face 'denote-faces-signature)
+        (propertize " " 'face 'font-lock-comment-face))))
+  (advice-add 'denote-menu-signature :override #'kb/denote-menu-signature)
+
+  (defun kb/denote-menu-title (path)
+    "Return title of PATH.
+If the denote file PATH has no title, return the string \"(No
+Title)\".  Otherwise return PATH's title.
+
+Determine whether a denote file has a title based on the
+following rule derived from the file naming scheme:
+
+1. If the path does not have a \"--\", it has no title."
+
+    (let* ((title (if (or (not (string-match-p "--" path)))
+                      (propertize "(No Title)" 'face 'font-lock-comment-face)
+                    (propertize (denote-retrieve-front-matter-title-value path (denote-filetype-heuristics path))
+                                'face 'denote-faces-title)))
+           (file-type (propertize (concat "." (denote-menu-type path)) 'face 'font-lock-keyword-face)))
+      (if denote-menu-show-file-type
+          (concat title " " file-type)
+        title)))
+  (advice-add 'denote-menu-title :override #'kb/denote-menu-title)
+
+  (define-derived-mode denote-menu-mode tabulated-list-mode "Denote Menu"
+    "Major mode for browsing a list of Denote files."
+    :interactive nil
+    (if denote-menu-show-file-signature
+        (setq tabulated-list-format `[("Signature" ,denote-menu-signature-column-width kb/denote-menu--signature-sorter)
+                                      ("Title" ,denote-menu-title-column-width t)
+                                      ("Keywords" ,denote-menu-keywords-column-width nil)])
+
+      (setq tabulated-list-format `[("Date" ,denote-menu-date-column-width t)
+                                    ("Title" ,denote-menu-title-column-width t)
+                                    ("Keywords" ,denote-menu-keywords-column-width nil)]))
+
+    (denote-menu-update-entries)
+    (setq tabulated-list-sort-key (if denote-menu-show-file-signature
+                                      '("Signature" . nil)
+                                    '("Date" . t)))
+    (tabulated-list-init-header)
+    (tabulated-list-print)))
 
 ;;;; Consult-notes
 (use-package consult-notes
