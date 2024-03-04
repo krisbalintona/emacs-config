@@ -432,7 +432,9 @@ with prefix-arg."
 ;;;; Denote-menu
 (use-package denote-menu
   :general
-  (kb/note-keys "m" 'denote-menu-list-notes)
+  (kb/note-keys
+    "m" 'denote-menu-list-notes
+    "r" 'kb/denote-menu-set-signature-interactively)
   (:keymaps 'denote-menu-mode-map
             "|" 'denote-menu-clear-filters
             "/r" 'denote-menu-filter
@@ -633,12 +635,28 @@ Call this function for its side effects."
                                                   "No signature"))
                          text))
 
-  (defun kb/denote-menu-set-signature-interactively ()
+  (defun kb/denote-menu-set-signature-interactively (files)
     "Set the note at point's signature by selecting another note.
-Select another note and choose whether to be its the sibling or child."
-    (interactive)
-    (let* ((file-at-point (kb/denote-menu--get-path-at-point))
-           (files (remove file-at-point (denote-menu--entries-to-paths)))
+Select another note and choose whether to be its the sibling or child.
+
+Also accepts FILES, which are the list of file paths which are
+considered.
+
+If nil or called interactively, then defaults to the value of
+`denote-directory-files' with the \"==\" regexp and :omit-current
+non-nil. Otherwise,when called interactively in `denote-menu', it will
+be the value of `denote-menu--entries-to-paths'."
+    (interactive (list (if (eq major-mode 'denote-menu-mode)
+                           (denote-menu--entries-to-paths)
+                         (denote-directory-files "==" :omit-current))))
+    (let* ((file-at-point (cond ((derived-mode-p 'denote-menu-mode)
+                                 (kb/denote-menu--get-path-at-point))
+                                ((and (derived-mode-p 'org-mode)
+                                      (denote-file-is-note-p (buffer-file-name)))
+                                 (buffer-file-name))
+                                (t
+                                 (user-error "Must use in `denote-menu' or a Denote note!"))))
+           (files (remove file-at-point (or files (denote-directory-files "==" :omit-current))))
            (files
             (cl-loop for file in files collect
                      (let ((sig (denote-retrieve-filename-signature file)))
