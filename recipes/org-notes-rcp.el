@@ -544,34 +544,47 @@ Right now, a \"signature portion\" is delimited by:
   (defun kb/denote-menu--signature-lessp (sig1 sig2)
     "Compare two strings based on my signature sorting rules.
 Returns t if SIG1 should be sorted before SIG2, nil otherwise."
-    (let* ((parts1 (kb/denote-menu--signature-decompose sig1))
-           (parts2 (kb/denote-menu--signature-decompose sig2))
-           (head1 (car parts1))
-           (head2 (car parts2))
-           (tail1 (cdr parts1))
-           (tail2 (cdr parts2))
-           ;; HACK 2024-03-03: Right now, this treats uppercase and lowercase as
-           ;; the same, as well as ignores the difference between, e.g., "a" and
-           ;; "aa"
-           (index1 (string-to-number head1 16))
-           (index2 (string-to-number head2 16)))
+    (if (and sig1 sig2)
+        (let* ((parts1 (kb/denote-menu--signature-decompose sig1))
+               (parts2 (kb/denote-menu--signature-decompose sig2))
+               (head1 (car parts1))
+               (head2 (car parts2))
+               (tail1 (cdr parts1))
+               (tail2 (cdr parts2))
+               ;; HACK 2024-03-03: Right now, this treats uppercase and
+               ;; lowercase as the same, as well as ignores the difference
+               ;; between, e.g., "a" and "aa"
+               (index1 (string-to-number head1 16))
+               (index2 (string-to-number head2 16)))
+          (cond
+           ;; Sig1 is earlier in order than sig2
+           ((< index1 index2) t)
+           ;; Sig2 is later than sig2
+           ((> index1 index2) nil)
+           ;; Sig1 has no tail while sig2 has a tail, so it's later than sig2
+           ((and (not tail1) tail2) t)
+           ;; Sig1 has a tail while sig2 has no tail, so it's earlier than sig2
+           ((and tail1 (not tail2)) nil)
+           ;; Neither sig2 nor sig2 have a tail, and their indexes must be
+           ;; equal, so they must have identical signatures. So do something
+           ;; with it now. (Returning nil seems to put the oldest earlier, so we
+           ;; do that.)
+           ((and (not tail1) (not tail2)) nil)
+           ;; Their indices are equal, and they still have a tail, so process
+           ;; those tails next
+           ((= index1 index2)
+            (kb/denote-menu--signature-lessp tail1 tail2))))
       (cond
-       ;; Sig1 is earlier in order than sig2
-       ((< index1 index2) t)
-       ;; Sig2 is later than sig2
-       ((> index1 index2) nil)
-       ;; Sig1 has no tail while sig2 has a tail, so it's later than sig2
-       ((and (not tail1) tail2) t)
-       ;; Sig1 has a tail while sig2 has no tail, so it's earlier than sig2
-       ((and tail1 (not tail2)) nil)
-       ;; Neither sig2 nor sig2 have a tail, and their indexes must be equal, so
-       ;; they must have identical signatures. So do something with it now.
-       ;; (Returning nil seems to put the oldest earlier, so we do that.)
-       ((and (not tail1) (not tail2)) nil)
-       ;; Their indices are equal, and they still have a tail, so process those
-       ;; tails next
-       ((= index1 index2)
-        (kb/denote-menu--signature-lessp tail1 tail2)))))
+       ;; If neither are supplied, then use `string-collate-lessp'
+       ((not (or sig1 sig2))
+        (string-collate-lessp sig1 sig2))
+       ;; If sig1 is present but not sig2, then return true so that sig1 can be
+       ;; earlier in the list
+       ((and sig1 (not sig2))
+        t)
+       ;; If sig2 is present but not sig1, then return nil to put sig2 earlier
+       ((and (not sig1) sig2)
+        nil))))
   (advice-add 'denote-sort-signature-lessp
               :override (lambda (f1 f2)
                           (kb/denote-menu--signature-lessp (denote-retrieve-filename-signature f1)
@@ -588,16 +601,7 @@ loading time suffer greatly."
       ;; fragile, so try to find a more robust alternative
       (setq sig1 (replace-regexp-in-string "\\." "=" sig1)
             sig2 (replace-regexp-in-string "\\." "=" sig2))
-      ;; Use `kb/denote-menu--signature-lessp' if both a and b have signatures.
-      ;; If not, then return t if a has a signature, nil if b has a signature,
-      ;; and if neither has a signature, then default to `string-collate-lessp'
-      (cond ((and sig1 sig2)
-             (kb/denote-menu--signature-lessp sig1 sig2))
-            (sig1 t)
-            (sig2 nil)
-            (t
-             (string-collate-lessp (car (split-string (car a) "-"))
-                                   (car (split-string (car b) "-")))))))
+      (kb/denote-menu--signature-lessp sig1 sig2)))
 
   (defun kb/denote-menu--next-signature (file)
     "Return the signature following the signature of FILE.
