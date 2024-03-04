@@ -499,16 +499,17 @@ with prefix-arg."
     (interactive)
     (display-buffer (find-file-noselect (kb/denote-menu--get-path-at-point)) t))
 
-  (defun kb/denote-menu-set-signature ()
+  (defun kb/denote-menu-set-signature (path new-sig)
     "Set the note at point's signature."
-    (interactive)
-    (let* ((path (kb/denote-menu--get-path-at-point))
+    (interactive (list (kb/denote-menu--get-path-at-point) nil))
+    (let* ((path (or path (kb/denote-menu--get-path-at-point)))
            (file-type (denote-filetype-heuristics path))
            (title (denote-retrieve-title-value path file-type))
            (initial-sig (denote-retrieve-filename-signature path))
-           (new-sig (denote-signature-prompt
-                     (unless (string= initial-sig "000") initial-sig) ; 000 is the "unsorted" signature for me
-                     "Choose new signature"))
+           (new-sig (or new-sig
+                        (denote-signature-prompt
+                         (unless (string= initial-sig "000") initial-sig) ; 000 is the "unsorted" signature for me
+                         "Choose new signature")))
            (keywords
             (denote-retrieve-front-matter-keywords-value path file-type))
            (denote-rename-no-confirm t)) ; Want it automatic
@@ -722,10 +723,7 @@ the :omit-current non-nil. Otherwise,when called interactively in
                             "a" "1"))
               (kb/denote-menu--next-signature selection)))
            (denote-rename-no-confirm t))
-      (denote-rename-file file-at-point
-                          (denote-retrieve-front-matter-title-value file-at-point file-type)
-                          (denote-retrieve-front-matter-keywords-value file-at-point file-type)
-                          new-sig)))
+      (kb/denote-menu-set-signature file-at-point new-sig)))
 
   ;; Redefinitions for built-ins
   (defun kb/denote-menu--path-to-entry (path)
