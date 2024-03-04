@@ -682,12 +682,16 @@ be the value of `denote-menu--entries-to-paths'."
            (affixation-function
             (lambda (cands)
               (cl-loop for cand in cands collect
-                       (let ((title (denote-retrieve-front-matter-title-value
-                                     cand (denote-filetype-heuristics cand)))
-                             (sig (denote-retrieve-filename-signature cand)))
-                         (kb/denote-menu--add-group-text-property title sig)
-                         (list title
-                               (string-pad sig (+ largest-sig-length 3))
+                       (let* ((title (denote-retrieve-front-matter-title-value
+                                      cand (denote-filetype-heuristics cand)))
+                              (propertized-title (propertize title 'face 'denote-faces-title))
+                              (sig (denote-retrieve-filename-signature cand))
+                              (propertized-sig
+                               (replace-regexp-in-string "=" (propertize "." 'face 'shadow)
+                                                         (propertize sig 'face 'denote-faces-signature))))
+                         (kb/denote-menu--add-group-text-property propertized-title sig)
+                         (list propertized-title
+                               (string-pad propertized-sig (+ largest-sig-length 3))
                                nil)))))
            (selection
             (completing-read "Choose a note: "
