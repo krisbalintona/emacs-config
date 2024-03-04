@@ -549,7 +549,7 @@ The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
 Select another note and choose whether to be its the sibling or child."
     (interactive)
     (let* ((file-at-point (kb/denote-menu--get-path-at-point))
-           (files (denote-menu--entries-to-paths))
+           (files (remove file-at-point (denote-menu--entries-to-paths)))
            (largest-sig-length
             (cl-loop for file in files
                      maximize (length (denote-retrieve-filename-signature file))))
