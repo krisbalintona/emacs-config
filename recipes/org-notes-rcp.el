@@ -383,7 +383,7 @@ If called with `universal-arg', then replace links in all denote buffers."
             "RET" 'kb/denote-menu-goto-note
             "o" 'kb/denote-menu-goto-note-other-window
             "C-o" 'kb/denote-menu-display-note-other-window
-            "r" 'kb/denote-menu-set-signature
+            "r" 'kb/denote-menu-set-signature-interactively
             "R" 'kb/denote-menu-set-signature)
   :custom
   (denote-menu-show-file-signature t)
@@ -437,7 +437,127 @@ If called with `universal-arg', then replace links in all denote buffers."
            (keywords
             (denote-retrieve-front-matter-keywords-value path file-type))
            (denote-rename-no-confirm t)) ; Want it automatic
-      (denote-rename-file path title keywords new-sig))))
+      (denote-rename-file path title keywords new-sig)))
+
+  (defun kb/denote-menu--signature-decompose (sig)
+    "Take a SIG and return a cons.
+The car of this cons will be the \"front\" portion of the signature,
+while the cdr of this cons will be the remaining portion of the
+signature."
+    (let (head tail)
+      (save-match-data
+        (if (string-match (if (s-numeric-p (substring sig 0 1))
+                              (rx (or (any alpha) "=")) ; Numbered index head
+                            (rx (or (any digit) "=")))  ; Alphabet index head
+                          sig)
+            (setq head (substring sig 0 (match-beginning 0))
+                  tail (string-remove-prefix "=" (substring sig (match-beginning 0))))
+          (setq head sig
+                tail nil)))
+      (cons head tail)))
+
+  (defun kb/denote-menu--signature-lessp (sig1 sig2)
+    "Compare two strings based on my signature sorting rules.
+Returns t if SIG1 should be sorted before SIG2, nil otherwise."
+    (let* ((parts1 (kb/denote-menu--signature-decompose sig1))
+           (parts2 (kb/denote-menu--signature-decompose sig2))
+           (head1 (car parts1))
+           (head2 (car parts2))
+           (tail1 (cdr parts1))
+           (tail2 (cdr parts2))
+           ;; HACK 2024-03-03: Right now, this treats uppercase and lowercase as
+           ;; the same, as well as ignores the difference between, e.g., "a" and
+           ;; "aa"
+           (index1 (string-to-number head1 16))
+           (index2 (string-to-number head2 16)))
+      (cond
+       ;; Sig1 is earlier in order than sig2
+       ((< index1 index2) t)
+       ;; Sig2 is later than sig2
+       ((> index1 index2) nil)
+       ;; Sig1 has no tail while sig2 has a tail, so it's later than sig2
+       ((and (not tail1) tail2) t)
+       ;; Sig1 has a tail while sig2 has no tail, so it's earlier than sig2
+       ((and tail1 (not tail2)) nil)
+       ;; Neither sig2 nor sig2 have a tail, and their indexes must be equal, so
+       ;; they must have identical signatures. So do something with it now.
+       ;; (Returning nil seems to put the oldest earlier, so we do that.)
+       ((and (not tail1) (not tail2)) nil)
+       ;; Their indices are equal, and they still have a tail, so process those
+       ;; tails next
+       ((= index1 index2)
+        (kb/denote-menu--signature-lessp tail1 tail2)))))
+
+  (defun kb/denote-menu--next-signature (file)
+    "Return the signature following the signature of FILE.
+The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
+\"z\" is \"A\", and for \"Z\" \"aa\"."
+    (let* ((sig (denote-retrieve-filename-signature file))
+           (parts (kb/denote-menu--signature-decompose sig))
+           tail char next)
+      (while (cdr parts)                  ; Get final portion of signature
+        (setq parts (kb/denote-menu--signature-decompose (cdr parts))))
+      (setq tail (car parts)
+            char (string-to-char tail)
+            next (cond ((s-numeric-p tail) ; A number
+                        (number-to-string
+                         (1+ (string-to-number tail))))
+                       ((and (>= char 97) (< char 122)) ; Between "a" and "z"
+                        (char-to-string (1+ char)))
+                       ((and (>= char 65) (< char 90)) ; Between "A" and "Z"
+                        (char-to-string (1+ char)))
+                       ((= 122 char) "A") ; Is "z"
+                       ;; REVIEW 2024-03-03: Presently, we choose to go into
+                       ;; double-letters when we go above Z
+                       ((= 90 char) "aa"))) ; Is "Z"
+      (concat (string-remove-suffix tail sig) next)))
+
+  (defun kb/denote-menu-set-signature-interactively ()
+    "Set the note at point's signature by selecting another note.
+Select another note and choose whether to be its the sibling or child."
+    (interactive)
+    (let* ((file-at-point (kb/denote-menu--get-path-at-point))
+           (files (denote-menu--entries-to-paths))
+           (largest-sig-length
+            (cl-loop for file in files
+                     maximize (length (denote-retrieve-filename-signature file))))
+           (display-sort-function
+            (lambda (completions)
+              (cl-sort completions
+                       'kb/denote-menu--signature-lessp
+                       :key (lambda (c) (denote-retrieve-filename-signature c)))))
+           (affixation-function
+            (lambda (cands)
+              (cl-loop for cand in cands collect
+                       (list (denote-retrieve-front-matter-title-value cand (denote-filetype-heuristics cand))
+                             (string-pad (denote-retrieve-filename-signature cand)
+                                         (+ largest-sig-length 3))
+                             nil))))
+           (selection
+            (completing-read "Choose a note: "
+                             (lambda (str pred action)
+                               (if (eq action 'metadata)
+                                   `(metadata
+                                     (display-sort-function . ,display-sort-function)
+                                     (cycle-sort-function . ,#'identity)
+                                     (affixation-function . ,affixation-function))
+                                 (complete-with-action action files str pred)))
+                             nil t))
+           (file-type (denote-filetype-heuristics selection))
+           (current-sig (denote-retrieve-filename-signature selection))
+           (childp
+            (string= "Child" (completing-read "Choose relation: " '("Sibling" "Child"))))
+           (new-sig
+            (if childp
+                (concat current-sig
+                        (if (s-numeric-p (substring current-sig (1- (length current-sig))))
+                            "a" "1"))
+              (kb/denote-menu--next-signature selection)))
+           (denote-rename-no-confirm t))
+      (denote-rename-file file-at-point
+                          (denote-retrieve-front-matter-title-value file-at-point file-type)
+                          (denote-retrieve-front-matter-keywords-value file-at-point file-type)
+                          new-sig))))
 
 ;;;; Consult-notes
 (use-package consult-notes
