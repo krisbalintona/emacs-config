@@ -456,9 +456,16 @@ If called with `universal-arg', then replace links in all denote buffers."
     "Take a SIG and return a cons.
 The car of this cons will be the \"front\" portion of the signature,
 while the cdr of this cons will be the remaining portion of the
-signature."
+signature.
+
+Right now, a \"signature portion\" is delimited by:
+- The \"=\" character.
+- A change from a number to letter.
+- A change from a letter to number."
     (let (head tail)
       (save-match-data
+        ;; HACK 2024-03-04: I hardcode "=" as an additional delimiter of
+        ;; signature portions
         (if (string-match (if (s-numeric-p (substring sig 0 1))
                               (rx (or (any alpha) "=")) ; Numbered index head
                             (rx (or (any digit) "=")))  ; Alphabet index head
