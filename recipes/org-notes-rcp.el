@@ -379,9 +379,9 @@ If called with `universal-arg', then replace links in all denote buffers."
             "/r" 'denote-menu-filter
             "//" 'denote-menu-filter
             "/k" 'denote-menu-filter-by-keyword
-            "/e" 'kb/denote-menu-edit-filter
-            "/E" 'kb/denote-menu-edit-filter-presets
-            "e" 'denote-menu-export-to-dired
+            "/e" 'kb/denote-menu-edit-filter-presets
+            "/E" 'kb/denote-menu-edit-filter
+            "E" 'denote-menu-export-to-dired
             "RET" 'kb/denote-menu-goto-note
             "o" 'kb/denote-menu-goto-note-other-window
             "C-o" 'kb/denote-menu-display-note-other-window
