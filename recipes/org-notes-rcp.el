@@ -666,21 +666,32 @@ Select another note and choose whether to be its the sibling or child."
     "Convert PATH to an entry matching the form of `tabulated-list-entries'."
     (if denote-menu-show-file-signature
         `(,(denote-menu--path-to-unique-identifier path)
-          [,(replace-regexp-in-string "=" "." (denote-menu-signature path))
+          [,(denote-menu-signature path)
            ,(denote-menu-title path)
-           ,(propertize (format "%s" (denote-extract-keywords-from-path path)) 'face 'italic)])
+           ,(concat (propertize "(" 'face 'shadow)
+                    (string-join
+                     (mapcar (lambda (s) (propertize s 'face 'denote-faces-keywords))
+                             (denote-extract-keywords-from-path path))
+                     (propertize ", " 'face 'shadow))
+                    (propertize ")" 'face 'shadow))])
 
       `(,(denote-menu--path-to-unique-identifier path)
         [(,(denote-menu-date path) . (action ,(lambda (button) (funcall denote-menu-action path))))
          ,(denote-menu-title path)
-         ,(propertize (format "%s" (denote-extract-keywords-from-path path)) 'face 'italic)])))
+         ,(concat (propertize "(" 'face 'shadow)
+                  (string-join
+                   (mapcar (lambda (s) (propertize s 'face 'denote-faces-keywords))
+                           (denote-extract-keywords-from-path path))
+                   (propertize ", " 'face 'shadow))
+                  (propertize ")" 'face 'shadow))])))
   (advice-add 'denote-menu--path-to-entry :override #'kb/denote-menu--path-to-entry)
 
   (defun kb/denote-menu-signature (path)
     "Return file signature from denote PATH identifier."
     (let ((signature (denote-retrieve-filename-signature path)))
       (if signature
-          (propertize signature 'face 'denote-faces-signature)
+          (replace-regexp-in-string "=" (propertize "." 'face 'shadow)
+                                    (propertize signature 'face 'denote-faces-signature))
         (propertize " " 'face 'font-lock-comment-face))))
   (advice-add 'denote-menu-signature :override #'kb/denote-menu-signature)
 
