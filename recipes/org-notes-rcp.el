@@ -125,7 +125,8 @@ My version camelCases keywords."
       (set-face-attribute 'denote-faces-signature nil :weight 'bold)
       (set-face-attribute 'denote-faces-title nil :weight 'bold :foreground rainbow-2)
       (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
-      (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow))))
+      (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow)))
+  (kb/themes-setup-denote-faces))       ; Immediately call
 
 ;;;;; Standardizing note front-matter
 (with-eval-after-load 'denote
