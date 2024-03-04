@@ -371,7 +371,6 @@ If called with `universal-arg', then replace links in all denote buffers."
 
 ;;;; Denote-menu
 (use-package denote-menu
-  :ensure (:type git :host github :repo "namilus/denote-menu")
   :general
   (kb/note-keys "m" 'denote-menu-list-notes)
   (:keymaps 'denote-menu-mode-map
