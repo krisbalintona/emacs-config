@@ -458,7 +458,7 @@ with prefix-arg."
   (denote-menu-initial-regex (first kb/denote-menu-filter-presets))
   :preface
   (defvar kb/denote-menu-filter-presets
-    '("zettels/[^z-a]n*" "bib/[^z-a]*")
+    '("zettels/[^z-a]*" "bib/[^z-a]*")
     "The common filters I use.")
   :config
   ;; Custom denote-menu functions and commands
