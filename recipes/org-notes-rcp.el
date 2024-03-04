@@ -536,6 +536,9 @@ Right now, a \"signature portion\" is delimited by:
                 tail nil)))
       (cons head tail)))
 
+  ;; REVIEW 2024-03-04: Consider changing to take in files rather than
+  ;; signatures? If so, make sure I alter my advice for
+  ;; `denote-sort-signature-lessp'.
   (defun kb/denote-menu--signature-lessp (sig1 sig2)
     "Compare two strings based on my signature sorting rules.
 Returns t if SIG1 should be sorted before SIG2, nil otherwise."
@@ -567,6 +570,10 @@ Returns t if SIG1 should be sorted before SIG2, nil otherwise."
        ;; tails next
        ((= index1 index2)
         (kb/denote-menu--signature-lessp tail1 tail2)))))
+  (advice-add 'denote-sort-signature-lessp
+              :override (lambda (f1 f2)
+                          (kb/denote-menu--signature-lessp (denote-retrieve-filename-signature f1)
+                                                           (denote-retrieve-filename-signature f2))))
 
   (defun kb/denote-menu--signature-sorter (a b)
     "Tabulated-list sorter for signatures A and B.
