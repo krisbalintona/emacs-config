@@ -123,8 +123,8 @@ My version camelCases keywords."
     "Set up denote faces."
     (modus-themes-with-colors
       (set-face-attribute 'denote-faces-signature nil :weight 'bold)
-      (set-face-attribute 'denote-faces-title nil :weight 'bold :foreground rainbow-2)
-      (set-face-attribute 'denote-faces-keywords nil :weight 'normal :slant 'italic)
+      (set-face-attribute 'denote-faces-title nil :weight 'semibold :foreground cyan-cooler)
+      (set-face-attribute 'denote-faces-keywords nil :foreground keyword :slant 'italic)
       (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow)))
   (kb/themes-setup-denote-faces))       ; Immediately call
 
