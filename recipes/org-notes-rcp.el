@@ -282,7 +282,8 @@ My version camelCases keywords."
           (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
             (kill-buffer)))))))
 
-;;;;; Update link descriptions
+;;;;; Update link descriptions (old)
+;; FIXME 2024-03-04: Check how much of this is still relevant
 (with-eval-after-load 'denote
   (defun kb/denote--update-buffer-link-descriptions (buffer)
     "Update the link descriptions for all `denote' links in BUFFER,
@@ -356,6 +357,7 @@ If called with `universal-arg', then replace links in all denote buffers."
                replaced-count updated-notes))))
 
 ;;;; Denote-explore
+;;;;; This
 ;; Useful Denote utilities
 (use-package denote-explore
   :after denote
@@ -368,6 +370,50 @@ If called with `universal-arg', then replace links in all denote buffers."
    (no-littering-expand-var-file-name "denote-explore/"))
   (denote-explore-network-format 'd3.js)
   (denote-explore-network-keywords-ignore '("archive")))
+
+;;;;; Update link descriptions
+(with-eval-after-load 'org
+  (defun kb/denote-explore-update-link-descriptions ()
+    "Recreate denote link descriptions in the current buffer."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward (denote-org-extras--get-link-type-regexp 'denote) nil :no-error)
+        (condition-case er
+            (save-match-data
+              (let* ((link-beg (match-beginning 0))
+                     (link-end (match-end 0))
+                     (s (match-string-no-properties 0))
+                     (link (with-temp-buffer
+                             (let ((org-inhibit-startup nil))
+                               (insert s)
+                               (org-mode)
+                               (goto-char (point-min))
+                               (org-element-link-parser))))
+                     (type (org-element-property :type link))
+                     (path (org-element-property :path link))
+                     (file (denote-get-path-by-id (car (string-split path "::"))))
+                     (heading-custom-id (cadr (string-split path "::"))))
+                (goto-char link-beg)
+                (delete-region link-beg link-end)
+                (insert
+                 ;; TODO 2024-03-04: This is a brittle way to create the link.
+                 ;; Changes to Denote might break this. Avoid that.
+                 (if (and denote-org-store-link-to-heading heading-custom-id)
+                     (format "[[denote:%s::#%s][%s]]"
+                             (denote-retrieve-filename-identifier file)
+                             (string-remove-prefix "#" heading-custom-id)
+                             (concat (denote--link-get-description file)
+                                     "::"
+                                     (save-excursion
+                                       (with-current-buffer (find-file-noselect file)
+                                         (org-link-search heading-custom-id)
+                                         (org-link-display-format
+                                          (denote-link-ol-get-heading))))))
+                   (format "[[denote:%s][%s]]"
+                           (denote-retrieve-filename-identifier file)
+                           (denote--link-get-description file))))))
+          (error (message "Error encountered:  %s" (error-message-string err))))))))
 
 ;;;; Denote-menu
 (use-package denote-menu
