@@ -411,7 +411,8 @@ If called with `universal-arg', then replace links in all denote buffers."
     "Edit the currently existing filter."
     (interactive)
     (setq denote-menu-current-regex
-          (completing-read "Filter preset: " kb/denote-menu-filter-presets))
+          (completing-read "Filter preset: "
+                           (remove denote-menu-current-regex kb/denote-menu-filter-presets)))
     (revert-buffer))
 
   (defun kb/denote-menu--get-path-at-point ()
