@@ -373,13 +373,16 @@ If called with `universal-arg', then replace links in all denote buffers."
 
 ;;;;; Update link descriptions
 (with-eval-after-load 'org
-  (defun kb/denote-explore-update-link-descriptions ()
-    "Recreate denote link descriptions in the current buffer."
-    (interactive)
+  (defun kb/denote-explore-update-link-descriptions (confirmp)
+    "Recreate denote link descriptions in the current buffer.
+If called with CONFIMP, then prompt user to confirm a replacement. When
+interactively called, CONFIRMP is non-nil by default, flipping the value
+with prefix-arg."
+    (interactive (list (not current-prefix-arg)))
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward (denote-org-extras--get-link-type-regexp 'denote) nil :no-error)
-        (condition-case er
+        (condition-case err
             (save-match-data
               (let* ((link-beg (match-beginning 0))
                      (link-end (match-end 0))
@@ -393,27 +396,38 @@ If called with `universal-arg', then replace links in all denote buffers."
                      (type (org-element-property :type link))
                      (path (org-element-property :path link))
                      (file (denote-get-path-by-id (car (string-split path "::"))))
-                     (heading-custom-id (cadr (string-split path "::"))))
-                (goto-char link-beg)
-                (delete-region link-beg link-end)
-                (insert
-                 ;; TODO 2024-03-04: This is a brittle way to create the link.
-                 ;; Changes to Denote might break this. Avoid that.
-                 (if (and denote-org-store-link-to-heading heading-custom-id)
-                     (format "[[denote:%s::#%s][%s]]"
-                             (denote-retrieve-filename-identifier file)
-                             (string-remove-prefix "#" heading-custom-id)
-                             (concat (denote--link-get-description file)
-                                     "::"
-                                     (save-excursion
-                                       (with-current-buffer (find-file-noselect file)
-                                         (org-link-search heading-custom-id)
-                                         (org-link-display-format
-                                          (denote-link-ol-get-heading))))))
-                   (format "[[denote:%s][%s]]"
-                           (denote-retrieve-filename-identifier file)
-                           (denote--link-get-description file))))))
-          (error (message "Error encountered:  %s" (error-message-string err))))))))
+                     (heading-custom-id (cadr (string-split path "::")))
+                     (new-link-text
+                      ;; TODO 2024-03-04: This is a brittle way to create the
+                      ;; link. Changes to Denote might break this. Avoid that.
+                      (if (and denote-org-store-link-to-heading heading-custom-id)
+                          (format "[[denote:%s::#%s][%s]]"
+                                  (denote-retrieve-filename-identifier file)
+                                  (string-remove-prefix "#" heading-custom-id)
+                                  (concat (denote--link-get-description file)
+                                          "::"
+                                          (save-excursion
+                                            (with-current-buffer (find-file-noselect file)
+                                              (org-link-search heading-custom-id)
+                                              (org-link-display-format
+                                               (denote-link-ol-get-heading))))))
+                        (format "[[denote:%s][%s]]"
+                                (denote-retrieve-filename-identifier file)
+                                (denote--link-get-description file))))
+                     (current-link-text (buffer-substring link-beg link-end)))
+                (when (and (not (string= (substring-no-properties current-link-text) new-link-text))
+                           (or (not confirmp)
+                               (yes-or-no-p (concat "Replace this link? " current-link-text))))
+                  (goto-char link-beg)
+                  (delete-region link-beg link-end)
+                  (insert new-link-text))))
+          (error (message "[kb/denote-explore-update-link-descriptions] Error encountered:  %s"
+                          (error-message-string err))))))
+    (message "Corrected links in %s"
+             (propertize (denote-retrieve-front-matter-title-value
+                          (buffer-file-name)
+                          (denote-filetype-heuristics (buffer-file-name)))
+                         'face 'denote-faces-title))))
 
 ;;;; Denote-menu
 (use-package denote-menu
