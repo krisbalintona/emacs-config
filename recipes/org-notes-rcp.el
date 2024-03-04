@@ -390,6 +390,10 @@ If called with `universal-arg', then replace links in all denote buffers."
   :custom
   (denote-menu-show-file-signature t)
   (denote-menu-show-file-type nil)
+  (denote-menu-signature-column-width
+   (+ 6 (cl-loop for file in (denote-directory-files)
+                 maximize (length (denote-retrieve-filename-signature file)))))
+  (denote-menu-title-column-width 120)
   (denote-menu-initial-regex (first kb/denote-menu-filter-presets))
   :preface
   (defvar kb/denote-menu-filter-presets
