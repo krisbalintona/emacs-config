@@ -646,13 +646,17 @@ Select another note and choose whether to be its the sibling or child.
 Also accepts FILES, which are the list of file paths which are
 considered.
 
-If nil or called interactively, then defaults to the value of
-`denote-directory-files' with the \"==\" regexp and :omit-current
-non-nil. Otherwise,when called interactively in `denote-menu', it will
-be the value of `denote-menu--entries-to-paths'."
+If nil or called interactively, then defaults `denote-directory-files'
+constrained to notes with signatures (i.e. \"==\") and are in the
+current subdirectory (this is my bespoke desired behavior), as well as
+the :omit-current non-nil. Otherwise,when called interactively in
+`denote-menu', it will be the value of `denote-menu--entries-to-paths'."
     (interactive (list (if (eq major-mode 'denote-menu-mode)
                            (denote-menu--entries-to-paths)
-                         (denote-directory-files "==" :omit-current))))
+                         (denote-directory-files
+                          (rx (literal (car (last (butlast (file-name-split (buffer-file-name)) 1))))
+                              "/" (* alnum) "==")
+                          :omit-current))))
     (let* ((file-at-point (cond ((derived-mode-p 'denote-menu-mode)
                                  (kb/denote-menu--get-path-at-point))
                                 ((and (derived-mode-p 'org-mode)
@@ -660,7 +664,11 @@ be the value of `denote-menu--entries-to-paths'."
                                  (buffer-file-name))
                                 (t
                                  (user-error "Must use in `denote-menu' or a Denote note!"))))
-           (files (remove file-at-point (or files (denote-directory-files "==" :omit-current))))
+           (files (remove file-at-point
+                          (or files (denote-directory-files
+                                     (rx (literal (car (last (butlast (file-name-split (buffer-file-name)) 1))))
+                                         "/" (* alnum) "==")
+                                     :omit-current))))
            (files
             (cl-loop for file in files collect
                      (let ((sig (denote-retrieve-filename-signature file)))
