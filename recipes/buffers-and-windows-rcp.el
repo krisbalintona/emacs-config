@@ -88,7 +88,11 @@
   (switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
   (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
-   `(;; Automatically hide
+   `(;; Don't show
+     ("\\*BibTeX validation errors\\*"
+      ;; (display-buffer-reuse-mode-window display-buffer-no-window))
+      (display-buffer-no-window)
+      (allow-no-window . t))
 
      ;; Full frame
 
