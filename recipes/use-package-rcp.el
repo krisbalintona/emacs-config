@@ -24,15 +24,15 @@
 
 ;;; Code:
 
-(use-package use-package
-  :custom
-  (use-package-always-ensure t)
-  ;; (use-package-expand-minimally t)      ; Less verbose
-  (use-package-always-defer t)          ; Always defer
+(require 'use-package)
 
-  ;; Set use-package-verbose to t for interpreted .emacs, and to nil for
-  ;; byte-compiled .emacs.elc.
-  (use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
+(setq use-package-always-ensure t)
+;; (setq use-package-expand-minimally t)   ; Less verbose
+(setq use-package-always-defer t)       ; Always defer
+
+;; Set use-package-verbose to t for interpreted .emacs, and to nil for
+;; byte-compiled .emacs.elc.
+(setq use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
 
 (provide 'use-package-rcp)
 ;;; use-package-rcp.el ends here
