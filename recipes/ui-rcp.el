@@ -280,7 +280,7 @@ Additionally, run `kb/themes-hook'."
 
 ;;;;; Diminish
 (use-package diminish
-  :hook (elpaca-after-init . kb/diminish-setup)
+  :hook (after-init . kb/diminish-setup)
   :init
   (defun kb/diminish-setup ()
     "Set up `diminish’ lighters for pre-loaded packages (packages that

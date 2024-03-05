@@ -34,10 +34,11 @@
 ;; more customization. However, `grip-mode' shows exactly what GitHub would show
 (use-package markdown-xwidget
   :ensure-system-package pandoc
-  :ensure (:type git
-                 :host github
-                 :repo "cfclrk/markdown-xwidget"
-                 :files (:defaults "resources"))
+  ;; :ensure (:type git
+  ;;                :host github
+  ;;                :repo "cfclrk/markdown-xwidget"
+  ;;                :files (:defaults "resources"))
+  :vc (:url "https://github.com/cfclrk/markdown-xwidget.git")
   :general (:keymaps 'markdown-mode-command-map
                      "x" 'markdown-xwidget-preview-mode)
   :custom

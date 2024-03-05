@@ -92,7 +92,7 @@
 (use-package flymake-collection
   :requires flymake
   :ensure-system-package luacheck
-  :hook (elpaca-after-init . flymake-collection-hook-setup))
+  :hook (after-init . flymake-collection-hook-setup))
 
 ;;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use

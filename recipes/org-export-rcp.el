@@ -417,8 +417,9 @@ Uses my 'latex-paper' backend. See the original
 
 ;;;; Org-contrib
 (use-package org-contrib
+  :demand
   :after org
-  :init
+  :config
   (require 'ox-extra)
   (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
 

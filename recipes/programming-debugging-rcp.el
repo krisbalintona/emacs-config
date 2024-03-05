@@ -109,7 +109,7 @@
 ;; Dap-mode but without LSP-mode
 (use-package dape
   :demand ; OPTIMIZE 2024-02-02: Current version needs to me demanded to set dape-key-prefix
-  :ensure (:type git :host github :repo "svaante/dape")
+  ;; :ensure (:type git :host github :repo "svaante/dape")
   :general (:keymaps 'prog-mode-map
                      "C-c d" dape-global-map)
   :custom

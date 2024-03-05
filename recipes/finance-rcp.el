@@ -33,22 +33,22 @@
             :states 'insert
             "TAB" 'tab-to-tab-stop)
   (kb/yank-keys
-   :keymaps 'ledger-mode-map
-   :states '(normal insert)
-   "d" '((lambda (prefix)
-           "Insert the current date. Accepts a PREFIX to change date format.
+    :keymaps 'ledger-mode-map
+    :states '(normal insert)
+    "d" '((lambda (prefix)
+            "Insert the current date. Accepts a PREFIX to change date format.
 Mainly used for `ledger-mode'."
-           (interactive "P")
-           (let ((format (cond
-                          ((not prefix) "%Y/%m/%d")
-                          ((equal prefix '(4)) "%d/%m/%Y"))) ; Other format
-                 (system-time-locale "de_DE"))
-             (insert (format-time-string format)))
-           (insert " ")
-           (evil-insert-state))
-         :wk "Insert date")
-   "e" '(ledger-insert-effective-date :wk "Insert effective date")
-   )
+            (interactive "P")
+            (let ((format (cond
+                           ((not prefix) "%Y/%m/%d")
+                           ((equal prefix '(4)) "%d/%m/%Y"))) ; Other format
+                  (system-time-locale "de_DE"))
+              (insert (format-time-string format)))
+            (insert " ")
+            (evil-insert-state))
+          :wk "Insert date")
+    "e" '(ledger-insert-effective-date :wk "Insert effective date")
+    )
   (:keymaps 'ledger-report-mode-map
             :states '(normal visual motion)
             "q" nil) ; Doesn't kill window as it would normally

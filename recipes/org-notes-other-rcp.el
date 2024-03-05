@@ -43,7 +43,7 @@
   ;;          :repo "aikrahguzar/pdf-tools"
   ;;          :branch "upstream-pdf-roll"
   ;;          :remotes ("upstream" :repo "vedang/pdf-tools"))
-  :hook ((elpaca-after-init . pdf-tools-install)
+  :hook ((after-init . pdf-tools-install)
          ;; FIXME 2024-01-13: Uncomment this once the above issues between the
          ;; official release and pending pull request are resolved.
          ;; (pdf-view-mode . pdf-view-roll-minor-mode)
@@ -435,11 +435,13 @@ Uses the current annotation at point's ID."
 
 ;;;;; Org-noter
 (use-package org-noter
-  :ensure (:protocol ssh
-                     :fetcher github
-                     :repo "org-noter/org-noter"
-                     :files ("*.el" "modules" (:exclude "*-test-utils.el" "*-devel.el"))
-                     :remotes ("remote" :repo "krisbalintona/org-noter"))
+  ;; :ensure (:protocol ssh
+  ;;                    :fetcher github
+  ;;                    :repo "org-noter/org-noter"
+  ;;                    :files ("*.el" "modules" (:exclude "*-test-utils.el" "*-devel.el"))
+  ;;                    :remotes ("remote" :repo "krisbalintona/org-noter"))
+  :vc (:url "https://github.com/krisbalintona/org-noter.git"
+            :rev :newest)
   :general
   (:keymaps 'pdf-misc-minor-mode-map
             "I" nil
@@ -576,12 +578,14 @@ A modified version of `ytdl-download'."
 ;;;; Zotxt
 ;; Integration between Emacs and Zotero
 (use-package zotxt
+  :demand
   :custom
   (zotxt-default-bibliography-style "modern-language-association")
   (org-zotxt-link-description-style :citekey)
-  :init
-  (require 'org-zotxt-noter)
-  (org-zotxt-mode)
+  :config
+  ;; FIXME 2024-03-05: Don't know how to deal with this using package.el
+  ;; (require 'org-zotxt-noter)
+  (org-zotxt-mode 1)
 
   ;; Allow for file-level org-noter sessions
   (defun kb/org-zotxt-noter (arg)
@@ -681,6 +685,7 @@ See `org-noter' for details and ARG usage."
 ;;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
 (use-package org-roam-ui
+  :disabled
   :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
   :custom

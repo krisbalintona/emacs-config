@@ -167,8 +167,9 @@ With a prefix argument, show NLINES of context."
 
 ;; NOTE 2024-01-05: Temporarily update seq library to avoid dependency errors.
 ;; See https://github.com/progfolio/elpaca/issues/216
-(elpaca '(seq :type git :host nil :repo "https://git.savannah.gnu.org/git/emacs/elpa.git" :branch "externals/seq")
-  (progn (unload-feature 'seq t) (require 'seq)))
+(when (fboundp 'elpaca)
+  (elpaca '(seq :type git :host nil :repo "https://git.savannah.gnu.org/git/emacs/elpa.git" :branch "externals/seq")
+    (progn (unload-feature 'seq t) (require 'seq))))
 
 (use-package magit
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
@@ -298,9 +299,8 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Magit-lfs
 (use-package magit-lfs
-  :demand t
-  :after magit
-  )
+  :demand
+  :after magit)
 
 ;;;;; Forge
 ;; Support for git forges (e.g. GitLab and GitHub).
@@ -340,10 +340,10 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Abdridge-diff
 (use-package abridge-diff
-  :after magit
+  :demand
   :diminish
-  :init
-  (abridge-diff-mode))
+  :config
+  (abridge-diff-mode 1))
 
 ;;;;; Keychain-environment
 (use-package keychain-environment

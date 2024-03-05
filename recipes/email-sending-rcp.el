@@ -121,7 +121,9 @@
 ;;;;; Itself
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
-  :ensure (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
+  ;; :ensure (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
+  :vc (:url "https://github.com/jeremy-compostella/org-msg.git"
+            :rev :newest)
   :hook ((org-msg-edit-mode . (lambda ()
                                 "Set `org-download' directories."
                                 (setq-local org-download-method 'directory
@@ -500,11 +502,13 @@ MML tags."
 ;;;; Mu4e-send-delay
 (use-package mu4e-send-delay
   :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
-  :ensure (:type git
-                 :host github
-                 :protocol ssh
-                 :repo "krisbalintona/mu4e-send-delay"
-                 :depth nil)
+  ;; :ensure (:type git
+  ;;                :host github
+  ;;                :protocol ssh
+  ;;                :repo "krisbalintona/mu4e-send-delay"
+  ;;                :depth nil)
+  :vc (:url "https://github.com/krisbalintona/mu4e-send-delay.git"
+            :rev :newest)
   :hook (mu4e-main-mode . mu4e-send-delay-setup)
   :general ([remap message-send-and-exit] 'mu4e-send-delay-send-and-exit)
   :custom

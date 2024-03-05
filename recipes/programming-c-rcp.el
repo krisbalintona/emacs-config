@@ -59,7 +59,8 @@ regarding \"target-async\"."
 
 ;;;; Gdb-bp-session
 (use-package gdb-bp-session
-  :ensure (:type git :host github :repo "emacsmirror/gdb-bp-session")
+  ;; :ensure (:type git :host github :repo "emacsmirror/gdb-bp-session")
+  :vc (:url "https://github.com/emacsmirror/gdb-bp-session.git")
   :requires no-littering gud
   :hook (gdb-inferior-io-mode . kb/gdb-bp-session-ask-restore-breakpoints)
   :config

@@ -31,7 +31,9 @@
 ;; the Emacs infrastructure
 ;;;;; Itself
 (use-package corfu
-  :ensure (corfu :files (:defaults "extensions/*"))
+  ;; :ensure (corfu :files (:defaults "extensions/*"))
+  :vc (:url "https://github.com/minad/corfu.git"
+            :rev :newest)
   :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map

@@ -347,7 +347,9 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 
 ;;;; Wombag
 (use-package wombag
-  :ensure (:host github :repo "karthink/wombag")
+  ;; :ensure (:host github :repo "karthink/wombag")
+  :vc (:url "https://github.com/karthink/wombag.git"
+            :rev :newest)
   :general (kb/open-keys "W" 'wombag)
   :hook (wombag-show-mode . (lambda ()
                               (unless olivetti-mode
@@ -365,9 +367,9 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 ;;;; Pocket-reader
 ;; View my Pocket
 (use-package pocket-reader
-  :ensure (pocket-reader :type git
-                         :host github
-                         :repo "alphapapa/pocket-reader.el")
+  ;; :ensure (pocket-reader :type git
+  ;;                        :host github
+  ;;                        :repo "alphapapa/pocket-reader.el")
   :general
   (kb/open-keys
     "p" 'pocket-reader)

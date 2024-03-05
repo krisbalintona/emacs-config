@@ -38,11 +38,13 @@
 
 ;;;;; Alt-comment-dwim
 (use-package alt-comment-dwim
-  :ensure (:type git
-                 :host gitlab
-                 :protocol ssh
-                 :repo "PreciousPudding/alt-comment-dwim"
-                 :depth nil)
+  ;; :ensure (:type git
+  ;;                :host gitlab
+  ;;                :protocol ssh
+  ;;                :repo "PreciousPudding/alt-comment-dwim"
+  ;;                :depth nil)
+  :vc (:url "git@gitlab.com:PreciousPudding/alt-comment-dwim.git"
+            :rev :newest)
   :general
   ([remap comment-dwim] 'alt-comment-dwim
    [remap comment-line] 'alt-comment-dwim-line
@@ -60,7 +62,8 @@
 ;;;;; Info-variable-pitch
 ;; Mixed pitch in Info pages
 (use-package info-variable-pitch
-  :ensure (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
+  ;; :ensure (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
+  :vc (:url "https://github.com/kisaragi-hiu/info-variable-pitch.git")
   :ghook 'Info-selection-hook)
 
 ;;;;; Info-colors
@@ -71,13 +74,13 @@
 ;;;;; Inform
 ;; Package `inform’ provides links from elisp symbols (quoted functions, variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
 (use-package inform
+  :disabled
   :demand)
 
 ;;;; Timers
 ;;;;; Tmr
 ;; Timer package/library from Prot
 (use-package tmr
-  :ensure (tmr :type git :host gitlab :repo "protesilaos/tmr.el")
   :general (kb/open-keys
              "t" 'tmr-prefix-map)
   :custom
@@ -103,11 +106,13 @@
 ;;;;; Work-timer
 (use-package work-timer
   :demand
-  :ensure (:host github
-                 :protocol ssh
-                 :repo "krisbalintona/work-timer"
-                 :depth nil
-                 :files (:defaults "*.mp3"))
+  ;; :ensure (:host github
+  ;;                :protocol ssh
+  ;;                :repo "krisbalintona/work-timer"
+  ;;                :depth nil
+  ;;                :files (:defaults "*.mp3"))
+  :vc (:url "git@github.com:krisbalintona/work-timer.git"
+            :rev :newest)
   :hook (kb/themes . kb/work-timer-set-faces)
   :general (kb/open-keys
              "w" work-timer-prefix-map)
@@ -145,9 +150,9 @@
 ;; that respect abbreviations, etc.
 (use-package pcre2el)
 (use-package sentex
-  :ensure (sentex :type git :host codeberg :repo "martianh/sentex"
-                  ;; Need more than just elisp files
-                  :files ("*"))
+  ;; :ensure (sentex :type git :host codeberg :repo "martianh/sentex"
+  ;;                 ;; Need more than just elisp files
+  ;;                 :files ("*"))
   :commands kb/forward-sentence-function
   :custom
   ;; NOTE 2023-01-18: icu4j has many more rules, but is "too thorough" for my
@@ -653,7 +658,7 @@ ARG and REDISPLAY are identical to the original function."
 (use-package whole-line-or-region
   :disabled                             ; Trying life without this package
   :diminish whole-line-or-region-local-mode
-  :hook (elpaca-after-init . whole-line-or-region-global-mode)
+  :hook (after-init . whole-line-or-region-global-mode)
   :general (:keymaps 'whole-line-or-region-local-mode-map
                      [remap kill-region] 'whole-line-or-region-kill-region
                      [remap kill-ring-save] 'whole-line-or-region-kill-ring-save
@@ -667,36 +672,41 @@ ARG and REDISPLAY are identical to the original function."
 ;;;;; Clippety
 ;; Nearly system-wide mutual clipboard support
 (use-package clipetty
+  :demand
   :diminish
-  :init
-  (global-clipetty-mode))
+  :config
+  (global-clipetty-mode 1))
 
 ;;;;; Image-popup
 ;; Match height of image to line height (?)
 (use-package image-popup
-  :ensure (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
+  ;; :ensure (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
+  :vc (:url "https://gitlab.com/OlMon/image-popup.git"
+            :rev :master
+            :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
 ;;;;; Form-feed
 ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
 ;; differences
 (use-package form-feed
+  :demand
   :diminish
   :custom
   (form-feed-include-modes
    '(prog-mode text-mode help-mode emacs-news-view-mode))
   (form-feed-exclude-modes nil)
-  :init
-  (global-form-feed-mode))
+  :config
+  (global-form-feed-mode 1))
 
 ;;;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode
   :custom
   (engine/browser-function 'browse-url-generic)
-  :init
-  (engine-mode)
   :config
+  (engine-mode 1)
+
   (defengine amazon
     "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s")
 

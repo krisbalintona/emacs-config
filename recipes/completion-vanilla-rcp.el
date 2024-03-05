@@ -34,7 +34,8 @@
 ;;;;; Itself
 (use-package vertico
   :demand                               ; Otherwise won't get loaded immediately
-  :ensure (vertico :files (:defaults "extensions/*"))
+  ;; :ensure (vertico :files (:defaults "extensions/*"))
+  :vc (:rev :newest)
   :general
   ("H-." #'vertico-repeat)
   (:keymaps 'vertico-map
@@ -126,9 +127,11 @@
 (use-package vertico-truncate
   :demand
   :after vertico
-  :ensure (:type git
-                 :host github
-                 :repo "jdtsmith/vertico-truncate")
+  ;; :ensure (:type git
+  ;;                :host github
+  ;;                :repo "jdtsmith/vertico-truncate")
+  :vc (:url "https://github.com/jdtsmith/vertico-truncate.git"
+            :rev :newest)
   :config
   (vertico-truncate-mode))
 
@@ -224,7 +227,9 @@
 
 ;;;;; Flx-rs
 (use-package flx-rs
-  :ensure (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
+  ;; :ensure (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
+  :vc (:url "https://github.com/jcs-elpa/flx-rs.git"
+            :rev :newest)
   :after flx-rs
   :commands fussy-score
   :config (flx-rs-load-dyn))
@@ -236,21 +241,27 @@
 
 ;;;;; Fuz-bin
 (use-package fuz-bin
-  :ensure (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
+  ;; :ensure (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
+  :vc (:url "https://github.com/jcs-elpa/fuz-bin.git"
+            :rev :newest)
   :after fussy
   :commands fussy-fuz-score
   :config (fuz-bin-load-dyn))
 
 ;;;;; Fuz-native
 (use-package fzf-native
-  :ensure (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
+  ;; :ensure (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
+  :vc (:url "https://github.com/dangduc/fzf-native.git"
+            :rev :newest)
   :after fussy
   :commands fussy-fzf-native-score
   :config (fzf-native-load-dyn))
 
 ;;;;; Subline-fuzzy
 (use-package sublime-fuzzy
-  :ensure (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
+  ;; :ensure (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
+  :vc (:url "https://github.com/jcs-elpa/sublime-fuzzy.git"
+            :rev :newest)
   :after fussy
   :commands fussy-sublime-fuzzy-score
   :config (sublime-fuzzy-load-dyn))

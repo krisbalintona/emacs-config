@@ -13,7 +13,7 @@
 ;; Emacs vim integration layer
 (use-package evil
   :disabled t                           ; Trying out native emacs
-  :ghook 'elpaca-after-init-hook
+  :ghook 'after-init-hook
   :gfhook 'general-evil-setup    ; Set up `general.el' infrastructure for `evil'
   :general
   ([remap undo] 'evil-undo

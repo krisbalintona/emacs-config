@@ -196,10 +196,11 @@
 
 ;;;; Recursion-indicator
 (use-package recursion-indicator
-  :init
+  :demand
+  :config
   (recursion-indicator-mode)
   (minibuffer-depth-indicate-mode -1)
-  :config
+
   ;; Thanks to Daniel Mendler for this! It removes the square brackets that
   ;; denote recursive edits in the modeline. I do not need them because I am
   ;; using Daniel's `recursion-indicator':

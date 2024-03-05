@@ -30,6 +30,8 @@
 ;;;; Denote
 ;;;;; This
 (use-package denote
+  :vc (:url "https://github.com/protesilaos/denote.git"
+            :rev :newest)
   :autoload 'denote-directory-files
   :hook ((dired-mode . denote-dired-mode)
          (denote-dired-mode . toggle-truncate-lines)
@@ -87,6 +89,14 @@
   (denote-backlinks-show-context t)
   (denote-rename-buffer-format "%s %t")
   :init
+  ;; Rename denote note. Meant to be added to `after-save-hook'
+  (defun kb/denote-auto-rename ()
+    "Auto rename denote file."
+    (when-let ((f (buffer-file-name)))
+      (when (and (file-in-directory-p f denote-directory)
+                 (denote-filename-is-note-p f))
+        (denote-rename-file-using-front-matter f :auto-confirm))))
+
   (require 's)
   ;; Camel cased keywords
   (defun kb/denote-sluggify-keyword (str)
@@ -101,14 +111,6 @@ My version camelCases keywords."
   :config
   (denote-rename-buffer-mode)
   (denote-menu-bar-mode -1)
-
-  ;; Rename denote note. Meant to be added to `after-save-hook'
-  (defun kb/denote-auto-rename ()
-    "Auto rename denote file."
-    (when-let ((f (buffer-file-name)))
-      (when (and (file-in-directory-p f denote-directory)
-                 (denote-filename-is-note-p f))
-        (denote-rename-file-using-front-matter f :auto-confirm))))
 
   ;; HACK 2024-03-03: Temporary fix for org-capture creating CUSTOM_ID
   ;; properties. See related issue:
@@ -916,10 +918,10 @@ following rule derived from the file naming scheme:
 
 ;;;; Citar-denote
 (use-package citar-denote
-  :after denote
+  :demand
   :diminish
   :custom
-  (citar-denote-subdir nil)
+  (citar-denote-subdir t)
   (citar-denote-signature t)
   (citar-denote-title-format nil)       ; Use citekey as title
   (citar-denote-title-format-authors 2)
@@ -938,8 +940,8 @@ following rule derived from the file naming scheme:
              "b r f" 'citar-denote-find-reference
              "b r F" 'citar-denote-nocite
              "b r l" 'citar-denote-link-reference)
-  :init
-  (citar-denote-mode)
+  :config
+  (citar-denote-mode 1)
 
   ;; Keep the reference keyword after Denote's identifier keyword
   (defun kb/citar-denote--add-reference (citekey file-type)

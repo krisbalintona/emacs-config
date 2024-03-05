@@ -36,7 +36,7 @@
 (use-package mu4e
   :ensure nil
   :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :hook ((elpaca-after-init . (lambda () (when (daemonp) (mu4e t))))
+  :hook ((after-init . (lambda () (when (daemonp) (mu4e t))))
          (server-mode . (lambda () (mu4e t)))
          (window-setup . (lambda ()
                            (setq mu4e-headers-personal-mark  '("p" . " ")) ; Always set this
@@ -704,9 +704,10 @@ will also be the width of all other printable characters."
 
 ;;;; Mu4e-column-faces
 (use-package mu4e-column-faces
+  :demand
   :after mu4e
-  :init
-  (mu4e-column-faces-mode))
+  :config
+  (mu4e-column-faces-mode 1))
 
 ;;;; Mu4e-views
 (use-package mu4e-views
@@ -714,7 +715,10 @@ will also be the width of all other printable characters."
   :after mu4e
   :ensure-system-package wkhtmltopdf    ; HTML to PDF CLI command
   ;; This branch for support of new version of `mu'
-  :ensure (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
+  ;; :ensure (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
+  :vc (:url "https://github.com/lordpretzel/mu4e-views.git"
+            :rev :newest
+            :branch "mu-1.8-support")
   :general
   (:keymaps 'mu4e-headers-mode-map
             "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
@@ -732,9 +736,11 @@ will also be the width of all other printable characters."
 
 ;;;; Fontify-patch
 (use-package fontify-patch
-  :ensure (:type git
-                 :host github
-                 :repo "whame/fontify-patch")
+  ;; :ensure (:type git
+  ;;                :host github
+  ;;                :repo "whame/fontify-patch")
+  :vc (:url "https://github.com/whame/fontify-patch.git"
+            :rev :newest)
   ;; To fontify mail containing patches with the email client
   :hook (gnus-part-display . fontify-patch-buffer))
 

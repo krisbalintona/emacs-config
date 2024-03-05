@@ -156,6 +156,7 @@ Info node `(eshell)Top'."
       (kill-buffer (current-buffer))))
   (add-hook 'delete-frame-functions #'kb/kill-eshell-process-maybe)
 
+  (require 'em-alias)
   ;; Cat but with Emacs syntax highlighting. Copied from
   ;; https://www.reddit.com/r/emacs/comments/wp1jit/comment/ikhtjsm/?utm_source=share&utm_medium=web2x&context=3
   (defun kb/eshell-cat (file)
@@ -181,7 +182,8 @@ Info node `(eshell)Top'."
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
-  :init
+  :demand
+  :config
   (eshell-syntax-highlighting-global-mode 1))
 
 ;;;; Pcmpl-args

@@ -31,8 +31,8 @@
 (use-package server
   :demand
   :ensure nil
-  :hook (elpaca-after-init . (lambda () (unless (server-running-p)
-                                     (server-mode))))
+  :hook (after-init . (lambda () (unless (server-running-p)
+                              (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -519,7 +519,8 @@ timestamp)."
       ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir))
                                             (remove "/home/krisbalintona/.emacs.d/recipes"
                                                     (remove "/home/krisbalintona/.emacs.d/site-lisp"
-                                                            (append load-path (list elpaca-repos-directory))))))))
+                                                            (append load-path (list (when (fboundp 'elpaca)
+                                                                                      elpaca-repos-directory)))))))))
       ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
   :config
   ;; The following columns are taken from Doom Emacs.
@@ -542,23 +543,27 @@ timestamp)."
 
 ;;;;; Burly
 (use-package burly
-  :ensure (:depth 1
-                  :fetcher github
-                  ;; NOTE 2023-07-15: See
-                  ;; https://github.com/alphapapa/burly.el/issues/28 for details on
-                  ;; this branch
-                  :repo "alphapapa/burly.el"
-                  :branch "wip/readablep"
-                  :files ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-                          (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
-  :init
-  (burly-tabs-mode))
+  :demand
+  ;; :ensure (:depth 1
+  ;;                 :fetcher github
+  ;;                 ;; NOTE 2023-07-15: See
+  ;;                 ;; https://github.com/alphapapa/burly.el/issues/28 for details on
+  ;;                 ;; this branch
+  ;;                 :repo "alphapapa/burly.el"
+  ;;                 :branch "wip/readablep"
+  ;;                 :files ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+  ;;                         (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
+  :vc (:url "https://github.com/alphapapa/burly.el.git"
+            :rev :newest
+            :branch "wip/readablep")
+  :config
+  (burly-tabs-mode 1))
 
 ;;;;; Perfect-margin
 ;; Center the window contents via setting the margins
 (use-package perfect-margin
   :diminish
-  :hook (elpaca-after-init . perfect-margin-mode)
+  :hook (after-init . perfect-margin-mode)
   :custom
   (fringes-outside-margins nil)
   (perfect-margin-visible-width 128)
@@ -666,7 +671,8 @@ Determine if WINDOW is splittable."
 
 ;;;; Activities
 (use-package activities
-  :ensure (:type git :host github :repo "alphapapa/activities.el")
+  ;; :ensure (:type git :host github :repo "alphapapa/activities.el")
+  :vc (:rev :newest)
   :general (:prefix "C-c a"
                     "n" 'activities-new
                     "g" 'activities-revert

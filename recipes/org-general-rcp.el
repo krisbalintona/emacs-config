@@ -30,7 +30,8 @@
 (use-package org
   ;; FIXME 2024-02-27: Latest org branch has buggy interactions with other org
   ;; packages. Currently pinned to 256caa08231850b421d2dd2b58e9e9aabc7cb828
-  :ensure (:pin t)
+  ;; :ensure (:pin t)
+  :vc (:rev "256caa08231850b421d2dd2b58e9e9aabc7cb828")
   :gfhook
   'variable-pitch-mode
   'visual-line-mode
@@ -197,6 +198,7 @@ have `org-warning' face."
 
 ;;;;; Org-attach
 (use-package org-attach
+  :demand                               ; Need `org-attach-id-dir' elsewhere
   :ensure nil
   :custom
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
@@ -278,14 +280,14 @@ have `org-warning' face."
 ;;;;; Itself
 (use-package ob
   :ensure nil
-  :hook (elpaca-after-init . (lambda ()
-                               "Activate languages"
-                               (org-babel-do-load-languages
-                                'org-babel-load-languages
-                                '((emacs-lisp . t)
-                                  (python . t)
-                                  (mermaid . t)
-                                  (ditaa . t))))))
+  :hook (after-init . (lambda ()
+                        "Activate languages"
+                        (org-babel-do-load-languages
+                         'org-babel-load-languages
+                         '((emacs-lisp . t)
+                           (python . t)
+                           (mermaid . t)
+                           (ditaa . t))))))
 
 ;;;;; Ob-mermaid
 (use-package mermaid-mode)
@@ -624,11 +626,11 @@ have `org-warning' face."
 
   ;; My own cycles
   (define-typo-cycle typo-cycle-right-single-quotation-mark
-    "Cycle through the typewriter apostrophe and the right quotation mark.
+                     "Cycle through the typewriter apostrophe and the right quotation mark.
 
 If used with a numeric prefix argument N, N typewriter
 apostrophes will be inserted."
-    ("'" "’"))                          ; Swapped these two
+                     ("'" "’"))                          ; Swapped these two
 
   ;; Add characters (e.g. curly quotes) to syntax table
   (defun kb/typo-modify-syntax-table ()

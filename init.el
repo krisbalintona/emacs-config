@@ -23,7 +23,8 @@
 ;; These are packages which come before others because their config files rely
 ;; on them.
 ;; (require 'straight-package-management-rcp)
-(require 'elpaca-package-management-rcp)
+;; (require 'elpaca-package-management-rcp)
+(require 'vanilla-package-management-rcp)
 (require 'use-package-rcp)
 (require 'system-packages-rcp)
 (require 'garbage-collection-rcp)

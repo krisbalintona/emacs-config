@@ -26,17 +26,16 @@
 ;; Initialize package sources
 (require 'package)
 
-(setq package-archive-priorities '(("gnu" . 10)
+(setq package-archive-priorities '(("elpa" . 10)
                                    ("melpa" . 5))
       package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
-                         ;; ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("nongnu-devel" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://stable.melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
                          ("melpa-devel" . "https://melpa.org/packages/")))
 
+(package-refresh-contents)
 (package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
 
 ;; For Elpaca. I still want to keep my elpaca-wait declarations in my
 ;; configuration files just in case I ever go back to Elpaca.

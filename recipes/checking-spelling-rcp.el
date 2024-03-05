@@ -158,9 +158,11 @@
                           (hspell)      ; Hebrew
                           (nuspell) ; Newest spell checker to be used by Firefox, Thunderbird, etc.
                           (voikkospell . libvoikko)) ; Finish
-  :ensure (:depth nil
-                  :repo "minad/jinx"
-                  :files (:defaults "jinx-mod.c" "emacs-module.h"))
+  ;; :ensure (:depth nil
+  ;;                 :repo "minad/jinx"
+  ;;                 :files (:defaults "jinx-mod.c" "emacs-module.h"))
+  :vc (:url "https://github.com/minad/jinx.git"
+            :rev :newest)
   :diminish
   :general (:keymaps 'jinx-mode-map
                      [remap ispell-word] 'jinx-correct

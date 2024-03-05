@@ -83,7 +83,7 @@
   ;; HACK 2023-07-14: Don't demand since EAF can't be loaded while Emacs is
   ;; non-GUI. See, e.g.,
   ;; https://github.com/emacs-eaf/emacs-application-framework/issues/1042
-  (add-hook (if (daemonp) 'server-after-make-frame-hook 'elpaca-after-init-hook)
+  (add-hook (if (daemonp) 'server-after-make-frame-hook 'after-init-hook)
             #'(lambda () (require 'eaf)))
   :config
   ;; All-the-icons integration

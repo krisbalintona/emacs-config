@@ -141,6 +141,7 @@ See `kb/consult-org-depend’."
 
 ;;;; Org-timeblock
 (use-package org-timeblock
+  :disabled
   :ensure (:type git :host github :repo "ichernyshovvv/org-timeblock"))
 
 ;;;; Custom org-tags-view org-link type

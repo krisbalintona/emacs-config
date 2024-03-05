@@ -26,28 +26,28 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Tex-site (auctex)
+;;;; Auctex (auctex)
 ;;;;; This
 ;; Collection for most of the following packages. **Package name should be
-;; loaded as `tex-site' for elpaca, according to my testing**
+;; loaded as `auctex' for elpaca, according to my testing**
 ;; NOTE 2023-07-12: If I haven't already, download the `texlive' and
 ;; `texlive-langs' package groups
-(use-package tex-site
+(use-package auctex
   ;; NOTE 2023-07-12: I had trouble with the recipe with elpaca, but I found the
   ;; proper one here (and in Doom):
   ;; https://github.com/radian-software/radian/blob/f403244e244ccca695ff6c73c62b1265e521afa7/emacs/radian.el#L3386-L3506
-  :ensure (auctex :type git
-                  :host github
-                  :repo "emacs-straight/auctex"
-                  :files ("*.el" "*.info" "dir"
-                          "doc" "etc" "images" "latex" "style")
-                  :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh")))
+  ;; :ensure (auctex :type git
+  ;;                 :host github
+  ;;                 :repo "emacs-straight/auctex"
+  ;;                 :files ("*.el" "*.info" "dir"
+  ;;                         "doc" "etc" "images" "latex" "style")
+  ;;                 :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh")))
   :ensure-system-package biber)
 
 ;;;;; Tex
 (use-package tex
   :ensure nil
-  :after tex-site
+  :after auctex
   :hook ((TeX-mode . (lambda ()
                        ;; Tell Emacs how to parse TeX files
                        (setq ispell-parser 'tex)
@@ -88,7 +88,7 @@
 ;;;;; Latex
 (use-package latex
   :ensure nil
-  :after tex-site
+  :after auctex
   :mode ("\\.[tT]e[xX]\\'" . LaTeX-mode)
   :general (:keymaps 'LaTeX-mode-map
                      "C-<return>" 'LaTeX-insert-item)
@@ -250,7 +250,7 @@
 ;;;;; Tex-fold
 (use-package tex-fold
   :ensure nil
-  :after tex-site
+  :after auctex
   :hook ((TeX-mode . TeX-fold-mode)
          (mixed-pitch-mode . (lambda ()
                                "Fix folded things invariably getting fixed pitch when using
@@ -268,7 +268,7 @@ blacklist, this is mostly for \\section etc."
 ;;;; Cdlatex
 ;; Faster LaTeX inputs
 (use-package cdlatex
-  :after tex-site
+  :after auctex
   :hook ((LaTeX-mode . cdlatex-mode)
          (org-mode . org-cdlatex-mode))
   :diminish (org-cdlatex-mode . "")
@@ -299,7 +299,7 @@ blacklist, this is mostly for \\section etc."
 ;;;; Auctex-latexmk
 ;; Quicker insertion and filling-out of macros. Taken from Doom
 (use-package auctex-latexmk
-  :after tex-site
+  :after auctex
   :custom
   (TeX-command-default "LatexMk")
   ;; Pass the -pdf flag when TeX-PDF-mode is active.
@@ -322,7 +322,7 @@ blacklist, this is mostly for \\section etc."
 ;; code. Taken from Doom
 (use-package preview
   :ensure nil
-  :after tex-site
+  :after auctex
   :hook (LaTeX-mode . LaTeX-preview-setup)
   :config
   (setq-default preview-scale 1.4
@@ -337,10 +337,13 @@ blacklist, this is mostly for \\section etc."
 ;; **Don't forget to install the dependencies found on the README.** (And don't
 ;; forget that `pipx' is an option)
 (use-package popweb
-  :ensure (:type git
-                 :host github
-                 :repo "manateelazycat/popweb"
-                 :files (:defaults "*.py" "*.js" "extension/*/*"))
+  :disabled
+  ;; :ensure (:type git
+  ;;                :host github
+  ;;                :repo "manateelazycat/popweb"
+  ;;                :files (:defaults "*.py" "*.js" "extension/*/*"))
+  :vc (:url "https://github.com/manateelazycat/popweb.git"
+            :rev :newest)
   :hook (LaTeX-mode . popweb-latex-mode)
   :general (:keymaps '(LaTeX-mode-map org-mode-map)
                      "H-'" 'popweb-latex-show)

@@ -127,14 +127,16 @@ command."
 ;;;;; Dired-hist
 ;; History for dired buffers
 (use-package dired-hist
-  :ensure (:host github :repo "karthink/dired-hist")
+  :demand
+  ;; :ensure (:host github :repo "karthink/dired-hist")
+  :vc (:url "https://github.com/karthink/dired-hist.git")
   :after dired
   :general
   (:keymaps 'dired-mode-map
             "l" 'dired-hist-go-back
             "r" 'dired-hist-go-forward)
-  :init
-  (dired-hist-mode))
+  :config
+  (dired-hist-mode 1))
 
 ;;;;; Consult-dir
 (use-package consult-dir

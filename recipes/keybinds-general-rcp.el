@@ -80,7 +80,7 @@
 ;; Trying out an alternative modal editing package
 (use-package meow
   :disabled t                       ; I think I'm sticking with vanilla bindings
-  :hook (elpaca-after-init . meow-global-mode)
+  :hook (after-init . meow-global-mode)
   :config
   (defun meow-setup ()
     ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)

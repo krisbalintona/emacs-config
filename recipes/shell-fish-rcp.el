@@ -26,12 +26,13 @@
 ;;;; Fish-completion
 ;; Use fish's completions (via `pcomplete') in eshell and shell buffers
 (use-package fish-completion
+  :demand
   :autoload 'global-fish-completion-mode
   :custom
   (fish-completion-fallback-on-bash-p t)
-  :init
+  :config
   (when (executable-find "fish")
-    (global-fish-completion-mode)))
+    (global-fish-completion-mode 1)))
 
 ;;;; Fish-mode
 (use-package fish-mode)

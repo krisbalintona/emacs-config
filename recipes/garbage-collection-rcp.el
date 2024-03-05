@@ -45,7 +45,7 @@
 ;; Garbage collect on when idle
 (use-package gcmh
   :diminish
-  :hook ((elpaca-after-init . gcmh-mode)
+  :hook ((after-init . gcmh-mode)
          (minibuffer-setup . kb/gcmh-minibuffer-setup)
          (minibuffer-exit . kb/gcmh-minibuffer-exit))
   :custom

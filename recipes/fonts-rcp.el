@@ -88,7 +88,7 @@
 
 ;;;; Emojify
 (use-package emojify
-  :hook (elpaca-after-init . global-emojify-mode)
+  :hook (after-init . global-emojify-mode)
   :custom
   ;; See
   ;; https://github.com/iqbalansari/emacs-emojify#displaying-composed-text-as-emojis
@@ -136,7 +136,7 @@
 ;;;; Ligature
 ;; Ligatures! See for configuration examples: https://github.com/j/wiki
 (use-package ligature
-  :ensure (ligature :type git :host github :repo "mickeynp/ligature.el")
+  ;; :ensure (ligature :type git :host github :repo "mickeynp/ligature.el")
   :hook (window-setup . global-ligature-mode)
   :config
   ;; Enables simple HTML ligations for web-related major modes using the string
