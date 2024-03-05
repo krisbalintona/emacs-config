@@ -517,7 +517,7 @@ with prefix-arg."
            (denote-rename-no-confirm t)) ; Want it automatic
       (denote-rename-file path title keywords new-sig)))
 
-  (defun kb/denote-menu--signature-decompose (sig)
+  (defun kb/denote-menu--signature-head-tail (sig)
     "Take a SIG and return a cons.
 The car of this cons will be the \"front\" portion of the signature,
 while the cdr of this cons will be the remaining portion of the
@@ -541,6 +541,16 @@ Right now, a \"signature portion\" is delimited by:
                 tail nil)))
       (cons head tail)))
 
+  (defun kb/denote-menu--signature-decompose (sig)
+    "Return the indexical components of SIG."
+    (setq sig (string-trim sig))
+    (if (string-empty-p sig)
+        nil
+      (let ((result (kb/denote-menu--signature-head-tail sig)))
+        (if (cdr result)
+            (cons (car result) (kb/denote-menu--signature-decompose (cdr result)))
+          (cons (car result) nil)))))
+
   ;; REVIEW 2024-03-04: Consider changing to take in files rather than
   ;; signatures? If so, make sure I alter my advice for
   ;; `denote-sort-signature-lessp'.
@@ -548,8 +558,8 @@ Right now, a \"signature portion\" is delimited by:
     "Compare two strings based on my signature sorting rules.
 Returns t if SIG1 should be sorted before SIG2, nil otherwise."
     (if (and sig1 sig2)
-        (let* ((parts1 (kb/denote-menu--signature-decompose sig1))
-               (parts2 (kb/denote-menu--signature-decompose sig2))
+        (let* ((parts1 (kb/denote-menu--signature-head-tail sig1))
+               (parts2 (kb/denote-menu--signature-head-tail sig2))
                (head1 (car parts1))
                (head2 (car parts2))
                (tail1 (cdr parts1))
@@ -611,10 +621,10 @@ loading time suffer greatly."
 The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
 \"z\" is \"A\", and for \"Z\" \"aa\"."
     (let* ((sig (denote-retrieve-filename-signature file))
-           (parts (kb/denote-menu--signature-decompose sig))
+           (parts (kb/denote-menu--signature-head-tail sig))
            tail char next)
       (while (cdr parts)                  ; Get final portion of signature
-        (setq parts (kb/denote-menu--signature-decompose (cdr parts))))
+        (setq parts (kb/denote-menu--signature-head-tail (cdr parts))))
       (setq tail (car parts)
             char (string-to-char tail)
             next (cond ((s-numeric-p tail) ; A number
@@ -638,7 +648,7 @@ Call this function for its side effects."
     (add-text-properties 0
                          (length text)
                          (list 'denote-menu-sig (if sig
-                                                    (car (kb/denote-menu--signature-decompose sig))
+                                                    (car (kb/denote-menu--signature-head-tail sig))
                                                   "No signature"))
                          text))
 
@@ -753,11 +763,11 @@ the :omit-current non-nil. Otherwise,when called interactively in
 
   (defun kb/denote-menu-signature (path)
     "Return file signature from denote PATH identifier."
-    (let ((signature (denote-retrieve-filename-signature path)))
-      (if signature
-          (replace-regexp-in-string "=" (propertize "." 'face 'shadow)
-                                    (propertize signature 'face 'denote-faces-signature))
-        (propertize " " 'face 'font-lock-comment-face))))
+    (replace-regexp-in-string
+     "=" (propertize "." 'face 'shadow)
+     (let ((sig (or (denote-retrieve-filename-signature path) " ")))
+       (kb/denote-menu--signature-decompose ))
+     ))
   (advice-add 'denote-menu-signature :override #'kb/denote-menu-signature)
 
   (defun kb/denote-menu-title (path)
