@@ -666,14 +666,18 @@ Determine if WINDOW is splittable."
 
 ;;;; Activities
 (use-package activities
+  :ensure (:type git :host github :repo "alphapapa/activities.el")
   :general (:prefix "C-c a"
                     "n" 'activities-new
                     "g" 'activities-revert
                     "s" 'activities-suspend
                     "k" 'activities-kill
                     "a" 'activities-resume
-                    "b" 'activities-switch
+                    "b" 'activities-switch-buffer
+                    "B" 'activities-switch
                     "l" 'activities-list)
+  :custom
+  (activities-kill-buffers t)
   :init
   (activities-mode 1)
   (activities-tabs-mode 1))
