@@ -708,7 +708,7 @@ the :omit-current non-nil. Otherwise,when called interactively in
                               (sig (denote-retrieve-filename-signature cand))
                               (propertized-sig
                                (replace-regexp-in-string "=" (propertize "." 'face 'shadow)
-                                                         (propertize sig 'face 'denote-faces-signature))))
+                                                         (kb/denote-menu--signature-propertize sig))))
                          (kb/denote-menu--add-group-text-property propertized-title sig)
                          (list propertized-title
                                (string-pad propertized-sig (+ largest-sig-length 3))
@@ -761,15 +761,27 @@ the :omit-current non-nil. Otherwise,when called interactively in
                   (propertize ")" 'face 'shadow))])))
   (advice-add 'denote-menu--path-to-entry :override #'kb/denote-menu--path-to-entry)
 
+  (defvar kb/denote-menu--signature-propertize-cache nil
+    "Signature cache for `kb/denote-menu--signature-propertize'.")
+
+  (defun kb/denote-menu--signature-propertize (sig)
+    "Return propertized SIG for hierarchical visibility."
+    (or (cdr (assoc-string sig kb/denote-menu--signature-propertize-cache))
+        (let* ((decomposed (kb/denote-menu--signature-decompose sig))
+               (level (1- (length decomposed)))
+               (face (if (= level 0)
+                         'shadow
+                       (intern (format "outline-%s" (+ 1 (% (1- level) 8))))))
+               (propertized-sig (propertize sig 'face face)))
+          (add-to-list 'kb/denote-menu--signature-propertize-cache
+                       (cons sig propertized-sig))
+          propertized-sig)))
+
   (defun kb/denote-menu-signature (path)
     "Return file signature from denote PATH identifier."
-    (let* ((sig (denote-retrieve-filename-signature path))
-           (decomposed (kb/denote-menu--signature-decompose sig))
-           (level (1- (length decomposed)))
-           (face (if (= level 0)
-                     'shadow
-                   (intern (format "outline-%s" (+ 1 (% (1- level) 8)))))))
-      (replace-regexp-in-string "=" (propertize "." 'face 'shadow) (propertize sig 'face face))))
+    (let ((sig (denote-retrieve-filename-signature path)))
+      (replace-regexp-in-string "=" (propertize "." 'face 'shadow)
+                                (kb/denote-menu--signature-propertize sig))))
   (advice-add 'denote-menu-signature :override #'kb/denote-menu-signature)
 
   (defun kb/denote-menu-title (path)
