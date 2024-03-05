@@ -763,11 +763,13 @@ the :omit-current non-nil. Otherwise,when called interactively in
 
   (defun kb/denote-menu-signature (path)
     "Return file signature from denote PATH identifier."
-    (replace-regexp-in-string
-     "=" (propertize "." 'face 'shadow)
-     (let ((sig (or (denote-retrieve-filename-signature path) " ")))
-       (kb/denote-menu--signature-decompose ))
-     ))
+    (let* ((sig (denote-retrieve-filename-signature path))
+           (decomposed (kb/denote-menu--signature-decompose sig))
+           (level (1- (length decomposed)))
+           (face (if (= level 0)
+                     'shadow
+                   (intern (format "outline-%s" (+ 1 (% (1- level) 8)))))))
+      (replace-regexp-in-string "=" (propertize "." 'face 'shadow) (propertize sig 'face face))))
   (advice-add 'denote-menu-signature :override #'kb/denote-menu-signature)
 
   (defun kb/denote-menu-title (path)
