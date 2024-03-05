@@ -345,7 +345,7 @@ have `org-warning' face."
   :ghook 'org-mode-hook
   :gfhook 'kb/org-superstar-auto-lightweight-mode
   :custom
-  (inhibit-compacting-font-caches t) ; Stop slowdown
+  ;; (inhibit-compacting-font-caches t) ; Stop slowdown
 
   ;; Indentation
   ;; The following ensures consistent indentation, overriding `org-indent'
