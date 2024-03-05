@@ -660,8 +660,7 @@ the :omit-current non-nil. Otherwise,when called interactively in
                           :omit-current))))
     (let* ((file-at-point (cond ((derived-mode-p 'denote-menu-mode)
                                  (kb/denote-menu--get-path-at-point))
-                                ((and (derived-mode-p 'org-mode)
-                                      (denote-file-is-note-p (buffer-file-name)))
+                                ((denote-file-is-note-p (buffer-file-name))
                                  (buffer-file-name))
                                 (t
                                  (user-error "Must use in `denote-menu' or a Denote note!"))))
