@@ -702,6 +702,7 @@ ARG and REDISPLAY are identical to the original function."
 ;;;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode
+  :commands 'engine/search-duckduckgo
   :custom
   (engine/browser-function 'browse-url-generic)
   :config
