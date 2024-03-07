@@ -155,7 +155,6 @@ then call `dash-docs-completing-read-at-point'."
 ;;;;; Reverso
 ;; Use Reverso to check grammar, translate, find synonyms, conjugations, etc.
 (use-package reverso
-  ;; :ensure (:host github :repo "SqrtMinusOne/reverso.el")
   :config
   (reverso-history-mode)
   (diminish 'reverso-history-mode))
