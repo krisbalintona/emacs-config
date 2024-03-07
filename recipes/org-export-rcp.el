@@ -36,6 +36,7 @@
   :custom
   (org-export-coding-system 'utf-8)
   (org-export-with-tags t)
+  (org-export-with-smart-quotes t)
   (org-export-with-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
   (org-export-with-section-numbers nil)
   (org-time-stamp-formats               ; Format of time stamps in the file
