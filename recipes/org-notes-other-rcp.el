@@ -562,7 +562,9 @@ A modified version of `ytdl-download'."
       (let* ((dir (or (org-attach-dir) (org-attach-dir-get-create)))
              (destination (expand-file-name (ytdl--get-filename dir url) dir))
              (extra-ytdl-args '("--write-auto-sub" "--write-sub" "--sub-lang" "en" "--convert-subs" "srt" ; Create .srt file
-                                "-S" "res:720,fps")) ; Set maximum resolution
+                                ;; Set maximum resolution and file type
+                                "-S" "res:720,fps,ext:mp4:m4a"
+                                "--recode" "mp4"))
              (dl-type-name "Org-attach"))
         (ytdl--download-async url
                               destination
