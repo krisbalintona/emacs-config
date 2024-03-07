@@ -550,7 +550,7 @@ Commands that control MPV playback mimic MPV keybinds."
      ("Music"  "m" ytdl-music-folder ytdl-music-extra-args)
      ("Videos" "v"  ytdl-video-folder ytdl-video-extra-args)
      ("Temp" "t" ,(expand-file-name "/tmp/") ("-S" "res:720,fps"))))
-  :config
+  :init
   (with-eval-after-load 'org
     ;; Custom `org-attach' integration
     (defun kb/ytdl-org-attach (url)
