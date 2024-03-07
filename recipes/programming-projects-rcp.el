@@ -169,7 +169,7 @@ With a prefix argument, show NLINES of context."
 ;; See https://github.com/progfolio/elpaca/issues/216
 (when (fboundp 'elpaca)
   (elpaca '(seq :type git :host nil :repo "https://git.savannah.gnu.org/git/emacs/elpa.git" :branch "externals/seq")
-    (progn (unload-feature 'seq t) (require 'seq))))
+          (progn (unload-feature 'seq t) (require 'seq))))
 
 (use-package magit
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)

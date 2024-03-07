@@ -44,7 +44,6 @@
 
 ;;;; Consult-yasnippet
 (use-package consult-yasnippet
-  :after yasnippet
   :general
   ([remap yas-insert-snippet] 'consult-yasnippet
    [remap yas-visit-snippet-file] 'consult-yasnippet-visit-snippet-file))
