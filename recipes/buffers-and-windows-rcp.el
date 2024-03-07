@@ -522,9 +522,7 @@ timestamp)."
       ("Org" (directory . ,org-directory))
       ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir))
                                             (remove "/home/krisbalintona/.emacs.d/recipes"
-                                                    (remove "/home/krisbalintona/.emacs.d/site-lisp"
-                                                            (append load-path (list (when (fboundp 'elpaca)
-                                                                                      elpaca-repos-directory)))))))))
+                                                    load-path)))))
       ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
   :config
   ;; The following columns are taken from Doom Emacs.
