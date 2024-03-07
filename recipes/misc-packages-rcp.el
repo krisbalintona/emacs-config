@@ -82,7 +82,7 @@
 ;; Timer package/library from Prot
 (use-package tmr
   :general (kb/open-keys
-             "t" 'tmr-prefix-map)
+             "t" 'tmr-dispatch)
   :custom
   ;; Useful variables
   (tmr-descriptions-list
