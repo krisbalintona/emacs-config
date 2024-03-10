@@ -654,12 +654,11 @@ loading time suffer greatly."
             sig2 (replace-regexp-in-string "\\." "=" sig2))
       (kb/denote-menu--signature-lessp sig1 sig2)))
 
-  (defun kb/denote-menu--next-signature (file)
-    "Return the signature following the signature of FILE.
+  (defun kb/denote-menu--next-signature (sig)
+    "Return the signature following SIG.
 The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
 \"z\" is \"A\", and for \"Z\" \"aa\"."
-    (let* ((sig (denote-retrieve-filename-signature file))
-           (parts (kb/denote-menu--signature-elements-head-tail sig))
+    (let* ((parts (kb/denote-menu--signature-elements-head-tail sig))
            tail char next)
       (while (cdr parts)                  ; Get final portion of signature
         (setq parts (kb/denote-menu--signature-elements-head-tail (cdr parts))))
@@ -677,6 +676,29 @@ The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
                        ;; double-letters when we go above Z
                        ((= 90 char) "aa"))) ; Is "Z"
       (concat (string-remove-suffix tail sig) next)))
+
+  (defun kb/denote-menu--determine-new-signature (sig &optional childp dir)
+    "Return the next available signature relative to SIG.
+If CHILDP, then return the next signature available for a new child
+note. If non-nil, then assume the desired next note will be a sibling.
+
+If DIR is provided, check for the existence of signatures in that
+directory rather than the entirety of `denote-directory'. DIR can also
+be a file. If it is, the parent directory of that file will be used as
+the directory."
+    (let* ((dir (when dir
+                  (file-name-directory (file-relative-name dir denote-directory))))
+           (next-sig
+            (if childp
+                (concat sig
+                        (if (s-numeric-p (substring sig (1- (length sig))))
+                            "a" "1"))
+              (kb/denote-menu--next-signature sig))))
+      (while (member next-sig
+                     (cl-loop for f in (denote-directory-files dir)
+                              collect (denote-retrieve-filename-signature f)))
+        (setq next-sig (kb/denote-menu--next-signature next-sig)))
+      next-sig))
 
   (defun kb/denote-menu--add-group-text-property (text sig)
     "Add the `denote-menu-sig' text property to TEXT.
@@ -765,12 +787,10 @@ the :omit-current non-nil. Otherwise,when called interactively in
            (current-sig (denote-retrieve-filename-signature selection))
            (childp
             (string= "Child" (completing-read "Choose relation: " '("Sibling" "Child"))))
-           (new-sig
-            (if childp
-                (concat current-sig
-                        (if (s-numeric-p (substring current-sig (1- (length current-sig))))
-                            "a" "1"))
-              (kb/denote-menu--next-signature selection)))
+           (new-sig (kb/denote-menu--determine-new-signature
+                     (denote-retrieve-filename-signature selection)
+                     childp
+                     selection))
            (denote-rename-no-confirm t))
       (kb/denote-menu-set-signature file-at-point new-sig))))
 
