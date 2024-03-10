@@ -658,7 +658,8 @@ loading time suffer greatly."
     "Return the signature following SIG.
 The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
 \"z\" is \"A\", and for \"Z\" \"aa\"."
-    (let* ((parts (kb/denote-menu--signature-elements-head-tail sig))
+    (let* ((groups (kb/denote-menu--signature-decompose-into-groups sig))
+           (parts (kb/denote-menu--signature-elements-head-tail (car (last groups))))
            tail char next)
       (while (cdr parts)                  ; Get final portion of signature
         (setq parts (kb/denote-menu--signature-elements-head-tail (cdr parts))))
@@ -694,6 +695,7 @@ the directory."
                         (if (s-numeric-p (substring sig (1- (length sig))))
                             "a" "1"))
               (kb/denote-menu--next-signature sig))))
+      (message "tk next-sig: %s" next-sig)
       (while (member next-sig
                      (cl-loop for f in (denote-directory-files dir)
                               collect (denote-retrieve-filename-signature f)))
