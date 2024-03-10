@@ -432,6 +432,7 @@ with prefix-arg."
                          'face 'denote-faces-title))))
 
 ;;;; Denote-menu
+;;;;; Itself
 (use-package denote-menu
   :general
   (kb/note-keys
@@ -461,9 +462,10 @@ with prefix-arg."
   :preface
   (defvar kb/denote-menu-filter-presets
     '("zettels/[^z-a]*" "bib/[^z-a]*")
-    "The common filters I use.")
-  :config
-  ;; Custom denote-menu functions and commands
+    "The common filters I use."))
+
+;;;;; Custom denote-menu functions and commands
+(with-eval-after-load 'denote-menu
   (defun kb/denote-menu-edit-filter ()
     "Edit the currently existing filter."
     (interactive)
@@ -515,8 +517,10 @@ with prefix-arg."
            (keywords
             (denote-retrieve-front-matter-keywords-value path file-type))
            (denote-rename-no-confirm t)) ; Want it automatic
-      (denote-rename-file path title keywords new-sig)))
+      (denote-rename-file path title keywords new-sig))))
 
+;;;;; Support for bespoke numbering system
+(with-eval-after-load 'denote-menu
   (defun kb/denote-menu--signature-head-tail (sig)
     "Take a SIG and return a cons.
 The car of this cons will be the \"front\" portion of the signature,
@@ -734,9 +738,10 @@ the :omit-current non-nil. Otherwise,when called interactively in
                             "a" "1"))
               (kb/denote-menu--next-signature selection)))
            (denote-rename-no-confirm t))
-      (kb/denote-menu-set-signature file-at-point new-sig)))
+      (kb/denote-menu-set-signature file-at-point new-sig))))
 
-  ;; Redefinitions for built-ins
+;;;;; Override for `denote-menu-mode' and friends
+(with-eval-after-load 'denote-menu
   (defun kb/denote-menu--path-to-entry (path)
     "Convert PATH to an entry matching the form of `tabulated-list-entries'."
     (if denote-menu-show-file-signature
