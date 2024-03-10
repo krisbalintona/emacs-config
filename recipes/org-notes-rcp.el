@@ -521,8 +521,8 @@ with prefix-arg."
 
 ;;;;; Support for bespoke numbering system
 (with-eval-after-load 'denote-menu
-  (defun kb/denote-menu--signature-head-tail (sig)
-    "Take a SIG and return a cons.
+  (defun kb/denote-menu--signature-elements-head-tail (group)
+    "Take a signature GROUP and return a cons.
 The car of this cons will be the \"front\" portion of the signature,
 while the cdr of this cons will be the remaining portion of the
 signature.
@@ -535,54 +535,57 @@ Right now, a \"signature portion\" is delimited by:
       (save-match-data
         ;; HACK 2024-03-04: I hardcode "=" as an additional delimiter of
         ;; signature portions
-        (if (string-match (if (s-numeric-p (substring sig 0 1))
-                              (rx (or (any alpha) "=")) ; Numbered index head
-                            (rx (or (any digit) "=")))  ; Alphabet index head
-                          sig)
-            (setq head (substring sig 0 (match-beginning 0))
-                  tail (string-remove-prefix "=" (substring sig (match-beginning 0))))
-          (setq head sig
+        (if (string-match (if (s-numeric-p (substring group 0 1))
+                              (rx (any alpha)) ; Numbered index head
+                            (rx (any digit)))  ; Alphabet index head
+                          group)
+            (setq head (substring group 0 (match-beginning 0))
+                  tail (string-remove-prefix "=" (substring group (match-beginning 0))))
+          (setq head group
                 tail nil)))
       (cons head tail)))
 
-  (defun kb/denote-menu--signature-decompose (sig)
-    "Return the indexical components of SIG."
-    (setq sig (string-trim sig))
-    (if (string-empty-p sig)
-        nil
-      (let ((result (kb/denote-menu--signature-head-tail sig)))
-        (if (cdr result)
-            (cons (car result) (kb/denote-menu--signature-decompose (cdr result)))
-          (cons (car result) nil)))))
+  (defun kb/denote-menu--signature-decompose-into-groups (sig)
+    "Decompose SIG into groups."
+    (when sig
+      (if (string-empty-p sig)
+          nil
+        (string-split sig "="))))
 
   ;; REVIEW 2024-03-04: Consider changing to take in files rather than
   ;; signatures? If so, make sure I alter my advice for
   ;; `denote-sort-signature-lessp'.
-  (defun kb/denote-menu--signature-lessp (sig1 sig2)
-    "Compare two strings based on my signature sorting rules.
-Returns t if SIG1 should be sorted before SIG2, nil otherwise."
-    (if (and sig1 sig2)
-        (let* ((parts1 (kb/denote-menu--signature-head-tail sig1))
-               (parts2 (kb/denote-menu--signature-head-tail sig2))
-               (head1 (car parts1))
-               (head2 (car parts2))
-               (tail1 (cdr parts1))
-               (tail2 (cdr parts2))
+  (defun kb/denote-menu--signature-group-lessp (group1 group2)
+    "Compare the ordering of two groups.
+Returns t if GROUP1 should be sorted before GROUP2, nil otherwise."
+    (when (and group1
+               group2
+               (or (s-contains-p "=" group1) (s-contains-p "=" group2)))
+      (error "[kb/denote-menu--signature-group-lessp] Does not accept strings with \"=\""))
+    (if (and group1 group2)
+        (let* ((elements1 (kb/denote-menu--signature-elements-head-tail group1))
+               (elements2 (kb/denote-menu--signature-elements-head-tail group2))
+               (head1 (car elements1))
+               (head2 (car elements2))
+               (tail1 (cdr elements1))
+               (tail2 (cdr elements2))
                ;; HACK 2024-03-03: Right now, this treats uppercase and
                ;; lowercase as the same, as well as ignores the difference
                ;; between, e.g., "a" and "aa"
                (index1 (string-to-number head1 16))
                (index2 (string-to-number head2 16)))
           (cond
-           ;; Sig1 is earlier in order than sig2
+           ;; Group1 is earlier in order than group2
            ((< index1 index2) t)
-           ;; Sig2 is later than sig2
+           ;; Group2 is later than group2
            ((> index1 index2) nil)
-           ;; Sig1 has no tail while sig2 has a tail, so it's later than sig2
+           ;; Group1 has no tail while group2 has a tail, so it's later than
+           ;; group2
            ((and (not tail1) tail2) t)
-           ;; Sig1 has a tail while sig2 has no tail, so it's earlier than sig2
+           ;; Group1 has a tail while group2 has no tail, so it's earlier than
+           ;; group2
            ((and tail1 (not tail2)) nil)
-           ;; Neither sig2 nor sig2 have a tail, and their indexes must be
+           ;; Neither group2 nor group2 have a tail, and their indexes must be
            ;; equal, so they must have identical signatures. So do something
            ;; with it now. (Returning nil seems to put the oldest earlier, so we
            ;; do that.)
@@ -590,18 +593,49 @@ Returns t if SIG1 should be sorted before SIG2, nil otherwise."
            ;; Their indices are equal, and they still have a tail, so process
            ;; those tails next
            ((= index1 index2)
-            (kb/denote-menu--signature-lessp tail1 tail2))))
+            (kb/denote-menu--signature-group-lessp tail1 tail2))))
+      ;; When one or both of group1 and group2 are not supplied
       (cond
        ;; If neither are supplied, then use `string-collate-lessp'
-       ((not (or sig1 sig2))
-        (string-collate-lessp sig1 sig2))
-       ;; If sig1 is present but not sig2, then return true so that sig1 can be
-       ;; earlier in the list
-       ((and sig1 (not sig2))
+       ((not (or group1 group2))
+        (string-collate-lessp group1 group2))
+       ;; If group1 is present but not group2, then return true so that group1
+       ;; can be earlier in the list
+       ((and group1 (not group2))
         t)
-       ;; If sig2 is present but not sig1, then return nil to put sig2 earlier
-       ((and (not sig1) sig2)
+       ;; If group2 is present but not group1, then return nil to put group2
+       ;; earlier
+       ((and (not group1) group2)
         nil))))
+
+  (defun kb/denote-menu--signature-lessp (sig1 sig2)
+    "Compare two strings based on my signature sorting rules.
+Returns t if SIG1 should be sorted before SIG2, nil otherwise.
+
+This function splits SIG1 and SIG2 into indexical groups with
+`kb/denote-menu--signature-decompose-into-groups' and compares the first
+group of each. If SIG1 is not definitively before SIG2, then recursively
+call this function on the remaining portion of the signature."
+    (let ((groups1 (kb/denote-menu--signature-decompose-into-groups sig1))
+          (groups2 (kb/denote-menu--signature-decompose-into-groups sig2)))
+      (cond
+       ;; Return t when: if sig1's groups have so far been after sig2's, but
+       ;; sig2 has more groups while sig1 does not, then this means sig2
+       ;; ultimately goes after sig1
+       ((and (not sig1) sig2) t)
+       ;; Return nil when: if all of sig1's groups go after sig2's groups, then
+       ;; sig2 is after sig1
+       ((not (and sig1 sig2)) nil)
+       ;; When the car of groups1 and groups2 are the same, then recursively
+       ;; call this function on the remaining portion of the signature
+       ((string= (car groups1) (car groups2))
+        (let ((remaining-groups1 (string-join (cdr groups1) "="))
+              (remaining-groups2 (string-join (cdr groups2) "=")))
+          (kb/denote-menu--signature-lessp (unless (string-empty-p remaining-groups1) remaining-groups1)
+                                           (unless (string-empty-p remaining-groups2) remaining-groups2))))
+       ;; When both groups1 and groups2 are non-nil (there are groups left), then tk
+       (t
+        (kb/denote-menu--signature-group-lessp (pop groups1) (pop groups2))))))
   (advice-add 'denote-sort-signature-lessp
               :override (lambda (f1 f2)
                           (kb/denote-menu--signature-lessp (denote-retrieve-filename-signature f1)
@@ -625,10 +659,10 @@ loading time suffer greatly."
 The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
 \"z\" is \"A\", and for \"Z\" \"aa\"."
     (let* ((sig (denote-retrieve-filename-signature file))
-           (parts (kb/denote-menu--signature-head-tail sig))
+           (parts (kb/denote-menu--signature-elements-head-tail sig))
            tail char next)
       (while (cdr parts)                  ; Get final portion of signature
-        (setq parts (kb/denote-menu--signature-head-tail (cdr parts))))
+        (setq parts (kb/denote-menu--signature-elements-head-tail (cdr parts))))
       (setq tail (car parts)
             char (string-to-char tail)
             next (cond ((s-numeric-p tail) ; A number
@@ -652,7 +686,7 @@ Call this function for its side effects."
     (add-text-properties 0
                          (length text)
                          (list 'denote-menu-sig (if sig
-                                                    (car (kb/denote-menu--signature-head-tail sig))
+                                                    (car (kb/denote-menu--signature-decompose-into-groups sig))
                                                   "No signature"))
                          text))
 
