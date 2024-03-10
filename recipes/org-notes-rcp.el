@@ -62,7 +62,7 @@
 
 * Potential titles
 
-* 1 Draft                                                            :export:
+* 1 Draft                                                     :export:ignore:
 
 * Works Cited                                                 :ignore:export:
 
