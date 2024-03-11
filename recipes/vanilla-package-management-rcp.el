@@ -34,7 +34,7 @@
                          ("melpa" . "https://stable.melpa.org/packages/")
                          ("melpa-devel" . "https://melpa.org/packages/")))
 
-(package-refresh-contents)
+(package-refresh-contents :async)
 (package-initialize)
 
 ;; For Elpaca. I still want to keep my elpaca-wait declarations in my
