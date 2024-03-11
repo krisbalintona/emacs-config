@@ -110,16 +110,16 @@
                     (citar-org-update-prefix-suffix))))
   (advice-add 'citar-org-update-prefix-suffix
               :around (lambda (orig-fun &rest args)
-                        (when (featurep 'typo)
+                        (when (fboundp 'typo-mode)
                           (add-hook 'minibuffer-mode-hook 'typo-mode))
                         (condition-case err
                             (apply orig-fun args)
                           (quit
                            ;; Remove from minibuffer-mode-hook when user
                            ;; interrupts with keyboard-quit (C-g)
-                           (when (featurep 'typo)
+                           (when (fboundp 'typo-mode)
                              (remove-hook 'minibuffer-mode-hook 'typo-mode))))
-                        (when (featurep 'typo)
+                        (when (fboundp 'typo-mode)
                           (remove-hook 'minibuffer-mode-hook 'typo-mode))))
 
   ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators

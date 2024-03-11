@@ -591,6 +591,7 @@ have `org-warning' face."
 ;;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
+  :disabled
   :hook (typo-mode . kb/typo-modify-syntax-table)
   :ghook 'org-mode-hook
   :config
