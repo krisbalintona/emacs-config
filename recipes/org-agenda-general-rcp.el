@@ -109,7 +109,7 @@
      ;; org ID for org todo
      ("i" "Idea" entry
       (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
-      "* %u %?\n"
+      "* %?\n"
       :tree-type month
       :empty-lines 1
       :hook
@@ -146,7 +146,7 @@ I currently hard-code the ID to the task that I want to clock in."
           (message "Interrupted clock has been resumed"))))
      ("I" "Idea with context" entry
       (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
-      "* %u %?\n\n+ %^{Context string}: %a"
+      "* %?\n\n+ %^{Context string}: %a"
       :tree-type month
       :empty-lines 1
       :hook
