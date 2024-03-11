@@ -552,6 +552,18 @@ Right now, a \"signature portion\" is delimited by:
           nil
         (string-split sig "="))))
 
+  (defun kb/denote-menu--signature-decompose-elements-from-group (group)
+    "Take a GROUP and decompose it into its elements.
+Uses `kb/denote-menu--signature-elements-head-tail'."
+    (let* ((parts (kb/denote-menu--signature-elements-head-tail group))
+           (head (car parts))
+           (tail (cdr parts)))
+      (if tail
+          (flatten-list
+           (list head
+                 (kb/denote-menu--signature-decompose-elements-from-group tail)))
+        group)))
+
   ;; REVIEW 2024-03-04: Consider changing to take in files rather than
   ;; signatures? If so, make sure I alter my advice for
   ;; `denote-sort-signature-lessp'.
@@ -825,13 +837,28 @@ the :omit-current non-nil. Otherwise,when called interactively in
   (defvar kb/denote-menu--signature-propertize-cache nil
     "Signature cache for `kb/denote-menu--signature-propertize'.")
 
+  (defun kb/denote-menu--signature-propertize-element (sig level)
+    "Return SIG with its first element (head) propertized.
+The head is propertized with the stipulation that its nesting level is
+LEVEL."
+    (unless (or (not sig) (string-empty-p sig))
+      (let* ((groups (kb/denote-menu--signature-decompose-into-groups sig))
+             (head (car (kb/denote-menu--signature-decompose-elements-from-group (car groups)))))
+        (concat
+         (propertize head
+                     'face (intern (format "outline-%s" (+ 1 (% (1- level) 8)))))
+         (string-remove-prefix head sig)))))
+
   (defun kb/denote-menu--signature-propertize (sig)
     "Return propertized SIG for hierarchical visibility."
     (or (cdr (assoc-string sig kb/denote-menu--signature-propertize-cache))
-        (let* ((decomposed (kb/denote-menu--signature-decompose sig))
+        (let* ((groups (kb/denote-menu--signature-decompose-into-groups sig))
+               (decomposed
+                (flatten-list
+                 (cl-loop for group in groups
+                          collect (kb/denote-menu--signature-decompose-elements-from-group group))))
                (level (1- (length decomposed)))
-               (face (if (= level 0)
-                         'shadow
+               (face (if (string= sig "000") 'shadow ; 000 is my "unsorted" signature
                        (intern (format "outline-%s" (+ 1 (% (1- level) 8))))))
                (propertized-sig (propertize sig 'face face)))
           (add-to-list 'kb/denote-menu--signature-propertize-cache
