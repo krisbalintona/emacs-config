@@ -645,7 +645,6 @@ call this function on the remaining portion of the signature."
               (remaining-groups2 (string-join (cdr groups2) "=")))
           (kb/denote-menu--signature-lessp (unless (string-empty-p remaining-groups1) remaining-groups1)
                                            (unless (string-empty-p remaining-groups2) remaining-groups2))))
-       ;; When both groups1 and groups2 are non-nil (there are groups left), then tk
        (t
         (kb/denote-menu--signature-group-lessp (pop groups1) (pop groups2))))))
   (advice-add 'denote-sort-signature-lessp
@@ -690,24 +689,45 @@ The following signature for \"a\" is \"b\", for \"9\" is \"10\", for
                        ((= 90 char) "aa"))) ; Is "Z"
       (concat (string-remove-suffix tail sig) next)))
 
-  (defun kb/denote-menu--determine-new-signature (sig &optional childp dir)
+  (defvar kb/denote-menu--relations
+    '("Sibling" "Child" "Top-level")
+    "List of possible note relations for
+`kb/denote-menu--determine-new-signature'. See its docstring for more
+information.")
+
+  (defun kb/denote-menu--determine-new-signature (sig &optional relation dir)
     "Return the next available signature relative to SIG.
-If CHILDP, then return the next signature available for a new child
-note. If non-nil, then assume the desired next note will be a sibling.
+
+The new signature depends on RELATION, a string in
+`kb/denote-menu--relations'. If RELATION is \"child\", then return the
+next signature available for a new child note. If it is \"sibling\",
+then the new note will be the next available signature at the same
+hierarchical level as SIG. If it is \"top-level\", then the next
+available top-level signature will be returned. If RELATION is nil, then
+it defaults to a value of \"child\".
 
 If DIR is provided, check for the existence of signatures in that
 directory rather than the entirety of `denote-directory'. DIR can also
 be a file. If it is, the parent directory of that file will be used as
 the directory."
-    (let* ((dir (when dir
+    (let* ((relation (or (downcase relation) "child"))
+           (dir (when dir
                   (file-name-directory (file-relative-name dir denote-directory))))
-           (next-sig
-            (if childp
-                (concat sig
-                        (if (s-numeric-p (substring sig (1- (length sig))))
-                            "a" "1"))
-              (kb/denote-menu--next-signature sig))))
-      (message "tk next-sig: %s" next-sig)
+           (next-sig (pcase relation
+                       ("child"
+                        (concat sig
+                                (if (s-numeric-p (substring sig (1- (length sig))))
+                                    "a" "1")))
+                       ("sibling"
+                        (kb/denote-menu--next-signature sig))
+                       ("top-level"
+                        (concat (number-to-string
+                                 (1+ (cl-loop for f in (denote-directory-files dir)
+                                              maximize (string-to-number
+                                                        (car (kb/denote-menu--signature-decompose-into-groups
+                                                              (or (denote-retrieve-filename-signature f)
+                                                                  "000")))))))
+                                "=1")))))
       (while (member next-sig
                      (cl-loop for f in (denote-directory-files dir)
                               collect (denote-retrieve-filename-signature f)))
@@ -799,11 +819,11 @@ the :omit-current non-nil. Otherwise,when called interactively in
                              nil t))
            (file-type (denote-filetype-heuristics selection))
            (current-sig (denote-retrieve-filename-signature selection))
-           (childp
-            (string= "Child" (completing-read "Choose relation: " '("Sibling" "Child"))))
+           (note-relation
+            (downcase (completing-read "Choose relation: " kb/denote-menu--relations)))
            (new-sig (kb/denote-menu--determine-new-signature
                      (denote-retrieve-filename-signature selection)
-                     childp
+                     note-relation
                      selection))
            (denote-rename-no-confirm t))
       (kb/denote-menu-set-signature file-at-point new-sig))))
