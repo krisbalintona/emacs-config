@@ -797,7 +797,8 @@ LEVEL."
 
   (defun kb/denote-menu--signature-propertize (sig)
     "Return propertized SIG for hierarchical visibility."
-    (or (cdr (assoc-string sig kb/denote-menu--signature-propertize-cache))
+    (or (and (not sig) "")
+        (cdr (assoc-string sig kb/denote-menu--signature-propertize-cache))
         (let* ((groups (kb/denote-menu--signature-decompose-into-groups sig))
                (decomposed
                 (flatten-list
