@@ -121,6 +121,7 @@
 ;;;;; Itself
 ;; Using org-mode to compose HTML-friendly emails
 (use-package org-msg
+  :disabled ; FIXME 2024-03-12: For now since mu4e 1.12 refactored email composition
   ;; :ensure (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :vc (:url "https://github.com/jeremy-compostella/org-msg.git"
             :rev :newest)
@@ -516,6 +517,23 @@ MML tags."
   (mu4e-send-delay-default-hour "8")
   (mu4e-send-delay-timer 60)
   (mu4e-send-delay-enable-org-msg t))
+
+;;;; Org-mime
+(use-package org-mime
+  :hook (message-send . org-mime-confirm-when-no-multipart)
+  :general
+  (:keymaps 'message-mode-map
+            :prefix "C-c"
+            "M-o" 'org-mime-htmlize)
+  :custom
+  (org-mime-library 'mml)               ; For gnus
+  (org-mime-export-ascii 'ascii)
+  (org-mime-export-options
+   '(:with-latex dvipng
+                 :section-numbers nil
+                 :with-author nil
+                 :with-toc nil
+                 :preserve-breaks t)))
 
 (provide 'email-sending-rcp)
 ;;; email-sending-rcp.el ends here
