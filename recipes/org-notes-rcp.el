@@ -308,6 +308,7 @@ If called with CONFIMP, then prompt user to confirm a replacement. When
 interactively called, CONFIRMP is non-nil by default, flipping the value
 with prefix-arg."
     (interactive (list (not current-prefix-arg)))
+    (require 'denote-org-extras)
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward (denote-org-extras--get-link-type-regexp 'denote) nil :no-error)
