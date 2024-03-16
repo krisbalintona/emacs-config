@@ -297,6 +297,7 @@ My version camelCases keywords."
   (denote-explore-network-directory     ; Have to end path in slash
    (no-littering-expand-var-file-name "denote-explore/"))
   (denote-explore-network-format 'd3.js)
+  (denote-explore-network-graphviz-filetype "pdf")
   (denote-explore-network-keywords-ignore '("archive")))
 
 ;;;;; Update link descriptions
