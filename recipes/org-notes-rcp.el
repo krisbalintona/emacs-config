@@ -357,7 +357,21 @@ with prefix-arg."
              (propertize (denote-retrieve-front-matter-title-value
                           (buffer-file-name)
                           (denote-filetype-heuristics (buffer-file-name)))
-                         'face 'denote-faces-title))))
+                         'face 'denote-faces-title)))
+
+  (defun kb/denote-explore-update-link-descriptions-globally (dir confirmp)
+    "Update the link description of all notes in DIR.
+If CONFIRMP is non-nil, then prompt the user to confirm each
+replacement."
+    (interactive (list (denote-subdirectory-prompt) current-prefix-arg))
+    (save-window-excursion
+      (dolist (f (denote-directory-files (concat (file-name-nondirectory dir) "/") nil t))
+        (save-excursion
+          (let* ((live-buffer (get-file-buffer f)))
+            (with-current-buffer (find-file-noselect f)
+              (kb/denote-explore-update-link-descriptions confirmp))
+            (unless live-buffer (kill-buffer live-buffer))))))
+    (message "Updated all links in %s!" dir)))
 
 ;;;; Denote-menu
 ;;;;; Itself
