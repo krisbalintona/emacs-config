@@ -379,7 +379,8 @@ replacement."
             :rev :newest)
   :general (kb/note-keys
              "m" 'denote-interface-list
-             "r" 'denote-interface-set-signature-interactively)
+             "r" 'denote-interface-set-signature-list
+             "R" 'denote-interface-set-signature-minibuffer)
   :custom
   (denote-interface-signature-column-width
    (+ 6 (cl-loop for file in (denote-directory-files)
