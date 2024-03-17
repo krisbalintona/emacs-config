@@ -386,9 +386,9 @@ replacement."
    (+ 6 (cl-loop for file in (denote-directory-files)
                  maximize (length (denote-retrieve-filename-signature file)))))
   (denote-interface-title-column-width 120)
-  (denote-interface-filter-presets
+  (denote-interface-starting-filter-presets
    '("zettels/[^z-a]*" "bib/[^z-a]*"))
-  (denote-interface-filter "zettels/[^z-a]*")
+  (denote-interface-starting-filter "zettels/[^z-a]*")
   :config
   (advice-add 'denote-sort-signature-lessp
               :override (lambda (f1 f2)
