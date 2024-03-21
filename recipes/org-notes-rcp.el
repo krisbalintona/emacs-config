@@ -41,6 +41,7 @@
   :general (kb/note-keys
              "f" 'denote-open-or-create
              "i" 'denote-insert-link
+             "e" 'denote-org-extras-extract-org-subtree
              "ta" 'denote-keywords-add
              "tr" 'denote-keywords-remove)
   :custom
