@@ -83,7 +83,8 @@
    (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
            ;; Don't save files from other Emacs repos because sometimes they
            ;; have local variables that mess with desktop's loading of files
-           (literal "/home/krisbalintona/emacs-repos/")))))
+           (literal "/home/krisbalintona/emacs-repos/"))))
+  (desktop-auto-save-timeout 3))
 
 ;;;; Super-save
 ;; Automatically save buffers when you do certain things
