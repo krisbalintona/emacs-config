@@ -164,6 +164,7 @@ command."
 ;;;;; Affe
 ;; Blazing fast fuzzy finder
 (use-package affe
+  :disabled            ; NOTE 2024-03-17: Trying to defer to `project-find-file'
   :after orderless
   :general (:keymaps 'project-prefix-map
                      [remap project-find-file] 'affe-find)
