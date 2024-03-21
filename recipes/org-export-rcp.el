@@ -253,7 +253,8 @@ storing and resolving footnotes.  It is created automatically."
   \\end{center}
 }
 \\tableofcontents
-\\newpage")
+\\newpage
+")
   (org-export-with-toc nil)
   (org-latex-packages-alist
    '(("" "lipsum" nil)))                ; Sample text
