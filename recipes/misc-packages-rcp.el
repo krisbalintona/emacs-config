@@ -765,5 +765,11 @@ ARG and REDISPLAY are identical to the original function."
   :init
   (selection-highlight-mode))
 
+;;;;; Casual
+;; Easier interface for `calc'
+(use-package casual
+  :general (:keymaps 'calc-mode-map
+                     "C-o" 'casual-main-menu))
+
 (provide 'misc-packages-rcp)
 ;;; misc-packages-rcp.el ends here
