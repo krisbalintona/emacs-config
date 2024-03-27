@@ -108,6 +108,8 @@
              (major-mode . vc-annotate-mode)
              (major-mode . vc-git-region-history-mode)))
       (display-buffer-reuse-mode-window display-buffer-same-window))
+     ("OrgMimeMailBody"
+      (display-buffer-same-window))
      ((major-mode . denote-interface-mode)
       (display-buffer-same-window))
 
