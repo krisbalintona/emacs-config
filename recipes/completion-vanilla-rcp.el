@@ -143,10 +143,10 @@
    ;; '(initials orderless substring basic flex))
    '(orderless flex))
   (orderless-matching-styles
-   '(orderless-prefixes
+   '(orderless-regexp
+     orderless-prefixes
      orderless-initialism
-     orderless-regexp
-     orderless-literal
+     ;; orderless-literal
      ;; orderless-flex
      ;; orderless-without-literal          ; Recommended for dispatches instead
      ))
