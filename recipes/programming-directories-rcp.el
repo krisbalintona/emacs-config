@@ -31,7 +31,7 @@
 ;; Emacs' file manager
 (use-package dired
   :ensure nil
-  :gfhook 'dired-hide-details-mode 'dired-omit-mode
+  :gfhook 'dired-hide-details-mode
   :general
   (:keymaps 'dired-mode-map
             :states 'normal
@@ -70,6 +70,11 @@ command."
                       (call-interactively (intern sexp))             ; Command
                     (funcall-interactively 'eval-expression sexp)))) ; Sexp
             (dired-get-marked-files)))))
+
+;;;;; Dired-x
+(use-package dired-x
+  :ensure nil
+  :hook (dired-mode . dired-omit-mode))
 
 ;;;;; All-the-icons-dired
 ;; Add icons which represent file types
