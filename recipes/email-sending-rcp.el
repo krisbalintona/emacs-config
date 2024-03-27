@@ -525,7 +525,8 @@ MML tags."
   :general
   (:keymaps 'message-mode-map
             :prefix "C-c"
-            "M-o" 'org-mime-htmlize)
+            "M-o" 'org-mime-htmlize
+            "'" 'org-mime-edit-mail-in-org-mode)
   :custom
   (org-mime-library 'mml)               ; For gnus
   (org-mime-export-ascii 'ascii)
