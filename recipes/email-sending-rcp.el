@@ -530,6 +530,15 @@ MML tags."
   :custom
   (org-mime-library 'mml)               ; For gnus
   (org-mime-export-ascii 'ascii)
+  ;; Keep GPG signatures outside of multipart. Modified version of
+  ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
+  (org-mime-find-html-start
+   (lambda (start)
+     (save-excursion
+       (goto-char start)
+       (if (search-forward "<#secure method=pgpmime mode=sign>" nil t)
+           (1+ (point))
+         start))))
   ;; Start with a single # to font-lock as comment
   (org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n")
   :config
