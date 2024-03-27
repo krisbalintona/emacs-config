@@ -535,7 +535,42 @@ MML tags."
                       :section-numbers nil
                       :with-author nil
                       :with-toc nil
-                      :preserve-breaks t)))
+                      :preserve-breaks t))
+
+  ;; Pop buffer according to `display-buffer-alist'
+  (defun kb/org-mime-edit-mail-in-org-mode ()
+    "Call a special editor to edit the mail body in `org-mode'."
+    (interactive)
+    ;; see `org-src--edit-element'
+    (cond
+     ((eq major-mode 'org-mode)
+      (message "This command is not for `org-mode'."))
+     (t
+      (setq org-mime--saved-temp-window-config (current-window-configuration))
+      (let* ((beg (copy-marker (org-mime-mail-body-begin)))
+             (end (copy-marker (or (org-mime-mail-signature-begin) (point-max))))
+             (bufname "OrgMimeMailBody")
+             (buffer (generate-new-buffer bufname))
+             (overlay (org-mime-src--make-source-overlay beg end))
+             (text (buffer-substring-no-properties beg end)))
+
+        (setq org-mime-src--beg-marker beg)
+        (setq org-mime-src--end-marker end)
+        ;; don't use local-variable because only user can't edit multiple emails
+        ;; or multiple embedded org code in one mail
+        (setq org-mime-src--overlay overlay)
+
+        (with-current-buffer buffer
+          (erase-buffer)
+          (insert org-mime-src--hint)
+          (insert text)
+          (goto-char (point-min))
+          (org-mode)
+          (org-mime-src-mode)
+          (while (org-at-comment-p)
+            (forward-line)))
+        (display-buffer buffer)))))
+  (advice-add 'org-mime-edit-mail-in-org-mode :override #'kb/org-mime-edit-mail-in-org-mode))
 
 (provide 'email-sending-rcp)
 ;;; email-sending-rcp.el ends here
