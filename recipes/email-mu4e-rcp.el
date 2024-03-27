@@ -133,6 +133,8 @@
   (mu4e-compose-hidden-headers nil)   ; See all headers
   (mu4e-compose-dont-reply-to-self t)
   (mu4e-compose-signature message-signature)
+  (mu4e-compose-complete-only-personal t)
+  (mu4e-compose-switch 'window)
 
   ;; Other
   (mu4e-change-filenames-when-moving t) ; Prevent duplication
