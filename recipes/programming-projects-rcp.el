@@ -300,6 +300,7 @@ With a prefix argument, show NLINES of context."
 ;;;;; Magit-lfs
 (use-package magit-lfs
   :demand
+  :ensure-system-package (git-lfs)
   :after magit)
 
 ;;;;; Forge
