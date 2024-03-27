@@ -156,6 +156,7 @@
     (interactive)
     (if kb/mu4e-main-pre-window-conf
         (progn
+          (bury-buffer)
           (set-window-configuration kb/mu4e-main-pre-window-conf)
           (setq kb/mu4e-main-pre-window-conf nil))
       (bury-buffer)))
