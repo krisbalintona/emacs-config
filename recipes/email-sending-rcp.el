@@ -44,7 +44,7 @@
   (message-signature-separator "^-- $")
   (message-signature-insert-empty-line t)
   (message-citation-line-function 'message-insert-formatted-citation-line)
-  (message-ignored-cited-headers "") ; Don't include any headers when citing emails
+  (message-ignored-cited-headers ".") ; Don't include any headers when citing emails
   (message-confirm-send nil)
   (message-kill-buffer-on-exit t)
   (message-wide-reply-confirm-recipients t)
@@ -528,12 +528,13 @@ MML tags."
   :custom
   (org-mime-library 'mml)               ; For gnus
   (org-mime-export-ascii 'ascii)
-  (org-mime-export-options
-   '(:with-latex dvipng
-                 :section-numbers nil
-                 :with-author nil
-                 :with-toc nil
-                 :preserve-breaks t)))
+  :config
+  (setq org-mime-export-options
+        '(:with-latex t
+                      :section-numbers nil
+                      :with-author nil
+                      :with-toc nil
+                      :preserve-breaks t)))
 
 (provide 'email-sending-rcp)
 ;;; email-sending-rcp.el ends here
