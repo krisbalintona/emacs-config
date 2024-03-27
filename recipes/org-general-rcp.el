@@ -28,10 +28,7 @@
 ;;;; Org
 ;;;;; Itself
 (use-package org
-  ;; FIXME 2024-02-27: Latest org branch has buggy interactions with other org
-  ;; packages. Currently pinned to 256caa08231850b421d2dd2b58e9e9aabc7cb828
   ;; :ensure (:pin t)
-  :vc (:rev "256caa08231850b421d2dd2b58e9e9aabc7cb828")
   :gfhook
   'variable-pitch-mode
   'visual-line-mode
@@ -446,7 +443,7 @@ have `org-warning' face."
   (org-appear-delay 0.0)
   (org-appear-trigger 'always)
   (org-appear-autoemphasis t)
-  (org-appear-autolinks 'just-brackets)
+  (org-appear-autolinks t)
   (org-appear-autosubmarkers t)
   (org-appear-autoentities t)
   (org-appear-autokeywords t)
