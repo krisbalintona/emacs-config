@@ -529,6 +529,8 @@ MML tags."
   :custom
   (org-mime-library 'mml)               ; For gnus
   (org-mime-export-ascii 'ascii)
+  ;; Start with a single # to font-lock as comment
+  (org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n")
   :config
   (setq org-mime-export-options
         '(:with-latex t
