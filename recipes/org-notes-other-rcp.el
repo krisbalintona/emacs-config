@@ -652,7 +652,7 @@ See `org-noter' for details and ARG usage."
   (org-remark-create-default-pen-set nil) ; Make my own pens
   :config
   (diminish 'org-remark-mode)
-  (org-remark-global-tracking-mode)
+  ;; (org-remark-global-tracking-mode 1)
   (diminish 'org-remark-global-tracking-mode)
 
   (with-eval-after-load 'eww
