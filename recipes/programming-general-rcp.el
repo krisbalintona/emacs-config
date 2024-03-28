@@ -324,12 +324,20 @@
          (org-mode . (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
   :init
   (defun kb/prettify-symbols-compose-p (start end _match)
-    "Returns nil if the character before and after MATCH isn't a
-punctuation."
-    (let ((before (or (char-before start) ? ))
-          (after (or (char-after end) ? )))
-      (not (or (string-match-p (rx (any punct)) (char-to-string before))
-               (string-match-p (rx (any punct)) (char-to-string after))))))
+    "Returns nil except on org-mode exceptions.
+Returns nil if the character before and after MATCH isn't a punctuation,
+with the exception of org-emphasis markers."
+    (let ((before (char-to-string (or (char-before start) ? )))
+          (after (char-to-string (or (char-after end) ? )))
+          (org-emphasis-markers (mapcar #'car org-emphasis-alist)))
+      (cond
+       ((or (member before org-emphasis-markers)
+            (member after org-emphasis-markers))
+        t)
+       ((or (string-match-p (rx (or (any punct))) before)
+            (string-match-p (rx (or (any punct))) after))
+        nil)
+       (t t))))
   :config
   (add-hook 'org-mode-hook
             (lambda ()
@@ -343,7 +351,7 @@ punctuation."
               (add-to-list 'prettify-symbols-alist '("\\Dashv" . ?⫤))
               (add-to-list 'prettify-symbols-alist '("\\DashVDash" . ?⟚))
               (add-to-list 'prettify-symbols-alist '("\\dashVdash" . ?⊢))
-              (delete '("--" . 8211) prettify-symbols-alist)
+              (delete '("--" . 8211 ) prettify-symbols-alist)
               (delete '("---" . 8212) prettify-symbols-alist)
               ;; For `lplfitch'. Slightly higher than `\vdots'. Using the
               ;; `\pline{\vdots}' results in the ellipses not being centered
