@@ -69,7 +69,7 @@
 
 #+begin_export LaTeX
 \\newpage
-\center
+\\center
 #+end_export
 
 #+print_bibliography:")
