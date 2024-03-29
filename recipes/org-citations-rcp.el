@@ -110,14 +110,14 @@
                     (citar-org-update-prefix-suffix))))
   (advice-add 'citar-org-update-prefix-suffix
               :around (lambda (orig-fun &rest args)
-                        (when (fboundp 'typo-mode)
+                        (when (and (fboundp 'typo-mode) (not org-export-with-smart-quotes))
                           (add-hook 'minibuffer-mode-hook 'typo-mode))
                         (condition-case err
                             (apply orig-fun args)
                           (quit
                            ;; Remove from minibuffer-mode-hook when user
                            ;; interrupts with keyboard-quit (C-g)
-                           (when (fboundp 'typo-mode)
+                           (when (member 'typo-mode minibuffer-mode-hook)
                              (remove-hook 'minibuffer-mode-hook 'typo-mode))))
                         (when (fboundp 'typo-mode)
                           (remove-hook 'minibuffer-mode-hook 'typo-mode))))
