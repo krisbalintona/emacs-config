@@ -126,6 +126,7 @@ My version camelCases keywords."
   (defun kb/themes-setup-denote-faces ()
     "Set up denote faces."
     (modus-themes-with-colors
+      (set-face-attribute 'denote-faces-link nil :weight 'normal :foreground fg-active-argument :inherit 'unspecified)
       (set-face-attribute 'denote-faces-signature nil :weight 'bold)
       (set-face-attribute 'denote-faces-title nil :weight 'semibold :foreground cyan-cooler)
       (set-face-attribute 'denote-faces-keywords nil :foreground keyword :slant 'italic)
