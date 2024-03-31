@@ -124,7 +124,7 @@ get the contents and display them on demand."
           (window-parameters (no-other-window . t)
                              (mode-line-format . none)))))
 
-;;;;; Custom entry formatter
+;;;;;; Custom entry formatter
 (with-eval-after-load 'pdf-tools
   (defun kb/pdf-annot--make-entry-formatter (a)
     "Return a formatter function for annotation A.
@@ -188,7 +188,7 @@ pretty-printed output."
              processed-text))))))
   (advice-add 'pdf-annot--make-entry-formatter :override 'kb/pdf-annot--make-entry-formatter))
 
-;;;;; Avy keys to highlight region in PDF
+;;;;;; Avy keys to highlight region in PDF
 ;; Use an avy-like interface to highlight region in pdf-view-mode. Heavily based
 ;; off of
 ;; https://github.com/dalanicolai/dala-emacs-lisp/blob/master/pdf-avy-highlight.el
@@ -311,7 +311,7 @@ annotation immediately after creation."
   (general-define-key :keymaps 'pdf-view-mode-map
                       [remap avy-goto-char-timer] #'kb/avy-pdf-highlight))
 
-;;;;; Pdf-annot-list custom (tablist) color filter
+;;;;;; Pdf-annot-list custom (tablist) color filter
 (with-eval-after-load 'pdf-tools
   (defun kb/pdf-annot-list-filter-color-regexp ()
     "Get a prompt to filter for the color column's colors.
@@ -374,7 +374,7 @@ the color column."
   (general-define-key :keymaps 'pdf-annot-list-mode-map
                       [remap tablist-push-regexp-filter] 'kb/pdf-annot-list-filter-regexp))
 
-;;;;; Custom org-link type for PDF annotations
+;;;;;; Custom org-link type for PDF annotations
 ;; NOTE 2024-02-10: Code copied from the code shared on Thu, 08 Feb 2024
 ;; 22:13:50 +0000 by Juan Manuel Macías <maciaschain@posteo.net> in the
 ;; Emacs-devel mailing list. The original uses the modification date, whereas
@@ -427,6 +427,48 @@ Uses the current annotation at point's ID."
    "pdf-annot"
    :follow #'kb/org-pdf-annot-follow-link
    :store #'kb/org-pdf-annot-store-link))
+
+;;;;;; Modify PDF metadata
+;; Emacs wrapper and convenience functions for changing package metadata using
+;; `pdftk'. See https://unix.stackexchange.com/a/72457 for more information on
+;; the CLI commands involved.
+(with-eval-after-load 'pdf-tools
+  (system-packages-ensure "pdftk")
+
+  (defun kb/pdf-tools--metadata-modify (pdf-file)
+    "Modify PDF-FILE metadata."
+    (interactive (list (buffer-file-name)))
+    (unless (string= "pdf" (file-name-extension pdf-file))
+      (error "File is not a PDF!"))
+    (let* ((pdf-name (file-name-sans-extension (file-name-nondirectory pdf-file)))
+           (buf-name (concat "*pdf-tools metadata: " pdf-name))
+           (metadata-file (concat "/tmp/pdf-tools-metadata--" pdf-name))
+           (temp-pdf (make-temp-file "/tmp/pdf-tools-metadata--"))
+           (metadata-dump-command (concat "pdftk '" pdf-file "' dump_data"))
+           (metadata-update-command
+            (concat "pdftk '" pdf-file "' update_info '" metadata-file "' output '" temp-pdf "'"))
+           (keymap (make-sparse-keymap))
+           (commit-func (lambda ()
+                          "Commit the changes to PDF metadata."
+                          (interactive)
+                          (with-current-buffer buf-name
+                            (write-region (point-min) (point-max) metadata-file))
+                          (shell-command metadata-update-command "*pdf-tools metadata: CLI output")
+                          (kill-buffer buf-name)
+                          ;; Have to do it this way since `pdftk' does not allow
+                          ;; having the output file be the input file
+                          (rename-file temp-pdf pdf-file t)
+                          (message "Updated metadata!"))))
+      (save-buffer)
+      (with-current-buffer (get-buffer-create buf-name)
+        (insert (shell-command-to-string metadata-dump-command))
+        (goto-char (point-min)))
+      (pop-to-buffer buf-name)
+      (define-key keymap (kbd "C-c C-c") commit-func)
+      (use-local-map keymap)
+      (set-buffer-modified-p nil)
+      (message "Press `C-c C-c' when finished editing package metadata")))
+  (define-key pdf-view-mode-map (kbd "C-c m") #'kb/pdf-tools--metadata-modify))
 
 ;;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
