@@ -111,7 +111,8 @@
   (vertico-multiform-commands
    ;; I use jinx now, but I think it's better to not apply a grid layout to it
    ;; since its use of vertico-groups is useful
-   '(("flyspell-correct-*" grid (vertico-grid-annotate . 20))))
+   '(("flyspell-correct-*" grid (vertico-grid-annotate . 20))
+     (pdf-view-goto-label (vertico-sort-function . nil))))
   :config
   (vertico-multiform-mode))
 
