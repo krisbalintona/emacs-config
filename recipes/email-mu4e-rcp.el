@@ -69,7 +69,7 @@
             "q" 'kb/mu4e-main-bury-buffer
             "Q" 'mu4e-quit)
   (kb/open-keys
-    "m" '(mu4e :wk "Mu4e"))
+    "m" 'kb/mu4e)
   ([remap compose-mail] 'mu4e-compose-new)
   (:keymaps '(mu4e-main-mode-map mu4e-headers-mode-map mu4e-view-mode-map)
             "M-U" 'mu4e-update-index-nonlazy)
@@ -152,6 +152,15 @@
     (unless (derived-mode-p '(mu4e-main-mode mu4e-view-mode mu4e-headers-mode))
       (setq kb/mu4e-main-pre-window-conf (current-window-configuration))))
   (advice-add 'mu4e :before #'kb/mu4e-main-set-window-conf)
+
+  (defun kb/mu4e (&optional background)
+    "Wrapper for `mu4e' command.
+Opens mu4e to take up the entire frame. When
+BACKGROUND (prefix-argument) is non-nil, don't show the window."
+    (interactive "P")
+    (unless background (kb/mu4e-main-set-window-conf))
+    (delete-other-windows)
+    (mu4e background))
 
   (defun kb/mu4e-main-bury-buffer ()
     "Restore window configuration."
