@@ -533,11 +533,11 @@ Uses the current annotation at point's ID."
   (defun kb/mpv-play ()
     "Call `mpv-start' from the org-attach directory."
     (interactive)
-    (if-let ((dir (org-attach-dir)))
-        (mpv-play (read-file-name
-                   "Select video: "
-                   (file-name-as-directory dir)))
-      (call-interactively 'mpv-play)))
+    (let* ((dir (if (org-attach-dir)
+                    (file-name-as-directory (org-attach-dir))
+                  default-directory))
+           (file-name (expand-file-name (read-file-name "Select video: " dir))))
+      (mpv-start file-name)))
 
   (defun kb/mpv-jump-to-playback-position (time)
     "Prompt user for a time to jump to.
