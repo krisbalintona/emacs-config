@@ -570,7 +570,7 @@ Commands that control MPV playback mimic MPV keybinds."
     :repeat (mpv-pause mpv-seek-backward mpv-seek-forward)
     "o" #'kb/mpv-play
     "O" #'mpv-play-url
-    "i" #'mpv-insert-playback-position
+    "k" #'mpv-kill
     "p" #'mpv-pause
     "b" #'mpv-seek-backward
     "f" #'mpv-seek-forward
@@ -579,7 +579,8 @@ Commands that control MPV playback mimic MPV keybinds."
     "0" #'mpv-volume-increase
     "[" #'mpv-speed-decrease
     "]" #'mpv-speed-increase
-    "P" #'mpv-jump-to-playlist-entry)
+    "P" #'mpv-jump-to-playlist-entry
+    "i" #'mpv-insert-playback-position)
   (define-key global-map (kbd "H-m") kb/mpv-map)
 
   ;; Taken from https://github.com/kljohann/mpv.el/wiki
