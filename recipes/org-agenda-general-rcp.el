@@ -202,7 +202,7 @@ I currently hard-code the ID to the task that I want to clock in."
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "TODO(t)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
+   '((sequence "TODO(t)" "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
   (org-todo-keyword-faces
    '(("PROG" . (bold success))
      ("ACTIVE" . org-warning)
