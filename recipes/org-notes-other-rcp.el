@@ -524,7 +524,11 @@ Uses the current annotation at point's ID."
 ;;;; Videos
 ;;;;; MPV
 ;; Dependency for packages that interact with mpv
-(use-package mpv)
+(use-package mpv
+  ;; NOTE 2024-03-31: See
+  ;; https://github.com/kljohann/mpv.el/issues/31#issuecomment-1856491594 for
+  ;; why I use the latest GitHub version
+  :vc (:rev :newest))
 
 ;;;;; Custom MPV notes
 (with-eval-after-load 'org
