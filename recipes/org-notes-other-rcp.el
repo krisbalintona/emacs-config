@@ -537,13 +537,23 @@ Uses the current annotation at point's ID."
   (require 'mpv)
 
   (defun kb/mpv-play ()
-    "Call `mpv-start' from the org-attach directory."
+    "Call `mpv-start'.
+Prompts for file in `org-attach-directory' if existent. Otherwise,
+prompts for file in `default-directory'.
+
+Behaves specially in dired files with marked files. In those cases case,
+marked files will be played as a playlist as chronologically displayed
+in the dired buffer. (It is useful to `dired-sort-toggle-or-edit' to
+control the ordering of files. To reverse the order, pass the \"-r\"
+flag to the listing switches, done by calling
+`dired-sort-toggle-or-edit' with `C-u'.)"
     (interactive)
     (let* ((dir (if (org-attach-dir)
                     (file-name-as-directory (org-attach-dir))
                   default-directory))
-           (file-name (expand-file-name (read-file-name "Select video: " dir))))
-      (mpv-start file-name)))
+           (files (or (dired-get-marked-files)
+                      (expand-file-name (read-file-name "Select video: " dir)))))
+      (apply #'mpv-start files)))
 
   (defun kb/mpv-jump-to-playback-position (time)
     "Prompt user for a time to jump to.
