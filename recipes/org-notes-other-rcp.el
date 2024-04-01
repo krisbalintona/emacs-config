@@ -550,7 +550,8 @@ Uses the current annotation at point's ID."
 Takes HH:MM:SS time format. Uses `org-timer-hms-to-secs' to parse user
 input."
     (interactive "MJump to time (HH:MM:SS format): ")
-    (org-timer-hms-to-secs time))
+    (let ((secs (org-timer-hms-to-secs time)))
+      (mpv-seek secs)))
 
   ;; Keymap
   (defvar-keymap kb/mpv-map
