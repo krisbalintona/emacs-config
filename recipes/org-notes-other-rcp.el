@@ -553,10 +553,10 @@ input."
     (org-timer-hms-to-secs time))
 
   ;; Keymap
-  (defvar-keymap kb/mpv-org-map
+  (defvar-keymap kb/mpv-map
     :doc "Keymap for my mpv.el commands for use in `org-mode'.
 Commands that control MPV playback mimic MPV keybinds."
-    :repeat (mpv-pause mpv-seek-backward)
+    :repeat (mpv-pause mpv-seek-backward mpv-seek-forward)
     "o" #'kb/mpv-play
     "O" #'mpv-play-url
     "i" #'mpv-insert-playback-position
@@ -567,8 +567,9 @@ Commands that control MPV playback mimic MPV keybinds."
     "9" #'mpv-volume-decrease
     "0" #'mpv-volume-increase
     "[" #'mpv-speed-decrease
-    "]" #'mpv-speed-increase)
-  (define-key global-map (kbd "H-m") kb/mpv-org-map)
+    "]" #'mpv-speed-increase
+    "P" #'mpv-jump-to-playlist-entry)
+  (define-key global-map (kbd "H-m") kb/mpv-map)
 
   ;; Taken from https://github.com/kljohann/mpv.el/wiki
   (defun kb/mpv-org-metareturn-insert-playback-position ()
