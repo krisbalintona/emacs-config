@@ -541,18 +541,30 @@ Uses the current annotation at point's ID."
 Prompts for file in `org-attach-directory' if existent. Otherwise,
 prompts for file in `default-directory'.
 
-Behaves specially in dired files with marked files. In those cases case,
-marked files will be played as a playlist as chronologically displayed
-in the dired buffer. (It is useful to `dired-sort-toggle-or-edit' to
-control the ordering of files. To reverse the order, pass the \"-r\"
-flag to the listing switches, done by calling
-`dired-sort-toggle-or-edit' with `C-u'.)"
+Behaves specially in dired buffers. In those cases case, marked files
+will be played as a playlist as chronologically displayed in the dired
+buffer. If no files are marked, just the file at point is played. (It is
+useful to `dired-sort-toggle-or-edit' to control the ordering of files.
+To reverse the order, pass the \"-r\" flag to the listing switches, done
+by calling `dired-sort-toggle-or-edit' with `C-u'.)"
     (interactive)
     (let* ((dir (if (org-attach-dir)
                     (file-name-as-directory (org-attach-dir))
                   default-directory))
-           (files (or (dired-get-marked-files)
-                      (expand-file-name (read-file-name "Select video: " dir)))))
+           (files
+            (or (cl-remove-if
+                 (lambda (f)
+                   "Ensure F is not a directory and is a video file."
+                   (not (and (not (directory-name-p f))
+                             (member (file-name-extension f)
+                                     ;; OPTIMIZE 2024-03-31: I hard-code this,
+                                     ;; but I don't know if there's a better way
+                                     ;; to recognize video extensions
+                                     (list "mp4" "avi" "mkv" "mov" "wmv" "flv" "webm" "mpeg" "m4v" "3gp")))))
+                 ;; NOTE 2024-03-31: If no files are marked, the file at point
+                 ;; is treated as marked
+                 (dired-get-marked-files))
+                (expand-file-name (read-file-name "Select video: " dir)))))
       (apply #'mpv-start files)))
 
   (defun kb/mpv-jump-to-playback-position (time)
