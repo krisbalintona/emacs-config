@@ -54,17 +54,13 @@
 ;; Side buffer with imenu items
 (use-package imenu-list
   :after imenu
-  :general (kb/nav-keys
-             "I" '(imenu-list :wk "Imenu list"))
   :hook (imenu-list-major-mode . visual-line-mode))
 
 ;;;; Occur
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur
   :ensure nil
-  :gfhook 'visual-line-mode
-  :general (kb/nav-keys
-             "o" '(occur :wk "Occur")))
+  :gfhook 'visual-line-mode)
 
 ;;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins

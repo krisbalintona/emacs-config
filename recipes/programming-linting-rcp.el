@@ -31,8 +31,6 @@
 ;; Check your code
 (use-package flycheck
   :general
-  (kb/nav-keys
-    "E" '(flycheck-list-errors :wk "List flycheck errors"))
   (:keymaps 'flycheck-mode-map
             "M-n" 'flycheck-next-error
             "M-p" 'flycheck-previous-error)
