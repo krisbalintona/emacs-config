@@ -444,9 +444,9 @@ Uses the current annotation at point's ID."
            (buf-name (concat "*pdf-tools metadata: " pdf-name))
            (metadata-file (concat "/tmp/pdf-tools-metadata--" pdf-name))
            (temp-pdf (make-temp-file "/tmp/pdf-tools-metadata--"))
-           (metadata-dump-command (concat "pdftk '" pdf-file "' dump_data"))
+           (metadata-dump-command (concat "pdftk \"" pdf-file "\" dump_data"))
            (metadata-update-command
-            (concat "pdftk '" pdf-file "' update_info '" metadata-file "' output '" temp-pdf "'"))
+            (concat "pdftk \"" pdf-file "\" update_info \"" metadata-file "\" output \"" temp-pdf "\""))
            (keymap (make-sparse-keymap))
            (commit-func (lambda ()
                           "Commit the changes to PDF metadata."
