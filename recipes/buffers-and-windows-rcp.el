@@ -680,6 +680,7 @@ Determine if WINDOW is splittable."
   ;; :ensure (:type git :host github :repo "alphapapa/activities.el")
   :vc (:rev :newest)
   :general (:prefix "C-c a"
+                    "d" 'activities-define
                     "n" 'activities-new
                     "g" 'activities-revert
                     "s" 'activities-suspend
