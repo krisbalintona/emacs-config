@@ -299,7 +299,7 @@ blacklist, this is mostly for \\section etc."
 ;;;; Auctex-latexmk
 ;; Quicker insertion and filling-out of macros. Taken from Doom
 (use-package auctex-latexmk
-  :after auctex
+  :after tex
   :custom
   (TeX-command-default "LatexMk")
   ;; Pass the -pdf flag when TeX-PDF-mode is active.
