@@ -73,6 +73,7 @@ command."
 
 ;;;;; Dired-x
 (use-package dired-x
+  :disabled
   :ensure nil
   :hook (dired-mode . dired-omit-mode))
 
