@@ -115,7 +115,7 @@
   :general ("<f5>" 'recompile)
   :custom
   (compilation-scroll-output 'first-error) ; Scroll with compile buffer
-  (compilation-auto-jump-to-first-error t))
+  (compilation-auto-jump-to-first-error 'if-location-known))
 
 ;;;; Consult
 ;; Counsel equivalent for default Emacs completion. It provides many useful
