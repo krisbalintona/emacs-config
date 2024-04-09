@@ -435,6 +435,24 @@ Uses the current annotation at point's ID."
 (with-eval-after-load 'pdf-tools
   (system-packages-ensure "pdftk")
 
+  (defun kb/pdf-tools--metadata-bookmark-section ()
+    "Insert bookmark metadata section."
+    (interactive)
+    (save-excursion
+      (insert "BookmarkBegin\nBookmarkTitle: \nBookmarkLevel: 1\nBookmarkPageNumber: tk\n"))
+    (move-end-of-line 2))
+
+  (defvar kb/pdf-tools-metadata-mode-map
+    (let ((km (make-sparse-keymap)))
+      (define-key km (kbd "C-c C-b") #'kb/pdf-tools--metadata-bookmark-section)
+      km)
+    "Mode map for `kb/pdf-tools-metadata-mode'.")
+
+  (define-derived-mode kb/pdf-tools-metadata-mode fundamental-mode "Metadata"
+    "Major mode for altering and viewing PDF metadata."
+    :interactive t
+    (use-local-map kb/pdf-tools-metadata-mode-map))
+
   (defun kb/pdf-tools--metadata-modify (pdf-file)
     "Modify PDF-FILE metadata."
     (interactive (list (buffer-file-name)))
@@ -447,7 +465,6 @@ Uses the current annotation at point's ID."
            (metadata-dump-command (concat "pdftk \"" pdf-file "\" dump_data"))
            (metadata-update-command
             (concat "pdftk \"" pdf-file "\" update_info \"" metadata-file "\" output \"" temp-pdf "\""))
-           (keymap (make-sparse-keymap))
            (commit-func (lambda ()
                           "Commit the changes to PDF metadata."
                           (interactive)
@@ -462,10 +479,10 @@ Uses the current annotation at point's ID."
       (save-buffer)
       (with-current-buffer (get-buffer-create buf-name)
         (insert (shell-command-to-string metadata-dump-command))
-        (goto-char (point-min)))
+        (goto-char (point-min))
+        (kb/pdf-tools-metadata-mode))
       (pop-to-buffer buf-name)
-      (define-key keymap (kbd "C-c C-c") commit-func)
-      (use-local-map keymap)
+      (define-key kb/pdf-tools-metadata-mode-map (kbd "C-c C-c") commit-func)
       (set-buffer-modified-p nil)
       (message "Press `C-c C-c' when finished editing package metadata")))
   (define-key pdf-view-mode-map (kbd "C-c m") #'kb/pdf-tools--metadata-modify))
