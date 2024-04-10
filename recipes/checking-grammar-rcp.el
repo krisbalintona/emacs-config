@@ -34,6 +34,7 @@
 ;;;; Langtool
 ;; Use langtool program to check grammar of current buffer
 (use-package langtool
+  :disabled
   ;; NOTE 2021-08-19: Can't use `ensure-system-package' becuase the installation
   ;; of `languagetool' involves many steps (unless on Arch).
   :if (system-packages-package-installed-p "languagetool")
