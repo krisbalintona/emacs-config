@@ -34,8 +34,9 @@
 ;;;; Mu4e
 ;;;;; Itself
 (use-package mu4e
+  :demand
   :ensure nil
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :load-path "/usr/share/emacs/site-lisp/mu4e/"
   :hook ((after-init . (lambda () (when (daemonp) (mu4e t))))
          (server-mode . (lambda () (mu4e t)))
          (window-setup . (lambda ()
@@ -64,12 +65,13 @@
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
          (mu4e-view-mode . olivetti-mode)
          (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
+  :commands 'kb/mu4e
   :general
+  (kb/open-keys
+    "m" 'kb/mu4e)
   (:keymaps 'mu4e-main-mode-map
             "q" 'kb/mu4e-main-bury-buffer
             "Q" 'mu4e-quit)
-  (kb/open-keys
-    "m" 'kb/mu4e)
   ([remap compose-mail] 'mu4e-compose-new)
   (:keymaps '(mu4e-main-mode-map mu4e-headers-mode-map mu4e-view-mode-map)
             "M-U" 'mu4e-update-index-nonlazy)
@@ -142,7 +144,7 @@
   (mu4e-headers-eldoc-format "In %m with flags %F")
   (mu4e-read-option-use-builtin t)      ; Builtin is unobtrusive
   (mu4e-completing-read-function 'completing-read)
-  :init
+  :config
   ;; Restore window configuration when closing Mu4e main window like you can
   ;; with org-agenda via the `org-agenda-restore-windows-after-quit' user option
   (defvar kb/mu4e-main-pre-window-conf nil)
@@ -158,6 +160,7 @@
 Opens mu4e to take up the entire frame. When
 BACKGROUND (prefix-argument) is non-nil, don't show the window."
     (interactive "P")
+    (require 'mu4e)
     (unless background (kb/mu4e-main-set-window-conf))
     (delete-other-windows)
     (mu4e background))
@@ -165,13 +168,13 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
   (defun kb/mu4e-main-bury-buffer ()
     "Restore window configuration."
     (interactive)
-    (if kb/mu4e-main-pre-window-conf
-        (progn
-          (bury-buffer)
-          (set-window-configuration kb/mu4e-main-pre-window-conf)
-          (setq kb/mu4e-main-pre-window-conf nil))
-      (bury-buffer)))
-
+    (let ((mu4e-buffer (current-buffer)))
+      (if kb/mu4e-main-pre-window-conf
+          (progn
+            (set-window-configuration kb/mu4e-main-pre-window-conf t)
+            (setq kb/mu4e-main-pre-window-conf nil)
+            (bury-buffer mu4e-buffer))
+        (bury-buffer mu4e-buffer))))
 
   ;; Gmail integration is taken from Doom
   ;; Check if msg is being called from a gmail account
@@ -210,7 +213,7 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
                (match-beginning 0) (match-end 0)
                '(message-deletable t face italic) (current-buffer)))
           (pop headers)))))
-  :config
+
   ;; Modeline
   ;; Force using regular characters rather than the fancy ones
   (advice-add 'mu4e--bookmarks-modeline-item :around
@@ -373,7 +376,7 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
           mm-automatic-display (remove "text/html" mm-automatic-display)))) ; If I really don't want to see HTML
 
 ;;;;; Mu4e-contexts
-(with-eval-after-load 'mu4e
+(with-eval-after-load 'email-sending-rcp
   (setq mu4e-contexts
         `(,(make-mu4e-context
             :name "Uni"
