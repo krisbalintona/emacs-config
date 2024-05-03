@@ -96,18 +96,18 @@
   (project-find-functions '(kb/project-special-dir project-try-vc))
   (project-file-history-behavior 'relativize)
   ;; NOTE 2024-01-31: Replace via project-switch-commands to project-prefix-or-any-command
-  ;; (project-switch-commands
-  ;;  '((affe-find "Find file" "f")
-  ;;    (consult-ripgrep "Regexp" "g")
-  ;;    (magit-project-status "Magit")
-  ;;    (project-switch-to-buffer "Buffer" "b")
-  ;;    (project-query-replace-regexp "Replace regexp")
-  ;;    (kb/project-multi-occur "Multi-occur" "o")
-  ;;    (project-dired "Open dired")
-  ;;    (project-find-dir "Open directory in dired")
-  ;;    (project-compile "Compile")
-  ;;    (project-eshell "Eshell")
-  ;;    (project-shell "Shell")))
+  (project-switch-commands
+   '((project-find-file "Find file" "f")
+     (consult-ripgrep "Regexp" "g")
+     (magit-project-status "Magit")
+     (project-switch-to-buffer "Buffer" "b")
+     (project-query-replace-regexp "Replace regexp")
+     (kb/project-multi-occur "Multi-occur" "o")
+     (project-dired "Open dired")
+     (project-find-dir "Open directory in dired")
+     (project-compile "Compile")
+     (project-eshell "Eshell")
+     (project-shell "Shell")))
   (project-vc-merge-submodules nil) ; Consider submodules as their own projects?
   :init
   (defun kb/project-special-dir (dir)
@@ -132,7 +132,8 @@ With a prefix argument, show NLINES of context."
                    nlines)))
   :config
   ;; Found in Emacs News
-  (setopt project-switch-commands #'project-prefix-or-any-command))
+  ;; (setopt project-switch-commands #'project-prefix-or-any-command)
+  )
 
 ;;;;; Xref
 (use-package xref
