@@ -43,8 +43,10 @@
   :prefix "C-c i")
 (general-create-definer kb/open-keys    ; Open certain things
   :prefix "C-c o")
-(general-create-definer kb/toggle-keys  ; Toggles
-  :prefix "H-t")
+;; Toggles. Use Hyper key if on Linux, and C-M- if in WSL2 or Windows natively
+(if (string-match-p "Microsoft" (shell-command-to-string "uname -a"))
+    (general-create-definer kb/toggle-keys :prefix "C-M-S-t")
+  (general-create-definer kb/toggle-keys :prefix "H-t"))
 
 ;;; Key-chords
 (use-package use-package-chords

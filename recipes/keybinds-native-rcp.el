@@ -76,7 +76,10 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;;;;; Scrolling
 (general-define-key
  "H-P" 'scroll-down-line
- "H-N" 'scroll-up-line)
+ "H-N" 'scroll-up-line
+ ;; If the Hyper key isn't available
+ "C-M-P" 'scroll-down-line
+ "C-M-N" 'scroll-up-line)
 
 ;;;; Text editing
 (general-define-key
