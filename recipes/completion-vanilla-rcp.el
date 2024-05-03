@@ -37,7 +37,8 @@
   ;; :ensure (vertico :files (:defaults "extensions/*"))
   :vc (:rev :newest)
   :general
-  ("H-." #'vertico-repeat)
+  ("H-." #'vertico-repeat
+   "C-M->" #'vertico-repeat)
   (:keymaps 'vertico-map
             "TAB" #'kb/vertico-insert-unless-tramp
             "<escape>" #'minibuffer-keyboard-quit
