@@ -534,6 +534,7 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
 ;;;;; Image-popup
 ;; Match height of image to line height (?)
 (use-package image-popup
+  :disabled
   ;; :ensure (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master")
   :vc (:url "https://gitlab.com/OlMon/image-popup.git"
             :rev :master
