@@ -300,7 +300,7 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Magit-lfs
 (use-package magit-lfs
-  :demand
+  :disabled                    ; 4/11/24: Broken; can manually do git lfs on CLI
   :ensure-system-package (git-lfs)
   :after magit)
 
