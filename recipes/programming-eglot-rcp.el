@@ -86,7 +86,8 @@ functions."
             :rev :newest)
   :after eglot
   :init
-  (eglot-booster-mode 1))
+  ;; (eglot-booster-mode 1)
+  )
 
 ;;;; Languages
 ;;;;; Eglot-java

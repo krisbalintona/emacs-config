@@ -341,6 +341,7 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Abdridge-diff
 (use-package abridge-diff
+  :disabled
   :demand
   :diminish
   :config
