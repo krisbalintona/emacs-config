@@ -67,164 +67,99 @@
 ;; Use denote links or denote:DENOTEID as the file path for #+INCLUDE keywords
 (with-eval-after-load 'ox
   (require 'denote)
-  (defun kb/org-export-expand-include-keyword (&optional included dir footnotes)
-    "Expand every include keyword in buffer.
-Optional argument INCLUDED is a list of included file names along
-with their line restriction, when appropriate.  It is used to
-avoid infinite recursion.  Optional argument DIR is the current
-working directory.  It is used to properly resolve relative
-paths.  Optional argument FOOTNOTES is a hash-table used for
-storing and resolving footnotes.  It is created automatically."
-    (let ((includer-file (buffer-file-name (buffer-base-buffer)))
-          (case-fold-search t)
-          (file-prefix (make-hash-table :test #'equal))
-          (current-prefix 0)
-          (footnotes (or footnotes (make-hash-table :test #'equal)))
-          (include-re "^[ \t]*#\\+INCLUDE:"))
-      ;; If :minlevel is not set the text-property
-      ;; `:org-include-induced-level' will be used to determine the
-      ;; relative level when expanding INCLUDE.
-      ;; Only affects included Org documents.
-      (goto-char (point-min))
-      (while (re-search-forward include-re nil t)
-        (put-text-property (line-beginning-position) (line-end-position)
-                           :org-include-induced-level
-                           (1+ (org-reduced-level (or (org-current-level) 0)))))
-      ;; Expand INCLUDE keywords.
-      (goto-char (point-min))
-      (while (re-search-forward include-re nil t)
-        (unless (org-in-commented-heading-p)
-          (let ((element (save-match-data (org-element-at-point))))
-            (when (eq (org-element-type element) 'keyword)
-              (beginning-of-line)
-              ;; Extract arguments from keyword's value.
-              (let* ((value (org-element-property :value element))
-                     (ind (org-current-text-indentation))
-                     location
-                     (coding-system-for-read
-                      (or (and (string-match ":coding +\\(\\S-+\\)>" value)
-                               (prog1 (intern (match-string 1 value))
-                                 (setq value (replace-match "" nil nil value))))
-                          coding-system-for-read))
-                     (file
-                      (and (string-match "^\\(\".+?\"\\|\\S-+\\)\\(?:\\s-+\\|$\\)"
-                                         value)
-                           (prog1
-                               (save-match-data
-                                 (let ((matched (match-string 1 value))
-                                       stripped)
-                                   (when (string-match "\\(::\\(.*?\\)\\)\"?\\'"
-                                                       matched)
-                                     (setq location (match-string 2 matched))
-                                     (setq matched
-                                           (replace-match "" nil nil matched 1)))
-                                   ;; HACK 2024-02-25: Added the following sexp.
-                                   ;; Checks if link has a denote ID, and if so,
-                                   ;; changes the matched (file) to the file
-                                   ;; corresponding to that ID. Allows me to use
-                                   ;; denote links as the included file
-                                   (when (string-match denote-id-regexp matched)
-                                     (setq matched
-                                           (denote-get-path-by-id (match-string 0 matched))))
-                                   (setq stripped (org-strip-quotes matched))
-                                   (if (org-url-p stripped)
-                                       stripped
-                                     (expand-file-name stripped dir))))
-                             (setq value (replace-match "" nil nil value)))))
-                     (only-contents
-                      (and (string-match ":only-contents *\\([^: \r\t\n]\\S-*\\)?"
-                                         value)
-                           (prog1 (org-not-nil (match-string 1 value))
-                             (setq value (replace-match "" nil nil value)))))
-                     (lines
-                      (and (string-match
-                            ":lines +\"\\([0-9]*-[0-9]*\\)\""
-                            value)
-                           (prog1 (match-string 1 value)
-                             (setq value (replace-match "" nil nil value)))))
-                     (env (cond
-                           ((string-match "\\<example\\>" value) 'literal)
-                           ((string-match "\\<export\\(?: +\\(.*\\)\\)?" value)
-                            'literal)
-                           ((string-match "\\<src\\(?: +\\(.*\\)\\)?" value)
-                            'literal)))
-                     ;; Minimal level of included file defaults to the
-                     ;; child level of the current headline, if any, or
-                     ;; one.  It only applies is the file is meant to be
-                     ;; included as an Org one.
-                     (minlevel
-                      (and (not env)
-                           (if (string-match ":minlevel +\\([0-9]+\\)" value)
-                               (prog1 (string-to-number (match-string 1 value))
-                                 (setq value (replace-match "" nil nil value)))
-                             (get-text-property (point)
-                                                :org-include-induced-level))))
-                     (args (and (eq env 'literal) (match-string 1 value)))
-                     (block (and (string-match "\\<\\(\\S-+\\)\\>" value)
-                                 (match-string 1 value))))
-                ;; Remove keyword.
-                (delete-region (point) (line-beginning-position 2))
-                (cond
-                 ((not file) nil)
-                 ((and (not (org-url-p file)) (not (file-readable-p file)))
-                  (error "Cannot include file %s" file))
-                 ;; Check if files has already been parsed.  Look after
-                 ;; inclusion lines too, as different parts of the same
-                 ;; file can be included too.
-                 ((member (list file lines) included)
-                  (error "Recursive file inclusion: %s" file))
-                 (t
-                  (cond
-                   ((eq env 'literal)
-                    (insert
-                     (let ((ind-str (make-string ind ?\s))
-                           (arg-str (if (stringp args) (format " %s" args) ""))
-                           (contents
-                            (org-escape-code-in-string
-                             (org-export--prepare-file-contents file lines))))
-                       (format "%s#+BEGIN_%s%s\n%s%s#+END_%s\n"
-                               ind-str block arg-str contents ind-str block))))
-                   ((stringp block)
-                    (insert
-                     (let ((ind-str (make-string ind ?\s))
-                           (contents
-                            (org-export--prepare-file-contents file lines)))
-                       (format "%s#+BEGIN_%s\n%s%s#+END_%s\n"
-                               ind-str block contents ind-str block))))
-                   (t
-                    (insert
-                     (with-temp-buffer
-                       (let ((org-inhibit-startup t)
-                             (lines
-                              (if location
-                                  (org-export--inclusion-absolute-lines
-                                   file location only-contents lines)
-                                lines)))
-                         (org-mode)
-                         (insert
-                          (org-export--prepare-file-contents
-                           file lines ind minlevel
-                           (or (gethash file file-prefix)
-                               (puthash file
-                                        (cl-incf current-prefix)
-                                        file-prefix))
-                           footnotes
-                           includer-file)))
-                       (org-export-expand-include-keyword
-                        (cons (list file lines) included)
-                        (unless (org-url-p file)
-                          (file-name-directory file))
-                        footnotes)
-                       (buffer-string)))))
-                  ;; Expand footnotes after all files have been
-                  ;; included.  Footnotes are stored at end of buffer.
-                  (unless included
-                    (org-with-wide-buffer
-                     (goto-char (point-max))
-                     (maphash (lambda (k v)
-                                (insert (format "\n[fn:%s] %s\n" k v)))
-                              footnotes))))))))))))
-  (advice-add 'org-export-expand-include-keyword :override #'kb/org-export-expand-include-keyword))
+  (defun kb/org-export-parse-include-value (value &optional dir)
+    "Extract the various parameters from #+include: VALUE.
+
+More specifically, this extracts the following parameters to a
+plist: :file, :coding-system, :location, :only-contents, :lines,
+:env, :minlevel, :args, and :block.
+
+The :file parameter is expanded relative to DIR.
+
+The :file, :block, and :args parameters are extracted
+positionally, while the remaining parameters are extracted as
+plist-style keywords.
+
+Any remaining unmatched content is passed through
+`org-babel-parse-header-arguments' (without evaluation) and
+provided as the :unmatched parameter.
+
+This version that overrides the original takes into account denote IDs.
+See the HACK comment below."
+    (let* (location
+           (coding-system
+            (and (string-match ":coding +\\(\\S-+\\)>" value)
+                 (prog1 (intern (match-string 1 value))
+                   (setq value (replace-match "" nil nil value)))))
+           (file
+            (and (string-match "^\\(\".+?\"\\|\\S-+\\)\\(?:\\s-+\\|$\\)" value)
+                 (let ((matched (match-string 1 value)) stripped)
+                   (setq value (replace-match "" nil nil value))
+                   (when (string-match "\\(::\\(.*?\\)\\)\"?\\'"
+                                       matched)
+                     (setq location (match-string 2 matched))
+                     (setq matched
+                           (replace-match "" nil nil matched 1)))
+                   ;; HACK 2024-02-25: Added the following sexp. Checks if link
+                   ;; has a denote ID, and if so, changes the matched (file) to
+                   ;; the file corresponding to that ID. Allows me to use denote
+                   ;; links as the included file
+                   (when (string-match denote-id-regexp matched)
+                     (setq matched
+                           (denote-get-path-by-id (match-string 0 matched))))
+                   (setq stripped (org-strip-quotes matched))
+                   (if (org-url-p stripped)
+                       stripped
+                     (expand-file-name stripped dir)))))
+           (only-contents
+            (and (string-match ":only-contents *\\([^: \r\t\n]\\S-*\\)?"
+                               value)
+                 (prog1 (org-not-nil (match-string 1 value))
+                   (setq value (replace-match "" nil nil value)))))
+           (lines
+            (and (string-match
+                  ":lines +\"\\([0-9]*-[0-9]*\\)\""
+                  value)
+                 (prog1 (match-string 1 value)
+                   (setq value (replace-match "" nil nil value)))))
+           (env (cond
+                 ((string-match "\\<example\\>" value) 'literal)
+                 ((string-match "\\<export\\(?: +\\(.*\\)\\)?" value)
+                  'literal)
+                 ((string-match "\\<src\\(?: +\\(.*\\)\\)?" value)
+                  'literal)))
+           ;; Minimal level of included file defaults to the
+           ;; child level of the current headline, if any, or
+           ;; one.  It only applies is the file is meant to be
+           ;; included as an Org one.
+           (minlevel
+            (and (not env)
+                 (if (string-match ":minlevel +\\([0-9]+\\)" value)
+                     (prog1 (string-to-number (match-string 1 value))
+                       (setq value (replace-match "" nil nil value)))
+                   (get-text-property (point)
+                                      :org-include-induced-level))))
+           (args (and (eq env 'literal)
+                      (prog1 (match-string 1 value)
+                        (when (match-string 1 value)
+                          (setq value (replace-match "" nil nil value 1))))))
+           (block (and (or (string-match "\"\\(\\S-+\\)\"" value)
+                           (string-match "\\<\\(\\S-+\\)\\>" value))
+                       (or (= (match-beginning 0) 0)
+                           (not (= ?: (aref value (1- (match-beginning 0))))))
+                       (prog1 (match-string 1 value)
+                         (setq value (replace-match "" nil nil value))))))
+      (list :file file
+            :coding-system coding-system
+            :location location
+            :only-contents only-contents
+            :lines lines
+            :env env
+            :minlevel minlevel
+            :args args
+            :block block
+            :unmatched (org-babel-parse-header-arguments value t))))
+  (advice-add 'org-export-parse-include-value :override #'kb/org-export-parse-include-value))
 
 ;;;; Ox-odt
 (use-package ox-odt
