@@ -130,7 +130,6 @@
 
   ;; Composing and sending
   (mu4e-sent-messages-behavior 'delete) ; Don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))
   (mu4e-compose-signature-auto-include t)
   (mu4e-compose-hidden-headers nil)   ; See all headers
   (mu4e-compose-dont-reply-to-self t)

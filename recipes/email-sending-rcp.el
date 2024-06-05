@@ -77,7 +77,10 @@
           (cl--set-buffer-substring (pos-bol) (pos-eol)
                                     (concat
                                      "From: "
-                                     (read-string "Set FROM to: " user-mail-address))))))))
+                                     (read-string "Set FROM to: " user-mail-address)))))))
+  :config
+  (with-eval-after-load 'mu4e
+    (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))))
 
 ;;;; Sendmail
 ;; Use `sendmail' program to send emails?
