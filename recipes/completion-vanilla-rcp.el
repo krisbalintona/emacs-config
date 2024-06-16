@@ -108,7 +108,8 @@
   (vertico-multiform-categories
    '((consult-grep buffer)
      (imenu buffer)
-     (buffer (vertico-sort-function . nil))))
+     (buffer (vertico-sort-function . nil))
+     (citar (vertico-sort-function . vertico-sort-history-alpha))))
   (vertico-multiform-commands
    ;; I use jinx now, but I think it's better to not apply a grid layout to it
    ;; since its use of vertico-groups is useful
