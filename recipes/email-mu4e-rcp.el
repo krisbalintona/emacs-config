@@ -380,7 +380,7 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
             :name "Uni"
             :enter-func (lambda () (mu4e-message "Entering Uni context"))
             :leave-func (lambda () (mu4e-message "Leaving Uni context"))
-            :vars `((user-mail-address . "kristoffer_balintona@brown.edu")
+            :vars `((user-mail-address . "kristoffer_balintona@alumni.brown.edu")
                     ;; Directories
                     (mu4e-drafts-folder . "/drafts/uni/")
                     (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
@@ -603,8 +603,8 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
 #+end_export"
                                                                   kb/signature-close))))
                     ;; Smtpmail
-                    (smtpmail-smtp-user "kristoffer_balintona@brown.edu") ; Send from this address
-                    (smtpmail-mail-address "kristoffer_balintona@brown.edu")))
+                    (smtpmail-smtp-user "kristoffer_balintona@alumni.brown.edu") ; Send from this address
+                    (smtpmail-mail-address "kristoffer_balintona@alumni.brown.edu")))
           ,(make-mu4e-context
             :name "Personal"
             :enter-func (lambda () (mu4e-message "Entering Personal context"))

@@ -100,11 +100,11 @@
      (:name "[personal] sent" :query "path:\"personal/[Gmail].Sent Mail/**\"" :key "S")
      (:name "[uni] sent" :query "path:\"uni/[Gmail].Sent Mail/**\"" :key "s")
      ;; (:name "[personal] drafts" :query "from:krisbalintona**@gmail.com tag:draft" :key "D")
-     ;; (:name "[uni] drafts" :query "from:kristoffer_balintona**@brown.edu tag:draft" :key "d")
+     ;; (:name "[uni] drafts" :query "from:kristoffer_balintona**@alumni.brown.edu tag:draft" :key "d")
      ;; (:name "[personal] drafts" :query "path:drafts/ OR path:personal/[Gmail].Drafts/**" :key "D")
      ;; (:name "[uni] drafts" :query "path:drafts/uni/** OR path:uni/[Gmail].Drafts/**" :key "d")
      ;; (:name "[personal] drafts" :query "path:drafts/** AND from:krisbalintona**@gmail.com OR path:personal/[Gmail].Drafts/**" :key "D")
-     ;; (:name "[uni] drafts" :query "path:drafts/** AND from:kristoffer_balintona**@brown.edu OR path:uni/[Gmail].Drafts/**" :key "d")
+     ;; (:name "[uni] drafts" :query "path:drafts/** AND from:kristoffer_balintona**@alumni.brown.edu OR path:uni/[Gmail].Drafts/**" :key "d")
      (:name "drafts" :query "path:drafts/** OR path:personal/[Gmail].Drafts/** OR path:uni/[Gmail].Drafts/**" :key "d")
      (:name "[personal] all mail" :query "path:\"personal/[Gmail].All Mail/**\"" :key "a")
      (:name "[uni] all mail" :query "path:\"uni/[Gmail].All Mail/**\"" :key "A")
@@ -180,7 +180,7 @@
   ;; seems to capture more than just using the to keyword
   (notmuch-indicator-args
    '((:terms "to:krisbalintona@gmail.com and tag:inbox and tag:unread" :label "")
-     (:terms "to:kristoffer_balintona@brown.edu and tag:inbox and tag:unread" :label "")
+     (:terms "to:kristoffer_balintona@alumni.brown.edu and tag:inbox and tag:unread" :label "")
      ))
   (notmuch-indicator-refresh-count (* 60 3))
   ;; (notmuch-indicator-hide-empty-counters t)
