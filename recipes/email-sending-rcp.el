@@ -325,7 +325,14 @@
   "Alist of aliases and their corresponding email signatures.")
 
 (defun kb/mu4e-select-signature (&optional alias)
-  "Select one of the signatures from `kb/signature-alist'."
+  "Select one of the signatures from `kb/signature-alist'.
+
+If ALIAS is a key in `kb/signature-alist', then the corresponding value
+will be returned. If it is not, then it will be treated as the content
+of a properly formatted signature.
+
+If no ALIAS is supplied, then the keys from `kb/signature-alist' will be
+ shown via the `completing-read' interface."
   (let* ((alias (or alias
                     (completing-read
                      "Insert signature: "
