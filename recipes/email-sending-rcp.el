@@ -315,7 +315,8 @@
 ;;;;; Custom signatures
 (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
   "Separator between email body and its signature.")
-(defvar kb/signature-open "\n\n#+begin_signature\n"
+(defvar kb/signature-open (concat (when message-signature-insert-empty-line "\n")
+                                  "\n#+begin_signature\n")
   "String meant to begin email signatures.")
 (defvar kb/signature-close "\n#+end_signature"
   "String meant to end email signatures.")
@@ -323,26 +324,32 @@
 (defvar kb/signature-alist nil
   "Alist of aliases and their corresponding email signatures.")
 
-(defun kb/mu4e-select-signature (alias)
+(defun kb/mu4e-select-signature (&optional alias)
   "Select one of the signatures from `kb/signature-alist'."
-  (interactive (list (completing-read
-                      "Insert signature: "
-                      (cl-loop for (key . value) in kb/signature-alist
-                               collect key))))
-  (or (alist-get alias kb/signature-alist nil nil #'string=)
-      ;; If a signature was manually typed rather than an alias chosen.
-      ;; Example: if "Test" is typed, the result will be:
-      ;; "#+begin_signature (kb/signature-open)
-      ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (kb/signature-separator)
-      ;; Test,
-      ;; Kristoffer
-      ;; #+end_signature    (kb/signature-close)"
-      (format "%s%s\n%s%s%s"
-              kb/signature-open
-              kb/signature-separator
-              alias
-              ",\nKristoffer"
-              kb/signature-close)))
+  (let* ((alias (or alias
+                    (completing-read
+                     "Insert signature: "
+                     (cl-loop for (key . value) in kb/signature-alist
+                              collect key))))
+         (content (or (alist-get alias kb/signature-alist nil nil #'string=) alias)))
+    (if org-msg-mode
+        ;; If using `org-msg-mode' and a signature was manually typed rather
+        ;; than an alias chosen, then format that manually-typed-signature.
+        ;; Example: if "Test" is typed, the result will be:
+        ;; "#+begin_signature  (`kb/signature-open')
+        ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (`kb/signature-separator')
+        ;; Test,
+        ;; Kristoffer
+        ;; #+end_signature  (`kb/signature-close')"
+        (format "%s%s\n%s%s%s"
+                kb/signature-open
+                kb/signature-separator
+                content
+                ",\nKristoffer"
+                kb/signature-close)
+      content)))
+(setq message-signature 'kb/mu4e-select-signature)
+
 (defun kb/mu4e-insert-signature ()
   "Insert a selection from `kb/signature-alist'.
 
@@ -351,7 +358,7 @@ signatures being wrapped in `kb/signature-open' and
 `kb/signature-close'."
   (interactive)
   (save-excursion
-    (let ((sig (call-interactively 'kb/mu4e-select-signature))
+    (let ((sig (funcall 'kb/mu4e-select-signature))
           (existing-sig-beg
            (save-excursion
              (save-match-data
@@ -373,7 +380,7 @@ signatures being wrapped in `kb/signature-open' and
         (insert (string-trim-left sig)))))
   ;; Change email signature separator to the conventional "--" for text-only
   ;; emails
-  (when (and (equal major-mode 'org-msg-edit-mode)
+  (when (and (derived-mode-p 'org-msg-edit-mode)
              (equal (org-msg-get-prop "alternatives")
                     '(text)))
     (save-excursion
