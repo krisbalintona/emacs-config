@@ -152,7 +152,7 @@
             "C-w" 'message-goto-fcc)
   (:keymaps 'org-msg-edit-mode-map
             ;; This keybinding is fine since we wouldn't want to call `org-refile' anyway
-            "C-c C-w" 'kb/mu4e-insert-signature)
+            "C-c C-w" 'kb/signature-insert-mu4e)
   :custom
   (mu4e-compose-signature-auto-include nil)
   (org-msg-options "html-postamble:nil toc:nil author:nil email:nil \\n:t")
@@ -324,7 +324,7 @@
 (defvar kb/signature-alist nil
   "Alist of aliases and their corresponding email signatures.")
 
-(defun kb/mu4e-select-signature (&optional alias)
+(defun kb/signature-select (&optional alias)
   "Select one of the signatures from `kb/signature-alist'.
 
 If ALIAS is a key in `kb/signature-alist', then the corresponding value
@@ -355,9 +355,9 @@ If no ALIAS is supplied, then the keys from `kb/signature-alist' will be
                 ",\nKristoffer"
                 kb/signature-close)
       content)))
-(setq message-signature 'kb/mu4e-select-signature)
+(setq message-signature 'kb/signature-select)
 
-(defun kb/mu4e-insert-signature ()
+(defun kb/signature-insert-mu4e ()
   "Insert a selection from `kb/signature-alist'.
 
 Replaces existing signature if present in buffer. Relies on
@@ -365,7 +365,7 @@ signatures being wrapped in `kb/signature-open' and
 `kb/signature-close'."
   (interactive)
   (save-excursion
-    (let ((sig (funcall 'kb/mu4e-select-signature))
+    (let ((sig (funcall 'kb/signature-select))
           (existing-sig-beg
            (save-excursion
              (save-match-data
@@ -444,12 +444,12 @@ email."
                                 ;; We don't use `message-signature-separator'
                                 ;; because the separator may be replaced
                                 ;; conditionally. See
-                                ;; `kb/mu4e-insert-signature'.
+                                ;; `kb/signature-insert-mu4e'.
                                 (re-search-forward (rx (literal kb/signature-open)
                                                        (+ anychar)
                                                        (literal kb/signature-close))
                                                    nil t)))
-                      (call-interactively 'kb/mu4e-select-signature)))))
+                      (call-interactively 'kb/signature-select)))))
   (advice-add 'org-msg-composition-parameters :override 'kb/org-msg-composition-parameters)
 
   (defun kb/org-msg-post-setup (&rest _args)
