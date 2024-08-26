@@ -162,14 +162,6 @@
 ;;;; Don't do anything with inactive mark
 (setq mark-even-if-inactive nil)
 
-;;;; Copy and pasting in Wayland with PGTK
-;; Taken from
-;; https://github.com/doomemacs/doomemacs/issues/5219#issuecomment-913039531
-(when (string-equal (getenv "XDG_SESSION_TYPE") "wayland")
-  (setq interprogram-paste-function
-        (lambda () (shell-command-to-string "wl-paste -n | tr -d '\r'"))))
-
-
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
