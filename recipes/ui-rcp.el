@@ -271,7 +271,7 @@ Additionally, run `kb/themes-hook'."
 
 ;;;;; Minions
 (use-package minions
-  :ghook 'elpaca-after-init-hook
+  :ghook 'elpaca-after-init-hook 'after-init-hook
   :custom
   (minions-mode-line-lighter "…")
   (minions-mode-line-delimiters '("[" . "]"))
