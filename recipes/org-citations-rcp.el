@@ -178,12 +178,13 @@
 
 ;;;; Citar-embark
 (use-package citar-embark
+  :demand
   :after citar
   :diminish
   :custom
   (citar-at-point-function 'embark-act)
-  :init
-  (citar-embark-mode))
+  :config
+  (citar-embark-mode 1))
 
 (provide 'org-citations-rcp)
 ;;; org-citations-rcp.el ends here

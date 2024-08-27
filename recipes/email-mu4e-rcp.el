@@ -380,7 +380,7 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
             :name "Uni"
             :enter-func (lambda () (mu4e-message "Entering Uni context"))
             :leave-func (lambda () (mu4e-message "Leaving Uni context"))
-            :vars `((user-mail-address . "kristoffer_balintona@brown.edu")
+            :vars `((user-mail-address . "kristoffer_balintona@alumni.brown.edu")
                     ;; Directories
                     (mu4e-drafts-folder . "/drafts/uni/")
                     (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
@@ -395,30 +395,11 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
                                                (:maildir "/uni/[Gmail].Trash" :key ?t)
                                                (:maildir "/uni/[Gmail].All Mail" :key ?a)))
                     (kb/signature-alist .
-                                        (("Take care" . ,(format "%s%s\n%s%s"
-                                                                 kb/signature-open
-                                                                 kb/signature-separator
-                                                                 "Take care,\nKristoffer"
-                                                                 kb/signature-close))
-                                         ("In gratitude" . ,(format "%s%s\n%s%s"
-                                                                    kb/signature-open
-                                                                    kb/signature-separator
-                                                                    "In gratitude,\nKristoffer"
-                                                                    kb/signature-close))
-                                         ("Best" . ,(format "%s%s\n%s%s"
-                                                            kb/signature-open
-                                                            kb/signature-separator
-                                                            "Best,\nKristoffer"
-                                                            kb/signature-close))
-                                         ("With appreciation" . ,(format "%s%s\n%s%s"
-                                                                         kb/signature-open
-                                                                         kb/signature-separator
-                                                                         "With appreciation,\nKristoffer"
-                                                                         kb/signature-close))
-                                         ("Brown banner" . ,(concat kb/signature-open
-                                                                    kb/signature-separator
-                                                                    "\nWith appreciation,\nKristoffer\n\n"
-                                                                    "#+begin_export html
+                                        (("Take care" . "Take care,\nKristoffer")
+                                         ("In gratitude" . "In gratitude,\nKristoffer")
+                                         ("Best" . "Best,\nKristoffer")
+                                         ("With appreciation" . "With appreciation,\nKristoffer")
+                                         ("Brown banner" . "\nWith appreciation,\nKristoffer\n\n#+begin_export html
 <br />
 <table
   style='color: rgb(136, 136, 136); border: none; border-collapse: collapse; font-family: garamond'
@@ -524,12 +505,8 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
     </tr>
   </tbody>
 </table>
-#+end_export"
-                                                                    kb/signature-close))
-                                         ("BUI banner" . ,(concat kb/signature-open
-                                                                  kb/signature-separator
-                                                                  "\n\nWarmly,\nBrown University Interviews Executive Committee\n\n"
-                                                                  "#+begin_export html
+#+end_export")
+                                         ("BUI banner" . "\n\nWarmly,\nBrown University Interviews Executive Committee\n\n#+begin_export html
 <br />
 <table
   style='
@@ -600,11 +577,10 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
     </tr>
   </tbody>
 </table>
-#+end_export"
-                                                                  kb/signature-close))))
+#+end_export")))
                     ;; Smtpmail
-                    (smtpmail-smtp-user "kristoffer_balintona@brown.edu") ; Send from this address
-                    (smtpmail-mail-address "kristoffer_balintona@brown.edu")))
+                    (smtpmail-smtp-user "kristoffer_balintona@alumni.brown.edu") ; Send from this address
+                    (smtpmail-mail-address "kristoffer_balintona@alumni.brown.edu")))
           ,(make-mu4e-context
             :name "Personal"
             :enter-func (lambda () (mu4e-message "Entering Personal context"))
@@ -624,26 +600,10 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
                                                (:maildir "/personal/[Gmail].Trash" :key ?t)
                                                (:maildir "/personal/[Gmail].All Mail" :key ?a)))
                     (kb/signature-alist .
-                                        (("Take care" . ,(format "%s%s\n%s%s"
-                                                                 kb/signature-open
-                                                                 kb/signature-separator
-                                                                 "Take care,\nKristoffer"
-                                                                 kb/signature-close))
-                                         ("In gratitude" . ,(format "%s%s\n%s%s"
-                                                                    kb/signature-open
-                                                                    kb/signature-separator
-                                                                    "In gratitude,\nKristoffer"
-                                                                    kb/signature-close))
-                                         ("Best" . ,(format "%s%s\n%s%s"
-                                                            kb/signature-open
-                                                            kb/signature-separator
-                                                            "Best,\nKristoffer"
-                                                            kb/signature-close))
-                                         ("With appreciation" . ,(format "%s%s\n%s%s"
-                                                                         kb/signature-open
-                                                                         kb/signature-separator
-                                                                         "With appreciation,\nKristoffer"
-                                                                         kb/signature-close))))
+                                        (("Take care" . "Take care,\nKristoffer")
+                                         ("In gratitude" . "In gratitude,\nKristoffer")
+                                         ("Best" . "Best,\nKristoffer")
+                                         ("With appreciation" . "With appreciation,\nKristoffer")))
                     ;; Smtpmail
                     (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
                     (smtpmail-mail-address "krisbalintona@gmail.com"))))))

@@ -38,7 +38,7 @@
   (shr-width nil)
   ;; (shr-discard-aria-hidden t)
   ;; (shr-cookie-policy nil)               ; When to use cookies
-  )
+  (shr-fill-text nil))
 
 ;;; Browse-url
 (use-package browse-url

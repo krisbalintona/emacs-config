@@ -47,6 +47,7 @@
 ;; be added to see which tasks are being blocked by the current task. See
 ;; https://karl-voit.at/2021/01/23/org-linker-edna/ for sample workflow
 (use-package org-edna
+  :demand
   :after org
   :diminish
   :general
@@ -54,9 +55,9 @@
             "C-c d" 'kb/consult-org-depend)
   (:keymaps 'org-agenda-mode-map
             "C-c d" 'kb/consult-org-agenda-depend)
-  :init
-  (org-edna-mode)
   :config
+  (org-edna-mode 1)
+
   (with-eval-after-load 'consult
     (defun kb/consult-org-depend--add-id (new-id)
       "Add an ID to the current heading’s BLOCKER property.

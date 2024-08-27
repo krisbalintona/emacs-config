@@ -168,9 +168,9 @@
                      [remap ispell-word] 'jinx-correct
                      "C-," 'jinx-correct
                      "C-M-$" #'jinx-languages)
-  :init
-  (global-jinx-mode)
   :config
+  (global-jinx-mode 1)
+  
   ;; Use veritco's grid display such that more suggestions fit on the screen and
   ;; enable annotations. Taken from
   ;; https://github.com/minad/jinx#correcting-misspellings

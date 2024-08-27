@@ -437,10 +437,16 @@ Uses my 'latex-paper' backend. See the original
 
 ;;;; Ox-clip
 (use-package ox-clip
-  :ensure-system-package xclip
+  :ensure-system-package ((xclip)
+                          (wl-copy . wl-clipboard))
   :general (kb/yank-keys
              :keymaps 'org-mode-map
-             "x" 'ox-clip-formatted-copy))
+             "x" 'ox-clip-formatted-copy)
+  :config
+  (setq ox-clip-linux-cmd
+        (if (string-equal (getenv "XDG_SESSION_TYPE") "wayland")
+            "wl-copy --type text/html < $%f"
+          "xclip -verbose -i \"%f\" -t text/html -selection clipboard")))
 
 (provide 'org-export-rcp)
 ;;; org-export-rcp.el ends here
