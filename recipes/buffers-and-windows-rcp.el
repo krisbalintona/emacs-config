@@ -568,8 +568,8 @@ timestamp)."
 ;;;;; Perfect-margin
 ;; Center the window contents via setting the margins
 (use-package perfect-margin
+  :demand
   :diminish
-  :hook (after-init . perfect-margin-mode)
   :custom
   (fringes-outside-margins nil)
   (perfect-margin-visible-width 128)
@@ -590,6 +590,8 @@ timestamp)."
          (and (string-match-p "^[[:space:]]*\\*" (buffer-name))
               (not (eq major-mode 'vc-dir-mode)))))))
   :config
+  (perfect-margin-mode 1)
+  
   ;; Additional mouse bindings for now wider margins. Taken from
   ;; https://github.com/mpwang/perfect-margin#additional-binding-on-margin-area
   (dolist (margin '("<left-margin> " "<right-margin> "))
