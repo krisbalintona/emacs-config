@@ -443,7 +443,7 @@ have `org-warning' face."
   (org-appear-delay 0.0)
   (org-appear-trigger 'always)
   (org-appear-autoemphasis t)
-  (org-appear-autolinks t)
+  (org-appear-autolinks 'just-brackets)
   (org-appear-autosubmarkers t)
   (org-appear-autoentities t)
   (org-appear-autokeywords t)
