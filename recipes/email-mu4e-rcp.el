@@ -113,7 +113,8 @@
      (:flags . 10)                      ; The max width of 3 icon flags
      (:subject)))
   (mu4e-headers-actions
-   '(("capture message" . mu4e-action-capture-message)
+   '(("view in browser" . mu4e-action-view-in-browser)
+     ("capture message" . mu4e-action-capture-message)
      ("browse online archive" . mu4e-action-browse-list-archive)
      ("show this thread" . mu4e-action-show-thread)
      ("kill-ring-save file path" . mu4e-action-copy-message-file-path)))
