@@ -48,24 +48,24 @@
   (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
   ;; Hydra menu
   (pretty-hydra-define hydra:selectrum-projectile
-                       (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
-                       ("Projectile"
-                        (("i" projectile-invalidate-cache :color red)
-                         ("n" projectile-add-known-project))
-                        "Buffers"
-                        (("b" projectile-switch-to-buffer)
-                         ("K" projectile-kill-buffers)
-                         ("S" projectile-save-project-buffers))
-                        "Find"
-                        (("d" projectile-find-dir)
-                         ("D" projectile-dired)
-                         ("f" projectile-find-file)
-                         ("p" projectile-switch-project))
-                        "Search"
-                        (("r" projectile-replace)
-                         ("R" projectile-replace-regexp)
-                         ("s" counsel-projectile-rg))
-                        ))
+    (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
+    ("Projectile"
+     (("i" projectile-invalidate-cache :color red)
+      ("n" projectile-add-known-project))
+     "Buffers"
+     (("b" projectile-switch-to-buffer)
+      ("K" projectile-kill-buffers)
+      ("S" projectile-save-project-buffers))
+     "Find"
+     (("d" projectile-find-dir)
+      ("D" projectile-dired)
+      ("f" projectile-find-file)
+      ("p" projectile-switch-project))
+     "Search"
+     (("r" projectile-replace)
+      ("R" projectile-replace-regexp)
+      ("s" counsel-projectile-rg))
+     ))
   :config
   (projectile-mode)
 
@@ -401,6 +401,22 @@ With a prefix argument, show NLINES of context."
     (setq kb/vc-pre-window-conf nil))
   (advice-add 'log-edit-done :after #'kb/vc-restore-window-conf)
   (advice-add 'log-edit-kill-buffer :after #'kb/vc-restore-window-conf))
+
+;;;;; Vc-defer
+;; VC makes opening files on Emacs significantly slower. This is a bandaid to
+;; defer expensive VC operations until a VC command is explicitly called.
+;; (Therefore, VC info won't be shown until a VC command is invoked.) See:
+;; 1. https://lists.gnu.org/archive/html/emacs-devel/2016-02/msg00440.html
+;; 2. https://stackoverflow.com/questions/6724471/git-slows-down-emacs-to-death-how-to-fix-this
+;; 3. https://www.reddit.com/r/emacs/comments/4c0mi3/the_biggest_performance_improvement_to_emacs_ive/
+(use-package vc-defer
+  :demand
+  :diminish
+  :after vc
+  :custom
+  (vc-defer-backends '(Git))
+  :config
+  (vc-defer-mode 1))
 
 ;;;;; Log-edit
 (use-package log-edit
