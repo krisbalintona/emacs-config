@@ -430,7 +430,7 @@ have `org-warning' face."
   ;; `mode--line-format-right-align', which determines where the right side of
   ;; the mode line is placed.
   (mode-line-format-right-align
-   '(:eval (if (eq major-mode 'org-mode)
+   '(:eval (if olivetti-mode
                (let ((mode-line-right-align-edge 'right-fringe))
                  (mode--line-format-right-align))
              (mode--line-format-right-align)))))
