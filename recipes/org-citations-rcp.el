@@ -29,6 +29,8 @@
 
 ;;;; Oc (org-cite)
 ;; Built-in citations in org-mode
+
+;;;;; Itself
 (use-package oc
   :ensure nil
   :general (:keymaps 'org-mode-map [remap citar-insert-citation] 'org-cite-insert)
@@ -57,6 +59,68 @@
   (require 'oc-bibtex)
   (require 'oc-biblatex))
 
+;;;;; Faster renderer
+;; Replaces the *VERY SLOW* `'org-cite-basic-activate' (which `citar' relies on
+;; in `citar-org-activate') with a faster version. Practically necessary if I
+;; want to edit a line with a citation in Org without having to wait several
+;; seconds for it to render. See for more information on the matter:
+;; 1. https://www.reddit.com/r/orgmode/comments/td76wz/comment/i0lpg7k/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+;; 2. https://list.orgmode.org/87ils5sz8x.fsf@localhost/t/#u
+(with-eval-after-load 'citar
+  (defun kb/citar-basic-activate (citation)
+    "Set various text properties on CITATION object.
+
+Fontify whole citation with `org-cite' face.  Fontify key with `error' face
+when it does not belong to known keys.  Otherwise, use `org-cite-key' face.
+
+Moreover, when mouse is on a known key, display the corresponding bibliography.
+On a wrong key, suggest a list of possible keys, and offer to substitute one of
+them with a mouse click.
+
+My version of this function uses the speed of `citar' (and its cache) to
+eliminate the extraordinary slow down of the default function's
+rendering. I believe the bottlenecks are `org-cite-basic--all-keys' and
+`org-cite-basic--get-entry' so I have replaced them with equivalent
+functions from `citar'."
+    (pcase-let ((`(,beg . ,end) (org-cite-boundaries citation))
+                ;; NOTE 2024-09-05: Use `citar' (and its cache) to get all keys
+                (keys (let (keys)
+                        (maphash (lambda (key value) (push key keys))
+                                 (citar-get-entries))
+                        keys)))
+      (put-text-property beg end 'font-lock-multiline t)
+      (add-face-text-property beg end 'org-cite)
+      (dolist (reference (org-cite-get-references citation))
+        (pcase-let* ((`(,beg . ,end) (org-cite-key-boundaries reference))
+                     (key (org-element-property :key reference)))
+          ;; Highlight key on mouse over.
+          (put-text-property beg end
+                             'mouse-face
+                             org-cite-basic-mouse-over-key-face)
+          (if (member key keys)
+              ;; Activate a correct key. Face is `org-cite-key' and `help-echo'
+              ;; displays bibliography entry, for reference. <mouse-1> calls
+              ;; `org-open-at-point'.
+              ;; NOTE 2024-09-05: Use `citar' (and its cache) to create the
+              ;; bibliographic entry text used in the help echo
+              (let* ((entry (string-trim (citar-format-reference (list key))))
+                     (bibliography-entry
+                      (org-element-interpret-data entry)))
+                (add-face-text-property beg end 'org-cite-key)
+                (put-text-property beg end 'help-echo bibliography-entry)
+                (org-cite-basic--set-keymap beg end nil))
+            ;; Activate a wrong key. Face is `error', `help-echo' displays
+            ;; possible suggestions.
+            (add-face-text-property beg end 'error)
+            (let ((close-keys (org-cite-basic--close-keys key keys)))
+              (when close-keys
+                (put-text-property beg end 'help-echo
+                                   (concat "Suggestions (mouse-1 to substitute): "
+                                           (mapconcat #'identity close-keys " "))))
+              ;; When the are close know keys, <mouse-1> provides completion to
+              ;; fix the current one. Otherwise, call `org-cite-insert'.
+              (org-cite-basic--set-keymap beg end (or close-keys 'all))))))))
+  (setq citar-org-activation-functions '(kb/citar-basic-activate citar-org-activate-keymap)))
 ;;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
 (use-package citar
