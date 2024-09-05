@@ -427,7 +427,8 @@ have `org-warning' face."
 
   ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's changing of
   ;; margins and fringes messes with the calculation of
-  ;; `mode--line-format-right-align'.
+  ;; `mode--line-format-right-align', which determines where the right side of
+  ;; the mode line is placed.
   (mode-line-format-right-align
    '(:eval (if (eq major-mode 'org-mode)
                (let ((mode-line-right-align-edge 'right-fringe))

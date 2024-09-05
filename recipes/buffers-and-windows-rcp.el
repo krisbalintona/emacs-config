@@ -591,7 +591,7 @@ timestamp)."
               (not (eq major-mode 'vc-dir-mode)))))))
   :config
   (perfect-margin-mode 1)
-  
+
   ;; Additional mouse bindings for now wider margins. Taken from
   ;; https://github.com/mpwang/perfect-margin#additional-binding-on-margin-area
   (dolist (margin '("<left-margin> " "<right-margin> "))
