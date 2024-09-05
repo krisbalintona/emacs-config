@@ -361,6 +361,7 @@ With a prefix argument, show NLINES of context."
   :general (:keymaps 'vc-dir-mode-map
                      "G" 'vc-revert)
   :custom
+  (vc-handled-backends '(Git))          ; Expand this list when necessary
   (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
   (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
   (vc-git-diff-switches              ; Have diff headers look similar to Magit's
