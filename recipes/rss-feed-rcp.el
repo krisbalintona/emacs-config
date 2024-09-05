@@ -346,6 +346,22 @@ The list of tags is provided by `prot-elfeed-search-tags'."
    "H-d" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :wk "Toggle done tag")
    "H-c" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")))
 
+;;;; Wallabag
+(use-package wallabag
+  :disabled                             ; I think I prefer Wombag
+  :vc (:url "https://github.com/chenyanming/wallabag.el.git"
+            :rev :newest)
+  :general (kb/open-keys "W" 'wallabag)
+  :custom
+  (wallabag-host "https://app.wallabag.it") ; Wallabag server host name
+  (wallabag-username "krisbalintona") ; Username
+  (wallabag-password (auth-source-pick-first-password :host "app.wallabag.it")) ; Password
+  (wallabag-clientid (auth-source-pick-first-password :host "emacs-wombag.el")) ; Created with API clients management
+  (wallabag-secret (auth-source-pick-first-password :host "emacs-wombag.el")) ; Created with API clients management
+  :config
+  ;; (run-with-timer 0 3540 'wallabag-request-token) ; Optional, auto refresh token, token should refresh every hour
+  )
+
 ;;;; Wombag
 (use-package wombag
   ;; :ensure (:host github :repo "karthink/wombag")
