@@ -129,9 +129,8 @@
       ;; These are the three ways to increase scrolling performance.
       ;; See (info "(emacs) Scrolling") for details
       fast-but-imprecise-scrolling t
-      ;; jit-lock-defer-time 0.2
-      ;; redisplay-skip-fontification-on-input t
-      )
+      jit-lock-defer-time 0
+      redisplay-skip-fontification-on-input t)
 
 ;;;; Do not load outdated byte code files
 (setq load-prefer-newer t)

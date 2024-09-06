@@ -76,13 +76,13 @@
 
 ;;;; Elfeed-org
 (use-package elfeed-org
-  :demand t
+  :demand
   :after elfeed
   :custom
   (rmh-elfeed-org-files `(,(concat no-littering-var-directory "elfeed/elfeed-feeds.org")))
   (rmh-elfeed-org-auto-ignore-invalid-feeds nil) ; Appropriately tag failed entries
-  :config (general-advice-add 'elfeed :after 'elfeed-org nil t)
-  )
+  :config
+  (general-advice-add 'elfeed :after 'elfeed-org nil t))
 
 ;;;; Elfeed-goodies
 (use-package elfeed-goodies
