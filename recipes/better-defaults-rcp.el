@@ -24,9 +24,10 @@
 
 ;;; Code:
 
-;;;; Custom
+;;;; Customize
 ;; Show variable names in their lisp form
-(setq custom-unlispify-tag-names nil)
+(setq custom-unlispify-tag-names nil
+      custom-safe-themes t)             ; Treat all themes as safe
 
 ;;;; No-littering
 ;; Set better default package paths
@@ -160,6 +161,9 @@
 
 ;;;; Don't do anything with inactive mark
 (setq mark-even-if-inactive nil)
+
+;;;; Smoother resizing of frames
+(setq frame-resize-pixelwise t)
 
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.

@@ -27,9 +27,11 @@
 
 ;;; General itself
 ;; Leader key capabilities and more convenient key definitions and bindings.
-(use-package general :demand)
+(use-package general
+  :demand
+  :config
+  (general-auto-unbind-keys))       ; Overwrite keybinds without returning error
 (elpaca-wait)
-(general-auto-unbind-keys)         ; Overwrite keybinds without returning error
 
 ;;; Leader keys
 (general-create-definer kb/note-keys    ; For all note-taking needs

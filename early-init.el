@@ -11,10 +11,8 @@
 ;; Defer garbage collection
 (setq gc-cons-threshold most-positive-fixnum)
 
-;; Better?
-(setq frame-resize-pixelwise t)
-
-;; Preview loading any packages prior to init.el being loading
+;; Prevent loading any packages prior to init.el. Speeds up startup but packages
+;; must be initizlied by `package-initialize' before any are needed.
 (setq package-enable-at-startup nil)
 
 ;; Faster to disable these graphical elements before they've been initialized
