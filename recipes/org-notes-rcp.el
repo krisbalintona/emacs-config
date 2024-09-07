@@ -89,6 +89,7 @@
   (denote-date-prompt-use-org-read-date t)
   (denote-backlinks-show-context t)
   (denote-rename-buffer-format "%s %t")
+  (denote-rename-confirmations '(add-front-matter))
   :init
   ;; Rename denote note. Meant to be added to `after-save-hook'
   (defun kb/denote-auto-rename ()
