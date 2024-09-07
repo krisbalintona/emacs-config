@@ -382,6 +382,7 @@ replacement."
 (use-package denote-interface
   :vc (:url "git@github.com:krisbalintona/denote-interface.git"
             :rev :newest)
+  :hook (denote-interface-mode . (lambda () (kb/puni-mode -1)))
   :general (kb/note-keys
              "m" 'denote-interface-list
              "r" 'denote-interface-set-signature-list
