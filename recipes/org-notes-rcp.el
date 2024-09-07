@@ -43,8 +43,7 @@
              "i" 'denote-insert-link
              "I" 'denote-link-or-create
              "e" 'denote-org-extras-extract-org-subtree
-             "ta" 'denote-keywords-add
-             "tr" 'denote-keywords-remove)
+             "t" 'denote-rename-file-keywords)
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords nil)
