@@ -42,7 +42,7 @@
   (dired-dwim-target t)                 ; Guess default target directory?
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
   (dired-kill-when-opening-new-dired-buffer t)  ; Basically `dired-single'
-  (dired-listing-switches "-alhgv") ; Flags `dired' passes to `ls'
+  (dired-listing-switches "--group-directories-first --time-style=long-iso -alhgv") ; Flags `dired' passes to `ls'
   (dired-omit-verbose nil)
   ;; Always copy/delete recursively?
   (dired-recursive-copies  'always)
