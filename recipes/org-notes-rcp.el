@@ -97,7 +97,8 @@
     (when-let ((f (buffer-file-name)))
       (when (and (file-in-directory-p f denote-directory)
                  (denote-filename-is-note-p f))
-        (denote-rename-file-using-front-matter f))))
+        (with-demoted-errors "Error: %S"
+          (denote-rename-file-using-front-matter f)))))
 
   (require 's)
   ;; Camel cased keywords
@@ -270,22 +271,23 @@ My version camelCases keywords."
         (error "No title in %s!" (buffer-file-name)))))
   (defun kb/denote-standardize-front-matter ()
     (interactive)
-    (require 'denote)
-    (save-mark-and-excursion
-      (dolist (file (denote-directory-files-matching-regexp (rx (literal ".org") eol)))
-        ;; Export all the files
-        (with-current-buffer (find-file-noselect file)
-          (read-only-mode -1)
-          (save-restriction
-            (widen)
-            (kb/denote-insert-identifier-maybe)
-            (kb/denote-rearrange-keywords-maybe)
-            (kb/denote-ensure-title-space)
-            (kb/format-buffer-indentation))
-          (denote-rename-file-using-front-matter file t)
-
-          (unless (member (get-buffer (buffer-name)) (buffer-list)) ; Kill buffer unless it already exists
-            (kill-buffer)))))))
+    (let ((existing-buffers (buffer-list)))
+      (save-mark-and-excursion
+        (dolist (file (denote-directory-files-matching-regexp (rx (literal ".org") eol)))
+          ;; Export all the files
+          (with-current-buffer (find-file-noselect file)
+            (read-only-mode -1)
+            (save-restriction
+              (widen)
+              (kb/denote-insert-identifier-maybe)
+              (kb/denote-rearrange-keywords-maybe)
+              (kb/denote-ensure-title-space)
+              (delete-trailing-whitespace))
+            (with-demoted-errors "Error: %S"
+              (denote-rename-file-using-front-matter file))
+            ;; Kill buffer unless it already exists
+            (unless (member (get-buffer (buffer-name)) existing-buffers)
+              (kill-buffer))))))))
 
 ;;;; Denote-explore
 ;;;;; This
