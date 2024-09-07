@@ -26,13 +26,16 @@
 ;; Initialize package sources
 (require 'package)
 
-(setq package-archive-priorities '(("elpa" . 10)
-                                   ("melpa" . 5))
-      package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
+(setq package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                         ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("nongnu-devel" . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://stable.melpa.org/packages/")
-                         ("melpa-devel" . "https://melpa.org/packages/")))
+                         ("melpa" . "https://melpa.org/packages/"))
+      package-archive-priorities '(("gnu-elpa" . 4)
+                                   ("melpa" . 3)
+                                   ("nongnu" . 2)
+                                   ("gnu-elpa-devel" . 1))
+      package-install-upgrade-built-in t
+      package-pinned-packages nil)
 
 (package-refresh-contents :async)
 (package-initialize)
@@ -44,9 +47,6 @@
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
-
-;;;; Package-vc
-(setq package-install-upgrade-built-in t)
 
 (provide 'vanilla-package-management-rcp)
 ;;; vanilla-package-management-rcp.el ends here
