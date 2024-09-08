@@ -467,6 +467,39 @@ With a prefix argument, show NLINES of context."
 (use-package vc-msg
   :general ("H-v" 'vc-msg-show))
 
+;;;;; Agitate
+;; QoL stuff for built-in VC workflow
+(use-package agitate
+  :hook (diff-mode . agitate-diff-enable-outline-minor-mode)
+  :general
+  (:keymaps 'vc-prefix-map
+            "=" #'agitate-diff-buffer-or-file
+            "f" #'agitate-vc-git-find-revision
+            "s" #'agitate-vc-git-show
+            "w" #'agitate-vc-git-kill-commit-message)
+  (:keymaps 'diff-mode-map
+            [remap diff-refine-hunk] #'agitate-diff-refine-cycle
+            [remap diff-restrict-view] #'agitate-diff-narrow-dwim)
+  (:keymaps 'log-view-mode-map
+            "w" #'agitate-log-view-kill-revision
+            "W" #'agitate-log-view-kill-revision-expanded)
+  (:keymaps 'log-edit-mode-map
+            :prefix "C-c C-i"
+            "C-n" #'agitate-log-edit-insert-file-name
+            ;; See user options `agitate-log-edit-emoji-collection' and
+            ;; `agitate-log-edit-conventional-commits-collection'.
+            "C-e" #'agitate-log-edit-emoji-commit
+            "C-c" #'agitate-log-edit-conventional-commit)
+  :custom
+  (diff-refine nil)                     ; We use `agitate-diff-refine-cycle' now
+  (agitate-log-edit-informative-show-root-log nil)
+  (agitate-log-edit-informative-show-files t)
+  :config
+  ;; Make window layout when in `log-edit-mode' similarly informative to Magit
+  (agitate-log-edit-informative-mode 1)
+
+  (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote))
+
 ;;;; QoL
 ;;;;; Git-gutter
 (use-package git-gutter
