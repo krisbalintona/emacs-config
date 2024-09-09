@@ -439,9 +439,7 @@ With a prefix argument, show NLINES of context."
 (use-package diff-mode
   :ensure nil
   :gfhook
-  'outshine-mode
-  '(lambda ()                  ; FIXME 2022-12-30: Not sure why this doesn't work...
-     (display-line-numbers-mode -1))
+  'diff-delete-empty-files
   :general (:keymaps 'diff-mode-map
                      "S-<iso-lefttab>" 'outshine-cycle-buffer
                      "<tab>" 'outshine-cycle
