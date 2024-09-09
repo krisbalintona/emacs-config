@@ -554,7 +554,7 @@ With a prefix argument, show NLINES of context."
   (diff-hl-show-staged-changes nil)
   (diff-hl-update-async t)
   (diff-hl-side 'right)
-  (diff-hl-flydiff-delay 0.5)           ; See `diff-hl-flydiff-mode'
+  (diff-hl-flydiff-delay 1)             ; See `diff-hl-flydiff-mode'
   :config
   (global-diff-hl-show-hunk-mouse-mode 1))
 
