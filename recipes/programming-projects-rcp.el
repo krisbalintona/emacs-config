@@ -411,6 +411,7 @@ With a prefix argument, show NLINES of context."
 ;; 2. https://stackoverflow.com/questions/6724471/git-slows-down-emacs-to-death-how-to-fix-this
 ;; 3. https://www.reddit.com/r/emacs/comments/4c0mi3/the_biggest_performance_improvement_to_emacs_ive/
 (use-package vc-defer
+  :disabled              ; I don't like it's inhibition of diff-hl functionality
   :demand
   :diminish
   :after vc
