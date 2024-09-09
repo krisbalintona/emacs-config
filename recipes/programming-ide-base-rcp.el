@@ -173,7 +173,7 @@ Non-nil only if installation completed without any errors."
 ;;;; Hideshow
 (use-package hideshow
   :ensure nil
-  :hook (prog-mode . hs-minor-mode)
+  :hook ((prog-mode conf-mode) . hs-minor-mode)
   :custom
   (hs-set-up-overlay 'kb/hideshow-display)
   (hs-isearch-open t)

@@ -694,7 +694,7 @@ ARG and REDISPLAY are identical to the original function."
   :diminish
   :custom
   (form-feed-include-modes
-   '(prog-mode text-mode help-mode emacs-news-view-mode))
+   '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
   (form-feed-exclude-modes nil)
   :config
   (global-form-feed-mode 1))

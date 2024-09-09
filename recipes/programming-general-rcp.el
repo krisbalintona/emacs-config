@@ -456,13 +456,13 @@ with the exception of org-emphasis markers."
 ;; Colorify color codes
 (use-package rainbow-mode
   :diminish
-  :ghook 'text-mode-hook 'prog-mode-hook 'help-mode-hook)
+  :ghook 'text-mode-hook 'prog-mode-hook 'conf-mode-hook 'help-mode-hook)
 
 ;;;;; Highlight-defined
 ;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
 ;; text which is the symbol of a face.
 (use-package highlight-defined
-  :ghook 'prog-mode-hook
+  :ghook 'prog-mode-hook 'conf-mode-hook
   :custom
   (highlight-defined-face-use-itself t))
 
@@ -492,7 +492,7 @@ with the exception of org-emphasis markers."
 ;; Visually indent lines wrapped visually!
 (use-package adaptive-wrap
   ;; NOTE 2024-02-15: This makes long-lines in lists properly indented!
-  :hook ((prog-mode org-mode) . adaptive-wrap-prefix-mode))
+  :hook ((prog-mode conf-mode org-mode) . adaptive-wrap-prefix-mode))
 
 ;;;; Other
 ;;;;; Outshine
@@ -501,7 +501,7 @@ with the exception of org-emphasis markers."
 (defvar outline-minor-mode-prefix (kbd "C-c \\"))
 (use-package outshine
   :diminish (outshine-mode outline-minor-mode)
-  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook
+  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook 'conf-mode-hook
   :gfhook 'visual-line-mode
   :general
   (:keymaps 'outshine-mode-map

@@ -505,7 +505,7 @@ With a prefix argument, show NLINES of context."
 (use-package git-gutter
   :disabled                          ; NOTE 2022-12-29: Trying `diff-hl' for now
   :hook ((window-configuration-change . git-gutter:update-all-windows)
-         (prog-mode . git-gutter-mode))
+         ((prog-mode conf-mode) . git-gutter-mode))
   :custom
   (git-gutter-fr:side 'left-fringe)
   ;; 0 is actually on-save, so we put this as low as possible to effectively
@@ -533,6 +533,7 @@ With a prefix argument, show NLINES of context."
 ;; git-gutter-fringes
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
+         (conf-mode . diff-hl-mode)
          (vc-dir-mode . diff-hl-dir-mode)
          (dired-mode . diff-hl-dired-mode)
          (magit-pre-refresh . diff-hl-magit-pre-refresh)
@@ -544,7 +545,7 @@ With a prefix argument, show NLINES of context."
   (diff-hl-side 'right)
   (diff-hl-flydiff-delay 0.5)           ; See `diff-hl-flydiff-mode'
   :config
-  (global-diff-hl-show-hunk-mouse-mode))
+  (global-diff-hl-show-hunk-mouse-mode 1))
 
 ;;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history
