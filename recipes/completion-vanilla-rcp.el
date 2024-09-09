@@ -34,8 +34,6 @@
 ;;;;; Itself
 (use-package vertico
   :demand                               ; Otherwise won't get loaded immediately
-  ;; :ensure (vertico :files (:defaults "extensions/*"))
-  :vc (:rev :newest)
   :general
   ("H-." #'vertico-repeat
    "C-M->" #'vertico-repeat)
@@ -48,6 +46,8 @@
   (vertico-count 13)
   (vertico-resize 'grow-only)
   (vertico-cycle nil)
+  :preface
+  (add-to-list 'package-pinned-packages '(vertico . "gnu-elpa-devel"))
   :config
   (vertico-mode)
 
