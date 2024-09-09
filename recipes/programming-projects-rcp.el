@@ -438,8 +438,8 @@ With a prefix argument, show NLINES of context."
 ;;;;; Diff-mode
 (use-package diff-mode
   :ensure nil
-  :gfhook
-  'diff-delete-empty-files
+  :hook ((diff-mode . diff-delete-empty-files)
+         (kb/themes . kb/themes-setup-diff-mode-faces))
   :general (:keymaps 'diff-mode-map
                      "S-<iso-lefttab>" 'outshine-cycle-buffer
                      "<tab>" 'outshine-cycle
@@ -451,8 +451,20 @@ With a prefix argument, show NLINES of context."
   (diff-refine 'navigation)             ; Font lock hunk when it is navigated to
   (diff-font-lock-syntax 'hunk-also) ; Fontify diffs with syntax highlighting of the language
   :config
-  (set-face-attribute 'diff-header nil :background "blue2")
-  (set-face-attribute 'diff-hunk-header nil :background "tan4"))
+  (defun kb/themes-setup-diff-mode-faces ()
+    "Set up `diff-mode' faces."
+    (set-face-attribute 'diff-header nil
+                        :height 1.2
+                        :overline t
+                        :width 'expanded
+                        :foreground (modus-themes-with-colors fg-alt)
+                        :extend t)
+    (set-face-attribute 'diff-hunk-header nil
+                        :height 1.1
+                        :slant 'italic
+                        :foreground 'unspecified
+                        :background (modus-themes-with-colors bg-dim)))
+  (kb/themes-setup-diff-mode-faces))
 
 ;;;;; Ediff
 (use-package ediff
@@ -553,9 +565,9 @@ With a prefix argument, show NLINES of context."
 ;;;;; Better Magic status
 ;;;###autoload
 (defun unpackaged/magit-status ()
-  "Open a `magit-status' buffer and close the other window so only Magit is visible.
-If a file was visited in the buffer that was active when this
-command was called, go to its unstaged changes section."
+  "Open a `magit-status' buffer and close all other windows.
+If a file was visited in the buffer that was active when this command
+was called, go to its unstaged changes section."
   (interactive)
   (let* ((buffer-file-path (when buffer-file-name
                              (file-relative-name buffer-file-name
