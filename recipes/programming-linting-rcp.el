@@ -51,7 +51,7 @@
   :config
   ;; Set prefix map
   (define-key flycheck-mode-map flycheck-keymap-prefix nil)
-  (setq flycheck-keymap-prefix (kbd "H-f"))
+  (setq flycheck-keymap-prefix (kbd "C-M-s-f"))
   (define-key flycheck-mode-map flycheck-keymap-prefix
               flycheck-command-map))
 

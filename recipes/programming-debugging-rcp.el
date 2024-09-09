@@ -65,8 +65,8 @@
             "er" '(dap-ui-expressions-remove :wk "Expression add")
             )
   (:keymaps 'lsp-mode-map
-            "H-c" 'dap-debug-last
-            "H-C" 'dap-debug-recent
+            "C-M-s-c" 'dap-debug-last
+            "C-M-s-C" 'dap-debug-recent
             )
   :custom
   (dap-debug-compilation-keep t)        ; Keep output window in success?

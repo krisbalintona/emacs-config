@@ -37,8 +37,8 @@
      (setq-local line-spacing 0.2))
   :general
   (:keymaps 'org-mode-map
-            "H-s" 'org-store-link
-            "H-S" 'org-id-store-link
+            "C-M-s-s" 'org-store-link
+            "C-M-S-s" 'org-id-store-link
             "C-M-<up>" 'org-up-element)
   (kb/note-keys
     "c" 'org-capture)

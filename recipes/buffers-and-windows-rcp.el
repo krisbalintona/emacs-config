@@ -53,26 +53,26 @@
 (use-package windmove
   :ensure nil
   :general (:keymaps 'windmove-mode-map
-                     "H-h" 'windmove-left
-                     "H-j" 'windmove-down
-                     "H-k" 'windmove-up
-                     "H-l" 'windmove-right
-                     "H-<left>" 'windmove-left
-                     "H-<down>" 'windmove-down
-                     "H-<up>" 'windmove-up
-                     "H-<right>" 'windmove-right
-                     "H-H" 'windmove-swap-states-left
-                     "H-J" 'windmove-swap-states-down
-                     "H-K" 'windmove-swap-states-up
-                     "H-L" 'windmove-swap-states-right)
+                     "C-M-s-h" 'windmove-left
+                     "C-M-s-j" 'windmove-down
+                     "C-M-s-k" 'windmove-up
+                     "C-M-s-l" 'windmove-right
+                     "C-M-s-<left>" 'windmove-left
+                     "C-M-s-<down>" 'windmove-down
+                     "C-M-s-<up>" 'windmove-up
+                     "C-M-s-<right>" 'windmove-right
+                     "C-M-s-H" 'windmove-swap-states-left
+                     "C-M-s-J" 'windmove-swap-states-down
+                     "C-M-s-K" 'windmove-swap-states-up
+                     "C-M-s-L" 'windmove-swap-states-right)
   :init
   (windmove-mode))
 
 ;;;;; Transpose-frame
 ;; Rotate window configuration
 (use-package transpose-frame
-  :general ("H-r" 'rotate-frame-anticlockwise
-            "H-l" 'rotate-frame-clockwise))
+  :general ("C-M-s-<right>" 'rotate-frame-clockwise
+            "C-M-s-l" 'rotate-frame-clockwise))
 
 ;;;;; Window
 (use-package window
@@ -319,7 +319,7 @@
 (use-package popper
   :general ("M-`" 'popper-toggle-latest
             "C-`" 'popper-cycle
-            "H-`" 'popper-kill-latest-popup
+            "C-M-s-`" 'popper-kill-latest-popup
             "C-~" 'popper-toggle-type)
   :custom
   (popper-reference-buffers

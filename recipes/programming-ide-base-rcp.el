@@ -77,7 +77,7 @@ Non-nil only if installation completed without any errors."
   :disabled                             ; Used old tree-sitter package
   :requires tree-sitter
   :ensure (turbo-log :type git :host github :repo "artawower/turbo-log.el")
-  :general (:prefix "H-;"
+  :general (:prefix "C-M-s-;"
                     ";" 'turbo-log-print
                     "i" 'turbo-log-print-immediately
                     "h" 'turbo-log-comment-all-logs

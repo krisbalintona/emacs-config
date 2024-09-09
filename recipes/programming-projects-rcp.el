@@ -476,7 +476,7 @@ With a prefix argument, show NLINES of context."
 ;;;;; Vc-msg
 ;; See a line's corresponding commit information (like git blame)
 (use-package vc-msg
-  :general ("H-v" 'vc-msg-show))
+  :general ("C-M-s-v" 'vc-msg-show))
 
 ;;;;; Agitate
 ;; QoL stuff for built-in VC workflow

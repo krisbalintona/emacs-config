@@ -38,7 +38,7 @@
   :general
   (:keymaps 'corfu-map
             "M-d" 'corfu-info-documentation
-            ;; "H-SPC" 'corfu-insert-separator
+            ;; "C-M-s-SPC" 'corfu-insert-separator
             )
   (:keymaps 'corfu-map
             :states 'insert
@@ -46,7 +46,7 @@
             "C-p" 'corfu-previous
             "<escape>" 'corfu-quit
             "<return>" 'corfu-insert
-            "H-SPC" 'corfu-insert-separator
+            "C-M-s-SPC" 'corfu-insert-separator
             ;; "SPC" 'corfu-insert-separator ; Use when `corfu-quit-at-boundary' is non-nil
             "M-d" 'corfu-show-documentation
             "C-g" 'corfu-quit
@@ -131,8 +131,8 @@ default lsp-passthrough."
   :ghook 'corfu-mode-hook
   :general
   (:keymaps 'corfu-map
-            "H-d" 'corfu-popupinfo-toggle
-            "H-l" 'corfu-popupinfo-location)
+            "C-M-s-d" 'corfu-popupinfo-toggle
+            "C-M-s-l" 'corfu-popupinfo-location)
   :custom
   (corfu-popupinfo-delay '(0.5 . 0.3))
   (corfu-popupinfo-direction '(right left vertical))
@@ -218,7 +218,7 @@ default lsp-passthrough."
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
          ((git-commit-mode vc-git-log-edit-mode) . kb/cape-capf-setup-commit))
   :general
-  (:prefix "H-c"               ; Particular completion function
+  (:prefix "C-M-s-c"               ; Particular completion function
            "p" 'completion-at-point
            "d" 'cape-dabbrev
            "h" 'cape-history

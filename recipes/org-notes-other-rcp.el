@@ -513,7 +513,7 @@ Uses the current annotation at point's ID."
             "C-M-i" nil
             "M-i" nil
             ;; FIXME 2024-01-13: Choose better keybind
-            "H-\"" 'org-noter-pdf--create-missing-annotation)
+            "C-M-s-\"" 'org-noter-pdf--create-missing-annotation)
   :custom
   (org-noter-notes-search-path `(,kb/notes-dir))
   ;; FIXME 2024-01-12: I am not currently using org-noter, but when I do, I can
@@ -610,7 +610,7 @@ Commands that control MPV playback mimic MPV keybinds."
     "]" #'mpv-speed-increase
     "P" #'mpv-jump-to-playlist-entry
     "i" #'mpv-insert-playback-position)
-  (define-key global-map (kbd "H-m") kb/mpv-map)
+  (define-key global-map (kbd "C-M-s-m") kb/mpv-map)
 
   ;; Taken from https://github.com/kljohann/mpv.el/wiki
   (defun kb/mpv-org-metareturn-insert-playback-position ()

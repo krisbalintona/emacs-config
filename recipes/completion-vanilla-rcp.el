@@ -35,8 +35,7 @@
 (use-package vertico
   :demand                               ; Otherwise won't get loaded immediately
   :general
-  ("H-." #'vertico-repeat
-   "C-M->" #'vertico-repeat)
+  ("C-M-s-." #'vertico-repeat)
   (:keymaps 'vertico-map
             "TAB" #'kb/vertico-insert-unless-tramp
             "<escape>" #'minibuffer-keyboard-quit

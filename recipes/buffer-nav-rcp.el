@@ -206,8 +206,8 @@
 
 ;;;; Goto-last-change
 (use-package goto-chg
-  :general ("H-(" 'goto-last-change
-            "H-)" 'goto-last-change-reverse))
+  :general ("C-M-s-(" 'goto-last-change
+            "C-M-s-)" 'goto-last-change-reverse))
 
 (provide 'buffer-nav-rcp)
 ;;; buffer-nav-rcp.el ends here

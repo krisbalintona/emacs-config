@@ -346,7 +346,7 @@ blacklist, this is mostly for \\section etc."
             :rev :newest)
   :hook (LaTeX-mode . popweb-latex-mode)
   :general (:keymaps '(LaTeX-mode-map org-mode-map)
-                     "H-'" 'popweb-latex-show)
+                     "C-M-s-'" 'popweb-latex-show)
   :custom
   (popweb-config-location (no-littering-expand-var-file-name "popweb"))
   (popweb-popup-pos "point-bottom")

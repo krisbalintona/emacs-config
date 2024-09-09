@@ -32,8 +32,8 @@
          (java-mode . lsp-java-lens-mode)       ; For run/debug overlays
          (java-mode . lsp-java-boot-lens-mode)) ; For code-lens overlays
   :general (:keymaps 'java-mode-map
-                     "H-b" 'lsp-java-build-project
-                     "H-l j" '(lsp-jt-browser :wk "Lsp-jt"))
+                     "C-M-s-b" 'lsp-java-build-project
+                     "C-M-s-l j" '(lsp-jt-browser :wk "Lsp-jt"))
   :custom
   (lsp-java-inhibit-message t) ; Inhibit java messages echo via `inhibit-message'.
   (lsp-java-content-provider-preferred "fernflower")

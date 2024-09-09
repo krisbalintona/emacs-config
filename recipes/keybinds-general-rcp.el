@@ -45,10 +45,7 @@
   :prefix "C-c i")
 (general-create-definer kb/open-keys    ; Open certain things
   :prefix "C-c o")
-;; Toggles. Use Hyper key if on Linux, and C-M- if in WSL2 or Windows natively
-(if (string-match-p "Microsoft" (shell-command-to-string "uname -a"))
-    (general-create-definer kb/toggle-keys :prefix "C-M-S-t")
-  (general-create-definer kb/toggle-keys :prefix "H-t"))
+(general-create-definer kb/toggle-keys :prefix "C-M-s-t")
 
 ;;; Key-chords
 (use-package use-package-chords
@@ -92,8 +89,8 @@
      '("<escape>" . ignore))
     (meow-leader-define-key
      ;; SPC j/k will run the original command in MOTION state.
-     '("j" . "H-j")
-     '("k" . "H-k")
+     '("j" . "C-M-s-j")
+     '("k" . "C-M-s-k")
      ;; Use SPC (0-9) for digit arguments.
      '("1" . meow-digit-argument)
      '("2" . meow-digit-argument)
