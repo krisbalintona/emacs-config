@@ -420,11 +420,10 @@ with the exception of org-emphasis markers."
       (ansi-color-apply-on-region compilation-filter-start (point)))))
 
 ;;;;; Fancy-compilation
-;; Better compilation buffers. Has the following features:
-;; * Support color output.
-;; * Support progress updates on a single line (as used by ninja, sphinx and many other build systems).
-;; * Use scrolling behavior similar to most terminals.
-;; * Optionally use foreground & background independent of theme colors.
+;; Better compilation buffers. Has support color output,progress updates on a
+;; single line (as used by many build systems),scrolling behavior similar to
+;; most terminals,and optionally use foreground & background independent of
+;; theme colors.
 (use-package fancy-compilation
   :custom
   (fancy-compilation-override-colors nil)
