@@ -497,7 +497,7 @@ This is a difference in multitude of %s."
   :custom
   (chatgpt-shell-openai-key "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"))
 
-;;;; Other built-in Emacs modes/packages
+;;;; Built-in Emacs modes/packages
 (use-package emacs
   :ensure nil
   :hook (messages-buffer-mode . visual-line-mode)
@@ -770,6 +770,16 @@ ARG and REDISPLAY are identical to the original function."
 (use-package casual-suite
   :general (:keymaps 'calc-mode-map
                      "C-o" 'casual-calc-tmenu))
+
+;;;;; Async.el
+;; Async library and a few small but useful implementations
+(use-package async
+  :demand
+  :custom
+  (async-bytecomp-allowed-packages 'all)
+  :config
+  (dired-async-mode 1)
+  (async-bytecomp-package-mode 1))
 
 (provide 'misc-packages-rcp)
 ;;; misc-packages-rcp.el ends here
