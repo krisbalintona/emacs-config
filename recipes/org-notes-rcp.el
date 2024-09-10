@@ -90,6 +90,8 @@
   (denote-backlinks-show-context t)
   (denote-rename-buffer-format "%s %t")
   (denote-rename-confirmations '(add-front-matter))
+  :preface
+  (add-to-list 'package-pinned-packages '(denote . "gnu-elpa-devel"))
   :init
   ;; Rename denote note. Meant to be added to `after-save-hook'
   (defun kb/denote-auto-rename ()

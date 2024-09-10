@@ -48,7 +48,7 @@
   :preface
   (add-to-list 'package-pinned-packages '(vertico . "gnu-elpa-devel"))
   :config
-  (vertico-mode)
+  (vertico-mode 1)
 
   ;; Special for `org-agenda-filter' and `org-tags-view'. See
   ;; https://github.com/minad/vertico?tab=readme-ov-file#org-agenda-filter-and-org-tags-view
