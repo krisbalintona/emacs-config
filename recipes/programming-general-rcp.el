@@ -289,12 +289,26 @@
 
 ;;;;; Hi-lock
 (use-package hi-lock
+  :demand
   :ensure nil
   :custom
   (hi-lock-file-patterns-policy
    '(lambda (_pattern) t))
-  :init
+  :config
   (global-hi-lock-mode 1))
+
+;;;;; Symbol-overlay
+;; Mimics functionality of built-in hi-lock but with overlays instead of
+;; font-lock. Usefully has `symbol-overlay-rename'. On highlighted regions, the
+;; `symbol-overlay-map' is enabled
+(use-package symbol-overlay
+  :general
+  ([remap highlight-symbol-at-point] #'symbol-overlay-put)
+  (:prefix "M-s h"
+           "M-n" #'symbol-overlay-switch-forward
+           "M-p" #'symbol-overlay-switch-backward
+           "<f7>" #'symbol-overlay-mode
+           "<f8>" #'symbol-overlay-remove-all))
 
 ;;;;; Re-builder
 ;; Interactively build regexps
