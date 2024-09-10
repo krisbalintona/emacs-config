@@ -29,22 +29,13 @@
   'visual-line-mode
   'kb/eshell-setup
   :general
+  (kb/open-keys "e" 'eshell)
   (:keymaps 'eshell-mode-map
             [remap eshell-previous-matching-input] 'consult-history)
   (:keymaps 'eshell-mode-map
             :states 'insert
             [remap back-to-indentation] 'eshell-bol)
-  (kb/open-keys
-    "e" '((lambda ()
-            "Create an eshell buffer per default directory."
-            (interactive)
-            (require 'eshell)
-            (let ((buf-name (concat "*eshell* "
-                                    (file-name-nondirectory (directory-file-name (file-name-directory default-directory))))))
-              (if (member buf-name (mapcar #'buffer-name (buffer-list)))
-                  (display-buffer buf-name)
-                (kb/eshell buf-name))))
-          :wk "My eshell"))
+
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)
