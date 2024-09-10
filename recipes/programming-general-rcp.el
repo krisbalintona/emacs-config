@@ -495,41 +495,25 @@ with the exception of org-emphasis markers."
   :hook ((prog-mode conf-mode org-mode) . adaptive-wrap-prefix-mode))
 
 ;;;; Other
+;;;;; Outline
+(use-package outline
+  :ensure nil
+  :custom
+  (outline-minor-mode-cycle t)
+  (outline-minor-mode-highlight t)
+  (outline-blank-line t))
+
 ;;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support.
 ;; `outline-minor-mode-prefix' must be set prior to the package's loading
 (defvar outline-minor-mode-prefix (kbd "C-c \\"))
 (use-package outshine
   :diminish (outshine-mode outline-minor-mode)
-  :ghook 'LaTeX-mode-hook 'css-mode-hook 'prog-mode-hook 'conf-mode-hook
-  :gfhook 'visual-line-mode
-  :general
-  (:keymaps 'outshine-mode-map
-            "C-x n s" 'outshine-narrow-to-subtree)
+  :ghook 'LaTeX-mode-hook 'prog-mode-hook 'conf-mode-hook
+  :general (:keymaps 'outshine-mode-map
+                     "C-x n s" 'outshine-narrow-to-subtree)
   :custom
-  (outshine-use-speed-commands t) ; Use speedy commands on headlines (or other defined locations)
-  :init
-  ;; More convenient `outline-insert-heading'
-  (defun kb/around-outline-insert-heading (orig_fun &rest args)
-    "Insert a new heading at same depth at point.
-
-Also insert newline before if an empty line isn’t there already.
-
-Also end in `evil-insert-state’ if `evil-local-mode’ is active in
-this buffer."
-    ;; Check for if previous line is empty
-    (unless (save-excursion
-              (widen)
-              (forward-line -1)
-              (looking-at-p "[[:blank:]]*$"))
-      (insert "\n"))
-
-    (apply orig_fun args)
-
-    ;; Enter evil insert
-    (when (bound-and-true-p evil-local-mode)
-      (evil-insert-state)))
-  (advice-add 'outline-insert-heading :around 'kb/around-outline-insert-heading))
+  (outshine-use-speed-commands t)) ; Use speedy commands on headlines (or other defined locations)
 
 ;;;;; Anzu
 ;; Display search information in mode-line.
