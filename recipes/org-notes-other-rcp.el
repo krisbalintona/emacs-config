@@ -471,6 +471,7 @@ Uses the current annotation at point's ID."
                           "Commit the changes to PDF metadata."
                           (interactive)
                           (with-current-buffer buf-name
+                            (widen)
                             (write-region (point-min) (point-max) metadata-file))
                           (shell-command metadata-update-command "*pdf-tools metadata: CLI output")
                           (kill-buffer buf-name)
