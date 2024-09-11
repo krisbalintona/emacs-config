@@ -463,7 +463,7 @@ Uses the current annotation at point's ID."
     (let* ((pdf-name (file-name-sans-extension (file-name-nondirectory pdf-file)))
            (buf-name (concat "*pdf-tools metadata: " pdf-name))
            (metadata-file (concat "/tmp/pdf-tools-metadata--" pdf-name))
-           (temp-pdf (make-temp-file "/tmp/pdf-tools-metadata--"))
+           (temp-pdf (make-temp-file "/tmp/pdf-tools-metadata--temp-pdf"))
            (metadata-dump-command (concat "pdftk \"" pdf-file "\" dump_data"))
            (metadata-update-command
             (concat "pdftk \"" pdf-file "\" update_info \"" metadata-file "\" output \"" temp-pdf "\""))
