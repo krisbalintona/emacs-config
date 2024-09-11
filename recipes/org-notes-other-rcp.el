@@ -458,6 +458,8 @@ Uses the current annotation at point's ID."
     (interactive (list (buffer-file-name)))
     (unless (string= "pdf" (file-name-extension pdf-file))
       (error "File is not a PDF!"))
+    (unless (executable-find "pdftk")
+      (error "System executable `pdftk' not found. Please install executable on filesystem to proceed."))
     (let* ((pdf-name (file-name-sans-extension (file-name-nondirectory pdf-file)))
            (buf-name (concat "*pdf-tools metadata: " pdf-name))
            (metadata-file (concat "/tmp/pdf-tools-metadata--" pdf-name))
@@ -484,7 +486,7 @@ Uses the current annotation at point's ID."
       (pop-to-buffer buf-name)
       (define-key kb/pdf-tools-metadata-mode-map (kbd "C-c C-c") commit-func)
       (set-buffer-modified-p nil)
-      (message "Press `C-c C-c' when finished editing package metadata")))
+      (message "Press `C-c C-c' when finished editing PDF metadata")))
   (define-key pdf-view-mode-map (kbd "C-c m") #'kb/pdf-tools--metadata-modify))
 
 ;;;;; Saveplace-pdf-view
