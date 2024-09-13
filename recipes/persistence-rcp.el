@@ -128,6 +128,7 @@
   (auto-save-default t) ; Only a local minor mode exists; this variable influences the global value
   (auto-save-interval 150)
   (auto-save-timeout 8)
+  (auto-save-include-big-deletions t)
   (delete-auto-save-files nil)
   (kill-buffer-delete-auto-save-files nil)
   (auto-save-no-message t)
