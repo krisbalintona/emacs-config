@@ -75,8 +75,7 @@
 ;; Save buffers across Emacs sessions
 (use-package desktop
   :ensure nil
-  :hook ((desktop-after-read . desktop-save-mode)
-         (window-setup . desktop-read))
+  :hook (desktop-after-read . desktop-save-mode)
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-files-not-to-save
