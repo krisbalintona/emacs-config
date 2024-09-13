@@ -37,8 +37,9 @@
       package-install-upgrade-built-in t
       package-pinned-packages nil)
 
-(package-refresh-contents :async)
 (package-initialize)
+(unless package-archive-contents
+    (package-refresh-contents))
 
 ;; For Elpaca. I still want to keep my elpaca-wait declarations in my
 ;; configuration files just in case I ever go back to Elpaca.
@@ -47,6 +48,11 @@
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
+
+;; Ensure use-package is available at compile time
+(eval-when-compile
+    (require 'use-package))
 
 (provide 'vanilla-package-management-rcp)
 ;;; vanilla-package-management-rcp.el ends here
