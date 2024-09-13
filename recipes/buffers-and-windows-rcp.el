@@ -82,6 +82,10 @@
   (:keymaps 'diff-mode-map
             "M-o" nil)
   :custom
+  ;;;; Prefer vertical splits over horizontal ones
+  (split-width-threshold 170)
+  (split-height-threshold nil)
+
   (window-resize-pixelwise t)
   (window-sides-vertical t)
 
@@ -442,7 +446,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                             ignore-window-parameters))
+                                        ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))

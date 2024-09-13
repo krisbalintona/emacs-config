@@ -11,6 +11,10 @@
 ;; Defer garbage collection
 (setq gc-cons-threshold most-positive-fixnum)
 
+;; NOTE 2024-09-13: Suggested by "minimal emacs." By default, Emacs "updates"
+;; its ui more often than it needs to
+(setq idle-update-delay 1.0)
+
 ;; Prevent loading any packages prior to init.el. Speeds up startup but packages
 ;; must be initizlied by `package-initialize' before any are needed.
 (setq package-enable-at-startup nil)
@@ -20,8 +24,17 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+;; Shave seconds off startup time by starting the scratch buffer in
+;; `fundamental-mode'
+(setq initial-major-mode 'fundamental-mode
+      initial-scratch-message nil)
+
 ;; Default coding system to UTF-8
 (set-language-environment "UTF-8")
+
+;; Increase performance for buffers with lots of special characters at the
+;; expense of memory
+(setq inhibit-compacting-font-caches t)
 
 ;;; Native-compilations settings
 ;; Basic settings

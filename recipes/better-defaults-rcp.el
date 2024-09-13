@@ -50,12 +50,8 @@
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
 
-              initial-scratch-message ";; Hi, Onii-chan~ ❀◕ ‿ ◕❀\n;; Let's have some fun...\n\n"  ; Set a cringe scratch buffer message
-
               trash-directory (no-littering-expand-var-file-name "trash")                         ; Trash directory
               delete-by-moving-to-trash t                                                         ; Delete files to trash
-
-              find-file-visit-truename t                                                          ; Follow symlink to actual file
               create-lockfiles nil                                                                ; Don't create lockfiles
 
               select-enable-clipboard t                                                           ; Merge system's and Emacs' clipboard
@@ -68,7 +64,7 @@
 
               max-mini-window-height 0.3                                                          ; Max minibuffer height
 
-              tab-width 8
+              tab-width 4
               indent-tabs-mode nil
 
               visible-bell nil
@@ -129,9 +125,10 @@
       scroll-down-aggressively nil      ; Center after point leaves window
       ;; These are the three ways to increase scrolling performance.
       ;; See (info "(emacs) Scrolling") for details
-      fast-but-imprecise-scrolling t
-      jit-lock-defer-time 0
-      redisplay-skip-fontification-on-input t)
+      ;; fast-but-imprecise-scrolling t
+      ;; jit-lock-defer-time 0
+      ;; redisplay-skip-fontification-on-input t
+      )
 
 ;;;; Do not load outdated byte code files
 (setq load-prefer-newer t)
@@ -164,6 +161,25 @@
 
 ;;;; Smoother resizing of frames
 (setq frame-resize-pixelwise t)
+
+;;;; How we uniquify buffer names
+(setq uniquify-buffer-name-style 'forward)
+
+;;;; Indent and formatting
+(setq-default left-fringe-width  8
+              right-fringe-width 8)
+
+;;;; Word wrapping
+;; Continue wrapped lines at whitespace rather than breaking in the
+;; middle of a word.
+(setq-default word-wrap t)
+
+;;;; Truncate lines
+;; Disable wrapping by default due to its performance cost.
+(setq-default truncate-lines t)
+;; If enabled and `truncate-lines' is disabled, soft wrapping will not occur
+;; when the window is narrower than `truncate-partial-width-windows' characters.
+(setq truncate-partial-width-windows nil)
 
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.

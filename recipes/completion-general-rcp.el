@@ -66,8 +66,10 @@
       ;; "default ...") to something else
       minibuffer-default-prompt-format " [%s]")
 (setq-default case-fold-search t)         ; For general regexp
-(setq minibuffer-prompt-properties        ; Don't show cursor in the minibuffer
-      '(read-only t cursor-intangible t face minibuffer-prompt))
+;; Keep the cursor out of the read-only portions of the.minibuffer
+(setq minibuffer-prompt-properties
+      '(read-only t intangible t cursor-intangible t face
+                  minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Add prompt indicator to `completing-read-multiple'. We display
