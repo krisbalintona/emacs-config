@@ -13,7 +13,6 @@
                     (expand-file-name "site-lisp" user-emacs-directory)
                     (expand-file-name "site-lisp/org-wc-targets/" user-emacs-directory)
                     (expand-file-name "exwm" user-emacs-directory)))
-
   (add-to-list 'load-path path))
 
 ;;; Load packages

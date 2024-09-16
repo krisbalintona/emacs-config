@@ -31,13 +31,45 @@
 ;; A lot of this is taken from
 ;; https://protesilaos.com/dotemacs/#h:c110e399-3f43-4555-8427-b1afe44c0779
 (setq completion-styles '(basic initials partial-completion flex)
+      ;; A non-exhaustve list of known completion categories:
+      ;;
+      ;; - `bookmark'
+      ;; - `buffer'
+      ;; - `charset'
+      ;; - `coding-system'
+      ;; - `color'
+      ;; - `command' (e.g. `M-x')
+      ;; - `customize-group'
+      ;; - `environment-variable'
+      ;; - `expression'
+      ;; - `face'
+      ;; - `file'
+      ;; - `function' (the `describe-function' command bound to `C-h f')
+      ;; - `info-menu'
+      ;; - `imenu'
+      ;; - `input-method'
+      ;; - `kill-ring'
+      ;; - `library'
+      ;; - `minor-mode'
+      ;; - `multi-category'
+      ;; - `package'
+      ;; - `project-file'
+      ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
+      ;; - `theme'
+      ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
+      ;; - `variable' (the `describe-variable' command bound to `C-h v')
+      ;; - `consult-grep'
+      ;; - `consult-isearch'
+      ;; - `consult-kmacro'
+      ;; - `consult-location'
+      ;; - `embark-keybinding'
       completion-category-overrides
       '((file (styles . (basic
                          basic-remote ; For `tramp' hostname completion with `vertico'
                          partial-completion)))) ; Partial completion for file paths!
       completion-flex-nospace t
       completion-cycle-threshold nil ; Number of candidates until cycling turns off
-      completion-lazy-hilit t      ; Performance; added Emacs 30.1
+      completion-lazy-hilit t        ; Performance; added Emacs 30.1
       completion-show-help nil
       completion-auto-help t
       completion-ignore-case t
