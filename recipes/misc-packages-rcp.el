@@ -768,8 +768,13 @@ ARG and REDISPLAY are identical to the original function."
 ;;;;; Casual-suite
 ;; A suite of "casual" interfaces.
 (use-package casual-suite
-  :general (:keymaps 'calc-mode-map
-                     "C-o" 'casual-calc-tmenu))
+  :general
+  (:keymaps 'ibuffer-mode-map
+            "C-\\" 'casual-ibuffer-tmenu)
+  (:keymaps 'Info-mode-map
+            "C-\\" 'casual-info-tmenu)
+  (:keymaps 'calc-mode-map
+            "C-\\" 'casual-calc-tmenu))
 
 ;;;;; Async.el
 ;; Async library and a few small but useful implementations
