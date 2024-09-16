@@ -663,58 +663,6 @@ A modified version of `ytdl-download'."
                    "Provide a URL and have \"ytdl\" download the corresponding video and attach that file.")
                  t)))
 
-;;;; Zotxt
-;; Integration between Emacs and Zotero
-(use-package zotxt
-  :demand
-  :custom
-  (zotxt-default-bibliography-style "modern-language-association")
-  (org-zotxt-link-description-style :citekey)
-  :config
-  ;; FIXME 2024-03-05: Don't know how to deal with this using package.el
-  ;; (require 'org-zotxt-noter)
-  (org-zotxt-mode 1)
-
-  ;; Allow for file-level org-noter sessions
-  (defun kb/org-zotxt-noter (arg)
-    "Like `org-noter', but use Zotero.
-
-If no document path property is found, will prompt for a Zotero
-search to choose an attachment to annotate, then calls `org-noter'.
-
-If a document path property is found, simply call `org-noter'.
-
-See `org-noter' for details and ARG usage."
-    (interactive "P")
-    (require 'org-noter nil t)
-    (unless (eq major-mode 'org-mode)
-      (error "Org mode not running"))
-    (unless (fboundp 'org-noter)
-      (error "`org-noter' not installed"))
-    ;; (if (org-before-first-heading-p)
-    ;;     (error "`org-zotxt-noter' must be issued inside a heading"))
-    (let* ((document-property (org-entry-get nil org-noter-property-doc-file (not (equal arg '(4)))))
-           (document-path (when (stringp document-property) (expand-file-name document-property))))
-      (if (and document-path (not (file-directory-p document-path)) (file-readable-p document-path))
-          (call-interactively #'org-noter)
-        (let ((arg arg))
-          (deferred:$
-           (zotxt-choose-deferred)
-           (deferred:nextc it
-                           (lambda (item-ids)
-                             (zotxt-get-item-deferred (car item-ids) :paths)))
-           (deferred:nextc it
-                           (lambda (item)
-                             (org-zotxt-get-item-link-text-deferred item)))
-           (deferred:nextc it
-                           (lambda (resp)
-                             (let ((path (org-zotxt-choose-path (cdr (assq 'paths (plist-get resp :paths))))))
-                               (org-entry-put nil org-zotxt-noter-zotero-link (org-zotxt-make-item-link resp))
-                               (org-entry-put nil org-noter-property-doc-file path))
-                             (call-interactively #'org-noter)))
-           (deferred:error it #'zotxt--deferred-handle-error))))))
-  (advice-add 'org-zotxt-noter :override #'kb/org-zotxt-noter))
-
 ;;;; Org-remark
 (use-package org-remark
   :demand
