@@ -48,7 +48,8 @@
   :custom
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
   (imenu-auto-rescan t)
-  (use-package-enable-imenu-support t))
+  (use-package-enable-imenu-support t)
+  (imenu-flatten 'group))
 
 ;;;; Imenu-list
 ;; Side buffer with imenu items
