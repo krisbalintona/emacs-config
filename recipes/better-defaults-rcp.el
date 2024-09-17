@@ -23,6 +23,7 @@
 ;; Set more sane Emacs-wide settings and minor QoL changes.
 
 ;;; Code:
+(require 'personal-variables-rcp)
 
 ;;;; Customize
 ;; Show variable names in their lisp form
@@ -40,7 +41,7 @@
 (no-littering-theme-backups)            ; Sets various built-in variables
 
 ;;;; Enable all disabled commands
-(customize-set-variable disabled-command-function nil "Enable all commands")
+(customize-set-variable 'disabled-command-function nil "Enable all commands")
 
 ;;;; Disable startup echo message
 ;; See `startup-echo-area-message'
@@ -122,13 +123,7 @@
       scroll-conservatively 0           ; Affects `scroll-step'
       scroll-minibuffer-conservatively t
       scroll-up-aggressively nil        ; Center after point leaves window
-      scroll-down-aggressively nil      ; Center after point leaves window
-      ;; These are the three ways to increase scrolling performance.
-      ;; See (info "(emacs) Scrolling") for details
-      ;; fast-but-imprecise-scrolling t
-      ;; jit-lock-defer-time 0
-      ;; redisplay-skip-fontification-on-input t
-      )
+      scroll-down-aggressively nil)     ; Center after point leaves window
 
 ;;;; Do not load outdated byte code files
 (setq load-prefer-newer t)
@@ -180,6 +175,18 @@
 ;; If enabled and `truncate-lines' is disabled, soft wrapping will not occur
 ;; when the window is narrower than `truncate-partial-width-windows' characters.
 (setq truncate-partial-width-windows nil)
+
+;;;; Language environment and input method
+;; Contrary to what many Emacs users have in their configs, you don't need more
+;; than this to make UTF-8 the default coding system:
+(set-language-environment "UTF-8")
+;; ...but `set-language-environment' also sets `default-input-method', which is
+;; a step too opinionated.
+(setq default-input-method nil)
+;; ...And the clipboard on Windows is often a wider encoding (UTF-16), so leave
+;; Emacs to its own devices there.
+(unless kb/sys-win
+  (setq selection-coding-system 'utf-8))
 
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
