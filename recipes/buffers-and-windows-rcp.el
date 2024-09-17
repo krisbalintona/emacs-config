@@ -356,7 +356,6 @@
      rustic-cargo-run-mode
      rustic-cargo-test-mode
      rustic-compilation-mode
-     Man-mode
      ))
   (popper-display-control nil)
   (popper-group-function
