@@ -335,9 +335,11 @@ This version removes delimiters.")
   (setq-default mode-line-buffer-identification (propertized-buffer-identification "%20b")
                 mode-line-format
                 '("%e" mode-line-front-space
+                  mode-line-mule-info   ; Input method info
                   mode-line-client
                   mode-line-modified
-                  mode-line-remote " "
+                  mode-line-remote
+                  mode-line-window-dedicated " "
                   mode-line-buffer-identification
                   mode-line-position
                   (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
