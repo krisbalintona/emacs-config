@@ -107,11 +107,12 @@
       (display-buffer-reuse-mode-window display-buffer-same-window))
      ("\\*devdocs\\*"
       (display-buffer-reuse-mode-window display-buffer-same-window))
-     ((or . ("\\*vc-diff\\*"
-             (major-mode . vc-git-log-view-mode)
+     ((major-mode . diff-mode)
+      (display-buffer-same-window))
+     ((or . ((major-mode . vc-git-log-view-mode)
              (major-mode . vc-annotate-mode)
              (major-mode . vc-git-region-history-mode)))
-      (display-buffer-reuse-mode-window display-buffer-same-window))
+      (display-buffer-same-window))
      ("OrgMimeMailBody"
       (display-buffer-same-window))
      ((major-mode . denote-interface-mode)
