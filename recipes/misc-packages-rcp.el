@@ -786,5 +786,11 @@ ARG and REDISPLAY are identical to the original function."
   (dired-async-mode 1)
   (async-bytecomp-package-mode 1))
 
+;;;;; Grep
+(use-package grep
+  :custom
+  (grep-save-buffers 'ask)
+  (grep-use-headings t))
+
 (provide 'misc-packages-rcp)
 ;;; misc-packages-rcp.el ends here
