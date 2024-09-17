@@ -108,7 +108,7 @@
     "Sluggify STR while joining separate words.
 My version camelCases keywords."
     (s-lower-camel-case
-     (denote--slug-hyphenate (denote--slug-no-punct str))))
+     (denote-slug-hyphenate str)))
   (setq denote-file-name-slug-functions
         '((title . denote-sluggify-title)
           (signature . denote-sluggify-signature)
