@@ -99,6 +99,7 @@
 
   (help-enable-variable-value-editing t)
   (help-clean-buttons t)
+  (help-enable-symbol-autoload t)
 
   (describe-bindings-outline t)
   (describe-bindings-show-prefix-commands t)
