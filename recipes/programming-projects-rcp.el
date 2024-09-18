@@ -108,7 +108,8 @@
   ;;    (project-compile "Compile")
   ;;    (project-eshell "Eshell")
   ;;    (project-shell "Shell")))
-  (project-vc-merge-submodules nil) ; Consider submodules as their own projects?
+  (project-vc-merge-submodules nil)
+  (project-mode-line t)
   :init
   (defun kb/project-special-dir (dir)
     "Return project if DIR is noticed as special.

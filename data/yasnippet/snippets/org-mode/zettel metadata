@@ -1,0 +1,9 @@
+# key: zettel_metadata
+# name: zettel metadata
+# expand-env: ((yas-indent-line 'fixed))
+# --
+#+begin_src org :exports none
+  + ${1:$$(yas-choose-value '("Source" "Context"))}: $0
+  + Related:
+  + Zettels:
+#+end_src
