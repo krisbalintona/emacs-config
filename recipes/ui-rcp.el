@@ -340,18 +340,20 @@ This version removes delimiters.")
                   mode-line-modified
                   mode-line-remote
                   mode-line-window-dedicated " "
+                  (project-mode-line
+                   (:eval (concat "["
+                                  (string-trim (format-mode-line project-mode-line-format))
+                                  "] ")))
                   mode-line-buffer-identification
                   mode-line-position
-                  (:eval (when (bound-and-true-p anzu-mode) anzu--mode-line-format))
+                  (anzu-mode anzu--mode-line-format)
                   (:eval (when (and (bound-and-true-p mlscroll-mode)
                                     (mode-line-window-selected-p)
                                     (not (derived-mode-p 'pdf-view-mode)))
                            (mlscroll-mode-line)))
                   mode-line-format-right-align
                   mode-line-process
-                  (:eval (when (bound-and-true-p flymake-mode)
-                           flymake-mode-line-format))
-                  " "
+                  (flymake-mode flymake-mode-line-format) " "
                   (:eval (when (mode-line-window-selected-p)
                            mode-line-misc-info))
                   (:eval kb/mode-line-modes)
