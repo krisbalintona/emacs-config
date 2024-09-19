@@ -114,8 +114,8 @@ My version camelCases keywords."
           (signature . denote-sluggify-signature)
           (keyword . kb/denote-sluggify-keyword)))
   :config
-  (denote-rename-buffer-mode)
-  (denote-menu-bar-mode -1)
+  (denote-rename-buffer-mode 1)
+  (denote-menu-bar-mode 1)
 
   ;; HACK 2024-03-03: Temporary fix for org-capture creating CUSTOM_ID
   ;; properties. See related issue:
