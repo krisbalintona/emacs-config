@@ -188,6 +188,10 @@
 (unless kb/sys-win
   (setq selection-coding-system 'utf-8))
 
+;;;; Make right-click show context menu
+(when (display-graphic-p)
+  (context-menu-mode))
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
