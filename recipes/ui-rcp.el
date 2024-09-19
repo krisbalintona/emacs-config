@@ -80,7 +80,10 @@
 
           ;; Headings
           (fg-heading-1 red-faint)
-          (fg-heading-6 rainbow-0))
+          (fg-heading-6 rainbow-0)
+
+          ;; Make the fringe invisible
+          (fringe unspecified))
         modus-operandi-palette-overrides
         `(
           ;; I like `modus-*-tinted's mode line colors. I like to keep
@@ -144,19 +147,13 @@
                       :family kb/themes-variable-pitch-font
                       :height 1.1)
 
-  (set-face-attribute 'mode-line nil
-                      :family kb/themes-mode-line-font
-                      ;; :height 113)      ; JetBrainsMono Nerd Font
-                      :height 135       ; Iosevka Aile
-                      :box `(:line-width 4
-                                         :color
-                                         ,(face-background 'mode-line)
-                                         :style nil))
+  (set-face-attribute 'mode-line-active nil
+                      :background (face-background 'default)
+                      :overline (modus-themes-with-colors fg-mode-line-active)
+                      :box nil)
   (set-face-attribute 'mode-line-inactive nil
-                      :box `(:line-width 4
-                                         :color ,(face-background 'mode-line-inactive)
-                                         :style nil)
-                      :inherit 'mode-line)
+                      :background (face-background 'default)
+                      :box nil)
 
   (modus-themes-with-colors
     (set-face-attribute 'cursor nil :background magenta-cooler))
@@ -418,8 +415,8 @@ This version removes delimiters.")
     "Set colors for `mlscroll'."
     (when (bound-and-true-p mlscroll-mode)
       (mlscroll-mode -1)
-      (customize-set-variable 'mlscroll-in-color (modus-themes-with-colors bg-mode-line-inactive))
-      (customize-set-variable 'mlscroll-out-color (modus-themes-with-colors bg-mode-line-active))
+      (customize-set-variable 'mlscroll-in-color (modus-themes-with-colors bg-mode-line-active))
+      (customize-set-variable 'mlscroll-out-color (face-background 'mode-line-active))
       (mlscroll-mode 1)))
   (kb/mlscroll-set-colors))
 
