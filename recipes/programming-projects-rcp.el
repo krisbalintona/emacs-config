@@ -367,9 +367,10 @@ With a prefix argument, show NLINES of context."
   :general (:keymaps 'vc-dir-mode-map
                      "G" 'vc-revert)
   :custom
-  (vc-command-messages nil)   ; NOTE 2024-09-19: Can be useful in the future...
+  (vc-command-messages 'log)   ; NOTE 2024-09-19: Can be useful in the future...
   (vc-follow-symlinks t)
   (vc-handled-backends '(Git))          ; Expand this list when necessary
+
   (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
   (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
   (vc-git-diff-switches              ; Have diff headers look similar to Magit's
@@ -387,9 +388,13 @@ With a prefix argument, show NLINES of context."
       (2 'change-log-list nil lax)
       (3 'change-log-name)
       (4 'change-log-date))))
-  (vc-annotate-display-mode 'scale)     ; Scale to oldest
   (add-log-mailing-address "krisbalintona@gmail.com")
   (add-log-keep-changes-together t)
+
+  ;; Other
+  (vc-find-revision-no-save t)
+  (vc-revert-show-diff 'kill)
+  (vc-annotate-display-mode 'fullscale)
   :config
   ;; Restore window configuration when when making commits with VC like you can
   ;; with org-agenda via the `org-agenda-restore-windows-after-quit' user option
