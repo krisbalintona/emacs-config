@@ -768,6 +768,12 @@ ARG and REDISPLAY are identical to the original function."
   (grep-save-buffers 'ask)
   (grep-use-headings t))
 
+;;;;; Wgrep
+;; Edit lines in grep buffers
+(use-package wgrep
+  :custom
+  (wgrep-auto-save-buffer t))
+
 ;;;;; Try
 ;; Install a package only for the current Emacs session.
 (use-package try)
