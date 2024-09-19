@@ -113,11 +113,8 @@
 ;;;; Avy
 ;; Quickly jump to any character
 (use-package avy
-  :commands kb/avy-goto-parens
-  :general
-  ("C-;" 'avy-goto-char-timer)
-  (:keymaps '(emacs-lisp-mode-map lisp-interaction-mode-map)
-            "C-:" 'kb/avy-goto-parens)
+  :commands kb/avy-transient-menu
+  :general ("C-;" 'kb/avy-transient-menu)
   :custom
   (avy-all-windows nil)                 ; Scope
   (avy-case-fold-search nil)
@@ -203,7 +200,14 @@
     (set-face-attribute 'avy-lead-face nil :inherit 'modus-themes-reset-soft)
     (set-face-attribute 'avy-lead-face-0 nil :inherit 'modus-themes-reset-soft)
     (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
-    (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft)))
+    (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft))
+
+  ;; Transient map
+  (transient-define-prefix kb/avy-transient-menu ()
+    "Transient menu for several avy commands."
+    [("l" "Line" avy-goto-line)
+     ("c" "Character" avy-goto-char-timer)
+     ("p" "Parens" kb/avy-goto-parens :if-mode emacs-lisp-mode)]))
 
 ;;;; Goto-last-change
 (use-package goto-chg
