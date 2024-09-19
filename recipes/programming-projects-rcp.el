@@ -362,6 +362,7 @@ With a prefix argument, show NLINES of context."
   :general (:keymaps 'vc-dir-mode-map
                      "G" 'vc-revert)
   :custom
+  (vc-command-messages nil)   ; NOTE 2024-09-19: Can be useful in the future...
   (vc-follow-symlinks t)
   (vc-handled-backends '(Git))          ; Expand this list when necessary
   (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
@@ -483,6 +484,7 @@ With a prefix argument, show NLINES of context."
 ;;;;; Agitate
 ;; QoL stuff for built-in VC workflow
 (use-package agitate
+  :after vc
   :hook (diff-mode . agitate-diff-enable-outline-minor-mode)
   :general
   (:keymaps 'vc-prefix-map
@@ -507,7 +509,7 @@ With a prefix argument, show NLINES of context."
   (diff-refine nil)                     ; We use `agitate-diff-refine-cycle' now
   (agitate-log-edit-informative-show-root-log nil)
   (agitate-log-edit-informative-show-files t)
-  :config
+  :init
   ;; Make window layout when in `log-edit-mode' similarly informative to Magit
   (agitate-log-edit-informative-mode 1)
 
