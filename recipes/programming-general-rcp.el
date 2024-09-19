@@ -266,7 +266,7 @@
   :ensure nil
   :custom
   (auto-revert-interval 5)
-  (auto-revert-avoid-polling t)
+  (auto-revert-avoid-polling t) ; Automatically reread from disk if the underlying file changes
   (auto-revert-check-vc-info t)
   (auto-revert-verbose t)
   :init
