@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (after-init . (lambda () (unless (server-running-p)
-                              (server-mode))))
+                                   (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -446,7 +446,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                        ignore-window-parameters))
+                                             ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
@@ -578,6 +578,7 @@ timestamp)."
   (fringes-outside-margins nil)
   (perfect-margin-visible-width 128)
   (perfect-margin-only-set-left-margin nil)
+  (perfect-margin-disable-in-splittable-check t)
   (perfect-margin-ignore-modes
    '(exwm-mode doc-view-mode nov-mode pdf-view-mode))
   (perfect-margin-ignore-regexps
@@ -603,34 +604,7 @@ timestamp)."
     (global-set-key (kbd (concat margin "<mouse-3>")) 'ignore)
     (dolist (multiple '("" "double-" "triple-"))
       (global-set-key (kbd (concat margin "<" multiple "wheel-up>")) 'mwheel-scroll)
-      (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll)))
-
-  ;; Fix window splitting
-  (defun kb/window-splittable-p (window &optional horizontal)
-    "Override for `window-splittable-p'.
-Determine if WINDOW is splittable."
-    (when (and (window-live-p window)
-               (not (window-parameter window 'window-side)))
-      (with-current-buffer (window-buffer window)
-        (if horizontal
-            (and (memq window-size-fixed '(nil height))
-                 (numberp split-width-threshold)
-                 (>= (if (bound-and-true-p perfect-margin-mode)
-                         ;; NOTE 2024-02-25: Added this. Not sure if this is
-                         ;; foolproof, since all it does is take into
-                         ;; consideration the margins and fringes, but for now
-                         ;; it's a sufficient approximation
-                         (window-total-width window)
-                       (window-width window))
-                     (max split-width-threshold
-                          (* 2 (max window-min-width 2)))))
-          (and (memq window-size-fixed '(nil width))
-               (numberp split-height-threshold)
-               (>= (window-height window)
-                   (max split-height-threshold
-                        (* 2 (max window-min-height
-                                  (if mode-line-format 2 1))))))))))
-  (advice-add 'window-splittable-p :override #'kb/window-splittable-p))
+      (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll))))
 
 ;;;;; Centered-window
 ;; Center the window contents via setting the fringes
@@ -641,18 +615,19 @@ Determine if WINDOW is splittable."
   (cwm-lighter nil)
   (cwm-centered-window-width 128)
   (cwm-ignore-buffer-predicates
-   '((lambda (buf)
+   '(cwm-special-buffer-p
+     (lambda (buf)
        "Ignore if `olivetti-mode' is active."
        (with-current-buffer buf (bound-and-true-p olivetti-mode)))
      (lambda (buf)
        "Ignore special buffers unless I like it."
        (with-current-buffer buf
          (let ((buf-name (buffer-name)))
-           (or (string-match-p "^[[:space:]]*\\*" buf-name) ; Special buffers
-               (string-match-p "^minibuf" buf-name)         ; Minibuffer
-               (not (derived-mode-p major-mode
-                                    '(exwm-mode doc-view-mode pdf-view-mode vc-dir-mode)))))))))
-  :init
+           (not (derived-mode-p major-mode
+                                '(exwm-mode doc-view-mode pdf-view-mode))))))))
+  :config
+  (centered-window-mode 1)
+
   ;; My own version
   (defun kb/window-splittable-p (window &optional horizontal)
     "Override for `window-splittable-p'.
@@ -677,9 +652,7 @@ Determine if WINDOW is splittable."
                    (max split-height-threshold
                         (* 2 (max window-min-height
                                   (if mode-line-format 2 1))))))))))
-  (advice-add 'window-splittable-p :override #'kb/window-splittable-p)
-
-  (centered-window-mode))
+  (advice-add 'window-splittable-p :override #'kb/window-splittable-p))
 
 ;;;; Activities
 (use-package activities
