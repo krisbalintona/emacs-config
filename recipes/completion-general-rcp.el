@@ -71,7 +71,9 @@
       completion-cycle-threshold nil ; Number of candidates until cycling turns off
       completion-lazy-hilit t        ; Performance; added Emacs 30.1
       completion-show-help nil
-      completion-auto-help t
+      completion-auto-help 'always
+      completion-auto-select 'second-tab
+      completions-max-height 20
       completion-ignore-case t
       completion-pcm-complete-word-inserts-delimiters nil
       completion-pcm-word-delimiters "-_./:| " ; Word delimiters
@@ -117,6 +119,9 @@
                 (car args))
         (cdr args)))
 (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+;; TAB acts more like how it does in the shell
+(keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete)
 
 ;;;; Prescient
 ;;;;; Itself
