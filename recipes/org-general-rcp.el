@@ -90,8 +90,8 @@
   :custom-face
   (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
   :config
-  (when (bound-and-true-p evil-local-mode)
-    (advice-add 'org-ctrl-c-ret :after #'evil-insert-state))) ; Entire insert-state after M-RET
+  ;; Make org-open-at-point follow file links in the same window
+  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file))
 
 ;;;;; Org-num
 (use-package org-num
