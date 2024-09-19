@@ -716,44 +716,20 @@ ARG and REDISPLAY are identical to the original function."
     :keybinding "d")
 
   (defengine github
-    "https://github.com/search?ref=simplesearch&q=%s")
+    "https://github.com/search?ref=simplesearch&q=%s"
+    :keybinding "g")
 
   (defengine google
     "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-    :keybinding "g")
-
-  (defengine google-images
-    "https://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
-
-  (defengine google-maps
-    "https://maps.google.com/maps?q=%s"
-    :docstring "Mappin' it up.")
-
-  (defengine project-gutenberg
-    "https://www.gutenberg.org/ebooks/search/?query=%s")
-
-  (defengine qwant
-    "https://www.qwant.com/?q=%s")
-
-  (defengine stack-overflow
-    "https://stackoverflow.com/search?q=%s")
-
-  (defengine twitter
-    "https://twitter.com/search?q=%s")
+    :keybinding "G")
 
   (defengine wikipedia
     "https://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-    :keybinding "w"
-    :docstring "Searchin' the wikis.")
-
-  (defengine wiktionary
-    "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s")
-
-  (defengine wolfram-alpha
-    "https://www.wolframalpha.com/input/?i=%s")
+    :keybinding "w")
 
   (defengine youtube
-    "https://www.youtube.com/results?aq=f&oq=&search_query=%s"))
+    "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+    :keybinding "y"))
 
 ;;;;; Selection-highlight-mode
 (use-package selection-highlight-mode
