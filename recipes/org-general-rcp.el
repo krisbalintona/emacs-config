@@ -776,7 +776,6 @@ Otherwise, return a user error."
 ;; Insert table of contents in the first headline with a TOC tag. Useful for the
 ;; READMEs of my packages.
 (use-package org-make-toc
-  :hook (org-mode . org-make-toc-mode)
   :custom
   (org-make-toc-insert-custom-ids t)
   (org-make-toc-link-type-fn 'org-make-toc--link-entry-github))
