@@ -112,9 +112,9 @@
   (project-mode-line t)
   (project-mode-line-format
    '(:eval (when-let ((project (project-mode-line-format)))
-             (propertize (concat "[" (string-trim (format-mode-line project)) "] ")
+             (propertize (concat " [" (string-trim (format-mode-line project)) "]")
                          'face project-mode-line-face))))
-  (project-mode-line-face 'shadow)
+  (project-mode-line-face nil)
   :init
   (defun kb/project-special-dir (dir)
     "Return project if DIR is noticed as special.
@@ -391,10 +391,6 @@ With a prefix argument, show NLINES of context."
   (add-log-mailing-address "krisbalintona@gmail.com")
   (add-log-keep-changes-together t)
   :config
-  ;; Put in `global-mode-string'
-  (or (member '(:eval vc-mode) global-mode-string)
-      (push '(:eval vc-mode) global-mode-string))
-
   ;; Restore window configuration when when making commits with VC like you can
   ;; with org-agenda via the `org-agenda-restore-windows-after-quit' user option
   (defvar kb/vc-pre-window-conf nil)

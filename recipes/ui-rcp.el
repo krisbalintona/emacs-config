@@ -337,7 +337,6 @@ This version removes delimiters.")
                   mode-line-modified
                   mode-line-remote
                   mode-line-window-dedicated " "
-                  (project-mode-line project-mode-line-format)
                   mode-line-buffer-identification
                   mode-line-position
                   (anzu-mode anzu--mode-line-format)
@@ -351,7 +350,15 @@ This version removes delimiters.")
                   (:eval (when (mode-line-window-selected-p)
                            mode-line-misc-info))
                   (:eval kb/mode-line-modes)
-                  mode-line-end-spaces)))
+                  mode-line-end-spaces))
+
+  ;; Add things to `global-mode-string'
+  (add-to-list 'global-mode-string '(:eval
+                                     (let ((branch (car (vc-git-branches))))
+                                       (unless (or (string= branch "master")
+                                                   (string= branch "main"))
+                                         vc-mode))))
+  (add-to-list 'global-mode-string '(project-mode-line project-mode-line-format)))
 
 ;;;;; Time
 ;; Enable time in the mode-line
