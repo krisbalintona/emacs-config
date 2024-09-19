@@ -110,6 +110,11 @@
   ;;    (project-shell "Shell")))
   (project-vc-merge-submodules nil)
   (project-mode-line t)
+  (project-mode-line-format
+   '(:eval (when-let ((project (project-mode-line-format)))
+             (propertize (concat "[" (string-trim (format-mode-line project)) "] ")
+                         'face project-mode-line-face))))
+  (project-mode-line-face 'shadow)
   :init
   (defun kb/project-special-dir (dir)
     "Return project if DIR is noticed as special.

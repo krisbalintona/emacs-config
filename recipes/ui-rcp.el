@@ -340,10 +340,7 @@ This version removes delimiters.")
                   mode-line-modified
                   mode-line-remote
                   mode-line-window-dedicated " "
-                  (project-mode-line
-                   (:eval (concat "["
-                                  (string-trim (format-mode-line project-mode-line-format))
-                                  "] ")))
+                  (project-mode-line project-mode-line-format)
                   mode-line-buffer-identification
                   mode-line-position
                   (anzu-mode anzu--mode-line-format)

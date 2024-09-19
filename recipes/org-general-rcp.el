@@ -428,7 +428,7 @@ have `org-warning' face."
   ;; `mode--line-format-right-align', which determines where the right side of
   ;; the mode line is placed.
   (mode-line-format-right-align
-   '(:eval (if (and (boundp 'olivetti-mode) olivetti-mode)
+   '(:eval (if (bound-and-true-p olivetti-mode)
                (let ((mode-line-right-align-edge 'right-fringe))
                  (mode--line-format-right-align))
              (mode--line-format-right-align)))))
