@@ -239,8 +239,6 @@
   :general
   ("C-." 'embark-act
    "C-h B" 'embark-bindings)
-  (:keymaps '(emacs-lisp-mode-map lisp-interaction-mode-map)
-            [remap xref-find-definitions] 'embark-dwim) ; Check README for why it's sensible to overwrite `xref-find-definitions'
   (:keymaps 'vertico-map
             "C-." 'embark-act
             "C->" 'embark-become)
