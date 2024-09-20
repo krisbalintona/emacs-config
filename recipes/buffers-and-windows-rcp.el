@@ -576,8 +576,7 @@ timestamp)."
 ;;;;; Perfect-margin
 ;; Center the window contents via setting the margins
 (use-package perfect-margin
-  :disabled ; NOTE 2024-09-19: Went on to start `pinching-margins' because the
-            ; code wasn't working and is bloated
+  :disabled ; NOTE 2024-09-19: Went on to start `pinching-margins' because the code wasn't working and is bloated
   :demand
   :diminish
   :custom
@@ -629,7 +628,7 @@ timestamp)."
       (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
                '("^[[:space:]]*\\*")))
     (lambda (win)
-      (with-selected-window win olivetti-mode)))
+      (with-selected-window win (bound-and-true-p olivetti-mode))))
   "Predicates to exclude certain windows."
   :type '(repeat function))
 
