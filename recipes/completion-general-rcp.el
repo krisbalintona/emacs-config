@@ -130,63 +130,65 @@
 ;; Additionally, `orderless' has style "dispatchers," i.e., I can define
 ;; predicates for what filtering style to use for which token
 (use-package prescient
-  :disabled
   :demand
   :custom
+  ;; (completion-styles '(prescient flex))
   ;; NOTE 2024-02-03: Flex is chosen as a backup in case nothing in prescient is
   ;; matched, which only happens if I'm clueless about what I'm searching for.
   ;; We prefer this over adding the fuzzy matching in `prescient-filter-method'
   ;; because we don't want a bunch of random results included in the filtered
   ;; prescient results and cluttering it
-  (completion-styles '(prescient flex))
   (prescient-filter-method
-   '(literal initialism regexp))
+   '(literal prefix regexp))
   (prescient-sort-full-matches-first t)
   (prescient-history-length 200)
   (prescient-aggressive-file-save t)
   :config
-  (prescient-persist-mode))
+  (prescient-persist-mode 1))
 
 ;;;;; Vertico-prescient
 (use-package vertico-prescient
   :after (prescient vertico)
+  :demand
   :custom
-  (vertico-prescient-enable-filtering t)
-  (vertico-prescient-enable-sorting t)
-  (vertico-prescient-override-sorting nil) ; Keep it up to vertico
   (vertico-prescient-completion-styles '(prescient flex))
+  (vertico-prescient-enable-filtering nil) ; We want orderless
+  (vertico-prescient-enable-sorting t)
+  (vertico-prescient-override-sorting nil)
   ;; See also `prescient--completion-recommended-overrides'
   (vertico-prescient-completion-category-overrides
    '((file (styles basic partial-completion))
      (eglot (styles prescient flex))))
-  :init
-  (vertico-prescient-mode))
+  :config
+  (vertico-prescient-mode 1))
 
 ;;;;; Corfu-prescient
 (use-package corfu-prescient
   :after (prescient corfu)
+  :demand
   :custom
-  (corfu-prescient-enable-filtering t)
-  (corfu-prescient-enable-sorting t)
-  (corfu-prescient-override-sorting t)
   (corfu-prescient-completion-styles '(prescient flex))
+  (corfu-prescient-enable-filtering nil) ; We want orderless
+  (corfu-prescient-enable-sorting t)
+  (corfu-prescient-override-sorting nil)
   ;; See also `prescient--completion-recommended-overrides'
   (corfu-prescient-completion-category-overrides
    '((file (styles basic partial-completion))
      (eglot (styles prescient flex))))
-  :init
-  (corfu-prescient-mode))
+  :config
+  (corfu-prescient-mode 1))
 
 ;;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
+  :demand
   :custom
   (marginalia-max-relative-age 0)
   (marginalia-align 'right)
   (marginalia-field-width 80)
   (marginalia-align-offset -2)          ; Two to the left
-  :init
-  (marginalia-mode))
+  :config
+  (marginalia-mode 1))
 
 (provide 'completion-general-rcp)
 ;;; completion-general-rcp.el ends here
