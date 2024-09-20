@@ -762,6 +762,11 @@ ARG and REDISPLAY are identical to the original function."
   (dired-async-mode 1)
   (async-bytecomp-package-mode 1))
 
+;;;;; Info
+(use-package info
+  :custom
+  (Info-isearch-search nil))            ; Restore default isearch behavior
+
 ;;;;; Grep
 (use-package grep
   :custom
