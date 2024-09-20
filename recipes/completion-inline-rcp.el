@@ -52,7 +52,7 @@
             "C-g" 'corfu-quit
             "M-l" 'corfu-show-location)
   :custom
-  (corfu-auto nil)
+  (corfu-auto nil) ; REVIEW 2024-09-20: Perhaps try https://github.com/minad/corfu?tab=readme-ov-file#auto-completion
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.25)
   (corfu-on-exact-match 'insert)
