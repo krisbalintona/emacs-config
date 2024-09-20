@@ -508,12 +508,6 @@ have `org-warning' face."
   ;; This command isn't autoloaded...
   (org-extra-emphasis-mode 1))
 
-;;;;; Svg-lib
-;; Common dependency for Rougier's packages
-(use-package svg-lib
-  :custom
-  (svg-lib-icons-dir (no-littering-expand-var-file-name "svg-lib/cache/"))) ; Change cache dir
-
 ;;;;; Org-margin
 (use-package org-margin
   :disabled
