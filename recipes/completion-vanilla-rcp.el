@@ -138,6 +138,25 @@
   :config
   (vertico-truncate-mode))
 
+;;;;; Vertico-prescient
+(use-package vertico-prescient
+  :after (prescient vertico)
+  :demand
+  :custom
+  (vertico-prescient-completion-styles '(prescient flex))
+  (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
+  (vertico-prescient-enable-sorting t)
+  (vertico-prescient-override-sorting nil)
+  ;; Only set if `vertico-prescient-enable-filtering' is non-nil. See also
+  ;; `prescient--completion-recommended-overrides'
+  (vertico-prescient-completion-category-overrides
+   '(;; Include `partial-completion' to enable wildcards and partial paths.
+     (file (styles partial-completion prescient))
+     ;; Eglot forces `flex' by default.
+     (eglot (styles prescient flex))))
+  :config
+  (vertico-prescient-mode 1))
+
 ;;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless

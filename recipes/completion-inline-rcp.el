@@ -143,6 +143,25 @@ default lsp-passthrough."
   (corfu-popupinfo-min-height 1)
   (corfu-popupinfo-min-width 30))
 
+;;;;; Corfu-prescient
+(use-package corfu-prescient
+  :after (prescient corfu)
+  :demand
+  :custom
+  (corfu-prescient-completion-styles '(prescient flex))
+  (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
+  (corfu-prescient-enable-sorting t)
+  (corfu-prescient-override-sorting nil)
+  ;; Only set if `corfu-prescient-enable-filtering' is non-nil. See also
+  ;; `prescient--completion-recommended-overrides'
+  (corfu-prescient-completion-category-overrides
+   '(;; Include `partial-completion' to enable wildcards and partial paths.
+     (file (styles partial-completion prescient))
+     ;; Eglot forces `flex' by default.
+     (eglot (styles prescient flex))))
+  :config
+  (corfu-prescient-mode 1))
+
 ;;;; Kind-icon
 ;; Icons for corfu!
 (use-package kind-icon

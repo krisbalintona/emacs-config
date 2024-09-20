@@ -123,7 +123,6 @@
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete)
 
 ;;;; Prescient
-;;;;; Itself
 ;; Sorting and filtering of minibuffer candidates. The difference between
 ;; `orderless' and this package is that `orderless' filters but does not sort -
 ;; it leaves that up to the "candidate source and the completion UI."
@@ -147,44 +146,6 @@
   (prescient-frequency-threshold 0.05)
   :config
   (prescient-persist-mode 1))
-
-;;;;; Vertico-prescient
-(use-package vertico-prescient
-  :after (prescient vertico)
-  :demand
-  :custom
-  (vertico-prescient-completion-styles '(prescient flex))
-  (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
-  (vertico-prescient-enable-sorting t)
-  (vertico-prescient-override-sorting nil)
-  ;; Only set if `vertico-prescient-enable-filtering' is non-nil. See also
-  ;; `prescient--completion-recommended-overrides'
-  (vertico-prescient-completion-category-overrides
-   '(;; Include `partial-completion' to enable wildcards and partial paths.
-     (file (styles partial-completion prescient))
-     ;; Eglot forces `flex' by default.
-     (eglot (styles prescient flex))))
-  :config
-  (vertico-prescient-mode 1))
-
-;;;;; Corfu-prescient
-(use-package corfu-prescient
-  :after (prescient corfu)
-  :demand
-  :custom
-  (corfu-prescient-completion-styles '(prescient flex))
-  (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
-  (corfu-prescient-enable-sorting t)
-  (corfu-prescient-override-sorting nil)
-  ;; Only set if `corfu-prescient-enable-filtering' is non-nil. See also
-  ;; `prescient--completion-recommended-overrides'
-  (corfu-prescient-completion-category-overrides
-   '(;; Include `partial-completion' to enable wildcards and partial paths.
-     (file (styles partial-completion prescient))
-     ;; Eglot forces `flex' by default.
-     (eglot (styles prescient flex))))
-  :config
-  (corfu-prescient-mode 1))
 
 ;;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
