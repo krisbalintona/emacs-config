@@ -27,8 +27,8 @@
 
 ;;;; Customize
 ;; Show variable names in their lisp form
-(setq custom-unlispify-tag-names nil
-      custom-safe-themes t)             ; Treat all themes as safe
+(setopt custom-unlispify-tag-names nil
+        custom-safe-themes t)             ; Treat all themes as safe
 
 ;;;; No-littering
 ;; Set better default package paths
@@ -88,9 +88,8 @@
 
 ;;;; Require pin-entry for passowrds
 ;; Pinentry is responsible for querying passphrases
-(require 'epg)
-(setq epg-pinentry-mode 'loopback ; Ask through the minibuffer, instead of external Pinentry program
-      epa-file-cache-passphrase-for-symmetric-encryption t)
+(require 'epg-config)
+(setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
 
 ;;;; Don't confirm when killing a process
 (setq confirm-kill-processes nil)
