@@ -206,7 +206,7 @@
 (use-package fussy
   :disabled               ; Less performant than `orderless' with little benefit
   :ensure (fussy :type git :host github :repo "jojojames/fussy")
-  :commands fussy-all-completions fussy-try-completions
+  :commands (fussy-all-completions fussy-try-completions)
   :custom
   (completion-styles '(fussy orderless flex))
 
