@@ -148,6 +148,7 @@ With a prefix argument, show NLINES of context."
   (xref-show-xrefs-function #'xref-show-definitions-buffer)
   (xref-file-name-display 'project-relative)
   (xref-search-program 'ripgrep)
+  (xref-history-storage 'xref-window-local-history) ; Per-window history of `xref-go-*'
   :config
   (with-eval-after-load 'consult
     ;; Use Consult to select xref locations with preview
