@@ -207,6 +207,7 @@
     "Transient menu for several avy commands."
     [("l" "Line" avy-goto-line)
      ("c" "Character" avy-goto-char-timer)
+     ("s" "Symbol" avy-goto-symbol-1)
      ("p" "Parens" kb/avy-goto-parens :if-mode emacs-lisp-mode)]))
 
 ;;;; Goto-last-change
