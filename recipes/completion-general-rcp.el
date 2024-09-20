@@ -65,7 +65,6 @@
       ;; - `embark-keybinding'
       completion-category-overrides
       '((file (styles . (basic
-                         basic-remote ; For `tramp' hostname completion with `vertico'
                          partial-completion)))) ; Partial completion for file paths!
       completion-flex-nospace t
       completion-cycle-threshold nil ; Number of candidates until cycling turns off
@@ -158,7 +157,7 @@
   (vertico-prescient-completion-styles '(prescient flex))
   ;; See also `prescient--completion-recommended-overrides'
   (vertico-prescient-completion-category-overrides
-   '((file (styles basic basic-remote partial-completion))
+   '((file (styles basic partial-completion))
      (eglot (styles prescient flex))))
   :init
   (vertico-prescient-mode))
@@ -173,7 +172,7 @@
   (corfu-prescient-completion-styles '(prescient flex))
   ;; See also `prescient--completion-recommended-overrides'
   (corfu-prescient-completion-category-overrides
-   '((file (styles basic basic-remote partial-completion))
+   '((file (styles basic partial-completion))
      (eglot (styles prescient flex))))
   :init
   (corfu-prescient-mode))
