@@ -190,6 +190,7 @@
      ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
 
 ;;;; Hotfuzz
+;; Faster version of the flex completion style.
 (use-package hotfuzz
   :demand
   :after orderless              ; Let orderless set up `completion-styles' first
@@ -198,76 +199,6 @@
   ;; Replace flex style with hotfuzz style; it's much faster. See
   ;; https://github.com/axelf4/emacs-completion-bench#readme
   (setq completion-styles (cl-substitute 'hotfuzz 'flex completion-styles)))
-
-;;;; Fussy
-;; Instead of just filtering (e.g. like `orderless' alone), also score the
-;; filtered candidates afterward!
-;;;;; Itself
-(use-package fussy
-  :disabled               ; Less performant than `orderless' with little benefit
-  :ensure (fussy :type git :host github :repo "jojojames/fussy")
-  :commands (fussy-all-completions fussy-try-completions)
-  :custom
-  (completion-styles '(fussy orderless flex))
-
-  (fussy-max-candidate-limit 100)     ; Score only the top N shortest candidates
-  (fussy-compare-same-score-fn 'fussy-histlen->strlen<)
-
-  (orderless-matching-styles '(orderless-initialism orderless-regexp))
-  :config
-  (setq
-   fussy-filter-fn 'fussy-filter-fast   ; See `fussy-fast-regex-fn'
-   fussy-filter-fn 'fussy-filter-orderless
-   )
-  (setq
-   fussy-score-fn 'fussy-sublime-fuzzy-score ; Doesn't work with orderless components
-   fussy-score-fn 'fussy-liquidmetal-score
-   fussy-score-fn 'fussy-hotfuzz-score
-   fussy-score-fn 'fussy-fzf-native-score
-   fussy-score-fn 'fussy-fuz-bin-score
-   fussy-score-fn 'flx-rs-score
-   ))
-
-;;;;; Flx-rs
-(use-package flx-rs
-  ;; :ensure (flx-rs :repo "jcs-elpa/flx-rs" :fetcher github :files (:defaults "bin"))
-  :vc (:url "https://github.com/jcs-elpa/flx-rs.git"
-            :rev :newest)
-  :after flx-rs
-  :commands fussy-score
-  :config (flx-rs-load-dyn))
-
-;;;;; Liquidmetal
-(use-package liquidmetal
-  :after fussy
-  :commands fussy-liquidmetal-score)
-
-;;;;; Fuz-bin
-(use-package fuz-bin
-  ;; :ensure (fuz-bin :repo "jcs-elpa/fuz-bin" :fetcher github :files (:defaults "bin"))
-  :vc (:url "https://github.com/jcs-elpa/fuz-bin.git"
-            :rev :newest)
-  :after fussy
-  :commands fussy-fuz-score
-  :config (fuz-bin-load-dyn))
-
-;;;;; Fuz-native
-(use-package fzf-native
-  ;; :ensure (fzf-native :repo "dangduc/fzf-native" :host github :files (:defaults "bin"))
-  :vc (:url "https://github.com/dangduc/fzf-native.git"
-            :rev :newest)
-  :after fussy
-  :commands fussy-fzf-native-score
-  :config (fzf-native-load-dyn))
-
-;;;;; Subline-fuzzy
-(use-package sublime-fuzzy
-  ;; :ensure (sublime-fuzzy :repo "jcs-elpa/sublime-fuzzy" :fetcher github :files (:defaults "bin"))
-  :vc (:url "https://github.com/jcs-elpa/sublime-fuzzy.git"
-            :rev :newest)
-  :after fussy
-  :commands fussy-sublime-fuzzy-score
-  :config (sublime-fuzzy-load-dyn))
 
 (provide 'completion-vanilla-rcp)
 ;;; completion-vanilla-rcp.el ends here
