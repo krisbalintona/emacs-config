@@ -31,8 +31,8 @@
 ;;;;; Itself
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo
-  :demand
-  :after ox
+  :after org
+  :defer 20
   :ensure-system-package (hugo go)
   :custom
   (org-hugo-base-dir (expand-file-name "hugo/" org-directory))

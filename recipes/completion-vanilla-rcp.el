@@ -33,14 +33,14 @@
 ;;;; Vertico
 ;;;;; Itself
 (use-package vertico
-  :demand                               ; Otherwise won't get loaded immediately
   :general
   ("C-M-s-." #'vertico-repeat)
   (:keymaps 'vertico-map
             "TAB" #'kb/vertico-insert-unless-tramp
             "<escape>" #'minibuffer-keyboard-quit
             "?" #'minibuffer-completion-help)
-  :hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
+  :hook ((minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
+         (on-first-input . vertico-mode))
   :custom
   (vertico-count 13)
   (vertico-resize 'grow-only)
@@ -48,8 +48,6 @@
   :preface
   (add-to-list 'package-pinned-packages '(vertico . "gnu-elpa-devel"))
   :config
-  (vertico-mode 1)
-
   ;; Special for `org-agenda-filter' and `org-tags-view'. See
   ;; https://github.com/minad/vertico?tab=readme-ov-file#org-agenda-filter-and-org-tags-view
   (defun kb/org-enforce-basic-completion (&rest args)
@@ -89,6 +87,7 @@
 
 ;;;;; Vertico-directory
 (use-package vertico-directory
+  :after vertico
   :ensure nil
   ;; More convenient directory navigation commands
   :general (:keymaps 'vertico-map
@@ -100,7 +99,6 @@
 
 ;;;;; Vertico-multiform
 (use-package vertico-multiform
-  :demand
   :after vertico
   :ensure nil
   :custom
@@ -115,7 +113,7 @@
    '(("flyspell-correct-*" grid (vertico-grid-annotate . 20))
      (pdf-view-goto-label (vertico-sort-function . nil))))
   :config
-  (vertico-multiform-mode))
+  (vertico-multiform-mode 1))
 
 ;;;;; Vertico-buffer
 (use-package vertico-buffer
@@ -128,7 +126,6 @@
 ;;;;; Vertico-truncate
 ;; Truncate long lines while leaving match visible
 (use-package vertico-truncate
-  :demand
   :after vertico
   ;; :ensure (:type git
   ;;                :host github
@@ -136,12 +133,11 @@
   :vc (:url "https://github.com/jdtsmith/vertico-truncate.git"
             :rev :newest)
   :config
-  (vertico-truncate-mode))
+  (vertico-truncate-mode 1))
 
 ;;;;; Vertico-prescient
 (use-package vertico-prescient
   :after (prescient vertico)
-  :demand
   :custom
   (vertico-prescient-completion-styles '(prescient flex))
   (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
@@ -182,7 +178,7 @@
      ;; Eglot forces `flex' by default.
      (eglot (styles orderless flex))))
   (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
-  :init
+  :config
   ;; Taken from Doom
   (defun kb/orderless-consult-dispatch (pattern _index _total)
     "Basically `orderless-affix-dispatch-alist' but with prefixes too."
@@ -211,9 +207,8 @@
 ;;;; Hotfuzz
 ;; Faster version of the flex completion style.
 (use-package hotfuzz
-  :demand
   :after orderless              ; Let orderless set up `completion-styles' first
-  :commands fussy-hotfuzz-score
+  :demand
   :config
   ;; Replace flex style with hotfuzz style; it's much faster. See
   ;; https://github.com/axelf4/emacs-completion-bench#readme

@@ -59,7 +59,7 @@
      eshell-term
      eshell-tramp
      eshell-unix))
-  :init
+  :config
   ;; NOTE 2022-01-19: I changed the functionality when passed a nonnumerical
   ;; prefix argument.
   (defun kb/eshell (&optional arg)
@@ -107,7 +107,7 @@ Info node `(eshell)Top'."
                 outline-regexp eshell-prompt-regexp
                 ;; Imenu with eshell prompt history
                 imenu-generic-expression `((nil ,eshell-prompt-regexp 0))))
-  :config
+
   ;; Eshell modules should be loaded manually
   ;; Taken from
   ;; https://protesilaos.com/dotemacs/#h:103a8795-c29c-474f-9ddf-ecafaa2f6775
@@ -174,6 +174,7 @@ Info node `(eshell)Top'."
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
   :demand
+  :after eshell
   :config
   (eshell-syntax-highlighting-global-mode 1))
 

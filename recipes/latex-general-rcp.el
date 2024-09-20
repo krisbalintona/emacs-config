@@ -300,11 +300,12 @@ blacklist, this is mostly for \\section etc."
 ;; Quicker insertion and filling-out of macros. Taken from Doom
 (use-package auctex-latexmk
   :after tex
+  :demand
   :custom
   (TeX-command-default "LatexMk")
   ;; Pass the -pdf flag when TeX-PDF-mode is active.
   (auctex-latexmk-inherit-TeX-PDF-mode t)
-  :init
+  :config
   ;; Add LatexMk as a TeX command
   (auctex-latexmk-setup)
 

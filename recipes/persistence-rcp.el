@@ -43,7 +43,7 @@
                  kmacro-ring
                  shell-command-history))
     (add-to-list 'savehist-additional-variables var))
-  (savehist-mode)
+  (savehist-mode 1)
 
   ;; REVIEW 2024-01-16: Not sure what this does...
   (unless (daemonp)
@@ -53,23 +53,21 @@
 ;; Enable logging of recent files
 (use-package recentf
   :ensure nil
-  :hook (kill-emacs . recentf-save-list)
+  :hook ((on-first-input . recentf-mode)
+         (kill-emacs . recentf-save-list))
   :general (kb/file-keys
              "r" 'recentf-open-files)
   :custom
   (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15)
-  :init
-  (recentf-mode))
+  (recentf-max-menu-items 15))
 
 ;;;; Saveplace
 ;; Save and restore the point's location in files
 (use-package saveplace
   :ensure nil
+  :hook (on-first-file . save-place-mode)
   :custom
-  (save-place-forget-unreadable-files t)
-  :init
-  (save-place-mode))
+  (save-place-forget-unreadable-files t))
 
 ;;;; Desktop
 ;; Save buffers across Emacs sessions
@@ -120,6 +118,7 @@
 ;; Make recovery files
 (use-package files
   :ensure nil
+  :hook (on-first-file . auto-save-visited-mode)
   :custom
   ;; NOTE 2023-01-09: `auto-save-list-file-prefix' and `backup-directory-alist'
   ;; are set by `no-littering'
@@ -150,9 +149,7 @@
   (kept-new-versions 6)
   (kept-old-versions 2)
   (delete-old-versions t)
-  :init
-  (auto-save-visited-mode)
-
+  :config
   ;; HACK 2024-03-03: Prevent auto-save from complaining about long file names
   ;; by hashing them. Copied from Doom Emacs' doom-editor.el. Last updated:
   ;; 3bcee249d3e814ff15ddd59add491625d308352e

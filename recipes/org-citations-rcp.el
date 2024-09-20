@@ -31,6 +31,7 @@
 ;; Built-in citations in org-mode
 (use-package oc
   :ensure nil
+  :after org
   :general (:keymaps 'org-mode-map [remap citar-insert-citation] 'org-cite-insert)
   :custom
   (org-cite-global-bibliography kb/bib-files)
@@ -78,31 +79,6 @@
   (citar-notes-paths (list kb/notes-dir))
   (citar-open-entry-function #'citar-open-entry-in-file)
   (citar-default-action 'kb/citar-open-pdf-in-zotero)
-  :init
-  ;; Original function. Was able to discover the appropriate link here:
-  ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
-  ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
-  ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
-  ;; for a different solution
-  (defun kb/citar-open-pdf-in-zotero (citekey)
-    "Open PDF associated with CITEKEY in Zotero."
-    (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
-              (files-list (delete-dups (apply #'append files-hash)))
-              ;; OPTIMIZE 2023-07-16: The following line of code only works if
-              ;; there is only one PDF attached to the item, and that PDF is
-              ;; the document. For progress on differentiating mere
-              ;; attachments to PDF documents, see the issue linked above
-              (pdf (car (-filter
-                         (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
-              (zotero-key (f-base (f-parent pdf))))
-        (citar-file-open-external
-         (concat "zotero://open-pdf/library/items/" zotero-key))
-      (message "No PDF for %s!" citekey)))
-  (defun kb/citar-open-pdfs-in-zotero (citekeys)
-    "Open PDFs associated with CITEKEYS in Zotero."
-    (interactive (list (citar-select-refs)))
-    (dolist (citekey citekeys)
-      (kb/citar-open-pdf-in-zotero citekey)))
   :config
   ;; Immediately set citation prefix and suffix and enable `typo-mode'
   ;; temporarily while inserting
@@ -164,7 +140,32 @@
         (list citar-indicator-files-icons
               citar-indicator-links-icons
               citar-indicator-notes-icons
-              citar-indicator-cited-icons)))
+              citar-indicator-cited-icons))
+
+  ;; Original function. Was able to discover the appropriate link here:
+  ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
+  ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
+  ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
+  ;; for a different solution
+  (defun kb/citar-open-pdf-in-zotero (citekey)
+    "Open PDF associated with CITEKEY in Zotero."
+    (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
+              (files-list (delete-dups (apply #'append files-hash)))
+              ;; OPTIMIZE 2023-07-16: The following line of code only works if
+              ;; there is only one PDF attached to the item, and that PDF is
+              ;; the document. For progress on differentiating mere
+              ;; attachments to PDF documents, see the issue linked above
+              (pdf (car (-filter
+                         (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
+              (zotero-key (f-base (f-parent pdf))))
+        (citar-file-open-external
+         (concat "zotero://open-pdf/library/items/" zotero-key))
+      (message "No PDF for %s!" citekey)))
+  (defun kb/citar-open-pdfs-in-zotero (citekeys)
+    "Open PDFs associated with CITEKEYS in Zotero."
+    (interactive (list (citar-select-refs)))
+    (dolist (citekey citekeys)
+      (kb/citar-open-pdf-in-zotero citekey))))
 
 ;;;;; Faster renderer
 ;; Replaces the *VERY SLOW* `'org-cite-basic-activate' (which `citar' relies on

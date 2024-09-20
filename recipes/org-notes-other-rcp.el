@@ -486,7 +486,7 @@ Uses the current annotation at point's ID."
 ;;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
 (use-package saveplace-pdf-view
-  :demand)
+  :defer 10)
 
 ;;;;; Org-noter
 (use-package org-noter
@@ -636,7 +636,7 @@ Commands that control MPV playback mimic MPV keybinds."
      ("Music"  "m" ytdl-music-folder ytdl-music-extra-args)
      ("Videos" "v"  ytdl-video-folder ytdl-video-extra-args)
      ("Temp" "t" ,(expand-file-name "/tmp/") ("-S" "res:720,fps"))))
-  :init
+  :config
   (with-eval-after-load 'org
     ;; Custom `org-attach' integration
     (defun kb/ytdl-org-attach (url)
@@ -665,7 +665,6 @@ A modified version of `ytdl-download'."
 
 ;;;; Org-remark
 (use-package org-remark
-  :demand
   :hook ((Info-mode eww-mode) . org-remark-mode)
   :general (:keymaps 'org-remark-mode-map
                      :prefix "C-c r"
@@ -914,9 +913,9 @@ When called with PREFIX, hide all previews."
             "u" 'lister-mode-unmark
             "U" 'lister-mode-unmark-all
             )
-  :init
-  (require 'lister-mode) ; Require since this proves the "core" definitions for the functions below
   :config
+  (require 'lister-mode) ; Require since this proves the "core" definitions for the functions below
+
   ;; Helpers: movement vertically
   (defun kb/lister-move-item-up (ewoc pos)
     "Move item and its sublist one up, preserving `org-mode'-like indentation."

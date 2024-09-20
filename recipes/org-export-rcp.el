@@ -171,6 +171,7 @@ See the HACK comment below."
 ;;;;; Itself
 (use-package ox-latex
   :ensure nil
+  :after org
   :custom
   (org-latex-compiler "lualatex")
   ;; Beautiful source block exports to latex. Read help buffer for much more
@@ -422,7 +423,6 @@ Uses my 'latex-paper' backend. See the original
 
 ;;;; Org-contrib
 (use-package org-contrib
-  :demand
   :after org
   :config
   (require 'ox-extra)
@@ -431,8 +431,8 @@ Uses my 'latex-paper' backend. See the original
 ;;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
-  :after ox
-  :demand
+  :after org
+  :defer 20
   :ensure-system-package pandoc)
 
 ;;;; Ox-clip

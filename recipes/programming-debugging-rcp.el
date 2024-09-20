@@ -108,16 +108,17 @@
 ;;;; Dape
 ;; Dap-mode but without LSP-mode
 (use-package dape
-  :demand ; OPTIMIZE 2024-02-02: Current version needs to me demanded to set dape-key-prefix
   ;; :ensure (:type git :host github :repo "svaante/dape")
-  :general (:keymaps 'prog-mode-map
-                     "C-c d" dape-global-map)
+  :defer 10
   :custom
   (dape-key-prefix nil)                 ; I make my own binding
   (dape-buffer-window-arrangement 'right)
   (dape-stepping-granularity 'instruction)
   (dape-info-variable-table-aligned t)
   :config
+  (general-define-key :keymaps 'prog-mode-map
+                      "C-c d" dape-global-map)
+
   (dape-breakpoint-global-mode 1)
   (diminish 'dape-breakpoint-global-mode)
 

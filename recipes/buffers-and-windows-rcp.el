@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (after-init . (lambda () (unless (server-running-p)
-                                   (server-mode))))
+                              (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -41,17 +41,17 @@
 ;; Reverting and traversing window configurations across time
 (use-package winner
   :ensure nil
+  :hook (on-first-buffer . winner-mode)
   :general ("C-<left>" 'winner-undo
             "C-<right>" 'winner-redo)
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
-  (winner-boring-buffers '("*Completions*"))
-  :init
-  (winner-mode))
+  (winner-boring-buffers '("*Completions*")))
 
 ;;;;; Windmove
 (use-package windmove
   :ensure nil
+  :hook (on-first-input . windmove-mode)
   :general (:keymaps 'windmove-mode-map
                      "C-M-s-h" 'windmove-left
                      "C-M-s-j" 'windmove-down
@@ -64,9 +64,7 @@
                      "C-M-s-H" 'windmove-swap-states-left
                      "C-M-s-J" 'windmove-swap-states-down
                      "C-M-s-K" 'windmove-swap-states-up
-                     "C-M-s-L" 'windmove-swap-states-right)
-  :init
-  (windmove-mode))
+                     "C-M-s-L" 'windmove-swap-states-right))
 
 ;;;;; Transpose-frame
 ;; Rotate window configuration
@@ -275,6 +273,7 @@
 ;;;;; Tab-bar
 (use-package tab-bar
   :ensure nil
+  :demand
   :general (:keymaps 'tab-prefix-map
                      "w" 'tab-bar-move-window-to-tab)
   :custom
@@ -288,9 +287,9 @@
    '(tab-bar-format-tabs-groups
      tab-bar-format-align-right
      tab-bar-format-global))
-  :init
-  (tab-bar-mode)
-  (tab-bar-history-mode))
+  :config
+  (tab-bar-mode 1)
+  (tab-bar-history-mode 1))
 
 ;;;;; Project-tab-groups
 (use-package project-tab-groups
@@ -418,15 +417,16 @@
 ;;;;; Switchy-window
 ;; `other-window' by most recently used
 (use-package switchy-window
+  :hook (on-first-buffer . switchy-window-minor-mode)
   :general (:keymaps 'switchy-window-minor-mode-map
                      [remap other-window] #'switchy-window)
+
   :init
-  (switchy-window-minor-mode)
   (defvar-keymap switchy-window-repeat-map
     :doc "Keymap to repeat `switchy-window'.  Used in `repeat-mode'."
     :repeat t
     "o" #'switchy-window)
-
+  :config
   (defun kb/switchy-window (&optional arg)
     "Switch to other windows in most-recently-used order.
 If prefix ARG is given, use least-recently-used order.
@@ -451,7 +451,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                             ignore-window-parameters))
+                                        ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
@@ -529,17 +529,20 @@ timestamp)."
      ("Emacs built-ins"
       (filename . "/usr/local/share/emacs"))))
   (ibuffer-filter-group-name-face '(:inherit (success bold)))
-  (ibuffer-saved-filter-groups      ; NOTE 2024-02-11: Order of entries matters!
-   `(("Basic"
-      ("Help" ,(-flatten `(or ,(mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes))))
-      ("Org" (directory . ,org-directory))
-      ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir))
-                                            (remove "/home/krisbalintona/.emacs.d/recipes"
-                                                    load-path)))))
-      ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
   :config
+  (use-package dash :demand)          ; Dependency for -flatten
+  (setopt ibuffer-saved-filter-groups ; NOTE 2024-02-11: Order of entries matters!
+          `(("Basic"
+             ("Help" ,(-flatten `(or ,(mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes))))
+             ("Org" (directory . ,kb/org-dir))
+             ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir))
+                                                   (remove "/home/krisbalintona/.emacs.d/recipes"
+                                                           load-path)))))
+             ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
+
   ;; The following columns are taken from Doom Emacs.
   ;; Display buffer icons on GUI
+  (use-package nerd-icons :demand)
   (define-ibuffer-column icon (:name "   ")
     (let ((icon (if (and (buffer-file-name)
                          (nerd-icons-auto-mode-match?))
@@ -558,7 +561,6 @@ timestamp)."
 
 ;;;;; Burly
 (use-package burly
-  :demand
   ;; :ensure (:depth 1
   ;;                 :fetcher github
   ;;                 ;; NOTE 2023-07-15: See
@@ -571,15 +573,14 @@ timestamp)."
   :vc (:url "https://github.com/alphapapa/burly.el.git"
             :rev :newest
             :branch "wip/readablep")
-  :config
-  (burly-tabs-mode 1))
+  :hook (on-switch-buffer . burly-tabs-mode))
 
 ;;;;; Perfect-margin
 ;; Center the window contents via setting the margins
 (use-package perfect-margin
   :disabled ; NOTE 2024-09-19: Went on to start `pinching-margins' because the code wasn't working and is bloated
-  :demand
   :diminish
+  :hook (on-first-input . perfect-margin-mode)
   :custom
   (fringes-outside-margins nil)
   (perfect-margin-visible-width 128)
@@ -593,8 +594,6 @@ timestamp)."
        "Ignore if `olivetti-mode' is active."
        (with-selected-window window (bound-and-true-p olivetti-mode)))))
   :config
-  (perfect-margin-mode 1)
-
   ;; Additional mouse bindings for now wider margins. Taken from
   ;; https://github.com/mpwang/perfect-margin#additional-binding-on-margin-area
   (dolist (margin '("<left-margin> " "<right-margin> "))
@@ -749,6 +748,7 @@ Determine if WINDOW is splittable."
 (use-package activities
   ;; :ensure (:type git :host github :repo "alphapapa/activities.el")
   :vc (:rev :newest)
+  :defer 3
   :general (:prefix "C-c a"
                     "d" 'activities-define
                     "n" 'activities-new
@@ -761,7 +761,7 @@ Determine if WINDOW is splittable."
                     "l" 'activities-list)
   :custom
   (activities-kill-buffers t)
-  :init
+  :config
   (activities-mode 1)
   (activities-tabs-mode 1))
 

@@ -227,8 +227,7 @@ Additionally, run `kb/themes-hook'."
 
 ;;;; Modeline
 ;;;;; Nerd-icons
-(use-package nerd-icons
-  :demand)
+(use-package nerd-icons)
 
 ;;;;; Doom-modeline
 ;; Sleek modeline from Doom Emacs
@@ -355,7 +354,7 @@ This version removes delimiters.")
 
   ;; Add things to `global-mode-string'
   (add-to-list 'global-mode-string '(:eval
-                                     (let ((branch (car (vc-git-branches))))
+                                     (when-let ((branch (and (featurep 'vc) (car (vc-git-branches)))))
                                        (unless (or (string= branch "master")
                                                    (string= branch "main"))
                                          vc-mode))))
@@ -412,13 +411,12 @@ This version removes delimiters.")
 ;; Adds an interactive indicator for the view's position in the current buffer
 ;; to the modeline
 (use-package mlscroll
-  :hook (kb/themes . kb/mlscroll-set-colors)
+  :hook ((on-first-buffer . mlscroll-mode)
+         (kb/themes . kb/mlscroll-set-colors))
   :custom
   (mlscroll-right-align nil) ; Doesn't work well with `mode-line-right-align-edge'
   (mlscroll-alter-percent-position nil) ; I position it myself
-  :init
-  (mlscroll-mode 1)
-
+  :config
   (defun kb/mlscroll-set-colors ()
     "Set colors for `mlscroll'."
     (when (bound-and-true-p mlscroll-mode)
@@ -483,25 +481,23 @@ change to if called with ARG."
 ;;;;; Lin
 ;; `hl-line-mode' but contextual based on mode (e.g. more visible)
 (use-package lin
+  :hook (on-first-buffer . lin-global-mode)
   :custom
   (lin-face 'lin-cyan)
-  :init
-  (lin-global-mode)
   :config
   (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
 
 ;;;;; Pulsar
 (use-package pulsar
-  :hook ((consult-after-jump . pulsar-recenter-top)
+  :hook ((on-first-buffer . pulsar-global-mode)
+         (consult-after-jump . pulsar-recenter-top)
          (consult-after-jump . pulsar-reveal-entry)
          (imenu-after-jump . pulsar-recenter-top)
          (imenu-after-jump . pulsar-reveal-entry))
   :custom
   (pulsar-pulse t)
   (pulsar-delay 0.05)
-  (pulsar-iterations (/ 2 pulsar-delay))
-  :init
-  (pulsar-global-mode))
+  (pulsar-iterations (/ 2 pulsar-delay)))
 
 (provide 'ui-rcp)
 ;;; ui-rcp.el ends here

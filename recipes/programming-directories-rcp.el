@@ -133,10 +133,10 @@ command."
 ;;;;; Dired-hist
 ;; History for dired buffers
 (use-package dired-hist
-  :demand
   ;; :ensure (:host github :repo "karthink/dired-hist")
   :vc (:url "https://github.com/karthink/dired-hist.git")
   :after dired
+  :demand
   :general
   (:keymaps 'dired-mode-map
             "l" 'dired-hist-go-back
@@ -174,9 +174,7 @@ command."
   (:keymaps 'dired-mode-map
             [remap dired-do-async-shell-command] 'dwim-shell-command
             [remap dired-do-shell-command] 'dwim-shell-command
-            [remap dired-smart-shell-command] 'dwim-shell-command)
-  :init
-  (require 'dwim-shell-commands))       ; Set of command line utilities
+            [remap dired-smart-shell-command] 'dwim-shell-command))
 
 (provide 'programming-directories-rcp)
 ;;; programming-directories-rcp.el ends here

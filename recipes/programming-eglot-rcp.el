@@ -85,7 +85,8 @@ functions."
   :vc (:url "https://github.com/jdtsmith/eglot-booster.git"
             :rev :newest)
   :after eglot
-  :init
+  :demand
+  :config
   (eglot-booster-mode 1))
 
 ;;;; Languages

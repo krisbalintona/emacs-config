@@ -321,7 +321,7 @@ Side effects occur if the parent of the current headline has a
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
-  (org-super-agenda-mode)
+  (org-super-agenda-mode 1)
   (setq org-agenda-custom-commands
         '(("n" "Now"
            ((alltodo ""

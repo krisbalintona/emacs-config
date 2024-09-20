@@ -262,9 +262,9 @@ With a prefix argument, show NLINES of context."
                           'magit-insert-staged-changes t))
 
 ;;;;; Magit-log date headers
+;; Add dates to magit-logs
 (with-eval-after-load 'magit
-  ;; Add dates to magit-logs
-  (use-package ov :demand) ; Dependency
+  (require 'ov)                         ; Dependency
 
   (defun unpackaged/magit-log--add-date-headers (&rest _ignore)
     "Add date headers to Magit log buffers."
@@ -307,12 +307,6 @@ With a prefix argument, show NLINES of context."
   (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
   )
 
-;;;;; Magit-lfs
-(use-package magit-lfs
-  :demand
-  :ensure-system-package (git-lfs)
-  :after magit)
-
 ;;;;; Forge
 ;; Support for git forges (e.g. GitLab and GitHub).
 ;; NOTE 2022-06-01: Make sure a github and/or gitlab token is stored in either
@@ -351,10 +345,8 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Abdridge-diff
 (use-package abridge-diff
-  :demand
-  :diminish
-  :config
-  (abridge-diff-mode 1))
+  :hook (on-first-file . abridge-diff-mode)
+  :diminish)
 
 ;;;;; Keychain-environment
 (use-package keychain-environment
@@ -523,10 +515,10 @@ With a prefix argument, show NLINES of context."
   (agitate-log-edit-informative-show-root-log nil)
   (agitate-log-edit-informative-show-files t)
   :init
-  ;; Make window layout when in `log-edit-mode' similarly informative to Magit
-  (agitate-log-edit-informative-mode 1)
-
-  (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote))
+  (with-eval-after-load 'vc-git
+    (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote))
+  :config
+  (agitate-log-edit-informative-mode 1))
 
 ;;;; QoL
 ;;;;; Git-gutter

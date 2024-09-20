@@ -34,7 +34,8 @@
   ;; :ensure (corfu :files (:defaults "extensions/*"))
   :vc (:url "https://github.com/minad/corfu.git"
             :rev :newest)
-  :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+  :hook ((on-first-input . global-corfu-mode)
+         (lsp-completion-mode . kb/corfu-setup-lsp)) ; Use corfu for lsp completion
   :general
   (:keymaps 'corfu-map
             "M-d" 'corfu-info-documentation
@@ -78,8 +79,6 @@
 
   ;; Other
   (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
-  :init
-  (global-corfu-mode 1)
   :config
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
   ;; be adopted in a variable pitch buffer) have inconsistent spacing
@@ -146,7 +145,6 @@ default lsp-passthrough."
 ;;;;; Corfu-prescient
 (use-package corfu-prescient
   :after (prescient corfu)
-  :demand
   :custom
   (corfu-prescient-completion-styles '(prescient flex))
   (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
@@ -159,8 +157,9 @@ default lsp-passthrough."
      (file (styles partial-completion prescient))
      ;; Eglot forces `flex' by default.
      (eglot (styles prescient flex))))
-  :config
-  (corfu-prescient-mode 1))
+  :init
+  (with-eval-after-load 'corfu
+    (corfu-prescient-mode 1)))
 
 ;;;; Kind-icon
 ;; Icons for corfu!
@@ -216,23 +215,27 @@ default lsp-passthrough."
      (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
      (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
      (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
-  :config
+  :init
   ;; TODO 2022-05-24: See if I can use the cooler icons from
   ;; `lsp-bridge-icon--icons' without requiring the package
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+  (with-eval-after-load 'corfu
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
 ;;;; Nerd-icons-corfu
 ;; Use nerd-icons with corfu
 (use-package nerd-icons-corfu
-  :after (nerd-icons corfu)
-  :demand
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+  :after corfu
+  :autoload nerd-icons-corfu-formatter
+  :init
+  (with-eval-after-load 'corfu
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)))
 
 ;;;; Cape
 ;; Expand capf functionality with corfu! See an updated list of the defined capf
 ;; functions in the package's commentary.
 (use-package cape
+  :after corfu ; FIXME 2024-09-20: Not sure why, but something in :hook is making this package load, so I force deferral with this
+  :autoload (kb/cape-capf-setup-elisp kb/cape-capf-setup-elisp kb/cape-capf-setup-lsp kb/cape-capf-setup-commit)
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
          ((git-commit-mode vc-git-log-edit-mode) . kb/cape-capf-setup-commit))
@@ -251,8 +254,7 @@ default lsp-passthrough."
            "_" 'cape-tex
            "^" 'cape-tex
            "&" 'cape-sgml
-           "r" 'cape-rfc1345
-           "y" (cape-capf-interactive (cape-company-to-capf #'company-yasnippet)))
+           "r" 'cape-rfc1345)
   ([remap dabbrev-completion] 'cape-dabbrev)
   (:keymaps 'corfu-map
             :states 'insert
@@ -262,7 +264,7 @@ default lsp-passthrough."
                                          (corfu-quit)))
   :custom
   (cape-dabbrev-min-length 2)
-  :init
+  :config
   ;; Elisp
   (defun kb/cape-capf-setup-elisp ()
     "Replace the default `elisp-completion-at-point'
@@ -293,19 +295,19 @@ Additionally, add `cape-file' as early as possible to the list."
       (define-key vc-git-log-edit-mode-map (kbd "<tab>") 'completion-at-point))
     (when (boundp 'git-commit-mode-map)
       (define-key git-commit-mode-map (kbd "<tab>") 'completion-at-point))
-    (let ((result))
+    (let ((result nil))
       (dolist (element '(cape-dabbrev cape-elisp-symbol) result)
         (add-to-list 'completion-at-point-functions element))))
-  :config
+
   ;; For pcomplete. For now these two advices are strongly recommended to
   ;; achieve a sane Eshell experience. See
   ;; https://github.com/minad/corfu#completing-with-corfu-in-the-shell-or-eshell
-
-  ;; Silence the pcomplete capf, no errors or messages!
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-  ;; Ensure that pcomplete does not write to the buffer and behaves as a pure
-  ;; `completion-at-point-function'.
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+  (with-eval-after-load 'pcomplete
+    ;; Silence the pcomplete capf, no errors or messages!
+    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+    ;; Ensure that pcomplete does not write to the buffer and behaves as a pure
+    ;; `completion-at-point-function'.
+    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)))
 
 (provide 'completion-inline-rcp)
 ;;; completion-inline-rcp.el ends here

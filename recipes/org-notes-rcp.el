@@ -32,7 +32,8 @@
 (use-package denote
   :vc (:url "https://github.com/protesilaos/denote.git"
             :rev :newest)
-  :autoload 'denote-directory-files
+  :autoload (denote-directory-files kb/denote-auto-rename)
+  :commands (denote denote-open-or-create)
   :hook ((dired-mode . denote-dired-mode)
          (denote-dired-mode . toggle-truncate-lines)
          (before-save . kb/denote-insert-identifier-maybe)
@@ -92,7 +93,14 @@
   (denote-rename-confirmations '(add-front-matter))
   :preface
   (add-to-list 'package-pinned-packages '(denote . "gnu-elpa-devel"))
-  :init
+  :config
+  (denote-rename-buffer-mode 1)
+  (denote-menu-bar-mode 1)
+
+  ;; Set `org-refile-targets'
+  (add-to-list 'org-refile-targets
+               `(,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2)))
+
   ;; Rename denote note. Meant to be added to `after-save-hook'
   (defun kb/denote-auto-rename ()
     "Auto rename denote file."
@@ -106,16 +114,13 @@
   ;; Camel cased keywords
   (defun kb/denote-sluggify-keyword (str)
     "Sluggify STR while joining separate words.
-My version camelCases keywords."
+  My version camelCases keywords."
     (s-lower-camel-case
      (denote-slug-hyphenate str)))
   (setq denote-file-name-slug-functions
         '((title . denote-sluggify-title)
           (signature . denote-sluggify-signature)
           (keyword . kb/denote-sluggify-keyword)))
-  :config
-  (denote-rename-buffer-mode 1)
-  (denote-menu-bar-mode 1)
 
   ;; HACK 2024-03-03: Temporary fix for org-capture creating CUSTOM_ID
   ;; properties. See related issue:
@@ -523,6 +528,7 @@ replacement."
 ;;;; Citar-denote
 (use-package citar-denote
   :demand
+  :after denote
   :diminish
   :custom
   (citar-denote-subdir t)

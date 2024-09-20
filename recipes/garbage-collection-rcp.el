@@ -99,13 +99,12 @@
 ;; Also see https://elpa.gnu.org/packages/emacs-gc-stats.html
 (use-package emacs-gc-stats
   :disabled
+  :hook (on-first-input . emacs-gc-stats-mode)
   :custom
   ;; Optionally reset Emacs GC settings to default values (recommended)
   (emacs-gc-stats-gc-defaults 'emacs-defaults)
   (emacs-gc-stats-remind (* 7))  ; Optionally set reminder to upload the stats
-  (emacs-gc-stats-inhibit-command-name-logging nil)
-  :init
-  (emacs-gc-stats-mode))
+  (emacs-gc-stats-inhibit-command-name-logging nil))
 
 (provide 'garbage-collection-rcp)
 ;;; garbage-collection-rcp.el ends here

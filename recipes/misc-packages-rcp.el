@@ -72,10 +72,12 @@
   :hook (Info-selection . info-colors-fontify-node))
 
 ;;;;; Inform
-;; Package `inform’ provides links from elisp symbols (quoted functions, variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
+;; Package `inform’ provides links from elisp symbols (quoted functions,
+;; variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
 (use-package inform
   :disabled
-  :demand)
+  :demand
+  :after info)
 
 ;;;; Timers
 ;;;;; Tmr
@@ -105,7 +107,6 @@
 
 ;;;;; Work-timer
 (use-package work-timer
-  :demand
   ;; :ensure (:host github
   ;;                :protocol ssh
   ;;                :repo "krisbalintona/work-timer"
@@ -113,9 +114,8 @@
   ;;                :files (:defaults "*.mp3"))
   :vc (:url "git@github.com:krisbalintona/work-timer.git"
             :rev :newest)
+  :defer 5
   :hook (kb/themes . kb/work-timer-set-faces)
-  :general (kb/open-keys
-             "w" work-timer-prefix-map)
   :custom
   (work-timer-debug nil)
   (work-timer-time-format "%.2m:%.2s")
@@ -141,8 +141,11 @@
            (foreground (if dark-p dark-foreground light-foreground)))
       (set-face-foreground 'work-timer-mode-line foreground)))
   :config
-  (work-timer-with-org-clock-mode)
-  (kb/work-timer-set-faces))
+  (work-timer-with-org-clock-mode 1)
+  (kb/work-timer-set-faces)
+
+  ;; We do this because a :general complains about a symbol's value being void
+  (kb/open-keys "w" work-timer-prefix-map))
 
 ;;;; Writing
 ;;;;; Sentex
@@ -500,7 +503,12 @@ This is a difference in multitude of %s."
 ;;;; Built-in Emacs modes/packages
 (use-package emacs
   :ensure nil
-  :hook (messages-buffer-mode . visual-line-mode)
+  :hook ((messages-buffer-mode . visual-line-mode)
+         (on-first-file . undelete-frame-mode)
+         (on-first-buffer . global-so-long-mode)
+         (on-first-buffer . repeat-mode)
+         (on-first-buffer . find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
+         (on-first-input . minibuffer-electric-default-mode))
   :general
   ;; Remap these defaults; they are effectively the same while phasing out the
   ;; need the *-region binds
@@ -523,12 +531,7 @@ This is a difference in multitude of %s."
   (kill-ring-deindent-mode nil)
   (window-divider-default-places 'bottom-only)
   (custom-search-field nil)
-  :init
-  (undelete-frame-mode 1)
-  (global-so-long-mode 1)
-  (repeat-mode 1)
-  (find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
-  (minibuffer-electric-default-mode 1)
+  :config
   (when (bound-and-true-p evil-local-mode)
     (general-unbind 'normal help-mode-map "SPC")
     (general-unbind 'normal custom-mode-map "SPC")))
@@ -579,12 +582,15 @@ interactively, then delete the register instead of jumping to it."
 ;;;;; Midnight
 (use-package midnight
   :ensure nil
-  :init
+  :defer 20
+  :config
   (midnight-mode 1))
 
 ;;;;; Pixel-scroll
 (use-package pixel-scroll
   :ensure nil
+  :hook ((on-first-input . pixel-scroll-mode)
+         (on-first-input . pixel-scroll-precision-mode))
   :custom
   (pixel-scroll-precision-interpolate-page t)
   (pixel-scroll-precision-interpolation-factor 1)
@@ -648,10 +654,7 @@ ARG and REDISPLAY are identical to the original function."
                (t
                 (advice-remove 'scroll-up 'kb/pixel-scroll-up)
                 (advice-remove 'scroll-down 'kb/pixel-scroll-down)
-                (advice-remove 'recenter 'kb/pixel-recenter)))))
-
-  (pixel-scroll-mode 1)
-  (pixel-scroll-precision-mode 1))
+                (advice-remove 'recenter 'kb/pixel-recenter))))))
 
 ;;;; Other
 ;;;;; Whole-line-or-region
@@ -672,10 +675,8 @@ ARG and REDISPLAY are identical to the original function."
 ;;;;; Clippety
 ;; Nearly system-wide mutual clipboard support
 (use-package clipetty
-  :demand
-  :diminish
-  :config
-  (global-clipetty-mode 1))
+  :hook (on-first-buffer . global-clipetty-mode)
+  :diminish)
 
 ;;;;; Image-popup
 ;; Match height of image to line height (?)
@@ -690,24 +691,20 @@ ARG and REDISPLAY are identical to the original function."
 ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
 ;; differences
 (use-package form-feed
-  :demand
+  :hook (on-first-buffer . global-form-feed-mode)
   :diminish
   :custom
   (form-feed-include-modes
    '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
-  (form-feed-exclude-modes nil)
-  :config
-  (global-form-feed-mode 1))
+  (form-feed-exclude-modes nil))
 
 ;;;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode
-  :commands 'engine/search-duckduckgo
+  :commands engine/search-duckduckgo
   :custom
   (engine/browser-function 'browse-url-generic)
   :config
-  (engine-mode 1)
-
   (defengine amazon
     "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s")
 
@@ -729,7 +726,9 @@ ARG and REDISPLAY are identical to the original function."
 
   (defengine youtube
     "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
-    :keybinding "y"))
+    :keybinding "y")
+
+  (engine-mode 1))
 
 ;;;;; Selection-highlight-mode
 (use-package selection-highlight-mode
@@ -738,7 +737,7 @@ ARG and REDISPLAY are identical to the original function."
                  :repo "balloneij/selection-highlight-mode")
   :custom
   (selection-highlight-mode-min-length 3)
-  :init
+  :config
   (selection-highlight-mode))
 
 ;;;;; Casual-suite
@@ -755,12 +754,10 @@ ARG and REDISPLAY are identical to the original function."
 ;;;;; Async.el
 ;; Async library and a few small but useful implementations
 (use-package async
-  :demand
+  :hook ((on-first-buffer . dired-async-mode)
+         (on-first-buffer . async-bytecomp-package-mode))
   :custom
-  (async-bytecomp-allowed-packages 'all)
-  :config
-  (dired-async-mode 1)
-  (async-bytecomp-package-mode 1))
+  (async-bytecomp-allowed-packages 'all))
 
 ;;;;; Info
 (use-package info
@@ -769,11 +766,9 @@ ARG and REDISPLAY are identical to the original function."
 
 ;;;;; Which-func
 (use-package which-func
-  :demand
+  :hook (on-first-file . which-function-mode)
   :custom
-  (which-func-modes '(prog-mode))
-  :config
-  (which-function-mode 1))
+  (which-func-modes '(prog-mode)))
 
 ;;;;; Grep
 (use-package grep

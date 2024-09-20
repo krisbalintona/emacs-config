@@ -137,7 +137,7 @@ fail on poorly-designed websites."
 ;;;;; Language-detection
 ;; Detects language of current buffer
 (use-package language-detection
-  :demand
+  :defer 15
   :config
   (with-eval-after-load 'eww
     ;; Has proper syntax highlighting in `eww' (and thus `elfeed-show-mode') from

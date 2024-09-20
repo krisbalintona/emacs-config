@@ -27,6 +27,7 @@
 ;; Use fish's completions (via `pcomplete') in eshell and shell buffers
 (use-package fish-completion
   :demand
+  :after pcomplete
   :autoload 'global-fish-completion-mode
   :custom
   (fish-completion-fallback-on-bash-p t)

@@ -129,7 +129,7 @@
 ;; Additionally, `orderless' has style "dispatchers," i.e., I can define
 ;; predicates for what filtering style to use for which token
 (use-package prescient
-  :demand
+  :hook (on-first-input . prescient-persist-mode)
   :custom
   ;; (completion-styles '(prescient flex))
   ;; NOTE 2024-02-03: Flex is chosen as a backup in case nothing in prescient is
@@ -143,21 +143,17 @@
   (prescient-sort-full-matches-first t)
   (prescient-history-length 200)
   (prescient-frequency-decay 0.997)
-  (prescient-frequency-threshold 0.05)
-  :config
-  (prescient-persist-mode 1))
+  (prescient-frequency-threshold 0.05))
 
 ;;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
-  :demand
+  :hook (on-first-input . marginalia-mode)
   :custom
   (marginalia-max-relative-age 0)
   (marginalia-align 'right)
   (marginalia-field-width 80)
-  (marginalia-align-offset -2)          ; Two to the left
-  :config
-  (marginalia-mode 1))
-
+  (marginalia-align-offset -2))         ; Two to the left
+  
 (provide 'completion-general-rcp)
 ;;; completion-general-rcp.el ends here

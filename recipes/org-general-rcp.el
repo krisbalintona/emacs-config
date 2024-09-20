@@ -96,7 +96,7 @@
 ;;;;; Org-num
 (use-package org-num
   :ensure nil
-  :diminish
+  :after org  :diminish
   :general (kb/toggle-keys
              :keymaps 'org-mode-map
              "n" 'org-num-mode)
@@ -110,6 +110,7 @@
 (use-package org-indent
   :disabled
   :ensure nil
+  :after org
   :diminish
   :custom
   (org-indent-indentation-per-level 2)
@@ -188,6 +189,7 @@ have `org-warning' face."
 ;;;;; Org-footnote
 (use-package org-footnote
   :ensure nil
+  :after org
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)          ; Automatically renumber
@@ -195,8 +197,8 @@ have `org-warning' face."
 
 ;;;;; Org-attach
 (use-package org-attach
-  :demand                               ; Need `org-attach-id-dir' elsewhere
   :ensure nil
+  :after org
   :custom
   (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
   (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
@@ -212,6 +214,7 @@ have `org-warning' face."
 ;;;;; Org-id
 (use-package org-id
   :ensure nil
+  :after org
   :custom
   (org-clone-delete-id t)
   (org-id-method 'ts)
@@ -220,10 +223,10 @@ have `org-warning' face."
 ;;;;; Org-refile
 (use-package org-refile
   :ensure nil
+  :after org
   :custom
   (org-refile-targets
-   `((,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2))
-     (nil . (:maxlevel . 2))))
+   `((nil . (:maxlevel . 2))))
   (org-refile-use-cache nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
@@ -241,6 +244,7 @@ have `org-warning' face."
 ;;;;; Org-faces
 (use-package org-faces
   :ensure nil
+  :after org
   :custom
   (org-fontify-todo-headline nil)
   (org-fontify-done-headline nil)
@@ -250,6 +254,7 @@ have `org-warning' face."
 ;;;;; Org-src
 (use-package org-src
   :ensure nil
+  :after org
   :custom
   (org-src-fontify-natively t)
   (org-src-block-faces nil))
@@ -257,6 +262,7 @@ have `org-warning' face."
 ;;;;; Org-archive
 (use-package org-archive
   :ensure nil
+  :after org
   :custom
   (org-archive-subtree-save-file-p t)  ; Save archive file always
   :config
@@ -277,6 +283,7 @@ have `org-warning' face."
 ;;;;; Itself
 (use-package ob
   :ensure nil
+  :after org
   :hook (after-init . (lambda ()
                         "Activate languages"
                         (org-babel-do-load-languages
@@ -289,7 +296,7 @@ have `org-warning' face."
 ;;;;; Ob-mermaid
 (use-package mermaid-mode)
 (use-package ob-mermaid
-  :after ob
+  :after (org ob)
   :custom
   (ob-mermaid-cli-path (executable-find "mmdc"))
   :config
@@ -341,6 +348,7 @@ have `org-warning' face."
 ;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
 (use-package org-superstar  ;; Improved version of org-bullets
+  :after org
   :ghook 'org-mode-hook
   :gfhook 'kb/org-superstar-auto-lightweight-mode
   :custom
@@ -397,6 +405,7 @@ have `org-warning' face."
 (use-package org-bars
   :disabled                    ; Not much value, and sometimes even distracting
   :ensure (org-bars :type git :host github :repo "tonyaldon/org-bars")
+  :after org
   :ghook 'org-mode-hook
   :init
   ;; Set these in init for some reason
@@ -410,6 +419,7 @@ have `org-warning' face."
 ;;;;; Olivetti
 ;; Better writing environment
 (use-package olivetti
+  :after org
   :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
          (kb/themes . (lambda ()
                         (with-eval-after-load 'olivetti
@@ -438,6 +448,7 @@ have `org-warning' face."
 ;; over enclosed content
 (use-package org-appear
   :ghook 'org-mode-hook
+  :after org
   :custom
   (org-appear-delay 0.0)
   (org-appear-trigger 'always)
@@ -451,6 +462,7 @@ have `org-warning' face."
 ;;;;; Org-modern
 (use-package org-modern
   :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
+  :after org
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-hide-stars nil)           ; Adds extra indentation
@@ -480,7 +492,7 @@ have `org-warning' face."
   :disabled
   :ensure (:type git :host github :repo "QiangF/org-extra-emphasis")
   :demand
-  :after ox-odt
+  :after (ox-odt org)
   :custom
   (org-extra-emphasis-alist
    '(("!!" org-extra-emphasis-01)
@@ -512,6 +524,7 @@ have `org-warning' face."
 (use-package org-margin
   :disabled
   :ensure (:type git :host github :repo "rougier/org-margin")
+  :after org
   :hook (org-mode . org-margin-mode)
   :custom
   (org-startup-indented nil)            ; Not compatible
@@ -573,7 +586,7 @@ have `org-warning' face."
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "scrot -s %s") ; Use scrot
-  (org-download-image-dir org-attach-id-dir)
+  (org-download-image-dir (progn (require 'org-attach) org-attach-id-dir))
   (org-download-heading-lvl nil)
   (org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
   (org-download-image-html-width 700))
@@ -750,6 +763,7 @@ Otherwise, return a user error."
 ;; Persist org headline folded/unfolded states
 (use-package org-visibility
   :disabled
+  :after org
   :diminish
   :ghook 'org-mode-hook
   :general
@@ -770,6 +784,7 @@ Otherwise, return a user error."
 ;; Insert table of contents in the first headline with a TOC tag. Useful for the
 ;; READMEs of my packages.
 (use-package org-make-toc
+  :after org
   :custom
   (org-make-toc-insert-custom-ids t)
   (org-make-toc-link-type-fn 'org-make-toc--link-entry-github))

@@ -152,55 +152,55 @@
 ;;;; Fontaine
 ;; Test faces without restart Emacs!
 (use-package fontaine
-  :init
-  (setq fontaine-presets
-        '((regular
-           :default-family "Hack"
-           :default-weight normal
-           :default-height 100
-           :fixed-pitch-family "Fira Code"
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "Noto Sans"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.0
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
-           :italic-family "Source Code Pro"
-           :italic-slant italic
-           :line-spacing 1)
-          (large
-           :default-family "Iosevka"
-           :default-weight normal
-           :default-height 150
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
-           :italic-family nil ; use whatever the underlying face has
-           :italic-slant italic
-           :line-spacing 1)
-          ;; Mine
-          (test
-           :default-family "Iosevka Term SS04"
-           :default-weight normal
-           :default-height 140
-           :fixed-pitch-family "Iosevka Comfy"
-           :fixed-pitch-weight nil
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "Open Sans"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.10
-           :bold-family nil
-           :bold-weight bold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing 1)))
-  )
+  :defer 20
+  :config
+  (setopt fontaine-presets
+          '((regular
+             :default-family "Hack"
+             :default-weight normal
+             :default-height 100
+             :fixed-pitch-family "Fira Code"
+             :fixed-pitch-weight nil ; falls back to :default-weight
+             :fixed-pitch-height 1.0
+             :variable-pitch-family "Noto Sans"
+             :variable-pitch-weight normal
+             :variable-pitch-height 1.0
+             :bold-family nil ; use whatever the underlying face has
+             :bold-weight bold
+             :italic-family "Source Code Pro"
+             :italic-slant italic
+             :line-spacing 1)
+            (large
+             :default-family "Iosevka"
+             :default-weight normal
+             :default-height 150
+             :fixed-pitch-family nil ; falls back to :default-family
+             :fixed-pitch-weight nil ; falls back to :default-weight
+             :fixed-pitch-height 1.0
+             :variable-pitch-family "FiraGO"
+             :variable-pitch-weight normal
+             :variable-pitch-height 1.05
+             :bold-family nil ; use whatever the underlying face has
+             :bold-weight bold
+             :italic-family nil ; use whatever the underlying face has
+             :italic-slant italic
+             :line-spacing 1)
+            ;; Mine
+            (test
+             :default-family "Iosevka Term SS04"
+             :default-weight normal
+             :default-height 140
+             :fixed-pitch-family "Iosevka Comfy"
+             :fixed-pitch-weight nil
+             :fixed-pitch-height 1.0
+             :variable-pitch-family "Open Sans"
+             :variable-pitch-weight normal
+             :variable-pitch-height 1.10
+             :bold-family nil
+             :bold-weight bold
+             :italic-family nil
+             :italic-slant italic
+             :line-spacing 1))))
 
 ;;;; All-the-icons
 ;; Provides a bunch of unicode icons which many other packages leverage
@@ -211,10 +211,9 @@
 ;;;; All-the-icons-completion
 ;; Add `all-the-icons' icons to minibuffer completion candidates
 (use-package all-the-icons-completion
-  :demand
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :config
-  (all-the-icons-completion-mode))
+  (all-the-icons-completion-mode 1))
 
 (provide 'fonts-rcp)
 ;;; fonts-rcp.el ends here

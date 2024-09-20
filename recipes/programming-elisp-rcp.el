@@ -171,7 +171,7 @@
                 (edebug-unwrap* previous-value)))
       (setq edebug-previous-result
             (edebug-safe-prin1-to-string previous-value))))
-
+  :config
   (advice-add #'edebug-compute-previous-result
               :around #'adviced:edebug-compute-previous-result)
 
@@ -181,7 +181,7 @@
 ;;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
-  :demand
+  :defer 7
   :config
   (add-hook 'help-fns-describe-function-functions #'elisp-demos-advice-describe-function-1)
   (with-eval-after-load 'helpful
@@ -197,9 +197,8 @@
 
 ;;;; Recursion-indicator
 (use-package recursion-indicator
-  :demand
+  :hook (on-first-buffer . recursion-indicator-mode)
   :config
-  (recursion-indicator-mode)
   (minibuffer-depth-indicate-mode -1)
 
   ;; Thanks to Daniel Mendler for this! It removes the square brackets that

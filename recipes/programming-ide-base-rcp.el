@@ -35,7 +35,7 @@
 
 ;;;;; Treesit-auto
 (use-package treesit-auto
-  :demand
+  :hook (on-first-buffer . global-treesit-auto-mode)
   :custom
   (treesit-auto-install 'prompt)
   (treesit-extra-load-path              ; Where language files are found
@@ -69,8 +69,7 @@ Non-nil only if installation completed without any errors."
                                              (no-littering-expand-var-file-name "tree-sitter")))))
   (advice-add 'treesit-auto--prompt-to-install-package :override #'kb/treesit-auto--prompt-to-install-package)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  (treesit-auto-add-to-auto-mode-alist 'all))
 
 ;;;;; Turbo-log
 (use-package turbo-log

@@ -29,15 +29,14 @@
 ;;;; Electric
 (use-package electric
   :ensure nil
+  :hook (on-first-input . electric-pair-mode)
   :custom
   (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
   (electric-quote-comment nil)
   (electric-quote-string nil)
   (electric-quote-context-sensitive t)
   (electric-quote-replace-double t)
-  (electric-quote-inhibit-functions nil)
-  :init
-  (electric-pair-mode))
+  (electric-quote-inhibit-functions nil))
 
 ;;;; Eldoc
 (use-package eldoc
@@ -242,8 +241,8 @@
   (:keymaps 'vertico-map
             "C-." 'embark-act
             "C->" 'embark-become)
-  (:keymaps 'embark-symbol-map
-            "R" 'raise-sexp)
+  ;; (:keymaps 'embark-symbol-map
+  ;;           "R" 'raise-sexp)
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
@@ -266,13 +265,12 @@
 ;; Companion package for embark
 (use-package embark-consult
   :demand
-  :requires (embark consult)
+  :after (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
 (use-package scratch
-  ;; :demand t ; For the initial scratch buffer at startup
   :hook (scratch-create-buffer . kb/scratch-buffer-setup)
   :general (kb/open-keys
              "s" 'scratch)
@@ -296,13 +294,12 @@
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
   :ensure nil
+  :hook (on-first-file . global-auto-revert-mode)
   :custom
   (auto-revert-interval 5)
   (auto-revert-avoid-polling t) ; Automatically reread from disk if the underlying file changes
   (auto-revert-check-vc-info t)
-  (auto-revert-verbose t)
-  :init
-  (global-auto-revert-mode))
+  (auto-revert-verbose t))
 
 ;;;;; Whitespace
 ;; Remove whitespace on save
@@ -322,13 +319,11 @@
 
 ;;;;; Hi-lock
 (use-package hi-lock
-  :demand
+  :hook (on-first-file . global-hi-lock-mode)
   :ensure nil
   :custom
   (hi-lock-file-patterns-policy
-   '(lambda (_pattern) t))
-  :config
-  (global-hi-lock-mode 1))
+   '(lambda (_pattern) t)))
 
 ;;;;; Symbol-overlay
 ;; Mimics functionality of built-in hi-lock but with overlays instead of
@@ -432,6 +427,7 @@ with the exception of org-emphasis markers."
 ;; OPTIMIZE 2023-07-14: Also consider synergy with
 ;; https://codeberg.org/ideasman42/emacs-prog-face-refine
 (use-package hl-todo
+  :hook (on-first-buffer . global-hl-todo-mode)
   :general (:keymaps 'hl-todo-mode-map
                      :prefix "M-s t"
                      "n" 'hl-todo-next
@@ -445,8 +441,6 @@ with the exception of org-emphasis markers."
   ;; hl-todo's punctuation highlighting.
   (hl-todo-require-punctuation nil)
   (hl-todo-highlight-punctuation "")
-  :init
-  (global-hl-todo-mode)
   :config
   (with-eval-after-load 'alt-comment-dwim
     ;; Make sure to have all words in `alt-comment-dwim-keywords-coding' and
@@ -459,6 +453,7 @@ with the exception of org-emphasis markers."
 ;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
 (use-package ansi-color
   :ensure nil
+  :autoload endless/colorize-compilation
   :hook (compilation-filter . endless/colorize-compilation)
   :config
   (defun endless/colorize-compilation ()
@@ -472,14 +467,15 @@ with the exception of org-emphasis markers."
 ;; most terminals,and optionally use foreground & background independent of
 ;; theme colors.
 (use-package fancy-compilation
+  :after compile
+  :demand
   :custom
   (fancy-compilation-override-colors nil)
   ;; Briefer text
   (fancy-compilation-quiet-prelude t)
   (fancy-compilation-quiet-prolog t)
-  :init
-  (with-eval-after-load 'compile
-    (fancy-compilation-mode)))
+  :config
+  (fancy-compilation-mode 1))
 
 ;;;;; Indent-bars
 ;; Show indicator for indentation levels (like in VS Code)
@@ -522,9 +518,9 @@ with the exception of org-emphasis markers."
 ;; Highlight matching delimiters
 (use-package paren
   :ensure nil
+  :hook (on-first-buffer . show-paren-mode)
   :custom
-  (show-paren-context-when-offscreen 'overlay)
-  :init (show-paren-mode))
+  (show-paren-context-when-offscreen 'overlay))
 
 ;;;;; Display-fill-column-indicator
 (use-package display-fill-column-indicator
@@ -576,7 +572,7 @@ with the exception of org-emphasis markers."
 ;;;;; Lorem-ipsum
 ;; Sample text
 (use-package lorem-ipsum
-  :init
+  :config
   (setq-default lorem-ipsum-list-bullet "- "))
 
 (provide 'programming-general-rcp)

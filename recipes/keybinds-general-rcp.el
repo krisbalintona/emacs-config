@@ -51,7 +51,8 @@
 ;;; Key-chords
 (use-package use-package-chords
   :demand
-  :init (key-chord-mode))
+  :config
+  (key-chord-mode 1))
 
 ;;; Which-key
 ;; Show keybind tooltips

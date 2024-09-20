@@ -55,7 +55,6 @@
 ;;;; Dap-python
 ;; Compatibility with dap
 (use-package dap-python
-  :requires dap-mode
   :demand
   :after python dap-mode
   :ensure-system-package debugpy-run    ; For debugging in python using dap

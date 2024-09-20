@@ -29,8 +29,8 @@
 ;;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
-  :demand
   :diminish yas-minor-mode
+  :hook (on-first-buffer . yas-global-mode)
   :custom
   (yas-alias-to-yas/prefix-p nil)
   (yas-also-auto-indent-first-line t)
@@ -38,9 +38,7 @@
   (yas-inhibit-overlay-modification-protection nil)
   (yas-snippet-revival t)
   (yas-triggers-in-field nil)
-  (yas-choose-tables-first nil)         ; Fewer things to select!
-  :config
-  (yas-global-mode 1))
+  (yas-choose-tables-first nil))         ; Fewer things to select!
 
 ;;;; Consult-yasnippet
 (use-package consult-yasnippet

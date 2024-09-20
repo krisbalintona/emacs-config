@@ -129,6 +129,8 @@
   ;; :ensure (org-msg :type git :host github :repo "jeremy-compostella/org-msg")
   :vc (:url "https://github.com/jeremy-compostella/org-msg.git"
             :rev :newest)
+  :demand
+  :after mu4e
   :hook ((org-msg-edit-mode . (lambda ()
                                 "Set `org-download' directories."
                                 (setq-local org-download-method 'directory
@@ -308,9 +310,8 @@
                ,font-size))
        ;; Applies to entire body
        (div ,(intern org-html-content-class) (,@font (line-height . "12pt"))))))
-  :init
-  (with-eval-after-load 'mu4e
-    (org-msg-mode)))
+  :config
+  (org-msg-mode 1))
 
 ;;;;; Custom signatures
 (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
@@ -394,6 +395,240 @@ signatures being wrapped in `kb/signature-open' and
       (goto-char (point-min))
       (when (search-forward kb/signature-separator nil t)
         (replace-match "--" 1)))))
+
+(with-eval-after-load 'mu4e
+  (setq mu4e-contexts
+        `(,(make-mu4e-context
+            :name "Uni"
+            :enter-func (lambda () (mu4e-message "Entering Uni context"))
+            :leave-func (lambda () (mu4e-message "Leaving Uni context"))
+            :vars `((user-mail-address . "kristoffer_balintona@alumni.brown.edu")
+                    ;; Directories
+                    (mu4e-drafts-folder . "/drafts/uni/")
+                    (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
+                    (mu4e-refile-folder . "/uni/[Gmail].All Mail")
+                    (mu4e-trash-folder . "/uni/[Gmail].Trash")
+                    (mu4e-maildir-initial-input . "/uni/ ")
+                    ;; Maildirs
+                    (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
+                                               (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
+                                               (:maildir "/drafts/uni/" :key ?d)
+                                               (:maildir "/uni/[Gmail].Drafts" :key ?D)
+                                               (:maildir "/uni/[Gmail].Trash" :key ?t)
+                                               (:maildir "/uni/[Gmail].All Mail" :key ?a)))
+                    (kb/signature-alist .
+                                        (("Take care" . "Take care,\nKristoffer")
+                                         ("In gratitude" . "In gratitude,\nKristoffer")
+                                         ("Best" . "Best,\nKristoffer")
+                                         ("With appreciation" . "With appreciation,\nKristoffer")
+                                         ("Brown banner" . "\nWith appreciation,\nKristoffer\n\n#+begin_export html
+<br />
+<table
+  style='color: rgb(136, 136, 136); border: none; border-collapse: collapse; font-family: garamond'
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://clipground.com/images/brown-university-logo-png-1.png'
+          alt='Brown logo'
+          style='border: none'
+          height='100'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 6pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 11pt;
+              font-weight: 700;
+              white-space: pre-wrap;
+            '
+            >Kristoffer Balintona</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >B.A. Philosophy</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Class of 2024</span
+          >
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              white-space: pre-wrap;
+            '
+            >Tel: (773) 677-9699</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='
+            font-size: 10pt;
+            line-height: 1.2;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+          '
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Box: 6327</span
+          >
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export")
+                                         ("BUI banner" . "\n\nWarmly,\nBrown University Interviews Executive Committee\n\n#+begin_export html
+<br />
+<table
+  style='
+    color: rgb(136, 136, 136);
+    border: none;
+    border-collapse: collapse;
+    font-family: garamond;
+  '
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://browninterviews.org/wp-content/uploads/2020/06/bu-small-logo.png'
+          alt='Brown logo'
+          style='border: none'
+          height='70'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Kristoffer Balintona ('24)</span>
+          <span> | Editor in Chief</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Charles Alaimo ('25)</span>
+          <span> | Senior Interviews Coordinator</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Dana Toneva ('24)</span>
+          <span> | Senior Editor</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Riley Stevenson ('27)</span>
+          <span> | Senior Editor</span>
+          <br />
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export")))
+                    ;; Smtpmail
+                    (smtpmail-smtp-user "kristoffer_balintona@alumni.brown.edu") ; Send from this address
+                    (smtpmail-mail-address "kristoffer_balintona@alumni.brown.edu")))
+          ,(make-mu4e-context
+            :name "Personal"
+            :enter-func (lambda () (mu4e-message "Entering Personal context"))
+            :leave-func (lambda () (mu4e-message "Leaving Personal context"))
+            :vars `((user-mail-address . "krisbalintona@gmail.com")
+                    ;; Directories
+                    (mu4e-drafts-folder . "/drafts/personal")
+                    (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
+                    (mu4e-refile-folder . "/personal/[Gmail].All Mail")
+                    (mu4e-trash-folder . "/personal/[Gmail].Trash")
+                    (mu4e-maildir-initial-input . "/personal/ ")
+                    ;; Maildirs
+                    (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
+                                               (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
+                                               (:maildir "/drafts/personal/" :key ?d)
+                                               (:maildir "/personal[Gmail].Drafts/[Gmail].Drafts" :key ?D)
+                                               (:maildir "/personal/[Gmail].Trash" :key ?t)
+                                               (:maildir "/personal/[Gmail].All Mail" :key ?a)))
+                    (kb/signature-alist .
+                                        (("Take care" . "Take care,\nKristoffer")
+                                         ("In gratitude" . "In gratitude,\nKristoffer")
+                                         ("Best" . "Best,\nKristoffer")
+                                         ("With appreciation" . "With appreciation,\nKristoffer")))
+                    ;; Smtpmail
+                    (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
+                    (smtpmail-mail-address "krisbalintona@gmail.com"))))))
 
 ;;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
@@ -520,7 +755,8 @@ MML tags."
 
 ;;;; Mu4e-send-delay
 (use-package mu4e-send-delay
-  :demand ; So that we aren't waiting on loading `mu4e' to send scheduled messages
+  :after mu4e
+  :commands mu4e
   ;; :ensure (:type git
   ;;                :host github
   ;;                :protocol ssh
