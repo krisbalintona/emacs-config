@@ -67,8 +67,8 @@
   (which-key-side-window-location 'right)
   (which-key-side-window-max-width 0.35)
   (which-key-lighter "")
-  :init
-  (which-key-mode)
+  :config
+  (which-key-mode 1)
 
   ;; Don't display C-u, digit, and other numeric keypad bindings
   (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)

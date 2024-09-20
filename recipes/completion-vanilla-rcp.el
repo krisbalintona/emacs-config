@@ -158,8 +158,7 @@
   ;; just the default `completion-styles'
   (completion-category-defaults nil)
   (completion-category-overrides
-   '((file (styles . (basic
-                      orderless
+   '((file (styles . (orderless
                       partial-completion
                       flex)))))
   (orderless-style-dispatchers '(kb/orderless-consult-dispatch))

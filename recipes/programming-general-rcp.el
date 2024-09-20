@@ -317,9 +317,10 @@
 ;; Utilities to edit files as root
 (use-package sudo-edit
   :general (kb/file-keys
-             "U" '(sudo-edit-find-file :wk "Sudo find-file")
-             "u" '(sudo-edit :wk "Sudo this file"))
-  :config (sudo-edit-indicator-mode))
+             "U" 'sudo-edit-find-file
+             "u" 'sudo-edit)
+  :config
+  (sudo-edit-indicator-mode))
 
 ;;;;; Hi-lock
 (use-package hi-lock
