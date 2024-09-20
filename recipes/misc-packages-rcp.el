@@ -767,6 +767,14 @@ ARG and REDISPLAY are identical to the original function."
   :custom
   (Info-isearch-search nil))            ; Restore default isearch behavior
 
+;;;;; Which-func
+(use-package which-func
+  :demand
+  :custom
+  (which-func-modes '(prog-mode))
+  :config
+  (which-function-mode 1))
+
 ;;;;; Grep
 (use-package grep
   :custom
