@@ -167,6 +167,7 @@ default lsp-passthrough."
 (use-package kind-icon
   :disabled ; Prefer `nerd-icons-corfu' with its lighter weight icons (doesn't use svgs)
   :after corfu
+  :demand
   ;; Add hook to reset cache so the icon colors match my theme
   :hook (kb/themes . (lambda () (call-interactively 'kind-icon-reset-cache)))
   :custom
@@ -215,19 +216,18 @@ default lsp-passthrough."
      (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
      (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
      (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
-  :init
+  :config
   ;; TODO 2022-05-24: See if I can use the cooler icons from
   ;; `lsp-bridge-icon--icons' without requiring the package
-  (with-eval-after-load 'corfu          ; Enable
-    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 ;;;; Nerd-icons-corfu
 ;; Use nerd-icons with corfu
 (use-package nerd-icons-corfu
   :after (nerd-icons corfu)
-  :init
-  (with-eval-after-load 'corfu
-    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)))
+  :demand
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;;;; Cape
 ;; Expand capf functionality with corfu! See an updated list of the defined capf
