@@ -421,14 +421,14 @@ have `org-warning' face."
   (olivetti-body-width 0.55)
   (olivetti-minimum-body-width 80)
   (olivetti-margin-width 8)
-  (olivetti-style 'fancy)  ; NOTE 2024-01-05: "Fancy" works best with org-margin
-
+  (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
   ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's changing of
   ;; margins and fringes messes with the calculation of
   ;; `mode--line-format-right-align', which determines where the right side of
   ;; the mode line is placed.
   (mode-line-format-right-align
-   '(:eval (if (bound-and-true-p olivetti-mode)
+   '(:eval (if (and (bound-and-true-p olivetti-mode)
+                    olivetti-style)     ; 'fringes or 'fancy
                (let ((mode-line-right-align-edge 'right-fringe))
                  (mode--line-format-right-align))
              (mode--line-format-right-align)))))
