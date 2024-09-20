@@ -158,9 +158,10 @@
   ;; just the default `completion-styles'
   (completion-category-defaults nil)
   (completion-category-overrides
-   '((file (styles . (orderless
-                      partial-completion
-                      flex)))))
+   '(;; Include `partial-completion' to enable wildcards and partial paths.
+     (file (styles . (orderless partial-completion flex)))
+     ;; Eglot forces `flex' by default.
+     (eglot (styles orderless flex))))
   (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
   :init
   ;; Taken from Doom
