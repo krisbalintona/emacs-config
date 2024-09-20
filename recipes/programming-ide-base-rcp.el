@@ -124,6 +124,7 @@ Non-nil only if installation completed without any errors."
 
 ;;;; Breadcrumb
 (use-package breadcrumb
+  :commands which-function-mode
   :hook ((lsp-ui-mode eglot-managed-mode) . (lambda () (when (derived-mode-p 'prog-mode) (breadcrumb-local-mode))))
   :custom
   (which-func-functions '(breadcrumb-imenu-crumbs)))
