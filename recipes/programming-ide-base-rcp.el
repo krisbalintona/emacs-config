@@ -123,6 +123,8 @@ Non-nil only if installation completed without any errors."
    (alist-get 'fourmolu apheleia-formatters) '("fourmolu")))
 
 ;;;; Breadcrumb
+;; Which-function stuff but more performant and prettier formatting. Read
+;; package commentary for a description on how.
 (use-package breadcrumb
   :commands which-function-mode
   :hook ((lsp-ui-mode eglot-managed-mode) . (lambda () (when (derived-mode-p 'prog-mode) (breadcrumb-local-mode))))
