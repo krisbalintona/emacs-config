@@ -156,6 +156,7 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Dumb-jump
 (use-package dumb-jump
+  :disabled ; REVIEW 2024-09-20: Not sure how current functionality of xref is aided by this...
   :after xref
   :demand
   :custom
