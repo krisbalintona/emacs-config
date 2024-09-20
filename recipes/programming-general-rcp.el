@@ -195,7 +195,41 @@
    ;; `consult-recent-file'
    consult-recent-file :preview-key "C-M-;"
    ;; `consult-find'
-   consult-find :preview-key "C-M-;"))
+   consult-find :preview-key "C-M-;")
+
+  ;; Dired consult-buffer source
+  (defvar kb/consult-buffer--dired-source
+    (list :name     "Dired Buffers"
+          :category 'buffer
+          :narrow   ?d
+          :face     'consult-buffer
+          :history  'buffer-name-history
+          :state    'consult--buffer-state
+          :action   'consult--buffer-action
+          :items (lambda ()
+                   (mapcar #'buffer-name
+                           (seq-filter
+                            (lambda (x)
+                              (eq (buffer-local-value 'major-mode x) 'dired-mode))
+                            (buffer-list))))))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--dired-source 'append)
+
+  ;; Info consult-buffer source
+  (defvar kb/consult-buffer--info-source
+    (list :name     "Info Buffers"
+          :category 'buffer
+          :narrow   ?i
+          :face     'info-title-1
+          :history  'buffer-name-history
+          :state    'consult--buffer-state
+          :action   'consult--buffer-action
+          :items (lambda ()
+                   (mapcar #'buffer-name
+                           (seq-filter
+                            (lambda (x)
+                              (eq (buffer-local-value 'major-mode x) 'Info-mode))
+                            (buffer-list))))))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--info-source 'append))
 
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
