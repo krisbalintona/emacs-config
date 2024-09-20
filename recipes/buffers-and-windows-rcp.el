@@ -221,7 +221,11 @@
       (preserve-size . (t . t)))
      ("\\*vc-log\\*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
-      (dedicated . t))))
+      (dedicated . t))
+     ((or (major-mode . xref--xref-buffer-mode)
+          (,(rx (literal xref-buffer-name))))
+      (display-buffer-below-selected display-buffer-at-bottom)
+      (window-height . 0.25))))
   :init
   ;; Helper functions for `display-buffer-alist'
   (defun kb/select-buffer-in-side-window (buffer alist)
