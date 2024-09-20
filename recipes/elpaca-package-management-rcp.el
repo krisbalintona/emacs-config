@@ -67,7 +67,8 @@
 (elpaca elpaca-use-package
   ;; Enable :ensure use-package keyword.
   (elpaca-use-package-mode))
-(elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 
 (provide 'elpaca-package-management-rcp)
 ;;; elpaca-package-management-rcp.el ends here

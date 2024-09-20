@@ -31,7 +31,8 @@
   :demand
   :config
   (general-auto-unbind-keys))       ; Overwrite keybinds without returning error
-(elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 
 ;;; Leader keys
 (general-create-definer kb/note-keys    ; For all note-taking needs
@@ -73,7 +74,8 @@
   ;; Don't display C-u, digit, and other numeric keypad bindings
   (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
         which-key-replacement-alist))
-;; (elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 
 ;;; Meow
 ;; Trying out an alternative modal editing package

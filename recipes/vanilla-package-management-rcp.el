@@ -41,10 +41,6 @@
 (unless package-archive-contents
     (package-refresh-contents))
 
-;; For Elpaca. I still want to keep my elpaca-wait declarations in my
-;; configuration files just in case I ever go back to Elpaca.
-(defalias 'elpaca-wait #'ignore)
-
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))

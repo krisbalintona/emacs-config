@@ -113,7 +113,8 @@
        `(solaire-org-hide-face ((,c :background ,bg-dim :foreground ,bg-dim)))))))
 (use-package solo-jazz-theme :disabled)
 (use-package kaolin-themes  :disabled)
-(elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 
 ;;;; kb/theme-switcher
 ;;;;; Variable declarations
@@ -219,7 +220,8 @@ Additionally, run `kb/themes-hook'."
     (kb/proper-load-theme-light)))
 (add-hook 'elpaca-after-init-hook #'kb/themes-setup-base-faces) ; Initialize for daemon
 (add-hook 'server-after-make-frame-hook #'kb/themes-setup-base-faces)
-(elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 
 (provide 'kb-themes)
 

@@ -44,7 +44,8 @@
      ;; For LSP-mode. See
      ;; https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
      "LSP_USE_PLISTS")))
-(elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 (exec-path-from-shell-initialize)
 
 ;; Found here:
@@ -59,7 +60,8 @@
 (use-package system-packages
   :custom
   (system-packages-noconfirm t))        ; Bypass its prompt
-(elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 
 (provide 'system-packages-rcp)
 ;;; system-packages-rcp.el ends here

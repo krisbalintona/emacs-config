@@ -36,7 +36,8 @@
 ;; Set these variables prior to loading the feature
 (setq no-littering-etc-directory (expand-file-name "data/" user-emacs-directory) ; Config files
       no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-(elpaca-wait)
+(when (fboundp 'elpaca-wait)
+  (elpaca-wait))
 (require 'no-littering)
 (no-littering-theme-backups)            ; Sets various built-in variables
 
