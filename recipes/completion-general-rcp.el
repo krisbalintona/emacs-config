@@ -140,9 +140,11 @@
   ;; prescient results and cluttering it
   (prescient-filter-method
    '(literal prefix regexp))
+  (prescient-aggressive-file-save t)
   (prescient-sort-full-matches-first t)
   (prescient-history-length 200)
-  (prescient-aggressive-file-save t)
+  (prescient-frequency-decay 0.997)
+  (prescient-frequency-threshold 0.05)
   :config
   (prescient-persist-mode 1))
 
@@ -152,12 +154,15 @@
   :demand
   :custom
   (vertico-prescient-completion-styles '(prescient flex))
-  (vertico-prescient-enable-filtering nil) ; We want orderless
+  (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
   (vertico-prescient-enable-sorting t)
   (vertico-prescient-override-sorting nil)
-  ;; See also `prescient--completion-recommended-overrides'
+  ;; Only set if `vertico-prescient-enable-filtering' is non-nil. See also
+  ;; `prescient--completion-recommended-overrides'
   (vertico-prescient-completion-category-overrides
-   '((file (styles basic partial-completion))
+   '(;; Include `partial-completion' to enable wildcards and partial paths.
+     (file (styles partial-completion prescient))
+     ;; Eglot forces `flex' by default.
      (eglot (styles prescient flex))))
   :config
   (vertico-prescient-mode 1))
@@ -168,12 +173,15 @@
   :demand
   :custom
   (corfu-prescient-completion-styles '(prescient flex))
-  (corfu-prescient-enable-filtering nil) ; We want orderless
+  (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
   (corfu-prescient-enable-sorting t)
   (corfu-prescient-override-sorting nil)
-  ;; See also `prescient--completion-recommended-overrides'
+  ;; Only set if `corfu-prescient-enable-filtering' is non-nil. See also
+  ;; `prescient--completion-recommended-overrides'
   (corfu-prescient-completion-category-overrides
-   '((file (styles basic partial-completion))
+   '(;; Include `partial-completion' to enable wildcards and partial paths.
+     (file (styles partial-completion prescient))
+     ;; Eglot forces `flex' by default.
      (eglot (styles prescient flex))))
   :config
   (corfu-prescient-mode 1))
