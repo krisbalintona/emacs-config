@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (after-init . (lambda () (unless (server-running-p)
-                                   (server-mode))))
+                              (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -572,6 +572,8 @@ timestamp)."
 ;;;;; Perfect-margin
 ;; Center the window contents via setting the margins
 (use-package perfect-margin
+  :disabled ; NOTE 2024-09-19: Went on to start `pinching-margins' because the
+            ; code wasn't working and is bloated
   :demand
   :diminish
   :custom
@@ -579,21 +581,13 @@ timestamp)."
   (perfect-margin-visible-width 128)
   (perfect-margin-only-set-left-margin nil)
   (perfect-margin-disable-in-splittable-check t)
-  (perfect-margin-ignore-modes
-   '(exwm-mode doc-view-mode nov-mode pdf-view-mode))
-  (perfect-margin-ignore-regexps
-   '("^minibuf"))
+  (perfect-margin-ignore-modes '(exwm-mode doc-view-mode pdf-view-mode))
+  (perfect-margin-ignore-regexps '("^minibuf" "^[[:space:]]*\\*"))
   (perfect-margin-ignore-filters
    '(window-minibuffer-p
      (lambda (window)
        "Ignore if `olivetti-mode' is active."
-       (with-selected-window window (bound-and-true-p olivetti-mode)))
-     (lambda (window)
-       "Ignore if a special buffer whose major mode isn't...
-- `vc-dir-mode'"
-       (with-selected-window window
-         (and (string-match-p "^[[:space:]]*\\*" (buffer-name))
-              (not (eq major-mode 'vc-dir-mode)))))))
+       (with-selected-window window (bound-and-true-p olivetti-mode)))))
   :config
   (perfect-margin-mode 1)
 
@@ -604,7 +598,100 @@ timestamp)."
     (global-set-key (kbd (concat margin "<mouse-3>")) 'ignore)
     (dolist (multiple '("" "double-" "triple-"))
       (global-set-key (kbd (concat margin "<" multiple "wheel-up>")) 'mwheel-scroll)
-      (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll))))
+      (global-set-key (kbd (concat margin "<" multiple "wheel-down>")) 'mwheel-scroll)))
+
+  ;; REVIEW 2024-09-19: For some reason I find myself manually needing to make
+  ;; this fix? Perhaps a change in Emacs broke perfect-margin?
+  (defun kb/perfect-margin--init-window-margins ()
+    "Calculate target window margins as if there is only one window on frame."
+    ;; (let ((init-margin-width (round (max 0 (/ (- (frame-width) perfect-margin-visible-width) 2)))))
+    (let ((init-margin-width (round (max 0 (/ (- (window-total-width) perfect-margin-visible-width) 2)))))
+      (cons
+       init-margin-width
+       (if perfect-margin-only-set-left-margin 0 init-margin-width))))
+  (advice-add 'perfect-margin--init-window-margins :override #'kb/perfect-margin--init-window-margins))
+
+;;;;; Pinching-margins
+(defcustom pinching-margins-visible-width 128
+  "The visible width each window should be kept to"
+  :type 'number)
+
+(defcustom pinching-margins-ignore-predicates
+  '(window-minibuffer-p
+    (lambda (win)
+      (with-selected-window win
+        (member major-mode '(exwm-mode doc-view-mode))))
+    (lambda (win)
+      (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
+               '("^[[:space:]]*\\*")))
+    (lambda (win)
+      (with-selected-window win olivetti-mode)))
+  "Predicates to exclude certain windows."
+  :type '(repeat function))
+
+(defcustom pinching-margins-force-predicates
+  '((lambda (win)
+      (with-selected-window win
+        (member major-mode '())))
+    (lambda (win)
+      (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
+               '("^\\*vc-"))))
+  "Predicates to force including certain window."
+  :type '(repeat function))
+
+(defun pinching-margins--calculate-margins (win)
+  (let ((width (round (max 0 (/ (- (window-total-width win) pinching-margins-visible-width) 2)))))
+    (cons width width)))
+
+(defun pinching-margins--apply-p (win)
+  (with-current-buffer (window-buffer win)
+    (or (run-hook-with-args-until-success 'pinching-margins-force-predicates win)
+        (not (run-hook-with-args-until-success 'pinching-margins-ignore-predicates win)))))
+
+(defun pinching-margins--set-win-margin (win)
+  (with-selected-window win
+    (when (pinching-margins--apply-p win)
+      (let ((margins (pinching-margins--calculate-margins win)))
+        (set-window-margins win (car margins) (cdr margins))))))
+
+(defun pinching-margins--set-margins (&optional win)
+  (cl-loop for win in (or win (window-list))
+           do (pinching-margins--set-win-margin win)))
+
+(defun pinching-margins--window-splittable-p-advice (orig-fun window &optional horizontal)
+  "Advice for `window-splittable-p' to temporarily remove margins when called.
+If WINDOW is not managed by pinched-margins or HORIZONTAL is nil, the
+function will not modify the margins and directly call ORIG-FUN."
+  (if (or (not horizontal)
+          (not (pinching-margins--apply-p window)))
+      (funcall orig-fun window horizontal)
+    (let ((margins (window-margins window)))
+      (prog2
+          (set-window-margins window 0 0)
+          (funcall orig-fun window horizontal)
+        (set-window-margins window (car margins) (cdr margins))))))
+
+(define-minor-mode pinching-margins-mode
+  "Auto center windows."
+  :init-value nil
+  :global t
+  (if pinching-margins-mode
+      ;; Add hook and activate
+      (progn
+        (advice-add 'window-splittable-p :around #'pinching-margins--window-splittable-p-advice)
+        (add-hook 'window-configuration-change-hook 'pinching-margins--set-margins)
+        (add-hook 'window-size-change-functions 'pinching-margins--set-margins)
+        (pinching-margins--set-margins))
+    ;; Remove hook and restore margin
+    (advice-remove 'window-splittable-p #'pinching-margins--window-splittable-p-advice)
+    (remove-hook 'window-configuration-change-hook 'pinching-margins--set-margins)
+    (remove-hook 'window-size-change-functions 'pinching-margins--set-margins)
+    ;; FIXME 2024-09-19: This only restores the currently visible windows. E.g.
+    ;; `tab-bar' windows that are elsewhere aren't affected.
+    (dolist (window (window-list))
+      (when (pinching-margins--apply-p window)
+        (set-window-margins window 0 0)))))
+(pinching-margins-mode 1)
 
 ;;;;; Centered-window
 ;; Center the window contents via setting the fringes
