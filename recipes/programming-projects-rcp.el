@@ -151,11 +151,13 @@ With a prefix argument, show NLINES of context."
   :config
   (with-eval-after-load 'consult
     ;; Use Consult to select xref locations with preview
-    (setq xref-show-xrefs-function #'consult-xref
-          xref-show-definitions-function #'consult-xref)))
+    (setq xref-show-definitions-function #'consult-xref
+          xref-show-xrefs-function #'consult-xref)))
 
 ;;;;; Dumb-jump
 (use-package dumb-jump
+  :after xref
+  :demand
   :custom
   (dumb-jump-quiet nil)
   (dumb-jump-default-project (file-name-concat user-emacs-directory "recipes/"))
@@ -163,8 +165,8 @@ With a prefix argument, show NLINES of context."
   ;; behaves
   (dumb-jump-prefer-searcher 'rg)
   (dumb-jump-rg-search-args "--hidden --glob '!.git' --pcre2")
-  :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 95)) ; Last
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate t)) ; Last
 
 ;;;; Magit
 ;;;;; Itself
