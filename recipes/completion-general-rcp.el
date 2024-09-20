@@ -139,7 +139,7 @@
   ;; because we don't want a bunch of random results included in the filtered
   ;; prescient results and cluttering it
   (prescient-filter-method
-   '(literal prefix regexp))
+   '(literal initialism regexp))
   (prescient-aggressive-file-save t)
   (prescient-sort-full-matches-first t)
   (prescient-history-length 200)
