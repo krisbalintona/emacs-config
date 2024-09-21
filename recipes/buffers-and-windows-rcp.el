@@ -746,9 +746,6 @@ Determine if WINDOW is splittable."
 
 ;;;; Activities
 (use-package activities
-  ;; :ensure (:type git :host github :repo "alphapapa/activities.el")
-  :vc (:rev :newest)
-  :defer 3
   :general (:prefix "C-c a"
                     "d" 'activities-define
                     "n" 'activities-new
@@ -759,6 +756,8 @@ Determine if WINDOW is splittable."
                     "b" 'activities-switch-buffer
                     "B" 'activities-switch
                     "l" 'activities-list)
+  :preface
+  (add-to-list 'package-pinned-packages '(activities . "gnu-elpa-devel"))
   :custom
   (activities-kill-buffers t)
   :config
