@@ -95,7 +95,9 @@
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-find-functions '(kb/project-special-dir project-try-vc))
   (project-file-history-behavior 'relativize)
-  ;; NOTE 2024-01-31: Replace via project-switch-commands to project-prefix-or-any-command
+  (project-switch-commands #'project-prefix-or-any-command)
+  ;; NOTE 2024-01-31: Prefer `project-switch-commands' st to
+  ;; `project-prefix-or-any-command'
   ;; (project-switch-commands
   ;;  '((affe-find "Find file" "f")
   ;;    (consult-ripgrep "Regexp" "g")
@@ -110,16 +112,17 @@
   ;;    (project-shell "Shell")))
   (project-vc-merge-submodules nil)
   (project-mode-line t)
-  (project-mode-line-format
-   '(:eval (when-let ((project (project-mode-line-format)))
-             (propertize (concat " [" (string-trim (format-mode-line project)) "]")
-                         'face project-mode-line-face))))
   (project-mode-line-face nil)
-  :init
+  :config
+  ;; This is a regular variable
+  (setq project-mode-line-format
+        '(:eval (when-let ((project (project-mode-line-format)))
+                  (propertize (concat " [" (string-trim (format-mode-line project)) "]")
+                              'face project-mode-line-face))))
+
   (defun kb/project-special-dir (dir)
     "Return project if DIR is noticed as special.
 As directory is special if I've decided it is!"
-    (require 'denote)
     (let ((projectp))
       (dolist (specialp (list (expand-file-name "papers" denote-directory)
                               (expand-file-name "buoy" denote-directory)))
@@ -135,10 +138,7 @@ With a prefix argument, show NLINES of context."
     (let ((project (project-current)))
       (multi-occur (project-buffers project)
                    (car (occur-read-primary-args))
-                   nlines)))
-  :config
-  ;; Found in Emacs News
-  (setopt project-switch-commands #'project-prefix-or-any-command))
+                   nlines))))
 
 ;;;;; Xref
 (use-package xref
