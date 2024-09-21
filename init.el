@@ -126,14 +126,18 @@
 (require 'dungeons-and-dragons-rcp)
 (require 'misc-packages-rcp) ; FIXME 2024-02-11: Distribute these configs elsewhere
 
-;; After-init stats
+;; Startup time stats
 (add-hook 'window-setup-hook
-          '(lambda ()
-             (when (fboundp 'elpaca--queued)
-               (message "Emacs took %s to start up and load %s packages!"
-                        (format "%f seconds" (float-time (time-subtract elpaca-after-init-time
-                                                                        before-init-time)))
-                        (length (elpaca--queued))))))
+          #'(lambda ()
+              (if (and (fboundp 'elpaca--queued) (boundp 'elpaca-after-init-time))
+                  (message "Emacs took %s to start up and load %s packages!"
+                           (format "%f seconds" (float-time (time-subtract elpaca-after-init-time
+                                                                           before-init-time)))
+                           (length (elpaca--queued)))
+                (message "Emacs took %s to start up and load %s packages!"
+                         (format "%f seconds" (float-time (time-subtract after-init-time
+                                                                         before-init-time)))
+                         (length package-selected-packages)))))
 
 ;;; init.el ends here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
