@@ -170,17 +170,18 @@
                      "C-M-$" #'jinx-languages)
   :config
   (global-jinx-mode 1)
-  
+
   ;; Use veritco's grid display such that more suggestions fit on the screen and
   ;; enable annotations. Taken from
   ;; https://github.com/minad/jinx#correcting-misspellings
-  (add-to-list 'vertico-multiform-categories
-               '(jinx grid
-                      (vertico-grid-annotate . 20)
-                      (vertico-grid-max-columns . 12)
-                      (vertico-grid-separator .
-                                              #("    |    " 4 5
-                                                (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
+  (with-eval-after-load 'vertico-multiform
+    (add-to-list 'vertico-multiform-categories
+                 '(jinx grid
+                        (vertico-grid-annotate . 20)
+                        (vertico-grid-max-columns . 12)
+                        (vertico-grid-separator .
+                                                #("    |    " 4 5
+                                                  (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
 
   ;; Mimic `flyspell-abbrev-p'. Taken from
   ;; https://github.com/minad/jinx/wiki#save-misspelling-and-correction-as-abbreviation

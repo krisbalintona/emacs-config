@@ -101,6 +101,7 @@
 (use-package vertico-multiform
   :after vertico
   :ensure nil
+  :demand
   :custom
   (vertico-multiform-categories
    '((consult-grep buffer)
