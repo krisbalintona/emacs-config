@@ -3,3 +3,5 @@
 /eln-cache/
 /elpaca/
 /tree-sitter/
+*.elc
+recipes/*.elc
