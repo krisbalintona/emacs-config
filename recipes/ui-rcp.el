@@ -479,9 +479,11 @@ change to if called with ARG."
   (solaire-global-mode))
 
 ;;;;; Lin
-;; `hl-line-mode' but contextual based on mode (e.g. more visible)
+;; Lin is a stylistic enhancement for Emacs' built-in `hl-line-mode'. It remaps
+;; the `hl-line' face (or equivalent) buffer-locally to a style that is optimal
+;; for major modes where line selection is the primary mode of interaction.
 (use-package lin
-  :hook (on-first-buffer . lin-global-mode)
+  :hook (on-buffer-input . lin-global-mode)
   :custom
   (lin-face 'lin-cyan)
   :config
