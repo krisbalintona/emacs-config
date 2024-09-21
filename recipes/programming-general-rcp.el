@@ -241,8 +241,8 @@
   (:keymaps 'vertico-map
             "C-." 'embark-act
             "C->" 'embark-become)
-  ;; (:keymaps 'embark-symbol-map
-  ;;           "R" 'raise-sexp)
+  (:keymaps 'embark-symbol-map
+            "R" 'raise-sexp)
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key

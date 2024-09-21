@@ -57,6 +57,7 @@
 ;;; Which-key
 ;; Show keybind tooltips
 (use-package which-key
+  :hook (on-first-input . which-key-mode)
   :custom
   ;; These variables should be set before which-key-mode is activated
   (which-key-idle-delay 1.6)
@@ -70,8 +71,6 @@
   (which-key-side-window-max-width 0.35)
   (which-key-lighter "")
   :config
-  (which-key-mode 1)
-
   ;; Don't display C-u, digit, and other numeric keypad bindings
   (push '(("^[0-9-]\\|kp-[0-9]\\|kp-subtract\\|C-u$" . nil) . ignore)
         which-key-replacement-alist))
