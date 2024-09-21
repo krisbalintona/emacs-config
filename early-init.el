@@ -71,7 +71,7 @@
 ;; Shave seconds off startup time by starting the scratch buffer in
 ;; `fundamental-mode'
 (setq initial-major-mode 'fundamental-mode
-      initial-scratch-message nil)
+      initial-scratch-message "Hello 👋")
 
 ;;;; Native-compilations settings
 ;; Basic settings
