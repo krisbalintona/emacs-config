@@ -490,6 +490,7 @@ With a prefix argument, show NLINES of context."
 ;; QoL stuff for built-in VC workflow
 (use-package agitate
   :after vc
+  :demand
   :hook (diff-mode . agitate-diff-enable-outline-minor-mode)
   :general
   (:keymaps 'vc-prefix-map
