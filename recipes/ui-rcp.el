@@ -126,6 +126,7 @@
 
 (defvar kb/themes-hook nil
   "Hook that runs after the `kb/proper-load-theme-*'.")
+(add-hook 'window-setup-hook #'(lambda () (run-hooks 'kb/themes-hook)) 100)
 
 ;;;;; Function definitions
 (defun kb/themes-setup-base-faces (&optional frame)
