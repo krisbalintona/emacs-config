@@ -156,7 +156,6 @@
     "Set the value of `kb/mu4e-main-pre-window-conf'."
     (unless (derived-mode-p '(mu4e-main-mode mu4e-view-mode mu4e-headers-mode))
       (setq kb/mu4e-main-pre-window-conf (current-window-configuration))))
-  (advice-add 'mu4e :before #'kb/mu4e-main-set-window-conf)
 
   (defun kb/mu4e (&optional background)
     "Wrapper for `mu4e' command.
@@ -173,9 +172,8 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
     (interactive)
     (if kb/mu4e-main-pre-window-conf
         (progn
-          (set-window-configuration kb/mu4e-main-pre-window-conf t)
-          (setq kb/mu4e-main-pre-window-conf nil)
-          (bury-buffer (current-buffer)))
+          (set-window-configuration kb/mu4e-main-pre-window-conf)
+          (setq kb/mu4e-main-pre-window-conf nil))
       (bury-buffer)))
 
   ;; Gmail integration is taken from Doom
