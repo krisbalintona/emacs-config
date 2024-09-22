@@ -32,26 +32,16 @@
 ;;;;; Itself
 (use-package corfu
   ;; :ensure (corfu :files (:defaults "extensions/*"))
-  :vc (:url "https://github.com/minad/corfu.git"
-            :rev :newest)
-  :hook ((on-first-input . global-corfu-mode)
-         (lsp-completion-mode . kb/corfu-setup-lsp)) ; Use corfu for lsp completion
-  :general
-  (:keymaps 'corfu-map
-            "M-d" 'corfu-info-documentation
-            ;; "C-M-s-SPC" 'corfu-insert-separator
-            )
-  (:keymaps 'corfu-map
-            :states 'insert
-            "C-n" 'corfu-next
-            "C-p" 'corfu-previous
-            "<escape>" 'corfu-quit
-            "<return>" 'corfu-insert
-            "C-M-s-SPC" 'corfu-insert-separator
-            ;; "SPC" 'corfu-insert-separator ; Use when `corfu-quit-at-boundary' is non-nil
-            "M-d" 'corfu-show-documentation
-            "C-g" 'corfu-quit
-            "M-l" 'corfu-show-location)
+  :vc ( :url "https://github.com/minad/corfu.git"
+        :rev :newest)
+  :hook
+  ((on-first-buffer . global-corfu-mode)
+   (lsp-completion-mode . kb/corfu-setup-lsp)) ; Use corfu for lsp completion
+  :bind
+  ( :map corfu-map
+    ("M-d" . corfu-info-documentation)
+    ;; ("C-M-s-SPC" . corfu-insert-separator)
+    )
   :custom
   (corfu-auto nil) ; REVIEW 2024-09-20: Perhaps try https://github.com/minad/corfu?tab=readme-ov-file#auto-completion
   (corfu-auto-prefix 2)
@@ -76,9 +66,6 @@
   (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
   (corfu-preview-current t)
   (corfu-preselect 'valid)
-
-  ;; Other
-  (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
   :config
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
   ;; be adopted in a variable pitch buffer) have inconsistent spacing
@@ -108,6 +95,8 @@
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 
   ;; Setup lsp to use corfu for lsp completion
+  (with-eval-after-load 'lsp
+    (setopt lsp-completion-provider :none)) ; Use corfu instead for lsp completions
   (defun kb/corfu-setup-lsp ()
     "Use orderless completion style with lsp-capf instead of the
 default lsp-passthrough."
@@ -127,11 +116,12 @@ default lsp-passthrough."
 ;; Documentation window for corfu!
 (use-package corfu-popupinfo
   :ensure nil
-  :ghook 'corfu-mode-hook
-  :general
-  (:keymaps 'corfu-map
-            "C-M-s-d" 'corfu-popupinfo-toggle
-            "C-M-s-l" 'corfu-popupinfo-location)
+  :hook
+  (corfu-mode . corfu-popupinfo-mode)
+  :bind
+  ( :map corfu-map
+    ("C-M-s-d" . corfu-popupinfo-toggle)
+    ("C-M-s-l" . corfu-popupinfo-location))
   :custom
   (corfu-popupinfo-delay '(0.5 . 0.3))
   (corfu-popupinfo-direction '(right left vertical))
