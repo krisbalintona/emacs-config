@@ -32,10 +32,12 @@
 (use-package oc
   :ensure nil
   :after org
-  :general (:keymaps 'org-mode-map [remap citar-insert-citation] 'org-cite-insert)
+  :bind
+  (:map org-mode-map
+        ([remap citar-insert-citation] . org-cite-insert))
   :custom
   (org-cite-global-bibliography kb/bib-files)
-  (org-cite-csl-locales-dir (file-name-concat user-emacs-directory "locales/"))
+  (org-cite-csl-locales-dir (expand-file-name "locales/" user-emacs-directory))
   (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
   (org-cite-export-processors
    '((md . (csl "chicago-fullnote-bibliography.csl"))   ; Footnote reliant
@@ -46,17 +48,7 @@
   :custom-face
   ;; Have citation link faces look closer to as they were for `org-ref'
   (org-cite ((t (:foreground "DarkSeaGreen4"))))
-  (org-cite-key ((t (:foreground "forest green" :slant italic))))
-  :config
-  ;; NOTE 2023-07-14: Require all `oc-*' packages so that I don't run into the
-  ;; issue where the package associated with a style (e.g. `oc-biblatex' for the
-  ;; biblatex style) in `org-cite-export-processors' is used prior to its
-  ;; loading
-  (require 'oc-natbib)
-  (require 'oc-csl)
-  (require 'oc-basic)
-  (require 'oc-bibtex)
-  (require 'oc-biblatex))
+  (org-cite-key ((t (:foreground "forest green" :slant italic)))))
 
 ;;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
