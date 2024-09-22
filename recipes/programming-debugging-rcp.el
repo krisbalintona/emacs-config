@@ -108,8 +108,6 @@
 ;;;; Dape
 ;; Dap-mode but without LSP-mode
 (use-package dape
-  ;; :ensure (:type git :host github :repo "svaante/dape")
-  :defer 10
   :custom
   (dape-key-prefix nil)                 ; I make my own binding
   (dape-buffer-window-arrangement 'right)
