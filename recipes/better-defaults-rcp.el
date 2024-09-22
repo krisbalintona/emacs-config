@@ -48,6 +48,9 @@
 ;; See `startup-echo-area-message'
 (fset #'display-startup-echo-area-message #'ignore)
 
+;;;; Don't open splash screen
+(setopt inhibit-startup-screen t)
+
 ;;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
@@ -126,7 +129,7 @@
       scroll-down-aggressively nil)     ; Center after point leaves window
 
 ;;;; Do not load outdated byte code files
-(setq load-prefer-newer t)
+(setopt load-prefer-newer t)
 
 ;;;; Highlight next error
 (setq next-error-message-highlight t)
