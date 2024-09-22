@@ -28,6 +28,8 @@
 (require 'org-general-rcp)
 
 ;;;; Oc (org-cite)
+
+;;;;; Itself
 ;; Built-in citations in org-mode
 (use-package oc
   :ensure nil
@@ -49,6 +51,33 @@
   ;; Have citation link faces look closer to as they were for `org-ref'
   (org-cite ((t (:foreground "DarkSeaGreen4"))))
   (org-cite-key ((t (:foreground "forest green" :slant italic)))))
+
+;;;; Oc-csl-activate
+
+;;;;; Itself
+(use-package oc-csl-activate
+  :vc (:url "https://github.com/andras-simonyi/org-cite-csl-activate.git"
+            :rev :newest)
+  :after oc
+  :demand)
+
+;;;;; Custom eldoc backend that formats citations into CSL form
+(with-eval-after-load 'oc-csl-activate ; REVIEW 2024-09-22: Currently depends on its functions
+  (with-eval-after-load 'eldoc
+    (defun kb/org-cite-eldoc (callback &rest _ignored)
+      "Show a CSL-formatted citation at point by calling CALLBACK.
+Intended for `eldoc-documentation-functions'."
+      (when-let ((citation (org-cite-csl-activate--get-citation (point))))
+        (let* ((proc (org-cite-csl-activate--processor))
+               (info (list :cite-citeproc-processor proc))
+               (cit-struct (org-cite-csl--create-structure citation info)))
+          (citeproc-clear proc)
+          (citeproc-append-citations (list cit-struct) proc)
+          (funcall callback (car (citeproc-render-citations proc 'plain nil))))))
+
+    (add-hook 'org-mode-hook #'(lambda ()
+                                 (add-hook 'eldoc-documentation-functions #'kb/org-cite-eldoc nil t)
+                                 (setq-local eldoc-idle-delay 1)))))
 
 ;;;; Citar
 ;; Alternative to `ivy-bibtex' and `helm-bibtex'
