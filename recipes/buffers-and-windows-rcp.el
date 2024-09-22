@@ -498,10 +498,10 @@ timestamp)."
 ;;;;; Ibuffer
 (use-package ibuffer
   :ensure nil
-  :general
-  ([remap list-buffers] 'ibuffer)
-  (:keymaps 'ibuffer-mode-map
-            "SPC" 'scroll-up-command)
+  :bind
+  (([remap list-buffers] . ibuffer)
+   :map ibuffer-mode-map
+   ("SPC" . scroll-up-command))
   :custom
   (ibuffer-save-with-custom nil)
   (ibuffer-default-sorting-mode 'recency)
@@ -514,8 +514,8 @@ timestamp)."
   (ibuffer-expert nil)
   (ibuffer-show-empty-filter-groups t)
   (ibuffer-formats
-   `((mark modified read-only locked
-           " " (icon 2 2 :left :elide)
+   '((mark modified read-only locked
+           ;; " " (icon 2 2 :left :elide)
            " " (name 18 18 :left :elide)
            " " (size 9 -1 :right)
            " " (mode 16 16 :left :elide)
@@ -527,35 +527,57 @@ timestamp)."
      ("Emacs built-ins"
       (filename . "/usr/local/share/emacs"))))
   (ibuffer-filter-group-name-face '(:inherit (success bold)))
+  (ibuffer-saved-filter-groups ; NOTE 2024-02-11: Order of entries matters!
+   `(("Basic"
+      ("Help" ,(append '(or) (mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes)))
+      ("Org" (directory . ,kb/org-dir))
+      ("Libraries" ,(append '(or) (mapcar (lambda (dir) `(directory . ,dir))
+                                          (remove "/home/krisbalintona/.emacs.d/recipes"
+                                                  load-path))))
+      ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
   :config
-  (use-package dash :demand)          ; Dependency for -flatten
-  (setopt ibuffer-saved-filter-groups ; NOTE 2024-02-11: Order of entries matters!
-          `(("Basic"
-             ("Help" ,(-flatten `(or ,(mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes))))
-             ("Org" (directory . ,kb/org-dir))
-             ("Libraries" ,(-flatten `(or ,(mapcar (lambda (dir) `(directory . ,dir))
-                                                   (remove "/home/krisbalintona/.emacs.d/recipes"
-                                                           load-path)))))
-             ("Emacs" (directory . ,(expand-file-name user-emacs-directory))))))
-
-  ;; The following columns are taken from Doom Emacs.
-  ;; Display buffer icons on GUI
-  (use-package nerd-icons :demand)
-  (define-ibuffer-column icon (:name "   ")
-    (let ((icon (if (and (buffer-file-name)
-                         (nerd-icons-auto-mode-match?))
-                    (nerd-icons-icon-for-file (file-name-nondirectory (buffer-file-name)) :v-adjust -0.05)
-                  (nerd-icons-icon-for-mode major-mode :v-adjust -0.05))))
-      (if (symbolp icon)
-          (setq icon (nerd-icons-faicon "nf-fa-file_o" :face 'nerd-icons-dsilver :height 0.8 :v-adjust 0.0))
-        icon)))
-
   ;; Redefine size column to display human readable size
   (define-ibuffer-column size
     (:name "Size"
            :inline t
            :header-mouse-map ibuffer-size-header-map)
-    (file-size-human-readable (buffer-size))))
+    (file-size-human-readable (buffer-size)))
+
+  ;; Prepend Nerd Icons to buffer file names in GUI. Inspired by Doom Emacs'
+  ;; code.
+  (when (display-graphic-p)
+    (with-eval-after-load 'nerd-icons
+      ;; I've tried various ways to accomplish this, but the most modular way
+      ;; (e.g. way without loading packages early, or having repetitious code)
+      ;; I've found is to redefine the "name" ibuffer column.
+      (define-ibuffer-column name
+        (:inline t
+                 :header-mouse-map ibuffer-name-header-map
+                 :props
+                 ('mouse-face 'highlight 'keymap ibuffer-name-map
+                              'ibuffer-name-column t
+                              'help-echo '(if tooltip-mode
+                                              "mouse-1: mark this buffer\nmouse-2: select this buffer\nmouse-3: operate on this buffer"
+                                            "mouse-1: mark buffer   mouse-2: select buffer   mouse-3: operate"))
+                 :summarizer
+                 (lambda (strings)
+                   (let ((bufs (length strings)))
+                     (cond ((zerop bufs) "No buffers")
+                           ((= 1 bufs) "1 buffer")
+                           (t (format "%s buffers" bufs))))))
+        (let* ((buf-name (buffer-name))
+               (icon (if (and buf-name (nerd-icons-auto-mode-match?))
+                         (nerd-icons-icon-for-file (file-name-nondirectory buf-name) :v-adjust -0.05)
+                       (nerd-icons-icon-for-mode major-mode :v-adjust -0.05)))
+               name)
+          (when (symbolp icon)
+            (setq icon (nerd-icons-faicon "nf-fa-file_o" :face 'nerd-icons-dsilver :height 0.8 :v-adjust 0.0)))
+          (setq name (propertize (concat icon "  " buf-name)
+                                 'font-lock-face (ibuffer-buffer-name-face buffer mark)))
+          (if (not (seq-position name ?\n))
+              name
+            (string-replace
+             "\n" (propertize "^J" 'font-lock-face 'escape-glyph) name)))))))
 
 ;;;;; Burly
 (use-package burly
