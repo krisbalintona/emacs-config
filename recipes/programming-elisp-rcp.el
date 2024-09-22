@@ -27,41 +27,12 @@
 (require 'keybinds-general-rcp)
 (require 'buffers-and-windows-rcp)
 
-;;;; Ielm
+;;;; IELM
 (use-package ielm
   :ensure nil
   :custom
   (ielm-noisy nil)
   (ielm-dynamic-return nil))
-
-;;;; Lisp-keyword-indent
-;; Better keyword, cl-defun, and cl-loop indenting. See
-;; https://github.com/twlz0ne/lisp-keyword-indent.el#usage for examples
-(use-package lisp-keyword-indent
-  :disabled                             ; Change of heart...?
-  :demand
-  :ensure (lisp-keyword-indent :type git
-                               :host github
-                               :repo "twlz0ne/lisp-keyword-indent.el")
-  :functions kb/lisp-keyword-indent-mode
-  :init
-  ;; FIXME 2024-01-14: kb/lisp-keyword-indent-allow isn't being set properly
-  (defvar-local kb/lisp-keyword-indent-allow nil
-    "Whether to allow `lisp-keyword-indent-mode' in current buffer.")
-  (define-minor-mode kb/lisp-keyword-indent-mode
-    "Minor mode for keyword indent of Emacs Lisp."
-    :init-value nil
-    :lighter (:eval (when (and kb/lisp-keyword-indent-mode
-                               (derived-mode-p 'emacs-lisp-mode))
-                      (propertize " LKI" 'face '(:inherit shadow))))
-    :keymap nil
-    :global t
-    (if kb/lisp-keyword-indent-mode
-        (advice-add 'lisp-indent-function :override 'lisp-keyword-indent)
-      (when kb/lisp-keyword-indent-allow
-        (advice-remove 'lisp-indent-function 'lisp-keyword-indent))))
-  :config
-  (kb/lisp-keyword-indent-mode))
 
 ;;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
@@ -70,21 +41,7 @@
   :custom
   (eros-eval-result-prefix "⟹  "))      ; Fancy!
 
-;;;; Syntax highlighting
-;;;;; Lisp-extra-font-lock
-;; Give faces to elisp symbols
-(use-package lisp-extra-font-lock
-  :disabled t
-  :init
-  (lisp-extra-font-lock-global-mode))
-
-;;;;; Highlight-function-calls
-;; Give function calls a special face (default is underline)
-(use-package highlight-function-calls
-  :disabled t
-  :ghook 'emacs-lisp-mode-hook)
-
-;;;;; Rainbow-delimiters
+;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
   :ghook 'emacs-lisp-mode-hook 'lisp-interaction-mode-hook 'inferior-emacs-lisp-mode-hook)

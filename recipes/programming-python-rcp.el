@@ -25,7 +25,6 @@
 ;;; Code:
 (require 'general)
 (require 'keybinds-general-rcp)
-(require 'keybinds-evil-rcp)
 (require 'programming-projects-rcp)
 
 ;;;; Python-mode

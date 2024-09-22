@@ -27,41 +27,6 @@
 (require 'keybinds-general-rcp)
 (require 'personal-variables-rcp)
 
-;;;; Flycheck
-;; Check your code
-(use-package flycheck
-  :general
-  (:keymaps 'flycheck-mode-map
-            "M-n" 'flycheck-next-error
-            "M-p" 'flycheck-previous-error)
-  :custom
-  (flycheck-emacs-lisp-load-path 'inherit) ; Use load-path for Emacs session
-
-  (flycheck-check-syntax-automatically
-   '(save mode-enabled idle-change idle-buffer-switch)) ; When to check
-  (flycheck-idle-buffer-switch-delay 1.5) ; Wait 1.5 second after buffer switch
-
-  ;; Don't create temp files in current directory, create in /tmp/
-  (flycheck-temp-prefix "/tmp/flycheck")
-
-  (flycheck-relevant-error-other-file-show nil) ; Errors from other files?
-  (flycheck-display-errors-delay 0.5)           ; Time to show an error on point
-  (flycheck-indication-mode 'right-margin)
-  (flycheck-highlighting-mode 'symbols)
-  :config
-  ;; Set prefix map
-  (define-key flycheck-mode-map flycheck-keymap-prefix nil)
-  (setq flycheck-keymap-prefix (kbd "C-M-s-f"))
-  (define-key flycheck-mode-map flycheck-keymap-prefix
-              flycheck-command-map))
-
-;;;; Consult-flycheck
-;; List flycheck errors in minibuffer with consult
-(use-package consult-flycheck
-  :after (consult flycheck)
-  :general (:keymaps 'lsp-mode-map
-                     "C-c e" 'consult-flycheck))
-
 ;;;; Flymake
 (use-package flymake
   :diminish

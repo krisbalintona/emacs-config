@@ -37,7 +37,6 @@
 ;;;; Keybind infrastructure
 (require 'keybinds-general-rcp)
 (require 'keybinds-native-rcp)
-;; (require 'keybinds-evil-rcp)
 
 ;;;; Aesthetics
 (require 'fonts-rcp)
@@ -47,9 +46,6 @@
 (require 'completion-general-rcp)
 (require 'completion-vanilla-rcp)
 (require 'completion-inline-rcp)
-;; (require 'completion-company-rcp)
-;; (require 'completion-ivy-rcp)
-;; (require 'completion-helm-rcp)
 
 ;;;; Buffers, text, and windows
 (require 'persistence-rcp)
@@ -70,7 +66,6 @@
 (require 'org-notes-rcp)
 (require 'org-notes-other-rcp)
 (require 'org-agenda-general-rcp)
-;; (require 'org-agenda-views-rcp)
 (require 'org-agenda-other-rcp)
 
 ;;;; Other major modes
@@ -102,7 +97,6 @@
 (require 'programming-c-rcp)
 (require 'programming-racket-rcp)
 (require 'programming-rust-rcp)
-(require 'programming-haskell-rcp)
 
 ;;;; Shells
 (require 'shell-basic-rcp)
@@ -126,7 +120,7 @@
 (require 'dungeons-and-dragons-rcp)
 (require 'misc-packages-rcp) ; FIXME 2024-02-11: Distribute these configs elsewhere
 
-;; Startup time stats
+;;; Startup time stats
 (add-hook 'window-setup-hook
           #'(lambda ()
               (if (and (fboundp 'elpaca--queued) (boundp 'elpaca-after-init-time))

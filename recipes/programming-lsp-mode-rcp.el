@@ -222,22 +222,5 @@
   (:keymaps 'lsp-mode-map
             [remap consult-flycheck] '(consult-lsp-diagnostics :wk "Consult lsp diagnostics")))
 
-;;;;; Lsp-treemacs
-;; Treemacs-like buffer that shows files, errors, symbol hierarchy, etc.
-(use-package lsp-treemacs
-  :requires treemacs
-  :after lsp
-  :hook ((lsp-mode . lsp-treemacs-sync-mode)
-         (lsp-treemacs-generic-mode . hide-mode-line-mode)
-         (lsp-treemacs-error-list-mode . hide-mode-line-mode)
-         (lsp-treemacs-deps-list-mode . hide-mode-line-mode)
-         )
-  :general
-  (kb/lsp-keys
-    "Ft" '(lsp-treemacs-symbols :wk "Lsp-treemacs"))
-  (:keymaps 'lsp-treemacs-error-list-mode-map
-            :states 'normal
-            "x" 'lsp-treemacs-quick-fix))
-
 (provide 'programming-lsp-mode-rcp)
 ;;; programming-lsp-mode-rcp.el ends here

@@ -25,7 +25,6 @@
 ;;; Code:
 (require 'general)
 (require 'keybinds-general-rcp)
-(require 'keybinds-evil-rcp)
 
 ;;;; Sh-script
 ;; Built-in for sh-mode

@@ -127,23 +127,6 @@ See `kb/consult-org-depend’."
                        kb/consult-org-agenda-depend
                        :prompt "Select dependency for this agenda item: ")))
 
-;;;; Org-heatmap
-;; Heatmap in agenda for tracked habits. Also highlighted calendar dates
-(use-package org-heatmap
-  :disabled  ; REVIEW 2023-07-10: Doesn't work for me right now. Return to later
-  :after org
-  :ensure (:type git :host github :repo "Elilif/org-heatmap")
-  :custom
-  (org-heatmap-db-location (no-littering-expand-var-file-name "org-heatmap/"))
-  (org-heatmap-enable-habit-statics t)
-  :init
-  (org-heatmap-mode))
-
-;;;; Org-timeblock
-(use-package org-timeblock
-  :disabled
-  :ensure (:type git :host github :repo "ichernyshovvv/org-timeblock"))
-
 ;;;; Custom org-tags-view org-link type
 (with-eval-after-load 'org
   (defun kb/org-tag-link (tag)

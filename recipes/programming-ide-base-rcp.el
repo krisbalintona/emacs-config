@@ -71,23 +71,6 @@ Non-nil only if installation completed without any errors."
   :config
   (treesit-auto-add-to-auto-mode-alist 'all))
 
-;;;;; Turbo-log
-(use-package turbo-log
-  :disabled                             ; Used old tree-sitter package
-  :requires tree-sitter
-  :ensure (turbo-log :type git :host github :repo "artawower/turbo-log.el")
-  :general (:prefix "C-M-s-;"
-                    ";" 'turbo-log-print
-                    "i" 'turbo-log-print-immediately
-                    "h" 'turbo-log-comment-all-logs
-                    "s" 'turbo-log-uncomment-all-logs
-                    "[" 'turbo-log-paste-as-logger
-                    "]" 'turbo-log-paste-as-logger-immediately
-                    "d" 'turbo-log-delete-all-logs)
-  :custom
-  (turbo-log-msg-format-template "\"tk %s\"") ; "tk" is a rare bigram!
-  (turbo-log-allow-insert-without-tree-sitter-p t))
-
 ;;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia

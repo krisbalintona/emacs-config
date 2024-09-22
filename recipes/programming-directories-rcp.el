@@ -149,21 +149,6 @@ command."
   :general ([remap dired] 'consult-dir))
 
 ;;;; Misc
-;;;;; Affe
-;; Blazing fast fuzzy finder
-(use-package affe
-  :disabled            ; NOTE 2024-03-17: Trying to defer to `project-find-file'
-  :after orderless
-  :general (:keymaps 'project-prefix-map
-                     [remap project-find-file] 'affe-find)
-  :custom
-  ;; Found in readme: https://github.com/minad/affe
-  (affe-regexp-compiler
-   (lambda (input _type _ignorecase)      ; Use orderless instead of consult to regexp
-     (setq input (orderless-pattern-compiler input))
-     (cons input (apply-partially #'orderless--highlight input t))))
-  (affe-find-command "rg --hidden --color=never --files") ; Include hidden files
-  (affe-grep-command "rg --hidden --null --color=never --max-columns=1000 --no-heading --line-number -v ^$ .")) ; Include hidden files
 
 ;;;;; Dwim-shell-command
 ;; Many convenient wrappers involving shell commands in and out of `dired' (with

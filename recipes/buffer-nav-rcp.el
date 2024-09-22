@@ -51,12 +51,6 @@
   (use-package-enable-imenu-support t)
   (imenu-flatten 'group))
 
-;;;; Imenu-list
-;; Side buffer with imenu items
-(use-package imenu-list
-  :after imenu
-  :hook (imenu-list-major-mode . visual-line-mode))
-
 ;;;; Occur
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur

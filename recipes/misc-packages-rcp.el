@@ -462,37 +462,12 @@ This is a difference in multitude of %s."
   (interactive "r")
   (replace-regexp "\n" " " nil beg end))
 
-;;;;; Writeroom-mode
-(use-package writeroom-mode
-  :custom
-  (writeroom-major-modes '(org-mode))
-  (writeroom-width 100)
-  (writeroom-global-effects
-   '(writeroom-set-fullscreen
-     ;; writeroom-set-alpha
-     writeroom-set-menu-bar-lines
-     writeroom-set-tool-bar-lines
-     writeroom-set-vertical-scroll-bars
-     writeroom-set-bottom-divider-width
-     )))
-
 ;;;;; Smog-mode
 ;; Report statistics on writing style, word use and readability of prose
 (use-package smog
   :ensure-system-package diction
   :custom
   (smog-command "style -L en --print-nom-passive"))
-
-;;;; LLMs
-;;;;; Chatgpt-shell
-(use-package chatgpt-shell
-  :disabled
-  :ensure (chatgpt-shell :type git :host github :repo "xenodium/chatgpt-shell")
-  :general (kb/open-keys
-             "C" 'chatgpt-shell
-             "D" 'dall-e-shell)
-  :custom
-  (chatgpt-shell-openai-key "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"))
 
 ;;;; Built-in Emacs modes/packages
 (use-package emacs
@@ -651,20 +626,6 @@ ARG and REDISPLAY are identical to the original function."
                 (advice-remove 'recenter 'kb/pixel-recenter))))))
 
 ;;;; Other
-;;;;; Whole-line-or-region
-(use-package whole-line-or-region
-  :disabled                             ; Trying life without this package
-  :diminish whole-line-or-region-local-mode
-  :hook (after-init . whole-line-or-region-global-mode)
-  :general (:keymaps 'whole-line-or-region-local-mode-map
-                     [remap kill-region] 'whole-line-or-region-kill-region
-                     [remap kill-ring-save] 'whole-line-or-region-kill-ring-save
-                     [remap copy-region-as-kill] 'whole-line-or-region-copy-region-as-kill
-                     [remap delete-region] 'whole-line-or-region-delete-region
-                     ;; [remap comment-dwim] 'whole-line-or-region-comment-dwim-2
-                     [remap comment-dwim] nil
-                     [remap comment-region] 'whole-line-or-region-comment-region
-                     [remap uncomment-region] 'whole-line-or-region-uncomment-region))
 
 ;;;;; Clippety
 ;; Nearly system-wide mutual clipboard support
@@ -723,16 +684,6 @@ ARG and REDISPLAY are identical to the original function."
     :keybinding "y")
 
   (engine-mode 1))
-
-;;;;; Selection-highlight-mode
-(use-package selection-highlight-mode
-  :disabled
-  :ensure (:host github
-                 :repo "balloneij/selection-highlight-mode")
-  :custom
-  (selection-highlight-mode-min-length 3)
-  :config
-  (selection-highlight-mode))
 
 ;;;;; Casual-suite
 ;; A suite of "casual" interfaces.

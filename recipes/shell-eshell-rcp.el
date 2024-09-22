@@ -180,17 +180,7 @@ Info node `(eshell)Top'."
 
 ;;;; Pcmpl-args
 ;; Extend the build in `pcomplete' to another level.
-(use-package pcmpl-args
-  :demand
-  :after eshell)
-
-;;;; Esh-autosuggest
-;; Has shadowed suggestions from shell history (like in zsh)
-(use-package esh-autosuggest
-  :disabled                  ; FIXME 2023-07-12: Freezes eshell for some reason
-  :ghook 'eshell-mode-hook
-  :custom
-  (esh-autosuggest-delay 0.25))
+(use-package pcmpl-args)
 
 ;;;; Eshell source in `consult-buffer'
 (with-eval-after-load 'consult

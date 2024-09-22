@@ -481,7 +481,6 @@ with the exception of org-emphasis markers."
 ;; Show indicator for indentation levels (like in VS Code)
 (use-package indent-bars
   :disabled t                           ; FIXME 2023-08-18: Causes errors I think...
-  :ensure (:type git :host github :repo "jdtsmith/indent-bars")
   ;; OPTIMIZE 2023-08-15: Have to add to `after-init-hook' because of issues
   ;; with daemon
   :hook ((kb/themes . indent-bars-reset)
@@ -556,18 +555,6 @@ with the exception of org-emphasis markers."
                      "C-x n s" 'outshine-narrow-to-subtree)
   :custom
   (outshine-use-speed-commands t)) ; Use speedy commands on headlines (or other defined locations)
-
-;;;;; Anzu
-;; Display search information in mode-line.
-(use-package anzu
-  :disabled
-  :diminish
-  :general ([remap query-replace] 'anzu-query-replace
-            [remap query-replace-regexp] 'anzu-query-replace-regexp)
-  :custom
-  (anzu-cons-mode-line-p nil)
-  :init
-  (global-anzu-mode))
 
 ;;;;; Lorem-ipsum
 ;; Sample text

@@ -46,17 +46,5 @@
   ([remap yas-insert-snippet] 'consult-yasnippet
    [remap yas-visit-snippet-file] 'consult-yasnippet-visit-snippet-file))
 
-;;;; Tempel
-;; Small and simple snippet/template system compatible with corfu.
-(use-package tempel
-  :disabled                             ; Migrate to yasnippet
-  :general
-  ("M-+" 'tempel-complete               ; List all available templates
-   "M-*" 'tempel-insert)                ; Insert typed template
-  (:keymaps 'tempel-map
-            "C-M-c" 'tempel-done)
-  :custom
-  (tempel-file (no-littering-expand-var-file-name "tempel-templates")))
-
 (provide 'template-rcp)
 ;;; template-rcp.el ends here

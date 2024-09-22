@@ -27,59 +27,6 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Project management
-;;;;; Projectile
-;; Navigate and manage project directories easier
-(use-package projectile
-  :disabled t ; In favor of `project.el'
-  :general
-  (kb/general-keys
-   "p" '(:ignore t :wk "Projectile")
-   "p?" '(hydra:selectrum-projectile/body :wk "Help menu")
-   ;; "pf"  'projectile-find-file
-   "pp"  'projectile-switch-project
-   ;; "ps"  'counsel-projectile-rg
-   "pb"  'projectile-switch-to-buffer
-   "pD"  'projectile-dired
-   ;; "pc"  'projectile-compile-project
-   )
-  :custom
-  (projectile-completion-system 'default) ; Use selectrum
-  (projectile-enable-caching t)
-  (projectile-track-known-projects-automatically nil) ; Don't create projects automatically
-  ;; Hydra menu
-  (pretty-hydra-define hydra:selectrum-projectile
-    (:color blue :hint t :foreign-keys run :quit-key "q" :exit t)
-    ("Projectile"
-     (("i" projectile-invalidate-cache :color red)
-      ("n" projectile-add-known-project))
-     "Buffers"
-     (("b" projectile-switch-to-buffer)
-      ("K" projectile-kill-buffers)
-      ("S" projectile-save-project-buffers))
-     "Find"
-     (("d" projectile-find-dir)
-      ("D" projectile-dired)
-      ("f" projectile-find-file)
-      ("p" projectile-switch-project))
-     "Search"
-     (("r" projectile-replace)
-      ("R" projectile-replace-regexp)
-      ("s" counsel-projectile-rg))
-     ))
-  :config
-  (projectile-mode)
-
-  (when (file-directory-p user-emacs-directory)
-    (setq projectile-project-search-path `(,user-emacs-directory)))
-  (setq projectile-switch-project-action #'projectile-dired)
-  )
-
-;;;;; Counsel-projectile
-;; Use Ivy as projectile interface
-(use-package counsel-projectile
-  :after (counsel projectile)
-  :ghook 'counsel-mode-hook
-  )
 
 ;;;;; Project
 (use-package project
@@ -154,21 +101,6 @@ With a prefix argument, show NLINES of context."
     ;; Use Consult to select xref locations with preview
     (setq xref-show-definitions-function #'consult-xref
           xref-show-xrefs-function #'consult-xref)))
-
-;;;;; Dumb-jump
-(use-package dumb-jump
-  :disabled ; REVIEW 2024-09-20: Not sure how current functionality of xref is aided by this...
-  :after xref
-  :demand
-  :custom
-  (dumb-jump-quiet nil)
-  (dumb-jump-default-project (file-name-concat user-emacs-directory "recipes/"))
-  ;; See https://github.com/jacktasia/dumb-jump#configuration to see how it
-  ;; behaves
-  (dumb-jump-prefer-searcher 'rg)
-  (dumb-jump-rg-search-args "--hidden --glob '!.git' --pcre2")
-  :init
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate t)) ; Last
 
 ;;;; Magit
 ;;;;; Itself
@@ -317,32 +249,6 @@ With a prefix argument, show NLINES of context."
   :demand
   :after magit)
 
-;;;;; Magit-todos
-(use-package magit-todos
-  :disabled t                           ; Not very useful for now
-  :after magit
-  :custom
-  (magit-todos-item-cache t)
-  (magit-todos-keywords 'alt-comment-dwim-keyword-faces)
-  (magit-todos-insert-at 'bottom)
-  (magit-todos-keyword-suffix (rx " ")) ; Match the type of comments I make
-  (magit-todos-branch-list 'branch)
-  (magit-todos-branch-list-merge-base-ref (magit-main-branch))
-  (magit-todos-auto-group-items 10)
-  (magit-todos-group-by
-   '(magit-todos-item-keyword
-     magit-todos-item-filename
-     ))
-  (magit-todos-max-items 5)
-  (magit-todos-sort-order
-   '(magit-todos--sort-by-keyword
-     magit-todos--sort-by-filename
-     magit-todos--sort-by-position
-     ))
-  :init
-  (magit-todos-mode)
-  )
-
 ;;;;; Abdridge-diff
 (use-package abridge-diff
   :hook (on-first-file . abridge-diff-mode)
@@ -410,23 +316,6 @@ With a prefix argument, show NLINES of context."
     (setq kb/vc-pre-window-conf nil))
   (advice-add 'log-edit-done :after #'kb/vc-restore-window-conf)
   (advice-add 'log-edit-kill-buffer :after #'kb/vc-restore-window-conf))
-
-;;;;; Vc-defer
-;; VC makes opening files on Emacs significantly slower. This is a bandaid to
-;; defer expensive VC operations until a VC command is explicitly called.
-;; (Therefore, VC info won't be shown until a VC command is invoked.) See:
-;; 1. https://lists.gnu.org/archive/html/emacs-devel/2016-02/msg00440.html
-;; 2. https://stackoverflow.com/questions/6724471/git-slows-down-emacs-to-death-how-to-fix-this
-;; 3. https://www.reddit.com/r/emacs/comments/4c0mi3/the_biggest_performance_improvement_to_emacs_ive/
-(use-package vc-defer
-  :disabled              ; I don't like it's inhibition of diff-hl functionality
-  :demand
-  :diminish
-  :after vc
-  :custom
-  (vc-defer-backends '(Git))
-  :config
-  (vc-defer-mode 1))
 
 ;;;;; Log-edit
 (use-package log-edit
@@ -524,18 +413,6 @@ With a prefix argument, show NLINES of context."
   (agitate-log-edit-informative-mode 1))
 
 ;;;; QoL
-;;;;; Git-gutter
-(use-package git-gutter
-  :disabled                          ; NOTE 2022-12-29: Trying `diff-hl' for now
-  :hook ((window-configuration-change . git-gutter:update-all-windows)
-         ((prog-mode conf-mode) . git-gutter-mode))
-  :custom
-  (git-gutter-fr:side 'left-fringe)
-  ;; 0 is actually on-save, so we put this as low as possible to effectively
-  ;; have real-time updating
-  (git-gutter:update-interval 0.02)
-  ;; (git-gutter:disabled-modes '(org-mode)) ; Using this to disable in modes yields annoying echo messages
-  )
 
 ;;;;; Git-gutter-fringe
 (use-package git-gutter-fringe
@@ -574,31 +451,31 @@ With a prefix argument, show NLINES of context."
 ;; Enable in current buffer to iterate through git revision history
 (use-package git-timemachine)
 
-;;;;; Better Magic status
-;;;###autoload
-(defun unpackaged/magit-status ()
-  "Open a `magit-status' buffer and close all other windows.
+;;;;; Better Magit status
+(with-eval-after-load 'magit
+  (defun unpackaged/magit-status ()
+    "Open a `magit-status' buffer and close all other windows.
 If a file was visited in the buffer that was active when this command
 was called, go to its unstaged changes section."
-  (interactive)
-  (let* ((buffer-file-path (when buffer-file-name
-                             (file-relative-name buffer-file-name
-                                                 (locate-dominating-file buffer-file-name ".git"))))
-         (section-ident `((file . ,buffer-file-path) (unstaged) (status))))
-    (call-interactively #'magit-status)
-    (delete-other-windows)
-    (when buffer-file-path
-      (goto-char (point-min))
-      (cl-loop until (when (equal section-ident (magit-section-ident (magit-current-section)))
-                       (magit-section-show (magit-current-section))
-                       (recenter)
-                       t)
-               do (condition-case nil
-                      (magit-section-forward)
-                    (error (cl-return (magit-status-goto-initial-section))))
-               ))
-    ))
-(general-define-key [remap magit-status] #'unpackaged/magit-status)
+    (interactive)
+    (let* ((buffer-file-path (when buffer-file-name
+                               (file-relative-name buffer-file-name
+                                                   (locate-dominating-file buffer-file-name ".git"))))
+           (section-ident `((file . ,buffer-file-path) (unstaged) (status))))
+      (call-interactively #'magit-status)
+      (delete-other-windows)
+      (when buffer-file-path
+        (goto-char (point-min))
+        (cl-loop until (when (equal section-ident (magit-section-ident (magit-current-section)))
+                         (magit-section-show (magit-current-section))
+                         (recenter)
+                         t)
+                 do (condition-case nil
+                        (magit-section-forward)
+                      (error (cl-return (magit-status-goto-initial-section))))
+                 ))
+      ))
+  (general-define-key [remap magit-status] #'unpackaged/magit-status))
 
 ;;;;; Deadgrep
 ;; Grep but with a convenient magit-like interface (with visibility toggles)
