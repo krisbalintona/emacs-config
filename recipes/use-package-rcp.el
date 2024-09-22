@@ -26,13 +26,16 @@
 
 (require 'use-package)
 
-(setq use-package-always-ensure t)
+(setopt use-package-always-ensure t)
 ;; (setq use-package-expand-minimally t)   ; Less verbose
-(setq use-package-always-defer t)       ; Always defer
+(setopt use-package-always-defer t)     ; Always defer
 
 ;; Set use-package-verbose to t for interpreted .emacs, and to nil for
 ;; byte-compiled .emacs.elc.
-(setq use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
+(setopt use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
+
+;; Compile statistics to be shown in `use-package-report'
+(setopt use-package-compute-statistics t)
 
 (provide 'use-package-rcp)
 ;;; use-package-rcp.el ends here
