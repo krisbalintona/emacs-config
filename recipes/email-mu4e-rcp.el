@@ -38,8 +38,8 @@
   :load-path "/usr/share/emacs/site-lisp/mu4e/"
   :commands (kb/mu4e mu4e)
   :hook (;; (after-init . (lambda () (when (daemonp) (mu4e t))))
-         ;; (server-mode . (lambda () (mu4e t)))
-         (on-first-file . (lambda () (mu4e t)))
+         (server-mode . (lambda () (mu4e t)))
+         ;; (on-first-file . (lambda () (mu4e t)))
          (window-setup . (lambda ()
                            (setq mu4e-headers-personal-mark  '("p" . " ")) ; Always set this
                            (unless (bound-and-true-p kb/mu4e-initialise-icons)
