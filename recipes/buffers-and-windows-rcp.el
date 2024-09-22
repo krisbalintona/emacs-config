@@ -73,156 +73,158 @@
             "C-M-s-l" 'rotate-frame-clockwise))
 
 ;;;;; Window
-(general-define-key "M-o" 'other-window)
-(general-define-key :keymaps 'diff-mode-map
-                    "M-o" nil)
+(use-package window
+  :ensure nil
+  :autoload kb/select-buffer-in-side-window
+  :bind (("M-o" . other-window))
+  :custom
+  ;; Prefer vertical splits over horizontal ones
+  (split-width-threshold 170)
+  (split-height-threshold nil)
 
-;; Prefer vertical splits over horizontal ones
-(setopt split-width-threshold 170)
-(setopt split-height-threshold nil)
+  (window-resize-pixelwise t)
+  (window-sides-vertical t)
 
-(setopt window-resize-pixelwise t)
-(setopt window-sides-vertical t)
+  (switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
+  (switch-to-buffer-in-dedicated-window 'pop)
+  (display-buffer-alist
+   `(;; Don't show
+     ("\\*BibTeX validation errors\\*"
+      ;; (display-buffer-reuse-mode-window display-buffer-no-window))
+      (display-buffer-no-window)
+      (allow-no-window . t))
 
-(setopt switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
-(setopt switch-to-buffer-in-dedicated-window 'pop)
+     ;; Full frame
 
-;; Helper function for `display-buffer-alist'
-(defun kb/select-buffer-in-side-window (buffer alist)
-  "Display buffer in a side window then select it."
-  (let ((window (display-buffer-in-side-window buffer alist)))
-    (select-window window)))
-(setopt display-buffer-alist
-        `(;; Don't show
-          ("\\*BibTeX validation errors\\*"
-           ;; (display-buffer-reuse-mode-window display-buffer-no-window))
-           (display-buffer-no-window)
-           (allow-no-window . t))
+     ;; Same window
+     ("\\*helpful *"
+      (display-buffer-reuse-mode-window display-buffer-same-window))
+     ("*Flycheck errors*"
+      (display-buffer-reuse-mode-window display-buffer-same-window))
+     ("\\*devdocs\\*"
+      (display-buffer-reuse-mode-window display-buffer-same-window))
+     ((major-mode . diff-mode)
+      (display-buffer-same-window))
+     ((or . ((major-mode . vc-git-log-view-mode)
+             (major-mode . vc-annotate-mode)
+             (major-mode . vc-git-region-history-mode)))
+      (display-buffer-same-window))
+     ("OrgMimeMailBody"
+      (display-buffer-same-window))
+     ((major-mode . denote-interface-mode)
+      (display-buffer-same-window))
 
-          ;; Full frame
+     ;; To the left
+     ("\\*Faces\\*"
+      (kb/select-buffer-in-side-window)
+      (window-width . 0.33)
+      (side . left)
+      (slot . 2)
+      (window-parameters . ((no-other-window . t))))
 
-          ;; Same window
-          ("\\*helpful *"
-           (display-buffer-reuse-mode-window display-buffer-same-window))
-          ("*Flycheck errors*"
-           (display-buffer-reuse-mode-window display-buffer-same-window))
-          ("\\*devdocs\\*"
-           (display-buffer-reuse-mode-window display-buffer-same-window))
-          ((major-mode . diff-mode)
-           (display-buffer-same-window))
-          ((or . ((major-mode . vc-git-log-view-mode)
-                  (major-mode . vc-annotate-mode)
-                  (major-mode . vc-git-region-history-mode)))
-           (display-buffer-same-window))
-          ("OrgMimeMailBody"
-           (display-buffer-same-window))
-          ((major-mode . denote-interface-mode)
-           (display-buffer-same-window))
+     ;; To the right
+     ("\\*Help\\*"
+      (display-buffer-in-previous-window))
+     ("\\*org-roam\\*"
+      (display-buffer-in-side-window)
+      (dedicated . t)
+      (side . right)
+      (window-width . 0.2))
+     ("\\*Async Shell Command\\*"
+      (kb/select-buffer-in-side-window
+       display-buffer-in-direction)
+      (window-width . 0.20)
+      (side . right)
+      (direction . right)
+      (slot . 4)
+      (window-parameters . ((no-other-window . t))))
 
-          ;; To the left
-          ("\\*Faces\\*"
-           (kb/select-buffer-in-side-window)
-           (window-width . 0.33)
-           (side . left)
-           (slot . 2)
-           (window-parameters . ((no-other-window . t))))
+     ;; To the top
+     (,(rx (literal messages-buffer-name))
+      (kb/select-buffer-in-side-window)
+      (window-height . 0.36)
+      (side . top)
+      (slot . 1))
+     ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
+      (kb/select-buffer-in-side-window)
+      (window-height . 0.3)
+      (side . top)
+      (slot . 2))
+     ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
+      (kb/select-buffer-in-side-window)
+      (window-height . fit-window-to-buffer)
+      (side . top)
+      (slot . -2)
+      (preserve-size . (nil . t))
+      (window-parameters . ((mode-line-format . none))))
 
-          ;; To the right
-          ("\\*Help\\*"
-           (display-buffer-in-previous-window))
-          ("\\*org-roam\\*"
-           (display-buffer-in-side-window)
-           (dedicated . t)
-           (side . right)
-           (window-width . 0.2))
-          ("\\*Async Shell Command\\*"
-           (kb/select-buffer-in-side-window
-            display-buffer-in-direction)
-           (window-width . 0.20)
-           (side . right)
-           (direction . right)
-           (slot . 4)
-           (window-parameters . ((no-other-window . t))))
+     ;; To the bottom
+     ("\\*Flycheck errors\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.33))
+     ("\\(?:[Oo]utput\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . fit-window-to-buffer)
+      (side . bottom)
+      (slot . -4))
+     ("\\*Embark Actions\\*"
+      (display-buffer-at-bottom)
+      (window-height . fit-window-to-buffer)
+      (window-parameters . ((no-other-window . t))))
+     ((major-mode . dap-ui-repl-mode)
+      (display-buffer-at-bottom)
+      (window-height . 12)
+      (window-parameters . ((mode-line-format . none))))
+     ("^\\*eldoc"
+      (lambda (buffer alist)
+        (let ((window (display-buffer-at-bottom buffer alist)))
+          (select-window window)))
+      (window-height . shrink-window-if-larger-than-buffer)
+      (window-parameters . ((mode-line-format . none))))
 
-          ;; To the top
-          (,(rx (literal messages-buffer-name))
-           (kb/select-buffer-in-side-window)
-           (window-height . 0.36)
-           (side . top)
-           (slot . 1))
-          ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
-           (kb/select-buffer-in-side-window)
-           (window-height . 0.3)
-           (side . top)
-           (slot . 2))
-          ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
-           (kb/select-buffer-in-side-window)
-           (window-height . fit-window-to-buffer)
-           (side . top)
-           (slot . -2)
-           (preserve-size . (nil . t))
-           (window-parameters . ((mode-line-format . none))))
-
-          ;; To the bottom
-          ("\\*Flycheck errors\\*"
-           (display-buffer-in-side-window)
-           (window-height . 0.33))
-          ("\\(?:[Oo]utput\\)\\*"
-           (display-buffer-in-side-window)
-           (window-height . fit-window-to-buffer)
-           (side . bottom)
-           (slot . -4))
-          ("\\*Embark Actions\\*"
-           (display-buffer-at-bottom)
-           (window-height . fit-window-to-buffer)
-           (window-parameters . ((no-other-window . t))))
-          ((major-mode . dap-ui-repl-mode)
-           (display-buffer-at-bottom)
-           (window-height . 12)
-           (window-parameters . ((mode-line-format . none))))
-          ("^\\*eldoc"
-           (lambda (buffer alist)
-             (let ((window (display-buffer-at-bottom buffer alist)))
-               (select-window window)))
-           (window-height . shrink-window-if-larger-than-buffer)
-           (window-parameters . ((mode-line-format . none))))
-
-          ;; Below current window
-          ("\\*\\(Calendar\\|Org Select\\).*"
-           (display-buffer-below-selected)
-           (window-height . fit-window-to-buffer))
-          ("\\*\\(Embark\\)?.*Completions.*"
-           (display-buffer-in-side-window)
-           (side . bottom)
-           (slot . 0)
-           (window-parameters . ((no-other-window . t)
-                                 (mode-line-format . none))))
-          ("\\*compilation\\*"
-           (display-buffer-in-side-window)
-           (side . bottom))
-          ("\\*\\(I?Python3\\|Python3\\)\\*"
-           (display-buffer-in-side-window)
-           (side . bottom)
-           (slot . -1)
-           (window-height . 0.27))
-          ("\\*Racket REPL"
-           (display-buffer-in-side-window)
-           (side . bottom)
-           (slot . -1)
-           (window-height . 0.35))
-          ((major-mode . rustic-cargo-run-mode)
-           (display-buffer-in-side-window)
-           (side . bottom)
-           (slot . -1)
-           (window-height . 0.35))
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 20)
-           (dedicated . t)
-           (preserve-size . (t . t)))
-          ("\\*vc-log\\*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (dedicated . t))))
+     ;; Below current window
+     ("\\*\\(Calendar\\|Org Select\\).*"
+      (display-buffer-below-selected)
+      (window-height . fit-window-to-buffer))
+     ("\\*\\(Embark\\)?.*Completions.*"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . 0)
+      (window-parameters . ((no-other-window . t)
+                            (mode-line-format . none))))
+     ("\\*compilation\\*"
+      (display-buffer-in-side-window)
+      (side . bottom))
+     ("\\*\\(I?Python3\\|Python3\\)\\*"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -1)
+      (window-height . 0.27))
+     ("\\*Racket REPL"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -1)
+      (window-height . 0.35))
+     ((major-mode . rustic-cargo-run-mode)
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -1)
+      (window-height . 0.35))
+     ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+      (display-buffer-reuse-mode-window display-buffer-below-selected)
+      (window-height . 20)
+      (dedicated . t)
+      (preserve-size . (t . t)))
+     ("\\*vc-log\\*"
+      (display-buffer-reuse-mode-window display-buffer-below-selected)
+      (dedicated . t))))
+  :config
+  ;; Helper function for `display-buffer-alist'
+  (defun kb/select-buffer-in-side-window (buffer alist)
+    "Display BUFFER in a side window then select it.
+ALIST is  an alist of information about buffer."
+    (let ((window (display-buffer-in-side-window buffer alist)))
+      (select-window window))))
 
 ;; Below selected
 (with-eval-after-load 'xref
@@ -320,8 +322,7 @@
      (?v aw-split-window-vert "Split Vert Window")
      (?b aw-split-window-horz "Split Horz Window")
      (?o delete-other-windows "Delete Other Windows")
-     (?? aw-show-dispatch-help))
-   ))
+     (?? aw-show-dispatch-help))))
 
 ;;;;; Popper
 ;; "Tame ephemeral windows"
