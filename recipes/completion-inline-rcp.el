@@ -120,7 +120,8 @@ default lsp-passthrough."
   (corfu-mode . corfu-popupinfo-mode)
   :bind
   ( :map corfu-map
-    ("C-M-s-d" . corfu-popupinfo-toggle)
+    ("C-M-s-t" . corfu-popupinfo-toggle)
+    ("C-M-s-d" . corfu-popupinfo-documentation)
     ("C-M-s-l" . corfu-popupinfo-location))
   :custom
   (corfu-popupinfo-delay '(0.5 . 0.3))
