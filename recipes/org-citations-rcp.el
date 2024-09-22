@@ -33,8 +33,8 @@
   :ensure nil
   :after org
   :bind
-  (:map org-mode-map
-        ([remap citar-insert-citation] . org-cite-insert))
+  ( :map org-mode-map
+    ([remap citar-insert-citation] . org-cite-insert))
   :custom
   (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (expand-file-name "locales/" user-emacs-directory))

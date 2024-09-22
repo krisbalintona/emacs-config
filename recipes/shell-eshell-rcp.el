@@ -25,9 +25,9 @@
 ;;;; Eshell
 (use-package eshell
   :ensure nil
-  :gfhook
-  'visual-line-mode
-  'kb/eshell-setup
+  :hook
+  ((eshell . visual-line-mode)
+   (eshell . kb/eshell-setup))
   :general
   (kb/open-keys "e" 'eshell)
   (:keymaps 'eshell-mode-map

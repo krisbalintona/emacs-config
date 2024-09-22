@@ -420,11 +420,11 @@ ALIST is  an alist of information about buffer."
 (use-package switchy-window
   :hook (on-first-buffer . switchy-window-minor-mode)
   :bind*
-  (:map switchy-window-minor-mode-map
-        ([remap other-window] . switchy-window))
+  ( :map switchy-window-minor-mode-map
+    ([remap other-window] . switchy-window))
   :bind
-  (:repeat-map kb/switchy-window-repeat-map
-               ("o" . switchy-window))
+  ( :repeat-map kb/switchy-window-repeat-map
+    ("o" . switchy-window))
   :config
   (defun kb/switchy-window (&optional arg)
     "Switch to other windows in most-recently-used order.

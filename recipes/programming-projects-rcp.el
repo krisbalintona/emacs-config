@@ -449,12 +449,13 @@ With a prefix argument, show NLINES of context."
   :hook ((diff-mode . diff-delete-empty-files)
          (kb/themes . kb/themes-setup-diff-mode-faces))
 
-  :bind (:map diff-mode-map
-              ("S-<iso-lefttab>" . outshine-cycle-buffer)
-              ("<tab>" . outshine-cycle)
-              ("C-x n s" . outshine-narrow-to-subtree)
-              ("L" . vc-print-root-log)
-              ("v" . vc-next-action))
+  :bind
+  ( :map diff-mode-map
+    ("S-<iso-lefttab>" . outshine-cycle-buffer)
+    ("<tab>" . outshine-cycle)
+    ("C-x n s" . outshine-narrow-to-subtree)
+    ("L" . vc-print-root-log)
+    ("v" . vc-next-action))
   :custom
   (diff-font-lock-prettify t)
   (diff-refine 'navigation)             ; Font lock hunk when it is navigated to
