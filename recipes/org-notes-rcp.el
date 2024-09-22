@@ -98,8 +98,9 @@
   (denote-menu-bar-mode 1)
 
   ;; Set `org-refile-targets'
-  (add-to-list 'org-refile-targets
-               `(,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2)))
+  (with-eval-after-load 'org-refile
+    (add-to-list 'org-refile-targets
+                 `(,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2))))
 
   ;; Rename denote note. Meant to be added to `after-save-hook'
   (defun kb/denote-auto-rename ()
