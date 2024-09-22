@@ -107,14 +107,9 @@
 
 ;;;;; Work-timer
 (use-package work-timer
-  ;; :ensure (:host github
-  ;;                :protocol ssh
-  ;;                :repo "krisbalintona/work-timer"
-  ;;                :depth nil
-  ;;                :files (:defaults "*.mp3"))
   :vc (:url "git@github.com:krisbalintona/work-timer.git"
             :rev :newest)
-  :defer 5
+  :bind-keymap ("C-c o w" . work-timer-prefix-map)
   :hook (kb/themes . kb/work-timer-set-faces)
   :custom
   (work-timer-debug nil)
@@ -123,13 +118,17 @@
   (work-timer-fractional-work-duration 25)
   (work-timer-break-duration-function 'work-timer-break-duration-fractional)
   (work-timer-fractional-break-duration-fraction 0.25)
-  :init
+  :config
+  (with-eval-after-load 'org-agenda
+    (work-timer-with-org-clock-mode 1))
+
   ;; Save relevant current timer variables to resume timer across Emacs sessions
-  (dolist (var '(work-timer-start-time
-                 work-timer-duration
-                 work-timer-type
-                 work-timer-pauses))
-    (add-to-list 'savehist-additional-variables var))
+  (when (bound-and-true-p savehist-mode)
+    (dolist (var '(work-timer-start-time
+                   work-timer-duration
+                   work-timer-type
+                   work-timer-pauses))
+      (add-to-list 'savehist-additional-variables var)))
 
   (defun kb/work-timer-set-faces ()
     "Set `work-timer-mode-line' according to dark or light theme."
@@ -140,12 +139,7 @@
             (color-darken-name dark-foreground 15))
            (foreground (if dark-p dark-foreground light-foreground)))
       (set-face-foreground 'work-timer-mode-line foreground)))
-  :config
-  (work-timer-with-org-clock-mode 1)
-  (kb/work-timer-set-faces)
-
-  ;; We do this because a :general complains about a symbol's value being void
-  (kb/open-keys "w" work-timer-prefix-map))
+  (kb/work-timer-set-faces))
 
 ;;;; Writing
 ;;;;; Sentex
