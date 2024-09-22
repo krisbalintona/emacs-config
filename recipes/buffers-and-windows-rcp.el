@@ -490,12 +490,11 @@ timestamp)."
 ;;;;; Bookmark
 (use-package bookmark
   :ensure nil
+  :hook (on-first-input . bookmark-maybe-load-default-file)
   :custom
   (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
-  (bookmark-fringe-mark nil)             ; No value and intrusive oftentimes
-  :config
-  (bookmark-maybe-load-default-file))   ; Load bookmarks immediately for access
+  (bookmark-fringe-mark nil))            ; No value and intrusive oftentimes
 
 ;;;;; Ibuffer
 (use-package ibuffer
