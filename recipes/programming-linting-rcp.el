@@ -30,10 +30,12 @@
 ;;;; Flymake
 (use-package flymake
   :diminish
-  :ghook 'prog-mode-hook 'org-mode-hook
-  :general (:keymaps 'flymake-mode-map
-                     "M-n" 'flymake-goto-next-error
-                     "M-p" 'flymake-goto-prev-error)
+  :hook
+  ((prog-mode org-mode) . flymake-mode)
+  :bind
+  ( :map flymake-mode-map
+    ("M-n" . flymake-goto-next-error)
+    ("M-p". flymake-goto-prev-error))
   :custom
   (elisp-flymake-byte-compile-load-path (append '("./") load-path)) ; Recognizes files I know about
   (flymake-wrap-around nil)

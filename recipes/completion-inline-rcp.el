@@ -107,7 +107,8 @@ default lsp-passthrough."
 ;; Save the history across Emacs sessions
 (use-package corfu-history
   :ensure nil
-  :ghook 'corfu-mode-hook
+  :hook
+  (corfu-mode . corfu-history-mode)
   :config
   (with-eval-after-load 'savehist
     (add-to-list 'savehist-additional-variables 'corfu-history)))
@@ -230,29 +231,22 @@ default lsp-passthrough."
   :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
          (lsp-completion-mode . kb/cape-capf-setup-lsp)
          ((git-commit-mode vc-git-log-edit-mode) . kb/cape-capf-setup-commit))
-  :general
-  (:prefix "C-M-s-c"               ; Particular completion function
-           "p" 'completion-at-point
-           "d" 'cape-dabbrev
-           "h" 'cape-history
-           "f" 'cape-file
-           "k" 'cape-keyword
-           "s" 'cape-elisp-symbol
-           "a" 'cape-abbrev
-           "w" 'cape-dict
-           "l" 'cape-line
-           "\\" 'cape-tex
-           "_" 'cape-tex
-           "^" 'cape-tex
-           "&" 'cape-sgml
-           "r" 'cape-rfc1345)
-  ([remap dabbrev-completion] 'cape-dabbrev)
-  (:keymaps 'corfu-map
-            :states 'insert
-            [remap evil-normal-state] '(lambda ()
-                                         (interactive)
-                                         (evil-normal-state)
-                                         (corfu-quit)))
+  :bind
+  (("C-M-s-c p" . completion-at-point)
+   ("C-M-s-c d" . cape-dabbrev)
+   ("C-M-s-c h" . cape-history)
+   ("C-M-s-c f" . cape-file)
+   ("C-M-s-c k" . cape-keyword)
+   ("C-M-s-c s" . cape-elisp-symbol)
+   ("C-M-s-c a" . cape-abbrev)
+   ("C-M-s-c w" . cape-dict)
+   ("C-M-s-c l" . cape-line)
+   ("C-M-s-c \\" . cape-tex)
+   ("C-M-s-c _" . cape-tex)
+   ("C-M-s-c ^" . cape-tex)
+   ("C-M-s-c &" . cape-sgml)
+   ("C-M-s-c r" . cape-rfc1345)
+   ([remap dabbrev-completion] . cape-dabbrev))
   :custom
   (cape-dabbrev-min-length 2)
   :config

@@ -37,9 +37,9 @@
     ("C-M-s-s" . org-store-link)
     ("C-M-S-s" . org-id-store-link)
     ("C-M-<up>" . org-up-element))
-  :general
-  (kb/note-keys
-    "c" 'org-capture)
+  :bind
+  ( :map kb/note-keys
+    ("c" . org-capture))
   :custom
   (org-directory kb/org-dir)
   (org-special-ctrl-a/e t)
@@ -95,9 +95,9 @@
 (use-package org-num
   :ensure nil
   :after org  :diminish
-  :general (kb/toggle-keys
-             :keymaps 'org-mode-map
-             "n" 'org-num-mode)
+  :bind
+  ( :map kb/toggle-keys
+    ("n" . org-num-mode))
   :custom
   (org-num-face 'fixed-pitch)
   (org-num-skip-commented t)
@@ -347,8 +347,9 @@ have `org-warning' face."
 ;; Descendant of (and thus superior to) org-bullets
 (use-package org-superstar  ;; Improved version of org-bullets
   :after org
-  :ghook 'org-mode-hook
-  :gfhook 'kb/org-superstar-auto-lightweight-mode
+  :hook
+  ((org-mode . org-superstar-mode)
+   (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
   :custom
   ;; Indentation
   ;; The following ensures consistent indentation, overriding `org-indent'
@@ -404,7 +405,8 @@ have `org-warning' face."
   :disabled                    ; Not much value, and sometimes even distracting
   :ensure (org-bars :type git :host github :repo "tonyaldon/org-bars")
   :after org
-  :ghook 'org-mode-hook
+  :hook
+  (org-mode . org-bars-mode)
   :init
   ;; Set these in init for some reason
   (setq org-bars-with-dynamic-stars-p nil ; Custom headline stars?
@@ -444,7 +446,8 @@ have `org-warning' face."
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
 ;; over enclosed content
 (use-package org-appear
-  :ghook 'org-mode-hook
+  :hook
+  (org-mode . org-appear-mode)
   :after org
   :custom
   (org-appear-delay 0.0)
@@ -565,9 +568,9 @@ have `org-warning' face."
 ;;;;; Org-web-tools
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
-  :general (kb/yank-keys
-             :keymaps 'org-mode-map
-             "b" 'org-web-tools-insert-link-for-url)
+  :bind
+  ( :map kb/yank-keys
+    ("b" . org-web-tools-insert-link-for-url))
   :config
   ;; Immediately enter view mode
   (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode))))
@@ -577,9 +580,9 @@ have `org-warning' face."
 (use-package org-download
   :ensure-system-package (scrot)
   :hook (org-mode . org-download-enable)
-  :general (kb/yank-keys
-             :keymaps 'org-mode-map
-             "i" 'org-download-clipboard)
+  :bind
+  ( :map kb/yank-keys
+    ("i" . org-download-clipboard))
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "scrot -s %s") ; Use scrot
@@ -591,9 +594,11 @@ have `org-warning' face."
 ;;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
-  :hook ((typo-mode org-mode) . kb/typo-modify-syntax-table)
-  ;; :ghook 'org-mode-hook
-  :init
+  :disabled                             ; NOTE 2024-09-22: Check out `astute.el'
+  :hook
+  (;; (org-mode . typo-mode)
+   ((typo-mode org-mode) . kb/typo-modify-syntax-table))
+  :config
   ;; Add characters (e.g. curly quotes) to syntax table
   (defun kb/typo-modify-syntax-table ()
     "Locally modify the current buffer's syntax table.
@@ -602,7 +607,7 @@ Allows our special characters to be recognized as delimiters."
     (modify-syntax-entry (string-to-char "”") ")“")
     (modify-syntax-entry (string-to-char "‘") "(’")
     (modify-syntax-entry (string-to-char "’") ")‘"))
-  :config
+
   (defun kb/typo-insert-cycle (cycle)
     "Insert the strings in CYCLE"
     (let ((i 0)
@@ -762,12 +767,12 @@ Otherwise, return a user error."
   :disabled
   :after org
   :diminish
-  :ghook 'org-mode-hook
-  :general
-  (:keymaps 'org-visibility-mode-map
-            :prefix "C-x"
-            "C-v" 'org-visibility-force-save ; Originally bound to `find-alternative-file'
-            "M-v" 'org-visibility-remove)
+  :hook
+  (org-mode . org-visibility-mode)
+  :bind
+  ( :map org-visibility-mode-map
+    ("C-x C-v" . org-visibility-force-save) ; Originally bound to `find-alternative-file'
+    ("C-x M-v" . org-visibility-remove))
   :custom
   (org-visibility-state-file (no-littering-expand-var-file-name "org/.org-visibility"))
   (org-visibility-include-paths `(,org-directory))

@@ -29,11 +29,12 @@
 ;;;; Undo-tree
 (use-package undo-tree
   :disabled t
-  :general (:keymaps 'undo-tree-visualizer-mode-map
-                     "h" 'undo-tree-visualize-switch-branch-left
-                     "j" 'undo-tree-visualize-redo
-                     "k" 'undo-tree-visualize-undo
-                     "l" 'undo-tree-visualize-switch-branch-right)
+  :bind
+  ( :map undo-tree-visualizer-mode-map
+    ("h". undo-tree-visualize-switch-branch-left)
+    ("j". undo-tree-visualize-redo)
+    ("k". undo-tree-visualize-undo)
+    ("l". undo-tree-visualize-switch-branch-right))
   :custom
   (evil-undo-system 'undo-tree)
   :init

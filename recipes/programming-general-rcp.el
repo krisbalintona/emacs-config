@@ -55,10 +55,10 @@
   :disabled                             ; Only intrusive
   :diminish eldoc-box-hover-mode
   ;; :hook (eldoc-mode . eldoc-box-hover-mode)
-  :general
-  ([remap eldoc-doc-buffer] 'eldoc-box-help-at-point)
-  (:keymaps 'eglot-mode-map
-            [remap eldoc-box-help-at-point] 'eldoc-box-eglot-help-at-point)
+  :bind
+  (([remap eldoc-doc-buffer] . eldoc-box-help-at-point)
+   :map eglot-mode-map
+   ([remap eldoc-box-help-at-point] . eldoc-box-eglot-help-at-point))
   :custom
   (eldoc-box-max-pixel-width 650)
   (eldoc-box-max-pixel-height 400)
@@ -111,7 +111,8 @@
 ;;;; Compile
 (use-package compile
   :ensure nil
-  :general ("<f5>" 'recompile)
+  :bind
+  ("<f5>" . recompile)
   :custom
   (compilation-scroll-output 'first-error) ; Scroll with compile buffer
   (compilation-auto-jump-to-first-error 'if-location-known))
@@ -123,40 +124,42 @@
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-  :general
-  ("C-x B" 'consult-buffer
-   "C-x r B" 'consult-bookmark)
-  ;; Put remaps here
-  ([remap yank-pop] 'consult-yank-pop
-   [remap repeat-complex-command] 'consult-complex-command
-   [remap goto-line] 'consult-goto-line
-   [remap imenu] 'kb/consult-imenu-versatile
-   [remap recentf-open-files] 'consult-recent-file
-   [remap flymake-show-buffer-diagnostics] 'consult-flymake)
-  (:keymaps 'goto-map
-            ;; Uses the `M-g' prefix
-            "e" 'consult-compile-error
-            "f" 'consult-flymake
-            "o" 'consult-outline
-            "m" 'consult-mark
-            "M" 'consult-global-mark
-            "I" 'consult-imenu-multi)
-  (:keymaps 'search-map
-            ;; Uses the `M-s' prefix
-            "g" 'consult-git-grep
-            "G" 'consult-grep
-            "r" 'consult-ripgrep
-            "f" 'consult-find
-            "F" 'consult-locate
-            "l" 'consult-line
-            "i" 'consult-info)
-  (:keymaps 'consult-narrow-map "?" 'consult-narrow-help) ; Show available narrow keys
-  (:keymaps 'help-map [remap apropos-command] 'consult-apropos)
-  (:keymaps 'org-mode-map [remap consult-outline] 'consult-org-heading)
-  (:keymaps 'comint-mode-map [remap comint-history-isearch-backward-regexp] 'consult-history)
-  (:keymaps 'minibuffer-local-map
-            [remap next-matching-history-element] 'consult-history
-            [remap previous-matching-history-element] 'consult-history)
+  :bind
+  (("C-x B" . consult-buffer)
+   ("C-x r B" . consult-bookmark)
+   ;; Remaps
+   ([remap yank-pop] . consult-yank-pop)
+   ([remap repeat-complex-command] . consult-complex-command)
+   ([remap goto-line] . consult-goto-line)
+   ([remap imenu] . kb/consult-imenu-versatile)
+   ([remap recentf-open-files] . consult-recent-file)
+   ([remap flymake-show-buffer-diagnostics] . consult-flymake)
+   :map goto-map                        ; Uses the `M-g' prefix
+   ("e" . consult-compile-error)
+   ("f" . consult-flymake)
+   ("o" . consult-outline)
+   ("m" . consult-mark)
+   ("M" . consult-global-mark)
+   ("I" . consult-imenu-multi)
+   :map search-map                      ; Uses the `M-s' prefix
+   ("g" . consult-git-grep)
+   ("G" . consult-grep)
+   ("r" . consult-ripgrep)
+   ("f" . consult-find)
+   ("F" . consult-locate)
+   ("l" . consult-line)
+   ("i" . consult-info)
+   :map consult-narrow-map
+   ("?" . consult-narrow-help)          ; Show available narrow keys
+   :map help-map
+   ([remap apropos-command] . consult-apropos)
+   :map org-mode-map
+   ([remap consult-outline] . consult-org-heading)
+   :map comint-mode-map
+   ([remap comint-history-isearch-backward-regexp]. consult-history)
+   :map minibuffer-local-map
+   ([remap next-matching-history-element] . consult-history)
+   ([remap previous-matching-history-element]. consult-history))
   :custom
   (consult-mode-histories   ; What variable consult-history looks at for history
    '((eshell-mode eshell-history-ring eshell-history-index)
@@ -235,14 +238,14 @@
 ;; thus selectrum!)
 (use-package embark
   :commands embark-act
-  :general
-  ("C-." 'embark-act
-   "C-h B" 'embark-bindings)
-  (:keymaps 'vertico-map
-            "C-." 'embark-act
-            "C->" 'embark-become)
-  (:keymaps 'embark-symbol-map
-            "R" 'raise-sexp)
+  :bind
+  (("C-.". embark-act)
+   ("C-h B". embark-bindings)
+   :map vertico-map
+   ("C-.". embark-act)
+   ("C->". embark-become)
+   :map embark-symbol-map
+   ("R". raise-sexp))
   :custom
   ;; Embark Actions menu
   (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
@@ -272,8 +275,9 @@
 ;; Easily create scratch buffers for different modes
 (use-package scratch
   :hook (scratch-create-buffer . kb/scratch-buffer-setup)
-  :general (kb/open-keys
-             "s" 'scratch)
+  :bind
+  ( :map kb/open-keys
+    ("s". scratch))
   :preface
   (defun kb/scratch-buffer-setup ()
     "Add contents to `scratch' buffer and name it accordingly.
@@ -311,9 +315,10 @@
 ;;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
-  :general (kb/file-keys
-             "U" 'sudo-edit-find-file
-             "u" 'sudo-edit)
+  :bind
+  ( :map kb/file-keys
+    ("U" . sudo-edit-find-file)
+    ("u" . sudo-edit))
   :config
   (sudo-edit-indicator-mode))
 
@@ -330,13 +335,12 @@
 ;; font-lock. Usefully has `symbol-overlay-rename'. On highlighted regions, the
 ;; `symbol-overlay-map' is enabled
 (use-package symbol-overlay
-  :general
-  ([remap highlight-symbol-at-point] #'symbol-overlay-put)
-  (:prefix "M-s h"
-           "M-n" #'symbol-overlay-switch-forward
-           "M-p" #'symbol-overlay-switch-backward
-           "<f7>" #'symbol-overlay-mode
-           "<f8>" #'symbol-overlay-remove-all))
+  :bind
+  (([remap highlight-symbol-at-point] . symbol-overlay-put)
+   ("M-s h M-n" . symbol-overlay-switch-forward)
+   ("M-s h M-p" . symbol-overlay-switch-backward)
+   ("M-s h <f7>" . symbol-overlay-mode)
+   ("M-s h <f8>" . symbol-overlay-remove-all)))
 
 ;;;;; Re-builder
 ;; Interactively build regexps
@@ -351,7 +355,8 @@
 (use-package conf-mode
   :ensure nil
   :mode ("\\.rs\\'" . conf-mode)
-  :gfhook 'outshine-mode)
+  :hook
+  (conf-mode . outshine-mode))
 
 ;;;;; Vimrc-mode
 ;; For editing vim/nvim config files
@@ -421,18 +426,19 @@ with the exception of org-emphasis markers."
 ;;;;; Hl-line
 (use-package hl-line
   :ensure nil
-  :ghook 'prog-mode-hook 'conf-mode-hook)
+  :hook
+  ((prog-mode conf-mode) . hl-line-mode))
 
 ;;;;; Hl-todo
 ;; OPTIMIZE 2023-07-14: Also consider synergy with
 ;; https://codeberg.org/ideasman42/emacs-prog-face-refine
 (use-package hl-todo
   :hook (on-first-buffer . global-hl-todo-mode)
-  :general (:keymaps 'hl-todo-mode-map
-                     :prefix "M-s t"
-                     "n" 'hl-todo-next
-                     "p" 'hl-todo-previous
-                     "o" 'hl-todo-occur)
+  :bind
+  ( :map hl-todo-mode-map
+    ("M-s t n" . hl-todo-next)
+    ("M-s t p" . hl-todo-previous)
+    ("M-s t o" . hl-todo-occur))
   :custom
   (hl-todo-include-modes '(prog-mode text-mode))
   (hl-todo-text-modes '(markdown-mode text-mode))
@@ -497,13 +503,15 @@ with the exception of org-emphasis markers."
 ;; Colorify color codes
 (use-package rainbow-mode
   :diminish
-  :ghook 'text-mode-hook 'prog-mode-hook 'conf-mode-hook 'help-mode-hook)
+  :hook
+  ((text-mode prog-mode conf-mode help-mode) . rainbow-mode))
 
 ;;;;; Highlight-defined
 ;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
 ;; text which is the symbol of a face.
 (use-package highlight-defined
-  :ghook 'prog-mode-hook 'conf-mode-hook
+  :hook
+  ((prog-mode conf-mode) . highlight-defined-mode)
   :custom
   (highlight-defined-face-use-itself t))
 
@@ -511,7 +519,8 @@ with the exception of org-emphasis markers."
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
-  :ghook 'emacs-lisp-mode-hook)
+  :hook
+  (emacs-lisp-mode . highlight-quoted-mode))
 
 ;;;;; Paren
 ;; Highlight matching delimiters
@@ -550,9 +559,11 @@ with the exception of org-emphasis markers."
 (defvar outline-minor-mode-prefix (kbd "C-c \\"))
 (use-package outshine
   :diminish (outshine-mode outline-minor-mode)
-  :ghook 'LaTeX-mode-hook 'prog-mode-hook 'conf-mode-hook
-  :general (:keymaps 'outshine-mode-map
-                     "C-x n s" 'outshine-narrow-to-subtree)
+  :hook
+  ((LaTeX-mode prog-mode conf-mode) . outshine-mode)
+  :bind
+  ( :map outshine-mode-map
+    ("C-x n s". outshine-narrow-to-subtree))
   :custom
   (outshine-use-speed-commands t)) ; Use speedy commands on headlines (or other defined locations)
 

@@ -43,18 +43,17 @@ functions."
                                  (push (cons 'flymake-diagnostic-functions flymake-diagnostic-functions)
                                        eglot--saved-bindings) ; Manually add to saved values
                                  (add-to-list 'flymake-diagnostic-functions 'eglot-flymake-backend))))
-  :general
-  ("C-c e e" 'eglot)
-  (:keymaps 'eglot-mode-map
-            :prefix "C-c e"
-            "r" 'eglot-rename
-            "a" 'eglot-code-actions
-            "=" 'eglot-format
-            "R" 'eglot-reconnect
-            "s" 'eglot-shutdown
-            "S" 'eglot-shutdown-all)
-  (:keymaps 'eglot-mode-map
-            (general-chord "``") 'eglot-code-actions)
+  :bind
+  (("C-c e e" . eglot)
+   :map eglot-mode-map
+   ("C-c e r" . eglot-rename)
+   ("C-c e a" . eglot-code-actions)
+   ("C-c e =" . eglot-format)
+   ("C-c e R" . eglot-reconnect)
+   ("C-c e s" . eglot-shutdown)
+   ("C-c e S" . eglot-shutdown-all))
+  :chords
+  ("``" . eglot-code-actions)
   :custom
   ;; NOTE 2023-07-11: Set to 0 if I want performance in exchange for no events
   ;; printed to a buffer. Fyi: Pretty printing to lisp is much much slower than
@@ -108,8 +107,9 @@ functions."
 ;; Equivalent to `consult-lsp'; adds `consult-eglot-symbols'.
 (use-package consult-eglot
   :after eglot
-  :general (:keymaps 'eglot-mode-map
-                     [remap xref-find-apropos] #'consult-eglot-symbols))
+  :bind
+  ( :map eglot-mode-map
+    ([remap xref-find-apropos] . consult-eglot-symbols)))
 
 (provide 'programming-eglot-rcp)
 ;;; programming-eglot-rcp.el ends here

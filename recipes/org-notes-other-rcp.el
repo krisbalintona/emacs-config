@@ -301,8 +301,7 @@ annotation immediately after creation."
                                          (if (equal type "") 'highlight (intern type)))
                                        (pdf-annot-read-color "Annotation color: "))))
 
-  (general-define-key :keymaps 'pdf-view-mode-map
-                      [remap avy-goto-char-timer] #'kb/avy-pdf-highlight))
+  (bind-key [remap avy-goto-char-timer] #'kb/avy-pdf-highlight pdf-view-mode-map))
 
 ;;;;;; Pdf-annot-list custom (tablist) color filter
 (with-eval-after-load 'pdf-tools
@@ -364,8 +363,7 @@ the color column."
         (kb/pdf-annot-list-filter-color-regexp)
       (call-interactively 'tablist-push-regexp-filter)))
 
-  (general-define-key :keymaps 'pdf-annot-list-mode-map
-                      [remap tablist-push-regexp-filter] 'kb/pdf-annot-list-filter-regexp))
+  (bind-key [remap tablist-push-regexp-filter] #'kb/pdf-annot-list-filter-regexp 'pdf-annot-list-mode-map))
 
 ;;;;;; Custom org-link type for PDF annotations
 ;; NOTE 2024-02-10: Code copied from the code shared on Thu, 08 Feb 2024
@@ -497,19 +495,19 @@ Uses the current annotation at point's ID."
   ;;                    :remotes ("remote" :repo "krisbalintona/org-noter"))
   :vc (:url "https://github.com/krisbalintona/org-noter.git"
             :rev :newest)
-  :general
-  (:keymaps 'pdf-misc-minor-mode-map
-            "I" nil
-            "M" 'pdf-misc-display-metadata)
-  (:keymaps 'org-noter-doc-mode-map
-            "i" 'org-noter-insert-precise-note
-            "I" 'org-noter-insert-precise-note-toggle-no-questions
-            "C-i" 'org-noter-insert-note
-            "C-S-i" 'org-noter-insert-note-toggle-no-questions
-            "C-M-i" nil
-            "M-i" nil
-            ;; FIXME 2024-01-13: Choose better keybind
-            "C-M-s-\"" 'org-noter-pdf--create-missing-annotation)
+  :bind
+  ( :map pdf-misc-minor-mode-map
+    (("I" . nil)
+     ("M" . 'pdf-misc-display-metadata))
+    :map org-noter-doc-mode-map
+    (("i" . org-noter-insert-precise-note)
+     ("I" . org-noter-insert-precise-note-toggle-no-questions)
+     ("C-i" . org-noter-insert-note)
+     ("C-S-i" . org-noter-insert-note-toggle-no-questions)
+     ("C-M-i" . nil)
+     ("M-i" . nil)
+     ;; FIXME 2024-01-13: Choose better keybind
+     ("C-M-s-\"" . org-noter-pdf--create-missing-annotation)))
   :custom
   (org-noter-notes-search-path `(,kb/notes-dir))
   ;; FIXME 2024-01-12: I am not currently using org-noter, but when I do, I can
@@ -666,17 +664,17 @@ A modified version of `ytdl-download'."
 ;;;; Org-remark
 (use-package org-remark
   :hook ((Info-mode eww-mode) . org-remark-mode)
-  :general (:keymaps 'org-remark-mode-map
-                     :prefix "C-c r"
-                     "r" '(lambda () (interactive) (org-remark-highlights-load))
-                     "m" 'org-remark-mark
-                     "d" 'org-remark-delete
-                     "c" 'org-remark-change
-                     "t" 'org-remark-toggle
-                     "o" 'org-remark-open
-                     "v" 'org-remark-view
-                     "n" 'org-remark-next
-                     "p" 'org-remark-prev)
+  :bind
+  ( :map org-remark-mode-map
+    ("C-c r r" . (lambda () (interactive) (org-remark-highlights-load)))
+    ("C-c r m" . org-remark-mark)
+    ("C-c r d" . org-remark-delete)
+    ("C-c r c" . org-remark-change)
+    ("C-c r t" . org-remark-toggle)
+    ("C-c r o" . org-remark-open)
+    ("C-c r v" . org-remark-view)
+    ("C-c r n" . org-remark-next)
+    ("C-c r p" . org-remark-prev))
   :custom
   (org-remark-notes-auto-delete :auto-delete)
   (org-remark-source-file-name 'abbreviate-file-name)
@@ -753,7 +751,8 @@ A modified version of `ytdl-download'."
 (use-package delve
   :disabled t                           ; Don't use
   :ensure (delve :type git :host github :repo "publicimageltd/delve")
-  :gfhook #'delve-compact-view-mode
+  :hook
+  (delve-mode . delve-compact-view-mode)
   ;; FIXME 2022-05-27: `delve--zettel-preview' seems necessary to prevent cmacro
   ;; compiler error for `kb/delve--key--toggle-preview'.
   :commands delve delve--zettel-preview
@@ -816,18 +815,18 @@ A modified version of `ytdl-download'."
 
   ;; My own functions below
   (lister-defkey kb/delve--key--toggle-preview (ewoc pos prefix node)
-    "Toggle the display of the preview of ZETTEL."
-    (let ((zettel (delve--current-item-or-error 'delve--zettel ewoc pos)))
-      ;; Unhide the sublist first
-      (lister-with-sublist-below ewoc pos beg end
-        (lister--outline-hide-show ewoc beg end nil))
-      ;; Then show preview
-      (let ((preview (and (not (delve--zettel-preview zettel))
-                          (or (delve--get-preview-contents zettel)
-                              "No preview available"))))
-        (setf (delve--zettel-preview zettel) preview)
-        (lister-refresh-at lister-local-ewoc :point))
-      ))
+                 "Toggle the display of the preview of ZETTEL."
+                 (let ((zettel (delve--current-item-or-error 'delve--zettel ewoc pos)))
+                   ;; Unhide the sublist first
+                   (lister-with-sublist-below ewoc pos beg end
+                                              (lister--outline-hide-show ewoc beg end nil))
+                   ;; Then show preview
+                   (let ((preview (and (not (delve--zettel-preview zettel))
+                                       (or (delve--get-preview-contents zettel)
+                                           "No preview available"))))
+                     (setf (delve--zettel-preview zettel) preview)
+                     (lister-refresh-at lister-local-ewoc :point))
+                   ))
 
   (defvar kb/delve-cycle-global-contents t
     "Are all the contents of the given delve buffer (EWOC)
@@ -860,29 +859,29 @@ When called with PREFIX, hide all previews."
     (setq-local kb/delve-cycle-global-contents (not kb/delve-cycle-global-contents)))
 
   (lister-defkey kb/delve-mark-duplicates (ewoc pos prefix node)
-    "Mark duplicate org-roam nodes in the current delve buffer."
-    (let ((id-tracker (list)))
-      (lister-save-current-node ewoc
-          (lister-walk-nodes ewoc
-                             #'(lambda (ewoc new-node)
-                                 (let ((id (delve--zettel-id (delve--current-item nil ewoc new-node))))
-                                   (if (member id id-tracker)
-                                       ;; (lister-delete-at ewoc new-node)
-                                       (lister-mode-mark ewoc new-node)
-                                     (setq id-tracker (append id-tracker (list id))))))
-                             :first :last
-                             #'(lambda (new-node) (cl-typep (delve--current-item nil ewoc new-node) 'delve--zettel))))))
+                 "Mark duplicate org-roam nodes in the current delve buffer."
+                 (let ((id-tracker (list)))
+                   (lister-save-current-node ewoc
+                                             (lister-walk-nodes ewoc
+                                                                #'(lambda (ewoc new-node)
+                                                                    (let ((id (delve--zettel-id (delve--current-item nil ewoc new-node))))
+                                                                      (if (member id id-tracker)
+                                                                          ;; (lister-delete-at ewoc new-node)
+                                                                          (lister-mode-mark ewoc new-node)
+                                                                        (setq id-tracker (append id-tracker (list id))))))
+                                                                :first :last
+                                                                #'(lambda (new-node) (cl-typep (delve--current-item nil ewoc new-node) 'delve--zettel))))))
   (lister-defkey kb/delve-visual-copy-nodes (ewoc pos prefix node)
-    "Copy current node(s) when region is active."
-    (when (region-active-p)
-      (copy-region-as-kill (mark) (point) 'region)))
+                 "Copy current node(s) when region is active."
+                 (when (region-active-p)
+                   (copy-region-as-kill (mark) (point) 'region)))
   (lister-defkey kb/delve-copy-zettel-title (ewoc pos prefix node)
-    "Copy current org-roam node's (delve--zettel) title."
-    (let* ((item (delve--current-item-or-error 'delve--zettel ewoc node))
-           (title (delve--zettel-title item))
-           (file (delve--zettel-file item)))
-      (kill-new title)
-      (message (format "The node title \"%s\" from %s has been copied" title file)))))
+                 "Copy current org-roam node's (delve--zettel) title."
+                 (let* ((item (delve--current-item-or-error 'delve--zettel ewoc node))
+                        (title (delve--zettel-title item))
+                        (file (delve--zettel-file item)))
+                   (kill-new title)
+                   (message (format "The node title \"%s\" from %s has been copied" title file)))))
 
 ;;;; Lister
 ;; Interactive list library for `delve'
@@ -962,34 +961,34 @@ But don't indent if indenting breaks the structure of the tree."
 
   ;; New keybinds
   (lister-defkey kb/lister-mode-up (ewoc pos prefix node)
-    "Move the item at point one up, preserving `org-mode'-like tree
+                 "Move the item at point one up, preserving `org-mode'-like tree
 structure."
-    (kb/lister-move-item-up ewoc pos))
+                 (kb/lister-move-item-up ewoc pos))
   (lister-defkey kb/lister-mode-down (ewoc pos prefix node)
-    "Move the item at point one down, preserving `org-mode'-like tree
+                 "Move the item at point one down, preserving `org-mode'-like tree
 structure."
-    (kb/lister-move-item-down ewoc pos prefix))
+                 (kb/lister-move-item-down ewoc pos prefix))
   (lister-defkey kb/lister-mode-right (ewoc pos prefix node)
-    "Move the item at point to the right, preserving `org-mode'-like
+                 "Move the item at point to the right, preserving `org-mode'-like
 tree structure."
-    (kb/lister-move-item-right ewoc pos node))
+                 (kb/lister-move-item-right ewoc pos node))
   (lister-defkey kb/lister-mode-left-sublist (ewoc pos prefix node)
-    "Move the node at point and its sublist, if any, to the left."
-    (let ((indentation-current (lister-node-get-level node)))
-      (if (and (< 0 indentation-current) (lister-sublist-below-p ewoc node))
-          (progn
-            (lister-set-node-level ewoc node (1- indentation-current))
-            (lister-move-sublist-left ewoc (ewoc-next ewoc node)))
-        (lister-move-item-left ewoc pos))))
+                 "Move the node at point and its sublist, if any, to the left."
+                 (let ((indentation-current (lister-node-get-level node)))
+                   (if (and (< 0 indentation-current) (lister-sublist-below-p ewoc node))
+                       (progn
+                         (lister-set-node-level ewoc node (1- indentation-current))
+                         (lister-move-sublist-left ewoc (ewoc-next ewoc node)))
+                     (lister-move-item-left ewoc pos))))
   (lister-defkey kb/lister-mode-right-sublist (ewoc pos prefix node)
-    "Move the node at point and its sublist, if any, to the right."
-    (if (lister-sublist-below-p ewoc node)
-        (progn
-          (lister-move-sublist-right ewoc (ewoc-next ewoc node))
-          ;; Move sublist before current node because the current node becomes
-          ;; part of the sublist if indented first
-          (lister-set-node-level ewoc node (1+ (lister-node-get-level node))))
-      (kb/lister-move-item-right ewoc pos node))))
+                 "Move the node at point and its sublist, if any, to the right."
+                 (if (lister-sublist-below-p ewoc node)
+                     (progn
+                       (lister-move-sublist-right ewoc (ewoc-next ewoc node))
+                       ;; Move sublist before current node because the current node becomes
+                       ;; part of the sublist if indented first
+                       (lister-set-node-level ewoc node (1+ (lister-node-get-level node))))
+                   (kb/lister-move-item-right ewoc pos node))))
 
 (provide 'org-notes-other-rcp)
 ;;; org-notes-other-rcp.el ends here

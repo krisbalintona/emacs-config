@@ -42,7 +42,8 @@
 ;;;; Ssh-config-mode
 ;; For ~/.ssh/config
 (use-package ssh-config-mode
-  :gfhook 'display-line-numbers-mode)
+  :hook
+  (ssh-config-mode . display-line-numbers-mode))
 
 (provide 'programming-shell-rcp)
 ;;; programming-shell-rcp.el ends here

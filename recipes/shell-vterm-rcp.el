@@ -32,21 +32,14 @@
   :ensure-system-package (("/usr/share/licenses/libvterm/" . libvterm) ; Specifically for Fedora
                           (libtool)
                           (cmake))
-  :gfhook
-  '(lambda ()
-     (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
-     (buffer-face-mode t)
-     (face-remap-add-relative 'default :height 1.1))
-  :general
-  (:keymaps 'vterm-mode-map
-            :states 'insert
-            "<tab>" 'vterm-send-tab)
-  (kb/open-keys
-    "v" '((lambda ()
-            (interactive)
-            (vterm (concat "*vterm* "
-                           (file-name-nondirectory (directory-file-name (file-name-directory default-directory))))))
-          :wk "Vterm"))
+  :hook
+  (vterm-mode . (lambda ()
+                  (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
+                  (buffer-face-mode t)
+                  (face-remap-add-relative 'default :height 1.1)))
+  :bind
+  ( :map kb/open-keys
+    ("v" . vterm))
   :custom
   (vterm-kill-buffer-on-exit nil)
   (vterm-copy-exclude-prompt t)

@@ -36,9 +36,9 @@
   :mode ("\\.hbs\\'"                    ; For ghost
          "\\.yaml\\'"
          "\\.html\\'")
-  :gfhook
-  'display-line-numbers-mode
-  'visual-line-mode
+  :hook
+  ((web-mode . display-line-numbers-mode)
+   (web-mode . visual-line-mode))
   :custom
   (web-mode-markup-indent-offset 4)
   (web-mode-css-indent-offset 2)
@@ -80,9 +80,9 @@
   :ensure-system-package ((eslint . "sudo npm install --global --save-dev eslint")
                           (semistandard . "sudo npm install --global semistandard"))
   :mode "\\.js\\'"
-  :gfhook
-  'display-line-numbers-mode
-  'visual-line-mode
+  :hook
+  ((js2-mode . display-line-numbers-mode)
+   (js2-mode . visual-line-mode))
   :custom
   (js-indent-level 4)
 
@@ -99,11 +99,9 @@
 ;;;; Yaml-mode
 (use-package yaml-mode
   :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
-  :gfhook
-  'display-line-numbers-mode
-  'visual-line-mode
-  :general (:keymaps 'yaml-mode-map
-                     [remap evil-indent] 'yaml-indent-line)
+  :hook
+  ((yaml-mode . display-line-numbers-mode)
+   (yaml-mode . visual-line-mode))
   :custom
   (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 

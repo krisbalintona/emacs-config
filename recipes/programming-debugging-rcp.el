@@ -43,31 +43,28 @@
 (use-package dap-mode
   :after lsp-mode
   :commands dap-debug
-  :general
-  (:keymaps 'lsp-mode-map
-            :prefix "<f6>"
-            "d" '(dap-debug :wk "Debug")
-            "l" '(dap-debug-last :wk "Debug last")
-            "h" '(dap-hydra :wk "Hydra")
-            "q" '(dap-disconnect :wk "Quit")
-            "r" '(dap-ui-repl :wk "REPL")
+  :bind
+  ( :map lsp-mode-map
+    ("<f6> d" . dap-debug)
+    ("<f6> l" . dap-debug-last)
+    ("<f6> h" . dap-hydra)
+    ("<f6> q" . dap-disconnect)
+    ("<f6> r" . dap-ui-repl)
 
-            "b" '(:ignore t :wk "Breakpoints")
-            "bt" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
-            "ba" '(dap-breakpoint-toggle :wk "Add breakpoint")
-            "bd" '(dap-breakpoint-delete :wk "Delete breakpoint")
-            "bD" '(dap-breakpoint-delete-all :wk "Delete all breakpoints")
-            "bl" '(dap-breakpoint-log-message :wk "Breakpoint log")
-            "bc" '(dap-breakpoint-condition :wk "Breakpoint condition")
+    ("<f6> b" . :ignore)
+    ("<f6> bt" . dap-breakpoint-toggle)
+    ("<f6> ba" . dap-breakpoint-toggle)
+    ("<f6> bd" . dap-breakpoint-delete)
+    ("<f6> bD" . dap-breakpoint-delete-all)
+    ("<f6> bl" . dap-breakpoint-log-message)
+    ("<f6> bc" . dap-breakpoint-condition)
 
-            "e" '(:ignore t :wk "Expressions")
-            "ea" '(dap-ui-expressions-add :wk "Expression add")
-            "er" '(dap-ui-expressions-remove :wk "Expression add")
-            )
-  (:keymaps 'lsp-mode-map
-            "C-M-s-c" 'dap-debug-last
-            "C-M-s-C" 'dap-debug-recent
-            )
+    ("<f6> e" . :ignore)
+    ("<f6> ea" . dap-ui-expressions-add)
+    ("<f6> er" . dap-ui-expressions-remove)
+
+    ("C-M-s-c" . dap-debug-last)
+    ("C-M-s-C" . dap-debug-recent))
   :custom
   (dap-debug-compilation-keep t)        ; Keep output window in success?
   (dap-debug-restart-keep-session nil)  ; Delete previous sessions
@@ -108,17 +105,16 @@
 ;;;; Dape
 ;; Dap-mode but without LSP-mode
 (use-package dape
+  :diminish dape-breakpoint-global-mode
   :custom
   (dape-key-prefix nil)                 ; I make my own binding
   (dape-buffer-window-arrangement 'right)
   (dape-stepping-granularity 'instruction)
   (dape-info-variable-table-aligned t)
   :config
-  (general-define-key :keymaps 'prog-mode-map
-                      "C-c d" dape-global-map)
-
   (dape-breakpoint-global-mode 1)
-  (diminish 'dape-breakpoint-global-mode)
+
+  (bind-key "C-c d" dape-global-map 'prog-mode-map)
 
   ;; Kill created compile buffer on build success
   (add-hook 'dape-compile-compile-hooks 'kill-buffer)

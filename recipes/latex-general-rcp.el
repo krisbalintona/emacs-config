@@ -90,18 +90,20 @@
   :ensure nil
   :after auctex
   :mode ("\\.[tT]e[xX]\\'" . LaTeX-mode)
-  :general (:keymaps 'LaTeX-mode-map
-                     "C-<return>" 'LaTeX-insert-item)
-  :hook (LaTeX-mode . (lambda ()
-                        (TeX-PDF-mode)
-                        (TeX-source-correlate-mode) ; Minor mode for forward and inverse search.
-                        (TeX-fold-mode)
-                        (LaTeX-math-mode) ; Math macros
-                        (visual-line-mode)
-                        (display-line-numbers-mode)
-                        (prettify-symbols-mode)
-                        (outshine-mode)
-                        (flymake-mode)))
+  :bind
+  ( :map LaTeX-mode-map
+    ("C-<return>" . LaTeX-insert-item))
+  :hook
+  (LaTeX-mode . (lambda ()
+                  (TeX-PDF-mode)
+                  (TeX-source-correlate-mode) ; Minor mode for forward and inverse search.
+                  (TeX-fold-mode)
+                  (LaTeX-math-mode) ; Math macros
+                  (visual-line-mode)
+                  (display-line-numbers-mode)
+                  (prettify-symbols-mode)
+                  (outshine-mode)
+                  (flymake-mode)))
   :custom
   ;; Add the TOC entry to the sectioning hooks
   (LaTeX-section-hook
@@ -269,27 +271,28 @@ blacklist, this is mostly for \\section etc."
 ;; Faster LaTeX inputs
 (use-package cdlatex
   :after auctex
-  :hook ((LaTeX-mode . cdlatex-mode)
-         (org-mode . org-cdlatex-mode))
-  :diminish (org-cdlatex-mode . "")
-  :general
-  (:keymaps 'cdlatex-mode-map
-            ;; Other packages take care of inserting closing delimiters
-            "$" nil
-            "(" nil
-            "{" nil
-            "[" nil
-            "|" nil
-            "<" nil
-            ;; AUCTeX takes care of auto-inserting {} on _^ if you want, with
-            ;; `TeX-electric-sub-and-superscript'.
-            "^" nil
-            "_" nil
-            ;; Don't affect tab behavior
-            "TAB" nil
-            ;; AUCTeX already provides this functionality with `LaTeX-insert-item'
-            ;; (albeit in another binding; at least was reserve this one)
-            "C-<return>" nil)
+  :diminish org-cdlatex-mode
+  :hook
+  ((LaTeX-mode . cdlatex-mode)
+   (org-mode . org-cdlatex-mode))
+  :bind
+  ( :map cdlatex-mode-map
+    ;; Other packages take care of inserting closing delimiters
+    ("$" . nil)
+    ("(" . nil)
+    ("{" . nil)
+    ("[" . nil)
+    ("|" . nil)
+    ("<" . nil)
+    ;; AUCTeX takes care of auto-inserting {} on _^ if you want, with
+    ;; `TeX-electric-sub-and-superscript'.
+    ("^" . nil)
+    ("_" . nil)
+    ;; Don't affect tab behavior
+    ("TAB" . nil)
+    ;; AUCTeX already provides this functionality with `LaTeX-insert-item'
+    ;; (albeit in another binding; at least was reserve this one)
+    ("C-<return>" . nil))
   :custom
   (cdlatex-env-alist
    '(("pline" "\\pline[]{?}[]" nil)
@@ -345,9 +348,13 @@ blacklist, this is mostly for \\section etc."
   ;;                :files (:defaults "*.py" "*.js" "extension/*/*"))
   :vc (:url "https://github.com/manateelazycat/popweb.git"
             :rev :newest)
-  :hook (LaTeX-mode . popweb-latex-mode)
-  :general (:keymaps '(LaTeX-mode-map org-mode-map)
-                     "C-M-s-'" 'popweb-latex-show)
+  :hook
+  (LaTeX-mode . popweb-latex-mode)
+  :bind
+  ( :map LaTeX-mode-map
+    ("C-M-s-'" . popweb-latex-show)
+    :map org-mode-map
+    ("C-M-s-'" . popweb-latex-show))
   :custom
   (popweb-config-location (no-littering-expand-var-file-name "popweb"))
   (popweb-popup-pos "point-bottom")

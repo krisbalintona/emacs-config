@@ -31,73 +31,9 @@
 (use-package lsp-mode
   :diminish ((lsp-mode . "LSP")
              (lsp-lens-mode . "Lens"))
-  :gfhook
-  'lsp-enable-which-key-integration
-  'lsp-lens-mode
-  :general
-  (:keymaps 'lsp-mode-map
-            :states 'insert
-            "<tab>" 'indent-for-tab-command)
-  (kb/lsp-keys ; Remap all the keys from `lsp-command-map'
-    "w" '(ignore t :wk "Workspaces")
-    "wD" '(lsp-disconnect :wk "disconnect")
-    "wd" '(lsp-describe-session :wk "describe session")
-    "wq" '(lsp-workspace-shutdown :wk "shutdown server")
-    "wr" '(lsp-workspace-restart :wk "restart server")
-    "ws" '(lsp :wk "start server")
-
-    "=" '(ignore t :wk "Formatting")
-    "==" '(lsp-format-buffer :wk "format buffer")
-    "=r" '(lsp-format-region :wk "format region")
-
-    "F" '(ignore t :wk "Folders")
-    "Fa" '(lsp-workspace-folders-add :wk "add folder")
-    "Fb" '(lsp-workspace-blacklist-remove :wk "un-blacklist folder")
-    "Fr" '(lsp-workspace-folders-remove :wk "remove folder")
-
-    "T" '(ignore t :wk "Toggles")
-    "TD" '(lsp-modeline-diagnostics-mode :wk "toggle modeline diagnostics")
-    "TL" '(lsp-toggle-trace-io :wk "toggle log io")
-    "TS" '(lsp-ui-sideline-mode :wk "toggle sideline")
-    "TT" '(lsp-treemacs-sync-mode :wk "toggle treemacs integration")
-    "Ta" '(lsp-modeline-code-actions-mode :wk "toggle modeline code actions")
-    "Tb" '(lsp-headerline-breadcrumb-mode :wk "toggle breadcrumb")
-    "Td" '(lsp-ui-doc-mode :wk "toggle documentation popup")
-    "Tf" '(lsp-toggle-on-type-formatting :wk "toggle on type formatting")
-    "Th" '(lsp-toggle-symbol-highlight :wk "toggle highlighting")
-    "Tl" '(lsp-lens-mode :wk "toggle lenses")
-    "Ts" '(lsp-toggle-signature-auto-activate :wk "toggle signature")
-
-    "g" '(ignore t :wk "Gotos")
-    "ga" '(xref-find-apropos :wk "find symbol in workspace")
-    "gd" '(lsp-find-declaration :wk "find declarations")
-    "ge" '(lsp-treemacs-errors-list :wk "show errors")
-    "gg" '(lsp-find-definition :wk "find definitions")
-    "gh" '(lsp-treemacs-call-hierarchy :wk "call hierarchy")
-    "gi" '(lsp-find-implementation :wk "find implementations")
-    "gr" '(lsp-find-references :wk "find references")
-    "gt" '(lsp-find-type-definition :wk "find type definition")
-
-    "h" '(ignore t :wk "Help")
-    "hg" '(lsp-ui-doc-glance :wk "glance symbol")
-    "hh" '(lsp-describe-thing-at-point :wk "describe symbol at point")
-    "hs" '(lsp-signature-activate :wk "signature help")
-
-    "r" '(ignore t :wk "Refactoring")
-    "ro" '(lsp-organize-imports :wk "organize imports")
-    "rr" '(lsp-rename :wk "rename")
-
-    "a" '(ignore t :wk "Actions")
-    "aa" '(lsp-execute-code-action :wk "code actions")
-    "ah" '(lsp-document-highlight :wk "highlight symbol")
-    "al" '(lsp-avy-lens :wk "lens")
-
-    "p" '(ignore t :wk "Peeks")
-    "Gg" '(lsp-ui-peek-find-definitions :wk "peek definitions")
-    "Gi" '(lsp-ui-peek-find-implementation :wk "peek implementations")
-    "Gr" '(lsp-ui-peek-find-references :wk "peek references")
-    "Gs" '(lsp-ui-peek-find-workspace-symbol :wk "peek workspace symbol")
-    )
+  :hook
+  ((lsp-mode . lsp-enable-which-key-integration)
+   (lsp-mode . lsp-lens-mode))
   :custom
   ;; core
   (lsp-keymap-prefix "C-M-s-l")             ; Also have this be a prefix
@@ -155,16 +91,17 @@
 ;; on the point.
 (use-package lsp-ui
   :requires lsp
-  :ghook 'lsp-mode-hook
-  :hook (lsp-ui-imenu-mode . hide-mode-line-mode)
-  :gfhook
-  '(lambda ()
-     (when (bound-and-true-p eldoc-box-hover-mode)
-       (eldoc-box-hover-mode -1)))
-  :general (:keymaps 'lsp-ui-mode-map
-                     [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
-                     [remap xref-find-references] #'lsp-ui-peek-find-references
-                     [remap imenu-list] #'lsp-ui-imenu)
+  :hook
+  ((lsp-mode . lsp-ui-mode)
+   (lsp-ui-imenu-mode . hide-mode-line-mode)
+   (lsp-ui-mode . (lambda ()
+                    (when (bound-and-true-p eldoc-box-hover-mode)
+                      (eldoc-box-hover-mode -1)))))
+  :bind
+  ( :map lsp-ui-mode-map
+    ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+    ([remap xref-find-references] . lsp-ui-peek-find-references)
+    ([remap imenu-list] . lsp-ui-imenu))
   :custom
   ;; Lsp-ui-peek - Peek in a child frame
   (lsp-ui-peek-enable t)
@@ -211,16 +148,9 @@
 ;;;;; Consult-lsp
 (use-package consult-lsp
   :after lsp-mode
-  :hook (lsp-mode . (lambda () ; Need to do it this way since adding to `lsp-mode-map' doesn't work
-                      (general-define-key
-                       :keymaps 'local
-                       :states '(normal visual)
-                       "gs" '(consult-lsp-symbols :wk "Consult lsp symbols regexp")
-                       "gf" '(consult-lsp-file-symbols :wk "Consult lsp file symbols list")
-                       )))
-  :general
-  (:keymaps 'lsp-mode-map
-            [remap consult-flycheck] '(consult-lsp-diagnostics :wk "Consult lsp diagnostics")))
+  :bind
+  ( :map lsp-mode-map
+    ([remap consult-flycheck] . consult-lsp-diagnostics)))
 
 (provide 'programming-lsp-mode-rcp)
 ;;; programming-lsp-mode-rcp.el ends here

@@ -439,9 +439,9 @@ Uses my 'latex-paper' backend. See the original
 (use-package ox-clip
   :ensure-system-package ((xclip)
                           (wl-copy . wl-clipboard))
-  :general (kb/yank-keys
-             :keymaps 'org-mode-map
-             "x" 'ox-clip-formatted-copy)
+  :bind
+  ( :map kb/yank-keys
+    ("x" . ox-clip-formatted-copy))
   :config
   (setq ox-clip-linux-cmd
         (if (string-equal (getenv "XDG_SESSION_TYPE") "wayland")

@@ -42,9 +42,9 @@
 
 ;;;; Consult-yasnippet
 (use-package consult-yasnippet
-  :general
-  ([remap yas-insert-snippet] 'consult-yasnippet
-   [remap yas-visit-snippet-file] 'consult-yasnippet-visit-snippet-file))
+  :bind
+  (([remap yas-insert-snippet] . consult-yasnippet)
+   ([remap yas-visit-snippet-file] . consult-yasnippet-visit-snippet-file)))
 
 (provide 'template-rcp)
 ;;; template-rcp.el ends here

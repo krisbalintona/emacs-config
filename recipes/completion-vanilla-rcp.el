@@ -33,12 +33,12 @@
 ;;;; Vertico
 ;;;;; Itself
 (use-package vertico
-  :general
-  ("C-M-s-." #'vertico-repeat)
-  (:keymaps 'vertico-map
-            "TAB" #'kb/vertico-insert-unless-tramp
-            "<escape>" #'minibuffer-keyboard-quit
-            "?" #'minibuffer-completion-help)
+  :bind
+  (("C-M-s-." . vertico-repeat)
+   :map vertico-map
+   ("TAB" . kb/vertico-insert-unless-tramp)
+   ("<escape>" . minibuffer-keyboard-quit)
+   ("?" . minibuffer-completion-help))
   :hook ((minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved
          (on-first-input . vertico-mode))
   :custom
@@ -90,10 +90,11 @@
   :after vertico
   :ensure nil
   ;; More convenient directory navigation commands
-  :general (:keymaps 'vertico-map
-                     "RET" 'vertico-directory-enter
-                     "DEL" 'vertico-directory-delete-char
-                     "M-DEL" 'vertico-directory-delete-word)
+  :bind
+  ( :map vertico-map
+    ("RET" . vertico-directory-enter)
+    ("DEL" . vertico-directory-delete-char)
+    ("M-DEL" . vertico-directory-delete-word))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 

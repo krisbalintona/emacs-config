@@ -31,9 +31,10 @@
   :hook ((java-mode . lsp-deferred)
          (java-mode . lsp-java-lens-mode)       ; For run/debug overlays
          (java-mode . lsp-java-boot-lens-mode)) ; For code-lens overlays
-  :general (:keymaps 'java-mode-map
-                     "C-M-s-b" 'lsp-java-build-project
-                     "C-M-s-l j" '(lsp-jt-browser :wk "Lsp-jt"))
+  :bind
+  ( :map java-mode-map
+    ("C-M-s-b" . lsp-java-build-project)
+    ("C-M-s-l j" . lsp-jt-browser))
   :custom
   (lsp-java-inhibit-message t) ; Inhibit java messages echo via `inhibit-message'.
   (lsp-java-content-provider-preferred "fernflower")
@@ -126,8 +127,9 @@
 (use-package dap-java
   :requires dap-mode
   :ensure nil
-  :general (:keymaps 'java-mode-map
-                     "C-c C-c" '(kb/dap-java-debug :wk "Dap-java-debug"))
+  :bind
+  ( :map java-mode-map
+    ("C-c C-c" . kb/dap-java-debug))
   :config
   (defun kb/dap-java-debug ()
     "`dap-java-debug' but with the \"enable-preview\" vmArg."

@@ -37,19 +37,22 @@
 ;;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
 (use-package eros
-  :ghook 'emacs-lisp-mode-hook
+  :hook
+  (emacs-lisp-mode . eros-mode)
   :custom
-  (eros-eval-result-prefix "⟹  "))      ; Fancy!
+  (eros-eval-result-prefix "⟹  "))
 
 ;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
-  :ghook 'emacs-lisp-mode-hook 'lisp-interaction-mode-hook 'inferior-emacs-lisp-mode-hook)
+  :hook
+  ((emacs-lisp-mode lisp-interaction-mode inferior-emacs-lisp-mode) . rainbow-delimiters-mode))
 
 ;;;; Help
 (use-package help
   :ensure nil
-  :general ("C-h M-k" 'describe-keymap)
+  :bind
+  ("C-h C-k" . describe-keymap)
   :custom
   (help-window-select t)
   (help-window-keep-selected t)
@@ -66,28 +69,27 @@
 ;;;; Help-find
 ;; Provides `help-find-function' and `help-find-keybinding'
 (use-package help-find
-  :general
-  (:keymaps 'help-map
-            :prefix "M-f"
-            "f" 'help-find-function
-            "r" 'help-find-keybinding))
+  :bind
+  ( :map help-map
+    ("M-f f" . help-find-function)
+    ("M-f r" . help-find-keybinding)))
 
 ;;;; Helpful
 ;; Have more descriptive and helpful function and variable descriptions
 (use-package helpful
   :disabled                          ; Trying out built-in `help' functionality
-  :gfhook 'visual-line-mode
-  :general
-  (:keymaps 'helpful-mode-map
-            (general-chord "jj") 'helpful-at-point)
-  ;; NOTE 2021-08-20: Emacs' describe-function includes both functions and
-  ;; macros
-  ([remap describe-function] 'helpful-function
-   [remap describe-command] 'helpful-command
-   [remap describe-variable] 'helpful-variable
-   [remap describe-symbol] 'helpful-symbol
-   [remap describe-key] 'helpful-key
-   [remap apropos-command] 'helpful-command))
+  :hook
+  (helpful-mode . visual-line-mode)
+  :bind
+  (([remap describe-function] . helpful-function)
+   ([remap describe-command] . helpful-command)
+   ([remap describe-variable] . helpful-variable)
+   ([remap describe-symbol] . helpful-symbol)
+   ([remap describe-key] . helpful-key)
+   ([remap apropos-command] . helpful-command))
+  :chords
+  ( :map helpful-mode-map
+    ("jj" . helpful-at-point)))
 
 ;;;; Edebug
 (use-package edebug
@@ -147,8 +149,9 @@
 ;;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!
 (use-package suggest
-  :general (kb/open-keys
-             "S" 'suggest)
+  :bind
+  ( :map kb/open-keys
+    ("S" . suggest))
   :custom
   (suggest-insert-example-on-start nil))
 

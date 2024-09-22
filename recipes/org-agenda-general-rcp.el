@@ -36,8 +36,9 @@
   :after org
   :hook ((org-agenda-finalize . (lambda () (goto-char (point-min))))
          (org-after-todo-state-change . kb/org-todo-project-prog))
-  :general
-  (kb/open-keys "a" 'org-agenda)
+  :bind
+  ( :map kb/open-keys
+    ("a" . org-agenda))
   :custom
   (org-agenda-files (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
 

@@ -14,7 +14,9 @@
 (use-package org-roam
   :disabled                             ; In favor of denote
   :commands kb/find-blog-files-org
-  :gfhook 'hide-mode-line-mode 'visual-line-mode
+  :hook
+  ((org-roam-mode . hide-mode-line-mode)
+   (org-roam-mdoe . visual-line-mode))
   :general
   (:keymaps 'org-roam-mode-map ; To add back mouse click to visit the node in the backlink buffer
             "<tab>" 'magit-section-toggle
@@ -251,9 +253,7 @@ Mostly taken from https://jethrokuan.github.io/org-roam-guide/."
       (kb/org-hide-properties)
       (put 'org-toggle-properties-hide-state 'state 'hidden))))
 
-(general-define-key
- :keymaps 'org-mode-map
- "C-c p t" '(kb/org-toggle-properties :wk "Toggle property drawer visibility"))
+(bind-key "C-c p t" #'kb/org-toggle-properties 'org-mode-map)
 
 ;;;; Find a node which links to any other given node
 ;; From

@@ -55,13 +55,16 @@
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur
   :ensure nil
-  :gfhook 'visual-line-mode)
+  :hook
+  (occur-mode . visual-line-mode))
 
 ;;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
-  :defines 'kb/puni-global-mode
-  :general
+  :commands kb/puni-global-mode
+  :hook
+  (on-first-input . kb/puni-global-mode)
+  ;; :general
   ;; See `puni-mode-map'
   ;; (;; [remap transpose-sexps] 'puni-transpose
   ;;  [remap forward-word] 'toki-forward-word
@@ -72,7 +75,7 @@
   ;;           [remap puni-backward-kill-word] 'toki-backward-delete-word)
   :custom
   (puni-confirm-when-delete-unbalanced-active-region t)
-  :init
+  :config
   (defvar kb/puni-mode-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-d") 'puni-forward-kill-word)
@@ -101,14 +104,14 @@
     :keymap kb/puni-mode-map)
   (define-globalized-minor-mode kb/puni-global-mode
     kb/puni-mode
-    (lambda () (kb/puni-mode 1)))
-  (kb/puni-global-mode))
+    (lambda () (kb/puni-mode 1))))
 
 ;;;; Avy
 ;; Quickly jump to any character
 (use-package avy
   :commands kb/avy-transient-menu
-  :general ("C-;" 'kb/avy-transient-menu)
+  :bind
+  ("C-;" . kb/avy-transient-menu)
   :custom
   (avy-all-windows nil)                 ; Scope
   (avy-case-fold-search nil)
@@ -206,8 +209,9 @@
 
 ;;;; Goto-last-change
 (use-package goto-chg
-  :general ("C-M-s-(" 'goto-last-change
-            "C-M-s-)" 'goto-last-change-reverse))
+  :bind
+  (("C-M-s-(" . goto-last-change)
+   ("C-M-s-)" . goto-last-change-reverse)))
 
 (provide 'buffer-nav-rcp)
 ;;; buffer-nav-rcp.el ends here

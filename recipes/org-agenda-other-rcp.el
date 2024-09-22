@@ -49,11 +49,11 @@
 (use-package org-edna
   :after org-agenda
   :diminish
-  :general
-  (:keymaps 'org-mode-map
-            "C-c d" 'kb/consult-org-depend)
-  (:keymaps 'org-agenda-mode-map
-            "C-c d" 'kb/consult-org-agenda-depend)
+  :bind
+  ( :map org-mode-map
+    ("C-c d" . kb/consult-org-depend)
+    :map org-agenda-mode-map
+    ("C-c d". kb/consult-org-agenda-depend))
   :config
   (org-edna-mode 1)
 

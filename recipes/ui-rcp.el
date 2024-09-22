@@ -269,7 +269,8 @@ Additionally, run `kb/themes-hook'."
 
 ;;;;; Minions
 (use-package minions
-  :ghook 'elpaca-after-init-hook 'after-init-hook
+  :hook
+  ((elpaca-after-init after-init) . minions-mode)
   :custom
   (minions-mode-line-lighter "…")
   (minions-mode-line-delimiters '("[" . "]"))
@@ -402,8 +403,9 @@ This version removes delimiters.")
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ensure nil
-  :general (kb/toggle-keys
-             "l" 'display-line-numbers-mode)
+  :bind
+  ( :map kb/toggle-keys
+    ("l". display-line-numbers-mode))
   :custom
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
@@ -433,8 +435,9 @@ This version removes delimiters.")
 ;; Hide the modeline when you don't want to see it
 (use-package hide-mode-line
   :commands hide-mode-line-mode
-  :general (kb/toggle-keys
-             "m" 'hide-mode-line-mode))
+  :bind
+  ( :map kb/toggle-keys
+    ("m" . hide-mode-line-mode)))
 
 ;;;;; Transparency toggle
 ;; Set the alpha-background parameter. Initially arose from a patch of Emacs
@@ -458,7 +461,7 @@ change to if called with ARG."
                            (72 100)
                            (100 72)
                            (t 100)))))
-(general-define-key "<f9>" 'kb/toggle-window-transparency)
+(bind-key "<f9>" #'kb/toggle-window-transparency)
 
 ;;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.

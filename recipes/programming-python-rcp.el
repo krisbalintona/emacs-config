@@ -92,14 +92,14 @@
                          (if (and pyvenv-tracking-mode pyvenv-mode)
                              (add-hook 'python-base-mode-hook 'kb/pyvenv-auto-activate)
                            (remove-hook 'python-base-mode-hook 'kb/pyvenv-auto-activate))))
-  :ghook 'python-base-mode-hook
-  :gfhook
-  'pyvenv-tracking-mode
-  :general (kb/lsp-keys
-             "v" '(ignore :wk "Pyvenv")
-             "vv" '(pyvenv-activate :wk "Activate")
-             "vV" '(pyvenv-workon :wk "Workon")
-             "vc" '(pyvenv-create :wk "Create"))
+  :hook
+  ((python-base-mode . pyvenv-mode)
+   (pyvenv-mode . pyvenv-tracking-mode))
+  :bind
+  ( :map kb/lsp-keys
+    ("vv" . pyvenv-activate)
+    ("vV" . pyvenv-workon)
+    ("vc" . pyvenv-create))
   :custom
   (pyvenv-default-virtual-env-name ".venv")
   :config
@@ -248,10 +248,10 @@ it."
 
 ;;;; Python-pytest
 (use-package python-pytest
-  :general (kb/lsp-keys
-             "t" '(ignore :wk "Pyvenv")
-             "tt" '(python-pytest-file :wk "Pyvenv activate")
-             "tT" '(python-pytest-dispatch :wk "Pyvenv activate")))
+  :bind
+  ( :map kb/lsp-keys
+    ("tt" . python-pytest-file)
+    ("tT" . python-pytest-dispatch)))
 
 
 (provide 'programming-python-rcp)

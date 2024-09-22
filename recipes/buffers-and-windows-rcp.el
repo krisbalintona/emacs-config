@@ -42,8 +42,9 @@
 (use-package winner
   :ensure nil
   :hook (on-first-buffer . winner-mode)
-  :general ("C-<left>" 'winner-undo
-            "C-<right>" 'winner-redo)
+  :bind
+  (("C-<left>" . winner-undo)
+   ("C-<right>" . winner-redo))
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*")))
@@ -52,31 +53,33 @@
 (use-package windmove
   :ensure nil
   :hook (on-first-input . windmove-mode)
-  :general (:keymaps 'windmove-mode-map
-                     "C-M-s-h" 'windmove-left
-                     "C-M-s-j" 'windmove-down
-                     "C-M-s-k" 'windmove-up
-                     "C-M-s-l" 'windmove-right
-                     "C-M-s-<left>" 'windmove-left
-                     "C-M-s-<down>" 'windmove-down
-                     "C-M-s-<up>" 'windmove-up
-                     "C-M-s-<right>" 'windmove-right
-                     "C-M-s-H" 'windmove-swap-states-left
-                     "C-M-s-J" 'windmove-swap-states-down
-                     "C-M-s-K" 'windmove-swap-states-up
-                     "C-M-s-L" 'windmove-swap-states-right))
+  :bind
+  ( :map windmove-mode-map
+    ("C-M-s-h" . windmove-left)
+    ("C-M-s-j" . windmove-down)
+    ("C-M-s-k" . windmove-up)
+    ("C-M-s-l" . windmove-right)
+    ("C-M-s-<left>" . windmove-left)
+    ("C-M-s-<down>" . windmove-down)
+    ("C-M-s-<up>" . windmove-up)
+    ("C-M-s-<right>" . windmove-right)
+    ("C-M-s-H" . windmove-swap-states-left)
+    ("C-M-s-J" . windmove-swap-states-down)
+    ("C-M-s-K" . windmove-swap-states-up)
+    ("C-M-s-L" . windmove-swap-states-right)))
 
 ;;;;; Transpose-frame
 ;; Rotate window configuration
 (use-package transpose-frame
-  :general ("C-M-s-<right>" 'rotate-frame-clockwise
-            "C-M-s-l" 'rotate-frame-clockwise))
+  :bind
+  (("C-M-s-<right>" . rotate-frame-clockwise)
+   ("C-M-s-l" . rotate-frame-clockwise)))
 
 ;;;;; Window
 (use-package window
   :ensure nil
   :autoload kb/select-buffer-in-side-window
-  :bind (("M-o" . other-window))
+  :bind ("M-o" . other-window)
   :custom
   ;; Prefer vertical splits over horizontal ones
   (split-width-threshold 170)
@@ -239,24 +242,22 @@ ALIST is  an alist of information about buffer."
 (use-package eyebrowse
   :disabled                             ; Testing out `tab-bar'
   :demand
-  :general
-  (:keymaps 'eyebrowse-mode-map
-            "M-1" 'eyebrowse-switch-to-window-config-1
-            "M-2" 'eyebrowse-switch-to-window-config-2
-            "M-3" 'eyebrowse-switch-to-window-config-3
-            "M-4" 'eyebrowse-switch-to-window-config-4
-            "M-5" 'eyebrowse-switch-to-window-config-5
-            "M-6" 'eyebrowse-switch-to-window-config-6
-            "M-7" 'eyebrowse-switch-to-window-config-7
-            "M-8" 'eyebrowse-switch-to-window-config-8
-            "M-9" 'eyebrowse-switch-to-window-config-9
-            "M-0" 'eyebrowse-switch-to-window-config-0
-            "M-\\" 'eyebrowse-last-window-config
-            "M-[" 'eyebrowse-prev-window-config
-            "M-]" 'eyebrowse-next-window-config)
-  (:keymaps 'eyebrowse-mode-map
-            :prefix eyebrowse-keymap-prefix
-            "d" 'eyebrowse-close-window-config)
+  :bind
+  ( :map eyebrowse-mode-map
+    ("M-1" . eyebrowse-switch-to-window-config-1)
+    ("M-2" . eyebrowse-switch-to-window-config-2)
+    ("M-3" . eyebrowse-switch-to-window-config-3)
+    ("M-4" . eyebrowse-switch-to-window-config-4)
+    ("M-5" . eyebrowse-switch-to-window-config-5)
+    ("M-6" . eyebrowse-switch-to-window-config-6)
+    ("M-7" . eyebrowse-switch-to-window-config-7)
+    ("M-8" . eyebrowse-switch-to-window-config-8)
+    ("M-9" . eyebrowse-switch-to-window-config-9)
+    ("M-0" . eyebrowse-switch-to-window-config-0)
+    ("M-\\" . eyebrowse-last-window-config)
+    ("M-[" . eyebrowse-prev-window-config)
+    ("M-]" . eyebrowse-next-window-config)
+    ((concat eyebrowse-keymap-prefix "d") . eyebrowse-close-window-config))
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c M-w"))
@@ -276,8 +277,9 @@ ALIST is  an alist of information about buffer."
 (use-package tab-bar
   :ensure nil
   :demand
-  :general (:keymaps 'tab-prefix-map
-                     "w" 'tab-bar-move-window-to-tab)
+  :bind
+  ( :map tab-prefix-map
+    ("w" . tab-bar-move-window-to-tab))
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)
@@ -301,9 +303,9 @@ ALIST is  an alist of information about buffer."
 
 ;;;;; Ace-window
 (use-package ace-window
-  :general (:prefix "C-c"
-                    "w" 'ace-window
-                    "W" 'ace-swap-window)
+  :bind
+  (("C-c w" . ace-window)
+   ("C-c W" . ace-swap-window))
   :custom
   (aw-scope 'frame)
   (aw-background t)
@@ -327,10 +329,11 @@ ALIST is  an alist of information about buffer."
 ;;;;; Popper
 ;; "Tame ephemeral windows"
 (use-package popper
-  :general ("M-`" 'popper-toggle-latest
-            "C-`" 'popper-cycle
-            "C-M-s-`" 'popper-kill-latest-popup
-            "C-~" 'popper-toggle-type)
+  :bind
+  (("M-`" . popper-toggle-latest)
+   ("C-`" . popper-cycle)
+   ("C-M-s-`" . popper-kill-latest-popup)
+   ("C-~" . popper-toggle-type))
   :custom
   (popper-reference-buffers
    '(;; General
@@ -450,7 +453,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                        ignore-window-parameters))
+                                             ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
@@ -748,16 +751,16 @@ Determine if WINDOW is splittable."
 
 ;;;; Activities
 (use-package activities
-  :general (:prefix "C-c a"
-                    "d" 'activities-define
-                    "n" 'activities-new
-                    "g" 'activities-revert
-                    "s" 'activities-suspend
-                    "k" 'activities-kill
-                    "a" 'activities-resume
-                    "b" 'activities-switch-buffer
-                    "B" 'activities-switch
-                    "l" 'activities-list)
+  :bind
+  (("C-c a d" . activities-define)
+   ("C-c a n" . activities-new)
+   ("C-c a g" . activities-revert)
+   ("C-c a s" . activities-suspend)
+   ("C-c a k" . activities-kill)
+   ("C-c a a" . activities-resume)
+   ("C-c a b" . activities-switch-buffer)
+   ("C-c a B" . activities-switch)
+   ("C-c a l" . activities-list))
   :preface
   (add-to-list 'package-pinned-packages '(activities . "gnu-elpa-devel"))
   :custom

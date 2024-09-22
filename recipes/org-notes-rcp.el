@@ -39,12 +39,13 @@
          (before-save . kb/denote-insert-identifier-maybe)
          (after-save . kb/denote-auto-rename)
          (kb/themes . kb/themes-setup-denote-faces))
-  :general (kb/note-keys
-             "f" 'denote-open-or-create
-             "i" 'denote-insert-link
-             "I" 'denote-link-or-create
-             "e" 'denote-org-extras-extract-org-subtree
-             "t" 'denote-rename-file-keywords)
+  :bind
+  ( :map kb/note-keys
+    ("f" . denote-open-or-create)
+    ("i" . denote-insert-link)
+    ("I" . denote-link-or-create)
+    ("e" . denote-org-extras-extract-org-subtree)
+    ("t" . denote-rename-file-keywords))
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords nil)
@@ -391,10 +392,11 @@ replacement."
   :vc (:url "git@github.com:krisbalintona/denote-interface.git"
             :rev :newest)
   :hook (denote-interface-mode . (lambda () (kb/puni-mode -1)))
-  :general (kb/note-keys
-             "m" 'denote-interface-list
-             "r" 'denote-interface-set-signature-list
-             "R" 'denote-interface-set-signature-minibuffer)
+  :bind
+  ( :map kb/note-keys
+    ("m" . denote-interface-list)
+    ("r" . denote-interface-set-signature-list)
+    ("R" . denote-interface-set-signature-minibuffer))
   :custom
   (denote-interface-signature-column-width
    (+ 6 (cl-loop for file in (denote-directory-files)
@@ -418,7 +420,9 @@ replacement."
              ;; In case using `org-roam'
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
-  :general (kb/note-keys "f" 'consult-notes)
+  :bind
+  ( :map kb/note-keys
+    ("f" . consult-notes))
   :custom
   ;; File paths must have ending slashing. See
   ;; https://github.com/mclear-tools/consult-notes/issues/26#issuecomment-1356038580
@@ -539,17 +543,18 @@ replacement."
   (citar-denote-keyword "bib")
   (citar-denote-use-bib-keywords nil)
   (citar-denote-template t)
-  :general (kb/note-keys
-             "b b" 'citar-denote-dwim
-             "b c" 'citar-create-note
-             "b o" 'citar-denote-open-note
-             "b f" 'citar-denote-find-citation
-             "b e" 'citar-denote-open-reference-entry
-             "b k a" 'citar-denote-add-citekey
-             "b k r" 'citar-denote-remove-citekey
-             "b r f" 'citar-denote-find-reference
-             "b r F" 'citar-denote-nocite
-             "b r l" 'citar-denote-link-reference)
+  :bind
+  ( :map kb/note-keys
+    ("b b" . citar-denote-dwim)
+    ("b c" . citar-create-note)
+    ("b o" . citar-denote-open-note)
+    ("b f" . citar-denote-find-citation)
+    ("b e" . citar-denote-open-reference-entry)
+    ("b k a" . citar-denote-add-citekey)
+    ("b k r" . citar-denote-remove-citekey)
+    ("b r f" . citar-denote-find-reference)
+    ("b r F" . citar-denote-nocite)
+    ("b r l" . citar-denote-link-reference))
   :config
   (citar-denote-mode 1)
 

@@ -27,7 +27,8 @@
 ;;;; Markdown-mode
 (use-package markdown-mode
   :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")
-  :gfhook 'visual-line-mode)
+  :hook
+  (markdown-mode . visual-line-mode))
 
 ;;;; Markdown-xwidget
 ;; Similar to `grip-mode' but avoids sending many requests to GitHub's API and
@@ -39,8 +40,9 @@
   ;;                :repo "cfclrk/markdown-xwidget"
   ;;                :files (:defaults "resources"))
   :vc (:url "https://github.com/cfclrk/markdown-xwidget.git")
-  :general (:keymaps 'markdown-mode-command-map
-                     "x" 'markdown-xwidget-preview-mode)
+  :bind
+  ( :map markdown-mode-command-map
+    ("x" . markdown-xwidget-preview-mode))
   :custom
   (markdown-xwidget-command "pandoc")
   (markdown-xwidget-github-theme "dark")

@@ -462,17 +462,16 @@ signatures being wrapped in `kb/signature-open' and
                            (when (bound-and-true-p org-msg-mode)
                              (switch-to-buffer "*Org ASCII Export*")
                              (kill-buffer-and-window)))))
-  :general
+  :bind
   ;; Get access to the `message' header editing commands in `org-msg-edit-mode'
-  (:keymaps 'org-msg-edit-mode-map
-            :prefix "C-c C-m"
-            "C-t" 'message-goto-to
-            "C-s" 'message-goto-subject
-            "C-c" 'message-goto-cc
-            "C-b" 'message-goto-bcc
-            "C-r" 'message-goto-reply-to
-            "C-f" 'message-goto-followup-to
-            "C-w" 'message-goto-fcc)
+  ( :map org-msg-edit-mode-map
+    ("C-c C-m C-t". message-goto-to)
+    ("C-c C-m C-s". message-goto-subject)
+    ("C-c C-m C-c". message-goto-cc)
+    ("C-c C-m C-b". message-goto-bcc)
+    ("C-c C-m C-r". message-goto-reply-to)
+    ("C-c C-m C-f". message-goto-followup-to)
+    ("C-c C-m C-w". message-goto-fcc))
   (:keymaps 'org-msg-edit-mode-map
             ;; This keybinding is fine since we wouldn't want to call `org-refile' anyway
             "C-c C-w" 'kb/signature-insert-mu4e)
@@ -768,8 +767,10 @@ MML tags."
   ;;                :depth nil)
   :vc (:url "https://github.com/krisbalintona/mu4e-send-delay.git"
             :rev :newest)
-  :hook (mu4e-main-mode . mu4e-send-delay-setup)
-  :general ([remap message-send-and-exit] 'mu4e-send-delay-send-and-exit)
+  :hook
+  (mu4e-main-mode . mu4e-send-delay-setup)
+  :bind
+  ([remap message-send-and-exit] . mu4e-send-delay-send-and-exit)
   :custom
   (mu4e-send-delay-default-delay "10m")
   (mu4e-send-delay-default-hour "8")
@@ -781,11 +782,10 @@ MML tags."
   :vc (:rev :newest)
   :after message
   :hook (message-send . org-mime-confirm-when-no-multipart)
-  :general
-  (:keymaps 'message-mode-map
-            :prefix "C-c"
-            "M-o" 'org-mime-htmlize
-            "'" 'org-mime-edit-mail-in-org-mode)
+  :bind
+  ( :map message-mode-map
+    ("C-c M-o" . org-mime-htmlize)
+    ("C-c '" . org-mime-edit-mail-in-org-mode))
   :custom
   (org-mime-library 'mml)               ; For gnus
   (org-mime-export-ascii 'ascii)

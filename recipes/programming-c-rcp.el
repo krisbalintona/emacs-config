@@ -28,8 +28,9 @@
 ;;;; C-mode
 (use-package cc-mode
   :ensure nil
-  :general (:keymaps 'c-mode-map
-                     "TAB" 'indent-for-tab-command))
+  :bind
+  ( :map c-mode-map
+    ("TAB" . indent-for-tab-command)))
 
 ;;;; Gdb-mi
 ;; Built-in GDB

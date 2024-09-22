@@ -12,18 +12,17 @@
 ;;; Ledger-mode
 (use-package ledger-mode
   :ensure-system-package (ledger)
-  :hook (before-save . kb/ledger-add-blank-lines)
-  :gfhook
-  'outshine-mode
-  '(lambda () (mixed-pitch-mode 0)
-     (display-line-numbers-mode 0)
-     (setq-local tab-always-indent nil ; Indent first then complete
-                 completion-cycle-threshold t
-                 fill-column 90
-                 comment-column fill-column)
-     (setq-default ledger-master-file
-                   (concat no-littering-var-directory "ledger/master.ledger"))
-     )
+  :hook
+  ((before-save . kb/ledger-add-blank-lines)
+   (ledger-mode . 'outshine-mode)
+   (ledger-mode . (lambda () (mixed-pitch-mode 0)
+                    (display-line-numbers-mode 0)
+                    (setq-local tab-always-indent nil ; Indent first then complete
+                                completion-cycle-threshold t
+                                fill-column 90
+                                comment-column fill-column)
+                    (setq-default ledger-master-file
+                                  (concat no-littering-var-directory "ledger/master.ledger")))))
   :general
   (:keymaps 'ledger-mode-map
             "C-c C-t" '(ledger-toggle-current :wk "Toggle check on current")

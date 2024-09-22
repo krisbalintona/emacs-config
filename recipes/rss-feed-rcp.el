@@ -34,17 +34,9 @@
                                  ))
          (elfeed-search-update . elfeed-apply-autotags-now) ; Apply the appropriate autotags to already existing entries
          )
-  :general
-  (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-            :states 'normal
-            [remap elfeed-search-tag-all] '(prot-elfeed-toggle-tag :wk "Add tag")
-            "L" '((lambda ()
-                    (interactive)
-                    (elfeed-goodies/toggle-logs)
-                    (other-window 1))
-                  :wk "Elfeed logs"))
-  (kb/open-keys
-    "r" '(elfeed :wk "Elfeed"))
+  :bind
+  ( :map kb/open-keys
+    ("r" . elfeed))
   :custom
   ;; Give time for long updates to complete
   (elfeed-use-curl t)

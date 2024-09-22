@@ -73,7 +73,8 @@
 ;; height of the variable-pitch face
 (use-package mixed-pitch
   :diminish
-  :ghook 'text-mode-hook
+  :hook
+  (text-mode . mixed-pitch-mode)
   :config
   (add-to-list 'mixed-pitch-fixed-pitch-faces
                '(highlight-indent-guides-character-face ; Highlight-indent-guides

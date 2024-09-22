@@ -115,8 +115,9 @@ Non-nil only if installation completed without any errors."
 
 ;;;; Devdocs
 (use-package devdocs
-  :general (:keymaps 'prog-mode-map
-                     "C-c D" 'devdocs-lookup)
+  :bind
+  ( :map prog-mode-map
+    ("C-c D" . devdocs-lookup))
   :hook ((python-base-mode
           . (lambda () (setq-local devdocs-current-docs '("python~3.9"))))
          (c-ts-base-mode
@@ -149,11 +150,11 @@ Non-nil only if installation completed without any errors."
 (use-package dash-docs-completing-read
   :ensure nil
   :after dash-docs
-  :general (kb/lsp-keys
-             "D" '(:ignore t :wk "Dashdocs")
-             "Di" '(dash-docs-install-docset :wk "Install docs")
-             "Dl" '(dash-docs-completing-read-at-point :wk "At-point search")
-             "DL" '(dash-docs-completing-read :wk "Manual search")))
+  :bind
+  ( :map kb/lsp-keys
+    ("Di" . dash-docs-install-docset)
+    ("Dl" . dash-docs-completing-read-at-point)
+    ("DL" . dash-docs-completing-read)))
 
 ;;;; Hideshow
 (use-package hideshow

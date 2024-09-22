@@ -31,12 +31,8 @@
 ;; Emacs' file manager
 (use-package dired
   :ensure nil
-  :gfhook 'dired-hide-details-mode
-  :general
-  (:keymaps 'dired-mode-map
-            :states 'normal
-            "h" 'dired-up-directory
-            "l" 'dired-find-file)
+  :hook
+  (dired-mode . dired-hide-details-mode)
   :custom
   (dired-auto-revert-buffer t)
   (dired-dwim-target t)                 ; Guess default target directory?
@@ -80,12 +76,12 @@ command."
 ;;;;; All-the-icons-dired
 ;; Add icons which represent file types
 (use-package all-the-icons-dired
-  :ghook 'dired-mode-hook
-  :gfhook '(lambda () (setq-local all-the-icons-scale-factor 0.95))
+  :hook
+  ((dired-mode . all-the-icons-dired-mode)
+   (all-the-icons-dired-mode . (lambda () (setq-local all-the-icons-scale-factor 0.95))))
   :custom
   (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
-  (dired-kill-when-opening-new-dired-buffer t) ; Kill dired buffer when opening new directory
-  )
+  (dired-kill-when-opening-new-dired-buffer t)) ; Kill dired buffer when opening new directory
 
 ;;;;; Image-dired
 (use-package image-dired
@@ -101,7 +97,8 @@ command."
 ;; Show git information in dired
 (use-package dired-git
   :disabled
-  :ghook 'dired-mode-hook
+  :hook
+  (dired-mode . dired-git-mode)
   :custom
   (dired-git-disable-dirs '("~/"))
   (dired-git-parallel 7))               ; Number of parallel processes
@@ -124,9 +121,6 @@ command."
 ;;;;; Dired-hide-dotfiles
 ;; Hide dotfiles
 (use-package dired-hide-dotfiles
-  :general (:keymaps 'dired-mode-map
-                     :states 'normal
-                     "H" 'dired-hide-dotfiles-mode)
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
@@ -137,16 +131,17 @@ command."
   :vc (:url "https://github.com/karthink/dired-hist.git")
   :after dired
   :demand
-  :general
-  (:keymaps 'dired-mode-map
-            "l" 'dired-hist-go-back
-            "r" 'dired-hist-go-forward)
+  :bind
+  ( :map dired-mode-map
+    ("l" . dired-hist-go-back)
+    ("r" . dired-hist-go-forward))
   :config
   (dired-hist-mode 1))
 
 ;;;;; Consult-dir
 (use-package consult-dir
-  :general ([remap dired] 'consult-dir))
+  :bind
+  ([remap dired] . consult-dir))
 
 ;;;; Misc
 
@@ -154,12 +149,12 @@ command."
 ;; Many convenient wrappers involving shell commands in and out of `dired' (with
 ;; the ability to easily create my own)
 (use-package dwim-shell-command
-  :general
-  ([remap shell-command] 'dwim-shell-command)
-  (:keymaps 'dired-mode-map
-            [remap dired-do-async-shell-command] 'dwim-shell-command
-            [remap dired-do-shell-command] 'dwim-shell-command
-            [remap dired-smart-shell-command] 'dwim-shell-command))
+  :bind
+  (([remap shell-command] . dwim-shell-command)
+   :map dired-mode-map
+   ([remap dired-do-async-shell-command] . dwim-shell-command)
+   ([remap dired-do-shell-command] . dwim-shell-command)
+   ([remap dired-smart-shell-command] . dwim-shell-command)))
 
 (provide 'programming-directories-rcp)
 ;;; programming-directories-rcp.el ends here

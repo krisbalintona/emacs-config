@@ -34,7 +34,8 @@
   ;; Don't forget to install the following packages from the AUR:
   ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
   :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
-  :gfhook 'hide-mode-line-mode
+  :hook
+  (dictionary-mode . hide-mode-line-mode)
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-create-buttons nil)
@@ -134,17 +135,16 @@ then call `dash-docs-completing-read-at-point'."
 
 (if (or (bound-and-true-p evil-local-mode)
         (bound-and-true-p meow-mode))
-    (general-define-key
-     :prefix "C-c"
-     "d" 'kb/dictionary-at-point
-     "D" 'kb/dictionary-lookup
-     "l" 'kb/thesaurus-at-point
-     "L" 'kb/thesuarus-lookup)
-  (general-define-key
-   (general-chord "jj") 'kb/dictionary-at-point
-   (general-chord "JJ") 'kb/dictionary-lookup
-   (general-chord "kk") 'kb/thesaurus-at-point
-   (general-chord "KK") 'kb/thesuarus-lookup))
+    (bind-keys
+     ("C-c d" . kb/dictionary-at-point)
+     ("C-c D" . kb/dictionary-lookup)
+     ("C-c l" . kb/thesaurus-at-point)
+     ("C-c L" . kb/thesuarus-lookup))
+  (bind-chords
+   ("jj" . kb/dictionary-at-point)
+   ("JJ" . kb/dictionary-lookup)
+   ("kk" . kb/thesaurus-at-point)
+   ("KK" . kb/thesuarus-lookup)))
 
 ;;;; Other
 ;;;;; Reverso

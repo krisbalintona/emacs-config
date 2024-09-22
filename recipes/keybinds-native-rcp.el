@@ -74,18 +74,16 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
     (funcall indent-line-function)))
 
 ;;;;; Scrolling
-(general-define-key
- "C-M-s-P" 'scroll-down-line
- "C-M-s-N" 'scroll-up-line)
+(bind-key "C-M-s-P" #'scroll-down-line)
+(bind-key "C-M-s-N" #'scroll-up-line)
 
 ;;;; Text editing
-(general-define-key
- "C-S-p" 'kb/open-line-above-goto
- "C-S-n" 'kb/open-line-below-goto
- "C-S-k" 'kb/join-line-above
- "C-S-j" 'kb/join-line-below
- (general-chord "[ ") 'kb/open-line-above-insert
- (general-chord "] ") 'kb/open-line-below-insert)
+(bind-key "C-S-p" #'kb/open-line-above-goto)
+(bind-key "C-S-n" #'kb/open-line-below-goto)
+(bind-key "C-S-k" #'kb/join-line-above)
+(bind-key "C-S-j" #'kb/join-line-below)
+(bind-chords ("[ " . kb/open-line-above-insert))
+(bind-chords ("] " . kb/open-line-below-insert))
 
 ;;;; Other
 (defun kb/restart-or-kill-emacs (&optional arg restart)
@@ -95,8 +93,7 @@ instead. Passes ARG to `save-buffers-kill-emacs'."
   (interactive "P")
   (save-buffers-kill-emacs arg (or restart (equal arg '(4)))))
 
-(general-define-key
- [remap save-buffers-kill-terminal] 'kb/restart-or-kill-emacs)
+(bind-key [remap save-buffers-kill-terminal] #'kb/restart-or-kill-emacs)
 
 (provide 'keybinds-native-rcp)
 ;;; keybinds-native-rcp.el ends here

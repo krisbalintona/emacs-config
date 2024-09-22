@@ -25,34 +25,40 @@
 ;;; Code:
 (require 'use-package-rcp)
 
-;;; General itself
-;; Leader key capabilities and more convenient key definitions and bindings.
-(use-package general
-  :demand
-  :config
-  (general-auto-unbind-keys))       ; Overwrite keybinds without returning error
-(when (fboundp 'elpaca-wait)
-  (elpaca-wait))
-
 ;;; Leader keys
-(general-create-definer kb/note-keys    ; For all note-taking needs
-  :prefix "C-c n")
-(general-create-definer kb/lsp-keys     ; For all lsp-related commands
-  :keymaps 'lsp-mode-map
-  :prefix "C-c l")
-(general-create-definer kb/file-keys    ; File-related
-  :prefix "C-c f")
-(general-create-definer kb/yank-keys    ; Yanking
-  :prefix "C-c i")
-(general-create-definer kb/open-keys    ; Open certain things
-  :prefix "C-c o")
-(general-create-definer kb/toggle-keys :prefix "C-M-s-t")
+(defvar-keymap kb/note-keys
+  :doc "Prefix for my note-taking needs.")
+(bind-key "C-c n" kb/note-keys 'global-map)
+
+(defvar-keymap kb/lsp-keys
+  :doc "Prefix for lsp-related commands.")
+(with-eval-after-load 'lsp-mode
+  (bind-key "C-c l" kb/lsp-keys 'lsp-mode-map))
+
+(defvar-keymap kb/file-keys
+  :doc "Prefix for file-related commands.")
+(bind-key "C-c f" kb/file-keys 'global-map)
+
+(defvar-keymap kb/yank-keys
+  :doc "Prefix for yanking stuff.")
+(bind-key "C-c i" kb/yank-keys 'global-map)
+
+(defvar-keymap kb/open-keys
+  :doc "Prefix for opening various hings.")
+(bind-key "C-c o" kb/open-keys 'global-map)
+
+(defvar-keymap kb/toggle-keys
+  :doc "Prefix for toggling stuff.")
+(bind-key "C-M-s-t" kb/toggle-keys 'global-map)
 
 ;;; Key-chords
+(use-package key-chord
+  :hook
+  (on-first-input . key-chord-mode))
+
+;;; Use-package-chords
 (use-package use-package-chords
-  :demand
-  :config
-  (key-chord-mode 1))
+  :demand)
 
 ;;; Which-key
 ;; Show keybind tooltips

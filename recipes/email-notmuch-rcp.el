@@ -41,16 +41,16 @@
                           (gmi . "pip install lieer"))
   :hook ((notmuch-mua-send . notmuch-mua-attachment-check)
          (notmuch-show-mode . olivetti-mode))
-  :general
-  (kb/open-keys
-    "n" '(notmuch :wk "Notmuch"))
-  ([remap compose-mail] #'notmuch-mua-new-mail)
-  (:keymaps 'notmuch-search-mode-map
-            "r" 'notmuch-search-reply-to-thread ; Easier to reply to all by default
-            "R" 'notmuch-search-reply-to-thread-sender)
-  (:keymaps 'notmuch-show-mode-map
-            "r" 'notmuch-show-reply     ; Easier to reply to all by default
-            "R" 'notmuch-show-reply-sender)
+  :bind
+  ( :map kb/open-keys
+    ("n" . notmuch)
+    ([remap compose-mail] . notmuch-mua-new-mail)
+    :map notmuch-search-mode-map
+    ("r" . notmuch-search-reply-to-thread) ; Easier to reply to all by default
+    ("R" . notmuch-search-reply-to-thread-sender)
+    :map notmuch-show-mode-map
+    ("r" . notmuch-show-reply)          ; Easier to reply to all by default
+    ("R" . notmuch-show-reply-sender))
   :custom
   (mail-user-agent 'notmuch-user-agent)
 

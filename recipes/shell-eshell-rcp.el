@@ -28,14 +28,11 @@
   :hook
   ((eshell . visual-line-mode)
    (eshell . kb/eshell-setup))
-  :general
-  (kb/open-keys "e" 'eshell)
-  (:keymaps 'eshell-mode-map
-            [remap eshell-previous-matching-input] 'consult-history)
-  (:keymaps 'eshell-mode-map
-            :states 'insert
-            [remap back-to-indentation] 'eshell-bol)
-
+  :bind
+  ( :map kb/open-keys
+    ("e" . eshell)
+    :map eshell-mode-map
+    ([remap eshell-previous-matching-input] . consult-history))
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)

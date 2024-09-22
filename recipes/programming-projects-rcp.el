@@ -30,14 +30,14 @@
 
 ;;;;; Project
 (use-package project
-  :general
-  (:keymaps 'project-prefix-map
-            "g" 'consult-git-grep
-            "r" 'consult-ripgrep
-            "R" 'project-query-replace-regexp
-            "m" 'magit-project-status
-            "a" 'project-any-command
-            "o" 'kb/project-multi-occur)
+  :bind
+  ( :map project-prefix-map
+    ("g". consult-git-grep)
+    ("r". consult-ripgrep)
+    ("R". project-query-replace-regexp)
+    ("m". magit-project-status)
+    ("a". project-any-command)
+    ("o". kb/project-multi-occur))
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-find-functions '(kb/project-special-dir project-try-vc))
@@ -89,7 +89,8 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Xref
 (use-package xref
-  :general ("C-M-?" 'xref-find-references-and-replace) ; Emacs 29.1
+  :bind
+  ("C-M-?". xref-find-references-and-replace) ; Emacs 29.1
   :custom
   (xref-show-definitions-function #'xref-show-definitions-completing-read)
   (xref-show-xrefs-function #'xref-show-definitions-buffer)
@@ -115,9 +116,9 @@ With a prefix argument, show NLINES of context."
 
 (use-package magit
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
-  :general
-  (:keymaps 'magit-mode-map
-            "C-<tab>" 'magit-section-toggle-children)
+  :bind
+  ( :map magit-mode-map
+    ("C-<tab>". magit-section-toggle-children))
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
@@ -266,8 +267,6 @@ With a prefix argument, show NLINES of context."
 ;;;;; Itself
 (use-package vc
   :ensure nil
-  :general (:keymaps 'vc-dir-mode-map
-                     "G" 'vc-revert)
   :custom
   (vc-command-messages 'log)   ; NOTE 2024-09-19: Can be useful in the future...
   (vc-follow-symlinks t)
@@ -317,11 +316,19 @@ With a prefix argument, show NLINES of context."
   (advice-add 'log-edit-done :after #'kb/vc-restore-window-conf)
   (advice-add 'log-edit-kill-buffer :after #'kb/vc-restore-window-conf))
 
+;;;;; Vc-dir
+(use-package vc-dir
+  :ensure nil
+  :bind
+  ( :map vc-dir-mode-map
+    ("G" . vc-revert)))
+
 ;;;;; Log-edit
 (use-package log-edit
   :ensure nil
-  :general (:keymaps 'log-edit-mode-map
-                     [remap log-edit-comment-search-backward] 'consult-history)
+  :bind
+  ( :map log-edit-mode-map
+    ([remap log-edit-comment-search-backward]. consult-history))
   :custom
   (log-edit-headers-alist
    '(("Summary" . log-edit-summary)
@@ -375,7 +382,8 @@ With a prefix argument, show NLINES of context."
 ;;;;; Vc-msg
 ;; See a line's corresponding commit information (like git blame)
 (use-package vc-msg
-  :general ("C-M-s-v" 'vc-msg-show))
+  :bind
+  ("C-M-s-v". vc-msg-show))
 
 ;;;;; Agitate
 ;; QoL stuff for built-in VC workflow
@@ -383,25 +391,24 @@ With a prefix argument, show NLINES of context."
   :after vc
   :demand
   :hook (diff-mode . agitate-diff-enable-outline-minor-mode)
-  :general
-  (:keymaps 'vc-prefix-map
-            "=" #'agitate-diff-buffer-or-file
-            "f" #'agitate-vc-git-find-revision
-            "s" #'agitate-vc-git-show
-            "w" #'agitate-vc-git-kill-commit-message)
-  (:keymaps 'diff-mode-map
-            [remap diff-refine-hunk] #'agitate-diff-refine-cycle
-            [remap diff-restrict-view] #'agitate-diff-narrow-dwim)
-  (:keymaps 'log-view-mode-map
-            "w" #'agitate-log-view-kill-revision
-            "W" #'agitate-log-view-kill-revision-expanded)
-  (:keymaps 'log-edit-mode-map
-            :prefix "C-c C-i"
-            "C-n" #'agitate-log-edit-insert-file-name
-            ;; See user options `agitate-log-edit-emoji-collection' and
-            ;; `agitate-log-edit-conventional-commits-collection'.
-            "C-e" #'agitate-log-edit-emoji-commit
-            "C-c" #'agitate-log-edit-conventional-commit)
+  :bind
+  ( :map vc-prefix-map
+    ("=" . agitate-diff-buffer-or-file)
+    ("f" . agitate-vc-git-find-revision)
+    ("s" . agitate-vc-git-show)
+    ("w" . agitate-vc-git-kill-commit-message)
+    :map diff-mode-map
+    ([remap diff-refine-hunk] . agitate-diff-refine-cycle)
+    ([remap diff-restrict-view] . agitate-diff-narrow-dwim)
+    :map log-view-mode-map
+    ("w" . agitate-log-view-kill-revision)
+    ("W" . agitate-log-view-kill-revision-expanded)
+    :map log-edit-mode-map
+    ("C-c C-i C-n" . agitate-log-edit-insert-file-name)
+    ;; See user options `agitate-log-edit-emoji-collection' and
+    ;; `agitate-log-edit-conventional-commits-collection'.
+    ("C-c C-i C-e" . agitate-log-edit-emoji-commit)
+    ("C-c C-i C-c" . agitate-log-edit-conventional-commit))
   :custom
   (diff-refine nil)                     ; We use `agitate-diff-refine-cycle' now
   (agitate-log-edit-informative-show-root-log nil)
@@ -475,12 +482,13 @@ was called, go to its unstaged changes section."
                       (error (cl-return (magit-status-goto-initial-section))))
                  ))
       ))
-  (general-define-key [remap magit-status] #'unpackaged/magit-status))
+  (bind-key [remap magit-status] #'unpackaged/magit-status))
 
 ;;;;; Deadgrep
 ;; Grep but with a convenient magit-like interface (with visibility toggles)
 (use-package deadgrep
-  :general ("<f6>" 'deadgrep))
+  :bind
+  ("<f6>". deadgrep))
 
 (provide 'programming-projects-rcp)
 ;;; programming-projects-rcp.el ends here

@@ -62,13 +62,13 @@
          (prog-mode . (lambda ()             ; Prevent conflicts
                         (unless (featurep 'wucuo)
                           (flyspell-prog-mode)))))
-  :general
+  :bind
   ;; Unbind all the keys from the mode-map because they're all annoying...
-  (:keymaps 'flyspell-mode-map
-            "C-," nil
-            "C-." nil
-            "C-;" nil
-            "C-c $" nil)
+  (:map flyspell-mode-map
+        ("C-," . nil)
+        ("C-." . nil)
+        ("C-;" . nil)
+        ("C-c $" . nil))
   :custom
   (flyspell-use-meta-tab nil)
 
@@ -96,8 +96,9 @@
 ;; Suggest correct spelling for words flyspell marks as incorrect
 (use-package flyspell-correct
   :after flyspell
-  :chords (("<<" . flyspell-correct-previous)
-           (">>" . flyspell-correct-next))
+  :chords
+  (("<<" . flyspell-correct-previous)
+   (">>" . flyspell-correct-next))
   :custom
   (flyspell-correct-interface 'flyspell-correct-completing-read))
 
@@ -112,7 +113,8 @@
                                    ;; `wucuo' is incompatible with `flyspell'
                                    (flyspell-mode -1)
                                    (wucuo-start)))
-  :general ([remap flyspell-buffer] 'wucuo-spell-check-visible-region)
+  :bind
+  ([remap flyspell-buffer] . wucuo-spell-check-visible-region)
   :custom
   (wucuo-flyspell-start-mode "normal")
   (wucuo-personal-font-faces-to-check flyspell-prog-text-faces)
@@ -164,10 +166,11 @@
   :vc (:url "https://github.com/minad/jinx.git"
             :rev :newest)
   :diminish
-  :general (:keymaps 'jinx-mode-map
-                     [remap ispell-word] 'jinx-correct
-                     "C-," 'jinx-correct
-                     "C-M-$" #'jinx-languages)
+  :bind
+  ( :map jinx-mode-map
+    ([remap ispell-word] . jinx-correct)
+    ("C-," . jinx-correct)
+    ("C-M-$" . jinx-languages))
   :config
   (global-jinx-mode 1)
 

@@ -97,7 +97,7 @@ act upon that region instead."
       (kb/format-buffer-indentation--base beg end)))
     (message (format-time-string "Formatting buffer... Done. Took %s.%3N seconds."
                                  (float-time (time-subtract (current-time) start-time))))))
-(general-define-key [remap indent-region] 'kb/format-buffer-indentation)
+(bind-key [remap indent-region] #'kb/format-buffer-indentation)
 
 ;;;; Yank current buffer's file-path
 (defun kb/yank-buffer-filename ()
@@ -107,7 +107,7 @@ act upon that region instead."
       (progn (kill-new filename)
              (message "Copied %s" filename))
     (error "Couldn't find filename in current buffer")))
-(kb/file-keys "w" 'kb/yank-buffer-filename)
+(bind-key "w" #'kb/yank-buffer-filename 'kb/file-keys)
 
 ;;;; Delete this file
 (defun kb/delete-this-file (&optional path force-p)
@@ -138,7 +138,7 @@ act upon that region instead."
           ;; (doom--update-files path)
           (kill-this-buffer)
           (message "Deleted %S" short-path))))))
-(kb/file-keys "D" '(kb/delete-this-file :wk "Delete current file"))
+(bind-key "D" #'kb/delete-this-file 'kb/file-keys)
 
 ;;;; Empty trash
 (defun kb/empty-trash ()

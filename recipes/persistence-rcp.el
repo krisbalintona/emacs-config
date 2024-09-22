@@ -55,8 +55,9 @@
   :ensure nil
   :hook ((on-first-input . recentf-mode)
          (kill-emacs . recentf-save-list))
-  :general (kb/file-keys
-             "r" 'recentf-open-files)
+  :bind
+  ( :map kb/file-keys
+    ("r" . recentf-open-files))
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15))

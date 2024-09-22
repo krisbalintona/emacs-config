@@ -56,16 +56,15 @@
 ;;;;; Itself
 (use-package citar
   :after all-the-icons
-  :general
-  (:prefix "C-c b"
-           "b" 'citar-insert-citation
-           "r" 'citar-insert-reference
-           "o" 'citar-open
-           "f" 'citar-open-files
-           "n" 'citar-open-notes
-           "z" 'kb/citar-open-pdfs-in-zotero)
-  (:keymaps 'citar-embark-citation-map
-            "z" 'kb/citar-open-pdfs-in-zotero)
+  :bind
+  (("C-c b b" . citar-insert-citation)
+   ("C-c b r" . citar-insert-reference)
+   ("C-c b o" . citar-open)
+   ("C-c b f" . citar-open-files)
+   ("C-c b n" . citar-open-notes)
+   ("C-c b z" . kb/citar-open-pdfs-in-zotero)
+   :map citar-embark-citation-map
+   ("z" . kb/citar-open-pdfs-in-zotero))
   :custom
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))

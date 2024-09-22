@@ -45,10 +45,10 @@
   ;;                :depth nil)
   :vc (:url "git@gitlab.com:PreciousPudding/alt-comment-dwim.git"
             :rev :newest)
-  :general
-  ([remap comment-dwim] 'alt-comment-dwim
-   [remap comment-line] 'alt-comment-dwim-line
-   "C-M-;" 'alt-comment-dwim-todo-and-timestamp)
+  :bind
+  (([remap comment-dwim] . alt-comment-dwim)
+   ([remap comment-line] . alt-comment-dwim-line)
+   ("C-M-;" . alt-comment-dwim-todo-and-timestamp))
   :custom
   (alt-comment-dwim-keyword-faces
    '(("TODO" . "orange")
@@ -64,7 +64,7 @@
 (use-package info-variable-pitch
   ;; :ensure (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
   :vc (:url "https://github.com/kisaragi-hiu/info-variable-pitch.git")
-  :ghook 'Info-selection-hook)
+  :hook (Info-selection . info-variable-pitch-mode))
 
 ;;;;; Info-colors
 ;; Fontify useful parts of info buffers
@@ -83,8 +83,9 @@
 ;;;;; Tmr
 ;; Timer package/library from Prot
 (use-package tmr
-  :general (kb/open-keys
-             "t" 'tmr-dispatch)
+  :bind
+  ( :map kb/open-keys
+    ("t" . tmr-dispatch))
   :custom
   ;; Useful variables
   (tmr-descriptions-list
@@ -478,21 +479,17 @@ This is a difference in multitude of %s."
          (on-first-buffer . repeat-mode)
          (on-first-buffer . find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
          (on-first-input . minibuffer-electric-default-mode))
-  :general
+  :bind
   ;; Remap these defaults; they are effectively the same while phasing out the
   ;; need the *-region binds
-  ([remap upcase-word] 'upcase-dwim
-   [remap downcase-word] 'downcase-dwim
-   [remap capitalize-word] 'capitalize-dwim)
-  ([remap dabbrev-expand] 'hippie-expand)
-  (kb/open-keys
-    "c" 'calendar)
-  (:keymaps 'Info-mode-map
-            :states '(visual normal motion)
-            "SPC" nil                   ; For my leader key
-            [remap evil-ret] 'Info-follow-nearest-node)
-  (:keymaps 'universal-argument-map     ; Multiple universal arguments
-            "u" 'universal-argument-more)
+  (([remap upcase-word] . upcase-dwim)
+   ([remap downcase-word] . downcase-dwim)
+   ([remap capitalize-word] . capitalize-dwim)
+   ([remap dabbrev-expand] . hippie-expand)
+   :map kb/open-keys
+   ("c" . calendar)
+   :map universal-argument-map          ; Multiple universal arguments
+   ("u" . universal-argument-more))
   :custom
   (save-interprogram-paste-before-kill t)
   ;; Killing
@@ -508,7 +505,8 @@ This is a difference in multitude of %s."
 ;;;;; Register
 (use-package register
   :ensure nil
-  :general ([remap jump-to-register] 'kb/jump-to-register)
+  :bind
+  ([remap jump-to-register] . kb/jump-to-register)
   :custom
   (register-preview-delay 0)
   (register-separator " ")
@@ -538,7 +536,6 @@ interactively, then delete the register instead of jumping to it."
 ;; Built in process monitor
 (use-package proced
   :ensure nil
-  :general ("C-c p" 'proced)
   :custom
   (proced-auto-update-flag t)           ; Update live
   (proced-auto-update-interval 1)
@@ -688,13 +685,13 @@ ARG and REDISPLAY are identical to the original function."
 ;;;;; Casual-suite
 ;; A suite of "casual" interfaces.
 (use-package casual-suite
-  :general
-  (:keymaps 'ibuffer-mode-map
-            "C-\\" 'casual-ibuffer-tmenu)
-  (:keymaps 'Info-mode-map
-            "C-\\" 'casual-info-tmenu)
-  (:keymaps 'calc-mode-map
-            "C-\\" 'casual-calc-tmenu))
+  :bind
+  ( :map ibuffer-mode-map
+    ("C-\\" . casual-ibuffer-tmenu)
+    :map Info-mode-map
+    ("C-\\" . casual-info-tmenu)
+    :map calc-mode-map
+    ("C-\\" . casual-calc-tmenu)))
 
 ;;;;; Async.el
 ;; Async library and a few small but useful implementations

@@ -66,15 +66,19 @@
          (dired-mode . turn-on-gnus-dired-mode) ; Attachment integration with dired
          (mu4e-view-mode . olivetti-mode)
          (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
-  :general
-  (kb/open-keys
-    "m" 'kb/mu4e)
-  (:keymaps 'mu4e-main-mode-map
-            "q" 'kb/mu4e-main-bury-buffer
-            "Q" 'mu4e-quit)
-  ([remap compose-mail] 'mu4e-compose-new)
-  (:keymaps '(mu4e-main-mode-map mu4e-headers-mode-map mu4e-view-mode-map)
-            "M-U" 'mu4e-update-index-nonlazy)
+  :bind
+  ( :map kb/open-keys
+    ("m" . kb/mu4e)
+    :map mu4e-main-mode-map
+    ("q" . kb/mu4e-main-bury-buffer)
+    ("Q" . mu4e-quit)
+    ([remap compose-mail] . mu4e-compose-new)
+    :map mu4e-main-mode-map
+    ("M-U" . mu4e-update-index-nonlazy)
+    :map mu4e-headers-mode-map
+    ("M-U" . mu4e-update-index-nonlazy)
+    :map mu4e-view-mode-map
+    ("M-U" . mu4e-update-index-nonlazy))
   :custom
   (mail-user-agent 'mu4e-user-agent)
   (mu4e-bookmarks
@@ -363,8 +367,8 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
   ;; names, not redefinitions of extant marks) I create
   (mu4e~headers-defun-mark-for label)
   (mu4e--view-defun-mark-for label)
-  (general-define-key :keymaps 'mu4e-headers-mode-map "l" 'mu4e-headers-mark-for-label)
-  (general-define-key :keymaps 'mu4e-view-mode-map "l" 'mu4e-view-mark-for-label)
+  (bind-key "l" #'mu4e-headers-mark-for-label mu4e-headers-mode-map)
+  (bind-key "l" #'mu4e-view-mark-for-label mu4e-view-mode-map)
 
   ;; See 5.3 of the mu4e info manual. Also see 1.5 Display Customization of the
   ;; emacs-mime info entry
@@ -458,13 +462,13 @@ will also be the width of all other printable characters."
   :vc (:url "https://github.com/lordpretzel/mu4e-views.git"
             :rev :newest
             :branch "mu-1.8-support")
-  :general
-  (:keymaps 'mu4e-headers-mode-map
-            "v" 'mu4e-views-mu4e-select-view-msg-method ; Select viewing method
-            "M-n" 'mu4e-views-cursor-msg-view-window-down ; From headers window scroll the email view
-            "M-p" 'mu4e-views-cursor-msg-view-window-up ; From headers window scroll the email view
-            "f" 'mu4e-views-toggle-auto-view-selected-message ; Toggle opening messages automatically when moving in the headers view
-            "i" 'mu4e-views-mu4e-view-as-nonblocked-html) ; Show currently selected email with all remote content
+  :bind
+  ( :map mu4e-headers-mode-map
+    ("v" . mu4e-views-mu4e-select-view-msg-method) ; Select viewing method
+    ("M-n" . mu4e-views-cursor-msg-view-window-down) ; From headers window scroll the email view
+    ("M-p" . mu4e-views-cursor-msg-view-window-up) ; From headers window scroll the email view
+    ("f" . mu4e-views-toggle-auto-view-selected-message) ; Toggle opening messages automatically when moving in the headers view
+    ("i" . mu4e-views-mu4e-view-as-nonblocked-html)) ; Show currently selected email with all remote content
   :custom
   (mu4e-views-auto-view-selected-message nil)
   (mu4e-views-next-previous-message-behaviour 'stick-to-current-window)
