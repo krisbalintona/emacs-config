@@ -419,14 +419,12 @@ ALIST is  an alist of information about buffer."
 ;; `other-window' by most recently used
 (use-package switchy-window
   :hook (on-first-buffer . switchy-window-minor-mode)
-  :general (:keymaps 'switchy-window-minor-mode-map
-                     [remap other-window] #'switchy-window)
-
-  :init
-  (defvar-keymap switchy-window-repeat-map
-    :doc "Keymap to repeat `switchy-window'.  Used in `repeat-mode'."
-    :repeat t
-    "o" #'switchy-window)
+  :bind*
+  (:map switchy-window-minor-mode-map
+        ([remap other-window] . switchy-window))
+  :bind
+  (:repeat-map kb/switchy-window-repeat-map
+               ("o" . switchy-window))
   :config
   (defun kb/switchy-window (&optional arg)
     "Switch to other windows in most-recently-used order.

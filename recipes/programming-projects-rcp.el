@@ -454,9 +454,7 @@ With a prefix argument, show NLINES of context."
               ("<tab>" . outshine-cycle)
               ("C-x n s" . outshine-narrow-to-subtree)
               ("L" . vc-print-root-log)
-              ("v" . vc-next-action)
-              ("M-o" . nil))
-
+              ("v" . vc-next-action))
   :custom
   (diff-font-lock-prettify t)
   (diff-refine 'navigation)             ; Font lock hunk when it is navigated to
