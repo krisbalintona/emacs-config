@@ -513,9 +513,10 @@ timestamp)."
   (ibuffer-old-time 48)
   (ibuffer-expert nil)
   (ibuffer-show-empty-filter-groups t)
+  ;; NOTE 2024-09-22: Gets overwritten by `all-the-icons-ibuffer-formats' when
+  ;; `nerd-icons-ibuffer-mode'
   (ibuffer-formats
    '((mark modified read-only locked
-           ;; " " (icon 2 2 :left :elide)
            " " (name 18 18 :left :elide)
            " " (size 9 -1 :right)
            " " (mode 16 16 :left :elide)
@@ -541,43 +542,24 @@ timestamp)."
     (:name "Size"
            :inline t
            :header-mouse-map ibuffer-size-header-map)
-    (file-size-human-readable (buffer-size)))
+    (file-size-human-readable (buffer-size))))
 
-  ;; Prepend Nerd Icons to buffer file names in GUI. Inspired by Doom Emacs'
-  ;; code.
-  (when (display-graphic-p)
-    (with-eval-after-load 'nerd-icons
-      ;; I've tried various ways to accomplish this, but the most modular way
-      ;; (e.g. way without loading packages early, or having repetitious code)
-      ;; I've found is to redefine the "name" ibuffer column.
-      (define-ibuffer-column name
-        (:inline t
-                 :header-mouse-map ibuffer-name-header-map
-                 :props
-                 ('mouse-face 'highlight 'keymap ibuffer-name-map
-                              'ibuffer-name-column t
-                              'help-echo '(if tooltip-mode
-                                              "mouse-1: mark this buffer\nmouse-2: select this buffer\nmouse-3: operate on this buffer"
-                                            "mouse-1: mark buffer   mouse-2: select buffer   mouse-3: operate"))
-                 :summarizer
-                 (lambda (strings)
-                   (let ((bufs (length strings)))
-                     (cond ((zerop bufs) "No buffers")
-                           ((= 1 bufs) "1 buffer")
-                           (t (format "%s buffers" bufs))))))
-        (let* ((buf-name (buffer-name))
-               (icon (if (and buf-name (nerd-icons-auto-mode-match?))
-                         (nerd-icons-icon-for-file (file-name-nondirectory buf-name) :v-adjust -0.05)
-                       (nerd-icons-icon-for-mode major-mode :v-adjust -0.05)))
-               name)
-          (when (symbolp icon)
-            (setq icon (nerd-icons-faicon "nf-fa-file_o" :face 'nerd-icons-dsilver :height 0.8 :v-adjust 0.0)))
-          (setq name (propertize (concat icon "  " buf-name)
-                                 'font-lock-face (ibuffer-buffer-name-face buffer mark)))
-          (if (not (seq-position name ?\n))
-              name
-            (string-replace
-             "\n" (propertize "^J" 'font-lock-face 'escape-glyph) name)))))))
+;;;;; Nerd-icons-ibuffer
+(use-package nerd-icons-ibuffer
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode)
+  :custom
+  (nerd-icons-ibuffer-color-icon t)
+  (nerd-icons-ibuffer-icon-size 0.97)
+  (nerd-icons-ibuffer-formats
+   `((mark modified read-only ,(if (>= emacs-major-version 26) 'locked "")
+           ;; Here you may adjust by replacing :right with :center or :left
+           ;; According to taste, if you want the icon further from the name
+           " " (icon 2 2 :right)
+           " " (name 18 18 :left :elide)
+           " " (size 9 -1 :right)
+           " " (mode 16 16 :left :elide)
+           " " filename-and-process)
+     (mark " " (name 16 -1) " " filename))))
 
 ;;;;; Burly
 (use-package burly
