@@ -411,6 +411,7 @@ This version removes delimiters.")
 ;; Adds an interactive indicator for the view's position in the current buffer
 ;; to the modeline
 (use-package mlscroll
+  :autoload kb/mlscroll-set-colors
   :hook ((on-first-buffer . mlscroll-mode)
          (kb/themes . kb/mlscroll-set-colors))
   :custom
