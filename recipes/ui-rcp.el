@@ -485,7 +485,7 @@ change to if called with ARG."
 ;; the `hl-line' face (or equivalent) buffer-locally to a style that is optimal
 ;; for major modes where line selection is the primary mode of interaction.
 (use-package lin
-  :hook (on-buffer-input . lin-global-mode)
+  :hook (on-first-buffer . lin-global-mode)
   :custom
   (lin-face 'lin-cyan)
   :config
