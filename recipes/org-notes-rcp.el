@@ -528,7 +528,6 @@ replacement."
 
 ;;;; Citar-denote
 (use-package citar-denote
-  :demand
   :after denote
   :diminish
   :custom
