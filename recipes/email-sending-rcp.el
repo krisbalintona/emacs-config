@@ -29,6 +29,7 @@
 ;;;; Message
 (use-package message
   :ensure nil
+  :commands (compose-mail mu4e-compose-new)
   :hook ((message-setup . message-sort-headers)
          (message-mode . olivetti-mode)
          (message-send . kb/message-check-for-subject)
@@ -48,7 +49,10 @@
   (message-confirm-send nil)
   (message-kill-buffer-on-exit t)
   (message-wide-reply-confirm-recipients t)
-  :init
+  :config
+  (with-eval-after-load 'mu4e
+    (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory)))
+
   ;; Taken from Doom. Detect empty subjects, and give users an opportunity to
   ;; fill something in
   (defun kb/message-check-for-subject ()
@@ -77,15 +81,13 @@
           (cl--set-buffer-substring (pos-bol) (pos-eol)
                                     (concat
                                      "From: "
-                                     (read-string "Set FROM to: " user-mail-address)))))))
-  :config
-  (with-eval-after-load 'mu4e
-    (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))))
+                                     (read-string "Set FROM to: " user-mail-address))))))))
 
 ;;;; Sendmail
 ;; Use `sendmail' program to send emails?
 (use-package sendmail
   :ensure nil
+  :after message
   :custom
   ;; If I want to use `sendmail' over `msmtp'/`smtpmail'
   (send-mail-function 'sendmail-send-it)
@@ -104,6 +106,7 @@
 (use-package smtpmail
   :ensure nil
   :ensure-system-package msmtp
+  :after message
   :custom
   ;; I set this in my sendmail configuration too so that if smtpmail isn't use,
   ;; the above configuration works still
@@ -120,6 +123,324 @@
   (smtpmail-store-queue-variables t)
   (smtpmail-queue-dir (expand-file-name "drafts/.smtp-queue" message-directory))
   (smtpmail-servers-requiring-authorization "gmail")) ; REVIEW 2024-08-25: I think this fixes the gmail 530 error on sending?
+
+;;;; Custom signatures
+(with-eval-after-load 'message
+  (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
+    "Separator between email body and its signature.")
+  (defvar kb/signature-open (concat (when message-signature-insert-empty-line "\n")
+                                    "\n#+begin_signature\n")
+    "String meant to begin email signatures.")
+  (defvar kb/signature-close "\n#+end_signature"
+    "String meant to end email signatures.")
+  (setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
+  (defvar kb/signature-alist nil
+    "Alist of aliases and their corresponding email signatures.")
+
+  (defun kb/signature-select (&optional alias)
+    "Select one of the signatures from `kb/signature-alist'.
+
+If ALIAS is a key in `kb/signature-alist', then the corresponding value
+will be returned. If it is not, then it will be treated as the content
+of a properly formatted signature.
+
+If no ALIAS is supplied, then the keys from `kb/signature-alist' will be
+ shown via the `completing-read' interface."
+    (let* ((alias (or alias
+                      (completing-read
+                       "Insert signature: "
+                       (cl-loop for (key . value) in kb/signature-alist
+                                collect key))))
+           (content (or (alist-get alias kb/signature-alist nil nil #'string=) alias)))
+      (if org-msg-mode
+          ;; If using `org-msg-mode' and a signature was manually typed rather
+          ;; than an alias chosen, then format that manually-typed-signature.
+          ;; Example: if "Test" is typed, the result will be:
+          ;; "#+begin_signature  (`kb/signature-open')
+          ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (`kb/signature-separator')
+          ;; Test,
+          ;; Kristoffer
+          ;; #+end_signature  (`kb/signature-close')"
+          (format "%s%s\n%s%s%s"
+                  kb/signature-open
+                  kb/signature-separator
+                  content
+                  ",\nKristoffer"
+                  kb/signature-close)
+        content)))
+  (setq message-signature 'kb/signature-select)
+
+  (defun kb/signature-insert-mu4e ()
+    "Insert a selection from `kb/signature-alist'.
+
+Replaces existing signature if present in buffer. Relies on
+signatures being wrapped in `kb/signature-open' and
+`kb/signature-close'."
+    (interactive)
+    (save-excursion
+      (let ((sig (funcall 'kb/signature-select))
+            (existing-sig-beg
+             (save-excursion
+               (save-match-data
+                 (goto-char (point-min))
+                 (when (search-forward kb/signature-open nil t)
+                   (match-beginning 0)))))
+            (existing-sig-end
+             (save-excursion
+               (save-match-data
+                 (goto-char (point-min))
+                 (search-forward kb/signature-close nil t)))))
+        (if (and existing-sig-beg existing-sig-end)
+            ;; Replace existing signature
+            (progn
+              (goto-char existing-sig-beg)
+              (delete-region existing-sig-beg existing-sig-end)
+              (insert sig))
+          ;; Remove leading whitespace from sig if inserting
+          (insert (string-trim-left sig)))))
+    ;; Change email signature separator to the conventional "--" for text-only
+    ;; emails
+    (when (and (derived-mode-p 'org-msg-edit-mode)
+               (equal (org-msg-get-prop "alternatives")
+                      '(text)))
+      (save-excursion
+        (goto-char (point-min))
+        (when (search-forward kb/signature-separator nil t)
+          (replace-match "--" 1)))))
+
+  (with-eval-after-load 'mu4e
+    (setq mu4e-contexts
+          `(,(make-mu4e-context
+              :name "Uni"
+              :enter-func (lambda () (mu4e-message "Entering Uni context"))
+              :leave-func (lambda () (mu4e-message "Leaving Uni context"))
+              :vars `((user-mail-address . "kristoffer_balintona@alumni.brown.edu")
+                      ;; Directories
+                      (mu4e-drafts-folder . "/drafts/uni/")
+                      (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
+                      (mu4e-refile-folder . "/uni/[Gmail].All Mail")
+                      (mu4e-trash-folder . "/uni/[Gmail].Trash")
+                      (mu4e-maildir-initial-input . "/uni/ ")
+                      ;; Maildirs
+                      (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
+                                                 (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
+                                                 (:maildir "/drafts/uni/" :key ?d)
+                                                 (:maildir "/uni/[Gmail].Drafts" :key ?D)
+                                                 (:maildir "/uni/[Gmail].Trash" :key ?t)
+                                                 (:maildir "/uni/[Gmail].All Mail" :key ?a)))
+                      (kb/signature-alist .
+                                          (("Take care" . "Take care,\nKristoffer")
+                                           ("In gratitude" . "In gratitude,\nKristoffer")
+                                           ("Best" . "Best,\nKristoffer")
+                                           ("With appreciation" . "With appreciation,\nKristoffer")
+                                           ("Brown banner" . "\nWith appreciation,\nKristoffer\n\n#+begin_export html
+<br />
+<table
+  style='color: rgb(136, 136, 136); border: none; border-collapse: collapse; font-family: garamond'
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://clipground.com/images/brown-university-logo-png-1.png'
+          alt='Brown logo'
+          style='border: none'
+          height='100'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 6pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 11pt;
+              font-weight: 700;
+              white-space: pre-wrap;
+            '
+            >Kristoffer Balintona</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >B.A. Philosophy</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Class of 2024</span
+          >
+        </p>
+        <p
+          dir='ltr'
+          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
+        >
+          <span
+            style='
+              font-size: 10pt;
+              white-space: pre-wrap;
+            '
+            >Tel: (773) 677-9699</span
+          >
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='
+            font-size: 10pt;
+            line-height: 1.2;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+          '
+        >
+          <span
+            style='
+              font-size: 10pt;
+              vertical-align: baseline;
+              white-space: pre-wrap;
+            '
+            >Box: 6327</span
+          >
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export")
+                                           ("BUI banner" . "\n\nWarmly,\nBrown University Interviews Executive Committee\n\n#+begin_export html
+<br />
+<table
+  style='
+    color: rgb(136, 136, 136);
+    border: none;
+    border-collapse: collapse;
+    font-family: garamond;
+  '
+>
+  <tbody>
+    <tr style='height: 81.25pt'>
+      <td
+        style='
+          border-right: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 11pt 5pt 5pt;
+        '
+        title=''
+      >
+        <img
+          src='https://browninterviews.org/wp-content/uploads/2020/06/bu-small-logo.png'
+          alt='Brown logo'
+          style='border: none'
+          height='70'
+        />
+      </td>
+      <td
+        style='
+          border-left: 0.75pt dotted rgb(135, 127, 116);
+          vertical-align: top;
+          padding: 5pt 5pt 5pt 11pt;
+        '
+      >
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Kristoffer Balintona ('24)</span>
+          <span> | Editor in Chief</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Charles Alaimo ('25)</span>
+          <span> | Senior Interviews Coordinator</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Dana Toneva ('24)</span>
+          <span> | Senior Editor</span>
+          <br />
+        </p>
+        <p
+          dir='ltr'
+          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
+        >
+          <span style='font-weight: 700'>Riley Stevenson ('27)</span>
+          <span> | Senior Editor</span>
+          <br />
+        </p>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+#+end_export")))
+                      ;; Smtpmail
+                      (smtpmail-smtp-user "kristoffer_balintona@alumni.brown.edu") ; Send from this address
+                      (smtpmail-mail-address "kristoffer_balintona@alumni.brown.edu")))
+            ,(make-mu4e-context
+              :name "Personal"
+              :enter-func (lambda () (mu4e-message "Entering Personal context"))
+              :leave-func (lambda () (mu4e-message "Leaving Personal context"))
+              :vars `((user-mail-address . "krisbalintona@gmail.com")
+                      ;; Directories
+                      (mu4e-drafts-folder . "/drafts/personal")
+                      (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
+                      (mu4e-refile-folder . "/personal/[Gmail].All Mail")
+                      (mu4e-trash-folder . "/personal/[Gmail].Trash")
+                      (mu4e-maildir-initial-input . "/personal/ ")
+                      ;; Maildirs
+                      (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
+                                                 (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
+                                                 (:maildir "/drafts/personal/" :key ?d)
+                                                 (:maildir "/personal[Gmail].Drafts/[Gmail].Drafts" :key ?D)
+                                                 (:maildir "/personal/[Gmail].Trash" :key ?t)
+                                                 (:maildir "/personal/[Gmail].All Mail" :key ?a)))
+                      (kb/signature-alist .
+                                          (("Take care" . "Take care,\nKristoffer")
+                                           ("In gratitude" . "In gratitude,\nKristoffer")
+                                           ("Best" . "Best,\nKristoffer")
+                                           ("With appreciation" . "With appreciation,\nKristoffer")))
+                      ;; Smtpmail
+                      (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
+                      (smtpmail-mail-address "krisbalintona@gmail.com")))))))
 
 ;;;; Org-msg
 ;;;;; Itself
@@ -313,323 +634,6 @@
   :config
   (org-msg-mode 1))
 
-;;;;; Custom signatures
-(defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
-  "Separator between email body and its signature.")
-(defvar kb/signature-open (concat (when message-signature-insert-empty-line "\n")
-                                  "\n#+begin_signature\n")
-  "String meant to begin email signatures.")
-(defvar kb/signature-close "\n#+end_signature"
-  "String meant to end email signatures.")
-(setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
-(defvar kb/signature-alist nil
-  "Alist of aliases and their corresponding email signatures.")
-
-(defun kb/signature-select (&optional alias)
-  "Select one of the signatures from `kb/signature-alist'.
-
-If ALIAS is a key in `kb/signature-alist', then the corresponding value
-will be returned. If it is not, then it will be treated as the content
-of a properly formatted signature.
-
-If no ALIAS is supplied, then the keys from `kb/signature-alist' will be
- shown via the `completing-read' interface."
-  (let* ((alias (or alias
-                    (completing-read
-                     "Insert signature: "
-                     (cl-loop for (key . value) in kb/signature-alist
-                              collect key))))
-         (content (or (alist-get alias kb/signature-alist nil nil #'string=) alias)))
-    (if org-msg-mode
-        ;; If using `org-msg-mode' and a signature was manually typed rather
-        ;; than an alias chosen, then format that manually-typed-signature.
-        ;; Example: if "Test" is typed, the result will be:
-        ;; "#+begin_signature  (`kb/signature-open')
-        ;; ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼  (`kb/signature-separator')
-        ;; Test,
-        ;; Kristoffer
-        ;; #+end_signature  (`kb/signature-close')"
-        (format "%s%s\n%s%s%s"
-                kb/signature-open
-                kb/signature-separator
-                content
-                ",\nKristoffer"
-                kb/signature-close)
-      content)))
-(setq message-signature 'kb/signature-select)
-
-(defun kb/signature-insert-mu4e ()
-  "Insert a selection from `kb/signature-alist'.
-
-Replaces existing signature if present in buffer. Relies on
-signatures being wrapped in `kb/signature-open' and
-`kb/signature-close'."
-  (interactive)
-  (save-excursion
-    (let ((sig (funcall 'kb/signature-select))
-          (existing-sig-beg
-           (save-excursion
-             (save-match-data
-               (goto-char (point-min))
-               (when (search-forward kb/signature-open nil t)
-                 (match-beginning 0)))))
-          (existing-sig-end
-           (save-excursion
-             (save-match-data
-               (goto-char (point-min))
-               (search-forward kb/signature-close nil t)))))
-      (if (and existing-sig-beg existing-sig-end)
-          ;; Replace existing signature
-          (progn
-            (goto-char existing-sig-beg)
-            (delete-region existing-sig-beg existing-sig-end)
-            (insert sig))
-        ;; Remove leading whitespace from sig if inserting
-        (insert (string-trim-left sig)))))
-  ;; Change email signature separator to the conventional "--" for text-only
-  ;; emails
-  (when (and (derived-mode-p 'org-msg-edit-mode)
-             (equal (org-msg-get-prop "alternatives")
-                    '(text)))
-    (save-excursion
-      (goto-char (point-min))
-      (when (search-forward kb/signature-separator nil t)
-        (replace-match "--" 1)))))
-
-(with-eval-after-load 'mu4e
-  (setq mu4e-contexts
-        `(,(make-mu4e-context
-            :name "Uni"
-            :enter-func (lambda () (mu4e-message "Entering Uni context"))
-            :leave-func (lambda () (mu4e-message "Leaving Uni context"))
-            :vars `((user-mail-address . "kristoffer_balintona@alumni.brown.edu")
-                    ;; Directories
-                    (mu4e-drafts-folder . "/drafts/uni/")
-                    (mu4e-sent-folder . "/uni/[Gmail].Sent Mail")
-                    (mu4e-refile-folder . "/uni/[Gmail].All Mail")
-                    (mu4e-trash-folder . "/uni/[Gmail].Trash")
-                    (mu4e-maildir-initial-input . "/uni/ ")
-                    ;; Maildirs
-                    (mu4e-maildir-shortcuts . ((:maildir "/uni/Inbox" :key ?i)
-                                               (:maildir "/uni/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/drafts/uni/" :key ?d)
-                                               (:maildir "/uni/[Gmail].Drafts" :key ?D)
-                                               (:maildir "/uni/[Gmail].Trash" :key ?t)
-                                               (:maildir "/uni/[Gmail].All Mail" :key ?a)))
-                    (kb/signature-alist .
-                                        (("Take care" . "Take care,\nKristoffer")
-                                         ("In gratitude" . "In gratitude,\nKristoffer")
-                                         ("Best" . "Best,\nKristoffer")
-                                         ("With appreciation" . "With appreciation,\nKristoffer")
-                                         ("Brown banner" . "\nWith appreciation,\nKristoffer\n\n#+begin_export html
-<br />
-<table
-  style='color: rgb(136, 136, 136); border: none; border-collapse: collapse; font-family: garamond'
->
-  <tbody>
-    <tr style='height: 81.25pt'>
-      <td
-        style='
-          border-right: 0.75pt dotted rgb(135, 127, 116);
-          vertical-align: top;
-          padding: 5pt 11pt 5pt 5pt;
-        '
-        title=''
-      >
-        <img
-          src='https://clipground.com/images/brown-university-logo-png-1.png'
-          alt='Brown logo'
-          style='border: none'
-          height='100'
-        />
-      </td>
-      <td
-        style='
-          border-left: 0.75pt dotted rgb(135, 127, 116);
-          vertical-align: top;
-          padding: 5pt 5pt 5pt 11pt;
-        '
-      >
-        <p
-          dir='ltr'
-          style='line-height: 1.38; margin-top: 6pt; margin-bottom: 0pt'
-        >
-          <span
-            style='
-              font-size: 11pt;
-              font-weight: 700;
-              white-space: pre-wrap;
-            '
-            >Kristoffer Balintona</span
-          >
-          <br />
-        </p>
-        <p
-          dir='ltr'
-          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
-        >
-          <span
-            style='
-              font-size: 10pt;
-              vertical-align: baseline;
-              white-space: pre-wrap;
-            '
-            >B.A. Philosophy</span
-          >
-          <br />
-        </p>
-        <p
-          dir='ltr'
-          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
-        >
-          <span
-            style='
-              font-size: 10pt;
-              vertical-align: baseline;
-              white-space: pre-wrap;
-            '
-            >Class of 2024</span
-          >
-        </p>
-        <p
-          dir='ltr'
-          style='line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt'
-        >
-          <span
-            style='
-              font-size: 10pt;
-              white-space: pre-wrap;
-            '
-            >Tel: (773) 677-9699</span
-          >
-          <br />
-        </p>
-        <p
-          dir='ltr'
-          style='
-            font-size: 10pt;
-            line-height: 1.2;
-            margin-top: 0pt;
-            margin-bottom: 0pt;
-          '
-        >
-          <span
-            style='
-              font-size: 10pt;
-              vertical-align: baseline;
-              white-space: pre-wrap;
-            '
-            >Box: 6327</span
-          >
-        </p>
-        <br />
-      </td>
-    </tr>
-  </tbody>
-</table>
-#+end_export")
-                                         ("BUI banner" . "\n\nWarmly,\nBrown University Interviews Executive Committee\n\n#+begin_export html
-<br />
-<table
-  style='
-    color: rgb(136, 136, 136);
-    border: none;
-    border-collapse: collapse;
-    font-family: garamond;
-  '
->
-  <tbody>
-    <tr style='height: 81.25pt'>
-      <td
-        style='
-          border-right: 0.75pt dotted rgb(135, 127, 116);
-          vertical-align: top;
-          padding: 5pt 11pt 5pt 5pt;
-        '
-        title=''
-      >
-        <img
-          src='https://browninterviews.org/wp-content/uploads/2020/06/bu-small-logo.png'
-          alt='Brown logo'
-          style='border: none'
-          height='70'
-        />
-      </td>
-      <td
-        style='
-          border-left: 0.75pt dotted rgb(135, 127, 116);
-          vertical-align: top;
-          padding: 5pt 5pt 5pt 11pt;
-        '
-      >
-        <p
-          dir='ltr'
-          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
-        >
-          <span style='font-weight: 700'>Kristoffer Balintona ('24)</span>
-          <span> | Editor in Chief</span>
-          <br />
-        </p>
-        <p
-          dir='ltr'
-          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
-        >
-          <span style='font-weight: 700'>Charles Alaimo ('25)</span>
-          <span> | Senior Interviews Coordinator</span>
-          <br />
-        </p>
-        <p
-          dir='ltr'
-          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
-        >
-          <span style='font-weight: 700'>Dana Toneva ('24)</span>
-          <span> | Senior Editor</span>
-          <br />
-        </p>
-        <p
-          dir='ltr'
-          style='margin-top: 6pt; margin-bottom: 0pt; font-size: 11pt'
-        >
-          <span style='font-weight: 700'>Riley Stevenson ('27)</span>
-          <span> | Senior Editor</span>
-          <br />
-        </p>
-        <br />
-      </td>
-    </tr>
-  </tbody>
-</table>
-#+end_export")))
-                    ;; Smtpmail
-                    (smtpmail-smtp-user "kristoffer_balintona@alumni.brown.edu") ; Send from this address
-                    (smtpmail-mail-address "kristoffer_balintona@alumni.brown.edu")))
-          ,(make-mu4e-context
-            :name "Personal"
-            :enter-func (lambda () (mu4e-message "Entering Personal context"))
-            :leave-func (lambda () (mu4e-message "Leaving Personal context"))
-            :vars `((user-mail-address . "krisbalintona@gmail.com")
-                    ;; Directories
-                    (mu4e-drafts-folder . "/drafts/personal")
-                    (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
-                    (mu4e-refile-folder . "/personal/[Gmail].All Mail")
-                    (mu4e-trash-folder . "/personal/[Gmail].Trash")
-                    (mu4e-maildir-initial-input . "/personal/ ")
-                    ;; Maildirs
-                    (mu4e-maildir-shortcuts . ((:maildir "/personal/Inbox" :key ?i)
-                                               (:maildir "/personal/[Gmail].Sent Mail" :key ?s)
-                                               (:maildir "/drafts/personal/" :key ?d)
-                                               (:maildir "/personal[Gmail].Drafts/[Gmail].Drafts" :key ?D)
-                                               (:maildir "/personal/[Gmail].Trash" :key ?t)
-                                               (:maildir "/personal/[Gmail].All Mail" :key ?a)))
-                    (kb/signature-alist .
-                                        (("Take care" . "Take care,\nKristoffer")
-                                         ("In gratitude" . "In gratitude,\nKristoffer")
-                                         ("Best" . "Best,\nKristoffer")
-                                         ("With appreciation" . "With appreciation,\nKristoffer")))
-                    ;; Smtpmail
-                    (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
-                    (smtpmail-mail-address "krisbalintona@gmail.com"))))))
-
 ;;;;; Custom creation of `org-msg' buffer
 (with-eval-after-load 'org-msg
   (defun kb/org-msg--html-special-block (special-block contents info)
@@ -775,6 +779,7 @@ MML tags."
 ;;;; Org-mime
 (use-package org-mime
   :vc (:rev :newest)
+  :after message
   :hook (message-send . org-mime-confirm-when-no-multipart)
   :general
   (:keymaps 'message-mode-map
