@@ -151,10 +151,17 @@
 
   (set-face-attribute 'mode-line-active nil
                       :background (modus-themes-with-colors bg-mode-line-active)
-                      :box nil)
-  (set-face-attribute 'mode-line-inactive nil
-                      :background (face-background 'default)
-                      :box nil)
+                      :box `( :line-width 3
+                              :color ,(modus-themes-with-colors bg-mode-line-active)))
+  (require 'color)
+  (let ((bg-color
+         (if (eq (car custom-enabled-themes) kb/themes-dark)
+             (color-darken-name (modus-themes-with-colors bg-mode-line-inactive) 13)
+           (color-lighten-name (modus-themes-with-colors bg-mode-line-inactive) 13))))
+    (set-face-attribute 'mode-line-inactive nil
+                        :background bg-color
+                        :box `( :line-width 3
+                                :color ,bg-color)))
 
   (modus-themes-with-colors
     (set-face-attribute 'cursor nil :background magenta-cooler))
