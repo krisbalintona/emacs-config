@@ -444,7 +444,7 @@ will also be the width of all other printable characters."
 ;;;; Mu4e-column-faces
 (use-package mu4e-column-faces
   :after mu4e
-  :commands mu4e
+  :demand
   :config
   (mu4e-column-faces-mode 1))
 
