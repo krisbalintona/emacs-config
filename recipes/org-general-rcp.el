@@ -421,11 +421,10 @@ have `org-warning' face."
 (use-package olivetti
   :after org
   :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
-         (kb/themes . (lambda ()
-                        (with-eval-after-load 'olivetti
-                          (set-face-attribute 'olivetti-fringe nil
-                                              :background (modus-themes-with-colors bg-dim)
-                                              :inherit 'unspecified)))))
+         (kb/themes . (lambda () (when (featurep 'olivetti)
+                              (set-face-attribute 'olivetti-fringe nil
+                                                  :background (modus-themes-with-colors bg-dim)
+                                                  :inherit 'unspecified)))))
   :custom
   (olivetti-lighter nil)
   (olivetti-body-width 0.55)
