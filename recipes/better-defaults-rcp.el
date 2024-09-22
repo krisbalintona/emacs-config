@@ -197,7 +197,7 @@
 (setopt mouse-wheel-flip-direction t)
 
 ;;;; Only show these byte-compile warnings
-(setopt byte-compile-warnings '(not obsolete))
+(setopt byte-compile-warnings (cl-remove 'obsolete byte-compile-warning-types))
 
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
