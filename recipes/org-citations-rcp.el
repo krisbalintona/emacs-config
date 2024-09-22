@@ -34,7 +34,7 @@
   :after org
   :bind
   ( :map org-mode-map
-    ([remap citar-insert-citation] . org-cite-insert))
+    ([remap org-cite-insert] . citar-insert-citation))
   :custom
   (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (expand-file-name "locales/" user-emacs-directory))
@@ -55,16 +55,12 @@
 
 ;;;;; Itself
 (use-package citar
-  :after all-the-icons
   :bind
   (("C-c b b" . citar-insert-citation)
    ("C-c b r" . citar-insert-reference)
    ("C-c b o" . citar-open)
    ("C-c b f" . citar-open-files)
-   ("C-c b n" . citar-open-notes)
-   ("C-c b z" . kb/citar-open-pdfs-in-zotero)
-   :map citar-embark-citation-map
-   ("z" . kb/citar-open-pdfs-in-zotero))
+   ("C-c b n" . citar-open-notes))
   :custom
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))
@@ -91,72 +87,48 @@
                         (when (fboundp 'typo-mode)
                           (remove-hook 'minibuffer-mode-hook 'typo-mode))))
 
-  ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
-  (defvar citar-indicator-files-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-faicon
-              "file-o"
-              :face 'all-the-icons-green
-              :v-adjust -0.1)
-     :function #'citar-has-files
-     :padding "  " ; need this because the default padding is too low for these icons
-     :tag "has:files"))
-  (defvar citar-indicator-links-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-octicon
-              "link"
-              :face 'all-the-icons-orange
-              :v-adjust 0.01)
-     :function #'citar-has-links
-     :padding "  "
-     :tag "has:links"))
-  (defvar citar-indicator-notes-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-material
-              "speaker_notes"
-              :face 'all-the-icons-blue
-              :v-adjust -0.3)
-     :function #'citar-has-notes
-     :padding "  "
-     :tag "has:notes"))
-  (defvar citar-indicator-cited-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-faicon
-              "circle-o"
-              :face 'all-the-icon-green)
-     :function #'citar-is-cited
-     :padding "  "
-     :tag "is:cited"))
-  (setq citar-indicators
-        (list citar-indicator-files-icons
-              citar-indicator-links-icons
-              citar-indicator-notes-icons
-              citar-indicator-cited-icons))
-
-  ;; Original function. Was able to discover the appropriate link here:
-  ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
-  ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
-  ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
-  ;; for a different solution
-  (defun kb/citar-open-pdf-in-zotero (citekey)
-    "Open PDF associated with CITEKEY in Zotero."
-    (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
-              (files-list (delete-dups (apply #'append files-hash)))
-              ;; OPTIMIZE 2023-07-16: The following line of code only works if
-              ;; there is only one PDF attached to the item, and that PDF is
-              ;; the document. For progress on differentiating mere
-              ;; attachments to PDF documents, see the issue linked above
-              (pdf (car (-filter
-                         (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
-              (zotero-key (f-base (f-parent pdf))))
-        (citar-file-open-external
-         (concat "zotero://open-pdf/library/items/" zotero-key))
-      (message "No PDF for %s!" citekey)))
-  (defun kb/citar-open-pdfs-in-zotero (citekeys)
-    "Open PDFs associated with CITEKEYS in Zotero."
-    (interactive (list (citar-select-refs)))
-    (dolist (citekey citekeys)
-      (kb/citar-open-pdf-in-zotero citekey))))
+  (with-eval-after-load 'all-the-icons
+    ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
+    (defvar citar-indicator-files-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-faicon
+                "file-o"
+                :face 'all-the-icons-green
+                :v-adjust -0.1)
+       :function #'citar-has-files
+       :padding "  " ; Need this because the default padding is too low for these icons
+       :tag "has:files"))
+    (defvar citar-indicator-links-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-octicon
+                "link"
+                :face 'all-the-icons-orange
+                :v-adjust 0.01)
+       :function #'citar-has-links
+       :padding "  "
+       :tag "has:links"))
+    (defvar citar-indicator-notes-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-material
+                "speaker_notes"
+                :face 'all-the-icons-blue
+                :v-adjust -0.3)
+       :function #'citar-has-notes
+       :padding "  "
+       :tag "has:notes"))
+    (defvar citar-indicator-cited-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-faicon
+                "circle-o"
+                :face 'all-the-icon-green)
+       :function #'citar-is-cited
+       :padding "  "
+       :tag "is:cited"))
+    (setq citar-indicators
+          (list citar-indicator-files-icons
+                citar-indicator-links-icons
+                citar-indicator-notes-icons
+                citar-indicator-cited-icons))))
 
 ;;;;; Faster renderer
 ;; Replaces the *VERY SLOW* `'org-cite-basic-activate' (which `citar' relies on
@@ -235,13 +207,42 @@ functions from `citar'."
 
 ;;;; Citar-embark
 (use-package citar-embark
-  :demand
   :after citar
   :diminish
+  :commands kb/citar-open-pdfs-in-zotero
+  :bind
+  (("C-c b z" . kb/citar-open-pdfs-in-zotero)
+   :map citar-embark-citation-map
+   ("z" . kb/citar-open-pdfs-in-zotero))
   :custom
   (citar-at-point-function 'embark-act)
   :config
-  (citar-embark-mode 1))
+  (citar-embark-mode 1)
+
+  ;; Original function. Was able to discover the appropriate link here:
+  ;; https://forums.zotero.org/discussion/90858/pdf-reader-and-zotero-open-pdf-links.
+  ;; Also see https://github.com/emacs-citar/citar/issues/685 with potentially
+  ;; https://forums.zotero.org/discussion/101535/betterbibtex-export-itemids-to-bib-file
+  ;; for a different solution
+  (defun kb/citar-open-pdf-in-zotero (citekey)
+    "Open PDF associated with CITEKEY in Zotero."
+    (if-let* ((files-hash (hash-table-values (citar-get-files citekey)))
+              (files-list (delete-dups (apply #'append files-hash)))
+              ;; OPTIMIZE 2023-07-16: The following line of code only works if
+              ;; there is only one PDF attached to the item, and that PDF is
+              ;; the document. For progress on differentiating mere
+              ;; attachments to PDF documents, see the issue linked above
+              (pdf (car (-filter
+                         (lambda (file) (string= (file-name-extension file) "pdf")) files-list)))
+              (zotero-key (f-base (f-parent pdf))))
+        (citar-file-open-external
+         (concat "zotero://open-pdf/library/items/" zotero-key))
+      (message "No PDF for %s!" citekey)))
+  (defun kb/citar-open-pdfs-in-zotero (citekeys)
+    "Open PDFs associated with CITEKEYS in Zotero."
+    (interactive (list (citar-select-refs)))
+    (dolist (citekey citekeys)
+      (kb/citar-open-pdf-in-zotero citekey))))
 
 (provide 'org-citations-rcp)
 ;;; org-citations-rcp.el ends here
