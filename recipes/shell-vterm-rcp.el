@@ -63,8 +63,7 @@ process and its buffer without confirmation."
 
 ;;;; EAT
 (use-package eat
-  :hook ((on-first-buffer . eat-eshell-mode)
-         (eshell-first-time-mode . eat-eshell-mode))
+  :hook (eshell-first-time-mode . eat-eshell-mode)
   :config
   (eat-eshell-visual-command-mode 1))
 
