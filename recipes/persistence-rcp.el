@@ -53,14 +53,16 @@
 ;; Enable logging of recent files
 (use-package recentf
   :ensure nil
-  :hook ((on-first-input . recentf-mode)
-         (kill-emacs . recentf-save-list))
+  :hook
+  (on-first-input . recentf-mode)
   :bind
   ( :map kb/file-keys
     ("r" . recentf-open-files))
   :custom
   (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15))
+  (recentf-max-menu-items 15)
+  :config
+  (recentf-mode 1))
 
 ;;;; Saveplace
 ;; Save and restore the point's location in files
