@@ -166,15 +166,14 @@
   :vc (:url "https://github.com/minad/jinx.git"
             :rev :newest)
   :diminish
+  :hook (on-first-file . global-jinx-mode)
   :bind
   ( :map jinx-mode-map
     ([remap ispell-word] . jinx-correct)
     ("C-," . jinx-correct)
     ("C-M-$" . jinx-languages))
   :config
-  (global-jinx-mode 1)
-
-  ;; Use veritco's grid display such that more suggestions fit on the screen and
+  ;; Use Vertico's grid display such that more suggestions fit on the screen and
   ;; enable annotations. Taken from
   ;; https://github.com/minad/jinx#correcting-misspellings
   (with-eval-after-load 'vertico-multiform
