@@ -27,6 +27,62 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
+;;;; Generalized
+
+;;;;; Org-remark
+(use-package org-remark
+  :hook ((Info-mode eww-mode) . org-remark-mode)
+  :bind
+  ( :map org-remark-mode-map
+    ("C-c r r" . (lambda () (interactive) (org-remark-highlights-load)))
+    ("C-c r m" . org-remark-mark)
+    ("C-c r d" . org-remark-delete)
+    ("C-c r c" . org-remark-change)
+    ("C-c r t" . org-remark-toggle)
+    ("C-c r o" . org-remark-open)
+    ("C-c r v" . org-remark-view)
+    ("C-c r n" . org-remark-next)
+    ("C-c r p" . org-remark-prev))
+  :custom
+  (org-remark-notes-auto-delete :auto-delete)
+  (org-remark-source-file-name 'abbreviate-file-name)
+  (org-remark-notes-file-name
+   (no-littering-expand-var-file-name "org-remark/marginalia.org"))
+  (org-remark-create-default-pen-set nil) ; Make my own pens
+  :config
+  (diminish 'org-remark-mode)
+  ;; (org-remark-global-tracking-mode 1)
+  (diminish 'org-remark-global-tracking-mode)
+
+  (with-eval-after-load 'eww
+    (org-remark-eww-mode 1))
+  (with-eval-after-load 'nov
+    (org-remark-nov-mode 1))
+  (with-eval-after-load 'info
+    (org-remark-info-mode 1))
+
+  ;; My pens
+  (org-remark-create "red"
+                     `(:background "PaleVioletRed4")
+                     `(CATEGORY "amazing" help-echo "Wow!"))
+  (org-remark-create "red-line"
+                     `(:underline '(:color "PaleVioletRed4" :style wave))
+                     `(CATEGORY "surprise" help-echo "Wow!"))
+  (org-remark-create "yellow"
+                     `(:background "yellow3")
+                     `(CATEGORY "important"))
+  (org-remark-create "green"
+                     `(:underline (:color "lawn green" :style wave))
+                     `(CATEGORY "outline")))
+
+;;;;; Org-transclusion
+;; Enable transclusion of org files
+(use-package org-transclusion
+  :hook (org-mode . org-transclusion-mode)
+  :custom
+  (org-transclusion-include-first-section t)
+  (org-transclusion-exclude-elements '(property-drawer)))
+
 ;;;; PDFs
 ;;;;; Pdf-tools
 ;; View pdfs and interact with them. Has many dependencies
@@ -197,8 +253,8 @@ reading links."
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                              (<= x 1)
-                                              (>= x 0))))))
+                                         (<= x 1)
+                                         (>= x 0))))))
 
   (defun kb/avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.
@@ -660,60 +716,6 @@ A modified version of `ytdl-download'."
                  '((?Y ?\C-Y) kb/ytdl-org-attach
                    "Provide a URL and have \"ytdl\" download the corresponding video and attach that file.")
                  t)))
-
-;;;; Org-remark
-(use-package org-remark
-  :hook ((Info-mode eww-mode) . org-remark-mode)
-  :bind
-  ( :map org-remark-mode-map
-    ("C-c r r" . (lambda () (interactive) (org-remark-highlights-load)))
-    ("C-c r m" . org-remark-mark)
-    ("C-c r d" . org-remark-delete)
-    ("C-c r c" . org-remark-change)
-    ("C-c r t" . org-remark-toggle)
-    ("C-c r o" . org-remark-open)
-    ("C-c r v" . org-remark-view)
-    ("C-c r n" . org-remark-next)
-    ("C-c r p" . org-remark-prev))
-  :custom
-  (org-remark-notes-auto-delete :auto-delete)
-  (org-remark-source-file-name 'abbreviate-file-name)
-  (org-remark-notes-file-name
-   (no-littering-expand-var-file-name "org-remark/marginalia.org"))
-  (org-remark-create-default-pen-set nil) ; Make my own pens
-  :config
-  (diminish 'org-remark-mode)
-  ;; (org-remark-global-tracking-mode 1)
-  (diminish 'org-remark-global-tracking-mode)
-
-  (with-eval-after-load 'eww
-    (org-remark-eww-mode 1))
-  (with-eval-after-load 'nov
-    (org-remark-nov-mode 1))
-  (with-eval-after-load 'info
-    (org-remark-info-mode 1))
-
-  ;; My pens
-  (org-remark-create "red"
-                     `(:background "PaleVioletRed4")
-                     `(CATEGORY "amazing" help-echo "Wow!"))
-  (org-remark-create "red-line"
-                     `(:underline '(:color "PaleVioletRed4" :style wave))
-                     `(CATEGORY "surprise" help-echo "Wow!"))
-  (org-remark-create "yellow"
-                     `(:background "yellow3")
-                     `(CATEGORY "important"))
-  (org-remark-create "green"
-                     `(:underline (:color "lawn green" :style wave))
-                     `(CATEGORY "outline")))
-
-;;;; Org-transclusion
-;; Enable transclusion of org files
-(use-package org-transclusion
-  :hook (org-mode . org-transclusion-mode)
-  :custom
-  (org-transclusion-include-first-section t)
-  (org-transclusion-exclude-elements '(property-drawer)))
 
 ;;;; Org-roam-ui
 ;; Newer `org-roam-server' for org-roam V2.
