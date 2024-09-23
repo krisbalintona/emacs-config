@@ -247,7 +247,7 @@ have `org-warning' face."
   (org-fontify-todo-headline nil)
   (org-fontify-done-headline nil)
   (org-fontify-whole-block-delimiter-line nil)
-  (org-fontify-quote-and-verse-blocks nil))
+  (org-fontify-quote-and-verse-blocks t))
 
 ;;;;; Org-src
 (use-package org-src
