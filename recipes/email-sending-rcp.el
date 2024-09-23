@@ -49,6 +49,9 @@
   (message-confirm-send nil)
   (message-kill-buffer-on-exit t)
   (message-wide-reply-confirm-recipients t)
+
+  (mml-attach-file-at-the-end t)
+  (mml-dnd-attach-options t)
   :config
   (with-eval-after-load 'mu4e
     (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory)))
