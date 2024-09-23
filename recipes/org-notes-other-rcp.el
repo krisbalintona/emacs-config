@@ -83,6 +83,23 @@
   (org-transclusion-include-first-section t)
   (org-transclusion-exclude-elements '(property-drawer)))
 
+;;;;; Paw
+(use-package paw
+  :disabled    ; NOTE 2024-09-23: Such messy code and idiosyncratic practices...
+  :vc (:url "https://github.com/chenyanming/paw.git"
+            :rev :newest)
+  :hook
+  (wallabag-entry-mode . paw-annotation-mode)
+  :custom
+  ;; TODO 2024-09-23: The parent directory of the following three paths must be
+  ;; set, or paw errors... Make issues about this.
+  (paw-cache-dir (no-littering-expand-var-file-name "paw/cache"))
+  (paw-tts-cache-dir (no-littering-expand-var-file-name "paw/edge-tts"))
+  (paw-note-dir (no-littering-expand-var-file-name "paw/notes"))
+  (paw-annotation-read-only-enable t)
+  (paw-view-note-after-editting-note nil)
+  (paw-svg-enable t))
+
 ;;;; PDFs
 ;;;;; Pdf-tools
 ;; View pdfs and interact with them. Has many dependencies
@@ -253,8 +270,8 @@ reading links."
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                         (<= x 1)
-                                         (>= x 0))))))
+                                              (<= x 1)
+                                              (>= x 0))))))
 
   (defun kb/avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.
