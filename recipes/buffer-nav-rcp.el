@@ -54,9 +54,7 @@
 ;;;; Occur
 ;; Narrow current buffer to lines which match a regexp
 (use-package occur
-  :ensure nil
-  :hook
-  (occur-mode . visual-line-mode))
+  :ensure nil)
 
 ;;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
