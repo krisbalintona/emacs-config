@@ -43,6 +43,7 @@
 
 ;;;;; Light
 (use-package modus-themes
+  :autoload modus-themes-with-colors
   :hook ((modus-themes-after-load-theme . kb/themes-setup-base-faces)
          ((modus-themes-after-load-theme kb/themes) . kb/modus-themes-solaire-faces))
   :custom
@@ -56,6 +57,15 @@
                                (selection . (semibold)))))
   (modus-themes-variable-pitch-ui nil)
   (modus-themes-headings '((t . (semibold))))
+  :init
+  ;; Taken from (info "(modus-themes) Add support for solaire-mode")
+  (defun kb/modus-themes-solaire-faces ()
+    (modus-themes-with-colors
+      (custom-set-faces
+       `(solaire-default-face ((,c :inherit default :background ,bg-dim :foreground ,fg-dim)))
+       `(solaire-line-number-face ((,c :inherit solaire-default-face :foreground ,fg-line-number-inactive)))
+       `(solaire-hl-line-face ((,c :background ,bg-active)))
+       `(solaire-org-hide-face ((,c :background ,bg-dim :foreground ,bg-dim))))))
   :config
   ;; Overrides
   (setopt modus-themes-common-palette-overrides
@@ -100,16 +110,7 @@
             (bg-mode-line-active        "#484d67")
             (fg-mode-line-active        "#ffffff")
             (bg-mode-line-inactive      "#292d48")
-            (fg-mode-line-inactive      "#969696")))
-
-  ;; Taken from (info "(modus-themes) Add support for solaire-mode")
-  (defun kb/modus-themes-solaire-faces ()
-    (modus-themes-with-colors
-      (custom-set-faces
-       `(solaire-default-face ((,c :inherit default :background ,bg-dim :foreground ,fg-dim)))
-       `(solaire-line-number-face ((,c :inherit solaire-default-face :foreground ,fg-line-number-inactive)))
-       `(solaire-hl-line-face ((,c :background ,bg-active)))
-       `(solaire-org-hide-face ((,c :background ,bg-dim :foreground ,bg-dim)))))))
+            (fg-mode-line-inactive      "#969696"))))
 (use-package solo-jazz-theme :disabled)
 (use-package kaolin-themes  :disabled)
 (when (fboundp 'elpaca-wait)
