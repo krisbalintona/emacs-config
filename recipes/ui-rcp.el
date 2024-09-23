@@ -406,13 +406,13 @@ This version removes delimiters.")
   :init
   (display-battery-mode 1))
 
-;;;;; Display-line-numbers-mode
+;;;;; Display-line-numbers
 ;; Show line numbers on the left fringe
 (use-package display-line-numbers
   :ensure nil
   :bind
   ( :map kb/toggle-keys
-    ("l". display-line-numbers-mode))
+    ("l" . display-line-numbers-mode))
   :custom
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
@@ -421,7 +421,6 @@ This version removes delimiters.")
 ;; Adds an interactive indicator for the view's position in the current buffer
 ;; to the modeline
 (use-package mlscroll
-  :autoload kb/mlscroll-set-colors
   :hook ((on-first-buffer . mlscroll-mode)
          (kb/themes . kb/mlscroll-set-colors))
   :custom
@@ -430,11 +429,12 @@ This version removes delimiters.")
   :config
   (defun kb/mlscroll-set-colors ()
     "Set colors for `mlscroll'."
-    (when (bound-and-true-p mlscroll-mode)
-      (mlscroll-mode -1)
-      (customize-set-variable 'mlscroll-in-color (modus-themes-with-colors bg-mode-line-inactive))
-      (customize-set-variable 'mlscroll-out-color (modus-themes-with-colors bg-mode-line-active))
-      (mlscroll-mode 1)))
+    (let ((m (bound-and-true-p mlscroll-mode)))
+      (when m (mlscroll-mode -1))
+      (modus-themes-with-colors
+        (customize-set-variable 'mlscroll-in-color bg-mode-line-inactive)
+        (customize-set-variable 'mlscroll-out-color bg-mode-line-active))
+      (when m (mlscroll-mode 1))))
   (kb/mlscroll-set-colors))
 
 ;;;; Other UI
