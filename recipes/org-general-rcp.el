@@ -86,6 +86,7 @@
   (org-ditaa-jar-path                   ; EAF happens to install it...
    "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
   :custom-face
+  (org-quote ((t (:family ,kb/themes-variable-pitch-font :extend t :inherit 'org-block))))
   (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
   :config
   ;; Make org-open-at-point follow file links in the same window
