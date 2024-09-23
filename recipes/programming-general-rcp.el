@@ -386,9 +386,6 @@ with the exception of org-emphasis markers."
   :config
   (add-hook 'org-mode-hook
             (lambda ()
-              (add-to-list 'prettify-symbols-alist '("..." . ?…))
-              (add-to-list 'prettify-symbols-alist '("--" . ?–))
-              (add-to-list 'prettify-symbols-alist '("---" . ?—))
               (add-to-list 'prettify-symbols-alist '("->" . ?➡))
               (add-to-list 'prettify-symbols-alist '("<-" . ?⬅))))
   (add-hook 'latex-mode-hook
