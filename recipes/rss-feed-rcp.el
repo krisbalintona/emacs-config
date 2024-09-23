@@ -340,23 +340,41 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 
 ;;;; Wallabag
 (use-package wallabag
-  :disabled                             ; I think I prefer Wombag
   :vc (:url "https://github.com/chenyanming/wallabag.el.git"
             :rev :newest)
-  :general (kb/open-keys "W" 'wallabag)
+  :hook
+  ((wallabag-after-render . wallabag-search-update-and-clear-filter)
+   (wallabag-post-html-render . olivetti-mode)
+   (wallabag-post-html-render . visual-line-mode))
+  :bind
+  ( :map kb/open-keys
+    ("W" . wallabag))
   :custom
+  (wallabag-db-connector 'sqlite-builtin)
+  ;; NOTE 2024-09-23: If sqlite errors are being returned, try recompiling the
+  ;; package once the sqlite file path is set by the db variable
+  (wallabag-db-file (no-littering-expand-var-file-name "wallabag/wallabag.sqlite"))
+  (wallabag-json-file (no-littering-expand-var-file-name "wallabag/wallabag.json"))
+  (wallabag-download-dir (expand-file-name "~/Downloads"))
   (wallabag-host "https://app.wallabag.it") ; Wallabag server host name
-  (wallabag-username "krisbalintona") ; Username
+  (wallabag-username "krisbalintona")       ; Username
   (wallabag-password (auth-source-pick-first-password :host "app.wallabag.it")) ; Password
-  (wallabag-clientid (auth-source-pick-first-password :host "emacs-wombag.el")) ; Created with API clients management
+  (wallabag-clientid "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco") ; Created with API clients management
   (wallabag-secret (auth-source-pick-first-password :host "emacs-wombag.el")) ; Created with API clients management
+  (wallabag-starred-icon "⭐")
+  ;; From
+  ;; https://github.com/chenyanming/wallabag.el?tab=readme-ov-file#image-caching:
+  ;; Wallabag will not download the images, but using Emacs disk caching
+  ;; capability. Setting url-automatic-caching non-nil causes documents to be
+  ;; cached automatically.
+  (url-automatic-caching t)
   :config
   ;; (run-with-timer 0 3540 'wallabag-request-token) ; Optional, auto refresh token, token should refresh every hour
   )
 
 ;;;; Wombag
 (use-package wombag
-  ;; :ensure (:host github :repo "karthink/wombag")
+  :disabled        ; NOTE 2024-09-23: Prefer Wallabag because at least it works!
   :vc (:url "https://github.com/karthink/wombag.git"
             :rev :newest)
   :general (kb/open-keys "W" 'wombag)
@@ -381,7 +399,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   ;;                        :repo "alphapapa/pocket-reader.el")
   :general
   (kb/open-keys
-    "p" 'pocket-reader)
+   "p" 'pocket-reader)
   (:keymaps 'pocket-reader-mode-map
             "TAB" 'kb/pocket-reader-cycle-view
             "+" 'pocket-reader-more
