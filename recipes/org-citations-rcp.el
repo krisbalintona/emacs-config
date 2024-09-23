@@ -84,6 +84,7 @@ Intended for `eldoc-documentation-functions'."
 
 ;;;;; Itself
 (use-package citar
+  :hook (org-mode . citar-capf-setup)
   :bind
   (("C-c b b" . citar-insert-citation)
    ("C-c b r" . citar-insert-reference)
@@ -226,8 +227,6 @@ functions from `citar'."
 ;; Use `citar' with `org-cite'
 (use-package citar-org
   :ensure nil
-  :after citar
-  :hook (org-mode . citar-capf-setup)
   :custom
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
