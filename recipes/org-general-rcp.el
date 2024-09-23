@@ -421,10 +421,8 @@ have `org-warning' face."
 (use-package olivetti
   :after org
   :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
-         (kb/themes . (lambda () (when (featurep 'olivetti)
-                              (set-face-attribute 'olivetti-fringe nil
-                                                  :background (modus-themes-with-colors bg-dim)
-                                                  :inherit 'unspecified)))))
+         (olivetti-mode . kb/olivetti-set-colors)
+         (kb/themes . kb/olivetti-set-colors))
   :custom
   (olivetti-lighter nil)
   (olivetti-body-width 0.55)
@@ -440,7 +438,14 @@ have `org-warning' face."
                     olivetti-style)     ; 'fringes or 'fancy
                (let ((mode-line-right-align-edge 'right-fringe))
                  (mode--line-format-right-align))
-             (mode--line-format-right-align)))))
+             (mode--line-format-right-align))))
+  :config
+  (defun kb/olivetti-set-colors ()
+    "Set custom colors for `olivetti'."
+    (when (featurep 'olivetti)
+      (set-face-attribute 'olivetti-fringe nil
+                          :background (modus-themes-with-colors bg-dim)
+                          :inherit 'unspecified))))
 
 ;;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
