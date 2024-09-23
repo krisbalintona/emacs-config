@@ -161,27 +161,25 @@
    ([remap next-matching-history-element] . consult-history)
    ([remap previous-matching-history-element]. consult-history))
   :custom
-  (consult-mode-histories   ; What variable consult-history looks at for history
-   '((eshell-mode eshell-history-ring eshell-history-index)
-     (comint-mode comint-input-ring comint-input-ring-index)
-     (term-mode term-input-ring term-input-ring-index)
-     (log-edit-mode log-edit-comment-ring log-edit-comment-ring-index)))
   (consult-ripgrep-args
    (concat
     "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
    --smart-case --no-heading --with-filename --line-number --search-zip"
     ;; Additional args
     " --line-number --hidden"))
-  :init
+  :config
+  (add-to-list 'consult-mode-histories
+               '(log-edit-mode log-edit-comment-ring log-edit-comment-ring-index log-edit-beginning-of-line))
+
+  ;; Use the faster plocate rather than locate
+  (when (executable-find "plocate")
+    (setq consult-locate-args "plocate --ignore-case --existing --regexp"))
+
   (defun kb/consult-imenu-versatile (&optional arg)
     "Call `consult-imenu'. With prefix-command ARG, call
     `consult-imenu-multi'."
     (interactive "P")
     (if arg (consult-imenu-multi) (consult-imenu)))
-  :config
-  ;; Use the faster locate rather than locate
-  (when (executable-find "plocate")
-    (setq consult-locate-args "plocate --ignore-case --existing --regexp"))
 
   ;; Have line centered in previews. Make sure `recenter' is called after
   ;; `consult--maybe-recenter'
