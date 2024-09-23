@@ -79,7 +79,8 @@
 (use-package window
   :ensure nil
   :autoload kb/select-buffer-in-side-window
-  :bind ("M-o" . other-window)
+  :bind*
+  ("M-o" . other-window)
   :custom
   ;; Prefer vertical splits over horizontal ones
   (split-width-threshold 170)
@@ -422,11 +423,10 @@ ALIST is  an alist of information about buffer."
 ;; `other-window' by most recently used
 (use-package switchy-window
   :hook (on-first-buffer . switchy-window-minor-mode)
-  :bind*
-  ( :map switchy-window-minor-mode-map
-    ([remap other-window] . switchy-window))
   :bind
-  ( :repeat-map kb/switchy-window-repeat-map
+  ( :map switchy-window-minor-mode-map
+    ([remap other-window] . switchy-window)
+    :repeat-map kb/switchy-window-repeat-map
     ("o" . switchy-window))
   :config
   (defun kb/switchy-window (&optional arg)
@@ -453,7 +453,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                             ignore-window-parameters))
+                                        ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
