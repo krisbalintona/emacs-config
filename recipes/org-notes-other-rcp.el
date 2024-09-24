@@ -62,6 +62,8 @@
     (org-remark-info-mode 1))
 
   ;; My pens
+  ;; TODO 2024-09-23: Instead of static colors, perhaps set them as faces which
+  ;; I update upon theme switch.
   (org-remark-create "red"
                      `(:background "PaleVioletRed4")
                      `(CATEGORY "amazing" help-echo "Wow!"))
@@ -453,7 +455,7 @@ the color column."
   (defun kb/org-pdf-annot-store-link ()
     "Stores link to annotation via its annotate.
 Uses the current annotation at point's ID."
-    (when (equal (format "%s" major-mode) "pdf-annot-list-mode")
+    (when (eq major-mode 'pdf-annot-list-mode)
       (let* ((annot-buf pdf-annot-list-document-buffer)
              (pdf-file (buffer-file-name annot-buf))
              (annot (pdf-annot-getannot (tabulated-list-get-id) annot-buf))
