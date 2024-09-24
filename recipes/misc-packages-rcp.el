@@ -560,14 +560,15 @@ interactively, then delete the register instead of jumping to it."
   :custom
   (pixel-scroll-precision-interpolate-page t)
   (pixel-scroll-precision-interpolation-factor 1)
-  :init
+  :config
   (defun kb/pixel-recenter (&optional arg redisplay)
     "Similar to `recenter' but with pixel scrolling.
 ARG and REDISPLAY are identical to the original function."
     ;; See the links in line 6676 in window.c for
     (when-let* ((current-pixel (pixel-posn-y-at-point))
-                (target-pixel (or (when arg (* (line-pixel-height) arg))
-                                  (* 0.5 (window-body-height nil t))))
+                (target-pixel (if (numberp arg)
+                                  (* (line-pixel-height) arg)
+                                (* 0.5 (window-body-height nil t))))
                 (distance-in-pixels 0)
                 (pixel-scroll-precision-interpolation-total-time
                  (/ pixel-scroll-precision-interpolation-total-time 2.0)))
