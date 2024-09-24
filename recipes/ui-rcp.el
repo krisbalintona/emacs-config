@@ -461,13 +461,15 @@ This version removes delimiters.")
 Toggles between 100 and 72 by default. Can choose which value to
 change to if called with ARG."
   (interactive "P")
-  (set-frame-parameter nil 'alpha-background
-                       (if arg
-                           (read-number "Change the transparency to which value (0-100)? ")
+  (let ((transparency (pcase arg
+                        ((pred numberp) arg)
+                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
+                        (_
                          (cl-case (frame-parameter nil 'alpha-background)
                            (72 100)
                            (100 72)
-                           (t 100)))))
+                           (t 100))))))
+    (set-frame-parameter nil 'alpha-background transparency)))
 (bind-key "<f9>" #'kb/toggle-window-transparency)
 
 ;;;;; Solaire-mode
