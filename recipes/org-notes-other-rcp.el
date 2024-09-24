@@ -33,16 +33,25 @@
 (use-package org-remark
   :hook ((Info-mode eww-mode) . org-remark-mode)
   :bind
-  ( :map org-remark-mode-map
-    ("C-c r r" . (lambda () (interactive) (org-remark-highlights-load)))
-    ("C-c r m" . org-remark-mark)
-    ("C-c r d" . org-remark-delete)
-    ("C-c r c" . org-remark-change)
-    ("C-c r t" . org-remark-toggle)
-    ("C-c r o" . org-remark-open)
-    ("C-c r v" . org-remark-view)
-    ("C-c r n" . org-remark-next)
-    ("C-c r p" . org-remark-prev))
+  ( :prefix "C-c r"
+    :prefix-map org-remark-mode-map
+    ("r" . (lambda () (interactive) (org-remark-highlights-load)))
+    ("m" . org-remark-mark)
+    ("d" . org-remark-delete)
+    ("c" . org-remark-change)
+    ("t" . org-remark-toggle)
+    ("o" . org-remark-open)
+    ("v" . org-remark-view)
+    ("n" . org-remark-next)
+    ("p" . org-remark-prev)
+    :repeat-map kb/org-remark-mode-repeat-map
+    ("d" . org-remark-delete)
+    ("c" . org-remark-change)
+    ("t" . org-remark-toggle)
+    ("o" . org-remark-open)
+    ("v" . org-remark-view)
+    ("n" . org-remark-next)
+    ("p" . org-remark-prev))
   :custom
   (org-remark-notes-auto-delete :auto-delete)
   (org-remark-source-file-name 'abbreviate-file-name)
