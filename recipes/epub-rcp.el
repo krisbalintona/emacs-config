@@ -39,8 +39,6 @@
 ;;;; Justify-kp
 ;; Advanced justification of text with the Knuth/Plass algorithm
 (use-package justify-kp
-  :after nov
-  ;; :ensure (justify-kp :type git :host github :repo "Fuco1/justify-kp")
   :vc (:url "https://github.com/Fuco1/justify-kp.git"
             :rev :newest)
   :hook (nov-post-html-render . kb/nov-post-html-render-hook)
