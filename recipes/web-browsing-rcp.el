@@ -59,11 +59,10 @@
 ;; Emacs' web browser
 (use-package eww
   :ensure nil
-  :hook (eww-after-render . eww-readable)
   :custom
-  (eww-restore-desktop t)               ; Restore eww pages from `desktop-restore'
+  (eww-restore-desktop nil)
   (eww-desktop-remove-duplicates t)     ; Don't duplicate pages in history
-  ;; (setq eww-header-line-format nil)
+  (eww-header-line-format nil)
   (eww-search-prefix "https://duckduckgo.com/html/?q=") ; Use duckduckgo search engine
   (eww-download-directory (no-littering-expand-var-file-name "eww/downloads/")) ; Where to put downloads
   (eww-history-limit 150)
