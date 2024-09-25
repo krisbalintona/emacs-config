@@ -85,20 +85,20 @@
 (use-package tmr
   :bind
   ( :map kb/open-keys
-    ("t" . tmr-dispatch))
+    ("t" . kb/tmr-dispatch))
   :custom
   ;; Useful variables
   (tmr-descriptions-list
    '("Stop working!" "Work time 😄"))
   (tmr-notification-urgency 'normal)
   (tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
-  :init
+  :config
   (require 'transient)
-  (transient-define-prefix tmr-dispatch ()
-    "Invoke a transient menu for tmr"
+  (transient-define-prefix kb/tmr-dispatch ()
+    "Invoke a transient menu for `tmr'."
     ["Create or remove timers"
      [("t" "Create a timer" tmr)
-      ("T" "Create a timer with description" tmr-with-description)
+      ("T" "Create a timer with description" tmr-with-details)
       ("C" "Clone a timer" tmr-clone)]
      [("r" "Remove finished" tmr-remove-finished)
       ("c" "Cancel timer" tmr-cancel)]]
