@@ -72,8 +72,8 @@
 ;; Rotate window configuration
 (use-package transpose-frame
   :bind
-  (("C-M-s-<right>" . rotate-frame-clockwise)
-   ("C-M-s-l" . rotate-frame-clockwise)))
+  (("C-M-s-r" . rotate-frame-clockwise)
+   ("C-M-s-R" . rotate-frame-anticlockwise)))
 
 ;;;;; Window
 (use-package window
@@ -453,7 +453,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                        ignore-window-parameters))
+                                             ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
