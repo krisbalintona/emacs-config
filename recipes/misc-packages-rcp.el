@@ -142,6 +142,64 @@
       (set-face-foreground 'work-timer-mode-line foreground)))
   (kb/work-timer-set-faces))
 
+;;;;; Hammy
+(use-package hammy
+  :custom
+  (hammy-mode-always-show-lighter nil)
+  (hammy-mode-update-mode-line-continuously t)
+  (hammy-mode-lighter-seconds-format "%.2m:%.2s")
+  (hammy-mode-lighter-prefix "[H]")
+  (hammy-mode-lighter-overdue "!")
+  ;; TODO 2024-09-25: Have this found more locally. When I do, also change
+  ;; `tmr-sound' to this file
+  (hammy-sound-end-work "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
+  (hammy-sound-end-break "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
+  :config
+  (hammy-mode 1)
+
+  ;; Hammy definitions
+  (setq hammy-hammys nil)
+  (hammy-define "Fractional"
+    :documentation "Breaks that are ⅓ as long as the last work interval."
+    :intervals
+    (list
+     (interval :name "Work"
+               :duration "25 minutes"
+               :advance (do (let* ((current-duration
+                                    (ts-human-format-duration
+                                     (float-time
+                                      (time-subtract (current-time)
+                                                     current-interval-start-time))))
+                                   (message (format "You've worked for %s!" current-duration)))
+                              (when hammy-sound-end-work
+                                (call-process-shell-command
+                                 (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-work) nil 0)))))
+     (interval :name "Break"
+               :duration (do (cl-assert (equal "Work" (hammy-interval-name (caar history))))
+                             (let ((duration (cl-loop for (interval start end) in history
+                                                      while (equal "Work" (hammy-interval-name interval))
+                                                      sum (float-time (time-subtract end start))
+                                                      into work-seconds
+                                                      finally return (* work-seconds 0.25))))
+                               (when (alist-get 'unused-break etc)
+                                 ;; Add unused break time.
+                                 (cl-incf duration (alist-get 'unused-break etc))
+                                 (setf (alist-get 'unused-break etc) nil))
+                               duration))
+               :after (do (let* ((elapsed
+                                  (float-time
+                                   (time-subtract (current-time) current-interval-start-time)))
+                                 (unused (- current-duration elapsed)))
+                            (when (> unused 0)
+                              ;; "Bank" unused break time.
+                              (if (alist-get 'unused-break etc)
+                                  (cl-incf (alist-get 'unused-break etc) unused)
+                                (setf (alist-get 'unused-break etc) unused)))))
+               :advance (remind "5 minutes"
+                                (do (when hammy-sound-end-break
+                                      (call-process-shell-command
+                                       (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-break) nil 0))))))))
+
 ;;;; Writing
 ;;;;; Sentex
 ;; Alternative to `sentence-navigation'. Provides sentence navigation commands
