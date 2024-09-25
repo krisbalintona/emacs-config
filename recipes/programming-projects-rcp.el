@@ -64,7 +64,7 @@
   ;; This is a regular variable
   (setq project-mode-line-format
         '(:eval (when-let ((project (project-mode-line-format)))
-                  (propertize (concat " [" (string-trim (format-mode-line project)) "]")
+                  (propertize (concat "[" (string-trim (format-mode-line project)) "] ")
                               'face project-mode-line-face))))
 
   (defun kb/project-special-dir (dir)
