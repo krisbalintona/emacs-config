@@ -173,5 +173,11 @@
                                            "^\\(%\\[\\|%\\]\\)$" s))))
                               kb/mode-line-modes))))
 
+;;;; Inspector
+;; Introspect list expressions. Also integrates with the debugging backtrace and
+;; edebug (see
+;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
+(use-package inspector)
+
 (provide 'programming-elisp-rcp)
 ;;; programming-elisp-rcp.el ends here
