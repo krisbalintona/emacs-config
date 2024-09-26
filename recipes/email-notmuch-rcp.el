@@ -291,5 +291,10 @@ buffer hidden."
   :after notmuch
   :demand)
 
+;;;; Ol-notmuch
+;; Org-links for search queries (i.e. notmuch-search-mode, notmuch-tree-mode)
+;; and messages (i.e. notmuch-show-mode).
+(use-package ol-notmuch)
+
 (provide 'email-notmuch-rcp)
 ;;; email-notmuch-rcp.el ends here
