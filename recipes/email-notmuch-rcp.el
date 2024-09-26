@@ -294,7 +294,53 @@ buffer hidden."
 ;;;; Ol-notmuch
 ;; Org-links for search queries (i.e. notmuch-search-mode, notmuch-tree-mode)
 ;; and messages (i.e. notmuch-show-mode).
-(use-package ol-notmuch)
+(use-package ol-notmuch
+  :autoload kb/org-notmuch-store-link
+  :config
+  ;; Integration with `org-agenda'
+  (defun kb/org-notmuch-store-link ()
+    "Store a link to one or more notmuch messages.
+My version allows for linking to the first message in an email thread
+from a `notmuch-search-mode' buffer."
+    (cond
+     ((memq major-mode '(notmuch-show-mode notmuch-tree-mode))
+      ;; The value is passed around using variable `org-store-link-plist'.
+      (org-link-store-props
+       :type       "notmuch"
+       :message-id (notmuch-show-get-message-id t)
+       :subject    (notmuch-show-get-subject)
+       :from       (notmuch-show-get-from)
+       :to         (notmuch-show-get-to)
+       :date       (org-trim (notmuch-show-get-date)))
+      (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+      (org-link-add-props :description (org-link-email-description))
+      org-store-link-plist)
+     ((equal major-mode 'notmuch-search-mode)
+      (save-window-excursion
+        (let ((buf (notmuch-show (notmuch-search-find-thread-id))))
+          (with-current-buffer buf
+            (org-link-store-props
+             :type       "notmuch"
+             :message-id (notmuch-show-get-message-id t)
+             :subject    (notmuch-show-get-subject)
+             :from       (notmuch-show-get-from)
+             :to         (notmuch-show-get-to)
+             :date       (org-trim (notmuch-show-get-date)))
+            (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+            (org-link-add-props :description (org-link-email-description)))
+          (kill-buffer buf)
+          org-store-link-plist)))))
+  (advice-add 'org-notmuch-store-link :override #'kb/org-notmuch-store-link)
+
+  (with-eval-after-load 'org-agenda
+    (add-to-list 'org-capture-templates
+                 `("e" "Email" entry
+                   (file ,(expand-file-name "todo.org" kb/agenda-dir))
+                   "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
+                   :empty-lines 1))
+
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-tree-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
 
 (provide 'email-notmuch-rcp)
 ;;; email-notmuch-rcp.el ends here
