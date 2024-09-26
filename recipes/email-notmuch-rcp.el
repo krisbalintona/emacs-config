@@ -226,18 +226,28 @@ buffer hidden."
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
-  :disabled
   :after notmuch
+  :demand
   :custom
-  ;; OPTIMIZE 2022-12-28: This breaks when using the path query term, but that
-  ;; seems to capture more than just using the to keyword
-  (notmuch-indicator-args
-   '((:terms "to:krisbalintona@gmail.com and tag:inbox and tag:unread" :label "")
-     (:terms "to:kristoffer_balintona@alumni.brown.edu and tag:inbox and tag:unread" :label "")))
+  (notmuch-indicator-add-to-mode-line-misc-info nil) ; I add it to the modeline myself
+  (notmuch-indicator-counter-format "%s%s")
+  (notmuch-indicator-args '(( :terms "path:personal/mail/** and tag:inbox"
+                              :label "P:"
+                              :label-face 'notmuch-search-unread-face)
+                            ( :terms "path:uni/mail/** and tag:inbox"
+                              :label "U:"
+                              :label-face 'notmuch-search-unread-face)))
   (notmuch-indicator-refresh-count (* 60 3))
-  ;; (notmuch-indicator-hide-empty-counters t)
-  (notmuch-indicator-hide-empty-counters nil)
-  (notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer)))
+  (notmuch-indicator-hide-empty-counters t)
+  (notmuch-indicator-force-refresh-commands '(notmuch notmuch-refresh-this-buffer))
+  :config
+  (notmuch-indicator-mode 1)
+
+  ;; Override default mode line construct
+  (setq-default notmuch-indicator-mode-line-construct
+                '(notmuch-indicator-mode ((:eval notmuch-indicator--counters) " ")))
+  ;; Add to mode line myself
+  (add-to-list 'global-mode-string 'notmuch-indicator-mode-line-construct))
 
 (provide 'email-notmuch-rcp)
 ;;; email-notmuch-rcp.el ends here
