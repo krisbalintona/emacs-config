@@ -160,6 +160,39 @@
   (send-mail-function 'sendmail-send-it)
   (notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
   :config
+  ;; Restore window configuration when closing notmuch-hello window
+  (defvar kb/notmuch-hello-pre-window-conf nil)
+
+  (defun kb/notmuch-hello-set-window-conf ()
+    "Set the value of `kb/notmuch-hello-pre-window-conf'."
+    (unless (memq major-mode '(notmuch-show-mode
+                               notmuch-tree-mode
+                               notmuch-hello-mode
+                               notmuch-search-mode
+                               notmuch-message-mode))
+      (setq kb/notmuch-hello-pre-window-conf (current-window-configuration))))
+
+  (defun kb/notmuch--around (fn &rest args)
+    "Set pre-window-configuration also."
+    (interactive)
+    (kb/notmuch-hello-set-window-conf)
+    (delete-other-windows)
+    (apply fn args))
+  (advice-add 'notmuch :around #'kb/notmuch--around)
+
+  (defun kb/notmuch-bury-or-kill-this-buffer--around (fn &rest args)
+    "Restore window configuration if appropriate."
+    (interactive)
+    (if (and (equal major-mode 'notmuch-hello-mode)
+             kb/notmuch-hello-pre-window-conf
+             (equal (selected-frame) (window-configuration-frame kb/notmuch-hello-pre-window-conf)))
+        (progn
+          (apply fn args)
+          (set-window-configuration kb/notmuch-hello-pre-window-conf)
+          (setq kb/notmuch-hello-pre-window-conf nil))
+      (apply fn args)))
+  (advice-add 'notmuch-bury-or-kill-this-buffer :around #'kb/notmuch-bury-or-kill-this-buffer--around)
+
   ;; REVIEW 2024-09-26: Prot's lin package apparently makes disabling this
   ;; better?
   (with-eval-after-load 'lin
