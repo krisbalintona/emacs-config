@@ -275,5 +275,10 @@ buffer hidden."
   ;; Add to mode line myself
   (add-to-list 'global-mode-string 'notmuch-indicator-mode-line-construct))
 
+;;;; Notmuch-transient
+(use-package notmuch-transient
+  :after notmuch
+  :demand)
+
 (provide 'email-notmuch-rcp)
 ;;; email-notmuch-rcp.el ends here
