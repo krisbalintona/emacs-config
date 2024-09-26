@@ -63,7 +63,8 @@
 
   ;; Hello UI
   (notmuch-hello-sections (list #'notmuch-hello-insert-saved-searches
-                                #'notmuch-hello-insert-alltags))
+                                #'notmuch-hello-insert-alltags
+                                #'notmuch-hello-insert-recent-searches))
   (notmuch-hello-thousands-separator ",")
   (notmuch-show-all-tags-list t)
 
