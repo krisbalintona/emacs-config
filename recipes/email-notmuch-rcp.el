@@ -171,16 +171,15 @@ maildir) such that lieer can properly send the email. (This assumes
 `sendmail-program' is set to the gmi executable.) Instruction from
 https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
     (when (string-match-p "gmi" sendmail-program)
-      (let* ((from (message-fetch-field "from"))
+      (let* ((from (downcase (message-fetch-field "from")))
              (root-maildir (expand-file-name "~/Documents/emails/"))
              (personal-maildir (expand-file-name "personal" root-maildir))
              (uni-maildir (expand-file-name "uni" root-maildir)))
-        ;; REVIEW 2024-09-26: Not sure if I should have this locally set
         (cond
-         ((string= from "krisbalintona@gmail.com")
-          (setq message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,personal-maildir)))
-         ((string= from "kristoffer_balintona@alumni.brown.edu")
-          (setq message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
+         ((string-match-p (rx (literal "krisbalintona@gmail.com")) from)
+          (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,personal-maildir)))
+         ((string-match-p (rx (literal "kristoffer_balintona@alumni.brown.edu")) from)
+          (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
 
   (defun kb/notmuch-show-setup-faces ()
     "Set up faces in `notmuch-show-mode'."
