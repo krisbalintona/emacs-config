@@ -181,24 +181,8 @@ I currently hard-code the ID to the task that I want to clock in."
                                    (org-capture-get :interrupted-clock 'local))))
           (let ((clock-in-task (org-capture-get :interrupted-clock 'local)))
             (org-with-point-at clock-in-task (org-clock-in)))
-          (message "Interrupted clock has been resumed"))))
-     ("e" "Email" entry
-      (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
-      :empty-lines 1)
-     ;; NOTE 2023-01-01: Also see `mu4e--org-store-link-message' from mu4e-org
-     ("E" "Mu4e-captured email" entry
-      (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      ,(concat "* TODO Respond to%? "
-               "[[mu4e:msgid:%(plist-get mu4e-captured-message :message-id)]"
-               "[\"%(plist-get mu4e-captured-message :subject)\" "
-               "from %(plist-get (car (plist-get mu4e-captured-message :from)) :name) "
-               "on %(format-time-string \"%F\" (plist-get mu4e-captured-message :date))]]\n")
-      :empty-lines 1)))
-  (org-capture-templates-contexts
-   '(("e" ((in-mode . "mu4e-headers-mode")))
-     ("e" ((in-mode . "mu4e-view-mode")))
-     ("E" ((lambda () (bound-and-true-p mu4e-captured-message))))))
+          (message "Interrupted clock has been resumed"))))))
+  (org-capture-templates-contexts nil)
 
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)

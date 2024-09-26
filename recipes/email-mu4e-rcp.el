@@ -373,7 +373,28 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
     (setq gnus-blocked-images (rx unmatchable) ; Don't block images
           ;; gnus-inhibit-mime-unbuttonizing t    ; Show all MIME buttons?
           mm-discouraged-alternatives '("text/html" "text/richtext" "image/.*")
-          mm-automatic-display (remove "text/html" mm-automatic-display)))) ; If I really don't want to see HTML
+          mm-automatic-display (remove "text/html" mm-automatic-display))) ; If I really don't want to see HTML
+
+  (with-eval-after-load 'org-agenda
+    (add-to-list 'org-capture-templates
+                 `("e" "Email" entry
+                   (file ,(expand-file-name "todo.org" kb/agenda-dir))
+                   "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
+                   :empty-lines 1))
+    ;; NOTE 2023-01-01: Also see `mu4e--org-store-link-message' from mu4e-org
+    (add-to-list 'org-capture-templates
+                 `("E" "Mu4e-captured email" entry
+                   (file ,(expand-file-name "todo.org" kb/agenda-dir))
+                   ,(concat "* TODO Respond to%? "
+                            "[[mu4e:msgid:%(plist-get mu4e-captured-message :message-id)]"
+                            "[\"%(plist-get mu4e-captured-message :subject)\" "
+                            "from %(plist-get (car (plist-get mu4e-captured-message :from)) :name) "
+                            "on %(format-time-string \"%F\" (plist-get mu4e-captured-message :date))]]\n")
+                   :empty-lines 1))
+
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "mu4e-headers-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "mu4e-view-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("E" ((lambda () (bound-and-true-p mu4e-captured-message)))))))
 
 ;;;;; Integration with `logos.el'
 (defun kb/mu4e-view-set-outline-regexp ()
