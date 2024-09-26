@@ -40,6 +40,7 @@
   :hook
   ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
    (notmuch-show . olivetti-mode)
+   (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
    (message-send . kb/notmuch-set-sendmail-args))
   :bind
   (([remap compose-mail] . notmuch-mua-new-mail)
@@ -71,24 +72,24 @@
   ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
   ;; via cli
   (notmuch-saved-searches
-   '((:name "[personal] inbox" :query "path:personal/** tag:inbox" :key "I")
-     (:name "[uni] inbox" :query "path:uni/mail/**  tag:inbox" :key "i")
-     (:name "[personal] flagged" :query "path:personal/** tag:flagged" :key "F")
-     (:name "[uni] flagged" :query "path:uni/** tag:flagged" :key "f")
-     (:name "[personal] sent" :query "path:personal/** tag:sent" :key "S")
-     (:name "[uni] sent" :query "path:uni/** tag:sent" :key "s")
-     (:name "[personal] drafts" :query "from:krisbalintona@gmail.com tag:draft" :key "D")
-     (:name "[uni] drafts" :query "from:kristoffer_balintona@alumni.brown.edu tag:draft" :key "d")
-     (:name "[personal] all mail" :query "path:personal/**" :key "a")
-     (:name "[uni] all mail" :query "path:uni/**" :key "A")
-     (:name "[personal] trash" :query "path:personal/** tag:trash" :key "T")
-     (:name "[uni] trash" :query "path:uni/** tag:trash" :key "t")))
+   '((:name "[personal] inbox"    :query "path:personal/** tag:inbox"                           :key "I")
+     (:name "[uni] inbox"         :query "path:uni/mail/**  tag:inbox"                          :key "i")
+     (:name "[personal] flagged"  :query "path:personal/** tag:flagged"                         :key "F")
+     (:name "[uni] flagged"       :query "path:uni/** tag:flagged"                              :key "f")
+     (:name "[personal] sent"     :query "path:personal/** tag:sent"                            :key "S")
+     (:name "[uni] sent"          :query "path:uni/** tag:sent"                                 :key "s")
+     (:name "[personal] drafts"   :query "from:krisbalintona@gmail.com tag:draft"               :key "D")
+     (:name "[uni] drafts"        :query "from:kristoffer_balintona@alumni.brown.edu tag:draft" :key "d")
+     (:name "[personal] all mail" :query "path:personal/**"                                     :key "a")
+     (:name "[uni] all mail"      :query "path:uni/**"                                          :key "A")
+     (:name "[personal] trash"    :query "path:personal/** tag:trash"                           :key "T")
+     (:name "[uni] trash"         :query "path:uni/** tag:trash"                                :key "t")))
   (notmuch-show-empty-saved-searches t)
   (notmuch-search-oldest-first nil)
-  (notmuch-search-result-format '(("date" . "%12s  ")
-                                  ("count" . "%-7s  ")
-                                  ("authors" . "%-20s  ")
-                                  ("subject" . "%-85s  ")
+  (notmuch-search-result-format '(("date" . "%12s ")
+                                  ("count" . "%-7s ")
+                                  ("authors" . "%-30s ")
+                                  ("subject" . "%-72s ")
                                   ("tags" . "(%s)")))
 
   ;; Tags
@@ -154,7 +155,7 @@
                                          "attache\?ment\\|attached\\|attach\\|"
                                          "pi[èe]ce\s+jointe?"
                                          "\\)\\b"))
-  :config
+
   ;; Sending emails.
   ;; Use Lieer to send emails. Also see `kb/notmuch-set-sendmail-args'. Read
   ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
@@ -184,7 +185,21 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
   (set-face-attribute 'notmuch-message-summary-face nil :overline t)
 
   ;; Prefer not to have emails recentered as I readjust them
-  (advice-add 'notmuch-show-message-adjust :override #'ignore))
+  (advice-add 'notmuch-show-message-adjust :override #'ignore)
+
+  (defun kb/notmuch-show-expand-only-unread-h ()
+    "The `+notmuch-show-expand-only-unread-h' taken from Doom Emacs.
+In `notmuch-show-mode', when showing a thread, keep read messages
+folded."
+    (interactive)
+    (let ((unread nil)
+          (open (notmuch-show-get-message-ids-for-open-messages)))
+      (notmuch-show-mapc (lambda ()
+                           (when (member "unread" (notmuch-show-get-tags))
+                             (setq unread t))))
+      (when unread
+        (let ((notmuch-show-hook (remove 'kb/notmuch-show-expand-only-unread-h notmuch-show-hook)))
+          (notmuch-show-filter-thread "tag:unread"))))))
 
 ;;;; Sync emails with Lieer
 (with-eval-after-load 'notmuch
