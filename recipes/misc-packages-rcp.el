@@ -170,6 +170,12 @@
   (hammy-mode-lighter-pie t)
   (hammy-mode-lighter-pie-height 0.7)
   :config
+  (defun kb/hammy-play-sound ()
+    "Play end of timer sound."
+    (interactive)
+    (call-process-shell-command
+     (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-work) nil 0))
+
   ;; Hammy definitions
   (setq hammy-hammys nil)
   (hammy-define "Fractional"
@@ -189,8 +195,7 @@
                               (announce message)
                               (notify message)
                               (when hammy-sound-end-work
-                                (call-process-shell-command
-                                 (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-work) nil 0)))))
+                                (kb/hammy-play-sound)))))
      (interval :name "Break"
                :duration (do (cl-assert (equal "Work" (hammy-interval-name (caar history))))
                              (let ((duration (cl-loop for (interval start end) in history
@@ -218,8 +223,7 @@
                                 (setf (alist-get 'unused-break etc) unused)))))
                :advance (remind "5 minutes"
                                 (do (when hammy-sound-end-break
-                                      (call-process-shell-command
-                                       (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-break) nil 0)))))))
+                                      (kb/hammy-play-sound)))))))
   (hammy-define "Flywheel"
     :documentation "Get your momentum going!"
     :intervals (list (interval :name "Rest"
@@ -228,7 +232,9 @@
                                :before (do (announce "Rest time!")
                                            (notify "Rest time!"))
                                :advance (do (announce "Rest time is over!")
-                                            (notify "Rest time is over!")))
+                                            (notify "Rest time is over!")
+                                          (when hammy-sound-end-work
+                                            (kb/hammy-play-sound))))
                      (interval :name "Work"
                                :face 'font-lock-builtin-face
                                :duration (climb "5 minutes" "45 minutes"
@@ -236,7 +242,9 @@
                                :before (do (announce "Work time!")
                                            (notify "Work time!"))
                                :advance (do (announce "Work time is over!")
-                                            (notify "Work time is over!"))))
+                                            (notify "Work time is over!")
+                                          (when hammy-sound-end-break
+                                            (kb/hammy-play-sound)))))
     :after (do (announce "Flywheel session complete!")
                (notify "Flywheel session complete!"))
     :complete-p (do (and (> cycles 1)
