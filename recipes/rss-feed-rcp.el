@@ -128,30 +128,31 @@ fail on poorly-designed websites."
 
 ;;;;; Language-detection
 ;; Detects language of current buffer
+;; Automatically detect then fontify a buffer (that uses `shr', e.g. eww-mode
+;; and elfeed-show-mode) according to the programming language it appears to
+;; have.
 (use-package language-detection
-  :defer 15
-  :config
-  (with-eval-after-load 'eww
-    ;; Has proper syntax highlighting in `eww' (and thus `elfeed-show-mode') from
-    ;; the languages supported by `language-detection'.
+  :disabled ; NOTE 2024-09-26: Intrusive. Sometimes there isn't a programming language in the buffer but it still fontifies...
+  :init
+  (with-eval-after-load 'shr
     (require 'cl-lib)
 
-    (defun eww-tag-pre (dom)
+    (defun kb/language-detection-eww-tag-pre (dom)
       (let ((shr-folding-mode 'none)
             (shr-current-font 'default))
         (shr-ensure-newline)
-        (insert (eww-fontify-pre dom))
+        (insert (kb/language-detection-eww-fontify-pre dom))
         (shr-ensure-newline)))
 
-    (defun eww-fontify-pre (dom)
+    (defun kb/language-detection-eww-fontify-pre (dom)
       (with-temp-buffer
         (shr-generic dom)
-        (let ((mode (eww-buffer-auto-detect-mode)))
+        (let ((mode (kb/language-detection-eww-buffer-auto-detect-mode)))
           (when mode
-            (eww-fontify-buffer mode)))
+            (kb/language-detection-eww-fontify-buffer mode)))
         (buffer-string)))
 
-    (defun eww-fontify-buffer (mode)
+    (defun kb/language-detection-eww-fontify-buffer (mode)
       (delay-mode-hooks (funcall mode))
       (font-lock-default-function mode)
       (font-lock-default-fontify-region (point-min)
@@ -204,12 +205,12 @@ fail on poorly-designed websites."
              (mode (cl-loop for mode in modes
                             when (fboundp mode)
                             return mode)))
-        (message (format "%s" language))
+        (message (format "[language-detection] Detected \"%s\" programming language" language))
         (when (fboundp mode)
           mode)))
 
     (setq shr-external-rendering-functions
-          '((pre . eww-tag-pre)))))
+          '((pre . kb/language-detection-eww-tag-pre)))))
 
 ;;;;; Custom search completion
 (defun prot-common-crm-exclude-selected-p (input)
