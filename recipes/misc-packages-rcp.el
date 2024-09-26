@@ -144,6 +144,17 @@
 
 ;;;;; Hammy
 (use-package hammy
+  :bind
+  ( :map kb/open-keys
+    ("h s" . hammy-start)
+    ("h n" . hammy-next)
+    ("h S" . hammy-stop)
+    ("h r" . hammy-reset)
+    ("h t" . hammy-toggle)
+    ("h a" . hammy-adjust)
+    ("h v" . hammy-view-log)
+    ("h R" . hammy-status)
+    ("h I" . hammy-start-org-clock-in))
   :custom
   (hammy-mode-always-show-lighter nil)
   (hammy-mode-update-mode-line-continuously t)
