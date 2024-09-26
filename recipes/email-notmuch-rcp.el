@@ -41,6 +41,7 @@
   ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
    (notmuch-show . olivetti-mode)
    (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
+   (kb/themes . kb/notmuch-show-setup-faces)
    (message-send . kb/notmuch-set-sendmail-args))
   :bind
   (([remap compose-mail] . notmuch-mua-new-mail)
@@ -118,8 +119,8 @@
   ;; Notmuch-show-mode (i.e. reading emails)
   (notmuch-show-relative-dates t)
   (notmuch-show-all-multipart/alternative-parts nil)
-  (notmuch-show-indent-messages-width 1)
   (notmuch-show-indent-multipart nil)
+  (notmuch-show-indent-messages-width 3)
   (notmuch-show-part-button-default-action 'notmuch-show-interactively-view-part)
   (notmuch-show-text/html-blocked-images ".") ; Block everything
   (notmuch-wash-citation-lines-prefix 3)
@@ -181,8 +182,19 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
          ((string= from "kristoffer_balintona@alumni.brown.edu")
           (setq message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
 
-  ;; More noticeable demarcation of emails in thread in notmuch-show-mode
-  (set-face-attribute 'notmuch-message-summary-face nil :overline t)
+  (defun kb/notmuch-show-setup-faces ()
+    "Set up faces in `notmuch-show-mode'."
+    ;; More noticeable demarcation of emails in thread in notmuch-show-mode
+    (modus-themes-with-colors
+      (set-face-attribute 'notmuch-message-summary-face nil
+                          :foreground fg-alt
+                          ;; NOTE 2024-09-26: We do it this way since changing
+                          ;; faces will refresh the font to be 1.1 times the 1.1
+                          ;; times height, and so on
+                          :height (truncate (* (face-attribute 'default :height nil) 1.1))
+                          :overline t
+                          :extend nil
+                          :inherit 'italic)))
 
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore)
