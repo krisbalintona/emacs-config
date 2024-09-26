@@ -31,8 +31,8 @@
 ;; Emacs' file manager
 (use-package dired
   :ensure nil
-  :hook
-  (dired-mode . dired-hide-details-mode)
+  :hook ((dired-mode . dired-hide-details-mode)
+         (dired-mode . turn-on-gnus-dired-mode)) ; Attachment integration with dired
   :custom
   (dired-auto-revert-buffer t)
   (dired-dwim-target t)                 ; Guess default target directory?
