@@ -170,8 +170,6 @@
   (hammy-mode-lighter-pie t)
   (hammy-mode-lighter-pie-height 0.7)
   :config
-  (hammy-mode 1)
-
   ;; Hammy definitions
   (setq hammy-hammys nil)
   (hammy-define "Fractional"
@@ -244,7 +242,10 @@
     :complete-p (do (and (> cycles 1)
                          interval
                          (equal "Work" interval-name)
-                         (equal (duration "5 minutes") current-duration)))))
+                         (equal (duration "5 minutes") current-duration))))
+
+  ;; Mode line
+  (hammy-mode 1))
 
 ;;;; Writing
 ;;;;; Sentex

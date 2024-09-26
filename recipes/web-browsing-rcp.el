@@ -36,9 +36,9 @@
   (shr-max-image-proportion 0.6)        ; How big are images?
   (shr-image-animate t)               ; GIFs?
   (shr-width nil)
-  ;; (shr-discard-aria-hidden t)
-  ;; (shr-cookie-policy nil)               ; When to use cookies
-  (shr-fill-text nil))
+  (shr-discard-aria-hidden t)
+  ;; (shr-cookie-policy nil)
+  (shr-fill-text t))
 
 ;;; Browse-url
 (use-package browse-url
