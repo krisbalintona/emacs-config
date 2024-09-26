@@ -173,6 +173,7 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
              (root-maildir (expand-file-name "~/Documents/emails/"))
              (personal-maildir (expand-file-name "personal" root-maildir))
              (uni-maildir (expand-file-name "uni" root-maildir)))
+        ;; REVIEW 2024-09-26: Not sure if I should have this locally set
         (cond
          ((string= from "krisbalintona@gmail.com")
           (setq message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,personal-maildir)))
