@@ -71,6 +71,7 @@
   ;; See `man' for mbsync and notmuch to see valid search terms. See
   ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
   ;; via cli
+  (notmuch-search-hide-excluded t)
   (notmuch-saved-searches
    '((:name "[personal] inbox"    :query "path:personal/** tag:inbox"                           :key "I")
      (:name "[uni] inbox"         :query "path:uni/mail/**  tag:inbox"                          :key "i")
