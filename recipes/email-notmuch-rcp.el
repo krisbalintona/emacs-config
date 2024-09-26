@@ -42,6 +42,7 @@
    (notmuch-show . olivetti-mode)
    (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
    (kb/themes . kb/notmuch-show-setup-faces)
+   (kb/themes . kb/notmuch-search-setup-faces)
    (message-send . kb/notmuch-set-sendmail-args))
   :bind
   (([remap compose-mail] . notmuch-mua-new-mail)
@@ -181,10 +182,18 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
          ((string-match-p (rx (literal "kristoffer_balintona@alumni.brown.edu")) from)
           (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
 
+
+  (defun kb/notmuch-search-setup-faces ()
+    "Set up faces in `notmuch-search-mode'."
+    (modus-themes-with-colors
+      (set-face-attribute 'notmuch-tag-added nil
+                          :underline `(:color ,cyan-cooler :style double-line :position t))))
+  (kb/notmuch-search-setup-faces)
+
   (defun kb/notmuch-show-setup-faces ()
     "Set up faces in `notmuch-show-mode'."
-    ;; More noticeable demarcation of emails in thread in notmuch-show-mode
     (modus-themes-with-colors
+      ;; More noticeable demarcation of emails in thread in notmuch-show-mode
       (set-face-attribute 'notmuch-message-summary-face nil
                           :foreground fg-alt
                           ;; NOTE 2024-09-26: We do it this way since changing
@@ -194,6 +203,7 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
                           :overline t
                           :extend nil
                           :inherit 'italic)))
+  (kb/notmuch-show-setup-faces)
 
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore)
