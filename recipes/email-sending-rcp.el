@@ -132,7 +132,10 @@
   (defvar kb/signature-close "\n#+end_signature"
     "String meant to end email signatures.")
   (setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
-  (defvar kb/signature-alist nil
+  (defvar kb/signature-alist '(("Take care" . "Take care,\nKristoffer")
+                               ("In gratitude" . "In gratitude,\nKristoffer")
+                               ("Best" . "Best,\nKristoffer")
+                               ("With appreciation" . "With appreciation,\nKristoffer"))
     "Alist of aliases and their corresponding email signatures.")
 
   (defun kb/signature-select (&optional alias)
