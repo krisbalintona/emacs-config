@@ -53,16 +53,18 @@
     ("v" . org-remark-view)
     ("n" . org-remark-next)
     ("p" . org-remark-prev))
-  :custom
-  (org-remark-source-file-name 'abbreviate-file-name)
-  (org-remark-notes-file-name
-   (no-littering-expand-var-file-name "org-remark/marginalia.org"))
-  (org-remark-notes-display-buffer-action `((display-buffer-in-side-window)
-                                            (side . right)
-                                            (slot . 1)))
-  (org-remark-create-default-pen-set nil) ; Make my own pens
-  (org-remark-notes-auto-delete nil)
   :config
+  ;; REVIEW 2024-09-26: For some reason some or all of my configs in :custom are
+  ;; being overridden/not applied, so I put them here instead
+  (setopt org-remark-source-file-name 'abbreviate-file-name)
+  (setopt org-remark-notes-file-name
+          (no-littering-expand-var-file-name "org-remark/marginalia.org"))
+  (setopt org-remark-notes-display-buffer-action `((display-buffer-in-side-window)
+                                                   (side . right)
+                                                   (slot . 1)))
+  (setopt org-remark-create-default-pen-set nil) ; Make my own pens
+  (setopt org-remark-notes-auto-delete nil)
+
   (with-eval-after-load 'eww
     (org-remark-eww-mode 1))
   (with-eval-after-load 'nov
