@@ -259,10 +259,10 @@ buffer hidden."
   (notmuch-indicator-counter-format "%s%s")
   (notmuch-indicator-args '(( :terms "path:personal/mail/** and tag:inbox"
                               :label "P:"
-                              :label-face 'notmuch-search-unread-face)
+                              :label-face notmuch-search-unread-face)
                             ( :terms "path:uni/mail/** and tag:inbox"
                               :label "U:"
-                              :label-face 'notmuch-search-unread-face)))
+                              :label-face notmuch-search-unread-face)))
   (notmuch-indicator-refresh-count (* 60 3))
   (notmuch-indicator-hide-empty-counters t)
   (notmuch-indicator-force-refresh-commands '(notmuch notmuch-refresh-this-buffer))
