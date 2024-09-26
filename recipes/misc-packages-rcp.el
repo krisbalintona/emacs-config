@@ -156,15 +156,19 @@
     ("h R" . hammy-status)
     ("h I" . hammy-start-org-clock-in))
   :custom
-  (hammy-mode-always-show-lighter nil)
-  (hammy-mode-update-mode-line-continuously t)
-  (hammy-mode-lighter-seconds-format "%.2m:%.2s")
-  (hammy-mode-lighter-prefix "[H]")
-  (hammy-mode-lighter-overdue "!")
   ;; TODO 2024-09-25: Have this found more locally. When I do, also change
   ;; `tmr-sound' to this file
   (hammy-sound-end-work "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
   (hammy-sound-end-break "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
+
+  ;; Mode line
+  (hammy-mode-always-show-lighter t)
+  (hammy-mode-update-mode-line-continuously t)
+  (hammy-mode-lighter-seconds-format "%.2m:%.2s")
+  (hammy-mode-lighter-prefix "[H]")
+  (hammy-mode-lighter-overdue "!")
+  (hammy-mode-lighter-pie t)
+  (hammy-mode-lighter-pie-height 0.7)
   :config
   (hammy-mode 1)
 
