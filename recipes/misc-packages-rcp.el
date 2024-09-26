@@ -164,13 +164,17 @@
     :intervals
     (list
      (interval :name "Work"
-               :duration "25 minutes"
+               :duration "40 minutes"
+               :before (do (announce "Starting work time (advance to break when ready).")
+                           (notify "Starting work time (advance to break when ready)."))
                :advance (do (let* ((current-duration
                                     (ts-human-format-duration
                                      (float-time
                                       (time-subtract (current-time)
                                                      current-interval-start-time))))
                                    (message (format "You've worked for %s!" current-duration)))
+                              (announce message)
+                              (notify message)
                               (when hammy-sound-end-work
                                 (call-process-shell-command
                                  (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-work) nil 0)))))
@@ -180,12 +184,16 @@
                                                       while (equal "Work" (hammy-interval-name interval))
                                                       sum (float-time (time-subtract end start))
                                                       into work-seconds
-                                                      finally return (* work-seconds 0.25))))
+                                                      finally return (* work-seconds 0.33))))
                                (when (alist-get 'unused-break etc)
                                  ;; Add unused break time.
                                  (cl-incf duration (alist-get 'unused-break etc))
                                  (setf (alist-get 'unused-break etc) nil))
                                duration))
+               :before (do (let ((message (format "Starting break for %s."
+                                                  (ts-human-format-duration current-duration))))
+                             (announce message)
+                             (notify message)))
                :after (do (let* ((elapsed
                                   (float-time
                                    (time-subtract (current-time) current-interval-start-time)))
@@ -198,7 +206,30 @@
                :advance (remind "5 minutes"
                                 (do (when hammy-sound-end-break
                                       (call-process-shell-command
-                                       (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-break) nil 0))))))))
+                                       (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-break) nil 0)))))))
+  (hammy-define "Flywheel"
+    :documentation "Get your momentum going!"
+    :intervals (list (interval :name "Rest"
+                               :face 'font-lock-type-face
+                               :duration "5 minutes"
+                               :before (do (announce "Rest time!")
+                                           (notify "Rest time!"))
+                               :advance (do (announce "Rest time is over!")
+                                            (notify "Rest time is over!")))
+                     (interval :name "Work"
+                               :face 'font-lock-builtin-face
+                               :duration (climb "5 minutes" "45 minutes"
+                                                :descend t :step "5 minutes")
+                               :before (do (announce "Work time!")
+                                           (notify "Work time!"))
+                               :advance (do (announce "Work time is over!")
+                                            (notify "Work time is over!"))))
+    :after (do (announce "Flywheel session complete!")
+               (notify "Flywheel session complete!"))
+    :complete-p (do (and (> cycles 1)
+                         interval
+                         (equal "Work" interval-name)
+                         (equal (duration "5 minutes") current-duration)))))
 
 ;;;; Writing
 ;;;;; Sentex
