@@ -244,6 +244,10 @@
                          (equal "Work" interval-name)
                          (equal (duration "5 minutes") current-duration))))
 
+  ;; Make active timers persistent across emacs sessions
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'hammy-active))
+
   ;; Mode line
   (hammy-mode 1))
 
