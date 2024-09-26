@@ -165,6 +165,11 @@
   (send-mail-function 'sendmail-send-it)
   (notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
   :config
+  ;; REVIEW 2024-09-26: Prot's lin package apparently makes disabling this
+  ;; better?
+  (with-eval-after-load 'lin
+    (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode))
+
   (defun kb/notmuch-set-sendmail-args ()
     "Set `message-sendmail-extra-arguments' arguments.
 Set `message-sendmail-extra-arguments' accordingly (changing the
