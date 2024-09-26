@@ -100,7 +100,7 @@
   (notmuch-draft-folder "drafts")
   (notmuch-draft-save-plaintext 'ask)
   (notmuch-tagging-keys
-   '(("a" notmuch-archive-tags "Archive")
+   `(("a" notmuch-archive-tags "Archive")
      ("r" notmuch-show-mark-read-tags "Mark read")
      ("f" ("+flagged") "Flag")
      ("s" ("+spam" "-inbox") "Mark as spam")
@@ -154,7 +154,7 @@
                                          "attache\?ment\\|attached\\|attach\\|"
                                          "pi[èe]ce\s+jointe?"
                                          "\\)\\b"))
-
+  :config
   ;; Sending emails.
   ;; Use Lieer to send emails. Also see `kb/notmuch-set-sendmail-args'. Read
   ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
@@ -184,6 +184,29 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
 
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore))
+
+;;;; Sync emails with Lieer
+(with-eval-after-load 'notmuch
+  (defun kb/notmuch-lieer-sync (&optional arg)
+    "Run my script that syncs via lieer.
+If called with ARG, then show output buffer. Else, keep output
+buffer hidden."
+    (interactive "P")
+    (let* ((buf-name "*notmuch lieer sync*")
+           (buf (get-buffer-create buf-name))
+           (script (expand-file-name "~/Documents/emails/lieer-sync.sh"))
+           (display-buffer-alist (if arg
+                                     display-buffer-alist
+                                   `((,buf-name display-buffer-no-window)))))
+      (unless (get-buffer-process buf)
+        ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
+        ;; `async-shell-command'
+        (async-shell-command script buf))))
+
+  ;; Call on startup
+  (kb/notmuch-lieer-sync)
+  ;; Timer every 10 min
+  (run-with-timer (* 60 30) (* 60 30) 'kb/notmuch-lieer-sync))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
