@@ -134,6 +134,7 @@
   (shr-color-visible-luminance-min 80)   ; Better viewing for dark theme
 
   ;; Composing and sending
+  (send-mail-function 'smtpmail-send-it) ; Use smtpmail
   (mu4e-sent-messages-behavior 'delete) ; Don't save message to Sent Messages, Gmail/IMAP takes care of this
   (mu4e-compose-signature-auto-include t)
   (mu4e-compose-hidden-headers nil)   ; See all headers

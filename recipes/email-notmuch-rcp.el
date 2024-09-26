@@ -35,84 +35,61 @@
 
 ;;;; Notmuch
 (use-package notmuch
-  :disabled
   :ensure-system-package (notmuch
-                          (mbsync . isync)
-                          (gmi . "pip install lieer"))
-  :hook ((notmuch-mua-send . notmuch-mua-attachment-check)
-         (notmuch-show-mode . olivetti-mode))
+                          (gmi . "sudo paru -S lieer-git"))
+  :hook
+  ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
+   (notmuch-show . olivetti-mode)
+   (message-send . kb/notmuch-set-sendmail-args))
   :bind
-  ( :map kb/open-keys
-    ("n" . notmuch)
-    ([remap compose-mail] . notmuch-mua-new-mail)
-    :map notmuch-search-mode-map
-    ("r" . notmuch-search-reply-to-thread) ; Easier to reply to all by default
-    ("R" . notmuch-search-reply-to-thread-sender)
-    :map notmuch-show-mode-map
-    ("r" . notmuch-show-reply)          ; Easier to reply to all by default
-    ("R" . notmuch-show-reply-sender))
+  (([remap compose-mail] . notmuch-mua-new-mail)
+   :map kb/open-keys
+   ("n" . notmuch)
+   :map notmuch-search-mode-map
+   ("a" . nil) ; The default is too easy to hit accidentally
+   ("/" . notmuch-search-filter)
+   ("r" . notmuch-search-reply-to-thread)
+   ("R" . notmuch-search-reply-to-thread-sender)
+   :map notmuch-show-mode-map
+   ("a" . nil)
+   ("r" . notmuch-show-reply)
+   ("R" . notmuch-show-reply-sender))
   :custom
   (mail-user-agent 'notmuch-user-agent)
-
-  ;; Account settings
   (notmuch-identities nil)              ; Defer to notmuch-config's file data
-  (notmuch-fcc-dirs                     ; Set sent mail directories
-   '(("kristoffer_balintona@brown.com" . "drafts/uni")
-     ("krisbalintona@gmail.com" . "drafts/personal")))
 
-  ;; General UI
-  (notmuch-show-logo nil)
-  (notmuch-column-control t)
-  (notmuch-hello-auto-refresh t)
-  (notmuch-hello-recent-searches-max 20)
+  ;; Hello UI
+  (notmuch-hello-sections (list #'notmuch-hello-insert-saved-searches
+                                #'notmuch-hello-insert-search
+                                #'notmuch-hello-insert-recent-searches
+                                #'notmuch-hello-insert-alltags))
   (notmuch-hello-thousands-separator ",")
-  (notmuch-hello-sections
-   '(notmuch-hello-insert-saved-searches notmuch-hello-insert-alltags))
   (notmuch-show-all-tags-list t)
 
-  ;; Search
-  (notmuch-search-oldest-first nil)
-  (notmuch-search-result-format
-   '(("date" . "%12s  ")
-     ("count" . "%-7s  ")
-     ("authors" . "%-20s  ")
-     ("subject" . "%-80s  ")
-     ("tags" . "(%s)")))
-  (notmuch-tree-result-format
-   '(("date" . "%12s  ")
-     ("authors" . "%-20s  ")
-     ((("tree" . "%s")
-       ("subject" . "%s"))
-      . " %-80s  ")
-     ("tags" . "(%s)")))
-  (notmuch-search-line-faces
-   '(("unread" . notmuch-search-unread-face)
-     ("flagged" . notmuch-search-flagged-face)))
-  (notmuch-show-empty-saved-searches t)
+  ;; Searches
   ;; See `man' for mbsync and notmuch to see valid search terms. See
-  ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 how to expunge local files
+  ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
   ;; via cli
   (notmuch-saved-searches
-   '((:name "[personal] inbox" :query "path:personal/Inbox/**" :key "I")
-     (:name "[uni] inbox" :query "path:uni/Inbox/**" :key "i")
-     (:name "[personal] flagged" :query "path:personal/[Gmail].Starred/**" :key "F")
-     (:name "[uni] flagged" :query "path:uni/[Gmail].Starred/**" :key "f")
-     (:name "[personal] sent" :query "path:\"personal/[Gmail].Sent Mail/**\"" :key "S")
-     (:name "[uni] sent" :query "path:\"uni/[Gmail].Sent Mail/**\"" :key "s")
-     ;; (:name "[personal] drafts" :query "from:krisbalintona**@gmail.com tag:draft" :key "D")
-     ;; (:name "[uni] drafts" :query "from:kristoffer_balintona**@alumni.brown.edu tag:draft" :key "d")
-     ;; (:name "[personal] drafts" :query "path:drafts/ OR path:personal/[Gmail].Drafts/**" :key "D")
-     ;; (:name "[uni] drafts" :query "path:drafts/uni/** OR path:uni/[Gmail].Drafts/**" :key "d")
-     ;; (:name "[personal] drafts" :query "path:drafts/** AND from:krisbalintona**@gmail.com OR path:personal/[Gmail].Drafts/**" :key "D")
-     ;; (:name "[uni] drafts" :query "path:drafts/** AND from:kristoffer_balintona**@alumni.brown.edu OR path:uni/[Gmail].Drafts/**" :key "d")
-     (:name "drafts" :query "path:drafts/** OR path:personal/[Gmail].Drafts/** OR path:uni/[Gmail].Drafts/**" :key "d")
-     (:name "[personal] all mail" :query "path:\"personal/[Gmail].All Mail/**\"" :key "a")
-     (:name "[uni] all mail" :query "path:\"uni/[Gmail].All Mail/**\"" :key "A")
-     (:name "[personal] trash" :query "path:personal/[Gmail].Trash/**" :key "T")
-     (:name "[uni] trash" :query "path:uni/[Gmail].Trash/**" :key "t")))
-
-  ;; Tree
-  (notmuch-tree-show-out t)
+   '((:name "[personal] inbox" :query "path:personal/** tag:inbox" :key "I")
+     (:name "[uni] inbox" :query "path:uni/mail/**  tag:inbox" :key "i")
+     (:name "[personal] flagged" :query "path:personal/** tag:flagged" :key "F")
+     (:name "[uni] flagged" :query "path:uni/** tag:flagged" :key "f")
+     (:name "[personal] sent" :query "path:personal/** tag:sent" :key "S")
+     (:name "[uni] sent" :query "path:uni/** tag:sent" :key "s")
+     (:name "[personal] drafts" :query "from:krisbalintona@gmail.com tag:draft" :key "D")
+     (:name "[uni] drafts" :query "from:kristoffer_balintona@alumni.brown.edu tag:draft" :key "d")
+     (:name "[personal] all mail" :query "path:personal/**" :key "a")
+     (:name "[uni] all mail" :query "path:uni/**" :key "A")
+     (:name "[personal] trash" :query "path:personal/** tag:trash" :key "T")
+     (:name "[uni] trash" :query "path:uni/** tag:trash" :key "t")))
+  (notmuch-show-empty-saved-searches t)
+  (notmuch-search-oldest-first nil)
+  (notmuch-search-result-format '(("date" . "%12s  ")
+                                  ("count" . "%-7s  ")
+                                  ("authors" . "%-20s  ")
+                                  ("subject" . "%-85s  ")
+                                  ("tags" . "(%s)")))
 
   ;; Tags
   (notmuch-archive-tags '("-inbox"))
@@ -122,14 +99,12 @@
   (notmuch-draft-tags '("+draft"))
   (notmuch-draft-folder "drafts")
   (notmuch-draft-save-plaintext 'ask)
-  ;; NOTE 2023-01-01: These tags are equivalents to Gmail's default mailboxes
-  ;; (according to lieer's translation between tags and labels).
   (notmuch-tagging-keys
    '(("a" notmuch-archive-tags "Archive")
      ("r" notmuch-show-mark-read-tags "Mark read")
      ("f" ("+flagged") "Flag")
      ("s" ("+spam" "-inbox") "Mark as spam")
-     ("d" ("+trash" "-inbox") "Trash")))
+     ("t" ("+trash" "-inbox") "Trash")))
   (notmuch-tag-formats
    '(("unread" (propertize tag 'face 'notmuch-tag-unread))
      ("flagged"
@@ -139,6 +114,30 @@
    '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
      (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
 
+  ;; Notmuch-show-mode (i.e. reading emails)
+  (notmuch-show-relative-dates t)
+  (notmuch-show-all-multipart/alternative-parts nil)
+  (notmuch-show-indent-messages-width 1)
+  (notmuch-show-indent-multipart nil)
+  (notmuch-show-part-button-default-action 'notmuch-show-interactively-view-part)
+  (notmuch-show-text/html-blocked-images ".") ; Block everything
+  (notmuch-wash-citation-lines-prefix 3)
+  (notmuch-wash-citation-lines-suffix 3)
+  (notmuch-wash-wrap-lines-length nil)
+  (notmuch-unthreaded-show-out t)
+  (notmuch-message-headers '("To" "Cc" "Date" "Subject"))
+  (notmuch-message-headers-visible t)
+
+  ;; Notmuch-tree-mode
+  (notmuch-tree-show-out nil)
+  (notmuch-tree-result-format '(("date" . "%12s  ")
+                                ("authors" . "%-20s  ")
+                                ((("tree" . "%s")
+                                  ("subject" . "%s"))
+                                 . " %-85s  ")
+                                ("tags" . "(%s)")))
+  (notmuch-tree-outline-enabled nil)
+
   ;; Email composition
   (notmuch-mua-compose-in 'current-window)
   (notmuch-mua-hidden-headers nil)
@@ -147,41 +146,55 @@
   (notmuch-mua-cite-function 'message-cite-original-without-signature)
   (notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
   (notmuch-mua-user-agent-function nil)
-  (notmuch-maildir-use-notmuch-insert t) ; Simple or notmuch fcc insert?
+  (notmuch-maildir-use-notmuch-insert t)
   (notmuch-crypto-process-mime t)
   (notmuch-crypto-get-keys-asynchronously t)
-  (notmuch-mua-attachment-regexp        ; Also see `notmuch-mua-send-hook'
-   "\\b\\(attache\?ment\\|attached\\|attach\\|pi[èe]ce\s+jointe?\\)\\b")
+  ;; See `notmuch-mua-send-hook'
+  (notmuch-mua-attachment-regexp (concat "\\b\\("
+                                         "attache\?ment\\|attached\\|attach\\|"
+                                         "pi[èe]ce\s+jointe?"
+                                         "\\)\\b"))
 
-  ;; Reading messages
-  (notmuch-show-relative-dates t)
-  (notmuch-show-all-multipart/alternative-parts nil)
-  ;; (notmuch-show-indent-messages-width 0)
-  (notmuch-show-indent-multipart nil)
-  (notmuch-show-part-button-default-action 'notmuch-show-save-part)
-  ;; (notmuch-show-text/html-blocked-images ".") ; Block everything
-  (notmuch-wash-citation-lines-prefix 6)
-  (notmuch-wash-citation-lines-suffix 6)
-  ;; (notmuch-wash-wrap-lines-length 100)
-  (notmuch-unthreaded-show-out nil)
-  (notmuch-message-headers '("To" "Cc" "Date" "Subject"))
-  (notmuch-message-headers-visible t)
+  ;; Sending emails.
+  ;; Use Lieer to send emails. Also see `kb/notmuch-set-sendmail-args'. Read
+  ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
+  (sendmail-program (executable-find "gmi"))
+  (send-mail-function 'sendmail-send-it)
+  (notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
   :config
-  (org-msg-mode)
+  (defun kb/notmuch-set-sendmail-args ()
+    "Set `message-sendmail-extra-arguments' arguments.
+Set `message-sendmail-extra-arguments' accordingly (changing the
+maildir) such that lieer can properly send the email. (This assumes
+`sendmail-program' is set to the gmi executable.) Instruction from
+https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
+    (when (string-match-p "gmi" sendmail-program)
+      (let* ((from (message-fetch-field "from"))
+             (root-maildir (expand-file-name "~/Documents/emails/"))
+             (personal-maildir (expand-file-name "personal" root-maildir))
+             (uni-maildir (expand-file-name "uni" root-maildir)))
+        (cond
+         ((string= from "krisbalintona@gmail.com")
+          (setq message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,personal-maildir)))
+         ((string= from "kristoffer_balintona@alumni.brown.edu")
+          (setq message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
 
-  ;; Recentering causes jittery window behavior in notmuch-view-mode for me.
-  (defun kb/notmuch-show-message-adjust () nil)
-  (advice-add 'notmuch-show-message-adjust :override #'kb/notmuch-show-message-adjust))
+  ;; More noticeable demarcation of emails in thread in notmuch-show-mode
+  (set-face-attribute 'notmuch-message-summary-face nil :overline t)
+
+  ;; Prefer not to have emails recentered as I readjust them
+  (advice-add 'notmuch-show-message-adjust :override #'ignore))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
+  :disabled
+  :after notmuch
   :custom
   ;; OPTIMIZE 2022-12-28: This breaks when using the path query term, but that
   ;; seems to capture more than just using the to keyword
   (notmuch-indicator-args
    '((:terms "to:krisbalintona@gmail.com and tag:inbox and tag:unread" :label "")
-     (:terms "to:kristoffer_balintona@alumni.brown.edu and tag:inbox and tag:unread" :label "")
-     ))
+     (:terms "to:kristoffer_balintona@alumni.brown.edu and tag:inbox and tag:unread" :label "")))
   (notmuch-indicator-refresh-count (* 60 3))
   ;; (notmuch-indicator-hide-empty-counters t)
   (notmuch-indicator-hide-empty-counters nil)

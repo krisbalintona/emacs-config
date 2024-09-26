@@ -87,16 +87,13 @@
                                      (read-string "Set FROM to: " user-mail-address))))))))
 
 ;;;; Sendmail
-;; Use `sendmail' program to send emails?
+;; Use `sendmail' program to send emails? If yes, send the value of
+;; `send-mail-function' to `sendmail-send-it'
 (use-package sendmail
   :ensure nil
   :after message
   :custom
-  ;; If I want to use `sendmail' over `msmtp'/`smtpmail'
-  (send-mail-function 'sendmail-send-it)
-  (sendmail-program (executable-find "sendmail"))
-  (mail-default-directory (progn (require 'message)
-                                 (expand-file-name "drafts/" message-directory)))
+  (mail-default-directory (expand-file-name "drafts/" message-directory))
   ;; These two messages make sure that emails are sent from the email address
   ;; specified in the "from" header field! Taken from
   ;; https://jonathanchu.is/posts/emacs-notmuch-isync-msmtp-setup/
@@ -105,15 +102,13 @@
   (mail-envelope-from 'header))
 
 ;;;; Smtpmail
-;; Use `msmtp' program to send emails?
+;; Use `msmtp' program to send emails? If yes, set the value of
+;; `send-mail-function' to `smtpmail-send-it'
 (use-package smtpmail
   :ensure nil
   :ensure-system-package msmtp
   :after message
   :custom
-  ;; I set this in my sendmail configuration too so that if smtpmail isn't use,
-  ;; the above configuration works still
-  (send-mail-function 'smtpmail-send-it)
   (smtpmail-queue-mail nil)
   ;; Below are settings for Gmail. See
   ;; https://support.google.com/mail/answer/7126229?hl=en#zippy=%2Cstep-change-smtp-other-settings-in-your-email-client

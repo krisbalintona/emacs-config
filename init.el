@@ -106,7 +106,7 @@
 
 ;;;; Communication interfaces
 (require 'email-notmuch-rcp)
-(require 'email-mu4e-rcp)
+;; (require 'email-mu4e-rcp)
 (require 'email-sending-rcp)
 (require 'rss-feed-rcp)
 (require 'epub-rcp)
