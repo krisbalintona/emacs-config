@@ -29,7 +29,7 @@
 ;;;; Message
 (use-package message
   :ensure nil
-  :commands (compose-mail mu4e-compose-new)
+  :commands compose-mail
   :hook ((message-setup . message-sort-headers)
          (message-mode . olivetti-mode)
          (message-send . kb/message-check-for-subject)
@@ -38,18 +38,36 @@
   (message-directory "~/Documents/emails/")
   (message-mail-user-agent t)           ; Use `mail-user-agent'
   (compose-mail-user-agent-warnings t)
-  (message-hidden-headers nil)          ; Show everything!
-
+  (message-kill-buffer-on-exit t)
   (message-elide-ellipsis "\n> [... %l lines elided]\n")
-  (message-signature "Kind regards,\nKristoffer\n")
-  (message-signature-separator "^-- $")
+  (message-confirm-send nil)
+
+  ;; Headers
+  (message-hidden-headers nil)
+  (message-ignored-cited-headers ".") ; Don't include any headers when citing emails
+  ;; Generates all headers in the variables `message-required-news-headers' or
+  ;; `message-required-mail-headers'. Otherwise, unless another package manually
+  ;; adds headers (e.g. mu4e), those headers won't be inserted into a message
+  ;; draft buffer. I enable this to make sure that the date header is inserted
+  ;; in a draft. (No date header means the date is set to time 0, which is
+  ;; annoying for querying emails via e.g. notmuch.)
+  (message-generate-headers-first t)
+
+  ;; Signatures
   (message-signature-insert-empty-line t)
   (message-citation-line-function 'message-insert-formatted-citation-line)
-  (message-ignored-cited-headers ".") ; Don't include any headers when citing emails
-  (message-confirm-send nil)
-  (message-kill-buffer-on-exit t)
+  (message-signature "Kind regards,\nKristoffer\n")
+  (message-signature-separator "^-- $")
+
+  ;; Reply
+  (message-cite-reply-position 'above)
   (message-wide-reply-confirm-recipients t)
 
+  ;; Forwarding
+  (message-forward-as-mime t)           ; NOTE 2024-09-27: Experimental
+  (message-forward-before-signature nil)
+
+  ;; Attachments
   (mml-attach-file-at-the-end t)
   (mml-dnd-attach-options t)
   :config
@@ -124,7 +142,8 @@
 
 ;;;; Custom signatures
 (with-eval-after-load 'message
-  (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
+  ;; (defvar kb/signature-separator "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
+  (defvar kb/signature-separator "--"
     "Separator between email body and its signature.")
   (defvar kb/signature-open (concat (when message-signature-insert-empty-line "\n")
                                     "\n#+begin_signature\n")
@@ -154,7 +173,7 @@ If no ALIAS is supplied, then the keys from `kb/signature-alist' will be
                        (cl-loop for (key . value) in kb/signature-alist
                                 collect key))))
            (content (or (alist-get alias kb/signature-alist nil nil #'string=) alias)))
-      (if org-msg-mode
+      (if (bound-and-true-p org-msg-mode)
           ;; If using `org-msg-mode' and a signature was manually typed rather
           ;; than an alias chosen, then format that manually-typed-signature.
           ;; Example: if "Test" is typed, the result will be:
