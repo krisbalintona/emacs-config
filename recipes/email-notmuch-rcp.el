@@ -41,8 +41,7 @@
   ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
    (notmuch-show . olivetti-mode)
    (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
-   (kb/themes . kb/notmuch-show-setup-faces)
-   (kb/themes . kb/notmuch-search-setup-faces)
+   (kb/themes . kb/notmuch-setup-faces)
    (message-send . kb/notmuch-set-sendmail-args))
   :bind
   (([remap compose-mail] . notmuch-mua-new-mail)
@@ -216,19 +215,7 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
          ((string-match-p (rx (literal "kristoffer_balintona@alumni.brown.edu")) from)
           (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
 
-
-  (defun kb/notmuch-search-setup-faces ()
-    "Set up faces in `notmuch-search-mode'."
-    (modus-themes-with-colors
-      (set-face-attribute 'notmuch-tag-added nil
-                          :underline `(:color ,cyan-cooler :style double-line :position t))
-      (add-to-list 'notmuch-tag-formats
-                   `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
-      (add-to-list 'notmuch-tag-formats
-                   `("commitment" (propertize tag 'face '(:foreground ,yellow-faint))))))
-  (kb/notmuch-search-setup-faces)
-
-  (defun kb/notmuch-show-setup-faces ()
+  (defun kb/notmuch-setup-faces ()
     "Set up faces in `notmuch-show-mode'."
     (modus-themes-with-colors
       ;; More noticeable demarcation of emails in thread in notmuch-show-mode
@@ -240,8 +227,14 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
                           :height (truncate (* (face-attribute 'default :height nil) 1.1))
                           :overline t
                           :extend nil
-                          :inherit 'italic)))
-  (kb/notmuch-show-setup-faces)
+                          :inherit 'italic)
+      (set-face-attribute 'notmuch-tag-added nil
+                          :underline `(:color ,cyan-cooler :style double-line :position t))
+      (add-to-list 'notmuch-tag-formats
+                   `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
+      (add-to-list 'notmuch-tag-formats
+                   `("commitment" (propertize tag 'face '(:foreground ,yellow-faint))))))
+  (kb/notmuch-setup-faces)
 
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore)
