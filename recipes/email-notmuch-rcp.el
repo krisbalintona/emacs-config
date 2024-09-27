@@ -79,7 +79,7 @@
      (:name "sent"     :query "tag:sent"      :key "s")
      (:name "drafts"   :query "tag:draft"     :key "d")
      (:name "archived" :query "not tag:trash" :key "a")
-     (:name "all"      :query "path**"        :key "A")
+     (:name "all"      :query "path:**"       :key "A")
      (:name "trash"    :query "tag:trash"     :key "t")))
   (notmuch-show-empty-saved-searches t)
   (notmuch-search-oldest-first nil)
