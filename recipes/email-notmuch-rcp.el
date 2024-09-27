@@ -373,6 +373,7 @@ from a `notmuch-search-mode' buffer."
                  'append)
 
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-tree-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
 
 (provide 'email-notmuch-rcp)
