@@ -135,7 +135,8 @@
   (defvar kb/signature-alist '(("Take care" . "Take care,\nKristoffer")
                                ("In gratitude" . "In gratitude,\nKristoffer")
                                ("Best" . "Best,\nKristoffer")
-                               ("With appreciation" . "With appreciation,\nKristoffer"))
+                               ("With appreciation" . "With appreciation,\nKristoffer")
+                               ("Professional" . "Best regards,\nKristoffer Balintona\nPhone: (773) 677-9699"))
     "Alist of aliases and their corresponding email signatures.")
 
   (defun kb/signature-select (&optional alias)
