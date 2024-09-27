@@ -288,7 +288,7 @@ buffer hidden."
   ;; Call on startup
   (kb/notmuch-lieer-sync)
   ;; Timer every 10 min
-  (run-with-timer (* 60 30) (* 60 30) 'kb/notmuch-lieer-sync))
+  (run-with-timer (* 60 10) (* 60 10) 'kb/notmuch-lieer-sync))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
