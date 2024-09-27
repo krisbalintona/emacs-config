@@ -77,7 +77,7 @@
    '((:name "inbox"    :query "tag:inbox"     :key "i")
      (:name "flagged"  :query "tag:flagged"   :key "f")
      (:name "sent"     :query "tag:sent"      :key "s")
-     (:name "drafts"   :query "tag:draft"     :key "D")
+     (:name "drafts"   :query "tag:draft"     :key "d")
      (:name "archived" :query "not tag:trash" :key "a")
      (:name "all"      :query "path**"        :key "A")
      (:name "trash"    :query "tag:trash"     :key "t")))
