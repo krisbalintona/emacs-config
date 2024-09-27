@@ -753,13 +753,12 @@ Determine if WINDOW is splittable."
 (use-package activities
   :bind
   (("C-c a d" . activities-define)
-   ("C-c a n" . activities-new)
-   ("C-c a g" . activities-revert)
-   ("C-c a s" . activities-suspend)
-   ("C-c a k" . activities-kill)
    ("C-c a a" . activities-resume)
+   ("C-c a g" . activities-revert)
    ("C-c a b" . activities-switch-buffer)
    ("C-c a B" . activities-switch)
+   ("C-c a s" . activities-suspend)
+   ("C-c a k" . activities-kill)
    ("C-c a l" . activities-list))
   :preface
   (add-to-list 'package-pinned-packages '(activities . "gnu-elpa-devel"))
