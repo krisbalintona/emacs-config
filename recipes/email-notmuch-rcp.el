@@ -363,12 +363,13 @@ from a `notmuch-search-mode' buffer."
           org-store-link-plist)))))
   (advice-add 'org-notmuch-store-link :override #'kb/org-notmuch-store-link)
 
-  (with-eval-after-load 'org-agenda
+  (with-eval-after-load 'org-capture
     (add-to-list 'org-capture-templates
                  `("e" "Email" entry
                    (file ,(expand-file-name "todo.org" kb/agenda-dir))
                    "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
-                   :empty-lines 1))
+                   :empty-lines 1)
+                 'append)
 
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-tree-mode"))))
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
