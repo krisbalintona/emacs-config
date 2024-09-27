@@ -176,8 +176,10 @@
     "Set pre-window-configuration also."
     (interactive)
     (kb/notmuch-hello-set-window-conf)
-    (delete-other-windows)
-    (apply fn args))
+    (apply fn args)
+    ;; We delete other windows afterward just in case `notmuch' is called with
+    ;; e.g. `other-frame-prefix'
+    (delete-other-windows))
   (advice-add 'notmuch :around #'kb/notmuch--around)
 
   (defun kb/notmuch-bury-or-kill-this-buffer--around (fn &rest args)
