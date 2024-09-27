@@ -106,9 +106,7 @@
      ("t" ("+trash" "-inbox") "Trash")))
   (notmuch-tag-formats
    '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-     ("flagged"
-      (propertize tag 'face 'notmuch-tag-flagged)
-      (notmuch-tag-format-image-data tag (notmuch-tag-star-icon)))))
+     ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
   (notmuch-tag-deleted-formats
    '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
      (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
@@ -223,7 +221,11 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
     "Set up faces in `notmuch-search-mode'."
     (modus-themes-with-colors
       (set-face-attribute 'notmuch-tag-added nil
-                          :underline `(:color ,cyan-cooler :style double-line :position t))))
+                          :underline `(:color ,cyan-cooler :style double-line :position t))
+      (add-to-list 'notmuch-tag-formats
+                   `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
+      (add-to-list 'notmuch-tag-formats
+                   `("commitment" (propertize tag 'face '(:foreground ,yellow-faint))))))
   (kb/notmuch-search-setup-faces)
 
   (defun kb/notmuch-show-setup-faces ()
