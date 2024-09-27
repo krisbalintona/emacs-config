@@ -783,14 +783,21 @@ MML tags."
 (use-package org-mime
   :vc (:rev :newest)
   :after message
-  :hook (message-send . org-mime-confirm-when-no-multipart)
+  :hook
+  ((message-send . org-mime-confirm-when-no-multipart)
+   (org-mime-html . (lambda ()
+                      "Nicely offset block quotes in email bodies.
+Taken from
+https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization."
+                      (org-mime-change-element-style
+                       "blockquote" "border-left: 2px solid gray; padding-left: 4px;"))))
   :bind
   ( :map message-mode-map
     ("C-c M-o" . org-mime-htmlize)
     ("C-c '" . org-mime-edit-mail-in-org-mode))
   :custom
   (org-mime-library 'mml)               ; For gnus
-  (org-mime-export-ascii 'ascii)
+  (org-mime-export-ascii 'utf-8)
   ;; Keep GPG signatures outside of multipart. Modified version of
   ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
   (org-mime-find-html-start
@@ -803,12 +810,11 @@ MML tags."
   ;; Start with a single # to font-lock as comment
   (org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n")
   :config
-  (setq org-mime-export-options
-        '(:with-latex t
-                      :section-numbers nil
-                      :with-author nil
-                      :with-toc nil
-                      :preserve-breaks t))
+  (setq org-mime-export-options '( :with-latex t
+                                   :section-numbers nil
+                                   :with-author nil
+                                   :with-toc nil
+                                   :preserve-breaks t))
 
   ;; Pop buffer according to `display-buffer-alist'
   (defun kb/org-mime-edit-mail-in-org-mode ()
