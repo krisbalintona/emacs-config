@@ -150,11 +150,9 @@ command."
 ;; the ability to easily create my own)
 (use-package dwim-shell-command
   :bind
-  (([remap shell-command] . dwim-shell-command)
+  (([remap async-shell-command] . dwim-shell-command)
    :map dired-mode-map
-   ([remap dired-do-async-shell-command] . dwim-shell-command)
-   ([remap dired-do-shell-command] . dwim-shell-command)
-   ([remap dired-smart-shell-command] . dwim-shell-command)))
+   ([remap dired-do-async-shell-command] . dwim-shell-command)))
 
 (provide 'programming-directories-rcp)
 ;;; programming-directories-rcp.el ends here
