@@ -368,7 +368,7 @@ from a `notmuch-search-mode' buffer."
     (add-to-list 'org-capture-templates
                  `("e" "Email" entry
                    (file ,(expand-file-name "todo.org" kb/agenda-dir))
-                   "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
+                   "* TODO %? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
                    :empty-lines 1)
                  'append)
 
