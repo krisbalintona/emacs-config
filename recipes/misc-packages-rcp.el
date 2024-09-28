@@ -817,16 +817,21 @@ ARG and REDISPLAY are identical to the original function."
 
   (engine-mode 1))
 
-;;;;; Casual-suite
+;;;;; Casual
 ;; A suite of "casual" interfaces.
-(use-package casual-suite
-  :bind*
-  ( :map ibuffer-mode-map
-    ("C-\\" . casual-ibuffer-tmenu)
-    :map Info-mode-map
-    ("C-\\" . casual-info-tmenu)
-    :map calc-mode-map
-    ("C-\\" . casual-calc-tmenu)))
+(use-package casual-suite)
+
+(use-package casual-ibuffer
+  :bind ( :map ibuffer-mode-map
+          ("C-M-s-\\" . casual-ibuffer-tmenu)))
+
+(use-package casual-info
+  :bind ( :map Info-mode-map
+          ("C-M-s-\\" . casual-info-tmenu)))
+
+(use-package casual-calc
+  :bind ( :map calc-mode-map
+          ("C-M-s-\\" . casual-calc-tmenu)))
 
 ;;;;; Async.el
 ;; Async library and a few small but useful implementations
