@@ -497,9 +497,6 @@ will also be the width of all other printable characters."
 
 ;;;; Fontify-patch
 (use-package fontify-patch
-  ;; :ensure (:type git
-  ;;                :host github
-  ;;                :repo "whame/fontify-patch")
   :vc (:url "https://github.com/whame/fontify-patch.git"
             :rev :newest)
   ;; To fontify mail containing patches with the email client
