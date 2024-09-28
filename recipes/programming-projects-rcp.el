@@ -255,8 +255,11 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Abdridge-diff
 (use-package abridge-diff
-  :hook (on-first-file . abridge-diff-mode)
-  :diminish)
+  :diminish
+  :after diff
+  :demand
+  :config
+  (abridge-diff-mode 1))
 
 ;;;;; Keychain-environment
 (use-package keychain-environment
