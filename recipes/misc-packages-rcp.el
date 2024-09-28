@@ -108,6 +108,7 @@
 
 ;;;;; Work-timer
 (use-package work-timer
+  :disabled
   :vc (:url "git@github.com:krisbalintona/work-timer.git"
             :rev :newest)
   :bind-keymap ("C-c o w" . work-timer-prefix-map)
