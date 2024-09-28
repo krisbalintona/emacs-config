@@ -820,7 +820,7 @@ ARG and REDISPLAY are identical to the original function."
 ;;;;; Casual-suite
 ;; A suite of "casual" interfaces.
 (use-package casual-suite
-  :bind
+  :bind*
   ( :map ibuffer-mode-map
     ("C-\\" . casual-ibuffer-tmenu)
     :map Info-mode-map
@@ -857,6 +857,7 @@ ARG and REDISPLAY are identical to the original function."
 (use-package super-hint
   :vc (:url "https://github.com/eval-exec/super-hint.el.git"
             :rev :newest)
+  :diminish (super-hint-rg-mode super-hint-xref-mode)
   :config
   (require 'super-hint-xref)
   (super-hint-xref-mode 1) ;; then M-x xref-find-references to enjoy super-hint
