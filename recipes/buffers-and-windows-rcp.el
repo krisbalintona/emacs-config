@@ -526,10 +526,14 @@ timestamp)."
            " " filename-and-process)
      (mark " " (name 16 -1) " " filename)))
   (ibuffer-saved-filters
-   '(("PDFs"
-      (mode . pdf-view-mode))
+   '(("Files, directories, and Info"
+      (or (mode . dired-mode)
+          (mode . Info-mode)
+          (visiting-file)))
      ("Emacs built-ins"
-      (filename . "/usr/local/share/emacs"))))
+      (filename . "/usr/local/share/emacs/"))
+     ("Processes"
+      (process))))
   (ibuffer-filter-group-name-face '(:inherit (success bold)))
   (ibuffer-saved-filter-groups ; NOTE 2024-02-11: Order of entries matters!
    `(("Basic"
