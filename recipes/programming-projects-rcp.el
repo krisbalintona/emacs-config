@@ -248,7 +248,10 @@ With a prefix argument, show NLINES of context."
 (use-package forge
   :hook (forge-issue-mode . visual-line-mode)
   :custom
-  (forge-owned-accounts '(("krisbalintona" . nil))))
+  (forge-owned-accounts '(("krisbalintona" . nil)))
+  :config
+  ;; I don't know why the hook definition enables flyspell-mode...
+  (remove-hook 'forge-post-mode-hook #'turn-on-flyspell))
 
 ;;;;; Abdridge-diff
 (use-package abridge-diff
