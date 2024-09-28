@@ -186,15 +186,16 @@
                :duration "40 minutes"
                :before (do (announce "Starting work time (advance to break when ready).")
                            (notify "Starting work time (advance to break when ready)."))
-               :advance (do (let* ((current-duration
+               :after (do (kb/hammy-play-sound))
+               :advance (do (kb/hammy-play-sound)
+                            (let* ((current-duration
                                     (ts-human-format-duration
                                      (float-time
                                       (time-subtract (current-time)
                                                      current-interval-start-time))))
                                    (message (format "You've worked for %s!" current-duration)))
                               (announce message)
-                              (notify message)
-                              (kb/hammy-play-sound))))
+                              (notify message))))
      (interval :name "Break"
                :duration (do (cl-assert (equal "Work" (hammy-interval-name (caar history))))
                              (let ((duration (cl-loop for (interval start end) in history
@@ -210,7 +211,8 @@
                                                   (ts-human-format-duration current-duration))))
                              (announce message)
                              (notify message)))
-               :after (do (let* ((elapsed
+               :after (do (kb/hammy-play-sound)
+                          (let* ((elapsed
                                   (float-time
                                    (time-subtract (current-time) current-interval-start-time)))
                                  (unused (- current-duration elapsed)))
@@ -228,23 +230,26 @@
                                                 :descend t :step "5 minutes")
                                :before (do (announce "Work time!")
                                            (notify "Work time!"))
+                               :after (do (kb/hammy-play-sound))
                                :advance (do (announce "Work time is over!")
                                             (notify "Work time is over!")
-                                          (kb/hammy-play-sound)))
+                                          (remind "5 minutes"
+                                                  (do (kb/hammy-play-sound)))))
                      (interval :name "Rest"
                                :face 'font-lock-type-face
                                :duration (do (let ((duration (cl-loop for (interval start end) in history
                                                                       while (equal "Work" (hammy-interval-name interval))
                                                                       sum (float-time (time-subtract end start))
                                                                       into work-seconds
-                                                                      finally return (* work-seconds 0.33))))
+                                                                      finally return (max (* 60 2) (* work-seconds 0.33)))))
                                                (when (alist-get 'unused-break etc)
                                                  (cl-incf duration (alist-get 'unused-break etc))
                                                  (setf (alist-get 'unused-break etc) nil))
                                                duration))
                                :before (do (announce "Rest time!")
                                            (notify "Rest time!"))
-                               :after (do (let* ((elapsed
+                               :after (do (kb/hammy-play-sound)
+                                          (let* ((elapsed
                                                   (float-time
                                                    (time-subtract (current-time) current-interval-start-time)))
                                                  (unused (- current-duration elapsed)))
@@ -252,13 +257,14 @@
                                               (if (alist-get 'unused-break etc)
                                                   (cl-incf (alist-get 'unused-break etc) unused)
                                                 (setf (alist-get 'unused-break etc) unused)))))
-                               :advance (do (announce "Rest time is over!")
-                                            (notify "Rest time is over!")
-                                          (kb/hammy-play-sound))))
+                               :advance (remind "5 minutes"
+                                                (do (announce "Rest time is over!")
+                                                    (notify "Rest time is over!")
+                                                  (kb/hammy-play-sound)))))
     :complete-p (do (and (> cycles 1)
                          interval
                          (equal "Work" interval-name)
-                         (equal (duration "5 minutes") current-duration)))
+                         (>= (duration "5 minutes") current-duration)))
     :after (do (announce "Flywheel session complete!")
                (notify "Flywheel session complete!")))
 
