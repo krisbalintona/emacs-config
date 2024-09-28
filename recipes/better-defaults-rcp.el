@@ -202,6 +202,9 @@
 ;;;; Only show these byte-compile warnings
 (setopt byte-compile-warnings (cl-remove 'obsolete byte-compile-warning-types))
 
+;;;; Defer font lock during input
+(setopt jit-lock-defer-time 0)
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
