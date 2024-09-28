@@ -403,12 +403,16 @@ With a prefix argument, show NLINES of context."
     ("f" . agitate-vc-git-find-revision)
     ("s" . agitate-vc-git-show)
     ("w" . agitate-vc-git-kill-commit-message)
+    ("p p" . agitate-vc-git-format-patch-single)
+    ("p n" . agitate-vc-git-format-patch-n-from-head)
     :map diff-mode-map
     ([remap diff-refine-hunk] . agitate-diff-refine-cycle)
     ([remap diff-restrict-view] . agitate-diff-narrow-dwim)
     :map log-view-mode-map
     ("w" . agitate-log-view-kill-revision)
     ("W" . agitate-log-view-kill-revision-expanded)
+    :map vc-git-log-view-mode-map
+    ("c" . agitate-vc-git-format-patch-single)
     :map log-edit-mode-map
     ("C-c C-i C-n" . agitate-log-edit-insert-file-name)
     ;; See user options `agitate-log-edit-emoji-collection' and
