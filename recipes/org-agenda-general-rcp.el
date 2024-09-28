@@ -451,7 +451,7 @@ Side effects occur if the parent of the current headline has a
   (org-clock-persist t)
   (org-clock-out-when-done t)
   (org-clock-history-length 10)
-  (org-clock-in-resume nil)
+  (org-clock-in-resume t)
   (org-clock-persist-query-resume t)
   (org-clock-into-drawer t)
   (org-clock-out-remove-zero-time-clocks t)
