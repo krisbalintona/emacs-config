@@ -853,6 +853,18 @@ ARG and REDISPLAY are identical to the original function."
   (grep-save-buffers 'ask)
   (grep-use-headings t))
 
+;;;;; Super-hint
+(use-package super-hint
+  :vc (:url "https://github.com/eval-exec/super-hint.el.git"
+            :rev :newest)
+  :config
+  (require 'super-hint-xref)
+  (super-hint-xref-mode 1) ;; then M-x xref-find-references to enjoy super-hint
+
+  ;; (require 'super-hint-rg)
+  ;; (super-hint-rg-mode 1) ;; then M-x rg-project to enjoy super-hint
+  )
+
 ;;;;; Wgrep
 ;; Edit lines in grep buffers
 (use-package wgrep
