@@ -55,7 +55,8 @@
    :map notmuch-show-mode-map
    ("a" . nil)
    ("r" . notmuch-show-reply)
-   ("R" . notmuch-show-reply-sender))
+   ("R" . notmuch-show-reply-sender)
+   ("T" . kb/notmuch-show-trash-thread-then-exit))
   :custom
   (mail-user-agent 'notmuch-user-agent)
   (notmuch-identities nil)              ; Defer to notmuch-config's file data
@@ -263,7 +264,15 @@ folded."
              (browse-url-generic-args (remove "--new-window" browse-url-generic-args))) ; This is ad-hoc: I prefer not to open in a new window
          (mm-save-part-to-file handle file)
          (browse-url file)))))
-  (advice-add 'notmuch-show-view-part :override #'kb/notmuch-show-view-part))
+  (advice-add 'notmuch-show-view-part :override #'kb/notmuch-show-view-part)
+
+  ;; Bespoke `notmuch-show-mode' commands
+  (defun kb/notmuch-show-trash-thread-then-exit ()
+    "\"Trash\" all messages in the current buffer, then exit thread."
+    (interactive)
+    (notmuch-show-tag-all
+     (notmuch-tag-change-list (append notmuch-archive-tags '("+trash"))))
+    (notmuch-show-next-thread)))
 
 ;;;; Sync emails with Lieer
 (with-eval-after-load 'notmuch
