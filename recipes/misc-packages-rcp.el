@@ -265,10 +265,6 @@
     :after (do (announce "Flywheel session complete!")
                (notify "Flywheel session complete!")))
 
-  ;; Make active timers persistent across emacs sessions
-  (with-eval-after-load 'savehist
-    (add-to-list 'savehist-additional-variables 'hammy-active))
-
   ;; Mode line
   (hammy-mode 1))
 
