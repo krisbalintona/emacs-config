@@ -78,9 +78,7 @@
 ;;;;; Window
 (use-package window
   :ensure nil
-  :autoload kb/select-buffer-in-side-window
-  :bind*
-  ("M-o" . other-window)
+  :bind* ("M-o" . other-window)
   :custom
   ;; Prefer vertical splits over horizontal ones
   (split-width-threshold 170)
@@ -120,11 +118,12 @@
 
      ;; To the left
      ("\\*Faces\\*"
-      (kb/select-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (window-width . 0.33)
       (side . left)
       (slot . 2)
-      (window-parameters . ((no-other-window . t))))
+      (window-parameters . ((no-other-window . t)))
+      (post-command-select-window . t))
 
      ;; To the right
      ("\\*Help\\*"
@@ -135,32 +134,35 @@
       (side . right)
       (window-width . 0.2))
      ("\\*Async Shell Command\\*"
-      (kb/select-buffer-in-side-window
-       display-buffer-in-direction)
+      (display-buffer-in-side-window)
       (window-width . 0.20)
       (side . right)
       (direction . right)
       (slot . 4)
-      (window-parameters . ((no-other-window . t))))
+      (window-parameters . ((no-other-window . t)))
+      (post-command-select-window . t))
 
      ;; To the top
      (,(rx (literal messages-buffer-name))
-      (kb/select-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (window-height . 0.36)
       (side . top)
-      (slot . 1))
+      (slot . 1)
+      (post-command-select-window . t))
      ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
-      (kb/select-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (window-height . 0.3)
       (side . top)
-      (slot . 2))
+      (slot . 2)
+      (post-command-select-window . t))
      ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
-      (kb/select-buffer-in-side-window)
+      (display-buffer-in-side-window)
       (window-height . fit-window-to-buffer)
       (side . top)
       (slot . -2)
       (preserve-size . (nil . t))
-      (window-parameters . ((mode-line-format . none))))
+      (window-parameters . ((mode-line-format . none)))
+      (post-command-select-window . t))
 
      ;; To the bottom
      ("\\*Flycheck errors\\*"
@@ -221,14 +223,7 @@
       (preserve-size . (t . t)))
      ("\\*vc-log\\*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
-      (dedicated . t))))
-  :config
-  ;; Helper function for `display-buffer-alist'
-  (defun kb/select-buffer-in-side-window (buffer alist)
-    "Display BUFFER in a side window then select it.
-ALIST is  an alist of information about buffer."
-    (let ((window (display-buffer-in-side-window buffer alist)))
-      (select-window window))))
+      (dedicated . t)))))
 
 ;; Below selected
 (with-eval-after-load 'xref
