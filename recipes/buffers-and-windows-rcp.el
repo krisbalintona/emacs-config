@@ -293,7 +293,7 @@
   (("M-`" . popper-toggle-latest)
    ("C-`" . popper-cycle)
    ("C-M-s-`" . popper-kill-latest-popup)
-   ("C-~" . popper-toggle-type))
+   ("M-~" . popper-toggle-type))
   :custom
   (popper-reference-buffers
    '(;; General
