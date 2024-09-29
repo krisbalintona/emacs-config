@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (after-init . (lambda () (unless (server-running-p)
-                              (server-mode))))
+                                   (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -92,17 +92,10 @@
   (display-buffer-alist
    `(;; Don't show
      ("\\*BibTeX validation errors\\*"
-      ;; (display-buffer-reuse-mode-window display-buffer-no-window))
       (display-buffer-no-window)
       (allow-no-window . t))
 
-     ;; Full frame
-
      ;; Same window
-     ("\\*helpful *"
-      (display-buffer-reuse-mode-window display-buffer-same-window))
-     ("*Flycheck errors*"
-      (display-buffer-reuse-mode-window display-buffer-same-window))
      ("\\*devdocs\\*"
       (display-buffer-reuse-mode-window display-buffer-same-window))
      ((major-mode . diff-mode)
@@ -119,27 +112,7 @@
      ;; To the left
      ("\\*Faces\\*"
       (display-buffer-in-side-window)
-      (window-width . 0.33)
       (side . left)
-      (slot . 2)
-      (window-parameters . ((no-other-window . t)))
-      (post-command-select-window . t))
-
-     ;; To the right
-     ("\\*Help\\*"
-      (display-buffer-in-previous-window))
-     ("\\*org-roam\\*"
-      (display-buffer-in-side-window)
-      (dedicated . t)
-      (side . right)
-      (window-width . 0.2))
-     ("\\*Async Shell Command\\*"
-      (display-buffer-in-side-window)
-      (window-width . 0.20)
-      (side . right)
-      (direction . right)
-      (slot . 4)
-      (window-parameters . ((no-other-window . t)))
       (post-command-select-window . t))
 
      ;; To the top
@@ -165,9 +138,6 @@
       (post-command-select-window . t))
 
      ;; To the bottom
-     ("\\*Flycheck errors\\*"
-      (display-buffer-in-side-window)
-      (window-height . 0.33))
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
       (window-height . fit-window-to-buffer)
@@ -177,14 +147,9 @@
       (display-buffer-at-bottom)
       (window-height . fit-window-to-buffer)
       (window-parameters . ((no-other-window . t))))
-     ((major-mode . dap-ui-repl-mode)
-      (display-buffer-at-bottom)
-      (window-height . 12)
-      (window-parameters . ((mode-line-format . none))))
      ("^\\*eldoc"
-      (lambda (buffer alist)
-        (let ((window (display-buffer-at-bottom buffer alist)))
-          (select-window window)))
+      (display-buffer-at-bottom)
+      (post-command-select-window . t)
       (window-height . shrink-window-if-larger-than-buffer)
       (window-parameters . ((mode-line-format . none))))
 
@@ -201,11 +166,6 @@
      ("\\*compilation\\*"
       (display-buffer-in-side-window)
       (side . bottom))
-     ("\\*\\(I?Python3\\|Python3\\)\\*"
-      (display-buffer-in-side-window)
-      (side . bottom)
-      (slot . -1)
-      (window-height . 0.27))
      ("\\*Racket REPL"
       (display-buffer-in-side-window)
       (side . bottom)
@@ -223,7 +183,11 @@
       (preserve-size . (t . t)))
      ("\\*vc-log\\*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
-      (dedicated . t)))))
+      (dedicated . t))
+
+     ;; Other
+     ("\\*Help\\*"
+      (display-buffer-reuse-window display-buffer-use-least-recent-window)))))
 
 ;; Below selected
 (with-eval-after-load 'xref
