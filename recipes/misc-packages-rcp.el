@@ -185,8 +185,7 @@
     (list
      (interval :name "Work"
                :duration "40 minutes"
-               :before (do (announce "Starting work time (advance to break when ready).")
-                           (notify "Starting work time (advance to break when ready)."))
+               :before (do (announce "Starting work time (advance to break when ready)."))
                :after (do (kb/hammy-play-sound))
                :advance (do (kb/hammy-play-sound)
                             (let* ((current-duration
@@ -210,8 +209,7 @@
                                duration))
                :before (do (let ((message (format "Starting break for %s."
                                                   (ts-human-format-duration current-duration))))
-                             (announce message)
-                             (notify message)))
+                             (announce message)))
                :after (do (kb/hammy-play-sound)
                           (let* ((elapsed
                                   (float-time
@@ -229,8 +227,7 @@
                                :face 'font-lock-builtin-face
                                :duration (climb "5 minutes" "40 minutes"
                                                 :descend t :step "5 minutes")
-                               :before (do (announce "Work time!")
-                                           (notify "Work time!"))
+                               :before (do (announce "Work time!"))
                                :after (do (kb/hammy-play-sound))
                                :advance (do (announce "Work time is over!")
                                             (notify "Work time is over!")
@@ -247,8 +244,7 @@
                                                  (cl-incf duration (alist-get 'unused-break etc))
                                                  (setf (alist-get 'unused-break etc) nil))
                                                duration))
-                               :before (do (announce "Rest time!")
-                                           (notify "Rest time!"))
+                               :before (do (announce "Rest time!"))
                                :after (do (kb/hammy-play-sound)
                                           (let* ((elapsed
                                                   (float-time
