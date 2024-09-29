@@ -862,12 +862,13 @@ ARG and REDISPLAY are identical to the original function."
 (use-package super-hint
   :vc (:url "https://github.com/eval-exec/super-hint.el.git"
             :rev :newest)
-  :diminish ( super-hint-xref-mode)
   :init
   (with-eval-after-load 'xref
-    (use-package super-hint-xref-mode)
+    (require 'super-hint-xref)
+    (super-hint-xref-mode 1)
     (diminish 'super-hint-xref-mode))
   (with-eval-after-load 'rg
+    (require 'super-hint-rg)
     (super-hint-rg-mode 1)
     (diminish 'super-hint-rg-mode)))
 
