@@ -304,12 +304,9 @@ buffer hidden."
   :custom
   (notmuch-indicator-add-to-mode-line-misc-info nil) ; I add it to the modeline myself
   (notmuch-indicator-counter-format "%s%s")
-  (notmuch-indicator-args '(( :terms "path:personal/mail/** and tag:inbox"
-                              :label "P:"
-                              :label-face notmuch-search-unread-face)
-                            ( :terms "path:uni/mail/** and tag:inbox"
-                              :label "U:"
-                              :label-face notmuch-search-unread-face)))
+  (notmuch-indicator-args '(( :terms "tag:unread and tag:inbox"
+                              :label "M:"
+                              :label-face modus-themes-fg-green)))
   (notmuch-indicator-refresh-count (* 60 3))
   (notmuch-indicator-hide-empty-counters t)
   (notmuch-indicator-force-refresh-commands '(notmuch notmuch-refresh-this-buffer))
