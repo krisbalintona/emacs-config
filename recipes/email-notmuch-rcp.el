@@ -56,7 +56,8 @@
    ("a" . nil)
    ("r" . notmuch-show-reply)
    ("R" . notmuch-show-reply-sender)
-   ("T" . kb/notmuch-show-trash-thread-then-exit))
+   ("T" . kb/notmuch-show-trash-thread-then-exit)
+   ([remap notmuch-show-advance-and-archive] . kb/notmuch-show-advance-and-tag))
   :custom
   (mail-user-agent 'notmuch-user-agent)
   (notmuch-identities nil)              ; Defer to notmuch-config's file data
@@ -272,7 +273,26 @@ folded."
     (interactive)
     (notmuch-show-tag-all
      (notmuch-tag-change-list (append notmuch-archive-tags '("+trash"))))
-    (notmuch-show-next-thread)))
+    (notmuch-show-next-thread))
+
+  (defun kb/notmuch-show-tag-thread (&optional reverse)
+    "Like `notmuch-show-archive-thread' put prompt "
+    (interactive "P")
+    (let (current-tags)
+      (notmuch-show-mapc
+       (lambda () (setq current-tags (append (notmuch-show-get-tags) current-tags))))
+      (notmuch-show-tag-all
+       (notmuch-tag-change-list
+        (notmuch-read-tag-changes current-tags)
+        reverse))))
+
+  (defun kb/notmuch-show-advance-and-tag ()
+    "Like `notmuch-show-advance-and-archive' but prompt for tag instead.
+Tagging is done by `kb/notmuch-show-tag-thread'."
+    (interactive)
+    (when (notmuch-show-advance)
+      (kb/notmuch-show-tag-thread)
+      (notmuch-show-next-thread t))))
 
 ;;;; Sync emails with Lieer
 (with-eval-after-load 'notmuch
