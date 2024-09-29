@@ -87,7 +87,7 @@
   (notmuch-search-result-format '(("date" . "%12s ")
                                   ("count" . "%-7s ")
                                   ("authors" . "%-30s ")
-                                  ("subject" . "%-72s ")
+                                  ("subject" . "%-75.75s ")
                                   ("tags" . "(%s)")))
 
   ;; Tags
@@ -131,7 +131,7 @@
                                 ("authors" . "%-20s  ")
                                 ((("tree" . "%s")
                                   ("subject" . "%s"))
-                                 . " %-85s  ")
+                                 . " %-85.85s  ")
                                 ("tags" . "(%s)")))
   (notmuch-tree-outline-enabled nil)
 
