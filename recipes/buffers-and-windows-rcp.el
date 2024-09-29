@@ -307,6 +307,7 @@
      "\\*Shell Command Output\\*"
      "\\*Async Shell Command\\*"
      "^\\*Compile-Log\\*$"
+     "\\*vc-git"
 
      ;; Shells
      ;; To consistently match shells, supply both the buffer name and major mode
