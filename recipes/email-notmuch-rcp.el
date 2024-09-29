@@ -122,8 +122,8 @@
   (notmuch-wash-citation-lines-suffix 3)
   (notmuch-wash-wrap-lines-length nil)
   (notmuch-unthreaded-show-out t)
+  (notmuch-message-headers-visible nil)
   (notmuch-message-headers '("To" "Cc" "Date" "Subject"))
-  (notmuch-message-headers-visible t)
 
   ;; Notmuch-tree-mode
   (notmuch-tree-show-out nil)
