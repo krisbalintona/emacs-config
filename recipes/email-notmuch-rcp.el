@@ -336,7 +336,10 @@ buffer hidden."
 ;;;; Notmuch-transient
 (use-package notmuch-transient
   :after notmuch
-  :demand)
+  :demand
+  :custom
+  (notmuch-transient-add-bindings t)
+  (notmuch-transient-prefix "C-d"))
 
 ;;;; Ol-notmuch
 ;; Org-links for search queries (i.e. notmuch-search-mode, notmuch-tree-mode)
