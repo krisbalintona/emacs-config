@@ -325,8 +325,7 @@
      racket-repl-mode
      rustic-cargo-run-mode
      rustic-cargo-test-mode
-     rustic-compilation-mode
-     ))
+     rustic-compilation-mode))
   (popper-display-control nil)
   (popper-group-function
    #'(lambda ()

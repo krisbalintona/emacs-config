@@ -90,6 +90,11 @@
 ")))
   (denote-date-prompt-use-org-read-date t)
   (denote-backlinks-show-context t)
+  (denote-backlinks-display-buffer-action
+   '((display-buffer-reuse-window display-buffer-below-selected)
+     (window-height . fit-window-to-buffer)
+     (post-command-select-window . t)
+     (dedicated . t)))
   (denote-rename-buffer-format "%s %t")
   (denote-rename-confirmations '(add-front-matter))
   :preface
