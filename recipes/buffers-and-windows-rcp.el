@@ -187,7 +187,11 @@
 
      ;; Other
      ("\\*Help\\*"
-      (display-buffer-reuse-window display-buffer-pop-up-window)))))
+      (display-buffer-reuse-window display-buffer-pop-up-window))
+     ((or "\\*Man"
+          (major-mode . Man-mode))
+      (display-buffer-reuse-window display-buffer-pop-up-window)
+      (post-command-select-window . t)))))
 
 ;; Below selected
 (with-eval-after-load 'xref
