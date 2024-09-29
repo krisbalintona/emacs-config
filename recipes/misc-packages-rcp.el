@@ -862,12 +862,14 @@ ARG and REDISPLAY are identical to the original function."
 (use-package super-hint
   :vc (:url "https://github.com/eval-exec/super-hint.el.git"
             :rev :newest)
-  :diminish (super-hint-rg-mode super-hint-xref-mode)
+  :diminish ( super-hint-xref-mode)
   :init
   (with-eval-after-load 'xref
-    (super-hint-xref-mode 1))
+    (use-package super-hint-xref-mode)
+    (diminish 'super-hint-xref-mode))
   (with-eval-after-load 'rg
-    (super-hint-rg-mode 1)))
+    (super-hint-rg-mode 1)
+    (diminish 'super-hint-rg-mode)))
 
 ;;;;; Wgrep
 ;; Edit lines in grep buffers
