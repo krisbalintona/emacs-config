@@ -372,13 +372,12 @@ This version removes delimiters.")
 ;;;;; Time
 ;; Enable time in the mode-line
 (use-package time
-  :disabled
   :ensure nil
   :custom
   (display-time-24hr-format t)
-  (display-time-format "(%a %d, %R)")
-  (display-time-interval 60)           ; Update every since if I'm using seconds
-  (display-time-default-load-average nil) ; Don't show load average
+  (display-time-format "%R")
+  (display-time-interval 60)
+  (display-time-default-load-average nil)
   (world-clock-list
    '(("America/Los_Angeles" "Seattle")
      ("America/New_York" "New York")
