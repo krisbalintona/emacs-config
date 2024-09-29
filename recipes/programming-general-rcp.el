@@ -41,6 +41,8 @@
 ;;;; Eldoc
 (use-package eldoc
   :diminish
+  :bind ( :map help-map
+          ("h" . eldoc-doc-buffer))
   :custom
   (eldoc-print-after-edit nil)
   (eldoc-idle-delay 0.2)
