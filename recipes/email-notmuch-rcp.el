@@ -292,10 +292,10 @@ buffer hidden."
         ;; `async-shell-command'
         (async-shell-command script buf))))
 
-  ;; Call on startup
-  (kb/notmuch-lieer-sync)
-  ;; Timer every 10 min
-  (run-with-timer (* 60 10) (* 60 10) 'kb/notmuch-lieer-sync))
+  ;; Timer every X minutes. (The first invocation is 30 seconds later because we
+  ;; don't want to spam the script when we open multiple Emacs sessions during
+  ;; e.g. testing my init.el.)
+  (run-with-timer 30 (* 60 3) 'kb/notmuch-lieer-sync))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
