@@ -297,8 +297,22 @@ buffer hidden."
   ;; e.g. testing my init.el.)
   (run-with-timer 30 (* 60 3) 'kb/notmuch-lieer-sync))
 
+;;;; Email indicator
+;; Try using display-time's built-in email indicator --- less informative but
+;; more visually subtle than `notmuch-indicator'.
+(with-eval-after-load 'time
+  ;; Obviously the below applies only when `display-time-mode' is non-nil.
+  (setopt display-time-use-mail-icon t
+          display-time-mail-face 'notmuch-search-flagged-face
+          display-time-mail-function
+          (lambda ()
+            (let* ((command (format "notmuch search tag:inbox and tag:unread | wc -l"))
+                   (count (string-to-number (shell-command-to-string command))))
+              (< 0 count)))))
+
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
+  :disabled   ; REVIEW 2024-09-29: Trying out simple display-time mail indicator
   :after notmuch
   :demand
   :custom
