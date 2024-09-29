@@ -187,7 +187,7 @@
 
      ;; Other
      ("\\*Help\\*"
-      (display-buffer-reuse-window display-buffer-use-least-recent-window)))))
+      (display-buffer-reuse-window display-buffer-pop-up-window)))))
 
 ;; Below selected
 (with-eval-after-load 'xref
