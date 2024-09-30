@@ -31,6 +31,7 @@
 (defvar kb/notes-dir (expand-file-name "notes" kb/org-dir))
 (defvar kb/blog-dir (expand-file-name "blog" kb/notes-dir))
 (defvar kb/agenda-dir (expand-file-name "agenda" kb/org-dir))
+(defvar kb/agenda-todo-file (expand-file-name "todo.org" kb/agenda-dir))
 
 (defvar kb/all-org-dir-files (cl-remove-if
                               (lambda (it)

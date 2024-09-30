@@ -224,9 +224,11 @@ have `org-warning' face."
   :ensure nil
   :after org
   :custom
-  (org-refile-targets
-   `((nil . (:maxlevel . 2))))
   (org-refile-use-cache nil)
+  (org-refile-targets
+   `((kb/agenda-todo-file . (:level . 0))
+     (nil . (:maxlevel . 2))))
+  (org-refile-target-verify-function nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
   ;; Workaround for orderless issue with `org-refile'. See

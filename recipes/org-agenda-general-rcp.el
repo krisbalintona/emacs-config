@@ -40,8 +40,6 @@
   ( :map kb/open-keys
     ("a" . org-agenda))
   :custom
-  (org-agenda-files (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
-
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
   (org-effort-durations
@@ -222,6 +220,9 @@ I currently hard-code the ID to the task that I want to clock in."
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :config
+  (dolist (f (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
+    (add-to-list 'org-agenda-files f))
+
   ;; Taken from
   ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L213
   (defun kb/org-agenda-format-date-aligned (date)
