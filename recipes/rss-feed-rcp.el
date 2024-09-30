@@ -101,164 +101,164 @@
 
 ;;;; QoL
 ;; Much is from https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
+(with-eval-after-load 'elfeed
 
 ;;;;; View in EWW
-(defun prot-elfeed-show-eww (&optional link)
-  "Browse current entry's link or optional LINK in `eww'.
+  (defun prot-elfeed-show-eww (&optional link)
+    "Browse current entry's link or optional LINK in `eww'.
 
 Only show the readable part once the website loads.  This can
 fail on poorly-designed websites."
-  (interactive)
-  (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                    elfeed-show-entry
-                  (elfeed-search-selected :ignore-region)))
-         (link (or link (elfeed-entry-link entry))))
-    (eww link)
-    (add-hook 'eww-after-render-hook 'eww-readable nil t))
-  )
-(bind-key "e" 'prot-elfeed-show-eww 'elfeed-show-mode-map)
+    (interactive)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           (link (or link (elfeed-entry-link entry))))
+      (eww link)
+      (add-hook 'eww-after-render-hook 'eww-readable nil t))
+    )
+  (bind-key "e" 'prot-elfeed-show-eww 'elfeed-show-mode-map)
 
-(add-hook 'eww-mode-hook #'(lambda () (olivetti-mode) (mixed-pitch-mode)))
+  (add-hook 'eww-mode-hook #'(lambda () (olivetti-mode) (mixed-pitch-mode)))
 
 ;;;;; Language-detection
-;; Detects language of current buffer
-;; Automatically detect then fontify a buffer (that uses `shr', e.g. eww-mode
-;; and elfeed-show-mode) according to the programming language it appears to
-;; have.
-(use-package language-detection
-  :disabled ; NOTE 2024-09-26: Intrusive. Sometimes there isn't a programming language in the buffer but it still fontifies...
-  :init
-  (with-eval-after-load 'shr
-    (require 'cl-lib)
+  ;; Detects language of current buffer
+  ;; Automatically detect then fontify a buffer (that uses `shr', e.g. eww-mode
+  ;; and elfeed-show-mode) according to the programming language it appears to
+  ;; have.
+  (use-package language-detection
+    :disabled ; NOTE 2024-09-26: Intrusive. Sometimes there isn't a programming language in the buffer but it still fontifies...
+    :init
+    (with-eval-after-load 'shr
+      (require 'cl-lib)
 
-    (defun kb/language-detection-eww-tag-pre (dom)
-      (let ((shr-folding-mode 'none)
-            (shr-current-font 'default))
-        (shr-ensure-newline)
-        (insert (kb/language-detection-eww-fontify-pre dom))
-        (shr-ensure-newline)))
+      (defun kb/language-detection-eww-tag-pre (dom)
+        (let ((shr-folding-mode 'none)
+              (shr-current-font 'default))
+          (shr-ensure-newline)
+          (insert (kb/language-detection-eww-fontify-pre dom))
+          (shr-ensure-newline)))
 
-    (defun kb/language-detection-eww-fontify-pre (dom)
-      (with-temp-buffer
-        (shr-generic dom)
-        (let ((mode (kb/language-detection-eww-buffer-auto-detect-mode)))
-          (when mode
-            (kb/language-detection-eww-fontify-buffer mode)))
-        (buffer-string)))
+      (defun kb/language-detection-eww-fontify-pre (dom)
+        (with-temp-buffer
+          (shr-generic dom)
+          (let ((mode (kb/language-detection-eww-buffer-auto-detect-mode)))
+            (when mode
+              (kb/language-detection-eww-fontify-buffer mode)))
+          (buffer-string)))
 
-    (defun kb/language-detection-eww-fontify-buffer (mode)
-      (delay-mode-hooks (funcall mode))
-      (font-lock-default-function mode)
-      (font-lock-default-fontify-region (point-min)
-                                        (point-max)
-                                        nil))
+      (defun kb/language-detection-eww-fontify-buffer (mode)
+        (delay-mode-hooks (funcall mode))
+        (font-lock-default-function mode)
+        (font-lock-default-fontify-region (point-min)
+                                          (point-max)
+                                          nil))
 
-    (defun eww-buffer-auto-detect-mode ()
-      (let* ((map '((ada ada-mode)
-                    (awk awk-mode)
-                    (c c-mode)
-                    (cpp c++-mode)
-                    (clojure clojure-mode lisp-mode)
-                    (csharp csharp-mode java-mode)
-                    (css css-mode)
-                    (dart dart-mode)
-                    (delphi delphi-mode)
-                    (emacslisp emacs-lisp-mode)
-                    (erlang erlang-mode)
-                    (fortran fortran-mode)
-                    (fsharp fsharp-mode)
-                    (go go-mode)
-                    (groovy groovy-mode)
-                    (haskell haskell-mode)
-                    (html html-mode)
-                    (java java-mode)
-                    (javascript javascript-mode)
-                    (json json-mode javascript-mode)
-                    (latex latex-mode)
-                    (lisp lisp-mode)
-                    (lua lua-mode)
-                    (matlab matlab-mode octave-mode)
-                    (objc objc-mode c-mode)
-                    (perl perl-mode)
-                    (php php-mode)
-                    (prolog prolog-mode)
-                    (python python-mode)
-                    (r r-mode)
-                    (ruby ruby-mode)
-                    (rust rust-mode)
-                    (scala scala-mode)
-                    (shell shell-script-mode)
-                    (smalltalk smalltalk-mode)
-                    (sql sql-mode)
-                    (swift swift-mode)
-                    (visualbasic visual-basic-mode)
-                    (xml sgml-mode)))
-             (language (language-detection-string
-                        (buffer-substring-no-properties (point-min) (point-max))))
-             (modes (cdr (assoc language map)))
-             (mode (cl-loop for mode in modes
-                            when (fboundp mode)
-                            return mode)))
-        (message (format "[language-detection] Detected \"%s\" programming language" language))
-        (when (fboundp mode)
-          mode)))
+      (defun eww-buffer-auto-detect-mode ()
+        (let* ((map '((ada ada-mode)
+                      (awk awk-mode)
+                      (c c-mode)
+                      (cpp c++-mode)
+                      (clojure clojure-mode lisp-mode)
+                      (csharp csharp-mode java-mode)
+                      (css css-mode)
+                      (dart dart-mode)
+                      (delphi delphi-mode)
+                      (emacslisp emacs-lisp-mode)
+                      (erlang erlang-mode)
+                      (fortran fortran-mode)
+                      (fsharp fsharp-mode)
+                      (go go-mode)
+                      (groovy groovy-mode)
+                      (haskell haskell-mode)
+                      (html html-mode)
+                      (java java-mode)
+                      (javascript javascript-mode)
+                      (json json-mode javascript-mode)
+                      (latex latex-mode)
+                      (lisp lisp-mode)
+                      (lua lua-mode)
+                      (matlab matlab-mode octave-mode)
+                      (objc objc-mode c-mode)
+                      (perl perl-mode)
+                      (php php-mode)
+                      (prolog prolog-mode)
+                      (python python-mode)
+                      (r r-mode)
+                      (ruby ruby-mode)
+                      (rust rust-mode)
+                      (scala scala-mode)
+                      (shell shell-script-mode)
+                      (smalltalk smalltalk-mode)
+                      (sql sql-mode)
+                      (swift swift-mode)
+                      (visualbasic visual-basic-mode)
+                      (xml sgml-mode)))
+               (language (language-detection-string
+                          (buffer-substring-no-properties (point-min) (point-max))))
+               (modes (cdr (assoc language map)))
+               (mode (cl-loop for mode in modes
+                              when (fboundp mode)
+                              return mode)))
+          (message (format "[language-detection] Detected \"%s\" programming language" language))
+          (when (fboundp mode)
+            mode)))
 
-    (setq shr-external-rendering-functions
-          '((pre . kb/language-detection-eww-tag-pre)))))
+      (setq shr-external-rendering-functions
+            '((pre . kb/language-detection-eww-tag-pre)))))
 
 ;;;;; Custom search completion
-(defun prot-common-crm-exclude-selected-p (input)
-  "Filter out INPUT from `completing-read-multiple'.
+  (defun prot-common-crm-exclude-selected-p (input)
+    "Filter out INPUT from `completing-read-multiple'.
 Hide non-destructively the selected entries from the completion
 table, thus avoiding the risk of inputting the same match twice.
 
 To be used as the PREDICATE of `completing-read-multiple'."
-  (if-let* ((pos (string-match-p crm-separator input))
-            (rev-input (reverse input))
-            (element (reverse
-                      (substring rev-input 0
-                                 (string-match-p crm-separator rev-input))))
-            (flag t))
-      (progn
-        (while pos
-          (if (string= (substring input 0 pos) element)
-              (setq pos nil)
-            (setq input (substring input (1+ pos))
-                  pos (string-match-p crm-separator input)
-                  flag (when pos t))))
-        (not flag))
-    t)
-  )
+    (if-let* ((pos (string-match-p crm-separator input))
+              (rev-input (reverse input))
+              (element (reverse
+                        (substring rev-input 0
+                                   (string-match-p crm-separator rev-input))))
+              (flag t))
+        (progn
+          (while pos
+            (if (string= (substring input 0 pos) element)
+                (setq pos nil)
+              (setq input (substring input (1+ pos))
+                    pos (string-match-p crm-separator input)
+                    flag (when pos t))))
+          (not flag))
+      t)
+    )
 
-(defun prot-elfeed-search-tag-filter ()
-  "Filter Elfeed search buffer by tags using completion.
+  (defun prot-elfeed-search-tag-filter ()
+    "Filter Elfeed search buffer by tags using completion.
 
 Completion accepts multiple inputs, delimited by `crm-separator'.
 Arbitrary input is also possible, but you may have to exit the
 minibuffer with something like `exit-minibuffer'."
-  (interactive)
-  (unwind-protect
-      (elfeed-search-clear-filter)
-    (let* ((elfeed-search-filter-active :live)
-           (db-tags (elfeed-db-get-all-tags))
-           (plus-tags (mapcar (lambda (tag)
-                                (format "+%s" tag))
-                              db-tags))
-           (minus-tags (mapcar (lambda (tag)
-                                 (format "-%s" tag))
-                               db-tags))
-           (all-tags (delete-dups (append plus-tags minus-tags)))
-           (tags (completing-read-multiple
-                  "Apply one or more tags: "
-                  all-tags #'prot-common-crm-exclude-selected-p t))
-           (input (string-join `(,elfeed-search-filter ,@tags) " ")))
-      (setq elfeed-search-filter input))
-    (elfeed-search-update :force))
-  )
-(bind-key "C-M-s-s" 'prot-elfeed-search-tag-filter 'elfeed-search-mode-map)
+    (interactive)
+    (unwind-protect
+        (elfeed-search-clear-filter)
+      (let* ((elfeed-search-filter-active :live)
+             (db-tags (elfeed-db-get-all-tags))
+             (plus-tags (mapcar (lambda (tag)
+                                  (format "+%s" tag))
+                                db-tags))
+             (minus-tags (mapcar (lambda (tag)
+                                   (format "-%s" tag))
+                                 db-tags))
+             (all-tags (delete-dups (append plus-tags minus-tags)))
+             (tags (completing-read-multiple
+                    "Apply one or more tags: "
+                    all-tags #'prot-common-crm-exclude-selected-p t))
+             (input (string-join `(,elfeed-search-filter ,@tags) " ")))
+        (setq elfeed-search-filter input))
+      (elfeed-search-update :force))
+    )
+  (bind-key "C-M-s-s" 'prot-elfeed-search-tag-filter 'elfeed-search-mode-map)
 
 ;;;;; Toggle custom tag keybinds
-(with-eval-after-load 'elfeed
   (defun prot-elfeed-toggle-tag (tag)
     "Toggle TAG for the current item.
 
