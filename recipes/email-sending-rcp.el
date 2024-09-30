@@ -816,7 +816,8 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
     ("C-c '" . org-mime-edit-mail-in-org-mode))
   :custom
   (org-mime-library 'mml)               ; For gnus
-  (org-mime-export-ascii 'utf-8)
+  (org-mime-export-ascii 'ascii)
+  (org-mime-preserve-breaks t)
   ;; Keep GPG signatures outside of multipart. Modified version of
   ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
   (org-mime-find-html-start
@@ -828,13 +829,12 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
          start))))
   ;; Start with a single # to font-lock as comment
   (org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n")
+  (org-mime-export-options '( :with-latex t
+                              :section-numbers nil
+                              :with-author nil
+                              :with-toc nil))
+  (org-mime-debug nil)
   :config
-  (setq org-mime-export-options '( :with-latex t
-                                   :section-numbers nil
-                                   :with-author nil
-                                   :with-toc nil
-                                   :preserve-breaks t))
-
   ;; Pop buffer according to `display-buffer-alist'
   (defun kb/org-mime-edit-mail-in-org-mode ()
     "Call a special editor to edit the mail body in `org-mode'."
@@ -866,7 +866,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
           (org-mode)
           (org-mime-src-mode)
           (while (org-at-comment-p)
-            (forward-line)))
+            (forward-line 1)))
         (display-buffer buffer)))))
   (advice-add 'org-mime-edit-mail-in-org-mode :override #'kb/org-mime-edit-mail-in-org-mode))
 
