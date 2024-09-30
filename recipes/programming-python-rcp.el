@@ -23,7 +23,6 @@
 ;; Packages related to developing in Python.
 
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
 (require 'programming-projects-rcp)
 

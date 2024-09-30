@@ -47,8 +47,6 @@
   (dired-create-destination-dirs 'ask)
   (dired-vc-rename-file t)
   :config
-  (general-unbind '(normal visual motion) dired-mode-map "SPC") ; Unbind SPC so leader key is available
-
   ;; Mark files and do a sexp in their buffers. Based off
   ;; https://superuser.com/a/176629
   (defun kb/dired-do-sexp (sexp &optional prefix)

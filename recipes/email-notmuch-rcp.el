@@ -30,7 +30,6 @@
 ;; https://protesilaos.com/emacs/dotemacs#h:5ad80664-3163-4d9d-be65-462637d77903
 
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
 
 ;;;; Notmuch

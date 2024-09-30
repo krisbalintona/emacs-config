@@ -622,11 +622,7 @@ This is a difference in multitude of %s."
   (kill-do-not-save-duplicates t)
   (kill-ring-deindent-mode nil)
   (window-divider-default-places 'bottom-only)
-  (custom-search-field nil)
-  :config
-  (when (bound-and-true-p evil-local-mode)
-    (general-unbind 'normal help-mode-map "SPC")
-    (general-unbind 'normal custom-mode-map "SPC")))
+  (custom-search-field nil))
 
 ;;;;; Register
 (use-package register

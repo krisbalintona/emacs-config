@@ -28,7 +28,6 @@
 ;; integration. I have marked those code snippets accordingly.
 
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
 
 ;;;; Mu4e
