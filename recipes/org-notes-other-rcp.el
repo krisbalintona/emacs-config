@@ -1025,6 +1025,7 @@ When called with PREFIX, hide all previews."
 ;;;; Lister
 ;; Interactive list library for `delve'
 (use-package lister
+  :disabled
   :general
   (:keymaps 'lister-mode-map
             "M-k" 'kb/lister-mode-up
