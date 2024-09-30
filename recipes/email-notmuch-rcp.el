@@ -327,7 +327,33 @@ buffer hidden."
           (lambda ()
             (let* ((command (format "notmuch search tag:inbox and tag:unread | wc -l"))
                    (count (string-to-number (shell-command-to-string command))))
-              (< 0 count)))))
+              (< 0 count)))
+          display-time-string-forms
+          '((if (and (not display-time-format) display-time-day-and-date)
+                (format-time-string "%a %b %e " now)
+              "")
+            (propertize
+             (format-time-string (or display-time-format
+                                     (if display-time-24hr-format "%H:%M" "%-I:%M%p"))
+                                 now)
+             'face 'display-time-date-and-time
+             'help-echo (format-time-string "%a %b %e, %Y" now))
+            load
+            (if mail
+                (concat
+                 " "
+                 (propertize
+                  (if (and display-time-use-mail-icon (display-graphic-p))
+                      (propertize (all-the-icons-material "mail_outline")
+                                  'face `(:family ,(all-the-icons-material-family) :height 1.1)
+                                  'display '(raise -0.1))
+                    display-time-mail-string)
+                  'face display-time-mail-face
+                  'help-echo "You have new mail; mouse-2: Read mail"
+                  'mouse-face 'mode-line-highlight
+                  'local-map (make-mode-line-mouse-map 'mouse-2
+                                                       read-mail-command)))
+              ""))))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
