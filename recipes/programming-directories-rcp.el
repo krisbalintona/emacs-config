@@ -74,6 +74,7 @@ command."
 ;;;;; All-the-icons-dired
 ;; Add icons which represent file types
 (use-package all-the-icons-dired
+  :diminish
   :hook
   ((dired-mode . all-the-icons-dired-mode)
    (all-the-icons-dired-mode . (lambda () (setq-local all-the-icons-scale-factor 0.95))))
