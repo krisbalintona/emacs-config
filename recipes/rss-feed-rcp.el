@@ -80,10 +80,6 @@
 (use-package elfeed-goodies
   :demand t
   :after elfeed ; Can't figure out how to have this work other than this and demanding it
-  :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-                     :states 'normal
-                     "p" 'elfeed-goodies/split-show-prev
-                     "n" 'elfeed-goodies/split-show-next)
   :custom
   (elfeed-goodies/feed-source-column-width 25)
   (elfeed-goodies/tag-column-width 40)
@@ -463,16 +459,13 @@ It assumes the major mode is `wombag-show-mode'.
 ;;;; Pocket-reader
 ;; View my Pocket
 (use-package pocket-reader
-  ;; :ensure (pocket-reader :type git
-  ;;                        :host github
-  ;;                        :repo "alphapapa/pocket-reader.el")
-  :general
-  (kb/open-keys
-   "p" 'pocket-reader)
-  (:keymaps 'pocket-reader-mode-map
-            "TAB" 'kb/pocket-reader-cycle-view
-            "+" 'pocket-reader-more
-            "o" 'pocket-reader-pop-to-url)
+  :bind
+  ( :map kb/open-keys
+    ("p" . pocket-reader)
+    :map pocket-reader-mode-map
+    ("TAB" . kb/pocket-reader-cycle-view)
+    ("+" . pocket-reader-more)
+    ("o" . pocket-reader-pop-to-url))
   :custom
   (pocket-reader-site-column-max-width 22)
   (pocket-reader-archive-on-open nil)
