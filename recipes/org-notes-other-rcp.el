@@ -236,8 +236,7 @@
   ;;          :repo "aikrahguzar/pdf-tools"
   ;;          :branch "upstream-pdf-roll"
   ;;          :remotes ("upstream" :repo "vedang/pdf-tools"))
-  :hook ((after-init . pdf-tools-install)
-         ;; FIXME 2024-01-13: Uncomment this once the above issues between the
+  :hook (;; FIXME 2024-01-13: Uncomment this once the above issues between the
          ;; official release and pending pull request are resolved.
          ;; (pdf-view-mode . pdf-view-roll-minor-mode)
          (pdf-view-mode . (lambda ()
