@@ -827,14 +827,15 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
        (if (search-forward "<#secure method=pgpmime mode=sign>" nil t)
            (1+ (point))
          start))))
-  ;; Start with a single # to font-lock as comment
-  (org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n")
-  (org-mime-export-options '( :with-latex t
-                              :section-numbers nil
-                              :with-author nil
-                              :with-toc nil))
   (org-mime-debug nil)
   :config
+  ;; Start with a single # to font-lock as comment
+  (setq org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n"
+        org-mime-export-options '( :with-latex t
+                                   :section-numbers nil
+                                   :with-author nil
+                                   :with-toc nil))
+
   ;; Pop buffer according to `display-buffer-alist'
   (defun kb/org-mime-edit-mail-in-org-mode ()
     "Call a special editor to edit the mail body in `org-mode'."
