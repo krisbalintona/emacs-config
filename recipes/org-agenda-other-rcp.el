@@ -24,16 +24,15 @@
 
 ;;; Code:
 
-;;;; Calendar
-(use-package calendar
+;;;; Solar
+(use-package solar
+  :ensure nil
   :custom
   ;; Geolocation
+  ;; TODO 2024-10-01: Make sure below isn't blocking when no internet is available.
   (calendar-latitude (car (kb/get-lat-lon)))
   (calendar-longitude (cdr (kb/get-lat-lon)))
   (calendar-location-name (kb/get-location-name))
-
-  ;; Diary
-  (calendar-mark-diary-entries-flag t)
   :init
   (defun kb/get-lat-lon ()
     "Fetch latitude and longitude via IP-based geolocation service."
@@ -49,6 +48,7 @@
       ;; Wait until the data is retrieved or timeout.
       (while (and (not lat) (< timeout 50))
         (setq timeout (1+ timeout))
+        (message "[kb/get-lat-lon] Waiting...")
         (sit-for 0.1))
       (if (and lat lon)
           (cons lat lon)
@@ -71,11 +71,27 @@
       ;; Wait until the data is retrieved or timeout.
       (while (and (not city) (not region) (< timeout 50))
         (setq timeout (1+ timeout))
+        (message "[kb/get-location-name] Waiting...")
         (sit-for 0.1))
       (if (and city region)
           (format "%s, %s" city region)
         (message "Failed to fetch geolocation data")
         nil))))
+
+;;;; Calendar
+(use-package calendar
+  :ensure nil
+  :custom
+  (calendar-time-display-form
+   '( 24-hours ":" minutes (when time-zone (format "(%s)" time-zone))))
+  (calendar-week-start-day 1)           ; Monday
+  (calendar-time-zone-style 'symbolic)
+
+  ;; Diary
+  (calendar-mark-diary-entries-flag t)
+
+  ;; Holidays
+  (calendar-mark-holidays-flag t))
 
 ;;;; Org-expiry
 (use-package org-expiry
