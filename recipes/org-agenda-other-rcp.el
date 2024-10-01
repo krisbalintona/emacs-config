@@ -29,9 +29,10 @@
   :custom
   (calendar-latitude (car (kb/get-lat-lon)))
   (calendar-longitude (cdr (kb/get-lat-lon)))
+  (calendar-location-name (kb/get-location-name))
   :init
   (defun kb/get-lat-lon ()
-    "Fetch latitude and longitude via IP-based geolocation service and return as a cons pair."
+    "Fetch latitude and longitude via IP-based geolocation service."
     (let (lat lon)
       (url-retrieve "http://ip-api.com/json"
                     (lambda (_status)
@@ -39,12 +40,32 @@
                       (re-search-forward "^$")
                       (let* ((json-object-type 'hash-table)
                              (json (json-read)))
-                        (setq lat (gethash "lat" json))
-                        (setq lon (gethash "lon" json)))))
+                        (setq lat (gethash "lat" json)
+                              lon (gethash "lon" json))))
+                    nil 'inhibit-cookies)
       ;; Wait until the data is retrieved.
       (while (not lat)
         (sit-for 0.1))
-      (cons lat lon))))
+      (cons lat lon)))
+
+  (defun kb/get-location-name ()
+    "Get the current location."
+    (let (city region)
+      (url-retrieve "http://ip-api.com/json"
+                    (lambda (status)
+                      (goto-char (point-min))
+                      (re-search-forward "\n\n")  ;; Skip the headers
+                      (let* ((json-object-type 'hash-table)
+                             (json-key-type 'string)
+                             (json-array-type 'list)
+                             (data (json-read)))
+                        (setq city (gethash "city" data)
+                              region (gethash "region" data))
+                        nil 'inhibit-cookies)))
+      ;; Wait until the data is retrieved.
+      (while (or (not city) (not region))
+        (sit-for 0.1))
+      (format "%s, %s" city region))))
 
 ;;;; Org-expiry
 (use-package org-expiry
