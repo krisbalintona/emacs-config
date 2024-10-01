@@ -99,10 +99,6 @@ Intended for `eldoc-documentation-functions'."
   :config
   ;; Immediately set citation prefix and suffix and enable `typo-mode'
   ;; temporarily while inserting
-  (advice-add 'org-cite-insert :after
-              #'(lambda (&rest _)
-                  (when (eq org-cite-insert-processor 'citar)
-                    (citar-org-update-prefix-suffix))))
   (advice-add 'citar-org-update-prefix-suffix
               :around (lambda (orig-fun &rest args)
                         (when (and (fboundp 'typo-mode) (not org-export-with-smart-quotes))
