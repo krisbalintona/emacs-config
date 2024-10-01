@@ -24,6 +24,28 @@
 
 ;;; Code:
 
+;;;; Calendar
+(use-package calendar
+  :custom
+  (calendar-latitude (car (kb/get-lat-lon)))
+  (calendar-longitude (cdr (kb/get-lat-lon)))
+  :init
+  (defun kb/get-lat-lon ()
+    "Fetch latitude and longitude via IP-based geolocation service and return as a cons pair."
+    (let (lat lon)
+      (url-retrieve "http://ip-api.com/json"
+                    (lambda (_status)
+                      (goto-char (point-min))
+                      (re-search-forward "^$")
+                      (let* ((json-object-type 'hash-table)
+                             (json (json-read)))
+                        (setq lat (gethash "lat" json))
+                        (setq lon (gethash "lon" json)))))
+      ;; Wait until the data is retrieved.
+      (while (not lat)
+        (sit-for 0.1))
+      (cons lat lon))))
+
 ;;;; Org-expiry
 (use-package org-expiry
   :ensure nil
@@ -79,9 +101,9 @@ based off of `org-linker-edna’."
 
     (defun kb/consult-org-depend (&optional match)
       "Create a dependency for the `org-todo’ at point.
-A dependency is defined by `org-depend’s `BLOCKER’ property. IDs
-are created in the todo dependency with `org-id-get-create’.
-MATCH is a query sent to `org-map-entries’."
+  A dependency is defined by `org-depend’s `BLOCKER’ property. IDs
+  are created in the todo dependency with `org-id-get-create’.
+  MATCH is a query sent to `org-map-entries’."
       (interactive)
       (save-window-excursion
         (let ((current-heading (org-get-heading))
@@ -103,7 +125,7 @@ MATCH is a query sent to `org-map-entries’."
 
     (defun kb/consult-org-agenda-depend (&optional match)
       "Create a dependency for the `org-agenda’ item at point.
-See `kb/consult-org-depend’."
+  See `kb/consult-org-depend’."
       (interactive)
       (let* ((bufname-orig (buffer-name))
              (marker (or (org-get-at-bol 'org-marker)
@@ -131,7 +153,7 @@ See `kb/consult-org-depend’."
 (with-eval-after-load 'org
   (defun kb/org-tag-link (tag)
     "Display a list of TODO headlines with tag TAG.
-With prefix argument, also display headlines without a TODO keyword."
+  With prefix argument, also display headlines without a TODO keyword."
     (org-tags-view (null current-prefix-arg) tag))
 
   (org-add-link-type "tag" 'kb/org-tag-link))
@@ -145,8 +167,8 @@ With prefix argument, also display headlines without a TODO keyword."
 
   (defun kb/org-gcal (&optional arg)
     "Run my emacs-gcal script.
-If called with ARG, then show output buffer. Else, keep output
-buffer hidden."
+  If called with ARG, then show output buffer. Else, keep output
+  buffer hidden."
     (interactive "P")
     (let* ((buf-name "*emacs-gcal*")
            (buf (get-buffer-create buf-name))
