@@ -249,140 +249,140 @@ Side effects occur if the parent of the current headline has a
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
   (org-super-agenda-mode 1)
-  (setq org-agenda-custom-commands
-        '(("n" "Now"
-           ((alltodo ""
-                     ((org-agenda-overriding-header "High priority but unscheduled")
-                      (org-super-agenda-groups
-                       '((:discard (:todo ("PROG" "ACTIVE" "WAITING")))
-                         (:discard (:scheduled t))
-                         (:discard (:tag "project"))
-                         (:name ""
-                                :priority>= "B")
-                         (:discard (:anything t))))))
-            (todo "WAITING"
-                  ((org-agenda-overriding-header "Unscheduled waiting")
-                   (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'scheduled))))
-            (alltodo ""
-                     ((org-agenda-overriding-header "Expedited")
-                      (org-agenda-prefix-format
-                       '((todo . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%?-10t")))
-                      (org-super-agenda-groups
-                       '((:discard (:scheduled t))
-                         (:name ""
-                                :and (:not (:scheduled today)
-                                           :not (:tag "project")
-                                           :todo ("PROG" "ACTIVE")))
-                         (:discard (:anything t))))))
-            (agenda ""
-                    ((org-agenda-overriding-header "Tasks")
-                     (org-agenda-show-inherited-tags t)
-                     (org-agenda-sorting-strategy
-                      '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
-                     (org-agenda-start-day "+0d")
-                     (org-agenda-span 1)
-                     (org-agenda-prefix-format
-                      '((agenda . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-12t")))
-                     (org-agenda-scheduled-leaders '("" "%2dx:"))
-                     (org-agenda-deadline-leaders '("" "In %3d d.:" "%2d d. ago:"))
-                     (org-agenda-skip-deadline-prewarning-if-scheduled t)
-                     (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-                     (org-habit-show-all-today nil)
-                     (org-habit-show-habits-only-for-today nil)
-                     (org-agenda-dim-blocked-tasks t)
-                     (org-agenda-include-diary t)
-                     (org-agenda-insert-diary-extract-time t)
-                     (org-super-agenda-groups
-                      '((:name "Projects in need of delegation"
-                               :and (:tag "project"
-                                          :scheduled t))
-                        (:name "Projects due"
-                               :and (:tag "project"
-                                          :deadline t))
-                        (:name "Orphans"
-                               :anything t)))))))
-          ("p" "Planning"
-           ((tags-todo "+project"
-                       ((org-agenda-overriding-header "Projects")
-                        (org-agenda-show-inherited-tags t)
-                        (org-agenda-dim-blocked-tasks nil)
-                        (org-agenda-prefix-format
-                         '((tags . "%-25(kb/org-agenda-breadcrumb 21)%?s")))
+  (setopt org-agenda-custom-commands
+          '(("n" "Now"
+             ((alltodo ""
+                       ((org-agenda-overriding-header "High priority but unscheduled")
                         (org-super-agenda-groups
-                         '((:discard (:todo "PROG"))
-                           (:discard (:not (:tag "project")))
-                           (:name "Undated"
-                                  :and (:not (:scheduled t)
-                                             :not (:deadline t)))
-                           (:name "Dated"
-                                  :scheduled t
-                                  :deadline t)
+                         '((:discard (:todo ("PROG" "ACTIVE" "WAITING")))
+                           (:discard (:scheduled t))
+                           (:discard (:tag "project"))
+                           (:name ""
+                                  :priority>= "B")
                            (:discard (:anything t))))))
-            (agenda ""
-                    ((org-agenda-overriding-header "Timeline")
-                     (org-agenda-show-inherited-tags t)
-                     (org-agenda-start-day "+0d")
-                     (org-agenda-span 3)
-                     (org-agenda-entry-types
-                      '(:deadline :scheduled :timestamp :sexp))
-                     (org-agenda-prefix-format
-                      '((agenda . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-12t")))
-                     (org-agenda-scheduled-leaders '("" "%2dx: "))
-                     (org-agenda-deadline-leaders '("" "In %3d d.: " "%2d d. ago: "))
-                     (org-agenda-skip-deadline-prewarning-if-scheduled t)
-                     (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-                     (org-agenda-skip-deadline-if-done t)
-                     (org-habit-show-all-today nil)
-                     (org-habit-show-habits-only-for-today nil)
-                     (org-agenda-dim-blocked-tasks t)
-                     (org-agenda-include-diary t)
-                     (org-agenda-insert-diary-extract-time t)
+              (todo "WAITING"
+                    ((org-agenda-overriding-header "Unscheduled waiting")
+                     (org-agenda-skip-function
+                      '(org-agenda-skip-entry-if 'scheduled))))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Expedited")
+                        (org-agenda-prefix-format
+                         '((todo . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%?-10t")))
+                        (org-super-agenda-groups
+                         '((:discard (:scheduled t))
+                           (:name ""
+                                  :and (:not (:scheduled today)
+                                             :not (:tag "project")
+                                             :todo ("PROG" "ACTIVE")))
+                           (:discard (:anything t))))))
+              (agenda ""
+                      ((org-agenda-overriding-header "Tasks")
+                       (org-agenda-show-inherited-tags t)
+                       (org-agenda-sorting-strategy
+                        '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
+                       (org-agenda-start-day "+0d")
+                       (org-agenda-span 1)
+                       (org-agenda-prefix-format
+                        '((agenda . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-12t")))
+                       (org-agenda-scheduled-leaders '("" "%2dx:"))
+                       (org-agenda-deadline-leaders '("" "In %3d d.:" "%2d d. ago:"))
+                       (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                       (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+                       (org-habit-show-all-today nil)
+                       (org-habit-show-habits-only-for-today nil)
+                       (org-agenda-dim-blocked-tasks t)
+                       (org-agenda-include-diary t)
+                       (org-agenda-insert-diary-extract-time t)
+                       (org-super-agenda-groups
+                        '((:name "Projects in need of delegation"
+                                 :and (:tag "project"
+                                            :scheduled t))
+                          (:name "Projects due"
+                                 :and (:tag "project"
+                                            :deadline t))
+                          (:name "Orphans"
+                                 :anything t)))))))
+            ("p" "Planning"
+             ((tags-todo "+project"
+                         ((org-agenda-overriding-header "Projects")
+                          (org-agenda-show-inherited-tags t)
+                          (org-agenda-dim-blocked-tasks nil)
+                          (org-agenda-prefix-format
+                           '((tags . "%-25(kb/org-agenda-breadcrumb 21)%?s")))
+                          (org-super-agenda-groups
+                           '((:discard (:todo "PROG"))
+                             (:discard (:not (:tag "project")))
+                             (:name "Undated"
+                                    :and (:not (:scheduled t)
+                                               :not (:deadline t)))
+                             (:name "Dated"
+                                    :scheduled t
+                                    :deadline t)
+                             (:discard (:anything t))))))
+              (agenda ""
+                      ((org-agenda-overriding-header "Timeline")
+                       (org-agenda-show-inherited-tags t)
+                       (org-agenda-start-day "+0d")
+                       (org-agenda-span 3)
+                       (org-agenda-entry-types
+                        '(:deadline :scheduled :timestamp :sexp))
+                       (org-agenda-prefix-format
+                        '((agenda . "  %-7e%-25(kb/org-agenda-breadcrumb 21)%-5s%?-12t")))
+                       (org-agenda-scheduled-leaders '("" "%2dx: "))
+                       (org-agenda-deadline-leaders '("" "In %3d d.: " "%2d d. ago: "))
+                       (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                       (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+                       (org-agenda-skip-deadline-if-done t)
+                       (org-habit-show-all-today nil)
+                       (org-habit-show-habits-only-for-today nil)
+                       (org-agenda-dim-blocked-tasks t)
+                       (org-agenda-include-diary t)
+                       (org-agenda-insert-diary-extract-time t)
+                       (org-super-agenda-groups
+                        '((:name "Projects"
+                                 :and (:tag "project"
+                                            :scheduled t))
+                          (:name "Orphans"
+                                 :anything t)))))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Unscheduled")
+                        (org-agenda-prefix-format
+                         '((todo . "%-25(kb/org-agenda-breadcrumb 21)%-5s")))
+                        (org-agenda-skip-function 'kb/org-agenda-skip-if-not-stuck-project)
+                        (org-super-agenda-groups
+                         '((:discard (:todo ("PROG" "ACTIVE" "WAITING" "MAYBE")))
+                           (:discard (:not (:scheduled nil)))
+                           ;; FIXME 2023-07-20: Would like to use :auto-priority,
+                           ;; but this is erroring for me. Perhaps the issue is on
+                           ;; the package side, e.g., unsupported version of org?
+                           (:discard (:tag "project"))
+                           (:name "" :anything t)))))
+              (todo "MAYBE"
+                    ((org-agenda-overriding-header "Maybes")
+                     (org-agenda-dim-blocked-tasks 'invisible)
                      (org-super-agenda-groups
-                      '((:name "Projects"
-                               :and (:tag "project"
-                                          :scheduled t))
-                        (:name "Orphans"
-                               :anything t)))))
-            (alltodo ""
-                     ((org-agenda-overriding-header "Unscheduled")
-                      (org-agenda-prefix-format
-                       '((todo . "%-25(kb/org-agenda-breadcrumb 21)%-5s")))
-                      (org-agenda-skip-function 'kb/org-agenda-skip-if-not-stuck-project)
-                      (org-super-agenda-groups
-                       '((:discard (:todo ("PROG" "ACTIVE" "WAITING" "MAYBE")))
-                         (:discard (:not (:scheduled nil)))
-                         ;; FIXME 2023-07-20: Would like to use :auto-priority,
-                         ;; but this is erroring for me. Perhaps the issue is on
-                         ;; the package side, e.g., unsupported version of org?
-                         (:discard (:tag "project"))
-                         (:name "" :anything t)))))
-            (todo "MAYBE"
-                  ((org-agenda-overriding-header "Maybes")
-                   (org-agenda-dim-blocked-tasks 'invisible)
-                   (org-super-agenda-groups
-                    '((:discard (:scheduled t))
-                      (:discard (:tag "project"))
-                      (:name ""
-                             :anything t)))))))
-          ("u" "Upcoming due dates and ongoing projects"
-           ((agenda ""
-                    ((org-agenda-overriding-header "Upcoming dates")
-                     (org-agenda-start-day "+0d")
-                     (org-agenda-span 9)
-                     (org-agenda-show-inherited-tags t)
-                     (org-agenda-dim-blocked-tasks t)
-                     (org-agenda-sorting-strategy
-                      '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
-                     (org-agenda-prefix-format
-                      '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
-                     (org-agenda-entry-types '(:deadline))))
-            (tags-todo "+project"
-                       ((org-agenda-overriding-header "Ongoing projects")
-                        (org-agenda-dim-blocked-tasks t)
-                        (org-agenda-use-tag-inheritance nil)))))
-          ("d" "Done and cancelled"
-           ((tags "TODO=\"DONE\"&LEVEL=1|TODO=\"CANCELED\"&LEVEL=1"))))))
+                      '((:discard (:scheduled t))
+                        (:discard (:tag "project"))
+                        (:name ""
+                               :anything t)))))))
+            ("u" "Upcoming due dates and ongoing projects"
+             ((agenda ""
+                      ((org-agenda-overriding-header "Upcoming dates")
+                       (org-agenda-start-day "+0d")
+                       (org-agenda-span 9)
+                       (org-agenda-show-inherited-tags t)
+                       (org-agenda-dim-blocked-tasks t)
+                       (org-agenda-sorting-strategy
+                        '((agenda time-up habit-down priority-down deadline-up todo-state-up)))
+                       (org-agenda-prefix-format
+                        '((agenda . "%2i %-14c%?-12t %-7s %-7e %b")))
+                       (org-agenda-entry-types '(:deadline))))
+              (tags-todo "+project"
+                         ((org-agenda-overriding-header "Ongoing projects")
+                          (org-agenda-dim-blocked-tasks t)
+                          (org-agenda-use-tag-inheritance nil)))))
+            ("d" "Done and cancelled"
+             ((tags "TODO=\"DONE\"&LEVEL=1|TODO=\"CANCELED\"&LEVEL=1"))))))
 
 ;;;; Org-clock
 (use-package org-clock
