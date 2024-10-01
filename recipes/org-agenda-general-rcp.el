@@ -99,10 +99,12 @@
   (org-agenda-auto-exclude-function #'kb/org-agenda-auto-exclude)
 
   ;; Capture templates
+  ;; See also `org-capture-templates-contexts'
   (org-capture-templates
    `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      "* TODO %? %^g\n"
+      ;; "* TODO %? %^g\n"
+      "* TODO %? %^{CATEGORY}p%^g\n"
       :empty-lines 1)
      ("i" "Idea" entry
       (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
@@ -120,7 +122,6 @@
       :clock-in t
       :clock-resume t
       :kill-buffer t)))
-  (org-capture-templates-contexts nil)
 
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
