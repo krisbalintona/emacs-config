@@ -33,7 +33,7 @@
   :init
   (defun kb/get-lat-lon ()
     "Fetch latitude and longitude via IP-based geolocation service."
-    (let (lat lon)
+    (let (lat lon (timeout 0))
       (url-retrieve "http://ip-api.com/json"
                     (lambda (_status)
                       (goto-char (point-min))
@@ -41,16 +41,19 @@
                       (let* ((json-object-type 'hash-table)
                              (json (json-read)))
                         (setq lat (gethash "lat" json)
-                              lon (gethash "lon" json))))
-                    nil 'inhibit-cookies)
-      ;; Wait until the data is retrieved.
-      (while (not lat)
+                              lon (gethash "lon" json)))))
+      ;; Wait until the data is retrieved or timeout.
+      (while (and (not lat) (< timeout 50))
+        (setq timeout (1+ timeout))
         (sit-for 0.1))
-      (cons lat lon)))
+      (if (and lat lon)
+          (cons lat lon)
+        (message "Failed to fetch geolocation data")
+        nil)))
 
   (defun kb/get-location-name ()
     "Get the current location."
-    (let (city region)
+    (let (city region (timeout 0))
       (url-retrieve "http://ip-api.com/json"
                     (lambda (status)
                       (goto-char (point-min))
@@ -60,12 +63,15 @@
                              (json-array-type 'list)
                              (data (json-read)))
                         (setq city (gethash "city" data)
-                              region (gethash "region" data))
-                        nil 'inhibit-cookies)))
-      ;; Wait until the data is retrieved.
-      (while (or (not city) (not region))
+                              region (gethash "region" data)))))
+      ;; Wait until the data is retrieved or timeout.
+      (while (and (not city) (not region) (< timeout 50))
+        (setq timeout (1+ timeout))
         (sit-for 0.1))
-      (format "%s, %s" city region))))
+      (if (and city region)
+          (format "%s, %s" city region)
+        (message "Failed to fetch geolocation data")
+        nil))))
 
 ;;;; Org-expiry
 (use-package org-expiry
