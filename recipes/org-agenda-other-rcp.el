@@ -27,9 +27,13 @@
 ;;;; Calendar
 (use-package calendar
   :custom
+  ;; Geolocation
   (calendar-latitude (car (kb/get-lat-lon)))
   (calendar-longitude (cdr (kb/get-lat-lon)))
   (calendar-location-name (kb/get-location-name))
+
+  ;; Diary
+  (calendar-mark-diary-entries-flag t)
   :init
   (defun kb/get-lat-lon ()
     "Fetch latitude and longitude via IP-based geolocation service."
