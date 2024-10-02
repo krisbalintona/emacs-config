@@ -52,12 +52,14 @@
      ("mon" . 43200)
      ("y" . 525960.0)))
 
-  ;; Inheritance
+  ;; Tags
   (org-use-tag-inheritance t)
   (org-agenda-show-inherited-tags t)
   (org-use-fast-todo-selection 'expert)
   (org-tags-exclude-from-inheritance '("project"))
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
+  (org-agenda-show-inherited-tags t)
+  (org-use-fast-todo-selection 'expert)
 
   ;; Dependencies
   (org-enforce-todo-dependencies t)
@@ -68,7 +70,6 @@
   (org-agenda-file-regexp "\\`[^.].*\\.org\\'")
   (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
   (org-agenda-window-setup 'only-window)
-  (org-use-fast-todo-selection 'expert)
   (org-agenda-restore-windows-after-quit t)
   (org-agenda-tags-column 'auto)
   (org-agenda-start-on-weekday 3)
