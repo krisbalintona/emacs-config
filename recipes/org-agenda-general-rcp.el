@@ -277,6 +277,24 @@ Also works in agenda buffers. Definition modeled after
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
   (org-super-agenda-mode 1)
+  ;; Relevant variables to set locally in `org-agenda-custom-commands'
+  ;; - `org-agenda-overriding-header'
+  ;; - `org-agenda-show-inherited-tags'
+  ;; - `org-agenda-sorting-strategy'
+  ;; - `org-agenda-start-day'
+  ;; - `org-agenda-span'
+  ;; - `org-agenda-prefix-format'
+  ;; - `org-agenda-scheduled-leaders'
+  ;; - `org-agenda-deadline-leaders'
+  ;; - `org-agenda-skip-deadline-prewarning-if-scheduled'
+  ;; - `org-agenda-skip-scheduled-if-deadline-is-shown'
+  ;; - `org-habit-show-all-today'
+  ;; - `org-habit-show-habits-only-for-today'
+  ;; - `org-agenda-dim-blocked-tasks'
+  ;; - `org-agenda-include-diary'
+  ;; - `org-agenda-insert-diary-extract-time'
+  ;; - `org-agenda-skip-function'
+  ;; - `org-agenda-entry-types'
   (setopt org-agenda-custom-commands
           '(("n" "Now"
              ((alltodo ""
