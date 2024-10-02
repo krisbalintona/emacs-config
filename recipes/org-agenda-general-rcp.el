@@ -38,7 +38,9 @@
          (org-after-todo-state-change . kb/org-todo-project-prog))
   :bind
   ( :map kb/open-keys
-    ("a" . org-agenda))
+    ("a" . org-agenda)
+    :map org-agenda-mode-map
+    ("C-c ." . kb/org-set-agenda-show-property))
   :custom
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
@@ -224,7 +226,33 @@ Side effects occur if the parent of the current headline has a
                  (let ((hr (nth 2 (decode-time))))
                    ;; After 10 or before 21
                    (or (> hr 10) (< hr 21)))))
-      (concat "-" tag))))
+      (concat "-" tag)))
+
+
+  ;; Define bespoke means of adding active timestamps to headings so that they
+  ;; show in agenda buffers
+  (defun kb/org-set-agenda-show-property ()
+    "Set the \"AGENDA_SHOW\" property for the current heading.
+Also works in agenda buffers. Definition modeled after
+`org-agenda-set-property'."
+    (interactive)
+    (if (not (eq major-mode 'org-agenda-mode))
+        (org-set-property "AGENDA_SHOW" (concat "<" (org-read-date) ">"))
+      (org-agenda-check-no-diary)
+      (org-agenda-maybe-loop
+       #'org-agenda-set-property nil nil nil
+       (let* ((hdmarker (or (org-get-at-bol 'org-hd-marker)
+                            (org-agenda-error)))
+              (buffer (marker-buffer hdmarker))
+              (pos (marker-position hdmarker))
+              (inhibit-read-only t)
+              ) ;; newhead
+         (org-with-remote-undo buffer
+           (with-current-buffer buffer
+             (widen)
+             (goto-char pos)
+             (org-fold-show-context 'agenda)
+             (org-set-property "AGENDA_SHOW" (concat "<" (org-read-date) ">")))))))))
 
 ;;;; Org-super-agenda
 (use-package org-super-agenda
