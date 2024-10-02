@@ -54,9 +54,10 @@
 
   ;; Inheritance
   (org-use-tag-inheritance t)
+  (org-agenda-show-inherited-tags t)
+  (org-use-fast-todo-selection 'expert)
   (org-tags-exclude-from-inheritance '("project"))
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
-  (org-agenda-show-inherited-tags t)
 
   ;; Dependencies
   (org-enforce-todo-dependencies t)
@@ -99,6 +100,7 @@
   (org-agenda-skip-scheduled-if-done t)
   (org-agenda-skip-timestamp-if-done t)
   (org-agenda-auto-exclude-function #'kb/org-agenda-auto-exclude)
+  (org-agenda-compact-blocks t)
 
   ;; Capture templates
   ;; See also `org-capture-templates-contexts'
@@ -128,7 +130,8 @@
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "TODO(t)" "PROG(p)" "ACTIVE(a)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
+   '((sequence "NEXT(n)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
+  (org-todo-repeat-to-state "TODO")
   (org-todo-keyword-faces
    '(("PROG" . (bold success))
      ("ACTIVE" . org-warning)
@@ -296,7 +299,32 @@ Also works in agenda buffers. Definition modeled after
   ;; - `org-agenda-skip-function'
   ;; - `org-agenda-entry-types'
   (setopt org-agenda-custom-commands
-          '(("n" "Now"
+          '(("f" "FYP"
+             ((agenda ""
+                      ((org-agenda-overriding-header "Time-bound tasks")
+                       (org-agenda-show-inherited-tags t)
+                       (org-agenda-sorting-strategy
+                        ;; NOTE 2024-10-01: Testing out `urgency-down' instead
+                        ;; of `priority-down'
+                        '((agenda habit-down time-up urgency-down deadline-up todo-state-up category-up)))
+                       (org-agenda-start-day "+0d")
+                       (org-agenda-span 3)
+                       (org-agenda-skip-deadline-prewarning-if-scheduled nil)
+                       (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+                       (org-habit-show-all-today nil)
+                       (org-habit-show-habits-only-for-today t)
+                       (org-agenda-dim-blocked-tasks t)
+                       (org-agenda-include-diary t)
+                       (org-agenda-insert-diary-extract-time t)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Non-timed Todos")
+                        (org-agenda-show-inherited-tags t)
+                        (org-agenda-dim-blocked-tasks 'invisible)
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'timestamp))
+                        (org-agenda-sorting-strategy
+                         '((todo todo-state-up priority-down category-up)))))))
+            ("n" "Now"
              ((alltodo ""
                        ((org-agenda-overriding-header "High priority but unscheduled")
                         (org-super-agenda-groups
@@ -478,10 +506,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
   (org-habit-graph-column 110)
   (org-habit-today-glyph ?◌)
   (org-habit-completed-glyph ?●)
-  (org-habit-missed-glyph ?○)
-
-  ;; Useful
-  (org-todo-repeat-to-state "ACTIVE"))
+  (org-habit-missed-glyph ?○))
 
 (provide 'org-agenda-general-rcp)
 ;;; org-agenda-general-rcp.el ends here
