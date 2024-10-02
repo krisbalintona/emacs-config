@@ -99,7 +99,7 @@
   (org-agenda-skip-scheduled-if-done t)
   (org-agenda-skip-timestamp-if-done t)
   (org-agenda-auto-exclude-function #'kb/org-agenda-auto-exclude)
-  (org-agenda-compact-blocks t)
+  (org-agenda-compact-blocks nil)
 
   ;; Capture templates
   ;; See also `org-capture-templates-contexts'
@@ -186,7 +186,7 @@ This function makes sure that dates are aligned for easy reading."
                          "")))
       (format " %-2s. %2d %s"
               dayname day monthname)))
-  
+
   (defun kb/org-agenda-auto-exclude (tag)
     "Set tags based on time. See (org) Filtering/limiting agenda items"
     (when (cond ((member tag '("@home" "@hobbies"))
@@ -261,11 +261,13 @@ This function makes sure that dates are aligned for easy reading."
                            '(org-agenda-skip-entry-if 'scheduled 'deadline))
                           (org-agenda-sorting-strategy
                            '((todo todo-state-up urgency-down category-up)))))
-              (tags-todo "+project"
-                         ((org-agenda-overriding-header "Projects")
-                          (org-agenda-dim-blocked-tasks nil)
-                          (org-agenda-sorting-strategy
-                           '((todo todo-state-up urgency-down category-up))))))))))
+              ))
+            ("p" "Projects"
+             ((tags "+project-TODO=\"DONE\"-TODO=\"CANCELED\"-CATEGORY=\"someday\""
+                    ((org-agenda-overriding-header "All projects")
+                     (org-agenda-dim-blocked-tasks nil)
+                     (org-agenda-sorting-strategy
+                      '((todo todo-state-up urgency-down category-up))))))))))
 
 ;;;; Org-clock
 (use-package org-clock
