@@ -60,6 +60,8 @@
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
   (org-agenda-show-inherited-tags t)
   (org-use-fast-todo-selection 'expert)
+  (org-tag-faces
+   '(("project" . highlight)))
 
   ;; Dependencies
   (org-enforce-todo-dependencies t)
@@ -131,7 +133,7 @@
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
+   '((sequence "TODO(t)" "NEXT(n)" "WAITING(w@/!)" "HOLD(h@)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
   (org-todo-keyword-faces
    '(("NEXT" . (bold success))
      ("TODO" . org-todo)
@@ -142,8 +144,8 @@
   (org-log-done 'time)
   (org-log-into-drawer t)
   (org-highest-priority ?A)
-  (org-lowest-priority ?E)
-  (org-default-priority ?D)
+  (org-default-priority ?E)
+  (org-lowest-priority ?F)
   (org-priority-faces
    '((?A . (bold org-priority))
      (?B . org-priority)
@@ -303,26 +305,24 @@ Also works in agenda buffers. Definition modeled after
                       ((org-agenda-overriding-header "Time-bound tasks")
                        (org-agenda-show-inherited-tags t)
                        (org-agenda-sorting-strategy
-                        ;; NOTE 2024-10-01: Testing out `urgency-down' instead
-                        ;; of `priority-down'
                         '((agenda habit-down time-up urgency-down deadline-up todo-state-up category-up)))
                        (org-agenda-start-day "+0d")
                        (org-agenda-span 3)
                        (org-agenda-skip-deadline-prewarning-if-scheduled nil)
-                       (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+                       (org-agenda-skip-scheduled-if-deadline-is-shown nil)
                        (org-habit-show-all-today nil)
                        (org-habit-show-habits-only-for-today t)
                        (org-agenda-dim-blocked-tasks t)
                        (org-agenda-include-diary t)
                        (org-agenda-insert-diary-extract-time t)))
-              (alltodo ""
-                       ((org-agenda-overriding-header "Non-timed Todos")
-                        (org-agenda-show-inherited-tags t)
-                        (org-agenda-dim-blocked-tasks 'invisible)
-                        (org-agenda-skip-function
-                         '(org-agenda-skip-entry-if 'timestamp))
-                        (org-agenda-sorting-strategy
-                         '((todo todo-state-up priority-down category-up)))))))
+              (tags-todo "+NEXT+TODO"
+                         ((org-agenda-overriding-header "Non-timed Todos")
+                          (org-agenda-show-inherited-tags t)
+                          (org-agenda-dim-blocked-tasks t)
+                          (org-agenda-skip-function
+                           '(org-agenda-skip-entry-if '(scheduled deadline)))
+                          (org-agenda-sorting-strategy
+                           '((todo todo-state-up priority-down category-up)))))))
             ("n" "Now"
              ((alltodo ""
                        ((org-agenda-overriding-header "High priority but unscheduled")
