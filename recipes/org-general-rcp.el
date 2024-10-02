@@ -226,9 +226,9 @@ have `org-warning' face."
   :custom
   (org-refile-use-cache nil)
   (org-refile-targets
-   `((kb/agenda-todo-file . (:level . 0))
-     (nil . (:maxlevel . 2))))
-  (org-refile-target-verify-function nil)
+   `((,kb/agenda-todo-file . (:level . 0))
+     (,kb/agenda-todo-file . (:tag . "project"))))
+  (org-refile-target-verify-function (lambda () (not (org-entry-is-done-p))))
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
   ;; Workaround for orderless issue with `org-refile'. See
