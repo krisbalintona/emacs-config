@@ -130,11 +130,9 @@
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "NEXT(n)" "TODO(t)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
-  (org-todo-repeat-to-state "TODO")
+   '((sequence "TODO(t)" "NEXT(n)" "WAITING(w@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
   (org-todo-keyword-faces
-   '(("PROG" . (bold success))
-     ("ACTIVE" . org-warning)
+   '(("NEXT" . (bold success))
      ("TODO" . org-todo)
      ("WAITING" . (shadow error))
      ("MAYBE" . (shadow org-todo))
