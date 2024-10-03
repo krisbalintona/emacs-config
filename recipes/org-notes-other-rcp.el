@@ -53,18 +53,16 @@
     ("v" . org-remark-view)
     ("n" . org-remark-next)
     ("p" . org-remark-prev))
+  :custom
+  (org-remark-source-file-name 'abbreviate-file-name)
+  (org-remark-notes-file-name
+   (no-littering-expand-var-file-name "org-remark/marginalia.org"))
+  (org-remark-notes-display-buffer-action `((display-buffer-in-side-window)
+                                            (side . right)
+                                            (slot . 1)))
+  (org-remark-create-default-pen-set nil) ; Make my own pens
+  (org-remark-notes-auto-delete nil)
   :config
-  ;; REVIEW 2024-09-26: For some reason some or all of my configs in :custom are
-  ;; being overridden/not applied, so I put them here instead
-  (setopt org-remark-source-file-name 'abbreviate-file-name)
-  (setopt org-remark-notes-file-name
-          (no-littering-expand-var-file-name "org-remark/marginalia.org"))
-  (setopt org-remark-notes-display-buffer-action `((display-buffer-in-side-window)
-                                                   (side . right)
-                                                   (slot . 1)))
-  (setopt org-remark-create-default-pen-set nil) ; Make my own pens
-  (setopt org-remark-notes-auto-delete nil)
-
   (with-eval-after-load 'eww
     (org-remark-eww-mode 1))
   (with-eval-after-load 'nov
@@ -193,7 +191,7 @@
      ["External"
       ("e" "Highlight" org-remark-mark-external)
       ("E" "Underline" org-remark-mark-external-underline)]])
-  (bind-key "C-c r m" kb/org-remark-mark-transient :keymap org-remark-mode-map))
+  (bind-key "C-c r m" #'kb/org-remark-mark-transient 'org-remark-mode-map))
 
 ;;;;; Org-transclusion
 ;; Enable transclusion of org files
@@ -225,7 +223,6 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
-  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   ;; FIXME 2024-01-13: There is an issue between `org-noter-insert-precise-note'
   ;; and this fork. I've even tried merging this fork to upstream/master to no
   ;; avail. I like continuous scrolling so I'll return to this at a later date.
@@ -390,8 +387,8 @@ reading links."
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                              (<= x 1)
-                                              (>= x 0))))))
+                                         (<= x 1)
+                                         (>= x 0))))))
 
   (defun kb/avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.

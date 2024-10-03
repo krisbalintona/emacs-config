@@ -64,7 +64,7 @@
 (require 'org-citations-rcp)
 (require 'org-blogging-rcp)
 (require 'org-notes-rcp)
-;; (require 'org-notes-other-rcp)
+(require 'org-notes-other-rcp)
 (require 'org-agenda-general-rcp)
 (require 'org-agenda-other-rcp)
 
