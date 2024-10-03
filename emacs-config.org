@@ -1,0 +1,6 @@
+#+title: Emacs configuration
+#+author: Kristoffer Balintona
+#+email: krisbalintona@gmail.com
+#+language: en
+#+options: num:t author:t email:t
+#+startup: content
