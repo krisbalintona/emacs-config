@@ -98,6 +98,10 @@ With a prefix argument, show NLINES of context."
   (xref-search-program 'ripgrep)
   (xref-history-storage 'xref-window-local-history) ; Per-window history of `xref-go-*'
   :config
+  ;; We set this to nil because the fallback backend, `etags--xref-backend',
+  ;; prompts the user for an etags table -- this is undesirable for me.
+  (setq-default xref-backend-functions nil)
+
   (with-eval-after-load 'consult
     ;; Use Consult to select xref locations with preview
     (setq xref-show-definitions-function #'consult-xref
