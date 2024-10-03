@@ -48,9 +48,6 @@
 ;; See `startup-echo-area-message'
 (fset #'display-startup-echo-area-message #'ignore)
 
-;;;; Don't open splash screen
-(setopt inhibit-startup-screen t)
-
 ;;;; Buffer-local defaults
 (setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
               confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
@@ -72,8 +69,7 @@
               tab-width 4
               indent-tabs-mode nil
 
-              visible-bell nil
-              ring-bell-function 'ignore)
+              visible-bell nil)
 
 ;;;; Cursor settings
 (setq-default cursor-type '(bar . 4)
@@ -156,9 +152,6 @@
 
 ;;;; Don't do anything with inactive mark
 (setq mark-even-if-inactive nil)
-
-;;;; Smoother resizing of frames
-(setq frame-resize-pixelwise t)
 
 ;;;; How we uniquify buffer names
 (setq uniquify-buffer-name-style 'forward)
