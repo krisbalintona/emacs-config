@@ -225,6 +225,7 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
+  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   ;; FIXME 2024-01-13: There is an issue between `org-noter-insert-precise-note'
   ;; and this fork. I've even tried merging this fork to upstream/master to no
   ;; avail. I like continuous scrolling so I'll return to this at a later date.
@@ -676,7 +677,8 @@ Uses the current annotation at point's ID."
 ;;;;; Saveplace-pdf-view
 ;; Save place in pdf-view buffers
 (use-package saveplace-pdf-view
-  :defer 10)
+  :after saveplace
+  :demand)
 
 ;;;;; Org-noter
 (use-package org-noter
