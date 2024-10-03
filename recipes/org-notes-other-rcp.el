@@ -272,6 +272,14 @@
         (when (and contents-buffer (buffer-live-p contents-buffer))
           (kill-buffer contents-buffer))))))
 
+;;;;;; Pdf-outline
+(use-package pdf-outline
+  :ensure nil
+  :custom
+  (pdf-outline-enable-imenu t)
+  (pdf-outline-display-labels t)
+  (pdf-outline-imenu-use-flat-menus nil))
+
 ;;;;;; Pdf-annot
 (use-package pdf-annot
   :ensure nil
