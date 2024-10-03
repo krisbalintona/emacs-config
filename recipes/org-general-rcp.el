@@ -602,7 +602,7 @@ Fixes splitting windows vertically."
 
 ;;;;; Astute.el
 (use-package astute
-  :hook (text-mode . astute-mode)
+  :hook (org-mode . astute-mode)
   :custom
   (astute-lighter "")
   (astute-prefix-single-quote-exceptions
