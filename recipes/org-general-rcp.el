@@ -226,8 +226,8 @@ have `org-warning' face."
   :custom
   (org-refile-use-cache nil)
   (org-refile-targets
-   `((,kb/agenda-todo-file . (:level . 0))
-     (,kb/agenda-todo-file . (:tag . "project"))
+   `((,kb/all-agenda-dir-files . (:level . 0))
+     (,kb/all-agenda-dir-files . (:tag . "project"))
      (,kb/agenda-todo-file . (:maxlevel . 1))))
   (org-refile-target-verify-function (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)) t)))
   (org-refile-allow-creating-parent-nodes 'confirm)
