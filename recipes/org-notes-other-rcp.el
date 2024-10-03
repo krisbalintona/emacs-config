@@ -220,9 +220,14 @@
 
 ;;;; PDFs
 ;;;;; Pdf-tools
+;;;;;; Itself
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
+  ;; You have to call `pdf-tools-install' to have PDF files use pdf-view-mode
+  ;; and have everything required loaded
+  :hook (on-first-file . pdf-tools-install)
+  ;; :demand ; FIXME 2024-10-03: I use this because I don't know why the package isn't loading what's needed when I need it
   ;; FIXME 2024-01-13: There is an issue between `org-noter-insert-precise-note'
   ;; and this fork. I've even tried merging this fork to upstream/master to no
   ;; avail. I like continuous scrolling so I'll return to this at a later date.
@@ -234,13 +239,17 @@
   ;;          :repo "aikrahguzar/pdf-tools"
   ;;          :branch "upstream-pdf-roll"
   ;;          :remotes ("upstream" :repo "vedang/pdf-tools"))
-  :hook (;; FIXME 2024-01-13: Uncomment this once the above issues between the
-         ;; official release and pending pull request are resolved.
-         ;; (pdf-view-mode . pdf-view-roll-minor-mode)
-         (pdf-view-mode . (lambda ()
-                            (add-hook 'kill-buffer-hook #'kb/pdf-cleanup-windows-h nil t)))
-         (pdf-annot-list-mode . (lambda ()
-                                  (hl-line-mode -1))))
+  )
+
+;;;;;; Pdf-view
+(use-package pdf-view
+  :ensure nil
+  :autoload kb/pdf-cleanup-windows-h
+  :hook
+  ;; FIXME 2024-01-13: Uncomment this once the above issues between the official
+  ;; release and pending pull request are resolved.
+  ;; (pdf-view-mode . pdf-view-roll-minor-mode)
+  (pdf-view-mode . (lambda () (add-hook 'kill-buffer-hook #'kb/pdf-cleanup-windows-h nil t)))
   :custom
   (pdf-view-resize-factor 1.1)
   (pdf-view-display-size 'fit-page)
@@ -248,6 +257,26 @@
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick t)
+  :config
+  ;; Taken from Doom
+  (defun kb/pdf-cleanup-windows-h ()
+    "Kill left-over annotation buffers when the document is killed."
+    ;; We add a guard here because sometimes things go wrong and this function
+    ;; is called before `pdf-annot' is loaded, causing an error
+    (when (featurep 'pdf-annot)
+      (when (buffer-live-p pdf-annot-list-document-buffer)
+        (pdf-info-close pdf-annot-list-document-buffer))
+      (when (buffer-live-p pdf-annot-list-buffer)
+        (kill-buffer pdf-annot-list-buffer))
+      (let ((contents-buffer (get-buffer "*Contents*")))
+        (when (and contents-buffer (buffer-live-p contents-buffer))
+          (kill-buffer contents-buffer))))))
+
+;;;;;; Pdf-annot
+(use-package pdf-annot
+  :ensure nil
+  :hook (pdf-annot-list-mode . (lambda () (hl-line-mode -1)))
+  :custom
   (pdf-annot-color-history              ; "Default" colors
    '("yellow" "SteelBlue1" "SeaGreen3" "LightSalmon1" "MediumPurple1"))
   (pdf-annot-list-format '((page . 3)
@@ -255,7 +284,7 @@
                            (text . 68)
                            (type . 10)))
   (pdf-annot-list-highlight-type nil)
-  :init
+  :config
   ;; Fit the "contents" window to buffer height
   (defun kb/pdf-annot-list-context-function (id buffer)
     "Show the contents of an Annotation.
@@ -274,30 +303,8 @@ get the contents and display them on demand."
         (read-only-mode 1))
       (fit-window-to-buffer)
       (visual-line-mode)))
-  (advice-add 'pdf-annot-list-context-function
-              :override 'kb/pdf-annot-list-context-function)
+  (advice-add 'pdf-annot-list-context-function :override #'kb/pdf-annot-list-context-function)
 
-  ;; Taken from Doom
-  (defun kb/pdf-cleanup-windows-h ()
-    "Kill left-over annotation buffers when the document is killed."
-    (when (buffer-live-p pdf-annot-list-document-buffer)
-      (pdf-info-close pdf-annot-list-document-buffer))
-    (when (buffer-live-p pdf-annot-list-buffer)
-      (kill-buffer pdf-annot-list-buffer))
-    (let ((contents-buffer (get-buffer "*Contents*")))
-      (when (and contents-buffer (buffer-live-p contents-buffer))
-        (kill-buffer contents-buffer))))
-
-  (defun kb/org-noter-pdf--get-selected-text (mode)
-    (when (and (eq mode 'pdf-view-mode)
-               (pdf-view-active-region-p))
-      (let* ((raw-text (mapconcat 'identity (pdf-view-active-region-text) ? ))
-             (process-text-1 (replace-regexp-in-string "-\n" "" raw-text))
-             (process-text-2 (replace-regexp-in-string "\n" " " process-text-1)))
-        process-text-2)))
-  (advice-add 'org-noter-pdf--get-selected-text
-              :override #'kb/org-noter-pdf--get-selected-text)
-  :config
   ;; Set the display action (e.g. window parameters) for the "context buffer"
   ;; (the buffer that shows annotation contents in `pdf-annot-mode')
   (setq tablist-context-window-display-action
@@ -494,7 +501,7 @@ annotation immediately after creation."
   (bind-key [remap avy-goto-char-timer] #'kb/avy-pdf-highlight pdf-view-mode-map))
 
 ;;;;;; Pdf-annot-list custom (tablist) color filter
-(with-eval-after-load 'pdf-tools
+(with-eval-after-load 'pdf-annot
   (defun kb/pdf-annot-list-filter-color-regexp ()
     "Get a prompt to filter for the color column's colors.
 The offered colors are those already present in the document's
@@ -721,7 +728,16 @@ Uses the current annotation at point's ID."
   (org-noter-insert-note-no-questions nil) ; Activate this setting if I rarely type my own titles
   (org-noter-max-short-selected-text-length 0) ; Always enclose in quote block
   :config
-  (org-noter-enable-update-renames))
+  (org-noter-enable-update-renames)
+
+  (defun kb/org-noter-pdf--get-selected-text (mode)
+    (when (and (eq mode 'pdf-view-mode)
+               (pdf-view-active-region-p))
+      (let* ((raw-text (mapconcat 'identity (pdf-view-active-region-text) ? ))
+             (process-text-1 (replace-regexp-in-string "-\n" "" raw-text))
+             (process-text-2 (replace-regexp-in-string "\n" " " process-text-1)))
+        process-text-2)))
+  (advice-add 'org-noter-pdf--get-selected-text :override #'kb/org-noter-pdf--get-selected-text))
 
 ;;;; Videos
 ;;;;; MPV
