@@ -231,9 +231,9 @@ functions from `citar'."
 
 ;;;; Citar-embark
 (use-package citar-embark
-  :after citar
   :diminish
-  :commands kb/citar-open-pdfs-in-zotero
+  :after embark
+  :demand
   :bind
   (("C-c b z" . kb/citar-open-pdfs-in-zotero)
    :map citar-embark-citation-map
