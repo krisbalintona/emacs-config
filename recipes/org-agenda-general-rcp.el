@@ -59,7 +59,7 @@
   (org-agenda-show-inherited-tags t)
   (org-use-fast-todo-selection 'expert)
   (org-tag-faces
-   '(("project" . highlight)))
+   '(("project" . outline-1)))
 
   ;; Dependencies
   (org-enforce-todo-dependencies t)
