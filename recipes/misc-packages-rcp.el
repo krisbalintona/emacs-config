@@ -915,6 +915,7 @@ ARG and REDISPLAY are identical to the original function."
         :width 80
         :content ,(enlight-menu
                    '(("Configs"
+                      ("M-x desktop-read" (call-interactively 'desktop-read) "r")
                       ("Emacs" (project-switch-project user-emacs-directory) "e")
                       ("Dotfiles" (project-switch-project "~/dotfies/") "d"))
                      ("Other"
