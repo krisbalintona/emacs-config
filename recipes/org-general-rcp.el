@@ -191,8 +191,8 @@ have `org-warning' face."
   :after org
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
-  (org-footnote-auto-adjust t)          ; Automatically renumber
-  (org-footnote-define-inline t)) ; Write footnote content where you declare rather in a particular section (i.e. `org-footnote-section')?
+  (org-footnote-auto-adjust t)
+  (org-footnote-define-inline t))
 
 ;;;;; Org-attach
 (use-package org-attach
@@ -229,7 +229,7 @@ have `org-warning' face."
    `((,kb/agenda-todo-file . (:level . 0))
      (,kb/agenda-todo-file . (:tag . "project"))
      (,kb/agenda-todo-file . (:maxlevel . 1))))
-  (org-refile-target-verify-function (lambda () (not (org-entry-is-done-p))))
+  (org-refile-target-verify-function (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)) t)))
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
   ;; Workaround for orderless issue with `org-refile'. See
