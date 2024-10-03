@@ -36,7 +36,9 @@
   :after org
   :bind
   ( :map kb/open-keys
-    ("a" . org-agenda))
+    ("a" . org-agenda)
+    :map org-agenda-mode-map
+    ("`" . kb/org-agenda-process))
   :custom
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
@@ -52,7 +54,7 @@
   (org-use-tag-inheritance t)
   (org-agenda-show-inherited-tags t)
   (org-use-fast-todo-selection 'expert)
-  (org-tags-exclude-from-inheritance '("project"))
+  (org-tags-exclude-from-inheritance '("project" "inbox"))
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
   (org-agenda-show-inherited-tags t)
   (org-use-fast-todo-selection 'expert)
@@ -107,7 +109,7 @@
    `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
       ;; "* TODO %? %^g\n"
-      "* TODO %? %^{CATEGORY}p%^g\n"
+      "* TODO %? %^g\n"
       :empty-lines 1)
      ("i" "Idea" entry
       (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
@@ -129,14 +131,14 @@
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
   (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n)" "WAITING(w@/!)" "HOLD(h@)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
+   '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
   (org-todo-keyword-faces
    '(("NEXT" . (bold success))
      ("TODO" . org-todo)
-     ("WAITING" . (shadow error))
+     ("HOLD" . (shadow error))
      ("MAYBE" . (shadow org-todo))
      ("DONE" . (bold org-done))
-     ("CANCEL" . error)))
+     ("CANCELED" . error)))
   (org-log-done 'time)
   (org-log-into-drawer t)
   (org-highest-priority ?A)
@@ -144,10 +146,11 @@
   (org-lowest-priority ?F)
   (org-priority-faces
    '((?A . (bold org-priority))
-     (?B . org-priority)
+     (?B . (bold org-priority))
      (?C . org-priority)
-     (?D . (shadow org-priority))
-     (?E . (shadow org-priority))))
+     (?D . org-priority)
+     (?E . (shadow org-priority))
+     (?F . (shadow org-priority))))
   ;; FIXME 2024-10-02: Haven't found a way to get this to mesh well with my
   ;; workflow
   (org-stuck-projects
@@ -156,6 +159,9 @@
      nil
      nil
      ,(rx (regexp org-not-done-heading-regexp))))
+
+  ;; Input
+  (org-read-date-prefer-future 'time)
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :config
@@ -193,7 +199,14 @@ This function makes sure that dates are aligned for easy reading."
                  (let ((hr (nth 2 (decode-time))))
                    ;; After 10 or before 21
                    (or (> hr 10) (< hr 21)))))
-      (concat "-" tag))))
+      (concat "-" tag)))
+
+  (defun kb/org-agenda-process ()
+    "(Bespoke) process org-agenda entry at point."
+    (interactive)
+    (org-agenda-priority)
+    (org-agenda-set-tags)
+    (org-agenda-next-item 1)))
 
 ;;;; Org-super-agenda
 (use-package org-super-agenda
@@ -202,6 +215,7 @@ This function makes sure that dates are aligned for easy reading."
   :custom
   (org-super-agenda-hide-empty-groups t)
   (org-super-agenda-keep-order t)
+  (org-agenda-cmp-user-defined #'kb/org-sort-agenda-by-created-time)
   :init
   (defun kb/org-agenda-breadcrumb (len)
     "Formatted breadcrumb for current `org-agenda' item."
@@ -216,6 +230,24 @@ This function makes sure that dates are aligned for easy reading."
                  "")))
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
+
+  (defun kb/org-get-created-time (entry)
+    "Return the CREATED time of ENTRY, or an empty string if it doesn't exist."
+    (let ((marker (get-text-property 0 'marker entry)))
+      (if marker
+          (org-entry-get marker "CREATED")
+        "")))
+
+  (defun kb/org-sort-agenda-by-created-time (a b)
+    "Compare two agenda items, A and B, by their CREATED property."
+    (let* ((time-a (kb/org-get-created-time a))
+           (time-b (kb/org-get-created-time b)))
+      (cond
+       ((string= time-a "") +1)         ; A has no CREATED property, put it last
+       ((string= time-b "") -1)         ; B has no CREATED property, put it last
+       (t
+        (if (time-less-p (date-to-time time-a) (date-to-time time-b))
+            -1 +1)))))
   :config
   (org-super-agenda-mode 1)
   ;; Relevant variables to set locally in `org-agenda-custom-commands'
@@ -252,22 +284,57 @@ This function makes sure that dates are aligned for easy reading."
                        (org-agenda-dim-blocked-tasks t)
                        (org-agenda-include-diary t)
                        (org-agenda-insert-diary-extract-time t)))
-              (tags-todo "+TODO=\"NEXT\"|+TODO=\"TODO\"-project"
-                         ((org-agenda-overriding-header "Non-timed Todos")
+              (tags-todo "+TODO=\"NEXT\"-project-inbox"
+                         ((org-agenda-overriding-header "Next")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
-                          (org-agenda-dim-blocked-tasks t)
+                          (org-agenda-dim-blocked-tasks 'invisible)
                           (org-agenda-skip-function
                            '(org-agenda-skip-entry-if 'scheduled 'deadline))
                           (org-agenda-sorting-strategy
                            '((todo todo-state-up urgency-down category-up)))))
-              ))
+              (tags-todo "+TODO=\"TODO\"-project-inbox"
+                         ((org-agenda-overriding-header "Standard")
+                          (org-agenda-use-tag-inheritance '(todo))
+                          (org-agenda-show-inherited-tags t)
+                          (org-agenda-dim-blocked-tasks 'invisible)
+                          (org-agenda-skip-function
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
+                          (org-agenda-sorting-strategy
+                           '((todo todo-state-up urgency-down category-up)))))))
+            ("i" "Inbox: process entries"
+             ((agenda ""
+                      ((org-agenda-overriding-header "Time-bound inbox")
+                       (org-agenda-start-day "+0d")
+                       (org-agenda-span 5)
+                       (org-habit-show-habits nil)
+                       (org-agenda-entry-types
+                        '(:deadline :scheduled))
+                       (org-agenda-sorting-strategy
+                        '((agenda user-defined-up urgency-down todo-state-up category-up)))
+                       (org-super-agenda-groups
+                        '((:tag "inbox")
+                          (:todo "MAYBE")
+                          (:discard (:anything t))))))
+              (tags-todo "+inbox"
+                         ((org-agenda-overriding-header "Regular inbox")
+                          (org-agenda-dim-blocked-tasks t)
+                          (org-agenda-skip-function
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
+                          (org-agenda-sorting-strategy
+                           '((todo user-defined-up urgency-down todo-state-up category-up)))))
+              (todo "MAYBE"
+                    ((org-agenda-overriding-header "Regular maybes")
+                     (org-agenda-skip-function
+                      '(org-agenda-skip-entry-if 'scheduled 'deadline))
+                     (org-agenda-sorting-strategy
+                      '((todo user-defined-up urgency-down todo-state-up category-up)))))))
             ("p" "Projects"
-             ((tags "+project-TODO=\"DONE\"-TODO=\"CANCELED\"-CATEGORY=\"someday\""
+             ((tags "project/-DONE-CANCELED-MAYBE"
                     ((org-agenda-overriding-header "All projects")
                      (org-agenda-dim-blocked-tasks nil)
                      (org-agenda-sorting-strategy
-                      '((todo todo-state-up urgency-down category-up))))))))))
+                      '((todo user-defined-up urgency-down todo-state-up category-up))))))))))
 
 ;;;; Org-clock
 (use-package org-clock
