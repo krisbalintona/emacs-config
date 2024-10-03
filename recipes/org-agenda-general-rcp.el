@@ -193,6 +193,9 @@ This function makes sure that dates are aligned for easy reading."
       (format " %-2s. %2d %s"
               dayname day monthname)))
 
+  ;; TODO 2024-10-02: Perhaps turn this into a transient menu which lets me
+  ;; choose on-the-fly among a list of pre-defined options (similar to
+  ;; `notmuch-tag-jump')
   (defun kb/org-agenda-auto-exclude (tag)
     "Set tags based on time. See (org) Filtering/limiting agenda items"
     (when (cond ((member tag '("@home" "@hobbies"))
