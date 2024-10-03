@@ -108,8 +108,7 @@
   (org-capture-templates
    `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      ;; "* TODO %? %^g\n"
-      "* TODO %? %^g\n"
+      "* TODO %? :inbox:%^g\n"
       :empty-lines 1)
      ("i" "Idea" entry
       (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
