@@ -72,7 +72,7 @@
   (org-agenda-window-setup 'only-window)
   (org-agenda-restore-windows-after-quit t)
   (org-agenda-tags-column 'auto)
-  (org-agenda-start-on-weekday 3)
+  (org-agenda-start-on-weekday 1)
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
   (org-agenda-tags-todo-honor-ignore-options t)
   (org-agenda-todo-ignore-scheduled nil)
