@@ -278,7 +278,7 @@ This function makes sure that dates are aligned for easy reading."
                        (org-agenda-sorting-strategy
                         '((agenda habit-down time-up urgency-down deadline-up todo-state-up category-up)))
                        (org-agenda-start-day "+0d")
-                       (org-agenda-span 3)
+                       (org-agenda-span 'day)
                        (org-agenda-skip-deadline-prewarning-if-scheduled nil)
                        (org-agenda-skip-scheduled-if-deadline-is-shown nil)
                        (org-habit-show-all-today nil)
