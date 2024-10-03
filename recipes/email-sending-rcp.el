@@ -155,7 +155,8 @@
                                ("In gratitude" . "In gratitude,\nKristoffer")
                                ("Best" . "Best,\nKristoffer")
                                ("With appreciation" . "With appreciation,\nKristoffer")
-                               ("Professional" . "Best regards,\nKristoffer Balintona\nPhone: (773) 677-9699"))
+                               ("Professional" . "Best regards,\nKristoffer Balintona\nPhone: (773) 677-9699")
+                               ("Website" . "In gratitude,\nKristoffer Balintona\nhttps://kristofferbalintona.me"))
     "Alist of aliases and their corresponding email signatures.")
 
   (defun kb/signature-select (&optional alias)
