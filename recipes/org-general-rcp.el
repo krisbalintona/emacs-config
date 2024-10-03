@@ -228,7 +228,7 @@ have `org-warning' face."
   (org-refile-targets
    `((,kb/all-agenda-dir-files . (:level . 0))
      (,kb/all-agenda-dir-files . (:tag . "project"))
-     (,kb/agenda-todo-file . (:maxlevel . 1))))
+     (,kb/agenda-main-todo-file . (:maxlevel . 1))))
   (org-refile-target-verify-function (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)) t)))
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
