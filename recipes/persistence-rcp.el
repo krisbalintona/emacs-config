@@ -70,7 +70,8 @@
   :ensure nil
   :hook (on-first-file . save-place-mode)
   :custom
-  (save-place-forget-unreadable-files t))
+  (save-place-forget-unreadable-files t)
+  (save-place-limit 4000))
 
 ;;;; Desktop
 ;; Save buffers across Emacs sessions
