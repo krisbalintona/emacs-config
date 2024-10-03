@@ -106,9 +106,13 @@
   ;; Capture templates
   ;; See also `org-capture-templates-contexts'
   (org-capture-templates
-   `(("t" "Todo" entry
+   `(("t" "Todo (without processing)" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
       "* TODO %? :inbox:%^g\n"
+      :empty-lines 1)
+     ("T" "Todo" entry
+      (file ,(expand-file-name "todo.org" kb/agenda-dir))
+      "* TODO %? %^g\n"
       :empty-lines 1)
      ("i" "Idea" entry
       (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
