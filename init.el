@@ -11,7 +11,6 @@
 ;;; Recursively add files to `load-path'
 (dolist (path (list (expand-file-name "recipes" user-emacs-directory)
                     (expand-file-name "site-lisp" user-emacs-directory)
-                    (expand-file-name "site-lisp/org-wc-targets/" user-emacs-directory)
                     (expand-file-name "exwm" user-emacs-directory)))
   (add-to-list 'load-path path))
 
