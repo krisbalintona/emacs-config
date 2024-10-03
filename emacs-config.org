@@ -4,3 +4,13 @@
 #+language: en
 #+options: num:t author:t email:t
 #+startup: content
+
+* =init.el=
+
+** Add modules and bespoke libraries to ~load-path~
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
+                      (expand-file-name "lisp" user-emacs-directory)))
+    (add-to-list 'load-path path))
+#+end_src
