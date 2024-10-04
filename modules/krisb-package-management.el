@@ -24,3 +24,5 @@
 ;; Then ensure use-package is available at compile time
 (eval-when-compile
   (require 'use-package))
+
+(provide 'krisb-package-management)

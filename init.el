@@ -6,3 +6,5 @@
 ;; `fundamental-mode'
 (setopt initial-major-mode 'fundamental-mode
         initial-scratch-message "Hello 👋")
+
+(require 'krisb-package-management)

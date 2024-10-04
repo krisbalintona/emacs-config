@@ -164,7 +164,7 @@ This sets the default graphical element settings used by every frame.
     (add-to-list 'load-path path))
 #+end_src
 
-*** Scratch buffer
+*** Initial scratch buffer
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;; Shave seconds off startup time by starting the scratch buffer in
@@ -173,11 +173,18 @@ This sets the default graphical element settings used by every frame.
           initial-scratch-message "Hello 👋")
 #+end_src
 
+*** Load modules
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (require 'krisb-package-management)
+#+end_src
+
 * Modules
 
 ** =krisb-package-management.el=
 
-Configure =package.el=.
+*** Configure =package.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-package-management.el"
   ;; Initialize package resources
   (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
@@ -198,7 +205,8 @@ Configure =package.el=.
     (package-refresh-contents))
 #+end_src
 
-Make sure =use-package= is available.
+*** Make sure =use-package= is available.
+
 #+begin_src emacs-lisp :tangle "modules/krisb-package-management.el"
   ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
   ;; it's installed just in case I test/use an earlier Emacs version
@@ -208,6 +216,12 @@ Make sure =use-package= is available.
   ;; Then ensure use-package is available at compile time
   (eval-when-compile
     (require 'use-package))
+#+end_src
+
+*** Provide
+
+#+begin_src emacs-lisp :tangle "modules/krisb-package-management.el"
+  (provide 'krisb-package-management)
 #+end_src
 
 * Lisp (libraries)
