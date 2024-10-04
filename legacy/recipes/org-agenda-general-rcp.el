@@ -59,7 +59,7 @@
   (org-agenda-show-inherited-tags t)
   (org-use-fast-todo-selection 'expert)
   (org-tag-faces
-   '(("project" . highlight)))
+   '(("project" . outline-1)))
 
   ;; Dependencies
   (org-enforce-todo-dependencies t)
@@ -72,7 +72,7 @@
   (org-agenda-window-setup 'only-window)
   (org-agenda-restore-windows-after-quit t)
   (org-agenda-tags-column 'auto)
-  (org-agenda-start-on-weekday 3)
+  (org-agenda-start-on-weekday 1)
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
   (org-agenda-tags-todo-honor-ignore-options t)
   (org-agenda-todo-ignore-scheduled nil)
@@ -106,9 +106,12 @@
   ;; Capture templates
   ;; See also `org-capture-templates-contexts'
   (org-capture-templates
-   `(("t" "Todo" entry
+   `(("t" "Todo (without processing)" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
-      ;; "* TODO %? %^g\n"
+      "* TODO %? :inbox:%^g\n"
+      :empty-lines 1)
+     ("T" "Todo" entry
+      (file ,(expand-file-name "todo.org" kb/agenda-dir))
       "* TODO %? %^g\n"
       :empty-lines 1)
      ("i" "Idea" entry
@@ -279,7 +282,7 @@ This function makes sure that dates are aligned for easy reading."
                        (org-agenda-sorting-strategy
                         '((agenda habit-down time-up urgency-down deadline-up todo-state-up category-up)))
                        (org-agenda-start-day "+0d")
-                       (org-agenda-span 3)
+                       (org-agenda-span 'day)
                        (org-agenda-skip-deadline-prewarning-if-scheduled nil)
                        (org-agenda-skip-scheduled-if-deadline-is-shown nil)
                        (org-habit-show-all-today nil)

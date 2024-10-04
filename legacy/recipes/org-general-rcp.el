@@ -226,9 +226,9 @@ have `org-warning' face."
   :custom
   (org-refile-use-cache nil)
   (org-refile-targets
-   `((,kb/agenda-todo-file . (:level . 0))
-     (,kb/agenda-todo-file . (:tag . "project"))
-     (,kb/agenda-todo-file . (:maxlevel . 1))))
+   `((,kb/all-agenda-dir-files . (:level . 0))
+     (,kb/all-agenda-dir-files . (:tag . "project"))
+     (,kb/agenda-main-todo-file . (:maxlevel . 1))))
   (org-refile-target-verify-function (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)) t)))
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
@@ -293,7 +293,10 @@ have `org-warning' face."
                          '((emacs-lisp . t)
                            (python . t)
                            (mermaid . t)
-                           (ditaa . t))))))
+                           (ditaa . t)))))
+  :custom
+  (org-edit-src-turn-on-auto-save nil)
+  (org-edit-src-auto-save-idle-delay 3))
 
 ;;;;; Ob-mermaid
 (use-package mermaid-mode)
