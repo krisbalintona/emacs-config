@@ -40,7 +40,7 @@ Emacs 27 introduces early-init.el, which is run before init.el, before package a
 
 *** Runtime optimizations
 
-**** Doom Emacs suggestions
+**** Doom Emacs' suggestions
 
 All of the settings below are taken from Doom Emacs, whose developers have the know-how for smartly increasing startup performance.
 #+begin_src emacs-lisp :tangle "early-init.el"
@@ -107,6 +107,18 @@ All of the settings below are taken from Doom Emacs, whose developers have the k
   ;; later (and before I need non-built-in packages) to make other packages
   ;; available.
   (setq package-enable-at-startup nil)
+#+end_src
+
+*** Buffer encoding
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+  ;; NOTE 2024-10-03: From Doom Emacs.
+  ;; Contrary to what many Emacs users have in their configs, you don't need more
+  ;; than this to make UTF-8 the default coding system:
+  (set-language-environment "UTF-8")
+  ;; ...but `set-language-environment' also sets `default-input-method', which is
+  ;; a step too opinionated.
+  (setq default-input-method nil)
 #+end_src
 
 *** Graphical elements
@@ -187,7 +199,20 @@ All configuration for =package.el=.
     (package-refresh-contents))
 #+end_src
 
-
-#+end_src
-
 * Lisp (libraries)
+
+* COMMENT Removed
+
+These are lines I've removed while porting to a literate config.
+#+begin_src emacs-lisp :tangle no :results none
+  ;; Kill child processes without confirm
+  (custom-set-variables '(confirm-kill-processes nil))
+
+  ;; Don't confirm when killing a process
+  (setq confirm-kill-processes nil)
+
+  ;; ...And the clipboard on Windows is often a wider encoding (UTF-16), so leave
+  ;; Emacs to its own devices there.
+  (unless kb/sys-win
+    (setq selection-coding-system 'utf-8))
+#+end_src

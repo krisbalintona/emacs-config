@@ -77,6 +77,14 @@
 ;; available.
 (setq package-enable-at-startup nil)
 
+;; NOTE 2024-10-03: From Doom Emacs.
+;; Contrary to what many Emacs users have in their configs, you don't need more
+;; than this to make UTF-8 the default coding system:
+(set-language-environment "UTF-8")
+;; ...but `set-language-environment' also sets `default-input-method', which is
+;; a step too opinionated.
+(setq default-input-method nil)
+
 ;; NOTE 2024-10-03: From Doom Emacs. If we're disabling these graphical
 ;; elements, it's faster to do so before they've been initialized.
 ;; HACK: I intentionally avoid calling `menu-bar-mode', `tool-bar-mode', and

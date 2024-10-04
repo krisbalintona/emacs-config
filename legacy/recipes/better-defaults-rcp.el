@@ -76,9 +76,6 @@
               cursor-in-non-selected-windows 'box
               x-stretch-cursor t)       ; Stretch cursor to the glyph width
 
-;;;; Kill child processes without confirm
-(custom-set-variables '(confirm-kill-processes nil))
-
 ;;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
 
@@ -89,9 +86,6 @@
 ;; Pinentry is responsible for querying passphrases
 (require 'epg-config)
 (setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
-
-;;;; Don't confirm when killing a process
-(setq confirm-kill-processes nil)
 
 ;;;; Ignore case for buffer and file names
 (setq read-buffer-completion-ignore-case t
@@ -171,18 +165,6 @@
 ;; If enabled and `truncate-lines' is disabled, soft wrapping will not occur
 ;; when the window is narrower than `truncate-partial-width-windows' characters.
 (setq truncate-partial-width-windows nil)
-
-;;;; Language environment and input method
-;; Contrary to what many Emacs users have in their configs, you don't need more
-;; than this to make UTF-8 the default coding system:
-(set-language-environment "UTF-8")
-;; ...but `set-language-environment' also sets `default-input-method', which is
-;; a step too opinionated.
-(setq default-input-method nil)
-;; ...And the clipboard on Windows is often a wider encoding (UTF-16), so leave
-;; Emacs to its own devices there.
-(unless kb/sys-win
-  (setq selection-coding-system 'utf-8))
 
 ;;;; Make right-click show context menu
 (when (display-graphic-p)
