@@ -293,7 +293,10 @@ have `org-warning' face."
                          '((emacs-lisp . t)
                            (python . t)
                            (mermaid . t)
-                           (ditaa . t))))))
+                           (ditaa . t)))))
+  :custom
+  (org-edit-src-turn-on-auto-save nil)
+  (org-edit-src-auto-save-idle-delay 3))
 
 ;;;;; Ob-mermaid
 (use-package mermaid-mode)
