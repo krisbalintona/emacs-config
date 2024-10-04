@@ -5,6 +5,16 @@
 #+options: num:t author:t email:t
 #+startup: content
 
+* Emacs build
+
+The following are the flags I prefer to compile Emacs with.
+#+begin_src emacs-lisp :exports both
+  system-configuration-options
+#+end_src
+
+#+RESULTS:
+: --with-mailutils --with-pgtk --with-native-compilation --with-x-toolkit=gtk3 'CFLAGS=-O2 -pipe -march=native -fomit-frame-pointer'
+
 * Initialization
 
 ** =early-init.el=
