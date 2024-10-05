@@ -59,7 +59,10 @@
   :custom
   (flymake-collection-hook-inherit-config t)
   (flymake-collection-hook-ignore-modes nil)
-  :config
+  :init
+  ;; NOTE 2024-10-05: Set `flymake-collection-config' immediately when the
+  ;; package loads, so the first invocation of `flymake-collection-hook-setup'
+  ;; uses my configured value.
   ;; NOTE 2024-10-05: I configure vale to use proselint to my liking, so I
   ;; disable the proselint checker. One reason that motivates this decision is
   ;; vale's performance compared to proselint (see
@@ -84,7 +87,7 @@
           (flymake-collection-proselint
            :depth -1
            :disabled t)))
-
+  :config
   (require 'flymake-collection-define)
   ;; Customize the vale checker to my liking
   (flymake-collection-define-enumerate
