@@ -289,7 +289,9 @@ This function makes sure that dates are aligned for easy reading."
                        (org-habit-show-habits-only-for-today t)
                        (org-agenda-dim-blocked-tasks t)
                        (org-agenda-include-diary t)
-                       (org-agenda-insert-diary-extract-time t)))
+                       (org-agenda-insert-diary-extract-time t)
+                       (org-agenda-skip-function
+                        '(org-agenda-skip-entry-if 'regexp ":inbox:"))))
               (tags-todo "+TODO=\"NEXT\"-project-inbox"
                          ((org-agenda-overriding-header "Next")
                           (org-agenda-use-tag-inheritance '(todo))
