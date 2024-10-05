@@ -55,9 +55,35 @@
 
 ;;;; Flymake-collection
 (use-package flymake-collection
-  :requires flymake
-  :ensure-system-package luacheck
-  :hook (after-init . flymake-collection-hook-setup))
+  :hook (after-init . flymake-collection-hook-setup)
+  :custom
+  (flymake-collection-hook-inherit-config t)
+  (flymake-collection-hook-ignore-modes nil)
+  :config
+  ;; NOTE 2024-10-05: I configure vale to use proselint to my liking, so I
+  ;; disable the proselint checker. One reason that motivates this decision is
+  ;; vale's performance compared to proselint (see
+  ;; https://github.com/errata-ai/vale?tab=readme-ov-file#benchmarks).
+  (setf (alist-get 'org-mode flymake-collection-config)
+        '((flymake-collection-vale
+           :depth -20)
+          (flymake-collection-proselint
+           :depth -1
+           :disabled t))
+        (alist-get 'markdown-mode flymake-collection-config)
+        '((flymake-collection-markdownlint
+           :depth -50)
+          (flymake-collection-vale
+           :depth -20)
+          (flymake-collection-proselint
+           :disabled t
+           :depth -1))
+        (alist-get 'notmuch-message-mode flymake-collection-config)
+        '((flymake-collection-vale
+           :depth -20)
+          (flymake-collection-proselint
+           :depth -1
+           :disabled))))
 
 ;;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use
