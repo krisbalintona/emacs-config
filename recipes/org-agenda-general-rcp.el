@@ -88,7 +88,7 @@
   (org-extend-today-until 3)
   (org-use-effective-time t)
   (org-agenda-block-separator ?—)
-  (org-deadline-warning-days 0)
+  (org-deadline-warning-days 3)
   (org-agenda-time-grid
    '((daily today require-timed)
      (800 1000 1200 1400 1600 1800 2000)
@@ -274,6 +274,7 @@ This function makes sure that dates are aligned for easy reading."
   ;; - `org-agenda-insert-diary-extract-time'
   ;; - `org-agenda-skip-function'
   ;; - `org-agenda-entry-types'
+  ;; - `org-deadline-warning-days'
   (setopt org-agenda-custom-commands
           '(("f" "FYP"
              ((agenda ""
