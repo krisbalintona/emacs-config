@@ -149,6 +149,15 @@
       (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow)))
   (kb/themes-setup-denote-faces))       ; Immediately call
 
+;;;;; Denote-journal-extras
+(use-package denote-journal-extras
+  :ensure nil
+  :custom
+  (denote-journal-extras-directory
+   (expand-file-name "commonplace_book/journal" denote-directory))
+  (denote-journal-extras-keyword "journal")
+  (denote-journal-extras-title-format 'day-date-month-year-24h))
+
 ;;;;; Standardizing note front-matter
 (with-eval-after-load 'denote
   (defun kb/org-set-keyword (keyword value)
