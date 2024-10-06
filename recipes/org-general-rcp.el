@@ -452,34 +452,7 @@ have `org-warning' face."
     (when (featurep 'olivetti)
       (set-face-attribute 'olivetti-fringe nil
                           :background (modus-themes-with-colors bg-dim)
-                          :inherit 'unspecified)))
-
-  ;; Fix window splitting
-  (defun kb/olivetti--window-splittable-p (window &optional horizontal)
-    "Override for `window-splittable-p'.
-Fixes splitting windows vertically."
-    (when (and (window-live-p window)
-               (not (window-parameter window 'window-side)))
-      (with-current-buffer (window-buffer window)
-        (if horizontal
-            (and (memq window-size-fixed '(nil height))
-                 (numberp split-width-threshold)
-                 (>= (if (bound-and-true-p olivetti-mode)
-                         ;; NOTE 2024-02-25: Added this. Not sure if this is
-                         ;; foolproof, since all it does is take into
-                         ;; consideration the margins and fringes, but for now
-                         ;; it's a sufficient approximation
-                         (window-total-width window)
-                       (window-width window))
-                     (max split-width-threshold
-                          (* 2 (max window-min-width 2)))))
-          (and (memq window-size-fixed '(nil width))
-               (numberp split-height-threshold)
-               (>= (window-height window)
-                   (max split-height-threshold
-                        (* 2 (max window-min-height
-                                  (if mode-line-format 2 1))))))))))
-  (advice-add 'window-splittable-p :override #'kb/olivetti--window-splittable-p))
+                          :inherit 'unspecified))))
 
 ;;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
