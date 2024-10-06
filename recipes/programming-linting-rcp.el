@@ -101,7 +101,12 @@
     :command `(,vale-exec
                ,@(let* ((file-name (buffer-file-name flymake-collection-source))
                         (extension
+                         ;; Sometimes we specify the extension based on the
+                         ;; major mode because we editing buffers not visiting a
+                         ;; file
                          (cond
+                          ((equal major-mode 'org-mode) "org")
+                          ((derived-mode-p 'markdown-mode) "md")
                           ((derived-mode-p 'message-mode)
                            ;; I define a custom ".email" extension in my
                            ;; .vale.ini so that the rules I want are run during
