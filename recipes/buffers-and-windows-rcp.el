@@ -654,13 +654,13 @@ function will not modify the margins and directly call ORIG-FUN."
       ;; Add hook and activate
       (progn
         (advice-add 'window-splittable-p :around #'pinching-margins--window-splittable-p-advice)
-        (add-hook 'window-configuration-change-hook 'pinching-margins--set-margins)
-        (add-hook 'window-size-change-functions 'pinching-margins--set-margins)
+        (add-hook 'window-configuration-change-hook #'pinching-margins--set-margins)
+        (add-hook 'window-size-change-functions #'pinching-margins--set-margins)
         (pinching-margins--set-margins))
     ;; Remove hook and restore margin
     (advice-remove 'window-splittable-p #'pinching-margins--window-splittable-p-advice)
-    (remove-hook 'window-configuration-change-hook 'pinching-margins--set-margins)
-    (remove-hook 'window-size-change-functions 'pinching-margins--set-margins)
+    (remove-hook 'window-configuration-change-hook #'pinching-margins--set-margins)
+    (remove-hook 'window-size-change-functions #'pinching-margins--set-margins)
     ;; FIXME 2024-09-19: This only restores the currently visible windows. E.g.
     ;; `tab-bar' windows that are elsewhere aren't affected.
     (dolist (window (window-list))
