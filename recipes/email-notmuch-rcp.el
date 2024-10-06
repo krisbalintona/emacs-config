@@ -345,7 +345,7 @@ buffer hidden."
                 (concat
                  " "
                  (propertize
-                  (if (and display-time-use-mail-icon (display-graphic-p))
+                  (if (and display-time-use-mail-icon (display-graphic-p) (featurep 'all-the-icons))
                       (propertize (all-the-icons-material "mail_outline")
                                   'face `(:family ,(all-the-icons-material-family) :height 1.1)
                                   'display '(raise -0.1))
