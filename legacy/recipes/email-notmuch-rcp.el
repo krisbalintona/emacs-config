@@ -55,7 +55,7 @@
    ("a" . nil)
    ("r" . notmuch-show-reply)
    ("R" . notmuch-show-reply-sender)
-   ("T" . kb/notmuch-show-trash-thread-then-exit)
+   ("T" . kb/notmuch-show-trash-thread-then-next)
    ([remap notmuch-show-advance-and-archive] . kb/notmuch-show-advance-and-tag))
   :custom
   (mail-user-agent 'notmuch-user-agent)
@@ -267,12 +267,14 @@ folded."
   (advice-add 'notmuch-show-view-part :override #'kb/notmuch-show-view-part)
 
   ;; Bespoke `notmuch-show-mode' commands
-  (defun kb/notmuch-show-trash-thread-then-exit ()
-    "\"Trash\" all messages in the current buffer, then exit thread."
-    (interactive)
+  (defun kb/notmuch-show-trash-thread-then-next (&optional show)
+    "\"Trash\" all messages in the current buffer, then exit thread.
+If SHOW is provided (interactively by prefix-arg), then also open that
+thread."
+    (interactive "P")
     (notmuch-show-tag-all
      (notmuch-tag-change-list (append notmuch-archive-tags '("+trash"))))
-    (notmuch-show-next-thread))
+    (notmuch-show-next-thread t))
 
   (defun kb/notmuch-show-tag-thread (&optional reverse)
     "Like `notmuch-show-archive-thread' put prompt "
@@ -343,7 +345,7 @@ buffer hidden."
                 (concat
                  " "
                  (propertize
-                  (if (and display-time-use-mail-icon (display-graphic-p))
+                  (if (and display-time-use-mail-icon (display-graphic-p) (featurep 'all-the-icons))
                       (propertize (all-the-icons-material "mail_outline")
                                   'face `(:family ,(all-the-icons-material-family) :height 1.1)
                                   'display '(raise -0.1))

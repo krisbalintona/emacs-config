@@ -32,6 +32,9 @@
   :commands compose-mail
   :hook ((message-setup . message-sort-headers)
          (message-mode . olivetti-mode)
+         ;; I like to use prose linters. See my flymake and flymake-collection
+         ;; config
+         (message-mode . flymake-mode)
          (message-send . kb/message-check-for-subject)
          (message-send . kb/message-check-correct-from))
   :custom

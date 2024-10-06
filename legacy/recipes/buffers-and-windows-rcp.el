@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (after-init . (lambda () (unless (server-running-p)
-                                   (server-mode))))
+                              (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -80,10 +80,9 @@
   :ensure nil
   :bind* ("M-o" . other-window)
   :custom
-  ;; Prefer vertical splits over horizontal ones
-  (split-width-threshold 170)
-  (split-height-threshold nil)
-
+  (split-width-threshold 110)
+  (split-height-threshold 80)
+  (window-combination-resize t) ; Allow to resize existing windows when splitting?
   (window-resize-pixelwise t)
   (window-sides-vertical t)
 
@@ -416,7 +415,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                             ignore-window-parameters))
+                                        ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
@@ -654,13 +653,13 @@ function will not modify the margins and directly call ORIG-FUN."
       ;; Add hook and activate
       (progn
         (advice-add 'window-splittable-p :around #'pinching-margins--window-splittable-p-advice)
-        (add-hook 'window-configuration-change-hook 'pinching-margins--set-margins)
-        (add-hook 'window-size-change-functions 'pinching-margins--set-margins)
+        (add-hook 'window-configuration-change-hook #'pinching-margins--set-margins)
+        (add-hook 'window-size-change-functions #'pinching-margins--set-margins)
         (pinching-margins--set-margins))
     ;; Remove hook and restore margin
     (advice-remove 'window-splittable-p #'pinching-margins--window-splittable-p-advice)
-    (remove-hook 'window-configuration-change-hook 'pinching-margins--set-margins)
-    (remove-hook 'window-size-change-functions 'pinching-margins--set-margins)
+    (remove-hook 'window-configuration-change-hook #'pinching-margins--set-margins)
+    (remove-hook 'window-size-change-functions #'pinching-margins--set-margins)
     ;; FIXME 2024-09-19: This only restores the currently visible windows. E.g.
     ;; `tab-bar' windows that are elsewhere aren't affected.
     (dolist (window (window-list))

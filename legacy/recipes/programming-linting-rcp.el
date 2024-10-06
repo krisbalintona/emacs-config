@@ -55,9 +55,90 @@
 
 ;;;; Flymake-collection
 (use-package flymake-collection
-  :requires flymake
-  :ensure-system-package luacheck
-  :hook (after-init . flymake-collection-hook-setup))
+  :hook (after-init . flymake-collection-hook-setup)
+  :custom
+  (flymake-collection-hook-inherit-config t)
+  (flymake-collection-hook-ignore-modes nil)
+  :init
+  ;; NOTE 2024-10-05: Set `flymake-collection-config' immediately when the
+  ;; package loads, so the first invocation of `flymake-collection-hook-setup'
+  ;; uses my configured value.
+  ;; NOTE 2024-10-05: I configure vale to use proselint to my liking, so I
+  ;; disable the proselint checker. One reason that motivates this decision is
+  ;; vale's performance compared to proselint (see
+  ;; https://github.com/errata-ai/vale?tab=readme-ov-file#benchmarks).
+  (setf (alist-get 'org-mode flymake-collection-config)
+        '((flymake-collection-vale
+           :depth -20)
+          (flymake-collection-proselint
+           :depth -1
+           :disabled t))
+        (alist-get 'markdown-mode flymake-collection-config)
+        '((flymake-collection-markdownlint
+           :depth -50)
+          (flymake-collection-vale
+           :depth -20)
+          (flymake-collection-proselint
+           :disabled t
+           :depth -1))
+        (alist-get 'notmuch-message-mode flymake-collection-config)
+        '((flymake-collection-vale
+           :depth -20)
+          (flymake-collection-proselint
+           :depth -1
+           :disabled t)))
+  :config
+  (require 'flymake-collection-define)
+  ;; Customize the vale checker to my liking
+  (flymake-collection-define-enumerate
+    flymake-collection-vale
+    "My version of `flymake-collection''s vale checker."
+    :title "vale"
+    :pre-let ((vale-exec (executable-find "vale")))
+    :pre-check (unless vale-exec
+                 (error "Cannot find vale executable"))
+    :write-type 'pipe
+    :command `(,vale-exec
+               ,@(let* ((file-name (buffer-file-name flymake-collection-source))
+                        (extension
+                         ;; Sometimes we specify the extension based on the
+                         ;; major mode because we editing buffers not visiting a
+                         ;; file
+                         (cond
+                          ((equal major-mode 'org-mode) "org")
+                          ((derived-mode-p 'markdown-mode) "md")
+                          ((derived-mode-p 'message-mode)
+                           ;; I define a custom ".email" extension in my
+                           ;; .vale.ini so that the rules I want are run during
+                           ;; email composition
+                           "email")
+                          (file-name
+                           (file-name-extension file-name)))))
+                   (when extension
+                     (list (concat "--ext=." extension))))
+               "--output=JSON")
+    :generator
+    (cdaar
+     (flymake-collection-parse-json
+      (buffer-substring-no-properties
+       (point-min) (point-max))))
+    :enumerate-parser
+    (let-alist it
+      `(,flymake-collection-source
+        ,@(with-current-buffer flymake-collection-source
+            (save-excursion
+              (goto-char (point-min))
+              (unless (and (eq .Line 1)
+                           (not (bolp)))
+                (forward-line (1- .Line)))
+              (list (+ (point) (1- (car .Span)))
+                    (+ (point) (cadr .Span)))))
+        ,(pcase .Severity
+           ("suggestion" :note)
+           ("warning" :warning)
+           ((or "error" _) :error))
+        ,(concat (propertize (concat "[" .Check "]") 'face 'flymake-collection-diag-id) " "
+                 .Message)))))
 
 ;;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use

@@ -88,7 +88,7 @@
   (org-extend-today-until 3)
   (org-use-effective-time t)
   (org-agenda-block-separator ?—)
-  (org-deadline-warning-days 0)
+  (org-deadline-warning-days 3)
   (org-agenda-time-grid
    '((daily today require-timed)
      (800 1000 1200 1400 1600 1800 2000)
@@ -220,6 +220,14 @@ This function makes sure that dates are aligned for easy reading."
   :after org-agenda
   :custom
   (org-super-agenda-hide-empty-groups t)
+  ;; FIXME 2024-10-06: When trying to set `org-super-agenda-keep-order' to
+  ;; non-nil, it causes an error when using :auto-* selectors. This doesn't seem
+  ;; to occur in an emacs -Q instances, but I have no clue what is causing the
+  ;; error in my config... Although the following PR might fix the issue:
+  ;; https://github.com/alphapapa/org-super-agenda/pull/242
+  ;; NOTE 2024-10-06: I have currently checked out and installed a version of
+  ;; org-super-agenda that applies the patch from PR#242
+  ;; (/home/krisbalintona/emacs-repos/packages/org-super-agenda-PR#242/)
   (org-super-agenda-keep-order t)
   (org-agenda-cmp-user-defined #'kb/org-sort-agenda-by-created-time)
   :init
@@ -274,6 +282,7 @@ This function makes sure that dates are aligned for easy reading."
   ;; - `org-agenda-insert-diary-extract-time'
   ;; - `org-agenda-skip-function'
   ;; - `org-agenda-entry-types'
+  ;; - `org-deadline-warning-days'
   (setopt org-agenda-custom-commands
           '(("f" "FYP"
              ((agenda ""
@@ -283,13 +292,13 @@ This function makes sure that dates are aligned for easy reading."
                         '((agenda habit-down time-up urgency-down deadline-up todo-state-up category-up)))
                        (org-agenda-start-day "+0d")
                        (org-agenda-span 'day)
-                       (org-agenda-skip-deadline-prewarning-if-scheduled nil)
-                       (org-agenda-skip-scheduled-if-deadline-is-shown nil)
-                       (org-habit-show-all-today nil)
                        (org-habit-show-habits-only-for-today t)
                        (org-agenda-dim-blocked-tasks t)
                        (org-agenda-include-diary t)
-                       (org-agenda-insert-diary-extract-time t)))
+                       (org-agenda-insert-diary-extract-time t)
+                       (org-super-agenda-groups
+                        '((:discard (:tag "inbox"))
+                          (:auto-category t)))))
               (tags-todo "+TODO=\"NEXT\"-project-inbox"
                          ((org-agenda-overriding-header "Next")
                           (org-agenda-use-tag-inheritance '(todo))

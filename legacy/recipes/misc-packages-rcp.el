@@ -860,6 +860,20 @@ ARG and REDISPLAY are identical to the original function."
     (super-hint-rg-mode 1)
     (diminish 'super-hint-rg-mode)))
 
+(use-package super-hint-xref
+  :diminish
+  :after xref
+  :ensure nil
+  :config
+  (super-hint-xref-mode 1))
+
+(use-package super-hint-rg
+  :diminish
+  :after rg
+  :ensure nil
+  :config
+  (super-hint-rg-mode 1))
+
 ;;;;; Wgrep
 ;; Edit lines in grep buffers
 (use-package wgrep
@@ -914,8 +928,9 @@ ARG and REDISPLAY are identical to the original function."
      `( :align center
         :width 80
         :content ,(enlight-menu
-                   '(("Configs"
-                      ("M-x desktop-read" (call-interactively 'desktop-read) "r")
+                   '(("Commands"
+                      ("M-x desktop-read" (call-interactively 'desktop-read) "r"))
+                     ("Configs"
                       ("Emacs" (project-switch-project user-emacs-directory) "e")
                       ("Dotfiles" (project-switch-project "~/dotfies/") "d"))
                      ("Other"
