@@ -220,6 +220,14 @@ This function makes sure that dates are aligned for easy reading."
   :after org-agenda
   :custom
   (org-super-agenda-hide-empty-groups t)
+  ;; FIXME 2024-10-06: When trying to set `org-super-agenda-keep-order' to
+  ;; non-nil, it causes an error when using :auto-* selectors. This doesn't seem
+  ;; to occur in an emacs -Q instances, but I have no clue what is causing the
+  ;; error in my config... Although the following PR might fix the issue:
+  ;; https://github.com/alphapapa/org-super-agenda/pull/242
+  ;; NOTE 2024-10-06: I have currently checked out and installed a version of
+  ;; org-super-agenda that applies the patch from PR#242
+  ;; (/home/krisbalintona/emacs-repos/packages/org-super-agenda-PR#242/)
   (org-super-agenda-keep-order t)
   (org-agenda-cmp-user-defined #'kb/org-sort-agenda-by-created-time)
   :init
@@ -288,8 +296,9 @@ This function makes sure that dates are aligned for easy reading."
                        (org-agenda-dim-blocked-tasks t)
                        (org-agenda-include-diary t)
                        (org-agenda-insert-diary-extract-time t)
-                       (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'regexp ":inbox:"))))
+                       (org-super-agenda-groups
+                        '((:discard (:tag "inbox"))
+                          (:auto-category t)))))
               (tags-todo "+TODO=\"NEXT\"-project-inbox"
                          ((org-agenda-overriding-header "Next")
                           (org-agenda-use-tag-inheritance '(todo))
