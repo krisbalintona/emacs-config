@@ -42,8 +42,7 @@
   :bind
   ( :map kb/note-keys
     ("f" . denote-open-or-create)
-    ("i" . denote-insert-link)
-    ("I" . denote-link-or-create)
+    ("i" . denote-link-or-create)
     ("e" . denote-org-extras-extract-org-subtree)
     ("t" . denote-rename-file-keywords)
     ("l" . denote-backlinks))
