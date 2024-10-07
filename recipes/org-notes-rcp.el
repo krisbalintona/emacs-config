@@ -45,7 +45,8 @@
     ("i" . denote-link-or-create)
     ("e" . denote-org-extras-extract-org-subtree)
     ("t" . denote-rename-file-keywords)
-    ("l" . denote-backlinks))
+    ("l" . denote-find-backlink)
+    ("L" . denote-backlinks))
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords nil)
