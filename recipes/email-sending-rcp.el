@@ -832,6 +832,15 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
            (1+ (point))
          start))))
   (org-mime-debug nil)
+  :init
+  (defun kb/org-mime--remove-spacer ()
+    "Remove the \"spacer\" above the line at point.
+A spacer is two newlines inserted after portions inserted by
+`org-mime-htmlize'."
+    (save-excursion
+      (previous-logical-line)
+      (delete-blank-lines)))
+  (advice-add 'org-mime-htmlize :after #'kb/org-mime--remove-spacer)
   :config
   ;; Start with a single # to font-lock as comment
   (setq org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n"
