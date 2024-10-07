@@ -134,7 +134,16 @@
       :empty-lines 1
       :clock-in t
       :clock-resume t
-      :kill-buffer t)))
+      :kill-buffer t)
+     ("j" "Journal" entry
+      (file+olp+datetree ,(car (denote-directory-files "20241006T214811")))
+      "* %<%F>\n\n%?"
+      :tree-type week
+      :jump-to-captured t
+      :immediate-finish t
+      :empty-lines 1
+      :clock-in t
+      :clock-resume t)))
 
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
