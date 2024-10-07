@@ -361,12 +361,31 @@ This function makes sure that dates are aligned for easy reading."
                      (org-agenda-sorting-strategy
                       '((todo user-defined-up urgency-down todo-state-up category-up)))))))
             ("p" "Projects"
-             ((tags "project/-DONE-CANCELED-MAYBE"
-                    ((org-agenda-overriding-header "All projects")
-                     (org-agenda-dim-blocked-tasks nil)
-                     (org-agenda-sorting-strategy
-                      '((todo user-defined-up urgency-down todo-state-up category-up))))))))))
-
+             ((tags-todo "project"
+                         ((org-agenda-overriding-header "")
+                          (org-agenda-dim-blocked-tasks nil)
+                          ;; This lets project sub-tasks be discoverable by a tags
+                          ;; search. One might think :auto-parent makes this
+                          ;; redundant, but this handles cases where I have a
+                          ;; sub-task but its parent is not a project -- I do this
+                          ;; sometimes for simple dependencies between todos
+                          ;; FIXME 2024-10-07: This shows the project tag for all the
+                          ;; sub-tasks, which can be visually noisy. I'm not sure if
+                          ;; there is a workaround
+                          (org-tags-exclude-from-inheritance
+                           (remove "project" org-tags-exclude-from-inheritance))
+                          (org-agenda-sorting-strategy
+                           '((todo user-defined-up urgency-down todo-state-up category-up)))
+                          (org-agenda-prefix-format
+                           ;; FIXME 2024-10-07: Not sure if this is a tags- or
+                           ;; todo-type view
+                           '((tags  . " %i %-8:c")))
+                          (org-super-agenda-groups
+                           '(( :auto-parent t
+                               :order 2)
+                             ( :name "All projects"
+                               :anything t
+                               :order 1))))))))))
 ;;;; Org-clock
 (use-package org-clock
   :demand
