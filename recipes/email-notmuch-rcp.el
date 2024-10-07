@@ -274,7 +274,7 @@ thread."
     (interactive "P")
     (notmuch-show-tag-all
      (notmuch-tag-change-list (append notmuch-archive-tags '("+trash"))))
-    (notmuch-show-next-thread t))
+    (notmuch-show-next-thread t show))
 
   (defun kb/notmuch-show-tag-thread (&optional reverse)
     "Like `notmuch-show-archive-thread' put prompt "
