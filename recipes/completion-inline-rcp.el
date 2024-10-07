@@ -155,7 +155,6 @@ default lsp-passthrough."
 ;;;; Kind-icon
 ;; Icons for corfu!
 (use-package kind-icon
-  :disabled               ; Nerd icons' representations are more intuitive to me
   :after corfu
   :demand
   :hook (kb/themes . (lambda ()
@@ -171,42 +170,46 @@ default lsp-passthrough."
   ;; Use VSCode's icons. Taken from
   ;; https://github.com/jdtsmith/kind-icon/wiki#using-vs-code-icons-as-an-alternative
   (kind-icon-mapping
-   '((array          "a"   :icon "symbol-array"       :face font-lock-type-face              :collection "vscode")
-     (boolean        "b"   :icon "symbol-boolean"     :face font-lock-builtin-face           :collection "vscode")
-     (color          "#"   :icon "symbol-color"       :face success                          :collection "vscode")
-     (command        "cm"  :icon "chevron-right"      :face default                          :collection "vscode")
-     (constant       "co"  :icon "symbol-constant"    :face font-lock-constant-face          :collection "vscode")
-     (class          "c"   :icon "symbol-class"       :face font-lock-type-face              :collection "vscode")
-     (constructor    "cn"  :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-     (enum           "e"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
-     (enummember     "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
-     (enum-member    "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
-     (event          "ev"  :icon "symbol-event"       :face font-lock-warning-face           :collection "vscode")
-     (field          "fd"  :icon "symbol-field"       :face font-lock-variable-name-face     :collection "vscode")
-     (file           "f"   :icon "symbol-file"        :face font-lock-string-face            :collection "vscode")
-     (folder         "d"   :icon "folder"             :face font-lock-doc-face               :collection "vscode")
-     (function       "f"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-     (interface      "if"  :icon "symbol-interface"   :face font-lock-type-face              :collection "vscode")
-     (keyword        "kw"  :icon "symbol-keyword"     :face font-lock-keyword-face           :collection "vscode")
+   '((array          "a"   :icon "symbol-array"       :face font-lock-type-face              :collection "nerd-fonts-codicons")
+     (boolean        "b"   :icon "symbol-boolean"     :face font-lock-builtin-face           :collection "nerd-fonts-codicons")
+     (color          "#"   :icon "symbol-color"       :face success                          :collection "nerd-fonts-codicons")
+     (command        "cm"  :icon "chevron-right"      :face default                          :collection "nerd-fonts-codicons")
+     (constant       "co"  :icon "symbol-constant"    :face font-lock-constant-face          :collection "nerd-fonts-codicons")
+     (class          "c"   :icon "symbol-class"       :face font-lock-type-face              :collection "nerd-fonts-codicons")
+     (constructor    "cn"  :icon "symbol-method"      :face font-lock-function-name-face     :collection "nerd-fonts-codicons")
+     (enum           "e"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "nerd-fonts-codicons")
+     (enummember     "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "nerd-fonts-codicons")
+     (enum-member    "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "nerd-fonts-codicons")
+     (event          "ev"  :icon "symbol-event"       :face font-lock-warning-face           :collection "nerd-fonts-codicons")
+     (field          "fd"  :icon "symbol-field"       :face font-lock-variable-name-face     :collection "nerd-fonts-codicons")
+     (file           "f"   :icon "symbol-file"        :face font-lock-string-face            :collection "nerd-fonts-codicons")
+     (folder         "d"   :icon "folder"             :face font-lock-doc-face               :collection "nerd-fonts-codicons")
+     (function       "f"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "nerd-fonts-codicons")
+     (interface      "if"  :icon "symbol-interface"   :face font-lock-type-face              :collection "nerd-fonts-codicons")
+     (keyword        "kw"  :icon "symbol-keyword"     :face font-lock-keyword-face           :collection "nerd-fonts-codicons")
      (macro          "mc"  :icon "lambda"             :face font-lock-keyword-face)
-     (magic          "ma"  :icon "lightbulb-autofix"  :face font-lock-builtin-face           :collection "vscode")
-     (method         "m"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+     (magic          "ma"  :icon "lightbulb-autofix"  :face font-lock-builtin-face           :collection "nerd-fonts-codicons")
+     (method         "m"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "nerd-fonts-codicons")
      (module         "{"   :icon "file-code-outline"  :face font-lock-preprocessor-face)
-     (numeric        "nu"  :icon "symbol-numeric"     :face font-lock-builtin-face           :collection "vscode")
-     (operator       "op"  :icon "symbol-operator"    :face font-lock-comment-delimiter-face :collection "vscode")
-     (param          "pa"  :icon "gear"               :face default                          :collection "vscode")
-     (property       "pr"  :icon "symbol-property"    :face font-lock-variable-name-face     :collection "vscode")
-     (reference      "rf"  :icon "library"            :face font-lock-variable-name-face     :collection "vscode")
-     (snippet        "S"   :icon "symbol-snippet"     :face font-lock-string-face            :collection "vscode")
-     (string         "s"   :icon "symbol-string"      :face font-lock-string-face            :collection "vscode")
-     (struct         "%"   :icon "symbol-structure"   :face font-lock-variable-name-face     :collection "vscode")
-     (text           "tx"  :icon "symbol-key"         :face font-lock-doc-face               :collection "vscode")
-     (typeparameter  "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
-     (type-parameter "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
-     (unit           "u"   :icon "symbol-ruler"       :face font-lock-constant-face          :collection "vscode")
-     (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
-     (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
-     (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
+     (numeric        "nu"  :icon "symbol-numeric"     :face font-lock-builtin-face           :collection "nerd-fonts-codicons")
+     (operator       "op"  :icon "symbol-operator"    :face font-lock-comment-delimiter-face :collection "nerd-fonts-codicons")
+     (param          "pa"  :icon "gear"               :face default                          :collection "nerd-fonts-codicons")
+     (property       "pr"  :icon "symbol-property"    :face font-lock-variable-name-face     :collection "nerd-fonts-codicons")
+     (reference      "rf"  :icon "library"            :face font-lock-variable-name-face     :collection "nerd-fonts-codicons")
+     (snippet        "S"   :icon "symbol-snippet"     :face font-lock-string-face            :collection "nerd-fonts-codicons")
+     (string         "s"   :icon "symbol-string"      :face font-lock-string-face            :collection "nerd-fonts-codicons")
+     (struct         "%"   :icon "symbol-structure"   :face font-lock-variable-name-face     :collection "nerd-fonts-codicons")
+     (text           "tx"  :icon "symbol-key"         :face font-lock-doc-face               :collection "nerd-fonts-codicons")
+     (typeparameter  "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "nerd-fonts-codicons")
+     (type-parameter "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "nerd-fonts-codicons")
+     (unit           "u"   :icon "symbol-ruler"       :face font-lock-constant-face          :collection "nerd-fonts-codicons")
+     (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "nerd-fonts-codicons")
+     (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "nerd-fonts-codicons")
+     (t              "."   :icon "question"           :face font-lock-warning-face           :collection "nerd-fonts-codicons")))
+  :init
+  (require 'svg-lib)
+  (add-to-list 'svg-lib-icon-collections
+               '("nerd-fonts-codicons" . "https://github.com/microsoft/vscode-codicons/raw/HEAD/src/icons/%s.svg"))
   :config
   ;; TODO 2022-05-24: See if I can use the cooler icons from
   ;; `lsp-bridge-icon--icons' without requiring the package
@@ -215,6 +218,7 @@ default lsp-passthrough."
 ;;;; Nerd-icons-corfu
 ;; Use nerd-icons with corfu
 (use-package nerd-icons-corfu
+  :disabled ; Deprecated because I've created a setup with kind-icon that pulls nerd-icon icons
   :after corfu
   :demand
   :autoload nerd-icons-corfu-formatter
