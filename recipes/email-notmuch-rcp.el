@@ -37,10 +37,10 @@
   :ensure-system-package (notmuch
                           (gmi . "sudo paru -S lieer-git"))
   :hook
-  ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
+  ((kb/themes . kb/notmuch-setup-faces)
+   (notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
    (notmuch-show . olivetti-mode)
    (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
-   (kb/themes . kb/notmuch-setup-faces)
    (message-send . kb/notmuch-set-sendmail-args))
   :bind
   (([remap compose-mail] . notmuch-mua-new-mail)
@@ -297,7 +297,33 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
   (with-eval-after-load 'pulsar
     (dolist (func '(notmuch-show-advance-and-archive
                     kb/notmuch-show-advance-and-tag))
-      (add-to-list 'pulsar-pulse-functions func))))
+      (add-to-list 'pulsar-pulse-functions func)))
+
+  ;; Sets the style of `message's citations before sending a reply
+  ;; TODO 2024-10-07: Try setting this automatically. If I can't, then clean up
+  ;; the prompting of this function
+  (defun kb/notmuch--set-message-citation-style (orig-func &rest args)
+    "Prompt for which style of citations should be used for message reply."
+    (let ((selection
+           (completing-read "Citation style: " '("default" "gmail"))))
+      (cond
+       ((equal selection "gmail")
+        (message "Setting citation style to gmail")
+        ;; These settings set what is specified by `message-cite-style-gmail'. I
+        ;; do this manually since not all packages seem to be affected by
+        ;; `message-cite-style'
+        (let ((message-cite-function 'message-cite-original)
+              (message-citation-line-function 'message-insert-formatted-citation-line)
+              (message-cite-reply-position 'above)
+              (message-yank-prefix "    ")
+              (message-yank-cited-prefix "    ")
+              (message-yank-empty-prefix "    ")
+              (message-citation-line-format "On %e %B %Y %R, %f wrote:\n"))
+          (apply orig-func args)))
+       (t
+        (message "Using default citation style")
+        (apply orig-func args)))))
+  (advice-add 'notmuch-mua-new-reply :around #'kb/notmuch--set-message-citation-style))
 
 ;;;; Sync emails with Lieer
 (with-eval-after-load 'notmuch
