@@ -823,7 +823,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
   :custom
   (org-mime-library 'mml)               ; For gnus
   (org-mime-export-ascii 'ascii)
-  (org-mime-preserve-breaks t)
+  (org-mime-preserve-breaks nil)
   ;; Keep GPG signatures outside of multipart. Modified version of
   ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
   (org-mime-find-html-start
