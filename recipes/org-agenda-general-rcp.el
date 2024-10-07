@@ -78,6 +78,11 @@
   (org-agenda-todo-ignore-scheduled nil)
   (org-agenda-remove-times-when-in-prefix t)
   (org-agenda-remove-tags 'prefix)
+  (org-agenda-prefix-format
+   '((agenda  . " %i %-8:c%?-12t% s %(kb/org-agenda-breadcrumb 20)")
+     (todo  . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")
+     (tags  . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")
+     (search . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")))
   (org-agenda-sorting-strategy
    '((agenda time-up habit-down deadline-up priority-down todo-state-up scheduled-up category-keep)
      (todo todo-state-up priority-down category-keep)
@@ -167,6 +172,20 @@
   (org-read-date-prefer-future 'time)
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
+  :init
+  (defun kb/org-agenda-breadcrumb (len)
+    "Formatted breadcrumb for current `org-agenda' item."
+    (org-with-point-at (org-get-at-bol 'org-marker)
+      (let ((s (if (derived-mode-p 'org-mode)
+                   (org-format-outline-path (org-get-outline-path)
+                                            (1- (frame-width))
+                                            nil org-agenda-breadcrumbs-separator)
+                 ;; Not in Org buffer. This can happen, for example, in
+                 ;; `org-agenda-add-time-grid-maybe' where time grid does not
+                 ;; correspond to a particular heading.
+                 "")))
+        (if (equal "" s) ""
+          (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
   (dolist (f (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
     (add-to-list 'org-agenda-files f))
@@ -231,20 +250,6 @@ This function makes sure that dates are aligned for easy reading."
   (org-super-agenda-keep-order t)
   (org-agenda-cmp-user-defined #'kb/org-sort-agenda-by-created-time)
   :init
-  (defun kb/org-agenda-breadcrumb (len)
-    "Formatted breadcrumb for current `org-agenda' item."
-    (org-with-point-at (org-get-at-bol 'org-marker)
-      (let ((s (if (derived-mode-p 'org-mode)
-                   (org-format-outline-path (org-get-outline-path)
-                                            (1- (frame-width))
-                                            nil org-agenda-breadcrumbs-separator)
-                 ;; Not in Org buffer. This can happen, for example, in
-                 ;; `org-agenda-add-time-grid-maybe' where time grid does not
-                 ;; correspond to a particular heading.
-                 "")))
-        (if (equal "" s) ""
-          (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
-
   (defun kb/org-get-created-time (entry)
     "Return the CREATED time of ENTRY, or an empty string if it doesn't exist."
     (let ((marker (get-text-property 0 'marker entry)))
@@ -283,6 +288,7 @@ This function makes sure that dates are aligned for easy reading."
   ;; - `org-agenda-skip-function'
   ;; - `org-agenda-entry-types'
   ;; - `org-deadline-warning-days'
+  ;; - `org-scheduled-delay-days'
   (setopt org-agenda-custom-commands
           '(("f" "FYP"
              ((agenda ""
