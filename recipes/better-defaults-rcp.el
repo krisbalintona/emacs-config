@@ -205,6 +205,11 @@
 ;;;; Defer font lock during input
 (setopt jit-lock-defer-time 0)
 
+;;;; Continuation line indicator character
+;; See for an explanation of these concepts
+;; https://www.reddit.com/r/emacs/comments/1fxr1ci/comment/lqpf2bz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+(set-display-table-slot standard-display-table 1 ?⏎)
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
