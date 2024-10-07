@@ -29,6 +29,7 @@
 ;;;; Lsp-mode
 ;; Use the language server protocol as a backend for Emacs.
 (use-package lsp-mode
+  :disabled
   :diminish ((lsp-mode . "LSP")
              (lsp-lens-mode . "Lens"))
   :hook
