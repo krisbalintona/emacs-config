@@ -58,12 +58,17 @@
 
   ;; Signatures
   (message-signature-insert-empty-line t)
-  (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-signature "Kind regards,\nKristoffer\n")
   (message-signature-separator "^-- $")
 
-  ;; Reply
-  (message-cite-reply-position 'above)
+  ;; Citations. See e.g. `message-cite-style-gmail' for the options relevant to
+  ;; citations. Importantly, I can set these options buffer locally.
+  (message-cite-function 'message-cite-original-without-signature)
+  (message-citation-line-function 'message-insert-formatted-citation-line)
+  (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
+  (message-cite-reply-position 'traditional)
+
+  ;; Replying
   (message-wide-reply-confirm-recipients t)
 
   ;; Forwarding
@@ -518,9 +523,6 @@ signatures being wrapped in `kb/signature-open' and
 \\(?:attached\\|enclosed\\)[ \t\n]\\(?:for\\|is\\)[ \t\n]")
   ;; Settings for Gmail-formatted HTML citations
   (org-msg-posting-style 'gmail) ; My own value which I leverage in `kb/org-msg-post-setup'
-  (message-cite-function 'message-cite-original-without-signature)
-  (message-citation-line-function 'message-insert-formatted-citation-line)
-  (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
   ;; CSS for emails. Taken initially from Doom Emacs then modified.
   (org-msg-enforce-css
    ;; Avoid styling that applies to all blockquotes (i.e. (blockquotes nil ...))
