@@ -339,6 +339,7 @@ buffer hidden."
                                      display-buffer-alist
                                    `((,buf-name display-buffer-no-window)))))
       (unless (get-buffer-process buf)
+        (with-current-buffer buf (setq-local buffer-read-only t))
         ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
         ;; `async-shell-command'
         (async-shell-command script buf))))
