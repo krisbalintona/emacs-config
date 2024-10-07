@@ -602,5 +602,10 @@ replacement."
            :reference-format "reference:  %s\n"
            :reference-regex "^reference\\s-*:"))))
 
+;;;; Darkroom
+(use-package darkroom
+  :custom
+  (darkroom-text-scale-increase 1.3))
+
 (provide 'org-notes-rcp)
 ;;; org-notes-rcp.el ends here
