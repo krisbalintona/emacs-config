@@ -144,6 +144,7 @@
       :empty-lines 1
       :clock-in t
       :clock-resume t)))
+  (org-capture-use-agenda-date t)       ; Use the time-at-point if any
 
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
