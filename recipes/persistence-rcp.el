@@ -77,15 +77,19 @@
 ;; Save buffers across Emacs sessions
 (use-package desktop
   :ensure nil
-  :hook (desktop-after-read . desktop-save-mode)
+  :hook ((desktop-after-read . desktop-save-mode)
+         (kill-emacs . (lambda () (when desktop-save-mode (desktop-save-in-desktop-dir)))))
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-files-not-to-save
    (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
            ;; Don't save files from other Emacs repos because sometimes they
            ;; have local variables that mess with desktop's loading of files
-           (literal "/home/krisbalintona/emacs-repos/"))))
-  (desktop-auto-save-timeout 3))
+           (literal (expand-file-name "emacs-repos/" "~")))))
+  (desktop-auto-save-timeout 3)
+  (desktop-restore-forces-onscreen t)
+  (desktop-restore-frames t)
+  (desktop-restore-in-current-display nil))
 
 ;;;; Super-save
 ;; Automatically save buffers when you do certain things
