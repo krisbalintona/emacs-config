@@ -257,6 +257,10 @@ With a prefix argument, show NLINES of context."
   ;; I don't know why the hook definition enables flyspell-mode...
   (remove-hook 'forge-post-mode-hook #'turn-on-flyspell))
 
+;;;;; Orgit-forge
+;; Org links to forge buffers
+(use-package orgit-forge)
+
 ;;;;; Abdridge-diff
 (use-package abridge-diff
   :diminish
