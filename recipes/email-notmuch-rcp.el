@@ -144,6 +144,8 @@
   (notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
   (notmuch-mua-user-agent-function nil)
   (notmuch-maildir-use-notmuch-insert t)
+  (notmuch-wash-citation-lines-prefix 0)
+  (notmuch-wash-citation-lines-suffix 0)
   (notmuch-crypto-process-mime t)
   (notmuch-crypto-get-keys-asynchronously t)
   ;; See `notmuch-mua-send-hook'
@@ -354,8 +356,9 @@ buffer hidden."
 ;; more visually subtle than `notmuch-indicator'.
 (with-eval-after-load 'time
   ;; Obviously the below applies only when `display-time-mode' is non-nil.
+  (with-eval-after-load 'notmuch
+    (setopt display-time-mail-face 'notmuch-search-flagged-face))
   (setopt display-time-use-mail-icon t
-          display-time-mail-face 'notmuch-search-flagged-face
           display-time-mail-function
           (lambda ()
             (let* ((command (format "notmuch search tag:inbox and tag:unread | wc -l"))
