@@ -293,7 +293,11 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
     (interactive)
     (when (notmuch-show-advance)
       (kb/notmuch-show-tag-thread)
-      (notmuch-show-next-thread t))))
+      (notmuch-show-next-thread t)))
+  (with-eval-after-load 'pulsar
+    (dolist (func '(notmuch-show-advance-and-archive
+                    kb/notmuch-show-advance-and-tag))
+      (add-to-list 'pulsar-pulse-functions func))))
 
 ;;;; Sync emails with Lieer
 (with-eval-after-load 'notmuch
