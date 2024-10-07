@@ -79,10 +79,10 @@
   (org-agenda-remove-times-when-in-prefix t)
   (org-agenda-remove-tags 'prefix)
   (org-agenda-prefix-format
-   '((agenda  . " %i %-8:c%?-12t% s %(kb/org-agenda-breadcrumb 20)")
-     (todo  . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")
-     (tags  . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")
-     (search . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")))
+   '((agenda  . " %i %-8:c%?-12t% s%-5e%(kb/org-agenda-breadcrumb 20)")
+     (todo  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
+     (tags  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
+     (search . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")))
   (org-agenda-sorting-strategy
    '((agenda habit-down user-defined-up urgency-down deadline-up todo-state-up category-up)
      (todo user-defined-up urgency-down todo-state-up category-up)
@@ -365,7 +365,7 @@ This function makes sure that dates are aligned for easy reading."
                           (org-agenda-prefix-format
                            ;; FIXME 2024-10-07: Not sure if this is a tags- or
                            ;; todo-type view
-                           '((tags  . " %i %-8:c")))
+                           '((tags  . " %i %-8:c%-5e")))
                           (org-super-agenda-groups
                            '(( :auto-parent t
                                :order 2)
