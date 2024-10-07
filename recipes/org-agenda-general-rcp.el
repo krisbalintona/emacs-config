@@ -100,7 +100,7 @@
      " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
   (org-agenda-current-time-string
    "⭠ now ─────────────────────────────────────────────────")
-  (org-agenda-breadcrumbs-separator " -> ")
+  (org-agenda-breadcrumbs-separator " ⇛ ")
   (org-agenda-skip-scheduled-delay-if-deadline nil)
   (org-agenda-skip-deadline-if-done t)
   (org-agenda-skip-scheduled-if-done t)
