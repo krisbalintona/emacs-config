@@ -155,8 +155,6 @@
 ;; Test faces without restart Emacs!
 (use-package fontaine
   :custom
-  (fontaine-latest-state-file
-   (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld"))
   (fontaine-presets
    '((regular
       :default-family "Hack"
