@@ -33,10 +33,10 @@
    (org-mode . visual-line-mode)
    (org-mode . (lambda () (setq-local line-spacing 0.2))))
   :bind
-  ( :map org-mode-map
-    ("C-M-s-s" . org-store-link)
-    ("C-M-S-s" . org-id-store-link)
-    ("C-M-<up>" . org-up-element))
+  (("C-M-s-s" . org-store-link)
+   :map org-mode-map
+   ("C-M-S-s" . org-id-store-link)
+   ("C-M-<up>" . org-up-element))
   :bind
   ( :map kb/note-keys
     ("c" . org-capture))
