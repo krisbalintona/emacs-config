@@ -44,7 +44,8 @@
   ;; "LiterationSerif Nerd Font"           ; Variable
   ;; "Latin Modern Mono Prop"              ; Monospace
   ;; "Sans Serif"
-  "Open Sans"
+  ;; "Open Sans"
+  "Overpass Nerd Font Propo"
   "Font for the variable-pitch face.")
 
 (defvar kb/themes-mode-line-font
@@ -153,55 +154,47 @@
 ;;;; Fontaine
 ;; Test faces without restart Emacs!
 (use-package fontaine
-  :defer 20
-  :config
-  (setopt fontaine-presets
-          '((regular
-             :default-family "Hack"
-             :default-weight normal
-             :default-height 100
-             :fixed-pitch-family "Fira Code"
-             :fixed-pitch-weight nil ; falls back to :default-weight
-             :fixed-pitch-height 1.0
-             :variable-pitch-family "Noto Sans"
-             :variable-pitch-weight normal
-             :variable-pitch-height 1.0
-             :bold-family nil ; use whatever the underlying face has
-             :bold-weight bold
-             :italic-family "Source Code Pro"
-             :italic-slant italic
-             :line-spacing 1)
-            (large
-             :default-family "Iosevka"
-             :default-weight normal
-             :default-height 150
-             :fixed-pitch-family nil ; falls back to :default-family
-             :fixed-pitch-weight nil ; falls back to :default-weight
-             :fixed-pitch-height 1.0
-             :variable-pitch-family "FiraGO"
-             :variable-pitch-weight normal
-             :variable-pitch-height 1.05
-             :bold-family nil ; use whatever the underlying face has
-             :bold-weight bold
-             :italic-family nil ; use whatever the underlying face has
-             :italic-slant italic
-             :line-spacing 1)
-            ;; Mine
-            (test
-             :default-family "Iosevka Term SS04"
-             :default-weight normal
-             :default-height 140
-             :fixed-pitch-family "Iosevka Comfy"
-             :fixed-pitch-weight nil
-             :fixed-pitch-height 1.0
-             :variable-pitch-family "Open Sans"
-             :variable-pitch-weight normal
-             :variable-pitch-height 1.10
-             :bold-family nil
-             :bold-weight bold
-             :italic-family nil
-             :italic-slant italic
-             :line-spacing 1))))
+  :custom
+  (fontaine-latest-state-file
+   (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld"))
+  (fontaine-presets
+   '((regular
+      :default-family "Hack"
+      :default-weight normal
+      :default-height 100
+      :fixed-pitch-family "Fira Code"
+      :fixed-pitch-weight nil ; falls back to :default-weight
+      :fixed-pitch-height 1.0
+      :variable-pitch-family "Noto Sans"
+      :variable-pitch-weight normal
+      :variable-pitch-height 1.0
+      :bold-family nil ; use whatever the underlying face has
+      :bold-weight bold
+      :italic-family "Source Code Pro"
+      :italic-slant italic
+      :line-spacing 1)
+     (large
+      :default-family "Iosevka"
+      :default-weight normal
+      :default-height 150
+      :fixed-pitch-family nil ; falls back to :default-family
+      :fixed-pitch-weight nil ; falls back to :default-weight
+      :fixed-pitch-height 1.0
+      :variable-pitch-family "FiraGO"
+      :variable-pitch-weight normal
+      :variable-pitch-height 1.05
+      :bold-family nil ; use whatever the underlying face has
+      :bold-weight bold
+      :italic-family nil ; use whatever the underlying face has
+      :italic-slant italic
+      :line-spacing 1)
+     ;; My presets
+     (testing
+      ;; :default-family "OverpassM Nerd Font Mono"
+      ;; :fixed-pitch-family "OverpassM Nerd Font Mono"
+      ;; :fixed-pitch-height 1.1
+      :variable-pitch-family "Overpass Nerd Font Propo"
+      :variable-pitch-height 1.15))))
 
 ;;;; Show-font
 ;; Best font previewer
