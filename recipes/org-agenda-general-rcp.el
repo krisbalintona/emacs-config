@@ -84,9 +84,9 @@
      (tags  . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")
      (search . " %i %-8:c %(kb/org-agenda-breadcrumb 20)")))
   (org-agenda-sorting-strategy
-   '((agenda time-up habit-down deadline-up priority-down todo-state-up scheduled-up category-keep)
-     (todo todo-state-up priority-down category-keep)
-     (tags todo-state-up priority-down category-keep)
+   '((agenda habit-down user-defined-up urgency-down deadline-up todo-state-up category-up)
+     (todo user-defined-up urgency-down todo-state-up category-up)
+     (todo user-defined-up urgency-down todo-state-up category-up)
      (search todo-state-up priority-down category-keep)))
   ;; See
   ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
@@ -304,8 +304,6 @@ This function makes sure that dates are aligned for easy reading."
              ((agenda ""
                       ((org-agenda-overriding-header "Time-bound tasks")
                        (org-agenda-show-inherited-tags t)
-                       (org-agenda-sorting-strategy
-                        '((agenda habit-down time-up urgency-down deadline-up todo-state-up category-up)))
                        (org-agenda-start-day "+0d")
                        (org-agenda-span 'day)
                        (org-habit-show-habits-only-for-today t)
@@ -321,18 +319,14 @@ This function makes sure that dates are aligned for easy reading."
                           (org-agenda-show-inherited-tags t)
                           (org-agenda-dim-blocked-tasks 'invisible)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                          (org-agenda-sorting-strategy
-                           '((todo todo-state-up urgency-down category-up)))))
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))
               (tags-todo "+TODO=\"TODO\"-project-inbox"
                          ((org-agenda-overriding-header "Standard")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
                           (org-agenda-dim-blocked-tasks 'invisible)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                          (org-agenda-sorting-strategy
-                           '((todo todo-state-up urgency-down category-up)))))))
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
             ("i" "Inbox: process entries"
              ((agenda ""
                       ((org-agenda-overriding-header "Time-bound inbox")
@@ -341,8 +335,6 @@ This function makes sure that dates are aligned for easy reading."
                        (org-habit-show-habits nil)
                        (org-agenda-entry-types
                         '(:deadline :scheduled))
-                       (org-agenda-sorting-strategy
-                        '((agenda user-defined-up urgency-down todo-state-up category-up)))
                        (org-super-agenda-groups
                         '((:tag "inbox")
                           (:todo "MAYBE")
@@ -351,15 +343,11 @@ This function makes sure that dates are aligned for easy reading."
                          ((org-agenda-overriding-header "Regular inbox")
                           (org-agenda-dim-blocked-tasks t)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                          (org-agenda-sorting-strategy
-                           '((todo user-defined-up urgency-down todo-state-up category-up)))))
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))
               (todo "MAYBE"
                     ((org-agenda-overriding-header "Regular maybes")
                      (org-agenda-skip-function
-                      '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                     (org-agenda-sorting-strategy
-                      '((todo user-defined-up urgency-down todo-state-up category-up)))))))
+                      '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
             ("p" "Projects"
              ((tags-todo "project"
                          ((org-agenda-overriding-header "")
@@ -374,8 +362,6 @@ This function makes sure that dates are aligned for easy reading."
                           ;; there is a workaround
                           (org-tags-exclude-from-inheritance
                            (remove "project" org-tags-exclude-from-inheritance))
-                          (org-agenda-sorting-strategy
-                           '((todo user-defined-up urgency-down todo-state-up category-up)))
                           (org-agenda-prefix-format
                            ;; FIXME 2024-10-07: Not sure if this is a tags- or
                            ;; todo-type view
