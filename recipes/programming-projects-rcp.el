@@ -261,6 +261,50 @@ With a prefix argument, show NLINES of context."
 ;; Org links to forge buffers
 (use-package orgit-forge)
 
+;;;;; Consult-gh
+;; Use consult to interface with Github CLI. (And Forge, with
+;; `consult-gh-forge').
+(use-package consult-gh
+  :ensure-system-package (gh . github-cli)
+  :custom
+  (consult-gh-default-interactive-command #'consult-gh-transient)
+
+  ;; Cloning
+  (consult-gh-default-clone-directory (expand-file-name "Repos" "~"))
+
+  ;; Actions
+  (consult-gh-code-action #'consult-gh--code-view-action)
+  (consult-gh-discussion-action #'consult-gh--discussion-browse-url-action)
+  (consult-gh-file-action #'consult-gh--files-browse-url-action)
+  (consult-gh-issue-action #'consult-gh-forge--issue-view-action)
+
+  ;; Previews
+  (consult-gh-show-preview t)
+  (consult-gh-preview-key "C-;")
+  (consult-gh-issue-preview-mode 'markdown-mode)
+  (consult-gh-repo-preview-mode 'markdown-mode)
+  :config
+  ;; FIXME 2024-10-07: For some reason this file isn't loaded, nor is
+  ;; `consult-gh-transient' autoloaded
+  (require 'consult-gh-transient)
+  
+  (add-to-list 'savehist-additional-variables 'consult-gh--known-orgs-list)
+  (add-to-list 'savehist-additional-variables 'consult-gh--known-repos-list))
+
+(use-package consult-gh-forge
+  :diminish
+  :custom
+  (consult-gh-forge-timeout-seconds 10)
+  :init
+  (with-eval-after-load 'forge
+    (consult-gh-forge-mode 1)))
+
+(use-package consult-gh-embark
+  :diminish
+  :init
+  (with-eval-after-load 'embark
+    (consult-gh-embark-mode 1)))
+
 ;;;;; Abdridge-diff
 (use-package abridge-diff
   :diminish
