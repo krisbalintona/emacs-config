@@ -163,7 +163,7 @@
   (hammy-sound-end-break "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
 
   ;; Mode line
-  (hammy-mode-always-show-lighter t)
+  (hammy-mode-always-show-lighter nil)
   (hammy-mode-update-mode-line-continuously t)
   (hammy-mode-lighter-seconds-format "%.2m:%.2s")
   (hammy-mode-lighter-prefix "[H]")
