@@ -844,8 +844,8 @@ A spacer is two newlines inserted after portions inserted by
       (delete-blank-lines)))
   (advice-add 'org-mime-htmlize :after #'kb/org-mime--remove-spacer)
   :config
-  ;; Start with a single # to font-lock as comment
-  (setq org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n"
+  ;; FIXME 2024-10-07: For some reason, setting these in :custom doesn't work...
+  (setq org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n" ; Start with a single # to font-lock as comment
         org-mime-export-options '( :with-latex t
                                    :section-numbers nil
                                    :with-author nil
