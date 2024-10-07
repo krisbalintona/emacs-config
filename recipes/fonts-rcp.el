@@ -203,6 +203,10 @@
              :italic-slant italic
              :line-spacing 1))))
 
+;;;; Show-font
+;; Best font previewer
+(use-package show-font)
+
 ;;;; All-the-icons
 ;; Provides a bunch of unicode icons which many other packages leverage
 (use-package all-the-icons
