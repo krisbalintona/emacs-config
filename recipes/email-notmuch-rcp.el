@@ -84,7 +84,7 @@
      (:name "trash"                 :query "tag:trash"                                        :key "t")))
   (notmuch-show-empty-saved-searches t)
   (notmuch-search-oldest-first nil)
-  (notmuch-search-result-format '(("date" . "%12s ")
+  (notmuch-search-result-format '(("date" . "%14s ")
                                   ("count" . "%-7s ")
                                   ("authors" . "%-30s ")
                                   ("subject" . "%-75.75s ")
