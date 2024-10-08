@@ -210,6 +210,9 @@
 ;; https://www.reddit.com/r/emacs/comments/1fxr1ci/comment/lqpf2bz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 (set-display-table-slot standard-display-table 1 ?⏎)
 
+;;;; Header line text scaling
+(setq-default text-scale-remap-header-line t)
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
