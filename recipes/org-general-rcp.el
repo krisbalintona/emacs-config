@@ -33,10 +33,10 @@
    (org-mode . visual-line-mode)
    (org-mode . (lambda () (setq-local line-spacing 0.2))))
   :bind
-  ( :map org-mode-map
-    ("C-M-s-s" . org-store-link)
-    ("C-M-S-s" . org-id-store-link)
-    ("C-M-<up>" . org-up-element))
+  (("C-M-s-s" . org-store-link)
+   :map org-mode-map
+   ("C-M-S-s" . org-id-store-link)
+   ("C-M-<up>" . org-up-element))
   :bind
   ( :map kb/note-keys
     ("c" . org-capture))
@@ -86,7 +86,7 @@
   (org-ditaa-jar-path                   ; EAF happens to install it...
    "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
   :custom-face
-  (org-quote ((t (:family ,kb/themes-variable-pitch-font :extend t :inherit 'org-block))))
+  (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
   (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
   :config
   ;; Make org-open-at-point follow file links in the same window
@@ -599,7 +599,11 @@ have `org-warning' face."
     ("b" . org-web-tools-insert-link-for-url))
   :config
   ;; Immediately enter view mode
-  (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode))))
+  (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode)))
+
+  (add-to-list 'org-attach-commands
+               '((?w) org-web-tools-archive-attach
+                 "Download then attach an archive of a webpage using `org-web-tools'\n")))
 
 ;;;;; Org-download
 ;; Insert images and screenshots into select modes

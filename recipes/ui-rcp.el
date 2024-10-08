@@ -39,7 +39,6 @@
   :init
   (mood-one-theme-arrow-fringe-bmp-enable)
   (eval-after-load 'flycheck #'mood-one-theme-flycheck-fringe-bmp-enable))
-(require 'uninspiring-dark-theme)
 
 ;;;;; Light
 (use-package modus-themes
@@ -134,21 +133,6 @@
   (setq frame (or frame (selected-frame)))
   (select-frame frame)
 
-  (set-face-attribute 'default nil
-                      :family kb/themes-default-font
-                      ;; 1920x1080 display
-                      ;; :height 140)
-                      ;; 2560x1600 display
-                      ;; :height 186)
-                      ;; 2560x1600 display, with DPI set to 118
-                      :height 161)
-  (set-face-attribute 'fixed-pitch nil
-                      :family kb/themes-fixed-pitch-font
-                      :height 1.0)
-  (set-face-attribute 'variable-pitch nil
-                      :family kb/themes-variable-pitch-font
-                      :height 1.1)
-
   (set-face-attribute 'mode-line-active nil
                       :background (modus-themes-with-colors bg-mode-line-active)
                       :box `( :line-width 3
@@ -165,13 +149,6 @@
 
   (modus-themes-with-colors
     (set-face-attribute 'cursor nil :background magenta-cooler))
-
-  (dolist (face (list 'tab-bar-tab
-                      'tab-bar-tab-inactive
-                      'tab-bar-tab-group-current
-                      'tab-bar-tab-group-inactive))
-    (set-face-attribute face nil
-                        :family (face-attribute 'variable-pitch :family)))
 
   (set-face-background 'fringe (face-attribute 'default :background))
   ;; Note that the vertical border is distinct from the window divider when

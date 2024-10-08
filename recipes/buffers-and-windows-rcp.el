@@ -80,11 +80,12 @@
   :ensure nil
   :bind* ("M-o" . other-window)
   :custom
-  (split-width-threshold 110)
+  (split-width-threshold (ceiling (/ (frame-width) 2.0)))
   (split-height-threshold 80)
-  (window-combination-resize t) ; Allow to resize existing windows when splitting?
-  (window-resize-pixelwise t)
   (window-sides-vertical t)
+  (window-resize-pixelwise t)
+  (window-combination-resize t) ; Allow to resize existing windows when splitting?
+  (fit-window-to-buffer-horizontally t)
 
   (switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
   (switch-to-buffer-in-dedicated-window 'pop)

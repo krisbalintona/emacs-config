@@ -41,17 +41,22 @@
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil) ; Disable fringe indicators
   (flymake-show-diagnostics-at-end-of-line nil) ; I enable this selectively via a hook
+  (flymake-suppress-zero-counters t)
   (flymake-mode-line-format
    '(flymake-mode-line-exception flymake-mode-line-counters))
   (flymake-mode-line-counter-format     ; Remove surrounding brackets
-   ;; NOTE 2024-02-12: Need to have first and last elements be strings!
-   ;; Otherwise a counter might be hidden
-   '(""
-     flymake-mode-line-error-counter
-     flymake-mode-line-warning-counter
-     flymake-mode-line-note-counter
-     ""))
-  (flymake-suppress-zero-counters t))
+   '(:eval
+     ;; NOTE 2024-02-12: Need to have first and last elements be strings!
+     ;; Otherwise a counter might be hidden
+     (let ((counters '(""
+                       flymake-mode-line-error-counter
+                       flymake-mode-line-warning-counter
+                       flymake-mode-line-note-counter
+                       "")))
+       (if (mode-line-window-selected-p)
+           counters
+         (propertize (format-mode-line counters)
+                     'face '(:inherit (bold mode-line-inactive))))))))
 
 ;;;; Flymake-collection
 (use-package flymake-collection

@@ -78,10 +78,15 @@
   (org-agenda-todo-ignore-scheduled nil)
   (org-agenda-remove-times-when-in-prefix t)
   (org-agenda-remove-tags 'prefix)
+  (org-agenda-prefix-format
+   '((agenda  . " %i %-8:c%?-12t% s%-5e%(kb/org-agenda-breadcrumb 20)")
+     (todo  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
+     (tags  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
+     (search . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")))
   (org-agenda-sorting-strategy
-   '((agenda time-up habit-down deadline-up priority-down todo-state-up scheduled-up category-keep)
-     (todo todo-state-up priority-down category-keep)
-     (tags todo-state-up priority-down category-keep)
+   '((agenda habit-down user-defined-up urgency-down deadline-up todo-state-up category-up)
+     (todo user-defined-up urgency-down todo-state-up category-up)
+     (todo user-defined-up urgency-down todo-state-up category-up)
      (search todo-state-up priority-down category-keep)))
   ;; See
   ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
@@ -95,7 +100,7 @@
      " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
   (org-agenda-current-time-string
    "⭠ now ─────────────────────────────────────────────────")
-  (org-agenda-breadcrumbs-separator " -> ")
+  (org-agenda-breadcrumbs-separator " ⇛ ")
   (org-agenda-skip-scheduled-delay-if-deadline nil)
   (org-agenda-skip-deadline-if-done t)
   (org-agenda-skip-scheduled-if-done t)
@@ -129,7 +134,17 @@
       :empty-lines 1
       :clock-in t
       :clock-resume t
-      :kill-buffer t)))
+      :kill-buffer t)
+     ("j" "Journal" entry
+      (file+olp+datetree ,(car (denote-directory-files "20241006T214811")))
+      "* %<%F>\n\n%?"
+      :tree-type week
+      :jump-to-captured t
+      :immediate-finish t
+      :empty-lines 1
+      :clock-in t
+      :clock-resume t)))
+  (org-capture-use-agenda-date t)       ; Use the time-at-point if any
 
   ;; Todos
   (org-fast-tag-selection-single-key 'expert)
@@ -167,6 +182,20 @@
   (org-read-date-prefer-future 'time)
   :custom-face
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
+  :init
+  (defun kb/org-agenda-breadcrumb (len)
+    "Formatted breadcrumb for current `org-agenda' item."
+    (org-with-point-at (org-get-at-bol 'org-marker)
+      (let ((s (if (derived-mode-p 'org-mode)
+                   (org-format-outline-path (org-get-outline-path)
+                                            (1- (frame-width))
+                                            nil org-agenda-breadcrumbs-separator)
+                 ;; Not in Org buffer. This can happen, for example, in
+                 ;; `org-agenda-add-time-grid-maybe' where time grid does not
+                 ;; correspond to a particular heading.
+                 "")))
+        (if (equal "" s) ""
+          (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
   (dolist (f (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
     (add-to-list 'org-agenda-files f))
@@ -216,6 +245,10 @@ This function makes sure that dates are aligned for easy reading."
 
 ;;;; Org-super-agenda
 (use-package org-super-agenda
+  ;; NOTE 2024-10-06: I can currently check out and install a version of
+  ;; org-super-agenda that applies the patch from PR#242
+  :vc (:url "https://github.com/Alexander-Miller/org-super-agenda.git"
+            :rev "f524347474d7535aab7ae3e6651cf2dd1fb68c72")
   :demand
   :after org-agenda
   :custom
@@ -224,27 +257,11 @@ This function makes sure that dates are aligned for easy reading."
   ;; non-nil, it causes an error when using :auto-* selectors. This doesn't seem
   ;; to occur in an emacs -Q instances, but I have no clue what is causing the
   ;; error in my config... Although the following PR might fix the issue:
-  ;; https://github.com/alphapapa/org-super-agenda/pull/242
-  ;; NOTE 2024-10-06: I have currently checked out and installed a version of
-  ;; org-super-agenda that applies the patch from PR#242
-  ;; (/home/krisbalintona/emacs-repos/packages/org-super-agenda-PR#242/)
+  ;; https://github.com/alphapapa/org-super-agenda/pull/242. Also see the NOTE
+  ;; above, near the :vc keword
   (org-super-agenda-keep-order t)
   (org-agenda-cmp-user-defined #'kb/org-sort-agenda-by-created-time)
   :init
-  (defun kb/org-agenda-breadcrumb (len)
-    "Formatted breadcrumb for current `org-agenda' item."
-    (org-with-point-at (org-get-at-bol 'org-marker)
-      (let ((s (if (derived-mode-p 'org-mode)
-                   (org-format-outline-path (org-get-outline-path)
-                                            (1- (frame-width))
-                                            nil org-agenda-breadcrumbs-separator)
-                 ;; Not in Org buffer. This can happen, for example, in
-                 ;; `org-agenda-add-time-grid-maybe' where time grid does not
-                 ;; correspond to a particular heading.
-                 "")))
-        (if (equal "" s) ""
-          (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
-
   (defun kb/org-get-created-time (entry)
     "Return the CREATED time of ENTRY, or an empty string if it doesn't exist."
     (let ((marker (get-text-property 0 'marker entry)))
@@ -283,13 +300,12 @@ This function makes sure that dates are aligned for easy reading."
   ;; - `org-agenda-skip-function'
   ;; - `org-agenda-entry-types'
   ;; - `org-deadline-warning-days'
+  ;; - `org-scheduled-delay-days'
   (setopt org-agenda-custom-commands
           '(("f" "FYP"
              ((agenda ""
                       ((org-agenda-overriding-header "Time-bound tasks")
                        (org-agenda-show-inherited-tags t)
-                       (org-agenda-sorting-strategy
-                        '((agenda habit-down time-up urgency-down deadline-up todo-state-up category-up)))
                        (org-agenda-start-day "+0d")
                        (org-agenda-span 'day)
                        (org-habit-show-habits-only-for-today t)
@@ -305,18 +321,14 @@ This function makes sure that dates are aligned for easy reading."
                           (org-agenda-show-inherited-tags t)
                           (org-agenda-dim-blocked-tasks 'invisible)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                          (org-agenda-sorting-strategy
-                           '((todo todo-state-up urgency-down category-up)))))
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))
               (tags-todo "+TODO=\"TODO\"-project-inbox"
                          ((org-agenda-overriding-header "Standard")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
                           (org-agenda-dim-blocked-tasks 'invisible)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                          (org-agenda-sorting-strategy
-                           '((todo todo-state-up urgency-down category-up)))))))
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
             ("i" "Inbox: process entries"
              ((agenda ""
                       ((org-agenda-overriding-header "Time-bound inbox")
@@ -325,8 +337,6 @@ This function makes sure that dates are aligned for easy reading."
                        (org-habit-show-habits nil)
                        (org-agenda-entry-types
                         '(:deadline :scheduled))
-                       (org-agenda-sorting-strategy
-                        '((agenda user-defined-up urgency-down todo-state-up category-up)))
                        (org-super-agenda-groups
                         '((:tag "inbox")
                           (:todo "MAYBE")
@@ -335,22 +345,35 @@ This function makes sure that dates are aligned for easy reading."
                          ((org-agenda-overriding-header "Regular inbox")
                           (org-agenda-dim-blocked-tasks t)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                          (org-agenda-sorting-strategy
-                           '((todo user-defined-up urgency-down todo-state-up category-up)))))
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))
               (todo "MAYBE"
                     ((org-agenda-overriding-header "Regular maybes")
                      (org-agenda-skip-function
-                      '(org-agenda-skip-entry-if 'scheduled 'deadline))
-                     (org-agenda-sorting-strategy
-                      '((todo user-defined-up urgency-down todo-state-up category-up)))))))
+                      '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
             ("p" "Projects"
-             ((tags "project/-DONE-CANCELED-MAYBE"
-                    ((org-agenda-overriding-header "All projects")
-                     (org-agenda-dim-blocked-tasks nil)
-                     (org-agenda-sorting-strategy
-                      '((todo user-defined-up urgency-down todo-state-up category-up))))))))))
-
+             ((tags-todo "project"
+                         ((org-agenda-overriding-header "")
+                          (org-agenda-dim-blocked-tasks nil)
+                          ;; This lets project sub-tasks be discoverable by a tags
+                          ;; search. One might think :auto-parent makes this
+                          ;; redundant, but this handles cases where I have a
+                          ;; sub-task but its parent is not a project -- I do this
+                          ;; sometimes for simple dependencies between todos
+                          ;; FIXME 2024-10-07: This shows the project tag for all the
+                          ;; sub-tasks, which can be visually noisy. I'm not sure if
+                          ;; there is a workaround
+                          (org-tags-exclude-from-inheritance
+                           (remove "project" org-tags-exclude-from-inheritance))
+                          (org-agenda-prefix-format
+                           ;; FIXME 2024-10-07: Not sure if this is a tags- or
+                           ;; todo-type view
+                           '((tags  . " %i %-8:c%-5e")))
+                          (org-super-agenda-groups
+                           '(( :auto-parent t
+                               :order 2)
+                             ( :name "All projects"
+                               :anything t
+                               :order 1))))))))))
 ;;;; Org-clock
 (use-package org-clock
   :demand

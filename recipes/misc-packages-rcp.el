@@ -163,7 +163,7 @@
   (hammy-sound-end-break "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
 
   ;; Mode line
-  (hammy-mode-always-show-lighter t)
+  (hammy-mode-always-show-lighter nil)
   (hammy-mode-update-mode-line-continuously t)
   (hammy-mode-lighter-seconds-format "%.2m:%.2s")
   (hammy-mode-lighter-prefix "[H]")
@@ -807,19 +807,16 @@ ARG and REDISPLAY are identical to the original function."
 
 ;;;;; Casual
 ;; A suite of "casual" interfaces.
-(use-package casual-suite)
-
-(use-package casual-ibuffer
-  :bind ( :map ibuffer-mode-map
-          ("C-M-s-\\" . casual-ibuffer-tmenu)))
-
-(use-package casual-info
-  :bind ( :map Info-mode-map
-          ("C-M-s-\\" . casual-info-tmenu)))
-
-(use-package casual-calc
-  :bind ( :map calc-mode-map
-          ("C-M-s-\\" . casual-calc-tmenu)))
+(use-package casual-suite
+  ;; TODO 2024-10-07: Try to avoid using demand
+  :demand
+  :bind
+  ( :map ibuffer-mode-map
+    ("C-M-s-\\" . casual-ibuffer-tmenu)
+    :map Info-mode-map
+    ("C-M-s-\\" . casual-info-tmenu)
+    :map calc-mode-map
+    ("C-M-s-\\" . casual-calc-tmenu)))
 
 ;;;;; Async.el
 ;; Async library and a few small but useful implementations

@@ -42,11 +42,11 @@
   :bind
   ( :map kb/note-keys
     ("f" . denote-open-or-create)
-    ("i" . denote-insert-link)
-    ("I" . denote-link-or-create)
+    ("i" . denote-link-or-create)
     ("e" . denote-org-extras-extract-org-subtree)
     ("t" . denote-rename-file-keywords)
-    ("l" . denote-backlinks))
+    ("l" . denote-find-backlink)
+    ("L" . denote-backlinks))
   :custom
   (denote-directory kb/notes-dir)
   (denote-known-keywords nil)
@@ -148,6 +148,15 @@
       (set-face-attribute 'denote-faces-keywords nil :foreground keyword :slant 'italic)
       (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow)))
   (kb/themes-setup-denote-faces))       ; Immediately call
+
+;;;;; Denote-journal-extras
+(use-package denote-journal-extras
+  :ensure nil
+  :custom
+  (denote-journal-extras-directory
+   (expand-file-name "commonplace_book/journal" denote-directory))
+  (denote-journal-extras-keyword "journal")
+  (denote-journal-extras-title-format 'day-date-month-year-24h))
 
 ;;;;; Standardizing note front-matter
 (with-eval-after-load 'denote
@@ -592,6 +601,11 @@ replacement."
           (text
            :reference-format "reference:  %s\n"
            :reference-regex "^reference\\s-*:"))))
+
+;;;; Darkroom
+(use-package darkroom
+  :custom
+  (darkroom-text-scale-increase 1.3))
 
 (provide 'org-notes-rcp)
 ;;; org-notes-rcp.el ends here

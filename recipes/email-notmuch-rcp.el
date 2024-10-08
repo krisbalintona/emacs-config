@@ -37,10 +37,10 @@
   :ensure-system-package (notmuch
                           (gmi . "sudo paru -S lieer-git"))
   :hook
-  ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
+  ((kb/themes . kb/notmuch-setup-faces)
+   (notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
    (notmuch-show . olivetti-mode)
    (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
-   (kb/themes . kb/notmuch-setup-faces)
    (message-send . kb/notmuch-set-sendmail-args))
   :bind
   (([remap compose-mail] . notmuch-mua-new-mail)
@@ -74,17 +74,17 @@
   ;; via cli
   (notmuch-search-hide-excluded t)
   (notmuch-saved-searches
-   '((:name "inbox"                 :query "tag:inbox and not tag:list" :key "i")
-     (:name "to-read mailing lists" :query "tag:list and tag:inbox "    :key "l")
-     (:name "all mailing lists"     :query "tag:list"                   :key "L")
-     (:name "sent"                  :query "tag:sent"                   :key "s")
-     (:name "drafts"                :query "tag:draft or path:drafts/"  :key "d")
-     (:name "archived"              :query "not tag:trash"              :key "a")
-     (:name "all"                   :query "path:**"                    :key "A")
-     (:name "trash"                 :query "tag:trash"                  :key "t")))
+   '((:name "inbox"                 :query "tag:inbox and not tag:list"                       :key "i")
+     (:name "to-read mailing lists" :query "tag:list and tag:inbox " :sort-order oldest-first :key "l")
+     (:name "all mailing lists"     :query "tag:list"                                         :key "L" )
+     (:name "sent"                  :query "tag:sent"                                         :key "s")
+     (:name "drafts"                :query "tag:draft or path:drafts/"                        :key "d")
+     (:name "archived"              :query "not tag:trash"                                    :key "a")
+     (:name "all"                   :query "path:**"                                          :key "A")
+     (:name "trash"                 :query "tag:trash"                                        :key "t")))
   (notmuch-show-empty-saved-searches t)
   (notmuch-search-oldest-first nil)
-  (notmuch-search-result-format '(("date" . "%12s ")
+  (notmuch-search-result-format '(("date" . "%14s ")
                                   ("count" . "%-7s ")
                                   ("authors" . "%-30s ")
                                   ("subject" . "%-75.75s ")
@@ -118,8 +118,6 @@
   (notmuch-show-indent-messages-width 3)
   (notmuch-show-part-button-default-action 'notmuch-show-interactively-view-part)
   (notmuch-show-text/html-blocked-images ".") ; Block everything
-  (notmuch-wash-citation-lines-prefix 3)
-  (notmuch-wash-citation-lines-suffix 3)
   (notmuch-wash-wrap-lines-length nil)
   (notmuch-unthreaded-show-out t)
   (notmuch-message-headers-visible nil)
@@ -144,6 +142,8 @@
   (notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
   (notmuch-mua-user-agent-function nil)
   (notmuch-maildir-use-notmuch-insert t)
+  (notmuch-wash-citation-lines-prefix 0)
+  (notmuch-wash-citation-lines-suffix 0)
   (notmuch-crypto-process-mime t)
   (notmuch-crypto-get-keys-asynchronously t)
   ;; See `notmuch-mua-send-hook'
@@ -159,6 +159,13 @@
   (send-mail-function 'sendmail-send-it)
   (notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
   :config
+  ;; Don't buttonize citations
+  ;; FIXME 2024-10-07: For some reason putting this in :custom and setting it to
+  ;; a high value doesn't work, so I put it here
+  (setq notmuch-wash-citation-lines-prefix most-positive-fixnum
+        notmuch-wash-citation-lines-suffix most-positive-fixnum)
+
+
   ;; Restore window configuration when closing notmuch-hello window
   (defvar kb/notmuch-hello-pre-window-conf nil)
 
@@ -274,7 +281,7 @@ thread."
     (interactive "P")
     (notmuch-show-tag-all
      (notmuch-tag-change-list (append notmuch-archive-tags '("+trash"))))
-    (notmuch-show-next-thread t))
+    (notmuch-show-next-thread t show))
 
   (defun kb/notmuch-show-tag-thread (&optional reverse)
     "Like `notmuch-show-archive-thread' put prompt "
@@ -293,7 +300,37 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
     (interactive)
     (when (notmuch-show-advance)
       (kb/notmuch-show-tag-thread)
-      (notmuch-show-next-thread t))))
+      (notmuch-show-next-thread t)))
+  (with-eval-after-load 'pulsar
+    (dolist (func '(notmuch-show-advance-and-archive
+                    kb/notmuch-show-advance-and-tag))
+      (add-to-list 'pulsar-pulse-functions func)))
+
+  ;; Sets the style of `message's citations before sending a reply
+  ;; TODO 2024-10-07: Try setting this automatically. If I can't, then clean up
+  ;; the prompting of this function
+  (defun kb/notmuch--set-message-citation-style (orig-func &rest args)
+    "Prompt for which style of citations should be used for message reply."
+    (let ((selection
+           (completing-read "Citation style: " '("default" "gmail"))))
+      (cond
+       ((equal selection "gmail")
+        (message "Setting citation style to gmail")
+        ;; These settings set what is specified by `message-cite-style-gmail'. I
+        ;; do this manually since not all packages seem to be affected by
+        ;; `message-cite-style'
+        (let ((message-cite-function 'message-cite-original)
+              (message-citation-line-function 'message-insert-formatted-citation-line)
+              (message-cite-reply-position 'above)
+              (message-yank-prefix "    ")
+              (message-yank-cited-prefix "    ")
+              (message-yank-empty-prefix "    ")
+              (message-citation-line-format "On %e %B %Y %R, %f wrote:\n"))
+          (apply orig-func args)))
+       (t
+        (message "Using default citation style")
+        (apply orig-func args)))))
+  (advice-add 'notmuch-mua-new-reply :around #'kb/notmuch--set-message-citation-style))
 
 ;;;; Sync emails with Lieer
 (with-eval-after-load 'notmuch
@@ -309,6 +346,7 @@ buffer hidden."
                                      display-buffer-alist
                                    `((,buf-name display-buffer-no-window)))))
       (unless (get-buffer-process buf)
+        (with-current-buffer buf (setq-local buffer-read-only t))
         ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
         ;; `async-shell-command'
         (async-shell-command script buf))))
@@ -323,8 +361,9 @@ buffer hidden."
 ;; more visually subtle than `notmuch-indicator'.
 (with-eval-after-load 'time
   ;; Obviously the below applies only when `display-time-mode' is non-nil.
+  (with-eval-after-load 'notmuch
+    (setopt display-time-mail-face 'notmuch-search-flagged-face))
   (setopt display-time-use-mail-icon t
-          display-time-mail-face 'notmuch-search-flagged-face
           display-time-mail-function
           (lambda ()
             (let* ((command (format "notmuch search tag:inbox and tag:unread | wc -l"))

@@ -439,14 +439,14 @@ Uses my 'latex-paper' backend. See the original
 (use-package ox-clip
   :ensure-system-package ((xclip)
                           (wl-copy . wl-clipboard))
-  :bind
-  ( :map kb/yank-keys
-    ("x" . ox-clip-formatted-copy))
-  :config
-  (setq ox-clip-linux-cmd
-        (if (string-equal (getenv "XDG_SESSION_TYPE") "wayland")
-            "wl-copy --type text/html < $%f"
-          "xclip -verbose -i \"%f\" -t text/html -selection clipboard")))
+  :bind ( :map kb/yank-keys
+          ("x" . ox-clip-formatted-copy))
+  :custom
+  ;; FIXME 2024-10-07: Doesn't work on wayland for some reason. It's just
+  ;; pasting the plain text.
+  (ox-clip-linux-cmd (if (string-equal (getenv "XDG_SESSION_TYPE") "wayland")
+                         "wl-copy -p --type text/html < $%f"
+                       "xclip -verbose -i \"%f\" -t text/html -selection clipboard")))
 
 (provide 'org-export-rcp)
 ;;; org-export-rcp.el ends here

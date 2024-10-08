@@ -58,12 +58,17 @@
 
   ;; Signatures
   (message-signature-insert-empty-line t)
-  (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-signature "Kind regards,\nKristoffer\n")
   (message-signature-separator "^-- $")
 
-  ;; Reply
-  (message-cite-reply-position 'above)
+  ;; Citations. See e.g. `message-cite-style-gmail' for the options relevant to
+  ;; citations. Importantly, I can set these options buffer locally.
+  (message-cite-function 'message-cite-original-without-signature)
+  (message-citation-line-function 'message-insert-formatted-citation-line)
+  (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
+  (message-cite-reply-position 'traditional)
+
+  ;; Replying
   (message-wide-reply-confirm-recipients t)
 
   ;; Forwarding
@@ -518,9 +523,6 @@ signatures being wrapped in `kb/signature-open' and
 \\(?:attached\\|enclosed\\)[ \t\n]\\(?:for\\|is\\)[ \t\n]")
   ;; Settings for Gmail-formatted HTML citations
   (org-msg-posting-style 'gmail) ; My own value which I leverage in `kb/org-msg-post-setup'
-  (message-cite-function 'message-cite-original-without-signature)
-  (message-citation-line-function 'message-insert-formatted-citation-line)
-  (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
   ;; CSS for emails. Taken initially from Doom Emacs then modified.
   (org-msg-enforce-css
    ;; Avoid styling that applies to all blockquotes (i.e. (blockquotes nil ...))
@@ -821,7 +823,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
   :custom
   (org-mime-library 'mml)               ; For gnus
   (org-mime-export-ascii 'ascii)
-  (org-mime-preserve-breaks t)
+  (org-mime-preserve-breaks nil)
   ;; Keep GPG signatures outside of multipart. Modified version of
   ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
   (org-mime-find-html-start
@@ -832,9 +834,18 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
            (1+ (point))
          start))))
   (org-mime-debug nil)
+  :init
+  (defun kb/org-mime--remove-spacer ()
+    "Remove the \"spacer\" above the line at point.
+A spacer is two newlines inserted after portions inserted by
+`org-mime-htmlize'."
+    (save-excursion
+      (previous-logical-line)
+      (delete-blank-lines)))
+  (advice-add 'org-mime-htmlize :after #'kb/org-mime--remove-spacer)
   :config
-  ;; Start with a single # to font-lock as comment
-  (setq org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n"
+  ;; FIXME 2024-10-07: For some reason, setting these in :custom doesn't work...
+  (setq org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n" ; Start with a single # to font-lock as comment
         org-mime-export-options '( :with-latex t
                                    :section-numbers nil
                                    :with-author nil
