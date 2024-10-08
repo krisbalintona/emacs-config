@@ -37,8 +37,7 @@
   :ensure-system-package (notmuch
                           (gmi . "sudo paru -S lieer-git"))
   :hook
-  ((kb/themes . kb/notmuch-setup-faces)
-   (notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
+  ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
    (notmuch-show . olivetti-mode)
    (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
    (message-send . kb/notmuch-set-sendmail-args))
@@ -223,26 +222,27 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
          ((string-match-p (rx (literal "kristoffer_balintona@alumni.brown.edu")) from)
           (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
 
-  (defun kb/notmuch-setup-faces ()
+  (defun kb/notmuch--setup-faces (theme)
     "Set up faces in `notmuch-show-mode'."
-    (modus-themes-with-colors
-      ;; More noticeable demarcation of emails in thread in notmuch-show-mode
-      (set-face-attribute 'notmuch-message-summary-face nil
-                          :foreground fg-alt
-                          ;; NOTE 2024-09-26: We do it this way since changing
-                          ;; faces will refresh the font to be 1.1 times the 1.1
-                          ;; times height, and so on
-                          :height (truncate (* (face-attribute 'default :height nil) 1.1))
-                          :overline t
-                          :extend nil
-                          :inherit 'italic)
-      (set-face-attribute 'notmuch-tag-added nil
-                          :underline `(:color ,cyan-cooler :style double-line :position t))
-      (add-to-list 'notmuch-tag-formats
-                   `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
-      (add-to-list 'notmuch-tag-formats
-                   `("commitment" (propertize tag 'face '(:foreground ,yellow-faint))))))
-  (kb/notmuch-setup-faces)
+    (when (string-match "^modus-" (symbol-name theme))
+      (modus-themes-with-colors
+        ;; More noticeable demarcation of emails in thread in notmuch-show-mode
+        (set-face-attribute 'notmuch-message-summary-face nil
+                            :foreground fg-alt
+                            ;; NOTE 2024-09-26: We do it this way since changing
+                            ;; faces will refresh the font to be 1.1 times the 1.1
+                            ;; times height, and so on
+                            :height (truncate (* (face-attribute 'default :height nil) 1.1))
+                            :overline t
+                            :extend nil
+                            :inherit 'italic)
+        (set-face-attribute 'notmuch-tag-added nil
+                            :underline `(:color ,cyan-cooler :style double-line :position t))
+        (add-to-list 'notmuch-tag-formats
+                     `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
+        (add-to-list 'notmuch-tag-formats
+                     `("commitment" (propertize tag 'face '(:foreground ,yellow-faint)))))))
+  (add-hook 'enable-theme-functions #'kb/notmuch--setup-faces)
 
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore)
