@@ -118,8 +118,6 @@
   (notmuch-show-indent-messages-width 3)
   (notmuch-show-part-button-default-action 'notmuch-show-interactively-view-part)
   (notmuch-show-text/html-blocked-images ".") ; Block everything
-  (notmuch-wash-citation-lines-prefix 3)
-  (notmuch-wash-citation-lines-suffix 3)
   (notmuch-wash-wrap-lines-length nil)
   (notmuch-unthreaded-show-out t)
   (notmuch-message-headers-visible nil)
@@ -161,6 +159,13 @@
   (send-mail-function 'sendmail-send-it)
   (notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
   :config
+  ;; Don't buttonize citations
+  ;; FIXME 2024-10-07: For some reason putting this in :custom and setting it to
+  ;; a high value doesn't work, so I put it here
+  (setq notmuch-wash-citation-lines-prefix most-positive-fixnum
+        notmuch-wash-citation-lines-suffix most-positive-fixnum)
+
+
   ;; Restore window configuration when closing notmuch-hello window
   (defvar kb/notmuch-hello-pre-window-conf nil)
 
