@@ -136,6 +136,7 @@
   (notmuch-mua-compose-in 'current-window)
   (notmuch-mua-hidden-headers nil)
   (notmuch-address-command 'internal)
+  (notmuch-address-internal-completion '(sent nil))
   (notmuch-always-prompt-for-sender t)
   (notmuch-mua-cite-function 'message-cite-original-without-signature)
   (notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
