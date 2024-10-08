@@ -245,6 +245,10 @@ This function makes sure that dates are aligned for easy reading."
 
 ;;;; Org-super-agenda
 (use-package org-super-agenda
+  ;; NOTE 2024-10-06: I can currently check out and install a version of
+  ;; org-super-agenda that applies the patch from PR#242
+  :vc (:url "https://github.com/Alexander-Miller/org-super-agenda.git"
+            :rev "f524347474d7535aab7ae3e6651cf2dd1fb68c72")
   :demand
   :after org-agenda
   :custom
@@ -253,10 +257,8 @@ This function makes sure that dates are aligned for easy reading."
   ;; non-nil, it causes an error when using :auto-* selectors. This doesn't seem
   ;; to occur in an emacs -Q instances, but I have no clue what is causing the
   ;; error in my config... Although the following PR might fix the issue:
-  ;; https://github.com/alphapapa/org-super-agenda/pull/242
-  ;; NOTE 2024-10-06: I have currently checked out and installed a version of
-  ;; org-super-agenda that applies the patch from PR#242
-  ;; (/home/krisbalintona/emacs-repos/packages/org-super-agenda-PR#242/)
+  ;; https://github.com/alphapapa/org-super-agenda/pull/242. Also see the NOTE
+  ;; above, near the :vc keword
   (org-super-agenda-keep-order t)
   (org-agenda-cmp-user-defined #'kb/org-sort-agenda-by-created-time)
   :init
