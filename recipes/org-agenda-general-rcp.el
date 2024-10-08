@@ -353,7 +353,6 @@ This function makes sure that dates are aligned for easy reading."
             ("p" "Projects"
              ((tags-todo "project"
                          ((org-agenda-overriding-header "")
-                          (org-agenda-dim-blocked-tasks nil)
                           ;; This lets project sub-tasks be discoverable by a tags
                           ;; search. One might think :auto-parent makes this
                           ;; redundant, but this handles cases where I have a
