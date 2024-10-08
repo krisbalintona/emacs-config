@@ -30,30 +30,7 @@
 (set-charset-priority 'unicode)
 (prefer-coding-system 'utf-8-unix)
 
-;;;; Font famlies
-(defvar kb/themes-default-font
-  "Iosevka Term SS04"
-  "Font for default face.")
-
-(defvar kb/themes-fixed-pitch-font
-  ;; "Hack Nerd Font Mono"
-  "Iosevka"
-  "Font for fixed-pitch face.")
-
-(defvar kb/themes-variable-pitch-font
-  ;; "LiterationSerif Nerd Font"           ; Variable
-  ;; "Latin Modern Mono Prop"              ; Monospace
-  ;; "Sans Serif"
-  ;; "Open Sans"
-  "Overpass Nerd Font Propo"
-  "Font for the variable-pitch face.")
-
-(defvar kb/themes-mode-line-font
-  ;; "JetBrainsMono Nerd Font"
-  "Iosevka Aile"
-  "Font for the mode line.")
-
-;;;;; Lighter minibuffer and echo area
+;;;; Slimmer minibuffer and echo area faces
 ;; Make minibuffer and echo fonts a little lighter. Taken from
 ;; https://www.reddit.com/r/emacs/comments/14q399t/comment/jqm6zr3/?utm_source=share&utm_medium=web2x&context=3
 (dolist (buffer (list " *Minibuf-0*" " *Echo Area 0*"
@@ -81,8 +58,7 @@
                '(highlight-indent-guides-character-face ; Highlight-indent-guides
                  ;; Ace-jump
                  ace-jump-face-foreground
-                 ace-jump-face-background
-                 )))
+                 ace-jump-face-background)))
 
 ;;;; Default-text-scale
 ;; Text-scale-mode but Emacs-wide
@@ -152,47 +128,113 @@
                                                    ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++")))
 
 ;;;; Fontaine
-;; Test faces without restart Emacs!
+;; Define then apply face presets
 (use-package fontaine
+  :demand
   :custom
   (fontaine-presets
-   '((regular
-      :default-family "Hack"
-      :default-weight normal
-      :default-height 100
-      :fixed-pitch-family "Fira Code"
-      :fixed-pitch-weight nil ; falls back to :default-weight
+   '((default)                          ; Use fallback values
+     ;; Below are the shared fallback properties. I leave them there also as
+     ;; reference for all possible properties
+     (t
+      ;; Alternatives:
+      :default-family "Iosevka Term SS04"
+      :default-weight regular
+      :default-slant normal
+      :default-width normal
+      ;; 1920x1080 display
+      ;; :default-height 140
+      ;; 2560x1600 display
+      ;; :default-height 186
+      ;; 2560x1600 display, with DPI set to 118
+      :default-height 161
+
+      ;; Alternatives
+      ;; "Hack Nerd Font Mono"
+      :fixed-pitch-family "Iosevka"
+      :fixed-pitch-weight nil
+      :fixed-pitch-slant nil
+      :fixed-pitch-width nil
       :fixed-pitch-height 1.0
-      :variable-pitch-family "Noto Sans"
-      :variable-pitch-weight normal
-      :variable-pitch-height 1.0
-      :bold-family nil ; use whatever the underlying face has
-      :bold-weight bold
-      :italic-family "Source Code Pro"
-      :italic-slant italic
-      :line-spacing 1)
-     (large
-      :default-family "Iosevka"
-      :default-weight normal
-      :default-height 150
-      :fixed-pitch-family nil ; falls back to :default-family
-      :fixed-pitch-weight nil ; falls back to :default-weight
-      :fixed-pitch-height 1.0
-      :variable-pitch-family "FiraGO"
-      :variable-pitch-weight normal
-      :variable-pitch-height 1.05
-      :bold-family nil ; use whatever the underlying face has
-      :bold-weight bold
-      :italic-family nil ; use whatever the underlying face has
-      :italic-slant italic
-      :line-spacing 1)
-     ;; My presets
-     (testing
-      ;; :default-family "OverpassM Nerd Font Mono"
-      ;; :fixed-pitch-family "OverpassM Nerd Font Mono"
-      ;; :fixed-pitch-height 1.1
+
+      :fixed-pitch-serif-family nil
+      :fixed-pitch-serif-weight nil
+      :fixed-pitch-serif-slant nil
+      :fixed-pitch-serif-width nil
+      :fixed-pitch-serif-height 1.0
+
+      ;; Alternatives:
+      ;; "LiterationSerif Nerd Font"       ; Variable
+      ;; "Latin Modern Mono Prop"          ; Monospace
+      ;; "Sans Serif"
+      ;; "Open Sans" (1.1 height)
       :variable-pitch-family "Overpass Nerd Font Propo"
-      :variable-pitch-height 1.15))))
+      :variable-pitch-weight nil
+      :variable-pitch-slant nil
+      :variable-pitch-width nil
+      :variable-pitch-height 1.15
+
+      ;; Alternatives:
+      ;; "JetBrainsMono Nerd Font"
+      :mode-line-active-family "Iosevka Aile"
+      :mode-line-active-weight nil
+      :mode-line-active-slant nil
+      :mode-line-active-width nil
+      :mode-line-active-height 1.0
+
+      :mode-line-inactive-family nil
+      :mode-line-inactive-weight nil
+      :mode-line-inactive-slant nil
+      :mode-line-inactive-width nil
+      :mode-line-inactive-height 1.0
+
+      :header-line-family nil
+      :header-line-weight nil
+      :header-line-slant nil
+      :header-line-width nil
+      :header-line-height 1.0
+
+      :line-number-family nil
+      :line-number-weight nil
+      :line-number-slant nil
+      :line-number-width nil
+      :line-number-height 1.0
+
+      :tab-bar-family "Overpass Nerd Font"
+      :tab-bar-weight nil
+      :tab-bar-slant nil
+      :tab-bar-width nil
+      :tab-bar-height 0.97
+
+      :tab-line-family nil
+      :tab-line-weight nil
+      :tab-line-slant nil
+      :tab-line-width nil
+      :tab-line-height 1.0
+
+      :bold-family nil
+      :bold-slant nil
+      :bold-weight bold
+      :bold-width nil
+      :bold-height 1.0
+
+      :italic-family nil
+      :italic-weight nil
+      :italic-slant italic
+      :italic-width nil
+      :italic-height 1.0
+
+      :line-spacing nil)))
+  :config
+  ;; Set the last preset or fall back to desired style from `fontaine-presets'
+  (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default))
+
+  ;; Persist the latest font preset when closing/starting Emacs and while
+  ;; switching between themes.
+  (fontaine-mode 1)
+
+  (with-eval-after-load 'pulsar
+    (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
 ;;;; Show-font
 ;; Best font previewer
