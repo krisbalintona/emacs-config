@@ -604,6 +604,10 @@ replacement."
 
 ;;;; Darkroom
 (use-package darkroom
+  :bind
+  ( :map kb/toggle-keys
+    ("d" . darkroom-mode)
+    ("D" . darkroom-tentative-mode))
   :custom
   (darkroom-text-scale-increase 1.3))
 
