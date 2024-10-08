@@ -235,7 +235,7 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
                             :height (truncate (* (face-attribute 'default :height nil) 1.1))
                             :overline t
                             :extend nil
-                            :inherit 'italic)
+                            :inherit 'unspecified)
         (set-face-attribute 'notmuch-tag-added nil
                             :underline `(:color ,cyan-cooler :style double-line :position t))
         (add-to-list 'notmuch-tag-formats
