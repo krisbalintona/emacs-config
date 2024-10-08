@@ -110,7 +110,17 @@
           (cl--set-buffer-substring (pos-bol) (pos-eol)
                                     (concat
                                      "From: "
-                                     (read-string "Set FROM to: " user-mail-address))))))))
+                                     (read-string "Set FROM to: " user-mail-address)))))))
+
+  ;; Set up faces
+  (defun kb/message--setup-faces (theme)
+    "Set up mml and message faces."
+    (when (string-match "^modus-" (symbol-name theme))
+      (modus-themes-with-colors
+        (set-face-attribute 'message-mml nil
+                            :weight 'bold
+                            :background bg-sage))))
+  (add-hook 'enable-theme-functions #'kb/message--setup-faces))
 
 ;;;; Sendmail
 ;; Use `sendmail' program to send emails? If yes, send the value of
