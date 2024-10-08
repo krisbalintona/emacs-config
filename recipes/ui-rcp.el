@@ -39,7 +39,6 @@
   :init
   (mood-one-theme-arrow-fringe-bmp-enable)
   (eval-after-load 'flycheck #'mood-one-theme-flycheck-fringe-bmp-enable))
-(require 'uninspiring-dark-theme)
 
 ;;;;; Light
 (use-package modus-themes
