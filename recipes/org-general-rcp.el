@@ -356,8 +356,7 @@ have `org-warning' face."
 ;;;; Aesthetics
 ;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
-(use-package org-superstar  ;; Improved version of org-bullets
-  :after org
+(use-package org-superstar
   :hook
   ((org-mode . org-superstar-mode)
    (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
@@ -380,15 +379,13 @@ have `org-warning' face."
   (org-superstar-special-todo-items t)
   ;; Update when I change `org-todo-keywords'
   (org-superstar-todo-bullet-alist
-   '(("PROG" . 9744)
-     ("ACTIVE" . 9744)
-     ("TODO" . 9744)
-     ("WAITING" . 9745)
-     ("MAYBE" . 9745)
-     ("DONE" . 9745)
-     ("CANCELLED" . 9745)
-     ("[ ]"  . 9744)
-     ("[X]"  . 9745)))
+   '(("NEXT" . ?☐)
+     ("TODO" . ?☐)
+     ("HOLD" . ?☐)
+     ("DONE" . ?☑)
+     ("CANCELED" . ?☑)
+     ("[ ]"  . ?☐)
+     ("[X]"  . ?☑)))
 
   ;; Plain lists
   (org-superstar-prettify-item-bullets t)
