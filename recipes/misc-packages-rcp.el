@@ -169,7 +169,7 @@
   (hammy-mode-lighter-prefix "[H]")
   (hammy-mode-lighter-overdue "!")
   (hammy-mode-lighter-pie t)
-  (hammy-mode-lighter-pie-height 0.5)
+  (hammy-mode-lighter-pie-height 0.6)
   :config
   (defun kb/hammy-play-sound ()
     "Play end of timer sound."
