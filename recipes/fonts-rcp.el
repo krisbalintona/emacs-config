@@ -180,7 +180,7 @@
       :mode-line-active-weight nil
       :mode-line-active-slant nil
       :mode-line-active-width nil
-      :mode-line-active-height 1.0
+      :mode-line-active-height 0.93
 
       :mode-line-inactive-family nil
       :mode-line-inactive-weight nil
