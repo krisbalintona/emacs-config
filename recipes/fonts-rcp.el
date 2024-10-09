@@ -204,7 +204,7 @@
       :tab-bar-weight nil
       :tab-bar-slant nil
       :tab-bar-width nil
-      :tab-bar-height 0.97
+      :tab-bar-height 0.93
 
       :tab-line-family nil
       :tab-line-weight nil
