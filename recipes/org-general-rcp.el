@@ -270,6 +270,7 @@ have `org-warning' face."
   :after org
   :custom
   (org-archive-subtree-save-file-p t)  ; Save archive file always
+  (org-archive-subtree-add-inherited-tags t)
   :config
   (define-advice org-archive--compute-location
       (:around (orig-fun &rest args) kb/org-archive--compute-location-denote-format-string)
