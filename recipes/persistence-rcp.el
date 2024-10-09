@@ -78,7 +78,6 @@
 (use-package desktop
   :ensure nil
   :demand
-  :hook (desktop-after-read . desktop-save-mode)
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-files-not-to-save
