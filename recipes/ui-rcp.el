@@ -488,8 +488,9 @@ change to if called with ARG."
          (imenu-after-jump . pulsar-reveal-entry))
   :custom
   (pulsar-pulse t)
+  (pulsar-face 'pulsar-red)
   (pulsar-delay 0.05)
-  (pulsar-iterations (/ 2 pulsar-delay)))
+  (pulsar-iterations 5))
 
 (provide 'ui-rcp)
 ;;; ui-rcp.el ends here
