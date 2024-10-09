@@ -90,14 +90,19 @@
 * 1 Draft                                                     :ignore:export:
 ")))
   (denote-date-prompt-use-org-read-date t)
+  (denote-rename-confirmations '(add-front-matter))
+
+  ;; Backlinks
   (denote-backlinks-show-context t)
   (denote-backlinks-display-buffer-action
    '((display-buffer-reuse-window display-buffer-below-selected)
      (window-height . fit-window-to-buffer)
      (post-command-select-window . t)
      (dedicated . t)))
-  (denote-rename-buffer-format "%s %t")
-  (denote-rename-confirmations '(add-front-matter))
+
+  ;; Buffer name
+  (denote-rename-buffer-format "%s %t%b")
+  (denote-rename-buffer-backlinks-indicator " ⟷")
   :preface
   (add-to-list 'package-pinned-packages '(denote . "gnu-elpa-devel"))
   :config
