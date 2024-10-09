@@ -192,7 +192,7 @@ have `org-warning' face."
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)
-  (org-footnote-define-inline t))
+  (org-footnote-define-inline nil))
 
 ;;;;; Org-attach
 (use-package org-attach
