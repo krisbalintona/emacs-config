@@ -111,11 +111,11 @@
   ;; Capture templates
   ;; See also `org-capture-templates-contexts'
   (org-capture-templates
-   `(("t" "Todo (without processing)" entry
+   `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
       "* TODO %? :inbox:%^g\n"
       :empty-lines 1)
-     ("T" "Todo" entry
+     ("T" "Todo (without processing)" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
       "* TODO %? %^g\n"
       :empty-lines 1)
