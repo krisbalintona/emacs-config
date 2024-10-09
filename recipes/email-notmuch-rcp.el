@@ -303,7 +303,8 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
       (kb/notmuch-show-tag-thread)
       (notmuch-show-next-thread t)))
   (with-eval-after-load 'pulsar
-    (dolist (func '(notmuch-show-advance-and-archive
+    (dolist (func '(notmuch-show-rewind
+                    notmuch-show-advance-and-archive
                     kb/notmuch-show-advance-and-tag))
       (add-to-list 'pulsar-pulse-functions func)))
 
