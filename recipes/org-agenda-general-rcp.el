@@ -138,8 +138,8 @@
       :kill-buffer t)
      ("j" "Journal" entry
       (file+olp+datetree ,(car (denote-directory-files "20241006T214811")))
-      "* %<%F>\n\n%?"
-      :tree-type week
+      "* %<%c>\n\n%?"
+      :tree-type month
       :jump-to-captured t
       :immediate-finish t
       :empty-lines 1
