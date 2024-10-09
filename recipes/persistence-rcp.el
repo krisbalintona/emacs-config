@@ -88,6 +88,7 @@
   (desktop-auto-save-timeout 3)
   (desktop-restore-forces-onscreen t)
   (desktop-restore-frames t)
+  (desktop-save 'if-exists)
   (desktop-restore-in-current-display nil)
   :config
   (desktop-save-mode 1))
