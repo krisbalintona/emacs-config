@@ -83,10 +83,11 @@
      (todo  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
      (tags  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
      (search . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")))
+  ;; See `kb/org-sort-agenda-by-created-time' for my user-defined sorter
   (org-agenda-sorting-strategy
-   '((agenda habit-down user-defined-up urgency-down deadline-up todo-state-up category-up)
-     (todo user-defined-up urgency-down todo-state-up category-up)
-     (todo user-defined-up urgency-down todo-state-up category-up)
+   '((agenda habit-down urgency-down priority-down user-defined-up deadline-up todo-state-up category-up)
+     (todo urgency-down priority-down user-defined-up todo-state-up category-up)
+     (todo urgency-down priority-down user-defined-up todo-state-up category-up)
      (search todo-state-up priority-down category-keep)))
   ;; See
   ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
@@ -366,7 +367,7 @@ This function makes sure that dates are aligned for easy reading."
                           (org-agenda-prefix-format
                            ;; FIXME 2024-10-07: Not sure if this is a tags- or
                            ;; todo-type view
-                           '((tags  . " %i %-8:c%-5e")))
+                           '((tags  . " %i %-8:c%-5e%?-12t% s")))
                           (org-super-agenda-groups
                            '(( :auto-parent t
                                :order 2)
