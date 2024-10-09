@@ -197,7 +197,7 @@
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
-  (dolist (f (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
+  (dolist (f (directory-files-recursively kb/agenda-dir (rx (or (literal ".org") (literal ".org_archive")) eol)))
     (add-to-list 'org-agenda-files f))
 
   ;; Taken from
