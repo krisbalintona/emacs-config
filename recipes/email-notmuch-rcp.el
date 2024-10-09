@@ -395,7 +395,8 @@ buffer hidden."
                   'mouse-face 'mode-line-highlight
                   'local-map (make-mode-line-mouse-map 'mouse-2
                                                        read-mail-command)))
-              ""))))
+              "")
+            " ")))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
