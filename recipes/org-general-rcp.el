@@ -376,7 +376,7 @@ have `org-warning' face."
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
 
   ;; Todos
-  (org-superstar-special-todo-items t)
+  (org-superstar-special-todo-items nil)
   ;; Update when I change `org-todo-keywords'
   (org-superstar-todo-bullet-alist
    '(("NEXT" . ?☐)
