@@ -197,13 +197,13 @@
       (display-buffer-reuse-window display-buffer-pop-up-window)
       (post-command-select-window . t))))
   :config
-  ;; Taken from
+  ;; Fixed version from
   ;; https://karthinks.com/software/emacs-window-management-almanac/#other-window-alternating
   (defalias 'kb/other-window-alternating
     (let ((direction 1))
       (lambda (&optional arg)
         "Call `other-window', switching directions each time."
-        (interactive)
+        (interactive "p")
         (if (equal last-command 'kb/other-window-alternating)
             (other-window (* direction (or arg 1)))
           (setq direction (- direction))
