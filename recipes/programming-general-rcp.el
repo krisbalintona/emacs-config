@@ -136,6 +136,7 @@
    ([remap imenu] . kb/consult-imenu-versatile)
    ([remap recentf-open-files] . consult-recent-file)
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
+   ([remap Info-search] . consult-info)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
    ("f" . consult-flymake)
