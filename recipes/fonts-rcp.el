@@ -182,11 +182,11 @@
       :mode-line-active-width nil
       :mode-line-active-height 0.93
 
-      :mode-line-inactive-family nil
+      :mode-line-inactive-family "Iosevka Aile"
       :mode-line-inactive-weight nil
       :mode-line-inactive-slant nil
       :mode-line-inactive-width nil
-      :mode-line-inactive-height 1.0
+      :mode-line-inactive-height 0.93
 
       :header-line-family nil
       :header-line-weight nil
