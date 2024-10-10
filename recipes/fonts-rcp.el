@@ -142,12 +142,7 @@
       :default-weight regular
       :default-slant normal
       :default-width normal
-      ;; 1920x1080 display
-      ;; :default-height 140
-      ;; 2560x1600 display
-      ;; :default-height 186
-      ;; 2560x1600 display, with DPI set to 118
-      :default-height 161
+      :default-height 170
 
       ;; Alternatives
       ;; "Hack Nerd Font Mono"
@@ -172,7 +167,7 @@
       :variable-pitch-weight nil
       :variable-pitch-slant nil
       :variable-pitch-width nil
-      :variable-pitch-height 1.15
+      :variable-pitch-height 1.2
 
       ;; Alternatives:
       ;; "JetBrainsMono Nerd Font"
