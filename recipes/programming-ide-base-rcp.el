@@ -162,7 +162,7 @@ Non-nil only if installation completed without any errors."
   :diminish hs-minor-mode
   :hook ((prog-mode conf-mode) . hs-minor-mode)
   :bind (("C-M-s-<tab>" . kb/hs-cycle)
-         ("C-M-s-S-<tab>" . kb/hs-global-cycle))
+         ("C-M-S-s-<iso-lefttab>" . kb/hs-global-cycle))
   :custom
   (hs-set-up-overlay 'kb/hideshow-display)
   (hs-isearch-open t)
