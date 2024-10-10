@@ -535,11 +535,16 @@ with the exception of org-emphasis markers."
   :custom-face
   (fill-column-indicator ((t (:inherit line-number)))))
 
-;;;;; Adaptive-wrap
-;; Visually indent lines wrapped visually!
-(use-package adaptive-wrap
-  ;; NOTE 2024-02-15: This makes long-lines in lists properly indented!
-  :hook ((prog-mode conf-mode org-mode) . adaptive-wrap-prefix-mode))
+;;;;; Visual-wrap
+;; Visually indent lines wrapped visually! This makes long-lines in lists
+;; properly indented!
+;; NOTE 2024-10-09: This package is the same as the more often referred to
+;; `adaptive-wrap-prefix-mode'.
+(use-package visual-wrap
+  :ensure nil
+  :demand t
+  :config
+  (global-visual-wrap-prefix-mode 1))
 
 ;;;; Other
 ;;;;; Outline
