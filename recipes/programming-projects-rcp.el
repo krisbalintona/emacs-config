@@ -60,6 +60,7 @@
   (project-vc-merge-submodules nil)
   (project-mode-line t)
   (project-mode-line-face nil)
+  (project-vc-extra-root-markers '("Makefile"))
   :config
   ;; This is a regular variable
   (setq project-mode-line-format
