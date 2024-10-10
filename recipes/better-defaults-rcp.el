@@ -119,11 +119,11 @@
 (setq process-adaptive-read-buffering nil)
 
 ;;;; Scrolling behavior
-(setq scroll-preserve-screen-position t
-      scroll-error-top-bottom nil
+(setq scroll-error-top-bottom nil
+      scroll-preserve-screen-position t
       scroll-margin 0
-      next-screen-context-lines 12
-      scroll-conservatively 0           ; Affects `scroll-step'
+      next-screen-context-lines 4
+      scroll-conservatively 1           ; Affects `scroll-step'
       scroll-minibuffer-conservatively t
       scroll-up-aggressively nil        ; Center after point leaves window
       scroll-down-aggressively nil)     ; Center after point leaves window
@@ -132,7 +132,7 @@
 (setopt load-prefer-newer t)
 
 ;;;; Highlight next error
-(setq next-error-message-highlight t)
+(setq next-error-message-highlight 'keep)
 
 ;;;; Recenter upon `next-error'
 (setq next-error-recenter '(4))
