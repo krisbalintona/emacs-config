@@ -346,7 +346,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (wombag-show-mode . kb/wombag-entry-setup)
   :bind
   ( :map kb/open-keys
-    ("W" . wombag))
+    ("w" . wombag))
   :custom
   (wombag-dir (no-littering-expand-var-file-name "wombag"))
   (wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite"))
