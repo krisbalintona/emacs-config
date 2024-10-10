@@ -501,7 +501,7 @@ with the exception of org-emphasis markers."
 (use-package rainbow-mode
   :diminish
   :hook
-  ((text-mode prog-mode conf-mode help-mode) . rainbow-mode))
+  ((prog-mode conf-mode help-mode) . rainbow-mode))
 
 ;;;;; Highlight-defined
 ;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
