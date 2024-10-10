@@ -79,6 +79,9 @@
 (use-package window
   :ensure nil
   :bind* ("M-o" . other-window)
+  :bind (([remap other-window] . kb/other-window-alternating)
+         :repeat-map other-window-repeat-map
+         ("o" . kb/other-window-alternating))
   :custom
   (split-width-threshold (ceiling (/ (frame-width) 2.0)))
   (split-height-threshold 80)
@@ -193,6 +196,18 @@
           (major-mode . Man-mode))
       (display-buffer-reuse-window display-buffer-pop-up-window)
       (post-command-select-window . t)))))
+  :config
+  ;; Taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#other-window-alternating
+  (defalias 'kb/other-window-alternating
+    (let ((direction 1))
+      (lambda (&optional arg)
+        "Call `other-window', switching directions each time."
+        (interactive)
+        (if (equal last-command 'kb/other-window-alternating)
+            (other-window (* direction (or arg 1)))
+          (setq direction (- direction))
+          (other-window (* direction (or arg 1))))))))
 
 ;; Below selected
 (with-eval-after-load 'xref
@@ -386,6 +401,7 @@
 ;;;;; Switchy-window
 ;; `other-window' by most recently used
 (use-package switchy-window
+  :disabled t
   :hook (on-first-buffer . switchy-window-minor-mode)
   :bind
   ( :map switchy-window-minor-mode-map
