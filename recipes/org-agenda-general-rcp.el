@@ -314,7 +314,7 @@ This function makes sure that dates are aligned for easy reading."
                        (org-agenda-include-diary t)
                        (org-agenda-insert-diary-extract-time t)
                        (org-super-agenda-groups
-                        '((:discard (:tag "inbox"))
+                        '((:discard (:and (:tag "inbox" :not (:deadline t)))) ; We want to see deadlines even if they have the inbox tag
                           (:auto-category t)))))
               (tags-todo "+TODO=\"NEXT\"-project-inbox"
                          ((org-agenda-overriding-header "Next")
