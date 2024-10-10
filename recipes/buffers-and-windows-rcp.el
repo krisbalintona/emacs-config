@@ -143,7 +143,7 @@
      ;; To the bottom
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
-      (window-height . fit-window-to-buffer)
+      (window-height . shrink-window-if-larger-than-buffer)
       (side . bottom)
       (slot . -4))
      ("\\*Embark Actions\\*"
@@ -187,14 +187,15 @@
      ("\\*vc-log\\*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
       (dedicated . t))
-
-     ;; Other
      ("\\*Help\\*"
-      (display-buffer-reuse-window display-buffer-pop-up-window))
+      (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+      (window-height . shrink-window-if-larger-than-buffer))
+
+     ;; Pop up
      ((or "\\*Man"
           (major-mode . Man-mode))
       (display-buffer-reuse-window display-buffer-pop-up-window)
-      (post-command-select-window . t)))))
+      (post-command-select-window . t))))
   :config
   ;; Taken from
   ;; https://karthinks.com/software/emacs-window-management-almanac/#other-window-alternating
