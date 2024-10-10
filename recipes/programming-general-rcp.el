@@ -127,9 +127,9 @@
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
-  (("C-x B" . consult-buffer)
-   ("C-x r B" . consult-bookmark)
-   ;; Remaps
+  (;; Remaps
+   ([remap switch-to-buffer] . consult-buffer)
+   ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap repeat-complex-command] . consult-complex-command)
    ([remap goto-line] . consult-goto-line)
@@ -189,15 +189,13 @@
 
   ;; Customize consult commands
   (consult-customize
-   ;; For `consult-*-grep'
+   consult-buffer :preview-key "C-M-;"
    consult-grep :preview-key "C-M-;"
    consult-git-grep :preview-key "C-M-;"
    consult-ripgrep :preview-key "C-M-;"
-   ;; For `consult-fdfind'. Make sure this is after the definition of
-   ;; `consult-recent-file'
-   consult-recent-file :preview-key "C-M-;"
-   ;; `consult-find'
-   consult-find :preview-key "C-M-;")
+   consult-recent-file :preview-key "C-M-;" ; Make sure this is after the definition of `consult-recent-file'
+   consult-find :preview-key "C-M-;"
+   consult-bookmark :preview-key "C-M-;")
 
   ;; Dired consult-buffer source
   (defvar kb/consult-buffer--dired-source
@@ -300,8 +298,8 @@
   :ensure nil
   :hook (on-first-file . global-auto-revert-mode)
   :custom
-  (auto-revert-interval 5)
-  (auto-revert-avoid-polling t) ; Automatically reread from disk if the underlying file changes
+  (auto-revert-interval 3)
+  (auto-revert-avoid-polling t)
   (auto-revert-check-vc-info t)
   (auto-revert-verbose t))
 
@@ -516,6 +514,7 @@ with the exception of org-emphasis markers."
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
+  :disabled t
   :hook
   (emacs-lisp-mode . highlight-quoted-mode))
 
