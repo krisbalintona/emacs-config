@@ -64,6 +64,8 @@
      ;; Don't let Emacs make decisions about where to insert newlines
      (plain-list-item . nil)))
   (org-cycle-separator-lines 2)
+  (org-cycle-level-faces t)
+  (org-n-level-faces 8)
 
   (org-return-follows-link nil)
   (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
@@ -375,9 +377,8 @@ have `org-warning' face."
 ;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
 (use-package org-superstar
-  :hook
-  ((org-mode . org-superstar-mode)
-   (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
+  :hook ((org-mode . org-superstar-mode)
+         (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
   :custom
   ;; Indentation
   ;; The following ensures consistent indentation, overriding `org-indent'
@@ -385,12 +386,10 @@ have `org-warning' face."
   (org-hide-leading-stars nil)
   (org-indent-mode-turns-on-hiding-stars nil)
   (org-superstar-remove-leading-stars nil)
-  (org-superstar-leading-bullet ?·)
 
   ;; Headlines
+  (org-superstar-leading-bullet ?·)
   (org-superstar-headline-bullets-list '("◈" "▷" "◉" "◇" "✳")) ; List inspired from `org-modern'
-  (org-n-level-faces 5)
-  (org-cycle-level-faces t)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
 
   ;; Todos
@@ -416,7 +415,7 @@ have `org-warning' face."
   ;; Make a good non-distracting foreground color and ensure headlines are
   ;; aligned with headline content
   (org-superstar-leading ((t (:inherit (fixed-pitch org-hide)))))
-  :init
+  :config
   ;; See https://github.com/emacsmirror/org-superstar#fast-plain-list-items
   (defun kb/org-superstar-auto-lightweight-mode ()
     "Start Org Superstar differently depending on the number of lists items."
