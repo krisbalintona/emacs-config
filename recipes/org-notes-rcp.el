@@ -616,5 +616,10 @@ replacement."
   :custom
   (darkroom-text-scale-increase 1.3))
 
+;;;; Typewriter-roll-mode
+(use-package typewriter-roll-mode
+  :bind ( :map kb/toggle-keys
+          ("t" . typewriter-roll-mode)))
+
 (provide 'org-notes-rcp)
 ;;; org-notes-rcp.el ends here
