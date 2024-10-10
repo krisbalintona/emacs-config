@@ -283,28 +283,80 @@
 
 ;;;;; Ace-window
 (use-package ace-window
-  :bind
-  (("C-c w" . ace-window)
-   ("C-c W" . ace-swap-window))
+  :bind (("C-c w" . ace-window)
+         ("C-c W" . kb/ace-window-prefix))
   :custom
-  (aw-scope 'frame)
+  (aw-scope 'global)
+  (aw-swap-invert t)
   (aw-background t)
+  (aw-display-mode-overlay nil)
   (aw-dispatch-always t)   ; Open dispatch when less than three windows are open
   (aw-minibuffer-flag t)
-  (aw-keys '(?h ?j ?k ?l ?H ?J ?K ?L))
+  (aw-keys '(?q ?w ?e ?r ?t ?y ?u ?i ?p))
   (aw-dispatch-alist
-   '((?x aw-delete-window "Delete Window")
-     (?m aw-swap-window "Swap Windows")
-     (?M aw-move-window "Move Window")
-     (?c aw-copy-window "Copy Window")
-     (?j aw-switch-buffer-in-window "Select Buffer")
-     (?n aw-flip-window)
-     (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
-     (?c aw-split-window-fair "Split Fair Window")
-     (?v aw-split-window-vert "Split Vert Window")
-     (?b aw-split-window-horz "Split Horz Window")
-     (?o delete-other-windows "Delete Other Windows")
-     (?? aw-show-dispatch-help))))
+   '((?k aw-delete-window "Delete window")
+     (?K delete-other-windows "Delete other windows")
+     (?s aw-swap-window "Swap windows")
+     (?m kb/aw-take-over-window "Move window")
+     (?c aw-copy-window "Copy window")
+     (?o aw-flip-window "Other window")
+     (?v kb/ace-set-other-window "Set to other-scroll-window's window")
+     (?b aw-switch-buffer-in-window "Switch to buffer in window")
+     (?B aw-switch-buffer-other-window "Change buffer in window")
+     (?2 aw-split-window-vert "Split vertically")
+     (?3 aw-split-window-horz "Split horizontally")
+     (?+ aw-split-window-fair "Split heuristically") ; See `aw-fair-aspect-ratio'
+     (?? aw-show-dispatch-help)))
+  (aw-fair-aspect-ratio 3)
+  :custom-face
+  (aw-leading-char-face ((t (:height 3.0 :weight bold))))
+  :config
+  ;; Taken from Karthink's config
+  (defun kb/aw-take-over-window (window)
+    "Move from current window to WINDOW.
+
+Delete current window in the process."
+    (let ((buf (current-buffer)))
+      (if (one-window-p)
+          (delete-frame)
+        (delete-window))
+      (aw-switch-to-window window)
+      (switch-to-buffer buf)))
+
+  ;; Taken from Karthink's config
+  (defun kb/ace-window-prefix ()
+    "Use `ace-window' to display the buffer of the next command.
+The next buffer is the buffer displayed by the next command invoked
+immediately after this command (ignoring reading from the minibuffer).
+Creates a new window before displaying the buffer. When
+`switch-to-buffer-obey-display-actions' is non-nil, `switch-to-buffer'
+commands are also supported."
+    (interactive)
+    (display-buffer-override-next-command
+     (lambda (buffer _)
+       (let (window type)
+         (setq
+          window (aw-select (propertize " ACE" 'face 'mode-line-highlight))
+          type 'reuse)
+         (cons window type)))
+     nil "[ace-window]")
+    (message "Use `ace-window' to display next command buffer..."))
+
+  ;; Based off of similar code taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
+  (defun kb/ace-set-other-window (window)
+    "Set WINDOW as the \"other window\" for the current one.
+\"Other window\" is the window scrolled by `scroll-other-window' and
+`scroll-other-window-down'."
+    (setq-local other-window-scroll-buffer (window-buffer window)))
+
+  ;; A useful macro for executing stuff in other windows. Taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#with-other-window-an-elisp-helper
+  (defmacro with-other-window (&rest body)
+    "Execute forms in BODY in the other-window."
+    `(unless (one-window-p)
+       (with-selected-window (other-window-for-scrolling)
+         ,@body))))
 
 ;;;;; Popper
 ;; "Tame ephemeral windows"
