@@ -209,6 +209,9 @@
 ;;;; Header line text scaling
 (setq-default text-scale-remap-header-line t)
 
+;;;; Enable `view-mode' for read-only buffers
+(setopt view-read-only t)
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
