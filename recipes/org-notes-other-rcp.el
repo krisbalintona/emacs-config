@@ -227,6 +227,11 @@
   ;; You have to call `pdf-tools-install' to have PDF files use pdf-view-mode
   ;; and have everything required loaded
   :hook (on-first-file . pdf-tools-install)
+  :bind ( :map pdf-view-mode-map
+          ("C-c C-r a" . pdf-view-auto-slice-minor-mode)
+          ;; Also lets you scroll via `scroll-other-window'
+          ([remap scroll-up-command] . pdf-view-scroll-up-or-next-page)
+          ([remap scroll-down-command] . pdf-view-scroll-down-or-previous-page))
   ;; :demand ; FIXME 2024-10-03: I use this because I don't know why the package isn't loading what's needed when I need it
   ;; FIXME 2024-01-13: There is an issue between `org-noter-insert-precise-note'
   ;; and this fork. I've even tried merging this fork to upstream/master to no
