@@ -565,10 +565,9 @@ replacement."
   (citar-denote-template t)
   :bind
   ( :map kb/note-keys
-    ("b b" . citar-denote-dwim)
+    ("b o" . citar-denote-dwim)
     ("b c" . citar-create-note)
-    ("b o" . citar-denote-open-note)
-    ("b f" . citar-denote-find-citation)
+    ("b n" . citar-denote-open-note)
     ("b e" . citar-denote-open-reference-entry)
     ("b k a" . citar-denote-add-citekey)
     ("b k r" . citar-denote-remove-citekey)
