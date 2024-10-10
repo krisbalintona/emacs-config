@@ -775,17 +775,21 @@ ARG and REDISPLAY are identical to the original function."
           (or arg (- (window-text-height) next-screen-context-lines)))
        nil 1))))
 
-  (add-hook 'pixel-scroll-precision-mode-hook
-            (lambda ()
-              (cond
-               (pixel-scroll-precision-mode
-                (advice-add 'scroll-up :override 'kb/pixel-scroll-up)
-                (advice-add 'scroll-down :override 'kb/pixel-scroll-down)
-                (advice-add 'recenter :override 'kb/pixel-recenter))
-               (t
-                (advice-remove 'scroll-up 'kb/pixel-scroll-up)
-                (advice-remove 'scroll-down 'kb/pixel-scroll-down)
-                (advice-remove 'recenter 'kb/pixel-recenter))))))
+  (defun kb/pixel-scroll-everything ()
+    "Use pixel-scroll functions for scrolling and recentering.
+Dependent on the activation of `pixel-scroll-precision-mode'. Add to
+`pixel-scroll-precision-mode-hook'."
+    (cond
+     (pixel-scroll-precision-mode
+      (advice-add 'scroll-up :override #'kb/pixel-scroll-up)
+      (advice-add 'scroll-down :override #'kb/pixel-scroll-down)
+      (advice-add 'recenter :override #'kb/pixel-recenter))
+     (t
+      (advice-remove 'scroll-up #'kb/pixel-scroll-up)
+      (advice-remove 'scroll-down #'kb/pixel-scroll-down)
+      (advice-remove 'recenter #'kb/pixel-recenter))))
+  ;; (add-hook 'pixel-scroll-precision-mode-hook #'kb/pixel-scroll-everything)
+  )
 
 ;;;; Other
 
