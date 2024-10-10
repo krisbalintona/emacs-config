@@ -325,7 +325,6 @@ This version removes delimiters.")
                   mode-line-window-dedicated " "
                   mode-line-buffer-identification
                   mode-line-position
-                  (anzu-mode anzu--mode-line-format)
                   (:eval (when (and (bound-and-true-p mlscroll-mode)
                                     (mode-line-window-selected-p)
                                     (not (derived-mode-p 'pdf-view-mode)))
