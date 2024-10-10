@@ -42,9 +42,8 @@
 (use-package winner
   :ensure nil
   :hook (on-first-buffer . winner-mode)
-  :bind
-  (("C-<left>" . winner-undo)
-   ("C-<right>" . winner-redo))
+  :bind (("C-<left>" . winner-undo)
+         ("C-<right>" . winner-redo))
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*")))
@@ -257,9 +256,10 @@
 (use-package tab-bar
   :ensure nil
   :demand
-  :bind
-  ( :map tab-prefix-map
-    ("w" . tab-bar-move-window-to-tab))
+  :bind (([remap winner-undo] . tab-bar-history-back)
+         ([remap winner-redo] . tab-bar-history-forward)
+         :map tab-prefix-map
+         ("w" . tab-bar-move-window-to-tab))
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)
