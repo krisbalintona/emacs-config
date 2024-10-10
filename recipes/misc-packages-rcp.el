@@ -681,7 +681,7 @@ interactively, then delete the register instead of jumping to it."
          (on-first-input . pixel-scroll-precision-mode))
   :custom
   (pixel-scroll-precision-interpolate-page t)
-  (pixel-scroll-precision-interpolation-factor 1)
+  (pixel-scroll-precision-interpolation-factor 3.0)
   :config
   (defun kb/pixel-recenter (&optional arg redisplay)
     "Similar to `recenter' but with pixel scrolling.
