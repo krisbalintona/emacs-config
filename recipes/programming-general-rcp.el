@@ -236,10 +236,10 @@
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
-  :commands embark-act
   :bind
   (("C-.". embark-act)
    ("C-h B". embark-bindings)
+   ([remap xref-find-definitions] . embark-dwim)
    :map vertico-map
    ("C-.". embark-act)
    ("C->". embark-become)
