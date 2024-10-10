@@ -212,6 +212,15 @@
 ;;;; Enable `view-mode' for read-only buffers
 (setopt view-read-only t)
 
+;;;; More predictable window selection of `scroll-other-window' and `scroll-other-window-down'
+;; Taken from
+;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
+(setq other-window-scroll-default
+      (lambda ()
+        (or (get-mru-window nil nil 'not-this-one-dummy)
+            (next-window)               ; Fall back to next window
+            (next-window nil nil 'visible))))
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
