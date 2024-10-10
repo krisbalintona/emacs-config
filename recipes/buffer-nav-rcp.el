@@ -116,7 +116,7 @@
   (avy-single-candidate-jump t)
   (avy-timeout-seconds 0.3)
   (avy-style 'at-full)
-  (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (avy-keys '(?a ?w ?e ?r ?u ?i ?o ?p))
   (avy-dispatch-alist ; Avy actions (first narrow so letter combinations appear)
    '((?x . avy-action-kill-move)
      (?X . avy-action-kill-stay)
@@ -125,12 +125,11 @@
      (?n . avy-action-copy)
      (?y . avy-action-yank)
      (?Y . avy-action-yank-line)
-     (?i . avy-action-ispell)
      (?z . avy-action-zap-to-char)
      ;; New, custom actions
      (?. . avy-action-embark)
-     (? . avy-action-help)
-     (? . avy-action-define)))
+     (?h . avy-action-help)
+     (?d . avy-action-define)))
   (avy-orders-alist
    '((avy-goto-char . kb/avy-order-farthest)
      (avy-goto-char-2 . kb/avy-order-farthest)
