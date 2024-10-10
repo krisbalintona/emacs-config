@@ -41,7 +41,7 @@
     ("`" . kb/org-agenda-process))
   :custom
   ;; Effort
-  (org-agenda-sort-noeffort-is-high nil)
+  (org-agenda-sort-noeffort-is-high t)
   (org-effort-durations
    '(("m" . 1)
      ("h" . 60)
