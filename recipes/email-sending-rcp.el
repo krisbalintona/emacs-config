@@ -31,7 +31,6 @@
   :ensure nil
   :commands compose-mail
   :hook ((message-setup . message-sort-headers)
-         (message-mode . olivetti-mode)
          ;; I like to use prose linters. See my flymake and flymake-collection
          ;; config
          (message-mode . flymake-mode)
@@ -79,6 +78,9 @@
   (mml-attach-file-at-the-end t)
   (mml-dnd-attach-options t)
   :config
+  (with-eval-after-load 'olivetti
+    (add-hook 'message-mode-hook #'olivetti-mode))
+
   (with-eval-after-load 'mu4e
     (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory)))
 
