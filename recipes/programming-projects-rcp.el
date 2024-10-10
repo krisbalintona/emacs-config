@@ -287,7 +287,11 @@ With a prefix argument, show NLINES of context."
   ;; FIXME 2024-10-07: For some reason this file isn't loaded, nor is
   ;; `consult-gh-transient' autoloaded
   (require 'consult-gh-transient)
-  
+
+  ;; FIXME 2024-10-09: I have to require this since I set
+  ;; `consult-gh-issue-action' to `consult-gh-forge--issue-view-action'...
+  (require 'consult-gh-forge)
+
   (add-to-list 'savehist-additional-variables 'consult-gh--known-orgs-list)
   (add-to-list 'savehist-additional-variables 'consult-gh--known-repos-list))
 
