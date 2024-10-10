@@ -45,11 +45,11 @@
   (org-special-ctrl-a/e t)
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
 
-  (org-hide-leading-stars t)
+  (org-hide-leading-stars nil)
   (org-startup-folded 'nofold)
   (org-ellipsis " ⮷")
   (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
-  (org-hide-macro-markers t)
+  (org-hide-macro-markers nil)
   (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
   (org-pretty-entities-include-sub-superscripts t) ; Show superscripts and subscripts? Also see `org-export-with-sub-superscripts'
   (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
@@ -65,8 +65,10 @@
      (plain-list-item . nil)))
   (org-cycle-separator-lines 2)
 
-  (org-return-follows-link t)
+  (org-return-follows-link nil)
   (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
+  (org-M-RET-may-split-line '((table . nil)
+                              (default . t)))
 
   (org-file-apps
    '((directory . emacs)
@@ -82,6 +84,17 @@
   (org-edit-timestamp-down-means-later t)
 
   ;; Org-babel et. al
+  (setq org-structure-template-alist
+        '(("s" . "src")
+          ("e" . "src emacs-lisp")
+          ("E" . "src emacs-lisp :results value code :lexical t")
+          ("t" . "src emacs-lisp :tangle FILENAME")
+          ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
+          ("x" . "example")
+          ("X" . "export")
+          ("v" . "verse")
+          ("c" . "comment")
+          ("q" . "quote")))
   (org-confirm-babel-evaluate nil)
   (org-ditaa-jar-path                   ; EAF happens to install it...
    "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
@@ -90,7 +103,12 @@
   (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
   :config
   ;; Make org-open-at-point follow file links in the same window
-  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file))
+  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
+
+  (with-eval-after-load 'pulsar
+    (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
+      (add-hook hook #'pulsar-recenter-center)
+      (add-hook hook #'pulsar-reveal-entry))))
 
 ;;;;; Org-num
 (use-package org-num
