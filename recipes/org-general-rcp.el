@@ -490,20 +490,63 @@ have `org-warning' face."
 
 ;;;;; Org-modern
 (use-package org-modern
-  :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
-  :after org
-  :hook (org-mode . org-modern-mode)
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
   :custom
-  (org-modern-hide-stars nil)           ; Adds extra indentation
-  (org-modern-label-border 'auto)
-  (org-modern-todo nil)
   (org-modern-keyword nil)
+
+  (org-modern-hide-stars "· ") ; Is affected by the value of `org-hide-leading-stars'
+  (org-modern-star 'fold)
+  (org-modern-fold-stars
+   '(("▶" . "▼")
+     ("▷" . "▽")
+     ("⯈" . "⯆")
+     ("▹" . "▿")
+     ("▸" . "▾")))
+
+  (org-modern-todo t) ; NOTE 2024-10-10: I set `org-modern-todo-faces' in my org-agenda section
+  (org-modern-priority t)
+  ;; See my value for `org-priority-faces'
+  (org-modern-priority-faces
+   '((?A :inverse-video t :inherit (bold org-priority))
+     (?B :inverse-video t :inherit (bold org-priority))
+     (?C :inverse-video t :inherit org-priority)
+     (?D :inverse-video t :inherit org-priority)
+     (?E :inverse-video t :inherit (shadow org-priority))
+     (?F :inverse-video t :inherit (shadow org-priority))))
+  ;; See my value for `org-todo-keyword-faces'
+  (org-modern-todo-faces
+   '(("NEXT" :inherit (bold success org-modern-todo))
+     ("TODO" :inherit (org-todo org-modern-todo))
+     ("HOLD" :inherit (shadow error org-modern-todo))
+     ("MAYBE" :inherit (shadow org-todo org-modern-todo))
+     ("DONE" :inherit (bold org-done org-modern-todo))
+     ("CANCELED" :inherit (error org-modern-todo))))
+
+  (org-modern-label-border 'auto)
+  (org-modern-tag t)
+  ;; See my value for `org-tag-faces'
+  (org-modern-tag-faces
+   `(("project"
+      :foreground ,(face-background 'default nil t)
+      :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))
+
+  (org-modern-block-fringe nil) ; Doesn't work well with `olivetti-style' set to 'fancy
+  (org-modern-block-name '("⌜" . "⌞"))
+
+  (org-modern-footnote '(nil (raise 0.15) (height 0.9)))
+  (org-modern-list '((?+ . "◦")
+                     (?- . "–")
+                     (?* . "•")))
   (org-modern-timestamp t)
+
   (org-modern-table t)
-  (org-modern-table-vertical 1)
-  (org-modern-table-horizontal 0)
-  (org-modern-list nil)
-  (org-modern-priority nil))
+  (org-modern-table-vertical 3)
+  (org-modern-table-horizontal 0.1)
+  :custom-face
+  (org-modern-label
+   ((t :height 0.9 :width condensed :weight regular :underline nil)))
+  (org-modern-todo ((t :weight semibold :inverse-video t :inherit org-modern-label))))
 
 ;;;;; Org-modern-indent
 (use-package org-modern-indent
