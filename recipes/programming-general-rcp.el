@@ -210,9 +210,9 @@
    consult-find :preview-key "C-M-;"
    consult-bookmark :preview-key "C-M-;")
 
-  ;; Dired consult-buffer source
+  ;; Additional `consult-buffer' sources (groups)
   (defvar kb/consult-buffer--dired-source
-    (list :name     "Dired Buffers"
+    (list :name     "Dired"
           :category 'buffer
           :narrow   ?d
           :face     'consult-buffer
@@ -227,9 +227,8 @@
                             (buffer-list))))))
   (add-to-list 'consult-buffer-sources #'kb/consult-buffer--dired-source 'append)
 
-  ;; Info consult-buffer source
   (defvar kb/consult-buffer--info-source
-    (list :name     "Info Buffers"
+    (list :name     "Info"
           :category 'buffer
           :narrow   ?i
           :face     'info-title-1
@@ -242,7 +241,23 @@
                             (lambda (x)
                               (eq (buffer-local-value 'major-mode x) 'Info-mode))
                             (buffer-list))))))
-  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--info-source 'append))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--info-source 'append)
+
+  (defvar kb/consult-buffer--customize-source
+    (list :name     "Customize"
+          :category 'buffer
+          :narrow   ?c
+          :face     'custom-group-tag
+          :history  'buffer-name-history
+          :state    'consult--buffer-state
+          :action   'consult--buffer-action
+          :items (lambda ()
+                   (mapcar #'buffer-name
+                           (seq-filter
+                            (lambda (x)
+                              (eq (buffer-local-value 'major-mode x) 'Custom-mode))
+                            (buffer-list))))))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--customize-source 'append))
 
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
