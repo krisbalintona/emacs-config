@@ -377,6 +377,7 @@ have `org-warning' face."
 ;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
 (use-package org-superstar
+  :disabled t             ; NOTE 2024-10-11: Switched to a configured org-modern
   :hook ((org-mode . org-superstar-mode)
          (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
   :custom
