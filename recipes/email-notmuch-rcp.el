@@ -373,7 +373,10 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
                   'local-map (make-mode-line-mouse-map 'mouse-2
                                                        read-mail-command)))
               "")
-            " ")))
+            " "))
+  ;; Update right after closing the notmuch hello buffer so the mail icon
+  ;; reflects the state of my maildirs accurate
+  (advice-add 'notmuch-bury-or-kill-this-buffer :after #'display-time-update))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
