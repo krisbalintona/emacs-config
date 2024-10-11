@@ -291,27 +291,29 @@
   (aw-swap-invert t)
   (aw-background t)
   (aw-display-mode-overlay nil)
-  (aw-dispatch-always t)   ; Open dispatch when less than three windows are open
+  (aw-dispatch-always t) ; Dispatch available even when less than three windows are open
   (aw-minibuffer-flag t)
   (aw-keys '(?q ?w ?e ?r ?t ?y ?u ?i ?p))
-  (aw-dispatch-alist
-   '((?k aw-delete-window "Delete window")
-     (?K delete-other-windows "Delete other windows")
-     (?s aw-swap-window "Swap windows")
-     (?m kb/aw-take-over-window "Move window")
-     (?c aw-copy-window "Copy window")
-     (?o aw-flip-window "Other window")
-     (?v kb/ace-set-other-window "Set to other-scroll-window's window")
-     (?b aw-switch-buffer-in-window "Switch to buffer in window")
-     (?B aw-switch-buffer-other-window "Change buffer in window")
-     (?2 aw-split-window-vert "Split vertically")
-     (?3 aw-split-window-horz "Split horizontally")
-     (?+ aw-split-window-fair "Split heuristically") ; See `aw-fair-aspect-ratio'
-     (?? aw-show-dispatch-help)))
   (aw-fair-aspect-ratio 3)
   :custom-face
   (aw-leading-char-face ((t (:height 3.0 :weight bold))))
   :config
+  ;; Is not a defcustom, so use setq
+  (setq aw-dispatch-alist
+        '((?k aw-delete-window "Delete window")
+          (?K delete-other-windows "Delete other windows")
+          (?s aw-swap-window "Swap windows")
+          (?m kb/aw-take-over-window "Move window")
+          (?c aw-copy-window "Copy window")
+          (?o aw-flip-window "Other window")
+          (?v kb/ace-set-other-window "Set to other-scroll-window's window")
+          (?b aw-switch-buffer-in-window "Switch to buffer in window")
+          (?B aw-switch-buffer-other-window "Change buffer in window")
+          (?2 aw-split-window-vert "Split vertically")
+          (?3 aw-split-window-horz "Split horizontally")
+          (?+ aw-split-window-fair "Split heuristically") ; See `aw-fair-aspect-ratio'
+          (?? aw-show-dispatch-help)))
+
   ;; Taken from Karthink's config
   (defun kb/aw-take-over-window (window)
     "Move from current window to WINDOW.
