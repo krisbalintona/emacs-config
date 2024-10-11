@@ -444,11 +444,10 @@ have `org-warning' face."
 ;;;;; Olivetti
 ;; Better writing environment
 (use-package olivetti
-  :after org
   :hook ((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
   :custom
   (olivetti-lighter nil)
-  (olivetti-body-width 0.55)
+  (olivetti-body-width 0.6)
   (olivetti-minimum-body-width 80)
   (olivetti-margin-width 8)
   (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
