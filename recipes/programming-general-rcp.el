@@ -163,6 +163,19 @@
    ([remap next-matching-history-element] . consult-history)
    ([remap previous-matching-history-element]. consult-history))
   :custom
+  ;; `consult-bookmark' groups
+  (consult-bookmark-narrow
+   '((?f "File" bookmark-default-handler)
+     (?i "Info" Info-bookmark-jump)
+     (?h "Help" help-bookmark-jump Info-bookmark-jump
+         Man-bookmark-jump woman-bookmark-jump)
+     (?p "PDFs" pdf-view-bookmark-jump-handler)
+     (?a "Activities" activities-bookmark-handler)
+     (?d "Docview" doc-view-bookmark-jump)
+     (?s "Eshell" eshell-bookmark-jump)
+     (?w "Web" eww-bookmark-jump xwidget-webkit-bookmark-jump-handler)
+     (?v "VC Directory" vc-dir-bookmark-jump)
+     (nil "Other")))
   (consult-ripgrep-args
    (concat
     "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
