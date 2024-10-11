@@ -198,17 +198,20 @@ Additionally, run `kb/themes-hook'."
 (define-key global-map (kbd "<f8>") 'kb/theme-switcher)
 
 ;;;;; Load appropriate theme based on time of day
-(let ((hour (string-to-number (format-time-string "%H"))))
-  ;; Dark theme between 7 PM or 8 AM
-  (if (or (<= 19 hour) (<= hour 8))
-      (kb/proper-load-theme-dark)
-    (kb/proper-load-theme-light)))
-(add-hook 'elpaca-after-init-hook #'kb/themes-setup-base-faces) ; Initialize for daemon
-(add-hook 'server-after-make-frame-hook #'kb/themes-setup-base-faces)
-(when (fboundp 'elpaca-wait)
-  (elpaca-wait))
-
-(provide 'kb-themes)
+(defun kb/enable-theme-time-of-day ()
+  "Enables the theme based on time of day.
+If daytime, call `kb/proper-load-theme-light'. If nighttime, call
+`kb/proper-load-theme-dark'."
+  (interactive)
+  (let ((hour (string-to-number (format-time-string "%H"))))
+    ;; Dark theme between 7 PM or 8 AM
+    (if (or (<= 19 hour) (<= hour 8))
+        (kb/proper-load-theme-dark)
+      (kb/proper-load-theme-light))))
+(kb/enable-theme-time-of-day)
+;; Desktop saves certain faces, so we call `kb/enable-theme-time-of-day' after
+;; reading to ensure faces are consistent with the time of day.
+(add-hook 'desktop-after-read-hook #'kb/enable-theme-time-of-day)
 
 ;;;; Modeline
 ;;;;; Nerd-icons
