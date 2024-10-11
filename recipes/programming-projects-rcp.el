@@ -330,6 +330,7 @@ With a prefix argument, show NLINES of context."
 ;;;;; Itself
 (use-package vc
   :ensure nil
+  :hook (vc-git-log-edit-mode . auto-fill-mode)
   :custom
   (vc-command-messages 'log)   ; NOTE 2024-09-19: Can be useful in the future...
   (vc-follow-symlinks t)
