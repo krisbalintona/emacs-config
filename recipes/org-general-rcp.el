@@ -463,13 +463,15 @@ have `org-warning' face."
                  (mode--line-format-right-align))
              (mode--line-format-right-align))))
   :config
-  (defun kb/olivetti-set-colors ()
+  (defun kb/olivetti--setup-faces (&optional _theme)
     "Set custom colors for `olivetti'."
-    (when (featurep 'olivetti)
-      (set-face-attribute 'olivetti-fringe nil
-                          :background (modus-themes-with-colors bg-dim)
-                          :inherit 'unspecified)))
-  (add-hook 'enable-theme-functions #'kb/olivetti-set-colors))
+    (when (fboundp 'modus-themes-with-colors)
+      (when (featurep 'olivetti)
+        (set-face-attribute 'olivetti-fringe nil
+                            :background (modus-themes-with-colors bg-dim)
+                            :inherit 'unspecified))))
+  (kb/olivetti--setup-faces)            ; Set faces when first loaded
+  (add-hook 'enable-theme-functions #'kb/olivetti--setup-faces))
 
 ;;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
