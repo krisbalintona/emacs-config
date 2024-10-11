@@ -526,7 +526,7 @@ have `org-warning' face."
      ("DONE" :inherit (bold org-done org-modern-todo))
      ("CANCELED" :inherit (error org-modern-todo))))
 
-  (org-modern-label-border 'auto)
+  (org-modern-label-border 3)
   (org-modern-tag t)
   ;; See my value for `org-tag-faces'
   (org-modern-tag-faces
