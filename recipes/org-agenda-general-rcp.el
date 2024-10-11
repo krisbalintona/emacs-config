@@ -182,6 +182,7 @@
   ;; Input
   (org-read-date-prefer-future 'time)
   :custom-face
+  (org-drawer ((t (:height 0.9))))
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :init
   (defun kb/org-agenda-breadcrumb (len)
