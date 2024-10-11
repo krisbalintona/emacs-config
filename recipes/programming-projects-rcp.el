@@ -60,6 +60,7 @@
   (project-vc-merge-submodules nil)
   (project-mode-line t)
   (project-mode-line-face nil)
+  (project-vc-extra-root-markers '("Makefile"))
   :config
   ;; This is a regular variable
   (setq project-mode-line-format
@@ -287,7 +288,11 @@ With a prefix argument, show NLINES of context."
   ;; FIXME 2024-10-07: For some reason this file isn't loaded, nor is
   ;; `consult-gh-transient' autoloaded
   (require 'consult-gh-transient)
-  
+
+  ;; FIXME 2024-10-09: I have to require this since I set
+  ;; `consult-gh-issue-action' to `consult-gh-forge--issue-view-action'...
+  (require 'consult-gh-forge)
+
   (add-to-list 'savehist-additional-variables 'consult-gh--known-orgs-list)
   (add-to-list 'savehist-additional-variables 'consult-gh--known-repos-list))
 
@@ -325,6 +330,7 @@ With a prefix argument, show NLINES of context."
 ;;;;; Itself
 (use-package vc
   :ensure nil
+  :hook (vc-git-log-edit-mode . auto-fill-mode)
   :custom
   (vc-command-messages 'log)   ; NOTE 2024-09-19: Can be useful in the future...
   (vc-follow-symlinks t)

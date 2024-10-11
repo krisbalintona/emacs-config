@@ -78,7 +78,6 @@
 (use-package desktop
   :ensure nil
   :demand
-  :hook (desktop-after-read . desktop-save-mode)
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-files-not-to-save
@@ -89,6 +88,7 @@
   (desktop-auto-save-timeout 3)
   (desktop-restore-forces-onscreen t)
   (desktop-restore-frames t)
+  (desktop-save 'if-exists)
   (desktop-restore-in-current-display nil)
   :config
   (desktop-save-mode 1))

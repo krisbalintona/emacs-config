@@ -203,5 +203,12 @@ Info node `(eshell)Top'."
                             (buffer-list))))))
   (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append))
 
+;;;; Eshell-z
+;; Use z in Eshell
+(use-package eshell-z
+  :custom
+  (eshell-z-freq-dir-hash-table-file-name (getenv "Z_DATA"))
+  (eshell-z-exclude-dirs nil))
+
 (provide 'shell-eshell-rcp)
 ;;; shell-eshell-rcp.el ends here

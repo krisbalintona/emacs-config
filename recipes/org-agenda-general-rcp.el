@@ -33,7 +33,7 @@
   ;; Call after `org' since some of the options below are from `org', not
   ;; `org-export', so they will be overwritten if this use-package loads before
   ;; `org' does
-  :after org
+  :hook (org-agenda-mode . hl-line-mode)
   :bind
   ( :map kb/open-keys
     ("a" . org-agenda)
@@ -41,7 +41,7 @@
     ("`" . kb/org-agenda-process))
   :custom
   ;; Effort
-  (org-agenda-sort-noeffort-is-high nil)
+  (org-agenda-sort-noeffort-is-high t)
   (org-effort-durations
    '(("m" . 1)
      ("h" . 60)
@@ -71,7 +71,7 @@
   (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
   (org-agenda-window-setup 'only-window)
   (org-agenda-restore-windows-after-quit t)
-  (org-agenda-tags-column 'auto)
+  (org-agenda-tags-column 0)
   (org-agenda-start-on-weekday 1)
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
   (org-agenda-tags-todo-honor-ignore-options t)
@@ -83,23 +83,24 @@
      (todo  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
      (tags  . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")
      (search . " %i %-8:c%-5e%(kb/org-agenda-breadcrumb 20)")))
+  ;; See `kb/org-sort-agenda-by-created-time' for my user-defined sorter
   (org-agenda-sorting-strategy
-   '((agenda habit-down user-defined-up urgency-down deadline-up todo-state-up category-up)
-     (todo user-defined-up urgency-down todo-state-up category-up)
-     (todo user-defined-up urgency-down todo-state-up category-up)
+   '((agenda habit-down urgency-down priority-down user-defined-up deadline-up todo-state-up category-up)
+     (todo urgency-down priority-down user-defined-up todo-state-up category-up)
+     (todo urgency-down priority-down user-defined-up todo-state-up category-up)
      (search todo-state-up priority-down category-keep)))
   ;; See
   ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
   (org-extend-today-until 3)
   (org-use-effective-time t)
-  (org-agenda-block-separator ?—)
+  (org-agenda-block-separator ?─)
   (org-deadline-warning-days 3)
   (org-agenda-time-grid
    '((daily today require-timed)
      (800 1000 1200 1400 1600 1800 2000)
      " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
   (org-agenda-current-time-string
-   "⭠ now ─────────────────────────────────────────────────")
+   "◀── now ─────────────────────────────────────────────────")
   (org-agenda-breadcrumbs-separator " ⇛ ")
   (org-agenda-skip-scheduled-delay-if-deadline nil)
   (org-agenda-skip-deadline-if-done t)
@@ -111,11 +112,11 @@
   ;; Capture templates
   ;; See also `org-capture-templates-contexts'
   (org-capture-templates
-   `(("t" "Todo (without processing)" entry
+   `(("t" "Todo" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
       "* TODO %? :inbox:%^g\n"
       :empty-lines 1)
-     ("T" "Todo" entry
+     ("T" "Todo (without processing)" entry
       (file ,(expand-file-name "todo.org" kb/agenda-dir))
       "* TODO %? %^g\n"
       :empty-lines 1)
@@ -137,8 +138,8 @@
       :kill-buffer t)
      ("j" "Journal" entry
       (file+olp+datetree ,(car (denote-directory-files "20241006T214811")))
-      "* %<%F>\n\n%?"
-      :tree-type week
+      "* %<%c>\n\n%?"
+      :tree-type month
       :jump-to-captured t
       :immediate-finish t
       :empty-lines 1
@@ -181,6 +182,7 @@
   ;; Input
   (org-read-date-prefer-future 'time)
   :custom-face
+  (org-drawer ((t (:height 0.9))))
   (org-mode-line-clock ((t (:inherit org-agenda-date))))
   :init
   (defun kb/org-agenda-breadcrumb (len)
@@ -197,7 +199,7 @@
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
-  (dolist (f (directory-files-recursively kb/agenda-dir (rx (literal ".org") eol)))
+  (dolist (f (directory-files-recursively kb/agenda-dir (rx (or (literal ".org") (literal ".org_archive")) eol)))
     (add-to-list 'org-agenda-files f))
 
   ;; Taken from
@@ -313,7 +315,7 @@ This function makes sure that dates are aligned for easy reading."
                        (org-agenda-include-diary t)
                        (org-agenda-insert-diary-extract-time t)
                        (org-super-agenda-groups
-                        '((:discard (:tag "inbox"))
+                        '((:discard (:and (:tag "inbox" :not (:deadline t)))) ; We want to see deadlines even if they have the inbox tag
                           (:auto-category t)))))
               (tags-todo "+TODO=\"NEXT\"-project-inbox"
                          ((org-agenda-overriding-header "Next")
@@ -353,7 +355,6 @@ This function makes sure that dates are aligned for easy reading."
             ("p" "Projects"
              ((tags-todo "project"
                          ((org-agenda-overriding-header "")
-                          (org-agenda-dim-blocked-tasks nil)
                           ;; This lets project sub-tasks be discoverable by a tags
                           ;; search. One might think :auto-parent makes this
                           ;; redundant, but this handles cases where I have a
@@ -367,7 +368,7 @@ This function makes sure that dates are aligned for easy reading."
                           (org-agenda-prefix-format
                            ;; FIXME 2024-10-07: Not sure if this is a tags- or
                            ;; todo-type view
-                           '((tags  . " %i %-8:c%-5e")))
+                           '((tags  . " %i %-8:c%-5e%?-12t% s")))
                           (org-super-agenda-groups
                            '(( :auto-parent t
                                :order 2)

@@ -42,9 +42,8 @@
 (use-package winner
   :ensure nil
   :hook (on-first-buffer . winner-mode)
-  :bind
-  (("C-<left>" . winner-undo)
-   ("C-<right>" . winner-redo))
+  :bind (("C-<left>" . winner-undo)
+         ("C-<right>" . winner-redo))
   :custom
   (winner-dont-bind-my-keys t) ; Don't bind keys because I bind them myself
   (winner-boring-buffers '("*Completions*")))
@@ -79,6 +78,9 @@
 (use-package window
   :ensure nil
   :bind* ("M-o" . other-window)
+  :bind (([remap other-window] . kb/other-window-alternating)
+         :repeat-map other-window-repeat-map
+         ("o" . kb/other-window-alternating))
   :custom
   (split-width-threshold (ceiling (/ (frame-width) 2.0)))
   (split-height-threshold 80)
@@ -100,7 +102,8 @@
       (display-buffer-reuse-mode-window display-buffer-same-window))
      ((major-mode . diff-mode)
       (display-buffer-same-window))
-     ((or . ((major-mode . vc-git-log-view-mode)
+     ((or . ((major-mode . vc-dir-mode)
+             (major-mode . vc-git-log-view-mode)
              (major-mode . vc-annotate-mode)
              (major-mode . vc-git-region-history-mode)))
       (display-buffer-same-window))
@@ -140,7 +143,7 @@
      ;; To the bottom
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
-      (window-height . fit-window-to-buffer)
+      (window-height . shrink-window-if-larger-than-buffer)
       (side . bottom)
       (slot . -4))
      ("\\*Embark Actions\\*"
@@ -184,14 +187,27 @@
      ("\\*vc-log\\*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
       (dedicated . t))
-
-     ;; Other
      ("\\*Help\\*"
-      (display-buffer-reuse-window display-buffer-pop-up-window))
+      (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+      (window-height . shrink-window-if-larger-than-buffer))
+
+     ;; Pop up
      ((or "\\*Man"
           (major-mode . Man-mode))
       (display-buffer-reuse-window display-buffer-pop-up-window)
-      (post-command-select-window . t)))))
+      (post-command-select-window . t))))
+  :config
+  ;; Fixed version from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#other-window-alternating
+  (defalias 'kb/other-window-alternating
+    (let ((direction 1))
+      (lambda (&optional arg)
+        "Call `other-window', switching directions each time."
+        (interactive "p")
+        (if (equal last-command 'kb/other-window-alternating)
+            (other-window (* direction (or arg 1)))
+          (setq direction (- direction))
+          (other-window (* direction (or arg 1))))))))
 
 ;; Below selected
 (with-eval-after-load 'xref
@@ -241,9 +257,10 @@
 (use-package tab-bar
   :ensure nil
   :demand
-  :bind
-  ( :map tab-prefix-map
-    ("w" . tab-bar-move-window-to-tab))
+  :bind (([remap winner-undo] . tab-bar-history-back)
+         ([remap winner-redo] . tab-bar-history-forward)
+         :map tab-prefix-map
+         ("w" . tab-bar-move-window-to-tab))
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)
@@ -267,28 +284,82 @@
 
 ;;;;; Ace-window
 (use-package ace-window
-  :bind
-  (("C-c w" . ace-window)
-   ("C-c W" . ace-swap-window))
+  :bind (("C-c w" . ace-window)
+         ("C-c W" . kb/ace-window-prefix))
   :custom
-  (aw-scope 'frame)
+  (aw-scope 'global)
+  (aw-swap-invert t)
   (aw-background t)
-  (aw-dispatch-always t)   ; Open dispatch when less than three windows are open
+  (aw-display-mode-overlay nil)
+  (aw-dispatch-always t) ; Dispatch available even when less than three windows are open
   (aw-minibuffer-flag t)
-  (aw-keys '(?h ?j ?k ?l ?H ?J ?K ?L))
-  (aw-dispatch-alist
-   '((?x aw-delete-window "Delete Window")
-     (?m aw-swap-window "Swap Windows")
-     (?M aw-move-window "Move Window")
-     (?c aw-copy-window "Copy Window")
-     (?j aw-switch-buffer-in-window "Select Buffer")
-     (?n aw-flip-window)
-     (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
-     (?c aw-split-window-fair "Split Fair Window")
-     (?v aw-split-window-vert "Split Vert Window")
-     (?b aw-split-window-horz "Split Horz Window")
-     (?o delete-other-windows "Delete Other Windows")
-     (?? aw-show-dispatch-help))))
+  (aw-keys '(?q ?w ?e ?r ?t ?y ?u ?i ?p))
+  (aw-fair-aspect-ratio 3)
+  :custom-face
+  (aw-leading-char-face ((t (:height 3.0 :weight bold))))
+  :config
+  ;; Is not a defcustom, so use setq
+  (setq aw-dispatch-alist
+        '((?k aw-delete-window "Delete window")
+          (?K delete-other-windows "Delete other windows")
+          (?s aw-swap-window "Swap windows")
+          (?m kb/aw-take-over-window "Move window")
+          (?c aw-copy-window "Copy window")
+          (?o aw-flip-window "Other window")
+          (?v kb/ace-set-other-window "Set to other-scroll-window's window")
+          (?b aw-switch-buffer-in-window "Switch to buffer in window")
+          (?B aw-switch-buffer-other-window "Change buffer in window")
+          (?2 aw-split-window-vert "Split vertically")
+          (?3 aw-split-window-horz "Split horizontally")
+          (?+ aw-split-window-fair "Split heuristically") ; See `aw-fair-aspect-ratio'
+          (?? aw-show-dispatch-help)))
+
+  ;; Taken from Karthink's config
+  (defun kb/aw-take-over-window (window)
+    "Move from current window to WINDOW.
+
+Delete current window in the process."
+    (let ((buf (current-buffer)))
+      (if (one-window-p)
+          (delete-frame)
+        (delete-window))
+      (aw-switch-to-window window)
+      (switch-to-buffer buf)))
+
+  ;; Taken from Karthink's config
+  (defun kb/ace-window-prefix ()
+    "Use `ace-window' to display the buffer of the next command.
+The next buffer is the buffer displayed by the next command invoked
+immediately after this command (ignoring reading from the minibuffer).
+Creates a new window before displaying the buffer. When
+`switch-to-buffer-obey-display-actions' is non-nil, `switch-to-buffer'
+commands are also supported."
+    (interactive)
+    (display-buffer-override-next-command
+     (lambda (buffer _)
+       (let (window type)
+         (setq
+          window (aw-select (propertize " ACE" 'face 'mode-line-highlight))
+          type 'reuse)
+         (cons window type)))
+     nil "[ace-window]")
+    (message "Use `ace-window' to display next command buffer..."))
+
+  ;; Based off of similar code taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
+  (defun kb/ace-set-other-window (window)
+    "Set WINDOW as the \"other window\" for the current one.
+\"Other window\" is the window scrolled by `scroll-other-window' and
+`scroll-other-window-down'."
+    (setq-local other-window-scroll-buffer (window-buffer window)))
+
+  ;; A useful macro for executing stuff in other windows. Taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#with-other-window-an-elisp-helper
+  (defmacro with-other-window (&rest body)
+    "Execute forms in BODY in the other-window."
+    `(unless (one-window-p)
+       (with-selected-window (other-window-for-scrolling)
+         ,@body))))
 
 ;;;;; Popper
 ;; "Tame ephemeral windows"
@@ -385,6 +456,7 @@
 ;;;;; Switchy-window
 ;; `other-window' by most recently used
 (use-package switchy-window
+  :disabled t
   :hook (on-first-buffer . switchy-window-minor-mode)
   :bind
   ( :map switchy-window-minor-mode-map

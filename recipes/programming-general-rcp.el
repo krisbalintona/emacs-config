@@ -123,19 +123,18 @@
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
-  (("C-x B" . consult-buffer)
-   ("C-x r B" . consult-bookmark)
-   ;; Remaps
+  (;; Remaps
+   ([remap switch-to-buffer] . consult-buffer)
+   ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap repeat-complex-command] . consult-complex-command)
    ([remap goto-line] . consult-goto-line)
    ([remap imenu] . kb/consult-imenu-versatile)
    ([remap recentf-open-files] . consult-recent-file)
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
+   ([remap Info-search] . consult-info)
+   ([remap project-switch-to-buffer] . consult-project-buffer)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
    ("f" . consult-flymake)
@@ -157,12 +156,26 @@
    ([remap apropos-command] . consult-apropos)
    :map org-mode-map
    ([remap consult-outline] . consult-org-heading)
+   ("M-g a" . consult-org-agenda)
    :map comint-mode-map
    ([remap comint-history-isearch-backward-regexp]. consult-history)
    :map minibuffer-local-map
    ([remap next-matching-history-element] . consult-history)
    ([remap previous-matching-history-element]. consult-history))
   :custom
+  ;; `consult-bookmark' groups
+  (consult-bookmark-narrow
+   '((?f "File" bookmark-default-handler)
+     (?i "Info" Info-bookmark-jump)
+     (?h "Help" help-bookmark-jump Info-bookmark-jump
+         Man-bookmark-jump woman-bookmark-jump)
+     (?p "PDFs" pdf-view-bookmark-jump-handler)
+     (?a "Activities" activities-bookmark-handler)
+     (?d "Docview" doc-view-bookmark-jump)
+     (?s "Eshell" eshell-bookmark-jump)
+     (?w "Web" eww-bookmark-jump xwidget-webkit-bookmark-jump-handler)
+     (?v "VC Directory" vc-dir-bookmark-jump)
+     (nil "Other")))
   (consult-ripgrep-args
    (concat
     "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
@@ -189,19 +202,17 @@
 
   ;; Customize consult commands
   (consult-customize
-   ;; For `consult-*-grep'
+   consult-buffer :preview-key "C-M-;"
    consult-grep :preview-key "C-M-;"
    consult-git-grep :preview-key "C-M-;"
    consult-ripgrep :preview-key "C-M-;"
-   ;; For `consult-fdfind'. Make sure this is after the definition of
-   ;; `consult-recent-file'
-   consult-recent-file :preview-key "C-M-;"
-   ;; `consult-find'
-   consult-find :preview-key "C-M-;")
+   consult-recent-file :preview-key "C-M-;" ; Make sure this is after the definition of `consult-recent-file'
+   consult-find :preview-key "C-M-;"
+   consult-bookmark :preview-key "C-M-;")
 
-  ;; Dired consult-buffer source
+  ;; Additional `consult-buffer' sources (groups)
   (defvar kb/consult-buffer--dired-source
-    (list :name     "Dired Buffers"
+    (list :name     "Dired"
           :category 'buffer
           :narrow   ?d
           :face     'consult-buffer
@@ -216,9 +227,8 @@
                             (buffer-list))))))
   (add-to-list 'consult-buffer-sources #'kb/consult-buffer--dired-source 'append)
 
-  ;; Info consult-buffer source
   (defvar kb/consult-buffer--info-source
-    (list :name     "Info Buffers"
+    (list :name     "Info"
           :category 'buffer
           :narrow   ?i
           :face     'info-title-1
@@ -231,16 +241,32 @@
                             (lambda (x)
                               (eq (buffer-local-value 'major-mode x) 'Info-mode))
                             (buffer-list))))))
-  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--info-source 'append))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--info-source 'append)
+
+  (defvar kb/consult-buffer--customize-source
+    (list :name     "Customize"
+          :category 'buffer
+          :narrow   ?c
+          :face     'custom-group-tag
+          :history  'buffer-name-history
+          :state    'consult--buffer-state
+          :action   'consult--buffer-action
+          :items (lambda ()
+                   (mapcar #'buffer-name
+                           (seq-filter
+                            (lambda (x)
+                              (eq (buffer-local-value 'major-mode x) 'Custom-mode))
+                            (buffer-list))))))
+  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--customize-source 'append))
 
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
 ;; thus selectrum!)
 (use-package embark
-  :commands embark-act
   :bind
   (("C-.". embark-act)
    ("C-h B". embark-bindings)
+   ([remap xref-find-definitions] . embark-dwim)
    :map vertico-map
    ("C-.". embark-act)
    ("C->". embark-become)
@@ -300,8 +326,8 @@
   :ensure nil
   :hook (on-first-file . global-auto-revert-mode)
   :custom
-  (auto-revert-interval 5)
-  (auto-revert-avoid-polling t) ; Automatically reread from disk if the underlying file changes
+  (auto-revert-interval 3)
+  (auto-revert-avoid-polling t)
   (auto-revert-check-vc-info t)
   (auto-revert-verbose t))
 
@@ -501,7 +527,7 @@ with the exception of org-emphasis markers."
 (use-package rainbow-mode
   :diminish
   :hook
-  ((text-mode prog-mode conf-mode help-mode) . rainbow-mode))
+  ((prog-mode conf-mode help-mode) . rainbow-mode))
 
 ;;;;; Highlight-defined
 ;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
@@ -516,6 +542,7 @@ with the exception of org-emphasis markers."
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
+  :disabled t
   :hook
   (emacs-lisp-mode . highlight-quoted-mode))
 
@@ -535,11 +562,16 @@ with the exception of org-emphasis markers."
   :custom-face
   (fill-column-indicator ((t (:inherit line-number)))))
 
-;;;;; Adaptive-wrap
-;; Visually indent lines wrapped visually!
-(use-package adaptive-wrap
-  ;; NOTE 2024-02-15: This makes long-lines in lists properly indented!
-  :hook ((prog-mode conf-mode org-mode) . adaptive-wrap-prefix-mode))
+;;;;; Visual-wrap
+;; Visually indent lines wrapped visually! This makes long-lines in lists
+;; properly indented!
+;; NOTE 2024-10-09: This package is the same as the more often referred to
+;; `adaptive-wrap-prefix-mode'.
+(use-package visual-wrap
+  :ensure nil
+  :demand t
+  :config
+  (global-visual-wrap-prefix-mode 1))
 
 ;;;; Other
 ;;;;; Outline

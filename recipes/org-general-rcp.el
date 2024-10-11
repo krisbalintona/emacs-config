@@ -45,16 +45,17 @@
   (org-special-ctrl-a/e t)
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
 
-  (org-hide-leading-stars t)
+  (org-hide-leading-stars nil)
   (org-startup-folded 'nofold)
   (org-ellipsis " ⮷")
   (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
-  (org-hide-macro-markers t)
+  (org-hide-macro-markers nil)
   (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
   (org-pretty-entities-include-sub-superscripts t) ; Show superscripts and subscripts? Also see `org-export-with-sub-superscripts'
   (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
   (org-hidden-keywords nil)
   (org-ctrl-k-protect-subtree 'error)
+  (org-tags-column 0)
 
   (org-list-allow-alphabetical t)
   (org-list-use-circular-motion t)
@@ -64,9 +65,13 @@
      ;; Don't let Emacs make decisions about where to insert newlines
      (plain-list-item . nil)))
   (org-cycle-separator-lines 2)
+  (org-cycle-level-faces t)
+  (org-n-level-faces 8)
 
-  (org-return-follows-link t)
+  (org-return-follows-link nil)
   (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
+  (org-M-RET-may-split-line '((table . nil)
+                              (default . t)))
 
   (org-file-apps
    '((directory . emacs)
@@ -78,19 +83,35 @@
      ;; Default to `auto-mode-alist'
      (auto-mode . emacs)))
 
-  (org-fold-catch-invisible-edits 'show)
+  (org-fold-catch-invisible-edits 'show-and-error)
   (org-edit-timestamp-down-means-later t)
 
   ;; Org-babel et. al
+  (setq org-structure-template-alist
+        '(("s" . "src")
+          ("e" . "src emacs-lisp")
+          ("E" . "src emacs-lisp :results value code :lexical t")
+          ("t" . "src emacs-lisp :tangle FILENAME")
+          ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
+          ("x" . "example")
+          ("X" . "export")
+          ("v" . "verse")
+          ("c" . "comment")
+          ("q" . "quote")))
   (org-confirm-babel-evaluate nil)
   (org-ditaa-jar-path                   ; EAF happens to install it...
    "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
   :custom-face
   (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
-  (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
+  (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
   :config
   ;; Make org-open-at-point follow file links in the same window
-  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file))
+  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
+
+  (with-eval-after-load 'pulsar
+    (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
+      (add-hook hook #'pulsar-recenter-center)
+      (add-hook hook #'pulsar-reveal-entry))))
 
 ;;;;; Org-num
 (use-package org-num
@@ -192,7 +213,7 @@ have `org-warning' face."
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust t)
-  (org-footnote-define-inline t))
+  (org-footnote-define-inline nil))
 
 ;;;;; Org-attach
 (use-package org-attach
@@ -229,7 +250,10 @@ have `org-warning' face."
    `((,kb/all-agenda-dir-files . (:level . 0))
      (,kb/all-agenda-dir-files . (:tag . "project"))
      (,kb/agenda-main-todo-file . (:maxlevel . 1))))
-  (org-refile-target-verify-function (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)) t)))
+  ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
+  ;; want to refile to a non-todo heading in the current file?
+  (org-refile-target-verify-function    ; Only let not done todos be refile targets
+   (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)))))
   (org-refile-allow-creating-parent-nodes 'confirm)
   :config
   ;; Workaround for orderless issue with `org-refile'. See
@@ -267,6 +291,7 @@ have `org-warning' face."
   :after org
   :custom
   (org-archive-subtree-save-file-p t)  ; Save archive file always
+  (org-archive-subtree-add-inherited-tags t)
   :config
   (define-advice org-archive--compute-location
       (:around (orig-fun &rest args) kb/org-archive--compute-location-denote-format-string)
@@ -352,11 +377,10 @@ have `org-warning' face."
 ;;;; Aesthetics
 ;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
-(use-package org-superstar  ;; Improved version of org-bullets
-  :after org
-  :hook
-  ((org-mode . org-superstar-mode)
-   (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
+(use-package org-superstar
+  :disabled t             ; NOTE 2024-10-11: Switched to a configured org-modern
+  :hook ((org-mode . org-superstar-mode)
+         (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
   :custom
   ;; Indentation
   ;; The following ensures consistent indentation, overriding `org-indent'
@@ -364,27 +388,23 @@ have `org-warning' face."
   (org-hide-leading-stars nil)
   (org-indent-mode-turns-on-hiding-stars nil)
   (org-superstar-remove-leading-stars nil)
-  (org-superstar-leading-bullet ?·)
 
   ;; Headlines
+  (org-superstar-leading-bullet ?·)
   (org-superstar-headline-bullets-list '("◈" "▷" "◉" "◇" "✳")) ; List inspired from `org-modern'
-  (org-n-level-faces 5)
-  (org-cycle-level-faces t)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
 
   ;; Todos
-  (org-superstar-special-todo-items t)
+  (org-superstar-special-todo-items nil)
   ;; Update when I change `org-todo-keywords'
   (org-superstar-todo-bullet-alist
-   '(("PROG" . 9744)
-     ("ACTIVE" . 9744)
-     ("TODO" . 9744)
-     ("WAITING" . 9745)
-     ("MAYBE" . 9745)
-     ("DONE" . 9745)
-     ("CANCELLED" . 9745)
-     ("[ ]"  . 9744)
-     ("[X]"  . 9745)))
+   '(("NEXT" . ?☐)
+     ("TODO" . ?☐)
+     ("HOLD" . ?☐)
+     ("DONE" . ?☑)
+     ("CANCELED" . ?☑)
+     ("[ ]"  . ?☐)
+     ("[X]"  . ?☑)))
 
   ;; Plain lists
   (org-superstar-prettify-item-bullets t)
@@ -397,7 +417,7 @@ have `org-warning' face."
   ;; Make a good non-distracting foreground color and ensure headlines are
   ;; aligned with headline content
   (org-superstar-leading ((t (:inherit (fixed-pitch org-hide)))))
-  :init
+  :config
   ;; See https://github.com/emacsmirror/org-superstar#fast-plain-list-items
   (defun kb/org-superstar-auto-lightweight-mode ()
     "Start Org Superstar differently depending on the number of lists items."
@@ -426,13 +446,10 @@ have `org-warning' face."
 ;;;;; Olivetti
 ;; Better writing environment
 (use-package olivetti
-  :after org
-  :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
-         (olivetti-mode . kb/olivetti-set-colors)
-         (kb/themes . kb/olivetti-set-colors))
+  :hook ((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
   :custom
   (olivetti-lighter nil)
-  (olivetti-body-width 0.55)
+  (olivetti-body-width 0.6)
   (olivetti-minimum-body-width 80)
   (olivetti-margin-width 8)
   (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
@@ -447,12 +464,15 @@ have `org-warning' face."
                  (mode--line-format-right-align))
              (mode--line-format-right-align))))
   :config
-  (defun kb/olivetti-set-colors ()
+  (defun kb/olivetti--setup-faces (&optional _theme)
     "Set custom colors for `olivetti'."
-    (when (featurep 'olivetti)
-      (set-face-attribute 'olivetti-fringe nil
-                          :background (modus-themes-with-colors bg-dim)
-                          :inherit 'unspecified))))
+    (when (fboundp 'modus-themes-with-colors)
+      (when (featurep 'olivetti)
+        (set-face-attribute 'olivetti-fringe nil
+                            :background (modus-themes-with-colors bg-dim)
+                            :inherit 'unspecified))))
+  (kb/olivetti--setup-faces)            ; Set faces when first loaded
+  (add-hook 'enable-theme-functions #'kb/olivetti--setup-faces))
 
 ;;;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
@@ -473,20 +493,63 @@ have `org-warning' face."
 
 ;;;;; Org-modern
 (use-package org-modern
-  :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
-  :after org
-  :hook (org-mode . org-modern-mode)
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
   :custom
-  (org-modern-hide-stars nil)           ; Adds extra indentation
-  (org-modern-label-border 'auto)
-  (org-modern-todo nil)
   (org-modern-keyword nil)
+
+  (org-modern-hide-stars "· ") ; Is affected by the value of `org-hide-leading-stars'
+  (org-modern-star 'fold)
+  (org-modern-fold-stars
+   '(("▶" . "▼")
+     ("▷" . "▽")
+     ("⯈" . "⯆")
+     ("▹" . "▿")
+     ("▸" . "▾")))
+
+  (org-modern-todo t) ; NOTE 2024-10-10: I set `org-modern-todo-faces' in my org-agenda section
+  (org-modern-priority t)
+  ;; See my value for `org-priority-faces'
+  (org-modern-priority-faces
+   '((?A :inverse-video t :inherit (bold org-priority))
+     (?B :inverse-video t :inherit (bold org-priority))
+     (?C :inverse-video t :inherit org-priority)
+     (?D :inverse-video t :inherit org-priority)
+     (?E :inverse-video t :inherit (shadow org-priority))
+     (?F :inverse-video t :inherit (shadow org-priority))))
+  ;; See my value for `org-todo-keyword-faces'
+  (org-modern-todo-faces
+   '(("NEXT" :inherit (bold success org-modern-todo))
+     ("TODO" :inherit (org-todo org-modern-todo))
+     ("HOLD" :inherit (shadow error org-modern-todo))
+     ("MAYBE" :inherit (shadow org-todo org-modern-todo))
+     ("DONE" :inherit (bold org-done org-modern-todo))
+     ("CANCELED" :inherit (error org-modern-todo))))
+
+  (org-modern-label-border 'auto)
+  (org-modern-tag t)
+  ;; See my value for `org-tag-faces'
+  (org-modern-tag-faces
+   `(("project"
+      :foreground ,(face-background 'default nil t)
+      :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))
+
+  (org-modern-block-fringe nil) ; Doesn't work well with `olivetti-style' set to 'fancy
+  (org-modern-block-name '("⌜" . "⌞"))
+
+  (org-modern-footnote '(nil (raise 0.15) (height 0.9)))
+  (org-modern-list '((?+ . "◦")
+                     (?- . "–")
+                     (?* . "•")))
   (org-modern-timestamp t)
+
   (org-modern-table t)
-  (org-modern-table-vertical 1)
-  (org-modern-table-horizontal 0)
-  (org-modern-list nil)
-  (org-modern-priority nil))
+  (org-modern-table-vertical 3)
+  (org-modern-table-horizontal 0.1)
+  :custom-face
+  (org-modern-label
+   ((t :height 0.9 :width condensed :weight regular :underline nil)))
+  (org-modern-todo ((t :weight semibold :inverse-video t :inherit org-modern-label))))
 
 ;;;;; Org-modern-indent
 (use-package org-modern-indent

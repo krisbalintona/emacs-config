@@ -169,7 +169,7 @@
   (hammy-mode-lighter-prefix "[H]")
   (hammy-mode-lighter-overdue "!")
   (hammy-mode-lighter-pie t)
-  (hammy-mode-lighter-pie-height 0.7)
+  (hammy-mode-lighter-pie-height 0.65)
   :config
   (defun kb/hammy-play-sound ()
     "Play end of timer sound."
@@ -266,7 +266,49 @@
                (notify "Flywheel session complete!")))
 
   ;; Mode line
-  (hammy-mode 1))
+  (hammy-mode 1)
+
+  ;; Custom lighter
+  (defun kb/hammy-mode-lighter ()
+    "Return lighter for `hammy-mode'."
+    (cl-labels
+        ((format-hammy (hammy)
+           (let ((remaining
+                  (abs
+                   ;; We use the absolute value because `ts-human-format-duration'
+                   ;; returns 0 for negative numbers.
+                   (- (hammy-current-duration hammy)
+                      (float-time (time-subtract (current-time)
+                                                 (hammy-current-interval-start-time hammy)))))))
+             (format "%s(%s%s:%s)"
+                     (propertize (hammy-name hammy)
+                                 'face 'hammy-mode-lighter-name)
+                     (if (hammy-overduep hammy)
+                         (propertize hammy-mode-lighter-overdue
+                                     'face 'hammy-mode-lighter-overdue)
+                       "")
+                     (propertize (hammy-interval-name (hammy-interval hammy))
+                                 'face `(hammy-mode-lighter-interval
+                                         ,(hammy-interval-face (hammy-interval hammy))))
+                     (concat (when hammy-mode-lighter-pie
+                               (propertize " " 'display (hammy--pie hammy)))
+                             (if (hammy-overduep hammy)
+                                 ;; We use the negative sign when counting down to
+                                 ;; the end of an interval (i.e. "T-minus...") .
+                                 "+" "-")
+                             (format-seconds (if (< remaining 60)
+                                                 "%2ss" hammy-mode-lighter-seconds-format)
+                                             remaining))))))
+      (if hammy-active
+          (concat (mapconcat #'format-hammy hammy-active ",") " ")
+        ;; No active hammys.
+        (when hammy-mode-always-show-lighter
+          (concat (propertize hammy-mode-lighter-prefix
+                              'face 'hammy-mode-lighter-prefix-inactive)
+                  (if hammy-mode-lighter-suffix-inactive
+                      (concat ":" hammy-mode-lighter-suffix-inactive))
+                  " ")))))
+  (advice-add 'hammy-mode-lighter :override #'kb/hammy-mode-lighter))
 
 ;;;; Writing
 ;;;;; Sentex
@@ -681,7 +723,7 @@ interactively, then delete the register instead of jumping to it."
          (on-first-input . pixel-scroll-precision-mode))
   :custom
   (pixel-scroll-precision-interpolate-page t)
-  (pixel-scroll-precision-interpolation-factor 1)
+  (pixel-scroll-precision-interpolation-factor 3.0)
   :config
   (defun kb/pixel-recenter (&optional arg redisplay)
     "Similar to `recenter' but with pixel scrolling.
@@ -733,17 +775,21 @@ ARG and REDISPLAY are identical to the original function."
           (or arg (- (window-text-height) next-screen-context-lines)))
        nil 1))))
 
-  (add-hook 'pixel-scroll-precision-mode-hook
-            (lambda ()
-              (cond
-               (pixel-scroll-precision-mode
-                (advice-add 'scroll-up :override 'kb/pixel-scroll-up)
-                (advice-add 'scroll-down :override 'kb/pixel-scroll-down)
-                (advice-add 'recenter :override 'kb/pixel-recenter))
-               (t
-                (advice-remove 'scroll-up 'kb/pixel-scroll-up)
-                (advice-remove 'scroll-down 'kb/pixel-scroll-down)
-                (advice-remove 'recenter 'kb/pixel-recenter))))))
+  (defun kb/pixel-scroll-everything ()
+    "Use pixel-scroll functions for scrolling and recentering.
+Dependent on the activation of `pixel-scroll-precision-mode'. Add to
+`pixel-scroll-precision-mode-hook'."
+    (cond
+     (pixel-scroll-precision-mode
+      (advice-add 'scroll-up :override #'kb/pixel-scroll-up)
+      (advice-add 'scroll-down :override #'kb/pixel-scroll-down)
+      (advice-add 'recenter :override #'kb/pixel-recenter))
+     (t
+      (advice-remove 'scroll-up #'kb/pixel-scroll-up)
+      (advice-remove 'scroll-down #'kb/pixel-scroll-down)
+      (advice-remove 'recenter #'kb/pixel-recenter))))
+  ;; (add-hook 'pixel-scroll-precision-mode-hook #'kb/pixel-scroll-everything)
+  )
 
 ;;;; Other
 
@@ -925,9 +971,7 @@ ARG and REDISPLAY are identical to the original function."
      `( :align center
         :width 80
         :content ,(enlight-menu
-                   '(("Commands"
-                      ("M-x desktop-read" (call-interactively 'desktop-read) "r"))
-                     ("Configs"
+                   '(("Configs"
                       ("Emacs" (project-switch-project user-emacs-directory) "e")
                       ("Dotfiles" (project-switch-project "~/dotfies/") "d"))
                      ("Other"

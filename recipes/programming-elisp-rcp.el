@@ -45,8 +45,17 @@
 ;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
+  :disabled          ; I think with my experience, I now favor `paren-face-mode'
   :hook
   ((emacs-lisp-mode lisp-interaction-mode inferior-emacs-lisp-mode) . rainbow-delimiters-mode))
+
+;;;; Paren-faces
+(use-package paren-face
+  :demand
+  :custom
+  (paren-face-mode-lighter "")
+  :config
+  (global-paren-face-mode 1))
 
 ;;;; Help
 (use-package help

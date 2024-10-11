@@ -37,8 +37,7 @@
   :ensure-system-package (notmuch
                           (gmi . "sudo paru -S lieer-git"))
   :hook
-  ((kb/themes . kb/notmuch-setup-faces)
-   (notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
+  ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
    (notmuch-show . olivetti-mode)
    (notmuch-show  . kb/notmuch-show-expand-only-unread-h)
    (message-send . kb/notmuch-set-sendmail-args))
@@ -74,14 +73,14 @@
   ;; via cli
   (notmuch-search-hide-excluded t)
   (notmuch-saved-searches
-   '((:name "inbox"                 :query "tag:inbox and not tag:list"                       :key "i")
-     (:name "to-read mailing lists" :query "tag:list and tag:inbox " :sort-order oldest-first :key "l")
-     (:name "all mailing lists"     :query "tag:list"                                         :key "L" )
-     (:name "sent"                  :query "tag:sent"                                         :key "s")
-     (:name "drafts"                :query "tag:draft or path:drafts/"                        :key "d")
-     (:name "archived"              :query "not tag:trash"                                    :key "a")
-     (:name "all"                   :query "path:**"                                          :key "A")
-     (:name "trash"                 :query "tag:trash"                                        :key "t")))
+   '((:name "inbox"                 :query "tag:inbox and not tag:list" :sort-order oldest-first :key "i")
+     (:name "to-read mailing lists" :query "tag:list and tag:inbox "    :sort-order oldest-first :key "l")
+     (:name "all mailing lists"     :query "tag:list"                                            :key "L" )
+     (:name "sent"                  :query "tag:sent"                                            :key "s")
+     (:name "drafts"                :query "tag:draft or path:drafts/"                           :key "d")
+     (:name "archived"              :query "not tag:trash"                                       :key "a")
+     (:name "all"                   :query "path:**"                                             :key "A")
+     (:name "trash"                 :query "tag:trash"                                           :key "t")))
   (notmuch-show-empty-saved-searches t)
   (notmuch-search-oldest-first nil)
   (notmuch-search-result-format '(("date" . "%14s ")
@@ -137,6 +136,7 @@
   (notmuch-mua-compose-in 'current-window)
   (notmuch-mua-hidden-headers nil)
   (notmuch-address-command 'internal)
+  (notmuch-address-internal-completion '(sent nil))
   (notmuch-always-prompt-for-sender t)
   (notmuch-mua-cite-function 'message-cite-original-without-signature)
   (notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
@@ -223,26 +223,27 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
          ((string-match-p (rx (literal "kristoffer_balintona@alumni.brown.edu")) from)
           (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
 
-  (defun kb/notmuch-setup-faces ()
+  (defun kb/notmuch--setup-faces (theme)
     "Set up faces in `notmuch-show-mode'."
-    (modus-themes-with-colors
-      ;; More noticeable demarcation of emails in thread in notmuch-show-mode
-      (set-face-attribute 'notmuch-message-summary-face nil
-                          :foreground fg-alt
-                          ;; NOTE 2024-09-26: We do it this way since changing
-                          ;; faces will refresh the font to be 1.1 times the 1.1
-                          ;; times height, and so on
-                          :height (truncate (* (face-attribute 'default :height nil) 1.1))
-                          :overline t
-                          :extend nil
-                          :inherit 'italic)
-      (set-face-attribute 'notmuch-tag-added nil
-                          :underline `(:color ,cyan-cooler :style double-line :position t))
-      (add-to-list 'notmuch-tag-formats
-                   `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
-      (add-to-list 'notmuch-tag-formats
-                   `("commitment" (propertize tag 'face '(:foreground ,yellow-faint))))))
-  (kb/notmuch-setup-faces)
+    (when (string-match "^modus-" (symbol-name theme))
+      (modus-themes-with-colors
+        ;; More noticeable demarcation of emails in thread in notmuch-show-mode
+        (set-face-attribute 'notmuch-message-summary-face nil
+                            :foreground fg-alt
+                            ;; NOTE 2024-09-26: We do it this way since changing
+                            ;; faces will refresh the font to be 1.1 times the 1.1
+                            ;; times height, and so on
+                            :height (truncate (* (face-attribute 'default :height nil) 1.1))
+                            :overline t
+                            :extend nil
+                            :inherit 'unspecified)
+        (set-face-attribute 'notmuch-tag-added nil
+                            :underline `(:color ,cyan-cooler :style double-line :position t))
+        (add-to-list 'notmuch-tag-formats
+                     `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
+        (add-to-list 'notmuch-tag-formats
+                     `("commitment" (propertize tag 'face '(:foreground ,yellow-faint)))))))
+  (add-hook 'enable-theme-functions #'kb/notmuch--setup-faces)
 
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore)
@@ -302,7 +303,8 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
       (kb/notmuch-show-tag-thread)
       (notmuch-show-next-thread t)))
   (with-eval-after-load 'pulsar
-    (dolist (func '(notmuch-show-advance-and-archive
+    (dolist (func '(notmuch-show-rewind
+                    notmuch-show-advance-and-archive
                     kb/notmuch-show-advance-and-tag))
       (add-to-list 'pulsar-pulse-functions func)))
 
@@ -366,7 +368,7 @@ buffer hidden."
   (setopt display-time-use-mail-icon t
           display-time-mail-function
           (lambda ()
-            (let* ((command (format "notmuch search tag:inbox and tag:unread | wc -l"))
+            (let* ((command (format "notmuch search tag:inbox and tag:unread and not tag:list | wc -l"))
                    (count (string-to-number (shell-command-to-string command))))
               (< 0 count)))
           display-time-string-forms
@@ -394,7 +396,8 @@ buffer hidden."
                   'mouse-face 'mode-line-highlight
                   'local-map (make-mode-line-mouse-map 'mouse-2
                                                        read-mail-command)))
-              ""))))
+              "")
+            " ")))
 
 ;;;; Notmuch-indicator
 (use-package notmuch-indicator
@@ -479,6 +482,17 @@ from a `notmuch-search-mode' buffer."
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-tree-mode"))))
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
+
+;;;; Notmuch-addr
+;; Better address completion for notmuch; replaces the built-in
+;; `notmuch-address' completion system. Read
+;; https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li
+;; for more information
+(use-package notmuch-addr
+  :autoload notmuch-addr-setup
+  :init
+  (with-eval-after-load 'notmuch-address
+    (notmuch-addr-setup)))
 
 (provide 'email-notmuch-rcp)
 ;;; email-notmuch-rcp.el ends here

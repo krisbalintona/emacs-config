@@ -90,14 +90,19 @@
 * 1 Draft                                                     :ignore:export:
 ")))
   (denote-date-prompt-use-org-read-date t)
+  (denote-rename-confirmations '(add-front-matter))
+
+  ;; Backlinks
   (denote-backlinks-show-context t)
   (denote-backlinks-display-buffer-action
    '((display-buffer-reuse-window display-buffer-below-selected)
      (window-height . fit-window-to-buffer)
      (post-command-select-window . t)
      (dedicated . t)))
-  (denote-rename-buffer-format "%s %t")
-  (denote-rename-confirmations '(add-front-matter))
+
+  ;; Buffer name
+  (denote-rename-buffer-format "%s %t%b")
+  (denote-rename-buffer-backlinks-indicator " ⟷")
   :preface
   (add-to-list 'package-pinned-packages '(denote . "gnu-elpa-devel"))
   :config
@@ -547,7 +552,6 @@ replacement."
 
 ;;;; Citar-denote
 (use-package citar-denote
-  :after denote
   :diminish
   :custom
   (citar-denote-subdir t)
@@ -560,10 +564,9 @@ replacement."
   (citar-denote-template t)
   :bind
   ( :map kb/note-keys
-    ("b b" . citar-denote-dwim)
+    ("b o" . citar-denote-dwim)
     ("b c" . citar-create-note)
-    ("b o" . citar-denote-open-note)
-    ("b f" . citar-denote-find-citation)
+    ("b n" . citar-denote-open-note)
     ("b e" . citar-denote-open-reference-entry)
     ("b k a" . citar-denote-add-citekey)
     ("b k r" . citar-denote-remove-citekey)
@@ -604,8 +607,17 @@ replacement."
 
 ;;;; Darkroom
 (use-package darkroom
+  :bind
+  ( :map kb/toggle-keys
+    ("d" . darkroom-mode)
+    ("D" . darkroom-tentative-mode))
   :custom
   (darkroom-text-scale-increase 1.3))
+
+;;;; Typewriter-roll-mode
+(use-package typewriter-roll-mode
+  :bind ( :map kb/toggle-keys
+          ("t" . typewriter-roll-mode)))
 
 (provide 'org-notes-rcp)
 ;;; org-notes-rcp.el ends here

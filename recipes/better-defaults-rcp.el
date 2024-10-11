@@ -109,11 +109,11 @@
 (setq process-adaptive-read-buffering nil)
 
 ;;;; Scrolling behavior
-(setq scroll-preserve-screen-position t
-      scroll-error-top-bottom nil
+(setq scroll-error-top-bottom nil
+      scroll-preserve-screen-position t
       scroll-margin 0
-      next-screen-context-lines 12
-      scroll-conservatively 0           ; Affects `scroll-step'
+      next-screen-context-lines 4
+      scroll-conservatively 1           ; Affects `scroll-step'
       scroll-minibuffer-conservatively t
       scroll-up-aggressively nil        ; Center after point leaves window
       scroll-down-aggressively nil)     ; Center after point leaves window
@@ -122,7 +122,7 @@
 (setopt load-prefer-newer t)
 
 ;;;; Highlight next error
-(setq next-error-message-highlight t)
+(setq next-error-message-highlight 'keep)
 
 ;;;; Recenter upon `next-error'
 (setq next-error-recenter '(4))
@@ -170,10 +170,6 @@
 (when (display-graphic-p)
   (context-menu-mode))
 
-;;;; Enable horizontal scrolling
-(setopt mouse-wheel-tilt-scroll t)
-(setopt mouse-wheel-flip-direction t)
-
 ;;;; Only show these byte-compile warnings
 (setopt byte-compile-warnings (cl-remove 'obsolete byte-compile-warning-types))
 
@@ -187,6 +183,18 @@
 
 ;;;; Header line text scaling
 (setq-default text-scale-remap-header-line t)
+
+;;;; Enable `view-mode' for read-only buffers
+(setopt view-read-only t)
+
+;;;; More predictable window selection of `scroll-other-window' and `scroll-other-window-down'
+;; Taken from
+;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
+(setq other-window-scroll-default
+      (lambda ()
+        (or (get-mru-window nil nil 'not-this-one-dummy)
+            (next-window)               ; Fall back to next window
+            (next-window nil nil 'visible))))
 
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.

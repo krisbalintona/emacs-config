@@ -142,12 +142,7 @@
       :default-weight regular
       :default-slant normal
       :default-width normal
-      ;; 1920x1080 display
-      ;; :default-height 140
-      ;; 2560x1600 display
-      ;; :default-height 186
-      ;; 2560x1600 display, with DPI set to 118
-      :default-height 161
+      :default-height 170
 
       ;; Alternatives
       ;; "Hack Nerd Font Mono"
@@ -172,7 +167,7 @@
       :variable-pitch-weight nil
       :variable-pitch-slant nil
       :variable-pitch-width nil
-      :variable-pitch-height 1.15
+      :variable-pitch-height 1.2
 
       ;; Alternatives:
       ;; "JetBrainsMono Nerd Font"
@@ -180,13 +175,13 @@
       :mode-line-active-weight nil
       :mode-line-active-slant nil
       :mode-line-active-width nil
-      :mode-line-active-height 1.0
+      :mode-line-active-height 0.93
 
-      :mode-line-inactive-family nil
+      :mode-line-inactive-family "Iosevka Aile"
       :mode-line-inactive-weight nil
       :mode-line-inactive-slant nil
       :mode-line-inactive-width nil
-      :mode-line-inactive-height 1.0
+      :mode-line-inactive-height 0.93
 
       :header-line-family nil
       :header-line-weight nil
@@ -204,7 +199,7 @@
       :tab-bar-weight nil
       :tab-bar-slant nil
       :tab-bar-width nil
-      :tab-bar-height 0.97
+      :tab-bar-height 0.93
 
       :tab-line-family nil
       :tab-line-weight nil

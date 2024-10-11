@@ -31,7 +31,6 @@
   :ensure nil
   :commands compose-mail
   :hook ((message-setup . message-sort-headers)
-         (message-mode . olivetti-mode)
          ;; I like to use prose linters. See my flymake and flymake-collection
          ;; config
          (message-mode . flymake-mode)
@@ -79,6 +78,9 @@
   (mml-attach-file-at-the-end t)
   (mml-dnd-attach-options t)
   :config
+  (with-eval-after-load 'olivetti
+    (add-hook 'message-mode-hook #'olivetti-mode))
+
   (with-eval-after-load 'mu4e
     (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory)))
 
@@ -110,7 +112,17 @@
           (cl--set-buffer-substring (pos-bol) (pos-eol)
                                     (concat
                                      "From: "
-                                     (read-string "Set FROM to: " user-mail-address))))))))
+                                     (read-string "Set FROM to: " user-mail-address)))))))
+
+  ;; Set up faces
+  (defun kb/message--setup-faces (theme)
+    "Set up mml and message faces."
+    (when (string-match "^modus-" (symbol-name theme))
+      (modus-themes-with-colors
+        (set-face-attribute 'message-mml nil
+                            :weight 'bold
+                            :background bg-sage))))
+  (add-hook 'enable-theme-functions #'kb/message--setup-faces))
 
 ;;;; Sendmail
 ;; Use `sendmail' program to send emails? If yes, send the value of
