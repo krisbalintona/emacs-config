@@ -156,6 +156,7 @@
    ([remap apropos-command] . consult-apropos)
    :map org-mode-map
    ([remap consult-outline] . consult-org-heading)
+   ("M-g a" . consult-org-agenda)
    :map comint-mode-map
    ([remap comint-history-isearch-backward-regexp]. consult-history)
    :map minibuffer-local-map
