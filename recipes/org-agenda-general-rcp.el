@@ -71,7 +71,7 @@
   (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
   (org-agenda-window-setup 'only-window)
   (org-agenda-restore-windows-after-quit t)
-  (org-agenda-tags-column 'auto)
+  (org-agenda-tags-column 0)
   (org-agenda-start-on-weekday 1)
   (org-agenda-format-date 'kb/org-agenda-format-date-aligned)
   (org-agenda-tags-todo-honor-ignore-options t)
