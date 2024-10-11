@@ -93,14 +93,14 @@
   ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
   (org-extend-today-until 3)
   (org-use-effective-time t)
-  (org-agenda-block-separator ?—)
+  (org-agenda-block-separator ?─)
   (org-deadline-warning-days 3)
   (org-agenda-time-grid
    '((daily today require-timed)
      (800 1000 1200 1400 1600 1800 2000)
      " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
   (org-agenda-current-time-string
-   "⭠ now ─────────────────────────────────────────────────")
+   "◀── now ─────────────────────────────────────────────────")
   (org-agenda-breadcrumbs-separator " ⇛ ")
   (org-agenda-skip-scheduled-delay-if-deadline nil)
   (org-agenda-skip-deadline-if-done t)

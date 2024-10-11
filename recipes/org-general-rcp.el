@@ -55,6 +55,7 @@
   (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
   (org-hidden-keywords nil)
   (org-ctrl-k-protect-subtree 'error)
+  (org-tags-column 0)
 
   (org-list-allow-alphabetical t)
   (org-list-use-circular-motion t)
@@ -82,7 +83,7 @@
      ;; Default to `auto-mode-alist'
      (auto-mode . emacs)))
 
-  (org-fold-catch-invisible-edits 'show)
+  (org-fold-catch-invisible-edits 'show-and-error)
   (org-edit-timestamp-down-means-later t)
 
   ;; Org-babel et. al
@@ -102,7 +103,7 @@
    "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
   :custom-face
   (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
-  (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
+  (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
   :config
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
