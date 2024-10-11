@@ -334,30 +334,6 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
         (apply orig-func args)))))
   (advice-add 'notmuch-mua-new-reply :around #'kb/notmuch--set-message-citation-style))
 
-;;;; Sync emails with Lieer
-(with-eval-after-load 'notmuch
-  (defun kb/notmuch-lieer-sync (&optional arg)
-    "Run my script that syncs via lieer.
-If called with ARG, then show output buffer. Else, keep output
-buffer hidden."
-    (interactive "P")
-    (let* ((buf-name "*notmuch lieer sync*")
-           (buf (get-buffer-create buf-name))
-           (script (expand-file-name "~/Documents/emails/lieer-sync.sh"))
-           (display-buffer-alist (if arg
-                                     display-buffer-alist
-                                   `((,buf-name display-buffer-no-window)))))
-      (unless (get-buffer-process buf)
-        (with-current-buffer buf (setq-local buffer-read-only t))
-        ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
-        ;; `async-shell-command'
-        (async-shell-command script buf))))
-
-  ;; Timer every X minutes. (The first invocation is 30 seconds later because we
-  ;; don't want to spam the script when we open multiple Emacs sessions during
-  ;; e.g. testing my init.el.)
-  (run-with-timer 30 (* 60 3) 'kb/notmuch-lieer-sync))
-
 ;;;; Email indicator
 ;; Try using display-time's built-in email indicator --- less informative but
 ;; more visually subtle than `notmuch-indicator'.
