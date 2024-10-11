@@ -126,6 +126,7 @@
   :bind
   (;; Remaps
    ([remap switch-to-buffer] . consult-buffer)
+   ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
    ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap repeat-complex-command] . consult-complex-command)
@@ -203,6 +204,7 @@
   ;; Customize consult commands
   (consult-customize
    consult-buffer :preview-key "C-M-;"
+   consult-buffer-other-window :preview-key "C-M-;"
    consult-grep :preview-key "C-M-;"
    consult-git-grep :preview-key "C-M-;"
    consult-ripgrep :preview-key "C-M-;"
