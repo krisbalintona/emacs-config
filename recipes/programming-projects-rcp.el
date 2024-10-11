@@ -267,6 +267,7 @@ With a prefix argument, show NLINES of context."
 ;; `consult-gh-forge').
 (use-package consult-gh
   :ensure-system-package (gh . github-cli)
+  :bind ("C-c g" . consult-gh)
   :custom
   (consult-gh-default-interactive-command #'consult-gh-transient)
 
