@@ -33,7 +33,7 @@
   ;; Call after `org' since some of the options below are from `org', not
   ;; `org-export', so they will be overwritten if this use-package loads before
   ;; `org' does
-  :after org
+  :hook (org-agenda-mode . hl-line-mode)
   :bind
   ( :map kb/open-keys
     ("a" . org-agenda)
