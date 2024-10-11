@@ -36,7 +36,6 @@
   :bind
   (("C-M-s-s" . org-store-link)
    :map org-mode-map
-   ("C-M-S-s" . org-id-store-link)
    ("C-M-<up>" . org-up-element))
   :bind
   ( :map kb/note-keys
