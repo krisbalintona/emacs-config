@@ -536,7 +536,7 @@ with the exception of org-emphasis markers."
 ;; text which is the symbol of a face.
 (use-package highlight-defined
   :hook
-  ((prog-mode conf-mode) . highlight-defined-mode)
+  ((emacs-lisp-mode lisp-interaction-mode) . highlight-defined-mode)
   :custom
   (highlight-defined-face-use-itself t))
 
