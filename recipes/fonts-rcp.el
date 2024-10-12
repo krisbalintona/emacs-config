@@ -133,7 +133,10 @@
   :demand
   :custom
   (fontaine-presets
-   '((default)                          ; Use fallback values
+   '((iosevka-variant
+      :default-family "Iosevka SS11"
+      :fixed-pitch-family "Iosevka")
+     (default)                          ; Use fallback values
      ;; Below are the shared fallback properties. I leave them there also as
      ;; reference for all possible properties
      (t
