@@ -75,10 +75,9 @@
               visible-bell nil
               ring-bell-function 'ignore)
 
-;;;; Cursor settings
-(setq-default cursor-type '(bar . 4)
-              cursor-in-non-selected-windows 'box
-              x-stretch-cursor t)       ; Stretch cursor to the glyph width
+;;;; Set `x-stretch-cursor'
+;; Stretch cursor to the glyph width
+(setopt x-stretch-cursor t)
 
 ;;;; Kill child processes without confirm
 (custom-set-variables '(confirm-kill-processes nil))

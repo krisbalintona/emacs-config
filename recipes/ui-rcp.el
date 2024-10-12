@@ -494,5 +494,36 @@ change to if called with ARG."
   (pulsar-delay 0.05)
   (pulsar-iterations 5))
 
+;;;;; Cursory
+(use-package cursory
+  :hook ((prog-mode . (lambda () (cursory-set-preset 'code :local)))
+         ((org-mode markdown-mode) . (lambda () (cursory-set-preset 'prose :local))))
+  :custom
+  (cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))
+  (cursory-presets
+   '((code
+      :cursor-type box
+      :cursor-in-non-selected-windows hollow
+      :blink-cursor-mode 1)
+     (prose
+      :cursor-type (bar . 2)
+      :blink-cursor-mode -1
+      :cursor-in-non-selected-windows (hbar . 3))
+     (default)
+     (t                                 ; The fallback values
+      :cursor-type box
+      :cursor-in-non-selected-windows hollow
+      :blink-cursor-mode 1
+      :blink-cursor-blinks 10
+      :blink-cursor-delay 5
+      :blink-cursor-interval 0.5)))
+  :config
+  ;; Set last preset or fall back to desired style from `cursory-presets'.
+  (when (file-exists-p cursory-latest-state-file)
+    (cursory-set-preset (or (cursory-restore-latest-preset) 'default)))
+
+  ;; Persist latest preset used across Emacs sessions
+  (cursory-mode 1))
+
 (provide 'ui-rcp)
 ;;; ui-rcp.el ends here
