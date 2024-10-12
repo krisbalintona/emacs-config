@@ -99,6 +99,11 @@
   ( :map helpful-mode-map
     ("jj" . helpful-at-point)))
 
+;;;; Apropos
+(use-package apropos
+  :ensure nil
+  :bind ("C-h u" . apropos-user-option))
+
 ;;;; Edebug
 (use-package edebug
   :ensure nil

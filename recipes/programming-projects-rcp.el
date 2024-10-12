@@ -391,9 +391,8 @@ With a prefix argument, show NLINES of context."
 ;;;;; Log-edit
 (use-package log-edit
   :ensure nil
-  :bind
-  ( :map log-edit-mode-map
-    ([remap log-edit-comment-search-backward]. consult-history))
+  :bind ( :map log-edit-mode-map
+          ([remap log-edit-comment-search-backward]. consult-history))
   :custom
   (log-edit-headers-alist
    '(("Summary" . log-edit-summary)
