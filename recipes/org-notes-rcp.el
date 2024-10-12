@@ -552,26 +552,23 @@ replacement."
 ;;;; Citar-denote
 (use-package citar-denote
   :diminish
+  :bind (("C-c b c" . citar-create-note)
+         :map kb/note-keys
+         ("b b" . citar-denote-link-reference)
+         ("b o" . citar-denote-dwim)
+         ("b c" . citar-create-note)
+         ("b n" . citar-denote-open-note)
+         ("b k a" . citar-denote-add-citekey)
+         ("b k r" . citar-denote-remove-citekey))
   :custom
-  (citar-denote-subdir t)
-  (citar-denote-signature t)
+  (citar-denote-subdir "/bib/")
+  (citar-denote-signature nil)
   (citar-denote-title-format nil)       ; Use citekey as title
   (citar-denote-title-format-authors 2)
   (citar-denote-title-format-andstr "and")
   (citar-denote-keyword "bib")
   (citar-denote-use-bib-keywords nil)
-  (citar-denote-template t)
-  :bind
-  ( :map kb/note-keys
-    ("b o" . citar-denote-dwim)
-    ("b c" . citar-create-note)
-    ("b n" . citar-denote-open-note)
-    ("b e" . citar-denote-open-reference-entry)
-    ("b k a" . citar-denote-add-citekey)
-    ("b k r" . citar-denote-remove-citekey)
-    ("b r f" . citar-denote-find-reference)
-    ("b r F" . citar-denote-nocite)
-    ("b r l" . citar-denote-link-reference))
+  (citar-denote-template 'default)
   :config
   (citar-denote-mode 1)
 
@@ -589,7 +586,7 @@ replacement."
       (insert
        (format (citar-denote--reference-format file-type) citekey))))
   (advice-add 'citar-denote--add-reference :override #'kb/citar-denote--add-reference)
-  :config
+
   (setq citar-denote-file-types
         `((org
            :reference-format "#+reference: %s\n" ; Keep single space
