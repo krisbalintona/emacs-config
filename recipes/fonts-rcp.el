@@ -142,7 +142,7 @@
       :default-weight regular
       :default-slant normal
       :default-width normal
-      :default-height 170
+      :default-height 165
 
       ;; Alternatives
       ;; "Hack Nerd Font Mono"
