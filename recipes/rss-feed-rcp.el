@@ -304,15 +304,15 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 
 ;;;; Wallabag
 (use-package wallabag
+  :disabled t
   :vc (:url "https://github.com/chenyanming/wallabag.el.git"
             :rev :newest)
   :hook
   ((wallabag-after-render . wallabag-search-update-and-clear-filter)
    (wallabag-post-html-render . olivetti-mode)
    (wallabag-post-html-render . visual-line-mode))
-  :bind
-  ( :map kb/open-keys
-    ("W" . wallabag))
+  :bind ( :map kb/open-keys
+          ("w" . wallabag))
   :custom
   (wallabag-db-connector 'sqlite-builtin)
   ;; NOTE 2024-09-23: If sqlite errors are being returned, try recompiling the
@@ -344,9 +344,8 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (wombag-show-mode . org-remark-mode)
   :hook
   (wombag-show-mode . kb/wombag-entry-setup)
-  :bind
-  ( :map kb/open-keys
-    ("w" . wombag))
+  :bind ( :map kb/open-keys
+          ("w" . wombag))
   :custom
   (wombag-dir (no-littering-expand-var-file-name "wombag"))
   (wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite"))
