@@ -303,7 +303,7 @@
         '((?k aw-delete-window "Delete window")
           (?K delete-other-windows "Delete other windows")
           (?s aw-swap-window "Swap windows")
-          (?m kb/aw-take-over-window "Move window")
+          (?m kb/aw-take-over-window "Go to window and delete current window")
           (?c aw-copy-window "Copy window")
           (?o aw-flip-window "Other window")
           (?v kb/ace-set-other-window "Set to other-scroll-window's window")
