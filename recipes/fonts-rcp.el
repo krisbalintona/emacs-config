@@ -132,6 +132,7 @@
 (use-package fontaine
   :demand
   :custom
+  (fontaine-latest-state-file (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld"))
   (fontaine-presets
    '((iosevka-variant
       :default-family "Iosevka SS11"
