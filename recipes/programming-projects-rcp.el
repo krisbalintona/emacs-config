@@ -121,9 +121,9 @@ With a prefix argument, show NLINES of context."
 
 (use-package magit
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
-  :bind
-  ( :map magit-mode-map
-    ("C-<tab>". magit-section-toggle-children))
+  :bind (("C-x g" . magit)
+         :map magit-mode-map
+         ("C-<tab>". magit-section-toggle-children))
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)

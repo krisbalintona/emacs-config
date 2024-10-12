@@ -60,8 +60,7 @@
 ;;;; Help
 (use-package help
   :ensure nil
-  :bind
-  ("C-h C-k" . describe-keymap)
+  :bind ("C-h C-k" . describe-keymap)
   :custom
   (help-window-select t)
   (help-window-keep-selected t)
