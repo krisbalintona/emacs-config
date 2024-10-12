@@ -411,6 +411,7 @@ replacement."
 (use-package denote-interface
   :vc (:url "git@github.com:krisbalintona/denote-interface.git"
             :rev :newest)
+  :autoload denote-interface--signature-lessp
   :hook (denote-interface-mode . (lambda () (kb/puni-mode -1)))
   :bind
   ( :map kb/note-keys
@@ -425,11 +426,9 @@ replacement."
   (denote-interface-starting-filter-presets
    '("zettels/[^z-a]*" "bib/[^z-a]*"))
   (denote-interface-starting-filter "zettels/[^z-a]*")
-  :config
-  (advice-add 'denote-sort-signature-lessp
-              :override (lambda (f1 f2)
-                          (denote-interface--signature-lessp (denote-retrieve-filename-signature f1)
-                                                             (denote-retrieve-filename-signature f2)))))
+  :init
+  (with-eval-after-load 'denote
+    (setopt denote-sort-signature-comparison-function #'denote-interface--signature-lessp)))
 
 ;;;; Consult-notes
 (use-package consult-notes
