@@ -225,7 +225,8 @@
       :line-spacing nil)))
   :config
   ;; Set the last preset or fall back to desired style from `fontaine-presets'
-  (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default))
+  (when (file-exists-p fontaine-latest-state-file)
+    (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default)))
 
   ;; Persist the latest font preset when closing/starting Emacs and while
   ;; switching between themes.
