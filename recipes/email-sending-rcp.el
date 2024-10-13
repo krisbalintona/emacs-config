@@ -58,7 +58,7 @@
   ;; Signatures
   (message-signature-insert-empty-line t)
   (message-signature "Kind regards,\nKristoffer\n")
-  (message-signature-separator "^-- $")
+  (message-signature-separator "^-- *$")
 
   ;; Citations. See e.g. `message-cite-style-gmail' for the options relevant to
   ;; citations. Importantly, I can set these options buffer locally.
@@ -170,7 +170,7 @@
     "String meant to begin email signatures.")
   (defvar kb/signature-close "\n#+end_signature"
     "String meant to end email signatures.")
-  (setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
+  (setopt message-signature-separator (format "^%s *$" (read kb/signature-separator)))
   (defvar kb/signature-alist '(("Take care" . "Take care,\nKristoffer")
                                ("In gratitude" . "In gratitude,\nKristoffer")
                                ("Best" . "Best,\nKristoffer")
