@@ -210,7 +210,9 @@ Info node `(eshell)Top'."
   :demand
   :custom
   (eshell-z-freq-dir-hash-table-file-name (getenv "Z_DATA"))
-  (eshell-z-exclude-dirs nil))
+  (eshell-z-exclude-dirs nil)
+  :init
+  (exec-path-from-shell-copy-env "Z_DATA"))
 
 (provide 'shell-eshell-rcp)
 ;;; shell-eshell-rcp.el ends here
