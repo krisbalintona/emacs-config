@@ -86,7 +86,7 @@
            ;; have local variables that mess with desktop's loading of files
            (literal (expand-file-name "emacs-repos/" "~")))))
   (desktop-auto-save-timeout 3)
-  (desktop-restore-forces-onscreen t)
+  (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)
   (desktop-save 'if-exists)
   (desktop-restore-in-current-display nil))
