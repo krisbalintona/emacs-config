@@ -77,7 +77,7 @@
 ;; Save buffers across Emacs sessions
 (use-package desktop
   :ensure nil
-  :demand
+  :hook (after-init . desktop-save-mode)
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-files-not-to-save
@@ -89,9 +89,7 @@
   (desktop-restore-forces-onscreen t)
   (desktop-restore-frames t)
   (desktop-save 'if-exists)
-  (desktop-restore-in-current-display nil)
-  :config
-  (desktop-save-mode 1))
+  (desktop-restore-in-current-display nil))
 
 ;;;; Super-save
 ;; Automatically save buffers when you do certain things
