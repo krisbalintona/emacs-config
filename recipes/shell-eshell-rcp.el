@@ -206,6 +206,8 @@ Info node `(eshell)Top'."
 ;;;; Eshell-z
 ;; Use z in Eshell
 (use-package eshell-z
+  :after eshell
+  :demand
   :custom
   (eshell-z-freq-dir-hash-table-file-name (getenv "Z_DATA"))
   (eshell-z-exclude-dirs nil))
