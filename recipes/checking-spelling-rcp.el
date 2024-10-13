@@ -37,14 +37,26 @@
   (abbrev-suggest t)
   (abbrev-suggest-hint-threshold 2)
   :init
+  (defun kb/abbrev-todo-keyword--string ()
+    "Select a todo keyword."
+    ;; OPTIMIZE 2024-10-12: Don't rely on `hl-todo-keyword-faces'
+    (completing-read "Keyword: " (split-string (key-description nil hl-todo-keyword-faces))))
+
   (defun kb/abbrev-todo-keyword ()
     "Insert the a todo keyword."
-    ;; OPTIMIZE 2024-10-12: Don't rely on `hl-todo-keyword-faces'
-    (insert (completing-read "Keyword: " (split-string (key-description nil hl-todo-keyword-faces)))))
+    (insert (kb/abbrev-todo-keyword--string)))
+
+  (defun kb/abbrev-current-date--string ()
+    "Return the current date formatted."
+    (format-time-string "%F"))
 
   (defun kb/abbrev-current-date ()
     "Insert the current date."
-    (insert (format-time-string "%F")))
+    (insert (kb/abbrev-current-date--string)))
+
+  (defun kb/abbrev-todo-keyword-and-date ()
+    "Insert a todo keyword followed by the current date and colon."
+    (insert (kb/abbrev-todo-keyword--string) " " (kb/abbrev-current-date--string) ":"))
   :config
   ;; Enable the mode globally
   (setq-default abbrev-mode t)
@@ -55,7 +67,8 @@
 
   ;; Predefined abbrevs
   (define-abbrev global-abbrev-table ";todo" "" #'kb/abbrev-todo-keyword)
-  (define-abbrev prog-mode-abbrev-table ";date" "" #'kb/abbrev-current-date))
+  (define-abbrev global-abbrev-table ";date" "" #'kb/abbrev-current-date)
+  (define-abbrev global-abbrev-table ";td" "" #'kb/abbrev-todo-keyword-and-date))
 
 ;;; Ispell
 (use-package ispell
