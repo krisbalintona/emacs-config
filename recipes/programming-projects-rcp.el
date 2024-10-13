@@ -519,7 +519,14 @@ With a prefix argument, show NLINES of context."
   (diff-hl-side 'right)
   (diff-hl-flydiff-delay 1)             ; See `diff-hl-flydiff-mode'
   :config
-  (global-diff-hl-show-hunk-mouse-mode 1))
+  (global-diff-hl-show-hunk-mouse-mode 1)
+
+  ;; Ensure buffer is widened before calling `diff-hl-stage-dwim' because the
+  ;; buffer cannot be narrowed for it to succeed
+  (advice-add 'diff-hl-stage-dwim :around (lambda (orig-fun &rest args)
+                                            (save-restriction
+                                              (widen)
+                                              (apply orig-fun args)))))
 
 ;;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history
