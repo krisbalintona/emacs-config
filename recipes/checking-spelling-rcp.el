@@ -37,10 +37,16 @@
   (abbrev-suggest t)
   (abbrev-suggest-hint-threshold 2)
   :init
+  (defun kb/abbrev-todo-keyword ()
+    "Insert the a todo keyword."
+    ;; OPTIMIZE 2024-10-12: Don't rely on `hl-todo-keyword-faces'
+    (insert (completing-read "Keyword: " (split-string (key-description nil hl-todo-keyword-faces)))))
+
   (defun kb/abbrev-current-date ()
     "Insert the current date."
     (insert (format-time-string "%F")))
   :config
+  ;; Enable the mode globally
   (setq-default abbrev-mode t)
 
   ;; Allow abbrevs with a prefix colon, semicolon, or underscore. See:
@@ -48,6 +54,7 @@
   (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
 
   ;; Predefined abbrevs
+  (define-abbrev global-abbrev-table ";todo" "" #'kb/abbrev-todo-keyword)
   (define-abbrev prog-mode-abbrev-table ";date" "" #'kb/abbrev-current-date))
 
 ;;; Ispell
