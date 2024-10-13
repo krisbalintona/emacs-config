@@ -316,6 +316,19 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
     (let ((selection
            (completing-read "Citation style: " '("default" "gmail"))))
       (cond
+       ((equal selection "default")
+        (message "Setting citation style to gmail")
+        ;; These settings set what is specified by `message-cite-style-gmail'. I
+        ;; do this manually since not all packages seem to be affected by
+        ;; `message-cite-style'
+        (let ((message-cite-function 'message-cite-original)
+              (message-citation-line-function 'message-insert-formatted-citation-line)
+              (message-cite-reply-position 'above)
+              (message-yank-prefix "    ")
+              (message-yank-cited-prefix "    ")
+              (message-yank-empty-prefix "    ")
+              (message-citation-line-format "On %e %B %Y %R, %f wrote:\n"))
+          (apply orig-func args)))
        ((equal selection "gmail")
         (message "Setting citation style to gmail")
         ;; These settings set what is specified by `message-cite-style-gmail'. I
@@ -334,7 +347,131 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
         (apply orig-func args)))))
   (advice-add 'notmuch-mua-new-reply :around #'kb/notmuch--set-message-citation-style))
 
-;;;; Email indicator
+;;;; `notmuch-mua-reply' overide to obey `message-cite-reply-position'
+(with-eval-after-load 'notmuch-mua
+  (defun kb/notmuch-mua-reply (query-string &optional sender reply-all duplicate)
+    "Like `notmuch-mua-reply' but positions citation based on `message-cite-reply-position'."
+    (let* ((duparg (and duplicate (list (format "--duplicate=%d" duplicate))))
+           (args `("reply" "--format=sexp" "--format-version=5" ,@duparg))
+           (process-crypto notmuch-show-process-crypto)
+           reply
+           original)
+      (when process-crypto
+        (setq args (append args '("--decrypt=true"))))
+      (if reply-all
+          (setq args (append args '("--reply-to=all")))
+        (setq args (append args '("--reply-to=sender"))))
+      (setq args (append args (list query-string)))
+      ;; Get the reply object as SEXP, and parse it into an elisp object.
+      (setq reply (apply #'notmuch-call-notmuch-sexp args))
+      ;; Extract the original message to simplify the following code.
+      (setq original (plist-get reply :original))
+      ;; Extract the headers of both the reply and the original message.
+      (let* ((original-headers (plist-get original :headers))
+             (reply-headers (plist-get reply :reply-headers)))
+        ;; If sender is non-nil, set the From: header to its value.
+        (when sender
+          (plist-put reply-headers :From sender))
+        (let
+            ;; Overlay the composition window on that being used to read
+            ;; the original message.
+            ((same-window-regexps '("\\*mail .*")))
+          ;; We modify message-header-format-alist to get around
+          ;; a bug in message.el.  See the comment above on
+          ;; notmuch-mua-insert-references.
+          (let ((message-header-format-alist
+                 (cl-loop for pair in message-header-format-alist
+                          if (eq (car pair) 'References)
+                          collect (cons 'References
+                                        (apply-partially
+                                         'notmuch-mua-insert-references
+                                         (cdr pair)))
+                          else
+                          collect pair)))
+            (notmuch-mua-mail (plist-get reply-headers :To)
+                              (notmuch-sanitize (plist-get reply-headers :Subject))
+                              (notmuch-headers-plist-to-alist reply-headers)
+                              nil (notmuch-mua-get-switch-function))))
+        ;; Create a buffer-local queue for tag changes triggered when
+        ;; sending the reply.
+        (when notmuch-message-replied-tags
+          (setq notmuch-message-queued-tag-changes
+                (list (cons query-string notmuch-message-replied-tags))))
+        ;; Insert the message body - but put it in front of the signature
+        ;; if one is present, and after any other content
+        ;; message*setup-hooks may have added to the message body already.
+        (save-restriction
+          (message-goto-body)
+          (narrow-to-region (point) (point-max))
+          (goto-char (point-max))
+          (if (re-search-backward message-signature-separator nil t)
+              (when message-signature-insert-empty-line
+                (forward-line -1))
+            (goto-char (point-max))))
+        ;; If `message-cite-reply-position' is `above', e.g., for Gmail-like
+        ;; email replies, then before inserting the citation, put the point
+        ;; after the signature and insert a newline for spacing. Also respects
+        ;; if `message-cite-reply-position' is set via `message-cite-style'.
+        (when (or (equal message-cite-reply-position 'above)
+                  (and message-cite-style
+                       (eq (eval (cadr
+                                  (assoc 'message-cite-reply-position
+                                         (if (symbolp message-cite-style)
+                                             (eval message-cite-style)
+                                           message-cite-style))))
+                           'above)))
+          (goto-char (point-max))
+          (insert "\n"))
+        (let ((from (plist-get original-headers :From))
+              (date (plist-get original-headers :Date))
+              (start (point)))
+          ;; notmuch-mua-cite-function constructs a citation line based
+          ;; on the From and Date headers of the original message, which
+          ;; are assumed to be in the buffer.
+          (insert "From: " from "\n")
+          (insert "Date: " date "\n\n")
+          (insert
+           (with-temp-buffer
+             (let
+                 ;; Don't attempt to clean up messages, excerpt
+                 ;; citations, etc. in the original message before
+                 ;; quoting.
+                 ((notmuch-show-insert-text/plain-hook nil)
+                  ;; Don't omit long parts.
+                  (notmuch-show-max-text-part-size 0)
+                  ;; Insert headers for parts as appropriate for replying.
+                  (notmuch-show-insert-header-p-function
+                   notmuch-mua-reply-insert-header-p-function)
+                  ;; Ensure that any encrypted parts are
+                  ;; decrypted during the generation of the reply
+                  ;; text.
+                  (notmuch-show-process-crypto process-crypto)
+                  ;; Don't indent multipart sub-parts.
+                  (notmuch-show-indent-multipart nil)
+                  ;; Stop certain mime types from being inlined
+                  (mm-inline-override-types (notmuch--inline-override-types)))
+               ;; We don't want sigstatus buttons (an information leak and usually wrong anyway).
+               (cl-letf (((symbol-function 'notmuch-crypto-insert-sigstatus-button) #'ignore)
+                         ((symbol-function 'notmuch-crypto-insert-encstatus-button) #'ignore))
+                 (notmuch-show-insert-body original (plist-get original :body) 0)
+                 (buffer-substring-no-properties (point-min) (point-max))))))
+          (set-mark (point))
+          (goto-char start)
+          ;; Quote the original message according to the user's configured style.
+          (funcall notmuch-mua-cite-function)))
+      ;; Crypto processing based crypto content of the original message
+      (when process-crypto
+        (notmuch-mua-reply-crypto (plist-get original :body))))
+    ;; Push mark right before signature, if any.
+    (message-goto-signature)
+    (unless (eobp)
+      (end-of-line -1))
+    (push-mark)
+    (message-goto-body)
+    (set-buffer-modified-p nil))
+  (advice-add 'notmuch-mua-reply :override #'kb/notmuch-mua-reply))
+
+;;;; Email mode line indicator
 ;; Try using display-time's built-in email indicator --- less informative but
 ;; more visually subtle than `notmuch-indicator'.
 (with-eval-after-load 'time
