@@ -131,7 +131,7 @@
 (setopt load-prefer-newer t)
 
 ;;;; Highlight next error
-(setq next-error-message-highlight 'keep)
+(setq next-error-message-highlight nil)
 
 ;;;; Recenter upon `next-error'
 (setq next-error-recenter '(4))
