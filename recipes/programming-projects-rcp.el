@@ -99,14 +99,13 @@ With a prefix argument, show NLINES of context."
   (xref-search-program 'ripgrep)
   (xref-history-storage 'xref-window-local-history) ; Per-window history of `xref-go-*'
   :config
-  ;; We set this to nil because the fallback backend, `etags--xref-backend',
-  ;; prompts the user for an etags table -- this is undesirable for me.
+  ;; We remove the fallback backend, `etags--xref-backend', which prompts the
+  ;; user for an etags table -- this is undesirable for me.
   (setq-default xref-backend-functions nil)
-
-  (with-eval-after-load 'consult
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-definitions-function #'consult-xref
-          xref-show-xrefs-function #'consult-xref)))
+  ;; Then add `elisp--xref-backend' to the global value of
+  ;; `xref-backend-functions', which means it is run when the local value ends
+  ;; with `t'. See (info "(elisp) Running Hooks") for an explanation.
+  (add-hook 'xref-backend-functions #'elisp--xref-backend))
 
 ;;;; Magit
 ;;;;; Itself

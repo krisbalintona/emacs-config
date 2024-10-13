@@ -199,7 +199,7 @@
 
   ;; Have line centered in previews. Make sure `recenter' is called after
   ;; `consult--maybe-recenter'
-  (add-to-list 'consult-after-jump-hook 'recenter t)
+  (add-hook 'consult-after-jump-hook #'recenter)
 
   ;; Customize consult commands
   (consult-customize
@@ -211,6 +211,12 @@
    consult-recent-file :preview-key "C-M-;" ; Make sure this is after the definition of `consult-recent-file'
    consult-find :preview-key "C-M-;"
    consult-bookmark :preview-key "C-M-;")
+
+  ;; Use consult UI with xref
+  (with-eval-after-load 'xref
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-definitions-function #'consult-xref
+          xref-show-xrefs-function #'consult-xref))
 
   ;; Additional `consult-buffer' sources (groups)
   (defvar kb/consult-buffer--dired-source
