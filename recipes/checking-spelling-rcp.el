@@ -36,8 +36,19 @@
   (save-abbrevs 'silently)
   (abbrev-suggest t)
   (abbrev-suggest-hint-threshold 2)
+  :init
+  (defun kb/abbrev-current-date ()
+    "Insert the current date."
+    (insert (format-time-string "%F")))
   :config
-  (setq-default abbrev-mode t))
+  (setq-default abbrev-mode t)
+
+  ;; Allow abbrevs with a prefix colon, semicolon, or underscore. See:
+  ;; <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
+  (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
+
+  ;; Predefined abbrevs
+  (define-abbrev prog-mode-abbrev-table ";date" "" #'kb/abbrev-current-date))
 
 ;;; Ispell
 (use-package ispell
