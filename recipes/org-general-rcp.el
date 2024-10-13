@@ -247,7 +247,7 @@ have `org-warning' face."
   (org-refile-targets
    `((,kb/all-agenda-dir-files . (:level . 0))
      (,kb/all-agenda-dir-files . (:tag . "project"))
-     (,kb/agenda-main-todo-file . (:maxlevel . 1))))
+     (,kb/agenda-main-todo-file . (:maxlevel . 3))))
   ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
   ;; want to refile to a non-todo heading in the current file?
   (org-refile-target-verify-function    ; Only let not done todos be refile targets
