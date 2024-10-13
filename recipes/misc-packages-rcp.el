@@ -38,6 +38,7 @@
 
 ;;;;; Alt-comment-dwim
 (use-package alt-comment-dwim
+  :disabled
   ;; :ensure (:type git
   ;;                :host gitlab
   ;;                :protocol ssh
