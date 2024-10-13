@@ -187,12 +187,12 @@
      ("\\*vc-log\\*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
       (dedicated . t))
-     ("\\*Help\\*"
+     ((major-mode . help-mode)
       (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
       (window-height . shrink-window-if-larger-than-buffer))
 
      ;; Pop up
-     ((or "\\*Man"
+     ((or ,(rx (literal "*Man ") num (literal " "))
           (major-mode . Man-mode))
       (display-buffer-reuse-window display-buffer-pop-up-window)
       (post-command-select-window . t))))
