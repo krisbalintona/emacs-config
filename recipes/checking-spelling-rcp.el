@@ -66,8 +66,8 @@
   (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
 
   ;; Predefined abbrevs
-  (define-abbrev global-abbrev-table ";todo" "" #'kb/abbrev-todo-keyword)
-  (define-abbrev global-abbrev-table ";date" "" #'kb/abbrev-current-date)
+  (define-abbrev global-abbrev-table ";t" "" #'kb/abbrev-todo-keyword)
+  (define-abbrev global-abbrev-table ";d" "" #'kb/abbrev-current-date)
   (define-abbrev global-abbrev-table ";td" "" #'kb/abbrev-todo-keyword-and-date))
 
 ;;; Ispell
