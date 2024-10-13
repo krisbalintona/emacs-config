@@ -244,11 +244,7 @@ default lsp-passthrough."
    ("C-M-s-c ^" . cape-tex)
    ("C-M-s-c &" . cape-sgml)
    ("C-M-s-c r" . cape-rfc1345)
-   ([remap dabbrev-completion] . cape-dabbrev)
-   :map vc-git-log-edit-mode-map
-   ("<tab>" . completion-at-point)
-   :map git-commit-mode-map
-   ("<tab>" . completion-at-point))
+   ([remap dabbrev-completion] . cape-dabbrev))
   :custom
   (cape-dabbrev-min-length 2)
   :init

@@ -122,7 +122,9 @@ With a prefix argument, show NLINES of context."
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
   :bind (("C-x g" . magit)
          :map magit-mode-map
-         ("C-<tab>". magit-section-toggle-children))
+         ("C-<tab>". magit-section-toggle-children)
+         :map git-commit-mode-map
+         ("<tab>" . completion-at-point))
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
@@ -331,6 +333,8 @@ With a prefix argument, show NLINES of context."
 (use-package vc
   :ensure nil
   :hook (vc-git-log-edit-mode . auto-fill-mode)
+  :bind ( :map vc-git-log-edit-mode-map
+          ("<tab>" . completion-at-point))
   :custom
   (vc-command-messages 'log)   ; NOTE 2024-09-19: Can be useful in the future...
   (vc-follow-symlinks t)
