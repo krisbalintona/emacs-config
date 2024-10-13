@@ -69,7 +69,7 @@
   :config
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
   ;; be adopted in a variable pitch buffer) have inconsistent spacing
-  (set-face-attribute 'corfu-default nil :family (face-attribute 'default :family))
+  (set-face-attribute 'corfu-default nil :height 0.95 :inherit 'default)
 
   ;; NOTE 2022-03-01: This allows for a more evil-esque way to have
   ;; `corfu-insert-separator' work with space in insert mode without resorting to
