@@ -314,35 +314,33 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
   (defun kb/notmuch--set-message-citation-style (orig-func &rest args)
     "Prompt for which style of citations should be used for message reply."
     (let ((selection
-           (completing-read "Citation style: " '("default" "gmail"))))
+           (completing-read "Citation style: "
+                            '("default" "traditional" "gmail"))))
       (cond
-       ((equal selection "default")
-        (message "Setting citation style to gmail")
-        ;; These settings set what is specified by `message-cite-style-gmail'. I
-        ;; do this manually since not all packages seem to be affected by
-        ;; `message-cite-style'
+       ((equal selection "traditional")
+        (message "Setting citation style to \"traditional\"")
         (let ((message-cite-function 'message-cite-original)
               (message-citation-line-function 'message-insert-formatted-citation-line)
-              (message-cite-reply-position 'above)
-              (message-yank-prefix "    ")
-              (message-yank-cited-prefix "    ")
-              (message-yank-empty-prefix "    ")
-              (message-citation-line-format "On %e %B %Y %R, %f wrote:\n"))
+              (message-citation-line-format "On %a, %b %d %Y, %N wrote:\n")
+              (message-cite-reply-position 'below)
+              (message-yank-prefix "> ")
+              (message-yank-cited-prefix ">")
+              (message-yank-empty-prefix ">"))
           (apply orig-func args)))
        ((equal selection "gmail")
-        (message "Setting citation style to gmail")
+        (message "Setting citation style to \"gmail\"")
         ;; These settings set what is specified by `message-cite-style-gmail'. I
         ;; do this manually since not all packages seem to be affected by
         ;; `message-cite-style'
         (let ((message-cite-function 'message-cite-original)
               (message-citation-line-function 'message-insert-formatted-citation-line)
+              (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
               (message-cite-reply-position 'above)
               (message-yank-prefix "    ")
               (message-yank-cited-prefix "    ")
-              (message-yank-empty-prefix "    ")
-              (message-citation-line-format "On %e %B %Y %R, %f wrote:\n"))
+              (message-yank-empty-prefix "    "))
           (apply orig-func args)))
-       (t
+       ((equal selection "default")
         (message "Using default citation style")
         (apply orig-func args)))))
   (advice-add 'notmuch-mua-new-reply :around #'kb/notmuch--set-message-citation-style))

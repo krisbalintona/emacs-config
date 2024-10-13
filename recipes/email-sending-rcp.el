@@ -64,8 +64,8 @@
   ;; citations. Importantly, I can set these options buffer locally.
   (message-cite-function 'message-cite-original-without-signature)
   (message-citation-line-function 'message-insert-formatted-citation-line)
-  (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
-  (message-cite-reply-position 'traditional)
+  (message-citation-line-format "On %a, %b %d %Y, %N wrote:\n")
+  (message-cite-reply-position 'below)
 
   ;; Replying
   (message-wide-reply-confirm-recipients t)
