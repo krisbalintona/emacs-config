@@ -136,6 +136,7 @@
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
    ([remap Info-search] . consult-info)
    ([remap project-switch-to-buffer] . consult-project-buffer)
+   ([remap point-to-register] . consult-register-store)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
    ("f" . consult-flymake)
@@ -217,6 +218,17 @@
     ;; Use Consult to select xref locations with preview
     (setq xref-show-definitions-function #'consult-xref
           xref-show-xrefs-function #'consult-xref))
+
+  ;; Registers
+  ;; FIXME 2024-10-13: Right now consult's register stuff doesn't work well with
+  ;; desktop restoring buffers, windows, and frames that are no longer
+  ;; existent...
+  ;; Fancier formatting of preview
+  (setopt register-preview-function #'consult-register-format)
+  ;; Fancier formatting of preview window. Adds thin lines, sorting and hides
+  ;; the mode line of the register preview window. Copied from
+  ;; https://github.com/minad/consult#use-package-example
+  (advice-add 'register-preview :override #'consult-register-window)
 
   ;; Additional `consult-buffer' sources (groups)
   (defvar kb/consult-buffer--dired-source

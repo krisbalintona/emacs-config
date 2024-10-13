@@ -670,25 +670,16 @@ This is a difference in multitude of %s."
 ;;;;; Register
 (use-package register
   :ensure nil
-  :bind
-  ([remap jump-to-register] . kb/jump-to-register)
   :custom
   (register-preview-delay 0)
-  (register-separator " ")
-  (register-use-preview 'traditional)
-  :init
-  (defun kb/jump-to-register (register &optional delete)
-    "Proxy for `jump-to-register'.
-Provide REGISTER and jump to it. If interactively called, then
-prompt user for register.
-
-If called with DELETE, which is the prefix-arg if called
-interactively, then delete the register instead of jumping to it."
-    (interactive (list (register-read-with-preview "Select register: ")
-                       current-prefix-arg))
-    (if delete
-        (set-register register nil)
-      (jump-to-register register)))
+  (register-separator "  ")
+  (register-use-preview t)
+  (register-preview-display-buffer-alist
+   '(display-buffer-at-bottom
+     (window-height . fit-window-to-buffer)
+     (preserve-size . (nil . t))
+     (window-parameters . ((mode-line-format . none)
+                           (no-other-window . t)))))
   :config
   (with-eval-after-load 'consult
     ;; Better than `consult-register'
