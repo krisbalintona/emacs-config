@@ -471,19 +471,26 @@ with the exception of org-emphasis markers."
     ("M-s t p" . hl-todo-previous)
     ("M-s t o" . hl-todo-occur))
   :custom
-  (hl-todo-include-modes '(prog-mode text-mode))
-  (hl-todo-text-modes '(markdown-mode text-mode))
-  (hl-todo-exclude-modes '(org-mode))
+  (hl-todo-include-modes '(prog-mode conf-mode text-mode))
+  (hl-todo-text-modes '(markdown-mode org-mode text-mode))
+  (hl-todo-exclude-modes nil)
   ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
   ;; hl-todo's punctuation highlighting.
-  (hl-todo-require-punctuation nil)
-  (hl-todo-highlight-punctuation "")
+  (hl-todo-require-punctuation t)
+  (hl-todo-highlight-punctuation ": ")
+  (hl-todo-keyword-faces
+   '(("TODO" . "orange")
+     ("HACK" error bold)
+     ("NOTE" . "cornflower blue")
+     ("REVIEW" . "orchid")
+     ("FIXME" error bold)
+     ("OPTIMIZE" . "SandyBrown")))
   :config
   (with-eval-after-load 'alt-comment-dwim
     ;; Make sure to have all words in `alt-comment-dwim-keywords-coding' and
     ;; `alt-comment-dwim-keywords-writing' in this list, otherwise those words will not
     ;; appear in any calls to `alt-comment-dwim-dwim'.
-    (setq hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
+    (setopt hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
 
 ;;;;; Ansi-color
 ;; Apply ANSI terminal color escape codes.
