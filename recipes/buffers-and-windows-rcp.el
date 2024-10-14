@@ -527,7 +527,7 @@ timestamp)."
 ;;;;; Bookmark
 (use-package bookmark
   :ensure nil
-  :hook (on-first-input . bookmark-maybe-load-default-file)
+  :hook (on-first-file . bookmark-maybe-load-default-file)
   :custom
   (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
