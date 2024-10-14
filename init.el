@@ -119,6 +119,12 @@
 (require 'dungeons-and-dragons-rcp)
 (require 'misc-packages-rcp) ; FIXME 2024-02-11: Distribute these configs elsewhere
 
+;; For my work in vtable.el sorting patch
+(use-package vtable
+  :ensure nil
+  :demand t
+  :load-path "/home/krisbalintona/Repos/emacs/vtable-sorters/lisp/emacs-lisp/")
+
 ;;; Startup time stats
 (add-hook 'window-setup-hook
           #'(lambda ()
