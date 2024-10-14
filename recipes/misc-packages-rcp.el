@@ -172,13 +172,58 @@
   (hammy-mode-lighter-pie t)
   (hammy-mode-lighter-pie-height 0.65)
   :config
+  ;; Mode line
+  (hammy-mode 1)
+
+  ;; Custom lighter
+  (defun kb/hammy-mode-lighter ()
+    "Return lighter for `hammy-mode'."
+    (cl-labels
+        ((format-hammy (hammy)
+           (let ((remaining
+                  (abs
+                   ;; We use the absolute value because `ts-human-format-duration'
+                   ;; returns 0 for negative numbers.
+                   (- (hammy-current-duration hammy)
+                      (float-time (time-subtract (current-time)
+                                                 (hammy-current-interval-start-time hammy)))))))
+             (format "%s(%s%s:%s)"
+                     (propertize (hammy-name hammy)
+                                 'face 'hammy-mode-lighter-name)
+                     (if (hammy-overduep hammy)
+                         (propertize hammy-mode-lighter-overdue
+                                     'face 'hammy-mode-lighter-overdue)
+                       "")
+                     (propertize (hammy-interval-name (hammy-interval hammy))
+                                 'face `(hammy-mode-lighter-interval
+                                         ,(hammy-interval-face (hammy-interval hammy))))
+                     (concat (when hammy-mode-lighter-pie
+                               (propertize " " 'display (hammy--pie hammy)))
+                             (if (hammy-overduep hammy)
+                                 ;; We use the negative sign when counting down to
+                                 ;; the end of an interval (i.e. "T-minus...") .
+                                 "+" "-")
+                             (format-seconds (if (< remaining 60)
+                                                 "%2ss" hammy-mode-lighter-seconds-format)
+                                             remaining))))))
+      (if hammy-active
+          (concat (mapconcat #'format-hammy hammy-active ",") " ")
+        ;; No active hammys.
+        (when hammy-mode-always-show-lighter
+          (concat (propertize hammy-mode-lighter-prefix
+                              'face 'hammy-mode-lighter-prefix-inactive)
+                  (if hammy-mode-lighter-suffix-inactive
+                      (concat ":" hammy-mode-lighter-suffix-inactive))
+                  " ")))))
+  (advice-add 'hammy-mode-lighter :override #'kb/hammy-mode-lighter)
+
+  ;; Hammy definitions
   (defun kb/hammy-play-sound ()
     "Play end of timer sound."
     (interactive)
     (call-process-shell-command
      (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-work) nil 0))
 
-  ;; Hammy definitions
   (setq hammy-hammys nil)
   (hammy-define "Fractional"
     :documentation "Breaks that are ⅓ as long as the last work interval."
@@ -280,52 +325,7 @@
                     :advance (remind "5 minutes"
                                      (do (let ((message (format "%s is over!" interval-name)))
                                            (announce message)
-                                           (notify message))))))))))
-
-  ;; Mode line
-  (hammy-mode 1)
-
-  ;; Custom lighter
-  (defun kb/hammy-mode-lighter ()
-    "Return lighter for `hammy-mode'."
-    (cl-labels
-        ((format-hammy (hammy)
-           (let ((remaining
-                  (abs
-                   ;; We use the absolute value because `ts-human-format-duration'
-                   ;; returns 0 for negative numbers.
-                   (- (hammy-current-duration hammy)
-                      (float-time (time-subtract (current-time)
-                                                 (hammy-current-interval-start-time hammy)))))))
-             (format "%s(%s%s:%s)"
-                     (propertize (hammy-name hammy)
-                                 'face 'hammy-mode-lighter-name)
-                     (if (hammy-overduep hammy)
-                         (propertize hammy-mode-lighter-overdue
-                                     'face 'hammy-mode-lighter-overdue)
-                       "")
-                     (propertize (hammy-interval-name (hammy-interval hammy))
-                                 'face `(hammy-mode-lighter-interval
-                                         ,(hammy-interval-face (hammy-interval hammy))))
-                     (concat (when hammy-mode-lighter-pie
-                               (propertize " " 'display (hammy--pie hammy)))
-                             (if (hammy-overduep hammy)
-                                 ;; We use the negative sign when counting down to
-                                 ;; the end of an interval (i.e. "T-minus...") .
-                                 "+" "-")
-                             (format-seconds (if (< remaining 60)
-                                                 "%2ss" hammy-mode-lighter-seconds-format)
-                                             remaining))))))
-      (if hammy-active
-          (concat (mapconcat #'format-hammy hammy-active ",") " ")
-        ;; No active hammys.
-        (when hammy-mode-always-show-lighter
-          (concat (propertize hammy-mode-lighter-prefix
-                              'face 'hammy-mode-lighter-prefix-inactive)
-                  (if hammy-mode-lighter-suffix-inactive
-                      (concat ":" hammy-mode-lighter-suffix-inactive))
-                  " ")))))
-  (advice-add 'hammy-mode-lighter :override #'kb/hammy-mode-lighter))
+                                           (notify message)))))))))))
 
 ;;;; Writing
 ;;;;; Sentex
