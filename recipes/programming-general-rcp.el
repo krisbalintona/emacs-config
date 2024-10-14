@@ -286,7 +286,6 @@
   :bind
   (("C-.". embark-act)
    ("C-h B". embark-bindings)
-   ([remap xref-find-definitions] . embark-dwim)
    :map vertico-map
    ("C-.". embark-act)
    ("C->". embark-become)
