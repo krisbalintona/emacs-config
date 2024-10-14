@@ -229,6 +229,8 @@ If daytime, call `kb/proper-load-theme-light'. If nighttime, call
 (kb/enable-theme-time-of-day)
 ;; Desktop saves certain faces, so we call `kb/enable-theme-time-of-day' after
 ;; reading to ensure faces are consistent with the time of day.
+;; REVIEW 2024-10-14: Look into whether I can circumvent this by modifying
+;; `frameset-filter-alist'
 (add-hook 'desktop-after-read-hook #'kb/enable-theme-time-of-day)
 
 ;;;; Modeline
