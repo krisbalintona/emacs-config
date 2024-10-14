@@ -556,15 +556,6 @@ with the exception of org-emphasis markers."
   :hook
   ((prog-mode conf-mode help-mode) . rainbow-mode))
 
-;;;;; Highlight-defined
-;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
-;; text which is the symbol of a face.
-(use-package highlight-defined
-  :hook
-  ((emacs-lisp-mode lisp-interaction-mode) . highlight-defined-mode)
-  :custom
-  (highlight-defined-face-use-itself t))
-
 ;;;;; Highlight-quoted
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
