@@ -797,13 +797,14 @@ Determine if WINDOW is splittable."
 
 ;;;; Beframe
 (use-package beframe
+  :disabled t
   :bind-keymap ("C-c B" . beframe-prefix-map)
   :custom
   (beframe-functions-in-frames nil)
   (beframe-rename-function #'beframe-rename-frame)
   (beframe-mode 1)
   :config
-   ;; `consult-buffer' integration. Taken from (info "(beframe) Integration with Consult")
+  ;; `consult-buffer' integration. Taken from (info "(beframe) Integration with Consult")
   (defvar consult-buffer-sources)
   (declare-function consult--buffer-state "consult")
 
@@ -828,6 +829,48 @@ Determine if WINDOW is splittable."
          :state    ,#'consult--buffer-state))
 
     (add-to-list 'consult-buffer-sources 'beframe-consult-source)))
+
+;;;; Bufferlo
+(use-package bufferlo
+  :demand t
+  :config
+  (bufferlo-mode 1)
+  (bufferlo-anywhere-mode 1)
+
+  ;; `consult-buffer' integration. From
+  ;; https://github.com/florommel/bufferlo?tab=readme-ov-file#consult-integration
+  (with-eval-after-load 'consult
+    (defvar kb/bufferlo-consult--source-buffer
+      `(:name "Other Buffers"
+              :narrow   ?b
+              ;; :hidden t          ; Can keep hidden unless filtered for with this
+              :category buffer
+              :face     consult-buffer
+              :history  buffer-name-history
+              :state    ,#'consult--buffer-state
+              :items ,(lambda () (consult--buffer-query
+                             :predicate #'bufferlo-non-local-buffer-p
+                             :sort 'visibility
+                             :as #'buffer-name)))
+      "Non-local buffer candidate source for `consult-buffer'.")
+
+    (defvar kb/bufferlo-consult--source-local-buffer
+      `(:name "Local Buffers"
+              :narrow   ?l
+              :category buffer
+              :face     consult-buffer
+              :history  buffer-name-history
+              :state    ,#'consult--buffer-state
+              :default  t
+              :items ,(lambda () (consult--buffer-query
+                             :predicate #'bufferlo-local-buffer-p
+                             :sort 'visibility
+                             :as #'buffer-name)))
+      "Local buffer candidate source for `consult-buffer'.")
+
+    (add-to-list 'consult-buffer-sources 'kb/bufferlo-consult--source-local-buffer)
+    (when (member 'consult--source-buffer consult-buffer-sources)
+      (setf (car (member 'consult--source-buffer consult-buffer-sources)) 'kb/bufferlo-consult--source-buffer))))
 
 (provide 'buffers-and-windows-rcp)
 ;;; buffers-and-windows-rcp.el ends here
