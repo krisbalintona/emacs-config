@@ -353,9 +353,9 @@ This version removes delimiters.")
                                     (not (derived-mode-p 'pdf-view-mode)))
                            (mlscroll-mode-line)))
                   " "
-                  ;; For beframe's frame renaming
-                  (:eval (when (mode-line-window-selected-p)
-                           (propertize (frame-parameter nil 'name)
+                  (:eval (when (and (bound-and-true-p bufferlo-mode)
+                                    (mode-line-window-selected-p))
+                           (propertize (or (frame-parameter nil 'bufferlo-bookmark-frame-name) "")
                                        'face '(:slant italic :inherit font-lock-string-face))))
                   mode-line-format-right-align
                   mode-line-process
