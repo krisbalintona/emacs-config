@@ -898,5 +898,16 @@ A spacer is two newlines inserted after portions inserted by
         (display-buffer buffer)))))
   (advice-add 'org-mime-edit-mail-in-org-mode :override #'kb/org-mime-edit-mail-in-org-mode))
 
+;;;; Footnote
+;; Footnotes for `message-mode'
+(use-package footnote
+  :ensure nil
+  :hook (message-mode . footnote-mode)
+  :custom
+  (footnote-mode-line-string "")
+  (footnote-section-tag "Footnotes:")
+  (footnote-spaced-footnotes nil)
+  (footnote-prompt-before-deletion nil))
+
 (provide 'email-sending-rcp)
 ;;; email-sending-rcp.el ends here
