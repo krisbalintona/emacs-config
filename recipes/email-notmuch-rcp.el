@@ -77,7 +77,7 @@
      (:name "to-read mailing lists" :query "tag:list and tag:inbox "    :sort-order oldest-first :key "l")
      (:name "all mailing lists"     :query "tag:list"                                            :key "L" )
      (:name "sent"                  :query "tag:sent"                                            :key "s")
-     (:name "drafts"                :query "tag:draft or path:drafts/"                           :key "d")
+     (:name "drafts"                :query "tag:draft or path:drafts/"  :search-type unthreaded  :key "d")
      (:name "archived"              :query "not tag:trash"                                       :key "a")
      (:name "all"                   :query "path:**"                                             :key "A")
      (:name "trash"                 :query "tag:trash"                                           :key "t")))
