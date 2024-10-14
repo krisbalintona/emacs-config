@@ -605,18 +605,6 @@ timestamp)."
 
 ;;;;; Burly
 (use-package burly
-  ;; :ensure (:depth 1
-  ;;                 :fetcher github
-  ;;                 ;; NOTE 2023-07-15: See
-  ;;                 ;; https://github.com/alphapapa/burly.el/issues/28 for details on
-  ;;                 ;; this branch
-  ;;                 :repo "alphapapa/burly.el"
-  ;;                 :branch "wip/readablep"
-  ;;                 :files ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-  ;;                         (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
-  :vc (:url "https://github.com/alphapapa/burly.el.git"
-            :rev :newest
-            :branch "wip/readablep")
   :hook (on-switch-buffer . burly-tabs-mode))
 
 ;;;;; Perfect-margin
