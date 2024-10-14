@@ -673,7 +673,7 @@ This is a difference in multitude of %s."
   :custom
   (register-preview-delay 0)
   (register-separator "  ")
-  (register-use-preview t)
+  (register-use-preview nil)            ; Highlighting + navigation?
   (register-preview-display-buffer-alist
    '(display-buffer-at-bottom
      (window-height . fit-window-to-buffer)
