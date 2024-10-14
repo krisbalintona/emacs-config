@@ -220,6 +220,10 @@
             (next-window)               ; Fall back to next window
             (next-window nil nil 'visible))))
 
+;;;; Even better space cycling
+;; Read the docstring for an explanation (or try it out!)
+(setopt cycle-spacing-actions '((just-one-space -) (delete-all-space -) restore))
+
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.
 (with-eval-after-load 'no-littering
