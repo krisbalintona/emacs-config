@@ -41,7 +41,7 @@
   (message-mail-user-agent t)           ; Use `mail-user-agent'
   (compose-mail-user-agent-warnings t)
   (message-kill-buffer-on-exit t)
-  (message-elide-ellipsis "\n> [... %l lines elided]\n")
+  (message-elide-ellipsis "> [... %l lines elided]\n")
   (message-confirm-send nil)
 
   ;; Headers
