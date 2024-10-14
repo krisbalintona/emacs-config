@@ -332,6 +332,11 @@ This version removes delimiters.")
                                     (mode-line-window-selected-p)
                                     (not (derived-mode-p 'pdf-view-mode)))
                            (mlscroll-mode-line)))
+                  " "
+                  ;; For beframe's frame renaming
+                  (:eval (when (mode-line-window-selected-p)
+                           (propertize (frame-parameter nil 'name)
+                                       'face '(:slant italic :inherit font-lock-string-face))))
                   mode-line-format-right-align
                   mode-line-process
                   (flymake-mode flymake-mode-line-format) " "
