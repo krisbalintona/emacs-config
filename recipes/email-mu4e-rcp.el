@@ -497,6 +497,7 @@ will also be the width of all other printable characters."
 ;;;; Message-view-patch
 ;; Fontify patches in message buffers
 (use-package message-view-patch
+  :disabled t
   :hook (gnus-part-display . message-view-patch-highlight))
 
 (provide 'email-mu4e-rcp)
