@@ -99,6 +99,28 @@
                              ;; workaround I choose for now.
                              ;; register-alist
                              file-name-history))
+  (desktop-locals-to-save '(desktop-locals-to-save
+                            truncate-lines
+                            case-fold-search
+                            case-replace
+                            fill-column
+
+                            overwrite-mode
+                            change-log-default-name
+                            line-number-mode
+
+                            column-number-mode
+                            size-indication-mode
+
+                            buffer-file-coding-system
+                            buffer-display-time
+
+                            indent-tabs-mode
+                            tab-width
+                            indicate-buffer-boundaries
+
+                            indicate-empty-lines
+                            show-trailing-whitespace))
 
   (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)

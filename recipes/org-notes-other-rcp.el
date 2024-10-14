@@ -249,7 +249,8 @@
   ;;          :repo "aikrahguzar/pdf-tools"
   ;;          :branch "upstream-pdf-roll"
   ;;          :remotes ("upstream" :repo "vedang/pdf-tools"))
-  )
+  :config
+  (add-to-list 'desktop-locals-to-save 'pdf-view-register-alist))
 
 ;;;;;; Pdf-view
 (use-package pdf-view
