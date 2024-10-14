@@ -324,7 +324,7 @@
                     :duration (read-string "Duration: ")
                     :advance (remind "5 minutes"
                                      (do (let ((message (format "%s is over!" interval-name)))
-                                           (announce message)
+                                           (kb/hammy-play-sound)
                                            (notify message)))))))))))
 
 ;;;; Writing
