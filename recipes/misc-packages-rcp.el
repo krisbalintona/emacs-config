@@ -266,6 +266,22 @@
     :after (do (announce "Flywheel session complete!")
                (notify "Flywheel session complete!")))
 
+  (hammy-define "1-shot"
+    :documentation "Single-use timer that prompts for name and duration."
+    :complete-p (do (> cycles 0))
+    :before
+    (lambda (hammy)
+      (hammy-reset hammy)
+      (setf (hammy-intervals hammy)
+            (ring-convert-sequence-to-ring
+             (list (interval
+                    :name (read-string "Interval name (optional): " nil nil "")
+                    :duration (read-string "Duration: ")
+                    :advance (remind "5 minutes"
+                                     (do (let ((message (format "%s is over!" interval-name)))
+                                           (announce message)
+                                           (notify message))))))))))
+
   ;; Mode line
   (hammy-mode 1)
 
