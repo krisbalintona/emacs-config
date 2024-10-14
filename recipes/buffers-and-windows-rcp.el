@@ -531,7 +531,10 @@ timestamp)."
   :custom
   (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
-  (bookmark-fringe-mark nil))            ; No value and intrusive oftentimes
+  (bookmark-fringe-mark nil)             ; No value and intrusive oftentimes
+  (bookmark-sort-flag 'last-modified)
+  (bookmark-use-annotations nil)
+  (bookmark-version-control t))
 
 ;;;;; Ibuffer
 (use-package ibuffer
