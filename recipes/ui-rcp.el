@@ -56,7 +56,7 @@
                                (selection . (semibold)))))
   (modus-themes-variable-pitch-ui nil)
   (modus-themes-headings '((t . (semibold))))
-  :init
+  :config
   ;; Taken from (info "(modus-themes) Add support for solaire-mode")
   (defun kb/modus-themes-solaire-faces ()
     (modus-themes-with-colors
@@ -65,7 +65,7 @@
        `(solaire-line-number-face ((,c :inherit solaire-default-face :foreground ,fg-line-number-inactive)))
        `(solaire-hl-line-face ((,c :background ,bg-active)))
        `(solaire-org-hide-face ((,c :background ,bg-dim :foreground ,bg-dim))))))
-  :config
+
   ;; Overrides
   (setopt modus-themes-common-palette-overrides
           `(;; Completion
@@ -100,7 +100,10 @@
             (bg-mode-line-active        "#cab9b2")
             (fg-mode-line-active        "#000000")
             (bg-mode-line-inactive      "#dfd9cf")
-            (fg-mode-line-inactive      "#585858"))
+            (fg-mode-line-inactive      "#585858")
+
+
+            )
           modus-vivendi-palette-overrides
           `(
             ;; I like `modus-*-tinted's mode line colors. I like to keep
@@ -109,7 +112,22 @@
             (bg-mode-line-active        "#484d67")
             (fg-mode-line-active        "#ffffff")
             (bg-mode-line-inactive      "#292d48")
-            (fg-mode-line-inactive      "#969696"))))
+            (fg-mode-line-inactive      "#969696")))
+
+  (defun kb/modus-themes--setup-font-lock (theme)
+    "Set up font-lock faces."
+    ;; As described in (info "(modus-themes) DIY Measure color contrast"), I can
+    ;; check for contrast by making sure the color contrast (relative luminance)
+    ;; between the foreground and background color is at least 7:1.
+    ;;
+    ;; Like:
+    ;;    (modus-themes-contrast (modus-themes-with-colors bg-main) (face-foreground 'font-lock-function-call-face))
+    (cond
+     ((string-match "^modus-operandi" (symbol-name theme))
+      (set-face-attribute 'font-lock-function-call-face nil :foreground "#161BA1"))
+     ((string-match "^modus-vivendi" (symbol-name theme))
+      (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2"))))
+  (add-hook 'enable-theme-functions #'kb/modus-themes--setup-font-lock))
 (use-package solo-jazz-theme :disabled)
 (use-package kaolin-themes  :disabled)
 (when (fboundp 'elpaca-wait)
