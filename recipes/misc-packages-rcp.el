@@ -662,7 +662,7 @@ This is a difference in multitude of %s."
          (on-first-file . undelete-frame-mode)
          (on-first-buffer . global-so-long-mode)
          (on-first-buffer . repeat-mode)
-         (on-first-buffer . find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
+         (on-first-buffer . find-function-mode) ; Adds useful commands for jumping to variables, functions, and libraries
          (on-first-input . minibuffer-electric-default-mode))
   :bind
   ;; Remap these defaults; they are effectively the same while phasing out the
