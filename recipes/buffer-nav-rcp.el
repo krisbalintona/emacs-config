@@ -116,7 +116,7 @@
   (avy-single-candidate-jump t)
   (avy-timeout-seconds 0.3)
   (avy-style 'at-full)
-  (avy-keys '(?a ?w ?e ?r ?u ?i ?o ?p))
+  (avy-keys '(?a ?w ?r ?u ?i ?o ?p))
   (avy-dispatch-alist ; Avy actions (first narrow so letter combinations appear)
    '((?k . avy-action-kill-stay)
      (?K . avy-action-kill-move)
@@ -124,10 +124,10 @@
      (?m . avy-action-mark)
      (?y . avy-action-yank)
      (?z . avy-action-zap-to-char)
-     ;; New, custom actions
-     (?. . avy-action-embark)
-     (?h . avy-action-help)
-     (?d . avy-action-define)))
+     (?. . kb/avy-action-embark)
+     (?h . kb/avy-action-help)
+     (?d . kb/avy-action-define)
+     (?e . kb/avy-action-eval)))
   (avy-orders-alist
    '((avy-goto-char . kb/avy-order-farthest)
      (avy-goto-char-2 . kb/avy-order-farthest)
@@ -153,7 +153,7 @@
   ;; https://karthinks.com/software/avy-can-do-anything/
 
   ;; Embark
-  (defun avy-action-embark (pt)
+  (defun kb/avy-action-embark (pt)
     (unwind-protect
         (save-excursion
           (goto-char pt)
@@ -163,7 +163,7 @@
     t)
 
   ;; Helpful
-  (defun avy-action-help (pt)
+  (defun kb/avy-action-help (pt)
     (save-excursion
       (goto-char pt)
       (if (featurep 'helpful)
@@ -175,7 +175,7 @@
     t)
 
   ;; Dictionary
-  (defun avy-action-define (pt)
+  (defun kb/avy-action-define (pt)
     (require 'checking-words-rcp)
     (save-excursion
       (goto-char pt)
@@ -184,6 +184,15 @@
     (when current-prefix-arg
       (select-window
        (cdr (ring-ref avy-ring 0))))
+    t)
+
+  ;; Evaluation
+  (defun kb/avy-action-eval (pt)
+    (save-excursion
+      (goto-char pt)
+      (if (fboundp 'eros-eval-last-sexp)
+          (call-interactively 'eros-eval-last-sexp)
+        (call-interactively 'eval-last-sexp)))
     t)
 
   ;; Faces
