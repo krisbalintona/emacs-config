@@ -781,6 +781,7 @@ Determine if WINDOW is splittable."
 
 ;;;; Activities
 (use-package activities
+  :pin gnu-elpa-devel
   :bind
   (("C-c a d" . activities-define)
    ("C-c a a" . activities-resume)
@@ -790,8 +791,6 @@ Determine if WINDOW is splittable."
    ("C-c a s" . activities-suspend)
    ("C-c a k" . activities-kill)
    ("C-c a l" . activities-list))
-  :preface
-  (add-to-list 'package-pinned-packages '(activities . "gnu-elpa-devel"))
   :custom
   (activities-kill-buffers t)
   :config

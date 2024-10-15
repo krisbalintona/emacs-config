@@ -32,6 +32,7 @@
 (use-package denote
   :vc (:url "https://github.com/protesilaos/denote.git"
             :rev :newest)
+  :pin gnu-elpa-devel
   :autoload (denote-directory-files kb/denote-auto-rename)
   :commands (denote denote-open-or-create)
   :hook ((dired-mode . denote-dired-mode)
@@ -103,8 +104,6 @@
   ;; Buffer name
   (denote-rename-buffer-format "%s %t%b")
   (denote-rename-buffer-backlinks-indicator " ⟷")
-  :preface
-  (add-to-list 'package-pinned-packages '(denote . "gnu-elpa-devel"))
   :config
   (denote-rename-buffer-mode 1)
   (denote-menu-bar-mode 1)

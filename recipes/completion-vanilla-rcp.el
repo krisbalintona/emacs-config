@@ -33,6 +33,7 @@
 ;;;; Vertico
 ;;;;; Itself
 (use-package vertico
+  :pin gnu-elpa-devel
   :bind
   (("C-M-s-." . vertico-repeat)
    :map vertico-map
@@ -45,8 +46,6 @@
   (vertico-count 13)
   (vertico-resize 'grow-only)
   (vertico-cycle nil)
-  :preface
-  (add-to-list 'package-pinned-packages '(vertico . "gnu-elpa-devel"))
   :config
   ;; Special for `org-agenda-filter' and `org-tags-view'. See
   ;; https://github.com/minad/vertico?tab=readme-ov-file#org-agenda-filter-and-org-tags-view
