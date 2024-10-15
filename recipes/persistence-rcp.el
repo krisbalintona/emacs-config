@@ -77,9 +77,10 @@
 ;; Save buffers across Emacs sessions
 (use-package desktop
   :ensure nil
+  :demand t
   :custom
   (desktop-load-locked-desktop 'check-pid)
-  (desktop-save 'if-exists)
+  (desktop-save 'ask-if-exists)
   (desktop-auto-save-timeout 3)
   (desktop-files-not-to-save
    (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
@@ -124,7 +125,7 @@
   (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)
   (desktop-restore-in-current-display nil)
-
+  :config
   (desktop-save-mode 1))
 
 ;;;; Super-save
