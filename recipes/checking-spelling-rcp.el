@@ -26,11 +26,12 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Abbrev-mode
+;;; Abbrev
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
 ;; spelling mistakes as they are made.
 (use-package abbrev
   :ensure nil
+  :diminish
   :custom
   (abbrev-file-name (expand-file-name "abbrev/abbrev.el" no-littering-var-directory))
   (save-abbrevs 'silently)

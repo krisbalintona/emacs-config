@@ -286,20 +286,13 @@ If daytime, call `kb/proper-load-theme-light'. If nighttime, call
 
 ;;;;; Diminish
 (use-package diminish
-  :hook (after-init . kb/diminish-setup)
   :init
-  (defun kb/diminish-setup ()
-    "Set up `diminish’ lighters for pre-loaded packages (packages that
-are troublesome)."
-    (with-eval-after-load 'subword
-      (diminish 'subword-mode))
-    (with-eval-after-load 'simple
-      (diminish 'visual-line-mode))
-    ;; (with-eval-after-load (diminish 'hs-minor-mode))
-    (with-eval-after-load 'face-remap
-      (diminish 'buffer-face-mode))
-    (with-eval-after-load 'abbrev
-      (diminish 'abbrev-mode))))
+  (with-eval-after-load 'subword
+    (diminish 'subword-mode))
+  (with-eval-after-load 'simple
+    (diminish 'visual-line-mode))
+  (with-eval-after-load 'face-remap
+    (diminish 'buffer-face-mode)))
 
 ;;;;; Default mode line
 (unless (bound-and-true-p mood-line-mode)
