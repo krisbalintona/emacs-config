@@ -899,6 +899,7 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
 
 ;;;;; Super-hint
 (use-package super-hint
+  :disabled t
   :vc (:url "https://github.com/eval-exec/super-hint.el.git"
             :rev :newest)
   :init
