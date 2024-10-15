@@ -205,31 +205,5 @@ based off of `org-linker-edna’."
 
   (org-add-link-type "tag" 'kb/org-tag-link))
 
-;;;; Ical2orgpy script
-;; NOTE 2024-01-24: Make sure ical2orgpy is installed via `pipx install
-;; ical2orgpy'
-(with-eval-after-load 'org-agenda
-  (unless (system-packages-package-installed-p "ical2orgpy")
-    (system-packages-ensure "pipx install --force ical2orgpy"))
-
-  (defun kb/org-gcal (&optional arg)
-    "Run my emacs-gcal script.
-  If called with ARG, then show output buffer. Else, keep output
-  buffer hidden."
-    (interactive "P")
-    (let* ((buf-name "*emacs-gcal*")
-           (buf (get-buffer-create buf-name))
-           (script (expand-file-name "emacs-gcal.sh" "~/Scripts/"))
-           (display-buffer-alist (if arg
-                                     display-buffer-alist
-                                   `((,buf-name display-buffer-no-window)))))
-      (unless (get-buffer-process buf)
-        ;; OPTIMIZE 2024-01-24: Consider using `start-process' instead of
-        ;; `async-shell-command'
-        (async-shell-command script buf))))
-
-  ;; Timer every 30 min
-  (run-with-timer (* 60 30) (* 60 30) 'kb/org-gcal))
-
 (provide 'org-agenda-other-rcp)
 ;;; org-agenda-other-rcp.el ends here

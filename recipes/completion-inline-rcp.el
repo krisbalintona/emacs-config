@@ -69,7 +69,7 @@
   :config
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
   ;; be adopted in a variable pitch buffer) have inconsistent spacing
-  (set-face-attribute 'corfu-default nil :family (face-attribute 'default :family))
+  (set-face-attribute 'corfu-default nil :height 0.95 :inherit 'default)
 
   ;; NOTE 2022-03-01: This allows for a more evil-esque way to have
   ;; `corfu-insert-separator' work with space in insert mode without resorting to
@@ -229,11 +229,6 @@ default lsp-passthrough."
 ;; Expand capf functionality with corfu! See an updated list of the defined capf
 ;; functions in the package's commentary.
 (use-package cape
-  :after corfu ; FIXME 2024-09-20: Not sure why, but something in :hook is making this package load, so I force deferral with this
-  :autoload (kb/cape-capf-setup-elisp kb/cape-capf-setup-elisp kb/cape-capf-setup-lsp kb/cape-capf-setup-commit)
-  :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
-         (lsp-completion-mode . kb/cape-capf-setup-lsp)
-         ((git-commit-mode vc-git-log-edit-mode) . kb/cape-capf-setup-commit))
   :bind
   (("C-M-s-c p" . completion-at-point)
    ("C-M-s-c d" . cape-dabbrev)
@@ -252,50 +247,43 @@ default lsp-passthrough."
    ([remap dabbrev-completion] . cape-dabbrev))
   :custom
   (cape-dabbrev-min-length 2)
-  :config
-  ;; Elisp
-  (defun kb/cape-capf-setup-elisp ()
-    "Replace the default `elisp-completion-at-point'
-completion-at-point-function. Doing it this way will prevent
-disrupting the addition of other capfs (e.g. merely setting the
-variable entirely, or adding to list).
+  :init
+  ;; These are added to the global definition of
+  ;; `completion-at-point-functions', which acts as a fallback if buffer-local
+  ;; values end in `t'. Read (info "(cape) Configuration") for an explanation.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
 
-Additionally, add `cape-file' as early as possible to the list."
-    (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-    ;; I prefer this being early/first in the list
-    (add-to-list 'completion-at-point-functions #'cape-file))
+  ;; Macro to help adding capfs via hooks
+  (defmacro kb/cape-setup-capfs (label hooks capfs)
+    "Set up `completion-at-point-functions' for HOOKS.
+CAPFS are a list of `completion-at-point-functions'. Adds CAPFS when a
+hook in HOOKS is run. These effects are added by a defined function with
+LABEL appended to `kb/cape-setup-capfs-'.
 
-  ;; LSP
-  (defun kb/cape-capf-setup-lsp ()
-    "Replace the default `lsp-completion-at-point' with its
-`cape-capf-buster' version."
-    (setq completion-at-point-functions
-          (-replace-first 'lsp-completion-at-point (cape-capf-buster #'lsp-completion-at-point)
-                          completion-at-point-functions))
-    ;; TODO 2022-02-28: Maybe use `cape-wrap-predicate' to have candidates
-    ;; listed when I want?
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
+The order of elements in CAPFS are the order they will appear in
+`completion-at-point-functions' for that buffer. That is, the first
+element in CAPFS will be the first element in
+`completion-at-point-functions'.
 
-  ;; Git-commit
-  (defun kb/cape-capf-setup-commit ()
-    "Set up capfs when committing."
-    (when (boundp 'vc-git-log-edit-mode-map)
-      (define-key vc-git-log-edit-mode-map (kbd "<tab>") 'completion-at-point))
-    (when (boundp 'git-commit-mode-map)
-      (define-key git-commit-mode-map (kbd "<tab>") 'completion-at-point))
-    (let ((result nil))
-      (dolist (element '(cape-dabbrev cape-elisp-symbol) result)
-        (add-to-list 'completion-at-point-functions element))))
+This macro does not affect capfs already in
+`completion-at-point-functions' nor how later capfs are added to
+`completion-at-point-functions'."
+    (declare (indent 0))
+    `(dolist (hook ,hooks)
+       (add-hook hook
+                 (defun ,(intern (concat "kb/cape-setup-capfs-" label)) ()
+                   (dolist (capf (reverse ,capfs))
+                     (add-to-list 'completion-at-point-functions capf))))))
 
-  ;; For pcomplete. For now these two advices are strongly recommended to
-  ;; achieve a sane Eshell experience. See
-  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-shell-or-eshell
-  (with-eval-after-load 'pcomplete
-    ;; Silence the pcomplete capf, no errors or messages!
-    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-    ;; Ensure that pcomplete does not write to the buffer and behaves as a pure
-    ;; `completion-at-point-function'.
-    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)))
+  (kb/cape-setup-capfs
+    "elisp"
+    '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
+    (list #'cape-file #'cape-elisp-symbol))
+
+  (kb/cape-setup-capfs
+    "commit"
+    '(git-commit-mode-hook vc-git-log-edit-mode-hook)
+    (list #'cape-elisp-symbol #'cape-dabbrev)))
 
 (provide 'completion-inline-rcp)
 ;;; completion-inline-rcp.el ends here

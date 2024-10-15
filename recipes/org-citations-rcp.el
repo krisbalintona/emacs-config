@@ -34,9 +34,6 @@
 (use-package oc
   :ensure nil
   :after org
-  :bind
-  ( :map org-mode-map
-    ([remap org-cite-insert] . citar-insert-citation))
   :custom
   (org-cite-global-bibliography kb/bib-files)
   (org-cite-csl-locales-dir (expand-file-name "locales/" user-emacs-directory))
@@ -86,11 +83,12 @@ Intended for `eldoc-documentation-functions'."
 (use-package citar
   :hook (org-mode . citar-capf-setup)
   :bind
-  (("C-c b b" . citar-insert-citation)
-   ("C-c b r" . citar-insert-reference)
-   ("C-c b o" . citar-open)
-   ("C-c b f" . citar-open-files)
-   ("C-c b n" . citar-open-notes))
+  :bind (("C-c b b" . citar-insert-citation)
+         ("C-c b o" . citar-open)
+         ("C-c b f" . citar-open-files)
+         ("C-c b n" . citar-open-notes)
+         :map org-mode-map
+         ([remap org-cite-insert] . citar-insert-citation))
   :custom
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))

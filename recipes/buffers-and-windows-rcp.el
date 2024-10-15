@@ -187,12 +187,12 @@
      ("\\*vc-log\\*"
       (display-buffer-reuse-mode-window display-buffer-below-selected)
       (dedicated . t))
-     ("\\*Help\\*"
+     ((major-mode . help-mode)
       (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
       (window-height . shrink-window-if-larger-than-buffer))
 
      ;; Pop up
-     ((or "\\*Man"
+     ((or ,(rx (literal "*Man ") num (literal " "))
           (major-mode . Man-mode))
       (display-buffer-reuse-window display-buffer-pop-up-window)
       (post-command-select-window . t))))
@@ -303,7 +303,7 @@
         '((?k aw-delete-window "Delete window")
           (?K delete-other-windows "Delete other windows")
           (?s aw-swap-window "Swap windows")
-          (?m kb/aw-take-over-window "Move window")
+          (?m kb/aw-take-over-window "Go to window and delete current window")
           (?c aw-copy-window "Copy window")
           (?o aw-flip-window "Other window")
           (?v kb/ace-set-other-window "Set to other-scroll-window's window")
@@ -527,11 +527,14 @@ timestamp)."
 ;;;;; Bookmark
 (use-package bookmark
   :ensure nil
-  :hook (on-first-input . bookmark-maybe-load-default-file)
+  :hook (on-first-file . bookmark-maybe-load-default-file)
   :custom
   (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
   (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
-  (bookmark-fringe-mark nil))            ; No value and intrusive oftentimes
+  (bookmark-fringe-mark nil)             ; No value and intrusive oftentimes
+  (bookmark-sort-flag 'last-modified)
+  (bookmark-use-annotations nil)
+  (bookmark-version-control t))
 
 ;;;;; Ibuffer
 (use-package ibuffer
@@ -605,18 +608,6 @@ timestamp)."
 
 ;;;;; Burly
 (use-package burly
-  ;; :ensure (:depth 1
-  ;;                 :fetcher github
-  ;;                 ;; NOTE 2023-07-15: See
-  ;;                 ;; https://github.com/alphapapa/burly.el/issues/28 for details on
-  ;;                 ;; this branch
-  ;;                 :repo "alphapapa/burly.el"
-  ;;                 :branch "wip/readablep"
-  ;;                 :files ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-  ;;                         (:exclude ".dir-locals.el" "test.el" "tests.el" "*-test.el" "*-tests.el" "LICENSE" "README*" "*-pkg.el")))
-  :vc (:url "https://github.com/alphapapa/burly.el.git"
-            :rev :newest
-            :branch "wip/readablep")
   :hook (on-switch-buffer . burly-tabs-mode))
 
 ;;;;; Perfect-margin
@@ -806,6 +797,83 @@ Determine if WINDOW is splittable."
   :config
   (activities-mode 1)
   (activities-tabs-mode 1))
+
+;;;; Beframe
+(use-package beframe
+  :disabled t
+  :bind-keymap ("C-c B" . beframe-prefix-map)
+  :custom
+  (beframe-functions-in-frames nil)
+  (beframe-rename-function #'beframe-rename-frame)
+  (beframe-mode 1)
+  :config
+  ;; `consult-buffer' integration. Taken from (info "(beframe) Integration with Consult")
+  (defvar consult-buffer-sources)
+  (declare-function consult--buffer-state "consult")
+
+  (with-eval-after-load 'consult
+    (defface beframe-buffer
+      '((t :inherit font-lock-string-face))
+      "Face for `consult' framed buffers.")
+
+    (defun my-beframe-buffer-names-sorted (&optional frame)
+      "Return the list of buffers from `beframe-buffer-names' sorted by visibility.
+     With optional argument FRAME, return the list of buffers of FRAME."
+      (beframe-buffer-names frame :sort #'beframe-buffer-sort-visibility))
+
+    (defvar beframe-consult-source
+      `( :name     "Frame-specific buffers (current frame)"
+         :narrow   ?F
+         :category buffer
+         :face     beframe-buffer
+         :history  beframe-history
+         :items    ,#'my-beframe-buffer-names-sorted
+         :action   ,#'switch-to-buffer
+         :state    ,#'consult--buffer-state))
+
+    (add-to-list 'consult-buffer-sources 'beframe-consult-source)))
+
+;;;; Bufferlo
+(use-package bufferlo
+  :demand t
+  :config
+  (bufferlo-mode 1)
+  (bufferlo-anywhere-mode 1)
+
+  ;; `consult-buffer' integration. From
+  ;; https://github.com/florommel/bufferlo?tab=readme-ov-file#consult-integration
+  (with-eval-after-load 'consult
+    (defvar kb/bufferlo-consult--source-buffer
+      `(:name "Other Buffers"
+              :narrow   ?b
+              ;; :hidden t          ; Can keep hidden unless filtered for with this
+              :category buffer
+              :face     consult-buffer
+              :history  buffer-name-history
+              :state    ,#'consult--buffer-state
+              :items ,(lambda () (consult--buffer-query
+                             :predicate #'bufferlo-non-local-buffer-p
+                             :sort 'visibility
+                             :as #'buffer-name)))
+      "Non-local buffer candidate source for `consult-buffer'.")
+
+    (defvar kb/bufferlo-consult--source-local-buffer
+      `(:name "Local Buffers"
+              :narrow   ?l
+              :category buffer
+              :face     consult-buffer
+              :history  buffer-name-history
+              :state    ,#'consult--buffer-state
+              :default  t
+              :items ,(lambda () (consult--buffer-query
+                             :predicate #'bufferlo-local-buffer-p
+                             :sort 'visibility
+                             :as #'buffer-name)))
+      "Local buffer candidate source for `consult-buffer'.")
+
+    (add-to-list 'consult-buffer-sources 'kb/bufferlo-consult--source-local-buffer)
+    (when (member 'consult--source-buffer consult-buffer-sources)
+      (setf (car (member 'consult--source-buffer consult-buffer-sources)) 'kb/bufferlo-consult--source-buffer))))
 
 (provide 'buffers-and-windows-rcp)
 ;;; buffers-and-windows-rcp.el ends here

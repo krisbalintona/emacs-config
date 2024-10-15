@@ -411,6 +411,7 @@ replacement."
 (use-package denote-interface
   :vc (:url "git@github.com:krisbalintona/denote-interface.git"
             :rev :newest)
+  :autoload denote-interface--signature-lessp
   :hook (denote-interface-mode . (lambda () (kb/puni-mode -1)))
   :bind
   ( :map kb/note-keys
@@ -425,11 +426,9 @@ replacement."
   (denote-interface-starting-filter-presets
    '("zettels/[^z-a]*" "bib/[^z-a]*"))
   (denote-interface-starting-filter "zettels/[^z-a]*")
-  :config
-  (advice-add 'denote-sort-signature-lessp
-              :override (lambda (f1 f2)
-                          (denote-interface--signature-lessp (denote-retrieve-filename-signature f1)
-                                                             (denote-retrieve-filename-signature f2)))))
+  :init
+  (with-eval-after-load 'denote
+    (setopt denote-sort-signature-comparison-function #'denote-interface--signature-lessp)))
 
 ;;;; Consult-notes
 (use-package consult-notes
@@ -553,26 +552,23 @@ replacement."
 ;;;; Citar-denote
 (use-package citar-denote
   :diminish
+  :bind (("C-c b c" . citar-create-note)
+         :map kb/note-keys
+         ("b b" . citar-denote-link-reference)
+         ("b o" . citar-denote-dwim)
+         ("b c" . citar-create-note)
+         ("b n" . citar-denote-open-note)
+         ("b k a" . citar-denote-add-citekey)
+         ("b k r" . citar-denote-remove-citekey))
   :custom
-  (citar-denote-subdir t)
-  (citar-denote-signature t)
+  (citar-denote-subdir "/bib/")
+  (citar-denote-signature nil)
   (citar-denote-title-format nil)       ; Use citekey as title
   (citar-denote-title-format-authors 2)
   (citar-denote-title-format-andstr "and")
   (citar-denote-keyword "bib")
   (citar-denote-use-bib-keywords nil)
-  (citar-denote-template t)
-  :bind
-  ( :map kb/note-keys
-    ("b o" . citar-denote-dwim)
-    ("b c" . citar-create-note)
-    ("b n" . citar-denote-open-note)
-    ("b e" . citar-denote-open-reference-entry)
-    ("b k a" . citar-denote-add-citekey)
-    ("b k r" . citar-denote-remove-citekey)
-    ("b r f" . citar-denote-find-reference)
-    ("b r F" . citar-denote-nocite)
-    ("b r l" . citar-denote-link-reference))
+  (citar-denote-template 'default)
   :config
   (citar-denote-mode 1)
 
@@ -590,7 +586,7 @@ replacement."
       (insert
        (format (citar-denote--reference-format file-type) citekey))))
   (advice-add 'citar-denote--add-reference :override #'kb/citar-denote--add-reference)
-  :config
+
   (setq citar-denote-file-types
         `((org
            :reference-format "#+reference: %s\n" ; Keep single space

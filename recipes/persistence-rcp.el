@@ -77,18 +77,53 @@
 ;; Save buffers across Emacs sessions
 (use-package desktop
   :ensure nil
-  :demand
+  :demand t
   :custom
   (desktop-load-locked-desktop 'check-pid)
+  (desktop-save 'ask-if-exists)
+  (desktop-auto-save-timeout 3)
   (desktop-files-not-to-save
    (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
            ;; Don't save files from other Emacs repos because sometimes they
            ;; have local variables that mess with desktop's loading of files
            (literal (expand-file-name "emacs-repos/" "~")))))
-  (desktop-auto-save-timeout 3)
-  (desktop-restore-forces-onscreen t)
+  (desktop-globals-to-save '(desktop-missing-file-warning
+                             tags-file-name
+                             tags-table-list
+                             search-ring
+                             regexp-search-ring
+                             ;; REVIEW 2024-10-13: The previews in
+                             ;; `jump-to-register' cause errors when trying to
+                             ;; visit a buffer or window which no longer exists.
+                             ;; Removing it from the saved globals list is the
+                             ;; workaround I choose for now.
+                             ;; register-alist
+                             file-name-history))
+  (desktop-locals-to-save '(desktop-locals-to-save
+                            truncate-lines
+                            case-fold-search
+                            case-replace
+                            fill-column
+
+                            overwrite-mode
+                            change-log-default-name
+                            line-number-mode
+
+                            column-number-mode
+                            size-indication-mode
+
+                            buffer-file-coding-system
+                            buffer-display-time
+
+                            indent-tabs-mode
+                            tab-width
+                            indicate-buffer-boundaries
+
+                            indicate-empty-lines
+                            show-trailing-whitespace))
+
+  (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)
-  (desktop-save 'if-exists)
   (desktop-restore-in-current-display nil)
   :config
   (desktop-save-mode 1))

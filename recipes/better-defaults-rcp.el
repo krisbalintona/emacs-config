@@ -71,10 +71,9 @@
 
               visible-bell nil)
 
-;;;; Cursor settings
-(setq-default cursor-type '(bar . 4)
-              cursor-in-non-selected-windows 'box
-              x-stretch-cursor t)       ; Stretch cursor to the glyph width
+;;;; Set `x-stretch-cursor'
+;; Stretch cursor to the glyph width
+(setopt x-stretch-cursor t)
 
 ;;;; Aviod cursor collisions
 (mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
@@ -122,7 +121,7 @@
 (setopt load-prefer-newer t)
 
 ;;;; Highlight next error
-(setq next-error-message-highlight 'keep)
+(setq next-error-message-highlight nil)
 
 ;;;; Recenter upon `next-error'
 (setq next-error-recenter '(4))
@@ -160,8 +159,6 @@
 (setq-default word-wrap t)
 
 ;;;; Truncate lines
-;; Disable wrapping by default due to its performance cost.
-(setq-default truncate-lines t)
 ;; If enabled and `truncate-lines' is disabled, soft wrapping will not occur
 ;; when the window is narrower than `truncate-partial-width-windows' characters.
 (setq truncate-partial-width-windows nil)
@@ -195,6 +192,10 @@
         (or (get-mru-window nil nil 'not-this-one-dummy)
             (next-window)               ; Fall back to next window
             (next-window nil nil 'visible))))
+
+;;;; Even better space cycling
+;; Read the docstring for an explanation (or try it out!)
+(setopt cycle-spacing-actions '((just-one-space -) (delete-all-space -) restore))
 
 ;;;; Load custom file
 ;; Set and load custom file which contains persistent settings.

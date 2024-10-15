@@ -28,16 +28,17 @@
 
 ;;;; Comments
 ;;;;; Newcomment
-(use-package new-comment
+(use-package newcomment
   :ensure nil
   :custom
   (comment-empty-lines t)
   (comment-fill-column nil)
-  (comment-multi-line nil)
+  (comment-multi-line t)
   (comment-style 'indent))
 
 ;;;;; Alt-comment-dwim
 (use-package alt-comment-dwim
+  :disabled
   ;; :ensure (:type git
   ;;                :host gitlab
   ;;                :protocol ssh
@@ -145,17 +146,17 @@
 
 ;;;;; Hammy
 (use-package hammy
-  :bind
-  ( :map kb/open-keys
-    ("h s" . hammy-start)
-    ("h n" . hammy-next)
-    ("h S" . hammy-stop)
-    ("h r" . hammy-reset)
-    ("h t" . hammy-toggle)
-    ("h a" . hammy-adjust)
-    ("h v" . hammy-view-log)
-    ("h R" . hammy-status)
-    ("h I" . hammy-start-org-clock-in))
+  :bind ( :map kb/open-keys
+          ("h h" . kb/hammy-dwim)
+          ("h S" . hammy-start)
+          ("h n" . hammy-next)
+          ("h s" . hammy-stop)
+          ("h r" . hammy-reset)
+          ("h t" . hammy-toggle)
+          ("h a" . hammy-adjust)
+          ("h v" . hammy-view-log)
+          ("h R" . hammy-status)
+          ("h I" . hammy-start-org-clock-in))
   :custom
   ;; TODO 2024-09-25: Have this found more locally. When I do, also change
   ;; `tmr-sound' to this file
@@ -171,13 +172,66 @@
   (hammy-mode-lighter-pie t)
   (hammy-mode-lighter-pie-height 0.65)
   :config
+  ;; Mode line
+  (hammy-mode 1)
+
+  ;; Custom lighter
+  (defun kb/hammy-mode-lighter ()
+    "Return lighter for `hammy-mode'."
+    (cl-labels
+        ((format-hammy (hammy)
+           (let ((remaining
+                  (abs
+                   ;; We use the absolute value because `ts-human-format-duration'
+                   ;; returns 0 for negative numbers.
+                   (- (hammy-current-duration hammy)
+                      (float-time (time-subtract (current-time)
+                                                 (hammy-current-interval-start-time hammy)))))))
+             (format "%s(%s%s:%s)"
+                     (propertize (hammy-name hammy)
+                                 'face 'hammy-mode-lighter-name)
+                     (if (hammy-overduep hammy)
+                         (propertize hammy-mode-lighter-overdue
+                                     'face 'hammy-mode-lighter-overdue)
+                       "")
+                     (propertize (hammy-interval-name (hammy-interval hammy))
+                                 'face `(hammy-mode-lighter-interval
+                                         ,(hammy-interval-face (hammy-interval hammy))))
+                     (concat (when hammy-mode-lighter-pie
+                               (propertize " " 'display (hammy--pie hammy)))
+                             (if (hammy-overduep hammy)
+                                 ;; We use the negative sign when counting down to
+                                 ;; the end of an interval (i.e. "T-minus...") .
+                                 "+" "-")
+                             (format-seconds (if (< remaining 60)
+                                                 "%2ss" hammy-mode-lighter-seconds-format)
+                                             remaining))))))
+      (if hammy-active
+          (concat (mapconcat #'format-hammy hammy-active ",") " ")
+        ;; No active hammys.
+        (when hammy-mode-always-show-lighter
+          (concat (propertize hammy-mode-lighter-prefix
+                              'face 'hammy-mode-lighter-prefix-inactive)
+                  (if hammy-mode-lighter-suffix-inactive
+                      (concat ":" hammy-mode-lighter-suffix-inactive))
+                  " ")))))
+  (advice-add 'hammy-mode-lighter :override #'kb/hammy-mode-lighter)
+
+  ;; Dwim command
+  (defun kb/hammy-dwim ()
+    "DWIM with hammy."
+    (interactive)
+    (if hammy-active
+        (call-interactively 'hammy-next)
+      (call-interactively 'hammy-start)))
+
+  ;; Hammy definitions
   (defun kb/hammy-play-sound ()
     "Play end of timer sound."
     (interactive)
     (call-process-shell-command
      (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-work) nil 0))
 
-  ;; Hammy definitions
   (setq hammy-hammys nil)
   (hammy-define "Fractional"
     :documentation "Breaks that are ⅓ as long as the last work interval."
@@ -265,50 +319,46 @@
     :after (do (announce "Flywheel session complete!")
                (notify "Flywheel session complete!")))
 
-  ;; Mode line
-  (hammy-mode 1)
+  (hammy-define (propertize "🍅" 'face '(:foreground "tomato"))
+    :documentation "The classic pomodoro timer."
+    :intervals
+    (list
+     (interval :name "Working"
+               :duration "25 minutes"
+               :before (do (announce "Starting work time.")
+                           (notify "Starting work time."))
+               :advance (remind "10 minutes"
+                                (do (announce "Break time!")
+                                    (notify "Break time!"))))
+     (interval :name "Resting"
+               :duration (do (if (and (not (zerop cycles))
+                                      (zerop (mod cycles 3)))
+                                 ;; If a multiple of three cycles have
+                                 ;; elapsed, the fourth work period was
+                                 ;; just completed, so take a longer break.
+                                 "30 minutes"
+                               "5 minutes"))
+               :before (do (announce "Starting break time.")
+                           (notify "Starting break time."))
+               :advance (remind "10 minutes"
+                                (do (announce "Break time is over!")
+                                    (notify "Break time is over!"))))))
 
-  ;; Custom lighter
-  (defun kb/hammy-mode-lighter ()
-    "Return lighter for `hammy-mode'."
-    (cl-labels
-        ((format-hammy (hammy)
-           (let ((remaining
-                  (abs
-                   ;; We use the absolute value because `ts-human-format-duration'
-                   ;; returns 0 for negative numbers.
-                   (- (hammy-current-duration hammy)
-                      (float-time (time-subtract (current-time)
-                                                 (hammy-current-interval-start-time hammy)))))))
-             (format "%s(%s%s:%s)"
-                     (propertize (hammy-name hammy)
-                                 'face 'hammy-mode-lighter-name)
-                     (if (hammy-overduep hammy)
-                         (propertize hammy-mode-lighter-overdue
-                                     'face 'hammy-mode-lighter-overdue)
-                       "")
-                     (propertize (hammy-interval-name (hammy-interval hammy))
-                                 'face `(hammy-mode-lighter-interval
-                                         ,(hammy-interval-face (hammy-interval hammy))))
-                     (concat (when hammy-mode-lighter-pie
-                               (propertize " " 'display (hammy--pie hammy)))
-                             (if (hammy-overduep hammy)
-                                 ;; We use the negative sign when counting down to
-                                 ;; the end of an interval (i.e. "T-minus...") .
-                                 "+" "-")
-                             (format-seconds (if (< remaining 60)
-                                                 "%2ss" hammy-mode-lighter-seconds-format)
-                                             remaining))))))
-      (if hammy-active
-          (concat (mapconcat #'format-hammy hammy-active ",") " ")
-        ;; No active hammys.
-        (when hammy-mode-always-show-lighter
-          (concat (propertize hammy-mode-lighter-prefix
-                              'face 'hammy-mode-lighter-prefix-inactive)
-                  (if hammy-mode-lighter-suffix-inactive
-                      (concat ":" hammy-mode-lighter-suffix-inactive))
-                  " ")))))
-  (advice-add 'hammy-mode-lighter :override #'kb/hammy-mode-lighter))
+  (hammy-define "1-shot"
+    :documentation "Single-use timer that prompts for name and duration."
+    :complete-p (do (> cycles 0))
+    :before
+    (lambda (hammy)
+      (hammy-reset hammy)
+      (setf (hammy-intervals hammy)
+            (ring-convert-sequence-to-ring
+             (list (interval
+                    :name (read-string "Interval name (optional): " nil nil "")
+                    :duration (read-string "Duration: ")
+                    :advance (remind "5 minutes"
+                                     (do (let ((message (format "%s is over!" interval-name)))
+                                           (kb/hammy-play-sound)
+                                           (notify message)))))))))))
 
 ;;;; Writing
 ;;;;; Sentex
@@ -645,7 +695,7 @@ This is a difference in multitude of %s."
          (on-first-file . undelete-frame-mode)
          (on-first-buffer . global-so-long-mode)
          (on-first-buffer . repeat-mode)
-         (on-first-buffer . find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
+         (on-first-buffer . find-function-mode) ; Adds useful commands for jumping to variables, functions, and libraries
          (on-first-input . minibuffer-electric-default-mode))
   :bind
   ;; Remap these defaults; they are effectively the same while phasing out the
@@ -669,25 +719,16 @@ This is a difference in multitude of %s."
 ;;;;; Register
 (use-package register
   :ensure nil
-  :bind
-  ([remap jump-to-register] . kb/jump-to-register)
   :custom
   (register-preview-delay 0)
-  (register-separator " ")
-  (register-use-preview 'traditional)
-  :init
-  (defun kb/jump-to-register (register &optional delete)
-    "Proxy for `jump-to-register'.
-Provide REGISTER and jump to it. If interactively called, then
-prompt user for register.
-
-If called with DELETE, which is the prefix-arg if called
-interactively, then delete the register instead of jumping to it."
-    (interactive (list (register-read-with-preview "Select register: ")
-                       current-prefix-arg))
-    (if delete
-        (set-register register nil)
-      (jump-to-register register)))
+  (register-separator "  ")
+  (register-use-preview nil)            ; Highlighting + navigation?
+  (register-preview-display-buffer-alist
+   '(display-buffer-at-bottom
+     (window-height . fit-window-to-buffer)
+     (preserve-size . (nil . t))
+     (window-parameters . ((mode-line-format . none)
+                           (no-other-window . t)))))
   :config
   (with-eval-after-load 'consult
     ;; Better than `consult-register'
@@ -891,6 +932,7 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
 
 ;;;;; Super-hint
 (use-package super-hint
+  :disabled t
   :vc (:url "https://github.com/eval-exec/super-hint.el.git"
             :rev :newest)
   :init

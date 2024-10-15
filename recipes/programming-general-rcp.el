@@ -126,6 +126,7 @@
   :bind
   (;; Remaps
    ([remap switch-to-buffer] . consult-buffer)
+   ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
    ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap repeat-complex-command] . consult-complex-command)
@@ -135,6 +136,7 @@
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
    ([remap Info-search] . consult-info)
    ([remap project-switch-to-buffer] . consult-project-buffer)
+   ([remap point-to-register] . consult-register-store)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
    ("f" . consult-flymake)
@@ -198,17 +200,35 @@
 
   ;; Have line centered in previews. Make sure `recenter' is called after
   ;; `consult--maybe-recenter'
-  (add-to-list 'consult-after-jump-hook 'recenter t)
+  (add-hook 'consult-after-jump-hook #'recenter)
 
   ;; Customize consult commands
   (consult-customize
    consult-buffer :preview-key "C-M-;"
+   consult-buffer-other-window :preview-key "C-M-;"
    consult-grep :preview-key "C-M-;"
    consult-git-grep :preview-key "C-M-;"
    consult-ripgrep :preview-key "C-M-;"
    consult-recent-file :preview-key "C-M-;" ; Make sure this is after the definition of `consult-recent-file'
    consult-find :preview-key "C-M-;"
    consult-bookmark :preview-key "C-M-;")
+
+  ;; Use consult UI with xref
+  (with-eval-after-load 'xref
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-definitions-function #'consult-xref
+          xref-show-xrefs-function #'consult-xref))
+
+  ;; Registers
+  ;; FIXME 2024-10-13: Right now consult's register stuff doesn't work well with
+  ;; desktop restoring buffers, windows, and frames that are no longer
+  ;; existent...
+  ;; Fancier formatting of preview
+  (setopt register-preview-function #'consult-register-format)
+  ;; Fancier formatting of preview window. Adds thin lines, sorting and hides
+  ;; the mode line of the register preview window. Copied from
+  ;; https://github.com/minad/consult#use-package-example
+  (advice-add 'register-preview :override #'consult-register-window)
 
   ;; Additional `consult-buffer' sources (groups)
   (defvar kb/consult-buffer--dired-source
@@ -266,7 +286,6 @@
   :bind
   (("C-.". embark-act)
    ("C-h B". embark-bindings)
-   ([remap xref-find-definitions] . embark-dwim)
    :map vertico-map
    ("C-.". embark-act)
    ("C->". embark-become)
@@ -463,19 +482,26 @@ with the exception of org-emphasis markers."
     ("M-s t p" . hl-todo-previous)
     ("M-s t o" . hl-todo-occur))
   :custom
-  (hl-todo-include-modes '(prog-mode text-mode))
-  (hl-todo-text-modes '(markdown-mode text-mode))
-  (hl-todo-exclude-modes '(org-mode))
+  (hl-todo-include-modes '(prog-mode conf-mode text-mode))
+  (hl-todo-text-modes '(markdown-mode org-mode text-mode))
+  (hl-todo-exclude-modes nil)
   ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
   ;; hl-todo's punctuation highlighting.
-  (hl-todo-require-punctuation nil)
-  (hl-todo-highlight-punctuation "")
+  (hl-todo-require-punctuation t)
+  (hl-todo-highlight-punctuation ": ")
+  (hl-todo-keyword-faces
+   '(("TODO" . "orange")
+     ("HACK" error bold)
+     ("NOTE" . "cornflower blue")
+     ("REVIEW" . "orchid")
+     ("FIXME" error bold)
+     ("OPTIMIZE" . "SandyBrown")))
   :config
   (with-eval-after-load 'alt-comment-dwim
     ;; Make sure to have all words in `alt-comment-dwim-keywords-coding' and
     ;; `alt-comment-dwim-keywords-writing' in this list, otherwise those words will not
     ;; appear in any calls to `alt-comment-dwim-dwim'.
-    (setq hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
+    (setopt hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
 
 ;;;;; Ansi-color
 ;; Apply ANSI terminal color escape codes.
@@ -528,15 +554,6 @@ with the exception of org-emphasis markers."
   :diminish
   :hook
   ((prog-mode conf-mode help-mode) . rainbow-mode))
-
-;;;;; Highlight-defined
-;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
-;; text which is the symbol of a face.
-(use-package highlight-defined
-  :hook
-  ((prog-mode conf-mode) . highlight-defined-mode)
-  :custom
-  (highlight-defined-face-use-itself t))
 
 ;;;;; Highlight-quoted
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting

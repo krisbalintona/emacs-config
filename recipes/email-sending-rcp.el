@@ -41,7 +41,7 @@
   (message-mail-user-agent t)           ; Use `mail-user-agent'
   (compose-mail-user-agent-warnings t)
   (message-kill-buffer-on-exit t)
-  (message-elide-ellipsis "\n> [... %l lines elided]\n")
+  (message-elide-ellipsis "> [... %l lines elided]\n")
   (message-confirm-send nil)
 
   ;; Headers
@@ -58,14 +58,14 @@
   ;; Signatures
   (message-signature-insert-empty-line t)
   (message-signature "Kind regards,\nKristoffer\n")
-  (message-signature-separator "^-- $")
+  (message-signature-separator "^-- *$")
 
   ;; Citations. See e.g. `message-cite-style-gmail' for the options relevant to
   ;; citations. Importantly, I can set these options buffer locally.
   (message-cite-function 'message-cite-original-without-signature)
   (message-citation-line-function 'message-insert-formatted-citation-line)
-  (message-citation-line-format "On %a, %b %d, %Y at %-I:%M %p %f wrote:\n")
-  (message-cite-reply-position 'traditional)
+  (message-citation-line-format "On %a, %b %d %Y, %N wrote:\n")
+  (message-cite-reply-position 'below)
 
   ;; Replying
   (message-wide-reply-confirm-recipients t)
@@ -170,7 +170,7 @@
     "String meant to begin email signatures.")
   (defvar kb/signature-close "\n#+end_signature"
     "String meant to end email signatures.")
-  (setq message-signature-separator (format "^%s *" (read kb/signature-separator)))
+  (setopt message-signature-separator (format "^%s *$" (read kb/signature-separator)))
   (defvar kb/signature-alist '(("Take care" . "Take care,\nKristoffer")
                                ("In gratitude" . "In gratitude,\nKristoffer")
                                ("Best" . "Best,\nKristoffer")
@@ -897,6 +897,17 @@ A spacer is two newlines inserted after portions inserted by
             (forward-line 1)))
         (display-buffer buffer)))))
   (advice-add 'org-mime-edit-mail-in-org-mode :override #'kb/org-mime-edit-mail-in-org-mode))
+
+;;;; Footnote
+;; Footnotes for `message-mode'
+(use-package footnote
+  :ensure nil
+  :hook (message-mode . footnote-mode)
+  :custom
+  (footnote-mode-line-string "")
+  (footnote-section-tag "Footnotes:")
+  (footnote-spaced-footnotes nil)
+  (footnote-prompt-before-deletion nil))
 
 (provide 'email-sending-rcp)
 ;;; email-sending-rcp.el ends here

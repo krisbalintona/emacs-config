@@ -26,18 +26,50 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Abbrev-mode
+;;; Abbrev
 ;; Automatically correct typed strings (e.g. words). Most useful for correcting
 ;; spelling mistakes as they are made.
 (use-package abbrev
   :ensure nil
+  :diminish
   :custom
-  (abbrev-file-name (expand-file-name "abbrev-mode/abbrev.el" no-littering-var-directory))
+  (abbrev-file-name (expand-file-name "abbrev/abbrev.el" no-littering-var-directory))
   (save-abbrevs 'silently)
   (abbrev-suggest t)
   (abbrev-suggest-hint-threshold 2)
+  :init
+  (defun kb/abbrev-todo-keyword--string ()
+    "Select a todo keyword."
+    ;; OPTIMIZE 2024-10-12: Don't rely on `hl-todo-keyword-faces'
+    (completing-read "Keyword: " (split-string (key-description nil hl-todo-keyword-faces))))
+
+  (defun kb/abbrev-todo-keyword ()
+    "Insert the a todo keyword."
+    (insert (kb/abbrev-todo-keyword--string)))
+
+  (defun kb/abbrev-current-date--string ()
+    "Return the current date formatted."
+    (format-time-string "%F"))
+
+  (defun kb/abbrev-current-date ()
+    "Insert the current date."
+    (insert (kb/abbrev-current-date--string)))
+
+  (defun kb/abbrev-todo-keyword-and-date ()
+    "Insert a todo keyword followed by the current date and colon."
+    (insert (kb/abbrev-todo-keyword--string) " " (kb/abbrev-current-date--string) ":"))
   :config
-  (setq-default abbrev-mode t))
+  ;; Enable the mode globally
+  (setq-default abbrev-mode t)
+
+  ;; Allow abbrevs with a prefix colon, semicolon, or underscore. See:
+  ;; <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
+  (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
+
+  ;; Predefined abbrevs
+  (define-abbrev global-abbrev-table ";t" "" #'kb/abbrev-todo-keyword)
+  (define-abbrev global-abbrev-table ";d" "" #'kb/abbrev-current-date)
+  (define-abbrev global-abbrev-table ";td" "" #'kb/abbrev-todo-keyword-and-date))
 
 ;;; Ispell
 (use-package ispell

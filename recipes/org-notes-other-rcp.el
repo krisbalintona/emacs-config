@@ -219,6 +219,11 @@
   (paw-svg-enable t))
 
 ;;;; PDFs
+;;;;; DocView
+(use-package doc-view
+  :custom
+  (doc-view-resolution 192))
+
 ;;;;; Pdf-tools
 ;;;;;; Itself
 ;; View pdfs and interact with them. Has many dependencies
@@ -244,7 +249,8 @@
   ;;          :repo "aikrahguzar/pdf-tools"
   ;;          :branch "upstream-pdf-roll"
   ;;          :remotes ("upstream" :repo "vedang/pdf-tools"))
-  )
+  :config
+  (add-to-list 'desktop-locals-to-save 'pdf-view-register-alist))
 
 ;;;;;; Pdf-view
 (use-package pdf-view

@@ -27,6 +27,16 @@
 (require 'keybinds-general-rcp)
 (require 'buffers-and-windows-rcp)
 
+;;;; Highlight-function-calls
+(use-package highlight-function-calls
+  :hook ((emacs-lisp-mode lisp-interaction-mode) . highlight-function-calls-mode)
+  :custom
+  (highlight-function-calls-not nil)
+  (highlight-function-calls-macro-calls nil)
+  (highlight-function-calls-special-forms nil)
+  :custom-face
+  (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
+
 ;;;; IELM
 (use-package ielm
   :ensure nil
@@ -60,8 +70,7 @@
 ;;;; Help
 (use-package help
   :ensure nil
-  :bind
-  ("C-h C-k" . describe-keymap)
+  :bind ("C-h C-k" . describe-keymap)
   :custom
   (help-window-select t)
   (help-window-keep-selected t)
@@ -99,6 +108,11 @@
   :chords
   ( :map helpful-mode-map
     ("jj" . helpful-at-point)))
+
+;;;; Apropos
+(use-package apropos
+  :ensure nil
+  :bind ("C-h u" . apropos-user-option))
 
 ;;;; Edebug
 (use-package edebug

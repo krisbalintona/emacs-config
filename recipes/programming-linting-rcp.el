@@ -91,59 +91,7 @@
            :depth -20)
           (flymake-collection-proselint
            :depth -1
-           :disabled t)))
-  :config
-  (require 'flymake-collection-define)
-  ;; Customize the vale checker to my liking
-  (flymake-collection-define-enumerate
-    flymake-collection-vale
-    "My version of `flymake-collection''s vale checker."
-    :title "vale"
-    :pre-let ((vale-exec (executable-find "vale")))
-    :pre-check (unless vale-exec
-                 (error "Cannot find vale executable"))
-    :write-type 'pipe
-    :command `(,vale-exec
-               ,@(let* ((file-name (buffer-file-name flymake-collection-source))
-                        (extension
-                         ;; Sometimes we specify the extension based on the
-                         ;; major mode because we editing buffers not visiting a
-                         ;; file
-                         (cond
-                          ((equal major-mode 'org-mode) "org")
-                          ((derived-mode-p 'markdown-mode) "md")
-                          ((derived-mode-p 'message-mode)
-                           ;; I define a custom ".email" extension in my
-                           ;; .vale.ini so that the rules I want are run during
-                           ;; email composition
-                           "email")
-                          (file-name
-                           (file-name-extension file-name)))))
-                   (when extension
-                     (list (concat "--ext=." extension))))
-               "--output=JSON")
-    :generator
-    (cdaar
-     (flymake-collection-parse-json
-      (buffer-substring-no-properties
-       (point-min) (point-max))))
-    :enumerate-parser
-    (let-alist it
-      `(,flymake-collection-source
-        ,@(with-current-buffer flymake-collection-source
-            (save-excursion
-              (goto-char (point-min))
-              (unless (and (eq .Line 1)
-                           (not (bolp)))
-                (forward-line (1- .Line)))
-              (list (+ (point) (1- (car .Span)))
-                    (+ (point) (cadr .Span)))))
-        ,(pcase .Severity
-           ("suggestion" :note)
-           ("warning" :warning)
-           ((or "error" _) :error))
-        ,(concat (propertize (concat "[" .Check "]") 'face 'flymake-collection-diag-id) " "
-                 .Message)))))
+           :disabled t))))
 
 ;;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use

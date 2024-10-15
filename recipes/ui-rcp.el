@@ -56,7 +56,7 @@
                                (selection . (semibold)))))
   (modus-themes-variable-pitch-ui nil)
   (modus-themes-headings '((t . (semibold))))
-  :init
+  :config
   ;; Taken from (info "(modus-themes) Add support for solaire-mode")
   (defun kb/modus-themes-solaire-faces ()
     (modus-themes-with-colors
@@ -65,7 +65,7 @@
        `(solaire-line-number-face ((,c :inherit solaire-default-face :foreground ,fg-line-number-inactive)))
        `(solaire-hl-line-face ((,c :background ,bg-active)))
        `(solaire-org-hide-face ((,c :background ,bg-dim :foreground ,bg-dim))))))
-  :config
+
   ;; Overrides
   (setopt modus-themes-common-palette-overrides
           `(;; Completion
@@ -100,7 +100,10 @@
             (bg-mode-line-active        "#cab9b2")
             (fg-mode-line-active        "#000000")
             (bg-mode-line-inactive      "#dfd9cf")
-            (fg-mode-line-inactive      "#585858"))
+            (fg-mode-line-inactive      "#585858")
+
+
+            )
           modus-vivendi-palette-overrides
           `(
             ;; I like `modus-*-tinted's mode line colors. I like to keep
@@ -109,7 +112,22 @@
             (bg-mode-line-active        "#484d67")
             (fg-mode-line-active        "#ffffff")
             (bg-mode-line-inactive      "#292d48")
-            (fg-mode-line-inactive      "#969696"))))
+            (fg-mode-line-inactive      "#969696")))
+
+  (defun kb/modus-themes--setup-font-lock (theme)
+    "Set up font-lock faces."
+    ;; As described in (info "(modus-themes) DIY Measure color contrast"), I can
+    ;; check for contrast by making sure the color contrast (relative luminance)
+    ;; between the foreground and background color is at least 7:1.
+    ;;
+    ;; Like:
+    ;;    (modus-themes-contrast (modus-themes-with-colors bg-main) (face-foreground 'font-lock-function-call-face))
+    (cond
+     ((string-match "^modus-operandi" (symbol-name theme))
+      (set-face-attribute 'font-lock-function-call-face nil :foreground "#161BA1"))
+     ((string-match "^modus-vivendi" (symbol-name theme))
+      (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2"))))
+  (add-hook 'enable-theme-functions #'kb/modus-themes--setup-font-lock))
 (use-package solo-jazz-theme :disabled)
 (use-package kaolin-themes  :disabled)
 (when (fboundp 'elpaca-wait)
@@ -211,6 +229,8 @@ If daytime, call `kb/proper-load-theme-light'. If nighttime, call
 (kb/enable-theme-time-of-day)
 ;; Desktop saves certain faces, so we call `kb/enable-theme-time-of-day' after
 ;; reading to ensure faces are consistent with the time of day.
+;; REVIEW 2024-10-14: Look into whether I can circumvent this by modifying
+;; `frameset-filter-alist'
 (add-hook 'desktop-after-read-hook #'kb/enable-theme-time-of-day)
 
 ;;;; Modeline
@@ -266,20 +286,13 @@ If daytime, call `kb/proper-load-theme-light'. If nighttime, call
 
 ;;;;; Diminish
 (use-package diminish
-  :hook (after-init . kb/diminish-setup)
   :init
-  (defun kb/diminish-setup ()
-    "Set up `diminish’ lighters for pre-loaded packages (packages that
-are troublesome)."
-    (with-eval-after-load 'subword
-      (diminish 'subword-mode))
-    (with-eval-after-load 'simple
-      (diminish 'visual-line-mode))
-    ;; (with-eval-after-load (diminish 'hs-minor-mode))
-    (with-eval-after-load 'face-remap
-      (diminish 'buffer-face-mode))
-    (with-eval-after-load 'abbrev
-      (diminish 'abbrev-mode))))
+  (with-eval-after-load 'subword
+    (diminish 'subword-mode))
+  (with-eval-after-load 'simple
+    (diminish 'visual-line-mode))
+  (with-eval-after-load 'face-remap
+    (diminish 'buffer-face-mode)))
 
 ;;;;; Default mode line
 (unless (bound-and-true-p mood-line-mode)
@@ -338,6 +351,14 @@ This version removes delimiters.")
                   (:eval (when (mode-line-window-selected-p)
                            mode-line-misc-info))
                   (:eval kb/mode-line-modes)
+                  (:eval (let ((name (frame-parameter nil 'bufferlo-bookmark-frame-name)))
+                           (when (and name
+                                      (bound-and-true-p bufferlo-mode)
+                                      (mode-line-window-selected-p))
+                             (propertize (concat "@" name)
+                                         'face (list :inherit 'mode-line
+                                                     :slant 'italic
+                                                     :foreground (face-foreground 'font-lock-string-face))))))
                   mode-line-end-spaces))
 
   ;; Add things to `global-mode-string'
@@ -493,6 +514,37 @@ change to if called with ARG."
   (pulsar-face 'pulsar-red)
   (pulsar-delay 0.05)
   (pulsar-iterations 5))
+
+;;;;; Cursory
+(use-package cursory
+  :hook ((prog-mode . (lambda () (cursory-set-preset 'code :local)))
+         ((org-mode markdown-mode) . (lambda () (cursory-set-preset 'prose :local))))
+  :custom
+  (cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))
+  (cursory-presets
+   '((code
+      :cursor-type box
+      :cursor-in-non-selected-windows hollow
+      :blink-cursor-mode 1)
+     (prose
+      :cursor-type (bar . 2)
+      :blink-cursor-mode -1
+      :cursor-in-non-selected-windows (hbar . 3))
+     (default)
+     (t                                 ; The fallback values
+      :cursor-type box
+      :cursor-in-non-selected-windows hollow
+      :blink-cursor-mode 1
+      :blink-cursor-blinks 10
+      :blink-cursor-delay 5
+      :blink-cursor-interval 0.5)))
+  :config
+  ;; Set last preset or fall back to desired style from `cursory-presets'.
+  (when (file-exists-p cursory-latest-state-file)
+    (cursory-set-preset (or (cursory-restore-latest-preset) 'default)))
+
+  ;; Persist latest preset used across Emacs sessions
+  (cursory-mode 1))
 
 (provide 'ui-rcp)
 ;;; ui-rcp.el ends here

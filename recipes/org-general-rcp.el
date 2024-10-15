@@ -31,12 +31,10 @@
   :hook
   ((org-mode . variable-pitch-mode)
    (org-mode . visual-line-mode)
-   (org-mode . (lambda () (setq-local line-spacing 0.2))))
-  :bind
-  (("C-M-s-s" . org-store-link)
-   :map org-mode-map
-   ("C-M-S-s" . org-id-store-link)
-   ("C-M-<up>" . org-up-element))
+   (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 120))))
+  :bind (("C-M-s-s" . org-store-link)
+         :map org-mode-map
+         ("C-M-<up>" . org-up-element))
   :bind
   ( :map kb/note-keys
     ("c" . org-capture))
@@ -249,7 +247,7 @@ have `org-warning' face."
   (org-refile-targets
    `((,kb/all-agenda-dir-files . (:level . 0))
      (,kb/all-agenda-dir-files . (:tag . "project"))
-     (,kb/agenda-main-todo-file . (:maxlevel . 1))))
+     (,kb/agenda-main-todo-file . (:maxlevel . 3))))
   ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
   ;; want to refile to a non-todo heading in the current file?
   (org-refile-target-verify-function    ; Only let not done todos be refile targets
@@ -526,7 +524,7 @@ have `org-warning' face."
      ("DONE" :inherit (bold org-done org-modern-todo))
      ("CANCELED" :inherit (error org-modern-todo))))
 
-  (org-modern-label-border 'auto)
+  (org-modern-label-border 3)
   (org-modern-tag t)
   ;; See my value for `org-tag-faces'
   (org-modern-tag-faces

@@ -99,14 +99,13 @@ With a prefix argument, show NLINES of context."
   (xref-search-program 'ripgrep)
   (xref-history-storage 'xref-window-local-history) ; Per-window history of `xref-go-*'
   :config
-  ;; We set this to nil because the fallback backend, `etags--xref-backend',
-  ;; prompts the user for an etags table -- this is undesirable for me.
+  ;; We remove the fallback backend, `etags--xref-backend', which prompts the
+  ;; user for an etags table -- this is undesirable for me.
   (setq-default xref-backend-functions nil)
-
-  (with-eval-after-load 'consult
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-definitions-function #'consult-xref
-          xref-show-xrefs-function #'consult-xref)))
+  ;; Then add `elisp--xref-backend' to the global value of
+  ;; `xref-backend-functions', which means it is run when the local value ends
+  ;; with `t'. See (info "(elisp) Running Hooks") for an explanation.
+  (add-hook 'xref-backend-functions #'elisp--xref-backend))
 
 ;;;; Magit
 ;;;;; Itself
@@ -121,9 +120,11 @@ With a prefix argument, show NLINES of context."
 
 (use-package magit
   :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
-  :bind
-  ( :map magit-mode-map
-    ("C-<tab>". magit-section-toggle-children))
+  :bind (("C-x g" . magit)
+         :map magit-mode-map
+         ("C-<tab>". magit-section-toggle-children)
+         :map git-commit-mode-map
+         ("<tab>" . completion-at-point))
   :custom
   ;; How opened magit buffers (e.g. commit) are shown
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
@@ -267,6 +268,7 @@ With a prefix argument, show NLINES of context."
 ;; `consult-gh-forge').
 (use-package consult-gh
   :ensure-system-package (gh . github-cli)
+  :bind ("C-c g" . consult-gh)
   :custom
   (consult-gh-default-interactive-command #'consult-gh-transient)
 
@@ -331,6 +333,8 @@ With a prefix argument, show NLINES of context."
 (use-package vc
   :ensure nil
   :hook (vc-git-log-edit-mode . auto-fill-mode)
+  :bind ( :map vc-git-log-edit-mode-map
+          ("<tab>" . completion-at-point))
   :custom
   (vc-command-messages 'log)   ; NOTE 2024-09-19: Can be useful in the future...
   (vc-follow-symlinks t)
@@ -390,9 +394,8 @@ With a prefix argument, show NLINES of context."
 ;;;;; Log-edit
 (use-package log-edit
   :ensure nil
-  :bind
-  ( :map log-edit-mode-map
-    ([remap log-edit-comment-search-backward]. consult-history))
+  :bind ( :map log-edit-mode-map
+          ([remap log-edit-comment-search-backward]. consult-history))
   :custom
   (log-edit-headers-alist
    '(("Summary" . log-edit-summary)
@@ -520,7 +523,14 @@ With a prefix argument, show NLINES of context."
   (diff-hl-side 'right)
   (diff-hl-flydiff-delay 1)             ; See `diff-hl-flydiff-mode'
   :config
-  (global-diff-hl-show-hunk-mouse-mode 1))
+  (global-diff-hl-show-hunk-mouse-mode 1)
+
+  ;; Ensure buffer is widened before calling `diff-hl-stage-dwim' because the
+  ;; buffer cannot be narrowed for it to succeed
+  (advice-add 'diff-hl-stage-dwim :around (lambda (orig-fun &rest args)
+                                            (save-restriction
+                                              (widen)
+                                              (apply orig-fun args)))))
 
 ;;;;; Git-timemachine
 ;; Enable in current buffer to iterate through git revision history

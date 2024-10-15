@@ -91,6 +91,8 @@ act upon that region instead."
            (apheleia--get-formatters))    ; If available apheleia formatter
       (let* ((apheleia-mode t))           ; Save silently
         (apheleia-format-after-save)))
+     ((derived-mode-p 'message-mode)
+      (delete-trailing-whitespace))
      ((derived-mode-p '(prog-mode conf-mode))
       (kb/format-buffer-indentation--fill-column beg end))
      (t

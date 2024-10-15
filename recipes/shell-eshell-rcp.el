@@ -206,9 +206,26 @@ Info node `(eshell)Top'."
 ;;;; Eshell-z
 ;; Use z in Eshell
 (use-package eshell-z
+  :after eshell
+  :demand
   :custom
   (eshell-z-freq-dir-hash-table-file-name (getenv "Z_DATA"))
-  (eshell-z-exclude-dirs nil))
+  (eshell-z-exclude-dirs nil)
+  :init
+  (exec-path-from-shell-copy-env "Z_DATA"))
+
+;;;; Eshell-atuin
+(use-package eshell-atuin
+  :demand t
+  :after eshell
+  :custom
+  (eshell-atuin-save-duration t)
+  (eshell-atuin-filter-mode 'global)
+  (eshell-atuin-search-options '("--reverse"))
+  (eshell-atuin-search-fields '(time command duration directory))
+  (eshell-atuin-history-format "%-110c (in %i)")
+  :config
+  (eshell-atuin-mode 1))
 
 (provide 'shell-eshell-rcp)
 ;;; shell-eshell-rcp.el ends here

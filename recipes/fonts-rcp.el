@@ -132,8 +132,12 @@
 (use-package fontaine
   :demand
   :custom
+  (fontaine-latest-state-file (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld"))
   (fontaine-presets
-   '((default)                          ; Use fallback values
+   '((iosevka-variant
+      :default-family "Iosevka SS11"
+      :fixed-pitch-family "Iosevka")
+     (default)                          ; Use fallback values
      ;; Below are the shared fallback properties. I leave them there also as
      ;; reference for all possible properties
      (t
@@ -142,7 +146,7 @@
       :default-weight regular
       :default-slant normal
       :default-width normal
-      :default-height 170
+      :default-height 165
 
       ;; Alternatives
       ;; "Hack Nerd Font Mono"
@@ -222,7 +226,8 @@
       :line-spacing nil)))
   :config
   ;; Set the last preset or fall back to desired style from `fontaine-presets'
-  (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default))
+  (when (file-exists-p fontaine-latest-state-file)
+    (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default)))
 
   ;; Persist the latest font preset when closing/starting Emacs and while
   ;; switching between themes.
