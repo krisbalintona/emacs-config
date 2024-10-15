@@ -146,17 +146,17 @@
 
 ;;;;; Hammy
 (use-package hammy
-  :bind
-  ( :map kb/open-keys
-    ("h s" . hammy-start)
-    ("h n" . hammy-next)
-    ("h S" . hammy-stop)
-    ("h r" . hammy-reset)
-    ("h t" . hammy-toggle)
-    ("h a" . hammy-adjust)
-    ("h v" . hammy-view-log)
-    ("h R" . hammy-status)
-    ("h I" . hammy-start-org-clock-in))
+  :bind ( :map kb/open-keys
+          ("h h" . kb/hammy-dwim)
+          ("h S" . hammy-start)
+          ("h n" . hammy-next)
+          ("h s" . hammy-stop)
+          ("h r" . hammy-reset)
+          ("h t" . hammy-toggle)
+          ("h a" . hammy-adjust)
+          ("h v" . hammy-view-log)
+          ("h R" . hammy-status)
+          ("h I" . hammy-start-org-clock-in))
   :custom
   ;; TODO 2024-09-25: Have this found more locally. When I do, also change
   ;; `tmr-sound' to this file
@@ -216,6 +216,14 @@
                       (concat ":" hammy-mode-lighter-suffix-inactive))
                   " ")))))
   (advice-add 'hammy-mode-lighter :override #'kb/hammy-mode-lighter)
+
+  ;; Dwim command
+  (defun kb/hammy-dwim ()
+    "DWIM with hammy."
+    (interactive)
+    (if hammy-active
+        (call-interactively 'hammy-next)
+      (call-interactively 'hammy-start)))
 
   ;; Hammy definitions
   (defun kb/hammy-play-sound ()
