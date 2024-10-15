@@ -352,17 +352,20 @@ This version removes delimiters.")
                                     (mode-line-window-selected-p)
                                     (not (derived-mode-p 'pdf-view-mode)))
                            (mlscroll-mode-line)))
-                  " "
-                  (:eval (when (and (bound-and-true-p bufferlo-mode)
-                                    (mode-line-window-selected-p))
-                           (propertize (or (frame-parameter nil 'bufferlo-bookmark-frame-name) "")
-                                       'face '(:slant italic :inherit font-lock-string-face))))
                   mode-line-format-right-align
                   mode-line-process
                   (flymake-mode flymake-mode-line-format) " "
                   (:eval (when (mode-line-window-selected-p)
                            mode-line-misc-info))
                   (:eval kb/mode-line-modes)
+                  (:eval (let ((name (frame-parameter nil 'bufferlo-bookmark-frame-name)))
+                           (when (and name
+                                      (bound-and-true-p bufferlo-mode)
+                                      (mode-line-window-selected-p))
+                             (propertize (concat "@" name)
+                                         'face (list :inherit 'mode-line
+                                                     :slant 'italic
+                                                     :foreground (face-foreground 'font-lock-string-face))))))
                   mode-line-end-spaces))
 
   ;; Add things to `global-mode-string'
