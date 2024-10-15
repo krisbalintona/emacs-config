@@ -479,7 +479,7 @@ Tagging is done by `kb/notmuch-show-tag-thread'."
   (setopt display-time-use-mail-icon t
           display-time-mail-function
           (lambda ()
-            (let* ((command (format "notmuch search tag:inbox and tag:unread and not tag:list | wc -l"))
+            (let* ((command (format "notmuch search tag:inbox and tag:unread and not tag:list and not tag:sub | wc -l"))
                    (count (string-to-number (shell-command-to-string command))))
               (< 0 count)))
           display-time-string-forms
