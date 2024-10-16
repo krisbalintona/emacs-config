@@ -818,12 +818,14 @@ Determine if WINDOW is splittable."
 
 ;;;; Beframe
 (use-package beframe
+  :demand t
   :bind-keymap ("C-c B" . beframe-prefix-map)
   :custom
   (beframe-functions-in-frames nil)
   (beframe-rename-function #'beframe-rename-frame)
-  (beframe-mode 1)
   :config
+  (beframe-mode 1)
+
   ;; `consult-buffer' integration. Taken from (info "(beframe) Integration with Consult")
   (defvar consult-buffer-sources)
   (declare-function consult--buffer-state "consult")
