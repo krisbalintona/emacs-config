@@ -218,6 +218,8 @@ Info node `(eshell)Top'."
 (use-package eshell-atuin
   :demand t
   :after eshell
+  :bind* ( :map eshell-mode-map
+           ([remap eshell-previous-matching-input] . eshell-atuin-history))
   :custom
   (eshell-atuin-save-duration t)
   (eshell-atuin-filter-mode 'global)
