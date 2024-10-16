@@ -93,7 +93,7 @@ Intended for `eldoc-documentation-functions'."
   (citar-bibliography kb/bib-files)
   (citar-notes-paths (list kb/notes-dir))
   (citar-open-entry-function #'citar-open-entry-in-file)
-  (citar-default-action 'kb/citar-open-pdf-in-zotero)
+  (citar-default-action #'citar-open-files)
   :config
   ;; Immediately set citation prefix and suffix and enable `typo-mode'
   ;; temporarily while inserting
@@ -230,12 +230,9 @@ functions from `citar'."
 ;;;; Citar-embark
 (use-package citar-embark
   :diminish
-  :after embark
-  :demand
-  :bind
-  (("C-c b z" . kb/citar-open-pdfs-in-zotero)
-   :map citar-embark-citation-map
-   ("z" . kb/citar-open-pdfs-in-zotero))
+  :bind (("C-c b z" . kb/citar-open-pdfs-in-zotero)
+         :map citar-embark-citation-map
+         ("z" . kb/citar-open-pdfs-in-zotero))
   :custom
   (citar-at-point-function 'embark-act)
   :config
