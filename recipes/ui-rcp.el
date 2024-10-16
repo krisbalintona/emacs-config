@@ -351,14 +351,21 @@ This version removes delimiters.")
                   (:eval (when (mode-line-window-selected-p)
                            mode-line-misc-info))
                   (:eval kb/mode-line-modes)
-                  (:eval (let ((name (frame-parameter nil 'bufferlo-bookmark-frame-name)))
-                           (when (and name
-                                      (bound-and-true-p bufferlo-mode)
-                                      (mode-line-window-selected-p))
-                             (propertize (concat "@" name)
-                                         'face (list :inherit 'mode-line
-                                                     :slant 'italic
-                                                     :foreground (face-foreground 'font-lock-string-face))))))
+                  ;; Beframe
+                  (:eval (when (and (bound-and-true-p beframe-mode)
+                                    (mode-line-window-selected-p))
+                           (propertize (concat "@" (frame-parameter nil 'name))
+                                       'face (list :inherit 'mode-line
+                                                   :slant 'italic
+                                                   :foreground (face-foreground 'font-lock-string-face)))))
+                  ;; Bufferlo
+                  (:eval (when-let ((name (frame-parameter nil 'bufferlo-bookmark-frame-name))
+                                    (bound-and-true-p bufferlo-mode)
+                                    (mode-line-window-selected-p))
+                           (propertize (concat "@" name)
+                                       'face (list :inherit 'mode-line
+                                                   :slant 'italic
+                                                   :foreground (face-foreground 'font-lock-string-face)))))
                   mode-line-end-spaces))
 
   ;; Add things to `global-mode-string'
