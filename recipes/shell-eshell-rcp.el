@@ -223,7 +223,7 @@ Info node `(eshell)Top'."
   :custom
   (eshell-atuin-save-duration t)
   (eshell-atuin-filter-mode 'global)
-  (eshell-atuin-search-options '("--reverse"))
+  (eshell-atuin-search-options '("--exit" "0"))
   (eshell-atuin-search-fields '(time command duration directory))
   (eshell-atuin-history-format "%-110c (in %i)")
   :config
