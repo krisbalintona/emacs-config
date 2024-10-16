@@ -619,5 +619,10 @@ with the exception of org-emphasis markers."
   :config
   (setq-default lorem-ipsum-list-bullet "- "))
 
+;;;;; Duplicate-dwim binding
+(bind-key "C-x ;" #'duplicate-dwim)
+(setopt duplicate-line-final-position -1
+        duplicate-region-final-position 1)
+
 (provide 'programming-general-rcp)
 ;;; programming-general-rcp.el ends here
