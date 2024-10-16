@@ -614,8 +614,20 @@ timestamp)."
      (mark " " (name 16 -1) " " filename))))
 
 ;;;;; Burly
+;; FIXME 2024-10-16: Still isn't working. I think it's a mysterious issue with
+;; my config somewhere? See https://github.com/alphapapa/burly.el/issues/28
 (use-package burly
-  :hook (on-switch-buffer . burly-tabs-mode))
+  :commands kb/burly-bookmark-frame
+  :hook (on-switch-buffer . burly-tabs-mode)
+  :config
+  (defun kb/burly-bookmark-frame (name)
+    "Bookmark the current frame as NAME."
+    (interactive
+     (list (completing-read "Save Burly bookmark: " (burly-bookmark-names)
+                            nil nil burly-bookmark-prefix)))
+    (let ((record (list (cons 'url (burly-frames-url (list (selected-frame))))
+                        (cons 'handler #'burly-bookmark-handler))))
+      (bookmark-store name record nil))))
 
 ;;;;; Perfect-margin
 ;; Center the window contents via setting the margins
