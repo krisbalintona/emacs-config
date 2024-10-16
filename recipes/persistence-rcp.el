@@ -122,6 +122,7 @@
                             indicate-empty-lines
                             show-trailing-whitespace))
 
+  (desktop-restore-eager 5)
   (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)
   (desktop-restore-in-current-display nil)
