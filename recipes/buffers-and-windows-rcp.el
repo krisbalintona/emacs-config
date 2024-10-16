@@ -78,9 +78,9 @@
 (use-package window
   :ensure nil
   :bind* ("M-o" . other-window)
-  :bind (([remap other-window] . kb/other-window-alternating)
+  :bind (([remap other-window] . kb/other-window-mru)
          :repeat-map other-window-repeat-map
-         ("o" . kb/other-window-alternating))
+         ("o" . kb/other-window-mru))
   :custom
   (split-width-threshold (ceiling (/ (frame-width) 2.0)))
   (split-height-threshold 80)
@@ -197,17 +197,24 @@
       (display-buffer-reuse-window display-buffer-pop-up-window)
       (post-command-select-window . t))))
   :config
-  ;; Fixed version from
-  ;; https://karthinks.com/software/emacs-window-management-almanac/#other-window-alternating
-  (defalias 'kb/other-window-alternating
-    (let ((direction 1))
-      (lambda (&optional arg)
-        "Call `other-window', switching directions each time."
-        (interactive "p")
-        (if (equal last-command 'kb/other-window-alternating)
-            (other-window (* direction (or arg 1)))
-          (setq direction (- direction))
-          (other-window (* direction (or arg 1))))))))
+  ;; Modified version of "other-window-mru" taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#the-back-and-forth-method
+  ;; that accepts a prefix arg
+  (defun kb/other-window-mru (&optional arg)
+    "Select the most recently used window on this frame."
+    (interactive "p")
+    (when-let ((windows-by-mru              ; Used `get-mru-window' as a reference
+                (sort (delq nil
+                            (mapcar
+                             (lambda (win)
+                               (when (and (not (window-dedicated-p win))
+                                          (not (eq win (selected-window)))
+                                          (not (window-no-other-p win)))
+                                 (cons (window-use-time win) win)))
+                             (window-list-1 nil 'nomini nil)))
+                      :lessp #'>
+                      :key #'car)))
+      (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
 
 ;; Below selected
 (with-eval-after-load 'xref
@@ -799,7 +806,6 @@ Determine if WINDOW is splittable."
 
 ;;;; Beframe
 (use-package beframe
-  :disabled t
   :bind-keymap ("C-c B" . beframe-prefix-map)
   :custom
   (beframe-functions-in-frames nil)
@@ -834,6 +840,7 @@ Determine if WINDOW is splittable."
 
 ;;;; Bufferlo
 (use-package bufferlo
+  :disabled t
   :demand t
   :config
   (bufferlo-mode 1)
