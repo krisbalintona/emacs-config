@@ -125,8 +125,6 @@
 (use-package consult
   :bind
   (;; Remaps
-   ([remap switch-to-buffer] . consult-buffer)
-   ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
    ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap repeat-complex-command] . consult-complex-command)
@@ -135,7 +133,6 @@
    ([remap recentf-open-files] . consult-recent-file)
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
    ([remap Info-search] . consult-info)
-   ([remap project-switch-to-buffer] . consult-project-buffer)
    ([remap point-to-register] . consult-register-store)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
