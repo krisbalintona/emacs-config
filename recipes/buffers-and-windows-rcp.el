@@ -207,8 +207,7 @@
                 (sort (delq nil
                             (mapcar
                              (lambda (win)
-                               (when (and (not (window-dedicated-p win))
-                                          (not (eq win (selected-window)))
+                               (when (and (not (eq win (selected-window)))
                                           (not (window-no-other-p win)))
                                  (cons (window-use-time win) win)))
                              (window-list-1 nil 'nomini nil)))
