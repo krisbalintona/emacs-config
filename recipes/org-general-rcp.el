@@ -236,7 +236,7 @@ have `org-warning' face."
   :custom
   (org-clone-delete-id t)
   (org-id-method 'ts)
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+  (org-id-link-to-org-use-id 'use-existing))
 
 ;;;;; Org-refile
 (use-package org-refile
