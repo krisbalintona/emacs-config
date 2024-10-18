@@ -86,7 +86,10 @@
    (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
            ;; Don't save files from other Emacs repos because sometimes they
            ;; have local variables that mess with desktop's loading of files
-           (literal (expand-file-name "emacs-repos/" "~")))))
+           (literal (expand-file-name "emacs-repos/" "~"))
+           ;; Don't want to open my large org-agenda files which I'll open
+           ;; eventually anyway
+           (literal kb/agenda-dir))))
   (desktop-globals-to-save '(desktop-missing-file-warning
                              tags-file-name
                              tags-table-list
@@ -122,6 +125,7 @@
                             indicate-empty-lines
                             show-trailing-whitespace))
 
+  (desktop-restore-eager 5)
   (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)
   (desktop-restore-in-current-display nil)

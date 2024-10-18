@@ -218,10 +218,12 @@ Info node `(eshell)Top'."
 (use-package eshell-atuin
   :demand t
   :after eshell
+  :bind* ( :map eshell-mode-map
+           ([remap eshell-previous-matching-input] . eshell-atuin-history))
   :custom
   (eshell-atuin-save-duration t)
   (eshell-atuin-filter-mode 'global)
-  (eshell-atuin-search-options '("--reverse"))
+  (eshell-atuin-search-options '("--exit" "0"))
   (eshell-atuin-search-fields '(time command duration directory))
   (eshell-atuin-history-format "%-110c (in %i)")
   :config

@@ -32,6 +32,7 @@
 (use-package denote
   :vc (:url "https://github.com/protesilaos/denote.git"
             :rev :newest)
+  :pin gnu-elpa-devel
   :autoload (denote-directory-files kb/denote-auto-rename)
   :commands (denote denote-open-or-create)
   :hook ((dired-mode . denote-dired-mode)
@@ -103,8 +104,6 @@
   ;; Buffer name
   (denote-rename-buffer-format "%s %t%b")
   (denote-rename-buffer-backlinks-indicator " ⟷")
-  :preface
-  (add-to-list 'package-pinned-packages '(denote . "gnu-elpa-devel"))
   :config
   (denote-rename-buffer-mode 1)
   (denote-menu-bar-mode 1)
@@ -551,6 +550,8 @@ replacement."
 
 ;;;; Citar-denote
 (use-package citar-denote
+  :demand t
+  :after citar
   :diminish
   :bind (("C-c b c" . citar-create-note)
          :map kb/note-keys
@@ -572,6 +573,20 @@ replacement."
   :config
   (citar-denote-mode 1)
 
+  (setq citar-denote-file-types
+        `((org
+           :reference-format "#+reference: %s\n" ; Keep single space
+           :reference-regex "^#\\+reference\\s-*:")
+          (markdown-yaml
+           :reference-format "reference:  %s\n"
+           :reference-regex "^reference\\s-*:")
+          (markdown-toml
+           :reference-format "reference  = %s\n"
+           :reference-regex "^reference\\s-*=")
+          (text
+           :reference-format "reference:  %s\n"
+           :reference-regex "^reference\\s-*:")))
+
   ;; Keep the reference keyword after Denote's identifier keyword
   (defun kb/citar-denote--add-reference (citekey file-type)
     "Add reference with CITEKEY in front matter of the file with FILE-TYPE.
@@ -585,21 +600,7 @@ replacement."
         (forward-line -2))
       (insert
        (format (citar-denote--reference-format file-type) citekey))))
-  (advice-add 'citar-denote--add-reference :override #'kb/citar-denote--add-reference)
-
-  (setq citar-denote-file-types
-        `((org
-           :reference-format "#+reference: %s\n" ; Keep single space
-           :reference-regex "^#\\+reference\\s-*:")
-          (markdown-yaml
-           :reference-format "reference:  %s\n"
-           :reference-regex "^reference\\s-*:")
-          (markdown-toml
-           :reference-format "reference  = %s\n"
-           :reference-regex "^reference\\s-*=")
-          (text
-           :reference-format "reference:  %s\n"
-           :reference-regex "^reference\\s-*:"))))
+  (advice-add 'citar-denote--add-reference :override #'kb/citar-denote--add-reference))
 
 ;;;; Darkroom
 (use-package darkroom

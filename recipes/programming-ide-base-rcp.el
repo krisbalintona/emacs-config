@@ -148,6 +148,7 @@ Non-nil only if installation completed without any errors."
 ;;;;; Dash-docs-completing-read
 ;; My own interface for accessing docsets via `completing-read'.
 (use-package dash-docs-completing-read
+  :disabled                   ; REVIEW 2024-10-17: Check what I dod this with...
   :ensure nil
   :after dash-docs
   :bind

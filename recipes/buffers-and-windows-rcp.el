@@ -78,9 +78,9 @@
 (use-package window
   :ensure nil
   :bind* ("M-o" . other-window)
-  :bind (([remap other-window] . kb/other-window-alternating)
+  :bind (([remap other-window] . kb/other-window-mru)
          :repeat-map other-window-repeat-map
-         ("o" . kb/other-window-alternating))
+         ("o" . kb/other-window-mru))
   :custom
   (split-width-threshold (ceiling (/ (frame-width) 2.0)))
   (split-height-threshold 80)
@@ -197,17 +197,23 @@
       (display-buffer-reuse-window display-buffer-pop-up-window)
       (post-command-select-window . t))))
   :config
-  ;; Fixed version from
-  ;; https://karthinks.com/software/emacs-window-management-almanac/#other-window-alternating
-  (defalias 'kb/other-window-alternating
-    (let ((direction 1))
-      (lambda (&optional arg)
-        "Call `other-window', switching directions each time."
-        (interactive "p")
-        (if (equal last-command 'kb/other-window-alternating)
-            (other-window (* direction (or arg 1)))
-          (setq direction (- direction))
-          (other-window (* direction (or arg 1))))))))
+  ;; Modified version of "other-window-mru" taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#the-back-and-forth-method
+  ;; that accepts a prefix arg
+  (defun kb/other-window-mru (&optional arg)
+    "Select the most recently used window on this frame."
+    (interactive "p")
+    (when-let ((windows-by-mru              ; Used `get-mru-window' as a reference
+                (sort (delq nil
+                            (mapcar
+                             (lambda (win)
+                               (when (and (not (eq win (selected-window)))
+                                          (not (window-no-other-p win)))
+                                 (cons (window-use-time win) win)))
+                             (window-list-1 nil 'nomini nil)))
+                      :lessp #'>
+                      :key #'car)))
+      (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
 
 ;; Below selected
 (with-eval-after-load 'xref
@@ -237,7 +243,7 @@
     ("M-\\" . eyebrowse-last-window-config)
     ("M-[" . eyebrowse-prev-window-config)
     ("M-]" . eyebrowse-next-window-config)
-    ((concat eyebrowse-keymap-prefix "d") . eyebrowse-close-window-config))
+    ("C-c M-w d" . eyebrowse-close-window-config))
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c M-w"))
@@ -607,8 +613,20 @@ timestamp)."
      (mark " " (name 16 -1) " " filename))))
 
 ;;;;; Burly
+;; FIXME 2024-10-16: Still isn't working. I think it's a mysterious issue with
+;; my config somewhere? See https://github.com/alphapapa/burly.el/issues/28
 (use-package burly
-  :hook (on-switch-buffer . burly-tabs-mode))
+  :commands kb/burly-bookmark-frame
+  :hook (on-switch-buffer . burly-tabs-mode)
+  :config
+  (defun kb/burly-bookmark-frame (name)
+    "Bookmark the current frame as NAME."
+    (interactive
+     (list (completing-read "Save Burly bookmark: " (burly-bookmark-names)
+                            nil nil burly-bookmark-prefix)))
+    (let ((record (list (cons 'url (burly-frames-url (list (selected-frame))))
+                        (cons 'handler #'burly-bookmark-handler))))
+      (bookmark-store name record nil))))
 
 ;;;;; Perfect-margin
 ;; Center the window contents via setting the margins
@@ -781,6 +799,7 @@ Determine if WINDOW is splittable."
 
 ;;;; Activities
 (use-package activities
+  :pin gnu-elpa-devel
   :bind
   (("C-c a d" . activities-define)
    ("C-c a a" . activities-resume)
@@ -790,8 +809,6 @@ Determine if WINDOW is splittable."
    ("C-c a s" . activities-suspend)
    ("C-c a k" . activities-kill)
    ("C-c a l" . activities-list))
-  :preface
-  (add-to-list 'package-pinned-packages '(activities . "gnu-elpa-devel"))
   :custom
   (activities-kill-buffers t)
   :config
@@ -800,13 +817,34 @@ Determine if WINDOW is splittable."
 
 ;;;; Beframe
 (use-package beframe
-  :disabled t
+  :demand t
   :bind-keymap ("C-c B" . beframe-prefix-map)
   :custom
   (beframe-functions-in-frames nil)
-  (beframe-rename-function #'beframe-rename-frame)
-  (beframe-mode 1)
+  (beframe-rename-function #'kb/beframe-rename-frame-by-count)
   :config
+  (beframe-mode 1)
+
+  (defun kb/beframe-rename-frame-by-count (frame &optional name)
+    "Rename FRAME.
+Meant to be the value of `beframe-rename-function'."
+    (interactive
+     (let ((select-frame (beframe--frame-prompt :force-even-if-one)))
+       (list
+        (beframe--frame-object select-frame)
+        (when current-prefix-arg
+          (read-string
+           (format "Rename the frame now called `%s' to: "
+                   select-frame)
+           nil 'beframe--rename-frame-history select-frame)))))
+    (modify-frame-parameters
+     frame
+     (list (cons 'name
+                 (or name (number-to-string
+                           (1+ (cl-position (selected-frame)
+                                            (make-frame-names-alist) :key #'cdr :test #'eq))))))))
+  (funcall 'kb/beframe-rename-frame-by-count (selected-frame))
+
   ;; `consult-buffer' integration. Taken from (info "(beframe) Integration with Consult")
   (defvar consult-buffer-sources)
   (declare-function consult--buffer-state "consult")
@@ -835,6 +873,7 @@ Determine if WINDOW is splittable."
 
 ;;;; Bufferlo
 (use-package bufferlo
+  :disabled t
   :demand t
   :config
   (bufferlo-mode 1)

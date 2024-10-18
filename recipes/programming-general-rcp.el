@@ -124,9 +124,8 @@
 ;; commands.
 (use-package consult
   :bind
-  (;; Remaps
-   ([remap switch-to-buffer] . consult-buffer)
-   ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
+  (("C-c B" . consult-buffer)
+   ;; Remaps
    ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap repeat-complex-command] . consult-complex-command)
@@ -135,7 +134,6 @@
    ([remap recentf-open-files] . consult-recent-file)
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
    ([remap Info-search] . consult-info)
-   ([remap project-switch-to-buffer] . consult-project-buffer)
    ([remap point-to-register] . consult-register-store)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
@@ -204,14 +202,15 @@
 
   ;; Customize consult commands
   (consult-customize
-   consult-buffer :preview-key "C-M-;"
-   consult-buffer-other-window :preview-key "C-M-;"
-   consult-grep :preview-key "C-M-;"
-   consult-git-grep :preview-key "C-M-;"
-   consult-ripgrep :preview-key "C-M-;"
-   consult-recent-file :preview-key "C-M-;" ; Make sure this is after the definition of `consult-recent-file'
-   consult-find :preview-key "C-M-;"
-   consult-bookmark :preview-key "C-M-;")
+   consult-buffer
+   consult-buffer-other-window
+   consult-grep
+   consult-git-grep
+   consult-ripgrep
+   consult-recent-file ; Make sure this is after the definition of `consult-recent-file'
+   consult-find
+   consult-bookmark :preview-key "C-M-;"
+   consult-buffer :group nil)
 
   ;; Use consult UI with xref
   (with-eval-after-load 'xref
@@ -618,6 +617,11 @@ with the exception of org-emphasis markers."
 (use-package lorem-ipsum
   :config
   (setq-default lorem-ipsum-list-bullet "- "))
+
+;;;;; Duplicate-dwim binding
+(bind-key "C-x ;" #'duplicate-dwim)
+(setopt duplicate-line-final-position -1
+        duplicate-region-final-position 1)
 
 (provide 'programming-general-rcp)
 ;;; programming-general-rcp.el ends here

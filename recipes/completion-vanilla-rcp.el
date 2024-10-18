@@ -33,6 +33,7 @@
 ;;;; Vertico
 ;;;;; Itself
 (use-package vertico
+  :pin gnu-elpa-devel
   :bind
   (("C-M-s-." . vertico-repeat)
    :map vertico-map
@@ -45,8 +46,6 @@
   (vertico-count 13)
   (vertico-resize 'grow-only)
   (vertico-cycle nil)
-  :preface
-  (add-to-list 'package-pinned-packages '(vertico . "gnu-elpa-devel"))
   :config
   ;; Special for `org-agenda-filter' and `org-tags-view'. See
   ;; https://github.com/minad/vertico?tab=readme-ov-file#org-agenda-filter-and-org-tags-view
@@ -113,7 +112,8 @@
    ;; I use jinx now, but I think it's better to not apply a grid layout to it
    ;; since its use of vertico-groups is useful
    '(("flyspell-correct-*" grid (vertico-grid-annotate . 20))
-     (pdf-view-goto-label (vertico-sort-function . nil))))
+     (pdf-view-goto-label (vertico-sort-function . nil))
+     (".+-history" (vertico-sort-function . nil))))
   :config
   (vertico-multiform-mode 1))
 
@@ -139,6 +139,7 @@
 
 ;;;;; Vertico-prescient
 (use-package vertico-prescient
+  :demand
   :after (prescient vertico)
   :custom
   (vertico-prescient-completion-styles '(prescient flex))
@@ -178,7 +179,9 @@
    '(;; Include `partial-completion' to enable wildcards and partial paths.
      (file (styles . (orderless partial-completion flex)))
      ;; Eglot forces `flex' by default.
-     (eglot (styles orderless flex))))
+     (eglot (styles orderless flex))
+     ;; For citar
+     (citar-candidate (styles basic substring))))
   (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
   :config
   ;; Taken from Doom

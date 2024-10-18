@@ -282,7 +282,6 @@
                                :duration (climb "5 minutes" "40 minutes"
                                                 :descend t :step "5 minutes")
                                :before (do (announce "Work time!"))
-                               :after (do (kb/hammy-play-sound))
                                :advance (do (announce "Work time is over!")
                                             (notify "Work time is over!")
                                           (remind "5 minutes"
@@ -299,8 +298,7 @@
                                                  (setf (alist-get 'unused-break etc) nil))
                                                duration))
                                :before (do (announce "Rest time!"))
-                               :after (do (kb/hammy-play-sound)
-                                          (let* ((elapsed
+                               :after (do (let* ((elapsed
                                                   (float-time
                                                    (time-subtract (current-time) current-interval-start-time)))
                                                  (unused (- current-duration elapsed)))
