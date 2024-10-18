@@ -179,7 +179,9 @@
    '(;; Include `partial-completion' to enable wildcards and partial paths.
      (file (styles . (orderless partial-completion flex)))
      ;; Eglot forces `flex' by default.
-     (eglot (styles orderless flex))))
+     (eglot (styles orderless flex))
+     ;; For citar
+     (citar-candidate (styles basic substring))))
   (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
   :config
   ;; Taken from Doom
