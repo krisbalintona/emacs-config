@@ -205,8 +205,6 @@ This sets the default graphical element settings used by every frame.
 
 Package management via =package.el=.
 
-*** Configure =package.el=
-
 #+begin_src emacs-lisp :tangle "modules/krisb-package-management.el"
   ;; Initialize package resources
   (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
@@ -222,11 +220,7 @@ Package management via =package.el=.
 
   (unless package-archive-contents
     (package-refresh-contents))
-#+end_src
 
-*** Make sure =use-package= is available.
-
-#+begin_src emacs-lisp :tangle "modules/krisb-package-management.el"
   ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
   ;; it's installed just in case I test/use an earlier Emacs version
   (unless (package-installed-p 'use-package)
@@ -235,11 +229,7 @@ Package management via =package.el=.
   ;; Then ensure use-package is available at compile time
   (eval-when-compile
     (require 'use-package))
-#+end_src
 
-*** Provide
-
-#+begin_src emacs-lisp :tangle "modules/krisb-package-management.el"
   (provide 'krisb-package-management)
 #+end_src
 
