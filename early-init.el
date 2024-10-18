@@ -70,13 +70,6 @@
 ;; of `gcmh-mode'.
 (setq gc-cons-threshold most-positive-fixnum)
 
-;; Prevent loading any packages prior to init.el. Speeds up startup but packages
-;; must be initizlied by `package-initialize' before any are needed.
-;; Importnatly, if this is nil, make sure to expressly call `package-initialize'
-;; later (and before I need non-built-in packages) to make other packages
-;; available.
-(setq package-enable-at-startup nil)
-
 ;; NOTE 2024-10-03: From Doom Emacs.
 ;; Contrary to what many Emacs users have in their configs, you don't need more
 ;; than this to make UTF-8 the default coding system:

@@ -10,9 +10,6 @@
         package-install-upgrade-built-in t
         package-pinned-packages nil)
 
-;; We have to manually initialize package because in `early-init.el' we set
-;; `package-enable-at-startup' to nil to speed up startup, like Doom Emacs does.
-(package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 
