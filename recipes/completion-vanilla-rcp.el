@@ -139,6 +139,7 @@
 
 ;;;;; Vertico-prescient
 (use-package vertico-prescient
+  :demand
   :after (prescient vertico)
   :custom
   (vertico-prescient-completion-styles '(prescient flex))
