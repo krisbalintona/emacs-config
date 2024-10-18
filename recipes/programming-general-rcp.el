@@ -124,7 +124,7 @@
 ;; commands.
 (use-package consult
   :bind
-  (("C-c B" . consult-buffer)
+  (("C-x B" . consult-buffer)
    ;; Remaps
    ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
