@@ -35,7 +35,7 @@
   :ensure nil
   :after org
   :custom
-  (org-cite-global-bibliography kb/bib-files)
+  (org-cite-global-bibliography krisb-bibliography-files)
   (org-cite-csl-locales-dir (expand-file-name "locales/" user-emacs-directory))
   (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
   (org-cite-export-processors
@@ -90,8 +90,8 @@ Intended for `eldoc-documentation-functions'."
          :map org-mode-map
          ([remap org-cite-insert] . citar-insert-citation))
   :custom
-  (citar-bibliography kb/bib-files)
-  (citar-notes-paths (list kb/notes-dir))
+  (citar-bibliography krisb-bibliography-files)
+  (citar-notes-paths (list krisb-notes-directory))
   (citar-open-entry-function #'citar-open-entry-in-file)
   (citar-default-action #'citar-open-files)
   :config

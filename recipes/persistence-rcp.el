@@ -89,7 +89,7 @@
            (literal (expand-file-name "emacs-repos/" "~"))
            ;; Don't want to open my large org-agenda files which I'll open
            ;; eventually anyway
-           (literal kb/agenda-dir))))
+           (literal krisb-org-agenda-directory))))
   (desktop-globals-to-save '(desktop-missing-file-warning
                              tags-file-name
                              tags-table-list

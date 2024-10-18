@@ -553,7 +553,7 @@ timestamp)."
   (ibuffer-save-with-custom nil)
   (ibuffer-default-sorting-mode 'recency)
   (ibuffer-directory-abbrev-alist
-   `((,(file-name-as-directory (expand-file-name kb/notes-dir)) . ,(propertize "Notes/" 'face 'bold))
+   `((,(file-name-as-directory (expand-file-name krisb-notes-directory)) . ,(propertize "Notes/" 'face 'bold))
      (,(expand-file-name user-emacs-directory) . ,(propertize "Emacs/" 'face 'bold))))
   (ibuffer-eliding-string "…")
   (ibuffer-jump-offer-only-visible-buffers t)
@@ -582,7 +582,7 @@ timestamp)."
   (ibuffer-saved-filter-groups ; NOTE 2024-02-11: Order of entries matters!
    `(("Basic"
       ("Help" ,(append '(or) (mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes)))
-      ("Org" (directory . ,kb/org-dir))
+      ("Org" (directory . ,krisb-org-directory))
       ("Libraries" ,(append '(or) (mapcar (lambda (dir) `(directory . ,dir))
                                           (remove "/home/krisbalintona/.emacs.d/recipes"
                                                   load-path))))

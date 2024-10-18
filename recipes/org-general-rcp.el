@@ -39,7 +39,7 @@
   ( :map kb/note-keys
     ("c" . org-capture))
   :custom
-  (org-directory kb/org-dir)
+  (org-directory krisb-org-directory)
   (org-special-ctrl-a/e t)
   (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
 
@@ -245,9 +245,9 @@ have `org-warning' face."
   :custom
   (org-refile-use-cache nil)
   (org-refile-targets
-   `((,kb/all-agenda-dir-files . (:level . 0))
-     (,kb/all-agenda-dir-files . (:tag . "project"))
-     (,kb/agenda-main-todo-file . (:maxlevel . 3))))
+   `((,krisb-org-agenda-directory-files . (:level . 0))
+     (,krisb-org-agenda-directory-files . (:tag . "project"))
+     (,krisb-org-agenda-main-file . (:maxlevel . 3))))
   ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
   ;; want to refile to a non-todo heading in the current file?
   (org-refile-target-verify-function    ; Only let not done todos be refile targets

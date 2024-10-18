@@ -113,11 +113,11 @@
   ;; See also `org-capture-templates-contexts'
   (org-capture-templates
    `(("t" "Todo" entry
-      (file ,(expand-file-name "todo.org" kb/agenda-dir))
+      (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
       "* TODO %? :inbox:%^g\n"
       :empty-lines 1)
      ("T" "Todo (without processing)" entry
-      (file ,(expand-file-name "todo.org" kb/agenda-dir))
+      (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
       "* TODO %? %^g\n"
       :empty-lines 1)
      ("i" "Idea" entry
@@ -199,7 +199,7 @@
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
-  (dolist (f (directory-files-recursively kb/agenda-dir (rx (or (literal ".org") (literal ".org_archive")) eol)))
+  (dolist (f (directory-files-recursively krisb-org-agenda-directory (rx (or (literal ".org") (literal ".org_archive")) eol)))
     (add-to-list 'org-agenda-files f))
 
   ;; Taken from

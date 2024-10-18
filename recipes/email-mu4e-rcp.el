@@ -377,13 +377,13 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
   (with-eval-after-load 'org-agenda
     (add-to-list 'org-capture-templates
                  `("e" "Email" entry
-                   (file ,(expand-file-name "todo.org" kb/agenda-dir))
+                   (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
                    "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
                    :empty-lines 1))
     ;; NOTE 2023-01-01: Also see `mu4e--org-store-link-message' from mu4e-org
     (add-to-list 'org-capture-templates
                  `("E" "Mu4e-captured email" entry
-                   (file ,(expand-file-name "todo.org" kb/agenda-dir))
+                   (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
                    ,(concat "* TODO Respond to%? "
                             "[[mu4e:msgid:%(plist-get mu4e-captured-message :message-id)]"
                             "[\"%(plist-get mu4e-captured-message :subject)\" "

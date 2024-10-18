@@ -726,13 +726,13 @@ Uses the current annotation at point's ID."
      ;; FIXME 2024-01-13: Choose better keybind
      ("C-M-s-\"" . org-noter-pdf--create-missing-annotation)))
   :custom
-  (org-noter-notes-search-path `(,kb/notes-dir))
+  (org-noter-notes-search-path `(,krisb-notes-directory))
   ;; FIXME 2024-01-12: I am not currently using org-noter, but when I do, I can
   ;; create a notes file and set it here like thus
   ;; (org-noter-default-notes-file-names
   ;;  (list (file-relative-name (car (directory-files-recursively
-  ;;                                  kb/notes-dir "20240111T235139"))
-  ;;                            kb/notes-dir)))
+  ;;                                  krisb-notes-directory "20240111T235139"))
+  ;;                            krisb-notes-directory)))
   (org-noter-always-create-frame nil)
   (org-noter-kill-frame-at-session-end nil) ; Don't close frame when killing pdf buffer
   (org-noter-use-indirect-buffer t)
@@ -977,7 +977,7 @@ A modified version of `ytdl-download'."
             "yy" 'evil-yank-line
             )
   :custom
-  (delve-storage-paths (concat kb/notes-dir "delve-storage/"))
+  (delve-storage-paths (concat krisb-notes-directory "delve-storage/"))
   (delve-dashboard-tags '("working"))
   :init
   ;; Must be loaded before delve

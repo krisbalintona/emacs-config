@@ -7,4 +7,8 @@
 (setopt initial-major-mode 'fundamental-mode
         initial-scratch-message "Hello 👋")
 
+;;; Libraries
+(require 'krisb-common)
+
+;;; Modules
 (require 'krisb-package-management)

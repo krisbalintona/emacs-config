@@ -571,8 +571,8 @@ and rewrite link paths to make blogging more seamless."
 (with-eval-after-load 'ox-hugo
   (defun kb/find-blog-files-org ()
     "Return a list of org files which are within the blog subdirectory
-of `kb/notes-dir'."
-    (directory-files-recursively kb/blog-dir ""))
+of `krisb-notes-directory'."
+    (directory-files-recursively krisb-blog-directory ""))
 
   (defun kb/org-hugo--add-tag-maybe ()
     "Add a FILETAGS value if necessary. Right now I only need the

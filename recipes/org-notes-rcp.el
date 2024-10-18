@@ -49,7 +49,7 @@
     ("l" . denote-find-backlink)
     ("L" . denote-backlinks))
   :custom
-  (denote-directory kb/notes-dir)
+  (denote-directory krisb-notes-directory)
   (denote-known-keywords nil)
   (denote-prompts '(subdirectory title keywords signature template))
   (denote-org-front-matter "#+title: %s
@@ -519,7 +519,7 @@ replacement."
                                                 (propertize title 'denote-path f 'denote-keywords keywords)))
                                             (remove-if-not (lambda (f) (equal (file-name-extension f) "org"))
                                                            (directory-files-recursively
-                                                            (expand-file-name "papers" kb/notes-dir)
+                                                            (expand-file-name "papers" krisb-notes-directory)
                                                             denote-id-regexp)))))
                         (mapcar (lambda (c)
                                   (let* ((keywords (get-text-property 0 'denote-keywords c)))

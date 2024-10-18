@@ -202,7 +202,7 @@ current subtree."
   "Call `unpackaged/org-add-blank-lines'.
 
 Called before saving in org files which are not in
-`kb/agenda-dir'."
+`krisb-org-agenda-directory'."
   (when (and
          ;; NOTE 2022-02-03: This next line is a very important check. It fixes
          ;; a persistent and annoying bug when using `org-roam-capture' and
@@ -210,7 +210,7 @@ Called before saving in org files which are not in
          (not (bound-and-true-p org-capture-mode)) ; Not in org-capture buffer
          (buffer-file-name)                  ; In file
          (derived-mode-p 'org-mode)          ; Org-mode
-         (not (file-in-directory-p (buffer-file-name) kb/agenda-dir))) ; Not agenda-dir
+         (not (file-in-directory-p (buffer-file-name) krisb-org-agenda-directory))) ; Not agenda-dir
     (save-excursion
       (org-with-wide-buffer
        (funcall-interactively 'unpackaged/org-add-blank-lines whole-buffer)))))
