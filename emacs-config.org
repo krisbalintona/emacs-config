@@ -404,3 +404,12 @@ These are lines I've removed while porting to a literate config.
   (unless kb/sys-win
     (setq selection-coding-system 'utf-8))
 #+end_src
+
+* Local variables :noexport:
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+
+# Local Variables:
+# org-src-fontify-natively: nil
+# End:
