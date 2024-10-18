@@ -821,9 +821,29 @@ Determine if WINDOW is splittable."
   :bind-keymap ("C-c B" . beframe-prefix-map)
   :custom
   (beframe-functions-in-frames nil)
-  (beframe-rename-function #'beframe-rename-frame)
+  (beframe-rename-function #'kb/beframe-rename-frame-by-count)
   :config
   (beframe-mode 1)
+
+  (defun kb/beframe-rename-frame-by-count (frame &optional name)
+    "Rename FRAME.
+Meant to be the value of `beframe-rename-function'."
+    (interactive
+     (let ((select-frame (beframe--frame-prompt :force-even-if-one)))
+       (list
+        (beframe--frame-object select-frame)
+        (when current-prefix-arg
+          (read-string
+           (format "Rename the frame now called `%s' to: "
+                   select-frame)
+           nil 'beframe--rename-frame-history select-frame)))))
+    (modify-frame-parameters
+     frame
+     (list (cons 'name
+                 (or name (number-to-string
+                           (1+ (cl-position (selected-frame)
+                                            (make-frame-names-alist) :key #'cdr :test #'eq))))))))
+  (funcall 'kb/beframe-rename-frame-by-count (selected-frame))
 
   ;; `consult-buffer' integration. Taken from (info "(beframe) Integration with Consult")
   (defvar consult-buffer-sources)
