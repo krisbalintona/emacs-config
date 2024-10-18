@@ -12,3 +12,4 @@
 
 ;;; Modules
 (require 'krisb-package-management)
+(require 'krisb-garbage-collection)
