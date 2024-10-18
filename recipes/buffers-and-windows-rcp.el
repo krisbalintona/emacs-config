@@ -243,7 +243,7 @@
     ("M-\\" . eyebrowse-last-window-config)
     ("M-[" . eyebrowse-prev-window-config)
     ("M-]" . eyebrowse-next-window-config)
-    ((concat eyebrowse-keymap-prefix "d") . eyebrowse-close-window-config))
+    ("C-c M-w d" . eyebrowse-close-window-config))
   :custom
   (eyebrowse-default-workspace-slot 0)  ; Start at 0
   (eyebrowse-keymap-prefix (kbd "C-c M-w"))
