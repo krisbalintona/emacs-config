@@ -3,9 +3,11 @@
 #+email: krisbalintona@gmail.com
 #+language: en
 #+options: num:t author:t email:t
-#+startup: content
 
 * Emacs build
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 
 The following are the flags I prefer to compile Emacs with.
 #+begin_src emacs-lisp :exports both
@@ -16,6 +18,9 @@ The following are the flags I prefer to compile Emacs with.
 : --with-mailutils --with-pgtk --with-native-compilation --with-x-toolkit=gtk3 'CFLAGS=-O2 -pipe -march=native -fomit-frame-pointer'
 
 * Initialization
+:PROPERTIES:
+:VISIBILITY: children
+:END:
 
 ** =early-init.el=
 
@@ -183,6 +188,9 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 * Modules
+:PROPERTIES:
+:VISIBILITY: children
+:END:
 
 ** =krisb-package-management.el=
 
@@ -225,8 +233,14 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 * Lisp (libraries)
+:PROPERTIES:
+:VISIBILITY: children
+:END:
 
 * COMMENT Removed
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 
 These are lines I've removed while porting to a literate config.
 #+begin_src emacs-lisp :tangle no :results none
