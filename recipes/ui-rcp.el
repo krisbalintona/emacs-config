@@ -366,7 +366,10 @@ This version removes delimiters.")
                                        'face (list :inherit 'mode-line
                                                    :slant 'italic
                                                    :foreground (face-foreground 'font-lock-string-face)))))
-                  mode-line-end-spaces))
+                  mode-line-end-spaces
+                  ;; REVIEW 2024-10-17: For some reason the right side of my
+                  ;; mode line gets cut off... maybe font is?
+                  " "))
 
   ;; Add things to `global-mode-string'
   (add-to-list 'global-mode-string '(:eval
