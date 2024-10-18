@@ -124,7 +124,8 @@
 ;; commands.
 (use-package consult
   :bind
-  (;; Remaps
+  (("C-c B" . consult-buffer)
+   ;; Remaps
    ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap repeat-complex-command] . consult-complex-command)
@@ -201,14 +202,15 @@
 
   ;; Customize consult commands
   (consult-customize
-   consult-buffer :preview-key "C-M-;"
-   consult-buffer-other-window :preview-key "C-M-;"
-   consult-grep :preview-key "C-M-;"
-   consult-git-grep :preview-key "C-M-;"
-   consult-ripgrep :preview-key "C-M-;"
-   consult-recent-file :preview-key "C-M-;" ; Make sure this is after the definition of `consult-recent-file'
-   consult-find :preview-key "C-M-;"
-   consult-bookmark :preview-key "C-M-;")
+   consult-buffer
+   consult-buffer-other-window
+   consult-grep
+   consult-git-grep
+   consult-ripgrep
+   consult-recent-file ; Make sure this is after the definition of `consult-recent-file'
+   consult-find
+   consult-bookmark :preview-key "C-M-;"
+   consult-buffer :group nil)
 
   ;; Use consult UI with xref
   (with-eval-after-load 'xref
