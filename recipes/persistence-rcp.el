@@ -132,37 +132,6 @@
   :config
   (desktop-save-mode 1))
 
-;;;; Super-save
-;; Automatically save buffers when you do certain things
-(use-package super-save
-  :disabled                             ; Opting for built in auto-save
-  :demand
-  :custom
-  (super-save-auto-save-when-idle t) ; Save buffer if Emacs is idle
-  (super-save-idle-duration 10) ; Wait 10 seconds for idle trigger
-  (super-save-remote-files t) ; Turn on saving of remote files (those pulled from git repo?)
-  (super-save-exclude nil) ; Don't exclude anything from being saved
-  (super-save-predicates
-   '((lambda ()
-       (stringp (buffer-file-name (buffer-base-buffer))))
-     (lambda ()
-       (buffer-modified-p (current-buffer)))
-     (lambda ()
-       (file-writable-p (buffer-file-name (buffer-base-buffer))))
-     (lambda ()
-       (if (file-remote-p (buffer-file-name (buffer-base-buffer)))
-           super-save-remote-files t))
-     (lambda ()
-       (super-save-include-p (buffer-file-name (buffer-base-buffer))))
-     (lambda ()                              ; Don't save Email drafts
-       (not (or (derived-mode-p 'message-mode)
-                (eq major-mode 'org-msg-edit-mode))))))
-  :config
-  (add-to-list 'super-save-hook-triggers 'eyebrowse-pre-window-switch-hook)
-  (add-to-list 'super-save-triggers 'evil-window-mru)
-  ;; Make sure this goes after adding hooks, since the hooks are manually added once `super-save-mode' is enable
-  (super-save-mode))
-
 ;;;; Built-in auto save and backup
 ;; Make recovery files
 (use-package files
