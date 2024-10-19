@@ -121,29 +121,6 @@
 
 ;; TAB acts more like how it does in the shell
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete)
-
-;;;; Prescient
-;; Sorting and filtering of minibuffer candidates. The difference between
-;; `orderless' and this package is that `orderless' filters but does not sort -
-;; it leaves that up to the "candidate source and the completion UI."
-;; Additionally, `orderless' has style "dispatchers," i.e., I can define
-;; predicates for what filtering style to use for which token
-(use-package prescient
-  :hook (on-first-input . prescient-persist-mode)
-  :custom
-  ;; (completion-styles '(prescient flex))
-  ;; NOTE 2024-02-03: Flex is chosen as a backup in case nothing in prescient is
-  ;; matched, which only happens if I'm clueless about what I'm searching for.
-  ;; We prefer this over adding the fuzzy matching in `prescient-filter-method'
-  ;; because we don't want a bunch of random results included in the filtered
-  ;; prescient results and cluttering it
-  (prescient-filter-method
-   '(literal initialism regexp))
-  (prescient-aggressive-file-save t)
-  (prescient-sort-full-matches-first t)
-  (prescient-history-length 200)
-  (prescient-frequency-decay 0.997)
-  (prescient-frequency-threshold 0.05))
   
 (provide 'completion-general-rcp)
 ;;; completion-general-rcp.el ends here
