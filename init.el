@@ -12,4 +12,5 @@
 
 ;;; Modules
 (require 'krisb-package-management)
+(require 'krisb-use-package)
 (require 'krisb-garbage-collection)

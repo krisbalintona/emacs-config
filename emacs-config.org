@@ -193,6 +193,7 @@ This sets the default graphical element settings used by every frame.
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Modules
   (require 'krisb-package-management)
+  (require 'krisb-use-package)
   (require 'krisb-garbage-collection)
 #+end_src
 
@@ -231,6 +232,22 @@ Package management via =package.el=.
     (require 'use-package))
 
   (provide 'krisb-package-management)
+#+end_src
+
+** =krisb-use-package.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-use-package.el"
+  (setopt use-package-always-ensure t
+          use-package-expand-minimally t  ; Verbosity of use-package macro
+          use-package-always-defer t)     ; Always defer
+
+  ;; Only be verbose when interpreted, otherwise errors are caught at compile time
+  (setopt use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
+
+  ;; Compile statistics to be shown in `use-package-report'
+  (setopt use-package-compute-statistics t)
+
+  (provide 'krisb-use-package)
 #+end_src
 
 ** =krisb-garbage-collection.el=
