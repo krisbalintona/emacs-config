@@ -37,21 +37,6 @@
   :custom-face
   (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 
-;;;; IELM
-(use-package ielm
-  :ensure nil
-  :custom
-  (ielm-noisy nil)
-  (ielm-dynamic-return nil))
-
-;;;; Eros-mode
-;; Overlay lisp evaluations into the current buffer (near cursor)
-(use-package eros
-  :hook
-  (emacs-lisp-mode . eros-mode)
-  :custom
-  (eros-eval-result-prefix "⟹  "))
-
 ;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters
@@ -66,23 +51,6 @@
   (paren-face-mode-lighter "")
   :config
   (global-paren-face-mode 1))
-
-;;;; Help
-(use-package help
-  :ensure nil
-  :bind ("C-h C-k" . describe-keymap)
-  :custom
-  (help-window-select t)
-  (help-window-keep-selected t)
-
-  (help-enable-variable-value-editing t)
-  (help-clean-buttons t)
-  (help-enable-symbol-autoload t)
-
-  (describe-bindings-outline t)
-  (describe-bindings-show-prefix-commands t)
-  :config
-  (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function))
 
 ;;;; Help-find
 ;; Provides `help-find-function' and `help-find-keybinding'
@@ -108,66 +76,6 @@
   :chords
   ( :map helpful-mode-map
     ("jj" . helpful-at-point)))
-
-;;;; Apropos
-(use-package apropos
-  :ensure nil
-  :bind ("C-h u" . apropos-user-option))
-
-;;;; Edebug
-(use-package edebug
-  :ensure nil
-  :custom
-  (edebug-initial-mode 'step)
-  :init
-  ;; The following is taken from
-  ;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/.
-  ;; Better indication for evaluated sexps in during edebugging.
-
-  (defun adviced:edebug-previous-result (_ &rest r)
-    "Adviced `edebug-previous-result'."
-    (require 'eros)
-    (eros--make-result-overlay edebug-previous-result
-      :where (point)
-      :duration eros-eval-result-duration))
-
-  (defun edebug-compute-previous-result (previous-value)
-    (if edebug-unwrap-results
-        (setq previous-value
-              (edebug-unwrap* previous-value)))
-    (setq edebug-previous-result
-          (concat "Result: "
-                  (edebug-safe-prin1-to-string previous-value)
-                  (eval-expression-print-format previous-value))))
-
-  (defun edebug-previous-result ()
-    "Print the previous result."
-    (interactive)
-    (message "%s" edebug-previous-result))
-
-  (defun adviced:edebug-compute-previous-result (_ &rest r)
-    "Adviced `edebug-compute-previous-result'."
-    (let ((previous-value (nth 0 r)))
-      (if edebug-unwrap-results
-          (setq previous-value
-                (edebug-unwrap* previous-value)))
-      (setq edebug-previous-result
-            (edebug-safe-prin1-to-string previous-value))))
-  :config
-  (advice-add #'edebug-compute-previous-result
-              :around #'adviced:edebug-compute-previous-result)
-
-  (advice-add #'edebug-previous-result
-              :around #'adviced:edebug-previous-result))
-
-;;;; Elisp-demos
-;; Add example code snippets to some of the help windows
-(use-package elisp-demos
-  :defer 7
-  :config
-  (add-hook 'help-fns-describe-function-functions #'elisp-demos-advice-describe-function-1)
-  (with-eval-after-load 'helpful
-    (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 
 ;;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!
@@ -195,12 +103,6 @@
                                           (string-match-p
                                            "^\\(%\\[\\|%\\]\\)$" s))))
                               kb/mode-line-modes))))
-
-;;;; Inspector
-;; Introspect list expressions. Also integrates with the debugging backtrace and
-;; edebug (see
-;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
-(use-package inspector)
 
 (provide 'programming-elisp-rcp)
 ;;; programming-elisp-rcp.el ends here

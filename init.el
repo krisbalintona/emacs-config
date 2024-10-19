@@ -119,6 +119,9 @@
 (require 'krisb-org-agenda)
 (require 'krisb-citations)
 (require 'krisb-pdfs)
+
+(require 'krisb-elisp)
+
 (require 'krisb-mermaid)
 
 ;;; Load custom file
