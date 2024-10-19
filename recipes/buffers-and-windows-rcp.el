@@ -76,21 +76,7 @@
 
 ;;;;; Window
 (use-package window
-  :ensure nil
-  :bind* ("M-o" . other-window)
-  :bind (([remap other-window] . kb/other-window-mru)
-         :repeat-map other-window-repeat-map
-         ("o" . kb/other-window-mru))
   :custom
-  (split-width-threshold (ceiling (/ (frame-width) 2.0)))
-  (split-height-threshold 80)
-  (window-sides-vertical t)
-  (window-resize-pixelwise t)
-  (window-combination-resize t) ; Allow to resize existing windows when splitting?
-  (fit-window-to-buffer-horizontally t)
-
-  (switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
-  (switch-to-buffer-in-dedicated-window 'pop)
   (display-buffer-alist
    `(;; Don't show
      ("\\*BibTeX validation errors\\*"
@@ -195,25 +181,7 @@
      ((or ,(rx (literal "*Man ") num (literal " "))
           (major-mode . Man-mode))
       (display-buffer-reuse-window display-buffer-pop-up-window)
-      (post-command-select-window . t))))
-  :config
-  ;; Modified version of "other-window-mru" taken from
-  ;; https://karthinks.com/software/emacs-window-management-almanac/#the-back-and-forth-method
-  ;; that accepts a prefix arg
-  (defun kb/other-window-mru (&optional arg)
-    "Select the most recently used window on this frame."
-    (interactive "p")
-    (when-let ((windows-by-mru              ; Used `get-mru-window' as a reference
-                (sort (delq nil
-                            (mapcar
-                             (lambda (win)
-                               (when (and (not (eq win (selected-window)))
-                                          (not (window-no-other-p win)))
-                                 (cons (window-use-time win) win)))
-                             (window-list-1 nil 'nomini nil)))
-                      :lessp #'>
-                      :key #'car)))
-      (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
+      (post-command-select-window . t)))))
 
 ;; Below selected
 (with-eval-after-load 'xref
