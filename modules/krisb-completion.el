@@ -419,11 +419,11 @@
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
 
   ;; Macro to help adding capfs via hooks
-  (defmacro kb/cape-setup-capfs (label hooks capfs)
+  (defmacro krisb-cape-setup-capfs (label hooks capfs)
     "Set up `completion-at-point-functions' for HOOKS.
 CAPFS are a list of `completion-at-point-functions'. Adds CAPFS when a
 hook in HOOKS is run. These effects are added by a defined function with
-LABEL appended to `kb/cape-setup-capfs-'.
+LABEL appended to `krisb-cape-setup-capfs-'.
 
 The order of elements in CAPFS are the order they will appear in
 `completion-at-point-functions' for that buffer. That is, the first
@@ -436,16 +436,16 @@ This macro does not affect capfs already in
     (declare (indent 0))
     `(dolist (hook ,hooks)
        (add-hook hook
-                 (defun ,(intern (concat "kb/cape-setup-capfs-" label)) ()
+                 (defun ,(intern (concat "krisb-cape-setup-capfs-" label)) ()
                    (dolist (capf (reverse ,capfs))
                      (add-to-list 'completion-at-point-functions capf))))))
 
-  (kb/cape-setup-capfs
+  (krisb-cape-setup-capfs
     "elisp"
     '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
     (list #'cape-file #'cape-elisp-symbol))
 
-  (kb/cape-setup-capfs
+  (krisb-cape-setup-capfs
     "commit"
     '(git-commit-mode-hook vc-git-log-edit-mode-hook)
     (list #'cape-elisp-symbol #'cape-dabbrev)))
