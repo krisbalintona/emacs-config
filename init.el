@@ -63,5 +63,6 @@
 
 ;;; Modules
 (require 'krisb-garbage-collection)
+(require 'krisb-themes)
 (require 'krisb-fonts)
 (require 'krisb-completion)
