@@ -286,7 +286,6 @@ See ((org) Filtering/limiting agenda items)."
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
-  :pin gnu-elpa-devel
   :demand
   :after org-agenda
   :custom

@@ -2722,7 +2722,6 @@ Enhancements to all built-in-based completions.
 
   ;;; Org-super-agenda
   (use-package org-super-agenda
-    :pin gnu-elpa-devel
     :demand
     :after org-agenda
     :custom
