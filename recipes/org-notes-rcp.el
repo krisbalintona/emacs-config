@@ -242,15 +242,6 @@ replacement."
                   (let ((save-silently t))
                     (apply orig-fun args)))))
 
-;;;; Darkroom
-(use-package darkroom
-  :bind
-  ( :map krisb-toggle-keymap
-    ("d" . darkroom-mode)
-    ("D" . darkroom-tentative-mode))
-  :custom
-  (darkroom-text-scale-increase 1.3))
-
 ;;;; Typewriter-roll-mode
 (use-package typewriter-roll-mode
   :bind ( :map krisb-toggle-keymap

@@ -40,5 +40,13 @@
      "twas"
      "tis")))
 
+;;; Darkroom
+(use-package darkroom
+  :bind ( :map krisb-toggle-keymap
+          ("d" . darkroom-mode)
+          ("D" . darkroom-tentative-mode))
+  :custom
+  (darkroom-text-scale-increase 1.3))
+
 ;;; Provide
 (provide 'krisb-prose)
