@@ -83,7 +83,9 @@
   (marginalia-max-relative-age 0)
   (marginalia-align 'right)
   (marginalia-field-width 80)
-  (marginalia-align-offset -2))         ; Two to the left
+  (marginalia-align-offset -2)          ; Two to the left
+  :config
+  (marginalia-mode 1))
 
 ;;; Prescient
 ;; Sorting and filtering of minibuffer candidates. The difference between
@@ -138,7 +140,6 @@
 (use-package vertico-multiform
   :requires vertico
   :ensure nil
-  :demand
   :custom
   (vertico-multiform-categories
    '((consult-grep buffer)
