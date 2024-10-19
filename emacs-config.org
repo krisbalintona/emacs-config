@@ -348,7 +348,25 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-garbage-collection)
 #+end_src
 
-** =krisb-themes.el=
+** =krisb-completion.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
+  ;;; Marginalia
+  ;; Enable richer annotations in minibuffer (companion package of consult.el)
+  (use-package marginalia
+    :custom
+    (marginalia-max-relative-age 0)
+    (marginalia-align 'right)
+    (marginalia-field-width 80)
+    (marginalia-align-offset -2))         ; Two to the left
+
+  ;;; Provide
+  (provide 'krisb-completion)
+#+end_src
+
+** Appearance
+
+*** =krisb-themes.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-themes.el"
   ;;; Modus-themes
@@ -492,7 +510,7 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-themes)
 #+end_src
 
-** =krisb-fonts.el=
+*** =krisb-fonts.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-fonts.el"
   ;;; Fontaine
@@ -608,23 +626,9 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-fonts)
 #+end_src
 
-** =krisb-completion.el=
+** Prose
 
-#+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
-  ;;; Marginalia
-  ;; Enable richer annotations in minibuffer (companion package of consult.el)
-  (use-package marginalia
-    :custom
-    (marginalia-max-relative-age 0)
-    (marginalia-align 'right)
-    (marginalia-field-width 80)
-    (marginalia-align-offset -2))         ; Two to the left
-
-  ;;; Provide
-  (provide 'krisb-completion)
-#+end_src
-
-** =krisb-org.el=
+*** =krisb-org.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
   ;;; Built-in
