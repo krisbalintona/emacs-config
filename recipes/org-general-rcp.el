@@ -262,54 +262,6 @@ have `org-warning' face."
         '(:desaturate-level-faces 30
                                   :darken-level-faces 15)))
 
-;;;;; Olivetti
-;; Better writing environment
-(use-package olivetti
-  :hook ((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
-  :custom
-  (olivetti-lighter nil)
-  (olivetti-body-width 0.6)
-  (olivetti-minimum-body-width 80)
-  (olivetti-margin-width 8)
-  (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
-  ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's changing of
-  ;; margins and fringes messes with the calculation of
-  ;; `mode--line-format-right-align', which determines where the right side of
-  ;; the mode line is placed.
-  (mode-line-format-right-align
-   '(:eval (if (and (bound-and-true-p olivetti-mode)
-                    olivetti-style)     ; 'fringes or 'fancy
-               (let ((mode-line-right-align-edge 'right-fringe))
-                 (mode--line-format-right-align))
-             (mode--line-format-right-align))))
-  :config
-  (defun kb/olivetti--setup-faces (&optional _theme)
-    "Set custom colors for `olivetti'."
-    (when (fboundp 'modus-themes-with-colors)
-      (when (featurep 'olivetti)
-        (set-face-attribute 'olivetti-fringe nil
-                            :background (modus-themes-with-colors bg-dim)
-                            :inherit 'unspecified))))
-  (kb/olivetti--setup-faces)            ; Set faces when first loaded
-  (add-hook 'enable-theme-functions #'kb/olivetti--setup-faces))
-
-;;;;; Org-appear
-;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
-;; over enclosed content
-(use-package org-appear
-  :hook
-  (org-mode . org-appear-mode)
-  :after org
-  :custom
-  (org-appear-delay 0.0)
-  (org-appear-trigger 'always)
-  (org-appear-autoemphasis t)
-  (org-appear-autolinks 'just-brackets)
-  (org-appear-autosubmarkers t)
-  (org-appear-autoentities t)
-  (org-appear-autokeywords t)
-  (org-appear-inside-latex t))
-
 ;;;;; Org-modern-indent
 (use-package org-modern-indent
   :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
