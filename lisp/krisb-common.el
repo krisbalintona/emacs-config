@@ -93,8 +93,19 @@ Useful for some citation-related configurations.")
 ;;; Functions
 
 ;;; Macros
-
-;;; Commands
+(defmacro krisb-evaluate-when-internet (interval &rest body)
+  "Asynchronously evaluate BODY once internet connection is available.
+Retries every INTERVAL seconds."
+  (declare (indent 0))
+  `(let ((url "https://google.com"))
+     (cl-labels ((check-connection (status)
+                   (if (plist-get status :error)
+                       (progn
+                         (message "No internet. Retrying in %s seconds..." interval)
+                         (run-at-time interval nil
+                                      (lambda () (url-retrieve url #'check-connection))))
+                     (progn ,@body))))  ; Execute BODY on success.
+       (url-retrieve url #'check-connection))))
 
 ;;; Keymaps
 (defvar-keymap krisb-note-keymap

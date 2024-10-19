@@ -310,6 +310,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-completion)
 
   (require 'krisb-org)
+  (require 'krisb-org-agenda)
   (require 'krisb-citations)
   (require 'krisb-pdfs)
   (require 'krisb-mermaid)
@@ -2208,6 +2209,87 @@ Enhancements to all built-in-based completions.
   ;;; krisb-pdfs.el ends here
 #+end_src
 
+*** Todos
+
+**** =krisb-org-agenda.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
+  ;;; Calendar
+  (use-package calendar
+    :ensure nil
+    :bind ( :map krisb-open-keymap
+            ("c" . calendar))
+    :custom
+    (calendar-time-display-form
+     '( 24-hours ":" minutes (when time-zone (format "(%s)" time-zone))))
+    (calendar-week-start-day 1)           ; Monday
+    (calendar-time-zone-style 'symbolic)
+
+    ;; Diary
+    (calendar-mark-diary-entries-flag t)
+
+    ;; Holidays
+    (calendar-mark-holidays-flag t)
+    :init
+    (defun krisb-get-lat-lon ()
+      "Fetch latitude and longitude via IP-based geolocation service."
+      (let (lat lon (timeout 0))
+        (url-retrieve "http://ip-api.com/json"
+                      (lambda (_status)
+                        (goto-char (point-min))
+                        (re-search-forward "^$")
+                        (let* ((json-object-type 'hash-table)
+                               (json (json-read)))
+                          (setq lat (gethash "lat" json)
+                                lon (gethash "lon" json)))))
+        ;; Wait until the data is retrieved or timeout.
+        (while (and (not lat) (< timeout 50))
+          (setq timeout (1+ timeout))
+          (sit-for 0.1))
+        (when (= timeout 50)
+          (message "[krisb-get-lat-lon] Maximum timeout reached"))
+        (if (and lat lon)
+            (cons lat lon)
+          (message "[krisb-get-lat-lon] Failed to fetch geolocation data")
+          nil)))
+
+    (defun krisb-get-location-name ()
+      "Get the current location."
+      (let (city region (timeout 0))
+        (url-retrieve "http://ip-api.com/json"
+                      (lambda (status)
+                        (goto-char (point-min))
+                        (re-search-forward "\n\n")  ;; Skip the headers
+                        (let* ((json-object-type 'hash-table)
+                               (json-key-type 'string)
+                               (json-array-type 'list)
+                               (data (json-read)))
+                          (setq city (gethash "city" data)
+                                region (gethash "region" data)))))
+        ;; Wait until the data is retrieved or timeout.
+        (while (and (not city) (not region) (< timeout 50))
+          (setq timeout (1+ timeout))
+          (sit-for 0.1))
+        (when (= timeout 50)
+          (message "[krisb-get-location-name] Maximum timeout reached"))
+        (if (and city region)
+            (format "%s, %s" city region)
+          (message "[krisb-get-location-name] Failed to fetch geolocation data")
+          nil)))
+    :config
+    ;; Solar
+    (require 'solar)
+    (krisb-evaluate-when-internet
+      20
+      (let ((coords (krisb-get-lat-lon)))
+        (setopt calendar-latitude (car coords)
+                calendar-longitude (cdr coords)))
+      (setopt calendar-location-name (krisb-get-location-name))))
+
+  ;;; Provide
+  (provide 'krisb-org-agenda)
+#+end_src
+
 *** Blogging
 
 **** =krisb-mermaid.el=
@@ -2333,8 +2415,19 @@ Enhancements to all built-in-based completions.
   ;;; Functions
 
   ;;; Macros
-
-  ;;; Commands
+  (defmacro krisb-evaluate-when-internet (interval &rest body)
+    "Asynchronously evaluate BODY once internet connection is available.
+  Retries every INTERVAL seconds."
+    (declare (indent 0))
+    `(let ((url "https://google.com"))
+       (cl-labels ((check-connection (status)
+                     (if (plist-get status :error)
+                         (progn
+                           (message "No internet. Retrying in %s seconds..." interval)
+                           (run-at-time interval nil
+                                        (lambda () (url-retrieve url #'check-connection))))
+                       (progn ,@body))))  ; Execute BODY on success.
+         (url-retrieve url #'check-connection))))
 
   ;;; Keymaps
   (defvar-keymap krisb-note-keymap
@@ -2902,6 +2995,7 @@ Enhancements to all built-in-based completions.
 #+end_src
 
 ** =krisb-pdfs-ext.el=
+
 #+begin_src emacs-lisp :tangle "lisp/krisb-pdfs-ext.el"
   ;;; krisb-pdfs-ext.el --- pdf-view-mode extensions   -*- lexical-binding: t; -*-
 
@@ -3290,6 +3384,7 @@ Enhancements to all built-in-based completions.
   (provide 'krisb-pdfs-ext)
   ;;; krisb-pdfs-ext.el ends here
 #+end_src
+
 * COMMENT Removed
 :PROPERTIES:
 :VISIBILITY: folded
@@ -3318,4 +3413,4 @@ These are lines I've removed while porting to a literate config.
 # org-src-fontify-natively: nil
 # End:
 
-#  LocalWords:  Vertico Minibuffer
+#  LocalWords:  Vertico Minibuffer Todos

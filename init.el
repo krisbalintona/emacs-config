@@ -116,6 +116,7 @@
 (require 'krisb-completion)
 
 (require 'krisb-org)
+(require 'krisb-org-agenda)
 (require 'krisb-citations)
 (require 'krisb-pdfs)
 (require 'krisb-mermaid)

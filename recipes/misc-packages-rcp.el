@@ -702,8 +702,6 @@ This is a difference in multitude of %s."
    ([remap downcase-word] . downcase-dwim)
    ([remap capitalize-word] . capitalize-dwim)
    ([remap dabbrev-expand] . hippie-expand)
-   :map krisb-open-keymap
-   ("c" . calendar)
    :map universal-argument-map          ; Multiple universal arguments
    ("u" . universal-argument-more))
   :custom
