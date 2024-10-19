@@ -30,17 +30,6 @@
 (setopt custom-unlispify-tag-names nil
         custom-safe-themes t)             ; Treat all themes as safe
 
-;;;; No-littering
-;; Set better default package paths
-(use-package no-littering)
-;; Set these variables prior to loading the feature
-(setq no-littering-etc-directory (expand-file-name "data/" user-emacs-directory) ; Config files
-      no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-(when (fboundp 'elpaca-wait)
-  (elpaca-wait))
-(require 'no-littering)
-(no-littering-theme-backups)            ; Sets various built-in variables
-
 ;;;; Enable all disabled commands
 (customize-set-variable 'disabled-command-function nil "Enable all commands")
 

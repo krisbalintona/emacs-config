@@ -17,6 +17,15 @@
 ;; Compile statistics to be shown in `use-package-report'
 (setopt use-package-compute-statistics t)
 
+;; Set better default package paths
+(use-package no-littering
+  :init
+  ;; Set these variables prior to loading the feature
+  (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
+        no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
+  :config
+  (no-littering-theme-backups)) ; Sets various built-in variables
+
 ;;; Libraries
 (require 'krisb-common)
 
