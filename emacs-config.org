@@ -263,6 +263,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-themes)
   (require 'krisb-fonts)
   (require 'krisb-completion)
+  (require 'krisb-org)
 #+end_src
 
 * Modules
@@ -625,8 +626,9 @@ This sets the default graphical element settings used by every frame.
 
 ** =krisb-org.el=
 
-#+begin_src emacs-lisp :tanble "modules/krisb-org.el"
-  ;;; Org
+#+begin_src emacs-lisp :tangle "modules/krisb-org.el"
+  ;;; Built-in
+  ;;;; Org
   (use-package org
     :hook ((org-mode . variable-pitch-mode)
            (org-mode . visual-line-mode)
@@ -683,7 +685,6 @@ This sets the default graphical element settings used by every frame.
        ("v" . "verse")
        ("c" . "comment")
        ("q" . "quote")))
-    (org-confirm-babel-evaluate nil)
 
     ;; Other
     (org-file-apps
@@ -710,14 +711,108 @@ This sets the default graphical element settings used by every frame.
         (add-hook hook #'pulsar-recenter-center)
         (add-hook hook #'pulsar-reveal-entry))))
 
+  ;;;; Org-faces
+  (use-package org-faces
+    :ensure nil
+    :custom
+    (org-fontify-todo-headline nil)
+    (org-fontify-done-headline nil)
+    (org-fontify-whole-block-delimiter-line nil)
+    (org-fontify-quote-and-verse-blocks t))
 
-  ;;; Org-src
+  ;;;; Org-src
   (use-package org-src
     :ensure nil
     :custom
     (org-src-fontify-natively t)
     (org-src-window-setup 'current-window)
-    (org-src-block-faces nil)) ; Open src block window on current buffer were in the language's major mode
+    (org-src-block-faces nil) ; Open src block window on current buffer were in the language's major mode
+    (org-edit-src-turn-on-auto-save nil)
+    (org-edit-src-auto-save-idle-delay 3))
+
+
+  ;;;; Org-id
+  (use-package org-id
+    :ensure nil
+    :after org
+    :custom
+    (org-clone-delete-id t)
+    (org-id-method 'ts)
+    (org-id-link-to-org-use-id 'use-existing))
+
+  ;;;; Org-babel
+  (use-package ob
+    :ensure nil
+    :custom
+    (org-babel-load-languages '((emacs-lisp . t)
+                                (python . t)
+                                (mermaid . t)))
+    (org-confirm-babel-evaluate nil))
+
+  ;;;;;; Org-modern
+  (use-package org-modern
+    :hook ((org-mode . org-modern-mode)
+           (org-agenda-finalize . org-modern-agenda))
+    :custom
+    (org-modern-keyword nil)
+
+    (org-modern-hide-stars "· ") ; Is affected by the value of `org-hide-leading-stars'
+    (org-modern-star 'fold)
+    (org-modern-fold-stars
+     '(("▶" . "▼")
+       ("▷" . "▽")
+       ("⯈" . "⯆")
+       ("▹" . "▿")
+       ("▸" . "▾")))
+
+    (org-modern-todo t) ; NOTE 2024-10-10: I set `org-modern-todo-faces' in my org-agenda section
+    (org-modern-priority t)
+    ;; See my value for `org-priority-faces'
+    (org-modern-priority-faces
+     '((?A :inverse-video t :inherit (bold org-priority))
+       (?B :inverse-video t :inherit (bold org-priority))
+       (?C :inverse-video t :inherit org-priority)
+       (?D :inverse-video t :inherit org-priority)
+       (?E :inverse-video t :inherit (shadow org-priority))
+       (?F :inverse-video t :inherit (shadow org-priority))))
+    ;; See my value for `org-todo-keyword-faces'
+    (org-modern-todo-faces
+     '(("NEXT" :inherit (bold success org-modern-todo))
+       ("TODO" :inherit (org-todo org-modern-todo))
+       ("HOLD" :inherit (shadow error org-modern-todo))
+       ("MAYBE" :inherit (shadow org-todo org-modern-todo))
+       ("DONE" :inherit (bold org-done org-modern-todo))
+       ("CANCELED" :inherit (error org-modern-todo))))
+
+    (org-modern-label-border 3)
+    (org-modern-tag t)
+
+    (org-modern-block-fringe nil) ; Doesn't work well with `olivetti-style' set to 'fancy
+    (org-modern-block-name '("⌜" . "⌞"))
+
+    (org-modern-footnote '(nil (raise 0.15) (height 0.9)))
+    (org-modern-list '((?+ . "◦")
+                       (?- . "–")
+                       (?* . "•")))
+    (org-modern-timestamp t)
+
+    (org-modern-table t)
+    (org-modern-table-vertical 3)
+    (org-modern-table-horizontal 0.1)
+    :custom-face
+    (org-modern-label
+     ((t :height 0.9 :width condensed :weight regular :underline nil)))
+    (org-modern-todo ((t :weight semibold :inverse-video t :inherit org-modern-label)))
+    :config
+    (defun kb/modus-themes--setup-org-modern (theme)
+      "Set up org-modern faces."
+      (when (string-match "^modus-" (symbol-name theme))
+        ;; See my value for `org-tag-faces'
+        (setopt org-modern-tag-faces
+                `(("project"
+                   :foreground ,(face-background 'default nil t)
+                   :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))))
+    (add-hook 'enable-theme-functions #'kb/modus-themes--setup-org-modern))
 
   ;;; Provide
   (provide 'krisb-org)
