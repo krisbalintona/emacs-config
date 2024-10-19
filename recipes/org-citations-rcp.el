@@ -27,28 +27,6 @@
 (require 'keybinds-general-rcp)
 (require 'org-general-rcp)
 
-;;;; Oc (org-cite)
-
-;;;;; Itself
-;; Built-in citations in org-mode
-(use-package oc
-  :ensure nil
-  :after org
-  :custom
-  (org-cite-global-bibliography krisb-bibliography-files)
-  (org-cite-csl-locales-dir (expand-file-name "locales/" user-emacs-directory))
-  (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
-  (org-cite-export-processors
-   '((md . (csl "chicago-fullnote-bibliography.csl"))   ; Footnote reliant
-     (latex biblatex)                                   ; For humanities
-     (odt . (csl "chicago-fullnote-bibliography.csl"))  ; Footnote reliant
-     (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
-     (t . (csl "modern-language-association.csl"))))    ; Fallback
-  :custom-face
-  ;; Have citation link faces look closer to as they were for `org-ref'
-  (org-cite ((t (:foreground "DarkSeaGreen4"))))
-  (org-cite-key ((t (:foreground "forest green" :slant italic)))))
-
 ;;;; Oc-csl-activate
 
 ;;;;; Itself

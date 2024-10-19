@@ -85,6 +85,11 @@ Meant to be used as the value of `org-directory'.")
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
   "A list of my bibliography (.bib) files.")
 
+;;;; Other
+(defvar krisb-zotero-directory (expand-file-name "Zotero" "~")
+  "The directory for everything Zotero.
+Useful for some citation-related configurations.")
+
 ;;; Functions
 
 ;;; Macros
