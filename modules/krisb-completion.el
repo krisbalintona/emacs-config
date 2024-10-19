@@ -236,6 +236,7 @@
 ;; the Emacs infrastructure
 ;;;;; Itself
 (use-package corfu
+  :demand t
   :bind ( :map corfu-map
           ("M-d" . corfu-info-documentation))
   :custom
