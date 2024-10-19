@@ -44,7 +44,6 @@
 (require 'krisb-common)
 
 ;;; Modules
-(require 'krisb-package-management)
-(require 'krisb-use-package)
 (require 'krisb-garbage-collection)
 (require 'krisb-fonts)
+(require 'krisb-completion)

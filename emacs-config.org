@@ -237,10 +237,9 @@ This sets the default graphical element settings used by every frame.
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Modules
-  (require 'krisb-package-management)
-  (require 'krisb-use-package)
   (require 'krisb-garbage-collection)
   (require 'krisb-fonts)
+  (require 'krisb-completion)
 #+end_src
 
 * Modules
@@ -469,6 +468,22 @@ Package management via =package.el=.
       (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
   (provide 'krisb-fonts)
+#+end_src
+
+** =krisb-completion.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
+  ;;; Marginalia
+  ;; Enable richer annotations in minibuffer (companion package of consult.el)
+  (use-package marginalia
+    :custom
+    (marginalia-max-relative-age 0)
+    (marginalia-align 'right)
+    (marginalia-field-width 80)
+    (marginalia-align-offset -2))         ; Two to the left
+
+  ;;; Provide
+  (provide 'krisb-completion)
 #+end_src
 
 * Lisp (libraries)

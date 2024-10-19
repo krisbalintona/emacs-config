@@ -144,16 +144,6 @@
   (prescient-history-length 200)
   (prescient-frequency-decay 0.997)
   (prescient-frequency-threshold 0.05))
-
-;;;; Marginalia
-;; Enable richer annotations in minibuffer (companion package of consult.el)
-(use-package marginalia
-  :hook (on-first-input . marginalia-mode)
-  :custom
-  (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
-  (marginalia-field-width 80)
-  (marginalia-align-offset -2))         ; Two to the left
   
 (provide 'completion-general-rcp)
 ;;; completion-general-rcp.el ends here
