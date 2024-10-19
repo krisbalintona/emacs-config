@@ -679,10 +679,14 @@ Enhancements to all built-in-based completions.
     :requires prescient
     :after vertico
     :custom
-    (vertico-prescient-completion-styles '(prescient flex))
+    ;; Sorting
     (vertico-prescient-enable-sorting t)
     (vertico-prescient-override-sorting nil)
+
+    ;; Filtering. Below only applies when `vertico-prescient-enable-filtering' is
+    ;; non-nil
     (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
+    (vertico-prescient-completion-styles '(prescient flex))
     ;; Only set if `vertico-prescient-enable-filtering' is non-nil. See also
     ;; `prescient--completion-recommended-overrides'
     (vertico-prescient-completion-category-overrides
@@ -778,12 +782,15 @@ Enhancements to all built-in-based completions.
     :requires prescient
     :after corfu
     :custom
-    (corfu-prescient-completion-styles '(prescient flex))
+    ;; Sorting
     (corfu-prescient-enable-sorting t)
     (corfu-prescient-override-sorting nil)
+
+    ;; Filtering. Below only applies when `corfu-prescient-enable-filtering' is
+    ;; non-nil
     (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
-    ;; Only set if `corfu-prescient-enable-filtering' is non-nil. See also
-    ;; `prescient--completion-recommended-overrides'
+    (corfu-prescient-completion-styles '(prescient flex))
+    ;; See also `prescient--completion-recommended-overrides'
     (corfu-prescient-completion-category-overrides
      '(;; Include `partial-completion' to enable wildcards and partial paths.
        (file (styles partial-completion prescient))
