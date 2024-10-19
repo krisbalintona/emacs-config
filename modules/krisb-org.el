@@ -116,8 +116,7 @@
   :ensure nil
   :custom
   (org-babel-load-languages '((emacs-lisp . t)
-                              (python . t)
-                              (mermaid . t)))
+                              (python . t)))
   (org-confirm-babel-evaluate nil))
 
 ;;;;;; Org-modern

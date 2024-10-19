@@ -264,6 +264,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-fonts)
   (require 'krisb-completion)
   (require 'krisb-org)
+  (require 'krisb-mermaid)
 #+end_src
 
 * Modules
@@ -749,8 +750,7 @@ This sets the default graphical element settings used by every frame.
     :ensure nil
     :custom
     (org-babel-load-languages '((emacs-lisp . t)
-                                (python . t)
-                                (mermaid . t)))
+                                (python . t)))
     (org-confirm-babel-evaluate nil))
 
   ;;;;;; Org-modern
@@ -820,6 +820,32 @@ This sets the default graphical element settings used by every frame.
 
   ;;; Provide
   (provide 'krisb-org)
+#+end_src
+
+** Blogging
+
+*** =krisb-mermaid.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-mermaid.el"
+  ;;; Mermaid-mode
+  (use-package mermaid-mode)
+
+  ;;; Ob-mermaid
+  ;; Mermaid diagrams
+  (use-package ob-mermaid
+    :ensure-system-package (mmdc . mermaid-cli)
+    :custom
+    (ob-mermaid-cli-path (executable-find "mmdc"))
+    :config
+    (with-eval-after-load 'org
+      ;; We use setopt to start the evaluation of the :set keyword of
+      ;; `org-babel-load-languages'
+      ;; REVIEW 2024-10-18: Check if setopt is necessary.
+      (setopt org-babel-load-languages
+              (append '((mermaid . t)) org-babel-load-languages))))
+
+  ;;; Provide
+  (provide 'krisb-mermaid)
 #+end_src
 
 * Lisp (libraries)

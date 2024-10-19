@@ -66,4 +66,6 @@
 (require 'krisb-themes)
 (require 'krisb-fonts)
 (require 'krisb-completion)
+
 (require 'krisb-org)
+(require 'krisb-mermaid)
