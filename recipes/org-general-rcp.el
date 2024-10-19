@@ -27,19 +27,6 @@
 
 ;;;; Org
 
-;;;;; Org-num
-(use-package org-num
-  :ensure nil
-  :after org  :diminish
-  :bind
-  ( :map krisb-toggle-keymap
-    ("n" . org-num-mode))
-  :custom
-  (org-num-face 'fixed-pitch)
-  (org-num-skip-commented t)
-  (org-num-skip-footnotes t)
-  (org-num-skip-unnumbered t))
-
 ;;;;; Org-indent
 (use-package org-indent
   :disabled

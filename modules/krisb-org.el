@@ -118,6 +118,18 @@
                               (python . t)))
   (org-confirm-babel-evaluate nil))
 
+;;;; Org-num
+(use-package org-num
+  :ensure nil
+  :diminish
+  :bind ( :map krisb-toggle-keymap
+          ("n" . org-num-mode))
+  :custom
+  (org-num-face 'fixed-pitch)
+  (org-num-skip-commented t)
+  (org-num-skip-footnotes t)
+  (org-num-skip-unnumbered t))
+
 ;;; Org-modern
 (use-package org-modern
   :hook ((org-mode . org-modern-mode)
