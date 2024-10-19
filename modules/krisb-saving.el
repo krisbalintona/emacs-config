@@ -79,4 +79,4 @@ Then apply ARGS."
 (add-hook 'on-first-file-hook #'auto-save-visited-mode)
 
 ;;; Provide
-(provide /krisb-saving)
+(provide 'krisb-saving)

@@ -117,6 +117,7 @@
 
 (require 'krisb-org)
 (require 'krisb-citations)
+(require 'krisb-pdfs)
 (require 'krisb-mermaid)
 
 ;;; Load custom file
