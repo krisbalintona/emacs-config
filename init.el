@@ -50,7 +50,11 @@
   (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
         no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
   :config
-  (no-littering-theme-backups)) ; Sets various built-in variables
+  ;; Ensure the directories exist
+  (mkdir no-littering-etc-directory t)
+  (mkdir no-littering-var-directory t)
+
+  (no-littering-theme-backups))
 
 ;;; On
 ;; Package exposes a number of utility hooks and functions ported from Doom
