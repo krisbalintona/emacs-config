@@ -622,6 +622,106 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-completion)
 #+end_src
 
+** =krisb-org.el=
+
+#+begin_src emacs-lisp :tanble "modules/krisb-org.el"
+  ;;; Org
+  (use-package org
+    :hook ((org-mode . variable-pitch-mode)
+           (org-mode . visual-line-mode)
+           (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 120))))
+    :bind (("C-M-s-s" . org-store-link)
+           :map krisb-note-keymap
+           ("c" . org-capture))
+    :custom
+    (org-directory krisb-org-directory)
+
+    ;; Headline appearance
+    (org-hide-leading-stars nil)
+    (org-n-level-faces 8)
+    (org-cycle-separator-lines 2)
+    (org-cycle-level-faces t)
+    (org-ellipsis " ⮷")
+    (org-startup-folded 'nofold)
+    (org-tags-column 0)
+
+    ;; Markup appearance
+    (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
+    (org-hide-macro-markers nil)
+    (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
+    (org-pretty-entities-include-sub-superscripts t) ; Show superscripts and subscripts? Also see `org-export-with-sub-superscripts'
+    (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
+    (org-hidden-keywords nil)
+
+    ;; Movement
+    (org-special-ctrl-a/e t)
+    (org-ctrl-k-protect-subtree 'error)
+
+    ;; Plain lists
+    (org-list-allow-alphabetical t)
+    (org-list-use-circular-motion t)
+
+    ;; Headline insertion
+    (org-blank-before-new-entry
+     '((heading . auto)
+       ;; Don't let Emacs make decisions about where to insert newlines
+       (plain-list-item . nil)))
+    (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
+    (org-M-RET-may-split-line '((table . nil)
+                                (default . t)))
+
+    ;; Blocks
+    (org-structure-template-alist
+     '(("s" . "src")
+       ("e" . "src emacs-lisp")
+       ("E" . "src emacs-lisp :results value code :lexical t")
+       ("t" . "src emacs-lisp :tangle FILENAME")
+       ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
+       ("x" . "example")
+       ("X" . "export")
+       ("v" . "verse")
+       ("c" . "comment")
+       ("q" . "quote")))
+    (org-confirm-babel-evaluate nil)
+
+    ;; Other
+    (org-file-apps
+     '((directory . emacs)
+       ("\\.mm\\'" . default)
+       ("\\.x?html?\\'" . default)
+       ("\\.pdf\\'" . default)
+       ("\\.docx\\'" . system)
+       ("\\.odt\\'" . system)
+       ;; Default to `auto-mode-alist'
+       (auto-mode . emacs)))
+    (org-fold-catch-invisible-edits 'show-and-error)
+    (org-edit-timestamp-down-means-later t)
+    :custom-face
+    (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
+    (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
+    :config
+    ;; Make org-open-at-point follow file links in the same window
+    (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
+
+    ;; Pulsar pulses
+    (with-eval-after-load 'pulsar
+      (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
+        (add-hook hook #'pulsar-recenter-center)
+        (add-hook hook #'pulsar-reveal-entry))))
+
+
+  ;;; Org-src
+  (use-package org-src
+    :ensure nil
+    :custom
+    (org-src-fontify-natively t)
+    (org-src-window-setup 'current-window)
+    (org-src-block-faces nil)) ; Open src block window on current buffer were in the language's major mode
+
+  ;;; Provide
+  (provide 'krisb-org)
+#+end_src
+
 * Lisp (libraries)
 :PROPERTIES:
 :VISIBILITY: children

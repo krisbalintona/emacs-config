@@ -26,90 +26,6 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Org
-;;;;; Itself
-(use-package org
-  :hook
-  ((org-mode . variable-pitch-mode)
-   (org-mode . visual-line-mode)
-   (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 120))))
-  :bind (("C-M-s-s" . org-store-link)
-         :map org-mode-map
-         ("C-M-<up>" . org-up-element))
-  :bind
-  ( :map krisb-note-keymap
-    ("c" . org-capture))
-  :custom
-  (org-directory krisb-org-directory)
-  (org-special-ctrl-a/e t)
-  (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
-
-  (org-hide-leading-stars nil)
-  (org-startup-folded 'nofold)
-  (org-ellipsis " ⮷")
-  (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
-  (org-hide-macro-markers nil)
-  (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
-  (org-pretty-entities-include-sub-superscripts t) ; Show superscripts and subscripts? Also see `org-export-with-sub-superscripts'
-  (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
-  (org-hidden-keywords nil)
-  (org-ctrl-k-protect-subtree 'error)
-  (org-tags-column 0)
-
-  (org-list-allow-alphabetical t)
-  (org-list-use-circular-motion t)
-
-  (org-blank-before-new-entry
-   '((heading . auto)
-     ;; Don't let Emacs make decisions about where to insert newlines
-     (plain-list-item . nil)))
-  (org-cycle-separator-lines 2)
-  (org-cycle-level-faces t)
-  (org-n-level-faces 8)
-
-  (org-return-follows-link nil)
-  (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
-  (org-M-RET-may-split-line '((table . nil)
-                              (default . t)))
-
-  (org-file-apps
-   '((directory . emacs)
-     ("\\.mm\\'" . default)
-     ("\\.x?html?\\'" . default)
-     ("\\.pdf\\'" . default)
-     ("\\.docx\\'" . system)
-     ("\\.odt\\'" . system)
-     ;; Default to `auto-mode-alist'
-     (auto-mode . emacs)))
-
-  (org-fold-catch-invisible-edits 'show-and-error)
-  (org-edit-timestamp-down-means-later t)
-
-  ;; Org-babel et. al
-  (setq org-structure-template-alist
-        '(("s" . "src")
-          ("e" . "src emacs-lisp")
-          ("E" . "src emacs-lisp :results value code :lexical t")
-          ("t" . "src emacs-lisp :tangle FILENAME")
-          ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
-          ("x" . "example")
-          ("X" . "export")
-          ("v" . "verse")
-          ("c" . "comment")
-          ("q" . "quote")))
-  (org-confirm-babel-evaluate nil)
-  (org-ditaa-jar-path                   ; EAF happens to install it...
-   "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
-  :custom-face
-  (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
-  (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
-  :config
-  ;; Make org-open-at-point follow file links in the same window
-  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
-
-  (with-eval-after-load 'pulsar
-    (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
-      (add-hook hook #'pulsar-recenter-center)
-      (add-hook hook #'pulsar-reveal-entry))))
 
 ;;;;; Org-num
 (use-package org-num
@@ -274,14 +190,6 @@ have `org-warning' face."
   (org-fontify-done-headline nil)
   (org-fontify-whole-block-delimiter-line nil)
   (org-fontify-quote-and-verse-blocks t))
-
-;;;;; Org-src
-(use-package org-src
-  :ensure nil
-  :after org
-  :custom
-  (org-src-fontify-natively t)
-  (org-src-block-faces nil))
 
 ;;;;; Org-archive
 (use-package org-archive
