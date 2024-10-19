@@ -60,18 +60,6 @@
      ("OPTIMIZE" . "SandyBrown"))))
 
 ;;;; Info
-;;;;; Info-variable-pitch
-;; Mixed pitch in Info pages
-(use-package info-variable-pitch
-  ;; :ensure (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
-  :vc (:url "https://github.com/kisaragi-hiu/info-variable-pitch.git")
-  :hook (Info-selection . info-variable-pitch-mode))
-
-;;;;; Info-colors
-;; Fontify useful parts of info buffers
-(use-package info-colors
-  :hook (Info-selection . info-colors-fontify-node))
-
 ;;;;; Inform
 ;; Package `inform’ provides links from elisp symbols (quoted functions,
 ;; variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
@@ -907,11 +895,6 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
          (on-first-buffer . async-bytecomp-package-mode))
   :custom
   (async-bytecomp-allowed-packages 'all))
-
-;;;;; Info
-(use-package info
-  :custom
-  (Info-isearch-search nil))            ; Restore default isearch behavior
 
 ;;;;; Which-func
 (use-package which-func
