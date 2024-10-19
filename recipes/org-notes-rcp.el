@@ -27,22 +27,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Denote-explore
-;;;;; This
-;; Useful Denote utilities
-(use-package denote-explore
-  :after denote
-  ;; NOTE 2024-02-28: Don't forget to install the required dependencies required
-  ;; for my chosen `denote-explore-network-format'
-  :ensure-system-package ((dot . graphviz)
-                          (R . r))
-  :custom
-  (denote-explore-network-directory     ; Have to end path in slash
-   (no-littering-expand-var-file-name "denote-explore/"))
-  (denote-explore-network-format 'd3.js)
-  (denote-explore-network-graphviz-filetype "pdf")
-  (denote-explore-network-keywords-ignore '("archive")))
-
 ;;;;; Update link descriptions
 (with-eval-after-load 'org
   (defun kb/denote-explore-update-link-descriptions (confirmp)

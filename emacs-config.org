@@ -1848,6 +1848,21 @@ Enhancements to all built-in-based completions.
     (denote-journal-extras-keyword "journal")
     (denote-journal-extras-title-format 'day-date-month-year-24h))
 
+  ;;; Denote-explore
+  ;; Useful Denote utilities
+  (use-package denote-explore
+    :after denote
+    ;; Don't forget to install the required dependencies required for my chosen
+    ;; `denote-explore-network-format'
+    :ensure-system-package ((dot . graphviz)
+                            (R . r))
+    :custom
+    (denote-explore-network-directory     ; Have to end path in slash
+     (no-littering-expand-var-file-name "denote-explore/"))
+    (denote-explore-network-format 'd3.js)
+    (denote-explore-network-graphviz-filetype "pdf")
+    (denote-explore-network-keywords-ignore '("archive")))
+
   ;;; Provide
   (provide 'krisb-denote)
 #+end_src
