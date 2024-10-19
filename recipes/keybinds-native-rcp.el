@@ -28,26 +28,6 @@
 
 ;;;; Commands
 ;;;;; Inserting empty lines
-(defun kb/open-line-above-goto ()
-  "Insert an empty line above the current line.
-Position the cursor at it's beginning, according to the current
-mode. Credit to
-https://emacsredux.com/blog/2013/06/15/open-line-above/"
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (previous-line)
-  (indent-according-to-mode))
-
-(defun kb/open-line-below-goto ()
-  "Insert an empty line after the current line.
-Position the cursor at its beginning, according to the current
-mode. Credit to
-https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-
 (defun kb/open-line-above-insert ()
   "Insert an empty line above the current one without going to it."
   (interactive)
@@ -58,42 +38,9 @@ https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (interactive)
   (save-excursion (kb/open-line-below-goto)))
 
-;;;;; Join lines
-(defun kb/join-line-above ()
-  "Join the current line with the line above."
-  (interactive)
-  (save-excursion (delete-indentation))
-  (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
-    (funcall indent-line-function)))
-
-(defun kb/join-line-below ()
-  "Join the current line with the line below."
-  (interactive)
-  (save-excursion (delete-indentation t))
-  (when (bolp)
-    (funcall indent-line-function)))
-
-;;;;; Scrolling
-(bind-key "C-M-s-P" #'scroll-down-line)
-(bind-key "C-M-s-N" #'scroll-up-line)
-
 ;;;; Text editing
-(bind-key "C-S-p" #'kb/open-line-above-goto)
-(bind-key "C-S-n" #'kb/open-line-below-goto)
-(bind-key "C-S-k" #'kb/join-line-above)
-(bind-key "C-S-j" #'kb/join-line-below)
 (bind-chords ("[ " . kb/open-line-above-insert))
 (bind-chords ("] " . kb/open-line-below-insert))
-
-;;;; Other
-(defun kb/restart-or-kill-emacs (&optional arg restart)
-  "Kill Emacs.
-If called with RESTART or `universal-argument’, restart Emacs
-instead. Passes ARG to `save-buffers-kill-emacs'."
-  (interactive "P")
-  (save-buffers-kill-emacs arg (or restart (equal arg '(4)))))
-
-(bind-key [remap save-buffers-kill-terminal] #'kb/restart-or-kill-emacs)
 
 (provide 'keybinds-native-rcp)
 ;;; keybinds-native-rcp.el ends here
