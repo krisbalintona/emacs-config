@@ -59,7 +59,7 @@
             (bg-mode-line-inactive      "#292d48")
             (fg-mode-line-inactive      "#969696")))
 
-  (defun kb/modus-themes--setup-font-lock (theme)
+  (defun krisb-modus-themes--setup-font-lock (theme)
     "Set up font-lock faces."
     ;; As described in (info "(modus-themes) DIY Measure color contrast"), I can
     ;; check for contrast by making sure the color contrast (relative luminance)
@@ -72,7 +72,7 @@
       (set-face-attribute 'font-lock-function-call-face nil :foreground "#161BA1"))
      ((string-match "^modus-vivendi" (symbol-name theme))
       (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2"))))
-  (add-hook 'enable-theme-functions #'kb/modus-themes--setup-font-lock))
+  (add-hook 'enable-theme-functions #'krisb-modus-themes--setup-font-lock))
 
 ;;; Cursory
 ;; Global and local cursor presets

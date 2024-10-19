@@ -648,13 +648,13 @@ This sets the default graphical element settings used by every frame.
        ;; orderless-without-literal          ; Recommended for dispatches instead
        ))
     (orderless-component-separator 'orderless-escapable-split-on-space)
-    (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
+    (orderless-style-dispatchers '(krisb-orderless-consult-dispatch))
     :config
     ;; Eglot forces `flex' by default.
     (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
 
     ;; Taken from Doom
-    (defun kb/orderless-consult-dispatch (pattern _index _total)
+    (defun krisb-orderless-consult-dispatch (pattern _index _total)
       "Basically `orderless-affix-dispatch-alist' but with prefixes too."
       (cond
        ;; Ensure $ works with Consult commands, which add disambiguation suffixes
@@ -748,7 +748,7 @@ This sets the default graphical element settings used by every frame.
               (bg-mode-line-inactive      "#292d48")
               (fg-mode-line-inactive      "#969696")))
 
-    (defun kb/modus-themes--setup-font-lock (theme)
+    (defun krisb-modus-themes--setup-font-lock (theme)
       "Set up font-lock faces."
       ;; As described in (info "(modus-themes) DIY Measure color contrast"), I can
       ;; check for contrast by making sure the color contrast (relative luminance)
@@ -761,7 +761,7 @@ This sets the default graphical element settings used by every frame.
         (set-face-attribute 'font-lock-function-call-face nil :foreground "#161BA1"))
        ((string-match "^modus-vivendi" (symbol-name theme))
         (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2"))))
-    (add-hook 'enable-theme-functions #'kb/modus-themes--setup-font-lock))
+    (add-hook 'enable-theme-functions #'krisb-modus-themes--setup-font-lock))
 
   ;;; Cursory
   ;; Global and local cursor presets
@@ -1125,7 +1125,7 @@ This sets the default graphical element settings used by every frame.
      ((t :height 0.9 :width condensed :weight regular :underline nil)))
     (org-modern-todo ((t :weight semibold :inverse-video t :inherit org-modern-label)))
     :config
-    (defun kb/modus-themes--setup-org-modern (theme)
+    (defun krisb-modus-themes--setup-org-modern (theme)
       "Set up org-modern faces."
       (when (string-match "^modus-" (symbol-name theme))
         ;; See my value for `org-tag-faces'
@@ -1133,7 +1133,7 @@ This sets the default graphical element settings used by every frame.
                 `(("project"
                    :foreground ,(face-background 'default nil t)
                    :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))))
-    (add-hook 'enable-theme-functions #'kb/modus-themes--setup-org-modern))
+    (add-hook 'enable-theme-functions #'krisb-modus-themes--setup-org-modern))
 
   ;;; Provide
   (provide 'krisb-org)

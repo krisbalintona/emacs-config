@@ -195,13 +195,13 @@
      ;; orderless-without-literal          ; Recommended for dispatches instead
      ))
   (orderless-component-separator 'orderless-escapable-split-on-space)
-  (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
+  (orderless-style-dispatchers '(krisb-orderless-consult-dispatch))
   :config
   ;; Eglot forces `flex' by default.
   (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
 
   ;; Taken from Doom
-  (defun kb/orderless-consult-dispatch (pattern _index _total)
+  (defun krisb-orderless-consult-dispatch (pattern _index _total)
     "Basically `orderless-affix-dispatch-alist' but with prefixes too."
     (cond
      ;; Ensure $ works with Consult commands, which add disambiguation suffixes

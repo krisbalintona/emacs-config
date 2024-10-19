@@ -174,7 +174,7 @@
    ((t :height 0.9 :width condensed :weight regular :underline nil)))
   (org-modern-todo ((t :weight semibold :inverse-video t :inherit org-modern-label)))
   :config
-  (defun kb/modus-themes--setup-org-modern (theme)
+  (defun krisb-modus-themes--setup-org-modern (theme)
     "Set up org-modern faces."
     (when (string-match "^modus-" (symbol-name theme))
       ;; See my value for `org-tag-faces'
@@ -182,7 +182,7 @@
               `(("project"
                  :foreground ,(face-background 'default nil t)
                  :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))))
-  (add-hook 'enable-theme-functions #'kb/modus-themes--setup-org-modern))
+  (add-hook 'enable-theme-functions #'krisb-modus-themes--setup-org-modern))
 
 ;;; Provide
 (provide 'krisb-org)
