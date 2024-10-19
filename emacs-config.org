@@ -434,6 +434,81 @@ This sets the default graphical element settings used by every frame.
     (marginalia-field-width 80)
     (marginalia-align-offset -2))         ; Two to the left
 
+  ;;; Vertico
+  ;;;; Itself
+  (use-package vertico
+    :pin gnu-elpa-devel
+    :bind ("C-M-s-." . vertico-repeat)
+    :hook (minibuffer-setup . vertico-repeat-save)
+    :custom
+    (vertico-count 13)
+    (vertico-resize 'grow-only)
+    (vertico-cycle nil)
+    :config
+    (vertico-mode 1)
+    (require 'krisb-vertico))
+
+  ;;;; Vertico-directory
+  ;; More convenient path modification commands
+  (use-package vertico-directory
+    :requires vertico
+    :ensure nil
+    :bind ( :map vertico-map
+            ("RET" . vertico-directory-enter)
+            ("DEL" . vertico-directory-delete-char)
+            ("M-DEL" . vertico-directory-delete-word))
+    ;; Tidy shadowed file names
+    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+  ;;;; Vertico-multiform
+  (use-package vertico-multiform
+    :requires vertico
+    :ensure nil
+    :demand
+    :custom
+    (vertico-multiform-categories
+     '((consult-grep buffer)
+       (imenu buffer)
+       (buffer (vertico-sort-function . nil))
+       (citar (vertico-sort-function . vertico-sort-history-alpha))))
+    (vertico-multiform-commands
+     '(;; I use jinx now, but I think it's better to not apply a grid layout to it
+       ;; since its use of vertico-groups is useful
+       ("flyspell-correct-*" grid (vertico-grid-annotate . 20))
+       (pdf-view-goto-label (vertico-sort-function . nil))
+       (".+-history" (vertico-sort-function . nil))))
+    :config
+    (vertico-multiform-mode 1))
+
+  ;;;; Vertico-buffer
+  (use-package vertico-buffer
+    :requires vertico
+    :ensure nil
+    :custom
+    (vertico-buffer-hide-prompt nil)
+    (vertico-buffer-display-action '(display-buffer-reuse-window)))
+
+  ;;;; Vertico-prescient
+  (use-package vertico-prescient
+    :requires prescient
+    :after vertico
+    :custom
+    (vertico-prescient-completion-styles '(prescient flex))
+    (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
+    (vertico-prescient-enable-sorting t)
+    (vertico-prescient-override-sorting nil)
+    ;; Only set if `vertico-prescient-enable-filtering' is non-nil. See also
+    ;; `prescient--completion-recommended-overrides'
+    (vertico-prescient-completion-category-overrides
+     '(;; Include `partial-completion' to enable wildcards and partial paths.
+       (file (styles partial-completion prescient))
+       ;; Eglot forces `flex' by default.
+       (eglot (styles prescient flex))))
+    :config
+    (vertico-prescient-mode 1))
+
+
+
   ;;; Provide
   (provide 'krisb-completion)
 #+end_src
@@ -1054,6 +1129,84 @@ This sets the default graphical element settings used by every frame.
   ;;; krisb-common.el ends here
 #+end_src
 
+** =krisb-vertico.el=
+#+begin_src emacs-lisp :tangle "lisp/krisb-vertico.el"
+  ;;; krisb-vertico.el --- Vertico extensions          -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2024  Kristoffer Balintona
+
+  ;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+  ;; Keywords: lisp
+
+  ;; This program is free software; you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation, either version 3 of the License, or
+  ;; (at your option) any later version.
+
+  ;; This program is distributed in the hope that it will be useful,
+  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ;; GNU General Public License for more details.
+
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  ;;; Commentary:
+
+  ;; Extension to Vertico.
+
+  ;;; Code:
+  (require 'vertico)
+
+  ;;; Tab for tramp paths
+  ;; Exception for TAB behavior when completing TRAMP paths. See
+  ;; https://github.com/minad/vertico/wiki#restore-old-tab-behavior-when-completing-tramp-paths
+  (defun krisb-vertico-insert-unless-tramp ()
+    "Insert current candidate in minibuffer, except for tramp."
+    (interactive)
+    (if (vertico--remote-p (vertico--candidate))
+        (minibuffer-complete)
+      (vertico-insert)))
+  (bind-key [remap vertico-insert] #'krisb-vertico-insert-unless-tramp 'vertico-map)
+
+  ;;; Exceptions for org commands
+  ;; Special for `org-agenda-filter' and `org-tags-view'. See
+  ;; https://github.com/minad/vertico?tab=readme-ov-file#org-agenda-filter-and-org-tags-view
+  (defun krisb-vertico-org-enforce-basic-completion (&rest args)
+    (minibuffer-with-setup-hook
+        (:append
+         (lambda ()
+           (let ((map (make-sparse-keymap)))
+             (define-key map [tab] #'minibuffer-complete)
+             (use-local-map (make-composed-keymap (list map) (current-local-map))))
+           (setq-local completion-styles (cons 'basic completion-styles)
+                       vertico-preselect 'prompt)))
+      (apply args)))
+  (with-eval-after-load 'org
+    (declare-function org-make-tags-matcher "org")
+    (advice-add #'org-make-tags-matcher :around #'krisb-vertico-org-enforce-basic-completion))
+  (with-eval-after-load 'org-agenda
+    (declare-function org-agenda-filter "org-agenda")
+    (advice-add #'org-agenda-filter :around #'krisb-vertico-org-enforce-basic-completion))
+
+  ;;; Truncate long filenames
+  ;; Left-truncate filename candidates. Taken from
+  ;; https://github.com/minad/vertico/wiki#left-truncate-recentf-filename-candidates-eg-for-consult-buffer
+  (defun krisb-vertico-truncate-filename-candidates (args)
+    (if-let ((arg (car args))
+             (type (get-text-property 0 'multi-category arg))
+             ((eq (car-safe type) 'file))
+             (w (max 30 (- (window-width) 38)))
+             (l (length arg))
+             ((> l w)))
+        (setcar args (concat "…" (truncate-string-to-width arg l (- l w)))))
+    args)
+  (advice-add #'vertico--format-candidate :filter-args #'krisb-vertico-truncate-filename-candidates)
+
+  ;;; Provide
+  (provide 'krisb-vertico)
+  ;;; krisb-vertico.el ends here
+#+end_src
 * COMMENT Removed
 :PROPERTIES:
 :VISIBILITY: folded
