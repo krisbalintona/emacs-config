@@ -1,0 +1,2 @@
+;;; Provide
+(provide 'krisb-notmuch)

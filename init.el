@@ -123,6 +123,9 @@
 
 (require 'krisb-elisp)
 
+(require 'krisb-email-composition)
+(require 'krisb-notmuch)
+
 (require 'krisb-mermaid)
 
 ;;; Load custom file

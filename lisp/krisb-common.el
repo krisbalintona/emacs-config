@@ -90,6 +90,9 @@ Meant to be used as the value of `org-directory'.")
   "The directory for everything Zotero.
 Useful for some citation-related configurations.")
 
+(defvar krisb-email-directory (expand-file-name "~/Documents/emails/")
+  "Directory that houses my local email files.")
+
 ;;; Functions
 
 ;;; Macros
