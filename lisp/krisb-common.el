@@ -82,5 +82,6 @@ Meant to be used as the value of `org-directory'.")
 (bind-key "C-M-s-t" krisb-toggle-keymap 'global-map)
 
 
+;;; Provide
 (provide 'krisb-common)
 ;;; krisb-common.el ends here

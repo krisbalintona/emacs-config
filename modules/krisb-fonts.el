@@ -107,4 +107,5 @@
   (with-eval-after-load 'pulsar
     (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
+;;; Provide
 (provide 'krisb-fonts)

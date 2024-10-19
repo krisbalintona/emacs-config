@@ -342,6 +342,7 @@ This sets the default graphical element settings used by every frame.
     (emacs-gc-stats-remind (* 7))  ; Optionally set reminder to upload the stats
     (emacs-gc-stats-inhibit-command-name-logging nil))
 
+  ;;; Provide
   (provide 'krisb-garbage-collection)
 #+end_src
 
@@ -457,6 +458,7 @@ This sets the default graphical element settings used by every frame.
     (with-eval-after-load 'pulsar
       (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
+  ;;; Provide
   (provide 'krisb-fonts)
 #+end_src
 
@@ -568,6 +570,7 @@ This sets the default graphical element settings used by every frame.
   (bind-key "C-M-s-t" krisb-toggle-keymap 'global-map)
 
 
+  ;;; Provide
   (provide 'krisb-common)
   ;;; krisb-common.el ends here
 #+end_src

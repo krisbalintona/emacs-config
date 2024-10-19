@@ -68,4 +68,5 @@
   (emacs-gc-stats-remind (* 7))  ; Optionally set reminder to upload the stats
   (emacs-gc-stats-inhibit-command-name-logging nil))
 
+;;; Provide
 (provide 'krisb-garbage-collection)
