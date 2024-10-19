@@ -162,7 +162,7 @@ Tagging is done by `krisb-notmuch-show-tag-thread'."
 (advice-add 'notmuch-mua-new-reply :around #'krisb-notmuch--set-message-citation-style)
 
 ;;;; `notmuch-mua-reply' overide to obey `message-cite-reply-position'
-(defun kb/notmuch-mua-reply (query-string &optional sender reply-all duplicate)
+(defun krisb-notmuch-mua-reply (query-string &optional sender reply-all duplicate)
   "Like `notmuch-mua-reply' but positions citation based on `message-cite-reply-position'."
   (let* ((duparg (and duplicate (list (format "--duplicate=%d" duplicate))))
          (args `("reply" "--format=sexp" "--format-version=5" ,@duparg))
@@ -282,7 +282,7 @@ Tagging is done by `krisb-notmuch-show-tag-thread'."
   (push-mark)
   (message-goto-body)
   (set-buffer-modified-p nil))
-(advice-add 'notmuch-mua-reply :override #'kb/notmuch-mua-reply)
+(advice-add 'notmuch-mua-reply :override #'krisb-notmuch-mua-reply)
 
 ;;; Provide
 (provide 'krisb-notmuch-ext)
