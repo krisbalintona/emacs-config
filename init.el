@@ -114,6 +114,7 @@
 
 (require 'krisb-saving)
 (require 'krisb-completion)
+(require 'krisb-windows)
 
 (require 'krisb-org)
 (require 'krisb-org-agenda)

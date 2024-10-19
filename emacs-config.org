@@ -308,6 +308,7 @@ This sets the default graphical element settings used by every frame.
 
   (require 'krisb-saving)
   (require 'krisb-completion)
+  (require 'krisb-windows)
 
   (require 'krisb-org)
   (require 'krisb-org-agenda)
@@ -1395,7 +1396,7 @@ Enhancements to all built-in-based completions.
                      (window-height . 0.25)))))
 
   ;;; Provide
-  (provide 'krisb-windows.el)
+  (provide 'krisb-windows)
 #+end_src
 
 ** Appearance
@@ -3056,6 +3057,7 @@ Enhancements to all built-in-based completions.
 ** Programming
 
 *** =krisb-elisp.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-elisp.el"
   ;;; Documentation
   ;;;; Help
@@ -3155,6 +3157,7 @@ Enhancements to all built-in-based completions.
   ;;; Provide
   (provide 'krisb-elisp)
 #+end_src
+
 * Lisp (libraries)
 :PROPERTIES:
 :VISIBILITY: children

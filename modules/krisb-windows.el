@@ -44,4 +44,4 @@
                    (window-height . 0.25)))))
 
 ;;; Provide
-(provide 'krisb-windows.el)
+(provide 'krisb-windows)
