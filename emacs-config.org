@@ -236,6 +236,9 @@ This sets the default graphical element settings used by every frame.
     (mkdir no-littering-etc-directory t)
     (mkdir no-littering-var-directory t)
 
+    ;; Read docstring. Sets more secure values for
+    ;; `auto-save-file-name-transforms', `backup-directory-alist', and
+    ;; `undo-tree-history-directory-alist'.
     (no-littering-theme-backups))
 #+end_src
 
