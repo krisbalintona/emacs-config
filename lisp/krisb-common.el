@@ -26,8 +26,40 @@
 
 ;;; Variables
 
-;;;; Org
+;;;; Me
+(setq user-full-name "Kristoffer Balintona"
+      user-mail-address "krisbalintona@gmail.com")
 
+;;;; System
+(defconst krisb-system-win-p
+  (eq system-type 'windows-nt)
+  "Are we running on a WinTel system?")
+
+(defconst krisb-system-mac-p
+  (eq system-type 'darwin)
+  "Are we running on a Mac system?")
+
+(defconst krisb-system-linux-p
+  (eq system-type 'gnu/linux)
+  "Are we running on a GNU/Linux system?")
+
+(defconst krisb-linux-distribution
+  (when krisb-system-linux-p (shell-command-to-string "printf %s \"$(lsb_release -sd)\""))
+  "An escaped string that has the name of my Linux distribution.")
+
+(defconst krisb-linux-ubuntu-p
+  (integerp (string-match "Ubuntu" krisb-linux-distribution))
+  "Is this Ubuntu?")
+
+(defconst krisb-linux-fedora-p
+  (integerp (string-match "Fedora" krisb-linux-distribution))
+  "Is this Fedora?")
+
+(defconst krisb-linux-arch-p
+  (integerp (string-match "Arch" krisb-linux-distribution))
+  "Is this Arch Linux?")
+
+;;;; Org
 (defvar krisb-org-directory (expand-file-name "org-database" "~/Documents")
   "The directory holding my org files.
 Meant to be used as the value of `org-directory'.")

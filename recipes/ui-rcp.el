@@ -373,7 +373,7 @@ This version removes delimiters.")
 ;; 29.0.50: https://github.com/TheVaffel/emacs, but was merged on January 30,
 ;; 2022:
 ;; https://github.com/emacs-mirror/emacs/commit/5c87d826201a5cae242ce5887a0aa7e24ad6f5ee
-(unless kb/linux-ubuntu
+(unless krisb-linux-ubuntu-p
   (set-frame-parameter nil 'alpha-background 100)
   (add-to-list 'default-frame-alist '(alpha-background . 100)))
 
