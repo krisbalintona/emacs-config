@@ -242,60 +242,6 @@ replacement."
                   (let ((save-silently t))
                     (apply orig-fun args)))))
 
-;;;; Citar-denote
-(use-package citar-denote
-  :demand t
-  :after citar
-  :diminish
-  :bind (("C-c b c" . citar-create-note)
-         :map krisb-note-keymap
-         ("b b" . citar-denote-link-reference)
-         ("b o" . citar-denote-dwim)
-         ("b c" . citar-create-note)
-         ("b n" . citar-denote-open-note)
-         ("b k a" . citar-denote-add-citekey)
-         ("b k r" . citar-denote-remove-citekey))
-  :custom
-  (citar-denote-subdir "/bib/")
-  (citar-denote-signature nil)
-  (citar-denote-title-format nil)       ; Use citekey as title
-  (citar-denote-title-format-authors 2)
-  (citar-denote-title-format-andstr "and")
-  (citar-denote-keyword "bib")
-  (citar-denote-use-bib-keywords nil)
-  (citar-denote-template 'default)
-  :config
-  (citar-denote-mode 1)
-
-  (setq citar-denote-file-types
-        `((org
-           :reference-format "#+reference: %s\n" ; Keep single space
-           :reference-regex "^#\\+reference\\s-*:")
-          (markdown-yaml
-           :reference-format "reference:  %s\n"
-           :reference-regex "^reference\\s-*:")
-          (markdown-toml
-           :reference-format "reference  = %s\n"
-           :reference-regex "^reference\\s-*=")
-          (text
-           :reference-format "reference:  %s\n"
-           :reference-regex "^reference\\s-*:")))
-
-  ;; Keep the reference keyword after Denote's identifier keyword
-  (defun kb/citar-denote--add-reference (citekey file-type)
-    "Add reference with CITEKEY in front matter of the file with FILE-TYPE.
-
-`citar-denote-add-citekey' is the interactive version of this function."
-    (save-excursion
-      (goto-char (point-min))
-      (re-search-forward (rx bol (literal "#+identifier:")) nil t)
-      (if (eq (or file-type 'org) 'org)
-          (forward-line 1)
-        (forward-line -2))
-      (insert
-       (format (citar-denote--reference-format file-type) citekey))))
-  (advice-add 'citar-denote--add-reference :override #'kb/citar-denote--add-reference))
-
 ;;;; Darkroom
 (use-package darkroom
   :bind
