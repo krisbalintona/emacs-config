@@ -350,6 +350,7 @@ This sets the default graphical element settings used by every frame.
 ** =krisb-themes.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-themes.el"
+  ;;; Modus-themes
   (use-package modus-themes
     :custom
     (modus-themes-custom-auto-reload t) ; Only applies to `customize-set-variable' and related
@@ -424,6 +425,66 @@ This sets the default graphical element settings used by every frame.
        ((string-match "^modus-vivendi" (symbol-name theme))
         (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2"))))
     (add-hook 'enable-theme-functions #'kb/modus-themes--setup-font-lock))
+
+  ;;; Cursory
+  ;; Global and local cursor presets
+  (use-package cursory
+    :hook ((prog-mode . (lambda () (cursory-set-preset 'code :local)))
+           ((org-mode markdown-mode) . (lambda () (cursory-set-preset 'prose :local))))
+    :custom
+    (cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))
+    (cursory-presets
+     '((code
+        :cursor-type box
+        :cursor-in-non-selected-windows hollow
+        :blink-cursor-mode 1)
+       (prose
+        :cursor-type (bar . 2)
+        :blink-cursor-mode -1
+        :cursor-in-non-selected-windows (hbar . 3))
+       (default)
+       (t                                 ; The fallback values
+        :cursor-type box
+        :cursor-in-non-selected-windows hollow
+        :blink-cursor-mode 1
+        :blink-cursor-blinks 10
+        :blink-cursor-delay 5
+        :blink-cursor-interval 0.5)))
+    :config
+    ;; Set last preset or fall back to desired style from `cursory-presets'.
+    (when (file-exists-p cursory-latest-state-file)
+      (cursory-set-preset (or (cursory-restore-latest-preset) 'default)))
+
+    ;; Persist latest preset used across Emacs sessions
+    (cursory-mode 1))
+
+
+  ;;; Lin
+  ;; Lin is a stylistic enhancement for Emacs' built-in `hl-line-mode'. It remaps
+  ;; the `hl-line' face (or equivalent) buffer-locally to a style that is optimal
+  ;; for major modes where line selection is the primary mode of interaction.
+  (use-package lin
+    :custom
+    (lin-face 'lin-cyan)
+    :config
+    (lin-global-mode 1)
+
+    (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
+
+  ;;; Pulsar
+  ;; Alternative to `pulse.el'
+  (use-package pulsar
+    :hook ((consult-after-jump . pulsar-recenter-top)
+           (consult-after-jump . pulsar-reveal-entry)
+           (imenu-after-jump . pulsar-recenter-top)
+           (imenu-after-jump . pulsar-reveal-entry))
+    :custom
+    (pulsar-pulse t)
+    (pulsar-face 'pulsar-red)
+    (pulsar-delay 0.05)
+    (pulsar-iterations 5)
+    :config
+    (pulsar-global-mode 1))
 
   ;;; Provide
   (provide 'krisb-themes)
