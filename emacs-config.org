@@ -1716,9 +1716,9 @@ Enhancements to all built-in-based completions.
   (provide 'krisb-org)
 #+end_src
 
-** Blogging
+*** Blogging
 
-*** =krisb-mermaid.el=
+**** =krisb-mermaid.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-mermaid.el"
   ;;; Mermaid-mode
