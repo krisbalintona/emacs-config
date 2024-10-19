@@ -24,22 +24,6 @@
 
 ;;; Code:
 
-;;;; Org-expiry
-(use-package org-expiry
-  :ensure nil
-  :hook (org-capture-before-finalize . org-expiry-insert-created)
-  :custom
-  (org-expiry-inactive-timestamps t))
-
-;;;; Org-depend
-;; Add blocking and triggering actions when an org-todo state is changed.
-(use-package org-depend
-  :ensure nil
-  :after org-contrib
-  :demand
-  :after org-agenda
-  :commands kb/consult-org-id-get-create)
-
 ;;;; Org-edna
 ;; Also look at `org-edna' with `org-linker-edna'
 ;; (https://github.com/toshism/org-linker-edna) (the second of which requires

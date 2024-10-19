@@ -459,5 +459,20 @@ Same as default but truncates with `truncate-string-ellipsis'."
   (org-habit-completed-glyph ?●)
   (org-habit-missed-glyph ?○))
 
+;;;; Org-expiry
+(use-package org-expiry
+  :requires org-contrib
+  :ensure nil
+  :hook (org-capture-before-finalize . org-expiry-insert-created)
+  :custom
+  (org-expiry-inactive-timestamps t))
+
+;;;; Org-depend
+;; Add blocking and triggering actions when an org-todo state is changed.
+(use-package org-depend
+  :requires org-contrib
+  :ensure nil
+  :after org-agenda)
+
 ;;; Provide
 (provide 'krisb-org-agenda)
