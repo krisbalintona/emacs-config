@@ -881,9 +881,13 @@ This sets the default graphical element settings used by every frame.
   (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
     "A list of my bibliography (.bib) files.")
 
-  ;;; Leader keymaps
+  ;;; Functions
 
-  ;;; Leader keys
+  ;;; Macros
+
+  ;;; Commands
+
+  ;;; Keymaps
   (defvar-keymap krisb-note-keymap
     :doc "Prefix for my note-taking needs.")
   (bind-key "C-c n" krisb-note-keymap 'global-map)

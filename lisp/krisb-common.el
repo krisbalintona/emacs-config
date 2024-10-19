@@ -59,7 +59,7 @@ Meant to be used as the value of `org-directory'.")
 
 ;;; Commands
 
-;;; Leader key keymaps
+;;; Keymaps
 (defvar-keymap krisb-note-keymap
   :doc "Prefix for my note-taking needs.")
 (bind-key "C-c n" krisb-note-keymap 'global-map)
