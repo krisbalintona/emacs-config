@@ -1,3 +1,63 @@
+;;; Minibuffer
+(use-package minibuffer
+  :ensure nil
+  :custom
+  (completion-cycle-threshold nil)
+  (completion-lazy-hilit t)             ; Lazy highlighting; added Emacs 30.1
+  (completion-auto-select 'second-tab)
+  (completions-max-height 20)
+  (completion-ignore-case t)
+  (completion-flex-nospace t)
+  (minibuffer-default-prompt-format " [%s]") ; Format of portion for default value
+
+  ;; Completions buffer
+  (completions-format 'one-column)
+  (completions-detailed t) ; Show more details in completion minibuffer (inspired by `marginalia')
+  (completions-group t)    ; Groups; Emacs 28
+
+  ;; Category settings. A non-exhaustve list of known completion categories:
+  ;; - `bookmark'
+  ;; - `buffer'
+  ;; - `charset'
+  ;; - `coding-system'
+  ;; - `color'
+  ;; - `command' (e.g. `M-x')
+  ;; - `customize-group'
+  ;; - `environment-variable'
+  ;; - `expression'
+  ;; - `face'
+  ;; - `file'
+  ;; - `function' (the `describe-function' command bound to `C-h f')
+  ;; - `info-menu'
+  ;; - `imenu'
+  ;; - `input-method'
+  ;; - `kill-ring'
+  ;; - `library'
+  ;; - `minor-mode'
+  ;; - `multi-category'
+  ;; - `package'
+  ;; - `project-file'
+  ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
+  ;; - `theme'
+  ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
+  ;; - `variable' (the `describe-variable' command bound to `C-h v')
+  ;; - `consult-grep'
+  ;; - `consult-isearch'
+  ;; - `consult-kmacro'
+  ;; - `consult-location'
+  ;; - `embark-keybinding'
+  (completion-category-defaults
+   '((buffer (styles . (basic substring)))
+     (unicode-name (styles . (basic substring)))
+     (project-file (styles . (substring)))
+     (xref-location (styles . (substring)))
+     (info-menu (styles . (basic substring)))
+     (symbol-help (styles . (basic shorthand substring)))
+     (calendar-month (display-sort-function . identity))))
+  (completion-category-overrides
+   '((file (styles . (basic partial-completion flex))) ; Include `partial-completion' to enable wildcards and partial paths.
+     (citar-candidate (styles basic substring)))))
+
 ;;; Crm
 (use-package crm
   :ensure nil
@@ -121,7 +181,49 @@
   :config
   (vertico-prescient-mode 1))
 
+;;; Orderless
+;; Alternative and powerful completion style (i.e. filters candidates)
+(use-package orderless
+  :custom
+  (completion-styles '(orderless flex))
+  (orderless-matching-styles
+   '(orderless-regexp
+     orderless-prefixes
+     orderless-initialism
+     ;; orderless-literal
+     ;; orderless-flex
+     ;; orderless-without-literal          ; Recommended for dispatches instead
+     ))
+  (orderless-component-separator 'orderless-escapable-split-on-space)
+  (orderless-style-dispatchers '(kb/orderless-consult-dispatch))
+  :config
+  ;; Eglot forces `flex' by default.
+  (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
 
+  ;; Taken from Doom
+  (defun kb/orderless-consult-dispatch (pattern _index _total)
+    "Basically `orderless-affix-dispatch-alist' but with prefixes too."
+    (cond
+     ;; Ensure $ works with Consult commands, which add disambiguation suffixes
+     ((string-suffix-p "$" pattern)
+      `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x200000-\x300000]*$")))
+     ;; Ignore single !
+     ((string= "!" pattern) `(orderless-literal . ""))
+     ;; Without literal
+     ((string-prefix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1)))
+     ((string-suffix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1 -1)))
+     ;; Character folding
+     ((string-prefix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 1)))
+     ((string-suffix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 0 -1)))
+     ;; Initialism matching
+     ((string-prefix-p "," pattern) `(orderless-initialism . ,(substring pattern 1)))
+     ((string-suffix-p "," pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
+     ;; Literal matching
+     ((string-prefix-p "=" pattern) `(orderless-literal . ,(substring pattern 1)))
+     ((string-suffix-p "=" pattern) `(orderless-literal . ,(substring pattern 0 -1)))
+     ;; Flex matching
+     ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
+     ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
 
 ;;; Provide
 (provide 'krisb-completion)
