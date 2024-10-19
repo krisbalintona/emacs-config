@@ -1,24 +1,3 @@
-;;; Keep the cursor out of the read-only portions of the minibuffer
-(setq minibuffer-prompt-properties
-      '(read-only t intangible t cursor-intangible t face
-                  minibuffer-prompt))
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-;;; Allow minibuffer commands in minibuffer
-(setq enable-recursive-minibuffers t)
-
-;;; Ignore case basically everywhere
-(setq read-buffer-completion-ignore-case t
-      read-file-name-completion-ignore-case t)
-(setq-default case-fold-search t)
-
-;;; `indent-for-tab-command' functionality.
-(setopt tab-always-indent 'complete
-        tab-first-completion 'word)
-
-;;; Provide
-(provide 'krisb-essentials)
-
 ;;; krisb-essentials.el --- Essential Emacs-wide settings  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona
@@ -211,6 +190,24 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 (setq-default sentence-end-double-space nil)
 (add-hook 'prog-mode-hook (lambda () (setq-local sentence-end-double-space t)))
 (add-hook 'conf-mode-hook (lambda () (setq-local sentence-end-double-space t)))
+
+;;;; Keep the cursor out of the read-only portions of the minibuffer
+(setq minibuffer-prompt-properties
+      '(read-only t intangible t cursor-intangible t face
+                  minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+;;;; Allow minibuffer commands in minibuffer
+(setq enable-recursive-minibuffers t)
+
+;;;; Ignore case basically everywhere
+(setq read-buffer-completion-ignore-case t
+      read-file-name-completion-ignore-case t)
+(setq-default case-fold-search t)
+
+;;;; `indent-for-tab-command' functionality.
+(setopt tab-always-indent 'complete
+        tab-first-completion 'word)
 
 (provide 'krisb-essentials)
 ;;; krisb-essentials.el ends here
