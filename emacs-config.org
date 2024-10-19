@@ -945,7 +945,28 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-fonts)
 #+end_src
 
-** Prose
+** Writing
+
+*** =krisb-prose.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
+  ;;; Astute.el
+  (use-package astute
+    :hook (org-mode . astute-mode)
+    :custom
+    (astute-lighter "")
+    (astute-prefix-single-quote-exceptions
+     '("bout"
+       "em"
+       "n'"
+       "cause"
+       "round"
+       "twas"
+       "tis")))
+
+  ;;; Provide
+  (provide 'krisb-prose)
+#+end_src
 
 *** =krisb-org.el=
 

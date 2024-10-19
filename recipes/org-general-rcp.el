@@ -398,20 +398,6 @@ have `org-warning' face."
          (cons "\\(# NOTE\\)"
                (propertize "    N " 'face '(fixed-pitch font-lock-comment-face))))))
 
-;;;;; Astute.el
-(use-package astute
-  :hook (org-mode . astute-mode)
-  :custom
-  (astute-lighter "")
-  (astute-prefix-single-quote-exceptions
-   '("bout"
-     "em"
-     "n'"
-     "cause"
-     "round"
-     "twas"
-     "tis")))
-
 ;;;; Ancillary functionality
 ;;;;; Org-web-tools
 ;; Paste https links with automatic descriptions
