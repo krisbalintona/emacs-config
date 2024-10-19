@@ -615,7 +615,9 @@ Enhancements to all built-in-based completions.
        ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
 #+end_src
 
-*** Vertico
+*** Minibuffer completion
+
+**** Vertico
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Vertico
@@ -678,9 +680,9 @@ Enhancements to all built-in-based completions.
     :after vertico
     :custom
     (vertico-prescient-completion-styles '(prescient flex))
-    (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
     (vertico-prescient-enable-sorting t)
     (vertico-prescient-override-sorting nil)
+    (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
     ;; Only set if `vertico-prescient-enable-filtering' is non-nil. See also
     ;; `prescient--completion-recommended-overrides'
     (vertico-prescient-completion-category-overrides
@@ -690,6 +692,168 @@ Enhancements to all built-in-based completions.
        (eglot (styles prescient flex))))
     :config
     (vertico-prescient-mode 1))
+#+end_src
+
+*** Inline completion
+
+**** Corfu
+
+#+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
+  ;;;; Corfu
+  ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
+  ;; the Emacs infrastructure
+  ;;;;; Itself
+  (use-package corfu
+    :bind ( :map corfu-map
+            ("M-d" . corfu-info-documentation))
+    :custom
+    (corfu-auto nil) ; REVIEW 2024-09-20: Perhaps try https://github.com/minad/corfu?tab=readme-ov-file#auto-completion
+    (corfu-auto-prefix 2)
+    (corfu-auto-delay 0.25)
+    (corfu-on-exact-match 'insert)
+
+    (corfu-min-width 80)
+    (corfu-max-width corfu-min-width)     ; Always have the same width
+    (corfu-count 14)
+    (corfu-scroll-margin 4)
+    (corfu-cycle nil)
+
+    ;; `nil' means to ignore `corfu-separator' behavior, that is, use the older
+    ;; `corfu-quit-at-boundary' = nil behavior. Set this to separator if using
+    ;; `corfu-auto' = `t' workflow (in that case, make sure you also set up
+    ;; `corfu-separator' and a keybind for `corfu-insert-separator', which my
+    ;; configuration already has pre-prepared). Necessary for manual corfu usage with
+    ;; orderless, otherwise first component is ignored, unless `corfu-separator'
+    ;; is inserted.
+    (corfu-quit-at-boundary nil)
+    (corfu-separator ?\s)            ; Use space
+    (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
+    (corfu-preview-current t)
+    (corfu-preselect 'valid)
+    :custom-face
+    ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
+    ;; be adopted in a variable pitch buffer) have inconsistent spacing
+    (corfu-default ((t (:inherit 'default))))
+    :config
+    (global-corfu-mode 1)
+
+    ;; Enable corfu in minibuffer if `vertico-mode' is disabled. From
+    ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
+    (defun krisb-corfu-enable-in-minibuffer ()
+      "Enable Corfu in the minibuffer if vertico is not active."
+      (unless (bound-and-true-p vertico-mode)
+        (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+        (corfu-mode 1)))
+    (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer 1))
+
+  ;;;;; Corfu-history
+  ;; Save the history across Emacs sessions
+  (use-package corfu-history
+    :ensure nil
+    :hook (corfu-mode . corfu-history-mode)
+    :config
+    (with-eval-after-load 'savehist
+      (add-to-list 'savehist-additional-variables 'corfu-history)))
+
+  ;;;;; Corfu-popupinfo
+  ;; Documentation window for corfu!
+  (use-package corfu-popupinfo
+    :ensure nil
+    :hook (corfu-mode . corfu-popupinfo-mode)
+    :bind ( :map corfu-map
+            ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
+            ("M-l" . corfu-popupinfo-location))
+    :custom
+    (corfu-popupinfo-delay '(0.5 . 0.3))
+    (corfu-popupinfo-direction '(right left vertical))
+    (corfu-popupinfo-hide t)
+    (corfu-popupinfo-resize t)
+    (corfu-popupinfo-max-height 20)
+    (corfu-popupinfo-max-width 70)
+    (corfu-popupinfo-min-height 1)
+    (corfu-popupinfo-min-width 30))
+
+  ;;;;; Corfu-prescient
+  (use-package corfu-prescient
+    :requires prescient
+    :after corfu
+    :custom
+    (corfu-prescient-completion-styles '(prescient flex))
+    (corfu-prescient-enable-sorting t)
+    (corfu-prescient-override-sorting nil)
+    (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
+    ;; Only set if `corfu-prescient-enable-filtering' is non-nil. See also
+    ;; `prescient--completion-recommended-overrides'
+    (corfu-prescient-completion-category-overrides
+     '(;; Include `partial-completion' to enable wildcards and partial paths.
+       (file (styles partial-completion prescient))
+       ;; Eglot forces `flex' by default.
+       (eglot (styles prescient flex))))
+    :config
+    (corfu-prescient-mode 1))
+#+end_src
+
+**** Cape
+
+#+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
+  ;;; Cape
+  ;; Expand capf functionality with corfu! See an updated list of the defined capf
+  ;; functions in the package's commentary.
+  (use-package cape
+    :bind (("C-M-s-c p" . completion-at-point)
+           ("C-M-s-c d" . cape-dabbrev)
+           ("C-M-s-c h" . cape-history)
+           ("C-M-s-c f" . cape-file)
+           ("C-M-s-c k" . cape-keyword)
+           ("C-M-s-c s" . cape-elisp-symbol)
+           ("C-M-s-c a" . cape-abbrev)
+           ("C-M-s-c w" . cape-dict)
+           ("C-M-s-c l" . cape-line)
+           ("C-M-s-c \\" . cape-tex)
+           ("C-M-s-c _" . cape-tex)
+           ("C-M-s-c ^" . cape-tex)
+           ("C-M-s-c &" . cape-sgml)
+           ("C-M-s-c r" . cape-rfc1345)
+           ([remap dabbrev-completion] . cape-dabbrev))
+    :custom
+    (cape-dabbrev-min-length 2)
+    :init
+    ;; These are added to the global definition of
+    ;; `completion-at-point-functions', which acts as a fallback if buffer-local
+    ;; values end in `t'. Read (info "(cape) Configuration") for an explanation.
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+
+    ;; Macro to help adding capfs via hooks
+    (defmacro kb/cape-setup-capfs (label hooks capfs)
+      "Set up `completion-at-point-functions' for HOOKS.
+  CAPFS are a list of `completion-at-point-functions'. Adds CAPFS when a
+  hook in HOOKS is run. These effects are added by a defined function with
+  LABEL appended to `kb/cape-setup-capfs-'.
+
+  The order of elements in CAPFS are the order they will appear in
+  `completion-at-point-functions' for that buffer. That is, the first
+  element in CAPFS will be the first element in
+  `completion-at-point-functions'.
+
+  This macro does not affect capfs already in
+  `completion-at-point-functions' nor how later capfs are added to
+  `completion-at-point-functions'."
+      (declare (indent 0))
+      `(dolist (hook ,hooks)
+         (add-hook hook
+                   (defun ,(intern (concat "kb/cape-setup-capfs-" label)) ()
+                     (dolist (capf (reverse ,capfs))
+                       (add-to-list 'completion-at-point-functions capf))))))
+
+    (kb/cape-setup-capfs
+      "elisp"
+      '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
+      (list #'cape-file #'cape-elisp-symbol))
+
+    (kb/cape-setup-capfs
+      "commit"
+      '(git-commit-mode-hook vc-git-log-edit-mode-hook)
+      (list #'cape-elisp-symbol #'cape-dabbrev)))
 #+end_src
 
 *** Provide
@@ -1518,4 +1682,4 @@ These are lines I've removed while porting to a literate config.
 # org-src-fontify-natively: nil
 # End:
 
-#  LocalWords:  Vertico
+#  LocalWords:  Vertico Minibuffer
