@@ -1,3 +1,21 @@
+;;; Crm
+(use-package crm
+  :ensure nil
+  :config
+  ;; Add prompt indicator to `completing-read-multiple'. We display
+  ;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
+  ;; https://github.com/minad/vertico
+  (defun krisb-crm-indicator (args)
+    (cons (format "[completing-read-multiple: %s]  %s"
+                  (propertize
+                   (replace-regexp-in-string
+                    "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                    crm-separator)
+                   'face 'error)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'krisb-crm-indicator))
+
 ;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia

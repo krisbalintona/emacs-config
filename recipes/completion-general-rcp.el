@@ -105,22 +105,5 @@
                   minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-;; Add prompt indicator to `completing-read-multiple'. We display
-;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
-;; https://github.com/minad/vertico
-(defun crm-indicator (args)
-  (cons (format "[completing-read-multiple: %s]  %s"
-                (propertize
-                 (replace-regexp-in-string
-                  "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                  crm-separator)
-                 'face 'error)
-                (car args))
-        (cdr args)))
-(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-;; TAB acts more like how it does in the shell
-(keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete)
-  
 (provide 'completion-general-rcp)
 ;;; completion-general-rcp.el ends here
