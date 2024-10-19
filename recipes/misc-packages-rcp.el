@@ -711,8 +711,7 @@ This is a difference in multitude of %s."
   ;; Killing
   (kill-do-not-save-duplicates t)
   (kill-ring-deindent-mode nil)
-  (window-divider-default-places 'bottom-only)
-  (custom-search-field nil))
+  (window-divider-default-places 'bottom-only))
 
 ;;;;; Register
 (use-package register

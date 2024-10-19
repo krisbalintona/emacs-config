@@ -51,17 +51,6 @@
 ;; usage, however!
 (setq inhibit-compacting-font-caches t)
 
-;; NOTE 2024-09-16: From Doom Emacs.
-;; These are the three ways to increase scrolling performance.
-;; See (info "(emacs) Scrolling") for details. Introduced in Emacs HEAD
-;; (b2f8c9f), this inhibits fontification while receiving input, which should
-;; help a little with scrolling performance.
-(setq redisplay-skip-fontification-on-input t)
-;; More performant rapid scrolling over unfontified regions. May cause brief
-;; spells of inaccurate syntax highlighting right after scrolling, which should
-;; quickly self-correct.
-(setq fast-but-imprecise-scrolling t)
-
 ;; NOTE 2024-09-13: Suggested by "minimal emacs." By default, Emacs "updates"
 ;; its UI more often than it needs to
 (setq idle-update-delay 1.0)

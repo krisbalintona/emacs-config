@@ -9,6 +9,7 @@
 
 ;;; Load libraries
 (require 'krisb-common)
+(require 'krisb-essentials)
 
 ;;; Packages
 
@@ -24,6 +25,8 @@
                                      ("gnu-elpa-devel" . 1))
         package-install-upgrade-built-in t
         package-pinned-packages nil)
+
+(setopt load-prefer-newer t) ; Do not load outdated byte code files
 
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
 ;; it's installed just in case I test/use an earlier Emacs version
@@ -105,3 +108,7 @@
 
 (require 'krisb-org)
 (require 'krisb-mermaid)
+
+;;; Load custom file
+(when (file-exists-p custom-file)
+  (load custom-file))

@@ -25,62 +25,20 @@
 ;;; Code:
 (require 'personal-variables-rcp)
 
-;;;; Customize
-;; Show variable names in their lisp form
-(setopt custom-unlispify-tag-names nil
-        custom-safe-themes t)             ; Treat all themes as safe
-
-;;;; Enable all disabled commands
-(customize-set-variable 'disabled-command-function nil "Enable all commands")
-
 ;;;; Disable startup echo message
 ;; See `startup-echo-area-message'
 (fset #'display-startup-echo-area-message #'ignore)
 
 ;;;; Buffer-local defaults
-(setq-default ad-redefinition-action 'accept                                                      ; Don’t warn when advice is added for functions
-              confirm-kill-emacs 'y-or-n-p                                                        ; Confirm before killing emacs
-
-              trash-directory (no-littering-expand-var-file-name "trash")                         ; Trash directory
-              delete-by-moving-to-trash t                                                         ; Delete files to trash
-              create-lockfiles nil                                                                ; Don't create lockfiles
-
-              select-enable-clipboard t                                                           ; Merge system's and Emacs' clipboard
-
-              sentence-end-double-space nil                                                       ; Single space after period denotes end of sentence
-
-              fill-column 80                                                                      ; Set width for automatic line breaks
-
-              truncate-string-ellipsis "…"                                                        ; For all ellipsis
-
-              max-mini-window-height 0.3                                                          ; Max minibuffer height
-
-              tab-width 4
-              indent-tabs-mode nil
+(setq-default max-mini-window-height 0.3                                                          ; Max minibuffer height
 
               visible-bell nil)
 
-;;;; Set `x-stretch-cursor'
-;; Stretch cursor to the glyph width
-(setopt x-stretch-cursor t)
-
-;;;; Aviod cursor collisions
-(mouse-avoidance-mode 'jump)      ; Avoid collision of mouse with point
-
-;;;; Recognize camel case as words
-(global-subword-mode t) ; Iterate through CamelCase words
 
 ;;;; Require pin-entry for passowrds
 ;; Pinentry is responsible for querying passphrases
 (require 'epg-config)
 (setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
-
-;;;; Ignore case for buffer and file names
-(setq read-buffer-completion-ignore-case t
-      read-file-name-completion-ignore-case t)
-
-;;;; Middle-click paste at point, not at cursor.
-(setq mouse-yank-at-point t)
 
 ;;;; Toggle visiting of image files as images (Auto Image File mode).
 (auto-image-file-mode t)
@@ -89,78 +47,20 @@
 ;; Echo keystrokes (of unfinished commands) much quicker
 (setq echo-keystrokes 0.5)
 
-;;;; More leeway for Emacs subprocesses
-;; Let Emacs subprocesses read more data per chunk
-(setq read-process-output-max (* 4 1024 1024)) ; 4mb
-;; Recommend here
-;; https://www.reddit.com/r/emacs/comments/17nl7cw/comment/k7u1ueu/?utm_source=share&utm_medium=web2x&context=3
-(setq process-adaptive-read-buffering nil)
-
-;;;; Scrolling behavior
-(setq scroll-error-top-bottom nil
-      scroll-preserve-screen-position t
-      scroll-margin 0
-      next-screen-context-lines 4
-      scroll-conservatively 1           ; Affects `scroll-step'
-      scroll-minibuffer-conservatively t
-      scroll-up-aggressively nil        ; Center after point leaves window
-      scroll-down-aggressively nil)     ; Center after point leaves window
-
-;;;; Do not load outdated byte code files
-(setopt load-prefer-newer t)
-
 ;;;; Highlight next error
 (setq next-error-message-highlight nil)
 
 ;;;; Recenter upon `next-error'
 (setq next-error-recenter '(4))
 
-;;;; Delete-selection-mode
-;; When selecting text, if typing new text, replace the selected text with the
-;; new text
-(delete-selection-mode t)
-
-;;;; Repeatedly popping mark
-(setq set-mark-command-repeat-pop t)
-
-;;;; Case insensitive `auto-mode'
-;; A second, case-insensitive pass over `auto-mode-alist' is time wasted, and
-;; indicates misconfiguration (or that the user needs to stop relying on case
-;; insensitivity).
-(setq auto-mode-case-fold nil)
-
-;;;; Keep all logged messages
-(setq message-log-max t)
-
-;;;; Don't do anything with inactive mark
-(setq mark-even-if-inactive nil)
-
-;;;; How we uniquify buffer names
-(setq uniquify-buffer-name-style 'forward)
-
 ;;;; Indent and formatting
 (setq-default left-fringe-width  8
               right-fringe-width 8)
-
-;;;; Word wrapping
-;; Continue wrapped lines at whitespace rather than breaking in the
-;; middle of a word.
-(setq-default word-wrap t)
 
 ;;;; Truncate lines
 ;; If enabled and `truncate-lines' is disabled, soft wrapping will not occur
 ;; when the window is narrower than `truncate-partial-width-windows' characters.
 (setq truncate-partial-width-windows nil)
-
-;;;; Make right-click show context menu
-(when (display-graphic-p)
-  (context-menu-mode))
-
-;;;; Only show these byte-compile warnings
-(setopt byte-compile-warnings (cl-remove 'obsolete byte-compile-warning-types))
-
-;;;; Defer font lock during input
-(setopt jit-lock-defer-time 0)
 
 ;;;; Continuation line indicator character
 ;; See for an explanation of these concepts
@@ -170,9 +70,6 @@
 ;;;; Header line text scaling
 (setq-default text-scale-remap-header-line t)
 
-;;;; Enable `view-mode' for read-only buffers
-(setopt view-read-only t)
-
 ;;;; More predictable window selection of `scroll-other-window' and `scroll-other-window-down'
 ;; Taken from
 ;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
@@ -181,16 +78,6 @@
         (or (get-mru-window nil nil 'not-this-one-dummy)
             (next-window)               ; Fall back to next window
             (next-window nil nil 'visible))))
-
-;;;; Even better space cycling
-;; Read the docstring for an explanation (or try it out!)
-(setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
-
-;;;; Load custom file
-;; Set and load custom file which contains persistent settings.
-(with-eval-after-load 'no-littering
-  (setq custom-file (no-littering-expand-var-file-name "custom.el"))
-  (load custom-file))
 
 (provide 'better-defaults-rcp)
 ;;; better-defaults-rcp.el ends here
