@@ -110,6 +110,21 @@
   (org-id-method 'ts)
   (org-id-link-to-org-use-id 'use-existing))
 
+;;;; Org-attach
+(use-package org-attach
+  :ensure nil
+  :custom
+  (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
+  (org-attach-auto-tag "ATTACH")
+  (org-attach-dir-relative nil)         ; Use relative file paths?
+  (org-attach-id-dir (expand-file-name "resources" org-directory))
+  (org-attach-method 'cp)            ; Attach copies of files
+  (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
+  (org-attach-id-to-path-function-list
+   '(org-attach-id-ts-folder-format
+     org-attach-id-uuid-folder-format
+     org-attach-id-fallback-folder-format)))
+
 ;;;; Org-babel
 (use-package ob
   :ensure nil

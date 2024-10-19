@@ -107,31 +107,6 @@ have `org-warning' face."
   (advice-add 'org-indent--compute-prefixes :override 'kb/org-indent--compute-prefixes)
   (advice-add 'org-indent-set-line-properties :override 'kb/org-indent-set-line-properties))
 
-;;;;; Org-footnote
-(use-package org-footnote
-  :ensure nil
-  :after org
-  :custom
-  (org-footnote-section nil)            ; Don't create footnote headline
-  (org-footnote-auto-adjust t)
-  (org-footnote-define-inline nil))
-
-;;;;; Org-attach
-(use-package org-attach
-  :ensure nil
-  :after org
-  :custom
-  (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
-  (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
-  (org-attach-dir-relative nil)        ; Use relative file paths?
-  (org-attach-id-dir (expand-file-name "resources" org-directory))
-  (org-attach-method 'cp)            ; Attach copies of files
-  (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
-  (org-attach-id-to-path-function-list
-   '(org-attach-id-ts-folder-format
-     org-attach-id-uuid-folder-format
-     org-attach-id-fallback-folder-format)))
-
 ;;;;; Org-refile
 (use-package org-refile
   :ensure nil
