@@ -234,5 +234,12 @@
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
 
+;;; Org-contrib
+(use-package org-contrib
+  :after org
+  :config
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
+
 ;;; Provide
 (provide 'krisb-org)

@@ -421,13 +421,6 @@ Uses my 'latex-paper' backend. See the original
 ;;;;;; [ end ]
   )
 
-;;;; Org-contrib
-(use-package org-contrib
-  :after org
-  :config
-  (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
-
 ;;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
