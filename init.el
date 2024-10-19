@@ -111,6 +111,8 @@
 (require 'krisb-essentials)
 (require 'krisb-themes)
 (require 'krisb-fonts)
+
+(require 'krisb-saving)
 (require 'krisb-completion)
 
 (require 'krisb-org)
