@@ -120,8 +120,9 @@
   (vertico-count 13)
   (vertico-resize 'grow-only)
   (vertico-cycle nil)
-  :config
+  :init
   (vertico-mode 1)
+  :config
   (require 'krisb-vertico))
 
 ;;;; Vertico-directory
