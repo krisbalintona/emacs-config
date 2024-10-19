@@ -8,12 +8,8 @@
   :custom
   (ob-mermaid-cli-path (executable-find "mmdc"))
   :config
-  (with-eval-after-load 'org
-    ;; We use setopt to start the evaluation of the :set keyword of
-    ;; `org-babel-load-languages'
-    ;; REVIEW 2024-10-18: Check if setopt is necessary.
-    (setopt org-babel-load-languages
-            (append '((mermaid . t)) org-babel-load-languages))))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append '((mermaid . t)) org-babel-load-languages)))
 
 ;;; Provide
 (provide 'krisb-mermaid)

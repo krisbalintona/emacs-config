@@ -138,8 +138,8 @@
 (use-package ob
   :ensure nil
   :custom
-  (org-babel-load-languages '((emacs-lisp . t)
-                              (python . t)))
+  (org-babel-load-languages '((python . t)
+                              (emacs-lisp . t)))
   (org-confirm-babel-evaluate nil))
 
 ;;;; Org-num
