@@ -851,6 +851,7 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
 ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
 ;; differences
 (use-package form-feed
+  :disabled               ; FIXME 2024-10-17: Broke?!?!?! Form feeds everywhere!
   :hook (on-first-buffer . global-form-feed-mode)
   :diminish
   :custom
@@ -1022,6 +1023,12 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
   (use-package grid
     :autoload (grid-get-box grid-get-row grid-get-column)
     :vc (:url "https://github.com/ichernyshovvv/grid.el")))
+
+;;;;; Autoinsert
+(use-package autoinsert
+  :demand
+  :config
+  (auto-insert-mode 1))
 
 (provide 'misc-packages-rcp)
 ;;; misc-packages-rcp.el ends here
