@@ -181,9 +181,31 @@ This sets the default graphical element settings used by every frame.
           initial-scratch-message "Hello 👋")
 #+end_src
 
+*** =package=
+
+#+begin_src emacs-lisp :tangle "init.el"
+  ;;; Package.el
+  ;; Initialize package resources
+  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("melpa" . "https://melpa.org/packages/"))
+          package-archive-priorities '(("gnu-elpa" . 4)
+                                       ("melpa" . 3)
+                                       ("nongnu" . 2)
+                                       ("gnu-elpa-devel" . 1))
+          package-install-upgrade-built-in t
+          package-pinned-packages nil)
+#+end_src
+
 *** =use-package=
 
 #+begin_src emacs-lisp :tangle "init.el"
+  ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
+  ;; it's installed just in case I test/use an earlier Emacs version
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
   (setopt use-package-always-ensure t
           use-package-expand-minimally t  ; Verbosity of use-package macro
           use-package-always-defer nil)
@@ -246,38 +268,6 @@ This sets the default graphical element settings used by every frame.
 :PROPERTIES:
 :VISIBILITY: children
 :END:
-
-** =krisb-package-management.el=
-
-Package management via =package.el=.
-
-#+begin_src emacs-lisp :tangle "modules/krisb-package-management.el"
-  ;; Initialize package resources
-  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                             ("melpa" . "https://melpa.org/packages/"))
-          package-archive-priorities '(("gnu-elpa" . 4)
-                                       ("melpa" . 3)
-                                       ("nongnu" . 2)
-                                       ("gnu-elpa-devel" . 1))
-          package-install-upgrade-built-in t
-          package-pinned-packages nil)
-
-  (unless package-archive-contents
-    (package-refresh-contents))
-
-  ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
-  ;; it's installed just in case I test/use an earlier Emacs version
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-  ;; Then ensure use-package is available at compile time
-  (eval-when-compile
-    (require 'use-package))
-
-  (provide 'krisb-package-management)
-#+end_src
 
 ** =krisb-garbage-collection.el=
 
