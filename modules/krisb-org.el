@@ -105,7 +105,6 @@
 ;;;; Org-id
 (use-package org-id
   :ensure nil
-  :after org
   :custom
   (org-clone-delete-id t)
   (org-id-method 'ts)
@@ -119,7 +118,7 @@
                               (python . t)))
   (org-confirm-babel-evaluate nil))
 
-;;;;;; Org-modern
+;;; Org-modern
 (use-package org-modern
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda))
@@ -183,6 +182,21 @@
                  :foreground ,(face-background 'default nil t)
                  :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))))
   (add-hook 'enable-theme-functions #'krisb-modus-themes--setup-org-modern))
+
+;;; Org-appear
+;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
+;; over enclosed content
+(use-package org-appear
+  :hook (org-mode . org-appear-mode)
+  :custom
+  (org-appear-delay 0.0)
+  (org-appear-trigger 'always)
+  (org-appear-autoemphasis t)
+  (org-appear-autolinks 'just-brackets)
+  (org-appear-autosubmarkers t)
+  (org-appear-autoentities t)
+  (org-appear-autokeywords t)
+  (org-appear-inside-latex t))
 
 ;;; Provide
 (provide 'krisb-org)
