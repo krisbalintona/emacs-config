@@ -53,9 +53,13 @@ Meant to be used as the value of `org-directory'.")
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
   "A list of my bibliography (.bib) files.")
 
-;;; Leader keymaps
+;;; Functions
 
-;;; Leader keys
+;;; Macros
+
+;;; Commands
+
+;;; Leader key keymaps
 (defvar-keymap krisb-note-keymap
   :doc "Prefix for my note-taking needs.")
 (bind-key "C-c n" krisb-note-keymap 'global-map)
