@@ -98,6 +98,7 @@
 ;;;; Modules
 (require 'krisb-garbage-collection)
 (require 'krisb-system-env)
+(require 'krisb-essentials)
 (require 'krisb-themes)
 (require 'krisb-fonts)
 (require 'krisb-completion)
