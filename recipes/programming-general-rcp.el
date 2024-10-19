@@ -320,7 +320,7 @@
 (use-package scratch
   :hook (scratch-create-buffer . kb/scratch-buffer-setup)
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("s". scratch))
   :preface
   (defun kb/scratch-buffer-setup ()
@@ -360,7 +360,7 @@
 ;; Utilities to edit files as root
 (use-package sudo-edit
   :bind
-  ( :map kb/file-keys
+  ( :map krisb-file-keymap
     ("U" . sudo-edit-find-file)
     ("u" . sudo-edit))
   :config

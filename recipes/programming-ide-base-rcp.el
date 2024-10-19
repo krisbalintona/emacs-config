@@ -152,7 +152,7 @@ Non-nil only if installation completed without any errors."
   :ensure nil
   :after dash-docs
   :bind
-  ( :map kb/lsp-keys
+  ( :map krisb-lsp-keymap
     ("Di" . dash-docs-install-docset)
     ("Dl" . dash-docs-completing-read-at-point)
     ("DL" . dash-docs-completing-read)))

@@ -43,7 +43,7 @@
    (message-send . kb/notmuch-set-sendmail-args))
   :bind
   (([remap compose-mail] . notmuch-mua-new-mail)
-   :map kb/open-keys
+   :map krisb-open-keymap
    ("n" . notmuch)
    :map notmuch-search-mode-map
    ("a" . nil) ; The default is too easy to hit accidentally

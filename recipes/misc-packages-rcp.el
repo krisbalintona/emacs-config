@@ -85,7 +85,7 @@
 ;; Timer package/library from Prot
 (use-package tmr
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("t" . kb/tmr-dispatch))
   :custom
   ;; Useful variables
@@ -146,7 +146,7 @@
 
 ;;;;; Hammy
 (use-package hammy
-  :bind ( :map kb/open-keys
+  :bind ( :map krisb-open-keymap
           ("h h" . kb/hammy-dwim)
           ("h S" . hammy-start)
           ("h n" . hammy-next)
@@ -702,7 +702,7 @@ This is a difference in multitude of %s."
    ([remap downcase-word] . downcase-dwim)
    ([remap capitalize-word] . capitalize-dwim)
    ([remap dabbrev-expand] . hippie-expand)
-   :map kb/open-keys
+   :map krisb-open-keymap
    ("c" . calendar)
    :map universal-argument-map          ; Multiple universal arguments
    ("u" . universal-argument-more))

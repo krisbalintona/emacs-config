@@ -41,7 +41,7 @@
          (after-save . kb/denote-auto-rename)
          (kb/themes . kb/themes-setup-denote-faces))
   :bind
-  ( :map kb/note-keys
+  ( :map krisb-note-keymap
     ("f" . denote-open-or-create)
     ("i" . denote-link-or-create)
     ("e" . denote-org-extras-extract-org-subtree)
@@ -413,7 +413,7 @@ replacement."
   :autoload denote-interface--signature-lessp
   :hook (denote-interface-mode . (lambda () (kb/puni-mode -1)))
   :bind
-  ( :map kb/note-keys
+  ( :map krisb-note-keymap
     ("m" . denote-interface-list)
     ("r" . denote-interface-set-signature-list)
     ("R" . denote-interface-set-signature-minibuffer))
@@ -439,7 +439,7 @@ replacement."
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
   :bind
-  ( :map kb/note-keys
+  ( :map krisb-note-keymap
     ("f" . consult-notes))
   :custom
   ;; File paths must have ending slashing. See
@@ -554,7 +554,7 @@ replacement."
   :after citar
   :diminish
   :bind (("C-c b c" . citar-create-note)
-         :map kb/note-keys
+         :map krisb-note-keymap
          ("b b" . citar-denote-link-reference)
          ("b o" . citar-denote-dwim)
          ("b c" . citar-create-note)
@@ -605,7 +605,7 @@ replacement."
 ;;;; Darkroom
 (use-package darkroom
   :bind
-  ( :map kb/toggle-keys
+  ( :map krisb-toggle-keymap
     ("d" . darkroom-mode)
     ("D" . darkroom-tentative-mode))
   :custom
@@ -613,7 +613,7 @@ replacement."
 
 ;;;; Typewriter-roll-mode
 (use-package typewriter-roll-mode
-  :bind ( :map kb/toggle-keys
+  :bind ( :map krisb-toggle-keymap
           ("t" . typewriter-roll-mode)))
 
 (provide 'org-notes-rcp)

@@ -65,7 +65,7 @@
          (mu4e-view-mode . olivetti-mode)
          (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("m" . kb/mu4e)
     :map mu4e-main-mode-map
     ("q" . kb/mu4e-main-bury-buffer)

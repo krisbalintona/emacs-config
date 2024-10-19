@@ -38,7 +38,7 @@
                   (buffer-face-mode t)
                   (face-remap-add-relative 'default :height 1.1)))
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("v" . vterm))
   :custom
   (vterm-kill-buffer-on-exit nil)

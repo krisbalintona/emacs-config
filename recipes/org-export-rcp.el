@@ -439,7 +439,7 @@ Uses my 'latex-paper' backend. See the original
 (use-package ox-clip
   :ensure-system-package ((xclip)
                           (wl-copy . wl-clipboard))
-  :bind ( :map kb/yank-keys
+  :bind ( :map krisb-yank-keymap
           ("x" . ox-clip-formatted-copy))
   :custom
   ;; FIXME 2024-10-07: Doesn't work on wayland for some reason. It's just

@@ -29,7 +29,7 @@
   ((eshell . visual-line-mode)
    (eshell . kb/eshell-setup))
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("e" . eshell)
     :map eshell-mode-map
     ([remap eshell-previous-matching-input] . consult-history))

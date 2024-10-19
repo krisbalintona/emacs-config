@@ -36,7 +36,7 @@
          :map org-mode-map
          ("C-M-<up>" . org-up-element))
   :bind
-  ( :map kb/note-keys
+  ( :map krisb-note-keymap
     ("c" . org-capture))
   :custom
   (org-directory krisb-org-directory)
@@ -116,7 +116,7 @@
   :ensure nil
   :after org  :diminish
   :bind
-  ( :map kb/toggle-keys
+  ( :map krisb-toggle-keymap
     ("n" . org-num-mode))
   :custom
   (org-num-face 'fixed-pitch)
@@ -656,7 +656,7 @@ have `org-warning' face."
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
   :bind
-  ( :map kb/yank-keys
+  ( :map krisb-yank-keymap
     ("b" . org-web-tools-insert-link-for-url))
   :config
   ;; Immediately enter view mode
@@ -672,7 +672,7 @@ have `org-warning' face."
   :ensure-system-package (scrot)
   :hook (org-mode . org-download-enable)
   :bind
-  ( :map kb/yank-keys
+  ( :map krisb-yank-keymap
     ("i" . org-download-clipboard))
   :custom
   (org-download-method 'attach)

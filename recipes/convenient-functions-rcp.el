@@ -109,7 +109,7 @@ act upon that region instead."
       (progn (kill-new filename)
              (message "Copied %s" filename))
     (error "Couldn't find filename in current buffer")))
-(bind-key "w" #'kb/yank-buffer-filename 'kb/file-keys)
+(bind-key "w" #'kb/yank-buffer-filename 'krisb-file-keymap)
 
 ;;;; Delete this file
 (defun kb/delete-this-file (&optional path force-p)
@@ -140,7 +140,7 @@ act upon that region instead."
           ;; (doom--update-files path)
           (kill-this-buffer)
           (message "Deleted %S" short-path))))))
-(bind-key "D" #'kb/delete-this-file 'kb/file-keys)
+(bind-key "D" #'kb/delete-this-file 'krisb-file-keymap)
 
 ;;;; Empty trash
 (defun kb/empty-trash ()

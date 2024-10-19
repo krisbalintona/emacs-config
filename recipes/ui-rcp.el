@@ -420,7 +420,7 @@ This version removes delimiters.")
 (use-package display-line-numbers
   :ensure nil
   :bind
-  ( :map kb/toggle-keys
+  ( :map krisb-toggle-keymap
     ("l" . display-line-numbers-mode))
   :custom
   (display-line-numbers-type t)
@@ -452,7 +452,7 @@ This version removes delimiters.")
 (use-package hide-mode-line
   :commands hide-mode-line-mode
   :bind
-  ( :map kb/toggle-keys
+  ( :map krisb-toggle-keymap
     ("m" . hide-mode-line-mode)))
 
 ;;;;; Transparency toggle

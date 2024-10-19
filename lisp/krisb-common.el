@@ -53,5 +53,34 @@ Meant to be used as the value of `org-directory'.")
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
   "A list of my bibliography (.bib) files.")
 
+;;; Leader keymaps
+
+;;; Leader keys
+(defvar-keymap krisb-note-keymap
+  :doc "Prefix for my note-taking needs.")
+(bind-key "C-c n" krisb-note-keymap 'global-map)
+
+(defvar-keymap krisb-lsp-keymap
+  :doc "Prefix for lsp-related commands.")
+(with-eval-after-load 'lsp-mode
+  (bind-key "C-c l" krisb-lsp-keymap 'lsp-mode-map))
+
+(defvar-keymap krisb-file-keymap
+  :doc "Prefix for file-related commands.")
+(bind-key "C-c f" krisb-file-keymap 'global-map)
+
+(defvar-keymap krisb-yank-keymap
+  :doc "Prefix for yanking stuff.")
+(bind-key "C-c i" krisb-yank-keymap 'global-map)
+
+(defvar-keymap krisb-open-keymap
+  :doc "Prefix for opening various hings.")
+(bind-key "C-c o" krisb-open-keymap 'global-map)
+
+(defvar-keymap krisb-toggle-keymap
+  :doc "Prefix for toggling stuff.")
+(bind-key "C-M-s-t" krisb-toggle-keymap 'global-map)
+
+
 (provide 'krisb-common)
 ;;; krisb-common.el ends here

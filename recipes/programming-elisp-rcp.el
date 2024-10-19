@@ -173,7 +173,7 @@
 ;; Query `suggest' for elisp coding suggestions!
 (use-package suggest
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("S" . suggest))
   :custom
   (suggest-insert-example-on-start nil))

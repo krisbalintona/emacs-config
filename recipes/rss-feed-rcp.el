@@ -35,7 +35,7 @@
          (elfeed-search-update . elfeed-apply-autotags-now) ; Apply the appropriate autotags to already existing entries
          )
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("r" . elfeed))
   :custom
   ;; Give time for long updates to complete
@@ -311,7 +311,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   ((wallabag-after-render . wallabag-search-update-and-clear-filter)
    (wallabag-post-html-render . olivetti-mode)
    (wallabag-post-html-render . visual-line-mode))
-  :bind ( :map kb/open-keys
+  :bind ( :map krisb-open-keymap
           ("w" . wallabag))
   :custom
   (wallabag-db-connector 'sqlite-builtin)
@@ -344,7 +344,7 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   (wombag-show-mode . org-remark-mode)
   :hook
   (wombag-show-mode . kb/wombag-entry-setup)
-  :bind ( :map kb/open-keys
+  :bind ( :map krisb-open-keymap
           ("w" . wombag))
   :custom
   (wombag-dir (no-littering-expand-var-file-name "wombag"))
@@ -459,7 +459,7 @@ It assumes the major mode is `wombag-show-mode'.
 ;; View my Pocket
 (use-package pocket-reader
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("p" . pocket-reader)
     :map pocket-reader-mode-map
     ("TAB" . kb/pocket-reader-cycle-view)

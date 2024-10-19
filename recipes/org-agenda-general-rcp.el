@@ -35,7 +35,7 @@
   ;; `org' does
   :hook (org-agenda-mode . hl-line-mode)
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("a" . org-agenda)
     :map org-agenda-mode-map
     ("`" . kb/org-agenda-process))

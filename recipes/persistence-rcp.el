@@ -56,7 +56,7 @@
   :hook
   (on-first-input . recentf-mode)
   :bind
-  ( :map kb/file-keys
+  ( :map krisb-file-keymap
     ("r" . recentf-open-files))
   :custom
   (recentf-max-saved-items 1000)
