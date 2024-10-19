@@ -1,3 +1,16 @@
+(require 'color)
+
+;;; Krisb-themes-ext
+(use-package krisb-themes-ext
+  :demand t
+  :ensure nil
+  :bind ("<f8>" . krisb-themes-ext-theme-switcher)
+  :custom
+  (krisb-themes-ext-light 'modus-operandi)
+  (krisb-themes-ext-dark 'modus-vivendi)
+  :config
+  (krisb-theme-ext-enable-theme-time-of-day 8 19))
+
 ;;; Modus-themes
 (use-package modus-themes
   :custom
@@ -59,8 +72,31 @@
             (bg-mode-line-inactive      "#292d48")
             (fg-mode-line-inactive      "#969696")))
 
-  (defun krisb-modus-themes--setup-font-lock (theme)
-    "Set up font-lock faces."
+  (defun krisb-modus-themes-setup-base-faces (theme)
+    "Set up common faces in FRAME."
+    (set-face-attribute 'mode-line-active nil
+                        :background (modus-themes-with-colors bg-mode-line-active)
+                        :box `( :line-width 3
+                                :color ,(modus-themes-with-colors bg-mode-line-active)))
+    (let ((bg-color
+           (if (eq (car custom-enabled-themes) krisb-themes-dark)
+               (color-darken-name (modus-themes-with-colors bg-mode-line-inactive) 13)
+             (color-lighten-name (modus-themes-with-colors bg-mode-line-inactive) 13))))
+      (set-face-attribute 'mode-line-inactive nil
+                          :background bg-color
+                          :box `( :line-width 3
+                                  :color ,bg-color)))
+
+    (modus-themes-with-colors
+      (set-face-attribute 'cursor nil :background magenta-cooler))
+
+    (set-face-background 'fringe (face-attribute 'default :background))
+    ;; Note that the vertical border is distinct from the window divider when
+    ;; `window-divider-mode' is enabled.
+    (set-face-attribute 'vertical-border nil
+                        :foreground (face-attribute 'default :background))
+
+    ;; Set up font-lock faces.
     ;; As described in (info "(modus-themes) DIY Measure color contrast"), I can
     ;; check for contrast by making sure the color contrast (relative luminance)
     ;; between the foreground and background color is at least 7:1.
@@ -72,7 +108,7 @@
       (set-face-attribute 'font-lock-function-call-face nil :foreground "#161BA1"))
      ((string-match "^modus-vivendi" (symbol-name theme))
       (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2"))))
-  (add-hook 'enable-theme-functions #'krisb-modus-themes--setup-font-lock))
+  (add-hook 'enable-theme-functions #'krisb-modus-themes-setup-base-faces))
 
 ;;; Cursory
 ;; Global and local cursor presets
