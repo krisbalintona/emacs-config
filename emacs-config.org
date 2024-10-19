@@ -326,7 +326,9 @@ This sets the default graphical element settings used by every frame.
 :VISIBILITY: children
 :END:
 
-** =krisb-garbage-collection.el=
+** Base
+
+*** =krisb-garbage-collection.el=
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-garbage-collection.el"
   ;; NOTE 2024-02-11: Please reference https://emacsconf.org/2023/talks/gc/ for a
@@ -403,7 +405,7 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-garbage-collection)
 #+end_src
 
-** =krisb-system-env.el=
+*** =krisb-system-env.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-system-env.el"
   ;;; Exec-path-from-shell
@@ -432,7 +434,7 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-system-env)
 #+end_src
 
-** =krisb-essentials.el=
+*** =krisb-essentials.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Keep the cursor out of the read-only portions of the minibuffer
@@ -457,9 +459,9 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-essentials)
 #+end_src
 
-** =krisb-completion.el=
+*** =krisb-completion.el=
 
-*** Built-in
+**** Built-in
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Minibuffer
@@ -541,7 +543,7 @@ This sets the default graphical element settings used by every frame.
     (advice-add #'completing-read-multiple :filter-args #'krisb-crm-indicator))
 #+end_src
 
-*** Accessories
+**** Accessories
 
 Enhancements to all built-in-based completions.
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
@@ -624,9 +626,9 @@ Enhancements to all built-in-based completions.
        ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
 #+end_src
 
-*** Minibuffer completion
+**** Minibuffer completion
 
-**** Vertico
+***** Vertico
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Vertico
@@ -707,9 +709,9 @@ Enhancements to all built-in-based completions.
     (vertico-prescient-mode 1))
 #+end_src
 
-*** Inline completion
+**** Inline completion
 
-**** Corfu
+***** Corfu
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;;; Corfu
@@ -873,7 +875,7 @@ Enhancements to all built-in-based completions.
     (add-hook 'enable-theme-functions (lambda () (call-interactively 'kind-icon-reset-cache))))
 #+end_src
 
-**** Cape
+***** Cape
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Cape
@@ -936,14 +938,14 @@ Enhancements to all built-in-based completions.
      (list #'cape-elisp-symbol #'cape-dabbrev)))
 #+end_src
 
-*** Provide
+**** Provide
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Provide
   (provide 'krisb-completion)
 #+end_src
 
-** =krisb-saving.el=
+*** =krisb-saving.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-saving.el"
   ;; No-littering's `no-littering-theme-backups' sets the values for
@@ -1030,7 +1032,7 @@ Enhancements to all built-in-based completions.
   (provide /krisb-saving)
 #+end_src
 
-** =krisb-persistence.el=
+*** =krisb-persistence.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
   ;;; Savehist
@@ -1738,7 +1740,7 @@ Enhancements to all built-in-based completions.
 
 * Lisp (libraries)
 :PROPERTIES:
-:VISIBILITY: content
+:VISIBILITY: children
 :END:
 
 ** =krisb-common.el=
