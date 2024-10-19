@@ -509,6 +509,7 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 **** Commands
+
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Commands
   ;;;; Restart or close Emacs
@@ -2705,7 +2706,7 @@ Enhancements to all built-in-based completions.
 
     (defun krisb-org-agenda-auto-exclude-function (tag)
       "Set tags based on time of day.
-See ((org) Filtering/limiting agenda items)."
+  See ((org) Filtering/limiting agenda items)."
       (when (cond ((member tag '("@home" "@hobbies"))
                    (let ((hr (nth 2 (decode-time))))
                      ;; After 10 or before 21
