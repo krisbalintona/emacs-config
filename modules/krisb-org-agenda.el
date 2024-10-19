@@ -412,5 +412,53 @@ See ((org) Filtering/limiting agenda items)."
                                :anything t
                                :order 1))))))))))
 
+;;; Org-clock
+(use-package org-clock
+  :ensure nil
+  :custom
+  (org-clock-persist t)
+  (org-clock-out-when-done t)
+  (org-clock-history-length 10)
+  (org-clock-in-resume t)
+  (org-clock-persist-query-resume t)
+  (org-clock-into-drawer t)
+  (org-clock-out-remove-zero-time-clocks t)
+  (org-clock-report-include-clocking-task t)
+  (org-show-notification-handler #'(lambda (str)
+                                     (notifications-notify
+                                      :title "Org-agenda task overrun!"
+                                      :body str
+                                      :app-name "GNU Emacs"
+                                      :urgency 'normal)))
+  ;; Mode line
+  (org-clock-string-limit 0)
+  (org-clock-heading-function 'krisb-org-clock-get-heading-string)
+  :config
+  (org-clock-persistence-insinuate)
+
+  ;; Mode line string
+  (defun krisb-org-clock-get-heading-string ()
+    "Get truncated org heading string.
+
+Same as default but truncates with `truncate-string-ellipsis'."
+    (let ((heading (org-link-display-format
+                    (org-no-properties (org-get-heading t t t t)))))
+      (truncate-string-to-width heading 40 nil nil (truncate-string-ellipsis)))))
+
+;;; Org-habit
+(use-package org-habit
+  :after org-agenda
+  :ensure nil
+  :custom
+  (org-habit-show-habits t)
+  (org-habit-following-days 1)
+  (org-habit-preceding-days 14)
+  (org-habit-show-done-always-green t)
+  (org-habit-show-habits-only-for-today t)
+  (org-habit-graph-column 110)
+  (org-habit-today-glyph ?◌)
+  (org-habit-completed-glyph ?●)
+  (org-habit-missed-glyph ?○))
+
 ;;; Provide
 (provide 'krisb-org-agenda)
