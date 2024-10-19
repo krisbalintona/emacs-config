@@ -26,6 +26,20 @@
   :config
   (no-littering-theme-backups)) ; Sets various built-in variables
 
+;;; On
+;; Package exposes a number of utility hooks and functions ported from Doom
+;; Emacs. The hooks make it easier to speed up Emacs startup by providing
+;; finer-grained control of the timing at which packages are loaded. Provides
+;; the following hooks:
+;; - on-first-input-hook
+;; - on-init-ui-hook
+;; - on-first-file-hook
+;; - on-switch-frame-hook
+;; - on-first-buffer-hook
+;; - on-switch-buffer-hook
+;; - on-switch-window-hook
+(use-package on)
+
 ;;; Libraries
 (require 'krisb-common)
 
