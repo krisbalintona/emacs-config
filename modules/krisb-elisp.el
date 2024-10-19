@@ -93,5 +93,10 @@
             (edebug-safe-prin1-to-string previous-value))))
   (advice-add #'krisb-edebug-compute-previous-result :around #'adviced:edebug-compute-previous-result))
 
+;;; Package maintenance
+;;;; Package-lint-flymake
+(use-package package-lint-flymake
+  :hook (emacs-lisp-mode . package-lint-flymake-setup))
+
 ;;; Provide
 (provide 'krisb-elisp)
