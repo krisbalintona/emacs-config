@@ -181,7 +181,20 @@ This sets the default graphical element settings used by every frame.
           initial-scratch-message "Hello 👋")
 #+end_src
 
-*** =package=
+*** Load libraries
+
+#+begin_src emacs-lisp :tangle "init.el"
+  ;;; Load libraries
+  (require 'krisb-common)
+#+end_src
+
+*** Package configurations
+
+#+begin_src emacs-lisp :tangle "init.el"
+  ;;; Packages
+#+end_src
+
+**** =package=
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Package.el
@@ -198,7 +211,7 @@ This sets the default graphical element settings used by every frame.
           package-pinned-packages nil)
 #+end_src
 
-*** =use-package=
+**** =use-package=
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
@@ -217,7 +230,7 @@ This sets the default graphical element settings used by every frame.
   (setopt use-package-compute-statistics t)
 #+end_src
 
-*** =no-littering=
+**** =no-littering=
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;; Set better default package paths
@@ -230,7 +243,7 @@ This sets the default graphical element settings used by every frame.
     (no-littering-theme-backups)) ; Sets various built-in variables
 #+end_src
 
-*** =on=
+**** =on=
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; On
@@ -248,17 +261,46 @@ This sets the default graphical element settings used by every frame.
   (use-package on)
 #+end_src
 
-*** Load libraries
+**** =system-packages=
 
 #+begin_src emacs-lisp :tangle "init.el"
-  ;;; Libraries
-  (require 'krisb-common)
+  ;;; System-packages
+  ;; Install system packages via Emacs. Necessary for use-package's
+  ;; `:ensure-system-package' flag
+  (use-package system-packages
+    :custom
+    (system-packages-noconfirm nil)
+    :config
+    (when (executable-find "paru")
+      (add-to-list 'system-packages-supported-package-managers
+                   '(paru . ((default-sudo . nil)
+                             (install . "paru -S")
+                             (search . "paru -Ss")
+                             (uninstall . "paru -Rns")
+                             (update . "paru -Syu")
+                             (clean-cache . "paru -Sc")
+                             (change-log . "paru -Qc")
+                             (log . "cat /var/log/paru.log")
+                             (get-info . "paru -Qi")
+                             (get-info-remote . "paru -Si")
+                             (list-files-provided-by . "paru -qQl")
+                             (owning-file . "paru -Qo")
+                             (owning-file-remote . "paru -F")
+                             (verify-all-packages . "paru -Qkk")
+                             (verify-all-dependencies . "paru -Dk")
+                             (remove-orphaned . "paru -Rns $(paru -Qtdq)")
+                             (list-installed-packages . "paru -Qe")
+                             (list-installed-packages-all . "paru -Q")
+                             (list-dependencies-of . "paru -Qi")
+                             (noconfirm . "--noconfirm"))))
+      (setq system-packages-package-manager 'paru
+            system-packages-use-sudo nil)))
 #+end_src
 
-*** Load modules
+**** Load modules
 
 #+begin_src emacs-lisp :tangle "init.el"
-  ;;; Modules
+  ;;;; Modules
   (require 'krisb-garbage-collection)
   (require 'krisb-system-env)
   (require 'krisb-themes)

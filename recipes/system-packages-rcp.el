@@ -24,14 +24,5 @@
 
 ;;; Code:
 
-;;;; System-packages
-;; Install system packages within Emacs. Necessary for use-package's
-;; `:ensure-system-package' flag
-(use-package system-packages
-  :custom
-  (system-packages-noconfirm t))        ; Bypass its prompt
-(when (fboundp 'elpaca-wait)
-  (elpaca-wait))
-
 (provide 'system-packages-rcp)
 ;;; system-packages-rcp.el ends here
