@@ -1,3 +1,12 @@
+;;; Newcomment
+(use-package newcomment
+  :ensure nil
+  :custom
+  (comment-empty-lines t)
+  (comment-fill-column nil)
+  (comment-multi-line t)
+  (comment-style 'indent))
+
 ;;; Electric
 (use-package electric
   :ensure nil

@@ -27,15 +27,6 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Comments
-;;;;; Newcomment
-(use-package newcomment
-  :ensure nil
-  :custom
-  (comment-empty-lines t)
-  (comment-fill-column nil)
-  (comment-multi-line t)
-  (comment-style 'indent))
-
 ;;;;; Alt-comment-dwim
 (use-package alt-comment-dwim
   :disabled
