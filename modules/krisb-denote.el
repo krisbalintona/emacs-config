@@ -112,6 +112,7 @@
 
 ;;; Krisb-denote-ext
 (use-package krisb-denote-ext
+  :ensure nil
   :after denote
   :hook (after-save . krisb-denote-ext-auto-rename-file))
 
