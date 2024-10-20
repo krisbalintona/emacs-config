@@ -187,15 +187,12 @@
   :ensure nil
   :custom
   (vertico-multiform-categories
-   '((consult-grep buffer)
-     (imenu buffer)
+   '(;; (consult-grep buffer)
+     ;; (imenu buffer)
      (buffer (vertico-sort-function . nil))
      (citar (vertico-sort-function . vertico-sort-history-alpha))))
   (vertico-multiform-commands
-   '(;; I use jinx now, but I think it's better to not apply a grid layout to it
-     ;; since its use of vertico-groups is useful
-     ("flyspell-correct-*" grid (vertico-grid-annotate . 20))
-     (pdf-view-goto-label (vertico-sort-function . nil))
+   '((pdf-view-goto-label (vertico-sort-function . nil))
      (".+-history" (vertico-sort-function . nil))))
   :config
   (vertico-multiform-mode 1))
