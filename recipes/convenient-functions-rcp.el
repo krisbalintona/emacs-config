@@ -149,15 +149,6 @@ act upon that region instead."
   (if delete-by-moving-to-trash
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
 
-;;;; Advice-unadvice
-;; Thanks to
-;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
-(defun advice-unadvice (sym)
-  "Remove all advices from symbol SYM."
-  (interactive "aFunction symbol: ")
-  (advice-mapc (lambda (advice _props)
-                 (advice-remove sym advice)) sym))
-
 ;;;; kb/org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with
 ;; =universal-argument= to apply to whole buffer

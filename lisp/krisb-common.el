@@ -94,7 +94,14 @@ Useful for some citation-related configurations.")
   "Directory that houses my local email files.")
 
 ;;; Functions
-
+;; Thanks to
+;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
+(defun krisb-advice-unadvice (sym)
+  "Remove all advices from symbol SYM."
+  (interactive "aFunction symbol: ")
+  (advice-mapc (lambda (advice _props)
+                 (advice-remove sym advice))
+               sym))
 ;;; Macros
 (defmacro krisb-evaluate-when-internet (interval &rest body)
   "Asynchronously evaluate BODY once internet connection is available.
