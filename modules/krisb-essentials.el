@@ -110,6 +110,23 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  ("C-S-k" . krisb-join-line-above)
  ("C-S-j" . krisb-join-line-below))
 
+;;;; Empty trash
+(defun krisb-empty-trash ()
+  "Empty the trash directory."
+  (interactive)
+  (when delete-by-moving-to-trash
+    (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
+
+;;;; Remove all advice from a function
+;; Thanks to
+;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
+(defun krisb-advice-unadvice (sym)
+  "Remove all advices from symbol SYM."
+  (interactive "aFunction symbol: ")
+  (advice-mapc (lambda (advice _props)
+                 (advice-remove sym advice))
+               sym))
+
 ;;; Minor modes
 ;;;; Recognize camel case as words
 (global-subword-mode 1)
