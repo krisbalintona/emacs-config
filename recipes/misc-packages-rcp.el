@@ -549,38 +549,6 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
             :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
-;;;;; Engine-mode
-;; Send arbitrary search engine queries to your browser from within Emacs
-(use-package engine-mode
-  :commands engine/search-duckduckgo
-  :custom
-  (engine/browser-function 'browse-url-generic)
-  :config
-  (defengine amazon
-    "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s")
-
-  (defengine duckduckgo
-    "https://duckduckgo.com/?q=%s"
-    :keybinding "d")
-
-  (defengine github
-    "https://github.com/search?ref=simplesearch&q=%s"
-    :keybinding "g")
-
-  (defengine google
-    "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-    :keybinding "G")
-
-  (defengine wikipedia
-    "https://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-    :keybinding "w")
-
-  (defengine youtube
-    "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
-    :keybinding "y")
-
-  (engine-mode 1))
-
 ;;;;; Casual
 ;; A suite of "casual" interfaces.
 (use-package casual-suite
