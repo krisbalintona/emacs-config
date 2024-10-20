@@ -129,6 +129,10 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;;;; Avoid collision of mouse with point
 (mouse-avoidance-mode 'jump)
 
+;;;; Find-funtion-mode
+;; Binds useful commands for jumping to variables, functions, and libraries
+(find-function-mode 1)
+
 ;;; Miscellaneous
 ;;;; Enable all disabled commands
 (setopt disabled-command-function nil)

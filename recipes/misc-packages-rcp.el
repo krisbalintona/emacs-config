@@ -680,7 +680,6 @@ This is a difference in multitude of %s."
   :hook ((messages-buffer-mode . visual-line-mode)
          (on-first-file . undelete-frame-mode)
          (on-first-buffer . global-so-long-mode)
-         (on-first-buffer . find-function-mode) ; Adds useful commands for jumping to variables, functions, and libraries
          (on-first-input . minibuffer-electric-default-mode))
   :bind
   ;; Remap these defaults; they are effectively the same while phasing out the

@@ -599,6 +599,10 @@ This sets the default graphical element settings used by every frame.
 
   ;;;; Avoid collision of mouse with point
   (mouse-avoidance-mode 'jump)
+
+  ;;;; Find-funtion-mode
+  ;; Binds useful commands for jumping to variables, functions, and libraries
+  (find-function-mode 1)
 #+end_src
 **** Miscellaneous
 
