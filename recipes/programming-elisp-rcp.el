@@ -27,16 +27,6 @@
 (require 'keybinds-general-rcp)
 (require 'buffers-and-windows-rcp)
 
-;;;; Highlight-function-calls
-(use-package highlight-function-calls
-  :hook ((emacs-lisp-mode lisp-interaction-mode) . highlight-function-calls-mode)
-  :custom
-  (highlight-function-calls-not nil)
-  (highlight-function-calls-macro-calls nil)
-  (highlight-function-calls-special-forms nil)
-  :custom-face
-  (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
-
 ;;;; Rainbow-delimiters
 ;; Highlight matching delimiters (e.g. parenthesis)
 (use-package rainbow-delimiters

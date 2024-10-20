@@ -7,15 +7,15 @@
  '(package-selected-packages
    '(ace-window agitate astute avy cape citar-denote consult corfu-prescient
                 cursory darkroom denote-explore elisp-demos eros
-                exec-path-from-shell fontaine gcmh ht inspector
-                keychain-environment kind-icon lin magit marginalia mermaid-mode
-                modus-themes no-littering notmuch-addr notmuch-transient
-                ob-mermaid ol-notmuch olivetti on orderless org-appear
-                org-contrib org-mime org-modern outshine package-lint-flymake
-                pdf-tools peg project pulsar puni python saveplace-pdf-view
-                so-long soap-client svg system-packages track-changes tramp try
-                ts use-package verilog-mode vertico-prescient which-key
-                window-tool-bar))
+                exec-path-from-shell fontaine gcmh highlight-function-calls ht
+                inspector keychain-environment kind-icon lin magit marginalia
+                mermaid-mode modus-themes no-littering notmuch-addr
+                notmuch-transient ob-mermaid ol-notmuch olivetti on orderless
+                org-appear org-contrib org-mime org-modern outshine
+                package-lint-flymake pdf-tools peg project pulsar puni python
+                saveplace-pdf-view so-long soap-client svg system-packages
+                track-changes tramp try ts use-package verilog-mode
+                vertico-prescient which-key window-tool-bar))
  '(package-vc-selected-packages
    '((org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")))
