@@ -19,11 +19,13 @@
   (modus-themes-italic-constructs t)
   (modus-themes-bold-constructs nil)
   (modus-themes-mixed-fonts t)
-  (modus-themes-prompts '(semibold))
-  (modus-themes-completions '(((matches . (heavy))
-                               (selection . (semibold)))))
   (modus-themes-variable-pitch-ui nil)
-  (modus-themes-headings '((t . (semibold))))
+  (modus-themes-prompts '(semibold))
+  (modus-themes-completions '((matches . (semibold))
+                              (selection . (regular))))
+  (modus-themes-headings '((agenda-date . (1.1))
+                           (agenda-structure . (variable-pitch 1.2))
+                           (t . (semibold 1.1))))
   :config
   ;; Overrides
   (setopt modus-themes-common-palette-overrides
