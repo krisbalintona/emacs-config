@@ -43,7 +43,7 @@
         scroll-down-aggressively nil)   ; Center after point leaves window?
 
 ;;;;; Font locking
-(setopt jit-lock-defer-time 0.15
+(setopt jit-lock-defer-time 0
         ;; NOTE 2024-09-16: The below are used by Doom Emacs.
         ;; These are the three ways to increase scrolling performance.
         ;; See (info "(emacs) Scrolling") for details. Introduced in Emacs HEAD
