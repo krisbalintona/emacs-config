@@ -66,8 +66,7 @@
 ;;;;; Help
           ((major-mode . help-mode)
            (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-           (window-height . shrink-window-if-larger-than-buffer)
-           (dedicated . t))
+           (window-height . shrink-window-if-larger-than-buffer))
 
 ;;;;; Eldoc
           ("^\\*eldoc"
