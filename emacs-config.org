@@ -3266,7 +3266,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (denote-interface-starting-filter-presets
      '("zettels/[^z-a]*" "bib/[^z-a]*"))
     (denote-interface-starting-filter "zettels/[^z-a]*")
-    :preface
+    :init
     (with-eval-after-load 'denote
       (setopt denote-sort-signature-comparison-function #'denote-interface--signature-lessp)))
 

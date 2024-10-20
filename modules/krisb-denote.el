@@ -198,7 +198,7 @@ Namely, adds the #+reference after the #+identifier line."
   (denote-interface-starting-filter-presets
    '("zettels/[^z-a]*" "bib/[^z-a]*"))
   (denote-interface-starting-filter "zettels/[^z-a]*")
-  :preface
+  :init
   (with-eval-after-load 'denote
     (setopt denote-sort-signature-comparison-function #'denote-interface--signature-lessp)))
 
