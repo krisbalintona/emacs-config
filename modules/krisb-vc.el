@@ -53,6 +53,8 @@
      ("Fixes")
      ("Author")))
   (log-edit-setup-add-author nil)
+  :custom-face
+  (log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
   :config
   ;; I can see the files from the Diff with C-c C-d when I want
   (remove-hook 'log-edit-hook #'log-edit-show-files))
@@ -154,6 +156,8 @@
                                             (modules . hide)
                                             (unpushed . show)
                                             (unpulled . hide)))
+  :custom-face
+  (git-commit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
   :config
   (magit-auto-revert-mode 1))
 
