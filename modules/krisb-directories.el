@@ -42,5 +42,9 @@ command."
   :custom
   (dired-omit-verbose nil))
 
+;;; Nerd-icons-dired
+(use-package nerd-icons-dired
+  :hook (dired-mode . nerd-icons-dired-mode))
+
 ;;; Provide
 (provide 'krisb-directories)

@@ -5845,6 +5845,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom
     (dired-omit-verbose nil))
 
+  ;;; Nerd-icons-dired
+  (use-package nerd-icons-dired
+    :hook (dired-mode . nerd-icons-dired-mode))
+
   ;;; Provide
   (provide 'krisb-directories)
 #+end_src

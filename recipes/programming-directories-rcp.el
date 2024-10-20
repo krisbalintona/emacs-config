@@ -27,17 +27,6 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Dired
-;;;;; All-the-icons-dired
-;; Add icons which represent file types
-(use-package all-the-icons-dired
-  :diminish
-  :hook
-  ((dired-mode . all-the-icons-dired-mode)
-   (all-the-icons-dired-mode . (lambda () (setq-local all-the-icons-scale-factor 0.95))))
-  :custom
-  (all-the-icons-dired-monochrome nil) ; Icon the same color as the text on the line?
-  (dired-kill-when-opening-new-dired-buffer t)) ; Kill dired buffer when opening new directory
-
 ;;;;; Image-dired
 (use-package image-dired
   :ensure nil
