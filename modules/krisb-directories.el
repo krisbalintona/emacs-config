@@ -10,7 +10,6 @@
   (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
   (dired-kill-when-opening-new-dired-buffer t)  ; Basically `dired-single'
   (dired-listing-switches "--group-directories-first --time-style=long-iso -alhgv") ; Flags `dired' passes to `ls'
-  (dired-omit-verbose nil)
   ;; Always copy/delete recursively?
   (dired-recursive-copies  'always)
   (dired-recursive-deletes 'top)
@@ -35,6 +34,13 @@ command."
                       (call-interactively (intern sexp))             ; Command
                     (funcall-interactively 'eval-expression sexp)))) ; Sexp
             (dired-get-marked-files)))))
+
+;;; Dired-x
+(use-package dired-x
+  :ensure nil
+  :hook (dired-mode . dired-omit-mode)
+  :custom
+  (dired-omit-verbose nil))
 
 ;;; Provide
 (provide 'krisb-directories)

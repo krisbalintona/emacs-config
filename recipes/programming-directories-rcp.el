@@ -27,12 +27,6 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Dired
-;;;;; Dired-x
-(use-package dired-x
-  :disabled
-  :ensure nil
-  :hook (dired-mode . dired-omit-mode))
-
 ;;;;; All-the-icons-dired
 ;; Add icons which represent file types
 (use-package all-the-icons-dired
