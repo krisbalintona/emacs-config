@@ -29,12 +29,6 @@
 ;; See `startup-echo-area-message'
 (fset #'display-startup-echo-area-message #'ignore)
 
-;;;; Buffer-local defaults
-(setq-default max-mini-window-height 0.3                                                          ; Max minibuffer height
-
-              visible-bell nil)
-
-
 ;;;; Require pin-entry for passowrds
 ;; Pinentry is responsible for querying passphrases
 (require 'epg-config)
@@ -42,9 +36,6 @@
 
 ;;;; Toggle visiting of image files as images (Auto Image File mode).
 (auto-image-file-mode t)
-
-;;;; Highlight next error
-(setq next-error-message-highlight nil)
 
 ;;;; Recenter upon `next-error'
 (setq next-error-recenter '(4))
