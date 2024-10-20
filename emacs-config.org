@@ -1175,7 +1175,7 @@ Enhancements to all built-in-based completions.
   (provide 'krisb-completion)
 #+end_src
 
-**** =krisb-saving.el=
+*** =krisb-saving.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-saving.el"
   ;; No-littering's `no-littering-theme-backups' sets the values for
@@ -1262,7 +1262,7 @@ Enhancements to all built-in-based completions.
   (provide 'krisb-saving)
 #+end_src
 
-**** =krisb-persistence.el=
+*** =krisb-persistence.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
   ;;; Savehist
@@ -1394,7 +1394,7 @@ Enhancements to all built-in-based completions.
         (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
 #+end_src
 
-**** =display-buffer-alist=
+**** Setting =display-buffer-alist=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-windows.el"
   ;;;; Display-buffer-alist
