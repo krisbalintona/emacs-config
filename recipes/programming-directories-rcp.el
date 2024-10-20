@@ -68,20 +68,6 @@
   :custom
   (dired-hide-dotfiles-verbose nil)) ; No announcements about hiding in echo area
 
-;;;;; Dired-hist
-;; History for dired buffers
-(use-package dired-hist
-  ;; :ensure (:host github :repo "karthink/dired-hist")
-  :vc (:url "https://github.com/karthink/dired-hist.git")
-  :after dired
-  :demand
-  :bind
-  ( :map dired-mode-map
-    ("l" . dired-hist-go-back)
-    ("r" . dired-hist-go-forward))
-  :config
-  (dired-hist-mode 1))
-
 ;;;;; Consult-dir
 (use-package consult-dir
   :bind

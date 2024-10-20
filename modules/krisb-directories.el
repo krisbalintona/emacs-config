@@ -46,5 +46,13 @@ command."
 (use-package nerd-icons-dired
   :hook (dired-mode . nerd-icons-dired-mode))
 
+;;; Dired-hist
+;; History for dired buffers
+(use-package dired-hist
+  :bind (dired-mode . dired-hist-mode)
+  :bind ( :map dired-mode-map
+          ("l" . dired-hist-go-back)
+          ("r" . dired-hist-go-forward)))
+
 ;;; Provide
 (provide 'krisb-directories)
