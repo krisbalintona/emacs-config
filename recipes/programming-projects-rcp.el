@@ -30,14 +30,12 @@
 
 ;;;;; Project
 (use-package project
-  :bind
-  ( :map project-prefix-map
-    ("g". consult-git-grep)
-    ("r". consult-ripgrep)
-    ("R". project-query-replace-regexp)
-    ("m". magit-project-status)
-    ("a". project-any-command)
-    ("o". kb/project-multi-occur))
+  :bind ( :map project-prefix-map
+          ("g". consult-git-grep)
+          ("r". consult-ripgrep)
+          ("R". project-query-replace-regexp)
+          ("m". magit-project-status)
+          ("a". project-any-command))
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-find-functions '(kb/project-special-dir project-try-vc))
@@ -90,8 +88,7 @@ With a prefix argument, show NLINES of context."
 
 ;;;;; Xref
 (use-package xref
-  :bind
-  ("C-M-?". xref-find-references-and-replace) ; Emacs 29.1
+  :bind ("C-M-?". xref-find-references-and-replace) ; Emacs 29.1
   :custom
   (xref-show-definitions-function #'xref-show-definitions-completing-read)
   (xref-show-xrefs-function #'xref-show-definitions-buffer)
@@ -102,7 +99,7 @@ With a prefix argument, show NLINES of context."
   ;; We remove the fallback backend, `etags--xref-backend', which prompts the
   ;; user for an etags table -- this is undesirable for me.
   (setq-default xref-backend-functions nil)
-  ;; Then add `elisp--xref-backend' to the global value of
+  ;; Then add `elisp--xref-backend' as the global value of
   ;; `xref-backend-functions', which means it is run when the local value ends
   ;; with `t'. See (info "(elisp) Running Hooks") for an explanation.
   (add-hook 'xref-backend-functions #'elisp--xref-backend))
@@ -111,27 +108,8 @@ With a prefix argument, show NLINES of context."
 ;;;;; Itself
 ;; The best git interface. Mostly taken from Mostly taken from
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
-
-;; NOTE 2024-01-05: Temporarily update seq library to avoid dependency errors.
-;; See https://github.com/progfolio/elpaca/issues/216
-(when (fboundp 'elpaca)
-  (elpaca '(seq :type git :host nil :repo "https://git.savannah.gnu.org/git/emacs/elpa.git" :branch "externals/seq")
-          (progn (unload-feature 'seq t) (require 'seq))))
-
 (use-package magit
-  :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
-  :bind (("C-x g" . magit)
-         :map magit-mode-map
-         ("C-<tab>". magit-section-toggle-children)
-         :map git-commit-mode-map
-         ("<tab>" . completion-at-point))
   :custom
-  ;; How opened magit buffers (e.g. commit) are shown
-  (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
-
-  ;; How opened magit buffers are closed
-  (magit-bury-buffer-function 'magit-restore-window-configuration) ; Restore the window configuration used before calling magit when closing it
-
   ;; Displaying hunks
   (magit-diff-highlight-hunk-body t)
   (magit-diff-highlight-hunk-region-functions
@@ -140,17 +118,7 @@ With a prefix argument, show NLINES of context."
      magit-diff-highlight-hunk-region-using-face
      ))
 
-  ;; Sections
-  (magit-module-sections-nested t)
-  (magit-section-show-child-count t)
-  (magit-refs-show-commit-count 'all)   ; Show branches and tags
-  (magit-section-initial-visibility-alist '((modules . hide) ; Modules overview
-                                            (stashes . show)
-                                            (unpulled . show)
-                                            (unpushed . show)
-                                            ))
   (transient-mode-line-format nil)
-
   ;; Save transient changes to a different location (since I changed the
   ;; transient-level for certain magit transient popups)
   (transient-history-file (concat no-littering-var-directory "transient/history.el"))
@@ -180,19 +148,11 @@ With a prefix argument, show NLINES of context."
      ;; magit-insert-unpulled-from-pushremote
      ;; magit-insert-push-branch-header
      ))
-  :preface
-  ;; NOTE 2022-06-01: Set this to `nil' before `magit' is loaded so when `forge'
-  ;; is loaded it does not add keybinds which conflict with `evil-collection'
-  (when (featurep 'evil)
-    (setq forge-add-default-bindings nil))
   :config
   ;; NOTE 2021-08-20: Provides useful functionality, such as `magit-project-status'
   (require 'magit-extras)               ; Load the remaining magit libraries
 
   (magit-auto-revert-mode)
-
-  (when (bound-and-true-p evil-local-mode)
-    (evil-set-initial-state 'git-commit-mode 'insert))
 
   ;; Adds hooks to `magit-status-sections-hook'. Should be a separate call for
   ;; each.
@@ -320,53 +280,12 @@ With a prefix argument, show NLINES of context."
   :config
   (abridge-diff-mode 1))
 
-;;;;; Keychain-environment
-(use-package keychain-environment
-  ;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated when committing since
-  ;; their values may change (ever since I started using keychain in the Fish
-  ;; shell to call ssh-agent). Requires the "keychain" package; sources
-  ;; appropriate file in ~/.keychain/ to update environment variables
-  :hook ((elpaca-after-init after-init git-commit-post-finish) . keychain-refresh-environment))
-
 ;;;; VC
 ;;;;; Itself
 (use-package vc
-  :ensure nil
-  :hook (vc-git-log-edit-mode . auto-fill-mode)
-  :bind ( :map vc-git-log-edit-mode-map
-          ("<tab>" . completion-at-point))
   :custom
-  (vc-command-messages 'log)   ; NOTE 2024-09-19: Can be useful in the future...
-  (vc-follow-symlinks t)
-  (vc-handled-backends '(Git))          ; Expand this list when necessary
-
-  (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
-  (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
-  (vc-git-diff-switches              ; Have diff headers look similar to Magit's
-   '("--patch-with-stat" "--histogram"))
-  (vc-git-root-log-format
-   `("%h %ad (%ar) %aN%d%n  %s"
-     ;; The first shy group matches the characters drawn by --graph. We use
-     ;; numbered groups because `log-view-message-re' wants the revision number
-     ;; to be group 1.
-     ,(concat "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?"
-              "\\(?1:[0-9a-z]+\\)"      ; %h
-              " "
-              "\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} (.*? ago)\\)?" ; %ad (%ar)
-              " "
-              "\\(?3:\\(?:[[:alpha:]]+\\.?[\n ]\\)+\\)" ; %aN
-              "\\(?2:([^)]+)\\)?")                      ; %d
-     ((1 'log-view-message)
-      (2 'change-log-list nil lax)
-      (3 'change-log-name)
-      (4 'change-log-date))))
   (add-log-mailing-address "krisbalintona@gmail.com")
   (add-log-keep-changes-together t)
-
-  ;; Other
-  (vc-find-revision-no-save t)
-  (vc-revert-show-diff 'kill)
-  (vc-annotate-display-mode 'fullscale)
   :config
   ;; Restore window configuration when when making commits with VC like you can
   ;; with org-agenda via the `org-agenda-restore-windows-after-quit' user option
@@ -383,61 +302,6 @@ With a prefix argument, show NLINES of context."
     (setq kb/vc-pre-window-conf nil))
   (advice-add 'log-edit-done :after #'kb/vc-restore-window-conf)
   (advice-add 'log-edit-kill-buffer :after #'kb/vc-restore-window-conf))
-
-;;;;; Vc-dir
-(use-package vc-dir
-  :ensure nil
-  :bind
-  ( :map vc-dir-mode-map
-    ("G" . vc-revert)))
-
-;;;;; Log-edit
-(use-package log-edit
-  :ensure nil
-  :bind ( :map log-edit-mode-map
-          ([remap log-edit-comment-search-backward]. consult-history))
-  :custom
-  (log-edit-headers-alist
-   '(("Summary" . log-edit-summary)
-     ("Fixes")
-     ("Author")))
-  (log-edit-setup-add-author nil)
-  :config
-  ;; I can see the files from the Diff with C-c C-d
-  (remove-hook 'log-edit-hook #'log-edit-show-files))
-
-;;;;; Diff-mode
-(use-package diff-mode
-  :ensure nil
-  :hook ((diff-mode . diff-delete-empty-files)
-         (kb/themes . kb/themes-setup-diff-mode-faces))
-
-  :bind
-  ( :map diff-mode-map
-    ("S-<iso-lefttab>" . outshine-cycle-buffer)
-    ("<tab>" . outshine-cycle)
-    ("C-x n s" . outshine-narrow-to-subtree)
-    ("L" . vc-print-root-log)
-    ("v" . vc-next-action))
-  :custom
-  (diff-font-lock-prettify t)
-  (diff-refine 'navigation)             ; Font lock hunk when it is navigated to
-  (diff-font-lock-syntax 'hunk-also) ; Fontify diffs with syntax highlighting of the language
-  :config
-  (defun kb/themes-setup-diff-mode-faces ()
-    "Set up `diff-mode' faces."
-    (set-face-attribute 'diff-header nil
-                        :height 1.2
-                        :overline t
-                        :width 'expanded
-                        :foreground (modus-themes-with-colors fg-alt)
-                        :extend t)
-    (set-face-attribute 'diff-hunk-header nil
-                        :height 1.1
-                        :slant 'italic
-                        :foreground 'unspecified
-                        :background (modus-themes-with-colors bg-dim)))
-  (kb/themes-setup-diff-mode-faces))
 
 ;;;;; Ediff
 (use-package ediff

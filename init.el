@@ -121,6 +121,7 @@
 (require 'krisb-citations)
 (require 'krisb-pdfs)
 
+(require 'krisb-vc)
 (require 'krisb-elisp)
 
 (require 'krisb-email-composition)
