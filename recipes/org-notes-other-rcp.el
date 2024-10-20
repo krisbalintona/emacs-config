@@ -275,15 +275,6 @@
   (advice-add 'org-noter-pdf--get-selected-text :override #'kb/org-noter-pdf--get-selected-text))
 
 ;;;; Videos
-;;;;; MPV
-;; Dependency for packages that interact with mpv
-(use-package mpv
-  ;; NOTE 2024-03-31: See
-  ;; https://github.com/kljohann/mpv.el/issues/31#issuecomment-1856491594 for
-  ;; why I use the latest GitHub version
-  :vc (:rev :newest)
-  :custom
-  (mpv-default-options (list "--save-position-on-quit")))
 
 ;;;;; Custom MPV notes
 (with-eval-after-load 'org

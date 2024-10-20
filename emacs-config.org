@@ -3494,6 +3494,22 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; krisb-pdfs.el ends here
 #+end_src
 
+**** =krisb-videos.el=
+#+begin_src emacs-lisp :tangle "modules/krisb-videos.el"
+  ;;; MPV
+  ;; Dependency for packages that interact with mpv
+  (use-package mpv
+    ;; NOTE 2024-03-31: See
+    ;; https://github.com/kljohann/mpv.el/issues/31#issuecomment-1856491594 for
+    ;; why I use the latest GitHub version
+    :pin melpa
+    :custom
+    (mpv-default-options (list "--save-position-on-quit")))
+
+  ;;; Provide
+  (require 'krisb-videos)
+#+end_src
+
 *** Todos
 
 **** =krisb-org-agenda.el=
