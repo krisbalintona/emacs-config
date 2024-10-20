@@ -1164,14 +1164,14 @@ Enhancements to all built-in-based completions.
                        (add-to-list 'completion-at-point-functions capf))))))
 
     (krisb-cape-setup-capfs
-     "elisp"
-     '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
-     (list #'cape-file #'cape-elisp-symbol))
+      "elisp"
+      '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
+      (list #'cape-file #'cape-elisp-symbol))
 
     (krisb-cape-setup-capfs
-     "commit"
-     '(git-commit-mode-hook vc-git-log-edit-mode-hook)
-     (list #'cape-elisp-symbol #'cape-dabbrev)))
+      "commit"
+      '(git-commit-mode-hook vc-git-log-edit-mode-hook)
+      (list #'cape-elisp-symbol #'cape-dabbrev)))
 #+end_src
 
 **** Provide
@@ -5358,8 +5358,8 @@ Enhancements to all built-in-based completions.
     :group 'pdf-links
     :type '(restricted-sexp :match-alternatives
                             ((lambda (x) (and (numberp x)
-                                         (<= x 1)
-                                         (>= x 0))))))
+                                              (<= x 1)
+                                              (>= x 0))))))
 
   (defun krisb-avy-pdf-links-read-char-action (query prompt)
     "Using PROMPT, interactively read a link-action.

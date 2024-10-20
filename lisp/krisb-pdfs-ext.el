@@ -102,8 +102,8 @@ reading links."
   :group 'pdf-links
   :type '(restricted-sexp :match-alternatives
                           ((lambda (x) (and (numberp x)
-                                       (<= x 1)
-                                       (>= x 0))))))
+                                            (<= x 1)
+                                            (>= x 0))))))
 
 (defun krisb-avy-pdf-links-read-char-action (query prompt)
   "Using PROMPT, interactively read a link-action.

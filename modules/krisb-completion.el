@@ -442,14 +442,14 @@ This macro does not affect capfs already in
                      (add-to-list 'completion-at-point-functions capf))))))
 
   (krisb-cape-setup-capfs
-   "elisp"
-   '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
-   (list #'cape-file #'cape-elisp-symbol))
+    "elisp"
+    '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
+    (list #'cape-file #'cape-elisp-symbol))
 
   (krisb-cape-setup-capfs
-   "commit"
-   '(git-commit-mode-hook vc-git-log-edit-mode-hook)
-   (list #'cape-elisp-symbol #'cape-dabbrev)))
+    "commit"
+    '(git-commit-mode-hook vc-git-log-edit-mode-hook)
+    (list #'cape-elisp-symbol #'cape-dabbrev)))
 
 ;;; Provide
 (provide 'krisb-completion)
