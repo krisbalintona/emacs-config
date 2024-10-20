@@ -699,27 +699,6 @@ This is a difference in multitude of %s."
   (kill-ring-deindent-mode nil)
   (window-divider-default-places 'bottom-only))
 
-;;;;; Register
-(use-package register
-  :ensure nil
-  :custom
-  (register-preview-delay 0)
-  (register-separator "  ")
-  (register-use-preview nil)            ; Highlighting + navigation?
-  (register-preview-display-buffer-alist
-   '(display-buffer-at-bottom
-     (window-height . fit-window-to-buffer)
-     (preserve-size . (nil . t))
-     (window-parameters . ((mode-line-format . none)
-                           (no-other-window . t)))))
-  :config
-  (with-eval-after-load 'consult
-    ;; Better than `consult-register'
-    (setq register-preview-function #'consult-register-format)
-    ;; Adds thin lines, sorting and hides the mode line of the register preview
-    ;; window. Copied from https://github.com/minad/consult#use-package-example
-    (advice-add #'register-preview :override #'consult-register-window)))
-
 ;;;;; Proced
 ;; Built in process monitor
 (use-package proced

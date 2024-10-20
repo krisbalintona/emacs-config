@@ -1,8 +1,30 @@
+;;; Register
+(use-package register
+  :ensure nil
+  :custom
+  (register-preview-delay 0)
+  (register-separator "  ")
+  (register-use-preview nil)            ; Highlighting + navigation?
+  (register-preview-display-buffer-alist
+   '(display-buffer-at-bottom
+     (window-height . fit-window-to-buffer)
+     (preserve-size . (nil . t))
+     (window-parameters . ((mode-line-format . none)
+                           (no-other-window . t)))))
+  :config
+  (with-eval-after-load 'consult
+    ;; Better than `consult-register'
+    (setq register-preview-function #'consult-register-format)
+    ;; Adds thin lines, sorting and hides the mode line of the register preview
+    ;; window. Copied from https://github.com/minad/consult#use-package-example
+    (advice-add #'register-preview :override #'consult-register-window)))
+
+;;; Files
 ;; No-littering's `no-littering-theme-backups' sets the values for
 ;; `auto-save-file-name-transforms', `backup-directory-alist', and
 ;; `undo-tree-history-directory-alist'. Read its docstring for more information.
 
-;;; Backup
+;;;; Backup
 ;; Backup files. "Emacs makes a backup for a file only the first time the file
 ;; is saved from the buffer that visits it."
 (setopt make-backup-files t
@@ -37,7 +59,8 @@ Takes any FILE and return a hashed version."
                           (file-name-directory file))))))
 (setopt make-backup-file-name-function #'krisb-backup-file-name-hash)
 
-;;; Auto-save
+
+;;;; Auto-save
 (setopt auto-save-default t ; Only a local minor mode exists; this variable influences the global value
         auto-save-timeout 3
         auto-save-interval 150
