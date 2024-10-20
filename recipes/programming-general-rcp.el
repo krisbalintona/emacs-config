@@ -124,73 +124,29 @@
 ;; commands.
 (use-package consult
   :bind
-  (;; Remaps
-   ([remap flymake-show-buffer-diagnostics] . consult-flymake)
-   :map goto-map                        ; Uses the `M-g' prefix
-   ("e" . consult-compile-error)
-   ("m" . consult-mark)
-   ("M" . consult-global-mark)
-   ("I" . consult-imenu-multi)
-   :map search-map                      ; Uses the `M-s' prefix
-   ("g" . consult-git-grep)
-   ("G" . consult-grep)
-   ("r" . consult-ripgrep)
-   ("f" . consult-find)
-   ("F" . consult-locate)
-   :map comint-mode-map
-   ([remap comint-history-isearch-backward-regexp]. consult-history)
-   :map minibuffer-local-map
-   ([remap next-matching-history-element] . consult-history)
-   ([remap previous-matching-history-element]. consult-history))
-  :custom
-  ;; `consult-bookmark' groups
-  (consult-bookmark-narrow
-   '((?f "File" bookmark-default-handler)
-     (?i "Info" Info-bookmark-jump)
-     (?h "Help" help-bookmark-jump Info-bookmark-jump
-         Man-bookmark-jump woman-bookmark-jump)
-     (?p "PDFs" pdf-view-bookmark-jump-handler)
-     (?a "Activities" activities-bookmark-handler)
-     (?d "Docview" doc-view-bookmark-jump)
-     (?s "Eshell" eshell-bookmark-jump)
-     (?w "Web" eww-bookmark-jump xwidget-webkit-bookmark-jump-handler)
-     (?v "VC Directory" vc-dir-bookmark-jump)
-     (nil "Other")))
-  (consult-ripgrep-args
-   (concat
-    "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
-   --smart-case --no-heading --with-filename --line-number --search-zip"
-    ;; Additional args
-    " --line-number --hidden"))
+  ( :map goto-map                        ; Uses the `M-g' prefix
+    ("e" . consult-compile-error)
+    ("m" . consult-mark)
+    ("M" . consult-global-mark)
+    ("I" . consult-imenu-multi)
+    :map search-map                      ; Uses the `M-s' prefix
+    ("g" . consult-git-grep)
+    ("G" . consult-grep)
+    ("r" . consult-ripgrep)
+    ("f" . consult-find)
+    ("F" . consult-locate)
+    :map comint-mode-map
+    ([remap comint-history-isearch-backward-regexp]. consult-history)
+    :map minibuffer-local-map
+    ([remap next-matching-history-element] . consult-history)
+    ([remap previous-matching-history-element]. consult-history))
   :config
-  (add-to-list 'consult-mode-histories
-               '(log-edit-mode log-edit-comment-ring log-edit-comment-ring-index log-edit-beginning-of-line))
-
-  ;; Use the faster plocate rather than locate
-  (when (executable-find "plocate")
-    (setq consult-locate-args "plocate --ignore-case --existing --regexp"))
-
-  (defun kb/consult-imenu-versatile (&optional arg)
-    "Call `consult-imenu'. With prefix-command ARG, call
-    `consult-imenu-multi'."
-    (interactive "P")
-    (if arg (consult-imenu-multi) (consult-imenu)))
-
   ;; Have line centered in previews. Make sure `recenter' is called after
   ;; `consult--maybe-recenter'
   (add-hook 'consult-after-jump-hook #'recenter)
 
   ;; Customize consult commands
-  (consult-customize
-   consult-buffer
-   consult-buffer-other-window
-   consult-grep
-   consult-git-grep
-   consult-ripgrep
-   consult-recent-file ; Make sure this is after the definition of `consult-recent-file'
-   consult-find
-   consult-bookmark :preview-key "C-M-;"
-   consult-buffer :group nil)
+  (consult-customize consult-buffer :group nil)
   
   ;; Additional `consult-buffer' sources (groups)
   (defvar kb/consult-buffer--dired-source

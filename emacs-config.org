@@ -2070,6 +2070,7 @@ Enhancements to all built-in-based completions.
            ([remap point-to-register] . consult-register-store)
            ([remap repeat-complex-command] . consult-complex-command)
            ([remap imenu] . consult-imenu)
+           ([remap flymake-show-buffer-diagnostics] . consult-flymake)
            :map consult-narrow-map
            ("?" . consult-narrow-help)          ; Show available narrow keys
            :map goto-map                  ; The `M-g' prefix
@@ -2081,7 +2082,35 @@ Enhancements to all built-in-based completions.
            :map org-mode-map
            ([remap consult-outline] . consult-org-heading)
            ("M-g a" . consult-org-agenda))
+    :custom
+    (consult-preview-key "C-M-;")
+    (consult-bookmark-narrow
+     '((?f "File" bookmark-default-handler)
+       (?i "Info" Info-bookmark-jump)
+       (?h "Help" help-bookmark-jump Info-bookmark-jump
+           Man-bookmark-jump woman-bookmark-jump)
+       (?p "PDFs" pdf-view-bookmark-jump-handler)
+       (?a "Activities" activities-bookmark-handler)
+       (?d "Docview" doc-view-bookmark-jump)
+       (?s "Eshell" eshell-bookmark-jump)
+       (?w "Web" eww-bookmark-jump xwidget-webkit-bookmark-jump-handler)
+       (?v "VC Directory" vc-dir-bookmark-jump)
+       (nil "Other")))
+    (consult-ripgrep-args
+     (concat
+      "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+     --smart-case --no-heading --with-filename --line-number --search-zip"
+      ;; Additional args
+      " --line-number --hidden"))
     :config
+    ;; Log-edit history
+    (add-to-list 'consult-mode-histories
+                 '(log-edit-mode log-edit-comment-ring log-edit-comment-ring-index log-edit-beginning-of-line))
+
+    ;; Use the faster plocate rather than locate
+    (when (executable-find "plocate")
+      (setopt consult-locate-args "plocate --ignore-case --existing --regexp"))
+    
     ;; Use consult UI with xref
     (with-eval-after-load 'xref
       ;; Use Consult to select xref locations with preview
