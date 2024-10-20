@@ -1397,63 +1397,61 @@ Enhancements to all built-in-based completions.
 
 #+begin_src emacs-lisp :tangle "modules/krisb-windows.el"
   ;;;; Display-buffer-alist
-  (use-package window
-    :ensure nil
-    :custom
+  (with-eval-after-load 'window
   ;;;;; Messages
-    (display-buffer-alist
-     `((,(rx (literal messages-buffer-name))
-        (display-buffer-in-side-window)
-        (window-height . 0.36)
-        (side . top)
-        (slot . 1)
-        (post-command-select-window . t))
+    (setq display-buffer-alist
+          `((,(rx (literal messages-buffer-name))
+             (display-buffer-in-side-window)
+             (window-height . 0.36)
+             (side . top)
+             (slot . 1)
+             (post-command-select-window . t))
   ;;;;; Org-mime
-       ("OrgMimeMailBody"
-        (display-buffer-same-window))
+            ("OrgMimeMailBody"
+             (display-buffer-same-window))
 
   ;;;;; VC
-       ((or . ((major-mode . vc-dir-mode)
-               (major-mode . vc-git-log-view-mode)
+            ((or . ((major-mode . vc-dir-mode)
+                    (major-mode . vc-git-log-view-mode)
 
-               (major-mode . vc-git-region-history-mode)))
-        (display-buffer-same-window))
-       ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-        (display-buffer-reuse-mode-window display-buffer-below-selected)
-        (window-height . 20)
-        (dedicated . t)
-        (preserve-size . (t . t)))
-       ("\\*vc-log\\*"
-        (display-buffer-reuse-mode-window display-buffer-below-selected)
-        (dedicated . t))
+                    (major-mode . vc-git-region-history-mode)))
+             (display-buffer-same-window))
+            ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+             (display-buffer-reuse-mode-window display-buffer-below-selected)
+             (window-height . 20)
+             (dedicated . t)
+             (preserve-size . (t . t)))
+            ("\\*vc-log\\*"
+             (display-buffer-reuse-mode-window display-buffer-below-selected)
+             (dedicated . t))
 
   ;;;;; Help
-       ((major-mode . help-mode)
-        (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-        (window-height . shrink-window-if-larger-than-buffer)
-        (dedicated . t))
+            ((major-mode . help-mode)
+             (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+             (window-height . shrink-window-if-larger-than-buffer)
+             (dedicated . t))
 
   ;;;;; Eldoc
-       ("^\\*eldoc"
-        (display-buffer-at-bottom)
-        (post-command-select-window . t)
-        (window-height . shrink-window-if-larger-than-buffer)
-        (window-parameters . ((mode-line-format . none))))
+            ("^\\*eldoc"
+             (display-buffer-at-bottom)
+             (post-command-select-window . t)
+             (window-height . shrink-window-if-larger-than-buffer)
+             (window-parameters . ((mode-line-format . none))))
 
   ;;;;; Org and calendar
-       ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
-        (display-buffer-in-side-window)
-        (window-height . fit-window-to-buffer)
-        (side . top)
-        (slot . -2)
-        (preserve-size . (nil . t))
-        (window-parameters . ((mode-line-format . none)))
-        (post-command-select-window . t))
-       (,(rx (literal calendar-buffer))
-        (display-buffer-below-selected)
-        (window-height . fit-window-to-buffer))
-       ))
-    :config
+            ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
+             (display-buffer-in-side-window)
+             (window-height . fit-window-to-buffer)
+             (side . top)
+             (slot . -2)
+             (preserve-size . (nil . t))
+             (window-parameters . ((mode-line-format . none)))
+             (post-command-select-window . t))
+            ("\\*Calendar\\*"
+             (display-buffer-below-selected)
+             (window-height . fit-window-to-buffer))
+            ))
+
   ;;;;; Xref
     (with-eval-after-load 'xref
       (add-to-list 'display-buffer-alist
