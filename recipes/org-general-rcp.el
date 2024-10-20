@@ -265,20 +265,6 @@ have `org-warning' face."
                (propertize "    N " 'face '(fixed-pitch font-lock-comment-face))))))
 
 ;;;; Ancillary functionality
-;;;;; Org-web-tools
-;; Paste https links with automatic descriptions
-(use-package org-web-tools
-  :bind
-  ( :map krisb-yank-keymap
-    ("b" . org-web-tools-insert-link-for-url))
-  :config
-  ;; Immediately enter view mode
-  (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode)))
-
-  (add-to-list 'org-attach-commands
-               '((?w) org-web-tools-archive-attach
-                 "Download then attach an archive of a webpage using `org-web-tools'\n")))
-
 ;;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download

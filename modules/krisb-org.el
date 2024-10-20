@@ -201,6 +201,13 @@
   (org-num-skip-footnotes t)
   (org-num-skip-unnumbered t))
 
+;;; Org-contrib
+(use-package org-contrib
+  :after org
+  :config
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
+
 ;;; Org-modern
 (use-package org-modern
   :hook ((org-mode . org-modern-mode)
@@ -278,12 +285,17 @@
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
 
-;;; Org-contrib
-(use-package org-contrib
-  :after org
+;;; Org-web-tools
+;; Paste https links with automatic descriptions
+(use-package org-web-tools
+  :bind ( :map krisb-yank-keymap
+          ("b" . org-web-tools-insert-link-for-url))
   :config
-  (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
+  (add-to-list 'org-attach-commands
+               '((?w) org-web-tools-archive-attach
+                 "Download then attach an archive of a webpage using `org-web-tools'\n"))
+
+  (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
 
 ;;; Provide
 (provide 'krisb-org)

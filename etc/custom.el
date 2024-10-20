@@ -12,13 +12,16 @@
                 keychain-environment kind-icon lin magit marginalia mermaid-mode
                 modus-themes no-littering notmuch-addr notmuch-transient
                 ob-mermaid ol-notmuch olivetti on orderless org-appear
-                org-contrib org-mime org-modern outshine package-lint-flymake
-                paren-face pdf-tools peg project pulsar puni python
-                recursion-indicator saveplace-pdf-view so-long soap-client svg
-                system-packages track-changes tramp try ts use-package
-                verilog-mode vertico-prescient which-key window-tool-bar))
+                org-contrib org-mime org-modern org-web-tools outshine
+                package-lint-flymake paren-face pdf-tools peg project pulsar
+                puni python recursion-indicator saveplace-pdf-view so-long
+                soap-client svg system-packages track-changes tramp try ts
+                use-package verilog-mode vertico-prescient which-key
+                window-tool-bar))
  '(package-vc-selected-packages
-   '((org-super-agenda :url
+   '((info-variable-pitch :url
+                          "https://github.com/kisaragi-hiu/info-variable-pitch.git")
+     (org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")))
  '(safe-local-variable-directories
    '("/home/krisbalintona/Documents/org-database/notes/buoy/"
