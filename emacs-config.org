@@ -5553,6 +5553,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        (with-selected-window (other-window-for-scrolling)
          ,@body)))
 
+  ;;; Commands
+  (defun krisb-empty-trash ()
+    "Empty the trash directory."
+    (interactive)
+    (when delete-by-moving-to-trash
+      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
+
   ;;; Keymaps
   (defvar-keymap krisb-note-keymap
     :doc "Prefix for my note-taking needs.")

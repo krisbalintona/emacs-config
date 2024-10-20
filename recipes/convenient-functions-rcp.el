@@ -142,13 +142,6 @@ act upon that region instead."
           (message "Deleted %S" short-path))))))
 (bind-key "D" #'kb/delete-this-file 'krisb-file-keymap)
 
-;;;; Empty trash
-(defun kb/empty-trash ()
-  "Empty the trash directory."
-  (interactive)
-  (if delete-by-moving-to-trash
-      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
-
 ;;;; kb/org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with
 ;; =universal-argument= to apply to whole buffer
