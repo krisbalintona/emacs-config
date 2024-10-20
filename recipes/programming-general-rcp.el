@@ -149,17 +149,6 @@
   (consult-customize consult-buffer :group nil))
 
 ;;;; File or buffer utilities
-;;;;; Autorevert
-;; Automatically update buffers as files are externally modified
-(use-package autorevert
-  :ensure nil
-  :hook (on-first-file . global-auto-revert-mode)
-  :custom
-  (auto-revert-interval 3)
-  (auto-revert-avoid-polling t)
-  (auto-revert-check-vc-info t)
-  (auto-revert-verbose t))
-
 ;;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace

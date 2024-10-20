@@ -101,5 +101,17 @@ Then apply ARGS."
         remote-file-name-inhibit-auto-save-visited nil)
 (add-hook 'on-first-file-hook #'auto-save-visited-mode)
 
+;;;; Autorevert
+;; Automatically update buffers as files are externally modified
+(use-package autorevert
+  :ensure nil
+  :custom
+  (auto-revert-interval 3)
+  (auto-revert-avoid-polling t)
+  (auto-revert-check-vc-info t)
+  (auto-revert-verbose t)
+  :config
+  (global-auto-revert-mode 1))
+
 ;;; Provide
 (provide 'krisb-saving)
