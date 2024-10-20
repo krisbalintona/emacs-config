@@ -1939,6 +1939,27 @@ Enhancements to all built-in-based completions.
     (with-eval-after-load 'face-remap
       (diminish 'buffer-face-mode)))
 
+  ;;; Time
+  ;; Enable time in the mode-line
+  (use-package time
+    :ensure nil
+    :custom
+    (display-time-24hr-format t)
+    (display-time-format "%R")
+    (display-time-interval 60)
+    (display-time-default-load-average nil)
+    (world-clock-list
+     '(("America/Los_Angeles" "Seattle")
+       ("America/New_York" "New York")
+       ("Europe/London" "London")
+       ("Europe/Paris" "Paris")
+       ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
+       ("Asia/Calcutta" "Bangalore")
+       ("Asia/Tokyo" "Tokyo")
+       ("Asia/Shanghai" "Beijing")))
+    :config
+    (display-time-mode 1))
+
   ;;; Recursion-indicator
   (use-package recursion-indicator
     :custom
@@ -4389,11 +4410,11 @@ Enhancements to all built-in-based completions.
       (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
       (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
 
-  ;;;; Email mode line indicator
+  ;;;; Mode line indicator
   ;; Try using display-time's built-in email indicator --- less informative but
-  ;; more visually subtle than `notmuch-indicator'.
+  ;; more visually subtle than `notmuch-indicator'.  Obviously the below applies
+  ;; only when `display-time-mode' is non-nil.
   (with-eval-after-load 'time
-    ;; Obviously the below applies only when `display-time-mode' is non-nil.
     (with-eval-after-load 'notmuch
       (setopt display-time-mail-face 'notmuch-search-flagged-face))
 

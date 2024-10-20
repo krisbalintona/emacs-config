@@ -256,11 +256,11 @@ from a `notmuch-search-mode' buffer."
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
 
-;;;; Email mode line indicator
+;;;; Mode line indicator
 ;; Try using display-time's built-in email indicator --- less informative but
-;; more visually subtle than `notmuch-indicator'.
+;; more visually subtle than `notmuch-indicator'.  Obviously the below applies
+;; only when `display-time-mode' is non-nil.
 (with-eval-after-load 'time
-  ;; Obviously the below applies only when `display-time-mode' is non-nil.
   (with-eval-after-load 'notmuch
     (setopt display-time-mail-face 'notmuch-search-flagged-face))
 

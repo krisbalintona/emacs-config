@@ -182,27 +182,6 @@ This version removes delimiters.")
                                          vc-mode))))
   (add-to-list 'global-mode-string '(project-mode-line project-mode-line-format)))
 
-;;;;; Time
-;; Enable time in the mode-line
-(use-package time
-  :ensure nil
-  :custom
-  (display-time-24hr-format t)
-  (display-time-format "%R")
-  (display-time-interval 60)
-  (display-time-default-load-average nil)
-  (world-clock-list
-   '(("America/Los_Angeles" "Seattle")
-     ("America/New_York" "New York")
-     ("Europe/London" "London")
-     ("Europe/Paris" "Paris")
-     ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
-     ("Asia/Calcutta" "Bangalore")
-     ("Asia/Tokyo" "Tokyo")
-     ("Asia/Shanghai" "Beijing")))
-  :init
-  (display-time-mode 1))
-
 ;;;;; Battery
 ;; Display batter percentage
 (use-package battery
