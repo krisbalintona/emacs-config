@@ -15,13 +15,6 @@
 
   (switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
   (switch-to-buffer-in-dedicated-window 'pop)
-  (display-buffer-alist
-   `((,(rx (literal messages-buffer-name))
-      (display-buffer-in-side-window)
-      (window-height . 0.36)
-      (side . top)
-      (slot . 1)
-      (post-command-select-window . t))))
   :config
   ;; Modified version of "other-window-mru" taken from
   ;; https://karthinks.com/software/emacs-window-management-almanac/#the-back-and-forth-method
@@ -39,15 +32,57 @@
                              (window-list-1 nil 'nomini nil)))
                       :lessp #'>
                       :key #'car)))
-      (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru)))))
+      (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
 
-  ;; Below selected
-  (with-eval-after-load 'xref
-    (add-to-list 'display-buffer-alist
-                 `((or (major-mode . xref--xref-buffer-mode)
-                       (,(rx (literal xref-buffer-name))))
-                   (display-buffer-below-selected display-buffer-at-bottom)
-                   (window-height . 0.25)))))
+;;;; Display-buffer-alist
+;;;;; Messages
+(setopt display-buffer-alist
+        `((,(rx (literal messages-buffer-name))
+           (display-buffer-in-side-window)
+           (window-height . 0.36)
+           (side . top)
+           (slot . 1)
+           (post-command-select-window . t))
+;;;;; Org-mime
+          ("OrgMimeMailBody"
+           (display-buffer-same-window))
+
+;;;;; VC
+          ((or . ((major-mode . vc-dir-mode)
+                  (major-mode . vc-git-log-view-mode)
+                  (major-mode . vc-annotate-mode)
+                  (major-mode . vc-git-region-history-mode)))
+           (display-buffer-same-window))
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . 20)
+           (dedicated . t)
+           (preserve-size . (t . t)))
+          ("\\*vc-log\\*"
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (dedicated . t))
+
+;;;;; Help
+          ((major-mode . help-mode)
+           (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+           (window-height . shrink-window-if-larger-than-buffer)
+           (dedicated . t))
+
+;;;;; Eldoc
+          ("^\\*eldoc"
+           (display-buffer-at-bottom)
+           (post-command-select-window . t)
+           (window-height . shrink-window-if-larger-than-buffer)
+           (window-parameters . ((mode-line-format . none))))
+          ))
+
+;;;;; Xref
+(with-eval-after-load 'xref
+  (add-to-list 'display-buffer-alist
+               `((or (major-mode . xref--xref-buffer-mode)
+                     (,(rx (literal xref-buffer-name))))
+                 (display-buffer-below-selected display-buffer-at-bottom)
+                 (window-height . 0.25))))
 
 ;;; Provide
 (provide 'krisb-windows)

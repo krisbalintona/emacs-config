@@ -88,13 +88,6 @@
       (display-buffer-reuse-mode-window display-buffer-same-window))
      ((major-mode . diff-mode)
       (display-buffer-same-window))
-     ((or . ((major-mode . vc-dir-mode)
-             (major-mode . vc-git-log-view-mode)
-             (major-mode . vc-annotate-mode)
-             (major-mode . vc-git-region-history-mode)))
-      (display-buffer-same-window))
-     ("OrgMimeMailBody"
-      (display-buffer-same-window))
      ((major-mode . denote-interface-mode)
       (display-buffer-same-window))
 
@@ -130,12 +123,7 @@
       (display-buffer-at-bottom)
       (window-height . fit-window-to-buffer)
       (window-parameters . ((no-other-window . t))))
-     ("^\\*eldoc"
-      (display-buffer-at-bottom)
-      (post-command-select-window . t)
-      (window-height . shrink-window-if-larger-than-buffer)
-      (window-parameters . ((mode-line-format . none))))
-
+     
      ;; Below current window
      ("\\*\\(Calendar\\|Org Select\\).*"
       (display-buffer-below-selected)
@@ -159,31 +147,12 @@
       (side . bottom)
       (slot . -1)
       (window-height . 0.35))
-     ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-      (display-buffer-reuse-mode-window display-buffer-below-selected)
-      (window-height . 20)
-      (dedicated . t)
-      (preserve-size . (t . t)))
-     ("\\*vc-log\\*"
-      (display-buffer-reuse-mode-window display-buffer-below-selected)
-      (dedicated . t))
-     ((major-mode . help-mode)
-      (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-      (window-height . shrink-window-if-larger-than-buffer))
-
+     
      ;; Pop up
      ((or ,(rx (literal "*Man ") num (literal " "))
           (major-mode . Man-mode))
       (display-buffer-reuse-window display-buffer-pop-up-window)
       (post-command-select-window . t)))))
-
-;; Below selected
-(with-eval-after-load 'xref
-  (add-to-list 'display-buffer-alist
-               `((or (major-mode . xref--xref-buffer-mode)
-                     (,(rx (literal xref-buffer-name))))
-                 (display-buffer-below-selected display-buffer-at-bottom)
-                 (window-height . 0.25))))
 
 ;;;;; Eyebrowse
 ;; Provide a simple way to have workspaces
