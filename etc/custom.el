@@ -6,7 +6,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(ace-window agitate astute avy cape citar-denote consult corfu-prescient
-                cursory darkroom denote-explore elisp-demos eros
+                cursory darkroom denote-explore diminish elisp-demos eros
                 exec-path-from-shell fontaine gcmh highlight-function-calls ht
                 inspector keychain-environment kind-icon lin magit marginalia
                 mermaid-mode modus-themes no-littering notmuch-addr
