@@ -828,6 +828,15 @@ Enhancements to all built-in-based completions.
     :config
     (marginalia-mode 1))
 
+  ;;; Nerd-icons-completion
+  ;; Use nerd-icons in completing-read interfaces. An alternative would be
+  ;; all-the-icons-completion which uses all-the-icons -- I prefer nerd-icons.
+  (use-package nerd-icons-completion
+    :demand t
+    :hook (marginalia-mode . nerd-icons-completion-marginalia-setup)
+    :config
+    (nerd-icons-completion-mode 1))
+
   ;;; Prescient
   ;; Sorting and filtering of minibuffer candidates. The difference between
   ;; `orderless' and this package is that `orderless' filters but does not sort -

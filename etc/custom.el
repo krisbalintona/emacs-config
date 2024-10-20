@@ -10,13 +10,13 @@
                 embark-consult eros exec-path-from-shell fontaine gcmh
                 highlight-function-calls ht info-colors inspector jinx
                 keychain-environment kind-icon lin magit marginalia mermaid-mode
-                modus-themes no-littering notmuch-addr notmuch-transient
-                ob-mermaid ol-notmuch olivetti on orderless org-appear
-                org-contrib org-mime org-modern org-web-tools outshine
-                package-lint-flymake paren-face pdf-tools peg project pulsar
-                puni python recursion-indicator saveplace-pdf-view so-long
-                soap-client svg system-packages track-changes tramp try ts
-                use-package verilog-mode vertico-prescient which-key
+                modus-themes nerd-icons-completion no-littering notmuch-addr
+                notmuch-transient ob-mermaid ol-notmuch olivetti on orderless
+                org-appear org-contrib org-mime org-modern org-web-tools
+                outshine package-lint-flymake paren-face pdf-tools peg project
+                pulsar puni python recursion-indicator saveplace-pdf-view
+                so-long soap-client svg system-packages track-changes tramp try
+                ts use-package verilog-mode vertico-prescient which-key
                 window-tool-bar))
  '(package-vc-selected-packages
    '((info-variable-pitch :url
