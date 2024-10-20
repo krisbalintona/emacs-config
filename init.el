@@ -112,7 +112,7 @@
 (require 'krisb-themes)
 (require 'krisb-fonts)
 
-(require 'krisb-saving)
+(require 'krisb-saving-state)
 (require 'krisb-completion)
 (require 'krisb-windows)
 (require 'krisb-navigation)

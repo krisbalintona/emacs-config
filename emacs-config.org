@@ -306,7 +306,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-themes)
   (require 'krisb-fonts)
 
-  (require 'krisb-saving)
+  (require 'krisb-saving-state)
   (require 'krisb-completion)
   (require 'krisb-windows)
   (require 'krisb-navigation)
@@ -1240,9 +1240,9 @@ Enhancements to all built-in-based completions.
   (provide 'krisb-completion)
 #+end_src
 
-*** =krisb-saving.el=
-
-#+begin_src emacs-lisp :tangle "modules/krisb-saving.el"
+*** =krisb-saving-state.el=
+Configuration related to "saving a state," that is, storing or restoring anything about the point, window configuration, file, buffer, et cetera. 
+#+begin_src emacs-lisp :tangle "modules/krisb-saving-state.el"
   ;;; Register
   (use-package register
     :ensure nil
@@ -1350,16 +1350,15 @@ Enhancements to all built-in-based completions.
   ;; Automatically update buffers as files are externally modified
   (use-package autorevert
     :ensure nil
+    :hook (on-first-file . global-auto-revert-mode)
     :custom
     (auto-revert-interval 3)
     (auto-revert-avoid-polling t)
     (auto-revert-check-vc-info t)
-    (auto-revert-verbose t)
-    :config
-    (global-auto-revert-mode 1))
+    (auto-revert-verbose t))
 
   ;;; Provide
-  (provide 'krisb-saving)
+  (provide 'krisb-saving-state)
 #+end_src
 
 *** =krisb-persistence.el=

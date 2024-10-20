@@ -105,13 +105,12 @@ Then apply ARGS."
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
   :ensure nil
+  :hook (on-first-file . global-auto-revert-mode)
   :custom
   (auto-revert-interval 3)
   (auto-revert-avoid-polling t)
   (auto-revert-check-vc-info t)
-  (auto-revert-verbose t)
-  :config
-  (global-auto-revert-mode 1))
+  (auto-revert-verbose t))
 
 ;;; Provide
-(provide 'krisb-saving)
+(provide 'krisb-saving-state)
