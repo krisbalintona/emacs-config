@@ -3,7 +3,8 @@
   :diminish
   :hook ((prog-mode org-mode) . flymake-mode)
   :custom
-  (elisp-flymake-byte-compile-load-path (append '("./") load-path)) ; Recognize files Emacs knows about
+  (elisp-flymake-byte-compile-load-path ; Recognize files Emacs knows about
+   (append elisp-flymake-byte-compile-load-path load-path))
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil)       ; Disable fringe indicators
   (flymake-show-diagnostics-at-end-of-line nil)
