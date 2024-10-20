@@ -105,12 +105,6 @@
       (post-command-select-window . t))
 
      ;; To the top
-     (,(rx (literal messages-buffer-name))
-      (display-buffer-in-side-window)
-      (window-height . 0.36)
-      (side . top)
-      (slot . 1)
-      (post-command-select-window . t))
      ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
       (display-buffer-in-side-window)
       (window-height . 0.3)

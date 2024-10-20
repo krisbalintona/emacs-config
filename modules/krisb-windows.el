@@ -15,7 +15,13 @@
 
   (switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
   (switch-to-buffer-in-dedicated-window 'pop)
-  (display-buffer-alist nil)
+  (display-buffer-alist
+   `((,(rx (literal messages-buffer-name))
+      (display-buffer-in-side-window)
+      (window-height . 0.36)
+      (side . top)
+      (slot . 1)
+      (post-command-select-window . t))))
   :config
   ;; Modified version of "other-window-mru" taken from
   ;; https://karthinks.com/software/emacs-window-management-almanac/#the-back-and-forth-method
