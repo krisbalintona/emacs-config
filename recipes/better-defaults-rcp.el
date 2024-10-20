@@ -43,10 +43,6 @@
 ;;;; Toggle visiting of image files as images (Auto Image File mode).
 (auto-image-file-mode t)
 
-;;;; Show unfinished keystrokes quickly
-;; Echo keystrokes (of unfinished commands) much quicker
-(setq echo-keystrokes 0.5)
-
 ;;;; Highlight next error
 (setq next-error-message-highlight nil)
 

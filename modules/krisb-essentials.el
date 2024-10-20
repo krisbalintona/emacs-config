@@ -228,12 +228,12 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 (setopt tab-always-indent 'complete
         tab-first-completion 'word)
 
-;;;;; Duplicate-dwim binding
+;;;; Duplicate-dwim binding
 (bind-key "C-x ;" #'duplicate-dwim)
 (setopt duplicate-line-final-position 0
         duplicate-region-final-position 1)
 
-;;;;; Rebind case commands
+;;;; Rebind case commands
 ;; Remap these defaults; they are effectively the same while phasing out the
 ;; need the *-region binds
 (bind-keys
@@ -241,8 +241,12 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  ([remap downcase-word] . downcase-dwim)
  ([remap capitalize-word] . capitalize-dwim))
 
-;;;;; Hippie-expand
+;;;; Hippie-expand
 (bind-key [remap dabbrev-expand] #'hippie-expand)
+
+;;;; Echo unfinished keystrokes quicker
+;; Echo keystrokes (of unfinished commands) much quicker
+(setopt echo-keystrokes 0.5)
 
 (provide 'krisb-essentials)
 ;;; krisb-essentials.el ends here
