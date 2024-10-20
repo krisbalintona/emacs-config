@@ -471,5 +471,9 @@ This macro does not affect capfs already in
   :config
   (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
 
+;;; Embark-consult
+(use-package embark-consult
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
 ;;; Provide
 (provide 'krisb-completion)

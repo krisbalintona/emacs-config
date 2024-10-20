@@ -1228,6 +1228,10 @@ Enhancements to all built-in-based completions.
     (embark-collect-live-update-delay 0.5)
     :config
     (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
+
+  ;;; Embark-consult
+  (use-package embark-consult
+    :hook (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 **** Provide
 

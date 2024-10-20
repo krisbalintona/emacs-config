@@ -148,13 +148,6 @@
   ;; Customize consult commands
   (consult-customize consult-buffer :group nil))
 
-;;;; Embark-consult
-;; Companion package for embark
-(use-package embark-consult
-  :demand
-  :after (embark consult)
-  :hook (embark-collect-mode . consult-preview-at-point-mode))
-
 ;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
 (use-package scratch
