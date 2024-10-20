@@ -100,29 +100,6 @@ replacement."
             (unless live-buffer (kill-buffer live-buffer))))))
     (message "Updated all links in %s!" dir)))
 
-;;;; Denote-interface
-(use-package denote-interface
-  :vc (:url "git@github.com:krisbalintona/denote-interface.git"
-            :rev :newest)
-  :autoload denote-interface--signature-lessp
-  :hook (denote-interface-mode . (lambda () (kb/puni-mode -1)))
-  :bind
-  ( :map krisb-note-keymap
-    ("m" . denote-interface-list)
-    ("r" . denote-interface-set-signature-list)
-    ("R" . denote-interface-set-signature-minibuffer))
-  :custom
-  (denote-interface-signature-column-width
-   (+ 6 (cl-loop for file in (denote-directory-files)
-                 maximize (length (denote-retrieve-filename-signature file)))))
-  (denote-interface-title-column-width 120)
-  (denote-interface-starting-filter-presets
-   '("zettels/[^z-a]*" "bib/[^z-a]*"))
-  (denote-interface-starting-filter "zettels/[^z-a]*")
-  :init
-  (with-eval-after-load 'denote
-    (setopt denote-sort-signature-comparison-function #'denote-interface--signature-lessp)))
-
 ;;;; Typewriter-roll-mode
 (use-package typewriter-roll-mode
   :bind ( :map krisb-toggle-keymap

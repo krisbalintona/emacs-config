@@ -186,5 +186,26 @@ Namely, adds the #+reference after the #+identifier line."
        (format (citar-denote--reference-format file-type) citekey))))
   (advice-add 'citar-denote--add-reference :override #'krisb-citar-denote--add-reference))
 
+;;; Denote-interface
+(use-package denote-interface
+  :vc (:url "git@github.com:krisbalintona/denote-interface.git"
+            :rev :newest)
+  :autoload denote-interface--signature-lessp
+  :bind ( :map krisb-note-keymap
+          ("m" . denote-interface-list)
+          ("r" . denote-interface-set-signature-list)
+          ("R" . denote-interface-set-signature-minibuffer))
+  :custom
+  (denote-interface-signature-column-width
+   (+ 6 (cl-loop for file in (denote-directory-files)
+                 maximize (length (denote-retrieve-filename-signature file)))))
+  (denote-interface-title-column-width 120)
+  (denote-interface-starting-filter-presets
+   '("zettels/[^z-a]*" "bib/[^z-a]*"))
+  (denote-interface-starting-filter "zettels/[^z-a]*")
+  :preface
+  (with-eval-after-load 'denote
+    (setopt denote-sort-signature-comparison-function #'denote-interface--signature-lessp)))
+
 ;;; Provide
 (provide 'krisb-denote)
