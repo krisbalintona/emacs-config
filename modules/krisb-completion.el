@@ -390,7 +390,7 @@
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
 
   ;; Reset cache on loading new theme
-  (add-hook 'enable-theme-functions (lambda () (call-interactively 'kind-icon-reset-cache))))
+  (add-hook 'enable-theme-functions (lambda (_) (funcall-interactively 'kind-icon-reset-cache))))
 
 ;;; Cape
 ;; Expand capf functionality with corfu! See an updated list of the defined capf
