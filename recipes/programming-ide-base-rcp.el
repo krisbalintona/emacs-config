@@ -26,51 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Treesit
-;;;;; Itself
-(use-package treesit
-  :ensure nil
-  :custom
-  (treesit-font-lock-level 3))
-
-;;;;; Treesit-auto
-(use-package treesit-auto
-  :hook (on-first-buffer . global-treesit-auto-mode)
-  :custom
-  (treesit-auto-install 'prompt)
-  (treesit-extra-load-path              ; Where language files are found
-   (list (no-littering-expand-var-file-name "tree-sitter")))
-  :init
-  ;; `Treesit-auto' doesn't allow us to set the installation path yet because
-  ;; Emacs 29 `treesit-install-language-grammar' didn't have a parameter for it
-  ;; (whereas the master branch of Emacs does). See
-  ;; https://github.com/renzmann/treesit-auto/issues/18. Note that
-  ;; `treesit-auto-install-all' doesn't use this function to install languages
-  (defun kb/treesit-auto--prompt-to-install-package (lang)
-    "Ask the user if they want to install a tree-sitter grammar for `LANG'.
-
-Non-nil only if installation completed without any errors."
-    (when (cond ((eq t treesit-auto-install) t)
-                ((eq 'prompt treesit-auto-install)
-                 (y-or-n-p (format "Tree-sitter grammar for %s is missing.  Install it from %s? "
-                                   (symbol-name lang)
-                                   (car (alist-get lang treesit-language-source-alist))))))
-      (message "Installing the tree-sitter grammar for %s" lang)
-      ;; treesit-install-language-grammar will return nil if the
-      ;; operation succeeded and 't if a warning was sent to the
-      ;; warning buffer. I don't think this is by design but just
-      ;; because of the way `display-warning' works, so this might not
-      ;; work in the future.
-      (not (treesit-install-language-grammar lang
-                                             ;; OPTIMIZE 2023-07-14: Manually
-                                             ;; set path here. I set it to the
-                                             ;; path I added to
-                                             ;; "/home/krisbalintona/.emacs.d/var/tree-sitter"
-                                             (no-littering-expand-var-file-name "tree-sitter")))))
-  (advice-add 'treesit-auto--prompt-to-install-package :override #'kb/treesit-auto--prompt-to-install-package)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all))
-
 ;;;; Breadcrumb
 ;; Which-function stuff but more performant and prettier formatting. Read
 ;; package commentary for a description on how.
