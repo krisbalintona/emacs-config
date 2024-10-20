@@ -37,16 +37,6 @@
   (image-dired-thumb-relief 0)
   (dired-mouse-drag-files t))
 
-;;;;; Dired-git
-;; Show git information in dired
-(use-package dired-git
-  :disabled
-  :hook
-  (dired-mode . dired-git-mode)
-  :custom
-  (dired-git-disable-dirs '("~/"))
-  (dired-git-parallel 7))               ; Number of parallel processes
-
 ;;;;; Dired-open
 ;; Override how dired opens files with certain extensions
 (use-package dired-open
