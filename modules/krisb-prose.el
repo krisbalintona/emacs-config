@@ -47,6 +47,30 @@
   :custom
   (darkroom-text-scale-increase 1.3))
 
+;;;; Timers
+;;;;; Tmr
+(use-package tmr
+  :bind ( :map krisb-open-keymap
+          ("t" . krisb-tmr-dispatch))
+  :custom
+  ;; Useful variables
+  (tmr-descriptions-list
+   '("Stop working!" "Work time 😄"))
+  (tmr-notification-urgency 'normal)
+  (tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
+  :config
+  (require 'transient)
+  (transient-define-prefix krisb-tmr-dispatch ()
+    "Invoke a transient menu for `tmr'."
+    ["Create or remove timers"
+     [("t" "Create a timer" tmr)
+      ("T" "Create a timer with description" tmr-with-details)
+      ("C" "Clone a timer" tmr-clone)]
+     [("r" "Remove finished" tmr-remove-finished)
+      ("c" "Cancel timer" tmr-cancel)]]
+    ["View timers"
+     [("v" "Tabulated view" tmr-tabulated-view)]]))
+
 ;;; Spell checking
 ;;;; Jinx
 ;; JIT spell checker that uses `enchant'. The executable is enchant-2. See the
