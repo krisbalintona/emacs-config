@@ -34,6 +34,31 @@
                       :key #'car)))
       (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
 
+;;; Tab-bar
+(use-package tab-bar
+  :ensure nil
+  :bind ( :map tab-prefix-map
+          ("w" . tab-bar-move-window-to-tab)
+          :repeat-map krisb-tab-bar-repeat-map
+          ("C-c <left>" . tab-bar-history-back)
+          ("C-c <right>" . tab-bar-history-forward))
+  :custom
+  (tab-bar-close-button-show nil)
+  (tab-bar-new-tab-choice 'clone)
+  (tab-bar-close-last-tab-choice 'delete-frame)
+  (tab-bar-select-tab-modifiers '(meta))
+  (tab-bar-tab-hints t)
+  (tab-bar-show t)
+  (tab-bar-separator " ")
+  (tab-bar-format
+   '(tab-bar-format-tabs-groups
+     tab-bar-separator
+     tab-bar-format-align-right
+     tab-bar-format-global))
+  :config
+  (tab-bar-mode 1)
+  (tab-bar-history-mode 1))
+
 ;;;; Display-buffer-alist
 (with-eval-after-load 'window
 ;;;;; Messages

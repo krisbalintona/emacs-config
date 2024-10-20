@@ -177,29 +177,6 @@
   ;; Immediately remove from mode line so I can manually place it
   (delete '(eyebrowse-mode (:eval (eyebrowse-mode-line-indicator))) mode-line-misc-info))
 
-;;;;; Tab-bar
-(use-package tab-bar
-  :ensure nil
-  :demand
-  :bind (([remap winner-undo] . tab-bar-history-back)
-         ([remap winner-redo] . tab-bar-history-forward)
-         :map tab-prefix-map
-         ("w" . tab-bar-move-window-to-tab))
-  :custom
-  (tab-bar-close-button-show nil)
-  (tab-bar-new-tab-choice 'clone)
-  (tab-bar-close-last-tab-choice 'delete-frame)
-  (tab-bar-select-tab-modifiers '(meta))
-  (tab-bar-tab-hints t)
-  (tab-bar-show t)
-  (tab-bar-format
-   '(tab-bar-format-tabs-groups
-     tab-bar-format-align-right
-     tab-bar-format-global))
-  :config
-  (tab-bar-mode 1)
-  (tab-bar-history-mode 1))
-
 ;;;;; Project-tab-groups
 (use-package project-tab-groups
   :disabled                             ; Intrusive for my use
