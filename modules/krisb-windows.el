@@ -77,6 +77,11 @@
       (post-command-select-window . t)
       (window-height . shrink-window-if-larger-than-buffer)
       (window-parameters . ((mode-line-format . none))))
+
+;;;;; Org and calendar
+     ("\\*\\(Calendar\\|Org Select\\).*"
+      (display-buffer-below-selected)
+      (window-height . fit-window-to-buffer))
      ))
   :config
 ;;;;; Xref

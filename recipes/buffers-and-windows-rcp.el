@@ -125,9 +125,6 @@
       (window-parameters . ((no-other-window . t))))
      
      ;; Below current window
-     ("\\*\\(Calendar\\|Org Select\\).*"
-      (display-buffer-below-selected)
-      (window-height . fit-window-to-buffer))
      ("\\*\\(Embark\\)?.*Completions.*"
       (display-buffer-in-side-window)
       (side . bottom)
