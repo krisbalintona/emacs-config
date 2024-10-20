@@ -2,9 +2,9 @@
 
 ;;; Krisb-themes-ext
 (use-package krisb-themes-ext
-  :demand t
   :ensure nil
-  :bind ("<f8>" . krisb-themes-ext-theme-switcher)
+  :bind (("<f8>" . krisb-themes-ext-theme-switcher)
+         ("<f9>" . krisb-themes-ext-toggle-window-transparency))
   :custom
   (krisb-themes-ext-light 'modus-operandi)
   (krisb-themes-ext-dark 'modus-vivendi)

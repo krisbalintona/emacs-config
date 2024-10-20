@@ -268,32 +268,6 @@ This version removes delimiters.")
   ( :map krisb-toggle-keymap
     ("m" . hide-mode-line-mode)))
 
-;;;;; Transparency toggle
-;; Set the alpha-background parameter. Initially arose from a patch of Emacs
-;; 29.0.50: https://github.com/TheVaffel/emacs, but was merged on January 30,
-;; 2022:
-;; https://github.com/emacs-mirror/emacs/commit/5c87d826201a5cae242ce5887a0aa7e24ad6f5ee
-(unless krisb-linux-ubuntu-p
-  (set-frame-parameter nil 'alpha-background 100)
-  (add-to-list 'default-frame-alist '(alpha-background . 100)))
-
-(defun kb/toggle-window-transparency (&optional arg)
-  "Toggle the value of `alpha-background'.
-
-Toggles between 100 and 72 by default. Can choose which value to
-change to if called with ARG."
-  (interactive "P")
-  (let ((transparency (pcase arg
-                        ((pred numberp) arg)
-                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
-                        (_
-                         (cl-case (frame-parameter nil 'alpha-background)
-                           (72 100)
-                           (100 72)
-                           (t 100))))))
-    (set-frame-parameter nil 'alpha-background transparency)))
-(bind-key "<f9>" #'kb/toggle-window-transparency)
-
 ;;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 ;; NOTE 2023-07-13: Make sure you set solaire's faces if my theme does not

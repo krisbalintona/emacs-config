@@ -89,6 +89,23 @@ hour."
           ((equal krisb-themes-ext-dark current)
            (krisb-themes-ext-proper-load-theme-light)))))
 
+;;; Window transparency toggle
+(defun krisb-themes-ext-toggle-window-transparency (&optional arg)
+  "Toggle the value of `alpha-background'.
+
+Toggles between 100 and 72 by default. Can choose which value to
+change to if called with ARG."
+  (interactive "P")
+  (let ((transparency (pcase arg
+                        ((pred numberp) arg)
+                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
+                        (_
+                         (cl-case (frame-parameter nil 'alpha-background)
+                           (72 100)
+                           (100 72)
+                           (t 100))))))
+    (set-frame-parameter nil 'alpha-background transparency)))
+
 ;;; Provide
 (provide 'krisb-themes-ext)
 ;;; krisb-themes-ext.el ends here
