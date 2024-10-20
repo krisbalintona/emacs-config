@@ -26,12 +26,18 @@
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
-  :bind (("C-c B" . consult-buffer)
+  :bind (("C-x B" . consult-buffer)
          ;; Remaps
          ([remap bookmark-jump] . consult-bookmark)
          ([remap yank-pop] . consult-yank-pop)
          ([remap goto-line] . consult-goto-line)
          ([remap recentf-open-files] . consult-recent-file)
+         ([remap Info-search] . consult-info)
+         ([remap point-to-register] . consult-register-store)
+         ([remap repeat-complex-command] . consult-complex-command)
+         ([remap imenu] . consult-imenu)
+         :map consult-narrow-map
+         ("?" . consult-narrow-help)          ; Show available narrow keys
          :map goto-map                  ; The `M-g' prefix
          ("f" . consult-flymake)
          ("o" . consult-outline)
@@ -40,7 +46,22 @@
          ("l" . consult-line)
          :map org-mode-map
          ([remap consult-outline] . consult-org-heading)
-         ("M-g a" . consult-org-agenda)))
+         ("M-g a" . consult-org-agenda))
+  :config
+  ;; Use consult UI with xref
+  (with-eval-after-load 'xref
+    ;; Use Consult to select xref locations with preview
+    (setopt xref-show-definitions-function #'consult-xref
+            xref-show-xrefs-function #'consult-xref))
+
+  ;; Registers
+  (with-eval-after-load 'register
+    ;; Fancier formatting of preview
+    (setopt register-preview-function #'consult-register-format)
+    ;; Fancier formatting of preview window. Adds thin lines, sorting and hides
+    ;; the mode line of the register preview window. Copied from
+    ;; https://github.com/minad/consult#use-package-example
+    (advice-add 'register-preview :override #'consult-register-window)))
 
 ;;; Jump
 ;;;; Isearch

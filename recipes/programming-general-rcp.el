@@ -125,11 +125,7 @@
 (use-package consult
   :bind
   (;; Remaps
-   ([remap repeat-complex-command] . consult-complex-command)
-   ([remap imenu] . kb/consult-imenu-versatile)
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
-   ([remap Info-search] . consult-info)
-   ([remap point-to-register] . consult-register-store)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
    ("m" . consult-mark)
@@ -141,10 +137,6 @@
    ("r" . consult-ripgrep)
    ("f" . consult-find)
    ("F" . consult-locate)
-   :map consult-narrow-map
-   ("?" . consult-narrow-help)          ; Show available narrow keys
-   :map help-map
-   ([remap apropos-command] . consult-apropos)
    :map comint-mode-map
    ([remap comint-history-isearch-backward-regexp]. consult-history)
    :map minibuffer-local-map
@@ -199,24 +191,7 @@
    consult-find
    consult-bookmark :preview-key "C-M-;"
    consult-buffer :group nil)
-
-  ;; Use consult UI with xref
-  (with-eval-after-load 'xref
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-definitions-function #'consult-xref
-          xref-show-xrefs-function #'consult-xref))
-
-  ;; Registers
-  ;; FIXME 2024-10-13: Right now consult's register stuff doesn't work well with
-  ;; desktop restoring buffers, windows, and frames that are no longer
-  ;; existent...
-  ;; Fancier formatting of preview
-  (setopt register-preview-function #'consult-register-format)
-  ;; Fancier formatting of preview window. Adds thin lines, sorting and hides
-  ;; the mode line of the register preview window. Copied from
-  ;; https://github.com/minad/consult#use-package-example
-  (advice-add 'register-preview :override #'consult-register-window)
-
+  
   ;; Additional `consult-buffer' sources (groups)
   (defvar kb/consult-buffer--dired-source
     (list :name     "Dired"
