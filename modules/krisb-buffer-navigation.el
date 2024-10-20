@@ -23,6 +23,108 @@
   (use-package-enable-imenu-support t)
   (imenu-flatten 'group))
 
+;;; Avy
+;; Quickly jump to any character
+(use-package avy
+  :commands krisb-avy-goto-parens
+  :bind (("C-; C-;" . avy-goto-char-timer)
+         ("C-; s" . avy-goto-symbol-1)
+         ("C-; l" . avy-goto-line)
+         ("C-; p" . krisb-avy-goto-parens))
+  :custom
+  (avy-all-windows t)                   ; Scope
+  (avy-case-fold-search nil)
+  (avy-single-candidate-jump t)
+  (avy-timeout-seconds 0.3)
+  (avy-style 'at-full)
+  (avy-keys '(?a ?w ?r ?u ?i ?o ?p))
+  (avy-dispatch-alist ; Avy actions (first narrow so letter combinations appear)
+   '((?k . avy-action-kill-stay)
+     (?K . avy-action-kill-move)
+     (?t . avy-action-teleport)
+     (?m . avy-action-mark)
+     (?y . avy-action-yank)
+     (?z . avy-action-zap-to-char)
+     (?. . krisb-avy-action-embark)
+     (?h . krisb-avy-action-help)
+     (?d . krisb-avy-action-define)
+     (?e . krisb-avy-action-eval)))
+  (avy-orders-alist
+   '((avy-goto-char . krisb-avy-order-farthest)
+     (avy-goto-char-2 . krisb-avy-order-farthest)
+     (avy-goto-word-0 . krisb-avy-order-farthest)
+     (avy-goto-word-1 . krisb-avy-order-farthest)
+     (avy-goto-char-timer . krisb-avy-order-farthest)
+     (krisb-avy-goto-parens . krisb-avy-order-farthest)))
+  :config
+  (defun krisb-avy-setup-faces (theme)
+    "Set up avy faces."
+    (when (string-match "^modus-" (symbol-name theme))
+      ;; Don't bold so text isn't shifted much
+      (set-face-attribute 'avy-lead-face nil :inherit 'modus-themes-reset-soft)
+      (set-face-attribute 'avy-lead-face-0 nil :inherit 'modus-themes-reset-soft)
+      (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
+      (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft)))
+  (add-hook 'enable-theme-functions #'krisb-avy-setup-faces)
+
+  (defun krisb-avy-order-farthest (x)
+    (- (abs (- (if (numberp (car x))
+                   (car x)
+                 (caar x))
+               (point)))))
+
+  ;; Taken from the avy wiki
+  (defun krisb-avy-goto-parens ()
+    "Go to an open or close parens."
+    (interactive)
+    (let ((avy-command this-command))   ; for look up in avy-orders-alist
+      (avy-jump (rx (+ (or (literal "(") (literal ")")))))))
+
+  ;; Additional avy dispatch actions. Most are inspired or taken from
+  ;; https://karthinks.com/software/avy-can-do-anything/
+  ;; Embark
+  (defun krisb-avy-action-embark (pt)
+    (unwind-protect
+        (save-excursion
+          (goto-char pt)
+          (embark-act))
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  ;; Helpful
+  (defun krisb-avy-action-help (pt)
+    (save-excursion
+      (goto-char pt)
+      (if (featurep 'helpful)
+          (helpful-at-point)
+        (describe-symbol (symbol-at-point))))
+    (when (featurep 'helpful)
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  ;; Dictionary
+  (defun krisb-avy-action-define (pt)
+    (require 'checking-words-rcp)
+    (save-excursion
+      (goto-char pt)
+      (krisb-dictionary-at-point))
+    ;; If with `universal-arg', don't switch to help buffer
+    (when current-prefix-arg
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  ;; Evaluation
+  (defun krisb-avy-action-eval (pt)
+    (save-excursion
+      (goto-char pt)
+      (if (fboundp 'eros-eval-last-sexp)
+          (call-interactively 'eros-eval-last-sexp)
+        (call-interactively 'eval-last-sexp)))
+    t))
+
 ;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
