@@ -8,9 +8,9 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
-    (";d" "" kb/abbrev-current-date :count 3)
-    (";t" "" kb/abbrev-todo-keyword :count 0)
-    (";td" "" kb/abbrev-todo-keyword-and-date :count 6)
+    (";d" "" krisb-abbrev-current-date :count 0)
+    (";t" "" krisb-abbrev-todo-keyword :count 0)
+    (";td" "" krisb-abbrev-todo-keyword-and-date :count 0)
    ))
 
 (define-abbrev-table 'org-mode-abbrev-table
