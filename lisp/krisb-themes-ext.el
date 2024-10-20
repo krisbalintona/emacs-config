@@ -26,8 +26,8 @@
 ;;; Code:
 (require 'color)
 
-;;; Variables
-
+;;; Theme switcher
+;;;; Variables
 (defgroup krisb-themes-ext ()
   "Extensions for using themes."
   :group 'faces
@@ -42,7 +42,7 @@
   "The chosen light theme."
   :type 'symbol)
 
-;;; Function definitions
+;;;; Function definitions
 (defun krisb-themes-ext-ensure-themes-loaded ()
   "Ensure that the themes in `krisb-themes-ext-list' are loaded."
   (unless (or (custom-theme-p krisb-themes-ext-dark)
@@ -78,7 +78,7 @@ hour."
         (krisb-themes-ext-proper-load-theme-dark)
       (krisb-themes-ext-proper-load-theme-light))))
 
-;;; Command
+;;;; Command
 (defun krisb-themes-ext-theme-switcher ()
   "Switch between the light and dark themes."
   (interactive)
