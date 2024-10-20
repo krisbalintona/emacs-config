@@ -27,6 +27,16 @@
 (require 'org-element)
 (require 'denote-org-extras)
 
+;;; Auto-rename denote file based on front-matter
+(defun krisb-denote-ext-auto-rename-file ()
+  "Rename denote file based on front-matter.
+Intended to be added to `after-save-hook'."
+  (when-let ((f (buffer-file-name)))
+    (when (and (file-in-directory-p f denote-directory)
+               (denote-filename-is-note-p f))
+      (with-demoted-errors "Error: %S"
+        (denote-rename-file-using-front-matter f)))))
+
 ;;; Standardizing note front-matter
 (defun krisb-org-set-keyword (keyword value)
   "Set org KEYWORD in current buffer to VALUE."
