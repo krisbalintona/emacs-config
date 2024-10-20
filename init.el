@@ -116,6 +116,7 @@
 (require 'krisb-completion)
 (require 'krisb-windows)
 
+(require 'krisb-prose)
 (require 'krisb-org)
 (require 'krisb-org-agenda)
 (require 'krisb-denote)
