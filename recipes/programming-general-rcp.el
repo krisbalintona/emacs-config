@@ -124,21 +124,14 @@
 ;; commands.
 (use-package consult
   :bind
-  (("C-c B" . consult-buffer)
-   ;; Remaps
-   ([remap bookmark-jump] . consult-bookmark)
-   ([remap yank-pop] . consult-yank-pop)
+  (;; Remaps
    ([remap repeat-complex-command] . consult-complex-command)
-   ([remap goto-line] . consult-goto-line)
    ([remap imenu] . kb/consult-imenu-versatile)
-   ([remap recentf-open-files] . consult-recent-file)
    ([remap flymake-show-buffer-diagnostics] . consult-flymake)
    ([remap Info-search] . consult-info)
    ([remap point-to-register] . consult-register-store)
    :map goto-map                        ; Uses the `M-g' prefix
    ("e" . consult-compile-error)
-   ("f" . consult-flymake)
-   ("o" . consult-outline)
    ("m" . consult-mark)
    ("M" . consult-global-mark)
    ("I" . consult-imenu-multi)
@@ -148,15 +141,10 @@
    ("r" . consult-ripgrep)
    ("f" . consult-find)
    ("F" . consult-locate)
-   ("l" . consult-line)
-   ("i" . consult-info)
    :map consult-narrow-map
    ("?" . consult-narrow-help)          ; Show available narrow keys
    :map help-map
    ([remap apropos-command] . consult-apropos)
-   :map org-mode-map
-   ([remap consult-outline] . consult-org-heading)
-   ("M-g a" . consult-org-agenda)
    :map comint-mode-map
    ([remap comint-history-isearch-backward-regexp]. consult-history)
    :map minibuffer-local-map
