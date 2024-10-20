@@ -76,14 +76,6 @@ As directory is special if I've decided it is!"
 ;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#version-control
 (use-package magit
   :custom
-  ;; Displaying hunks
-  (magit-diff-highlight-hunk-body t)
-  (magit-diff-highlight-hunk-region-functions
-   '(magit-diff-highlight-hunk-region-dim-outside
-     magit-diff-highlight-hunk-region-using-overlays
-     magit-diff-highlight-hunk-region-using-face
-     ))
-
   (transient-mode-line-format nil)
   ;; Save transient changes to a different location (since I changed the
   ;; transient-level for certain magit transient popups)

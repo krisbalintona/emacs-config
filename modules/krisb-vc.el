@@ -139,6 +139,14 @@
 
   (magit-refs-show-commit-count 'all)   ; Show branches and tags
 
+  ;; Refinement in hunks
+  (magit-diff-highlight-hunk-body t)
+  (magit-diff-highlight-hunk-region-functions
+   '(magit-diff-highlight-hunk-region-dim-outside
+     magit-diff-highlight-hunk-region-using-overlays
+     magit-diff-highlight-hunk-region-using-face
+     ))
+
   ;; Sections
   (magit-module-sections-nested t)
   (magit-section-show-child-count t)

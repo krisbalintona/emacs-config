@@ -21,7 +21,8 @@
    '((org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/Documents/org-database/notes/commonplace_book/"
+   '("/home/krisbalintona/Documents/org-database/notes/buoy/"
+     "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"
      "/home/krisbalintona/Documents/org-database/agenda/"))
  '(safe-local-variable-values
    '((org-src-fontify-natively)
