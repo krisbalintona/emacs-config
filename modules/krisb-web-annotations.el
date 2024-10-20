@@ -43,8 +43,8 @@
             org-remark-icon-position-adjusted (all-the-icons-material "error")
             org-remark-line-icon (all-the-icons-faicon "sticky-note"))))
 
-;;; Org-remark-ext
-(use-package org-remark-ext
+;;; Kris-org-remark-ext
+(use-package krisb-org-remark-ext
   :ensure nil
   :after org-remark
   :bind ( :map org-remark-mode-map
