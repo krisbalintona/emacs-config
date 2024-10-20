@@ -13,9 +13,10 @@
                 notmuch-transient ob-mermaid ol-notmuch olivetti on orderless
                 org-appear org-contrib org-mime org-modern outshine
                 package-lint-flymake paren-face pdf-tools peg project pulsar
-                puni python saveplace-pdf-view so-long soap-client svg
-                system-packages track-changes tramp try ts use-package
-                verilog-mode vertico-prescient which-key window-tool-bar))
+                puni python recursion-indicator saveplace-pdf-view so-long
+                soap-client svg system-packages track-changes tramp try ts
+                use-package verilog-mode vertico-prescient which-key
+                window-tool-bar))
  '(package-vc-selected-packages
    '((org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")))

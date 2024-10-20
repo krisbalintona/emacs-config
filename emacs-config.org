@@ -1927,6 +1927,23 @@ Enhancements to all built-in-based completions.
   (provide 'krisb-fonts)
 #+end_src
 
+*** =krisb-mode-line.el=
+#+begin_src emacs-lisp :tangle "modules/krisb-mode-line.el"
+  ;;; Recursion-indicator
+  (use-package recursion-indicator
+    :custom
+    (recursion-indicator-symbols
+     '((completion "C" recursion-indicator-completion)
+       (prompt     "P" recursion-indicator-prompt)
+       (suspend    "S" recursion-indicator-suspend)
+       (t          "R" recursion-indicator-default)))
+    :config
+    (recursion-indicator-mode 1)
+    (minibuffer-depth-indicate-mode -1))
+
+  ;;; Provide
+  (provide 'krisb-mode-line)
+#+end_src
 ** Navigation
 
 *** =krisb-navigation.el=
