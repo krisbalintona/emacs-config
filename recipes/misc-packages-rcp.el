@@ -943,10 +943,6 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
   :custom
   (wgrep-auto-save-buffer t))
 
-;;;;; Try
-;; Install a package only for the current Emacs session.
-(use-package try)
-
 ;;;;; Enlight
 ;; Easily create simple startup screens
 (use-package enlight

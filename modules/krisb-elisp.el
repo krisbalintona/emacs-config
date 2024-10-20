@@ -93,10 +93,14 @@
             (edebug-safe-prin1-to-string previous-value))))
   (advice-add #'krisb-edebug-compute-previous-result :around #'adviced:edebug-compute-previous-result))
 
-;;; Package maintenance
+;;; Packages
 ;;;; Package-lint-flymake
 (use-package package-lint-flymake
   :hook (emacs-lisp-mode . package-lint-flymake-setup))
+
+;;;; Try
+;; Install a package only for the current Emacs session.
+(use-package try)
 
 ;;; Provide
 (provide 'krisb-elisp)
