@@ -26,20 +26,5 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Recentf
-;; Enable logging of recent files
-(use-package recentf
-  :ensure nil
-  :hook
-  (on-first-input . recentf-mode)
-  :bind
-  ( :map krisb-file-keymap
-    ("r" . recentf-open-files))
-  :custom
-  (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15)
-  :config
-  (recentf-mode 1))
-
 (provide 'persistence-rcp)
 ;;; persistence-rcp.el ends here

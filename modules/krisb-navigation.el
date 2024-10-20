@@ -226,6 +226,18 @@
   (grep-save-buffers 'ask)
   (grep-use-headings t))
 
+;;;; Recentf
+;; Enable logging of recent files
+(use-package recentf
+  :ensure nil
+  :bind ( :map krisb-file-keymap
+          ("r" . recentf-open-files))
+  :custom
+  (recentf-max-saved-items 1000)
+  (recentf-max-menu-items 15)
+  :config
+  (recentf-mode 1))
+
 ;;; Folding
 ;;;; Outline
 (use-package outline
