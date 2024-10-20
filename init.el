@@ -115,6 +115,7 @@
 (require 'krisb-saving)
 (require 'krisb-completion)
 (require 'krisb-windows)
+(require 'krisb-buffer-navigation)
 
 (require 'krisb-prose)
 (require 'krisb-org)
