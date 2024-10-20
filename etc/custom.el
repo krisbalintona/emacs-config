@@ -8,8 +8,8 @@
    '(ace-window agitate astute avy cape citar-denote consult corfu-prescient
                 cursory darkroom denote-explore diminish elisp-demos eros
                 exec-path-from-shell fontaine gcmh highlight-function-calls ht
-                inspector keychain-environment kind-icon lin magit marginalia
-                mermaid-mode modus-themes no-littering notmuch-addr
+                inspector jinx keychain-environment kind-icon lin magit
+                marginalia mermaid-mode modus-themes no-littering notmuch-addr
                 notmuch-transient ob-mermaid ol-notmuch olivetti on orderless
                 org-appear org-contrib org-mime org-modern outshine
                 package-lint-flymake paren-face pdf-tools peg project pulsar
