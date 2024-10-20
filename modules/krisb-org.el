@@ -177,7 +177,7 @@
   (org-archive-subtree-add-inherited-tags t)
   :config
   (define-advice org-archive--compute-location
-      (:around (orig-fun &rest args) kb/org-archive--compute-location-denote-format-string)
+      (:around (orig-fun &rest args) krisb-org-archive--compute-location-denote-format-string)
     "Take LOCATION in `org-archive--compute-location' and expand %D.
 %D is expanded to the denote identifier."
     ;; Modify LOCATION before normal operations
