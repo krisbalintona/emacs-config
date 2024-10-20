@@ -50,15 +50,6 @@
      ("FIXME" . (error bold))
      ("OPTIMIZE" . "SandyBrown"))))
 
-;;;; Info
-;;;;; Inform
-;; Package `inform’ provides links from elisp symbols (quoted functions,
-;; variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
-(use-package inform
-  :disabled
-  :demand
-  :after info)
-
 ;;;; Timers
 ;;;;; Work-timer
 (use-package work-timer
