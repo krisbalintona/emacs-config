@@ -4000,9 +4000,7 @@ Enhancements to all built-in-based completions.
     :ensure nil
     :hook (vc-git-log-edit-mode . auto-fill-mode)
     :bind ( :map vc-git-log-edit-mode-map
-            ("<tab>" . completion-at-point)
-            :map vc-dir-mode-map
-            ("G" . vc-revert))
+            ("<tab>" . completion-at-point))
     :custom
     (vc-follow-symlinks t)
     ;; Improves performance by not having to check for other backends. Expand this
@@ -4035,6 +4033,12 @@ Enhancements to all built-in-based completions.
 
     (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
     (vc-git-log-edit-summary-max-len (+ 70 (length "Summary"))))
+
+  ;;; Vc-dir
+  (use-package vc-dir ; NOTE 2024-10-19: Is not required by vc, so have its own use-package
+    :ensure nil
+    :bind ( :map vc-dir-mode-map
+            ("G" . vc-revert)))
 
   ;;; Log-edit
   (use-package log-edit
