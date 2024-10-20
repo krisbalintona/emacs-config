@@ -166,7 +166,7 @@
 ;; their values may change. Sources them to ~/.keychain/
 (use-package keychain-environment
   :ensure-system-package keychain
-  :hook ((after-init vc-before-checkin-hook git-commit-setup-hook) . keychain-refresh-environment))
+  :hook ((after-init vc-before-checkin git-commit-setup) . keychain-refresh-environment))
 
 ;;; Provide
 (provide 'krisb-vc)
