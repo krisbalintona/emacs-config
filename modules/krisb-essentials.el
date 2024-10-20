@@ -110,18 +110,31 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  ("C-S-k" . krisb-join-line-above)
  ("C-S-j" . krisb-join-line-below))
 
+;;; Minor modes
+;;;; Recognize camel case as words
+(global-subword-mode 1)
+
+;;;; Repeat-mode
+(repeat-mode 1)
+
+;;;; Delete-selection-mode
+;; When selecting text, if typing new text, replace the selected text with the
+;; new text
+(delete-selection-mode t)
+
+;;;; Show context menu from right-click
+(when (display-graphic-p)
+  (context-menu-mode 1))
+
+;;;; Avoid collision of mouse with point
+(mouse-avoidance-mode 'jump)
+
 ;;; Miscellaneous
 ;;;; Enable all disabled commands
 (setopt disabled-command-function nil)
 
 ;;;; Stretch cursor to the glyph width
 (setopt x-stretch-cursor t)
-
-;;;; Avoid collision of mouse with point
-(mouse-avoidance-mode 'jump)
-
-;;;; Recognize camel case as words
-(global-subword-mode 1)
 
 ;;;; Middle-click pastes at point, not at mouse
 (setopt mouse-yank-at-point t)
@@ -133,27 +146,17 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;; https://www.reddit.com/r/emacs/comments/17nl7cw/comment/k7u1ueu/?utm_source=share&utm_medium=web2x&context=3
 (setopt process-adaptive-read-buffering nil)
 
-;;;; Delete-selection-mode
-;; When selecting text, if typing new text, replace the selected text with the
-;; new text
-(delete-selection-mode t)
-
 ;;;; Don't do anything with inactive mark
 (setopt mark-even-if-inactive nil)
 
 ;;;; Strategy for uniquifying buffer names
 (setopt uniquify-buffer-name-style 'post-forward)
 
-;;;; Show context menu from right-click
-(when (display-graphic-p)
-  (context-menu-mode 1))
-
 ;;;; Don't show "obsolete" byte-compile warnings
 (setopt byte-compile-warnings (remove 'obsolete byte-compile-warning-types))
 
 ;;;; Enable `view-mode' when calling `read-only-mode'
 (setopt view-read-only t)
-
 
 ;;;; Behavior for `cycle-spacing-actions'
 ;; Read the docstring for an explanation (or try it out!)
