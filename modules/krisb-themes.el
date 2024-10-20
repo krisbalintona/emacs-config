@@ -80,7 +80,7 @@
                         :box `( :line-width 3
                                 :color ,(modus-themes-with-colors bg-mode-line-active)))
     (let ((bg-color
-           (if (eq (car custom-enabled-themes) krisb-themes-dark)
+           (if (eq (car custom-enabled-themes) krisb-themes-ext-dark)
                (color-darken-name (modus-themes-with-colors bg-mode-line-inactive) 13)
              (color-lighten-name (modus-themes-with-colors bg-mode-line-inactive) 13))))
       (set-face-attribute 'mode-line-inactive nil
