@@ -79,7 +79,15 @@
       (window-parameters . ((mode-line-format . none))))
 
 ;;;;; Org and calendar
-     ("\\*\\(Calendar\\|Org Select\\).*"
+     ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . fit-window-to-buffer)
+      (side . top)
+      (slot . -2)
+      (preserve-size . (nil . t))
+      (window-parameters . ((mode-line-format . none)))
+      (post-command-select-window . t))
+     (,(rx (literal calendar-buffer))
       (display-buffer-below-selected)
       (window-height . fit-window-to-buffer))
      ))

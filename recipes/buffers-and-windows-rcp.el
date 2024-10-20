@@ -104,15 +104,7 @@
       (side . top)
       (slot . 2)
       (post-command-select-window . t))
-     ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
-      (display-buffer-in-side-window)
-      (window-height . fit-window-to-buffer)
-      (side . top)
-      (slot . -2)
-      (preserve-size . (nil . t))
-      (window-parameters . ((mode-line-format . none)))
-      (post-command-select-window . t))
-
+     
      ;; To the bottom
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
