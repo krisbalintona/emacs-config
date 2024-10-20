@@ -454,7 +454,7 @@ This macro does not affect capfs already in
 
   (krisb-cape-setup-capfs
     "commit"
-    '(git-commit-mode-hook vc-git-log-edit-mode-hook)
+    '(git-commit-setup-hook vc-git-log-edit-mode-hook)
     (list #'cape-elisp-symbol #'cape-dabbrev)))
 
 ;;; Embark

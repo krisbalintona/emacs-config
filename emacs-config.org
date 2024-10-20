@@ -1218,7 +1218,7 @@ Enhancements to all built-in-based completions.
 
     (krisb-cape-setup-capfs
       "commit"
-      '(git-commit-mode-hook vc-git-log-edit-mode-hook)
+      '(git-commit-setup-hook vc-git-log-edit-mode-hook)
       (list #'cape-elisp-symbol #'cape-dabbrev)))
 #+end_src
 
