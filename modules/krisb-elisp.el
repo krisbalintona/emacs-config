@@ -32,6 +32,7 @@
   (describe-bindings-outline t)
   (describe-bindings-show-prefix-commands t)
   :config
+  (require 'shortdoc)
   (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function))
 
 ;;;; Apropos
