@@ -3,6 +3,7 @@
 ;;; Krisb-themes-ext
 (use-package krisb-themes-ext
   :ensure nil
+  :demand t
   :bind (("<f8>" . krisb-themes-ext-theme-switcher)
          ("<f9>" . krisb-themes-ext-toggle-window-transparency))
   :custom
