@@ -4,7 +4,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(astute avy cape citar-denote corfu-prescient cursory darkroom denote-explore
+            elisp-demos eros exec-path-from-shell fontaine gcmh ht inspector
+            keychain-environment kind-icon lin magit marginalia mermaid-mode
+            modus-themes no-littering notmuch-addr notmuch-transient ob-mermaid
+            ol-notmuch olivetti on orderless org-appear org-contrib org-mime
+            org-modern outshine package-lint-flymake pdf-tools peg project
+            pulsar puni python saveplace-pdf-view so-long soap-client svg
+            system-packages track-changes tramp ts use-package verilog-mode
+            vertico-prescient which-key window-tool-bar))
  '(package-vc-selected-packages
    '((org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")))
