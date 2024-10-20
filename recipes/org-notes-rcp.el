@@ -100,10 +100,5 @@ replacement."
             (unless live-buffer (kill-buffer live-buffer))))))
     (message "Updated all links in %s!" dir)))
 
-;;;; Typewriter-roll-mode
-(use-package typewriter-roll-mode
-  :bind ( :map krisb-toggle-keymap
-          ("t" . typewriter-roll-mode)))
-
 (provide 'org-notes-rcp)
 ;;; org-notes-rcp.el ends here

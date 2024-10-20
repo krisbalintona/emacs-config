@@ -47,6 +47,11 @@
   :custom
   (darkroom-text-scale-increase 1.3))
 
+;;;; Typewriter-roll-mode
+(use-package typewriter-roll-mode
+  :bind ( :map krisb-toggle-keymap
+          ("t" . typewriter-roll-mode)))
+
 ;;;; Timers
 ;;;;; Tmr
 (use-package tmr
