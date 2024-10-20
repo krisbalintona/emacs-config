@@ -110,7 +110,10 @@
 ;;; Mixed-pitch
 ;; Locally remap default face to variable-pitch.
 (use-package mixed-pitch
-  :diminish)
+  :diminish
+  :custom
+  (mixed-pitch-set-height t)
+  (mixed-pitch-variable-pitch-cursor nil))
 
 ;;; Provide
 (provide 'krisb-fonts)
