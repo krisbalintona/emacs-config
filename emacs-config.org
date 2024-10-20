@@ -4222,7 +4222,8 @@ Enhancements to all built-in-based completions.
 *** =krisb-vc.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-vc.el"
-  ;;; VC
+  ;;; Built-in
+  ;;;; VC
   (use-package vc
     :ensure nil
     :hook (vc-git-log-edit-mode . auto-fill-mode)
@@ -4261,13 +4262,13 @@ Enhancements to all built-in-based completions.
     (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
     (vc-git-log-edit-summary-max-len (+ 70 (length "Summary"))))
 
-  ;;; Vc-dir
+  ;;;; Vc-dir
   (use-package vc-dir ; NOTE 2024-10-19: Is not required by vc, so have its own use-package
     :ensure nil
     :bind ( :map vc-dir-mode-map
             ("G" . vc-revert)))
 
-  ;;; Log-edit
+  ;;;; Log-edit
   (use-package log-edit
     :ensure nil
     :custom
@@ -4280,7 +4281,7 @@ Enhancements to all built-in-based completions.
     ;; I can see the files from the Diff with C-c C-d when I want
     (remove-hook 'log-edit-hook #'log-edit-show-files))
 
-  ;;;;; Diff-mode
+  ;;;; Diff-mode
   (use-package diff-mode
     :ensure nil
     :hook (diff-mode . diff-delete-empty-files)
@@ -4310,7 +4311,45 @@ Enhancements to all built-in-based completions.
                          :foreground 'unspecified
                          :background (modus-themes-with-colors bg-dim))))
 
+  ;;;; Agitate
+  ;; QoL stuff for built-in VC workflow
+  (use-package agitate
+    :after vc
+    :demand t
+    :hook (diff-mode . agitate-diff-enable-outline-minor-mode)
+    :bind ( :map vc-prefix-map
+            ("=" . agitate-diff-buffer-or-file)
+            ("f" . agitate-vc-git-find-revision)
+            ("s" . agitate-vc-git-show)
+            ("w" . agitate-vc-git-kill-commit-message)
+            ("p p" . agitate-vc-git-format-patch-single)
+            ("p n" . agitate-vc-git-format-patch-n-from-head)
+            :map diff-mode-map
+            ([remap diff-refine-hunk] . agitate-diff-refine-cycle)
+            ([remap diff-restrict-view] . agitate-diff-narrow-dwim)
+            :map log-view-mode-map
+            ("w" . agitate-log-view-kill-revision)
+            ("W" . agitate-log-view-kill-revision-expanded)
+            :map vc-git-log-view-mode-map
+            ("c" . agitate-vc-git-format-patch-single)
+            :map log-edit-mode-map
+            ("C-c C-i C-n" . agitate-log-edit-insert-file-name)
+            ;; See user options `agitate-log-edit-emoji-collection' and
+            ;; `agitate-log-edit-conventional-commits-collection'.
+            ("C-c C-i C-e" . agitate-log-edit-emoji-commit)
+            ("C-c C-i C-c" . agitate-log-edit-conventional-commit))
+    :custom
+    (diff-refine nil)                     ; We use `agitate-diff-refine-cycle' now
+    (agitate-log-edit-informative-show-root-log nil)
+    (agitate-log-edit-informative-show-files t)
+    :config
+    (agitate-log-edit-informative-mode 1)
+
+    (with-eval-after-load 'vc-git
+      (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)))
+
   ;;; Magit
+  ;;;; Magit
   (use-package magit
     :hook ((magit-diff-mode magit-process-mode) . visual-line-mode)
     :bind (("C-x g" . magit)

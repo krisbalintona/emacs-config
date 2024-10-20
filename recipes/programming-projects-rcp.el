@@ -251,23 +251,7 @@ As directory is special if I've decided it is!"
 (use-package vc
   :custom
   (add-log-mailing-address "krisbalintona@gmail.com")
-  (add-log-keep-changes-together t)
-  :config
-  ;; Restore window configuration when when making commits with VC like you can
-  ;; with org-agenda via the `org-agenda-restore-windows-after-quit' user option
-  (defvar kb/vc-pre-window-conf nil)
-
-  (defun kb/vc-set-window-conf (&rest _)
-    "Set the value of `kb/vc-pre-window-conf'."
-    (setq kb/vc-pre-window-conf (current-window-configuration)))
-  (advice-add 'vc-next-action :before #'kb/vc-set-window-conf)
-
-  (defun kb/vc-restore-window-conf (&rest _)
-    "Set the value of `kb/vc-pre-window-conf'."
-    (set-window-configuration kb/vc-pre-window-conf)
-    (setq kb/vc-pre-window-conf nil))
-  (advice-add 'log-edit-done :after #'kb/vc-restore-window-conf)
-  (advice-add 'log-edit-kill-buffer :after #'kb/vc-restore-window-conf))
+  (add-log-keep-changes-together t))
 
 ;;;;; Ediff
 (use-package ediff
@@ -281,44 +265,6 @@ As directory is special if I've decided it is!"
 (use-package vc-msg
   :bind
   ("C-M-s-v". vc-msg-show))
-
-;;;;; Agitate
-;; QoL stuff for built-in VC workflow
-(use-package agitate
-  :after vc
-  :demand
-  :hook (diff-mode . agitate-diff-enable-outline-minor-mode)
-  :bind
-  ( :map vc-prefix-map
-    ("=" . agitate-diff-buffer-or-file)
-    ("f" . agitate-vc-git-find-revision)
-    ("s" . agitate-vc-git-show)
-    ("w" . agitate-vc-git-kill-commit-message)
-    ("p p" . agitate-vc-git-format-patch-single)
-    ("p n" . agitate-vc-git-format-patch-n-from-head)
-    :map diff-mode-map
-    ([remap diff-refine-hunk] . agitate-diff-refine-cycle)
-    ([remap diff-restrict-view] . agitate-diff-narrow-dwim)
-    :map log-view-mode-map
-    ("w" . agitate-log-view-kill-revision)
-    ("W" . agitate-log-view-kill-revision-expanded)
-    :map vc-git-log-view-mode-map
-    ("c" . agitate-vc-git-format-patch-single)
-    :map log-edit-mode-map
-    ("C-c C-i C-n" . agitate-log-edit-insert-file-name)
-    ;; See user options `agitate-log-edit-emoji-collection' and
-    ;; `agitate-log-edit-conventional-commits-collection'.
-    ("C-c C-i C-e" . agitate-log-edit-emoji-commit)
-    ("C-c C-i C-c" . agitate-log-edit-conventional-commit))
-  :custom
-  (diff-refine nil)                     ; We use `agitate-diff-refine-cycle' now
-  (agitate-log-edit-informative-show-root-log nil)
-  (agitate-log-edit-informative-show-files t)
-  :init
-  (with-eval-after-load 'vc-git
-    (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote))
-  :config
-  (agitate-log-edit-informative-mode 1))
 
 ;;;; QoL
 
