@@ -7,6 +7,7 @@
          ;; I like to use prose linters. See my flymake and flymake-collection
          ;; configurations that leverage vale
          (message-mode . flymake-mode)
+         (message-mode . olivetti-mode)
          (message-send . krisb-message-check-subject)
          (message-send . krisb-message-check-from))
   :custom
@@ -51,8 +52,9 @@
   (mml-attach-file-at-the-end t)
   (mml-dnd-attach-options t)
   :config
-  (with-eval-after-load 'olivetti
-    (add-hook 'message-mode-hook #'olivetti-mode))
+  (krisb-modus-themes-setup-faces
+   "message"
+   (set-face-attribute 'message-mml nil :weight 'bold :background bg-sage))
 
   (with-eval-after-load 'mu4e
     (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory)))
@@ -85,17 +87,7 @@
           (cl--set-buffer-substring (pos-bol) (pos-eol)
                                     (concat
                                      "From: "
-                                     (read-string "Set FROM to: " user-mail-address)))))))
-
-  ;; Setup faces
-  (defun krisb-message--setup-faces (theme)
-    "Set up mml and message faces."
-    (when (string-match "^modus-" (symbol-name theme))
-      (modus-themes-with-colors
-        (set-face-attribute 'message-mml nil
-                            :weight 'bold
-                            :background bg-sage))))
-  (add-hook 'enable-theme-functions #'krisb-message--setup-faces))
+                                     (read-string "Set FROM to: " user-mail-address))))))))
 
 ;;;; Krisb-email-composition-ext
 (use-package krisb-email-composition-ext

@@ -18,13 +18,11 @@
                  (mode--line-format-right-align))
              (mode--line-format-right-align))))
   :config
-  (defun krisb-olivetti--setup-faces (&optional _theme)
-    "Set custom colors for `olivetti'."
-    (when (fboundp 'modus-themes-with-colors)
-      (set-face-attribute 'olivetti-fringe nil
-                          :background (modus-themes-with-colors bg-dim)
-                          :inherit 'unspecified)))
-  (add-hook 'enable-theme-functions #'krisb-olivetti--setup-faces))
+  (krisb-modus-themes-setup-faces
+   "olivetti"
+   (set-face-attribute 'olivetti-fringe nil
+                       :background bg-dim
+                       :inherit 'unspecified)))
 
 ;;; Astute.el
 (use-package astute

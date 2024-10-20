@@ -82,6 +82,14 @@
   (denote-menu-bar-mode 1)
   (require 'krisb-denote-ext)
 
+  (krisb-modus-themes-setup-faces
+   "denote"
+   (set-face-attribute 'denote-faces-link nil :weight 'normal :foreground fg-active-argument :inherit 'unspecified)
+   (set-face-attribute 'denote-faces-signature nil :weight 'bold)
+   (set-face-attribute 'denote-faces-title nil :weight 'semibold :foreground cyan-cooler)
+   (set-face-attribute 'denote-faces-keywords nil :foreground keyword :slant 'italic)
+   (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow))
+
   ;; Rename denote note. Meant to be added to `after-save-hook'
   (defun krisb-denote-auto-rename-file ()
     "Auto rename denote file."
@@ -102,19 +110,7 @@
   ;; Add inbox to `org-refile-targets'
   (with-eval-after-load 'org-refile
     (add-to-list 'org-refile-targets
-                 `(,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2))))
-
-  ;; Setup faces
-  (defun krisb-denote--setup-faces (&optional _theme)
-    "Set custom colors for `olivetti'."
-    (when (fboundp 'modus-themes-with-colors)
-      (modus-themes-with-colors
-        (set-face-attribute 'denote-faces-link nil :weight 'normal :foreground fg-active-argument :inherit 'unspecified)
-        (set-face-attribute 'denote-faces-signature nil :weight 'bold)
-        (set-face-attribute 'denote-faces-title nil :weight 'semibold :foreground cyan-cooler)
-        (set-face-attribute 'denote-faces-keywords nil :foreground keyword :slant 'italic)
-        (set-face-attribute 'denote-faces-date nil :foreground 'unspecified :inherit 'shadow))))
-  (add-hook 'enable-theme-functions #'krisb-denote--setup-faces))
+                 `(,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2)))))
 
 ;;; Denote-journal-extras
 (use-package denote-journal-extras

@@ -122,6 +122,25 @@
   (send-mail-function 'sendmail-send-it)
   (notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
   :config
+  (krisb-modus-themes-setup-faces
+   "notmuch"
+   ;; More noticeable demarcation of emails in thread in notmuch-show-mode
+   (set-face-attribute 'notmuch-message-summary-face nil
+                       :foreground fg-alt
+                       ;; NOTE 2024-09-26: We do it this way since changing
+                       ;; faces will refresh the font to be 1.1 times the 1.1
+                       ;; times height, and so on
+                       :height (truncate (* (face-attribute 'default :height nil) 1.1))
+                       :overline t
+                       :extend nil
+                       :inherit 'unspecified)
+   (set-face-attribute 'notmuch-tag-added nil
+                       :underline `(:color ,cyan-cooler :style double-line :position t))
+   (add-to-list 'notmuch-tag-formats
+                `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
+   (add-to-list 'notmuch-tag-formats
+                `("commitment" (propertize tag 'face '(:foreground ,yellow-faint)))))
+
   ;; Don't buttonize citations
   ;; FIXME 2024-10-07: For some reason putting this in :custom and setting it to
   ;; a high value doesn't work, so I put it here
@@ -152,30 +171,7 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
     (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode))
 
   ;; Prefer not to have emails recentered as I readjust them
-  (advice-add 'notmuch-show-message-adjust :override #'ignore)
-
-  ;; Setup faces
-  (defun krisb-notmuch--setup-faces (theme)
-    "Set up faces in `notmuch-show-mode'."
-    (when (string-match "^modus-" (symbol-name theme))
-      (modus-themes-with-colors
-        ;; More noticeable demarcation of emails in thread in notmuch-show-mode
-        (set-face-attribute 'notmuch-message-summary-face nil
-                            :foreground fg-alt
-                            ;; NOTE 2024-09-26: We do it this way since changing
-                            ;; faces will refresh the font to be 1.1 times the 1.1
-                            ;; times height, and so on
-                            :height (truncate (* (face-attribute 'default :height nil) 1.1))
-                            :overline t
-                            :extend nil
-                            :inherit 'unspecified)
-        (set-face-attribute 'notmuch-tag-added nil
-                            :underline `(:color ,cyan-cooler :style double-line :position t))
-        (add-to-list 'notmuch-tag-formats
-                     `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
-        (add-to-list 'notmuch-tag-formats
-                     `("commitment" (propertize tag 'face '(:foreground ,yellow-faint)))))))
-  (add-hook 'enable-theme-functions #'krisb-notmuch--setup-faces))
+  (advice-add 'notmuch-show-message-adjust :override #'ignore))
 
 ;;;; Krisb-notmuch-ext
 (use-package krisb-notmuch-ext

@@ -72,21 +72,19 @@
   (diff-refine 'font-lock)
   (diff-font-lock-syntax 'hunk-also) ; Fontify diffs with syntax highlighting of the language
   :config
-  (defun krisb-diff-mode-setup-faces (theme)
-    "Set up `diff-mode' faces."
-    (when (string-match "^modus-" (symbol-name theme))
-      (set-face-attribute 'diff-header nil
-                          :height 1.2
-                          :overline t
-                          :width 'expanded
-                          :foreground (modus-themes-with-colors fg-alt)
-                          :extend t)
-      (set-face-attribute 'diff-hunk-header nil
-                          :height 1.1
-                          :slant 'italic
-                          :foreground 'unspecified
-                          :background (modus-themes-with-colors bg-dim))))
-  (add-hook 'enable-theme-functions #'krisb-diff-mode-setup-faces))
+  (krisb-modus-themes-setup-faces
+   "diff-mode"
+   (set-face-attribute 'diff-header nil
+                       :height 1.2
+                       :overline t
+                       :width 'expanded
+                       :foreground (modus-themes-with-colors fg-alt)
+                       :extend t)
+   (set-face-attribute 'diff-hunk-header nil
+                       :height 1.1
+                       :slant 'italic
+                       :foreground 'unspecified
+                       :background (modus-themes-with-colors bg-dim))))
 
 ;;; Magit
 (use-package magit

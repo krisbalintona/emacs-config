@@ -57,15 +57,13 @@
      (avy-goto-char-timer . krisb-avy-order-farthest)
      (krisb-avy-goto-parens . krisb-avy-order-farthest)))
   :config
-  (defun krisb-avy-setup-faces (theme)
-    "Set up avy faces."
-    (when (string-match "^modus-" (symbol-name theme))
-      ;; Don't bold so text isn't shifted much
-      (set-face-attribute 'avy-lead-face nil :inherit 'modus-themes-reset-soft)
-      (set-face-attribute 'avy-lead-face-0 nil :inherit 'modus-themes-reset-soft)
-      (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
-      (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft)))
-  (add-hook 'enable-theme-functions #'krisb-avy-setup-faces)
+  (krisb-modus-themes-setup-faces
+   "avy"
+   ;; Don't bold so text isn't shifted much
+   (set-face-attribute 'avy-lead-face nil :inherit 'modus-themes-reset-soft)
+   (set-face-attribute 'avy-lead-face-0 nil :inherit 'modus-themes-reset-soft)
+   (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
+   (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft))
 
   (defun krisb-avy-order-farthest (x)
     (- (abs (- (if (numberp (car x))

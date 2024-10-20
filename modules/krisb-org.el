@@ -256,15 +256,12 @@
    ((t :height 0.9 :width condensed :weight regular :underline nil)))
   (org-modern-todo ((t :weight semibold :inverse-video t :inherit org-modern-label)))
   :config
-  (defun krisb-modus-themes--setup-org-modern (theme)
-    "Set up org-modern faces."
-    (when (string-match "^modus-" (symbol-name theme))
-      ;; See my value for `org-tag-faces'
-      (setopt org-modern-tag-faces
-              `(("project"
-                 :foreground ,(face-background 'default nil t)
-                 :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))))
-  (add-hook 'enable-theme-functions #'krisb-modus-themes--setup-org-modern))
+  (krisb-modus-themes-setup-faces
+   "org-modern"
+   (setopt org-modern-tag-faces
+           `(("project"
+              :foreground ,(face-background 'default nil t)
+              :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t))))))
 
 ;;; Org-appear
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is

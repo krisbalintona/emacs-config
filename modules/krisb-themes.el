@@ -72,6 +72,7 @@
             (bg-mode-line-inactive      "#292d48")
             (fg-mode-line-inactive      "#969696")))
 
+  ;; TODO 2024-10-19: Use `krisb-modus-themes-setup-faces'?
   (defun krisb-modus-themes-setup-base-faces (theme)
     "Set up common faces in FRAME."
     (set-face-attribute 'mode-line-active nil
