@@ -10,6 +10,7 @@
 ;;; Load libraries
 (require 'krisb-common)
 (require 'krisb-essentials)
+(require 'krisb-indentation)
 
 ;;; Packages
 
@@ -111,22 +112,28 @@
 (require 'krisb-essentials)
 (require 'krisb-themes)
 (require 'krisb-fonts)
+(require 'krisb-mode-line)
 
 (require 'krisb-saving-state)
+(require 'krisb-persistence)
 (require 'krisb-completion)
+(require 'krisb-expansion)
 (require 'krisb-windows)
 (require 'krisb-navigation)
 
 (require 'krisb-prose)
 (require 'krisb-org)
 (require 'krisb-org-agenda)
+(require 'krisb-org-export)
 (require 'krisb-denote)
 (require 'krisb-citations)
 (require 'krisb-pdfs)
 
 (require 'krisb-vc)
 (require 'krisb-projects)
+(require 'krisb-flymake)
 (require 'krisb-elisp)
+(require 'krisb-info)
 
 (require 'krisb-email-composition)
 (require 'krisb-notmuch)
