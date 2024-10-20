@@ -403,38 +403,6 @@ A modified version of `ytdl-download'."
                    "Provide a URL and have \"ytdl\" download the corresponding video and attach that file.")
                  t)))
 
-;;;; Org-roam-ui
-;; Newer `org-roam-server' for org-roam V2.
-(use-package org-roam-ui
-  :disabled
-  :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-  :after org-roam
-  :custom
-  (org-roam-ui-browser-function 'browse-url-default-browser) ; Open in my actual browser, to avoid opening in EAF
-  (org-roam-ui-open-on-start nil) ; Don't open graph on startup
-  (org-roam-ui-sync-theme t)
-  (org-roam-ui-follow t)
-  (org-roam-ui-update-on-save t)
-  (org-roam-ui-custom-theme '(list
-                              (bg . "#1E2029")
-                              (bg-alt . "#282a36")
-                              (fg . "#f8f8f2")
-                              (fg-alt . "#6272a4")
-                              (red . "#ff5555")
-                              (orange . "#f1fa8c")
-                              (yellow ."#ffb86c")
-                              (green . "#50fa7b")
-                              (cyan . "#8be9fd")
-                              (blue . "#ff79c6")
-                              (violet . "#8be9fd")
-                              (magenta . "#bd93f9"))
-                            )
-  :preface
-  (use-package websocket :demand t)
-  (use-package simple-httpd :demand t)
-  (use-package f :demand t)
-  )
-
 ;;;; Delve
 (use-package delve
   :disabled t                           ; Don't use
