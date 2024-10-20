@@ -48,6 +48,10 @@
           ("OrgMimeMailBody"
            (display-buffer-same-window))
 
+;;;;; Diff-mode
+          ((major-mode . diff-mode)
+           (display-buffer-same-window))
+
 ;;;;; VC
           ((or . ((major-mode . vc-dir-mode)
                   (major-mode . vc-git-log-view-mode)
