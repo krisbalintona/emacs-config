@@ -127,8 +127,11 @@
 (require 'krisb-org-export)
 (require 'krisb-denote)
 (require 'krisb-citations)
-(require 'krisb-pdfs)
 
+(require 'krisb-pdfs)
+(require 'krisb-web-annotations)
+
+(require 'krisb-programming)
 (require 'krisb-vc)
 (require 'krisb-projects)
 (require 'krisb-flymake)

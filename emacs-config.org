@@ -321,8 +321,11 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-org-export)
   (require 'krisb-denote)
   (require 'krisb-citations)
-  (require 'krisb-pdfs)
 
+  (require 'krisb-pdfs)
+  (require 'krisb-web-annotations)
+
+  (require 'krisb-programming)
   (require 'krisb-vc)
   (require 'krisb-projects)
   (require 'krisb-flymake)
