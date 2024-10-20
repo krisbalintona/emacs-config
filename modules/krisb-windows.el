@@ -59,6 +59,77 @@
   (tab-bar-mode 1)
   (tab-bar-history-mode 1))
 
+;;; Ace-window
+(use-package ace-window
+  :bind (("C-c w" . ace-window)
+         ("C-c W" . krisb-ace-window-prefix))
+  :custom
+  (aw-scope 'global)
+  (aw-swap-invert t)
+  (aw-background t)
+  (aw-display-mode-overlay nil)
+  (aw-dispatch-always t) ; Dispatch available even when less than three windows are open
+  (aw-minibuffer-flag t)
+  (aw-keys '(?q ?w ?e ?r ?t ?y ?u ?i ?p))
+  (aw-fair-aspect-ratio 3)
+  :custom-face
+  (aw-leading-char-face ((t (:height 3.0 :weight bold))))
+  :config
+  ;; Is not a defcustom, so use setq
+  (setq aw-dispatch-alist
+        '((?k aw-delete-window "Delete window")
+          (?K delete-other-windows "Delete other windows")
+          (?s aw-swap-window "Swap windows")
+          (?m krisb-ace-window-take-over-window "Go to window and delete current window")
+          (?c aw-copy-window "Copy window")
+          (?o aw-flip-window "Other window")
+          (?v krisb-ace-window-set-other-window "Set to other-scroll-window's window")
+          (?b aw-switch-buffer-in-window "Switch to buffer in window")
+          (?B aw-switch-buffer-other-window "Change buffer in window")
+          (?2 aw-split-window-vert "Split vertically")
+          (?3 aw-split-window-horz "Split horizontally")
+          (?+ aw-split-window-fair "Split heuristically") ; See `aw-fair-aspect-ratio'
+          (?? aw-show-dispatch-help)))
+
+  ;; Taken from Karthink's config
+  (defun krisb-ace-window-take-over-window (window)
+    "Move from current window to WINDOW.
+
+Delete current window in the process."
+    (let ((buf (current-buffer)))
+      (if (one-window-p)
+          (delete-frame)
+        (delete-window))
+      (aw-switch-to-window window)
+      (switch-to-buffer buf)))
+
+  ;; Taken from Karthink's config
+  (defun krisb-ace-window-prefix ()
+    "Use `ace-window' to display the buffer of the next command.
+The next buffer is the buffer displayed by the next command invoked
+immediately after this command (ignoring reading from the minibuffer).
+Creates a new window before displaying the buffer. When
+`switch-to-buffer-obey-display-actions' is non-nil, `switch-to-buffer'
+commands are also supported."
+    (interactive)
+    (display-buffer-override-next-command
+     (lambda (buffer _)
+       (let (window type)
+         (setq
+          window (aw-select (propertize " ACE" 'face 'mode-line-highlight))
+          type 'reuse)
+         (cons window type)))
+     nil "[ace-window]")
+    (message "Use `ace-window' to display next command buffer..."))
+
+  ;; Based off of similar code taken from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
+  (defun krisb-ace-window-set-other-window (window)
+    "Set WINDOW as the \"other window\" for the current one.
+\"Other window\" is the window scrolled by `scroll-other-window' and
+`scroll-other-window-down'."
+    (setq-local other-window-scroll-buffer (window-buffer window))))
+
 ;;;; Display-buffer-alist
 (with-eval-after-load 'window
 ;;;;; Messages
