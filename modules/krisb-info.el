@@ -1,6 +1,6 @@
 ;;;; Info
 (use-package info
-  :hook (Info-selection . mixed-pitch)
+  :hook (Info-selection . mixed-pitch-mode)
   :custom
   (Info-isearch-search nil))            ; Restore default isearch behavior
 

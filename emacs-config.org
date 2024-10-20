@@ -5317,7 +5317,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+begin_src emacs-lisp :tangle "modules/krisb-info.el"
   ;;;; Info
   (use-package info
-    :hook (Info-selection . mixed-pitch)
+    :hook (Info-selection . mixed-pitch-mode)
     :custom
     (Info-isearch-search nil))            ; Restore default isearch behavior
 
