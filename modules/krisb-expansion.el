@@ -42,5 +42,10 @@
   (define-abbrev global-abbrev-table ";d" "" #'krisb-abbrev-current-date)
   (define-abbrev global-abbrev-table ";td" "" #'krisb-abbrev-todo-keyword-and-date))
 
+;;; Hippie-expand
+(use-package hippie-exp
+  :ensure nil
+  :bind ([remap dabbrev-expand] . hippie-expand))
+
 ;;; Provide
 (provide 'krisb-expansion)

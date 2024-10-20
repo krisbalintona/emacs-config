@@ -724,9 +724,6 @@ This sets the default graphical element settings used by every frame.
    ([remap downcase-word] . downcase-dwim)
    ([remap capitalize-word] . capitalize-dwim))
 
-  ;;;; Hippie-expand
-  (bind-key [remap dabbrev-expand] #'hippie-expand)
-
   ;;;; Echo unfinished keystrokes quicker
   ;; Echo keystrokes (of unfinished commands) much quicker
   (setopt echo-keystrokes 0.5)
@@ -1741,6 +1738,11 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (define-abbrev global-abbrev-table ";t" "" #'krisb-abbrev-todo-keyword)
     (define-abbrev global-abbrev-table ";d" "" #'krisb-abbrev-current-date)
     (define-abbrev global-abbrev-table ";td" "" #'krisb-abbrev-todo-keyword-and-date))
+
+  ;;; Hippie-expand
+  (use-package hippie-exp
+    :ensure nil
+    :bind ([remap dabbrev-expand] . hippie-expand))
 
   ;;; Provide
   (provide 'krisb-expansion)

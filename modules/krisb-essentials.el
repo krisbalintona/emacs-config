@@ -241,9 +241,6 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  ([remap downcase-word] . downcase-dwim)
  ([remap capitalize-word] . capitalize-dwim))
 
-;;;; Hippie-expand
-(bind-key [remap dabbrev-expand] #'hippie-expand)
-
 ;;;; Echo unfinished keystrokes quicker
 ;; Echo keystrokes (of unfinished commands) much quicker
 (setopt echo-keystrokes 0.5)
