@@ -107,5 +107,10 @@
   (with-eval-after-load 'pulsar
     (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
+;;; Mixed-pitch
+;; Locally remap default face to variable-pitch.
+(use-package mixed-pitch
+  :diminish)
+
 ;;; Provide
 (provide 'krisb-fonts)

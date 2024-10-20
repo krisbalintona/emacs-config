@@ -45,21 +45,6 @@
              (face-remap-add-relative 'bold :weight 'normal)
              (face-remap-add-relative 'default :weight 'light)))
 
-;;;; Mixed-pitch
-;; Allow the same buffer to have both fixed- and variable-pitch
-;; NOTE Changes the family and height of the default face to the family and
-;; height of the variable-pitch face
-(use-package mixed-pitch
-  :diminish
-  :hook
-  (text-mode . mixed-pitch-mode)
-  :config
-  (add-to-list 'mixed-pitch-fixed-pitch-faces
-               '(highlight-indent-guides-character-face ; Highlight-indent-guides
-                 ;; Ace-jump
-                 ace-jump-face-foreground
-                 ace-jump-face-background)))
-
 ;;;; Default-text-scale
 ;; Text-scale-mode but Emacs-wide
 (use-package default-text-scale)
