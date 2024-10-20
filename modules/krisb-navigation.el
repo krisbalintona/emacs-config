@@ -177,4 +177,4 @@
   (outshine-use-speed-commands t))
 
 ;;; Provide
-(provide 'krisb-buffer-navigation)
+(provide 'krisb-navigation)

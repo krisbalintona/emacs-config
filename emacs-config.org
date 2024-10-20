@@ -309,7 +309,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-saving)
   (require 'krisb-completion)
   (require 'krisb-windows)
-  (require 'krisb-buffer-navigation)
+  (require 'krisb-navigation)
 
   (require 'krisb-prose)
   (require 'krisb-org)
@@ -1898,9 +1898,9 @@ Enhancements to all built-in-based completions.
 
 ** Navigation
 
-*** =krisb-buffer-navigation.el=
+*** =krisb-navigation.el=
 
-#+begin_src emacs-lisp :tangle "modules/krisb-buffer-navigation.el"
+#+begin_src emacs-lisp :tangle "modules/krisb-navigation.el"
   ;;; Puni
   ;; Major-mode agnostic structural editing, faithful to built-ins
   (use-package puni
@@ -2080,7 +2080,7 @@ Enhancements to all built-in-based completions.
     (outshine-use-speed-commands t))
 
   ;;; Provide
-  (provide 'krisb-buffer-navigation)
+  (provide 'krisb-navigation)
 #+end_src
 
 ** Writing and reading
