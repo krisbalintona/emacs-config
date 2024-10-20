@@ -153,6 +153,12 @@
         (call-interactively 'eval-last-sexp)))
     t))
 
+;;;; Grep
+(use-package grep
+  :custom
+  (grep-save-buffers 'ask)
+  (grep-use-headings t))
+
 ;;; Folding
 ;;;; Outline
 (use-package outline

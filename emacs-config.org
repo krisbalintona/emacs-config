@@ -2056,6 +2056,12 @@ Enhancements to all built-in-based completions.
           (call-interactively 'eval-last-sexp)))
       t))
 
+  ;;;; Grep
+  (use-package grep
+    :custom
+    (grep-save-buffers 'ask)
+    (grep-use-headings t))
+
   ;;; Folding
   ;;;; Outline
   (use-package outline

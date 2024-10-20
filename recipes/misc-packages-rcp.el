@@ -880,12 +880,6 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
   :custom
   (which-func-modes '(prog-mode)))
 
-;;;;; Grep
-(use-package grep
-  :custom
-  (grep-save-buffers 'ask)
-  (grep-use-headings t))
-
 ;;;;; Super-hint
 (use-package super-hint
   :disabled t
