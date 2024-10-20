@@ -8,7 +8,7 @@
    '(ace-window agitate all-the-icons apheleia astute breadcrumb cape citar-denote
                 cl-generic corfu-prescient cursory darkroom denote-explore
                 denote-interface diminish editorconfig eglot elisp-demos
-                embark-consult erc eros exec-path-from-shell faceup
+                embark-consult engine-mode erc eros exec-path-from-shell faceup
                 flymake-collection fontaine form-feed gcmh
                 highlight-function-calls ht idlwave info-colors inspector jinx
                 keychain-environment kind-icon lin magit map marginalia
@@ -21,9 +21,10 @@
                 scratch so-long soap-client svg system-packages tmr
                 track-changes tramp treesit-auto try ts typewriter-roll-mode
                 use-package verilog-mode vertico-prescient which-key
-                window-tool-bar ytdl))
+                window-tool-bar wombag ytdl))
  '(package-vc-selected-packages
-   '((denote-interface :url "git@github.com:krisbalintona/denote-interface.git")))
+   '((wombag :url "https://github.com/karthink/wombag.git")
+     (denote-interface :url "git@github.com:krisbalintona/denote-interface.git")))
  '(safe-local-variable-directories
    '("/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
