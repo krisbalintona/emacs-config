@@ -291,9 +291,10 @@
   :bind ( :map krisb-yank-keymap
           ("b" . org-web-tools-insert-link-for-url))
   :config
-  (add-to-list 'org-attach-commands
-               '((?w) org-web-tools-archive-attach
-                 "Download then attach an archive of a webpage using `org-web-tools'\n"))
+  (with-eval-after-load 'org-attach
+    (add-to-list 'org-attach-commands
+                 '((?w) org-web-tools-archive-attach
+                   "Download then attach an archive of a webpage using `org-web-tools'\n")))
 
   (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
 
