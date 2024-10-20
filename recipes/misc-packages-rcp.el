@@ -602,12 +602,6 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
   :custom
   (async-bytecomp-allowed-packages 'all))
 
-;;;;; Which-func
-(use-package which-func
-  :hook (on-first-file . which-function-mode)
-  :custom
-  (which-func-modes '(prog-mode)))
-
 ;;;;; Super-hint
 (use-package super-hint
   :disabled t

@@ -70,6 +70,12 @@
   ;; Also see the command `treesit-auto-install-all'
   (global-form-feed-mode 1))
 
+;;; Which-func
+(use-package which-func
+  :hook (on-first-file . which-function-mode)
+  :custom
+  (which-func-modes '(prog-mode)))
+
 ;;; Breadcrumb
 ;; Which-function stuff but more performant and prettier formatting. Read
 ;; package commentary for a description on how.
