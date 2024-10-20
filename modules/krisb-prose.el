@@ -85,6 +85,7 @@
                           (hspell)      ; Hebrew
                           (nuspell) ; Newest spell checker to be used by Firefox, Thunderbird, etc.
                           (voikkospell . libvoikko)) ; Finnish
+  :demand t
   :diminish
   :bind ( :map jinx-mode-map
           ([remap ispell-word] . jinx-correct)
