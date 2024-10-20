@@ -34,12 +34,10 @@
           ("g". consult-git-grep)
           ("r". consult-ripgrep)
           ("R". project-query-replace-regexp)
-          ("m". magit-project-status)
           ("a". project-any-command))
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-find-functions '(kb/project-special-dir project-try-vc))
-  (project-file-history-behavior 'relativize)
   (project-switch-commands #'project-prefix-or-any-command)
   ;; NOTE 2024-01-31: Prefer `project-switch-commands' st to
   ;; `project-prefix-or-any-command'
@@ -55,10 +53,6 @@
   ;;    (project-compile "Compile")
   ;;    (project-eshell "Eshell")
   ;;    (project-shell "Shell")))
-  (project-vc-merge-submodules nil)
-  (project-mode-line t)
-  (project-mode-line-face nil)
-  (project-vc-extra-root-markers '("Makefile"))
   :config
   ;; This is a regular variable
   (setq project-mode-line-format
@@ -74,35 +68,7 @@ As directory is special if I've decided it is!"
                               (expand-file-name "buoy" denote-directory)))
         (when (file-in-directory-p dir specialp)
           (setq projectp t)))
-      (when projectp (list 'vc 'Git dir))))
-
-  ;; Inspired by `projectile-multi-occur'
-  (defun kb/project-multi-occur (&optional nlines)
-    "Do a `multi-occur' in the project's buffers.
-With a prefix argument, show NLINES of context."
-    (interactive "P")
-    (let ((project (project-current)))
-      (multi-occur (project-buffers project)
-                   (car (occur-read-primary-args))
-                   nlines))))
-
-;;;;; Xref
-(use-package xref
-  :bind ("C-M-?". xref-find-references-and-replace) ; Emacs 29.1
-  :custom
-  (xref-show-definitions-function #'xref-show-definitions-completing-read)
-  (xref-show-xrefs-function #'xref-show-definitions-buffer)
-  (xref-file-name-display 'project-relative)
-  (xref-search-program 'ripgrep)
-  (xref-history-storage 'xref-window-local-history) ; Per-window history of `xref-go-*'
-  :config
-  ;; We remove the fallback backend, `etags--xref-backend', which prompts the
-  ;; user for an etags table -- this is undesirable for me.
-  (setq-default xref-backend-functions nil)
-  ;; Then add `elisp--xref-backend' as the global value of
-  ;; `xref-backend-functions', which means it is run when the local value ends
-  ;; with `t'. See (info "(elisp) Running Hooks") for an explanation.
-  (add-hook 'xref-backend-functions #'elisp--xref-backend))
+      (when projectp (list 'vc 'Git dir)))))
 
 ;;;; Magit
 ;;;;; Itself

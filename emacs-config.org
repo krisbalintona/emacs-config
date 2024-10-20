@@ -316,6 +316,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-pdfs)
 
   (require 'krisb-vc)
+  (require 'krisb-projects)
   (require 'krisb-elisp)
 
   (require 'krisb-email-composition)
@@ -3983,6 +3984,7 @@ Enhancements to all built-in-based completions.
 ** Programming
 
 *** =krisb-vc.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-vc.el"
   ;;; VC
   (use-package vc
@@ -4108,6 +4110,7 @@ Enhancements to all built-in-based completions.
 #+end_src
 
 *** =krisb-projects.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-projects.el"
   ;;; Project
   (use-package project

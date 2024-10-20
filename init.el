@@ -122,6 +122,7 @@
 (require 'krisb-pdfs)
 
 (require 'krisb-vc)
+(require 'krisb-projects)
 (require 'krisb-elisp)
 
 (require 'krisb-email-composition)
