@@ -685,6 +685,11 @@ This sets the default graphical element settings used by every frame.
   ;;;; `indent-for-tab-command' functionality.
   (setopt tab-always-indent 'complete
           tab-first-completion 'word)
+
+  ;;;;; Duplicate-dwim binding
+  (bind-key "C-x ;" #'duplicate-dwim)
+  (setopt duplicate-line-final-position 0
+          duplicate-region-final-position 1)
 #+end_src
 
 **** Provide

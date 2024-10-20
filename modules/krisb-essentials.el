@@ -212,5 +212,10 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 (setopt tab-always-indent 'complete
         tab-first-completion 'word)
 
+;;;;; Duplicate-dwim binding
+(bind-key "C-x ;" #'duplicate-dwim)
+(setopt duplicate-line-final-position 0
+        duplicate-region-final-position 1)
+
 (provide 'krisb-essentials)
 ;;; krisb-essentials.el ends here
