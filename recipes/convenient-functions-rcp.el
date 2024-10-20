@@ -101,47 +101,6 @@ act upon that region instead."
                                  (float-time (time-subtract (current-time) start-time))))))
 (bind-key [remap indent-region] #'kb/format-buffer-indentation)
 
-;;;; Yank current buffer's file-path
-(defun kb/yank-buffer-filename ()
-  "Copy the current buffer's path to the kill ring."
-  (interactive)
-  (if-let ((filename (or buffer-file-name (bound-and-true-p list-buffers-directory))))
-      (progn (kill-new filename)
-             (message "Copied %s" filename))
-    (error "Couldn't find filename in current buffer")))
-(bind-key "w" #'kb/yank-buffer-filename 'krisb-file-keymap)
-
-;;;; Delete this file
-(defun kb/delete-this-file (&optional path force-p)
-  "Delete PATH, kill its buffers and expunge it from vc/magit cache.
-
-  If PATH is not specified, default to the current buffer's file.
-
-  If FORCE-P, delete without confirmation."
-  (interactive
-   (list (buffer-file-name (buffer-base-buffer))
-         current-prefix-arg))
-  (let* ((path (or path (buffer-file-name (buffer-base-buffer))))
-         (short-path (abbreviate-file-name path)))
-    (unless (and path (file-exists-p path))
-      (user-error "Buffer is not visiting any file"))
-    (unless (file-exists-p path)
-      (error "File doesn't exist: %s" path))
-    (unless (or force-p (y-or-n-p (format "Really delete %S? " short-path)))
-      (user-error "Aborted"))
-    (let ((buf (current-buffer)))
-      (unwind-protect
-          (progn (delete-file path) t)
-        (if (file-exists-p path)
-            (error "Failed to delete %S" short-path)
-          ;; ;; Ensures that windows displaying this buffer will be switched to
-          ;; ;; real buffers (`doom-real-buffer-p')
-          ;; (doom/kill-this-buffer-in-all-windows buf t)
-          ;; (doom--update-files path)
-          (kill-this-buffer)
-          (message "Deleted %S" short-path))))))
-(bind-key "D" #'kb/delete-this-file 'krisb-file-keymap)
-
 ;;;; kb/org-add-blank-lines
 ;; Ensure that there are blank lines before and after org heading. Use with
 ;; =universal-argument= to apply to whole buffer
