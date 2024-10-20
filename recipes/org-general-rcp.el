@@ -107,54 +107,6 @@ have `org-warning' face."
   (advice-add 'org-indent--compute-prefixes :override 'kb/org-indent--compute-prefixes)
   (advice-add 'org-indent-set-line-properties :override 'kb/org-indent-set-line-properties))
 
-;;;;; Org-refile
-(use-package org-refile
-  :ensure nil
-  :after org
-  :custom
-  (org-refile-use-cache nil)
-  (org-refile-targets
-   `((,krisb-org-agenda-directory-files . (:level . 0))
-     (,krisb-org-agenda-directory-files . (:tag . "project"))
-     (,krisb-org-agenda-main-file . (:maxlevel . 3))))
-  ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
-  ;; want to refile to a non-todo heading in the current file?
-  (org-refile-target-verify-function    ; Only let not done todos be refile targets
-   (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)))))
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  :config
-  ;; Workaround for orderless issue with `org-refile'. See
-  ;; https://github.com/minad/vertico#org-refile
-  (setq org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil)
-  (when (featurep 'vertico)
-    (advice-add #'org-olpath-completing-read :around
-                (lambda (&rest args)
-                  (minibuffer-with-setup-hook
-                      (lambda () (setq-local completion-styles '(basic)))
-                    (apply args))))))
-
-;;;;; Org-archive
-(use-package org-archive
-  :ensure nil
-  :after org
-  :custom
-  (org-archive-subtree-save-file-p t)  ; Save archive file always
-  (org-archive-subtree-add-inherited-tags t)
-  :config
-  (define-advice org-archive--compute-location
-      (:around (orig-fun &rest args) kb/org-archive--compute-location-denote-format-string)
-    "Take LOCATION in `org-archive--compute-location' and expand %D.
-%D is expanded to the denote identifier."
-    ;; Modify LOCATION before normal operations
-    (cl-letf (((car args)
-               (if (fboundp 'denote-retrieve-filename-identifier)
-                   (replace-regexp-in-string "%D"
-                                             (denote-retrieve-filename-identifier (buffer-file-name (buffer-base-buffer)))
-                                             (car args))
-                 (car args))))
-      (apply orig-fun args))))
-
 ;;;; Aesthetics
 ;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
