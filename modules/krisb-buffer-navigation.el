@@ -1,4 +1,34 @@
-;;; Isearch
+;;; Puni
+;; Major-mode agnostic structural editing, faithful to built-ins
+(use-package puni
+  :custom
+  (puni-confirm-when-delete-unbalanced-active-region t)
+  :config
+  (setq puni-mode-map
+        (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "M-d") 'puni-forward-kill-word)
+          (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
+          (define-key map [remap kill-line] 'puni-kill-line)
+          (define-key map [remap backward-sexp] 'puni-backward-sexp)
+          (define-key map [remap forward-sexp] 'puni-forward-sexp)
+          (define-key map [remap beginning-of-defun] 'puni-beginning-of-sexp)
+          (define-key map [remap end-of-defun] 'puni-end-of-sexp)
+          (define-key map [remap backward-list] 'puni-backward-sexp-or-up-list)
+          (define-key map [remap forward-list] 'puni-forward-sexp-or-up-list)
+          (define-key map (kbd "C-M-9") 'puni-syntactic-backward-punct)
+          (define-key map (kbd "C-M-0") 'puni-syntactic-forward-punct)
+          (define-key map (kbd "C-M-r") 'puni-raise)
+          (define-key map (kbd "C-M-=") 'puni-splice)
+          (define-key map (kbd "C-M-S-o") 'puni-split)
+          (define-key map (kbd "C-M-[") 'puni-slurp-backward)
+          (define-key map (kbd "C-M-]") 'puni-slurp-forward)
+          (define-key map (kbd "C-M-{") 'puni-barf-backward)
+          (define-key map (kbd "C-M-}") 'puni-barf-forward)
+          map))
+  (puni-global-mode 1))
+
+;;; Jump
+;;;; Isearch
 ;; Incremental search
 (use-package isearch
   :ensure nil
@@ -14,7 +44,7 @@
   (isearch-lax-whitespace t)
   (search-whitespace-regexp ".*?"))
 
-;;; Imenu
+;;;; Imenu
 (use-package imenu
   :ensure nil
   :custom
@@ -23,7 +53,7 @@
   (use-package-enable-imenu-support t)
   (imenu-flatten 'group))
 
-;;; Avy
+;;;; Avy
 ;; Quickly jump to any character
 (use-package avy
   :commands krisb-avy-goto-parens
@@ -123,34 +153,28 @@
         (call-interactively 'eval-last-sexp)))
     t))
 
-;;; Puni
-;; Major-mode agnostic structural editing, faithful to built-ins
-(use-package puni
+;;; Folding
+;;;; Outline
+(use-package outline
+  :ensure nil
+  :diminish outline-minor-mode
   :custom
-  (puni-confirm-when-delete-unbalanced-active-region t)
-  :config
-  (setq puni-mode-map
-        (let ((map (make-sparse-keymap)))
-          (define-key map (kbd "M-d") 'puni-forward-kill-word)
-          (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
-          (define-key map [remap kill-line] 'puni-kill-line)
-          (define-key map [remap backward-sexp] 'puni-backward-sexp)
-          (define-key map [remap forward-sexp] 'puni-forward-sexp)
-          (define-key map [remap beginning-of-defun] 'puni-beginning-of-sexp)
-          (define-key map [remap end-of-defun] 'puni-end-of-sexp)
-          (define-key map [remap backward-list] 'puni-backward-sexp-or-up-list)
-          (define-key map [remap forward-list] 'puni-forward-sexp-or-up-list)
-          (define-key map (kbd "C-M-9") 'puni-syntactic-backward-punct)
-          (define-key map (kbd "C-M-0") 'puni-syntactic-forward-punct)
-          (define-key map (kbd "C-M-r") 'puni-raise)
-          (define-key map (kbd "C-M-=") 'puni-splice)
-          (define-key map (kbd "C-M-S-o") 'puni-split)
-          (define-key map (kbd "C-M-[") 'puni-slurp-backward)
-          (define-key map (kbd "C-M-]") 'puni-slurp-forward)
-          (define-key map (kbd "C-M-{") 'puni-barf-backward)
-          (define-key map (kbd "C-M-}") 'puni-barf-forward)
-          map))
-  (puni-global-mode 1))
+  (outline-minor-mode-cycle t)
+  (outline-minor-mode-highlight t)
+  (outline-blank-line t)
+  :init
+  ;; `outline-minor-mode-prefix' must be set prior to the package's loading
+  (setq outline-minor-mode-prefix (kbd "C-c \\")))
+
+;;;; Outshine
+;; Outline-minor-mode but with better keybindings and more support.
+(use-package outshine
+  :diminish outshine-mode
+  :hook ((LaTeX-mode prog-mode conf-mode) . outshine-mode)
+  :bind ( :map outshine-mode-map
+          ("C-x n s". outshine-narrow-to-subtree))
+  :custom
+  (outshine-use-speed-commands t))
 
 ;;; Provide
 (provide 'krisb-buffer-navigation)

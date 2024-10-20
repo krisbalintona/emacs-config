@@ -590,28 +590,6 @@ with the exception of org-emphasis markers."
   (global-visual-wrap-prefix-mode 1))
 
 ;;;; Other
-;;;;; Outline
-(use-package outline
-  :ensure nil
-  :custom
-  (outline-minor-mode-cycle t)
-  (outline-minor-mode-highlight t)
-  (outline-blank-line t))
-
-;;;;; Outshine
-;; Outline-minor-mode but with better keybindings and more support.
-;; `outline-minor-mode-prefix' must be set prior to the package's loading
-(defvar outline-minor-mode-prefix (kbd "C-c \\"))
-(use-package outshine
-  :diminish (outshine-mode outline-minor-mode)
-  :hook
-  ((LaTeX-mode prog-mode conf-mode) . outshine-mode)
-  :bind
-  ( :map outshine-mode-map
-    ("C-x n s". outshine-narrow-to-subtree))
-  :custom
-  (outshine-use-speed-commands t)) ; Use speedy commands on headlines (or other defined locations)
-
 ;;;;; Lorem-ipsum
 ;; Sample text
 (use-package lorem-ipsum
