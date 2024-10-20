@@ -580,6 +580,7 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 **** Minor modes
+
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Minor modes
   ;;;; Recognize camel case as words
@@ -616,6 +617,7 @@ This sets the default graphical element settings used by every frame.
   ;;;; Show a default value only when default is applicable
   (minibuffer-electric-default-mode 1)
 #+end_src
+
 **** Miscellaneous
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
@@ -1205,6 +1207,7 @@ Enhancements to all built-in-based completions.
 #+end_src
 
 **** Embark
+
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Embark
   ;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
@@ -1233,6 +1236,7 @@ Enhancements to all built-in-based completions.
   (use-package embark-consult
     :hook (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
+
 **** Provide
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
@@ -1241,6 +1245,7 @@ Enhancements to all built-in-based completions.
 #+end_src
 
 *** =krisb-saving-state.el=
+
 Configuration related to "saving a state," that is, storing or restoring anything about the point, window configuration, file, buffer, et cetera. 
 #+begin_src emacs-lisp :tangle "modules/krisb-saving-state.el"
   ;;; Register
@@ -1672,6 +1677,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-expansion.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-expansion.el"
   ;;; Abbrev
   ;; Automatically correct typed strings (e.g. words).  Most useful for correcting
@@ -1720,6 +1726,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Provide
   (provide 'krisb-expansion)
 #+end_src
+
 ** Appearance
 
 *** =krisb-themes.el=
@@ -2026,6 +2033,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-mode-line.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-mode-line.el"
   ;;; Diminish
   (use-package diminish
@@ -2073,6 +2081,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Provide
   (provide 'krisb-mode-line)
 #+end_src
+
 ** Navigation
 
 *** =krisb-navigation.el=
@@ -2338,6 +2347,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 *** =krisb-prose.el=
 
 **** Environment
+
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Environment
   ;;;; Olivetti
@@ -2415,6 +2425,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** Spell checking
+
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Spell checking
   ;;;; Jinx
@@ -2509,6 +2520,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** Provide
+
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Provide
   (provide 'krisb-prose)
@@ -2517,6 +2529,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 *** =krisb-org.el=
 
 **** Base
+
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
   ;;; Built-in
   ;;;; Org
@@ -2721,7 +2734,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (org-num-skip-footnotes t)
     (org-num-skip-unnumbered t))
 #+end_src
+
 **** Additional
+
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
   ;;; Org-contrib
   (use-package org-contrib
@@ -2819,7 +2834,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
     (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
 #+end_src
+
 **** Provide
+
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
   ;;; Provide
   (provide 'krisb-org)
@@ -4736,6 +4753,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 ** Programming
 
 *** =krisb-programming.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-programming.el"
   ;;; Electric
   (use-package electric
@@ -4780,6 +4798,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Provide
   (provide 'krisb-programming)
 #+end_src
+
 *** =krisb-vc.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-vc.el"
@@ -5541,6 +5560,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 ** =krisb-consult-ext.el=
+
 #+begin_src emacs-lisp :tangle "lisp/krisb-consult-ext.el"
   ;;; krisb-consult-ext.el --- Extensions for Consult  -*- lexical-binding: t; -*-
 
