@@ -35,54 +35,57 @@
       (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
 
 ;;;; Display-buffer-alist
+(use-package window
+  :ensure nil
+  :custom
 ;;;;; Messages
-(setopt display-buffer-alist
-        `((,(rx (literal messages-buffer-name))
-           (display-buffer-in-side-window)
-           (window-height . 0.36)
-           (side . top)
-           (slot . 1)
-           (post-command-select-window . t))
+  (display-buffer-alist
+   `((,(rx (literal messages-buffer-name))
+      (display-buffer-in-side-window)
+      (window-height . 0.36)
+      (side . top)
+      (slot . 1)
+      (post-command-select-window . t))
 ;;;;; Org-mime
-          ("OrgMimeMailBody"
-           (display-buffer-same-window))
+     ("OrgMimeMailBody"
+      (display-buffer-same-window))
 
 ;;;;; VC
-          ((or . ((major-mode . vc-dir-mode)
-                  (major-mode . vc-git-log-view-mode)
-                  (major-mode . vc-annotate-mode)
-                  (major-mode . vc-git-region-history-mode)))
-           (display-buffer-same-window))
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 20)
-           (dedicated . t)
-           (preserve-size . (t . t)))
-          ("\\*vc-log\\*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (dedicated . t))
+     ((or . ((major-mode . vc-dir-mode)
+             (major-mode . vc-git-log-view-mode)
+
+             (major-mode . vc-git-region-history-mode)))
+      (display-buffer-same-window))
+     ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+      (display-buffer-reuse-mode-window display-buffer-below-selected)
+      (window-height . 20)
+      (dedicated . t)
+      (preserve-size . (t . t)))
+     ("\\*vc-log\\*"
+      (display-buffer-reuse-mode-window display-buffer-below-selected)
+      (dedicated . t))
 
 ;;;;; Help
-          ((major-mode . help-mode)
-           (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-           (window-height . shrink-window-if-larger-than-buffer)
-           (dedicated . t))
+     ((major-mode . help-mode)
+      (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+      (window-height . shrink-window-if-larger-than-buffer)
+      (dedicated . t))
 
 ;;;;; Eldoc
-          ("^\\*eldoc"
-           (display-buffer-at-bottom)
-           (post-command-select-window . t)
-           (window-height . shrink-window-if-larger-than-buffer)
-           (window-parameters . ((mode-line-format . none))))
-          ))
-
+     ("^\\*eldoc"
+      (display-buffer-at-bottom)
+      (post-command-select-window . t)
+      (window-height . shrink-window-if-larger-than-buffer)
+      (window-parameters . ((mode-line-format . none))))
+     ))
+  :config
 ;;;;; Xref
-(with-eval-after-load 'xref
-  (add-to-list 'display-buffer-alist
-               `((or (major-mode . xref--xref-buffer-mode)
-                     (,(rx (literal xref-buffer-name))))
-                 (display-buffer-below-selected display-buffer-at-bottom)
-                 (window-height . 0.25))))
+  (with-eval-after-load 'xref
+    (add-to-list 'display-buffer-alist
+                 `((or (major-mode . xref--xref-buffer-mode)
+                       (,(rx (literal xref-buffer-name))))
+                   (display-buffer-below-selected display-buffer-at-bottom)
+                   (window-height . 0.25)))))
 
 ;;; Provide
 (provide 'krisb-windows)
