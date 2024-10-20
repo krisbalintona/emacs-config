@@ -104,6 +104,7 @@ Then apply ARGS."
 ;;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 (use-package autorevert
+  :diminish auto-revert-mode
   :ensure nil
   :hook (on-first-file . global-auto-revert-mode)
   :custom
