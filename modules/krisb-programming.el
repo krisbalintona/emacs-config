@@ -26,5 +26,17 @@
   (eldoc-echo-area-display-truncation-message t)
   (eldoc-echo-area-prefer-doc-buffer t))
 
+;;; Form-feed
+;; Display  (page breaks) fancily. Visit the readme for alternatives and their
+;; differences
+(use-package form-feed
+  :diminish
+  :custom
+  (form-feed-include-modes
+   '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
+  (form-feed-exclude-modes nil)
+  :config
+  (global-form-feed-mode 1))
+
 ;;; Provide
 (provide 'krisb-programming)

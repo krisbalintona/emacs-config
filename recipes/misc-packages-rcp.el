@@ -772,17 +772,6 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
             :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
-;;;;; Form-feed
-;; Display  (page breaks) fancily. Visit the readme for alternatives and their
-;; differences
-(use-package form-feed
-  :hook (on-first-buffer . global-form-feed-mode)
-  :diminish
-  :custom
-  (form-feed-include-modes
-   '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
-  (form-feed-exclude-modes nil))
-
 ;;;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode
