@@ -148,36 +148,6 @@
   ;; Customize consult commands
   (consult-customize consult-buffer :group nil))
 
-;;;; Embark
-;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
-;; thus selectrum!)
-(use-package embark
-  :bind
-  (("C-.". embark-act)
-   ("C-h B". embark-bindings)
-   :map vertico-map
-   ("C-.". embark-act)
-   ("C->". embark-become)
-   :map embark-symbol-map
-   ("R". raise-sexp))
-  :custom
-  ;; Embark Actions menu
-  (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
-  (embark-prompter 'embark-keymap-prompter) ; What interface do I want to use for Embark Actions?
-  (embark-indicators                    ; How the Embark Actions menu appears
-   '(embark-mixed-indicator
-     embark-highlight-indicator
-     ;; embark-isearch-highlight-indicator
-     ;; embark-verbose-indicator
-     ))
-  (embark-mixed-indicator-delay 1.5)
-
-  ;; Misc
-  (embark-collect-live-initial-delay 0.8)
-  (embark-collect-live-update-delay 0.5)
-  :config
-  (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
-
 ;;;; Embark-consult
 ;; Companion package for embark
 (use-package embark-consult

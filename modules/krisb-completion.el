@@ -448,5 +448,28 @@ This macro does not affect capfs already in
     '(git-commit-mode-hook vc-git-log-edit-mode-hook)
     (list #'cape-elisp-symbol #'cape-dabbrev)))
 
+;;; Embark
+;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
+(use-package embark
+  :bind (("C-.". embark-act)
+         ("C-h B". embark-bindings)
+         :map vertico-map
+         ("C-.". embark-act)
+         :map embark-symbol-map
+         ("R". raise-sexp))
+  :custom
+  ;; Embark Actions menu
+  (embark-prompter 'embark-keymap-prompter) ; What interface do I want to use for Embark Actions?
+  (embark-indicators                    ; How the Embark Actions menu appears
+   '(embark-mixed-indicator
+     embark-highlight-indicator))
+  (prefix-help-command #'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
+
+  (embark-mixed-indicator-delay 1.5)
+  (embark-collect-live-initial-delay 0.8)
+  (embark-collect-live-update-delay 0.5)
+  :config
+  (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
+
 ;;; Provide
 (provide 'krisb-completion)
