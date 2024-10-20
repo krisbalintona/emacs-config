@@ -141,8 +141,9 @@
 
   (magit-refs-show-commit-count 'all)   ; Show branches and tags
 
-  ;; Refinement in hunks
+  ;; Refinement (diffs) in hunks
   (magit-diff-highlight-hunk-body t)
+  (magit-diff-refine-hunk t)
   (magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside
      magit-diff-highlight-hunk-region-using-overlays
