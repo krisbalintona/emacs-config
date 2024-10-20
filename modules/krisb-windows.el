@@ -41,7 +41,10 @@
           ("w" . tab-bar-move-window-to-tab)
           :repeat-map krisb-tab-bar-repeat-map
           ("C-c <left>" . tab-bar-history-back)
-          ("C-c <right>" . tab-bar-history-forward))
+          ("C-c <right>" . tab-bar-history-forward)
+          :continue
+          ("<left>" . tab-bar-history-back)
+          ("<right>" . tab-bar-history-forward))
   :custom
   (tab-bar-close-button-show nil)
   (tab-bar-new-tab-choice 'clone)

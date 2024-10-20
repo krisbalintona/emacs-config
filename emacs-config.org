@@ -717,7 +717,7 @@ This sets the default graphical element settings used by every frame.
 
   ;;;;; Hippie-expand
   (bind-key [remap dabbrev-expand] #'hippie-expand)
-    
+
 #+end_src
 
 **** Provide
@@ -1459,7 +1459,10 @@ Enhancements to all built-in-based completions.
             ("w" . tab-bar-move-window-to-tab)
             :repeat-map krisb-tab-bar-repeat-map
             ("C-c <left>" . tab-bar-history-back)
-            ("C-c <right>" . tab-bar-history-forward))
+            ("C-c <right>" . tab-bar-history-forward)
+            :continue
+            ("<left>" . tab-bar-history-back)
+            ("<right>" . tab-bar-history-forward))
     :custom
     (tab-bar-close-button-show nil)
     (tab-bar-new-tab-choice 'clone)
