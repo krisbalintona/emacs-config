@@ -677,19 +677,8 @@ This is a difference in multitude of %s."
 ;;;; Built-in Emacs modes/packages
 (use-package emacs
   :ensure nil
-  :hook ((messages-buffer-mode . visual-line-mode)
-         (on-first-file . undelete-frame-mode)
-         (on-first-buffer . global-so-long-mode)
-         (on-first-input . minibuffer-electric-default-mode))
-  :bind
-  ;; Remap these defaults; they are effectively the same while phasing out the
-  ;; need the *-region binds
-  (([remap upcase-word] . upcase-dwim)
-   ([remap downcase-word] . downcase-dwim)
-   ([remap capitalize-word] . capitalize-dwim)
-   ([remap dabbrev-expand] . hippie-expand)
-   :map universal-argument-map          ; Multiple universal arguments
-   ("u" . universal-argument-more))
+  :bind (:map universal-argument-map    ; Multiple universal arguments
+              ("u" . universal-argument-more))
   :custom
   (save-interprogram-paste-before-kill t)
   ;; Killing

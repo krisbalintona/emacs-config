@@ -133,6 +133,18 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;; Binds useful commands for jumping to variables, functions, and libraries
 (find-function-mode 1)
 
+;;;; Visual-line-mode in *Messages* buffer
+(add-hook 'messages-buffer-mode-hook #'visual-line-mode)
+
+;;;; Undo frame deletions
+(undelete-frame-mode 1)
+
+;;;; So-long-mode everywhere
+(global-so-long-mode 1)
+
+;;;; Show a default value only when default is applicable
+(minibuffer-electric-default-mode 1)
+
 ;;; Miscellaneous
 ;;;; Enable all disabled commands
 (setopt disabled-command-function nil)
@@ -220,6 +232,17 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 (bind-key "C-x ;" #'duplicate-dwim)
 (setopt duplicate-line-final-position 0
         duplicate-region-final-position 1)
+
+;;;;; Rebind case commands
+;; Remap these defaults; they are effectively the same while phasing out the
+;; need the *-region binds
+(bind-keys
+ ([remap upcase-word] . upcase-dwim)
+ ([remap downcase-word] . downcase-dwim)
+ ([remap capitalize-word] . capitalize-dwim))
+
+;;;;; Hippie-expand
+(bind-key [remap dabbrev-expand] #'hippie-expand)
 
 (provide 'krisb-essentials)
 ;;; krisb-essentials.el ends here
