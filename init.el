@@ -186,6 +186,7 @@
 (require 'krisb-mermaid)
 
 (require 'krisb-web)
+(require 'krisb-directories)
 
 ;;; Load custom file
 (when (file-exists-p custom-file)
