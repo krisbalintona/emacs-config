@@ -142,12 +142,10 @@
   ;; Sections
   (magit-module-sections-nested t)
   (magit-section-show-child-count t)
-  (magit-section-initial-visibility-alist
-   '((stashes . show)
-     ;; (modules . hide)
-     ;; (unpulled . show)
-     ;; (unpushed . show)
-     ))
+  (magit-section-initial-visibility-alist '((stashes . show)
+                                            (modules . hide)
+                                            (unpushed . show)
+                                            (unpulled . hide)))
   :config
   (magit-auto-revert-mode 1))
 
