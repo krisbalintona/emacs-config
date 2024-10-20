@@ -34,14 +34,6 @@
   :hook
   ((emacs-lisp-mode lisp-interaction-mode inferior-emacs-lisp-mode) . rainbow-delimiters-mode))
 
-;;;; Paren-faces
-(use-package paren-face
-  :demand
-  :custom
-  (paren-face-mode-lighter "")
-  :config
-  (global-paren-face-mode 1))
-
 ;;;; Help-find
 ;; Provides `help-find-function' and `help-find-keybinding'
 (use-package help-find

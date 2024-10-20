@@ -1,4 +1,5 @@
-;;; Highlight-function-calls
+;;; Font locking
+;;;; Highlight-function-calls
 (use-package highlight-function-calls
   :hook ((emacs-lisp-mode lisp-interaction-mode) . highlight-function-calls-mode)
   :custom
@@ -7,6 +8,13 @@
   (highlight-function-calls-special-forms nil)
   :custom-face
   (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
+
+;;;; Paren-faces
+(use-package paren-face
+  :custom
+  (paren-face-mode-lighter "")
+  :config
+  (global-paren-face-mode 1))
 
 ;;; Documentation
 ;;;; Help
