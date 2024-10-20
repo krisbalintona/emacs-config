@@ -286,8 +286,9 @@ See ((org) Filtering/limiting agenda items)."
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
-  :demand
-  :after org-agenda
+  ;; NOTE 2024-10-06: I can currently check out and install a version of
+  ;; org-super-agenda that applies the patch from PR#242
+  :load-path "/home/krisbalintona/emacs-repos/packages/org-super-agenda/"
   :custom
   (org-super-agenda-hide-empty-groups t)
   ;; FIXME 2024-10-06: When trying to set `org-super-agenda-keep-order' to
@@ -298,7 +299,9 @@ See ((org) Filtering/limiting agenda items)."
   ;; above, near the :vc keword
   (org-super-agenda-keep-order t)
   (org-agenda-cmp-user-defined #'krisb-org-sort-agenda-by-created-time)
-  :init
+  :config
+  (org-super-agenda-mode 1)
+
   (defun krisb-org-get-created-time (entry)
     "Return the CREATED time of ENTRY, or an empty string if it doesn't exist."
     (let ((marker (get-text-property 0 'marker entry)))
@@ -316,8 +319,7 @@ See ((org) Filtering/limiting agenda items)."
        (t
         (if (time-less-p (date-to-time time-a) (date-to-time time-b))
             -1 +1)))))
-  :config
-  (org-super-agenda-mode 1)
+
   ;; Relevant variables to set locally in `org-agenda-custom-commands'
   ;; - `org-agenda-overriding-header'
   ;; - `org-agenda-show-inherited-tags'
