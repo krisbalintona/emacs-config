@@ -118,6 +118,7 @@
 
 (require 'krisb-org)
 (require 'krisb-org-agenda)
+(require 'krisb-denote)
 (require 'krisb-citations)
 (require 'krisb-pdfs)
 

@@ -1,4 +1,4 @@
-;;; krisb-denote.el --- Denote extensions            -*- lexical-binding: t; -*-
+;;; krisb-denote-ext.el --- Denote extensions        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona
 
@@ -182,5 +182,5 @@
             (kill-buffer)))))))
 
 ;;; Provide
-(provide 'krisb-denote)
-;;; krisb-denote.el ends here
+(provide 'krisb-denote-ext)
+;;; krisb-denote-ext.el ends here

@@ -80,7 +80,7 @@
   :config
   (denote-rename-buffer-mode 1)
   (denote-menu-bar-mode 1)
-  (require 'krisb-denote)
+  (require 'krisb-denote-ext)
 
   ;; Rename denote note. Meant to be added to `after-save-hook'
   (defun krisb-denote-auto-rename-file ()
