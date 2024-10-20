@@ -26,15 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Breadcrumb
-;; Which-function stuff but more performant and prettier formatting. Read
-;; package commentary for a description on how.
-(use-package breadcrumb
-  :commands which-function-mode
-  :hook ((lsp-ui-mode eglot-managed-mode) . (lambda () (when (derived-mode-p 'prog-mode) (breadcrumb-local-mode))))
-  :custom
-  (which-func-functions '(breadcrumb-imenu-crumbs)))
-
 ;;;; Devdocs
 (use-package devdocs
   :bind

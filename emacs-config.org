@@ -5041,18 +5041,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (eldoc-echo-area-display-truncation-message t)
     (eldoc-echo-area-prefer-doc-buffer t))
 
-  ;;; Form-feed
-  ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
-  ;; differences
-  (use-package form-feed
-    :diminish
-    :custom
-    (form-feed-include-modes
-     '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
-    (form-feed-exclude-modes nil)
-    :config
-    (global-form-feed-mode 1))
-
   ;;; Treesit
   (use-package treesit
     :ensure nil
@@ -5074,6 +5062,29 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode 1))
+
+  ;;; Form-feed
+  ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
+  ;; differences
+  (use-package form-feed
+    :diminish
+    :custom
+    (form-feed-include-modes
+     '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
+    (form-feed-exclude-modes nil)
+    :config
+    ;; Also see the command `treesit-auto-install-all'
+    (global-form-feed-mode 1))
+
+  ;;; Breadcrumb
+  ;; Which-function stuff but more performant and prettier formatting. Read
+  ;; package commentary for a description on how.
+  (use-package breadcrumb
+    :demand t
+    :hook (eglot-managed-mode . (lambda () (when (derived-mode-p 'prog-mode) (breadcrumb-local-mode))))
+    :init
+    (with-eval-after-load 'which-func
+      (which-func-functions '(breadcrumb-imenu-crumbs))))
 
   ;;; Provide
   (provide 'krisb-programming)
