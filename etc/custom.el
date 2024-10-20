@@ -7,7 +7,7 @@
  '(package-selected-packages
    '(ace-window agitate astute cape citar-denote cl-generic corfu-prescient cursory
                 darkroom denote-explore diminish editorconfig eglot elisp-demos
-                embark-consult erc eros exec-path-from-shell faceup
+                embark-consult epg-config erc eros exec-path-from-shell faceup
                 flymake-collection fontaine gcmh highlight-function-calls
                 hippie-exp ht idlwave info-colors inspector jinx
                 keychain-environment kind-icon lin magit map marginalia

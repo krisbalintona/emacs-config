@@ -29,11 +29,6 @@
 ;; See `startup-echo-area-message'
 (fset #'display-startup-echo-area-message #'ignore)
 
-;;;; Require pin-entry for passowrds
-;; Pinentry is responsible for querying passphrases
-(require 'epg-config)
-(setq epg-pinentry-mode 'loopback) ; Ask through the minibuffer, instead of external Pinentry program
-
 ;;;; Toggle visiting of image files as images (Auto Image File mode).
 (auto-image-file-mode t)
 

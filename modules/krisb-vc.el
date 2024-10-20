@@ -169,5 +169,12 @@
   :ensure-system-package keychain
   :hook ((after-init vc-before-checkin git-commit-setup) . keychain-refresh-environment))
 
+;;; Epg-config
+;; Epg-config is responsible for querying passphrases
+(use-package epg-config
+  :ensure nil
+  :custom
+  (epg-pinentry-mode 'loopback)) ; Ask through the minibuffer instead of external Pinentry program
+
 ;;; Provide
 (provide 'krisb-vc)
