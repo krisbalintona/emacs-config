@@ -1,31 +1,26 @@
 ;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni
+  :bind (([remap kill-word] . puni-forward-kill-word)
+         ([remap backward-kill-word] . puni-backward-kill-word)
+         ([remap kill-line] . puni-kill-line)
+         ([remap backward-sexp] . puni-backward-sexp)
+         ([remap forward-sexp] . puni-forward-sexp)
+         ([remap beginning-of-defun] . puni-beginning-of-sexp)
+         ([remap end-of-defun] . puni-end-of-sexp)
+         ([remap backward-list] . puni-backward-sexp-or-up-list)
+         ([remap forward-list] . puni-forward-sexp-or-up-list)
+         ("C-M-9" . puni-syntactic-backward-punct)
+         ("C-M-0" . puni-syntactic-forward-punct)
+         ("C-M-r" . puni-raise)
+         ("C-M-=" . puni-splice)
+         ("C-M-S-o" . puni-split)
+         ("C-M-[" . puni-slurp-backward)
+         ("C-M-]" . puni-slurp-forward)
+         ("C-M-{" . puni-barf-backward)
+         ("C-M-}" . puni-barf-forward))
   :custom
-  (puni-confirm-when-delete-unbalanced-active-region t)
-  :config
-  (setq puni-mode-map
-        (let ((map (make-sparse-keymap)))
-          (define-key map (kbd "M-d") 'puni-forward-kill-word)
-          (define-key map (kbd "M-DEL") 'puni-backward-kill-word)
-          (define-key map [remap kill-line] 'puni-kill-line)
-          (define-key map [remap backward-sexp] 'puni-backward-sexp)
-          (define-key map [remap forward-sexp] 'puni-forward-sexp)
-          (define-key map [remap beginning-of-defun] 'puni-beginning-of-sexp)
-          (define-key map [remap end-of-defun] 'puni-end-of-sexp)
-          (define-key map [remap backward-list] 'puni-backward-sexp-or-up-list)
-          (define-key map [remap forward-list] 'puni-forward-sexp-or-up-list)
-          (define-key map (kbd "C-M-9") 'puni-syntactic-backward-punct)
-          (define-key map (kbd "C-M-0") 'puni-syntactic-forward-punct)
-          (define-key map (kbd "C-M-r") 'puni-raise)
-          (define-key map (kbd "C-M-=") 'puni-splice)
-          (define-key map (kbd "C-M-S-o") 'puni-split)
-          (define-key map (kbd "C-M-[") 'puni-slurp-backward)
-          (define-key map (kbd "C-M-]") 'puni-slurp-forward)
-          (define-key map (kbd "C-M-{") 'puni-barf-backward)
-          (define-key map (kbd "C-M-}") 'puni-barf-forward)
-          map))
-  (puni-global-mode 1))
+  (puni-confirm-when-delete-unbalanced-active-region t))
 
 ;;; Consult
 ;; Counsel equivalent for default Emacs completion. It provides many useful
