@@ -229,6 +229,7 @@
 ;;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
+  :demand t
   :ensure nil
   :bind ( :map krisb-file-keymap
           ("r" . recentf-open-files))

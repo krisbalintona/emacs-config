@@ -2460,6 +2460,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;;; Recentf
   ;; Enable logging of recent files
   (use-package recentf
+    :demand t
     :ensure nil
     :bind ( :map krisb-file-keymap
             ("r" . recentf-open-files))
@@ -7913,4 +7914,4 @@ These are lines I've removed while porting to a literate config.
 :VISIBILITY: folded
 :END:
 
-#  LocalWords:  Vertico Minibuffer Todos Notmuch
+#  LocalWords:  Vertico Minibuffer Todos Notmuch LocalWords
