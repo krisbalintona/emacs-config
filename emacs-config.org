@@ -186,6 +186,7 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 **** =package=
+=Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:1]
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Package.el
@@ -203,6 +204,8 @@ This sets the default graphical element settings used by every frame.
 
   (setopt load-prefer-newer t) ; Do not load outdated byte code files
 #+end_src
+
+[fn:1] Those who utilize =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ direcctly.
 
 **** =use-package=
 Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
@@ -1375,7 +1378,7 @@ Enhancements to all built-in-based completions.
 
 *** =krisb-saving-state.el=
 
-Configuration related to "saving a state," that is, storing or restoring anything about the point, window configuration, file, buffer, et cetera. 
+Configuration related to "saving a state," that is, storing or restoring anything about the point, window configuration, file, buffer, et cetera.
 #+begin_src emacs-lisp :tangle "modules/krisb-saving-state.el"
   ;;; Register
   (use-package register
@@ -2298,7 +2301,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
       " --line-number --hidden"))
     :config
     (require 'krisb-consult-ext)
-    
+
     ;; Log-edit history
     (add-to-list 'consult-mode-histories
                  '(log-edit-mode log-edit-comment-ring log-edit-comment-ring-index log-edit-beginning-of-line))
@@ -2306,7 +2309,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; Use the faster plocate rather than locate
     (when (executable-find "plocate")
       (setopt consult-locate-args "plocate --ignore-case --existing --regexp"))
-    
+
     ;; Use consult UI with xref
     (with-eval-after-load 'xref
       ;; Use Consult to select xref locations with preview
@@ -5246,7 +5249,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                     'face `(:family ,(all-the-icons-material-family) :height 1.1)
                     'display '(raise -0.1))))
       "Icon I use for displaying mail in `display-time-string-forms'.")
-    
+
     (setopt display-time-use-mail-icon t
             display-time-mail-function
             (lambda ()
