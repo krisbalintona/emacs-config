@@ -299,7 +299,7 @@ from a `notmuch-search-mode' buffer."
                  " "
                  (propertize
                   (if (and display-time-use-mail-icon (display-graphic-p))
-                      krisb-display-time-mail-icon
+                      (symbol-value 'krisb-display-time-mail-icon)
                     display-time-mail-string)
                   'face display-time-mail-face
                   'help-echo "You have new mail; mouse-2: Read mail"
