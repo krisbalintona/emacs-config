@@ -118,7 +118,7 @@
 ;; Global and local cursor presets
 (use-package cursory
   :hook ((prog-mode . (lambda () (cursory-set-preset 'code :local)))
-         ((org-mode markdown-mode git-commit-setup log-edit-mode) . (lambda () (cursory-set-preset 'prose :local))))
+         ((org-mode markdown-mode git-commit-setup log-edit-mode message-mode) . (lambda () (cursory-set-preset 'prose :local))))
   :custom
   (cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))
   (cursory-presets
