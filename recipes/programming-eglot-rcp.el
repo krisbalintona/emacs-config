@@ -111,5 +111,14 @@ functions."
   ( :map eglot-mode-map
     ([remap xref-find-apropos] . consult-eglot-symbols)))
 
+;;;; Eglot-signature-eldoc-talkative
+;; Show documentation of symbols alongside their signature. (By default, only
+;; the signature is only shown via `eglot-signature-eldoc-function'.)
+(use-package eglot-signature-eldoc-talkative
+  :demand
+  :after eglot
+  :config
+  (advice-add #'eglot-signature-eldoc-function :override #'eglot-signature-eldoc-talkative))
+
 (provide 'programming-eglot-rcp)
 ;;; programming-eglot-rcp.el ends here

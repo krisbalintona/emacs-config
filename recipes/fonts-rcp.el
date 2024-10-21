@@ -94,7 +94,11 @@
                        ((member "NotoEmoji Nerd Font" (font-family-list)) "NotoEmoji Nerd Font")
                        ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
                        ((member "Symbola" (font-family-list)) "Symbola")))
-   nil 'prepend))
+   nil 'prepend)
+  ;; Don't use the symbols from the default family. Otherwise, Emacs prefers to
+  ;; use the default face's font for punctuation and symbols, effectively
+  ;; disregarding the fontsets
+  (setq use-default-font-for-symbols nil))
 
 ;;;; Ligature
 ;; Ligatures! See for configuration examples: https://github.com/j/wiki
