@@ -24,7 +24,7 @@
 
 ;;; Code:
 
-;;; Customize
+;;; Custom
 (setopt custom-file (no-littering-expand-etc-file-name "custom.el")
         custom-safe-themes t
         custom-theme-allow-multiple-selections t

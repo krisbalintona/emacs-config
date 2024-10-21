@@ -549,8 +549,12 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 
 **** Customize and customize buffers
 
+=Custom= is a built-in way to modify user options, face attributes, and more. ~customize-group~ is an exceptionally good way to discover the options a package provides.[fn:2] Customize buffers are also very mouse friendly (Sometimes it's better to use the mouse!).
+
+A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to set directory local settings (see =(info "(emacs) Directory Variables")=; there are also the command ~add-dir-local-variable~) using the customize UI.
+
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
-  ;;; Customize
+  ;;; Custom
   (setopt custom-file (no-littering-expand-etc-file-name "custom.el")
           custom-safe-themes t
           custom-theme-allow-multiple-selections t
@@ -558,6 +562,8 @@ Uncommonly known are the commands =use-package= offers that help users debug and
           custom-buffer-style 'links
           custom-search-field nil)
 #+end_src
+
+[fn:2] This is because the =:group= keyword is available and customarily used by package authors.
 
 **** Scrolling behavior
 
