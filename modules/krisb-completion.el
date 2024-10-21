@@ -14,6 +14,7 @@
   (completions-format 'one-column)
   (completions-detailed t) ; Show more details in completion minibuffer (inspired by `marginalia')
   (completions-group t)    ; Groups; Emacs 28
+  (completions-sort 'historical)        ; Emacs 30.1
 
   ;; Category settings. A non-exhaustve list of known completion categories:
   ;; - `bookmark'
