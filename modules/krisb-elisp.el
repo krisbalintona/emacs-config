@@ -9,7 +9,7 @@
   :custom-face
   (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 
-;;;; Paren-faces
+;;;; Paren-face
 ;; Creates a face just for parentheses. Useful for lispy languages where readers
 ;; want the parentheses as unnoticeable as possible.
 (use-package paren-face
