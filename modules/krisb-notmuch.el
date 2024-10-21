@@ -84,6 +84,8 @@
   (notmuch-unthreaded-show-out t)
   (notmuch-message-headers-visible nil)
   (notmuch-message-headers '("To" "Cc" "Date" "Subject"))
+  (notmuch-multipart/alternative-discouraged
+   '("text/html" "multipart/related" "text/x-patch"))
 
   ;; Notmuch-tree-mode
   (notmuch-tree-show-out nil)
