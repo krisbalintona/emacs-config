@@ -84,7 +84,7 @@
   :hook (eglot-managed-mode . (lambda () (when (derived-mode-p 'prog-mode) (breadcrumb-local-mode))))
   :init
   (with-eval-after-load 'which-func
-    (which-func-functions '(breadcrumb-imenu-crumbs))))
+    (setopt which-func-functions '(breadcrumb-imenu-crumbs))))
 
 ;;; Provide
 (provide 'krisb-programming)
