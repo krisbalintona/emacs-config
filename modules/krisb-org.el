@@ -108,7 +108,7 @@
   :custom
   (org-clone-delete-id t)
   (org-id-method 'ts)
-  (org-id-link-to-org-use-id 'use-existing))
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 
 ;;;; Org-attach
 (use-package org-attach
