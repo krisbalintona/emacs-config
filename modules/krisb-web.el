@@ -2,7 +2,7 @@
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode
   :custom
-  (engine/browser-function 'browse-url-generic)
+  (engine/browser-function 'browse-url-default-browser)
   :config
   (engine-mode 1)
 
