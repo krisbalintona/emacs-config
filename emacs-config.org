@@ -205,6 +205,12 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 **** =use-package=
+Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
+
+Uncommonly known are the commands =use-package= offers that help users debug and introspect the loading of their packages. The following is a non-exhaustive list:
++ ~use-package-jump-to-package-form~ :: Prompts the user for a package configured using use-package and jumps to its corresponding use-package declaration. Useful for navigating a large =.init.el= or many small config files.
++ ~use-package-lint~ :: Reports any syntax errors in use-package declarations in the current buffer.
++ ~use-package-report~ :: Show statistics about all your use--package declarations. Requires ~use-package-compute-statistics~ to be non-nil.
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
