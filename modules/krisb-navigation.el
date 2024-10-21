@@ -70,7 +70,7 @@
     " --line-number --hidden"))
   :config
   (require 'krisb-consult-ext)
-  
+
   ;; Log-edit history
   (add-to-list 'consult-mode-histories
                '(log-edit-mode log-edit-comment-ring log-edit-comment-ring-index log-edit-beginning-of-line))
@@ -78,7 +78,7 @@
   ;; Use the faster plocate rather than locate
   (when (executable-find "plocate")
     (setopt consult-locate-args "plocate --ignore-case --existing --regexp"))
-  
+
   ;; Use consult UI with xref
   (with-eval-after-load 'xref
     ;; Use Consult to select xref locations with preview

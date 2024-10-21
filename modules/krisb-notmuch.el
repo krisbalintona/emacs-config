@@ -276,7 +276,7 @@ from a `notmuch-search-mode' buffer."
                   'face `(:family ,(all-the-icons-material-family) :height 1.1)
                   'display '(raise -0.1))))
     "Icon I use for displaying mail in `display-time-string-forms'.")
-  
+
   (setopt display-time-use-mail-icon t
           display-time-mail-function
           (lambda ()
