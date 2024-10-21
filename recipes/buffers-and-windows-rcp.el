@@ -109,10 +109,6 @@
       (window-height . shrink-window-if-larger-than-buffer)
       (side . bottom)
       (slot . -4))
-     ("\\*Embark Actions\\*"
-      (display-buffer-at-bottom)
-      (window-height . fit-window-to-buffer)
-      (window-parameters . ((no-other-window . t))))
      
      ;; Below current window
      ("\\*\\(Embark\\)?.*Completions.*"
