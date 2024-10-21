@@ -8,6 +8,7 @@
          ;; configurations that leverage vale
          (message-mode . flymake-mode)
          (message-mode . olivetti-mode)
+         (message-mode . mixed-pitch-mode)
          (message-send . krisb-message-check-subject)
          (message-send . krisb-message-check-from))
   :custom
