@@ -4567,7 +4567,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             (end-of-line)
             (insert (read-string "Subject (optional): "))))))
 
-    (defun krisb-message-check-fromn ()
+    (defun krisb-message-check-from ()
       "Prompt user to confirm sending from this email."
       (save-excursion
         (goto-char (point-min))
