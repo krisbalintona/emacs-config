@@ -6,7 +6,7 @@
          :repeat-map other-window-repeat-map
          ("o" . krisb-other-window-mru))
   :custom
-  (split-width-threshold (ceiling (* 0.6 (frame-width))))
+  (split-width-threshold (ceiling (* 0.5 (frame-width))))
   (split-height-threshold 80)
   (window-sides-vertical t)
   (window-resize-pixelwise t)
