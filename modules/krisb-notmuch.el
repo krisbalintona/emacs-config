@@ -264,6 +264,17 @@ from a `notmuch-search-mode' buffer."
   (with-eval-after-load 'notmuch
     (setopt display-time-mail-face 'notmuch-search-flagged-face))
 
+  (defvar krisb-display-time-mail-icon
+    (cond
+     ((featurep 'nerd-icons)
+      (propertize (nerd-icons-mdicon "nf-md-email")
+                  'face `(:family ,(nerd-icons-mdicon-family) :height 1.1)))
+     ((featurep 'all-the-icons)
+      (propertize (all-the-icons-material "mail_outline")
+                  'face `(:family ,(all-the-icons-material-family) :height 1.1)
+                  'display '(raise -0.1))))
+    "Icon I use for displaying mail in `display-time-string-forms'.")
+  
   (setopt display-time-use-mail-icon t
           display-time-mail-function
           (lambda ()
@@ -285,10 +296,8 @@ from a `notmuch-search-mode' buffer."
                 (concat
                  " "
                  (propertize
-                  (if (and display-time-use-mail-icon (display-graphic-p) (featurep 'all-the-icons))
-                      (propertize (all-the-icons-material "mail_outline")
-                                  'face `(:family ,(all-the-icons-material-family) :height 1.1)
-                                  'display '(raise -0.1))
+                  (if (and display-time-use-mail-icon (display-graphic-p))
+                      krisb-display-time-mail-icon
                     display-time-mail-string)
                   'face display-time-mail-face
                   'help-echo "You have new mail; mouse-2: Read mail"
