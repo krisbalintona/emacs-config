@@ -270,7 +270,8 @@ from a `notmuch-search-mode' buffer."
     (cond
      ((featurep 'nerd-icons)
       (propertize (nerd-icons-mdicon "nf-md-email")
-                  'face `(:family ,(nerd-icons-mdicon-family) :height 1.1)))
+                  'face `(:family ,(nerd-icons-mdicon-family) :height 1.1)
+                  'display '(raise 0.05)))
      ((featurep 'all-the-icons)
       (propertize (all-the-icons-material "mail_outline")
                   'face `(:family ,(all-the-icons-material-family) :height 1.1)
