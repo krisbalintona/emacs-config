@@ -71,9 +71,10 @@
           ("L" . vc-print-root-log)
           ("v" . vc-next-action))
   :custom
+  (diff-default-read-only t)
   (diff-font-lock-prettify t)
   (diff-refine 'font-lock)
-  (diff-font-lock-syntax 'hunk-also) ; Fontify diffs with syntax highlighting of the language
+  (diff-font-lock-syntax nil)
   :config
   (krisb-modus-themes-setup-faces
    "diff-mode"
