@@ -5546,6 +5546,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     (magit-auto-revert-mode 1))
 
+  ;;;; Magit-file-icons
+  (use-package magit-file-icons
+    :after magit
+    :custom
+    (magit-file-icons-enable-diff-file-section-icons t)
+    (magit-file-icons-enable-untracked-icons t)
+    (magit-file-icons-enable-diffstat-icons t)
+    :config
+    (magit-file-icons-mode 1))
+
   ;;; Keychain-environment
   ;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated before committing since
   ;; their values may change. Sources them to ~/.keychain/
