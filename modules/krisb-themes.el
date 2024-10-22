@@ -75,44 +75,45 @@
             (bg-mode-line-inactive      "#292d48")
             (fg-mode-line-inactive      "#969696")))
 
-  ;; TODO 2024-10-19: Use `krisb-modus-themes-setup-faces'?
-  (defun krisb-modus-themes-setup-base-faces (theme)
-    "Set up common faces in FRAME."
-    (set-face-attribute 'mode-line-active nil
-                        :background (modus-themes-with-colors bg-mode-line-active)
-                        :box `( :line-width 3
-                                :color ,(modus-themes-with-colors bg-mode-line-active)))
-    (let ((bg-color
-           (if (eq (car custom-enabled-themes) krisb-themes-ext-dark)
-               (color-darken-name (modus-themes-with-colors bg-mode-line-inactive) 13)
-             (color-lighten-name (modus-themes-with-colors bg-mode-line-inactive) 13))))
-      (set-face-attribute 'mode-line-inactive nil
-                          :background bg-color
-                          :box `( :line-width 3
-                                  :color ,bg-color)))
+  ;; Set up essential faces
+  (krisb-modus-themes-setup-faces
+   "mode-line"
+   (set-face-attribute 'mode-line-active nil
+                       :background bg-mode-line-active
+                       :box `( :line-width 3
+                               :color ,bg-mode-line-active))
 
-    (modus-themes-with-colors
-      (set-face-attribute 'cursor nil :background magenta-cooler))
+   (let ((bg-color (cond
+                    ((eq theme krisb-themes-ext-dark)
+                     (color-darken-name bg-mode-line-inactive 13))
+                    ((eq theme krisb-themes-ext-light)
+                     (color-lighten-name bg-mode-line-inactive 13)))))
+     (set-face-attribute 'mode-line-inactive nil
+                         :background bg-color
+                         :box `( :line-width 3
+                                 :color ,bg-color))))
 
-    (set-face-background 'fringe (face-attribute 'default :background))
-    ;; Note that the vertical border is distinct from the window divider when
-    ;; `window-divider-mode' is enabled.
-    (set-face-attribute 'vertical-border nil
-                        :foreground (face-attribute 'default :background))
+  (krisb-modus-themes-setup-faces
+   "cursor"
+   (set-face-attribute 'cursor nil :background magenta-cooler))
 
-    ;; Set up font-lock faces.
-    ;; As described in (info "(modus-themes) DIY Measure color contrast"), I can
-    ;; check for contrast by making sure the color contrast (relative luminance)
-    ;; between the foreground and background color is at least 7:1.
-    ;;
-    ;; Like:
-    ;;    (modus-themes-contrast (modus-themes-with-colors bg-main) (face-foreground 'font-lock-function-call-face))
-    (cond
-     ((string-match "^modus-operandi" (symbol-name theme))
-      (set-face-attribute 'font-lock-function-call-face nil :foreground "#161BA1"))
-     ((string-match "^modus-vivendi" (symbol-name theme))
-      (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2"))))
-  (add-hook 'enable-theme-functions #'krisb-modus-themes-setup-base-faces))
+  (krisb-modus-themes-setup-faces
+   "fringe"
+   (set-face-background 'fringe (face-attribute 'default :background)))
+
+  (krisb-modus-themes-setup-faces
+   "font-lock"
+   ;; As described in (info "(modus-themes) DIY Measure color contrast"), I can
+   ;; check for contrast by making sure the color contrast (relative luminance)
+   ;; between the foreground and background color is at least 7:1.
+   ;;
+   ;; Like:
+   ;;    (modus-themes-contrast (modus-themes-with-colors bg-main) (face-foreground 'font-lock-function-call-face))
+   (cond
+    ((string-match "^modus-operandi" (symbol-name theme))
+     (set-face-attribute 'font-lock-function-call-face nil :foreground "#161BA1"))
+    ((string-match "^modus-vivendi" (symbol-name theme))
+     (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2")))))
 
 ;;; Cursory
 ;; Global and local cursor presets
