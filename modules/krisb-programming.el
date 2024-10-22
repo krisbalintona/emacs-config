@@ -86,5 +86,11 @@
   (with-eval-after-load 'which-func
     (setopt which-func-functions '(breadcrumb-imenu-crumbs))))
 
+;;; Lorem-ipsum
+;; Insert sample text
+(use-package lorem-ipsum
+  :config
+  (setq-default lorem-ipsum-list-bullet "- "))
+
 ;;; Provide
 (provide 'krisb-programming)

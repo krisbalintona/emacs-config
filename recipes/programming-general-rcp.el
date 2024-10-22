@@ -363,12 +363,5 @@ with the exception of org-emphasis markers."
   :config
   (global-visual-wrap-prefix-mode 1))
 
-;;;; Other
-;;;;; Lorem-ipsum
-;; Sample text
-(use-package lorem-ipsum
-  :config
-  (setq-default lorem-ipsum-list-bullet "- "))
-
 (provide 'programming-general-rcp)
 ;;; programming-general-rcp.el ends here
