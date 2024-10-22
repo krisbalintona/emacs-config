@@ -175,9 +175,11 @@
 (require 'krisb-web-annotations)
 
 (require 'krisb-programming-essentials)
+(require 'krisb-treesit-essentials)
 (require 'krisb-vc)
 (require 'krisb-projects)
 (require 'krisb-flymake)
+
 (require 'krisb-elisp)
 (require 'krisb-info)
 
