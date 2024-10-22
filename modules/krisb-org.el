@@ -285,6 +285,31 @@
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
 
+;;; Org-tidy
+;; Make org drawers less visually obtrusive.
+(use-package org-tidy
+  :hook (org-mode . org-tidy-mode)      ; Tidies on save
+  :bind ( :map krisb-toggle-keymap
+          ("T" . krisb-org-tidy-transient))
+  :custom
+  (org-tidy-properties-inline-symbol (propertize "♯" 'face '(:inherit shadow)))
+  (org-tidy-properties-style 'inline)
+  (org-tidy-top-property-style 'keep)   ; Style for file-level drawer
+  (org-tidy-general-drawer-flag t)
+  (org-tidy-protect-overlay t)
+
+  (org-tidy-general-drawer-name-blacklist nil)
+  (org-tidy-general-drawer-name-whitelist nil)
+
+  (org-tidy-property-drawer-property-blacklist '("CUSTOM_ID"))
+  (org-tidy-property-drawer-property-whitelist nil)
+  :config
+  (transient-define-prefix krisb-org-tidy-transient ()
+    "Transient map for useful org-tidy commands."
+    [("u" "Untidy buffer temporarily (until save)" org-tidy-untidy-buffer)
+     ("b" "Tidy buffer" org-tidy-buffer)
+     ("t" "Toggle tidiness" org-tidy-toggle)]))
+
 ;;; Org-web-tools
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
