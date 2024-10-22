@@ -7,22 +7,21 @@
  '(package-selected-packages
    '(ace-window agitate all-the-icons apheleia astute breadcrumb cape citar-denote
                 cl-generic corfu-prescient cursory darkroom denote-explore
-                denote-interface diminish dired-hist editorconfig eglot
-                elisp-demos embark-consult engine-mode enlight erc eros
+                denote-interface diminish dired-hist edit-indirect editorconfig
+                eglot elisp-demos embark-consult engine-mode enlight erc eros
                 exec-path-from-shell faceup flymake-collection fontaine
-                form-feed gcmh grid highlight-function-calls ht idlwave
+                form-feed gcmh grid hammy highlight-function-calls ht idlwave
                 info-colors inspector jinx keychain-environment kind-icon lin
-                magit magit-file-icons map marginalia mermaid-mode mixed-pitch
+                magit-file-icons map marginalia mermaid-mode mixed-pitch
                 modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
                 no-littering notmuch-addr notmuch-transient ntlm ob-mermaid
                 ol-notmuch olivetti on orderless org-appear org-contrib org-mime
-                org-modern org-remark org-web-tools outshine
+                org-modern org-remark org-tidy org-web-tools outshine
                 package-lint-flymake paren-face pdf-tools peg pulsar puni python
                 recursion-indicator saveplace-pdf-view scratch so-long
                 soap-client svg system-packages tmr track-changes tramp
-                treesit-auto try ts typewriter-roll-mode use-package
-                verilog-mode vertico-prescient which-key window-tool-bar wombag
-                ytdl))
+                treesit-auto try typewriter-roll-mode use-package verilog-mode
+                vertico-prescient which-key window-tool-bar wombag ytdl))
  '(package-vc-selected-packages
    '((grid :url "https://github.com/ichernyshovvv/grid.el")
      (wombag :url "https://github.com/karthink/wombag.git")
