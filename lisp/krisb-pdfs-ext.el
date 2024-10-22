@@ -328,7 +328,7 @@ Uses the current annotation at point's ID."
 ;; `pdftk'. See https://unix.stackexchange.com/a/72457 for more information on
 ;; the CLI commands involved.
 ;;;###autoload
-(defun krisb-pdf-tools--metadata-bookmark-section ()
+(defun krisb-pdf-tools-metadata-bookmark-section ()
   "Insert bookmark metadata section."
   (interactive)
   (save-excursion
@@ -337,7 +337,7 @@ Uses the current annotation at point's ID."
 
 (defvar-keymap krisb-pdf-tools-metadata-mode-map
   :doc "Mode map for `krisb-pdf-tools-metadata-mode'."
-  (kbd "C-c C-b") #'krisb-pdf-tools--metadata-bookmark-section)
+  "C-c C-b" #'krisb-pdf-tools-metadata-bookmark-section)
 
 (define-derived-mode krisb-pdf-tools-metadata-mode fundamental-mode "Metadata"
   "Major mode for altering and viewing PDF metadata."
@@ -345,7 +345,7 @@ Uses the current annotation at point's ID."
   (use-local-map krisb-pdf-tools-metadata-mode-map))
 
 ;;;###autoload
-(defun krisb-pdf-tools--metadata-modify (pdf-file)
+(defun krisb-pdf-tools-metadata-modify (pdf-file)
   "Modify PDF-FILE metadata."
   (interactive (list (buffer-file-name)))
   (unless (string= "pdf" (file-name-extension pdf-file))

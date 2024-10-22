@@ -4013,10 +4013,11 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; the CLI commands involved.
   (use-package krisb-pdfs-ext
     :ensure nil
-    :after pdf-view
     :ensure-system-package pdftk
+    :after pdf-view
+    :demand t
     :bind ( :map pdf-view-mode-map
-            ("C-c m" . 'krisb-pdf-tools--metadata-modify)
+            ("C-c m" . krisb-pdf-tools-metadata-modify)
             ("C-;" . krisb-avy-pdf-highlight)
             :map pdf-annot-list-mode-map
             ([remap tablist-push-regexp-filter] . krisb-pdf-annot-list-filter-regexp)))
@@ -4032,7 +4033,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;;; Pdf-annot
   (use-package pdf-annot
     :ensure nil
-    :hook (pdf-annot-list-mode-hook krisb-pdf-annot--setup-context-window-display-action)
+    :hook (pdf-annot-list-mode . krisb-pdf-annot--setup-context-window-display-action)
     :custom
     (pdf-annot-color-history ; "Default" color list. Appears at the top of annotation color change commands
      '("yellow" "SteelBlue1" "SeaGreen3" "LightSalmon1" "MediumPurple1"))
@@ -7610,7 +7611,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; `pdftk'. See https://unix.stackexchange.com/a/72457 for more information on
   ;; the CLI commands involved.
   ;;;###autoload
-  (defun krisb-pdf-tools--metadata-bookmark-section ()
+  (defun krisb-pdf-tools-metadata-bookmark-section ()
     "Insert bookmark metadata section."
     (interactive)
     (save-excursion
@@ -7619,7 +7620,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   (defvar-keymap krisb-pdf-tools-metadata-mode-map
     :doc "Mode map for `krisb-pdf-tools-metadata-mode'."
-    (kbd "C-c C-b") #'krisb-pdf-tools--metadata-bookmark-section)
+    "C-c C-b" #'krisb-pdf-tools-metadata-bookmark-section)
 
   (define-derived-mode krisb-pdf-tools-metadata-mode fundamental-mode "Metadata"
     "Major mode for altering and viewing PDF metadata."
@@ -7627,7 +7628,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (use-local-map krisb-pdf-tools-metadata-mode-map))
 
   ;;;###autoload
-  (defun krisb-pdf-tools--metadata-modify (pdf-file)
+  (defun krisb-pdf-tools-metadata-modify (pdf-file)
     "Modify PDF-FILE metadata."
     (interactive (list (buffer-file-name)))
     (unless (string= "pdf" (file-name-extension pdf-file))

@@ -60,10 +60,11 @@
 ;; the CLI commands involved.
 (use-package krisb-pdfs-ext
   :ensure nil
-  :after pdf-view
   :ensure-system-package pdftk
+  :after pdf-view
+  :demand t
   :bind ( :map pdf-view-mode-map
-          ("C-c m" . 'krisb-pdf-tools--metadata-modify)
+          ("C-c m" . krisb-pdf-tools-metadata-modify)
           ("C-;" . krisb-avy-pdf-highlight)
           :map pdf-annot-list-mode-map
           ([remap tablist-push-regexp-filter] . krisb-pdf-annot-list-filter-regexp)))
@@ -79,7 +80,7 @@
 ;;;; Pdf-annot
 (use-package pdf-annot
   :ensure nil
-  :hook (pdf-annot-list-mode-hook krisb-pdf-annot--setup-context-window-display-action)
+  :hook (pdf-annot-list-mode . krisb-pdf-annot--setup-context-window-display-action)
   :custom
   (pdf-annot-color-history ; "Default" color list. Appears at the top of annotation color change commands
    '("yellow" "SteelBlue1" "SeaGreen3" "LightSalmon1" "MediumPurple1"))
