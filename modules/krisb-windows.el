@@ -32,7 +32,18 @@
                              (window-list-1 nil 'nomini nil)))
                       :lessp #'>
                       :key #'car)))
-      (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru))))))
+      (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru)))))
+
+
+  ;; More predictable (at least, if I use `krisb-other-window-mru') window
+  ;; selection of `scroll-other-window' and `scroll-other-window-down'.  Taken
+  ;; from
+  ;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
+  (setq-default other-window-scroll-default
+                (lambda ()
+                  (or (get-mru-window nil nil 'not-this-one-dummy)
+                      (next-window)             ; Fall back to next window
+                      (next-window nil nil 'visible)))))
 
 ;;; Tab-bar
 (use-package tab-bar
