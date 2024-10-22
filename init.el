@@ -161,6 +161,7 @@
 (require 'krisb-persistence)
 (require 'krisb-completion)
 (require 'krisb-expansion)
+(require 'krisb-formatting)
 (require 'krisb-windows)
 (require 'krisb-navigation)
 
