@@ -33,6 +33,7 @@
 
 (define-abbrev-table 'vc-git-log-edit-mode-abbrev-table
   '(
+    ("activaate" "activate" nil :count 0)
     ("slightlyg" "slightly" nil :count 0)
     ("visibitilty" "visibility" nil :count 0)
    ))

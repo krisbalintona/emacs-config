@@ -10,7 +10,7 @@
                 denote-explore denote-interface diminish dired-hist
                 edit-indirect editorconfig eglot elisp-demos embark-consult
                 engine-mode enlight erc eros exec-path-from-shell faceup
-                flymake-collection fontaine form-feed gcmh grid hammy
+                flymake-collection fontaine forge form-feed gcmh grid hammy
                 highlight-function-calls ht idlwave info-colors inspector jinx
                 keychain-environment kind-icon lin lorem-ipsum magit-file-icons
                 map marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice

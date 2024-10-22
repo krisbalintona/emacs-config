@@ -164,19 +164,6 @@ As directory is special if I've decided it is!"
   (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
   )
 
-;;;;; Forge
-;; Support for git forges (e.g. GitLab and GitHub).
-;; NOTE 2022-06-01: Make sure a github and/or gitlab token is stored in either
-;; ~/.authinfo, ~/.authinfo.gpg, or ~/.netrc. See
-;; https://magit.vc/manual/ghub/Storing-a-Token.html
-(use-package forge
-  :hook (forge-issue-mode . visual-line-mode)
-  :custom
-  (forge-owned-accounts '(("krisbalintona" . nil)))
-  :config
-  ;; I don't know why the hook definition enables flyspell-mode...
-  (remove-hook 'forge-post-mode-hook #'turn-on-flyspell))
-
 ;;;;; Orgit-forge
 ;; Org links to forge buffers
 (use-package orgit-forge)

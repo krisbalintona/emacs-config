@@ -173,6 +173,19 @@
   :config
   (magit-file-icons-mode 1))
 
+;;;; Forge
+;; Support for git forges (e.g. GitLab and GitHub).
+;; NOTE 2022-06-01: Make sure a github and/or gitlab token is stored in either
+;; ~/.authinfo, ~/.authinfo.gpg, or ~/.netrc. See
+;; https://magit.vc/manual/ghub/Storing-a-Token.html
+(use-package forge
+  :hook (forge-issue-mode . visual-line-mode)
+  :custom
+  (forge-owned-accounts '(("krisbalintona" . nil)))
+  :config
+  ;; I don't know why the hook definition enables flyspell-mode...
+  (remove-hook 'forge-post-mode-hook #'turn-on-flyspell))
+
 ;;; Keychain-environment
 ;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated before committing since
 ;; their values may change. Sources them to ~/.keychain/
