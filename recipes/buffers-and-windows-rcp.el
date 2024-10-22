@@ -26,16 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Server
-;; Prefer Emacs server over Emacs daemon
-(use-package server
-  :demand
-  :ensure nil
-  :hook (after-init . (lambda () (unless (server-running-p)
-                                   (server-mode))))
-  :custom
-  (server-client-instructions nil))
-
 ;;;; Window configurations
 ;;;;; Winner-mode
 ;; Reverting and traversing window configurations across time
