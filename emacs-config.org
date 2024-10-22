@@ -357,6 +357,7 @@ Uncommonly known are the commands =use-package= offers that help users debug and
   (require 'krisb-garbage-collection)
   (require 'krisb-system-env)
   (require 'krisb-essentials)
+  (require 'krisb-icons)
   (require 'krisb-themes)
   (require 'krisb-fonts)
   (require 'krisb-mode-line)
@@ -856,6 +857,23 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   (provide 'krisb-essentials)
   ;;; krisb-essentials.el ends here
+#+end_src
+
+*** =krisb-icons.el=
+Where I set global options for icon libraries. I currently (as of 2024-10-21) prefer the Nerd Icons. 
+#+begin_src emacs-lisp :tangle "modules/krisb-icons.el"
+  ;;; Nerd-icons
+  (use-package nerd-icons
+    :custom
+    (nerd-icons-scale-factor 0.9))
+
+  ;;; All-the-icons
+  (use-package all-the-icons
+    :custom
+    (all-the-icons-scale-factor 1.1))
+
+  ;;; Provide
+  (provide 'krisb-icons)
 #+end_src
 
 *** =krisb-completion.el=
