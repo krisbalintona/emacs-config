@@ -32,7 +32,7 @@
   :demand
   :ensure nil
   :hook (after-init . (lambda () (unless (server-running-p)
-                              (server-mode))))
+                                   (server-mode))))
   :custom
   (server-client-instructions nil))
 
@@ -102,14 +102,14 @@
       (side . top)
       (slot . 2)
       (post-command-select-window . t))
-     
+
      ;; To the bottom
      ("\\(?:[Oo]utput\\)\\*"
       (display-buffer-in-side-window)
       (window-height . shrink-window-if-larger-than-buffer)
       (side . bottom)
       (slot . -4))
-     
+
      ;; Below current window
      ("\\*\\(Embark\\)?.*Completions.*"
       (display-buffer-in-side-window)
@@ -130,7 +130,7 @@
       (side . bottom)
       (slot . -1)
       (window-height . 0.35))
-     
+
      ;; Pop up
      ((or ,(rx (literal "*Man ") num (literal " "))
           (major-mode . Man-mode))
@@ -306,7 +306,7 @@ timestamp)."
                                       switchy-window--tick-alist))
     ;; Add windows never selected.
     (dolist (win (seq-filter (lambda (e) (or (not (window-parameter e 'no-other-window))
-                                        ignore-window-parameters))
+                                             ignore-window-parameters))
                              (window-list (selected-frame))))
       (unless (assq win switchy-window--tick-alist)
         (setf (alist-get win switchy-window--tick-alist) 0)))
@@ -406,70 +406,6 @@ timestamp)."
            :inline t
            :header-mouse-map ibuffer-size-header-map)
     (file-size-human-readable (buffer-size))))
-
-;;;;; Bufler
-(use-package bufler
-  :custom
-  (bufler-groups
-   (bufler-defgroups
-     (group
-      ;; Subgroup collecting buffers in `org-directory' (or "~/org" if
-      ;; `org-directory' is not yet defined).
-      (dir (if (bound-and-true-p org-directory)
-               org-directory
-             "~/org"))
-      (group
-       ;; Subgroup collecting indirect Org buffers, grouping them by file.
-       ;; This is very useful when used with `org-tree-to-indirect-buffer'.
-       (auto-indirect)
-       (auto-file))
-      ;; Group remaining buffers by whether they're file backed, then by mode.
-      (group-not "*special*" (auto-file))
-      (auto-mode))
-     ;; All buffers under "~/.emacs.d" (or wherever it is).
-     (dir user-emacs-directory)
-     (group
-      ;; Subgroup collecting all `help-mode' and `info-mode' buffers.
-      (group-or "*Help/Info*"
-                (mode-match "*Help*" (rx bos "help-"))
-                (mode-match "*Info*" (rx bos "info-"))))
-     (group
-      ;; Subgroup collecting all special buffers (i.e. ones that are not file-backed),
-      ;; except certain ones like Dired, Forge, or Magit buffers (which are allowed to
-      ;; fall through to other groups, so they end up grouped with their project buffers).
-      (group-not "*Special"
-                 (group-or "*Special*"
-                           (mode-match "Magit" (rx bos "magit-"))
-                           (mode-match "Forge" (rx bos "forge-"))
-                           (mode-match "Dired" (rx bos "dired"))
-                           (mode-match "grep" (rx bos "grep-"))
-                           (mode-match "compilation" (rx bos "compilation-"))
-                           (auto-file)))
-      (group
-       ;; Subgroup collecting these "special special" buffers
-       ;; separately for convenience.
-       (name-match "**Special**"
-                   (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
-      (group
-       ;; Subgroup collecting all other Magit buffers, grouped by directory.
-       (mode-match "*Magit* (non-status)" (rx bos "magit-"))
-       (auto-directory))
-      ;; Remaining special buffers are grouped automatically by mode.
-      (auto-mode))
-     (group
-      ;; Subgroup collecting buffers in a version-control project,
-      ;; grouping them by directory (using the parent project keeps,
-      ;; e.g. git worktrees with their parent repos).
-      (auto-parent-project)
-      (group-not "special"
-                 ;; This subgroup collects special buffers so they are
-                 ;; easily distinguished from file buffers.
-                 (group-or "Non-file-backed and neither Dired nor Magit"
-                           (mode-match "Magit Status" (rx bos "magit-status"))
-                           (mode-match "Dired" (rx bos "dired-"))
-                           (auto-file))))
-     ;; Group remaining buffers by directory
-     (auto-directory))))
 
 ;;;;; Nerd-icons-ibuffer
 (use-package nerd-icons-ibuffer
@@ -767,9 +703,9 @@ Meant to be the value of `beframe-rename-function'."
               :history  buffer-name-history
               :state    ,#'consult--buffer-state
               :items ,(lambda () (consult--buffer-query
-                             :predicate #'bufferlo-non-local-buffer-p
-                             :sort 'visibility
-                             :as #'buffer-name)))
+                                  :predicate #'bufferlo-non-local-buffer-p
+                                  :sort 'visibility
+                                  :as #'buffer-name)))
       "Non-local buffer candidate source for `consult-buffer'.")
 
     (defvar kb/bufferlo-consult--source-local-buffer
@@ -781,9 +717,9 @@ Meant to be the value of `beframe-rename-function'."
               :state    ,#'consult--buffer-state
               :default  t
               :items ,(lambda () (consult--buffer-query
-                             :predicate #'bufferlo-local-buffer-p
-                             :sort 'visibility
-                             :as #'buffer-name)))
+                                  :predicate #'bufferlo-local-buffer-p
+                                  :sort 'visibility
+                                  :as #'buffer-name)))
       "Local buffer candidate source for `consult-buffer'.")
 
     (add-to-list 'consult-buffer-sources 'kb/bufferlo-consult--source-local-buffer)
