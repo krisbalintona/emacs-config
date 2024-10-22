@@ -290,7 +290,7 @@
 (use-package org-tidy
   :hook (org-mode . org-tidy-mode)      ; Tidies on save
   :bind ( :map krisb-toggle-keymap
-          ("T" . krisb-org-tidy-transient))
+          ("t" . krisb-org-tidy-transient))
   :custom
   (org-tidy-properties-inline-symbol (propertize "♯" 'face '(:inherit shadow)))
   (org-tidy-properties-style 'inline)

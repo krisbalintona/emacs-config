@@ -2587,7 +2587,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;;; Typewriter-roll-mode
   (use-package typewriter-roll-mode
     :bind ( :map krisb-toggle-keymap
-            ("t" . typewriter-roll-mode)))
+            ("r" . typewriter-roll-mode)))
 
   ;;;; Timers
   ;;;;; Tmr
@@ -3232,7 +3232,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (use-package org-tidy
     :hook (org-mode . org-tidy-mode)      ; Tidies on save
     :bind ( :map krisb-toggle-keymap
-            ("T" . krisb-org-tidy-transient))
+            ("t" . krisb-org-tidy-transient))
     :custom
     (org-tidy-properties-inline-symbol (propertize "♯" 'face '(:inherit shadow)))
     (org-tidy-properties-style 'inline)

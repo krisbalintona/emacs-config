@@ -50,7 +50,7 @@
 ;;;; Typewriter-roll-mode
 (use-package typewriter-roll-mode
   :bind ( :map krisb-toggle-keymap
-          ("t" . typewriter-roll-mode)))
+          ("r" . typewriter-roll-mode)))
 
 ;;;; Timers
 ;;;;; Tmr
