@@ -138,7 +138,7 @@
         :content ,(enlight-menu
                    '(("Configs"
                       ("Emacs" (project-switch-project user-emacs-directory) "e")
-                      ("Dotfiles" (project-switch-project "~/dotfies/") "d"))
+                      ("Dotfiles" (project-switch-project "~/dotfiles/") "d"))
                      ("Other"
                       ("Projects" project-switch-project "p")
                       ("Email" notmuch "n"))))))))
