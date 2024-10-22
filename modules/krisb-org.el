@@ -306,6 +306,7 @@
   (org-tidy-property-drawer-property-blacklist '("CUSTOM_ID"))
   (org-tidy-property-drawer-property-whitelist nil)
   :config
+  (require 'transient)
   (transient-define-prefix krisb-org-tidy-transient ()
     "Transient map for useful org-tidy commands."
     [("u" "Untidy buffer temporarily (until save)" org-tidy-untidy-buffer)
