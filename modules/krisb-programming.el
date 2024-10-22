@@ -1,4 +1,27 @@
-;;; Newcomment
+;;; Treesit
+(use-package treesit
+  :ensure nil
+  :custom
+  ;; HACK 2024-10-20: The car of
+  ;; `treesit--install-language-grammar-out-dir-history' is used as the default
+  ;; output directory for installing grammars via
+  ;; `treesit-install-language-grammar'. See the definition of
+  ;; `treesit-install-language-grammar'.
+  (treesit--install-language-grammar-out-dir-history
+   (list (no-littering-expand-var-file-name "treesit")))
+  (treesit-font-lock-level 3))
+
+;;; Treesit-auto
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  (treesit-extra-load-path treesit--install-language-grammar-out-dir-history)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode 1))
+
+;;; Writing
+;;;; Newcomment
 (use-package newcomment
   :ensure nil
   :custom
@@ -7,7 +30,7 @@
   (comment-multi-line t)
   (comment-style 'indent))
 
-;;; Electric
+;;;; Electric
 (use-package electric
   :ensure nil
   :custom
@@ -35,29 +58,8 @@
   (eldoc-echo-area-display-truncation-message t)
   (eldoc-echo-area-prefer-doc-buffer t))
 
-;;; Treesit
-(use-package treesit
-  :ensure nil
-  :custom
-  ;; HACK 2024-10-20: The car of
-  ;; `treesit--install-language-grammar-out-dir-history' is used as the default
-  ;; output directory for installing grammars via
-  ;; `treesit-install-language-grammar'. See the definition of
-  ;; `treesit-install-language-grammar'.
-  (treesit--install-language-grammar-out-dir-history
-   (list (no-littering-expand-var-file-name "treesit")))
-  (treesit-font-lock-level 3))
-
-;;; Treesit-auto
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  (treesit-extra-load-path treesit--install-language-grammar-out-dir-history)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode 1))
-
-;;; Form-feed
+;;; Visual organization
+;;;; Form-feed
 ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
 ;; differences
 (use-package form-feed
@@ -70,13 +72,13 @@
   ;; Also see the command `treesit-auto-install-all'
   (global-form-feed-mode 1))
 
-;;; Which-func
+;;;; Which-func
 (use-package which-func
   :hook (on-first-file . which-function-mode)
   :custom
   (which-func-modes '(prog-mode)))
 
-;;; Breadcrumb
+;;;; Breadcrumb
 ;; Which-function stuff but more performant and prettier formatting. Read
 ;; package commentary for a description on how.
 (use-package breadcrumb
@@ -86,7 +88,8 @@
   (with-eval-after-load 'which-func
     (setopt which-func-functions '(breadcrumb-imenu-crumbs))))
 
-;;; Lorem-ipsum
+;;; Convenience
+;;;; Lorem-ipsum
 ;; Insert sample text
 (use-package lorem-ipsum
   :config
