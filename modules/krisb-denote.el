@@ -133,15 +133,16 @@
 
 ;;; Citar-denote
 (use-package citar-denote
+  :demand t
+  :after citar
   :diminish
-  :bind (("C-c b c" . citar-create-note)
-         :map krisb-note-keymap
-         ("b b" . citar-denote-link-reference)
-         ("b o" . citar-denote-dwim)
-         ("b c" . citar-create-note)
-         ("b n" . citar-denote-open-note)
-         ("b k a" . citar-denote-add-citekey)
-         ("b k r" . citar-denote-remove-citekey))
+  :bind ( :map krisb-note-keymap
+          ("b b" . citar-denote-link-reference)
+          ("b o" . citar-denote-dwim)
+          ("b c" . citar-create-note)
+          ("b n" . citar-denote-open-note)
+          ("b k a" . citar-denote-add-citekey)
+          ("b k r" . citar-denote-remove-citekey))
   :custom
   (citar-denote-subdir "/bib/")
   (citar-denote-signature nil)
