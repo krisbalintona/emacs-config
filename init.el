@@ -176,7 +176,7 @@
 
 (require 'krisb-programming-essentials)
 (require 'krisb-directories)
-(require 'krisb-treesit-essentials)
+(require 'krisb-treesit)
 (require 'krisb-vc)
 (require 'krisb-projects)
 (require 'krisb-flymake)
