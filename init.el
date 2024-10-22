@@ -175,6 +175,7 @@
 (require 'krisb-web-annotations)
 
 (require 'krisb-programming-essentials)
+(require 'krisb-directories)
 (require 'krisb-treesit-essentials)
 (require 'krisb-vc)
 (require 'krisb-projects)
@@ -183,13 +184,12 @@
 (require 'krisb-elisp)
 (require 'krisb-info)
 
+(require 'krisb-mermaid)
+
 (require 'krisb-email-composition)
 (require 'krisb-notmuch)
 
-(require 'krisb-mermaid)
-
 (require 'krisb-web)
-(require 'krisb-directories)
 
 ;;; Load custom file
 (when (file-exists-p custom-file)
