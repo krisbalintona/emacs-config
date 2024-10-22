@@ -379,7 +379,7 @@ Uncommonly known are the commands =use-package= offers that help users debug and
   (require 'krisb-pdfs)
   (require 'krisb-web-annotations)
 
-  (require 'krisb-programming)
+  (require 'krisb-programming-essentials)
   (require 'krisb-vc)
   (require 'krisb-projects)
   (require 'krisb-flymake)
@@ -5354,9 +5354,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
 ** Programming
 
-*** =krisb-programming.el=
+*** =krisb-programming-essentials.el=
 
-#+begin_src emacs-lisp :tangle "modules/krisb-programming.el"
+#+begin_src emacs-lisp :tangle "modules/krisb-programming-essentials.el"
   ;;; Treesit
   (use-package treesit
     :ensure nil
@@ -5455,7 +5455,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (setq-default lorem-ipsum-list-bullet "- "))
 
   ;;; Provide
-  (provide 'krisb-programming)
+  (provide 'krisb-programming-essentials)
 #+end_src
 
 *** =krisb-vc.el=

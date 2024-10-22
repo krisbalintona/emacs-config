@@ -96,4 +96,4 @@
   (setq-default lorem-ipsum-list-bullet "- "))
 
 ;;; Provide
-(provide 'krisb-programming)
+(provide 'krisb-programming-essentials)

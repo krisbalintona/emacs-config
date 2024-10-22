@@ -174,7 +174,7 @@
 (require 'krisb-pdfs)
 (require 'krisb-web-annotations)
 
-(require 'krisb-programming)
+(require 'krisb-programming-essentials)
 (require 'krisb-vc)
 (require 'krisb-projects)
 (require 'krisb-flymake)
