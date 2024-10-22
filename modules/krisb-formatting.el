@@ -19,17 +19,37 @@
    ;; Major modes
    (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
    (alist-get 'ruby-mode apheleia-mode-alist) '(rufo)
-   (alist-get 'haskell-mode apheleia-mode-alist) '(fourmolu)
+   (alist-get 'haskell-mode apheleia-mode-alist) '(fourmolu))
+  (setf
    ;; Formatters
-   (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
+   (alist-get 'black apheleia-formatters)
+   '("black"
+     "-l 80"
+     "-")
    (alist-get 'google-java-format apheleia-formatters)
-   '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
+   '("google-java-format"
+     "--aosp"
+     "--skip-removing-unused-imports"
+     "-")
    (alist-get 'stylua apheleia-formatters)
-   `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
+   `("stylua"
+     "--indent-type" "Spaces"
+     "--line-endings" "Unix"
+     "--column-width" ,(number-to-string fill-column)
+     "--quote-style" "ForceDouble"
+     "-")
    (alist-get 'latexindent apheleia-formatters)
-   '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
-   (alist-get 'rufo apheleia-formatters) '("rufo" "--simple-exit" "--filename" filepath)
-   (alist-get 'fourmolu apheleia-formatters) '("fourmolu")))
+   '("latexindent"
+     "--cruft=/tmp/"
+     "--logfile"
+     "indent.log")
+   (alist-get 'rufo apheleia-formatters)
+   '("rufo"
+     "--simple-exit"
+     "--filename"
+     filepath)
+   (alist-get 'fourmolu apheleia-formatters)
+   '("fourmolu")))
 
 ;;; Krisb-indentation
 (use-package krisb-indentation

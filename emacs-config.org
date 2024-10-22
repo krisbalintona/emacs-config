@@ -185,6 +185,7 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 **** =package=
+
 =Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:1]
 
 #+begin_src emacs-lisp :tangle "init.el"
@@ -207,6 +208,7 @@ This sets the default graphical element settings used by every frame.
 [fn:1] Those who utilize =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ direcctly.
 
 **** =use-package=
+
 Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
 
 Uncommonly known are the commands =use-package= offers that help users debug and introspect the loading of their packages. The following is a non-exhaustive list:
@@ -306,6 +308,7 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** =enlight=
+
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Enlight
   ;; Easily create simple startup screens
@@ -350,6 +353,7 @@ Uncommonly known are the commands =use-package= offers that help users debug and
       :autoload (grid-get-box grid-get-row grid-get-column)
       :vc (:url "https://github.com/ichernyshovvv/grid.el")))
 #+end_src
+
 **** Load modules
 
 #+begin_src emacs-lisp :tangle "init.el"
@@ -863,7 +867,8 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+end_src
 
 *** =krisb-icons.el=
-Where I set global options for icon libraries. I currently (as of 2024-10-21) prefer the Nerd Icons. 
+
+Where I set global options for icon libraries. I currently (as of 2024-10-21) prefer the Nerd Icons.
 #+begin_src emacs-lisp :tangle "modules/krisb-icons.el"
   ;;; Nerd-icons
   (use-package nerd-icons
@@ -1899,6 +1904,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-formatting.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-formatting.el"
   ;;; Apheleia
   ;; Quality code formatting for (arbitrarily) many languages
@@ -1921,17 +1927,37 @@ Configuration related to "saving a state," that is, storing or restoring anythin
      ;; Major modes
      (alist-get 'lua-mode apheleia-mode-alist) '(stylua)
      (alist-get 'ruby-mode apheleia-mode-alist) '(rufo)
-     (alist-get 'haskell-mode apheleia-mode-alist) '(fourmolu)
+     (alist-get 'haskell-mode apheleia-mode-alist) '(fourmolu))
+    (setf
      ;; Formatters
-     (alist-get 'black apheleia-formatters) '("black" "-l 80" "-")
+     (alist-get 'black apheleia-formatters)
+     '("black"
+       "-l 80"
+       "-")
      (alist-get 'google-java-format apheleia-formatters)
-     '("google-java-format" "--aosp" "--skip-removing-unused-imports" "-")
+     '("google-java-format"
+       "--aosp"
+       "--skip-removing-unused-imports"
+       "-")
      (alist-get 'stylua apheleia-formatters)
-     `("stylua" "--indent-type" "Spaces" "--line-endings" "Unix"  "--column-width" ,(number-to-string fill-column) "--quote-style" "ForceDouble" "-")
+     `("stylua"
+       "--indent-type" "Spaces"
+       "--line-endings" "Unix"
+       "--column-width" ,(number-to-string fill-column)
+       "--quote-style" "ForceDouble"
+       "-")
      (alist-get 'latexindent apheleia-formatters)
-     '("latexindent" "--cruft=/tmp/" "--logfile" "indent.log")
-     (alist-get 'rufo apheleia-formatters) '("rufo" "--simple-exit" "--filename" filepath)
-     (alist-get 'fourmolu apheleia-formatters) '("fourmolu")))
+     '("latexindent"
+       "--cruft=/tmp/"
+       "--logfile"
+       "indent.log")
+     (alist-get 'rufo apheleia-formatters)
+     '("rufo"
+       "--simple-exit"
+       "--filename"
+       filepath)
+     (alist-get 'fourmolu apheleia-formatters)
+     '("fourmolu")))
 
   ;;; Krisb-indentation
   (use-package krisb-indentation
@@ -2802,8 +2828,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                  :before (do (announce "Work time!"))
                                  :advance (do (announce "Work time is over!")
                                               (notify "Work time is over!")
-                                            (remind "5 minutes"
-                                                    (do (krisb-hammy-play-sound)))))
+                                              (remind "5 minutes"
+                                                      (do (krisb-hammy-play-sound)))))
                        (interval :name "Rest"
                                  :face 'font-lock-type-face
                                  :duration (do (let ((duration (cl-loop for (interval start end) in history
@@ -2827,7 +2853,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                  :advance (remind "5 minutes"
                                                   (do (announce "Rest time is over!")
                                                       (notify "Rest time is over!")
-                                                    (krisb-hammy-play-sound)))))
+                                                      (krisb-hammy-play-sound)))))
       :complete-p (do (and (> cycles 1)
                            interval
                            (equal "Work" interval-name)
@@ -3060,7 +3086,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
     :config
     (require 'krisb-org-ext)
-    
+
     ;; Make org-open-at-point follow file links in the same window
     (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
@@ -3657,6 +3683,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** =krisb-web-annotations.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-web-annotations.el"
   ;;; Org-remark
   (use-package org-remark
@@ -3740,6 +3767,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Provide
   (provide 'krisb-web-annotations)
 #+end_src
+
 **** =krisb-citations.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-citations.el"
@@ -4022,6 +4050,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** =krisb-videos.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-videos.el"
   ;;; MPV
   ;; Dependency for packages that interact with mpv
@@ -5498,6 +5527,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-treesit.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-treesit.el"
   ;;; Treesit
   ;; Built-in tree-sitter support.
@@ -5934,6 +5964,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 ** Other
 
 *** =krisb-web.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-web.el"
   ;;; Engine-mode
   ;; Send arbitrary search engine queries to your browser from within Emacs
@@ -5945,27 +5976,27 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
     ;; My searches
     (defengine amazon
-               "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s")
+      "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s")
 
     (defengine duckduckgo
-               "https://duckduckgo.com/?q=%s"
-               :keybinding "d")
+      "https://duckduckgo.com/?q=%s"
+      :keybinding "d")
 
     (defengine github
-               "https://github.com/search?ref=simplesearch&q=%s"
-               :keybinding "g")
+      "https://github.com/search?ref=simplesearch&q=%s"
+      :keybinding "g")
 
     (defengine google
-               "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-               :keybinding "G")
+      "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      :keybinding "G")
 
     (defengine wikipedia
-               "https://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-               :keybinding "w")
+      "https://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+      :keybinding "w")
 
     (defengine youtube
-               "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
-               :keybinding "y"))
+      "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      :keybinding "y"))
 
   ;;; Wombag
   (use-package wombag
@@ -6087,7 +6118,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Provide
   (provide 'krisb-web)
 #+end_src
+
 *** =krisb-directories.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-directories.el"
   ;;; Dired
   ;; Emacs' file manager
@@ -6148,6 +6181,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Provide
   (provide 'krisb-directories)
 #+end_src
+
 * Lisp (libraries)
 :PROPERTIES:
 :VISIBILITY: children
@@ -6446,6 +6480,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 ** =krisb-indentation.el=
+
 #+begin_src emacs-lisp :tangle "lisp/krisb-indentation.el"
   ;;; krisb-indentation.el --- Bespoke utilities for consistent indentation  -*- lexical-binding: t; -*-
 
@@ -6551,6 +6586,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (provide 'krisb-indentation)
   ;;; krisb-indentation.el ends here
 #+end_src
+
 ** =krisb-vertico.el=
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-vertico.el"
@@ -6715,6 +6751,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 ** =krisb-org-ext.el=
+
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-ext.el"
   ;;; krisb-org-ext.el --- Org-mode extensions         -*- lexical-binding: t; -*-
 
@@ -6785,6 +6822,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (provide 'krisb-org-ext)
   ;;; krisb-org-ext.el ends here
 #+end_src
+
 ** =krisb-denote-ext.el=
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-denote-ext.el"
@@ -7061,6 +7099,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 ** =krisb-org-remark-ext.el=
+
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-remark-ext.el"
   ;;; krisb-org-remark-ext.el --- Extensions for org-remark  -*- lexical-binding: t; -*-
 
@@ -7596,6 +7635,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 ** =krisb-mpv.el=
+
 #+begin_src emacs-lisp :tangle "lisp/krisb-mpv.el"
   ;;; krisb-mpv.el --- Bespoke MPV extensions          -*- lexical-binding: t; -*-
 
