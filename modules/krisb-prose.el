@@ -368,19 +368,7 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
                  " "))))
     (list key word "File (LocalWords)"))
   ;; NOTE 2023-07-16: Can also directly add to `jinx--save-keys' directly
-  (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword)
-
-  ;; Use Vertico's grid display such that more suggestions fit on the screen and
-  ;; enable annotations.  Taken from
-  ;; https://github.com/minad/jinx#correcting-misspellings
-  (with-eval-after-load 'vertico-multiform
-    (add-to-list 'vertico-multiform-categories
-                 '(jinx grid
-                        (vertico-grid-annotate . 20)
-                        (vertico-grid-max-columns . 12)
-                        (vertico-grid-separator .
-                                                #("    |    " 4 5
-                                                  (display (space :width (1)) face (:inherit shadow :inverse-video t))))))))
+  (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword))
 
 ;;; Provide
 (provide 'krisb-prose)
