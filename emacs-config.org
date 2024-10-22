@@ -307,6 +307,19 @@ Uncommonly known are the commands =use-package= offers that help users debug and
             system-packages-use-sudo nil)))
 #+end_src
 
+**** =async.el=
+
+#+begin_src emacs-lisp :tangle "init.el"
+   ;;; Async.el
+  ;; Async library and a few small but useful implementations
+  (use-package async
+    :custom
+    (async-bytecomp-allowed-packages 'all)
+    :config
+    (dired-async-mode 1)
+    (async-bytecomp-package-mode 1))
+#+end_src
+
 **** =enlight=
 
 #+begin_src emacs-lisp :tangle "init.el"

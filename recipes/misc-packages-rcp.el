@@ -553,14 +553,6 @@ Dependent on the activation of `pixel-scroll-precision-mode'. Add to
     :map calc-mode-map
     ("C-M-s-\\" . casual-calc-tmenu)))
 
-;;;;; Async.el
-;; Async library and a few small but useful implementations
-(use-package async
-  :hook ((on-first-buffer . dired-async-mode)
-         (on-first-buffer . async-bytecomp-package-mode))
-  :custom
-  (async-bytecomp-allowed-packages 'all))
-
 ;;;;; Super-hint
 (use-package super-hint
   :disabled t

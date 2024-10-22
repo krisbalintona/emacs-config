@@ -105,6 +105,15 @@
     (setq system-packages-package-manager 'paru
           system-packages-use-sudo nil)))
 
+;;; Async.el
+;; Async library and a few small but useful implementations
+(use-package async
+  :custom
+  (async-bytecomp-allowed-packages 'all)
+  :config
+  (dired-async-mode 1)
+  (async-bytecomp-package-mode 1))
+
 ;;; Enlight
 ;; Easily create simple startup screens
 (use-package enlight
