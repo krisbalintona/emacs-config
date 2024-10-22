@@ -202,6 +202,16 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;;;; Show a default value only when default is applicable
 (minibuffer-electric-default-mode 1)
 
+;;;; Display-line-numbers
+;; Show line numbers on the left fringe
+(use-package display-line-numbers
+  :ensure nil
+  :bind ( :map krisb-toggle-keymap
+          ("l" . display-line-numbers-mode))
+  :custom
+  (display-line-numbers-type t)
+  (display-line-numbers-width-start t)) ; Keep width consistent in buffer
+
 ;;; Miscellaneous
 ;;;; Enable all disabled commands
 (setopt disabled-command-function nil)

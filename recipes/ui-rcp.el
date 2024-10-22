@@ -197,17 +197,6 @@ This version removes delimiters.")
   :init
   (display-battery-mode 1))
 
-;;;;; Display-line-numbers
-;; Show line numbers on the left fringe
-(use-package display-line-numbers
-  :ensure nil
-  :bind
-  ( :map krisb-toggle-keymap
-    ("l" . display-line-numbers-mode))
-  :custom
-  (display-line-numbers-type t)
-  (display-line-numbers-width-start t)) ; Keep width consistent in buffer
-
 ;;;;; Mlscroll
 ;; Adds an interactive indicator for the view's position in the current buffer
 ;; to the modeline
