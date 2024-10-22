@@ -144,6 +144,31 @@ commands are also supported."
 `scroll-other-window-down'."
     (setq-local other-window-scroll-buffer (window-buffer window))))
 
+;;; Pinching-margins
+(use-package pinching-margins
+  :ensure nil
+  :custom
+  (pinching-margins-visible-width 140)
+  (pinching-margins-ignore-predicates
+   '(window-minibuffer-p
+     (lambda (win)
+       (with-selected-window win
+         (member major-mode '(exwm-mode doc-view-mode))))
+     (lambda (win)
+       (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
+                '("^[[:space:]]*\\*")))
+     (lambda (win)
+       (with-selected-window win (bound-and-true-p olivetti-mode)))))
+  (pinching-margins-force-predicates
+  '((lambda (win)
+      (with-selected-window win
+        (member major-mode '())))
+    (lambda (win)
+      (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
+               '("^\\*vc-")))))
+  :config
+  (pinching-margins-mode 1))
+
 ;;; Bufler
 (use-package bufler
   :bind ([remap list-buffers] . bufler)
