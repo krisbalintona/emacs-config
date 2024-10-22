@@ -37,4 +37,4 @@
   :bind ([remap indent-region] . krisb-format-buffer-indentation))
 
 ;;; Provide
-(require 'krisb-formatting)
+(provide 'krisb-formatting)

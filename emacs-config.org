@@ -1938,7 +1938,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :bind ([remap indent-region] . krisb-format-buffer-indentation))
 
   ;;; Provide
-  (require 'krisb-formatting)
+  (provide 'krisb-formatting)
 #+end_src
 
 ** Appearance
