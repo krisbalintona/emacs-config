@@ -130,16 +130,6 @@
   :custom
   (whitespace-style '(face empty indentation::space tab)))
 
-;;;;; Sudo-edit
-;; Utilities to edit files as root
-(use-package sudo-edit
-  :bind
-  ( :map krisb-file-keymap
-    ("U" . sudo-edit-find-file)
-    ("u" . sudo-edit))
-  :config
-  (sudo-edit-indicator-mode))
-
 ;;;;; Hi-lock
 (use-package hi-lock
   :hook (on-first-file . global-hi-lock-mode)
@@ -243,38 +233,6 @@ with the exception of org-emphasis markers."
   :ensure nil
   :hook
   ((prog-mode conf-mode) . hl-line-mode))
-
-;;;;; Hl-todo
-;; OPTIMIZE 2023-07-14: Also consider synergy with
-;; https://codeberg.org/ideasman42/emacs-prog-face-refine
-(use-package hl-todo
-  :hook (on-first-buffer . global-hl-todo-mode)
-  :bind
-  ( :map hl-todo-mode-map
-    ("M-s t n" . hl-todo-next)
-    ("M-s t p" . hl-todo-previous)
-    ("M-s t o" . hl-todo-occur))
-  :custom
-  (hl-todo-include-modes '(prog-mode conf-mode text-mode))
-  (hl-todo-text-modes '(markdown-mode org-mode text-mode))
-  (hl-todo-exclude-modes nil)
-  ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
-  ;; hl-todo's punctuation highlighting.
-  (hl-todo-require-punctuation t)
-  (hl-todo-highlight-punctuation ": ")
-  (hl-todo-keyword-faces
-   '(("TODO" . "orange")
-     ("HACK" error bold)
-     ("NOTE" . "cornflower blue")
-     ("REVIEW" . "orchid")
-     ("FIXME" error bold)
-     ("OPTIMIZE" . "SandyBrown")))
-  :config
-  (with-eval-after-load 'alt-comment-dwim
-    ;; Make sure to have all words in `alt-comment-dwim-keywords-coding' and
-    ;; `alt-comment-dwim-keywords-writing' in this list, otherwise those words will not
-    ;; appear in any calls to `alt-comment-dwim-dwim'.
-    (setopt hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
 
 ;;;;; Ansi-color
 ;; Apply ANSI terminal color escape codes.
