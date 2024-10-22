@@ -135,7 +135,8 @@
      `( :align center
         :width 80
         :content ,(enlight-menu
-                   '(("Configs"
+                   `(("Configs"
+                      ("Recent files" ,(command-remapping 'recentf-open-files) "r")
                       ("Emacs" (project-switch-project user-emacs-directory) "e")
                       ("Dotfiles" (project-switch-project "~/dotfiles/") "d"))
                      ("Other"
