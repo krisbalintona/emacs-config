@@ -10,7 +10,6 @@
 ;;; Load libraries
 (require 'krisb-common)
 (require 'krisb-essentials)
-(require 'krisb-indentation)
 
 ;;; Packages
 
