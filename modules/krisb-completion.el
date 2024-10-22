@@ -197,9 +197,7 @@
   :ensure nil
   :custom
   (vertico-multiform-categories
-   '(;; (consult-grep buffer)
-     ;; (imenu buffer)
-     (buffer (vertico-sort-function . nil))
+   '((buffer (vertico-sort-function . nil))
      (citar (vertico-sort-function . vertico-sort-history-alpha))))
   (vertico-multiform-commands
    '((pdf-view-goto-label (vertico-sort-function . nil))
