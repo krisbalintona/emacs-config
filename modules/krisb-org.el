@@ -291,6 +291,7 @@
 ;; Make org drawers less visually obtrusive.
 (use-package krisb-org-hide-drawers
   :ensure nil
+  :diminish
   :hook (org-mode . krisb-org-hide-drawers-mode)
   :bind ( :map krisb-toggle-keymap
           ("t" . krisb-org-hide-drawers-transient))
