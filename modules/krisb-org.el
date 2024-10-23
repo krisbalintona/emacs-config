@@ -313,6 +313,14 @@
      ("b" "Tidy buffer" org-tidy-buffer)
      ("t" "Toggle tidiness" org-tidy-toggle)]))
 
+;;; Org-bulletproof
+;; Automatically cycle plain list bullet point styles.
+(use-package org-bulletproof
+  :hook (org-mode . org-bulletproof-mode)
+  :custom
+  (org-bulletproof-ordered-cycle '("1." "1)"))
+  (org-bulletproof-unordered-cycle '("+" "-" "*")))
+
 ;;; Org-web-tools
 ;; Paste https links with automatic descriptions
 (use-package org-web-tools
