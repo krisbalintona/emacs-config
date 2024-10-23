@@ -4,7 +4,7 @@
   :custom
   (register-preview-delay 0)
   (register-separator "  ")
-  (register-use-preview nil)            ; Highlighting + navigation?
+  (register-use-preview 'traditional)
   (register-preview-display-buffer-alist
    '(display-buffer-at-bottom
      (window-height . fit-window-to-buffer)

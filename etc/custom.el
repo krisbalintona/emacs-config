@@ -13,7 +13,7 @@
                 flymake-collection fontaine forge form-feed gcmh grid hammy
                 highlight-function-calls ht idlwave info-colors inspector jinx
                 keychain-environment kind-icon lin lorem-ipsum magit-file-icons
-                map marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
+                marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
                 nerd-icons-completion nerd-icons-dired no-littering notmuch-addr
                 notmuch-transient ntlm ob-mermaid ol-notmuch olivetti on
                 orderless org-appear org-contrib org-mime org-modern org-remark
@@ -28,7 +28,8 @@
      (wombag :url "https://github.com/karthink/wombag.git")
      (denote-interface :url "git@github.com:krisbalintona/denote-interface.git")))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/Documents/org-database/notes/bib/"
+   '("/home/krisbalintona/emacs-repos/packages/citar/"
+     "/home/krisbalintona/Documents/org-database/notes/bib/"
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
