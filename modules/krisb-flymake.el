@@ -1,6 +1,5 @@
 ;;; Flymake
 (use-package flymake
-  :diminish
   :hook ((prog-mode org-mode) . flymake-mode)
   :custom
   (elisp-flymake-byte-compile-load-path ; Recognize files Emacs knows about
@@ -8,22 +7,21 @@
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil)       ; Disable fringe indicators
   (flymake-show-diagnostics-at-end-of-line nil)
-  (flymake-suppress-zero-counters t)
+  (flymake-suppress-zero-counters :warning)
   (flymake-mode-line-format
-   '(flymake-mode-line-exception flymake-mode-line-counters))
-  (flymake-mode-line-counter-format     ; Remove surrounding brackets
-   '(:eval
-     ;; NOTE 2024-02-12: Need to have first and last elements be strings!
-     ;; Otherwise a counter might be hidden
-     (let ((counters '(""
-                       flymake-mode-line-error-counter
-                       flymake-mode-line-warning-counter
-                       flymake-mode-line-note-counter
-                       "")))
-       (if (mode-line-window-selected-p)
-           counters
-         (propertize (format-mode-line counters)
-                     'face '(:inherit (bold mode-line-inactive))))))))
+   '(" " flymake-mode-line-title flymake-mode-line-exception flymake-mode-line-counters))
+  (flymake-mode-line-counter-format
+   '("["
+     flymake-mode-line-error-counter
+     flymake-mode-line-warning-counter
+     flymake-mode-line-note-counter
+     "]"))
+  :config
+  (setq flymake-mode-line-counters
+        '(:eval (if (mode-line-window-selected-p)
+                    (flymake--mode-line-counters)
+                  (propertize (format-mode-line (flymake--mode-line-counters))
+                              'face '(:inherit (bold mode-line-inactive)))))))
 
 ;;; Flymake-collection
 (use-package flymake-collection
