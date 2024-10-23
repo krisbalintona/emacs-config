@@ -289,116 +289,20 @@
 
 ;;; Org-tidy
 ;; Make org drawers less visually obtrusive.
-(use-package org-tidy
-  :hook (org-mode . org-tidy-mode)      ; Tidies on save
+(use-package krisb-org-hide-drawers
+  :ensure nil
+  :hook (org-mode . krisb-org-hide-drawers-mode)
   :bind ( :map krisb-toggle-keymap
-          ("t" . krisb-org-tidy-transient))
+          ("t" . krisb-org-hide-drawers-transient))
   :custom
-  (org-tidy-properties-inline-symbol (propertize "♯" 'face '(:inherit shadow)))
-  (org-tidy-properties-style 'inline)
-  (org-tidy-top-property-style 'keep)   ; Style for file-level drawer
-  (org-tidy-general-drawer-flag t)
-  (org-tidy-protect-overlay t)
-
-  (org-tidy-general-drawer-name-blacklist nil)
-  (org-tidy-general-drawer-name-whitelist nil)
-
-  (org-tidy-property-drawer-property-blacklist '("CUSTOM_ID"))
-  (org-tidy-property-drawer-property-whitelist nil)
+  (krisb-org-hide-drawers-blacklist '("CUSTOM_ID"))
   :config
   (require 'transient)
-  (transient-define-prefix krisb-org-tidy-transient ()
-    "Transient map for useful org-tidy commands."
-    [("u" "Untidy buffer temporarily (until save)" org-tidy-untidy-buffer)
-     ("b" "Tidy buffer" org-tidy-buffer)
-     ("t" "Toggle tidiness" org-tidy-toggle)])
-
-  ;; Prevent org-tidy from overshadowing bindings sometimes.  Taken from
-  ;; https://github.com/jxq0/org-tidy/issues/11#issuecomment-1950301932
-  (defun krisb-org-tidy-make-protect-ov (backspace-beg backspace-end del-beg del-end)
-    "Make two read-only overlay: (BACKSPACE-BEG, BACKSPACE-END) (DEL-BEG, DEL-END)."
-    (let* ((backspace-ov (make-overlay backspace-beg backspace-end nil t t))
-           (del-ov (make-overlay del-beg del-end nil t nil)))
-      (overlay-put backspace-ov
-                   'keymap org-tidy-properties-backspace-map)
-      (overlay-put del-ov
-                   'keymap org-tidy-properties-delete-map)
-
-      (push (list :type 'protect :ov backspace-ov) org-tidy-overlays)
-      (push (list :type 'protect :ov del-ov) org-tidy-overlays)))
-  (advice-add 'org-tidy-make-protect-ov :override #'krisb-org-tidy-make-protect-ov)
-
-  ;; Don't include newline following a drawer in its overlay.  Taken from
-  ;; https://github.com/jxq0/org-tidy/pull/19
-  (defun krisb-org-tidy--put-overlays (ovs)
-    "Put overlays from OVS, ensuring newline after drawer is kept."
-    (dolist (l ovs)
-      (-when-let* (((&plist :ovly-beg :ovly-end :display
-                            :backspace-beg :backspace-end
-                            :del-beg :del-end) l)
-                   (not-exists (not (org-tidy-overlay-exists ovly-beg ovly-end)))
-                   ;; Adjust ovly-end to keep newline after drawer
-                   (adjusted-ovly-end (if
-                                          ;; check i there is a newline after
-                                          (save-excursion
-                                            (goto-char ovly-end)
-                                            (looking-at-p "\n"))
-
-
-                                          (1- ovly-end)
-                                        ovly-end))
-                   (ovly (make-overlay ovly-beg adjusted-ovly-end nil t nil)))
-        (pcase display
-          ('empty (overlay-put ovly 'display ""))
-
-          ('inline-symbol
-           (overlay-put ovly 'display
-                        (format " %s" org-tidy-properties-inline-symbol)))
-
-          ('fringe
-           (overlay-put ovly 'display
-                        '(left-fringe org-tidy-fringe-bitmap-sharp org-drawer))))
-
-        (push (list :type 'property :ov ovly) org-tidy-overlays)
-
-        (org-tidy-make-protect-ov backspace-beg backspace-end
-                                  del-beg del-end))))
-  (defun krisb-org-tidy--put-overlays (ovs)
-    "Put overlays from OVS, ensuring newline after drawer is kept."
-    (dolist (l ovs)
-      (-when-let* (((&plist :ovly-beg :ovly-end :display
-                            :backspace-beg :backspace-end
-                            :del-beg :del-end) l)
-                   (not-exists (not (org-tidy-overlay-exists ovly-beg ovly-end)))
-                   ;; Adjust ovly-end to keep newline after drawer
-                   (adjusted-ovly-end (if
-                                          ;; check i there is a newline after
-                                          (save-excursion
-                                            (goto-char ovly-end)
-                                            (looking-at-p "\n"))
-
-
-                                          (1- ovly-end)
-                                        ovly-end))
-                   (ovly (make-overlay ovly-beg adjusted-ovly-end nil t nil)))
-        (pcase display
-          ('empty (overlay-put ovly 'display ""))
-
-          ('inline-symbol
-           (overlay-put ovly 'display
-                        (format " %s" org-tidy-properties-inline-symbol)))
-
-          ('fringe
-           (overlay-put ovly 'display
-                        '(left-fringe org-tidy-fringe-bitmap-sharp org-drawer))))
-
-        (push (list :type 'property :ov ovly) org-tidy-overlays)
-
-        (when org-tidy-protect-overlay
-          (org-tidy-make-protect-ov backspace-beg backspace-end
-                                    del-beg del-end)))))
-  (advice-add 'org-tidy--put-overlays :override #'krisb-org-tidy--put-overlays)
-  (advice-add 'org-tidy--put-overlays :override #'krisb-org-tidy--put-overlays))
+  (transient-define-prefix krisb-org-hide-drawers-transient ()
+    "Transient map for useful krisb-org-hide-drawers commands."
+    [("b" "Hide drawers" krisb-org-hide-drawers-create-overlays)
+     ("u" "Unhide drawers" krisb-org-hide-drawers-delete-overlays)
+     ("t" "Toggle hiding" krisb-org-hide-drawers-toggle)]))
 
 ;;; Org-bulletproof
 ;; Automatically cycle plain list bullet point styles.
