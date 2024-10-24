@@ -109,7 +109,7 @@
   (defun krisb-ace-window-take-over-window (window)
     "Move from current window to WINDOW.
 
-Delete current window in the process."
+  Delete current window in the process."
     (let ((buf (current-buffer)))
       (if (one-window-p)
           (delete-frame)
@@ -120,11 +120,11 @@ Delete current window in the process."
   ;; Taken from Karthink's config
   (defun krisb-ace-window-prefix ()
     "Use `ace-window' to display the buffer of the next command.
-The next buffer is the buffer displayed by the next command invoked
-immediately after this command (ignoring reading from the minibuffer).
-Creates a new window before displaying the buffer. When
-`switch-to-buffer-obey-display-actions' is non-nil, `switch-to-buffer'
-commands are also supported."
+  The next buffer is the buffer displayed by the next command invoked
+  immediately after this command (ignoring reading from the minibuffer).
+  Creates a new window before displaying the buffer. When
+  `switch-to-buffer-obey-display-actions' is non-nil, `switch-to-buffer'
+  commands are also supported."
     (interactive)
     (display-buffer-override-next-command
      (lambda (buffer _)
@@ -140,11 +140,11 @@ commands are also supported."
   ;; https://karthinks.com/software/emacs-window-management-almanac/#scroll-other-window--built-in
   (defun krisb-ace-window-set-other-window (window)
     "Set WINDOW as the \"other window\" for the current one.
-\"Other window\" is the window scrolled by `scroll-other-window' and
-`scroll-other-window-down'."
+  \"Other window\" is the window scrolled by `scroll-other-window' and
+  `scroll-other-window-down'."
     (setq-local other-window-scroll-buffer (window-buffer window))))
 
-;;; Pinching-margins
+  ;;; Pinching-margins
 (use-package pinching-margins
   :ensure nil
   :custom
@@ -169,7 +169,7 @@ commands are also supported."
   :config
   (pinching-margins-mode 1))
 
-;;; Bufler
+  ;;; Bufler
 (use-package bufler
   :custom
   (bufler-groups
@@ -233,11 +233,12 @@ commands are also supported."
      ;; Group remaining buffers by directory
      (auto-directory))))
 
-;;; Ibuffer
+  ;;; Ibuffer
 (use-package ibuffer
-  :bind (([remap list-buffers] . ibuffer)
-         :map ibuffer-mode-map
-         ("SPC" . scroll-up-command))
+  :bind (([remap list-buffers] . ibuffer))
+  :bind* ( :map ibuffer-mode-map
+           ("SPC" . scroll-up-command)
+           ("DEL" . scroll-down-command))
   :custom
   (ibuffer-save-with-custom nil)
   (ibuffer-default-sorting-mode 'recency)
