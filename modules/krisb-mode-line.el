@@ -41,5 +41,33 @@
   (recursion-indicator-mode 1)
   (minibuffer-depth-indicate-mode -1))
 
+;;; Mode line
+(setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
+
+(setopt mode-line-compact 'long         ; Emacs 28
+        mode-line-right-align-edge 'window
+        mode-line-percent-position '(-3 "%p") ; Don't show percentage of position in buffer
+        mode-line-position-line-format '(" %l")
+        mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
+
+(setq-default mode-line-format
+              '("%e"
+                mode-line-front-space
+                (:propertize
+                 ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote
+                  mode-line-window-dedicated)
+                 display (min-width (6.0)))
+                mode-line-frame-identification
+                mode-line-buffer-identification "   "
+                mode-line-position
+                mode-line-format-right-align
+                (project-mode-line project-mode-line-format) "   "
+                mode-line-modes
+                mode-line-misc-info
+                mode-line-end-spaces))
+
+;; Add segments to `global-mode-string'
+(add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " "))))
+
 ;;; Provide
 (provide 'krisb-mode-line)

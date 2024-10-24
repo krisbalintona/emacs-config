@@ -127,13 +127,6 @@ mouse-3: Toggle minor modes"
     "Mode line construct for displaying major and minor modes.
 This version removes delimiters.")
 
-  (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
-        mode-line-compact 'long        ; Emacs 28
-        mode-line-right-align-edge 'window
-        mode-line-percent-position nil ; Don't show percentage of position in buffer
-        mode-line-position-line-format '(" %l")
-        mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
-
   (setq-default mode-line-buffer-identification (propertized-buffer-identification "%20b")
                 mode-line-format
                 '("%e" mode-line-front-space
