@@ -140,7 +140,6 @@
 (use-package replace
   :ensure nil
   :config
-  ;; Revealing occur matches
   (with-eval-after-load 'krisb-reveal
     (defun kris-reveal-occur-find-information ()
       "Return information required by `krisb-reveal-fold-commands'.
@@ -265,7 +264,23 @@ See the docstring of `krisb-reveal-fold-commands'."
 (use-package grep
   :custom
   (grep-save-buffers 'ask)
-  (grep-use-headings t))
+  (grep-use-headings t)
+  :config
+  (with-eval-after-load 'krisb-reveal
+    (defun kris-reveal-grep-find-information ()
+      "Return information required by `krisb-reveal-fold-commands'.
+See the docstring of `krisb-reveal-fold-commands'."
+      (save-window-excursion
+        (save-excursion
+          (compile-goto-error)
+          (cons (point) (current-buffer)))))
+    (dolist (command '(next-error-no-select
+                       previous-error-no-select
+                       compilation-display-error))
+      (add-to-list 'krisb-reveal-fold-commands
+                   (list :command command
+                         :location #'kris-reveal-grep-find-information
+                         :predicate (lambda () (eq major-mode 'grep-mode)))))))
 
 ;;;;; Recentf
 ;; Enable logging of recent files
