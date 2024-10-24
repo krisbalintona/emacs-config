@@ -163,11 +163,6 @@
 ;;; Pulsar
 ;; Alternative to `pulse.el'
 (use-package pulsar
-  ;; TODO 2024-10-18: Redistribute to their respective use-package declarations
-  :hook ((consult-after-jump . pulsar-recenter-top)
-         (consult-after-jump . pulsar-reveal-entry)
-         (imenu-after-jump . pulsar-recenter-top)
-         (imenu-after-jump . pulsar-reveal-entry))
   :custom
   (pulsar-pulse t)
   (pulsar-face 'pulsar-red)

@@ -98,7 +98,11 @@
     ;; Fancier formatting of preview window. Adds thin lines, sorting and hides
     ;; the mode line of the register preview window. Copied from
     ;; https://github.com/minad/consult#use-package-example
-    (advice-add 'register-preview :override #'consult-register-window)))
+    (advice-add 'register-preview :override #'consult-register-window))
+
+  ;; Pulsar pulses
+  (with-eval-after-load 'pulsar
+    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
 
 ;;; Jump
 ;;;; Isearch
@@ -124,7 +128,10 @@
   (org-imenu-depth 7)                   ; Show more than just 2 levels...
   (imenu-auto-rescan t)
   (use-package-enable-imenu-support t)
-  (imenu-flatten 'group))
+  (imenu-flatten 'group)
+  :config
+  (with-eval-after-load 'pulsar
+    (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
 
 ;;;; Avy
 ;; Quickly jump to any character
