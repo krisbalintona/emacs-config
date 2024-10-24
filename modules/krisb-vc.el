@@ -3,14 +3,27 @@
 (use-package vc
   :ensure nil
   :hook (vc-git-log-edit-mode . auto-fill-mode)
-  :bind ( :map vc-git-log-edit-mode-map
-          ("<tab>" . completion-at-point))
   :custom
   (vc-follow-symlinks t)
   ;; Improves performance by not having to check for other backends. Expand this
   ;; list when necessary
   (vc-handled-backends '(Git))
+  (vc-revert-show-diff t)
+  (vc-annotate-display-mode 'fullscale)
+  (vc-find-revision-no-save t))
 
+;;;; Vc-dir
+(use-package vc-dir ; NOTE 2024-10-19: Is not required by vc, so have its own use-package
+  :ensure nil
+  :bind ( :map vc-dir-mode-map
+          ("G" . vc-revert)))
+
+;;;; Vc-git
+(use-package vc-git
+  :ensure nil
+  :bind ( :map vc-git-log-edit-mode-map
+          ("<tab>" . completion-at-point))
+  :custom
   (vc-git-diff-switches              ; Have diff headers look similar to Magit's
    '("--patch-with-stat" "--histogram"))
   (vc-git-root-log-format
@@ -29,20 +42,8 @@
       (2 'change-log-list nil lax)
       (3 'change-log-name)
       (4 'change-log-date))))
-  (vc-revert-show-diff t)
-
-  (vc-annotate-display-mode 'fullscale)
-
-  (vc-find-revision-no-save t)
-
   (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
   (vc-git-log-edit-summary-max-len (+ 70 (length "Summary"))))
-
-;;;; Vc-dir
-(use-package vc-dir ; NOTE 2024-10-19: Is not required by vc, so have its own use-package
-  :ensure nil
-  :bind ( :map vc-dir-mode-map
-          ("G" . vc-revert)))
 
 ;;;; Log-edit
 (use-package log-edit
