@@ -36,6 +36,11 @@ See the docstring of `krisb-reveal-fold-commands'."
         (save-excursion
           (xref-goto-xref)
           (cons (point) (current-buffer)))))
+    ;; I could also advise the following commands to call
+    ;; `xref-show-location-at-point' afterwards.  Though such a solution is
+    ;; applicable only to xref.  I wanted similar functionality for non-xref
+    ;; buffers, so I wrote krisb-reveal, and to remain idiomatic with my usage
+    ;; of it, I also do it here.
     (dolist (command '(xref-prev-line
                        xref-next-line
                        xref-quit-and-goto-xref))
