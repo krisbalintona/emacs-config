@@ -3468,7 +3468,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (require 'transient)
     (transient-define-prefix krisb-org-hide-drawers-transient ()
       "Transient map for useful krisb-org-hide-drawers commands."
-      [("b" "Hide drawers" krisb-org-hide-drawers-create-overlays)
+      [("u" "Hide drawers" krisb-org-hide-drawers-create-overlays)
        ("u" "Unhide drawers" krisb-org-hide-drawers-delete-overlays)
        ("t" "Toggle hiding" krisb-org-hide-drawers-toggle)]))
 
@@ -4328,12 +4328,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     ;; Solar
     (require 'solar)
-    (krisb-evaluate-when-internet
-      20
-      (let ((coords (krisb-get-lat-lon)))
-        (setopt calendar-latitude (car coords)
-                calendar-longitude (cdr coords)))
-      (setopt calendar-location-name (krisb-get-location-name))))
+    ;; (krisb-evaluate-when-internet
+    ;;   20
+    ;;   (let ((coords (krisb-get-lat-lon)))
+    ;;     (setopt calendar-latitude (car coords)
+    ;;             calendar-longitude (cdr coords)))
+    ;;   (setopt calendar-location-name (krisb-get-location-name)))
+    )
 #+end_src
 
 **** =Org-agenda= and =org-super-agenda=

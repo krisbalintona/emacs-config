@@ -301,7 +301,7 @@
   (require 'transient)
   (transient-define-prefix krisb-org-hide-drawers-transient ()
     "Transient map for useful krisb-org-hide-drawers commands."
-    [("b" "Hide drawers" krisb-org-hide-drawers-create-overlays)
+    [("u" "Hide drawers" krisb-org-hide-drawers-create-overlays)
      ("u" "Unhide drawers" krisb-org-hide-drawers-delete-overlays)
      ("t" "Toggle hiding" krisb-org-hide-drawers-toggle)]))
 
