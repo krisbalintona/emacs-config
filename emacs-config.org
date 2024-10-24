@@ -6052,8 +6052,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                          xref-next-line
                          xref-quit-and-goto-xref))
         (add-to-list 'krisb-reveal-fold-commands
-                     (cons command #'krisb-reveal-xref-find-information)))
-      (add-hook 'xref-after-jump-hook #'krisb-reveal-fold)))
+                     (list :command command
+                           :location #'krisb-reveal-xref-find-information)))
+      (add-hook 'xref-after-jump-hook #'krisb-reveal-fold))')
 
   ;;; Provide
   (provide 'krisb-projects)
@@ -6886,6 +6887,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; Open the org or outline/outshine heading that contains point when needed.
 
   ;;; Code:
+  (require 'cl-macs)
 
   ;;; Options
   (defgroup krisb-reveal nil
@@ -6895,28 +6897,49 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :prefix "krisb-reveal-")
 
   (defcustom krisb-reveal-fold-commands (list)
-    "Alist that determines arguments to pass to `krisb-reveal-fold'.
-  This is an alist of elements whose car is a symbol representing a
-  command after which `krisb-reveal-fold' should be invoked and cdr is a
-  function (name or lambda expression).  This function should return a
-  cons whose car is a point at which `krisb-reveal-fold' will be invoked
-  and cdr is the buffer to invoke `krisb-reveal-fold' in."
-    :type '(alist :key-type (symbol :tag "Symbol representing a command")
-                  :value-type (function :tag "Function returning a cons of point and buffer")))
+    "A plist that determines arguments to pass to `krisb-reveal-fold'.
+  This is a plist of elements.
+
+  The following properties are required:
+  - :command -- A symbol representing a command after which `krisb-reveal-fold'
+    should be invoked
+  - :location -- A function (name or lambda expression) that returns a cons whose
+    car is a point at which `krisb-reveal-fold' will be invoked and cdr is the
+    buffer to invoke `krisb-reveal-fold' in.
+
+  The following properties are optional:
+  - :predicate -- A function (name or lambda expression) that, if returning nil,
+    prevents `kris-reveal-fold' from being invoked after the command denoted by
+    :command."
+    :type '(plist :key-type (choice
+                             (const :command)      ; Required
+                             (const :location)     ; Required
+                             (const :predicate))   ; Optional
+                  :value-type (choice
+                               (function :tag "Command")           ; For :command
+                               (function :tag "Location function") ; For :location
+                               (function :tag "Predicate function")))) ; For :predicate)
 
   ;;; Functions
   (declare-function org-show-entry "org")
   (declare-function outline-show-entry "outline")
 
   ;;;###autoload
-  (defun krisb-reveal-fold (&optional location buffer)
-    "Open the outline/outshine or org heading at LOCATION in BUFFER.
+  (defun krisb-reveal-fold (&optional point buffer predicate)
+    "Open the outline/outshine or org heading at POINT in BUFFER.
   This is like `pulsar-reveal-entry' but not just when point is at heading.
 
-  If LOCATION is nil, the current point in BUFFER will be assumed.  If
-  BUFFER is nil, the current buffer will be assumed."
-    (with-current-buffer buffer
-      (goto-char location)
+  PREDICATE is a function name or lambda expression that is evaluated in
+  the current buffer (not BUFFER) and prevents this function from doing
+  anything if it returns nil.
+
+  If POINT is nil, the current point in BUFFER will be assumed.  If BUFFER
+  is nil, the current buffer will be assumed.  If PREDICATE is nil, then
+  this function will operate normally."
+    (when (and predicate (not (funcall predicate)))
+      (cl-return))
+    (with-current-buffer (or buffer (current-buffer))
+      (goto-char (or point (point)))
       (cond
        ((eq major-mode 'org-mode)
         (org-show-entry))
@@ -6926,7 +6949,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;; TODO 2024-10-24: Consider resolving aliases like
   ;; `pulsar--resolve-function-aliases'.
-  (defun krisb-reveal-fold--post-command-maybe ()
+  (defun krisb-reveal-fold--post-command ()
     "Maybe reveal fold at point.
   A \"fold\" is an outline, outshine, or org heading.  Folds are revealed
   if the `this-command' is one of the ones listed in
@@ -6936,11 +6959,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   This function is meant to be added to `post-command-hook'.
 
   This function was inspired by `pulsar--post-command-pulse'."
-    (when (assoc this-command krisb-reveal-fold-commands)
-      (let* ((cons (funcall (alist-get 'xref-next-line krisb-reveal-fold-commands)))
-             (location (car cons))
-             (buffer (cdr cons)))
-        (krisb-reveal-fold location buffer))))
+    (when (eq this-command (plist-get krisb-reveal-fold-commands 'command))
+      (let* ((location (funcall (plist-get krisb-reveal-fold-commands 'location)))
+             (point (car location))
+             (buffer (cdr location))
+             (predicate (plist-get krisb-reveal-fold-commands 'predicate)))
+        (krisb-reveal-fold point buffer predicate))))
 
   ;;; Minor mode
   (define-minor-mode krisb-reveal-mode
@@ -6949,8 +6973,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :global nil
     (if krisb-reveal-mode
         (progn
-          (add-hook 'post-command-hook #'krisb-reveal-fold--post-command-maybe nil 'local))
-      (remove-hook 'post-command-hook #'krisb-reveal-fold--post-command-maybe 'local)))
+          (add-hook 'post-command-hook #'krisb-reveal-fold--post-command nil 'local))
+      (remove-hook 'post-command-hook #'krisb-reveal-fold--post-command 'local)))
 
   (defun krisb-reveal--on ()
     "Enable `krisb-reveal-mode'."

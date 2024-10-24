@@ -40,8 +40,9 @@ See the docstring of `krisb-reveal-fold-commands'."
                        xref-next-line
                        xref-quit-and-goto-xref))
       (add-to-list 'krisb-reveal-fold-commands
-                   (cons command #'krisb-reveal-xref-find-information)))
-    (add-hook 'xref-after-jump-hook #'krisb-reveal-fold)))
+                   (list :command command
+                         :location #'krisb-reveal-xref-find-information)))
+    (add-hook 'xref-after-jump-hook #'krisb-reveal-fold))')
 
 ;;; Provide
 (provide 'krisb-projects)
