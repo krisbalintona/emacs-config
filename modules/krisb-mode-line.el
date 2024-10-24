@@ -41,7 +41,7 @@
   (recursion-indicator-mode 1)
   (minibuffer-depth-indicate-mode -1))
 
-;;; Mode line
+;;; Mode line format
 (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
 
 (setopt mode-line-compact 'long         ; Emacs 28
