@@ -2705,6 +2705,29 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (with-eval-after-load 'pulsar
       (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
 
+  ;;;;; Occur
+  (use-package replace
+    :ensure nil
+    :config
+    ;; Revealing occur matches
+    (with-eval-after-load 'krisb-reveal
+      (defun kris-reveal-occur-find-information ()
+        "Return information required by `krisb-reveal-fold-commands'.
+  See the docstring of `krisb-reveal-fold-commands'."
+        (save-window-excursion
+          (save-excursion
+            (occur-mode-goto-occurrence)
+            (cons (point) (current-buffer)))))
+      (dolist (command '(next-error-no-select
+                         previous-error-no-select
+                         occur-mode-display-occurrence
+                         occur-mode-goto-occurrence
+                         occur-mode-goto-occurrence-other-window))
+        (add-to-list 'krisb-reveal-fold-commands
+                     (list :command command
+                           :location #'kris-reveal-occur-find-information
+                           :predicate (lambda () (eq major-mode 'occur-mode)))))))
+
   ;;;;; Avy
   ;; Quickly jump to any character
   (use-package avy
