@@ -1801,7 +1801,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     `scroll-other-window-down'."
       (setq-local other-window-scroll-buffer (window-buffer window))))
 
-    ;;; Pinching-margins
+  ;;; Pinching-margins
   (use-package pinching-margins
     :ensure nil
     :custom
@@ -1826,7 +1826,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     (pinching-margins-mode 1))
 
-    ;;; Bufler
+  ;;; Bufler
   (use-package bufler
     :custom
     (bufler-groups
@@ -1890,7 +1890,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        ;; Group remaining buffers by directory
        (auto-directory))))
 
-    ;;; Ibuffer
+  ;;; Ibuffer
   (use-package ibuffer
     :bind (([remap list-buffers] . ibuffer))
     :bind* ( :map ibuffer-mode-map
@@ -1905,6 +1905,23 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (ibuffer-expert nil)
     (ibuffer-show-empty-filter-groups t)
     (ibuffer-filter-group-name-face '(:inherit (success bold))))
+
+  ;;; Activities
+  (use-package activities
+    :pin gnu-elpa-devel
+    :bind (("C-c a d" . activities-define)
+           ("C-c a a" . activities-resume)
+           ("C-c a g" . activities-revert)
+           ("C-c a b" . activities-switch-buffer)
+           ("C-c a B" . activities-switch)
+           ("C-c a s" . activities-suspend)
+           ("C-c a k" . activities-kill)
+           ("C-c a l" . activities-list))
+    :custom
+    (activities-kill-buffers t)
+    :config
+    (activities-mode 1)
+    (activities-tabs-mode 1))
 #+end_src
 
 **** Setting =display-buffer-alist=
@@ -6105,8 +6122,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
         "Adviced `edebug-previous-result'."
         (require 'eros)
         (eros--make-result-overlay edebug-previous-result
-                                   :where (point)
-                                   :duration eros-eval-result-duration))
+          :where (point)
+          :duration eros-eval-result-duration))
       (advice-add #'edebug-previous-result :around #'krisb-edebug-previous-result--around))
 
     (defun krisb-edebug-compute-previous-result (previous-value)

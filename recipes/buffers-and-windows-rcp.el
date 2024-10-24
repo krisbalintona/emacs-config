@@ -466,24 +466,6 @@ Determine if WINDOW is splittable."
                                   (if mode-line-format 2 1))))))))))
   (advice-add 'window-splittable-p :override #'kb/window-splittable-p))
 
-;;;; Activities
-(use-package activities
-  :pin gnu-elpa-devel
-  :bind
-  (("C-c a d" . activities-define)
-   ("C-c a a" . activities-resume)
-   ("C-c a g" . activities-revert)
-   ("C-c a b" . activities-switch-buffer)
-   ("C-c a B" . activities-switch)
-   ("C-c a s" . activities-suspend)
-   ("C-c a k" . activities-kill)
-   ("C-c a l" . activities-list))
-  :custom
-  (activities-kill-buffers t)
-  :config
-  (activities-mode 1)
-  (activities-tabs-mode 1))
-
 ;;;; Beframe
 (use-package beframe
   :demand t

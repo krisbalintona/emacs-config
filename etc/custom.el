@@ -5,8 +5,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ace-window agitate all-the-icons apheleia astute breadcrumb bufler cape
-                citar-denote cl-generic corfu-prescient cursory darkroom
+   '(ace-window activities agitate all-the-icons apheleia astute breadcrumb bufler
+                cape citar-denote cl-generic corfu-prescient cursory darkroom
                 denote-explore denote-interface diminish dired-hist
                 edit-indirect editorconfig eglot elisp-demos embark-consult
                 engine-mode enlight erc eros exec-path-from-shell faceup
@@ -29,7 +29,8 @@
      (wombag :url "https://github.com/karthink/wombag.git")
      (denote-interface :url "git@github.com:krisbalintona/denote-interface.git")))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/emacs-repos/packages/citar/"
+   '("/home/krisbalintona/Documents/org-database/notes/zettels/"
+     "/home/krisbalintona/emacs-repos/packages/citar/"
      "/home/krisbalintona/Documents/org-database/notes/bib/"
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))

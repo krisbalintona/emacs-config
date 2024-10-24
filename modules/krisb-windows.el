@@ -144,7 +144,7 @@
   `scroll-other-window-down'."
     (setq-local other-window-scroll-buffer (window-buffer window))))
 
-  ;;; Pinching-margins
+;;; Pinching-margins
 (use-package pinching-margins
   :ensure nil
   :custom
@@ -169,7 +169,7 @@
   :config
   (pinching-margins-mode 1))
 
-  ;;; Bufler
+;;; Bufler
 (use-package bufler
   :custom
   (bufler-groups
@@ -233,7 +233,7 @@
      ;; Group remaining buffers by directory
      (auto-directory))))
 
-  ;;; Ibuffer
+;;; Ibuffer
 (use-package ibuffer
   :bind (([remap list-buffers] . ibuffer))
   :bind* ( :map ibuffer-mode-map
@@ -248,6 +248,23 @@
   (ibuffer-expert nil)
   (ibuffer-show-empty-filter-groups t)
   (ibuffer-filter-group-name-face '(:inherit (success bold))))
+
+;;; Activities
+(use-package activities
+  :pin gnu-elpa-devel
+  :bind (("C-c a d" . activities-define)
+         ("C-c a a" . activities-resume)
+         ("C-c a g" . activities-revert)
+         ("C-c a b" . activities-switch-buffer)
+         ("C-c a B" . activities-switch)
+         ("C-c a s" . activities-suspend)
+         ("C-c a k" . activities-kill)
+         ("C-c a l" . activities-list))
+  :custom
+  (activities-kill-buffers t)
+  :config
+  (activities-mode 1)
+  (activities-tabs-mode 1))
 
 ;;;; Display-buffer-alist
 (with-eval-after-load 'window
