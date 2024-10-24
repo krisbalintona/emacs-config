@@ -112,7 +112,11 @@
 (use-package mixed-pitch
   :diminish
   :custom
-  (mixed-pitch-set-height t)
+  ;; We don't want to set the height of variable-pitch faces because
+  ;; non-variable-pitch faces will be "out of sync" with the height.  Therefore,
+  ;; to have larger font sizes in these buffers, we have to remap those faces
+  ;; manually and locally.
+  (mixed-pitch-set-height nil)
   (mixed-pitch-variable-pitch-cursor nil))
 
 ;;; Provide
