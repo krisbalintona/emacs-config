@@ -2797,7 +2797,11 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :diminish outshine-mode
     :hook ((LaTeX-mode prog-mode conf-mode) . outshine-mode)
     :bind ( :map outshine-mode-map
-            ("C-x n s". outshine-narrow-to-subtree))
+            ("C-x n s". outshine-narrow-to-subtree)
+            :map diff-mode-map
+            ("S-<iso-lefttab>" . outshine-cycle-buffer)
+            ("<tab>" . outshine-cycle)
+            ("C-x n s" . outshine-narrow-to-subtree))
     :custom
     (outshine-use-speed-commands t))
 
@@ -5819,11 +5823,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (use-package diff-mode
     :ensure nil
     :hook (diff-mode . diff-delete-empty-files)
-
     :bind ( :map diff-mode-map
-            ("S-<iso-lefttab>" . outshine-cycle-buffer)
-            ("<tab>" . outshine-cycle)
-            ("C-x n s" . outshine-narrow-to-subtree)
             ("L" . vc-print-root-log)
             ("v" . vc-next-action))
     :custom

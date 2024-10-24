@@ -255,7 +255,11 @@
   :diminish outshine-mode
   :hook ((LaTeX-mode prog-mode conf-mode) . outshine-mode)
   :bind ( :map outshine-mode-map
-          ("C-x n s". outshine-narrow-to-subtree))
+          ("C-x n s". outshine-narrow-to-subtree)
+          :map diff-mode-map
+          ("S-<iso-lefttab>" . outshine-cycle-buffer)
+          ("<tab>" . outshine-cycle)
+          ("C-x n s" . outshine-narrow-to-subtree))
   :custom
   (outshine-use-speed-commands t))
 

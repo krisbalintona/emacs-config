@@ -64,11 +64,7 @@
 (use-package diff-mode
   :ensure nil
   :hook (diff-mode . diff-delete-empty-files)
-
   :bind ( :map diff-mode-map
-          ("S-<iso-lefttab>" . outshine-cycle-buffer)
-          ("<tab>" . outshine-cycle)
-          ("C-x n s" . outshine-narrow-to-subtree)
           ("L" . vc-print-root-log)
           ("v" . vc-next-action))
   :custom

@@ -86,8 +86,8 @@
       "Adviced `edebug-previous-result'."
       (require 'eros)
       (eros--make-result-overlay edebug-previous-result
-        :where (point)
-        :duration eros-eval-result-duration))
+                                 :where (point)
+                                 :duration eros-eval-result-duration))
     (advice-add #'edebug-previous-result :around #'krisb-edebug-previous-result--around))
 
   (defun krisb-edebug-compute-previous-result (previous-value)
