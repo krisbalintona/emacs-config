@@ -347,21 +347,11 @@ timestamp)."
 ;;;;; Ibuffer
 (use-package ibuffer
   :ensure nil
-  :bind
-  (([remap list-buffers] . ibuffer)
-   :map ibuffer-mode-map
-   ("SPC" . scroll-up-command))
+  :bind (([remap list-buffers] . ibuffer))
   :custom
-  (ibuffer-save-with-custom nil)
-  (ibuffer-default-sorting-mode 'recency)
   (ibuffer-directory-abbrev-alist
    `((,(file-name-as-directory (expand-file-name krisb-notes-directory)) . ,(propertize "Notes/" 'face 'bold))
      (,(expand-file-name user-emacs-directory) . ,(propertize "Emacs/" 'face 'bold))))
-  (ibuffer-eliding-string "…")
-  (ibuffer-jump-offer-only-visible-buffers t)
-  (ibuffer-old-time 48)
-  (ibuffer-expert nil)
-  (ibuffer-show-empty-filter-groups t)
   ;; NOTE 2024-09-22: Gets overwritten by `all-the-icons-ibuffer-formats' when
   ;; `nerd-icons-ibuffer-mode'
   (ibuffer-formats
@@ -380,7 +370,6 @@ timestamp)."
       (filename . "/usr/local/share/emacs/"))
      ("Processes"
       (process))))
-  (ibuffer-filter-group-name-face '(:inherit (success bold)))
   (ibuffer-saved-filter-groups ; NOTE 2024-02-11: Order of entries matters!
    `(("Basic"
       ("Help" ,(append '(or) (mapcar (lambda (mode) `(mode . ,mode)) ibuffer-help-buffer-modes)))

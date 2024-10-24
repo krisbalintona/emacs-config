@@ -160,12 +160,12 @@ commands are also supported."
      (lambda (win)
        (with-selected-window win (bound-and-true-p olivetti-mode)))))
   (pinching-margins-force-predicates
-  '((lambda (win)
-      (with-selected-window win
-        (member major-mode '())))
-    (lambda (win)
-      (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
-               '("^\\*vc-")))))
+   '((lambda (win)
+       (with-selected-window win
+         (member major-mode '())))
+     (lambda (win)
+       (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
+                '("^\\*vc-")))))
   :config
   (pinching-margins-mode 1))
 
@@ -233,6 +233,20 @@ commands are also supported."
                            (auto-file))))
      ;; Group remaining buffers by directory
      (auto-directory))))
+
+;;; Ibuffer
+(use-package ibuffer
+  :bind ( s:map ibuffer-mode-map
+          ("SPC" . scroll-up-command))
+  :custom
+  (ibuffer-save-with-custom nil)
+  (ibuffer-default-sorting-mode 'recency)
+  (ibuffer-eliding-string "…")
+  (ibuffer-jump-offer-only-visible-buffers t)
+  (ibuffer-old-time 48)
+  (ibuffer-expert nil)
+  (ibuffer-show-empty-filter-groups t)
+  (ibuffer-filter-group-name-face '(:inherit (success bold))))
 
 ;;;; Display-buffer-alist
 (with-eval-after-load 'window
