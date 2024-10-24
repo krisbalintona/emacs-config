@@ -215,6 +215,12 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Keep width consistent in buffer
 
+;;;; Krisb-reveal
+(use-package krisb-reveal
+  :ensure
+  :config
+  (krisb-reveal-global-mode 1))
+
 ;;; Miscellaneous
 ;;;; Enable all disabled commands
 (setopt disabled-command-function nil)
