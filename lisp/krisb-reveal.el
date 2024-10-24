@@ -63,7 +63,9 @@ The following properties are optional:
 ;;;###autoload
 (defun krisb-reveal-fold (&optional point buffer predicate)
   "Open the outline/outshine or org heading at POINT in BUFFER.
-This is like `pulsar-reveal-entry' but not just when point is at heading.
+This function is like `pulsar-reveal-entry' but not just when point is at heading.
+
+This function assumes `krisb-reveal-mode' is non-nil.
 
 PREDICATE is a function name or lambda expression that is evaluated in
 the current buffer (not BUFFER) and prevents this function from doing
@@ -72,7 +74,8 @@ anything if it returns nil.
 If POINT is nil, the current point in BUFFER will be assumed.  If BUFFER
 is nil, the current buffer will be assumed.  If PREDICATE is nil, then
 this function will operate normally."
-  (when (and predicate (not (funcall predicate)))
+  (when (or (not krisb-reveal-mode)
+            (and predicate (not (funcall predicate))))
     (cl-return))
   (with-current-buffer (or buffer (current-buffer))
     (goto-char (or point (point)))
