@@ -44,7 +44,8 @@
       (3 'change-log-name)
       (4 'change-log-date))))
   (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
-  (vc-git-log-edit-summary-max-len (+ 70 (length "Summary"))))
+  (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
+  (vc-git-revision-complete-only-branches t))
 
 ;;;; Log-edit
 (use-package log-edit
