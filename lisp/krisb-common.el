@@ -1,4 +1,4 @@
-;;; krisb-common.el --- Common variables and functions  -*- lexical-binding: t; -*-
+;;; krisb-common.el --- Common variables, functions, macros, and more -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona
 
@@ -92,6 +92,8 @@ Useful for some citation-related configurations.")
 
 (defvar krisb-email-directory (expand-file-name "~/Documents/emails/")
   "Directory that houses my local email files.")
+
+;;; Functions
 
 ;;; Macros
 (defmacro krisb-evaluate-when-internet (interval &rest body)
