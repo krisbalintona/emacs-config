@@ -42,7 +42,7 @@ See the docstring of `krisb-reveal-fold-commands'."
       (add-to-list 'krisb-reveal-fold-commands
                    (list :command command
                          :location #'krisb-reveal-xref-find-information)))
-    (add-hook 'xref-after-jump-hook #'krisb-reveal-fold))')
+    (add-hook 'xref-after-jump-hook #'krisb-reveal-fold)))
 
 ;;; Provide
 (provide 'krisb-projects)
