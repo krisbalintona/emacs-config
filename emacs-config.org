@@ -782,7 +782,7 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 
   ;;;; Krisb-reveal
   (use-package krisb-reveal
-    :ensure
+    :ensure nil
     :config
     (krisb-reveal-global-mode 1))
 #+end_src

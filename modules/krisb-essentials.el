@@ -217,7 +217,7 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 
 ;;;; Krisb-reveal
 (use-package krisb-reveal
-  :ensure
+  :ensure nil
   :config
   (krisb-reveal-global-mode 1))
 
