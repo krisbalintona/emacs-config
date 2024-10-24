@@ -6949,22 +6949,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (declare-function outline-show-entry "outline")
 
   ;;;###autoload
-  (defun krisb-reveal-fold (&optional point buffer predicate)
+  (defun krisb-reveal-fold (&optional point buffer)
     "Reveal the outline/outshine or org heading at POINT in BUFFER.
   This function is like `pulsar-reveal-entry' but not just when point is
   at heading.
 
   This function assumes `krisb-reveal-mode' is non-nil.
 
-  PREDICATE is a function name or lambda expression that is evaluated in
-  the current buffer (not BUFFER) and prevents this function from doing
-  anything if it returns nil.
-
   If POINT is nil, the current point in BUFFER will be assumed.  If BUFFER
-  is nil, the current buffer will be assumed.  If PREDICATE is nil, then
-  this function will operate normally."
-    (when (or (not krisb-reveal-mode)
-              (and predicate (not (funcall predicate))))
+  is nil, the current buffer will be assumed."
+    (when (not krisb-reveal-mode)
       (cl-return))
     (with-current-buffer (or buffer (current-buffer))
       (goto-char (or point (point)))
@@ -6977,7 +6971,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;; TODO 2024-10-24: Consider resolving aliases like
   ;; `pulsar--resolve-function-aliases'.
-  (defun krisb-reveal-fold--post-command ()
+  (defun krisb-reveal--post-command ()
     "Maybe reveal fold at point.
   A \"fold\" is an outline, outshine, or org heading.  Folds are revealed
   if the `this-command' is one of the ones listed in
@@ -6987,33 +6981,28 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   This function is meant to be added to `post-command-hook'.
 
   This function was inspired by `pulsar--post-command-pulse'."
-    ;; TODO 2024-10-24: Consider the case when there are multiple entries in
-    ;; `krisb-reveal-fold-commands' that have the same :command.  In these cases,
-    ;; the differentiator would be predicate, so we should try all of them until
-    ;; there is a successful invocation.
-    (when (cl-some (lambda (plist)
-                     (when (plist-get plist :command)
-                       (eq (plist-get plist :command) this-command)))
-                   krisb-reveal-fold-commands)
-      (let* ((plist (cl-find this-command krisb-reveal-fold-commands
-                             :key (lambda (plist) (plist-get plist :command))
-                             :test #'eq))
-             (location (plist-get plist :location))
-             (point (car location))
-             (buffer (cdr location))
-             (predicate (plist-get plist :predicate)))
-        (krisb-reveal-fold point buffer predicate))))
+    (dolist (plist (cl-remove-if-not
+                    (lambda (plist)
+                      (eq (plist-get plist :command) this-command))
+                    krisb-reveal-fold-commands))
+      (let ((predicate (plist-get plist :predicate)))
+        (when (or (not predicate) (funcall predicate))
+          (let* ((location (funcall (plist-get plist :location)))
+                 (point (car location))
+                 (buffer (cdr location)))
+            (krisb-reveal-fold point buffer))))))
 
   ;;; Minor mode
+  ;;;###autoload
   (define-minor-mode krisb-reveal-mode
     "Set up krisb-reveal for each command in `krisb-reveal-fold-commands'.
   This is a buffer-local mode.  Also check `krisb-reveal-global-mode'."
     :global nil
     (if krisb-reveal-mode
-        (progn
-          (add-hook 'post-command-hook #'krisb-reveal-fold--post-command nil 'local))
-      (remove-hook 'post-command-hook #'krisb-reveal-fold--post-command 'local)))
+        (add-hook 'post-command-hook #'krisb-reveal--post-command nil 'local)
+      (remove-hook 'post-command-hook #'krisb-reveal--post-command 'local)))
 
+  ;;;###autoload
   (defun krisb-reveal--on ()
     "Enable `krisb-reveal-mode'."
     (unless (minibufferp)
