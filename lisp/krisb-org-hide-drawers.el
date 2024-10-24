@@ -86,9 +86,18 @@ Considers `krisb-org-hide-drawers-blacklist'."
                         (point)))
                  (ov (make-overlay (1- begin) ; Include preceding newline in overlay
                                    end))) ; Don't include proceeding whitespace in overlay
+
+            ;; TODO 2024-10-23: Consider using the `insert-in-front-hooks'
+            ;; special text property to notify the user of danger when adding
+            ;; characters in front of hidden property drawer, since un-hiding it
+            ;; then means that drawer is no longer recognized as such.
+
             (overlay-put ov 'display krisb-org-hide-drawers-string)
             (overlay-put ov 'modification-hooks
-                         '((lambda (&rest _) (error "Hidden drawer text is read-only"))))
+                         '((lambda (overlay after beg end)
+                             (setq krisb-org-hide-drawers-overlays
+                                   (remove overlay krisb-org-hide-drawers-overlays))
+                             (delete-overlay overlay))))
             (overlay-put ov 'read-only t)
             (push ov krisb-org-hide-drawers-overlays)))))))
 
