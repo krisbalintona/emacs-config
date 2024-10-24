@@ -25,7 +25,22 @@
   ;; Then add `elisp--xref-backend' as the global value of
   ;; `xref-backend-functions', which means it is run when the local value ends
   ;; with `t'. See (info "(elisp) Running Hooks") for an explanation.
-  (add-hook 'xref-backend-functions #'elisp--xref-backend))
+  (add-hook 'xref-backend-functions #'elisp--xref-backend)
+
+  ;; Revealing headings
+  (with-eval-after-load 'krisb-reveal
+    (defun krisb-reveal-xref-find-information ()
+      "Return information required by `krisb-reveal-fold-commands'.
+See the docstring of `krisb-reveal-fold-commands'."
+      (save-window-excursion
+        (save-excursion
+          (xref-goto-xref)
+          (cons (point) (current-buffer)))))
+    (dolist (command '(xref-prev-line
+                       xref-next-line
+                       xref-quit-and-goto-xref))
+      (add-to-list 'krisb-reveal-fold-commands
+                   (cons command #'krisb-reveal-xref-find-information)))))
 
 ;;; Provide
 (provide 'krisb-projects)

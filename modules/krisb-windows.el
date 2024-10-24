@@ -330,7 +330,7 @@
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-          
+
 ;;;;; Occur
           ("\\*Occur"
            (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected)
