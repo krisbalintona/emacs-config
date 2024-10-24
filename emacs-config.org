@@ -6907,9 +6907,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (declare-function org-show-entry "org")
   (declare-function outline-show-entry "outline")
 
-  (defun krisb-reveal-fold (location buffer)
+  ;;;###autoload
+  (defun krisb-reveal-fold (&optional location buffer)
     "Open the outline/outshine or org heading at LOCATION in BUFFER.
-  This is like `pulsar-reveal-entry' but not just when point is at heading."
+  This is like `pulsar-reveal-entry' but not just when point is at heading.
+
+  If LOCATION is nil, the current point in BUFFER will be assumed.  If
+  BUFFER is nil, the current buffer will be assumed."
     (with-current-buffer buffer
       (goto-char location)
       (cond
@@ -6921,7 +6925,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;; TODO 2024-10-24: Consider resolving aliases like
   ;; `pulsar--resolve-function-aliases'.
-  (defun krisb-reveal-fold-maybe ()
+  (defun krisb-reveal-fold--post-command-maybe ()
     "Maybe reveal fold at point.
   A \"fold\" is an outline, outshine, or org heading.  Folds are revealed
   if the `this-command' is one of the ones listed in
@@ -6942,10 +6946,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     "Set up krisb-reveal for each command in `krisb-reveal-fold-commands'.
   This is a buffer-local mode.  Also check `krisb-reveal-global-mode'."
     :global nil
-    (if pulsar-mode
+    (if krisb-reveal-mode
         (progn
-          (add-hook 'post-command-hook #'krisb-reveal-fold-maybe nil 'local))
-      (remove-hook 'post-command-hook #'krisb-reveal-fold-maybe 'local)))
+          (add-hook 'post-command-hook #'krisb-reveal-fold--post-command-maybe nil 'local))
+      (remove-hook 'post-command-hook #'krisb-reveal-fold--post-command-maybe 'local)))
 
   (defun krisb-reveal--on ()
     "Enable `krisb-reveal-mode'."
