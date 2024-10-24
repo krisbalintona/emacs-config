@@ -30,7 +30,7 @@
   :diminish
   :custom
   (form-feed-include-modes
-   '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
+   '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode compilation-mode))
   (form-feed-exclude-modes nil)
   :config
   ;; Also see the command `treesit-auto-install-all'
