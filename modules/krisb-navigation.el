@@ -247,10 +247,7 @@
   :custom
   (outline-minor-mode-cycle t)
   (outline-minor-mode-highlight t)
-  (outline-blank-line t)
-  :init
-  ;; `outline-minor-mode-prefix' must be set prior to the package's loading
-  (setq outline-minor-mode-prefix (kbd "C-c \\")))
+  (outline-blank-line t))
 
 ;;;; Outshine
 ;; Outline-minor-mode but with better keybindings and more support.
