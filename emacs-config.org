@@ -2674,7 +2674,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
       (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
 
   ;;; Jump
-  ;;;; Isearch
+
+  ;;;; Intra-file
+
+  ;;;;; Isearch
   ;; Incremental search
   (use-package isearch
     :ensure nil
@@ -2690,7 +2693,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (isearch-lax-whitespace t)
     (search-whitespace-regexp ".*?"))
 
-  ;;;; Imenu
+  ;;;;; Imenu
   (use-package imenu
     :ensure nil
     :custom
@@ -2702,7 +2705,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (with-eval-after-load 'pulsar
       (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
 
-  ;;;; Avy
+  ;;;;; Avy
   ;; Quickly jump to any character
   (use-package avy
     :commands krisb-avy-goto-parens
@@ -2802,13 +2805,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
           (call-interactively 'eval-last-sexp)))
       t))
 
-  ;;;; Grep
+  ;;;; Inter-file
+
+  ;;;;; Grep
   (use-package grep
     :custom
     (grep-save-buffers 'ask)
     (grep-use-headings t))
 
-  ;;;; Recentf
+  ;;;;; Recentf
   ;; Enable logging of recent files
   (use-package recentf
     :demand t

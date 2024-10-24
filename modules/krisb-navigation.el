@@ -105,7 +105,10 @@
     (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
 
 ;;; Jump
-;;;; Isearch
+
+;;;; Intra-file
+
+;;;;; Isearch
 ;; Incremental search
 (use-package isearch
   :ensure nil
@@ -121,7 +124,7 @@
   (isearch-lax-whitespace t)
   (search-whitespace-regexp ".*?"))
 
-;;;; Imenu
+;;;;; Imenu
 (use-package imenu
   :ensure nil
   :custom
@@ -133,7 +136,7 @@
   (with-eval-after-load 'pulsar
     (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
 
-;;;; Avy
+;;;;; Avy
 ;; Quickly jump to any character
 (use-package avy
   :commands krisb-avy-goto-parens
@@ -233,13 +236,15 @@
         (call-interactively 'eval-last-sexp)))
     t))
 
-;;;; Grep
+;;;; Inter-file
+
+;;;;; Grep
 (use-package grep
   :custom
   (grep-save-buffers 'ask)
   (grep-use-headings t))
 
-;;;; Recentf
+;;;;; Recentf
 ;; Enable logging of recent files
 (use-package recentf
   :demand t
