@@ -122,9 +122,9 @@ Considers `krisb-org-hide-drawers-blacklist'."
   (if krisb-org-hide-drawers-mode
       (progn
         (krisb-org-hide-drawers-create-overlays)
-        (add-hook 'org-mode-hook #'krisb-org-hide-drawers-create-overlays nil t))
+        (add-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays nil t))
     (krisb-org-hide-drawers-delete-overlays)
-    (remove-hook 'org-mode-hook #'krisb-org-hide-drawers-create-overlays t)))
+    (remove-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays t)))
 
 ;;; Provide
 (provide 'krisb-org-hide-drawers)

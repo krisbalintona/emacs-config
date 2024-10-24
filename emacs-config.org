@@ -4328,13 +4328,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     ;; Solar
     (require 'solar)
-    ;; (krisb-evaluate-when-internet
-    ;;   20
-    ;;   (let ((coords (krisb-get-lat-lon)))
-    ;;     (setopt calendar-latitude (car coords)
-    ;;             calendar-longitude (cdr coords)))
-    ;;   (setopt calendar-location-name (krisb-get-location-name)))
-    )
+    (krisb-evaluate-when-internet
+      20
+      (let ((coords (krisb-get-lat-lon)))
+        (setopt calendar-latitude (car coords)
+                calendar-longitude (cdr coords)))
+      (setopt calendar-location-name (krisb-get-location-name))))
 #+end_src
 
 **** =Org-agenda= and =org-super-agenda=
@@ -7114,9 +7113,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (if krisb-org-hide-drawers-mode
         (progn
           (krisb-org-hide-drawers-create-overlays)
-          (add-hook 'org-mode-hook #'krisb-org-hide-drawers-create-overlays nil t))
+          (add-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays nil t))
       (krisb-org-hide-drawers-delete-overlays)
-      (remove-hook 'org-mode-hook #'krisb-org-hide-drawers-create-overlays t)))
+      (remove-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays t)))
 
   ;;; Provide
   (provide 'krisb-org-hide-drawers)
