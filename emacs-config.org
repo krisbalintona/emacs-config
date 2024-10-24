@@ -4328,12 +4328,14 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     ;; Solar
     (require 'solar)
-    (krisb-evaluate-when-internet
-      20
-      (let ((coords (krisb-get-lat-lon)))
-        (setopt calendar-latitude (car coords)
-                calendar-longitude (cdr coords)))
-      (setopt calendar-location-name (krisb-get-location-name))))
+    ;; FIXME 2024-10-23: Hangs on startup sometimes for some reason...
+    ;; (krisb-evaluate-when-internet
+    ;;   20
+    ;;   (let ((coords (krisb-get-lat-lon)))
+    ;;     (setopt calendar-latitude (car coords)
+    ;;             calendar-longitude (cdr coords)))
+    ;;   (setopt calendar-location-name (krisb-get-location-name)))
+    )
 #+end_src
 
 **** =Org-agenda= and =org-super-agenda=

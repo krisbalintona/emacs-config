@@ -63,12 +63,14 @@
   :config
   ;; Solar
   (require 'solar)
-  (krisb-evaluate-when-internet
-    20
-    (let ((coords (krisb-get-lat-lon)))
-      (setopt calendar-latitude (car coords)
-              calendar-longitude (cdr coords)))
-    (setopt calendar-location-name (krisb-get-location-name))))
+  ;; FIXME 2024-10-23: Hangs on startup sometimes for some reason...
+  ;; (krisb-evaluate-when-internet
+  ;;   20
+  ;;   (let ((coords (krisb-get-lat-lon)))
+  ;;     (setopt calendar-latitude (car coords)
+  ;;             calendar-longitude (cdr coords)))
+  ;;   (setopt calendar-location-name (krisb-get-location-name)))
+  )
 
 ;;; Org-agenda
 (use-package org-agenda
