@@ -6897,10 +6897,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :prefix "krisb-reveal-")
 
   (defcustom krisb-reveal-fold-commands (list)
-    "A plist that determines arguments to pass to `krisb-reveal-fold'.
-  This is a plist of elements.
+    "A list that determines arguments to pass to `krisb-reveal-fold'.
+  This is a list of plists.
 
-  The following properties are required:
+  Each plist requires the following properties:
   - :command -- A symbol representing a command after which `krisb-reveal-fold'
     should be invoked
   - :location -- A function (name or lambda expression) that returns a cons whose
@@ -6911,14 +6911,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   - :predicate -- A function (name or lambda expression) that, if returning nil,
     prevents `kris-reveal-fold' from being invoked after the command denoted by
     :command."
-    :type '(plist :key-type (choice
-                             (const :command)      ; Required
-                             (const :location)     ; Required
-                             (const :predicate))   ; Optional
-                  :value-type (choice
-                               (function :tag "Command")           ; For :command
-                               (function :tag "Location function") ; For :location
-                               (function :tag "Predicate function")))) ; For :predicate)
+    :type '(repeat
+            (plist :key-type (choice
+                              (const :command)      ; Required
+                              (const :location)     ; Required
+                              (const :predicate))   ; Optional
+                   :value-type (choice
+                                (function :tag "Command")           ; For :command
+                                (function :tag "Location function") ; For :location
+                                (function :tag "Predicate function"))))) ; For :predicate)
 
   ;;; Functions
   (declare-function org-show-entry "org")
@@ -6926,8 +6927,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;;###autoload
   (defun krisb-reveal-fold (&optional point buffer predicate)
-    "Open the outline/outshine or org heading at POINT in BUFFER.
-  This function is like `pulsar-reveal-entry' but not just when point is at heading.
+    "Reveal the outline/outshine or org heading at POINT in BUFFER.
+  This function is like `pulsar-reveal-entry' but not just when point is
+  at heading.
 
   This function assumes `krisb-reveal-mode' is non-nil.
 
@@ -6962,11 +6964,21 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   This function is meant to be added to `post-command-hook'.
 
   This function was inspired by `pulsar--post-command-pulse'."
-    (when (eq this-command (plist-get krisb-reveal-fold-commands 'command))
-      (let* ((location (funcall (plist-get krisb-reveal-fold-commands 'location)))
+    ;; TODO 2024-10-24: Consider the case when there are multiple entries in
+    ;; `krisb-reveal-fold-commands' that have the same :command.  In these cases,
+    ;; the differentiator would be predicate, so we should try all of them until
+    ;; there is a successful invocation.
+    (when (cl-some (lambda (plist)
+                     (when (plist-get plist :command)
+                       (eq (plist-get plist :command) this-command)))
+                   krisb-reveal-fold-commands)
+      (let* ((plist (cl-find this-command krisb-reveal-fold-commands
+                             :key (lambda (plist) (plist-get plist :command))
+                             :test #'eq))
+             (location (plist-get plist :location))
              (point (car location))
              (buffer (cdr location))
-             (predicate (plist-get krisb-reveal-fold-commands 'predicate)))
+             (predicate (plist-get plist :predicate)))
         (krisb-reveal-fold point buffer predicate))))
 
   ;;; Minor mode
