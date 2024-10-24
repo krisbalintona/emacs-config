@@ -2,7 +2,6 @@
 ;;;; VC
 (use-package vc
   :ensure nil
-  :hook (vc-git-log-edit-mode . auto-fill-mode)
   :custom
   (vc-follow-symlinks t)
   ;; Improves performance by not having to check for other backends. Expand this
@@ -22,6 +21,7 @@
 ;;;; Vc-git
 (use-package vc-git
   :ensure nil
+  :hook (vc-git-log-edit-mode . auto-fill-mode)
   :bind ( :map vc-git-log-edit-mode-map
           ("<tab>" . completion-at-point))
   :custom
