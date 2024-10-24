@@ -42,9 +42,15 @@
          :map goto-map                  ; The `M-g' prefix
          ("f" . consult-flymake)
          ("o" . consult-outline)
+         ("e" . consult-compile-error)
+         ("l" . consult-line)
          :map search-map                ; The `M-s' prefix
          ("i" . consult-info)
-         ("l" . consult-line)
+         ("g" . consult-git-grep)
+         ("G" . consult-grep)
+         ("r" . consult-ripgrep)
+         ("f" . consult-find)
+         ("F" . consult-locate)
          :map org-mode-map
          ([remap consult-outline] . consult-org-heading)
          ("M-g a" . consult-org-agenda))

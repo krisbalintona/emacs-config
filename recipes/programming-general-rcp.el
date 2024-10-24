@@ -99,16 +99,9 @@
 (use-package consult
   :bind
   ( :map goto-map                        ; Uses the `M-g' prefix
-    ("e" . consult-compile-error)
     ("m" . consult-mark)
     ("M" . consult-global-mark)
     ("I" . consult-imenu-multi)
-    :map search-map                      ; Uses the `M-s' prefix
-    ("g" . consult-git-grep)
-    ("G" . consult-grep)
-    ("r" . consult-ripgrep)
-    ("f" . consult-find)
-    ("F" . consult-locate)
     :map comint-mode-map
     ([remap comint-history-isearch-backward-regexp]. consult-history)
     :map minibuffer-local-map
