@@ -25,6 +25,7 @@
 ;;; Code:
 (require 'cl-macs)
 (require 'pdf-annot)
+(require 'pdf-links)
 (require 'avy)
 
 ;;; Custom entry formatter
@@ -332,7 +333,7 @@ Uses the current annotation at point's ID."
   "Insert bookmark metadata section."
   (interactive)
   (save-excursion
-    (insert "BookmarkBegin\nBookmarkTitle: \nBookmarkLevel: 1\nBookmarkPageNumber: tk\n"))
+    (insert "\nBookmarkBegin\nBookmarkTitle: \nBookmarkLevel: 1\nBookmarkPageNumber: "))
   (move-end-of-line 2))
 
 (defvar-keymap krisb-pdf-tools-metadata-mode-map
@@ -379,7 +380,7 @@ Uses the current annotation at point's ID."
     (pop-to-buffer buf-name)
     (define-key krisb-pdf-tools-metadata-mode-map (kbd "C-c C-c") commit-func)
     (set-buffer-modified-p nil)
-    (message "Press `C-c C-c' when finished editing PDF metadata")))
+    (message (substitute-command-keys "Press `C-c C-c' when finished editing PDF metadata. To see keybinds, press \\[describe-mode]"))))
 
 ;;; Provide
 (provide 'krisb-pdfs-ext)
