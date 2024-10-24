@@ -347,7 +347,6 @@ timestamp)."
 ;;;;; Ibuffer
 (use-package ibuffer
   :ensure nil
-  :bind (([remap list-buffers] . ibuffer))
   :custom
   (ibuffer-directory-abbrev-alist
    `((,(file-name-as-directory (expand-file-name krisb-notes-directory)) . ,(propertize "Notes/" 'face 'bold))

@@ -171,7 +171,6 @@ commands are also supported."
 
 ;;; Bufler
 (use-package bufler
-  :bind ([remap list-buffers] . bufler)
   :custom
   (bufler-groups
    (bufler-defgroups
@@ -236,8 +235,9 @@ commands are also supported."
 
 ;;; Ibuffer
 (use-package ibuffer
-  :bind ( s:map ibuffer-mode-map
-          ("SPC" . scroll-up-command))
+  :bind (([remap list-buffers] . ibuffer)
+         :map ibuffer-mode-map
+         ("SPC" . scroll-up-command))
   :custom
   (ibuffer-save-with-custom nil)
   (ibuffer-default-sorting-mode 'recency)

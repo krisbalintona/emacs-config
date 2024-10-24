@@ -28,9 +28,9 @@
 
 ;;; Options
 (defgroup pinching-margins ()
-    "Visually center buffer content."
-    :group 'emacs
-    :prefix "pinching-margins-")
+  "Visually center buffer content."
+  :group 'emacs
+  :prefix "pinching-margins-")
 
 (defcustom pinching-margins-visible-width 128
   "The number of columns each window should be pinched to."
