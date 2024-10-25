@@ -167,14 +167,6 @@ Info node `(eshell)Top'."
 (use-package shrink-path
   :after eshell)
 
-;;;; Eshell-syntax-highlighting
-;; Zsh-esque syntax highlighting in eshell
-(use-package eshell-syntax-highlighting
-  :demand
-  :after eshell
-  :config
-  (eshell-syntax-highlighting-global-mode 1))
-
 ;;;; Eshell source in `consult-buffer'
 (with-eval-after-load 'consult
   ;; For showing eshell sources in `consult-buffer'. Taken from

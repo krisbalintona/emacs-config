@@ -4,7 +4,8 @@
 (use-package pcmpl-args
   :after pcomplete)
 
-;;; Eshell-atuin
+;;; Eshell
+;;;; Eshell-atuin
 ;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
 (use-package eshell-atuin
   :after eshell
@@ -16,6 +17,13 @@
   (eshell-atuin-history-format "%-110c (in %i)")
   :config
   (eshell-atuin-mode 1))
+
+;;;; Eshell-syntax-highlighting
+;; Zsh-esque syntax highlighting in eshell
+(use-package eshell-syntax-highlighting
+  :after eshell
+  :config
+  (eshell-syntax-highlighting-global-mode 1))
 
 ;;; Provide
 (provide 'krisb-shell)
