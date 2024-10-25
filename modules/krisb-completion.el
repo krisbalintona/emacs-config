@@ -48,13 +48,7 @@
   ;; - `consult-location'
   ;; - `embark-keybinding'
   (completion-category-defaults
-   '((buffer (styles . (basic substring)))
-     (unicode-name (styles . (basic substring)))
-     (project-file (styles . (substring)))
-     (xref-location (styles . (substring)))
-     (info-menu (styles . (basic substring)))
-     (symbol-help (styles . (basic shorthand substring)))
-     (calendar-month (display-sort-function . identity))))
+   '((calendar-month (display-sort-function . identity))))
   (completion-category-overrides
    '((file (styles . (basic partial-completion flex))) ; Include `partial-completion' to enable wildcards and partial paths.
      (citar-candidate (styles basic substring)))))
