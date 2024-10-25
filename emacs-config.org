@@ -8227,7 +8227,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Modify PDF metadata
   ;; Emacs wrapper and convenience functions for changing package metadata using
-  ;; `pdftk'. See https://unix.stackexchange.com/a/72457 for more information on
+  ;; `pdftk'.  See https://unix.stackexchange.com/a/72457 for more information on
   ;; the CLI commands involved.
   ;;;###autoload
   (defun krisb-pdf-tools-metadata-bookmark-section ()
