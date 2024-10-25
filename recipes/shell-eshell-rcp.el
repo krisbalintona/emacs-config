@@ -175,10 +175,6 @@ Info node `(eshell)Top'."
   :config
   (eshell-syntax-highlighting-global-mode 1))
 
-;;;; Pcmpl-args
-;; Extend the build in `pcomplete' to another level.
-(use-package pcmpl-args)
-
 ;;;; Eshell source in `consult-buffer'
 (with-eval-after-load 'consult
   ;; For showing eshell sources in `consult-buffer'. Taken from
@@ -213,21 +209,6 @@ Info node `(eshell)Top'."
   (eshell-z-exclude-dirs nil)
   :init
   (exec-path-from-shell-copy-env "Z_DATA"))
-
-;;;; Eshell-atuin
-(use-package eshell-atuin
-  :demand t
-  :after eshell
-  :bind* ( :map eshell-mode-map
-           ([remap eshell-previous-matching-input] . eshell-atuin-history))
-  :custom
-  (eshell-atuin-save-duration t)
-  (eshell-atuin-filter-mode 'global)
-  (eshell-atuin-search-options '("--exit" "0"))
-  (eshell-atuin-search-fields '(time command duration directory))
-  (eshell-atuin-history-format "%-110c (in %i)")
-  :config
-  (eshell-atuin-mode 1))
 
 (provide 'shell-eshell-rcp)
 ;;; shell-eshell-rcp.el ends here

@@ -9,21 +9,21 @@
                 cape citar-denote cl-generic corfu-prescient cursory darkroom
                 denote-explore denote-interface diminish dired-hist
                 edit-indirect editorconfig eglot elisp-demos embark-consult
-                engine-mode enlight erc eros exec-path-from-shell faceup
-                flymake-collection fontaine forge form-feed gcmh grid hammy
-                highlight-function-calls ht idlwave info-colors inspector jinx
-                keychain-environment kind-icon lin lorem-ipsum magit-file-icons
-                marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
-                nerd-icons-completion nerd-icons-dired no-littering notmuch-addr
-                notmuch-transient ntlm ob-mermaid ol-notmuch olivetti on
-                orderless org-appear org-bulletproof org-contrib org-mime
-                org-modern org-remark org-tidy org-web-tools outshine
-                package-lint-flymake paren-face pdf-tools peg pulsar puni python
-                recursion-indicator saveplace-pdf-view scratch so-long
-                soap-client sudo-edit svg system-packages tmr track-changes
-                tramp treesit-auto try typewriter-roll-mode use-package
-                verilog-mode vertico-prescient which-key window-tool-bar wombag
-                ytdl))
+                engine-mode enlight erc eros eshell-atuin exec-path-from-shell
+                faceup flymake-collection fontaine forge form-feed gcmh grid
+                hammy highlight-function-calls ht idlwave info-colors inspector
+                jinx keychain-environment kind-icon lin lorem-ipsum
+                magit-file-icons marginalia mermaid-mode mixed-pitch
+                modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
+                nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
+                ntlm ob-mermaid ol-notmuch olivetti on orderless org-appear
+                org-bulletproof org-contrib org-mime org-modern org-remark
+                org-tidy org-web-tools outshine package-lint-flymake paren-face
+                pcmpl-args pdf-tools peg pulsar puni python recursion-indicator
+                saveplace-pdf-view scratch so-long soap-client sudo-edit svg
+                system-packages tmr track-changes tramp treesit-auto try
+                typewriter-roll-mode use-package verilog-mode vertico-prescient
+                which-key window-tool-bar wombag ytdl))
  '(package-vc-selected-packages
    '((grid :url "https://github.com/ichernyshovvv/grid.el")
      (wombag :url "https://github.com/karthink/wombag.git")

@@ -189,6 +189,7 @@
 (require 'krisb-treesit)
 (require 'krisb-vc)
 (require 'krisb-projects)
+(require 'krisb-shell)
 (require 'krisb-flymake)
 
 (require 'krisb-elisp)
