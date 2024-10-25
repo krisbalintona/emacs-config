@@ -118,7 +118,6 @@
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless
   :custom
-  (completion-styles '(orderless flex))
   (orderless-matching-styles
    '(orderless-regexp
      orderless-prefixes
@@ -157,6 +156,25 @@
      ;; Flex matching
      ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
      ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
+
+;;; Hotfuzz
+;; Faster version of the flex completion style.  Hotfuzz is a much faster
+;; version of the built-in flex style.  See
+;; https://github.com/axelf4/emacs-completion-bench#readme
+(use-package hotfuzz)
+
+;;; Set up completion styles
+;; I do this manually here because the final styles I want depends on the
+;; packages I want enabled, and so setting this within each use-package,
+;; independently of other use-packages, means I have to make sure various
+;; packages are loaded after other ones so my `completion-styles' setting isn't
+;; overridden in an undesirable way.  Instead, I opt to just set it finally
+;; after all those packages are set.
+(setopt completion-styles
+        (list 'orderless
+              (if (featurep 'hotfuzz)
+                  'hotfuzz
+                'flex)))
 
 ;;; Vertico
 ;;;; Itself

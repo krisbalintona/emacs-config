@@ -30,15 +30,5 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Hotfuzz
-;; Faster version of the flex completion style.
-(use-package hotfuzz
-  :after orderless              ; Let orderless set up `completion-styles' first
-  :demand
-  :config
-  ;; Replace flex style with hotfuzz style; it's much faster. See
-  ;; https://github.com/axelf4/emacs-completion-bench#readme
-  (setq completion-styles (cl-substitute 'hotfuzz 'flex completion-styles)))
-
 (provide 'completion-vanilla-rcp)
 ;;; completion-vanilla-rcp.el ends here
