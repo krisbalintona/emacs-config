@@ -8224,7 +8224,17 @@ Configuration related to "saving a state," that is, storing or restoring anythin
      "pdf-annot"
      :follow #'krisb-pdf-annot-org-follow-link
      :store #'krisb-pdf-annot-org-store-link))
+#+end_src
 
+*** Modifying PDF metadata
+
+Modify PDF metadata. PDF metadata includes the PDF outline, pagination (chronological and actual), and pagination style(s). =pdf-tools= offers powerful commands to navigate PDFs via chronological pagination (~pdf-view-goto-page~), actual pagination (i.e. "labels") (~pdf-view-goto-label~), and outline (~pdf-outline~, or =consult='s ~consult-imenu~). Hence, a PDF's metadata can become very handy---when accurate, at least.
+
+However, many PDFs can have missing or inconsistent metadata, such as having no outline nor labels (i.e. actual pagination). I hadn't found any existing package to do this (and still haven't), so I wrote a few lines of code to leverage Linux's =pdftk=[fn:3] binary. It creates a new buffer whose contents are the output of =pdftk='s representation of PDF metadata. Users can change the buffer contents to their liking then "commit" those changes to the actual file (using =pdftk=).
+
+I shared this code snippet (or, rather, a [[https://gist.github.com/krisbalintona/f4554bb8e53c27c246ae5e3c4ff9b342][GitHub gist of this code snippet]]) for the first time [[https://www.reddit.com/r/emacs/comments/1gbkdag/code_to_modify_pdf_metadata_such_as_its_outline/][on the r/emacs subreddit]].
+
+#+begin_src emacs-lisp :tangle "lisp/krisb-pdfs-ext.el"
   ;;; Modify PDF metadata
   ;; Emacs wrapper and convenience functions for changing package metadata using
   ;; `pdftk'.  See https://unix.stackexchange.com/a/72457 for more information on
@@ -8287,6 +8297,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (provide 'krisb-pdfs-ext)
   ;;; krisb-pdfs-ext.el ends here
 #+end_src
+
+[fn:3] I don't know the availability of =pdftk= on other operating systems, nor what the comparable CLI alternatives are for those operating systems, so right now I can only claim this as a solution for Linux.
 
 ** =krisb-mpv.el=
 

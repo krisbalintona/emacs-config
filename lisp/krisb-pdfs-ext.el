@@ -326,7 +326,7 @@ Uses the current annotation at point's ID."
 
 ;;; Modify PDF metadata
 ;; Emacs wrapper and convenience functions for changing package metadata using
-;; `pdftk'. See https://unix.stackexchange.com/a/72457 for more information on
+;; `pdftk'.  See https://unix.stackexchange.com/a/72457 for more information on
 ;; the CLI commands involved.
 ;;;###autoload
 (defun krisb-pdf-tools-metadata-bookmark-section ()
