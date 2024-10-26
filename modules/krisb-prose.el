@@ -1,7 +1,8 @@
 ;;; Environment
 ;;;; Olivetti
 (use-package olivetti
-  :hook ((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
+  :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
+         (olivetti-mode . krisb-olivetti-set-bookmark-face))
   :custom
   (olivetti-lighter nil)
   (olivetti-body-width 0.6)
@@ -23,7 +24,16 @@
    "olivetti"
    (set-face-attribute 'olivetti-fringe nil
                        :background bg-dim
-                       :inherit 'unspecified)))
+                       :inherit 'unspecified))
+
+  ;; Set `bookmark-face' buffer-locally
+  (defun krisb-olivetti-set-bookmark-face ()
+    "Sets the buffer-local specification of `bookmark-face'.
+We do this because the olivetti settings may change the background color
+of the fringe, meaning bookmark fringe marks, which use the default
+fringe background color, are out of place."
+    (face-remap-add-relative 'bookmark-face
+                             :background (face-background 'olivetti-fringe))))
 
 ;;;; Astute.el
 (use-package astute
