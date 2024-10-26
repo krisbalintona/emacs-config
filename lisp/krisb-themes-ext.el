@@ -71,9 +71,9 @@ nighttime, call `krisb-themes-ext-proper-load-theme-dark'.
 
 Nighttime begins at NIGHT-START hour and daytime begins at DAY-START
 hour."
-  (interactive)
+  (interactive (list 8 19))
   (let ((hour (string-to-number (format-time-string "%H"))))
-    ;; Dark theme between 7 PM or 8 AM
+    ;; Dark theme between NIGHT-START and DAY-START
     (if (or (<= night-start hour) (<= hour day-start))
         (krisb-themes-ext-proper-load-theme-dark)
       (krisb-themes-ext-proper-load-theme-light))))
