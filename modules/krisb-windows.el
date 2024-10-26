@@ -263,6 +263,12 @@
            :header-mouse-map ibuffer-size-header-map)
     (file-size-human-readable (buffer-size))))
 
+;;; Ibuffer-project
+(use-package ibuffer-project
+  :hook (ibuffer . (lambda ()
+                     (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
+                     (ibuffer-update t t))))
+
 ;;; Nerd-icons-ibuffer
 (use-package nerd-icons-ibuffer
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode)
