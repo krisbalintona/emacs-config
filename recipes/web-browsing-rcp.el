@@ -41,21 +41,5 @@
         (let ((browse-url-generic-args (remove "--new-window" browse-url-generic-args)))
           (funcall browse-url-browser-function url args)))))))
 
-;;; Eww
-;; Emacs' web browser
-(use-package eww
-  :ensure nil
-  :custom
-  (eww-restore-desktop nil)
-  (eww-desktop-remove-duplicates t)     ; Don't duplicate pages in history
-  (eww-header-line-format nil)
-  (eww-search-prefix "https://duckduckgo.com/html/?q=") ; Use duckduckgo search engine
-  (eww-download-directory (no-littering-expand-var-file-name "eww/downloads/")) ; Where to put downloads
-  (eww-history-limit 150)
-  (eww-browse-url-new-window-is-tab nil)
-  (eww-form-checkbox-selected-symbol "[X]")
-  (eww-form-checkbox-symbol "[ ]")
-  (eww-auto-rename-buffer 'title))
-
 (provide 'web-browsing-rcp)
 ;;; web-browsing-rcp.el ends here

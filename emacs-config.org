@@ -6420,6 +6420,23 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; (shr-cookie-policy nil)
     )
 
+  ;;; Eww
+  ;; Emacs' web browser
+  (use-package eww
+    :ensure nil
+    :hook (eww-after-render . visual-line-mode)
+    :custom
+    (eww-restore-desktop t)
+    (eww-desktop-remove-duplicates t)     ; Don't duplicate pages in history
+    (eww-search-prefix "https://duckduckgo.com/html/?q=") ; Use duckduckgo search engine
+    (eww-download-directory (no-littering-expand-var-file-name "eww/downloads/")) ; Where to put downloads
+    (eww-history-limit 150)
+    (eww-readable-adds-to-history nil)
+    (eww-browse-url-new-window-is-tab nil)
+    (eww-form-checkbox-selected-symbol "[X]")
+    (eww-form-checkbox-symbol "[ ]")
+    (eww-auto-rename-buffer 'title))
+
   ;;; Engine-mode
   ;; Send arbitrary search engine queries to your browser from within Emacs
   (use-package engine-mode
