@@ -180,6 +180,7 @@
 (require 'krisb-org-export)
 (require 'krisb-denote)
 (require 'krisb-citations)
+(require 'krisb-spelling)
 
 (require 'krisb-pdfs)
 (require 'krisb-web-annotations)

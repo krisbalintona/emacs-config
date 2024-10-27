@@ -20,11 +20,12 @@
                 nov ntlm ob-mermaid ol-notmuch olivetti on orderless org-appear
                 org-bulletproof org-contrib org-mime org-modern org-remark
                 org-tidy org-web-tools outshine package-lint-flymake paren-face
-                pcmpl-args pdf-tools peg pulsar puni python recursion-indicator
-                saveplace-pdf-view scratch so-long soap-client sudo-edit svg
-                system-packages tmr track-changes tramp treesit-auto try
-                typewriter-roll-mode use-package verilog-mode vertico-prescient
-                which-key window-tool-bar wombag ytdl))
+                pcmpl-args pdf-tools peg powerthesaurus pulsar puni python
+                recursion-indicator saveplace-pdf-view scratch so-long
+                soap-client sudo-edit svg system-packages tmr track-changes
+                tramp treesit-auto try typewriter-roll-mode use-package
+                verilog-mode vertico-prescient which-key window-tool-bar wombag
+                ytdl))
  '(package-vc-selected-packages
    '((grid :url "https://github.com/ichernyshovvv/grid.el")
      (wombag :url "https://github.com/karthink/wombag.git")
