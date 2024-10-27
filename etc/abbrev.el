@@ -9,7 +9,7 @@
 (define-abbrev-table 'global-abbrev-table
   '(
     (";d" "" krisb-abbrev-current-date :count 0)
-    (";t" "" krisb-abbrev-todo-keyword :count 1)
+    (";t" "" krisb-abbrev-todo-keyword :count 0)
     (";td" "" krisb-abbrev-todo-keyword-and-date :count 0)
    ))
 
@@ -50,5 +50,8 @@
     ("activaate" "activate" nil :count 0)
     ("slightlyg" "slightly" nil :count 0)
     ("visibitilty" "visibility" nil :count 0)
+    ("accomodate" "accommodate" nil :count 0)
+    ("caled" "called" nil :count 0)
+    ("intersting" "interesting" nil :count 0)
    ))
 
