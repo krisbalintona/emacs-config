@@ -4074,11 +4074,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (with-eval-after-load 'info
       (org-remark-info-mode 1))
     :config
-    (use-package all-the-icons
-      :config
-      (setopt org-remark-icon-notes (all-the-icons-material "details")
-              org-remark-icon-position-adjusted (all-the-icons-material "error")
-              org-remark-line-icon (all-the-icons-faicon "sticky-note"))))
+    (with-eval-after-load 'nerd-icons
+      (setopt org-remark-icon-notes (nerd-icons-mdicon "nf-md-thought_bubble")
+              org-remark-icon-position-adjusted (nerd-icons-mdicon "nf-md-exclamation_thick")
+              org-remark-line-icon (nerd-icons-mdicon "nf-md-note"))))
 
   ;;; Kris-org-remark-ext
   (use-package krisb-org-remark-ext
