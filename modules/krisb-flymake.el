@@ -1,6 +1,9 @@
 ;;; Flymake
 (use-package flymake
   :hook ((prog-mode org-mode) . flymake-mode)
+  :bind ( :map goto-map
+          ("M-p" . flymake-goto-prev-error)
+          ("M-n" . flymake-goto-next-error))
   :custom
   (elisp-flymake-byte-compile-load-path ; Recognize files Emacs knows about
    (append elisp-flymake-byte-compile-load-path load-path))
