@@ -396,6 +396,7 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 
   (require 'krisb-pdfs)
   (require 'krisb-web-annotations)
+  (require 'krisb-epub)
 
   (require 'krisb-programming-essentials)
   (require 'krisb-directories)
@@ -4390,6 +4391,19 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Provide
   (provide 'krisb-pdfs)
   ;;; krisb-pdfs.el ends here
+#+end_src
+
+**** =krisb-epub.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-epub.el"
+  ;;; Nov-mode
+  (use-package nov
+    :mode ("\\.epub\\'" . nov-mode)
+    :hook ((nov-mode . visual-line-mode)
+           (nov-mode . olivetti-mode)))
+
+  ;;; Provide
+  (provide 'krisb-epub)
 #+end_src
 
 **** =krisb-videos.el=

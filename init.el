@@ -183,6 +183,7 @@
 
 (require 'krisb-pdfs)
 (require 'krisb-web-annotations)
+(require 'krisb-epub)
 
 (require 'krisb-programming-essentials)
 (require 'krisb-directories)

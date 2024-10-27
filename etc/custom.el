@@ -17,7 +17,7 @@
                 lorem-ipsum magit-file-icons marginalia mermaid-mode mixed-pitch
                 modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
                 nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
-                ntlm ob-mermaid ol-notmuch olivetti on orderless org-appear
+                nov ntlm ob-mermaid ol-notmuch olivetti on orderless org-appear
                 org-bulletproof org-contrib org-mime org-modern org-remark
                 org-tidy org-web-tools outshine package-lint-flymake paren-face
                 pcmpl-args pdf-tools peg pulsar puni python recursion-indicator
