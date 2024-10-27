@@ -1,3 +1,18 @@
+;;; Shr
+;; Emacs' built-in web renderer
+(use-package shr
+  :ensure nil
+  :custom
+  (shr-fill-text nil)                ; Prefer to use `visual-line-mode' instead
+  (shr-use-fonts t)
+  ;; (shr-use-colors nil)                  ; t is bad for accessibility
+  (shr-width nil)
+  (shr-discard-aria-hidden t)
+  (shr-max-image-proportion 0.6)        ; How big are images?
+  (shr-image-animate t)
+  ;; (shr-cookie-policy nil)
+  )
+
 ;;; Engine-mode
 ;; Send arbitrary search engine queries to your browser from within Emacs
 (use-package engine-mode

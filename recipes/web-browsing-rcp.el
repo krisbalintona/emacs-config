@@ -26,20 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Shr
-;; Simple HTML Renderer (Shr)
-(use-package shr
-  :ensure nil
-  :custom
-  ;; (shr-use-colors nil)                  ; t is bad for accessibility
-  (shr-use-fonts t)                     ; Proportional fonts?
-  (shr-max-image-proportion 0.6)        ; How big are images?
-  (shr-image-animate t)               ; GIFs?
-  (shr-width nil)
-  (shr-discard-aria-hidden t)
-  ;; (shr-cookie-policy nil)
-  (shr-fill-text t))
-
 ;;; Browse-url
 (use-package browse-url
   :ensure nil
