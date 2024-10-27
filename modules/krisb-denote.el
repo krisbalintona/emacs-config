@@ -95,11 +95,15 @@
     (require 's)
     (s-lower-camel-case (denote-slug-hyphenate str)))
 
-
   ;; Add inbox to `org-refile-targets'
   (with-eval-after-load 'org-refile
     (add-to-list 'org-refile-targets
-                 `(,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2)))))
+                 `(,(car (denote-directory-files "20221011T101254")) . (:maxlevel . 2))))
+
+  ;; Zettel metadata template
+  (with-eval-after-load 'org
+    (add-to-list 'org-structure-template-alist
+                 '("m" . "src org :exports none"))))
 
 ;;; Denote-journal-extras
 (use-package denote-journal-extras
