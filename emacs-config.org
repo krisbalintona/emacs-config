@@ -9063,9 +9063,13 @@ These are lines I've removed while porting to a literate config.
     (setq selection-coding-system 'utf-8))
 #+end_src
 
-* LocalWords :noexport:
+* Local :noexport:
 :PROPERTIES:
 :VISIBILITY: folded
 :END:
 
 #  LocalWords:  Vertico Minibuffer Todos Notmuch LocalWords
+
+# Local Variables:
+# apheleia-inhibit: t
+# End:
