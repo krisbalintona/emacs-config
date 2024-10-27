@@ -73,7 +73,7 @@
   (diff-default-read-only t)
   (diff-font-lock-prettify t)
   (diff-refine 'font-lock)
-  (diff-font-lock-syntax nil)
+  (diff-font-lock-syntax t)
   :config
   (krisb-modus-themes-setup-faces
    "diff-mode"
