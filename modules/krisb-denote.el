@@ -65,6 +65,7 @@
   (denote-rename-buffer-backlinks-indicator " ⟷")
 
   ;; Backlinks
+  (denote-org-store-link-to-heading 'id)
   (denote-backlinks-show-context t)
   (denote-backlinks-display-buffer-action
    '((display-buffer-reuse-window display-buffer-below-selected)
@@ -75,7 +76,6 @@
 
   ;; Miscellaneous
   (denote-date-prompt-use-org-read-date t)
-  (denote-org-store-link-to-heading)
   :config
   (denote-rename-buffer-mode 1)
   (denote-menu-bar-mode 1)
