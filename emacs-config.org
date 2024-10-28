@@ -3388,6 +3388,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
     ;; Movement
     (org-special-ctrl-a/e t)
+    (org-special-ctrl-k t)
     (org-ctrl-k-protect-subtree 'error)
 
     ;; Plain lists

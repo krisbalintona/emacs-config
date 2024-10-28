@@ -29,6 +29,7 @@
 
   ;; Movement
   (org-special-ctrl-a/e t)
+  (org-special-ctrl-k t)
   (org-ctrl-k-protect-subtree 'error)
 
   ;; Plain lists
