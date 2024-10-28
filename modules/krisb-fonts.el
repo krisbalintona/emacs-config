@@ -8,7 +8,11 @@
    '((iosevka-variant
       :default-family "Iosevka SS11"
       :fixed-pitch-family "Iosevka")
-     (default)                          ; Use fallback values
+     (default-wsl2
+      :default-height 135
+      :inherit iosevka-variant)
+     (default                           ; Use fallback values
+      :inherit iosevka-variant)
      ;; Below are the shared fallback properties. I leave them there also as
      ;; reference for all possible properties
      (t
