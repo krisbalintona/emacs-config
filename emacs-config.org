@@ -3792,6 +3792,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Flymake-collection
   (use-package flymake-collection
+    :ensure-system-package vale
     :after flymake
     :custom
     (flymake-collection-hook-inherit-config t)
