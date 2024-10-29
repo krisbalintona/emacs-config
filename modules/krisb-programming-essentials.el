@@ -33,7 +33,6 @@
    '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode compilation-mode))
   (form-feed-exclude-modes nil)
   :config
-  ;; Also see the command `treesit-auto-install-all'
   (global-form-feed-mode 1))
 
 ;;;; Which-func

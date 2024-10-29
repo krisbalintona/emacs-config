@@ -78,20 +78,6 @@ folded."
       (let ((notmuch-show-hook (remove 'krisb-notmuch-show-expand-only-unread-h notmuch-show-hook)))
         (notmuch-show-filter-thread "tag:unread")))))
 
-;;; Open MML part in browser
-;; FIXME 2024-09-26: This is a workaround. For some reason
-;; `notmuch-show-view-part' opens a non-existent HTML file in the browser...
-;;;###autoload
-(defun krisb-notmuch-show-view-part ()
-  "View part in browser."
-  (notmuch-show-apply-to-current-part-handle
-   (lambda (handle &optional mime-type)
-     (let ((file (make-temp-file "kb-notmuch-part-" nil (when (string= mime-type "text/html") ".html")))
-           (browse-url-generic-args (remove "--new-window" browse-url-generic-args))) ; This is ad-hoc: I prefer not to open in a new window
-       (mm-save-part-to-file handle file)
-       (browse-url file)))))
-(advice-add 'notmuch-show-view-part :override #'krisb-notmuch-show-view-part)
-
 ;;; Bespoke `notmuch-show-mode' commands
 ;;;###autoload
 (defun krisb-notmuch-show-trash-thread-then-next (&optional show)

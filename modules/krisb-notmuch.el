@@ -313,5 +313,14 @@ from a `notmuch-search-mode' buffer."
   ;; reflects the state of my maildirs accurate
   (advice-add 'notmuch-bury-or-kill-this-buffer :after #'display-time-update))
 
+;;;; Mailcap
+(use-package mailcap
+  :ensure nil
+  :custom
+  ;; This affects the action called by `notmuch-show-view-part' and the listings
+  ;; of `notmuch-show-interactively-view-part'
+  (mailcap-user-mime-data
+   '(("xdg-open %s" "text/html"))))
+
 ;;; Provide
 (provide 'krisb-notmuch)

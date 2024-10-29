@@ -20,8 +20,8 @@
   (treesit-extra-load-path treesit--install-language-grammar-out-dir-history)
   :config
   ;; Add all *-ts-modes to `auto-mode-alist'
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode 1))
+  (global-treesit-auto-mode 1)
+  (treesit-auto-add-to-auto-mode-alist 'all))
 
 ;;; Provide
 (provide 'krisb-treesit)
