@@ -1,7 +1,7 @@
 ;;;; Notmuch
 (use-package notmuch
   :ensure-system-package (notmuch
-                          (gmi . "lieer-git"))
+                          (gmi . lieer-git))
   :hook ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
          (notmuch-show . olivetti-mode)
          (message-send . krisb-notmuch-set-sendmail-args))
