@@ -1,4 +1,14 @@
 ;;; Environment
+;;;; Visual-wrap
+;; Visually indent lines wrapped visually! This makes long-lines in lists
+;; properly indented!
+;; NOTE: This package is the same as the more often referred to
+;; `adaptive-wrap-prefix-mode'.
+(use-package visual-wrap
+  :ensure nil
+  :config
+  (global-visual-wrap-prefix-mode 1))
+
 ;;;; Olivetti
 (use-package olivetti
   :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
