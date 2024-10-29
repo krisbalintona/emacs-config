@@ -43,7 +43,7 @@ We do this because the olivetti settings may change the background color
 of the fringe, meaning bookmark fringe marks, which use the default
 fringe background color, are out of place."
     (face-remap-add-relative 'bookmark-face
-                             :background (face-background 'olivetti-fringe))))
+                             :inherit '(olivetti-fringe success))))
 
 ;;;; Astute.el
 (use-package astute
