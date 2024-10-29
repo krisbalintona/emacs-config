@@ -9,7 +9,7 @@
       :default-family "Iosevka SS11"
       :fixed-pitch-family "Iosevka")
      (default-wsl2
-      :default-height 135
+      :default-height 180
       :inherit iosevka-variant)
      (default                           ; Use fallback values
       :inherit iosevka-variant)
