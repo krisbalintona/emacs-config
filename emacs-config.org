@@ -619,6 +619,19 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
    fast-but-imprecise-scrolling t)
 #+end_src
 
+**** Recognizing =M-SPC= under WSLg
+
+#+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
+  ;;; Recognizing `M-SPC' under WSLg
+  ;; 2024-10-29: There is currently an issue in WSLg that prevents Alt+Space from
+  ;; being caught by X11.  A workaround is described in
+  ;; https://github.com/microsoft/wslg/issues/1068#issuecomment-1817786154.  Use
+  ;; PowerToys Keyboard Manager to rebind Alt+Space to Alt+F13 in then using
+  ;; xmodmap to redirect Alt+F13 to M-SPC.  (Instead of creating a file, I do it
+  ;; using a shell command below.)
+  (shell-command "xmodmap -e 'keycode 191 = space'")
+#+end_src
+
 **** Commands
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
@@ -3201,8 +3214,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                  :before (do (announce "Work time!"))
                                  :advance (do (announce "Work time is over!")
                                               (notify "Work time is over!")
-                                              (remind "5 minutes"
-                                                      (do (krisb-hammy-play-sound)))))
+                                            (remind "5 minutes"
+                                                    (do (krisb-hammy-play-sound)))))
                        (interval :name "Rest"
                                  :face 'font-lock-type-face
                                  :duration (do (let ((duration (cl-loop for (interval start end) in history
@@ -3226,7 +3239,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                  :advance (remind "5 minutes"
                                                   (do (announce "Rest time is over!")
                                                       (notify "Rest time is over!")
-                                                      (krisb-hammy-play-sound)))))
+                                                    (krisb-hammy-play-sound)))))
       :complete-p (do (and (> cycles 1)
                            interval
                            (equal "Work" interval-name)
