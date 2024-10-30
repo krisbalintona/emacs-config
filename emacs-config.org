@@ -7668,8 +7668,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (when-let ((f (buffer-file-name)))
       (when (and (file-in-directory-p f denote-directory)
                  (denote-filename-is-note-p f))
-        (with-demoted-errors "Error: %S"
-          (denote-rename-file-using-front-matter f)))))
+        ;; We ignore user-errors since `denote--rename-file' (called internally by
+        ;; `denote-rename-file') throws a user-error if you are trying to rename
+        ;; the current file to a file that already exists.  This is suppose to
+        ;; safeguard against cases wherein renaming a file overwrites another
+        ;; file.  However, in my use-case, this should never happen.  I use this
+        ;; as a workaround to prevent user-errors from being constantly thrown.
+        (condition-case-unless-debug err
+            (denote-rename-file-using-front-matter f)
+          (user-error nil)))))
 
   ;;; Standardizing note front-matter
   (defun krisb-org-set-keyword (keyword value)
