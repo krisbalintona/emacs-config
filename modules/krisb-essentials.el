@@ -132,8 +132,10 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 (defun krisb-empty-trash ()
   "Empty the trash directory."
   (interactive)
-  (when delete-by-moving-to-trash
-    (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory)))))
+  (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
+    (when (and delete-by-moving-to-trash
+               (yes-or-no-p (format "Empty trash directory of %s size? " size)))
+      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))))
 
 ;;;; Remove all advice from a function
 ;; Thanks to
