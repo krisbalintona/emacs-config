@@ -25,14 +25,6 @@
 ;;;; Eshell
 (use-package eshell
   :ensure nil
-  :hook
-  ((eshell . visual-line-mode)
-   (eshell . kb/eshell-setup))
-  :bind
-  ( :map krisb-open-keymap
-    ("e" . eshell)
-    :map eshell-mode-map
-    ([remap eshell-previous-matching-input] . consult-history))
   :custom
   (eshell-kill-processes-on-exit t)
   (eshell-scroll-to-bottom-on-input 'all)
@@ -57,54 +49,6 @@
      eshell-tramp
      eshell-unix))
   :config
-  ;; NOTE 2022-01-19: I changed the functionality when passed a nonnumerical
-  ;; prefix argument.
-  (defun kb/eshell (&optional arg)
-    "Create an interactive Eshell buffer. Start a new Eshell session, or switch
-to an already active session. Return the buffer selected (or created).
-
-With a string prefix arg, create a new session with arg as its name.
-
-With a nonnumeric, nonstring prefix arg, create a new session.
-
-With a numeric prefix arg (as in `\\[universal-argument] 42 \\[eshell]'), switch
-to the session with that number, or create it if it doesn't already exist.
-
-The buffer name used for Eshell sessions is determined by the value of
-`eshell-buffer-name', which see.
-
-Eshell is a shell-like command interpreter. For more information on Eshell, see
-Info node `(eshell)Top'."
-    (interactive "P")
-    (cl-assert eshell-buffer-name)
-    (let ((buf (cond ((numberp arg)
-                      (get-buffer-create (format "%s<%d>"
-                                                 eshell-buffer-name
-                                                 arg)))
-                     ((stringp arg)     ; If arg is string
-                      (generate-new-buffer arg))
-                     (arg
-                      (generate-new-buffer eshell-buffer-name))
-                     (t
-                      (get-buffer-create eshell-buffer-name))
-                     )))
-      (cl-assert (and buf (buffer-live-p buf)))
-      (pop-to-buffer-same-window buf)
-      (unless (derived-mode-p 'eshell-mode)
-        (eshell-mode))
-      buf))
-
-  (defun kb/eshell-setup ()
-    "Buffer-local settings for eshell."
-    (set-display-table-slot standard-display-table 0 ?\ )
-    (setq-local scroll-margin 3
-                line-spacing 0
-                ;; `consult-outline' support for eshell prompts. See
-                ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
-                outline-regexp eshell-prompt-regexp
-                ;; Imenu with eshell prompt history
-                imenu-generic-expression `((nil ,eshell-prompt-regexp 0))))
-
   ;; Eshell modules should be loaded manually
   ;; Taken from
   ;; https://protesilaos.com/dotemacs/#h:103a8795-c29c-474f-9ddf-ecafaa2f6775
@@ -190,17 +134,6 @@ Info node `(eshell)Top'."
                               (eq (buffer-local-value 'major-mode x) 'eshell-mode))
                             (buffer-list))))))
   (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append))
-
-;;;; Eshell-z
-;; Use z in Eshell
-(use-package eshell-z
-  :after eshell
-  :demand
-  :custom
-  (eshell-z-freq-dir-hash-table-file-name (getenv "Z_DATA"))
-  (eshell-z-exclude-dirs nil)
-  :init
-  (exec-path-from-shell-copy-env "Z_DATA"))
 
 (provide 'shell-eshell-rcp)
 ;;; shell-eshell-rcp.el ends here
