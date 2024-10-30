@@ -11,9 +11,7 @@
   :hook ((eshell . visual-line-mode)
          (eshell . krisb-eshell-setup))
   :bind ( :map krisb-open-keymap
-          ("e" . eshell)
-          :map eshell-mode-map
-          ([remap eshell-previous-matching-input] . consult-history))
+          ("e" . eshell))
   :config
   (defun krisb-eshell-setup ()
     "Buffer-local settings for eshell."
@@ -25,6 +23,12 @@
                 outline-regexp eshell-prompt-regexp
                 ;; Imenu with eshell prompt history
                 imenu-generic-expression `((nil ,eshell-prompt-regexp 0)))))
+
+;;;; Esh-mode
+(use-package esh-mode
+  :ensure nil
+  :bind ( :map eshell-mode-map
+          ([remap eshell-previous-matching-input] . consult-history)))
 
 ;;;; Eshell-atuin
 ;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
