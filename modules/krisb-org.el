@@ -5,8 +5,7 @@
          (org-mode . visual-line-mode)
          (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 120))))
   :bind (("C-M-s-s" . org-store-link)
-         :map krisb-note-keymap
-         ("c" . org-capture))
+         ("C-c c" . org-capture))
   :custom
   (org-directory krisb-org-directory)
 
