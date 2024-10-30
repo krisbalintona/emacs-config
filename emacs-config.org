@@ -2613,6 +2613,11 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 *** =krisb-mode-line.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-mode-line.el"
+  ;;; Hide-mode-line
+  (use-package hide-mode-line
+    :bind ( :map krisb-toggle-keymap
+            ("m" . hide-mode-line-mode)))
+
   ;;; Diminish
   (use-package diminish
     :config

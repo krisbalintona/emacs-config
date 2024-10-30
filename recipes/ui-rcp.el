@@ -211,14 +211,6 @@ This version removes delimiters.")
   (kb/mlscroll-set-colors))
 
 ;;;; Other UI
-;;;;; Hide-mode-line
-;; Hide the modeline when you don't want to see it
-(use-package hide-mode-line
-  :commands hide-mode-line-mode
-  :bind
-  ( :map krisb-toggle-keymap
-    ("m" . hide-mode-line-mode)))
-
 ;;;;; Solaire-mode
 ;; Have "non-real" (by my own predicate) buffers and other faces swapped.
 ;; NOTE 2023-07-13: Make sure you set solaire's faces if my theme does not

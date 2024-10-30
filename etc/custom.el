@@ -13,8 +13,8 @@
                 enlight erc eros eshell-atuin eshell-syntax-highlighting
                 eshell-z exec-path-from-shell external-completion faceup
                 fish-mode flymake flymake-collection fontaine forge form-feed
-                gcmh grid hammy highlight-function-calls hotfuzz ht
-                ibuffer-project idlwave info-colors inspector jinx jsonrpc
+                gcmh grid hammy hide-mode-line highlight-function-calls hotfuzz
+                ht ibuffer-project idlwave info-colors inspector jinx jsonrpc
                 keychain-environment kind-icon let-alist lin lorem-ipsum
                 magit-file-icons map marginalia mermaid-mode mixed-pitch
                 modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
