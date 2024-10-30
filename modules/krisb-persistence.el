@@ -81,7 +81,38 @@
   (desktop-restore-frames t)
   (desktop-restore-in-current-display nil)
   :config
-  (desktop-save-mode 1))
+  ;; (desktop-save-mode 1)
+  )
+
+;;; Easysession
+(use-package easysession
+  :diminish easysession-save-mode
+  :custom
+  (easysession-directory (no-littering-expand-var-file-name "easysession"))
+  (easysession-save-interval (* 2 60))
+  (easysession-mode-line-misc-info nil) ; I manually add to `global-mode-string' instead
+  :init
+  (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
+  (add-hook 'emacs-startup-hook #'easysession-save-mode 102)
+  :config
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'easysession--current-session-name))
+
+  ;; Add session infor to `global-mode-string'
+  (add-to-list 'global-mode-string `easysession-mode-line-misc-info-format)
+
+  ;; Kill old session buffers before loading a new session.  Taken from
+  ;; https://github.com/jamescherti/easysession.el?tab=readme-ov-file#how-to-make-easysession-kill-all-buffers-before-loading-a-session
+  (defun krisb-easysession-kill-old-session-buffers ()
+    (save-some-buffers t)
+    (mapc #'kill-buffer
+          (cl-remove-if
+           (lambda (buffer)
+             (string= (buffer-name buffer) messages-buffer-name))
+           (buffer-list)))
+    (delete-other-windows))
+  (add-hook 'easysession-before-load-hook #'krisb-easysession-kill-old-session-buffers)
+  (add-hook 'easysession-new-session-hook #'krisb-easysession-kill-old-session-buffers))
 
 ;;; Bookmark
 (use-package bookmark

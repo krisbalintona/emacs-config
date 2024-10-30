@@ -113,7 +113,9 @@
 ;;; Enlight
 ;; Easily create simple startup screens
 (use-package enlight
-  :hook (window-setup . (lambda () (unless desktop-save-mode (enlight-open))))
+  :hook (window-setup . (lambda ()
+                          (unless (or desktop-save-mode (bound-and-true-p easysession-save-mode))
+                            (enlight-open))))
   :custom
   (enlight-content
    (concat
