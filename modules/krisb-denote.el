@@ -6,6 +6,7 @@
   :hook ((dired-mode . denote-dired-mode)
          (denote-dired-mode . toggle-truncate-lines))
   :bind ( :map krisb-note-keymap
+          ("c" . denote-create-note)
           ("f" . denote-open-or-create)
           ("i" . denote-link-or-create)
           ("e" . denote-org-extras-extract-org-subtree)
