@@ -24,6 +24,12 @@
 
 ;;; Code:
 
+;;; Set initial scratch buffer major mode and message
+(setopt initial-scratch-message "Hello 👋"
+        ;; Shave seconds off startup time by starting the scratch buffer in
+        ;; `fundamental-mode'
+        initial-major-mode 'fundamental-mode)
+
 ;;; Custom
 (setopt custom-file (no-littering-expand-etc-file-name "custom.el")
         custom-safe-themes t

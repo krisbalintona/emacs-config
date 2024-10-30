@@ -156,18 +156,10 @@ This sets the default graphical element settings used by every frame.
 *** Add modules and bespoke libraries to ~load-path~
 
 #+begin_src emacs-lisp :tangle "init.el"
+  ;;; Add modules and lisp to load path
   (dolist (path (list (expand-file-name "modules" user-emacs-directory)
                       (expand-file-name "lisp" user-emacs-directory)))
     (add-to-list 'load-path path))
-#+end_src
-
-*** Initial scratch buffer
-
-#+begin_src emacs-lisp :tangle "init.el"
-  ;; Shave seconds off startup time by starting the scratch buffer in
-  ;; `fundamental-mode'
-  (setopt initial-major-mode 'fundamental-mode
-          initial-scratch-message "Hello 👋")
 #+end_src
 
 *** Load libraries
@@ -569,6 +561,15 @@ Uncommonly known are the commands =use-package= offers that help users debug and
   ;; Setting general user options.
 
   ;;; Code:
+#+end_src
+**** Initial scratch buffer
+
+#+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
+  ;;; Set initial scratch buffer major mode and message
+  (setopt initial-scratch-message "Hello 👋"
+          ;; Shave seconds off startup time by starting the scratch buffer in
+          ;; `fundamental-mode'
+          initial-major-mode 'fundamental-mode)
 #+end_src
 
 **** Customize and customize buffers
