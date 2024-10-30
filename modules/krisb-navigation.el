@@ -67,6 +67,7 @@
      (?s "Eshell" eshell-bookmark-jump)
      (?w "Web" eww-bookmark-jump xwidget-webkit-bookmark-jump-handler)
      (?v "VC Directory" vc-dir-bookmark-jump)
+     (?o "Org headings" org-bookmark-heading-jump)
      (nil "Other")))
   (consult-ripgrep-args
    (concat

@@ -326,5 +326,11 @@
 
   (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
 
+;;; Org-bookmark-heading
+(use-package org-bookmark-heading
+  :hook (org-bookmark-heading-after-jump . org-narrow-to-subtree)
+  :custom
+  (org-bookmark-heading-make-ids t))
+
 ;;; Provide
 (provide 'krisb-org)

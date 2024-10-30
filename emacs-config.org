@@ -2714,6 +2714,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        (?s "Eshell" eshell-bookmark-jump)
        (?w "Web" eww-bookmark-jump xwidget-webkit-bookmark-jump-handler)
        (?v "VC Directory" vc-dir-bookmark-jump)
+       (?o "Org headings" org-bookmark-heading-jump)
        (nil "Other")))
     (consult-ripgrep-args
      (concat
@@ -3725,6 +3726,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                      "Download then attach an archive of a webpage using `org-web-tools'\n")))
 
     (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
+
+  ;;; Org-bookmark-heading
+  (use-package org-bookmark-heading
+    :hook (org-bookmark-heading-after-jump . org-narrow-to-subtree)
+    :custom
+    (org-bookmark-heading-make-ids t))
 #+end_src
 
 **** Provide
