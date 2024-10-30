@@ -6169,12 +6169,19 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
 *** =krisb-shell.el=
 
+**** General
+
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
   ;;; Pcmpl-args
   ;; Extend the build in `pcomplete'.  Includes flag and argument completion in
   ;; the shell.
   (use-package pcmpl-args
     :after pcomplete)
+#+end_src
+
+**** Eshell
+
+#+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
 
   ;;; Eshell
   ;;;; Eshell-atuin
@@ -6196,6 +6203,19 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :after eshell
     :config
     (eshell-syntax-highlighting-global-mode 1))
+#+end_src
+
+**** Fish
+
+#+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
+  ;;; Fish-mode
+  (use-package fish-mode
+    :mode "\\.fish\\'")
+#+end_src
+
+**** Provide
+
+#+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
 
   ;;; Provide
   (provide 'krisb-shell)

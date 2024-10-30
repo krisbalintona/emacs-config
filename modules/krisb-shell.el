@@ -25,5 +25,9 @@
   :config
   (eshell-syntax-highlighting-global-mode 1))
 
+;;; Fish-mode
+(use-package fish-mode
+  :mode "\\.fish\\'")
+
 ;;; Provide
 (provide 'krisb-shell)
