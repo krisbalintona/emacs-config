@@ -23,9 +23,12 @@
   (modus-themes-prompts '(semibold))
   (modus-themes-completions '((matches . (semibold))
                               (selection . (regular))))
-  (modus-themes-headings '((agenda-date . (1.1))
+  (modus-themes-headings '((0 . (semibold 1.1))
+                           (1 . (regular 1.1))
+                           (2 . (regular 1.1))
+                           (agenda-date . (1.1))
                            (agenda-structure . (variable-pitch 1.2))
-                           (t . (semibold 1.1))))
+                           (t . (regular 1.0))))
   :config
   ;; Overrides
   (setopt modus-themes-common-palette-overrides
