@@ -5,9 +5,17 @@
 ;; NOTE: This package is the same as the more often referred to
 ;; `adaptive-wrap-prefix-mode'.
 (use-package visual-wrap
+  ;; 2024-10-30: Using adaptive-wrap for now since there seems to be some kind
+  ;; of error between the interactions of visual-wrap and org-modern.  See
+  ;; https://github.com/minad/org-modern/discussions/238.
+  :disabled t
   :ensure nil
   :config
   (global-visual-wrap-prefix-mode 1))
+
+;;;; Adaptive-wrap
+(use-package adaptive-wrap
+  :hook (visual-line-mode . adaptive-wrap-prefix-mode))
 
 ;;;; Olivetti
 (use-package olivetti

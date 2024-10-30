@@ -5,16 +5,16 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ace-window activities agitate all-the-icons apheleia astute bind-key
-                breadcrumb bufler cape citar-denote cl-generic cl-lib compat
-                corfu-prescient cursory darkroom denote-explore denote-interface
-                diminish dired-hist edit-indirect editorconfig eglot eldoc
-                elisp-demos embark-consult engine-mode enlight erc eros
-                eshell-atuin eshell-syntax-highlighting exec-path-from-shell
-                external-completion faceup fish-mode flymake flymake-collection
-                fontaine forge form-feed gcmh grid hammy
-                highlight-function-calls hotfuzz ht ibuffer-project idlwave
-                info-colors inspector jinx jsonrpc keychain-environment
+   '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
+                bind-key breadcrumb bufler cape citar-denote cl-generic cl-lib
+                compat corfu-prescient cursory darkroom denote-explore
+                denote-interface diminish dired-hist edit-indirect editorconfig
+                eglot eldoc elisp-demos embark-consult engine-mode enlight erc
+                eros eshell-atuin eshell-syntax-highlighting
+                exec-path-from-shell external-completion faceup fish-mode
+                flymake flymake-collection fontaine forge form-feed gcmh grid
+                hammy highlight-function-calls hotfuzz ht ibuffer-project
+                idlwave info-colors inspector jinx jsonrpc keychain-environment
                 kind-icon let-alist lin lorem-ipsum magit-file-icons map
                 marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
                 nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
