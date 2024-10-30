@@ -6921,8 +6921,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   (defvar-keymap krisb-toggle-keymap
     :doc "Prefix for toggling stuff.")
-  (bind-key "C-M-s-t" krisb-toggle-keymap 'global-map)
-
+  (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 
   ;;; Provide
   (provide 'krisb-common)
