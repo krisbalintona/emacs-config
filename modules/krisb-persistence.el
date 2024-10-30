@@ -83,5 +83,17 @@
   :config
   (desktop-save-mode 1))
 
+;;; Bookmark
+(use-package bookmark
+  :ensure nil
+  :hook (on-buffer-file . bookmark-maybe-load-default-file)
+  :custom
+  (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
+  (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
+  (bookmark-fringe-mark 'bookmark-mark)
+  (bookmark-sort-flag 'last-modified)
+  (bookmark-use-annotations nil)
+  (bookmark-version-control 'nospecial))
+
 ;;; Provide
 (provide 'krisb-persistence)

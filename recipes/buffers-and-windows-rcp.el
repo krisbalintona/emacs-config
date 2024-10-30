@@ -332,18 +332,6 @@ timestamp)."
   (advice-add 'switchy-window :override 'kb/switchy-window))
 
 ;;;; Buffers
-;;;;; Bookmark
-(use-package bookmark
-  :ensure nil
-  :hook (on-first-file . bookmark-maybe-load-default-file)
-  :custom
-  (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
-  (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
-  (bookmark-fringe-mark nil)             ; No value and intrusive oftentimes
-  (bookmark-sort-flag 'last-modified)
-  (bookmark-use-annotations nil)
-  (bookmark-version-control t))
-
 ;;;;; Ibuffer
 (use-package ibuffer
   :ensure nil
