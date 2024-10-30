@@ -23,7 +23,7 @@
          (olivetti-mode . krisb-olivetti-set-bookmark-face))
   :custom
   (olivetti-lighter nil)
-  (olivetti-body-width 0.6)
+  (olivetti-body-width 0.55)
   (olivetti-minimum-body-width 80)
   (olivetti-margin-width 8)
   (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
