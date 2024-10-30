@@ -237,8 +237,8 @@ fringe background color, are out of place."
                                :before (do (announce "Work time!"))
                                :advance (do (announce "Work time is over!")
                                             (notify "Work time is over!")
-                                          (remind "5 minutes"
-                                                  (do (krisb-hammy-play-sound)))))
+                                            (remind "5 minutes"
+                                                    (do (krisb-hammy-play-sound)))))
                      (interval :name "Rest"
                                :face 'font-lock-type-face
                                :duration (do (let ((duration (cl-loop for (interval start end) in history
@@ -262,7 +262,7 @@ fringe background color, are out of place."
                                :advance (remind "5 minutes"
                                                 (do (announce "Rest time is over!")
                                                     (notify "Rest time is over!")
-                                                  (krisb-hammy-play-sound)))))
+                                                    (krisb-hammy-play-sound)))))
     :complete-p (do (and (> cycles 1)
                          interval
                          (equal "Work" interval-name)

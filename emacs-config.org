@@ -562,6 +562,7 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 
   ;;; Code:
 #+end_src
+
 **** Initial scratch buffer
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
@@ -3215,8 +3216,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                  :before (do (announce "Work time!"))
                                  :advance (do (announce "Work time is over!")
                                               (notify "Work time is over!")
-                                            (remind "5 minutes"
-                                                    (do (krisb-hammy-play-sound)))))
+                                              (remind "5 minutes"
+                                                      (do (krisb-hammy-play-sound)))))
                        (interval :name "Rest"
                                  :face 'font-lock-type-face
                                  :duration (do (let ((duration (cl-loop for (interval start end) in history
@@ -3240,7 +3241,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                  :advance (remind "5 minutes"
                                                   (do (announce "Rest time is over!")
                                                       (notify "Rest time is over!")
-                                                    (krisb-hammy-play-sound)))))
+                                                      (krisb-hammy-play-sound)))))
       :complete-p (do (and (> cycles 1)
                            interval
                            (equal "Work" interval-name)
@@ -3911,7 +3912,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
      '((plain . "\n")
        (source-note . "
   ,#+begin_src org :exports none
-    + Source: 
+    + Source:
   ,#+end_src\n")
        (mla . "#+latex_class: mla
   ,#+cite_export: biblatex mla-new

@@ -31,7 +31,7 @@
    '((plain . "\n")
      (source-note . "
 #+begin_src org :exports none
-  + Source: 
+  + Source:
 #+end_src\n")
      (mla . "#+latex_class: mla
 #+cite_export: biblatex mla-new
