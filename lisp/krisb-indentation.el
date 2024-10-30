@@ -29,7 +29,6 @@
 (declare-function comint-bol "comint")
 (declare-function comint-next-prompt "comint")
 (declare-function conf-align-assignments "conf-mode")
-(declare-function apheleia--get-formatters "apheleia")
 (declare-function org-align-tags "org")
 (declare-function krisb-org-ext-add-blank-lines "krisb-org-ext")
 
@@ -87,7 +86,7 @@ entire buffer or the region if active."
       (org-align-tags (not (region-active-p)))
       (krisb-org-ext-add-blank-lines (unless (region-active-p) 'whole-buffer))
       (krisb-format-buffer-indentation--base beg end))
-     ((apheleia--get-formatters)   ; If there is an available apheleia formatter
+     ((and (require 'apheleia nil t) (apheleia--get-formatters))   ; If there is an available apheleia formatter
       (call-interactively 'apheleia-format-buffer))
      ((derived-mode-p 'message-mode)
       (delete-trailing-whitespace))
