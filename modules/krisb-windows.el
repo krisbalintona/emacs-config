@@ -289,6 +289,7 @@
   :pin gnu-elpa-devel
   :hook (kill-emacs . activities-save-all)
   :bind (("C-c a d" . activities-define)
+         ("C-c a n" . activities-new)
          ("C-c a a" . activities-resume)
          ("C-c a g" . activities-revert)
          ("C-c a b" . activities-switch-buffer)
