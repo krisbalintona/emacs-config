@@ -9,9 +9,9 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
-    (";d" "" krisb-abbrev-current-date :count 1)
+    (";d" "" krisb-abbrev-current-date :count 2)
     (";t" "" krisb-abbrev-todo-keyword :count 0)
-    (";td" "" krisb-abbrev-todo-keyword-and-date :count 0)
+    (";td" "" krisb-abbrev-todo-keyword-and-date :count 1)
    ))
 
 (define-abbrev-table 'org-mode-abbrev-table
@@ -22,6 +22,7 @@
     ("Phillipines" "Philippines" nil :count 0)
     ("Poitn" "Point" nil :count 0)
     ("Tenessee" "Tennessee" nil :count 0)
+    ("bookpages" "book pages" nil :count 0)
     ("catalogy" "catalog" nil :count 0)
     ("coleagues" "colleagues" nil :count 0)
     ("collaborive" "collaborative" nil :count 0)
@@ -37,6 +38,7 @@
     ("labelled" "labeled" nil :count 0)
     ("maintanence" "maintenance" nil :count 0)
     ("maleability" "malleability" nil :count 0)
+    ("misperceives" "misconceives" nil :count 0)
     ("obiously" "obviously" nil :count 0)
     ("recommendatiosn" "recommendations" nil :count 0)
     ("repicate" "replicate" nil :count 0)
@@ -44,11 +46,13 @@
     ("supercede" "supersede" nil :count 0)
     ("superceded" "superseded" nil :count 0)
     ("supercedes" "supersedes" nil :count 0)
+    ("symolibc" "symbolic" nil :count 0)
     ("travelling" "traveling" nil :count 0)
    ))
 
 (define-abbrev-table 'text-mode-abbrev-table
   '(
+    ("Remoov" "Remove" nil :count 0)
     ("isntances" "instances" nil :count 0)
    ))
 
