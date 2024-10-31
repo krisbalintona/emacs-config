@@ -11,8 +11,9 @@
           ("i" . denote-link-or-create)
           ("e" . denote-org-extras-extract-org-subtree)
           ("k" . denote-rename-file-keywords)
-          ("l" . denote-find-backlink)
-          ("L" . denote-backlinks))
+          ("l" . denote-backlinks)
+          ("L" . denote-find-backlink)
+          ("h" . denote-org-extras-backlinks-for-heading))
   :custom
   (denote-directory krisb-notes-directory)
   (denote-prompts '(subdirectory title keywords signature template))
