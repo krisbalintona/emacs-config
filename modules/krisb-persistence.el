@@ -25,10 +25,22 @@
   (save-place-forget-unreadable-files t)
   (save-place-limit 3000))
 
-;;; Desktop
+;;; Bookmark
+(use-package bookmark
+  :ensure nil
+  :hook (on-buffer-file . bookmark-maybe-load-default-file)
+  :custom
+  (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
+  (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
+  (bookmark-fringe-mark 'bookmark-mark)
+  (bookmark-sort-flag 'last-modified)
+  (bookmark-use-annotations nil)
+  (bookmark-version-control 'nospecial))
+
+;;; Persistent desktops
+;;;; Desktop
 ;; Save buffers across Emacs sessions
 (use-package desktop
-  :disabled t
   :ensure nil
   :custom
   (desktop-load-locked-desktop 'check-pid)
@@ -84,7 +96,7 @@
   :config
   (desktop-save-mode 1))
 
-;;; Easysession
+;;;; Easysession
 (use-package easysession
   :disabled t
   :diminish easysession-save-mode
@@ -115,25 +127,14 @@
   (add-hook 'easysession-before-load-hook #'krisb-easysession-kill-old-session-buffers)
   (add-hook 'easysession-new-session-hook #'krisb-easysession-kill-old-session-buffers))
 
-;;; Psession
+;;;; Psession
 (use-package psession
+  :disabled t
   :custom
   (psession-auto-save-delay 60)
   :config
   (psession-mode 1)
   (psession-autosave-mode 1))
-
-;;; Bookmark
-(use-package bookmark
-  :ensure nil
-  :hook (on-buffer-file . bookmark-maybe-load-default-file)
-  :custom
-  (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
-  (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
-  (bookmark-fringe-mark 'bookmark-mark)
-  (bookmark-sort-flag 'last-modified)
-  (bookmark-use-annotations nil)
-  (bookmark-version-control 'nospecial))
 
 ;;; Provide
 (provide 'krisb-persistence)

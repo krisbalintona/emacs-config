@@ -1655,10 +1655,26 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (save-place-forget-unreadable-files t)
     (save-place-limit 3000))
 
-  ;;; Desktop
+  ;;; Bookmark
+  (use-package bookmark
+    :ensure nil
+    :hook (on-buffer-file . bookmark-maybe-load-default-file)
+    :custom
+    (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
+    (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
+    (bookmark-fringe-mark 'bookmark-mark)
+    (bookmark-sort-flag 'last-modified)
+    (bookmark-use-annotations nil)
+    (bookmark-version-control 'nospecial))
+#+end_src
+
+**** Persistent sessions
+
+#+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
+  ;;; Persistent desktops
+  ;;;; Desktop
   ;; Save buffers across Emacs sessions
   (use-package desktop
-    :disabled t
     :ensure nil
     :custom
     (desktop-load-locked-desktop 'check-pid)
@@ -1714,7 +1730,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     (desktop-save-mode 1))
 
-  ;;; Easysession
+  ;;;; Easysession
   (use-package easysession
     :disabled t
     :diminish easysession-save-mode
@@ -1745,26 +1761,19 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (add-hook 'easysession-before-load-hook #'krisb-easysession-kill-old-session-buffers)
     (add-hook 'easysession-new-session-hook #'krisb-easysession-kill-old-session-buffers))
 
-  ;;; Psession
+  ;;;; Psession
   (use-package psession
+    :disabled t
     :custom
     (psession-auto-save-delay 60)
     :config
     (psession-mode 1)
     (psession-autosave-mode 1))
+#+end_src
 
-  ;;; Bookmark
-  (use-package bookmark
-    :ensure nil
-    :hook (on-buffer-file . bookmark-maybe-load-default-file)
-    :custom
-    (bookmark-save-flag 1)                 ; Save bookmarks file every new entry
-    (bookmark-watch-bookmark-file 'silent) ; Reload bookmarks file without query
-    (bookmark-fringe-mark 'bookmark-mark)
-    (bookmark-sort-flag 'last-modified)
-    (bookmark-use-annotations nil)
-    (bookmark-version-control 'nospecial))
+**** Provide
 
+#+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
   ;;; Provide
   (provide 'krisb-persistence)
 #+end_src
