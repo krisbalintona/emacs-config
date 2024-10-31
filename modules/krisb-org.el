@@ -330,7 +330,6 @@
 (use-package org-bookmark-heading
   ;; TODO 2024-10-30: Consider also adding `org-cycle-set-startup-visibility' to
   ;; `org-bookmark-heading-after-jump-hook'
-  :hook (org-bookmark-heading-after-jump . org-narrow-to-subtree)
   :custom
   (org-bookmark-heading-make-ids nil))
 

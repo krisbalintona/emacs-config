@@ -3799,7 +3799,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (use-package org-bookmark-heading
     ;; TODO 2024-10-30: Consider also adding `org-cycle-set-startup-visibility' to
     ;; `org-bookmark-heading-after-jump-hook'
-    :hook (org-bookmark-heading-after-jump . org-narrow-to-subtree)
     :custom
     (org-bookmark-heading-make-ids nil))
 #+end_src
