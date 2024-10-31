@@ -336,9 +336,29 @@ Uses the current annotation at point's ID."
     (insert "\nBookmarkBegin\nBookmarkTitle: \nBookmarkLevel: 1\nBookmarkPageNumber: "))
   (move-end-of-line 2))
 
+(defun krisb-pdf-tools-metadata-label-section ()
+  "Insert bookmark metadata section."
+  (interactive)
+  (let* ((possible-styles
+          '("DecimalArabicNumerals"
+            "LowercaseRomanNumerals"
+            "UppercaseRomanNumerals"
+            "UppercaseLetters"
+            "LowercaseLetters"
+            "NoNumber"))
+         (style
+          (completing-read "Label style: " possible-styles nil t)))
+    (save-excursion
+      (insert "\n"
+              "PageLabelBegin\n"
+              "PageLabelNewIndex: 1\n"
+              "PageLabelStart: 1\n"
+              "PageLabelNumStyle: " style))))
+
 (defvar-keymap krisb-pdf-tools-metadata-mode-map
   :doc "Mode map for `krisb-pdf-tools-metadata-mode'."
-  "C-c C-b" #'krisb-pdf-tools-metadata-bookmark-section)
+  "C-c C-b" #'krisb-pdf-tools-metadata-bookmark-section
+  "C-c C-l" #'krisb-pdf-tools-metadata-label-section)
 
 (define-derived-mode krisb-pdf-tools-metadata-mode fundamental-mode "Metadata"
   "Major mode for altering and viewing PDF metadata."
