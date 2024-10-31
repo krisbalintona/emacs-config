@@ -109,7 +109,18 @@
   ;; Zettel metadata template
   (with-eval-after-load 'org
     (add-to-list 'org-structure-template-alist
-                 '("m" . "src org :exports none"))))
+                 '("m" . "src org :exports none")))
+
+  ;; Custom link formatting for denote org links
+  (defun krisb-denote-link-ol-get-heading ()
+    "Get current Org heading text.
+My version uses the full outline path instead of just heading text."
+    (let ((heading-text (org-get-heading :no-tags :no-todo :no-priority :no-comment))
+          (outline-path (org-get-outline-path)))
+      (if outline-path
+          (mapconcat #'identity (append outline-path (list heading-text)) " > ")
+        heading-text)))
+  (advice-add 'denote-link-ol-get-heading :override #'krisb-denote-link-ol-get-heading))
 
 ;;; Denote-journal-extras
 (use-package denote-journal-extras
