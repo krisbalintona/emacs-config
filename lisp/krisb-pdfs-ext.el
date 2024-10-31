@@ -328,6 +328,10 @@ Uses the current annotation at point's ID."
 ;; Emacs wrapper and convenience functions for changing package metadata using
 ;; `pdftk'.  See https://unix.stackexchange.com/a/72457 for more information on
 ;; the CLI commands involved.
+
+;; TODO 2024-10-30: Change the prefix of names to "krisb-pdf-metadata-modify-"
+;; because this is independent of pdf-tools?
+
 ;;;###autoload
 (defun krisb-pdf-tools-metadata-bookmark-section ()
   "Insert bookmark metadata section."
@@ -380,6 +384,10 @@ Uses the current annotation at point's ID."
          (metadata-dump-command (concat "pdftk \"" pdf-file "\" dump_data"))
          (metadata-update-command
           (concat "pdftk \"" pdf-file "\" update_info \"" metadata-file "\" output \"" temp-pdf "\""))
+         ;; TODO 2024-10-30: Make committing more robust by adding a named
+         ;; commit command to `krisb-pdf-tools-metadata-mode-map' whose activity
+         ;; depends on a buffer-local value set here.  This makes the command
+         ;; work in e.g. major mode changes.
          (commit-func (lambda ()
                         "Commit the changes to PDF metadata."
                         (interactive)
