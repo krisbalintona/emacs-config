@@ -187,6 +187,22 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
     (error "Couldn't find filename in current buffer")))
 (bind-key "w" #'krisb-yank-buffer-filename 'krisb-file-keymap)
 
+;;;; Unfill paragraph
+;; Protesilaos's `prot-simple-unfill-region-or-paragraph'
+(defun krisb-unfill-region-or-paragraph (&optional beg end)
+  "Unfill paragraph or, when active, the region.
+Join all lines in region delimited by BEG and END, if active, while
+respecting any empty lines (so multiple paragraphs are not joined, just
+unfilled).  If no region is active, operate on the paragraph.  The idea
+is to produce the opposite effect of both `fill-paragraph' and
+`fill-region'."
+  (interactive "r")
+  (let ((fill-column most-positive-fixnum))
+    (if (use-region-p)
+        (fill-region beg end)
+      (fill-paragraph))))
+(bind-key "M-Q" #'krisb-unfill-region-or-paragraph)
+
 ;;; Minor modes
 ;;;; Recognize camel case as words
 (global-subword-mode 1)
