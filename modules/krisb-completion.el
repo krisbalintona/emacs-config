@@ -211,7 +211,6 @@
   (vertico-multiform-categories
    '((buffer (vertico-sort-function . nil))
      (color (vertico-sort-function . vertico-sort-history-length-alpha))
-     (citar (vertico-sort-function . vertico-sort-history-alpha))
      (jinx grid
            (vertico-grid-annotate . 20)
            (vertico-grid-max-columns . 12)
