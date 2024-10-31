@@ -332,7 +332,7 @@
   ;; `org-bookmark-heading-after-jump-hook'
   :hook (org-bookmark-heading-after-jump . org-narrow-to-subtree)
   :custom
-  (org-bookmark-heading-make-ids t))
+  (org-bookmark-heading-make-ids nil))
 
 ;;; Provide
 (provide 'krisb-org)

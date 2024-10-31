@@ -3791,7 +3791,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; `org-bookmark-heading-after-jump-hook'
     :hook (org-bookmark-heading-after-jump . org-narrow-to-subtree)
     :custom
-    (org-bookmark-heading-make-ids t))
+    (org-bookmark-heading-make-ids nil))
 #+end_src
 
 **** Provide
