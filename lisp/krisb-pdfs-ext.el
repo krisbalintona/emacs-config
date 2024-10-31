@@ -336,6 +336,7 @@ My version of this function also saves the value of the
     (cons (buffer-name)
           (append (bookmark-make-record-default nil t 1)
                   `(,(cons 'registers (buffer-local-value 'pdf-view-register-alist (current-buffer)))
+                    ,(cons 'midnight-p (buffer-local-value 'pdf-view-midnight-minor-mode (current-buffer)))
                     ,(unless no-page
                        (cons 'page (pdf-view-current-page)))
                     ,(unless no-slice
@@ -358,6 +359,7 @@ See also `pdf-view-bookmark-make-record'.
 My version of this function also restores the value of the
 `pdf-view-register-alist' buffer local variable."
   (let ((registers (bookmark-prop-get bmk 'registers))
+        (midnight-p (bookmark-prop-get bmk 'midnight-p))
         (page (bookmark-prop-get bmk 'page))
         (slice (bookmark-prop-get bmk 'slice))
         (size (bookmark-prop-get bmk 'size))
@@ -372,6 +374,9 @@ My version of this function also restores the value of the
             (with-selected-window
                 (or (get-buffer-window (current-buffer) 0)
                     (selected-window))
+              (if midnight-p
+                  (pdf-view-midnight-minor-mode 1)
+                (pdf-view-midnight-minor-mode -1))
               (when registers
                 (setq-local pdf-view-register-alist registers))
               (when size
