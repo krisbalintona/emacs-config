@@ -180,7 +180,8 @@
 ;;;; Itself
 (use-package vertico
   :pin gnu-elpa-devel
-  :bind ("C-M-s-." . vertico-repeat)
+  :bind (("C-c v r" . vertico-repeat)
+         ("C-c v s" . vertico-suspend))
   :hook (minibuffer-setup . vertico-repeat-save)
   :custom
   (vertico-count 13)
