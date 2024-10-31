@@ -324,6 +324,79 @@ Uses the current annotation at point's ID."
    :follow #'krisb-pdf-annot-org-follow-link
    :store #'krisb-pdf-annot-org-store-link))
 
+;;; Save and restore PDF registers via bookmark handler
+(defun krisb-pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
+  "Create a bookmark PDF record.
+The optional, boolean args exclude certain attributes.
+
+My version of this function also saves the value of the
+`pdf-view-register-alist' buffer local variable."
+  (let ((displayed-p (eq (current-buffer)
+                         (window-buffer))))
+    (cons (buffer-name)
+          (append (bookmark-make-record-default nil t 1)
+                  `(,(cons 'registers (buffer-local-value 'pdf-view-register-alist (current-buffer)))
+                    ,(unless no-page
+                       (cons 'page (pdf-view-current-page)))
+                    ,(unless no-slice
+                       (cons 'slice (and displayed-p
+                                         (pdf-view-current-slice))))
+                    ,(unless no-size
+                       (cons 'size pdf-view-display-size))
+                    ,(unless no-origin
+                       (cons 'origin
+                             (and displayed-p
+                                  (let ((edges (pdf-util-image-displayed-edges nil t)))
+                                    (pdf-util-scale-pixel-to-relative
+                                     (cons (car edges) (cadr edges)) nil t)))))
+                    (handler . pdf-view-bookmark-jump-handler))))))
+
+(defun krisb-pdf-view-bookmark-jump-handler (bmk)
+  "The bookmark handler-function interface for bookmark BMK.
+See also `pdf-view-bookmark-make-record'.
+
+My version of this function also restores the value of the
+`pdf-view-register-alist' buffer local variable."
+  (let ((registers (bookmark-prop-get bmk 'registers))
+        (page (bookmark-prop-get bmk 'page))
+        (slice (bookmark-prop-get bmk 'slice))
+        (size (bookmark-prop-get bmk 'size))
+        (origin (bookmark-prop-get bmk 'origin))
+        (file (bookmark-prop-get bmk 'filename))
+        (show-fn-sym (make-symbol "pdf-view-bookmark-after-jump-hook")))
+    (fset show-fn-sym
+          (lambda ()
+            (remove-hook 'bookmark-after-jump-hook show-fn-sym)
+            (unless (derived-mode-p 'pdf-view-mode)
+              (pdf-view-mode))
+            (with-selected-window
+                (or (get-buffer-window (current-buffer) 0)
+                    (selected-window))
+              (when registers
+                (setq-local pdf-view-register-alist registers))
+              (when size
+                (setq-local pdf-view-display-size size))
+              (when slice
+                (apply 'pdf-view-set-slice slice))
+              (when (numberp page)
+                (pdf-view-goto-page page))
+              (when origin
+                (let ((size (pdf-view-image-size t)))
+                  (image-set-window-hscroll
+                   (round (/ (* (car origin) (car size))
+                             (frame-char-width))))
+                  (image-set-window-vscroll
+                   (round (/ (* (cdr origin) (cdr size))
+                             (if pdf-view-have-image-mode-pixel-vscroll
+                                 1
+                               (frame-char-height))))))))))
+    (add-hook 'bookmark-after-jump-hook show-fn-sym)
+    (set-buffer (or (find-buffer-visiting file)
+                    (find-file-noselect file)))))
+
+(advice-add 'pdf-view-bookmark-make-record :override #'krisb-pdf-view-bookmark-make-record)
+(advice-add 'pdf-view-bookmark-jump-handler :override #'krisb-pdf-view-bookmark-jump-handler)
+
 ;;; Modify PDF metadata
 ;; Emacs wrapper and convenience functions for changing package metadata using
 ;; `pdftk'.  See https://unix.stackexchange.com/a/72457 for more information on
