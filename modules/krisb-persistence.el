@@ -28,6 +28,7 @@
 ;;; Desktop
 ;; Save buffers across Emacs sessions
 (use-package desktop
+  :disabled t
   :ensure nil
   :custom
   (desktop-load-locked-desktop 'check-pid)
@@ -81,11 +82,11 @@
   (desktop-restore-frames t)
   (desktop-restore-in-current-display nil)
   :config
-  ;; (desktop-save-mode 1)
-  )
+  (desktop-save-mode 1))
 
 ;;; Easysession
 (use-package easysession
+  :disabled t
   :diminish easysession-save-mode
   :custom
   (easysession-directory (no-littering-expand-var-file-name "easysession"))
@@ -113,6 +114,14 @@
     (delete-other-windows))
   (add-hook 'easysession-before-load-hook #'krisb-easysession-kill-old-session-buffers)
   (add-hook 'easysession-new-session-hook #'krisb-easysession-kill-old-session-buffers))
+
+;;; Psession
+(use-package psession
+  :custom
+  (psession-auto-save-delay 60)
+  :config
+  (psession-mode 1)
+  (psession-autosave-mode 1))
 
 ;;; Bookmark
 (use-package bookmark

@@ -23,8 +23,8 @@
                 org-appear org-bookmark-heading org-bulletproof org-contrib
                 org-mime org-modern org-remark org-super-agenda org-tidy
                 org-web-tools outshine package-lint-flymake paren-face
-                pcmpl-args pdf-tools peg powerthesaurus project pulsar puni
-                python recursion-indicator saveplace-pdf-view scratch seq
+                pcmpl-args pdf-tools peg powerthesaurus project psession pulsar
+                puni python recursion-indicator saveplace-pdf-view scratch seq
                 so-long soap-client sudo-edit svg system-packages tmr
                 track-changes tramp treesit-auto try typewriter-roll-mode
                 use-package verilog-mode vertico-prescient which-key
