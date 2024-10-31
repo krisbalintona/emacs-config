@@ -192,7 +192,7 @@
   :ensure-system-package keychain
   :hook ((vc-before-checkin git-commit-setup) . krisb-ensure-keychain-environment)
   :config
-  (defun krisb-ensure-keychain-environment ()
+  (defun krisb-ensure-keychain-environment (&rest _)
     "Set keychain environment variables if they are unset.
 We run `keychain-refresh-environment' by checking the presence of the
 \"SSH_AGENT_PID\" variable.
@@ -201,9 +201,13 @@ This is preferable to calling `keychain-refresh-environment' because
 that is an expensive function, especially in WSL2.  Hence, we only do so
 if necessary."
     (interactive)
-    (unless (getenv "SSH_AGENT_PID")
-      (message "[krisb-ensure-keychain-environment] Setting keychain environment variables.")
-      (keychain-refresh-environment))))
+    (unless (zerop (call-process-shell-command "ssh-add -l >/dev/null 2>&1"))
+      (message "[krisb-ensure-keychain-environment] Setting keychain environment variables")
+      (keychain-refresh-environment)
+      (if (zerop (call-process-shell-command "ssh-add -l >/dev/null 2>&1"))
+          (error "[krisb-ensure-keychain-environment] No ssh keys available still...")
+        (message "[krisb-ensure-keychain-environment] Added keychain environment variables"))))
+  (advice-add 'vc-do-command :before #'krisb-ensure-keychain-environment))
 
 ;;; Epg-config
 ;; Epg-config is responsible for querying passphrases
