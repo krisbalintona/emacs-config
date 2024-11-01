@@ -4069,7 +4069,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (denote-rename-buffer-backlinks-indicator " ⟷")
 
     ;; Backlinks
-    (denote-org-store-link-to-heading 'id)
+    ;; If we want to use a CUSTOM_ID, we should manually create it.  Otherwise,
+    ;; setting this to the value `'id' will over-populate my headings with
+    ;; CUSTOM_IDs whenever I call `org-capture'.
+    (denote-org-store-link-to-heading 'context)
     (denote-backlinks-show-context t)
     (denote-backlinks-display-buffer-action
      '((display-buffer-reuse-window display-buffer-below-selected)
