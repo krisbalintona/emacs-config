@@ -325,6 +325,9 @@ Uses the current annotation at point's ID."
    :store #'krisb-pdf-annot-org-store-link))
 
 ;;; Save and restore PDF registers via bookmark handler
+;; Drop-in extensions for `pdf-view-bookmark-make-record' and
+;; `pdf-view-bookmark-jump-handler'.  Override those functions with the two
+;; below.
 
 ;; NOTE 2024-10-31: When using desktop.el, do not add `pdf-view-register-alist'
 ;; to `desktop-locals-to-save': that causes an infinite loop.  Either choose
