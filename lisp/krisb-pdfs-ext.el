@@ -331,6 +331,7 @@ Uses the current annotation at point's ID."
 ;; this solution (modifying the bookmark handler) or that one.  I opt for this
 ;; one since other packages utilize bookmarks (e.g. activities.el).
 
+;;;###autoload
 (defun krisb-pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
   "Create a bookmark PDF record.
 The optional, boolean args exclude certain attributes.
@@ -358,6 +359,7 @@ My version of this function also saves the value of the
                                      (cons (car edges) (cadr edges)) nil t)))))
                     (handler . pdf-view-bookmark-jump-handler))))))
 
+;;;###autoload
 (defun krisb-pdf-view-bookmark-jump-handler (bmk)
   "The bookmark handler-function interface for bookmark BMK.
 See also `pdf-view-bookmark-make-record'.
@@ -404,9 +406,6 @@ My version of this function also restores the value of the
     (add-hook 'bookmark-after-jump-hook show-fn-sym)
     (set-buffer (or (find-buffer-visiting file)
                     (find-file-noselect file)))))
-
-(advice-add 'pdf-view-bookmark-make-record :override #'krisb-pdf-view-bookmark-make-record)
-(advice-add 'pdf-view-bookmark-jump-handler :override #'krisb-pdf-view-bookmark-jump-handler)
 
 ;;; Modify PDF metadata
 ;; Emacs wrapper and convenience functions for changing package metadata using

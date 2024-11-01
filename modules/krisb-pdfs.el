@@ -35,6 +35,9 @@
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick t)
+  :init
+  (advice-add 'pdf-view-bookmark-make-record :override #'krisb-pdf-view-bookmark-make-record)
+  (advice-add 'pdf-view-bookmark-jump-handler :override #'krisb-pdf-view-bookmark-jump-handler)
   :config
   ;; Taken from Doom
   (defun krisb-pdf-view-cleanup-windows-h ()

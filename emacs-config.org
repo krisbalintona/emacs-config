@@ -4442,6 +4442,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
     (pdf-view-use-scaling t)
     (pdf-view-use-imagemagick t)
+    :init
+    (advice-add 'pdf-view-bookmark-make-record :override #'krisb-pdf-view-bookmark-make-record)
+    (advice-add 'pdf-view-bookmark-jump-handler :override #'krisb-pdf-view-bookmark-jump-handler)
     :config
     ;; Taken from Doom
     (defun krisb-pdf-view-cleanup-windows-h ()
@@ -8542,6 +8545,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; this solution (modifying the bookmark handler) or that one.  I opt for this
   ;; one since other packages utilize bookmarks (e.g. activities.el).
 
+  ;;;###autoload
   (defun krisb-pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
     "Create a bookmark PDF record.
   The optional, boolean args exclude certain attributes.
@@ -8569,6 +8573,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                        (cons (car edges) (cadr edges)) nil t)))))
                       (handler . pdf-view-bookmark-jump-handler))))))
 
+  ;;;###autoload
   (defun krisb-pdf-view-bookmark-jump-handler (bmk)
     "The bookmark handler-function interface for bookmark BMK.
   See also `pdf-view-bookmark-make-record'.
@@ -8615,9 +8620,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
       (add-hook 'bookmark-after-jump-hook show-fn-sym)
       (set-buffer (or (find-buffer-visiting file)
                       (find-file-noselect file)))))
-
-  (advice-add 'pdf-view-bookmark-make-record :override #'krisb-pdf-view-bookmark-make-record)
-  (advice-add 'pdf-view-bookmark-jump-handler :override #'krisb-pdf-view-bookmark-jump-handler)
 #+end_src
 
 *** Modifying PDF metadata
