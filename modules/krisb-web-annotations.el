@@ -29,6 +29,7 @@
                                             (slot . 1)))
   (org-remark-create-default-pen-set nil) ; Make my own pens
   (org-remark-notes-auto-delete nil)
+  (org-remark-report-no-highlights nil)
   :init
   (with-eval-after-load 'eww
     (org-remark-eww-mode 1))
