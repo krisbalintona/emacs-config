@@ -127,6 +127,12 @@
      org-attach-id-uuid-folder-format
      org-attach-id-fallback-folder-format)))
 
+;;;; Ol
+(use-package ol
+  :ensure nil
+  :custom
+  (org-link-search-must-match-exact-headline nil))
+
 ;;;; Org-footnote
 (use-package org-footnote
   :ensure nil
