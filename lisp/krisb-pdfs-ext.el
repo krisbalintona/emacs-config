@@ -325,6 +325,12 @@ Uses the current annotation at point's ID."
    :store #'krisb-pdf-annot-org-store-link))
 
 ;;; Save and restore PDF registers via bookmark handler
+
+;; NOTE 2024-10-31: When using desktop.el, do not add `pdf-view-register-alist'
+;; to `desktop-locals-to-save': that causes an infinite loop.  Either choose
+;; this solution (modifying the bookmark handler) or that one.  I opt for this
+;; one since other packages utilize bookmarks (e.g. activities.el).
+
 (defun krisb-pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
   "Create a bookmark PDF record.
 The optional, boolean args exclude certain attributes.

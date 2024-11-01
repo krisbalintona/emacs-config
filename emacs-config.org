@@ -4427,11 +4427,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             ;; Additionally useful since it lets you scroll via
             ;; `scroll-other-window'
             ([remap scroll-up-command] . pdf-view-scroll-up-or-next-page)
-            ([remap scroll-down-command] . pdf-view-scroll-down-or-previous-page))
-    :config
-    ;; Make PDF registers persistent
-    (with-eval-after-load 'desktop
-      (add-to-list 'desktop-locals-to-save 'pdf-view-register-alist)))
+            ([remap scroll-down-command] . pdf-view-scroll-down-or-previous-page)))
 
   ;;;; Pdf-view
   (use-package pdf-view
@@ -8539,6 +8535,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
      :store #'krisb-pdf-annot-org-store-link))
 
   ;;; Save and restore PDF registers via bookmark handler
+
+  ;; NOTE 2024-10-31: When using desktop.el, do not add `pdf-view-register-alist'
+  ;; to `desktop-locals-to-save': that causes an infinite loop.  Either choose
+  ;; this solution (modifying the bookmark handler) or that one.  I opt for this
+  ;; one since other packages utilize bookmarks (e.g. activities.el).
+
   (defun krisb-pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
     "Create a bookmark PDF record.
   The optional, boolean args exclude certain attributes.

@@ -21,11 +21,7 @@
           ;; Additionally useful since it lets you scroll via
           ;; `scroll-other-window'
           ([remap scroll-up-command] . pdf-view-scroll-up-or-next-page)
-          ([remap scroll-down-command] . pdf-view-scroll-down-or-previous-page))
-  :config
-  ;; Make PDF registers persistent
-  (with-eval-after-load 'desktop
-    (add-to-list 'desktop-locals-to-save 'pdf-view-register-alist)))
+          ([remap scroll-down-command] . pdf-view-scroll-down-or-previous-page)))
 
 ;;;; Pdf-view
 (use-package pdf-view
