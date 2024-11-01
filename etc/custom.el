@@ -21,8 +21,8 @@
                 nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
                 nov ntlm ob-mermaid ol-notmuch olivetti on orderless org
                 org-appear org-bookmark-heading org-bulletproof org-contrib
-                org-mime org-modern org-remark org-super-agenda org-tidy
-                org-web-tools outshine package-lint-flymake paren-face
+                org-edna org-mime org-modern org-remark org-super-agenda
+                org-tidy org-web-tools outshine package-lint-flymake paren-face
                 pcmpl-args pdf-tools peg pinentry powerthesaurus project
                 psession pulsar puni python recursion-indicator
                 saveplace-pdf-view scratch seq so-long soap-client sudo-edit svg

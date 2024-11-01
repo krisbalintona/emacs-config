@@ -477,5 +477,92 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :ensure nil
   :after org-agenda)
 
+;;;; Org-edna
+;; Also look at `org-edna' with `org-linker-edna'
+;; (https://github.com/toshism/org-linker-edna) (the second of which requires
+;; `org-linker': https://github.com/toshism/org-linker). `org-super-links' can
+;; be added to see which tasks are being blocked by the current task. See
+;; https://karl-voit.at/2021/01/23/org-linker-edna/ for sample workflow
+(use-package org-edna
+  :diminish
+  :demand t
+  :after org-agenda
+  :bind ( :map org-mode-map
+          ("C-c d" . krisb-consult-org-depend)
+          :map org-agenda-mode-map
+          ("C-c d". krisb-consult-org-agenda-depend))
+  :config
+  (org-edna-mode 1)
+
+  (with-eval-after-load 'consult
+    (defun krisb-consult-org-depend--add-id (new-id)
+      "Add an ID to the current heading’s BLOCKER property.
+If none exists, automatically create the BLOCKER property. Code
+based off of `org-linker-edna’."
+      (let* ((value (org-entry-get (point) "BLOCKER"))
+             (formatted-new-id
+              (progn
+                (unless (org-id-find new-id)
+                  (error "This ID (%s) does not exist!" new-id))
+                (list (concat "\"id:" new-id "\""))))
+             (existing-ids
+              ;; Get IDs if they exist in proper `org-edna' syntax as the value
+              ;; of the BLOCKER property
+              (when (and value (string-match "ids(\\([^\\)]*\\)).*" value))
+                (split-string (match-string 1 value))))
+             (all-ids (string-join (seq-uniq (append existing-ids formatted-new-id)) " "))
+             (new-value (concat "ids(" all-ids ")")))
+        (org-set-property "BLOCKER" new-value)))
+
+    (defun krisb-consult-org-depend (&optional match)
+      "Create a dependency for the `org-todo’ at point.
+  A dependency is defined by `org-depend’s `BLOCKER’ property. IDs
+  are created in the todo dependency with `org-id-get-create’.
+  MATCH is a query sent to `org-map-entries’."
+      (interactive)
+      (save-window-excursion
+        (let ((current-heading (org-get-heading))
+              new-id dependency)
+          (if (not (org-entry-is-todo-p))
+              ;; Error if not currently on an `org-todo'
+              (error "Not on an `org-todo’ heading!")
+            ;; Add and ID to the dependency if necessary
+            (save-excursion
+              (consult-org-agenda (or match "/-DONE-CANCELED"))
+              (setq dependency (org-get-heading))
+              (when (equal current-heading dependency)
+                (error "Cannot depend on the same `org-todo’!"))
+              (setq new-id (org-id-get-create)))
+            ;; Modify the BLOCKER property of the current todo
+            (krisb-consult-org-depend--add-id new-id)
+            (message "‘%s’ added as a dependency to this todo"
+                     (substring-no-properties dependency))))))
+
+    (defun krisb-consult-org-agenda-depend (&optional match)
+      "Create a dependency for the `org-agenda’ item at point.
+  See `krisb-consult-org-depend’."
+      (interactive)
+      (let* ((bufname-orig (buffer-name))
+             (marker (or (org-get-at-bol 'org-marker)
+                         (org-agenda-error)))
+             (buffer (marker-buffer marker))
+             (pos (marker-position marker))
+             dependency)
+        (org-with-remote-undo buffer
+          (with-current-buffer buffer
+            (save-excursion
+              (goto-char pos)
+              ;; FIXME 2023-01-17: Janky workaround. Remove all
+              ;; `consult-after-jump-hook' hooks since we if there is a
+              ;; `recenter' hook then an error will be returned since it'll be
+              ;; attempting to `recenter' a non-present buffer
+              (let ((consult-after-jump-hook nil))
+                (setq dependency (funcall 'krisb-consult-org-depend match))))))))
+
+    (consult-customize krisb-consult-org-depend
+                       :prompt "Select dependency for the heading at point: "
+                       krisb-consult-org-agenda-depend
+                       :prompt "Select dependency for this agenda item: ")))
+
 ;;; Provide
 (provide 'krisb-org-agenda)
