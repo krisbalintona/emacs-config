@@ -6263,6 +6263,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated before committing since
   ;; their values may change. Sources them to ~/.keychain/
   (use-package keychain-environment
+    :disabled t ; 2024-11-01: Trying to see if I can replace this with `pinentry.el'
     :ensure-system-package keychain
     :hook ((vc-before-checkin git-commit-setup) . krisb-ensure-keychain-environment)
     :config
@@ -6289,6 +6290,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :ensure nil
     :custom
     (epg-pinentry-mode 'loopback)) ; Ask through the minibuffer instead of external Pinentry program
+
+  ;;; Pinentry
+  ;; (Discovered from angrybacon's dotemacs:
+  ;; https://github.com/angrybacon/dotemacs.)  Start a pinentry service
+  ;; automatically in order for Emacs to be able to prompt passphrases from the
+  ;; minibuffer.  If Emacs doesn't redirect prompts regardless of the value for
+  ;; `epg-pinentry-mode', add "allow-emacs-pinentry" to ~/.gnupg/gpg-agent.conf.
+  (use-package pinentry
+    :config
+    (pinentry-start))
 
   ;;; Provide
   (provide 'krisb-vc)
