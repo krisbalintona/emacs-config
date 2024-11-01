@@ -300,7 +300,7 @@
   :diminish
   :hook (org-mode . krisb-org-hide-drawers-mode)
   :bind ( :map krisb-toggle-keymap
-          ("t" . krisb-org-hide-drawers-transient))
+          ("h" . krisb-org-hide-drawers-transient))
   :custom
   (krisb-org-hide-drawers-blacklist '("CUSTOM_ID"))
   :config
