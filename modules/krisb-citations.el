@@ -85,7 +85,7 @@
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
-  (citar-org-styles-format 'short))
+  (citar-org-styles-format 'long))
 
 ;;; Provide
 (provide 'krisb-citations)
