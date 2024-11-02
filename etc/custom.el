@@ -22,9 +22,9 @@
                 nov ntlm ob-mermaid ol-notmuch olivetti on orderless org
                 org-appear org-bookmark-heading org-bulletproof org-contrib
                 org-edna org-mime org-modern org-remark org-super-agenda
-                org-tidy org-web-tools outshine package-lint-flymake paren-face
-                pcmpl-args pdf-tools peg pinentry powerthesaurus project
-                psession pulsar puni python recursion-indicator
+                org-tidy org-web-tools outshine ox-hugo package-lint-flymake
+                paren-face pcmpl-args pdf-tools peg pinentry powerthesaurus
+                project psession pulsar puni python recursion-indicator
                 saveplace-pdf-view scratch seq so-long soap-client sudo-edit svg
                 system-packages tmr track-changes tramp treesit-auto try
                 typewriter-roll-mode use-package verilog-mode vertico-prescient
@@ -43,7 +43,9 @@
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
-   '((eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created 99 t)))
+   '((org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
+     (system-time-locale . "C")
+     (eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created 99 t)))
  '(tmr-description-list '("Stop working!" "Work time 😄") nil nil "Customized with use-package tmr"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

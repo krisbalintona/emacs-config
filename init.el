@@ -197,6 +197,7 @@
 (require 'krisb-elisp)
 (require 'krisb-info)
 
+(require 'krisb-hugo)
 (require 'krisb-mermaid)
 
 (require 'krisb-email-composition)
