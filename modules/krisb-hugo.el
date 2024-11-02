@@ -17,13 +17,7 @@
 ;;; Krisb-ox-hugo-ext
 (use-package krisb-ox-hugo-ext
   :ensure nil
-  :after ox-hugo
-  :config
-  ;; `nil' if you don't want to export to the static directory.  This is
-  ;; desirable if, for instance, you leverage page bundles for each post,
-  ;; causing resources to be contained within each bundle.
-  (when krisb-org-hugo-bundle-workflow
-    (setopt org-hugo-default-static-subdirectory-for-externals nil)))
+  :after ox-hugo)
 
 ;;; Provide
 (provide 'krisb-hugo)
