@@ -4476,11 +4476,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; the CLI commands involved.
   (use-package krisb-pdfs-ext
     :ensure nil
-    :ensure-system-package pdftk
     :after pdf-view
     :demand t
     :bind ( :map pdf-view-mode-map
-            ("C-c m" . krisb-pdf-tools-metadata-modify)
             ("C-;" . krisb-avy-pdf-highlight)
             :map pdf-annot-list-mode-map
             ([remap tablist-push-regexp-filter] . krisb-pdf-annot-list-filter-regexp)))
@@ -4542,6 +4540,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; Save place in pdf-view buffers
   (use-package saveplace-pdf-view
     :after saveplace)
+
+  ;;; Pdf-meta-edit
+  (use-package pdf-meta-edit
+    :load-path "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/")
 
   ;;; Provide
   (provide 'krisb-pdfs)
@@ -8766,104 +8768,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
       (set-buffer (or (find-buffer-visiting file)
                       (find-file-noselect file)))))
 #+end_src
-
-*** Modifying PDF metadata
-
-Modify PDF metadata. PDF metadata includes the PDF outline, pagination (chronological and actual), and pagination style(s). =pdf-tools= offers powerful commands to navigate PDFs via chronological pagination (~pdf-view-goto-page~), actual pagination (i.e. "labels") (~pdf-view-goto-label~), and outline (~pdf-outline~, or =consult='s ~consult-imenu~). Hence, a PDF's metadata can become very handy---when accurate, at least.
-
-However, many PDFs can have missing or inconsistent metadata, such as having no outline nor labels (i.e. actual pagination). I hadn't found any existing package to do this (and still haven't), so I wrote a few lines of code to leverage Linux's =pdftk=[fn:3] binary. It creates a new buffer whose contents are the output of =pdftk='s representation of PDF metadata. Users can change the buffer contents to their liking then "commit" those changes to the actual file (using =pdftk=).
-
-I shared this code snippet (or, rather, a [[https://gist.github.com/krisbalintona/f4554bb8e53c27c246ae5e3c4ff9b342][GitHub gist of this code snippet]]) for the first time [[https://www.reddit.com/r/emacs/comments/1gbkdag/code_to_modify_pdf_metadata_such_as_its_outline/][on the r/emacs subreddit]].
-
-#+begin_src emacs-lisp :tangle "lisp/krisb-pdfs-ext.el"
-  ;;; Modify PDF metadata
-  ;; Emacs wrapper and convenience functions for changing package metadata using
-  ;; `pdftk'.  See https://unix.stackexchange.com/a/72457 for more information on
-  ;; the CLI commands involved.
-
-  ;; TODO 2024-10-30: Change the prefix of names to "krisb-pdf-metadata-modify-"
-  ;; because this is independent of pdf-tools?
-
-  ;;;###autoload
-  (defun krisb-pdf-tools-metadata-bookmark-section ()
-    "Insert bookmark metadata section."
-    (interactive)
-    (save-excursion
-      (insert "\nBookmarkBegin\nBookmarkTitle: \nBookmarkLevel: 1\nBookmarkPageNumber: "))
-    (move-end-of-line 2))
-
-  (defun krisb-pdf-tools-metadata-label-section ()
-    "Insert bookmark metadata section."
-    (interactive)
-    (let* ((possible-styles
-            '("DecimalArabicNumerals"
-              "LowercaseRomanNumerals"
-              "UppercaseRomanNumerals"
-              "UppercaseLetters"
-              "LowercaseLetters"
-              "NoNumber"))
-           (style
-            (completing-read "Label style: " possible-styles nil t)))
-      (save-excursion
-        (insert "\n"
-                "PageLabelBegin\n"
-                "PageLabelNewIndex: 1\n"
-                "PageLabelStart: 1\n"
-                "PageLabelNumStyle: " style))))
-
-  (defvar-keymap krisb-pdf-tools-metadata-mode-map
-    :doc "Mode map for `krisb-pdf-tools-metadata-mode'."
-    "C-c C-b" #'krisb-pdf-tools-metadata-bookmark-section
-    "C-c C-l" #'krisb-pdf-tools-metadata-label-section)
-
-  (define-derived-mode krisb-pdf-tools-metadata-mode fundamental-mode "Metadata"
-    "Major mode for altering and viewing PDF metadata."
-    :interactive t
-    (use-local-map krisb-pdf-tools-metadata-mode-map))
-
-  ;;;###autoload
-  (defun krisb-pdf-tools-metadata-modify (pdf-file)
-    "Modify PDF-FILE metadata."
-    (interactive (list (buffer-file-name)))
-    (unless (string= "pdf" (file-name-extension pdf-file))
-      (user-error "File is not a PDF!"))
-    (unless (executable-find "pdftk")
-      (error "System executable `pdftk' not found. Please install executable on filesystem to proceed"))
-    (let* ((pdf-name (file-name-sans-extension (file-name-nondirectory pdf-file)))
-           (buf-name (concat "*pdf-tools metadata: " pdf-name))
-           (metadata-file (concat "/tmp/pdf-tools-metadata--" pdf-name))
-           (temp-pdf (make-temp-file "/tmp/pdf-tools-metadata--temp-pdf"))
-           (metadata-dump-command (concat "pdftk \"" pdf-file "\" dump_data"))
-           (metadata-update-command
-            (concat "pdftk \"" pdf-file "\" update_info \"" metadata-file "\" output \"" temp-pdf "\""))
-           ;; TODO 2024-10-30: Make committing more robust by adding a named
-           ;; commit command to `krisb-pdf-tools-metadata-mode-map' whose activity
-           ;; depends on a buffer-local value set here.  This makes the command
-           ;; work in e.g. major mode changes.
-           (commit-func (lambda ()
-                          "Commit the changes to PDF metadata."
-                          (interactive)
-                          (with-current-buffer buf-name
-                            (widen)
-                            (write-region (point-min) (point-max) metadata-file))
-                          (shell-command metadata-update-command "*pdf-tools metadata: CLI output")
-                          (kill-buffer buf-name)
-                          ;; Have to do it this way since `pdftk' does not allow
-                          ;; having the output file be the input file
-                          (rename-file temp-pdf pdf-file t)
-                          (message "Updated metadata!"))))
-      (save-buffer)
-      (with-current-buffer (get-buffer-create buf-name)
-        (insert (shell-command-to-string metadata-dump-command))
-        (goto-char (point-min))
-        (krisb-pdf-tools-metadata-mode))
-      (pop-to-buffer buf-name)
-      (define-key krisb-pdf-tools-metadata-mode-map (kbd "C-c C-c") commit-func)
-      (set-buffer-modified-p nil)
-      (message (substitute-command-keys "Press `C-c C-c' when finished editing PDF metadata. To see keybinds, press \\[describe-mode]"))))
-#+end_src
-
-[fn:3] I don't know the availability of =pdftk= on other operating systems, nor what the comparable CLI alternatives are for those operating systems, so right now I can only claim this as a solution for Linux.
 
 *** Provide
 

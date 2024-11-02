@@ -59,11 +59,9 @@
 ;; the CLI commands involved.
 (use-package krisb-pdfs-ext
   :ensure nil
-  :ensure-system-package pdftk
   :after pdf-view
   :demand t
   :bind ( :map pdf-view-mode-map
-          ("C-c m" . krisb-pdf-tools-metadata-modify)
           ("C-;" . krisb-avy-pdf-highlight)
           :map pdf-annot-list-mode-map
           ([remap tablist-push-regexp-filter] . krisb-pdf-annot-list-filter-regexp)))
@@ -125,6 +123,10 @@ The context buffer is the buffer that shows annotation contents in
 ;; Save place in pdf-view buffers
 (use-package saveplace-pdf-view
   :after saveplace)
+
+;;; Pdf-meta-edit
+(use-package pdf-meta-edit
+  :load-path "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/")
 
 ;;; Provide
 (provide 'krisb-pdfs)
