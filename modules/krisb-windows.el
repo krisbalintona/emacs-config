@@ -29,7 +29,7 @@
                                (when (and (not (eq win (selected-window)))
                                           (not (window-no-other-p win)))
                                  (cons (window-use-time win) win)))
-                             (window-list-1 nil 'nomini nil)))
+                             (window-list-1 nil nil nil)))
                       :lessp #'>
                       :key #'car)))
       (select-window (cdr (nth (1- (min (length windows-by-mru) (or arg 1))) windows-by-mru)))))
