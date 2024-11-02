@@ -861,6 +861,13 @@ Uncommonly known are the commands =use-package= offers that help users debug and
             system-packages-use-sudo nil)))
 #+end_src
 
+**** =el-patch=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;;; El-patch
+  (use-package el-patch)
+#+end_src
+
 **** =async.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"

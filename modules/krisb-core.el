@@ -90,6 +90,9 @@
     (setq system-packages-package-manager 'paru
           system-packages-use-sudo nil)))
 
+;;; El-patch
+(use-package el-patch)
+
 ;;; Async.el
 ;; Async library and a few small but useful implementations
 (use-package async
