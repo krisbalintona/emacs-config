@@ -63,6 +63,22 @@ after each heading's drawers."
                          nil
                        'tree)))
 
+;;; Automate creation of CUSTOM_ID
+(defun krisb-org-ext-create-custom-id ()
+  "Get the CUSTOM_ID of the current entry.
+If the entry already has a CUSTOM_ID, return it as-is, else create a new
+one.
+
+This function is a copy of `denote-link-ol-get-id'."
+  (interactive nil org-mode)
+  (let* ((pos (point))
+         (id (org-entry-get pos "CUSTOM_ID")))
+    (if (and (stringp id) (string-match-p "\\S-" id))
+        id
+      (setq id (org-id-new "h"))
+      (org-entry-put pos "CUSTOM_ID" id)
+      id)))
+
 ;;; Provide
 (provide 'krisb-org-ext)
 ;;; krisb-org-ext.el ends here
