@@ -11,14 +11,16 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
-    (";d" "" krisb-abbrev-current-date :count 4)
+    (";d" "" krisb-abbrev-current-date :count 14)
     (";t" "" krisb-abbrev-todo-keyword :count 0)
     (";td" "" krisb-abbrev-todo-keyword-and-date :count 1)
    ))
 
 (define-abbrev-table 'org-mode-abbrev-table
   '(
+    ("Adivse" "Advise" nil :count 0)
     ("Colordo" "Colorado" nil :count 0)
+    ("Dumpng" "Dumping" nil :count 0)
     ("Keybinds" "Keybindings" nil :count 0)
     ("Marketting" "Marketing" nil :count 0)
     ("Phillipines" "Philippines" nil :count 0)
@@ -26,6 +28,7 @@
     ("Tenessee" "Tennessee" nil :count 0)
     ("beheve" "behave" nil :count 0)
     ("bookpages" "book pages" nil :count 0)
+    ("canstration" "castration" nil :count 0)
     ("catalogy" "catalog" nil :count 0)
     ("coleagues" "colleagues" nil :count 0)
     ("collaborive" "collaborative" nil :count 0)
@@ -33,7 +36,9 @@
     ("concpet" "concept" nil :count 0)
     ("concusion" "conclusion" nil :count 0)
     ("develoepd" "developed" nil :count 0)
+    ("direcctly" "directly" nil :count 0)
     ("disambiguiate" "disambiguate" nil :count 0)
+    ("engangement" "engagement" nil :count 0)
     ("enuciated" "enunciated" nil :count 0)
     ("excusive" "exclusive" nil :count 0)
     ("fractical" "fractal" nil :count 0)
@@ -46,9 +51,13 @@
     ("maleability" "malleability" nil :count 0)
     ("misperceives" "misconceives" nil :count 0)
     ("obiously" "obviously" nil :count 0)
+    ("ponderingon" "pondering on" nil :count 0)
+    ("privvty" "privy" nil :count 0)
     ("recommendatiosn" "recommendations" nil :count 0)
     ("repicate" "replicate" nil :count 0)
     ("resolvese" "resolves" nil :count 0)
+    ("stimualtes" "stimulates" nil :count 0)
+    ("stornger" "stronger" nil :count 0)
     ("supercede" "supersede" nil :count 0)
     ("superceded" "superseded" nil :count 0)
     ("supercedes" "supersedes" nil :count 0)
@@ -59,7 +68,9 @@
 (define-abbrev-table 'text-mode-abbrev-table
   '(
     ("Remoov" "Remove" nil :count 0)
+    ("hugo" "Hugo" nil :count 2)
     ("isntances" "instances" nil :count 0)
+    ("reposotiry" "repository" nil :count 0)
    ))
 
 (define-abbrev-table 'vc-git-log-edit-mode-abbrev-table

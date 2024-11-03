@@ -30,7 +30,8 @@
                 typewriter-roll-mode use-package verilog-mode vertico-prescient
                 which-key window-tool-bar wombag xref ytdl))
  '(package-vc-selected-packages
-   '((org-super-agenda :url
+   '((pdf-meta-edit :url "git@github.com:krisbalintona/pdf-meta-edit.git")
+     (org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")
      (grid :url "https://github.com/ichernyshovvv/grid.el")
      (wombag :url "https://github.com/karthink/wombag.git")
@@ -44,6 +45,7 @@
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
    '((org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
+     (org-time-stamp-custom-formats quote ("<%B %d, %Y>" . "<%B %d, %Y %H:%M>"))
      (system-time-locale . "C")
      (eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created 99 t)))
  '(tmr-description-list '("Stop working!" "Work time 😄") nil nil "Customized with use-package tmr"))
