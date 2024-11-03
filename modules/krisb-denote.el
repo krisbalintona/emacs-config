@@ -193,18 +193,32 @@ My version uses the full outline path instead of just heading text."
   (citar-denote-mode 1)
 
   ;; Keep the reference keyword after Denote's identifier keyword
-  (defun krisb-citar-denote--add-reference (citekey file-type)
-    "Like `citar-denote--add-reference' but adds reference to specific line.
-Namely, adds the #+reference after the #+identifier line."
+  (el-patch-defun citar-denote--add-reference (citekey file-type)
+    (el-patch-swap
+      "Add reference with CITEKEY in front matter of the file with FILE-TYPE.
+
+`citar-denote-add-citekey' is the interactive version of this function."
+      "Add reference with CITEKEY in front matter of the file with FILE-TYPE.
+`citar-denote-add-citekey' is the interactive version of this function.
+
+My version is has references added to specific line.  Namely, adds the
+#+reference after the #+identifier line.")
     (save-excursion
       (goto-char (point-min))
-      (re-search-forward (rx bol (literal "#+identifier:")) nil t)
-      (if (eq (or file-type 'org) 'org)
-          (forward-line 1)
-        (forward-line -2))
+      (el-patch-swap
+        (re-search-forward "^\n" nil t)
+        (re-search-forward (rx bol (literal "#+identifier:")) nil t))
+      (el-patch-remove
+        (forward-line -1))
+      (el-patch-remove
+        (if (not (eq (or file-type 'org) 'org))
+            (forward-line -1)))
+      (el-patch-add
+        (if (eq (or file-type 'org) 'org)
+            (forward-line 1)
+          (forward-line -2)))
       (insert
-       (format (citar-denote--reference-format file-type) citekey))))
-  (advice-add 'citar-denote--add-reference :override #'krisb-citar-denote--add-reference))
+       (format (citar-denote--reference-format file-type) citekey)))))
 
 ;;; Denote-interface
 (use-package denote-interface

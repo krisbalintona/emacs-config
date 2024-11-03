@@ -23,12 +23,15 @@
 ;; Supplementary functionality for my workflow of blogging with Hugo.
 
 ;;; Code:
+(require 'denote)
 (require 'ox-hugo)
+(require 'el-patch)
 
 ;;; Return the title portion of the denote file corresponding to ID
 (declare-function denote--retrieve-title-or-filename "denote")
 (defun krisb-org-hugo-retrieve-denote-title (id)
-  (when-let ((paths (denote-directory-files id)))
+  "Return the title portion of the denote file corresponding to ID."
+  (when-let* ((paths (denote-directory-files id)))
     (if (= 1 (length paths))
         (denote-retrieve-title-or-filename (car paths) 'org)
       (error "Multiple Denote files with that ID!"))))
@@ -38,8 +41,8 @@
   '("ATTACH" "project" "PROJECT" "draft"
     "section" "series" "tag" "category"
     "creative-writing")
-  "Tags to exclude. Look at `krisb-org-hugo--tag-processing-fn-ignore-tags-maybe'.")
-(defun krisb-org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list info)
+  "Tags to exclude.  Look at `krisb-org-hugo--tag-processing-fn-ignore-tags-maybe'.")
+(defun krisb-org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list _info)
   "Ignore tags which match a string found in `krisb-org-hugo-exclude-tags'.
 TAG-LIST and INFO are as described in
 `org-hugo-tag-processing-functions'."
@@ -52,60 +55,66 @@ TAG-LIST and INFO are as described in
 Relevant for my `krisb-org-hugo--get-pub-dir'.  A non-nil value means
 bundles are given a default name; see `krisb-org-hugo--get-pub-dir'.")
 
-(defun krisb-org-hugo-title-slug (title)
-  "Turn TITLE into a hyphenated slug."
+(defun krisb-org-hugo-title-slug (path)
+  "Turn PATH into a hyphenated Denote title slug."
   ;; (message "[krisb-org-hugo-title-slug DBG] title: %s" title)
   (file-name-as-directory
-   (denote-sluggify 'title title)))
+   (denote-sluggify 'title path)))
 
-;; Set a default bundle name (there isn't one without this)
-(defun krisb-org-hugo--get-pub-dir (info)
-  "Return the post publication directory path.
+(el-patch-defun org-hugo--get-pub-dir (info)
+  (el-patch-swap
+    "Return the post publication directory path.
+
+The publication directory is created if it does not exist.
+
+INFO is a plist used as a communication channel."
+    "Return the post publication directory path.
 
 The publication directory is created if it does not exist.
 
 INFO is a plist used as a communication channel.
 
-My version of this function sets the default bundle-dir to be the
-slug of the file's title with underscores replaced for hyphens."
+My version sets a default bundle directory name if
+`krisb-org-hugo-bundle-workflow' is non-nil.  This directory name will
+be a sluggified version of the file's title.")
   (let* ((base-dir (if (plist-get info :hugo-base-dir)
                        (file-name-as-directory (plist-get info :hugo-base-dir))
                      (user-error "It is mandatory to set the HUGO_BASE_DIR property or the `org-hugo-base-dir' local variable")))
          (content-dir "content/")
          (section-path (org-hugo--get-section-path info))
          ;; Use the bundle path if its value exists (with underscores replaced
-         ;; with hyphens). If it doesn't, then defer to using the file's title
-         ;; slug as a default value, but only if `krisb-org-hugo-bundle-workflow'
-         ;; is non-nil. Otherwise, have bundle-dir be an empty string.
-         (bundle-dir (let ((bundle-path (or ; Hugo bundle set in the post subtree gets higher precedence
-                                         (org-hugo--entry-get-concat nil "EXPORT_HUGO_BUNDLE" "/")
-                                         (plist-get info :hugo-bundle))) ;This is mainly to support per-file flow
-                           (default-bundle-path
-                            (cond
-                             ((featurep 'denote) (car (plist-get info :title)))
-                             ((featurep 'org-roam) (org-roam-node-create :title (car (plist-get info :title)))))))
-                       (cond
-                        ;; If hugo_bundle is set
-                        ((and bundle-path ; Keyword must exist unless error
-                              (not (string= bundle-path ""))) ; Non-empty string value
-                         (krisb-org-hugo-title-slug bundle-path))
-                        (krisb-org-hugo-bundle-workflow
-                         (krisb-org-hugo-title-slug default-bundle-path))
-                        (t ""))))
+         ;; with hyphens).  If it doesn't, then defer to using the file's title
+         ;; slug as a default value, but only if
+         ;; `krisb-org-hugo-bundle-workflow' is non-nil.  Otherwise, have
+         ;; bundle-dir be an empty string.
+         (el-patch-swap
+           (bundle-dir (let ((bundle-path (or ; Hugo bundle set in the post subtree gets higher precedence
+                                           (org-hugo--entry-get-concat nil "EXPORT_HUGO_BUNDLE" "/")
+                                           (plist-get info :hugo-bundle)))) ; This is mainly to support per-file flow
+                         (if bundle-path
+                             (file-name-as-directory bundle-path)
+                           "")))
+           (bundle-dir (let ((bundle-path (or (org-hugo--entry-get-concat nil "EXPORT_HUGO_BUNDLE" "/")
+                                              (plist-get info :hugo-bundle)))
+                             (default-bundle-path (car (plist-get info :title))))
+                         (cond
+                          ((and bundle-path (not (string= bundle-path "")))
+                           (krisb-org-hugo-title-slug bundle-path))
+                          (krisb-org-hugo-bundle-workflow (krisb-org-hugo-title-slug default-bundle-path))
+                          (t "")))))
          (pub-dir (let ((dir (concat base-dir content-dir section-path bundle-dir)))
                     (make-directory dir :parents) ;Create the directory if it does not exist
                     dir)))
     (file-truename pub-dir)))
-(advice-add 'org-hugo--get-pub-dir :override #'krisb-org-hugo--get-pub-dir)
 
 ;;; Relative links
-(defun krisb-org-export-resolve-denote-link (link info)
+(defun krisb-org-export-resolve-denote-link (link _info)
   "Return `denote' file referenced as LINK destination.
 
 INFO is a plist used as a communication channel.
 
-Return value will be the file name of LINK destination. Throw an
-error if no match is found."
+Return value will be the file name of LINK destination.  Throw an error
+if no match is found."
   (let* ((denote-id (org-element-property :path link))
          (denote-files (denote-directory-files denote-id)))
     ;; (message "[denote-files]: %s" denote-files)
@@ -121,7 +130,7 @@ error if no match is found."
 ;; NOTE 2022-03-12: This is a janky way to get links working with page
 ;; bundles. **REQUIRES THE BUNDLE NAME OF EACH POST TO MATCH THE POST'S FILE
 ;; NAME.**
-(defun krisb-org-hugo-link (link desc info)
+(el-patch-defun org-hugo-link (link desc info)
   "Convert LINK to Markdown format.
 
 DESC is the link's description.
@@ -144,24 +153,23 @@ and rewrite link paths to make blogging more seamless."
     ;; (message "[org-hugo-link DBG] link: %S" link)
     ;; (message "[org-hugo-link DBG] link type: %s" type)
     (cond
-     ;; For `denote' support!
-     ((string= type "denote")
-      ;; (message "[org-hugo-link DBG] hugo-bundle: %s" (plist-get info :hugo-bundle))
-      ;; (message "[org-hugo-link DBG] title %s" (plist-get info :title))
-      (let* ((destination (krisb-org-export-resolve-denote-link link info))
-             (note-file (denote-retrieve-title-value destination 'org))
-             (path
-              (if (string= ".org" (downcase (file-name-extension destination ".")))
-                  (if (and krisb-org-hugo-bundle-workflow (plist-get info :hugo-bundle))
-                      (concat (file-name-as-directory (krisb-org-hugo-title-slug note-file))
-                              "index.md")
-                    (concat note-file ".md"))
-                destination)))
-        ;; (message "[org-hugo-link DBG] link path: %s" path)
-        ;; (message "[org-hugo-link DBG] link desc: %s" desc)
-        (if desc
-            (format "[%s]({{< relref \"%s\" >}})" desc path)
-          (format "[%s]({{< relref \"%s\" >}})" path path))))
+     ;; For denote org link support
+     (el-patch-add
+       ((string= type "denote")
+        ;; (message "[org-hugo-link DBG] hugo-bundle: %s" (plist-get info :hugo-bundle))
+        ;; (message "[org-hugo-link DBG] title %s" (plist-get info :title))
+        (let* ((destination (krisb-org-export-resolve-denote-link link info))
+               (note-file (denote-retrieve-title-value destination 'org))
+               (path
+                (if (string= ".org" (downcase (file-name-extension destination ".")))
+                    (if (and krisb-org-hugo-bundle-workflow (plist-get info :hugo-bundle))
+                        (concat (file-name-as-directory (krisb-org-hugo-title-slug note-file))
+                                "index.md")
+                      (concat note-file ".md"))
+                  destination)))
+          ;; (message "[org-hugo-link DBG] link path: %s" path)
+          ;; (message "[org-hugo-link DBG] link desc: %s" desc)
+          (format "[%s]({{< relref \"%s\" >}})" (if desc desc path) path))))
      ;; Link type is handled by a special function.
      ((org-export-custom-protocol-maybe link desc 'md))
      ((member type '("custom-id" "id"
@@ -174,37 +182,58 @@ and rewrite link paths to make blogging more seamless."
         ;; (message "[org-hugo-link DBG] link: %S" link)
         ;; (message "[org-hugo-link DBG] link destination elem type: %S" (org-element-type destination))
         (pcase (org-element-type destination)
-          ;; External file.
-          (`plain-text
-           (let ((path (progn
-                         ;; (message "[org-hugo-link DBG] hugo-bundle: %s" (plist-get info :hugo-bundle))
-                         ;; (message "[org-hugo-link DBG] title %s" (plist-get info :title))
-                         ;; Treat links to `file.org' as links to `file.md'.
-                         (if (string= ".org" (downcase (file-name-extension destination ".")))
-                             ;; NOTE 2022-06-02: I made changes here to get
-                             ;; links to between bundles working. If the
-                             ;; hugo_bundle file property exists, then this
-                             ;; changes the destination appropriately.
-                             (if (and krisb-org-hugo-bundle-workflow (plist-get info :hugo-bundle))
-                                 (concat (krisb-org-hugo-title-slug (file-name-sans-extension destination))
-                                         "index.md")
-                               (concat (file-name-sans-extension destination) ".md"))
-                           destination))))
-             ;; (message "[org-hugo-link DBG] plain-text path: %s" path)
-             (if (org-id-find-id-file raw-path)
-                 (let* ((anchor (org-hugo-link--heading-anchor-maybe link info))
-                        (ref (if (and (org-string-nw-p anchor)
-                                      (not (string-prefix-p "#" anchor)))
-                                 ;; If the "anchor" doesn't begin with
-                                 ;; "#", it's a direct reference to a
-                                 ;; post subtree.
-                                 anchor
-                               (concat path anchor))))
-                   ;; (message "[org-hugo-link DBG] plain-text org-id anchor: %S" anchor)
-                   (format "[%s]({{< relref \"%s\" >}})" (or desc path) ref))
-               (if desc
-                   (format "[%s](%s)" desc path)
-                 (format "<%s>" path)))))
+          (el-patch-swap
+            ;; External file.
+            (`plain-text
+             (let ((path (progn
+                           ;; Treat links to `file.org' as links to `file.md'.
+                           (if (string= ".org" (downcase (file-name-extension destination ".")))
+                               (concat (file-name-sans-extension destination) ".md")
+                             destination))))
+               ;; (message "[org-hugo-link DBG] plain-text path: %s" path)
+               (if (org-id-find-id-file raw-path)
+                   (let* ((anchor (org-hugo-link--heading-anchor-maybe link info))
+                          (ref (if (and (org-string-nw-p anchor)
+                                        (not (string-prefix-p "#" anchor)))
+                                   ;; If the "anchor" doesn't begin with
+                                   ;; "#", it's a direct reference to a
+                                   ;; post subtree.
+                                   anchor
+                                 (concat path anchor))))
+                     ;; (message "[org-hugo-link DBG] plain-text org-id anchor: %S" anchor)
+                     (format "[%s]({{< relref \"%s\" >}})" (or desc path) ref))
+                 (if desc
+                     (format "[%s](%s)" desc path)
+                   (format "<%s>" path)))))
+            (`plain-text
+             (let ((path (progn
+                           ;; (message "[org-hugo-link DBG] hugo-bundle: %s" (plist-get info :hugo-bundle))
+                           ;; (message "[org-hugo-link DBG] title %s" (plist-get info :title))
+                           ;; Treat links to `file.org' as links to `file.md'.
+                           (if (string= ".org" (downcase (file-name-extension destination ".")))
+                               ;; NOTE 2022-06-02: I made changes here to get
+                               ;; links to between bundles working.  If the
+                               ;; hugo_bundle file property exists, then this
+                               ;; changes the destination appropriately.
+                               (if (and krisb-org-hugo-bundle-workflow (plist-get info :hugo-bundle))
+                                   (concat (krisb-org-hugo-title-slug (file-name-sans-extension destination))
+                                           "index.md")
+                                 (concat (file-name-sans-extension destination) ".md"))
+                             destination))))
+               ;; (message "[org-hugo-link DBG] plain-text path: %s" path)
+               (if (org-id-find-id-file raw-path)
+                   (let* ((anchor (org-hugo-link--heading-anchor-maybe link info))
+                          (ref (if (and (org-string-nw-p anchor)
+                                        (not (string-prefix-p "#" anchor)))
+                                   ;; If the "anchor" doesn't begin with "#",
+                                   ;; it's a direct reference to a post subtree.
+                                   anchor
+                                 (concat path anchor))))
+                     ;; (message "[org-hugo-link DBG] plain-text org-id anchor: %S" anchor)
+                     (format "[%s]({{< relref \"%s\" >}})" (or desc path) ref))
+                 (if desc
+                     (format "[%s](%s)" desc path)
+                   (format "<%s>" path))))))
           ;; Links of type [[* Some heading]].
           (`headline
            (let ((title (org-export-data (org-element-property :title destination) info)))
@@ -545,11 +574,12 @@ and rewrite link paths to make blogging more seamless."
                     ;; https://stackoverflow.com/q/25706012/1219634.
                     (replace-regexp-in-string ":" "&colon;" (org-link-unescape path)))))
          ;; Neither link description, nor link attributes.
+         ((string-prefix-p "{{< relref " path)
+          (format "[%s](%s)" path path))
+         ((org-string-nw-p path)
+          (format "<%s>" path))
          (t
-          (if (string-prefix-p "{{< relref " path)
-              (format "[%s](%s)" path path)
-            (format "<%s>" path)))))))))
-(advice-add 'org-hugo-link :override #'krisb-org-hugo-link)
+          "")))))))
 
 ;;; Provide
 (provide 'krisb-ox-hugo-ext)
