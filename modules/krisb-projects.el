@@ -49,5 +49,20 @@ See the docstring of `krisb-reveal-fold-commands'."
                          :location #'krisb-reveal-xref-find-information)))
     (add-hook 'xref-after-jump-hook #'krisb-reveal-fold)))
 
+;;; Dumber-jump
+;; A lean fork of dumb-jump.
+(use-package dumber-jump
+  :ensure-system-package (rg . ripgrep)
+  :custom
+  (dumber-jump-default-project user-emacs-directory)
+  :init
+  ;; Add to global value so it is used as a fallback (when local value ends in
+  ;; t)
+  (add-hook 'xref-backend-functions #'dumber-jump-xref-activate)
+  :config
+  (setopt dumber-jump-project-denoters
+          (cl-remove-duplicates
+           (append dumber-jump-project-denoters project-vc-extra-root-markers))))
+
 ;;; Provide
 (provide 'krisb-projects)
