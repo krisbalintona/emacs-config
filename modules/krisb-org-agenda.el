@@ -242,7 +242,12 @@
   :config
   ;; Populate `org-agenda-files'
   (dolist (f (directory-files-recursively krisb-org-agenda-directory
-                                          (rx (or (literal ".org") (literal ".org_archive")) eol)))
+                                          (rx (or (literal ".org") (literal ".org_archive")) eol)
+                                          nil
+                                          (lambda (subdir)
+                                            "Ignore \".st\" subdirectories.
+These are directories created by SyncThing which may have org files I do not want to include."
+                                            (not (string-match (rx (literal ".st")) subdir)))))
     (add-to-list 'org-agenda-files f))
 
   ;; Taken from
