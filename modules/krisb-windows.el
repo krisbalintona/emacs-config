@@ -374,7 +374,11 @@
           ("\\*Occur"
            (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer)
-           (post-command-select-window . t))))
+           (post-command-select-window . t))
+
+;;;;; Denote-interface
+          ((major-mode . denote-interface-mode)
+           (display-buffer-same-window))))
 
 ;;;;; Xref
   (with-eval-after-load 'xref

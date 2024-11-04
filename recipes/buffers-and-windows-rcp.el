@@ -76,8 +76,6 @@
      ;; Same window
      ("\\*devdocs\\*"
       (display-buffer-reuse-mode-window display-buffer-same-window))
-     ((major-mode . denote-interface-mode)
-      (display-buffer-same-window))
 
      ;; To the left
      ("\\*Faces\\*"
