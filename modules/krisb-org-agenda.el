@@ -359,6 +359,7 @@ See ((org) Filtering/limiting agenda items)."
                        (org-agenda-insert-diary-extract-time t)
                        (org-super-agenda-groups
                         '((:discard (:and (:tag "inbox" :not (:deadline t)))) ; We want to see deadlines even if they have the inbox tag
+                          (:name "Overdue" :scheduled past :deadline past)
                           (:auto-category t)))))
               (tags-todo "+TODO=\"NEXT\"-project-inbox"
                          ((org-agenda-overriding-header "Next")
