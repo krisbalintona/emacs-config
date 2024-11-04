@@ -4716,7 +4716,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     )
 #+end_src
 
-**** =Org-agenda= and =org-super-agenda=
+***** =Org-agenda= and =org-super-agenda=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
   ;;; Org-agenda
