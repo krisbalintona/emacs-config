@@ -378,7 +378,11 @@
 
 ;;;;; Denote-interface
           ((major-mode . denote-interface-mode)
-           (display-buffer-same-window))))
+           (display-buffer-same-window))
+
+;;;;; Customize buffers
+          ("\\*Customize Group:"
+           (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected))))
 
 ;;;;; Xref
   (with-eval-after-load 'xref
