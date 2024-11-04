@@ -60,8 +60,8 @@
   (eros-eval-result-prefix "⟹  "))
 
 ;;;; Inspector
-;; Introspect list expressions. Also integrates with the debugging backtrace and
-;; edebug (see
+;; Introspect list expressions.  This is similar in role to CEDET's
+;; data-debug.el.  Also integrates with the debugging backtrace and edebug (see
 ;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
 (use-package inspector)
 
