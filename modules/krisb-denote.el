@@ -151,8 +151,8 @@ My version uses the full outline path instead of just heading text."
   :custom
   (denote-explore-network-directory     ; Have to end path in slash
    (no-littering-expand-var-file-name "denote-explore/"))
-  (denote-explore-network-format 'd3.js)
-  (denote-explore-network-graphviz-filetype "pdf")
+  (denote-explore-network-format 'graphviz)
+  (denote-explore-network-graphviz-filetype "svg")
   (denote-explore-network-keywords-ignore '("archive")))
 
 ;;; Citar-denote
