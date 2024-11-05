@@ -398,5 +398,13 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   ;; NOTE 2023-07-16: Can also directly add to `jinx--save-keys' directly
   (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword))
 
+;;; Other
+;;;; Cm-mode (CriticMarkup minor mode)
+;; Track suggested changes in plain text files.
+(use-package cm-mode
+  :vc ( :url "https://github.com/joostkremers/criticmarkup-emacs.git"
+        :rev :newest)
+  :ensure-system-package (pandiff . nodejs-pandiff))
+
 ;;; Provide
 (provide 'krisb-prose)

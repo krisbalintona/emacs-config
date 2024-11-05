@@ -3487,6 +3487,18 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword))
 #+end_src
 
+**** Other
+
+#+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
+  ;;; Other
+  ;;;; Cm-mode (CriticMarkup minor mode)
+  ;; Track suggested changes in plain text files.
+  (use-package cm-mode
+    :vc ( :url "https://github.com/joostkremers/criticmarkup-emacs.git"
+          :rev :newest)
+    :ensure-system-package (pandiff . nodejs-pandiff))
+#+end_src
+
 **** Provide
 
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"

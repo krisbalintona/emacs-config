@@ -7,7 +7,7 @@
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
                 bind-key breadcrumb bufler cape citar-denote cl-generic cl-lib
-                compat corfu-prescient cursory darkroom denote-explore
+                cm-mode compat corfu-prescient cursory darkroom denote-explore
                 denote-interface diminish dired-hist dumber-jump easysession
                 edit-indirect editorconfig eglot eldoc elisp-demos
                 embark-consult engine-mode enlight erc eros eshell-atuin
@@ -31,7 +31,7 @@
                 typewriter-roll-mode use-package verilog-mode vertico-prescient
                 which-key window-tool-bar wombag xref ytdl))
  '(package-vc-selected-packages
-   '((pdf-meta-edit :url "git@github.com:krisbalintona/pdf-meta-edit.git")
+   '((cm-mode :url "https://github.com/joostkremers/criticmarkup-emacs.git")
      (org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")
      (grid :url "https://github.com/ichernyshovvv/grid.el")
