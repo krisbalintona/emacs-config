@@ -64,6 +64,7 @@ after each heading's drawers."
                        'tree)))
 
 ;;; Automate creation of CUSTOM_ID
+;;;###autoload
 (defun krisb-org-ext-create-custom-id ()
   "Get the CUSTOM_ID of the current entry.
 If the entry already has a CUSTOM_ID, return it as-is, else create a new
@@ -78,6 +79,20 @@ This function is a copy of `denote-link-ol-get-id'."
       (setq id (org-id-new "h"))
       (org-entry-put pos "CUSTOM_ID" id)
       id)))
+
+;;; Eldoc backend for footnote content
+;;;###autoload
+(defun krisb-org-ext-eldoc-footnote (callback &rest _rest)
+  "Show formatted footnote content for footnote reference at point.
+Read `eldoc-documentation-functions' for an explanation of CALLBACK and
+_REST."
+  (when-let*
+      ((reference (org-footnote-at-reference-p))
+       (label (nth 0 (org-footnote-at-reference-p)))
+       (definition (org-footnote-get-definition label))
+       (footnote-content (buffer-substring (nth 1 definition)
+                                           (nth 2 definition))))
+    (funcall callback footnote-content)))
 
 ;;; Provide
 (provide 'krisb-org-ext)

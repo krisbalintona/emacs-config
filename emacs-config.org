@@ -3586,8 +3586,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
     (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
     :config
-    (require 'krisb-org-ext)
-
     ;; Make org-open-at-point follow file links in the same window
     (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
@@ -3732,6 +3730,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     (require 'ox-extra)
     (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
+
+  ;;; Krisb-org-ext
+  (use-package krisb-org-ext
+    :after org
+    :hook (org-mode . krisb-org-ext-setup-eldoc)
+    :config
+    (defun krisb-org-ext-setup-eldoc ()
+      "Set up `eldoc-documentation-functions' in org-mode buffers."
+      (add-hook 'eldoc-documentation-functions #'krisb-org-ext-eldoc-footnote nil t)
+      (setq-local eldoc-idle-delay 1)))
 
   ;;; Org-modern
   (use-package org-modern
@@ -7817,6 +7825,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                          'tree)))
 
   ;;; Automate creation of CUSTOM_ID
+  ;;;###autoload
   (defun krisb-org-ext-create-custom-id ()
     "Get the CUSTOM_ID of the current entry.
   If the entry already has a CUSTOM_ID, return it as-is, else create a new
@@ -7831,6 +7840,20 @@ Configuration related to "saving a state," that is, storing or restoring anythin
         (setq id (org-id-new "h"))
         (org-entry-put pos "CUSTOM_ID" id)
         id)))
+
+  ;;; Eldoc backend for footnote content
+  ;;;###autoload
+  (defun krisb-org-ext-eldoc-footnote (callback &rest _rest)
+    "Show formatted footnote content for footnote reference at point.
+  Read `eldoc-documentation-functions' for an explanation of CALLBACK and
+  _REST."
+    (when-let*
+        ((reference (org-footnote-at-reference-p))
+         (label (nth 0 (org-footnote-at-reference-p)))
+         (definition (org-footnote-get-definition label))
+         (footnote-content (buffer-substring (nth 1 definition)
+                                             (nth 2 definition))))
+      (funcall callback footnote-content)))
 
   ;;; Provide
   (provide 'krisb-org-ext)

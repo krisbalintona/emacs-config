@@ -73,8 +73,6 @@
   (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
   (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
   :config
-  (require 'krisb-org-ext)
-
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
@@ -215,6 +213,16 @@
   :config
   (require 'ox-extra)
   (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
+
+;;; Krisb-org-ext
+(use-package krisb-org-ext
+  :after org
+  :hook (org-mode . krisb-org-ext-setup-eldoc)
+  :config
+  (defun krisb-org-ext-setup-eldoc ()
+    "Set up `eldoc-documentation-functions' in org-mode buffers."
+    (add-hook 'eldoc-documentation-functions #'krisb-org-ext-eldoc-footnote nil t)
+    (setq-local eldoc-idle-delay 1)))
 
 ;;; Org-modern
 (use-package org-modern
