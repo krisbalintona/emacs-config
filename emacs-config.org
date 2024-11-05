@@ -3733,6 +3733,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Krisb-org-ext
   (use-package krisb-org-ext
+    :ensure nil
     :after org
     :hook (org-mode . krisb-org-ext-setup-eldoc)
     :config

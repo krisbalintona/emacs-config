@@ -216,6 +216,7 @@
 
 ;;; Krisb-org-ext
 (use-package krisb-org-ext
+  :ensure nil
   :after org
   :hook (org-mode . krisb-org-ext-setup-eldoc)
   :config
