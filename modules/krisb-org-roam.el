@@ -1,19 +1,19 @@
 ;;; Org-roam
 (use-package org-roam
-  :custom
-  (org-roam-directory (expand-file-name "org-roam" org-directory))
+  :autoload org-roam-node-from-id
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)
          ("C-c n l" . org-roam-buffer-toggle)
          ("C-c n g" . org-roam-graph))
   :custom
+  (org-roam-directory (expand-file-name "org-roam" org-directory))
   (org-roam-capture-templates
    '(("d" "default" plain "%?"
       :target (file+head "%<%Y%m%dT%H%M%S>.org"
                          "#+title: ${title}\n")
       :unnarrowed t)))
-  (org-roam-node-display-template (concat (propertize "(${directories})  " 'face 'shadow)
+  (org-roam-node-display-template (concat (propertize "/${directories:12} " 'face 'shadow)
                                           "${hierarchy:120} "
                                           (propertize "${tags:*}" 'face 'org-tag)))
   (org-roam-db-node-include-function
@@ -21,6 +21,7 @@
   :config
   (org-roam-db-autosync-mode 1)
 
+  ;; TODO 2024-11-06: Can I change these method names to a krisb-* namespace?
   (cl-defmethod org-roam-node-directories ((node org-roam-node))
     (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
         (format "%s" (car (split-string dirs "/")))

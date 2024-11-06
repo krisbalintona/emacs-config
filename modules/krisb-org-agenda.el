@@ -178,7 +178,9 @@
       :clock-resume t
       :kill-buffer t)
      ("j" "Journal" entry
-      (file+olp+datetree ,(org-roam-node-from-id "20241006T214811"))
+      (file+olp+datetree ,(lambda ()
+                            (org-roam-node-file
+                             (org-roam-node-from-id "20241006T214800.000000"))))
       "* %<%c>\n\n%?"
       :tree-type month
       :jump-to-captured t
