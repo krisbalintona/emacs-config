@@ -6507,6 +6507,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
   (use-package eshell-atuin
     :after eshell
+    :bind* ( :map eshell-mode-map
+             ([remap eshell-previous-matching-input] . eshell-atuin-history))
     :custom
     (eshell-atuin-save-duration t)
     (eshell-atuin-filter-mode 'global)
