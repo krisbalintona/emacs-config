@@ -178,7 +178,7 @@
       :clock-resume t
       :kill-buffer t)
      ("j" "Journal" entry
-      (file+olp+datetree ,(car (denote-directory-files "20241006T214811")))
+      (file+olp+datetree ,(org-roam-node-from-id "20241006T214811"))
       "* %<%c>\n\n%?"
       :tree-type month
       :jump-to-captured t

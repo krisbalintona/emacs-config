@@ -31,6 +31,7 @@
 (require 'krisb-org-agenda)
 (require 'krisb-org-export)
 (require 'krisb-denote)
+(require 'krisb-org-roam)
 (require 'krisb-citations)
 (require 'krisb-spelling)
 
