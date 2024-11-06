@@ -8407,20 +8407,20 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (transient-define-prefix krisb-org-remark-mark-transient ()
     "Transient menu for my pre-defined `org-remark' pens."
     [["Resonant"
-      ("r" "Highlight" org-remark-mark-resonant)
-      ("R" "Underline" org-remark-mark-resonant-underline)]
+      ("r" "Underline" org-remark-mark-resonant-underline)
+      ("R" "Highlight" org-remark-mark-resonant)]
      ["Thesis"
-      ("t" "Highlight" org-remark-mark-thesis)
-      ("T" "Underline" org-remark-mark-thesis-underline)]]
+      ("t" "Underline" org-remark-mark-thesis-underline)
+      ("T" "Highlight" org-remark-mark-thesis)]]
     [["Detail"
-      ("d" "Highlight" org-remark-mark-detail)
-      ("D" "Underline" org-remark-mark-detail-underline)]
+      ("d" "Underline" org-remark-mark-detail-underline)
+      ("D" "Highlight" org-remark-mark-detail)]
      ["Outline"
-      ("o" "Highlight" org-remark-mark-outline)
-      ("O" "Underline" org-remark-mark-outline-underline)]
+      ("o" "Underline" org-remark-mark-outline-underline)
+      ("O" "Highlight" org-remark-mark-outline)]
      ["External"
-      ("e" "Highlight" org-remark-mark-external)
-      ("E" "Underline" org-remark-mark-external-underline)]])
+      ("e" "Underline" org-remark-mark-external-underline)
+      ("E" "Highlight" org-remark-mark-external)]])
 
   (provide 'krisb-org-remark-ext)
   ;;; krisb-org-remark-ext.el ends here
