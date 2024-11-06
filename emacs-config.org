@@ -9421,12 +9421,33 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Return the title portion of the denote file corresponding to ID
   (declare-function denote--retrieve-title-or-filename "denote")
-  (defun krisb-org-hugo-retrieve-denote-title (id)
-    "Return the title portion of the denote file corresponding to ID."
-    (when-let* ((paths (denote-directory-files id)))
-      (if (= 1 (length paths))
-          (denote-retrieve-title-or-filename (car paths) 'org)
-        (error "Multiple Denote files with that ID!"))))
+  ;;;###autoload
+  (defun krisb-org-hugo-retrieve-denote-name (denote-id &optional custom-id)
+    "Return the title portion of the denote file corresponding to DENOTE_ID.
+  If CUSTOM-ID is provided, then this is a CUSTOM-ID to a heading in the
+  file corresponding to DENOTE_ID.  In this case, the title of the heading
+  will be returned instead.
+
+  If a file does not correspond to DENOTE-ID, then throw an error.  If a
+  heading does not have a CUSTOM-ID, then also throw an error."
+    (let ((paths (denote-directory-files denote-id)))
+      (cond
+       ((null paths)
+        (error "No file found for Denote ID %s" denote-id))
+       ((> (length paths) 1)
+        (error "Multiple files found for Denote ID %s" denote-id))
+       (t
+        (if custom-id
+            (with-current-buffer (find-file-noselect (car paths))
+              (let ((found nil))
+                (org-map-entries
+                 (lambda ()
+                   (when (string= (org-entry-get nil "CUSTOM_ID") custom-id)
+                     (setq found (denote-link-ol-get-heading))))
+                 nil 'file)
+                (or found
+                    (error "No heading found with CUSTOM_ID %s" custom-id))))
+          (denote-retrieve-title-or-filename (car paths) 'org))))))
 
   ;;; Exclude the exportation of certain heading tags
   (defvar krisb-org-hugo-exclude-tags
