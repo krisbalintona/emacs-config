@@ -292,6 +292,7 @@
          ("C-c a n" . activities-new)
          ("C-c a a" . activities-resume)
          ("C-c a g" . activities-revert)
+         ("C-c a r" . activities-rename)
          ("C-c a b" . activities-switch-buffer)
          ("C-c a B" . activities-switch)
          ("C-c a s" . activities-suspend)
