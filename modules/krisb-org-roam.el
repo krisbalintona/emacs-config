@@ -33,5 +33,13 @@
        (when (> level 1) (concat (string-join (org-roam-node-olp node) " > ") " > "))
        (org-roam-node-title node)))))
 
+;;; Org-roam-ui
+(use-package org-roam-ui
+  :after org-roam
+  :custom
+  (org-roam-ui-open-on-start nil)
+  :config
+  (org-roam-ui-mode 1))
+
 ;;; Provide
 (provide 'krisb-org-roam)
