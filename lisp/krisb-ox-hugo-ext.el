@@ -39,8 +39,7 @@
 ;;; Exclude the exportation of certain heading tags
 (defvar krisb-org-hugo-exclude-tags
   '("ATTACH" "project" "PROJECT" "draft"
-    "section" "series" "tag" "category"
-    "creative-writing")
+    "section" "series" "tag" "category")
   "Tags to exclude.  Look at `krisb-org-hugo--tag-processing-fn-ignore-tags-maybe'.")
 (defun krisb-org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list _info)
   "Ignore tags which match a string found in `krisb-org-hugo-exclude-tags'.
