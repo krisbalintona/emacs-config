@@ -83,9 +83,13 @@ entire buffer or the region if active."
       (conf-align-assignments)
       (krisb-format-buffer-indentation--base beg end))
      ((eq major-mode 'org-mode)
+      (when krisb-org-hide-drawers-mode
+        (krisb-org-hide-drawers-delete-overlays))
       (org-align-tags (not (region-active-p)))
       (krisb-org-ext-add-blank-lines (unless (region-active-p) 'whole-buffer))
-      (krisb-format-buffer-indentation--base beg end))
+      (krisb-format-buffer-indentation--base beg end)
+      (when krisb-org-hide-drawers-mode
+        (krisb-org-hide-drawers-create-overlays)))
      ((and (require 'apheleia nil t) (apheleia--get-formatters))   ; If there is an available apheleia formatter
       (call-interactively 'apheleia-format-buffer))
      ((derived-mode-p 'message-mode)
