@@ -19,8 +19,6 @@
   (apheleia-formatters-respect-fill-column t)
   (apheleia-formatters-respect-indent-level t)
   :config
-  (apheleia-global-mode 1)
-
   ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
   ;; instead of defining the variables directly so that it is agnostic to any
   ;; package changes. Take a look at the `format-all' package for how to install
