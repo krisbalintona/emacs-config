@@ -99,7 +99,8 @@ be a sluggified version of the file's title.")
                          (cond
                           ((and bundle-path (not (string= bundle-path "")))
                            (krisb-org-hugo-title-slug bundle-path))
-                          (krisb-org-hugo-bundle-workflow (krisb-org-hugo-title-slug default-bundle-path))
+                          ((and bundle-path krisb-org-hugo-bundle-workflow)
+                           (krisb-org-hugo-title-slug default-bundle-path))
                           (t "")))))
          (pub-dir (let ((dir (concat base-dir content-dir section-path bundle-dir)))
                     (make-directory dir :parents) ;Create the directory if it does not exist
