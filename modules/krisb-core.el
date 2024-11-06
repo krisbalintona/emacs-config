@@ -99,7 +99,6 @@
   :custom
   (async-bytecomp-allowed-packages 'all)
   :config
-  (dired-async-mode 1)
   (async-bytecomp-package-mode 1))
 
 ;;; Enlight
