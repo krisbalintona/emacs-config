@@ -345,7 +345,9 @@ My version of this function also saves the value of the
                          (window-buffer))))
     (cons (buffer-name)
           (append (bookmark-make-record-default nil t 1)
-                  `(,(cons 'registers (buffer-local-value 'pdf-view-register-alist (current-buffer)))
+                  ;; FIXME 2024-11-05: Causes infinite recursion with desktop.e
+                  ;; for some reason
+                  `(;; ,(cons 'registers (buffer-local-value 'pdf-view-register-alist (current-buffer)))
                     ,(cons 'midnight-p (buffer-local-value 'pdf-view-midnight-minor-mode (current-buffer)))
                     ,(unless no-page
                        (cons 'page (pdf-view-current-page)))
@@ -388,8 +390,10 @@ My version of this function also restores the value of the
               (if midnight-p
                   (pdf-view-midnight-minor-mode 1)
                 (pdf-view-midnight-minor-mode -1))
-              (when registers
-                (setq-local pdf-view-register-alist registers))
+              ;; FIXME 2024-11-05: Causes infinite recursion with desktop.e for
+              ;; some reason
+              ;; (when registers
+              ;;   (setq-local pdf-view-register-alist registers))
               (when size
                 (setq-local pdf-view-display-size size))
               (when slice
