@@ -158,7 +158,7 @@ My version uses the full outline path instead of just heading text."
 ;;; Citar-denote
 (use-package citar-denote
   :demand t
-  :after citar
+  :after (citar denote)
   :diminish
   :bind ( :map krisb-note-keymap
           ("b b" . citar-denote-link-reference)
@@ -222,6 +222,7 @@ My version is has references added to specific line.  Namely, adds the
 
 ;;; Denote-interface
 (use-package denote-interface
+  :after denote
   :vc (:url "git@github.com:krisbalintona/denote-interface.git"
             :rev :newest)
   :autoload denote-interface--signature-lessp

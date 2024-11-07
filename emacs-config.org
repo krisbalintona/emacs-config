@@ -4186,7 +4186,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Citar-denote
   (use-package citar-denote
     :demand t
-    :after citar
+    :after (citar denote)
     :diminish
     :bind ( :map krisb-note-keymap
             ("b b" . citar-denote-link-reference)
@@ -4250,6 +4250,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Denote-interface
   (use-package denote-interface
+    :after denote
     :vc (:url "git@github.com:krisbalintona/denote-interface.git"
               :rev :newest)
     :autoload denote-interface--signature-lessp
