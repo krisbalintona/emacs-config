@@ -62,6 +62,7 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
 ;;; Org-roam-ui
 (use-package org-roam-ui
   :after org-roam
+  :diminish org-roam-ui-follow-mode
   :custom
   (org-roam-ui-open-on-start nil)
   :config
@@ -70,6 +71,7 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
 ;;; Citar-org-roam
 (use-package citar-org-roam
   :after (citar org-roam)
+  :diminish citar-org-roam-mode
   :bind ( :map krisb-note-keymap
           ("b r" . citar-org-roam-ref-add)
           ("b o" . citar-org-roam-open-current-refs))
