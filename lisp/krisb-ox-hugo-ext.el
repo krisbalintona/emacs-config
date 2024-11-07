@@ -23,7 +23,7 @@
 ;; Supplementary functionality for my workflow of blogging with Hugo.
 
 ;;; Code:
-(require 'denote)
+(require 'denote) ; TODO 2024-11-07: Use declare-functions instead of require to remove denote dependency
 (require 'ox-hugo)
 (require 'el-patch)
 
@@ -75,11 +75,16 @@ TAG-LIST and INFO are as described in
 Relevant for my `krisb-org-hugo--get-pub-dir'.  A non-nil value means
 bundles are given a default name; see `krisb-org-hugo--get-pub-dir'.")
 
-(defun krisb-org-hugo-title-slug (path)
-  "Turn PATH into a hyphenated Denote title slug."
+(defun krisb-org-hugo-title-slug (name)
+  "Turn NAME into a hyphenated title slug.
+This function is used by my bespoke bundle workflow to determine the
+directory name of the bundle.  Additionally, this function is used for
+my bespoke code for relative links to Denote notes and Org-roam nodes."
   ;; (message "[krisb-org-hugo-title-slug DBG] title: %s" title)
   (file-name-as-directory
-   (denote-sluggify 'title path)))
+   ;; TODO 2024-11-07: Figure out a way to not depend on denote so this function
+   ;; can be Denote- and Org-roam-agnostic.
+   (denote-sluggify 'title name)))
 
 (el-patch-defun org-hugo--get-pub-dir (info)
   (el-patch-swap
@@ -129,9 +134,8 @@ be a sluggified version of the file's title.")
     (file-truename pub-dir)))
 
 ;;; Relative links
-(defun krisb-org-export-resolve-denote-link (link _info)
+(defun krisb-org-export-resolve-denote-relative-link (link _info)
   "Return `denote' file referenced as LINK destination.
-
 INFO is a plist used as a communication channel.
 
 Return value will be the file name of LINK destination.  Throw an error
@@ -144,10 +148,12 @@ if no match is found."
      ((and denote-files (equal 1 (length denote-files)))
       (car denote-files))
      (denote-files
-      (user-error "[krisb-org-export-resolve-denote-link]: Multiple notes with that ID! %s" denote-files))
-     (t                                 ; If link is broken
+      (user-error "[krisb-org-export-resolve-denote-relative-link]: Multiple notes with that ID! %s" denote-files))
+     (t
       (signal 'org-link-broken (list denote-id))))))
 
+(declare-function org-roam-node-title "org-roam-node")
+(declare-function org-roam-node-from-id "org-roam-node")
 ;; NOTE 2022-03-12: This is a janky way to get links working with page
 ;; bundles. **REQUIRES THE BUNDLE NAME OF EACH POST TO MATCH THE POST'S FILE
 ;; NAME.**
@@ -179,7 +185,7 @@ and rewrite link paths to make blogging more seamless."
        ((string= type "denote")
         ;; (message "[org-hugo-link DBG] hugo-bundle: %s" (plist-get info :hugo-bundle))
         ;; (message "[org-hugo-link DBG] title %s" (plist-get info :title))
-        (let* ((destination (krisb-org-export-resolve-denote-link link info))
+        (let* ((destination (krisb-org-export-resolve-denote-relative-link link info))
                (note-file (denote-retrieve-title-value destination 'org))
                (path
                 (if (string= ".org" (downcase (file-name-extension destination ".")))
@@ -242,19 +248,27 @@ and rewrite link paths to make blogging more seamless."
                                  (concat (file-name-sans-extension destination) ".md"))
                              destination))))
                ;; (message "[org-hugo-link DBG] plain-text path: %s" path)
-               (if (org-id-find-id-file raw-path)
-                   (let* ((anchor (org-hugo-link--heading-anchor-maybe link info))
-                          (ref (if (and (org-string-nw-p anchor)
-                                        (not (string-prefix-p "#" anchor)))
-                                   ;; If the "anchor" doesn't begin with "#",
-                                   ;; it's a direct reference to a post subtree.
-                                   anchor
-                                 (concat path anchor))))
-                     ;; (message "[org-hugo-link DBG] plain-text org-id anchor: %S" anchor)
-                     (format "[%s]({{< relref \"%s\" >}})" (or desc path) ref))
-                 (if desc
-                     (format "[%s](%s)" desc path)
-                   (format "<%s>" path))))))
+               (cond
+                ;; TODO 2024-11-07: Think through what the desired behavior
+                ;; should be if I am linking to a node that is a headline.
+                ;; Org-roam links
+                ((org-roam-node-from-id raw-path)
+                 (let* ((node-name (org-roam-node-title (org-roam-node-from-id raw-path)))
+                        (destination (concat (krisb-org-hugo-title-slug node-name) "index.md")))
+                   (format "[%s]({{< relref \"%s\" >}})" (or desc path) destination)))
+                ((org-id-find-id-file raw-path)
+                 (let* ((anchor (org-hugo-link--heading-anchor-maybe link info))
+                        (ref (if (and (org-string-nw-p anchor)
+                                      (not (string-prefix-p "#" anchor)))
+                                 ;; If the "anchor" doesn't begin with "#",
+                                 ;; it's a direct reference to a post subtree.
+                                 anchor
+                               (concat path anchor))))
+                   ;; (message "[org-hugo-link DBG] plain-text org-id anchor: %S" anchor)
+                   (format "[%s]({{< relref \"%s\" >}})" (or desc path) ref)))
+                (t (if desc
+                       (format "[%s](%s)" desc path)
+                     (format "<%s>" path)))))))
           ;; Links of type [[* Some heading]].
           (`headline
            (let ((title (org-export-data (org-element-property :title destination) info)))
