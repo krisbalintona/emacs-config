@@ -1,5 +1,6 @@
 ;;; Denote
 (use-package denote
+  :disabled t                           ; 2024-11-06: Migrating to org-roam
   :pin gnu-elpa-devel
   :autoload (denote-directory-files krisb-denote-auto-rename-file krisb-denote-sluggify-keyword)
   :commands (denote denote-open-or-create)
