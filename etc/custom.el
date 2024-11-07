@@ -20,17 +20,17 @@
      "/home/krisbalintona/Documents/org-database/agenda/archive/2023-and-before todos.org_archive"))
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
-                beframe breadcrumb bufler cape citar-denote cl-generic cm-mode
-                corfu-prescient cursory darkroom denote-explore denote-interface
-                diminish dired-hist dumber-jump easysession edit-indirect
-                editorconfig eglot elisp-demos embark-consult engine-mode
-                enlight erc eros eshell-atuin eshell-syntax-highlighting
-                eshell-z exec-path-from-shell faceup fish-mode
-                flymake-collection fontaine forge form-feed gcmh grid hammy
-                hide-mode-line highlight-function-calls hotfuzz ibuffer-project
-                idlwave info-colors inspector jinx keychain-environment
-                kind-icon lin lorem-ipsum magit-file-icons marginalia
-                mermaid-mode mixed-pitch modus-themes mpv nadvice
+                beframe breadcrumb bufler cape citar-denote citar-org-roam
+                cl-generic cm-mode corfu-prescient cursory darkroom
+                denote-explore denote-interface diminish dired-hist dumber-jump
+                easysession edit-indirect editorconfig eglot elisp-demos
+                embark-consult engine-mode enlight erc eros eshell-atuin
+                eshell-syntax-highlighting eshell-z exec-path-from-shell faceup
+                fish-mode flymake-collection fontaine forge form-feed gcmh grid
+                hammy hide-mode-line highlight-function-calls hotfuzz
+                ibuffer-project idlwave info-colors inspector jinx
+                keychain-environment kind-icon lin lorem-ipsum magit-file-icons
+                marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
                 nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
                 no-littering notmuch-addr notmuch-transient nov ntlm ob-mermaid
                 oc-csl-activate ol-notmuch olivetti on orderless org-appear

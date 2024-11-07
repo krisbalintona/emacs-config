@@ -13,9 +13,10 @@
       :target (file+head "%<%Y%m%dT%H%M%S>.org"
                          "#+title: ${title}\n")
       :unnarrowed t)))
-  (org-roam-node-display-template (concat (propertize "/${directories:12} " 'face 'shadow)
-                                          "${hierarchy:120} "
-                                          (propertize "${tags:*}" 'face 'org-tag)))
+  (org-roam-node-display-template
+   (concat (propertize "/${directories:12} " 'face 'shadow)
+           "${hierarchy:120} "
+           (propertize "${tags:*}" 'face 'org-tag)))
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
   :config
@@ -41,6 +42,18 @@
   (org-roam-ui-open-on-start nil)
   :config
   (org-roam-ui-mode 1))
+
+;;; Citar-org-roam
+(use-package citar-org-roam
+  :after (citar org-roam)
+  :bind ( :map krisb-note-keymap
+          ("b r" . citar-org-roam-ref-add))
+  :custom
+  (citar-org-roam-subdir "references/")
+  (citar-org-roam-capture-template-key "d")
+  (citar-org-roam-note-title-template "${key}")
+  :config
+  (citar-org-roam-mode 1))
 
 ;;; Provide
 (provide 'krisb-org-roam)
