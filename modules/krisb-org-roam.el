@@ -71,7 +71,8 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
 (use-package citar-org-roam
   :after (citar org-roam)
   :bind ( :map krisb-note-keymap
-          ("b r" . citar-org-roam-ref-add))
+          ("b r" . citar-org-roam-ref-add)
+          ("b o" . citar-org-roam-open-current-refs))
   :custom
   (citar-org-roam-subdir "references/")
   (citar-org-roam-capture-template-key "r")
