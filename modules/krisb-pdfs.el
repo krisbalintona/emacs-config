@@ -126,7 +126,9 @@ The context buffer is the buffer that shows annotation contents in
 
 ;;; Pdf-meta-edit
 (use-package pdf-meta-edit
-  :load-path "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/")
+  :load-path "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/"
+  :bind ( :map pdf-view-mode-map
+          ("C-c m" . pdf-meta-edit-modify)))
 
 ;;; Provide
 (provide 'krisb-pdfs)
