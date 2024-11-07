@@ -311,7 +311,7 @@
   :bind ( :map krisb-toggle-keymap
           ("h" . krisb-org-hide-drawers-transient))
   :custom
-  (krisb-org-hide-drawers-blacklist '("CUSTOM_ID"))
+  (krisb-org-hide-drawers-blacklist '("CUSTOM_ID" "ID"))
   :config
   (require 'transient)
   (transient-define-prefix krisb-org-hide-drawers-transient ()
