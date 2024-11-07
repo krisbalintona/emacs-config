@@ -1,5 +1,6 @@
 ;;;; Notmuch
 (use-package notmuch
+  :load-path "/home/krisbalintona/emacs-repos/packages/notmuch/emacs/"
   :ensure-system-package (notmuch
                           (gmi . lieer-git))
   :hook ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'

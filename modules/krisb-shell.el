@@ -34,6 +34,7 @@
 ;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
 (use-package eshell-atuin
   :after eshell
+  :demand t
   :bind* ( :map eshell-mode-map
            ([remap eshell-previous-matching-input] . eshell-atuin-history))
   :custom
