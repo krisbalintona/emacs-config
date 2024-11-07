@@ -4289,12 +4289,25 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom
     (org-roam-directory (expand-file-name "org-roam" org-directory))
     (org-roam-capture-templates
-     '(("d" "default" plain "%?"
-        :target (file+head "%<%Y%m%dT%H%M%S>.org"
+     '(("p" "plain" plain "%?"
+        :target (file+head "%(let* ((subdirs
+          (mapcar (lambda (dir) (file-relative-name dir org-roam-directory))
+                  (seq-filter #'file-directory-p
+                              (directory-files org-roam-directory t \"^[^.]\" t))))
+         (subdir (expand-file-name
+                  (completing-read \"Subdirectory: \" subdirs)
+                  org-roam-directory)))
+    (expand-file-name (concat (format-time-string \"%Y%m%dT%H%M%S\") \".org\")
+                      subdir))"
                            "#+title: ${title}\n")
+        :unnarrowed t)
+       ("r" "reference" plain "%?"
+        :target (file+head
+                 "references/%<%Y%m%dT%H%M%S>.org"
+                 "#+title: ${title}\n")
         :unnarrowed t)))
     (org-roam-node-display-template
-     (concat (propertize "/${directories:12} " 'face 'shadow)
+     (concat (propertize "${directories:12} " 'face 'shadow)
              "${hierarchy:120} "
              (propertize "${tags:*}" 'face 'org-tag)))
     (org-roam-db-node-include-function
@@ -4305,14 +4318,17 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; TODO 2024-11-06: Can I change these method names to a krisb-* namespace?
     (cl-defmethod org-roam-node-directories ((node org-roam-node))
       (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
-          (format "%s" (car (split-string dirs "/")))
+          (format "/%s" (car (split-string dirs "/")))
         ""))
 
     (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
       (let ((level (org-roam-node-level node)))
         (concat
-         (when (> level 0) (concat (org-roam-node-file-title node) " > "))
-         (when (> level 1) (concat (string-join (org-roam-node-olp node) " > ") " > "))
+         (when (> level 0)
+           (concat (org-roam-node-file-title node) " > "))
+         (when (> level 1)
+           (concat (string-join (org-roam-node-olp node) " > ")
+                   " > "))
          (org-roam-node-title node)))))
 
   ;;; Org-roam-ui
@@ -4330,7 +4346,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             ("b r" . citar-org-roam-ref-add))
     :custom
     (citar-org-roam-subdir "references/")
-    (citar-org-roam-capture-template-key "d")
+    (citar-org-roam-capture-template-key "r")
     (citar-org-roam-template-fields
      '((:citar-title . ("title"))
        (:citar-author . ("author" "editor"))
