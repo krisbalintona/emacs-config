@@ -30,8 +30,14 @@
   ;; (i.e. searchable) even if visually absent/truncated
   (org-roam-node-display-template
    (concat (propertize "${directories:12} " 'face 'shadow)
-           "${hierarchy:*} "
-           (propertize "${tags:*}" 'face 'org-tag)))
+           "${hierarchy:120} "
+           (propertize "${tags:60}" 'face 'org-tag)))
+  (org-roam-node-annotation-function
+   (lambda (node)
+     "Show modification time annotation.
+Taken from
+https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-time-annotation-in-org-roam-node-find-minad."
+     (marginalia--time (org-roam-node-file-mtime node))))
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
   :config
