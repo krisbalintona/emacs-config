@@ -51,7 +51,16 @@
   :custom
   (citar-org-roam-subdir "references/")
   (citar-org-roam-capture-template-key "d")
-  (citar-org-roam-note-title-template "${key}")
+  (citar-org-roam-template-fields
+   '((:citar-title . ("title"))
+     (:citar-author . ("author" "editor"))
+     (:citar-date . ("date" "year" "issued"))
+     (:citar-pages . ("pages"))
+     (:citar-type . ("=type="))
+     ;; Allow citar to pass the "key" field, which we can use in
+     ;; `citar-org-roam-note-title-template' as "=key=", like ${=key=}
+     (:citar-key . ("=key="))))
+  (citar-org-roam-note-title-template "${=key=} ${citar-key}")
   :config
   (citar-org-roam-mode 1))
 
