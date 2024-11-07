@@ -26,9 +26,11 @@
                "references/%<%Y%m%dT%H%M%S>.org"
                "#+title: ${title}\n")
       :unnarrowed t)))
+  ;; NOTE 2024-11-07: The full content of each template element is present
+  ;; (i.e. searchable) even if visually absent/truncated
   (org-roam-node-display-template
    (concat (propertize "${directories:12} " 'face 'shadow)
-           "${hierarchy:120} "
+           "${hierarchy:*} "
            (propertize "${tags:*}" 'face 'org-tag)))
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
