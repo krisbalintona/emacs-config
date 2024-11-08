@@ -232,13 +232,6 @@ As directory is special if I've decided it is!"
   (add-log-mailing-address "krisbalintona@gmail.com")
   (add-log-keep-changes-together t))
 
-;;;;; Ediff
-(use-package ediff
-  :ensure nil
-  :custom
-  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
-  (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
-
 ;;;;; Vc-msg
 ;; See a line's corresponding commit information (like git blame)
 (use-package vc-msg
