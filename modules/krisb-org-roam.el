@@ -105,7 +105,9 @@ called outright."
 ;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
   :vc ( :url "git@github.com:krisbalintona/org-roam-folgezettel.git"
-        :rev :newest))
+        :rev :newest)
+  :bind ( :map krisb-note-keymap
+          ("m" . org-roam-folgezettel-list)))
 
 ;;; Provide
 (provide 'krisb-org-roam)
