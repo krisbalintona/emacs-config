@@ -68,9 +68,16 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
   :config
   (org-roam-ui-mode 1)
 
+  (defun krisb-org-roam-ui-update-theme (&optional _)
+    "Update org-roam-ui theme if `org-roam-ui-sync-theme' is non-nil.
+This function is added to `enable-theme-functions' and can also be
+called outright."
+    (when (and org-roam-ui-sync-theme org-roam-ui-mode)
+      (call-interactively 'org-roam-ui-sync-theme)))
+  (krisb-org-roam-ui-update-theme)
+
   ;; Update graph theme on theme change
-  (add-hook 'enable-theme-functions
-            #'(lambda (_) (when org-roam-ui-sync-theme (call-interactively 'org-roam-ui-sync-theme)))))
+  (add-hook 'enable-theme-functions #'krisb-org-roam-ui-update-theme))
 
 ;;; Citar-org-roam
 (use-package citar-org-roam
