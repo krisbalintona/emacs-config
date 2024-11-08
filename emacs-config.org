@@ -5146,44 +5146,29 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                          (org-agenda-include-diary t)
                          (org-agenda-insert-diary-extract-time t)
                          (org-super-agenda-groups
-                          '((:discard (:and (:tag "inbox" :not (:deadline t)))) ; We want to see deadlines even if they have the inbox tag
-                            (:name "Overdue" :scheduled past :deadline past)
+                          '((:name "Overdue" :scheduled past :deadline past)
                             (:auto-category t)))))
-                (tags-todo "+TODO=\"NEXT\"-project-inbox"
-                           ((org-agenda-overriding-header "Next")
-                            (org-agenda-use-tag-inheritance '(todo))
-                            (org-agenda-show-inherited-tags t)
-                            (org-agenda-dim-blocked-tasks 'invisible)
-                            (org-agenda-skip-function
-                             '(org-agenda-skip-entry-if 'scheduled 'deadline))))
-                (tags-todo "+TODO=\"TODO\"-project-inbox"
-                           ((org-agenda-overriding-header "Standard")
+                (tags-todo "+TODO=\"NEXT\"|+TODO=\"TODO\"-project-inbox"
+                           ((org-agenda-overriding-header "Non-time-bound tasks")
                             (org-agenda-use-tag-inheritance '(todo))
                             (org-agenda-show-inherited-tags t)
                             (org-agenda-dim-blocked-tasks 'invisible)
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
               ("i" "Inbox: process entries"
-               ((agenda ""
-                        ((org-agenda-overriding-header "Time-bound inbox")
-                         (org-agenda-start-day "+0d")
-                         (org-agenda-span 5)
-                         (org-habit-show-habits nil)
-                         (org-agenda-entry-types
-                          '(:deadline :scheduled))
-                         (org-super-agenda-groups
-                          '((:tag "inbox")
-                            (:todo "MAYBE")
-                            (:discard (:anything t))))))
+               ((tags-todo "+inbox|+TODO=\"MAYBE\""
+                           ((org-agenda-overriding-header "Review")
+                            (org-agenda-dim-blocked-tasks t)
+                            (org-agenda-skip-function 'org-review-agenda-skip)))
                 (tags-todo "+inbox"
-                           ((org-agenda-overriding-header "Regular inbox")
+                           ((org-agenda-overriding-header "Non-review inbox")
                             (org-agenda-dim-blocked-tasks t)
                             (org-agenda-skip-function
-                             '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+                             'krisb-org-review-has-review-property-p)))
                 (todo "MAYBE"
-                      ((org-agenda-overriding-header "Regular maybes")
+                      ((org-agenda-overriding-header "Non-review maybes")
                        (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
+                        'krisb-org-review-has-review-property-p)))))
               ("p" "Projects"
                ((tags-todo "project"
                            ((org-agenda-overriding-header "")
@@ -5365,17 +5350,19 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Org-review
   (use-package org-review
     :bind ( :map org-mode-map
-            ("C-c r s" . org-review-insert-next-review)
-            ("C-c r l" . org-review-insert-last-review)
+            ("C-c R s" . org-review-insert-next-review)
+            ("C-c R l" . org-review-insert-last-review)
             :map org-agenda-mode-map
-            ("C-c r s" . org-review-insert-next-review)
-            ("C-c r l" . org-review-insert-last-review))
+            ("C-c R s" . org-review-insert-next-review)
+            ("C-c R l" . org-review-insert-last-review))
     :custom
     (org-review-delay "+8d")
     (org-review-last-timestamp-format 'inactive)
     (org-review-next-timestamp-format 'inactive)
+    (org-review-sets-next-date nil)
     :config
-    (defun krisb-org-review-has-next-p ()
+    ;; Agenda helpers
+    (defun krisb-org-review-has-review-property-p ()
       "Skip the current todo if it has an org-review property.
   Returns non-nil if the current todo has a property by the name of the
   value of `org-review-next-property-name' or
@@ -5384,6 +5371,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                (org-entry-get (point) org-review-last-property-name))
            (org-with-wide-buffer (or (outline-next-heading) (point-max)))))
 
+    ;; Commands
     (defun krisb-org-review-unreview ()
       "Un-review the current heading.
   Removes the properties denoted by `org-review-next-property-name' and
@@ -5392,7 +5380,27 @@ Configuration related to "saving a state," that is, storing or restoring anythin
       (when (org-entry-get (point) org-review-next-property-name)
         (org-delete-property org-review-next-property-name))
       (when (org-entry-get (point) org-review-last-property-name)
-        (org-delete-property org-review-last-property-name))))
+        (org-delete-property org-review-last-property-name)))
+
+    (defun krisb-org-review-scheduled-to-review ()
+      "Turn the scheduled date of an agenda entry to a review date.
+  Sets the value of `org-review-next-property-name' to the scheduled
+  date.  Deletes the scheduled date afterward.
+
+  This command was initially used to help me transition from a
+  non-org-review workflow (a combination of an INBOX tag and scheduling)
+  to an org-review workflow."
+      (interactive)
+      (org-agenda-with-point-at-orig-entry nil
+        (let ((date (org-entry-get (point) "SCHEDULED")))
+          (if date
+              (progn
+                (org-set-property org-review-next-property-name
+                                  (concat "["
+                                          (substring date 1 -1)
+                                          "]"))
+                (org-schedule '(4))
+                (message "No scheduled date found for this item.")))))))
 #+end_src
 
 **** Provide
