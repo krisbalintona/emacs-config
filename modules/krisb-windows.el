@@ -382,6 +382,10 @@
           ((major-mode . denote-interface-mode)
            (display-buffer-same-window))
 
+;;;;; Org-roam-folgezettel
+          ((major-mode . org-roam-folgezettel-mode)
+           (display-buffer-same-window))
+
 ;;;;; Customize buffers
           ("\\*Customize Group:"
            (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected))))
