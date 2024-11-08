@@ -35,17 +35,19 @@
                 no-littering notmuch-addr notmuch-transient nov ntlm ob-mermaid
                 oc-csl-activate ol-notmuch olivetti on orderless org-appear
                 org-bookmark-heading org-bulletproof org-contrib org-edna
-                org-mime org-modern org-remark org-review org-roam org-roam-ui
-                org-super-agenda org-tidy org-web-tools outshine ox-hugo
-                package-lint-flymake paren-face pcmpl-args pdf-tools peg
-                pinentry popper powerthesaurus psession pulsar puni python
-                recursion-indicator saveplace-pdf-view scratch show-font so-long
-                soap-client sudo-edit svg system-packages tmr track-changes
-                tramp treesit-auto try typewriter-roll-mode use-package
-                verilog-mode vertico-prescient which-key window-tool-bar wombag
-                ytdl))
+                org-mime org-modern org-remark org-review org-roam
+                org-roam-folgezettel org-roam-ui org-super-agenda org-tidy
+                org-web-tools outshine ox-hugo package-lint-flymake paren-face
+                pcmpl-args pdf-tools peg pinentry popper powerthesaurus psession
+                pulsar puni python recursion-indicator saveplace-pdf-view
+                scratch show-font so-long soap-client sudo-edit svg
+                system-packages tmr track-changes tramp treesit-auto try
+                typewriter-roll-mode use-package verilog-mode vertico-prescient
+                which-key window-tool-bar wombag ytdl))
  '(package-vc-selected-packages
-   '((cm-mode :url "https://github.com/joostkremers/criticmarkup-emacs.git")
+   '((org-roam-folgezettel :url
+                           "git@github.com:krisbalintona/org-roam-folgezettel.git")
+     (cm-mode :url "https://github.com/joostkremers/criticmarkup-emacs.git")
      (org-super-agenda :url
                        "https://github.com/Alexander-Miller/org-super-agenda.git")
      (grid :url "https://github.com/ichernyshovvv/grid.el")

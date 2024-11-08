@@ -102,5 +102,10 @@ called outright."
   :config
   (citar-org-roam-mode 1))
 
+;;; Org-roam-folgezettel
+(use-package org-roam-folgezettel
+  :vc ( :url "git@github.com:krisbalintona/org-roam-folgezettel.git"
+        :rev :newest))
+
 ;;; Provide
 (provide 'krisb-org-roam)
