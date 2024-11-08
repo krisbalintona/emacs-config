@@ -326,8 +326,10 @@ See ((org) Filtering/limiting agenda items)."
        ((string= time-b "") -1)         ; B has no CREATED property, put it last
        (t
         (if (time-less-p (date-to-time time-a) (date-to-time time-b))
-            -1 +1)))))
+            -1 +1))))))
 
+;;; `org-agenda-custom-commands'
+(with-eval-after-load 'org-agenda
   ;; Relevant variables to set locally in `org-agenda-custom-commands'
   ;; - `org-agenda-overriding-header'
   ;; - `org-agenda-show-inherited-tags'
@@ -470,7 +472,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
   (org-habit-completed-glyph ?●)
   (org-habit-missed-glyph ?○))
 
-;;;; Org-expiry
+;;; Org-expiry
 (use-package org-expiry
   :requires org-contrib
   :ensure nil
@@ -478,14 +480,14 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :custom
   (org-expiry-inactive-timestamps t))
 
-;;;; Org-depend
+;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is changed.
 (use-package org-depend
   :requires org-contrib
   :ensure nil
   :after org-agenda)
 
-;;;; Org-edna
+;;; Org-edna
 ;; Also look at `org-edna' with `org-linker-edna'
 ;; (https://github.com/toshism/org-linker-edna) (the second of which requires
 ;; `org-linker': https://github.com/toshism/org-linker). `org-super-links' can
@@ -571,6 +573,38 @@ based off of `org-linker-edna’."
                        :prompt "Select dependency for the heading at point: "
                        krisb-consult-org-agenda-depend
                        :prompt "Select dependency for this agenda item: ")))
+
+;;; Org-review
+(use-package org-review
+  :bind ( :map org-mode-map
+          ("C-c r s" . org-review-insert-next-review)
+          ("C-c r l" . org-review-insert-last-review)
+          :map org-agenda-mode-map
+          ("C-c r s" . org-review-insert-next-review)
+          ("C-c r l" . org-review-insert-last-review))
+  :custom
+  (org-review-delay "+8d")
+  (org-review-last-timestamp-format 'inactive)
+  (org-review-next-timestamp-format 'inactive)
+  :config
+  (defun krisb-org-review-has-next-p ()
+    "Skip the current todo if it has an org-review property.
+Returns non-nil if the current todo has a property by the name of the
+value of `org-review-next-property-name' or
+`org-review-last-property-name'."
+    (and (or (org-entry-get (point) org-review-next-property-name)
+             (org-entry-get (point) org-review-last-property-name))
+         (org-with-wide-buffer (or (outline-next-heading) (point-max)))))
+
+  (defun krisb-org-review-unreview ()
+    "Un-review the current heading.
+Removes the properties denoted by `org-review-next-property-name' and
+`org-review-last-property-name'."
+    (interactive)
+    (when (org-entry-get (point) org-review-next-property-name)
+      (org-delete-property org-review-next-property-name))
+    (when (org-entry-get (point) org-review-last-property-name)
+      (org-delete-property org-review-last-property-name))))
 
 ;;; Provide
 (provide 'krisb-org-agenda)

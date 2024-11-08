@@ -35,7 +35,7 @@
                 no-littering notmuch-addr notmuch-transient nov ntlm ob-mermaid
                 oc-csl-activate ol-notmuch olivetti on orderless org-appear
                 org-bookmark-heading org-bulletproof org-contrib org-edna
-                org-mime org-modern org-remark org-roam org-roam-ui
+                org-mime org-modern org-remark org-review org-roam org-roam-ui
                 org-super-agenda org-tidy org-web-tools outshine ox-hugo
                 package-lint-flymake paren-face pcmpl-args pdf-tools peg
                 pinentry popper powerthesaurus psession pulsar puni python
