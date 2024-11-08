@@ -7,7 +7,7 @@
          ("C-c n l" . org-roam-buffer-toggle)
          ("C-c n g" . org-roam-graph))
   :custom
-  (org-roam-directory (expand-file-name "org-roam" org-directory))
+  (org-roam-directory krisb-notes-directory)
   (org-roam-capture-templates
    '(("p" "plain" plain "%?"
       :target (file+head "%(let* ((subdirs
