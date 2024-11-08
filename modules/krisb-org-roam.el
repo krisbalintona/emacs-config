@@ -66,7 +66,11 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
   :custom
   (org-roam-ui-open-on-start nil)
   :config
-  (org-roam-ui-mode 1))
+  (org-roam-ui-mode 1)
+
+  ;; Update graph theme on theme change
+  (add-hook 'enable-theme-functions
+            #'(lambda (_) (when org-roam-ui-sync-theme (call-interactively 'org-roam-ui-sync-theme)))))
 
 ;;; Citar-org-roam
 (use-package citar-org-roam
