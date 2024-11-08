@@ -562,11 +562,13 @@ based off of `org-linker-edna’."
 ;;; Org-review
 (use-package org-review
   :bind ( :map org-mode-map
-          ("C-c R s" . org-review-insert-next-review)
-          ("C-c R l" . org-review-insert-last-review)
+          ("C-c r s" . org-review-insert-next-review)
+          ("C-c r l" . org-review-insert-last-review)
+          ("C-c r u" . krisb-org-review-unreview)
           :map org-agenda-mode-map
-          ("C-c R s" . org-review-insert-next-review)
-          ("C-c R l" . org-review-insert-last-review))
+          ("C-c r s" . org-review-insert-next-review)
+          ("C-c r l" . org-review-insert-last-review)
+          ("C-c r u" . krisb-org-review-unreview))
   :custom
   (org-review-delay "+8d")
   (org-review-last-timestamp-format 'inactive)

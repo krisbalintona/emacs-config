@@ -4387,15 +4387,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :diminish (org-remark-mode org-remark-global-tracking-mode)
     :hook (on-first-file . org-remark-global-tracking-mode)
     :bind ( :map org-remark-mode-map
-            ("C-c r r" . (lambda () (interactive) (org-remark-highlights-load)))
-            ("C-c r l" . org-remark-mark-line)
-            ("C-c r d" . org-remark-delete)
-            ("C-c r c" . org-remark-change)
-            ("C-c r t" . org-remark-toggle)
-            ("C-c r o" . org-remark-open)
-            ("C-c r v" . org-remark-view)
-            ("C-c r n" . org-remark-next)
-            ("C-c r p" . org-remark-prev)
+            ("C-c m r" . (lambda () (interactive) (org-remark-highlights-load)))
+            ("C-c m l" . org-remark-mark-line)
+            ("C-c m d" . org-remark-delete)
+            ("C-c m c" . org-remark-change)
+            ("C-c m t" . org-remark-toggle)
+            ("C-c m o" . org-remark-open)
+            ("C-c m v" . org-remark-view)
+            ("C-c m n" . org-remark-next)
+            ("C-c m p" . org-remark-prev)
             :repeat-map krisb-org-remark-mode-repeat-map
             ("d" . org-remark-delete)
             ("c" . org-remark-change)
@@ -5350,11 +5350,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Org-review
   (use-package org-review
     :bind ( :map org-mode-map
-            ("C-c R s" . org-review-insert-next-review)
-            ("C-c R l" . org-review-insert-last-review)
+            ("C-c r s" . org-review-insert-next-review)
+            ("C-c r l" . org-review-insert-last-review)
+            ("C-c r u" . krisb-org-review-unreview)
             :map org-agenda-mode-map
-            ("C-c R s" . org-review-insert-next-review)
-            ("C-c R l" . org-review-insert-last-review))
+            ("C-c r s" . org-review-insert-next-review)
+            ("C-c r l" . org-review-insert-last-review)
+            ("C-c r u" . krisb-org-review-unreview))
     :custom
     (org-review-delay "+8d")
     (org-review-last-timestamp-format 'inactive)
