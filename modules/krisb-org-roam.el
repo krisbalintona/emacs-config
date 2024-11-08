@@ -62,7 +62,7 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
 ;;; Org-roam-ui
 (use-package org-roam-ui
   :after org-roam
-  :diminish org-roam-ui-follow-mode
+  :diminish (org-roam-ui-mode org-roam-ui-follow-mode)
   :custom
   (org-roam-ui-open-on-start nil)
   :config

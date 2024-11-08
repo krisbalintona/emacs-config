@@ -4346,7 +4346,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Org-roam-ui
   (use-package org-roam-ui
     :after org-roam
-    :diminish org-roam-ui-follow-mode
+    :diminish (org-roam-ui-mode org-roam-ui-follow-mode)
     :custom
     (org-roam-ui-open-on-start nil)
     :config
