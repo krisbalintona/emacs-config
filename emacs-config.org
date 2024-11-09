@@ -4352,8 +4352,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom
     (org-roam-ui-open-on-start nil)
     :config
-    (org-roam-ui-mode 1)
-
     (defun krisb-org-roam-ui-update-theme (&optional _)
       "Update org-roam-ui theme if `org-roam-ui-sync-theme' is non-nil.
   This function is added to `enable-theme-functions' and can also be

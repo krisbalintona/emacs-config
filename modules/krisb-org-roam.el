@@ -68,8 +68,6 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
   :custom
   (org-roam-ui-open-on-start nil)
   :config
-  (org-roam-ui-mode 1)
-
   (defun krisb-org-roam-ui-update-theme (&optional _)
     "Update org-roam-ui theme if `org-roam-ui-sync-theme' is non-nil.
 This function is added to `enable-theme-functions' and can also be
