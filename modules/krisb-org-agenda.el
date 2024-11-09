@@ -290,8 +290,11 @@ See ((org) Filtering/limiting agenda items)."
     "(Bespoke) process org-agenda entry at point."
     (interactive)
     (org-agenda-priority)
+    (org-agenda-todo)
     (org-agenda-set-tags)
-    (org-agenda-next-item 1)))
+    (org-agenda-set-effort)
+    (org-review-insert-last-review)
+    (org-review-insert-next-review)))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda

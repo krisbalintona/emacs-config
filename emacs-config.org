@@ -5092,8 +5092,11 @@ Configuration related to "saving a state," that is, storing or restoring anythin
       "(Bespoke) process org-agenda entry at point."
       (interactive)
       (org-agenda-priority)
+      (org-agenda-todo)
       (org-agenda-set-tags)
-      (org-agenda-next-item 1)))
+      (org-agenda-set-effort)
+      (org-review-insert-last-review)
+      (org-review-insert-next-review)))
 
   ;;; Org-super-agenda
   (use-package org-super-agenda
