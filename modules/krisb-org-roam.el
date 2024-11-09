@@ -5,6 +5,8 @@
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)
          ("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n ta" . org-roam-tag-add)
+         ("C-c n tr" . org-roam-tag-remove)
          ("C-c n g" . org-roam-graph))
   :custom
   (org-roam-directory krisb-notes-directory)
