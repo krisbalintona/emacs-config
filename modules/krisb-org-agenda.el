@@ -364,7 +364,7 @@ See ((org) Filtering/limiting agenda items)."
                        (org-super-agenda-groups
                         '((:name "Overdue" :scheduled past :deadline past)
                           (:auto-category t)))))
-              (tags-todo "+TODO=\"NEXT\"|+TODO=\"TODO\"-project-inbox"
+              (tags-todo "+TODO=\"NEXT\"-project-inbox|+TODO=\"TODO\"-project-inbox"
                          ((org-agenda-overriding-header "Non-time-bound tasks")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
