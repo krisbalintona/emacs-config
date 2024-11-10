@@ -4356,6 +4356,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (use-package org-roam-ui
     :after org-roam
     :diminish (org-roam-ui-mode org-roam-ui-follow-mode)
+    :hook (org-roam-ui-mode . krisb-org-roam-ui-update-theme)
     :custom
     (org-roam-ui-open-on-start nil)
     :config
@@ -4365,8 +4366,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   called outright."
       (when (and org-roam-ui-sync-theme org-roam-ui-mode)
         (call-interactively 'org-roam-ui-sync-theme)))
-    (krisb-org-roam-ui-update-theme)
-
+    
     ;; Update graph theme on theme change
     (add-hook 'enable-theme-functions #'krisb-org-roam-ui-update-theme))
 

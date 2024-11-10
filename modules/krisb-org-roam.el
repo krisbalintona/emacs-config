@@ -68,6 +68,7 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
 (use-package org-roam-ui
   :after org-roam
   :diminish (org-roam-ui-mode org-roam-ui-follow-mode)
+  :hook (org-roam-ui-mode . krisb-org-roam-ui-update-theme)
   :custom
   (org-roam-ui-open-on-start nil)
   :config
@@ -77,8 +78,7 @@ This function is added to `enable-theme-functions' and can also be
 called outright."
     (when (and org-roam-ui-sync-theme org-roam-ui-mode)
       (call-interactively 'org-roam-ui-sync-theme)))
-  (krisb-org-roam-ui-update-theme)
-
+  
   ;; Update graph theme on theme change
   (add-hook 'enable-theme-functions #'krisb-org-roam-ui-update-theme))
 
