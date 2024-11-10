@@ -30,7 +30,12 @@
 (require 'krisb-org)
 (require 'krisb-org-agenda)
 (require 'krisb-org-export)
-(require 'krisb-denote)
+;; 2024-11-06: Migrating to org-roam.  We remove the require altogether since
+;; some of my Denote packages are lazy-loaded after Denote is, and they
+;; overshadow some of the functionality from my org-roam related packages.  I
+;; don't use Denote, but I still keep the package around (for now) since I
+;; depend on some Denote forms throughout my configuration currently.
+;; (require 'krisb-denote)
 (require 'krisb-org-roam)
 (require 'krisb-citations)
 (require 'krisb-spelling)
