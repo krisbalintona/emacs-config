@@ -42,6 +42,7 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
      (marginalia--time (org-roam-node-file-mtime node))))
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
+  (org-roam-db-gc-threshold most-positive-fixnum)
   :config
   (org-roam-db-autosync-mode 1)
 

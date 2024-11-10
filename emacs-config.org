@@ -4330,6 +4330,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        (marginalia--time (org-roam-node-file-mtime node))))
     (org-roam-db-node-include-function
      (lambda () (not (member "ATTACH" (org-get-tags)))))
+    (org-roam-db-gc-threshold most-positive-fixnum)
     :config
     (org-roam-db-autosync-mode 1)
 
