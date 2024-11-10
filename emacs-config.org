@@ -4343,7 +4343,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
          (when (> level 1)
            (concat (string-join (org-roam-node-olp node) " > ")
                    " > "))
-         (org-roam-node-title node)))))
+         (if (> level 1)
+             (propertize (org-roam-node-title node) 'face 'org-roam-title)
+           (org-roam-node-title node))))))
 
   ;;; Org-roam-ui
   (use-package org-roam-ui

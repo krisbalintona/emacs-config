@@ -59,7 +59,9 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
        (when (> level 1)
          (concat (string-join (org-roam-node-olp node) " > ")
                  " > "))
-       (org-roam-node-title node)))))
+       (if (> level 1)
+           (propertize (org-roam-node-title node) 'face 'org-roam-title)
+         (org-roam-node-title node))))))
 
 ;;; Org-roam-ui
 (use-package org-roam-ui
