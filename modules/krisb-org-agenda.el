@@ -576,7 +576,7 @@ based off of `org-linker-edna’."
   (org-review-delay "+8d")
   (org-review-last-timestamp-format 'inactive)
   (org-review-next-timestamp-format 'inactive)
-  (org-review-sets-next-date nil)
+  (org-review-sets-next-date t)
   :config
   ;; Agenda helpers
   (defun krisb-org-review-has-review-property-p ()
