@@ -62,7 +62,17 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
                  " > "))
        (if (> level 1)
            (propertize (org-roam-node-title node) 'face 'org-roam-title)
-         (org-roam-node-title node))))))
+         (org-roam-node-title node)))))
+
+  ;; Add ROAM_* properties to properties completing-read interface completions
+  (dolist (prop '("ROAM_EXCLUDE"
+                  "ROAM_PLACE"
+                  "ROAM_PERSON"
+                  "ROAM_SOURCE"
+                  "ROAM_CONTEXT"
+                  "ROAM_REFS"
+                  "ROAM_TYPE"))
+    (add-to-list 'org-default-properties prop)))
 
 ;;; Org-roam-ui
 (use-package org-roam-ui
