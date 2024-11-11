@@ -4901,14 +4901,14 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             ("`" . krisb-org-agenda-process))
     :custom
     ;; Effort
-    (org-agenda-sort-noeffort-is-high t)
-    (org-effort-durations
-     '(("m" . 1)
+    (org-agenda-sort-noeffort-is-high nil)
+    (org-durations-units
+     `(("m" . 1)
        ("h" . 60)
-       ("d" . 1440)
-       ("w" . 10080)
-       ("mon" . 43200)
-       ("y" . 525960.0)))
+       ("d" . ,(* 60 8))
+       ("w" . ,(* 60 8 5))
+       ("mon" . ,(* 60 8 5 4))
+       ("y" . ,(* 60 8 5 4 10))))
 
     ;; Tags
     (org-use-tag-inheritance t)
@@ -5070,6 +5070,11 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   These are directories created by SyncThing which may have org files I do not want to include."
                                               (not (string-match (rx (literal ".st")) subdir)))))
       (add-to-list 'org-agenda-files f))
+
+    ;; REVIEW 2024-11-11: Not sure if this is needed if we set the value of
+    ;; `org-durations-units' via :custom.
+    ;; See `org-durations-units'
+    (org-duration-set-regexps)
 
     ;; Taken from
     ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L213
