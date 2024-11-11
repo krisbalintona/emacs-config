@@ -54,7 +54,10 @@
      (wombag :url "https://github.com/karthink/wombag.git")
      (denote-interface :url "git@github.com:krisbalintona/denote-interface.git")))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/Documents/org-database/notes/buoy/"
+   '("/home/krisbalintona/Documents/org-database/notes/references/"
+     "/home/krisbalintona/Documents/org-database/notes/papers/"
+     "/home/krisbalintona/Documents/org-database/notes/thoughts/"
+     "/home/krisbalintona/Documents/org-database/notes/buoy/"
      "/home/krisbalintona/Documents/org-database/notes/zettels/"
      "/home/krisbalintona/emacs-repos/packages/citar/"
      "/home/krisbalintona/Documents/org-database/notes/bib/"
