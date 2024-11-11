@@ -367,13 +367,26 @@ See ((org) Filtering/limiting agenda items)."
                        (org-super-agenda-groups
                         '((:name "Overdue" :scheduled past :deadline past)
                           (:auto-category t)))))
-              (tags-todo "+TODO=\"NEXT\"-project-inbox|+TODO=\"TODO\"-project-inbox"
+              (tags-todo "+TODO=\"NEXT\"-inbox|+TODO=\"TODO\"-inbox"
+                         ((org-agenda-overriding-header "Projects and tasks to review")
+                          (org-agenda-use-tag-inheritance '(todo))
+                          (org-agenda-show-inherited-tags t)
+                          (org-agenda-dim-blocked-tasks t)
+                          (org-agenda-skip-function 'org-review-agenda-skip)))
+              (tags-todo "+TODO=\"NEXT\"-project-inbox+EFFORT<\"3h\"|+TODO=\"TODO\"-project-inbox+EFFORT<\"3h\""
                          ((org-agenda-overriding-header "Non-time-bound tasks")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
                           (org-agenda-dim-blocked-tasks 'invisible)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
+                           '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+              (tags-todo "+TODO=\"NEXT\"-inbox-project+EFFORT>=\"3h\""
+                         ((org-agenda-overriding-header "Long-running NEXT tasks")
+                          (org-agenda-use-tag-inheritance '(todo))
+                          (org-agenda-show-inherited-tags t)
+                          (org-agenda-dim-blocked-tasks t)
+                          (org-agenda-skip-function
+                           '(org-agenda-skip-entry-if 'scheduled))))))
             ("i" "Inbox: process entries"
              ((tags-todo "+inbox|+TODO=\"MAYBE\""
                          ((org-agenda-overriding-header "Review")
