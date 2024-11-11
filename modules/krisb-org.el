@@ -180,20 +180,7 @@
   :ensure nil
   :custom
   (org-archive-subtree-save-file-p t)  ; Save archive file always
-  (org-archive-subtree-add-inherited-tags t)
-  :config
-  (define-advice org-archive--compute-location
-      (:around (orig-fun &rest args) krisb-org-archive--compute-location-denote-format-string)
-    "Take LOCATION in `org-archive--compute-location' and expand %D.
-%D is expanded to the denote identifier."
-    ;; Modify LOCATION before normal operations
-    (cl-letf (((car args)
-               (if (fboundp 'denote-retrieve-filename-identifier)
-                   (replace-regexp-in-string "%D"
-                                             (denote-retrieve-filename-identifier (buffer-file-name (buffer-base-buffer)))
-                                             (car args))
-                 (car args))))
-      (apply orig-fun args))))
+  (org-archive-subtree-add-inherited-tags t))
 
 ;;;; Org-num
 (use-package org-num

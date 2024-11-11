@@ -72,7 +72,24 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
                   "ROAM_CONTEXT"
                   "ROAM_REFS"
                   "ROAM_TYPE"))
-    (add-to-list 'org-default-properties prop)))
+    (add-to-list 'org-default-properties prop))
+
+  ;; Advise for archiving org-roam nodes
+  (defun krisb-org-archive--compute-location-org-roam-format-string (orig-fun &rest args)
+    "Take LOCATION in `org-archive--compute-location' and expand %R.
+%R is expanded to the identifier for the org-roam node (at point) the archive
+command is invoked in.
+
+If there is no node at point, then expand to the file path instead."
+    ;; Modify LOCATION before normal operations
+    (cl-letf (((car args)
+               (if (fboundp 'org-roam-node-at-point)
+                   (replace-regexp-in-string "%D"
+                                             (or (org-roam-node-id (org-roam-node-at-point 'assert))
+                                                 (buffer-file-name (buffer-base-buffer)))
+                                             (car args))
+                 (car args))))
+      (apply orig-fun args))))
 
 ;;; Org-roam-ui
 (use-package org-roam-ui
@@ -88,7 +105,7 @@ This function is added to `enable-theme-functions' and can also be
 called outright."
     (when (and org-roam-ui-sync-theme org-roam-ui-mode)
       (call-interactively 'org-roam-ui-sync-theme)))
-  
+
   ;; Update graph theme on theme change
   (add-hook 'enable-theme-functions #'krisb-org-roam-ui-update-theme))
 

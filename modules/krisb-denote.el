@@ -123,7 +123,21 @@ My version uses the full outline path instead of just heading text."
       (if outline-path
           (mapconcat #'identity (append outline-path (list heading-text)) " > ")
         heading-text)))
-  (advice-add 'denote-link-ol-get-heading :override #'krisb-denote-link-ol-get-heading))
+  (advice-add 'denote-link-ol-get-heading :override #'krisb-denote-link-ol-get-heading)
+
+  ;; Advise for archiving within Denote notes
+  (defun krisb-org-archive--compute-location-denote-format-string (orig-fun &rest args)
+    "Take LOCATION in `org-archive--compute-location' and expand %D.
+%D is expanded to the identifier for the Denote note the archive command
+ is invoked in."
+    ;; Modify LOCATION before normal operations
+    (cl-letf (((car args)
+               (if (fboundp 'denote-retrieve-filename-identifier)
+                   (replace-regexp-in-string "%D"
+                                             (denote-retrieve-filename-identifier (buffer-file-name (buffer-base-buffer)))
+                                             (car args))
+                 (car args))))
+      (apply orig-fun args))))
 
 ;;; Denote-journal-extras
 (use-package denote-journal-extras
