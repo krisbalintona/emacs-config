@@ -272,13 +272,6 @@ with the exception of org-emphasis markers."
   (indent-bars-highlight-current-depth '(:face default :blend 0.4))
   (indent-bars-display-on-blank-lines t))
 
-;;;;; Rainbow-mode
-;; Colorify color codes
-(use-package rainbow-mode
-  :diminish
-  :hook
-  ((prog-mode conf-mode help-mode) . rainbow-mode))
-
 ;;;;; Highlight-quoted
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them

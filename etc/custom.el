@@ -39,11 +39,11 @@
                 org-roam-folgezettel org-roam-ui org-super-agenda org-tidy
                 org-web-tools outshine ox-hugo package-lint-flymake paren-face
                 pcmpl-args pdf-tools peg pinentry popper powerthesaurus psession
-                pulsar puni python recursion-indicator saveplace-pdf-view
-                scratch show-font so-long soap-client sudo-edit svg
-                system-packages tmr track-changes tramp treesit-auto try
-                typewriter-roll-mode use-package verilog-mode vertico-prescient
-                which-key window-tool-bar wombag ytdl))
+                pulsar puni python rainbow-mode recursion-indicator
+                saveplace-pdf-view scratch show-font so-long soap-client
+                sudo-edit svg system-packages tmr track-changes tramp
+                treesit-auto try typewriter-roll-mode use-package verilog-mode
+                vertico-prescient which-key window-tool-bar wombag ytdl))
  '(package-vc-selected-packages
    '((org-roam-folgezettel :url
                            "git@github.com:krisbalintona/org-roam-folgezettel.git")

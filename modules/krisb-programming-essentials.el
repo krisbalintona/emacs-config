@@ -81,5 +81,11 @@
   (eldoc-echo-area-display-truncation-message t)
   (eldoc-echo-area-prefer-doc-buffer t))
 
+;;; Rainbow-mode
+;; Colorify color codes
+(use-package rainbow-mode
+  :diminish
+  :hook (help-mode . rainbow-mode))
+
 ;;; Provide
 (provide 'krisb-programming-essentials)
