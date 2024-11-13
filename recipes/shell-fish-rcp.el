@@ -24,8 +24,5 @@
 
 ;;; Code:
 
-;;;; Fish-mode
-(use-package fish-mode)
-
 (provide 'shell-fish-rcp)
 ;;; shell-fish-rcp.el ends here

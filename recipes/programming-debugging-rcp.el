@@ -41,6 +41,7 @@
 
 ;;;; Dap-mode
 (use-package dap-mode
+  :disabled
   :after lsp-mode
   :commands dap-debug
   :bind

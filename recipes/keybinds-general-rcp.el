@@ -25,32 +25,6 @@
 ;;; Code:
 (require 'use-package-rcp)
 
-;;; Leader keys
-(defvar-keymap kb/note-keys
-  :doc "Prefix for my note-taking needs.")
-(bind-key "C-c n" kb/note-keys 'global-map)
-
-(defvar-keymap kb/lsp-keys
-  :doc "Prefix for lsp-related commands.")
-(with-eval-after-load 'lsp-mode
-  (bind-key "C-c l" kb/lsp-keys 'lsp-mode-map))
-
-(defvar-keymap kb/file-keys
-  :doc "Prefix for file-related commands.")
-(bind-key "C-c f" kb/file-keys 'global-map)
-
-(defvar-keymap kb/yank-keys
-  :doc "Prefix for yanking stuff.")
-(bind-key "C-c i" kb/yank-keys 'global-map)
-
-(defvar-keymap kb/open-keys
-  :doc "Prefix for opening various hings.")
-(bind-key "C-c o" kb/open-keys 'global-map)
-
-(defvar-keymap kb/toggle-keys
-  :doc "Prefix for toggling stuff.")
-(bind-key "C-M-s-t" kb/toggle-keys 'global-map)
-
 ;;; Key-chords
 (use-package key-chord
   :hook

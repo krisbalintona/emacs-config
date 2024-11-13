@@ -26,32 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Electric
-(use-package electric
-  :ensure nil
-  :hook (on-first-input . electric-pair-mode)
-  :custom
-  (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
-  (electric-quote-comment nil)
-  (electric-quote-string nil)
-  (electric-quote-context-sensitive t)
-  (electric-quote-replace-double t)
-  (electric-quote-inhibit-functions nil))
-
-;;;; Eldoc
-(use-package eldoc
-  :diminish
-  :bind ( :map help-map
-          ("h" . eldoc-doc-buffer))
-  :custom
-  (eldoc-print-after-edit nil)
-  (eldoc-idle-delay 0.2)
-  (eldoc-documentation-strategy
-   'eldoc-documentation-compose-eagerly) ; Mash multiple sources together and display eagerly
-  (eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit) ; Also respects `max-mini-window-height'
-  (eldoc-echo-area-display-truncation-message t)
-  (eldoc-echo-area-prefer-doc-buffer t))
-
 ;;;; Eldoc-box
 (use-package eldoc-box
   :disabled                             ; Only intrusive
@@ -123,204 +97,31 @@
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
 (use-package consult
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
-  (("C-x B" . consult-buffer)
-   ("C-x r B" . consult-bookmark)
-   ;; Remaps
-   ([remap yank-pop] . consult-yank-pop)
-   ([remap repeat-complex-command] . consult-complex-command)
-   ([remap goto-line] . consult-goto-line)
-   ([remap imenu] . kb/consult-imenu-versatile)
-   ([remap recentf-open-files] . consult-recent-file)
-   ([remap flymake-show-buffer-diagnostics] . consult-flymake)
-   :map goto-map                        ; Uses the `M-g' prefix
-   ("e" . consult-compile-error)
-   ("f" . consult-flymake)
-   ("o" . consult-outline)
-   ("m" . consult-mark)
-   ("M" . consult-global-mark)
-   ("I" . consult-imenu-multi)
-   :map search-map                      ; Uses the `M-s' prefix
-   ("g" . consult-git-grep)
-   ("G" . consult-grep)
-   ("r" . consult-ripgrep)
-   ("f" . consult-find)
-   ("F" . consult-locate)
-   ("l" . consult-line)
-   ("i" . consult-info)
-   :map consult-narrow-map
-   ("?" . consult-narrow-help)          ; Show available narrow keys
-   :map help-map
-   ([remap apropos-command] . consult-apropos)
-   :map org-mode-map
-   ([remap consult-outline] . consult-org-heading)
-   :map comint-mode-map
-   ([remap comint-history-isearch-backward-regexp]. consult-history)
-   :map minibuffer-local-map
-   ([remap next-matching-history-element] . consult-history)
-   ([remap previous-matching-history-element]. consult-history))
-  :custom
-  (consult-ripgrep-args
-   (concat
-    "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
-   --smart-case --no-heading --with-filename --line-number --search-zip"
-    ;; Additional args
-    " --line-number --hidden"))
+  ( :map goto-map                        ; Uses the `M-g' prefix
+    ("m" . consult-mark)
+    ("M" . consult-global-mark)
+    ("I" . consult-imenu-multi)
+    :map comint-mode-map
+    ([remap comint-history-isearch-backward-regexp]. consult-history)
+    :map minibuffer-local-map
+    ([remap next-matching-history-element] . consult-history)
+    ([remap previous-matching-history-element]. consult-history))
   :config
-  (add-to-list 'consult-mode-histories
-               '(log-edit-mode log-edit-comment-ring log-edit-comment-ring-index log-edit-beginning-of-line))
-
-  ;; Use the faster plocate rather than locate
-  (when (executable-find "plocate")
-    (setq consult-locate-args "plocate --ignore-case --existing --regexp"))
-
-  (defun kb/consult-imenu-versatile (&optional arg)
-    "Call `consult-imenu'. With prefix-command ARG, call
-    `consult-imenu-multi'."
-    (interactive "P")
-    (if arg (consult-imenu-multi) (consult-imenu)))
-
   ;; Have line centered in previews. Make sure `recenter' is called after
   ;; `consult--maybe-recenter'
-  (add-to-list 'consult-after-jump-hook 'recenter t)
+  (add-hook 'consult-after-jump-hook #'recenter)
 
   ;; Customize consult commands
-  (consult-customize
-   ;; For `consult-*-grep'
-   consult-grep :preview-key "C-M-;"
-   consult-git-grep :preview-key "C-M-;"
-   consult-ripgrep :preview-key "C-M-;"
-   ;; For `consult-fdfind'. Make sure this is after the definition of
-   ;; `consult-recent-file'
-   consult-recent-file :preview-key "C-M-;"
-   ;; `consult-find'
-   consult-find :preview-key "C-M-;")
-
-  ;; Dired consult-buffer source
-  (defvar kb/consult-buffer--dired-source
-    (list :name     "Dired Buffers"
-          :category 'buffer
-          :narrow   ?d
-          :face     'consult-buffer
-          :history  'buffer-name-history
-          :state    'consult--buffer-state
-          :action   'consult--buffer-action
-          :items (lambda ()
-                   (mapcar #'buffer-name
-                           (seq-filter
-                            (lambda (x)
-                              (eq (buffer-local-value 'major-mode x) 'dired-mode))
-                            (buffer-list))))))
-  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--dired-source 'append)
-
-  ;; Info consult-buffer source
-  (defvar kb/consult-buffer--info-source
-    (list :name     "Info Buffers"
-          :category 'buffer
-          :narrow   ?i
-          :face     'info-title-1
-          :history  'buffer-name-history
-          :state    'consult--buffer-state
-          :action   'consult--buffer-action
-          :items (lambda ()
-                   (mapcar #'buffer-name
-                           (seq-filter
-                            (lambda (x)
-                              (eq (buffer-local-value 'major-mode x) 'Info-mode))
-                            (buffer-list))))))
-  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--info-source 'append))
-
-;;;; Embark
-;; Allow an equivalent to ivy-actions to regular complete-read minibuffers (and
-;; thus selectrum!)
-(use-package embark
-  :commands embark-act
-  :bind
-  (("C-.". embark-act)
-   ("C-h B". embark-bindings)
-   :map vertico-map
-   ("C-.". embark-act)
-   ("C->". embark-become)
-   :map embark-symbol-map
-   ("R". raise-sexp))
-  :custom
-  ;; Embark Actions menu
-  (prefix-help-command 'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
-  (embark-prompter 'embark-keymap-prompter) ; What interface do I want to use for Embark Actions?
-  (embark-indicators                    ; How the Embark Actions menu appears
-   '(embark-mixed-indicator
-     embark-highlight-indicator
-     ;; embark-isearch-highlight-indicator
-     ;; embark-verbose-indicator
-     ))
-  (embark-mixed-indicator-delay 1.5)
-
-  ;; Misc
-  (embark-collect-live-initial-delay 0.8)
-  (embark-collect-live-update-delay 0.5)
-  :config
-  (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
-
-;;;; Embark-consult
-;; Companion package for embark
-(use-package embark-consult
-  :demand
-  :after (embark consult)
-  :hook (embark-collect-mode . consult-preview-at-point-mode))
-
-;;;; Scratch.el
-;; Easily create scratch buffers for different modes
-(use-package scratch
-  :hook (scratch-create-buffer . kb/scratch-buffer-setup)
-  :bind
-  ( :map kb/open-keys
-    ("s". scratch))
-  :preface
-  (defun kb/scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly.
- Taken from
- https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
-    (let* ((mode (format "%s" major-mode))
-           (string (concat "Scratch buffer for: " mode "\n\n")))
-      (when scratch-buffer
-        (save-excursion
-          (insert string)
-          (goto-char (point-min))
-          (comment-region (point-at-bol) (point-at-eol)))
-        (forward-line 2))
-      (rename-buffer (concat "*Scratch for " mode "*") t))))
+  (consult-customize consult-buffer :group nil))
 
 ;;;; File or buffer utilities
-;;;;; Autorevert
-;; Automatically update buffers as files are externally modified
-(use-package autorevert
-  :ensure nil
-  :hook (on-first-file . global-auto-revert-mode)
-  :custom
-  (auto-revert-interval 5)
-  (auto-revert-avoid-polling t) ; Automatically reread from disk if the underlying file changes
-  (auto-revert-check-vc-info t)
-  (auto-revert-verbose t))
-
 ;;;;; Whitespace
 ;; Remove whitespace on save
 (use-package whitespace
   :ensure nil
   :custom
   (whitespace-style '(face empty indentation::space tab)))
-
-;;;;; Sudo-edit
-;; Utilities to edit files as root
-(use-package sudo-edit
-  :bind
-  ( :map kb/file-keys
-    ("U" . sudo-edit-find-file)
-    ("u" . sudo-edit))
-  :config
-  (sudo-edit-indicator-mode))
 
 ;;;;; Hi-lock
 (use-package hi-lock
@@ -426,31 +227,6 @@ with the exception of org-emphasis markers."
   :hook
   ((prog-mode conf-mode) . hl-line-mode))
 
-;;;;; Hl-todo
-;; OPTIMIZE 2023-07-14: Also consider synergy with
-;; https://codeberg.org/ideasman42/emacs-prog-face-refine
-(use-package hl-todo
-  :hook (on-first-buffer . global-hl-todo-mode)
-  :bind
-  ( :map hl-todo-mode-map
-    ("M-s t n" . hl-todo-next)
-    ("M-s t p" . hl-todo-previous)
-    ("M-s t o" . hl-todo-occur))
-  :custom
-  (hl-todo-include-modes '(prog-mode text-mode))
-  (hl-todo-text-modes '(markdown-mode text-mode))
-  (hl-todo-exclude-modes '(org-mode))
-  ;; TODO 2022-02-07: Change `kb-comment' such that I am able to leverage
-  ;; hl-todo's punctuation highlighting.
-  (hl-todo-require-punctuation nil)
-  (hl-todo-highlight-punctuation "")
-  :config
-  (with-eval-after-load 'alt-comment-dwim
-    ;; Make sure to have all words in `alt-comment-dwim-keywords-coding' and
-    ;; `alt-comment-dwim-keywords-writing' in this list, otherwise those words will not
-    ;; appear in any calls to `alt-comment-dwim-dwim'.
-    (setq hl-todo-keyword-faces alt-comment-dwim-keyword-faces)))
-
 ;;;;; Ansi-color
 ;; Apply ANSI terminal color escape codes.
 ;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
@@ -496,26 +272,11 @@ with the exception of org-emphasis markers."
   (indent-bars-highlight-current-depth '(:face default :blend 0.4))
   (indent-bars-display-on-blank-lines t))
 
-;;;;; Rainbow-mode
-;; Colorify color codes
-(use-package rainbow-mode
-  :diminish
-  :hook
-  ((text-mode prog-mode conf-mode help-mode) . rainbow-mode))
-
-;;;;; Highlight-defined
-;; Very useful for emacs configuration! Fontify symbols. Additionally, fontify
-;; text which is the symbol of a face.
-(use-package highlight-defined
-  :hook
-  ((prog-mode conf-mode) . highlight-defined-mode)
-  :custom
-  (highlight-defined-face-use-itself t))
-
 ;;;;; Highlight-quoted
 ;; Make (lisp) quotes and quoted symbols easier to distinguish from free variables by highlighting
 ;; them
 (use-package highlight-quoted
+  :disabled t
   :hook
   (emacs-lisp-mode . highlight-quoted-mode))
 
@@ -534,41 +295,6 @@ with the exception of org-emphasis markers."
   (display-fill-column-indicator-character ?│)
   :custom-face
   (fill-column-indicator ((t (:inherit line-number)))))
-
-;;;;; Adaptive-wrap
-;; Visually indent lines wrapped visually!
-(use-package adaptive-wrap
-  ;; NOTE 2024-02-15: This makes long-lines in lists properly indented!
-  :hook ((prog-mode conf-mode org-mode) . adaptive-wrap-prefix-mode))
-
-;;;; Other
-;;;;; Outline
-(use-package outline
-  :ensure nil
-  :custom
-  (outline-minor-mode-cycle t)
-  (outline-minor-mode-highlight t)
-  (outline-blank-line t))
-
-;;;;; Outshine
-;; Outline-minor-mode but with better keybindings and more support.
-;; `outline-minor-mode-prefix' must be set prior to the package's loading
-(defvar outline-minor-mode-prefix (kbd "C-c \\"))
-(use-package outshine
-  :diminish (outshine-mode outline-minor-mode)
-  :hook
-  ((LaTeX-mode prog-mode conf-mode) . outshine-mode)
-  :bind
-  ( :map outshine-mode-map
-    ("C-x n s". outshine-narrow-to-subtree))
-  :custom
-  (outshine-use-speed-commands t)) ; Use speedy commands on headlines (or other defined locations)
-
-;;;;; Lorem-ipsum
-;; Sample text
-(use-package lorem-ipsum
-  :config
-  (setq-default lorem-ipsum-list-bullet "- "))
 
 (provide 'programming-general-rcp)
 ;;; programming-general-rcp.el ends here

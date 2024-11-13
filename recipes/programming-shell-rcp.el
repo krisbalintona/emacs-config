@@ -23,7 +23,6 @@
 ;; Packages related to developing in shell languages (e.g. bash).
 
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
 
 ;;;; Sh-script

@@ -35,7 +35,7 @@
          (elfeed-search-update . elfeed-apply-autotags-now) ; Apply the appropriate autotags to already existing entries
          )
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("r" . elfeed))
   :custom
   ;; Give time for long updates to complete
@@ -80,10 +80,6 @@
 (use-package elfeed-goodies
   :demand t
   :after elfeed ; Can't figure out how to have this work other than this and demanding it
-  :general (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-                     :states 'normal
-                     "p" 'elfeed-goodies/split-show-prev
-                     "n" 'elfeed-goodies/split-show-next)
   :custom
   (elfeed-goodies/feed-source-column-width 25)
   (elfeed-goodies/tag-column-width 40)
@@ -101,176 +97,164 @@
 
 ;;;; QoL
 ;; Much is from https://protesilaos.com/dotemacs/#h:0cd8ddab-55d1-40df-b3db-1234850792ba
+(with-eval-after-load 'elfeed
 
 ;;;;; View in EWW
-(defun prot-elfeed-show-eww (&optional link)
-  "Browse current entry's link or optional LINK in `eww'.
+  (defun prot-elfeed-show-eww (&optional link)
+    "Browse current entry's link or optional LINK in `eww'.
 
 Only show the readable part once the website loads.  This can
 fail on poorly-designed websites."
-  (interactive)
-  (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                    elfeed-show-entry
-                  (elfeed-search-selected :ignore-region)))
-         (link (or link (elfeed-entry-link entry))))
-    (eww link)
-    (add-hook 'eww-after-render-hook 'eww-readable nil t))
-  )
-(general-define-key
- :keymaps 'elfeed-show-mode-map
- :states 'normal
- "e" '(prot-elfeed-show-eww :wk "Show in EWW"))
-(general-define-key
- :keymaps 'elfeed-show-mode-map
- "e" 'prot-elfeed-show-eww)
+    (interactive)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           (link (or link (elfeed-entry-link entry))))
+      (eww link)
+      (add-hook 'eww-after-render-hook 'eww-readable nil t))
+    )
+  (bind-key "e" 'prot-elfeed-show-eww 'elfeed-show-mode-map)
 
-(add-hook 'eww-mode-hook #'(lambda () (olivetti-mode) (mixed-pitch-mode)))
+  (add-hook 'eww-mode-hook #'(lambda () (olivetti-mode) (mixed-pitch-mode)))
 
 ;;;;; Language-detection
-;; Detects language of current buffer
-;; Automatically detect then fontify a buffer (that uses `shr', e.g. eww-mode
-;; and elfeed-show-mode) according to the programming language it appears to
-;; have.
-(use-package language-detection
-  :disabled ; NOTE 2024-09-26: Intrusive. Sometimes there isn't a programming language in the buffer but it still fontifies...
-  :init
-  (with-eval-after-load 'shr
-    (require 'cl-lib)
+  ;; Detects language of current buffer
+  ;; Automatically detect then fontify a buffer (that uses `shr', e.g. eww-mode
+  ;; and elfeed-show-mode) according to the programming language it appears to
+  ;; have.
+  (use-package language-detection
+    :disabled ; NOTE 2024-09-26: Intrusive. Sometimes there isn't a programming language in the buffer but it still fontifies...
+    :init
+    (with-eval-after-load 'shr
+      (require 'cl-lib)
 
-    (defun kb/language-detection-eww-tag-pre (dom)
-      (let ((shr-folding-mode 'none)
-            (shr-current-font 'default))
-        (shr-ensure-newline)
-        (insert (kb/language-detection-eww-fontify-pre dom))
-        (shr-ensure-newline)))
+      (defun kb/language-detection-eww-tag-pre (dom)
+        (let ((shr-folding-mode 'none)
+              (shr-current-font 'default))
+          (shr-ensure-newline)
+          (insert (kb/language-detection-eww-fontify-pre dom))
+          (shr-ensure-newline)))
 
-    (defun kb/language-detection-eww-fontify-pre (dom)
-      (with-temp-buffer
-        (shr-generic dom)
-        (let ((mode (kb/language-detection-eww-buffer-auto-detect-mode)))
-          (when mode
-            (kb/language-detection-eww-fontify-buffer mode)))
-        (buffer-string)))
+      (defun kb/language-detection-eww-fontify-pre (dom)
+        (with-temp-buffer
+          (shr-generic dom)
+          (let ((mode (kb/language-detection-eww-buffer-auto-detect-mode)))
+            (when mode
+              (kb/language-detection-eww-fontify-buffer mode)))
+          (buffer-string)))
 
-    (defun kb/language-detection-eww-fontify-buffer (mode)
-      (delay-mode-hooks (funcall mode))
-      (font-lock-default-function mode)
-      (font-lock-default-fontify-region (point-min)
-                                        (point-max)
-                                        nil))
+      (defun kb/language-detection-eww-fontify-buffer (mode)
+        (delay-mode-hooks (funcall mode))
+        (font-lock-default-function mode)
+        (font-lock-default-fontify-region (point-min)
+                                          (point-max)
+                                          nil))
 
-    (defun eww-buffer-auto-detect-mode ()
-      (let* ((map '((ada ada-mode)
-                    (awk awk-mode)
-                    (c c-mode)
-                    (cpp c++-mode)
-                    (clojure clojure-mode lisp-mode)
-                    (csharp csharp-mode java-mode)
-                    (css css-mode)
-                    (dart dart-mode)
-                    (delphi delphi-mode)
-                    (emacslisp emacs-lisp-mode)
-                    (erlang erlang-mode)
-                    (fortran fortran-mode)
-                    (fsharp fsharp-mode)
-                    (go go-mode)
-                    (groovy groovy-mode)
-                    (haskell haskell-mode)
-                    (html html-mode)
-                    (java java-mode)
-                    (javascript javascript-mode)
-                    (json json-mode javascript-mode)
-                    (latex latex-mode)
-                    (lisp lisp-mode)
-                    (lua lua-mode)
-                    (matlab matlab-mode octave-mode)
-                    (objc objc-mode c-mode)
-                    (perl perl-mode)
-                    (php php-mode)
-                    (prolog prolog-mode)
-                    (python python-mode)
-                    (r r-mode)
-                    (ruby ruby-mode)
-                    (rust rust-mode)
-                    (scala scala-mode)
-                    (shell shell-script-mode)
-                    (smalltalk smalltalk-mode)
-                    (sql sql-mode)
-                    (swift swift-mode)
-                    (visualbasic visual-basic-mode)
-                    (xml sgml-mode)))
-             (language (language-detection-string
-                        (buffer-substring-no-properties (point-min) (point-max))))
-             (modes (cdr (assoc language map)))
-             (mode (cl-loop for mode in modes
-                            when (fboundp mode)
-                            return mode)))
-        (message (format "[language-detection] Detected \"%s\" programming language" language))
-        (when (fboundp mode)
-          mode)))
+      (defun eww-buffer-auto-detect-mode ()
+        (let* ((map '((ada ada-mode)
+                      (awk awk-mode)
+                      (c c-mode)
+                      (cpp c++-mode)
+                      (clojure clojure-mode lisp-mode)
+                      (csharp csharp-mode java-mode)
+                      (css css-mode)
+                      (dart dart-mode)
+                      (delphi delphi-mode)
+                      (emacslisp emacs-lisp-mode)
+                      (erlang erlang-mode)
+                      (fortran fortran-mode)
+                      (fsharp fsharp-mode)
+                      (go go-mode)
+                      (groovy groovy-mode)
+                      (haskell haskell-mode)
+                      (html html-mode)
+                      (java java-mode)
+                      (javascript javascript-mode)
+                      (json json-mode javascript-mode)
+                      (latex latex-mode)
+                      (lisp lisp-mode)
+                      (lua lua-mode)
+                      (matlab matlab-mode octave-mode)
+                      (objc objc-mode c-mode)
+                      (perl perl-mode)
+                      (php php-mode)
+                      (prolog prolog-mode)
+                      (python python-mode)
+                      (r r-mode)
+                      (ruby ruby-mode)
+                      (rust rust-mode)
+                      (scala scala-mode)
+                      (shell shell-script-mode)
+                      (smalltalk smalltalk-mode)
+                      (sql sql-mode)
+                      (swift swift-mode)
+                      (visualbasic visual-basic-mode)
+                      (xml sgml-mode)))
+               (language (language-detection-string
+                          (buffer-substring-no-properties (point-min) (point-max))))
+               (modes (cdr (assoc language map)))
+               (mode (cl-loop for mode in modes
+                              when (fboundp mode)
+                              return mode)))
+          (message (format "[language-detection] Detected \"%s\" programming language" language))
+          (when (fboundp mode)
+            mode)))
 
-    (setq shr-external-rendering-functions
-          '((pre . kb/language-detection-eww-tag-pre)))))
+      (setq shr-external-rendering-functions
+            '((pre . kb/language-detection-eww-tag-pre)))))
 
 ;;;;; Custom search completion
-(defun prot-common-crm-exclude-selected-p (input)
-  "Filter out INPUT from `completing-read-multiple'.
+  (defun prot-common-crm-exclude-selected-p (input)
+    "Filter out INPUT from `completing-read-multiple'.
 Hide non-destructively the selected entries from the completion
 table, thus avoiding the risk of inputting the same match twice.
 
 To be used as the PREDICATE of `completing-read-multiple'."
-  (if-let* ((pos (string-match-p crm-separator input))
-            (rev-input (reverse input))
-            (element (reverse
-                      (substring rev-input 0
-                                 (string-match-p crm-separator rev-input))))
-            (flag t))
-      (progn
-        (while pos
-          (if (string= (substring input 0 pos) element)
-              (setq pos nil)
-            (setq input (substring input (1+ pos))
-                  pos (string-match-p crm-separator input)
-                  flag (when pos t))))
-        (not flag))
-    t)
-  )
+    (if-let* ((pos (string-match-p crm-separator input))
+              (rev-input (reverse input))
+              (element (reverse
+                        (substring rev-input 0
+                                   (string-match-p crm-separator rev-input))))
+              (flag t))
+        (progn
+          (while pos
+            (if (string= (substring input 0 pos) element)
+                (setq pos nil)
+              (setq input (substring input (1+ pos))
+                    pos (string-match-p crm-separator input)
+                    flag (when pos t))))
+          (not flag))
+      t)
+    )
 
-(defun prot-elfeed-search-tag-filter ()
-  "Filter Elfeed search buffer by tags using completion.
+  (defun prot-elfeed-search-tag-filter ()
+    "Filter Elfeed search buffer by tags using completion.
 
 Completion accepts multiple inputs, delimited by `crm-separator'.
 Arbitrary input is also possible, but you may have to exit the
 minibuffer with something like `exit-minibuffer'."
-  (interactive)
-  (unwind-protect
-      (elfeed-search-clear-filter)
-    (let* ((elfeed-search-filter-active :live)
-           (db-tags (elfeed-db-get-all-tags))
-           (plus-tags (mapcar (lambda (tag)
-                                (format "+%s" tag))
-                              db-tags))
-           (minus-tags (mapcar (lambda (tag)
-                                 (format "-%s" tag))
-                               db-tags))
-           (all-tags (delete-dups (append plus-tags minus-tags)))
-           (tags (completing-read-multiple
-                  "Apply one or more tags: "
-                  all-tags #'prot-common-crm-exclude-selected-p t))
-           (input (string-join `(,elfeed-search-filter ,@tags) " ")))
-      (setq elfeed-search-filter input))
-    (elfeed-search-update :force))
-  )
-(general-define-key
- :keymaps 'elfeed-search-mode-map
- :states 'normal
- "C-s" '(prot-elfeed-search-tag-filter :wk "Prot tag completion"))
-(general-define-key
- :keymaps 'elfeed-search-mode-map
- "C-M-s-s" 'prot-elfeed-search-tag-filter)
+    (interactive)
+    (unwind-protect
+        (elfeed-search-clear-filter)
+      (let* ((elfeed-search-filter-active :live)
+             (db-tags (elfeed-db-get-all-tags))
+             (plus-tags (mapcar (lambda (tag)
+                                  (format "+%s" tag))
+                                db-tags))
+             (minus-tags (mapcar (lambda (tag)
+                                   (format "-%s" tag))
+                                 db-tags))
+             (all-tags (delete-dups (append plus-tags minus-tags)))
+             (tags (completing-read-multiple
+                    "Apply one or more tags: "
+                    all-tags #'prot-common-crm-exclude-selected-p t))
+             (input (string-join `(,elfeed-search-filter ,@tags) " ")))
+        (setq elfeed-search-filter input))
+      (elfeed-search-update :force))
+    )
+  (bind-key "C-M-s-s" 'prot-elfeed-search-tag-filter 'elfeed-search-mode-map)
 
 ;;;;; Toggle custom tag keybinds
-(with-eval-after-load 'elfeed
   (defun prot-elfeed-toggle-tag (tag)
     "Toggle TAG for the current item.
 
@@ -304,52 +288,31 @@ The list of tags is provided by `prot-elfeed-search-tags'."
     (if (and (derived-mode-p 'elfeed-show-mode) (not elfeed-search-remain-on-entry))
         (elfeed-goodies/split-show-next))
     )
-
-  (general-define-key
-   :keymaps 'elfeed-search-mode-map
-   :states '(visual normal motion)
-   "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread)) :wk "Toggle unread tag")
-   "C-M-s-j" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'unread)) (prot-elfeed-toggle-tag 'junk)) :wk "Toggle junk tag")
-   "C-M-s-i" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'unread) (elfeed-search-untag-all 'junk)) (prot-elfeed-toggle-tag 'input)) :wk "Toggle input tag")
-   "C-M-s-d" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'done)) :wk "Toggle done tag")
-   "C-M-s-c" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
-   )
-  (general-define-key
-   :keymaps 'elfeed-show-mode-map
-   :states '(visual normal motion)
-   "u"   '((lambda () (interactive) (prot-elfeed-toggle-tag 'unread))                               :wk "Toggle unread tag")
-   "C-M-s-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
-   "C-M-s-i" '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :wk "Toggle input tag")
-   "C-M-s-d" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :wk "Toggle done tag")
-   "C-M-s-c" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
-   )
-  (general-define-key
-   :keymaps 'elfeed-search-mode-map
-   "u"   (lambda () (interactive) (prot-elfeed-toggle-tag 'unread))
-   "C-M-s-j" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'unread)) (prot-elfeed-toggle-tag 'junk)) :wk "Toggle junk tag")
-   "C-M-s-i" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'unread) (elfeed-search-untag-all 'junk)) (prot-elfeed-toggle-tag 'input)) :wk "Toggle input tag")
-   "C-M-s-d" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'done)) :wk "Toggle done tag")
-   "C-M-s-c" '((lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")
-   )
-  (general-define-key
-   :keymaps 'elfeed-show-mode-map
-   [remap elfeed-show-tag--unread] (lambda () (interactive) (prot-elfeed-toggle-tag 'unread))       :wk "Toggle unread tag"
-   "C-M-s-j" '((lambda () (interactive) (prot-elfeed-toggle-tag 'junk))                                 :wk "Toggle junk tag")
-   "C-M-s-i" '((lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input))      :wk "Toggle input tag")
-   "C-M-s-d" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done))      :wk "Toggle done tag")
-   "C-M-s-c" '((lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)) :wk "Toggle canceled tag")))
+  (bind-keys
+   :map elfeed-search-mode-map
+   ("u" . (lambda () (interactive) (prot-elfeed-toggle-tag 'unread)))
+   ("C-M-s-j" . (lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'unread)) (prot-elfeed-toggle-tag 'junk)))
+   ("C-M-s-i" . (lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'unread) (elfeed-search-untag-all 'junk)) (prot-elfeed-toggle-tag 'input)))
+   ("C-M-s-d" . (lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'done)))
+   ("C-M-s-c" . (lambda () (interactive) (let ((elfeed-search-remain-on-entry t)) (elfeed-search-untag-all 'input)) (prot-elfeed-toggle-tag 'cancelled)))
+   :map elfeed-show-mode-map
+   ([remap elfeed-show-tag--unread] . (lambda () (interactive) (prot-elfeed-toggle-tag 'unread)))
+   ("C-M-s-j" . (lambda () (interactive) (prot-elfeed-toggle-tag 'junk)))
+   ("C-M-s-i" . (lambda () (interactive) (elfeed-show-untag 'junk) (prot-elfeed-toggle-tag 'input)))
+   ("C-M-s-d" . (lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'done)))
+   ("C-M-s-c" . (lambda () (interactive) (elfeed-show-untag 'input) (prot-elfeed-toggle-tag 'cancelled)))))
 
 ;;;; Wallabag
 (use-package wallabag
+  :disabled t
   :vc (:url "https://github.com/chenyanming/wallabag.el.git"
             :rev :newest)
   :hook
   ((wallabag-after-render . wallabag-search-update-and-clear-filter)
    (wallabag-post-html-render . olivetti-mode)
    (wallabag-post-html-render . visual-line-mode))
-  :bind
-  ( :map kb/open-keys
-    ("W" . wallabag))
+  :bind ( :map krisb-open-keymap
+          ("w" . wallabag))
   :custom
   (wallabag-db-connector 'sqlite-builtin)
   ;; NOTE 2024-09-23: If sqlite errors are being returned, try recompiling the
@@ -373,139 +336,16 @@ The list of tags is provided by `prot-elfeed-search-tags'."
   ;; (run-with-timer 0 3540 'wallabag-request-token) ; Optional, auto refresh token, token should refresh every hour
   )
 
-;;;; Wombag
-(use-package wombag
-  :vc (:url "https://github.com/karthink/wombag.git"
-            :rev :newest)
-  :hook
-  (wombag-show-mode . org-remark-mode)
-  :hook
-  (wombag-show-mode . kb/wombag-entry-setup)
-  :bind
-  ( :map kb/open-keys
-    ("W" . wombag))
-  :custom
-  (wombag-dir (no-littering-expand-var-file-name "wombag"))
-  (wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite"))
-  (wombag-host "https://app.wallabag.it")
-  (wombag-username "krisbalintona")
-  (wombag-password (auth-source-pick-first-password :host "app.wallabag.it"))
-  (wombag-client-id "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
-  (wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
-  (wombag-search-filter "")
-  :config
-  (defun kb/wombag-entry-setup ()
-    "Set up the visual for wombag-entry buffers."
-    (setq-local line-spacing 0.08)
-    (face-remap-add-relative 'default :height 1.1)
-    (when (require 'olivetti nil t)
-      (olivetti-mode 1)
-      (olivetti-set-width 120))
-    (when (require 'mixed-pitch nil t)
-      (mixed-pitch-mode 1))
-    (visual-line-mode 1))
-
-  ;; Custom wombag org-link
-  (defun kb/wombag-org-store-link ()
-    "Stores link to the current wombag entry."
-    (when (eq major-mode 'wombag-show-mode)
-      (let* ((title (alist-get 'title wombag-show-entry))
-             (id (alist-get 'id wombag-show-entry))
-             (pt (save-restriction (widen) (point)))
-             (url (concat "wombag:" (number-to-string id) "::" (number-to-string pt)))
-             (desc (format "%s (at point %s)" title pt)))
-        (org-link-store-props
-         :type "wombag"
-         :link url
-         :description desc))))
-
-  (defun kb/wombag-org-follow-link (path)
-    "Open wombag entry.
-The PATH is formatted in the following way:
-- \"wombag:\"
-- a wombag entry ID
-- \"::\"
-- an optional number that represents the point in the buffer."
-    (let* ((option (and (string-match "::\\(.*\\)\\'" path)
-                        (match-string 1 path)))
-           (id (string-to-number
-                (if (not option)
-                    path
-                  (substring path 0 (match-beginning 0)))))
-           (pt (when option
-                 (string-to-number (substring path (+ 2 (match-beginning 0))))))
-           (entry (car
-                   (wombag-db-get-entries
-                    `[:select ,(vconcat wombag-search-columns) :from items :where (= id ,id)]
-                    wombag-search-columns))))
-      (with-current-buffer (wombag-show-entry entry)
-        (when pt (goto-char pt)))))
-
-  (org-link-set-parameters
-   "wombag"
-   :follow #'kb/wombag-org-follow-link
-   :store #'kb/wombag-org-store-link)
-
-  ;; Glue with `org-remark'. Code based on org-remark-eww.el
-  (require 'org-remark)
-  (defun kb/org-remark-wombag-find-file-name ()
-    "Return the ID of the entry.
-It assumes the buffer is a `wombag-show-mode' buffer and has a
-`wombag-show-entry' value.
-
-This function is meant to be set to hook
-`org-remark-source-find-file-name-functions'."
-    (when (eq major-mode 'wombag-show-mode)
-      (concat "wombag:" (number-to-string (alist-get 'id wombag-show-entry)))))
-
-  (defun kb/org-remark-wombag-highlight-link-to-source (filename point)
-    "Return org-link pointing to the source wombag entry (i.e. FILENAME).
-It assumes the major mode is `wombag-show-mode'.
-
- This function is meant to be set to hook
-`org-remark-highlight-link-to-source-functions'."
-    (when (eq major-mode 'wombag-show-mode)
-      (let* ((file-title filename)
-             (id (string-to-number (cadr (string-split filename ":"))))
-             (title (or (caar (wombag-db-query `[:select title :from items :where (= id ,id)]))
-                        "UNTITLED")) ; NOTE 2024-09-24: This is what `wombag' currently titles its untitled notes
-             (pt (number-to-string point))
-             (desc (format "%s (at point %s)" title point)))
-        (concat "[[" file-title "::" pt "][" title " (at point " pt ")" "]]"))))
-
-  (define-minor-mode kb/org-remark-wombag-mode
-    "Enable Org-remark to work with Wombag."
-    :global t
-    :group 'org-remark-wombag
-    (if kb/org-remark-wombag-mode
-        ;; Enable
-        (progn
-          (add-hook 'wombag-show-mode-hook #'org-remark-auto-on)
-          (add-hook 'org-remark-source-find-file-name-functions
-                    #'kb/org-remark-wombag-find-file-name)
-          (add-hook 'org-remark-highlight-link-to-source-functions
-                    #'kb/org-remark-wombag-highlight-link-to-source))
-      ;; Disable
-      (remove-hook 'wombag-show-mode-hook #'org-remark-auto-on)
-      (remove-hook 'org-remark-source-find-file-name-functions
-                   #'kb/org-remark-wombag-find-file-name)
-      (remove-hook 'org-remark-highlight-link-to-source-functions
-                   #'kb/org-remark-wombag-highlight-link-to-source)))
-  (kb/org-remark-wombag-mode 1))
-
 ;;;; Pocket-reader
 ;; View my Pocket
 (use-package pocket-reader
-  ;; :ensure (pocket-reader :type git
-  ;;                        :host github
-  ;;                        :repo "alphapapa/pocket-reader.el")
-  :general
-  (kb/open-keys
-   "p" 'pocket-reader)
-  (:keymaps 'pocket-reader-mode-map
-            "TAB" 'kb/pocket-reader-cycle-view
-            "+" 'pocket-reader-more
-            "o" 'pocket-reader-pop-to-url)
+  :bind
+  ( :map krisb-open-keymap
+    ("p" . pocket-reader)
+    :map pocket-reader-mode-map
+    ("TAB" . kb/pocket-reader-cycle-view)
+    ("+" . pocket-reader-more)
+    ("o" . pocket-reader-pop-to-url))
   :custom
   (pocket-reader-site-column-max-width 22)
   (pocket-reader-archive-on-open nil)

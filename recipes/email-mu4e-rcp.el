@@ -28,7 +28,6 @@
 ;; integration. I have marked those code snippets accordingly.
 
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
 
 ;;;; Mu4e
@@ -66,7 +65,7 @@
          (mu4e-view-mode . olivetti-mode)
          (mu4e-compose-mode . fraolt-mu4e-mark-deletable-headers))
   :bind
-  ( :map kb/open-keys
+  ( :map krisb-open-keymap
     ("m" . kb/mu4e)
     :map mu4e-main-mode-map
     ("q" . kb/mu4e-main-bury-buffer)
@@ -378,13 +377,13 @@ BACKGROUND (prefix-argument) is non-nil, don't show the window."
   (with-eval-after-load 'org-agenda
     (add-to-list 'org-capture-templates
                  `("e" "Email" entry
-                   (file ,(expand-file-name "todo.org" kb/agenda-dir))
+                   (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
                    "* TODO Respond to%? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
                    :empty-lines 1))
     ;; NOTE 2023-01-01: Also see `mu4e--org-store-link-message' from mu4e-org
     (add-to-list 'org-capture-templates
                  `("E" "Mu4e-captured email" entry
-                   (file ,(expand-file-name "todo.org" kb/agenda-dir))
+                   (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
                    ,(concat "* TODO Respond to%? "
                             "[[mu4e:msgid:%(plist-get mu4e-captured-message :message-id)]"
                             "[\"%(plist-get mu4e-captured-message :subject)\" "
@@ -498,6 +497,7 @@ will also be the width of all other printable characters."
 ;;;; Message-view-patch
 ;; Fontify patches in message buffers
 (use-package message-view-patch
+  :disabled t
   :hook (gnus-part-display . message-view-patch-highlight))
 
 (provide 'email-mu4e-rcp)

@@ -26,84 +26,6 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Org
-;;;;; Itself
-(use-package org
-  :hook
-  ((org-mode . variable-pitch-mode)
-   (org-mode . visual-line-mode)
-   (org-mode . (lambda () (setq-local line-spacing 0.2))))
-  :bind
-  ( :map org-mode-map
-    ("C-M-s-s" . org-store-link)
-    ("C-M-S-s" . org-id-store-link)
-    ("C-M-<up>" . org-up-element))
-  :bind
-  ( :map kb/note-keys
-    ("c" . org-capture))
-  :custom
-  (org-directory kb/org-dir)
-  (org-special-ctrl-a/e t)
-  (org-src-window-setup 'current-window) ; Open src block window on current buffer were in the language's major mode
-
-  (org-hide-leading-stars t)
-  (org-startup-folded 'nofold)
-  (org-ellipsis " ⮷")
-  (org-hide-emphasis-markers t)     ; Remove org-mode markup characters
-  (org-hide-macro-markers t)
-  (org-pretty-entities t)           ; Show as UTF-8 characters (useful for math)
-  (org-pretty-entities-include-sub-superscripts t) ; Show superscripts and subscripts? Also see `org-export-with-sub-superscripts'
-  (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
-  (org-hidden-keywords nil)
-  (org-ctrl-k-protect-subtree 'error)
-
-  (org-list-allow-alphabetical t)
-  (org-list-use-circular-motion t)
-
-  (org-blank-before-new-entry
-   '((heading . auto)
-     ;; Don't let Emacs make decisions about where to insert newlines
-     (plain-list-item . nil)))
-  (org-cycle-separator-lines 2)
-
-  (org-return-follows-link t)
-  (org-insert-heading-respect-content nil) ; Let M-RET make heading in place
-
-  (org-file-apps
-   '((directory . emacs)
-     ("\\.mm\\'" . default)
-     ("\\.x?html?\\'" . default)
-     ("\\.pdf\\'" . default)
-     ("\\.docx\\'" . system)
-     ("\\.odt\\'" . system)
-     ;; Default to `auto-mode-alist'
-     (auto-mode . emacs)))
-
-  (org-fold-catch-invisible-edits 'show)
-  (org-edit-timestamp-down-means-later t)
-
-  ;; Org-babel et. al
-  (org-confirm-babel-evaluate nil)
-  (org-ditaa-jar-path                   ; EAF happens to install it...
-   "/home/krisbalintona/.emacs.d/straight/build/eaf/app/markdown-previewer/node_modules/@shd101wyy/mume/dependencies/ditaa/ditaa.jar")
-  :custom-face
-  (org-quote ((t (:family ,kb/themes-variable-pitch-font :extend t :inherit 'org-block))))
-  (org-ellipsis ((t (:height 1.0)))) ; Don't make line taller because of org-ellipsis
-  :config
-  ;; Make org-open-at-point follow file links in the same window
-  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file))
-
-;;;;; Org-num
-(use-package org-num
-  :ensure nil
-  :after org  :diminish
-  :bind
-  ( :map kb/toggle-keys
-    ("n" . org-num-mode))
-  :custom
-  (org-num-face 'fixed-pitch)
-  (org-num-skip-commented t)
-  (org-num-skip-footnotes t)
-  (org-num-skip-unnumbered t))
 
 ;;;;; Org-indent
 (use-package org-indent
@@ -185,172 +107,13 @@ have `org-warning' face."
   (advice-add 'org-indent--compute-prefixes :override 'kb/org-indent--compute-prefixes)
   (advice-add 'org-indent-set-line-properties :override 'kb/org-indent-set-line-properties))
 
-;;;;; Org-footnote
-(use-package org-footnote
-  :ensure nil
-  :after org
-  :custom
-  (org-footnote-section nil)            ; Don't create footnote headline
-  (org-footnote-auto-adjust t)          ; Automatically renumber
-  (org-footnote-define-inline t)) ; Write footnote content where you declare rather in a particular section (i.e. `org-footnote-section')?
-
-;;;;; Org-attach
-(use-package org-attach
-  :ensure nil
-  :after org
-  :custom
-  (org-attach-preferred-new-method 'id) ; Necessary to add the ATTACH tag
-  (org-attach-auto-tag "ATTACH")       ; See `org-roam-db-node-include-function'
-  (org-attach-dir-relative nil)        ; Use relative file paths?
-  (org-attach-id-dir (expand-file-name "resources" org-directory))
-  (org-attach-method 'cp)            ; Attach copies of files
-  (org-attach-archive-delete 'query) ; If subtree is deleted or archived, ask user
-  (org-attach-id-to-path-function-list
-   '(org-attach-id-ts-folder-format
-     org-attach-id-uuid-folder-format
-     org-attach-id-fallback-folder-format)))
-
-;;;;; Org-id
-(use-package org-id
-  :ensure nil
-  :after org
-  :custom
-  (org-clone-delete-id t)
-  (org-id-method 'ts)
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
-
-;;;;; Org-refile
-(use-package org-refile
-  :ensure nil
-  :after org
-  :custom
-  (org-refile-targets
-   `((nil . (:maxlevel . 2))))
-  (org-refile-use-cache nil)
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  :config
-  ;; Workaround for orderless issue with `org-refile'. See
-  ;; https://github.com/minad/vertico#org-refile
-  (setq org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil)
-  (when (featurep 'vertico)
-    (advice-add #'org-olpath-completing-read :around
-                (lambda (&rest args)
-                  (minibuffer-with-setup-hook
-                      (lambda () (setq-local completion-styles '(basic)))
-                    (apply args))))))
-
-;;;;; Org-faces
-(use-package org-faces
-  :ensure nil
-  :after org
-  :custom
-  (org-fontify-todo-headline nil)
-  (org-fontify-done-headline nil)
-  (org-fontify-whole-block-delimiter-line nil)
-  (org-fontify-quote-and-verse-blocks t))
-
-;;;;; Org-src
-(use-package org-src
-  :ensure nil
-  :after org
-  :custom
-  (org-src-fontify-natively t)
-  (org-src-block-faces nil))
-
-;;;;; Org-archive
-(use-package org-archive
-  :ensure nil
-  :after org
-  :custom
-  (org-archive-subtree-save-file-p t)  ; Save archive file always
-  :config
-  (define-advice org-archive--compute-location
-      (:around (orig-fun &rest args) kb/org-archive--compute-location-denote-format-string)
-    "Take LOCATION in `org-archive--compute-location' and expand %D.
-%D is expanded to the denote identifier."
-    ;; Modify LOCATION before normal operations
-    (cl-letf (((car args)
-               (if (fboundp 'denote-retrieve-filename-identifier)
-                   (replace-regexp-in-string "%D"
-                                             (denote-retrieve-filename-identifier (buffer-file-name (buffer-base-buffer)))
-                                             (car args))
-                 (car args))))
-      (apply orig-fun args))))
-
-;;;; Org-babel
-;;;;; Itself
-(use-package ob
-  :ensure nil
-  :after org
-  :hook (after-init . (lambda ()
-                        "Activate languages"
-                        (org-babel-do-load-languages
-                         'org-babel-load-languages
-                         '((emacs-lisp . t)
-                           (python . t)
-                           (mermaid . t)
-                           (ditaa . t))))))
-
-;;;;; Ob-mermaid
-(use-package mermaid-mode)
-(use-package ob-mermaid
-  :after (org ob)
-  :custom
-  (ob-mermaid-cli-path (executable-find "mmdc"))
-  :config
-  (defun kb/org-babel-execute:mermaid (body params)
-    (let* ((out-file (or (cdr (assoc :file params))
-                         (error "mermaid requires a \":file\" header argument")))
-           (theme (cdr (assoc :theme params)))
-           (width (cdr (assoc :width params)))
-           (height (cdr (assoc :height params)))
-           (scale (cdr (assoc :scale params)))
-           (pdffit (cdr (assoc :scale params)))
-           (background-color (cdr (assoc :background-color params)))
-           (mermaid-config-file (cdr (assoc :mermaid-config-file params)))
-           (css-file (cdr (assoc :css-file params)))
-           (pupeteer-config-file (cdr (assoc :pupeteer-config-file params)))
-           (temp-file (org-babel-temp-file "mermaid-"))
-           (mmdc (or ob-mermaid-cli-path
-                     (executable-find "mmdc")
-                     (error "`ob-mermaid-cli-path' is not set and mmdc is not in `exec-path'")))
-           (cmd (concat (shell-quote-argument (expand-file-name mmdc))
-                        " -i " (org-babel-process-file-name temp-file)
-                        " -o " (org-babel-process-file-name out-file)
-                        (when theme
-                          (concat " -t " theme))
-                        (when width
-                          (concat " -w " width))
-                        (when height
-                          (concat " -H " height))
-                        (when scale   ; Add support for scale
-                          (concat " -s " (number-to-string scale)))
-                        (when pdffit " -f ") ; Add support for pdffit
-                        (when mermaid-config-file
-                          (concat " -c " (org-babel-process-file-name mermaid-config-file)))
-                        (when css-file
-                          (concat " -C " (org-babel-process-file-name css-file)))
-                        (when pupeteer-config-file
-                          (concat " -p " (org-babel-process-file-name pupeteer-config-file))))))
-      (unless (file-executable-p mmdc)
-        ;; cannot happen with `executable-find', so we complain about
-        ;; `ob-mermaid-cli-path'
-        (error "Cannot find or execute %s, please check `ob-mermaid-cli-path'" mmdc))
-      (with-temp-file temp-file (insert body))
-      (message "%s" cmd)
-      (org-babel-eval cmd "")
-      nil))
-  (advice-add 'org-babel-execute:mermaid :override 'kb/org-babel-execute:mermaid))
-
 ;;;; Aesthetics
 ;;;;; Org-superstar
 ;; Descendant of (and thus superior to) org-bullets
-(use-package org-superstar  ;; Improved version of org-bullets
-  :after org
-  :hook
-  ((org-mode . org-superstar-mode)
-   (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
+(use-package org-superstar
+  :disabled t             ; NOTE 2024-10-11: Switched to a configured org-modern
+  :hook ((org-mode . org-superstar-mode)
+         (org-superstar-mode . kb/org-superstar-auto-lightweight-mode))
   :custom
   ;; Indentation
   ;; The following ensures consistent indentation, overriding `org-indent'
@@ -358,27 +121,23 @@ have `org-warning' face."
   (org-hide-leading-stars nil)
   (org-indent-mode-turns-on-hiding-stars nil)
   (org-superstar-remove-leading-stars nil)
-  (org-superstar-leading-bullet ?·)
 
   ;; Headlines
+  (org-superstar-leading-bullet ?·)
   (org-superstar-headline-bullets-list '("◈" "▷" "◉" "◇" "✳")) ; List inspired from `org-modern'
-  (org-n-level-faces 5)
-  (org-cycle-level-faces t)
   (org-superstar-cycle-headline-bullets nil) ; Don't repeat bullets in hierarchy
 
   ;; Todos
-  (org-superstar-special-todo-items t)
+  (org-superstar-special-todo-items nil)
   ;; Update when I change `org-todo-keywords'
   (org-superstar-todo-bullet-alist
-   '(("PROG" . 9744)
-     ("ACTIVE" . 9744)
-     ("TODO" . 9744)
-     ("WAITING" . 9745)
-     ("MAYBE" . 9745)
-     ("DONE" . 9745)
-     ("CANCELLED" . 9745)
-     ("[ ]"  . 9744)
-     ("[X]"  . 9745)))
+   '(("NEXT" . ?☐)
+     ("TODO" . ?☐)
+     ("HOLD" . ?☐)
+     ("DONE" . ?☑)
+     ("CANCELED" . ?☑)
+     ("[ ]"  . ?☐)
+     ("[X]"  . ?☑)))
 
   ;; Plain lists
   (org-superstar-prettify-item-bullets t)
@@ -391,7 +150,7 @@ have `org-warning' face."
   ;; Make a good non-distracting foreground color and ensure headlines are
   ;; aligned with headline content
   (org-superstar-leading ((t (:inherit (fixed-pitch org-hide)))))
-  :init
+  :config
   ;; See https://github.com/emacsmirror/org-superstar#fast-plain-list-items
   (defun kb/org-superstar-auto-lightweight-mode ()
     "Start Org Superstar differently depending on the number of lists items."
@@ -416,71 +175,6 @@ have `org-warning' face."
         org-bars-color-options
         '(:desaturate-level-faces 30
                                   :darken-level-faces 15)))
-
-;;;;; Olivetti
-;; Better writing environment
-(use-package olivetti
-  :after org
-  :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
-         (olivetti-mode . kb/olivetti-set-colors)
-         (kb/themes . kb/olivetti-set-colors))
-  :custom
-  (olivetti-lighter nil)
-  (olivetti-body-width 0.55)
-  (olivetti-minimum-body-width 80)
-  (olivetti-margin-width 8)
-  (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
-  ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's changing of
-  ;; margins and fringes messes with the calculation of
-  ;; `mode--line-format-right-align', which determines where the right side of
-  ;; the mode line is placed.
-  (mode-line-format-right-align
-   '(:eval (if (and (bound-and-true-p olivetti-mode)
-                    olivetti-style)     ; 'fringes or 'fancy
-               (let ((mode-line-right-align-edge 'right-fringe))
-                 (mode--line-format-right-align))
-             (mode--line-format-right-align))))
-  :config
-  (defun kb/olivetti-set-colors ()
-    "Set custom colors for `olivetti'."
-    (when (featurep 'olivetti)
-      (set-face-attribute 'olivetti-fringe nil
-                          :background (modus-themes-with-colors bg-dim)
-                          :inherit 'unspecified))))
-
-;;;;; Org-appear
-;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
-;; over enclosed content
-(use-package org-appear
-  :hook
-  (org-mode . org-appear-mode)
-  :after org
-  :custom
-  (org-appear-delay 0.0)
-  (org-appear-trigger 'always)
-  (org-appear-autoemphasis t)
-  (org-appear-autolinks 'just-brackets)
-  (org-appear-autosubmarkers t)
-  (org-appear-autoentities t)
-  (org-appear-autokeywords t)
-  (org-appear-inside-latex t))
-
-;;;;; Org-modern
-(use-package org-modern
-  :disabled              ; NOTE 2024-01-05: Trying-org margin for visual clarity
-  :after org
-  :hook (org-mode . org-modern-mode)
-  :custom
-  (org-modern-hide-stars nil)           ; Adds extra indentation
-  (org-modern-label-border 'auto)
-  (org-modern-todo nil)
-  (org-modern-keyword nil)
-  (org-modern-timestamp t)
-  (org-modern-table t)
-  (org-modern-table-vertical 1)
-  (org-modern-table-horizontal 0)
-  (org-modern-list nil)
-  (org-modern-priority nil))
 
 ;;;;; Org-modern-indent
 (use-package org-modern-indent
@@ -570,38 +264,14 @@ have `org-warning' face."
          (cons "\\(# NOTE\\)"
                (propertize "    N " 'face '(fixed-pitch font-lock-comment-face))))))
 
-;;;;; Astute.el
-(use-package astute
-  :hook (text-mode . astute-mode)
-  :custom
-  (astute-lighter "")
-  (astute-prefix-single-quote-exceptions
-   '("bout"
-     "em"
-     "n'"
-     "cause"
-     "round"
-     "twas"
-     "tis")))
-
 ;;;; Ancillary functionality
-;;;;; Org-web-tools
-;; Paste https links with automatic descriptions
-(use-package org-web-tools
-  :bind
-  ( :map kb/yank-keys
-    ("b" . org-web-tools-insert-link-for-url))
-  :config
-  ;; Immediately enter view mode
-  (advice-add 'org-web-tools-read-url-as-org :after (lambda (&rest r) (view-mode))))
-
 ;;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download
   :ensure-system-package (scrot)
   :hook (org-mode . org-download-enable)
   :bind
-  ( :map kb/yank-keys
+  ( :map krisb-yank-keymap
     ("i" . org-download-clipboard))
   :custom
   (org-download-method 'attach)

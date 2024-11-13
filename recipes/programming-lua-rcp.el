@@ -23,7 +23,6 @@
 ;; These are packages that are helpful for programming in elisp.
 
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
 
 ;;;; Lua-mode

@@ -26,16 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Nov-mode
-;; EPub reader
-(use-package nov
-  :mode ("\\.epub\\'" . nov-mode)
-  :hook ((nov-mode . visual-line-mode)
-         (nov-mode . olivetti-mode))
-  :config
-  (with-eval-after-load 'eaf
-    (add-to-list 'eaf-find-file-ext-blacklist "epub")))
-
 ;;;; Justify-kp
 ;; Advanced justification of text with the Knuth/Plass algorithm
 (use-package justify-kp

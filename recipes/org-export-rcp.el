@@ -26,43 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;;; Ox (org-export)
-(use-package ox
-  :ensure nil
-  ;; Call after `org' since some of the options below are from `org', not
-  ;; `org-export', so they will be overwritten if this use-package loads before
-  ;; `org' does
-  :after org
-  :custom
-  (org-export-coding-system 'utf-8)
-  (org-export-with-tags t)
-  (org-export-with-smart-quotes t)
-  (org-export-with-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
-  (org-export-with-section-numbers nil)
-  (org-time-stamp-formats               ; Format of time stamps in the file
-   '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
-  (org-display-custom-times t)          ; Export with custom time stamps?
-  (org-time-stamp-custom-formats        ; Format of exported time stamps
-   '("%a, %b %-d" . "%a, %b %-d (%-H:%M%p)"))
-
-  (org-image-actual-width 700)          ; Image widths on export
-
-  ;; Async export
-  (org-export-in-background nil)          ; Have it be default?
-  (org-export-async-debug t)
-  (org-export-async-init-file (locate-library "quickstart"))
-  :config
-  ;; Taken from
-  ;; https://endlessparentheses.com/better-time-stamps-in-org-export.html
-  (defun kb/org-export-filter-timestamp-reformat (timestamp backend info)
-    "Remove <> or [] around time-stamps."
-    (cond
-     ((org-export-derived-backend-p backend 'latex)
-      (replace-regexp-in-string "[<>]\\|[][]" "" timestamp))
-     ((org-export-derived-backend-p backend 'html)
-      (replace-regexp-in-string "&[lg]t;\\|[][]" "" timestamp))))
-  (add-to-list 'org-export-filter-timestamp-functions #'kb/org-export-filter-timestamp-reformat))
-
 ;;;; Custom processing of #+INCLUDE keyword
 ;; Use denote links or denote:DENOTEID as the file path for #+INCLUDE keywords
 (with-eval-after-load 'ox
@@ -160,12 +123,6 @@ See the HACK comment below."
             :block block
             :unmatched (org-babel-parse-header-arguments value t))))
   (advice-add 'org-export-parse-include-value :override #'kb/org-export-parse-include-value))
-
-;;;; Ox-odt
-(use-package ox-odt
-  :ensure nil
-  :custom
-  (org-odt-preferred-output-format "docx")) ; Convert to docx at the end of conversion
 
 ;;;; Ox-latex
 ;;;;; Itself
@@ -421,13 +378,6 @@ Uses my 'latex-paper' backend. See the original
 ;;;;;; [ end ]
   )
 
-;;;; Org-contrib
-(use-package org-contrib
-  :after org
-  :config
-  (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
-
 ;;;; Ox-pandoc
 ;; Export to whatever file format pandoc can export to
 (use-package ox-pandoc
@@ -439,14 +389,14 @@ Uses my 'latex-paper' backend. See the original
 (use-package ox-clip
   :ensure-system-package ((xclip)
                           (wl-copy . wl-clipboard))
-  :bind
-  ( :map kb/yank-keys
-    ("x" . ox-clip-formatted-copy))
-  :config
-  (setq ox-clip-linux-cmd
-        (if (string-equal (getenv "XDG_SESSION_TYPE") "wayland")
-            "wl-copy --type text/html < $%f"
-          "xclip -verbose -i \"%f\" -t text/html -selection clipboard")))
+  :bind ( :map krisb-yank-keymap
+          ("x" . ox-clip-formatted-copy))
+  :custom
+  ;; FIXME 2024-10-07: Doesn't work on wayland for some reason. It's just
+  ;; pasting the plain text.
+  (ox-clip-linux-cmd (if (string-equal (getenv "XDG_SESSION_TYPE") "wayland")
+                         "wl-copy -p --type text/html < $%f"
+                       "xclip -verbose -i \"%f\" -t text/html -selection clipboard")))
 
 (provide 'org-export-rcp)
 ;;; org-export-rcp.el ends here

@@ -23,7 +23,6 @@
 ;; Packages related to developing in Python.
 
 ;;; Code:
-(require 'general)
 (require 'keybinds-general-rcp)
 (require 'programming-projects-rcp)
 
@@ -96,7 +95,7 @@
   ((python-base-mode . pyvenv-mode)
    (pyvenv-mode . pyvenv-tracking-mode))
   :bind
-  ( :map kb/lsp-keys
+  ( :map krisb-lsp-keymap
     ("vv" . pyvenv-activate)
     ("vV" . pyvenv-workon)
     ("vc" . pyvenv-create))
@@ -249,7 +248,7 @@ it."
 ;;;; Python-pytest
 (use-package python-pytest
   :bind
-  ( :map kb/lsp-keys
+  ( :map krisb-lsp-keymap
     ("tt" . python-pytest-file)
     ("tT" . python-pytest-dispatch)))
 

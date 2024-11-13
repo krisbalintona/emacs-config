@@ -26,20 +26,6 @@
 (require 'use-package-rcp)
 (require 'keybinds-general-rcp)
 
-;;; Shr
-;; Simple HTML Renderer (Shr)
-(use-package shr
-  :ensure nil
-  :custom
-  ;; (shr-use-colors nil)                  ; t is bad for accessibility
-  (shr-use-fonts t)                     ; Proportional fonts?
-  (shr-max-image-proportion 0.6)        ; How big are images?
-  (shr-image-animate t)               ; GIFs?
-  (shr-width nil)
-  (shr-discard-aria-hidden t)
-  ;; (shr-cookie-policy nil)
-  (shr-fill-text t))
-
 ;;; Browse-url
 (use-package browse-url
   :ensure nil
@@ -54,22 +40,6 @@
       (lambda (url &rest args)
         (let ((browse-url-generic-args (remove "--new-window" browse-url-generic-args)))
           (funcall browse-url-browser-function url args)))))))
-
-;;; Eww
-;; Emacs' web browser
-(use-package eww
-  :ensure nil
-  :custom
-  (eww-restore-desktop nil)
-  (eww-desktop-remove-duplicates t)     ; Don't duplicate pages in history
-  (eww-header-line-format nil)
-  (eww-search-prefix "https://duckduckgo.com/html/?q=") ; Use duckduckgo search engine
-  (eww-download-directory (no-littering-expand-var-file-name "eww/downloads/")) ; Where to put downloads
-  (eww-history-limit 150)
-  (eww-browse-url-new-window-is-tab nil)
-  (eww-form-checkbox-selected-symbol "[X]")
-  (eww-form-checkbox-symbol "[ ]")
-  (eww-auto-rename-buffer 'title))
 
 (provide 'web-browsing-rcp)
 ;;; web-browsing-rcp.el ends here

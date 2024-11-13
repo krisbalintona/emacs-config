@@ -27,17 +27,9 @@
 (require 'keybinds-general-rcp)
 
 ;;;; Comments
-;;;;; Newcomment
-(use-package new-comment
-  :ensure nil
-  :custom
-  (comment-empty-lines t)
-  (comment-fill-column nil)
-  (comment-multi-line nil)
-  (comment-style 'indent))
-
 ;;;;; Alt-comment-dwim
 (use-package alt-comment-dwim
+  :disabled
   ;; :ensure (:type git
   ;;                :host gitlab
   ;;                :protocol ssh
@@ -58,54 +50,7 @@
      ("FIXME" . (error bold))
      ("OPTIMIZE" . "SandyBrown"))))
 
-;;;; Info
-;;;;; Info-variable-pitch
-;; Mixed pitch in Info pages
-(use-package info-variable-pitch
-  ;; :ensure (info-variable-pitch :type git :host github :repo "kisaragi-hiu/info-variable-pitch")
-  :vc (:url "https://github.com/kisaragi-hiu/info-variable-pitch.git")
-  :hook (Info-selection . info-variable-pitch-mode))
-
-;;;;; Info-colors
-;; Fontify useful parts of info buffers
-(use-package info-colors
-  :hook (Info-selection . info-colors-fontify-node))
-
-;;;;; Inform
-;; Package `inform’ provides links from elisp symbols (quoted functions,
-;; variables and fonts) in Gnu-Emacs Info viewer to their help documentation.
-(use-package inform
-  :disabled
-  :demand
-  :after info)
-
 ;;;; Timers
-;;;;; Tmr
-;; Timer package/library from Prot
-(use-package tmr
-  :bind
-  ( :map kb/open-keys
-    ("t" . kb/tmr-dispatch))
-  :custom
-  ;; Useful variables
-  (tmr-descriptions-list
-   '("Stop working!" "Work time 😄"))
-  (tmr-notification-urgency 'normal)
-  (tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
-  :config
-  (require 'transient)
-  (transient-define-prefix kb/tmr-dispatch ()
-    "Invoke a transient menu for `tmr'."
-    ["Create or remove timers"
-     [("t" "Create a timer" tmr)
-      ("T" "Create a timer with description" tmr-with-details)
-      ("C" "Clone a timer" tmr-clone)]
-     [("r" "Remove finished" tmr-remove-finished)
-      ("c" "Cancel timer" tmr-cancel)]]
-    ["View timers"
-     [("v" "Tabulated view" tmr-tabulated-view)]]))
-
-
 ;;;;; Work-timer
 (use-package work-timer
   :disabled
@@ -142,131 +87,6 @@
            (foreground (if dark-p dark-foreground light-foreground)))
       (set-face-foreground 'work-timer-mode-line foreground)))
   (kb/work-timer-set-faces))
-
-;;;;; Hammy
-(use-package hammy
-  :bind
-  ( :map kb/open-keys
-    ("h s" . hammy-start)
-    ("h n" . hammy-next)
-    ("h S" . hammy-stop)
-    ("h r" . hammy-reset)
-    ("h t" . hammy-toggle)
-    ("h a" . hammy-adjust)
-    ("h v" . hammy-view-log)
-    ("h R" . hammy-status)
-    ("h I" . hammy-start-org-clock-in))
-  :custom
-  ;; TODO 2024-09-25: Have this found more locally. When I do, also change
-  ;; `tmr-sound' to this file
-  (hammy-sound-end-work "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
-  (hammy-sound-end-break "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
-
-  ;; Mode line
-  (hammy-mode-always-show-lighter t)
-  (hammy-mode-update-mode-line-continuously t)
-  (hammy-mode-lighter-seconds-format "%.2m:%.2s")
-  (hammy-mode-lighter-prefix "[H]")
-  (hammy-mode-lighter-overdue "!")
-  (hammy-mode-lighter-pie t)
-  (hammy-mode-lighter-pie-height 0.7)
-  :config
-  (defun kb/hammy-play-sound ()
-    "Play end of timer sound."
-    (interactive)
-    (call-process-shell-command
-     (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" hammy-sound-end-work) nil 0))
-
-  ;; Hammy definitions
-  (setq hammy-hammys nil)
-  (hammy-define "Fractional"
-    :documentation "Breaks that are ⅓ as long as the last work interval."
-    :intervals
-    (list
-     (interval :name "Work"
-               :duration "40 minutes"
-               :before (do (announce "Starting work time (advance to break when ready)."))
-               :after (do (kb/hammy-play-sound))
-               :advance (do (kb/hammy-play-sound)
-                            (let* ((current-duration
-                                    (ts-human-format-duration
-                                     (float-time
-                                      (time-subtract (current-time)
-                                                     current-interval-start-time))))
-                                   (message (format "You've worked for %s!" current-duration)))
-                              (announce message)
-                              (notify message))))
-     (interval :name "Break"
-               :duration (do (cl-assert (equal "Work" (hammy-interval-name (caar history))))
-                             (let ((duration (cl-loop for (interval start end) in history
-                                                      while (equal "Work" (hammy-interval-name interval))
-                                                      sum (float-time (time-subtract end start))
-                                                      into work-seconds
-                                                      finally return (* work-seconds 0.33))))
-                               (when (alist-get 'unused-break etc)
-                                 (cl-incf duration (alist-get 'unused-break etc))
-                                 (setf (alist-get 'unused-break etc) nil))
-                               duration))
-               :before (do (let ((message (format "Starting break for %s."
-                                                  (ts-human-format-duration current-duration))))
-                             (announce message)))
-               :after (do (kb/hammy-play-sound)
-                          (let* ((elapsed
-                                  (float-time
-                                   (time-subtract (current-time) current-interval-start-time)))
-                                 (unused (- current-duration elapsed)))
-                            (when (> unused 0)
-                              (if (alist-get 'unused-break etc)
-                                  (cl-incf (alist-get 'unused-break etc) unused)
-                                (setf (alist-get 'unused-break etc) unused)))))
-               :advance (remind "5 minutes"
-                                (do (kb/hammy-play-sound))))))
-  (hammy-define "Ramp and decline"
-    :documentation "Get your momentum going!"
-    :intervals (list (interval :name "Work"
-                               :face 'font-lock-builtin-face
-                               :duration (climb "5 minutes" "40 minutes"
-                                                :descend t :step "5 minutes")
-                               :before (do (announce "Work time!"))
-                               :after (do (kb/hammy-play-sound))
-                               :advance (do (announce "Work time is over!")
-                                            (notify "Work time is over!")
-                                          (remind "5 minutes"
-                                                  (do (kb/hammy-play-sound)))))
-                     (interval :name "Rest"
-                               :face 'font-lock-type-face
-                               :duration (do (let ((duration (cl-loop for (interval start end) in history
-                                                                      while (equal "Work" (hammy-interval-name interval))
-                                                                      sum (float-time (time-subtract end start))
-                                                                      into work-seconds
-                                                                      finally return (max (* 60 2) (* work-seconds 0.33)))))
-                                               (when (alist-get 'unused-break etc)
-                                                 (cl-incf duration (alist-get 'unused-break etc))
-                                                 (setf (alist-get 'unused-break etc) nil))
-                                               duration))
-                               :before (do (announce "Rest time!"))
-                               :after (do (kb/hammy-play-sound)
-                                          (let* ((elapsed
-                                                  (float-time
-                                                   (time-subtract (current-time) current-interval-start-time)))
-                                                 (unused (- current-duration elapsed)))
-                                            (when (> unused 0)
-                                              (if (alist-get 'unused-break etc)
-                                                  (cl-incf (alist-get 'unused-break etc) unused)
-                                                (setf (alist-get 'unused-break etc) unused)))))
-                               :advance (remind "5 minutes"
-                                                (do (announce "Rest time is over!")
-                                                    (notify "Rest time is over!")
-                                                  (kb/hammy-play-sound)))))
-    :complete-p (do (and (> cycles 1)
-                         interval
-                         (equal "Work" interval-name)
-                         (>= (duration "5 minutes") current-duration)))
-    :after (do (announce "Flywheel session complete!")
-               (notify "Flywheel session complete!")))
-
-  ;; Mode line
-  (hammy-mode 1))
 
 ;;;; Writing
 ;;;;; Sentex
@@ -599,64 +419,14 @@ This is a difference in multitude of %s."
 ;;;; Built-in Emacs modes/packages
 (use-package emacs
   :ensure nil
-  :hook ((messages-buffer-mode . visual-line-mode)
-         (on-first-file . undelete-frame-mode)
-         (on-first-buffer . global-so-long-mode)
-         (on-first-buffer . repeat-mode)
-         (on-first-buffer . find-function-setup-keys) ; NOTE 2022-12-30: Adds very useful commands to C-x f, F, k, K, v, V, and l, L
-         (on-first-input . minibuffer-electric-default-mode))
-  :bind
-  ;; Remap these defaults; they are effectively the same while phasing out the
-  ;; need the *-region binds
-  (([remap upcase-word] . upcase-dwim)
-   ([remap downcase-word] . downcase-dwim)
-   ([remap capitalize-word] . capitalize-dwim)
-   ([remap dabbrev-expand] . hippie-expand)
-   :map kb/open-keys
-   ("c" . calendar)
-   :map universal-argument-map          ; Multiple universal arguments
-   ("u" . universal-argument-more))
+  :bind (:map universal-argument-map    ; Multiple universal arguments
+              ("u" . universal-argument-more))
   :custom
   (save-interprogram-paste-before-kill t)
   ;; Killing
   (kill-do-not-save-duplicates t)
   (kill-ring-deindent-mode nil)
-  (window-divider-default-places 'bottom-only)
-  (custom-search-field nil)
-  :config
-  (when (bound-and-true-p evil-local-mode)
-    (general-unbind 'normal help-mode-map "SPC")
-    (general-unbind 'normal custom-mode-map "SPC")))
-
-;;;;; Register
-(use-package register
-  :ensure nil
-  :bind
-  ([remap jump-to-register] . kb/jump-to-register)
-  :custom
-  (register-preview-delay 0)
-  (register-separator " ")
-  (register-use-preview 'traditional)
-  :init
-  (defun kb/jump-to-register (register &optional delete)
-    "Proxy for `jump-to-register'.
-Provide REGISTER and jump to it. If interactively called, then
-prompt user for register.
-
-If called with DELETE, which is the prefix-arg if called
-interactively, then delete the register instead of jumping to it."
-    (interactive (list (register-read-with-preview "Select register: ")
-                       current-prefix-arg))
-    (if delete
-        (set-register register nil)
-      (jump-to-register register)))
-  :config
-  (with-eval-after-load 'consult
-    ;; Better than `consult-register'
-    (setq register-preview-function #'consult-register-format)
-    ;; Adds thin lines, sorting and hides the mode line of the register preview
-    ;; window. Copied from https://github.com/minad/consult#use-package-example
-    (advice-add #'register-preview :override #'consult-register-window)))
+  (window-divider-default-places 'bottom-only))
 
 ;;;;; Proced
 ;; Built in process monitor
@@ -685,7 +455,7 @@ interactively, then delete the register instead of jumping to it."
          (on-first-input . pixel-scroll-precision-mode))
   :custom
   (pixel-scroll-precision-interpolate-page t)
-  (pixel-scroll-precision-interpolation-factor 1)
+  (pixel-scroll-precision-interpolation-factor 3.0)
   :config
   (defun kb/pixel-recenter (&optional arg redisplay)
     "Similar to `recenter' but with pixel scrolling.
@@ -737,17 +507,21 @@ ARG and REDISPLAY are identical to the original function."
           (or arg (- (window-text-height) next-screen-context-lines)))
        nil 1))))
 
-  (add-hook 'pixel-scroll-precision-mode-hook
-            (lambda ()
-              (cond
-               (pixel-scroll-precision-mode
-                (advice-add 'scroll-up :override 'kb/pixel-scroll-up)
-                (advice-add 'scroll-down :override 'kb/pixel-scroll-down)
-                (advice-add 'recenter :override 'kb/pixel-recenter))
-               (t
-                (advice-remove 'scroll-up 'kb/pixel-scroll-up)
-                (advice-remove 'scroll-down 'kb/pixel-scroll-down)
-                (advice-remove 'recenter 'kb/pixel-recenter))))))
+  (defun kb/pixel-scroll-everything ()
+    "Use pixel-scroll functions for scrolling and recentering.
+Dependent on the activation of `pixel-scroll-precision-mode'. Add to
+`pixel-scroll-precision-mode-hook'."
+    (cond
+     (pixel-scroll-precision-mode
+      (advice-add 'scroll-up :override #'kb/pixel-scroll-up)
+      (advice-add 'scroll-down :override #'kb/pixel-scroll-down)
+      (advice-add 'recenter :override #'kb/pixel-recenter))
+     (t
+      (advice-remove 'scroll-up #'kb/pixel-scroll-up)
+      (advice-remove 'scroll-down #'kb/pixel-scroll-down)
+      (advice-remove 'recenter #'kb/pixel-recenter))))
+  ;; (add-hook 'pixel-scroll-precision-mode-hook #'kb/pixel-scroll-everything)
+  )
 
 ;;;; Other
 
@@ -766,92 +540,22 @@ ARG and REDISPLAY are identical to the original function."
             :branch "master")
   :hook ((eww-after-render nov-post-html-render) . image-popup-reload))
 
-;;;;; Form-feed
-;; Display  (page breaks) fancily. Visit the readme for alternatives and their
-;; differences
-(use-package form-feed
-  :hook (on-first-buffer . global-form-feed-mode)
-  :diminish
-  :custom
-  (form-feed-include-modes
-   '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode))
-  (form-feed-exclude-modes nil))
-
-;;;;; Engine-mode
-;; Send arbitrary search engine queries to your browser from within Emacs
-(use-package engine-mode
-  :commands engine/search-duckduckgo
-  :custom
-  (engine/browser-function 'browse-url-generic)
-  :config
-  (defengine amazon
-    "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s")
-
-  (defengine duckduckgo
-    "https://duckduckgo.com/?q=%s"
-    :keybinding "d")
-
-  (defengine github
-    "https://github.com/search?ref=simplesearch&q=%s"
-    :keybinding "g")
-
-  (defengine google
-    "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-    :keybinding "G")
-
-  (defengine wikipedia
-    "https://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-    :keybinding "w")
-
-  (defengine youtube
-    "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
-    :keybinding "y")
-
-  (engine-mode 1))
-
 ;;;;; Casual
 ;; A suite of "casual" interfaces.
-(use-package casual-suite)
-
-(use-package casual-ibuffer
-  :bind ( :map ibuffer-mode-map
-          ("C-M-s-\\" . casual-ibuffer-tmenu)))
-
-(use-package casual-info
-  :bind ( :map Info-mode-map
-          ("C-M-s-\\" . casual-info-tmenu)))
-
-(use-package casual-calc
-  :bind ( :map calc-mode-map
-          ("C-M-s-\\" . casual-calc-tmenu)))
-
-;;;;; Async.el
-;; Async library and a few small but useful implementations
-(use-package async
-  :hook ((on-first-buffer . dired-async-mode)
-         (on-first-buffer . async-bytecomp-package-mode))
-  :custom
-  (async-bytecomp-allowed-packages 'all))
-
-;;;;; Info
-(use-package info
-  :custom
-  (Info-isearch-search nil))            ; Restore default isearch behavior
-
-;;;;; Which-func
-(use-package which-func
-  :hook (on-first-file . which-function-mode)
-  :custom
-  (which-func-modes '(prog-mode)))
-
-;;;;; Grep
-(use-package grep
-  :custom
-  (grep-save-buffers 'ask)
-  (grep-use-headings t))
+(use-package casual-suite
+  ;; TODO 2024-10-07: Try to avoid using demand
+  :demand
+  :bind
+  ( :map ibuffer-mode-map
+    ("C-M-s-\\" . casual-ibuffer-tmenu)
+    :map Info-mode-map
+    ("C-M-s-\\" . casual-info-tmenu)
+    :map calc-mode-map
+    ("C-M-s-\\" . casual-calc-tmenu)))
 
 ;;;;; Super-hint
 (use-package super-hint
+  :disabled t
   :vc (:url "https://github.com/eval-exec/super-hint.el.git"
             :rev :newest)
   :init
@@ -864,29 +568,25 @@ ARG and REDISPLAY are identical to the original function."
     (super-hint-rg-mode 1)
     (diminish 'super-hint-rg-mode)))
 
+(use-package super-hint-xref
+  :diminish
+  :after xref
+  :ensure nil
+  :config
+  (super-hint-xref-mode 1))
+
+(use-package super-hint-rg
+  :diminish
+  :after rg
+  :ensure nil
+  :config
+  (super-hint-rg-mode 1))
+
 ;;;;; Wgrep
 ;; Edit lines in grep buffers
 (use-package wgrep
   :custom
   (wgrep-auto-save-buffer t))
-
-;;;;; On
-;; Package exposes a number of utility hooks and functions ported from Doom
-;; Emacs. The hooks make it easier to speed up Emacs startup by providing
-;; finer-grained control of the timing at which packages are loaded. Provides
-;; the following hooks:
-;; - on-first-input-hook
-;; - on-init-ui-hook
-;; - on-first-file-hook
-;; - on-switch-frame-hook
-;; - on-first-buffer-hook
-;; - on-switch-buffer-hook
-;; - on-switch-window-hook
-(use-package on :demand)
-
-;;;;; Try
-;; Install a package only for the current Emacs session.
-(use-package try)
 
 (provide 'misc-packages-rcp)
 ;;; misc-packages-rcp.el ends here

@@ -27,38 +27,6 @@
 (require 'keybinds-general-rcp)
 (require 'personal-variables-rcp)
 
-;;;; Flymake
-(use-package flymake
-  :diminish
-  :hook
-  ((prog-mode org-mode) . flymake-mode)
-  :bind
-  ( :map flymake-mode-map
-    ("M-n" . flymake-goto-next-error)
-    ("M-p". flymake-goto-prev-error))
-  :custom
-  (elisp-flymake-byte-compile-load-path (append '("./") load-path)) ; Recognizes files I know about
-  (flymake-wrap-around nil)
-  (flymake-fringe-indicator-position nil) ; Disable fringe indicators
-  (flymake-show-diagnostics-at-end-of-line nil) ; I enable this selectively via a hook
-  (flymake-mode-line-format
-   '(flymake-mode-line-exception flymake-mode-line-counters))
-  (flymake-mode-line-counter-format     ; Remove surrounding brackets
-   ;; NOTE 2024-02-12: Need to have first and last elements be strings!
-   ;; Otherwise a counter might be hidden
-   '(""
-     flymake-mode-line-error-counter
-     flymake-mode-line-warning-counter
-     flymake-mode-line-note-counter
-     ""))
-  (flymake-suppress-zero-counters t))
-
-;;;; Flymake-collection
-(use-package flymake-collection
-  :requires flymake
-  :ensure-system-package luacheck
-  :hook (after-init . flymake-collection-hook-setup))
-
 ;;;; Flymake-flycheck
 ;; For extending flycheck checkers into flymake. This allows flymake to use
 ;; flycheck backends; check readme on how to do so. I use this when only
@@ -83,15 +51,6 @@
     (setq-default flycheck-disabled-checkers
                   (append (default-value 'flycheck-disabled-checkers)
                           '(emacs-lisp emacs-lisp-checkdoc emacs-lisp-package)))))
-
-;;;; Package-lint-flymake
-(use-package package-lint-flymake
-  :commands package-lint-flymake
-  :hook (emacs-lisp-mode . kb/package-lint-flymake-setup)
-  :config
-  (defun kb/package-lint-flymake-setup ()
-    (unless (string-match-p (expand-file-name "recipes/" user-emacs-directory) default-directory)
-      (add-hook 'flymake-diagnostic-functions #'package-lint-flymake nil t))))
 
 (provide 'programming-linting-rcp)
 ;;; programming-linting-rcp.el ends here
