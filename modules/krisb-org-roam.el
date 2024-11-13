@@ -134,6 +134,7 @@ called outright."
 
 ;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
+  :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
   :vc ( :url "git@github.com:krisbalintona/org-roam-folgezettel.git"
         :rev :newest)
   :bind ( :map krisb-note-keymap
