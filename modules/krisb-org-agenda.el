@@ -81,6 +81,8 @@
           :map org-agenda-mode-map
           ("`" . krisb-org-agenda-process))
   :custom
+  (org-agenda-files krisb-org-agenda-directory-files)
+
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
   (org-durations-units
@@ -242,16 +244,6 @@
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
   :config
-  ;; Populate `org-agenda-files'
-  (dolist (f (directory-files-recursively krisb-org-agenda-directory
-                                          (rx (or (literal ".org") (literal ".org_archive")) eol)
-                                          nil
-                                          (lambda (subdir)
-                                            "Ignore \".st\" subdirectories.
-These are directories created by SyncThing which may have org files I do not want to include."
-                                            (not (string-match (rx (literal ".st")) subdir)))))
-    (add-to-list 'org-agenda-files f))
-
   ;; REVIEW 2024-11-11: Not sure if this is needed if we set the value of
   ;; `org-durations-units' via :custom.
   ;; See `org-durations-units'

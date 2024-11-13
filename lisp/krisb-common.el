@@ -76,10 +76,14 @@ Meant to be used as the value of `org-directory'.")
 (defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
   "My main org-agenda file.")
 
-(defvar krisb-org-agenda-directory-files (cl-remove-if
-                                          (lambda (f)
-                                            (string-match-p (rx "archive.org") f))
-                                          (directory-files-recursively krisb-org-agenda-directory ".org$"))
+(defvar krisb-org-agenda-directory-files
+  (directory-files-recursively krisb-org-agenda-directory
+                               (rx (or (literal ".org") (literal ".org_archive")) eol)
+                               nil
+                               (lambda (subdir)
+                                 "Ignore \".st\" subdirectories.
+These are directories created by SyncThing which may have org files I do not want to include."
+                                 (not (string-match (rx (literal ".st")) subdir))))
   "A list of all org and org_archive files in `krisb-org-directory'.")
 
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
