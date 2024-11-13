@@ -85,7 +85,7 @@
 
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
-  (org-durations-units
+  (org-duration-units
    `(("m" . 1)
      ("h" . 60)
      ("d" . ,(* 60 8))
@@ -246,8 +246,7 @@
   :config
   ;; REVIEW 2024-11-11: Not sure if this is needed if we set the value of
   ;; `org-durations-units' via :custom.
-  ;; See `org-durations-units'
-  (org-duration-set-regexps)
+  ;; (org-duration-set-regexps)
 
   ;; Taken from
   ;; https://github.com/psamim/dotfiles/blob/master/doom/config.el#L213
