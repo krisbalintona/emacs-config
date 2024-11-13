@@ -42,11 +42,16 @@ If any property in this option is present in a drawer, it will not be
 hidden."
   :type '(repeat string))
 
+(defcustom krisb-org-hide-top-level-drawers t
+  "If nil, don't hide top-level property drawers."
+  :type 'boolean)
+
 ;;; Variables
 (defvar-local krisb-org-hide-drawers-overlays nil
   "A list of overlays used to hide Org drawers in the current buffer.")
 
 ;;; Functions
+;; TODO 2024-11-12: Rename appropriately
 (defun krisb-org-drawer-properties (drawer)
   "Extract all properties from the given Org DRAWER element."
   (let ((contents (org-element-contents drawer))
@@ -65,10 +70,18 @@ DRAWER is an org-element.
 
 Considers `krisb-org-hide-drawers-blacklist'."
   (let* ((properties (krisb-org-drawer-properties drawer))
-         (property-keys (mapcar #'car properties)))
-    (not (cl-some (lambda (blacklist-prop)
-                    (member blacklist-prop property-keys)) ; Check against properties in the blacklist
-                  krisb-org-hide-drawers-blacklist))))
+         (property-keys (mapcar #'car properties))
+         ;; We check if DRAWER is a top-level drawer by checking if the
+         ;; beginning of the drawer (an org element) is at the first point in
+         ;; the buffer
+         (top-level-p (= 1 (org-element-property :begin drawer))))
+    (and
+     ;; First adhere to the value of `krisb-org-hide-top-level-drawers'
+     (or krisb-org-hide-top-level-drawers (not top-level-p))
+     ;; Check against properties in the blacklist
+     (not (cl-some (lambda (blacklist-prop)
+                     (member blacklist-prop property-keys))
+                   krisb-org-hide-drawers-blacklist)))))
 
 ;; TODO 2024-10-23: Consider special behavior for top-level drawers.  See
 ;; `org-tidy-should-tidy'.

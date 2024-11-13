@@ -299,6 +299,7 @@
           ("h" . krisb-org-hide-drawers-transient))
   :custom
   (krisb-org-hide-drawers-blacklist '("CUSTOM_ID" "ID"))
+  (krisb-org-hide-top-level-drawers nil)
   :config
   (require 'transient)
   (transient-define-prefix krisb-org-hide-drawers-transient ()
