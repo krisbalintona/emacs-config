@@ -26,6 +26,8 @@
 (require 'org)
 (require 'org-element)
 
+;; TODO 2024-11-12: Ensure namespace is adhered to
+
 ;;; Options
 (defgroup krisb-org-hide-drawers ()
   "Hide Org drawers using overlays."
