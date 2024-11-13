@@ -235,7 +235,7 @@ My version is has references added to specific line.  Namely, adds the
        (format (citar-denote--reference-format file-type) citekey)))))
 
 ;;; Denote-zettel-interface
-(use-package denote-interface
+(use-package denote-zettel-interface
   :after denote
   :load-path "/home/krisbalintona/emacs-repos/packages/denote-zettel-interface/"
   :autoload denote-zettel-interface--signature-lessp
