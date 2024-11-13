@@ -1,6 +1,6 @@
 ;;; Org-roam
 (use-package org-roam
-  :autoload org-roam-node-from-id
+  :autoload (org-roam-node-from-id org-roam-node-file)
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)
