@@ -4388,6 +4388,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom
     (org-roam-ui-open-on-start nil)
     :config
+    ;; Resolve conflict with desktop.el behavior.  See
+    ;; https://github.com/org-roam/org-roam-ui/issues/202#issuecomment-1014711909
+    (add-to-list 'desktop-minor-mode-table
+                 '(org-roam-ui-mode nil))
+    (add-to-list 'desktop-minor-mode-table
+                 '(org-roam-ui-follow-mode nil))
+
     (defun krisb-org-roam-ui-update-theme (&optional _)
       "Update org-roam-ui theme if `org-roam-ui-sync-theme' is non-nil.
   This function is added to `enable-theme-functions' and can also be
