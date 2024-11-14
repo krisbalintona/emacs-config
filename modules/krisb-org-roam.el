@@ -142,6 +142,7 @@ called outright."
 ;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
   :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
+  :hook (org-roam-folgezettel-mode . hl-line-mode)
   :bind ( :map krisb-note-keymap
           ("m" . org-roam-folgezettel-list)))
 
