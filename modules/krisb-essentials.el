@@ -339,7 +339,7 @@ is to produce the opposite effect of both `fill-paragraph' and
 
 ;;;; Duplicate-dwim binding
 (bind-key "C-x ;" #'duplicate-dwim)
-(setopt duplicate-line-final-position 0
+(setopt duplicate-line-final-position -1
         duplicate-region-final-position 1)
 
 ;;;; Rebind case commands

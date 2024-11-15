@@ -731,7 +731,7 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 
   ;;;; Duplicate-dwim binding
   (bind-key "C-x ;" #'duplicate-dwim)
-  (setopt duplicate-line-final-position 0
+  (setopt duplicate-line-final-position -1
           duplicate-region-final-position 1)
 
   ;;;; Rebind case commands
