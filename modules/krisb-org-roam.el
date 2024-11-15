@@ -23,30 +23,55 @@
                     subdir))"
                          "#+title: ${title}\n")
       :unnarrowed t)
+     ("s" "source" plain "%?"
+      :target (file+head "thoughts/%<%Y%m%dT%H%M%S>.org"
+                         ":PROPERTIES:
+:ROAM_TYPE: source
+:ROAM_%^{Context or source?|SOURCE|CONTEXT}: %(org-roam-node-insert)
+:END:
+#+title: ${title}\n")
+      :unnarrowed t)
+     ("c" "collection" plain "%?"
+      :target (file+head "thoughts/%<%Y%m%dT%H%M%S>.org"
+                         ":PROPERTIES:
+:ROAM_TYPE: collection
+:END:
+#+title: ${title}\n")
+      :unnarrowed t)
      ("r" "reference" plain "%?"
-      :target (file+head
-               "references/%<%Y%m%dT%H%M%S>.org"
-               "#+title: ${title}\n")
+      :target (file+head "references/%<%Y%m%dT%H%M%S>.org"
+                         "#+title: ${title}\n")
       :unnarrowed t)))
   ;; NOTE 2024-11-07: The full content of each template element is present
   ;; (i.e. searchable) even if visually absent/truncated
   (org-roam-node-display-template
-   (concat (propertize "${directories:12} " 'face 'shadow)
-           "${hierarchy:120} "
-           (propertize "${tags:60}" 'face 'org-tag)))
-  (org-roam-node-annotation-function
-   (lambda (node)
-     "Show modification time annotation.
-Taken from
-https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-time-annotation-in-org-roam-node-find-minad."
-     (marginalia--time (org-roam-node-file-mtime node))))
+   (concat (propertize "${directories:8} " 'face 'shadow)
+           "${index-numbering:"
+           (number-to-string
+            (1+ (cl-loop for node in (org-roam-node-list)
+                         maximize (length (cdr (assoc "ROAM_PLACE" (org-roam-node-properties node) #'string-equal))))))
+           "}"
+           "${type}"
+           "${person}"
+           "${hierarchy}"
+           (propertize " ${tags:60}" 'face 'org-tag)))
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
   (org-roam-db-gc-threshold most-positive-fixnum)
   :config
   (org-roam-db-autosync-mode 1)
 
+  ;; See (info "(org-roam) org-roam-export")
+  (with-eval-after-load 'ox-html
+    (require 'org-roam-export))
+
   ;; TODO 2024-11-06: Can I change these method names to a krisb-* namespace?
+  ;; Bespoke org-roam-node accessors
+  (cl-defmethod org-roam-node-index-numbering ((node org-roam-node))
+    (let ((index-number (cdr (assoc "ROAM_PLACE" (org-roam-node-properties node) #'string-equal))))
+      (when (and index-number (not (string-empty-p index-number)))
+        (propertize (string-trim (format "%s" index-number)) 'face 'shadow))))
+
   (cl-defmethod org-roam-node-directories ((node org-roam-node))
     (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
         (format "/%s" (car (split-string dirs "/")))
@@ -64,6 +89,16 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
            (propertize (org-roam-node-title node) 'face 'org-roam-title)
          (org-roam-node-title node)))))
 
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+    (let ((index-number (cdr (assoc "ROAM_TYPE" (org-roam-node-properties node) #'string-equal))))
+      (when (and index-number (not (string-empty-p index-number)))
+        (propertize (format "&%s " index-number) 'face 'font-lock-doc-face))))
+
+  (cl-defmethod org-roam-node-person ((node org-roam-node))
+    (let ((person (cdr (assoc "ROAM_PERSON" (org-roam-node-properties node) #'string-equal))))
+      (when (and person (not (string-empty-p person)))
+        (propertize (format "@%s " person) 'face 'font-lock-keyword-face))))
+
   ;; Add ROAM_* properties to properties completing-read interface completions
   (dolist (prop '("ROAM_EXCLUDE"
                   "ROAM_PLACE"
@@ -73,6 +108,9 @@ https://github.com/org-roam/org-roam/wiki/User-contributed-Tricks#modification-t
                   "ROAM_REFS"
                   "ROAM_TYPE"))
     (add-to-list 'org-default-properties prop))
+
+  ;; Set inherited default values for some ROAM_* properties
+  (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
 
   ;; Advise for archiving org-roam nodes
   (defun krisb-org-archive--compute-location-org-roam-format-string (orig-fun &rest args)
@@ -89,7 +127,31 @@ If there is no node at point, then expand to the file path instead."
                                                  (buffer-file-name (buffer-base-buffer)))
                                              (car args))
                  (car args))))
-      (apply orig-fun args))))
+      (apply orig-fun args)))
+
+  ;; Customize ID type org links
+  (krisb-modus-themes-setup-faces
+   "org-roam-link"
+   (org-link-set-parameters
+    "id"
+    ;; Custom face for ID links to org-roam-nodes
+    :face (lambda (id)
+            (if (org-roam-node-from-id id)
+                `(:foreground ,keyword)
+              'org-link))))
+  (org-link-set-parameters
+   "id"
+   ;; Custom stored description
+   :store (lambda (&optional interactive?)
+            (if (org-roam-node-at-point)
+                (let* ((node (org-roam-node-at-point))
+                       (address (org-roam-node-index-numbering node))
+                       (hierarchy (org-roam-node-hierarchy node))
+                       (description (concat (when address (format "(%s) " address)) hierarchy)))
+                  (org-link-store-props :type "id"
+                                        :link (concat "id:" (org-id-get-create))
+                                        :description description))
+              (apply 'org-id-store-link-maybe interactive?)))))
 
 ;;; Org-roam-ui
 (use-package org-roam-ui
