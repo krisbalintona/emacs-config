@@ -154,7 +154,7 @@ If there is no node at point, then expand to the file path instead."
    "id"
    ;; Custom stored description
    :store (lambda (&optional interactive?)
-            (if (org-roam-node-at-point)
+            (if (org-roam-node-from-id (org-id-get))
                 (let* ((node (org-roam-node-at-point))
                        (address (org-roam-node-index-numbering node))
                        (hierarchy (org-roam-node-hierarchy node))
@@ -162,7 +162,7 @@ If there is no node at point, then expand to the file path instead."
                   (org-link-store-props :type "id"
                                         :link (concat "id:" (org-id-get-create))
                                         :description description))
-              (apply 'org-id-store-link-maybe interactive?)))))
+              (funcall 'org-id-store-link-maybe interactive?)))))
 
 ;;; Org-roam-node
 (use-package org-roam-node
