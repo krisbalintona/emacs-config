@@ -85,7 +85,7 @@
       ""))
 
   (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
-    (let ((level (org-roam-node-level node)))
+    (when-let ((level (org-roam-node-level node)))
       (concat
        (when (> level 0)
          (concat (org-roam-node-file-title node) " > "))
