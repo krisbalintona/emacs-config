@@ -4287,6 +4287,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 **** =krisb-org-roam.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-roam.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Org-roam
   (use-package org-roam
     :autoload (org-roam-node-from-id org-roam-node-file)

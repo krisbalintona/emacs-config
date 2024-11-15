@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Org-roam
 (use-package org-roam
   :autoload (org-roam-node-from-id org-roam-node-file)
