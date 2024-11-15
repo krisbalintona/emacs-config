@@ -4291,7 +4291,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Org-roam
   (use-package org-roam
-    :autoload (org-roam-node-from-id org-roam-node-file)
     :bind (("C-c n f" . org-roam-node-find)
            ("C-c n i" . org-roam-node-insert)
            ("C-c n c" . org-roam-capture)
@@ -4333,24 +4332,30 @@ Configuration related to "saving a state," that is, storing or restoring anythin
         :target (file+head "references/%<%Y%m%dT%H%M%S>.org"
                            "#+title: ${title}\n")
         :unnarrowed t)))
-    ;; NOTE 2024-11-07: The full content of each template element is present
-    ;; (i.e. searchable) even if visually absent/truncated
-    (org-roam-node-display-template
-     (concat (propertize "${directories:8} " 'face 'shadow)
-             "${index-numbering:"
-             (number-to-string
-              (1+ (cl-loop for node in (org-roam-node-list)
-                           maximize (length (cdr (assoc "ROAM_PLACE" (org-roam-node-properties node) #'string-equal))))))
-             "}"
-             "${type}"
-             "${person}"
-             "${hierarchy}"
-             (propertize " ${tags:60}" 'face 'org-tag)))
     (org-roam-db-node-include-function
      (lambda () (not (member "ATTACH" (org-get-tags)))))
     (org-roam-db-gc-threshold most-positive-fixnum)
     :config
     (org-roam-db-autosync-mode 1)
+
+    ;; The full content of each template element is present
+    ;; (i.e. searchable) even if visually absent/truncated
+    ;; FIXME 2024-11-15: I use with-eval-after-load because for some reason a
+    ;; dependency loop is created if I have this in :custom with org-roam-node
+    ;; autoloading `org-roam-node-list'
+    (with-eval-after-load 'org-roam-node
+      (setopt org-roam-node-display-template
+              (concat (propertize "${directories:8} " 'face 'shadow)
+                      (propertize (concat "${index-numbering:"
+                                          (number-to-string
+                                           (1+ (cl-loop for node in (org-roam-node-list)
+                                                        maximize (length (cdr (assoc "ROAM_PLACE" (org-roam-node-properties node) #'string-equal))))))
+                                          "}")
+                                  'face 'shadow)
+                      "${type}"
+                      "${person}"
+                      "${hierarchy}"
+                      (propertize " ${tags:60}" 'face 'org-tag))))
 
     ;; See (info "(org-roam) org-roam-export")
     (with-eval-after-load 'ox-html
@@ -4361,7 +4366,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (cl-defmethod org-roam-node-index-numbering ((node org-roam-node))
       (let ((index-number (cdr (assoc "ROAM_PLACE" (org-roam-node-properties node) #'string-equal))))
         (when (and index-number (not (string-empty-p index-number)))
-          (propertize (string-trim (format "%s" index-number)) 'face 'shadow))))
+          (string-trim (format "%s" index-number)))))
 
     (cl-defmethod org-roam-node-directories ((node org-roam-node))
       (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
@@ -4443,6 +4448,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                                           :link (concat "id:" (org-id-get-create))
                                           :description description))
                 (apply 'org-id-store-link-maybe interactive?)))))
+
+  ;;; Org-roam-node
+  (use-package org-roam-node
+    :ensure nil
+    ;; I add this as a separate use-package in order to autoload these functions.
+    ;; Autoloading them in org-roam's use-package creates a dependency loop
+    :autoload (org-roam-node-from-id org-roam-node-file org-roam-node-list))
 
   ;;; Org-roam-ui
   (use-package org-roam-ui
