@@ -46,6 +46,10 @@
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
   (org-roam-db-gc-threshold most-positive-fixnum)
+  (org-roam-mode-sections
+   '(org-roam-backlinks-section
+     org-roam-reflinks-section
+     org-roam-unlinked-references-section))
   :config
   (org-roam-db-autosync-mode 1)
 
