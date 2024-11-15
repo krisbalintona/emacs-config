@@ -189,7 +189,15 @@
       :immediate-finish t
       :empty-lines 1
       :clock-in t
-      :clock-resume t)))
+      :clock-resume t)
+     ("m" "Work meeting notes" entry
+      (file+olp+datetree ,(lambda ()
+                            (org-roam-node-file
+                             (org-roam-node-from-id "20241114T091749.707997"))))
+      "* (%<%c>)%?\n\n"
+      :tree-type month
+      :jump-to-captured t
+      :immediate-finish t)))
   (org-capture-use-agenda-date t)       ; Use the time-at-point if any
 
   ;; Todos
