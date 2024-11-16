@@ -51,21 +51,6 @@
    '(org-roam-backlinks-section
      org-roam-reflinks-section
      org-roam-unlinked-references-section))
-  ;; The full content of each template element is present (i.e. searchable) even
-  ;; if visually absent/truncated
-  (org-roam-node-display-template
-   (concat "${directories-display-template:8} "
-           ;; FIXME 2024-11-16: For some reason using :* to automatically set
-           ;; length produces too-wide a column
-           (concat "${address-display-template:"
-                   (number-to-string
-                    (1+ (cl-loop for node in (org-roam-node-list)
-                                 maximize (length (org-roam-node-address node)))))
-                   "}")
-           "${type-display-template}"
-           "${person-display-template}"
-           "${hierarchy}"
-           (propertize " ${tags:60}" 'face 'org-tag)))
   :config
   (org-roam-db-autosync-mode 1)
 
@@ -126,20 +111,29 @@ If there is no node at point, then expand to the file path instead."
                                       :description (org-roam-node-formatted (org-roam-node-at-point)))
               (funcall 'org-id-store-link-maybe interactive?)))))
 
-;;; Org-roam-node
-(use-package org-roam-node
-  :ensure nil
-  ;; I add this as a separate use-package in order to autoload these functions.
-  ;; Autoloading them in org-roam's use-package creates a dependency loop
-  :autoload (org-roam-node-from-id org-roam-node-file org-roam-node-list))
-
 ;;; Krisb-org-roam-ext
 (use-package krisb-org-roam-ext
   :ensure nil
   :requires org-roam
   :custom
   ;; Customize how nodes are inserted via `org-roam-node-insert'
-  (org-roam-node-formatter 'krisb-org-roam-node-formatter))
+  (org-roam-node-formatter 'krisb-org-roam-node-formatter)
+  :config
+  ;; The full content of each template element is present (i.e. searchable) even
+  ;; if visually absent/truncated
+  (setopt org-roam-node-display-template
+          (concat "${directories-display-template:8} "
+                  ;; FIXME 2024-11-16: For some reason using :* to automatically set
+                  ;; length produces too-wide a column
+                  (concat "${address-display-template:"
+                          (number-to-string
+                           (1+ (cl-loop for node in (org-roam-node-list)
+                                        maximize (length (org-roam-node-address node)))))
+                          "}")
+                  "${type-display-template}"
+                  "${person-display-template}"
+                  "${hierarchy}"
+                  (propertize " ${tags:60}" 'face 'org-tag))))
 
 ;;; Org-roam-ui
 (use-package org-roam-ui
