@@ -37,6 +37,7 @@
                          ":PROPERTIES:
 :ROAM_TYPE: collection
 :END:
+
 #+title: ${title}\n")
       :unnarrowed t)
      ("r" "reference" plain "%?"
@@ -50,65 +51,27 @@
    '(org-roam-backlinks-section
      org-roam-reflinks-section
      org-roam-unlinked-references-section))
+  ;; The full content of each template element is present (i.e. searchable) even
+  ;; if visually absent/truncated
+  (org-roam-node-display-template
+   (concat "${directories-display-template:8} "
+           ;; FIXME 2024-11-16: For some reason using :* to automatically set
+           ;; length produces too-wide a column
+           (concat "${address-display-template:"
+                   (number-to-string
+                    (1+ (cl-loop for node in (org-roam-node-list)
+                                 maximize (length (org-roam-node-address node)))))
+                   "}")
+           "${type-display-template}"
+           "${person-display-template}"
+           "${hierarchy}"
+           (propertize " ${tags:60}" 'face 'org-tag)))
   :config
   (org-roam-db-autosync-mode 1)
-
-  ;; The full content of each template element is present
-  ;; (i.e. searchable) even if visually absent/truncated
-  ;; FIXME 2024-11-15: I use with-eval-after-load because for some reason a
-  ;; dependency loop is created if I have this in :custom with org-roam-node
-  ;; autoloading `org-roam-node-list'
-  (with-eval-after-load 'org-roam-node
-    (setopt org-roam-node-display-template
-            (concat (propertize "${directories:8} " 'face 'shadow)
-                    (propertize (concat "${index-numbering:"
-                                        (number-to-string
-                                         (1+ (cl-loop for node in (org-roam-node-list)
-                                                      maximize (length (cdr (assoc "ROAM_PLACE" (org-roam-node-properties node) #'string-equal))))))
-                                        "}")
-                                'face 'shadow)
-                    "${type}"
-                    "${person}"
-                    "${hierarchy}"
-                    (propertize " ${tags:60}" 'face 'org-tag))))
 
   ;; See (info "(org-roam) org-roam-export")
   (with-eval-after-load 'ox-html
     (require 'org-roam-export))
-
-  ;; TODO 2024-11-06: Can I change these method names to a krisb-* namespace?
-  ;; Bespoke org-roam-node accessors
-  (cl-defmethod org-roam-node-index-numbering ((node org-roam-node))
-    (let ((index-number (cdr (assoc "ROAM_PLACE" (org-roam-node-properties node) #'string-equal))))
-      (when (and index-number (not (string-empty-p index-number)))
-        (string-trim (format "%s" index-number)))))
-
-  (cl-defmethod org-roam-node-directories ((node org-roam-node))
-    (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
-        (format "/%s" (car (split-string dirs "/")))
-      ""))
-
-  (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
-    (when-let ((level (org-roam-node-level node)))
-      (concat
-       (when (> level 0)
-         (concat (org-roam-node-file-title node) " > "))
-       (when (> level 1)
-         (concat (string-join (org-roam-node-olp node) " > ")
-                 " > "))
-       (if (> level 1)
-           (propertize (org-roam-node-title node) 'face 'org-roam-title)
-         (org-roam-node-title node)))))
-
-  (cl-defmethod org-roam-node-type ((node org-roam-node))
-    (let ((index-number (cdr (assoc "ROAM_TYPE" (org-roam-node-properties node) #'string-equal))))
-      (when (and index-number (not (string-empty-p index-number)))
-        (propertize (format "&%s " index-number) 'face 'font-lock-doc-face))))
-
-  (cl-defmethod org-roam-node-person ((node org-roam-node))
-    (let ((person (cdr (assoc "ROAM_PERSON" (org-roam-node-properties node) #'string-equal))))
-      (when (and person (not (string-empty-p person)))
-        (propertize (format "@%s " person) 'face 'font-lock-keyword-face))))
 
   ;; Add ROAM_* properties to properties completing-read interface completions
   (dolist (prop '("ROAM_EXCLUDE"
@@ -133,39 +96,34 @@ If there is no node at point, then expand to the file path instead."
     ;; Modify LOCATION before normal operations
     (cl-letf (((car args)
                (if (fboundp 'org-roam-node-at-point)
-                   (replace-regexp-in-string "%D"
+                   (replace-regexp-in-string "%R"
                                              (or (org-roam-node-id (org-roam-node-at-point 'assert))
                                                  (buffer-file-name (buffer-base-buffer)))
                                              (car args))
                  (car args))))
       (apply orig-fun args)))
 
-  ;; Customize ID type org links
+  ;; Custom face for ID links to org-roam-nodes
   (krisb-modus-themes-setup-faces
    "org-roam-link"
    (org-link-set-parameters
     "id"
-    ;; Custom face for ID links to org-roam-nodes
     :face (lambda (id)
             (if (org-roam-node-from-id id)
                 `(:foreground ,keyword)
               'org-link))))
+
+  ;; Custom stored description
   (org-link-set-parameters
    "id"
-   ;; Custom stored description
    :store (lambda (&optional interactive?)
             (if (and (equal major-mode 'org-mode)
+                     ;; We want to check more than if there is a node at point;
+                     ;; we want to make sure ID corresponds to an existing node
                      (org-roam-node-from-id (org-id-get)))
-                (let* ((node (org-roam-node-at-point))
-                       (address (org-roam-node-index-numbering node))
-                       (type (org-roam-node-type node))
-                       (hierarchy (org-roam-node-hierarchy node))
-                       (description (concat (when address (format "(%s) " address))
-                                            (when type (format "&%s " type))
-                                            hierarchy)))
-                  (org-link-store-props :type "id"
-                                        :link (concat "id:" (org-id-get-create))
-                                        :description description))
+                (org-link-store-props :type "id"
+                                      :link (concat "id:" (org-id-get))
+                                      :description (org-roam-node-formatted (org-roam-node-at-point)))
               (funcall 'org-id-store-link-maybe interactive?)))))
 
 ;;; Org-roam-node
@@ -174,6 +132,14 @@ If there is no node at point, then expand to the file path instead."
   ;; I add this as a separate use-package in order to autoload these functions.
   ;; Autoloading them in org-roam's use-package creates a dependency loop
   :autoload (org-roam-node-from-id org-roam-node-file org-roam-node-list))
+
+;;; Krisb-org-roam-ext
+(use-package krisb-org-roam-ext
+  :ensure nil
+  :requires org-roam
+  :custom
+  ;; Customize how nodes are inserted via `org-roam-node-insert'
+  (org-roam-node-formatter 'krisb-org-roam-node-formatter))
 
 ;;; Org-roam-ui
 (use-package org-roam-ui
