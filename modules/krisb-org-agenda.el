@@ -163,22 +163,6 @@
       (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
       "* TODO %? %^g\n"
       :empty-lines 1)
-     ("i" "Idea" entry
-      (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
-      "* %?\n"
-      :tree-type month
-      :empty-lines 1
-      :clock-in t
-      :clock-resume t
-      :kill-buffer t)
-     ("I" "Idea with context" entry
-      (file+olp+datetree ,(car (denote-directory-files "20221011T101254")))
-      "* %?\n\n+ %^{Context string}: %a"
-      :tree-type month
-      :empty-lines 1
-      :clock-in t
-      :clock-resume t
-      :kill-buffer t)
      ("j" "Journal" entry
       (file+olp+datetree ,(lambda ()
                             (org-roam-node-file
