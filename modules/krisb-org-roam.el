@@ -113,8 +113,9 @@ If there is no node at point, then expand to the file path instead."
 
 ;;; Krisb-org-roam-ext
 (use-package krisb-org-roam-ext
+  :demand t
   :ensure nil
-  :requires org-roam
+  :after org-roam
   :custom
   ;; Customize how nodes are inserted via `org-roam-node-insert'
   (org-roam-node-formatter 'krisb-org-roam-node-formatter)
@@ -162,7 +163,8 @@ called outright."
 
 ;;; Citar-org-roam
 (use-package citar-org-roam
-  :after (citar org-roam)
+  :demand t
+  :after (:any citar org-roam)
   :diminish citar-org-roam-mode
   :bind ( :map krisb-note-keymap
           ("b r" . citar-org-roam-ref-add)
