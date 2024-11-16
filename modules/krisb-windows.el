@@ -367,7 +367,7 @@
 
 ;;;;; Embark
           ("\\*Embark Actions\\*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (display-buffer-pop-up-window)
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
