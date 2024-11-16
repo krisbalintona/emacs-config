@@ -360,7 +360,9 @@ See ((org) Filtering/limiting agenda items)."
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
                           (org-agenda-dim-blocked-tasks t)
-                          (org-agenda-skip-function 'org-review-agenda-skip)))
+                          (org-agenda-skip-function 'org-review-agenda-skip)
+                          (org-agenda-cmp-user-defined 'org-review-compare)
+                          (org-agenda-sorting-strategy '(user-defined-down))))
               (tags-todo "+TODO=\"NEXT\"-project-inbox+EFFORT<\"3h\"|+TODO=\"TODO\"-project-inbox+EFFORT<\"3h\""
                          ((org-agenda-overriding-header "Non-time-bound tasks")
                           (org-agenda-use-tag-inheritance '(todo))
@@ -379,7 +381,9 @@ See ((org) Filtering/limiting agenda items)."
              ((tags-todo "+inbox|+TODO=\"MAYBE\""
                          ((org-agenda-overriding-header "Review")
                           (org-agenda-dim-blocked-tasks t)
-                          (org-agenda-skip-function 'org-review-agenda-skip)))
+                          (org-agenda-skip-function 'org-review-agenda-skip)
+                          (org-agenda-cmp-user-defined 'org-review-compare)
+                          (org-agenda-sorting-strategy '(user-defined-down))))
               (tags-todo "+inbox"
                          ((org-agenda-overriding-header "Non-review inbox")
                           (org-agenda-dim-blocked-tasks t)
