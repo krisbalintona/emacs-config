@@ -47,8 +47,8 @@
     ("In gratitude" . "In gratitude,\nKristoffer")
     ("Best" . "Best,\nKristoffer")
     ("With appreciation" . "With appreciation,\nKristoffer")
-    ("Professional" . "Best regards,\nKristoffer Balintona\nPhone: (773) 677-9699")
-    ("Website" . "In gratitude,\nKristoffer Balintona\nhttps://kristofferbalintona.me"))
+    ("Phone number mention" . "Best regards,\nKristoffer Balintona\nPhone: (773) 677-9699")
+    ("Website link" . "In gratitude,\nKristoffer Balintona\nhttps://kristofferbalintona.me"))
   "Alist of aliases and their corresponding email signatures."
   :type '(alist :key-type (string :tag "Signature name")
                 :value-type (string :tag "Signature content"))
