@@ -62,7 +62,3 @@
 (require 'krisb-notmuch)
 
 (require 'krisb-web)
-
-;;; Load custom file
-(when (file-exists-p custom-file)
-  (load custom-file))

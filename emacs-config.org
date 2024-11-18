@@ -230,14 +230,6 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-web)
 #+end_src
 
-*** Load ~custom-file~
-
-#+begin_src emacs-lisp :tangle "init.el"
-  ;;; Load custom file
-  (when (file-exists-p custom-file)
-    (load custom-file))
-#+end_src
-
 * Modules
 :PROPERTIES:
 :VISIBILITY: children
@@ -407,6 +399,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
           custom-unlispify-tag-names nil
           custom-buffer-style 'links
           custom-search-field nil)
+
+  (when (file-exists-p custom-file)
+    (load custom-file))
 #+end_src
 
 [fn:1] This is because the =:group= keyword is available and customarily used by package authors.
