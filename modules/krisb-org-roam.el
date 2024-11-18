@@ -190,7 +190,23 @@ called outright."
   :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
   :hook (org-roam-folgezettel-mode . hl-line-mode)
   :bind ( :map krisb-note-keymap
-          ("m" . org-roam-folgezettel-list)))
+          ("m" . org-roam-folgezettel-list))
+  :custom
+  (org-roam-folgezettel-filter-query '(subdir "thoughts"))
+  :init
+  (el-patch-defun vtable-goto-object (object)
+    "Go to OBJECT in the current table.
+Return the position of the object if found, and nil if not."
+    (let ((start (point)))
+      (vtable-beginning-of-table)
+      (save-restriction
+        (narrow-to-region (point) (save-excursion (vtable-end-of-table)))
+        (if (text-property-search-forward 'vtable-object object (el-patch-swap #'eq #'equal))
+            (progn
+              (forward-line -1)
+              (point))
+          (goto-char start)
+          nil)))))
 
 ;;; Provide
 (provide 'krisb-org-roam)
