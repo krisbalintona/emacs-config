@@ -4,20 +4,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("/home/krisbalintona/Documents/org-database/agenda/todo.org"
-     "/home/krisbalintona/Documents/org-database/agenda/recurring.org"
-     "/home/krisbalintona/Documents/org-database/agenda/gcal.org"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/phil1340.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/hist1974i.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/hist0244.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/emails.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/emacs.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/cs1730.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/crc.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/buoy.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/bui.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/2023-and-before todos.org_archive"))
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
                 beframe breadcrumb bufler cape citar-denote citar-org-roam
@@ -54,7 +40,8 @@
      (wombag :url "https://github.com/karthink/wombag.git")
      (denote-interface :url "git@github.com:krisbalintona/denote-interface.git")))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/Documents/org-database/notes/references/"
+   '("/home/krisbalintona/Documents/org-database/notes/"
+     "/home/krisbalintona/Documents/org-database/notes/references/"
      "/home/krisbalintona/Documents/org-database/notes/papers/"
      "/home/krisbalintona/Documents/org-database/notes/thoughts/"
      "/home/krisbalintona/Documents/org-database/notes/buoy/"

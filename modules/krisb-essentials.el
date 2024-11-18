@@ -38,6 +38,9 @@
         custom-buffer-style 'links
         custom-search-field nil)
 
+(when (file-exists-p custom-file)
+  (load custom-file))
+
 ;;; Scrolling
 (setopt scroll-error-top-bottom nil
         scroll-preserve-screen-position t
