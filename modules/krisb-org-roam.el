@@ -23,53 +23,42 @@
   (expand-file-name (concat (format-time-string \"%Y%m%dT%H%M%S\") \".org\")
                     subdir))"
                          "#+title: ${title}\n")
-      :unnarrowed t)
+      :unnarrowed t
+      :immediate-finish t)
      ("s" "source" plain "%?"
-      :target (file+head "thoughts/%<%Y%m%dT%H%M%S>.org"
+      :target (file+head "main/%<%Y%m%dT%H%M%S>.org"
                          ":PROPERTIES:
 :ROAM_TYPE: source
 :ROAM_%^{Context or source?|SOURCE|CONTEXT}: %(org-roam-node-insert)
 :END:
 #+title: ${title}\n")
-      :unnarrowed t)
+      :unnarrowed t
+      :immediate-finish t)
      ("c" "collection" plain "%?"
-      :target (file+head "thoughts/%<%Y%m%dT%H%M%S>.org"
+      :target (file+head "main/%<%Y%m%dT%H%M%S>.org"
                          ":PROPERTIES:
 :ROAM_TYPE: collection
 :END:
-
 #+title: ${title}\n")
-      :unnarrowed t)
+      :unnarrowed t
+      :immediate-finish t)
      ("r" "reference" plain "%?"
       :target (file+head "references/%<%Y%m%dT%H%M%S>.org"
                          "#+title: ${title}\n")
-      :unnarrowed t)))
+      :unnarrowed t
+      :immediate-finish t)))
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
   (org-roam-db-gc-threshold most-positive-fixnum)
   (org-roam-mode-sections
    '(org-roam-backlinks-section
-     org-roam-reflinks-section
-     org-roam-unlinked-references-section))
+     org-roam-reflinks-section))
   :config
   (org-roam-db-autosync-mode 1)
 
   ;; See (info "(org-roam) org-roam-export")
   (with-eval-after-load 'ox-html
     (require 'org-roam-export))
-
-  ;; Add ROAM_* properties to properties completing-read interface completions
-  (dolist (prop '("ROAM_EXCLUDE"
-                  "ROAM_PLACE"
-                  "ROAM_PERSON"
-                  "ROAM_SOURCE"
-                  "ROAM_CONTEXT"
-                  "ROAM_REFS"
-                  "ROAM_TYPE"))
-    (add-to-list 'org-default-properties prop))
-
-  ;; Set inherited default values for some ROAM_* properties
-  (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
 
   ;; Advise for archiving org-roam nodes
   (defun krisb-org-archive--compute-location-org-roam-format-string (orig-fun &rest args)
@@ -89,14 +78,12 @@ If there is no node at point, then expand to the file path instead."
       (apply orig-fun args)))
 
   ;; Custom face for ID links to org-roam-nodes
-  (krisb-modus-themes-setup-faces
-   "org-roam-link"
-   (org-link-set-parameters
-    "id"
-    :face (lambda (id)
-            (if (org-roam-node-from-id id)
-                `(:foreground ,keyword)
-              'org-link))))
+  (org-link-set-parameters
+   "id"
+   :face (lambda (id)
+           (if (org-roam-node-from-id id)
+               '(:inherit font-lock-keyword-face)
+             'org-link)))
 
   ;; Custom stored description
   (org-link-set-parameters
@@ -188,25 +175,43 @@ called outright."
 ;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
   :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
-  :hook (org-roam-folgezettel-mode . hl-line-mode)
+  :hook ((org-roam-folgezettel-mode . hl-line-mode)
+         (org-roam-folgezettel-mode . (lambda () (setq-local line-spacing 0.2))))
   :bind ( :map krisb-note-keymap
-          ("m" . org-roam-folgezettel-list))
+          ("m" . org-roam-folgezettel-list)
+          ("s" . org-roam-folgezettel-show-node-in-list))
   :custom
-  (org-roam-folgezettel-filter-query '(subdir "thoughts"))
+  (org-roam-folgezettel-filter-query '(box "main"))
   :init
-  (el-patch-defun vtable-goto-object (object)
-    "Go to OBJECT in the current table.
+  (with-eval-after-load 'vtable
+    (el-patch-defun vtable-goto-object (object)
+      "Go to OBJECT in the current table.
 Return the position of the object if found, and nil if not."
-    (let ((start (point)))
-      (vtable-beginning-of-table)
-      (save-restriction
-        (narrow-to-region (point) (save-excursion (vtable-end-of-table)))
-        (if (text-property-search-forward 'vtable-object object (el-patch-swap #'eq #'equal))
-            (progn
-              (forward-line -1)
-              (point))
-          (goto-char start)
-          nil)))))
+      (let ((start (point)))
+        (vtable-beginning-of-table)
+        (save-restriction
+          (narrow-to-region (point) (save-excursion (vtable-end-of-table)))
+          (if (text-property-search-forward 'vtable-object object (el-patch-swap #'eq #'equal))
+              (progn
+                (forward-line -1)
+                (point))
+            (goto-char start)
+            nil)))))
+  :config
+  ;; Add ROAM_* properties to properties completing-read interface completions
+  (dolist (prop '("ROAM_EXCLUDE"
+                  "ROAM_PLACE"
+                  "ROAM_PERSON"
+                  "ROAM_SOURCE"
+                  "ROAM_CONTEXT"
+                  "ROAM_REFS"
+                  "ROAM_TYPE"
+                  "ROAM_BOX"))
+    (add-to-list 'org-default-properties prop))
+
+  ;; Set inherited default values for some ROAM_* properties
+  (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
+  (add-to-list 'org-use-property-inheritance "ROAM_BOX"))
 
 ;;; Provide
 (provide 'krisb-org-roam)
