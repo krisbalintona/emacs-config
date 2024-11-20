@@ -35,6 +35,7 @@
 ;;; Ox-odt
 (use-package ox-odt
   :ensure nil
+  :ensure-system-package (soffice . libreoffice-still)
   :custom
   (org-odt-preferred-output-format "docx")) ; Convert to .docx at the end of conversion
 
