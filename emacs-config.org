@@ -217,6 +217,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-projects)
   (require 'krisb-shell)
   (require 'krisb-flymake)
+  (require 'krisb-other-languages)
 
   (require 'krisb-elisp)
   (require 'krisb-info)
@@ -4324,6 +4325,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                            ":PROPERTIES:
   :ROAM_TYPE: collection
   :END:
+
   ,#+title: ${title}\n")
         :unnarrowed t
         :immediate-finish t)
@@ -7105,6 +7107,23 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Provide
   (provide 'krisb-elisp)
+#+end_src
+
+*** =krisb-other-languages.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-other-languages.el"
+  ;;; Hyprlang-ts-mode
+  ;; Treesitter mode for hyprland config files
+  (use-package hyprlang-ts-mode
+    :vc ( :url "https://github.com/Nathan-Melaku/hyprlang-ts-mode.git"
+          :rev :newest)
+    :init
+    (with-eval-after-load 'treesit
+      (add-to-list 'treesit-language-source-alist
+                   '(hyprlang "https://github.com/tree-sitter-grammars/tree-sitter-hyprlang"))))
+
+  ;;; Provide
+  (provide 'krisb-other-languages)
 #+end_src
 
 ** Other
