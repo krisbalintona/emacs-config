@@ -93,6 +93,7 @@
 
 ;;; Krisb-wombag-ext
 (use-package krisb-wombag-ext
+  :ensure nil
   :demand t
   :after wombag
   :config

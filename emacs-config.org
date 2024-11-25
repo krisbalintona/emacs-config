@@ -7207,6 +7207,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Krisb-wombag-ext
   (use-package krisb-wombag-ext
+    :ensure nil
     :demand t
     :after wombag
     :config
