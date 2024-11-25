@@ -51,6 +51,7 @@
 (require 'krisb-projects)
 (require 'krisb-shell)
 (require 'krisb-flymake)
+(require 'krisb-other-languages)
 
 (require 'krisb-elisp)
 (require 'krisb-info)
