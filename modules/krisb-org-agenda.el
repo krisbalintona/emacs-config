@@ -195,8 +195,6 @@
      ("MAYBE" . (shadow org-todo))
      ("DONE" . (bold org-done))
      ("CANCELED" . error)))
-  (org-log-done 'time)
-  (org-log-into-drawer t)
   (org-highest-priority ?A)
   (org-default-priority ?E)
   (org-lowest-priority ?F)
@@ -215,6 +213,12 @@
      nil
      nil
      ,(rx (regexp org-not-done-heading-regexp))))
+
+  ;; Logging
+  (org-log-done 'time)
+  (org-log-into-drawer t)
+  (org-log-reschedule 'time)
+  (org-log-redeadline 'time)
 
   ;; Input
   (org-read-date-prefer-future 'time)

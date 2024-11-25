@@ -5102,8 +5102,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        ("MAYBE" . (shadow org-todo))
        ("DONE" . (bold org-done))
        ("CANCELED" . error)))
-    (org-log-done 'time)
-    (org-log-into-drawer t)
     (org-highest-priority ?A)
     (org-default-priority ?E)
     (org-lowest-priority ?F)
@@ -5122,6 +5120,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        nil
        nil
        ,(rx (regexp org-not-done-heading-regexp))))
+
+    ;; Logging
+    (org-log-done 'time)
+    (org-log-into-drawer t)
+    (org-log-reschedule 'time)
+    (org-log-redeadline 'time)
 
     ;; Input
     (org-read-date-prefer-future 'time)
