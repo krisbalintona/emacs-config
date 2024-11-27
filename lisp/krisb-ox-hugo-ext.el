@@ -76,15 +76,15 @@ Relevant for my `krisb-org-hugo--get-pub-dir'.  A non-nil value means
 bundles are given a default name; see `krisb-org-hugo--get-pub-dir'.")
 
 (defun krisb-org-hugo-title-slug (name)
-  "Turn NAME into a hyphenated title slug.
+  "Sanitize NAME to be safe as a directory or file name.
 This function is used by my bespoke bundle workflow to determine the
 directory name of the bundle.  Additionally, this function is used for
 my bespoke code for relative links to Denote notes and Org-roam nodes."
   ;; (message "[krisb-org-hugo-title-slug DBG] title: %s" title)
-  (file-name-as-directory
-   ;; TODO 2024-11-07: Figure out a way to not depend on denote so this function
-   ;; can be Denote- and Org-roam-agnostic.
-   (denote-sluggify 'title name)))
+  (let ((invalid-chars (rx (or "/" "\\" ":" "*" "?" "\"" "<" ">" "|"))))
+    (file-name-as-directory
+     (downcase
+      (replace-regexp-in-string "\\s-" "_" (replace-regexp-in-string invalid-chars "" name))))))
 
 (el-patch-defun org-hugo--get-pub-dir (info)
   (el-patch-swap
