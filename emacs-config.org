@@ -4316,17 +4316,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                            ":PROPERTIES:
   :ROAM_TYPE: source
   :ROAM_%^{Context or source?|SOURCE|CONTEXT}: %(org-roam-node-insert)
-  :END:
-  ,#+title: ${title}\n")
+  :END:\n#+title: ${title}\n")
         :unnarrowed t
         :immediate-finish t)
        ("c" "collection" plain "%?"
         :target (file+head "main/%<%Y%m%dT%H%M%S>.org"
                            ":PROPERTIES:
+  :ROAM_BOX: main
   :ROAM_TYPE: collection
-  :END:
-
-  ,#+title: ${title}\n")
+  :END:\n#+title: ${title}\n")
         :unnarrowed t
         :immediate-finish t)
        ("r" "reference" plain "%?"
