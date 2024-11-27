@@ -154,9 +154,6 @@ if no match is found."
 
 (declare-function org-roam-node-title "org-roam-node")
 (declare-function org-roam-node-from-id "org-roam-node")
-;; NOTE 2022-03-12: This is a janky way to get links working with page
-;; bundles. **REQUIRES THE BUNDLE NAME OF EACH POST TO MATCH THE POST'S FILE
-;; NAME.**
 (el-patch-defun org-hugo-link (link desc info)
   "Convert LINK to Markdown format.
 
