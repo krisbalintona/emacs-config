@@ -49,6 +49,13 @@ See the docstring of `krisb-reveal-fold-commands'."
                          :location #'krisb-reveal-xref-find-information)))
     (add-hook 'xref-after-jump-hook #'krisb-reveal-fold)))
 
+;;; Consult-xref-stack
+(use-package consult-xref-stack
+  :vc ( :url "https://github.com/brett-lempereur/consult-xref-stack"
+        :rev :newest)
+  ;; :bind (("C-," . consult-xref-stack-backward))
+  )
+
 ;;; Dumber-jump
 ;; A lean fork of dumb-jump.
 (use-package dumber-jump
