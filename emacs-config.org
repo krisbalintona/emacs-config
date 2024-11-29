@@ -8678,7 +8678,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
               (when type (format "{%s} " type))
               hierarchy)))
 
-  ;;; Provdie
+  ;;; Provide
   (provide 'krisb-org-roam-ext)
   ;;; krisb-org-roam-ext.el ends here
 #+end_src
