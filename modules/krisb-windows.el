@@ -382,6 +382,11 @@
           ((major-mode . denote-interface-mode)
            (display-buffer-same-window))
 
+;;;;; Org-roam
+          ("\\*org-roam\\*"
+           (display-buffer-below-selected)
+           (window-height . fit-window-to-buffer))
+
 ;;;;; Org-roam-folgezettel
           ((major-mode . org-roam-folgezettel-mode)
            (display-buffer-same-window))
