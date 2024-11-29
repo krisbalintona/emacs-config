@@ -50,7 +50,7 @@
    (lambda () (not (member "ATTACH" (org-get-tags)))))
   (org-roam-db-gc-threshold most-positive-fixnum)
   (org-roam-mode-sections
-   '(org-roam-backlinks-section
+   '((org-roam-backlinks-section :unique t)
      org-roam-reflinks-section))
   :config
   (org-roam-db-autosync-mode 1)
