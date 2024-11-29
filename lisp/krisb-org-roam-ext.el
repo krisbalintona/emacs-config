@@ -121,6 +121,6 @@ which modifies the description of org-roam nodes from
             (when type (format "{%s} " type))
             hierarchy)))
 
-;;; Provdie
+;;; Provide
 (provide 'krisb-org-roam-ext)
 ;;; krisb-org-roam-ext.el ends here
