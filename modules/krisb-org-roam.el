@@ -76,12 +76,15 @@ If there is no node at point, then expand to the file path instead."
                  (car args))))
       (apply orig-fun args)))
 
-  ;; Custom face for ID links to org-roam-nodes
+  ;; Custom face for ID links to org-roam-nodes.  I prefer to change their
+  ;; foreground color to differentiate them from other types of links as well as
+  ;; to use a lighter face because a buffer packed-full of org links can become
+  ;; visually distracting and cluttered otherwise.
   (org-link-set-parameters
    "id"
    :face (lambda (id)
            (if (org-roam-node-from-id id)
-               '(:inherit font-lock-keyword-face)
+               '(:weight light :inherit font-lock-keyword-face)
              'org-link)))
 
   ;; Custom stored description
