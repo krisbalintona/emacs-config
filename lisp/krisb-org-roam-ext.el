@@ -121,6 +121,90 @@ which modifies the description of org-roam nodes from
             (when type (format "{%s} " type))
             hierarchy)))
 
+;;; Update link descriptions
+(defun krisb-org-roam-ext-lint-descriptions (dir)
+  "Correct org-roam link descriptions in DIR.
+If called interactively, DIR defaults to `org-roam-directory'.  When
+called with a prefix argument, prompt the user for the directory in
+which link swill be corrected.
+
+This function does the following operations in this order:
+1. List all org-roam nodes.
+2. Act (steps 3-6) on each node in turn.
+3. Retrieve backlinks and correctly formatted node text
+   (`org-roam-node-formatted').
+4. For each backlink to node, in reverse-point order, update their link
+   description if it does not match the correctly formatted node text.
+5. Kill any newly opened buffers."
+  (interactive (list (if current-prefix-arg
+                         (read-directory-name "Correct descriptions in directory: "
+                                              (expand-file-name org-roam-directory))
+                       org-roam-directory)))
+  (let ((save-silently t)
+        (node-list (seq-filter
+                    (lambda (node)
+                      (file-in-directory-p (org-roam-node-file node) dir))
+                    (org-roam-node-list)))
+        (corrected-counter 0))
+    (message "Correcting all links in %s... (this may take a while)" dir)
+    ;; Before iterating on node-list, must first ensure that the database file
+    ;; correctly reflects buffer contents.  This is because the location data of
+    ;; backlinks (their points) must be accurate, otherwise new link
+    ;; descriptions might not change the correct region of the buffer.  To do
+    ;; this, we first save all files that are visiting a node in node-list and
+    ;; update the org-roam database
+    (save-some-buffers nil (lambda () (member (buffer-file-name)
+                                              (mapcar #'org-roam-node-file node-list))))
+    (org-roam-db-sync)
+    (dolist (node node-list)
+      (let* ((node-formatted (org-roam-node-formatted node))
+             (backlinks (org-roam-backlinks-get node :unique t))
+             (initial-buffer-list (buffer-list)))
+        (message "Correcting links to %s" node-formatted)
+        ;; We must iterate through backlinks in the reverse order of their
+        ;; points (i.e. later links come first) so if any of those links are
+        ;; changed the backlink points in any earlier links aren't disrupted
+        (dolist (backlink (reverse (sort backlinks :key #'org-roam-backlink-point)))
+          (let ((path (org-roam-node-file
+                       (org-roam-backlink-source-node backlink))))
+            (with-current-buffer (find-file-noselect path)
+              (save-excursion
+                (let ((link-pt (org-roam-backlink-point backlink)))
+                  (goto-char link-pt)
+                  (let ((element (org-element-context)))
+                    (if (eq (org-element-type element) 'link)
+                        (let ((begin (org-element-property :contents-begin element))
+                              (end (org-element-property :contents-end element)))
+                          (when (and begin end)
+                            (unless (string= (buffer-substring-no-properties begin end)
+                                             node-formatted)
+                              (goto-char begin)
+                              (delete-region begin end)
+                              (insert node-formatted)
+                              (setq corrected-counter (1+ corrected-counter))
+                              ;; It is important to save the buffer and ensure
+                              ;; it is updated in the org-roam database such
+                              ;; that later nodes in node-list that have
+                              ;; backlinks in buffers with modified links
+                              ;; correctly report the location (point) of those
+                              ;; links
+                              ;; TODO 2024-11-30: Right now we save the file and
+                              ;; update the database for every change in a link.
+                              ;; This command could be much more performant if
+                              ;; we only do this once after we update the links
+                              ;; in that file.  This would, however, require
+                              ;; iterating per-file rather than per-node, which
+                              ;; (I think) would make the logic of this function
+                              ;; less intuitive.
+                              (save-buffer)
+                              (unless org-roam-db-autosync-mode
+                                (org-roam-db-update-file path)))))
+                      (message "[krisb-org-roam-ext-lint-descriptions] Element at %s in %s not a link!"
+                               link-pt path))))))))
+        ;; Kill newly opened buffers
+        (mapc #'kill-buffer (seq-difference (buffer-list) initial-buffer-list))))
+    (message "Finished correcting %s links in %s!" corrected-counter dir)))
+
 ;;; Provide
 (provide 'krisb-org-roam-ext)
 ;;; krisb-org-roam-ext.el ends here
