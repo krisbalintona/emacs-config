@@ -34,14 +34,12 @@ The hierarchy is the node title prepended with the file and outline path
 if it is a headline.  These parts are separated by \" > \"."
   (when-let* ((level (org-roam-node-level node)))
     (concat
-     (when (> level 0)
-       (concat (org-roam-node-file-title node) " > "))
+     (org-roam-node-title node)
      (when (> level 1)
-       (concat (string-join (org-roam-node-olp node) " > ")
-               " > "))
-     (if (> level 1)
-         (propertize (org-roam-node-title node) 'face 'org-roam-title)
-       (org-roam-node-title node)))))
+       (concat
+        (propertize " (" 'face 'shadow)
+        (propertize (string-join (org-roam-node-olp node) " > ") 'face 'shadow)
+        (propertize ")" 'face 'shadow))))))
 
 ;;;###autoload
 (cl-defmethod org-roam-node-directories ((node org-roam-node))
