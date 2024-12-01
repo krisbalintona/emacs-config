@@ -38,7 +38,9 @@ if it is a headline.  These parts are separated by \" > \"."
      (when (> level 1)
        (concat
         (propertize " (" 'face 'shadow)
-        (propertize (string-join (org-roam-node-olp node) " > ") 'face 'shadow)
+        (propertize (string-join (nconc (list (org-roam-node-file-title node)) (org-roam-node-olp node))
+                                 " > ")
+                    'face 'shadow)
         (propertize ")" 'face 'shadow))))))
 
 ;;;###autoload
