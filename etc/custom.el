@@ -14,23 +14,23 @@
                 eshell-atuin eshell-syntax-highlighting eshell-z
                 exec-path-from-shell faceup fish-mode flymake-collection
                 fontaine forge form-feed gcmh grid hammy hide-mode-line
-                highlight-function-calls hotfuzz ibuffer-project idlwave
-                info-colors inspector jinx keychain-environment kind-icon lin
-                lorem-ipsum magit-file-icons marginalia mermaid-mode mixed-pitch
-                modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
-                nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
-                nov ntlm ob-mermaid oc-csl-activate ol-notmuch olivetti on
-                orderless org-appear org-bookmark-heading org-bulletproof
-                org-contrib org-edna org-mime org-modern org-remark org-review
-                org-roam org-roam-folgezettel org-roam-ui org-super-agenda
-                org-tidy org-web-tools outshine ox-hugo package-lint-flymake
-                paren-face pcmpl-args pdf-tools peg pinentry popper
-                powerthesaurus project psession pulsar puni python rainbow-mode
-                recursion-indicator saveplace-pdf-view scratch show-font so-long
-                soap-client sudo-edit svg system-packages tmr track-changes
-                tramp treesit-auto try typewriter-roll-mode use-package
-                verilog-mode vertico-prescient which-key window-tool-bar wombag
-                xref ytdl))
+                highlight-function-calls hotfuzz hyprlang-ts-mode
+                ibuffer-project idlwave info-colors inspector jinx
+                keychain-environment kind-icon lin lorem-ipsum magit-file-icons
+                marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
+                nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
+                no-littering notmuch-addr notmuch-transient nov ntlm ob-mermaid
+                oc-csl-activate ol-notmuch olivetti on orderless org-appear
+                org-bookmark-heading org-bulletproof org-contrib org-edna
+                org-mime org-modern org-remark org-review org-roam
+                org-roam-folgezettel org-roam-ui org-super-agenda org-tidy
+                org-web-tools outshine ox-hugo package-lint-flymake paren-face
+                pcmpl-args pdf-tools peg pinentry popper powerthesaurus project
+                psession pulsar puni python rainbow-mode recursion-indicator
+                saveplace-pdf-view scratch show-font so-long soap-client
+                sudo-edit svg system-packages tmr track-changes tramp
+                treesit-auto try typewriter-roll-mode use-package verilog-mode
+                vertico-prescient which-key window-tool-bar wombag xref ytdl))
  '(package-vc-selected-packages
    '((consult-xref-stack :url
                          "https://github.com/brett-lempereur/consult-xref-stack")
