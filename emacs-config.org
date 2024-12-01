@@ -8733,39 +8733,41 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             (let ((path (org-roam-node-file
                          (org-roam-backlink-source-node backlink))))
               (with-current-buffer (find-file-noselect path)
-                (save-excursion
-                  (let ((link-pt (org-roam-backlink-point backlink)))
-                    (goto-char link-pt)
-                    (let ((element (org-element-context)))
-                      (if (eq (org-element-type element) 'link)
-                          (let ((begin (org-element-property :contents-begin element))
-                                (end (org-element-property :contents-end element)))
-                            (when (and begin end)
-                              (unless (string= (buffer-substring-no-properties begin end)
-                                               node-formatted)
-                                (goto-char begin)
-                                (delete-region begin end)
-                                (insert node-formatted)
-                                (setq corrected-counter (1+ corrected-counter))
-                                ;; It is important to save the buffer and ensure
-                                ;; it is updated in the org-roam database such
-                                ;; that later nodes in node-list that have
-                                ;; backlinks in buffers with modified links
-                                ;; correctly report the location (point) of those
-                                ;; links
-                                ;; TODO 2024-11-30: Right now we save the file and
-                                ;; update the database for every change in a link.
-                                ;; This command could be much more performant if
-                                ;; we only do this once after we update the links
-                                ;; in that file.  This would, however, require
-                                ;; iterating per-file rather than per-node, which
-                                ;; (I think) would make the logic of this function
-                                ;; less intuitive.
-                                (save-buffer)
-                                (unless org-roam-db-autosync-mode
-                                  (org-roam-db-update-file path)))))
-                        (message "[krisb-org-roam-ext-lint-descriptions] Element at %s in %s not a link!"
-                                 link-pt path))))))))
+                (save-restriction
+                  (widen)
+                  (save-excursion
+                    (let ((link-pt (org-roam-backlink-point backlink)))
+                      (goto-char link-pt)
+                      (let ((element (org-element-context)))
+                        (if (eq (org-element-type element) 'link)
+                            (let ((begin (org-element-property :contents-begin element))
+                                  (end (org-element-property :contents-end element)))
+                              (when (and begin end)
+                                (unless (string= (buffer-substring-no-properties begin end)
+                                                 node-formatted)
+                                  (goto-char begin)
+                                  (delete-region begin end)
+                                  (insert node-formatted)
+                                  (setq corrected-counter (1+ corrected-counter))
+                                  ;; It is important to save the buffer and ensure
+                                  ;; it is updated in the org-roam database such
+                                  ;; that later nodes in node-list that have
+                                  ;; backlinks in buffers with modified links
+                                  ;; correctly report the location (point) of those
+                                  ;; links
+                                  ;; TODO 2024-11-30: Right now we save the file and
+                                  ;; update the database for every change in a link.
+                                  ;; This command could be much more performant if
+                                  ;; we only do this once after we update the links
+                                  ;; in that file.  This would, however, require
+                                  ;; iterating per-file rather than per-node, which
+                                  ;; (I think) would make the logic of this function
+                                  ;; less intuitive.
+                                  (save-buffer)
+                                  (unless org-roam-db-autosync-mode
+                                    (org-roam-db-update-file path)))))
+                          (message "[krisb-org-roam-ext-lint-descriptions] Element at %s in %s not a link!"
+                                   link-pt path)))))))))
           ;; Kill newly opened buffers
           (mapc #'kill-buffer (seq-difference (buffer-list) initial-buffer-list))))
       (message "Finished correcting %s links in %s!" corrected-counter dir)))
