@@ -401,7 +401,13 @@
                  `((or (major-mode . xref--xref-buffer-mode)
                        (,(rx (literal xref-buffer-name))))
                    (display-buffer-below-selected display-buffer-at-bottom)
-                   (window-height . 0.25)))))
+                   (window-height . 0.25)))
+
+    ;; For buffers opened by xref
+    (add-to-list 'display-buffer-alist
+                 '(((category . xref)
+                    (display-buffer-reuse-window display-buffer-use-some-window)
+                    (some-window . mru))))))
 
 ;;; Provide
 (provide 'krisb-windows)
