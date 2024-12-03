@@ -207,6 +207,156 @@ This function does the following operations in this order:
         (mapc #'kill-buffer (seq-difference (buffer-list) initial-buffer-list))))
     (message "Finished correcting %s links in %s!" corrected-counter dir)))
 
+;;; Index numbering conversion
+;; TODO 2024-12-03: Rename the functions below more appropriately.
+;; TODO 2024-12-02: This function takes in a list rather than a single
+;; letter/number.  Rename appropriately.
+(defun krisb-org-roam-ext--convert-index-num-or-letter (num-or-letter)
+  "Turn a number into a letter and a letter into a number.
+NUM-OR-LETTER is either a number or a letter.  If it is a number, return
+the letter in the alphabet at that place in the alphabet.  For instance,
+\"2\" turns into \"b\".  If it is a letter, then return the place it is
+in the alphabet as a string.  For instance, \"d\" returns \"4\"."
+  (mapcar (lambda (item)
+            (cond
+             ;; If item is a number string, convert it to a letter.
+             ((string-match-p "^[0-9]+$" item)
+              (let ((num (string-to-number item)))
+                (if (and (>= num 1) (<= num 26))
+                    (char-to-string (+ ?a (- num 1)))
+                  (error "Number out of range: %s" item))))
+             ;; If item is a single letter, convert it to a number.
+             ((string-match-p "^[a-zA-Z]$" item)
+              (let ((char (string-to-char (downcase item))))
+                (number-to-string (- char ?a -1))))
+             ;; Otherwise, raise an error for invalid input.
+             (t (error "Invalid input: %s" item))))
+          num-or-letter))
+
+(defun krisb-org-roam-ext-convert-index--next-num-or-letter (input)
+  "Return the next number or letter of the alphabet as a string for INPUT.
+- If INPUT is a number string (e.g., \"3\"), return the next
+  number (\"4\").
+- If INPUT is a single letter (e.g., \"a\"), return the next
+  letter (\"b\").  Wrap from \"z\" to \"a\".
+- Raise an error for invalid input."
+  (cond
+   ;; Case 1: Input is a number
+   ((string-match-p "^[0-9]+$" input)
+    (number-to-string (1+ (string-to-number input))))
+   ;; Case 2: Input is a single letter
+   ((string-match-p "^[a-zA-Z]$" input)
+    (let* ((char (string-to-char input))
+           (next-char (if (char-equal char ?z) ?a
+                        (if (char-equal char ?Z) ?A
+                          (1+ char)))))
+      (char-to-string next-char)))
+   ;; Case 3: Invalid input
+   (t (error "Invalid input: %s" input))))
+
+(defun krisb-org-roam-ext-convert-index-numbering (root-index note-index prefix &optional unique)
+  "Convert NOTE-INDEX to a child index of ROOT-INDEX by modifying PREFIX.
+
+This function modifies the NOTE-INDEX to ensure it represents a valid
+child of ROOT-INDEX in a hierarchical numbering system (e.g.,
+\"12.3\").
+
+- PREFIX is the common prefix that both ROOT-INDEX and NOTE-INDEX
+  share.  The function ensures that NOTE-INDEX starts with PREFIX and
+  processes the remaining parts (referred to as suffix-parts).
+- If the final part of ROOT-INDEX (referred to as prefix-parts) is a
+  letter and the first part of the NOTE-INDEX suffix is also a letter,
+  or if both are numbers, the first part of the suffix-parts is
+  converted into the alternate type (letter or number) using
+  `krisb-org-roam-ext--convert-index-num-or-letter'.
+- If the first part of the suffix-parts is converted, the rest of the
+  suffix-parts are also processed to maintain consistency.
+
+If the optional argument UNIQUE is non-nil:
+- The function ensures the modified NOTE-INDEX does not collide with any
+  existing index numbers.  Existing indices are retrieved via
+  `org-roam-ql' using the UNIQUE argument as a box predicate.
+- If a collision is detected, the first part of the suffix-parts is
+  incremented using
+  `krisb-org-roam-ext-convert-index--next-num-or-letter' until a unique
+  index is generated.
+
+Steps:
+1. Extract the suffix-parts of NOTE-INDEX by removing PREFIX.
+2. Extract the prefix-parts of PARENT-INDEX.
+3. If conversion is needed (based on matching types for the final prefix-parts
+   and first suffix-parts), process suffix-parts using
+   `krisb-org-roam-ext--convert-index-num-or-letter'.
+4. Ensure uniqueness of the modified index if UNIQUE is provided.
+5. Combine root-index and `string-join'd final-suffix-parts into a
+   single string.
+
+Arguments:
+- PARENT-INDEX: The hierarchical index to which NOTE-INDEX will be a child.
+- NOTE-INDEX: The original index to be modified.
+- PREFIX: The common prefix shared between ROOT-INDEX and NOTE-INDEX.
+- UNIQUE: If non-nil, ensures the generated index is unique by checking against
+  existing indices.
+
+Returns:
+A string representing the new index, combining ROOT-INDEX and the converted
+suffix of NOTE-INDEX.
+
+Examples:
+  ;; Convert NOTE-INDEX to a child of ROOT-INDEX without uniqueness
+  (krisb-org-roam-ext-convert-index-numbering \"12\" \"12.3\" \"12.\")
+  => \"12.3\"
+
+  ;; Convert NOTE-INDEX to a child of ROOT-INDEX, ensuring uniqueness
+  ;; (Assume \"12.3\" already exists in UNIQUE box)
+  (krisb-org-roam-ext-convert-index-numbering \"12\" \"12.3\" \"12.\" \"unique-box\")
+  => \"12.4\""
+  ;; Ensure NOTE-INDEX starts with PREFIX
+  (unless (string-prefix-p prefix note-index)
+    (error "NOTE-INDEX does not start with PREFIX"))
+  ;; Step 1: Get parts of NOTE-INDEX after removing PREFIX
+  (let* ((suffix-parts (org-roam-folgezettel--index-split
+                        (string-remove-prefix prefix note-index)))
+         ;; Step 2: Get parts of ROOT-INDEX
+         (prefix-parts (org-roam-folgezettel--index-split root-index))
+         ;; Step 3: Check and convert first part of SUFFIX-PARTS if necessary
+         (head-original (car suffix-parts))
+         (head-converted head-original)
+         (needs-conversion nil))
+    ;; Determine if conversion is needed
+    (setq head-converted
+          (if (or (and (string-match-p "^[a-zA-Z]$" (car (last prefix-parts)))
+                       (string-match-p "^[a-zA-Z]$" head-original))
+                  (and (string-match-p "^[0-9]+$" (car (last prefix-parts)))
+                       (string-match-p "^[0-9]+$" head-original)))
+              (progn
+                (setq needs-conversion t)
+                (car (krisb-org-roam-ext--convert-index-num-or-letter (list head-original))))
+            head-original))
+    ;; Step 4: Convert the rest of SUFFIX-PARTS if necessary
+    (let* ((converted-suffix-parts
+            (if needs-conversion
+                (krisb-org-roam-ext--convert-index-num-or-letter suffix-parts)
+              suffix-parts))
+           ;; Combine prefix-parts and converted suffix-parts
+           (final-suffix-parts (cons head-converted (cdr converted-suffix-parts)))
+           (new-index nil))
+      ;; Step 5: Ensure uniqueness if requested
+      (when unique
+        (setq new-index
+              (concat root-index (string-join final-suffix-parts)))
+        (while (member new-index
+                       (mapcar #'org-roam-folgezettel-list--retrieve-index
+                               (org-roam-ql-nodes `(box ,unique))))
+          (setq head-converted
+                (krisb-org-roam-ext-convert-index--next-num-or-letter head-converted))
+          (setq final-suffix-parts
+                (cons head-converted (cdr converted-suffix-parts)))
+          (setq new-index
+                (concat root-index (string-join final-suffix-parts)))))
+      ;; Step 6: Combine prefix-parts and final-suffix-parts into a single string
+      (concat root-index (string-join final-suffix-parts)))))
+
 ;;; Provide
 (provide 'krisb-org-roam-ext)
 ;;; krisb-org-roam-ext.el ends here
