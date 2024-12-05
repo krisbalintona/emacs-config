@@ -113,5 +113,14 @@
            " " filename-and-process+)
      (mark " " (name 16 -1) " " filename))))
 
+;;; Buffer-terminator
+(use-package buffer-terminator
+  :vc ( :url "https://github.com/jamescherti/buffer-terminator.el"
+        :rev :newest)
+  :custom
+  (buffer-terminator-verbose t)
+  :config
+  (buffer-terminator-mode 1))
+
 ;;; Provide
 (provide 'krisb-buffers)
