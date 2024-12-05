@@ -177,6 +177,10 @@ and rewrite link paths to make blogging more seamless."
     ;; (message "[org-hugo-link DBG] link: %S" link)
     ;; (message "[org-hugo-link DBG] link type: %s" type)
     (cond
+     ;; NOTE 2024-12-03: I have since moved from Denote to Org-roam but have
+     ;; left the below just in case it is of use in the future.  However, easier
+     ;; than the below, I learned that `org-link-set-parameters' can be used to
+     ;; determine how these links are exported.
      ;; For denote org link support
      (el-patch-add
        ((string= type "denote")
