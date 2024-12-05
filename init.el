@@ -24,6 +24,7 @@
 (require 'krisb-expansion)
 (require 'krisb-formatting)
 (require 'krisb-windows)
+(require 'krisb-buffers)
 (require 'krisb-navigation)
 
 (require 'krisb-prose)
