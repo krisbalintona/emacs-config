@@ -5,6 +5,8 @@
                           (gmi . lieer-git))
   :hook ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
          (notmuch-show . olivetti-mode)
+         (notmuch-show . visual-line-mode)
+         (notmuch-show . visual-wrap-prefix-mode)
          (message-send . krisb-notmuch-set-sendmail-args))
   :bind (([remap compose-mail] . notmuch-mua-new-mail)
          :map krisb-open-keymap
