@@ -53,8 +53,7 @@ hidden."
   "A list of overlays used to hide Org drawers in the current buffer.")
 
 ;;; Functions
-;; TODO 2024-11-12: Rename appropriately
-(defun krisb-org-drawer-properties (drawer)
+(defun krisb-org-hide-drawers--get-properties (drawer)
   "Extract all properties from the given Org DRAWER element."
   (let ((contents (org-element-contents drawer))
         properties)
@@ -71,7 +70,7 @@ hidden."
 DRAWER is an org-element.
 
 Considers `krisb-org-hide-drawers-blacklist'."
-  (let* ((properties (krisb-org-drawer-properties drawer))
+  (let* ((properties (krisb-org-hide-drawers--get-properties drawer))
          (property-keys (mapcar #'car properties))
          ;; We check if DRAWER is a top-level drawer by checking if the
          ;; beginning of the drawer (an org element) is at the first point in
