@@ -6,15 +6,15 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
-                beframe breadcrumb bufler cape citar-denote citar-org-roam
-                cl-generic cm-mode consult-xref-stack corfu-prescient cursory
-                darkroom denote-explore denote-interface diminish dired-hist
-                dumber-jump easysession edit-indirect editorconfig eglot
-                elisp-demos embark-consult engine-mode enlight erc eros
-                eshell-atuin eshell-syntax-highlighting eshell-z
-                exec-path-from-shell faceup fish-mode flymake-collection
-                fontaine forge form-feed gcmh grid hammy hide-mode-line
-                highlight-function-calls hotfuzz hyprlang-ts-mode
+                beframe breadcrumb buffer-terminator bufler cape citar-denote
+                citar-org-roam cl-generic cm-mode consult-xref-stack
+                corfu-prescient cursory darkroom denote-explore denote-interface
+                diminish dired-hist dumber-jump easysession edit-indirect
+                editorconfig eglot elisp-demos embark-consult engine-mode
+                enlight erc eros eshell-atuin eshell-syntax-highlighting
+                eshell-z exec-path-from-shell faceup fish-mode
+                flymake-collection fontaine forge form-feed gcmh grid hammy
+                hide-mode-line highlight-function-calls hotfuzz hyprlang-ts-mode
                 ibuffer-project idlwave info-colors inspector jinx
                 keychain-environment kind-icon lin lorem-ipsum magit-file-icons
                 marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
@@ -32,7 +32,8 @@
                 treesit-auto try typewriter-roll-mode use-package verilog-mode
                 vertico-prescient which-key window-tool-bar wombag xref ytdl))
  '(package-vc-selected-packages
-   '((consult-xref-stack :url
+   '((buffer-terminator :url "https://github.com/jamescherti/buffer-terminator.el")
+     (consult-xref-stack :url
                          "https://github.com/brett-lempereur/consult-xref-stack")
      (org-roam-folgezettel :url
                            "git@github.com:krisbalintona/org-roam-folgezettel.git")
@@ -56,7 +57,8 @@
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
-   '((org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
+   '((org-use-tag-inheritance . t)
+     (org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
      (org-time-stamp-custom-formats quote ("<%B %d, %Y>" . "<%B %d, %Y %H:%M>"))
      (system-time-locale . "C")
      (eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created 99 t)))
