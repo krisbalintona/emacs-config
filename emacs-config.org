@@ -2215,6 +2215,29 @@ Configuration related to "saving a state," that is, storing or restoring anythin
           :rev :newest)
     :custom
     (buffer-terminator-verbose t)
+    (buffer-terminator-predicate 'krisb-buffer-terminator-predicate)
+    :init
+    (defun krisb-buffer-terminator-predicate ()
+      "Buffer predicate for buffer-terminator.
+  Meant to be the value of `buffer-terminator-predicate'.  See its
+  docstring for the expected return values."
+      (let* ((buffer (current-buffer))
+             (buffer-name (buffer-name buffer))
+             (file (buffer-file-name)))
+        (cond
+         ((and file
+               (functionp 'org-agenda-files)
+               (member file (org-agenda-files)))
+          :keep)
+         ((buffer-local-value 'org-capture-mode buffer)
+          :keep)
+         ((file-in-directory-p file user-emacs-directory)
+          :keep)
+         ((string-match-p "^marginalia\\.org$" buffer)
+          :keep)
+         ((string-match-p "^diary$" buffer)
+          :keep)
+         (t nil))))                       ; buffer-terminator decides
     :config
     (buffer-terminator-mode 1))
 
