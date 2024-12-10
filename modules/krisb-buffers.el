@@ -135,11 +135,11 @@ docstring for the expected return values."
         :keep)
        ((buffer-local-value 'org-capture-mode buffer)
         :keep)
-       ((file-in-directory-p file user-emacs-directory)
+       ((and file (file-in-directory-p file user-emacs-directory))
         :keep)
-       ((string-match-p "^marginalia\\.org$" buffer)
+       ((string-match-p "^marginalia\\.org$" buffer-name)
         :keep)
-       ((string-match-p "^diary$" buffer)
+       ((string-match-p "^diary$" buffer-name)
         :keep)
        (t nil))))                       ; buffer-terminator decides
   :config
