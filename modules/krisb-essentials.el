@@ -357,5 +357,11 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; Echo keystrokes (of unfinished commands) much quicker
 (setopt echo-keystrokes 0.5)
 
+;;;; Quitting windows to match my intentions more
+(setopt quit-restore-window-no-switch t)
+
+;;;; Killing buffers smartly deletes windows too sometimes
+(setopt kill-buffer-quit-windows t)
+
 (provide 'krisb-essentials)
 ;;; krisb-essentials.el ends here

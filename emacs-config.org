@@ -742,6 +742,12 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
   ;;;; Echo unfinished keystrokes quicker
   ;; Echo keystrokes (of unfinished commands) much quicker
   (setopt echo-keystrokes 0.5)
+
+  ;;;; Quitting windows to match my intentions more
+  (setopt quit-restore-window-no-switch t)
+
+  ;;;; Killing buffers smartly deletes windows too sometimes
+  (setopt kill-buffer-quit-windows t)
 #+end_src
 
 **** Provide
