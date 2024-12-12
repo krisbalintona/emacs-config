@@ -2216,8 +2216,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :vc ( :url "https://github.com/jamescherti/buffer-terminator.el"
           :rev :newest)
     :custom
+    (buffer-terminator-inactivity-timeout (* 60 60)) ; 60 minutes
+    (buffer-terminator-interval (* 60 10))           ; 10 minutes
     (buffer-terminator-verbose t)
-    (buffer-terminator-predicate 'krisb-buffer-terminator-predicate)
+    (buffer-terminator-rules-alist
+     '((keep-buffer-property . special)
+       (keep-buffer-property . process)
+       (keep-buffer-property . visible)
+       (kill-buffer-property . inactive)
+       (call-function . krisb-buffer-terminator-predicate)))
     :init
     (defun krisb-buffer-terminator-predicate ()
       "Buffer predicate for buffer-terminator.
