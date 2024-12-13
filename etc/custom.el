@@ -15,7 +15,7 @@
                 eshell-z exec-path-from-shell faceup fish-mode
                 flymake-collection fontaine forge form-feed gcmh grid hammy
                 hide-mode-line highlight-function-calls hotfuzz hyprlang-ts-mode
-                ibuffer-project idlwave info-colors inspector jinx
+                ibuffer-project idlwave info-colors inspector jinx jujutsushi
                 keychain-environment kind-icon lin lorem-ipsum magit-file-icons
                 marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
                 nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
@@ -32,7 +32,9 @@
                 treesit-auto try typewriter-roll-mode use-package verilog-mode
                 vertico-prescient which-key window-tool-bar wombag xref ytdl))
  '(package-vc-selected-packages
-   '((buffer-terminator :url "https://github.com/jamescherti/buffer-terminator.el")
+   '((jujutsushi :url "https://git.sr.ht/~puercopop/jujutsushi")
+     (buffer-terminator :url
+                        "https://github.com/jamescherti/buffer-terminator.el")
      (consult-xref-stack :url
                          "https://github.com/brett-lempereur/consult-xref-stack")
      (org-roam-folgezettel :url
