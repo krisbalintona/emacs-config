@@ -312,9 +312,14 @@ from a `notmuch-search-mode' buffer."
                                                        read-mail-command)))
               "")
             " "))
-  ;; Update right after closing the notmuch hello buffer so the mail icon
-  ;; reflects the state of my maildirs accurate
-  (advice-add 'notmuch-bury-or-kill-this-buffer :after #'display-time-update))
+  (advice-add 'notmuch-bury-or-kill-this-buffer :around
+              (lambda (&rest args)
+                "Ensure mail icon is accurate.
+Update right after closing the notmuch hello buffer so the mail icon
+reflects the state of my maildirs accurate."
+                (when (equal major-mode 'notmuch-hello-mode)
+                  (display-time-update))
+                (apply args))))
 
 ;;;; Mailcap
 (use-package mailcap
