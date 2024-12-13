@@ -3287,6 +3287,51 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; Mode line
     (hammy-mode 1)
 
+    ;; Override `hammy-start-org-clock-in' to work in org-agenda
+    (el-patch-defun hammy-start-org-clock-in (&rest _ignore)
+      "Call `org-clock-in' and start a hammy (or use an already-started one).
+  If point is in an Org entry, clock into it; otherwise, offer a
+  list of recently clocked tasks to clock into.  The Org task will
+  then automatically be clocked out during the hammy's second
+  interval (and when the hammy is stopped), and back in when the
+  first interval resumes.  (If the user clocks into a different
+  task while the hammy is running, the task that is clocked-in when
+  the work interval ends will be clocked back into when the next
+  work interval begins.)
+
+  Returns the hammy from `hammy-start'.  Assumes that the hammy's
+  first interval is the work interval (i.e. the one during which
+  the task should be clocked in)."
+      (interactive)
+      (require 'org)
+      ;; MAYBE: Take a point-or-marker argument for the task to clock into.
+      (el-patch-swap
+        (if (and (eq major-mode 'org-mode)
+                 (not (org-before-first-heading-p)))
+            ;; At an Org entry: clock in to heading at point.
+            (org-clock-in)
+          ;; Not in an Org entry: offer a list to choose from.
+          (org-clock-in '(4)))
+        (cond
+         ;; At an Org entry: clock in to heading at point.
+         ((and (eq major-mode 'org-mode)
+               (not (org-before-first-heading-p)))
+          (org-clock-in))
+         ;; At an Org-agenda entry: clock in to entry at point.
+         ((eq major-mode 'org-agenda-mode)
+          (org-agenda-clock-in))
+         ;; Not in an Org entry: offer a list to choose from.
+         (t (org-clock-in '(4)))))
+      (let ((hammy (hammy-complete "Clock in with Hammy: " hammy-hammys)))
+        (unless (hammy-interval hammy)
+          (hammy-start hammy))
+        (cl-macrolet ((pushfn (fn place)
+                        `(cl-pushnew ,fn ,place :test #'equal)))
+          (pushfn #'hammy--org-clock-in (hammy-interval-before (hammy-interval hammy)))
+          (pushfn #'hammy--org-clock-out (hammy-interval-after (hammy-interval hammy)))
+          (pushfn #'hammy--org-clock-out (hammy-stopped hammy)))
+        hammy))
+
     ;; Custom lighter
     (defun krisb-hammy-mode-lighter ()
       "Return lighter for `hammy-mode'."
