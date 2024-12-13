@@ -115,18 +115,13 @@
 
 ;;; Buffer-terminator
 (use-package buffer-terminator
+  :disabled t
   :vc ( :url "https://github.com/jamescherti/buffer-terminator.el"
         :rev :newest)
   :custom
   (buffer-terminator-inactivity-timeout (* 60 60)) ; 60 minutes
   (buffer-terminator-interval (* 60 10))           ; 10 minutes
   (buffer-terminator-verbose t)
-  (buffer-terminator-rules-alist
-   '((keep-buffer-property . special)
-     (keep-buffer-property . process)
-     (keep-buffer-property . visible)
-     (kill-buffer-property . inactive)
-     (call-function . krisb-buffer-terminator-predicate)))
   :init
   (defun krisb-buffer-terminator-predicate ()
     "Buffer predicate for buffer-terminator.
@@ -134,7 +129,7 @@ Meant to be the value of `buffer-terminator-predicate'.  See its
 docstring for the expected return values."
     (let* ((buffer (current-buffer))
            (buffer-name (buffer-name buffer))
-           (file (buffer-file-name)))
+           (file (or (buffer-file-name) (buffer-base-buffer buffer))))
       (cond
        ((and file
              (functionp 'org-agenda-files)
@@ -150,6 +145,14 @@ docstring for the expected return values."
         :keep)
        (t nil))))                       ; buffer-terminator decides
   :config
+  ;; This is a variable currently so we use `setq'
+  (setq buffer-terminator-rules-alist
+        '((keep-buffer-property . special)
+          (keep-buffer-property . process)
+          (keep-buffer-property . visible)
+          (kill-buffer-property . inactive)
+          (call-function . krisb-buffer-terminator-predicate)))
+
   (buffer-terminator-mode 1))
 
 ;;; Provide
