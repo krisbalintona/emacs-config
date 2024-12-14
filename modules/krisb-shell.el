@@ -36,7 +36,7 @@
   :after eshell
   :demand t
   :bind* ( :map eshell-mode-map
-           ([remap eshell-previous-matching-input] . eshell-atuin-history))
+           ([remap eshell-isearch-backward-regexp] . eshell-atuin-history))
   :custom
   (eshell-atuin-save-duration t)
   (eshell-atuin-filter-mode 'global)
