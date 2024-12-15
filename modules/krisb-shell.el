@@ -11,7 +11,7 @@
   :hook ((eshell . visual-line-mode)
          (eshell . krisb-eshell-setup))
   :bind ( :map krisb-open-keymap
-          ("e" . eshell))
+          ("E" . eshell))
   :config
   (defun krisb-eshell-setup ()
     "Buffer-local settings for eshell."
@@ -67,6 +67,11 @@
 ;;; Fish-mode
 (use-package fish-mode
   :mode "\\.fish\\'")
+
+;;; EAT
+(use-package eat
+  :bind ( :map krisb-open-keymap
+          ("e" . eat)))
 
 ;;; Provide
 (provide 'krisb-shell)
