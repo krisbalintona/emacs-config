@@ -2095,6 +2095,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-buffers.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-buffers.el"
   ;;; Bufler
   (use-package bufler
@@ -6974,12 +6975,14 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** EAT
+
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
   ;;; EAT
   (use-package eat
     :bind ( :map krisb-open-keymap
             ("e" . eat)))
 #+end_src
+
 **** Provide
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
@@ -6993,6 +6996,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+begin_src emacs-lisp :tangle "modules/krisb-projects.el"
   ;;; Project
   (use-package project
+    :bind ( :map project-prefix-map
+            ("e" . eat-project)
+            ("E" . project-eshell))
     :custom
     (project-vc-extra-root-markers '("Makefile"))
     (project-vc-merge-submodules nil)
@@ -7000,7 +7006,18 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (project-file-history-behavior 'relativize)
 
     (project-mode-line t)
-    (project-mode-line-face nil))
+    (project-mode-line-face nil)
+
+    ;; The commands in `project-switch-commands' must be found in
+    ;; `project-prefix-map'
+    (project-switch-commands
+     '((project-find-file "Find file")
+       (project-find-regexp "Find regexp")
+       (project-find-dir "Find directory")
+       (project-vc-dir "VC-Dir")
+       (eat-project "EAT")
+       (project-eshell "Eshell")
+       (project-any-command "Other"))))
 
   ;;; Xref
   (use-package xref
