@@ -6911,7 +6911,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :hook ((eshell . visual-line-mode)
            (eshell . krisb-eshell-setup))
     :bind ( :map krisb-open-keymap
-            ("e" . eshell))
+            ("E" . eshell))
     :config
     (defun krisb-eshell-setup ()
       "Buffer-local settings for eshell."
@@ -6973,6 +6973,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :mode "\\.fish\\'")
 #+end_src
 
+**** EAT
+#+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
+  ;;; EAT
+  (use-package eat
+    :bind ( :map krisb-open-keymap
+            ("e" . eat)))
+#+end_src
 **** Provide
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
