@@ -1,5 +1,8 @@
 ;;; Project
 (use-package project
+  :bind ( :map project-prefix-map
+          ("e" . eat-project)
+          ("E" . project-eshell))
   :custom
   (project-vc-extra-root-markers '("Makefile"))
   (project-vc-merge-submodules nil)
@@ -7,7 +10,18 @@
   (project-file-history-behavior 'relativize)
 
   (project-mode-line t)
-  (project-mode-line-face nil))
+  (project-mode-line-face nil)
+
+  ;; The commands in `project-switch-commands' must be found in
+  ;; `project-prefix-map'
+  (project-switch-commands
+   '((project-find-file "Find file")
+     (project-find-regexp "Find regexp")
+     (project-find-dir "Find directory")
+     (project-vc-dir "VC-Dir")
+     (eat-project "EAT")
+     (project-eshell "Eshell")
+     (project-any-command "Other"))))
 
 ;;; Xref
 (use-package xref

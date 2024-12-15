@@ -4,12 +4,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files krisb-org-agenda-directory-files nil nil "Customized with use-package org-agenda")
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
                 beframe breadcrumb buffer-terminator bufler cape citar-denote
                 citar-org-roam cl-generic cm-mode consult-xref-stack
                 corfu-prescient cursory darkroom denote-explore denote-interface
-                diminish dired-hist dumber-jump easysession edit-indirect
+                diminish dired-hist dumber-jump easysession eat edit-indirect
                 editorconfig eglot elisp-demos embark-consult engine-mode
                 enlight erc eros eshell-atuin eshell-syntax-highlighting
                 eshell-z exec-path-from-shell faceup fish-mode

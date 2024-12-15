@@ -30,29 +30,10 @@
 
 ;;;;; Project
 (use-package project
-  :bind ( :map project-prefix-map
-          ("g". consult-git-grep)
-          ("r". consult-ripgrep)
-          ("R". project-query-replace-regexp)
-          ("a". project-any-command))
   :custom
   (magit-bind-magit-project-status nil) ; Don't Automatically bind `magit-project-status' to `m' since I manually do it
   (project-find-functions '(kb/project-special-dir project-try-vc))
   (project-switch-commands #'project-prefix-or-any-command)
-  ;; NOTE 2024-01-31: Prefer `project-switch-commands' st to
-  ;; `project-prefix-or-any-command'
-  ;; (project-switch-commands
-  ;;  '((affe-find "Find file" "f")
-  ;;    (consult-ripgrep "Regexp" "g")
-  ;;    (magit-project-status "Magit")
-  ;;    (project-switch-to-buffer "Buffer" "b")
-  ;;    (project-query-replace-regexp "Replace regexp")
-  ;;    (kb/project-multi-occur "Multi-occur" "o")
-  ;;    (project-dired "Open dired")
-  ;;    (project-find-dir "Open directory in dired")
-  ;;    (project-compile "Compile")
-  ;;    (project-eshell "Eshell")
-  ;;    (project-shell "Shell")))
   :config
   ;; This is a regular variable
   (setq project-mode-line-format
