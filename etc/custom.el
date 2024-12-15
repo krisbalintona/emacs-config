@@ -15,7 +15,7 @@
                 eshell-z exec-path-from-shell faceup fish-mode
                 flymake-collection fontaine forge form-feed gcmh grid hammy
                 hide-mode-line highlight-function-calls hotfuzz hyprlang-ts-mode
-                ibuffer-project idlwave info-colors inspector jinx jujutsushi
+                ibuffer-project idlwave info-colors inspector jinx
                 keychain-environment kind-icon lin lorem-ipsum magit-file-icons
                 marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
                 nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
