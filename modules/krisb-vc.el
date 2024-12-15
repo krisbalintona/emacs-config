@@ -216,5 +216,9 @@
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
   (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
 
+;;; Jujutsu support
+(with-eval-after-load 'project
+  (add-to-list 'project-vc-extra-root-markers ".jj"))
+
 ;;; Provide
 (provide 'krisb-vc)
