@@ -166,7 +166,9 @@
      ("j" "Journal" entry
       (file+olp+datetree ,(lambda ()
                             (org-roam-node-file
-                             (org-roam-node-from-id "20241006T214800.000000"))))
+                             (org-roam-node-read nil
+                                                 (lambda (node) (member "journal" (org-roam-node-tags node)))
+                                                 nil t "Select journal: "))))
       "* %<%c>\n\n%?"
       :tree-type month
       :jump-to-captured t
