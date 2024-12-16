@@ -4,7 +4,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files krisb-org-agenda-directory-files nil nil "Customized with use-package org-agenda")
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
                 beframe breadcrumb buffer-terminator bufler cape citar-denote
@@ -60,7 +59,7 @@
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
-   '((org-use-tag-inheritance . t)
+   '((org-use-tag-inheritance) (org-use-tag-inheritance . t)
      (org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
      (org-time-stamp-custom-formats quote ("<%B %d, %Y>" . "<%B %d, %Y %H:%M>"))
      (system-time-locale . "C")

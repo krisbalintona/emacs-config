@@ -45,6 +45,22 @@
       :target (file+head "references/%<%Y%m%dT%H%M%S>.org"
                          "#+title: ${title}\n")
       :unnarrowed t
+      :immediate-finish t)
+     ("b" "blog" plain "%?"
+      :target (file+head "main/%<%Y%m%dT%H%M%S>.org"
+                         "#+title: ${title}
+#+filetags:
+#+hugo_bundle:
+#+export_file_name: index
+#+hugo_tags:
+#+hugo_categories:
+#+hugo_publishdate:
+#+hugo_lastmod:
+#+hugo_custom_front_matter:
+#+hugo_custom_front_matter: :TableOfContents false
+#+hugo_draft: true
+#+hugo_paired_shortcodes:\n")
+      :unnarrowed t
       :immediate-finish t)))
   (org-roam-db-node-include-function
    (lambda () (not (member "ATTACH" (org-get-tags)))))
