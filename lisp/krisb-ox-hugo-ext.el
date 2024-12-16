@@ -81,7 +81,7 @@ This function is used by my bespoke bundle workflow to determine the
 directory name of the bundle.  Additionally, this function is used for
 my bespoke code for relative links to Denote notes and Org-roam nodes."
   ;; (message "[krisb-org-hugo-title-slug DBG] title: %s" title)
-  (let ((invalid-chars (rx (or "/" "\\" ":" "*" "?" "\"" "<" ">" "|"))))
+  (let ((invalid-chars (rx (or "/" "\\" ":" "*" "?" "\"" "<" ">" "|" "(" ")"))))
     (file-name-as-directory
      (downcase
       (replace-regexp-in-string "\\s-" "_" (replace-regexp-in-string invalid-chars "" name))))))
