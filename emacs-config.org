@@ -1737,7 +1737,26 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (desktop-restore-frames t)
     (desktop-restore-in-current-display nil)
     :config
-    (desktop-save-mode 1))
+    (desktop-save-mode 1)
+
+    (defun krisb-desktop--save-narrowing ()
+      "Save narrowed information.
+  Taken from
+  https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1."
+      (setq desktop-save-buffer
+            (lambda (_d) (if (buffer-narrowed-p)
+                             (list 'narrowed (point-min) (point-max))))))
+    (add-hook 'text-mode-hook #'krisb-desktop--save-narrowing)
+    (add-hook 'prog-mode-hook #'krisb-desktop--save-narrowing)
+
+    (defun krisb-desktop--restore-narrowing (_f n misc &rest _)
+      "Restore narrowing of buffer.
+  Taken from
+  https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1."
+      (when (and misc (eq (car misc) 'narrowed))
+        (apply #'narrow-to-region (cdr misc))
+        (message "Narrowed %s" n)))
+    (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 
   ;;;; Easysession
   (use-package easysession
