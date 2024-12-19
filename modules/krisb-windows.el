@@ -252,8 +252,9 @@
 
 ;;;;; Embark
           ("\\*Embark Actions\\*"
-           (display-buffer-pop-up-window)
+           (display-buffer-in-direction)
            (window-height . fit-window-to-buffer)
+           (direction . above)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
 
