@@ -116,10 +116,13 @@ which modifies the description of org-roam nodes from
 `org-roam-node-insert'."
   (let* ((address (org-roam-node-address node))
          (type (org-roam-node-type node))
-         (hierarchy (org-roam-node-hierarchy node)))
+         (title (org-roam-node-title node))
+         (file-title (org-roam-node-file-title node)))
     (concat (when address (format "(%s) " address))
             (when type (format "{%s} " type))
-            hierarchy)))
+            title
+            (unless (string= title file-title)
+              (propertize (concat " (" file-title ")") 'face 'shadow)))))
 
 ;;; Update link descriptions
 (defun krisb-org-roam-ext-lint-descriptions (dir)
