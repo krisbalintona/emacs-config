@@ -395,6 +395,10 @@ See ((org) Filtering/limiting agenda items)."
                           (org-agenda-dim-blocked-tasks t)
                           (org-agenda-skip-function
                            'krisb-org-review-has-review-property-p)))
+              (todo "HOLD"
+                    ((org-agenda-overriding-header "Non-review holds")
+                     (org-agenda-skip-function
+                      'krisb-org-review-has-review-property-p)))
               (todo "MAYBE"
                     ((org-agenda-overriding-header "Non-review maybes")
                      (org-agenda-skip-function
