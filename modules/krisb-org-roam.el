@@ -114,7 +114,19 @@ If there is no node at point, then expand to the file path instead."
                 (org-link-store-props :type "id"
                                       :link (concat "id:" (org-id-get))
                                       :description (org-roam-node-formatted (org-roam-node-at-point)))
-              (funcall 'org-id-store-link-maybe interactive?)))))
+              (funcall 'org-id-store-link-maybe interactive?))))
+
+  ;; Add files with node(s) tagged with "__orgAgenda" but not with "archive" to
+  ;; `org-agenda-files' list
+  (with-eval-after-load 'org-agenda
+    (dolist (file (mapcar #'org-roam-node-file
+                          (cl-remove-if-not
+                           (lambda (node)
+                             (let ((tags (org-roam-node-tags node)))
+                               (and (member "__orgAgenda" tags)
+                                    (not (member "archive" tags)))))
+                           (org-roam-node-list))))
+      (add-to-list 'org-agenda-files file))))
 
 ;;; Krisb-org-roam-ext
 (use-package krisb-org-roam-ext
