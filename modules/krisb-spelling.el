@@ -2,15 +2,12 @@
 ;;;; Dictionary
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
+  :commands krisb-dictionary-at-point
   :ensure nil
   ;; Don't forget to install the following packages from the AUR:
   ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
   :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
   :hook (dictionary-mode . hide-mode-line-mode)
-  :bind ( :map embark-region-map
-          ("D" . krisb-dictionary-at-point)
-          :map embark-identifier-map
-          ("D" . krisb-dictionary-at-point))
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-create-buttons nil)
@@ -18,6 +15,13 @@
   (dictionary-search-interface nil)
   (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
   (dictionary-server nil)               ; "Automatic"
+  :init
+  (with-eval-after-load 'embark
+    (bind-keys
+     :map embark-region-map
+     ("D" . krisb-dictionary-at-point)
+     :map embark-identifier-map
+     ("D" . krisb-dictionary-at-point)))
   :config
   (defun krisb-dictionary-at-point ()
     "Show dictionary definition for word at point.
