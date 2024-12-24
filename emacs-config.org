@@ -4515,19 +4515,22 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; Advise for archiving org-roam nodes
     (defun krisb-org-archive--compute-location-org-roam-format-string (orig-fun &rest args)
       "Take LOCATION in `org-archive--compute-location' and expand %R.
-  %R is expanded to the identifier for the org-roam node (at point) the archive
-  command is invoked in.
+  Meant to be used as around advice for `org-archive--compute-location'.
 
-  If there is no node at point, then expand to the file path instead."
+  %R is expanded to the identifier for the org-roam node (at point) the
+  archive command is invoked in. If there is no node at point, then expand
+  to the file path instead."
       ;; Modify LOCATION before normal operations
       (cl-letf (((car args)
                  (if (fboundp 'org-roam-node-at-point)
                      (replace-regexp-in-string "%R"
-                                               (or (org-roam-node-id (org-roam-node-at-point 'assert))
-                                                   (buffer-file-name (buffer-base-buffer)))
+                                               (if (org-roam-db-node-p)
+                                                   (org-roam-node-id (org-roam-node-at-point 'assert))
+                                                 (buffer-file-name (buffer-base-buffer)))
                                                (car args))
                    (car args))))
         (apply orig-fun args)))
+    (advice-add 'org-archive--compute-location :around #'krisb-org-archive--compute-location-org-roam-format-string)
 
     ;; Custom face for ID links to org-roam-nodes.  I prefer to change their
     ;; foreground color to differentiate them from other types of links as well as
