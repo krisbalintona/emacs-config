@@ -129,7 +129,8 @@ to the file path instead."
                                (and (member "__orgAgenda" tags)
                                     (not (member "archive" tags)))))
                            (org-roam-node-list))))
-      (add-to-list 'org-agenda-files file))))
+      (add-to-list 'org-agenda-files file))
+    (setopt org-agenda-hide-tags-regexp "^__")))
 
 ;;; Krisb-org-roam-ext
 (use-package krisb-org-roam-ext
