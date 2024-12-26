@@ -4581,6 +4581,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :demand t
     :ensure nil
     :after org-roam
+    :bind ( :map krisb-note-keymap
+            ("." . org-roam-ext-properties-transient))
     :custom
     ;; Customize how nodes are inserted via `org-roam-node-insert'
     (org-roam-node-formatter 'krisb-org-roam-node-formatter)
@@ -9160,6 +9162,45 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                   (concat root-index (string-join final-suffix-parts)))))
         ;; Step 6: Combine prefix-parts and final-suffix-parts into a single string
         (concat root-index (string-join final-suffix-parts)))))
+
+  ;;; Bespoke transient menu for creating and managing org-roam heading node properties
+  (defun org-roam-ext-set-roam-place ()
+    "Set the ROAM_PLACE property in the current heading."
+    (interactive)
+    (let ((place (read-string "Enter ROAM_PLACE: ")))
+      (org-set-property "ROAM_PLACE" place)
+      (message "ROAM_PLACE set to: %s" place)))
+
+  (defun org-roam-ext-set-roam-box ()
+    "Set the ROAM_BOX property in the current heading."
+    (interactive)
+    (let ((box (read-string "Enter ROAM_BOX: ")))
+      (org-set-property "ROAM_BOX" box)
+      (message "ROAM_BOX set to: %s" box)))
+
+  (defun org-roam-ext-set-roam-person ()
+    "Set the ROAM_PERSON property in the current heading."
+    (interactive)
+    (let ((person (read-string "Enter ROAM_PERSON: ")))
+      (org-set-property "ROAM_PERSON" person)
+      (message "ROAM_PERSON set to: %s" person)))
+
+  (defun org-roam-ext-set-roam-context-or-source ()
+    "Set either the ROAM_CONTEXT or ROAM_SOURCE property in the current heading."
+    (interactive)
+    (let* ((choice (completing-read "Choose property: " '("ROAM_CONTEXT" "ROAM_SOURCE")))
+           (value (read-string (format "Enter %s: " choice))))
+      (org-set-property choice value)
+      (message "%s set to: %s" choice value)))
+
+  (transient-define-prefix org-roam-ext-properties-transient ()
+    "Transient menu for setting org-roam properties."
+    ["Org-roam properties"
+     ("a" "Add ID" org-id-get-create :transient t)
+     ("p" "Set ROAM_PLACE" org-roam-ext-set-roam-place :transient t)
+     ("b" "Set ROAM_BOX" org-roam-ext-set-roam-box :transient t)
+     ("r" "Set ROAM_PERSON" org-roam-ext-set-roam-person :transient t)
+     ("c" "Set ROAM_CONTEXT or ROAM_SOURCE" org-roam-ext-set-roam-context-or-source :transient t)])
 
   ;;; Provide
   (provide 'krisb-org-roam-ext)

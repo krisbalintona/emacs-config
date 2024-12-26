@@ -137,6 +137,8 @@ to the file path instead."
   :demand t
   :ensure nil
   :after org-roam
+  :bind ( :map krisb-note-keymap
+          ("." . org-roam-ext-properties-transient))
   :custom
   ;; Customize how nodes are inserted via `org-roam-node-insert'
   (org-roam-node-formatter 'krisb-org-roam-node-formatter)
