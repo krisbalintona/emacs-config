@@ -24,6 +24,8 @@
 
 ;;; Code:
 (require 'org-roam-node)
+(require 'org-roam-folgezettel)
+(require 'transient)
 
 ;;; Custom org-roam-node accessors
 ;;;; Normal values
