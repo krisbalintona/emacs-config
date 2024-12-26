@@ -26,6 +26,7 @@
 (require 'org-roam-node)
 (require 'org-roam-folgezettel)
 (require 'transient)
+(require 'org-expiry)
 
 ;;; Custom org-roam-node accessors
 ;;;; Normal values
@@ -396,6 +397,7 @@ Examples:
   "Transient menu for setting org-roam properties."
   ["Org-roam properties"
    ("a" "Add ID" org-id-get-create :transient t)
+   ("C" "Add CREATED" org-expiry-insert-created :transient t)
    ("p" "Set ROAM_PLACE" org-roam-ext-set-roam-place :transient t)
    ("b" "Set ROAM_BOX" org-roam-ext-set-roam-box :transient t)
    ("r" "Set ROAM_PERSON" org-roam-ext-set-roam-person :transient t)
