@@ -417,7 +417,9 @@ Examples:
    ("r" "Set ROAM_PERSON" org-roam-ext-set-roam-person :transient t)
    ("c" "Set ROAM_CONTEXT or ROAM_SOURCE" org-roam-ext-set-roam-context-or-source :transient t)]
   ["Other"
-   ("t" "Toggle visibility of properties drawer" org-roam-ext-toggle-properties-visibility :transient t)])
+   ("t" "Toggle visibility of properties drawer" org-roam-ext-toggle-properties-visibility :transient t)
+   ("s" "Show heading content" org-fold-show-entry :transient t)
+   ("h" "Hide heading content" org-fold-hide-entry :transient t)])
 
 ;;; Provide
 (provide 'krisb-org-roam-ext)
