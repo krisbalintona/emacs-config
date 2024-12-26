@@ -259,6 +259,13 @@ See the docstring of `krisb-reveal-fold-commands'."
         (call-interactively 'eval-last-sexp)))
     t))
 
+;;;;; Smart-mark
+;; When pressing C-g while marking a region, move point to the location the
+;; marking command was invoked from.
+(use-package smart-mark
+  :config
+  (smart-mark-mode 1))
+
 ;;;; Inter-file
 
 ;;;;; Grep
