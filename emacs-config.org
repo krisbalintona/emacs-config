@@ -7151,8 +7151,20 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (use-package consult-xref-stack
     :vc ( :url "https://github.com/brett-lempereur/consult-xref-stack"
           :rev :newest)
-    ;; :bind (("C-," . consult-xref-stack-backward))
-    )
+    :bind (([remap xref-go-back] . krisb-consult-xref-stack-backward)
+           ([remap xref-go-forward] . krisb-consult-xref-stack-forward))
+    :config
+    (defun krisb-consult-xref-stack-backward (arg)
+      "Call `xref-go-back' or `consult-xref-stack-backward' when called with ARG."
+      (interactive "p")
+      (call-interactively
+       (if (< 1 arg) 'consult-xref-stack-backward 'xref-go-back)))
+
+    (defun krisb-consult-xref-stack-forward (arg)
+      "Call `xref-go-forward' or `consult-xref-stack-forward' when called with ARG."
+      (interactive "p")
+      (call-interactively
+       (if (< 1 arg) 'consult-xref-stack-forward 'xref-go-forward))))
 
   ;;; Dumber-jump
   ;; A lean fork of dumb-jump.
