@@ -4678,6 +4678,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
               (goto-char start)
               nil)))))
     :config
+    (with-eval-after-load 'embark
+      (require 'org-roam-folgezettel-embark))
+    
     ;; Add ROAM_* properties to properties completing-read interface completions
     (dolist (prop '("ROAM_EXCLUDE"
                     "ROAM_PLACE"

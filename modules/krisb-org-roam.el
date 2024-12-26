@@ -234,6 +234,9 @@ Return the position of the object if found, and nil if not."
             (goto-char start)
             nil)))))
   :config
+  (with-eval-after-load 'embark
+    (require 'org-roam-folgezettel-embark))
+  
   ;; Add ROAM_* properties to properties completing-read interface completions
   (dolist (prop '("ROAM_EXCLUDE"
                   "ROAM_PLACE"
