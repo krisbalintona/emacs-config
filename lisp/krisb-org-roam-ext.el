@@ -367,21 +367,21 @@ Examples:
 (defun org-roam-ext-set-roam-place ()
   "Set the ROAM_PLACE property in the current heading."
   (interactive)
-  (let ((place (read-string "Enter ROAM_PLACE: ")))
+  (let ((place (org-read-property-value "ROAM_PLACE")))
     (org-set-property "ROAM_PLACE" place)
     (message "ROAM_PLACE set to: %s" place)))
 
 (defun org-roam-ext-set-roam-box ()
   "Set the ROAM_BOX property in the current heading."
   (interactive)
-  (let ((box (read-string "Enter ROAM_BOX: ")))
+  (let ((box (org-read-property-value "ROAM_BOX")))
     (org-set-property "ROAM_BOX" box)
     (message "ROAM_BOX set to: %s" box)))
 
 (defun org-roam-ext-set-roam-person ()
   "Set the ROAM_PERSON property in the current heading."
   (interactive)
-  (let ((person (read-string "Enter ROAM_PERSON: ")))
+  (let ((person (org-read-property-value "ROAM_PERSON")))
     (org-set-property "ROAM_PERSON" person)
     (message "ROAM_PERSON set to: %s" person)))
 
@@ -389,7 +389,7 @@ Examples:
   "Set either the ROAM_CONTEXT or ROAM_SOURCE property in the current heading."
   (interactive)
   (let* ((choice (completing-read "Choose property: " '("ROAM_CONTEXT" "ROAM_SOURCE")))
-         (value (read-string (format "Enter %s: " choice))))
+         (value (org-read-property-value choice)))
     (org-set-property choice value)
     (message "%s set to: %s" choice value)))
 
@@ -404,7 +404,7 @@ Examples:
       (if drawer
           (progn
             (goto-char drawer)
-            (org-hide-drawer-toggle (not (org-at-drawer-p))))
+            (org-fold-hide-drawer-toggle (not (org-at-drawer-p))))
         (message "No PROPERTIES drawer found at this heading.")))))
 
 (transient-define-prefix org-roam-ext-properties-transient ()
