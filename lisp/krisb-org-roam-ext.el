@@ -412,10 +412,10 @@ Examples:
   ["Properties"
    ("a" "Add ID" org-id-get-create :transient t)
    ("C" "Add CREATED" org-expiry-insert-created :transient t)
-   ("p" "Set ROAM_PLACE" org-roam-ext-set-roam-place :transient t)
    ("b" "Set ROAM_BOX" org-roam-ext-set-roam-box :transient t)
    ("r" "Set ROAM_PERSON" org-roam-ext-set-roam-person :transient t)
-   ("c" "Set ROAM_CONTEXT or ROAM_SOURCE" org-roam-ext-set-roam-context-or-source :transient t)]
+   ("c" "Set ROAM_CONTEXT or ROAM_SOURCE" org-roam-ext-set-roam-context-or-source :transient t)
+   ("p" "Set ROAM_PLACE" org-roam-ext-set-roam-place :transient t)]
   ["Other"
    ("t" "Toggle visibility of properties drawer" org-roam-ext-toggle-properties-visibility :transient t)
    ("s" "Show heading content" org-fold-show-entry :transient t)
