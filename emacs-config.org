@@ -7375,6 +7375,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom
     (org-make-toc-insert-custom-ids t))
 
+  ;;;;; Package-build
+  ;; For help with creating package recipes for, e.g., MELPA.  See
+  ;; https://github.com/melpa/melpa/blob/master/CONTRIBUTING.org#preparing-a-pull-request-to-melpa
+  ;; for how package-build is used to create MELPA PRs.
+  (use-package package-build
+    :custom
+    (package-build-recipes-dir (expand-file-name "recipes/" krisb-melpa-directory))
+    (package-build-archive-dir  (expand-file-name "packages/" krisb-melpa-directory))
+    (package-build-working-dir (expand-file-name "working/" krisb-melpa-directory)))
+
   ;;; Provide
   (provide 'krisb-elisp)
 #+end_src
@@ -7673,6 +7683,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   (defvar krisb-email-directory (expand-file-name "~/Documents/emails/")
     "Directory that houses my local email files.")
+
+  (defvar krisb-emacs-repos-directory (expand-file-name "~/emacs-repos/")
+    "Directory that for Emacs-related local repositories.")
+
+  (defvar krisb-melpa-directory (expand-file-name "other/melpa" krisb-emacs-repos-directory)
+    "Directory that for local MELPA repository.")
 
   ;;; Functions
 
