@@ -385,13 +385,19 @@ Examples:
     (org-set-property "ROAM_PERSON" person)
     (message "ROAM_PERSON set to: %s" person)))
 
-(defun org-roam-ext-set-roam-context-or-source ()
-  "Set either the ROAM_CONTEXT or ROAM_SOURCE property in the current heading."
+(defun org-roam-ext-set-roam-source ()
+  "Set the ROAM_SOURCE property in the current heading."
   (interactive)
-  (let* ((choice (completing-read "Choose property: " '("ROAM_CONTEXT" "ROAM_SOURCE")))
-         (value (org-read-property-value choice)))
-    (org-set-property choice value)
-    (message "%s set to: %s" choice value)))
+  (let ((source (org-read-property-value "ROAM_SOURCE")))
+    (org-set-property "ROAM_SOURCE" source)
+    (message "ROAM_SOURCE set to: %s" source)))
+
+(defun org-roam-ext-set-roam-context ()
+  "Set the ROAM_PROPERTY property in the current heading."
+  (interactive)
+  (let ((context (org-read-property-value "ROAM_CONTEXT")))
+    (org-set-property "ROAM_CONTEXT" context)
+    (message "ROAM_CONTEXT set to: %s" context)))
 
 (defun org-roam-ext-toggle-properties-visibility ()
   "Toggle the visibility of the PROPERTIES drawer of the Org heading at point."
@@ -407,19 +413,78 @@ Examples:
             (org-fold-hide-drawer-toggle (not (org-at-drawer-p))))
         (message "No PROPERTIES drawer found at this heading.")))))
 
+(defun org-roam-ext-toggle-heading-content-visibility ()
+  "Toggle the visibility of a heading's contents."
+  (interactive)
+  (if (save-excursion
+        (beginning-of-line)
+        (and (org-at-heading-p)
+             (outline-invisible-p (line-end-position))))
+      (org-fold-show-entry)
+    (org-fold-hide-entry)))
+
+(defmacro org-roam-ext-transient--dyn-roam-property-description (desc prop-name &optional desc-alt)
+  "Macro of dynamic descriptions for setting org-roam-specific properties.
+DESC is the description and PROP-NAME is the property name being checked
+for.  If there does not exist a value corresponding to the property
+named PROP-NAME, then the description of the transient command will be
+DESC.  If there is a value, then return DESC with the value of that
+property propertized and appended within parentheses.
+
+If DESC-ALT is provided, use that string instead as the base string when
+there exists a value for the property named PROP-NAME."
+  `(lambda ()
+     (let ((prop (org-entry-get (point) ,prop-name)))
+       (concat (if (and prop ,desc-alt)
+                   ,desc-alt
+                 ,desc)
+               (when prop
+                 (concat " ("
+                         (propertize prop 'face 'transient-value)
+                         ")"))))))
+
 (transient-define-prefix org-roam-ext-properties-transient ()
   "Transient menu for setting org-roam properties."
   ["Properties"
-   ("a" "Add ID" org-id-get-create :transient t)
-   ("C" "Add CREATED" org-expiry-insert-created :transient t)
-   ("b" "Set ROAM_BOX" org-roam-ext-set-roam-box :transient t)
-   ("r" "Set ROAM_PERSON" org-roam-ext-set-roam-person :transient t)
-   ("c" "Set ROAM_CONTEXT or ROAM_SOURCE" org-roam-ext-set-roam-context-or-source :transient t)
-   ("p" "Set ROAM_PLACE" org-roam-ext-set-roam-place :transient t)]
-  ["Other"
-   ("t" "Toggle visibility of properties drawer" org-roam-ext-toggle-properties-visibility :transient t)
-   ("s" "Show heading content" org-fold-show-entry :transient t)
-   ("h" "Hide heading content" org-fold-hide-entry :transient t)])
+   ["Generic"
+    (org-id-get-create
+     :key "a"
+     :transient t
+     :description ,(org-roam-ext-transient--dyn-roam-property-description "Add ID" "ID" "Modify ID"))
+    (org-expiry-insert-created
+     :key "C"
+     :transient t
+     :description ,(org-roam-ext-transient--dyn-roam-property-description "Add CREATED" "CREATED"))]
+   ["Roam-specific"
+    (org-roam-ext-set-roam-box
+     :key "b"
+     :transient t
+     :description ,(org-roam-ext-transient--dyn-roam-property-description "Set ROAM_BOX" "ROAM_BOX"))
+    (org-roam-ext-set-roam-person
+     :key "r"
+     :transient t
+     :description ,(org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PERSON" "ROAM_PERSON"))
+    (org-roam-ext-set-roam-source
+     :key "s"
+     :transient t
+     :description ,(org-roam-ext-transient--dyn-roam-property-description "Set ROAM_SOURCE" "ROAM_SOURCE"))
+    (org-roam-ext-set-roam-context
+     :key "c"
+     :transient t
+     :description ,(org-roam-ext-transient--dyn-roam-property-description "Set ROAM_CONTEXT" "ROAM_CONTEXT"))
+    (org-roam-ext-set-roam-place
+     :key "p"
+     :transient t
+     :description ,(org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))]]
+  [["Navigation"
+    ("C-u" "Up heading" org-up-heading :transient t)
+    ("C-p" "Next heading" org-previous-visible-heading :transient t)
+    ("C-n" "Next heading" org-next-visible-heading :transient t)
+    ("C-f" "Forward heading same level" org-forward-heading-same-level :transient t)
+    ("C-b" "Backward heading same level" org-backward-heading-same-level :transient t)]
+   ["Visibility"
+    ("t" "Toggle visibility of heading contents" org-roam-ext-toggle-heading-content-visibility :transient t)
+    ("T" "Toggle visibility of properties drawer" org-roam-ext-toggle-properties-visibility :transient t)]])
 
 ;;; Provide
 (provide 'krisb-org-roam-ext)
