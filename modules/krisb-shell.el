@@ -70,6 +70,11 @@
 
 ;;; EAT
 (use-package eat
+  ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we
+  ;; use this fork of eat.
+  :vc ( :url "https://codeberg.org/vifon/emacs-eat.git"
+        :branch "fish-integration"
+        :rev :newest)
   :bind ( :map krisb-open-keymap
           ("e" . eat)))
 

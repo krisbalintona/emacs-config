@@ -33,7 +33,9 @@
                 verilog-mode vertico-prescient which-key window-tool-bar wombag
                 xref ytdl))
  '(package-vc-selected-packages
-   '((jujutsu :url "https://github.com/bennyandresen/jujutsu.el.git")
+   '((eat :url "https://codeberg.org/vifon/emacs-eat.git" :branch
+          "fish-integration")
+     (jujutsu :url "https://github.com/bennyandresen/jujutsu.el.git")
      (jujutsushi :url "https://git.sr.ht/~puercopop/jujutsushi")
      (buffer-terminator :url
                         "https://github.com/jamescherti/buffer-terminator.el")
