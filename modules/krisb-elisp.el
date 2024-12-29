@@ -152,5 +152,15 @@
   :custom
   (org-make-toc-insert-custom-ids t))
 
+;;;;; Package-build
+;; For help with creating package recipes for, e.g., MELPA.  See
+;; https://github.com/melpa/melpa/blob/master/CONTRIBUTING.org#preparing-a-pull-request-to-melpa
+;; for how package-build is used to create MELPA PRs.
+(use-package package-build
+  :custom
+  (package-build-recipes-dir (expand-file-name "recipes/" krisb-melpa-directory))
+  (package-build-archive-dir  (expand-file-name "packages/" krisb-melpa-directory))
+  (package-build-working-dir (expand-file-name "working/" krisb-melpa-directory)))
+
 ;;; Provide
 (provide 'krisb-elisp)

@@ -24,9 +24,10 @@
                 org-bookmark-heading org-bulletproof org-contrib org-edna
                 org-make-toc org-mime org-modern org-remark org-review org-roam
                 org-roam-folgezettel org-roam-ui org-super-agenda org-tidy
-                org-web-tools outshine ox-hugo package-lint-flymake paren-face
-                pcmpl-args pdf-tools peg pinentry popper powerthesaurus project
-                psession pulsar puni python rainbow-mode recursion-indicator
+                org-web-tools outshine ox-hugo package-build
+                package-lint-flymake paren-face pcmpl-args pdf-meta-edit
+                pdf-tools peg pinentry popper powerthesaurus project psession
+                pulsar puni python rainbow-mode recursion-indicator
                 saveplace-pdf-view scratch show-font smart-mark so-long
                 soap-client sudo-edit svg system-packages tmr track-changes
                 tramp treesit-auto try typewriter-roll-mode use-package
@@ -50,7 +51,8 @@
      (wombag :url "https://github.com/karthink/wombag.git")
      (denote-interface :url "git@github.com:krisbalintona/denote-interface.git")))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/Documents/org-database/notes/main/"
+   '("/home/krisbalintona/emacs-repos/other/melpa/"
+     "/home/krisbalintona/Documents/org-database/notes/main/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/buoy/"
      "/home/krisbalintona/Documents/org-database/notes/"
      "/home/krisbalintona/Documents/org-database/notes/references/"

@@ -97,6 +97,12 @@ Useful for some citation-related configurations.")
 (defvar krisb-email-directory (expand-file-name "~/Documents/emails/")
   "Directory that houses my local email files.")
 
+(defvar krisb-emacs-repos-directory (expand-file-name "~/emacs-repos/")
+  "Directory that for Emacs-related local repositories.")
+
+(defvar krisb-melpa-directory (expand-file-name "other/melpa" krisb-emacs-repos-directory)
+  "Directory that for local MELPA repository.")
+
 ;;; Functions
 
 ;;; Macros
