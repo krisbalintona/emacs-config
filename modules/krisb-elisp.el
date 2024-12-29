@@ -115,9 +115,6 @@
   (advice-add #'krisb-edebug-compute-previous-result :around #'adviced:edebug-compute-previous-result))
 
 ;;; Packages
-;;;; Package-lint-flymake
-(use-package package-lint-flymake
-  :hook (emacs-lisp-mode . package-lint-flymake-setup))
 
 ;;;; Try
 ;; Install a package only for the current Emacs session.
@@ -143,6 +140,17 @@
           (comment-region (point-at-bol) (point-at-eol)))
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
+
+;;;; Package-making
+
+;;;;; Package-lint-flymake
+(use-package package-lint-flymake
+  :hook (emacs-lisp-mode . package-lint-flymake-setup))
+
+;;;;; Org-make-toc
+(use-package org-make-toc
+  :custom
+  (org-make-toc-insert-custom-ids t))
 
 ;;; Provide
 (provide 'krisb-elisp)

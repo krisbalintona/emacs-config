@@ -15,24 +15,26 @@
                 eshell-z exec-path-from-shell faceup fish-mode
                 flymake-collection fontaine forge form-feed gcmh grid hammy
                 hide-mode-line highlight-function-calls hotfuzz hyprlang-ts-mode
-                ibuffer-project idlwave info-colors inspector jinx
+                ibuffer-project idlwave info-colors inspector jinx jujutsu
                 keychain-environment kind-icon lin lorem-ipsum magit-file-icons
                 marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
                 nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
                 no-littering notmuch-addr notmuch-transient nov ntlm ob-mermaid
                 oc-csl-activate ol-notmuch olivetti on orderless org org-appear
                 org-bookmark-heading org-bulletproof org-contrib org-edna
-                org-mime org-modern org-remark org-review org-roam
+                org-make-toc org-mime org-modern org-remark org-review org-roam
                 org-roam-folgezettel org-roam-ui org-super-agenda org-tidy
                 org-web-tools outshine ox-hugo package-lint-flymake paren-face
                 pcmpl-args pdf-tools peg pinentry popper powerthesaurus project
                 psession pulsar puni python rainbow-mode recursion-indicator
-                saveplace-pdf-view scratch show-font so-long soap-client
-                sudo-edit svg system-packages tmr track-changes tramp
-                treesit-auto try typewriter-roll-mode use-package verilog-mode
-                vertico-prescient which-key window-tool-bar wombag xref ytdl))
+                saveplace-pdf-view scratch show-font smart-mark so-long
+                soap-client sudo-edit svg system-packages tmr track-changes
+                tramp treesit-auto try typewriter-roll-mode use-package
+                verilog-mode vertico-prescient which-key window-tool-bar wombag
+                xref ytdl))
  '(package-vc-selected-packages
-   '((jujutsushi :url "https://git.sr.ht/~puercopop/jujutsushi")
+   '((jujutsu :url "https://github.com/bennyandresen/jujutsu.el.git")
+     (jujutsushi :url "https://git.sr.ht/~puercopop/jujutsushi")
      (buffer-terminator :url
                         "https://github.com/jamescherti/buffer-terminator.el")
      (consult-xref-stack :url
@@ -59,7 +61,8 @@
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
-   '((org-use-tag-inheritance) (org-use-tag-inheritance . t)
+   '((eval add-hook 'before-save-hook 'org-make-toc) (org-use-tag-inheritance)
+     (org-use-tag-inheritance . t)
      (org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
      (org-time-stamp-custom-formats quote ("<%B %d, %Y>" . "<%B %d, %Y %H:%M>"))
      (system-time-locale . "C")
