@@ -7363,9 +7363,14 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             (comment-region (point-at-bol) (point-at-eol)))
           (forward-line 2))
         (rename-buffer (concat "*Scratch for " mode "*") t))))
+#+end_src
 
-  ;;;; Package-making
+**** Package authorship
 
+There are several packages that end up incredibly useful for authoring packages. In addition to the packages below, we can use the scripts provided by [[https://github.com/riscy/melpazoid][riscy/melpazoid]] for packages specifically for the MELPA package archive.
+
+#+begin_src emacs-lisp :tangle "modules/krisb-elisp.el"
+  ;;;; Package authorship
   ;;;;; Package-lint-flymake
   (use-package package-lint-flymake
     :hook (emacs-lisp-mode . package-lint-flymake-setup))

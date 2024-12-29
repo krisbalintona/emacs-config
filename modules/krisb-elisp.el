@@ -141,8 +141,7 @@
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
 
-;;;; Package-making
-
+;;;; Package authorship
 ;;;;; Package-lint-flymake
 (use-package package-lint-flymake
   :hook (emacs-lisp-mode . package-lint-flymake-setup))
