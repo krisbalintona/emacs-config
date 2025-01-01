@@ -130,7 +130,10 @@ to the file path instead."
                                     (not (member "archive" tags)))))
                            (org-roam-node-list))))
       (add-to-list 'org-agenda-files file))
-    (setopt org-agenda-hide-tags-regexp "^__")))
+    (setopt org-agenda-hide-tags-regexp "^__"))
+
+  ;; Fold headings by default
+  (add-to-list 'org-roam-buffer-postrender-functions #'magit-section-show-level-2))
 
 ;;; Krisb-org-roam-ext
 (use-package krisb-org-roam-ext
