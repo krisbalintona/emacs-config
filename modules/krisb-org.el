@@ -179,7 +179,7 @@
 (use-package org-archive
   :ensure nil
   :custom
-  (org-archive-subtree-save-file-p t)  ; Save archive file always
+  (org-archive-subtree-save-file-p 'from-org)
   (org-archive-subtree-add-inherited-tags t))
 
 ;;;; Org-num
