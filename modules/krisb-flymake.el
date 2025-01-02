@@ -33,6 +33,26 @@
   :custom
   (flymake-collection-hook-inherit-config t)
   (flymake-collection-hook-ignore-modes nil)
+  (flymake-collection-vale-extension-function
+   'krisb-flymake-collection-vale-extension-function)
+  :init
+  (defun krisb-flymake-collection-vale-extension-function (buffer)
+  "My own function for `flymake-collection-vale-extension-function'.
+Behaves like `flymake-collection-vale-default-extension-function' but
+with the following exceptions:
+- In org-src buffers, use the extension of the source buffer.
+- In org buffers without an associated file, return the \"org\" extension."
+  (let* ((file-name (buffer-file-name buffer))
+         (extension (and file-name (file-name-extension file-name))))
+    (cond
+     (extension
+      extension)
+     ((org-src-edit-buffer-p buffer)
+      (file-name-extension
+       (buffer-file-name
+        (org-src-source-buffer))))
+     ((equal 'org-mode (buffer-local-value 'major-mode buffer))
+      "org"))))
   :config
   ;; NOTE 2024-10-05: Set `flymake-collection-config' immediately when the
   ;; package loads, so the first invocation of `flymake-collection-hook-setup'
