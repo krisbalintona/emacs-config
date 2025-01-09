@@ -5497,14 +5497,14 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                             (org-agenda-skip-function 'org-review-agenda-skip)
                             (org-agenda-cmp-user-defined 'org-review-compare)
                             (org-agenda-sorting-strategy '(user-defined-down))))
-                (tags-todo "+TODO=\"NEXT\"-project-inbox+EFFORT<\"3h\"|+TODO=\"TODO\"-project-inbox+EFFORT<\"3h\""
+                (tags-todo "+TODO=\"NEXT\"&-project&-inbox&-ongoing&+Effort<\"3:00\"|+TODO=\"TODO\"&-project&-inbox&-ongoing&+Effort<\"3:00\""
                            ((org-agenda-overriding-header "Non-time-bound tasks")
                             (org-agenda-use-tag-inheritance '(todo))
                             (org-agenda-show-inherited-tags t)
                             (org-agenda-dim-blocked-tasks 'invisible)
                             (org-agenda-skip-function
-                             '(org-agenda-skip-entry-if 'scheduled 'deadline))))
-                (tags-todo "+TODO=\"NEXT\"-inbox-project+EFFORT>=\"3h\""
+                             '(org-agenda-skip-entry-if 'scheduled))))
+                (tags-todo "+ongoing|+TODO=\"TODO\"&-project&-inbox&+Effort>=\"3:00\"|+TODO=\"NEXT\"&-project&-inbox&+Effort>=\"3:00\""
                            ((org-agenda-overriding-header "Long-running NEXT tasks")
                             (org-agenda-use-tag-inheritance '(todo))
                             (org-agenda-show-inherited-tags t)
