@@ -105,6 +105,15 @@
   (with-eval-after-load 'pulsar
     (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
 
+;;; Ultra-scroll
+(use-package ultra-scroll
+  :vc (:url "https://github.com/jdtsmith/ultra-scroll")
+  :init
+  (setq scroll-conservatively 101       ; As instructed by the README
+        scroll-margin 0)
+  :config
+  (ultra-scroll-mode 1))
+
 ;;; Jump
 
 ;;;; Intra-file
