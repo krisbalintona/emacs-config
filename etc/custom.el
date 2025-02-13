@@ -4,40 +4,57 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("/home/krisbalintona/Documents/org-database/notes/commonplace_book/20230106T203900--job-search.org"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/2023-and-before todos.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/bui.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/buoy.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/crc.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/cs1730.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/emacs.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/emails.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/hist0244.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/hist1974i.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/archive/phil1340.org_archive"
+     "/home/krisbalintona/Documents/org-database/agenda/gcal.org"
+     "/home/krisbalintona/Documents/org-database/agenda/recurring.org"
+     "/home/krisbalintona/Documents/org-database/agenda/todo.org") nil nil "Customized with use-package org-agenda")
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
                 beframe breadcrumb buffer-terminator bufler cape citar-denote
                 citar-org-roam cl-generic cm-mode consult-xref-stack
-                corfu-prescient cursory darkroom denote-explore denote-interface
-                diminish dired-hist dumber-jump easysession eat edit-indirect
-                editorconfig eglot elisp-demos embark-consult engine-mode
-                enlight erc eros eshell-atuin eshell-syntax-highlighting
-                eshell-z exec-path-from-shell faceup fish-mode
-                flymake-collection fontaine forge form-feed gcmh grid hammy
-                hide-mode-line highlight-function-calls hotfuzz hyprlang-ts-mode
+                corfu-prescient csv-mode cursory darkroom denote-explore
+                denote-interface diff-hl diminish dired-hist dumber-jump
+                easysession eat edit-indirect editorconfig eglot elisp-demos
+                embark-consult engine-mode enlight erc eros eshell-atuin
+                eshell-syntax-highlighting eshell-z exec-path-from-shell faceup
+                fish-mode flymake-collection fontaine forge form-feed gcmh
+                gif-screencast grid hammy hide-mode-line
+                highlight-function-calls hotfuzz hyprlang-ts-mode
                 ibuffer-project idlwave info-colors inspector jinx jujutsu
-                keychain-environment kind-icon lin lorem-ipsum magit-file-icons
-                marginalia mermaid-mode mixed-pitch modus-themes mpv nadvice
-                nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
-                no-littering notmuch-addr notmuch-transient nov ntlm ob-mermaid
-                oc-csl-activate ol-notmuch olivetti on orderless org org-appear
-                org-bookmark-heading org-bulletproof org-contrib org-edna
-                org-make-toc org-mime org-modern org-remark org-review org-roam
-                org-roam-folgezettel org-roam-ui org-super-agenda org-tidy
-                org-web-tools outshine ox-hugo package-build
-                package-lint-flymake paren-face pcmpl-args pdf-meta-edit
-                pdf-tools peg pinentry popper powerthesaurus project psession
-                pulsar puni python rainbow-mode recursion-indicator
-                saveplace-pdf-view scratch show-font smart-mark so-long
-                soap-client sudo-edit svg system-packages tmr track-changes
-                tramp treesit-auto try typewriter-roll-mode use-package
-                verilog-mode vertico-prescient which-key window-tool-bar wombag
-                xref ytdl))
+                jujutsushi keychain-environment kind-icon lin lorem-ipsum
+                magit-file-icons marginalia mermaid-mode mixed-pitch
+                modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
+                nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
+                nov ntlm ob-mermaid oc-csl-activate ol-notmuch olivetti on
+                orderless org-appear org-bookmark-heading org-bulletproof
+                org-contrib org-edna org-make-toc org-mime org-modern
+                org-node-fakeroam org-remark org-review org-roam-ql org-roam-ui
+                org-supertag org-tidy org-web-tools outshine ox-hugo
+                package-build package-lint-flymake paren-face pcmpl-args
+                pdf-meta-edit peg pinentry popper powerthesaurus psession pulsar
+                puni python rainbow-mode recursion-indicator saveplace-pdf-view
+                scratch show-font smart-mark so-long soap-client sudo-edit svg
+                system-packages tmr track-changes tramp treesit-auto try
+                typewriter-roll-mode ultra-scroll use-package verilog-mode
+                vertico-prescient which-key window-tool-bar wombag ytdl))
  '(package-vc-selected-packages
-   '((eat :url "https://codeberg.org/vifon/emacs-eat.git" :branch
+   '((org-supertag :url "https://github.com/yibie/org-supertag.git")
+     (ultra-scroll :url "https://github.com/jdtsmith/ultra-scroll")
+     (jujutsushi :url "https://git.sr.ht/~puercopop/jujutsushi")
+     (eat :url "https://codeberg.org/vifon/emacs-eat.git" :branch
           "fish-integration")
      (jujutsu :url "https://github.com/bennyandresen/jujutsu.el.git")
-     (jujutsushi :url "https://git.sr.ht/~puercopop/jujutsushi")
      (buffer-terminator :url
                         "https://github.com/jamescherti/buffer-terminator.el")
      (consult-xref-stack :url
