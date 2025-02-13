@@ -82,6 +82,7 @@
           ("`" . krisb-org-agenda-process))
   :custom
   (org-agenda-files krisb-org-agenda-directory-files)
+  (org-agenda-inhibit-startup t)
 
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
