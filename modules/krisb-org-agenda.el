@@ -169,8 +169,8 @@
                              (org-roam-node-read nil
                                                  (lambda (node) (member "journal" (org-roam-node-tags node)))
                                                  nil t "Select journal: "))))
-      "* %<%c>\n\n%?"
-      :tree-type month
+      "* %<%c>\n%?"
+      :tree-type (year quarter month)
       :jump-to-captured t
       :immediate-finish t
       :empty-lines 1
@@ -181,7 +181,7 @@
                             (org-roam-node-file
                              (org-roam-node-from-id "20241114T091749.707997"))))
       "* (%<%c>)%?\n\n"
-      :tree-type month
+      :tree-type (year quarter month)
       :jump-to-captured t
       :immediate-finish t)))
   (org-capture-use-agenda-date t)       ; Use the time-at-point if any
