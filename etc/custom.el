@@ -4,21 +4,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("/home/krisbalintona/Documents/org-database/notes/commonplace_book/20230106T203900--job-search.org"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/2023-and-before todos.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/bui.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/buoy.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/crc.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/cs1730.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/emacs.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/emails.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/hist0244.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/hist1974i.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/phil1340.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/gcal.org"
-     "/home/krisbalintona/Documents/org-database/agenda/recurring.org"
-     "/home/krisbalintona/Documents/org-database/agenda/todo.org") nil nil "Customized with use-package org-agenda")
  '(package-selected-packages
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
                 beframe breadcrumb buffer-terminator bufler cape citar-denote
@@ -45,7 +30,7 @@
                 pdf-meta-edit peg pinentry popper powerthesaurus psession pulsar
                 puni python rainbow-mode recursion-indicator saveplace-pdf-view
                 scratch show-font smart-mark so-long soap-client sudo-edit svg
-                system-packages tmr track-changes tramp treesit-auto try
+                system-packages tablist tmr tramp treesit-auto try
                 typewriter-roll-mode ultra-scroll use-package verilog-mode
                 vertico-prescient which-key window-tool-bar wombag ytdl))
  '(package-vc-selected-packages
