@@ -69,6 +69,7 @@
 ;;;; Pdf-outline
 (use-package pdf-outline
   :ensure nil
+  :after pdf-tools
   :custom
   (pdf-outline-enable-imenu t)
   (pdf-outline-display-labels t)
