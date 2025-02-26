@@ -9350,7 +9350,11 @@ There are several packages that end up incredibly useful for authoring packages.
       (krisb-org-roam-ext-set-roam-place
        :key "p"
        :transient t
-       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))]]
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))
+      (krisb-org-roam-ext-set-roam-exclude
+       :key "e"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_EXCLUDE" "ROAM_EXCLUDE"))]]
     [["Navigation"
       ("C-u" "Up heading" org-up-heading :transient t)
       ("C-p" "Next heading" org-previous-visible-heading :transient t)
