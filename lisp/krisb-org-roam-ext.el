@@ -371,6 +371,13 @@ Examples:
     (org-set-property "ROAM_PLACE" place)
     (message "ROAM_PLACE set to: %s" place)))
 
+(defun krisb-org-roam-ext-set-roam-exclude ()
+  "Set the ROAM_EXCLUDE property in the current heading."
+  (interactive)
+  (let ((place (org-read-property-value "ROAM_EXCLUDE")))
+    (org-set-property "ROAM_EXCLUDE" place)
+    (message "ROAM_EXCLUDE set to: %s" place)))
+
 (defun krisb-org-roam-ext-set-roam-box ()
   "Set the ROAM_BOX property in the current heading."
   (interactive)
@@ -475,7 +482,11 @@ there exists a value for the property named PROP-NAME."
     (krisb-org-roam-ext-set-roam-place
      :key "p"
      :transient t
-     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))]]
+     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))
+    (krisb-org-roam-ext-set-roam-exclude
+     :key "e"
+     :transient t
+     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_EXCLUDE" "ROAM_EXCLUDE"))]]
   [["Navigation"
     ("C-u" "Up heading" org-up-heading :transient t)
     ("C-p" "Next heading" org-previous-visible-heading :transient t)
