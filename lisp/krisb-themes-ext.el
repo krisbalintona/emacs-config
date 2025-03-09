@@ -94,8 +94,8 @@ hour."
 (defun krisb-themes-ext-toggle-window-transparency (&optional arg)
   "Toggle the value of `alpha-background'.
 
-Toggles between 100 and 72 by default. Can choose which value to
-change to if called with ARG."
+Toggles between 100 and 72 by default.  Can choose which value to change
+to if called with ARG, or any prefix argument."
   (interactive "P")
   (let ((transparency (pcase arg
                         ((pred numberp) arg)
