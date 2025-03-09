@@ -199,7 +199,7 @@ and rewrite link paths to make blogging more seamless."
           ;; (message "[org-hugo-link DBG] link desc: %s" desc)
           (format "[%s]({{< relref \"%s\" >}})" (if desc desc path) path))))
      ;; Link type is handled by a special function.
-     ((org-export-custom-protocol-maybe link desc 'md))
+     ((org-export-custom-protocol-maybe link desc 'md info))
      ((member type '("custom-id" "id"
                      "fuzzy")) ;<<target>>, #+name, heading links
       (let ((destination (if (string= type "fuzzy")
