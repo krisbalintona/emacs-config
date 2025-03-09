@@ -385,7 +385,7 @@ See ((org) Filtering/limiting agenda items)."
                           (org-agenda-skip-function
                            '(org-agenda-skip-entry-if 'scheduled))))))
             ("i" "Inbox: process entries"
-             ((tags-todo "+inbox|+TODO=\"MAYBE\""
+             ((tags-todo "+inbox"
                          ((org-agenda-overriding-header "Review")
                           (org-agenda-dim-blocked-tasks t)
                           (org-agenda-skip-function 'org-review-agenda-skip)
