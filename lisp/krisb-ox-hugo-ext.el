@@ -105,7 +105,7 @@ be a sluggified version of the file's title.")
   (let* ((base-dir (if (plist-get info :hugo-base-dir)
                        (file-name-as-directory (plist-get info :hugo-base-dir))
                      (user-error "It is mandatory to set the HUGO_BASE_DIR property or the `org-hugo-base-dir' local variable")))
-         (content-dir "content/")
+         (content-dir (concat org-hugo-content-folder "/"))
          (section-path (org-hugo--get-section-path info))
          ;; Use the bundle path if its value exists (with underscores replaced
          ;; with hyphens).  If it doesn't, then defer to using the file's title
