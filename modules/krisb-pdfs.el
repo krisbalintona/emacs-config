@@ -15,7 +15,6 @@
   ;; loading; see its docstring and
   ;; https://github.com/vedang/pdf-tools?tab=readme-ov-file#installing-pdf-tools-elisp-code)
   ;; to have PDF files use pdf-view-mode and have everything required loaded
-  :hook (on-first-buffer . pdf-loader-install)
   :bind ( :map pdf-view-mode-map
           ("C-c C-r a" . pdf-view-auto-slice-minor-mode)
           ;; Additionally useful since it lets you scroll via
