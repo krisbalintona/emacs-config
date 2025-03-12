@@ -27,12 +27,13 @@
                 org-node-fakeroam org-remark org-review org-roam-ql org-roam-ui
                 org-supertag org-tidy org-web-tools outshine ox-hugo
                 package-build package-lint-flymake paren-face pcmpl-args
-                pdf-meta-edit peg pinentry popper powerthesaurus psession pulsar
-                puni python rainbow-mode recursion-indicator saveplace-pdf-view
-                scratch show-font smart-mark so-long soap-client sudo-edit svg
-                system-packages tablist tmr tramp treesit-auto try
-                typewriter-roll-mode ultra-scroll use-package verilog-mode
-                vertico-prescient which-key window-tool-bar wombag ytdl))
+                pdf-meta-edit pdf-tools peg pinentry popper powerthesaurus
+                psession pulsar puni python rainbow-mode recursion-indicator
+                saveplace-pdf-view scratch show-font smart-mark so-long
+                soap-client sudo-edit svg system-packages tablist tmr tramp
+                treesit-auto try typewriter-roll-mode ultra-scroll use-package
+                verilog-mode vertico-prescient which-key window-tool-bar wombag
+                ytdl))
  '(package-vc-selected-packages
    '((org-supertag :url "https://github.com/yibie/org-supertag.git")
      (ultra-scroll :url "https://github.com/jdtsmith/ultra-scroll")
