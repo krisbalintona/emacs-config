@@ -6,6 +6,12 @@
   :custom
   (org-hugo-base-dir (expand-file-name "hugo/" org-directory))
   (org-hugo-section "posts")
+  (org-hugo-anchor-functions
+   '(org-hugo-get-page-or-bundle-name
+     ;; org-hugo-get-custom-id
+     ;; org-hugo-get-id
+     org-hugo-get-heading-slug
+     org-hugo-get-md5))
 
   (org-hugo-use-code-for-kbd t)
   (org-hugo-link-desc-insert-type nil) ; TODO 2024-11-01: Check if I want to change this value
