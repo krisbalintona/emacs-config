@@ -10692,7 +10692,7 @@ There are several packages that end up incredibly useful for authoring packages.
   directory name of the bundle.  Additionally, this function is used for
   my bespoke code for relative links to Denote notes and Org-roam nodes."
     ;; (message "[krisb-org-hugo-title-slug DBG] title: %s" title)
-    (let ((invalid-chars (rx (or "/" "\\" ":" "*" "?" "\"" "<" ">" "|" "(" ")"))))
+    (let ((invalid-chars (rx (or "/" "\\" ":" "*" "?" "\"" "<" ">" "|" "(" ")"  ","))))
       (file-name-as-directory
        (downcase
         (replace-regexp-in-string "\\s-" "_" (replace-regexp-in-string invalid-chars "" name))))))
