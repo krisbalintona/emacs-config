@@ -116,8 +116,6 @@
 ;;; Buffer-terminator
 (use-package buffer-terminator
   :disabled t
-  :vc ( :url "https://github.com/jamescherti/buffer-terminator.el"
-        :rev :newest)
   :custom
   (buffer-terminator-inactivity-timeout (* 60 60)) ; 60 minutes
   (buffer-terminator-interval (* 60 10))           ; 10 minutes
