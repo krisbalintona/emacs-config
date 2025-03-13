@@ -748,6 +748,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 
   ;;;; Killing buffers smartly deletes windows too sometimes
   (setopt kill-buffer-quit-windows t)
+
+  ;;;; Don't display warning buffer at the bottom of frame
+  (setopt warning-display-at-bottom nil)
 #+end_src
 
 **** Provide
@@ -7048,6 +7051,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :ensure nil
     :custom
     (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
+    (ediff-split-window-function #'split-window-horizontally)
     (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
 
   ;;; vc-jj
@@ -7614,6 +7618,7 @@ There are several packages that end up incredibly useful for authoring packages.
     (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
     (dired-kill-when-opening-new-dired-buffer t)  ; Basically `dired-single'
     (dired-listing-switches "--group-directories-first --time-style=long-iso -alhgv") ; Flags `dired' passes to `ls'
+    (dired-movement-style 'bounded)
     ;; Always copy/delete recursively?
     (dired-recursive-copies  'always)
     (dired-recursive-deletes 'top)

@@ -214,6 +214,7 @@
   :ensure nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
+  (ediff-split-window-function #'split-window-horizontally)
   (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
 
 ;;; vc-jj

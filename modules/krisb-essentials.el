@@ -363,5 +363,8 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Killing buffers smartly deletes windows too sometimes
 (setopt kill-buffer-quit-windows t)
 
+;;;; Don't display warning buffer at the bottom of frame
+(setopt warning-display-at-bottom nil)
+
 (provide 'krisb-essentials)
 ;;; krisb-essentials.el ends here
