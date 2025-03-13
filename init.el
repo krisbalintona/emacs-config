@@ -5,13 +5,12 @@
 
 ;;; Load libraries
 (require 'krisb-common)
-(require 'krisb-essentials)
 
 ;;;; Modules
 (require 'krisb-garbage-collection)
 (require 'krisb-system-env)
-(require 'krisb-essentials)
 (require 'krisb-core)
+(require 'krisb-essentials)
 
 (require 'krisb-icons)
 (require 'krisb-themes)

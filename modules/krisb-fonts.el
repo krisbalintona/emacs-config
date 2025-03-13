@@ -1,7 +1,7 @@
 ;;; Fontaine
 ;; Define then apply face presets
 (use-package fontaine
-  :demand
+  :demand t
   :custom
   (fontaine-latest-state-file (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld"))
   (fontaine-presets
