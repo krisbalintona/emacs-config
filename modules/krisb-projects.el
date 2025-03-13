@@ -21,7 +21,10 @@
      (project-vc-dir "VC-Dir")
      (eat-project "EAT")
      (project-eshell "Eshell")
-     (project-any-command "Other"))))
+     (project-any-command "Other")))
+  :config
+  ;; On startup, remove non-existent directories from remembered projects list
+  (project-forget-zombie-projects))
 
 ;;; Xref
 (use-package xref
