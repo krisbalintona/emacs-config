@@ -203,6 +203,7 @@ This sets the default graphical element settings used by every frame.
   ;; depend on some Denote forms throughout my configuration currently.
   ;; (require 'krisb-denote)
   (require 'krisb-org-roam)
+  (require 'krisb-org-node)
   (require 'krisb-citations)
   (require 'krisb-spelling)
 
@@ -4788,6 +4789,20 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Provide
   (provide 'krisb-org-roam)
+#+end_src
+
+**** =krisb-org-node.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-org-node.el"
+  ;;; Org-node
+  (use-package org-node)
+
+  ;;; Org-node-fakeroam
+  (use-package org-node-fakeroam
+    :after org-roam)
+
+  ;;; Provide
+  (provide 'krisb-org-node)
 #+end_src
 
 **** =krisb-web-annotations.el=

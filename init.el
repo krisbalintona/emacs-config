@@ -37,6 +37,7 @@
 ;; depend on some Denote forms throughout my configuration currently.
 ;; (require 'krisb-denote)
 (require 'krisb-org-roam)
+(require 'krisb-org-node)
 (require 'krisb-citations)
 (require 'krisb-spelling)
 
