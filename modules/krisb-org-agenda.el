@@ -122,8 +122,11 @@
   (org-agenda-todo-ignore-scheduled nil)
   (org-agenda-remove-times-when-in-prefix t)
   (org-agenda-remove-tags 'prefix)
+
   (org-agenda-prefix-format
-   '((agenda  . " %i %-8:c%?-12t% s%-5e%(krisb-org-agenda-breadcrumb 20)")
+   ;; See https://whhone.com/posts/org-agenda-repeated-tasks/ for an explanation
+   ;; of `krisb-org-agenda-repeater' usage here
+   '((agenda  . " %i %-8:c%?-12t% s%(krisb-org-agenda-repeater)%-5e%(krisb-org-agenda-breadcrumb 20)")
      (todo  . " %i %-8:c%-5e%(krisb-org-agenda-breadcrumb 20)")
      (tags  . " %i %-8:c%-5e%(krisb-org-agenda-breadcrumb 20)")
      (search . " %i %-8:c%-5e%(krisb-org-agenda-breadcrumb 20)")))
@@ -146,6 +149,10 @@
   (org-agenda-current-time-string
    "◀── now ─────────────────────────────────────────────────")
   (org-agenda-breadcrumbs-separator " ⇛ ")
+  ;; Shorten the leaders to reserve spaces for the repeater.  Taken from
+  ;; https://whhone.com/posts/org-agenda-repeated-tasks/
+  (org-agenda-scheduled-leaders '("Sched" "S.%2dx"))
+  (org-agenda-deadline-leaders '("Deadl" "In%2dd" "D.%2dx"))
   (org-agenda-skip-scheduled-delay-if-deadline nil)
   (org-agenda-skip-deadline-if-done t)
   (org-agenda-skip-scheduled-if-done t)
@@ -242,6 +249,13 @@
                  "")))
         (if (equal "" s) ""
           (concat (truncate-string-to-width s len 0 nil (truncate-string-ellipsis)) org-agenda-breadcrumbs-separator)))))
+  (defun krisb-org-agenda-repeater ()
+    "The repeater shown in org-agenda-prefix for agenda.
+
+Taken from https://whhone.com/posts/org-agenda-repeated-tasks/."
+    (if (org-before-first-heading-p)
+        "┄┄┄┄┄┄┄"                       ; Fill the time grid
+      (format "%5s: " (or (org-get-repeat) ""))))
   :config
   ;; REVIEW 2024-11-11: Not sure if this is needed if we set the value of
   ;; `org-durations-units' via :custom.
