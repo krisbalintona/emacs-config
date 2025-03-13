@@ -37,6 +37,7 @@ If region is active, use the region's contents instead."
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
+  :after embark
   :bind ( :map embark-region-map
           ("t" . powerthesaurus-lookup-dwim)
           :map embark-identifier-map
