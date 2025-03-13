@@ -362,7 +362,7 @@ See ((org) Filtering/limiting agenda items)."
                        (org-super-agenda-groups
                         '((:name "Overdue" :scheduled past :deadline past)
                           (:auto-category t)))))
-              (tags-todo "+TODO=\"NEXT\"-inbox|+TODO=\"TODO\"-inbox"
+              (tags-todo "-inbox"
                          ((org-agenda-overriding-header "Projects and tasks to review")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
@@ -370,14 +370,25 @@ See ((org) Filtering/limiting agenda items)."
                           (org-agenda-skip-function 'org-review-agenda-skip)
                           (org-agenda-cmp-user-defined 'org-review-compare)
                           (org-agenda-sorting-strategy '(user-defined-down))))
-              (tags-todo "+TODO=\"NEXT\"&-project&-inbox&-ongoing&+Effort<\"3:00\"|+TODO=\"TODO\"&-project&-inbox&-ongoing&+Effort<\"3:00\""
+              (tags-todo "-project-inbox-ongoing+Effort<\"3:00\""
                          ((org-agenda-overriding-header "Non-time-bound tasks")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
                           (org-agenda-dim-blocked-tasks 'invisible)
                           (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'scheduled))))
-              (tags-todo "+ongoing|+TODO=\"TODO\"&-project&-inbox&+Effort>=\"3:00\"|+TODO=\"NEXT\"&-project&-inbox&+Effort>=\"3:00\""
+                           '(lambda ()
+                              (or
+                               (org-agenda-skip-entry-if 'scheduled)
+                               ;; Rather than something like:
+                               ;;   (not (org-review-agenda-skip))
+                               ;; We manually invert the definition of
+                               ;; `org-review-agenda-skip' because skipping
+                               ;; functions, if successful (i.e. reporting a
+                               ;; skip), must return the point which org-agenda
+                               ;; should continue from.
+                               (and (org-review-toreview-p)
+                                    (org-with-wide-buffer (or (outline-next-heading) (point-max)))))))))
+              (tags-todo "+ongoing-inbox|-project&-inbox&+Effort>=\"3:00\""
                          ((org-agenda-overriding-header "Long-running NEXT tasks")
                           (org-agenda-use-tag-inheritance '(todo))
                           (org-agenda-show-inherited-tags t)
