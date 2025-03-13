@@ -9252,6 +9252,13 @@ There are several packages that end up incredibly useful for authoring packages.
       (org-set-property "ROAM_PLACE" place)
       (message "ROAM_PLACE set to: %s" place)))
 
+  (defun krisb-org-roam-ext-set-roam-type ()
+    "Set the ROAM_TYPE property in the current heading."
+    (interactive)
+    (let ((place (org-read-property-value "ROAM_TYPE")))
+      (org-set-property "ROAM_TYPE" place)
+      (message "ROAM_TYPE set to: %s" place)))
+
   (defun krisb-org-roam-ext-set-roam-exclude ()
     "Set the ROAM_EXCLUDE property in the current heading."
     (interactive)
@@ -9348,10 +9355,10 @@ There are several packages that end up incredibly useful for authoring packages.
        :key "b"
        :transient t
        :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_BOX" "ROAM_BOX"))
-      (krisb-org-roam-ext-set-roam-person
-       :key "r"
+      (krisb-org-roam-ext-set-roam-type
+       :key "t"
        :transient t
-       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PERSON" "ROAM_PERSON"))
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_TYPE" "ROAM_TYPE"))
       (krisb-org-roam-ext-set-roam-source
        :key "s"
        :transient t
@@ -9360,6 +9367,10 @@ There are several packages that end up incredibly useful for authoring packages.
        :key "c"
        :transient t
        :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_CONTEXT" "ROAM_CONTEXT"))
+      (krisb-org-roam-ext-set-roam-person
+       :key "r"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PERSON" "ROAM_PERSON"))
       (krisb-org-roam-ext-set-roam-place
        :key "p"
        :transient t
@@ -9375,8 +9386,8 @@ There are several packages that end up incredibly useful for authoring packages.
       ("C-f" "Forward heading same level" org-forward-heading-same-level :transient t)
       ("C-b" "Backward heading same level" org-backward-heading-same-level :transient t)]
      ["Visibility"
-      ("t" "Toggle visibility of heading contents" krisb-org-roam-ext-toggle-heading-content-visibility :transient t)
-      ("T" "Toggle visibility of properties drawer" krisb-org-roam-ext-toggle-properties-visibility :transient t)]])
+      ("M-t" "Toggle visibility of heading contents" krisb-org-roam-ext-toggle-heading-content-visibility :transient t)
+      ("M-T" "Toggle visibility of properties drawer" krisb-org-roam-ext-toggle-properties-visibility :transient t)]])
 
   ;;; Provide
   (provide 'krisb-org-roam-ext)
