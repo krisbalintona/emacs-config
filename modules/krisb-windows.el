@@ -45,6 +45,24 @@
                       (next-window)             ; Fall back to next window
                       (next-window nil nil 'visible)))))
 
+;;; Sinister
+;; This package defines `sinister-stillness-mode' to solve a problem.  Namely,
+;; when invoking a tall minibuffer, if there are other windows present with
+;; points low enough in their buffers, those windows will scroll.  This is
+;; because points must be visible in buffers, so Emacs must scroll to keep the
+;; point visible when e.g. tall minibuffer windows are created.  As such,
+;; `sinister-stillness-mode' moves the points in existing buffers lower such
+;; that Emacs does not need to scroll to keep them visible.
+(use-package sinister
+  :vc ( :url "https://github.com/positron-solutions/sinister"
+        :rev :newest)
+  :config
+  (sinister-stillness-mode 1)
+  ;; Invasive: a function that simply sets certain options makes it difficult to
+  ;; debug.  If I want any of these settings, I should set them myself.
+  ;; (sinister-misc-settings)
+  )
+
 ;;; Tab-bar
 (use-package tab-bar
   :ensure nil
