@@ -136,7 +136,12 @@
         :width 80
         :content ,(enlight-menu
                    `(("Configs"
-                      ("Recent files" ,(command-remapping 'recentf-open-files) "r")
+                      ;; 2025-03-12 FIXME: This is a workaround.  Using
+                      ;; `command-remapping' does not work for some reason.
+                      ("Recent files" ,(if (functionp 'recentf-open-files)
+                                           'consult-recent-file
+                                         'recentf-open-files)
+                       "r")
                       ("Emacs" (project-switch-project user-emacs-directory) "e")
                       ("Dotfiles" (project-switch-project "~/dotfiles/") "d"))
                      ("Other"
