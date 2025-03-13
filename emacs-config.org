@@ -7427,6 +7427,18 @@ Configuration related to "saving a state," that is, storing or restoring anythin
               (edebug-safe-prin1-to-string previous-value))))
     (advice-add #'krisb-edebug-compute-previous-result :around #'adviced:edebug-compute-previous-result))
 
+  ;;;; Lazy-guard
+  ;; Help validate Emacs configuration.  See https://codeberg.org/vifon/lazy-guard
+  ;; for more information, including how to automate this with git commit hooks.
+  ;; NOTE 2025-03-13: Using the git hook method results in false positives from
+  ;; faulty autoloading; I think it's related to use-package, I think.  So I don't
+  ;; use that method for now.
+  (use-package lazy-guard
+    :vc ( :url "https://codeberg.org/vifon/lazy-guard.git")
+    :custom
+    (lazy-guard-autoloads-strict nil)
+    (lazy-guard-autoloads-known-broken nil))
+
   ;;; Packages
 
   ;;;; Try
