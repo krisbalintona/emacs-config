@@ -167,7 +167,6 @@ This sets the default graphical element settings used by every frame.
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Load libraries
   (require 'krisb-common)
-  (require 'krisb-essentials)
 #+end_src
 
 *** Load modules
@@ -176,8 +175,8 @@ This sets the default graphical element settings used by every frame.
   ;;;; Modules
   (require 'krisb-garbage-collection)
   (require 'krisb-system-env)
-  (require 'krisb-essentials)
   (require 'krisb-core)
+  (require 'krisb-essentials)
 
   (require 'krisb-icons)
   (require 'krisb-themes)
@@ -345,6 +344,205 @@ This sets the default graphical element settings used by every frame.
   (provide 'krisb-system-env)
 #+end_src
 
+*** =krisb-core.el=
+
+**** Package management and configuration
+
+I use =package.el=. =Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:2]
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;;; Package.el
+  ;; Initialize package resources
+  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("melpa" . "https://melpa.org/packages/"))
+          package-archive-priorities '(("gnu-elpa" . 4)
+                                       ("melpa" . 3)
+                                       ("nongnu" . 2)
+                                       ("gnu-elpa-devel" . 1))
+          package-install-upgrade-built-in t
+          package-pinned-packages nil)
+
+  (setopt load-prefer-newer t) ; Do not load outdated byte code files
+#+end_src
+
+[fn:2] Those who utilize =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ directly.
+
+Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
+
+Uncommonly known are the commands =use-package= offers that help users debug and introspect the loading of their packages. The following is a non-exhaustive list:
++ ~use-package-jump-to-package-form~ :: Prompts the user for a package configured using use-package and jumps to its corresponding use-package declaration. Useful for navigating a large =.init.el= or many small config files.
++ ~use-package-lint~ :: Reports any syntax errors in use-package declarations in the current buffer.
++ ~use-package-report~ :: Show statistics about all your use--package declarations. Requires ~use-package-compute-statistics~ to be non-nil.
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
+  ;; it's installed just in case I test/use an earlier Emacs version
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (setopt use-package-always-ensure t
+          use-package-expand-minimally t  ; Verbosity of use-package macro
+          use-package-always-defer nil)
+
+  ;; Only be verbose when interpreted, otherwise errors are caught at compile time
+  (setopt use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
+
+  ;; Compile statistics to be shown in `use-package-report'
+  (setopt use-package-compute-statistics t)
+#+end_src
+
+**** Other
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;; Set better default package paths
+  (use-package no-littering
+    :init
+    ;; According to the package instructions, these variables must be set prior to
+    ;; loading the feature
+    (eval-and-compile                 ; Ensure values don't differ at compile time
+      (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
+            no-littering-var-directory (expand-file-name "var/" user-emacs-directory))) ; Persistent files
+    :config
+    ;; Ensure the directories exist
+    (mkdir no-littering-etc-directory t)
+    (mkdir no-littering-var-directory t)
+
+    ;; Read docstring.  Sets more secure values for
+    ;; `auto-save-file-name-transforms', `backup-directory-alist', and
+    ;; `undo-tree-history-directory-alist'.
+    (no-littering-theme-backups))
+
+  ;;; On
+  ;; Package exposes a number of utility hooks and functions ported from Doom
+  ;; Emacs.  The hooks make it easier to speed up Emacs startup by providing
+  ;; finer-grained control of the timing at which packages are loaded.  Provides
+  ;; the following hooks:
+  ;; - on-first-input-hook
+  ;; - on-init-ui-hook
+  ;; - on-first-file-hook
+  ;; - on-switch-frame-hook
+  ;; - on-first-buffer-hook
+  ;; - on-switch-buffer-hook
+  ;; - on-switch-window-hook
+  (use-package on)
+
+  ;;; System-packages
+  ;; Install system packages via Emacs. Necessary for use-package's
+  ;; `:ensure-system-package' flag
+  (use-package system-packages
+    :custom
+    (system-packages-noconfirm nil)
+    :config
+    (when (executable-find "paru")
+      (add-to-list 'system-packages-supported-package-managers
+                   '(paru . ((default-sudo . nil)
+                             (install . "paru -S")
+                             (search . "paru -Ss")
+                             (uninstall . "paru -Rns")
+                             (update . "paru -Syu")
+                             (clean-cache . "paru -Sc")
+                             (change-log . "paru -Qc")
+                             (log . "cat /var/log/paru.log")
+                             (get-info . "paru -Qi")
+                             (get-info-remote . "paru -Si")
+                             (list-files-provided-by . "paru -qQl")
+                             (owning-file . "paru -Qo")
+                             (owning-file-remote . "paru -F")
+                             (verify-all-packages . "paru -Qkk")
+                             (verify-all-dependencies . "paru -Dk")
+                             (remove-orphaned . "paru -Rns $(paru -Qtdq)")
+                             (list-installed-packages . "paru -Qe")
+                             (list-installed-packages-all . "paru -Q")
+                             (list-dependencies-of . "paru -Qi")
+                             (noconfirm . "--noconfirm"))))
+      (setq system-packages-package-manager 'paru
+            system-packages-use-sudo nil)))
+#+end_src
+
+**** =el-patch=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;;; El-patch
+  (use-package el-patch)
+#+end_src
+
+**** =async.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+   ;;; Async.el
+  ;; Async library and a few small but useful implementations
+  (use-package async
+    :custom
+    (async-bytecomp-allowed-packages 'all)
+    :config
+    (async-bytecomp-package-mode 1))
+#+end_src
+
+**** =enlight=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;;; Enlight
+  ;; Easily create simple startup screens
+  (use-package enlight
+    :hook (window-setup . (lambda ()
+                            (unless (or desktop-save-mode
+                                        (bound-and-true-p easysession-save-mode)
+                                        (bound-and-true-p psession-mode))
+                              (enlight-open))))
+    :custom
+    (enlight-content
+     (concat
+      (grid-get-box `( :align center
+                       :width 80
+                       :content
+                       ;; Art generated by
+                       ;; https://www.patorjk.com/software/taag/#p=display&f=Isometric1&t=emacs
+                       ,(propertize
+                         "      ___           ___           ___           ___           ___
+       /\\  \\         /\\__\\         /\\  \\         /\\  \\         /\\  \\
+      /::\\  \\       /::|  |       /::\\  \\       /::\\  \\       /::\\  \\
+     /:/\\:\\  \\     /:|:|  |      /:/\\:\\  \\     /:/\\:\\  \\     /:/\\ \\  \\
+    /::\\~\\:\\  \\   /:/|:|__|__   /::\\~\\:\\  \\   /:/  \\:\\  \\   _\\:\\~\\ \\  \\
+   /:/\\:\\ \\:\\__\\ /:/ |::::\\__\\ /:/\\:\\ \\:\\__\\ /:/__/ \\:\\__\\ /\\ \\:\\ \\ \\__\\
+   \\:\\~\\:\\ \\/__/ \\/__/~~/:/  / \\/__\\:\\/:/  / \\:\\  \\  \\/__/ \\:\\ \\:\\ \\/__/
+    \\:\\ \\:\\__\\         /:/  /       \\::/  /   \\:\\  \\        \\:\\ \\:\\__\\
+     \\:\\ \\/__/        /:/  /        /:/  /     \\:\\  \\        \\:\\/:/  /
+      \\:\\__\\         /:/  /        /:/  /       \\:\\__\\        \\::/  /
+       \\/__/         \\/__/         \\/__/         \\/__/         \\/__/    "
+                         'face 'modus-themes-fg-yellow-intense)))
+      "\n\n"
+      (grid-get-box
+       `( :align center
+          :width 80
+          :content ,(enlight-menu
+                     `(("Configs"
+                        ;; 2025-03-12 FIXME: This is a workaround.  Using
+                        ;; `command-remapping' does not work for some reason.
+                        ("Recent files" ,(if (functionp 'recentf-open-files)
+                                             'consult-recent-file
+                                           'recentf-open-files)
+                         "r")
+                        ("Emacs" (project-switch-project user-emacs-directory) "e")
+                        ("Dotfiles" (project-switch-project "~/dotfiles/") "d"))
+                       ("Other"
+                        ("Projects" project-switch-project "p")
+                        ("Email" notmuch "n"))))))))
+    :init
+    ;; For more complex layouts, as recommended by the README
+    (use-package grid
+      :autoload (grid-get-box grid-get-row grid-get-column)
+      :vc (:url "https://github.com/ichernyshovvv/grid.el")))
+#+end_src
+
+**** Provide
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;;; Provide
+  (provide 'krisb-core)
+#+end_src
+
 *** =krisb-essentials.el=
 
 **** Preamble
@@ -402,7 +600,7 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
           custom-buffer-style 'links
           custom-search-field nil)
 
-  (when (file-exists-p custom-file)
+  (when (and custom-file (file-exists-p custom-file))
     (load custom-file))
 #+end_src
 
@@ -758,201 +956,6 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   (provide 'krisb-essentials)
   ;;; krisb-essentials.el ends here
-#+end_src
-
-*** =krisb-core.el=
-
-**** Package management and configuration
-
-I use =package.el=. =Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:2]
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;;; Package.el
-  ;; Initialize package resources
-  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                             ("melpa" . "https://melpa.org/packages/"))
-          package-archive-priorities '(("gnu-elpa" . 4)
-                                       ("melpa" . 3)
-                                       ("nongnu" . 2)
-                                       ("gnu-elpa-devel" . 1))
-          package-install-upgrade-built-in t
-          package-pinned-packages nil)
-
-  (setopt load-prefer-newer t) ; Do not load outdated byte code files
-#+end_src
-
-[fn:2] Those who utilize =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ directly.
-
-Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
-
-Uncommonly known are the commands =use-package= offers that help users debug and introspect the loading of their packages. The following is a non-exhaustive list:
-+ ~use-package-jump-to-package-form~ :: Prompts the user for a package configured using use-package and jumps to its corresponding use-package declaration. Useful for navigating a large =.init.el= or many small config files.
-+ ~use-package-lint~ :: Reports any syntax errors in use-package declarations in the current buffer.
-+ ~use-package-report~ :: Show statistics about all your use--package declarations. Requires ~use-package-compute-statistics~ to be non-nil.
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
-  ;; it's installed just in case I test/use an earlier Emacs version
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-  (setopt use-package-always-ensure t
-          use-package-expand-minimally t  ; Verbosity of use-package macro
-          use-package-always-defer nil)
-
-  ;; Only be verbose when interpreted, otherwise errors are caught at compile time
-  (setopt use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
-
-  ;; Compile statistics to be shown in `use-package-report'
-  (setopt use-package-compute-statistics t)
-#+end_src
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;; Set better default package paths
-  (use-package no-littering
-    :init
-    ;; Set these variables prior to loading the feature
-    (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
-          no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
-    :config
-    ;; Ensure the directories exist
-    (mkdir no-littering-etc-directory t)
-    (mkdir no-littering-var-directory t)
-
-    ;; Read docstring. Sets more secure values for
-    ;; `auto-save-file-name-transforms', `backup-directory-alist', and
-    ;; `undo-tree-history-directory-alist'.
-    (no-littering-theme-backups))
-
-  ;;; On
-  ;; Package exposes a number of utility hooks and functions ported from Doom
-  ;; Emacs. The hooks make it easier to speed up Emacs startup by providing
-  ;; finer-grained control of the timing at which packages are loaded. Provides
-  ;; the following hooks:
-  ;; - on-first-input-hook
-  ;; - on-init-ui-hook
-  ;; - on-first-file-hook
-  ;; - on-switch-frame-hook
-  ;; - on-first-buffer-hook
-  ;; - on-switch-buffer-hook
-  ;; - on-switch-window-hook
-  (use-package on)
-
-  ;;; System-packages
-  ;; Install system packages via Emacs. Necessary for use-package's
-  ;; `:ensure-system-package' flag
-  (use-package system-packages
-    :custom
-    (system-packages-noconfirm nil)
-    :config
-    (when (executable-find "paru")
-      (add-to-list 'system-packages-supported-package-managers
-                   '(paru . ((default-sudo . nil)
-                             (install . "paru -S")
-                             (search . "paru -Ss")
-                             (uninstall . "paru -Rns")
-                             (update . "paru -Syu")
-                             (clean-cache . "paru -Sc")
-                             (change-log . "paru -Qc")
-                             (log . "cat /var/log/paru.log")
-                             (get-info . "paru -Qi")
-                             (get-info-remote . "paru -Si")
-                             (list-files-provided-by . "paru -qQl")
-                             (owning-file . "paru -Qo")
-                             (owning-file-remote . "paru -F")
-                             (verify-all-packages . "paru -Qkk")
-                             (verify-all-dependencies . "paru -Dk")
-                             (remove-orphaned . "paru -Rns $(paru -Qtdq)")
-                             (list-installed-packages . "paru -Qe")
-                             (list-installed-packages-all . "paru -Q")
-                             (list-dependencies-of . "paru -Qi")
-                             (noconfirm . "--noconfirm"))))
-      (setq system-packages-package-manager 'paru
-            system-packages-use-sudo nil)))
-#+end_src
-
-**** =el-patch=
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;;; El-patch
-  (use-package el-patch)
-#+end_src
-
-**** =async.el=
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-   ;;; Async.el
-  ;; Async library and a few small but useful implementations
-  (use-package async
-    :custom
-    (async-bytecomp-allowed-packages 'all)
-    :config
-    (async-bytecomp-package-mode 1))
-#+end_src
-
-**** =enlight=
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;;; Enlight
-  ;; Easily create simple startup screens
-  (use-package enlight
-    :hook (window-setup . (lambda ()
-                            (unless (or desktop-save-mode
-                                        (bound-and-true-p easysession-save-mode)
-                                        (bound-and-true-p psession-mode))
-                              (enlight-open))))
-    :custom
-    (enlight-content
-     (concat
-      (grid-get-box `( :align center
-                       :width 80
-                       :content
-                       ;; Art generated by
-                       ;; https://www.patorjk.com/software/taag/#p=display&f=Isometric1&t=emacs
-                       ,(propertize
-                         "      ___           ___           ___           ___           ___
-       /\\  \\         /\\__\\         /\\  \\         /\\  \\         /\\  \\
-      /::\\  \\       /::|  |       /::\\  \\       /::\\  \\       /::\\  \\
-     /:/\\:\\  \\     /:|:|  |      /:/\\:\\  \\     /:/\\:\\  \\     /:/\\ \\  \\
-    /::\\~\\:\\  \\   /:/|:|__|__   /::\\~\\:\\  \\   /:/  \\:\\  \\   _\\:\\~\\ \\  \\
-   /:/\\:\\ \\:\\__\\ /:/ |::::\\__\\ /:/\\:\\ \\:\\__\\ /:/__/ \\:\\__\\ /\\ \\:\\ \\ \\__\\
-   \\:\\~\\:\\ \\/__/ \\/__/~~/:/  / \\/__\\:\\/:/  / \\:\\  \\  \\/__/ \\:\\ \\:\\ \\/__/
-    \\:\\ \\:\\__\\         /:/  /       \\::/  /   \\:\\  \\        \\:\\ \\:\\__\\
-     \\:\\ \\/__/        /:/  /        /:/  /     \\:\\  \\        \\:\\/:/  /
-      \\:\\__\\         /:/  /        /:/  /       \\:\\__\\        \\::/  /
-       \\/__/         \\/__/         \\/__/         \\/__/         \\/__/    "
-                         'face 'modus-themes-fg-yellow-intense)))
-      "\n\n"
-      (grid-get-box
-       `( :align center
-          :width 80
-          :content ,(enlight-menu
-                     `(("Configs"
-                        ;; 2025-03-12 FIXME: This is a workaround.  Using
-                        ;; `command-remapping' does not work for some reason.
-                        ("Recent files" ,(if (functionp 'recentf-open-files)
-                                             'consult-recent-file
-                                           'recentf-open-files)
-                         "r")
-                        ("Emacs" (project-switch-project user-emacs-directory) "e")
-                        ("Dotfiles" (project-switch-project "~/dotfiles/") "d"))
-                       ("Other"
-                        ("Projects" project-switch-project "p")
-                        ("Email" notmuch "n"))))))))
-    :init
-    ;; For more complex layouts, as recommended by the README
-    (use-package grid
-      :autoload (grid-get-box grid-get-row grid-get-column)
-      :vc (:url "https://github.com/ichernyshovvv/grid.el")))
-#+end_src
-
-**** Provide
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;;; Provide
-  (provide 'krisb-core)
 #+end_src
 
 *** =krisb-icons.el=
@@ -2649,7 +2652,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Fontaine
   ;; Define then apply face presets
   (use-package fontaine
-    :demand
+    :demand t
     :custom
     (fontaine-latest-state-file (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld"))
     (fontaine-presets

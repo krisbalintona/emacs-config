@@ -31,23 +31,25 @@
 ;; Set better default package paths
 (use-package no-littering
   :init
-  ;; Set these variables prior to loading the feature
-  (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
-        no-littering-var-directory (expand-file-name "var/" user-emacs-directory)) ; Persistent files
+  ;; According to the package instructions, these variables must be set prior to
+  ;; loading the feature
+  (eval-and-compile                 ; Ensure values don't differ at compile time
+    (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
+          no-littering-var-directory (expand-file-name "var/" user-emacs-directory))) ; Persistent files
   :config
   ;; Ensure the directories exist
   (mkdir no-littering-etc-directory t)
   (mkdir no-littering-var-directory t)
 
-  ;; Read docstring. Sets more secure values for
+  ;; Read docstring.  Sets more secure values for
   ;; `auto-save-file-name-transforms', `backup-directory-alist', and
   ;; `undo-tree-history-directory-alist'.
   (no-littering-theme-backups))
 
 ;;; On
 ;; Package exposes a number of utility hooks and functions ported from Doom
-;; Emacs. The hooks make it easier to speed up Emacs startup by providing
-;; finer-grained control of the timing at which packages are loaded. Provides
+;; Emacs.  The hooks make it easier to speed up Emacs startup by providing
+;; finer-grained control of the timing at which packages are loaded.  Provides
 ;; the following hooks:
 ;; - on-first-input-hook
 ;; - on-init-ui-hook

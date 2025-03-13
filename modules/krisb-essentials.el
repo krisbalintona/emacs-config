@@ -38,7 +38,7 @@
         custom-buffer-style 'links
         custom-search-field nil)
 
-(when (file-exists-p custom-file)
+(when (and custom-file (file-exists-p custom-file))
   (load custom-file))
 
 ;;; Scrolling
