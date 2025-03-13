@@ -987,13 +987,14 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
     :custom
     (completion-cycle-threshold nil)
     (completion-lazy-hilit t)             ; Lazy highlighting; added Emacs 30.1
-    (completion-auto-select 'second-tab)
     (completions-max-height 20)
     (completion-ignore-case t)
     (completion-flex-nospace t)
     (minibuffer-default-prompt-format " [%s]") ; Format of portion for default value
 
     ;; Completions buffer
+    (completion-auto-help 'visible)
+    (completion-auto-select 'second-tab)
     (completions-format 'one-column)
     (completions-detailed t) ; Show more details in completion minibuffer (inspired by `marginalia')
     (completions-group t)    ; Groups; Emacs 28
@@ -1035,6 +1036,35 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
     (completion-category-overrides
      '((file (styles . (basic partial-completion flex))) ; Include `partial-completion' to enable wildcards and partial paths.
        (citar-candidate (styles basic substring)))))
+
+  ;;; Completion-preview
+  (use-package completion-preview
+    :ensure nil
+    :hook ((minibuffer-setup . krisb-completion-preview--minibuffer-prompts-setup)
+           (prog-mode . completion-preview-mode))
+    :bind ( :map completion-preview-active-mode-map
+            ("M-n" . completion-preview-next-candidate)
+            ("M-p" . completion-preview-prev-candidate))
+    :custom
+    (completion-preview-ignore-case t)
+    (completion-preview-minimum-symbol-length 3)
+    :init
+    (defun krisb-completion-preview--minibuffer-prompts-setup ()
+      "Enable `completion-preview-mode' for certain minibuffer prompt commands."
+      (when (or (eq this-command 'eval-expression)
+                (eq this-command 'shell-command)
+                (eq this-command 'project-shell-command))
+        (completion-preview-mode 1)))
+    :config
+    ;; Use prescient's sorting function if prescient is available
+    (with-eval-after-load 'prescient
+      (setopt completion-preview-sort-function #'prescient-completion-sort))
+
+    ;; Add these bespoke self-insert commands to the list of recognized preview
+    ;; commands
+    (dolist (command '(org-self-insert-command
+                       outshine-self-insert-command))
+      (add-to-list 'completion-preview-commands command)))
 
   ;;; Crm
   (use-package crm
