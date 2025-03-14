@@ -417,7 +417,31 @@ See ((org) Filtering/limiting agenda items)."
                                            and append items)))
       ;; No super-filters; return list unmodified
       all-items))
-  )
+
+  (defun krisb-org-super-agenda--sort-matches-for-original-order (matching)
+    "Sort MATCHING items back into their original ordering based on `org-entries-lessp'.
+Only used when `org-super-agenda-keep-order' is non-nil."
+    (--sort
+     ;; Sorting has a shallow element of recursion because not all of the given items
+     ;; are matched org headlines that can just be sorted using `org-entries-lessp'.
+     ;; Some super-agenda matchers, like `:auto-category', will introduce sublists
+     ;; whose contents need sorting of their own. In that case the lists' `:items'
+     ;; properties need to be sorted instead.
+     (let ((first-is-list (listp it))
+           (second-is-list (listp other)))
+       (when first-is-list
+         (plist-put
+          it :items
+          (sort (plist-get it :items) #'org-entries-lessp)))
+       (when second-is-list
+         (plist-put
+          other :items
+          (sort (plist-get other :items) #'org-entries-lessp)))
+       (cond
+        (second-is-list t)
+        (first-is-list nil)
+        (t (org-entries-lessp it other))))
+     matching)))
 
 ;;; `org-agenda-custom-commands'
 (with-eval-after-load 'org-agenda
