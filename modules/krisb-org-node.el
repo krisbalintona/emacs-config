@@ -5,6 +5,15 @@
   :custom
   (org-node-datestamp-format "%Y%m%d%H%M%S-")
   (org-node-context-persist-on-disk t)
+  (org-node-filter-fn
+   (lambda (node)
+     "Predicate for whether to include NODE.
+If non-nil, include.  If nil, exclude.  This predicate excludes these
+nodes:
+- With non-nil ROAM_EXCLUDE property value.
+- Node in org-agenda file."
+     (not (or (assoc "ROAM_EXCLUDE" (org-node-get-properties node))
+              (org-agenda-file-p (org-node-get-file node))))))
   :config
   (org-node-cache-mode 1)
   (org-node-context-follow-mode 1))
