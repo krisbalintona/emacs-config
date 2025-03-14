@@ -58,7 +58,7 @@
 (use-package completion-preview
   :ensure nil
   :hook ((minibuffer-setup . krisb-completion-preview--minibuffer-prompts-setup)
-         (prog-mode . completion-preview-mode))
+         ((prog-mode log-edit-mode) . completion-preview-mode))
   :bind ( :map completion-preview-active-mode-map
           ("M-n" . completion-preview-next-candidate)
           ("M-p" . completion-preview-prev-candidate))
