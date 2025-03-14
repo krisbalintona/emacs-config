@@ -2,13 +2,14 @@
 
 ;;; Org-roam
 (use-package org-roam
-  :bind (("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n ta" . org-roam-tag-add)
-         ("C-c n tr" . org-roam-tag-remove)
-         ("C-c n g" . org-roam-graph))
+  :bind ( :map krisb-note-keymap
+          ("f" . org-roam-node-find)
+          ("i" . org-roam-node-insert)
+          ("c" . org-roam-capture)
+          ("l" . org-roam-buffer-toggle)
+          ("ta" . org-roam-tag-add)
+          ("tr" . org-roam-tag-remove)
+          ("g" . org-roam-graph))
   :custom
   (org-roam-directory krisb-notes-directory)
   (org-roam-capture-templates
