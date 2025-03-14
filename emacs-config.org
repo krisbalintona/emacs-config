@@ -5522,17 +5522,13 @@ Configuration related to "saving a state," that is, storing or restoring anythin
           :rev :newest)
     :custom
     (org-super-agenda-hide-empty-groups t)
-    ;; FIXME 2024-10-06: When trying to set `org-super-agenda-keep-order' to
-    ;; non-nil, it causes an error when using :auto-* selectors. This doesn't seem
-    ;; to occur in an emacs -Q instances, but I have no clue what is causing the
-    ;; error in my config... Although the following PR might fix the issue:
-    ;; https://github.com/alphapapa/org-super-agenda/pull/242. Also see the NOTE
-    ;; above, near the :vc keword
     (org-super-agenda-keep-order t)
     (org-agenda-cmp-user-defined #'krisb-org-sort-agenda-by-created-time)
     :config
     (org-super-agenda-mode 1)
 
+    ;; Custom user-defined sorting (comparison) function for
+    ;; `org-agenda-cmp-user-defined'
     (defun krisb-org-get-created-time (entry)
       "Return the CREATED time of ENTRY, or an empty string if it doesn't exist."
       (let ((marker (get-text-property 0 'marker entry)))
@@ -5549,7 +5545,90 @@ Configuration related to "saving a state," that is, storing or restoring anythin
          ((string= time-b "") -1)         ; B has no CREATED property, put it last
          (t
           (if (time-less-p (date-to-time time-a) (date-to-time time-b))
-              -1 +1))))))
+              -1 +1)))))
+
+    ;; NOTE 2025-03-14: I manually apply the changes described in the un-pulled
+    ;; merge request: https://github.com/alphapapa/org-super-agenda/pull/242.  I
+    ;; will keep this until the problem it resolves is fixed in master.
+    (el-patch-defun org-super-agenda--group-items (all-items)
+      "Divide ALL-ITEMS into groups based on `org-super-agenda-groups'."
+      (if (bound-and-true-p org-super-agenda-groups)
+          ;; Transform groups
+          (let ((org-super-agenda-groups (org-super-agenda--transform-groups org-super-agenda-groups)))
+            ;; Collect and insert groups
+            (cl-loop with section-name
+                     for filter in org-super-agenda-groups
+                     for custom-section-name = (plist-get filter :name)
+                     for order = (or (plist-get filter :order) 0)  ; Lowest number first, 0 by default
+                     for (auto-section-name non-matching matching) = (org-super-agenda--group-dispatch all-items filter)
+
+                     do (when org-super-agenda-keep-order
+                          (el-patch-swap
+                            (setf matching (sort matching #'org-entries-lessp))
+                            (setf matching (krisb-org-super-agenda--sort-matches-for-original-order matching))))
+
+                     ;; Transformer
+                     for transformer = (plist-get filter :transformer)
+                     when transformer
+                     do (setq matching (-map (pcase transformer
+                                               (`(function ,transformer) transformer)
+                                               ((pred symbolp) transformer)
+                                               (_ `(lambda (it) ,transformer)))
+                                             matching))
+
+                     ;; Face
+                     for face = (plist-get filter :face)
+                     when face
+                     do (let ((append (plist-get face :append)))
+                          (when append (cl-remf face :append))
+                          (--each matching
+                            (add-face-text-property 0 (length it) face append it)))
+
+                     ;; Auto category/group
+                     if (cl-member auto-section-name org-super-agenda-auto-selector-keywords)
+                     do (setq section-name (or custom-section-name "Auto category/group"))
+                     and append (cl-loop for group in matching
+                                         collect (list :name (plist-get group :name)
+                                                       :items (plist-get group :items)
+                                                       :order order))
+                     into sections
+                     and do (setq all-items non-matching)
+
+                     ;; Manual groups
+                     else
+                     do (setq section-name (or custom-section-name auto-section-name))
+                     and collect (list :name section-name :items matching :order order) into sections
+                     and do (setq all-items non-matching)
+
+                     ;; Sort sections by :order then :name
+                     finally do (setq non-matching (list :name org-super-agenda-unmatched-name
+                                                         :items non-matching
+                                                         :order org-super-agenda-unmatched-order))
+                     finally do (setq sections (--sort (let ((o-it (plist-get it :order))
+                                                             (o-other (plist-get other :order)))
+                                                         (cond ((and
+                                                                 ;; FIXME: This is now quite ugly.  I'm not sure that all of these tests
+                                                                 ;; are necessary, but at the moment it works, so I'm leaving it alone.
+                                                                 (equal o-it o-other)
+                                                                 (not (equal o-it 0))
+                                                                 (stringp (plist-get it :name))
+                                                                 (stringp (plist-get other :name)))
+                                                                ;; Sort by string only for items with a set order
+                                                                (string< (plist-get it :name)
+                                                                         (plist-get other :name)))
+                                                               ((and (numberp o-it)
+                                                                     (numberp o-other))
+                                                                (< o-it o-other))
+                                                               (t nil)))
+                                                       (push non-matching sections)))
+                     ;; Insert sections
+                     finally return (cl-loop for (_ name _ items) in sections
+                                             when items
+                                             collect (org-super-agenda--make-agenda-header name)
+                                             and append items)))
+        ;; No super-filters; return list unmodified
+        all-items))
+    )
 
   ;;; `org-agenda-custom-commands'
   (with-eval-after-load 'org-agenda
