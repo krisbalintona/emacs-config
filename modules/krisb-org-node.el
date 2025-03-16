@@ -68,7 +68,7 @@ Additionally, the entire string is fontified to the shadow face."
   (cl-defmethod krisb-org-node-tags ((node org-node))
     "Return the full outline path of NODE fontified."
     (when-let ((tags (org-node-get-tags node)))
-      (propertize (concat "#" (string-join tags "# ")) 'face 'org-tag)))
+      (propertize (concat "#" (string-join tags " #")) 'face 'org-tag)))
 
   (defun krisb-org-node-affixation-fn (node title)
     "Given NODE and TITLE, add a bespoke prefix and suffix.
