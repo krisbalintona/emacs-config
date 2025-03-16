@@ -4,7 +4,8 @@
           ("l" . org-node-context-toggle)
           ([remap org-roam-buffer-toggle] . org-node-context-toggle)
           ("f" . org-node-find)
-          ("i" . org-node-insert-link))
+          ("i" . org-node-insert-link)
+          ("t a" . org-node-add-tags-here))
   :custom
   (org-node-ask-directory t)
   (org-node-datestamp-format "%Y%m%dT%H%M%S--")
