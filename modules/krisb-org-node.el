@@ -1,7 +1,9 @@
 ;;; Org-node
 (use-package org-node
   :bind ( :map krisb-note-keymap
-          ("l" . org-node-context-toggle))
+          ("l" . org-node-context-toggle)
+          ("f" . org-node-find)
+          ("i" . org-node-insert-link))
   :custom
   (org-node-ask-directory t)
   (org-node-datestamp-format "%Y%m%dT%H%M%S--")
