@@ -4831,7 +4831,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             (dir (file-name-nondirectory
                   (directory-file-name
                    (file-name-directory (org-node-get-file node))))))
-        (propertize (concat "/" (or box dir)) 'face 'shadow)))
+        (propertize (or box (concat "/" dir)) 'face 'shadow)))
 
     (cl-defmethod krisb-org-node-place ((node org-node))
       "Return a fontified value of the ROAM_PLACE property of NODE."
