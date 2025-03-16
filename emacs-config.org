@@ -11759,7 +11759,7 @@ These are lines I've removed while porting to a literate config.
 :VISIBILITY: folded
 :END:
 
-#  LocalWords:  Vertico Minibuffer Todos Notmuch LocalWords
+#  LocalWords:  Vertico Minibuffer Todos Notmuch LocalWords Eshell config apheleia WSLg
 
 # Local Variables:
 # apheleia-inhibit: t
