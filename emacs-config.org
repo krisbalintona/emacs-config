@@ -4799,6 +4799,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (use-package org-node
     :bind ( :map krisb-note-keymap
             ("l" . org-node-context-toggle)
+            ([remap org-roam-buffer-toggle] . org-node-context-toggle)
             ("f" . org-node-find)
             ("i" . org-node-insert-link))
     :custom
@@ -4887,9 +4888,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Org-node-fakeroam
   (use-package org-node-fakeroam
+    ;; TODO 2025-03-16: For some reason, `org-node-fakeroam-db-rebuild' only
+    ;; partially rebuilds the org-roam db.  It gets hung up on node 600 out of
+    ;; 650+.  Couldn't introspect that command adequately to debug which node/file
+    ;; it is getting stuck on.
+    :disabled t
     :after org-roam
-    :bind ( :map krisb-note-keymap
-            ([remap org-roam-buffer-toggle] . org-node-context-toggle))
     :custom
     (org-roam-db-update-on-save nil)      ; Don't update DB on save, not needed
     (org-roam-link-auto-replace nil)      ; Don't look for "roam:" links on save
