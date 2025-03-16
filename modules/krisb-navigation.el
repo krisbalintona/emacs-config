@@ -44,6 +44,7 @@
          ("o" . consult-outline)
          ("e" . consult-compile-error)
          ("l" . consult-line)
+         ("a" . consult-org-agenda)
          :map search-map                ; The `M-s' prefix
          ("i" . consult-info)
          ("g" . consult-git-grep)
@@ -53,7 +54,8 @@
          ("F" . consult-locate)
          :map org-mode-map
          ([remap consult-outline] . consult-org-heading)
-         ("M-g a" . consult-org-agenda))
+         :map embark-org-heading-map
+         ("C-j" . org-clock-goto))
   :custom
   (consult-preview-key "C-M-;")
   (consult-bookmark-narrow
