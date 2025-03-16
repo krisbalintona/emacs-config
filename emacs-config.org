@@ -2941,6 +2941,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
            ("o" . consult-outline)
            ("e" . consult-compile-error)
            ("l" . consult-line)
+           ("a" . consult-org-agenda)
            :map search-map                ; The `M-s' prefix
            ("i" . consult-info)
            ("g" . consult-git-grep)
@@ -2950,7 +2951,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
            ("F" . consult-locate)
            :map org-mode-map
            ([remap consult-outline] . consult-org-heading)
-           ("M-g a" . consult-org-agenda))
+           :map embark-org-heading-map
+           ("C-j" . org-clock-goto))
     :custom
     (consult-preview-key "C-M-;")
     (consult-bookmark-narrow
