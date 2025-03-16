@@ -173,10 +173,11 @@
       :empty-lines 1)
      ("j" "Journal" entry
       (file+olp+datetree ,(lambda ()
-                            (org-roam-node-file
-                             (org-roam-node-read nil
-                                                 (lambda (node) (member "journal" (org-roam-node-tags node)))
-                                                 nil t "Select journal: "))))
+                            (org-node-get-file
+                             (gethash (completing-read "Select journal: " #'org-node-collection
+                                                       (lambda (_title node) (member "__journal" (org-node-get-tags node)))
+                                                       t nil 'org-node-hist)
+                                      org-node--candidate<>node))))
       "* %<%c>\n%?"
       :tree-type (year quarter month)
       :jump-to-captured t
