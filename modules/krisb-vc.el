@@ -253,13 +253,20 @@ process object in the asynchronous case."
              file-or-list
              (cond
               ((stringp file-or-list)
-               (shell-quote-argument file-or-list))
+               (concat "'\"" file-or-list "\"'"))
               ((and (listp file-or-list) (cl-every #'stringp file-or-list))
-               (mapcar (lambda (s) (shell-quote-argument s)) file-or-list))
-              (t file-or-list)))
+               (mapcar (lambda (s) (concat "'\"" s "\"'")) file-or-list))))
            (if (stringp vc-jj-global-switches)
                (cons vc-jj-global-switches flags)
              (append vc-jj-global-switches flags)))))
+
+;;; Git-share
+;; Share a web URL to the commit responsible for the change at point or the
+;; remote version of the file at point.
+(use-package git-share
+  :vc (:url "https://github.com/mgmarlow/git-share")
+  :custom
+  (git-share-open-links-in-browser nil))
 
 ;;; Provide
 (provide 'krisb-vc)
