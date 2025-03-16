@@ -1526,7 +1526,9 @@ Enhancements to all built-in-based completions.
            :map vertico-map
            ("C-.". embark-act)
            :map embark-symbol-map
-           ("R". raise-sexp))
+           ("R". raise-sexp)
+           :map embark-org-heading-map
+           ("C-j" . org-clock-goto))
     :custom
     ;; Embark Actions menu
     (embark-prompter 'embark-keymap-prompter) ; What interface do I want to use for Embark Actions?
@@ -2950,9 +2952,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
            ("f" . consult-find)
            ("F" . consult-locate)
            :map org-mode-map
-           ([remap consult-outline] . consult-org-heading)
-           :map embark-org-heading-map
-           ("C-j" . org-clock-goto))
+           ([remap consult-outline] . consult-org-heading))
     :custom
     (consult-preview-key "C-M-;")
     (consult-bookmark-narrow

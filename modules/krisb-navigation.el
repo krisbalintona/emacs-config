@@ -53,9 +53,7 @@
          ("f" . consult-find)
          ("F" . consult-locate)
          :map org-mode-map
-         ([remap consult-outline] . consult-org-heading)
-         :map embark-org-heading-map
-         ("C-j" . org-clock-goto))
+         ([remap consult-outline] . consult-org-heading))
   :custom
   (consult-preview-key "C-M-;")
   (consult-bookmark-narrow

@@ -513,7 +513,9 @@ This macro does not affect capfs already in
          :map vertico-map
          ("C-.". embark-act)
          :map embark-symbol-map
-         ("R". raise-sexp))
+         ("R". raise-sexp)
+         :map embark-org-heading-map
+         ("C-j" . org-clock-goto))
   :custom
   ;; Embark Actions menu
   (embark-prompter 'embark-keymap-prompter) ; What interface do I want to use for Embark Actions?
