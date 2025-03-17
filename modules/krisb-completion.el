@@ -518,10 +518,10 @@ This macro does not affect capfs already in
          ("C-j" . org-clock-goto))
   :custom
   ;; Embark Actions menu
-  (embark-prompter 'embark-keymap-prompter) ; What interface do I want to use for Embark Actions?
-  (embark-indicators                    ; How the Embark Actions menu appears
-   '(embark-mixed-indicator
-     embark-highlight-indicator))
+  (embark-prompter 'embark-keymap-prompter)
+  (embark-indicators '(embark-minimal-indicator
+                       embark-highlight-indicator
+                       embark-isearch-highlight-indicator))
   (prefix-help-command #'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
 
   (embark-mixed-indicator-delay 1.5)
