@@ -21,6 +21,7 @@ nodes:
 - Node in org-agenda file."
      (not (or (assoc "ROAM_EXCLUDE" (org-node-get-properties node))
               (org-agenda-file-p (org-node-get-file node))))))
+  (org-node-warn-title-collisions nil)
   :config
   (org-node-cache-mode 1)
   (org-node-context-follow-mode 1)
