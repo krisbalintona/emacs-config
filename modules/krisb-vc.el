@@ -220,8 +220,6 @@
 ;;; Vc-jj
 ;; Best jj integration with vc currently (2025-03-13).
 (use-package vc-jj
-  :vc ( :url "https://codeberg.org/emacs-jj-vc/vc-jj.el.git"
-        :rev :newest)
   :config
   ;; Project integration with JJ
   (require 'project-jj)
