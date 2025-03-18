@@ -7,6 +7,10 @@
           ("i" . org-node-insert-link)
           ("t a" . org-node-add-tags-here))
   :custom
+  ;; We set this to make sure all files in `krisb-notes-directory' are checked,
+  ;; otherwise we rely on the IDs identified by `org-id-update-id-locations',
+  ;; which can miss IDs (e.g. when mass-renaming files).
+  (org-node-extra-id-dirs (list krisb-notes-directory))
   (org-node-ask-directory t)
   (org-node-datestamp-format "%Y%m%dT%H%M%S--")
   (org-node-context-persist-on-disk t)
@@ -22,6 +26,7 @@ nodes:
      (not (or (assoc "ROAM_EXCLUDE" (org-node-get-properties node))
               (org-agenda-file-p (org-node-get-file node))))))
   (org-node-warn-title-collisions nil)
+  (org-node-renames-allowed-dirs (list krisb-notes-directory))
   :config
   (org-node-cache-mode 1)
   (org-node-context-follow-mode 1)
