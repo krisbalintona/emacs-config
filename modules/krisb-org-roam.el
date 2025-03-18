@@ -111,14 +111,17 @@ to the file path instead."
   (org-link-set-parameters
    "id"
    :store (lambda (&optional interactive?)
-            (if (and (equal major-mode 'org-mode)
-                     ;; We want to check more than if there is a node at point;
-                     ;; we want to make sure ID corresponds to an existing node
-                     (org-roam-node-from-id (org-id-get)))
-                (org-link-store-props :type "id"
-                                      :link (concat "id:" (org-id-get))
-                                      :description (org-roam-node-formatted (org-roam-node-at-point)))
-              (funcall 'org-id-store-link-maybe interactive?))))
+            (let* ((id (org-id-get))
+                   (node (org-roam-node-from-id id)))
+              (if (and (equal major-mode 'org-mode)
+                       ;; We want to check more than if there is a node at
+                       ;; point; we want to make sure ID corresponds to an
+                       ;; existing node
+                       node)
+                  (org-link-store-props :type "id"
+                                        :link (concat "id:" id)
+                                        :description (org-roam-node-formatted node))
+                (funcall 'org-id-store-link-maybe interactive?)))))
 
   ;; Add files with node(s) tagged with "__orgAgenda" but not with "archive" to
   ;; `org-agenda-files' list
