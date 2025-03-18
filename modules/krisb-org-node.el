@@ -93,11 +93,6 @@ For use as `org-node-affixation-fn'."
 
 ;;; Org-node-fakeroam
 (use-package org-node-fakeroam
-  ;; TODO 2025-03-16: For some reason, `org-node-fakeroam-db-rebuild' only
-  ;; partially rebuilds the org-roam db.  It gets hung up on node 600 out of
-  ;; 650+.  Couldn't introspect that command adequately to debug which node/file
-  ;; it is getting stuck on.
-  :disabled t
   :after org-roam
   :custom
   (org-roam-db-update-on-save nil)      ; Don't update DB on save, not needed
@@ -105,6 +100,14 @@ For use as `org-node-affixation-fn'."
   :config
   (org-roam-db-autosync-mode -1)
   (org-node-fakeroam-db-feed-mode 1))   ; Keep Roam DB up to date
+
+;;; Indexed
+(use-package indexed
+  :custom
+  (indexed-org-dirs (list krisb-org-directory))
+  (indexed-warn-title-collisions nil)
+  :config
+  (indexed-update-on-save-mode 1))
 
 ;;; Provide
 (provide 'krisb-org-node)
