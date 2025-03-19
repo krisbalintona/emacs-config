@@ -117,7 +117,10 @@ fringe background color, are out of place."
           ("h a" . hammy-adjust)
           ("h v" . hammy-view-log)
           ("h R" . hammy-status)
-          ("h I" . hammy-start-org-clock-in))
+          ("h I" . hammy-start-org-clock-in)
+          ;; Bespoke commands
+          ("h d" . krisb-hammy-modify-duration)
+          ("h e" . krisb-hammy-modify-elapsed))
   :custom
   ;; TODO 2024-09-25: Have this found more locally. When I do, also change
   ;; `tmr-sound' to this file
@@ -290,8 +293,8 @@ the task should be clocked in)."
                                :before (do (announce "Work time!"))
                                :advance (do (announce "Work time is over!")
                                             (notify "Work time is over!")
-                                            (remind "5 minutes"
-                                                    (do (krisb-hammy-play-sound)))))
+                                          (remind "5 minutes"
+                                                  (do (krisb-hammy-play-sound)))))
                      (interval :name "Rest"
                                :face 'font-lock-type-face
                                :duration (do (let ((duration (cl-loop for (interval start end) in history
@@ -315,7 +318,7 @@ the task should be clocked in)."
                                :advance (remind "5 minutes"
                                                 (do (announce "Rest time is over!")
                                                     (notify "Rest time is over!")
-                                                    (krisb-hammy-play-sound)))))
+                                                  (krisb-hammy-play-sound)))))
     :complete-p (do (and (> cycles 1)
                          interval
                          (equal "Work" interval-name)
@@ -362,7 +365,71 @@ the task should be clocked in)."
                     :advance (remind "5 minutes"
                                      (do (let ((message (format "%s is over!" interval-name)))
                                            (krisb-hammy-play-sound)
-                                           (notify message)))))))))))
+                                           (notify message))))))))))
+
+  ;; Bespoke commands
+  (defun krisb-hammy-modify-duration (hammy)
+    "Modify the duration of HAMMY timer.
+Interactively, prompt for a currently active hammy.
+
+Like `hammy-adjust', also sets the \"original-durations\" variable
+(which contains hammy-intervals) stored in the etc slot of HAMMY if it
+is not already set.
+
+See `timer-duration-words' for the units available when prompted for a
+duration."
+    (interactive (list (hammy-complete "Select which hammy's current duration to modify:" hammy-active)))
+    (cl-symbol-macrolet
+        ((original-interval-duration
+           (alist-get (car (member (hammy-interval hammy)
+                                   (ring-elements (hammy-intervals hammy))))
+                      (alist-get 'original-durations (hammy-etc hammy)))))
+      (let* ((input-duration
+              (car (read-from-string
+                    (read-string "Duration (as number or string): "
+                                 nil nil (prin1-to-string (hammy-interval-duration (hammy-interval hammy)))))))
+             (new-duration (pcase-exhaustive input-duration
+                             ((and (pred numberp) it) it)
+                             ((and (pred stringp) it) (timer-duration it))))
+             )
+        (setf (hammy-current-duration hammy) new-duration)
+        ;; Only save the original duration the first time the interval is
+        ;; adjusted, like `hammy-adjust'
+        (unless original-interval-duration
+          (setf original-interval-duration new-duration)))))
+
+  (defun krisb-hammy-modify-elapsed (hammy)
+    "Modify the elapsed time of HAMMY timer.
+Interactively, prompt for a currently active hammy.
+
+This command opts to alter pushing the start time of the
+hammy (current-interval-start-time slot of the hammy-interval slot of
+the hammy) forward (when increasing elapsed time) or backward (when
+decreasing elapsed time).
+
+The original value of current-interval-start-time is stored in the
+original-interval-start-time cons in the etc slot of the
+hammy-interval.
+
+See `timer-duration-words' for the units available when prompted for a
+duration."
+    (interactive (list (hammy-complete "Select which hammy's current elapsed time to modify:" hammy-active)))
+    (let* ((input-duration
+            (car (read-from-string
+                  (read-string "Duration (as number or string): "
+                               nil nil (prin1-to-string (hammy-interval-duration (hammy-interval hammy)))))))
+           (offset (pcase-exhaustive input-duration
+                     ((and (pred numberp) it) it)
+                     ;; TODO 2025-03-19: Figure out a more elegant solution to
+                     ;; negative durations.  Currently, since `timer-duration'
+                     ;; always returns positive numbers, even with a prefixing
+                     ;; "-", we manually negate the number.
+                     ((and (pred stringp) it) (let ((dur (timer-duration it)))
+                                                (if (string-prefix-p "-" input-duration)
+                                                    (- dur) dur)))))
+           (new-start-time (time-subtract (hammy-current-interval-start-time hammy)
+                                          (time-convert offset 'list))))
+      (setf (hammy-current-interval-start-time hammy) new-start-time))))
 
 ;;; Spell checking
 ;;;; Jinx
