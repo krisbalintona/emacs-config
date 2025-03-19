@@ -3717,7 +3717,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                  ;; To check the status of adding org-mode to the list of
                  ;; supported languages, see
                  ;; https://github.com/Automattic/harper/issues/79#issuecomment-2638110954
-                 '((org-mode :language-id "markdown") . ("harper-ls" "--stdio")))))
+                 '((org-mode :language-id "markdown") . ("harper-ls" "--stdio"))))
 #+end_src
 
 **** Other

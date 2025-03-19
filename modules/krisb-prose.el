@@ -461,7 +461,7 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
                ;; To check the status of adding org-mode to the list of
                ;; supported languages, see
                ;; https://github.com/Automattic/harper/issues/79#issuecomment-2638110954
-               '((org-mode :language-id "markdown") . ("harper-ls" "--stdio")))))
+               '((org-mode :language-id "markdown") . ("harper-ls" "--stdio"))))
 
 ;;; Other
 ;;;; Cm-mode (CriticMarkup minor mode)
