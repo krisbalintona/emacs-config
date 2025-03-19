@@ -3902,8 +3902,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom
     (org-refile-use-cache nil)
     (org-refile-targets
-     `((,krisb-org-agenda-directory-files . (:level . 0))
-       (,krisb-org-agenda-directory-files . (:tag . "project"))
+     `((,(krisb-org-agenda-directory-files) . (:level . 0))
+       (,(krisb-org-agenda-directory-files) . (:tag . "project"))
        (,krisb-org-agenda-main-file . (:maxlevel . 3))))
     ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
     ;; want to refile to a non-todo heading in the current file?
@@ -5432,7 +5432,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             :map org-agenda-mode-map
             ("`" . krisb-org-agenda-process))
     :custom
-    (org-agenda-files krisb-org-agenda-directory-files)
+    (org-agenda-files (krisb-org-agenda-directory-files))
     (org-agenda-inhibit-startup t)
 
     ;; Effort
@@ -8122,16 +8122,6 @@ There are several packages that end up incredibly useful for authoring packages.
   (defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
     "My main org-agenda file.")
 
-  (defvar krisb-org-agenda-directory-files
-    (directory-files-recursively krisb-org-agenda-directory
-                                 (rx (or (literal ".org") (literal ".org_archive")) eol)
-                                 nil
-                                 (lambda (subdir)
-                                   "Ignore \".st\" subdirectories.
-  These are directories created by SyncThing which may have org files I do not want to include."
-                                   (not (string-match (rx (literal ".st")) subdir))))
-    "A list of all org and org_archive files in `krisb-org-directory'.")
-
   (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
     "A list of my bibliography (.bib) files.")
 
@@ -8150,6 +8140,16 @@ There are several packages that end up incredibly useful for authoring packages.
     "Directory that for local MELPA repository.")
 
   ;;; Functions
+  (defun krisb-org-agenda-directory-files ()
+    "Return list of all org and org_archive files in `krisb-org-directory'."
+    (directory-files-recursively krisb-org-agenda-directory
+                                 (rx (or (literal ".org") (literal ".org_archive")) eol)
+                                 nil
+                                 (lambda (subdir)
+                                   "Ignore \".st\" subdirectories.
+  These are directories created by SyncThing which may have org files I do
+  not want to include."
+                                   (not (string-match (rx (literal ".st")) subdir)))))
 
   ;;; Macros
   (defmacro krisb-evaluate-when-internet (interval &rest body)

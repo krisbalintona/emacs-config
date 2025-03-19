@@ -81,7 +81,7 @@
           :map org-agenda-mode-map
           ("`" . krisb-org-agenda-process))
   :custom
-  (org-agenda-files krisb-org-agenda-directory-files)
+  (org-agenda-files (krisb-org-agenda-directory-files))
   (org-agenda-inhibit-startup t)
 
   ;; Effort

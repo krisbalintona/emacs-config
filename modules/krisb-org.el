@@ -155,8 +155,8 @@
   :custom
   (org-refile-use-cache nil)
   (org-refile-targets
-   `((,krisb-org-agenda-directory-files . (:level . 0))
-     (,krisb-org-agenda-directory-files . (:tag . "project"))
+   `((,(krisb-org-agenda-directory-files) . (:level . 0))
+     (,(krisb-org-agenda-directory-files) . (:tag . "project"))
      (,krisb-org-agenda-main-file . (:maxlevel . 3))))
   ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
   ;; want to refile to a non-todo heading in the current file?
