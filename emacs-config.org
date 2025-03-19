@@ -8454,141 +8454,6 @@ There are several packages that end up incredibly useful for authoring packages.
   ;;; krisb-indentation.el ends here
 #+end_src
 
-** =krisb-reveal.el=
-
-#+begin_src emacs-lisp :tangle "lisp/krisb-reveal.el"
-  ;;; krisb-reveal.el --- Convenience for opening outline and org headings  -*- lexical-binding: t; -*-
-
-  ;; Copyright (C) 2024  Kristoffer Balintona
-
-  ;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
-  ;; Keywords: convenience
-
-  ;; This program is free software; you can redistribute it and/or modify
-  ;; it under the terms of the GNU General Public License as published by
-  ;; the Free Software Foundation, either version 3 of the License, or
-  ;; (at your option) any later version.
-
-  ;; This program is distributed in the hope that it will be useful,
-  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ;; GNU General Public License for more details.
-
-  ;; You should have received a copy of the GNU General Public License
-  ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-  ;;; Commentary:
-
-  ;; Open the org or outline/outshine heading that contains point when needed.
-
-  ;;; Code:
-  (require 'cl-macs)
-
-  ;;; Options
-  (defgroup krisb-reveal nil
-    "Reveal outline/outshine and org heading that contains point after command.
-  Inspired by `pulsar--post-command-pulse'."
-    :group 'convenience
-    :prefix "krisb-reveal-")
-
-  (defcustom krisb-reveal-fold-commands (list)
-    "A list that determines arguments to pass to `krisb-reveal-fold'.
-  This is a list of plists.
-
-  Each plist requires the following properties:
-  - :command -- A symbol representing a command after which `krisb-reveal-fold'
-    should be invoked
-  - :location -- A function (name or lambda expression) that returns a cons whose
-    car is a point at which `krisb-reveal-fold' will be invoked and cdr is the
-    buffer to invoke `krisb-reveal-fold' in.
-
-  The following properties are optional:
-  - :predicate -- A function (name or lambda expression) that, if returning nil,
-    prevents `kris-reveal-fold' from being invoked after the command denoted by
-    :command."
-    :type '(repeat
-            (plist :key-type (choice
-                              (const :command)      ; Required
-                              (const :location)     ; Required
-                              (const :predicate))   ; Optional
-                   :value-type (choice
-                                (function :tag "Command")           ; For :command
-                                (function :tag "Location function") ; For :location
-                                (function :tag "Predicate function"))))) ; For :predicate)
-
-  ;;; Functions
-  (declare-function org-show-entry "org")
-  (declare-function outline-show-entry "outline")
-
-  ;;;###autoload
-  (defun krisb-reveal-fold (&optional point buffer)
-    "Reveal the outline/outshine or org heading at POINT in BUFFER.
-  This function is like `pulsar-reveal-entry' but not just when point is
-  at heading.
-
-  This function assumes `krisb-reveal-mode' is non-nil.
-
-  If POINT is nil, the current point in BUFFER will be assumed.  If BUFFER
-  is nil, the current buffer will be assumed."
-    (when (not krisb-reveal-mode)
-      (cl-return))
-    (with-current-buffer (or buffer (current-buffer))
-      (goto-char (or point (point)))
-      (cond
-       ((eq major-mode 'org-mode)
-        (org-show-entry))
-       ((or (eq major-mode 'outline-mode)
-            (bound-and-true-p outline-minor-mode))
-        (outline-show-entry)))))
-
-  ;; TODO 2024-10-24: Consider resolving aliases like
-  ;; `pulsar--resolve-function-aliases'.
-  (defun krisb-reveal--post-command ()
-    "Maybe reveal fold at point.
-  A \"fold\" is an outline, outshine, or org heading.  Folds are revealed
-  if the `this-command' is one of the ones listed in
-  `krisb-reveal-fold-commands'.  Revealing is achieved by
-  `krisb-reveal-fold'.
-
-  This function is meant to be added to `post-command-hook'.
-
-  This function was inspired by `pulsar--post-command-pulse'."
-    (dolist (plist (cl-remove-if-not
-                    (lambda (plist)
-                      (eq (plist-get plist :command) this-command))
-                    krisb-reveal-fold-commands))
-      (let ((predicate (plist-get plist :predicate)))
-        (when (or (not predicate) (funcall predicate))
-          (let* ((location (funcall (plist-get plist :location)))
-                 (point (car location))
-                 (buffer (cdr location)))
-            (krisb-reveal-fold point buffer))))))
-
-  ;;; Minor mode
-  ;;;###autoload
-  (define-minor-mode krisb-reveal-mode
-    "Set up krisb-reveal for each command in `krisb-reveal-fold-commands'.
-  This is a buffer-local mode.  Also check `krisb-reveal-global-mode'."
-    :global nil
-    (if krisb-reveal-mode
-        (add-hook 'post-command-hook #'krisb-reveal--post-command nil 'local)
-      (remove-hook 'post-command-hook #'krisb-reveal--post-command 'local)))
-
-  ;;;###autoload
-  (defun krisb-reveal--on ()
-    "Enable `krisb-reveal-mode'."
-    (unless (minibufferp)
-      (let (inhibit-quit)
-        (krisb-reveal-mode 1))))
-
-  ;;;###autoload
-  (define-globalized-minor-mode krisb-reveal-global-mode krisb-reveal-mode krisb-reveal--on)
-
-  ;;; Provide
-  (provide 'krisb-reveal)
-  ;;; krisb-reveal.el ends here
-#+end_src
-
 ** =krisb-vertico.el=
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-vertico.el"
@@ -8854,156 +8719,6 @@ There are several packages that end up incredibly useful for authoring packages.
   ;;; Provide
   (provide 'krisb-org-ext)
   ;;; krisb-org-ext.el ends here
-#+end_src
-
-** =krisb-org-hide-drawers.el=
-
-#+begin_src emacs-lisp :tangle "lisp/krisb-org-hide-drawers.el"
-  ;;; krisb-org-hide-drawers.el --- Hide drawers in Org using overlays  -*- lexical-binding: t; -*-
-
-  ;; Copyright (C) 2024  Kristoffer Balintona
-
-  ;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
-  ;; Keywords: tools, extensions
-
-  ;; This program is free software; you can redistribute it and/or modify
-  ;; it under the terms of the GNU General Public License as published by
-  ;; the Free Software Foundation, either version 3 of the License, or
-  ;; (at your option) any later version.
-
-  ;; This program is distributed in the hope that it will be useful,
-  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ;; GNU General Public License for more details.
-
-  ;; You should have received a copy of the GNU General Public License
-  ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-  ;;; Commentary:
-
-  ;; Hide drawers in Org using overlays.  My improved version of org-tidy.
-
-  ;;; Code:
-  (require 'org)
-  (require 'org-element)
-
-  ;; TODO 2024-11-12: Ensure namespace is adhered to
-
-  ;;; Options
-  (defgroup krisb-org-hide-drawers ()
-    "Hide Org drawers using overlays."
-    :group 'org-mode
-    :prefix "krisb-org-hide-drawers-")
-
-  (defcustom krisb-org-hide-drawers-string (propertize " #" 'face 'shadow)
-    "Display string used for overlays."
-    :type 'string)
-
-  (defcustom krisb-org-hide-drawers-blacklist (list)
-    "A list of properties that prevent hiding drawer.
-  If any property in this option is present in a drawer, it will not be
-  hidden."
-    :type '(repeat string))
-
-  (defcustom krisb-org-hide-top-level-drawers t
-    "If nil, don't hide top-level property drawers."
-    :type 'boolean)
-
-  ;;; Variables
-  (defvar-local krisb-org-hide-drawers-overlays nil
-    "A list of overlays used to hide Org drawers in the current buffer.")
-
-  ;;; Functions
-  (defun krisb-org-hide-drawers--get-properties (drawer)
-    "Extract all properties from the given Org DRAWER element."
-    (let ((contents (org-element-contents drawer))
-          properties)
-      (dolist (element contents)
-        (when (and (eq (org-element-type element) 'node-property)
-                   (org-element-property :key element))
-          (push (cons (org-element-property :key element)
-                      (org-element-property :value element))
-                properties)))
-      (nreverse properties)))             ; Return the list in original order
-
-  (defun krisb-org-hide-drawers--should-hide (drawer)
-    "Predicate for whether DRAWER should be hidden.
-  DRAWER is an org-element.
-
-  Considers `krisb-org-hide-drawers-blacklist'."
-    (let* ((properties (krisb-org-hide-drawers--get-properties drawer))
-           (property-keys (mapcar #'car properties))
-           ;; We check if DRAWER is a top-level drawer by checking if the
-           ;; beginning of the drawer (an org element) is at the first point in
-           ;; the buffer
-           (top-level-p (= 1 (org-element-property :begin drawer))))
-      (and
-       ;; First adhere to the value of `krisb-org-hide-top-level-drawers'
-       (or krisb-org-hide-top-level-drawers (not top-level-p))
-       ;; Check against properties in the blacklist
-       (not (cl-some (lambda (blacklist-prop)
-                       (member blacklist-prop property-keys))
-                     krisb-org-hide-drawers-blacklist)))))
-
-  ;; TODO 2024-10-23: Consider special behavior for top-level drawers.  See
-  ;; `org-tidy-should-tidy'.
-  (defun krisb-org-hide-drawers-create-overlays ()
-    "Create overlays to hide Org drawers in the current buffer using the Org AST."
-    (interactive)
-    (let ((ast (org-element-parse-buffer 'element nil)))
-      (org-element-map ast '(drawer property-drawer)
-        (lambda (drawer)
-          (when (krisb-org-hide-drawers--should-hide drawer)
-            (let* ((begin (org-element-property :begin drawer))
-                   (end (save-excursion
-                          (goto-char (org-element-property :end drawer))
-                          (skip-chars-backward "\n\t ") ; Skip trailing whitespace
-                          (point)))
-                   (ov (make-overlay (1- begin) ; Include preceding newline in overlay
-                                     end))) ; Don't include proceeding whitespace in overlay
-
-              ;; TODO 2024-10-23: Consider using the `insert-in-front-hooks'
-              ;; special text property to notify the user of danger when adding
-              ;; characters in front of hidden property drawer, since un-hiding it
-              ;; then means that drawer is no longer recognized as such.
-
-              (overlay-put ov 'display krisb-org-hide-drawers-string)
-              (overlay-put ov 'modification-hooks
-                           '((lambda (overlay after beg end)
-                               (setq krisb-org-hide-drawers-overlays
-                                     (remove overlay krisb-org-hide-drawers-overlays))
-                               (delete-overlay overlay))))
-              (overlay-put ov 'read-only t)
-              (push ov krisb-org-hide-drawers-overlays)))))))
-
-  (defun krisb-org-hide-drawers-delete-overlays ()
-    "Delete all drawer-hiding overlays in the current buffer."
-    (interactive)
-    (mapc #'delete-overlay krisb-org-hide-drawers-overlays)
-    (setq krisb-org-hide-drawers-overlays nil))
-
-  (defun krisb-org-hide-drawers-toggle ()
-    "Toggle visibility of Org drawers in the current buffer."
-    (interactive)
-    (if krisb-org-hide-drawers-overlays
-        (krisb-org-hide-drawers-delete-overlays)
-      (krisb-org-hide-drawers-create-overlays)))
-
-  ;;; Minor mode
-  ;;;###autoload
-  (define-minor-mode krisb-org-hide-drawers-mode
-    "Minor mode to hide Org drawers with a # symbol."
-    :lighter " HideDrawers"
-    (if krisb-org-hide-drawers-mode
-        (progn
-          (krisb-org-hide-drawers-create-overlays)
-          (add-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays nil t))
-      (krisb-org-hide-drawers-delete-overlays)
-      (remove-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays t)))
-
-  ;;; Provide
-  (provide 'krisb-org-hide-drawers)
-  ;;; krisb-org-hide-drawers.el ends here
 #+end_src
 
 ** =krisb-denote-ext.el=
@@ -11781,6 +11496,291 @@ There are several packages that end up incredibly useful for authoring packages.
   ;;; Provide
   (provide 'pinching-margins)
   ;;; pinching-margins.el ends here
+#+end_src
+
+*** =krisb-reveal.el=
+
+#+begin_src emacs-lisp :tangle "lisp/krisb-reveal.el"
+  ;;; krisb-reveal.el --- Convenience for opening outline and org headings  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2024  Kristoffer Balintona
+
+  ;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+  ;; Keywords: convenience
+
+  ;; This program is free software; you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation, either version 3 of the License, or
+  ;; (at your option) any later version.
+
+  ;; This program is distributed in the hope that it will be useful,
+  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ;; GNU General Public License for more details.
+
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  ;;; Commentary:
+
+  ;; Open the org or outline/outshine heading that contains point when needed.
+
+  ;;; Code:
+  (require 'cl-macs)
+
+  ;;; Options
+  (defgroup krisb-reveal nil
+    "Reveal outline/outshine and org heading that contains point after command.
+  Inspired by `pulsar--post-command-pulse'."
+    :group 'convenience
+    :prefix "krisb-reveal-")
+
+  (defcustom krisb-reveal-fold-commands (list)
+    "A list that determines arguments to pass to `krisb-reveal-fold'.
+  This is a list of plists.
+
+  Each plist requires the following properties:
+  - :command -- A symbol representing a command after which `krisb-reveal-fold'
+    should be invoked
+  - :location -- A function (name or lambda expression) that returns a cons whose
+    car is a point at which `krisb-reveal-fold' will be invoked and cdr is the
+    buffer to invoke `krisb-reveal-fold' in.
+
+  The following properties are optional:
+  - :predicate -- A function (name or lambda expression) that, if returning nil,
+    prevents `kris-reveal-fold' from being invoked after the command denoted by
+    :command."
+    :type '(repeat
+            (plist :key-type (choice
+                              (const :command)      ; Required
+                              (const :location)     ; Required
+                              (const :predicate))   ; Optional
+                   :value-type (choice
+                                (function :tag "Command")           ; For :command
+                                (function :tag "Location function") ; For :location
+                                (function :tag "Predicate function"))))) ; For :predicate)
+
+  ;;; Functions
+  (declare-function org-show-entry "org")
+  (declare-function outline-show-entry "outline")
+
+  ;;;###autoload
+  (defun krisb-reveal-fold (&optional point buffer)
+    "Reveal the outline/outshine or org heading at POINT in BUFFER.
+  This function is like `pulsar-reveal-entry' but not just when point is
+  at heading.
+
+  This function assumes `krisb-reveal-mode' is non-nil.
+
+  If POINT is nil, the current point in BUFFER will be assumed.  If BUFFER
+  is nil, the current buffer will be assumed."
+    (when (not krisb-reveal-mode)
+      (cl-return))
+    (with-current-buffer (or buffer (current-buffer))
+      (goto-char (or point (point)))
+      (cond
+       ((eq major-mode 'org-mode)
+        (org-show-entry))
+       ((or (eq major-mode 'outline-mode)
+            (bound-and-true-p outline-minor-mode))
+        (outline-show-entry)))))
+
+  ;; TODO 2024-10-24: Consider resolving aliases like
+  ;; `pulsar--resolve-function-aliases'.
+  (defun krisb-reveal--post-command ()
+    "Maybe reveal fold at point.
+  A \"fold\" is an outline, outshine, or org heading.  Folds are revealed
+  if the `this-command' is one of the ones listed in
+  `krisb-reveal-fold-commands'.  Revealing is achieved by
+  `krisb-reveal-fold'.
+
+  This function is meant to be added to `post-command-hook'.
+
+  This function was inspired by `pulsar--post-command-pulse'."
+    (dolist (plist (cl-remove-if-not
+                    (lambda (plist)
+                      (eq (plist-get plist :command) this-command))
+                    krisb-reveal-fold-commands))
+      (let ((predicate (plist-get plist :predicate)))
+        (when (or (not predicate) (funcall predicate))
+          (let* ((location (funcall (plist-get plist :location)))
+                 (point (car location))
+                 (buffer (cdr location)))
+            (krisb-reveal-fold point buffer))))))
+
+  ;;; Minor mode
+  ;;;###autoload
+  (define-minor-mode krisb-reveal-mode
+    "Set up krisb-reveal for each command in `krisb-reveal-fold-commands'.
+  This is a buffer-local mode.  Also check `krisb-reveal-global-mode'."
+    :global nil
+    (if krisb-reveal-mode
+        (add-hook 'post-command-hook #'krisb-reveal--post-command nil 'local)
+      (remove-hook 'post-command-hook #'krisb-reveal--post-command 'local)))
+
+  ;;;###autoload
+  (defun krisb-reveal--on ()
+    "Enable `krisb-reveal-mode'."
+    (unless (minibufferp)
+      (let (inhibit-quit)
+        (krisb-reveal-mode 1))))
+
+  ;;;###autoload
+  (define-globalized-minor-mode krisb-reveal-global-mode krisb-reveal-mode krisb-reveal--on)
+
+  ;;; Provide
+  (provide 'krisb-reveal)
+  ;;; krisb-reveal.el ends here
+#+end_src
+
+*** =krisb-org-hide-drawers.el=
+
+#+begin_src emacs-lisp :tangle "lisp/krisb-org-hide-drawers.el"
+  ;;; krisb-org-hide-drawers.el --- Hide drawers in Org using overlays  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2024  Kristoffer Balintona
+
+  ;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
+  ;; Keywords: tools, extensions
+
+  ;; This program is free software; you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation, either version 3 of the License, or
+  ;; (at your option) any later version.
+
+  ;; This program is distributed in the hope that it will be useful,
+  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ;; GNU General Public License for more details.
+
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  ;;; Commentary:
+
+  ;; Hide drawers in Org using overlays.  My improved version of org-tidy.
+
+  ;;; Code:
+  (require 'org)
+  (require 'org-element)
+
+  ;; TODO 2024-11-12: Ensure namespace is adhered to
+
+  ;;; Options
+  (defgroup krisb-org-hide-drawers ()
+    "Hide Org drawers using overlays."
+    :group 'org-mode
+    :prefix "krisb-org-hide-drawers-")
+
+  (defcustom krisb-org-hide-drawers-string (propertize " #" 'face 'shadow)
+    "Display string used for overlays."
+    :type 'string)
+
+  (defcustom krisb-org-hide-drawers-blacklist (list)
+    "A list of properties that prevent hiding drawer.
+  If any property in this option is present in a drawer, it will not be
+  hidden."
+    :type '(repeat string))
+
+  (defcustom krisb-org-hide-top-level-drawers t
+    "If nil, don't hide top-level property drawers."
+    :type 'boolean)
+
+  ;;; Variables
+  (defvar-local krisb-org-hide-drawers-overlays nil
+    "A list of overlays used to hide Org drawers in the current buffer.")
+
+  ;;; Functions
+  (defun krisb-org-hide-drawers--get-properties (drawer)
+    "Extract all properties from the given Org DRAWER element."
+    (let ((contents (org-element-contents drawer))
+          properties)
+      (dolist (element contents)
+        (when (and (eq (org-element-type element) 'node-property)
+                   (org-element-property :key element))
+          (push (cons (org-element-property :key element)
+                      (org-element-property :value element))
+                properties)))
+      (nreverse properties)))             ; Return the list in original order
+
+  (defun krisb-org-hide-drawers--should-hide (drawer)
+    "Predicate for whether DRAWER should be hidden.
+  DRAWER is an org-element.
+
+  Considers `krisb-org-hide-drawers-blacklist'."
+    (let* ((properties (krisb-org-hide-drawers--get-properties drawer))
+           (property-keys (mapcar #'car properties))
+           ;; We check if DRAWER is a top-level drawer by checking if the
+           ;; beginning of the drawer (an org element) is at the first point in
+           ;; the buffer
+           (top-level-p (= 1 (org-element-property :begin drawer))))
+      (and
+       ;; First adhere to the value of `krisb-org-hide-top-level-drawers'
+       (or krisb-org-hide-top-level-drawers (not top-level-p))
+       ;; Check against properties in the blacklist
+       (not (cl-some (lambda (blacklist-prop)
+                       (member blacklist-prop property-keys))
+                     krisb-org-hide-drawers-blacklist)))))
+
+  ;; TODO 2024-10-23: Consider special behavior for top-level drawers.  See
+  ;; `org-tidy-should-tidy'.
+  (defun krisb-org-hide-drawers-create-overlays ()
+    "Create overlays to hide Org drawers in the current buffer using the Org AST."
+    (interactive)
+    (let ((ast (org-element-parse-buffer 'element nil)))
+      (org-element-map ast '(drawer property-drawer)
+        (lambda (drawer)
+          (when (krisb-org-hide-drawers--should-hide drawer)
+            (let* ((begin (org-element-property :begin drawer))
+                   (end (save-excursion
+                          (goto-char (org-element-property :end drawer))
+                          (skip-chars-backward "\n\t ") ; Skip trailing whitespace
+                          (point)))
+                   (ov (make-overlay (1- begin) ; Include preceding newline in overlay
+                                     end))) ; Don't include proceeding whitespace in overlay
+
+              ;; TODO 2024-10-23: Consider using the `insert-in-front-hooks'
+              ;; special text property to notify the user of danger when adding
+              ;; characters in front of hidden property drawer, since un-hiding it
+              ;; then means that drawer is no longer recognized as such.
+
+              (overlay-put ov 'display krisb-org-hide-drawers-string)
+              (overlay-put ov 'modification-hooks
+                           '((lambda (overlay after beg end)
+                               (setq krisb-org-hide-drawers-overlays
+                                     (remove overlay krisb-org-hide-drawers-overlays))
+                               (delete-overlay overlay))))
+              (overlay-put ov 'read-only t)
+              (push ov krisb-org-hide-drawers-overlays)))))))
+
+  (defun krisb-org-hide-drawers-delete-overlays ()
+    "Delete all drawer-hiding overlays in the current buffer."
+    (interactive)
+    (mapc #'delete-overlay krisb-org-hide-drawers-overlays)
+    (setq krisb-org-hide-drawers-overlays nil))
+
+  (defun krisb-org-hide-drawers-toggle ()
+    "Toggle visibility of Org drawers in the current buffer."
+    (interactive)
+    (if krisb-org-hide-drawers-overlays
+        (krisb-org-hide-drawers-delete-overlays)
+      (krisb-org-hide-drawers-create-overlays)))
+
+  ;;; Minor mode
+  ;;;###autoload
+  (define-minor-mode krisb-org-hide-drawers-mode
+    "Minor mode to hide Org drawers with a # symbol."
+    :lighter " HideDrawers"
+    (if krisb-org-hide-drawers-mode
+        (progn
+          (krisb-org-hide-drawers-create-overlays)
+          (add-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays nil t))
+      (krisb-org-hide-drawers-delete-overlays)
+      (remove-hook 'after-save-hook #'krisb-org-hide-drawers-create-overlays t)))
+
+  ;;; Provide
+  (provide 'krisb-org-hide-drawers)
+  ;;; krisb-org-hide-drawers.el ends here
 #+end_src
 
 * COMMENT Removed
