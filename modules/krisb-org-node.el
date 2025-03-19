@@ -112,7 +112,8 @@ For use as `org-node-affixation-fn'."
   (indexed-org-dirs (list krisb-org-directory))
   (indexed-warn-title-collisions nil)
   :config
-  (indexed-update-on-save-mode 1))
+  (indexed-updater-mode 1)
+  (indexed-roam-mode 1))
 
 ;;; Provide
 (provide 'krisb-org-node)
