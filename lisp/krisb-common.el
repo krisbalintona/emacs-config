@@ -76,16 +76,6 @@ Meant to be used as the value of `org-directory'.")
 (defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
   "My main org-agenda file.")
 
-(defvar krisb-org-agenda-directory-files
-  (directory-files-recursively krisb-org-agenda-directory
-                               (rx (or (literal ".org") (literal ".org_archive")) eol)
-                               nil
-                               (lambda (subdir)
-                                 "Ignore \".st\" subdirectories.
-These are directories created by SyncThing which may have org files I do not want to include."
-                                 (not (string-match (rx (literal ".st")) subdir))))
-  "A list of all org and org_archive files in `krisb-org-directory'.")
-
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
   "A list of my bibliography (.bib) files.")
 
@@ -104,6 +94,16 @@ Useful for some citation-related configurations.")
   "Directory that for local MELPA repository.")
 
 ;;; Functions
+(defun krisb-org-agenda-directory-files ()
+  "Return list of all org and org_archive files in `krisb-org-directory'."
+  (directory-files-recursively krisb-org-agenda-directory
+                               (rx (or (literal ".org") (literal ".org_archive")) eol)
+                               nil
+                               (lambda (subdir)
+                                 "Ignore \".st\" subdirectories.
+These are directories created by SyncThing which may have org files I do
+not want to include."
+                                 (not (string-match (rx (literal ".st")) subdir)))))
 
 ;;; Macros
 (defmacro krisb-evaluate-when-internet (interval &rest body)
