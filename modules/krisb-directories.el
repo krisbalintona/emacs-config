@@ -55,5 +55,15 @@ command."
           ("l" . dired-hist-go-back)
           ("r" . dired-hist-go-forward)))
 
+;;; Cascading-dir-locals
+;; "Provides a global minor mode that changes how Emacs handles the lookup of
+;; applicable dir-locals files (".dir-locals.el"): instead of starting at the
+;; directory of the visited file and moving up the directory tree only until a
+;; first dir-locals file is found, collect and apply all (!) dir-locals files
+;; found from the current directory up to the root one."
+(use-package cascading-dir-locals
+  :config
+  (cascading-dir-locals-mode 1))
+
 ;;; Provide
 (provide 'krisb-directories)
