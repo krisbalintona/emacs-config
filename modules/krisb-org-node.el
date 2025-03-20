@@ -98,6 +98,7 @@ For use as `org-node-affixation-fn'."
 
 ;;; Org-node-fakeroam
 (use-package org-node-fakeroam
+  :disabled t                           ; 2025-03-20: We have indexed.el now
   :after org-roam
   :custom
   (org-roam-db-update-on-save nil)      ; Don't update DB on save, not needed
@@ -111,9 +112,18 @@ For use as `org-node-affixation-fn'."
   :custom
   (indexed-org-dirs (list krisb-org-directory))
   (indexed-warn-title-collisions nil)
+  (indexed-roam-db-location
+   (if (boundp 'org-roam-db-location)
+       org-roam-db-location
+     (expand-file-name "indexed-roam.db" temporary-file-directory)))
   :config
   (indexed-updater-mode 1)
-  (indexed-roam-mode 1))
+  (indexed-orgdb-mode 1)
+  ;; End dependence on `org-roam-db-sync'
+  (with-eval-after-load 'org-roam
+    (setopt org-roam-db-update-on-save nil)
+    (org-roam-db-autosync-mode -1)
+    (indexed-roam-mode 1)))
 
 ;;; Provide
 (provide 'krisb-org-node)
