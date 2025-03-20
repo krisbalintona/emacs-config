@@ -573,7 +573,7 @@ Only used when `org-super-agenda-keep-order' is non-nil."
   :config
   (org-clock-persistence-insinuate)
 
-  ;; Mode line string
+  ;; Bespoke mode line string
   (defun krisb-org-clock-get-heading-string ()
     "Get truncated org heading string.
 
@@ -625,14 +625,17 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :demand t
   :after org-agenda
   :bind ( :map org-mode-map
-          ("C-c d" . krisb-consult-org-depend)
+          ("C-c d" . krisb-consult-org-edna-block)
           :map org-agenda-mode-map
-          ("C-c d". krisb-consult-org-agenda-depend))
+          ("C-c d". krisb-consult-org-agenda-enda-block))
   :config
   (org-edna-mode 1)
 
+  ;; Bespoke `consult' integration.  This functionality depends on org-enda's
+  ;; :BLOCKER: (which supports lists of IDs, rather than a single ID, like
+  ;; `org-depend').
   (with-eval-after-load 'consult
-    (defun krisb-consult-org-depend--add-id (new-id)
+    (defun krisb-consult-org-edna--add-id (new-id)
       "Add an ID to the current heading’s BLOCKER property.
 If none exists, automatically create the BLOCKER property. Code
 based off of `org-linker-edna’."
@@ -651,7 +654,7 @@ based off of `org-linker-edna’."
              (new-value (concat "ids(" all-ids ")")))
         (org-set-property "BLOCKER" new-value)))
 
-    (defun krisb-consult-org-depend (&optional match)
+    (defun krisb-consult-org-edna-block (&optional match)
       "Create a dependency for the `org-todo’ at point.
   A dependency is defined by `org-depend’s `BLOCKER’ property. IDs
   are created in the todo dependency with `org-id-get-create’.
@@ -671,13 +674,13 @@ based off of `org-linker-edna’."
                 (error "Cannot depend on the same `org-todo’!"))
               (setq new-id (org-id-get-create)))
             ;; Modify the BLOCKER property of the current todo
-            (krisb-consult-org-depend--add-id new-id)
+            (krisb-consult-org-edna--add-id new-id)
             (message "‘%s’ added as a dependency to this todo"
                      (substring-no-properties dependency))))))
 
-    (defun krisb-consult-org-agenda-depend (&optional match)
+    (defun krisb-consult-org-agenda-edna (&optional match)
       "Create a dependency for the `org-agenda’ item at point.
-  See `krisb-consult-org-depend’."
+  See `krisb-consult-org-edna-block’."
       (interactive)
       (let* ((bufname-orig (buffer-name))
              (marker (or (org-get-at-bol 'org-marker)
@@ -694,11 +697,11 @@ based off of `org-linker-edna’."
               ;; `recenter' hook then an error will be returned since it'll be
               ;; attempting to `recenter' a non-present buffer
               (let ((consult-after-jump-hook nil))
-                (setq dependency (funcall 'krisb-consult-org-depend match))))))))
+                (setq dependency (funcall 'krisb-consult-org-edna-block match))))))))
 
-    (consult-customize krisb-consult-org-depend
+    (consult-customize krisb-consult-org-edna-block
                        :prompt "Select dependency for the heading at point: "
-                       krisb-consult-org-agenda-depend
+                       krisb-consult-org-agenda-edna
                        :prompt "Select dependency for this agenda item: ")))
 
 ;;; Org-review
