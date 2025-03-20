@@ -24,7 +24,6 @@ The following are the flags I prefer to compile Emacs with.
 
 ** =early-init.el=
 
-Emacs 27 introduces early-init.el, which is run before init.el, before package and UI initialization happens.
 
 *** Garbage collection
 
@@ -57,7 +56,7 @@ Emacs 27 introduces early-init.el, which is run before init.el, before package a
 
 **** Doom Emacs' suggestions
 
-All of the settings below are taken from Doom Emacs, whose developers have the know-how for smartly increasing startup performance.
+All the settings below come from Doom Emacs, whose developers have the know-how for smartly increasing startup performance.
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;; NOTE 2024-09-16: From Doom Emacs.
   ;; PERF: A second, case-insensitive pass over `auto-mode-alist' is time wasted.
@@ -369,7 +368,7 @@ I use =package.el=. =Package.el= (henceforth =package=) is the built-in package 
   (setopt load-prefer-newer t) ; Do not load outdated byte code files
 #+end_src
 
-[fn:2] Those who utilize =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ directly.
+[fn:2] Those who use =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ directly.
 
 Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
 
