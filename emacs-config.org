@@ -24,6 +24,7 @@ The following are the flags I prefer to compile Emacs with.
 
 ** =early-init.el=
 
+Emacs 27 introduces =early-init.el=, which runs before init.el, before package and UI initialization happens.
 
 *** Garbage collection
 
@@ -950,6 +951,12 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 
   ;;;; Don't display warning buffer at the bottom of frame
   (setopt warning-display-at-bottom nil)
+
+  ;;;; Change highlighting behavior of `exchange-point-and-mark'
+  (setopt exchange-point-and-mark-highlight-region nil) ; New in Emacs 31.1
+
+  ;;;; Don't visually shift text when using `rectangle-mark-mode'
+  (setopt rectangle-indicate-zero-width-rectangle nil) ; New in Emacs 31.1
 #+end_src
 
 **** Provide
