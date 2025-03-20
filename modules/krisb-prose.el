@@ -108,7 +108,6 @@ fringe background color, are out of place."
 ;;;;; Hammy
 (use-package hammy
   :bind ( :map krisb-open-keymap
-          ("h h" . krisb-hammy-dwim)
           ("h S" . hammy-start)
           ("h n" . hammy-next)
           ("h s" . hammy-stop)
@@ -119,10 +118,11 @@ fringe background color, are out of place."
           ("h R" . hammy-status)
           ("h I" . hammy-start-org-clock-in)
           ;; Bespoke commands
+          ("h h" . krisb-hammy-dwim)
           ("h d" . krisb-hammy-modify-duration)
           ("h e" . krisb-hammy-modify-elapsed))
   :custom
-  ;; TODO 2024-09-25: Have this found more locally. When I do, also change
+  ;; TODO 2024-09-25: Have this found more locally.  When I do, also change
   ;; `tmr-sound' to this file
   (hammy-sound-end-work "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
   (hammy-sound-end-break "/home/krisbalintona/.emacs.d/elpa/work-timer/simple-notification.mp3")
@@ -230,9 +230,11 @@ the task should be clocked in)."
   (defun krisb-hammy-dwim ()
     "DWIM with hammy."
     (interactive)
-    (if hammy-active
-        (call-interactively 'hammy-next)
-      (call-interactively 'hammy-start)))
+    (if (equal major-mode 'org-agenda-mode)
+        (call-interactively 'hammy-start-org-clock-in)
+      (if hammy-active
+          (call-interactively 'hammy-next)
+        (call-interactively 'hammy-start))))
 
   ;; Hammy definitions
   (defun krisb-hammy-play-sound ()
@@ -250,15 +252,17 @@ the task should be clocked in)."
                :duration "40 minutes"
                :before (do (announce "Starting work time (advance to break when ready)."))
                :after (do (krisb-hammy-play-sound))
-               :advance (do (krisb-hammy-play-sound)
-                            (let* ((current-duration
-                                    (ts-human-format-duration
-                                     (float-time
-                                      (time-subtract (current-time)
-                                                     current-interval-start-time))))
-                                   (message (format "You've worked for %s!" current-duration)))
-                              (announce message)
-                              (notify message))))
+               :advance t
+               ;; (do (krisb-hammy-play-sound)
+               ;;     (let* ((current-duration
+               ;;             (ts-human-format-duration
+               ;;              (float-time
+               ;;               (time-subtract (current-time)
+               ;;                              current-interval-start-time))))
+               ;;            (message (format "You've worked for %s!" current-duration)))
+               ;;       (announce message)
+               ;;       (notify message)))
+               )
      (interval :name "Break"
                :duration (do (cl-assert (equal "Work" (hammy-interval-name (caar history))))
                              (let ((duration (cl-loop for (interval start end) in history
@@ -282,8 +286,10 @@ the task should be clocked in)."
                               (if (alist-get 'unused-break etc)
                                   (cl-incf (alist-get 'unused-break etc) unused)
                                 (setf (alist-get 'unused-break etc) unused)))))
-               :advance (remind "5 minutes"
-                                (do (krisb-hammy-play-sound))))))
+               :advance t
+               ;; (remind "5 minutes"
+               ;;         (do (krisb-hammy-play-sound)))
+               )))
   (hammy-define "Ramp and decline"
     :documentation "Get your momentum going!"
     :intervals (list (interval :name "Work"
@@ -293,8 +299,8 @@ the task should be clocked in)."
                                :before (do (announce "Work time!"))
                                :advance (do (announce "Work time is over!")
                                             (notify "Work time is over!")
-                                          (remind "5 minutes"
-                                                  (do (krisb-hammy-play-sound)))))
+                                            (remind "5 minutes"
+                                                    (do (krisb-hammy-play-sound)))))
                      (interval :name "Rest"
                                :face 'font-lock-type-face
                                :duration (do (let ((duration (cl-loop for (interval start end) in history
@@ -318,7 +324,7 @@ the task should be clocked in)."
                                :advance (remind "5 minutes"
                                                 (do (announce "Rest time is over!")
                                                     (notify "Rest time is over!")
-                                                  (krisb-hammy-play-sound)))))
+                                                    (krisb-hammy-play-sound)))))
     :complete-p (do (and (> cycles 1)
                          interval
                          (equal "Work" interval-name)
