@@ -15,25 +15,25 @@
                 eshell-atuin eshell-syntax-highlighting eshell-z
                 exec-path-from-shell faceup fish-mode flymake-collection
                 fontaine forge form-feed gcmh gif-screencast git-share grid
-                hammy hide-mode-line highlight-function-calls hotfuzz
+                hammy hide-mode-line highlight-function-calls hotfuzz hugoista
                 hyprlang-ts-mode ibuffer-project idlwave indexed info-colors
                 inspector jinx keychain-environment kind-icon lazy-guard lin
-                lorem-ipsum magit-file-icons marginalia mermaid-mode mixed-pitch
-                modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
-                nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
-                nov ntlm ob-mermaid oc-csl-activate ol-notmuch olivetti on
-                orderless org-appear org-bookmark-heading org-bulletproof
-                org-contrib org-edna org-make-toc org-mime org-modern org-node
-                org-node-fakeroam org-remark org-review org-roam-ql org-roam-ui
-                org-tidy org-web-tools outshine ox-hugo package-build
-                package-lint-flymake paren-face pcmpl-args pdf-meta-edit
-                pdf-tools peg pinentry popper powerthesaurus psession pulsar
-                puni python rainbow-mode recursion-indicator saveplace-pdf-view
-                scratch show-font sinister smart-mark so-long soap-client
-                sudo-edit svg system-packages tmr tramp transient treesit-auto
-                try typewriter-roll-mode ultra-scroll use-package vc-jj
-                verilog-mode vertico-prescient which-key window-tool-bar wombag
-                ytdl))
+                litanize lorem-ipsum magit-file-icons marginalia mermaid-mode
+                mixed-pitch modus-themes mpv nadvice nerd-icons-completion
+                nerd-icons-dired nerd-icons-ibuffer no-littering notmuch-addr
+                notmuch-transient nov ntlm ob-mermaid oc-csl-activate ol-notmuch
+                olivetti on orderless org org-appear org-bookmark-heading
+                org-bulletproof org-contrib org-edna org-make-toc org-mime
+                org-modern org-node org-node-fakeroam org-remark org-review
+                org-roam-ql org-roam-ui org-tidy org-web-tools outshine ox-hugo
+                package-build package-lint-flymake paren-face pcmpl-args
+                pdf-meta-edit pdf-tools peg pinentry popper powerthesaurus
+                psession pulsar puni python rainbow-mode recursion-indicator
+                saveplace-pdf-view scratch show-font sinister smart-mark so-long
+                soap-client sudo-edit svg system-packages tmr tramp transient
+                treesit-auto try typewriter-roll-mode ultra-scroll use-package
+                vc-jj verilog-mode vertico-prescient which-key window-tool-bar
+                wombag ytdl))
  '(package-vc-selected-packages
    '((oblique :url "https://github.com/zzkt/oblique-strategies.git")
      (oblique-strategies :url "https://github.com/zzkt/oblique-strategies.git")
@@ -79,13 +79,15 @@
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
-   '((eval add-hook 'before-save-hook 'org-make-toc) (org-use-tag-inheritance)
-     (org-use-tag-inheritance . t)
+   '((org-review-delay . "+3d") (eval add-hook 'before-save-hook 'org-make-toc)
+     (org-use-tag-inheritance) (org-use-tag-inheritance . t)
      (org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
      (org-time-stamp-custom-formats quote ("<%B %d, %Y>" . "<%B %d, %Y %H:%M>"))
      (system-time-locale . "C")
      (eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created 99 t)))
- '(tmr-description-list '("Stop working!" "Work time 😄") nil nil "Customized with use-package tmr"))
+ '(tmr-description-list '("Stop working!" "Work time 😄") nil nil "Customized with use-package tmr")
+ '(warning-suppress-types
+   '((org-element org-element-parser) (org-element org-element-parser))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
