@@ -222,41 +222,7 @@
 (use-package vc-jj
   :config
   ;; Project integration with JJ
-  (require 'project-jj)
-
-  ;; Manual patch for the issue I described here:
-  ;; https://codeberg.org/emacs-jj-vc/vc-jj.el/issues/38
-  (el-patch-defun vc-jj-command (buffer okstatus file-or-list &rest flags)
-    "Execute `vc-jj-program', notifying the user and checking for errors.
-
-The output goes to BUFFER, the current buffer if BUFFER is t, or a
-buffer named \"*vc*\" if BUFFER is nil.  If the destination buffer is
-not already current, set it up properly and erase it.
-
-The command is considered successful if its exit status does not exceed
-OKSTATUS (if OKSTATUS is nil, that means to ignore error status, if it
-is 'async', that means not to wait for termination of the subprocess; if
-it is t it means to ignore all execution errors).  On unsuccessful
-execution, raise an error.
-
-FILE-OR-LIST is the name of a working file; it may be a list of files or
-be nil (to execute commands that don't expect a file name or set of
-files).  If an optional list of FLAGS is present, that is inserted into
-the command line before the filename(s).
-
-Return the return value of the command in the synchronous case, and the
-process object in the asynchronous case."
-    (apply #'vc-do-command (or buffer "*vc*") okstatus vc-jj-program
-           (el-patch-swap
-             file-or-list
-             (cond
-              ((stringp file-or-list)
-               (concat "'\"" file-or-list "\"'"))
-              ((and (listp file-or-list) (cl-every #'stringp file-or-list))
-               (mapcar (lambda (s) (concat "'\"" s "\"'")) file-or-list))))
-           (if (stringp vc-jj-global-switches)
-               (cons vc-jj-global-switches flags)
-             (append vc-jj-global-switches flags)))))
+  (require 'project-jj))
 
 ;;; Git-share
 ;; Share a web URL to the commit responsible for the change at point or the
