@@ -70,6 +70,9 @@ Meant to be used as the value of `org-directory'.")
 (defvar krisb-blog-directory (expand-file-name "blog" krisb-notes-directory)
   "The directory for my pre-export blog files.")
 
+(defvar krisb-org-archive-directory (expand-file-name "archive" krisb-org-directory)
+  "The archive directory for my org files.")
+
 (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-org-directory)
   "The directory holding my main org-agenda files.")
 

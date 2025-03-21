@@ -16,20 +16,21 @@
   (org-node-context-persist-on-disk t)
   (org-node-affixation-fn 'krisb-org-node-affixation-fn)
   (org-node-alter-candidates t)
-  (org-node-filter-fn
-   (lambda (node)
-     "Predicate for whether to include NODE.
-If non-nil, include.  If nil, exclude.  This predicate excludes these
-nodes:
-- With non-nil ROAM_EXCLUDE property value.
-- Node in org-agenda file."
-     (not (or (assoc "ROAM_EXCLUDE" (org-node-get-properties node))
-              (org-agenda-file-p (org-node-get-file node))))))
+  (org-node-custom-link-format-fn #'krisb-org-node-custom-link-format-fn)
+  (org-node-filter-fn #'krisb-org-node-filter-fn)
   (org-node-warn-title-collisions nil)
   (org-node-renames-allowed-dirs (list krisb-notes-directory))
   :config
   (org-node-cache-mode 1)
   (org-node-context-follow-mode 1)
+
+  ;; Bespoke filtering (exclusion) function
+  (defun krisb-org-node-filter-fn (node)
+    "Predicate for whether to include NODE.
+If non-nil, include.  If nil, exclude.  This predicate excludes these
+nodes:
+- With non-nil ROAM_EXCLUDE property value."
+    (not (or (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
 
   ;; Bespoke `org-node-find'
   (cl-defmethod krisb-org-node-box-or-dir ((node org-node))
@@ -44,27 +45,22 @@ containing NODE instead."
 
   (cl-defmethod krisb-org-node-place ((node org-node))
     "Return a fontified value of the ROAM_PLACE property of NODE."
-    (when-let ((place (cdr (assoc "ROAM_PLACE" (org-node-get-properties node)))))
-      (propertize place 'face 'shadow)))
+    (cdr (assoc "ROAM_PLACE" (org-node-get-properties node))))
 
   (cl-defmethod krisb-org-node-type ((node org-node))
     "Return a fontified value of the ROAM_TYPE property of NODE."
-    (when-let ((type (cdr (assoc "ROAM_TYPE" (org-node-get-properties node) #'string-equal))))
-      (propertize (concat "&" type) 'face 'font-lock-doc-face)))
+    (cdr (assoc "ROAM_TYPE" (org-node-get-properties node) #'string-equal)))
 
   (cl-defmethod krisb-org-node-person ((node org-node))
     "Return a fontified value of the ROAM_PERSON property of NODE."
-    (let ((person (cdr (assoc "ROAM_PERSON" (org-node-get-properties node) #'string-equal))))
-      (when person
-        (propertize (concat "@" person) 'face 'font-lock-keyword-face))))
+    (cdr (assoc "ROAM_PERSON" (org-node-get-properties node) #'string-equal)))
 
-  (cl-defmethod krisb-org-node-olp-full ((node org-node))
+  (cl-defmethod krisb-org-node-olp-full-propertized ((node org-node))
     "Return the full outline path of NODE fontified.
 The full outline path of NODE (given by `org-node-get-olp-full')
 surrounded by parentheses and whose parts are separated by \" > \".
 Additionally, the entire string is fontified to the shadow face."
-    (let ((olp
-           (propertize (string-join (org-node-get-olp-full node) " > ") 'face 'shadow)))
+    (let ((olp (propertize (string-join (org-node-get-olp-full node) " > ") 'face 'shadow)))
       (unless (string-empty-p olp)
         (concat
          (propertize "(" 'face 'shadow)
@@ -83,18 +79,35 @@ For use as `org-node-affixation-fn'."
           (place (krisb-org-node-place node))
           (type (krisb-org-node-type node))
           (person (krisb-org-node-person node))
-          (olp-full (krisb-org-node-olp-full node))
+          (olp-full (krisb-org-node-olp-full-propertized node))
           (tags (krisb-org-node-tags node)))
       (list title
             ;; Prefix
             (concat (when box-or-dir (concat box-or-dir " "))
-                    (when place (concat place " "))
-                    (when type (concat place " "))
-                    (when person (concat person " ")))
+                    (when place (propertize (concat place " ") 'face 'shadow))
+                    (when type (propertize (concat "&" type " ") 'face 'font-lock-doc-face))
+                    (when person (propertize (concat "@" person " ") 'face 'font-lock-keyword-face)))
             ;; Suffix
             (concat " "
                     (when olp-full (concat olp-full " "))
-                    tags)))))
+                    tags))))
+
+  ;; Bespoke `org-node-custom-link-format-fn' function
+  (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-node))
+    "Bespoke function for `org-node-custom-link-format-fn'."
+    (if (or (file-in-directory-p (org-node-get-file node) krisb-org-agenda-directory)
+            (file-in-directory-p (org-node-get-file node) krisb-org-archive-directory))
+        (org-node-get-title node)
+      (let* ((place (krisb-org-node-place node))
+             (type (krisb-org-node-type node))
+             (title (org-node-get-title node))
+             (file-title (org-node-get-file-title node)))
+        (concat (when place (format "(%s) " place))
+                (when type (format "{%s} " type))
+                title
+                (when (or (not (string= title file-title))
+                          (not file-title))
+                  (propertize (concat " (" file-title ")") 'face 'shadow)))))))
 
 ;;; Org-node-fakeroam
 (use-package org-node-fakeroam
