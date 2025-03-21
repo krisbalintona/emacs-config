@@ -25,5 +25,17 @@
   :ensure nil
   :after ox-hugo)
 
+;;; Hugoista
+;; List all posts' information
+(use-package hugoista
+  :after ox-hugo
+  :custom
+  (hugoista-hugo-command (executable-find "hugo"))
+  (hugoista-posts-dir "posts")
+  (hugoista-initial-sort t)
+  :config
+  (with-eval-after-load 'ox-hugo
+    (setopt hugoista-site-dir org-hugo-base-dir)))
+
 ;;; Provide
 (provide 'krisb-hugo)
