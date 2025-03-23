@@ -4151,13 +4151,17 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :bind ( :map krisb-toggle-keymap
             ("h" . org-hide-drawers-transient))
     :custom
-    (org-hide-drawers-blacklist '("CUSTOM_ID" "ID"))
-    (org-hide-top-level-drawers nil)
+    (org-hide-drawers-property-name-blacklist '("CUSTOM_ID" "ID"))
+    (org-hide-drawers-property-name-blacklist-ignore-case-p t)
+    (org-hide-drawers-hide-top-level-properties-drawer nil)
+    (org-hide-drawers-drawer-name-blacklist
+     '("CONTENTS"))                       ; Org-make-toc contents drawer
+    (org-hide-drawers-drawer-name-blacklist-ignore-case-p t)
     :config
     (require 'transient)
     (transient-define-prefix org-hide-drawers-transient ()
       "Transient map for useful org-hide-drawers commands."
-      [("h" "Hide drawers" org-hide-drawers-create-overlays)
+      [("h" "Hide drawers" org-hide-drawers-make-overlays)
        ("u" "Unhide drawers" org-hide-drawers-delete-overlays)
        ("t" "Toggle hiding" org-hide-drawers-toggle)]))
 
@@ -8506,7 +8510,7 @@ There are several packages that end up incredibly useful for authoring packages.
         (krisb-org-ext-add-blank-lines (unless (region-active-p) 'whole-buffer))
         (krisb-format-buffer-indentation--base beg end)
         (when org-hide-drawers-mode
-          (org-hide-drawers-create-overlays)))
+          (org-hide-drawers-make-overlays)))
        ((and (require 'apheleia nil t) (apheleia--get-formatters))   ; If there is an available apheleia formatter
         (call-interactively 'apheleia-format-buffer))
        ((derived-mode-p 'message-mode)
