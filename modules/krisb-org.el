@@ -318,7 +318,7 @@
         :rev :newest)
   :diminish
   :hook (org-mode . org-hide-drawers-mode)
-  :bind ( :map toggle-keymap
+  :bind ( :map krisb-toggle-keymap
           ("h" . org-hide-drawers-transient))
   :custom
   (org-hide-drawers-blacklist '("CUSTOM_ID" "ID"))
@@ -327,7 +327,7 @@
   (require 'transient)
   (transient-define-prefix org-hide-drawers-transient ()
     "Transient map for useful org-hide-drawers commands."
-    [("u" "Hide drawers" org-hide-drawers-create-overlays)
+    [("h" "Hide drawers" org-hide-drawers-create-overlays)
      ("u" "Unhide drawers" org-hide-drawers-delete-overlays)
      ("t" "Toggle hiding" org-hide-drawers-toggle)]))
 
