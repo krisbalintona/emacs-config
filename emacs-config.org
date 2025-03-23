@@ -12034,6 +12034,16 @@ There are several packages that end up incredibly useful for authoring packages.
     :type 'boolean)
 
   ;;; Variables
+  ;; TODO 2025-03-22: There might be future bugs related to creating indirect
+  ;; buffers of buffers with existent overlays.  The reason is that the overlays
+  ;; stored in this variable for those indirect buffers will contain overlay
+  ;; objects of the original object, not the indirect buffer's overlays.  However,
+  ;; with the current implementation of commands, this only applies before
+  ;; `krisb-org-hide-drawers-delete-overlays' then
+  ;; `krisb-org-hide-drawers-create-overlays' is created.  After deletion and
+  ;; creation, the overlay list is associated with the indirect buffer's objects
+  ;; -- but there might be bugs because these two commands are needed to replace
+  ;; this variable's value appropriately.  Can this be avoided?
   (defvar-local krisb-org-hide-drawers-overlays nil
     "A list of overlays used to hide Org drawers in the current buffer.")
 
@@ -12100,10 +12110,16 @@ There are several packages that end up incredibly useful for authoring packages.
               (overlay-put ov 'read-only t)
               (push ov krisb-org-hide-drawers-overlays)))))))
 
-  (defun krisb-org-hide-drawers-delete-overlays ()
-    "Delete all drawer-hiding overlays in the current buffer."
+  (defun krisb-org-hide-drawers-delete-overlays (&optional buffer)
+    "Delete all drawer-hiding overlays in the current buffer.
+  If BUFFER is non-nil, delete overlays in that buffer instead."
     (interactive)
-    (mapc #'delete-overlay krisb-org-hide-drawers-overlays)
+    ;; We use `delete-all-overlays' instead of `delete-overlay' on every overlay
+    ;; stored in `krisb-org-hide-drawers-overlays' because the overlay objects in
+    ;; this variable do not change when making an indirect buffer;
+    ;; `delete-overlay' will delete overlays in the original buffer but
+    ;; `delete-all-overlays' will not.
+    (delete-all-overlays (or buffer (current-buffer)))
     (setq krisb-org-hide-drawers-overlays nil))
 
   (defun krisb-org-hide-drawers-toggle ()
