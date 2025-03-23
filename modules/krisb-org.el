@@ -290,25 +290,6 @@
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
 
-;;; Org-tidy
-;; Make org drawers less visually obtrusive.
-(use-package krisb-org-hide-drawers
-  :ensure nil
-  :diminish
-  :hook (org-mode . krisb-org-hide-drawers-mode)
-  :bind ( :map krisb-toggle-keymap
-          ("h" . krisb-org-hide-drawers-transient))
-  :custom
-  (krisb-org-hide-drawers-blacklist '("CUSTOM_ID" "ID"))
-  (krisb-org-hide-top-level-drawers nil)
-  :config
-  (require 'transient)
-  (transient-define-prefix krisb-org-hide-drawers-transient ()
-    "Transient map for useful krisb-org-hide-drawers commands."
-    [("u" "Hide drawers" krisb-org-hide-drawers-create-overlays)
-     ("u" "Unhide drawers" krisb-org-hide-drawers-delete-overlays)
-     ("t" "Toggle hiding" krisb-org-hide-drawers-toggle)]))
-
 ;;; Org-bulletproof
 ;; Automatically cycle plain list bullet point styles.
 (use-package org-bulletproof
@@ -329,6 +310,26 @@
                    "Download then attach an archive of a webpage using `org-web-tools'\n")))
 
   (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
+
+;;; Org-hide-drawers
+;; Make org drawers less visually obtrusive.
+(use-package org-hide-drawers
+  :vc ( :url "git@github.com:krisbalintona/org-hide-drawers.git"
+        :rev :newest)
+  :diminish
+  :hook (org-mode . org-hide-drawers-mode)
+  :bind ( :map toggle-keymap
+          ("h" . org-hide-drawers-transient))
+  :custom
+  (org-hide-drawers-blacklist '("CUSTOM_ID" "ID"))
+  (org-hide-top-level-drawers nil)
+  :config
+  (require 'transient)
+  (transient-define-prefix org-hide-drawers-transient ()
+    "Transient map for useful org-hide-drawers commands."
+    [("u" "Hide drawers" org-hide-drawers-create-overlays)
+     ("u" "Unhide drawers" org-hide-drawers-delete-overlays)
+     ("t" "Toggle hiding" org-hide-drawers-toggle)]))
 
 ;;; Org-bookmark-heading
 (use-package org-bookmark-heading
