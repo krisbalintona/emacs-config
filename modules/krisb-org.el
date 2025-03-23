@@ -4,7 +4,7 @@
   :pin gnu-elpa                         ; Pin to latest stable release
   :hook ((org-mode . variable-pitch-mode)
          (org-mode . visual-line-mode)
-         (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 120))))
+         (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 100))))
   :bind (("C-c s" . org-store-link)
          ("C-c c" . org-capture))
   :custom
