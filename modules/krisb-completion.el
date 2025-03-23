@@ -455,7 +455,7 @@
          ("C-c / h" . cape-history)
          ("C-c / f" . cape-file)
          ("C-c / k" . cape-keyword)
-         ("C-c / s" . cape-elisp-symbol)
+         ("C-c / s" . krisb-cape-elisp-symbol)
          ("C-c / a" . cape-abbrev)
          ("C-c / w" . cape-dict)
          ("C-c / l" . cape-line)
@@ -503,7 +503,39 @@ This macro does not affect capfs already in
   (krisb-cape-setup-capfs
     "commit"
     '(git-commit-setup-hook vc-git-log-edit-mode-hook)
-    (list #'cape-elisp-symbol #'cape-dabbrev)))
+    (list #'cape-elisp-symbol #'cape-dabbrev))
+  :config
+  ;; Resolve the undesirable behavior of `cape-elisp-symbol' described in
+  ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
+  (defun krisb-corfu-popupinfo--doc-buffer (str)
+    "Wrapper around `elisp--company-doc-buffer'.
+This function is a replacement for `elisp--company-doc-buffer', which
+normally returns the main Help buffer (returned by `help-buffer').
+Instead, this function returns a separate buffer to use as the Help
+buffer.
+
+Accepts the same argument as `elisp--company-doc-buffer' (STR).
+
+Meant to be used with `cape-capf-properties' on the `cape-elisp-symbol'
+completion at point function.  This ameliorates the sometimes
+undesirable issue described in
+https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
+
+This solution was taken from the suggestion of
+https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
+    (let* ((help-xref-following t)
+           (new-help-buf-name
+            "*corfu-popupinfo documentation*")
+           (new-help-buf (get-buffer-create new-help-buf-name)))
+      (with-current-buffer new-help-buf
+        (help-mode)
+        (elisp--company-doc-buffer str))))
+
+  (defun krisb-cape-elisp-symbol ()
+    "Bespoke version of `cape-elisp-symbol'."
+    (interactive)
+    (cape-interactive (cape-capf-properties 'cape-elisp-symbol
+                                            :company-doc-buffer #'krisb-corfu-popupinfo--doc-buffer))))
 
 ;;; Embark
 ;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
