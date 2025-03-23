@@ -109,7 +109,10 @@ Considers `krisb-org-hide-drawers-blacklist'."
                         (skip-chars-backward "\n\t ") ; Skip trailing whitespace
                         (point)))
                  (ov (make-overlay (1- begin) ; Include preceding newline in overlay
-                                   end))) ; Don't include proceeding whitespace in overlay
+                                   end ; Don't include proceeding whitespace in overlay
+                                   nil ; Current buffer
+                                   t ; Don't include text inserted at the start of overlay
+                                   nil))) ; Don't include text inserted at the end of overlay
 
             ;; TODO 2024-10-23: Consider using the `insert-in-front-hooks'
             ;; special text property to notify the user of danger when adding
