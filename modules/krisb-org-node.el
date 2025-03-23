@@ -129,18 +129,21 @@ For use as `org-node-affixation-fn'."
   :custom
   (indexed-org-dirs (list krisb-org-directory))
   (indexed-warn-title-collisions nil)
-  (indexed-roam-db-location
-   (if (boundp 'org-roam-db-location)
-       org-roam-db-location
-     (expand-file-name "indexed-roam.db" temporary-file-directory)))
   :config
   (indexed-updater-mode 1)
-  (indexed-orgdb-mode 1)
+  ;; NOTE 2025-03-23: Not enabled for now because I do not use it and it is in
+  ;; flux, so I may enable in the future when it is more stable and finalized.
+  ;; (indexed-orgdb-mode 1)
   ;; End dependence on `org-roam-db-sync'
   (with-eval-after-load 'org-roam
-    (setopt org-roam-db-update-on-save nil)
+    (setopt org-roam-db-update-on-save nil
+            indexed-roam-overwrite t)
     (org-roam-db-autosync-mode -1)
-    (indexed-roam-mode 1)))
+    (indexed-roam-mode 1))
+
+  ;; Inform org-id about entries indexed is aware of.  As mentioned here:
+  ;; https://github.com/meedstrom/indexed?tab=readme-ov-file#tip-fully-inform-org-id
+  (add-hook 'indexed-record-entry-functions #'indexed-x-snitch-to-org-id))
 
 ;;; Provide
 (provide 'krisb-org-node)
