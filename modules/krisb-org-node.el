@@ -33,26 +33,30 @@ nodes:
     (not (or (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
 
   ;; Bespoke `org-node-find'
+  (cl-defmethod krisb-org-node-get-box ((node org-node))
+    "Return the value of the ROAM_BOX property of NODE."
+    (cdr (assoc "ROAM_BOX" (org-node-get-properties node) #'string-equal)))
+
   (cl-defmethod krisb-org-node-box-or-dir ((node org-node))
     "Return a fontified value of the ROAM_BOX property of NODE.
 If the ROAM_BOX property of NODE is nil, returns the directory name
 containing NODE instead."
-    (let ((box (cdr (assoc "ROAM_BOX" (org-node-get-properties node) #'string-equal)))
+    (let ((box (krisb-org-node-get-box node))
           (dir (file-name-nondirectory
                 (directory-file-name
                  (file-name-directory (org-node-get-file node))))))
       (propertize (or box (concat "/" dir)) 'face 'shadow)))
 
-  (cl-defmethod krisb-org-node-place ((node org-node))
-    "Return a fontified value of the ROAM_PLACE property of NODE."
+  (cl-defmethod krisb-org-node-get-place ((node org-node))
+    "Return the value of the ROAM_PLACE property of NODE."
     (cdr (assoc "ROAM_PLACE" (org-node-get-properties node))))
 
-  (cl-defmethod krisb-org-node-type ((node org-node))
-    "Return a fontified value of the ROAM_TYPE property of NODE."
+  (cl-defmethod krisb-org-node-get-type ((node org-node))
+    "Return the value of the ROAM_TYPE property of NODE."
     (cdr (assoc "ROAM_TYPE" (org-node-get-properties node) #'string-equal)))
 
-  (cl-defmethod krisb-org-node-person ((node org-node))
-    "Return a fontified value of the ROAM_PERSON property of NODE."
+  (cl-defmethod krisb-org-node-get-person ((node org-node))
+    "Return the value of the ROAM_PERSON property of NODE."
     (cdr (assoc "ROAM_PERSON" (org-node-get-properties node) #'string-equal)))
 
   (cl-defmethod krisb-org-node-olp-full-propertized ((node org-node))
@@ -67,7 +71,7 @@ Additionally, the entire string is fontified to the shadow face."
          olp
          (propertize ")" 'face 'shadow)))))
 
-  (cl-defmethod krisb-org-node-tags ((node org-node))
+  (cl-defmethod krisb-org-node-tags-propertized ((node org-node))
     "Return the full outline path of NODE fontified."
     (when-let ((tags (org-node-get-tags node)))
       (propertize (concat "#" (string-join tags " #")) 'face 'org-tag)))
@@ -76,11 +80,11 @@ Additionally, the entire string is fontified to the shadow face."
     "Given NODE and TITLE, add a bespoke prefix and suffix.
 For use as `org-node-affixation-fn'."
     (let ((box-or-dir (krisb-org-node-box-or-dir node))
-          (place (krisb-org-node-place node))
-          (type (krisb-org-node-type node))
-          (person (krisb-org-node-person node))
+          (place (krisb-org-node-get-place node))
+          (type (krisb-org-node-get-type node))
+          (person (krisb-org-node-get-person node))
           (olp-full (krisb-org-node-olp-full-propertized node))
-          (tags (krisb-org-node-tags node)))
+          (tags (krisb-org-node-tags-propertized node)))
       (list title
             ;; Prefix
             (concat (when box-or-dir (concat box-or-dir " "))
@@ -98,8 +102,8 @@ For use as `org-node-affixation-fn'."
     (if (or (file-in-directory-p (org-node-get-file node) krisb-org-agenda-directory)
             (file-in-directory-p (org-node-get-file node) krisb-org-archive-directory))
         (org-node-get-title node)
-      (let* ((place (krisb-org-node-place node))
-             (type (krisb-org-node-type node))
+      (let* ((place (krisb-org-node-get-place node))
+             (type (krisb-org-node-get-type node))
              (title (org-node-get-title node))
              (file-title (org-node-get-file-title node)))
         (concat (when place (format "(%s) " place))
