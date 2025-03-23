@@ -219,6 +219,7 @@ This sets the default graphical element settings used by every frame.
   (require 'krisb-projects)
   (require 'krisb-shell)
   (require 'krisb-flymake)
+  (require 'krisb-folding)
   (require 'krisb-other-languages)
 
   (require 'krisb-elisp)
@@ -7908,6 +7909,33 @@ There are several packages that end up incredibly useful for authoring packages.
 
   ;;; Provide
   (provide 'krisb-elisp)
+#+end_src
+
+*** =krisb-folding.el=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-folding.el"
+  ;;; Outline-indent
+  (use-package outline-indent
+    :hook (prog-mode . outline-indent-minor-mode)
+    :bind ( :map krisb-toggle-keymap
+            ("o" . krisb-outline-indent-dispatch))
+    :config
+    (require 'transient)
+    (transient-define-prefix krisb-outline-indent-dispatch ()
+      "Invoke a transient menu for `tmr'."
+      [["At point"
+        ("o" "Open" outline-indent-open-fold)
+        ("C" "Open recursively" outline-indent-open-fold-rec)
+        ("T" "Close" outline-indent-close-fold)]
+       ["At point toggle"
+        ("t" "Toggle" outline-indent-toggle-fold)
+        ("l" "Toggle level at point" outline-indent-toggle-level-at-point)]]
+      ["All folds"
+       [("O" "Open" outline-indent-open-folds)
+        ("C" "Close" outline-indent-close-folds)]]))
+
+  ;;; Provide
+  (provide 'krisb-folding)
 #+end_src
 
 *** =krisb-other-languages.el=

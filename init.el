@@ -53,6 +53,7 @@
 (require 'krisb-projects)
 (require 'krisb-shell)
 (require 'krisb-flymake)
+(require 'krisb-folding)
 (require 'krisb-other-languages)
 
 (require 'krisb-elisp)
