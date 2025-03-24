@@ -125,6 +125,14 @@ For use as `org-node-affixation-fn'."
   (org-roam-db-autosync-mode -1)
   (org-node-fakeroam-db-feed-mode 1))   ; Keep Roam DB up to date
 
+;;; Citar-org-node
+(use-package citar-org-node
+  :ensure nil
+  :load-path "/home/krisbalintona/emacs-repos/packages/citar-org-node/"
+  :after org-node
+  :config
+  (citar-org-node-mode 1))
+
 ;;; Indexed
 (use-package indexed
   :custom
