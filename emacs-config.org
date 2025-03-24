@@ -5703,9 +5703,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
         :clock-in t
         :clock-resume t)
        ("m" "Work meeting notes" entry
-        (file+olp+datetree ,(lambda ()
-                              (org-roam-node-file
-                               (org-roam-node-from-id "20241114T091749.707997"))))
+        (file+olp+datetree ,(lambda () (org-node-get-file (org-node-by-id "20241114T091749.707997"))))
         "* (%<%c>)%?\n\n"
         :tree-type (year quarter month)
         :jump-to-captured t
