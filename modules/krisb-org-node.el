@@ -14,6 +14,7 @@
   (org-node-ask-directory t)
   (org-node-datestamp-format "%Y%m%dT%H%M%S--")
   (org-node-context-persist-on-disk t)
+  (org-node-cache-everything t) ; For programming purposes; populates `org-node--file<>lnum.node.'
   (org-node-affixation-fn 'krisb-org-node-affixation-fn)
   (org-node-alter-candidates t)
   (org-node-custom-link-format-fn #'krisb-org-node-custom-link-format-fn)
