@@ -8,7 +8,7 @@
    '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
                 beframe breadcrumb bufler cape cascading-dir-locals citar-denote
                 citar-org-roam cl-generic cm-mode cond-star consult-xref-stack
-                corfu-prescient csv-mode cursory darkroom denote-explore
+                corfu-prescient csv-mode cursory darkroom denote denote-explore
                 denote-interface diff-hl diminish dired-hist dired-subtree
                 dumber-jump easysession eat edit-indirect editorconfig eglot
                 elisp-demos embark-consult engine-mode enlight erc eros
@@ -18,14 +18,14 @@
                 hammy hide-mode-line highlight-function-calls hotfuzz hugoista
                 hyprlang-ts-mode ibuffer-project idlwave indexed info-colors
                 inspector jinx keychain-environment kind-icon lazy-guard lin
-                litanize lorem-ipsum magit-file-icons marginalia mermaid-mode
-                mixed-pitch modus-themes mpv nadvice nerd-icons-completion
-                nerd-icons-dired nerd-icons-ibuffer no-littering notmuch-addr
-                notmuch-transient nov ntlm ob-mermaid oc-csl-activate ol-notmuch
-                olivetti on orderless org org-appear org-bookmark-heading
-                org-bulletproof org-contrib org-edna org-make-toc org-mime
-                org-modern org-node org-node-fakeroam org-remark org-review
-                org-roam-ql org-roam-ui org-tidy org-web-tools outshine ox-hugo
+                litanize lorem-ipsum marginalia mermaid-mode mixed-pitch
+                modus-themes mpv nadvice nerd-icons-completion nerd-icons-dired
+                nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
+                nov ntlm ob-mermaid oc-csl-activate ol-notmuch olivetti on
+                orderless org org-appear org-bookmark-heading org-bulletproof
+                org-contrib org-edna org-hide-drawers org-make-toc org-mime
+                org-modern org-node-fakeroam org-remark org-review org-roam-ql
+                org-roam-ui org-web-tools outline-indent outshine ox-hugo
                 package-build package-lint-flymake paren-face pcmpl-args
                 pdf-meta-edit pdf-tools peg pinentry popper powerthesaurus
                 psession pulsar puni python rainbow-mode recursion-indicator
@@ -35,7 +35,8 @@
                 vc-jj verilog-mode vertico-prescient which-key window-tool-bar
                 wombag ytdl))
  '(package-vc-selected-packages
-   '((oblique :url "https://github.com/zzkt/oblique-strategies.git")
+   '((org-hide-drawers :url "git@github.com:krisbalintona/org-hide-drawers.git")
+     (oblique :url "https://github.com/zzkt/oblique-strategies.git")
      (oblique-strategies :url "https://github.com/zzkt/oblique-strategies.git")
      (clever-cite :vc-backend Git :url
                   "https://github.com/Hugo-Heagren/clever-cite.git")
