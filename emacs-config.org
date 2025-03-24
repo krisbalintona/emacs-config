@@ -4257,6 +4257,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom
     (org-odt-preferred-output-format "docx")) ; Convert to .docx at the end of conversion
 
+  ;;; Ox-html
+  (use-package ox-html
+    :ensure nil
+    :custom
+    ;; Resolve HTML exports not using the name of the target of ID links, using
+    ;; internal ID values instead.  As per
+    ;; https://github.com/meedstrom/org-node?tab=readme-ov-file#appendix-iii-random-tips
+    (org-html-prefer-user-labels t))
+
   ;;; Provide
   (provide 'krisb-org-export)
 #+end_src
