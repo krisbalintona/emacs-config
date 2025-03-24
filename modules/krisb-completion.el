@@ -455,7 +455,7 @@
          ("C-c / h" . cape-history)
          ("C-c / f" . cape-file)
          ("C-c / k" . cape-keyword)
-         ("C-c / s" . krisb-cape-elisp-symbol)
+         ("C-c / s" . cape-elisp-symbol)
          ("C-c / a" . cape-abbrev)
          ("C-c / w" . cape-dict)
          ("C-c / l" . cape-line)
@@ -531,11 +531,15 @@ https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
         (help-mode)
         (elisp--company-doc-buffer str))))
 
-  (defun krisb-cape-elisp-symbol ()
-    "Bespoke version of `cape-elisp-symbol'."
-    (interactive)
-    (cape-interactive (cape-capf-properties 'cape-elisp-symbol
-                                            :company-doc-buffer #'krisb-corfu-popupinfo--doc-buffer))))
+  (defun krisb-cape-elisp--around-advice (orig-fun &rest args)
+    "Advice to use a different doc buffer for documentation.
+This solution was taken from the suggestion of
+https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
+    (cape-interactive
+     (cape-capf-properties orig-fun :company-doc-buffer #'krisb-corfu-popupinfo--doc-buffer)))
+
+  (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
+    (advice-add capf :around #'krisb-cape-elisp--around-advice)))
 
 ;;; Embark
 ;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
