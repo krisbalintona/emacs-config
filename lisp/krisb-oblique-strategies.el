@@ -248,7 +248,7 @@
 If N is provided, return that many prompts."
   (let (prompts)
     (dotimes (i n)
-      (push (random-elt krisb-oblique-strategies-prompts) prompts))
+      (push (seq-random-elt krisb-oblique-strategies-prompts) prompts))
     prompts))
 
 (defun krisb-oblique-strategies--select (&optional n)
