@@ -114,14 +114,16 @@
 
   (magit-refs-show-commit-count 'all)   ; Show branches and tags
 
+  (magit-format-file-function #'magit-format-file-nerd-icons) ; Fancy file icons
+
+
   ;; Refinement (diffs) in hunks
-  (magit-diff-highlight-hunk-body t)
   (magit-diff-refine-hunk t)
+  (magit-diff-highlight-hunk-body t)
   (magit-diff-highlight-hunk-region-functions
-   '(magit-diff-highlight-hunk-region-dim-outside
-     magit-diff-highlight-hunk-region-using-overlays
-     magit-diff-highlight-hunk-region-using-face
-     ))
+   '(magit-diff-highlight-hunk-region-using-overlays
+     ;; magit-diff-highlight-hunk-region-dim-outside
+     magit-diff-highlight-hunk-region-using-face))
 
   ;; Sections
   (magit-module-sections-nested t)
@@ -134,16 +136,6 @@
   (git-commit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
   :config
   (magit-auto-revert-mode 1))
-
-;;;; Magit-file-icons
-(use-package magit-file-icons
-  :after magit
-  :custom
-  (magit-file-icons-enable-diff-file-section-icons t)
-  (magit-file-icons-enable-untracked-icons t)
-  (magit-file-icons-enable-diffstat-icons t)
-  :config
-  (magit-file-icons-mode 1))
 
 ;;;; Forge
 ;; Support for git forges (e.g. GitLab and GitHub).
