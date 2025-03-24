@@ -1,5 +1,6 @@
 ;;; Org-node
 (use-package org-node
+  :load-path "/home/krisbalintona/emacs-repos/packages/org-node/"
   :bind ( :map krisb-note-keymap
           ("l" . org-node-context-toggle)
           ([remap org-roam-buffer-toggle] . org-node-context-toggle)
@@ -129,7 +130,7 @@ For use as `org-node-affixation-fn'."
 (use-package citar-org-node
   :ensure nil
   :load-path "/home/krisbalintona/emacs-repos/packages/citar-org-node/"
-  :after org-node
+  :after citar
   :config
   (citar-org-node-mode 1))
 

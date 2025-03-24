@@ -4957,6 +4957,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+begin_src emacs-lisp :tangle "modules/krisb-org-node.el"
   ;;; Org-node
   (use-package org-node
+    :load-path "/home/krisbalintona/emacs-repos/packages/org-node/"
     :bind ( :map krisb-note-keymap
             ("l" . org-node-context-toggle)
             ([remap org-roam-buffer-toggle] . org-node-context-toggle)
@@ -5086,7 +5087,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (use-package citar-org-node
     :ensure nil
     :load-path "/home/krisbalintona/emacs-repos/packages/citar-org-node/"
-    :after org-node
+    :after citar
     :config
     (citar-org-node-mode 1))
 
