@@ -12076,7 +12076,8 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 *** =dungeons-and-dragons.el=
-#+begin_src emacs-lisp :tangle "lisp/dungeons-and-dragons.el" 
+
+#+begin_src emacs-lisp :tangle "lisp/dungeons-and-dragons.el"
   ;;; dungeons-and-dragons-rcp.el --- Bespoke Dungeons and Dragons features  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12162,6 +12163,7 @@ There are several packages that end up incredibly useful for authoring packages.
   (provide 'dungeons-and-dragons-rcp)
   ;;; dungeons-and-dragons-rcp.el ends here
 #+end_src
+
 * Local :noexport:
 :PROPERTIES:
 :VISIBILITY: folded
