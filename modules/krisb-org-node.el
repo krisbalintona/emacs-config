@@ -1,6 +1,5 @@
 ;;; Org-node
 (use-package org-node
-  :load-path "/home/krisbalintona/emacs-repos/packages/org-node/"
   :bind ( :map krisb-note-keymap
           ("l" . org-node-context-toggle)
           ([remap org-roam-buffer-toggle] . org-node-context-toggle)
@@ -24,7 +23,7 @@
   (org-node-renames-allowed-dirs (list krisb-notes-directory))
   :config
   (org-node-cache-mode 1)
-  ;; (org-node-context-follow-mode 1)
+  (org-node-context-follow-mode 1)
 
   ;; Bespoke filtering (exclusion) function
   (defun krisb-org-node-filter-fn (node)
