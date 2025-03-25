@@ -158,8 +158,9 @@ to the file path instead."
                   ;; length produces too-wide a column
                   (concat "${address-display-template:"
                           (number-to-string
-                           (1+ (cl-loop for node in (org-roam-node-list)
-                                        maximize (length (org-roam-node-address node)))))
+                           (1+ (or (cl-loop for node in (org-roam-node-list)
+                                            maximize (length (org-roam-node-address node)))
+                                   2))) ; Have default: prevents startup error when (org-roam-node-list) is nil
                           "}")
                   "${type-display-template}"
                   "${person-display-template}"
