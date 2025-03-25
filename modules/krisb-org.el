@@ -314,8 +314,7 @@
 ;;; Org-hide-drawers
 ;; Make org drawers less visually obtrusive.
 (use-package org-hide-drawers
-  :vc ( :url "git@github.com:krisbalintona/org-hide-drawers.git"
-        :rev :newest)
+  :load-path "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/"
   :diminish
   :hook (org-mode . org-hide-drawers-mode)
   :bind ( :map krisb-toggle-keymap
