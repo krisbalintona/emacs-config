@@ -24,7 +24,7 @@
   (org-node-renames-allowed-dirs (list krisb-notes-directory))
   :config
   (org-node-cache-mode 1)
-  (org-node-context-follow-mode 1)
+  ;; (org-node-context-follow-mode 1)
 
   ;; Bespoke filtering (exclusion) function
   (defun krisb-org-node-filter-fn (node)

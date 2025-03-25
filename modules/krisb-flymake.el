@@ -5,8 +5,7 @@
           ("M-p" . flymake-goto-prev-error)
           ("M-n" . flymake-goto-next-error))
   :custom
-  (elisp-flymake-byte-compile-load-path ; Recognize files Emacs knows about
-   (append elisp-flymake-byte-compile-load-path load-path))
+  (elisp-flymake-byte-compile-load-path '("./")) ; Which libraries and files does flymake know about?
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil)       ; Disable fringe indicators
   (flymake-show-diagnostics-at-end-of-line nil)

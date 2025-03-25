@@ -1,4 +1,4 @@
-#+title: Emacs configuration
+﻿#+title: Emacs configuration
 #+author: Kristoffer Balintona
 #+email: krisbalintona@gmail.com
 #+language: en
@@ -4979,7 +4979,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (org-node-renames-allowed-dirs (list krisb-notes-directory))
     :config
     (org-node-cache-mode 1)
-    (org-node-context-follow-mode 1)
+    ;; (org-node-context-follow-mode 1)
 
     ;; Bespoke filtering (exclusion) function
     (defun krisb-org-node-filter-fn (node)
@@ -12073,25 +12073,6 @@ There are several packages that end up incredibly useful for authoring packages.
   ;;; Provide
   (provide 'krisb-reveal)
   ;;; krisb-reveal.el ends here
-#+end_src
-
-* COMMENT Removed
-:PROPERTIES:
-:VISIBILITY: folded
-:END:
-
-These are lines I've removed while porting to a literate config.
-#+begin_src emacs-lisp :tangle no :results none
-  ;; Kill child processes without confirm
-  (custom-set-variables '(confirm-kill-processes nil))
-
-  ;; Don't confirm when killing a process
-  (setq confirm-kill-processes nil)
-
-  ;; ...And the clipboard on Windows is often a wider encoding (UTF-16), so leave
-  ;; Emacs to its own devices there.
-  (unless krisb-system-win-p
-    (setq selection-coding-system 'utf-8))
 #+end_src
 
 * Local :noexport:

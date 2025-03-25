@@ -1,131 +1,135 @@
-;;; org-export-rcp.el --- Org-export config          -*- lexical-binding: t; -*-
+;;;; Ligature
+  ;; Ligatures! See for configuration examples: https://github.com/j/wiki
+  (use-package ligature
+    ;; :ensure (ligature :type git :host github :repo "mickeynp/ligature.el")
+    :hook (window-setup . global-ligature-mode)
+    :config
+    ;; Enables simple HTML ligations for web-related major modes using the string
+    ;; notation to create ligations
+    (ligature-set-ligatures '(html-mode nxml-mode web-mode) '("<!--" "-->" "</>" "</" "/>" "://"))
 
-;; Copyright (C) 2024  Kristoffer Balintona
+    ;; Enable all Iosevka ligatures in programming modes
+    (ligature-set-ligatures '(prog-mode conf-mode) '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
+                                                     "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
+                                                     "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
+                                                     ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++")))
 
-;; Author: Kristoffer Balintona <krisbalintona@gmail.com>
-;; Keywords:
+  ;;;; Show-font
+  ;; Best font previewer
+  (use-package show-font)
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
+  ;;;; Default-text-scale
+  ;; Text-scale-mode but Emacs-wide
+  (use-package default-text-scale)
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+  ;;;; Eglot-signature-eldoc-talkative
+  ;; Show documentation of symbols alongside their signature. (By default, only
+  ;; the signature is only shown via `eglot-signature-eldoc-function'.)
+  (use-package eglot-signature-eldoc-talkative
+    :demand
+    :after eglot
+    :config
+    (advice-add #'eglot-signature-eldoc-function :override #'eglot-signature-eldoc-talkative))
 
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ;;;; Eglot-booster
+  ;; Boosts Eglot's communication with the server. There's also a version for LSP.
+  (use-package eglot-booster
+    ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
+    ;; https://github.com/blahgeek/emacs-lsp-booster/releases
+    ;; :ensure (:type git :host github :repo "jdtsmith/eglot-booster")
+    :vc (:url "https://github.com/jdtsmith/eglot-booster.git"
+              :rev :newest)
+    :after eglot
+    :demand
+    :config
+    (eglot-booster-mode 1))
 
-;;; Commentary:
+  ;;;; Suggest
+  ;; Query `suggest' for elisp coding suggestions!
+  (use-package suggest
+    :bind
+    ( :map krisb-open-keymap
+      ("S" . suggest))
+    :custom
+    (suggest-insert-example-on-start nil))
 
-;; Config relaed specifically to `org-export'.
+  ;;;; Git-timemachine
+  ;; Enable in current buffer to iterate through git revision history
+  (use-package git-timemachine)
 
-;;; Code:
-(require 'use-package-rcp)
-(require 'keybinds-general-rcp)
+  ;;;;; Magit-log date headers
+  ;; Add dates to magit-logs
+  (with-eval-after-load 'magit
+    (require 'ov)                         ; Dependency
 
-;;;; Custom processing of #+INCLUDE keyword
-;; Use denote links or denote:DENOTEID as the file path for #+INCLUDE keywords
-(with-eval-after-load 'ox
-  (require 'denote)
-  (defun kb/org-export-parse-include-value (value &optional dir)
-    "Extract the various parameters from #+include: VALUE.
+    (defun unpackaged/magit-log--add-date-headers (&rest _ignore)
+      "Add date headers to Magit log buffers."
+      (when (derived-mode-p 'magit-log-mode)
+        (save-excursion
+          (ov-clear 'date-header t)
+          (goto-char (point-min))
+          (cl-loop with last-age
+                   for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
+                                    car
+                                    (overlay-get it 'before-string)
+                                    (get-text-property 0 'display it)
+                                    cadr
+                                    (s-match (rx (group (1+ digit) ; number
+                                                        " "
+                                                        (1+ (not blank))) ; unit
+                                                 (1+ blank) eos)
+                                             it)
+                                    cadr)
+                   do (when (and this-age
+                                 (not (equal this-age last-age)))
+                        (ov (line-beginning-position) (line-beginning-position)
+                            'after-string (propertize (concat " " this-age "\n")
+                                                      'face 'magit-section-heading)
+                            'date-header t)
+                        (setq last-age this-age))
+                   do (forward-line 1)
+                   until (eobp)))))
+    (define-minor-mode unpackaged/magit-log-date-headers-mode
+      "Display date/time headers in `magit-log' buffers."
+      :global t
+      (if unpackaged/magit-log-date-headers-mode
+          (progn
+            ;; Enable mode
+            (add-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+            (advice-add #'magit-setup-buffer-internal :after #'unpackaged/magit-log--add-date-headers))
+        ;; Disable mode
+        (remove-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+        (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
+    (add-hook 'magit-mode-hook #'unpackaged/magit-log-date-headers-mode) ; Enable the minor mode
+    )
 
-More specifically, this extracts the following parameters to a
-plist: :file, :coding-system, :location, :only-contents, :lines,
-:env, :minlevel, :args, and :block.
 
-The :file parameter is expanded relative to DIR.
+  ;;;; Compile
+  (use-package compile
+    :ensure nil
+    :bind
+    ("<f5>" . recompile)
+    :custom
+    (compilation-scroll-output 'first-error) ; Scroll with compile buffer
+    (compilation-auto-jump-to-first-error 'if-location-known))
 
-The :file, :block, and :args parameters are extracted
-positionally, while the remaining parameters are extracted as
-plist-style keywords.
+  ;;;; Re-builder
+  ;; Interactively build regexps
+  (use-package re-builder
+    :ensure nil
+    :custom
+    (reb-re-syntax 'read))
 
-Any remaining unmatched content is passed through
-`org-babel-parse-header-arguments' (without evaluation) and
-provided as the :unmatched parameter.
+;;;; Recenter upon `next-error'
+(setq next-error-recenter '(4))
 
-This version that overrides the original takes into account denote IDs.
-See the HACK comment below."
-    (let* (location
-           (coding-system
-            (and (string-match ":coding +\\(\\S-+\\)>" value)
-                 (prog1 (intern (match-string 1 value))
-                   (setq value (replace-match "" nil nil value)))))
-           (file
-            (and (string-match "^\\(\".+?\"\\|\\S-+\\)\\(?:\\s-+\\|$\\)" value)
-                 (let ((matched (match-string 1 value)) stripped)
-                   (setq value (replace-match "" nil nil value))
-                   (when (string-match "\\(::\\(.*?\\)\\)\"?\\'"
-                                       matched)
-                     (setq location (match-string 2 matched))
-                     (setq matched
-                           (replace-match "" nil nil matched 1)))
-                   ;; HACK 2024-02-25: Added the following sexp. Checks if link
-                   ;; has a denote ID, and if so, changes the matched (file) to
-                   ;; the file corresponding to that ID. Allows me to use denote
-                   ;; links as the included file
-                   (when (string-match denote-id-regexp matched)
-                     (setq matched
-                           (denote-get-path-by-id (match-string 0 matched))))
-                   (setq stripped (org-strip-quotes matched))
-                   (if (org-url-p stripped)
-                       stripped
-                     (expand-file-name stripped dir)))))
-           (only-contents
-            (and (string-match ":only-contents *\\([^: \r\t\n]\\S-*\\)?"
-                               value)
-                 (prog1 (org-not-nil (match-string 1 value))
-                   (setq value (replace-match "" nil nil value)))))
-           (lines
-            (and (string-match
-                  ":lines +\"\\([0-9]*-[0-9]*\\)\""
-                  value)
-                 (prog1 (match-string 1 value)
-                   (setq value (replace-match "" nil nil value)))))
-           (env (cond
-                 ((string-match "\\<example\\>" value) 'literal)
-                 ((string-match "\\<export\\(?: +\\(.*\\)\\)?" value)
-                  'literal)
-                 ((string-match "\\<src\\(?: +\\(.*\\)\\)?" value)
-                  'literal)))
-           ;; Minimal level of included file defaults to the
-           ;; child level of the current headline, if any, or
-           ;; one.  It only applies is the file is meant to be
-           ;; included as an Org one.
-           (minlevel
-            (and (not env)
-                 (if (string-match ":minlevel +\\([0-9]+\\)" value)
-                     (prog1 (string-to-number (match-string 1 value))
-                       (setq value (replace-match "" nil nil value)))
-                   (get-text-property (point)
-                                      :org-include-induced-level))))
-           (args (and (eq env 'literal)
-                      (prog1 (match-string 1 value)
-                        (when (match-string 1 value)
-                          (setq value (replace-match "" nil nil value 1))))))
-           (block (and (or (string-match "\"\\(\\S-+\\)\"" value)
-                           (string-match "\\<\\(\\S-+\\)\\>" value))
-                       (or (= (match-beginning 0) 0)
-                           (not (= ?: (aref value (1- (match-beginning 0))))))
-                       (prog1 (match-string 1 value)
-                         (setq value (replace-match "" nil nil value))))))
-      (list :file file
-            :coding-system coding-system
-            :location location
-            :only-contents only-contents
-            :lines lines
-            :env env
-            :minlevel minlevel
-            :args args
-            :block block
-            :unmatched (org-babel-parse-header-arguments value t))))
-  (advice-add 'org-export-parse-include-value :override #'kb/org-export-parse-include-value))
+;;;; Markdown-mode
+(use-package markdown-mode
+  :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")
+  :hook
+  (markdown-mode . visual-line-mode))
 
 ;;;; Ox-latex
-;;;;; Itself
 (use-package ox-latex
   :ensure nil
   :after org
@@ -377,26 +381,3 @@ Uses my 'latex-paper' backend. See the original
 
 ;;;;;; [ end ]
   )
-
-;;;; Ox-pandoc
-;; Export to whatever file format pandoc can export to
-(use-package ox-pandoc
-  :after org
-  :defer 20
-  :ensure-system-package pandoc)
-
-;;;; Ox-clip
-(use-package ox-clip
-  :ensure-system-package ((xclip)
-                          (wl-copy . wl-clipboard))
-  :bind ( :map krisb-yank-keymap
-          ("x" . ox-clip-formatted-copy))
-  :custom
-  ;; FIXME 2024-10-07: Doesn't work on wayland for some reason. It's just
-  ;; pasting the plain text.
-  (ox-clip-linux-cmd (if (string-equal (getenv "XDG_SESSION_TYPE") "wayland")
-                         "wl-copy -p --type text/html < $%f"
-                       "xclip -verbose -i \"%f\" -t text/html -selection clipboard")))
-
-(provide 'org-export-rcp)
-;;; org-export-rcp.el ends here
