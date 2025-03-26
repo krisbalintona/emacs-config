@@ -3699,16 +3699,17 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
     (defun krisb-hammy-modify-elapsed (hammy)
       "Modify the elapsed time of HAMMY timer.
-  Interactively, prompt for a currently active hammy.
-
-  This command opts to alter pushing the start time of the
-  hammy (current-interval-start-time slot of the hammy-interval slot of
-  the hammy) forward (when increasing elapsed time) or backward (when
-  decreasing elapsed time).
+  This command opts to add (a positive or negative) offset to modify the
+  start time of the hammy (current-interval-start-time slot of the
+  hammy-interval slot of the hammy).  This means moving the start time
+  backward to increase the elapsed time and forward to decrease the
+  elapsed time of HAMMY.
 
   The original value of current-interval-start-time is stored in the
   original-interval-start-time cons in the etc slot of the
   hammy-interval.
+
+  Interactively, prompt for a currently active hammy.
 
   See `timer-duration-words' for the units available when prompted for a
   duration."
