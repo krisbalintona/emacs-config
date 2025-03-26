@@ -9,9 +9,12 @@
                                      ("nongnu" . 2)
                                      ("gnu-elpa-devel" . 1))
         package-install-upgrade-built-in t
-        package-pinned-packages nil)
+        package-pinned-packages nil
 
-(setopt load-prefer-newer t) ; Do not load outdated byte code files
+        load-prefer-newer t)            ; Do not load outdated byte code files
+
+;; As recommended in https://elpa.gnu.org/
+(unless (fboundp 'package-activate-all) (package-initialize))
 
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
 ;; it's installed just in case I test/use an earlier Emacs version

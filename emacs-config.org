@@ -365,9 +365,12 @@ I use =package.el=. =Package.el= (henceforth =package=) is the built-in package 
                                        ("nongnu" . 2)
                                        ("gnu-elpa-devel" . 1))
           package-install-upgrade-built-in t
-          package-pinned-packages nil)
+          package-pinned-packages nil
 
-  (setopt load-prefer-newer t) ; Do not load outdated byte code files
+          load-prefer-newer t)            ; Do not load outdated byte code files
+
+  ;; As recommended in https://elpa.gnu.org/
+  (unless (fboundp 'package-activate-all) (package-initialize))
 #+end_src
 
 [fn:2] Those who use =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ directly.
