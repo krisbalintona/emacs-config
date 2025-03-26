@@ -30,7 +30,14 @@
   :diminish
   :custom
   (form-feed-include-modes
-   '(prog-mode conf-mode text-mode help-mode emacs-news-view-mode compilation-mode))
+   '(prog-mode
+     conf-mode
+     text-mode
+     ;; TOOD 2025-03-25: Enabling form feed in `help-mode' buffers removes the
+     ;; fontification of function arguments (face: `help-argument-name').
+     ;; help-mode
+     emacs-news-view-mode
+     compilation-mode))
   (form-feed-exclude-modes nil)
   :config
   (global-form-feed-mode 1))
@@ -85,7 +92,10 @@
 ;; Colorify color codes
 (use-package rainbow-mode
   :diminish
-  :hook (help-mode . rainbow-mode))
+  ;; TOOD 2025-03-25: Enabling form feed in `help-mode' buffers removes the
+  ;; fontification of function arguments (face: `help-argument-name').
+  ;; :hook (help-mode . rainbow-mode)
+  )
 
 ;;; Provide
 (provide 'krisb-programming-essentials)
