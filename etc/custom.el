@@ -23,20 +23,19 @@
                 nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
                 nov ntlm ob-mermaid oc-csl-activate ol-notmuch olivetti on
                 orderless org org-appear org-bookmark-heading org-bulletproof
-                org-contrib org-edna org-hide-drawers org-make-toc org-mime
-                org-modern org-node-fakeroam org-remark org-review org-roam-ql
-                org-roam-ui org-web-tools outline-indent outshine ox-hugo
-                package-build package-lint-flymake paren-face pcmpl-args
-                pdf-meta-edit pdf-tools peg pinentry popper powerthesaurus
-                psession pulsar puni python rainbow-mode recursion-indicator
-                saveplace-pdf-view scratch show-font sinister smart-mark so-long
-                soap-client sudo-edit svg system-packages tmr tramp transient
-                treesit-auto try typewriter-roll-mode ultra-scroll use-package
-                vc-jj verilog-mode vertico-prescient which-key window-tool-bar
-                wombag ytdl))
+                org-contrib org-edna org-make-toc org-mime org-modern org-node
+                org-remark org-review org-roam-ql org-roam-ui org-web-tools
+                outline-indent outshine ox-hugo package-build
+                package-lint-flymake paren-face pcmpl-args pdf-meta-edit
+                pdf-tools peg pinentry popper powerthesaurus psession pulsar
+                puni python rainbow-mode recursion-indicator saveplace-pdf-view
+                scratch show-font sinister smart-mark so-long soap-client
+                sudo-edit svg system-packages tmr tramp transient treesit-auto
+                try typewriter-roll-mode ultra-scroll use-package vc-jj
+                verilog-mode vertico-prescient which-key window-tool-bar wombag
+                ytdl))
  '(package-vc-selected-packages
-   '((org-hide-drawers :url "git@github.com:krisbalintona/org-hide-drawers.git")
-     (oblique :url "https://github.com/zzkt/oblique-strategies.git")
+   '((oblique :url "https://github.com/zzkt/oblique-strategies.git")
      (oblique-strategies :url "https://github.com/zzkt/oblique-strategies.git")
      (clever-cite :vc-backend Git :url
                   "https://github.com/Hugo-Heagren/clever-cite.git")
@@ -80,8 +79,9 @@
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
-   '((org-review-delay . "+3d") (eval add-hook 'before-save-hook 'org-make-toc)
-     (org-use-tag-inheritance) (org-use-tag-inheritance . t)
+   '((org-review-delay . "+3d")
+     (eval add-hook 'before-save-hook 'org-make-toc) (org-use-tag-inheritance)
+     (org-use-tag-inheritance . t)
      (org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
      (org-time-stamp-custom-formats quote ("<%B %d, %Y>" . "<%B %d, %Y %H:%M>"))
      (system-time-locale . "C")
