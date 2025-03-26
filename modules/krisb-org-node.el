@@ -129,7 +129,7 @@ For use as `org-node-affixation-fn'."
 (use-package citar-org-node
   :ensure nil
   :load-path "/home/krisbalintona/emacs-repos/packages/citar-org-node/"
-  :after citar
+  :after (:any citar org-node)
   :config
   (citar-org-node-mode 1))
 
