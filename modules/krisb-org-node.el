@@ -146,7 +146,7 @@ For use as `org-node-affixation-fn'."
   ;; End dependence on `org-roam-db-sync'
   (with-eval-after-load 'org-roam
     (setopt org-roam-db-update-on-save nil
-            indexed-roam-overwrite t)
+            indexed-roam-overwrite t)  ; Write to on-disk db, not a diskless one
     (org-roam-db-autosync-mode -1)
     (indexed-roam-mode 1))
 

@@ -70,7 +70,10 @@
    '((org-roam-backlinks-section :unique t)
      org-roam-reflinks-section))
   :config
-  (org-roam-db-autosync-mode 1)
+  ;; 2025-03-24: Using org-node/indexed.el to replace this.  I dont enable it at
+  ;; all because enabling causes a `org-roam-db-sync' on startup since it
+  ;; detects that indexed's db isn't its own...
+  ;; (org-roam-db-autosync-mode 1)
 
   ;; See (info "(org-roam) org-roam-export")
   (with-eval-after-load 'ox-html

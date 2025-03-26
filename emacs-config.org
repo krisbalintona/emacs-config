@@ -4758,7 +4758,10 @@ Configuration related to "saving a state," that is, storing or restoring anythin
      '((org-roam-backlinks-section :unique t)
        org-roam-reflinks-section))
     :config
-    (org-roam-db-autosync-mode 1)
+    ;; 2025-03-24: Using org-node/indexed.el to replace this.  I dont enable it at
+    ;; all because enabling causes a `org-roam-db-sync' on startup since it
+    ;; detects that indexed's db isn't its own...
+    ;; (org-roam-db-autosync-mode 1)
 
     ;; See (info "(org-roam) org-roam-export")
     (with-eval-after-load 'ox-html
@@ -5103,7 +5106,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     ;; End dependence on `org-roam-db-sync'
     (with-eval-after-load 'org-roam
       (setopt org-roam-db-update-on-save nil
-              indexed-roam-overwrite t)
+              indexed-roam-overwrite t)  ; Write to on-disk db, not a diskless one
       (org-roam-db-autosync-mode -1)
       (indexed-roam-mode 1))
 
