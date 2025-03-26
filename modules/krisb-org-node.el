@@ -135,9 +135,12 @@ For use as `org-node-affixation-fn'."
 
 ;;; Indexed
 (use-package indexed
+  :vc ( :url "https://github.com/meedstrom/indexed.git"
+        :rev :newest)
   :custom
   (indexed-org-dirs (list krisb-org-directory))
   (indexed-warn-title-collisions nil)
+  (indexed-sync-with-org-id t)
   :config
   (indexed-updater-mode 1)
   ;; NOTE 2025-03-23: Not enabled for now because I do not use it and it is in
@@ -148,11 +151,7 @@ For use as `org-node-affixation-fn'."
     (setopt org-roam-db-update-on-save nil
             indexed-roam-overwrite t)  ; Write to on-disk db, not a diskless one
     (org-roam-db-autosync-mode -1)
-    (indexed-roam-mode 1))
-
-  ;; Inform org-id about entries indexed is aware of.  As mentioned here:
-  ;; https://github.com/meedstrom/indexed?tab=readme-ov-file#tip-fully-inform-org-id
-  (add-hook 'indexed-record-entry-functions #'indexed-x-snitch-to-org-id))
+    (indexed-roam-mode 1)))
 
 ;;; Provide
 (provide 'krisb-org-node)
