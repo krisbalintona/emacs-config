@@ -33,6 +33,8 @@
 
   (describe-bindings-outline t)
   (describe-bindings-show-prefix-commands t)
+
+  (help-at-pt-display-when-idle t)
   :config
   (require 'shortdoc)
   (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function))
