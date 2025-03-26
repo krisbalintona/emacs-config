@@ -391,13 +391,11 @@ duration."
                                    (ring-elements (hammy-intervals hammy))))
                       (alist-get 'original-durations (hammy-etc hammy)))))
       (let* ((input-duration
-              (car (read-from-string
-                    (read-string "Duration (as number or string): "
-                                 nil nil (prin1-to-string (hammy-interval-duration (hammy-interval hammy)))))))
+              (read-string "Duration (as number or string): "
+                           nil nil (prin1-to-string (hammy-interval-duration (hammy-interval hammy)))))
              (new-duration (pcase-exhaustive input-duration
                              ((and (pred numberp) it) it)
-                             ((and (pred stringp) it) (timer-duration it))))
-             )
+                             ((and (pred stringp) it) (timer-duration it)))))
         (setf (hammy-current-duration hammy) new-duration)
         ;; Only save the original duration the first time the interval is
         ;; adjusted, like `hammy-adjust'
@@ -422,9 +420,8 @@ See `timer-duration-words' for the units available when prompted for a
 duration."
     (interactive (list (hammy-complete "Select which hammy's current elapsed time to modify:" hammy-active)))
     (let* ((input-duration
-            (car (read-from-string
-                  (read-string "Duration (as number or string): "
-                               nil nil (prin1-to-string (hammy-interval-duration (hammy-interval hammy)))))))
+            (read-string "Duration (as number or string): "
+                         nil nil (prin1-to-string (hammy-interval-duration (hammy-interval hammy)))))
            (offset (pcase-exhaustive input-duration
                      ((and (pred numberp) it) it)
                      ;; TODO 2025-03-19: Figure out a more elegant solution to
