@@ -54,6 +54,7 @@
 ;; `sinister-stillness-mode' moves the points in existing buffers lower such
 ;; that Emacs does not need to scroll to keep them visible.
 (use-package sinister
+  :disabled t ; 2025-03-25: Didn't find much use for it, and its behavior actually isn't the intuitive one for me
   :vc ( :url "https://github.com/positron-solutions/sinister"
         :rev :newest)
   :config
