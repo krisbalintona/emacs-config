@@ -197,7 +197,11 @@ called outright."
 
 ;;; Citar-org-roam
 (use-package citar-org-roam
-  :demand t
+  ;; 2025-03-25: Use `citar-org-node' now.  We forcefully disable this to
+  ;; prevent this package from internally calling an `org-roam-db-sync' with t,
+  ;; which, with `indexed-roam-mode' and `indexed-roam-overwrite' to non-nil,
+  ;; will cause a full, long database sync on startup.
+  :disabled t
   :after (:any citar org-roam)
   :diminish citar-org-roam-mode
   :bind ( :map krisb-note-keymap
@@ -221,6 +225,7 @@ called outright."
 
 ;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
+  :requires org-roam
   :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
   :hook ((org-roam-folgezettel-mode . hl-line-mode)
          (org-roam-folgezettel-mode . (lambda () (setq-local line-spacing 0.2))))
