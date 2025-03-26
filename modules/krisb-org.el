@@ -320,12 +320,12 @@
   :bind ( :map krisb-toggle-keymap
           ("h" . org-hide-drawers-transient))
   :custom
-  (org-hide-drawers-property-name-blacklist '("CUSTOM_ID" "ID"))
-  (org-hide-drawers-property-name-blacklist-ignore-case-p t)
   (org-hide-drawers-hide-top-level-properties-drawer nil)
-  (org-hide-drawers-drawer-name-blacklist
+  (org-hide-drawers-keep-visible-properties '("CUSTOM_ID" "ID"))
+  (org-hide-drawers-keep-visible-properties-ignore-case-p t)
+  (org-hide-drawers-keep-visible-drawers
    '("CONTENTS"))                       ; Org-make-toc contents drawer
-  (org-hide-drawers-drawer-name-blacklist-ignore-case-p t)
+  (org-hide-drawers-keep-visible-drawers-ignore-case-p t)
   :config
   (require 'transient)
   (transient-define-prefix org-hide-drawers-transient ()
