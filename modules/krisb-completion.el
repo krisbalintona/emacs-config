@@ -52,7 +52,7 @@
    '((calendar-month (display-sort-function . identity))))
   (completion-category-overrides
    '((file (styles . (basic partial-completion flex))) ; Include `partial-completion' to enable wildcards and partial paths.
-     (citar-candidate (styles basic substring)))))
+     (citar-candidate (styles basic substring flex)))))
 
 ;;; Completion-preview
 (use-package completion-preview
