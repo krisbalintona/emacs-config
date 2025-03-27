@@ -137,6 +137,7 @@
   ;; prescient results and cluttering it
   (prescient-filter-method '(literal initialism regexp))
   (prescient-aggressive-file-save t)
+  (prescient-sort-length-enable nil)
   (prescient-sort-full-matches-first t)
   (prescient-history-length 200)
   (prescient-frequency-decay 0.997)
@@ -269,7 +270,7 @@
   :custom
   ;; Sorting
   (vertico-prescient-enable-sorting t)
-  (vertico-prescient-override-sorting nil)
+  (vertico-prescient-override-sorting nil) ; Don't override `display-sort-function'
 
   ;; Filtering. Below only applies when `vertico-prescient-enable-filtering' is
   ;; non-nil
@@ -324,7 +325,7 @@
   :config
   (global-corfu-mode 1)
 
-  ;; Enable corfu in minibuffer if `vertico-mode' is disabled. From
+  ;; Enable corfu in minibuffer if `vertico-mode' is disabled.  From
   ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
   (defun krisb-corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer if vertico is not active."
@@ -367,9 +368,9 @@
   :custom
   ;; Sorting
   (corfu-prescient-enable-sorting t)
-  (corfu-prescient-override-sorting nil)
+  (corfu-prescient-override-sorting nil) ; Don't override `display-sort-function'
 
-  ;; Filtering. Below only applies when `corfu-prescient-enable-filtering' is
+  ;; Filtering.  Below only applies when `corfu-prescient-enable-filtering' is
   ;; non-nil
   (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
   (corfu-prescient-completion-styles '(prescient flex))
