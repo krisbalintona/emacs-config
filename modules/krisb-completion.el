@@ -263,21 +263,22 @@ for recommended corfu settings and usage with orderless."
   ;; However, after the first invocation, regular insertions of that character
   ;; will be recognized as separators.
   (if krisb-auto-completion-mode
-      (let ((sep " "))
+      (let ((sep " ")
+            (min-symbol-length 2))
         (require 'completion-preview)
         (require 'corfu)
         (require 'orderless)
 
         (setq-local corfu-auto t
                     corfu-auto-delay 0.25
-                    corfu-auto-prefix 2
+                    corfu-auto-prefix min-symbol-length
                     corfu-separator (string-to-char sep)
                     corfu-quit-at-boundary 'separator
                     corfu-quit-no-match 'separator
                     ;; This setup (particularly its keybinds) is designed to work in
                     ;; conjunction with `completion-preview-mode' in order to take advantage
                     ;; of its candidate previews
-                    corfu-auto-prefix completion-preview-minimum-symbol-length)
+                    completion-preview-minimum-symbol-length min-symbol-length)
 
         ;; TODO 2025-03-26: Is there a more elegant solution?  Overwrite
         ;; `corfu-map' bindings buffer-locally.
