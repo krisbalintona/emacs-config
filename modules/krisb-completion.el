@@ -68,7 +68,8 @@
 ;;; Completion-preview
 (use-package completion-preview
   :ensure nil
-  :hook ((prog-mode log-edit-mode eval-expression-minibuffer-setup) . completion-preview-mode)
+  :hook (((prog-mode log-edit-mode eval-expression-minibuffer-setup) . completion-preview-mode)
+         (eshell-mode . krisb-completion-preview-mode-setup-eshell))
   :bind ( :map completion-preview-active-mode-map
           ("M-n" . completion-preview-next-candidate)
           ("M-p" . completion-preview-prev-candidate))
@@ -84,7 +85,13 @@
   ;; commands
   (dolist (command '(org-self-insert-command
                      outshine-self-insert-command))
-    (add-to-list 'completion-preview-commands command)))
+    (add-to-list 'completion-preview-commands command))
+
+  ;; Special settings for eshell buffers
+  (defun krisb-completion-preview-mode-setup-eshell ()
+    "Set specific settings in eshell buffers."
+    (setq-local completion-preview-minimum-symbol-length 1)
+    (completion-preview-mode 1)))
 
 ;;; Crm
 (use-package crm
