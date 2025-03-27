@@ -1,8 +1,7 @@
 ;;; Project
 (use-package project
   :bind ( :map project-prefix-map
-          ("e" . eat-project)
-          ("E" . project-eshell))
+          ("e" . project-eshell))
   :custom
   (project-vc-extra-root-markers '("Makefile"))
   (project-vc-merge-submodules nil)
@@ -19,8 +18,8 @@
      (project-find-regexp "Find regexp")
      (project-find-dir "Find directory")
      (project-vc-dir "VC-Dir")
-     (eat-project "EAT")
      (project-eshell "Eshell")
+     (eat-project "EAT")
      (project-any-command "Other")))
   :config
   ;; On startup, remove non-existent directories from remembered projects list

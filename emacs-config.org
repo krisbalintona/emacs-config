@@ -7781,7 +7781,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :hook ((eshell-mode . visual-line-mode)
            (eshell-mode . krisb-eshell-setup))
     :bind ( :map krisb-open-keymap
-            ("E" . eshell))
+            ("e" . eshell))
     :config
     (defun krisb-eshell-setup ()
       "Buffer-local settings for eshell."
@@ -7915,7 +7915,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :hook ((eshell-load . eat-eshell-mode)
            (eshell-load . eat-eshell-visual-command-mode))
     :bind ( :map krisb-open-keymap
-            ("e" . eat)))
+            ("E" . eat)
+            :map project-prefix-map
+            ("E" . eat-project)))
 #+end_src
 
 **** Provide
@@ -7932,8 +7934,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Project
   (use-package project
     :bind ( :map project-prefix-map
-            ("e" . eat-project)
-            ("E" . project-eshell))
+            ("e" . project-eshell))
     :custom
     (project-vc-extra-root-markers '("Makefile"))
     (project-vc-merge-submodules nil)
@@ -7950,8 +7951,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        (project-find-regexp "Find regexp")
        (project-find-dir "Find directory")
        (project-vc-dir "VC-Dir")
-       (eat-project "EAT")
        (project-eshell "Eshell")
+       (eat-project "EAT")
        (project-any-command "Other")))
     :config
     ;; On startup, remove non-existent directories from remembered projects list

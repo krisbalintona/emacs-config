@@ -11,7 +11,7 @@
   :hook ((eshell-mode . visual-line-mode)
          (eshell-mode . krisb-eshell-setup))
   :bind ( :map krisb-open-keymap
-          ("E" . eshell))
+          ("e" . eshell))
   :config
   (defun krisb-eshell-setup ()
     "Buffer-local settings for eshell."
@@ -137,7 +137,9 @@ Meant for `completion-at-point-functions' in eshell buffers."
   :hook ((eshell-load . eat-eshell-mode)
          (eshell-load . eat-eshell-visual-command-mode))
   :bind ( :map krisb-open-keymap
-          ("e" . eat)))
+          ("E" . eat)
+          :map project-prefix-map
+          ("E" . eat-project)))
 
 ;;; Provide
 (provide 'krisb-shell)
