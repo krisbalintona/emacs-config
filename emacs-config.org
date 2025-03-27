@@ -1362,9 +1362,8 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 
   ;;;;; Corfu-prescient
   (use-package corfu-prescient
-    :requires prescient
     :demand t
-    :after corfu
+    :after corfu prescient
     :custom
     ;; Sorting
     (corfu-prescient-enable-sorting t)

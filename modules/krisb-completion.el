@@ -357,9 +357,8 @@ for recommended corfu settings and usage with orderless."
 
 ;;;;; Corfu-prescient
 (use-package corfu-prescient
-  :requires prescient
   :demand t
-  :after corfu
+  :after corfu prescient
   :custom
   ;; Sorting
   (corfu-prescient-enable-sorting t)
