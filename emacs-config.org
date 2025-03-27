@@ -5000,20 +5000,22 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (with-eval-after-load 'embark
       (require 'org-roam-folgezettel-embark))
 
-    ;; Add ROAM_* properties to properties completing-read interface completions
-    (dolist (prop '("ROAM_EXCLUDE"
-                    "ROAM_PLACE"
-                    "ROAM_PERSON"
-                    "ROAM_SOURCE"
-                    "ROAM_CONTEXT"
-                    "ROAM_REFS"
-                    "ROAM_TYPE"
-                    "ROAM_BOX"))
-      (add-to-list 'org-default-properties prop))
+    ;; We must add these after their default values are set by org
+    (with-eval-after-load 'org
+      ;; Add ROAM_* properties to properties completing-read interface completions
+      (dolist (prop '("ROAM_EXCLUDE"
+                      "ROAM_PLACE"
+                      "ROAM_PERSON"
+                      "ROAM_SOURCE"
+                      "ROAM_CONTEXT"
+                      "ROAM_REFS"
+                      "ROAM_TYPE"
+                      "ROAM_BOX"))
+        (add-to-list 'org-default-properties prop))
 
-    ;; Set inherited default values for some ROAM_* properties
-    (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
-    (add-to-list 'org-use-property-inheritance "ROAM_BOX"))
+      ;; Set inherited default values for some ROAM_* properties
+      (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
+      (add-to-list 'org-use-property-inheritance "ROAM_BOX")))
 
   ;;; Provide
   (provide 'krisb-org-roam)
