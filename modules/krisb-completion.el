@@ -505,7 +505,8 @@ This macro does not affect capfs already in
     '(git-commit-setup-hook vc-git-log-edit-mode-hook)
     (list #'cape-elisp-symbol #'cape-dabbrev))
   :config
-  ;; Resolve the undesirable behavior of `cape-elisp-symbol' described in
+  ;; Resolve the undesirable behavior of `cape-elisp-symbol' and the *Help*
+  ;; buffer described in
   ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
   (defun krisb-corfu-popupinfo--doc-buffer (str)
     "Wrapper around `elisp--company-doc-buffer'.
@@ -535,8 +536,7 @@ https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
     "Advice to use a different doc buffer for documentation.
 This solution was taken from the suggestion of
 https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
-    (cape-interactive
-     (cape-capf-properties orig-fun :company-doc-buffer #'krisb-corfu-popupinfo--doc-buffer)))
+    (cape-wrap-properties orig-fun :company-doc-buffer #'krisb-corfu-popupinfo--doc-buffer))
 
   (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
     (advice-add capf :around #'krisb-cape-elisp--around-advice)))
