@@ -97,5 +97,35 @@
   ;; :hook (help-mode . rainbow-mode)
   )
 
+;;; Embark
+;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
+(use-package embark
+  :bind (("C-.". embark-act)
+         ("C-h B". embark-bindings)
+         :map vertico-map
+         ("C-.". embark-act)
+         :map embark-symbol-map
+         ("R". raise-sexp)
+         :map embark-org-heading-map
+         ("C-j" . org-clock-goto))
+  :custom
+  ;; Embark Actions menu
+  (embark-prompter 'embark-keymap-prompter)
+  (embark-indicators '(embark-minimal-indicator
+                       embark-highlight-indicator
+                       embark-isearch-highlight-indicator))
+  (prefix-help-command #'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
+
+  (embark-mixed-indicator-delay 1.5)
+  (embark-collect-live-initial-delay 0.8)
+  (embark-collect-live-update-delay 0.5)
+  :config
+  (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
+
+;;; Embark-consult
+(use-package embark-consult
+  :requires embark consult
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
 ;;; Provide
 (provide 'krisb-programming-essentials)

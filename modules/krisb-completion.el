@@ -1,4 +1,4 @@
-;;; Minibuffer
+;;; Minibuffer.el
 (use-package minibuffer
   :ensure nil
   :custom
@@ -52,7 +52,18 @@
    '((calendar-month (display-sort-function . identity))))
   (completion-category-overrides
    '((file (styles . (basic partial-completion flex))) ; Include `partial-completion' to enable wildcards and partial paths.
-     (citar-candidate (styles basic substring flex)))))
+     (citar-candidate (styles basic substring flex))))
+
+  ;; I do this manually here because the final styles I want depends on the
+  ;; packages I want enabled, and so setting this within each use-package,
+  ;; independently of other use-packages, means I have to make sure various
+  ;; packages are loaded after other ones so my `completion-styles' setting isn't
+  ;; overridden in an undesirable way.  Instead, I opt to just set it finally
+  ;; after all those packages are set.
+  (completion-styles (list (if (featurep 'orderless)
+                               'basic 'orderless)
+                           (if (featurep 'hotfuzz)
+                               'hotfuzz 'flex))))
 
 ;;; Completion-preview
 (use-package completion-preview
@@ -100,112 +111,6 @@
                   (car args))
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'krisb-crm-indicator))
-
-;;; Marginalia
-;; Enable richer annotations in minibuffer (companion package of consult.el)
-(use-package marginalia
-  :custom
-  (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
-  (marginalia-field-width 80)
-  (marginalia-align-offset -2)          ; Two to the left
-  :config
-  (marginalia-mode 1))
-
-;;; Nerd-icons-completion
-;; Use nerd-icons in completing-read interfaces. An alternative would be
-;; all-the-icons-completion which uses all-the-icons -- I prefer nerd-icons.
-(use-package nerd-icons-completion
-  :demand t
-  :hook (marginalia-mode . nerd-icons-completion-marginalia-setup)
-  :config
-  (nerd-icons-completion-mode 1))
-
-;;; Prescient
-;; Sorting and filtering of minibuffer candidates. The difference between
-;; `orderless' and this package is that `orderless' filters but does not sort -
-;; it leaves that up to the "candidate source and the completion UI."
-;; Additionally, `orderless' has style "dispatchers," i.e., I can define
-;; predicates for what filtering style to use for which token
-(use-package prescient
-  :custom
-  ;; (completion-styles '(prescient flex))
-  ;; NOTE 2024-02-03: Flex is chosen as a backup in case nothing in prescient is
-  ;; matched, which only happens if I'm clueless about what I'm searching for.
-  ;; We prefer this over adding the fuzzy matching in `prescient-filter-method'
-  ;; because we don't want a bunch of random results included in the filtered
-  ;; prescient results and cluttering it
-  (prescient-filter-method '(literal initialism regexp))
-  (prescient-aggressive-file-save t)
-  (prescient-sort-length-enable nil)
-  (prescient-sort-full-matches-first t)
-  (prescient-history-length 200)
-  (prescient-frequency-decay 0.997)
-  (prescient-frequency-threshold 0.05)
-  :config
-  (prescient-persist-mode 1))
-
-;;; Orderless
-;; Alternative and powerful completion style (i.e. filters candidates)
-(use-package orderless
-  :custom
-  (orderless-matching-styles
-   '(orderless-regexp
-     orderless-prefixes
-     orderless-initialism
-     ;; orderless-literal
-     ;; orderless-flex
-     ;; orderless-without-literal          ; Recommended for dispatches instead
-     ))
-  (orderless-component-separator 'orderless-escapable-split-on-space)
-  (orderless-style-dispatchers '(krisb-orderless-consult-dispatch))
-  :config
-  ;; Eglot forces `flex' by default.
-  (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
-
-  ;; Taken from Doom
-  (defun krisb-orderless-consult-dispatch (pattern _index _total)
-    "Basically `orderless-affix-dispatch-alist' but with prefixes too."
-    (cond
-     ;; Ensure $ works with Consult commands, which add disambiguation suffixes
-     ((string-suffix-p "$" pattern)
-      `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x200000-\x300000]*$")))
-     ;; Ignore single !
-     ((string= "!" pattern) `(orderless-literal . ""))
-     ;; Without literal
-     ((string-prefix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1)))
-     ((string-suffix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1 -1)))
-     ;; Character folding
-     ((string-prefix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 1)))
-     ((string-suffix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 0 -1)))
-     ;; Initialism matching
-     ((string-prefix-p "," pattern) `(orderless-initialism . ,(substring pattern 1)))
-     ((string-suffix-p "," pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
-     ;; Literal matching
-     ((string-prefix-p "=" pattern) `(orderless-literal . ,(substring pattern 1)))
-     ((string-suffix-p "=" pattern) `(orderless-literal . ,(substring pattern 0 -1)))
-     ;; Flex matching
-     ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
-     ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
-
-;;; Hotfuzz
-;; Faster version of the flex completion style.  Hotfuzz is a much faster
-;; version of the built-in flex style.  See
-;; https://github.com/axelf4/emacs-completion-bench#readme
-(use-package hotfuzz)
-
-;;; Set up completion styles
-;; I do this manually here because the final styles I want depends on the
-;; packages I want enabled, and so setting this within each use-package,
-;; independently of other use-packages, means I have to make sure various
-;; packages are loaded after other ones so my `completion-styles' setting isn't
-;; overridden in an undesirable way.  Instead, I opt to just set it finally
-;; after all those packages are set.
-(setopt completion-styles
-        (list 'orderless
-              (if (featurep 'hotfuzz)
-                  'hotfuzz
-                'flex)))
 
 ;;; Vertico
 ;;;; Itself
@@ -556,34 +461,98 @@ ORIG-FUN should be `ispell-completion-at-point'."
 
   (advice-add 'ispell-completion-at-point :around #'krisb-cape-ispell--around-advice))
 
-;;; Embark
-;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
-(use-package embark
-  :bind (("C-.". embark-act)
-         ("C-h B". embark-bindings)
-         :map vertico-map
-         ("C-.". embark-act)
-         :map embark-symbol-map
-         ("R". raise-sexp)
-         :map embark-org-heading-map
-         ("C-j" . org-clock-goto))
+;;; Marginalia
+;; Enable richer annotations in minibuffer (companion package of consult.el)
+(use-package marginalia
   :custom
-  ;; Embark Actions menu
-  (embark-prompter 'embark-keymap-prompter)
-  (embark-indicators '(embark-minimal-indicator
-                       embark-highlight-indicator
-                       embark-isearch-highlight-indicator))
-  (prefix-help-command #'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
-
-  (embark-mixed-indicator-delay 1.5)
-  (embark-collect-live-initial-delay 0.8)
-  (embark-collect-live-update-delay 0.5)
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right)
+  (marginalia-field-width 80)
+  (marginalia-align-offset -2)          ; Two to the left
   :config
-  (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
+  (marginalia-mode 1))
 
-;;; Embark-consult
-(use-package embark-consult
-  :hook (embark-collect-mode . consult-preview-at-point-mode))
+;;; Nerd-icons-completion
+;; Use nerd-icons in completing-read interfaces. An alternative would be
+;; all-the-icons-completion which uses all-the-icons -- I prefer nerd-icons.
+(use-package nerd-icons-completion
+  :demand t
+  :hook (marginalia-mode . nerd-icons-completion-marginalia-setup)
+  :config
+  (nerd-icons-completion-mode 1))
+
+;;; Prescient
+;; Sorting and filtering of minibuffer candidates. The difference between
+;; `orderless' and this package is that `orderless' filters but does not sort -
+;; it leaves that up to the "candidate source and the completion UI."
+;; Additionally, `orderless' has style "dispatchers," i.e., I can define
+;; predicates for what filtering style to use for which token
+(use-package prescient
+  :custom
+  ;; (completion-styles '(prescient flex))
+  ;; NOTE 2024-02-03: Flex is chosen as a backup in case nothing in prescient is
+  ;; matched, which only happens if I'm clueless about what I'm searching for.
+  ;; We prefer this over adding the fuzzy matching in `prescient-filter-method'
+  ;; because we don't want a bunch of random results included in the filtered
+  ;; prescient results and cluttering it
+  (prescient-filter-method '(literal initialism regexp))
+  (prescient-aggressive-file-save t)
+  (prescient-sort-length-enable nil)
+  (prescient-sort-full-matches-first t)
+  (prescient-history-length 200)
+  (prescient-frequency-decay 0.997)
+  (prescient-frequency-threshold 0.05)
+  :config
+  (prescient-persist-mode 1))
+
+;;; Orderless
+;; Alternative and powerful completion style (i.e. filters candidates)
+(use-package orderless
+  :custom
+  (orderless-matching-styles
+   '(orderless-regexp
+     orderless-prefixes
+     orderless-initialism
+     ;; orderless-literal
+     ;; orderless-flex
+     ;; orderless-without-literal          ; Recommended for dispatches instead
+     ))
+  (orderless-component-separator 'orderless-escapable-split-on-space)
+  (orderless-style-dispatchers '(krisb-orderless-consult-dispatch))
+  :config
+  ;; Eglot forces `flex' by default.
+  (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
+
+  ;; Taken from Doom
+  (defun krisb-orderless-consult-dispatch (pattern _index _total)
+    "Basically `orderless-affix-dispatch-alist' but with prefixes too."
+    (cond
+     ;; Ensure $ works with Consult commands, which add disambiguation suffixes
+     ((string-suffix-p "$" pattern)
+      `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x200000-\x300000]*$")))
+     ;; Ignore single !
+     ((string= "!" pattern) `(orderless-literal . ""))
+     ;; Without literal
+     ((string-prefix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1)))
+     ((string-suffix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1 -1)))
+     ;; Character folding
+     ((string-prefix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 1)))
+     ((string-suffix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 0 -1)))
+     ;; Initialism matching
+     ((string-prefix-p "," pattern) `(orderless-initialism . ,(substring pattern 1)))
+     ((string-suffix-p "," pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
+     ;; Literal matching
+     ((string-prefix-p "=" pattern) `(orderless-literal . ,(substring pattern 1)))
+     ((string-suffix-p "=" pattern) `(orderless-literal . ,(substring pattern 0 -1)))
+     ;; Flex matching
+     ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
+     ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
+
+;;; Hotfuzz
+;; Faster version of the flex completion style.  Hotfuzz is a much faster
+;; version of the built-in flex style.  See
+;; https://github.com/axelf4/emacs-completion-bench#readme
+(use-package hotfuzz)
 
 ;;; Provide
 (provide 'krisb-completion)
