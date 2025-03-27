@@ -1063,9 +1063,7 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
   ;;; Completion-preview
   (use-package completion-preview
     :ensure nil
-    ;; 2025-03-27: I don't call this anymore because I have
-    ;; `krisb-auto-completion-mode'
-    ;; :hook (minibuffer-setup . krisb-completion-preview--minibuffer-prompts-setup)
+    :hook ((prog-mode log-edit-mode eval-expression-minibuffer-setup) . completion-preview-mode)
     :bind ( :map completion-preview-active-mode-map
             ("M-n" . completion-preview-next-candidate)
             ("M-p" . completion-preview-prev-candidate))
@@ -1073,13 +1071,6 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
     (completion-preview-ignore-case t)
     (completion-preview-minimum-symbol-length 3)
     :config
-    (defun krisb-completion-preview--minibuffer-prompts-setup ()
-      "Enable `completion-preview-mode' for certain minibuffer prompt commands."
-      (when (or (eq this-command 'eval-expression)
-                (eq this-command 'shell-command)
-                (eq this-command 'project-shell-command))
-        (completion-preview-mode 1)))
-
     ;; Use prescient's sorting function if prescient is available
     (with-eval-after-load 'prescient
       (setopt completion-preview-sort-function #'prescient-completion-sort))
@@ -1254,13 +1245,15 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
   ;;;;; Bespoke auto-completion minor mode
   (define-minor-mode krisb-auto-completion-mode
     "Minor mode for my bespoke auto-completion setup.
-  This function does the following buffer-locally.
-  - Sets relevant variables in corfu and adjacent packages.
-  - Modifies relevant hooks appropriately.
-  - Modifies relevant keybindings.
+  This minor mode enables functionality to enable an auto-completion
+  setup.
+  - Sets relevant variables completion-related packages.
+  - Modifies `completion-at-point-functions' appropriately.
+  - Modifies relevant minor mode keybindings.
+  - DOES NOT enable or disable any modes.  The user must do so separately.
 
-  This auto-completion setup is designed to work in harmony with
-  `completion-preview-mode'.
+  Notably, this minor mode is designed to work in harmony with
+  `completion-preview-mode' previews.
 
   NOTE: Disabling this minor mode does not revert these changes.
 
@@ -1281,11 +1274,15 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
           (require 'orderless)
 
           (setq-local corfu-auto t
-                      corfu-auto-prefix 2
                       corfu-auto-delay 0.25
+                      corfu-auto-prefix 2
                       corfu-separator (string-to-char sep)
                       corfu-quit-at-boundary 'separator
-                      corfu-quit-no-match 'separator)
+                      corfu-quit-no-match 'separator
+                      ;; This setup (particularly its keybinds) is designed to work in
+                      ;; conjunction with `completion-preview-mode' in order to take advantage
+                      ;; of its candidate previews
+                      corfu-auto-prefix completion-preview-minimum-symbol-length)
 
           ;; TODO 2025-03-26: Is there a more elegant solution?  Overwrite
           ;; `corfu-map' bindings buffer-locally.
@@ -1311,12 +1308,6 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
           (when (member 'orderless completion-styles)
             (setq-local orderless-component-separator sep))
 
-          ;; This setup (particularly its keybinds) is designed to work in
-          ;; conjunction with `completion-preview-mode' in order to take advantage
-          ;; of its candidate previews
-          (completion-preview-mode 1)
-          (setq-local corfu-auto-prefix completion-preview-minimum-symbol-length)
-
           ;; These capfs are annoying with corfu auto-completion since there will
           ;; always be candidates, no matter what I type.  Ensure these are not in
           ;; the global value of `completion-at-point-functions'.
@@ -1339,7 +1330,7 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 
   (dolist (hook '(prog-mode-hook
                   log-edit-mode-hook
-                  minibuffer-setup-hook))
+                  eval-expression-minibuffer-setup-hook))
     (add-hook hook #'krisb-auto-completion-mode))
 
   ;;;;; Corfu-history
