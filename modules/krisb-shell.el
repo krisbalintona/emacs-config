@@ -75,6 +75,8 @@
   :vc ( :url "https://codeberg.org/vifon/emacs-eat.git"
         :branch "fish-integration"
         :rev :newest)
+  :hook ((eshell-load . eat-eshell-mode)
+         (eshell-load . eat-eshell-visual-command-mode))
   :bind ( :map krisb-open-keymap
           ("e" . eat)))
 
