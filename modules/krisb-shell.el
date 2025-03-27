@@ -38,6 +38,7 @@
 (use-package eshell-atuin
   :after eshell
   :demand t
+  :hook (eshell-mode . krisb-eshell-atuin-setup-eshell-capf)
   :bind* ( :map eshell-mode-map
            ([remap eshell-isearch-backward-regexp] . eshell-atuin-history))
   :custom
@@ -47,7 +48,57 @@
   (eshell-atuin-search-fields '(time command duration directory))
   (eshell-atuin-history-format "%-110c (in %i)")
   :config
-  (eshell-atuin-mode 1))
+  (eshell-atuin-mode 1)
+
+  (defun krisb-eshell-atuin-setup-eshell-capf ()
+    "Add `krisb-eshell-atium-capf' to the beginning of `completion-at-point-functions'."
+    (add-hook 'completion-at-point-functions #'krisb-eshell-atium-capf -50 t))
+
+  ;; Bespoke capf.  Especially useful with `completion-preview-mode'
+  (defun krisb-eshell-atuin--relative-time (time-string)
+    "Turn TIME-STRING into a relative time string.
+TIME-STRING is a string that represents a time; it is in the format
+returned by \"atuin history list\" CLI command.  For example:
+\"2025-03-27 07:17:40\".
+
+An example of a return value for this function is: \"9 minutes ago\"."
+    (when-let* ((then-time (ignore-errors (date-to-time time-string)))
+                (now-time (current-time))
+                (diff-time (float-time (time-subtract then-time now-time)))
+                (abs-diff (abs diff-time)))
+      (cond ((< abs-diff 60)
+             (format "%.0f seconds %s" abs-diff (if (< diff-time 0) "ago" "from now")))
+            ((< abs-diff 3600)
+             (format "%.0f minutes %s" (/ abs-diff 60) (if (< diff-time 0) "ago" "from now")))
+            ((< abs-diff 86400)
+             (format "%.0f hours %s" (/ abs-diff 3600) (if (< diff-time 0) "ago" "from now")))
+            ((< abs-diff (* 30 86400))
+             (format "%.0f days %s" (/ abs-diff 86400) (if (< diff-time 0) "ago" "from now")))
+            (t (format "%.0f months %s" (/ abs-diff (* 30 86400)) (if (< diff-time 0) "ago" "from now"))))))
+
+  (defun krisb-eshell-atium-capf ()
+    "Capf or `eshell-atuin' command history.
+Meant for `completion-at-point-functions' in eshell buffers."
+    (interactive)
+    (when (bound-and-true-p eshell-atuin-mode)
+      (let* ((start (save-excursion (eshell-next-prompt) (point)))
+             (end (point))
+             (candidates
+              (mapcar (lambda (e)
+                        (let* ((command (alist-get 'command e))
+                               (directory (alist-get 'directory e))
+                               (time (alist-get 'time e))
+                               ;; 2025-03-27: I manually parse the time string
+                               ;; into relativetime string.  Upstream does not
+                               ;; do it for us.
+                               (relativetime (krisb-eshell-atuin--relative-time time)))
+                          (put-text-property 0 (length command) 'relativetime relativetime command)
+                          command))
+                      eshell-atuin--history-cache)))
+        (list start end candidates
+              :exclulsive 'no                   ; Go to other capfs afterward
+              :display-sort-function #'identity ; Keep in chronological order
+              :annotation-function (lambda (s) (get-text-property 0 'relativetime s)))))))
 
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
