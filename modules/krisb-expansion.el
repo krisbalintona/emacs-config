@@ -42,6 +42,17 @@
   (define-abbrev global-abbrev-table ";d" "" #'krisb-abbrev-current-date)
   (define-abbrev global-abbrev-table ";td" "" #'krisb-abbrev-todo-keyword-and-date))
 
+;;; Dabbrev
+;; Use Dabbrev with Corfu!
+(use-package dabbrev
+  :ensure nil
+  :config
+  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+  (dolist (mode '(doc-view-mode
+                  pdf-view-mode
+                  tags-table-mode))
+    (add-to-list 'dabbrev-ignored-buffer-modes mode)))
+
 ;;; Hippie-expand
 (use-package hippie-exp
   :ensure nil
