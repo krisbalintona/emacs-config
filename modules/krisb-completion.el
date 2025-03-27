@@ -200,7 +200,8 @@
   :demand t
   :bind (("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
          :map corfu-map
-         ("M-d" . corfu-info-documentation))
+         ("M-d" . corfu-info-documentation)
+         ("M-m" . krisb-corfu-move-to-minibuffer))
   :custom
   (corfu-auto nil)
   (corfu-preselect 'valid)
@@ -230,8 +231,20 @@
     (unless (bound-and-true-p vertico-mode)
       (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
       (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally 1))
+  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally 1)
 
+  ;; Transfer corfu completion to the minibuffer
+  (defun krisb-corfu-move-to-minibuffer ()
+    "Transfer corfu completion to the minibuffer.
+Taken from
+https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-minibuffer."
+    (interactive)
+    (pcase completion-in-region--data
+      (`(,beg ,end ,table ,pred ,extras)
+       (let ((completion-extra-properties extras)
+             completion-cycle-threshold completion-cycling)
+         (consult-completion-in-region beg end table pred)))))
+  (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer))
 
 ;;;;; Bespoke auto-completion minor mode
 (define-minor-mode krisb-auto-completion-mode
