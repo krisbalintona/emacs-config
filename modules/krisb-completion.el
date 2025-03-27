@@ -68,6 +68,8 @@
 ;;; Completion-preview
 (use-package completion-preview
   :ensure nil
+  ;; 2025-03-27: I don't call this anymore because I have
+  ;; `krisb-auto-completion-mode'
   ;; :hook (minibuffer-setup . krisb-completion-preview--minibuffer-prompts-setup)
   :bind ( :map completion-preview-active-mode-map
           ("M-n" . completion-preview-next-candidate)
@@ -75,14 +77,14 @@
   :custom
   (completion-preview-ignore-case t)
   (completion-preview-minimum-symbol-length 3)
-  :init
+  :config
   (defun krisb-completion-preview--minibuffer-prompts-setup ()
     "Enable `completion-preview-mode' for certain minibuffer prompt commands."
     (when (or (eq this-command 'eval-expression)
               (eq this-command 'shell-command)
               (eq this-command 'project-shell-command))
       (completion-preview-mode 1)))
-  :config
+
   ;; Use prescient's sorting function if prescient is available
   (with-eval-after-load 'prescient
     (setopt completion-preview-sort-function #'prescient-completion-sort))
@@ -196,9 +198,9 @@
 ;;;;; Itself
 (use-package corfu
   :demand t
-  :hook ((prog-mode log-edit-mode) . krisb-corfu-enable-auto-completion)
-  :bind ( :map corfu-map
-          ("M-d" . corfu-info-documentation))
+  :bind (("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
+         :map corfu-map
+         ("M-d" . corfu-info-documentation))
   :custom
   (corfu-auto nil)
   (corfu-preselect 'valid)
@@ -228,55 +230,100 @@
     (unless (bound-and-true-p vertico-mode)
       (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
       (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally 1)
+  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally 1))
 
-  ;; Bespoke auto-completion setup
-  (defun krisb-corfu-enable-auto-completion ()
-    "Enable an auto-completion corfu setup.
+
+;;;;; Bespoke auto-completion minor mode
+(define-minor-mode krisb-auto-completion-mode
+  "Minor mode for my bespoke auto-completion setup.
 This function does the following buffer-locally.
 - Sets relevant variables in corfu and adjacent packages.
 - Modifies relevant hooks appropriately.
 - Modifies relevant keybindings.
 
+This auto-completion setup is designed to work in harmony with
+`completion-preview-mode'.
+
+NOTE: Disabling this minor mode does not revert these changes.
+
 See also
 https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion
-for recommended settings and usage with orderless."
-    ;; There is a notable, behavior with `corfu-separator': if the corfu
-    ;; completions candidates are not shown yet, only through calling
-    ;; `corfu-insert-separator' will they be shown.  They will not be shown by
-    ;; inserting the character corresponding to the value of `corfu-separator'.
-    ;; However, after the first invocation, regular insertions of that character
-    ;; will be recognized as separators.
-    (let ((sep " "))
-      (setq-local corfu-auto t
-                  corfu-auto-prefix 2
-                  corfu-auto-delay 0.1
-                  corfu-separator (string-to-char sep)
-                  corfu-quit-at-boundary 'separator
-                  corfu-quit-no-match 'separator)
+for recommended corfu settings and usage with orderless."
+  :lighter " Auto-C"
+  ;; There is a notable, behavior with `corfu-separator': if the corfu
+  ;; completions candidates are not shown yet, only through calling
+  ;; `corfu-insert-separator' will they be shown.  They will not be shown by
+  ;; inserting the character corresponding to the value of `corfu-separator'.
+  ;; However, after the first invocation, regular insertions of that character
+  ;; will be recognized as separators.
+  (if krisb-auto-completion-mode
+      (let ((sep " "))
+        (require 'completion-preview)
+        (require 'corfu)
+        (require 'orderless)
 
-      ;; TODO 2025-03-26: Is there a more elegant solution?
-      ;; Overwrite `corfu-map' bindings buffer-locally.
-      (make-local-variable 'corfu-map)
-      (let ((map (make-sparse-keymap)))
-        (set-keymap-parent map corfu-map)
-        (bind-keys :map map
-                   ;; `corfu-map' remaps `next-line' and `previous-line'; I
-                   ;; undo the remapping
-                   ([remap next-line] . nil)
-                   ([remap previous-line] . nil))
-        (setq corfu-map map))
+        (setq-local corfu-auto t
+                    corfu-auto-prefix 2
+                    corfu-auto-delay 0.25
+                    corfu-separator (string-to-char sep)
+                    corfu-quit-at-boundary 'separator
+                    corfu-quit-no-match 'separator)
 
-      ;; Ensure `orderless-component-separator' matches `corfu-separator'
-      (when (member 'orderless completion-styles)
-        (setq-local orderless-component-separator sep))
+        ;; TODO 2025-03-26: Is there a more elegant solution?  Overwrite
+        ;; `corfu-map' bindings buffer-locally.
+        ;; Overwrite `corfu-map' `minibuffer-local-filename-syntax'
+        (let ((map (make-sparse-keymap)))
+          (set-keymap-parent map corfu-map)
+          (bind-keys :map map
+                     ;; `corfu-map' remaps `next-line' and `previous-line'; I
+                     ;; undo the remapping
+                     ([remap next-line] . nil)
+                     ([remap previous-line] . nil)
+                     ;; Have TAB do nothing
+                     ("TAB" . nil)
+                     ;; Rely on RET to insert and expand (`corfu-complete').  I
+                     ;; prefer to use this and C-j to do the usual RET behavior
+                     ("RET" . corfu-complete)
+                     ;; Behave like "M-i" in
+                     ;; `completion-preview-active-mode-map'
+                     ("M-i" . corfu-expand))
+          (setq-local corfu-map map))
 
-      ;; These capfs are annoying with corfu auto-completion since there will
-      ;; always be candidates, no matter what I type.  Ensure these are not in
-      ;; the global value of `completion-at-point-functions'.
-      (dolist (capf '(krisb-cape-super-capf--dict-dabbrev
-                      cape-dabbrev))
-        (remove-hook 'completion-at-point-functions capf t)))))
+        ;; Ensure `orderless-component-separator' matches `corfu-separator'
+        (when (member 'orderless completion-styles)
+          (setq-local orderless-component-separator sep))
+
+        ;; This setup (particularly its keybinds) is designed to work in
+        ;; conjunction with `completion-preview-mode' in order to take advantage
+        ;; of its candidate previews
+        (completion-preview-mode 1)
+        (setq-local corfu-auto-prefix completion-preview-minimum-symbol-length)
+
+        ;; These capfs are annoying with corfu auto-completion since there will
+        ;; always be candidates, no matter what I type.  Ensure these are not in
+        ;; the global value of `completion-at-point-functions'.
+        (dolist (capf '(krisb-cape-super-capf--dict-dabbrev
+                        cape-dabbrev))
+          (remove-hook 'completion-at-point-functions capf t)))
+    ;; TODO 2025-03-27: Can we do more to revert options, modes, etc. when
+    ;; disabling?
+    (dolist (var '(corfu-auto
+                   corfu-auto-prefix
+                   corfu-auto-delay
+                   corfu-separator
+                   corfu-quit-at-boundary
+                   corfu-quit-no-match
+                   corfu-map))
+      (kill-local-variable var))))
+
+(with-eval-after-load 'diminsh
+  (diminish 'krisb-auto-completion-mode))
+
+(dolist (hook '(prog-mode-hook
+                log-edit-mode-hook
+                minibuffer-setup-hook))
+  (add-hook hook #'krisb-auto-completion-mode))
+
 ;;;;; Corfu-history
 ;; Save the history across Emacs sessions
 (use-package corfu-history
@@ -299,14 +346,15 @@ for recommended settings and usage with orderless."
   (corfu-popupinfo-direction '(right left vertical))
   (corfu-popupinfo-hide t)
   (corfu-popupinfo-resize t)
-  (corfu-popupinfo-max-height 20)
-  (corfu-popupinfo-max-width 70)
+  (corfu-popupinfo-max-height 70)
+  (corfu-popupinfo-max-width 80)
   (corfu-popupinfo-min-height 1)
-  (corfu-popupinfo-min-width 30))
+  (corfu-popupinfo-min-width 25))
 
 ;;;;; Corfu-prescient
 (use-package corfu-prescient
   :requires prescient
+  :demand t
   :after corfu
   :custom
   ;; Sorting
