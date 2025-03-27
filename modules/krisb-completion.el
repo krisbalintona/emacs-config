@@ -196,6 +196,7 @@
 ;;;;; Itself
 (use-package corfu
   :demand t
+  :hook ((prog-mode log-edit-mode) . krisb-corfu-enable-auto-completion)
   :bind ( :map corfu-map
           ("M-d" . corfu-info-documentation))
   :custom
@@ -213,16 +214,6 @@
   (corfu-quit-at-boundary nil)
   (corfu-separator ?\s)            ; Use space
   (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
-
-  ;; 2025-03-26: Below is my corfu auto-complete settings.  Some of them
-  ;; override the settings above.  Comment out if I want my non-auto-complete
-  ;; configuration; uncomment if I want an auto-complete setup.
-  (corfu-auto t)
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.15)
-  (corfu-separator (string-to-char ";"))
-  (corfu-quit-at-boundary 'separator)
-  (corfu-quit-no-match 'separator)
   :custom-face
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
   ;; be adopted in a variable pitch buffer) have inconsistent spacing
@@ -237,8 +228,55 @@
     (unless (bound-and-true-p vertico-mode)
       (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
       (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally 1))
+  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally 1)
 
+  ;; Bespoke auto-completion setup
+  (defun krisb-corfu-enable-auto-completion ()
+    "Enable an auto-completion corfu setup.
+This function does the following buffer-locally.
+- Sets relevant variables in corfu and adjacent packages.
+- Modifies relevant hooks appropriately.
+- Modifies relevant keybindings.
+
+See also
+https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion
+for recommended settings and usage with orderless."
+    ;; There is a notable, behavior with `corfu-separator': if the corfu
+    ;; completions candidates are not shown yet, only through calling
+    ;; `corfu-insert-separator' will they be shown.  They will not be shown by
+    ;; inserting the character corresponding to the value of `corfu-separator'.
+    ;; However, after the first invocation, regular insertions of that character
+    ;; will be recognized as separators.
+    (let ((sep " "))
+      (setq-local corfu-auto t
+                  corfu-auto-prefix 2
+                  corfu-auto-delay 0.1
+                  corfu-separator (string-to-char sep)
+                  corfu-quit-at-boundary 'separator
+                  corfu-quit-no-match 'separator)
+
+      ;; TODO 2025-03-26: Is there a more elegant solution?
+      ;; Overwrite `corfu-map' bindings buffer-locally.
+      (make-local-variable 'corfu-map)
+      (let ((map (make-sparse-keymap)))
+        (set-keymap-parent map corfu-map)
+        (bind-keys :map map
+                   ;; `corfu-map' remaps `next-line' and `previous-line'; I
+                   ;; undo the remapping
+                   ([remap next-line] . nil)
+                   ([remap previous-line] . nil))
+        (setq corfu-map map))
+
+      ;; Ensure `orderless-component-separator' matches `corfu-separator'
+      (when (member 'orderless completion-styles)
+        (setq-local orderless-component-separator sep))
+
+      ;; These capfs are annoying with corfu auto-completion since there will
+      ;; always be candidates, no matter what I type.  Ensure these are not in
+      ;; the global value of `completion-at-point-functions'.
+      (dolist (capf '(krisb-cape-super-capf--dict-dabbrev
+                      cape-dabbrev))
+        (remove-hook 'completion-at-point-functions capf t)))))
 ;;;;; Corfu-history
 ;; Save the history across Emacs sessions
 (use-package corfu-history
@@ -383,10 +421,19 @@
   ;; These are added to the global definition of
   ;; `completion-at-point-functions', which acts as a fallback if buffer-local
   ;; values end in `t'. Read (info "(cape) Configuration") for an explanation.
+
+  ;; TODO 2025-03-26: Should I just add these as separate capfs? The use for
+  ;; super-capfs is described here:
+  ;; (info "(cape) Super-Capf - Merging multiple Capfs")
   (defun krisb-cape-super-capf--dict-dabbrev ()
     "Super-capf of `cape-dict' and `cape-dabbrev'."
     (cape-capf-super 'cape-dict :with 'cape-dabbrev))
-  (add-hook 'completion-at-point-functions 'krisb-cape-super-capf--dict-dabbrev 100)
+
+  (defvar krisb-cape-fallback-capfs '(krisb-cape-super-capf--dict-dabbrev)
+    "Capfs added to the end of the global value of `completion-at-point-functions'.")
+
+  (dolist (capf krisb-cape-fallback-capfs)
+    (add-hook 'completion-at-point-functions capf 100))
 
   ;; Macro to help adding capfs via hooks
   (defmacro krisb-cape-setup-capfs (label hooks capfs)
