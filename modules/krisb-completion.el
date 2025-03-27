@@ -68,8 +68,7 @@
 ;;; Completion-preview
 (use-package completion-preview
   :ensure nil
-  :hook (;; (minibuffer-setup . krisb-completion-preview--minibuffer-prompts-setup)
-         (log-edit-mode . completion-preview-mode))
+  ;; :hook (minibuffer-setup . krisb-completion-preview--minibuffer-prompts-setup)
   :bind ( :map completion-preview-active-mode-map
           ("M-n" . completion-preview-next-candidate)
           ("M-p" . completion-preview-prev-candidate))
@@ -200,9 +199,9 @@
   :bind ( :map corfu-map
           ("M-d" . corfu-info-documentation))
   :custom
-  (corfu-auto nil) ; REVIEW 2024-09-20: Perhaps try https://github.com/minad/corfu?tab=readme-ov-file#auto-completion
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.25)
+  (corfu-auto nil)
+  (corfu-preselect 'valid)
+  (corfu-preview-current t)
   (corfu-on-exact-match 'insert)
 
   (corfu-min-width 80)
@@ -211,18 +210,19 @@
   (corfu-scroll-margin 4)
   (corfu-cycle nil)
 
-  ;; `nil' means to ignore `corfu-separator' behavior, that is, use the older
-  ;; `corfu-quit-at-boundary' = nil behavior. Set this to separator if using
-  ;; `corfu-auto' = `t' workflow (in that case, make sure you also set up
-  ;; `corfu-separator' and a keybind for `corfu-insert-separator', which my
-  ;; configuration already has pre-prepared). Necessary for manual corfu usage with
-  ;; orderless, otherwise first component is ignored, unless `corfu-separator'
-  ;; is inserted.
   (corfu-quit-at-boundary nil)
   (corfu-separator ?\s)            ; Use space
   (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
-  (corfu-preview-current t)
-  (corfu-preselect 'valid)
+
+  ;; 2025-03-26: Below is my corfu auto-complete settings.  Some of them
+  ;; override the settings above.  Comment out if I want my non-auto-complete
+  ;; configuration; uncomment if I want an auto-complete setup.
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.15)
+  (corfu-separator (string-to-char ";"))
+  (corfu-quit-at-boundary 'separator)
+  (corfu-quit-no-match 'separator)
   :custom-face
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
   ;; be adopted in a variable pitch buffer) have inconsistent spacing
