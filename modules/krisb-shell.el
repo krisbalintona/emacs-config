@@ -62,6 +62,8 @@ returned by \"atuin history list\" CLI command.  For example:
 \"2025-03-27 07:17:40\".
 
 An example of a return value for this function is: \"9 minutes ago\"."
+    ;; HACK 2025-03-27: We use `ignore-errors' to catch any malformed data
+    ;; stored by upstream (which happened at least once for me...)
     (when-let* ((then-time (ignore-errors (date-to-time time-string)))
                 (now-time (current-time))
                 (diff-time (float-time (time-subtract then-time now-time)))
@@ -81,6 +83,9 @@ An example of a return value for this function is: \"9 minutes ago\"."
 Meant for `completion-at-point-functions' in eshell buffers."
     (interactive)
     (when (bound-and-true-p eshell-atuin-mode)
+      ;; Update cache first
+      (eshell-atuin--history-rotate-cache)
+      (eshell-atuin--history-update)
       (let* ((start (save-excursion (eshell-next-prompt) (point)))
              (end (point))
              (candidates
@@ -98,7 +103,7 @@ Meant for `completion-at-point-functions' in eshell buffers."
         (list start end candidates
               :exclulsive 'no                   ; Go to other capfs afterward
               :display-sort-function #'identity ; Keep in chronological order
-              :annotation-function (lambda (s) (get-text-property 0 'relativetime s)))))))
+              :annotation-function (lambda (s) (get-text-property 0 'relativetime s))))))) ; Add relative time annotation
 
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
