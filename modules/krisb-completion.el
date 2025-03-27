@@ -475,7 +475,7 @@ for recommended corfu settings and usage with orderless."
   ;; (info "(cape) Super-Capf - Merging multiple Capfs")
   (defun krisb-cape-super-capf--dict-dabbrev ()
     "Super-capf of `cape-dict' and `cape-dabbrev'."
-    (cape-capf-super 'cape-dict :with 'cape-dabbrev))
+    (cape-wrap-super 'cape-dict :with 'cape-dabbrev))
 
   (defvar krisb-cape-fallback-capfs '(krisb-cape-super-capf--dict-dabbrev)
     "Capfs added to the end of the global value of `completion-at-point-functions'.")
