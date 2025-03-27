@@ -532,14 +532,28 @@ https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
         (help-mode)
         (elisp--company-doc-buffer str))))
 
-  (defun krisb-cape-elisp--around-advice (orig-fun &rest args)
+  (defun krisb-cape-elisp--around-advice (orig-fun &rest _args)
     "Advice to use a different doc buffer for documentation.
 This solution was taken from the suggestion of
 https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
     (cape-wrap-properties orig-fun :company-doc-buffer #'krisb-corfu-popupinfo--doc-buffer))
 
   (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
-    (advice-add capf :around #'krisb-cape-elisp--around-advice)))
+    (advice-add capf :around #'krisb-cape-elisp--around-advice))
+
+  ;; Resolve `ispell-completion-at-point' error when there is no dictionary
+  ;; available
+  (defun krisb-cape-ispell--around-advice (orig-fun &rest _args)
+    "Advice to remove an error from missing ispell dictionary.
+There is an error when using `ispell-completion-at-point' without a
+dictionary.  The error is this:
+
+(error \"ispell-lookup-words: No plain word-list found at systemdefault locations.  Customize ‘ispell-alternate-dictionary’ to set yours.\")
+
+ORIG-FUN should be `ispell-completion-at-point'."
+    (cape-wrap-silent orig-fun))
+
+  (advice-add 'ispell-completion-at-point :around #'krisb-cape-ispell--around-advice))
 
 ;;; Embark
 ;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
