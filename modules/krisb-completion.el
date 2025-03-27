@@ -393,7 +393,7 @@
   (kind-icon-blend-background nil)
   (kind-icon-blend-frac 0.08)
   (kind-icon-default-style
-   '(:padding 0 :stroke 0 :margin 0 :radius 0 :height 0.8 :scale 1.0))
+   '(:padding 0 :stroke 0 :margin 0 :radius 0 :height 0.8 :scale 0.9))
   ;; Use VSCode's icons (i.e. nerd icons' codicons set). Read about it from my
   ;; write-up in the kind-icon wiki here:
   ;; https://github.com/jdtsmith/kind-icon/wiki#using-svg-icons-from-a-nerd-fonts-icon-collection
