@@ -144,9 +144,7 @@ to the file path instead."
 
 ;;; Krisb-org-roam-ext
 (use-package krisb-org-roam-ext
-  :demand t
   :ensure nil
-  :after org-roam
   :bind ( :map krisb-note-keymap
           ("." . krisb-org-roam-ext-properties-transient))
   :custom
@@ -168,7 +166,59 @@ to the file path instead."
                   "${type-display-template}"
                   "${person-display-template}"
                   "${hierarchy}"
-                  (propertize " ${tags:60}" 'face 'org-tag))))
+                  (propertize " ${tags:60}" 'face 'org-tag)))
+
+  ;; Define bespoke transient menu for node properties
+  (transient-define-prefix krisb-org-roam-ext-properties-transient ()
+    "Transient menu for setting org-roam properties."
+    ["Properties"
+     ["Generic"
+      (org-id-get-create
+       :key "a"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Add ID" "ID" "Modify ID"))
+      (org-expiry-insert-created
+       :key "C"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Add CREATED" "CREATED"))]
+     ["Roam-specific"
+      (krisb-org-roam-ext-set-roam-box
+       :key "b"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_BOX" "ROAM_BOX"))
+      (krisb-org-roam-ext-set-roam-type
+       :key "t"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_TYPE" "ROAM_TYPE"))
+      (krisb-org-roam-ext-set-roam-source
+       :key "s"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_SOURCE" "ROAM_SOURCE"))
+      (krisb-org-roam-ext-set-roam-context
+       :key "c"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_CONTEXT" "ROAM_CONTEXT"))
+      (krisb-org-roam-ext-set-roam-person
+       :key "r"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PERSON" "ROAM_PERSON"))
+      (krisb-org-roam-ext-set-roam-place
+       :key "p"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))
+      (krisb-org-roam-ext-set-roam-exclude
+       :key "e"
+       :transient t
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_EXCLUDE" "ROAM_EXCLUDE"))]]
+    [["Navigation"
+      ("C-u" "Up heading" org-up-heading :transient t)
+      ("C-p" "Next heading" org-previous-visible-heading :transient t)
+      ("C-n" "Next heading" org-next-visible-heading :transient t)
+      ("C-f" "Forward heading same level" org-forward-heading-same-level :transient t)
+      ("C-b" "Backward heading same level" org-backward-heading-same-level :transient t)]
+     ["Visibility"
+      ("M-t" "Toggle visibility of heading contents" krisb-org-roam-ext-toggle-heading-content-visibility :transient t)
+      ("M-T" "Toggle visibility of properties drawer" krisb-org-roam-ext-toggle-properties-visibility :transient t)]]))
 
 ;;; Org-roam-ui
 (use-package org-roam-ui
