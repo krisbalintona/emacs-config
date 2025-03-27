@@ -8,8 +8,8 @@
 ;;;; Itself
 (use-package eshell
   :ensure nil
-  :hook ((eshell . visual-line-mode)
-         (eshell . krisb-eshell-setup))
+  :hook ((eshell-load . visual-line-mode)
+         (eshell-load . krisb-eshell-setup))
   :bind ( :map krisb-open-keymap
           ("E" . eshell))
   :config
@@ -18,6 +18,9 @@
     (set-display-table-slot standard-display-table 0 ?\ )
     (setq-local scroll-margin 3
                 line-spacing 0
+                ;; TODO 2025-03-27: The `outline-regexp' and
+                ;; `imenu-generic-expression' settings don't work anymore.  Not
+                ;; sure why.
                 ;; `consult-outline' support for eshell prompts. See
                 ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
                 outline-regexp eshell-prompt-regexp
