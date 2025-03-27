@@ -471,7 +471,7 @@
   ;; These are added to the global definition of
   ;; `completion-at-point-functions', which acts as a fallback if buffer-local
   ;; values end in `t'. Read (info "(cape) Configuration") for an explanation.
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev 100)
 
   ;; Macro to help adding capfs via hooks
   (defmacro krisb-cape-setup-capfs (label hooks capfs)
