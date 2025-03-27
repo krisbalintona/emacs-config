@@ -191,7 +191,7 @@
   :config
   (vertico-prescient-mode 1))
 
-;;;; Corfu
+;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more faithful to
 ;; the Emacs infrastructure
 ;;;;; Itself
@@ -288,7 +288,7 @@
   :config
   (corfu-prescient-mode 1))
 
-;;;; Kind-icon
+;;; Kind-icon
 ;; Icons for corfu! An alternative is nerd-icons-corfu for specifically nerd
 ;; icons.
 (use-package kind-icon
@@ -364,6 +364,7 @@
          ("C-c ? s" . cape-elisp-symbol)
          ("C-c ? a" . cape-abbrev)
          ("C-c ? w" . cape-dict)
+         ([remap ispell-complete-word] . cape-dict)
          ("C-c ? l" . cape-line)
          ("C-c ? \\" . cape-tex)
          ("C-c ? _" . cape-tex)
@@ -373,6 +374,11 @@
          ([remap dabbrev-completion] . cape-dabbrev))
   :custom
   (cape-dabbrev-min-length 2)
+  ;; Recommended in
+  ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration: Emacs 30
+  ;; and newer: Disable Ispell completion function.  Try `cape-dict' as an
+  ;; alternative.
+  (text-mode-ispell-word-completion nil)
   :init
   ;; These are added to the global definition of
   ;; `completion-at-point-functions', which acts as a fallback if buffer-local
@@ -411,6 +417,11 @@ This macro does not affect capfs already in
     '(git-commit-setup-hook log-edit-mode-hook)
     (list #'cape-elisp-symbol #'cape-dabbrev))
   :config
+  ;; Use enchant en_US dictionary
+  (with-eval-after-load 'jinx
+    (setopt cape-dict-file
+            (list (expand-file-name "enchant/en_US.dic" (xdg-config-home)))))
+
   ;; Resolve the undesirable behavior of `cape-elisp-symbol' and the *Help*
   ;; buffer described in
   ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
@@ -447,6 +458,9 @@ https://github.com/minad/corfu/discussions/504#discussioncomment-12593463."
   (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
     (advice-add capf :around #'krisb-cape-elisp--around-advice))
 
+  ;; NOTE 2025-03-26: The below does not apply because I've set
+  ;; `text-mode-ispell-word-completion' to nil.  I've left it here for future
+  ;; reference and just in case I revert the value to 'completion-at-point.
   ;; Resolve `ispell-completion-at-point' error when there is no dictionary
   ;; available
   (defun krisb-cape-ispell--around-advice (orig-fun &rest _args)
