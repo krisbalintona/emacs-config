@@ -383,9 +383,9 @@
   ;; These are added to the global definition of
   ;; `completion-at-point-functions', which acts as a fallback if buffer-local
   ;; values end in `t'. Read (info "(cape) Configuration") for an explanation.
-  (defvar krisb-cape-super-capf--dict-dabbrev
-    (cape-capf-super 'cape-dict :with 'cape-dabbrev)
-    "Super-capf of `cape-dict' and `cape-dabbrev'.")
+  (defun krisb-cape-super-capf--dict-dabbrev ()
+    "Super-capf of `cape-dict' and `cape-dabbrev'."
+    (cape-capf-super 'cape-dict :with 'cape-dabbrev))
   (add-hook 'completion-at-point-functions 'krisb-cape-super-capf--dict-dabbrev 100)
 
   ;; Macro to help adding capfs via hooks
