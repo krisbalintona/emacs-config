@@ -502,7 +502,7 @@ This macro does not affect capfs already in
 
   (krisb-cape-setup-capfs
     "commit"
-    '(git-commit-setup-hook vc-git-log-edit-mode-hook)
+    '(git-commit-setup-hook log-edit-mode-hook)
     (list #'cape-elisp-symbol #'cape-dabbrev))
   :config
   ;; Resolve the undesirable behavior of `cape-elisp-symbol' and the *Help*
