@@ -436,6 +436,19 @@ duration."
       (setf (hammy-current-interval-start-time hammy) new-start-time))))
 
 ;;; Spell checking
+;;;; Ispell
+(use-package ispell
+  :ensure nil
+  :ensure-system-package aspell
+  :custom
+  (ispell-program-name (executable-find "aspell")) ; Aspell is better for English than hunspell
+  (ispell-silently-savep t)
+  :config
+  ;; Use my personal enchant en_US dictionary
+  (with-eval-after-load 'jinx
+    (setopt ispell-personal-dictionary
+            (expand-file-name "enchant/en_US.dic" (xdg-config-home)))))
+
 ;;;; Jinx
 ;; JIT spell checker that uses `enchant'. The executable is enchant-2. See the
 ;; manual for more information:
