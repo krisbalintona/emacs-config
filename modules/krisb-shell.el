@@ -8,8 +8,8 @@
 ;;;; Itself
 (use-package eshell
   :ensure nil
-  :hook ((eshell-load . visual-line-mode)
-         (eshell-load . krisb-eshell-setup))
+  :hook ((eshell-mode . visual-line-mode)
+         (eshell-mode . krisb-eshell-setup))
   :bind ( :map krisb-open-keymap
           ("E" . eshell))
   :config
