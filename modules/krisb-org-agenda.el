@@ -600,8 +600,6 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :requires org-contrib
   :ensure nil
   :hook (org-capture-before-finalize . org-expiry-insert-created)
-  :bind ( :map org-mode-map
-          ("C-c C" . org-expiry-insert-created))
   :custom
   (org-expiry-inactive-timestamps t))
 
