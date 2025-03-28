@@ -86,8 +86,8 @@ Meant for `completion-at-point-functions' in eshell buffers."
       ;; Update cache first
       (eshell-atuin--history-rotate-cache)
       (eshell-atuin--history-update)
-      (let* ((start (save-excursion (eshell-next-prompt) (point)))
-             (end (point))
+      (let* ((start (save-excursion (eshell-next-prompt 0) (point)))
+             (end (save-excursion (goto-char (point-max))))
              (candidates
               (mapcar (lambda (e)
                         (let* ((command (alist-get 'command e))
