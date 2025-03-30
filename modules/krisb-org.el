@@ -279,6 +279,7 @@
 ;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
 ;; over enclosed content
 (use-package org-appear
+  :load-path "/home/krisbalintona/emacs-repos/packages/org-appear/"
   :hook (org-mode . org-appear-mode)
   :custom
   (org-appear-delay 0.0)
