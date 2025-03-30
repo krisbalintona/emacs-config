@@ -5402,7 +5402,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom-face
     ;; Have citation link faces look closer to as they were for `org-ref'
     (org-cite ((t (:foreground "DarkSeaGreen4"))))
-    (org-cite-key ((t (:foreground "forest green" :slant italic)))))
+    (org-cite-key ((t (:foreground "forest green" :slant italic))))
+    :config
+    ;; 2025-03-30: For the biblatex cite export processor.  Otherwise,
+    ;; `org-cite-supported-styles' errors because (org-cite-get-processor
+    ;; 'biblatex) returns nil.
+    (require 'oc-biblatex))
 
   ;;; Citar
   (use-package citar
