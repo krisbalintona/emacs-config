@@ -25,7 +25,9 @@
                 ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
                 outline-regexp eshell-prompt-regexp
                 ;; Imenu with eshell prompt history
-                imenu-generic-expression `((nil ,eshell-prompt-regexp 0)))))
+                imenu-generic-expression `((nil ,eshell-prompt-regexp 0)))
+    (when (featurep 'cape)
+      (add-hook 'completion-at-point-functions #'cape-file nil t))))
 
 ;;;; Esh-mode
 (use-package esh-mode
