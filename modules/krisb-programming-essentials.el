@@ -11,6 +11,7 @@
 ;;;; Electric
 (use-package electric
   :ensure nil
+  :hook (prog-mode . electric-block-comment-mode) ; Emacs 31.1
   :custom
   (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
 
