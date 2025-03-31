@@ -86,7 +86,8 @@
    'eldoc-documentation-compose-eagerly) ; Mash multiple sources together and display eagerly
   (eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit) ; Also respects `max-mini-window-height'
   (eldoc-echo-area-display-truncation-message t)
-  (eldoc-echo-area-prefer-doc-buffer t))
+  (eldoc-echo-area-prefer-doc-buffer t)
+  (eldoc-help-at-pt t))                 ; Emacs 31.1
 
 ;;; Rainbow-mode
 ;; Colorify color codes
