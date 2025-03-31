@@ -77,9 +77,30 @@
   (completion-preview-ignore-case t)
   (completion-preview-minimum-symbol-length 3)
   :config
-  ;; Use prescient's sorting function if prescient is available
+  ;; Use prescient or corfu-prescient's sorting function if they are available.
+  ;; With this, the completion candidates shown by corfu align with the
+  ;; completion candidate shown by `completion-preview-mode'.  The reason we use
+  ;; this variable watcher is that it is an inexpensive solution to changing
+  ;; `corfu-sort-function' values.
   (with-eval-after-load 'prescient
+    ;; Use this as a fallback value: if `corfu-sort-function' isn't changed,
+    ;; `completion-preview-sort-function' will remain
+    ;; `prescient-completion-sort'
     (setopt completion-preview-sort-function #'prescient-completion-sort))
+  (add-variable-watcher 'corfu-sort-function
+                        (lambda (_symbol newval operation where)
+                          "Match the value of `completion-preview-sort-function' to `corfu-sort-function'.
+If `corfu-sort-function' is set buffer-locally, also set
+`completion-preview-sort-function' buffer-locally.  Otherwise, change
+the default value of `completion-preview-sort-function' accordingly.
+
+This action only applies when the value of `corfu-sort-function' is
+set (i.e., OPERATION is \\='set)."
+                          (when (equal operation 'set)
+                            (if where
+                                (with-current-buffer where
+                                  (setq-local completion-preview-sort-function newval))
+                              (setopt completion-preview-sort-function newval)))))
 
   ;; Add these bespoke self-insert commands to the list of recognized preview
   ;; commands
