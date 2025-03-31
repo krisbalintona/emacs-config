@@ -283,7 +283,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
           ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
           ("M-l" . corfu-popupinfo-location))
   :custom
-  (corfu-popupinfo-delay '(0.5 . 0.3))
+  (corfu-popupinfo-delay '(nil . 0.3))  ; Don't display initially
   (corfu-popupinfo-direction '(right left vertical))
   (corfu-popupinfo-hide t)
   (corfu-popupinfo-resize t)
