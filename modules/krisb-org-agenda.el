@@ -77,9 +77,7 @@
   :ensure nil
   :hook (org-agenda-mode . hl-line-mode)
   :bind ( :map krisb-open-keymap
-          ("a" . org-agenda)
-          :map org-agenda-mode-map
-          ("`" . krisb-org-agenda-process))
+          ("a" . org-agenda))
   :custom
   (org-agenda-files (krisb-org-agenda-directory-files))
   (org-agenda-inhibit-startup t)
@@ -172,17 +170,18 @@
       "* TODO %? %^g\n"
       :empty-lines 1)
      ("j" "Journal" entry
-      (file+olp+datetree ,(lambda ()
-                            (org-node-get-file
-                             (gethash (completing-read "Select journal: " #'org-node-collection
-                                                       (lambda (_title node) (member "__journal" (org-node-get-tags node)))
-                                                       t nil 'org-node-hist)
-                                      org-node--candidate<>node))))
+      (function krisb-org-capture--org-node-datetree)
       "* %<%c>\n%?"
       :tree-type (year quarter month)
       :jump-to-captured t
       :immediate-finish t
       :empty-lines 1
+      :clock-in t
+      :clock-resume t)
+     ("l" "Log" item
+      (function krisb-org-capture--org-node-datetree)
+      "- %u %?"
+      :tree-type (quarter week)
       :clock-in t
       :clock-resume t)
      ("m" "Work meeting notes" entry
@@ -255,6 +254,11 @@ Taken from https://whhone.com/posts/org-agenda-repeated-tasks/."
     (if (org-before-first-heading-p)
         "┄┄┄┄┄┄┄"                       ; Fill the time grid
       (format "%5s: " (or (org-get-repeat) ""))))
+
+  (defvar krisb-org-capture--temp-olp nil
+    "Used as cache for some bespoke org-capture templates.
+Should be a list of strings representing the outline path (olp) of an
+org heading.")
   :config
   ;; REVIEW 2024-11-11: Not sure if this is needed if we set the value of
   ;; `org-durations-units' via :custom.
@@ -294,15 +298,54 @@ See ((org) Filtering/limiting agenda items)."
                    (or (> hr 10) (< hr 21)))))
       (concat "-" tag)))
 
-  (defun krisb-org-agenda-process ()
-    "(Bespoke) process org-agenda entry at point."
-    (interactive)
-    (org-agenda-priority)
-    (org-agenda-todo)
-    (org-agenda-set-tags)
-    (org-agenda-set-effort)
-    (org-review-insert-last-review)
-    (org-review-insert-next-review)))
+  ;; Bespoke function meant for datetrees in org-node nodes
+  (defun krisb-org-capture--org-node-datetree ()
+    "Creates datetree at org-node node.
+Prompts for an org-node node, creates a datetree there, and leaves point
+where a new entry should be.  Meant to be used by itself as a function
+in `org-capture-templates'."
+    (require 'org-node)
+    (require 'org-datetree)
+    (let* ((candidate (completing-read "Select journal: "
+                                       #'org-node-collection
+                                       (lambda (_title node) (member "__journal" (org-node-get-tags node)))
+                                       t nil 'org-node-hist))
+           (node (gethash candidate org-node--candidate<>node))
+           (file (org-node-get-file node))
+           (olp (when (< 0 (org-node-get-level node))
+                  (org-node-get-olp-with-self node)))
+           (pt (org-node-get-pos node))
+           (date (calendar-gregorian-from-absolute
+                  (time-to-days
+                   (org-capture-get :default-time)))) ; Respect C-1 and :time-prompt
+           (buffer (org-capture-target-buffer file))
+           (tree-type (org-capture-get :tree-type))) ; Respect :tree-type
+      ;; See `org-capture-set-target-location' for an explanation of the next
+      ;; few lines
+      (set-buffer buffer)
+      (org-capture-put-target-region-and-position)
+      (widen)
+      (goto-char pt)
+      ;; Create datetree.  See the implementation of
+      ;; `org-capture-set-target-location' for an explanation of the lines
+      ;; below; it handles all the cases org-capture does
+      (funcall
+       (pcase tree-type
+         (`week #'org-datetree-find-iso-week-create)
+         (`month #'org-datetree-find-month-create)
+         (`day #'org-datetree-find-date-create)
+         ((pred not) #'org-datetree-find-date-create)
+         ((pred functionp)
+          (lambda (d keep-restriction)
+            (org-datetree-find-create-hierarchy
+             (funcall tree-type d) keep-restriction)))
+         ((pred listp)
+          (lambda (d keep-restriction)
+            (funcall #'org-datetree-find-create-entry tree-type
+                     d keep-restriction)))
+         (_ (error "Unrecognized :tree-type")))
+       date
+       (when olp 'subtree-at-point)))))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
