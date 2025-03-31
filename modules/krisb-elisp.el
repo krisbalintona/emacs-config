@@ -175,5 +175,9 @@
   (package-build-archive-dir  (expand-file-name "packages/" krisb-melpa-directory))
   (package-build-working-dir (expand-file-name "working/" krisb-melpa-directory)))
 
+;;;;; Lice
+;; Insert license headers for emacs-lisp files.
+(use-package lice)
+
 ;;; Provide
 (provide 'krisb-elisp)
