@@ -251,7 +251,8 @@ If N is provided, return that many prompts."
       (push (seq-random-elt krisb-oblique-strategies-prompts) prompts))
     prompts))
 
-(defun krisb-oblique-strategies--select (&optional n)
+;;;###autoload
+(defun krisb-oblique-strategies-select (&optional n)
   "Select a random Oblique Strategies prompt.
 The number of prompts available is N, which defaults to 5 if nil."
   (interactive "P")
@@ -259,13 +260,14 @@ The number of prompts available is N, which defaults to 5 if nil."
          (prompts (krisb-oblique-strategies--random n)))
     (completing-read "Choose a prompt: " prompts nil t)))
 
+;;;###autoload
 (defun krisb-oblique-strategies-insert (&optional select n)
   "Insert into the current buffer a random Oblique Strategies prompt.
-If SELECT is non-nil, use `krisb-oblique-strategies--select' to choose.
+If SELECT is non-nil, use `krisb-oblique-strategies-select' to choose.
 The number of prompts available is N, which defaults to 5 if nil."
   (interactive "P")
   (let ((prompt (if select
-                    (krisb-oblique-strategies--select n)
+                    (krisb-oblique-strategies-select n)
                   (car (krisb-oblique-strategies--random 1)))))
     (insert prompt)))
 
