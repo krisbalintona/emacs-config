@@ -27,6 +27,12 @@
 ;;;; Form-feed
 ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
 ;; differences
+;; 2025-03-31: I've found that form-feed is superior to page-break-lines for
+;; graphical systems, since it uses font-lock instead of glyph composition.  In
+;; practice, the biggest effect is the consistency of the length of the
+;; horizontal line regardless of font: the length of the horizontal rule of
+;; page-break-lines is not guaranteed to fill the width of the window, whereas
+;; it is for form-feed.
 (use-package form-feed
   :diminish
   :custom
