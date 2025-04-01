@@ -99,5 +99,23 @@ See the docstring of `krisb-reveal-fold-commands'."
           (cl-remove-duplicates
            (append dumber-jump-project-denoters project-vc-extra-root-markers))))
 
+;;; Eglot
+(use-package eglot
+  :custom
+  (eglot-code-action-indications '(eldoc-hint margin))
+  (eglot-code-action-indicator ?α)
+  (eglot-extend-to-xref t))
+
+;;; Eglot-booster
+;; Boosts Eglot's communication with the server. There's also a version for LSP.
+(use-package eglot-booster
+  ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
+  ;; https://github.com/blahgeek/emacs-lsp-booster/releases
+  :vc (:url "https://github.com/jdtsmith/eglot-booster.git"
+            :rev :newest)
+  :after eglot
+  :config
+  (eglot-booster-mode 1))
+
 ;;; Provide
 (provide 'krisb-projects)

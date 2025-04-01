@@ -129,7 +129,6 @@
   (lazy-guard-autoloads-known-broken nil))
 
 ;;; Packages
-
 ;;;; Try
 ;; Install a package only for the current Emacs session.
 (use-package try)
@@ -154,6 +153,15 @@
           (comment-region (point-at-bol) (point-at-eol)))
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
+
+;;; Other
+;;;; Suggest
+;; Query `suggest' for elisp coding suggestions!
+(use-package suggest
+  :bind ( :map krisb-open-keymap
+          ("S" . suggest))
+  :custom
+  (suggest-insert-example-on-start nil))
 
 ;;;; Package authorship
 ;;;;; Package-lint-flymake

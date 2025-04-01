@@ -38,6 +38,7 @@
 ;; (require 'krisb-denote)
 (require 'krisb-org-roam)
 (require 'krisb-org-node)
+(require 'krisb-markdown)
 (require 'krisb-citations)
 (require 'krisb-spelling)
 

@@ -135,7 +135,40 @@
   :custom-face
   (git-commit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
   :config
-  (magit-auto-revert-mode 1))
+  (magit-auto-revert-mode 1)
+
+  ;; Add dates to magit-logs.  Taken from
+  ;; https://github.com/alphapapa/unpackaged.el?tab=readme-ov-file#magit-log-date-headers
+  (defun krisb-magit-log--add-date-headers (&rest _ignore)
+    "Add date headers to Magit log buffers."
+    (when (derived-mode-p 'magit-log-mode)
+      (save-excursion
+        (ov-clear 'date-header t)
+        (goto-char (point-min))
+        (cl-loop with last-age
+                 for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
+                                  car
+                                  (overlay-get it 'before-string)
+                                  (get-text-property 0 'display it)
+                                  cadr
+                                  (s-match (rx (group (1+ digit) ; number
+                                                      " "
+                                                      (1+ (not blank))) ; unit
+                                               (1+ blank) eos)
+                                           it)
+                                  cadr)
+                 do (when (and this-age
+                               (not (equal this-age last-age)))
+                      (ov (line-beginning-position) (line-beginning-position)
+                          'after-string (propertize (concat " " this-age "\n")
+                                                    'face 'magit-section-heading)
+                          'date-header t)
+                      (setq last-age this-age))
+                 do (forward-line 1)
+                 until (eobp)))))
+  ;; Use the above function appropriately
+  (add-hook 'magit-post-refresh-hook #'krisb-magit-log--add-date-headers)
+  (advice-add 'magit-setup-buffer-internal :after #'krisb-magit-log--add-date-headers))
 
 ;;;; Forge
 ;; Support for git forges (e.g. GitLab and GitHub).

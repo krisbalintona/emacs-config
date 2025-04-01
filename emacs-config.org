@@ -204,6 +204,7 @@ This sets the default graphical element settings used by every frame.
   ;; (require 'krisb-denote)
   (require 'krisb-org-roam)
   (require 'krisb-org-node)
+  (require 'krisb-markdown)
   (require 'krisb-citations)
   (require 'krisb-spelling)
 
@@ -960,13 +961,40 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 
   ;;;; Don't visually shift text when using `rectangle-mark-mode'
   (setopt rectangle-indicate-zero-width-rectangle nil) ; New in Emacs 31.1
+
+  ;;;; Recenter upon `next-error'
+  (setopt next-error-recenter '(4))
+
+  ;;;; Header line text scaling
+  (setq-default text-scale-remap-header-line t)
+
+  ;;;; Truncate lines
+  ;; If non-nil and `truncate-lines' is disabled, soft wrapping will not occur
+  ;; when the window is narrower than `truncate-partial-width-windows' characters.
+  ;; So we set this to nil.
+  (setopt truncate-partial-width-windows nil)
+
+  ;;;; Continuation line indicator character
+  ;; See for an explanation of these concepts
+  ;; https://www.reddit.com/r/emacs/comments/1fxr1ci/comment/lqpf2bz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+  (set-display-table-slot standard-display-table 1 ?⏎)
+
+  ;;;; Prefer UTF-8 file and selection encoding
+  (prefer-coding-system 'utf-8)
+  ;; The clipboard on Windows is often a wider encoding (UTF-16), so leave Emacs
+  ;; to its own devices there.  Otherwise, encode text into the clipboard into UTF-8
+  (unless (eq system-type 'windows-nt)
+    (setopt selection-coding-system 'utf-8))
+
+  ;;;; Prefer unicode charset
+  (set-charset-priority 'unicode)
 #+end_src
 
 **** Provide
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
-  (provide 'krisb-essentials)
   ;;; krisb-essentials.el ends here
+  (provide 'krisb-essentials)
 #+end_src
 
 *** =krisb-icons.el=
@@ -2890,6 +2918,33 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (mixed-pitch-set-height nil)
     (mixed-pitch-variable-pitch-cursor nil))
 
+  ;;; Ligature
+  ;; Ligatures!  See for configuration examples: https://github.com/j/wiki
+  (use-package ligature
+    :hook (window-setup . global-ligature-mode)
+    :config
+    ;; Enables simple HTML ligations for web-related major modes using the string
+    ;; notation to create ligations
+    (ligature-set-ligatures
+     '(html-mode nxml-mode web-mode)
+     '("<!--" "-->" "</>" "</" "/>" "://"))
+
+    ;; Enable all Iosevka ligatures in programming modes
+    (ligature-set-ligatures
+     '(prog-mode conf-mode)
+     '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
+       "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
+       "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
+       ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++")))
+
+  ;;; Show-font
+  ;; Best font previewer
+  (use-package show-font)
+
+  ;;; Default-text-scale
+  ;; Text-scale-mode but Emacs-wide
+  (use-package default-text-scale)
+
   ;;; Provide
   (provide 'krisb-fonts)
 #+end_src
@@ -3352,7 +3407,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;;; Olivetti
   (use-package olivetti
-    :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
+    :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode markdown-mode) . olivetti-mode)
            (olivetti-mode . krisb-olivetti-set-bookmark-face))
     :custom
     (olivetti-lighter nil)
@@ -4326,6 +4381,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   (provide 'krisb-org-export)
 #+end_src
 
+*** =krisb-markdown.el=
+#+begin_src emacs-lisp :tangle "modules/krisb-markdown.el"
+  ;;; Markdown-mode
+  (use-package markdown-mode
+    :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")
+    :hook (markdown-mode . visual-line-mode))
+
+  ;;; Provide
+  (provide 'krisb-spelling)
+#+end_src
 *** =krisb-flymake.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-flymake.el"
@@ -7653,7 +7718,40 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :custom-face
     (git-commit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
     :config
-    (magit-auto-revert-mode 1))
+    (magit-auto-revert-mode 1)
+
+    ;; Add dates to magit-logs.  Taken from
+    ;; https://github.com/alphapapa/unpackaged.el?tab=readme-ov-file#magit-log-date-headers
+    (defun krisb-magit-log--add-date-headers (&rest _ignore)
+      "Add date headers to Magit log buffers."
+      (when (derived-mode-p 'magit-log-mode)
+        (save-excursion
+          (ov-clear 'date-header t)
+          (goto-char (point-min))
+          (cl-loop with last-age
+                   for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
+                                    car
+                                    (overlay-get it 'before-string)
+                                    (get-text-property 0 'display it)
+                                    cadr
+                                    (s-match (rx (group (1+ digit) ; number
+                                                        " "
+                                                        (1+ (not blank))) ; unit
+                                                 (1+ blank) eos)
+                                             it)
+                                    cadr)
+                   do (when (and this-age
+                                 (not (equal this-age last-age)))
+                        (ov (line-beginning-position) (line-beginning-position)
+                            'after-string (propertize (concat " " this-age "\n")
+                                                      'face 'magit-section-heading)
+                            'date-header t)
+                        (setq last-age this-age))
+                   do (forward-line 1)
+                   until (eobp)))))
+    ;; Use the above function appropriately
+    (add-hook 'magit-post-refresh-hook #'krisb-magit-log--add-date-headers)
+    (advice-add 'magit-setup-buffer-internal :after #'krisb-magit-log--add-date-headers))
 
   ;;;; Forge
   ;; Support for git forges (e.g. GitLab and GitHub).
@@ -7751,6 +7849,38 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 **** General
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
+  ;;; Shell
+  ;; Built-in shell
+  (use-package shell
+    :ensure nil
+    :custom
+    (shell-command-prompt-show-cwd t)     ; Emacs 27.1
+    (shell-input-autoexpand 'input)
+    (shell-highlight-undef-enable t)                   ; Emacs 29.1
+    (shell-has-auto-cd nil)                            ; Emacs 29.1
+    (shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
+    (shell-kill-buffer-on-exit t))                     ; Emacs 29.1
+
+  ;;; Comint
+  (use-package comint
+    :ensure nil
+    :custom
+    (comint-prompt-read-only t)
+    (comint-buffer-maximum-size 9999)
+    (comint-completion-autolist t)
+    (comint-scroll-to-bottom-on-input 'this)
+    (comint-scroll-to-bottom-on-output 'this)
+    (comint-input-autoexpand 'input)
+    (ansi-color-for-comint-mode t))
+
+  ;;; Compile
+  (use-package compile
+    :ensure nil
+    :bind ("<f5>" . recompile)
+    :custom
+    (compilation-scroll-output 'first-error) ; Scroll with compile buffer
+    (compilation-auto-jump-to-first-error 'if-location-known))
+
   ;;; Fancy-compilation
   (use-package fancy-compilation
     :custom
@@ -7781,7 +7911,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
            (eshell-mode . krisb-eshell-setup))
     :bind ( :map krisb-open-keymap
             ("e" . eshell))
+    :custom
+    (eshell-banner-message "")
+    (eshell-kill-processes-on-exit t)
+    (eshell-scroll-to-bottom-on-input 'this)
+    (eshell-scroll-to-bottom-on-output 'this)
+    (eshell-glob-case-insensitive nil)
+    (password-cache t)                    ; Cache password for tramp
+    (password-cache-expiry 600)           ; Seconds passwords are cached
     :config
+    ;; Set up `completion-at-point-functions'
     (defun krisb-eshell-setup ()
       "Buffer-local settings for eshell."
       (set-display-table-slot standard-display-table 0 ?\ )
@@ -7796,13 +7935,48 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                   ;; Imenu with eshell prompt history
                   imenu-generic-expression `((nil ,eshell-prompt-regexp 0)))
       (when (featurep 'cape)
-        (add-hook 'completion-at-point-functions #'cape-file nil t))))
+        (add-hook 'completion-at-point-functions #'cape-file nil t)))
+
+    ;; Eshell source in `consult-buffer'
+    (with-eval-after-load 'consult
+      ;; For showing eshell sources in `consult-buffer'. Taken from
+      ;; https://github.com/minad/consult#multiple-sources
+      (defvar kb/consult-buffer--eshell-source
+        (list :name     "Eshell Buffers"
+              :category 'buffer
+              :narrow   ?e
+              :face     'consult-buffer
+              :history  'buffer-name-history
+              :annotate '(lambda (cand)
+                           (substring-no-properties
+                            (car (ring-elements
+                                  (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
+              :state    'consult--buffer-state
+              :action   'display-buffer
+              :items (lambda ()
+                       (mapcar #'buffer-name
+                               (seq-filter
+                                (lambda (x)
+                                  (eq (buffer-local-value 'major-mode x) 'eshell-mode))
+                                (buffer-list))))))
+      (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append)))
 
   ;;;; Esh-mode
   (use-package esh-mode
     :ensure nil
     :bind ( :map eshell-mode-map
             ([remap eshell-previous-matching-input] . consult-history)))
+
+  ;;;; Em-hist
+  (use-package em-hist
+    :ensure nil
+    :custom
+    (eshell-history-size 20000)
+    (eshell-hist-ignoredups 'erase)       ; Only keep last duplicate
+    (eshell-save-history-on-exit t)
+    ;; Fix eshell overwriting history. From
+    ;; https://emacs.stackexchange.com/a/18569/15023.
+    (eshell-save-history-on-exit nil))
 
   ;;;; Eshell-atuin
   ;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
@@ -8033,6 +8207,24 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             (cl-remove-duplicates
              (append dumber-jump-project-denoters project-vc-extra-root-markers))))
 
+  ;;; Eglot
+  (use-package eglot
+    :custom
+    (eglot-code-action-indications '(eldoc-hint margin))
+    (eglot-code-action-indicator ?α)
+    (eglot-extend-to-xref t))
+
+  ;;; Eglot-booster
+  ;; Boosts Eglot's communication with the server. There's also a version for LSP.
+  (use-package eglot-booster
+    ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
+    ;; https://github.com/blahgeek/emacs-lsp-booster/releases
+    :vc (:url "https://github.com/jdtsmith/eglot-booster.git"
+              :rev :newest)
+    :after eglot
+    :config
+    (eglot-booster-mode 1))
+
   ;;; Provide
   (provide 'krisb-projects)
 #+end_src
@@ -8194,7 +8386,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (lazy-guard-autoloads-known-broken nil))
 
   ;;; Packages
-
   ;;;; Try
   ;; Install a package only for the current Emacs session.
   (use-package try)
@@ -8219,6 +8410,15 @@ Configuration related to "saving a state," that is, storing or restoring anythin
             (comment-region (point-at-bol) (point-at-eol)))
           (forward-line 2))
         (rename-buffer (concat "*Scratch for " mode "*") t))))
+
+  ;;; Other
+  ;;;; Suggest
+  ;; Query `suggest' for elisp coding suggestions!
+  (use-package suggest
+    :bind ( :map krisb-open-keymap
+            ("S" . suggest))
+    :custom
+    (suggest-insert-example-on-start nil))
 #+end_src
 
 **** Package authorship

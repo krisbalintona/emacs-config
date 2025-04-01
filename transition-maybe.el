@@ -1,317 +1,308 @@
-(set-charset-priority 'unicode)
-  (prefer-coding-system 'utf-8-unix)
 
-  ;; Don't confirm when killing a process
-  (setopt confirm-kill-processes nil)
 
-      ;;;; Slimmer minibuffer and echo area faces
-  ;; Make minibuffer and echo fonts a little lighter. Taken from
-  ;; https://www.reddit.com/r/emacs/comments/14q399t/comment/jqm6zr3/?utm_source=share&utm_medium=web2x&context=3
-  (dolist (buffer (list " *Minibuf-0*" " *Echo Area 0*"
-                        " *Minibuf-1*" " *Echo Area 1*"))
-    (when (get-buffer buffer)
-      (with-current-buffer buffer
-        (face-remap-add-relative 'bold :weight 'normal)
-        (face-remap-add-relative 'default :weight 'light))))
+;;;; Slimmer minibuffer and echo area faces
+;; Make minibuffer and echo fonts a little lighter. Taken from
+;; https://www.reddit.com/r/emacs/comments/14q399t/comment/jqm6zr3/?utm_source=share&utm_medium=web2x&context=3
+(dolist (buffer (list " *Minibuf-0*" " *Echo Area 0*"
+                      " *Minibuf-1*" " *Echo Area 1*"))
+  (when (get-buffer buffer)
+    (with-current-buffer buffer
+      (face-remap-add-relative 'bold :weight 'normal)
+      (face-remap-add-relative 'default :weight 'light))))
 
-  (add-hook 'minibuffer-setup-hook
-            '(lambda ()
-               (face-remap-add-relative 'bold :weight 'normal)
-               (face-remap-add-relative 'default :weight 'light)))
+(add-hook 'minibuffer-setup-hook
+          '(lambda ()
+             (face-remap-add-relative 'bold :weight 'normal)
+             (face-remap-add-relative 'default :weight 'light)))
 
-      ;;;; Bug-hunter
-  ;; Easy way to see if there is an error in your config files
-  ;; NOTE: Not sure if this looks through literate configs?
-  (use-package bug-hunter)
+;;;; Web-mode
+;; Compatible with most template engines (e.g. handlebars mode, mustache) and
+;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
+(use-package web-mode
+  :ensure-system-package (handlebars . "sudo npm --global install handlebars") ; For
+                                        ; ghost
+  :mode ("\\.hbs\\'"                    ; For ghost
+         "\\.yaml\\'"
+         "\\.html\\'")
+  :hook
+  ((web-mode . display-line-numbers-mode)
+   (web-mode . visual-line-mode))
+  :custom
+  (web-mode-markup-indent-offset 4)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 4)
+  (web-mode-comment-style 1)
 
-      ;;;; Web-mode
-  ;; Compatible with most template engines (e.g. handlebars mode, mustache) and
-  ;; proper indentation based on content (i.e. CSS, HTML, JavaScript, or code).
-  (use-package web-mode
-    :ensure-system-package (handlebars . "sudo npm --global install handlebars") ; For
-                                          ; ghost
-    :mode ("\\.hbs\\'"                    ; For ghost
-           "\\.yaml\\'"
-           "\\.html\\'")
-    :hook
-    ((web-mode . display-line-numbers-mode)
-     (web-mode . visual-line-mode))
-    :custom
-    (web-mode-markup-indent-offset 4)
-    (web-mode-css-indent-offset 2)
-    (web-mode-code-indent-offset 4)
-    (web-mode-comment-style 1)
+  (web-mode-engines-alist
+   '(("go" . "\\.html\\'")))            ; For hugo
 
-    (web-mode-engines-alist
-     '(("go" . "\\.html\\'")))            ; For hugo
+  ;; Features
+  (web-mode-enable-auto-pairing t)
+  (web-mode-enable-css-colorization t) ; CSS colorization
+  (web-mode-enable-block-face t) ; Block face: set blocks background and default
+                                        ; foreground
+  (web-mode-enable-part-face t) ; Part face: set parts background and default
+                                        ; foreground
+  (web-mode-enable-comment-interpolation nil) ; Font lock comment keywords
+  (web-mode-enable-heredoc-fontification t) ; Heredoc (cf. PHP strings)
+                                        ; fontification
 
-    ;; Features
-    (web-mode-enable-auto-pairing t)
-    (web-mode-enable-css-colorization t) ; CSS colorization
-    (web-mode-enable-block-face t) ; Block face: set blocks background and default
-                                          ; foreground
-    (web-mode-enable-part-face t) ; Part face: set parts background and default
-                                          ; foreground
-    (web-mode-enable-comment-interpolation nil) ; Font lock comment keywords
-    (web-mode-enable-heredoc-fontification t) ; Heredoc (cf. PHP strings)
-                                          ; fontification
-
-    ;; Other
-    (flycheck-handlebars-executable (executable-find "handlebars"))
-    :config
-    (setf (alist-get "handlebars" web-mode-comment-formats nil nil 'string=) '("{{!")))
+  ;; Other
+  (flycheck-handlebars-executable (executable-find "handlebars"))
+  :config
+  (setf (alist-get "handlebars" web-mode-comment-formats nil nil 'string=) '("{{!")))
 
           ;;;; Json-mode
-  (use-package json-mode
-    :ensure-system-package (jsonlint . "sudo npm install --global jsonlint")
-    :custom
-    (flycheck-json-jsonlint-executable (executable-find "jsonlint")))
+(use-package json-mode
+  :ensure-system-package (jsonlint . "sudo npm install --global jsonlint")
+  :custom
+  (flycheck-json-jsonlint-executable (executable-find "jsonlint")))
 
           ;;;; Yaml-mode
-  (use-package yaml-mode
-    :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
-    :hook
-    ((yaml-mode . display-line-numbers-mode)
-     (yaml-mode . visual-line-mode))
-    :custom
-    (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
+(use-package yaml-mode
+  :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
+  :hook
+  ((yaml-mode . display-line-numbers-mode)
+   (yaml-mode . visual-line-mode))
+  :custom
+  (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 
           ;;;; Abdridge-diff
-  (use-package abridge-diff
-    :diminish
-    :after diff
-    :demand
-    :config
-    (abridge-diff-mode 1))
+(use-package abridge-diff
+  :diminish
+  :after diff
+  :demand
+  :config
+  (abridge-diff-mode 1))
 
           ;;;; Git-gutter-fringe
-  (use-package git-gutter-fringe
-    :after git-gutter
-    :custom-face
-    ;; Colors taken from `uninspiring-dark-theme'
-    (git-gutter-fr:added ((t (:foreground "#98C379" :weight bold :inherit nil))))
-    (git-gutter-fr:deleted ((t (:foreground "#E06C75" :weight bold :inherit nil))))
-    (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
-    :config
-    (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
-    (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
-    (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t)))
+(use-package git-gutter-fringe
+  :after git-gutter
+  :custom-face
+  ;; Colors taken from `uninspiring-dark-theme'
+  (git-gutter-fr:added ((t (:foreground "#98C379" :weight bold :inherit nil))))
+  (git-gutter-fr:deleted ((t (:foreground "#E06C75" :weight bold :inherit nil))))
+  (git-gutter-fr:modified ((t (:foreground "#D19A66" :weight bold :inherit nil))))
+  :config
+  (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(top t))
+  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t)))
 
           ;;;; Diff-hl
-  ;; Diff information in the margins. Also provides commands for navigating and
-  ;; viewing diff info of the current file. Faster and cleaner than git-gutter and
-  ;; git-gutter-fringes
-  (use-package diff-hl
-    :hook ((prog-mode . diff-hl-mode)
-           (conf-mode . diff-hl-mode)
-           (vc-dir-mode . diff-hl-dir-mode)
-           (dired-mode . diff-hl-dired-mode)
-           (magit-pre-refresh . diff-hl-magit-pre-refresh)
-           (magit-post-refresh . diff-hl-magit-post-refresh))
-    :custom
-    (diff-hl-draw-borders nil)
-    (diff-hl-show-staged-changes nil)
-    (diff-hl-update-async t)
-    (diff-hl-side 'right)
-    (diff-hl-flydiff-delay 1)             ; See `diff-hl-flydiff-mode'
-    :config
-    (global-diff-hl-show-hunk-mouse-mode 1)
+;; Diff information in the margins. Also provides commands for navigating and
+;; viewing diff info of the current file. Faster and cleaner than git-gutter and
+;; git-gutter-fringes
+(use-package diff-hl
+  :hook ((prog-mode . diff-hl-mode)
+         (conf-mode . diff-hl-mode)
+         (vc-dir-mode . diff-hl-dir-mode)
+         (dired-mode . diff-hl-dired-mode)
+         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :custom
+  (diff-hl-draw-borders nil)
+  (diff-hl-show-staged-changes nil)
+  (diff-hl-update-async t)
+  (diff-hl-side 'right)
+  (diff-hl-flydiff-delay 1)             ; See `diff-hl-flydiff-mode'
+  :config
+  (global-diff-hl-show-hunk-mouse-mode 1)
 
-    ;; Ensure buffer is widened before calling `diff-hl-stage-dwim' because the
-    ;; buffer cannot be narrowed for it to succeed
-    (advice-add 'diff-hl-stage-dwim :around (lambda (orig-fun &rest args)
-                                              (save-restriction
-                                                (widen)
-                                                (apply orig-fun args)))))
+  ;; Ensure buffer is widened before calling `diff-hl-stage-dwim' because the
+  ;; buffer cannot be narrowed for it to succeed
+  (advice-add 'diff-hl-stage-dwim :around (lambda (orig-fun &rest args)
+                                            (save-restriction
+                                              (widen)
+                                              (apply orig-fun args)))))
 
           ;;;; Symbol-overlay
-  ;; Mimics functionality of built-in hi-lock but with overlays instead of
-  ;; font-lock. Usefully has `symbol-overlay-rename'. On highlighted regions, the
-  ;; `symbol-overlay-map' is enabled
-  (use-package symbol-overlay
-    :bind
-    (([remap highlight-symbol-at-point] . symbol-overlay-put)
-     ("M-s h M-n" . symbol-overlay-switch-forward)
-     ("M-s h M-p" . symbol-overlay-switch-backward)
-     ("M-s h <f7>" . symbol-overlay-mode)
-     ("M-s h <f8>" . symbol-overlay-remove-all)))
+;; Mimics functionality of built-in hi-lock but with overlays instead of
+;; font-lock. Usefully has `symbol-overlay-rename'. On highlighted regions, the
+;; `symbol-overlay-map' is enabled
+(use-package symbol-overlay
+  :bind
+  (([remap highlight-symbol-at-point] . symbol-overlay-put)
+   ("M-s h M-n" . symbol-overlay-switch-forward)
+   ("M-s h M-p" . symbol-overlay-switch-backward)
+   ("M-s h <f7>" . symbol-overlay-mode)
+   ("M-s h <f8>" . symbol-overlay-remove-all)))
 
           ;;;;; Display-fill-column-indicator
-  (use-package display-fill-column-indicator
-    :ensure nil
-    :custom
-    (display-fill-column-indicator-character ?│)
-    :custom-face
-    (fill-column-indicator ((t (:inherit line-number)))))
+(use-package display-fill-column-indicator
+  :ensure nil
+  :custom
+  (display-fill-column-indicator-character ?│)
+  :custom-face
+  (fill-column-indicator ((t (:inherit line-number)))))
 
           ;;;; Aesthetics
         ;;;;; Prog-mode
-  (use-package prog-mode
-    :ensure nil
-    :hook ((prog-mode . goto-address-prog-mode)
-           (window-setup . global-prettify-symbols-mode)
-           (org-mode . (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
-    :init
-    (defun kb/prettify-symbols-compose-p (start end _match)
-      "Returns nil except on org-mode exceptions.
+(use-package prog-mode
+  :ensure nil
+  :hook ((prog-mode . goto-address-prog-mode)
+         (window-setup . global-prettify-symbols-mode)
+         (org-mode . (lambda () (setq-local prettify-symbols-compose-predicate 'kb/prettify-symbols-compose-p))))
+  :init
+  (defun kb/prettify-symbols-compose-p (start end _match)
+    "Returns nil except on org-mode exceptions.
         Returns nil if the character before and after MATCH isn't a punctuation,
         with the exception of org-emphasis markers."
-      (let ((before (char-to-string (or (char-before start) ? )))
-            (after (char-to-string (or (char-after end) ? )))
-            (org-emphasis-markers (mapcar #'car org-emphasis-alist)))
-        (cond
-         ((or (member before org-emphasis-markers)
-              (member after org-emphasis-markers))
-          t)
-         ((or (string-match-p (rx (or (any punct))) before)
-              (string-match-p (rx (or (any punct))) after))
-          nil)
-         (t t))))
-    :config
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (add-to-list 'prettify-symbols-alist '("->" . ?➡))
-                (add-to-list 'prettify-symbols-alist '("<-" . ?⬅))))
-    (add-hook 'latex-mode-hook
-              (lambda ()
-                (add-to-list 'prettify-symbols-alist '("\\Dashv" . ?⫤))
-                (add-to-list 'prettify-symbols-alist '("\\DashVDash" . ?⟚))
-                (add-to-list 'prettify-symbols-alist '("\\dashVdash" . ?⊢))
-                (delete '("--" . 8211 ) prettify-symbols-alist)
-                (delete '("---" . 8212) prettify-symbols-alist)
-                ;; For `lplfitch'. Slightly higher than `\vdots'. Using the
-                ;; `\pline{\vdots}' results in the ellipses not being centered
-                ;; on the line.
-                (add-to-list 'prettify-symbols-alist '("\\ellipsesline" . ?⋮))
-                ;; Circled numbers from the pifont package
-                (add-to-list 'prettify-symbols-alist '("\\ding{192}" . ?①))
-                (add-to-list 'prettify-symbols-alist '("\\ding{193}" . ?②))
-                (add-to-list 'prettify-symbols-alist '("\\ding{194}" . ?③))
-                (add-to-list 'prettify-symbols-alist '("\\ding{195}" . ?④))
-                (add-to-list 'prettify-symbols-alist '("\\ding{196}" . ?⑤))
-                (add-to-list 'prettify-symbols-alist '("\\ding{197}" . ?⑥))
-                (add-to-list 'prettify-symbols-alist '("\\ding{198}" . ?⑦))
-                (add-to-list 'prettify-symbols-alist '("\\ding{199}" . ?⑧))
-                (add-to-list 'prettify-symbols-alist '("\\ding{200}" . ?⑨))
-                (add-to-list 'prettify-symbols-alist '("\\ding{201}" . ?⑩))
-                ;; Angle brackets for text (non-math)
-                (add-to-list 'prettify-symbols-alist '("\\textlangle" . 10216))
-                (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217))))
-    (add-hook 'python-base-mode-hook
-              (lambda ()
-                (add-to-list 'prettify-symbols-alist '("->" . ?»))
-                (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
+    (let ((before (char-to-string (or (char-before start) ? )))
+          (after (char-to-string (or (char-after end) ? )))
+          (org-emphasis-markers (mapcar #'car org-emphasis-alist)))
+      (cond
+       ((or (member before org-emphasis-markers)
+            (member after org-emphasis-markers))
+        t)
+       ((or (string-match-p (rx (or (any punct))) before)
+            (string-match-p (rx (or (any punct))) after))
+        nil)
+       (t t))))
+  :config
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-to-list 'prettify-symbols-alist '("->" . ?➡))
+              (add-to-list 'prettify-symbols-alist '("<-" . ?⬅))))
+  (add-hook 'latex-mode-hook
+            (lambda ()
+              (add-to-list 'prettify-symbols-alist '("\\Dashv" . ?⫤))
+              (add-to-list 'prettify-symbols-alist '("\\DashVDash" . ?⟚))
+              (add-to-list 'prettify-symbols-alist '("\\dashVdash" . ?⊢))
+              (delete '("--" . 8211 ) prettify-symbols-alist)
+              (delete '("---" . 8212) prettify-symbols-alist)
+              ;; For `lplfitch'. Slightly higher than `\vdots'. Using the
+              ;; `\pline{\vdots}' results in the ellipses not being centered
+              ;; on the line.
+              (add-to-list 'prettify-symbols-alist '("\\ellipsesline" . ?⋮))
+              ;; Circled numbers from the pifont package
+              (add-to-list 'prettify-symbols-alist '("\\ding{192}" . ?①))
+              (add-to-list 'prettify-symbols-alist '("\\ding{193}" . ?②))
+              (add-to-list 'prettify-symbols-alist '("\\ding{194}" . ?③))
+              (add-to-list 'prettify-symbols-alist '("\\ding{195}" . ?④))
+              (add-to-list 'prettify-symbols-alist '("\\ding{196}" . ?⑤))
+              (add-to-list 'prettify-symbols-alist '("\\ding{197}" . ?⑥))
+              (add-to-list 'prettify-symbols-alist '("\\ding{198}" . ?⑦))
+              (add-to-list 'prettify-symbols-alist '("\\ding{199}" . ?⑧))
+              (add-to-list 'prettify-symbols-alist '("\\ding{200}" . ?⑨))
+              (add-to-list 'prettify-symbols-alist '("\\ding{201}" . ?⑩))
+              ;; Angle brackets for text (non-math)
+              (add-to-list 'prettify-symbols-alist '("\\textlangle" . 10216))
+              (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217))))
+  (add-hook 'python-base-mode-hook
+            (lambda ()
+              (add-to-list 'prettify-symbols-alist '("->" . ?»))
+              (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
 
         ;;;;; Ansi-color
-  ;; Apply ANSI terminal color escape codes.
-  ;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
-  (use-package ansi-color
-    :ensure nil
-    :autoload endless/colorize-compilation
-    :hook (compilation-filter . endless/colorize-compilation)
-    :config
-    (defun endless/colorize-compilation ()
-      "Colorize from `compilation-filter-start' to `point'."
-      (let ((inhibit-read-only t))
-        (ansi-color-apply-on-region compilation-filter-start (point)))))
+;; Apply ANSI terminal color escape codes.
+;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
+(use-package ansi-color
+  :ensure nil
+  :autoload endless/colorize-compilation
+  :hook (compilation-filter . endless/colorize-compilation)
+  :config
+  (defun endless/colorize-compilation ()
+    "Colorize from `compilation-filter-start' to `point'."
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point)))))
 
         ;;;;; Fancy-compilation
-  ;; Better compilation buffers. Has support color output,progress updates on a
-  ;; single line (as used by many build systems),scrolling behavior similar to
-  ;; most terminals,and optionally use foreground & background independent of
-  ;; theme colors.
-  (use-package fancy-compilation
-    :after compile
-    :demand
-    :custom
-    (fancy-compilation-override-colors nil)
-    ;; Briefer text
-    (fancy-compilation-quiet-prelude t)
-    (fancy-compilation-quiet-prolog t)
-    :config
-    (fancy-compilation-mode 1))
+;; Better compilation buffers. Has support color output,progress updates on a
+;; single line (as used by many build systems),scrolling behavior similar to
+;; most terminals,and optionally use foreground & background independent of
+;; theme colors.
+(use-package fancy-compilation
+  :after compile
+  :demand
+  :custom
+  (fancy-compilation-override-colors nil)
+  ;; Briefer text
+  (fancy-compilation-quiet-prelude t)
+  (fancy-compilation-quiet-prolog t)
+  :config
+  (fancy-compilation-mode 1))
 
 
 
       ;;;; Yasnippet
-  ;; Template-expansion system (doesn't include templates)
-  (use-package yasnippet
-    :diminish yas-minor-mode
-    :hook (on-first-buffer . yas-global-mode)
-    :custom
-    (yas-alias-to-yas/prefix-p nil)
-    (yas-also-auto-indent-first-line t)
-    (yas-also-indent-empty-lines nil)
-    (yas-inhibit-overlay-modification-protection nil)
-    (yas-snippet-revival t)
-    (yas-triggers-in-field nil)
-    :config
-    (add-to-list 'prettify-symbols-alist '("->" . ?»)))
+;; Template-expansion system (doesn't include templates)
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :hook (on-first-buffer . yas-global-mode)
+  :custom
+  (yas-alias-to-yas/prefix-p nil)
+  (yas-also-auto-indent-first-line t)
+  (yas-also-indent-empty-lines nil)
+  (yas-inhibit-overlay-modification-protection nil)
+  (yas-snippet-revival t)
+  (yas-triggers-in-field nil)
+  :config
+  (add-to-list 'prettify-symbols-alist '("->" . ?»)))
 
       ;;;;; Minions
-  (use-package minions
-    :hook
-    ((elpaca-after-init after-init) . minions-mode)
-    :custom
-    (minions-mode-line-lighter "…")
-    (minions-mode-line-delimiters '("[" . "]"))
-    (minions-prominent-modes
-     '(kb/lisp-keyword-indent-mode tree-sitter-mode)))
+(use-package minions
+  :hook
+  ((elpaca-after-init after-init) . minions-mode)
+  :custom
+  (minions-mode-line-lighter "…")
+  (minions-mode-line-delimiters '("[" . "]"))
+  (minions-prominent-modes
+   '(kb/lisp-keyword-indent-mode tree-sitter-mode)))
 
       ;;;;; Battery
-  ;; Display batter percentage
-  (use-package battery
-    :disabled
-    :ensure nil
-    :custom
-    (battery-load-critical 15)
-    (battery-load-low 25)
-    (battery-mode-line-limit 95)
-    ;; (battery-mode-line-format "%cmAh")
-    ;; (battery-mode-line-format "  %p%%")
-    (battery-mode-line-format "%b%p%% ")
-    :init
-    (display-battery-mode 1))
+;; Display batter percentage
+(use-package battery
+  :disabled
+  :ensure nil
+  :custom
+  (battery-load-critical 15)
+  (battery-load-low 25)
+  (battery-mode-line-limit 95)
+  ;; (battery-mode-line-format "%cmAh")
+  ;; (battery-mode-line-format "  %p%%")
+  (battery-mode-line-format "%b%p%% ")
+  :init
+  (display-battery-mode 1))
 
 
       ;;;; Gud
-  (use-package gud
-    :ensure nil
-    :custom
-    (gud-highlight-current-line t))
+(use-package gud
+  :ensure nil
+  :custom
+  (gud-highlight-current-line t))
 
       ;;;; Realgud
-  (use-package realgud
-    :hook (realgud-srcbuf-mode . tool-bar-mode)
-    :custom
-    (realgud-window-split-orientation 'horizontal)
-    (realgud-short-key-on-tracing? t))
+(use-package realgud
+  :hook (realgud-srcbuf-mode . tool-bar-mode)
+  :custom
+  (realgud-window-split-orientation 'horizontal)
+  (realgud-short-key-on-tracing? t))
 
       ;;;; Dape
-  ;; Dap-mode but without LSP-mode
-  (use-package dape
-    :diminish dape-breakpoint-global-mode
-    :custom
-    (dape-key-prefix nil)                 ; I make my own binding
-    (dape-buffer-window-arrangement 'right)
-    (dape-stepping-granularity 'instruction)
-    (dape-info-variable-table-aligned t)
-    :config
-    (dape-breakpoint-global-mode 1)
+;; Dap-mode but without LSP-mode
+(use-package dape
+  :diminish dape-breakpoint-global-mode
+  :custom
+  (dape-key-prefix nil)                 ; I make my own binding
+  (dape-buffer-window-arrangement 'right)
+  (dape-stepping-granularity 'instruction)
+  (dape-info-variable-table-aligned t)
+  :config
+  (dape-breakpoint-global-mode 1)
 
-    (bind-key "C-c d" dape-global-map 'prog-mode-map)
+  (bind-key "C-c d" dape-global-map 'prog-mode-map)
 
-    ;; Kill created compile buffer on build success
-    (add-hook 'dape-compile-compile-hooks 'kill-buffer)
+  ;; Kill created compile buffer on build success
+  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
 
-    (defun kb/dape--save-on-start ()
-      "Save buffers on startup."
-      (save-some-buffers nil t))
-    (add-hook 'dape-on-start-hooks 'kb/dape--save-on-start)
+  (defun kb/dape--save-on-start ()
+    "Save buffers on startup."
+    (save-some-buffers nil t))
+  (add-hook 'dape-on-start-hooks 'kb/dape--save-on-start)
 
-    ;; To display info and repl buffers on stopped
-    (add-hook 'dape-on-stopped-hooks 'dape-info)
-    (add-hook 'dape-on-stopped-hooks 'dape-repl))
+  ;; To display info and repl buffers on stopped
+  (add-hook 'dape-on-stopped-hooks 'dape-info)
+  (add-hook 'dape-on-stopped-hooks 'dape-repl))
 
       ;;;;; Org-download
 ;; Insert images and screenshots into select modes
@@ -498,181 +489,6 @@ Otherwise, return a user error."
              (`paragraph (kb/org-edit-paragraph-block arg))
              (_ (user-error "No special environment to edit here"))))))))
   (advice-add 'org-edit-special :override 'kb/org-edit-special))
-
-;;;; Truncate lines
-;; If enabled and `truncate-lines' is disabled, soft wrapping will not occur
-;; when the window is narrower than `truncate-partial-width-windows' characters.
-(setq truncate-partial-width-windows nil)
-
-
-;;;; Continuation line indicator character
-;; See for an explanation of these concepts
-;; https://www.reddit.com/r/emacs/comments/1fxr1ci/comment/lqpf2bz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-(set-display-table-slot standard-display-table 1 ?⏎)
-
-;;;; Header line text scaling
-(setq-default text-scale-remap-header-line t)
-
-;;;; Toggle visiting of image files as images (Auto Image File mode).
-(auto-image-file-mode t)
-
-;;;; Comint
-(use-package comint
-  :ensure nil
-  :custom
-  (comint-prompt-read-only t)
-  (comint-buffer-maximum-size 9999)
-  (comint-completion-autolist t)
-  :config
-  (setq-default comint-scroll-to-bottom-on-input 'all)
-  (setq-default comint-scroll-to-bottom-on-output 'all)
-  (setq-default comint-input-autoexpand 'input))
-
-;;;; Shell
-;; Built-in shell
-(use-package shell
-  :ensure nil
-  :custom
-  (async-shell-command-buffer 'confirm-kill-process) ; Don't ask, just do
-  (ansi-color-for-comint-mode t)
-  (shell-command-prompt-show-cwd t)     ; Emacs 27.1
-  (shell-input-autoexpand 'input)
-  (shell-highlight-undef-enable t)                   ; Emacs 29.1
-  (shell-has-auto-cd nil)                            ; Emacs 29.1
-  (shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
-  (shell-kill-buffer-on-exit t))                     ; Emacs 29.1
-
-;;;; Markdown-xwidget
-;; Similar to `grip-mode' but avoids sending many requests to GitHub's API and
-;; more customization. However, `grip-mode' shows exactly what GitHub would show
-(use-package markdown-xwidget
-  :ensure-system-package pandoc
-  ;; :ensure (:type git
-  ;;                :host github
-  ;;                :repo "cfclrk/markdown-xwidget"
-  ;;                :files (:defaults "resources"))
-  :vc (:url "https://github.com/cfclrk/markdown-xwidget.git")
-  :bind
-  ( :map markdown-mode-command-map
-    ("x" . markdown-xwidget-preview-mode))
-  :custom
-  (markdown-xwidget-command "pandoc")
-  (markdown-xwidget-github-theme "dark")
-  (markdown-xwidget-mermaid-theme "dark")
-  (markdown-xwidget-code-block-theme "github-dark"))
-
-;;;; Shrink-path
-;; Truncate eshell directory path (has to be configured in my custom eshell
-;; prompt)
-(use-package shrink-path
-  :after eshell)
-
-;;;; Eshell source in `consult-buffer'
-(with-eval-after-load 'consult
-  ;; For showing eshell sources in `consult-buffer'. Taken from
-  ;; https://github.com/minad/consult#multiple-sources
-  (defvar kb/consult-buffer--eshell-source
-    (list :name     "Eshell Buffers"
-          :category 'buffer
-          :narrow   ?e
-          :face     'consult-buffer
-          :history  'buffer-name-history
-          :annotate '(lambda (cand)
-                       (substring-no-properties
-                        (car (ring-elements
-                              (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
-          :state    'consult--buffer-state
-          :action   'display-buffer
-          :items (lambda ()
-                   (mapcar #'buffer-name
-                           (seq-filter
-                            (lambda (x)
-                              (eq (buffer-local-value 'major-mode x) 'eshell-mode))
-                            (buffer-list))))))
-  (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append))
-
-;;;; Eshell
-(use-package eshell
-  :ensure nil
-  :custom
-  (eshell-kill-processes-on-exit t)
-  (eshell-scroll-to-bottom-on-input 'all)
-  (eshell-scroll-to-bottom-on-output 'all)
-  (eshell-input-filter (lambda (input) (not (string-match-p "\\`\\s-+" input)))) ; Don't record command in history if prefixed with whitespace
-  (eshell-glob-case-insensitive t)
-  (eshell-error-if-no-glob t)
-  (eshell-banner-message "Welcome to the shell, Onii-chan~ (◠﹏◠✿)\n")
-  ;; Taken from https://protesilaos.com/dotemacs/#h:103a8795-c29c-474f-9ddf-ecafaa2f6775
-  (eshell-modules-list
-   '(eshell-alias
-     eshell-basic
-     eshell-cmpl
-     eshell-dirs
-     eshell-glob
-     eshell-hist
-     eshell-ls
-     eshell-pred
-     eshell-prompt
-     eshell-script
-     eshell-term
-     eshell-tramp
-     eshell-unix))
-  :config
-  ;; Eshell modules should be loaded manually
-  ;; Taken from
-  ;; https://protesilaos.com/dotemacs/#h:103a8795-c29c-474f-9ddf-ecafaa2f6775
-  (require 'em-cmpl)
-  (require 'em-dirs)
-  (setq eshell-cd-on-directory t)
-
-  (require 'em-tramp)
-  (setq password-cache t)               ; Cache password for tramp
-  (setq password-cache-expiry 600)      ; Seconds passwords are cached
-
-  (require 'em-hist)
-  (setq eshell-history-size 20000)
-  (setq eshell-hist-ignoredups 'erase)  ; Only keep last duplicate
-  (setq eshell-save-history-on-exit t)
-  ;; Fix eshell overwriting history. From
-  ;; https://emacs.stackexchange.com/a/18569/15023.
-  (setq eshell-save-history-on-exit nil) ; Useless since only saves upon exiting eshell session
-  (defun eshell-append-history ()
-    "Call `eshell-write-history' with the `append' parameter set to `t'."
-    (when eshell-history-ring
-      (let ((newest-cmd-ring (make-ring 1)))
-        (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
-        (let ((eshell-history-ring newest-cmd-ring))
-          (eshell-write-history eshell-history-file-name t)))))
-  (add-hook 'eshell-post-command-hook #'eshell-append-history)
-
-  (require 'em-term)
-  (add-to-list 'eshell-visual-options '("git" "--help" "--paginate"))
-  (add-to-list 'eshell-visual-subcommands '("git" "log" "diff" "show"))
-
-  ;; Kill process upon `delete-frame'
-  (defun kb/kill-eshell-process-maybe (&optional frame)
-    "Delete `eshell' buffer when deleting FRAME."
-    (when (and (equal (selected-window) (frame-selected-window frame))
-               (derived-mode-p 'eshell-mode))
-      (kill-buffer (current-buffer))))
-  (add-hook 'delete-frame-functions #'kb/kill-eshell-process-maybe)
-
-  (require 'em-alias)
-  ;; Cat but with Emacs syntax highlighting. Copied from
-  ;; https://www.reddit.com/r/emacs/comments/wp1jit/comment/ikhtjsm/?utm_source=share&utm_medium=web2x&context=3
-  (defun kb/eshell-cat (file)
-    "Like `cat' but output with Emacs syntax highlighting."
-    (with-temp-buffer
-      (insert-file-contents file)
-      (let ((buffer-file-name file))
-        (delay-mode-hooks
-          (set-auto-mode)
-          (if (fboundp 'font-lock-ensure)
-              (font-lock-ensure)
-            (with-no-warnings
-              (font-lock-fontify-buffer)))))
-      (buffer-string)))
-  (eshell/alias "cat" "kb/eshell-cat $1"))
 
 ;;;; Ox-clip
 (use-package ox-clip

@@ -372,5 +372,32 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Don't visually shift text when using `rectangle-mark-mode'
 (setopt rectangle-indicate-zero-width-rectangle nil) ; New in Emacs 31.1
 
-(provide 'krisb-essentials)
+;;;; Recenter upon `next-error'
+(setopt next-error-recenter '(4))
+
+;;;; Header line text scaling
+(setq-default text-scale-remap-header-line t)
+
+;;;; Truncate lines
+;; If non-nil and `truncate-lines' is disabled, soft wrapping will not occur
+;; when the window is narrower than `truncate-partial-width-windows' characters.
+;; So we set this to nil.
+(setopt truncate-partial-width-windows nil)
+
+;;;; Continuation line indicator character
+;; See for an explanation of these concepts
+;; https://www.reddit.com/r/emacs/comments/1fxr1ci/comment/lqpf2bz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+(set-display-table-slot standard-display-table 1 ?⏎)
+
+;;;; Prefer UTF-8 file and selection encoding
+(prefer-coding-system 'utf-8)
+;; The clipboard on Windows is often a wider encoding (UTF-16), so leave Emacs
+;; to its own devices there.  Otherwise, encode text into the clipboard into UTF-8
+(unless (eq system-type 'windows-nt)
+  (setopt selection-coding-system 'utf-8))
+
+;;;; Prefer unicode charset
+(set-charset-priority 'unicode)
+
 ;;; krisb-essentials.el ends here
+(provide 'krisb-essentials)

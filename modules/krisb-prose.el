@@ -19,7 +19,7 @@
 
 ;;;; Olivetti
 (use-package olivetti
-  :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode) . olivetti-mode)
+  :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode markdown-mode) . olivetti-mode)
          (olivetti-mode . krisb-olivetti-set-bookmark-face))
   :custom
   (olivetti-lighter nil)
