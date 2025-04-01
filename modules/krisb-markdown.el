@@ -4,4 +4,4 @@
   :hook (markdown-mode . visual-line-mode))
 
 ;;; Provide
-(provide 'krisb-spelling)
+(provide 'krisb-markdown)

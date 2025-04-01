@@ -4382,6 +4382,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-markdown.el=
+
 #+begin_src emacs-lisp :tangle "modules/krisb-markdown.el"
   ;;; Markdown-mode
   (use-package markdown-mode
@@ -4389,8 +4390,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :hook (markdown-mode . visual-line-mode))
 
   ;;; Provide
-  (provide 'krisb-spelling)
+  (provide 'krisb-markdown)
 #+end_src
+
 *** =krisb-flymake.el=
 
 #+begin_src emacs-lisp :tangle "modules/krisb-flymake.el"
