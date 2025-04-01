@@ -103,7 +103,7 @@ See the docstring of `krisb-reveal-fold-commands'."
 (use-package eglot
   :custom
   (eglot-code-action-indications '(eldoc-hint margin))
-  (eglot-code-action-indicator ?α)
+  (eglot-code-action-indicator "  α ")
   (eglot-extend-to-xref t))
 
 ;;; Eglot-booster
