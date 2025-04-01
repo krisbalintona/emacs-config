@@ -278,7 +278,7 @@ is to produce the opposite effect of both `fill-paragraph' and
 (setopt mark-even-if-inactive nil)
 
 ;;;; Strategy for uniquifying buffer names
-(setopt uniquify-buffer-name-style 'post-forward)
+(setopt uniquify-buffer-name-style 'post-forward-angle-brackets)
 
 ;;;; Don't show "obsolete" byte-compile warnings
 (setopt byte-compile-warnings (remove 'obsolete byte-compile-warning-types))
