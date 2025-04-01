@@ -815,8 +815,9 @@ to an org-review workflow."
 DAYS should be a positive integer.  Calls `org-review-insert-date' onto
 a random date within the next DAYS days."
     (interactive (list (krisb-org-review--select-day)))
-    (let* ((ts (format-time-string (car org-time-stamp-formats)
-                                   (time-add (current-time) (days-to-time days)))))
+    (let* ((random-day (1+ (random days)))
+           (ts (format-time-string (car org-time-stamp-formats)
+                                   (time-add (current-time) (days-to-time random-day)))))
       ;; We don't also call `org-review-insert-last-review' because I use
       (org-review-insert-date org-review-next-property-name
                               org-review-next-timestamp-format
