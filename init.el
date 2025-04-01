@@ -26,6 +26,8 @@
 (require 'krisb-buffers)
 (require 'krisb-navigation)
 
+(require 'krisb-alternative-editing-schemes)
+
 (require 'krisb-prose)
 (require 'krisb-org)
 (require 'krisb-org-agenda)

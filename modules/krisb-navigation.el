@@ -1,27 +1,3 @@
-;;; Puni
-;; Major-mode agnostic structural editing, faithful to built-ins
-(use-package puni
-  :bind (([remap kill-word] . puni-forward-kill-word)
-         ([remap backward-kill-word] . puni-backward-kill-word)
-         ([remap kill-line] . puni-kill-line)
-         ([remap backward-sexp] . puni-backward-sexp)
-         ([remap forward-sexp] . puni-forward-sexp)
-         ([remap beginning-of-defun] . puni-beginning-of-sexp)
-         ([remap end-of-defun] . puni-end-of-sexp)
-         ([remap backward-list] . puni-backward-sexp-or-up-list)
-         ([remap forward-list] . puni-forward-sexp-or-up-list)
-         ("C-M-9" . puni-syntactic-backward-punct)
-         ("C-M-0" . puni-syntactic-forward-punct)
-         ("C-M-r" . puni-raise)
-         ("C-M-=" . puni-splice)
-         ("C-M-S-o" . puni-split)
-         ("C-M-[" . puni-slurp-backward)
-         ("C-M-]" . puni-slurp-forward)
-         ("C-M-{" . puni-barf-backward)
-         ("C-M-}" . puni-barf-forward))
-  :custom
-  (puni-confirm-when-delete-unbalanced-active-region t))
-
 ;;; Consult
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.
