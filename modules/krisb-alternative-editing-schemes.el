@@ -9,6 +9,8 @@
   ;; Replace the default mode map with my own version
   (defvar-keymap krisb-puni-mode-map
     :doc "Keymap used for `puni-mode'.")
+  ;; We use bind-keys because (i) I can use the [remap ...] form and (ii)
+  ;; because it integrates with `describe-personal-keybindings'
   (bind-keys :map krisb-puni-mode-map
              ;; ("DEL" . puni-backward-delete-char)
              ;; ("C-d" . puni-forward-delete-char)
@@ -33,7 +35,7 @@
              ("C-M-]" . puni-slurp-forward)
              ("C-M-{" . puni-barf-backward)
              ("C-M-}" . puni-barf-forward))
-  (setq puni-mode-map krisb-puni-mode-map))
+  (setf (alist-get 'puni-mode minor-mode-map-alist) krisb-puni-mode-map))
 
 ;;; God-mode
 (use-package god-mode
