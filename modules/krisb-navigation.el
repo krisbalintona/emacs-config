@@ -288,29 +288,5 @@ See the docstring of `krisb-reveal-fold-commands'."
   :config
   (recentf-mode 1))
 
-;;; Folding
-;;;; Outline
-(use-package outline
-  :ensure nil
-  :diminish outline-minor-mode
-  :custom
-  (outline-minor-mode-cycle t)
-  (outline-minor-mode-highlight t)
-  (outline-blank-line t))
-
-;;;; Outshine
-;; Outline-minor-mode but with better keybindings and more support.
-(use-package outshine
-  :diminish outshine-mode
-  :hook ((LaTeX-mode prog-mode conf-mode) . outshine-mode)
-  :bind ( :map outshine-mode-map
-          ("C-x n s". outshine-narrow-to-subtree)
-          :map diff-mode-map
-          ("S-<iso-lefttab>" . outshine-cycle-buffer)
-          ("<tab>" . outshine-cycle)
-          ("C-x n s" . outshine-narrow-to-subtree))
-  :custom
-  (outshine-use-speed-commands t))
-
 ;;; Provide
 (provide 'krisb-navigation)
