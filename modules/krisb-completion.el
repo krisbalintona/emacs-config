@@ -136,6 +136,7 @@ set (i.e., OPERATION is \\='set)."
 ;;;; Itself
 (use-package vertico
   :pin gnu-elpa-devel
+  :demand t
   :bind (("C-c v r" . vertico-repeat)
          ("C-c v s" . vertico-suspend))
   :hook (minibuffer-setup . vertico-repeat-save)
@@ -143,9 +144,8 @@ set (i.e., OPERATION is \\='set)."
   (vertico-count 13)
   (vertico-resize 'grow-only)
   (vertico-cycle nil)
-  :init
-  (vertico-mode 1)
   :config
+  (vertico-mode 1)
   (require 'krisb-vertico))
 
 ;;;; Vertico-directory
