@@ -276,7 +276,6 @@ called outright."
 
 ;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
-  :requires org-roam
   :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
   :hook ((org-roam-folgezettel-mode . hl-line-mode)
          (org-roam-folgezettel-mode . (lambda () (setq-local line-spacing 0.2))))
