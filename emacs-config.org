@@ -8675,10 +8675,23 @@ There are several packages that end up incredibly useful for authoring packages.
     :vc ( :url "https://github.com/jdtsmith/outli"
           :rev :newest)
     :hook ((prog-mode text-mode) . outli-mode)
+    :bind ( :map outline-minor-mode-map
+            ;; 2025-04-02: Assumes `outline-minor-mode-prefix' is "C-c @"
+            ("C-c @ C-<return>" . outli-insert-heading-respect-content))
     :custom
     (outli-allow-indented-headlines t)
     (outli-default-nobar nil)             ; No horizontal rule?
-    (outli-blend 0.0)) ; 0.0 rather than nil lets the horizontal rule begin at the stem, not after
+    (outli-blend 0.0) ; 0.0 rather than nil lets the horizontal rule begin at the stem, not after
+    :config
+    ;; Update outli faces on theme change.  As recommended in
+    ;; https://github.com/jdtsmith/outli?tab=readme-ov-file#faq
+    (advice-add 'load-theme :after #'outli-reset-all-faces)
+
+    ;; Add "Heading" (which outli headings are categorized as) imenu group.  Taken
+    ;; from https://github.com/jdtsmith/outli?tab=readme-ov-file#faq
+    (with-eval-after-load 'consult
+      (push '(?h "Headings")
+            (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 
   ;;; Provide
   (provide 'krisb-folding)
