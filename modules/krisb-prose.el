@@ -53,20 +53,6 @@ fringe background color, are out of place."
     (face-remap-add-relative 'bookmark-face
                              :inherit '(olivetti-fringe success))))
 
-;;;; Astute.el
-(use-package astute
-  :hook (org-mode . astute-mode)
-  :custom
-  (astute-lighter "")
-  (astute-prefix-single-quote-exceptions
-   '("bout"
-     "em"
-     "n'"
-     "cause"
-     "round"
-     "twas"
-     "tis")))
-
 ;;;; Darkroom
 (use-package darkroom
   :bind ( :map krisb-toggle-keymap

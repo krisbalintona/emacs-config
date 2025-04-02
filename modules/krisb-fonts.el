@@ -145,6 +145,41 @@
      "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
      ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++")))
 
+;;; Astute.el
+;; Redisplay typographical punctuation (e.g., em-dashes as "—" and en-dashes as
+;; "–")
+(use-package astute
+  :hook (text-mode . astute-mode)
+  :custom
+  (astute-lighter "")
+  (astute-prefix-single-quote-exceptions
+   '("bout"
+     "em"
+     "n'"
+     "cause"
+     "round"
+     "twas"
+     "tis")))
+
+;;; Prettify-symbols-mode
+(setopt prettify-symbols-unprettify-at-point 'right-edge)
+
+;; Org-mode
+(defun krisb-prettify-symbols--org-mode-setup ()
+  "Set up pretty symbols in `org-mode'."
+  (add-to-list 'prettify-symbols-alist '("->" . ?→))
+  (add-to-list 'prettify-symbols-alist '("<-" . ?←)))
+(add-hook 'org-mode-hook #'krisb-prettify-symbols--org-mode-setup)
+
+;; Prog-mode
+(defun krisb-prettify-symbols--prog-mode-setup ()
+  "Set up pretty symbols in `prog-mode'."
+  (add-to-list 'prettify-symbols-alist '("->" . ?→))
+  (add-to-list 'prettify-symbols-alist '("<-" . ?←))
+  (add-to-list 'prettify-symbols-alist '("<->" . ?↔))
+  (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))
+(add-hook 'prog-mode-hook #'krisb-prettify-symbols--prog-mode-setup)
+
 ;;; Show-font
 ;; Best font previewer
 (use-package show-font)

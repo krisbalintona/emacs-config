@@ -1,5 +1,4 @@
 
-
 ;;;; Slimmer minibuffer and echo area faces
 ;; Make minibuffer and echo fonts a little lighter. Taken from
 ;; https://www.reddit.com/r/emacs/comments/14q399t/comment/jqm6zr3/?utm_source=share&utm_medium=web2x&context=3
@@ -52,13 +51,13 @@
   :config
   (setf (alist-get "handlebars" web-mode-comment-formats nil nil 'string=) '("{{!")))
 
-          ;;;; Json-mode
+;;;; Json-mode
 (use-package json-mode
   :ensure-system-package (jsonlint . "sudo npm install --global jsonlint")
   :custom
   (flycheck-json-jsonlint-executable (executable-find "jsonlint")))
 
-          ;;;; Yaml-mode
+;;;; Yaml-mode
 (use-package yaml-mode
   :ensure-system-package (js-yaml . "sudo npm install --global js-yaml")
   :hook
@@ -67,7 +66,7 @@
   :custom
   (flycheck-yaml-jsyaml-executable (executable-find "js-yaml")))
 
-          ;;;; Abdridge-diff
+;;;; Abdridge-diff
 (use-package abridge-diff
   :diminish
   :after diff
@@ -75,7 +74,7 @@
   :config
   (abridge-diff-mode 1))
 
-          ;;;; Git-gutter-fringe
+;;;; Git-gutter-fringe
 (use-package git-gutter-fringe
   :after git-gutter
   :custom-face
@@ -88,7 +87,7 @@
   (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(top t))
   (define-fringe-bitmap 'git-gutter-fr:deleted [240 240 240 240] nil nil '(top t)))
 
-          ;;;; Diff-hl
+;;;; Diff-hl
 ;; Diff information in the margins. Also provides commands for navigating and
 ;; viewing diff info of the current file. Faster and cleaner than git-gutter and
 ;; git-gutter-fringes
@@ -115,7 +114,7 @@
                                               (widen)
                                               (apply orig-fun args)))))
 
-          ;;;; Symbol-overlay
+;;;; Symbol-overlay
 ;; Mimics functionality of built-in hi-lock but with overlays instead of
 ;; font-lock. Usefully has `symbol-overlay-rename'. On highlighted regions, the
 ;; `symbol-overlay-map' is enabled
@@ -127,7 +126,7 @@
    ("M-s h <f7>" . symbol-overlay-mode)
    ("M-s h <f8>" . symbol-overlay-remove-all)))
 
-          ;;;;; Display-fill-column-indicator
+;;;;; Display-fill-column-indicator
 (use-package display-fill-column-indicator
   :ensure nil
   :custom
@@ -135,8 +134,8 @@
   :custom-face
   (fill-column-indicator ((t (:inherit line-number)))))
 
-          ;;;; Aesthetics
-        ;;;;; Prog-mode
+;;;; Aesthetics
+;;;;; Prog-mode
 (use-package prog-mode
   :ensure nil
   :hook ((prog-mode . goto-address-prog-mode)
@@ -159,10 +158,6 @@
         nil)
        (t t))))
   :config
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (add-to-list 'prettify-symbols-alist '("->" . ?➡))
-              (add-to-list 'prettify-symbols-alist '("<-" . ?⬅))))
   (add-hook 'latex-mode-hook
             (lambda ()
               (add-to-list 'prettify-symbols-alist '("\\Dashv" . ?⫤))
@@ -187,13 +182,9 @@
               (add-to-list 'prettify-symbols-alist '("\\ding{201}" . ?⑩))
               ;; Angle brackets for text (non-math)
               (add-to-list 'prettify-symbols-alist '("\\textlangle" . 10216))
-              (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217))))
-  (add-hook 'python-base-mode-hook
-            (lambda ()
-              (add-to-list 'prettify-symbols-alist '("->" . ?»))
-              (add-to-list 'prettify-symbols-alist '("lambda" . ?λ)))))
+              (add-to-list 'prettify-symbols-alist '("\\textrangle" . 10217)))))
 
-        ;;;;; Ansi-color
+;;;;; Ansi-color
 ;; Apply ANSI terminal color escape codes.
 ;; <http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html>
 (use-package ansi-color
@@ -206,7 +197,7 @@
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region compilation-filter-start (point)))))
 
-        ;;;;; Fancy-compilation
+;;;;; Fancy-compilation
 ;; Better compilation buffers. Has support color output,progress updates on a
 ;; single line (as used by many build systems),scrolling behavior similar to
 ;; most terminals,and optionally use foreground & background independent of
@@ -224,7 +215,7 @@
 
 
 
-      ;;;; Yasnippet
+;;;; Yasnippet
 ;; Template-expansion system (doesn't include templates)
 (use-package yasnippet
   :diminish yas-minor-mode
@@ -239,7 +230,7 @@
   :config
   (add-to-list 'prettify-symbols-alist '("->" . ?»)))
 
-      ;;;;; Minions
+;;;;; Minions
 (use-package minions
   :hook
   ((elpaca-after-init after-init) . minions-mode)
@@ -249,7 +240,7 @@
   (minions-prominent-modes
    '(kb/lisp-keyword-indent-mode tree-sitter-mode)))
 
-      ;;;;; Battery
+;;;;; Battery
 ;; Display batter percentage
 (use-package battery
   :disabled
@@ -265,20 +256,20 @@
   (display-battery-mode 1))
 
 
-      ;;;; Gud
+;;;; Gud
 (use-package gud
   :ensure nil
   :custom
   (gud-highlight-current-line t))
 
-      ;;;; Realgud
+;;;; Realgud
 (use-package realgud
   :hook (realgud-srcbuf-mode . tool-bar-mode)
   :custom
   (realgud-window-split-orientation 'horizontal)
   (realgud-short-key-on-tracing? t))
 
-      ;;;; Dape
+;;;; Dape
 ;; Dap-mode but without LSP-mode
 (use-package dape
   :diminish dape-breakpoint-global-mode
@@ -304,7 +295,7 @@
   (add-hook 'dape-on-stopped-hooks 'dape-info)
   (add-hook 'dape-on-stopped-hooks 'dape-repl))
 
-      ;;;;; Org-download
+;;;;; Org-download
 ;; Insert images and screenshots into select modes
 (use-package org-download
   :ensure-system-package (scrot)
@@ -320,7 +311,7 @@
   (org-download-timestamp "%Y-%m-%d_%H-%M-%S_") ; Default
   (org-download-image-html-width 700))
 
-  ;;;;; Typo-mode
+;;;;; Typo-mode
 ;; Typography stuff for quotations, hyphens, back-ticks, etc.
 (use-package typo
   :disabled                             ; NOTE 2024-09-22: Check out `astute.el'
