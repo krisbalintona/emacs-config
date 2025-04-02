@@ -190,8 +190,8 @@ set (i.e., OPERATION is \\='set)."
 
 ;;;; Vertico-prescient
 (use-package vertico-prescient
-  :requires prescient
-  :after vertico
+  :requires vertico
+  :after prescient
   :custom
   ;; Sorting
   (vertico-prescient-enable-sorting t)

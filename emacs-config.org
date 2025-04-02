@@ -1220,8 +1220,8 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 
   ;;;; Vertico-prescient
   (use-package vertico-prescient
-    :requires prescient
-    :after vertico
+    :requires vertico
+    :after prescient
     :custom
     ;; Sorting
     (vertico-prescient-enable-sorting t)
