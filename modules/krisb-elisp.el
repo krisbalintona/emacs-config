@@ -131,7 +131,11 @@
 ;;; Packages
 ;;;; Try
 ;; Install a package only for the current Emacs session.
-(use-package try)
+(use-package try
+  :config
+  ;; Add `try' to embark keymap for packages
+  (with-eval-after-load 'embark
+    (keymap-set embark-package-map "t" #'try)))
 
 ;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
