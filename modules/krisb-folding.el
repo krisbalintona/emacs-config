@@ -57,16 +57,9 @@
   :custom
   (outli-allow-indented-headlines t)
   (outli-default-nobar nil)             ; No horizontal rule?
-  (outli-blend 0.0) ; 0.0 rather than nil lets the horizontal rule begin at the stem, not after
+  (outli-blend nil)
   :config
   ;; Update outli faces on theme change
-
-  ;; NOTE 2025-04-02: We can't call `outli-reset-all-faces' directly yet because
-  ;; `enable-theme-functions' should be functions that take a single argument.
-  ;; If we call `outli-reset-all-faces' directly, we'll get a warning because it
-  ;; does not accept any arguments.  I've made an issue about this:
-  ;; https://github.com/jdtsmith/outli/issues/21
-  (add-hook 'enable-theme-functions (lambda (_) (outli-reset-all-faces)))
 
   ;; Add "Heading" (which outli headings are categorized as) imenu group.  Taken
   ;; from https://github.com/jdtsmith/outli?tab=readme-ov-file#faq
