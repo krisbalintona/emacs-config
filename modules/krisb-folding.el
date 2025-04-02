@@ -65,7 +65,7 @@
 
   ;; Add "Heading" (which outli headings are categorized as) imenu group.  Taken
   ;; from https://github.com/jdtsmith/outli?tab=readme-ov-file#faq
-  (with-eval-after-load 'consult
+  (with-eval-after-load 'consult-imenu
     (push '(?h "Headings")
           (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 
