@@ -171,9 +171,8 @@ set (i.e., OPERATION is \\='set)."
      (jinx grid
            (vertico-grid-annotate . 20)
            (vertico-grid-max-columns . 12)
-           (vertico-grid-separator .
-                                   #("    |    " 4 5
-                                     (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
+           (vertico-grid-separator
+            . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
   (vertico-multiform-commands
    '((pdf-view-goto-label (vertico-sort-function . nil))
      (".+-history" (vertico-sort-function . nil))))
