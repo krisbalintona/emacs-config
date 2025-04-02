@@ -94,8 +94,8 @@
 
 ;;; Ace-window
 (use-package ace-window
-  :bind (("C-c w" . ace-window)
-         ("C-c W" . krisb-ace-window-prefix))
+  :bind (("C-; w" . ace-window)
+         ("C-; W" . krisb-ace-window-prefix))
   :custom
   (aw-scope 'global)
   (aw-swap-invert t)
