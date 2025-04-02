@@ -124,7 +124,9 @@
   (mixed-pitch-variable-pitch-cursor nil))
 
 ;;; Ligature
-;; Ligatures!  See for configuration examples: https://github.com/j/wiki
+;; Ligatures!  Be aware that this differs from `prettify-symbols-mode' because
+;; ligatures are provided by and must be supported by the particular font.  See
+;; for configuration examples: https://github.com/j/wiki
 (use-package ligature
   :hook (window-setup . global-ligature-mode)
   :config
@@ -134,7 +136,8 @@
    '(html-mode nxml-mode web-mode)
    '("<!--" "-->" "</>" "</" "/>" "://"))
 
-  ;; Enable all Iosevka ligatures in programming modes
+  ;; Enable all Iosevka ligatures in programming modes.  Taken from
+  ;; https://github.com/mickeynp/ligature.el/wiki#iosevka
   (ligature-set-ligatures
    '(prog-mode conf-mode)
    '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
