@@ -58,7 +58,13 @@
   ;; Set up QWERTY
   (defun krisb-alternative-editing-schemes-setup ()
     "Set up QWERTY bindings with meow."
-    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (setopt meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
+            meow--kbd-splice-sexp "C-M-="
+            meow--kbd-forward-slurp "C-M-]"
+            meow--kbd-backward-slurp "C-M-]"
+            meow--kbd-forward-barf "C-M-}"
+            meow--kbd-forward-barf "C-M-{"
+            meow--kbd-split-sexp "C-M-S-o")
     (meow-motion-define-key
      '("j" . meow-next)
      '("k" . meow-prev)
@@ -138,8 +144,24 @@
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
      '("'" . repeat)
-     '("<escape>" . ignore)))
+     '("<escape>" . ignore)
+     ;; Bespoke bindings
+     '(")" . puni-syntactic-forward-punct)
+     '("(" . puni-syntactic-backward-punct)
+     '("}" . meow-forward-slurp)
+     '("{" . meow-backward-slurp)
+     '("C-}" . meow-forward-barf)
+     '("C-{" . meow-backward-barf)
+     '("C-=" . meow-splice-sexp)
+     '("C-o" . meow-split-sexp)))
   (krisb-alternative-editing-schemes-setup))
+
+;;; Boon
+(use-package boon
+  :disabled t                ; 2025-04-02: Ergonomic but... what is the benefit?
+  :config
+  (require 'boon-qwerty)
+  (boon-mode 1))
 
 ;;; Provide
 (provide 'krisb-alternative-editing-schemes)
