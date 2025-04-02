@@ -5116,11 +5116,16 @@ Configuration related to "saving a state," that is, storing or restoring anythin
          :key "C"
          :transient t
          :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Add CREATED" "CREATED"))]
-       ["Roam-specific"
+       ["All nodes"
         (krisb-org-roam-ext-set-roam-box
          :key "b"
          :transient t
          :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_BOX" "ROAM_BOX"))
+        (krisb-org-roam-ext-set-roam-exclude
+         :key "e"
+         :transient t
+         :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_EXCLUDE" "ROAM_EXCLUDE"))]
+       ["Idea-specific"
         (krisb-org-roam-ext-set-roam-type
          :key "t"
          :transient t
@@ -5140,11 +5145,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
         (krisb-org-roam-ext-set-roam-place
          :key "p"
          :transient t
-         :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))
-        (krisb-org-roam-ext-set-roam-exclude
-         :key "e"
-         :transient t
-         :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_EXCLUDE" "ROAM_EXCLUDE"))]]
+         :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))]]
       [["Navigation"
         ("C-u" "Up heading" org-up-heading :transient t)
         ("C-p" "Next heading" org-previous-visible-heading :transient t)
