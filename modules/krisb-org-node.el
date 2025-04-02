@@ -10,10 +10,6 @@
           ("i" . org-node-insert-link)
           ("t a" . org-node-add-tags-here))
   :custom
-  ;; We set this to make sure all files in `krisb-notes-directory' are checked,
-  ;; otherwise we rely on the IDs identified by `org-id-update-id-locations',
-  ;; which can miss IDs (e.g. when mass-renaming files).
-  (org-node-extra-id-dirs (list krisb-notes-directory))
   (org-node-ask-directory t)
   (org-node-datestamp-format "%Y%m%dT%H%M%S--")
   (org-node-context-persist-on-disk t)
@@ -145,11 +141,13 @@ For use as `org-node-affixation-fn'."
   :vc ( :url "https://github.com/meedstrom/indexed.git"
         :rev :newest)
   :custom
+  (indexed-sync-with-org-id t)
   (indexed-org-dirs (list krisb-org-directory))
   (indexed-warn-title-collisions nil)
-  (indexed-sync-with-org-id t)
   :config
   (indexed-updater-mode 1)
+  (indexed-roam-mode 1) ; 2025-04-02: This is required for collecting ROAM_REFS information
+  
   ;; NOTE 2025-03-23: Not enabled for now because I do not use it and it is in
   ;; flux, so I may enable in the future when it is more stable and finalized.
   ;; (indexed-orgdb-mode 1)
@@ -157,8 +155,7 @@ For use as `org-node-affixation-fn'."
   (with-eval-after-load 'org-roam
     (setopt org-roam-db-update-on-save nil
             indexed-roam-overwrite t)  ; Write to on-disk db, not a diskless one
-    (org-roam-db-autosync-mode -1)
-    (indexed-roam-mode 1)))
+    (org-roam-db-autosync-mode -1)))
 
 ;;; Provide
 (provide 'krisb-org-node)
