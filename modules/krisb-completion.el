@@ -61,7 +61,7 @@
   ;; overridden in an undesirable way.  Instead, I opt to just set it finally
   ;; after all those packages are set.
   (completion-styles (list (if (featurep 'orderless)
-                               'basic 'orderless)
+                               'orderless 'basic)
                            (if (featurep 'hotfuzz)
                                'hotfuzz 'flex))))
 
