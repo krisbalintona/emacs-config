@@ -55,7 +55,11 @@
             (fringe unspecified)
 
             ;; More noticeable block (e.g. org) backgrounds
-            (bg-prose-block-contents bg-active-value))
+            (bg-prose-block-contents bg-active-value)
+
+            ;; Region
+            (fg-region unspecified)
+            (bg-region bg-dim))
           modus-operandi-palette-overrides
           `(
             ;; I like `modus-*-tinted's mode line colors. I like to keep
