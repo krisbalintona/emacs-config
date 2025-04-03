@@ -8,19 +8,25 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
-  ;; FIXME 2024-01-13: This is a pull request fork that implements continuous
-  ;; scrolling (`pdf-view-roll-minor-mode'). See
-  ;; https://github.com/vedang/pdf-tools/pull/224
-  ;; Must call `pdf-tools-install' or `pdf-loader-install' (which defers
-  ;; loading; see its docstring and
-  ;; https://github.com/vedang/pdf-tools?tab=readme-ov-file#installing-pdf-tools-elisp-code)
-  ;; to have PDF files use pdf-view-mode and have everything required loaded
+  ;; 2025-04-03: We manually add an auto-mode-alist entry to lazy-load this
+  ;; package.  I want to avoid calling `pdf-loader-install' or
+  ;; `pdf-tools-install' immediately at startup because I've had startup
+  ;; complications when the pdf-tools install is malformed.  So I lazy load this
+  ;; package and only call those functions after this package loads (i.e., in
+  ;; the :config block).
+  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :bind ( :map pdf-view-mode-map
           ("C-c C-r a" . pdf-view-auto-slice-minor-mode)
           ;; Additionally useful since it lets you scroll via
           ;; `scroll-other-window'
           ([remap scroll-up-command] . pdf-view-scroll-up-or-next-page)
-          ([remap scroll-down-command] . pdf-view-scroll-down-or-previous-page)))
+          ([remap scroll-down-command] . pdf-view-scroll-down-or-previous-page))
+  :config
+  ;; Must call `pdf-tools-install' or `pdf-loader-install' to have PDF files use
+  ;; pdf-view-mode and have everything required loaded.  The latter defers
+  ;; loading; see its docstring and
+  ;; https://github.com/vedang/pdf-tools?tab=readme-ov-file#installing-pdf-tools-elisp-code
+  (pdf-loader-install))
 
 ;;;; Pdf-view
 (use-package pdf-view
