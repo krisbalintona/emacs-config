@@ -191,7 +191,7 @@ See `pdf-links-action-perform' for the interface."
     (car (alist-get 'edges (car coords)))))
 
 ;;;###autoload
-(defun krisb-avy-pdf-highlight (&optional activate)
+(defun krisb-avy-pdf-highlight-region-by-char (&optional activate)
   "Use an avy-like interface to highlight region in PDF.
 
 If called with ACTIVATE, then also activate the created

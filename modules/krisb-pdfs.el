@@ -61,7 +61,7 @@
   :after pdf-view
   :demand t
   :bind ( :map pdf-view-mode-map
-          ("C-;" . krisb-avy-pdf-highlight)
+          ([remap avy-goto-char-timer] . krisb-avy-pdf-highlight-region-by-char)
           :map pdf-annot-list-mode-map
           ([remap tablist-push-regexp-filter] . krisb-pdf-annot-list-filter-regexp)))
 
