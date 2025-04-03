@@ -59,14 +59,17 @@ heading does not have a CUSTOM-ID, then also throw an error."
 
 ;;; Exclude the exportation of certain heading tags
 (defvar krisb-org-hugo-exclude-tags
-  '("ATTACH" "project" "PROJECT" "draft"
-    "section" "series" "tag" "category")
-  "Tags to exclude.  Look at `krisb-org-hugo--tag-processing-fn-ignore-tags-maybe'.")
+  `("ATTACH" "project" ,(rx "__" (0+ anychar)))
+  "Regexps to exclude tags from org-hugo export.
+For more information, see
+`krisb-org-hugo--tag-processing-fn-ignore-tags-maybe'.")
+
 (defun krisb-org-hugo--tag-processing-fn-ignore-tags-maybe (tag-list _info)
-  "Ignore tags which match a string found in `krisb-org-hugo-exclude-tags'.
+  "Ignore tags which match a regexp found in `krisb-org-hugo-exclude-tags'.
 TAG-LIST and INFO are as described in
 `org-hugo-tag-processing-functions'."
-  (cl-set-difference tag-list krisb-org-hugo-exclude-tags :test #'equal))
+  (cl-set-difference tag-list krisb-org-hugo-exclude-tags
+                     :test (lambda (t1 t2) (string-match-p t2 t1))))
 (add-to-list 'org-hugo-tag-processing-functions #'krisb-org-hugo--tag-processing-fn-ignore-tags-maybe)
 
 ;;; Convenience bundle-setting
