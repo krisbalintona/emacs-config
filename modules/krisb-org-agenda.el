@@ -180,7 +180,7 @@
       :clock-resume t)
      ("l" "Log" item
       (function krisb-org-capture--org-node-datetree)
-      "- %U %?"
+      "%U %?"
       :tree-type (quarter week)
       :clock-in t
       :clock-resume t)
