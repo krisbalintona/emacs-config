@@ -193,7 +193,8 @@
 
 ;;;;; Mode-minder
 ;; Visually represent the hierarchy of major mode inheritance via
-;; tabulated-list-mode.
+;; tabulated-list-mode.  NOTE: Calling `mode-minder' loads all packages with a
+;; known major mode.
 (use-package mode-minder
   :vc ( :url "https://github.com/jdtsmith/mode-minder.git"
         :rev :newest))

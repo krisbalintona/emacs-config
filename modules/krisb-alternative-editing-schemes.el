@@ -49,8 +49,16 @@
   ;; :bind ("<escape>" . god-local-mode)
   :custom
   (god-mode-enable-function-key-translation nil)
-  (god-exempt-major-modes nil)
-  (god-exempt-predicates nil))
+  (god-exempt-major-modes
+   '(Custom-mode Info-mode ag-mode calculator-mode calendar-mode
+                 cider-test-report-mode compilation-mode debugger-mode dired-mode
+                 edebug-mode ediff-mode eww-mode geben-breakpoint-list-mode
+                 git-commit-mode grep-mode ibuffer-mode magit-popup-mode
+                 org-agenda-mode pdf-outline-buffer-mode recentf-dialog-mode
+                 sldb-mode sly-db-mode vc-annotate-mode wdired-mode))
+  (god-exempt-predicates
+   '(god-exempt-mode-p god-comint-mode-p god-git-commit-mode-p god-view-mode-p
+                       god-special-mode-p)))
 
 ;;; Meow
 (use-package meow
@@ -173,7 +181,10 @@
 ;; (i.e. noun-verb, or select-as-you-move-then-act). (But, remember, god-mode
 ;; sticks with base Emacs keybindings, so this stays close to vanilla Emacs.)
 ;; This is basically god-mode but with selection during motion. Interesting...
-(use-package motion-selection-mode)
+(use-package motion-selection-mode
+  :disabled t ; 2025-04-03: I think the premise of this package is neat, but I don't think god-mode is for me.
+  :config
+  (motion-selection-mode 1))
 
 ;;; Provide
 (provide 'krisb-alternative-editing-schemes)
