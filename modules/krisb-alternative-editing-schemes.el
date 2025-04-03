@@ -42,8 +42,11 @@
   ;; 2025-04-01: I find the need for a toggle key to defeat the purpose of the
   ;; package: you can move around quickly, but when it comes to editing, you
   ;; have to enter a "new mode"...  Why not just do modal editing?
-  :disabled t
-  :bind ("<escape>" . god-local-mode)
+  ;; 2025-04-03: Trying out motion-selection, which has its own "escape"
+  ;; command; it also uses god-mode so I don't disable this config so my
+  ;; god-mode :custom can be applied.
+  ;; :disabled t
+  ;; :bind ("<escape>" . god-local-mode)
   :custom
   (god-mode-enable-function-key-translation nil)
   (god-exempt-major-modes nil)
@@ -164,6 +167,13 @@
   :config
   (require 'boon-qwerty)
   (boon-mode 1))
+
+;;; Motion-selection-mode
+;; Modify god-mode to emulate kakoune and meow's "motion selection" approach
+;; (i.e. noun-verb, or select-as-you-move-then-act). (But, remember, god-mode
+;; sticks with base Emacs keybindings, so this stays close to vanilla Emacs.)
+;; This is basically god-mode but with selection during motion. Interesting...
+(use-package motion-selection-mode)
 
 ;;; Provide
 (provide 'krisb-alternative-editing-schemes)
