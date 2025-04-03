@@ -8,6 +8,7 @@
   ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
   :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
   :hook (dictionary-mode . hide-mode-line-mode)
+  :bind ("C-h =" . krisb-dictionary-at-point)
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-create-buttons nil)

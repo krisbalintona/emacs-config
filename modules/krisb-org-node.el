@@ -129,6 +129,7 @@ For use as `org-node-affixation-fn'."
   :ensure nil
   :load-path "/home/krisbalintona/emacs-repos/packages/citar-org-node/"
   :after (:any citar org-node)
+  :demand t
   :diminish
   :bind ( :map krisb-note-keymap
           ("b a" . citar-org-node-add-refs)
