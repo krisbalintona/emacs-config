@@ -1827,6 +1827,29 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (bookmark-sort-flag 'last-modified)
     (bookmark-use-annotations nil)
     (bookmark-version-control 'nospecial))
+
+  ;;; Activities
+  (use-package activities
+    :pin gnu-elpa-devel
+    :hook (kill-emacs . activities-save-all)
+    :bind (("C-c a d" . activities-define)
+           ("C-c a n" . activities-new)
+           ("C-c a a" . activities-resume)
+           ("C-c a g" . activities-revert)
+           ("C-c a r" . activities-rename)
+           ("C-c a D" . activities-discard)
+           ("C-c a b" . activities-switch-buffer)
+           ("C-c a B" . activities-switch)
+           ("C-c a s" . activities-suspend)
+           ("C-c a k" . activities-kill)
+           ("C-c a l" . activities-list))
+    :custom
+    (activities-kill-buffers t)
+    (activities-bookmark-store nil)
+    (activities-bookmark-warnings t)
+    :config
+    (activities-mode 1)
+    (activities-tabs-mode 1))
 #+end_src
 
 **** Persistent sessions
@@ -2150,29 +2173,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                   '("^\\*vc-")))))
     :config
     (pinching-margins-mode 1))
-
-  ;;; Activities
-  (use-package activities
-    :pin gnu-elpa-devel
-    :hook (kill-emacs . activities-save-all)
-    :bind (("C-c a d" . activities-define)
-           ("C-c a n" . activities-new)
-           ("C-c a a" . activities-resume)
-           ("C-c a g" . activities-revert)
-           ("C-c a r" . activities-rename)
-           ("C-c a D" . activities-discard)
-           ("C-c a b" . activities-switch-buffer)
-           ("C-c a B" . activities-switch)
-           ("C-c a s" . activities-suspend)
-           ("C-c a k" . activities-kill)
-           ("C-c a l" . activities-list))
-    :custom
-    (activities-kill-buffers t)
-    (activities-bookmark-store nil)
-    (activities-bookmark-warnings t)
-    :config
-    (activities-mode 1)
-    (activities-tabs-mode 1))
 #+end_src
 
 **** Setting =display-buffer-alist=
