@@ -6167,11 +6167,11 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     ;; See also `org-capture-templates-contexts'
     (org-capture-templates
      `(("t" "Todo" entry
-        (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
+        (file ,krisb-org-agenda-main-file)
         "* TODO %? :inbox:%^g\n"
         :empty-lines 1)
        ("T" "Todo (without processing)" entry
-        (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
+        (file ,krisb-org-agenda-main-file)
         "* TODO %? %^g\n"
         :empty-lines 1)
        ("j" "Journal" entry
@@ -7673,10 +7673,22 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                      "* TODO %? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
                      :empty-lines 1)
                    'append)
+      (add-to-list 'org-capture-templates
+                   `("n" "Review newsletter/subscription email" entry
+                     (file ,krisb-org-agenda-main-file)
+                     "* TODO [#E] Review subscription/newsletter email: [[%L][\"%:subject\"]] %? :email:inbox:%^g
 
-      (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-tree-mode"))))
-      (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
-      (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
+  From %:from
+  To: %:to\n"
+                     :immediate-finish t
+                     :empty-lines 1)
+                   'append)
+
+      (cl-loop for mode in  '("notmuch-tree-mode"
+                              "notmuch-search-mode"
+                              "notmuch-show-mode")
+               do (add-to-list 'org-capture-templates-contexts `("e" ((in-mode . ,mode))))
+               do (add-to-list 'org-capture-templates-contexts `("n" ((in-mode . ,mode)))))))
 
   ;;;; Mode line indicator
   ;; Try using display-time's built-in email indicator --- less informative but

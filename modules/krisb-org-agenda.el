@@ -162,11 +162,11 @@
   ;; See also `org-capture-templates-contexts'
   (org-capture-templates
    `(("t" "Todo" entry
-      (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
+      (file ,krisb-org-agenda-main-file)
       "* TODO %? :inbox:%^g\n"
       :empty-lines 1)
      ("T" "Todo (without processing)" entry
-      (file ,(expand-file-name "todo.org" krisb-org-agenda-directory))
+      (file ,krisb-org-agenda-main-file)
       "* TODO %? %^g\n"
       :empty-lines 1)
      ("j" "Journal" entry

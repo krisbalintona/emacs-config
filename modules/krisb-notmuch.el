@@ -256,10 +256,22 @@ from a `notmuch-search-mode' buffer."
                    "* TODO %? [[%L][\"%:subject\"]] :email:\n\nFrom %:from\nTo: %:to\n"
                    :empty-lines 1)
                  'append)
+    (add-to-list 'org-capture-templates
+                 `("n" "Review newsletter/subscription email" entry
+                   (file ,krisb-org-agenda-main-file)
+                   "* TODO [#E] Review subscription/newsletter email: [[%L][\"%:subject\"]] %? :email:inbox:%^g
 
-    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-tree-mode"))))
-    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
-    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))))
+From %:from
+To: %:to\n"
+                   :immediate-finish t
+                   :empty-lines 1)
+                 'append)
+
+    (cl-loop for mode in  '("notmuch-tree-mode"
+                            "notmuch-search-mode"
+                            "notmuch-show-mode")
+             do (add-to-list 'org-capture-templates-contexts `("e" ((in-mode . ,mode))))
+             do (add-to-list 'org-capture-templates-contexts `("n" ((in-mode . ,mode)))))))
 
 ;;;; Mode line indicator
 ;; Try using display-time's built-in email indicator --- less informative but
