@@ -175,7 +175,10 @@ set (i.e., OPERATION is \\='set)."
             . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
   (vertico-multiform-commands
    '((pdf-view-goto-label (vertico-sort-function . nil))
-     (".+-history" (vertico-sort-function . nil))))
+     (".+-history" (vertico-sort-function . nil))
+     ("^org-node-"
+      (completion-styles . (orderless))
+      (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal)))))
   :config
   (vertico-multiform-mode 1))
 
