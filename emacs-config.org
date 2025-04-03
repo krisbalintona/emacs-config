@@ -1025,6 +1025,7 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
   ;;; Minibuffer.el
   (use-package minibuffer
     :ensure nil
+    :hook (after-init . krisb-completion-styles-setup)
     :custom
     (completion-cycle-threshold nil)
     (completion-lazy-hilit t)             ; Lazy highlighting; added Emacs 30.1
@@ -1077,17 +1078,19 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
     (completion-category-overrides
      '((file (styles . (basic partial-completion flex))) ; Include `partial-completion' to enable wildcards and partial paths.
        (citar-candidate (styles basic substring flex))))
-
-    ;; I do this manually here because the final styles I want depends on the
-    ;; packages I want enabled, and so setting this within each use-package,
-    ;; independently of other use-packages, means I have to make sure various
-    ;; packages are loaded after other ones so my `completion-styles' setting isn't
-    ;; overridden in an undesirable way.  Instead, I opt to just set it finally
-    ;; after all those packages are set.
-    (completion-styles (list (if (featurep 'orderless)
-                                 'orderless 'basic)
-                             (if (featurep 'hotfuzz)
-                                 'hotfuzz 'flex))))
+    :config
+    (defun krisb-completion-styles-setup ()
+      "Set up `completion-styes'."
+      ;; I do this manually last because the final styles I want depend on the
+      ;; packages I want enabled, and so setting this within each use-package,
+      ;; independently of other use-packages, means I have to make sure various
+      ;; packages are loaded after other ones so my `completion-styles' setting
+      ;; isn't overridden in an undesirable way.  Instead, I opt to just set it
+      ;; finally after all those packages are set.
+      (setopt completion-styles (list (if (featurep 'orderless)
+                                          'orderless 'basic)
+                                      (if (featurep 'hotfuzz)
+                                          'hotfuzz 'flex)))))
 
   ;;; Completion-preview
   (use-package completion-preview
