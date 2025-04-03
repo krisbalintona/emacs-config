@@ -189,6 +189,22 @@
       "* (%<%c>)%?\n\n"
       :tree-type (year quarter month)
       :jump-to-captured t
+      :immediate-finish t)
+     ("b" "Blog post" plain
+      (function (lambda ()
+                  (let ((org-node-ask-directory krisb-blog-directory))
+                    (org-node-capture-target))))
+      "#+filetags: :__draft:
+#+hugo_bundle:
+#+export_file_name: index
+#+hugo_tags:
+#+hugo_categories:
+#+hugo_publishdate:
+#+hugo_lastmod:
+#+hugo_custom_front_matter: :TableOfContents true
+#+hugo_draft: true
+#+hugo_paired_shortcodes:\n\n%?"
+      :jump-to-captured t
       :immediate-finish t)))
   (org-capture-use-agenda-date t)       ; Use the time-at-point if any
 
