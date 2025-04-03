@@ -95,9 +95,14 @@
   :ensure nil
   :after message
   :custom
-  (message-signature-separator (format "^%s *$" (read krisb-signature-separator)))
   (message-signature #'krisb-signature-select)
   :config
+  ;; TODO 2025-04-03: For some reason using `krisb-signature-separator' in
+  ;; :custom causes a startup warning about the variable not being
+  ;; defined... I'm not sure why, so a workaround is to set
+  ;; `message-signature-separator' in :config.
+  (setopt message-signature-separator (format "^%s *$" (read krisb-signature-separator)))
+  
   (with-eval-after-load 'mu4e
     (setq mu4e-contexts
           `(,(make-mu4e-context
