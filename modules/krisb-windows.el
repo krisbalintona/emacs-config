@@ -188,28 +188,34 @@
   :config
   (pinching-margins-mode 1))
 
-;;; Activities
-(use-package activities
-  :pin gnu-elpa-devel
-  :hook (kill-emacs . activities-save-all)
-  :bind (("C-c a d" . activities-define)
-         ("C-c a n" . activities-new)
-         ("C-c a a" . activities-resume)
-         ("C-c a g" . activities-revert)
-         ("C-c a r" . activities-rename)
-         ("C-c a D" . activities-discard)
-         ("C-c a b" . activities-switch-buffer)
-         ("C-c a B" . activities-switch)
-         ("C-c a s" . activities-suspend)
-         ("C-c a k" . activities-kill)
-         ("C-c a l" . activities-list))
-  :custom
-  (activities-kill-buffers t)
-  (activities-bookmark-store nil)
-  (activities-bookmark-warnings t)
-  :config
-  (activities-mode 1)
-  (activities-tabs-mode 1))
+;;; Window-x
+;; Awesome new window moving commands in Emacs 31.1 that took the former role of
+;; transpose-frame.el.  See for more information about the commands themselves
+;; as well as a little background on the development challenges that overcome to
+;; make these commands possible:
+;; https://p.bauherren.ovh/blog/tech/new_window_cmds.
+(use-package window-x
+  :ensure nil
+  :bind ( :map window-prefix-map
+          ("t" . transpose-window-layout) ; Diagonal reflection
+          ;; Rotate window layout
+          ("r" . rotate-window-layout-clockwise)
+          ("R" . rotate-window-layout-counterclockwise)
+          ;; Flipping
+          ("f" . flip-window-layout-horizontally)
+          ("F" . flip-window-layout-vertically)
+          ;; Rotate buffers (keep window placements)
+          ("c" . rotate-windows)
+          ("C" . rotate-windows-back)
+          ;; Repeat-mode map
+          :repeat-map krisb-window-x-repeat-map
+          ("t" . transpose-window-layout) ; Diagonal reflection
+          ("r" . rotate-window-layout-clockwise)
+          ("R" . rotate-window-layout-counterclockwise)
+          ("f" . flip-window-layout-horizontally)
+          ("F" . flip-window-layout-vertically)
+          ("c" . rotate-windows)
+          ("C" . rotate-windows-back)))
 
 ;;;; Display-buffer-alist
 (with-eval-after-load 'window
