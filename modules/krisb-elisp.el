@@ -191,5 +191,12 @@
 ;; Insert license headers for emacs-lisp files.
 (use-package lice)
 
+;;;;; Mode-minder
+;; Visually represent the hierarchy of major mode inheritance via
+;; tabulated-list-mode.
+(use-package mode-minder
+  :vc ( :url "https://github.com/jdtsmith/mode-minder.git"
+        :rev :newest))
+
 ;;; Provide
 (provide 'krisb-elisp)
