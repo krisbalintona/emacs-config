@@ -83,6 +83,8 @@
 ;;;; Pdf-annot
 (use-package pdf-annot
   :ensure nil
+  :after pdf-view
+  :demand t
   :hook ((pdf-annot-list-mode . (lambda () (hl-line-mode -1)))
          (pdf-annot-list-mode . krisb-pdf-annot--setup-context-window-display-action))
   :custom
