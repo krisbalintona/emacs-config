@@ -378,12 +378,13 @@ Examples:
     (org-set-property "ROAM_TYPE" place)
     (message "ROAM_TYPE set to: %s" place)))
 
-(defun krisb-org-roam-ext-set-roam-exclude ()
-  "Set the ROAM_EXCLUDE property in the current heading."
+(defun krisb-org-roam-ext-toggle-roam-exclude ()
+  "Toggle the ROAM_EXCLUDE property in the current heading."
   (interactive)
-  (let ((place (org-read-property-value "ROAM_EXCLUDE")))
-    (org-set-property "ROAM_EXCLUDE" place)
-    (message "ROAM_EXCLUDE set to: %s" place)))
+  (org-entry-put nil "ROAM_EXCLUDE"
+                 (pcase (org-entry-get nil "ROAM_EXCLUDE" nil t)
+                   ("t" "nil")
+                   ("nil" "t"))))
 
 (defun krisb-org-roam-ext-set-roam-box ()
   "Set the ROAM_BOX property in the current heading."
@@ -448,7 +449,7 @@ property propertized and appended within parentheses.
 If DESC-ALT is provided, use that string instead as the base string when
 there exists a value for the property named PROP-NAME."
   `(lambda ()
-     (let ((prop (org-entry-get (point) ,prop-name)))
+     (let ((prop (org-entry-get (point) ,prop-name nil t)))
        (concat (if (and prop ,desc-alt)
                    ,desc-alt
                  ,desc)
@@ -459,21 +460,26 @@ there exists a value for the property named PROP-NAME."
 
 (transient-define-prefix krisb-org-roam-ext-properties-transient ()
   "Transient menu for setting org-roam properties."
-  ["Properties"
-   ["Generic"
-    (org-id-get-create
-     :key "a"
+  ["Generic properties"
+   (org-id-get-create
+    :key "a"
+    :transient t
+    :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Add ID" "ID" "Modify ID"))
+   (org-expiry-insert-created
+    :key "C"
+    :transient t
+    :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Add CREATED" "CREATED"))]
+  ["Roam-specific properties"
+   ["All nodes"
+    (krisb-org-roam-ext-toggle-roam-exclude
+     :key "e"
      :transient t
-     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Add ID" "ID" "Modify ID"))
-    (org-expiry-insert-created
-     :key "C"
-     :transient t
-     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Add CREATED" "CREATED"))]
-   ["Roam-specific"
+     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Toggle ROAM_EXCLUDE" "ROAM_EXCLUDE"))
     (krisb-org-roam-ext-set-roam-box
      :key "b"
      :transient t
-     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_BOX" "ROAM_BOX"))
+     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_BOX" "ROAM_BOX"))]
+   ["Main nodes"
     (krisb-org-roam-ext-set-roam-type
      :key "t"
      :transient t
@@ -493,11 +499,7 @@ there exists a value for the property named PROP-NAME."
     (krisb-org-roam-ext-set-roam-place
      :key "p"
      :transient t
-     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))
-    (krisb-org-roam-ext-set-roam-exclude
-     :key "e"
-     :transient t
-     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_EXCLUDE" "ROAM_EXCLUDE"))]]
+     :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_PLACE" "ROAM_PLACE"))]]
   [["Navigation"
     ("C-u" "Up heading" org-up-heading :transient t)
     ("C-p" "Next heading" org-previous-visible-heading :transient t)
