@@ -33,11 +33,7 @@
   (notmuch-hello-thousands-separator ",")
   (notmuch-show-all-tags-list t)
 
-  ;; Searches
-  ;; See `man' for mbsync and notmuch to see valid search terms. See
-  ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
-  ;; via cli
-  (notmuch-search-hide-excluded t)
+  ;; Notmuch-searches
   (notmuch-saved-searches
    '((:name "inbox"                 :query "tag:inbox and not tag:list" :sort-order oldest-first :key "i")
      (:name "to-read mailing lists" :query "tag:list and tag:inbox "    :sort-order oldest-first :key "l")
@@ -47,6 +43,10 @@
      (:name "archived"              :query "not tag:trash"                                       :key "a")
      (:name "all"                   :query "path:**"                                             :key "A")
      (:name "trash"                 :query "tag:trash"                                           :key "t")))
+  ;; See `man' for mbsync and notmuch to see valid search terms. See
+  ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
+  ;; via cli
+  (notmuch-search-hide-excluded t)
   (notmuch-show-empty-saved-searches t)
   (notmuch-search-oldest-first nil)
   (notmuch-search-result-format '(("date" . "%14s ")
@@ -267,11 +267,14 @@ To: %:to\n"
                    :empty-lines 1)
                  'append)
 
-    (cl-loop for mode in  '("notmuch-tree-mode"
-                            "notmuch-search-mode"
-                            "notmuch-show-mode")
-             do (add-to-list 'org-capture-templates-contexts `("e" ((in-mode . ,mode))))
-             do (add-to-list 'org-capture-templates-contexts `("n" ((in-mode . ,mode)))))))
+    ;; Using `dolist' or `cl-loop' will not work as expected... you'll need to
+    ;; (copy-sequence ...) the shared objects, making those forms not elegant
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-tree-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("n" ((in-mode . "notmuch-tree-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("n" ((in-mode . "notmuch-search-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))
+    (add-to-list 'org-capture-templates-contexts '("n" ((in-mode . "notmuch-show-mode"))))))
 
 ;;;; Mode line indicator
 ;; Try using display-time's built-in email indicator --- less informative but
