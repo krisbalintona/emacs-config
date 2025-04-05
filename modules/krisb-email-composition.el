@@ -102,7 +102,7 @@
   ;; defined... I'm not sure why, so a workaround is to set
   ;; `message-signature-separator' in :config.
   (setopt message-signature-separator (format "^%s *$" (read krisb-signature-separator)))
-  
+
   (with-eval-after-load 'mu4e
     (setq mu4e-contexts
           `(,(make-mu4e-context

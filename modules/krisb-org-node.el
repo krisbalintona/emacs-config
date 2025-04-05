@@ -148,7 +148,7 @@ For use as `org-node-affixation-fn'."
   :config
   (indexed-updater-mode 1)
   (indexed-roam-mode 1) ; 2025-04-02: This is required for collecting ROAM_REFS information
-  
+
   ;; NOTE 2025-03-23: Not enabled for now because I do not use it and it is in
   ;; flux, so I may enable in the future when it is more stable and finalized.
   ;; (indexed-orgdb-mode 1)

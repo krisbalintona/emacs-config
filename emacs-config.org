@@ -4,9 +4,158 @@
 #+language: en
 #+options: num:t author:t email:t
 
+* Table of contents
+:PROPERTIES:
+:TOC:      :include all :force (nothing) :ignore (this) :local (nothing)
+:VISIBILITY: folded
+:END:
+
+:CONTENTS:
+- [[#emacs-build][Emacs build]]
+- [[#initialization][Initialization]]
+  - [[#early-initel][early-init.el]]
+    - [[#garbage-collection][Garbage collection]]
+    - [[#native-compilation][Native compilation]]
+    - [[#runtime-optimizations][Runtime optimizations]]
+      - [[#doom-emacs-suggestions][Doom Emacs' suggestions]]
+      - [[#other-optimizations][Other optimizations]]
+    - [[#buffer-encoding][Buffer encoding]]
+    - [[#graphical-elements][Graphical elements]]
+  - [[#initel][init.el]]
+    - [[#add-modules-and-bespoke-libraries-to-load-path][Add modules and bespoke libraries to load-path]]
+    - [[#load-libraries][Load libraries]]
+    - [[#load-modules][Load modules]]
+- [[#modules][Modules]]
+  - [[#base][Base]]
+    - [[#krisb-garbage-collectionel][krisb-garbage-collection.el]]
+    - [[#krisb-system-envel][krisb-system-env.el]]
+    - [[#krisb-coreel][krisb-core.el]]
+      - [[#package-management-and-configuration][Package management and configuration]]
+      - [[#other][Other]]
+      - [[#el-patch][el-patch]]
+      - [[#asyncel][async.el]]
+      - [[#enlight][enlight]]
+      - [[#provide][Provide]]
+    - [[#krisb-essentialsel][krisb-essentials.el]]
+      - [[#preamble][Preamble]]
+      - [[#initial-scratch-buffer][Initial scratch buffer]]
+      - [[#customize-and-customize-buffers][Customize and customize buffers]]
+      - [[#scrolling-behavior][Scrolling behavior]]
+      - [[#recognizing-m-spc-under-wslg][Recognizing M-SPC under WSLg]]
+      - [[#commands][Commands]]
+      - [[#minor-modes][Minor modes]]
+      - [[#miscellaneous][Miscellaneous]]
+      - [[#provide-0][Provide]]
+    - [[#krisb-iconsel][krisb-icons.el]]
+    - [[#krisb-completionel][krisb-completion.el]]
+      - [[#built-in][Built-in]]
+      - [[#completion][Completion]]
+        - [[#minibuffer][Minibuffer]]
+        - [[#inline][Inline]]
+      - [[#accessory-packages][Accessory packages]]
+      - [[#provide-1][Provide]]
+    - [[#krisb-saving-stateel][krisb-saving-state.el]]
+    - [[#krisb-persistenceel][krisb-persistence.el]]
+      - [[#persistent-sessions][Persistent sessions]]
+      - [[#provide-2][Provide]]
+    - [[#krisb-windowsel][krisb-windows.el]]
+      - [[#setting-display-buffer-alist][Setting display-buffer-alist]]
+      - [[#provide-3][Provide]]
+    - [[#krisb-buffersel][krisb-buffers.el]]
+    - [[#krisb-expansionel][krisb-expansion.el]]
+    - [[#krisb-formattingel][krisb-formatting.el]]
+  - [[#appearance][Appearance]]
+    - [[#krisb-themesel][krisb-themes.el]]
+    - [[#krisb-fontsel][krisb-fonts.el]]
+    - [[#krisb-mode-lineel][krisb-mode-line.el]]
+  - [[#navigation][Navigation]]
+    - [[#krisb-alternative-editing-schemesel][krisb-alternative-editing-schemes.el]]
+    - [[#krisb-navigationel][krisb-navigation.el]]
+  - [[#writing-and-reading][Writing and reading]]
+    - [[#krisb-proseel][krisb-prose.el]]
+      - [[#environment][Environment]]
+      - [[#spell-checking][Spell checking]]
+      - [[#grammar][Grammar]]
+      - [[#other-0][Other]]
+      - [[#provide-4][Provide]]
+    - [[#krisb-orgel][krisb-org.el]]
+      - [[#base-0][Base]]
+      - [[#extras][Extras]]
+      - [[#provide-5][Provide]]
+    - [[#krisb-org-exportel][krisb-org-export.el]]
+    - [[#krisb-markdownel][krisb-markdown.el]]
+    - [[#krisb-flymakeel][krisb-flymake.el]]
+    - [[#krisb-spellingel][krisb-spelling.el]]
+    - [[#note-taking][Note-taking]]
+      - [[#krisb-denoteel][krisb-denote.el]]
+      - [[#krisb-org-roamel][krisb-org-roam.el]]
+      - [[#krisb-org-nodeel][krisb-org-node.el]]
+      - [[#krisb-web-annotationsel][krisb-web-annotations.el]]
+      - [[#krisb-citationsel][krisb-citations.el]]
+      - [[#krisb-pdfsel][krisb-pdfs.el]]
+      - [[#krisb-epubel][krisb-epub.el]]
+      - [[#krisb-videosel][krisb-videos.el]]
+    - [[#todos][Todos]]
+      - [[#krisb-org-agendael][krisb-org-agenda.el]]
+        - [[#org-agenda-and-org-super-agenda][Org-agenda and org-super-agenda]]
+      - [[#friends-of-org-agenda][Friends of org-agenda]]
+      - [[#provide-6][Provide]]
+    - [[#blogging][Blogging]]
+      - [[#krisb-hugoel][krisb-hugo.el]]
+      - [[#krisb-mermaidel][krisb-mermaid.el]]
+  - [[#email][Email]]
+    - [[#composition][Composition]]
+    - [[#notmuch][Notmuch]]
+      - [[#notmuch-0][Notmuch]]
+      - [[#accessories][Accessories]]
+      - [[#provide-7][Provide]]
+  - [[#programming][Programming]]
+    - [[#krisb-programming-essentialsel][krisb-programming-essentials.el]]
+    - [[#krisb-treesitel][krisb-treesit.el]]
+    - [[#krisb-vcel][krisb-vc.el]]
+    - [[#krisb-shellel][krisb-shell.el]]
+      - [[#general][General]]
+      - [[#eshell][Eshell]]
+      - [[#fish][Fish]]
+      - [[#eat][EAT]]
+      - [[#provide-8][Provide]]
+    - [[#krisb-projectsel][krisb-projects.el]]
+    - [[#krisb-infoel][krisb-info.el]]
+    - [[#krisb-elispel][krisb-elisp.el]]
+      - [[#package-authorship][Package authorship]]
+    - [[#krisb-foldingel][krisb-folding.el]]
+    - [[#krisb-other-languagesel][krisb-other-languages.el]]
+  - [[#other-1][Other]]
+    - [[#krisb-webel][krisb-web.el]]
+    - [[#krisb-directoriesel][krisb-directories.el]]
+- [[#lisp-libraries][Lisp (libraries)]]
+  - [[#krisb-commonel][krisb-common.el]]
+  - [[#krisb-themes-extel][krisb-themes-ext.el]]
+  - [[#krisb-indentationel][krisb-indentation.el]]
+  - [[#krisb-verticoel][krisb-vertico.el]]
+  - [[#krisb-consult-extel][krisb-consult-ext.el]]
+  - [[#krisb-org-extel][krisb-org-ext.el]]
+  - [[#krisb-denote-extel][krisb-denote-ext.el]]
+  - [[#krisb-org-roam-extel][krisb-org-roam-ext.el]]
+  - [[#krisb-org-remark-extel][krisb-org-remark-ext.el]]
+  - [[#krisb-pdfs-extel][krisb-pdfs-ext.el]]
+  - [[#krisb-wombag-extel][krisb-wombag-ext.el]]
+  - [[#krisb-mpvel][krisb-mpv.el]]
+  - [[#krisb-email-composition-extel][krisb-email-composition-ext.el]]
+  - [[#krisb-notmuch-extel][krisb-notmuch-ext.el]]
+  - [[#krisb-ox-hugo-extel][krisb-ox-hugo-ext.el]]
+  - [[#krisb-oblique-strategiesel][krisb-oblique-strategies.el]]
+  - [[#krisb-auto-completionel][krisb-auto-completion.el]]
+  - [[#packages][Packages]]
+    - [[#pinching-marginsel][pinching-margins.el]]
+    - [[#krisb-revealel][krisb-reveal.el]]
+    - [[#dungeons-and-dragonsel][dungeons-and-dragons.el]]
+:END:
+
 * Emacs build
 :PROPERTIES:
 :VISIBILITY: folded
+:CUSTOM_ID: emacs-build
 :END:
 
 The following are the flags I prefer to compile Emacs with.
@@ -20,13 +169,20 @@ The following are the flags I prefer to compile Emacs with.
 * Initialization
 :PROPERTIES:
 :VISIBILITY: children
+:CUSTOM_ID: initialization
 :END:
 
 ** =early-init.el=
+:PROPERTIES:
+:CUSTOM_ID: early-initel
+:END:
 
 Emacs 27 introduces =early-init.el=, which runs before init.el, before package and UI initialization happens.
 
 *** Garbage collection
+:PROPERTIES:
+:CUSTOM_ID: garbage-collection
+:END:
 
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;; Defer garbage collection
@@ -34,6 +190,9 @@ Emacs 27 introduces =early-init.el=, which runs before init.el, before package a
 #+end_src
 
 *** Native compilation
+:PROPERTIES:
+:CUSTOM_ID: native-compilation
+:END:
 
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;;; Native-compilations settings
@@ -54,8 +213,14 @@ Emacs 27 introduces =early-init.el=, which runs before init.el, before package a
 #+end_src
 
 *** Runtime optimizations
+:PROPERTIES:
+:CUSTOM_ID: runtime-optimizations
+:END:
 
 **** Doom Emacs' suggestions
+:PROPERTIES:
+:CUSTOM_ID: doom-emacs-suggestions
+:END:
 
 All the settings below come from Doom Emacs, whose developers have the know-how for smartly increasing startup performance.
 #+begin_src emacs-lisp :tangle "early-init.el"
@@ -95,6 +260,9 @@ All the settings below come from Doom Emacs, whose developers have the know-how 
 #+end_src
 
 **** Other optimizations
+:PROPERTIES:
+:CUSTOM_ID: other-optimizations
+:END:
 
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;; NOTE 2024-09-13: Suggested by "minimal emacs." By default, Emacs "updates"
@@ -107,6 +275,9 @@ All the settings below come from Doom Emacs, whose developers have the know-how 
 #+end_src
 
 *** Buffer encoding
+:PROPERTIES:
+:CUSTOM_ID: buffer-encoding
+:END:
 
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;; NOTE 2024-10-03: From Doom Emacs.
@@ -119,6 +290,9 @@ All the settings below come from Doom Emacs, whose developers have the know-how 
 #+end_src
 
 *** Graphical elements
+:PROPERTIES:
+:CUSTOM_ID: graphical-elements
+:END:
 
 This sets the default graphical element settings used by every frame.
 #+begin_src emacs-lisp :tangle "early-init.el"
@@ -152,8 +326,14 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 ** =init.el=
+:PROPERTIES:
+:CUSTOM_ID: initel
+:END:
 
 *** Add modules and bespoke libraries to ~load-path~
+:PROPERTIES:
+:CUSTOM_ID: add-modules-and-bespoke-libraries-to-load-path
+:END:
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Add modules and lisp to load path
@@ -163,6 +343,9 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 *** Load libraries
+:PROPERTIES:
+:CUSTOM_ID: load-libraries
+:END:
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Load libraries
@@ -170,6 +353,9 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 *** Load modules
+:PROPERTIES:
+:CUSTOM_ID: load-modules
+:END:
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;;; Modules
@@ -239,11 +425,18 @@ This sets the default graphical element settings used by every frame.
 * Modules
 :PROPERTIES:
 :VISIBILITY: children
+:CUSTOM_ID: modules
 :END:
 
 ** Base
+:PROPERTIES:
+:CUSTOM_ID: base
+:END:
 
 *** =krisb-garbage-collection.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-garbage-collectionel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-garbage-collection.el"
   ;; NOTE 2024-02-11: Please reference https://emacsconf.org/2023/talks/gc/ for a
@@ -321,6 +514,9 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 *** =krisb-system-env.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-system-envel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-system-env.el"
   ;;; Exec-path-from-shell
@@ -350,8 +546,14 @@ This sets the default graphical element settings used by every frame.
 #+end_src
 
 *** =krisb-core.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-coreel
+:END:
 
 **** Package management and configuration
+:PROPERTIES:
+:CUSTOM_ID: package-management-and-configuration
+:END:
 
 I use =package.el=. =Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:2]
 
@@ -402,6 +604,9 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** Other
+:PROPERTIES:
+:CUSTOM_ID: other
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"
   ;; Set better default package paths
@@ -470,6 +675,9 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** =el-patch=
+:PROPERTIES:
+:CUSTOM_ID: el-patch
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"
   ;;; El-patch
@@ -477,6 +685,9 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** =async.el=
+:PROPERTIES:
+:CUSTOM_ID: asyncel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"
    ;;; Async.el
@@ -489,6 +700,9 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** =enlight=
+:PROPERTIES:
+:CUSTOM_ID: enlight
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"
   ;;; Enlight
@@ -545,6 +759,9 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"
   ;;; Provide
@@ -552,8 +769,14 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 *** =krisb-essentials.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-essentialsel
+:END:
 
 **** Preamble
+:PROPERTIES:
+:CUSTOM_ID: preamble
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; krisb-essentials.el --- Essential Emacs-wide settings  -*- lexical-binding: t; -*-
@@ -584,6 +807,9 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** Initial scratch buffer
+:PROPERTIES:
+:CUSTOM_ID: initial-scratch-buffer
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Set initial scratch buffer major mode and message
@@ -594,6 +820,9 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 #+end_src
 
 **** Customize and customize buffers
+:PROPERTIES:
+:CUSTOM_ID: customize-and-customize-buffers
+:END:
 
 =Custom= is a built-in way to modify user options, face attributes, and more. ~customize-group~ is an exceptionally good way to discover the options a package provides.[fn:1] Customize buffers are also very mouse friendly (Sometimes it's better to use the mouse!).
 
@@ -615,6 +844,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 [fn:1] This is because the =:group= keyword is available and customarily used by package authors.
 
 **** Scrolling behavior
+:PROPERTIES:
+:CUSTOM_ID: scrolling-behavior
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Scrolling
@@ -645,6 +877,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+end_src
 
 **** Recognizing =M-SPC= under WSLg
+:PROPERTIES:
+:CUSTOM_ID: recognizing-m-spc-under-wslg
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Recognizing `M-SPC' under WSLg
@@ -658,6 +893,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+end_src
 
 **** Commands
+:PROPERTIES:
+:CUSTOM_ID: commands
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Commands
@@ -792,6 +1030,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+end_src
 
 **** Minor modes
+:PROPERTIES:
+:CUSTOM_ID: minor-modes
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Minor modes
@@ -854,6 +1095,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+end_src
 
 **** Miscellaneous
+:PROPERTIES:
+:CUSTOM_ID: miscellaneous
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; Miscellaneous
@@ -1000,6 +1244,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-0
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
   ;;; krisb-essentials.el ends here
@@ -1007,6 +1254,9 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 #+end_src
 
 *** =krisb-icons.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-iconsel
+:END:
 
 Where I set global options for icon libraries. I currently (as of 2024-10-21) prefer the Nerd Icons.
 #+begin_src emacs-lisp :tangle "modules/krisb-icons.el"
@@ -1025,8 +1275,14 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 #+end_src
 
 *** =krisb-completion.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-completionel
+:END:
 
 **** Built-in
+:PROPERTIES:
+:CUSTOM_ID: built-in
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Minibuffer.el
@@ -1168,8 +1424,14 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 #+end_src
 
 **** Completion
+:PROPERTIES:
+:CUSTOM_ID: completion
+:END:
 
 ***** Minibuffer
+:PROPERTIES:
+:CUSTOM_ID: minibuffer
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Vertico
@@ -1255,6 +1517,9 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 #+end_src
 
 ***** Inline
+:PROPERTIES:
+:CUSTOM_ID: inline
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Corfu
@@ -1566,6 +1831,9 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 #+end_src
 
 **** Accessory packages
+:PROPERTIES:
+:CUSTOM_ID: accessory-packages
+:END:
 
 Enhancements to all built-in-based completions.
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
@@ -1664,6 +1932,9 @@ Enhancements to all built-in-based completions.
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-1
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
   ;;; Provide
@@ -1671,6 +1942,9 @@ Enhancements to all built-in-based completions.
 #+end_src
 
 *** =krisb-saving-state.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-saving-stateel
+:END:
 
 Configuration related to "saving a state," that is, storing or restoring anything about the point, window configuration, file, buffer, et cetera.
 #+begin_src emacs-lisp :tangle "modules/krisb-saving-state.el"
@@ -1794,6 +2068,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-persistence.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-persistenceel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
   ;;; Savehist
@@ -1860,6 +2137,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** Persistent sessions
+:PROPERTIES:
+:CUSTOM_ID: persistent-sessions
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
   ;;; Persistent desktops
@@ -1982,6 +2262,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-2
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
   ;;; Provide
@@ -1989,6 +2272,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-windows.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-windowsel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-windows.el"
   ;;; Window
@@ -2212,6 +2498,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** Setting =display-buffer-alist=
+:PROPERTIES:
+:CUSTOM_ID: setting-display-buffer-alist
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-windows.el"
   ;;;; Display-buffer-alist
@@ -2315,6 +2604,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-3
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-windows.el"
   ;;; Provide
@@ -2322,6 +2614,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-buffers.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-buffersel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-buffers.el"
   ;;; Bufler
@@ -2484,6 +2779,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-expansion.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-expansionel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-expansion.el"
   ;;; Abbrev
@@ -2551,6 +2849,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-formatting.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-formattingel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-formatting.el"
   ;;; Apheleia
@@ -2649,8 +2950,14 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 ** Appearance
+:PROPERTIES:
+:CUSTOM_ID: appearance
+:END:
 
 *** =krisb-themes.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-themesel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-themes.el"
   (require 'color)
@@ -2838,6 +3145,9 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 #+end_src
 
 *** =krisb-fonts.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-fontsel
+:END:
 
 This section is for setting up fonts as well as how they appear.
 
@@ -3038,6 +3348,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-mode-line.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-mode-lineel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-mode-line.el"
   ;;; Hide-mode-line
@@ -3121,8 +3434,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 ** Navigation
+:PROPERTIES:
+:CUSTOM_ID: navigation
+:END:
 
 *** =krisb-alternative-editing-schemes.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-alternative-editing-schemesel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-alternative-editing-schemes.el"
   ;;; Puni
@@ -3318,6 +3637,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-navigation.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-navigationel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-navigation.el"
   ;;; Consult
@@ -3688,10 +4010,19 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 ** Writing and reading
+:PROPERTIES:
+:CUSTOM_ID: writing-and-reading
+:END:
 
 *** =krisb-prose.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-proseel
+:END:
 
 **** Environment
+:PROPERTIES:
+:CUSTOM_ID: environment
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Environment
@@ -4119,6 +4450,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Spell checking
+:PROPERTIES:
+:CUSTOM_ID: spell-checking
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Spell checking
@@ -4215,6 +4549,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Grammar
+:PROPERTIES:
+:CUSTOM_ID: grammar
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Grammar
@@ -4239,6 +4576,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Other
+:PROPERTIES:
+:CUSTOM_ID: other-0
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Other
@@ -4251,6 +4591,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-4
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
   ;;; Provide
@@ -4258,8 +4601,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-org.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-orgel
+:END:
 
 **** Base
+:PROPERTIES:
+:CUSTOM_ID: base-0
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
   ;;; Built-in
@@ -4461,6 +4810,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Extras
+:PROPERTIES:
+:CUSTOM_ID: extras
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
   ;;; Org-contrib
@@ -4590,10 +4942,12 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
             ("h" . org-hide-drawers-transient))
     :custom
     (org-hide-drawers-hide-top-level-properties-drawer nil)
-    (org-hide-drawers-keep-visible-properties '("CUSTOM_ID" "ID"))
+    (org-hide-drawers-keep-visible-properties
+     '("CUSTOM_ID" "ID"
+       "TOC"))                            ; For org-make-toc
     (org-hide-drawers-keep-visible-properties-ignore-case-p t)
     (org-hide-drawers-keep-visible-drawers
-     '("CONTENTS"))                       ; Org-make-toc contents drawer
+     '("CONTENTS"))                       ; For org-make-toc
     (org-hide-drawers-keep-visible-drawers-ignore-case-p t)
     :config
     (require 'transient)
@@ -4612,6 +4966,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-5
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
   ;;; Provide
@@ -4619,6 +4976,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-org-export.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-org-exportel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-export.el"
   ;;; Ox (org-export)
@@ -4676,6 +5036,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-markdown.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-markdownel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-markdown.el"
   ;;; Markdown-mode
@@ -4688,6 +5051,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-flymake.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-flymakeel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-flymake.el"
   ;;; Flymake
@@ -4779,6 +5145,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-spelling.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-spellingel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-spelling.el"
   ;;; Online
@@ -4834,8 +5203,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** Note-taking
+:PROPERTIES:
+:CUSTOM_ID: note-taking
+:END:
 
 **** =krisb-denote.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-denoteel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-denote.el"
   ;;; Denote
@@ -5100,6 +5475,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-org-roam.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-org-roamel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-roam.el"
   ;; -*- lexical-binding: t; -*-
@@ -5429,6 +5807,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-org-node.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-org-nodeel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-node.el"
   ;;; Org-node
@@ -5581,7 +5962,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     :config
     (indexed-updater-mode 1)
     (indexed-roam-mode 1) ; 2025-04-02: This is required for collecting ROAM_REFS information
-    
+
     ;; NOTE 2025-03-23: Not enabled for now because I do not use it and it is in
     ;; flux, so I may enable in the future when it is more stable and finalized.
     ;; (indexed-orgdb-mode 1)
@@ -5596,6 +5977,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-web-annotations.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-web-annotationsel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-web-annotations.el"
   ;;; Org-remark
@@ -5682,6 +6066,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-citations.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-citationsel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-citations.el"
   ;;; Oc (org-cite)
@@ -5783,6 +6170,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-pdfs.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-pdfsel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-pdfs.el"
   ;;; Doc-view
@@ -5932,6 +6322,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-epub.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-epubel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-epub.el"
   ;;; Nov-mode
@@ -5945,6 +6338,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-videos.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-videosel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-videos.el"
   ;;; MPV
@@ -6004,8 +6400,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** Todos
+:PROPERTIES:
+:CUSTOM_ID: todos
+:END:
 
 **** =krisb-org-agenda.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-org-agendael
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
   ;;; Calendar
@@ -6084,6 +6486,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 ***** =Org-agenda= and =org-super-agenda=
+:PROPERTIES:
+:CUSTOM_ID: org-agenda-and-org-super-agenda
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
   ;;; Org-agenda
@@ -6622,6 +7027,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Friends of =org-agenda=
+:PROPERTIES:
+:CUSTOM_ID: friends-of-org-agenda
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
   ;;; Org-clock
@@ -6864,6 +7272,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-6
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
   ;;; Provide
@@ -6871,8 +7282,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** Blogging
+:PROPERTIES:
+:CUSTOM_ID: blogging
+:END:
 
 **** =krisb-hugo.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-hugoel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-hugo.el"
   ;;; Ox-hugo
@@ -6919,6 +7336,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** =krisb-mermaid.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-mermaidel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-mermaid.el"
   ;;; Mermaid-mode
@@ -6939,8 +7359,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 ** Email
+:PROPERTIES:
+:CUSTOM_ID: email
+:END:
 
 *** Composition
+:PROPERTIES:
+:CUSTOM_ID: composition
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-email-composition.el"
   ;;; Composition
@@ -7047,7 +7473,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     ;; defined... I'm not sure why, so a workaround is to set
     ;; `message-signature-separator' in :config.
     (setopt message-signature-separator (format "^%s *$" (read krisb-signature-separator)))
-    
+
     (with-eval-after-load 'mu4e
       (setq mu4e-contexts
             `(,(make-mu4e-context
@@ -7416,8 +7842,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** Notmuch
+:PROPERTIES:
+:CUSTOM_ID: notmuch
+:END:
 
 **** Notmuch
+:PROPERTIES:
+:CUSTOM_ID: notmuch-0
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-notmuch.el"
   ;;;; Notmuch
@@ -7614,6 +8046,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Accessories
+:PROPERTIES:
+:CUSTOM_ID: accessories
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-notmuch.el"
   ;;;; Notmuch-transient
@@ -7773,6 +8208,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-7
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-notmuch.el"
   ;;; Provide
@@ -7780,8 +8218,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 ** Programming
+:PROPERTIES:
+:CUSTOM_ID: programming
+:END:
 
 *** =krisb-programming-essentials.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-programming-essentialsel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-programming-essentials.el"
   ;;; Writing
@@ -7926,6 +8370,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-treesit.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-treesitel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-treesit.el"
   ;;; Treesit
@@ -7958,6 +8405,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-vc.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-vcel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-vc.el"
   ;;; Built-in
@@ -8224,8 +8674,14 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-shell.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-shellel
+:END:
 
 **** General
+:PROPERTIES:
+:CUSTOM_ID: general
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
   ;;; Shell
@@ -8280,6 +8736,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Eshell
+:PROPERTIES:
+:CUSTOM_ID: eshell
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
   ;;; Eshell
@@ -8449,6 +8908,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Fish
+:PROPERTIES:
+:CUSTOM_ID: fish
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
   ;;; Fish-mode
@@ -8457,6 +8919,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** EAT
+:PROPERTIES:
+:CUSTOM_ID: eat
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
   ;;; EAT
@@ -8483,6 +8948,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Provide
+:PROPERTIES:
+:CUSTOM_ID: provide-8
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
 
@@ -8491,6 +8959,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-projects.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-projectsel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-projects.el"
   ;;; Project
@@ -8617,6 +9088,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-info.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-infoel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-info.el"
   ;;;; Info
@@ -8640,6 +9114,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 *** =krisb-elisp.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-elispel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-elisp.el"
   ;;; Font locking
@@ -8813,6 +9290,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 #+end_src
 
 **** Package authorship
+:PROPERTIES:
+:CUSTOM_ID: package-authorship
+:END:
 
 There are several packages that end up incredibly useful for authoring packages. In addition to the packages below, we can use the scripts provided by [[https://github.com/riscy/melpazoid][riscy/melpazoid]] for packages specifically for the MELPA package archive.
 
@@ -8854,6 +9334,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 *** =krisb-folding.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-foldingel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-folding.el"
   ;;; Outline
@@ -8930,6 +9413,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 *** =krisb-other-languages.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-other-languagesel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-other-languages.el"
   ;;; Hyprlang-ts-mode
@@ -8947,8 +9433,14 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** Other
+:PROPERTIES:
+:CUSTOM_ID: other-1
+:END:
 
 *** =krisb-web.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-webel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-web.el"
   ;;; Shr
@@ -9057,6 +9549,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 *** =krisb-directories.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-directoriesel
+:END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-directories.el"
   ;;; Dired
@@ -9133,9 +9628,13 @@ There are several packages that end up incredibly useful for authoring packages.
 * Lisp (libraries)
 :PROPERTIES:
 :VISIBILITY: children
+:CUSTOM_ID: lisp-libraries
 :END:
 
 ** =krisb-common.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-commonel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-common.el"
   ;;; krisb-common.el --- Common variables, functions, macros, and more -*- lexical-binding: t; -*-
@@ -9325,6 +9824,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-themes-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-themes-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-themes-ext.el"
   ;;; krisb-themes-ext.el --- Manage switching/toggling of themes  -*- lexical-binding: t; -*-
@@ -9442,6 +9944,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-indentation.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-indentationel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-indentation.el"
   ;;; krisb-indentation.el --- Bespoke utilities for consistent indentation  -*- lexical-binding: t; -*-
@@ -9553,6 +10058,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-vertico.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-verticoel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-vertico.el"
   ;;; krisb-vertico.el --- Vertico extensions          -*- lexical-binding: t; -*-
@@ -9633,6 +10141,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-consult-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-consult-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-consult-ext.el"
   ;;; krisb-consult-ext.el --- Extensions for Consult  -*- lexical-binding: t; -*-
@@ -9716,6 +10227,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-org-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-org-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-ext.el"
   ;;; krisb-org-ext.el --- Org-mode extensions         -*- lexical-binding: t; -*-
@@ -9820,6 +10334,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-denote-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-denote-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-denote-ext.el"
   ;;; krisb-denote-ext.el --- Denote extensions        -*- lexical-binding: t; -*-
@@ -10102,6 +10619,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-org-roam-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-org-roam-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-roam-ext.el"
   ;;; krisb-org-roam-ext.el --- My bespoke org-roam extensions  -*- lexical-binding: t; -*-
@@ -10572,6 +11092,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-org-remark-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-org-remark-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-remark-ext.el"
   ;;; krisb-org-remark-ext.el --- Extensions for org-remark  -*- lexical-binding: t; -*-
@@ -10717,6 +11240,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-pdfs-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-pdfs-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-pdfs-ext.el"
   ;;; krisb-pdfs-ext.el --- pdf-view-mode extensions   -*- lexical-binding: t; -*-
@@ -11141,6 +11667,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-wombag-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-wombag-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-wombag-ext.el"
   ;;; krisb-wombag-ext.el --- Wombag extensions        -*- lexical-binding: t; -*-
@@ -11266,6 +11795,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-mpv.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-mpvel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-mpv.el"
   ;;; krisb-mpv.el --- Bespoke MPV extensions          -*- lexical-binding: t; -*-
@@ -11379,6 +11911,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-email-composition-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-email-composition-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-email-composition-ext.el"
   ;;; krisb-email-composition-ext.el --- Email composition extensions  -*- lexical-binding: t; -*-
@@ -11516,6 +12051,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-notmuch-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-notmuch-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-notmuch-ext.el"
   ;;; krisb-notmuch-ext.el --- Notmuch extensions      -*- lexical-binding: t; -*-
@@ -11796,6 +12334,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-ox-hugo-ext.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-ox-hugo-extel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-ox-hugo-ext.el"
   ;;; krisb-ox-hugo-ext.el --- Extensions to blogging with Hugo  -*- lexical-binding: t; -*-
@@ -12426,6 +12967,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-oblique-strategies.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-oblique-strategiesel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-oblique-strategies.el"
   ;;; krisb-oblique-strategies.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
@@ -12707,6 +13251,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** =krisb-auto-completion.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-auto-completionel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-auto-completion.el"
   ;;; krisb-auto-completion.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
@@ -12825,8 +13372,14 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 ** Packages
+:PROPERTIES:
+:CUSTOM_ID: packages
+:END:
 
 *** =pinching-margins.el=
+:PROPERTIES:
+:CUSTOM_ID: pinching-marginsel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/pinching-margins.el"
   ;;; pinching-margins.el ---Center buffer contents    -*- lexical-binding: t; -*-
@@ -12951,6 +13504,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 *** =krisb-reveal.el=
+:PROPERTIES:
+:CUSTOM_ID: krisb-revealel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-reveal.el"
   ;;; krisb-reveal.el --- Convenience for opening outline and org headings  -*- lexical-binding: t; -*-
@@ -13086,6 +13642,9 @@ There are several packages that end up incredibly useful for authoring packages.
 #+end_src
 
 *** =dungeons-and-dragons.el=
+:PROPERTIES:
+:CUSTOM_ID: dungeons-and-dragonsel
+:END:
 
 #+begin_src emacs-lisp :tangle "lisp/dungeons-and-dragons.el"
   ;;; dungeons-and-dragons-rcp.el --- Bespoke Dungeons and Dragons features  -*- lexical-binding: t; -*-
@@ -13183,4 +13742,5 @@ There are several packages that end up incredibly useful for authoring packages.
 
 # Local Variables:
 # apheleia-inhibit: t
+# eval: (add-hook 'before-save-hook 'org-make-toc)
 # End:
