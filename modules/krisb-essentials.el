@@ -229,6 +229,13 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; Binds useful commands for jumping to variables, functions, and libraries
 (find-function-mode 1)
 
+;; Useful keybind for my usage
+(defun krisb-find-library-other-tab (library)
+  "Find LIBRARY in other tab."
+  (interactive (list (read-library-name)))
+  (switch-to-buffer-other-tab (funcall-interactively #'find-library library)))
+(bind-key "L" #'krisb-find-library-other-tab tab-prefix-map)
+
 ;;;; Visual-line-mode in *Messages* buffer
 (add-hook 'messages-buffer-mode-hook #'visual-line-mode)
 

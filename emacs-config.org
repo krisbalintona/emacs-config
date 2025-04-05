@@ -817,6 +817,13 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
   ;; Binds useful commands for jumping to variables, functions, and libraries
   (find-function-mode 1)
 
+  ;; Useful keybind for my usage
+  (defun krisb-find-library-other-tab (library)
+    "Find LIBRARY in other tab."
+    (interactive (list (read-library-name)))
+    (switch-to-buffer-other-tab (funcall-interactively #'find-library library)))
+  (bind-key "L" #'krisb-find-library-other-tab tab-prefix-map)
+
   ;;;; Visual-line-mode in *Messages* buffer
   (add-hook 'messages-buffer-mode-hook #'visual-line-mode)
 
