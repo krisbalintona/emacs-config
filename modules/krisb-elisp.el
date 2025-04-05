@@ -142,7 +142,7 @@
 (use-package scratch
   :hook (scratch-create-buffer . krisb-scratch-buffer-setup)
   :bind ( :map krisb-open-keymap
-          ("s". scratch))
+          ("S". scratch))
   :config
   (defun krisb-scratch-buffer-setup ()
     "Add contents to `scratch' buffer and name it accordingly.
