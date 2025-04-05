@@ -53,7 +53,9 @@
   :hook ((prog-mode text-mode) . outli-mode)
   :bind ( :map outline-minor-mode-map
           ;; 2025-04-02: Assumes `outline-minor-mode-prefix' is "C-c @"
-          ("C-c @ C-<return>" . outli-insert-heading-respect-content))
+          ("C-c @ C-<return>" . outli-insert-heading-respect-content)
+          ("C-c @ ?" . outli-speed-command-help)
+          ("C-c @ s" . outli-toggle-narrow-to-subtree))
   :custom
   (outli-allow-indented-headlines t)
   (outli-default-nobar nil)             ; No horizontal rule?
