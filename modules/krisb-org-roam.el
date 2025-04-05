@@ -186,10 +186,10 @@ to the file path instead."
        :key "b"
        :transient t
        :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_BOX" "ROAM_BOX"))
-      (krisb-org-roam-ext-set-roam-exclude
+      (krisb-org-roam-ext-toggle-roam-exclude
        :key "e"
        :transient t
-       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Set ROAM_EXCLUDE" "ROAM_EXCLUDE"))]
+       :description ,(krisb-org-roam-ext-transient--dyn-roam-property-description "Toggle ROAM_EXCLUDE" "ROAM_EXCLUDE"))]
      ["Idea-specific"
       (krisb-org-roam-ext-set-roam-type
        :key "t"
