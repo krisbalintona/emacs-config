@@ -98,7 +98,7 @@ If `corfu-sort-function' is set buffer-locally, also set
 the default value of `completion-preview-sort-function' accordingly.
 
 This action only applies when the value of `corfu-sort-function' is
-set (i.e., OPERATION is \\='set)."
+set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
                           (when (equal operation 'set)
                             (if where
                                 (with-current-buffer where
