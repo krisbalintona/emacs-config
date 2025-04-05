@@ -48,9 +48,10 @@
                 popper powerthesaurus psession pulsar puni python rainbow-mode
                 recursion-indicator saveplace-pdf-view scratch show-font
                 sinister smart-mark so-long soap-client sudo-edit suggest svg
-                system-packages tmr tramp transient treesit-auto try
-                typewriter-roll-mode ultra-scroll use-package vc-jj verilog-mode
-                vertico-prescient which-key window-tool-bar wombag ytdl))
+                system-packages tmr tramp transient transpose-frame treesit-auto
+                try typewriter-roll-mode ultra-scroll use-package vc-jj
+                verilog-mode vertico-prescient which-key window-tool-bar wombag
+                ytdl))
  '(package-vc-selected-packages
    '((mode-minder :url "https://github.com/jdtsmith/mode-minder.git")
      (kbd-mode :url "https://github.com/kmonad/kbd-mode")
