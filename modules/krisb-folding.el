@@ -61,8 +61,6 @@
   (outli-default-nobar nil)             ; No horizontal rule?
   (outli-blend nil)
   :config
-  ;; Update outli faces on theme change
-
   ;; Add "Heading" (which outli headings are categorized as) imenu group.  Taken
   ;; from https://github.com/jdtsmith/outli?tab=readme-ov-file#faq
   (with-eval-after-load 'consult-imenu
