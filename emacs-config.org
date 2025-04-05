@@ -8460,9 +8460,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     :hook ((eshell-load . eat-eshell-mode)
            (eshell-load . eat-eshell-visual-command-mode))
     :bind ( :map krisb-open-keymap
-            ("E" . eat)
+            ("s" . eat)
             :map project-prefix-map
-            ("E" . eat-project)))
+            ("s" . eat-project)))
 #+end_src
 
 **** Provide

@@ -227,9 +227,9 @@ Meant for `completion-at-point-functions' in eshell buffers."
   :hook ((eshell-load . eat-eshell-mode)
          (eshell-load . eat-eshell-visual-command-mode))
   :bind ( :map krisb-open-keymap
-          ("E" . eat)
+          ("s" . eat)
           :map project-prefix-map
-          ("E" . eat-project)))
+          ("s" . eat-project)))
 
 ;;; Provide
 (provide 'krisb-shell)
