@@ -9509,6 +9509,7 @@ There are several packages that end up incredibly useful for authoring packages.
 
   ;;; Wombag
   (use-package wombag
+    :disabled t                           ; 2025-04-06: Trying out wallabag.el
     :vc (:url "https://github.com/karthink/wombag.git"
               :rev :newest)
     :hook ((wombag-show-mode . org-remark-mode)
@@ -9535,6 +9536,19 @@ There are several packages that end up incredibly useful for authoring packages.
       (when (require 'mixed-pitch nil t)
         (mixed-pitch-mode 1))
       (visual-line-mode 1)))
+
+  ;;; Wallabag
+  (use-package wallabag
+    :bind ( :map krisb-open-keymap
+            ("w" . wallabag))
+    :custom
+    (wallabag-host "https://app.wallabag.it")
+    (wallabag-username "krisbalintona")
+    (wallabag-password (auth-source-pick-first-password :host "app.wallabag.it"))
+    (wallabag-clientid "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
+    (wallabag-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
+    (wallabag-db-file (no-littering-expand-var-file-name "wallabag/wallabag.sqlite"))
+    (wallabag-search-page-max-rows 50))
 
   ;;; Krisb-wombag-ext
   (use-package krisb-wombag-ext
