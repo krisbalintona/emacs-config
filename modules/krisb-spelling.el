@@ -17,12 +17,14 @@
   (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
   (dictionary-server nil)               ; "Automatic"
   :init
+  ;; We place this here to ensure this package is lazy loaded when one of the
+  ;; commands is called from embark keymap
   (with-eval-after-load 'embark
     (bind-keys
      :map embark-region-map
-     ("D" . krisb-dictionary-at-point)
+     ("=" . krisb-dictionary-at-point)
      :map embark-identifier-map
-     ("D" . krisb-dictionary-at-point)))
+     ("=" . krisb-dictionary-at-point)))
   :config
   (defun krisb-dictionary-at-point ()
     "Show dictionary definition for word at point.
