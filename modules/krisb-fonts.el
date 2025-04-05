@@ -29,13 +29,13 @@
       :fixed-pitch-weight nil
       :fixed-pitch-slant nil
       :fixed-pitch-width nil
-      :fixed-pitch-height 1.0
+      :fixed-pitch-height nil
 
       :fixed-pitch-serif-family nil
       :fixed-pitch-serif-weight nil
       :fixed-pitch-serif-slant nil
       :fixed-pitch-serif-width nil
-      :fixed-pitch-serif-height 1.0
+      :fixed-pitch-serif-height nil
 
       ;; Alternatives:
       ;; "LiterationSerif Nerd Font"       ; Variable
@@ -72,7 +72,7 @@
       :line-number-weight nil
       :line-number-slant nil
       :line-number-width nil
-      :line-number-height 1.0
+      :line-number-height nil
 
       :tab-bar-family "Overpass Nerd Font"
       :tab-bar-weight nil
@@ -84,19 +84,19 @@
       :tab-line-weight nil
       :tab-line-slant nil
       :tab-line-width nil
-      :tab-line-height 1.0
+      :tab-line-height nil
 
 
       :bold-slant nil
       :bold-weight bold
       :bold-width nil
-      :bold-height 1.0
+      :bold-height nil
 
       :italic-family nil
       :italic-weight nil
       :italic-slant italic
       :italic-width nil
-      :italic-height 1.0
+      :italic-height nil
 
       :line-spacing nil)))
   :config
