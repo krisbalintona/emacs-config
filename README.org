@@ -1,0 +1,19 @@
+#+title: My Emacs configuration
+
+This is my literate Emacs configuration. Its directory structure is the following:
++ modules/
+  - Personal configuration files.
+  - Where I place ~(use-package ...)~ declarations.
++ lisp/
+  - Personal elisp code I've spun into separate files that act as libraries.
+  - Several of these files are candidates for packages.
++ etc/
+  - The ~no-littering-etc-directory~. The directory where packages place their configuration files.
++ var/
+  - The ~no-littering-var-directory~. The directory where packages place their persistent data files.
+  - Not included (tracked) in this repository.
+All files are created by tangling (i.e. calling ~org-babel-tangle~, or =C-c C-v t=) the =emacs-config.org= file.
+
+This repository is often updated; I change my configuration frequently, whether it be very minor tweaks to sweeping changes. You may also notice that commit may be vague and messy. This is natural---I do not treat this repository as a neat, clean package.
+
+If you have any questions about my configuration or would like to discuss anything related to this configuration or Emacs, feel free to reach out by email: krisbalintona@gmail.com.
