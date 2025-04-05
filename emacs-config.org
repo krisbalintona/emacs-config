@@ -8462,7 +8462,15 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     :bind ( :map krisb-open-keymap
             ("s" . eat)
             :map project-prefix-map
-            ("s" . eat-project)))
+            ("s" . eat-project))
+    :custom-face
+    ;; 2025-04-05: This resolves the continuation lines issue in EAT terminal
+    ;; (including eat-shell in `eat-eshell-visual-command-mode').  The
+    ;; continuation line issue results in, I think, the default font being too
+    ;; wide, causing the width of the characters to exceed the width of the
+    ;; window, resulting in ugly continuation lines that ruin the wrapping of the
+    ;; output.
+    (eat-term-font-0 ((t (:family "Iosevka Term SS04")))))
 #+end_src
 
 **** Provide
