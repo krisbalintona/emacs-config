@@ -1,6 +1,12 @@
 #+title: My Emacs configuration
 
-This is my literate Emacs configuration. Its directory structure is the following:
+This is my literate Emacs configuration. My uses for Emacs center around:
++ Prose writing.
++ Note-taking.
++ Developing small elisp packages.
+This configuration is tailored to achieve these ends, in accordance with my personal tastes and preferences.
+
+Its directory structure is the following:
 + modules/
   - Personal configuration files.
   - Where I place ~(use-package ...)~ declarations.
