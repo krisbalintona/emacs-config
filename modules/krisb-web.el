@@ -62,9 +62,33 @@
     "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
     :keybinding "y"))
 
+;;; Wallabag
+(use-package wallabag
+  :disabled t                           ; 2025-04-06: Prefer wombag.el
+  :hook (wallabag-entry-mode . olivetti-mode)
+  :bind ( :map krisb-open-keymap
+          ("w" . wallabag)
+          :map wallabag-search-mode-map
+          ("n" . next-line)
+          ("p" . previous-line)
+          ("M-n" . wallabag-search-next-page)
+          ("M-p" . wallabag-search-previous-page)
+          :map wallabag-sidebar-mode-map
+          ("RET" . wallabag-sidebar-find-tag)
+          :map wallabag-entry-mode-map
+          ("SPC" . scroll-up-command)
+          ("DEL" . scroll-down-command))
+  :custom
+  (wallabag-host "https://app.wallabag.it")
+  (wallabag-username "krisbalintona")
+  (wallabag-password (auth-source-pick-first-password :host "app.wallabag.it"))
+  (wallabag-clientid "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
+  (wallabag-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
+  (wallabag-db-file (no-littering-expand-var-file-name "wallabag/wallabag.sqlite"))
+  (wallabag-search-page-max-rows 50))
+
 ;;; Wombag
 (use-package wombag
-  :disabled t                           ; 2025-04-06: Trying out wallabag.el
   :vc (:url "https://github.com/karthink/wombag.git"
             :rev :newest)
   :hook ((wombag-show-mode . org-remark-mode)
@@ -91,30 +115,6 @@
     (when (require 'mixed-pitch nil t)
       (mixed-pitch-mode 1))
     (visual-line-mode 1)))
-
-;;; Wallabag
-(use-package wallabag
-  :hook (wallabag-entry-mode . olivetti-mode)
-  :bind ( :map krisb-open-keymap
-          ("w" . wallabag)
-          :map wallabag-search-mode-map
-          ("n" . next-line)
-          ("p" . previous-line)
-          ("M-n" . wallabag-search-next-page)
-          ("M-p" . wallabag-search-previous-page)
-          :map wallabag-sidebar-mode-map
-          ("RET" . wallabag-sidebar-find-tag)
-          :map wallabag-entry-mode-map
-          ("SPC" . scroll-up-command)
-          ("DEL" . scroll-down-command))
-  :custom
-  (wallabag-host "https://app.wallabag.it")
-  (wallabag-username "krisbalintona")
-  (wallabag-password (auth-source-pick-first-password :host "app.wallabag.it"))
-  (wallabag-clientid "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
-  (wallabag-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
-  (wallabag-db-file (no-littering-expand-var-file-name "wallabag/wallabag.sqlite"))
-  (wallabag-search-page-max-rows 50))
 
 ;;; Krisb-wombag-ext
 (use-package krisb-wombag-ext
