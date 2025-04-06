@@ -448,14 +448,15 @@ This sets the default graphical element settings used by every frame.
   ;; Garbage collect on when idle
   (use-package gcmh
     :diminish
-    :hook ((after-init . gcmh-mode)
+    :hook ((on-first-buffer . gcmh-mode)
            (minibuffer-setup . krisb-gcmh-minibuffer-setup)
            (minibuffer-exit . krisb-gcmh-minibuffer-exit))
     :custom
     ;; For a related discussion, see
-    ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3
-    (gcmh-high-cons-threshold (* 16       ; 16 mb, as Doom uses in doom-start.el
-                                 1024 1024))
+    ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3.
+    ;; 2025-04-06: The value below is taken from Doom Emacs; it was bumped up from
+    ;; 16mb on commit 80566503646dd80c7604220f184076e190144675, on Dec 6, 2024.
+    (gcmh-high-cons-threshold (* 64 1024 1024)) ; 64 mb
     (gcmh-idle-delay 3)
     (gcmh-verbose nil)
     :config
