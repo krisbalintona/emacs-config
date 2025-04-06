@@ -2341,24 +2341,24 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                         (next-window)             ; Fall back to next window
                         (next-window nil nil 'visible)))))
 
-  ;;; Sinister
-  ;; This package defines `sinister-stillness-mode' to solve a problem.  Namely,
-  ;; when invoking a tall minibuffer, if there are other windows present with
-  ;; points low enough in their buffers, those windows will scroll.  This is
-  ;; because points must be visible in buffers, so Emacs must scroll to keep the
-  ;; point visible when e.g. tall minibuffer windows are created.  As such,
-  ;; `sinister-stillness-mode' moves the points in existing buffers lower such
-  ;; that Emacs does not need to scroll to keep them visible.
-  (use-package sinister
-    :disabled t ; 2025-03-25: Didn't find much use for it, and its behavior actually isn't the intuitive one for me
-    :vc ( :url "https://github.com/positron-solutions/sinister"
-          :rev :newest)
+  ;;; Stillness-mode
+  ;; This package solves an annoyance: when invoking a tall minibuffer, if there
+  ;; are other windows present with points low enough in their buffers, those
+  ;; windows will scroll.  This is because points must be visible in buffers, so
+  ;; Emacs must scroll to keep the point visible when e.g. tall minibuffer windows
+  ;; are created.  As such, `stillness-mode' moves the points in existing buffers
+  ;; lower such that Emacs does not need to scroll to keep them visible.
+  ;;
+  ;; 2025-04-07: I know of two other very similar packages: sinister.el
+  ;; (https://github.com/positron-solutions/sinister) and mini-ontop.el
+  ;; (https://github.com/hkjels/mini-ontop.el).  I have not had the time to
+  ;; thoroughly test out the differences between each package (all of them seem to
+  ;; have been written in a similar time period, and none of them compare and
+  ;; contrast the merits with the other packages...), but for now I go with
+  ;; stillness-mode.
+  (use-package stillness-mode
     :config
-    (sinister-stillness-mode 1)
-    ;; Invasive: a function that simply sets certain options makes it difficult to
-    ;; debug.  If I want any of these settings, I should set them myself.
-    ;; (sinister-misc-settings)
-    )
+    (stillness-mode 1))
 
   ;;; Tab-bar
   (use-package tab-bar
