@@ -1579,6 +1579,7 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
   ;;;;; Corfu-history
   ;; Save the history across Emacs sessions
   (use-package corfu-history
+    :disabled t                    ; 2025-04-05: I use corfu-prescient for sorting
     :ensure nil
     :hook (corfu-mode . corfu-history-mode)
     :config

@@ -273,6 +273,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 ;;;;; Corfu-history
 ;; Save the history across Emacs sessions
 (use-package corfu-history
+  :disabled t                    ; 2025-04-05: I use corfu-prescient for sorting
   :ensure nil
   :hook (corfu-mode . corfu-history-mode)
   :config
