@@ -179,6 +179,9 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (psession-autosave-mode 1))
 
 ;;;; Persist-state
+;; Thin helper package that makes sure other packages' data are saved on-disk
+;; via those packages' own saving utilities.  The problem this package aims to
+;; resolve is data not being saved on disk when Emacs unexpectedly quits.
 (use-package persist-state
   :custom
   (persist-state-save-interval 600)
