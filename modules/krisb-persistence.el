@@ -178,5 +178,13 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (psession-mode 1)
   (psession-autosave-mode 1))
 
+;;;; Persist-state
+(use-package persist-state
+  :custom
+  (persist-state-save-interval 600)
+  (persist-state-wait-idle 3)
+  :config
+  (persist-state-mode 1))
+
 ;;; Provide
 (provide 'krisb-persistence)

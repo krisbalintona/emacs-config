@@ -2260,6 +2260,14 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     :config
     (psession-mode 1)
     (psession-autosave-mode 1))
+
+  ;;;; Persist-state
+  (use-package persist-state
+    :custom
+    (persist-state-save-interval 600)
+    (persist-state-wait-idle 3)
+    :config
+    (persist-state-mode 1))
 #+end_src
 
 **** Provide
