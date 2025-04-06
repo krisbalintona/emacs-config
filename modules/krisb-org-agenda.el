@@ -194,7 +194,7 @@
       (function (lambda ()
                   (let ((org-node-ask-directory krisb-blog-directory))
                     (org-node-capture-target))))
-      "#+filetags: :__draft:
+      "#+filetags: :__blog_draft:
 #+hugo_bundle:
 #+export_file_name: index
 #+hugo_tags:
