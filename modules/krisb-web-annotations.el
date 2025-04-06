@@ -48,8 +48,9 @@
   :ensure nil
   :after org-remark
   :bind ( :map org-remark-mode-map
-          ("C-c r m" . krisb-org-remark-mark-transient))
+          ("C-c m m" . krisb-org-remark-mark-transient))
   :config
+  ;; FIXME 2025-04-06: Faces not being applied for some reason?
   (krisb-modus-themes-setup-faces
    "org-remark-ext"
    (set-face-attribute 'krisb-org-remark-resonant-face nil
