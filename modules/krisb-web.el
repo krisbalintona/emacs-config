@@ -94,8 +94,19 @@
 
 ;;; Wallabag
 (use-package wallabag
+  :hook (wallabag-entry-mode . olivetti-mode)
   :bind ( :map krisb-open-keymap
-          ("w" . wallabag))
+          ("w" . wallabag)
+          :map wallabag-search-mode-map
+          ("n" . next-line)
+          ("p" . previous-line)
+          ("M-n" . wallabag-search-next-page)
+          ("M-p" . wallabag-search-previous-page)
+          :map wallabag-sidebar-mode-map
+          ("RET" . wallabag-sidebar-find-tag)
+          :map wallabag-entry-mode-map
+          ("SPC" . scroll-up-command)
+          ("DEL" . scroll-down-command))
   :custom
   (wallabag-host "https://app.wallabag.it")
   (wallabag-username "krisbalintona")
