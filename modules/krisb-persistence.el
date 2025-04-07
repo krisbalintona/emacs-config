@@ -60,6 +60,30 @@
   (activities-mode 1)
   (activities-tabs-mode 1))
 
+;;; Persist-state
+;; Thin helper package that makes sure other packages' data are saved on-disk
+;; via those packages' own saving utilities.  The problem this package aims to
+;; resolve is data not being saved on disk when Emacs unexpectedly quits.
+(use-package persist-state
+  :custom
+  (persist-state-save-interval 600)
+  (persist-state-wait-idle 3)
+  :config
+  (persist-state-mode 1))
+
+;;; Savefold
+(use-package savefold
+  :vc (:url "https://github.com/jcfk/savefold.el.git")
+  :custom
+  (savefold-backends '(outline
+                       org
+                       ;; origami
+                       ;; hideshow
+                       ))
+  (savefold-directory (no-littering-expand-var-file-name "savefold"))
+  :config
+  (savefold-mode 1))
+
 ;;; Persistent desktops
 ;;;; Desktop
 ;; Save buffers across Emacs sessions
@@ -177,17 +201,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :config
   (psession-mode 1)
   (psession-autosave-mode 1))
-
-;;;; Persist-state
-;; Thin helper package that makes sure other packages' data are saved on-disk
-;; via those packages' own saving utilities.  The problem this package aims to
-;; resolve is data not being saved on disk when Emacs unexpectedly quits.
-(use-package persist-state
-  :custom
-  (persist-state-save-interval 600)
-  (persist-state-wait-idle 3)
-  :config
-  (persist-state-mode 1))
 
 ;;; Provide
 (provide 'krisb-persistence)
