@@ -181,7 +181,7 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
      (".+-history" (vertico-sort-function . nil))
      ("^org-node-"
       (completion-styles . (orderless))
-      (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal)))))
+      (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal orderless-flex)))))
   :config
   (vertico-multiform-mode 1))
 

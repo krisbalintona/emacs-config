@@ -1485,7 +1485,7 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
        (".+-history" (vertico-sort-function . nil))
        ("^org-node-"
         (completion-styles . (orderless))
-        (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal)))))
+        (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal orderless-flex)))))
     :config
     (vertico-multiform-mode 1))
 
