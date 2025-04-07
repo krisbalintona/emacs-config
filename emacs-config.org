@@ -6619,7 +6619,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
         "* TODO %? %^g\n"
         :empty-lines 1)
        ("j" "Journal" entry
-        (function krisb-org-capture--org-node-datetree)
+        (function krisb-org-capture--org-node-datetree-journal)
         "* %<%c>\n%?"
         :tree-type (year quarter month)
         :jump-to-captured t
@@ -6628,7 +6628,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
         :clock-in t
         :clock-resume t)
        ("l" "Log" item
-        (function krisb-org-capture--org-node-datetree)
+        (function krisb-org-capture--org-node-datetree-log)
         "%U %?"
         :tree-type (quarter week)
         :clock-in t
@@ -6763,20 +6763,18 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                      (or (> hr 10) (< hr 21)))))
         (concat "-" tag)))
 
-    ;; Bespoke function meant for datetrees in org-node nodes
-    (defun krisb-org-capture--org-node-datetree ()
-      "Creates datetree at org-node node.
-  Prompts for an org-node node, creates a datetree there, and leaves point
-  where a new entry should be.  Meant to be used by itself as a function
-  in `org-capture-templates'."
+    ;; Bespoke functions for datetrees in org-node nodes
+    (defun krisb-org-capture--org-node-datetree (node)
+      "Creates datetree at org-node NODE.
+  Creates a datetree at NODE, and leaves point where a new entry should
+  be.
+
+  This is a helper function for functions used in `org-capture-templates',
+  but can also be called interactively to prompt for NODE."
+      (interactive (list (org-node-read)))
       (require 'org-node)
       (require 'org-datetree)
-      (let* ((candidate (completing-read "Select journal: "
-                                         #'org-node-collection
-                                         (lambda (_title node) (member "__journal" (org-node-get-tags node)))
-                                         t nil 'org-node-hist))
-             (node (gethash candidate org-node--candidate<>node))
-             (file (org-node-get-file node))
+      (let* ((file (org-node-get-file node))
              (olp (when (< 0 (org-node-get-level node))
                     (org-node-get-olp-with-self node)))
              (pt (org-node-get-pos node))
@@ -6810,7 +6808,35 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                        d keep-restriction)))
            (_ (error "Unrecognized :tree-type")))
          date
-         (when olp 'subtree-at-point)))))
+         (when olp 'subtree-at-point))))
+
+    (defun krisb-org-capture--org-node-datetree-journal ()
+      "Prompt for an org-node node and create a datetree there.
+  The nodes listed in the prompt are those with the \"__journal\" tag.
+
+  This function is meant to chiefly be used by itself as a function in
+  `org-capture-templates', though it can also be called interactively."
+      (interactive)
+      (let* ((candidate (completing-read "Select journal: "
+                                         #'org-node-collection
+                                         (lambda (_title node) (member "__journal" (org-node-get-tags node)))
+                                         t nil 'org-node-hist))
+             (node (gethash candidate org-node--candidate<>node)))
+        (krisb-org-capture--org-node-datetree node)))
+
+    (defun krisb-org-capture--org-node-datetree-log ()
+      "Prompt for an org-node node and create a datetree there.
+  The nodes listed in the prompt are those with the \"__log\" tag.
+
+  This function is meant to chiefly be used by itself as a function in
+  `org-capture-templates', though it can also be called interactively."
+      (interactive)
+      (let* ((candidate (completing-read "Select journal: "
+                                         #'org-node-collection
+                                         (lambda (_title node) (member "__log" (org-node-get-tags node)))
+                                         t nil 'org-node-hist))
+             (node (gethash candidate org-node--candidate<>node)))
+        (krisb-org-capture--org-node-datetree node))))
 
   ;;; Org-super-agenda
   (use-package org-super-agenda
