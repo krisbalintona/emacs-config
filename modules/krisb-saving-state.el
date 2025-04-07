@@ -28,7 +28,7 @@
 ;; Backup files. "Emacs makes a backup for a file only the first time the file
 ;; is saved from the buffer that visits it."
 (setopt make-backup-files t
-        backup-by-copying nil       ; See (info "(emacs) Backup Copying")
+        backup-by-copying t         ; See (info "(emacs) Backup Copying")
         vc-make-backup-files t)     ; Still backup even if under version control
 
 ;; Numbering backups
@@ -38,7 +38,7 @@
         delete-old-versions t)
 
 ;; Modified from Doom Emacs. Backup files have names that are hashed.
-(defun krisb-backup-file-name-hash (file)
+(defun krisb-backup-file-name-hash (fn file)
   "Hash the backup file name.
 A few places use the backup file name so paths don't get too long.
 
@@ -51,14 +51,13 @@ Takes any FILE and return a hashed version."
             (setq backup-directory (cdr elt)
                   alist nil)
           (setq alist (cdr alist)))))
-    (let ((file (make-backup-file-name--default-function file)))
+    (let ((file (funcall fn file)))
       (if (or (null backup-directory)
               (not (file-name-absolute-p backup-directory)))
           file
         (expand-file-name (sha1 (file-name-nondirectory file))
                           (file-name-directory file))))))
-(setopt make-backup-file-name-function #'krisb-backup-file-name-hash)
-
+(advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash)
 
 ;;;; Auto-save
 (setopt auto-save-default t ; Only a local minor mode exists; this variable influences the global value
