@@ -69,6 +69,10 @@
   :ensure nil
   :bind ( :map tab-prefix-map
           ("w" . tab-bar-move-window-to-tab)
+          ("w" . tab-bar-move-window-to-tab)
+          ("c" . tab-bar-change-tab-group)
+          ("C-S-g" . tab-bar-move-tab-to-group)
+          ("D" . tab-bar-close-group-tabs)
           :repeat-map krisb-tab-bar-repeat-map
           ("C-c <left>" . tab-bar-history-back)
           ("C-c <right>" . tab-bar-history-forward)
