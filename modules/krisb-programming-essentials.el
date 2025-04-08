@@ -101,10 +101,11 @@
 ;; Colorify color codes
 (use-package rainbow-mode
   :diminish
-  ;; TOOD 2025-03-25: Enabling form feed in `help-mode' buffers removes the
-  ;; fontification of function arguments (face: `help-argument-name').
-  ;; :hook (help-mode . rainbow-mode)
-  )
+  :hook (;; TOOD 2025-03-25: Enabling form feed in `help-mode' buffers removes
+         ;; the fontification of function arguments (face:
+         ;; `help-argument-name').
+         ;; (help-mode . rainbow-mode)
+         (prog-mode . rainbow-mode)))
 
 ;;; Eldoc
 (use-package eldoc
