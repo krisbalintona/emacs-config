@@ -517,7 +517,11 @@ dictionary.  The error is this:
 ORIG-FUN should be `ispell-completion-at-point'."
     (cape-wrap-silent orig-fun))
 
-  (advice-add 'ispell-completion-at-point :around #'krisb-cape-ispell--around-advice))
+  (advice-add 'ispell-completion-at-point :around #'krisb-cape-ispell--around-advice)
+
+  ;; Make eglot's capf non-exclusive
+  (with-eval-after-load 'eglot
+    (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)))
 
 ;;; Krisb-auto-completion
 (use-package krisb-auto-completion
