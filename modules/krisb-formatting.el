@@ -60,7 +60,12 @@
      "--filename"
      filepath)
    (alist-get 'fourmolu apheleia-formatters)
-   '("fourmolu"))
+   '("fourmolu")
+   (alist-get 'latexindent apheleia-formatters)
+   '("latexindent"
+     ;; 4-space indentation is more readable
+     "-y=defaultIndent:'    '"
+     "--cruft=/tmp/" "--logfile" "indent.log"))
 
   ;; Custom formatters
   (cl-defun krisb-apheleia-format-org-buffer
