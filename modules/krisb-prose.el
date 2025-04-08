@@ -514,23 +514,25 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword))
 
 ;;; Grammar
+;;;; Harper language server
 (with-eval-after-load 'eglot
   (unless (executable-find "harper-ls")
     (system-packages-ensure "harper"))
   (add-to-list 'eglot-server-programs
                '(markdown-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs
-               ;; NOTE 2025-03-19: We give a language ID of "markdown" to
-               ;; harper (see supported languages and their corresponding
-               ;; language IDs here:
+               ;; NOTE 2025-03-19: We give a language ID of "markdown" to harper
+               ;; (see supported languages and their corresponding language IDs
+               ;; here:
                ;; https://writewithharper.com/docs/integrations/language-server#Supported-Languages)
-               ;; because org-mode is currently not supported, so markdown is
-               ;; the closest we have (note: it is better than the "plaintext"
+               ;; because org-mode is currently not supported.  Markdown is the
+               ;; closest we have.  (Note: it is better than the "plaintext"
                ;; language ID; see the recommendation here:
-               ;; https://github.com/Automattic/harper/issues/149#issuecomment-2619515397).
+               ;; https://github.com/Automattic/harper/issues/149#issuecomment-2619515397.)
+               ;; 
                ;; To check the status of adding org-mode to the list of
                ;; supported languages, see
-               ;; https://github.com/Automattic/harper/issues/79#issuecomment-2638110954
+               ;; https://github.com/Automattic/harper/issues/79#issuecomment-2638110954.
                '((org-mode :language-id "markdown") . ("harper-ls" "--stdio"))))
 
 ;;; Other
