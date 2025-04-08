@@ -1,3 +1,9 @@
+;;; Prog-mode
+(use-package prog-mode
+  :ensure nil
+  :hook ((prog-mode . goto-address-prog-mode) ; Buttonize URLs and e-mail addresses in comments and strings
+         (prog-mode . bug-reference-prog-mode))) ; Buttonize bug references in comments and strings
+
 ;;; Writing
 ;;;; Newcomment
 (use-package newcomment

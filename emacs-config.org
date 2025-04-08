@@ -8290,6 +8290,12 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-programming-essentials.el"
+  ;;; Prog-mode
+  (use-package prog-mode
+    :ensure nil
+    :hook ((prog-mode . goto-address-prog-mode) ; Buttonize URLs and e-mail addresses in comments and strings
+           (prog-mode . bug-reference-prog-mode))) ; Buttonize bug references in comments and strings
+
   ;;; Writing
   ;;;; Newcomment
   (use-package newcomment
