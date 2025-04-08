@@ -57,6 +57,8 @@
 (require 'krisb-flymake)
 (require 'krisb-folding)
 (require 'krisb-other-languages)
+(require 'krisb-lsp)
+(require 'krisb-debugging)
 
 (require 'krisb-elisp)
 (require 'krisb-info)
