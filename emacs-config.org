@@ -1833,7 +1833,10 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
   ;;; Krisb-auto-completion
   (use-package krisb-auto-completion
     :ensure nil
-    :hook ((log-edit-mode eval-expression-minibuffer-setup) . krisb-auto-completion-mode))
+    ;; 2025-04-08: I didn't end up liking this behavior.  Might revisit this in
+    ;; the future; keeping here for reference, if anything.
+    ;; :hook ((log-edit-mode eval-expression-minibuffer-setup) . krisb-auto-completion-mode)
+    )
 #+end_src
 
 **** Accessory packages

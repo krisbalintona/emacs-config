@@ -522,7 +522,10 @@ ORIG-FUN should be `ispell-completion-at-point'."
 ;;; Krisb-auto-completion
 (use-package krisb-auto-completion
   :ensure nil
-  :hook ((log-edit-mode eval-expression-minibuffer-setup) . krisb-auto-completion-mode))
+  ;; 2025-04-08: I didn't end up liking this behavior.  Might revisit this in
+  ;; the future; keeping here for reference, if anything.
+  ;; :hook ((log-edit-mode eval-expression-minibuffer-setup) . krisb-auto-completion-mode)
+  )
 
 ;;; Marginalia
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
