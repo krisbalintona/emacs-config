@@ -581,35 +581,9 @@ ORIG-FUN should be `ispell-completion-at-point'."
      ;; orderless-without-literal          ; Recommended for dispatches instead
      ))
   (orderless-component-separator 'orderless-escapable-split-on-space)
-  (orderless-style-dispatchers '(krisb-orderless-consult-dispatch))
   :config
   ;; Eglot forces `flex' by default.
-  (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
-
-  ;; Taken from Doom
-  (defun krisb-orderless-consult-dispatch (pattern _index _total)
-    "Basically `orderless-affix-dispatch-alist' but with prefixes too."
-    (cond
-     ;; Ensure $ works with Consult commands, which add disambiguation suffixes
-     ((string-suffix-p "$" pattern)
-      `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x200000-\x300000]*$")))
-     ;; Ignore single !
-     ((string= "!" pattern) `(orderless-literal . ""))
-     ;; Without literal
-     ((string-prefix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1)))
-     ((string-suffix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1 -1)))
-     ;; Character folding
-     ((string-prefix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 1)))
-     ((string-suffix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 0 -1)))
-     ;; Initialism matching
-     ((string-prefix-p "," pattern) `(orderless-initialism . ,(substring pattern 1)))
-     ((string-suffix-p "," pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
-     ;; Literal matching
-     ((string-prefix-p "=" pattern) `(orderless-literal . ,(substring pattern 1)))
-     ((string-suffix-p "=" pattern) `(orderless-literal . ,(substring pattern 0 -1)))
-     ;; Flex matching
-     ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
-     ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1))))))
+  (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex)))))
 
 ;;; Hotfuzz
 ;; Faster version of the flex completion style.  Hotfuzz is a much faster
