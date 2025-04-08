@@ -1,3 +1,17 @@
+;;; LaTeX
+;;;; Auctex
+(use-package auctex)
+
+;;;; Auctex-cont-latexmk
+;; Automatically compile a latex file on-save with the latexmk program.  This is
+;; a more maintained version of auctex-latexmk
+;; (https://github.com/tom-tan/auctex-latexmk/).
+(use-package auctex-cont-latexmk
+  :ensure-system-package (latexmk . texlive-binextra)
+  :after latex
+  :bind ( :map LaTeX-mode-map
+          ("C-c t k" . auctex-cont-latexmk-toggle)))
+
 ;;; Hyprlang-ts-mode
 ;; Treesitter mode for hyprland config files
 (use-package hyprlang-ts-mode
