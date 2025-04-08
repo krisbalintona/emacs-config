@@ -233,7 +233,7 @@ is to produce the opposite effect of both `fill-paragraph' and
 (defun krisb-find-library-other-tab (library)
   "Find LIBRARY in other tab."
   (interactive (list (read-library-name)))
-  (switch-to-buffer-other-tab (funcall-interactively #'find-library library)))
+  (switch-to-buffer-other-tab (save-window-excursion (funcall-interactively #'find-library library))))
 (bind-key "L" #'krisb-find-library-other-tab tab-prefix-map)
 
 ;;;; Visual-line-mode in *Messages* buffer
