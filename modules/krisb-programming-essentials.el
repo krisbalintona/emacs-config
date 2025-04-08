@@ -71,6 +71,16 @@
   (with-eval-after-load 'which-func
     (setopt which-func-functions '(breadcrumb-imenu-crumbs))))
 
+;;;; Abdridge-diff
+;; Abridge (shorten) refined diff hunks with long lines.  You can enable and
+;; disable showing the abridged version using `abridge-diff-toggle-hiding'.
+(use-package abridge-diff
+  :demand t
+  :after diff
+  :diminish
+  :config
+  (abridge-diff-mode 1))
+
 ;;; Convenience
 ;;;; Lorem-ipsum
 ;; Insert sample text
