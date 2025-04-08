@@ -106,21 +106,6 @@
   ;; :hook (help-mode . rainbow-mode)
   )
 
-;;; Compilation
-;;;; Ansi-color
-(use-package ansi-color
-  :ensure nil
-  :hook (compilation-filter . krisb-ansi-color-colorize-compilation)
-  :config
-  (defun krisb-ansi-color-colorize-compilation ()
-    "Apply ANSI terminal color escape codes.
-Colorize from `compilation-filter-start' to `point'.
-
-Taken from
-http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html."
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region compilation-filter-start (point)))))
-
 ;;; Eldoc
 (use-package eldoc
   :diminish

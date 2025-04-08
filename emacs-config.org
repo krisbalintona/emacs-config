@@ -8558,21 +8558,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     ;; :hook (help-mode . rainbow-mode)
     )
 
-  ;;; Compilation
-  ;;;; Ansi-color
-  (use-package ansi-color
-    :ensure nil
-    :hook (compilation-filter . krisb-ansi-color-colorize-compilation)
-    :config
-    (defun krisb-ansi-color-colorize-compilation ()
-      "Apply ANSI terminal color escape codes.
-  Colorize from `compilation-filter-start' to `point'.
-
-  Taken from
-  http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html."
-      (let ((inhibit-read-only t))
-        (ansi-color-apply-on-region compilation-filter-start (point)))))
-
   ;;; Eldoc
   (use-package eldoc
     :diminish
@@ -8970,11 +8955,12 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     (compilation-auto-jump-to-first-error 'if-location-known))
 
   ;;; Fancy-compilation
+  ;; Make compilation outputs in compilation buffers more pleasant to see.
   (use-package fancy-compilation
     :custom
     ;; The TERM environment variable to use (set to an empty string to leave
     ;; unset).  Set to \"ansi-term\" for the default of ansi-term
-    (fancy-compilation-term nil)
+    (fancy-compilation-term "eterm-color")
     (fancy-compilation-override-colors nil)
     (fancy-compilation-quiet-prelude t)
     (fancy-compilation-quiet-prolog nil)

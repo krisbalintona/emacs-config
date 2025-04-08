@@ -31,11 +31,12 @@
   (compilation-auto-jump-to-first-error 'if-location-known))
 
 ;;; Fancy-compilation
+;; Make compilation outputs in compilation buffers more pleasant to see.
 (use-package fancy-compilation
   :custom
   ;; The TERM environment variable to use (set to an empty string to leave
   ;; unset).  Set to \"ansi-term\" for the default of ansi-term
-  (fancy-compilation-term nil)
+  (fancy-compilation-term "eterm-color")
   (fancy-compilation-override-colors nil)
   (fancy-compilation-quiet-prelude t)
   (fancy-compilation-quiet-prolog nil)
