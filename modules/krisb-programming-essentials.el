@@ -97,6 +97,30 @@
   :config
   (sudo-edit-indicator-mode 1))
 
+;;;; Rainbow-mode
+;; Colorify color codes
+(use-package rainbow-mode
+  :diminish
+  ;; TOOD 2025-03-25: Enabling form feed in `help-mode' buffers removes the
+  ;; fontification of function arguments (face: `help-argument-name').
+  ;; :hook (help-mode . rainbow-mode)
+  )
+
+;;; Compilation
+;;;; Ansi-color
+(use-package ansi-color
+  :ensure nil
+  :hook (compilation-filter . krisb-ansi-color-colorize-compilation)
+  :config
+  (defun krisb-ansi-color-colorize-compilation ()
+    "Apply ANSI terminal color escape codes.
+Colorize from `compilation-filter-start' to `point'.
+
+Taken from
+http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html."
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point)))))
+
 ;;; Eldoc
 (use-package eldoc
   :diminish
@@ -111,15 +135,6 @@
   (eldoc-echo-area-display-truncation-message t)
   (eldoc-echo-area-prefer-doc-buffer t)
   (eldoc-help-at-pt t))                 ; Emacs 31.1
-
-;;; Rainbow-mode
-;; Colorify color codes
-(use-package rainbow-mode
-  :diminish
-  ;; TOOD 2025-03-25: Enabling form feed in `help-mode' buffers removes the
-  ;; fontification of function arguments (face: `help-argument-name').
-  ;; :hook (help-mode . rainbow-mode)
-  )
 
 ;;; Embark
 ;; Allow an equivalent to ivy-actions to regular completing-read minibuffers
