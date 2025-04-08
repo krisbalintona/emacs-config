@@ -52,8 +52,7 @@
   (completion-category-defaults
    '((calendar-month (display-sort-function . identity))))
   (completion-category-overrides
-   '((file (styles . (basic partial-completion flex))) ; Include `partial-completion' to enable wildcards and partial paths.
-     (citar-candidate (styles basic substring flex))))
+   '((file (styles . (basic partial-completion flex))))) ; Include `partial-completion' to enable wildcards and partial paths.
   :config
   (defun krisb-completion-styles-setup ()
     "Set up `completion-styes'."
