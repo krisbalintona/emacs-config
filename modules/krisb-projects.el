@@ -106,6 +106,13 @@ See the docstring of `krisb-reveal-fold-commands'."
   :custom
   (eglot-code-action-indications '(eldoc-hint margin))
   (eglot-code-action-indicator "  α ")
+  (eglot-sync-connect t)                ; Use `eglot-connect-timeout' seconds
+  (eglot-connect-timeout 30)
+  (eglot-autoreconnect 10)
+  (eglot-events-buffer-config
+   (list :size 2000000
+         ;; :size 0           ; To boost performance, set size to 0 to stop logging
+         :format 'full))
   (eglot-extend-to-xref t))
 
 ;;; Eglot-booster
