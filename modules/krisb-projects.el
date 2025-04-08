@@ -126,5 +126,20 @@ See the docstring of `krisb-reveal-fold-commands'."
   :config
   (eglot-booster-mode 1))
 
+;;; Lsp-bridge
+;; Asynchronous alternative LSP integration.  The asynchronism is at a cost: its
+;; UI is bespoke.  To use, make sure to follow the install instructions in the
+;; package README.
+
+;; To install the required python packages system-wide try something like:
+;;     paru -S python-epc python-orjson python-sexpdata python-six \
+;;     python-setuptools python-paramiko python-rapidfuzz python-watchdog \
+;;     python-packaging
+(use-package lsp-bridge
+  :vc (:url "https://github.com/manateelazycat/lsp-bridge.git")
+  :init
+  (package-install 'yasnippet)
+  (package-install 'markdown-mode))
+
 ;;; Provide
 (provide 'krisb-projects)
