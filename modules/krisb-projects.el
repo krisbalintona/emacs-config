@@ -85,7 +85,8 @@ See the docstring of `krisb-reveal-fold-commands'."
      (if (< 1 arg) 'consult-xref-stack-forward 'xref-go-forward))))
 
 ;;; Dumber-jump
-;; A lean fork of dumb-jump.
+;; A lean fork of dumb-jump.  For a list of supported languages, see
+;; https://github.com/zenspider/dumber-jump?tab=readme-ov-file#supported-languages.
 (use-package dumber-jump
   :ensure-system-package (rg . ripgrep)
   :custom
@@ -93,7 +94,8 @@ See the docstring of `krisb-reveal-fold-commands'."
   :init
   ;; Add to global value so it is used as a fallback (when local value ends in
   ;; t)
-  (add-hook 'xref-backend-functions #'dumber-jump-xref-activate)
+  (with-eval-after-load 'xref
+    (add-hook 'xref-backend-functions #'dumber-jump-xref-activate 100))
   :config
   (setopt dumber-jump-project-denoters
           (cl-remove-duplicates
