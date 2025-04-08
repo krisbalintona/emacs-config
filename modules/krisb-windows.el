@@ -304,7 +304,12 @@
 
 ;;;;; Customize buffers
           ("\\*Customize Group:"
-           (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected))))
+           (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected))
+
+;;;;; Notmuch-hello buffer
+          ("\\*notmuch-hello\\*"
+           (display-buffer-in-tab display-buffer-full-frame)
+           (tab-group . "media"))))
 
 ;;;;; Xref
   (with-eval-after-load 'xref

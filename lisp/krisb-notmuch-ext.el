@@ -25,43 +25,6 @@
 ;;; Code:
 (require 'notmuch)
 
-;;; Restore window configuration when closing notmuch-hello window
-(defvar krisb-notmuch-hello-pre-window-conf nil)
-
-(defun krisb-notmuch-hello-set-window-conf ()
-  "Set the value of `krisb-notmuch-hello-pre-window-conf'."
-  (unless (memq major-mode '(notmuch-show-mode
-                             notmuch-tree-mode
-                             notmuch-hello-mode
-                             notmuch-search-mode
-                             notmuch-message-mode))
-    (setq krisb-notmuch-hello-pre-window-conf (current-window-configuration))))
-
-;;;###autoload
-(defun krisb-notmuch--around (fn &rest args)
-  "Set pre-window-configuration also."
-  (interactive)
-  (krisb-notmuch-hello-set-window-conf)
-  (apply fn args)
-  ;; We delete other windows afterward just in case `notmuch' is called with
-  ;; e.g. `other-frame-prefix'
-  (delete-other-windows))
-(advice-add 'notmuch :around #'krisb-notmuch--around)
-
-;;;###autoload
-(defun krisb-notmuch-bury-or-kill-this-buffer--around (fn &rest args)
-  "Restore window configuration if appropriate."
-  (interactive)
-  (if (and (equal major-mode 'notmuch-hello-mode)
-           krisb-notmuch-hello-pre-window-conf
-           (equal (selected-frame) (window-configuration-frame krisb-notmuch-hello-pre-window-conf)))
-      (progn
-        (apply fn args)
-        (set-window-configuration krisb-notmuch-hello-pre-window-conf)
-        (setq krisb-notmuch-hello-pre-window-conf nil))
-    (apply fn args)))
-(advice-add 'notmuch-bury-or-kill-this-buffer :around #'krisb-notmuch-bury-or-kill-this-buffer--around)
-
 ;;; Show only unread emails in thread opened via in notmuch-show-mode
 ;;;###autoload
 (defun krisb-notmuch-show-expand-only-unread-h ()
