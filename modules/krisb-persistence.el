@@ -82,7 +82,22 @@
                        ))
   (savefold-directory (no-littering-expand-var-file-name "savefold"))
   :config
-  (savefold-mode 1))
+  (savefold-mode 1)
+
+  ;; Hash file names.  Instead of using the absolute path of a file, turn that
+  ;; absolute path into a hash.  This resolves the issue of file paths being
+  ;; longer than what the OS permits.  See also `krisb-auto-save-hash-file-name'
+  ;; and `krisb-backup-file-name-hash'.
+  (el-patch-defun savefold-utils--get-attr-table-fpath (fpath)
+    "Return the fpath of the attribute table file for FPATH.
+
+This naively replaces path slashes with ! (/a/b/c -> !a!b!c) leading to a chance
+of collision."
+    (expand-file-name
+     (el-patch-swap
+       (string-replace "/" "!" (expand-file-name fpath))
+       (sha1 (expand-file-name fpath)))
+     savefold-directory)))
 
 ;;; Persistent desktops
 ;;;; Desktop
