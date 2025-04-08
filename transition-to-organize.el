@@ -230,23 +230,4 @@ Uses my 'latex-paper' backend. See the original
                   (org-open-file (org-latex-paper-export-to-pdf nil s v b)))))))
     :options-alist
     '((:professor "PROFESSOR" nil nil parse)
-      (:course "COURSE" nil nil parse))))
-
-;;;;; Custom links
-(with-eval-after-load 'ol
-;;;;;; Colored text
-  (defun kb/org-link-color-export (link description format)
-    (let ((desc (or description link)))
-      (cond
-       ((eq format 'latex) (format "\\textcolor{%s}{%s}" link desc))
-       (t desc))))
-
-  (org-link-set-parameters "color"
-                           :face (lambda (path) `(:foreground ,path))
-                           :export #'kb/org-link-color-export
-                           :complete (lambda (&optional _)
-                                       (concat "color:"
-                                               (completing-read "Choose color: " (list-colors-duplicates (defined-colors))))))
-
-;;;;;; [ end ]
-  )
+      (:course "COURSE" nil nil parse)))))

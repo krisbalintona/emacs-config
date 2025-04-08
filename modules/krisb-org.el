@@ -195,6 +195,26 @@
   (org-num-skip-footnotes t)
   (org-num-skip-unnumbered t))
 
+;;; Ol
+(use-package ol
+  :ensure nil
+  :after org
+  :config
+  ;; Bespoke "color" org link type; meant for in-buffer colorized text as well
+  ;; as simple colorized text in export.
+  (defun krisb-org-link-color-export (link description format)
+    (let ((desc (or description link)))
+      (cond
+       ((eq format 'latex) (format "\\textcolor{%s}{%s}" link desc))
+       (t desc))))
+
+  (org-link-set-parameters "color"
+                           :face (lambda (path) `(:foreground ,path))
+                           :export #'krisb-org-link-color-export
+                           :complete (lambda (&optional _)
+                                       (concat "color:"
+                                               (completing-read "Choose color: " (list-colors-duplicates (defined-colors)))))))
+
 ;;; Org-contrib
 (use-package org-contrib
   :after org
