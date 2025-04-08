@@ -1,12 +1,3 @@
-;;;; Eglot-signature-eldoc-talkative
-;; Show documentation of symbols alongside their signature. (By default, only
-;; the signature is only shown via `eglot-signature-eldoc-function'.)
-(use-package eglot-signature-eldoc-talkative
-  :demand
-  :after eglot
-  :config
-  (advice-add #'eglot-signature-eldoc-function :override #'eglot-signature-eldoc-talkative))
-
 ;;;; Ox-latex
 (use-package ox-latex
   :ensure nil

@@ -129,6 +129,15 @@ See the docstring of `krisb-reveal-fold-commands'."
   :config
   (eglot-booster-mode 1))
 
+;;;; Eglot-signature-eldoc-talkative
+;; Show documentation of symbols alongside their signature. (By default, only
+;; the signature is only shown via `eglot-signature-eldoc-function'.)
+(use-package eglot-signature-eldoc-talkative
+  :demand t
+  :after eglot
+  :config
+  (advice-add #'eglot-signature-eldoc-function :override #'eglot-signature-eldoc-talkative))
+
 ;;;; Lsp-bridge
 ;; Asynchronous alternative LSP integration.  The asynchronism is at a cost: its
 ;; UI is bespoke.  To use, make sure to follow the install instructions in the
