@@ -1,4 +1,4 @@
-;;; Project
+;;; Project.el
 (use-package project
   :bind ( :map project-prefix-map
           ("e" . project-eshell))
@@ -25,7 +25,8 @@
   ;; On startup, remove non-existent directories from remembered projects list
   (project-forget-zombie-projects))
 
-;;; Xref
+;;; Goto definition
+;;;; Xref
 (use-package xref
   :bind ("C-M-?". xref-find-references-and-replace) ; Emacs 29.1
   :custom
@@ -65,7 +66,7 @@ See the docstring of `krisb-reveal-fold-commands'."
                          :location #'krisb-reveal-xref-find-information)))
     (add-hook 'xref-after-jump-hook #'krisb-reveal-fold)))
 
-;;; Consult-xref-stack
+;;;; Consult-xref-stack
 (use-package consult-xref-stack
   :vc ( :url "https://github.com/brett-lempereur/consult-xref-stack"
         :rev :newest)
@@ -84,7 +85,7 @@ See the docstring of `krisb-reveal-fold-commands'."
     (call-interactively
      (if (< 1 arg) 'consult-xref-stack-forward 'xref-go-forward))))
 
-;;; Dumber-jump
+;;;; Dumber-jump
 ;; A lean fork of dumb-jump.  For a list of supported languages, see
 ;; https://github.com/zenspider/dumber-jump?tab=readme-ov-file#supported-languages.
 (use-package dumber-jump
@@ -101,7 +102,9 @@ See the docstring of `krisb-reveal-fold-commands'."
           (cl-remove-duplicates
            (append dumber-jump-project-denoters project-vc-extra-root-markers))))
 
-;;; Eglot
+;;; LSP integration
+
+;;;; Eglot
 (use-package eglot
   :custom
   (eglot-code-action-indications '(eldoc-hint margin))
@@ -115,7 +118,7 @@ See the docstring of `krisb-reveal-fold-commands'."
          :format 'full))
   (eglot-extend-to-xref t))
 
-;;; Eglot-booster
+;;;; Eglot-booster
 ;; Boosts Eglot's communication with the server. There's also a version for LSP.
 (use-package eglot-booster
   ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
@@ -126,7 +129,7 @@ See the docstring of `krisb-reveal-fold-commands'."
   :config
   (eglot-booster-mode 1))
 
-;;; Lsp-bridge
+;;;; Lsp-bridge
 ;; Asynchronous alternative LSP integration.  The asynchronism is at a cost: its
 ;; UI is bespoke.  To use, make sure to follow the install instructions in the
 ;; package README.
