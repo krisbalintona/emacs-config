@@ -102,5 +102,40 @@ See the docstring of `krisb-reveal-fold-commands'."
           (cl-remove-duplicates
            (append dumber-jump-project-denoters project-vc-extra-root-markers))))
 
+;;; Hl-todo
+;; Highlight todos
+(use-package hl-todo
+  :custom
+  (hl-todo-include-modes
+   '(prog-mode text-mode conf-mode))
+  (hl-todo-text-modes '(text-mode))
+  (hl-todo-exclude-modes nil)
+  :config
+  (global-hl-todo-mode 1)
+
+  ;; Bespoke regexp-creating command.  In
+  ;; https://github.com/tarsius/hl-todo/issues/42, the package author explained
+  ;; their reasoning as to why regexps are not limited only to comments: todos
+  ;; in docstrings are useful and backwards compatibility.  This is different
+  ;; from my use-case though, so I manually enable highlighting only in comments
+  (el-patch-defun hl-todo--setup-regexp ()
+    "Setup keyword regular expression.
+See the function `hl-todo--regexp'."
+    (when-let ((bomb (assoc "???" hl-todo-keyword-faces)))
+      ;; If the user customized this variable before we started to treat the
+      ;; strings as regexps, then the string "???" might still be present.  We
+      ;; have to remove it because it results in the regexp search taking
+      ;; forever.
+      (setq hl-todo-keyword-faces (delete bomb hl-todo-keyword-faces)))
+    (setq hl-todo--regexp
+          (concat (el-patch-add (bound-and-true-p comment-start-skip))
+                  "\\(\\<"
+                  "\\(" (mapconcat #'car hl-todo-keyword-faces "\\|") "\\)"
+                  "\\>"
+                  (and (not (equal hl-todo-highlight-punctuation ""))
+                       (concat "[" hl-todo-highlight-punctuation "]"
+                               (if hl-todo-require-punctuation "+" "*")))
+                  "\\)"))))
+
 ;;; Provide
 (provide 'krisb-projects)
