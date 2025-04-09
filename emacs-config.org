@@ -11744,7 +11744,7 @@ There are several packages that end up incredibly useful for authoring packages.
 
   ;;; Custom entry formatter
   (declare-function org-noter-pdf--edges-to-region "org-noter")
-  (defun krisb-pdf-annot--make-entry-formatter (a)
+  (el-patch-defun pdf-annot--make-entry-formatter (a)
     "Return a formatter function for annotation A.
 
   A formatter function takes a format cons-cell and returns
@@ -11780,29 +11780,31 @@ There are several packages that end up incredibly useful for authoring packages.
                              `(:background ,color
                                            :foreground ,(funcall contrasty-color color)))
                type)))
-          (color
-           (let* ((color (pdf-annot-get a 'color)))
-             (propertize color 'face
-                         `(:background ,color
-                                       :foreground ,(funcall contrasty-color color)))))
-          (text
-           (let* ((page (pdf-annot-get a 'page))
-                  (edges (or (when (featurep 'org-noter)
-                               (org-noter-pdf--edges-to-region (alist-get 'markup-edges a)))
-                             (pdf-annot-get a 'edges)))
-                  (raw-text
-                   (pdf-info-gettext page
-                                     edges
-                                     pdf-view-selection-style
-                                     pdf-annot-list-document-buffer))
-                  (processed-text
-                   (replace-regexp-in-string "\n" " "
-                                             (replace-regexp-in-string "-\n" "" raw-text)))
-                  (text-length (length processed-text)))
-             (when (< entry-width text-length)
-               (add-text-properties entry-width text-length '(display "…") processed-text))
-             processed-text))))))
-  (advice-add 'pdf-annot--make-entry-formatter :override 'krisb-pdf-annot--make-entry-formatter)
+          (el-patch-add
+            (color
+             (let* ((color (pdf-annot-get a 'color)))
+               (propertize color 'face
+                           `(:background ,color
+                                         :foreground ,(funcall contrasty-color color))))))
+          (el-patch-add
+            (text
+             (let* ((page (pdf-annot-get a 'page))
+                    (edges (or (when (featurep 'org-noter)
+                                 (org-noter-pdf--edges-to-region (alist-get 'markup-edges a)))
+                               (pdf-annot-get a 'edges)))
+                    (raw-text
+                     (pdf-info-gettext page
+                                       edges
+                                       pdf-view-selection-style
+                                       pdf-annot-list-document-buffer))
+                    (processed-text
+                     (replace-regexp-in-string "\n" " "
+                                               (replace-regexp-in-string "-\n" "" raw-text)))
+                    (text-length (length processed-text)))
+               (when (< entry-width text-length)
+                 (add-text-properties entry-width text-length '(display "…") processed-text))
+               processed-text)))))))
+
 
   ;;; Avy keys to highlight region in PDF
   ;; Use an avy-like interface to highlight region in pdf-view-mode. Heavily based
