@@ -13661,9 +13661,10 @@ There are several packages that end up incredibly useful for authoring packages.
 
   (defun krisb-oblique-strategies--random (&optional n)
     "Return a random Oblique Strategies prompt.
-  If N is provided, return that many prompts."
+  If N is non-nil, return a list of that many prompts.  If N is nil,
+  default to 5."
     (let (prompts)
-      (dotimes (i n)
+      (dotimes (i (or n 5))
         (push (seq-random-elt krisb-oblique-strategies-prompts) prompts))
       prompts))
 
