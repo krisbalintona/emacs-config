@@ -3,9 +3,10 @@
 (use-package auctex
   :config
   ;; Add lualatex to commands list
-  (add-to-list 'TeX-command-list
-               '("LuaLaTeX" "lualatex --interaction=nonstopmode %t"
-                 TeX-run-TeX nil LaTeX-mode :help "Run LuaLaTeX")))
+  (with-eval-after-load 'tex
+    (add-to-list 'TeX-command-list
+                 '("LuaLaTeX" "lualatex --interaction=nonstopmode %t"
+                   TeX-run-TeX nil LaTeX-mode :help "Run LuaLaTeX"))))
 
 ;;;; Auctex-cont-latexmk
 ;; Automatically compile a latex file on-save with the latexmk program.  This is
