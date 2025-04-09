@@ -8314,39 +8314,56 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     :config
     ;; Integration with `org-agenda'
     (with-eval-after-load 'ol
-      (defun krisb-org-notmuch-store-link ()
-        "Store a link to one or more notmuch messages.
+      (el-patch-defun org-notmuch-store-link ()
+        (el-patch-swap
+          "Store a link to one or more notmuch messages."
+          "Store a link to one or more notmuch messages.
   My version allows for linking to the first message in an email thread
-  from a `notmuch-search-mode' buffer."
-        (cond
-         ((memq major-mode '(notmuch-show-mode notmuch-tree-mode))
-          ;; The value is passed around using variable `org-store-link-plist'.
-          (org-link-store-props
-           :type       "notmuch"
-           :message-id (notmuch-show-get-message-id t)
-           :subject    (notmuch-show-get-subject)
-           :from       (notmuch-show-get-from)
-           :to         (notmuch-show-get-to)
-           :date       (org-trim (notmuch-show-get-date)))
-          (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
-          (org-link-add-props :description (org-link-email-description))
-          org-store-link-plist)
-         ((equal major-mode 'notmuch-search-mode)
-          (save-window-excursion
-            (let ((buf (notmuch-show (notmuch-search-find-thread-id))))
-              (with-current-buffer buf
-                (org-link-store-props
-                 :type       "notmuch"
-                 :message-id (notmuch-show-get-message-id t)
-                 :subject    (notmuch-show-get-subject)
-                 :from       (notmuch-show-get-from)
-                 :to         (notmuch-show-get-to)
-                 :date       (org-trim (notmuch-show-get-date)))
-                (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
-                (org-link-add-props :description (org-link-email-description)))
-              (kill-buffer buf)
-              org-store-link-plist)))))
-      (advice-add 'org-notmuch-store-link :override #'krisb-org-notmuch-store-link))
+  from a `notmuch-search-mode' buffer.")
+        ;; 2025-04-09: Not sure what the most elegant el-patch directives would
+        ;; be, so I just remove then add.
+        (el-patch-remove
+          (when (memq major-mode '(notmuch-show-mode notmuch-tree-mode))
+            ;; The value is passed around using variable `org-store-link-plist'.
+            (org-link-store-props
+             :type       "notmuch"
+             :message-id (notmuch-show-get-message-id t)
+             :subject    (notmuch-show-get-subject)
+             :from       (notmuch-show-get-from)
+             :to         (notmuch-show-get-to)
+             :date       (org-trim (notmuch-show-get-date)))
+            (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+            (org-link-add-props :description (org-link-email-description))
+            org-store-link-plist))
+        (el-patch-add
+          (cond
+           ((memq major-mode '(notmuch-show-mode notmuch-tree-mode))
+            ;; The value is passed around using variable `org-store-link-plist'.
+            (org-link-store-props
+             :type       "notmuch"
+             :message-id (notmuch-show-get-message-id t)
+             :subject    (notmuch-show-get-subject)
+             :from       (notmuch-show-get-from)
+             :to         (notmuch-show-get-to)
+             :date       (org-trim (notmuch-show-get-date)))
+            (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+            (org-link-add-props :description (org-link-email-description))
+            org-store-link-plist)
+           ((equal major-mode 'notmuch-search-mode)
+            (save-window-excursion
+              (let ((buf (notmuch-show (notmuch-search-find-thread-id))))
+                (with-current-buffer buf
+                  (org-link-store-props
+                   :type       "notmuch"
+                   :message-id (notmuch-show-get-message-id t)
+                   :subject    (notmuch-show-get-subject)
+                   :from       (notmuch-show-get-from)
+                   :to         (notmuch-show-get-to)
+                   :date       (org-trim (notmuch-show-get-date)))
+                  (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+                  (org-link-add-props :description (org-link-email-description)))
+                (kill-buffer buf)
+                org-store-link-plist)))))))
 
     (with-eval-after-load 'org-capture
       (add-to-list 'org-capture-templates
