@@ -17,6 +17,7 @@
   (paren-face-mode-lighter "")
   :config
   (global-paren-face-mode 1))
+
 ;;;; Highlight-parentheses
 (use-package highlight-parentheses
   :hook ((emacs-lisp . highlight-parentheses-mode)

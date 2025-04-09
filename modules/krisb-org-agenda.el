@@ -171,7 +171,16 @@
       :empty-lines 1)
      ("j" "Journal" entry
       (function krisb-org-capture--org-node-datetree-journal)
-      "* %<%c>\n%?"
+      "* %<%c>\n"
+      :tree-type (year quarter month)
+      :jump-to-captured t
+      :immediate-finish t
+      :empty-lines 1
+      :clock-in t
+      :clock-resume t)
+     ("w" "Just write" entry
+      (function ,(lambda () (krisb-org-capture--org-node-insert-datetree (org-node-by-id "20241006T214800.000000"))))
+      "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
       :tree-type (year quarter month)
       :jump-to-captured t
       :immediate-finish t
@@ -185,7 +194,7 @@
       :clock-in t
       :clock-resume t)
      ("m" "Work meeting notes" entry
-      (file+olp+datetree ,(lambda () (org-node-get-file (org-node-by-id "20241114T091749.707997"))))
+      (function ,(lambda () (krisb-org-capture--org-node-insert-datetree (org-node-by-id "20241114T091749.707997"))))
       "* (%<%c>)%?\n\n"
       :tree-type (year quarter month)
       :jump-to-captured t
@@ -315,7 +324,7 @@ See ((org) Filtering/limiting agenda items)."
       (concat "-" tag)))
 
   ;; Bespoke functions for datetrees in org-node nodes
-  (defun krisb-org-capture--org-node-datetree (node)
+  (defun krisb-org-capture--org-node-insert-datetree (node)
     "Creates datetree at org-node NODE.
 Creates a datetree at NODE, and leaves point where a new entry should
 be.
@@ -373,7 +382,7 @@ This function is meant to chiefly be used by itself as a function in
                                        (lambda (_title node) (member "__journal" (org-node-get-tags node)))
                                        t nil 'org-node-hist))
            (node (gethash candidate org-node--candidate<>node)))
-      (krisb-org-capture--org-node-datetree node)))
+      (krisb-org-capture--org-node-insert-datetree node)))
 
   (defun krisb-org-capture--org-node-datetree-log ()
     "Prompt for an org-node node and create a datetree there.
@@ -387,7 +396,7 @@ This function is meant to chiefly be used by itself as a function in
                                        (lambda (_title node) (member "__log" (org-node-get-tags node)))
                                        t nil 'org-node-hist))
            (node (gethash candidate org-node--candidate<>node)))
-      (krisb-org-capture--org-node-datetree node))))
+      (krisb-org-capture--org-node-insert-datetree node))))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
