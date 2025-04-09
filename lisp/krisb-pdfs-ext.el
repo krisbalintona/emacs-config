@@ -335,20 +335,24 @@ Uses the current annotation at point's ID."
 ;; one since other packages utilize bookmarks (e.g. activities.el).
 
 ;;;###autoload
-(defun krisb-pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
-  "Create a bookmark PDF record.
+(el-patch-defun pdf-view-bookmark-make-record (&optional no-page no-slice no-size no-origin)
+  (el-patch-swap
+    "Create a bookmark PDF record.
+
+The optional, boolean args exclude certain attributes."
+    "Create a bookmark PDF record.
 The optional, boolean args exclude certain attributes.
 
 My version of this function also saves the value of the
-`pdf-view-register-alist' buffer local variable."
+`pdf-view-register-alist' buffer local variable.")
   (let ((displayed-p (eq (current-buffer)
                          (window-buffer))))
     (cons (buffer-name)
           (append (bookmark-make-record-default nil t 1)
-                  ;; FIXME 2024-11-05: Causes infinite recursion with desktop.e
-                  ;; for some reason
-                  `(;; ,(cons 'registers (buffer-local-value 'pdf-view-register-alist (current-buffer)))
-                    ,(cons 'midnight-p (buffer-local-value 'pdf-view-midnight-minor-mode (current-buffer)))
+                  `((el-patch-add ,(cons 'midnight-p (buffer-local-value 'pdf-view-midnight-minor-mode (current-buffer))))
+                    ;; FIXME 2024-11-05: Causes infinite recursion with
+                    ;; desktop.el.  for some reason
+                    ;; (el-patch-add ,(cons 'registers (buffer-local-value 'pdf-view-register-alist (current-buffer))))
                     ,(unless no-page
                        (cons 'page (pdf-view-current-page)))
                     ,(unless no-slice
@@ -365,14 +369,18 @@ My version of this function also saves the value of the
                     (handler . pdf-view-bookmark-jump-handler))))))
 
 ;;;###autoload
-(defun krisb-pdf-view-bookmark-jump-handler (bmk)
-  "The bookmark handler-function interface for bookmark BMK.
+(el-patch-defun pdf-view-bookmark-jump-handler (bmk)
+  (el-patch-swap
+    "The bookmark handler-function interface for bookmark BMK.
+
+See also `pdf-view-bookmark-make-record'."
+    "The bookmark handler-function interface for bookmark BMK.
 See also `pdf-view-bookmark-make-record'.
 
 My version of this function also restores the value of the
-`pdf-view-register-alist' buffer local variable."
-  (let ((registers (bookmark-prop-get bmk 'registers))
-        (midnight-p (bookmark-prop-get bmk 'midnight-p))
+`pdf-view-register-alist' buffer local variable.")
+  (let ((el-patch-add (registers (bookmark-prop-get bmk 'registers)))
+        (el-patch-add (midnight-p (bookmark-prop-get bmk 'midnight-p)))
         (page (bookmark-prop-get bmk 'page))
         (slice (bookmark-prop-get bmk 'slice))
         (size (bookmark-prop-get bmk 'size))
@@ -387,13 +395,15 @@ My version of this function also restores the value of the
             (with-selected-window
                 (or (get-buffer-window (current-buffer) 0)
                     (selected-window))
-              (if midnight-p
-                  (pdf-view-midnight-minor-mode 1)
-                (pdf-view-midnight-minor-mode -1))
-              ;; FIXME 2024-11-05: Causes infinite recursion with desktop.e for
+              (el-patch-add
+                (if midnight-p
+                    (pdf-view-midnight-minor-mode 1)
+                  (pdf-view-midnight-minor-mode -1)))
+              ;; FIXME 2024-11-05: Causes infinite recursion with desktop.el for
               ;; some reason
-              ;; (when registers
-              ;;   (setq-local pdf-view-register-alist registers))
+              ;; (el-patch-add
+              ;;   (when registers
+              ;;     (setq-local pdf-view-register-alist registers)))
               (when size
                 (setq-local pdf-view-display-size size))
               (when slice
