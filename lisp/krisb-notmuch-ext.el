@@ -111,8 +111,8 @@ Tagging is done by `krisb-notmuch-show-tag-thread'."
 (advice-add 'notmuch-mua-new-reply :around #'krisb-notmuch--set-message-citation-style)
 
 ;;;; `notmuch-mua-reply' overide to obey `message-cite-reply-position'
-(defun krisb-notmuch-mua-reply (query-string &optional sender reply-all duplicate)
-  "Like `notmuch-mua-reply' but positions citation based on `message-cite-reply-position'."
+(el-patch-defun notmuch-mua-reply (query-string &optional sender reply-all duplicate)
+  (el-patch-add "Like `notmuch-mua-reply' but positions citation based on `message-cite-reply-position'.")
   (let* ((duparg (and duplicate (list (format "--duplicate=%d" duplicate))))
          (args `("reply" "--format=sexp" "--format-version=5" ,@duparg))
          (process-crypto notmuch-show-process-crypto)
@@ -170,20 +170,20 @@ Tagging is done by `krisb-notmuch-show-tag-thread'."
             (when message-signature-insert-empty-line
               (forward-line -1))
           (goto-char (point-max))))
-      ;; If `message-cite-reply-position' is `above', e.g., for Gmail-like
-      ;; email replies, then before inserting the citation, put the point
-      ;; after the signature and insert a newline for spacing. Also respects
-      ;; if `message-cite-reply-position' is set via `message-cite-style'.
-      (when (or (equal message-cite-reply-position 'above)
-                (and message-cite-style
-                     (eq (eval (cadr
-                                (assoc 'message-cite-reply-position
-                                       (if (symbolp message-cite-style)
-                                           (eval message-cite-style)
-                                         message-cite-style))))
-                         'above)))
-        (goto-char (point-max))
-        (insert "\n"))
+      ;; If `message-cite-reply-position' is `above', e.g., for Gmail-like email
+      ;; replies, then before inserting the citation, put the point after the
+      ;; signature and insert a newline for spacing. Also respects if
+      ;; `message-cite-reply-position' is set via `message-cite-style'.
+      (el-patch-add (when (or (equal message-cite-reply-position 'above)
+                              (and message-cite-style
+                                   (eq (eval (cadr
+                                              (assoc 'message-cite-reply-position
+                                                     (if (symbolp message-cite-style)
+                                                         (eval message-cite-style)
+                                                       message-cite-style))))
+                                       'above)))
+                      (goto-char (point-max))
+                      (insert "\n")))
       (let ((from (plist-get original-headers :From))
             (date (plist-get original-headers :Date))
             (start (point)))
