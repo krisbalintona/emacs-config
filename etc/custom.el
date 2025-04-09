@@ -4,56 +4,61 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("/home/krisbalintona/Documents/org-database/agenda/archive/2023-and-before todos.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/bui.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/buoy.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/crc.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/cs1730.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/emacs.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/emails.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/hist0244.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/hist1974i.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/archive/phil1340.org_archive"
-     "/home/krisbalintona/Documents/org-database/agenda/gcal.org"
-     "/home/krisbalintona/Documents/org-database/agenda/recurring.org"
-     "/home/krisbalintona/Documents/org-database/agenda/refile.org"
-     "/home/krisbalintona/Documents/org-database/agenda/todo.org") nil nil "Customized with use-package org-agenda")
+ '(eglot-events-buffer-config (list :size 2000000 :format 'full) nil nil "Customized with use-package eglot")
+ '(eglot-sync-connect t nil nil "Customized with use-package eglot")
  '(package-selected-packages
-   '(ace-window activities adaptive-wrap agitate all-the-icons apheleia astute
-                beframe boon breadcrumb bufler cape cascading-dir-locals
-                citar-denote citar-org-roam cl-generic cm-mode cond-star
-                consult-xref-stack corfu-prescient csv-mode cursory darkroom
-                default-text-scale denote denote-explore denote-interface
-                diff-hl diminish dired-hist dired-subtree dumber-jump
-                easysession eat edit-indirect editorconfig eglot eglot-booster
-                elisp-demos embark-consult engine-mode enlight erc eros
-                eshell-atuin eshell-syntax-highlighting eshell-z
-                exec-path-from-shell faceup fancy-compilation fish-mode
-                flymake-collection fontaine forge form-feed gcmh gif-screencast
-                git-share god-mode grid hammy hide-mode-line
-                highlight-function-calls hotfuzz hugoista hyprlang-ts-mode
-                ibuffer-project idlwave indexed info-colors inspector jinx
-                kbd-mode keychain-environment kind-icon lazy-guard ligature lin
-                litanize lorem-ipsum marginalia meow mermaid-mode mixed-pitch
-                mode-minder modus-themes motion-selection motion-selection-mode
-                mpv nadvice nerd-icons-completion nerd-icons-dired
-                nerd-icons-ibuffer no-littering notmuch-addr notmuch-transient
-                nov ntlm ob-mermaid oc-csl-activate ol-notmuch olivetti on
-                orderless org org-appear org-bookmark-heading org-bulletproof
-                org-contrib org-edna org-make-toc org-mime org-modern org-node
-                org-remark org-review org-roam-ql org-roam-ui org-web-tools
-                outli outline-indent ox-hugo package-build package-lint-flymake
-                paren-face pcmpl-args pdf-meta-edit pdf-tools peg pinentry
-                popper powerthesaurus psession pulsar puni python rainbow-mode
-                recursion-indicator saveplace-pdf-view scratch show-font
-                sinister smart-mark so-long soap-client sudo-edit suggest svg
-                system-packages tmr tramp transient transpose-frame treesit-auto
-                try typewriter-roll-mode ultra-scroll use-package vc-jj
-                verilog-mode vertico-prescient which-key window-tool-bar wombag
-                ytdl))
+   '(abridge-diff ace-window activities adaptive-wrap agitate all-the-icons
+                  apheleia artbollocks-mode astute auctex-cont-latexmk beframe
+                  boon breadcrumb bufler cape cascading-dir-locals citar-denote
+                  citar-org-roam cl-generic cm-mode cond-star consult-xref-stack
+                  corfu-prescient csv-mode cursory darkroom default-text-scale
+                  denote denote-explore denote-interface diff-hl diminish
+                  dired-hist dired-subtree dumber-jump easysession eat
+                  edit-indirect editorconfig eglot eglot-booster
+                  eglot-signature-eldoc-talkative elisp-demos embark-consult
+                  engine-mode enlight erc eros eshell-atuin
+                  eshell-syntax-highlighting eshell-z exec-path-from-shell
+                  faceup fancy-compilation fish-mode flymake-collection
+                  flymake-proselint fontaine forge form-feed gcmh gif-screencast
+                  git-share god-mode grid hammy hide-mode-line
+                  highlight-function-calls highlight-parentheses hl-todo hotfuzz
+                  hugoista hyprlang-ts-mode ibuffer-project idlwave indexed
+                  info-colors inspector jinx kbd-mode keychain-environment
+                  kind-icon lazy-guard ligature lin litanize lorem-ipsum
+                  lsp-bridge marginalia markdown-mode meow mermaid-mode
+                  mixed-pitch mode-minder modus-themes motion-selection
+                  motion-selection-mode mpv nadvice nerd-icons-completion
+                  nerd-icons-dired nerd-icons-ibuffer no-littering notmuch-addr
+                  notmuch-transient nov ntlm ob-mermaid oc-csl-activate
+                  ol-notmuch olivetti on orderless org org-appear
+                  org-bookmark-heading org-bulletproof org-contrib org-edna
+                  org-make-toc org-mime org-modern org-modern-indent org-node
+                  org-ql org-remark org-review org-roam-ql org-roam-ui
+                  org-web-tools outli outline-indent ox-hugo package-build
+                  package-lint-flymake paren-face pcmpl-args pdf-meta-edit
+                  pdf-tools peg persist-state pinentry popper powerthesaurus
+                  psession pulsar puni python rainbow-mode realgud
+                  recursion-indicator savefold saveplace-pdf-view scratch
+                  show-font sinister smart-mark so-long soap-client
+                  stillness-mode sudo-edit suggest svg system-packages tmr
+                  track-changes tramp transient transpose-frame treesit-auto try
+                  typewriter-roll-mode ultra-scroll use-package vc-backup vc-jj
+                  verilog-mode vertico-prescient wallabag which-key
+                  window-tool-bar wombag yasnippet ytdl))
  '(package-vc-selected-packages
-   '((mode-minder :url "https://github.com/jdtsmith/mode-minder.git")
+   '((lsp-bridge :vc-backend Git :url
+                 "https://github.com/manateelazycat/lsp-bridge.git")
+     (org-modern-indent :vc-backend Git :url
+                        "https://github.com/jdtsmith/org-modern-indent.git")
+     (savefold :url "https://github.com/jcfk/savefold.el.git")
+     (savefold.el :vc-backend Git :url "https://github.com/jcfk/savefold.el.git")
+     (mini-ontop.el :vc-backend Git :url
+                    "https://github.com/hkjels/mini-ontop.el.git")
+     (stillness :url "https://github.com/neeasade/stillness-mode.el")
+     (fancy-joiner :vc-backend Git :url
+                   "https://git.sr.ht/~flandrew/fancy-joiner")
+     (democratize :url "https://git.sr.ht/~flandrew/democratize")
+     (mode-minder :url "https://github.com/jdtsmith/mode-minder.git")
      (kbd-mode :url "https://github.com/kmonad/kbd-mode")
      (flymake-collection :url
                          "https://github.com/krisbalintona/flymake-collection.git"
