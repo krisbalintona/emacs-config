@@ -603,6 +603,14 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 
   (setopt use-package-always-ensure t
           use-package-expand-minimally t  ; Verbosity of use-package macro
+          ;; 2025-04-08: I do not set `use-package-always-defer' to non-nil
+          ;; because I have had bad experiences trying to troubleshoot packages
+          ;; because of the many potential deferral conditions.  Package deferrals
+          ;; overlap and become interwoven.  It becomes harder when I don't notice
+          ;; things are broken because a package's features were lazily loaded.
+          ;;
+          ;; Instead, I choose to opt-in to deferring packages (e.g. through
+          ;; :defer, :bind, :after, etc.)
           use-package-always-defer nil)
 
   ;; Only be verbose when interpreted, otherwise errors are caught at compile time
