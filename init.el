@@ -5,6 +5,7 @@
 
 ;;; Load libraries
 (require 'krisb-common)
+(require 'krisb-oblique-strategies)
 
 ;;;; Modules
 (require 'krisb-garbage-collection)

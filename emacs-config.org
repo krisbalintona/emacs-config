@@ -352,6 +352,7 @@ This sets the default graphical element settings used by every frame.
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; Load libraries
   (require 'krisb-common)
+  (require 'krisb-oblique-strategies)
 #+end_src
 
 *** Load modules
