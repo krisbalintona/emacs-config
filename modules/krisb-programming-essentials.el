@@ -5,6 +5,7 @@
          (prog-mode . bug-reference-prog-mode))) ; Buttonize bug references in comments and strings
 
 ;;; Writing
+
 ;;;; Newcomment
 (use-package newcomment
   :ensure nil
@@ -30,6 +31,7 @@
   (electric-pair-mode 1))
 
 ;;; Visual organization
+
 ;;;; Form-feed
 ;; Display  (page breaks) fancily. Visit the readme for alternatives and their
 ;; differences
@@ -81,7 +83,20 @@
   :config
   (abridge-diff-mode 1))
 
+;;;; Whitespace
+;; Visualize whitespace so mistakes are more easily detectable.
+(use-package whitespace
+  :ensure nil
+  :hook (prog-mode . whitespace-mode)
+  :custom
+  (whitespace-style '(empty face lines-tail tab-mark tabs trailing))
+  (whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
+                                 (newline-mark ?\n [?¬ ?\n])
+                                 (space-mark ?\  [?·] [?.])))
+  (whitespace-line-column nil))
+
 ;;; Convenience
+
 ;;;; Lorem-ipsum
 ;; Insert sample text
 (use-package lorem-ipsum
