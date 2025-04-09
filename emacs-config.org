@@ -9424,6 +9424,13 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     (paren-face-mode-lighter "")
     :config
     (global-paren-face-mode 1))
+  ;;;; Highlight-parentheses
+  (use-package highlight-parentheses
+    :hook ((emacs-lisp . highlight-parentheses-mode)
+           (minibuffer-setup . highlight-parentheses-minibuffer-setup))
+    :custom
+    ;; TODO 2025-04-08: Configure `highlight-parentheses-colors'
+    (highlight-parentheses-highlight-adjacent t))
 
   ;;; Documentation
   ;;;; Help
