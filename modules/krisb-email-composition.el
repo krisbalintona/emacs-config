@@ -394,7 +394,7 @@ A spacer is two newlines inserted after portions inserted by
                                    :with-toc nil))
 
   ;; Pop buffer according to `display-buffer-alist'
-  (defun krisb-org-mime-edit-mail-in-org-mode ()
+  (el-patch-defun org-mime-edit-mail-in-org-mode ()
     "Call a special editor to edit the mail body in `org-mode'."
     (interactive)
     ;; see `org-src--edit-element'
@@ -416,17 +416,26 @@ A spacer is two newlines inserted after portions inserted by
         ;; or multiple embedded org code in one mail
         (setq org-mime-src--overlay overlay)
 
-        (with-current-buffer buffer
-          (erase-buffer)
-          (insert org-mime-src--hint)
-          (insert text)
-          (goto-char (point-min))
-          (org-mode)
-          (org-mime-src-mode)
-          (while (org-at-comment-p)
-            (forward-line 1)))
-        (display-buffer buffer)))))
-  (advice-add 'org-mime-edit-mail-in-org-mode :override #'krisb-org-mime-edit-mail-in-org-mode))
+        (el-patch-swap
+          (save-excursion
+            (delete-other-windows)
+            (org-switch-to-buffer-other-window buffer)
+            (erase-buffer)
+            (insert org-mime-src--hint)
+            (insert text)
+            (goto-char (point-min))
+            (org-mode)
+            (org-mime-src-mode))
+          (with-current-buffer buffer
+            (erase-buffer)
+            (insert org-mime-src--hint)
+            (insert text)
+            (goto-char (point-min))
+            (org-mode)
+            (org-mime-src-mode)
+            (while (org-at-comment-p)
+              (forward-line 1))))
+        (el-patch-add (display-buffer buffer)))))))
 
 ;;; Mail Transfer Agent (email sending)
 
