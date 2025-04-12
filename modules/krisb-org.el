@@ -1,7 +1,7 @@
 ;;; Built-in
 ;;;; Org
 (use-package org
-  :pin gnu-elpa                         ; Pin to latest stable release
+  :pin gnu-elpa-devel
   :hook ((org-mode . variable-pitch-mode)
          (org-mode . visual-line-mode)
          (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 100))))
