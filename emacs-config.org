@@ -361,9 +361,9 @@ This sets the default graphical element settings used by every frame.
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;;; Modules
+  (require 'krisb-core)
   (require 'krisb-garbage-collection)
   (require 'krisb-system-env)
-  (require 'krisb-core)
   (require 'krisb-essentials)
 
   (require 'krisb-icons)

@@ -8,9 +8,9 @@
 (require 'krisb-oblique-strategies)
 
 ;;;; Modules
+(require 'krisb-core)
 (require 'krisb-garbage-collection)
 (require 'krisb-system-env)
-(require 'krisb-core)
 (require 'krisb-essentials)
 
 (require 'krisb-icons)
