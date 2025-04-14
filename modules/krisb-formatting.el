@@ -1,14 +1,14 @@
 ;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia
-  :ensure-system-package ((black . python-black)
-                          (prettier)
-                          (clang-format . clang-format-all-git)
-                          (latexindent . texlive-binextra)
-                          (stylua)
-                          (google-java-format)
-                          (shfmt)
-                          (rustfmt))
+  ;; :ensure-system-package ((black . python-black)
+  ;;                         (prettier)
+  ;;                         (clang-format . clang-format-all-git)
+  ;;                         (latexindent . texlive-binextra)
+  ;;                         (stylua)
+  ;;                         (google-java-format)
+  ;;                         (shfmt)
+  ;;                         (rustfmt))
   :hook (apheleia-post-format . delete-trailing-whitespace)
   :custom
   (apheleia-mode-lighter "")
