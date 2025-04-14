@@ -13,7 +13,8 @@
 ;; a more maintained version of auctex-latexmk
 ;; (https://github.com/tom-tan/auctex-latexmk/).
 (use-package auctex-cont-latexmk
-  :ensure-system-package (latexmk . texlive-binextra)
+  ;; For AUR:
+  ;; :ensure-system-package (latexmk . texlive-binextra)
   :after latex
   :bind ( :map LaTeX-mode-map
           ("C-c t k" . auctex-cont-latexmk-toggle)))

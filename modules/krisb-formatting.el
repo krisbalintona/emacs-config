@@ -1,6 +1,7 @@
 ;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia
+  ;; For AUR:
   ;; :ensure-system-package ((black . python-black)
   ;;                         (prettier)
   ;;                         (clang-format . clang-format-all-git)
