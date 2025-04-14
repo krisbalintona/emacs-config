@@ -158,10 +158,11 @@ My version uses the full outline path instead of just heading text."
 ;; Useful Denote utilities
 (use-package denote-explore
   :after denote
+  ;; For AUR:
   ;; Don't forget to install the required dependencies required for my chosen
   ;; `denote-explore-network-format'
-  :ensure-system-package ((dot . graphviz)
-                          (R . r))
+  ;; :ensure-system-package ((dot . graphviz)
+  ;;                         (R . r))
   :custom
   (denote-explore-network-directory     ; Have to end path in slash
    (no-littering-expand-var-file-name "denote-explore/"))
