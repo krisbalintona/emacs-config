@@ -1,7 +1,8 @@
 ;;;; Notmuch
 (use-package notmuch
-  :ensure-system-package (notmuch
-                          (gmi . lieer-git))
+  ;; For AUR:
+  ;; :ensure-system-package (notmuch
+  ;;                         (gmi . lieer-git))
   :hook ((notmuch-mua-send . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
          (notmuch-show . olivetti-mode)
          (notmuch-show . visual-line-mode)
