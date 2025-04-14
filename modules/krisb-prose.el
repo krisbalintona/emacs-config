@@ -542,9 +542,12 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
 ;;;; Cm-mode (CriticMarkup minor mode)
 ;; Track suggested changes in plain text files.
 (use-package cm-mode
+  :disabled t                     ; 2025-04-14: Haven't found a use for this yet
   :vc ( :url "https://github.com/joostkremers/criticmarkup-emacs.git"
         :rev :newest)
-  :ensure-system-package (pandiff . nodejs-pandiff))
+  ;; For AUR:
+  ;; :ensure-system-package (pandiff . nodejs-pandiff) ; Prose diffs for CriticMarkup
+  )
 
 ;;; Provide
 (provide 'krisb-prose)
