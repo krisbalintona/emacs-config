@@ -4,7 +4,8 @@
 ;;; Ob-mermaid
 ;; Mermaid diagrams
 (use-package ob-mermaid
-  :ensure-system-package (mmdc . mermaid-cli)
+  ;; For AUR:
+  ;; :ensure-system-package (mmdc . mermaid-cli)
   :custom
   (ob-mermaid-cli-path (executable-find "mmdc"))
   :config
