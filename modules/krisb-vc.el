@@ -187,7 +187,9 @@
 ;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated before committing since
 ;; their values may change. Sources them to ~/.keychain/
 (use-package keychain-environment
-  :ensure-system-package keychain)
+  ;; For AUR:
+  ;; :ensure-system-package keychain
+  )
 
 ;;; Epg-config
 ;; Epg-config is responsible for querying passphrases
