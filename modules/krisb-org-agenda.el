@@ -400,8 +400,6 @@ This function is meant to chiefly be used by itself as a function in
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
-  :vc ( :url "https://github.com/Alexander-Miller/org-super-agenda.git"
-        :rev :newest)
   :custom
   (org-super-agenda-hide-empty-groups t)
   (org-super-agenda-keep-order t)
