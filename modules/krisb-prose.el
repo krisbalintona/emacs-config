@@ -425,7 +425,8 @@ duration."
 ;;;; Ispell
 (use-package ispell
   :ensure nil
-  :ensure-system-package aspell
+  ;; For AUR:
+  ;; :ensure-system-package aspell
   :custom
   (ispell-program-name (executable-find "aspell")) ; Aspell is better for English than hunspell
   (ispell-silently-savep t)
@@ -440,14 +441,15 @@ duration."
 ;; manual for more information:
 ;; https://abiword.github.io/enchant/src/enchant.html
 (use-package jinx
-  :ensure-system-package ((enchant-2 . enchant)
-                          (pkgconf)
-                          ;; Don't forget to install spell checker libraries!
-                          (hunspell)
-                          ("/usr/share/hunspell/en_US-large.dic" . hunspell-en_us)
-                          (hspell)      ; Hebrew
-                          (nuspell) ; Newest spell checker to be used by Firefox, Thunderbird, etc.
-                          (voikkospell . libvoikko)) ; Finnish
+  ;; For AUR:
+  ;; :ensure-system-package ((enchant-2 . enchant)
+  ;;                         (pkgconf)
+  ;;                         ;; Don't forget to install spell checker libraries!
+  ;;                         (hunspell)
+  ;;                         ("/usr/share/hunspell/en_US-large.dic" . hunspell-en_us)
+  ;;                         (hspell)      ; Hebrew
+  ;;                         (nuspell) ; Newest spell checker to be used by Firefox, Thunderbird, etc.
+  ;;                         (voikkospell . libvoikko)) ; Finnish
   :demand t
   :diminish
   :bind ( :map jinx-mode-map
