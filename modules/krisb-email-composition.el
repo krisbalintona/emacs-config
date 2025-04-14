@@ -459,7 +459,8 @@ A spacer is two newlines inserted after portions inserted by
 ;; `send-mail-function' to `smtpmail-send-it'
 (use-package smtpmail
   :ensure nil
-  :ensure-system-package msmtp
+  ;; For AUR:
+  ;; :ensure-system-package msmtp
   :after message
   :custom
   (smtpmail-queue-mail nil)
