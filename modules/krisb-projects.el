@@ -89,7 +89,8 @@ See the docstring of `krisb-reveal-fold-commands'."
 ;; A lean fork of dumb-jump.  For a list of supported languages, see
 ;; https://github.com/zenspider/dumber-jump?tab=readme-ov-file#supported-languages.
 (use-package dumber-jump
-  :ensure-system-package (rg . ripgrep)
+  ;; For AUR:
+  ;; :ensure-system-package (rg . ripgrep)
   :custom
   (dumber-jump-default-project user-emacs-directory)
   :init
