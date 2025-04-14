@@ -231,14 +231,17 @@ Meant for `completion-at-point-functions' in eshell buffers."
           ("s" . eat)
           :map project-prefix-map
           ("s" . eat-project))
-  :custom-face
+  :config
   ;; 2025-04-05: This resolves the continuation lines issue in EAT terminal
   ;; (including eat-shell in `eat-eshell-visual-command-mode').  The
   ;; continuation line issue results in, I think, the default font being too
   ;; wide, causing the width of the characters to exceed the width of the
   ;; window, resulting in ugly continuation lines that ruin the wrapping of the
   ;; output.
-  (eat-term-font-0 ((t (:family "Iosevka Term SS04")))))
+  (set-face-attribute 'eat-term-font-0 nil
+                      :family (if (bound-and-true-p fontaine-current-preset)
+                                      (fontaine--get-preset-property fontaine-current-preset :default-family)
+                                "Iosevka Term SS04")))
 
 ;;; Provide
 (provide 'krisb-shell)
