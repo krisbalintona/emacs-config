@@ -12,6 +12,8 @@
   :hook (apheleia-post-format . delete-trailing-whitespace)
   :custom
   (apheleia-mode-lighter "")
+  (apheleia-remote-algorithm 'local)
+
   (apheleia-log-only-errors t)
   (apheleia-log-debug-info nil)         ; Can be useful to set to non-nil in order to temporarily debug
   (apheleia-hide-log-buffers nil)
