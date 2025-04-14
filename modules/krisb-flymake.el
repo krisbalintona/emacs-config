@@ -27,7 +27,8 @@
 
 ;;; Flymake-collection
 (use-package flymake-collection
-  :ensure-system-package vale
+  ;; For AUR:
+  ;; :ensure-system-package vale
   :after flymake
   :custom
   (flymake-collection-hook-inherit-config t)
