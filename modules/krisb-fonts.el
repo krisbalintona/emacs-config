@@ -101,6 +101,11 @@
 
       :line-spacing nil)))
   :config
+  ;; 2025-04-14: I manually create the parent directory if it doesn't already
+  ;; exist; this is not yet implemented upstream, so I do it manually here for
+  ;; fresh installs of Emacs.
+  (make-directory (file-name-directory fontaine-latest-state-file) t)
+
   ;; Set the last preset or fall back to desired style from `fontaine-presets'
   (when (file-exists-p fontaine-latest-state-file)
     (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default)))
