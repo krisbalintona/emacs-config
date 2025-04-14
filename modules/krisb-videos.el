@@ -13,7 +13,8 @@
 
 ;;; Ytdl
 (use-package ytdl
-  :ensure-system-package (yt-dlp)
+  ;; For AUR:
+  ;; :ensure-system-package (yt-dlp)
   :custom
   (ytdl-command "yt-dlp")
   (ytdl-always-query-default-filename 'yes-confirm)
