@@ -89,7 +89,7 @@
   :ensure nil
   :hook (prog-mode . whitespace-mode)
   :custom
-  (whitespace-style '(empty face lines-tail tab-mark tabs trailing))
+  (whitespace-style '(empty face tab-mark tabs trailing))
   (whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
                                  (newline-mark ?\n [?¬ ?\n])
                                  (space-mark ?\  [?·] [?.])))
