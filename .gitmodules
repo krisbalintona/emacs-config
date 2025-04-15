@@ -1,6 +1,3 @@
 [submodule "emacs-data"]
-    path = var
-    url = git@gitlab.com:PreciousPudding/emacs-data.git
-[submodule "site-lisp/work-timer"]
-	path = site-lisp/work-timer
-	url = git@github.com:krisbalintona/work-timer.git
+	path = var
+	url = git@gitlab.com:PreciousPudding/emacs-data.git
