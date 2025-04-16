@@ -31,5 +31,8 @@
     (unless (treesit-grammar-location 'hyprlang)
       (treesit-install-language-grammar 'hyprlang))))
 
+;;; Nix
+(use-package nix-ts-mode)
+
 ;;; Provide
 (provide 'krisb-other-languages)

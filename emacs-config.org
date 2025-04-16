@@ -9748,6 +9748,9 @@ There are several packages that end up incredibly useful for authoring packages.
       (unless (treesit-grammar-location 'hyprlang)
         (treesit-install-language-grammar 'hyprlang))))
 
+  ;;; Nix
+  (use-package nix-ts-mode)
+
   ;;; Provide
   (provide 'krisb-other-languages)
 #+end_src
