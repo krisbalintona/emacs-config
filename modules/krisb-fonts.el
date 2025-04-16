@@ -20,7 +20,7 @@
      ;; reference for all possible properties
      (t
       ;; Alternatives:
-      :default-family "Iosevka Term SS04"
+      :default-family "IosevkaTermSS04 Nerd Font"
       :default-weight regular
       :default-slant normal
       :default-width normal
