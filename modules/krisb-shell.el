@@ -225,7 +225,8 @@ Meant for `completion-at-point-functions' in eshell buffers."
   :vc ( :url "https://codeberg.org/vifon/emacs-eat.git"
         :branch "fish-integration"
         :rev :newest)
-  :hook ((eshell-load . eat-eshell-mode)
+  :hook ((fontaine-set-preset . krisb-eat--setup)
+         (eshell-load . eat-eshell-mode)
          (eshell-load . eat-eshell-visual-command-mode))
   :bind ( :map krisb-open-keymap
           ("s" . eat)
@@ -238,10 +239,13 @@ Meant for `completion-at-point-functions' in eshell buffers."
   ;; wide, causing the width of the characters to exceed the width of the
   ;; window, resulting in ugly continuation lines that ruin the wrapping of the
   ;; output.
-  (set-face-attribute 'eat-term-font-0 nil
-                      :family (if (bound-and-true-p fontaine-current-preset)
-                                      (fontaine--get-preset-property fontaine-current-preset :default-family)
-                                "Iosevka Term SS04")))
+  (defun krisb-eat--setup ()
+    "Set up an EAT terminal shell."
+    (when (featurep 'fontaine)
+      (set-face-attribute 'eat-term-font-0 nil
+                          ;; This returns the default-family of the current preset,
+                          ;; whether explicitly or implicitly set
+                          :family (fontaine--get-preset-property fontaine-current-preset :default-family)))))
 
 ;;; Provide
 (provide 'krisb-shell)
