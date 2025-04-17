@@ -39,7 +39,6 @@ command."
 ;;; Dired-x
 (use-package dired-x
   :ensure nil
-  :hook (dired-mode . dired-omit-mode)
   :custom
   (dired-omit-verbose nil))
 

@@ -10054,7 +10054,6 @@ There are several packages that end up incredibly useful for authoring packages.
   ;;; Dired-x
   (use-package dired-x
     :ensure nil
-    :hook (dired-mode . dired-omit-mode)
     :custom
     (dired-omit-verbose nil))
 
