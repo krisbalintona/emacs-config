@@ -715,7 +715,7 @@ Same as default but truncates with `truncate-string-ellipsis'."
   :bind ( :map org-mode-map
           ("C-c d" . krisb-consult-org-edna-block)
           :map org-agenda-mode-map
-          ("C-c d". krisb-consult-org-agenda-enda-block))
+          ("C-c d". krisb-consult-org-agenda-edna-block))
   :config
   (org-edna-mode 1)
 
