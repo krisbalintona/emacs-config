@@ -867,7 +867,10 @@ a random date within the next DAYS days."
     (let* ((random-day (1+ (random days)))
            (ts (format-time-string (car org-time-stamp-formats)
                                    (time-add (current-time) (days-to-time random-day)))))
-      ;; We don't also call `org-review-insert-last-review' because I use
+      ;; We don't also call `org-review-insert-last-review' because I sometimes
+      ;; I do not want that.  In the cases when I'd like that function called as
+      ;; well, I persist the org-agenda marks and call that function before or
+      ;; after this one
       (org-review-insert-date org-review-next-property-name
                               org-review-next-timestamp-format
                               ts)))
