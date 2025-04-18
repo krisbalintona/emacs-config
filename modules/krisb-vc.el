@@ -247,9 +247,11 @@
 ;;; Vc-jj
 ;; Best jj integration with vc currently (2025-03-13).
 (use-package vc-jj
+  :pin gnu-elpa-devel
   :config
   ;; Project integration with JJ
-  (require 'project-jj))
+  (with-eval-after-load 'project
+    (require 'project-jj)))
 
 ;;; Git-share
 ;; Share a web URL to the commit responsible for the change at point or the
