@@ -59,7 +59,7 @@
 
             ;; Region
             (fg-region unspecified)
-            (bg-region bg-dim))
+            (bg-region bg-ochre))
           modus-operandi-palette-overrides
           `(
             ;; I like `modus-*-tinted's mode line colors. I like to keep
@@ -69,8 +69,6 @@
             (fg-mode-line-active        "#000000")
             (bg-mode-line-inactive      "#dfd9cf")
             (fg-mode-line-inactive      "#585858")
-
-
             )
           modus-vivendi-palette-overrides
           `(
