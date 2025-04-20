@@ -38,6 +38,10 @@
   (with-eval-after-load 'info
     (org-remark-info-mode 1))
   :config
+  ;; Ensure that `org-remark-notes-file-name' exists
+  (when (stringp org-remark-notes-file-name)
+    (make-directory (file-name-directory org-remark-notes-file-name) t))
+
   (with-eval-after-load 'nerd-icons
     (setopt org-remark-icon-notes (nerd-icons-mdicon "nf-md-thought_bubble")
             org-remark-icon-position-adjusted (nerd-icons-mdicon "nf-md-exclamation_thick")
