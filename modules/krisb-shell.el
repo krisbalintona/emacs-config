@@ -243,9 +243,9 @@ Meant for `completion-at-point-functions' in eshell buffers."
     "Set up an EAT terminal shell."
     (when (featurep 'fontaine)
       (set-face-attribute 'eat-term-font-0 nil
-                          ;; This returns the default-family of the current preset,
-                          ;; whether explicitly or implicitly set
-                          :family (fontaine--get-preset-property fontaine-current-preset :default-family)))))
+                          ;; This returns the default-family of the current
+                          ;; preset, whether explicitly or implicitly set
+                          :family (fontaine--get-preset-property fontaine-current-preset :term-family)))))
 
 ;;; Provide
 (provide 'krisb-shell)

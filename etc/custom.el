@@ -4,47 +4,37 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(eglot-events-buffer-config (list :size 2000000 :format 'full) nil nil "Customized with use-package eglot")
- '(eglot-sync-connect t nil nil "Customized with use-package eglot")
  '(package-selected-packages
    '(abridge-diff ace-window activities adaptive-wrap agitate all-the-icons
-                  apheleia artbollocks-mode astute auctex-cont-latexmk beframe
-                  boon breadcrumb bufler cape cascading-dir-locals citar-denote
-                  citar-org-roam cl-generic cm-mode cond-star consult-xref-stack
-                  corfu-prescient csv-mode cursory darkroom default-text-scale
-                  denote denote-explore denote-interface diff-hl diminish
-                  dired-hist dired-subtree dumber-jump easysession eat
-                  edit-indirect editorconfig eglot eglot-booster
-                  eglot-signature-eldoc-talkative elisp-demos embark-consult
-                  engine-mode enlight erc eros eshell-atuin
+                  apheleia artbollocks-mode astute async auctex-cont-latexmk
+                  breadcrumb bufler cape cascading-dir-locals citar cl-generic
+                  cm-mode cond-star consult-xref-stack corfu-prescient cursory
+                  darkroom default-text-scale denote diminish dired-hist
+                  dumber-jump eat editorconfig eglot-booster
+                  eglot-signature-eldoc-talkative el-patch elisp-demos
+                  embark-consult engine-mode erc eros eshell-atuin
                   eshell-syntax-highlighting eshell-z exec-path-from-shell
-                  faceup fancy-compilation fish-mode flymake-collection
-                  flymake-proselint fontaine forge form-feed gcmh gif-screencast
-                  git-share god-mode grid hammy hide-mode-line
+                  faceup fancy-compilation fish-mode flymake-collection fontaine
+                  forge form-feed gcmh git-share god-mode hammy hide-mode-line
                   highlight-function-calls highlight-parentheses hl-todo hotfuzz
-                  hugoista hyprlang-ts-mode ibuffer-project idlwave indexed
-                  info-colors inspector jinx kbd-mode keychain-environment
-                  kind-icon lazy-guard ligature lin litanize lorem-ipsum
-                  lsp-bridge marginalia markdown-mode meow mermaid-mode
-                  mixed-pitch mode-minder modus-themes motion-selection
-                  motion-selection-mode mpv nadvice nerd-icons-completion
-                  nerd-icons-dired nerd-icons-ibuffer no-littering notmuch-addr
-                  notmuch-transient nov ntlm ob-mermaid oc-csl-activate
-                  ol-notmuch olivetti on orderless org org-appear
-                  org-bookmark-heading org-bulletproof org-contrib org-edna
-                  org-make-toc org-mime org-modern org-modern-indent org-node
-                  org-ql org-remark org-review org-roam-ql org-roam-ui
-                  org-web-tools outli outline-indent ox-hugo package-build
-                  package-lint-flymake paren-face pcmpl-args pdf-meta-edit
-                  pdf-tools peg persist-state pinentry popper powerthesaurus
-                  psession pulsar puni python rainbow-mode realgud
-                  recursion-indicator savefold saveplace-pdf-view scratch
-                  show-font sinister smart-mark so-long soap-client
-                  stillness-mode sudo-edit suggest svg system-packages tmr
-                  track-changes tramp transient transpose-frame treesit-auto try
-                  typewriter-roll-mode ultra-scroll use-package vc-backup vc-jj
-                  verilog-mode vertico-prescient wallabag which-key
-                  window-tool-bar wombag yasnippet ytdl))
+                  hugoista hyprlang-ts-mode info-colors inspector jinx
+                  keychain-environment kind-icon kv lazy-guard lice ligature lin
+                  lorem-ipsum lsp-bridge marginalia mermaid-mode mixed-pitch
+                  mode-minder modus-themes nadvice nerd-icons-completion
+                  nerd-icons-dired nerd-icons-ibuffer nix-ts-mode no-littering
+                  notmuch-addr notmuch-transient nov ntlm ob-mermaid ol-notmuch
+                  olivetti on orderless org-appear org-bookmark-heading
+                  org-bulletproof org-contrib org-edna org-make-toc org-mime
+                  org-modern org-node org-remark org-review org-roam-ql
+                  org-roam-ui org-web-tools outli ox-hugo package-build
+                  package-lint-flymake paren-face pcmpl-args pdf-tools peg
+                  persist-state powerthesaurus pulsar puni python rainbow-mode
+                  realgud recursion-indicator savefold saveplace-pdf-view
+                  scratch show-font smart-mark so-long soap-client
+                  stillness-mode sudo-edit suggest svg system-packages tmr tramp
+                  treesit-auto try typewriter-roll-mode ultra-scroll use-package
+                  vc-jj verilog-mode vertico-prescient which-key window-tool-bar
+                  wombag yasnippet))
  '(package-vc-selected-packages
    '((lsp-bridge :vc-backend Git :url
                  "https://github.com/manateelazycat/lsp-bridge.git")
@@ -118,7 +108,9 @@
      (eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created 99 t)))
  '(tmr-description-list '("Stop working!" "Work time 😄") nil nil "Customized with use-package tmr")
  '(warning-suppress-types
-   '((org-element org-element-parser) (org-element org-element-parser))))
+   '((files missing-lexbind-cookie
+            "/home/krisbalintona/.emacs.d/var/prescient-save.el")
+     (org-element org-element-parser) (org-element org-element-parser))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

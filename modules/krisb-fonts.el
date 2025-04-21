@@ -12,15 +12,16 @@
       ;; NOTE 2025-04-14: On Arch Linux, Iosevka fonts have associated packages
       ;; for each variant in the AUR (though not necessarily the Nerd Fonts
       ;; versions).
-      :default-family "Iosevka SS 11 Nerd Font" ; 2025-04-14: Must be a bug that there is a space between "SS" and "11" in the font name
+      :default-family "IosevkaSS 11 Nerd Font" ; 2025-04-14: Must be a bug that there is a space between "SS" and "11" in the font name
       :fixed-pitch-family "Iosevka Nerd Font"
+      :term-family "IosevkaTermSS 11 Nerd Font"
       :mode-line-active-family "Iosevka Aile Nerd Font"
       :mode-line-inactive-family "Iosevka Aile Nerd Font")
      ;; Below are the shared fallback properties. I leave them there also as
      ;; reference for all possible properties
      (t
       ;; Alternatives:
-      :default-family "IosevkaTermSS04 Nerd Font"
+      :default-family "IosevkaSS04 Nerd Font"
       :default-weight regular
       :default-slant normal
       :default-width normal
@@ -39,6 +40,10 @@
       :fixed-pitch-serif-slant nil
       :fixed-pitch-serif-width nil
       :fixed-pitch-serif-height nil
+
+      ;; 2025-04-21: This is my own bespoke setting.  Fontaine works fine with
+      ;; it set; I use it elsewhere (e.g., eat.el).
+      :term-family "IosevkaTermSS04 Nerd Font" ; For terminals
 
       ;; Alternatives:
       ;; "LiterationSerif Nerd Font"       ; Variable
