@@ -11458,9 +11458,39 @@ There are several packages that end up incredibly useful for authoring packages.
         ;; Step 6: Combine prefix-parts and final-suffix-parts into a single string
         (concat root-index (string-join final-suffix-parts)))))
 
-  ;;; Bespoke functions for creating and managing org-roam heading node properties
+  ;;; Bespoke commands for creating and managing org-roam node properties
   ;; I use this for a bespoke transient menu.
 
+  ;;;; Functions
+  (defun krisb-org-roam-ext--get-all-prop-values (property)
+    "Return all existing values for a given PROPERTY."
+    (let ((results (org-roam-db-query [:select :distinct [properties] :from nodes])))
+      (delete-dups
+       (remq nil
+             (mapcar (lambda (props)
+                       (alist-get property (car props) nil nil #'string-equal))
+                     results)))))
+
+  (defun krisb-org-roam-ext--allowed-prop-values (property)
+    "Define completion candidates for PROPERTY.
+  This is relevant for functions like `org-read-property-value'."
+    (let ((existing-values (krisb-org-roam-ext--get-all-prop-values property)))
+      (pcase property
+        ("ROAM_BOX"
+         (append existing-values '(":ETC")))
+        ("ROAM_TYPE"
+         (append existing-values '(":ETC")))
+        ("ROAM_PERSON"
+         (append existing-values '(":ETC")))
+        ;; TODO 2025-04-21: After deciding the box-place relation, add filtering
+        ;; here.
+        ("ROAM_PLACE"
+         (append existing-values '(":ETC"))))))
+
+  (add-hook 'org-property-allowed-value-functions #'krisb-org-roam-ext--allowed-prop-values)
+
+
+  ;;;; Commands
   (defun krisb-org-roam-ext-set-roam-place ()
     "Set the ROAM_PLACE property in the current heading."
     (interactive)
@@ -11535,6 +11565,7 @@ There are several packages that end up incredibly useful for authoring packages.
         (org-fold-show-entry)
       (org-fold-hide-entry)))
 
+  ;;;; Macros
   (defmacro krisb-org-roam-ext-transient--dyn-roam-property-description (desc prop-name &optional desc-alt)
     "Macro of dynamic descriptions for setting org-roam-specific properties.
   DESC is the description and PROP-NAME is the property name being checked
