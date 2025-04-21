@@ -396,7 +396,6 @@ This is relevant for functions like `org-read-property-value'."
 
 (add-hook 'org-property-allowed-value-functions #'krisb-org-roam-ext--allowed-prop-values)
 
-
 ;;;; Commands
 (defun krisb-org-roam-ext-set-roam-place ()
   "Set the ROAM_PLACE property in the current heading."

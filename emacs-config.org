@@ -8651,18 +8651,22 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   (use-package treesit
     :ensure nil
     :custom
-    ;; HACK 2024-10-20: The car of
-    ;; `treesit--install-language-grammar-out-dir-history' is used as the default
-    ;; output directory for installing grammars via
-    ;; `treesit-install-language-grammar'. See the definition of
-    ;; `treesit-install-language-grammar'.
+    (treesit-font-lock-level '((t . 3)))
+    ;; HACK 2024-10-20: `treesit--install-language-grammar-out-dir-history' is a
+    ;; history variable for directories tree-sitter grammars have been installed
+    ;; to.  However, its car (i.e., the latest history item) is used as the
+    ;; default output directory for installing grammars (see the definition of
+    ;; `treesit-install-language-grammar').  So we set the initial car of this
+    ;; variable to change the default install directory, which is currently
+    ;; hard-coded to the "tree-sitter" subdirectory under the
+    ;; `user-emacs-directory'.
     (treesit--install-language-grammar-out-dir-history
-     (list (no-littering-expand-var-file-name "treesit")))
-    (treesit-font-lock-level 3))
+     (list (no-littering-expand-var-file-name "treesit"))))
 
   ;;; Treesit-auto
   ;; Automatically install tree-sitter grammars.
   (use-package treesit-auto
+    :disabled t ; 2025-04-21: Don't need this with chnages to treesit.el in Emacs 31
     :custom
     (treesit-auto-install 'prompt)
     (treesit-extra-load-path treesit--install-language-grammar-out-dir-history)
@@ -11490,7 +11494,6 @@ There are several packages that end up incredibly useful for authoring packages.
          (append (get-existing-values) '(":ETC"))))))
 
   (add-hook 'org-property-allowed-value-functions #'krisb-org-roam-ext--allowed-prop-values)
-
 
   ;;;; Commands
   (defun krisb-org-roam-ext-set-roam-place ()
