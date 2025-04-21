@@ -379,18 +379,20 @@ Examples:
 (defun krisb-org-roam-ext--allowed-prop-values (property)
   "Define completion candidates for PROPERTY.
 This is relevant for functions like `org-read-property-value'."
-  (let ((existing-values (krisb-org-roam-ext--get-all-prop-values property)))
+  ;; We don't want to call `krisb-org-roam-ext--get-all-prop-values' unless we
+  ;; need it
+  (cl-flet ((get-existing-values () (krisb-org-roam-ext--get-all-prop-values property)))
     (pcase property
       ("ROAM_BOX"
-       (append existing-values '(":ETC")))
+       (append (get-existing-values) '(":ETC")))
       ("ROAM_TYPE"
-       (append existing-values '(":ETC")))
+       (append (get-existing-values) '(":ETC")))
       ("ROAM_PERSON"
-       (append existing-values '(":ETC")))
+       (append (get-existing-values) '(":ETC")))
       ;; TODO 2025-04-21: After deciding the box-place relation, add filtering
       ;; here.
       ("ROAM_PLACE"
-       (append existing-values '(":ETC"))))))
+       (append (get-existing-values) '(":ETC"))))))
 
 (add-hook 'org-property-allowed-value-functions #'krisb-org-roam-ext--allowed-prop-values)
 
