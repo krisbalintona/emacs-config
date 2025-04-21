@@ -211,7 +211,6 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
 ;; Org-links for search queries (i.e. notmuch-search-mode, notmuch-tree-mode)
 ;; and messages (i.e. notmuch-show-mode).
 (use-package ol-notmuch
-  :autoload krisb-org-notmuch-store-link
   :config
   ;; Integration with `org-agenda'
   (with-eval-after-load 'ol
