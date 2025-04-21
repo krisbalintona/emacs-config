@@ -201,25 +201,25 @@
 (use-package window-x
   :ensure nil
   :bind ( :map window-prefix-map
-          ("t" . transpose-window-layout) ; Diagonal reflection
+          ("t" . window-layout-tranpose) ; Diagonal reflection
           ;; Rotate window layout
-          ("r" . rotate-window-layout-clockwise)
-          ("R" . rotate-window-layout-counterclockwise)
+          ("r" . window-layout-rotate-clockwise)
+          ("R" . window-layout-rotate-anticlockwise)
           ;; Flipping
-          ("f" . flip-window-layout-horizontally)
-          ("F" . flip-window-layout-vertically)
+          ("f" . window-layout-flip-leftright)
+          ("F" . window-layout-flip-topdown)
           ;; Rotate buffers (keep window placements)
-          ("c" . rotate-windows)
-          ("C" . rotate-windows-back)
+          ("c" . window-layout-rotate-clockwise)
+          ("C" . window-layout-rotate-anticlockwise)
           ;; Repeat-mode map
           :repeat-map krisb-window-x-repeat-map
-          ("t" . transpose-window-layout) ; Diagonal reflection
-          ("r" . rotate-window-layout-clockwise)
-          ("R" . rotate-window-layout-counterclockwise)
-          ("f" . flip-window-layout-horizontally)
-          ("F" . flip-window-layout-vertically)
-          ("c" . rotate-windows)
-          ("C" . rotate-windows-back)))
+          ("t" . window-layout-tranpose)
+          ("r" . window-layout-rotate-clockwise)
+          ("R" . window-layout-rotate-anticlockwise)
+          ("f" . window-layout-flip-leftright)
+          ("F" . window-layout-flip-topdown)
+          ("c" . window-layout-rotate-clockwise)
+          ("C" . window-layout-rotate-anticlockwise)))
 
 ;;;; Display-buffer-alist
 (with-eval-after-load 'window
