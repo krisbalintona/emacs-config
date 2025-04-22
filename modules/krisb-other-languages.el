@@ -27,9 +27,7 @@
   ;;     M-x treesit-install-language-grammar RET hyprlang
   (with-eval-after-load 'treesit
     (add-to-list 'treesit-language-source-alist
-                 '(hyprlang "https://github.com/tree-sitter-grammars/tree-sitter-hyprlang"))
-    (unless (treesit-grammar-location 'hyprlang)
-      (treesit-install-language-grammar 'hyprlang))))
+                 '(hyprlang "https://github.com/tree-sitter-grammars/tree-sitter-hyprlang"))))
 
 ;;; Nix
 (use-package nix-ts-mode)
