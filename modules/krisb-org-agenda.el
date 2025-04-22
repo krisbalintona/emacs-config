@@ -61,6 +61,10 @@
         (message "[krisb-get-location-name] Failed to fetch geolocation data")
         nil)))
   :config
+  ;; Ensure diary file exists
+  (unless (file-exists-p diary-file)
+    (make-empty-file diary-file t))
+
   ;; Solar
   (require 'solar)
   ;; FIXME 2024-10-23: Hangs on startup sometimes for some reason...
