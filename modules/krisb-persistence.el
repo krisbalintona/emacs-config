@@ -93,11 +93,13 @@
 
 This naively replaces path slashes with ! (/a/b/c -> !a!b!c) leading to a chance
 of collision."
-    (expand-file-name
-     (el-patch-swap
-       (string-replace "/" "!" (expand-file-name fpath))
-       (sha1 (expand-file-name fpath)))
-     savefold-directory)))
+    (el-patch-remove
+      (let* ((fpath (expand-file-name fpath))
+             (fpath (string-replace "/" "!" fpath))
+             (fpath (string-replace ":" "!" fpath))) ; For windows
+        (expand-file-name fpath savefold-directory)))
+    (el-patch-add
+      (expand-file-name (sha1 (expand-file-name fpath)) savefold-directory))))
 
 ;;; Persistent desktops
 ;;;; Desktop
