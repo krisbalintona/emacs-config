@@ -20,7 +20,7 @@
 
 ;;;; Highlight-parentheses
 (use-package highlight-parentheses
-  :hook ((emacs-lisp . highlight-parentheses-mode)
+  :hook ((emacs-lisp-mode . highlight-parentheses-mode)
          (minibuffer-setup . highlight-parentheses-minibuffer-setup))
   :custom
   ;; TODO 2025-04-08: Configure `highlight-parentheses-colors'
