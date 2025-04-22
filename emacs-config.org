@@ -6290,6 +6290,13 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     (citar-notes-paths (list krisb-notes-directory))
     (citar-open-entry-function #'citar-open-entry-in-file)
     (citar-default-action #'citar-open-files)
+    ;; See also citar-format.el for more information on what happens with the
+    ;; templates.
+    (citar-templates
+     '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:48}") ; Candidate
+       (suffix . "          ${=key= id:15}    ${=type=:12}    ${tags keywords keywords:*}") ; Candidate annotation
+       (preview . "${author editor:%etal} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n") ; Formatted reference
+       (note . "${title} by ${author}"))) ; New note title
     :config
     (with-eval-after-load 'all-the-icons
       ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
