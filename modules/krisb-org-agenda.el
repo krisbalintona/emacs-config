@@ -176,7 +176,10 @@
       "* TODO %? %^g\n"
       :empty-lines 1)
      ("j" "Journal" entry
-      (function krisb-org-capture--org-node-datetree-journal)
+      (function (lambda ()
+                  (let* ((candidate (krisb-org-capture--org-node-select-by-tags '("^__journal$")))
+                         (node (gethash candidate org-node--candidate<>node)))
+                    (krisb-org-capture--org-node-insert-datetree node))))
       "* %<%c>\n"
       :tree-type (year quarter month)
       :jump-to-captured t
@@ -194,7 +197,10 @@
       :clock-in t
       :clock-resume t)
      ("l" "Log" item
-      (function krisb-org-capture--org-node-datetree-log)
+      (function (lambda ()
+                  (let* ((candidate (krisb-org-capture--org-node-select-by-tags '("^__log$")))
+                         (node (gethash candidate org-node--candidate<>node)))
+                    (krisb-org-capture--org-node-insert-datetree node))))
       "%U %?"
       :tree-type (quarter week)
       :clock-in t
@@ -376,33 +382,22 @@ but can also be called interactively to prompt for NODE."
        date
        (when olp 'subtree-at-point))))
 
-  (defun krisb-org-capture--org-node-datetree-journal ()
-    "Prompt for an org-node node and create a datetree there.
-The nodes listed in the prompt are those with the \"__journal\" tag.
+  (defun krisb-org-capture--org-node-select-by-tags (tags)
+    "Interactively prompt for an org-node candidate matching TAGS.
+TAGS is a list of regexps that match org-node tags.
 
-This function is meant to chiefly be used by itself as a function in
-`org-capture-templates', though it can also be called interactively."
-    (interactive)
-    (let* ((candidate (completing-read "Select journal: "
-                                       #'org-node-collection
-                                       (lambda (_title node) (member "__journal" (org-node-get-tags node)))
-                                       t nil 'org-node-hist))
-           (node (gethash candidate org-node--candidate<>node)))
-      (krisb-org-capture--org-node-insert-datetree node)))
-
-  (defun krisb-org-capture--org-node-datetree-log ()
-    "Prompt for an org-node node and create a datetree there.
-The nodes listed in the prompt are those with the \"__log\" tag.
-
-This function is meant to chiefly be used by itself as a function in
-`org-capture-templates', though it can also be called interactively."
-    (interactive)
-    (let* ((candidate (completing-read "Select journal: "
-                                       #'org-node-collection
-                                       (lambda (_title node) (member "__log" (org-node-get-tags node)))
-                                       t nil 'org-node-hist))
-           (node (gethash candidate org-node--candidate<>node)))
-      (krisb-org-capture--org-node-insert-datetree node))))
+This function will use `completing-read' whose candidates are the
+org-node nodes that match all of TAGS.  It will return a candidate (see
+`org-node--candidate<>node')."
+    (completing-read "Select journal: "
+                     #'org-node-collection
+                     (lambda (_title node)
+                       (cl-every (lambda (re)
+                                   (cl-some (lambda (str)
+                                              (string-match-p re str))
+                                            (org-node-get-tags node)))
+                                 tags))
+                     t nil 'org-node-hist)))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
