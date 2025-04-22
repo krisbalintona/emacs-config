@@ -125,7 +125,11 @@ Retries every INTERVAL seconds."
 
 (defmacro krisb-modus-themes-setup-faces (label &rest body)
   "Set up faces using modus-themes.
-Does several things:
+
+LABEL is a string describing the purpose of this instance of setting up
+faces.
+
+With LABEL and BODY, this macro does several things:
 - Defines a function whose name begins with \"krisb-modus-themes-\",
   followed by LABEL and \"-setup-faces\".
 - This function evaluates BODY within a `modus-themes-with-colors' block
