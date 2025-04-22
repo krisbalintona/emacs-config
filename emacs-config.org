@@ -7193,6 +7193,15 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
         :tree-type (year quarter month)
         :jump-to-captured t
         :immediate-finish t)
+       ("r" "Reference" entry
+        (function (lambda () (krisb-org-capture--org-node-insert-datetree (org-node-by-id "20250422T171216.767702"))))
+        "* %?\n"
+        :tree-type (year month)
+        :jump-to-captured t
+        :immediate-finish t
+        :empty-lines 1
+        :hook org-id-get-create
+        :before-finalize org-node-add-refs)
        ("b" "Blog post" plain
         (function (lambda ()
                     (let ((org-node-ask-directory krisb-blog-directory))
