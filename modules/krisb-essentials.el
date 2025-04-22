@@ -373,7 +373,7 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Don't display warning buffer at the bottom of frame
 (setopt warning-display-at-bottom nil)
 
-;;;; Change highlighting behavior of `exchange-point-and-mark'
+;;;; Don't highlight region if it isn't already active when calling `exchange-point-and-mark'
 (setopt exchange-point-and-mark-highlight-region nil) ; New in Emacs 31.1
 
 ;;;; Don't visually shift text when using `rectangle-mark-mode'
