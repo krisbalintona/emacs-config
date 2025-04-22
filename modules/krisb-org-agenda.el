@@ -68,6 +68,8 @@
   ;; Solar
   (require 'solar)
   ;; FIXME 2024-10-23: Hangs on startup sometimes for some reason...
+  ;; 2025-04-22: A potential solution might be to change
+  ;; `krisb-evaluate-when-internet' to use `while-no-input'.
   ;; (krisb-evaluate-when-internet
   ;;   20
   ;;   (let ((coords (krisb-get-lat-lon)))
