@@ -398,7 +398,7 @@ TAGS is a list of regexps that match org-node tags.
 This function will use `completing-read' whose candidates are the
 org-node nodes that match all of TAGS.  It will return a candidate (see
 `org-node--candidate<>node')."
-    (completing-read "Select journal: "
+    (completing-read "Select node: "
                      #'org-node-collection
                      (lambda (_title node)
                        (cl-every (lambda (re)
