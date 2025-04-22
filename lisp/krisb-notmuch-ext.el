@@ -231,7 +231,6 @@ Tagging is done by `krisb-notmuch-show-tag-thread'."
   (push-mark)
   (message-goto-body)
   (set-buffer-modified-p nil))
-(advice-add 'notmuch-mua-reply :override #'krisb-notmuch-mua-reply)
 
 ;;; Provide
 (provide 'krisb-notmuch-ext)
