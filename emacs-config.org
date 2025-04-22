@@ -9453,7 +9453,22 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
            (minibuffer-setup . highlight-parentheses-minibuffer-setup))
     :custom
     ;; TODO 2025-04-08: Configure `highlight-parentheses-colors'
-    (highlight-parentheses-highlight-adjacent t))
+    (highlight-parentheses-highlight-adjacent t)
+    :config
+    ;; See also (info "(modus-themes) Note on highlight-parenthesesel").
+    (krisb-modus-themes-setup-faces
+     "highlight-parentheses"
+     (set-face-attribute 'highlight-parentheses-highlight nil :inherit 'bold)
+     (modus-themes-with-colors
+       (setopt
+        highlight-parentheses-attributes '((:inherit bold)
+                                           (:inherit bold))
+        highlight-parentheses-colors (list yellow-faint
+                                           green-faint
+                                           magenta-faint
+                                           blue-faint
+                                           cyan-faint)
+        highlight-parentheses-background-colors nil))))
 
   ;;; Documentation
   ;;;; Help
