@@ -203,11 +203,14 @@ See the docstring of `krisb-reveal-fold-commands'."
   :config
   (krisb-modus-themes-setup-faces
    "avy"
-   ;; Don't bold so text isn't shifted much
-   (set-face-attribute 'avy-lead-face nil :inherit 'modus-themes-reset-soft)
-   (set-face-attribute 'avy-lead-face-0 nil :inherit 'modus-themes-reset-soft)
-   (set-face-attribute 'avy-lead-face-1 nil :inherit 'modus-themes-reset-soft)
-   (set-face-attribute 'avy-lead-face-2 nil :inherit 'modus-themes-reset-soft))
+   ;; By default, modus-themes inherits from the bold face.  But this is
+   ;; undesirable for variable-pitch faces since it causes the text to shift.
+   ;; To avoid this, we set the inherited face attribute to the default with
+   ;; bold removed.
+   (set-face-attribute 'avy-lead-face nil :inherit '(modus-themes-search-current modus-themes-reset-soft))
+   (set-face-attribute 'avy-lead-face-0 nil :inherit '(modus-themes-search-current modus-themes-reset-soft))
+   (set-face-attribute 'avy-lead-face-1 nil :inherit '(modus-themes-search-current modus-themes-reset-soft))
+   (set-face-attribute 'avy-lead-face-2 nil :inherit '(modus-themes-search-current modus-themes-reset-soft)))
 
   (defun krisb-avy-order-farthest (x)
     (- (abs (- (if (numberp (car x))
