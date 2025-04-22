@@ -43,9 +43,13 @@
 ;;     python-packaging
 (use-package lsp-bridge
   :vc (:url "https://github.com/manateelazycat/lsp-bridge.git")
+  :defer t
   :init
-  (package-install 'yasnippet)
-  (package-install 'markdown-mode))
+  ;; 2025-04-22: Manually install dependencies because lsp-bridge doesn't have
+  ;; proper package headings...
+  (dolist (package '(yasnippet markdown-mode))
+    (unless (package-installed-p package)
+      (package-install package))))
 
 ;;; Provide
 (provide 'krisb-lsp)
