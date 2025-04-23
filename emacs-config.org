@@ -10405,8 +10405,8 @@ There are several packages that end up incredibly useful for authoring packages.
     :custom
     (wombag-dir (no-littering-expand-var-file-name "wombag"))
     (wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite"))
-    (wombag-host "https://app.wallabag.it")
     (wombag-username "krisbalintona")
+    (wombag-host "https://app.wallabag.it")
     (wombag-password (auth-source-pick-first-password :host "app.wallabag.it"))
     (wombag-client-id "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
     (wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
@@ -11883,6 +11883,9 @@ There are several packages that end up incredibly useful for authoring packages.
   ;; I use this for a bespoke transient menu.
 
   ;;;; Functions
+
+  ;; TODO 2025-04-22: We might have a use for `org-property-set-functions-alist'.
+
   (defun krisb-org-roam-ext--get-all-prop-values (property)
     "Return all existing values for a given PROPERTY."
     (let ((results (org-roam-db-query [:select :distinct [properties] :from nodes])))

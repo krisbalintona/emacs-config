@@ -367,6 +367,9 @@ Examples:
 ;; I use this for a bespoke transient menu.
 
 ;;;; Functions
+
+;; TODO 2025-04-22: We might have a use for `org-property-set-functions-alist'.
+
 (defun krisb-org-roam-ext--get-all-prop-values (property)
   "Return all existing values for a given PROPERTY."
   (let ((results (org-roam-db-query [:select :distinct [properties] :from nodes])))
