@@ -264,7 +264,6 @@ See the docstring of `krisb-reveal-fold-commands'."
 
   (defun krisb-avy-action-dictionary (pt)
     "Dictionary avy action."
-    (require 'checking-words-rcp)
     (save-excursion
       (goto-char pt)
       (krisb-dictionary-at-point))
