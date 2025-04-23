@@ -219,7 +219,8 @@
       :immediate-finish t
       :empty-lines 1
       :hook org-id-get-create
-      :before-finalize org-node-add-refs)
+      :before-finalize (org-node-add-refs
+                        (lambda () (org-set-property "ROAM_BOX" "references"))))
      ("b" "Blog post" plain
       (function (lambda ()
                   (let ((org-node-ask-directory krisb-blog-directory))
