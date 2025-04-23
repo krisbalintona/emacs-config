@@ -369,6 +369,9 @@ Examples:
 ;;;; Functions
 
 ;; TODO 2025-04-22: We might have a use for `org-property-set-functions-alist'.
+;; TODO 2025-04-22: We might have a use for `org-property-separators'.  For
+;; instance, separating names in ROAM_PERSON and (potentially) box-place pairs
+;; if I merge them into a single property.
 
 (defun krisb-org-roam-ext--get-all-prop-values (property)
   "Return all existing values for a given PROPERTY."
