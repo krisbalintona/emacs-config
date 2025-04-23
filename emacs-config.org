@@ -5994,6 +5994,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     :vc ( :url "https://github.com/meedstrom/org-node.git"
           :branch "dev"
           :rev :newest)
+    :hook (find-file . krisb-org-node-buffer-name-to-title)
     :bind ( :map krisb-note-keymap
             ("l" . org-node-context-toggle)
             ([remap org-roam-buffer-toggle] . org-node-context-toggle)
@@ -6015,13 +6016,31 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     (org-node-cache-mode 1)
     (org-node-context-follow-mode 1)
 
-    ;; Bespoke filtering (exclusion) function
+    ;; Bespoke filtering (exclusion) function.
     (defun krisb-org-node-filter-fn (node)
       "Predicate for whether to include NODE.
   If non-nil, include.  If nil, exclude.  This predicate excludes these
   nodes:
   - With non-nil ROAM_EXCLUDE property value."
       (not (or (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
+
+    ;; Rename buffer to the file's title if the file is an org-node.
+    ;; NOTE 2025-04-23: We add this to `find-file-hook' rather than
+    ;; `org-mode-hook' since successive calls to
+    ;; `krisb-org-node-buffer-name-to-title' always change the buffer name because
+    ;; of `generate-new-buffer-name' (which must be used to avoid naming
+    ;; conflicts).  Not sure if this is avoidable.  But this suffices for now.
+    (defun krisb-org-node-buffer-name-to-title ()
+      "Rename buffer to its #+TITLE property.
+  This only occurs when the file is an org-node node."
+      (when (derived-mode-p 'org-mode)
+        (when-let ((id (save-excursion
+                         (save-restriction
+                           (widen)
+                           (org-entry-get (point-min) "ID"))))
+                   (node (gethash id org-nodes))
+                   (title (org-node-get-title node)))
+          (rename-buffer (generate-new-buffer-name title)))))
 
     ;; Bespoke `org-node-find'
     (cl-defmethod krisb-org-node-get-box ((node indexed-org-entry))
