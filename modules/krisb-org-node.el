@@ -3,7 +3,7 @@
   :vc ( :url "https://github.com/meedstrom/org-node.git"
         :branch "dev"
         :rev :newest)
-  :hook (find-file . krisb-org-node-buffer-name-to-title)
+  :hook (find-file . krisb-org-node-rename-buffer-name-to-title)
   :bind ( :map krisb-note-keymap
           ("l" . org-node-context-toggle)
           ([remap org-roam-buffer-toggle] . org-node-context-toggle)
@@ -36,10 +36,10 @@ nodes:
   ;; Rename buffer to the file's title if the file is an org-node.
   ;; NOTE 2025-04-23: We add this to `find-file-hook' rather than
   ;; `org-mode-hook' since successive calls to
-  ;; `krisb-org-node-buffer-name-to-title' always change the buffer name because
+  ;; `krisb-org-node-rename-buffer-name-to-title' always change the buffer name because
   ;; of `generate-new-buffer-name' (which must be used to avoid naming
   ;; conflicts).  Not sure if this is avoidable.  But this suffices for now.
-  (defun krisb-org-node-buffer-name-to-title ()
+  (defun krisb-org-node-rename-buffer-name-to-title ()
     "Rename buffer to its #+TITLE property.
 This only occurs when the file is an org-node node."
     (when (derived-mode-p 'org-mode)
