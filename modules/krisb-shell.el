@@ -212,6 +212,10 @@ Meant for `completion-at-point-functions' in eshell buffers."
   (eshell-z-freq-dir-hash-table-file-name (getenv "Z_DATA"))
   (eshell-z-exclude-dirs nil)
   :init
+  ;; TODO 2025-04-25: In NixOS, I don't have a solution yet.  Firstly, the
+  ;; Z_DATA environment variable seems to be inherited from the root user, not
+  ;; mine.  Secondly, the data file created by Z doesn't have user write
+  ;; permissions by default, I think.
   (exec-path-from-shell-copy-env "Z_DATA"))
 
 ;;; Fish-mode
