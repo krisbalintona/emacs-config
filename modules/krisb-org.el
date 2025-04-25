@@ -363,5 +363,18 @@
   :custom
   (org-bookmark-heading-make-ids nil))
 
+;;; Org-project-capture
+(use-package org-project-capture
+  :bind ( :map krisb-note-keymap
+          ("n p" . org-project-capture-project-todo-completing-read)
+          :map project-prefix-map
+          ("n c" . org-project-capture-capture-for-current-project)
+          ("n g" . org-project-capture-goto-location-for-project))
+  :custom
+  (org-project-capture-backend (make-instance 'org-project-capture-project-backend))
+  (org-project-capture-projects-file (expand-file-name "coding_projects.org" krisb-org-agenda-directory))
+  :custom
+  (org-project-capture-single-file))
+
 ;;; Provide
 (provide 'krisb-org)
