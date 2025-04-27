@@ -91,8 +91,9 @@
 
 ;;; Wombag
 (use-package wombag
-  :vc (:url "https://github.com/karthink/wombag.git"
-            :rev :newest)
+  :load-path "/home/krisbalintona/emacs-repos/packages/wombag/"
+  ;; :vc (:url "https://github.com/karthink/wombag.git"
+  ;;           :rev :newest)
   :hook ((wombag-show-mode . org-remark-mode)
          (wombag-show-mode . krisb-wombag-entry-setup))
   :bind ( :map krisb-open-keymap
