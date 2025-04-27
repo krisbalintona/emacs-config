@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; dungeons-and-dragons-rcp.el --- Bespoke Dungeons and Dragons features  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

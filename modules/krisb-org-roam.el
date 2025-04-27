@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
+;; -*- lexical-binding: t; -*-
+
 ;;; Org-roam
 (use-package org-roam
   :bind ( :map krisb-note-keymap

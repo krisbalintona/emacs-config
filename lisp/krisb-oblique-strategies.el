@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; krisb-oblique-strategies.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

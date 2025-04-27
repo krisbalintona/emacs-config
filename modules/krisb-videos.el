@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; MPV
 ;; Dependency for packages that interact with mpv
 (use-package mpv

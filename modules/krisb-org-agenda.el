@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Calendar
 (use-package calendar
   :ensure nil

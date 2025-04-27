@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; krisb-email-composition-ext.el --- Email composition extensions  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

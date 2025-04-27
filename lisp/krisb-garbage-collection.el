@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;; NOTE 2024-02-11: Please reference https://emacsconf.org/2023/talks/gc/ for a
 ;; statistically-informed recommendation for GC variables
 (setq garbage-collection-messages t)

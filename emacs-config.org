@@ -186,6 +186,8 @@ Emacs 27 introduces =early-init.el=, which runs before init.el, before package a
 :END:
 
 #+begin_src emacs-lisp :tangle "early-init.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;; Defer garbage collection
   (setq gc-cons-threshold most-positive-fixnum)
 #+end_src
@@ -337,6 +339,8 @@ This sets the default graphical element settings used by every frame.
 :END:
 
 #+begin_src emacs-lisp :tangle "init.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Add modules and lisp to load path
   (dolist (path (list (expand-file-name "modules" user-emacs-directory)
                       (expand-file-name "lisp" user-emacs-directory)))
@@ -443,6 +447,8 @@ This sets the default graphical element settings used by every frame.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-garbage-collection.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;; NOTE 2024-02-11: Please reference https://emacsconf.org/2023/talks/gc/ for a
   ;; statistically-informed recommendation for GC variables
   (setq garbage-collection-messages t)
@@ -528,6 +534,8 @@ This sets the default graphical element settings used by every frame.
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-system-env.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Exec-path-from-shell
   ;; Ensure Emacs' and system shell have same path
   (use-package exec-path-from-shell
@@ -567,6 +575,8 @@ This sets the default graphical element settings used by every frame.
 I use =package.el=. =Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:2]
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Package.el
   ;; Initialize package resources
   (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
@@ -740,6 +750,8 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-essentials.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-essentials.el --- Essential Emacs-wide settings  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -1221,6 +1233,8 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
 
 Where I set global options for icon libraries. I currently (as of 2024-10-21) prefer the Nerd Icons.
 #+begin_src emacs-lisp :tangle "modules/krisb-icons.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Nerd-icons
   (use-package nerd-icons
     :custom
@@ -1246,6 +1260,8 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-completion.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Minibuffer.el
   (use-package minibuffer
     :ensure nil
@@ -1890,6 +1906,8 @@ Enhancements to all built-in-based completions.
 
 Configuration related to "saving a state," that is, storing or restoring anything about the point, window configuration, file, buffer, et cetera.
 #+begin_src emacs-lisp :tangle "modules/krisb-saving-state.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Register
   (use-package register
     :ensure nil
@@ -2014,6 +2032,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-persistence.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Savehist
   ;; Make history of certain things (e.g. minibuffer) persistent across sessions
   (use-package savehist
@@ -2259,6 +2279,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-windows.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Window
   (use-package window
     :ensure nil
@@ -2610,6 +2632,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-buffers.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Bufler
   (use-package bufler
     :custom
@@ -2769,6 +2793,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-expansion.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Abbrev
   ;; Automatically correct typed strings (e.g. words).  Most useful for correcting
   ;; spelling mistakes as they are made.
@@ -2839,6 +2865,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-formatting.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Apheleia
   ;; Quality code formatting for (arbitrarily) many languages
   (use-package apheleia
@@ -2953,6 +2981,8 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-themes.el"
+  ;; -*- lexical-binding: t; -*-
+
   (require 'color)
 
   ;;; Krisb-themes-ext
@@ -3144,6 +3174,8 @@ This section is for setting up fonts as well as how they appear.
 
 Particularly useful packages for the /display/ of certain punctuation and typography are =ligature= and =astute=.
 #+begin_src emacs-lisp :tangle "modules/krisb-fonts.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Fontaine
   ;; Define then apply face presets
   (use-package fontaine
@@ -3355,6 +3387,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-mode-line.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Hide-mode-line
   (use-package hide-mode-line
     :bind ( :map krisb-toggle-keymap
@@ -3446,6 +3480,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-alternative-editing-schemes.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Puni
   ;; Major-mode agnostic structural editing, faithful to built-ins
   (use-package puni
@@ -3644,6 +3680,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-navigation.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Consult
   ;; Counsel equivalent for default Emacs completion. It provides many useful
   ;; commands.
@@ -4029,6 +4067,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-prose.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Environment
   ;;;; Visual-wrap
   ;; Visually indent lines wrapped visually! This makes long-lines in lists
@@ -4623,6 +4663,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Built-in
   ;;;; Org
   (use-package org
@@ -5025,6 +5067,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-export.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Ox (org-export)
   (use-package ox
     :ensure nil
@@ -5226,6 +5270,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-markdown.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Markdown-mode
   (use-package markdown-mode
     :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")
@@ -5241,6 +5287,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-flymake.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Flymake
   (use-package flymake
     :hook ((prog-mode org-mode) . flymake-mode)
@@ -5336,6 +5384,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-spelling.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Online
   ;;;; Dictionary
   ;; See definitions of words from an online dictionary.
@@ -5401,6 +5451,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-denote.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Denote
   (use-package denote
     :pin gnu-elpa-devel
@@ -5669,6 +5721,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-roam.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;; -*- lexical-binding: t; -*-
 
   ;;; Org-roam
@@ -6001,6 +6055,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-node.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Org-node
   (use-package org-node
     :vc ( :url "https://github.com/meedstrom/org-node.git"
@@ -6566,6 +6622,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-web-annotations.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Org-remark
   (use-package org-remark
     :diminish (org-remark-mode org-remark-global-tracking-mode)
@@ -6660,6 +6718,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-citations.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Oc (org-cite)
   ;; Built-in citations in org-mode
   (use-package oc
@@ -6771,6 +6831,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-pdfs.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Doc-view
   (use-package doc-view
     :custom
@@ -6920,6 +6982,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-epub.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Nov-mode
   (use-package nov
     :mode ("\\.epub\\'" . nov-mode)
@@ -6936,6 +7000,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-videos.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; MPV
   ;; Dependency for packages that interact with mpv
   (use-package mpv
@@ -7004,6 +7070,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Calendar
   (use-package calendar
     :ensure nil
@@ -7933,6 +8001,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-hugo.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Ox-hugo
   ;; Using the Hugo static cite generator as an option for exporting files
   (use-package ox-hugo
@@ -7983,6 +8053,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-mermaid.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Mermaid-mode
   (use-package mermaid-mode)
 
@@ -8012,6 +8084,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-email-composition.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Composition
   ;;;; Message
   (use-package message
@@ -8505,6 +8579,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-notmuch.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;;; Notmuch
   (use-package notmuch
     ;; For AUR:
@@ -8897,6 +8973,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-programming-essentials.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Prog-mode
   (use-package prog-mode
     :ensure nil
@@ -9076,6 +9154,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-treesit.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Treesit
   ;; Built-in tree-sitter support.
   (use-package treesit
@@ -9115,6 +9195,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-vc.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Built-in
   ;;;; VC
   (use-package vc
@@ -9393,6 +9475,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-shell.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Shell
   ;; Built-in shell
   (use-package shell
@@ -9685,6 +9769,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-projects.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Project.el
   (use-package project
     :bind ( :map project-prefix-map
@@ -9835,6 +9921,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-info.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;;; Info
   (use-package info
     :hook ((Info-selection . mixed-pitch-mode)
@@ -9861,6 +9949,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-elisp.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Font locking
   ;;;; Highlight-function-calls
   (use-package highlight-function-calls
@@ -10102,6 +10192,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-folding.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Outline
   (use-package outline
     :ensure nil
@@ -10181,6 +10273,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-other-languages.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; LaTeX
   ;;;; Auctex
   (use-package auctex
@@ -10225,6 +10319,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-lsp.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Eglot
   (use-package eglot
     :custom
@@ -10288,6 +10384,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-debugging.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Gud
   (use-package gud
     :ensure nil
@@ -10341,6 +10439,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-web.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Shr
   ;; Emacs' built-in web renderer
   (use-package shr
@@ -10477,6 +10577,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-directories.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; Dired
   ;; Emacs' file manager
   (use-package dired
@@ -10559,6 +10661,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-common.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-common.el --- Common variables, functions, macros, and more -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10755,6 +10859,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-themes-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-themes-ext.el --- Manage switching/toggling of themes  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10875,6 +10981,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-indentation.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-indentation.el --- Bespoke utilities for consistent indentation  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10989,6 +11097,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-vertico.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-vertico.el --- Vertico extensions          -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11072,6 +11182,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-consult-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-consult-ext.el --- Extensions for Consult  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11158,6 +11270,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-org-ext.el --- Org-mode extensions         -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11265,6 +11379,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-denote-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-denote-ext.el --- Denote extensions        -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11550,6 +11666,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-roam-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-org-roam-ext.el --- My bespoke org-roam extensions  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12061,6 +12179,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-remark-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-org-remark-ext.el --- Extensions for org-remark  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12209,6 +12329,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-pdfs-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-pdfs-ext.el --- pdf-view-mode extensions   -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12648,6 +12770,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-wombag-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-wombag-ext.el --- Wombag extensions        -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12776,6 +12900,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-mpv.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-mpv.el --- Bespoke MPV extensions          -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12892,6 +13018,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-email-composition-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-email-composition-ext.el --- Email composition extensions  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -13032,6 +13160,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-notmuch-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-notmuch-ext.el --- Notmuch extensions      -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -13277,6 +13407,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-ox-hugo-ext.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-ox-hugo-ext.el --- Extensions to blogging with Hugo  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -13910,6 +14042,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-oblique-strategies.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-oblique-strategies.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -14195,6 +14329,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-auto-completion.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-auto-completion.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2025  Kristoffer Balintona
@@ -14321,6 +14457,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/pinching-margins.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; pinching-margins.el ---Center buffer contents    -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -14448,6 +14586,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-reveal.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; krisb-reveal.el --- Convenience for opening outline and org headings  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -14586,6 +14726,8 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/dungeons-and-dragons.el"
+  ;; -*- lexical-binding: t; -*-
+
   ;;; dungeons-and-dragons-rcp.el --- Bespoke Dungeons and Dragons features  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona

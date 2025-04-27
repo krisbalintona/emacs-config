@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Bufler
 (use-package bufler
   :custom

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Markdown-mode
 (use-package markdown-mode
   :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'")

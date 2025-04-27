@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Eglot
 (use-package eglot
   :custom

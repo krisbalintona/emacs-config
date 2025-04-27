@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (use-package savehist

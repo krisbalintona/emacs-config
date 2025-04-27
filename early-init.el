@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;; Defer garbage collection
 (setq gc-cons-threshold most-positive-fixnum)
 

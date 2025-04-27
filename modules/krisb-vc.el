@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Built-in
 ;;;; VC
 (use-package vc

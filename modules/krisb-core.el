@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Package.el
 ;; Initialize package resources
 (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Exec-path-from-shell
 ;; Ensure Emacs' and system shell have same path
 (use-package exec-path-from-shell

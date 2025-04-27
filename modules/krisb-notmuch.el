@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;;; Notmuch
 (use-package notmuch
   ;; For AUR:

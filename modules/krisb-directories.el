@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Dired
 ;; Emacs' file manager
 (use-package dired

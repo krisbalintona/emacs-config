@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Flymake
 (use-package flymake
   :hook ((prog-mode org-mode) . flymake-mode)

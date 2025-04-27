@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; krisb-indentation.el --- Bespoke utilities for consistent indentation  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

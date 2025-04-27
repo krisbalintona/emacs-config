@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; krisb-essentials.el --- Essential Emacs-wide settings  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; LaTeX
 ;;;; Auctex
 (use-package auctex

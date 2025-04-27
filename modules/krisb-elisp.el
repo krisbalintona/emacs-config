@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Font locking
 ;;;; Highlight-function-calls
 (use-package highlight-function-calls

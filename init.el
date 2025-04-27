@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Add modules and lisp to load path
 (dolist (path (list (expand-file-name "modules" user-emacs-directory)
                     (expand-file-name "lisp" user-emacs-directory)))

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Puni
 ;; Major-mode agnostic structural editing, faithful to built-ins
 (use-package puni

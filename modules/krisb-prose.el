@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Environment
 ;;;; Visual-wrap
 ;; Visually indent lines wrapped visually! This makes long-lines in lists

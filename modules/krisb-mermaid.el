@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Mermaid-mode
 (use-package mermaid-mode)
 

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Org-node
 (use-package org-node
   :vc ( :url "https://github.com/meedstrom/org-node.git"

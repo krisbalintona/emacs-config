@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Project.el
 (use-package project
   :bind ( :map project-prefix-map

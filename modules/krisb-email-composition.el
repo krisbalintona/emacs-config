@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Composition
 ;;;; Message
 (use-package message

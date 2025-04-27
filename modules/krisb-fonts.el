@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Fontaine
 ;; Define then apply face presets
 (use-package fontaine

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Online
 ;;;; Dictionary
 ;; See definitions of words from an online dictionary.

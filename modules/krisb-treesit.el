@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Treesit
 ;; Built-in tree-sitter support.
 (use-package treesit

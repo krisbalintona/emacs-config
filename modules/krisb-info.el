@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;;; Info
 (use-package info
   :hook ((Info-selection . mixed-pitch-mode)

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Hide-mode-line
 (use-package hide-mode-line
   :bind ( :map krisb-toggle-keymap

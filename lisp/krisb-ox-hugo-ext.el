@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; krisb-ox-hugo-ext.el --- Extensions to blogging with Hugo  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

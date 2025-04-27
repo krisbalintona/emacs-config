@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; krisb-vertico.el --- Vertico extensions          -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

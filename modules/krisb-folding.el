@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Outline
 (use-package outline
   :ensure nil

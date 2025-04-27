@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Oc (org-cite)
 ;; Built-in citations in org-mode
 (use-package oc

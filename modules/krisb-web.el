@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Shr
 ;; Emacs' built-in web renderer
 (use-package shr

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Nerd-icons
 (use-package nerd-icons
   :custom

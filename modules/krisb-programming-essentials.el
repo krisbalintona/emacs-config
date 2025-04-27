@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Prog-mode
 (use-package prog-mode
   :ensure nil

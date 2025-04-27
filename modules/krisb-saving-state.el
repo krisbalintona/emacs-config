@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Register
 (use-package register
   :ensure nil

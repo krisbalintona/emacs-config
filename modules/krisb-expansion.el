@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Abbrev
 ;; Automatically correct typed strings (e.g. words).  Most useful for correcting
 ;; spelling mistakes as they are made.

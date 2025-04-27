@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Shell
 ;; Built-in shell
 (use-package shell

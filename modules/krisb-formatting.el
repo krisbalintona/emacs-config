@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Apheleia
 ;; Quality code formatting for (arbitrarily) many languages
 (use-package apheleia

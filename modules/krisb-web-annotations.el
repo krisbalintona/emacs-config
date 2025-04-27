@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Org-remark
 (use-package org-remark
   :diminish (org-remark-mode org-remark-global-tracking-mode)

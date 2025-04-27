@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Ox (org-export)
 (use-package ox
   :ensure nil

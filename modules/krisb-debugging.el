@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Gud
 (use-package gud
   :ensure nil

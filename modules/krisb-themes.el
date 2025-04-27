@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (require 'color)
 
 ;;; Krisb-themes-ext

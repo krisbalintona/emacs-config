@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Denote
 (use-package denote
   :pin gnu-elpa-devel

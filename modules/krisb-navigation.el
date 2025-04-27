@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Consult
 ;; Counsel equivalent for default Emacs completion. It provides many useful
 ;; commands.

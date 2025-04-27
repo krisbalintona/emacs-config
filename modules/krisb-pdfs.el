@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Doc-view
 (use-package doc-view
   :custom

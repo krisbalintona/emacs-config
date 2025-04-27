@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Ox-hugo
 ;; Using the Hugo static cite generator as an option for exporting files
 (use-package ox-hugo

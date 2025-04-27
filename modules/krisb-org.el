@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Built-in
 ;;;; Org
 (use-package org
