@@ -81,7 +81,9 @@ is nil, the current buffer will be assumed."
      ((eq major-mode 'org-mode)
       (org-show-entry))
      ((or (eq major-mode 'outline-mode)
-          (bound-and-true-p outline-minor-mode))
+          (and (bound-and-true-p outline-minor-mode)
+               (save-excursion
+                 (> (point) (or (progn (outline-next-heading) (point)) (point-max))))))
       (outline-show-entry)))))
 
 ;; TODO 2024-10-24: Consider resolving aliases like
