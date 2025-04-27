@@ -367,10 +367,9 @@
 
 ;;; Org-project-capture
 (use-package org-project-capture
-  :bind ( :map krisb-note-keymap
-          ("n p" . org-project-capture-project-todo-completing-read)
-          :map project-prefix-map
-          ("n c" . org-project-capture-capture-for-current-project)
+  :bind ( :map project-prefix-map
+          ("n c" . org-project-capture-project-todo-completing-read)
+          ("n C" . org-project-capture-capture-for-current-project)
           ("n g" . org-project-capture-goto-location-for-project))
   :custom
   (org-project-capture-backend (make-instance 'org-project-capture-project-backend))
