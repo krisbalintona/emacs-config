@@ -130,6 +130,7 @@ which modifies the description of org-roam nodes from
               (propertize (concat " (" file-title ")") 'face 'shadow)))))
 
 ;;; Update link descriptions
+;;;###autoload
 (defun krisb-org-roam-ext-lint-descriptions (dir)
   "Correct org-roam link descriptions in DIR.
 If called interactively, DIR defaults to `org-roam-directory'.  When
