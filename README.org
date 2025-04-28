@@ -4,7 +4,7 @@ This is my literate Emacs configuration. My uses for Emacs center around:
 + Prose writing.
 + Note-taking.
 + Developing small elisp packages.
-This configuration is tailored to achieve these ends, in accordance with my personal tastes and preferences.
+This configuration is tailored to achieve these ends, in accordance with my personal tastes and preferences. Additionally, I semi-frequently build from the master branch of Emacs, so my configuration may include settings to options not packaged in officially released Emacs versions yet.
 
 Its directory structure is the following:
 + modules/
