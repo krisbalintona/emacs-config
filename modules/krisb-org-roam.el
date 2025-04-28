@@ -153,8 +153,8 @@ to the file path instead."
   ;; Customize how nodes are inserted via `org-roam-node-insert'
   (org-roam-node-formatter 'krisb-org-roam-node-formatter)
   :config
-  ;; The full content of each template element is present (i.e. searchable) even
-  ;; if visually absent/truncated
+  ;; The full content of each template element is present (and therefore
+  ;; searchable) even if visually absent/truncated
   (setopt org-roam-node-display-template
           (concat "${directories-display-template:8} "
                   ;; FIXME 2024-11-16: For some reason using :* to automatically set
@@ -285,7 +285,7 @@ called outright."
           ("m" . org-roam-folgezettel-list)
           ("s" . org-roam-folgezettel-show-node-in-list))
   :custom
-  (org-roam-folgezettel-filter-query '(box "main"))
+  (org-roam-folgezettel-default-filter-query '(box "main"))
   :init
   (with-eval-after-load 'vtable
     (el-patch-defun vtable-goto-object (object)
