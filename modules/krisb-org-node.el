@@ -51,7 +51,7 @@ This only occurs when the file is an org-node node."
                          (org-entry-get (point-min) "ID"))))
                  (node (gethash id org-nodes))
                  (title (org-node-get-title node)))
-        (rename-buffer (generate-new-buffer-name title)))))
+        (rename-buffer (generate-new-buffer-name title (buffer-name))))))
 
   ;; Bespoke `org-node-find'
   (cl-defmethod krisb-org-node-get-box ((node indexed-org-entry))
