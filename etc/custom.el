@@ -17,15 +17,16 @@
                   faceup fancy-compilation fish-mode flymake-collection fontaine
                   forge form-feed gcmh git-share god-mode hammy hide-mode-line
                   highlight-function-calls highlight-parentheses hl-todo hotfuzz
-                  hugoista hyprlang-ts-mode info-colors inspector jinx
+                  hugoista hyprlang-ts-mode indexed info-colors inspector jinx
                   keychain-environment kind-icon kv lazy-guard lice ligature lin
-                  lorem-ipsum lsp-bridge marginalia mermaid-mode mixed-pitch
-                  mode-minder modus-themes nadvice nerd-icons-completion
-                  nerd-icons-dired nerd-icons-ibuffer nix-ts-mode no-littering
-                  notmuch-addr notmuch-transient nov ntlm ob-mermaid ol-notmuch
-                  olivetti on orderless org-appear org-bookmark-heading
-                  org-bulletproof org-contrib org-edna org-make-toc org-mime
-                  org-modern org-node org-remark org-review org-roam-ql
+                  lorem-ipsum lsp-bridge marginalia markdown-mode mermaid-mode
+                  mixed-pitch mode-minder modus-themes nadvice
+                  nerd-icons-completion nerd-icons-dired nerd-icons-ibuffer
+                  nix-mode nix-ts-mode no-littering notmuch-addr
+                  notmuch-transient nov ntlm ob-mermaid ol-notmuch olivetti on
+                  orderless org-appear org-bookmark-heading org-bulletproof
+                  org-contrib org-edna org-make-toc org-mime org-modern org-node
+                  org-project-capture org-remark org-review org-roam-ql
                   org-roam-ui org-web-tools outli ox-hugo package-build
                   package-lint-flymake paren-face pcmpl-args pdf-tools peg
                   persist-state powerthesaurus pulsar puni python rainbow-mode
@@ -36,7 +37,9 @@
                   vc-jj verilog-mode vertico-prescient which-key window-tool-bar
                   wombag yasnippet))
  '(package-vc-selected-packages
-   '((lsp-bridge :vc-backend Git :url
+   '((vc-jj :url "https://codeberg.org/emacs-jj-vc/vc-jj.el.git")
+     (indexed :url "https://github.com/meedstrom/indexed.git" :branch "dev")
+     (lsp-bridge :vc-backend Git :url
                  "https://github.com/manateelazycat/lsp-bridge.git")
      (org-modern-indent :vc-backend Git :url
                         "https://github.com/jdtsmith/org-modern-indent.git")
@@ -63,7 +66,6 @@
      (git-share :vc-backend Git :url "https://github.com/mgmarlow/git-share")
      (lazy-guard :url "https://codeberg.org/vifon/lazy-guard.git")
      (sinister :url "https://github.com/positron-solutions/sinister")
-     (vc-jj :url "https://codeberg.org/emacs-jj-vc/vc-jj.el.git")
      (jj-vc :url "https://codeberg.org/emacs-jj-vc/vc-jj.el.git")
      (hugoista :url "https://codeberg.org/c-alpha/hugoista.git")
      (org-supertag :url "https://github.com/yibie/org-supertag.git")
@@ -100,7 +102,8 @@
      "/home/krisbalintona/Documents/org-database/agenda/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/"))
  '(safe-local-variable-values
-   '((org-review-delay . "+3d") (eval add-hook 'before-save-hook 'org-make-toc)
+   '((eval add-hook 'before-save-hook 'org-make-toc nil t)
+     (org-review-delay . "+3d") (eval add-hook 'before-save-hook 'org-make-toc)
      (org-use-tag-inheritance) (org-use-tag-inheritance . t)
      (org-time-stamp-custom-formats "<%B %d, %Y>" . "<%B %d, %Y %H:%M>")
      (org-time-stamp-custom-formats quote ("<%B %d, %Y>" . "<%B %d, %Y %H:%M>"))
