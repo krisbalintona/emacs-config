@@ -102,7 +102,7 @@
   :ensure nil
   :custom
   (isearch-repeat-on-direction-change t)
-  (isearch-allow-scroll t)
+  (isearch-allow-scroll 'unlimited)
   (isearch-allow-motion t)
   (isearch-lazy-count t)
   (isearch-wrap-pause 'no)
