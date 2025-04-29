@@ -14827,5 +14827,5 @@ There are several packages that end up incredibly useful for authoring packages.
 
 # Local Variables:
 # apheleia-inhibit: t
-# eval: (add-hook 'before-save-hook 'org-make-toc)
+# eval: (add-hook 'before-save-hook 'org-make-toc nil t)
 # End:
