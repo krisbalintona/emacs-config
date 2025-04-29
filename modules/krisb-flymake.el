@@ -10,7 +10,7 @@
   (elisp-flymake-byte-compile-load-path '("./")) ; Which libraries and files does flymake know about?
   (flymake-wrap-around nil)
   (flymake-fringe-indicator-position nil)       ; Disable fringe indicators
-  (flymake-show-diagnostics-at-end-of-line nil)
+  (flymake-show-diagnostics-at-end-of-line 'fancy) ; Emacs 31
   (flymake-suppress-zero-counters :warning)
   (flymake-mode-line-format
    '(" " flymake-mode-line-title flymake-mode-line-exception flymake-mode-line-counters))
