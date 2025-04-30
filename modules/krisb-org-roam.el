@@ -286,21 +286,6 @@ called outright."
           ("s" . org-roam-folgezettel-show-node-in-list))
   :custom
   (org-roam-folgezettel-default-filter-query '(box "main"))
-  :init
-  (with-eval-after-load 'vtable
-    (el-patch-defun vtable-goto-object (object)
-      "Go to OBJECT in the current table.
-Return the position of the object if found, and nil if not."
-      (let ((start (point)))
-        (vtable-beginning-of-table)
-        (save-restriction
-          (narrow-to-region (point) (save-excursion (vtable-end-of-table)))
-          (if (text-property-search-forward 'vtable-object object (el-patch-swap #'eq #'equal))
-              (progn
-                (forward-line -1)
-                (point))
-            (goto-char start)
-            nil)))))
   :config
   (with-eval-after-load 'embark
     (require 'org-roam-folgezettel-embark))
