@@ -2807,40 +2807,12 @@ Configuration related to "saving a state," that is, storing or restoring anythin
     (abbrev-suggest t)
     (abbrev-suggest-hint-threshold 2)
     :config
-    (defun krisb-abbrev-todo-keyword--string ()
-      "Select a todo keyword."
-      ;; OPTIMIZE 2024-10-12: Don't rely on `hl-todo-keyword-faces'
-      (completing-read "Keyword: " (split-string (key-description nil hl-todo-keyword-faces))))
-
-    (defun krisb-abbrev-todo-keyword ()
-      "Insert the a todo keyword."
-      (insert (krisb-abbrev-todo-keyword--string)))
-
-    (defun krisb-abbrev-current-date--string ()
-      "Return the current date formatted."
-      (format-time-string "%F"))
-
-    (defun krisb-abbrev-current-date ()
-      "Insert the current date."
-      (insert (krisb-abbrev-current-date--string)))
-
-    (defun krisb-abbrev-todo-keyword-and-date ()
-      "Insert a todo keyword followed by the current date and colon."
-      (insert (krisb-abbrev-todo-keyword--string) " " (krisb-abbrev-current-date--string) ":"))
-    :config
     ;; Enable the mode globally
-    (setq-default abbrev-mode t)
+    (setq-default abbrev-mode t))
 
-    ;; Allow abbrevs with a prefix colon, semicolon, or underscore. See:
-    ;; <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
-    (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
+  ;;; "Guessing" at point
 
-    ;; Predefined abbrevs
-    (define-abbrev global-abbrev-table ";t" "" #'krisb-abbrev-todo-keyword)
-    (define-abbrev global-abbrev-table ";d" "" #'krisb-abbrev-current-date)
-    (define-abbrev global-abbrev-table ";td" "" #'krisb-abbrev-todo-keyword-and-date))
-
-  ;;; Dabbrev
+  ;;;; Dabbrev
   ;; Use Dabbrev with Corfu!
   (use-package dabbrev
     :ensure nil
@@ -2851,10 +2823,47 @@ Configuration related to "saving a state," that is, storing or restoring anythin
                     tags-table-mode))
       (add-to-list 'dabbrev-ignored-buffer-modes mode)))
 
-  ;;; Hippie-expand
+  ;;;; Hippie-expand
   (use-package hippie-exp
     :ensure nil
     :bind ([remap dabbrev-expand] . hippie-expand))
+
+  ;;; Templates
+
+  ;;;; Tempel
+  (use-package tempel
+    :hook ((prog-mode text-mode) . krisb-tempel-setup-capf)
+    :bind ("M-*" . tempel-insert)
+    :custom
+    (tempel-trigger-prefix ";")
+    :init
+    (defun krisb-tempel-setup-capf ()
+      "Add `tempel-complete' to the beginning of local `completion-at-point-functions'."
+      (add-hook 'completion-at-point-functions 'tempel-complete -90 t))
+
+    (defun krisb-tempel--todo-keyword-string ()
+      "Select a todo keyword."
+      ;; OPTIMIZE 2024-10-12: Don't rely on `hl-todo-keyword-faces'
+      (completing-read "Keyword: " (split-string (key-description nil hl-todo-keyword-faces))))
+    :config
+    ;; Place `tempel-complete' at the beginning of the fallback (global value)
+    ;; `completion-at-point-functions'
+    (add-hook 'completion-at-point-functions #'tempel-complete -90)
+
+    ;; Element that expands other templates by name.  E.g., (i header) expands the
+    ;; template named "header."
+    (defun krisb-tempel-include (elt)
+      (when (eq (car-safe elt) 'include)
+        (if-let (template (alist-get (cadr elt) (tempel--templates)))
+            (cons 'l template)
+          (message "Template %s not found" (cadr elt))
+          nil)))
+    (add-to-list 'tempel-user-elements #'krisb-tempel-include))
+
+  ;;;; Tempel-collection
+  ;; Additional templates for tempel.  Basically batteries for tempel.
+  (use-package tempel-collection
+    :after tempel)
 
   ;;; Provide
   (provide 'krisb-expansion)
