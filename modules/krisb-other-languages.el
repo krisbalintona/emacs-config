@@ -31,13 +31,13 @@
     (add-to-list 'treesit-language-source-alist
                  '(hyprlang "https://github.com/tree-sitter-grammars/tree-sitter-hyprlang"))))
 
-;;; Nix-mode
+;;; Nix-ts-mode
 ;; Language for .nix files
-(use-package nix-mode)
+(use-package nix-ts-mode)
 
-;;; Just-mode
+;;; Just-ts-mode
 ;; Language for just-files
-(use-package just-mode)
+(use-package just-ts-mode)
 
 ;;; Provide
 (provide 'krisb-other-languages)
