@@ -374,7 +374,7 @@
   :custom
   (org-project-capture-backend (make-instance 'org-project-capture-project-backend))
   (org-project-capture-projects-file (expand-file-name "coding_projects.org" krisb-org-agenda-directory))
-  :custom
+  :config
   (org-project-capture-single-file))
 
 ;;; Provide
