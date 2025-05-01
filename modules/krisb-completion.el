@@ -450,7 +450,7 @@ This macro does not affect capfs already in
        (add-hook hook
                  (defun ,(intern (concat "krisb-cape-setup-capfs-" label)) ()
                    (dolist (capf (reverse ,capfs))
-                     (add-to-list 'completion-at-point-functions capf))))))
+                     (add-hook 'completion-at-point-functions capf -50 t))))))
 
   (krisb-cape-setup-capfs
     "elisp"
