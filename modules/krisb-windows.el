@@ -181,7 +181,7 @@
          (member major-mode '(exwm-mode doc-view-mode))))
      (lambda (win)
        (cl-some (lambda (regexp) (string-match-p regexp (buffer-name (window-buffer win))))
-                '("^[[:space:]]*\\*")))
+                (list (rx bol (0+ whitespace) (literal "*")))))
      (lambda (win)
        (with-selected-window win (bound-and-true-p olivetti-mode)))))
   (pinching-margins-force-predicates
