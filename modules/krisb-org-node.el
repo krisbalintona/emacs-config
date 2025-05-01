@@ -132,7 +132,35 @@ For use as `org-node-affixation-fn'."
                 title
                 (when (or (not (string= title file-title))
                           (not file-title))
-                  (propertize (concat " (" file-title ")") 'face 'shadow)))))))
+                  (propertize (concat " (" file-title ")") 'face 'shadow))))))
+
+  ;; TODO 2025-05-01: Remove this when fixed upstream
+  (el-patch-defun org-node--record-completion-candidates (node)
+    "Cache completion candidates for NODE and its aliases."
+    (when (and (indexed-id node)
+               (funcall (org-node--try-ensure-compiled org-node-filter-fn) node))
+      (dolist (title (cons (indexed-title node)
+                           (indexed-roam-aliases node)))
+        (let ((affx (funcall (org-node--try-ensure-compiled org-node-affixation-fn)
+                             node title)))
+          (el-patch-remove
+            (if org-node-alter-candidates
+                ;; Absorb the affixations into one candidate string
+                (puthash (concat (nth 1 affx) (nth 0 affx) (nth 2 affx))
+                         node
+                         org-node--candidate<>node))
+            ;; Bare title, to be affixated later by `org-node-collection'
+            (puthash title affx org-node--title<>affixation-triplet)
+            (puthash title node org-node--candidate<>node))
+          (el-patch-add
+            (if org-node-alter-candidates
+                ;; Absorb the affixations into one candidate string
+                (puthash (concat (nth 1 affx) (nth 0 affx) (nth 2 affx))
+                         node
+                         org-node--candidate<>node)
+              ;; Bare title, to be affixated later by `org-node-collection'
+              (puthash title affx org-node--title<>affixation-triplet)
+              (puthash title node org-node--candidate<>node))))))))
 
 ;;; Org-node-fakeroam
 (use-package org-node-fakeroam
