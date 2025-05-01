@@ -7,7 +7,7 @@
   :custom
   (shr-fill-text nil)                ; Prefer to use `visual-line-mode' instead
   (shr-use-fonts t)
-  ;; (shr-use-colors nil)                  ; t is bad for accessibility
+  (shr-use-colors nil) ; I prefer to use my theme's colors
   (shr-width nil)
   (shr-discard-aria-hidden t)
   (shr-max-image-proportion 0.6)        ; How big are images?
