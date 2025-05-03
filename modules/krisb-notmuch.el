@@ -37,14 +37,14 @@
 
   ;; Notmuch-searches
   (notmuch-saved-searches
-   '((:name "inbox"                 :query "tag:inbox and not tag:list" :sort-order oldest-first :key "i")
-     (:name "to-read mailing lists" :query "tag:list and tag:inbox "    :sort-order oldest-first :key "l")
-     (:name "all mailing lists"     :query "tag:list"                                            :key "L" )
-     (:name "sent"                  :query "tag:sent"                                            :key "s")
-     (:name "drafts"                :query "tag:draft or path:drafts/"  :search-type unthreaded  :key "d")
-     (:name "archived"              :query "not tag:trash"                                       :key "a")
-     (:name "all"                   :query "path:**"                                             :key "A")
-     (:name "trash"                 :query "tag:trash"                                           :key "t")))
+   '((:name "inbox"                 :query "tag:inbox and (not tag:list or to:krisbalintona@gmail.com)" :sort-order oldest-first :key "i")
+     (:name "to-read mailing lists" :query "tag:list and tag:inbox "                                    :sort-order oldest-first :key "l")
+     (:name "all mailing lists"     :query "tag:list and not to:krisbalintona@gmail.com"                                         :key "L" )
+     (:name "sent"                  :query "tag:sent"                                                   :sort-order newest-first :key "s")
+     (:name "drafts"                :query "tag:draft or path:drafts/"                                  :sort-order newest-first :key "d" :search-type unthreaded)
+     (:name "archived"              :query "not tag:trash"                                                                       :key "a")
+     (:name "all"                   :query "path:**"                                                                             :key "A")
+     (:name "trash"                 :query "tag:trash"                                                                           :key "t")))
   ;; See `man' for mbsync and notmuch to see valid search terms. See
   ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
   ;; via cli
