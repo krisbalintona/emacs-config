@@ -3,7 +3,8 @@
 ;;; Project.el
 (use-package project
   :bind ( :map project-prefix-map
-          ("e" . project-eshell))
+          ("e" . project-eshell)
+          ("C" . project-recompile))
   :custom
   (project-vc-extra-root-markers '("Makefile"))
   (project-vc-merge-submodules nil)
@@ -16,12 +17,16 @@
   ;; The commands in `project-switch-commands' must be found in
   ;; `project-prefix-map'
   (project-switch-commands
-   '((project-find-file "Find file")
+   `((project-find-file "Find file")
      (project-find-regexp "Find regexp")
      (project-find-dir "Find directory")
      (project-vc-dir "VC-Dir")
      (project-eshell "Eshell")
-     (eat-project "EAT")
+     ,(when (locate-library "eat")
+        '(eat-project "EAT"))
+     ,(when (locate-library "compile-multi")
+        '(compile-multi "Compile-multi"))
+     (project-recompile "Recompile")
      (project-any-command "Other")))
   :config
   ;; On startup, remove non-existent directories from remembered projects list
@@ -139,6 +144,20 @@ See the function `hl-todo--regexp'."
                        (concat "[" hl-todo-highlight-punctuation "]"
                                (if hl-todo-require-punctuation "+" "*")))
                   "\\)"))))
+
+;;; Compile-multi
+(use-package compile-multi
+  :bind ([remap project-compile] . compile-multi)
+  :custom
+  (compile-multi-default-directory (lambda () (project-root (project-current))))
+  :config
+  (use-package consult-compile-multi
+    :after consult
+    :config
+    (consult-compile-multi-mode 1))
+
+  (use-package compile-multi-nerd-icons
+    :after nerd-icons-completion))
 
 ;;; Provide
 (provide 'krisb-projects)
