@@ -169,19 +169,21 @@
   ;; Capture templates
   ;; See also `org-capture-templates-contexts'
   (org-capture-templates
-   `(("t" "Todo" entry
-      (file ,krisb-org-agenda-main-file)
+   '(("t" "Todo" entry
+      (file krisb-org-agenda-main-file)
       "* TODO %? :inbox:%^g\n"
       :empty-lines 1)
      ("T" "Todo (without processing)" entry
-      (file ,krisb-org-agenda-main-file)
+      (file krisb-org-agenda-main-file)
       "* TODO %? %^g\n"
       :empty-lines 1)
      ("j" "Journal" entry
-      (function (lambda ()
-                  (let* ((candidate (krisb-org-capture--org-node-select-by-tags '("^__journal$")))
-                         (node (gethash candidate org-node--candidate<>node)))
-                    (krisb-org-capture--org-node-insert-datetree node))))
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (krisb-org-capture--org-node-by-tags '("^__journal$"))))
+           (org-capture-put :krisb-node node)
+           (indexed-file-name node)))
+       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
       "* %<%c>\n"
       :tree-type (year quarter month)
       :jump-to-captured t
@@ -190,7 +192,12 @@
       :clock-in t
       :clock-resume t)
      ("w" "Just write" entry
-      (function ,(lambda () (krisb-org-capture--org-node-insert-datetree (org-node-by-id "20241006T214800.000000"))))
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (org-node-by-id "20241006T214800.000000")))
+           (org-capture-put :krisb-node node)
+           (indexed-file-name node)))
+       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
       "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
       :tree-type (year quarter month)
       :jump-to-captured t
@@ -199,22 +206,34 @@
       :clock-in t
       :clock-resume t)
      ("l" "Log" item
-      (function (lambda ()
-                  (let* ((candidate (krisb-org-capture--org-node-select-by-tags '("^__log$")))
-                         (node (gethash candidate org-node--candidate<>node)))
-                    (krisb-org-capture--org-node-insert-datetree node))))
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
+           (org-capture-put :krisb-node node)
+           (indexed-file-name node)))
+       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
       "%U %?"
       :tree-type (quarter week)
       :clock-in t
       :clock-resume t)
      ("m" "Work meeting notes" entry
-      (function ,(lambda () (krisb-org-capture--org-node-insert-datetree (org-node-by-id "20241114T091749.707997"))))
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (org-node-by-id "20241114T091749.707997")))
+           (org-capture-put :krisb-node node)
+           (indexed-file-name node)))
+       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
       "* (%<%c>)%?\n\n"
       :tree-type (year quarter month)
       :jump-to-captured t
       :immediate-finish t)
      ("r" "Reference" entry
-      (function (lambda () (krisb-org-capture--org-node-insert-datetree (org-node-by-id "20250422T171216.767702"))))
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (org-node-by-id "20250422T171216.767702")))
+           (org-capture-put :krisb-node node)
+           (indexed-file-name node)))
+       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
       "* %?\n"
       :tree-type (year month)
       :jump-to-captured t
@@ -347,69 +366,25 @@ See ((org) Filtering/limiting agenda items)."
                    (or (> hr 10) (< hr 21)))))
       (concat "-" tag)))
 
-  ;; Bespoke functions for datetrees in org-node nodes
-  (defun krisb-org-capture--org-node-insert-datetree (node)
-    "Creates datetree at org-node NODE.
-Creates a datetree at NODE, and leaves point where a new entry should
-be.
-
-This is a helper function for functions used in `org-capture-templates',
-but can also be called interactively to prompt for NODE."
-    (interactive (list (org-node-read)))
-    (require 'org-node)
-    (require 'org-datetree)
-    (let* ((file (org-node-get-file node))
-           (olp (when (< 0 (org-node-get-level node))
-                  (org-node-get-olp-with-self node)))
-           (pt (org-node-get-pos node))
-           (date (calendar-gregorian-from-absolute
-                  (time-to-days
-                   (org-capture-get :default-time)))) ; Respect C-1 and :time-prompt
-           (buffer (org-capture-target-buffer file))
-           (tree-type (org-capture-get :tree-type))) ; Respect :tree-type
-      ;; See `org-capture-set-target-location' for an explanation of the next
-      ;; few lines
-      (set-buffer buffer)
-      (org-capture-put-target-region-and-position)
-      (widen)
-      (goto-char pt)
-      ;; Create datetree.  See the implementation of
-      ;; `org-capture-set-target-location' for an explanation of the lines
-      ;; below; it handles all the cases org-capture does
-      (funcall
-       (pcase tree-type
-         (`week #'org-datetree-find-iso-week-create)
-         (`month #'org-datetree-find-month-create)
-         (`day #'org-datetree-find-date-create)
-         ((pred not) #'org-datetree-find-date-create)
-         ((pred functionp)
-          (lambda (d keep-restriction)
-            (org-datetree-find-create-hierarchy
-             (funcall tree-type d) keep-restriction)))
-         ((pred listp)
-          (lambda (d keep-restriction)
-            (funcall #'org-datetree-find-create-entry tree-type
-                     d keep-restriction)))
-         (_ (error "Unrecognized :tree-type")))
-       date
-       (when olp 'subtree-at-point))))
-
-  (defun krisb-org-capture--org-node-select-by-tags (tags)
+  ;; Bespoke functions that selects an org-node node based on TAGS.  Used for my
+  ;; datetree capture templates
+  (defun krisb-org-capture--org-node-by-tags (tags)
     "Interactively prompt for an org-node candidate matching TAGS.
 TAGS is a list of regexps that match org-node tags.
 
 This function will use `completing-read' whose candidates are the
 org-node nodes that match all of TAGS.  It will return a candidate (see
 `org-node--candidate<>node')."
-    (completing-read "Select node: "
-                     #'org-node-collection
-                     (lambda (_title node)
-                       (cl-every (lambda (re)
-                                   (cl-some (lambda (str)
-                                              (string-match-p re str))
-                                            (org-node-get-tags node)))
-                                 tags))
-                     t nil 'org-node-hist)))
+    (gethash (completing-read "Select node: "
+                              #'org-node-collection
+                              (lambda (_title node)
+                                (cl-every (lambda (re)
+                                            (cl-some (lambda (str)
+                                                       (string-match-p re str))
+                                                     (org-node-get-tags node)))
+                                          tags))
+                              t nil 'org-node-hist)
+             org-node--candidate<>node)))
 
 ;;; Org-super-agenda
 (use-package org-super-agenda
