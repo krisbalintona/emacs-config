@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-common.el --- Common variables, functions, macros, and more -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

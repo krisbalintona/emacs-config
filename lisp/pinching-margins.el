@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; pinching-margins.el ---Center buffer contents    -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

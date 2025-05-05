@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-mpv.el --- Bespoke MPV extensions          -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

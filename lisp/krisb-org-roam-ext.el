@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-org-roam-ext.el --- My bespoke org-roam extensions  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

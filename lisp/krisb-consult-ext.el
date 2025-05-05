@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-consult-ext.el --- Extensions for Consult  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

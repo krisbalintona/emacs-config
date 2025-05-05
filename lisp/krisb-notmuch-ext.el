@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-notmuch-ext.el --- Notmuch extensions      -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

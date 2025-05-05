@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-denote-ext.el --- Denote extensions        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

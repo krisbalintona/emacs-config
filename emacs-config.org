@@ -10304,8 +10304,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-common.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-common.el --- Common variables, functions, macros, and more -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10502,8 +10500,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-themes-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-themes-ext.el --- Manage switching/toggling of themes  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10624,8 +10620,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-indentation.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-indentation.el --- Bespoke utilities for consistent indentation  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10740,8 +10734,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-vertico.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-vertico.el --- Vertico extensions          -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10825,8 +10817,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-consult-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-consult-ext.el --- Extensions for Consult  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -10913,8 +10903,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-org-ext.el --- Org-mode extensions         -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11022,8 +11010,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-denote-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-denote-ext.el --- Denote extensions        -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11309,8 +11295,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-roam-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-org-roam-ext.el --- My bespoke org-roam extensions  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11823,8 +11807,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-org-remark-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-org-remark-ext.el --- Extensions for org-remark  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -11973,8 +11955,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-pdfs-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-pdfs-ext.el --- pdf-view-mode extensions   -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12414,8 +12394,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-wombag-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-wombag-ext.el --- Wombag extensions        -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12544,8 +12522,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-mpv.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-mpv.el --- Bespoke MPV extensions          -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12662,8 +12638,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-email-composition-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-email-composition-ext.el --- Email composition extensions  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -12804,8 +12778,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-notmuch-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-notmuch-ext.el --- Notmuch extensions      -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -13051,8 +13023,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-ox-hugo-ext.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-ox-hugo-ext.el --- Extensions to blogging with Hugo  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -13686,8 +13656,6 @@ There are several packages that end up incredibly useful for authoring packages.
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-auto-completion.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-auto-completion.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2025  Kristoffer Balintona
@@ -13816,8 +13784,6 @@ These are libraries which are treated less like extensions of other packages and
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/pinching-margins.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; pinching-margins.el ---Center buffer contents    -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -13945,8 +13911,6 @@ These are libraries which are treated less like extensions of other packages and
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-reveal.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-reveal.el --- Convenience for opening outline and org headings  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -14087,8 +14051,6 @@ These are libraries which are treated less like extensions of other packages and
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/dungeons-and-dragons.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; dungeons-and-dragons-rcp.el --- Bespoke Dungeons and Dragons features  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona
@@ -14181,8 +14143,6 @@ These are libraries which are treated less like extensions of other packages and
 :END:
 
 #+begin_src emacs-lisp :tangle "lisp/krisb-oblique-strategies.el"
-  ;; -*- lexical-binding: t; -*-
-
   ;;; krisb-oblique-strategies.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
 
   ;; Copyright (C) 2024  Kristoffer Balintona

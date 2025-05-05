@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-org-ext.el --- Org-mode extensions         -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona

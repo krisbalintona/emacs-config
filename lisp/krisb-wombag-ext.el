@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;;; krisb-wombag-ext.el --- Wombag extensions        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona
