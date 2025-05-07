@@ -424,10 +424,9 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
     "Super-capf of `cape-dict' and `cape-dabbrev'."
     (cape-wrap-super 'cape-dict :with 'cape-dabbrev))
 
-  (defvar krisb-cape-fallback-capfs '(krisb-cape-super-capf--dict-dabbrev)
-    "Capfs added to the end of the global value of `completion-at-point-functions'.")
-
-  (dolist (capf krisb-cape-fallback-capfs)
+  ;; Capfs added to the end of the global value of
+  ;; `completion-at-point-functions'.  Consequently, they act as fallback capfs.
+  (dolist (capf '(krisb-cape-super-capf--dict-dabbrev))
     (add-hook 'completion-at-point-functions capf 100))
 
   ;; Macro to help adding capfs via hooks
@@ -461,6 +460,11 @@ This macro does not affect capfs already in
     "commit"
     '(git-commit-setup-hook log-edit-mode-hook)
     (list #'cape-elisp-symbol #'cape-dabbrev))
+
+  (krisb-cape-setup-capfs
+    "shells"
+    '(eshell-mode-hook comint-mode-hook)
+    (list #'cape-file #'cape-history))
   :config
   ;; Use enchant en_US dictionary
   (with-eval-after-load 'jinx

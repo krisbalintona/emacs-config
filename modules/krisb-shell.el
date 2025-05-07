@@ -81,9 +81,7 @@
                 ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
                 outline-regexp eshell-prompt-regexp
                 ;; Imenu with eshell prompt history
-                imenu-generic-expression `((nil ,eshell-prompt-regexp 0)))
-    (when (featurep 'cape)
-      (add-hook 'completion-at-point-functions #'cape-file nil t)))
+                imenu-generic-expression `((nil ,eshell-prompt-regexp 0))))
 
   ;; Eshell source in `consult-buffer'
   (with-eval-after-load 'consult
@@ -131,13 +129,12 @@
 (use-package eshell-atuin
   :after eshell
   :demand t
-  :hook (eshell-mode . krisb-eshell-atuin-setup-eshell-capf)
   :bind* ( :map eshell-mode-map
            ([remap eshell-isearch-backward-regexp] . eshell-atuin-history))
   :custom
   (eshell-atuin-save-duration t)
   (eshell-atuin-filter-mode 'global)
-  (eshell-atuin-search-options '("--exit" "0"))
+  (eshell-atuin-search-options nil)
   (eshell-atuin-search-fields '(time command duration directory))
   (eshell-atuin-history-format "%-110c (in %i)")
   :config
@@ -147,7 +144,9 @@
     "Add `krisb-eshell-atium-capf' to the beginning of `completion-at-point-functions'."
     (add-hook 'completion-at-point-functions #'krisb-eshell-atium-capf -50 t))
 
-  ;; Bespoke capf.  Especially useful with `completion-preview-mode'
+  ;; TODO 2025-05-08: Right now I've removed the function that used to use the
+  ;; following function.  However, I keep it here just in case I decide to
+  ;; create a PR/issue to upstream this missing functionlality (relative time).
   (defun krisb-eshell-atuin--relative-time (time-string)
     "Turn TIME-STRING into a relative time string.
 TIME-STRING is a string that represents a time; it is in the format
@@ -169,34 +168,7 @@ An example of a return value for this function is: \"9 minutes ago\"."
              (format "%.0f hours %s" (/ abs-diff 3600) (if (< diff-time 0) "ago" "from now")))
             ((< abs-diff (* 30 86400))
              (format "%.0f days %s" (/ abs-diff 86400) (if (< diff-time 0) "ago" "from now")))
-            (t (format "%.0f months %s" (/ abs-diff (* 30 86400)) (if (< diff-time 0) "ago" "from now"))))))
-
-  (defun krisb-eshell-atium-capf ()
-    "Capf or `eshell-atuin' command history.
-Meant for `completion-at-point-functions' in eshell buffers."
-    (interactive)
-    (when (bound-and-true-p eshell-atuin-mode)
-      ;; Update cache first
-      (eshell-atuin--history-rotate-cache)
-      (eshell-atuin--history-update)
-      (let* ((start (save-excursion (eshell-next-prompt 0) (point)))
-             (end (save-excursion (goto-char (point-max))))
-             (candidates
-              (mapcar (lambda (e)
-                        (let* ((command (alist-get 'command e))
-                               (directory (alist-get 'directory e))
-                               (time (alist-get 'time e))
-                               ;; 2025-03-27: I manually parse the time string
-                               ;; into relativetime string.  Upstream does not
-                               ;; do it for us.
-                               (relativetime (krisb-eshell-atuin--relative-time time)))
-                          (put-text-property 0 (length command) 'relativetime relativetime command)
-                          command))
-                      eshell-atuin--history-cache)))
-        (list start end candidates
-              :exclulsive 'no                   ; Go to other capfs afterward
-              :display-sort-function #'identity ; Keep in chronological order
-              :annotation-function (lambda (s) (get-text-property 0 'relativetime s))))))) ; Add relative time annotation
+            (t (format "%.0f months %s" (/ abs-diff (* 30 86400)) (if (< diff-time 0) "ago" "from now")))))))
 
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
