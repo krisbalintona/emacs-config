@@ -23,7 +23,8 @@
 ;;;; Highlight-parentheses
 (use-package highlight-parentheses
   :hook ((emacs-lisp-mode . highlight-parentheses-mode)
-         (minibuffer-setup . highlight-parentheses-minibuffer-setup))
+         (minibuffer-setup . highlight-parentheses-minibuffer-setup)
+         (highlight-parentheses-mode . (lambda () (show-paren-local-mode -1))))
   :custom
   ;; TODO 2025-04-08: Configure `highlight-parentheses-colors'
   (highlight-parentheses-highlight-adjacent t)
