@@ -754,7 +754,7 @@ based off of `org-linker-edna’."
           (message "‘%s’ added as a dependency to this todo"
                    (substring-no-properties dependency))))))
 
-  (defun krisb-consult-org-agenda-edna (&optional match)
+  (defun krisb-consult-org-agenda-edna-block (&optional match)
     "Create a dependency for the `org-agenda’ item at point.
   See `krisb-consult-org-edna-block’."
     (interactive)
@@ -778,7 +778,7 @@ based off of `org-linker-edna’."
   (with-eval-after-load 'consult
     (consult-customize krisb-consult-org-edna-block
                        :prompt "Select dependency for the heading at point: "
-                       krisb-consult-org-agenda-edna
+                       krisb-consult-org-agenda-edna-block
                        :prompt "Select dependency for this agenda item: ")))
 
 ;;; Org-review

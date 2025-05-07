@@ -7520,7 +7520,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
             (message "‘%s’ added as a dependency to this todo"
                      (substring-no-properties dependency))))))
 
-    (defun krisb-consult-org-agenda-edna (&optional match)
+    (defun krisb-consult-org-agenda-edna-block (&optional match)
       "Create a dependency for the `org-agenda’ item at point.
     See `krisb-consult-org-edna-block’."
       (interactive)
@@ -7544,7 +7544,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     (with-eval-after-load 'consult
       (consult-customize krisb-consult-org-edna-block
                          :prompt "Select dependency for the heading at point: "
-                         krisb-consult-org-agenda-edna
+                         krisb-consult-org-agenda-edna-block
                          :prompt "Select dependency for this agenda item: ")))
 
   ;;; Org-review
