@@ -1027,17 +1027,6 @@ A useful command added in Emacs 30.1 is ~customize-dirlocals~, which is a way to
   ;;;; Avoid collision of mouse with point
   (mouse-avoidance-mode 'jump)
 
-  ;;;; Find-funtion-mode
-  ;; Binds useful commands for jumping to variables, functions, and libraries
-  (find-function-mode 1)
-
-  ;; Useful keybind for my usage
-  (defun krisb-find-library-other-tab (library)
-    "Find LIBRARY in other tab."
-    (interactive (list (read-library-name)))
-    (switch-to-buffer-other-tab (save-window-excursion (funcall-interactively #'find-library library))))
-  (bind-key "L" #'krisb-find-library-other-tab tab-prefix-map)
-
   ;;;; Visual-line-mode in *Messages* buffer
   (add-hook 'messages-buffer-mode-hook #'visual-line-mode)
 
@@ -9700,6 +9689,27 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
     (with-eval-after-load 'helpful
       (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
+
+  ;;;; Find-funtion-mode
+  ;; Binds useful commands for jumping to variables, functions, and libraries
+  (use-package find-func
+    :ensure nil
+    :bind ( :map tab-prefix-map
+            ("F" . krisb-find-function-other-tab)
+            ("L" . krisb-find-library-other-tab))
+    :init
+    ;; Useful keybinds for my usage
+    (defun krisb-find-library-other-tab (library)
+      "Find LIBRARY in other tab."
+      (interactive (list (read-library-name)))
+      (switch-to-buffer-other-tab (save-window-excursion (funcall-interactively #'find-library library))))
+
+    (defun krisb-find-function-other-tab (function)
+      "Find FUNCTION in other tab."
+      (interactive (find-function-read))
+      (find-function-do-it function nil 'switch-to-buffer-other-tab))
+    :config
+    (find-function-mode 1))
 
   ;;; Debugging
   ;;;; Eros-mode

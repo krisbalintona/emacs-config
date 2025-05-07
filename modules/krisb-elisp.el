@@ -77,6 +77,27 @@
   (with-eval-after-load 'helpful
     (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 
+;;;; Find-funtion-mode
+;; Binds useful commands for jumping to variables, functions, and libraries
+(use-package find-func
+  :ensure nil
+  :bind ( :map tab-prefix-map
+          ("F" . krisb-find-function-other-tab)
+          ("L" . krisb-find-library-other-tab))
+  :init
+  ;; Useful keybinds for my usage
+  (defun krisb-find-library-other-tab (library)
+    "Find LIBRARY in other tab."
+    (interactive (list (read-library-name)))
+    (switch-to-buffer-other-tab (save-window-excursion (funcall-interactively #'find-library library))))
+
+  (defun krisb-find-function-other-tab (function)
+    "Find FUNCTION in other tab."
+    (interactive (find-function-read))
+    (find-function-do-it function nil 'switch-to-buffer-other-tab))
+  :config
+  (find-function-mode 1))
+
 ;;; Debugging
 ;;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
