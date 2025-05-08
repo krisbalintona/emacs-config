@@ -178,11 +178,11 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
            (vertico-grid-separator
             . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
   (vertico-multiform-commands
-   '((pdf-view-goto-label (vertico-sort-function . nil))
+   `((pdf-view-goto-label (vertico-sort-function . nil))
      (".+-history" (vertico-sort-function . nil))
-     ("^org-node-"
-      (completion-styles . (orderless))
-      (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal orderless-flex)))))
+     (,(rx bol (or (literal "org-node-") (literal "org-roam-")) "-find" eol)
+      (completion-styles . (orderless ,(if (featurep 'hotfuzz) 'hotfuzz 'flex))) ; FIXME 2025-05-08: But what if hotfuzz is loaded after vertico-multiform?
+      (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal)))))
   :config
   (vertico-multiform-mode 1))
 
