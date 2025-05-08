@@ -15,6 +15,9 @@
          ([remap repeat-complex-command] . consult-complex-command)
          ([remap imenu] . consult-imenu)
          ([remap flymake-show-buffer-diagnostics] . consult-flymake)
+         :map minibuffer-local-map
+         ([remap next-matching-history-element] . consult-history)
+         ([remap previous-matching-history-element] . consult-history)
          :map consult-narrow-map
          ("?" . consult-narrow-help)          ; Show available narrow keys
          :map goto-map                  ; The `M-g' prefix
