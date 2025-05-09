@@ -287,6 +287,8 @@ called outright."
   :custom
   (org-roam-folgezettel-default-filter-query '(box "main"))
   :config
+  (require 'krisb-org-roam-ext)
+
   (with-eval-after-load 'embark
     (require 'org-roam-folgezettel-embark))
 
