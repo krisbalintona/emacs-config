@@ -63,7 +63,7 @@ after each heading's drawers."
                          nil
                        'tree)))
 
-;;; Automate creation of CUSTOM_ID
+;;; Automate creation of IDs
 ;;;###autoload
 (defun krisb-org-ext-create-custom-id ()
   "Get the CUSTOM_ID of the current entry.
@@ -79,6 +79,16 @@ This function is a copy of `denote-link-ol-get-id'."
       (setq id (org-id-new "h"))
       (org-entry-put pos "CUSTOM_ID" id)
       id)))
+
+;;;###autoload
+(defun krisb-org-ext-create-dedicated-target ()
+  "Return a unique dedicated target.
+Based on the current time.  See (info \"(org) Internal Links\") for more
+information on dedicated targets."
+  (interactive)
+  (let* ((id (format-time-string "%Y%m%dT%H%M%S"))
+         (target (concat "<<" id ">>")))
+    (if (called-interactively-p 'interactive) (insert target) target)))
 
 ;;; Eldoc backend for footnote content
 ;;;###autoload
