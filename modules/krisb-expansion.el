@@ -39,16 +39,19 @@
   :hook ((prog-mode text-mode) . krisb-tempel-setup-capf)
   :bind ("M-*" . tempel-insert)
   :custom
-  (tempel-trigger-prefix ";")
+  ;; Applies to `tempel-expand' and `tempel-complete'.  We prefer non-pair
+  ;; characters to avoid inserting an extra pair from `electric-pair-mode'.  It
+  ;; should also ideally be an unused (or at least very rare) comment delimiter
+  ;; to avoid TAB indenting the line when `tab-always-indent' is \\='complete
+  (tempel-trigger-prefix "=")
   :init
   (defun krisb-tempel-setup-capf ()
-    "Add `tempel-complete' to the beginning of local `completion-at-point-functions'."
-    (add-hook 'completion-at-point-functions 'tempel-complete -90 t))
-
-  (defun krisb-tempel--todo-keyword-string ()
-    "Select a todo keyword."
-    ;; OPTIMIZE 2024-10-12: Don't rely on `hl-todo-keyword-faces'
-    (completing-read "Keyword: " (split-string (key-description nil hl-todo-keyword-faces))))
+    "Add `tempel-expand' to the beginning of local `completion-at-point-functions'.
+We also add `tempel-expand' to the beginning of the global value for
+`completion-at-point-functions'.  The difference here is that we want
+`tempel-expand' to be the first `completion-at-point' function for the
+buffers in which this function is run."
+    (add-hook 'completion-at-point-functions 'tempel-expand -90 t))
   :config
   ;; Place `tempel-complete' at the beginning of the fallback (global value)
   ;; `completion-at-point-functions'
@@ -63,11 +66,6 @@
         (message "Template %s not found" (cadr elt))
         nil)))
   (add-to-list 'tempel-user-elements #'krisb-tempel-include))
-
-;;;; Tempel-collection
-;; Additional templates for tempel.  Basically batteries for tempel.
-(use-package tempel-collection
-  :after tempel)
 
 ;;; Provide
 (provide 'krisb-expansion)
