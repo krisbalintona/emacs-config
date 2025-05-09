@@ -165,7 +165,7 @@ The following are the flags I prefer to compile Emacs with.
 #+end_src
 
 #+RESULTS:
-: --with-mailutils --with-pgtk --with-native-compilation --with-x-toolkit=gtk3 'CFLAGS=-O2 -pipe -march=native -fomit-frame-pointer'
+: --prefix=/nix/store/35hz5gybvqf7h11pdcd34ywncjagcmln-emacs-git-20250506.0 --disable-build-details --with-modules --with-x-toolkit=lucid --with-cairo --without-xft --with-compress-install --with-toolkit-scroll-bars --with-native-compilation --without-imagemagick --with-mailutils --without-small-ja-dic --with-tree-sitter --with-xinput2 --without-xwidgets --with-dbus --with-selinux --with-native-compilation --with-imagemagick --with-cairo --with-x-toolkit=gtk3
 
 * Initialization
 :PROPERTIES:
