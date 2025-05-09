@@ -1323,6 +1323,7 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
   ;;; Completion-preview
   (use-package completion-preview
     :ensure nil
+    :diminish
     :hook (((prog-mode log-edit-mode eval-expression-minibuffer-setup) . completion-preview-mode)
            (eshell-mode . krisb-completion-preview-mode-setup-eshell))
     :bind ( :map completion-preview-active-mode-map
@@ -8726,6 +8727,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;; Visualize whitespace so mistakes are more easily detectable.
   (use-package whitespace
     :ensure nil
+    :diminish
     :hook (prog-mode . whitespace-mode)
     :custom
     (whitespace-style '(empty face tab-mark tabs trailing))
@@ -9614,6 +9616,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;;; Highlight-parentheses
   (use-package highlight-parentheses
+    :diminish
     :hook ((emacs-lisp-mode . highlight-parentheses-mode)
            (minibuffer-setup . highlight-parentheses-minibuffer-setup)
            (highlight-parentheses-mode . (lambda () (show-paren-local-mode -1))))

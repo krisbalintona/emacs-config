@@ -22,6 +22,7 @@
 
 ;;;; Highlight-parentheses
 (use-package highlight-parentheses
+  :diminish
   :hook ((emacs-lisp-mode . highlight-parentheses-mode)
          (minibuffer-setup . highlight-parentheses-minibuffer-setup)
          (highlight-parentheses-mode . (lambda () (show-paren-local-mode -1))))

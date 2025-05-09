@@ -88,6 +88,7 @@
 ;; Visualize whitespace so mistakes are more easily detectable.
 (use-package whitespace
   :ensure nil
+  :diminish
   :hook (prog-mode . whitespace-mode)
   :custom
   (whitespace-style '(empty face tab-mark tabs trailing))

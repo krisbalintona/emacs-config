@@ -72,6 +72,7 @@
 ;;; Completion-preview
 (use-package completion-preview
   :ensure nil
+  :diminish
   :hook (((prog-mode log-edit-mode eval-expression-minibuffer-setup) . completion-preview-mode)
          (eshell-mode . krisb-completion-preview-mode-setup-eshell))
   :bind ( :map completion-preview-active-mode-map
