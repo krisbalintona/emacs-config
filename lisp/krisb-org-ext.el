@@ -82,13 +82,25 @@ This function is a copy of `denote-link-ol-get-id'."
 
 ;;;###autoload
 (defun krisb-org-ext-create-dedicated-target ()
-  "Return a unique dedicated target.
+  "Return a unique dedicated target as a string.
 Based on the current time.  See (info \"(org) Internal Links\") for more
-information on dedicated targets."
+information on dedicated targets.
+
+If called interactively, then insert the target into the buffer.
+Otherwise, just return the target as a string.
+
+In either case, also store the target as an org link that can be
+inserted with e.g. `org-insert-last-stored-link' or
+`org-insert-all-links'."
   (interactive)
   (let* ((id (format-time-string "%Y%m%dT%H%M%S"))
          (target (concat "<<" id ">>")))
-    (if (called-interactively-p 'interactive) (insert target) target)))
+    (if (called-interactively-p 'interactive)
+        (insert target)
+      target)
+    (let ((org-link-context-for-files t))
+      (org-link--add-to-stored-links (org-store-link '(16)) id))
+    target))
 
 ;;; Eldoc backend for footnote content
 ;;;###autoload
