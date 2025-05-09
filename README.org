@@ -1,12 +1,18 @@
 #+title: My Emacs configuration
 
-This is my literate Emacs configuration. My uses for Emacs center around:
+#  LocalWords:  emacs-lisp
+
+This repository is my literate Emacs configuration. My uses for Emacs center around:
 + Prose writing.
 + Note-taking.
 + Developing small elisp packages.
-This configuration is tailored to achieve these ends, in accordance with my personal tastes and preferences. Additionally, I semi-frequently build from the master branch of Emacs, so my configuration may include settings to options not packaged in officially released Emacs versions yet.
+My configuration is tailored to achieve these ends, also taking into account my personal tastes and preferences. Additionally, I semi-frequently build from the master branch of Emacs, so my configuration may include settings to options not packaged in officially released Emacs versions yet.
 
-Its directory structure is the following:
+If you have any questions about my configuration or would like to discuss anything related to this configuration or Emacs, feel free to reach out by email: krisbalintona@gmail.com.
+
+* Directories
+
+Several subdirectories are relevant herein:
 + modules/
   - Personal configuration files.
   - Where I place ~(use-package ...)~ declarations.
@@ -18,8 +24,8 @@ Its directory structure is the following:
 + var/
   - The ~no-littering-var-directory~. The directory where packages place their persistent data files.
   - Not included (tracked) in this repository.
-All files are created by tangling (i.e. calling ~org-babel-tangle~, or =C-c C-v t=) the =emacs-config.org= file.
+All emacs-lisp files are the result of tangling the =emacs-config.org= file (i.e. calling ~org-babel-tangle~, or =C-c C-v t=).
 
-This repository is often updated; I change my configuration frequently, whether it be very minor tweaks to sweeping changes. You may also notice that commit may be vague and messy. This is natural---I do not treat this repository as a neat, clean package.
+* A note to visitors
 
-If you have any questions about my configuration or would like to discuss anything related to this configuration or Emacs, feel free to reach out by email: krisbalintona@gmail.com.
+I often make commits to this repository, whether very minor tweaks or sweeping changes. As such, expect the commit history to be messy: I do not feel the need to strongly impose version control conventions intended for open source projects. Nevertheless, I do try to maintain a certain degree of cleanliness.
