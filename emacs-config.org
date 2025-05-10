@@ -146,7 +146,7 @@
   - [[#krisb-notmuch-extel][krisb-notmuch-ext.el]]
   - [[#krisb-ox-hugo-extel][krisb-ox-hugo-ext.el]]
   - [[#krisb-auto-completionel][krisb-auto-completion.el]]
-  - [[#packages-likes][Packages-likes]]
+  - [[#package-likes][Package-likes]]
     - [[#pinching-marginsel][pinching-margins.el]]
     - [[#krisb-revealel][krisb-reveal.el]]
     - [[#dungeons-and-dragonsel][dungeons-and-dragons.el]]
@@ -13813,9 +13813,9 @@ There are several packages that end up incredibly useful for authoring packages.
   ;;; krisb-auto-completion.el ends here
 #+end_src
 
-** Packages-likes
+** Package-likes
 :PROPERTIES:
-:CUSTOM_ID: packages-likes
+:CUSTOM_ID: package-likes
 :END:
 
 These are libraries which are treated less like extensions of other packages and more as standalone packages themselves.
