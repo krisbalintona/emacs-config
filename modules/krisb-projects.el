@@ -147,7 +147,9 @@ See the function `hl-todo--regexp'."
 
 ;;; Compile-multi
 (use-package compile-multi
-  :bind ([remap project-compile] . compile-multi)
+  :bind (([remap project-compile] . compile-multi)
+         :map project-prefix-map
+         ("c" . compile-multi))
   :custom
   (compile-multi-default-directory (lambda () (project-root (project-current))))
   :config
