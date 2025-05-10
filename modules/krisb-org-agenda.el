@@ -92,13 +92,6 @@
 
   ;; Effort
   (org-agenda-sort-noeffort-is-high nil)
-  (org-duration-units
-   `(("m" . 1)
-     ("h" . 60)
-     ("d" . ,(* 60 8))
-     ("w" . ,(* 60 8 5))
-     ("mon" . ,(* 60 8 5 4))
-     ("y" . ,(* 60 8 5 4 10))))
 
   ;; Tags
   (org-use-tag-inheritance t)
