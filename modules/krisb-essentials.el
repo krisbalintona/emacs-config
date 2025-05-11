@@ -319,12 +319,12 @@ is to produce the opposite effect of both `fill-paragraph' and
 (defun krisb-sentence-end-double-space-setup ()
   "Set up the value for `sentence-end-double-space'."
   (cond
-   ((derived-mode-p 'prog-mode)
+   ((derived-mode-p '(prog-mode conf-mode))
     (setq-local sentence-end-double-space t))
    ((derived-mode-p 'text-mode)
     (setq-local sentence-end-double-space nil))))
 
-(dolist (mode '(prog-mode-hook conf-mode-hook))
+(dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
   (add-hook mode #'krisb-sentence-end-double-space-setup))
 
 ;;;; Keep the cursor out of the read-only portions of the minibuffer
