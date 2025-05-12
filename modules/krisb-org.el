@@ -109,7 +109,7 @@
 (use-package org-id
   :ensure nil
   :custom
-  (org-clone-delete-id t)
+  (org-id-track-globally t)
   (org-id-method 'ts)
   (org-id-link-to-org-use-id 'use-existing))
 
