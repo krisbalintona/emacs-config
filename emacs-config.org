@@ -6900,7 +6900,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
        (search todo-state-up priority-down category-keep)))
     ;; See
     ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
-    (org-extend-today-until 3)
+    (org-extend-today-until 4)
     (org-use-effective-time t)
     (org-agenda-block-separator ?─)
     (org-deadline-warning-days 3)
