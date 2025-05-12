@@ -10280,6 +10280,12 @@ There are several packages that end up incredibly useful for authoring packages.
                       (funcall-interactively 'eval-expression sexp)))) ; Sexp
               (dired-get-marked-files)))))
 
+  ;;; Diredfl
+  ;; A little more fontification in dired buffers.
+  (use-package diredfl
+    :config
+    (diredfl-global-mode 1))
+
   ;;; Dired-x
   (use-package dired-x
     :ensure nil

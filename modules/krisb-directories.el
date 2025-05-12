@@ -38,6 +38,12 @@ command."
                     (funcall-interactively 'eval-expression sexp)))) ; Sexp
             (dired-get-marked-files)))))
 
+;;; Diredfl
+;; A little more fontification in dired buffers.
+(use-package diredfl
+  :config
+  (diredfl-global-mode 1))
+
 ;;; Dired-x
 (use-package dired-x
   :ensure nil
