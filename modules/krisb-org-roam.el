@@ -72,9 +72,9 @@
    '((org-roam-backlinks-section :unique t)
      org-roam-reflinks-section))
   :config
-  ;; 2025-03-24: Using org-node/indexed.el to replace this.  I dont enable it at
+  ;; 2025-03-24: Using org-node/org-mem.el to replace this.  I dont enable it at
   ;; all because enabling causes a `org-roam-db-sync' on startup since it
-  ;; detects that indexed's db isn't its own...
+  ;; detects that org-mem's db isn't its own...
   ;; (org-roam-db-autosync-mode 1)
 
   ;; See (info "(org-roam) org-roam-export")
@@ -252,7 +252,7 @@ called outright."
 (use-package citar-org-roam
   ;; 2025-03-25: Use `citar-org-node' now.  We forcefully disable this to
   ;; prevent this package from internally calling an `org-roam-db-sync' with t,
-  ;; which, with `indexed-roam-mode' and `indexed-roam-overwrite' to non-nil,
+  ;; which, with `org-mem-roam-mode' and `org-mem-roam-overwrite' to non-nil,
   ;; will cause a full, long database sync on startup.
   :disabled t
   :after (:any citar org-roam)

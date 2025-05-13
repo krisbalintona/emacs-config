@@ -175,8 +175,12 @@
        (lambda ()
          (let* ((node (krisb-org-capture--org-node-by-tags '("^__journal$"))))
            (org-capture-put :krisb-node node)
-           (indexed-file-name node)))
-       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
       "* %<%c>\n"
       :tree-type (year quarter month)
       :jump-to-captured t
@@ -189,8 +193,12 @@
        (lambda ()
          (let* ((node (org-node-by-id "20241006T214800.000000")))
            (org-capture-put :krisb-node node)
-           (indexed-file-name node)))
-       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
       "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
       :tree-type (year quarter month)
       :jump-to-captured t
@@ -203,8 +211,12 @@
        (lambda ()
          (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
            (org-capture-put :krisb-node node)
-           (indexed-file-name node)))
-       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
       "%U %?"
       :tree-type (quarter week)
       :clock-in t
@@ -214,8 +226,12 @@
        (lambda ()
          (let* ((node (org-node-by-id "20241114T091749.707997")))
            (org-capture-put :krisb-node node)
-           (indexed-file-name node)))
-       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
       "* (%<%c>)%?\n\n"
       :tree-type (year quarter month)
       :jump-to-captured t
@@ -225,8 +241,12 @@
        (lambda ()
          (let* ((node (org-node-by-id "20250422T171216.767702")))
            (org-capture-put :krisb-node node)
-           (indexed-file-name node)))
-       (lambda () (cdr (indexed-olpath-with-self-with-title (org-capture-get :krisb-node)))))
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
       "* %?\n"
       :tree-type (year month)
       :jump-to-captured t
