@@ -4,7 +4,8 @@
 (use-package flymake
   :hook ((prog-mode . (lambda ()
                         (setq-local flymake-indicator-type nil
-                                    flymake-show-diagnostics-at-end-of-line 'fancy) ; Emacs 31 value
+                                    flymake-show-diagnostics-at-end-of-line 'fancy ; Emacs 31 value
+                                    flymake-no-changes-timeout 3)
                         (flymake-mode 1)))
          (text-mode . (lambda ()
                         (setq-local flymake-indicator-type nil)
