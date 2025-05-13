@@ -33,10 +33,11 @@
 If non-nil, include.  If nil, exclude.  This predicate excludes these
 nodes:
 - With non-nil ROAM_EXCLUDE property value."
-    (not (or
-          (string= "t" (string-trim (cdr (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
-          ;; More conditions here
-          )))
+    (let ((exclude-val (cdr (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
+      (not (or
+            (when exclude-val (string= "t" (string-trim exclude-val)))
+            ;; More conditions here
+            ))))
 
   ;; Rename buffer to the file's title if the file is an org-node.
   ;; NOTE 2025-04-23: We add this to `find-file-hook' rather than

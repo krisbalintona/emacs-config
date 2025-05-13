@@ -6130,10 +6130,11 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   If non-nil, include.  If nil, exclude.  This predicate excludes these
   nodes:
   - With non-nil ROAM_EXCLUDE property value."
-      (not (or
-            (string= "t" (string-trim (cdr (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
-            ;; More conditions here
-            )))
+      (let ((exclude-val (cdr (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
+        (not (or
+              (when exclude-val (string= "t" (string-trim exclude-val)))
+              ;; More conditions here
+              ))))
 
     ;; Rename buffer to the file's title if the file is an org-node.
     ;; NOTE 2025-04-23: We add this to `find-file-hook' rather than
@@ -9274,9 +9275,11 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     (eshell-atuin-mode 1)
 
     (defun eshell-atuin--update-cache ()
-      "Ensure the `eshell-atuin' cache is up-to-date.
-  I use this as :before advice for `cape-history', which I use as in
-  `completion-at-point-functions', instead of `eshell-atuin-history'."
+      "Ensure the eshell-atuin cache is up-to-date.
+  This function is intended to be used in :before advice for
+  `completion-at-point' or a backend in `completion-at-point-functions'.
+  These are functions whose candidates may depend on an updated
+  eshell-atuin cache."
       (when (derived-mode-p 'eshell-mode)
         ;; These two functions are called before the `completing-read' of
         ;; `eshell-atuin-history'
