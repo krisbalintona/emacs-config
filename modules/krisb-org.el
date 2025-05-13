@@ -358,6 +358,11 @@
      ("u" "Unhide drawers" org-hide-drawers-delete-overlays)
      ("t" "Toggle hiding" org-hide-drawers-toggle)]))
 
+;;; Org-keyterm-index
+(use-package org-keyterm-index
+  :after org
+  :load-path "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/")
+
 ;;; Org-bookmark-heading
 (use-package org-bookmark-heading
   ;; TODO 2024-10-30: Consider also adding `org-cycle-set-startup-visibility' to
