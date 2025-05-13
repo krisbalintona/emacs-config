@@ -229,15 +229,15 @@ See the docstring of `krisb-reveal-fold-commands'."
     (interactive)
     (let ((avy-command this-command))
       (avy-with krisb-avy-goto-parens
-                ;; There will be many candidates if called in an e.g. elisp buffer.  The
-                ;; solution is changing the `avy-style' appropriately, either by setting
-                ;; `avy-style' directly or `avy-styles-alist'.
-                (avy-jump (rx (or "(" ")")))
-                ;; When jumping to a closing parens, move the point forward one
-                ;; character, since in these cases, I want the point to end after the
-                ;; parens, not before
-                (when (eq (char-after) (string-to-char ")"))
-                  (forward-char))))
+        ;; There will be many candidates if called in an e.g. elisp buffer.  The
+        ;; solution is changing the `avy-style' appropriately, either by setting
+        ;; `avy-style' directly or `avy-styles-alist'.
+        (avy-jump (rx (or "(" ")")))
+        ;; When jumping to a closing parens, move the point forward one
+        ;; character, since in these cases, I want the point to end after the
+        ;; parens, not before
+        (when (eq (char-after) (string-to-char ")"))
+          (forward-char))))
     t)
 
   ;; Actions
