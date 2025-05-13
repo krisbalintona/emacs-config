@@ -140,9 +140,16 @@
   :config
   (eshell-atuin-mode 1)
 
-  (defun krisb-eshell-atuin-setup-eshell-capf ()
-    "Add `krisb-eshell-atium-capf' to the beginning of `completion-at-point-functions'."
-    (add-hook 'completion-at-point-functions #'krisb-eshell-atium-capf -50 t))
+  (defun eshell-atuin--update-cache ()
+    "Ensure the `eshell-atuin' cache is up-to-date.
+I use this as :before advice for `cape-history', which I use as in
+`completion-at-point-functions', instead of `eshell-atuin-history'."
+    (when (derived-mode-p 'eshell-mode)
+      ;; These two functions are called before the `completing-read' of
+      ;; `eshell-atuin-history'
+      (eshell-atuin--history-rotate-cache)
+      (eshell-atuin--history-update)))
+  (advice-add 'cape-history :before #'eshell-atuin--update-cache)
 
   ;; TODO 2025-05-08: Right now I've removed the function that used to use the
   ;; following function.  However, I keep it here just in case I decide to

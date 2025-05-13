@@ -44,9 +44,9 @@
   ;; Increase `gc-cons-threshold' while using corfu, like we do for the
   ;; minibuffer
   (with-eval-after-load 'corfu
-    (advice-add 'completion-at-point :before 'krisb-gcmh-minibuffer-setup)
-    (advice-add 'corfu-quit :before 'krisb-gcmh-minibuffer-exit)
-    (advice-add 'corfu-insert :before 'krisb-gcmh-minibuffer-exit)))
+    (advice-add 'completion-at-point :before #'krisb-gcmh-minibuffer-setup)
+    (advice-add 'corfu-quit :before #'krisb-gcmh-minibuffer-exit)
+    (advice-add 'corfu-insert :before #'krisb-gcmh-minibuffer-exit)))
 
 ;;; Diagnose memory usage
 ;; See how Emacs is using memory. From
