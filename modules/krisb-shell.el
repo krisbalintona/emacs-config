@@ -129,6 +129,7 @@
 (use-package eshell-atuin
   :after eshell
   :demand t
+  :hook (eshell-post-command . eshell-atuin--update-cache)
   :bind* ( :map eshell-mode-map
            ([remap eshell-isearch-backward-regexp] . eshell-atuin-history))
   :custom
@@ -141,15 +142,18 @@
   (eshell-atuin-mode 1)
 
   (defun eshell-atuin--update-cache ()
-    "Ensure the `eshell-atuin' cache is up-to-date.
-I use this as :before advice for `cape-history', which I use as in
-`completion-at-point-functions', instead of `eshell-atuin-history'."
+    "Ensure the eshell-atuin cache is up-to-date.
+This function is intended to be used to prepare functions whose
+candidates may depend on an updated eshell-atuin cache.  Users should be
+careful not to call this function frequently in short periods of time
+because updating the cache takes some a small amount of time."
     (when (derived-mode-p 'eshell-mode)
       ;; These two functions are called before the `completing-read' of
       ;; `eshell-atuin-history'
       (eshell-atuin--history-rotate-cache)
       (eshell-atuin--history-update)))
-  (advice-add 'cape-history :before #'eshell-atuin--update-cache)
+  (advice-add 'completion-at-point :before #'eshell-atuin--update-cache)
+  (advice-add 'completion-preview-complete :before #'eshell-atuin--update-cache)
 
   ;; TODO 2025-05-08: Right now I've removed the function that used to use the
   ;; following function.  However, I keep it here just in case I decide to
