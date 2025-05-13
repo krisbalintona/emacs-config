@@ -12,7 +12,8 @@
   (vc-revert-show-diff t)
   (vc-annotate-display-mode 'fullscale)
   (vc-find-revision-no-save t)
-  (vc-allow-rewriting-published-history 'ask)) ; Emacs 31
+  (vc-allow-rewriting-published-history 'ask) ; Emacs 31
+  (vc-async-checkin t))                       ; Emacs 31
 
 ;;;; Vc-dir
 (use-package vc-dir ; NOTE 2024-10-19: Is not required by vc, so have its own use-package
