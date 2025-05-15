@@ -582,7 +582,7 @@ Only used when `org-super-agenda-keep-order' is non-nil."
       :tree-type (year quarter month)
       :jump-to-captured t
       :immediate-finish t)
-     ("r" "Reference" entry
+     ("r" "New reference" entry
       (file+olp+datetree
        (lambda ()
          (let* ((node (org-node-by-id "20250422T171216.767702")))
@@ -593,7 +593,7 @@ Only used when `org-super-agenda-keep-order' is non-nil."
            ;; Should return nil if node is a file
            (when (org-node-is-subtree node)
              (org-node-get-olp-with-self node)))))
-      "* %?\n"
+      "* %? %^g\n"
       :tree-type (year month)
       :jump-to-captured t
       :immediate-finish t
