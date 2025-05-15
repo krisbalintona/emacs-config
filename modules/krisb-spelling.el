@@ -46,9 +46,11 @@ If region is active, use the region's contents instead."
 (use-package powerthesaurus
   :after embark
   :bind ( :map embark-region-map
-          ("t" . powerthesaurus-lookup-dwim)
+          ("t" . powerthesaurus-lookup-synonyms-dwim)
+          ("T" . powerthesaurus-lookup-dwim)
           :map embark-identifier-map
-          ("t" . powerthesaurus-lookup-dwim)))
+          ("t" . powerthesaurus-lookup-synonyms-dwim)
+          ("T" . powerthesaurus-lookup-dwim)))
 
 ;;; Provide
 (provide 'krisb-spelling)
