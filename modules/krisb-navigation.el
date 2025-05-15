@@ -271,7 +271,7 @@ See the docstring of `krisb-reveal-fold-commands'."
     "Dictionary avy action."
     (save-excursion
       (goto-char pt)
-      (krisb-dictionary-at-point))
+      (krisb-dictionary-dwim))
     ;; If with `universal-arg', don't switch to help buffer
     (when current-prefix-arg
       (select-window

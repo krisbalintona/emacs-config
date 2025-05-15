@@ -4,13 +4,13 @@
 ;;;; Dictionary
 ;; See definitions of words from an online dictionary.
 (use-package dictionary
-  :commands krisb-dictionary-at-point
+  :commands krisb-dictionary-dwim
   :ensure nil
   ;; Don't forget to install the following packages from the AUR:
   ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
   ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
   :hook (dictionary-mode . hide-mode-line-mode)
-  :bind ("C-h =" . krisb-dictionary-at-point)
+  :bind ("C-h =" . krisb-dictionary-dwim)
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-create-buttons nil)
@@ -27,11 +27,11 @@
   (with-eval-after-load 'embark
     (bind-keys
      :map embark-region-map
-     ("=" . krisb-dictionary-at-point)
+     ("=" . krisb-dictionary-dwim)
      :map embark-identifier-map
-     ("=" . krisb-dictionary-at-point)))
+     ("=" . krisb-dictionary-dwim)))
   :config
-  (defun krisb-dictionary-at-point ()
+  (defun krisb-dictionary-dwim ()
     "Show dictionary definition for word at point.
 If region is active, use the region's contents instead."
     (interactive)
