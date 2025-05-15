@@ -318,11 +318,9 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Double space delimits end of sentence?
 (defun krisb-sentence-end-double-space-setup ()
   "Set up the value for `sentence-end-double-space'."
-  (cond
-   ((derived-mode-p '(prog-mode conf-mode))
-    (setq-local sentence-end-double-space t))
-   ((derived-mode-p 'text-mode)
-    (setq-local sentence-end-double-space nil))))
+  (setq-local sentence-end-double-space
+              (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
+                    ((derived-mode-p 'text-mode) nil))))
 
 (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
   (add-hook mode #'krisb-sentence-end-double-space-setup))
