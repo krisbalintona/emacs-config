@@ -336,9 +336,8 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Allow minibuffer commands in minibuffer
 (setopt enable-recursive-minibuffers t)
 
-;;;; Ignore case basically everywhere
+;;;; Ignore case when convenient
 (setopt read-buffer-completion-ignore-case t
-        read-file-name-completion-ignore-case t
         case-fold-search t)
 
 ;;;; `indent-for-tab-command' functionality.
