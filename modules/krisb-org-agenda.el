@@ -626,7 +626,7 @@ TAGS is a list of regexps that match org-node tags.
 
 This function will use `completing-read' whose candidates are the
 org-node nodes that match all of TAGS.  It will return a candidate (see
-`org-node--candidate<>node')."
+`org-node--candidate<>entry')."
     (gethash (completing-read "Select node: "
                               #'org-node-collection
                               (lambda (_title node)
@@ -636,7 +636,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
                                                      (org-node-get-tags node)))
                                           tags))
                               t nil 'org-node-hist)
-             org-node--candidate<>node)))
+             org-node--candidate<>entry)))
 
 ;;; Org-clock
 (use-package org-clock

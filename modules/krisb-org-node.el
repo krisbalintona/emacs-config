@@ -17,7 +17,7 @@
   (org-node-datestamp-format "%Y%m%dT%H%M%S--")
   (org-node-context-persist-on-disk t)
   (org-node-cache-everything t) ; For programming purposes; populates `org-node--file<>lnum.node.'
-  (org-node-affixation-fn #'krisb-org-node-affixation-fn)
+  (org-node-affixation-fn 'krisb-org-node-affixation-fn)
   (org-node-alter-candidates t)
   (org-node-custom-link-format-fn #'krisb-org-node-custom-link-format-fn)
   (org-node-filter-fn #'krisb-org-node-filter-fn)
@@ -58,11 +58,11 @@ This only occurs when the file is an org-node node."
         (rename-buffer (generate-new-buffer-name title (buffer-name))))))
 
   ;; Bespoke `org-node-find'
-  (cl-defmethod krisb-org-node-get-box ((node org-node))
+  (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
     "Return the value of the ROAM_BOX property of NODE."
     (cdr (assoc "ROAM_BOX" (org-node-get-properties node) #'string-equal)))
 
-  (cl-defmethod krisb-org-node-box-or-dir ((node org-node))
+  (cl-defmethod krisb-org-node-box-or-dir ((node org-mem-entry))
     "Return a fontified value of the ROAM_BOX property of NODE.
 If the ROAM_BOX property of NODE is nil, returns the directory name
 containing NODE instead."
@@ -72,19 +72,19 @@ containing NODE instead."
                  (file-name-directory (org-node-get-file node))))))
       (propertize (or box (concat "/" dir)) 'face 'shadow)))
 
-  (cl-defmethod krisb-org-node-get-place ((node org-node))
+  (cl-defmethod krisb-org-node-get-place ((node org-mem-entry))
     "Return the value of the ROAM_PLACE property of NODE."
     (cdr (assoc "ROAM_PLACE" (org-node-get-properties node))))
 
-  (cl-defmethod krisb-org-node-get-type ((node org-node))
+  (cl-defmethod krisb-org-node-get-type ((node org-mem-entry))
     "Return the value of the ROAM_TYPE property of NODE."
     (cdr (assoc "ROAM_TYPE" (org-node-get-properties node) #'string-equal)))
 
-  (cl-defmethod krisb-org-node-get-person ((node org-node))
+  (cl-defmethod krisb-org-node-get-person ((node org-mem-entry))
     "Return the value of the ROAM_PERSON property of NODE."
     (cdr (assoc "ROAM_PERSON" (org-node-get-properties node) #'string-equal)))
 
-  (cl-defmethod krisb-org-node-olp-full-propertized ((node org-node))
+  (cl-defmethod krisb-org-node-olp-full-propertized ((node org-mem-entry))
     "Return the full outline path of NODE fontified.
 The full outline path of NODE (given by `org-node-get-olp-full')
 surrounded by parentheses and whose parts are separated by \" > \".
@@ -96,7 +96,7 @@ Additionally, the entire string is fontified to the shadow face."
          olp
          (propertize ")" 'face 'shadow)))))
 
-  (cl-defmethod krisb-org-node-tags-propertized ((node org-node))
+  (cl-defmethod krisb-org-node-tags-propertized ((node org-mem-entry))
     "Return the full outline path of NODE fontified."
     (when-let ((tags (org-node-get-tags node)))
       (propertize (concat "#" (string-join tags " #")) 'face 'org-tag)))
@@ -122,7 +122,7 @@ For use as `org-node-affixation-fn'."
                     tags))))
 
   ;; Bespoke `org-node-custom-link-format-fn' function
-  (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-node))
+  (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-mem-entry))
     "Bespoke function for `org-node-custom-link-format-fn'."
     (if (or (file-in-directory-p (org-node-get-file node) krisb-org-agenda-directory)
             (file-in-directory-p (org-node-get-file node) krisb-org-archive-directory))

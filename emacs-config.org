@@ -6115,7 +6115,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     (org-node-datestamp-format "%Y%m%dT%H%M%S--")
     (org-node-context-persist-on-disk t)
     (org-node-cache-everything t) ; For programming purposes; populates `org-node--file<>lnum.node.'
-    (org-node-affixation-fn #'krisb-org-node-affixation-fn)
+    (org-node-affixation-fn 'krisb-org-node-affixation-fn)
     (org-node-alter-candidates t)
     (org-node-custom-link-format-fn #'krisb-org-node-custom-link-format-fn)
     (org-node-filter-fn #'krisb-org-node-filter-fn)
@@ -6156,11 +6156,11 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
           (rename-buffer (generate-new-buffer-name title (buffer-name))))))
 
     ;; Bespoke `org-node-find'
-    (cl-defmethod krisb-org-node-get-box ((node org-node))
+    (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
       "Return the value of the ROAM_BOX property of NODE."
       (cdr (assoc "ROAM_BOX" (org-node-get-properties node) #'string-equal)))
 
-    (cl-defmethod krisb-org-node-box-or-dir ((node org-node))
+    (cl-defmethod krisb-org-node-box-or-dir ((node org-mem-entry))
       "Return a fontified value of the ROAM_BOX property of NODE.
   If the ROAM_BOX property of NODE is nil, returns the directory name
   containing NODE instead."
@@ -6170,19 +6170,19 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                    (file-name-directory (org-node-get-file node))))))
         (propertize (or box (concat "/" dir)) 'face 'shadow)))
 
-    (cl-defmethod krisb-org-node-get-place ((node org-node))
+    (cl-defmethod krisb-org-node-get-place ((node org-mem-entry))
       "Return the value of the ROAM_PLACE property of NODE."
       (cdr (assoc "ROAM_PLACE" (org-node-get-properties node))))
 
-    (cl-defmethod krisb-org-node-get-type ((node org-node))
+    (cl-defmethod krisb-org-node-get-type ((node org-mem-entry))
       "Return the value of the ROAM_TYPE property of NODE."
       (cdr (assoc "ROAM_TYPE" (org-node-get-properties node) #'string-equal)))
 
-    (cl-defmethod krisb-org-node-get-person ((node org-node))
+    (cl-defmethod krisb-org-node-get-person ((node org-mem-entry))
       "Return the value of the ROAM_PERSON property of NODE."
       (cdr (assoc "ROAM_PERSON" (org-node-get-properties node) #'string-equal)))
 
-    (cl-defmethod krisb-org-node-olp-full-propertized ((node org-node))
+    (cl-defmethod krisb-org-node-olp-full-propertized ((node org-mem-entry))
       "Return the full outline path of NODE fontified.
   The full outline path of NODE (given by `org-node-get-olp-full')
   surrounded by parentheses and whose parts are separated by \" > \".
@@ -6194,7 +6194,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
            olp
            (propertize ")" 'face 'shadow)))))
 
-    (cl-defmethod krisb-org-node-tags-propertized ((node org-node))
+    (cl-defmethod krisb-org-node-tags-propertized ((node org-mem-entry))
       "Return the full outline path of NODE fontified."
       (when-let ((tags (org-node-get-tags node)))
         (propertize (concat "#" (string-join tags " #")) 'face 'org-tag)))
@@ -6220,7 +6220,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                       tags))))
 
     ;; Bespoke `org-node-custom-link-format-fn' function
-    (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-node))
+    (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-mem-entry))
       "Bespoke function for `org-node-custom-link-format-fn'."
       (if (or (file-in-directory-p (org-node-get-file node) krisb-org-agenda-directory)
               (file-in-directory-p (org-node-get-file node) krisb-org-archive-directory))
@@ -7369,7 +7369,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   This function will use `completing-read' whose candidates are the
   org-node nodes that match all of TAGS.  It will return a candidate (see
-  `org-node--candidate<>node')."
+  `org-node--candidate<>entry')."
       (gethash (completing-read "Select node: "
                                 #'org-node-collection
                                 (lambda (_title node)
@@ -7379,7 +7379,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                                                        (org-node-get-tags node)))
                                             tags))
                                 t nil 'org-node-hist)
-               org-node--candidate<>node)))
+               org-node--candidate<>entry)))
 #+end_src
 
 **** Friends of =org-agenda=
