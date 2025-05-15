@@ -6236,17 +6236,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                             (not file-title))
                     (propertize (concat " (" file-title ")") 'face 'shadow)))))))
 
-  ;;; Org-node-fakeroam
-  (use-package org-node-fakeroam
-    :disabled t                           ; 2025-03-20: We have org-mem.el now
-    :after org-roam
-    :custom
-    (org-roam-db-update-on-save nil)      ; Don't update DB on save, not needed
-    (org-roam-link-auto-replace nil)      ; Don't look for "roam:" links on save
-    :config
-    (org-roam-db-autosync-mode -1)
-    (org-node-fakeroam-db-feed-mode 1))   ; Keep Roam DB up to date
-
   ;;; Citar-org-node
   (use-package citar-org-node
     :ensure nil
