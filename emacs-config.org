@@ -97,7 +97,7 @@
     - [[#todos][Todos]]
       - [[#krisb-org-agendael][krisb-org-agenda.el]]
         - [[#org-agenda-and-org-super-agenda][Org-agenda and org-super-agenda]]
-        - [[#org-capture][Org-capture]]
+        - [[#org-capture-and-its-templates][Org-capture and its templates]]
       - [[#friends-of-org-agenda][Friends of org-agenda]]
       - [[#provide-6][Provide]]
     - [[#blogging][Blogging]]
@@ -7229,9 +7229,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                                  :order 1))))))))))
 #+end_src
 
-***** ~Org-capture~
+***** =Org-capture= and its templates
 :PROPERTIES:
-:CUSTOM_ID: org-capture
+:CUSTOM_ID: org-capture-and-its-templates
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-org-agenda.el"
@@ -8608,6 +8608,9 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 :PROPERTIES:
 :CUSTOM_ID: programming
 :END:
+
+Other interesting packages:
++ [[https://docs.kyleam.com/piem.html#Overview][piem]]: Better workflows for applying patches from public-inboxes.
 
 *** =krisb-programming-essentials.el=
 :PROPERTIES:
