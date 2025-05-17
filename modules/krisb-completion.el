@@ -426,8 +426,8 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
     (cape-wrap-super 'cape-dict :with 'cape-dabbrev))
 
   ;; Capfs added to the end of the global value of
-  ;; `completion-at-point-functions'.  Consequently, they act as fallback capfs.
-  (dolist (capf '(krisb-cape-super-capf--dict-dabbrev))
+  ;; `completion-at-point-functions'.  Consequently, they act as fallback backends.
+  (dolist (capf (reverse '(cape-elisp-symbol krisb-cape-super-capf--dict-dabbrev)))
     (add-hook 'completion-at-point-functions capf 100))
 
   ;; Macro to help adding capfs via hooks
