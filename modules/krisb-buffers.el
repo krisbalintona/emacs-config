@@ -66,6 +66,7 @@
 
 ;;; Ibuffer
 (use-package ibuffer
+  :ensure nil
   :bind (([remap list-buffers] . ibuffer))
   :bind* ( :map ibuffer-mode-map
            ("SPC" . scroll-up-command)

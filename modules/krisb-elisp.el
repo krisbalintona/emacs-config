@@ -169,7 +169,7 @@
 ;; faulty autoloading; I think it's related to use-package, I think.  So I don't
 ;; use that method for now.
 (use-package lazy-guard
-  :vc ( :url "https://codeberg.org/vifon/lazy-guard.git")
+  :ensure (:repo "https://codeberg.org/vifon/lazy-guard.git")
   :custom
   (lazy-guard-autoloads-strict nil)
   (lazy-guard-autoloads-known-broken nil))
@@ -248,8 +248,7 @@
 ;; tabulated-list-mode.  NOTE: Calling `mode-minder' loads all packages with a
 ;; known major mode.
 (use-package mode-minder
-  :vc ( :url "https://github.com/jdtsmith/mode-minder.git"
-        :rev :newest))
+  :ensure (:repo "https://github.com/jdtsmith/mode-minder.git"))
 
 ;;; Provide
 (provide 'krisb-elisp)

@@ -50,8 +50,7 @@
 ;; Coding language-agnostic file outlines.  Lightweight and close to the
 ;; built-in outline.el.
 (use-package outli
-  :vc ( :url "https://github.com/jdtsmith/outli"
-        :rev :newest)
+  :ensure (:repo "https://github.com/jdtsmith/outli")
   :hook ((prog-mode text-mode) . outli-mode)
   :bind ( :map outline-minor-mode-map
           ;; 2025-04-02: Assumes `outline-minor-mode-prefix' is "C-c @"

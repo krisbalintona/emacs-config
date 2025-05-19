@@ -3,7 +3,6 @@
 ;;; Built-in
 ;;;; Org
 (use-package org
-  :pin gnu-elpa-devel
   :hook ((org-mode . variable-pitch-mode)
          (org-mode . visual-line-mode)
          (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 100))))
@@ -336,7 +335,7 @@
 ;;; Org-hide-drawers
 ;; Make org drawers less visually obtrusive.
 (use-package org-hide-drawers
-  :load-path "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/"
+  :ensure (:local "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/")
   :diminish
   :hook (org-mode . org-hide-drawers-mode)
   :bind ( :map krisb-toggle-keymap
@@ -361,7 +360,7 @@
 ;;; Org-keyterm-index
 (use-package org-keyterm-index
   :after org
-  :load-path "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/")
+  :ensure (:local "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/"))
 
 ;;; Org-bookmark-heading
 (use-package org-bookmark-heading

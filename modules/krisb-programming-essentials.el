@@ -126,6 +126,7 @@
 
 ;;; Eldoc
 (use-package eldoc
+  :ensure nil
   :diminish
   :bind ( :map help-map
           ("\." . eldoc-doc-buffer))

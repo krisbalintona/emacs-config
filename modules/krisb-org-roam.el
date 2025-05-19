@@ -278,7 +278,7 @@ called outright."
 
 ;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
-  :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
+  :ensure (org-roam-folgezettel :local "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/")
   :hook ((org-roam-folgezettel-mode . hl-line-mode)
          (org-roam-folgezettel-mode . (lambda () (setq-local line-spacing 0.2))))
   :bind ( :map krisb-note-keymap

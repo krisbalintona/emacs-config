@@ -19,8 +19,7 @@
 (use-package eglot-booster
   ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
   ;; https://github.com/blahgeek/emacs-lsp-booster/releases
-  :vc (:url "https://github.com/jdtsmith/eglot-booster.git"
-            :rev :newest)
+  :ensure (:repo "https://github.com/jdtsmith/eglot-booster.git")
   :after eglot
   :config
   (eglot-booster-mode 1))
@@ -44,7 +43,7 @@
 ;;     python-setuptools python-paramiko python-rapidfuzz python-watchdog \
 ;;     python-packaging
 (use-package lsp-bridge
-  :vc (:url "https://github.com/manateelazycat/lsp-bridge.git")
+  :ensure (:repo "https://github.com/manateelazycat/lsp-bridge.git")
   :defer t
   :init
   ;; 2025-04-22: Manually install dependencies because lsp-bridge doesn't have

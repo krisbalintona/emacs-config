@@ -41,7 +41,6 @@
 
 ;;; Activities
 (use-package activities
-  :pin gnu-elpa-devel
   :hook (kill-emacs . activities-save-all)
   :bind (("C-c a d" . activities-define)
          ("C-c a n" . activities-new)
@@ -64,7 +63,7 @@
 
 ;;; Savefold
 (use-package savefold
-  :vc (:url "https://github.com/jcfk/savefold.el.git")
+  :ensure (:repo "https://github.com/jcfk/savefold.el.git")
   :custom
   (savefold-backends '(outline
                        org

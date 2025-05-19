@@ -140,7 +140,6 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
 ;;; Vertico
 ;;;; Itself
 (use-package vertico
-  :pin gnu-elpa-devel
   :demand t
   :bind (("C-c v r" . vertico-repeat)
          ("C-c v s" . vertico-suspend))

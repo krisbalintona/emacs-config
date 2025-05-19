@@ -10,6 +10,7 @@
 ;; View pdfs and interact with them. Has many dependencies
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
+  :ensure nil 				; 2025-05-18: We use Guix
   ;; 2025-04-03: We manually add an auto-mode-alist entry to lazy-load this
   ;; package.  I want to avoid calling `pdf-loader-install' or
   ;; `pdf-tools-install' immediately at startup because I've had startup
@@ -133,7 +134,7 @@ The context buffer is the buffer that shows annotation contents in
 
 ;;; Pdf-meta-edit
 (use-package pdf-meta-edit
-  :load-path "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/"
+  :ensure (pdf-meta-edit :local "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/")
   :bind ( :map pdf-view-mode-map
           ("C-c M" . pdf-meta-edit-modify)))
 

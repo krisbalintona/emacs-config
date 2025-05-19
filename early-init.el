@@ -3,6 +3,11 @@
 ;; Defer garbage collection
 (setq gc-cons-threshold most-positive-fixnum)
 
+;; Use elpaca instead of package.el
+(setopt package-enable-at-startup nil)
+
+(defvaralias 'after-init-hook 'elpaca-after-init-hook)
+
 ;;; Native-compilations settings
 ;; Basic settings
 (setq native-comp-jit-compilation t

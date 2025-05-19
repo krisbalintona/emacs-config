@@ -2,6 +2,7 @@
 
 ;;; Project.el
 (use-package project
+  :ensure nil
   :bind ( :map project-prefix-map
           ("e" . project-eshell)
           ("C" . project-recompile))
@@ -75,8 +76,7 @@ See the docstring of `krisb-reveal-fold-commands'."
 
 ;;;; Consult-xref-stack
 (use-package consult-xref-stack
-  :vc ( :url "https://github.com/brett-lempereur/consult-xref-stack"
-        :rev :newest)
+  :ensure (:repo "https://github.com/brett-lempereur/consult-xref-stack")
   :bind (([remap xref-go-back] . krisb-consult-xref-stack-backward)
          ([remap xref-go-forward] . krisb-consult-xref-stack-forward))
   :config

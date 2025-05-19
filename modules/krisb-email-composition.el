@@ -352,7 +352,6 @@
 
 ;;;; Org-mime
 (use-package org-mime
-  :pin melpa
   :after message
   :hook ((message-send . org-mime-confirm-when-no-multipart)
          (org-mime-html . (lambda ()

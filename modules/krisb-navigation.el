@@ -88,7 +88,7 @@
 
 ;;; Ultra-scroll
 (use-package ultra-scroll
-  :vc (:url "https://github.com/jdtsmith/ultra-scroll")
+  :ensure (:repo "https://github.com/jdtsmith/ultra-scroll")
   :init
   (setq scroll-conservatively 101       ; As instructed by the README
         scroll-margin 0)
@@ -335,6 +335,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 
 ;;;;; Grep
 (use-package grep
+  :ensure nil
   :custom
   (grep-save-buffers 'ask)
   (grep-use-headings t)

@@ -193,6 +193,15 @@ Emacs 27 introduces =early-init.el=, which runs before init.el, before package a
   (setq gc-cons-threshold most-positive-fixnum)
 #+end_src
 
+*** Use elpaca instead
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+  ;; Use elpaca instead of package.el
+  (setopt package-enable-at-startup nil)
+
+  (defvaralias 'after-init-hook 'elpaca-after-init-hook)
+#+end_src
+
 *** Native compilation
 :PROPERTIES:
 :CUSTOM_ID: native-compilation
@@ -366,6 +375,7 @@ This sets the default graphical element settings used by every frame.
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;;; Modules
+  (require 'krisb-package-manager)
   (require 'krisb-core)
   (require 'krisb-garbage-collection)
   (require 'krisb-system-env)
@@ -441,6 +451,149 @@ This sets the default graphical element settings used by every frame.
 :PROPERTIES:
 :CUSTOM_ID: base
 :END:
+
+*** =krisb-package-manager.el=
+:PROPERTIES:
+:CUSTOM_ID: package-management-and-configuration
+:END:
+
+***** COMMENT =Package.el=
+I use =package.el=. =Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:2]
+
+#+begin_src emacs-lisp :tangle "modules/krisb-package-manager.el"
+  ;; -*- lexical-binding: t; -*-
+
+  ;;; Package.el
+  ;; Initialize package resources
+  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("melpa" . "https://melpa.org/packages/"))
+          package-archive-priorities '(("gnu-elpa" . 4)
+                                       ("melpa" . 3)
+                                       ("nongnu" . 2)
+                                       ("gnu-elpa-devel" . 1))
+          package-install-upgrade-built-in t
+          package-pinned-packages nil
+
+          load-prefer-newer t)            ; Do not load outdated byte code files
+
+  ;; As recommended in https://elpa.gnu.org/
+  (unless (fboundp 'package-activate-all) (package-initialize))
+#+end_src
+
+[fn:2] Those who use =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ directly.
+
+***** =Elpaca=
+
+#+begin_src emacs-lisp :tangle "modules/krisb-package-manager.el"
+  ;;; Elpaca1
+  (defvar elpaca-installer-version 0.11)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                :ref nil :depth 1 :inherit ignore
+                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                                :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (<= emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+          (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                    ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                    ,@(when-let* ((depth (plist-get order :depth)))
+                                                        (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                    ,(plist-get order :repo) ,repo))))
+                    ((zerop (call-process "git" nil buffer t "checkout"
+                                          (or (plist-get order :ref) "--"))))
+                    (emacs (concat invocation-directory invocation-name))
+                    ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                          "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                    ((require 'elpaca))
+                    ((elpaca-generate-autoloads "elpaca" repo)))
+              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
+
+  ;; Get build date for Emacs installed via Guix.  See
+  ;; https://github.com/progfolio/elpaca/wiki/Usage-with-Nix#manually-setting-elpaca-core-date
+  ;; for the Nix version
+  (defun krisb-guix-emacs-build-date ()
+    "Extract YYYYMMDD from a datetime string like '2025-05-19 15:20:57.782742938 -0500'."
+    (let* ((emacs-build-path (when (string-match "--prefix=\\([^ ]+\\)" system-configuration-options)
+      (match-string 1 system-configuration-options)))
+           (datetime-string (shell-command-to-string (concat "stat -c %w " emacs-build-path))))
+      (when (string-match "\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\)" datetime-string)
+        (concat (match-string 1 datetime-string)
+                (match-string 2 datetime-string)
+                (match-string 3 datetime-string)))))
+
+  (unless emacs-build-time
+    (setq elpaca-core-date (list (krisb-guix-emacs-build-date))))
+
+  (defun my/nixos/get-emacs-build-date ()
+    "Return NixOS Emacs build date."
+    (string-match "--prefix.*emacs.*\\([[:digit:]]\\{8\\}\\)" system-configuration-options)
+    (string-to-number (match-string 1 system-configuration-options)))
+
+  ;; Enable use-package :ensure support for Elpaca
+  (elpaca elpaca-use-package
+    (elpaca-use-package-mode 1))
+#+end_src
+
+***** =Use-package=
+
+Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
+
+Uncommonly known are the commands =use-package= offers that help users debug and introspect the loading of their packages. The following is a non-exhaustive list:
++ ~use-package-jump-to-package-form~ :: Prompts the user for a package configured using use-package and jumps to its corresponding use-package declaration. Useful for navigating a large =.init.el= or many small config files.
++ ~use-package-lint~ :: Reports any syntax errors in use-package declarations in the current buffer.
++ ~use-package-report~ :: Show statistics about all your use--package declarations. Requires ~use-package-compute-statistics~ to be non-nil.
+
+#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
+  ;; it's installed just in case I test/use an earlier Emacs version
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+  ;; 2025-04-10: I think I must require use-package for subsequent NAblocks on a
+  ;; fresh install to be respected and those packages installed?
+  (require 'use-package)
+
+  (setopt use-package-always-ensure t
+          use-package-expand-minimally t  ; Verbosity of use-package macro
+          ;; 2025-04-08: I do not set `use-package-always-defer' to non-nil
+          ;; because I have had bad experiences trying to troubleshoot packages
+          ;; because of the many potential deferral conditions.  Package deferrals
+          ;; overlap and become interwoven.  It becomes harder when I don't notice
+          ;; things are broken because a package's features were lazily loaded.
+          ;;
+          ;; Instead, I choose to opt-in to deferring packages (e.g. through
+          ;; :defer, :bind, :after, etc.)
+          use-package-always-defer nil)
+
+  ;; Only be verbose when interpreted, otherwise errors are caught at compile time
+  (setopt use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
+
+  ;; Compile statistics to be shown in `use-package-report'
+  (setopt use-package-compute-statistics t)
+#+end_src
+
+***** Provide
+#+begin_src emacs-lisp :tangle "modules/krisb-package-manager.el"
+  (provide 'krisb-package-manager)
+#+end_src
 
 *** =krisb-garbage-collection.el=
 :PROPERTIES:
@@ -568,73 +721,7 @@ This sets the default graphical element settings used by every frame.
 :CUSTOM_ID: krisb-coreel
 :END:
 
-**** Package management and configuration
-:PROPERTIES:
-:CUSTOM_ID: package-management-and-configuration
-:END:
-
-I use =package.el=. =Package.el= (henceforth =package=) is the built-in package manager for Emacs. =package= downloads packages into ~package-user-dir~ from online package archives (defined in ~package-archives~). Every package download creates a directory in ~package-user-dir~ that holds that package files and whose name is the package followed by the version downloaded. The version downloaded depends on ~package-archive-priorities~: =package= will download from the highest priority archive that offers the desired package. Additionally, users can "pin" packages to a particular version via ~package-pinned-packages~.[fn:2]
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;; -*- lexical-binding: t; -*-
-
-  ;;; Package.el
-  ;; Initialize package resources
-  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                             ("melpa" . "https://melpa.org/packages/"))
-          package-archive-priorities '(("gnu-elpa" . 4)
-                                       ("melpa" . 3)
-                                       ("nongnu" . 2)
-                                       ("gnu-elpa-devel" . 1))
-          package-install-upgrade-built-in t
-          package-pinned-packages nil
-
-          load-prefer-newer t)            ; Do not load outdated byte code files
-
-  ;; As recommended in https://elpa.gnu.org/
-  (unless (fboundp 'package-activate-all) (package-initialize))
-#+end_src
-
-[fn:2] Those who use =use-package= can use the convenient ~:pin~ keyword instead of modifying ~package-pinned-packages~ directly.
-
-Releases of Emacs 29.1 and above come with =use-package= built-in. =use-package= offers an array of easy-to-use user-facing macros for setting user options, adding hooks, controlling the loading packages (order, lazily, dependencies, etc.), and setting keybindings (via =bind-key=).
-
-Uncommonly known are the commands =use-package= offers that help users debug and introspect the loading of their packages. The following is a non-exhaustive list:
-+ ~use-package-jump-to-package-form~ :: Prompts the user for a package configured using use-package and jumps to its corresponding use-package declaration. Useful for navigating a large =.init.el= or many small config files.
-+ ~use-package-lint~ :: Reports any syntax errors in use-package declarations in the current buffer.
-+ ~use-package-report~ :: Show statistics about all your use--package declarations. Requires ~use-package-compute-statistics~ to be non-nil.
-
-#+begin_src emacs-lisp :tangle "modules/krisb-core.el"
-  ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
-  ;; it's installed just in case I test/use an earlier Emacs version
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-  ;; 2025-04-10: I think I must require use-package for subsequent NAblocks on a
-  ;; fresh install to be respected and those packages installed?
-  (require 'use-package)
-
-  (setopt use-package-always-ensure t
-          use-package-expand-minimally t  ; Verbosity of use-package macro
-          ;; 2025-04-08: I do not set `use-package-always-defer' to non-nil
-          ;; because I have had bad experiences trying to troubleshoot packages
-          ;; because of the many potential deferral conditions.  Package deferrals
-          ;; overlap and become interwoven.  It becomes harder when I don't notice
-          ;; things are broken because a package's features were lazily loaded.
-          ;;
-          ;; Instead, I choose to opt-in to deferring packages (e.g. through
-          ;; :defer, :bind, :after, etc.)
-          use-package-always-defer nil)
-
-  ;; Only be verbose when interpreted, otherwise errors are caught at compile time
-  (setopt use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
-
-  ;; Compile statistics to be shown in `use-package-report'
-  (setopt use-package-compute-statistics t)
-#+end_src
-
-**** Other
+**** No-littering
 :PROPERTIES:
 :CUSTOM_ID: other
 :END:
@@ -736,6 +823,8 @@ Uncommonly known are the commands =use-package= offers that help users debug and
 :END:
 
 #+begin_src emacs-lisp :tangle "modules/krisb-core.el"
+  (elpaca-wait)
+
   ;;; Provide
   (provide 'krisb-core)
 #+end_src
@@ -1408,7 +1497,6 @@ Where I set global options for icon libraries. I currently (as of 2024-10-21) pr
   ;;; Vertico
   ;;;; Itself
   (use-package vertico
-    :pin gnu-elpa-devel
     :demand t
     :bind (("C-c v r" . vertico-repeat)
            ("C-c v s" . vertico-suspend))
@@ -2074,7 +2162,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Activities
   (use-package activities
-    :pin gnu-elpa-devel
     :hook (kill-emacs . activities-save-all)
     :bind (("C-c a d" . activities-define)
            ("C-c a n" . activities-new)
@@ -2097,7 +2184,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Savefold
   (use-package savefold
-    :vc (:url "https://github.com/jcfk/savefold.el.git")
+    :ensure (:repo "https://github.com/jcfk/savefold.el.git")
     :custom
     (savefold-backends '(outline
                          org
@@ -2689,6 +2776,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Ibuffer
   (use-package ibuffer
+    :ensure nil
     :bind (([remap list-buffers] . ibuffer))
     :bind* ( :map ibuffer-mode-map
              ("SPC" . scroll-up-command)
@@ -3031,6 +3119,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
 
   ;;; Modus-themes
   (use-package modus-themes
+    :ensure nil
     :custom
     (modus-themes-custom-auto-reload t) ; Only applies to `customize-set-variable' and related
     (modus-themes-italic-constructs t)
@@ -3802,7 +3891,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Ultra-scroll
   (use-package ultra-scroll
-    :vc (:url "https://github.com/jdtsmith/ultra-scroll")
+    :ensure (:repo "https://github.com/jdtsmith/ultra-scroll")
     :init
     (setq scroll-conservatively 101       ; As instructed by the README
           scroll-margin 0)
@@ -4049,6 +4138,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;;;; Grep
   (use-package grep
+    :ensure nil
     :custom
     (grep-save-buffers 'ask)
     (grep-use-headings t)
@@ -4670,8 +4760,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;; Track suggested changes in plain text files.
   (use-package cm-mode
     :disabled t                     ; 2025-04-14: Haven't found a use for this yet
-    :vc ( :url "https://github.com/joostkremers/criticmarkup-emacs.git"
-          :rev :newest)
+    :ensure (:repo "https://github.com/joostkremers/criticmarkup-emacs.git")
     ;; For AUR:
     ;; :ensure-system-package (pandiff . nodejs-pandiff) ; Prose diffs for CriticMarkup
     )
@@ -4703,7 +4792,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;;; Built-in
   ;;;; Org
   (use-package org
-    :pin gnu-elpa-devel
     :hook ((org-mode . variable-pitch-mode)
            (org-mode . visual-line-mode)
            (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 100))))
@@ -5043,7 +5131,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;;; Org-hide-drawers
   ;; Make org drawers less visually obtrusive.
   (use-package org-hide-drawers
-    :load-path "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/"
+    :ensure (:local "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/")
     :diminish
     :hook (org-mode . org-hide-drawers-mode)
     :bind ( :map krisb-toggle-keymap
@@ -5068,7 +5156,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;;; Org-keyterm-index
   (use-package org-keyterm-index
     :after org
-    :load-path "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/")
+    :ensure (:local "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/"))
 
   ;;; Org-bookmark-heading
   (use-package org-bookmark-heading
@@ -5507,7 +5595,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Denote
   (use-package denote
-    :pin gnu-elpa-devel
     :autoload (denote-directory-files krisb-denote-auto-rename-file krisb-denote-sluggify-keyword)
     :commands (denote denote-open-or-create)
     :hook ((dired-mode . denote-dired-mode)
@@ -5745,7 +5832,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;;; Denote-zettel-interface
   (use-package denote-zettel-interface
     :after denote
-    :load-path "/home/krisbalintona/emacs-repos/packages/denote-zettel-interface/"
+    :ensure (denote-zettel-interface :local "/home/krisbalintona/emacs-repos/packages/denote-zettel-interface/")
     :autoload denote-zettel-interface--signature-lessp
     :bind ( :map krisb-note-keymap
             ("m" . denote-zettel-interface-list)
@@ -6053,7 +6140,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Org-roam-folgezettel
   (use-package org-roam-folgezettel
-    :load-path "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
+    :ensure (org-roam-folgezettel :local "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/")
     :hook ((org-roam-folgezettel-mode . hl-line-mode)
            (org-roam-folgezettel-mode . (lambda () (setq-local line-spacing 0.2))))
     :bind ( :map krisb-note-keymap
@@ -6098,9 +6185,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Org-node
   (use-package org-node
-    :vc ( :url "https://github.com/meedstrom/org-node.git"
-          :branch "dev"
-          :rev :newest)
+    :ensure (:repo "https://github.com/meedstrom/org-node.git")
     :hook (find-file . krisb-org-node-rename-buffer-name-to-title)
     :bind ( :map krisb-note-keymap
             ("l" . org-node-context-toggle)
@@ -6237,7 +6322,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;;; Citar-org-node
   (use-package citar-org-node
     :ensure nil
-    :load-path "/home/krisbalintona/emacs-repos/packages/citar-org-node/"
+    :ensure (:repo "/home/krisbalintona/emacs-repos/packages/citar-org-node/")
     :after (:any citar org-node)
     :demand t
     :diminish
@@ -6249,8 +6334,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Org-Mem
   (use-package org-mem
-    :vc ( :url "https://github.com/meedstrom/org-mem.git"
-          :rev :newest)
+    :ensure (:repo "https://github.com/meedstrom/org-mem.git")
     :custom
     (org-mem-do-sync-with-org-id t)
     (org-mem-watch-dirs (list krisb-org-directory))
@@ -6469,8 +6553,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;;; Citar-org
   ;; Use `citar' with `org-cite'
   (use-package citar-org
-    :after oc
-    :ensure nil
+    :after (:any citar oc)
     :custom
     (org-cite-insert-processor 'citar)
     (org-cite-follow-processor 'citar)
@@ -6499,6 +6582,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;; View pdfs and interact with them. Has many dependencies
   ;; https://github.com/politza/pdf-tools#compiling-on-fedora
   (use-package pdf-tools
+    :ensure nil 				; 2025-05-18: We use Guix
     ;; 2025-04-03: We manually add an auto-mode-alist entry to lazy-load this
     ;; package.  I want to avoid calling `pdf-loader-install' or
     ;; `pdf-tools-install' immediately at startup because I've had startup
@@ -6622,7 +6706,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Pdf-meta-edit
   (use-package pdf-meta-edit
-    :load-path "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/"
+    :ensure (pdf-meta-edit :local "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/")
     :bind ( :map pdf-view-mode-map
             ("C-c M" . pdf-meta-edit-modify)))
 
@@ -6663,7 +6747,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
     ;; NOTE 2024-03-31: See
     ;; https://github.com/kljohann/mpv.el/issues/31#issuecomment-1856491594 for
     ;; why I use the latest GitHub version
-    :pin melpa
     :bind-keymap ("C-M-s-m" . krisb-mpv-map)
     :custom
     (mpv-default-options (list "--save-position-on-quit"))
@@ -8087,7 +8170,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;;; Org-mime
   (use-package org-mime
-    :pin melpa
     :after message
     :hook ((message-send . org-mime-confirm-when-no-multipart)
            (org-mime-html . (lambda ()
@@ -8750,6 +8832,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Eldoc
   (use-package eldoc
+    :ensure nil
     :diminish
     :bind ( :map help-map
             ("\." . eldoc-doc-buffer))
@@ -9084,7 +9167,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;;; Vc-jj
   ;; Best jj integration with vc currently (2025-03-13).
   (use-package vc-jj
-    :pin gnu-elpa-devel
     :config
     ;; Project integration with JJ
     (with-eval-after-load 'project
@@ -9094,7 +9176,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;; Share a web URL to the commit responsible for the change at point or the
   ;; remote version of the file at point.
   (use-package git-share
-    :vc (:url "https://github.com/mgmarlow/git-share")
+    :ensure (:repo "https://github.com/mgmarlow/git-share")
     :custom
     (git-share-open-links-in-browser nil))
 
@@ -9347,9 +9429,8 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   (use-package eat
     ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we
     ;; use this fork of eat.
-    :vc ( :url "https://codeberg.org/vifon/emacs-eat.git"
-          :branch "fish-integration"
-          :rev :newest)
+    :ensure (:repo "https://codeberg.org/vifon/emacs-eat.git"
+          :branch "fish-integration")
     :hook ((fontaine-set-preset . krisb-eat--setup)
            (eshell-load . eat-eshell-mode)
            (eshell-load . eat-eshell-visual-command-mode))
@@ -9394,6 +9475,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Project.el
   (use-package project
+    :ensure nil
     :bind ( :map project-prefix-map
             ("e" . project-eshell)
             ("C" . project-recompile))
@@ -9467,8 +9549,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;;; Consult-xref-stack
   (use-package consult-xref-stack
-    :vc ( :url "https://github.com/brett-lempereur/consult-xref-stack"
-          :rev :newest)
+    :ensure (:repo "https://github.com/brett-lempereur/consult-xref-stack")
     :bind (([remap xref-go-back] . krisb-consult-xref-stack-backward)
            ([remap xref-go-forward] . krisb-consult-xref-stack-forward))
     :config
@@ -9762,7 +9843,7 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   ;; faulty autoloading; I think it's related to use-package, I think.  So I don't
   ;; use that method for now.
   (use-package lazy-guard
-    :vc ( :url "https://codeberg.org/vifon/lazy-guard.git")
+    :ensure (:repo "https://codeberg.org/vifon/lazy-guard.git")
     :custom
     (lazy-guard-autoloads-strict nil)
     (lazy-guard-autoloads-known-broken nil))
@@ -9850,8 +9931,7 @@ There are several packages that end up incredibly useful for authoring packages.
   ;; tabulated-list-mode.  NOTE: Calling `mode-minder' loads all packages with a
   ;; known major mode.
   (use-package mode-minder
-    :vc ( :url "https://github.com/jdtsmith/mode-minder.git"
-          :rev :newest))
+    :ensure (:repo "https://github.com/jdtsmith/mode-minder.git"))
 
   ;;; Provide
   (provide 'krisb-elisp)
@@ -9915,8 +9995,7 @@ There are several packages that end up incredibly useful for authoring packages.
   ;; Coding language-agnostic file outlines.  Lightweight and close to the
   ;; built-in outline.el.
   (use-package outli
-    :vc ( :url "https://github.com/jdtsmith/outli"
-          :rev :newest)
+    :ensure (:repo "https://github.com/jdtsmith/outli")
     :hook ((prog-mode text-mode) . outli-mode)
     :bind ( :map outline-minor-mode-map
             ;; 2025-04-02: Assumes `outline-minor-mode-prefix' is "C-c @"
@@ -10016,8 +10095,7 @@ There are several packages that end up incredibly useful for authoring packages.
   (use-package eglot-booster
     ;; NOTE 2024-01-10: Must install the `emacs-lsp-booster' binary from
     ;; https://github.com/blahgeek/emacs-lsp-booster/releases
-    :vc (:url "https://github.com/jdtsmith/eglot-booster.git"
-              :rev :newest)
+    :ensure (:repo "https://github.com/jdtsmith/eglot-booster.git")
     :after eglot
     :config
     (eglot-booster-mode 1))
@@ -10041,7 +10119,7 @@ There are several packages that end up incredibly useful for authoring packages.
   ;;     python-setuptools python-paramiko python-rapidfuzz python-watchdog \
   ;;     python-packaging
   (use-package lsp-bridge
-    :vc (:url "https://github.com/manateelazycat/lsp-bridge.git")
+    :ensure (:repo "https://github.com/manateelazycat/lsp-bridge.git")
     :defer t
     :init
     ;; 2025-04-22: Manually install dependencies because lsp-bridge doesn't have
@@ -10208,7 +10286,7 @@ There are several packages that end up incredibly useful for authoring packages.
 
   ;;; Wombag
   (use-package wombag
-    :load-path "/home/krisbalintona/emacs-repos/packages/wombag/"
+    :ensure (:local "/home/krisbalintona/emacs-repos/packages/wombag/")
     ;; :vc (:url "https://github.com/karthink/wombag.git"
     ;;           :rev :newest)
     :hook ((wombag-show-mode . org-remark-mode)

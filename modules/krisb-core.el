@@ -1,23 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
-;;; Package.el
-;; Initialize package resources
-(setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-                           ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                           ("melpa" . "https://melpa.org/packages/"))
-        package-archive-priorities '(("gnu-elpa" . 4)
-                                     ("melpa" . 3)
-                                     ("nongnu" . 2)
-                                     ("gnu-elpa-devel" . 1))
-        package-install-upgrade-built-in t
-        package-pinned-packages nil
-
-        load-prefer-newer t)            ; Do not load outdated byte code files
-
-;; As recommended in https://elpa.gnu.org/
-(unless (fboundp 'package-activate-all) (package-initialize))
-
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
 ;; it's installed just in case I test/use an earlier Emacs version
 (unless (package-installed-p 'use-package)
@@ -118,6 +98,8 @@
   (async-bytecomp-allowed-packages 'all)
   :config
   (async-bytecomp-package-mode 1))
+
+(elpaca-wait)
 
 ;;; Provide
 (provide 'krisb-core)

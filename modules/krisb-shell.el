@@ -211,9 +211,8 @@ An example of a return value for this function is: \"9 minutes ago\"."
 (use-package eat
   ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we
   ;; use this fork of eat.
-  :vc ( :url "https://codeberg.org/vifon/emacs-eat.git"
-        :branch "fish-integration"
-        :rev :newest)
+  :ensure (:repo "https://codeberg.org/vifon/emacs-eat.git"
+        :branch "fish-integration")
   :hook ((fontaine-set-preset . krisb-eat--setup)
          (eshell-load . eat-eshell-mode)
          (eshell-load . eat-eshell-visual-command-mode))

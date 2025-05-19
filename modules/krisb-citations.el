@@ -93,8 +93,7 @@
 ;;; Citar-org
 ;; Use `citar' with `org-cite'
 (use-package citar-org
-  :after oc
-  :ensure nil
+  :after (:any citar oc)
   :custom
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)

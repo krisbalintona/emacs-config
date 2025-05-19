@@ -91,7 +91,7 @@
 
 ;;; Wombag
 (use-package wombag
-  :load-path "/home/krisbalintona/emacs-repos/packages/wombag/"
+  :ensure (:local "/home/krisbalintona/emacs-repos/packages/wombag/")
   ;; :vc (:url "https://github.com/karthink/wombag.git"
   ;;           :rev :newest)
   :hook ((wombag-show-mode . org-remark-mode)

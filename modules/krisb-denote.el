@@ -2,7 +2,6 @@
 
 ;;; Denote
 (use-package denote
-  :pin gnu-elpa-devel
   :autoload (denote-directory-files krisb-denote-auto-rename-file krisb-denote-sluggify-keyword)
   :commands (denote denote-open-or-create)
   :hook ((dired-mode . denote-dired-mode)
@@ -240,7 +239,7 @@ My version is has references added to specific line.  Namely, adds the
 ;;; Denote-zettel-interface
 (use-package denote-zettel-interface
   :after denote
-  :load-path "/home/krisbalintona/emacs-repos/packages/denote-zettel-interface/"
+  :ensure (denote-zettel-interface :local "/home/krisbalintona/emacs-repos/packages/denote-zettel-interface/")
   :autoload denote-zettel-interface--signature-lessp
   :bind ( :map krisb-note-keymap
           ("m" . denote-zettel-interface-list)

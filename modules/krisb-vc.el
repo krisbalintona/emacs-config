@@ -250,7 +250,6 @@
 ;;; Vc-jj
 ;; Best jj integration with vc currently (2025-03-13).
 (use-package vc-jj
-  :pin gnu-elpa-devel
   :config
   ;; Project integration with JJ
   (with-eval-after-load 'project
@@ -260,7 +259,7 @@
 ;; Share a web URL to the commit responsible for the change at point or the
 ;; remote version of the file at point.
 (use-package git-share
-  :vc (:url "https://github.com/mgmarlow/git-share")
+  :ensure (:repo "https://github.com/mgmarlow/git-share")
   :custom
   (git-share-open-links-in-browser nil))
 

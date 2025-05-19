@@ -10,6 +10,7 @@
 (require 'krisb-oblique-strategies)
 
 ;;;; Modules
+(require 'krisb-package-manager)
 (require 'krisb-core)
 (require 'krisb-garbage-collection)
 (require 'krisb-system-env)

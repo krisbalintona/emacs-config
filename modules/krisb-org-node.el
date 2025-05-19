@@ -2,9 +2,7 @@
 
 ;;; Org-node
 (use-package org-node
-  :vc ( :url "https://github.com/meedstrom/org-node.git"
-        :branch "dev"
-        :rev :newest)
+  :ensure (:repo "https://github.com/meedstrom/org-node.git")
   :hook (find-file . krisb-org-node-rename-buffer-name-to-title)
   :bind ( :map krisb-note-keymap
           ("l" . org-node-context-toggle)
@@ -141,7 +139,7 @@ For use as `org-node-affixation-fn'."
 ;;; Citar-org-node
 (use-package citar-org-node
   :ensure nil
-  :load-path "/home/krisbalintona/emacs-repos/packages/citar-org-node/"
+  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/citar-org-node/")
   :after (:any citar org-node)
   :demand t
   :diminish
@@ -153,8 +151,7 @@ For use as `org-node-affixation-fn'."
 
 ;;; Org-Mem
 (use-package org-mem
-  :vc ( :url "https://github.com/meedstrom/org-mem.git"
-        :rev :newest)
+  :ensure (:repo "https://github.com/meedstrom/org-mem.git")
   :custom
   (org-mem-do-sync-with-org-id t)
   (org-mem-watch-dirs (list krisb-org-directory))

@@ -16,6 +16,7 @@
 
 ;;; Modus-themes
 (use-package modus-themes
+  :ensure nil
   :custom
   (modus-themes-custom-auto-reload t) ; Only applies to `customize-set-variable' and related
   (modus-themes-italic-constructs t)
