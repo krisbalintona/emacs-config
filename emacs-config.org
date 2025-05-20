@@ -10406,6 +10406,11 @@ There are several packages that end up incredibly useful for authoring packages.
     "Is this Arch Linux?")
 
   ;;;; Org
+  ;; FIXME 2025-05-20: If the path denoted by `krisb-org-directory' does not
+  ;; exist, other packages that depend on this value are given a non-existing
+  ;; path, likelly resulting in errors.  We might solve this by turning this into
+  ;; a function instead, returning nil if it doesn't exist, thereby avoiding
+  ;; passing a non-existing file path to these packages.
   (defvar krisb-org-directory (expand-file-name "org-database" "~/Documents")
     "The directory holding my org files.
   Meant to be used as the value of `org-directory'.")
