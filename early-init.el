@@ -1,8 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;; Defer garbage collection
-(setq gc-cons-threshold most-positive-fixnum)
-
 ;;; Native-compilations settings
 ;; Basic settings
 (setq native-comp-jit-compilation t
@@ -87,10 +84,8 @@
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t
       frame-title-format '("%b")
-      ring-bell-function 'ignore
       use-dialog-box t                  ; For mouse events
       use-file-dialog nil
-      use-short-answers nil
       inhibit-splash-screen t
       inhibit-startup-screen t
       inhibit-x-resources t     ; REVIEW 2024-10-03: Not sure the precise effect
