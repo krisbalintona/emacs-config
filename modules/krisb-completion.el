@@ -541,10 +541,8 @@ ORIG-FUN should be `ispell-completion-at-point'."
 ;; Enable richer annotations in minibuffer (companion package of consult.el)
 (use-package marginalia
   :custom
-  (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
-  (marginalia-field-width 80)
-  (marginalia-align-offset -2)          ; Two to the left
+  (marginalia-max-relative-age 0)       ; Always use absolute age
+  (marginalia-align 'left)              ; Causes most alignment in my experience
   :config
   (marginalia-mode 1))
 
