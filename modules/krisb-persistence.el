@@ -99,7 +99,7 @@ of collision."
   :ensure nil
   :custom
   (desktop-load-locked-desktop 'check-pid)
-  (desktop-save 'ask-if-exists)
+  (desktop-save 'ask-if-new)
   (desktop-auto-save-timeout 3)
   (desktop-files-not-to-save
    (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
