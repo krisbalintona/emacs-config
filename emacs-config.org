@@ -6098,9 +6098,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Org-node
   (use-package org-node
-    :vc ( :url "https://github.com/meedstrom/org-node.git"
-          :branch "dev"
-          :rev :newest)
     :hook (find-file . krisb-org-node-rename-buffer-name-to-title)
     :bind ( :map krisb-note-keymap
             ("l" . org-node-context-toggle)
@@ -6249,8 +6246,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
 
   ;;; Org-Mem
   (use-package org-mem
-    :vc ( :url "https://github.com/meedstrom/org-mem.git"
-          :rev :newest)
     :custom
     (org-mem-do-sync-with-org-id t)
     (org-mem-watch-dirs (list krisb-org-directory))

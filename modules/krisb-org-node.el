@@ -2,9 +2,6 @@
 
 ;;; Org-node
 (use-package org-node
-  :vc ( :url "https://github.com/meedstrom/org-node.git"
-        :branch "dev"
-        :rev :newest)
   :hook (find-file . krisb-org-node-rename-buffer-name-to-title)
   :bind ( :map krisb-note-keymap
           ("l" . org-node-context-toggle)
@@ -153,8 +150,6 @@ For use as `org-node-affixation-fn'."
 
 ;;; Org-Mem
 (use-package org-mem
-  :vc ( :url "https://github.com/meedstrom/org-mem.git"
-        :rev :newest)
   :custom
   (org-mem-do-sync-with-org-id t)
   (org-mem-watch-dirs (list krisb-org-directory))
