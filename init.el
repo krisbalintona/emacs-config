@@ -5,71 +5,73 @@
                     (expand-file-name "lisp" user-emacs-directory)))
   (add-to-list 'load-path path))
 
-;;; Load libraries
-(require 'krisb-common)
-(require 'krisb-oblique-strategies)
 
-;;;; Modules
-(require 'krisb-core)
-(require 'krisb-garbage-collection)
-(require 'krisb-system-env)
-(require 'krisb-essentials)
+;;; Package.el
+;; Initialize package resources
+(setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                           ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ("melpa" . "https://melpa.org/packages/"))
+        package-archive-priorities '(("gnu-elpa" . 4)
+                                     ("nongnu" . 3)
+                                     ("gnu-elpa-devel" . 2)
+				     ("melpa" . 1))
+        package-install-upgrade-built-in t
 
-(require 'krisb-icons)
-(require 'krisb-themes)
-(require 'krisb-fonts)
-(require 'krisb-mode-line)
+        load-prefer-newer t) ; Do not load outdated byte code files
 
-(require 'krisb-saving-state)
-(require 'krisb-persistence)
-(require 'krisb-completion)
-(require 'krisb-expansion)
-(require 'krisb-formatting)
-(require 'krisb-windows)
-(require 'krisb-buffers)
-(require 'krisb-navigation)
+;; As recommended in https://elpa.gnu.org/
+(unless (fboundp 'package-activate-all) (package-initialize))
 
-(require 'krisb-alternative-editing-schemes)
+;;; Use-package
+;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
+;; it's installed just in case I test/use an earlier Emacs version
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
-(require 'krisb-prose)
-(require 'krisb-org)
-(require 'krisb-org-agenda)
-(require 'krisb-org-export)
-;; 2024-11-06: Migrating to org-roam.  We remove the require altogether since
-;; some of my Denote packages are lazy-loaded after Denote is, and they
-;; overshadow some of the functionality from my org-roam related packages.  I
-;; don't use Denote, but I still keep the package around (for now) since I
-;; depend on some Denote forms throughout my configuration currently.
-;; (require 'krisb-denote)
-(require 'krisb-org-roam)
-(require 'krisb-org-node)
-(require 'krisb-markdown)
-(require 'krisb-citations)
-(require 'krisb-spelling)
+;; 2025-04-10: I think I must require use-package for subsequent NAblocks on a
+;; fresh install to be respected and those packages installed?
+(use-package use-package
+  :custom
+  (setopt use-package-always-ensure t
+          use-package-expand-minimally t  ; Verbosity of use-package macro
+          ;; 2025-04-08: I do not set `use-package-always-defer' to non-nil
+          ;; because I have had bad experiences trying to troubleshoot packages
+          ;; because of the many potential deferral conditions.  Package deferrals
+          ;; overlap and become interwoven.  It becomes harder when I don't notice
+          ;; things are broken because a package's features were lazily loaded.
+          ;;
+          ;; Instead, I choose to opt-in to deferring packages (e.g. through
+          ;; :defer, :bind, :after, etc.)
+          use-package-always-defer nil)
+  
+  ;; Only be verbose when interpreted, otherwise errors are caught at compile time
+  (setopt use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
 
-(require 'krisb-pdfs)
-(require 'krisb-web-annotations)
-(require 'krisb-epub)
+  
+  ;; Compile statistics to be shown in `use-package-report'
+  (setopt use-package-compute-statistics t)
 
-(require 'krisb-programming-essentials)
-(require 'krisb-directories)
-(require 'krisb-treesit)
-(require 'krisb-vc)
-(require 'krisb-projects)
-(require 'krisb-shell)
-(require 'krisb-flymake)
-(require 'krisb-folding)
-(require 'krisb-other-languages)
-(require 'krisb-lsp)
-(require 'krisb-debugging)
+  )
 
-(require 'krisb-elisp)
-(require 'krisb-info)
+;;; No-littering
+;; Set better default package paths
+(use-package no-littering
+  :init
+  ;; According to the package instructions, these variables must be set prior to
+  ;; loading the feature
+  (eval-and-compile                 ; Ensure values don't differ at compile time
+    (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
+          no-littering-var-directory (expand-file-name "var/" user-emacs-directory))) ; Persistent files
+  :config
+  ;; Ensure the directories exist
+  (mkdir no-littering-etc-directory t)
+  (mkdir no-littering-var-directory t)
 
-(require 'krisb-hugo)
-(require 'krisb-mermaid)
+  ;; Read docstring.  Sets more secure values for
+  ;; `auto-save-file-name-transforms', `backup-directory-alist', and
+  ;; `undo-tree-history-directory-alist'.
+  (no-littering-theme-backups))
 
-(require 'krisb-email-composition)
-(require 'krisb-notmuch)
-
-(require 'krisb-web)
+;;; El-patch
+(use-package el-patch)
