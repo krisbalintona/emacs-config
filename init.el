@@ -776,9 +776,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
    :map vertico-map
    ("C-.". embark-act)
    :map embark-symbol-map
-   ("R". raise-sexp)
-   :map embark-org-heading-map
-   ("C-j" . org-clock-goto))
+   ("R". raise-sexp))
   :custom
   (embark-indicators '(embark-minimal-indicator
                        embark-highlight-indicator
@@ -790,6 +788,12 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   (embark-collect-live-update-delay 0.5)
   :config
   (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
+
+(use-package embark-org
+  :ensure nil
+  :bind
+  ( :map embark-org-heading-map
+    ("C-j" . org-clock-goto)))
 
 ;;;; Embark-consult
 ;; TODO 2025-05-20: Revisit this.  Do I need it?
