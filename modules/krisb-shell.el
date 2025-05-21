@@ -207,34 +207,5 @@ An example of a return value for this function is: \"9 minutes ago\"."
 (use-package fish-mode
   :mode "\\.fish\\'")
 
-;;; EAT
-(use-package eat
-  ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we
-  ;; use this fork of eat.
-  :vc ( :url "https://codeberg.org/vifon/emacs-eat.git"
-        :branch "fish-integration"
-        :rev :newest)
-  :hook ((fontaine-set-preset . krisb-eat--setup)
-         (eshell-load . eat-eshell-mode)
-         (eshell-load . eat-eshell-visual-command-mode))
-  :bind ( :map krisb-open-keymap
-          ("s" . eat)
-          :map project-prefix-map
-          ("s" . eat-project))
-  :config
-  ;; 2025-04-05: This resolves the continuation lines issue in EAT terminal
-  ;; (including eat-shell in `eat-eshell-visual-command-mode').  The
-  ;; continuation line issue results in, I think, the default font being too
-  ;; wide, causing the width of the characters to exceed the width of the
-  ;; window, resulting in ugly continuation lines that ruin the wrapping of the
-  ;; output.
-  (defun krisb-eat--setup ()
-    "Set up an EAT terminal shell."
-    (when (featurep 'fontaine)
-      (set-face-attribute 'eat-term-font-0 nil
-                          ;; This returns the default-family of the current
-                          ;; preset, whether explicitly or implicitly set
-                          :family (fontaine--get-preset-property fontaine-current-preset :term-family)))))
-
 ;;; Provide
 (provide 'krisb-shell)

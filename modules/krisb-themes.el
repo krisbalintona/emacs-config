@@ -122,39 +122,6 @@
     ((string-match "^modus-vivendi" (symbol-name theme))
      (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2")))))
 
-;;; Cursory
-;; Global and local cursor presets
-(use-package cursory
-  :hook ((prog-mode . (lambda () (cursory-set-preset 'code :local)))
-         ((org-mode markdown-mode git-commit-setup log-edit-mode message-mode) . (lambda () (cursory-set-preset 'prose :local))))
-  :custom
-  (cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))
-  (cursory-presets
-   '((code
-      :cursor-type box
-      :cursor-in-non-selected-windows hollow
-      :blink-cursor-mode 1)
-     (prose
-      :cursor-type (bar . 2)
-      :blink-cursor-mode -1
-      :cursor-in-non-selected-windows (hbar . 3))
-     (default)
-     (t                                 ; The fallback values
-      :cursor-type box
-      :cursor-in-non-selected-windows hollow
-      :blink-cursor-mode 1
-      :blink-cursor-blinks 10
-      :blink-cursor-delay 5
-      :blink-cursor-interval 0.5)))
-  :config
-  ;; Set last preset or fall back to desired style from `cursory-presets'.
-  (when (file-exists-p cursory-latest-state-file)
-    (cursory-set-preset (or (cursory-restore-latest-preset) 'default)))
-
-  ;; Persist latest preset used across Emacs sessions
-  (cursory-mode 1))
-
-
 ;;; Lin
 ;; Lin is a stylistic enhancement for Emacs' built-in `hl-line-mode'. It remaps
 ;; the `hl-line' face (or equivalent) buffer-locally to a style that is optimal

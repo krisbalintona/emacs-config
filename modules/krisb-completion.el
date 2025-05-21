@@ -1,55 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Completion-preview
-(use-package completion-preview
-  :ensure nil
-  :diminish
-  :hook (((prog-mode log-edit-mode eval-expression-minibuffer-setup) . completion-preview-mode)
-         (eshell-mode . krisb-completion-preview-mode-setup-eshell))
-  :bind ( :map completion-preview-active-mode-map
-          ("M-n" . completion-preview-next-candidate)
-          ("M-p" . completion-preview-prev-candidate))
-  :custom
-  (completion-preview-ignore-case t)
-  (completion-preview-minimum-symbol-length 3)
-  :config
-  ;; Use prescient or corfu-prescient's sorting function if they are available.
-  ;; With this, the completion candidates shown by corfu align with the
-  ;; completion candidate shown by `completion-preview-mode'.  The reason we use
-  ;; this variable watcher is that it is an inexpensive solution to changing
-  ;; `corfu-sort-function' values.
-  (with-eval-after-load 'prescient
-    ;; Use this as a fallback value: if `corfu-sort-function' isn't changed,
-    ;; `completion-preview-sort-function' will remain
-    ;; `prescient-completion-sort'
-    (setopt completion-preview-sort-function #'prescient-completion-sort))
-  (add-variable-watcher 'corfu-sort-function
-                        (lambda (_symbol newval operation where)
-                          "Match the value of `completion-preview-sort-function' to `corfu-sort-function'.
-If `corfu-sort-function' is set buffer-locally, also set
-`completion-preview-sort-function' buffer-locally.  Otherwise, change
-the default value of `completion-preview-sort-function' accordingly.
-
-This action only applies when the value of `corfu-sort-function' is
-set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
-                          (when (equal operation 'set)
-                            (if where
-                                (with-current-buffer where
-                                  (setq-local completion-preview-sort-function newval))
-                              (setopt completion-preview-sort-function newval)))))
-
-  ;; Add these bespoke self-insert commands to the list of recognized preview
-  ;; commands
-  (dolist (command '(org-self-insert-command
-                     outshine-self-insert-command))
-    (add-to-list 'completion-preview-commands command))
-
-  ;; Special settings for eshell buffers
-  (defun krisb-completion-preview-mode-setup-eshell ()
-    "Set specific settings in eshell buffers."
-    (setq-local completion-preview-minimum-symbol-length 1)
-    (completion-preview-mode 1)))
-
 ;;; Vertico
 
 ;;;; Vertico-buffer

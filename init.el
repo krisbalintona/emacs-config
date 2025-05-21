@@ -289,7 +289,6 @@
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:
 ;; 
-;; - `electric-pair-inhibit-predicate'
 ;; - `electric-quote-inhibit-functions'
 (use-package electric
   :ensure nil
@@ -303,6 +302,7 @@
   ;; (electric-quote-string nil)
   (electric-quote-context-sensitive t)
   (electric-quote-replace-double t)
+  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   :config
   (electric-pair-mode 1)
   (electric-indent-mode 1))
@@ -736,6 +736,43 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
          (consult-completion-in-region beg end table pred)))))
   (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer))
 
+;;;; Embark
+;; Allow an equivalent to ivy-actions to regular `completing-read'
+;; minibuffers
+;;
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;;
+;; - `embark-prompter'
+(use-package embark
+  :ensure t
+  :bind
+  (("C-.". embark-act)
+   ("C-h B". embark-bindings)
+   :map vertico-map
+   ("C-.". embark-act)
+   :map embark-symbol-map
+   ("R". raise-sexp)
+   :map embark-org-heading-map
+   ("C-j" . org-clock-goto))
+  :custom
+  (embark-indicators '(embark-minimal-indicator
+                       embark-highlight-indicator
+                       embark-isearch-highlight-indicator))
+  (prefix-help-command #'embark-prefix-help-command) ; Use completing read when typing ? after prefix key
+
+  (embark-mixed-indicator-delay 1.5)
+  (embark-collect-live-initial-delay 0.8)
+  (embark-collect-live-update-delay 0.5)
+  :config
+  (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
+
+(use-package embark-consult
+  :ensure nil
+  :after (embark consult)
+  :hook
+  (embark-collect-mode-hook . consult-preview-at-point-mode))
+
 ;;; Four steps below
 
 ;;;; Pulsar
@@ -779,14 +816,13 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
    ("e" . consult-compile-error)
    ("l" . consult-line)
    ("a" . consult-org-agenda)
-   ;; TODO 2025-05-20: Revisit this.
-   ;; :map search-map                ; The `M-s' prefix
-   ;; ("i" . consult-info)
-   ;; ("g" . consult-git-grep)
-   ;; ("G" . consult-grep)
-   ;; ("r" . consult-ripgrep)
-   ;; ("f" . consult-find)
-   ;; ("F" . consult-locate)
+   :map search-map                ; The `M-s' prefix
+   ("i" . consult-info)
+   ("g" . consult-git-grep)
+   ("G" . consult-grep)
+   ("r" . consult-ripgrep)
+   ("f" . consult-find)
+   ("F" . consult-locate)
    :map org-mode-map
    ([remap consult-outline] . consult-org-heading))
   :custom
@@ -871,3 +907,510 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   (marginalia-align 'left)              ; Causes most alignment in my experience
   :config
   (marginalia-mode 1))
+
+;;;; Tab-bar
+(use-package tab-bar
+  :ensure nil
+  :bind
+  ( :map tab-prefix-map
+    ("w" . tab-bar-move-window-to-tab)
+    ("w" . tab-bar-move-window-to-tab)
+    ("c" . tab-bar-change-tab-group)
+    ("C-S-g" . tab-bar-move-tab-to-group)
+    ("D" . tab-bar-close-group-tabs)
+    :repeat-map krisb-tab-bar-repeat-map
+    ("C-c <left>" . tab-bar-history-back)
+    ("C-c <right>" . tab-bar-history-forward)
+    :continue
+    ("<left>" . tab-bar-history-back)
+    ("<right>" . tab-bar-history-forward))
+  :custom
+  (tab-bar-close-button-show nil)
+  (tab-bar-new-tab-choice 'clone)
+  (tab-bar-close-last-tab-choice 'delete-frame)
+  (tab-bar-select-tab-modifiers '(meta))
+  (tab-bar-tab-hints t)
+  (tab-bar-show t)
+  (tab-bar-separator " ")
+  (tab-bar-format
+   '(tab-bar-format-tabs-groups
+     tab-bar-separator
+     tab-bar-format-align-right
+     ;; TODO 2025-05-20: Revisit this.
+     ;; tab-bar-format-global
+     ))
+  :config
+  (tab-bar-mode 1)
+  (tab-bar-history-mode 1))
+
+;;;; Mode line format
+(setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
+
+(setopt mode-line-compact 'long	; Emacs 28
+        mode-line-right-align-edge 'window
+        mode-line-percent-position '(-3 "%p") ; Don't show percentage of position in buffer
+        mode-line-position-line-format '(" %l")
+        mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
+
+;; TODO 2025-05-20: Revisit this.
+;; (setq-default mode-line-format
+;;               '("%e"
+;;                 mode-line-front-space
+;;                 (:propertize
+;;                  ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote
+;;                   mode-line-window-dedicated)
+;;                  display (min-width (6.0)))
+;;                 mode-line-frame-identification
+;;                 mode-line-buffer-identification "   "
+;;                 mode-line-position
+;;                 mode-line-format-right-align
+;;                 (project-mode-line project-mode-line-format) "   "
+;;                 mode-line-modes
+;;                 mode-line-misc-info
+;;                 mode-line-end-spaces))
+(setopt mode-line-format
+	'("%e" mode-line-front-space
+	  (:propertize
+	   ("" mode-line-mule-info mode-line-client mode-line-modified
+	    mode-line-remote mode-line-window-dedicated)
+	   display (min-width (6.0)))
+	  mode-line-frame-identification
+	  mode-line-buffer-identification "   "
+	  mode-line-position
+	  mode-line-format-right-align
+	  (project-mode-line project-mode-line-format)
+	  (vc-mode vc-mode) "  "
+	  mode-line-modes
+	  mode-line-misc-info
+	  mode-line-end-spaces))
+
+;; Add segments to `global-mode-string'
+(add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " "))))
+
+;;;; Window
+(use-package window
+  :ensure nil
+  :bind* ("M-o" . other-window)
+  :custom
+  (quit-restore-window-no-switch t)	; Emacs 31
+  (kill-buffer-quit-windows t))		; Emacs 31
+
+;;;; EAT
+(use-package eat
+  ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we
+  ;; use this fork of eat.
+  :ensure ( :repo "https://codeberg.org/vifon/emacs-eat.git"
+            :branch "fish-integration")
+  :defer t
+  :hook
+  (fontaine-set-preset-hook . krisb-eat--setup)
+  (eshell-load-hook . eat-eshell-mode)
+  (eshell-load-hook . eat-eshell-visual-command-mode)
+  :bind
+  ;; TODO 2025-05-20: Revisit this.
+  ;; ( :map krisb-open-keymap
+  ;;   ("s" . eat)
+  ;;   :map project-prefix-map
+  ;;   ("s" . eat-project))
+  :config
+  ;; 2025-04-05: This resolves the continuation lines issue in EAT
+  ;; terminal (including eat-shell in
+  ;; `eat-eshell-visual-command-mode').  The continuation line issue
+  ;; results in, I think, the default font being too wide, causing the
+  ;; width of the characters to exceed the width of the window,
+  ;; resulting in ugly continuation lines that ruin the wrapping of
+  ;; the output.
+  (defun krisb-eat--setup ()
+    "Set up an EAT terminal shell."
+    (when (featurep 'fontaine)
+      (set-face-attribute 'eat-term-font-0 nil
+                          ;; This returns the default-family of the current
+                          ;; preset, whether explicitly or implicitly set
+                          :family (fontaine--get-preset-property fontaine-current-preset :term-family)))))
+
+;;;; Ibuffer
+(use-package ibuffer
+  :ensure nil
+  :bind
+  ([remap list-buffers] . ibuffer)
+  :bind*
+  ( :map ibuffer-mode-map
+    ("SPC" . scroll-up-command)
+    ("DEL" . scroll-down-command)
+    ("* d" . krisb-ibuffer-mark-displayed-buffers)))
+
+;;;; Scratch.el
+;; Easily create scratch buffers for different modes
+(use-package scratch
+  :ensure t
+  :defer t
+  :hook
+  (scratch-create-buffer-hook . krisb-scratch-buffer-setup)
+  ;; TODO 2025-05-20: Revisit this.
+  ;; :bind
+  ;; ( :map krisb-open-keymap
+  ;;   ("S". scratch))
+  :config
+  (defun krisb-scratch-buffer-setup ()
+    "Add contents to `scratch' buffer and name it accordingly.
+ Taken from
+ https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
+    (let* ((mode (format "%s" major-mode))
+           (string (concat "Scratch buffer for: " mode "\n\n")))
+      (when scratch-buffer
+        (save-excursion
+          (insert string)
+          (goto-char (point-min))
+          (comment-region (point-at-bol) (point-at-eol)))
+        (forward-line 2))
+      (rename-buffer (concat "*Scratch for " mode "*") t))))
+
+;;; Fluff
+
+;;;; Recursion-indicator
+;; Enhanced `minibuffer-depth-indicate-mode'.  Indicates recursion for
+;; more than just the minibuffer
+(use-package recursion-indicator
+  :ensure t
+  :demand t
+  :hook
+  (recursion-indicator-mode-hook . minibuffer-depth-indicate-mode)
+  :custom
+  (recursion-indicator-symbols
+   '((completion "C" recursion-indicator-completion)
+     (prompt "P" recursion-indicator-prompt)
+     (suspend "S" recursion-indicator-suspend)
+     (t "R" recursion-indicator-default)))
+  :config
+  (recursion-indicator-mode 1))
+
+;;;; Time
+(use-package time
+  :ensure nil
+  :demand t
+  :custom
+  (display-time-24hr-format t)
+  (display-time-format "%R")
+  (display-time-interval 60)
+  (display-time-default-load-average nil)
+  (world-clock-list
+   '(("America/Los_Angeles" "Seattle")
+     ("America/New_York" "New York")
+     ("Europe/London" "London")
+     ("Europe/Paris" "Paris")
+     ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
+     ("Asia/Calcutta" "Bangalore")
+     ("Asia/Tokyo" "Tokyo")
+     ("Asia/Shanghai" "Beijing")))
+  :config
+  (display-time-mode 1))
+
+;;;; Eldoc
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;;
+;; - `eldoc-print-after-edit'
+;; - `eldoc-echo-area-display-truncation-message'
+;; - `eldoc-echo-area-use-multiline-p'
+(use-package eldoc
+  :bind
+  ( :map help-map			
+    ("\." . eldoc-doc-buffer)) ; I don't find much use for `display-local-help'
+  :custom
+  (eldoc-idle-delay 0.2)
+  (eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly) ; TODO 2025-05-20: Revisit this.
+  (eldoc-echo-area-prefer-doc-buffer t)
+  (eldoc-help-at-pt t)			; Emacs 31.1
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'eldoc-mode))
+
+;;;; Newcomment
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;;
+;; - `comment-fill-column'
+;; - `comment-multi-line'
+;; - `comment-style'
+(use-package newcomment
+  :ensure nil
+  :custom
+  (comment-empty-lines t))
+
+;;;; Prog-mode
+(use-package prog-mode
+  :ensure nil
+  :hook
+  (prog-mode-hook . goto-address-prog-mode) ; Buttonize URLs and e-mail addresses in comments and strings
+  (prog-mode-hook . bug-reference-prog-mode)) ; Buttonize bug references in comments and strings
+
+;;;; Abdridge-diff
+;; Abridge (shorten) refined diff hunks with long lines.  You can
+;; enable and disable showing the abridged version using
+;; `abridge-diff-toggle-hiding'.
+(use-package abridge-diff
+  :ensure t
+  :after diff
+  :demand t
+  :config
+  (abridge-diff-mode 1)
+  (add-to-list 'mode-line-collapse-minor-modes 'abridge-diff-mode))
+
+;;;; Cursory
+;; Global and local cursor presets
+(use-package cursory
+  :ensure t
+  :hook
+  (prog-mode-hook . (lambda () (cursory-set-preset 'code :local)))
+  ((org-mode-hook markdown-mode-hook git-commit-setup-hook log-edit-mode-hook message-mode-hook)
+   . (lambda () (cursory-set-preset 'prose :local)))
+  :custom
+  (cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))
+  (cursory-presets
+   '((code
+      :cursor-type box
+      :cursor-in-non-selected-windows hollow
+      :blink-cursor-mode 1)
+     (prose
+      :cursor-type (bar . 2)
+      :blink-cursor-mode -1
+      :cursor-in-non-selected-windows (hbar . 3))
+     (default)
+     (t                                 ; The fallback values
+      :cursor-type box
+      :cursor-in-non-selected-windows hollow
+      :blink-cursor-mode 1
+      :blink-cursor-blinks 10
+      :blink-cursor-delay 5
+      :blink-cursor-interval 0.5)))
+  :config
+  ;; 2025-04-14: I manually create the parent directory if it doesn't
+  ;; already exist; this is not yet implemented upstream, so I do it
+  ;; manually here for fresh installs of Emacs.
+  (make-directory (file-name-directory cursory-latest-state-file) t)
+
+  ;; Set last preset or fall back to desired style from `cursory-presets'.
+  (when (file-exists-p cursory-latest-state-file)
+    (cursory-set-preset (or (cursory-restore-latest-preset) 'default)))
+
+  ;; Persist latest preset used across Emacs sessions
+  (cursory-mode 1))
+
+;;;; Completion-preview
+(use-package completion-preview
+  :ensure nil
+  :hook
+  ((prog-mode-hook log-edit-mode-hook eval-expression-minibuffer-setup-hook)
+   . completion-preview-mode)
+  (eshell-mode-hook . krisb-completion-preview-mode-setup-eshell)
+  :bind
+  ( :map completion-preview-active-mode-map
+    ("M-n" . completion-preview-next-candidate)
+    ("M-p" . completion-preview-prev-candidate))
+  :custom
+  (completion-preview-ignore-case t)
+  (completion-preview-minimum-symbol-length 3)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'completion-preview-mode)
+
+  ;; TODO 2025-05-20: Revisit this.
+  ;;   ;; Use prescient or corfu-prescient's sorting function if they are
+  ;;   ;; available.  With this, the completion candidates shown by corfu
+  ;;   ;; align with the completion candidate shown by
+  ;;   ;; `completion-preview-mode'.  The reason we use this variable
+  ;;   ;; watcher is that it is an inexpensive solution to changing
+  ;;   ;; `corfu-sort-function' values.
+  ;;   (with-eval-after-load 'prescient
+  ;;     ;; Use this as a fallback value: if `corfu-sort-function' isn't
+  ;;     ;; changed, `completion-preview-sort-function' will remain
+  ;;     ;; `prescient-completion-sort'
+  ;;     (setopt completion-preview-sort-function #'prescient-completion-sort))
+  ;;   (add-variable-watcher 'corfu-sort-function
+  ;;                         (lambda (_symbol newval operation where)
+  ;;                           "Match the value of `completion-preview-sort-function' to `corfu-sort-function'.
+  ;; If `corfu-sort-function' is set buffer-locally, also set
+  ;; `completion-preview-sort-function' buffer-locally.  Otherwise, change
+  ;; the default value of `completion-preview-sort-function' accordingly.
+  ;; 
+  ;; This action only applies when the value of `corfu-sort-function' is
+  ;; set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
+  ;;                           (when (equal operation 'set)
+  ;;                             (if where
+  ;;                                 (with-current-buffer where
+  ;;                                   (setq-local completion-preview-sort-function newval))
+  ;;                               (setopt completion-preview-sort-function newval)))))
+
+  ;; Add these bespoke self-insert commands to the list of recognized
+  ;; preview commands
+  (dolist (command '(org-self-insert-command
+                     outshine-self-insert-command))
+    (add-to-list 'completion-preview-commands command))
+
+  ;; Special settings for eshell buffers
+  (defun krisb-completion-preview-mode-setup-eshell ()
+    "Set specific settings in eshell buffers."
+    (setq-local completion-preview-minimum-symbol-length 1)
+    (completion-preview-mode 1)))
+
+;;; Uncategorized
+
+;; Bind `restart-emacs'
+
+;; Restart or close Emacs
+(defun krisb-restart-or-kill-emacs (&optional arg restart)
+  "Kill Emacs.
+If called with RESTART (`universal-argument’ interactively) restart
+Emacs instead. Passes ARG to `save-buffers-kill-emacs'."
+  (interactive "P")
+  (save-buffers-kill-emacs arg (or restart (equal arg '(4)))))
+(bind-key [remap save-buffers-kill-terminal] #'krisb-restart-or-kill-emacs)
+
+;; Unfill paragraph.  Protesilaos's
+;; `prot-simple-unfill-region-or-paragraph'
+(defun krisb-unfill-region-or-paragraph (&optional beg end)
+  "Unfill paragraph or, when active, the region.
+Join all lines in region delimited by BEG and END, if active, while
+respecting any empty lines (so multiple paragraphs are not joined, just
+unfilled).  If no region is active, operate on the paragraph.  The idea
+is to produce the opposite effect of both `fill-paragraph' and
+`fill-region'."
+  (interactive "r")
+  (let ((fill-column most-positive-fixnum))
+    (if (use-region-p)
+        (fill-region beg end)
+      (fill-paragraph))))
+(bind-key "M-Q" #'krisb-unfill-region-or-paragraph)
+
+;; Single-line scrolling
+(bind-keys
+ ("C-M-S-p" . scroll-down-line)
+ ("C-M-S-n" . scroll-up-line))
+
+;; Rapid joining lines and inserting newlines tailored for prose
+;; writing
+(defun krisb-open-line-above-goto ()
+  "Insert an empty line above the current line.
+Position the cursor at it's beginning, according to the current
+mode. Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (previous-line)
+  (indent-according-to-mode))
+
+(defun krisb-open-line-below-goto ()
+  "Insert an empty line after the current line.
+Position the cursor at its beginning, according to the current mode.
+Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))
+
+(defun krisb-join-line-above ()
+  "Join the current line with the line above."
+  (interactive)
+  (save-excursion (delete-indentation))
+  (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
+    (funcall indent-line-function)))
+
+(defun krisb-join-line-below ()
+  "Join the current line with the line below."
+  (interactive)
+  (save-excursion (delete-indentation t))
+  (when (bolp)
+    (funcall indent-line-function)))
+
+(bind-keys
+ ("C-S-p" . krisb-open-line-above-goto)
+ ("C-S-n" . krisb-open-line-below-goto)
+ ("C-S-k" . krisb-join-line-above)
+ ("C-S-j" . krisb-join-line-below))
+
+;; `indent-for-tab-command' functionality: what happens when you press
+;; TAB?
+(setopt tab-always-indent 'complete
+        tab-first-completion 'word)
+
+;; Keep the cursor out of the read-only portions of the minibuffer
+(setopt minibuffer-prompt-properties
+        '( read-only t
+           cursor-intangible t
+           face minibuffer-prompt))
+
+;; Use DWIM case commands
+(bind-keys
+ ([remap upcase-word] . upcase-dwim)
+ ([remap downcase-word] . downcase-dwim)
+ ([remap capitalize-word] . capitalize-dwim))
+
+;; Recenter upon `next-error'
+(setopt next-error-recenter '(4))
+
+;; Disable the ring-bell (it's annoying)
+(setopt ring-bell-function #'ignore)
+
+;; Enable `delete-selection-mode'.  When selecting text, if typing new
+;; text, replace the selected text with the new text
+(delete-selection-mode t)
+
+;; Show context menu from right-click
+(when (display-graphic-p) (context-menu-mode 1))
+
+;; Avoid collision of mouse with point
+(mouse-avoidance-mode 'jump)
+
+;; Visual-line-mode in *Messages* buffer
+(add-hook 'messages-buffer-mode-hook #'visual-line-mode)
+
+;; Undo frame deletions
+(undelete-frame-mode 1)
+
+;; So-long-mode everywhere
+(global-so-long-mode 1)
+
+;; Stretch cursor to the glyph width
+(setopt x-stretch-cursor t)
+
+;; Middle-click pastes at point, not at mouse
+(setopt mouse-yank-at-point t)
+
+;; Don't do anything with inactive mark
+(setopt mark-even-if-inactive nil)
+
+;; Strategy for uniquifying buffer names
+(setopt uniquify-buffer-name-style 'forward)
+
+;; Behavior for `cycle-spacing-actions'.  Read the docstring for an
+;; explanation (or try it out!)
+(setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
+
+;; Word wrapping.  Continue wrapped lines at whitespace rather than
+;; breaking in the middle of a word.
+(setopt word-wrap t)
+
+;; Don’t warn when advising
+(setopt ad-redefinition-action 'accept)
+
+;; Prefer UTF-8 file and selection encoding
+(prefer-coding-system 'utf-8)
+;; The clipboard on Windows is often a wider encoding (UTF-16), so
+;; leave Emacs to its own devices there.  Otherwise, encode text into
+;; the clipboard into UTF-8
+(unless (eq system-type 'windows-nt)
+  (setopt selection-coding-system 'utf-8))
+
+;; Prefer unicode charset
+(set-charset-priority 'unicode)
+
+;; Set `sentence-end-double-space' conditionally
+(defun krisb-sentence-end-double-space-setup ()
+  "Set up the value for `sentence-end-double-space'."
+  (setq-local sentence-end-double-space
+              (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
+                    ((derived-mode-p 'text-mode) nil))))
+
+(dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
+  (add-hook mode #'krisb-sentence-end-double-space-setup))
+
+;; Trash
+(setopt trash-directory (no-littering-expand-var-file-name "trash")
+        delete-by-moving-to-trash t)

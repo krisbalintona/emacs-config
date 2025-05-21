@@ -79,59 +79,6 @@
 (shell-command "xmodmap -e 'keycode 191 = space'")
 
 ;;; Commands
-;;;; Restart or close Emacs
-(defun krisb-restart-or-kill-emacs (&optional arg restart)
-  "Kill Emacs.
-If called with RESTART (`universal-argument’ interactively) restart
-Emacs instead. Passes ARG to `save-buffers-kill-emacs'."
-  (interactive "P")
-  (save-buffers-kill-emacs arg (or restart (equal arg '(4)))))
-(bind-key [remap save-buffers-kill-terminal] #'krisb-restart-or-kill-emacs)
-
-;;;; Scrolling
-(bind-keys
- ("C-M-S-s-p" . scroll-down-line)
- ("C-M-S-s-n" . scroll-up-line))
-
-;;;; Joining lines
-(defun krisb-open-line-above-goto ()
-  "Insert an empty line above the current line.
-Position the cursor at it's beginning, according to the current
-mode. Credit to
-https://emacsredux.com/blog/2013/06/15/open-line-above/"
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (previous-line)
-  (indent-according-to-mode))
-
-(defun krisb-open-line-below-goto ()
-  "Insert an empty line after the current line.
-Position the cursor at its beginning, according to the current mode.
-Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-
-(defun krisb-join-line-above ()
-  "Join the current line with the line above."
-  (interactive)
-  (save-excursion (delete-indentation))
-  (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
-    (funcall indent-line-function)))
-
-(defun krisb-join-line-below ()
-  "Join the current line with the line below."
-  (interactive)
-  (save-excursion (delete-indentation t))
-  (when (bolp)
-    (funcall indent-line-function)))
-
-(bind-keys
- ("C-S-p" . krisb-open-line-above-goto)
- ("C-S-n" . krisb-open-line-below-goto)
- ("C-S-k" . krisb-join-line-above)
- ("C-S-j" . krisb-join-line-below))
 
 ;;;; Empty trash
 (defun krisb-empty-trash ()
@@ -192,49 +139,9 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
     (error "Couldn't find filename in current buffer")))
 (bind-key "w" #'krisb-yank-buffer-filename 'krisb-file-keymap)
 
-;;;; Unfill paragraph
-;; Protesilaos's `prot-simple-unfill-region-or-paragraph'
-(defun krisb-unfill-region-or-paragraph (&optional beg end)
-  "Unfill paragraph or, when active, the region.
-Join all lines in region delimited by BEG and END, if active, while
-respecting any empty lines (so multiple paragraphs are not joined, just
-unfilled).  If no region is active, operate on the paragraph.  The idea
-is to produce the opposite effect of both `fill-paragraph' and
-`fill-region'."
-  (interactive "r")
-  (let ((fill-column most-positive-fixnum))
-    (if (use-region-p)
-        (fill-region beg end)
-      (fill-paragraph))))
-(bind-key "M-Q" #'krisb-unfill-region-or-paragraph)
-
 ;;; Minor modes
 ;;;; Recognize camel case as words
 (global-subword-mode 1)
-
-;;;; Delete-selection-mode
-;; When selecting text, if typing new text, replace the selected text with the
-;; new text
-(delete-selection-mode t)
-
-;;;; Show context menu from right-click
-(when (display-graphic-p)
-  (context-menu-mode 1))
-
-;;;; Avoid collision of mouse with point
-(mouse-avoidance-mode 'jump)
-
-;;;; Visual-line-mode in *Messages* buffer
-(add-hook 'messages-buffer-mode-hook #'visual-line-mode)
-
-;;;; Undo frame deletions
-(undelete-frame-mode 1)
-
-;;;; So-long-mode everywhere
-(global-so-long-mode 1)
-
-;;;; Show a default value only when default is applicable
-(minibuffer-electric-default-mode 1)
 
 ;;;; Display-line-numbers
 ;; Show line numbers on the left fringe
@@ -256,12 +163,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Enable all disabled commands
 (setopt disabled-command-function nil)
 
-;;;; Stretch cursor to the glyph width
-(setopt x-stretch-cursor t)
-
-;;;; Middle-click pastes at point, not at mouse
-(setopt mouse-yank-at-point t)
-
 ;;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk
 (setopt read-process-output-max (* 4 1024 1024)) ; 4mb
@@ -269,26 +170,11 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; https://www.reddit.com/r/emacs/comments/17nl7cw/comment/k7u1ueu/?utm_source=share&utm_medium=web2x&context=3
 (setopt process-adaptive-read-buffering nil)
 
-;;;; Don't do anything with inactive mark
-(setopt mark-even-if-inactive nil)
-
-;;;; Strategy for uniquifying buffer names
-(setopt uniquify-buffer-name-style 'post-forward-angle-brackets)
-
 ;;;; Don't show "obsolete" byte-compile warnings
 (setopt byte-compile-warnings (remove 'obsolete byte-compile-warning-types))
 
 ;;;; Enable `view-mode' when calling `read-only-mode'
 (setopt view-read-only t)
-
-;;;; Behavior for `cycle-spacing-actions'
-;; Read the docstring for an explanation (or try it out!)
-(setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
-
-;;;; Word wrapping
-;; Continue wrapped lines at whitespace rather than breaking in the
-;; middle of a word.
-(setq-default word-wrap t)
 
 ;;;; Repeatedly pop mark with C-u SPC
 (setopt set-mark-command-repeat-pop t)
@@ -299,65 +185,24 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Insert spaces instead of tab characters
 (setq-default indent-tabs-mode nil)
 
-;;;; Trash
-(setq-default trash-directory (no-littering-expand-var-file-name "trash")
-              delete-by-moving-to-trash t)
-
 ;;;; Don't create lock files
 (setopt create-lockfiles nil)
 
 ;;;; Confirm to kill emacs
 (setopt confirm-kill-emacs 'y-or-n-p)
 
-;;;; Don’t warn when advising
-(setopt ad-redefinition-action 'accept)
-
-;;;; Double space delimits end of sentence?
-(defun krisb-sentence-end-double-space-setup ()
-  "Set up the value for `sentence-end-double-space'."
-  (setq-local sentence-end-double-space
-              (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
-                    ((derived-mode-p 'text-mode) nil))))
-
-(dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
-  (add-hook mode #'krisb-sentence-end-double-space-setup))
-
-;;;; Keep the cursor out of the read-only portions of the minibuffer
-(setopt minibuffer-prompt-properties
-        '( read-only t
-           cursor-intangible t
-           face minibuffer-prompt))
-
 ;;;; Ignore case when convenient
 (setopt read-buffer-completion-ignore-case t
         case-fold-search t)
-
-;;;; `indent-for-tab-command' functionality.
-(setopt tab-always-indent 'complete
-        tab-first-completion 'word)
 
 ;;;; Duplicate-dwim binding
 (bind-key "C-x ;" #'duplicate-dwim)
 (setopt duplicate-line-final-position -1
         duplicate-region-final-position 1)
 
-;;;; Rebind case commands
-;; Remap these defaults; they are effectively the same while phasing out the
-;; need the *-region binds
-(bind-keys
- ([remap upcase-word] . upcase-dwim)
- ([remap downcase-word] . downcase-dwim)
- ([remap capitalize-word] . capitalize-dwim))
-
 ;;;; Echo unfinished keystrokes quicker
 ;; Echo keystrokes (of unfinished commands) much quicker
 (setopt echo-keystrokes 0.5)
-
-;;;; Quitting windows to match my intentions more
-(setopt quit-restore-window-no-switch t)
-
-;;;; Killing buffers smartly deletes windows too sometimes
-(setopt kill-buffer-quit-windows t)
 
 ;;;; Don't display warning buffer at the bottom of frame
 (setopt warning-display-at-bottom nil)
@@ -367,9 +212,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 
 ;;;; Don't visually shift text when using `rectangle-mark-mode'
 (setopt rectangle-indicate-zero-width-rectangle nil) ; New in Emacs 31.1
-
-;;;; Recenter upon `next-error'
-(setopt next-error-recenter '(4))
 
 ;;;; Header line text scaling
 (setq-default text-scale-remap-header-line t)
@@ -384,16 +226,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; See for an explanation of these concepts
 ;; https://www.reddit.com/r/emacs/comments/1fxr1ci/comment/lqpf2bz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 (set-display-table-slot standard-display-table 1 ?⏎)
-
-;;;; Prefer UTF-8 file and selection encoding
-(prefer-coding-system 'utf-8)
-;; The clipboard on Windows is often a wider encoding (UTF-16), so leave Emacs
-;; to its own devices there.  Otherwise, encode text into the clipboard into UTF-8
-(unless (eq system-type 'windows-nt)
-  (setopt selection-coding-system 'utf-8))
-
-;;;; Prefer unicode charset
-(set-charset-priority 'unicode)
 
 ;;; krisb-essentials.el ends here
 (provide 'krisb-essentials)

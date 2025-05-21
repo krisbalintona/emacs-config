@@ -155,27 +155,6 @@
   (with-eval-after-load 'embark
     (keymap-set embark-package-map "t" #'try)))
 
-;;;; Scratch.el
-;; Easily create scratch buffers for different modes
-(use-package scratch
-  :hook (scratch-create-buffer . krisb-scratch-buffer-setup)
-  :bind ( :map krisb-open-keymap
-          ("S". scratch))
-  :config
-  (defun krisb-scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly.
- Taken from
- https://protesilaos.com/codelog/2020-08-03-emacs-custom-functions-galore/"
-    (let* ((mode (format "%s" major-mode))
-           (string (concat "Scratch buffer for: " mode "\n\n")))
-      (when scratch-buffer
-        (save-excursion
-          (insert string)
-          (goto-char (point-min))
-          (comment-region (point-at-bol) (point-at-eol)))
-        (forward-line 2))
-      (rename-buffer (concat "*Scratch for " mode "*") t))))
-
 ;;;; Dash
 ;; Popular library for list manipulation
 (use-package dash

@@ -66,11 +66,6 @@
 
 ;;; Ibuffer
 (use-package ibuffer
-  :bind (([remap list-buffers] . ibuffer))
-  :bind* ( :map ibuffer-mode-map
-           ("SPC" . scroll-up-command)
-           ("DEL" . scroll-down-command)
-           ("* d" . krisb-ibuffer-mark-displayed-buffers))
   :custom
   (ibuffer-save-with-custom nil)
   (ibuffer-default-sorting-mode 'recency)
