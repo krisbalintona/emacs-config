@@ -962,14 +962,18 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 ;; TODO 2025-05-20: Document that this package was the result of the
 ;; trial-and-error across many years and different packages to get
 ;; better mouse scrolling in Emacs.
+;; TODO 2025-05-20: Document that a fancy mode line can cause
+;; noticable dips in performance with this package:
+;; https://github.com/jdtsmith/ultra-scroll?tab=readme-ov-file#take-aways
 ;; Package that makes Emacs mouse scrolling buttery smooth
 (use-package ultra-scroll
   :ensure (:repo "https://github.com/jdtsmith/ultra-scroll")
   :demand t
-  :init
-  (setq scroll-conservatively 101       ; As instructed by the README
-        scroll-margin 0)
   :config
+  ;; As instructed by the README: `scroll-margin' > 0 not yet
+  ;; supported
+  (setopt scroll-conservatively 101
+          scroll-margin 0)
   (ultra-scroll-mode 1))
 
 ;;;; Marginalia
