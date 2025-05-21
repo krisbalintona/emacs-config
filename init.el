@@ -11,18 +11,20 @@
 ;;;; Package.el
 ;; TODO 2025-05-20: Because I use elpaca, "archive" my package.el
 ;; configuration somewhere.
+;; TODO 2025-05-21: I keep this here and changed so that commands like
+;; `describe-package' can be used on non-ELPA archives.
 ;; Initialize package resources
-;; (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-;;                            ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-;;                            ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-;;                            ("melpa" . "https://melpa.org/packages/"))
-;;         package-archive-priorities '(("gnu-elpa" . 4)
-;;                                      ("nongnu" . 3)
-;;                                      ("gnu-elpa-devel" . 2)
-;; 				     ("melpa" . 1))
-;;         package-install-upgrade-built-in t
+(setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                           ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ("melpa" . "https://melpa.org/packages/"))
+        package-archive-priorities '(("gnu-elpa" . 4)
+                                     ("nongnu" . 3)
+                                     ("gnu-elpa-devel" . 2)
+				     ("melpa" . 1))
+        package-install-upgrade-built-in t
 
-;;         load-prefer-newer t) ; Do not load outdated byte code files
+        load-prefer-newer t) ; Do not load outdated byte code files
 ;; (package-initialize)
 
 ;;;; Elpaca
