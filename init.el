@@ -7,7 +7,6 @@
                     (expand-file-name "lisp" user-emacs-directory)))
   (add-to-list 'load-path path))
 
-
 ;;;; Package.el
 ;; TODO 2025-05-20: Because I use elpaca, "archive" my package.el
 ;; configuration somewhere.
@@ -161,8 +160,8 @@
   (no-littering-theme-backups))
 
 ;;;; Set and load custom file
-(setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-(add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
+(setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
+(load custom-file 'noerror)
 
 ;;;; Fontaine 
 ;; Define then apply face presets
