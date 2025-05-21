@@ -64,20 +64,6 @@ Also disables its dark counterpart."
   (disable-theme krisb-themes-ext-light)
   (load-theme krisb-themes-ext-dark t))
 
-(defun krisb-theme-ext-enable-theme-time-of-day (day-start night-start)
-  "Enables the theme based on time of day.
-If daytime, call `krisb-themes-ext-proper-load-theme-light'. If
-nighttime, call `krisb-themes-ext-proper-load-theme-dark'.
-
-Nighttime begins at NIGHT-START hour and daytime begins at DAY-START
-hour."
-  (interactive (list 8 19))
-  (let ((hour (string-to-number (format-time-string "%H"))))
-    ;; Dark theme between NIGHT-START and DAY-START
-    (if (or (<= night-start hour) (<= hour day-start))
-        (krisb-themes-ext-proper-load-theme-dark)
-      (krisb-themes-ext-proper-load-theme-light))))
-
 ;;;; Command
 (defun krisb-themes-ext-theme-switcher ()
   "Switch between the light and dark themes."
@@ -88,24 +74,6 @@ hour."
            (krisb-themes-ext-proper-load-theme-dark))
           ((equal krisb-themes-ext-dark current)
            (krisb-themes-ext-proper-load-theme-light)))))
-
-;;; Window transparency toggle
-(add-to-list 'default-frame-alist '(alpha-background . 100))
-(defun krisb-themes-ext-toggle-window-transparency (&optional arg)
-  "Toggle the value of `alpha-background'.
-
-Toggles between 100 and 72 by default.  Can choose which value to change
-to if called with ARG, or any prefix argument."
-  (interactive "P")
-  (let ((transparency (pcase arg
-                        ((pred numberp) arg)
-                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
-                        (_
-                         (pcase (frame-parameter nil 'alpha-background)
-                           (72 100)
-                           (100 72)
-                           (t 100))))))
-    (set-frame-parameter nil 'alpha-background transparency)))
 
 ;;; Provide
 (provide 'krisb-themes-ext)

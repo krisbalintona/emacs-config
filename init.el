@@ -1561,3 +1561,21 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 
 ;; Message for total init time after startup
 (add-hook 'elpaca-after-init-hook (lambda () (message "Total startup time: %s" (emacs-init-time))))
+
+;; Frame backaground transparency toggle
+(add-to-list 'default-frame-alist '(alpha-background . 100))
+(defun krisb-toggle-window-transparency (&optional arg)
+  "Toggle the value of `alpha-background'.
+Toggles between 100 and 72 by default.  Can choose which value to change
+to if called with ARG, or any prefix argument."
+  (interactive "P")
+  (let ((transparency (pcase arg
+                        ((pred numberp) arg)
+                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
+                        (_
+                         (pcase (frame-parameter nil 'alpha-background)
+                           (72 100)
+                           (100 72)
+                           (t 100))))))
+    (set-frame-parameter nil 'alpha-background transparency)))
+(bind-key "<f9>" #'krisb-toggle-window-transparency)
