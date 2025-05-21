@@ -791,9 +791,10 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :config
   (add-to-list 'embark-keymap-alist '(raise-sexp . embark-symbol-map)))
 
+;;;; Embark-consult
+;; TODO 2025-05-20: Revisit this.  Do I need it?
 (use-package embark-consult
-  :ensure nil
-  :after (embark consult)
+  :ensure t
   :hook
   (embark-collect-mode-hook . consult-preview-at-point-mode))
 
