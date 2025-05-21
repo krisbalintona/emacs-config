@@ -104,6 +104,8 @@
       (package-install 'use-package)
     (elpaca (use-package :wait t))))
 
+;; TODO 2025-05-20: Document `use-package-lint' in literate config
+
 (require 'use-package)
 
 ;; TODO 2025-05-20: Ensure that my decision below is well-documented
