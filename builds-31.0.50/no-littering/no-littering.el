@@ -1,0 +1,1 @@
+/home/krisbalintona/.emacs.d/elpaca/repos/no-littering/no-littering.el

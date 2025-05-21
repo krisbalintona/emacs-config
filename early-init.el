@@ -1,7 +1,9 @@
 ;; -*- lexical-binding: t; -*-
 
+;; REVIEW 2025-05-20: Review the contents of this file and relocate or
+;; remove when appropriate.
+
 ;;; Native-compilations settings
-;; Basic settings
 (setq native-comp-jit-compilation t
       native-comp-async-report-warnings-errors 'silent ; Show in *Warnings*  buffer but don't show buffer
       native-comp-async-jobs-number
@@ -91,3 +93,10 @@
       inhibit-x-resources t     ; REVIEW 2024-10-03: Not sure the precise effect
       inhibit-startup-echo-area-message user-login-name ; Read the docstring
       inhibit-startup-buffer-menu t)
+
+;; TODO 2025-05-19: In literate config, optionally tangle this
+;; depending on whether I am using package.el or elpaca.
+;;; Disable package.el (for elpaca)
+;; Also make sure that there are e.g. no calls to
+;; `package-activate-all' elsewhere in my configuration
+(setq package-enable-at-startup nil)
