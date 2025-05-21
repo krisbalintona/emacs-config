@@ -270,6 +270,23 @@
   :config
   (exec-path-from-shell-initialize))
 
+;;;; Enable theme based on time of day
+(defun krisb-enable-theme-time-of-day (&optional day-start night-start)
+  "Enables the theme based on time of day.
+Night time begins at NIGHT-START hour and daytime begins at DAY-START
+hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
+default to 8."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes)
+  (let ((hour (string-to-number (format-time-string "%H")))
+	(day-start (or day-start 8))
+	(night-start (or night-start 19))
+	(light-theme 'doric-marble)
+	(dark-theme 'doric-dark))
+    ;; Dark theme between NIGHT-START and DAY-START
+    (load-theme (if (or (<= night-start hour) (<= hour day-start))
+		    dark-theme light-theme))))
+
 ;;;; Doric-themes
 ;; Minimalistic but visible and effective themes.  (Cf. modus-themes
 ;; and standard-themes.)
@@ -282,11 +299,13 @@
   :ensure (:repo "https://github.com/protesilaos/doric-themes")
   :demand t
   :bind
-  (("<f5>" . doric-themes-toggle)
-   ("C-<f5>" . doric-themes-select)
-   ("M-<f5>" . doric-themes-rotate))
+  (("<f8>" . doric-themes-toggle)
+   ("C-<f8>" . doric-themes-select)
+   ("M-<f8>" . doric-themes-rotate))
+  :custom
+  (doric-themes-to-toggle '(doric-marble doric-dark))
   :config
-  (doric-themes-select 'doric-dark))
+  (krisb-enable-theme-time-of-day))
 
 ;;;; Electric
 ;; Convenient DWIM, out-of-the-way while you edit
