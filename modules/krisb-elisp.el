@@ -155,12 +155,6 @@
   (with-eval-after-load 'embark
     (keymap-set embark-package-map "t" #'try)))
 
-;;;; Dash
-;; Popular library for list manipulation
-(use-package dash
-  :config
-  (global-dash-fontify-mode 1))
-
 ;;; Other
 ;;;; Suggest
 ;; Query `suggest' for elisp coding suggestions!

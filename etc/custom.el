@@ -6,7 +6,10 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(arei bui edit-indirect ef-themes el-patch fontaine geiser-guile jinx
-	  magit-popup no-littering on tablist)))
+	  magit-popup no-littering on tablist))
+ '(safe-local-variable-directories
+   '("/home/krisbalintona/nix-config/"
+     "/home/krisbalintona/.config/guix/current/share/guile/site/3.0/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

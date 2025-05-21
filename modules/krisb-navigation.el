@@ -4,18 +4,6 @@
 
 ;;;; Intra-file
 
-;;;;; Imenu
-(use-package imenu
-  :ensure nil
-  :custom
-  (org-imenu-depth 7)                   ; Show more than just 2 levels...
-  (imenu-auto-rescan t)
-  (use-package-enable-imenu-support t)
-  (imenu-flatten 'group)
-  :config
-  (with-eval-after-load 'pulsar
-    (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
-
 ;;;;; Occur
 (use-package replace
   :ensure nil
@@ -212,50 +200,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
     (krisb-avy-action-copy-whole-line pt)
     (save-excursion (yank) t)))
 
-
-;;;;; Smart-mark
-;; When pressing C-g while marking a region, move point to the location the
-;; marking command was invoked from.
-(use-package smart-mark
-  :config
-  (smart-mark-mode 1))
-
 ;;;; Inter-file
-
-;;;;; Grep
-(use-package grep
-  :custom
-  (grep-save-buffers 'ask)
-  (grep-use-headings t)
-  :config
-  (with-eval-after-load 'krisb-reveal
-    (defun kris-reveal-grep-find-information ()
-      "Return information required by `krisb-reveal-fold-commands'.
-See the docstring of `krisb-reveal-fold-commands'."
-      (save-window-excursion
-        (save-excursion
-          (compile-goto-error)
-          (cons (point) (current-buffer)))))
-    (dolist (command '(next-error-no-select
-                       previous-error-no-select
-                       compilation-display-error))
-      (add-to-list 'krisb-reveal-fold-commands
-                   (list :command command
-                         :location #'kris-reveal-grep-find-information
-                         :predicate (lambda () (eq major-mode 'grep-mode)))))))
-
-;;;;; Recentf
-;; Enable logging of recent files
-(use-package recentf
-  :demand t
-  :ensure nil
-  :bind ( :map krisb-file-keymap
-          ("r" . recentf-open-files))
-  :custom
-  (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15)
-  :config
-  (recentf-mode 1))
 
 ;;; Provide
 (provide 'krisb-navigation)

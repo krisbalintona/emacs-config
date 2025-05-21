@@ -136,6 +136,10 @@
   (elpaca (elpaca-use-package :wait t)
     (elpaca-use-package-mode 1)))
 
+;; Imenu integration: create a "packages" group that searches for
+;; use-package declarations
+(setopt use-package-enable-imenu-support t)
+
 ;;;; No-littering
 ;; Set better default package paths
 (use-package no-littering
@@ -641,8 +645,8 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 
 ;; More convenient path modification commands
 (use-package vertico-directory
-  :requires vertico
   :ensure nil
+  :after vertico
   :hook
   (rfn-eshadow-update-overlay-hook . vertico-directory-tidy)
   :bind
@@ -653,8 +657,10 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 
 ;; On-demand change the type of UI
 (use-package vertico-multiform
-  :requires vertico
   :ensure nil
+  :after vertico
+  :hook
+  (vertico-mode-hook . vertico-multiform-mode)
   :custom
   (vertico-multiform-categories
    '((buffer (vertico-sort-function . nil))
@@ -674,9 +680,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
      ;; (,(rx bol (or (literal "org-node-") (literal "org-roam-")) "-find" eol)
      ;;  (completion-styles . (orderless ,(if (featurep 'hotfuzz) 'hotfuzz 'flex))) ; FIXME 2025-05-08: But what if hotfuzz is loaded after vertico-multiform?
      ;;  (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal)))
-     ))
-  :config
-  (vertico-multiform-mode 1))
+     )))
 
 ;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more
@@ -774,6 +778,49 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :after (embark consult)
   :hook
   (embark-collect-mode-hook . consult-preview-at-point-mode))
+
+;;;; Recentf
+;; Enable logging of recent files
+(use-package recentf
+  :ensure nil
+  :demand t
+  ;; TODO 2025-05-20: Revisit this.
+  ;; :bind
+  ;; ( :map krisb-file-keymap
+  ;;   ("r" . recentf-open-files))
+  :custom
+  (recentf-max-saved-items 1000)
+  (recentf-max-menu-items 15)
+  :config
+  (recentf-mode 1))
+
+;;;; Grep
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;;
+;; - `grep-save-buffers'
+(use-package grep
+  :ensure nil
+  :custom
+  (grep-use-headings t)
+  ;; :config
+  ;; TODO 2025-05-20: Revisit this.
+  ;; (with-eval-after-load 'krisb-reveal
+  ;;     (defun kris-reveal-grep-find-information ()
+  ;;       "Return information required by `krisb-reveal-fold-commands'.
+  ;; See the docstring of `krisb-reveal-fold-commands'."
+  ;;       (save-window-excursion
+  ;;         (save-excursion
+  ;;           (compile-goto-error)
+  ;;           (cons (point) (current-buffer)))))
+  ;;     (dolist (command '(next-error-no-select
+  ;;                        previous-error-no-select
+  ;;                        compilation-display-error))
+  ;;       (add-to-list 'krisb-reveal-fold-commands
+  ;;                    (list :command command
+  ;;                          :location #'kris-reveal-grep-find-information
+  ;;                          :predicate (lambda () (eq major-mode 'grep-mode))))))
+  )
 
 ;;; Four steps below
 
@@ -1003,7 +1050,6 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ;; use this fork of eat.
   :ensure ( :repo "https://codeberg.org/vifon/emacs-eat.git"
             :branch "fish-integration")
-  :defer t
   :hook
   (fontaine-set-preset-hook . krisb-eat--setup)
   (eshell-load-hook . eat-eshell-mode)
@@ -1066,6 +1112,17 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
           (comment-region (point-at-bol) (point-at-eol)))
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
+
+;;;; Imenu
+(use-package imenu
+  :ensure nil
+  :custom
+  (org-imenu-depth 7)		     ; Show more than just 2 levels...
+  (imenu-auto-rescan t)
+  (imenu-flatten 'group)
+  :config
+  (with-eval-after-load 'pulsar
+    (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
 
 ;;; Fluff
 
@@ -1253,6 +1310,72 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
     (setq-local completion-preview-minimum-symbol-length 1)
     (completion-preview-mode 1)))
 
+;;;; Dash
+;; Popular library for list manipulation
+(use-package dash
+  :ensure t
+  :defer 10
+  :config
+  (global-dash-fontify-mode 1)
+  
+  (with-eval-after-load 'info-look
+    (dash-register-info-lookup)))
+
+;;;; Smart-mark
+;; When pressing C-g while marking a region, move point to the
+;; location the marking command was invoked from.
+(use-package smart-mark
+  :ensure t
+  :demand t
+  :config
+  (smart-mark-mode 1))
+
+;;;; Man
+(use-package man
+  :ensure nil
+  :defer t
+  :custom
+  (Man-notify-method 'aggressive)) ; Instead of `display-buffer-alist', use this
+
+;;;; Tempel
+;; Like tempel.el but updated to modern standards.
+(use-package tempel
+  :ensure t
+  :hook
+  ((prog-mode-hook text-mode-hook) . krisb-tempel-setup-capf)
+  :bind
+  ("M-*" . tempel-insert)
+  :custom
+  ;; Applies to `tempel-expand' and `tempel-complete'.  We prefer
+  ;; non-pair characters to avoid inserting an extra pair from
+  ;; `electric-pair-mode'.  It should also ideally be an unused (or at
+  ;; least very rare) comment delimiter to avoid TAB indenting the
+  ;; line when `tab-always-indent' is \\='complete
+  (tempel-trigger-prefix "=")
+  :init
+  ;; Element that expands other templates by name.  E.g., (i header)
+  ;; expands the template named "header."
+  (defun krisb-tempel-include (elt)
+    (when (eq (car-safe elt) 'include)
+      (if-let (template (alist-get (cadr elt) (tempel--templates)))
+          (cons 'l template)
+        (message "Template %s not found" (cadr elt))
+        nil)))
+  :config
+  (add-to-list 'tempel-user-elements #'krisb-tempel-include)
+
+  ;; Set up with `completion-at-point-functions'
+  (defun krisb-tempel-setup-capf ()
+    "Add `tempel-expand' to the beginning of local `completion-at-point-functions'.
+We also add `tempel-expand' to the beginning of the global value for
+`completion-at-point-functions'.  The difference here is that we want
+`tempel-expand' to be the first `completion-at-point' function for the
+buffers in which this function is run."
+    (add-hook 'completion-at-point-functions 'tempel-expand -90 t))
+  ;; Place `tempel-complete' at the beginning of the fallback (global
+  ;; value) `completion-at-point-functions'
+  (add-hook 'completion-at-point-functions #'tempel-complete -90))
+
 ;;; Uncategorized
 
 ;; Bind `restart-emacs'
@@ -1416,3 +1539,6 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;; Trash
 (setopt trash-directory (no-littering-expand-var-file-name "trash")
         delete-by-moving-to-trash t)
+
+;; Message for total init time after startup
+(add-hook 'elpaca-after-init-hook (lambda () (message "Total startup time: %s" (emacs-init-time))))
