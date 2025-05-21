@@ -889,9 +889,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
    ("G" . consult-grep)
    ("r" . consult-ripgrep)
    ("f" . consult-find)
-   ("F" . consult-locate)
-   :map org-mode-map
-   ([remap consult-outline] . consult-org-heading))
+   ("F" . consult-locate))
   :custom
   ;; TODO 2025-05-20: Revisit this.
   ;; (consult-preview-key "C-M-;")
@@ -914,6 +912,9 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
    --smart-case --no-heading --with-filename --line-number --search-zip"
     ;; Additional args
     " --line-number --hidden"))
+  :init
+  (with-eval-after-load 'org
+    (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
   :config
   ;; TODO 2025-05-20: Revisit this.
   ;; (require 'krisb-consult-ext)
