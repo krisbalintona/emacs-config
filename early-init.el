@@ -9,14 +9,15 @@
       native-comp-async-jobs-number
       (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1)) ; Use as many cores as possible
 
-;; Make sure `eln-cache' is set. Sometimes gets set to .emacs.d directory,
-;; meaning chemacs2 gets in the way.
-(unless (version-list-<
-         (version-to-list emacs-version)
-         '(28 0 1 0))
-  (when (boundp 'native-comp-eln-load-path)
-    (add-to-list 'native-comp-eln-load-path
-                 (expand-file-name "eln-cache/" user-emacs-directory))))
+;; Redirect the .eln cache to a directory that adheres to
+;; no-littering's convention of placing data files in the var
+;; subdirectory
+(when (and (fboundp 'startup-redirect-eln-cache)
+           (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+  (startup-redirect-eln-cache
+   (convert-standard-filename
+    (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 
 ;; NOTE 2024-09-16: From Doom Emacs.
 ;; PERF: A second, case-insensitive pass over `auto-mode-alist' is time wasted.

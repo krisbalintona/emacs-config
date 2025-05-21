@@ -17,20 +17,6 @@
   (comment-multi-line t)
   (comment-style 'indent))
 
-;;;; Electric
-(use-package electric
-  :ensure nil
-  :custom
-  (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
-
-  (electric-quote-comment nil)
-  (electric-quote-string nil)
-  (electric-quote-context-sensitive t)
-  (electric-quote-replace-double t)
-  (electric-quote-inhibit-functions nil)
-  :config
-  (electric-pair-mode 1))
-
 ;;; Visual organization
 
 ;;;; Form-feed

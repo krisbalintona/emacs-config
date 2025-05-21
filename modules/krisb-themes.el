@@ -167,16 +167,5 @@
 
   (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
 
-;;; Pulsar
-;; Alternative to `pulse.el'
-(use-package pulsar
-  :custom
-  (pulsar-pulse t)
-  (pulsar-face 'pulsar-red)
-  (pulsar-delay 0.05)
-  (pulsar-iterations 5)
-  :config
-  (pulsar-global-mode 1))
-
 ;;; Provide
 (provide 'krisb-themes)

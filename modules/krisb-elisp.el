@@ -44,39 +44,11 @@
         highlight-parentheses-background-colors nil)))))
 
 ;;; Documentation
-;;;; Help
-(use-package help
-  :ensure nil
-  :bind ("C-h C-k" . describe-keymap)
-  :custom
-  (help-window-select t)
-  (help-window-keep-selected t)
-
-  (help-enable-variable-value-editing t)
-  (help-clean-buttons t)
-  (help-enable-symbol-autoload t)
-
-  (describe-bindings-outline t)
-  (describe-bindings-show-prefix-commands t)
-
-  (help-at-pt-display-when-idle t)
-  :config
-  (require 'shortdoc)
-  (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function))
 
 ;;;; Apropos
 (use-package apropos
   :ensure nil
   :bind ("C-h u" . apropos-user-option))
-
-;;;; Elisp-demos
-;; Add example code snippets to some of the help windows
-(use-package elisp-demos
-  :config
-  (add-hook 'help-fns-describe-function-functions #'elisp-demos-advice-describe-function-1)
-
-  (with-eval-after-load 'helpful
-    (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 
 ;;;; Find-funtion-mode
 ;; Binds useful commands for jumping to variables, functions, and libraries

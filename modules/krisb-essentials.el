@@ -212,9 +212,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;;;; Recognize camel case as words
 (global-subword-mode 1)
 
-;;;; Repeat-mode
-(repeat-mode 1)
-
 ;;;; Delete-selection-mode
 ;; When selecting text, if typing new text, replace the selected text with the
 ;; new text
@@ -330,9 +327,6 @@ is to produce the opposite effect of both `fill-paragraph' and
         '( read-only t
            cursor-intangible t
            face minibuffer-prompt))
-
-;;;; Allow minibuffer commands in minibuffer
-(setopt enable-recursive-minibuffers t)
 
 ;;;; Ignore case when convenient
 (setopt read-buffer-completion-ignore-case t

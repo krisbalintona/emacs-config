@@ -1,74 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Minibuffer.el
-(use-package minibuffer
-  :ensure nil
-  :hook (after-init . krisb-completion-styles-setup)
-  :custom
-  (completion-cycle-threshold nil)
-  (completion-lazy-hilit t)             ; Lazy highlighting; added Emacs 30.1
-  (completions-max-height 20)
-  (completion-ignore-case t)
-  (completion-flex-nospace t)
-  (minibuffer-default-prompt-format " [%s]") ; Format of portion for default value
-
-  ;; Completions buffer
-  (completion-auto-help 'visible)
-  (completion-auto-select 'second-tab)
-  (completions-format 'one-column)
-  (completions-detailed t) ; Show more details in completion minibuffer (inspired by `marginalia')
-  (completions-group t)    ; Groups; Emacs 28
-  (completions-sort 'historical)        ; Emacs 30.1
-
-  ;; Category settings. A non-exhaustve list of known completion categories:
-  ;; - `bookmark'
-  ;; - `buffer'
-  ;; - `charset'
-  ;; - `coding-system'
-  ;; - `color'
-  ;; - `command' (e.g. `M-x')
-  ;; - `customize-group'
-  ;; - `environment-variable'
-  ;; - `expression'
-  ;; - `face'
-  ;; - `file'
-  ;; - `function' (the `describe-function' command bound to `C-h f')
-  ;; - `info-menu'
-  ;; - `imenu'
-  ;; - `input-method'
-  ;; - `kill-ring'
-  ;; - `library'
-  ;; - `minor-mode'
-  ;; - `multi-category'
-  ;; - `package'
-  ;; - `project-file'
-  ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
-  ;; - `theme'
-  ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
-  ;; - `variable' (the `describe-variable' command bound to `C-h v')
-  ;; - `consult-grep'
-  ;; - `consult-isearch'
-  ;; - `consult-kmacro'
-  ;; - `consult-location'
-  ;; - `embark-keybinding'
-  (completion-category-defaults
-   '((calendar-month (display-sort-function . identity))))
-  (completion-category-overrides
-   '((file (styles . (basic partial-completion flex))))) ; Include `partial-completion' to enable wildcards and partial paths.
-  :config
-  (defun krisb-completion-styles-setup ()
-    "Set up `completion-styes'."
-    ;; I do this manually last because the final styles I want depend on the
-    ;; packages I want enabled, and so setting this within each use-package,
-    ;; independently of other use-packages, means I have to make sure various
-    ;; packages are loaded after other ones so my `completion-styles' setting
-    ;; isn't overridden in an undesirable way.  Instead, I opt to just set it
-    ;; finally after all those packages are set.
-    (setopt completion-styles (list (if (featurep 'orderless)
-                                        'orderless 'basic)
-                                    (if (featurep 'hotfuzz)
-                                        'hotfuzz 'flex)))))
-
 ;;; Completion-preview
 (use-package completion-preview
   :ensure nil
@@ -119,73 +50,7 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
     (setq-local completion-preview-minimum-symbol-length 1)
     (completion-preview-mode 1)))
 
-;;; Crm
-(use-package crm
-  :ensure nil
-  :config
-  ;; Add prompt indicator to `completing-read-multiple'. We display
-  ;; [CRM<separator>], e.g., [CRM,] if the separator is a comma. Taken from
-  ;; https://github.com/minad/vertico
-  (defun krisb-crm-indicator (args)
-    (cons (format "[completing-read-multiple: %s]  %s"
-                  (propertize
-                   (replace-regexp-in-string
-                    "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                    crm-separator)
-                   'face 'error)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'krisb-crm-indicator))
-
 ;;; Vertico
-;;;; Itself
-(use-package vertico
-  :pin gnu-elpa-devel
-  :demand t
-  :bind (("C-c v r" . vertico-repeat)
-         ("C-c v s" . vertico-suspend))
-  :hook (minibuffer-setup . vertico-repeat-save)
-  :custom
-  (vertico-count 13)
-  (vertico-resize 'grow-only)
-  (vertico-cycle nil)
-  :config
-  (vertico-mode 1)
-  (require 'krisb-vertico))
-
-;;;; Vertico-directory
-;; More convenient path modification commands
-(use-package vertico-directory
-  :requires vertico
-  :ensure nil
-  :bind ( :map vertico-map
-          ("RET" . vertico-directory-enter)
-          ("DEL" . vertico-directory-delete-char)
-          ("M-DEL" . vertico-directory-delete-word))
-  ;; Tidy shadowed file names
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
-
-;;;; Vertico-multiform
-(use-package vertico-multiform
-  :requires vertico
-  :ensure nil
-  :custom
-  (vertico-multiform-categories
-   '((buffer (vertico-sort-function . nil))
-     (color (vertico-sort-function . vertico-sort-history-length-alpha))
-     (jinx grid
-           (vertico-grid-annotate . 20)
-           (vertico-grid-max-columns . 12)
-           (vertico-grid-separator
-            . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
-  (vertico-multiform-commands
-   `((pdf-view-goto-label (vertico-sort-function . nil))
-     (".+-history" (vertico-sort-function . nil))
-     (,(rx bol (or (literal "org-node-") (literal "org-roam-")) "-find" eol)
-      (completion-styles . (orderless ,(if (featurep 'hotfuzz) 'hotfuzz 'flex))) ; FIXME 2025-05-08: But what if hotfuzz is loaded after vertico-multiform?
-      (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal)))))
-  :config
-  (vertico-multiform-mode 1))
 
 ;;;; Vertico-buffer
 (use-package vertico-buffer
@@ -219,58 +84,6 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
   (vertico-prescient-mode 1))
 
 ;;; Corfu
-;; Faster, minimal, and more lightweight autocomplete that is more faithful to
-;; the Emacs infrastructure
-;;;;; Itself
-(use-package corfu
-  :demand t
-  :bind (("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
-         :map corfu-map
-         ("M-d" . corfu-info-documentation)
-         ("M-m" . krisb-corfu-move-to-minibuffer))
-  :custom
-  (corfu-auto nil)
-  (corfu-preselect 'valid)
-  (corfu-preview-current t)
-  (corfu-on-exact-match 'insert)
-
-  (corfu-min-width 80)
-  (corfu-max-width corfu-min-width)     ; Always have the same width
-  (corfu-count 14)
-  (corfu-scroll-margin 4)
-  (corfu-cycle nil)
-
-  (corfu-quit-at-boundary nil)
-  (corfu-separator ?\s)            ; Use space
-  (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
-  :custom-face
-  ;; Always use a fixed-pitched font for corfu; variable pitch fonts (which will
-  ;; be adopted in a variable pitch buffer) have inconsistent spacing
-  (corfu-default ((t (:inherit 'default))))
-  :config
-  (global-corfu-mode 1)
-
-  ;; Enable corfu in minibuffer if `vertico-mode' is disabled.  From
-  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
-  (defun krisb-corfu-enable-in-minibuffer-conditionally ()
-    "Enable Corfu in the minibuffer if vertico is not active."
-    (unless (bound-and-true-p vertico-mode)
-      (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
-      (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally 1)
-
-  ;; Transfer corfu completion to the minibuffer
-  (defun krisb-corfu-move-to-minibuffer ()
-    "Transfer corfu completion to the minibuffer.
-Taken from
-https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-minibuffer."
-    (interactive)
-    (pcase completion-in-region--data
-      (`(,beg ,end ,table ,pred ,extras)
-       (let ((completion-extra-properties extras)
-             completion-cycle-threshold completion-cycling)
-         (consult-completion-in-region beg end table pred)))))
-  (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer))
 
 ;;;;; Corfu-history
 ;; Save the history across Emacs sessions
@@ -537,15 +350,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   ;; :hook ((log-edit-mode eval-expression-minibuffer-setup) . krisb-auto-completion-mode)
   )
 
-;;; Marginalia
-;; Enable richer annotations in minibuffer (companion package of consult.el)
-(use-package marginalia
-  :custom
-  (marginalia-max-relative-age 0)       ; Always use absolute age
-  (marginalia-align 'left)              ; Causes most alignment in my experience
-  :config
-  (marginalia-mode 1))
-
 ;;; Nerd-icons-completion
 ;; Use nerd-icons in completing-read interfaces. An alternative would be
 ;; all-the-icons-completion which uses all-the-icons -- I prefer nerd-icons.
@@ -578,29 +382,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (prescient-frequency-threshold 0.05)
   :config
   (prescient-persist-mode 1))
-
-;;; Orderless
-;; Alternative and powerful completion style (i.e. filters candidates)
-(use-package orderless
-  :custom
-  (orderless-matching-styles
-   '(orderless-regexp
-     orderless-prefixes
-     orderless-initialism
-     ;; orderless-literal
-     ;; orderless-flex
-     ;; orderless-without-literal          ; Recommended for dispatches instead
-     ))
-  (orderless-component-separator 'orderless-escapable-split-on-space)
-  :config
-  ;; Eglot forces `flex' by default.
-  (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex)))))
-
-;;; Hotfuzz
-;; Faster version of the flex completion style.  Hotfuzz is a much faster
-;; version of the built-in flex style.  See
-;; https://github.com/axelf4/emacs-completion-bench#readme
-(use-package hotfuzz)
 
 ;;; Provide
 (provide 'krisb-completion)
