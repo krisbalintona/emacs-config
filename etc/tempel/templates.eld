@@ -5,7 +5,7 @@ fundamental-mode
 
 (t (p (if (featurep 'hl-todo)
           (split-string (key-description nil hl-todo-keyword-faces))
-        ("TODO" "FIXME" "NOTE"))
+        '("TODO" "FIXME" "NOTE" "REVIEW"))
       possible-todo-keywords noinsert)
    (completing-read "Keyword: " possible-todo-keywords) (just-one-space))
 (d (format-time-string "%F"))
