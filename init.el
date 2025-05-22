@@ -316,6 +316,11 @@ default to 8."
 ;; config:
 ;; 
 ;; - `electric-quote-inhibit-functions'
+;; - `electric-pair-delete-adjacent-pairs'
+;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
+;; locally.  See `lisp-mode-variables'.
+;; - `electric-pair-skip-whitespace'
+;; - `electric-pair-open-newline-between-pairs'
 (use-package electric
   :ensure nil
   :demand t
