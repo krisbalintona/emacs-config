@@ -448,9 +448,40 @@ default to 8."
 ;; See also `desktop-locals-to-save'
 (use-package desktop
   :ensure nil
-  :demand t
   :hook
   ((text-mode-hook prog-mode-hook conf-mode-hook) . krisb-desktop--save-narrowing)
+  ;; 2025-05-22: This is a workaround for elpaca.  Look at the bottom
+  ;; of desktop.el’s file: we must avoid enabling `desktop-save-mode’
+  ;; immediately when desktop is loaded because the desktop.el file
+  ;; automatically adds to `after-init-hook’ to call `desktop-read’ if
+  ;; `desktop-save-mode’ is enabled. This is problematic because, on
+  ;; account of elpaca’s asynchronicity, some packages will end up not
+  ;; being ready by the time desktop loads a buffer relevant to its
+  ;; behavior.  For example, outli is not enabled in buffers it should
+  ;; be because desktop opened them before outli could load.  Another
+  ;; example is org: if desktop loads an org buffer before the org
+  ;; declaration for elpaca, the built-in version is loaded before the
+  ;; use-package declarataion for org, meaning that elpaca will
+  ;; recognize the package as already available and therefore not
+  ;; install and use a more upgraded version.
+  ;;
+  ;; So we should avoid having desktop open buffers before elpaca is
+  ;; done initializing the packages.  One solution would be to just
+  ;; enable `desktop-save-hook’ after elpaca initializes, then call
+  ;; `desktop-read’ manually.  However, this would ignore the
+  ;; --no-desktop flag called with Emacs.  Instead, we opt to enabl
+  ;; `desktop-save-mode’ then add the very hook that desktop adds to
+  ;; `after-init-hook’ `elpaca-after-init-hook’.
+  (elpaca-after-init-hook
+   . (lambda ()
+       (desktop-save-mode 1)
+       (let ((key "--no-desktop"))
+	 (when (member key command-line-args)
+           (setq command-line-args (delete key command-line-args))
+           (desktop-save-mode 0)))
+       (when desktop-save-mode
+	 (desktop-read)
+	 (setq inhibit-startup-screen t))))
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-save 'ask-if-new)
@@ -470,8 +501,6 @@ default to 8."
   (desktop-restore-frames t)
   (desktop-restore-in-current-display nil)
   :config
-  (desktop-save-mode 1)
-
   ;; Also save these variable values
   (add-to-list 'desktop-globals-to-save '(kill-ring . 10000))
 
