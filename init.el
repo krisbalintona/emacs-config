@@ -1169,11 +1169,10 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   (eshell-load-hook . eat-eshell-mode)
   (eshell-load-hook . eat-eshell-visual-command-mode)
   :bind
-  ;; TODO 2025-05-20: Revisit this.
-  ;; ( :map krisb-open-keymap
-  ;;   ("s" . eat)
-  ;;   :map project-prefix-map
-  ;;   ("s" . eat-project))
+  ( :map krisb-open-keymap
+    ("s" . eat)
+    :map project-prefix-map
+    ("s" . eat-project))
   :config
   ;; 2025-04-05: This resolves the continuation lines issue in EAT
   ;; terminal (including eat-shell in
