@@ -272,9 +272,12 @@
   :config
   (exec-path-from-shell-initialize))
 
-;;;; Enable theme based on time of day
-(defun krisb-enable-theme-time-of-day (&optional day-start night-start)
-  "Enables the theme based on time of day.
+;;;; Theming
+;;;;; Enable theme based on time of day
+(defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
+  "Enables LIGHT-THEME or DARK-THEME based on time of day.
+LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
+
 Night time begins at NIGHT-START hour and daytime begins at DAY-START
 hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
 default to 8."
@@ -282,20 +285,19 @@ default to 8."
   (mapc #'disable-theme custom-enabled-themes)
   (let ((hour (string-to-number (format-time-string "%H")))
 	(day-start (or day-start 8))
-	(night-start (or night-start 19))
-	(light-theme 'doric-marble)
-	(dark-theme 'doric-dark))
+	(night-start (or night-start 19)))
     ;; Dark theme between NIGHT-START and DAY-START
     (load-theme (if (or (<= night-start hour) (<= hour day-start))
 		    dark-theme light-theme))))
 
-;;;; Doric-themes
+;;;;; Doric-themes
 ;; Minimalistic but visible and effective themes.  (Cf. modus-themes
 ;; and standard-themes.)
 ;;
 ;; TODO 2025-05-20: Document this in literate config.
 ;; See also `doric-themes-to-toggle' and `doric-themes-to-rotate'
 (use-package doric-themes
+  :disabled t
   ;; TODO 2025-05-20: Remove the :repo specification after
   ;; doric-themes gets added to ELPA
   :ensure (:repo "https://github.com/protesilaos/doric-themes")
@@ -307,9 +309,22 @@ default to 8."
   :custom
   (doric-themes-to-toggle '(doric-marble doric-dark))
   :config
-  (krisb-enable-theme-time-of-day))
+  (krisb-enable-theme-time-of-day 'doric-light 'doric-dark))
 
-;;;; Electric
+;;;;; Ef-themes
+(use-package ef-themes
+  :ensure t
+  :demand t
+  :bind
+  (("<f8>" . ef-themes-toggle)
+   ("C-<f8>" . ef-themes-select)
+   ("M-<f8>" . ef-themes-rotate))
+  :custom
+  (ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
+  :config
+  (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cdr ef-themes-to-toggle)))
+
+;;;;; Electric
 ;; Convenient DWIM, out-of-the-way while you edit
 ;;
 ;; TODO 2025-05-20: Document the user options below in the literate
@@ -463,7 +478,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 
 ;;;; Vc-jj
 ;; Integration between vc.el and the jujutsu (JJ) version control
-;; system
+;; system.  Best jj integration with vc currently (2025-03-13).
 (use-package vc-jj
   :ensure t
   :after (:any vc project)
