@@ -1116,21 +1116,6 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
         mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
 
 ;; TODO 2025-05-20: Revisit this.
-;; (setq-default mode-line-format
-;;               '("%e"
-;;                 mode-line-front-space
-;;                 (:propertize
-;;                  ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote
-;;                   mode-line-window-dedicated)
-;;                  display (min-width (6.0)))
-;;                 mode-line-frame-identification
-;;                 mode-line-buffer-identification "   "
-;;                 mode-line-position
-;;                 mode-line-format-right-align
-;;                 (project-mode-line project-mode-line-format) "   "
-;;                 mode-line-modes
-;;                 mode-line-misc-info
-;;                 mode-line-end-spaces))
 (setopt mode-line-format
 	'("%e" mode-line-front-space
 	  (:propertize
@@ -1138,10 +1123,10 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 	    mode-line-remote mode-line-window-dedicated)
 	   display (min-width (6.0)))
 	  mode-line-frame-identification
+	  (project-mode-line ("" project-mode-line-format "   "))
 	  mode-line-buffer-identification "   "
 	  mode-line-position
 	  mode-line-format-right-align
-	  (project-mode-line project-mode-line-format)
 	  (vc-mode vc-mode) "  "
 	  mode-line-modes
 	  mode-line-misc-info
