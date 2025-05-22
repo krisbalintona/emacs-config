@@ -256,6 +256,61 @@
   :ensure t
   :demand t)
 
+;;;; My variables, functions, macros, and keymaps
+(setopt user-full-name "Kristoffer Balintona"
+	user-mail-address "krisbalintona@gmail.com")
+
+;;;;; Keymaps
+(defvar-keymap krisb-note-keymap
+  :doc "Prefix for my note-taking needs.")
+(bind-key "C-c n" krisb-note-keymap 'global-map)
+
+;; TODO 2025-05-22: Revisit this.
+;; (defvar-keymap krisb-file-keymap
+;;   :doc "Prefix for file-related commands.")
+;; (bind-key "C-c f" krisb-file-keymap 'global-map)
+
+;; TODO 2025-05-22: Revisit this.
+;; (defvar-keymap krisb-yank-keymap
+;;   :doc "Prefix for yanking stuff.")
+;; (bind-key "C-c i" krisb-yank-keymap 'global-map)
+
+(defvar-keymap krisb-open-keymap
+  :doc "Prefix for opening various hings.")
+(bind-key "C-c o" krisb-open-keymap 'global-map)
+
+(defvar-keymap krisb-toggle-keymap
+  :doc "Prefix for toggling stuff.")
+(bind-key "C-c t" krisb-toggle-keymap 'global-map)
+
+;;;;; Org
+;; FIXME 2025-05-20: If the path denoted by `krisb-org-directory' does
+;; not exist, other packages that depend on this value are given a
+;; non-existing path, likelly resulting in errors.  We might solve
+;; this by turning this into a function instead, returning nil if it
+;; doesn't exist, thereby avoiding passing a non-existing file path to
+;; these packages.
+(defvar krisb-org-directory (expand-file-name "org-database" "~/Documents")
+  "The directory holding my org files.")
+
+(defvar krisb-notes-directory (expand-file-name "notes" krisb-org-directory)
+  "My notes directory.")
+
+(defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
+  "The directory for my pre-export blog files.")
+
+(defvar krisb-org-archive-directory (expand-file-name "archive" krisb-org-directory)
+  "The archive directory for my org files.")
+
+(defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-org-directory)
+  "The directory holding my main org-agenda files.")
+
+(defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
+  "My main org-agenda file.")
+
+(defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
+  "A list of my bibliography (.bib) files.")
+
 ;;; A step below
 
 ;;;; Exec-path-from-shell
@@ -1593,8 +1648,7 @@ command."
   ("C-c s" . org-store-link)
   :custom
   ;; TODO 2025-05-22: Revisit this.
-  ;; (org-directory krisb-org-directory)
-  (org-directory (expand-file-name "org-database" "~/Documents/"))
+  (org-directory krisb-org-directory)
   
   ;; Headlines
   ;; TODO 2025-05-22: Document:
