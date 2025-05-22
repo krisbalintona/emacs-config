@@ -1942,13 +1942,13 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 `org-node--candidate<>entry')."
     (require 'org-node)
     (gethash (completing-read "Select node: "
-                              #'org-node-collection
+                              #'org-node-collection-basic
                               (lambda (_title node)
-                                (cl-every (lambda (re)
-                                            (cl-some (lambda (str)
-                                                       (string-match-p re str))
-                                                     (org-node-get-tags node)))
-                                          tags))
+				(cl-every (lambda (re)
+					    (cl-some (lambda (str)
+						       (string-match-p re str))
+						     (org-node-get-tags node)))
+					  tags))
                               t nil 'org-node-hist)
              org-node--candidate<>entry)))
 
