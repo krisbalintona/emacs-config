@@ -1,17 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Mixed-pitch
-;; Locally remap default face to variable-pitch.
-(use-package mixed-pitch
-  :diminish
-  :custom
-  ;; We don't want to set the height of variable-pitch faces because
-  ;; non-variable-pitch faces will be "out of sync" with the height.  Therefore,
-  ;; to have larger font sizes in these buffers, we have to remap those faces
-  ;; manually and locally.
-  (mixed-pitch-set-height nil)
-  (mixed-pitch-variable-pitch-cursor nil))
-
 ;;; Ligature
 ;; Ligatures!  Be aware that this differs from `prettify-symbols-mode' because
 ;; ligatures are provided by and must be supported by the particular font.  See

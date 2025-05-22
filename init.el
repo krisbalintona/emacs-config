@@ -1340,6 +1340,33 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ;; (project-forget-zombie-projects)
   )
 
+;;;; Info
+(use-package info
+  :ensure nil
+  :hook
+  (Info-selection-hook . mixed-pitch-mode)
+  (Info-selection-hook . krisb-info-font-resize)
+  :custom
+  (Info-isearch-search nil)	    ; Limit isearch to the node we see
+  :config
+  (defun krisb-info-font-resize ()
+    "Increase the font size of text in Info buffers."
+    (face-remap-set-base 'default `(:height 1.2))))
+
+;;;; Mixed-pitch
+;; Locally remap default face to variable-pitch.
+(use-package mixed-pitch
+  :ensure t
+  :custom
+  ;; We don't want to set the height of variable-pitch faces because
+  ;; non-variable-pitch faces will be "out of sync" with the height.
+  ;; Therefore, to have larger font sizes in these buffers, we have to
+  ;; remap those faces manually and locally.
+  (mixed-pitch-set-height nil)
+  (mixed-pitch-variable-pitch-cursor nil)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'mixed-pitch-mode))
+
 ;;; Fluff
 
 ;;;; Recursion-indicator
