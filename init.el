@@ -508,9 +508,8 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 ;;;; Repeat
 (use-package repeat
   :ensure nil
-  :demand t
-  :config
-  (repeat-mode 1))
+  :hook
+  (on-first-input-hook . repeat-mode))
 
 ;;;; Minibuffer.el
 ;; TODO 2025-05-20: Document the following options below in the
