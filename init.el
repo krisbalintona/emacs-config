@@ -353,9 +353,7 @@ default to 8."
 ;; See also `doric-themes-to-toggle' and `doric-themes-to-rotate'
 (use-package doric-themes
   :disabled t
-  ;; TODO 2025-05-20: Remove the :repo specification after
-  ;; doric-themes gets added to ELPA
-  :ensure (:repo "https://github.com/protesilaos/doric-themes")
+  :ensure t
   :demand t
   :bind
   (("<f8>" . doric-themes-toggle)
