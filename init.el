@@ -1733,6 +1733,10 @@ command."
       (add-hook hook #'pulsar-recenter-center)
       (add-hook hook #'pulsar-reveal-entry))))
 
+(use-package org-contrib
+  :ensure t
+  :after org)
+
 ;;;; Org-capture
 (use-package org-capture
   :ensure nil
