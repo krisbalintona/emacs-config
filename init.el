@@ -350,23 +350,19 @@ default to 8."
   :config
   (savehist-mode 1)
 
-  (dolist (var '((kill-ring . 10000)
-                 Info-history-list
-		 register-alist))
+  (dolist (var '((Info-history-list . 250)))
     (add-to-list 'savehist-additional-variables var)))
 
 ;;;; Desktop
 ;; Save buffers across Emacs sessions
 ;;
 ;; TODO 2025-05-20: Document in literate configuration prose.
-;; See also `desktop-globals-to-save' and `desktop-locals-to-save'
+;; See also `desktop-locals-to-save'
 (use-package desktop
   :ensure nil
   :demand t
   :hook
-  (text-mode-hook . krisb-desktop--save-narrowing)
-  (prog-mode-hook . krisb-desktop--save-narrowing)
-  (conf-mode-hook . krisb-desktop--save-narrowing)
+  ((text-mode-hook prog-mode-hook conf-mode-hook) . krisb-desktop--save-narrowing)
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-save 'ask-if-new)
@@ -388,14 +384,17 @@ default to 8."
   :config
   (desktop-save-mode 1)
 
+  ;; Also save these variable values
+  (add-to-list 'desktop-globals-to-save '(kill-ring . 10000))
+  (add-to-list 'desktop-globals-to-save 'register-alist)
+
   ;; Also save and restore narrowing state
   (defun krisb-desktop--save-narrowing ()
     "Save narrowed information.
 Taken from
 https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1."
     (setq desktop-save-buffer
-          (lambda (_d) (if (buffer-narrowed-p)
-                           (list 'narrowed (point-min) (point-max))))))
+	  (lambda (_) (if (buffer-narrowed-p) (list 'narrowed (point-min) (point-max))))))
 
   (defun krisb-desktop--restore-narrowing (_f n misc &rest _)
     "Restore narrowing of buffer.
