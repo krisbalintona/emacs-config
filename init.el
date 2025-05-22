@@ -342,16 +342,17 @@ default to 8."
   :hook
   (text-mode-hook . electric-quote-local-mode)
   :custom
+  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   ;; TODO 2025-05-20: Revisit this.
   ;; (electric-quote-comment nil)
   ;; TODO 2025-05-20: Revisit this.
   ;; (electric-quote-string nil)
   (electric-quote-context-sensitive t)
   (electric-quote-replace-double t)
-  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   :config
   (electric-pair-mode 1)
-  (electric-indent-mode 1))
+  (electric-indent-mode 1)
+  (electric-quote-mode 1))
 
 ;;; Two steps below
 
