@@ -1599,8 +1599,8 @@ buffers in which this function is run."
 (use-package dired
   :ensure nil
   :hook
-  (dired-mode . dired-hide-details-mode)
-  (dired-mode . turn-on-gnus-dired-mode) ; Email attachment integration with dired
+  (dired-mode-hook . dired-hide-details-mode)
+  (dired-mode-hook . turn-on-gnus-dired-mode) ; Email attachment integration with dired
   :bind
   ( :map dired-mode-map
     ("e" . krisb-dired-eval-form))
@@ -1638,7 +1638,7 @@ command."
 (use-package dired-hist
   :ensure t
   :hook
-  (dired-mode . dired-hist-mode)
+  (dired-mode-hook . dired-hist-mode)
   :bind
   ( :map dired-mode-map
     ("l" . dired-hist-go-back)
@@ -1662,9 +1662,9 @@ command."
 (use-package org
   :ensure t
   :hook
-  (org-mode . variable-pitch-mode)
-  (org-mode . visual-line-mode)
-  (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 100)))
+  (org-mode-hook . variable-pitch-mode)
+  (org-mode-hook . visual-line-mode)
+  (org-mode-hook . (lambda () (setq-local line-spacing 0.2 fill-column 100)))
   :bind
   ("C-c s" . org-store-link)
   :custom
@@ -1922,7 +1922,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 (use-package org-node
   :ensure t
   :hook
-  (find-file . krisb-org-node-rename-buffer-name-to-title)
+  (find-file-hook . krisb-org-node-rename-buffer-name-to-title)
   :bind
   ( :map krisb-note-keymap
     ("l" . org-node-context-toggle)
