@@ -342,7 +342,8 @@ default to 8."
   :hook
   (text-mode-hook . electric-quote-local-mode)
   :custom
-  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+  (electric-pair-inhibit-predicate ; Applies to `electric-quote-mode’ too
+   'krisb-electric-pair-conservative-inhibit)
   ;; TODO 2025-05-20: Revisit this.
   ;; (electric-quote-comment nil)
   ;; TODO 2025-05-20: Revisit this.
@@ -352,7 +353,18 @@ default to 8."
   :config
   (electric-pair-mode 1)
   (electric-indent-mode 1)
-  (electric-quote-mode 1))
+  (electric-quote-mode 1)
+
+  ;; Bespoke inhibit predicate
+  (defun krisb-electric-pair-conservative-inhibit (char)
+    (or
+     ;; Always allow `electric-quote-chars’
+     (member char electric-quote-chars)
+     ;; Regular predicates
+     (eq char (char-after))
+     (and (eq char (char-before))
+	  (eq char (char-before (1- (point)))))
+     (eq (char-syntax (following-char)) ?w))))
 
 ;;; Two steps below
 
