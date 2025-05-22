@@ -1342,12 +1342,12 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 ;; Popular library for list manipulation
 (use-package dash
   :ensure t
-  :defer 10
-  :config
-  (global-dash-fontify-mode 1)
-  
+  :defer t
+  :init
   (with-eval-after-load 'info-look
-    (dash-register-info-lookup)))
+    (dash-register-info-lookup))
+  :config
+  (global-dash-fontify-mode 1))
 
 ;;;; Smart-mark
 ;; When pressing C-g while marking a region, move point to the
