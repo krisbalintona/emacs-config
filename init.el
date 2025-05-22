@@ -1480,6 +1480,72 @@ buffers in which this function is run."
   ;; value) `completion-at-point-functions'
   (add-hook 'completion-at-point-functions #'tempel-complete -90))
 
+;;;; Dired
+;; Emacs' file manager
+;; TODO 2025-05-22: Document:
+;; - `dired-recursive-deletes'
+(use-package dired
+  :ensure nil
+  :hook
+  (dired-mode . dired-hide-details-mode)
+  (dired-mode . turn-on-gnus-dired-mode) ; Email attachment integration with dired
+  :bind
+  ( :map dired-mode-map
+    ("e" . krisb-dired-eval-form))
+  :custom
+  (dired-auto-revert-buffer t)
+  (dired-dwim-target 'dired-dwim-target-recent)
+  (dired-hide-details-hide-symlink-targets nil) ; Don't hide symlink targets
+  (dired-kill-when-opening-new-dired-buffer t) ; Basically `dired-single'
+  (dired-listing-switches "--group-directories-first --time-style=long-iso -alhgv")
+  (dired-movement-style 'bounded-files)
+  (dired-recursive-copies  'always)
+  (dired-create-destination-dirs 'ask)
+  (dired-vc-rename-file t)
+  :config
+  ;; Mark files and do a sexp in their buffers. Based off
+  ;; https://superuser.com/a/176629
+  (defun krisb-dired-eval-form (sexp &optional prefix)
+    "Run SEXP in marked dired files. If called with
+PREFIX (`universal-argument' if interactively), run a particular
+command."
+    (interactive (list (if current-prefix-arg
+                           (read-extended-command) ; Command
+                         (read--expression "Run expression on marked files: ")) ; Sexp
+                       current-prefix-arg))
+    (save-window-excursion
+      (mapc #'(lambda (filename)
+                (with-current-buffer (find-file-noselect filename)
+                  (if prefix
+                      (call-interactively (intern sexp))             ; Command
+                    (funcall-interactively 'eval-expression sexp)))) ; Sexp
+            (dired-get-marked-files)))))
+
+;;;; Dired-hist
+;; History for dired buffers
+(use-package dired-hist
+  :ensure t
+  :hook
+  (dired-mode . dired-hist-mode)
+  :bind
+  ( :map dired-mode-map
+    ("l" . dired-hist-go-back)
+    ("r" . dired-hist-go-forward)))
+
+;;; Writing
+
+;;;; Cascading-dir-locals
+;; "Provides a global minor mode that changes how Emacs handles the
+;; lookup of applicable dir-locals files (".dir-locals.el"): instead
+;; of starting at the directory of the visited file and moving up the
+;; directory tree only until a first dir-locals file is found, collect
+;; and apply all (!) dir-locals files found from the current directory
+;; up to the root one."
+(use-package cascading-dir-locals
+  :ensure t
+  :hook
+  (on-first-file-hook . cascading-dir-locals-mode))
+
 ;;;; Org
 (use-package org
   :ensure t
