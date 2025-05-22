@@ -1828,3 +1828,8 @@ to if called with ARG, or any prefix argument."
                            (t 100))))))
     (set-frame-parameter nil 'alpha-background transparency)))
 (bind-key "<f9>" #'krisb-toggle-window-transparency)
+
+;; `duplicate-dwim' binding
+;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
+;; `duplicate-region-final-position' user options
+(bind-key "C-x ;" #'duplicate-dwim)
