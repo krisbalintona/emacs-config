@@ -496,7 +496,7 @@ default to 8."
   ;;          ;; eventually anyway
   ;;          (literal krisb-org-agenda-directory))))
   
-  (desktop-restore-eager 10)
+  (desktop-restore-eager 15)
   (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)
   (desktop-restore-in-current-display nil)
