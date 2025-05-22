@@ -1998,6 +1998,10 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-node-cache-mode 1)
   (org-node-context-follow-mode 1)
 
+  ;; Make the org-roam buffer performant for free
+  (with-eval-after-load 'org-roam
+    (org-node-roam-accelerator-mode 1))
+
   ;; Bespoke filtering (exclusion) function.
   (defun krisb-org-node-filter-fn (node)
     "Predicate for whether to include NODE.
