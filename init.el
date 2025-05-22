@@ -386,7 +386,6 @@ default to 8."
 
   ;; Also save these variable values
   (add-to-list 'desktop-globals-to-save '(kill-ring . 10000))
-  (add-to-list 'desktop-globals-to-save 'register-alist)
 
   ;; Also save and restore narrowing state
   (defun krisb-desktop--save-narrowing ()
