@@ -1303,6 +1303,43 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :config
   (find-function-mode 1))		; Emacs 31
 
+;;;; Project.el
+;; TODO 2025-05-22: Document:
+;; - `project-vc-extra-root-markers’
+(use-package project
+  :ensure nil
+  :defer t
+  :bind
+  ( :map project-prefix-map
+    ("e" . project-eshell)
+    ("C" . project-recompile))
+  :custom
+  (project-vc-merge-submodules nil)
+  (project-file-history-behavior 'relativize)
+  ;; The commands in `project-switch-commands' must be found in
+  ;; `project-prefix-map'
+  (project-switch-commands
+   `((project-find-file "Find file")
+     (project-find-regexp "Find regexp")
+     (project-find-dir "Find directory")
+     (project-vc-dir "VC-Dir")
+     (project-eshell "Eshell")
+     ,(if (locate-library "eat")
+          '(eat-project "EAT")
+	(project-shell "Shell"))
+     ,(if (locate-library "compile-multi")
+          '(compile-multi "Compile-multi")
+	'(project-compile "Compile"))
+     (project-recompile "Recompile")
+     (project-any-command "Other")))
+  (project-mode-line t)
+  (project-mode-line-face 'italic)
+  :config
+  ;; TODO 2025-05-22: Revisit this
+  ;; ;; On startup, remove non-existent directories from remembered projects list
+  ;; (project-forget-zombie-projects)
+  )
+
 ;;; Fluff
 
 ;;;; Recursion-indicator

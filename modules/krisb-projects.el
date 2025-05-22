@@ -1,37 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Project.el
-(use-package project
-  :bind ( :map project-prefix-map
-          ("e" . project-eshell)
-          ("C" . project-recompile))
-  :custom
-  (project-vc-extra-root-markers '("Makefile"))
-  (project-vc-merge-submodules nil)
-
-  (project-file-history-behavior 'relativize)
-
-  (project-mode-line t)
-  (project-mode-line-face nil)
-
-  ;; The commands in `project-switch-commands' must be found in
-  ;; `project-prefix-map'
-  (project-switch-commands
-   `((project-find-file "Find file")
-     (project-find-regexp "Find regexp")
-     (project-find-dir "Find directory")
-     (project-vc-dir "VC-Dir")
-     (project-eshell "Eshell")
-     ,(when (locate-library "eat")
-        '(eat-project "EAT"))
-     ,(when (locate-library "compile-multi")
-        '(compile-multi "Compile-multi"))
-     (project-recompile "Recompile")
-     (project-any-command "Other")))
-  :config
-  ;; On startup, remove non-existent directories from remembered projects list
-  (project-forget-zombie-projects))
-
 ;;; Goto definition
 ;;;; Xref
 (use-package xref
