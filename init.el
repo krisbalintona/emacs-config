@@ -283,7 +283,7 @@
   :doc "Prefix for toggling stuff.")
 (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 
-;;;;; Org
+;;;;; Writing
 ;; FIXME 2025-05-20: If the path denoted by `krisb-org-directory' does
 ;; not exist, other packages that depend on this value are given a
 ;; non-existing path, likelly resulting in errors.  We might solve
@@ -2055,6 +2055,55 @@ For use as `org-node-affixation-fn'."
                 (when (or (not (string= title file-title))
                           (not file-title))
                   (propertize (concat " (" file-title ")") 'face 'shadow)))))))
+
+;;;; Olivetti
+(use-package olivetti
+  :ensure t
+  :hook
+  ((org-mode-hook Info-mode-hook emacs-news-view-mode-hook org-msg-edit-mode-hook markdown-mode-hook)
+   . olivetti-mode)
+  ;; (olivetti-mode-hook . krisb-olivetti-set-bookmark-face)
+  :custom
+  (olivetti-body-width 0.55)
+  (olivetti-minimum-body-width 80)
+  (olivetti-margin-width 8)
+  (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
+  ;; TODO 2025-05-22: Revisit this.
+  ;; ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's
+  ;; ;; changing of margins and fringes messes with the calculation of
+  ;; ;; `mode--line-format-right-align', which determines where the right
+  ;; ;; side of the mode line is placed.
+  ;; (mode-line-format-right-align
+  ;;  '(:eval (if (and (bound-and-true-p olivetti-mode)
+  ;;                   olivetti-style)     ; 'fringes or 'fancy
+  ;;              (let ((mode-line-right-align-edge 'right-fringe))
+  ;;                (mode--line-format-right-align))
+  ;;            (mode--line-format-right-align))))
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'olivetti-mode)
+
+  ;; TODO 2025-05-22: Revisit this.
+  ;; (krisb-modus-themes-setup-faces
+  ;;  "olivetti"
+  ;;  (set-face-attribute 'olivetti-fringe nil
+  ;;                      :background bg-dim
+  ;;                      :inherit 'unspecified))
+
+  ;; TODO 2025-05-22: Revisit this.
+  ;; ;; Set `bookmark-face' buffer-locally
+;;   (defun krisb-olivetti-set-bookmark-face ()
+;;     "Sets the buffer-local specification of `bookmark-face'.
+;; We do this because the olivetti settings may change the background color
+;; of the fringe, meaning bookmark fringe marks, which use the default
+;; fringe background color, are out of place."
+;;     (face-remap-add-relative 'bookmark-face :inherit '(olivetti-fringe success)))
+  )
+
+;;;; Adaptive-wrap
+(use-package adaptive-wrap
+  :ensure t
+  :hook
+  (visual-line-mode-hook . adaptive-wrap-prefix-mode))
 
 ;;; Uncategorized
 

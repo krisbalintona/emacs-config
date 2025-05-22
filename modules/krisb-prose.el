@@ -15,46 +15,6 @@
   :config
   (global-visual-wrap-prefix-mode 1))
 
-;;;; Adaptive-wrap
-(use-package adaptive-wrap
-  :hook (visual-line-mode . adaptive-wrap-prefix-mode))
-
-;;;; Olivetti
-(use-package olivetti
-  :hook (((org-mode Info-mode emacs-news-view-mode org-msg-edit-mode markdown-mode) . olivetti-mode)
-         (olivetti-mode . krisb-olivetti-set-bookmark-face))
-  :custom
-  (olivetti-lighter nil)
-  (olivetti-body-width 0.55)
-  (olivetti-minimum-body-width 80)
-  (olivetti-margin-width 8)
-  (olivetti-style 'fancy)              ; Fancy makes the buffer look like a page
-  ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's changing of
-  ;; margins and fringes messes with the calculation of
-  ;; `mode--line-format-right-align', which determines where the right side of
-  ;; the mode line is placed.
-  (mode-line-format-right-align
-   '(:eval (if (and (bound-and-true-p olivetti-mode)
-                    olivetti-style)     ; 'fringes or 'fancy
-               (let ((mode-line-right-align-edge 'right-fringe))
-                 (mode--line-format-right-align))
-             (mode--line-format-right-align))))
-  :config
-  (krisb-modus-themes-setup-faces
-   "olivetti"
-   (set-face-attribute 'olivetti-fringe nil
-                       :background bg-dim
-                       :inherit 'unspecified))
-
-  ;; Set `bookmark-face' buffer-locally
-  (defun krisb-olivetti-set-bookmark-face ()
-    "Sets the buffer-local specification of `bookmark-face'.
-We do this because the olivetti settings may change the background color
-of the fringe, meaning bookmark fringe marks, which use the default
-fringe background color, are out of place."
-    (face-remap-add-relative 'bookmark-face
-                             :inherit '(olivetti-fringe success))))
-
 ;;;; Darkroom
 (use-package darkroom
   :bind ( :map krisb-toggle-keymap
