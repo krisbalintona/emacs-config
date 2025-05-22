@@ -1,69 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
 ;;; Built-in
-;;;; VC
-(use-package vc
-  :ensure nil
-  :custom
-  (vc-follow-symlinks t)
-  ;; Improves performance by not having to check for other backends. Expand this
-  ;; list when necessary
-  (vc-handled-backends '(Git))
-  (vc-revert-show-diff t)
-  (vc-annotate-display-mode 'fullscale)
-  (vc-find-revision-no-save t)
-  (vc-allow-rewriting-published-history 'ask) ; Emacs 31
-  (vc-async-checkin t))                       ; Emacs 31
-
-;;;; Vc-dir
-(use-package vc-dir ; NOTE 2024-10-19: Is not required by vc, so have its own use-package
-  :ensure nil
-  :bind ( :map vc-dir-mode-map
-          ("G" . vc-revert)))
-
-;;;; Vc-git
-(use-package vc-git
-  :ensure nil
-  :hook (vc-git-log-edit-mode . auto-fill-mode)
-  :bind ( :map vc-git-log-edit-mode-map
-          ("<tab>" . completion-at-point))
-  :custom
-  (vc-git-diff-switches              ; Have diff headers look similar to Magit's
-   '("--patch-with-stat" "--histogram"))
-  (vc-git-root-log-format
-   `("%h %ad (%ar) %aN%d%n  %s"
-     ;; The first shy group matches the characters drawn by --graph. We use
-     ;; numbered groups because `log-view-message-re' wants the revision number
-     ;; to be group 1.
-     ,(concat "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?"
-              "\\(?1:[0-9a-z]+\\)"      ; %h
-              " "
-              "\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} (.*? ago)\\)?" ; %ad (%ar)
-              " "
-              "\\(?3:\\(?:[[:alpha:]]+\\.?[\n ]\\)+\\)" ; %aN
-              "\\(?2:([^)]+)\\)?")                      ; %d
-     ((1 'log-view-message)
-      (2 'change-log-list nil lax)
-      (3 'change-log-name)
-      (4 'change-log-date))))
-  (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
-  (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
-  (vc-git-revision-complete-only-branches t))
-
-;;;; Log-edit
-(use-package log-edit
-  :ensure nil
-  :custom
-  (log-edit-headers-alist
-   '(("Summary" . log-edit-summary)
-     ("Fixes")
-     ("Author")))
-  (log-edit-setup-add-author nil)
-  :custom-face
-  (log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
-  :config
-  ;; I can see the files from the Diff with C-c C-d when I want
-  (remove-hook 'log-edit-hook #'log-edit-show-files))
 
 ;;;; Agitate
 ;; QoL stuff for built-in VC workflow
@@ -246,15 +183,6 @@
   (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
   (ediff-split-window-function #'split-window-horizontally)
   (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
-
-;;; Vc-jj
-;; Best jj integration with vc currently (2025-03-13).
-(use-package vc-jj
-  :pin gnu-elpa-devel
-  :config
-  ;; Project integration with JJ
-  (with-eval-after-load 'project
-    (require 'project-jj)))
 
 ;;; Git-share
 ;; Share a web URL to the commit responsible for the change at point or the
