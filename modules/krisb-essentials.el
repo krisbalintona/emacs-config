@@ -195,11 +195,6 @@
 (setopt read-buffer-completion-ignore-case t
         case-fold-search t)
 
-;;;; Duplicate-dwim binding
-(bind-key "C-x ;" #'duplicate-dwim)
-(setopt duplicate-line-final-position -1
-        duplicate-region-final-position 1)
-
 ;;;; Echo unfinished keystrokes quicker
 ;; Echo keystrokes (of unfinished commands) much quicker
 (setopt echo-keystrokes 0.5)
