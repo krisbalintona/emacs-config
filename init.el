@@ -1480,6 +1480,104 @@ buffers in which this function is run."
   ;; value) `completion-at-point-functions'
   (add-hook 'completion-at-point-functions #'tempel-complete -90))
 
+;;;; Org
+(use-package org
+  :ensure t
+  :hook
+  (org-mode . variable-pitch-mode)
+  (org-mode . visual-line-mode)
+  (org-mode . (lambda () (setq-local line-spacing 0.2 fill-column 100)))
+  :bind
+  (("C-c s" . org-store-link)
+   ("C-c c" . org-capture))
+  :custom
+  ;; TODO 2025-05-22: Revisit this.
+  ;; (org-directory krisb-org-directory)
+  (org-directory (expand-file-name "org-database" "~/Documents/"))
+  
+  ;; Headlines
+  ;; TODO 2025-05-22: Document:
+  ;; - `org-hide-leading-stars'
+  ;; - `org-n-level-faces'
+  ;; - `org-cycle-separator-lines'
+  ;; - `org-cycle-level-faces'
+  ;; - `org-insert-heading-respect-content'
+  ;; (org-ellipsis " ⮷")			; TODO 2025-05-22: Revisit this
+  (org-tags-column 0)
+  (org-blank-before-new-entry
+   '((heading . auto)
+     (plain-list-item . nil)))
+  (org-M-RET-may-split-line
+   '((table . nil)
+     (default . t)))
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-startup-folded 'nofold)
+
+  ;; Plain lists
+  ;; TODO 2025-05-22: Document the "Org Plain List" customize group as
+  ;; well as these options:
+  ;; - `org-list-use-circular-motion'
+  ;; TODO 2025-05-22: Document that `org-list-demote-modify-bullet' is
+  ;; almost like a more versatile version of org-bulletproof
+  (org-list-allow-alphabetical t)
+  (org-list-demote-modify-bullet
+   '(("+" . "-")
+     ("-" . "+")))
+
+  ;; Markup
+  ;; TODO 2025-05-22: Document:
+  ;; - `org-hide-macro-markers'
+  ;; - `org-pretty-entities-include-sub-superscripts' - see also `org-export-with-sub-superscripts'
+  ;; - `org-hidden-keywords'
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t) ; Show as UTF-8 characters (useful for math)
+  (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
+
+  ;; Movement
+  ;; TODO 2025-05-22: Document:
+  ;; - `org-special-ctrl-k'
+  (org-special-ctrl-a/e t)
+  (org-ctrl-k-protect-subtree 'error)
+
+  ;; Org blocks
+  (org-structure-template-alist
+   '(("s" . "src")
+     ("e" . "src emacs-lisp")
+     ("q" . "quote")
+     ("c" . "comment")
+     ("C" . "center")
+     ("e" . "example")
+     ("e" . "export")
+     ("v" . "verse")))
+
+  ;; Timestamps
+  (org-edit-timestamp-down-means-later t)
+
+  ;; TODO 2025-05-22: Revisit this.
+  ;; (org-file-apps
+  ;;  '((directory . emacs)
+  ;;    ("\\.mm\\'" . default)
+  ;;    ("\\.x?html?\\'" . default)
+  ;;    ("\\.pdf\\'" . default)
+  ;;    ("\\.docx\\'" . system)
+  ;;    ("\\.odt\\'" . system)
+  ;;    ;; Default to `auto-mode-alist'
+  ;;    (auto-mode . emacs)))
+  ;; TODO 2025-05-22: Revisit these.
+  ;; :custom-face
+  ;; (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
+  ;; (org-ellipsis ((t (:box unspecified :inherit default)))) ; Don't make line taller because of org-ellipsis
+  :config
+  ;; Make org-open-at-point follow file links in the same window
+  (setf (alist-get 'file org-link-frame-setup) 'find-file)
+
+  ;; Pulsar pulses
+  (with-eval-after-load 'pulsar
+    (dolist (hook '(org-agenda-after-show-hook
+		    org-follow-link-hook))
+      (add-hook hook #'pulsar-recenter-center)
+      (add-hook hook #'pulsar-reveal-entry))))
+
 ;;; Uncategorized
 
 ;; Bind `restart-emacs'
