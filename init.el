@@ -811,10 +811,9 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 (use-package recentf
   :ensure nil
   :demand t
-  ;; TODO 2025-05-20: Revisit this.
-  ;; :bind
-  ;; ( :map krisb-file-keymap
-  ;;   ("r" . recentf-open-files))
+  :bind
+  ( :map ctl-x-map
+    ("M-f" . recentf-open-files))
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)
