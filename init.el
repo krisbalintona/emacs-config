@@ -924,15 +924,14 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 ;; Enable logging of recent files
 (use-package recentf
   :ensure nil
-  :demand t
+  :hook
+  (on-first-file-hook . recentf-mode)
   :bind
   ( :map ctl-x-map
-    ("M-f" . recentf-open-files))
+    ("M-f" . recentf-open))
   :custom
   (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15)
-  :config
-  (recentf-mode 1))
+  (recentf-max-menu-items 15))
 
 ;;;; Grep
 ;; TODO 2025-05-20: Document the user options below in the literate
@@ -979,6 +978,8 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 
 ;;;; Consult
 ;; Get enhanced or fancy versions of many built-in commands
+;; TODO 2025-05-23: Document:
+;; - `consult-recent-file’
 (use-package consult
   :ensure t
   :bind
@@ -987,7 +988,6 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
    ([remap bookmark-jump] . consult-bookmark)
    ([remap yank-pop] . consult-yank-pop)
    ([remap goto-line] . consult-goto-line)
-   ([remap recentf-open-files] . consult-recent-file)
    ([remap Info-search] . consult-info)
    ;; TODO 2025-05-20: Revisit this.
    ;; ([remap point-to-register] . consult-register-store)
