@@ -812,6 +812,8 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (vertico-multiform-commands
    `((pdf-view-goto-label (vertico-sort-function . nil))
      (".+-history" (vertico-sort-function . nil))
+     (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
+      (vertico-sort-function . nil))
      ;; TODO 2025-05-20: Revisit this.
      ;; (,(rx bol (or (literal "org-node-") (literal "org-roam-")) "-find" eol)
      ;;  (completion-styles . (orderless ,(if (featurep 'hotfuzz) 'hotfuzz 'flex))) ; FIXME 2025-05-08: But what if hotfuzz is loaded after vertico-multiform?
