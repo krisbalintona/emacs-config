@@ -929,8 +929,10 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ( :map ctl-x-map
     ("M-f" . recentf-open))
   :custom
+  (recentf-auto-cleanup 600)
   (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15))
+  (recentf-max-menu-items 15)
+  (recentf-show-messages nil))
 
 ;;;; Grep
 ;; TODO 2025-05-20: Document the user options below in the literate
