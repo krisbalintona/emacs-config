@@ -2891,6 +2891,15 @@ If region is active, use the region's contents instead."
   (org-footnote-section nil)            ; Don't create footnote headline
   (org-footnote-auto-adjust 'sort))
 
+;;;; Org-id
+(use-package org-id
+  :ensure nil
+  :after org
+  :custom
+  (org-id-track-globally t)
+  (org-id-method 'ts)
+  (org-id-link-to-org-use-id 'use-existing))
+
 ;;; Uncategorized
 
 ;; Restart or close Emacs

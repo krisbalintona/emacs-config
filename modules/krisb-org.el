@@ -21,15 +21,6 @@
   (org-edit-src-turn-on-auto-save nil)
   (org-edit-src-auto-save-idle-delay 3))
 
-
-;;;; Org-id
-(use-package org-id
-  :ensure nil
-  :custom
-  (org-id-track-globally t)
-  (org-id-method 'ts)
-  (org-id-link-to-org-use-id 'use-existing))
-
 ;;;; Org-attach
 (use-package org-attach
   :ensure nil
