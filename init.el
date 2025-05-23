@@ -2741,9 +2741,68 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   :config
   (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
 
-;;; Uncategorized
+;;;; Dictionary
+;; See definitions of words from an online dictionary.
+;; TODO 2025-05-23: Document these options:
+;; - `dictionary-create-buttons’
+;; - `dictionary-read-word-function’
+;; - `dictionary-search-interface’
+(use-package dictionary
+  :ensure nil
+  ;; Don't forget to install the following packages from the AUR:
+  ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
+  ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
+  :hook
+  (dictionary-mode . hide-mode-line-mode)
+  :bind
+  ("C-h =" . krisb-dictionary-dwim)
+  :custom
+  (dictionary-use-single-buffer t)
+  (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
+  (dictionary-server
+   (if (string-equal (string-trim (shell-command-to-string "systemctl is-active dictd"))
+                     "active")
+       "localhost" "dict.org"))
+  :init
+  ;; FIXME 2025-05-23: For some reason, if we use :bind to set these
+  ;; commands, they are gone in the respective embark keymaps if
+  ;; embark is loaded after this package.  So we use this solution
+  ;; below.  Am I mistaken?
+  (with-eval-after-load 'embark
+    (bind-keys :map embark-region-map
+               ("=" . krisb-dictionary-dwim)
+               :map embark-identifier-map
+               ("=" . krisb-dictionary-dwim)))
+  :config
+  (defun krisb-dictionary-dwim ()
+    "Show dictionary definition for word at point.
+If region is active, use the region's contents instead."
+    (interactive)
+    (if-let ((word (if (use-region-p)
+                       (buffer-substring-no-properties (region-beginning) (region-end))
+                     (thing-at-point 'word :no-properties))))
+        (dictionary-search word)
+      (message "No word or region selected."))))
 
-;; Bind `restart-emacs'
+;;;; Powerthesaurus
+;; Search for synonyms using an online thesaurus.
+(use-package powerthesaurus
+  :ensure t
+  :defer t
+  :init
+  ;; FIXME 2025-05-23: For some reason, if we use :bind to set these
+  ;; commands, they are gone in the respective embark keymaps if
+  ;; embark is loaded after this package.  So we use this solution
+  ;; below.  Am I mistaken?
+  (with-eval-after-load 'embark
+    (bind-keys :map embark-region-map
+               ("t" . powerthesaurus-lookup-synonyms-dwim)
+               ("T" . powerthesaurus-lookup-dwim)
+               :map embark-identifier-map
+               ("t" . powerthesaurus-lookup-synonyms-dwim)
+               ("T" . powerthesaurus-lookup-dwim))))
+
+;;; Uncategorized
 
 ;; Restart or close Emacs
 (defun krisb-restart-or-kill-emacs (&optional arg restart)
