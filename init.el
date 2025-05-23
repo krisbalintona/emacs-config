@@ -2210,6 +2210,7 @@ which file on the system it backs up."
   ;; - `org-cycle-separator-lines'
   ;; - `org-cycle-level-faces'
   ;; - `org-insert-heading-respect-content'
+  ;; - `org-fontify-todo-headline’
   ;; (org-ellipsis " ⮷")                        ; TODO 2025-05-22: Revisit this
   (org-tags-column 0)
   (org-blank-before-new-entry
@@ -2220,6 +2221,7 @@ which file on the system it backs up."
      (default . t)))
   (org-fold-catch-invisible-edits 'show-and-error)
   (org-startup-folded 'nofold)
+  (org-fontify-done-headline nil)
 
   ;; Plain lists
   ;; TODO 2025-05-22: Document the "Org Plain List" customize group as
@@ -2257,6 +2259,8 @@ which file on the system it backs up."
      ("e" . "example")
      ("e" . "export")
      ("v" . "verse")))
+  (org-fontify-quote-and-verse-blocks t)
+  (org-fontify-whole-block-delimiter-line nil)
 
   ;; Timestamps
   (org-edit-timestamp-down-means-later t)
@@ -2498,7 +2502,7 @@ loaded."
     ;;    `org-mem-watch-dirs'’).
     ;; 3. Check if entry is would be filter by `org-node-filter-fn’.
     (when-let* (((eq major-mode 'org-mode)) ; Guard
-                ;; First check if there is an ID 
+                ;; First check if there is an ID
                 (id (save-excursion (widen) (org-id-get (point-min))))
                 ((require 'org-mem))
                 (entry (org-mem-entry-by-id id))
@@ -2838,7 +2842,7 @@ If region is active, use the region's contents instead."
   (org-modern-hide-stars "· ") ; Is affected by the value of `org-hide-leading-stars'
   (org-modern-star 'replace)
   (org-modern-replace-stars "✦⦾‣⬢")
-  
+
   ;; Todos
   (org-modern-todo t)
   (org-modern-priority t)
@@ -2873,7 +2877,7 @@ If region is active, use the region's contents instead."
   (org-modern-list '((?+ . "◦")
                      (?- . "–")
                      (?* . "•")))
-  
+
   ;; Timestamps
   (org-modern-timestamp t)
 

@@ -2,15 +2,6 @@
 
 ;;; Built-in
 
-;;;; Org-faces
-(use-package org-faces
-  :ensure nil
-  :custom
-  (org-fontify-todo-headline nil)
-  (org-fontify-done-headline nil)
-  (org-fontify-whole-block-delimiter-line nil)
-  (org-fontify-quote-and-verse-blocks t))
-
 ;;;; Org-attach
 (use-package org-attach
   :ensure nil
