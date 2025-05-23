@@ -283,31 +283,31 @@
 (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 
 ;;;;; Writing
-;; FIXME 2025-05-20: If the path denoted by `krisb-org-directory' does
-;; not exist, other packages that depend on this value are given a
-;; non-existing path, likelly resulting in errors.  We might solve
+;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
+;; does not exist, other packages that depend on this value are given
+;; a non-existing path, likelly resulting in errors.  We might solve
 ;; this by turning this into a function instead, returning nil if it
 ;; doesn't exist, thereby avoiding passing a non-existing file path to
 ;; these packages.
-(defvar krisb-org-directory (expand-file-name "org-database" "~/Documents")
+(defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
   "The directory holding my org files.")
 
-(defvar krisb-notes-directory (expand-file-name "notes" krisb-org-directory)
+(defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
   "My notes directory.")
 
 (defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
   "The directory for my pre-export blog files.")
 
-(defvar krisb-org-archive-directory (expand-file-name "archive" krisb-org-directory)
+(defvar krisb-org-archive-directory (expand-file-name "archive" krisb-folio-directory)
   "The archive directory for my org files.")
 
-(defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-org-directory)
+(defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
   "The directory holding my main org-agenda files.")
 
 (defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
   "My main org-agenda file.")
 
-(defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-org-directory))
+(defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
   "A list of my bibliography (.bib) files.")
 
 ;;; A step below
@@ -2187,9 +2187,8 @@ which file on the system it backs up."
   :bind
   ("C-c s" . org-store-link)
   :custom
-  ;; TODO 2025-05-22: Revisit this.
-  (org-directory krisb-org-directory)
-  
+  (org-directory krisb-folio-directory)
+
   ;; Headlines
   ;; TODO 2025-05-22: Document:
   ;; - `org-hide-leading-stars'
@@ -2423,7 +2422,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   :defer t
   :custom
   (org-mem-do-sync-with-org-id t)
-  (org-mem-watch-dirs (list krisb-org-directory))
+  (org-mem-watch-dirs (list krisb-folio-directory))
   (org-mem-do-warn-title-collisions nil)
   :config
   (org-mem-updater-mode 1)
