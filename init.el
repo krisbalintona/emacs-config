@@ -1188,7 +1188,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ( :map krisb-open-keymap
     ("s" . eat)
     :map project-prefix-map
-    ("s" . eat-project))
+    ("s" . eat-project))		; Overshadow `project-shell’
   :config
   ;; 2025-04-05: This resolves the continuation lines issue in EAT
   ;; terminal (including eat-shell in
@@ -1258,13 +1258,10 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 ;; Easily create scratch buffers for different modes
 (use-package scratch
   :ensure t
-  :defer t
   :hook
   (scratch-create-buffer-hook . krisb-scratch-buffer-setup)
-  ;; TODO 2025-05-20: Revisit this.
-  ;; :bind
-  ;; ( :map krisb-open-keymap
-  ;;   ("S". scratch))
+  :bind
+  ("C-c |" . scratch)
   :config
   (defun krisb-scratch-buffer-setup ()
     "Add contents to `scratch' buffer and name it accordingly.
