@@ -337,13 +337,17 @@ Night time begins at NIGHT-START hour and daytime begins at DAY-START
 hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
 default to 8."
   (interactive)
-  (mapc #'disable-theme custom-enabled-themes)
   (let ((hour (string-to-number (format-time-string "%H")))
 	(day-start (or day-start 8))
 	(night-start (or night-start 19)))
     ;; Dark theme between NIGHT-START and DAY-START
     (load-theme (if (or (<= night-start hour) (<= hour day-start))
-		    dark-theme light-theme))))
+		    dark-theme light-theme)))
+  ;; Disable the remainder of the enabled themes.  We do this at the
+  ;; end to prevent going from a state of having a theme to having no
+  ;; theme, which would often cause a sudden drastic but momentary
+  ;; change in color (e.g. dark theme to light theme)
+  (mapc #'disable-theme (cdr custom-enabled-themes)))
 
 ;;;;; Doric-themes
 ;; Minimalistic but visible and effective themes.  (Cf. modus-themes
