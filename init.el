@@ -1961,8 +1961,15 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-mem-do-warn-title-collisions nil)
   :config
   (org-mem-updater-mode 1)
-  (org-mem-roamy-db-mode 1) ; 2025-04-02: This is required for collecting ROAM_REFS information
-
+  (progn
+    ;; Emacsql is required for `org-mem-roamy-db-mode’, as it will
+    ;; error otherwise.
+    (use-package emacsql
+      :ensure t
+      :demand t
+      :config
+      (org-mem-roamy-db-mode 1)))
+  
   ;; NOTE 2025-03-23: Not enabled for now because I do not use it and it is in
   ;; flux, so I may enable in the future when it is more stable and finalized.
   ;; (org-mem-orgdb-mode 1)
