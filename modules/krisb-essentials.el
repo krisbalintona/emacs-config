@@ -160,8 +160,6 @@
   (krisb-reveal-global-mode 1))
 
 ;;; Miscellaneous
-;;;; Enable all disabled commands
-(setopt disabled-command-function nil)
 
 ;;;; More leeway for Emacs subprocesses
 ;; Let Emacs subprocesses read more data per chunk

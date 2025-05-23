@@ -2813,4 +2813,6 @@ to if called with ARG, or any prefix argument."
 ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
 ;; `duplicate-region-final-position' user options
 (bind-key "C-x ;" #'duplicate-dwim)
-(put 'help-fns-edit-variable 'disabled nil)
+
+;; Enable all disabled commands
+(setopt disabled-command-function nil)
