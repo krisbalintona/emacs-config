@@ -1462,6 +1462,21 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :bind
   ([remap dabbrev-expand] . hippie-expand))
 
+;;;; Autorevert
+;; Automatically update buffers as files are externally modified
+;; TODO 2025-05-22: Document:
+;; - `auto-revert-verbose’
+(use-package autorevert
+  :ensure nil
+  :hook
+  (on-first-file-hook . global-auto-revert-mode)
+  :custom
+  (auto-revert-interval 3)
+  (auto-revert-avoid-polling t)	    ; Has caveats.  Read its docstring
+  (auto-revert-check-vc-info t)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'auto-revert-mode))
+
 ;;; Fluff
 
 ;;;; Recursion-indicator
