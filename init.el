@@ -2488,11 +2488,7 @@ loaded."
                 ((require 'org-mem))
                 (entry (org-mem-entry-by-id id))
                 ((require 'org-node))
-                (;; FIXME 2025-05-23: Is there a better solution than
-                 ;; this?  I might create an issue upstream to return
-                 ;; a predicate that returns non-nil if entry is a
-                 ;; node (i.e. non-filtered entry)
-                 (funcall org-node-filter-fn entry))
+                ((org-node-p entry))
                 (title (org-mem-file-title-strict entry)))
       (rename-buffer (generate-new-buffer-name title (buffer-name)))))
   ;; The reason we add `krisb-org-node-rename-buffer-name-to-title’ to
