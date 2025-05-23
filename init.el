@@ -1206,6 +1206,9 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
                           :family (fontaine--get-preset-property fontaine-current-preset :term-family)))))
 
 ;;;; Ibuffer
+;; TODO 2025-05-23: Document these packages’ relation to ibuffer:
+;; - buffer-terminator
+;; - bufler
 (use-package ibuffer
   :ensure nil
   :bind
