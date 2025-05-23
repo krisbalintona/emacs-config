@@ -650,6 +650,17 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 ;;;; Insert spaces instead of tab characters
 (setopt indent-tabs-mode nil)
 
+;;;; Clipboard stuff
+;; Don’t wait until yanking to put clipboard text into `kill-ring’
+(setopt save-interprogram-paste-before-kill t)
+
+;; Wayland compatibility
+(when (getenv "WAYLAND_DISPLAY")
+  (setopt interprogram-cut-function
+          (lambda (text)
+            (start-process "wl-copy" nil "wl-copy"
+                           "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
+
 ;;; Three steps below
 
 ;;;; Vc-jj
@@ -2992,6 +3003,3 @@ to if called with ARG, or any prefix argument."
 
 ;; Enable all disabled commands
 (setopt disabled-command-function nil)
-
-;; Don’t wait until yanking to put clipboard text into `kill-ring’
-(setopt save-interprogram-paste-before-kill t)
