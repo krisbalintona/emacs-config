@@ -2146,6 +2146,13 @@ which file on the system it backs up."
 ;;;; Don't create lock files
 (setopt create-lockfiles nil)
 
+;;;; Hide-mode-line
+(use-package hide-mode-line
+  :ensure t
+  :bind
+  ( :map krisb-toggle-keymap
+    ("m" . hide-mode-line-mode)))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
