@@ -2327,20 +2327,20 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-mem-do-warn-title-collisions nil)
   :config
   (org-mem-updater-mode 1)
-  (progn
-    ;; Emacsql is required for `org-mem-roamy-db-mode’, as it will
+  ;; 2025-05-23: I’ve enabled the mode, although I have no use for the
+  ;; generated sqlite database for now.
+  (org-mem-db1-mode 1)
+
+  ;; Load things related to org-mem’s interaction with org-roam
+  (with-eval-after-load 'org-roam
+    ;; emacsql is required for `org-mem-roamy-db-mode’, as it will
     ;; error otherwise.
     (use-package emacsql
       :ensure t
       :demand t
       :config
-      (org-mem-roamy-db-mode 1)))
-  
-  ;; NOTE 2025-03-23: Not enabled for now because I do not use it and it is in
-  ;; flux, so I may enable in the future when it is more stable and finalized.
-  ;; (org-mem-orgdb-mode 1)
-  ;; End dependence on `org-roam-db-sync'
-  (with-eval-after-load 'org-roam
+      (org-mem-roamy-db-mode 1))
+    ;; End dependence on `org-roam-db-sync'
     (setopt org-roam-db-update-on-save nil
             org-mem-roamy-do-overwrite-real-db t)
     (org-roam-db-autosync-mode -1)))
@@ -2348,8 +2348,6 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 ;;;; Org-node
 (use-package org-node
   :ensure t
-  :hook
-  (find-file-hook . krisb-org-node-rename-buffer-name-to-title)
   :bind
   ( :map krisb-note-keymap
     ("l" . org-node-context-toggle)
@@ -2368,6 +2366,33 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-node-filter-fn 'krisb-org-node-filter-fn)
   (org-node-warn-title-collisions nil)
   (org-node-renames-allowed-dirs (list krisb-notes-directory))
+  :init
+  ;; Rename buffer to the file's title if the file is an org-node
+  ;; node.
+  (defun krisb-org-node-rename-buffer-name-to-title ()
+    "Rename org buffer to its #+TITLE property.
+This only occurs when the file is an org-mem entry.  (See
+`org-mem-watch-dirs' for files may contain entries.)"
+    (when-let* (((eq major-mode 'org-mode)) ; Guard
+		((require 'org-mem))
+		(entry (org-mem-entry-at-pos-in-file 0 (buffer-file-name)))
+		((require 'org-node))
+		;; Check if entry is would be filter by
+		;; `org-node-filter-fn’
+		(;; FIXME 2025-05-23: Is there a better solution than
+		 ;; this?  I might create an issue upstream to return
+		 ;; a predicate that returns non-nil if entry is a
+		 ;; node (i.e. non-filtered entry)
+		 (funcall
+		  (org-node--try-ensure-compiled org-node-filter-fn) entry))
+		(title (org-mem-file-title-strict entry)))
+      (rename-buffer (generate-new-buffer-name title (buffer-name)))))
+  ;; The reason we add `krisb-org-node-rename-buffer-name-to-title’ to
+  ;; `org-mode-hook’ here is because we do not want org-node being
+  ;; loaded when we opn just any org-mode buffer.  Instead, we require
+  ;; org-mem and org-node only when we need.  This helps keep org-mem
+  ;; and org-node deferred as late as possible.
+  (add-hook 'org-mode-hook #'krisb-org-node-rename-buffer-name-to-title)
   :config
   (org-node-cache-mode 1)
   (org-node-context-follow-mode 1)
@@ -2387,26 +2412,7 @@ nodes:
             (when exclude-val (string= "t" (string-trim exclude-val)))
             ;; More conditions here
             ))))
-
-  ;; Rename buffer to the file's title if the file is an org-node.
-  ;; NOTE 2025-04-23: We add this to `find-file-hook' rather than
-  ;; `org-mode-hook' since successive calls to
-  ;; `krisb-org-node-rename-buffer-name-to-title' always change the
-  ;; buffer name because of `generate-new-buffer-name' (which must be
-  ;; used to avoid naming conflicts).  Not sure if this is avoidable.
-  ;; But this suffices for now.
-  (defun krisb-org-node-rename-buffer-name-to-title ()
-    "Rename buffer to its #+TITLE property.
-This only occurs when the file is an org-node node."
-    (when (derived-mode-p 'org-mode)
-      (when-let ((id (save-excursion
-                       (save-restriction
-                         (widen)
-                         (org-entry-get (point-min) "ID"))))
-                 (node (gethash id org-nodes))
-                 (title (org-node-get-title node)))
-        (rename-buffer (generate-new-buffer-name title (buffer-name))))))
-
+  
   ;; Bespoke `org-node-find'
   (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
     "Return the value of the ROAM_BOX property of NODE."
