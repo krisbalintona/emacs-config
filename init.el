@@ -2992,3 +2992,6 @@ to if called with ARG, or any prefix argument."
 
 ;; Enable all disabled commands
 (setopt disabled-command-function nil)
+
+;; Don’t wait until yanking to put clipboard text into `kill-ring’
+(setopt save-interprogram-paste-before-kill t)
