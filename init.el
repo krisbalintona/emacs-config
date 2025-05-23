@@ -1978,10 +1978,14 @@ ORIG-FUN should be `ispell-completion-at-point'."
   :custom
   ;; Applies to `tempel-expand' and `tempel-complete'.  We prefer
   ;; non-pair characters to avoid inserting an extra pair from
-  ;; `electric-pair-mode'.  It should also ideally be an unused (or at
-  ;; least very rare) comment delimiter to avoid TAB indenting the
-  ;; line when `tab-always-indent' is \\='complete
-  (tempel-trigger-prefix "=")
+  ;; `electric-pair-mode'.  If set, it should be an unused (or at
+  ;; least very rarely used) comment delimiter to avoid indenting the
+  ;; line when pressing the TAB key and with `tab-always-indent' set
+  ;; to \\='complete.  If this is set to nil, then template names
+  ;; should not be ambiguous, otherwise trying to complete other
+  ;; symbol names will get hijacked by completing for tempel templates
+  ;; (assuming the tempel `completion-at-point’ functions are set).
+  (tempel-trigger-prefix nil)
   :init
   ;; Element that expands other templates by name.  E.g., (i header)
   ;; expands the template named "header."
