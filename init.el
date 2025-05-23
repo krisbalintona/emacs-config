@@ -1781,6 +1781,105 @@ command."
     ("l" . dired-hist-go-back)
     ("r" . dired-hist-go-forward)))
 
+;;;; Auto saves
+;; TODO 2025-05-23: Document:
+;; - `auto-save-include-big-deletions’
+;; - `delete-auto-save-files’ and
+;;   `kill-buffer-delete-auto-save-files’
+;; - `remote-file-name-inhibit-auto-save-visited’
+;; TODO 2025-05-23: Note that auto-save is distinct from
+;; `auto-save-visited-mode’
+(use-package files
+  :ensure nil
+  :hook
+  (on-first-file-hook . auto-save-visited-mode)
+  :custom
+  (auto-save-default t) ; Only a local minor mode exists; this variable influences the global value
+  (auto-save-timeout 5)
+  (auto-save-interval 150)
+  ;; TODO 2025-05-23: Revisit this.
+  ;; (auto-save-no-message t)
+  ;; `auto-save-visited-mode’
+  (auto-save-visited-interval 8)
+  (auto-save-visited-predicate	      ; Value Inspired by `super-save'
+   (lambda ()
+     (or
+      ;; TODO 2025-05-23: Revisit this.
+      ;; Don’t auto save buffers that are too long, since that may
+      ;; lead to noticable delays
+      (< (save-restriction (widen) (count-lines (point-min) (point-max)))
+         5000)
+      ;; Don’t auto-save `pdf-view-mode’ buffers
+      (derived-mode-p 'pdf-view-mode))))
+  :config
+  ;; Modified from Doom Emacs.  Auto save files have names that are
+  ;; hashed.
+  (defun krisb-auto-save-hash-file-name (&rest args)
+    "Turn `buffer-file-name' into a hash.
+Then apply ARGS."
+    (let ((buffer-file-name
+           (if (or
+		;; Don't do anything for non-file-visiting
+		;; buffers. Names generated for those are short enough
+		;; already.
+		(null buffer-file-name)
+		;; If an alternate handler exists for this path, bow
+		;; out. Most of them end up calling
+		;; `make-auto-save-file-name' again anyway, so we
+		;; still achieve this advice's ultimate goal.
+		(find-file-name-handler buffer-file-name
+					'make-auto-save-file-name))
+               buffer-file-name
+             (sha1 buffer-file-name))))
+      (apply args)))
+  (advice-add 'make-auto-save-file-name :around #'krisb-auto-save-hash-file-name))
+
+;;;; Backups
+;; Backup files. "Emacs makes a backup for a file only the first time
+;; the file is saved from the buffer that visits it."
+;; TODO 2025-05-22: Document:
+;; - `make-backup-files’
+;; - `dired-kept-versions’
+;; - `kept-old-versions’
+(use-package files
+  :ensure nil
+  :custom
+  (backup-by-copying t)		 ; See (info "(emacs) Backup Copying")
+  (vc-make-backup-files t)
+  ;; Numbering backups
+  (version-control t)
+  (kept-new-versions 4)
+  (delete-old-versions t)
+  :config
+  ;; TODO 2025-05-23: Mention no-littering's
+  ;; `no-littering-theme-backups'.
+  ;; Modified from Doom Emacs.  Backup files have names that are hashed.
+  (defun krisb-backup-file-name-hash (fn file)
+    "Hash the backup file name.
+Takes any FILE and return a hashed version.
+
+This is necessary when the user has very long file names since some
+systems, including Linux, have a maximum for the number of bytes a file
+name occupies.  With this method, we ensure backup file names are an
+acceptable length while still being unique.  The only potential downside
+is that outside of Emacs, the backup file name alone does not indicate
+which file on the system it backs up."
+    (let ((alist backup-directory-alist)
+          backup-directory)
+      (while alist
+	(let ((elt (car alist)))
+          (if (string-match (car elt) file)
+              (setq backup-directory (cdr elt)
+                    alist nil)
+            (setq alist (cdr alist)))))
+      (let ((file (funcall fn file)))
+	(if (or (null backup-directory)
+		(not (file-name-absolute-p backup-directory)))
+            file
+          (expand-file-name (sha1 (file-name-nondirectory file))
+                            (file-name-directory file))))))
+  (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
