@@ -2319,6 +2319,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 ;;;; Org-Mem
 (use-package org-mem
   :ensure t
+  :defer t
   :custom
   (org-mem-do-sync-with-org-id t)
   (org-mem-watch-dirs (list krisb-org-directory))
