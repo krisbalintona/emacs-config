@@ -424,6 +424,80 @@ default to 8."
           (eq char (char-before (1- (point)))))
      (eq (char-syntax (following-char)) ?w))))
 
+;;;; Garbage collection
+;; NOTE 2024-02-11: Please reference
+;; https://emacsconf.org/2023/talks/gc/ for a statistically-informed
+;; recommendation for GC variables
+(setopt garbage-collection-messages t
+        gc-cons-percentage 0.15)
+
+;; Restore `gc-cons-threshold’ to its default value.  We set it to an
+;; exceptionally high value in early-init.el, so we restore it after
+;; initialization.
+(add-hook 'after-init-hook
+          (lambda () (setopt gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))))
+
+;; Diagnose memory usage: see how Emacs is using memory. From
+;; https://www.reddit.com/r/emacs/comments/ck4zb3/comment/evji1n7/?utm_source=share&utm_medium=web2x&context=3
+(defun krisb-diagnose-garbage-collect ()
+  "Run `garbage-collect' and print stats about memory usage."
+  (interactive)
+  (message (cl-loop for (type size used free) in (garbage-collect)
+                    for used = (* used size)
+                    for free = (* (or free 0) size)
+                    for total = (file-size-human-readable (+ used free))
+                    for used = (file-size-human-readable used)
+                    for free = (file-size-human-readable free)
+                    concat (format "%s: %s + %s = %s\n" type used free total))))
+
+;;;; GCMH
+;; Garbage collect on when idle
+;; TODO 2025-05-23: Document
+;; - `gcmh-low-cons-threshold’
+(use-package gcmh
+  :ensure t
+  :hook
+  (on-first-buffer-hook . gcmh-mode)
+  (minibuffer-setup-hook . krisb-gcmh-minibuffer-setup)
+  (minibuffer-exit-hook . krisb-gcmh-minibuffer-exit)
+  :custom
+  ;; For a related discussion, see
+  ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3.
+  ;; 2025-04-06: The value below is taken from Doom Emacs; it was
+  ;; bumped up from 16mb on commit
+  ;; 80566503646dd80c7604220f184076e190144675, on Dec 6, 2024.
+  (gcmh-high-cons-threshold (* 64 1024 1024)) ; 64 mb
+  ;; If the idle delay is too long, we run the risk of runaway memory
+  ;; usage in busy sessions.  And if it's too low, then we may as well
+  ;; not be using gcmh at all.
+  (gcmh-idle-delay 'auto)               ; Taken from Doom Emacs
+  (gcmh-auto-idle-delay-factor 10)      ; Taken from Doom Emacs
+  (gcmh-verbose nil)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'gcmh-mode)
+  (setopt garbage-collection-messages gcmh-verbose)
+
+  ;; Increase GC threshold when in minibuffer
+  (defvar krisb-gc-minibuffer--original gcmh-high-cons-threshold
+    "Temporary variable to hold `gcmh-high-cons-threshold'")
+
+  (defun krisb-gcmh-minibuffer-setup ()
+    "Temporarily have \"limitless\" `gc-cons-threshold'."
+    ;; (message "[krisb-gcmh-minibuffer-setup] Increasing GC threshold")
+    (setq gcmh-high-cons-threshold most-positive-fixnum))
+
+  (defun krisb-gcmh-minibuffer-exit ()
+    "Restore value of `gc-cons-threshold'."
+    ;; (message "[krisb-gcmh-minibuffer-exit] Restoring GC threshold")
+    (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original))
+
+  ;; Increase `gc-cons-threshold' while using corfu too, like we do
+  ;; for the minibuffer
+  (with-eval-after-load 'corfu
+    (advice-add 'completion-at-point :before #'krisb-gcmh-minibuffer-setup)
+    (advice-add 'corfu-quit :before #'krisb-gcmh-minibuffer-exit)
+    (advice-add 'corfu-insert :before #'krisb-gcmh-minibuffer-exit)))
+
 ;;; Two steps below
 
 ;;;; Savehist
