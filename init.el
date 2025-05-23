@@ -98,11 +98,10 @@
 ;;;; Use-package
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
 ;; it's installed just in case I test/use an earlier Emacs version
-(when (package-installed-p 'use-package)
-  ;; Use package.el unless we're using elpaca
-  (if (and package-enable-at-startup (not elpaca-installer-version))
-      (package-install 'use-package)
-    (elpaca (use-package :wait t))))
+(unless (featurep 'use-package)
+  (if (featurep 'elpaca)
+      (elpaca (use-package :wait t))
+    (package-install 'use-package)))
 
 ;; TODO 2025-05-20: Document `use-package-lint' in literate config
 
