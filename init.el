@@ -519,8 +519,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 Taken from
 https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1."
     (when (and misc (eq (car misc) 'narrowed))
-      (apply #'narrow-to-region (cdr misc))
-      (message "Narrowed %s" n)))
+      (apply #'narrow-to-region (cdr misc))))
   (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 
 ;;;; Isearch
