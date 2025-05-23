@@ -2049,6 +2049,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-node-context-persist-on-disk t)
   (org-node-affixation-fn 'krisb-org-node-affixation-fn)
   (org-node-alter-candidates t)
+  (org-node-one-empty-candidate nil)
   (org-node-custom-link-format-fn 'krisb-org-node-custom-link-format-fn)
   (org-node-filter-fn 'krisb-org-node-filter-fn)
   (org-node-warn-title-collisions nil)
