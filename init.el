@@ -1210,11 +1210,49 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :ensure nil
   :bind
   ([remap list-buffers] . ibuffer)
+  :bind
+  ( :map ibuffer-mode-map
+    ("* d" . krisb-ibuffer-mark-displayed-buffers))
   :bind*
   ( :map ibuffer-mode-map
     ("SPC" . scroll-up-command)
-    ("DEL" . scroll-down-command)
-    ("* d" . krisb-ibuffer-mark-displayed-buffers)))
+    ("DEL" . scroll-down-command))
+  :config
+  ;; Bespoke command for marking buffers displayed across all tab-bar
+  ;; tabs.  Useful for using `ibuffer’ to clean up buffers after a
+  ;; long-running Emacs session.
+  (defun krisb-ibuffer--get-displayed-buffers ()
+    "Return a list of buffers visible in all windows across all tab-bar tabs."
+    (let (displayed-buffers)
+      (dolist (frame (frame-list))
+        (save-window-excursion
+          (dolist (tab (tab-bar-tabs frame))
+            ;; The current tab does not have a stored window
+            ;; configuration, so we don't need to switch to its window
+            ;; configuration for its window list
+            (when (eq 'tab (car tab))
+              (let* ((tab-info (cdr tab))
+                     (tab-window-conf (cdr (assq 'wc tab-info))))
+                (set-window-configuration tab-window-conf)))
+            (dolist (win (window-list nil 'never))
+              (cl-pushnew (window-buffer win) displayed-buffers)))))
+      displayed-buffers))
+
+  (defun krisb-ibuffer-mark-displayed-buffers ()
+    "Mark all buffers visible in any windows across all tab-bar tabs."
+    (interactive)
+    ;; We re-implement `ibuffer-mark-on-buffer' to call the expensive
+    ;; `krisb-ibuffer--get-displayed-buffers' only once
+    (let* ((displayed-buffers (krisb-ibuffer--get-displayed-buffers))
+           (count
+            (ibuffer-map-lines
+             (lambda (buf _mark)
+               (when (member buf displayed-buffers)
+                 (ibuffer-set-mark-1 ibuffer-marked-char)
+                 t))
+             nil nil)))
+      (ibuffer-redisplay t)
+      (message "Marked %s buffers" count))))
 
 ;;;; Scratch.el
 ;; Easily create scratch buffers for different modes
