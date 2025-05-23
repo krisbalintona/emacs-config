@@ -1446,6 +1446,22 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ;;     (add-hook 'xref-after-jump-hook #'krisb-reveal-fold))
   )
 
+;;;; Dabbrev
+(use-package dabbrev
+  :ensure nil
+  :config
+  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+  (dolist (mode '(doc-view-mode
+                  pdf-view-mode
+                  tags-table-mode))
+    (add-to-list 'dabbrev-ignored-buffer-modes mode)))
+
+;;;; Hippie-expand
+(use-package hippie-exp
+  :ensure nil
+  :bind
+  ([remap dabbrev-expand] . hippie-expand))
+
 ;;; Fluff
 
 ;;;; Recursion-indicator
