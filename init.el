@@ -919,7 +919,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :ensure t
   :demand t
   :hook
-  (minibuffer-setup . krisb-corfu-enable-in-minibuffer-conditionally)
+  (minibuffer-setup-hook . krisb-corfu-enable-in-minibuffer-conditionally)
   :bind
   (;; TODO 2025-05-20: Revisit this.
    ;; ("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
@@ -2763,7 +2763,7 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
   ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
   :hook
-  (dictionary-mode . hide-mode-line-mode)
+  (dictionary-mode-hook . hide-mode-line-mode)
   :bind
   ("C-h =" . krisb-dictionary-dwim)
   :custom
