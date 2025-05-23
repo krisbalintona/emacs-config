@@ -2455,19 +2455,28 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (defun krisb-org-node-rename-buffer-name-to-title ()
     "Rename org buffer to its #+TITLE property.
 This only occurs when the file is an org-mem entry.  (See
-`org-mem-watch-dirs' for files may contain entries.)"
+`org-mem-watch-dirs' for files may contain entries.)
+
+This function is written such that it calls org-mem and org-node as late
+as possible, which is useful for ensuring those packages are lazy
+loaded."
+    ;; Our strategy for keeping org-mem and org-node lazy loaded is as
+    ;; follows:
+    ;; 1. Check if there is an ID at the top-level.
+    ;; 2. Check if the ID has an associated org-mem entry (see
+    ;;    `org-mem-watch-dirs'’).
+    ;; 3. Check if entry is would be filter by `org-node-filter-fn’.
     (when-let* (((eq major-mode 'org-mode)) ; Guard
+                ;; First check if there is an ID 
+                (id (save-excursion (widen) (org-id-get (point-min))))
                 ((require 'org-mem))
-                (entry (org-mem-entry-at-pos-in-file 0 (buffer-file-name)))
+                (entry (org-mem-entry-by-id id))
                 ((require 'org-node))
-                ;; Check if entry is would be filter by
-                ;; `org-node-filter-fn’
                 (;; FIXME 2025-05-23: Is there a better solution than
                  ;; this?  I might create an issue upstream to return
                  ;; a predicate that returns non-nil if entry is a
                  ;; node (i.e. non-filtered entry)
-                 (funcall
-                  (org-node--try-ensure-compiled org-node-filter-fn) entry))
+                 (funcall org-node-filter-fn entry))
                 (title (org-mem-file-title-strict entry)))
       (rename-buffer (generate-new-buffer-name title (buffer-name)))))
   ;; The reason we add `krisb-org-node-rename-buffer-name-to-title’ to
