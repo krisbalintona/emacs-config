@@ -60,9 +60,6 @@
   "The directory for everything Zotero.
 Useful for some citation-related configurations.")
 
-(defvar krisb-email-directory (expand-file-name "~/Documents/emails/")
-  "Directory that houses my local email files.")
-
 ;;; Functions
 (defun krisb-org-agenda-directory-files ()
   "Return list of all org and org_archive files in `krisb-org-directory'."

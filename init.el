@@ -282,7 +282,7 @@
   :doc "Prefix for toggling stuff.")
 (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 
-;;;;; Writing
+;;;;; Directories
 ;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
 ;; does not exist, other packages that depend on this value are given
 ;; a non-existing path, likelly resulting in errors.  We might solve
@@ -304,6 +304,10 @@
 (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
   "The directory holding my main org-agenda files.")
 
+(defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
+  "Directory that houses my local email files.")
+
+;;;;; Files
 (defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
   "My main org-agenda file.")
 
@@ -2917,6 +2921,122 @@ If region is active, use the region's contents instead."
   (org-id-track-globally t)
   (org-id-method 'ts)
   (org-id-link-to-org-use-id 'use-existing))
+
+;;; Emails
+
+;;;; Message
+;; Universal email composition mode.  See (info "(message) Variables")
+;; for more information.
+;; TODO 2025-05-23: Document:
+;; - `message-confirm-send’
+;; - `mml-attach-file-at-the-end’
+;; - `message-ignored-cited-headers’
+;; - `message-alternative-emails’
+;; - `message-confirm-send’
+;; - `message-send-rename-function’
+;; - `message-generate-new-buffers’
+;; - `message-mark-insert-begin’
+;; - `message-mark-insert-end’
+;; - `message-signature-insert-empty-line’
+;; TODO 2025-05-23: Can we use `message-add-action’ effectively?  See
+;; (info "(message) Message Actions")
+;; TODO 2025-05-23: Document that users should probably read all the
+;; nodes in (info "(message) Commands")
+(use-package message
+  :ensure nil
+  :defer t
+  :hook
+  (message-setup-hook . message-sort-headers)
+  ;; I like to use prose linters.  See my flymake and
+  ;; flymake-collection configurations that leverage vale
+  (message-mode-hook . flymake-mode)
+  (message-mode-hook . olivetti-mode)
+  (message-mode-hook . mixed-pitch-mode)
+  (message-send-mail-hook . krisb-message-check-subject)
+  (message-send-mail-hook . krisb-message-check-from)
+  :custom
+  (message-directory krisb-email-directory)
+  (message-mail-user-agent t)           ; Use `mail-user-agent'
+
+  ;; Citations. See e.g. `message-cite-style-gmail' for the options relevant to
+  ;; citations. Importantly, I can set these options buffer locally.
+  (message-cite-function 'message-cite-original-without-signature)
+  (message-citation-line-function 'message-insert-formatted-citation-line)
+  (message-citation-line-format "On %a, %b %d %Y, %N wrote:\n")
+  (message-cite-reply-position 'below)
+
+  ;; Composition
+  (message-hidden-headers nil)          ; Show all headers
+  ;; Generates all headers in the variables
+  ;; `message-required-headers’, `message-required-news-headers', and
+  ;; `message-required-mail-headers'.  Otherwise, unless another
+  ;; package manually adds headers (e.g. mu4e), those headers won't be
+  ;; inserted into a message draft buffer.  I enable this to make sure
+  ;; that the date header is inserted in a draft.  (No date header
+  ;; means the date is set to time 0, which is annoying for querying
+  ;; emails via their date using e.g. notmuch.)
+  (message-generate-headers-first t)
+  (message-wide-reply-confirm-recipients t)
+  (message-elide-ellipsis "> [... %l lines elided]\n")
+  (message-signature-insert-empty-line t)
+  (message-signature "Kind regards,\nKristoffer\n")
+  (message-signature-separator "^-- *$")
+  (mml-dnd-attach-options t)
+  ;; REVIEW 2025-05-23: `message-auto-save-directory’ should be set
+  ;; relative to `message-directory’, but based on the order of
+  ;; evaluation, it never does so correctly when we set
+  ;; `message-directory’ via :custom.  Submit a patch upstream?
+  (message-auto-save-directory (expand-file-name "drafts" message-directory)) ; Directory where drafts are saved
+  (message-subject-trailing-was-query 'ask)
+  (message-kill-buffer-on-exit t)
+
+  ;; Forwarding
+  (message-forward-as-mime t)          ; NOTE 2024-09-27: Experimental
+  ;; TODO 2025-05-23: Change value per-email depending on
+  ;; `message-cite-reply-position'?
+  (message-forward-before-signature nil)
+  :config
+  ;; TODO 2025-05-23: Revisit this.
+  ;; (krisb-modus-themes-setup-faces
+  ;;  "message"
+  ;;  (set-face-attribute 'message-mml nil :weight 'bold :background bg-sage))
+
+  (with-eval-after-load 'mu4e
+    (setq mu4e-attachment-dir (expand-file-name ".attachments/" message-directory)))
+
+  ;; Taken from Doom. Detect empty subjects, and give users an opportunity to
+  ;; fill something in
+  (defun krisb-message-check-subject ()
+    "Check that a subject is present, and prompt for a subject if not."
+    (save-excursion
+      (goto-char (point-min))
+      (search-forward "--text follows this line--")
+      (re-search-backward "^Subject:")
+      (let ((subject (string-trim (substring (thing-at-point 'line) 8))))
+        (when (string-empty-p subject)
+          (end-of-line)
+          (insert (read-string "Subject (optional): "))))))
+
+  (defun krisb-message-check-from ()
+    "Prompt user to confirm sending from this email.
+If the `user-mail-address’ does not match the email in the FROM header,
+ask to confirm.  This is useful if we have multiple email addresses and
+ensure `user-mail-address’ matches the one we currently would like to
+send from."
+    (save-excursion
+      (goto-char (point-min))
+      (search-forward "--text follows this line--")
+      (re-search-backward "^From:")
+      (let ((from (string-trim (substring (thing-at-point 'line) 5))))
+        (when (and (not (string-match-p (rx (literal user-mail-address)) from))
+                   (not (yes-or-no-p (concat
+                                      "Are you sure you want to send from "
+                                      (propertize from 'face 'highlight)
+                                      "?"))))
+          (cl--set-buffer-substring (pos-bol) (pos-eol)
+                                    (concat
+                                     "From: "
+                                     (read-string "Set FROM to: " user-mail-address))))))))
 
 ;;; Uncategorized
 
