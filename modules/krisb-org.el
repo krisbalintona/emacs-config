@@ -11,16 +11,6 @@
   (org-fontify-whole-block-delimiter-line nil)
   (org-fontify-quote-and-verse-blocks t))
 
-;;;; Org-src
-(use-package org-src
-  :ensure nil
-  :custom
-  (org-src-fontify-natively t)
-  (org-src-window-setup 'current-window)
-  (org-src-block-faces nil) ; Open src block window on current buffer were in the language's major mode
-  (org-edit-src-turn-on-auto-save nil)
-  (org-edit-src-auto-save-idle-delay 3))
-
 ;;;; Org-attach
 (use-package org-attach
   :ensure nil
