@@ -362,7 +362,7 @@ default to 8."
   :custom
   (doric-themes-to-toggle '(doric-marble doric-dark))
   :config
-  (krisb-enable-theme-time-of-day 'doric-light 'doric-dark))
+  (krisb-enable-theme-time-of-day (car doric-themes-to-toggle) (cadr doric-themes-to-toggle)))
 
 ;;;;; Ef-themes
 (use-package ef-themes
@@ -375,7 +375,7 @@ default to 8."
   :custom
   (ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
   :config
-  (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cdr ef-themes-to-toggle)))
+  (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 
 ;;;;; Electric
 ;; Convenient DWIM, out-of-the-way while you edit
