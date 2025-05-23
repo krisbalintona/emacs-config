@@ -2426,9 +2426,10 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-mem-do-warn-title-collisions nil)
   :config
   (org-mem-updater-mode 1)
+  ;; TODO 2025-05-22: Revisit this.
   ;; 2025-05-23: I’ve enabled the mode, although I have no use for the
   ;; generated sqlite database for now.
-  (org-mem-db1-mode 1)
+  ;; (org-mem-db1-mode 1)
 
   ;; Load things related to org-mem’s interaction with org-roam
   (with-eval-after-load 'org-roam
