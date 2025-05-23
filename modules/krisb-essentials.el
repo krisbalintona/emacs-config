@@ -180,9 +180,6 @@
 ;;;; Default fill column
 (setq-default fill-column 80)
 
-;;;; Don't create lock files
-(setopt create-lockfiles nil)
-
 ;;;; Confirm to kill emacs
 (setopt confirm-kill-emacs 'y-or-n-p)
 
