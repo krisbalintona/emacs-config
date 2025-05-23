@@ -237,19 +237,6 @@
   (org-bulletproof-ordered-cycle '("1." "1)"))
   (org-bulletproof-unordered-cycle '("+" "-" "*")))
 
-;;; Org-web-tools
-;; Paste https links with automatic descriptions
-(use-package org-web-tools
-  :bind ( :map krisb-yank-keymap
-          ("b" . org-web-tools-insert-link-for-url))
-  :config
-  (with-eval-after-load 'org-attach
-    (add-to-list 'org-attach-commands
-                 '((?w) org-web-tools-archive-attach
-                   "Download then attach an archive of a webpage using `org-web-tools'\n")))
-
-  (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
-
 ;;; Org-hide-drawers
 ;; Make org drawers less visually obtrusive.
 (use-package org-hide-drawers
