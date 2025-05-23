@@ -2881,6 +2881,16 @@ If region is active, use the region's contents instead."
   ;;             :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t)))))
   )
 
+;;;; Org-footnote
+;; TODO 2025-05-23: Document:
+;; - `org-footnote-define-inline’
+(use-package org-footnote
+  :ensure nil
+  :after org
+  :custom
+  (org-footnote-section nil)            ; Don't create footnote headline
+  (org-footnote-auto-adjust 'sort))
+
 ;;; Uncategorized
 
 ;; Restart or close Emacs

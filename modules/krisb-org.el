@@ -51,15 +51,6 @@
   :custom
   (org-link-search-must-match-exact-headline nil))
 
-;;;; Org-footnote
-(use-package org-footnote
-  :ensure nil
-  :after org
-  :custom
-  (org-footnote-section nil)            ; Don't create footnote headline
-  (org-footnote-auto-adjust t)
-  (org-footnote-define-inline nil))
-
 ;;;; Org-babel
 (use-package ob
   :ensure nil
