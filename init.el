@@ -573,6 +573,9 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (with-eval-after-load 'helpful
     (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 
+;;;; Insert spaces instead of tab characters
+(setopt indent-tabs-mode nil)
+
 ;;; Three steps below
 
 ;;;; Vc-jj

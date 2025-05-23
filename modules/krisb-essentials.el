@@ -180,9 +180,6 @@
 ;;;; Default fill column
 (setq-default fill-column 80)
 
-;;;; Insert spaces instead of tab characters
-(setq-default indent-tabs-mode nil)
-
 ;;;; Don't create lock files
 (setopt create-lockfiles nil)
 
