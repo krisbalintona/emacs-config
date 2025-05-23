@@ -20,7 +20,7 @@
         package-archive-priorities '(("gnu-elpa" . 4)
                                      ("nongnu" . 3)
                                      ("gnu-elpa-devel" . 2)
-				     ("melpa" . 1))
+                                     ("melpa" . 1))
         package-install-upgrade-built-in t
 
         load-prefer-newer t) ; Do not load outdated byte code files
@@ -36,7 +36,7 @@
 (defun krisb-guix-emacs-build-date ()
   "Extract YYYYMMDD from a datetime string like '2025-05-19 15:20:57.782742938 -0500'."
   (let* ((emacs-build-path (when (string-match "--prefix=\\([^ ]+\\)" system-configuration-options)
-			     (match-string 1 system-configuration-options)))
+                             (match-string 1 system-configuration-options)))
          (datetime-string (shell-command-to-string (concat "stat -c %w " emacs-build-path))))
     (when (string-match "\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\)" datetime-string)
       (concat (match-string 1 datetime-string)
@@ -115,21 +115,21 @@
 ;; configuration with cross dependencies across packages.
 ;; Consequently, debugging is easier and sneaky bugs are avoided.
 (setopt use-package-always-ensure nil
-	;; Be explicit with deferral via e.g. through :defer, :bind,
+        ;; Be explicit with deferral via e.g. through :defer, :bind,
         ;; :after, and so on
         use-package-always-defer nil
-	use-package-always-demand nil
-	;; Also be explicit with hook names
-	use-package-hook-name-suffix nil)
+        use-package-always-demand nil
+        ;; Also be explicit with hook names
+        use-package-hook-name-suffix nil)
 
 ;; Let use-package collect data that is useful for introspecting my
 ;; Emacs session and use-package configurations
 (setopt use-package-expand-minimally nil
-	;; Only be verbose when interpreted, otherwise errors are
-	;; caught at compile time
-	use-package-verbose (not (bound-and-true-p byte-compile-current-file))
-	;; Compile statistics to be shown in `use-package-report'
-	use-package-compute-statistics t)
+        ;; Only be verbose when interpreted, otherwise errors are
+        ;; caught at compile time
+        use-package-verbose (not (bound-and-true-p byte-compile-current-file))
+        ;; Compile statistics to be shown in `use-package-report'
+        use-package-compute-statistics t)
 
 ;; Install elpaca and use-package integration (via use-package's
 ;; :ensure keyword)
@@ -165,7 +165,7 @@
 (setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
 (load custom-file 'noerror)
 
-;;;; Fontaine 
+;;;; Fontaine
 ;; Define then apply face presets
 (use-package fontaine
   :ensure (:wait t) ; To have faces set ASAP during startup
@@ -258,7 +258,7 @@
 
 ;;;; My variables, functions, macros, and keymaps
 (setopt user-full-name "Kristoffer Balintona"
-	user-mail-address "krisbalintona@gmail.com")
+        user-mail-address "krisbalintona@gmail.com")
 
 ;;;;; Keymaps
 (defvar-keymap krisb-note-keymap
@@ -328,6 +328,7 @@
   (exec-path-from-shell-initialize))
 
 ;;;; Theming
+
 ;;;;; Enable theme based on time of day
 (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
   "Enables LIGHT-THEME or DARK-THEME based on time of day.
@@ -338,11 +339,11 @@ hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
 default to 8."
   (interactive)
   (let ((hour (string-to-number (format-time-string "%H")))
-	(day-start (or day-start 8))
-	(night-start (or night-start 19)))
+        (day-start (or day-start 8))
+        (night-start (or night-start 19)))
     ;; Dark theme between NIGHT-START and DAY-START
     (load-theme (if (or (<= night-start hour) (<= hour day-start))
-		    dark-theme light-theme)))
+                    dark-theme light-theme)))
   ;; Disable the remainder of the enabled themes.  We do this at the
   ;; end to prevent going from a state of having a theme to having no
   ;; theme, which would often cause a sudden drastic but momentary
@@ -386,7 +387,7 @@ default to 8."
 ;;
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:
-;; 
+;;
 ;; - `electric-quote-inhibit-functions'
 ;; - `electric-pair-delete-adjacent-pairs'
 ;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
@@ -420,7 +421,7 @@ default to 8."
      ;; Regular predicates
      (eq char (char-after))
      (and (eq char (char-before))
-	  (eq char (char-before (1- (point)))))
+          (eq char (char-before (1- (point)))))
      (eq (char-syntax (following-char)) ?w))))
 
 ;;; Two steps below
@@ -478,12 +479,12 @@ default to 8."
    . (lambda ()
        (desktop-save-mode 1)
        (let ((key "--no-desktop"))
-	 (when (member key command-line-args)
+         (when (member key command-line-args)
            (setq command-line-args (delete key command-line-args))
            (desktop-save-mode 0)))
        (when desktop-save-mode
-	 (desktop-read)
-	 (setq inhibit-startup-screen t))))
+         (desktop-read)
+         (setq inhibit-startup-screen t))))
   :custom
   (desktop-load-locked-desktop 'check-pid)
   (desktop-save 'ask-if-new)
@@ -497,7 +498,7 @@ default to 8."
   ;;          ;; Don't want to open my large org-agenda files which I'll open
   ;;          ;; eventually anyway
   ;;          (literal krisb-org-agenda-directory))))
-  
+
   (desktop-restore-eager 15)
   (desktop-restore-forces-onscreen nil)
   (desktop-restore-frames t)
@@ -512,7 +513,7 @@ default to 8."
 Taken from
 https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1."
     (setq desktop-save-buffer
-	  (lambda (_) (if (buffer-narrowed-p) (list 'narrowed (point-min) (point-max))))))
+          (lambda (_) (if (buffer-narrowed-p) (list 'narrowed (point-min) (point-max))))))
 
   (defun krisb-desktop--restore-narrowing (_f n misc &rest _)
     "Restore narrowing of buffer.
@@ -631,7 +632,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 ;;;; Minibuffer.el
 ;; TODO 2025-05-20: Document the following options below in the
 ;; literate configuration:
-;; 
+;;
 ;; - `completion-cycle-threshold'
 (use-package minibuffer
   :ensure nil
@@ -846,7 +847,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   ;; Allow spaces and don't quit on boundary to leverage orderless's
   ;; space-separated components
   (corfu-quit-at-boundary nil)
-  (corfu-separator ?\s)	; Use space
+  (corfu-separator ?\s) ; Use space
   (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
   :custom-face
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts
@@ -863,7 +864,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
     (unless (bound-and-true-p vertico-mode)
       (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
       (corfu-mode 1)))
-  
+
   ;; Transfer corfu completion to the minibuffer
   (defun krisb-corfu-move-to-minibuffer ()
     "Transfer corfu completion to the minibuffer.
@@ -1045,9 +1046,9 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ;; Add log-edit histories to `consult-mode-histories'
   (add-to-list 'consult-mode-histories
                '(log-edit-mode
-		 log-edit-comment-ring
-		 log-edit-comment-ring-index
-		 log-edit-beginning-of-line))
+                 log-edit-comment-ring
+                 log-edit-comment-ring-index
+                 log-edit-beginning-of-line))
 
   ;; Use the faster plocate rather than locate
   (when (executable-find "plocate")
@@ -1141,7 +1142,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 ;;;; Mode line format
 (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
 
-(setopt mode-line-compact 'long	; Emacs 28
+(setopt mode-line-compact 'long ; Emacs 28
         mode-line-right-align-edge 'window
         mode-line-percent-position '(-3 "%p") ; Don't show percentage of position in buffer
         mode-line-position-line-format '(" %l")
@@ -1149,20 +1150,20 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 
 ;; TODO 2025-05-20: Revisit this.
 (setopt mode-line-format
-	'("%e" mode-line-front-space
-	  (:propertize
-	   ("" mode-line-mule-info mode-line-client mode-line-modified
-	    mode-line-remote mode-line-window-dedicated)
-	   display (min-width (6.0)))
-	  mode-line-frame-identification
-	  (project-mode-line ("" project-mode-line-format "   "))
-	  mode-line-buffer-identification "   "
-	  mode-line-position
-	  mode-line-format-right-align
-	  (vc-mode vc-mode) "  "
-	  mode-line-modes
-	  mode-line-misc-info
-	  mode-line-end-spaces))
+        '("%e" mode-line-front-space
+          (:propertize
+           ("" mode-line-mule-info mode-line-client mode-line-modified
+            mode-line-remote mode-line-window-dedicated)
+           display (min-width (6.0)))
+          mode-line-frame-identification
+          (project-mode-line ("" project-mode-line-format "   "))
+          mode-line-buffer-identification "   "
+          mode-line-position
+          mode-line-format-right-align
+          (vc-mode vc-mode) "  "
+          mode-line-modes
+          mode-line-misc-info
+          mode-line-end-spaces))
 
 ;; Add segments to `global-mode-string'
 (add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " "))))
@@ -1172,8 +1173,8 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :ensure nil
   :bind* ("M-o" . other-window)
   :custom
-  (quit-restore-window-no-switch t)	; Emacs 31
-  (kill-buffer-quit-windows t))		; Emacs 31
+  (quit-restore-window-no-switch t)     ; Emacs 31
+  (kill-buffer-quit-windows t))         ; Emacs 31
 
 ;;;; EAT
 (use-package eat
@@ -1189,7 +1190,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ( :map krisb-open-keymap
     ("s" . eat)
     :map project-prefix-map
-    ("s" . eat-project))		; Overshadow `project-shell’
+    ("s" . eat-project))                ; Overshadow `project-shell’
   :config
   ;; 2025-04-05: This resolves the continuation lines issue in EAT
   ;; terminal (including eat-shell in
@@ -1285,7 +1286,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
 (use-package imenu
   :ensure nil
   :custom
-  (org-imenu-depth 7)		     ; Show more than just 2 levels...
+  (org-imenu-depth 7)                ; Show more than just 2 levels...
   (imenu-auto-rescan t)
   (imenu-flatten 'group)
   :config
@@ -1310,7 +1311,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ;; backends. Expand this list when necessary
   (vc-async-checkin t)
   (vc-revert-show-diff t)
-  (vc-find-revision-no-save t))		; Emacs 31
+  (vc-find-revision-no-save t))         ; Emacs 31
 
 (use-package vc-git
   :ensure nil
@@ -1319,7 +1320,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :custom
   (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
   (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
-  (vc-git-diff-switches	   ; Show summary diff summary in diff headers
+  (vc-git-diff-switches    ; Show summary diff summary in diff headers
    '("--patch-with-stat" "--histogram"))
   (vc-git-root-log-format
    `("%h %ad (%ar) %aN%d%n  %s"
@@ -1371,7 +1372,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
     (interactive (find-function-read))
     (find-function-do-it function nil 'switch-to-buffer-other-tab))
   :config
-  (find-function-mode 1))		; Emacs 31
+  (find-function-mode 1))               ; Emacs 31
 
 ;;;; Project.el
 ;; TODO 2025-05-22: Document:
@@ -1396,10 +1397,10 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
      (project-eshell "Eshell")
      ,(if (locate-library "eat")
           '(eat-project "EAT")
-	(project-shell "Shell"))
+        (project-shell "Shell"))
      ,(if (locate-library "compile-multi")
           '(compile-multi "Compile-multi")
-	'(project-compile "Compile"))
+        '(project-compile "Compile"))
      (project-recompile "Recompile")
      (project-any-command "Other")))
   (project-mode-line t)
@@ -1417,7 +1418,7 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   (Info-selection-hook . mixed-pitch-mode)
   (Info-selection-hook . krisb-info-font-resize)
   :custom
-  (Info-isearch-search nil)	    ; Limit isearch to the node we see
+  (Info-isearch-search nil)         ; Limit isearch to the node we see
   :config
   (defun krisb-info-font-resize ()
     "Increase the font size of text in Info buffers."
@@ -1507,19 +1508,19 @@ This macro does not affect capfs already in
                      (add-hook 'completion-at-point-functions capf -50 t))))))
 
   (krisb-cape-setup-capfs
-   "elisp"
-   '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
-   (list #'cape-file #'cape-elisp-symbol))
+    "elisp"
+    '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
+    (list #'cape-file #'cape-elisp-symbol))
 
   (krisb-cape-setup-capfs
-   "commit"
-   '(git-commit-setup-hook log-edit-mode-hook)
-   (list #'cape-elisp-symbol #'cape-dabbrev))
+    "commit"
+    '(git-commit-setup-hook log-edit-mode-hook)
+    (list #'cape-elisp-symbol #'cape-dabbrev))
 
   (krisb-cape-setup-capfs
-   "shells"
-   '(eshell-mode-hook comint-mode-hook)
-   (list #'cape-file #'cape-history))
+    "shells"
+    '(eshell-mode-hook comint-mode-hook)
+    (list #'cape-file #'cape-history))
   :config
   ;; Use enchant en_US dictionary
   (with-eval-after-load 'jinx
@@ -1655,7 +1656,7 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (on-first-file-hook . global-auto-revert-mode)
   :custom
   (auto-revert-interval 3)
-  (auto-revert-avoid-polling t)	    ; Has caveats.  Read its docstring
+  (auto-revert-avoid-polling t)     ; Has caveats.  Read its docstring
   (auto-revert-check-vc-info t)
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'auto-revert-mode))
@@ -1709,13 +1710,13 @@ ORIG-FUN should be `ispell-completion-at-point'."
 ;; - `eldoc-echo-area-use-multiline-p'
 (use-package eldoc
   :bind
-  ( :map help-map			
+  ( :map help-map
     ("\." . eldoc-doc-buffer)) ; I don't find much use for `display-local-help'
   :custom
   (eldoc-idle-delay 0.2)
   (eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly) ; TODO 2025-05-20: Revisit this.
   (eldoc-echo-area-prefer-doc-buffer t)
-  (eldoc-help-at-pt t)			; Emacs 31.1
+  (eldoc-help-at-pt t)                  ; Emacs 31.1
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'eldoc-mode))
 
@@ -1825,7 +1826,7 @@ ORIG-FUN should be `ispell-completion-at-point'."
   ;; If `corfu-sort-function' is set buffer-locally, also set
   ;; `completion-preview-sort-function' buffer-locally.  Otherwise, change
   ;; the default value of `completion-preview-sort-function' accordingly.
-  ;; 
+  ;;
   ;; This action only applies when the value of `corfu-sort-function' is
   ;; set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
   ;;                           (when (equal operation 'set)
@@ -1984,7 +1985,7 @@ command."
   ;; (auto-save-no-message t)
   ;; `auto-save-visited-mode’
   (auto-save-visited-interval 8)
-  (auto-save-visited-predicate	      ; Value Inspired by `super-save'
+  (auto-save-visited-predicate        ; Value Inspired by `super-save'
    (lambda ()
      (or
       ;; TODO 2025-05-23: Revisit this.
@@ -2002,16 +2003,16 @@ command."
 Then apply ARGS."
     (let ((buffer-file-name
            (if (or
-		;; Don't do anything for non-file-visiting
-		;; buffers. Names generated for those are short enough
-		;; already.
-		(null buffer-file-name)
-		;; If an alternate handler exists for this path, bow
-		;; out. Most of them end up calling
-		;; `make-auto-save-file-name' again anyway, so we
-		;; still achieve this advice's ultimate goal.
-		(find-file-name-handler buffer-file-name
-					'make-auto-save-file-name))
+                ;; Don't do anything for non-file-visiting
+                ;; buffers. Names generated for those are short enough
+                ;; already.
+                (null buffer-file-name)
+                ;; If an alternate handler exists for this path, bow
+                ;; out. Most of them end up calling
+                ;; `make-auto-save-file-name' again anyway, so we
+                ;; still achieve this advice's ultimate goal.
+                (find-file-name-handler buffer-file-name
+                                        'make-auto-save-file-name))
                buffer-file-name
              (sha1 buffer-file-name))))
       (apply args)))
@@ -2027,7 +2028,7 @@ Then apply ARGS."
 (use-package files
   :ensure nil
   :custom
-  (backup-by-copying t)		 ; See (info "(emacs) Backup Copying")
+  (backup-by-copying t)          ; See (info "(emacs) Backup Copying")
   (vc-make-backup-files t)
   ;; Numbering backups
   (version-control t)
@@ -2050,14 +2051,14 @@ which file on the system it backs up."
     (let ((alist backup-directory-alist)
           backup-directory)
       (while alist
-	(let ((elt (car alist)))
+        (let ((elt (car alist)))
           (if (string-match (car elt) file)
               (setq backup-directory (cdr elt)
                     alist nil)
             (setq alist (cdr alist)))))
       (let ((file (funcall fn file)))
-	(if (or (null backup-directory)
-		(not (file-name-absolute-p backup-directory)))
+        (if (or (null backup-directory)
+                (not (file-name-absolute-p backup-directory)))
             file
           (expand-file-name (sha1 (file-name-nondirectory file))
                             (file-name-directory file))))))
@@ -2097,7 +2098,7 @@ which file on the system it backs up."
   ;; - `org-cycle-separator-lines'
   ;; - `org-cycle-level-faces'
   ;; - `org-insert-heading-respect-content'
-  ;; (org-ellipsis " ⮷")			; TODO 2025-05-22: Revisit this
+  ;; (org-ellipsis " ⮷")                        ; TODO 2025-05-22: Revisit this
   (org-tags-column 0)
   (org-blank-before-new-entry
    '((heading . auto)
@@ -2169,7 +2170,7 @@ which file on the system it backs up."
   ;; Pulsar pulses
   (with-eval-after-load 'pulsar
     (dolist (hook '(org-agenda-after-show-hook
-		    org-follow-link-hook))
+                    org-follow-link-hook))
       (add-hook hook #'pulsar-recenter-center)
       (add-hook hook #'pulsar-reveal-entry))))
 
@@ -2309,11 +2310,11 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
     (gethash (completing-read "Select node: "
                               #'org-node-collection-basic
                               (lambda (_title node)
-				(cl-every (lambda (re)
-					    (cl-some (lambda (str)
-						       (string-match-p re str))
-						     (org-node-get-tags node)))
-					  tags))
+                                (cl-every (lambda (re)
+                                            (cl-some (lambda (str)
+                                                       (string-match-p re str))
+                                                     (org-node-get-tags node)))
+                                          tags))
                               t nil 'org-node-hist)
              org-node--candidate<>entry)))
 
@@ -2374,18 +2375,18 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 This only occurs when the file is an org-mem entry.  (See
 `org-mem-watch-dirs' for files may contain entries.)"
     (when-let* (((eq major-mode 'org-mode)) ; Guard
-		((require 'org-mem))
-		(entry (org-mem-entry-at-pos-in-file 0 (buffer-file-name)))
-		((require 'org-node))
-		;; Check if entry is would be filter by
-		;; `org-node-filter-fn’
-		(;; FIXME 2025-05-23: Is there a better solution than
-		 ;; this?  I might create an issue upstream to return
-		 ;; a predicate that returns non-nil if entry is a
-		 ;; node (i.e. non-filtered entry)
-		 (funcall
-		  (org-node--try-ensure-compiled org-node-filter-fn) entry))
-		(title (org-mem-file-title-strict entry)))
+                ((require 'org-mem))
+                (entry (org-mem-entry-at-pos-in-file 0 (buffer-file-name)))
+                ((require 'org-node))
+                ;; Check if entry is would be filter by
+                ;; `org-node-filter-fn’
+                (;; FIXME 2025-05-23: Is there a better solution than
+                 ;; this?  I might create an issue upstream to return
+                 ;; a predicate that returns non-nil if entry is a
+                 ;; node (i.e. non-filtered entry)
+                 (funcall
+                  (org-node--try-ensure-compiled org-node-filter-fn) entry))
+                (title (org-mem-file-title-strict entry)))
       (rename-buffer (generate-new-buffer-name title (buffer-name)))))
   ;; The reason we add `krisb-org-node-rename-buffer-name-to-title’ to
   ;; `org-mode-hook’ here is because we do not want org-node being
@@ -2412,7 +2413,7 @@ nodes:
             (when exclude-val (string= "t" (string-trim exclude-val)))
             ;; More conditions here
             ))))
-  
+
   ;; Bespoke `org-node-find'
   (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
     "Return the value of the ROAM_BOX property of NODE."
@@ -2529,12 +2530,12 @@ For use as `org-node-affixation-fn'."
 
   ;; TODO 2025-05-22: Revisit this.
   ;; ;; Set `bookmark-face' buffer-locally
-;;   (defun krisb-olivetti-set-bookmark-face ()
-;;     "Sets the buffer-local specification of `bookmark-face'.
-;; We do this because the olivetti settings may change the background color
-;; of the fringe, meaning bookmark fringe marks, which use the default
-;; fringe background color, are out of place."
-;;     (face-remap-add-relative 'bookmark-face :inherit '(olivetti-fringe success)))
+  ;;   (defun krisb-olivetti-set-bookmark-face ()
+  ;;     "Sets the buffer-local specification of `bookmark-face'.
+  ;; We do this because the olivetti settings may change the background color
+  ;; of the fringe, meaning bookmark fringe marks, which use the default
+  ;; fringe background color, are out of place."
+  ;;     (face-remap-add-relative 'bookmark-face :inherit '(olivetti-fringe success)))
   )
 
 ;;;; Adaptive-wrap
