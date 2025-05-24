@@ -1981,10 +1981,11 @@ ORIG-FUN should be `ispell-completion-at-point'."
 (use-package flymake
   :ensure nil
   :hook
-  (prog-mode-hook . (lambda ()
-                      (setq-local flymake-indicator-type nil
-                                  flymake-show-diagnostics-at-end-of-line 'fancy) ; Emacs 31 value
-                      (flymake-mode 1)))
+  ;; TODO 2025-05-24: Revisit this.
+  ;; (prog-mode-hook . (lambda ()
+  ;;                     (setq-local flymake-indicator-type nil
+  ;;                                 flymake-show-diagnostics-at-end-of-line 'fancy) ; Emacs 31 value
+  ;;                     (flymake-mode 1)))
   (text-mode-hook . (lambda ()
                       (setq-local flymake-indicator-type nil)
                       (flymake-mode 1)))
