@@ -2275,6 +2275,8 @@ which file on the system it backs up."
 
   ;; Timestamps
   (org-edit-timestamp-down-means-later t)
+  (org-extend-today-until 4)
+  (org-use-effective-time t)
 
   ;; TODO 2025-05-22: Revisit this.
   ;; (org-file-apps
@@ -2286,6 +2288,10 @@ which file on the system it backs up."
   ;;    ("\\.odt\\'" . system)
   ;;    ;; Default to `auto-mode-alist'
   ;;    (auto-mode . emacs)))
+
+  ;; Properties
+  (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
+
   ;; TODO 2025-05-22: Revisit these.
   ;; :custom-face
   ;; (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
@@ -2305,7 +2311,7 @@ which file on the system it backs up."
   :ensure t
   :after org)
 
-;;; Org-expiry
+;;;; Org-expiry
 (use-package org-expiry
   :ensure nil
   :after org-contrib
@@ -2313,146 +2319,6 @@ which file on the system it backs up."
   (org-capture-before-finalize . org-expiry-insert-created)
   :custom
   (org-expiry-inactive-timestamps t))
-
-;;;; Org-capture
-(use-package org-capture
-  :ensure nil
-  :bind
-  ("C-c c" . org-capture)
-  :custom
-  (org-capture-use-agenda-date t)
-  ;; See also `org-capture-templates-contexts'
-  (org-capture-templates
-   '(("t" "Todo" entry
-      (file krisb-org-agenda-main-file)
-      "* TODO %? :inbox:%^g\n"
-      :empty-lines 1)
-     ("T" "Todo (without processing)" entry
-      (file krisb-org-agenda-main-file)
-      "* TODO %? %^g\n"
-      :empty-lines 1)
-     ("j" "Journal" entry
-      (file+olp+datetree
-       (lambda ()
-         (let* ((node (krisb-org-capture--org-node-by-tags '("^__journal$"))))
-           (org-capture-put :krisb-node node)
-           (org-node-get-file node)))
-       (lambda ()
-         (let ((node (org-capture-get :krisb-node)))
-           ;; Should return nil if node is a file
-           (when (org-node-is-subtree node)
-             (org-node-get-olp-with-self node)))))
-      "* %<%c>\n"
-      :tree-type (year quarter month)
-      :jump-to-captured t
-      :immediate-finish t
-      :empty-lines 1
-      :clock-in t
-      :clock-resume t)
-     ("w" "Just write" entry
-      (file+olp+datetree
-       (lambda ()
-         (let* ((node (org-node-by-id "20241006T214800.000000")))
-           (org-capture-put :krisb-node node)
-           (org-node-get-file node)))
-       (lambda ()
-         (let ((node (org-capture-get :krisb-node)))
-           ;; Should return nil if node is a file
-           (when (org-node-is-subtree node)
-             (org-node-get-olp-with-self node)))))
-      "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
-      :tree-type (year quarter month)
-      :jump-to-captured t
-      :immediate-finish t
-      :empty-lines 1
-      :clock-in t
-      :clock-resume t)
-     ("l" "Log" item
-      (file+olp+datetree
-       (lambda ()
-         (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
-           (org-capture-put :krisb-node node)
-           (org-node-get-file node)))
-       (lambda ()
-         (let ((node (org-capture-get :krisb-node)))
-           ;; Should return nil if node is a file
-           (when (org-node-is-subtree node)
-             (org-node-get-olp-with-self node)))))
-      "%U %?"
-      :tree-type (quarter week)
-      :clock-in t
-      :clock-resume t)
-     ("m" "Work meeting notes" entry
-      (file+olp+datetree
-       (lambda ()
-         (let* ((node (org-node-by-id "20241114T091749.707997")))
-           (org-capture-put :krisb-node node)
-           (org-node-get-file node)))
-       (lambda ()
-         (let ((node (org-capture-get :krisb-node)))
-           ;; Should return nil if node is a file
-           (when (org-node-is-subtree node)
-             (org-node-get-olp-with-self node)))))
-      "* (%<%c>)%?\n\n"
-      :tree-type (year quarter month)
-      :jump-to-captured t
-      :immediate-finish t)
-     ("r" "New reference" entry
-      (file+olp+datetree
-       (lambda ()
-         (let* ((node (org-node-by-id "20250422T171216.767702")))
-           (org-capture-put :krisb-node node)
-           (org-node-get-file node)))
-       (lambda ()
-         (let ((node (org-capture-get :krisb-node)))
-           ;; Should return nil if node is a file
-           (when (org-node-is-subtree node)
-             (org-node-get-olp-with-self node)))))
-      "* %? %^g\n"
-      :tree-type (year month)
-      :jump-to-captured t
-      :immediate-finish t
-      :empty-lines 1
-      :hook org-id-get-create
-      :before-finalize (org-node-add-refs
-                        (lambda () (org-set-property "ROAM_BOX" "references"))))
-     ("b" "Blog post" plain
-      (function (lambda ()
-                  (let ((org-node-ask-directory krisb-blog-directory))
-                    (org-node-capture-target))))
-      "#+filetags: :__blog_draft:
-#+hugo_bundle:
-#+export_file_name: index
-#+hugo_tags:
-#+hugo_categories:
-#+hugo_publishdate:
-#+hugo_lastmod:
-#+hugo_custom_front_matter: :TableOfContents true
-#+hugo_draft: true
-#+hugo_paired_shortcodes:\n\n%?"
-      :jump-to-captured t
-      :immediate-finish t)))
-  :config
-  ;; Bespoke functions that selects an org-node node based on TAGS.
-  ;; Used for my datetree capture templates
-  (defun krisb-org-capture--org-node-by-tags (tags)
-    "Interactively prompt for an org-node candidate matching TAGS.
-TAGS is a list of regexps that match org-node tags.
-
-This function will use `completing-read' whose candidates are the
-org-node nodes that match all of TAGS.  It will return a candidate (see
-`org-node--candidate<>entry')."
-    (require 'org-node)
-    (gethash (completing-read "Select node: "
-                              #'org-node-collection-basic
-                              (lambda (_title node)
-                                (cl-every (lambda (re)
-                                            (cl-some (lambda (str)
-                                                       (string-match-p re str))
-                                                     (org-node-get-tags node)))
-                                          tags))
-                              t nil 'org-node-hist)
-             org-node--candidate<>entry)))
 
 ;;;; Org-Mem
 (use-package org-mem
@@ -3249,6 +3115,224 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
   ;; TODO 2025-05-23: Revisit this.
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore))
+
+;;; Task management
+
+;;;; Org-capture
+(use-package org-capture
+  :ensure nil
+  :bind
+  ("C-c c" . org-capture)
+  :custom
+  (org-capture-use-agenda-date t)
+  ;; See also `org-capture-templates-contexts'
+  (org-capture-templates
+   '(("t" "Todo" entry
+      (file krisb-org-agenda-main-file)
+      "* TODO %? :inbox:%^g\n"
+      :empty-lines 1)
+     ("T" "Todo (without processing)" entry
+      (file krisb-org-agenda-main-file)
+      "* TODO %? %^g\n"
+      :empty-lines 1)
+     ("j" "Journal" entry
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (krisb-org-capture--org-node-by-tags '("^__journal$"))))
+           (org-capture-put :krisb-node node)
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
+      "* %<%c>\n"
+      :tree-type (year quarter month)
+      :jump-to-captured t
+      :immediate-finish t
+      :empty-lines 1
+      :clock-in t
+      :clock-resume t)
+     ("w" "Just write" entry
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (org-node-by-id "20241006T214800.000000")))
+           (org-capture-put :krisb-node node)
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
+      "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
+      :tree-type (year quarter month)
+      :jump-to-captured t
+      :immediate-finish t
+      :empty-lines 1
+      :clock-in t
+      :clock-resume t)
+     ("l" "Log" item
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
+           (org-capture-put :krisb-node node)
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
+      "%U %?"
+      :tree-type (quarter week)
+      :clock-in t
+      :clock-resume t)
+     ("m" "Work meeting notes" entry
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (org-node-by-id "20241114T091749.707997")))
+           (org-capture-put :krisb-node node)
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
+      "* (%<%c>)%?\n\n"
+      :tree-type (year quarter month)
+      :jump-to-captured t
+      :immediate-finish t)
+     ("r" "New reference" entry
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (org-node-by-id "20250422T171216.767702")))
+           (org-capture-put :krisb-node node)
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
+      "* %? %^g\n"
+      :tree-type (year month)
+      :jump-to-captured t
+      :immediate-finish t
+      :empty-lines 1
+      :hook org-id-get-create
+      :before-finalize (org-node-add-refs
+                        (lambda () (org-set-property "ROAM_BOX" "references"))))
+     ("b" "Blog post" plain
+      (function (lambda ()
+                  (let ((org-node-ask-directory krisb-blog-directory))
+                    (org-node-capture-target))))
+      "#+filetags: :__blog_draft:
+#+hugo_bundle:
+#+export_file_name: index
+#+hugo_tags:
+#+hugo_categories:
+#+hugo_publishdate:
+#+hugo_lastmod:
+#+hugo_custom_front_matter: :TableOfContents true
+#+hugo_draft: true
+#+hugo_paired_shortcodes:\n\n%?"
+      :jump-to-captured t
+      :immediate-finish t)))
+  :config
+  ;; Bespoke functions that selects an org-node node based on TAGS.
+  ;; Used for my datetree capture templates
+  (defun krisb-org-capture--org-node-by-tags (tags)
+    "Interactively prompt for an org-node candidate matching TAGS.
+TAGS is a list of regexps that match org-node tags.
+
+This function will use `completing-read' whose candidates are the
+org-node nodes that match all of TAGS.  It will return a candidate (see
+`org-node--candidate<>entry')."
+    (require 'org-node)
+    (gethash (completing-read "Select node: "
+                              #'org-node-collection-basic
+                              (lambda (_title node)
+                                (cl-every (lambda (re)
+                                            (cl-some (lambda (str)
+                                                       (string-match-p re str))
+                                                     (org-node-get-tags node)))
+                                          tags))
+                              t nil 'org-node-hist)
+             org-node--candidate<>entry)))
+
+;;;; Org-agenda
+;; TODO 2025-05-24: Document these options:
+;; - `org-agenda-start-on-weekday’
+;; - `org-enforce-todo-checkbox-dependencies’
+;; - `org-agenda-show-inherited-tags’
+;; - `org-use-tag-inheritance’
+;; TODO 2025-05-24: Also mention these options that are elevant to org-agenda:
+;; - `org-extend-today-until’
+;; - `org-use-effective-time’
+;; - `org-use-property-inheritance’
+(use-package org-agenda
+  :ensure nil
+  :hook
+  (org-agenda-mode . hl-line-mode)
+  :bind
+  ( :map krisb-open-keymap
+    ("a" . org-agenda))
+  :custom
+  ;; Files
+  (org-agenda-files (list krisb-org-agenda-directory))
+  (org-agenda-inhibit-startup t)
+  
+  ;; Org agenda buffer
+  (org-agenda-window-setup 'only-window)
+  (org-agenda-restore-windows-after-quit t)
+  (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
+  (org-agenda-tags-column 0)
+  ;; TODO 2025-05-24: Revisit these.
+  ;; (org-agenda-format-date #'krisb-org-agenda-format-date-aligned)
+  ;; (org-agenda-tags-todo-honor-ignore-options t)
+  ;; (org-agenda-todo-ignore-scheduled nil)
+  ;; (org-agenda-remove-times-when-in-prefix t)
+  ;; (org-agenda-remove-tags 'prefix)
+
+  ;; Todos
+  ;; TODO 2025-05-24: Revisit this.
+  ;; (org-use-fast-todo-selection 'expert)
+  ;; We set `org-todo-keywords’ directory locally
+  (org-todo-keyword-faces
+   '(("NEXT" . (bold success))
+     ("TODO" . org-todo)
+     ("HOLD" . (shadow error))
+     ("MAYBE" . (shadow org-todo))
+     ("DONE" . (bold org-done))
+     ("CANCELED" . error)))
+  (org-enforce-todo-dependencies t)
+  (org-agenda-dim-blocked-tasks t)
+
+  ;; Priorities
+  ;; We set `org-highest-priority’, `org-lowest-priority’, and
+  ;; `org-default-priority’ directory locally
+  (org-priority-faces
+   '((?A . (bold org-priority))
+     (?B . (bold org-priority))
+     (?C . org-priority)
+     (?D . org-priority)
+     (?E . (shadow org-priority))
+     (?F . (shadow org-priority))))
+
+  ;; Tags
+  ;; We set `org-tags-exclude-from-inheritance’ directory locally
+  (org-tag-faces
+   '(("project" . outline-1)))
+  ;; TODO 2025-05-24: Revisit this.
+  (org-fast-tag-selection-single-key 'expert)
+
+  ;; Effort
+  (org-agenda-sort-noeffort-is-high nil)
+
+  ;; REVIEW 2025-05-24: Should this be set directory locally?
+  ;; Logging
+  (org-log-done 'time)
+  (org-log-into-drawer t)
+  (org-log-reschedule 'time)
+  (org-log-redeadline 'time))
 
 ;;; Guix
 (use-package guix

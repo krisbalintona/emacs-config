@@ -83,45 +83,7 @@
 ;;; Org-agenda
 (use-package org-agenda
   :ensure nil
-  :hook (org-agenda-mode . hl-line-mode)
-  :bind ( :map krisb-open-keymap
-          ("a" . org-agenda))
   :custom
-  (org-agenda-files (krisb-org-agenda-directory-files))
-  (org-agenda-inhibit-startup t)
-
-  ;; Effort
-  (org-agenda-sort-noeffort-is-high nil)
-
-  ;; Tags
-  (org-use-tag-inheritance t)
-  (org-agenda-show-inherited-tags t)
-  (org-use-fast-todo-selection 'expert)
-  (org-tags-exclude-from-inheritance '("project" "inbox"))
-  (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
-  (org-agenda-show-inherited-tags t)
-  (org-use-fast-todo-selection 'expert)
-  (org-tag-faces
-   '(("project" . outline-1)))
-
-  ;; Dependencies
-  (org-enforce-todo-dependencies t)
-  (org-enforce-todo-checkbox-dependencies nil)
-  (org-agenda-dim-blocked-tasks t)
-
-  ;; Org agenda
-  (org-agenda-file-regexp "\\`[^.].*\\.org\\'")
-  (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
-  (org-agenda-window-setup 'only-window)
-  (org-agenda-restore-windows-after-quit t)
-  (org-agenda-tags-column 0)
-  (org-agenda-start-on-weekday 1)
-  (org-agenda-format-date #'krisb-org-agenda-format-date-aligned)
-  (org-agenda-tags-todo-honor-ignore-options t)
-  (org-agenda-todo-ignore-scheduled nil)
-  (org-agenda-remove-times-when-in-prefix t)
-  (org-agenda-remove-tags 'prefix)
-
   (org-agenda-prefix-format
    ;; See https://whhone.com/posts/org-agenda-repeated-tasks/ for an explanation
    ;; of `krisb-org-agenda-repeater' usage here
@@ -135,10 +97,6 @@
      (todo urgency-down priority-down user-defined-up todo-state-up category-up)
      (todo urgency-down priority-down user-defined-up todo-state-up category-up)
      (search todo-state-up priority-down category-keep)))
-  ;; See
-  ;; https://emacs.stackexchange.com/questions/17302/is-there-a-way-to-make-org-mode-count-repetitive-tasks-done-certain-hours-past-m?rq=1
-  (org-extend-today-until 4)
-  (org-use-effective-time t)
   (org-agenda-block-separator ?─)
   (org-deadline-warning-days 3)
   (org-agenda-time-grid
@@ -160,26 +118,6 @@
   (org-agenda-compact-blocks nil)
 
   ;; Todos
-  (org-fast-tag-selection-single-key 'expert)
-  (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|" "DONE(d!/@)" "CANCELED(c@/!)")))
-  (org-todo-keyword-faces
-   '(("NEXT" . (bold success))
-     ("TODO" . org-todo)
-     ("HOLD" . (shadow error))
-     ("MAYBE" . (shadow org-todo))
-     ("DONE" . (bold org-done))
-     ("CANCELED" . error)))
-  (org-highest-priority ?A)
-  (org-default-priority ?E)
-  (org-lowest-priority ?F)
-  (org-priority-faces
-   '((?A . (bold org-priority))
-     (?B . (bold org-priority))
-     (?C . org-priority)
-     (?D . org-priority)
-     (?E . (shadow org-priority))
-     (?F . (shadow org-priority))))
   ;; FIXME 2024-10-02: Haven't found a way to get this to mesh well with my
   ;; workflow
   (org-stuck-projects
@@ -188,12 +126,6 @@
      nil
      nil
      ,(rx (regexp org-not-done-heading-regexp))))
-
-  ;; Logging
-  (org-log-done 'time)
-  (org-log-into-drawer t)
-  (org-log-reschedule 'time)
-  (org-log-redeadline 'time)
 
   ;; Input
   (org-read-date-prefer-future 'time)
