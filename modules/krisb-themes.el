@@ -122,17 +122,5 @@
     ((string-match "^modus-vivendi" (symbol-name theme))
      (set-face-attribute 'font-lock-function-call-face nil :foreground "#66B1F2")))))
 
-;;; Lin
-;; Lin is a stylistic enhancement for Emacs' built-in `hl-line-mode'. It remaps
-;; the `hl-line' face (or equivalent) buffer-locally to a style that is optimal
-;; for major modes where line selection is the primary mode of interaction.
-(use-package lin
-  :custom
-  (lin-face 'lin-cyan)
-  :config
-  (lin-global-mode 1)
-
-  (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
-
 ;;; Provide
 (provide 'krisb-themes)
