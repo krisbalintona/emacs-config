@@ -3284,8 +3284,8 @@ If region is active, use the region's contents instead."
   (message-mode-hook . flymake-mode)
   (message-mode-hook . olivetti-mode)
   (message-mode-hook . mixed-pitch-mode)
-  (message-send-mail-hook . krisb-message-check-subject)
-  (message-send-mail-hook . krisb-message-check-from)
+  (message-send-hook . krisb-message-check-subject)
+  (message-send-hook . krisb-message-check-from)
   :custom
   (message-directory krisb-email-directory)
   (message-mail-user-agent t)           ; Use `mail-user-agent'
