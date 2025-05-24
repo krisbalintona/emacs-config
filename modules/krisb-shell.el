@@ -45,12 +45,6 @@
   :config
   (fancy-compilation-mode 1))
 
-;;; Pcmpl-args
-;; Extend the build in `pcomplete'.  Includes flag and argument completion in
-;; the shell.
-(use-package pcmpl-args
-  :after pcomplete)
-
 ;;; Eshell
 ;;;; Itself
 (use-package eshell

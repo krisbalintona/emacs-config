@@ -2220,6 +2220,14 @@ which file on the system it backs up."
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'whitespace-mode))
 
+;;;; Pcmpl-args
+;; Extend the build in `pcomplete'.  Includes flag and argument completion in
+;; the shell.
+(use-package pcmpl-args
+  :ensure t
+  :after pcomplete
+  :demand t)
+
 ;;;; Eshell-atuin
 ;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
 (use-package eshell-atuin
