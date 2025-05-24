@@ -1295,7 +1295,20 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   ( :map krisb-open-keymap
     ("s" . eat)
     :map project-prefix-map
-    ("s" . eat-project))                ; Overshadow `project-shell’
+    ("s" . eat-project)                 ; Overshadow `project-shell’
+    ;; Unbind M-<NUMBER> keybinds because I use them for switching
+    ;; betweeb tab-bar tabs
+    :map eat-semi-char-mode-map
+    ("M-1" . nil)
+    ("M-2" . nil)
+    ("M-3" . nil)
+    ("M-4" . nil)
+    ("M-5" . nil)
+    ("M-6" . nil)
+    ("M-7" . nil)
+    ("M-8" . nil)
+    ("M-9" . nil)
+    ("M-0" . nil))
   :config
   ;; 2025-04-05: This resolves the continuation lines issue in EAT
   ;; terminal (including eat-shell in
