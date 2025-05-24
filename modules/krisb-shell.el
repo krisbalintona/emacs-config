@@ -124,63 +124,6 @@
   ;; https://emacs.stackexchange.com/a/18569/15023.
   (eshell-save-history-on-exit nil))
 
-;;;; Eshell-atuin
-;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
-(use-package eshell-atuin
-  :after eshell
-  :demand t
-  :hook (eshell-post-command . eshell-atuin--update-cache)
-  :bind* ( :map eshell-mode-map
-           ([remap eshell-isearch-backward-regexp] . eshell-atuin-history))
-  :custom
-  (eshell-atuin-save-duration t)
-  (eshell-atuin-filter-mode 'global)
-  (eshell-atuin-search-options nil)
-  (eshell-atuin-search-fields '(time command duration directory))
-  (eshell-atuin-history-format "%-110c (in %i)")
-  :config
-  (eshell-atuin-mode 1)
-
-  (defun eshell-atuin--update-cache ()
-    "Ensure the eshell-atuin cache is up-to-date.
-This function is intended to be used to prepare functions whose
-candidates may depend on an updated eshell-atuin cache.  Users should be
-careful not to call this function frequently in short periods of time
-because updating the cache takes some a small amount of time."
-    (when (derived-mode-p 'eshell-mode)
-      ;; These two functions are called before the `completing-read' of
-      ;; `eshell-atuin-history'
-      (eshell-atuin--history-rotate-cache)
-      (eshell-atuin--history-update)))
-  (advice-add 'completion-at-point :before #'eshell-atuin--update-cache)
-  (advice-add 'completion-preview-complete :before #'eshell-atuin--update-cache)
-
-  ;; TODO 2025-05-08: Right now I've removed the function that used to use the
-  ;; following function.  However, I keep it here just in case I decide to
-  ;; create a PR/issue to upstream this missing functionlality (relative time).
-  (defun krisb-eshell-atuin--relative-time (time-string)
-    "Turn TIME-STRING into a relative time string.
-TIME-STRING is a string that represents a time; it is in the format
-returned by \"atuin history list\" CLI command.  For example:
-\"2025-03-27 07:17:40\".
-
-An example of a return value for this function is: \"9 minutes ago\"."
-    ;; HACK 2025-03-27: We use `ignore-errors' to catch any malformed data
-    ;; stored by upstream (which happened at least once for me...)
-    (when-let* ((then-time (ignore-errors (date-to-time time-string)))
-                (now-time (current-time))
-                (diff-time (float-time (time-subtract then-time now-time)))
-                (abs-diff (abs diff-time)))
-      (cond ((< abs-diff 60)
-             (format "%.0f seconds %s" abs-diff (if (< diff-time 0) "ago" "from now")))
-            ((< abs-diff 3600)
-             (format "%.0f minutes %s" (/ abs-diff 60) (if (< diff-time 0) "ago" "from now")))
-            ((< abs-diff 86400)
-             (format "%.0f hours %s" (/ abs-diff 3600) (if (< diff-time 0) "ago" "from now")))
-            ((< abs-diff (* 30 86400))
-             (format "%.0f days %s" (/ abs-diff 86400) (if (< diff-time 0) "ago" "from now")))
-            (t (format "%.0f months %s" (/ abs-diff (* 30 86400)) (if (< diff-time 0) "ago" "from now")))))))
-
 ;;;; Eshell-syntax-highlighting
 ;; Zsh-esque syntax highlighting in eshell
 (use-package eshell-syntax-highlighting
