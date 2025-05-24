@@ -107,17 +107,6 @@
   :bind ( :map eshell-mode-map
           ([remap eshell-previous-matching-input] . consult-history)))
 
-;;;; Em-hist
-(use-package em-hist
-  :ensure nil
-  :custom
-  (eshell-history-size 20000)
-  (eshell-hist-ignoredups 'erase)       ; Only keep last duplicate
-  (eshell-save-history-on-exit t)
-  ;; Fix eshell overwriting history. From
-  ;; https://emacs.stackexchange.com/a/18569/15023.
-  (eshell-save-history-on-exit nil))
-
 ;;;; Eshell-z
 ;; Use z in Eshell
 (use-package eshell-z

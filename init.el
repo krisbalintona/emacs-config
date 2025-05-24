@@ -2423,6 +2423,19 @@ which file on the system it backs up."
   :after pcomplete
   :demand t)
 
+;;;; Eshell
+(use-package em-hist
+  :ensure nil
+  :after eshell
+  :demand t
+  :custom
+  (eshell-history-size 20000)
+  (eshell-hist-ignoredups 'erase)       ; Only keep last duplicate
+  (eshell-save-history-on-exit t)
+  ;; Fix eshell overwriting history.  From
+  ;; https://emacs.stackexchange.com/a/18569/15023.
+  (eshell-save-history-on-exit nil))
+
 ;;;; Eshell-atuin
 ;; Use Atuin (https://github.com/atuinsh/atuin) with eshell
 (use-package eshell-atuin
