@@ -3243,6 +3243,17 @@ If region is active, use the region's contents instead."
   (org-id-method 'ts)
   (org-id-link-to-org-use-id 'use-existing))
 
+;;;; Display-line-numbers
+;; Show line numbers on the left fringe
+(use-package display-line-numbers
+  :ensure nil
+  :bind
+  ( :map krisb-toggle-keymap
+    ("l" . display-line-numbers-mode))
+  :custom
+  (display-line-numbers-type t)
+  (display-line-numbers-width-start t)) ; Use same width throughout
+
 ;;; Emails
 
 ;;;; Message

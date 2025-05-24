@@ -123,16 +123,6 @@
 ;;;; Recognize camel case as words
 (global-subword-mode 1)
 
-;;;; Display-line-numbers
-;; Show line numbers on the left fringe
-(use-package display-line-numbers
-  :ensure nil
-  :bind ( :map krisb-toggle-keymap
-          ("l" . display-line-numbers-mode))
-  :custom
-  (display-line-numbers-type t)
-  (display-line-numbers-width-start t)) ; Keep width consistent in buffer
-
 ;;;; Krisb-reveal
 (use-package krisb-reveal
   :ensure nil
