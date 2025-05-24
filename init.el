@@ -513,6 +513,16 @@ default to 8."
     (advice-add 'corfu-quit :before #'krisb-gcmh-minibuffer-exit)
     (advice-add 'corfu-insert :before #'krisb-gcmh-minibuffer-exit)))
 
+;;;; Fixing M-SPC under WSLg
+;; 2024-10-29: There is currently an issue in WSLg that prevents
+;; Alt+Space from being caught by X11.  A workaround is described in
+;; https://github.com/microsoft/wslg/issues/1068#issuecomment-1817786154.
+;; Use PowerToys Keyboard Manager to rebind Alt+Space to Alt+F13 in
+;; then using xmodmap to redirect Alt+F13 to M-SPC.  (Instead of
+;; creating a file, I do it using the shell command below.)
+(when (and (getenv "WAYLAND_DISPLAY") (executable-find "xmodmap"))
+  (shell-command "xmodmap -e 'keycode 191 = space'"))
+
 ;;; Two steps below
 
 ;;;; Savehist
