@@ -2973,10 +2973,8 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
-  (dictionary-server
-   (if (string-equal (string-trim (shell-command-to-string "systemctl is-active dictd"))
-                     "active")
-       "localhost" "dict.org"))
+  ;; (dictionary-server "localhost")
+  (dictionary-server nil)
   :init
   ;; FIXME 2025-05-23: For some reason, if we use :bind to set these
   ;; commands, they are gone in the respective embark keymaps if
