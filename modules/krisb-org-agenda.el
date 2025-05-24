@@ -477,13 +477,6 @@ Same as default but truncates with `truncate-string-ellipsis'."
   (org-habit-completed-glyph ?●)
   (org-habit-missed-glyph ?○))
 
-;;; Org-depend
-;; Add blocking and triggering actions when an org-todo state is changed.
-(use-package org-depend
-  :requires org-contrib
-  :ensure nil
-  :after org-agenda)
-
 ;;; Org-edna
 ;; Also look at `org-edna' with `org-linker-edna'
 ;; (https://github.com/toshism/org-linker-edna) (the second of which requires

@@ -3374,6 +3374,13 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-clock-in-resume t)
   (org-clock-out-remove-zero-time-clocks t))
 
+;;;; Org-depend
+;; Add blocking and triggering actions when an org-todo state is
+;; changed.
+(use-package org-depend
+  :after org-contrib
+  :ensure nil)
+
 ;;; Guix
 (use-package guix
   :ensure nil      ; Although available via MELPA, we install via Guix
