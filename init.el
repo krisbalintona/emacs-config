@@ -3042,6 +3042,14 @@ send from."
                                      "From: "
                                      (read-string "Set FROM to: " user-mail-address))))))))
 
+;;; Guix
+(use-package guix
+  :ensure nil      ; Although available via MELPA, we install via Guix
+  :defer t
+  :hook
+  (guix-build-log-mode-hook . toggle-truncate-lines)
+  (guix-build-log-mode-hook . guix-build-log-phase-toggle-all))
+
 ;;; Uncategorized
 
 ;; Restart or close Emacs
