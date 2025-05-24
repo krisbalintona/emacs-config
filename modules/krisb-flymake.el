@@ -1,43 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Flymake
-(use-package flymake
-  :hook ((prog-mode . (lambda ()
-                        (setq-local flymake-indicator-type nil
-                                    flymake-show-diagnostics-at-end-of-line 'fancy ; Emacs 31 value
-                                    flymake-no-changes-timeout 3)
-                        (flymake-mode 1)))
-         (text-mode . (lambda ()
-                        (setq-local flymake-indicator-type nil)
-                        (flymake-mode 1))))
-  :bind ( :map goto-map
-          ("M-p" . flymake-goto-prev-error)
-          ("M-n" . flymake-goto-next-error))
-  :custom
-  (elisp-flymake-byte-compile-load-path '("./")) ; Which libraries and files does flymake know about?
-  (flymake-wrap-around nil)
-  (flymake-suppress-zero-counters :warning)
-  (flymake-mode-line-format
-   '(" " flymake-mode-line-title flymake-mode-line-exception flymake-mode-line-counters))
-  (flymake-mode-line-counter-format
-   '("["
-     flymake-mode-line-error-counter
-     flymake-mode-line-warning-counter
-     flymake-mode-line-note-counter
-     "]"))
-
-  ;; Indicators
-  (flymake-indicator-type nil)
-  (flymake-fringe-indicator-position nil) ; Position for fringe position type
-  (flymake-margin-indicator-position 'right-margin) ; Position for margin position type
-  (flymake-show-diagnostics-at-end-of-line nil)
-  :config
-  (setq flymake-mode-line-counters
-        '(:eval (if (mode-line-window-selected-p)
-                    (flymake--mode-line-counters)
-                  (propertize (format-mode-line (flymake--mode-line-counters))
-                              'face '(:inherit (bold mode-line-inactive)))))))
-
 ;;; Flymake-collection
 (use-package flymake-collection
   ;; For AUR:
