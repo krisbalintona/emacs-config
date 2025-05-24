@@ -1300,9 +1300,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    ("G" . consult-grep)
    ("r" . consult-ripgrep)
    ("f" . consult-find)
-   ("F" . consult-locate)
-   :map eshell-mode-map
-   ([remap eshell-previous-matching-input] . consult-history))
+   ("F" . consult-locate))
   :custom
   ;; TODO 2025-05-20: Revisit this.
   ;; (consult-preview-key "C-M-;")
@@ -1362,7 +1360,12 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 
   ;; Pulsar pulses
   (with-eval-after-load 'pulsar
-    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
+    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry))
+
+  ;; Eshell is not loaded at startup, so we have to delay our binding
+  ;; in `eshell-mode-map’
+  (with-eval-after-load 'eshell
+    (bind-key [remap eshell-previous-matching-input] #'consult-history 'eshell-mode-map)))
 
 ;;;; Ultra-scroll
 ;; TODO 2025-05-20: Document that this package was the result of the
