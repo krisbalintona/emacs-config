@@ -1757,6 +1757,14 @@ ORIG-FUN should be `ispell-completion-at-point'."
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'auto-revert-mode))
 
+;;;; Customize buffers
+;; TODO 2025-05-24: Document these optins:
+;; - `custom-buffer-style’
+(setopt custom-safe-themes t            ; Treat all themes as safe
+        custom-theme-allow-multiple-selections t
+        custom-unlispify-tag-names nil
+        custom-search-field nil) ; Useful for Android and other touchscreen devices though
+
 ;;; Fluff
 
 ;;;; Recursion-indicator
@@ -2969,7 +2977,7 @@ send from."
    )
   :custom
   (mail-user-agent 'notmuch-user-agent)
-  
+
   ;; Hello UI
   (notmuch-hello-sections (list #'notmuch-hello-insert-saved-searches
                                 #'notmuch-hello-insert-alltags
@@ -3294,7 +3302,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   ;; Files
   (org-agenda-files (list krisb-org-agenda-directory))
   (org-agenda-inhibit-startup t)
-  
+
   ;; Org agenda buffer
   (org-agenda-window-setup 'only-window)
   (org-agenda-restore-windows-after-quit t)

@@ -32,17 +32,6 @@
         ;; `fundamental-mode'
         initial-major-mode 'fundamental-mode)
 
-;;; Custom
-(setopt custom-file (no-littering-expand-etc-file-name "custom.el")
-        custom-safe-themes t
-        custom-theme-allow-multiple-selections t
-        custom-unlispify-tag-names nil
-        custom-buffer-style 'links
-        custom-search-field nil)
-
-(when (and custom-file (file-exists-p custom-file))
-  (load custom-file))
-
 ;;; Scrolling
 (setopt scroll-error-top-bottom nil
         scroll-preserve-screen-position t
