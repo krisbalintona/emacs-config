@@ -1300,7 +1300,9 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    ("G" . consult-grep)
    ("r" . consult-ripgrep)
    ("f" . consult-find)
-   ("F" . consult-locate))
+   ("F" . consult-locate)
+   :map eshell-mode-map
+   ([remap eshell-previous-matching-input] . consult-history))
   :custom
   ;; TODO 2025-05-20: Revisit this.
   ;; (consult-preview-key "C-M-;")
@@ -2424,6 +2426,60 @@ which file on the system it backs up."
   :demand t)
 
 ;;;; Eshell
+;; TODO 2025-05-24: Document:
+;; - `eshell-glob-case-insensitive’
+;; - `password-cache’
+;; - `password-cache-expiry’
+(use-package eshell
+  :ensure nil
+  :hook
+  (eshell-mode-hook . krisb-eshell-setup)
+  :bind
+  ( :map krisb-open-keymap
+    ("e" . eshell))
+  :custom
+  (eshell-banner-message "")
+  (eshell-kill-processes-on-exit t)
+  (eshell-scroll-to-bottom-on-input 'all)
+  (eshell-scroll-to-bottom-on-output 'all)
+  :config
+  ;; Set up `completion-at-point-functions'
+  (defun krisb-eshell-setup ()
+    "Buffer-local settings for eshell."
+    (set-display-table-slot standard-display-table 0 ?\ )
+    (setq-local scroll-margin 3
+                line-spacing 0
+                ;; `consult-outline' support for eshell prompts by
+                ;; setting `outline-regexp’.  See
+                ;; https://github.com/minad/consult/wiki#consult-outline-support-for-eshell-prompts
+                outline-regexp eshell-prompt-regexp
+                ;; `imenu’ support for eshell prompt history
+                imenu-generic-expression `((nil ,eshell-prompt-regexp 0))))
+
+  ;; Eshell source in `consult-buffer'
+  (with-eval-after-load 'consult
+    ;; For showing eshell sources in `consult-buffer'. Taken from
+    ;; https://github.com/minad/consult#multiple-sources
+    (defvar kb/consult-buffer--eshell-source
+      (list :name     "Eshell Buffers"
+            :category 'buffer
+            :narrow   ?e
+            :face     'consult-buffer
+            :history  'buffer-name-history
+            :annotate '(lambda (cand)
+                         (substring-no-properties
+                          (car (ring-elements
+                                (buffer-local-value 'eshell-history-ring (get-buffer cand))))))
+            :state    'consult--buffer-state
+            :action   'display-buffer
+            :items (lambda ()
+                     (mapcar #'buffer-name
+                             (seq-filter
+                              (lambda (x)
+                                (eq (buffer-local-value 'major-mode x) 'eshell-mode))
+                              (buffer-list))))))
+    (add-to-list 'consult-buffer-sources #'kb/consult-buffer--eshell-source 'append)))
+
 (use-package em-hist
   :ensure nil
   :after eshell
@@ -2446,7 +2502,8 @@ which file on the system it backs up."
   (eshell-post-command . eshell-atuin--update-cache)
   :bind*
   ( :map eshell-mode-map
-    ([remap eshell-isearch-backward-regexp] . eshell-atuin-history))
+    ([remap eshell-isearch-backward-regexp] . eshell-atuin-history)
+    ([remap consult-history] . eshell-atuin-history))
   :custom
   (eshell-atuin-save-duration t)
   (eshell-atuin-filter-mode 'global)
