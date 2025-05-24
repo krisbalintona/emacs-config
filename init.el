@@ -2288,6 +2288,15 @@ An example of a return value for this function is: \"9 minutes ago\"."
              (format "%.0f days %s" (/ abs-diff 86400) (if (< diff-time 0) "ago" "from now")))
             (t (format "%.0f months %s" (/ abs-diff (* 30 86400)) (if (< diff-time 0) "ago" "from now")))))))
 
+;;;; Eshell-syntax-highlighting
+;; Zsh-esque syntax highlighting in eshell
+(use-package eshell-syntax-highlighting
+  :ensure t
+  :after eshell
+  :demand t
+  :config
+  (eshell-syntax-highlighting-global-mode 1))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals

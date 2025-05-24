@@ -118,13 +118,6 @@
   ;; https://emacs.stackexchange.com/a/18569/15023.
   (eshell-save-history-on-exit nil))
 
-;;;; Eshell-syntax-highlighting
-;; Zsh-esque syntax highlighting in eshell
-(use-package eshell-syntax-highlighting
-  :after eshell
-  :config
-  (eshell-syntax-highlighting-global-mode 1))
-
 ;;;; Eshell-z
 ;; Use z in Eshell
 (use-package eshell-z
