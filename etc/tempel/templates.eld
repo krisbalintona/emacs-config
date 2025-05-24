@@ -3,7 +3,7 @@
 
 fundamental-mode
 
-(t (p (if (featurep 'hl-todo)
+(t (p (if (require 'hl-todo nil t)
           (split-string (key-description nil hl-todo-keyword-faces))
         '("TODO" "FIXME" "NOTE" "REVIEW"))
       possible-todo-keywords noinsert)
@@ -69,4 +69,6 @@ emacs-lisp-mode
 
 org-mode
 
-(cid (krisb-org-ext-create-dedicated-target))
+(cid (if (fboundp 'krisb-org-ext-create-dedicated-target)
+         (krisb-org-ext-create-dedicated-target)
+       (user-error "Function \“krisb-org-ext-create-dedicated-target\” is not defined")))
