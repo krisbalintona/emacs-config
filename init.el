@@ -101,6 +101,15 @@
 ;; that cannot create symlinks
 ;; (elpaca-no-symlink-mode 1)
 
+;;;;; Upgrade built-ins
+;; In order to ensure built-in packages are upgraded by elpaca, we
+;; need to ensure they are activated by elpaca before they are loaded.
+;; Otherwise unexpected behavior may occur, including not using the
+;; upgraded version.  As such, we force elpaca to activate them early
+;; in the configuration, prior to anything else potentially loading
+;; them.
+(elpaca '(org :wait t))
+
 ;;;; Use-package
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
 ;; it's installed just in case I test/use an earlier Emacs version
@@ -2227,7 +2236,7 @@ which file on the system it backs up."
 
 ;;;; Org
 (use-package org
-  :ensure t
+  :ensure nil                           ; Activated by elpaca earlier
   :hook
   (org-mode-hook . variable-pitch-mode)
   (org-mode-hook . visual-line-mode)
