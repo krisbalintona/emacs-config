@@ -91,6 +91,12 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;; Install elpaca and use-package integration (via use-package's
+;; :ensure keyword)
+(with-eval-after-load 'use-package
+  (elpaca (elpaca-use-package :wait t)
+    (elpaca-use-package-mode 1)))
+
 ;; TODO 2025-05-20: Add note about enabling the mode below on systems
 ;; that cannot create symlinks
 ;; (elpaca-no-symlink-mode 1)
@@ -129,12 +135,6 @@
         use-package-verbose (not (bound-and-true-p byte-compile-current-file))
         ;; Compile statistics to be shown in `use-package-report'
         use-package-compute-statistics t)
-
-;; Install elpaca and use-package integration (via use-package's
-;; :ensure keyword)
-(with-eval-after-load 'elpaca
-  (elpaca (elpaca-use-package :wait t)
-    (elpaca-use-package-mode 1)))
 
 ;; Imenu integration: create a "packages" group that searches for
 ;; use-package declarations
