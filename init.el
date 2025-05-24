@@ -2188,6 +2188,21 @@ which file on the system it backs up."
   (org-src-window-setup 'current-window)
   (org-edit-src-turn-on-auto-save t))   ; Auto-save for source buffers
 
+;;;; Whitespace
+;; Visualize whitespace so mistakes are more easily detectable.
+(use-package whitespace
+  :ensure nil
+  :hook
+  (prog-mode-hook . whitespace-mode)
+  :custom
+  (whitespace-style '(empty face tab-mark tabs trailing))
+  (whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
+                                 (newline-mark ?\n [?¬ ?\n])
+                                 (space-mark ?\  [?·] [?.])))
+  (whitespace-line-column nil)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'whitespace-mode))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals

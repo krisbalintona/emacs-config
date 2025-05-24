@@ -45,19 +45,6 @@
   (with-eval-after-load 'which-func
     (setopt which-func-functions '(breadcrumb-imenu-crumbs))))
 
-;;;; Whitespace
-;; Visualize whitespace so mistakes are more easily detectable.
-(use-package whitespace
-  :ensure nil
-  :diminish
-  :hook (prog-mode . whitespace-mode)
-  :custom
-  (whitespace-style '(empty face tab-mark tabs trailing))
-  (whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
-                                 (newline-mark ?\n [?¬ ?\n])
-                                 (space-mark ?\  [?·] [?.])))
-  (whitespace-line-column nil))
-
 ;;; Convenience
 
 ;;;; Lorem-ipsum
