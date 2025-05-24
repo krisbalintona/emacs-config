@@ -438,12 +438,8 @@ Only used when `org-super-agenda-keep-order' is non-nil."
   :ensure nil
   :custom
   (org-clock-persist t)
-  (org-clock-out-when-done t)
   (org-clock-history-length 10)
-  (org-clock-in-resume t)
   (org-clock-persist-query-resume t)
-  (org-clock-into-drawer t)
-  (org-clock-out-remove-zero-time-clocks t)
   (org-clock-report-include-clocking-task t)
   (org-show-notification-handler #'(lambda (str)
                                      (notifications-notify

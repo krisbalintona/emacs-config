@@ -3357,6 +3357,14 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-log-reschedule 'time)
   (org-log-redeadline 'time))
 
+;;;; Org-clock
+;; TODO 2025-05-24: Document:
+;; - `org-clock-out-when-done’
+(use-package org-clock
+  :custom
+  (org-clock-in-resume t)
+  (org-clock-out-remove-zero-time-clocks t))
+
 ;;; Guix
 (use-package guix
   :ensure nil      ; Although available via MELPA, we install via Guix
