@@ -2302,6 +2302,15 @@ which file on the system it backs up."
   :ensure t
   :after org)
 
+;;; Org-expiry
+(use-package org-expiry
+  :ensure nil
+  :after org-contrib
+  :hook
+  (org-capture-before-finalize . org-expiry-insert-created)
+  :custom
+  (org-expiry-inactive-timestamps t))
+
 ;;;; Org-capture
 (use-package org-capture
   :ensure nil
