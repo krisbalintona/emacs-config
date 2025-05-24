@@ -2952,6 +2952,8 @@ For use as `org-node-affixation-fn'."
   :custom
   (jinx-delay 1.5)
   :config
+  (add-to-list 'mode-line-collapse-minor-modes 'jinx-mode)
+
   ;; Mimic `flyspell-abbrev-p'.  Taken from
   ;; https://github.com/minad/jinx/wiki#save-misspelling-and-correction-as-abbreviation
   (defun krisb-jinx--add-to-abbrev (overlay word)
