@@ -3291,6 +3291,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 ;; - `org-extend-today-until’
 ;; - `org-use-effective-time’
 ;; - `org-use-property-inheritance’
+;; TODO 2025-05-24: Explain that `org-todo-keywords’ does not work
+;; when set directory locally.  Some relevant mailing list
+;; discussions:
+;; https://lists.gnu.org/archive/html/emacs-orgmode/2020-05/msg00426.html,
+;; https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
+;; We either must set it via file-local keywords or using #+SETUPFILE.
 (use-package org-agenda
   :ensure nil
   :hook
@@ -3316,9 +3322,11 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   ;; (org-agenda-remove-tags 'prefix)
 
   ;; Todos
+  (org-todo-keywords
+   '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
+               "DONE(d!/@)" "CANCELED(c@/!)")))
   ;; TODO 2025-05-24: Revisit this.
   ;; (org-use-fast-todo-selection 'expert)
-  ;; We set `org-todo-keywords’ directory locally
   (org-todo-keyword-faces
    '(("NEXT" . (bold success))
      ("TODO" . org-todo)
@@ -3330,8 +3338,9 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-agenda-dim-blocked-tasks t)
 
   ;; Priorities
-  ;; We set `org-highest-priority’, `org-lowest-priority’, and
-  ;; `org-default-priority’ directory locally
+  (org-highest-priority . 65)
+  (org-default-priority . 69)
+  (org-lowest-priority . 70)
   (org-priority-faces
    '((?A . (bold org-priority))
      (?B . (bold org-priority))
