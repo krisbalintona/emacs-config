@@ -3338,9 +3338,9 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-agenda-dim-blocked-tasks t)
 
   ;; Priorities
-  (org-highest-priority . 65)
-  (org-default-priority . 69)
-  (org-lowest-priority . 70)
+  (org-highest-priority ?A)
+  (org-default-priority ?E)
+  (org-lowest-priority ?F)
   (org-priority-faces
    '((?A . (bold org-priority))
      (?B . (bold org-priority))
