@@ -349,44 +349,5 @@ A spacer is two newlines inserted after portions inserted by
               (forward-line 1))))
         (el-patch-add (display-buffer buffer)))))))
 
-;;; Mail Transfer Agent (email sending)
-
-;;;; Sendmail
-;; Use `sendmail' program to send emails? If yes, send the value of
-;; `send-mail-function' to `sendmail-send-it'
-(use-package sendmail
-  :ensure nil
-  :after message
-  :custom
-  (mail-default-directory (expand-file-name "drafts/" message-directory))
-  ;; These two messages make sure that emails are sent from the email address
-  ;; specified in the "from" header field! Taken from
-  ;; https://jonathanchu.is/posts/emacs-notmuch-isync-msmtp-setup/
-  (mail-specify-envelope-from t)
-  (message-sendmail-envelope-from 'header)
-  (mail-envelope-from 'header))
-
-;;;; Smtpmail
-;; Use `msmtp' program to send emails? If yes, set the value of
-;; `send-mail-function' to `smtpmail-send-it'
-(use-package smtpmail
-  :ensure nil
-  ;; For AUR:
-  ;; :ensure-system-package msmtp
-  :after message
-  :custom
-  (smtpmail-queue-mail nil)
-  ;; Below are settings for Gmail. See
-  ;; https://support.google.com/mail/answer/7126229?hl=en#zippy=%2Cstep-change-smtp-other-settings-in-your-email-client
-  (smtpmail-default-smtp-server "smtp.gmail.com")
-  (smtpmail-smtp-server "smtp.gmail.com")
-  (smtpmail-smtp-service 587)
-  (smtpmail-stream-type 'starttls)
-  ;; Make sure email details that are used are not the current (when flushing)
-  ;; variables, but the variables used when writing the email
-  (smtpmail-store-queue-variables t)
-  (smtpmail-queue-dir (expand-file-name "drafts/.smtp-queue" message-directory))
-  (smtpmail-servers-requiring-authorization "gmail")) ; NOTE 2024-08-25: Fixes Gmail's 530 error on sending
-
 ;;; Provide
 (provide 'krisb-email-composition)
