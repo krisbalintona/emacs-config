@@ -4032,8 +4032,9 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 ;; Add blocking and triggering actions when an org-todo state is
 ;; changed.
 (use-package org-depend
+  :ensure nil
   :after org-contrib
-  :ensure nil)
+  :demand t)
 
 ;;;; Org-review
 (use-package org-review
