@@ -19,16 +19,6 @@
   (notmuch-transient-add-bindings t)
   (notmuch-transient-prefix "C-d"))
 
-;;;; Notmuch-addr
-;; Better address completion for notmuch; replaces the built-in
-;; `notmuch-address' completion system. Read
-;; https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li
-;; for more information
-(use-package notmuch-addr
-  :after notmuch-address
-  :config
-  (notmuch-addr-setup))
-
 ;;;; Mode line indicator
 ;; Try using display-time's built-in email indicator --- less informative but
 ;; more visually subtle than `notmuch-indicator'.  Obviously the below applies

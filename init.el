@@ -3667,6 +3667,18 @@ To: %:to\n"
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))
     (add-to-list 'org-capture-templates-contexts '("n" ((in-mode . "notmuch-show-mode"))))))
 
+;;;; Notmuch-addr
+;; Better address completion for notmuch; replaces the built-in
+;; `notmuch-address' completion system. Read
+;; https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li
+;; for more information
+(use-package notmuch-addr
+  :ensure t
+  :after notmuch-address
+  :demand t
+  :config
+  (notmuch-addr-setup))
+
 ;;;; MUA (mail transfer agent)
 
 ;;;;; Sendmail
