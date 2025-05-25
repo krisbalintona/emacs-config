@@ -34,7 +34,8 @@
 ;; https://github.com/progfolio/elpaca/wiki/Usage-with-Nix#manually-setting-elpaca-core-date
 ;; for the Nix version.
 (defun krisb-guix-emacs-build-date ()
-  "Extract YYYYMMDD from a datetime string like '2025-05-19 15:20:57.782742938 -0500'."
+  "Extract YYYYMMDD from a datetime string.
+For example, \“2025-05-19 15:20:57.782742938 -0500\”."
   (let* ((emacs-build-path (when (string-match "--prefix=\\([^ ]+\\)" system-configuration-options)
                              (match-string 1 system-configuration-options)))
          (datetime-string (shell-command-to-string (concat "stat -c %w " emacs-build-path))))
@@ -3430,11 +3431,12 @@ send from."
   ;; Notmuch-searches
   (notmuch-saved-searches
    '((:name "inbox"                 :query "tag:inbox and (not tag:list or to:krisbalintona@gmail.com)" :sort-order oldest-first :key "i")
-     (:name "to-read mailing lists" :query "tag:list and tag:inbox "                                    :sort-order oldest-first :key "l")
-     (:name "all mailing lists"     :query "tag:list and not to:krisbalintona@gmail.com"                                         :key "L" )
+     (:name "Emacs mailing lists"   :query "tag:list and tag:inbox and tag:emacs"                       :sort-order newest-first :key "e")
+     (:name "Guix mailing lists"    :query "tag:list and tag:inbox and (tag:guix or tag:mumi)"          :sort-order newest-first :key "g")
+     (:name "Other mailing lists"   :query "tag:list and path:l2md/other/**"                            :sort-order newest-first :key "o")
      (:name "sent"                  :query "tag:sent"                                                   :sort-order newest-first :key "s")
      (:name "drafts"                :query "tag:draft or path:drafts/"                                  :sort-order newest-first :key "d" :search-type unthreaded)
-     (:name "archived"              :query "not tag:trash"                                                                       :key "a")
+     (:name "archived"              :query "not tag:inbox and not tag:trash"                                                     :key "a")
      (:name "all"                   :query "path:**"                                                                             :key "A")
      (:name "trash"                 :query "tag:trash"                                                                           :key "t")))
   ;; See `man' for mbsync and notmuch to see valid search terms. See
