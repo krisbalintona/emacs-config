@@ -3505,7 +3505,7 @@ send from."
   ;; Use Lieer to send emails.  Also see
   ;; `krisb-notmuch-set-sendmail-args'.  Read
   ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
-  (sendmail-program (if (executable-find "gmi") "sendmail"))
+  (sendmail-program (if (executable-find "gmi") "gmi" "sendmail"))
   (send-mail-function 'sendmail-send-it)
   (notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
   :config
