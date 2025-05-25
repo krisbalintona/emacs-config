@@ -249,17 +249,6 @@
                       (smtpmail-smtp-user "krisbalintona@gmail.com") ; Send from this address
                       (smtpmail-mail-address "krisbalintona@gmail.com")))))))
 
-;;;; Footnote
-;; Footnotes for `message-mode'
-(use-package footnote
-  :ensure nil
-  :hook (message-mode . footnote-mode)
-  :custom
-  (footnote-mode-line-string "")
-  (footnote-section-tag "Footnotes:")
-  (footnote-spaced-footnotes nil)
-  (footnote-prompt-before-deletion nil))
-
 ;;;; Org-mime
 (use-package org-mime
   :pin melpa

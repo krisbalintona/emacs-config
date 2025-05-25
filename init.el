@@ -3370,6 +3370,19 @@ send from."
                                      "From: "
                                      (read-string "Set FROM to: " user-mail-address))))))))
 
+;;;; Footnote
+;; TODO 2025-05-24: Document:
+;; - `footnote-section-tag’
+;; Footnotes for `message-mode'
+(use-package footnote
+  :ensure nil
+  :hook
+  (message-mode-hook . footnote-mode)
+  :custom
+  (footnote-mode-line-string "")
+  (footnote-spaced-footnotes nil)
+  (footnote-prompt-before-deletion nil))
+
 ;;;; Notmuch
 ;; TODO 2025-05-23: Document:
 ;; - `notmuch-identities’
