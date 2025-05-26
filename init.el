@@ -1715,7 +1715,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
      (project-eshell "Eshell")
      ,(if (locate-library "eat")
           '(eat-project "EAT")
-        (project-shell "Shell"))
+        '(project-shell "Shell"))
      ,(if (locate-library "compile-multi")
           '(compile-multi "Compile-multi")
         '(project-compile "Compile"))
