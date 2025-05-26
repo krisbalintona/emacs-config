@@ -2466,6 +2466,9 @@ which file on the system it backs up."
   (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
 
 ;;;; Info-colors
+;; TODO 2025-05-26: Document that this is somewhat of a hacky solution
+;; because it uses non-guaranteed regexps to find e.g. code blocks.
+;; See `info-colors-fontify-node’.
 ;; Fontify useful parts of info buffers
 (use-package info-colors
   :ensure t
