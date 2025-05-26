@@ -1742,7 +1742,14 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :config
   (defun krisb-info-font-resize ()
     "Increase the font size of text in Info buffers."
-    (face-remap-set-base 'default `(:height 1.2))))
+    (face-remap-set-base 'default `(:height 1.2)))
+
+  ;; TODO 2025-05-26: Place this in :custom-face?
+  ;; Increase font size of title faces
+  (set-face-attribute 'info-title-1 nil :height 1.4)
+  (set-face-attribute 'info-title-2 nil :height 1.3)
+  (set-face-attribute 'info-title-3 nil :height 1.2)
+  (set-face-attribute 'info-title-4 nil :height 1.1))
 
 ;;;; Mixed-pitch
 ;; Locally remap default face to variable-pitch.
@@ -2463,7 +2470,13 @@ which file on the system it backs up."
 (use-package info-colors
   :ensure t
   :hook
-  (Info-selection-hook . info-colors-fontify-node))
+  (Info-selection-hook . info-colors-fontify-node)
+  :config
+  ;; TODO 2025-05-26: Place this in :custom-face?
+  (set-face-attribute 'info-colors-ref-item-type nil :box t)
+  ;; FIXME 2025-05-26: What if `org-inline-src-block’ isn’t defined
+  ;; yet?
+  (set-face-attribute 'info-colors-lisp-code-block nil :inherit '(org-inline-src-block fixed-pitch)))
 
 ;;; Coding
 
