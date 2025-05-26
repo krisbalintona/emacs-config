@@ -1719,9 +1719,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
      (project-vc-dir "VC-Dir")
      (project-eshell "Eshell")
      (project-shell "Shell")
-     ,(if (locate-library "compile-multi")
-          '(compile-multi "Compile-multi")
-        '(project-compile "Compile"))
+     (project-compile "Compile")
      (project-recompile "Recompile")
      (project-any-command "Other")))
   (project-mode-line t)
@@ -2657,6 +2655,37 @@ An example of a return value for this function is: \"9 minutes ago\"."
   :demand t
   :config
   (eshell-syntax-highlighting-global-mode 1))
+
+;;;; Compile-multi
+;; Interface for `compile’ that also offers dynamic completion based
+;; on existing e.g. Makefile files.
+(use-package compile-multi
+  :ensure t
+  :defer t
+  :bind
+  (([remap project-compile] . compile-multi)
+   :map project-prefix-map
+   ("c" . compile-multi))
+  :custom
+  (compile-multi-default-directory (lambda () (project-root (project-current))))
+  :config
+  ;; Replace `project-compile’ with `compile-multi’ in
+  ;; `project-switch-commands’
+  (with-eval-after-load 'project
+    (cl-nsubstitute '(compile-multi "Compile-multi") '(project-compile "Compile")
+                    project-switch-commands :test #'equal)))
+
+(use-package consult-compile-multi
+    :ensure t
+    :after (:all consult compile-multi)
+    :demand t
+    :config
+    (consult-compile-multi-mode 1))
+
+(use-package compile-multi-nerd-icons
+    :ensure t
+    :after (:all nerd-icons-completion compile-multi)
+    :demand t)
 
 ;;; Writing
 

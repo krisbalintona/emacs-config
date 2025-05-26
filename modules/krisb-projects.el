@@ -74,21 +74,5 @@ See the function `hl-todo--regexp'."
                                (if hl-todo-require-punctuation "+" "*")))
                   "\\)"))))
 
-;;; Compile-multi
-(use-package compile-multi
-  :bind (([remap project-compile] . compile-multi)
-         :map project-prefix-map
-         ("c" . compile-multi))
-  :custom
-  (compile-multi-default-directory (lambda () (project-root (project-current))))
-  :config
-  (use-package consult-compile-multi
-    :after consult
-    :config
-    (consult-compile-multi-mode 1))
-
-  (use-package compile-multi-nerd-icons
-    :after nerd-icons-completion))
-
 ;;; Provide
 (provide 'krisb-projects)
