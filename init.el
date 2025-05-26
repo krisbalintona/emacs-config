@@ -4105,8 +4105,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 ;;;; Org-review
 (use-package org-review
   :ensure t
-  :after org-agenda
-  :demand t
+  :defer t
   :bind
   ( :map org-mode-map
     ("C-c r s" . org-review-insert-next-review)
