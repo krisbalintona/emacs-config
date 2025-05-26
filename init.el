@@ -3507,7 +3507,17 @@ send from."
   (notmuch-wash-wrap-lines-length nil)
   (notmuch-unthreaded-show-out t)
   (notmuch-message-headers-visible nil)
-  (notmuch-message-headers '("To" "Cc" "Date" "Subject"))
+  ;; The order of headers in this list seems to be the order in which
+  ;; they will appear in `notmuch-show’ buffers.  See also the user
+  ;; option `notmuch-show-message-visible'.  Additionally, to add
+  ;; headers to this list that are beyond the default, you must add to
+  ;; the “extra_headers” setting in the “show” section of your notmuch
+  ;; config.  Finally, to have these extra headers be query-able via
+  ;; notmuch search queries, be sure to define a search term prefix
+  ;; for it.  (See (info "(notmuch-config) DESCRIPTION") for how to
+  ;; achieve such a set up.)
+  (notmuch-message-headers '("To" "Cc" "List-Id" ; Show mailing list ID
+                             "Date" "Subject"))
   (notmuch-multipart/alternative-discouraged
    '("text/html" "multipart/related"
      ;; FIXME 2025-05-23: This doesn’t work?
