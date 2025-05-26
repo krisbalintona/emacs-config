@@ -3697,58 +3697,54 @@ To: %:to\n"
 ;; informative but more visually subtle than `notmuch-indicator'.
 ;; Obviously the below applies only when `display-time-mode' is
 ;; non-nil.
+;; Modify `display-time-mail-string’ such that it displays a neat
+;; unicode icon for mail.  Then modify `display-time-mail-function’
+;; such that it returns non-nil when there is more than one notmuch
+;; email available that is worth notifying my about. (Note: we use
+;; `display-time-mail-string’ instead of `display-time-use-mail-icon’
+;; because the latter is for xpm and pbm files; see the final form in
+;; `display-time-string-forms’.)
 (with-eval-after-load 'time
-  (with-eval-after-load 'notmuch
-    (setopt display-time-mail-face 'notmuch-search-flagged-face))
-
-  (defvar krisb-display-time-mail-icon
+  (defvar krisb-display-time-mail-string
     (cond
-     ((featurep 'nerd-icons)
+     ((require 'nerd-icons nil t)
       (propertize (nerd-icons-mdicon "nf-md-email")
                   'face `(:family ,(nerd-icons-mdicon-family) :height 1.1)
                   'display '(raise 0.05)))
-     ((featurep 'all-the-icons)
+     ((require 'all-the-icons nil t)
       (propertize (all-the-icons-material "mail_outline")
                   'face `(:family ,(all-the-icons-material-family) :height 1.1)
-                  'display '(raise -0.1))))
+                  'display '(raise -0.1)))
+     (t "🞷 "))
     "Icon I use for displaying mail in `display-time-string-forms'.")
 
-  (setopt display-time-use-mail-icon t
-          display-time-mail-function
-          (lambda ()
-            (let* ((command (format "notmuch search tag:inbox and tag:unread and not tag:list and not tag:sub | wc -l"))
-                   (count (string-to-number (shell-command-to-string command))))
-              (< 0 count)))
-          display-time-string-forms
-          '((if (and (not display-time-format) display-time-day-and-date)
-                (format-time-string "%a %b %e " now)
-              "")
-            (propertize
-             (format-time-string (or display-time-format
-                                     (if display-time-24hr-format "%H:%M" "%-I:%M%p"))
-                                 now)
-             'face 'display-time-date-and-time
-             'help-echo (format-time-string "%a %b %e, %Y" now))
-            load
-            (if mail
-                (concat
-                 " "
-                 (propertize
-                  (if (and display-time-use-mail-icon (display-graphic-p))
-                      (symbol-value 'krisb-display-time-mail-icon)
-                    display-time-mail-string)
-                  'face display-time-mail-face
-                  'help-echo "You have new mail; mouse-2: Read mail"
-                  'mouse-face 'mode-line-highlight
-                  'local-map (make-mode-line-mouse-map 'mouse-2
-                                                       read-mail-command)))
-              "")
-            " "))
+  (defun krisb-display-time-mail-notmuch-function ()
+    "Function for `display-time-mail-function'.
+Returns non-nil when there is mail."
+    (when-let* ((executable-find "notmuch")
+                (command
+                 (format "notmuch search tag:inbox and tag:unread and not tag:list and not tag:sub | wc -l"))
+                (mail-count (string-to-number (shell-command-to-string command))))
+      (< 0 mail-count)))
+
+  ;; TODO 2025-05-26: Setting `read-mail-command’ to `notmuch’ doesn’t
+  ;; seem to succeed as the command run when clicking the mode line
+  ;; mail string?
+  (setopt display-time-mail-string krisb-display-time-mail-string
+          display-time-mail-function 'krisb-display-time-mail-notmuch-function)
+  (with-eval-after-load 'notmuch
+    (setopt display-time-mail-face 'notmuch-search-flagged-face))
+
+  ;; FIXME 2025-05-26: This assumes that we always leave notmuch via
+  ;; the notmuch-hello buffer.  This is a workaround because I know of
+  ;; no other reliable indiaction of when I’m done checking mail.  Is
+  ;; there something better?
+  ;; Advise `notmuch-bury-or-kill-this-buffer’ such that it updates
+  ;; after leaving the notmuch-hello buffer.  This prevents the mail
+  ;; string from being visible right after we’ve just checked mail in
+  ;; notmuch
   (advice-add 'notmuch-bury-or-kill-this-buffer :around
               (lambda (&rest args)
-                "Ensure mail icon is accurate.
-Update right after closing the notmuch hello buffer so the mail icon
-reflects the state of my maildirs accurate."
                 (when (equal major-mode 'notmuch-hello-mode)
                   (display-time-update))
                 (apply args))))
