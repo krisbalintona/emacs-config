@@ -3482,7 +3482,8 @@ send from."
   (notmuch-message-forwarded-tags '("+forwarded"))
   (notmuch-show-mark-read-tags '("-unread"))
   (notmuch-draft-tags '("+draft"))
-  (notmuch-draft-folder krisb-email-drafts-directory)
+  (notmuch-draft-folder     ; Relative to root of the notmuch database
+   (file-relative-name krisb-email-drafts-directory krisb-email-directory))
   (notmuch-draft-save-plaintext 'ask)
   (notmuch-tagging-keys
    `(("a" notmuch-archive-tags "Archive")
