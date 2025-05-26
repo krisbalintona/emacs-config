@@ -1523,7 +1523,12 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
       (set-face-attribute 'eat-term-font-0 nil
                           ;; This returns the default-family of the current
                           ;; preset, whether explicitly or implicitly set
-                          :family (fontaine--get-preset-property fontaine-current-preset :term-family)))))
+                          :family (fontaine--get-preset-property fontaine-current-preset :term-family))))
+
+  ;; Replace `project-shell’ with `eat-project’ in `project-switch-commands’
+  (with-eval-after-load 'project
+    (cl-nsubstitute '(eat-project "EAT") '(project-shell "Shell")
+                    project-switch-commands :test #'equal)))
 
 ;;;; Ibuffer
 ;; TODO 2025-05-23: Document these packages’ relation to ibuffer:
@@ -1713,9 +1718,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
      (project-find-dir "Find directory")
      (project-vc-dir "VC-Dir")
      (project-eshell "Eshell")
-     ,(if (locate-library "eat")
-          '(eat-project "EAT")
-        '(project-shell "Shell"))
+     (project-shell "Shell")
      ,(if (locate-library "compile-multi")
           '(compile-multi "Compile-multi")
         '(project-compile "Compile"))
