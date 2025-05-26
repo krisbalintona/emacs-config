@@ -1730,6 +1730,8 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   )
 
 ;;;; Info
+;; More easily distinguish between paragraphs and function signatures
+;; in Info documentation manuals.
 (use-package info
   :ensure nil
   :hook
@@ -2455,6 +2457,13 @@ which file on the system it backs up."
   (lin-global-mode 1)
 
   (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
+
+;;;; Info-colors
+;; Fontify useful parts of info buffers
+(use-package info-colors
+  :ensure t
+  :hook
+  (Info-selection-hook . info-colors-fontify-node))
 
 ;;; Coding
 
