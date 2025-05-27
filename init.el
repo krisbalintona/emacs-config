@@ -110,6 +110,12 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 ;; in the configuration, prior to anything else potentially loading
 ;; them.
 (elpaca '(org :wait t))
+;; Until the vtable work I’ve been testing is upstreamed, we manually
+;; load that file for now.  NOTE: I have not figured out a way to
+;; replace the built-in vtable Info manual with this one.
+(elpaca '(vtable :wait t
+                 :repo "/home/krisbalintona/emacs-repos/packages/emacs/"
+                 :files ("lisp/emacs-lisp/vtable.el")))
 
 ;;;; Use-package
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
