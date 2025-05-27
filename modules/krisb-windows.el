@@ -202,22 +202,6 @@
           ((major-mode . diff-mode)
            (display-buffer-same-window))
 
-;;;;; VC
-          ((or . ((major-mode . vc-dir-mode)
-                  (major-mode . vc-git-log-view-mode)
-
-                  (major-mode . vc-git-region-history-mode)))
-           (display-buffer-same-window))
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-           (display-buffer-reuse-mode-window display-buffer-in-side-window)
-           (side . bottom)
-           (dedicated . side)
-           (window-height . 20)
-           (preserve-size . (t . t)))
-          ("\\*vc-log\\*"
-           (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (dedicated . t))
-
 ;;;;; Eldoc
           ("^\\*eldoc"
            (display-buffer-at-bottom)

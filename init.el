@@ -1254,6 +1254,9 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
     (save-excursion (yank) t)))
 
 ;;;; `display-buffer-alist’
+;; TODO 2025-05-27: Eventually eliminate this section since I aim to
+;; disperse additions to `display-buffer-alist' across my package
+;; configurations.
 (setq display-buffer-alist
       `(;; Messages
         (,(rx (literal messages-buffer-name))
@@ -1652,7 +1655,24 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   ;; backends. Expand this list when necessary
   (vc-async-checkin t)
   (vc-revert-show-diff t)
-  (vc-find-revision-no-save t))         ; Emacs 31
+  (vc-find-revision-no-save t)         ; Emacs 31
+  :config
+  ;; Additions to `display-buffer-alist’
+  (add-to-list 'display-buffer-alist
+               '((or . ((major-mode . vc-dir-mode)
+                        (major-mode . vc-git-log-view-mode)
+                        (major-mode . vc-git-region-history-mode)))
+                 (display-buffer-same-window)))
+  (add-to-list 'display-buffer-alist
+               '("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+                 (display-buffer-reuse-mode-window display-buffer-in-side-window)
+                 (side . bottom)
+                 (dedicated . side)
+                 (window-height . 20)
+                 (preserve-size . (t . t))))
+  (add-to-list 'display-buffer-alist
+               '("\\*vc-log\\*"
+                 (display-buffer-same-window))))
 
 (use-package vc-git
   :ensure nil
