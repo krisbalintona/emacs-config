@@ -4652,7 +4652,6 @@ This is a helper function for my el-patch for
   :ensure nil      ; Although available via MELPA, we install via Guix
   :defer t
   :hook
-  (guix-build-log-mode-hook . (lambda () (setq truncate-lines t)))
   (guix-build-log-mode-hook . guix-build-log-phase-toggle-all))
 
 ;;; Uncategorized
