@@ -28,18 +28,6 @@
 ;;; Documentation
 
 ;;; Debugging
-;;;; Eros-mode
-;; Overlay lisp evaluations into the current buffer (near cursor)
-(use-package eros
-  :hook (emacs-lisp-mode . eros-mode)
-  :custom
-  (eros-eval-result-prefix "⟹  "))
-
-;;;; Inspector
-;; Introspect list expressions.  This is similar in role to CEDET's
-;; data-debug.el.  Also integrates with the debugging backtrace and edebug (see
-;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
-(use-package inspector)
 
 ;;;; IELM
 (use-package ielm

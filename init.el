@@ -2719,6 +2719,24 @@ An example of a return value for this function is: \"9 minutes ago\"."
   :config
   (global-paren-face-mode 1))
 
+;;;; Eros
+;; Overlay lisp evaluations into the current buffer (near cursor)
+(use-package eros
+  :ensure t
+  :defer t
+  :hook
+  (emacs-lisp-mode-hook . eros-mode)
+  :custom
+  (eros-eval-result-prefix "⟹  "))
+
+;;;; Inspector
+;; Introspect list expressions.  This is similar in role to CEDET's
+;; data-debug.el.  Also integrates with the debugging backtrace and edebug (see
+;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
+(use-package inspector
+  :ensure t
+  :defer t)
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
