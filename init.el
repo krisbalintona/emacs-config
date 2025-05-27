@@ -115,6 +115,7 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 ;; replace the built-in vtable Info manual with this one.
 (elpaca '(vtable :wait t
                  :repo "/home/krisbalintona/emacs-repos/packages/emacs/"
+                 :branch "vtable-ship-mints"
                  :files ("lisp/emacs-lisp/vtable.el")))
 
 ;;;; Use-package
@@ -3679,7 +3680,7 @@ If region is active, use the region's contents instead."
 
 ;;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
-  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/")
+  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/" :branch "vtable-unstable")
   :defer t
   :hook
   (org-roam-folgezettel-mode-hook . hl-line-mode)
