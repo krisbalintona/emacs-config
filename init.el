@@ -748,8 +748,10 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 ;;;; Minibuffer.el
 ;; TODO 2025-05-20: Document the following options below in the
 ;; literate configuration:
-;;
 ;; - `completion-cycle-threshold'
+;; TODO 2025-05-27: Document this advice by vertico to show
+;; `completing-read-multiple' separator on Emacs versions below 31:
+;; https://github.com/minad/vertico#completing-read-multiple.
 (use-package minibuffer
   :ensure nil
   :demand t
@@ -824,23 +826,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
     (setopt completion-styles (list (if (featurep 'orderless)
                                         'orderless 'basic)
                                     (if (featurep 'hotfuzz)
-                                        'hotfuzz 'flex))))
-
-  ;; TODO 2025-05-20: Revisit this.
-  ;; ;; Add prompt indicator to `completing-read-multiple'.  We display
-  ;; ;; [CRM<separator>], e.g., [CRM,] if the separator is a comma.
-  ;; ;; Taken from https://github.com/minad/vertico
-  ;; (defun krisb-crm-indicator (args)
-  ;;   (cons (format "[completing-read-multiple: %s]  %s"
-  ;;                 (propertize
-  ;;                  (replace-regexp-in-string
-  ;;                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-  ;;                   crm-separator)
-  ;;                  'face 'error)
-  ;;                 (car args))
-  ;;         (cdr args)))
-  ;; (advice-add #'completing-read-multiple :filter-args #'krisb-crm-indicator)
-  )
+                                        'hotfuzz 'flex)))))
 
 ;;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
@@ -3825,8 +3811,8 @@ Returns non-nil when there is mail."
   :after notmuch
   :demand t
   :custom
-  (notmuch-transient-add-bindings t)
-  (notmuch-transient-prefix "C-d"))
+  (notmuch-transient-prefix "C-d")
+  (notmuch-transient-add-bindings t))
 
 ;;;; MUA (mail transfer agent)
 
