@@ -2099,13 +2099,20 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (bufferlo-anywhere-filter
    '(switch-to-buffer
      project-switch-to-buffer))
+  (bufferlo-hidden-buffers
+   '("\\*Org Agenda"))
 
   ;; Bookmarks
+  (bufferlo-bookmarks-auto-save-interval 60)
   (bufferlo-bookmark-inhibit-bookmark-point t)
+  (bufferlo-bookmark-tab-save-on-close 'if-current)
+  (bufferlo-bookmarks-save-at-emacs-exit 'all)
   :config
   (bufferlo-mode 1)
   (bufferlo-anywhere-mode 1)
 
+  ;; Customize `consult-buffer' sources in a way amenable to the
+  ;; bufferlo workflow
   (with-eval-after-load 'consult
     (delq 'consult--source-buffer consult-buffer-sources)
 
