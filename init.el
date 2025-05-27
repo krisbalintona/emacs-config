@@ -1558,10 +1558,10 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
             ;; The current tab does not have a stored window
             ;; configuration, so we don't need to switch to its window
             ;; configuration for its window list
-            (when (eq 'tab (car tab))
-              (let* ((tab-info (cdr tab))
-                     (tab-window-conf (cdr (assq 'wc tab-info))))
-                (set-window-configuration tab-window-conf)))
+            (when-let* (((eq 'tab (car tab)))
+                        (tab-info (cdr tab))
+                        (tab-window-conf (cdr (assq 'wc tab-info))))
+              (set-window-configuration tab-window-conf))
             (dolist (win (window-list nil 'never))
               (cl-pushnew (window-buffer win) displayed-buffers)))))
       displayed-buffers))
