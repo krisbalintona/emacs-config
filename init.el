@@ -3500,15 +3500,40 @@ send from."
 
   ;; Notmuch-searches
   (notmuch-saved-searches
-   '((:name "inbox"                 :query "tag:inbox and (not tag:list or to:krisbalintona@gmail.com)" :sort-order oldest-first :key "i")
-     (:name "Emacs mailing lists"   :query "tag:list and tag:inbox and tag:emacs"                       :sort-order newest-first :key "e")
-     (:name "Guix mailing lists"    :query "tag:list and tag:inbox and (tag:guix or tag:mumi)"          :sort-order newest-first :key "g")
-     (:name "Other mailing lists"   :query "tag:list and path:l2md/other/**"                            :sort-order newest-first :key "o")
-     (:name "sent"                  :query "tag:sent"                                                   :sort-order newest-first :key "s")
-     (:name "drafts"                :query "tag:draft or path:drafts/"                                  :sort-order newest-first :key "d" :search-type unthreaded)
-     (:name "archived"              :query "not tag:inbox and not tag:trash"                                                     :key "a")
-     (:name "all"                   :query "path:**"                                                                             :key "A")
-     (:name "trash"                 :query "tag:trash"                                                                           :key "t")))
+   '(( :name "inbox"
+       :query "tag:inbox and (not tag:list or to:krisbalintona@gmail.com or tag:watch)"
+       :sort-order oldest-first
+       :key "i")
+     ( :name "Emacs mailing lists"
+       :query "tag:list and tag:inbox and tag:emacs"
+       :sort-order newest-first
+       :key "e")
+     ( :name "Guix mailing lists"
+       :query "tag:list and tag:inbox and (tag:guix or tag:mumi)"
+       :sort-order newest-first
+       :key "g")
+     ( :name "Other mailing lists"
+       :query "tag:list and path:l2md/other/**"
+       :sort-order newest-first
+       :key "o")
+     ( :name "sent"
+       :query "tag:sent"
+       :sort-order newest-first
+       :key "s")
+     ( :name "drafts"
+       :query "tag:draft or path:drafts/"
+       :sort-order newest-first
+       :key "d"
+       :search-type unthreaded)
+     ( :name "archived"
+       :query "not tag:inbox and not tag:trash"
+       :key "a")
+     ( :name "all"
+       :query "path:**"
+       :key "A")
+     ( :name "trash"
+       :query "tag:trash"
+       :key "t")))
   ;; See `man' for mbsync and notmuch to see valid search terms. See
   ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
   ;; via cli
@@ -3538,7 +3563,8 @@ send from."
      ("t" ("+trash" "-inbox") "Trash")))
   (notmuch-tag-formats
    '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-     ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
+     ("flagged" (propertize tag 'face 'notmuch-tag-flagged))
+     ("watch" (propertize tag 'face 'font-lock-warning-face))))
   (notmuch-tag-deleted-formats
    '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
      (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
@@ -3662,7 +3688,7 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
 
   ;; TODO 2025-05-23: Revisit this.
   ;; Prefer not to have emails recentered as I readjust them
-  (advice-add 'notmuch-show-message-adjust :override #'ignore))
+  (advice-add 'notmuch-show-message-adjust :override #'ignore)
 
   ;; Add to `display-buffer-alist'
   (add-to-list 'display-buffer-alist
