@@ -1326,8 +1326,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    ("f" . consult-find)
    ("F" . consult-locate))
   :custom
-  ;; TODO 2025-05-20: Revisit this.
-  ;; (consult-preview-key "C-M-;")
+  (consult-preview-key "C-M-;")
   (consult-bookmark-narrow
    '((?f "File" bookmark-default-handler)
      (?i "Info" Info-bookmark-jump)
