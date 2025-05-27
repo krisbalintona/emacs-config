@@ -2570,6 +2570,7 @@ which file on the system it backs up."
 ;; line selection is the primary mode of interaction.
 (use-package lin
   :ensure t
+  :demand t
   :custom
   (lin-face 'lin-cyan)
   :config
