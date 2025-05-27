@@ -2688,6 +2688,30 @@ An example of a return value for this function is: \"9 minutes ago\"."
                  (advice-remove sym advice))
                sym))
 
+;;;; Highlight-function-calls
+(use-package highlight-function-calls
+  :ensure t
+  :defer t
+  :hook
+  ((emacs-lisp-mode-hook lisp-interaction-mode-hook) . highlight-function-calls-mode)
+  :custom
+  (highlight-function-calls-not nil)
+  (highlight-function-calls-macro-calls nil)
+  (highlight-function-calls-special-forms nil)
+  :custom-face
+  (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
+
+;;;; Paren-face
+;; Creates a face just for parentheses. Useful for lispy languages where readers
+;; want the parentheses as unnoticeable as possible.
+(use-package paren-face
+  :ensure t
+  :demand t
+  :custom
+  (paren-face-mode-lighter "")
+  :config
+  (global-paren-face-mode 1))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals

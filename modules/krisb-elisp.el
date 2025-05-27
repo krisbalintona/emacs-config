@@ -1,24 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
 ;;; Font locking
-;;;; Highlight-function-calls
-(use-package highlight-function-calls
-  :hook ((emacs-lisp-mode lisp-interaction-mode) . highlight-function-calls-mode)
-  :custom
-  (highlight-function-calls-not nil)
-  (highlight-function-calls-macro-calls nil)
-  (highlight-function-calls-special-forms nil)
-  :custom-face
-  (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
-
-;;;; Paren-face
-;; Creates a face just for parentheses. Useful for lispy languages where readers
-;; want the parentheses as unnoticeable as possible.
-(use-package paren-face
-  :custom
-  (paren-face-mode-lighter "")
-  :config
-  (global-paren-face-mode 1))
 
 ;;;; Highlight-parentheses
 (use-package highlight-parentheses
