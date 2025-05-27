@@ -2504,6 +2504,13 @@ which file on the system it backs up."
   ;; yet?
   (set-face-attribute 'info-colors-lisp-code-block nil :inherit '(org-inline-src-block fixed-pitch)))
 
+;;;; Apropos
+(use-package apropos
+  :ensure nil
+  :defer t
+  :bind
+  ("C-h u" . apropos-user-option))
+
 ;;; Coding
 
 ;;;; Org-src

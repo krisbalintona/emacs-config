@@ -27,11 +27,6 @@
 
 ;;; Documentation
 
-;;;; Apropos
-(use-package apropos
-  :ensure nil
-  :bind ("C-h u" . apropos-user-option))
-
 ;;; Debugging
 ;;;; Eros-mode
 ;; Overlay lisp evaluations into the current buffer (near cursor)
