@@ -2707,6 +2707,60 @@ because updating the cache takes some a small amount of time."
   (advice-add 'completion-at-point :before #'eshell-atuin--update-cache)
   (advice-add 'completion-preview-complete :before #'eshell-atuin--update-cache)
 
+  ;; TODO 2025-05-27: Consider creating a PR to merge this upstream?
+  ;; Show the filter mode in the `completing-read' prompt
+  (el-patch-defun eshell-atuin-history (&optional arg)
+    "Browse atuin history in Eshell.
+
+`eshell-atuin-mode' enables storing eshell history in atuin in
+addition to the built-in ring.  `eshell-atuin-history' opens
+`completing-read' with the saved history, like the C-r shell binding
+in the original tool.
+
+ARG overrides the default filter mode (which is
+`eshell-atuin-filter-mode').  The value is an index of
+`eshell-atuin-filter-modes'.
+
+By default, the completion UI shows only commands.  To change that,
+add more fields to `eshell-atuin-search-fields' and use them in
+`eshell-atuin-history-format'.  The default values are such for
+backwards compatibility with \"non-vertical\" completion systems.
+
+The completions are ordered; the first one is the most recent one.
+
+Be sure to have the correct `eshell-prompt-regexp' set up!"
+    (interactive "P")
+    (let ((eshell-atuin-filter-mode
+           (if arg
+               (or (nth arg eshell-atuin-filter-modes)
+                   (user-error "Invalid filter mode index: %s" arg))
+             eshell-atuin-filter-mode)))
+      (eshell-atuin--history-rotate-cache)
+      (eshell-atuin--history-update))
+    (let* ((commands (eshell-atuin--history-collection))
+           (input (eshell-atuin--get-input))
+           (completion-table (lambda (string pred action)
+                               (if (eq action 'metadata)
+                                   '(metadata (display-sort-function . identity)
+                                              (cycle-sort-function . identity))
+                                 (complete-with-action
+                                  action commands string pred))))
+           (el-patch-add
+             (mode (when arg (nth arg eshell-atuin-filter-modes))))
+           (el-patch-add
+             (prompt
+              (concat (capitalize (symbol-name (if mode
+                                                   mode
+                                                 eshell-atuin-filter-mode)))
+                      " history: ")))
+           (compl (completing-read (el-patch-swap "History: " prompt) completion-table nil nil input))
+           (command
+            (alist-get 'command
+                       (gethash compl eshell-atuin--history-cache-format-index))))
+      (eshell-bol)
+      (delete-region (point) (line-end-position))
+      (insert (or command compl))))
+
   ;; TODO 2025-05-08: Right now I've removed the function that used to use the
   ;; following function.  However, I keep it here just in case I decide to
   ;; create a PR/issue to upstream this missing functionlality (relative time).
