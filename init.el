@@ -3467,7 +3467,7 @@ send from."
   :hook
   (notmuch-show-hook . olivetti-mode)
   (notmuch-show-hook . visual-line-mode)
-  (notmuch-show-hook . adaptive-wrap-prefix-mode)
+  (notmuch-show-hook . visual-wrap-prefix-mode)
   (notmuch-mua-send-hook . notmuch-mua-attachment-check) ; Also see `notmuch-mua-attachment-regexp'
   (message-send-mail-hook . krisb-notmuch-set-sendmail-args)
   :bind
