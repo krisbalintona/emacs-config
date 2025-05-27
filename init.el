@@ -2812,9 +2812,9 @@ An example of a return value for this function is: \"9 minutes ago\"."
   :hook
   ((emacs-lisp-mode-hook lisp-interaction-mode-hook) . highlight-function-calls-mode)
   :custom
-  (highlight-function-calls-not nil)
-  (highlight-function-calls-macro-calls nil)
-  (highlight-function-calls-special-forms nil)
+  (highlight-function-calls-not t)
+  (highlight-function-calls-macro-calls t)
+  (highlight-function-calls-special-forms t)
   :custom-face
   (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 
