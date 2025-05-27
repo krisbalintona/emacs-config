@@ -3045,11 +3045,12 @@ For use as `org-node-affixation-fn'."
   ;;     (face-remap-add-relative 'bookmark-face :inherit '(olivetti-fringe success)))
   )
 
-;;;; Adaptive-wrap
-(use-package adaptive-wrap
-  :ensure t
+;;;; Visual-wrap
+;; TODO 2025-05-27: Document history with `visual-wrap’
+(use-package visual-wrap
+  :ensure nil
   :hook
-  (visual-line-mode-hook . adaptive-wrap-prefix-mode))
+  (on-first-buffer-hook . global-visual-wrap-prefix-mode))
 
 ;;;; Jinx
 ;; JIT spell checker that uses `enchant'. The executable is
