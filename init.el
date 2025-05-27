@@ -663,7 +663,11 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 
   ;; TODO 2025-05-20: Revisit this.
   ;; (help-at-pt-display-when-idle t)
-  )
+  :config
+  (add-to-list 'display-buffer-alist
+               '((major-mode . help-mode)
+                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+                 (window-height . shrink-window-if-larger-than-buffer))))
 
 ;;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
@@ -1248,6 +1252,27 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 Taken from https://karthinks.com/software/avy-can-do-anything/."
     (krisb-avy-action-copy-whole-line pt)
     (save-excursion (yank) t)))
+
+;;;; `display-buffer-alist’
+(setq display-buffer-alist
+      `(;; Messages
+        (,(rx (literal messages-buffer-name))
+         (display-buffer-in-side-window)
+         (window-height . 0.36)
+         (side . top)
+         (slot . 1)
+         (post-command-select-window . t))
+
+        ;; Calendar
+        ("\\*Calendar\\*"
+         (display-buffer-below-selected)
+         (window-height . fit-window-to-buffer))
+
+        ;; Occur
+        ("\\*Occur"
+         (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected)
+         (window-height . fit-window-to-buffer)
+         (post-command-select-window . t))))
 
 ;;; Four steps below
 
@@ -1919,6 +1944,17 @@ ORIG-FUN should be `ispell-completion-at-point'."
   ;; value ends with `t'. See (info "(elisp) Running Hooks") for an
   ;; explanation.
   (add-hook 'xref-backend-functions #'elisp--xref-backend)
+
+  ;; Additions to `display-buffer-alist’
+  (add-to-list 'display-buffer-alist
+               `((or (major-mode . xref--xref-buffer-mode)
+                     (,(rx (literal xref-buffer-name))))
+                 (display-buffer-below-selected display-buffer-at-bottom)
+                 (window-height . 0.25)))
+  (add-to-list 'display-buffer-alist
+               '(((category . xref)
+                  (display-buffer-reuse-window display-buffer-use-some-window)
+                  (some-window . mru))))
 
   ;; TODO 2025-05-22: Revisit this.
   ;; ;; Revealing headings
@@ -2800,7 +2836,18 @@ An example of a return value for this function is: \"9 minutes ago\"."
     (dolist (hook '(org-agenda-after-show-hook
                     org-follow-link-hook))
       (add-hook hook #'pulsar-recenter-center)
-      (add-hook hook #'pulsar-reveal-entry))))
+      (add-hook hook #'pulsar-reveal-entry)))
+
+  ;; Add to `display-buffer-alist’
+  (add-to-list 'display-buffer-alist
+               '("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
+                 (display-buffer-in-side-window)
+                 (window-height . fit-window-to-buffer)
+                 (side . top)
+                 (slot . -2)
+                 (preserve-size . (nil . t))
+                 (window-parameters . ((mode-line-format . none)))
+                 (post-command-select-window . t))))
 
 (use-package org-contrib
   :ensure t
@@ -3647,6 +3694,12 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
   ;; TODO 2025-05-23: Revisit this.
   ;; Prefer not to have emails recentered as I readjust them
   (advice-add 'notmuch-show-message-adjust :override #'ignore))
+
+  ;; Add to `display-buffer-alist'
+  (add-to-list 'display-buffer-alist
+               '("\\*notmuch-hello\\*"
+                 (display-buffer-in-tab display-buffer-full-frame)
+                 (tab-group . "media"))))
 
 ;;;; Ol-notmuch
 ;; Org-links for search queries (i.e. notmuch-search-mode,

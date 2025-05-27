@@ -192,14 +192,8 @@
 
 ;;;; Display-buffer-alist
 (with-eval-after-load 'window
-;;;;; Messages
   (setq display-buffer-alist
-        `((,(rx (literal messages-buffer-name))
-           (display-buffer-in-side-window)
-           (window-height . 0.36)
-           (side . top)
-           (slot . 1)
-           (post-command-select-window . t))
+        `(
 ;;;;; Org-mime
           ("OrgMimeMailBody"
            (display-buffer-same-window))
@@ -224,30 +218,12 @@
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (dedicated . t))
 
-;;;;; Help
-          ((major-mode . help-mode)
-           (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-           (window-height . shrink-window-if-larger-than-buffer))
-
 ;;;;; Eldoc
           ("^\\*eldoc"
            (display-buffer-at-bottom)
            (post-command-select-window . t)
            (window-height . shrink-window-if-larger-than-buffer)
            (window-parameters . ((mode-line-format . none))))
-
-;;;;; Org and calendar
-          ("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
-           (display-buffer-in-side-window)
-           (window-height . fit-window-to-buffer)
-           (side . top)
-           (slot . -2)
-           (preserve-size . (nil . t))
-           (window-parameters . ((mode-line-format . none)))
-           (post-command-select-window . t))
-          ("\\*Calendar\\*"
-           (display-buffer-below-selected)
-           (window-height . fit-window-to-buffer))
 
 ;;;;; Embark
           ("\\*Embark Actions\\*"
@@ -256,12 +232,6 @@
            (direction . above)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-
-;;;;; Occur
-          ("\\*Occur"
-           (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected)
-           (window-height . fit-window-to-buffer)
-           (post-command-select-window . t))
 
 ;;;;; Denote-interface
           ((major-mode . denote-interface-mode)
@@ -275,25 +245,7 @@
 ;;;;; Customize buffers
           ("\\*Customize Group:"
            (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected))
-
-;;;;; Notmuch-hello buffer
-          ("\\*notmuch-hello\\*"
-           (display-buffer-in-tab display-buffer-full-frame)
-           (tab-group . "media"))))
-
-;;;;; Xref
-  (with-eval-after-load 'xref
-    (add-to-list 'display-buffer-alist
-                 `((or (major-mode . xref--xref-buffer-mode)
-                       (,(rx (literal xref-buffer-name))))
-                   (display-buffer-below-selected display-buffer-at-bottom)
-                   (window-height . 0.25)))
-
-    ;; For buffers opened by xref
-    (add-to-list 'display-buffer-alist
-                 '(((category . xref)
-                    (display-buffer-reuse-window display-buffer-use-some-window)
-                    (some-window . mru))))))
+          )))
 
 ;;; Provide
 (provide 'krisb-windows)
