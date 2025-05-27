@@ -3039,23 +3039,26 @@ An example of a return value for this function is: \"9 minutes ago\"."
   ;; generated sqlite database for now.
   ;; (org-mem-db1-mode 1)
 
-  ;; Load things related to org-mem’s interaction with org-roam
-  (with-eval-after-load 'org-roam
-    ;; emacsql is required for `org-mem-roamy-db-mode’, as it will
-    ;; error otherwise.
-    (use-package emacsql
-      :ensure t
-      :demand t
-      :config
-      (org-mem-roamy-db-mode 1))
-    ;; End dependence on `org-roam-db-sync'
-    (setopt org-roam-db-update-on-save nil
-            org-mem-roamy-do-overwrite-real-db t)
-    (org-roam-db-autosync-mode -1)))
+
+  ;; FIXME 2025-05-27: Figure out which org-node update is breaking
+  ;; ;; org-roam database compatibility.
+  ;; ;; Load things related to org-mem’s interaction with org-roam
+  ;; (with-eval-after-load 'org-roam
+  ;;   ;; emacsql is required for `org-mem-roamy-db-mode’, as it will
+  ;;   ;; error otherwise.
+  ;;   (use-package emacsql
+  ;;     :ensure (:wait t))
+  ;;   (org-mem-roamy-db-mode 1)
+  ;;   ;; End dependence on `org-roam-db-sync'
+  ;;   (setopt org-roam-db-update-on-save nil
+  ;;           org-mem-roamy-do-overwrite-real-db t)
+  ;;   (org-roam-db-autosync-mode -1))
+  )
 
 ;;;; Org-node
 (use-package org-node
   :ensure t
+  :defer t
   :bind
   ( :map krisb-note-keymap
     ("l" . org-node-context-toggle)
@@ -3519,6 +3522,212 @@ If region is active, use the region's contents instead."
   :custom
   (display-line-numbers-type t)
   (display-line-numbers-width-start t)) ; Use same width throughout
+
+;;;; Citar
+(use-package citar
+  :ensure t
+  ;; NOTE 2025-05-27: We might have to :demand this package if I need
+  ;; it before I call any of its commands.  However, I would ideally
+  ;; avoid that because other packages like citar-org-node are lazily
+  ;; loaded, waiting for citar to load before themselves.  Thus, if
+  ;; citar is immediately loaded at startup, so too will those other
+  ;; packages (which may also load other packages).  Maybe we should
+  ;; be satisfied with e.g. :defer 10.
+  :defer t
+  :hook
+  (org-mode-hook . citar-capf-setup)
+  :bind
+  (("C-c b b" . citar-insert-citation)
+   ("C-c b o" . citar-open)
+   ("C-c b f" . citar-open-files)
+   ("C-c b n" . citar-open-notes)
+   :map org-mode-map
+   ([remap org-cite-insert] . citar-insert-citation))
+  :custom
+  (citar-bibliography krisb-bibliography-files)
+  (citar-notes-paths (list krisb-notes-directory))
+  (citar-open-entry-function #'citar-open-entry-in-file)
+  (citar-default-action #'citar-open-files)
+  ;; See also citar-format.el for more information on what happens with the
+  ;; templates.
+  (citar-templates
+   '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:48}") ; Candidate
+     (suffix . "          ${=key= id:15}    ${=type=:12}    ${tags keywords keywords:*}") ; Candidate annotation
+     (preview . "${author editor:%etal} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n") ; Formatted reference
+     (note . "${title} by ${author}"))) ; New note title
+
+  ;; Instruct org-cite to use citar
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-org-styles-format 'long)
+  :config
+  ;; Fancy UI
+  (with-eval-after-load 'all-the-icons
+    ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
+    (defvar citar-indicator-files-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-faicon
+                "file-o"
+                :face 'all-the-icons-green
+                :v-adjust -0.1)
+       :function #'citar-has-files
+       :padding "  " ; Need this because the default padding is too low for these icons
+       :tag "has:files"))
+    (defvar citar-indicator-links-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-octicon
+                "link"
+                :face 'all-the-icons-orange
+                :v-adjust 0.01)
+       :function #'citar-has-links
+       :padding "  "
+       :tag "has:links"))
+    (defvar citar-indicator-notes-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-material
+                "speaker_notes"
+                :face 'all-the-icons-blue
+                :v-adjust -0.3)
+       :function #'citar-has-notes
+       :padding "  "
+       :tag "has:notes"))
+    (defvar citar-indicator-cited-icons
+      (citar-indicator-create
+       :symbol (all-the-icons-faicon
+                "circle-o"
+                :face 'all-the-icon-green)
+       :function #'citar-is-cited
+       :padding "  "
+       :tag "is:cited"))
+    (setq citar-indicators
+          (list citar-indicator-files-icons
+                citar-indicator-links-icons
+                citar-indicator-notes-icons
+                citar-indicator-cited-icons))))
+
+;; ;; Use `citar' with `org-cite'
+;; (use-package citar-org
+;;   :after oc
+;;   :ensure nil
+;;   :custom
+;;   (org-cite-insert-processor 'citar)    ;
+;;   (org-cite-follow-processor 'citar)
+;;   (org-cite-activate-processor 'citar)
+;;   (citar-org-styles-format 'long))
+
+;;;; Org-roam
+(use-package org-roam
+  :ensure t
+  :defer t
+  ;; TODO 2025-05-27: Revisit this
+  ;; :bind
+  ;; ( :map krisb-note-keymap
+  ;;   ("f" . org-roam-node-find)
+  ;;   ("i" . org-roam-node-insert)
+  ;;   ("c" . org-roam-capture)
+  ;;   ("l" . org-roam-buffer-toggle)
+  ;;   ("ta" . org-roam-tag-add)
+  ;;   ("tr" . org-roam-tag-remove)
+  ;;   ("g" . org-roam-graph))
+  :custom
+  (org-roam-directory krisb-notes-directory)
+  (org-roam-db-node-include-function
+   (lambda () (not (member "ATTACH" (org-get-tags)))))
+  (org-roam-db-gc-threshold most-positive-fixnum)
+  (org-roam-mode-sections
+   '((org-roam-backlinks-section :unique t)
+     org-roam-reflinks-section))
+  :config
+  ;; Fold headings by default
+  (add-to-list 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
+
+  ;; 2025-03-24: Using org-node/org-mem.el to replace this.  I dont enable it at
+  ;; all because enabling causes a `org-roam-db-sync' on startup since it
+  ;; detects that org-mem's db isn't its own...
+  ;; (org-roam-db-autosync-mode 1)
+
+  ;; TODO 2025-05-27: Revisit this.
+  ;; ;; Custom face for ID links to org-roam-nodes.  I prefer to change
+  ;; ;; their foreground color to differentiate them from other types of
+  ;; ;; links as well as to use a lighter face because a buffer
+  ;; ;; packed-full of org links can become visually distracting and
+  ;; ;; cluttered otherwise.
+  ;; (org-link-set-parameters
+  ;;  "id"
+  ;;  :face (lambda (id)
+  ;;          (if (org-roam-node-from-id id)
+  ;;              '(:weight light :inherit font-lock-keyword-face)
+  ;;            'org-link)))
+  ;;
+  ;; ;; Custom stored description
+  ;; (org-link-set-parameters
+  ;;  "id"
+  ;;  :store (lambda (&optional interactive?)
+  ;;           (let* ((id (org-id-get))
+  ;;                  (node (org-roam-node-from-id id)))
+  ;;             (if (and (equal major-mode 'org-mode)
+  ;;                      ;; We want to check more than if there is a node at
+  ;;                      ;; point; we want to make sure ID corresponds to an
+  ;;                      ;; existing node
+  ;;                      node)
+  ;;                 (org-link-store-props :type "id"
+  ;;                                       :link (concat "id:" id)
+  ;;                                       :description (org-roam-node-formatted node))
+  ;;               (funcall 'org-id-store-link-maybe interactive?)))))
+  )
+
+;;;; Org-roam-folgezettel
+(use-package org-roam-folgezettel
+  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/")
+  :defer t
+  :hook
+  (org-roam-folgezettel-mode-hook . hl-line-mode)
+  (org-roam-folgezettel-mode-hook . (lambda () (setq-local line-spacing 0.2)))
+  :bind
+  ( :map krisb-note-keymap
+    ("m" . org-roam-folgezettel-list)
+    ("s" . org-roam-folgezettel-show-node-in-list))
+  :custom
+  (org-roam-folgezettel-default-filter-query '(box "main"))
+  :config
+  ;; TODO 2025-05-27: Revisit this.
+  ;; (require 'krisb-org-roam-ext)
+
+  ;; Load embark integration
+  (with-eval-after-load 'embark
+    (require 'org-roam-folgezettel-embark))
+
+  ;; We must add these after their default values are set by org
+  (with-eval-after-load 'org
+    ;; Add ROAM_* properties to properties completing-read interface
+    ;; completions
+    (dolist (prop '("ROAM_EXCLUDE"
+                    "ROAM_PLACE"
+                    "ROAM_PERSON"
+                    "ROAM_SOURCE"
+                    "ROAM_CONTEXT"
+                    "ROAM_REFS"
+                    "ROAM_TYPE"
+                    "ROAM_BOX"))
+      (add-to-list 'org-default-properties prop))
+
+    ;; Set inherited default values for some ROAM_* properties
+    (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
+    (add-to-list 'org-use-property-inheritance "ROAM_BOX")))
+
+;;;; Citar-org-node
+(use-package citar-org-node
+  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/citar-org-node/")
+  :after citar
+  :demand t
+  :bind
+  ( :map krisb-note-keymap
+    ("b a" . citar-org-node-add-refs)
+    ("b o" . citar-org-node-open-resource))
+  :config
+  (citar-org-node-mode 1)
+  (add-to-list 'mode-line-collapse-minor-modes 'citar-org-node-mode))
 
 ;;; Emails
 
