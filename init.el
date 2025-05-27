@@ -2057,6 +2057,55 @@ ORIG-FUN should be `ispell-completion-at-point'."
                   (propertize (format-mode-line (flymake--mode-line-counters))
                               'face '(:inherit (bold mode-line-inactive)))))))
 
+;;;; Bufferlo
+(use-package bufferlo
+  :ensure t
+  :demand t
+  :custom
+  (bufferlo-anywhere-filter-type 'include)
+  (bufferlo-anywhere-filter
+   '(switch-to-buffer
+     project-switch-to-buffer))
+
+  ;; Bookmarks
+  (bufferlo-bookmark-inhibit-bookmark-point t)
+  :config
+  (bufferlo-mode 1)
+  (bufferlo-anywhere-mode 1)
+
+  (with-eval-after-load 'consult
+    (delq 'consult--source-buffer consult-buffer-sources)
+
+    (defvar krisb-bufferlo-consult--source-local-buffers
+      (list :name "Bufferlo Local Buffers"
+            :narrow   ?b
+            :category 'buffer
+            :face     'consult-buffer
+            :history  'buffer-name-history
+            :state    #'consult--buffer-state
+            :default  t
+            :items    (lambda () (consult--buffer-query
+                                  :predicate #'bufferlo-local-buffer-p
+                                  :sort 'visibility
+                                  :as #'buffer-name)))
+      "Local Bufferlo buffer candidate source for consult-buffer.")
+
+    (defvar krisb-bufferlo-consult--source-other-buffers
+      (list :name "Bufferlo Other Buffers"
+            :narrow   ?B
+            :category 'buffer
+            :face     'consult-buffer
+            :history  'buffer-name-history
+            :state    #'consult--buffer-state
+            :items    (lambda () (consult--buffer-query
+                                  :predicate #'bufferlo-non-local-buffer-p
+                                  :sort 'visibility
+                                  :as #'buffer-name)))
+      "Non-local Bufferlo buffer candidate source for consult-buffer.")
+
+    (add-to-list 'consult-buffer-sources 'krisb-bufferlo-consult--source-other-buffers)
+    (add-to-list 'consult-buffer-sources 'krisb-bufferlo-consult--source-local-buffers)))
+
 ;;; Fluff
 
 ;;;; Recursion-indicator
