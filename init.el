@@ -2687,6 +2687,16 @@ An example of a return value for this function is: \"9 minutes ago\"."
     :after (:all nerd-icons-completion compile-multi)
     :demand t)
 
+;;;; Remove all advice from a function
+;; Thanks to
+;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
+(defun krisb-advice-unadvice (sym)
+  "Remove all advices from symbol SYM."
+  (interactive "aFunction symbol: ")
+  (advice-mapc (lambda (advice _props)
+                 (advice-remove sym advice))
+               sym))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals

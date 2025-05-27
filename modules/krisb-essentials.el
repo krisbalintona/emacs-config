@@ -69,16 +69,6 @@
                (yes-or-no-p (format "Empty trash directory of %s size? " size)))
       (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))))
 
-;;;; Remove all advice from a function
-;; Thanks to
-;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
-(defun krisb-advice-unadvice (sym)
-  "Remove all advices from symbol SYM."
-  (interactive "aFunction symbol: ")
-  (advice-mapc (lambda (advice _props)
-                 (advice-remove sym advice))
-               sym))
-
 ;;;; Delete this file
 (defun krisb-delete-this-file (&optional path force-p)
   "Delete PATH, kill its buffers and expunge it from vc/magit cache.
