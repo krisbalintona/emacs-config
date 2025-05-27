@@ -3694,7 +3694,7 @@ send from."
   ;; Notmuch-searches
   (notmuch-saved-searches
    '(( :name "inbox"
-       :query "tag:inbox and (not tag:list or to:krisbalintona@gmail.com or tag:watch)"
+       :query "tag:inbox and (not tag:list or tag:watch)"
        :sort-order oldest-first
        :key "i")
      ( :name "Emacs mailing lists"
