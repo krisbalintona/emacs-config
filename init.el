@@ -3894,62 +3894,10 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
 ;; notmuch-tree-mode) and messages (i.e. notmuch-show-mode).
 (use-package ol-notmuch
   :ensure t
-  :after (:any ol org-capture)
-  :demand t
-  :config
-  ;; Integration with `org-agenda'
-  (with-eval-after-load 'ol
-    (el-patch-defun org-notmuch-store-link ()
-      (el-patch-swap
-        "Store a link to one or more notmuch messages."
-        "Store a link to one or more notmuch messages.
-My version allows for linking to the first message in an email thread
-from a `notmuch-search-mode' buffer.")
-      ;; 2025-04-09: Not sure what the most elegant el-patch directives would
-      ;; be, so I just remove then add.
-      (el-patch-remove
-        (when (memq major-mode '(notmuch-show-mode notmuch-tree-mode))
-          ;; The value is passed around using variable `org-store-link-plist'.
-          (org-link-store-props
-           :type       "notmuch"
-           :message-id (notmuch-show-get-message-id t)
-           :subject    (notmuch-show-get-subject)
-           :from       (notmuch-show-get-from)
-           :to         (notmuch-show-get-to)
-           :date       (org-trim (notmuch-show-get-date)))
-          (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
-          (org-link-add-props :description (org-link-email-description))
-          org-store-link-plist))
-      (el-patch-add
-        (cond
-         ((memq major-mode '(notmuch-show-mode notmuch-tree-mode))
-          ;; The value is passed around using variable `org-store-link-plist'.
-          (org-link-store-props
-           :type       "notmuch"
-           :message-id (notmuch-show-get-message-id t)
-           :subject    (notmuch-show-get-subject)
-           :from       (notmuch-show-get-from)
-           :to         (notmuch-show-get-to)
-           :date       (org-trim (notmuch-show-get-date)))
-          (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
-          (org-link-add-props :description (org-link-email-description))
-          org-store-link-plist)
-         ((equal major-mode 'notmuch-search-mode)
-          (save-window-excursion
-            (let ((buf (notmuch-show (notmuch-search-find-thread-id))))
-              (with-current-buffer buf
-                (org-link-store-props
-                 :type       "notmuch"
-                 :message-id (notmuch-show-get-message-id t)
-                 :subject    (notmuch-show-get-subject)
-                 :from       (notmuch-show-get-from)
-                 :to         (notmuch-show-get-to)
-                 :date       (org-trim (notmuch-show-get-date)))
-                (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
-                (org-link-add-props :description (org-link-email-description)))
-              (kill-buffer buf)
-              org-store-link-plist)))))))
-
+  ;; :after (:any ol org-capture)
+  ;; :demand t
+  :defer t
+  :init
   (with-eval-after-load 'org-capture
     (add-to-list 'org-capture-templates
                  `("e" "Email" entry
@@ -3975,7 +3923,58 @@ To: %:to\n"
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-search-mode"))))
     (add-to-list 'org-capture-templates-contexts '("n" ((in-mode . "notmuch-search-mode"))))
     (add-to-list 'org-capture-templates-contexts '("e" ((in-mode . "notmuch-show-mode"))))
-    (add-to-list 'org-capture-templates-contexts '("n" ((in-mode . "notmuch-show-mode"))))))
+    (add-to-list 'org-capture-templates-contexts '("n" ((in-mode . "notmuch-show-mode")))))
+  :config
+  (el-patch-defun org-notmuch-store-link ()
+    (el-patch-swap
+      "Store a link to one or more notmuch messages."
+      "Store a link to one or more notmuch messages.
+My version allows for linking to the first message in an email thread
+from a `notmuch-search-mode' buffer.")
+    ;; 2025-04-09: Not sure what the most elegant el-patch directives would
+    ;; be, so I just remove then add.
+    (el-patch-remove
+      (when (memq major-mode '(notmuch-show-mode notmuch-tree-mode))
+        ;; The value is passed around using variable `org-store-link-plist'.
+        (org-link-store-props
+         :type       "notmuch"
+         :message-id (notmuch-show-get-message-id t)
+         :subject    (notmuch-show-get-subject)
+         :from       (notmuch-show-get-from)
+         :to         (notmuch-show-get-to)
+         :date       (org-trim (notmuch-show-get-date)))
+        (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+        (org-link-add-props :description (org-link-email-description))
+        org-store-link-plist))
+    (el-patch-add
+      (cond
+       ((memq major-mode '(notmuch-show-mode notmuch-tree-mode))
+        ;; The value is passed around using variable `org-store-link-plist'.
+        (org-link-store-props
+         :type       "notmuch"
+         :message-id (notmuch-show-get-message-id t)
+         :subject    (notmuch-show-get-subject)
+         :from       (notmuch-show-get-from)
+         :to         (notmuch-show-get-to)
+         :date       (org-trim (notmuch-show-get-date)))
+        (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+        (org-link-add-props :description (org-link-email-description))
+        org-store-link-plist)
+       ((equal major-mode 'notmuch-search-mode)
+        (save-window-excursion
+          (let ((buf (notmuch-show (notmuch-search-find-thread-id))))
+            (with-current-buffer buf
+              (org-link-store-props
+               :type       "notmuch"
+               :message-id (notmuch-show-get-message-id t)
+               :subject    (notmuch-show-get-subject)
+               :from       (notmuch-show-get-from)
+               :to         (notmuch-show-get-to)
+               :date       (org-trim (notmuch-show-get-date)))
+              (org-link-add-props :link (org-link-email-description "notmuch:id:%m"))
+              (org-link-add-props :description (org-link-email-description)))
+            (kill-buffer buf)
+            org-store-link-plist)))))))
 
 ;;;; Notmuch-addr
 ;; Better address completion for notmuch; replaces the built-in
