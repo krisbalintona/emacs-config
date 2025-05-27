@@ -1389,7 +1389,15 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   ;; Eshell is not loaded at startup, so we have to delay our binding
   ;; in `eshell-mode-map’
   (with-eval-after-load 'eshell
-    (bind-key [remap eshell-previous-matching-input] #'consult-history 'eshell-mode-map)))
+    (bind-key [remap eshell-previous-matching-input] #'consult-history 'eshell-mode-map))
+
+  ;; Remove sources from `consult-buffer’ I dislike.  Alternatively, I
+  ;; could make these hidden, allowing access to their filter despite
+  ;; being unseen.
+  (delq 'consult--source-recent-file consult-buffer-sources)
+  (delq 'consult--source-file-register consult-buffer-sources)
+  (delq 'consult--source-bookmark consult-buffer-sources)
+  (delq 'consult--source-project-recent-file-hidden consult-buffer-sources))
 
 ;;;; Ultra-scroll
 ;; TODO 2025-05-20: Document that this package was the result of the
