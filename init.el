@@ -1470,9 +1470,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    '(tab-bar-format-tabs-groups
      tab-bar-separator
      tab-bar-format-align-right
-     ;; TODO 2025-05-20: Revisit this.
-     ;; tab-bar-format-global
-     ))
+     tab-bar-format-global))
   :config
   (tab-bar-mode 1)
   (tab-bar-history-mode 1))
