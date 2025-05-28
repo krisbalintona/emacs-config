@@ -2969,12 +2969,12 @@ An example of a return value for this function is: \"9 minutes ago\"."
   ;; Org blocks
   (org-structure-template-alist
    '(("s" . "src")
-     ("e" . "src emacs-lisp")
+     ("S" . "src emacs-lisp")
      ("q" . "quote")
      ("c" . "comment")
      ("C" . "center")
-     ("e" . "example")
      ("e" . "export")
+     ("E" . "example")
      ("v" . "verse")))
   (org-fontify-quote-and-verse-blocks t)
   (org-fontify-whole-block-delimiter-line nil)
