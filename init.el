@@ -3909,6 +3909,16 @@ The context buffer is the buffer that shows annotation contents in
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
 
+;;;; Word-wrap-mode
+;; Instead of wrapping lines on whitespace, as is the default, also
+;; wrap lines on the characters denoted by
+;; `word-wrap-whitespace-characters’, e.g., em-dashes and en-dashes.
+(use-package word-wrap-mode
+  :ensure nil
+  :demand t
+  :config
+  (global-word-wrap-whitespace-mode 1))
+
 ;;; Emails
 
 ;;;; Message
