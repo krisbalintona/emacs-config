@@ -3776,6 +3776,7 @@ If region is active, use the region's contents instead."
 ;; https://github.com/politza/pdf-tools#compiling-on-fedora
 (use-package pdf-tools
   :ensure nil                           ; We install via Guix
+  :defer t
   ;; 2025-04-03: We manually add an auto-mode-alist entry to lazy-load this
   ;; package.  I want to avoid calling `pdf-loader-install' or
   ;; `pdf-tools-install' immediately at startup because I've had startup
