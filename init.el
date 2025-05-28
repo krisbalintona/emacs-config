@@ -2096,6 +2096,9 @@ ORIG-FUN should be `ispell-completion-at-point'."
 (use-package bufferlo
   :ensure t
   :demand t
+  :bind
+  (("C-c g g" . bufferlo-anywhere-disable-prefix)
+   ("C-c g G" . bufferlo-anywhere-enable-prefix))
   :custom
   (bufferlo-anywhere-filter-type 'include)
   (bufferlo-anywhere-filter
