@@ -3353,9 +3353,8 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   :ensure t
   :defer t
   :bind
-  ;; TODO 2025-05-22: Revisit this.
-  ;; ( :map krisb-yank-keymap
-  ;;   ("b" . org-web-tools-insert-link-for-url))
+  ( :map org-mode-map
+    ("C-c u" . org-web-tools-insert-link-for-url))
   :init
   ;; Add an org-attach entry for `org-web-tools-archive-attach’.  We
   ;; place this in :init since we want this added to the menu even if
