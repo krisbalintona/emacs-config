@@ -2100,6 +2100,9 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (bufferlo-anywhere-filter-type 'include)
   (bufferlo-anywhere-filter
    '(switch-to-buffer
+     switch-to-buffer-other-frame
+     switch-to-buffer-other-tab
+     switch-to-buffer-other-window
      project-switch-to-buffer))
   (bufferlo-hidden-buffers
    '("\\*Org Agenda"))
