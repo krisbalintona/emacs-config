@@ -1440,6 +1440,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 ;;;; Tab-bar
 (use-package tab-bar
   :ensure nil
+  :demand t
   :bind
   ( :map tab-prefix-map
     ("w" . tab-bar-move-window-to-tab)
@@ -2102,6 +2103,10 @@ ORIG-FUN should be `ispell-completion-at-point'."
      project-switch-to-buffer))
   (bufferlo-hidden-buffers
    '("\\*Org Agenda"))
+
+  ;; I prefer ‘window over ‘clone so the tab local bufferlo list is
+  ;; fresh for every new tab
+  (tab-bar-new-tab-choice 'window)
 
   ;; Bookmarks
   (bufferlo-bookmarks-auto-save-interval 60)
@@ -3039,7 +3044,6 @@ An example of a return value for this function is: \"9 minutes ago\"."
   ;; 2025-05-23: I’ve enabled the mode, although I have no use for the
   ;; generated sqlite database for now.
   ;; (org-mem-db1-mode 1)
-
 
   ;; FIXME 2025-05-27: Figure out which org-node update is breaking
   ;; ;; org-roam database compatibility.
