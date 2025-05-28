@@ -117,6 +117,10 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
                  :repo "/home/krisbalintona/emacs-repos/packages/emacs/"
                  :branch "vtable-ship-mints"
                  :files ("lisp/emacs-lisp/vtable.el")))
+(elpaca '(org-capture :wait t
+                      :repo "/home/krisbalintona/emacs-repos/packages/org-mode/"
+                      :branch "org-capture"
+                      :files ("lisp/org-capture.el")))
 
 ;;;; Use-package
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
