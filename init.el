@@ -3886,6 +3886,24 @@ The context buffer is the buffer that shows annotation contents in
   :ensure t
   :after saveplace)
 
+;;;; Org-appear
+;; Show hidden characters (e.g. emphasis markers, link brackets) when
+;; point is over enclosed content
+(use-package org-appear
+  :ensure t
+  :defer t
+  :hook
+  (org-mode-hook . org-appear-mode)
+  :custom
+  (org-appear-delay 0.0)
+  (org-appear-trigger 'always)
+  (org-appear-autoemphasis t)
+  (org-appear-autolinks 'just-brackets)
+  (org-appear-autosubmarkers t)
+  (org-appear-autoentities t)
+  (org-appear-autokeywords t)
+  (org-appear-inside-latex t))
+
 ;;; Emails
 
 ;;;; Message

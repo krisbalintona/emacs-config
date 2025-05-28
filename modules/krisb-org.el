@@ -115,21 +115,6 @@
     (add-hook 'eldoc-documentation-functions #'krisb-org-ext-eldoc-footnote nil t)
     (setq-local eldoc-idle-delay 1)))
 
-;;; Org-appear
-;; Show hidden characters (e.g. emphasis markers, link brackets) when point is
-;; over enclosed content
-(use-package org-appear
-  :hook (org-mode . org-appear-mode)
-  :custom
-  (org-appear-delay 0.0)
-  (org-appear-trigger 'always)
-  (org-appear-autoemphasis t)
-  (org-appear-autolinks 'just-brackets)
-  (org-appear-autosubmarkers t)
-  (org-appear-autoentities t)
-  (org-appear-autokeywords t)
-  (org-appear-inside-latex t))
-
 ;;; Org-bulletproof
 ;; Automatically cycle plain list bullet point styles.
 (use-package org-bulletproof
