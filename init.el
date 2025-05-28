@@ -3079,6 +3079,10 @@ An example of a return value for this function is: \"9 minutes ago\"."
   (org-mem-watch-dirs (list krisb-folio-directory))
   (org-mem-do-warn-title-collisions nil)
   :config
+  (cl-pushnew
+   (file-name-as-directory (file-relative-name krisb-org-archive-directory krisb-folio-directory))
+   org-mem-exclude)
+
   (org-mem-updater-mode 1)
   ;; TODO 2025-05-22: Revisit this.
   ;; 2025-05-23: I’ve enabled the mode, although I have no use for the
