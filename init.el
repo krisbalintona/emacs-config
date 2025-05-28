@@ -2111,7 +2111,8 @@ ORIG-FUN should be `ispell-completion-at-point'."
   ;; Bookmarks
   (bufferlo-bookmarks-auto-save-interval 60)
   (bufferlo-bookmark-inhibit-bookmark-point t)
-  (bufferlo-bookmark-tab-save-on-close 'if-current)
+  (bufferlo-bookmark-tab-replace-policy 'new)
+  (bufferlo-bookmark-tab-save-on-close 'when-bookmarked)
   (bufferlo-bookmarks-save-at-emacs-exit 'all)
   :config
   (bufferlo-mode 1)
