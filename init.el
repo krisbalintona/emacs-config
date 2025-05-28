@@ -3086,19 +3086,19 @@ An example of a return value for this function is: \"9 minutes ago\"."
   ;; (org-mem-db1-mode 1)
 
   ;; FIXME 2025-05-27: Figure out which org-node update is breaking
-  ;; ;; org-roam database compatibility.
-  ;; ;; Load things related to org-mem’s interaction with org-roam
-  ;; (with-eval-after-load 'org-roam
-  ;;   ;; emacsql is required for `org-mem-roamy-db-mode’, as it will
-  ;;   ;; error otherwise.
-  ;;   (use-package emacsql
-  ;;     :ensure (:wait t))
-  ;;   (org-mem-roamy-db-mode 1)
-  ;;   ;; End dependence on `org-roam-db-sync'
-  ;;   (setopt org-roam-db-update-on-save nil
-  ;;           org-mem-roamy-do-overwrite-real-db t)
-  ;;   (org-roam-db-autosync-mode -1))
-  )
+  ;; org-roam database compatibility.
+  ;; Load things related to org-mem’s interaction with org-roam
+  (with-eval-after-load 'org-roam
+    ;; emacsql is required for `org-mem-roamy-db-mode’, and it will
+    ;; error if it is not yet present
+    (use-package emacsql
+      :ensure (:wait t)
+      :config
+      (org-mem-roamy-db-mode 1))
+    ;; End dependence on `org-roam-db-sync'
+    (setopt org-roam-db-update-on-save nil
+            org-mem-roamy-do-overwrite-real-db t)
+    (org-roam-db-autosync-mode -1)))
 
 ;;;; Org-node
 (use-package org-node
