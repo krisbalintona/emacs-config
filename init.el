@@ -1679,10 +1679,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
                  (side . bottom)
                  (dedicated . side)
                  (window-height . 20)
-                 (preserve-size . (t . t))))
-  (add-to-list 'display-buffer-alist
-               '("\\*vc-log\\*"
-                 (display-buffer-same-window))))
+                 (preserve-size . (t . t)))))
 
 (use-package vc-git
   :ensure nil
@@ -1713,12 +1710,13 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 ;;;; Log-edit
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:
-;;
 ;; - `log-edit-headers-alist'
 ;; - `log-edit-setup-add-author'
 (use-package log-edit
   :ensure nil
   :defer t
+  :hook
+  (log-edit-hook . log-edit-maybe-show-diff)
   :custom-face
   (log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
 
