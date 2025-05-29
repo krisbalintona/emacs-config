@@ -3554,11 +3554,40 @@ If region is active, use the region's contents instead."
 ;;;; Org-id
 (use-package org-id
   :ensure nil
-  :after org
+  :defer t
   :custom
   (org-id-track-globally t)
   (org-id-method 'ts)
   (org-id-link-to-org-use-id 'use-existing))
+
+;;;; Org-archive
+(use-package org-archive
+  :ensure nil
+  :defer t
+  :config
+  ;; Allow archiving according to ID of file
+  (defun krisb-org-archive--compute-location-id-format-string (orig-fun &rest args)
+    "Take LOCATION in `org-archive--compute-location' and expand %I.
+%I is expanded to the value of the ID property of the heading or file
+containing the heading at point.  If there is no node at point, then it
+is expanded to the file path instead.
+
+Meant to be used as around advice for `org-archive--compute-location'."
+    ;; Modify LOCATION before normal operations
+    (cl-letf (((car args)
+               (replace-regexp-in-string
+                    "%I"
+                    (org-with-wide-buffer
+                     (let (id)
+                       (while (and (not id) (not (eq (point) (point-min))))
+                         (if (< 1 (org-outline-level))
+                             (org-up-heading 1 t)
+                           (goto-char (point-min)))
+                         (setq id (org-entry-get (point) "ID")))
+                       (or id (buffer-file-name))))
+                    (car args))))
+      (apply orig-fun args)))
+  (advice-add 'org-archive--compute-location :around #'krisb-org-archive--compute-location-id-format-string))
 
 ;;;; Display-line-numbers
 ;; Show line numbers on the left fringe
@@ -4095,7 +4124,7 @@ send from."
   ;; Notmuch-searches
   (notmuch-saved-searches
    '(( :name "inbox"
-       :query "tag:inbox and (not tag:list or tag:watch)"
+       :query "(tag:inbox and not tag:list) or (tag:inbox and tag:watch)"
        :sort-order oldest-first
        :key "i")
      ( :name "Emacs mailing lists"
