@@ -3331,7 +3331,7 @@ For use as `org-node-affixation-fn'."
     ("C-," . jinx-correct)
     ("C-M-$" . jinx-languages))
   :custom
-  (jinx-delay 1.5)
+  (jinx-delay 0.7)
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'jinx-mode)
 
