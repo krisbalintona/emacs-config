@@ -764,6 +764,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 ;; TODO 2025-05-20: Document the following options below in the
 ;; literate configuration:
 ;; - `completion-cycle-threshold'
+;; - `completion-flex-nospace’
 ;; TODO 2025-05-27: Document this advice by vertico to show
 ;; `completing-read-multiple' separator on Emacs versions below 31:
 ;; https://github.com/minad/vertico#completing-read-multiple.
@@ -819,10 +820,12 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (completion-category-overrides
    '((file (styles . (basic partial-completion flex))))) ; Include `partial-completion' to enable wildcards and partial paths.
 
-  ;; TODO 2025-05-20: Revisit this.
-  ;; (completion-ignore-case t)
-  ;; TODO 2025-05-20: Revisit this.
-  ;; (completion-flex-nospace t)
+  ;; We don’t want to ignore case for completions, but buffer and file names are
+  ;; exceptions
+  (completion-ignore-case nil)
+  (read-file-name-completion-ignore-case t)
+  (read-buffer-completion-ignore-case t)
+
   (minibuffer-default-prompt-format " [%s]") ; Format for portion of minibuffer showing default value
   (enable-recursive-minibuffers t)
   :config
@@ -2291,6 +2294,8 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (cursory-mode 1))
 
 ;;;; Completion-preview
+;; TODO 2025-05-30: Document:
+;; - `completion-preview-ignore-case’ in conjunction with `completion-ignore-case'
 (use-package completion-preview
   :ensure nil
   :hook
@@ -2302,7 +2307,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
     ("M-n" . completion-preview-next-candidate)
     ("M-p" . completion-preview-prev-candidate))
   :custom
-  (completion-preview-ignore-case t)
   (completion-preview-minimum-symbol-length 3)
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'completion-preview-mode)
