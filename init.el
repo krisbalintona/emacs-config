@@ -1460,6 +1460,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
     ("<right>" . tab-bar-history-forward))
   :custom
   (tab-bar-close-button-show nil)
+  ;; 2025-05-29: I change this value when I use bufferlo.
   (tab-bar-new-tab-choice 'clone)
   (tab-bar-close-last-tab-choice 'delete-frame)
   (tab-bar-select-tab-modifiers '(meta))
@@ -3972,6 +3973,9 @@ The context buffer is the buffer that shows annotation contents in
   :demand t
   :config
   (global-word-wrap-whitespace-mode 1))
+
+;;; Blogging
+(require 'krisb-org-publish)
 
 ;;; Emails
 
