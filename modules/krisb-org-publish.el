@@ -146,9 +146,11 @@ targets and targets."
              (concat org-html--id-attr-prefix id)))))
     (cond
      ((and user-label
-           (or (plist-get info :html-prefer-user-labels)
-               ;; Used CUSTOM_ID property unconditionnally.
-               custom-id))
+           ;; [KB] 2025-05-30: Normally, the presence of the CUSTOM_ID
+           ;; property will be used unconditionally.  I dislike that,
+           ;; so I change the behavior here: only use a user-label if
+           ;; and only if :html-prefer-user-labels is non-nil.
+           (plist-get info :html-prefer-user-labels))
       user-label)
      ((and named-only
            (not (memq type '(headline inlinetask radio-target target)))
@@ -236,45 +238,106 @@ contextual information."
                     (concat (org-html-section first-content "" info) contents))
                   (org-html--container headline info)))))))
 
-;;; Ox-publish
-(use-package ox-publish
-  :ensure nil
-  :defer t
-  :custom
-  ;; TODO 2025-05-30: Cache can sometimes get in the way and cause
-  ;; mysterious behavior.  Revisit this.
-  (org-publish-use-timestamps-flag nil)
-  (org-publish-project-alist
-   `(("posts"
-      :base-directory ,krisb-blog-manuscripts-directory
-      :publishing-directory "/tmp/new_blog/"
-      :base-extension "org"
-      :recursive t
-      :publishing-function krisb-org-html-publish-to-html
-      :auto-sitemap t
-      :sitemap-filename "/tmp/new_blog/posts-sitemap.org"
-      :sitemap-title "My posts"
-      :sitemap-style tree
-      :html-head-include-default-style nil
-      :html-head ,(sxml-to-xml `(link (@ (rel "stylesheet")
-                                         (href "/css/stylesheet.css")
-                                         (type "text/css"))))
-      :html-prefer-user-labels nil ; We have our own function for anchors
-      :org-export-with-broken-links t)
-     ("css"
-      :base-extension "css"
-      :base-directory ,(expand-file-name "css" krisb-blog-manuscripts-directory)
-      :publishing-directory "/tmp/new_blog/css/"
-      :recursive t
-      :publishing-function org-publish-attachment)
-     ("blog" :components ("css" "posts"))))
-  :init
-  (use-package esxml :ensure t)
-  :config
-  (use-package simple-httpd :ensure t)
+;;; Bespoke org-publish backend and publishing function
+(defun krisb-org-publish-post-file-name (file-name project)
+  "Transform FILE-NAME into one suitable for a post.
+FILE-NAME is a file name without its directory or an absolute file path.
+The returned file name will be the file name as a timestamp of the org
+file (as returned by `org-publish-find-date').
 
-  ;; Bespoke backend
-  (require 'ox)
+PROJECT is an org-project entry."
+  (let* ((file-name (file-name-nondirectory file-name))
+         (time (org-publish-find-date file-name project))
+         (timestamp (format-time-string "%Y%m%d%H%M" time)))
+    (file-name-with-extension timestamp "html")))
+
+(defun krisb-org-publish-sitemap-format-entry (entry style project)
+  "Format for site map ENTRY, as a string.
+ENTRY is a file name.  STYLE is the style of the sitemap.
+PROJECT is the current project.
+
+Like `org-publish-sitemap-default-entry’ but transform file paths (which
+end up as the URL) to place all posts in the posts subdirectory of the
+publishing directory and change post file names to their sluggified
+titles.
+
+With this, since it formats entries the way I like, I ignore the value
+of :sitemap-style."
+  (if (not (directory-name-p entry))
+      (let* ((file-name (krisb-org-publish-post-file-name entry project))
+             (path (file-name-concat "posts" file-name))
+             (title (org-publish-find-title entry project)))
+        (format "[[file:%s][%s]]" path title))
+    (t entry)))
+
+(defun krisb-org-publish-org-to (backend filename extension plist &optional pub-dir)
+  "Publish an Org file to a specified backend.
+
+BACKEND is a symbol representing the backend used for transcoding.
+FILENAME is the filename of the Org file to be published.  EXTENSION is
+the extension used for the output string, with the leading dot.  PLIST
+is the property list for the given project.
+
+Optional argument PUB-DIR, when non-nil is the publishing directory.
+
+Return output file name.
+
+Like `org-publish-org-to’ but hijack the output file name, since these
+names will be the URL on the site.  In particular, if the org file is a
+regular post, we change the output file name to a timestamp.  This lets
+each post have a non-changing URL (i.e., permalink)."
+  (unless (or (not pub-dir) (file-exists-p pub-dir)) (make-directory pub-dir t))
+  ;; Check if a buffer visiting FILENAME is already open.
+  (let* ((org-inhibit-startup t))
+    (org-with-file-buffer filename
+      ;; [KB] NOTE 2025-05-30: Right now, we assume that the thing
+      ;; we’re exporting is the file (and cannot be a subtree).  I
+      ;; think this is a correct assumption since org-publish seems
+      ;; only to support file-level exports.
+      (let* ((project (org-publish-get-project-from-filename filename))
+             ;; [KB] NOTE 2025-06-01: We must take care to consider
+             ;; the sitemap file if it is generated; it goes through
+             ;; this as well.
+             (output
+              ;; [KB] FIXME 2025-06-01: Figure out the best way not to
+              ;; hard-code the sitemap org file.
+              (if (equal (file-name-nondirectory filename) "index.org")
+                  (org-export-output-file-name extension nil pub-dir)
+                (krisb-org-publish-post-file-name filename project))))
+        (org-export-to-file backend (expand-file-name output pub-dir)
+          nil nil nil (plist-get plist :body-only)
+          ;; Add `org-publish--store-crossrefs' and
+          ;; `org-publish-collect-index' to final output filters.  The
+          ;; latter isn't dependent on `:makeindex', since we want to
+          ;; keep it up-to-date in cache anyway.
+          (org-combine-plists
+           plist
+           `(:crossrefs
+             ,(org-publish-cache-get-file-property
+               ;; Normalize file names in cache.
+               (file-truename filename) :crossrefs nil t)
+             :filter-final-output
+             (org-publish--store-crossrefs
+              org-publish-collect-index
+              ,@(plist-get plist :filter-final-output)))))))))
+
+;; Our own org-publish publishing function
+(defun krisb-org-html-publish-to-html (plist filename pub-dir)
+  "Publish an org file to HTML.
+FILENAME is the file-name of the Org file to be published.  PLIST is the
+property list for the given project.  PUB-DIR is the publishing
+directory.
+
+Return output file name."
+  (krisb-org-publish-org-to 'krisb-site-html filename
+                            (concat (when (> (length org-html-extension) 0) ".")
+                                    (or (plist-get plist :html-extension)
+                                        org-html-extension
+                                        "html"))
+                            plist pub-dir))
+
+;; Define our org-publish backend
+(with-eval-after-load 'ox
   (require 'ox-html)
   (org-export-define-derived-backend
       'krisb-site-html 'html
@@ -287,21 +350,48 @@ contextual information."
     ;; :options-alist
     ;; '((:video "VIDEO" nil nil)
     ;;   (:page-type "PAGE-TYPE" nil nil))
-    )
+    ))
 
-  (defun krisb-org-html-publish-to-html (plist filename pub-dir)
-    "Publish an org file to HTML.
-FILENAME is the filename of the Org file to be published.  PLIST is the
-property list for the given project.  PUB-DIR is the publishing
-directory.
-
-Return output file name."
-    (org-publish-org-to 'krisb-site-html filename
-                        (concat (when (> (length org-html-extension) 0) ".")
-                                (or (plist-get plist :html-extension)
-                                    org-html-extension
-                                    "html"))
-                        plist pub-dir)))
+;;; Ox-publish
+(use-package ox-publish
+  :ensure nil
+  :defer t
+  :custom
+  ;; NOTE 2025-05-30: I set this to nil for now because I am
+  ;; developing the site.  Probably should set this to non-nil in the
+  ;; future.
+  (org-publish-use-timestamps-flag nil)
+  (org-publish-project-alist
+   `(("posts"
+      :base-directory ,krisb-blog-manuscripts-directory
+      :publishing-directory "/tmp/new_blog/posts/"
+      :base-extension "org"
+      :recursive t
+      :publishing-function krisb-org-html-publish-to-html
+      :auto-sitemap t
+      :sitemap-filename "/tmp/new_blog/index.org"
+      :sitemap-title "My Posts"
+      :sitemap-sort-files anti-chronologically
+      :sitemap-format-entry krisb-org-publish-sitemap-format-entry
+      :html-head-include-default-style nil
+      :html-head ,(sxml-to-xml `(link (@ (rel "stylesheet")
+                                         (href "../css/stylesheet.css")
+                                         (type "text/css"))))
+      :html-prefer-user-labels nil ; We have our own function for anchors
+      :org-export-with-broken-links t
+      :with-toc nil
+      :with-cite-processors t)
+     ("css"
+      :base-extension "css"
+      :base-directory ,(expand-file-name "css" krisb-blog-manuscripts-directory)
+      :publishing-directory "/tmp/new_blog/css/"
+      :recursive t
+      :publishing-function org-publish-attachment)
+     ("blog" :components ("css" "posts"))))
+  :init
+  (use-package esxml :ensure t)
+  :config
+  (use-package simple-httpd :ensure t))
 
 ;;; Provide
 (provide 'krisb-org-publish)
