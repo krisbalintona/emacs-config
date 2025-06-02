@@ -2045,7 +2045,9 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (on-first-file-hook . global-auto-revert-mode)
   :custom
   (auto-revert-interval 3)
-  (auto-revert-avoid-polling t)     ; Has caveats.  Read its docstring
+  ;; TODO 2025-06-02: I think this should be nil on WSL.  Maybe set
+  ;; value conditionally?
+  ;; (auto-revert-avoid-polling t)     ; Has caveats.  Read its docstring
   (auto-revert-check-vc-info t)
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'auto-revert-mode))
