@@ -1,5 +1,29 @@
 ;; -*- lexical-binding: t; -*-
 
+;; WISHLIST:
+;; - Tags + tag pages
+;; - Backlinks (“Mentions of this page...”)
+;; - “Series” --- post groups?
+;; - Better home page
+;;   - Archive
+;; - Post categories
+;;   - Tech
+;;   - Other
+;; - Non-js search
+;; - Better post metadata
+;;   - Word count
+;;
+;; IMPLEMENTATION NOTES:
+;;
+;; TAGS:
+;;
+;; 2025-06-02: We can have multiple functions for
+;; :publication-function.  I think I should scrape all files to
+;; generate a tag list, then create an org page that is the exported
+;; for each tag page.  Not sure how to add option to add custom
+;; content to these pages.  Maybe check for the existence of an
+;; associated file/note with a tag?
+
 ;;; Bespoke org-export HTML backend
 
 ;;;; Headline transcoder
