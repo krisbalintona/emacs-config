@@ -490,15 +490,11 @@ default to 8."
   :custom
   ;; For a related discussion, see
   ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3.
-  ;; 2025-04-06: The value below is taken from Doom Emacs; it was
-  ;; bumped up from 16mb on commit
-  ;; 80566503646dd80c7604220f184076e190144675, on Dec 6, 2024.
-  (gcmh-high-cons-threshold (* 64 1024 1024)) ; 64 mb
+  (gcmh-high-cons-threshold (* 16 1024 1024)) ; 16 mb
   ;; If the idle delay is too long, we run the risk of runaway memory
   ;; usage in busy sessions.  And if it's too low, then we may as well
   ;; not be using gcmh at all.
-  (gcmh-idle-delay 'auto)               ; Taken from Doom Emacs
-  (gcmh-auto-idle-delay-factor 10)      ; Taken from Doom Emacs
+  (gcmh-idle-delay 5)
   (gcmh-verbose nil)
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'gcmh-mode)
