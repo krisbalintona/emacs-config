@@ -61,9 +61,5 @@
   ;; permissions by default, I think.
   (exec-path-from-shell-copy-env "Z_DATA"))
 
-;;; Fish-mode
-(use-package fish-mode
-  :mode "\\.fish\\'")
-
 ;;; Provide
 (provide 'krisb-shell)

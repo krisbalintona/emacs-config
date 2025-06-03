@@ -2945,6 +2945,10 @@ An example of a return value for this function is: \"9 minutes ago\"."
   :ensure t
   :defer t)
 
+;;;; Fish-mode
+(use-package fish-mode
+  :mode "\\.fish\\'")
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
