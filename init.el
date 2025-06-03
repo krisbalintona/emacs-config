@@ -1423,10 +1423,9 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :ensure (:repo "https://github.com/jdtsmith/ultra-scroll")
   :demand t
   :config
-  ;; As instructed by the README: `scroll-margin' > 0 not yet
-  ;; supported
-  (setopt scroll-conservatively 101
-          scroll-margin 0)
+  ;; 2025-06-03: As instructed by the README: `scroll-margin' > 0 not
+  ;; yet supported
+  (setopt scroll-margin 0)
   (ultra-scroll-mode 1))
 
 ;;;; Marginalia
