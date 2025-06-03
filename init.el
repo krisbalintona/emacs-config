@@ -700,6 +700,14 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
             (start-process "wl-copy" nil "wl-copy"
                            "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
 
+;;;; Don’t let GTK override key sequences on wayland
+;; See the section titled “Certain keys such as 'C-S-u' are not
+;; reported correctly.” in etc/PROBLEMS (M-x C-h C-p).
+(when (fboundp 'pgtk-use-im-context)
+  ;; 2025-06-03: In my experience, this function should only be called
+  ;; after the frame has been set up.
+  (add-hook 'window-setup-hook (lambda () (pgtk-use-im-context nil))))
+
 ;;; Three steps below
 
 ;;;; Vc-jj
