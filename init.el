@@ -1571,6 +1571,11 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
     (cl-nsubstitute '(eat-project "EAT") '(project-shell "Shell")
                     project-switch-commands :test #'equal)))
 
+;;;; Mistty
+(use-package mistty
+  :ensure t
+  :defer t)
+
 ;;;; Ibuffer
 ;; TODO 2025-05-23: Document these packages’ relation to ibuffer:
 ;; - buffer-terminator
