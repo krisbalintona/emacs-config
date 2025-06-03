@@ -427,8 +427,9 @@ default to 8."
   :hook
   (text-mode-hook . electric-quote-local-mode)
   :custom
-  (electric-pair-inhibit-predicate ; Applies to `electric-quote-mode’ too
-   'krisb-electric-pair-conservative-inhibit)
+  ;; TODO 2025-06-02: Revisit this.  I think I prefer the default.
+  ;; (electric-pair-inhibit-predicate ; Applies to `electric-quote-mode’ too
+  ;;  'krisb-electric-pair-conservative-inhibit)
   ;; TODO 2025-05-20: Revisit this.
   ;; (electric-quote-comment nil)
   ;; TODO 2025-05-20: Revisit this.
