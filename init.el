@@ -2100,6 +2100,7 @@ ORIG-FUN should be `ispell-completion-at-point'."
 
 ;;;; Bufferlo
 (use-package bufferlo
+  :disabled t   ; 2025-06-02: Performance issues with both minor modes
   :ensure t
   :demand t
   :bind
