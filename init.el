@@ -256,6 +256,8 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
     (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
 ;;;; El-patch
+;; TODO 2025-06-03: Describe relation to
+;; https://elpa.gnu.org/packages/advice-patch.html.
 (use-package el-patch
   :ensure (:wait t)
   :demand t)
