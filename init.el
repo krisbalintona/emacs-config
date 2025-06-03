@@ -3511,6 +3511,7 @@ If region is active, use the region's contents instead."
   (org-modern-label-border 3)
   (org-modern-tag t)
 
+  ;; Blocks
   (org-modern-block-fringe nil) ; Doesn't work well with `olivetti-style' set to 'fancy
   (org-modern-block-name '("⌜" . "⌞"))
 
@@ -3529,10 +3530,6 @@ If region is active, use the region's contents instead."
   (org-modern-table t)
   (org-modern-table-vertical 3)
   (org-modern-table-horizontal 0.1)
-  :custom-face
-  (org-modern-label
-   ((t :height 0.9 :width condensed :weight regular :underline nil)))
-  (org-modern-todo ((t :weight semibold :inverse-video t :inherit org-modern-label)))
   :config
   ;; TODO 2025-05-23: Revisit this.
   ;; (krisb-modus-themes-setup-faces
