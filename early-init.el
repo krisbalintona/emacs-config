@@ -37,6 +37,8 @@
 ;; characters whose 'paired-bracket' Unicode property is non-nil).
 (setq bidi-inhibit-bpa t)               ; Emacs 27+ only
 
+;; TODO 2025-06-04: Revisit this.  This seems to create exceptional
+;; lag from tons of redisplay calls on inside WSLg.
 ;; NOTE 2024-09-16: From Doom Emacs.
 ;; PGTK builds only: there's a timeout that adds latency to frame operations,
 ;; like `make-frame-invisible', which Emacs frequently calls without a guard
@@ -44,8 +46,8 @@
 ;; default 0.1 should make childframes and packages that manipulate them (like
 ;; `lsp-ui', `company-box', and `posframe') feel much snappier. See
 ;; emacs-lsp/lsp-ui#613.
-(when (boundp 'pgtk-wait-for-event-timeout)
-  (setq pgtk-wait-for-event-timeout 0.001))
+;; (when (boundp 'pgtk-wait-for-event-timeout)
+;;   (setq pgtk-wait-for-event-timeout 0.001))
 
 ;; NOTE 2024-09-16: From Doom Emacs.
 ;; Font compacting can be terribly expensive, especially for rendering icon
