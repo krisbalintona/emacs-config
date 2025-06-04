@@ -460,7 +460,12 @@ default to 8."
 ;; https://emacsconf.org/2023/talks/gc/ for a statistically-informed
 ;; recommendation for GC variables
 (setopt garbage-collection-messages t
-        gc-cons-percentage 0.15)
+        ;; TODO 2025-06-04: Revisit this.  I am trying out the IGC
+        ;; branch and may tweak these values.  But for now I want to
+        ;; try with stock values.
+        ;; gc-cons-threshold (* 16 1024 1024) ; 16 mb
+        ;; gc-cons-percentage 0.15
+        )
 
 ;; Restore `gc-cons-threshold’ to its default value.  We set it to an
 ;; exceptionally high value in early-init.el, so we restore it after
@@ -486,15 +491,14 @@ default to 8."
 ;; TODO 2025-05-23: Document
 ;; - `gcmh-low-cons-threshold’
 (use-package gcmh
+  :disabled t ; 2025-06-04: Trying out the experimental IGC build of Emacs that uses an MPS garbage collector
   :ensure t
   :hook
   (on-first-buffer-hook . gcmh-mode)
   (minibuffer-setup-hook . krisb-gcmh-minibuffer-setup)
   (minibuffer-exit-hook . krisb-gcmh-minibuffer-exit)
   :custom
-  ;; For a related discussion, see
-  ;; https://www.reddit.com/r/emacs/comments/bg85qm/comment/eln27qh/?utm_source=share&utm_medium=web2x&context=3.
-  (gcmh-high-cons-threshold (* 16 1024 1024)) ; 16 mb
+  (gcmh-high-cons-threshold gc-cons-threshold)
   ;; If the idle delay is too long, we run the risk of runaway memory
   ;; usage in busy sessions.  And if it's too low, then we may as well
   ;; not be using gcmh at all.
@@ -511,7 +515,8 @@ default to 8."
   (defun krisb-gcmh-minibuffer-setup ()
     "Temporarily have \"limitless\" `gc-cons-threshold'."
     ;; (message "[krisb-gcmh-minibuffer-setup] Increasing GC threshold")
-    (setq gcmh-high-cons-threshold most-positive-fixnum))
+    (when gcmh-mode
+      (setq gcmh-high-cons-threshold most-positive-fixnum)))
 
   (defun krisb-gcmh-minibuffer-exit ()
     "Restore value of `gc-cons-threshold'."
