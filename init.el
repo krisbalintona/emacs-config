@@ -1852,6 +1852,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    ([remap dabbrev-completion] . cape-dabbrev))
   :custom
   (cape-dabbrev-min-length 2)
+  (cape-dabbrev-buffer-function 'cape-text-buffers)
   ;; Recommended in
   ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration:
   ;; Emacs 30 and newer: Disable Ispell completion function.  Try
