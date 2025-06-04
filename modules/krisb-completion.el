@@ -45,24 +45,6 @@
   (with-eval-after-load 'savehist
     (add-to-list 'savehist-additional-variables 'corfu-history)))
 
-;;;;; Corfu-popupinfo
-;; Documentation window for corfu!
-(use-package corfu-popupinfo
-  :ensure nil
-  :hook (corfu-mode . corfu-popupinfo-mode)
-  :bind ( :map corfu-map
-          ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
-          ("M-l" . corfu-popupinfo-location))
-  :custom
-  (corfu-popupinfo-delay '(nil . 0.3))  ; Don't display initially
-  (corfu-popupinfo-direction '(right left vertical))
-  (corfu-popupinfo-hide t)
-  (corfu-popupinfo-resize t)
-  (corfu-popupinfo-max-height 70)
-  (corfu-popupinfo-max-width 80)
-  (corfu-popupinfo-min-height 1)
-  (corfu-popupinfo-min-width 25))
-
 ;;;;; Corfu-prescient
 (use-package corfu-prescient
   :demand t

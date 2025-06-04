@@ -928,6 +928,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 (use-package vertico-multiform
   :ensure nil
   :after vertico
+  :defer t
   :hook
   (vertico-mode-hook . vertico-multiform-mode)
   :custom
@@ -1012,6 +1013,28 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
              completion-cycle-threshold completion-cycling)
          (consult-completion-in-region beg end table pred)))))
   (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer))
+
+;;;; Corfu-popupinfo
+;; Popup documentation window for corfu candidates
+(use-package corfu-popupinfo
+  :ensure nil
+  :after corfu
+  :defer t
+  :hook
+  (corfu-mode-hook . corfu-popupinfo-mode)
+  :bind
+  ( :map corfu-map
+    ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
+    ("M-l" . corfu-popupinfo-location))
+  :custom
+  (corfu-popupinfo-delay '(nil . 0.4))  ; Don't display initially
+  (corfu-popupinfo-direction '(right left vertical))
+  (corfu-popupinfo-hide t)
+  (corfu-popupinfo-resize t)
+  (corfu-popupinfo-max-height 70)
+  (corfu-popupinfo-max-width 80)
+  (corfu-popupinfo-min-height 1)
+  (corfu-popupinfo-min-width 25))
 
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular `completing-read'
