@@ -121,6 +121,7 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
                       :repo "/home/krisbalintona/emacs-repos/packages/org-mode/"
                       :branch "org-capture"
                       :files ("lisp/org-capture.el")))
+(elpaca '(transient :wait t))
 
 ;;;; Use-package
 ;; Although `use-package' is built-in starting Emacs 29.1, I should make sure
