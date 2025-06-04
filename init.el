@@ -537,9 +537,10 @@ default to 8."
 ;; Use PowerToys Keyboard Manager to rebind Alt+Space to Alt+F13 in
 ;; then using xmodmap to redirect Alt+F13 to M-SPC.  (Instead of
 ;; creating a file, I do it using the shell command below.)  Of
-;; course, xmodmap only works under X11, so a Wayland solution is
-;; absent.
-(when (and (not (getenv "WAYLAND_DISPLAY")) (executable-find "xmodmap"))
+;; course, xmodmap is an X11 tool, so this is incompatible with the
+;; PGTK toolkit.
+(when (and (not (string-match-p "--with-pgtk" system-configuration-options))
+           (executable-find "xmodmap"))
   (shell-command "xmodmap -e 'keycode 191 = space'"))
 
 ;;; Two steps below
