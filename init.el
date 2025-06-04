@@ -2260,7 +2260,10 @@ ORIG-FUN should be `ispell-completion-at-point'."
 ;; Abridge (shorten) refined diff hunks with long lines.  You can
 ;; enable and disable showing the abridged version using
 ;; `abridge-diff-toggle-hiding'.
+;; TODO 2025-06-04: Revisit this.  This seems undesirable when using
+;; built-in diffs via diff-mode.
 (use-package abridge-diff
+  :disabled t
   :ensure t
   :after diff
   :demand t
