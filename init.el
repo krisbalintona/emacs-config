@@ -4028,6 +4028,25 @@ The context buffer is the buffer that shows annotation contents in
   :config
   (global-word-wrap-whitespace-mode 1))
 
+;;;; Astute.el
+;; Display punctuation typographically (e.g., em-dashes as "—" and
+;; en-dashes as "–")
+(use-package astute
+  :ensure t
+  :defer t
+  :hook
+  (text-mode-hook . astute-mode)
+  :custom
+  (astute-lighter "")
+  (astute-prefix-single-quote-exceptions
+   '("bout"
+     "em"
+     "n'"
+     "cause"
+     "round"
+     "twas"
+     "tis")))
+
 ;;; Blogging
 (require 'krisb-org-publish)
 

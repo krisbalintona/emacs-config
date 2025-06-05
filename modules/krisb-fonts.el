@@ -22,22 +22,6 @@
      "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
      ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++")))
 
-;;; Astute.el
-;; Redisplay typographical punctuation (e.g., em-dashes as "—" and en-dashes as
-;; "–")
-(use-package astute
-  :hook (text-mode . astute-mode)
-  :custom
-  (astute-lighter "")
-  (astute-prefix-single-quote-exceptions
-   '("bout"
-     "em"
-     "n'"
-     "cause"
-     "round"
-     "twas"
-     "tis")))
-
 ;;; Prettify-symbols-mode
 (setopt prettify-symbols-unprettify-at-point 'right-edge)
 
