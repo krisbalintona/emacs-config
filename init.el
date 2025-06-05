@@ -2699,6 +2699,32 @@ of collision."
     (el-patch-add
       (expand-file-name (sha1 (expand-file-name fpath)) savefold-directory))))
 
+;;;; Activities
+(use-package activities
+  :ensure t
+  :demand t
+  :hook
+  (kill-emacs-hook . activities-save-all)
+  :bind
+  (("C-c a d" . activities-define)
+   ("C-c a n" . activities-new)
+   ("C-c a a" . activities-resume)
+   ("C-c a g" . activities-revert)
+   ("C-c a r" . activities-rename)
+   ("C-c a D" . activities-discard)
+   ("C-c a b" . activities-switch-buffer)
+   ("C-c a B" . activities-switch)
+   ("C-c a s" . activities-suspend)
+   ("C-c a k" . activities-kill)
+   ("C-c a l" . activities-list))
+  :custom
+  (activities-kill-buffers t)
+  (activities-bookmark-store nil)
+  (activities-bookmark-warnings t)
+  :config
+  (activities-mode 1)
+  (activities-tabs-mode 1))
+
 ;;; Coding
 
 ;;;; Org-src
