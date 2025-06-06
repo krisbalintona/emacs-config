@@ -491,7 +491,7 @@ default to 8."
 ;; TODO 2025-05-23: Document
 ;; - `gcmh-low-cons-threshold’
 (use-package gcmh
-  :disabled t ; 2025-06-04: Trying out the experimental IGC build of Emacs that uses an MPS garbage collector
+  :if (string-match-p "--with-mps=yes" system-configuration-options)
   :ensure t
   :hook
   (on-first-buffer-hook . gcmh-mode)
@@ -503,10 +503,9 @@ default to 8."
   ;; usage in busy sessions.  And if it's too low, then we may as well
   ;; not be using gcmh at all.
   (gcmh-idle-delay 5)
-  (gcmh-verbose nil)
+  (gcmh-verbose garbage-collection-messages)
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'gcmh-mode)
-  (setopt garbage-collection-messages gcmh-verbose)
 
   ;; Increase GC threshold when in minibuffer
   (defvar krisb-gc-minibuffer--original gcmh-high-cons-threshold
