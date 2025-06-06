@@ -4605,6 +4605,14 @@ from a `notmuch-search-mode' buffer.")
   :config
   (notmuch-addr-setup))
 
+;;;; Notmuch-bookmarks
+(use-package notmuch-bookmarks
+  :ensure t
+  :after notmuch
+  :demand t
+  :config
+  (notmuch-bookmarks-mode))
+
 ;;;; Mode line indicator for notmuch emails
 ;; Try using display-time's built-in email indicator --- less
 ;; informative but more visually subtle than `notmuch-indicator'.
