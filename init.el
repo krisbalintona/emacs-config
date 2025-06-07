@@ -1690,13 +1690,15 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 ;;;; VC
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:
-;;
 ;; - `vc-annotate-display-mode'
 ;; - `vc-revert-show-diff'
 ;; - `vc-git-revision-complete-only-branches'
 (use-package vc
   :ensure nil
   :defer t
+  :bind
+  ( :map diff-mode-map
+    ("v" . vc-next-action))
   :custom
   (vc-handled-backends '(Git))
   (vc-follow-symlinks t)
