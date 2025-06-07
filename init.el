@@ -935,24 +935,20 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (vertico-multiform-categories
    '((buffer (vertico-sort-function . nil))
      (file grid)
+     (command flat)
+     (symbol-help flat)
+     (kill-ring (vertico-sort-function . nil))
      (color (vertico-sort-function . vertico-sort-history-length-alpha))
-     ;; TODO 2025-05-20: Revisit this.
-     ;; (jinx grid
-     ;;       (vertico-grid-annotate . 20)
-     ;;       (vertico-grid-max-columns . 12)
-     ;;       (vertico-grid-separator
-     ;;        . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t)))))
-     ))
+     (jinx grid
+           (vertico-grid-annotate . 20)
+           (vertico-grid-max-columns . 12)
+           (vertico-grid-separator
+            . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
   (vertico-multiform-commands
    `((pdf-view-goto-label (vertico-sort-function . nil))
      (".+-history" (vertico-sort-function . nil))
      (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
-      (vertico-sort-function . nil))
-     ;; TODO 2025-05-20: Revisit this.
-     ;; (,(rx bol (or (literal "org-node-") (literal "org-roam-")) "-find" eol)
-     ;;  (completion-styles . (orderless ,(if (featurep 'hotfuzz) 'hotfuzz 'flex))) ; FIXME 2025-05-08: But what if hotfuzz is loaded after vertico-multiform?
-     ;;  (orderless-matching-styles . (orderless-prefixes orderless-regexp orderless-literal)))
-     )))
+      (vertico-sort-function . nil)))))
 
 ;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more
