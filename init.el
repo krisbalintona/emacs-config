@@ -797,37 +797,17 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (completions-group t)    ; Emacs 28
   (completions-sort 'historical) ; Emacs 30.1
 
-  ;; Category settings. A non-exhaustve list of known completion categories:
+  ;; Category settings. A non-exhaustive list of known completion
+  ;; categories:
   ;; - `bookmark'
   ;; - `buffer'
   ;; - `charset'
   ;; - `coding-system'
   ;; - `color'
   ;; - `command' (e.g. `M-x')
-  ;; - `customize-group'
-  ;; - `environment-variable'
-  ;; - `expression'
-  ;; - `face'
-  ;; - `file'
-  ;; - `function' (the `describe-function' command bound to `C-h f')
-  ;; - `info-menu'
-  ;; - `imenu'
-  ;; - `input-method'
-  ;; - `kill-ring'
-  ;; - `library'
-  ;; - `minor-mode'
-  ;; - `multi-category'
-  ;; - `package'
-  ;; - `project-file'
-  ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
-  ;; - `theme'
-  ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
-  ;; - `variable' (the `describe-variable' command bound to `C-h v')
-  ;; - `consult-grep'
-  ;; - `consult-isearch'
-  ;; - `consult-kmacro'
-  ;; - `consult-location'
-  ;; - `embark-keybinding'
+  ;; You can find out the category of the completion canddiate at
+  ;; point via the form below:
+  ;;     (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
   (completion-category-defaults
    '((calendar-month (display-sort-function . identity))))
   (completion-category-overrides
