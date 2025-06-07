@@ -904,6 +904,13 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
     ("DEL" . vertico-directory-delete-char)
     ("M-DEL" . vertico-directory-delete-word)))
 
+;; A minimal, Ido-like UI
+(use-package vertico-flat
+  :ensure nil
+  :after vertico
+  :custom
+  (vertico-flat-annotate t))
+
 ;; On-demand change the type of UI
 (use-package vertico-multiform
   :ensure nil
@@ -925,10 +932,15 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
            (vertico-grid-separator
             . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t)))))))
   (vertico-multiform-commands
-   `((pdf-view-goto-label (vertico-sort-function . nil))
+   `((pdf-view-goto-label
+      (vertico-sort-function . nil))
      (".+-history" (vertico-sort-function . nil))
      (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
-      (vertico-sort-function . nil)))))
+      (vertico-sort-function . nil))
+     (,(rx bol (literal "customize-"))
+      flat)
+     (,(rx bol (0+ (literal "krisb-")) (literal "find-library"))
+      flat))))
 
 ;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more
