@@ -4197,6 +4197,36 @@ with the following exceptions:
        ((equal 'org-mode (buffer-local-value 'major-mode buffer))
         "org")))))
 
+
+;;;; Org-hide-drawers
+;; Make org drawers less visually obtrusive.
+(use-package org-hide-drawers
+  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/")
+  :defer t
+  :hook
+  (org-mode-hook . org-hide-drawers-mode)
+  :bind
+  ( :map krisb-toggle-keymap
+    ("h" . org-hide-drawers-transient))
+  :custom
+  (org-hide-drawers-hide-top-level-properties-drawer nil)
+  (org-hide-drawers-keep-visible-properties
+   '("CUSTOM_ID" "ID"
+     "TOC"))                            ; For org-make-toc
+  (org-hide-drawers-keep-visible-properties-ignore-case-p t)
+  (org-hide-drawers-keep-visible-drawers
+   '("CONTENTS"))                       ; For org-make-toc
+  (org-hide-drawers-keep-visible-drawers-ignore-case-p t)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'org-hide-drawers-mode)
+
+  (require 'transient)
+  (transient-define-prefix org-hide-drawers-transient ()
+    "Transient map for useful org-hide-drawers commands."
+    [("h" "Hide drawers" org-hide-drawers-make-overlays)
+     ("u" "Unhide drawers" org-hide-drawers-delete-overlays)
+     ("t" "Toggle hiding" org-hide-drawers-toggle)]))
+
 ;;; Blogging
 (require 'krisb-org-publish)
 
