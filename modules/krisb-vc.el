@@ -149,14 +149,6 @@
   :config
   (pinentry-start))
 
-;;; Ediff
-(use-package ediff
-  :ensure nil
-  :custom
-  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
-  (ediff-split-window-function #'split-window-horizontally)
-  (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
-
 ;;; Git-share
 ;; Share a web URL to the commit responsible for the change at point or the
 ;; remote version of the file at point.

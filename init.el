@@ -3084,6 +3084,15 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   ;;                      :background (modus-themes-with-colors bg-dim)))
   )
 
+;;;; Ediff
+(use-package ediff
+  :ensure nil
+  :defer t
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
+  (ediff-split-window-function #'split-window-horizontally)
+  (ediff-highlight-all-diffs nil)) ; Only highlight currently selected diff
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
