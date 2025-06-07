@@ -3394,6 +3394,9 @@ For use as `org-node-affixation-fn'."
   ((org-mode-hook Info-mode-hook emacs-news-view-mode-hook org-msg-edit-mode-hook markdown-mode-hook)
    . olivetti-mode)
   ;; (olivetti-mode-hook . krisb-olivetti-set-bookmark-face)
+  :bind
+  ( :map olivetti-mode-map
+    ("C-c |" . nil))
   :custom
   (olivetti-body-width 0.55)
   (olivetti-minimum-body-width 80)
