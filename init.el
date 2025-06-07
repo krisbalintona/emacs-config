@@ -1447,6 +1447,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 ;;;; Marginalia
 ;; Enable richer annotations in minibuffer
 (use-package marginalia
+  :disabled t     ; 2025-06-07: Trying out just `completions-detailed'
   :ensure t
   :demand t
   :custom
