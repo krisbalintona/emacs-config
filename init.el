@@ -1677,9 +1677,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 (use-package vc
   :ensure nil
   :defer t
-  :bind
-  ( :map diff-mode-map
-    ("v" . vc-next-action))
   :custom
   (vc-handled-backends '(Git))
   (vc-follow-symlinks t)
@@ -3054,6 +3051,38 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  ("C-S-n" . krisb-open-line-below-goto)
  ("C-S-k" . krisb-join-line-above)
  ("C-S-j" . krisb-join-line-below))
+
+;;;; Diff-mode
+;; TODO 2025-06-07: Document:
+;; - `diff-font-lock-syntax’
+;; - `diff-refine’
+(use-package diff-mode
+  :ensure nil
+  :defer t
+  :hook
+  (diff-mode-hook . diff-delete-empty-files)
+  :bind
+  ( :map diff-mode-map
+    ("v" . vc-next-action))
+  :custom
+  (diff-default-read-only t)
+  (diff-font-lock-prettify t)    ; Make diff headers look like Magit’s
+  :config
+  ;; TODO 2025-06-07: Revisit this.
+  ;; (krisb-modus-themes-setup-faces
+  ;;  "diff-mode"
+  ;;  (set-face-attribute 'diff-header nil
+  ;;                      :height 1.2
+  ;;                      :overline t
+  ;;                      :width 'expanded
+  ;;                      :foreground (modus-themes-with-colors fg-alt)
+  ;;                      :extend t)
+  ;;  (set-face-attribute 'diff-hunk-header nil
+  ;;                      :height 1.1
+  ;;                      :slant 'italic
+  ;;                      :foreground 'unspecified
+  ;;                      :background (modus-themes-with-colors bg-dim)))
+  )
 
 ;;; Writing
 

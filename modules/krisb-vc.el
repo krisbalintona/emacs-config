@@ -149,33 +149,6 @@
   :config
   (pinentry-start))
 
-;;; Diff-mode
-(use-package diff-mode
-  :ensure nil
-  :hook (diff-mode . diff-delete-empty-files)
-  :bind ( :map diff-mode-map
-          ("L" . vc-print-root-log)
-          ("v" . vc-next-action))
-  :custom
-  (diff-default-read-only t)
-  (diff-font-lock-prettify t)
-  (diff-refine 'font-lock)
-  (diff-font-lock-syntax t)
-  :config
-  (krisb-modus-themes-setup-faces
-   "diff-mode"
-   (set-face-attribute 'diff-header nil
-                       :height 1.2
-                       :overline t
-                       :width 'expanded
-                       :foreground (modus-themes-with-colors fg-alt)
-                       :extend t)
-   (set-face-attribute 'diff-hunk-header nil
-                       :height 1.1
-                       :slant 'italic
-                       :foreground 'unspecified
-                       :background (modus-themes-with-colors bg-dim))))
-
 ;;; Ediff
 (use-package ediff
   :ensure nil
