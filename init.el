@@ -3004,6 +3004,74 @@ An example of a return value for this function is: \"9 minutes ago\"."
 (use-package fish-mode
   :mode "\\.fish\\'")
 
+;;;; Enhancements to basic text editing
+;; Puni: major-mode agnostic structural editing.  We use some of its
+;; commands.
+(use-package puni
+  :ensure t
+  :defer t
+  :bind
+  (("C-S-o" . puni-split)
+   ("M-+" . puni-splice)
+   ("M-R" . puni-raise)
+   ([remap transpose-sexps] . puni-transpose)
+   ([remap kill-word] . puni-forward-kill-word)
+   ([remap backward-kill-word] . puni-backward-kill-word)
+   ([remap insert-parentheses] . puni-syntactic-backward-punct)
+   ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct))
+  :custom
+  (puni-confirm-when-delete-unbalanced-active-region nil))
+
+;; Open line indents too
+(defun krisb-open-line (n)
+  "Like `open-line’ but also indent.
+For N, see the docstring of `open-line’."
+  (interactive "*p")
+  (open-line n)
+  (save-excursion
+    (forward-line n)
+    (funcall indent-line-function)))
+(bind-key [remap open-line] 'krisb-open-line)
+
+;; Joining and inserting newlines
+(defun krisb-open-line-above-goto ()
+  "Insert an empty line above the current line.
+Position the cursor at it's beginning, according to the current
+mode. Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(defun krisb-open-line-below-goto ()
+  "Insert an empty line after the current line.
+Position the cursor at its beginning, according to the current mode.
+Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))
+
+(defun krisb-join-line-above ()
+  "Join the current line with the line above."
+  (interactive)
+  (save-excursion (delete-indentation))
+  (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
+    (funcall indent-line-function)))
+
+(defun krisb-join-line-below ()
+  "Join the current line with the line below."
+  (interactive)
+  (save-excursion (delete-indentation t))
+  (when (bolp)
+    (funcall indent-line-function)))
+
+(bind-keys
+ ("C-S-p" . krisb-open-line-above-goto)
+ ("C-S-n" . krisb-open-line-below-goto)
+ ("C-S-k" . krisb-join-line-above)
+ ("C-S-j" . krisb-join-line-below))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
@@ -5671,46 +5739,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 (bind-keys
  ("C-M-S-p" . scroll-down-line)
  ("C-M-S-n" . scroll-up-line))
-
-;; Rapid joining lines and inserting newlines tailored for prose
-;; writing
-(defun krisb-open-line-above-goto ()
-  "Insert an empty line above the current line.
-Position the cursor at it's beginning, according to the current
-mode. Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (previous-line)
-  (indent-according-to-mode))
-
-(defun krisb-open-line-below-goto ()
-  "Insert an empty line after the current line.
-Position the cursor at its beginning, according to the current mode.
-Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-
-(defun krisb-join-line-above ()
-  "Join the current line with the line above."
-  (interactive)
-  (save-excursion (delete-indentation))
-  (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
-    (funcall indent-line-function)))
-
-(defun krisb-join-line-below ()
-  "Join the current line with the line below."
-  (interactive)
-  (save-excursion (delete-indentation t))
-  (when (bolp)
-    (funcall indent-line-function)))
-
-(bind-keys
- ("C-S-p" . krisb-open-line-above-goto)
- ("C-S-n" . krisb-open-line-below-goto)
- ("C-S-k" . krisb-join-line-above)
- ("C-S-j" . krisb-join-line-below))
 
 ;; `indent-for-tab-command' functionality: what happens when you press
 ;; TAB?
