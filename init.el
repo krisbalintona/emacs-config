@@ -491,7 +491,7 @@ default to 8."
 ;; TODO 2025-05-23: Document
 ;; - `gcmh-low-cons-threshold’
 (use-package gcmh
-  :if (string-match-p "--with-mps=yes" system-configuration-options)
+  :if (not (string-match-p "--with-mps=yes" system-configuration-options))
   :ensure t
   :hook
   (on-first-buffer-hook . gcmh-mode)
