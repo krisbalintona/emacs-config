@@ -1812,6 +1812,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
      (project-compile "Compile")
      (project-recompile "Recompile")
      (project-any-command "Other")))
+  (project-compilation-buffer-name-function 'project-prefixed-buffer-name)
   (project-mode-line t)
   (project-mode-line-face 'italic)
   :config
