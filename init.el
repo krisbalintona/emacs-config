@@ -909,7 +909,15 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :ensure nil
   :after vertico
   :custom
-  (vertico-flat-annotate t))
+  (vertico-flat-annotate t)
+  (vertico-flat-format
+  '(:multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
+    :single #("[%s]" 0 1 (face minibuffer-prompt) 1 3 (face success) 3 4 (face minibuffer-prompt))
+    :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
+    :separator #("  |  " 0 5 (face minibuffer-prompt))
+    :ellipsis #("…" 0 1 (face minibuffer-prompt))
+    :no-match "[No match]"
+    :spacer #(" " 0 1 (cursor t)))))
 
 ;; On-demand change the type of UI
 (use-package vertico-multiform
@@ -920,7 +928,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (vertico-mode-hook . vertico-multiform-mode)
   :custom
   (vertico-multiform-categories
-   '((buffer (vertico-sort-function . nil))
+   '((buffer flat (vertico-sort-function . nil))
      (file grid)
      (command flat)
      (symbol-help flat)
@@ -939,8 +947,11 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
       (vertico-sort-function . nil))
      (,(rx bol (literal "customize-"))
       flat)
-     (,(rx bol (0+ (literal "krisb-")) (literal "find-library"))
-      flat))))
+     (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
+                   (literal "load-library")))
+      flat)
+     (,(rx bol (literal "consult-history"))
+      (vertico-sort-function . nil)))))
 
 ;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more
