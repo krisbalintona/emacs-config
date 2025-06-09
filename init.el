@@ -4467,7 +4467,10 @@ send from."
    ("/" . notmuch-search-filter)
    ("r" . notmuch-search-reply-to-thread)
    ("R" . notmuch-search-reply-to-thread-sender)
+   :map notmuch-tree-mode-map
+   ("S-SPC" . notmuch-tree-scroll-message-window-back)
    :map notmuch-show-mode-map
+   ("S-SPC" . notmuch-show-rewind)
    ("a" . nil)
    ("r" . notmuch-show-reply)
    ("R" . notmuch-show-reply-sender)
