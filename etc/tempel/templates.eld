@@ -69,6 +69,6 @@ emacs-lisp-mode
 
 org-mode
 
-(cid (if (fboundp 'krisb-org-ext-create-dedicated-target)
+(cid (if (fboundp 'krisb-org-create-dedicated-target)
          (krisb-org-ext-create-dedicated-target)
        (user-error "Function \“krisb-org-ext-create-dedicated-target\” is not defined")))

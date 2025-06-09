@@ -63,45 +63,6 @@ after each heading's drawers."
                          nil
                        'tree)))
 
-;;; Automate creation of IDs
-;;;###autoload
-(defun krisb-org-ext-create-custom-id ()
-  "Get the CUSTOM_ID of the current entry.
-If the entry already has a CUSTOM_ID, return it as-is, else create a new
-one.
-
-This function is a copy of `denote-link-ol-get-id'."
-  (interactive nil org-mode)
-  (let* ((pos (point))
-         (id (org-entry-get pos "CUSTOM_ID")))
-    (if (and (stringp id) (string-match-p "\\S-" id))
-        id
-      (setq id (org-id-new "h"))
-      (org-entry-put pos "CUSTOM_ID" id)
-      id)))
-
-;;;###autoload
-(defun krisb-org-ext-create-dedicated-target ()
-  "Return a unique dedicated target as a string.
-Based on the current time.  See (info \"(org) Internal Links\") for more
-information on dedicated targets.
-
-If called interactively, then insert the target into the buffer.
-Otherwise, just return the target as a string.
-
-In either case, also store the target as an org link that can be
-inserted with e.g. `org-insert-last-stored-link' or
-`org-insert-all-links'."
-  (interactive)
-  (let* ((id (format-time-string "%Y%m%dT%H%M%S"))
-         (target (concat "<<" id ">>")))
-    (if (called-interactively-p 'interactive)
-        (insert target)
-      target)
-    (let ((org-link-context-for-files t))
-      (org-link--add-to-stored-links (org-store-link '(16)) id))
-    target))
-
 ;;; Eldoc backend for footnote content
 ;;;###autoload
 (defun krisb-org-ext-eldoc-footnote (callback &rest _rest)
