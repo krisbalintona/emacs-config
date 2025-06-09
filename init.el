@@ -5823,6 +5823,22 @@ duration."
   :hook
   (guix-build-log-mode-hook . guix-build-log-phase-toggle-all))
 
+;;; Package authorship
+
+;;;; Package-lint-flymake
+(use-package package-lint-flymake
+  :ensure t
+  :defer t
+  :hook
+  (emacs-lisp-mode-hook . package-lint-flymake-setup))
+
+;;;; Org-make-toc
+(use-package org-make-toc
+  :ensure t
+  :defer t
+  :custom
+  (org-make-toc-insert-custom-ids t))
+
 ;;; Uncategorized
 
 ;; Restart or close Emacs

@@ -109,14 +109,6 @@
   (suggest-insert-example-on-start nil))
 
 ;;;; Package authorship
-;;;;; Package-lint-flymake
-(use-package package-lint-flymake
-  :hook (emacs-lisp-mode . package-lint-flymake-setup))
-
-;;;;; Org-make-toc
-(use-package org-make-toc
-  :custom
-  (org-make-toc-insert-custom-ids t))
 
 ;;;;; Package-build
 ;; For help with creating package recipes for, e.g., MELPA.  See
