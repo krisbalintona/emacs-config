@@ -1,14 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Saveplace
-;; Save and restore the point's location in files
-(use-package saveplace
-  :ensure nil
-  :hook (on-first-file . save-place-mode)
-  :custom
-  (save-place-forget-unreadable-files t)
-  (save-place-limit 3000))
-
 ;;; Bookmark
 (use-package bookmark
   :ensure nil
