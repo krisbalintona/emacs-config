@@ -4138,7 +4138,8 @@ Meant to be used as around advice for `org-archive--compute-location'."
 (use-package flymake-collection
   ;; For AUR:
   ;; :ensure-system-package vale
-  :ensure t
+  :ensure ( :repo "/home/krisbalintona/emacs-repos/packages/flymake-collection/"
+            :branch "vale-remove-unnecessary-splice")
   :after flymake
   :demand t
   :custom
