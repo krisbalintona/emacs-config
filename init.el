@@ -1383,7 +1383,12 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    ("G" . consult-grep)
    ("r" . consult-ripgrep)
    ("f" . consult-find)
-   ("F" . consult-locate))
+   ("F" . consult-locate)
+   :map dired-mode-map
+   ;; Dired binds its own commands in M-s f, so I rebind these
+   ;; specially in `dired-mode-map'
+   ("M-s f f" . consult-find)
+   ("M-s f F" . consult-locate))
   :custom
   (consult-preview-key "C-M-;")
   (consult-bookmark-narrow
