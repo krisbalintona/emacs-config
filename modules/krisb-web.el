@@ -89,36 +89,6 @@
   (wallabag-db-file (no-littering-expand-var-file-name "wallabag/wallabag.sqlite"))
   (wallabag-search-page-max-rows 50))
 
-;;; Wombag
-(use-package wombag
-  :load-path "/home/krisbalintona/emacs-repos/packages/wombag/"
-  ;; :vc (:url "https://github.com/karthink/wombag.git"
-  ;;           :rev :newest)
-  :hook ((wombag-show-mode . org-remark-mode)
-         (wombag-show-mode . krisb-wombag-entry-setup))
-  :bind ( :map krisb-open-keymap
-          ("w" . wombag))
-  :custom
-  (wombag-dir (no-littering-expand-var-file-name "wombag"))
-  (wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite"))
-  (wombag-username "krisbalintona")
-  (wombag-host "https://app.wallabag.it")
-  (wombag-password (auth-source-pick-first-password :host "app.wallabag.it"))
-  (wombag-client-id "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
-  (wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
-  (wombag-search-filter "")
-  :config
-  (defun krisb-wombag-entry-setup ()
-    "Set up the visual for wombag-entry buffers."
-    (setq-local line-spacing 0.08)
-    (face-remap-add-relative 'default :height 1.1)
-    (when (require 'olivetti nil t)
-      (olivetti-mode 1)
-      (olivetti-set-width 120))
-    (when (require 'mixed-pitch nil t)
-      (mixed-pitch-mode 1))
-    (visual-line-mode 1)))
-
 ;;; Krisb-wombag-ext
 (use-package krisb-wombag-ext
   :ensure nil
