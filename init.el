@@ -5919,12 +5919,22 @@ duration."
                                           (time-convert offset 'list))))
       (setf (hammy-current-interval-start-time hammy) new-start-time))))
 
-;;; Guix
+;;; Guix-management
+
+;;;; Guix
 (use-package guix
   :ensure nil      ; Although available via MELPA, we install via Guix
   :defer t
   :hook
   (guix-build-log-mode-hook . guix-build-log-phase-toggle-all))
+
+;;;; Geiser-guile
+(use-package geiser-guile
+  :ensure nil
+  :defer t
+  :custom
+  ;; TODO 2025-06-10: Avoid hard-coding this directory?
+  (geiser-guile-load-path (list "/home/krisbalintona/guix-config/")))
 
 ;;;; Sops
 (use-package sops
