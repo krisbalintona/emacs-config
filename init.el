@@ -4986,6 +4986,22 @@ Returns non-nil when there is mail."
   (smtpmail-store-queue-variables t)
   (smtpmail-queue-dir (expand-file-name ".smtp-queue" krisb-email-drafts-directory)))
 
+;;;; Shr
+;; TODO 2025-06-11: Document these:
+;; - `shr-cookie-policy’
+;; - `shr-image-animate’
+;; - `shr-width’
+;; - `shr-use-fonts’
+;; - `shr-fill-text’
+;; Emacs' built-in web renderer
+(use-package shr
+  :ensure nil
+  :defer t
+  :custom
+  (shr-use-colors nil)             ; I prefer to use my theme's colors
+  (shr-discard-aria-hidden t)
+  (shr-max-image-proportion 0.6))
+
 ;;; Task management
 
 ;;;; Org-capture
