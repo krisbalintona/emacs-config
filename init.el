@@ -5867,6 +5867,14 @@ duration."
   :hook
   (guix-build-log-mode-hook . guix-build-log-phase-toggle-all))
 
+;;;; Sops
+(use-package sops
+  :ensure t
+  :bind
+  (("C-c e C-c" . sops-save-file)
+   ("C-c e C-k" . sops-cancel)
+   ("C-c e C-d" . sops-edit-file)))
+
 ;;; Package authorship
 
 ;;;; Package-lint-flymake
