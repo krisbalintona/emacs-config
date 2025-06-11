@@ -1383,12 +1383,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    ("G" . consult-grep)
    ("r" . consult-ripgrep)
    ("f" . consult-find)
-   ("F" . consult-locate)
-   :map dired-mode-map
-   ;; Dired binds its own commands in M-s f, so I rebind these
-   ;; specially in `dired-mode-map'
-   ("M-s f f" . consult-find)
-   ("M-s f F" . consult-locate))
+   ("F" . consult-locate))
   :custom
   (consult-preview-key "C-M-;")
   (consult-bookmark-narrow
@@ -1413,6 +1408,13 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :init
   (with-eval-after-load 'org
     (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
+
+  (with-eval-after-load 'dired
+    (bind-keys :map dired-mode-map
+               ;; Dired binds its own commands in M-s f, so I rebind
+               ;; these specially in `dired-mode-map'
+               ("M-s f f" . consult-find)
+               ("M-s f F" . consult-locate)))
   :config
   ;; TODO 2025-05-20: Revisit this.
   ;; (require 'krisb-consult-ext)
