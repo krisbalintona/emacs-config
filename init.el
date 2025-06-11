@@ -2489,7 +2489,6 @@ buffers in which this function is run."
 (use-package dired
   :ensure nil
   :hook
-  (dired-mode-hook . dired-hide-details-mode)
   (dired-mode-hook . turn-on-gnus-dired-mode) ; Email attachment integration with dired
   :bind
   ( :map dired-mode-map
