@@ -1377,6 +1377,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
    ("e" . consult-compile-error)
    ("l" . consult-line)
    ("a" . consult-org-agenda)
+   ("m" . consult-mark)
    :map search-map                ; The `M-s' prefix
    ("i" . consult-info)
    ("g" . consult-git-grep)
