@@ -1101,7 +1101,14 @@ https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-min
   :ensure nil
   :custom
   (grep-use-headings t)
-  ;; :config
+  (grep-scroll-output t)
+  :config
+  ;; Additions to `display-buffer-alist’
+  (add-to-list 'display-buffer-alist
+               '((major-mode . grep-mode)
+                 (display-buffer-pop-up-window)
+                 (post-command-select-window . t)))
+
   ;; TODO 2025-05-20: Revisit this.
   ;; (with-eval-after-load 'krisb-reveal
   ;;     (defun kris-reveal-grep-find-information ()
