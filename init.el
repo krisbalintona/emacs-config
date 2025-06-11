@@ -912,7 +912,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (vertico-flat-annotate t)
   (vertico-flat-format
   '(:multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
-    :single #("[%s]" 0 1 (face minibuffer-prompt) 1 3 (face success) 3 4 (face minibuffer-prompt))
+    :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
     :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
     :separator #("  |  " 0 5 (face minibuffer-prompt))
     :ellipsis #("…" 0 1 (face minibuffer-prompt))
