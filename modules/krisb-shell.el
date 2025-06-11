@@ -24,27 +24,6 @@
   (comint-input-autoexpand 'input)
   (ansi-color-for-comint-mode t))
 
-;;; Compile
-(use-package compile
-  :ensure nil
-  :bind ("<f5>" . recompile)
-  :custom
-  (compilation-scroll-output 'first-error) ; Scroll with compile buffer
-  (compilation-auto-jump-to-first-error 'if-location-known))
-
-;;; Fancy-compilation
-;; Make compilation outputs in compilation buffers more pleasant to see.
-(use-package fancy-compilation
-  :custom
-  ;; The TERM environment variable to use (set to an empty string to leave
-  ;; unset).  Set to \"ansi-term\" for the default of ansi-term
-  (fancy-compilation-term "eterm-color")
-  (fancy-compilation-override-colors nil)
-  (fancy-compilation-quiet-prelude t)
-  (fancy-compilation-quiet-prolog nil)
-  :config
-  (fancy-compilation-mode 1))
-
 ;;; Eshell
 ;;;; Eshell-z
 ;; Use z in Eshell

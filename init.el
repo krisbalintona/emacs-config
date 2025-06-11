@@ -3142,6 +3142,33 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (ediff-split-window-function #'split-window-horizontally)
   (ediff-highlight-all-diffs nil)) ; Only highlight currently selected diff
 
+;;;; Fancy-compilation
+;; Make compilation outputs in compilation buffers more pleasant to
+;; see.
+(use-package fancy-compilation
+  :ensure t
+  :demand t
+  :custom
+  ;; The TERM environment variable to use (set to an empty string to
+  ;; leave unset).  Set to \"ansi-term\" for the default of ansi-term
+  (fancy-compilation-term "eterm-color")
+  (fancy-compilation-override-colors nil)
+  (fancy-compilation-quiet-prelude nil)
+  (fancy-compilation-quiet-prolog nil)
+  :config
+  (fancy-compilation-mode 1))
+
+;;;; Compile
+(use-package compile
+  :ensure nil
+  :defer t
+  ;; TODO 2025-06-11: Revisit this.
+  ;; :bind
+  ;; ("<f5>" . recompile)
+  :custom
+  (compilation-scroll-output 'first-error)
+  (compilation-auto-jump-to-first-error 'if-location-known))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
