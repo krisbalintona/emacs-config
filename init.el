@@ -4229,7 +4229,8 @@ with the following exceptions:
 ;;;; Org-hide-drawers
 ;; Make org drawers less visually obtrusive.
 (use-package org-hide-drawers
-  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/")
+  :ensure ( :repo "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/"
+            :branch "devel")
   :defer t
   :hook
   (org-mode-hook . org-hide-drawers-mode)
@@ -4237,14 +4238,14 @@ with the following exceptions:
   ( :map krisb-toggle-keymap
     ("h" . org-hide-drawers-transient))
   :custom
-  (org-hide-drawers-hide-top-level-properties-drawer nil)
-  (org-hide-drawers-keep-visible-properties
-   '("CUSTOM_ID" "ID"
-     "TOC"))                            ; For org-make-toc
-  (org-hide-drawers-keep-visible-properties-ignore-case-p t)
-  (org-hide-drawers-keep-visible-drawers
-   '("CONTENTS"))                       ; For org-make-toc
-  (org-hide-drawers-keep-visible-drawers-ignore-case-p t)
+  (org-hide-drawers-display-strings
+   (list (list 'property-drawer-regexp nil "^ID$")
+         (list 'property-drawer-regexp nil "^CUSTOM_ID$")
+         (list 'property-drawer-regexp nil "^TOC$") ; For org-make-toc
+         (list 'drawer-regexp nil "^CONTENTS$")     ; For org-make-toc
+         (list 'drawer-regexp (propertize "[Logbook]" 'face 'shadow) "^LOGBOOK$")
+         (list 'drawer-regexp (propertize "[Hidden...]" 'face 'shadow) (rx (0+ anychar)))
+         (list 'property-drawer-regexp (propertize " #" 'face 'shadow) (rx (0+ anychar)))))
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'org-hide-drawers-mode)
 
