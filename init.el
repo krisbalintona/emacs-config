@@ -897,12 +897,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :ensure nil
   :after vertico
   :hook
-  (rfn-eshadow-update-overlay-hook . vertico-directory-tidy)
-  :bind
-  ( :map vertico-map
-    ("RET" . vertico-directory-enter)
-    ("DEL" . vertico-directory-delete-char)
-    ("M-DEL" . vertico-directory-delete-word)))
+  (rfn-eshadow-update-overlay-hook . vertico-directory-tidy))
 
 ;; A minimal, Ido-like UI
 (use-package vertico-flat
@@ -929,7 +924,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :custom
   (vertico-multiform-categories
    '((buffer flat (vertico-sort-function . nil))
-     (file grid)
+     (file grid (:keymap . vertico-directory-map))
      (command flat)
      (symbol-help flat)
      (kill-ring (vertico-sort-function . nil))
