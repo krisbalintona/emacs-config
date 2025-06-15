@@ -1713,7 +1713,8 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :bind
   ([remap vc-diff] . krisb-vc-diff-dwim)
   :custom
-  (vc-handled-backends '(Git))
+  ;; TODO 2025-06-15: Revisit this.
+  ;; (vc-handled-backends '(Git))
   (vc-follow-symlinks t)
   (vc-allow-rewriting-published-history 'ask) ; Emacs 31
   ;; Improves performance by not having to check for other
