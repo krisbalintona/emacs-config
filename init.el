@@ -1710,6 +1710,8 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 (use-package vc
   :ensure nil
   :defer t
+  :bind
+  ([remap vc-diff] . krisb-vc-diff-dwim)
   :custom
   (vc-handled-backends '(Git))
   (vc-follow-symlinks t)
@@ -1733,7 +1735,17 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
                  (side . bottom)
                  (dedicated . side)
                  (window-height . 20)
-                 (preserve-size . (t . t)))))
+                 (preserve-size . (t . t))))
+
+  ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
+  (defun krisb-vc-diff-dwim ()
+    "Call `vc-diff’ or `diff-buffer-with-file’.
+Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
+call `diff-buffer-with-file’ instead."
+    (interactive)
+    (if (and (eq major-mode 'vc-dir-mode) (buffer-modified-p))
+        (diff-buffer-with-file (current-buffer))
+      (vc-diff))))
 
 (use-package vc-git
   :ensure nil
