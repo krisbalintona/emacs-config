@@ -3138,7 +3138,12 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   ;;                      :slant 'italic
   ;;                      :foreground 'unspecified
   ;;                      :background (modus-themes-with-colors bg-dim)))
-  )
+  
+  ;; Add to `display-buffer-alist’
+  (add-to-list 'display-buffer-alist
+               '((major-mode . diff-mode)
+                 nil
+                 (post-command-select-window . t))))
 
 ;;;; Ediff
 (use-package ediff
