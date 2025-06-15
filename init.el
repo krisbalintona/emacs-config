@@ -1744,7 +1744,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
 call `diff-buffer-with-file’ instead."
     (interactive)
-    (if (and (eq major-mode 'vc-dir-mode) (buffer-modified-p))
+    (if (and (not (eq major-mode 'vc-dir-mode)) (buffer-modified-p))
         (diff-buffer-with-file (current-buffer))
       (vc-diff))))
 
