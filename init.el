@@ -1840,6 +1840,8 @@ call `diff-buffer-with-file’ instead."
   )
 
 ;;;; Info
+;; TODO 2025-06-16: Document:
+;; - `Info-hide-note-references’
 ;; More easily distinguish between paragraphs and function signatures
 ;; in Info documentation manuals.
 (use-package info
