@@ -3220,6 +3220,19 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (compilation-scroll-output 'first-error)
   (compilation-auto-jump-to-first-error 'if-location-known))
 
+;;;; Keychain-environment
+(use-package keychain-environment
+  ;; For AUR:
+  ;; :ensure-system-package keychain
+  :ensure t
+  :defer t
+  :hook
+  (vc-before-checkin-hook
+   . (lambda ()
+       (unless (and (getenv "SSH_AUTH_SOCK")
+                    (getenv "SSH_AGENT_PID"))
+         (keychain-refresh-environment)))))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals

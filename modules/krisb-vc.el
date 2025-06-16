@@ -123,14 +123,6 @@
   ;; I don't know why the hook definition enables flyspell-mode...
   (remove-hook 'forge-post-mode-hook #'turn-on-flyspell))
 
-;;; Keychain-environment
-;; Ensure SSH_AGENT_PID and SSH_AUTH_SOCK are updated before committing since
-;; their values may change. Sources them to ~/.keychain/
-(use-package keychain-environment
-  ;; For AUR:
-  ;; :ensure-system-package keychain
-  )
-
 ;;; Epg-config
 ;; Epg-config is responsible for querying passphrases
 (use-package epg-config
