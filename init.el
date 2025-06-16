@@ -2752,6 +2752,15 @@ of collision."
   (save-place-forget-unreadable-files t)
   (save-place-limit 3000))
 
+;;;; Window
+(use-package window
+  :ensure nil
+  :demand t
+  :custom
+  (switch-to-buffer-obey-display-actions t)
+  
+  (window-resize-pixelwise t))
+
 ;;;; Calendar
 ;; TODO 2025-06-15: Document:
 ;; - `calendar-time-zone-style’
@@ -4093,7 +4102,8 @@ Meant to be used as around advice for `org-archive--compute-location'."
 
 ;;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
-  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/" :branch "vtable-unstable")
+  :ensure ( :repo "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
+            :branch "vtable-unstable")
   :defer t
   :hook
   (org-roam-folgezettel-mode-hook . hl-line-mode)

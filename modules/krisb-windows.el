@@ -10,11 +10,9 @@
   (split-width-threshold 130)
   (split-height-threshold 80)
   (window-sides-vertical t)
-  (window-resize-pixelwise t)
   (window-combination-resize t) ; Allow to resize existing windows when splitting?
   (fit-window-to-buffer-horizontally t)
 
-  (switch-to-buffer-obey-display-actions t) ; As per suggestion of Mastering Emacs
   (switch-to-buffer-in-dedicated-window 'pop)
   :config
   ;; Modified version of "other-window-mru" taken from
