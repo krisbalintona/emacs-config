@@ -3175,6 +3175,14 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
                '((major-mode . diff-mode)
                  nil
                  (post-command-select-window . t))))
+  
+  ;; Pulsar pulses while navigating
+  (with-eval-after-load 'pulsar
+    (add-to-list 'pulsar-pulse-functions 'diff-file-next)
+    (add-to-list 'pulsar-pulse-functions 'diff-file-prev)
+    (add-to-list 'pulsar-pulse-functions 'diff-hunk-next)
+    (add-to-list 'pulsar-pulse-functions 'diff-hunk-prev)
+    (add-to-list 'pulsar-pulse-functions 'diff-hunk-kill)))
 
 ;;;; Ediff
 (use-package ediff
