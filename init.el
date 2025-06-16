@@ -442,8 +442,7 @@ default to 8."
   :config
   (electric-pair-mode 1)
   (electric-indent-mode 1)
-  (electric-quote-mode 1)
-
+  
   ;; Bespoke inhibit predicate
   (defun krisb-electric-pair-conservative-inhibit (char)
     (or
