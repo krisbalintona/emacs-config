@@ -3068,6 +3068,7 @@ An example of a return value for this function is: \"9 minutes ago\"."
 
 ;;;; Fish-mode
 (use-package fish-mode
+  :ensure t
   :mode "\\.fish\\'")
 
 ;;;; Enhancements to basic text editing
