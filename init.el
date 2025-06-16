@@ -1316,12 +1316,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
          (side . top)
          (slot . 1)
          (post-command-select-window . t))
-
-        ;; Calendar
-        ("\\*Calendar\\*"
-         (display-buffer-below-selected)
-         (window-height . fit-window-to-buffer))
-
+        
         ;; Occur
         ("\\*Occur"
          (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected)
@@ -2756,6 +2751,31 @@ of collision."
   :custom
   (save-place-forget-unreadable-files t)
   (save-place-limit 3000))
+
+;;;; Calendar
+;; TODO 2025-06-15: Document:
+;; - `calendar-time-zone-style’
+(use-package calendar
+  :ensure nil
+  :defer t
+  :bind ( :map krisb-open-keymap
+          ("c" . calendar))
+  :custom
+  (calendar-time-display-form
+   '( 24-hours ":" minutes (when time-zone (format "(%s)" time-zone))))
+  (calendar-week-start-day 1)           ; Monday
+
+  ;; Diary
+  (calendar-mark-diary-entries-flag t)
+
+  ;; Holidays
+  (calendar-mark-holidays-flag t)
+  :config
+  ;; Calendar
+  (add-to-list 'display-buffer-alist
+               '("\\*Calendar\\*"
+                 (display-buffer-below-selected)
+                 (window-height . fit-window-to-buffer))))
 
 ;;; Coding
 

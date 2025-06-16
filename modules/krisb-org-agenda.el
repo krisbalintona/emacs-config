@@ -3,19 +3,6 @@
 ;;; Calendar
 (use-package calendar
   :ensure nil
-  :bind ( :map krisb-open-keymap
-          ("c" . calendar))
-  :custom
-  (calendar-time-display-form
-   '( 24-hours ":" minutes (when time-zone (format "(%s)" time-zone))))
-  (calendar-week-start-day 1)           ; Monday
-  (calendar-time-zone-style 'symbolic)
-
-  ;; Diary
-  (calendar-mark-diary-entries-flag t)
-
-  ;; Holidays
-  (calendar-mark-holidays-flag t)
   :init
   (defun krisb-get-lat-lon ()
     "Fetch latitude and longitude via IP-based geolocation service."
