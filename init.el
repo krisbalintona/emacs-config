@@ -5143,7 +5143,7 @@ Returns non-nil when there is mail."
            ;; Should return nil if node is a file
            (when (org-node-is-subtree node)
              (org-node-get-olp-with-self node)))))
-      "* %? %^g\n"
+      "* %?\n"
       :tree-type (year month)
       :jump-to-captured t
       :immediate-finish t
