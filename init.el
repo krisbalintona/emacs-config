@@ -1776,7 +1776,12 @@ call `diff-buffer-with-file’ instead."
 ;; - `log-edit-setup-add-author'
 (use-package log-edit
   :ensure nil
-  :defer t
+  ;; :defer t
+  ;; NOTE 2025-06-17: For some reason, when I use :defer t, the
+  ;; default value of `log-edit-hook' is overriden.  I've emailed the
+  ;; Emacs mailing lists about this and will change this back to
+  ;; :defer t once my confusion is cleared up or the bug is resolved.
+  :demand t
   :hook
   (log-edit-hook . log-edit-maybe-show-diff)
   :custom-face
