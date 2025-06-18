@@ -4669,7 +4669,7 @@ send from."
        :sort-order newest-first
        :key "g")
      ( :name "Other mailing lists"
-       :query "tag:list and path:l2md/other/**"
+       :query "tag:list and tag:inbox and (path:l2md/other/** or List:\"~abcdw/rde-discuss@lists.sr.ht\" or to:\"~abcdw/rde-discuss@lists.sr.ht\""
        :sort-order newest-first
        :key "o")
      ( :name "sent"
