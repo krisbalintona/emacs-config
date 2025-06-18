@@ -722,7 +722,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 ;; Integration between vc.el and the jujutsu (JJ) version control
 ;; system.  Best jj integration with vc currently (2025-03-13).
 (use-package vc-jj
-  :ensure ( :repo "/home/krisbalintona/emacs-repos/packages/vc-jj/"
+  :ensure ( :repo "https://codeberg.org/krisbalintona/vc-jj.el.git"
             :branch "merge")
   :after (:any vc project)
   :demand t
