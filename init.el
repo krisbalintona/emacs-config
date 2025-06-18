@@ -946,7 +946,14 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
                    (literal "load-library")))
       flat)
      (,(rx bol (literal "consult-history"))
-      (vertico-sort-function . nil)))))
+      (vertico-sort-function . nil))
+     ;; NOTE 2025-06-18: Should these commands have a category like
+     ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
+     ;; perhaps I can propose a patch for it.
+     (,(rx (or "find-function"
+               "find-library"
+               "find-variable"))
+      flat))))
 
 ;;;; Corfu
 ;; Faster, minimal, and more lightweight autocomplete that is more
