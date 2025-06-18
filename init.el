@@ -427,8 +427,6 @@ default to 8."
 (use-package electric
   :ensure nil
   :demand t
-  :hook
-  (text-mode-hook . electric-quote-local-mode)
   :custom
   ;; TODO 2025-06-02: Revisit this.  I think I prefer the default.
   ;; (electric-pair-inhibit-predicate ; Applies to `electric-quote-mode’ too
