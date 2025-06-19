@@ -4341,6 +4341,14 @@ with the following exceptions:
      ("u" "Unhide drawers" org-hide-drawers-delete-overlays)
      ("t" "Toggle hiding" org-hide-drawers-toggle)]))
 
+;;;; Markdown-mode
+(use-package markdown-mode
+  :ensure t
+  :defer t
+  :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'" "\\.md\\'")
+  :hook
+  (markdown-mode-hook . visual-line-mode))
+
 ;;; Reading
 
 ;;;; Pdf-tools
