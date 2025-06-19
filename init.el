@@ -3245,6 +3245,14 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
                     (getenv "SSH_AGENT_PID"))
          (keychain-refresh-environment)))))
 
+;;;; Lorem-ipsum
+;; Insert sample text
+(use-package lorem-ipsum
+  :ensure t
+  :defer t
+  :config
+  (setq-default lorem-ipsum-list-bullet "- "))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals

@@ -47,12 +47,6 @@
 
 ;;; Convenience
 
-;;;; Lorem-ipsum
-;; Insert sample text
-(use-package lorem-ipsum
-  :config
-  (setq-default lorem-ipsum-list-bullet "- "))
-
 ;;;; Sudo-edit
 ;; Utilities to edit files as root
 (use-package sudo-edit
