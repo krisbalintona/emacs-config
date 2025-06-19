@@ -4,6 +4,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("df39cc8ecf022613fc2515bccde55df40cb604d7568cb96cd7fe1eff806b863b"
+     default))
  '(org-node-blank-input-hint nil nil nil "Customized with use-package org-node")
  '(org-node-file-directory-ask t nil nil "Customized with use-package org-node")
  '(org-node-file-timestamp-format "%Y%m%dT%H%M%S--" nil nil "Customized with use-package org-node")
@@ -11,7 +14,8 @@
    '(arei bui edit-indirect ef-themes el-patch fontaine geiser-guile jinx
           magit-popup no-littering on tablist))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/.emacs.d/var/elpaca/repos/org-roam/"
+   '("/home/krisbalintona/Documents/org-database/"
+     "/home/krisbalintona/.emacs.d/var/elpaca/repos/org-roam/"
      "/home/krisbalintona/Documents/org-database/notes/main/"
      "/home/krisbalintona/Documents/org-database/notes/manuscripts/academic/"
      "/home/krisbalintona/Documents/org-database/notes/commonplace_book/buoy/"
