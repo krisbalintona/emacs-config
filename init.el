@@ -1515,6 +1515,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   (tab-bar-tab-hints t)
   (tab-bar-show t)
   (tab-bar-separator " ")
+  (tab-bar-show-inactive-group-tabs t)
   (tab-bar-format
    '(tab-bar-format-tabs-groups
      tab-bar-separator
