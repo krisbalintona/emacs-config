@@ -2115,8 +2115,14 @@ ORIG-FUN should be `ispell-completion-at-point'."
 ;; - `auto-revert-verbose’
 (use-package autorevert
   :ensure nil
-  :hook
-  (on-first-file-hook . global-auto-revert-mode)
+  ;; FIXME 2025-06-20: Revisit this.  I think this causes massive
+  ;; stutters and slow downs in WSL2.  Perhaps I should try a non-nil
+  ;; version of `auto-revert-avoid-polling'.  But maybe my non-nil
+  ;; setting of `auto-revert-check-vc-info' has something to do with
+  ;; it: "This currently works by automatically updating the version
+  ;; control info every auto-revert-interval seconds.""
+  ;; :hook
+  ;; (on-first-file-hook . global-auto-revert-mode)
   :custom
   (auto-revert-interval 3)
   ;; TODO 2025-06-02: I think this should be nil on WSL.  Maybe set
