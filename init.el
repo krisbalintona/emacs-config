@@ -201,9 +201,8 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
       ;; NOTE 2025-04-14: On Arch Linux, Iosevka fonts have associated packages
       ;; for each variant in the AUR (though not necessarily the Nerd Fonts
       ;; versions).
-      :default-family "IosevkaSS 11 Nerd Font" ; 2025-04-14: Must be a bug that there is a space between "SS" and "11" in the font name
+      :default-family "IosevkaTermSS 11 Nerd Font" ; 2025-04-14: Must be a bug that there is a space between "SS" and "11" in the font name
       :fixed-pitch-family "Iosevka Nerd Font"
-      :term-family "IosevkaTermSS 11 Nerd Font"
       :mode-line-active-family "Iosevka Aile Nerd Font"
       :mode-line-inactive-family "Iosevka Aile Nerd Font")
      ;; Below are the shared fallback properties. I leave them there also as
