@@ -3261,6 +3261,20 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   :config
   (setq-default lorem-ipsum-list-bullet "- "))
 
+;;;; Abbrev
+;; Automatically correct typed strings (e.g. words).  Most useful for
+;; correcting spelling mistakes as they are made.
+(use-package abbrev
+  :ensure nil
+  :custom
+  (save-abbrevs 'silently)
+  (abbrev-suggest t)
+  (abbrev-suggest-hint-threshold 2)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'abbrev-mode)
+  ;; Enable the mode globally
+  (setq-default abbrev-mode t))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
