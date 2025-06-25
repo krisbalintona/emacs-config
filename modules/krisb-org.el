@@ -31,33 +31,6 @@
                               (emacs-lisp . t)))
   (org-confirm-babel-evaluate nil))
 
-
-;;;; Org-refile
-(use-package org-refile
-  :ensure nil
-  :custom
-  (org-refile-use-cache nil)
-  (org-refile-targets
-   '((krisb-org-agenda-directory-files . (:level . 0))
-     (krisb-org-agenda-directory-files . (:tag . "project"))
-     (krisb-org-agenda-main-file . (:maxlevel . 3))))
-  ;; TODO 2024-10-07: Think about whether I actually want this before. What if I
-  ;; want to refile to a non-todo heading in the current file?
-  (org-refile-target-verify-function    ; Only let not done todos be refile targets
-   (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)))))
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  :config
-  ;; Workaround for orderless issue with `org-refile'. See
-  ;; https://github.com/minad/vertico#org-refile
-  (setq org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil)
-  (when (bound-and-true-p vertico-mode)
-    (advice-add #'org-olpath-completing-read :around
-                (lambda (&rest args)
-                  (minibuffer-with-setup-hook
-                      (lambda () (setq-local completion-styles '(basic)))
-                    (apply args))))))
-
 ;;;; Org-archive
 (use-package org-archive
   :ensure nil
