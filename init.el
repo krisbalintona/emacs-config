@@ -2705,13 +2705,15 @@ which file on the system it backs up."
 
 ;;;; Savefold
 (use-package savefold
+  :disabled t
   :ensure (:repo "https://github.com/jcfk/savefold.el.git")
   :demand t
   :custom
+  ;; See `savefold--all-backends' for all possible values
   (savefold-backends '(outline
-                       org
-                       ;; origami
-                       ;; hideshow
+                       ;; org
+                       hideshow
+                       ;; treesit-fold
                        ))
   (savefold-directory (no-littering-expand-var-file-name "savefold"))
   :config
@@ -4489,8 +4491,9 @@ The context buffer is the buffer that shows annotation contents in
   :hook
   ((wombag-show-mode-hook . org-remark-mode)
    (wombag-show-mode-hook . krisb-wombag-entry-setup))
-  :bind ( :map krisb-open-keymap
-          ("w" . wombag))
+  :bind
+  ( :map krisb-open-keymap
+    ("w" . wombag))
   :custom
   (wombag-dir (no-littering-expand-var-file-name "wombag"))
   (wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite"))
