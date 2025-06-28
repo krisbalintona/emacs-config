@@ -529,11 +529,11 @@ default to 8."
 ;; 2024-10-29: There is currently an issue in WSLg that prevents
 ;; Alt+Space from being caught by X11.  A workaround is described in
 ;; https://github.com/microsoft/wslg/issues/1068#issuecomment-1817786154.
-;; Use PowerToys Keyboard Manager to rebind Alt+Space to Alt+F13 in
-;; then using xmodmap to redirect Alt+F13 to M-SPC.  (Instead of
-;; creating a file, I do it using the shell command below.)  Of
-;; course, xmodmap is an X11 tool, so this is incompatible with the
-;; PGTK toolkit.
+;; Use PowerToys Keyboard Manager to remap the Alt+Space shortcut to
+;; Alt+F13 in WSLg (inside msrdc.exe processes), then use xmodmap to
+;; redirect Alt+F13 to M-SPC.  (Instead of creating an xmodmap file,
+;; we can just use the shell command below.)  Of course, xmodmap is an
+;; X11 tool, so this is incompatible with the PGTK toolkit.
 (when (and (not (string-match-p "--with-pgtk" system-configuration-options))
            (executable-find "xmodmap"))
   (shell-command "xmodmap -e 'keycode 191 = space'"))
