@@ -1723,8 +1723,9 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   (vc-async-checkin t)
   (vc-allow-async-diff t)               ; Emacs 31
   (vc-revert-show-diff t)
-  (vc-find-revision-no-save t)          ; Emacs 31
-  (vc-dir-hide-up-to-date-on-revert t)  ; Emacs 31
+  (vc-find-revision-no-save t)           ; Emacs 31
+  (vc-dir-hide-up-to-date-on-revert t)   ; Emacs 31
+  (vc-dir-save-some-buffers-on-revert t) ; Emacs 31
   :config
   ;; Additions to `display-buffer-alist’
   (add-to-list 'display-buffer-alist
