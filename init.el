@@ -922,6 +922,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (vertico-multiform-categories
    '((buffer flat (vertico-sort-function . nil))
      (file grid (:keymap . vertico-directory-map))
+     (project-file grid)                ; For `project-find-file'
      (command flat)
      (symbol-help flat)
      (kill-ring (vertico-sort-function . nil))
