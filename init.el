@@ -3334,7 +3334,8 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (org-list-allow-alphabetical t)
   (org-list-demote-modify-bullet
    '(("+" . "-")
-     ("-" . "+")))
+     ("-" . "*")
+     ("*" . "+")))
 
   ;; Markup
   ;; TODO 2025-05-22: Document:
