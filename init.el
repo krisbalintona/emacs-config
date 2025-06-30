@@ -3279,6 +3279,22 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   ;; Enable the mode globally
   (setq-default abbrev-mode t))
 
+;;;; Comint
+;; TODO 2025-06-30: Document:
+;; - `comint-buffer-maximum-size'
+;; Common library for REPLs in Emacs.
+(use-package comint
+  :ensure nil
+  :custom
+  (comint-terminfo-terminal "dumb-emacs-ansi")
+  (comint-prompt-read-only t)
+  (comint-completion-autolist t)
+  (comint-scroll-to-bottom-on-input 'this)
+  (comint-scroll-to-bottom-on-output 'this)
+  (comint-input-autoexpand 'input)
+  ;; 2025-06-30: Move this option to a more appropriate location?
+  (ansi-color-for-comint-mode t))
+
 ;;; Writing
 
 ;;;; Cascading-dir-locals
