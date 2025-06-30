@@ -3850,13 +3850,18 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
                :map embark-identifier-map
                ("=" . krisb-dictionary-dwim)))
   :config
-  (defun krisb-dictionary-dwim ()
+  (defun krisb-dictionary-dwim (promptp)
     "Show dictionary definition for word at point.
-If region is active, use the region's contents instead."
-    (interactive)
-    (if-let ((word (if (use-region-p)
-                       (buffer-substring-no-properties (region-beginning) (region-end))
-                     (thing-at-point 'word :no-properties))))
+If region is active, use the region's contents instead.
+
+If PROMPTP is non-nil, prompt for a word to find the definition of
+instead."
+    (interactive "P")
+    (if-let ((word (cond
+                    (promptp (read-string "Define: "))
+                    ((use-region-p)
+                     (buffer-substring-no-properties (region-beginning) (region-end)))
+                    (t (thing-at-point 'word :no-properties)))))
         (dictionary-search word)
       (message "No word or region selected."))))
 
