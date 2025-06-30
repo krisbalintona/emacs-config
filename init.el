@@ -2295,10 +2295,13 @@ ORIG-FUN should be `ispell-completion-at-point'."
 (use-package eldoc
   :bind
   ( :map help-map
-    ("\." . eldoc-doc-buffer)) ; I don't find much use for `display-local-help'
+    ;; I don't find much use for `display-local-help'.  Additionally,
+    ;; Emacs 31 has the new `eldoc-help-at-pt' option, which shows the
+    ;; local help at point via eldoc
+    ("\." . eldoc-doc-buffer))
   :custom
   (eldoc-idle-delay 0.2)
-  (eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly) ; TODO 2025-05-20: Revisit this.
+  (eldoc-documentation-strategy 'eldoc-documentation-enthusiast)
   (eldoc-echo-area-prefer-doc-buffer t)
   (eldoc-help-at-pt t)                  ; Emacs 31.1
   :config
