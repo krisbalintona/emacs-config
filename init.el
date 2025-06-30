@@ -6255,7 +6255,7 @@ is to produce the opposite effect of both `fill-paragraph' and
   "Set up the value for `sentence-end-double-space'."
   (setq-local sentence-end-double-space
               (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
-                    ((derived-mode-p 'text-mode) nil))))
+                    ((derived-mode-p '(text-mode wombag-show-mode)) nil))))
 
 (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
   (add-hook mode #'krisb-sentence-end-double-space-setup))
