@@ -4399,6 +4399,33 @@ with the following exceptions:
   :hook
   (markdown-mode-hook . visual-line-mode))
 
+;;;; Harper language server
+;; Support the Harper grammar checker (a language server).  See
+;; https://writewithharper.com/docs/integrations/emacs for configuring
+;; Harper via Eglot.  This includes configuring harper via
+;; `eglot-workspace-configuration' and setting the "languaegID" based
+;; on e.g. the major mode.
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(markdown-mode . ("harper-ls" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(org-mode . ("harper-ls" "--stdio")))
+  (setq-default eglot-workspace-configuration
+                `( :harper-ls ( :linters ( :SpellCheck :json-false
+                                           :Spaces :json-false
+                                           :LongSentences :json-false)
+                                ;; We can use the dictionary enchant
+                                ;; uses because they follow the same
+                                ;; line-separated format.
+                                ;; FIXME 2025-06-30: Is there a way to
+                                ;; figure out the path of the enchant
+                                ;; user dictionary when given a
+                                ;; language via the CLI?
+                                :userDictPath ,(expand-file-name "enchant/en_US.dic" (xdg-config-home))
+                                :dialect "American"
+                                :maxFileLength 120000)
+                   ,@eglot-workspace-configuration)))
+
 ;;; Reading
 
 ;;;; Pdf-tools
