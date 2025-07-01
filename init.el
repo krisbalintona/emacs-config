@@ -4225,8 +4225,10 @@ Meant to be used as around advice for `org-archive--compute-location'."
   :custom
   (org-roam-folgezettel-default-filter-query '(box "main"))
   :config
-  ;; TODO 2025-05-27: Revisit this.
-  ;; (require 'krisb-org-roam-ext)
+  ;; FIXME 2025-06-30: Eventually upstream contents of
+  ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
+  ;; workflow for most/all users.
+  (require 'krisb-org-roam-ext)
 
   ;; Load embark integration
   (with-eval-after-load 'embark
