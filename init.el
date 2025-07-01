@@ -3339,7 +3339,6 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (org-M-RET-may-split-line
    '((table . nil)
      (default . t)))
-  (org-fold-catch-invisible-edits 'show-and-error)
   (org-startup-folded 'nofold)
   (org-fontify-done-headline nil)
 
@@ -3468,6 +3467,25 @@ inserted with e.g. `org-insert-last-stored-link' or
 (use-package org-contrib
   :ensure t
   :after org)
+
+;;;; Org-fold
+(use-package org-fold
+  :ensure nil
+  :after org
+  :bind
+  ( :map org-mode-map
+    ("C-c f" . org-fold-transient))
+  :custom
+  (org-fold-catch-invisible-edits 'show-and-error)
+  :config
+  (require 'transient)
+  (transient-define-prefix org-fold-transient ()
+    "Transient map for useful org-fold commands."
+    ["Entries"
+     [("s" "Show heading content" org-fold-show-entry)
+      ("h" "Hide heading content" org-fold-hide-entry)]]
+    ["Headlines"
+     [("b" "Show branches" org-kill-note-or-show-branches)]]))
 
 ;;;; Org-expiry
 (use-package org-expiry
