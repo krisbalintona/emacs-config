@@ -1735,14 +1735,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
                         (major-mode . vc-git-log-view-mode)
                         (major-mode . vc-git-region-history-mode)))
                  (display-buffer-same-window)))
-  (add-to-list 'display-buffer-alist
-               '("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-                 (display-buffer-reuse-mode-window display-buffer-in-side-window)
-                 (side . bottom)
-                 (dedicated . side)
-                 (window-height . 20)
-                 (preserve-size . (t . t))))
-
+  
   ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
   (defun krisb-vc-diff-dwim ()
     "Call `vc-diff’ or `diff-buffer-with-file’.
@@ -3198,12 +3191,6 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   ;;                      :slant 'italic
   ;;                      :foreground 'unspecified
   ;;                      :background (modus-themes-with-colors bg-dim)))
-  
-  ;; Add to `display-buffer-alist’
-  (add-to-list 'display-buffer-alist
-               '((major-mode . diff-mode)
-                 nil
-                 (post-command-select-window . t))))
   
   ;; Pulsar pulses while navigating
   (with-eval-after-load 'pulsar
