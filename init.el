@@ -3239,15 +3239,13 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (fancy-compilation-mode 1))
 
 ;;;; Compile
+;; TODO 2025-07-03: Document:
+;; - `compilation-auto-jump-to-first-error'
 (use-package compile
   :ensure nil
   :defer t
-  ;; TODO 2025-06-11: Revisit this.
-  ;; :bind
-  ;; ("<f5>" . recompile)
   :custom
-  (compilation-scroll-output 'first-error)
-  (compilation-auto-jump-to-first-error 'if-location-known))
+  (compilation-scroll-output 'first-error))
 
 ;;;; Keychain-environment
 (use-package keychain-environment
