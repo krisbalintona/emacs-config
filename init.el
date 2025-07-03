@@ -1839,6 +1839,7 @@ call `diff-buffer-with-file’ instead."
    `((project-find-file "Find file")
      (project-find-regexp "Find regexp")
      (project-find-dir "Find directory")
+     (project-switch-to-buffer "Switch to buffer")
      (project-vc-dir "VC-Dir")
      (project-eshell "Eshell")
      (project-shell "Shell")
