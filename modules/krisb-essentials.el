@@ -60,15 +60,6 @@
 
 ;;; Commands
 
-;;;; Empty trash
-(defun krisb-empty-trash ()
-  "Empty the trash directory."
-  (interactive)
-  (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
-    (when (and delete-by-moving-to-trash
-               (yes-or-no-p (format "Empty trash directory of %s size? " size)))
-      (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory))))))
-
 ;;;; Delete this file
 (defun krisb-delete-this-file (&optional path force-p)
   "Delete PATH, kill its buffers and expunge it from vc/magit cache.
