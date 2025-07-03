@@ -723,6 +723,8 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
             :branch "merge")
   :after (:any vc project)
   :demand t
+  :custom
+  (vc-jj-diff-switches '("--git" "--stat"))
   :config
   (require 'project-jj))
 
