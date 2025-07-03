@@ -2617,6 +2617,7 @@ Then apply ARGS."
 ;; - `make-backup-files’
 ;; - `dired-kept-versions’
 ;; - `kept-old-versions’
+;; - `dired-backup-overwrite'
 (use-package files
   :ensure nil
   :custom
