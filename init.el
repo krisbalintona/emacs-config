@@ -925,7 +925,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
    '((buffer flat (vertico-sort-function . nil))
      (file grid (:keymap . vertico-directory-map))
      (project-file grid)                ; For `project-find-file'
-     (command flat)
+     (command flat (vertico-flat-annotate . nil))
      (symbol-help flat)
      (kill-ring (vertico-sort-function . nil))
      (color (vertico-sort-function . vertico-sort-history-length-alpha))
