@@ -3125,8 +3125,8 @@ For N, see the docstring of `open-line’."
 ;; Joining and inserting newlines
 (defun krisb-open-line-above-goto ()
   "Insert an empty line above the current line.
-Position the cursor at it's beginning, according to the current
-mode. Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
+Position the cursor at it's beginning, according to the current mode.
+Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
   (interactive)
   (beginning-of-line)
   (newline)
@@ -6185,7 +6185,7 @@ duration."
 (defun krisb-restart-or-kill-emacs (&optional arg restart)
   "Kill Emacs.
 If called with RESTART (`universal-argument’ interactively) restart
-Emacs instead. Passes ARG to `save-buffers-kill-emacs'."
+Emacs instead.  Passes ARG to `save-buffers-kill-emacs'."
   (interactive "P")
   (save-buffers-kill-emacs arg (or restart (equal arg '(4)))))
 (bind-key [remap save-buffers-kill-terminal] #'krisb-restart-or-kill-emacs)
