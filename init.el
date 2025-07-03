@@ -4561,7 +4561,8 @@ The context buffer is the buffer that shows annotation contents in
 
 ;;;; Wombag
 (use-package wombag
-  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/wombag/")
+  :ensure ( :repo "https://github.com/krisbalintona/wombag.git"
+            :branch "merge")
   :defer t
   :hook
   ((wombag-show-mode-hook . org-remark-mode)
