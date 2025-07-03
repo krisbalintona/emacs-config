@@ -439,7 +439,7 @@ default to 8."
   :config
   (electric-pair-mode 1)
   (electric-indent-mode 1)
-  
+
   ;; Bespoke inhibit predicate
   (defun krisb-electric-pair-conservative-inhibit (char)
     (or
@@ -1323,7 +1323,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
          (side . top)
          (slot . 1)
          (post-command-select-window . t))
-        
+
         ;; Occur
         ("\\*Occur"
          (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected)
@@ -1735,7 +1735,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
                         (major-mode . vc-git-log-view-mode)
                         (major-mode . vc-git-region-history-mode)))
                  (display-buffer-same-window)))
-  
+
   ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
   (defun krisb-vc-diff-dwim ()
     "Call `vc-diff’ or `diff-buffer-with-file’.
@@ -2780,7 +2780,7 @@ of collision."
   :demand t
   :custom
   (switch-to-buffer-obey-display-actions t)
-  
+
   (window-resize-pixelwise t))
 
 ;;;; Calendar
@@ -3191,7 +3191,7 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   ;;                      :slant 'italic
   ;;                      :foreground 'unspecified
   ;;                      :background (modus-themes-with-colors bg-dim)))
-  
+
   ;; Pulsar pulses while navigating
   (with-eval-after-load 'pulsar
     (add-to-list 'pulsar-pulse-functions 'diff-file-next)
