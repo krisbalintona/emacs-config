@@ -1728,6 +1728,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   (vc-find-revision-no-save t)           ; Emacs 31
   (vc-dir-hide-up-to-date-on-revert t)   ; Emacs 31
   (vc-dir-save-some-buffers-on-revert t) ; Emacs 31
+  (vc-use-incoming-outgoing-prefixes t)  ; Emacs 31
   :config
   ;; Additions to `display-buffer-alist’
   (add-to-list 'display-buffer-alist
