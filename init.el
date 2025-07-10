@@ -4548,6 +4548,14 @@ The context buffer is the buffer that shows annotation contents in
                   (window-parameters (no-other-window . t)
                                      (mode-line-format . none))))))
 
+;;;; Pdf-meta-edit
+(use-package pdf-meta-edit
+  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/")
+  :defer t
+  :bind
+  ( :map pdf-view-mode-map
+    ("C-c M" . pdf-meta-edit-modify)))
+
 ;;;; Wombag
 (use-package wombag
   :ensure ( :repo "https://github.com/krisbalintona/wombag.git"

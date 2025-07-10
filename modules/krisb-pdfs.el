@@ -20,12 +20,6 @@
           :map pdf-annot-list-mode-map
           ([remap tablist-push-regexp-filter] . krisb-pdf-annot-list-filter-regexp)))
 
-;;; Pdf-meta-edit
-(use-package pdf-meta-edit
-  :load-path "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/"
-  :bind ( :map pdf-view-mode-map
-          ("C-c M" . pdf-meta-edit-modify)))
-
 ;;; Provide
 (provide 'krisb-pdfs)
 ;;; krisb-pdfs.el ends here
