@@ -4,6 +4,7 @@
     ("Disregad" "Disregard" nil :count 0)
     ("Emptry" "Empty" nil :count 0)
     ("Otheriwse" "Otherwise" nil :count 0)
+    ("Swicth" "Switch" nil :count 0)
     ("Timesttamps" "Timestamps" nil :count 0)
     ("appropraite" "appropriate" nil :count 0)
     ("becareful" "be careful" nil :count 0)
@@ -31,6 +32,7 @@
   '(
     ("Defne" "Define" nil :count 0)
     ("Erroroneous" "Erroneous" nil :count 0)
+    ("Insstall" "Install" nil :count 0)
     ("enancements" "enhancements" nil :count 0)
     ("obscelete" "obsolete" nil :count 0)
     ("obscoleting" "obsoleting" nil :count 0)
@@ -85,8 +87,11 @@
     ("appearnce" "appearance" nil :count 0)
     ("assertability" "assertibility" nil :count 0)
     ("backround" "background" nil :count 0)
+    ("backstepping" "back-stepping" nil :count 0)
+    ("balanaces" "balances" nil :count 0)
     ("beginniner" "beginner" nil :count 0)
     ("bellieve" "believe" nil :count 0)
+    ("bufferfly" "butterfly" nil :count 0)
     ("buildling" "building" nil :count 0)
     ("characteres" "characters" nil :count 0)
     ("cleaniness" "cleanliness" nil :count 0)
@@ -118,6 +123,7 @@
     ("hoome" "home" nil :count 0)
     ("importnat" "important" nil :count 0)
     ("incease" "increase" nil :count 0)
+    ("indispensible" "indispensable" nil :count 0)
     ("indistinguishavle" "indistinguishable" nil :count 0)
     ("inviible" "invisible" nil :count 0)
     ("kidns" "kinds" nil :count 0)
@@ -166,16 +172,24 @@
     ("syption" "symption" nil :count 0)
     ("systemazing" "systematizing" nil :count 0)
     ("tabulaed" "tabulated" nil :count 0)
+    ("their’s" "theirs" nil :count 0)
     ("thsi" "this" nil :count 0)
     ("unpleasnat" "unpleasant" nil :count 0)
     ("unsecure" "unsecured" nil :count 0)
     ("utlize" "utilize" nil :count 0)
     ("verus" "versus" nil :count 0)
     ("wrtite" "write" nil :count 0)
+    ("yourhips" "your hips" nil :count 0)
    ))
 
 (define-abbrev-table 'scheme-mode-abbrev-table
   '(
     ("preferrable" "preferable" nil :count 0)
+   ))
+
+(define-abbrev-table 'sh-mode-abbrev-table
+  '(
+    ("Bootstrappping" "Bootstrapping" nil :count 0)
+    ("structire" "structure" nil :count 0)
    ))
 
