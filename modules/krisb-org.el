@@ -96,11 +96,6 @@
   (org-bulletproof-ordered-cycle '("1." "1)"))
   (org-bulletproof-unordered-cycle '("+" "-" "*")))
 
-;;; Org-keyterm-index
-(use-package org-keyterm-index
-  :after org
-  :load-path "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/")
-
 ;;; Org-bookmark-heading
 (use-package org-bookmark-heading
   ;; TODO 2024-10-30: Consider also adding `org-cycle-set-startup-visibility' to

@@ -4531,6 +4531,12 @@ The context buffer is the buffer that shows annotation contents in
       (mixed-pitch-mode 1))
     (visual-line-mode 1)))
 
+;;;; Org-keyterm-index
+(use-package org-keyterm-index
+  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/")
+  :after org
+  :defer t)
+
 ;;; Blogging
 (require 'krisb-org-publish)
 
