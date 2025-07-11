@@ -4331,6 +4331,7 @@ Meant to be used as around advice for `org-archive--compute-location'."
          (list 'property-drawer-regexp nil "^CUSTOM_ID$")
          (list 'property-drawer-regexp nil "^TOC$") ; For org-make-toc
          (list 'drawer-regexp nil "^CONTENTS$")     ; For org-make-toc
+         (list 'drawer-regexp nil "^KEYTERM_INDEX$") ; For org-keyterm-index
          (list 'drawer-regexp (propertize "[Logbook]" 'face 'shadow) "^LOGBOOK$")
          (list 'drawer-regexp (propertize "[Hidden...]" 'face 'shadow) (rx (0+ anychar)))
          (list 'property-drawer-regexp (propertize " #" 'face 'shadow) (rx (0+ anychar)))))
