@@ -1536,7 +1536,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
         mode-line-position-line-format '(" %l")
         mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
 
-;; TODO 2025-05-20: Revisit this.
 (setopt mode-line-format
         '("%e" mode-line-front-space
           (:propertize
@@ -1709,7 +1708,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 ;; config:
 ;; - `vc-annotate-display-mode'
 ;; - `vc-revert-show-diff'
-;; - `vc-git-revision-complete-only-branches'
 (use-package vc
   :ensure nil
   :defer t
@@ -1747,10 +1745,10 @@ call `diff-buffer-with-file’ instead."
         (diff-buffer-with-file (current-buffer))
       (vc-diff))))
 
+;; TODO 2025-07-10: Document:
+;; - `vc-git-revision-complete-only-branches'
 (use-package vc-git
   :ensure nil
-  :hook
-  (vc-git-log-edit-mode-hook . auto-fill-mode)
   :custom
   (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
   (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
@@ -1787,6 +1785,7 @@ call `diff-buffer-with-file’ instead."
   ;; :defer t once my confusion is cleared up or the bug is resolved.
   :demand t
   :hook
+  (log-edit-hook . auto-fill-mode)
   (log-edit-hook . log-edit-maybe-show-diff)
   :custom-face
   (log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
