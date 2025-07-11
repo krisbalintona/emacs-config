@@ -3532,8 +3532,8 @@ inserted with e.g. `org-insert-last-stored-link' or
     ("i" . org-node-insert-link)
     ("t a" . org-node-add-tags-here))
   :custom
-  (org-node-ask-directory t)
-  (org-node-datestamp-format "%Y%m%dT%H%M%S--")
+  (org-node-file-directory-ask t)
+  (org-node-file-timestamp-format "%Y%m%dT%H%M%S--")
   (org-node-context-persist-on-disk t)
   (org-node-affixation-fn 'krisb-org-node-affixation-fn)
   (org-node-alter-candidates t)
