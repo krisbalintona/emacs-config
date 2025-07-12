@@ -114,11 +114,11 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 ;; load that file for now.  NOTE: I have not figured out a way to
 ;; replace the built-in vtable Info manual with this one.
 (elpaca '(vtable :wait t
-                 :repo "/home/krisbalintona/emacs-repos/packages/emacs/"
+                 :repo "https://github.com/krisbalintona/emacs.git"
                  :branch "vtable-ship-mints"
                  :files ("lisp/emacs-lisp/vtable.el")))
 (elpaca '(org-capture :wait t
-                      :repo "/home/krisbalintona/emacs-repos/packages/org-mode/"
+                      :repo "https://github.com/krisbalintona/org-mode.git"
                       :branch "org-capture"
                       :files ("lisp/org-capture.el")))
 (elpaca '(transient :wait t))
@@ -4534,7 +4534,7 @@ The context buffer is the buffer that shows annotation contents in
 
 ;;;; Org-keyterm-index
 (use-package org-keyterm-index
-  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/org-keyterm-index/")
+  :ensure (:repo "https://github.com/krisbalintona/org-keyterm-index.git")
   :after org
   :defer t)
 
