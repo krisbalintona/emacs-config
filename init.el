@@ -4141,7 +4141,11 @@ Meant to be used as around advice for `org-archive--compute-location'."
 
 ;;;; Org-roam
 (use-package org-roam
-  :ensure t
+  ;; FIXME 2025-07-13: Bug with an "EmacSQL had an unhandled
+  ;; condition" error when using org-roam-ql with org-roam for some
+  ;; reason.  Problematic commit somewhere between v2.3.1 and master,
+  ;; so pinning version for now.
+  :ensure (:tag "v2.3.1")
   :defer t
   ;; TODO 2025-05-27: Revisit this
   ;; :bind
