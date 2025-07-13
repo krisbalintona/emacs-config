@@ -3093,7 +3093,8 @@ An example of a return value for this function is: \"9 minutes ago\"."
 ;;;; Fish-mode
 (use-package fish-mode
   :ensure t
-  :mode "\\.fish\\'")
+  :mode
+  "\\.fish\\'")
 
 ;;;; Enhancements to basic text editing
 ;; Puni: major-mode agnostic structural editing.  We use some of its
@@ -3304,6 +3305,7 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;;;; Org
 (use-package org
   :ensure nil                           ; Activated by elpaca earlier
+  :defer t
   :hook
   (org-mode-hook . variable-pitch-mode)
   (org-mode-hook . visual-line-mode)
@@ -4353,7 +4355,8 @@ Meant to be used as around advice for `org-archive--compute-location'."
 (use-package markdown-mode
   :ensure t
   :defer t
-  :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'" "\\.md\\'")
+  :mode
+  ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'" "\\.md\\'")
   :hook
   (markdown-mode-hook . visual-line-mode))
 
