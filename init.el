@@ -2345,6 +2345,7 @@ ORIG-FUN should be `ispell-completion-at-point'."
 ;;;; Cursory
 ;; Global and local cursor presets
 (use-package cursory
+  :if (display-graphic-p)
   :ensure t
   :hook
   (prog-mode-hook . (lambda () (cursory-set-preset 'code :local)))
