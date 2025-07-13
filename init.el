@@ -6305,3 +6305,7 @@ to if called with ARG, or any prefix argument."
 
 ;; Enable all disabled commands
 (setopt disabled-command-function nil)
+
+;; Don't prompt user to confirm killing running sub-processes when
+;; quitting Emacs
+(setopt confirm-kill-processes nil)
