@@ -1729,6 +1729,8 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   (vc-dir-save-some-buffers-on-revert t) ; Emacs 31
   (vc-use-incoming-outgoing-prefixes t)  ; Emacs 31
   :config
+  (vc-auto-revert-mode 1)
+  
   ;; Additions to `display-buffer-alist’
   (add-to-list 'display-buffer-alist
                '((or . ((major-mode . vc-dir-mode)
