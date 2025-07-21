@@ -5196,7 +5196,7 @@ Returns non-nil when there is mail."
      ("w" "Just write" entry
       (file+olp+datetree
        (lambda ()
-         (let* ((node (org-node-by-id "20241006T214800.000000")))
+         (let* ((node (org-mem-entry-by-id "20241006T214800.000000")))
            (org-capture-put :krisb-node node)
            (org-node-get-file node)))
        (lambda ()
@@ -5229,7 +5229,7 @@ Returns non-nil when there is mail."
      ("m" "Work meeting notes" entry
       (file+olp+datetree
        (lambda ()
-         (let* ((node (org-node-by-id "20241114T091749.707997")))
+         (let* ((node (org-mem-entry-by-id "20241114T091749.707997")))
            (org-capture-put :krisb-node node)
            (org-node-get-file node)))
        (lambda ()
@@ -5244,7 +5244,7 @@ Returns non-nil when there is mail."
      ("r" "New reference" entry
       (file+olp+datetree
        (lambda ()
-         (let* ((node (org-node-by-id "20250422T171216.767702")))
+         (let* ((node (org-mem-entry-by-id "20250422T171216.767702")))
            (org-capture-put :krisb-node node)
            (org-node-get-file node)))
        (lambda ()
