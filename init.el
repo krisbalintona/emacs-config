@@ -2350,7 +2350,14 @@ ORIG-FUN should be `ispell-completion-at-point'."
 ;; Global and local cursor presets
 (use-package cursory
   :if (display-graphic-p)
-  :ensure t
+  ;; REVIEW 2025-07-21: The commit after the one pinned below
+  ;; (3060fa130b3143e4b7c6332e48e97cfe357f4d96) removes buffer-local
+  ;; cursor states.  For now I pin to this commit to preserve this
+  ;; behavior, but in the future I may consider removing cursory
+  ;; altogether in favor of setting `cursor-type' manually via hooks.
+  ;; (See also `cursory--set-preset-subr' for the settings cursory
+  ;; sets.)
+  :ensure (:ref "7322b3b1e4477fc1dbfa5b5351c49457c4bd6d09")
   :hook
   (prog-mode-hook . (lambda () (cursory-set-preset 'code :local)))
   ((org-mode-hook markdown-mode-hook git-commit-setup-hook log-edit-mode-hook message-mode-hook)
