@@ -1557,10 +1557,14 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 (add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " "))))
 
 ;;;; Window
+;; TODO 2025-07-21: Document:
+;; - `quit-window-kill-buffer'
 (use-package window
   :ensure nil
   :bind* ("M-o" . other-window)
   :custom
+  (switch-to-buffer-obey-display-actions t)
+  (window-resize-pixelwise t)
   (quit-restore-window-no-switch t)     ; Emacs 31
   (kill-buffer-quit-windows t))         ; Emacs 31
 
@@ -1730,7 +1734,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   (vc-use-incoming-outgoing-prefixes t)  ; Emacs 31
   :config
   (vc-auto-revert-mode 1)
-  
+
   ;; Additions to `display-buffer-alist’
   (add-to-list 'display-buffer-alist
                '((or . ((major-mode . vc-dir-mode)
@@ -2778,15 +2782,6 @@ of collision."
   :custom
   (save-place-forget-unreadable-files t)
   (save-place-limit 3000))
-
-;;;; Window
-(use-package window
-  :ensure nil
-  :demand t
-  :custom
-  (switch-to-buffer-obey-display-actions t)
-
-  (window-resize-pixelwise t))
 
 ;;;; Calendar
 ;; TODO 2025-06-15: Document:
