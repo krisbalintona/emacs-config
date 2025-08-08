@@ -5279,7 +5279,17 @@ Returns non-nil when there is mail."
      ("g" "Game review" entry
       (file+olp+datetree
        (lambda ()
-         (let* ((node (org-mem-entry-by-id "20250807T130718.350720")))
+         (let* ((candidate-ids
+                 (list "20250809T050805.074803"   ; Mid
+                       "20250809T050803.643974")) ; ADC
+                (node
+                 (gethash
+                  (completing-read "Select node: "
+                                   #'org-node-collection-basic
+                                   (lambda (_title node)
+                                     (member (org-mem-id node) candidate-ids))
+                                   t nil 'org-node-hist)
+                  org-node--candidate<>entry)))
            (org-capture-put :krisb-node node)
            (org-node-get-file node)))
        (lambda ()
