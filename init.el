@@ -5275,7 +5275,23 @@ Returns non-nil when there is mail."
 #+hugo_draft: true
 #+hugo_paired_shortcodes:\n\n%?"
       :jump-to-captured t
-      :immediate-finish t)))
+      :immediate-finish t)
+     ("g" "Game review" entry
+      (file+olp+datetree
+       (lambda ()
+         (let* ((node (org-mem-entry-by-id "20250807T130718.350720")))
+           (org-capture-put :krisb-node node)
+           (org-node-get-file node)))
+       (lambda ()
+         (let ((node (org-capture-get :krisb-node)))
+           ;; Should return nil if node is a file
+           (when (org-node-is-subtree node)
+             (org-node-get-olp-with-self node)))))
+      "* %?
+** Successes
+** Mistakes"
+      :tree-type (month day)
+      :empty-lines 1)))
   :config
   ;; Bespoke functions that selects an org-node node based on TAGS.
   ;; Used for my datetree capture templates
