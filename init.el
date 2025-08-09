@@ -3518,14 +3518,12 @@ inserted with e.g. `org-insert-last-stored-link' or
   (with-eval-after-load 'org-roam
     ;; emacsql is required for `org-mem-roamy-db-mode’, and it will
     ;; error if it is not yet present
-    (use-package emacsql
-      :ensure (:wait t)
-      :config
-      (org-mem-roamy-db-mode 1))
+    (use-package emacsql :ensure (:wait t))
     ;; End dependence on `org-roam-db-sync'
     (setopt org-roam-db-update-on-save nil
             org-mem-roamy-do-overwrite-real-db t)
-    (org-roam-db-autosync-mode -1)))
+    (org-roam-db-autosync-mode -1)
+    (org-mem-roamy-db-mode 1)))
 
 ;;;; Org-node
 (use-package org-node
