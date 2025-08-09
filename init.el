@@ -2836,7 +2836,7 @@ of collision."
   :hook
   (prog-mode-hook . whitespace-mode)
   :custom
-  (whitespace-style '(empty face tab-mark tabs))
+  (whitespace-style '(empty face tab-mark tabs page-delimiters))
   (whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
                                  (newline-mark ?\n [?¬ ?\n])
                                  (space-mark ?\  [?·] [?.])))
