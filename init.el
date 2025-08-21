@@ -3975,7 +3975,7 @@ instead."
   :after org
   :custom
   (org-footnote-section nil)            ; Don't create footnote headline
-  (org-footnote-auto-adjust 'sort))
+  (org-footnote-auto-adjust t))
 
 ;;;; Org-id
 (use-package org-id
