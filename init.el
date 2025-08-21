@@ -4386,6 +4386,14 @@ Meant to be used as around advice for `org-archive--compute-location'."
                                 :maxFileLength 120000)
                    ,@eglot-workspace-configuration)))
 
+;;;; Indentinator
+;; Automatic indentation of changed lines after idle time.
+(use-package indentinator
+  :ensure (:repo "https://github.com/xendk/indentinator.el.git")
+  :hook ((emacs-lisp-mode-hook org-mode-hook) . indentinator-mode)
+  :config
+  (add-to-list 'mode-line-collapse-minor-modes 'indentinator-mode))
+
 ;;; Reading
 
 ;;;; Pdf-tools
