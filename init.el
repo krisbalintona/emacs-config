@@ -5103,6 +5103,7 @@ Returns non-nil when there is mail."
 
 ;;;; Notmuch-transient
 (use-package notmuch-transient
+  :disabled t                     ; 2025-09-07: Cool but not essential
   :ensure t
   :after notmuch
   :demand t
