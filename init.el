@@ -3498,8 +3498,6 @@ inserted with e.g. `org-insert-last-stored-link' or
 (use-package org-expiry
   :ensure nil
   :after org-contrib
-  :hook
-  (org-capture-before-finalize . org-expiry-insert-created)
   :custom
   (org-expiry-inactive-timestamps t))
 
