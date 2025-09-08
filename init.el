@@ -1527,34 +1527,39 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   (tab-bar-mode 1)
   (tab-bar-history-mode 1))
 
-;;;; Mode line format
-;; TODO 2025-07-10: Ask on emacs-devel why this isn't a defcustom.
-(setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
-
-(setopt mode-line-compact 'long ; Emacs 28
-        mode-line-right-align-edge 'right-fringe
-        mode-line-percent-position '(-3 "%p") ; Don't show percentage of position in buffer
-        mode-line-position-line-format '(" %l")
-        mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
-
-(setopt mode-line-format
-        '("%e" mode-line-front-space
-          (:propertize
-           ("" mode-line-mule-info mode-line-client mode-line-modified
-            mode-line-remote mode-line-window-dedicated)
-           display (min-width (6.0)))
-          mode-line-frame-identification
-          (project-mode-line ("" project-mode-line-format "   "))
-          mode-line-buffer-identification "   "
-          mode-line-position
-          mode-line-format-right-align
-          (vc-mode vc-mode) "  "
-          mode-line-modes
-          mode-line-misc-info
-          mode-line-end-spaces))
-
-;; Add segments to `global-mode-string'
-(add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " "))))
+;;;; Mode-line-maker (and `mode-line-format')
+;; Library for easier alignment of mode-line, header-line, and
+;; tab-line.
+(use-package mode-line-maker
+  :demand t
+  :ensure (:repo "https://github.com/rougier/mode-line-maker")
+  :custom
+  (mode-line-compact 'long) ; Emacs 28
+  (mode-line-right-align-edge 'right-fringe)
+  (mode-line-percent-position '(-3 "%p")) ; Don't show percentage of position in buffer
+  (mode-line-position-line-format '(" %l"))
+  (mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
+  (mode-line-format (mode-line-maker
+                     '("%e" mode-line-front-space
+                       (:propertize
+                        ("" mode-line-mule-info mode-line-client mode-line-modified
+                         mode-line-remote mode-line-window-dedicated)
+                        display (min-width (6.0)))
+                       mode-line-frame-identification
+                       (project-mode-line ("" project-mode-line-format "   "))
+                       mode-line-buffer-identification "   "
+                       mode-line-position)
+                     '((vc-mode vc-mode) "  "
+                       mode-line-modes
+                       mode-line-misc-info
+                       mode-line-end-spaces)))
+  (fringes-outside-margins t)
+  :config
+  ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a defcustom.
+  (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
+  
+  ;; Add segments to `global-mode-string'
+  (add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " ")))))
 
 ;;;; Window
 ;; TODO 2025-07-21: Document:
