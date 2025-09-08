@@ -2351,53 +2351,24 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (abridge-diff-mode 1)
   (add-to-list 'mode-line-collapse-minor-modes 'abridge-diff-mode))
 
-;;;; Cursory
-;; Global and local cursor presets
-(use-package cursory
-  :if (display-graphic-p)
-  ;; REVIEW 2025-07-21: The commit after the one pinned below
-  ;; (3060fa130b3143e4b7c6332e48e97cfe357f4d96) removes buffer-local
-  ;; cursor states.  For now I pin to this commit to preserve this
-  ;; behavior, but in the future I may consider removing cursory
-  ;; altogether in favor of setting `cursor-type' manually via hooks.
-  ;; (See also `cursory--set-preset-subr' for the settings cursory
-  ;; sets.)
-  :ensure (:ref "7322b3b1e4477fc1dbfa5b5351c49457c4bd6d09")
-  :hook
-  (prog-mode-hook . (lambda () (cursory-set-preset 'code :local)))
-  ((org-mode-hook markdown-mode-hook git-commit-setup-hook log-edit-mode-hook message-mode-hook)
-   . (lambda () (cursory-set-preset 'prose :local)))
-  :custom
-  (cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))
-  (cursory-presets
-   '((code
-      :cursor-type box
-      :cursor-in-non-selected-windows hollow
-      :blink-cursor-mode 1)
-     (prose
-      :cursor-type (bar . 2)
-      :blink-cursor-mode -1
-      :cursor-in-non-selected-windows (hbar . 3))
-     (default)
-     (t                                 ; The fallback values
-      :cursor-type box
-      :cursor-in-non-selected-windows hollow
-      :blink-cursor-mode 1
-      :blink-cursor-blinks 10
-      :blink-cursor-delay 5
-      :blink-cursor-interval 0.5)))
-  :config
-  ;; 2025-04-14: I manually create the parent directory if it doesn't
-  ;; already exist; this is not yet implemented upstream, so I do it
-  ;; manually here for fresh installs of Emacs.
-  (make-directory (file-name-directory cursory-latest-state-file) t)
+;;;; Set `cursor-type'
+;; Set `cursor-type' based on major mode.
+(defun krisb-set-cursor-code ()
+  "Set cursor settings for `prog-mode'."
+  (setq-local cursor-type 'box
+              cursor-in-non-selected-windows 'hollow))
+(add-hook 'prog-mode-hook #'krisb-set-cursor-code)
 
-  ;; Set last preset or fall back to desired style from `cursory-presets'.
-  (when (file-exists-p cursory-latest-state-file)
-    (cursory-set-preset (or (cursory-restore-latest-preset) 'default)))
-
-  ;; Persist latest preset used across Emacs sessions
-  (cursory-mode 1))
+(defun krisb-set-cursor-prose ()
+  "Set cursor settings for prose major modes."
+  (setq-local cursor-type '(bar . 2)
+              cursor-in-non-selected-windows 'hollow))
+(dolist (hook '(org-mode-hook
+                markdown-mode-hook
+                git-commit-setup-hook
+                log-edit-mode-hook
+                message-mode-hook))
+  (add-hook hook #'krisb-set-cursor-prose))
 
 ;;;; Completion-preview
 ;; TODO 2025-05-30: Document:
