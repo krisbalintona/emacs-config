@@ -2820,6 +2820,11 @@ of collision."
                  (display-buffer-below-selected)
                  (window-height . fit-window-to-buffer))))
 
+;;;; Miscellaneous additions to `mode-line-collapse-minor-modes'
+(dolist (hook '(visual-line-mode
+                buffer-face-mode))
+  (add-to-list 'mode-line-collapse-minor-modes hook))
+
 ;;; Coding
 
 ;;;; Org-src
