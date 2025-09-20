@@ -3276,18 +3276,6 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 
 ;;; Writing
 
-;;;; Cascading-dir-locals
-;; "Provides a global minor mode that changes how Emacs handles the
-;; lookup of applicable dir-locals files (".dir-locals.el"): instead
-;; of starting at the directory of the visited file and moving up the
-;; directory tree only until a first dir-locals file is found, collect
-;; and apply all (!) dir-locals files found from the current directory
-;; up to the root one."
-(use-package cascading-dir-locals
-  :ensure t
-  :hook
-  (on-first-file-hook . cascading-dir-locals-mode))
-
 ;;;; Org
 (use-package org
   :ensure nil                           ; Activated by elpaca earlier
