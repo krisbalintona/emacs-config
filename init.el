@@ -3504,7 +3504,7 @@ inserted with e.g. `org-insert-last-stored-link' or
     ([remap org-roam-buffer-toggle] . org-node-context-toggle)
     ("f" . org-node-find)
     ("i" . org-node-insert-link)
-    ("t a" . org-node-add-tags-here))
+    ("t" . org-node-set-tags-here))
   :custom
   (org-node-file-directory-ask t)
   (org-node-file-timestamp-format "%Y%m%dT%H%M%S--")
