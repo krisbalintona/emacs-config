@@ -810,7 +810,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (completion-category-defaults
    '((calendar-month (display-sort-function . identity))))
   (completion-category-overrides
-   '((file (styles . (basic partial-completion flex))))) ; Include `partial-completion' to enable wildcards and partial paths.
+   '((file (styles . (partial-completion flex))))) ; Include `partial-completion' to enable wildcards and partial paths.
 
   ;; We don’t want to ignore case for completions, but buffer and file names are
   ;; exceptions
@@ -925,6 +925,7 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :custom
   (vertico-multiform-categories
    '((buffer flat (vertico-sort-function . nil))
+     (project-buffer flat (vertico-sort-function . nil))
      (file grid (:keymap . vertico-directory-map))
      (project-file grid)                ; For `project-find-file'
      (command flat (vertico-flat-annotate . nil))
