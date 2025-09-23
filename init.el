@@ -3300,7 +3300,6 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   ;; - `org-insert-heading-respect-content'
   ;; - `org-fontify-todo-headline’
   ;; (org-ellipsis " ⮷")                        ; TODO 2025-05-22: Revisit this
-  (org-tags-column 0)
   (org-blank-before-new-entry
    '((heading . auto)
      (plain-list-item . nil)))
@@ -3365,6 +3364,10 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   ;;    ("\\.odt\\'" . system)
   ;;    ;; Default to `auto-mode-alist'
   ;;    (auto-mode . emacs)))
+
+  ;; Tags
+  (org-tags-column 0)
+  (org-tags-exclude-from-inheritance '("__journal" "__top_of_mind"))
 
   ;; Properties
   (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
