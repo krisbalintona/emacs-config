@@ -3310,6 +3310,14 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
   (org-startup-folded 'nofold)
   (org-fontify-done-headline nil)
 
+  ;; REVIEW 2025-05-24: Should this be set directory locally?
+  ;; Logging
+  (org-log-done 'time)
+  (org-log-into-drawer t)
+  (org-log-refile 'time)
+  (org-log-reschedule 'time)
+  (org-log-redeadline 'time)
+
   ;; Plain lists
   ;; TODO 2025-05-22: Document the "Org Plain List" customize group as
   ;; well as these options:
@@ -3436,6 +3444,63 @@ inserted with e.g. `org-insert-last-stored-link' or
         (org-link--add-to-stored-links (org-store-link '(16)) id))
       target)))
 
+;; Log changes to certain properties.
+;; 
+;; The following describes how it works.  We add a function to
+;; `org-property-changed-functions' (`krisb-org-log-property-change')
+;; that calls `org-add-log-setup' to log a change to properties listed
+;; in `krisb-org-log-properties' when they are changed.  (This logging
+;; follows the value of of the `org-log-into-drawer' option.)  The
+;; PURPOSE argument of `org-add-log-setup' is 'property; a
+;; corresponding entry in `org-log-note-headings' is added.  This
+;; option controls the format of logged entries based on the PURPOSE
+;; argument passed to `org-add-log-setup'.
+;;
+;; `org-log-note-headings' offers several %-escape sequences.  My
+;; desired behavior is to (i) log the name of the property and (ii)
+;; the old value of the property, before it is changed.  We abuse the
+;; "%s" escape sequence (initially for original todo states) to insert
+;; the name of the property changed (by also passing the name of the
+;; property as the STATE argument in `org-add-log-setup').  The
+;; @-escape sequences offered cannot accommodate (ii) neatly.  To
+;; accomplish (ii), we advise `org-entry-put' to store the value of
+;; the property before it is changed in
+;; `krisb-org-log-property-before'.  Then, we pass this as the
+;; PREV-STATE in `krisb-org-log-property-change' so that it can be
+;; inserted via the "%S" escape sequence in `org-log-note-headings'.
+(with-eval-after-load 'org
+  (defvar krisb-org-log-properties nil
+    "List of properties that are logged when their value is changed.
+Users can set this variable globally, buffer locally, and directory
+locally.")
+  (put 'krisb-org-log-properties 'safe-local-variable #'listp)
+  
+  (defvar krisb-org-log-property-before nil
+    "Temporary storage of property value before its change.")
+  
+  (defun krisb-org-log-property-set-before (epom property _value)
+    "Set the value of `krisb-org-log-property-before'.
+Meant as advice before `org-entry-put'.  Set the value of
+`krisb-org-log-property-before' to the value of the property set by
+`org-entry-put' before it is changed."
+    (setq krisb-org-log-property-before (org-entry-get epom property)))
+  (advice-add 'org-entry-put :before #'krisb-org-log-property-set-before)
+  
+  (defun krisb-org-log-property-change (prop _newval)
+    "Log when certain properties change value."
+    ;; NOTE: We allow empty values of `krisb-org-log-property-before'
+    ;; to be inserted (i.e., when PROP is set for the first time)
+    ;; because org's logging of todo state changes does the same.
+    (when (and (member prop krisb-org-log-properties) krisb-org-log-property-before)
+      (org-add-log-setup 'property prop krisb-org-log-property-before 'time)))
+  (add-hook 'org-property-changed-functions #'krisb-org-log-property-change)
+
+  ;; We abuse the "%s" key in `org-log-note-headings' to store the
+  ;; name of the property changed rather than the previous todo state,
+  ;; which is the intended use of "%s"
+  (add-to-list 'org-log-note-headings '(property . "Property %s changed from %S on %t")))
+
+;; Collection of org packages
 (use-package org-contrib
   :ensure t
   :after org)
@@ -5377,14 +5442,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (org-fast-tag-selection-single-key 'expert)
 
   ;; Effort
-  (org-agenda-sort-noeffort-is-high nil)
-
-  ;; REVIEW 2025-05-24: Should this be set directory locally?
-  ;; Logging
-  (org-log-done 'time)
-  (org-log-into-drawer t)
-  (org-log-reschedule 'time)
-  (org-log-redeadline 'time))
+  (org-agenda-sort-noeffort-is-high nil))
 
 ;;;; Org-clock
 ;; TODO 2025-05-24: Document:
