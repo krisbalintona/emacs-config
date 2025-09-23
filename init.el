@@ -818,8 +818,10 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (read-file-name-completion-ignore-case t)
   (read-buffer-completion-ignore-case t)
 
+  ;; Other settings
   (minibuffer-default-prompt-format " [%s]") ; Format for portion of minibuffer showing default value
   (enable-recursive-minibuffers t)
+  (completion-pcm-leading-wildcard t) ; Emacs 31: Make partial-completion behave more like the substring completion style
   :config
   (minibuffer-electric-default-mode 1)
 
