@@ -5153,7 +5153,7 @@ Returns non-nil when there is mail."
      ("j" "Journal" entry
       (file+olp+datetree
        (lambda ()
-         (let* ((node (krisb-org-capture--org-node-by-tags '("^__journal$"))))
+         (let* ((node (krisb-org-capture--org-node-by-tags `(,(rx bol (or "__journal" "__top_of_mind") eol)))))
            (org-capture-put :krisb-node node)
            (org-node-get-file node)))
        (lambda ()
@@ -5166,6 +5166,7 @@ Returns non-nil when there is mail."
       :jump-to-captured t
       :immediate-finish t
       :empty-lines 1
+      :hook org-expiry-insert-created
       :clock-in t
       :clock-resume t)
      ("w" "Just write" entry
@@ -5219,7 +5220,7 @@ Returns non-nil when there is mail."
      ("r" "New reference" entry
       (file+olp+datetree
        (lambda ()
-         (let* ((node (org-mem-entry-by-id "20250422T171216.767702")))
+         (let* ((node (krisb-org-capture--org-node-by-tags '("^__references$"))))
            (org-capture-put :krisb-node node)
            (org-node-get-file node)))
        (lambda ()
@@ -5232,7 +5233,7 @@ Returns non-nil when there is mail."
       :jump-to-captured t
       :immediate-finish t
       :empty-lines 1
-      :hook org-id-get-create
+      :hook (org-id-get-create org-expiry-insert-created)
       :before-finalize (org-node-add-refs
                         (lambda () (org-set-property "ROAM_BOX" "references"))))
      ("b" "Blog post" plain
