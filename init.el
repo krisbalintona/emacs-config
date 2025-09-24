@@ -3468,6 +3468,9 @@ inserted with e.g. `org-insert-last-stored-link' or
 ;; `krisb-org-log-property-before'.  Then, we pass this as the
 ;; PREV-STATE in `krisb-org-log-property-change' so that it can be
 ;; inserted via the "%S" escape sequence in `org-log-note-headings'.
+;; 
+;; See also
+;; https://www.reddit.com/r/emacs/comments/7gr9ps/add_logbook_entry_and_note_on_orgmode_property/.
 (with-eval-after-load 'org
   (defvar krisb-org-log-properties nil
     "List of properties that are logged when their value is changed.
