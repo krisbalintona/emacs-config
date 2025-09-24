@@ -4400,7 +4400,18 @@ Meant to be used as around advice for `org-archive--compute-location'."
     ("h" . org-hide-drawers-transient))
   :custom
   (org-hide-drawers-display-strings
-   (list (list 'property-drawer-regexp nil "^ID$")
+   (list (list 'property-drawer-regexp
+               (lambda (property-drawer)
+                 (let* ((property-info (org-hide-drawers--get-properties property-drawer))
+                        (box (alist-get "ROAM_BOX" property-info nil nil #'string-equal))
+                        (place (alist-get "ROAM_PLACE" property-info nil nil #'string-equal)))
+                   (propertize (if (or box place)
+                                   (concat (when box (concat "\n| Box — " box))
+                                           (when place (concat "\n| Place — " place))
+                                           "\n")
+                                 "")
+                               'face 'shadow)))
+               "^ID$")
          (list 'property-drawer-regexp nil "^CUSTOM_ID$")
          (list 'property-drawer-regexp nil "^TOC$") ; For org-make-toc
          (list 'drawer-regexp nil "^CONTENTS$")     ; For org-make-toc
