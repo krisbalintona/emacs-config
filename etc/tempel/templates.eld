@@ -9,6 +9,7 @@ fundamental-mode
       possible-todo-keywords noinsert)
    (completing-read "Keyword: " possible-todo-keywords) (just-one-space))
 (d (format-time-string "%F"))
+(D (include d) "T" (format-time-string "%R"))
 (td (p (if (or (derived-mode-p 'emacs-lisp-mode)
                (derived-mode-p 'scheme-mode))
            ";;" comment-start)
