@@ -8,7 +8,10 @@
    '(arei bui edit-indirect ef-themes el-patch fontaine geiser-guile jinx
           magit-popup no-littering on tablist))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/repos/guix/"
+   '("/home/krisbalintona/Documents/org-database/notes/notebooks/buoy/"
+     "/home/krisbalintona/Documents/org-database/notes/notebooks/"
+     "/home/krisbalintona/Documents/org-database/notes/media/"
+     "/home/krisbalintona/repos/guix/"
      "/home/krisbalintona/Documents/org-database/"
      "/home/krisbalintona/.emacs.d/var/elpaca/repos/org-roam/"
      "/home/krisbalintona/Documents/org-database/notes/main/"
@@ -23,7 +26,8 @@
      "/home/krisbalintona/.config/guix/current/share/guile/site/3.0/"
      "/home/krisbalintona/nix-config/"))
  '(safe-local-variable-values
-   '((org-use-tag-inheritance . t) (org-review-delay . "+3d")
+   '((eval add-hook 'before-save-hook 'org-make-toc)
+     (org-use-tag-inheritance . t) (org-review-delay . "+3d")
      (eval add-hook 'org-insert-heading-hook
            'org-expiry-insert-created 99 t)
      (org-use-tag-inheritance))))
