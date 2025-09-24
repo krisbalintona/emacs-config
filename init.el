@@ -1560,7 +1560,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :config
   ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a defcustom.
   (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
-  
+
   ;; Add segments to `global-mode-string'
   (add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " ")))))
 
@@ -3445,7 +3445,7 @@ inserted with e.g. `org-insert-last-stored-link' or
       target)))
 
 ;; Log changes to certain properties.
-;; 
+;;
 ;; The following describes how it works.  We add a function to
 ;; `org-property-changed-functions' (`krisb-org-log-property-change')
 ;; that calls `org-add-log-setup' to log a change to properties listed
@@ -3474,10 +3474,10 @@ inserted with e.g. `org-insert-last-stored-link' or
 Users can set this variable globally, buffer locally, and directory
 locally.")
   (put 'krisb-org-log-properties 'safe-local-variable #'listp)
-  
+
   (defvar krisb-org-log-property-before nil
     "Temporary storage of property value before its change.")
-  
+
   (defun krisb-org-log-property-set-before (epom property _value)
     "Set the value of `krisb-org-log-property-before'.
 Meant as advice before `org-entry-put'.  Set the value of
@@ -3485,13 +3485,16 @@ Meant as advice before `org-entry-put'.  Set the value of
 `org-entry-put' before it is changed."
     (setq krisb-org-log-property-before (org-entry-get epom property)))
   (advice-add 'org-entry-put :before #'krisb-org-log-property-set-before)
-  
+
   (defun krisb-org-log-property-change (prop _newval)
-    "Log when certain properties change value."
-    ;; NOTE: We allow empty values of `krisb-org-log-property-before'
-    ;; to be inserted (i.e., when PROP is set for the first time)
-    ;; because org's logging of todo state changes does the same.
-    (when (and (member prop krisb-org-log-properties) krisb-org-log-property-before)
+    "Log when certain properties change value.
+PROP is the name of the property being changed and _NEWVAL is the value
+this property has been set to."
+    ;; NOTE: We allow inserting empty values of
+    ;; `krisb-org-log-property-before' (i.e., when PROP is set for the
+    ;; first time) because org's logging of todo state changes does
+    ;; the same.
+    (when (member prop krisb-org-log-properties)
       (org-add-log-setup 'property prop krisb-org-log-property-before 'time)))
   (add-hook 'org-property-changed-functions #'krisb-org-log-property-change)
 
@@ -3499,6 +3502,33 @@ Meant as advice before `org-entry-put'.  Set the value of
   ;; name of the property changed rather than the previous todo state,
   ;; which is the intended use of "%s"
   (add-to-list 'org-log-note-headings '(property . "Property %s changed from %S on %t")))
+
+;; Bespoke settings for my media tracking system
+(with-eval-after-load 'org
+  (defun krisb-org-property-set-rating (&rest _args)
+    "Read a number for the RATING property.
+Prompts for a number until the user chooses a number between 0 and 10,
+inclusive.
+
+ARGS are the same as `completing-read'."
+    (let* ((existing-rating (org-entry-get (point) "RATING"))
+           (default (when existing-rating (string-to-number existing-rating)))
+           (rating
+            (read-number "Input a rating between 0 and 10, inclusive: " default)))
+      (while (or (< rating 0) (> rating 10))
+        (sleep-for 0.5)
+        (setq rating (read-number "Rating not between 0 and 10, inclusive: " default)))
+      (number-to-string rating)))
+  (add-to-list 'org-property-set-functions-alist
+               '("RATING" . krisb-org-property-set-rating))
+
+  (defun krisb-org-property-allowed-platform (prop)
+    "Return allowed list of values for the PLATFORM property.
+PROP is the name of the property.  See
+`org-property-allowed-value-functions'."
+    (when (string= prop "PLATFORM")
+      '("Netflix" "Hulu" "Disney+" "Tubi" ":ETC")))
+  (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
 
 ;; Collection of org packages
 (use-package org-contrib
