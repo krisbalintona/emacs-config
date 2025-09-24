@@ -4275,7 +4275,7 @@ Meant to be used as around advice for `org-archive--compute-location'."
 
 ;;;; Org-roam-folgezettel
 (use-package org-roam-folgezettel
-  :ensure ( :repo "/home/krisbalintona/emacs-repos/packages/org-roam-folgezettel/"
+  :ensure ( :repo "https://github.com/krisbalintona/org-roam-folgezettel.git"
             :branch "vtable-unstable")
   :defer t
   :hook
@@ -4317,7 +4317,7 @@ Meant to be used as around advice for `org-archive--compute-location'."
 
 ;;;; Citar-org-node
 (use-package citar-org-node
-  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/citar-org-node/")
+  :ensure (:repo "https://github.com/krisbalintona/citar-org-node.git")
   :after citar
   :demand t
   :bind
@@ -4390,7 +4390,7 @@ Meant to be used as around advice for `org-archive--compute-location'."
 ;;;; Org-hide-drawers
 ;; Make org drawers less visually obtrusive.
 (use-package org-hide-drawers
-  :ensure ( :repo "/home/krisbalintona/emacs-repos/packages/org-hide-drawers/"
+  :ensure ( :repo "https://github.com/krisbalintona/org-hide-drawers.git"
             :branch "devel")
   :defer t
   :hook
@@ -4587,7 +4587,7 @@ The context buffer is the buffer that shows annotation contents in
 
 ;;;; Pdf-meta-edit
 (use-package pdf-meta-edit
-  :ensure (:repo "/home/krisbalintona/emacs-repos/packages/pdf-meta-edit/")
+  :ensure (:repo "https://github.com/krisbalintona/pdf-meta-edit.git")
   :defer t
   :bind
   ( :map pdf-view-mode-map
