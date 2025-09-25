@@ -2799,6 +2799,22 @@ of collision."
                 buffer-face-mode))
   (add-to-list 'mode-line-collapse-minor-modes hook))
 
+;;;; Orgmdb
+;; Use the OMdb API to populate org headings with IMDB information on
+;; movies, shows, and episodes.
+(use-package orgmdb
+  :ensure t
+  :custom
+  ;; FIXME 2025-10-06: Should I obfuscate this?  There's a limit of
+  ;; 1000 requests per day.
+  (orgmdb-omdb-apikey "8ab4d64e")
+  (orgmdb-show-tag "show")
+  (orgmdb-type-prop "CATEGORY")
+  (orgmdb-fill-property-list
+   '( imdb-link
+      genre director writer actors box-office
+      tomatometer metascore metacritic imdb-rating)))
+
 ;;; Coding
 
 ;;;; Org-src
