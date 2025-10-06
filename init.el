@@ -4071,7 +4071,8 @@ instead."
   :custom
   (org-id-track-globally t)
   (org-id-method 'ts)
-  (org-id-link-to-org-use-id 'use-existing))
+  (org-id-link-to-org-use-id 'use-existing)
+  (org-id-link-consider-parent-id t))
 
 ;;;; Org-archive
 (use-package org-archive
