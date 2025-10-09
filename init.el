@@ -3528,6 +3528,90 @@ PROP is the name of the property.  See
   :ensure t
   :after org)
 
+;; Bespoke formatting in org buffers
+(with-eval-after-load 'org
+  ;; Like
+  ;; https://github.com/alphapapa/unpackaged.el?tab=readme-ov-file#ensure-blank-lines-between-headings-and-before-contents
+  ;; but using org-ml to modify parse trees and update regions
+  ;; accordingly.  More performant and less prone to bugs (because we
+  ;; rely on org's parser).
+  ;;
+  ;; With respect to performance, my version seems to be drastically
+  ;; more performant when correcting large org buffers (dozens of
+  ;; thousands of words with hundreds of headlines) but less
+  ;; performant in these buffers when no corrections are
+  ;; necessary--although, a singular invocation in a correct buffer is
+  ;; fast enough for both my version and alphapapa's version that the
+  ;; difference is unnoticed.
+  (defun krisb-org-ensure-blank-lines (&optional arg)
+    "Ensure blank lines surrounding headlines.
+Ensure there is at least one blank line separating the contents of every
+headline (after any drawers) and before every headline in the buffer.
+
+When called with ARG, or the prefix-argument when called interactively,
+widen the buffer first."
+    (interactive "P" org-mode)
+    (require 'org-ml)
+    (let ((action
+           (lambda ()
+             ;; Our strategy is to iterate on each headline from the
+             ;; end to beginning.  For each headline, update it
+             ;; accordingly.  (We opt to update headlines individually
+             ;; rather than the entire buffer at once with
+             ;; `org-ml-update-this-buffer' because, as explained in
+             ;; org-ml's README, such an operation will become
+             ;; unbearably slow for very large buffers.  The sum of
+             ;; all single headline updates in a buffer is much
+             ;; faster.)
+             (save-excursion
+               (goto-char (point-min))
+               (while (re-search-forward org-heading-regexp nil t)
+                 ;; We use `org-ml-update-this-subtree' instead of
+                 ;; `org-ml-update-this-headline' so subheadings are
+                 ;; not removed upon updating.
+                 (org-ml-update-this-subtree
+                   (lambda (headline)
+                     (cond
+                      ;; Headline with non-empty section (has a
+                      ;; property drawer or paragraphs or
+                      ;; subheadlines)
+                      ((org-ml-headline-get-section headline)
+                       (let* ()
+                         (--> headline
+                              ;; Preceding empty line
+                              (let ((supercontents (org-ml-headline-get-supercontents nil it)))
+                                (org-ml-headline-set-supercontents
+                                 nil
+                                 (plist-put supercontents :blank (max 1 (plist-get supercontents :blank)))
+                                 it))
+                              ;; Proceeding empty line
+                              (let* ((section (org-ml-headline-get-section it))
+                                     (last-child (car (last section))))
+                                (org-ml-headline-set-section
+                                 (append (butlast section)
+                                         (list (org-ml-set-property :post-blank (max 1 (org-ml-get-property :post-blank last-child))
+                                                                    last-child)))
+                                 it)))))
+                      ;; Headline with subheadlines but an empty
+                      ;; section (no content, no property drawers,
+                      ;; etc.)
+                      ((org-ml-headline-get-subheadlines headline)
+                       (let ((supercontents (org-ml-headline-get-supercontents nil headline)))
+                         (org-ml-headline-set-supercontents
+                          nil
+                          (plist-put supercontents :blank (max 1 (plist-get supercontents :blank)))
+                          headline)))
+                      ;; Entirely empty headline (no children
+                      ;; elements, i.e., no property drawers, no
+                      ;; content, no subheadlines, etc.)
+                      (t
+                       (org-ml-set-property :post-blank (max 1 (org-ml-get-property :post-blank headline))
+                                            headline))))))))))
+      (if arg
+          (org-with-wide-buffer
+           (funcall action))
+        (funcall action)))))
+
 ;;;; Org-fold
 (use-package org-fold
   :ensure nil
