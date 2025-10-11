@@ -3826,6 +3826,17 @@ For use as `org-node-affixation-fn'."
                           (not file-title))
                   (propertize (concat " (" file-title ")") 'face 'shadow)))))))
 
+(with-eval-after-load 'org-node
+  (defun krisb-org-node-add-source-or-context ()
+    "Set ROAM_CONTEXT or ROAM_SOURCE automatically.
+Prompt the user for ROAM_CONTEXT or ROAM_SOURCE.  Set that property to
+the value of the ROAM_REFS property of the nearest parent of the current
+headline."
+    (interactive)
+    (org-set-property
+     (completing-read "Type: " '("ROAM_CONTEXT" "ROAM_SOURCE"))
+     (org-entry-get nil "ROAM_REFS" 'inherit))))
+
 ;;;; Olivetti
 (use-package olivetti
   :ensure t
