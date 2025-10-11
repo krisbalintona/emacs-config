@@ -4482,6 +4482,12 @@ Meant to be used as around advice for `org-archive--compute-location'."
    (list (list 'property-drawer-regexp
                (lambda (property-drawer)
                  (let* ((property-info (org-hide-drawers--get-properties property-drawer))
+                        (rating (alist-get "RATING" property-info nil nil #'string-equal)))
+                   (propertize (when rating (concat "⎹ Rating — " rating " ")) 'face 'shadow)))
+               "^RATING$")
+         (list 'property-drawer-regexp
+               (lambda (property-drawer)
+                 (let* ((property-info (org-hide-drawers--get-properties property-drawer))
                         (box (alist-get "ROAM_BOX" property-info nil nil #'string-equal))
                         (place (alist-get "ROAM_PLACE" property-info nil nil #'string-equal)))
                    (propertize (if (or box place)
