@@ -3687,9 +3687,10 @@ widen the buffer first."
   (org-node-context-persist-on-disk t)
   (org-node-affixation-fn 'krisb-org-node-affixation-fn)
   (org-node-alter-candidates t)
-  (org-node-one-empty-candidate nil)
+  (org-node-blank-input-hint nil)
   (org-node-custom-link-format-fn 'krisb-org-node-custom-link-format-fn)
   (org-node-filter-fn 'krisb-org-node-filter-fn)
+  (org-node-do-filter-tags t)
   (org-node-warn-title-collisions nil)
   (org-node-renames-allowed-dirs (list krisb-notes-directory))
   :init
