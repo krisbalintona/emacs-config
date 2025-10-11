@@ -26,7 +26,9 @@
      "/home/krisbalintona/.config/guix/current/share/guile/site/3.0/"
      "/home/krisbalintona/nix-config/"))
  '(safe-local-variable-values
-   '((eval add-hook 'before-save-hook 'org-make-toc)
+   '((eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created
+           nil t)
+     (eval add-hook 'before-save-hook 'org-make-toc)
      (org-use-tag-inheritance . t) (org-review-delay . "+3d")
      (eval add-hook 'org-insert-heading-hook
            'org-expiry-insert-created 99 t)
