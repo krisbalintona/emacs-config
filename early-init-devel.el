@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t; -*-
-
 ;; Redirect the .eln cache to a directory that adheres to
 ;; no-littering's convention of placing data files in the var
 ;; subdirectory.  Taken from

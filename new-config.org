@@ -1,0 +1,235 @@
+#+title: Emacs configuration
+#+author: Kristoffer Balintona
+#+email: krisbalintona@gmail.com
+#+language: en
+#+options: num:t author:t email:t
+
+#  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el
+
+* About this document
+
+See =(org) Noweb Reference Syntax= for information on org's noweb syntax.
+
+Preview org blocks with noweb syntax with ~org-babel-expand-src-block~, bound to =C-c C-v C-v= and =C-c C-v v= by default.
+
+See also the useful command ~org-babel-goto-named-src-block~ and other useful commands in =(org) Key bindings and Useful Functions=.
+
+* Personal information
+
+* Emacs performance
+
+#+name: native-compilation
+#+begin_src emacs-lisp
+  ;; Native-compilations settings
+  (setq native-comp-jit-compilation t
+        native-comp-async-report-warnings-errors 'silent ; Show in *Warnings*  buffer but don't show buffer
+        native-comp-async-jobs-number
+        (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1)) ; Use as many cores as possible
+#+end_src
+
+#+name: auto-mode-case-fold
+#+begin_src emacs-lisp
+  ;; NOTE 2024-09-16: From Doom Emacs.
+  ;; Usually, a second, case-insensitive pass over `auto-mode-alist' is
+  ;; time wasted.
+  (setopt auto-mode-case-fold nil)
+#+end_src
+
+* Configuration itself
+
+** Lexical binding
+#+name: lexical-binding
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+#+end_src
+** Configuration-wide variables and helpers
+
+#+name: 
+#+begin_src emacs-lisp
+#+end_src
+
+** Load path for personal libraries
+
+#+name: set-load-path
+#+begin_src emacs-lisp
+  ;;; Add modules and personal lisp files to `load-path'
+  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
+                      (expand-file-name "lisp" user-emacs-directory)))
+    (add-to-list 'load-path path))
+#+end_src
+
+** Dealing with ~custom-file~
+
+We could use a snippet like the one below to set and load the ~custom-file~:
+#+name: set-and-load-custom-file
+#+begin_src emacs-lisp
+  ;;; Set and load custom file
+  (setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
+  (when (file-exists-p custom-file)
+    (load custom-file))
+#+end_src
+
+However, we opt to avoid loading any customization set there so that changes set in one Emacs session don't accidentally persist across confusing me and potentially interfering with, e.g., my package.el configuration. This is one method to do so:
+#+name: just-set-custom-file
+#+begin_src emacs-lisp
+  ;;; Set `custom-file' but do not load it
+  ;; Write `custom-file' in a temporary directory but don't load it.
+  ;; This is just to avoid writing Custom options to the
+  ;; `user-init-file'.  See
+  ;; https://protesilaos.com/emacs/dotemacs#h:f2ffe0e9-a58d-4bba-9831-cc35940ea83f
+  ;; for a more detailed explanation.
+  (setopt custom-file (make-temp-file "emacs-custom-file-" nil ".el"))
+#+end_src
+
+** Package management
+
+*** Package.el
+
+#+name: package.el
+#+begin_src emacs-lisp
+  ;;; package.el
+  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("melpa" . "https://melpa.org/packages/"))
+          package-archive-priorities '(("gnu-elpa" . 4)
+                                       ("nongnu" . 3)
+                                       ("gnu-elpa-devel" . 2)
+                                       ("melpa" . 1))
+          package-install-upgrade-built-in t
+
+          load-prefer-newer t)
+#+end_src
+
+*** Elpaca
+
+#+name: elpaca
+#+begin_src emacs-lisp
+#+end_src
+
+** Setup.el: =use-package= alternative
+
+#+name: setup.el
+#+begin_src emacs-lisp
+  ;;; Setup.el
+  (unless (package-installed-p 'setup)
+    (package-install 'setup))
+#+end_src
+
+** No-littering.el: keep a tidy =.emacs.d/=
+
+#+name: no-littering
+#+begin_src emacs-lisp
+  ;;; No-littering
+  ;; Have packages write their files in locations adhering to a
+  ;; convention.
+  (setup no-littering
+    (:package no-littering)
+    
+    ;; Set the package options according to the instructions found in
+    ;; the package commentary.
+    (eval-and-compile       ; Ensure values don't differ at compile time
+      (setq no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory) ; Config files
+            no-littering-var-directory (expand-file-name "var/" user-emacs-directory))) ; Persistent files
+    ;; Ensure the directories exist
+    (mkdir no-littering-etc-directory t)
+    (mkdir no-littering-var-directory t)
+    
+    (:require no-littering)
+
+    ;; Sets more secure values for `auto-save-file-name-transforms',
+    ;; `backup-directory-alist', and
+    ;; `undo-tree-history-directory-alist'.  Read docstring for a more
+    ;; detailed explanation.
+    (no-littering-theme-backups))
+#+end_src
+
+We also do this:
+#+name: no-littering-eln-cache
+#+begin_src emacs-lisp
+  ;; Redirect the .eln cache to a directory that adheres to
+  ;; no-littering's convention of placing data files in the var
+  ;; subdirectory.  Taken from
+  ;; https://github.com/emacscollective/no-littering?tab=readme-ov-file#native-compilation-cache
+  (when (and (fboundp 'startup-redirect-eln-cache)
+             (fboundp 'native-comp-available-p)
+             (native-comp-available-p))
+    (startup-redirect-eln-cache
+     (convert-standard-filename
+      (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+#+end_src
+
+* Domains
+
+** Programming
+
+*** Helpers
+
+*** Language-specific
+
+**** Emacs-lisp
+
+***** Package authorship
+
+*** Shells
+
+** Prose
+
+*** Linting
+
+*** Spell-checking
+
+** Ideation
+
+** Task direction
+
+** Media management
+
+*** Email
+
+*** PDFs
+
+* Platforms
+
+** Platform-specific configurations
+
+** Final configurations
+
+*** PC
+
+**** =early-init.el=
+
+#+begin_src emacs-lisp :noweb yes :tangle "early-init.el"
+  <<lexical-binding>>
+
+  <<no-littering-eln-cache>>
+
+  <<native-compilation>>
+#+end_src
+
+**** =init.el=
+
+#+begin_src emacs-lisp :noweb yes :tangle "init.el"
+  <<lexical-binding>>
+
+  <<set-load-path>>
+
+  <<just-set-custom-file>>
+
+  <<package.el>>
+
+  <<setup.el>>
+
+  <<no-littering>>
+#+end_src
+
+*** Android
+
+**** =early-init.el=
+
+**** COMMENT =init.el=
+
+#+begin_src emacs-lisp :noweb yes :tangle "init-android.el"
+  <<package.el>>
+#+end_src
+
