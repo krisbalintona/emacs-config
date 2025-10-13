@@ -216,22 +216,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
   :ensure (:wait t)
   :demand t)
 
-;;;; On
-;; Package exposes a number of utility hooks and functions ported from
-;; Doom Emacs.  The hooks make it easier to speed up Emacs startup by
-;; providing finer-grained control of the timing at which packages are
-;; loaded.  Provides the following hooks:
-;; - on-first-input-hook
-;; - on-init-ui-hook
-;; - on-first-file-hook
-;; - on-switch-frame-hook
-;; - on-first-buffer-hook
-;; - on-switch-buffer-hook
-;; - on-switch-window-hook
-(use-package on
-  :ensure t
-  :demand t)
-
 ;;;; My variables, functions, macros, and keymaps
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
@@ -312,27 +296,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 
 ;;;; Theming
 
-;;;;; Enable theme based on time of day
-(defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
-  "Enables LIGHT-THEME or DARK-THEME based on time of day.
-LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
-
-Night time begins at NIGHT-START hour and daytime begins at DAY-START
-hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
-default to 8."
-  (interactive)
-  (let ((hour (string-to-number (format-time-string "%H")))
-        (day-start (or day-start 8))
-        (night-start (or night-start 19)))
-    ;; Dark theme between NIGHT-START and DAY-START
-    (load-theme (if (or (<= night-start hour) (<= hour day-start))
-                    dark-theme light-theme)))
-  ;; Disable the remainder of the enabled themes.  We do this at the
-  ;; end to prevent going from a state of having a theme to having no
-  ;; theme, which would often cause a sudden drastic but momentary
-  ;; change in color (e.g. dark theme to light theme)
-  (mapc #'disable-theme (cdr custom-enabled-themes)))
-
 ;;;;; Doric-themes
 ;; Minimalistic but visible and effective themes.  (Cf. modus-themes
 ;; and standard-themes.)
@@ -351,19 +314,6 @@ default to 8."
   (doric-themes-to-toggle '(doric-marble doric-dark))
   :config
   (krisb-enable-theme-time-of-day (car doric-themes-to-toggle) (cadr doric-themes-to-toggle)))
-
-;;;;; Ef-themes
-(use-package ef-themes
-  :ensure t
-  :demand t
-  :bind
-  (("<f8>" . ef-themes-toggle)
-   ("C-<f8>" . ef-themes-select)
-   ("M-<f8>" . ef-themes-rotate))
-  :custom
-  (ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
-  :config
-  (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 
 ;;;;; Electric
 ;; Convenient DWIM, out-of-the-way while you edit
@@ -404,80 +354,6 @@ default to 8."
      (and (eq char (char-before))
           (eq char (char-before (1- (point)))))
      (eq (char-syntax (following-char)) ?w))))
-
-;;;; Garbage collection
-;; NOTE 2024-02-11: Please reference
-;; https://emacsconf.org/2023/talks/gc/ for a statistically-informed
-;; recommendation for GC variables
-(setopt garbage-collection-messages t
-        ;; TODO 2025-06-04: Revisit this.  I am trying out the IGC
-        ;; branch and may tweak these values.  But for now I want to
-        ;; try with stock values.
-        ;; gc-cons-threshold (* 16 1024 1024) ; 16 mb
-        ;; gc-cons-percentage 0.15
-        )
-
-;; Restore `gc-cons-threshold’ to its default value.  We set it to an
-;; exceptionally high value in early-init.el, so we restore it after
-;; initialization.
-(add-hook 'after-init-hook
-          (lambda () (setopt gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))))
-
-;; Diagnose memory usage: see how Emacs is using memory. From
-;; https://www.reddit.com/r/emacs/comments/ck4zb3/comment/evji1n7/?utm_source=share&utm_medium=web2x&context=3
-(defun krisb-diagnose-garbage-collect ()
-  "Run `garbage-collect' and print stats about memory usage."
-  (interactive)
-  (message (cl-loop for (type size used free) in (garbage-collect)
-                    for used = (* used size)
-                    for free = (* (or free 0) size)
-                    for total = (file-size-human-readable (+ used free))
-                    for used = (file-size-human-readable used)
-                    for free = (file-size-human-readable free)
-                    concat (format "%s: %s + %s = %s\n" type used free total))))
-
-;;;; GCMH
-;; Garbage collect on when idle
-;; TODO 2025-05-23: Document
-;; - `gcmh-low-cons-threshold’
-(use-package gcmh
-  :if (not (string-match-p "--with-mps=yes" system-configuration-options))
-  :ensure t
-  :hook
-  (on-first-buffer-hook . gcmh-mode)
-  (minibuffer-setup-hook . krisb-gcmh-minibuffer-setup)
-  (minibuffer-exit-hook . krisb-gcmh-minibuffer-exit)
-  :custom
-  (gcmh-high-cons-threshold gc-cons-threshold)
-  ;; If the idle delay is too long, we run the risk of runaway memory
-  ;; usage in busy sessions.  And if it's too low, then we may as well
-  ;; not be using gcmh at all.
-  (gcmh-idle-delay 5)
-  (gcmh-verbose garbage-collection-messages)
-  :config
-  (add-to-list 'mode-line-collapse-minor-modes 'gcmh-mode)
-
-  ;; Increase GC threshold when in minibuffer
-  (defvar krisb-gc-minibuffer--original gcmh-high-cons-threshold
-    "Temporary variable to hold `gcmh-high-cons-threshold'")
-
-  (defun krisb-gcmh-minibuffer-setup ()
-    "Temporarily have \"limitless\" `gc-cons-threshold'."
-    ;; (message "[krisb-gcmh-minibuffer-setup] Increasing GC threshold")
-    (when gcmh-mode
-      (setq gcmh-high-cons-threshold most-positive-fixnum)))
-
-  (defun krisb-gcmh-minibuffer-exit ()
-    "Restore value of `gc-cons-threshold'."
-    ;; (message "[krisb-gcmh-minibuffer-exit] Restoring GC threshold")
-    (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original))
-
-  ;; Increase `gc-cons-threshold' while using corfu too, like we do
-  ;; for the minibuffer
-  (with-eval-after-load 'corfu
-    (advice-add 'completion-at-point :before #'krisb-gcmh-minibuffer-setup)
-    (advice-add 'corfu-quit :before #'krisb-gcmh-minibuffer-exit)
-    (advice-add 'corfu-insert :before #'krisb-gcmh-minibuffer-exit)))
 
 ;;;; Fixing M-SPC under WSLg
 ;; 2024-10-29: There is currently an issue in WSLg that prevents
@@ -2097,14 +1973,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (auto-revert-check-vc-info t)
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'auto-revert-mode))
-
-;;;; Customize buffers
-;; TODO 2025-05-24: Document these optins:
-;; - `custom-buffer-style’
-(setopt custom-safe-themes t            ; Treat all themes as safe
-        custom-theme-allow-multiple-selections t
-        custom-unlispify-tag-names nil
-        custom-search-field nil) ; Useful for Android and other touchscreen devices though
 
 ;;;; Flymake
 ;; TODO 2025-05-24: Document:

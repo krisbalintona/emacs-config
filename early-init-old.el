@@ -34,10 +34,6 @@
 ;; its UI more often than it needs to
 (setq idle-update-delay 1.0)
 
-;; I defer garbage collection until after starting Emacs. See my configuration
-;; of `gcmh-mode'.
-(setq gc-cons-threshold most-positive-fixnum)
-
 ;; NOTE 2024-10-03: From Doom Emacs.
 ;; Contrary to what many Emacs users have in their configs, you don't need more
 ;; than this to make UTF-8 the default coding system:
@@ -45,32 +41,6 @@
 ;; ...but `set-language-environment' also sets `default-input-method', which is
 ;; a step too opinionated.
 (setq default-input-method nil)
-
-;; NOTE 2024-10-03: From Doom Emacs. If we're disabling these graphical
-;; elements, it's faster to do so before they've been initialized.
-;; HACK: I intentionally avoid calling `menu-bar-mode', `tool-bar-mode', and
-;;   `scroll-bar-mode' because their manipulation of frame parameters can
-;;   trigger/queue a superfluous (and expensive, depending on the window system)
-;;   frame redraw at startup. The variables must be set to `nil' as well so
-;;   users don't have to call the functions twice to re-enable them.
-(push '(menu-bar-lines . 0)   default-frame-alist)
-(push '(tool-bar-lines . 0)   default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-(setq menu-bar-mode nil
-      tool-bar-mode nil
-      scroll-bar-mode nil)
-
-;; Frame defaults
-(setq frame-resize-pixelwise t
-      frame-inhibit-implied-resize t
-      frame-title-format '("%b")
-      use-dialog-box t                  ; For mouse events
-      use-file-dialog nil
-      inhibit-splash-screen t
-      inhibit-startup-screen t
-      inhibit-x-resources t     ; REVIEW 2024-10-03: Not sure the precise effect
-      inhibit-startup-echo-area-message user-login-name ; Read the docstring
-      inhibit-startup-buffer-menu t)
 
 ;;; Disable package.el (for elpaca)
 ;; Also make sure that there are e.g. no calls to
