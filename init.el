@@ -41,9 +41,11 @@
 (unless (package-installed-p 'setup)
   (package-install 'setup))
 
-(setup (:package setup)
+(setup setup
+  (:package setup)
+
   ;; Mimic use-package's :after keyword.  Taken from
-  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-10
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-10.
   (setup-define :load-after
     (lambda (&rest features)
       (let ((body `(require ',(setup-get 'feature))))
@@ -54,7 +56,7 @@
     :debug '(symbolp listp))
 
   ;; Make adding advice easier.  Taken from
-  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-13
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-13.
   (setup-define :advice-add
     (lambda (symbol where arglist &rest body)
       (let ((name (gensym "setup-advice-")))
@@ -68,7 +70,7 @@ See `advice-add' for more details."
     :indent 3)
 
   ;; Mide a minor mode from the mode-line.  Modified from
-  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-11
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-11.
   (setup-define :hide-mode
     (lambda (&optional mode)
       (let* ((mode (or mode (setup-get 'mode)))
@@ -86,6 +88,16 @@ mode.
 
 If `mode-line-collapse-minor-modes' exists, add the current mode to
 that.  Otherwise, remove it from `minor-mode-alist'."
+    :after-loaded t)
+
+  ;; Customize faces.  Taken from
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-22.
+  (setup-define :face
+    (lambda (face spec) `(custom-set-faces (quote (,face ,spec))))
+    :documentation "Customize FACE to SPEC."
+    :signature '(face spec ...)
+    :debug '(setup)
+    :repeatable t
     :after-loaded t))
 
 ;;; No-littering.el
