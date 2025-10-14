@@ -44,6 +44,29 @@
 (setup setup
   (:package setup)
 
+  ;; Imenu support.  Modified from
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
+  (with-eval-after-load 'imenu
+    (defun krisb-setup-with-imenu ()
+      "Configure imenu to identify setup.el forms."
+      (setf (map-elt imenu-generic-expression "Setup")
+            (list (rx line-start (0+ blank)
+                      "(setup" (1+ blank)
+                      ;; Add here items that can define a feature:
+                      (or (group-n 1 (1+ (or (syntax word)
+                                             (syntax symbol))))
+                          (seq "(:" (or "package" "elpaca" "require")
+                               (1+ blank)
+                               (group-n 1 (1+ (or (syntax word)
+                                                  (syntax symbol)))))))
+                  1)))
+    (:with-function krisb-setup-with-imenu
+      (:hook-into emacs-lisp-mode-hook))
+
+    (with-eval-after-load 'consult-imenu
+      (push '(?s "Setup")
+            (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
+
   ;; Mimic use-package's :after keyword.  Taken from
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-10.
   (setup-define :load-after
@@ -55,19 +78,30 @@
     :documentation "Load the current feature after FEATURES."
     :debug '(symbolp listp))
 
-  ;; Make adding advice easier.  Taken from
+  ;; Make adding advice easier.  Modified from
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-13.
-  (setup-define :advice-add
-    (lambda (symbol where arglist &rest body)
-      (let ((name (gensym "setup-advice-")))
+  (setup-define :advice-def
+    (lambda (symbol where suffix arglist &rest body)
+      (let ((name (concat "setup-advice-" suffix)))
         `(progn
            (defun ,name ,arglist ,@body)
            (advice-add ',symbol ,where #',name))))
     :documentation "Add a piece of advice on a function.
+Provide a function symbol, a HOW from `advice-add', a string that acts
+as the suffix for the advice name, and the advice function definition.
 See `advice-add' for more details."
+    :debug '(sexp sexp sexp function-form)
     :after-loaded t
-    :debug '(sexp sexp function-form)
     :indent 3)
+
+  (setup-define :advice
+    (lambda (symbol where)
+      `(advice-add ',symbol ,where #',(setup-get 'func)))
+    :documentation "Advise a function the current function.
+Provide a function symbol and a HOW from `advice-add'.  See `advice-add'
+for more details."
+    :debug '(sexp sexp)
+    :after-loaded t)
 
   ;; Mide a minor mode from the mode-line.  Modified from
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-11.
@@ -177,7 +211,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
   (:hide-mode)
 
-  (:hook-into on-first-buffer-hook)
+  (add-hook 'on-first-buffer-hook #'gcmh-mode)
   (add-hook 'minibuffer-setup-hook #'krisb-gcmh-minibuffer-setup)
   (add-hook 'minibuffer-exit-hook #'krisb-gcmh-minibuffer-exit)
 
@@ -188,9 +222,10 @@ that.  Otherwise, remove it from `minor-mode-alist'."
           ;; https://emacsconf.org/2023/talks/gc/ for a
           ;; statistically-informed analysis of GC in Emacs.
           gcmh-idle-delay 5
-          gcmh-verbose garbage-collection-messages)
+          gcmh-verbose garbage-collection-messages))
 
-  ;; Increase GC threshold when in minibuffer
+;; Increase GC threshold when in minibuffer
+(with-eval-after-load 'gcmh
   (defvar krisb-gc-minibuffer--original gcmh-high-cons-threshold
     "Temporary variable to hold `gcmh-high-cons-threshold'")
 
@@ -201,7 +236,8 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
   (defun krisb-gcmh-minibuffer-exit ()
     "Restore value of `gc-cons-threshold'."
-    (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original))
+    (when gcmh-mode
+      (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original)))
 
   ;; Increase `gc-cons-threshold' while using corfu too, like we do
   ;; for the minibuffer
@@ -242,3 +278,77 @@ default to 8."
              ("M-<f8>" . ef-themes-rotate))
   (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
   (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
+
+;;; Vertico and extensions
+(setup vertico
+  (:package vertico)
+
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+
+  (bind-keys
+   ("C-c v r" . vertico-repeat)
+   :map vertico-map
+   ("C-c v s" . vertico-suspend))
+
+  (vertico-mode 1))
+
+;; More convenient path modification commands
+(setup vertico-directory
+  (:load-after vertico)
+
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
+
+;; On-demand change the type of UI
+(setup vertico-multiform
+  (:load-after vertico)
+
+  (add-hook 'vertico-mode-hook #'vertico-multiform-mode)
+
+  (setopt vertico-multiform-categories
+          '((buffer flat (vertico-sort-function . nil))
+            (project-buffer flat (vertico-sort-function . nil))
+            (file grid (:keymap . vertico-directory-map))
+            (project-file grid)                ; For `project-find-file'
+            (command flat (vertico-flat-annotate . nil))
+            (symbol-help flat)
+            (kill-ring (vertico-sort-function . nil))
+            (color (vertico-sort-function . vertico-sort-history-length-alpha))
+            (jinx grid
+                  (vertico-grid-annotate . 20)
+                  (vertico-grid-max-columns . 12)
+                  (vertico-grid-separator
+                   . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
+          vertico-multiform-commands
+          `((pdf-view-goto-label
+             (vertico-sort-function . nil))
+            (".+-history" (vertico-sort-function . nil))
+            (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
+             (vertico-sort-function . nil))
+            (,(rx bol (literal "customize-"))
+             flat)
+            (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
+                          (literal "load-library")))
+             flat)
+            (,(rx bol (literal "consult-history"))
+             (vertico-sort-function . nil))
+            ;; NOTE 2025-06-18: Should these commands have a category like
+            ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
+            ;; perhaps I can propose a patch for it.
+            (,(rx (or "find-function"
+                      "find-library"
+                      "find-variable"))
+             flat))))
+
+;; A minimal, Ido-like UI
+(setup vertico-flat
+  (:load-after vertico)
+
+  (setopt vertico-flat-annotate t
+          vertico-flat-format
+          `( :multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
+             :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
+             :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
+             :separator #("  |  " 0 5 (face minibuffer-prompt))
+             :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
+             :no-match ,(propertize "\n[No match]" 'face 'shadow)
+             :spacer #(" " 0 1 (cursor t)))))
