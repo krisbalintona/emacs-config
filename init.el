@@ -5,6 +5,9 @@
                     (expand-file-name "lisp" user-emacs-directory)))
   (add-to-list 'load-path path))
 
+(setopt user-full-name "Kristoffer Balintona"
+        user-mail-address "krisbalintona@gmail.com")
+
 ;;; Custom
 ;;; Set `custom-file' but do not load it
 ;; Write `custom-file' in a temporary directory but don't load it.
@@ -42,31 +45,10 @@
   (package-install 'setup))
 
 (setup setup
-  (:package setup)
+  (:package setup))
 
-  ;; Imenu support.  Modified from
-  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
-  (with-eval-after-load 'imenu
-    (defun krisb-setup-with-imenu ()
-      "Configure imenu to identify setup.el forms."
-      (setf (map-elt imenu-generic-expression "Setup")
-            (list (rx line-start (0+ blank)
-                      "(setup" (1+ blank)
-                      ;; Add here items that can define a feature:
-                      (or (group-n 1 (1+ (or (syntax word)
-                                             (syntax symbol))))
-                          (seq "(:" (or "package" "elpaca" "require")
-                               (1+ blank)
-                               (group-n 1 (1+ (or (syntax word)
-                                                  (syntax symbol)))))))
-                  1)))
-    (:with-function krisb-setup-with-imenu
-      (:hook-into emacs-lisp-mode-hook))
-
-    (with-eval-after-load 'consult-imenu
-      (push '(?s "Setup")
-            (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
-
+;; Define my own setup.el macros
+(with-eval-after-load 'setup
   ;; Mimic use-package's :after keyword.  Taken from
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-10.
   (setup-define :load-after
@@ -132,7 +114,37 @@ that.  Otherwise, remove it from `minor-mode-alist'."
     :signature '(face spec ...)
     :debug '(setup)
     :repeatable t
+    :after-loaded t)
+
+  ;; Macro for `bind-keys'
+  (setup-define :bind-keys
+    (lambda (&rest args)
+      `(bind-keys ,@args))
+    :documentation "Bind KEY to COMMAND in current map."
     :after-loaded t))
+
+;; Add setup entries to imenu.  Modified from
+;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
+(with-eval-after-load 'setup
+  (with-eval-after-load 'imenu
+    (defun krisb-setup-with-imenu ()
+      "Configure imenu to identify setup.el forms."
+      (setf (map-elt imenu-generic-expression "Setup")
+            (list (rx line-start (0+ blank)
+                      "(setup" (1+ blank)
+                      ;; Add here items that can define a feature:
+                      (or (group-n 1 (1+ (or (syntax word)
+                                             (syntax symbol))))
+                          (seq "(:" (or "package" "elpaca" "require")
+                               (1+ blank)
+                               (group-n 1 (1+ (or (syntax word)
+                                                  (syntax symbol)))))))
+                  1)))
+    (add-hook 'emacs-lisp-mode-hook #'krisb-setup-with-imenu)
+
+    (with-eval-after-load 'consult-imenu
+      (push '(?s "Setup")
+            (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types)))))
 
 ;;; No-littering.el
 ;; Have packages write their files in locations adhering to a
@@ -149,6 +161,8 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   (mkdir no-littering-etc-directory t)
   (mkdir no-littering-var-directory t)
 
+  ;; Require only after setting `no-littering-etc-directory' and
+  ;; `no-littering-var-directory'
   (:require no-littering)
 
   ;; Sets more secure values for `auto-save-file-name-transforms',
@@ -172,6 +186,12 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 (setup on
   (:package on)
   (:require on))
+
+;;; El-patch
+(setup el-patch
+  ;; Elpaca: :ensure (:wait t)
+  (:package el-patch)
+  (:require el-patch))
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
@@ -246,6 +266,81 @@ that.  Otherwise, remove it from `minor-mode-alist'."
     (advice-add 'corfu-quit :after #'krisb-gcmh-minibuffer-exit)
     (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
 
+;;; Fontaine
+;; Define and apply face presets.
+(setup fontaine
+  ;; Elpaca: :ensure (:wait t) ; To have faces set ASAP during startup
+  (:package fontaine)
+  (:require fontaine)
+
+  (setopt fontaine-latest-state-file
+          (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld")
+          fontaine-presets
+          '((default-wsl2
+             :default-height 180
+             :inherit iosevka-variants)
+            (iosevka-variants
+             ;; NOTE 2025-04-14: On Arch Linux, Iosevka fonts have associated packages
+             ;; for each variant in the AUR (though not necessarily the Nerd Fonts
+             ;; versions).
+             :default-family "IosevkaTermSS 11 Nerd Font" ; 2025-04-14: Must be a bug that there is a space between "SS" and "11" in the font name
+             :fixed-pitch-family "Iosevka Nerd Font"
+             :mode-line-active-family "Iosevka Aile Nerd Font"
+             :mode-line-inactive-family "Iosevka Aile Nerd Font")
+            ;; Below are the shared fallback properties. I leave them there also as
+            ;; reference for all possible properties
+            (t
+             ;; Alternatives:
+             :default-family "IosevkaSS04 Nerd Font"
+             :default-height 165
+
+             ;; Alternatives
+             ;; "Hack Nerd Font Mono"
+             :fixed-pitch-family "Iosevka"
+
+             ;; 2025-04-21: This is my own bespoke setting.  Fontaine works fine with
+             ;; it set; I use it elsewhere (e.g., eat.el).
+             :term-family "IosevkaTermSS04 Nerd Font" ; For terminals
+
+             ;; Alternatives:
+             ;; "LiterationSerif Nerd Font"       ; Variable
+             ;; "Latin Modern Mono Prop"          ; Monospace
+             ;; "Sans Serif"
+             ;; "Open Sans" (1.1 height)
+             :variable-pitch-family "Overpass Nerd Font Propo"
+             :variable-pitch-height 1.2
+
+             :mode-line-active-family "JetBrainsMono Nerd Font"
+             :mode-line-active-height 0.93
+
+             :mode-line-inactive-family "JetBrainsMono Nerd Font"
+             :mode-line-inactive-height 0.93
+
+             :header-line-height 1.0
+
+             :tab-bar-family "Overpass Nerd Font"
+             :tab-bar-height 0.93)))
+
+  ;; 2025-04-14: I manually create the parent directory if it doesn't
+  ;; already exist; this is not yet implemented upstream, so I do it
+  ;; manually here for fresh installs of Emacs.
+  (make-directory (file-name-directory fontaine-latest-state-file) t)
+
+  ;; Set the last preset or fall back to desired style from
+  ;; `fontaine-presets'
+  (when (file-exists-p fontaine-latest-state-file)
+    (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default)))
+
+  ;; Persist the latest font preset when closing/starting Emacs and
+  ;; while switching between themes.
+  (fontaine-mode 1)
+  )
+
+;; Leverage with pulsar
+(with-eval-after-load 'fontaine
+  (with-eval-after-load 'pulsar
+    (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
+
 ;;; Themes
 
 (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
@@ -273,9 +368,9 @@ default to 8."
   (:package ef-themes)
   (:require ef-themes)
 
-  (bind-keys ("<f8>" . ef-themes-toggle)
-             ("C-<f8>" . ef-themes-select)
-             ("M-<f8>" . ef-themes-rotate))
+  (:bind-keys ("<f8>" . ef-themes-toggle)
+              ("C-<f8>" . ef-themes-select)
+              ("M-<f8>" . ef-themes-rotate))
   (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
   (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 
@@ -285,7 +380,7 @@ default to 8."
 
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
 
-  (bind-keys
+  (:bind-keys
    ("C-c v r" . vertico-repeat)
    :map vertico-map
    ("C-c v s" . vertico-suspend))
@@ -352,3 +447,10 @@ default to 8."
              :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
              :no-match ,(propertize "\n[No match]" 'face 'shadow)
              :spacer #(" " 0 1 (cursor t)))))
+
+;;; Startup time
+;; Message for total init time after startup
+(defun krisb-startup-time ()
+  "Report Emacs startup time."
+  (message "Total startup time: %s" (emacs-init-time)))
+(add-hook 'after-init-hook #'krisb-startup-time)

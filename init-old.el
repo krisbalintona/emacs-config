@@ -140,85 +140,7 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 ;; use-package declarations
 (setopt use-package-enable-imenu-support t)
 
-;;;; Fontaine
-;; Define then apply face presets
-(use-package fontaine
-  :ensure (:wait t) ; To have faces set ASAP during startup
-  :demand t
-  :custom
-  (fontaine-latest-state-file (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld"))
-  (fontaine-presets
-   '((default-wsl2
-      :default-height 180
-      :inherit iosevka-variants)
-     (iosevka-variants
-      ;; NOTE 2025-04-14: On Arch Linux, Iosevka fonts have associated packages
-      ;; for each variant in the AUR (though not necessarily the Nerd Fonts
-      ;; versions).
-      :default-family "IosevkaTermSS 11 Nerd Font" ; 2025-04-14: Must be a bug that there is a space between "SS" and "11" in the font name
-      :fixed-pitch-family "Iosevka Nerd Font"
-      :mode-line-active-family "Iosevka Aile Nerd Font"
-      :mode-line-inactive-family "Iosevka Aile Nerd Font")
-     ;; Below are the shared fallback properties. I leave them there also as
-     ;; reference for all possible properties
-     (t
-      ;; Alternatives:
-      :default-family "IosevkaSS04 Nerd Font"
-      :default-height 165
-
-      ;; Alternatives
-      ;; "Hack Nerd Font Mono"
-      :fixed-pitch-family "Iosevka"
-
-      ;; 2025-04-21: This is my own bespoke setting.  Fontaine works fine with
-      ;; it set; I use it elsewhere (e.g., eat.el).
-      :term-family "IosevkaTermSS04 Nerd Font" ; For terminals
-
-      ;; Alternatives:
-      ;; "LiterationSerif Nerd Font"       ; Variable
-      ;; "Latin Modern Mono Prop"          ; Monospace
-      ;; "Sans Serif"
-      ;; "Open Sans" (1.1 height)
-      :variable-pitch-family "Overpass Nerd Font Propo"
-      :variable-pitch-height 1.2
-
-      :mode-line-active-family "JetBrainsMono Nerd Font"
-      :mode-line-active-height 0.93
-
-      :mode-line-inactive-family "JetBrainsMono Nerd Font"
-      :mode-line-inactive-height 0.93
-
-      :header-line-height 1.0
-
-      :tab-bar-family "Overpass Nerd Font"
-      :tab-bar-height 0.93)))
-  :config
-  ;; 2025-04-14: I manually create the parent directory if it doesn't already
-  ;; exist; this is not yet implemented upstream, so I do it manually here for
-  ;; fresh installs of Emacs.
-  (make-directory (file-name-directory fontaine-latest-state-file) t)
-
-  ;; Set the last preset or fall back to desired style from `fontaine-presets'
-  (when (file-exists-p fontaine-latest-state-file)
-    (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default)))
-
-  ;; Persist the latest font preset when closing/starting Emacs and while
-  ;; switching between themes.
-  (fontaine-mode 1)
-
-  (with-eval-after-load 'pulsar
-    (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
-
-;;;; El-patch
-;; TODO 2025-06-03: Describe relation to
-;; https://elpa.gnu.org/packages/advice-patch.html.
-(use-package el-patch
-  :ensure (:wait t)
-  :demand t)
-
 ;;;; My variables, functions, macros, and keymaps
-(setopt user-full-name "Kristoffer Balintona"
-        user-mail-address "krisbalintona@gmail.com")
 
 ;;;;; Keymaps
 (defvar-keymap krisb-note-keymap
@@ -6215,10 +6137,7 @@ is to produce the opposite effect of both `fill-paragraph' and
           (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
     (message "delete-by-moving-to-trash is nil; not emptying trash")))
 
-;; Message for total init time after startup
-(add-hook 'elpaca-after-init-hook (lambda () (message "Total startup time: %s" (emacs-init-time))))
-
-;; Frame backaground transparency toggle
+;; Frame background transparency toggle
 (add-to-list 'default-frame-alist '(alpha-background . 100))
 (defun krisb-toggle-window-transparency (&optional arg)
   "Toggle the value of `alpha-background'.

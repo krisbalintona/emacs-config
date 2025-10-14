@@ -1,12 +1,12 @@
 #+title: Emacs configuration
 #+author: Kristoffer Balintona
 #+email: krisbalintona@gmail.com
-#+language: en
+#+language: en_US
 #+options: num:t author:t email:t
 #+property: header-args :noweb yes
 
-#  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef
-#  LocalWords:  Minibuffer
+#  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
+#  LocalWords:  Minibuffer Vertico Fontaine Theming
 
 * About this document
 
@@ -17,7 +17,11 @@ Preview org blocks with noweb syntax with ~org-babel-expand-src-block~, bound to
 See also the useful command ~org-babel-goto-named-src-block~ and other useful commands in =(org) Key bindings and Useful Functions=.
 
 * Personal information
-
+#+name: bio
+#+begin_src emacs-lisp
+  (setopt user-full-name "Kristoffer Balintona"
+          user-mail-address "krisbalintona@gmail.com")
+#+end_src
 * Configuration itself
 
 ** Configuration-wide variables and helpers
@@ -80,7 +84,9 @@ However, we opt to avoid loading any customization set there so that changes set
 #+begin_src emacs-lisp
 #+end_src
 
-** Setup.el: =use-package= alternative
+** Setup.el: A transparent =use-package= alternative
+
+Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes with many of its own while making it easy for users to define their own macros. Macros are useful for Emacs configuration: they reduce repetition and boilerplate. See setup's Emacs Wiki page: [[https://www.emacswiki.org/emacs/SetupEl][EmacsWiki: Setup El]].
 
 #+name: setup.el
 #+begin_src emacs-lisp
@@ -88,31 +94,10 @@ However, we opt to avoid loading any customization set there so that changes set
     (package-install 'setup))
 
   (setup setup
-    (:package setup)
+    (:package setup))
 
-    ;; Imenu support.  Modified from
-    ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
-    (with-eval-after-load 'imenu
-      (defun krisb-setup-with-imenu ()
-        "Configure imenu to identify setup.el forms."
-        (setf (map-elt imenu-generic-expression "Setup")
-              (list (rx line-start (0+ blank)
-                        "(setup" (1+ blank)
-                        ;; Add here items that can define a feature:
-                        (or (group-n 1 (1+ (or (syntax word)
-                                               (syntax symbol))))
-                            (seq "(:" (or "package" "elpaca" "require")
-                                 (1+ blank)
-                                 (group-n 1 (1+ (or (syntax word)
-                                                    (syntax symbol)))))))
-                    1)))
-      (:with-function krisb-setup-with-imenu
-        (:hook-into emacs-lisp-mode-hook))
-
-      (with-eval-after-load 'consult-imenu
-        (push '(?s "Setup")
-              (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
-
+  ;; Define my own setup.el macros
+  (with-eval-after-load 'setup
     ;; Mimic use-package's :after keyword.  Taken from
     ;; https://www.emacswiki.org/emacs/SetupEl#h5o-10.
     (setup-define :load-after
@@ -178,8 +163,44 @@ However, we opt to avoid loading any customization set there so that changes set
       :signature '(face spec ...)
       :debug '(setup)
       :repeatable t
+      :after-loaded t)
+
+    ;; Macro for `bind-keys'
+    (setup-define :bind-keys
+      (lambda (&rest args)
+        `(bind-keys ,@args))
+      :documentation "Bind KEY to COMMAND in current map."
       :after-loaded t))
+
+  ;; Add setup entries to imenu.  Modified from
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
+  (with-eval-after-load 'setup
+    (with-eval-after-load 'imenu
+      (defun krisb-setup-with-imenu ()
+        "Configure imenu to identify setup.el forms."
+        (setf (map-elt imenu-generic-expression "Setup")
+              (list (rx line-start (0+ blank)
+                        "(setup" (1+ blank)
+                        ;; Add here items that can define a feature:
+                        (or (group-n 1 (1+ (or (syntax word)
+                                               (syntax symbol))))
+                            (seq "(:" (or "package" "elpaca" "require")
+                                 (1+ blank)
+                                 (group-n 1 (1+ (or (syntax word)
+                                                    (syntax symbol)))))))
+                    1)))
+      (add-hook 'emacs-lisp-mode-hook #'krisb-setup-with-imenu)
+
+      (with-eval-after-load 'consult-imenu
+        (push '(?s "Setup")
+              (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types)))))
 #+end_src
+
+*** Why use setup.el over use-package?
+
+In my opinion, use-package's macros add an opaqueness that adds a layer of potential confusion. One has to learn the specific "use-package language"---avoiding all its foot-guns and practicing its conventions---in order to configure their Emacs. Instead, I prefer setup.el because it's simply a bunch of straightforward elisp macros.
+
+This lets setup.el configurations be transparent rather than opaque: I understand exactly what elisp is at play and what it's doing. Consequently, I think configurations leveraging setup.el require no special know-how or caution to write or understand---I wouldn't say the same for use-package.
 
 ** No-littering.el: keep a tidy =.emacs.d/=
 
@@ -199,6 +220,8 @@ However, we opt to avoid loading any customization set there so that changes set
     (mkdir no-littering-etc-directory t)
     (mkdir no-littering-var-directory t)
 
+    ;; Require only after setting `no-littering-etc-directory' and
+    ;; `no-littering-var-directory'
     (:require no-littering)
 
     ;; Sets more secure values for `auto-save-file-name-transforms',
@@ -241,6 +264,31 @@ We also do this:
   (setup on
     (:package on)
     (:require on))
+#+end_src
+
+** El-patch: override packages in a future-proof way
+
+There is a problem when we use the typical ~(advice-add ... :override ...)~, namely, upstream definitions may change. This either renders our override unnecessary or our new function incompatible with the rest of upstream. El-patch provides a way to override functions while becoming aware of any upstream changes to the function we originally intended to override.
+
+#+name: el-patch
+#+begin_src emacs-lisp
+  (setup el-patch
+    ;; Elpaca: :ensure (:wait t)
+    (:package el-patch)
+    (:require el-patch))
+#+end_src
+
+# TODO 2025-06-03: Describe relation to https://elpa.gnu.org/packages/advice-patch.html.
+
+** Report total startup time
+
+#+name: startup-time
+#+begin_src emacs-lisp
+  ;; Message for total init time after startup
+  (defun krisb-startup-time ()
+    "Report Emacs startup time."
+    (message "Total startup time: %s" (emacs-init-time)))
+  (add-hook 'after-init-hook #'krisb-startup-time)
 #+end_src
 
 * Runtime performance
@@ -408,6 +456,85 @@ This option controls which themes Emacs does not ask for confirmation to load. S
   (setopt custom-safe-themes t)
 #+end_src
 
+** Fontaine: Setting fonts
+
+#+name: fontaine
+#+begin_src emacs-lisp
+  ;; Define and apply face presets.
+  (setup fontaine
+    ;; Elpaca: :ensure (:wait t) ; To have faces set ASAP during startup
+    (:package fontaine)
+    (:require fontaine)
+
+    (setopt fontaine-latest-state-file
+            (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld")
+            fontaine-presets
+            '((default-wsl2
+               :default-height 180
+               :inherit iosevka-variants)
+              (iosevka-variants
+               ;; NOTE 2025-04-14: On Arch Linux, Iosevka fonts have associated packages
+               ;; for each variant in the AUR (though not necessarily the Nerd Fonts
+               ;; versions).
+               :default-family "IosevkaTermSS 11 Nerd Font" ; 2025-04-14: Must be a bug that there is a space between "SS" and "11" in the font name
+               :fixed-pitch-family "Iosevka Nerd Font"
+               :mode-line-active-family "Iosevka Aile Nerd Font"
+               :mode-line-inactive-family "Iosevka Aile Nerd Font")
+              ;; Below are the shared fallback properties. I leave them there also as
+              ;; reference for all possible properties
+              (t
+               ;; Alternatives:
+               :default-family "IosevkaSS04 Nerd Font"
+               :default-height 165
+
+               ;; Alternatives
+               ;; "Hack Nerd Font Mono"
+               :fixed-pitch-family "Iosevka"
+
+               ;; 2025-04-21: This is my own bespoke setting.  Fontaine works fine with
+               ;; it set; I use it elsewhere (e.g., eat.el).
+               :term-family "IosevkaTermSS04 Nerd Font" ; For terminals
+
+               ;; Alternatives:
+               ;; "LiterationSerif Nerd Font"       ; Variable
+               ;; "Latin Modern Mono Prop"          ; Monospace
+               ;; "Sans Serif"
+               ;; "Open Sans" (1.1 height)
+               :variable-pitch-family "Overpass Nerd Font Propo"
+               :variable-pitch-height 1.2
+
+               :mode-line-active-family "JetBrainsMono Nerd Font"
+               :mode-line-active-height 0.93
+
+               :mode-line-inactive-family "JetBrainsMono Nerd Font"
+               :mode-line-inactive-height 0.93
+
+               :header-line-height 1.0
+
+               :tab-bar-family "Overpass Nerd Font"
+               :tab-bar-height 0.93)))
+
+    ;; 2025-04-14: I manually create the parent directory if it doesn't
+    ;; already exist; this is not yet implemented upstream, so I do it
+    ;; manually here for fresh installs of Emacs.
+    (make-directory (file-name-directory fontaine-latest-state-file) t)
+
+    ;; Set the last preset or fall back to desired style from
+    ;; `fontaine-presets'
+    (when (file-exists-p fontaine-latest-state-file)
+      (fontaine-set-preset (or (fontaine-restore-latest-preset) 'default)))
+
+    ;; Persist the latest font preset when closing/starting Emacs and
+    ;; while switching between themes.
+    (fontaine-mode 1)
+    )
+
+  ;; Leverage with pulsar
+  (with-eval-after-load 'fontaine
+    (with-eval-after-load 'pulsar
+      (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
+#+end_src
+
 ** Theme helpers
 
 #+name: theme-helpers
@@ -441,9 +568,9 @@ This option controls which themes Emacs does not ask for confirmation to load. S
     (:package ef-themes)
     (:require ef-themes)
 
-    (bind-keys ("<f8>" . ef-themes-toggle)
-               ("C-<f8>" . ef-themes-select)
-               ("M-<f8>" . ef-themes-rotate))
+    (:bind-keys ("<f8>" . ef-themes-toggle)
+                ("C-<f8>" . ef-themes-select)
+                ("M-<f8>" . ef-themes-rotate))
     (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
     (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 #+end_src
@@ -462,7 +589,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
           custom-unlispify-tag-names nil)
 #+end_src
 
-** Minibuffer completion
+** Vertico: Minibuffer completion
 
 #+name: vertico
 #+begin_src emacs-lisp
@@ -471,7 +598,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
 
     (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
 
-    (bind-keys
+    (:bind-keys
      ("C-c v r" . vertico-repeat)
      :map vertico-map
      ("C-c v s" . vertico-suspend))
@@ -603,6 +730,8 @@ Vertico provides several extensions:
 
   <<set-load-path>>
 
+  <<bio>>
+
   ;;; Custom
   <<just-set-custom-file>>
 
@@ -622,6 +751,9 @@ Vertico provides several extensions:
   ;;; On.el
   <<on.el>>
 
+  ;;; El-patch
+  <<el-patch>>
+
   ;;; Garbage collection
   <<garbage-collection-post-init>>
 
@@ -629,6 +761,9 @@ Vertico provides several extensions:
 
   ;;;; GCMH
   <<gcmh>>
+
+  ;;; Fontaine
+  <<fontaine>>
 
   ;;; Themes
 
@@ -639,6 +774,9 @@ Vertico provides several extensions:
 
   ;;; Vertico and extensions
   <<vertico>>
+
+  ;;; Startup time
+  <<startup-time>>
 #+end_src
 
 *** COMMENT Android
