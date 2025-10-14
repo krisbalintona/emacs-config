@@ -6,6 +6,7 @@
 #+property: header-args :noweb yes
 
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef
+#  LocalWords:  Minibuffer
 
 * About this document
 
@@ -16,309 +17,6 @@ Preview org blocks with noweb syntax with ~org-babel-expand-src-block~, bound to
 See also the useful command ~org-babel-goto-named-src-block~ and other useful commands in =(org) Key bindings and Useful Functions=.
 
 * Personal information
-
-* Runtime performance
-
-Performance optimizations belonging in =early-init.el=:
-#+name: early-perf-optimizations
-#+begin_src emacs-lisp
-  ;; Graphical elements of Emacs frame
-  <<graphical-elements>>
-
-  ;; Native-compilations settings
-  (setq native-comp-jit-compilation t
-        native-comp-async-report-warnings-errors 'silent ; Show in *Warnings*  buffer but don't show buffer
-        native-comp-async-jobs-number
-        (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1)) ; Use as many cores as possible
-
-  ;; NOTE 2024-09-16: From Doom Emacs.  Usually, a second,
-  ;; case-insensitive pass over `auto-mode-alist' is time wasted.
-  (setopt auto-mode-case-fold nil)
-#+end_src
-
-** Garbage collection
-
-Set ~gc-cons-threshold~ to as high a number as possible just for startup.
-#+name: garbage-collection-early-init
-#+begin_src emacs-lisp
-  ;; Defer garbage collection until after starting Emacs by raising
-  ;; `gc-cons-threshold' to as high a number as possible.  See also my
-  ;; configuration of `gcmh-mode'.
-  (setopt gc-cons-threshold most-positive-fixnum)
-#+end_src
-Then set ~gc-cons-threshold~ to its actual value after initialization:
-#+name: garbage-collection-post-init
-#+begin_src emacs-lisp
-  ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
-  ;; reset the value after initialization.
-  (defun krisb-gc-set-options ()
-    "Set garbage collection options."
-    ;; NOTE 2024-02-11: Please reference
-    ;; https://emacsconf.org/2023/talks/gc/ for a statistically-informed
-    ;; recommendation for GC variables
-    (setopt garbage-collection-messages t
-            gc-cons-threshold (* 16 1024 1024) ; 16 mb
-            gc-cons-percentage 0.15))
-  (add-hook 'after-init-hook #'krisb-gc-set-options)
-#+end_src
-
-Some bespoke commands and helper functions related to garbage collection:
-#+name: garbage-collection-helpers
-#+begin_src emacs-lisp
-  ;; Diagnose memory usage: see how Emacs is using memory. From
-  ;; https://www.reddit.com/r/emacs/comments/ck4zb3/comment/evji1n7/?utm_source=share&utm_medium=web2x&context=3
-  (defun krisb-diagnose-garbage-collect ()
-    "Run `garbage-collect' and print stats about memory usage."
-    (interactive)
-    (message (cl-loop for (type size used free) in (garbage-collect)
-                      for used = (* used size)
-                      for free = (* (or free 0) size)
-                      for total = (file-size-human-readable (+ used free))
-                      for used = (file-size-human-readable used)
-                      for free = (file-size-human-readable free)
-                      concat (format "%s: %s + %s = %s\n" type used free total))))
-#+end_src
-
-*** GCMH
-
-#+name: gcmh
-#+begin_src emacs-lisp
-  ;; Garbage collect when idle.
-  ;; TODO 2025-05-23: Document
-  ;; - `gcmh-low-cons-threshold’
-  (setup gcmh
-    ;; Don't load gcmh if this Emacs uses the incremental garbage
-    ;; collector (IGC) from the MPS branch.
-    (:only-if (not (string-match-p "--with-mps=yes" system-configuration-options)))
-    (:package gcmh)
-
-    (:hide-mode)
-
-    (add-hook 'on-first-buffer-hook #'gcmh-mode)
-    (add-hook 'minibuffer-setup-hook #'krisb-gcmh-minibuffer-setup)
-    (add-hook 'minibuffer-exit-hook #'krisb-gcmh-minibuffer-exit)
-
-    (setopt gcmh-high-cons-threshold gc-cons-threshold
-            ;; If the idle delay is too long, we run the risk of runaway
-            ;; memory usage in busy sessions.  And if it's too low, then
-            ;; we may as well not be using gcmh at all.  See
-            ;; https://emacsconf.org/2023/talks/gc/ for a
-            ;; statistically-informed analysis of GC in Emacs.
-            gcmh-idle-delay 5
-            gcmh-verbose garbage-collection-messages))
-
-  <<gcmh-minibuffer>>
-#+end_src
-
-#+name: gcmh-minibuffer
-#+begin_src emacs-lisp
-  ;; Increase GC threshold when in minibuffer
-  (with-eval-after-load 'gcmh
-    (defvar krisb-gc-minibuffer--original gcmh-high-cons-threshold
-      "Temporary variable to hold `gcmh-high-cons-threshold'")
-
-    (defun krisb-gcmh-minibuffer-setup ()
-      "Temporarily have \"limitless\" `gc-cons-threshold'."
-      (when gcmh-mode
-        (setq gcmh-high-cons-threshold most-positive-fixnum)))
-
-    (defun krisb-gcmh-minibuffer-exit ()
-      "Restore value of `gc-cons-threshold'."
-      (when gcmh-mode
-        (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original)))
-
-    ;; Increase `gc-cons-threshold' while using corfu too, like we do
-    ;; for the minibuffer
-    (with-eval-after-load 'corfu
-      (advice-add 'completion-at-point :before #'krisb-gcmh-minibuffer-setup)
-      (advice-add 'corfu-quit :after #'krisb-gcmh-minibuffer-exit)
-      (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
-#+end_src
-
-* Theming
-
-** Emacs frame
-
-Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorations):
-#+name: graphical-elements
-#+begin_src emacs-lisp
-  ;; NOTE 2024-10-03: From Doom Emacs.  If we're disabling these
-  ;; graphical elements, it's faster to do so before they've been
-  ;; initialized.
-  ;; HACK: I intentionally avoid calling `menu-bar-mode',
-  ;;   `tool-bar-mode', and `scroll-bar-mode' because their manipulation
-  ;;   of frame parameters can trigger/queue a superfluous (and
-  ;;   expensive, depending on the window system) frame redraw at
-  ;;   startup. The variables must be set to `nil' as well so users
-  ;;   don't have to call the functions twice to re-enable them.
-  (push '(menu-bar-lines . 0)   default-frame-alist)
-  (push '(tool-bar-lines . 0)   default-frame-alist)
-  (push '(vertical-scroll-bars) default-frame-alist)
-  (setq menu-bar-mode nil
-        tool-bar-mode nil
-        scroll-bar-mode nil)
-
-  ;; Frame defaults
-  (setq frame-resize-pixelwise t
-        frame-inhibit-implied-resize t
-        frame-title-format '("%b")
-        use-dialog-box t                  ; For mouse events
-        use-file-dialog nil
-        inhibit-x-resources t) ; REVIEW 2024-10-03: Not sure the precise effect
-
-  ;; Startup screen
-  (setopt inhibit-splash-screen t
-          inhibit-startup-screen t
-          inhibit-startup-echo-area-message user-login-name ; Read the docstring
-          inhibit-startup-buffer-menu t)
-#+end_src
-
-** User option: Make all themes safe
-
-This option controls which themes Emacs does not ask for confirmation to load. Setting it to ~t~ means Emacs never asks for confirmation:
-#+name: safe-themes
-#+begin_src emacs-lisp
-  ;; Make all themes safe
-  (setopt custom-safe-themes t)
-#+end_src
-
-** Theme helpers
-
-#+name: theme-helpers
-#+begin_src emacs-lisp
-  (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
-    "Enables LIGHT-THEME or DARK-THEME based on time of day.
-  LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
-
-  Night time begins at NIGHT-START hour and daytime begins at DAY-START
-  hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
-  default to 8."
-    (interactive)
-    (let ((hour (string-to-number (format-time-string "%H")))
-          (day-start (or day-start 8))
-          (night-start (or night-start 19)))
-      ;; Dark theme between NIGHT-START and DAY-START
-      (load-theme (if (or (<= night-start hour) (<= hour day-start))
-                      dark-theme light-theme)))
-    ;; Disable the remainder of the enabled themes.  We do this at the
-    ;; end to prevent going from a state of having a theme to having no
-    ;; theme, which would often cause a sudden drastic but momentary
-    ;; change in color (e.g. dark theme to light theme)
-    (mapc #'disable-theme (cdr custom-enabled-themes)))
-#+end_src
-
-** Ef-themes
-
-#+name: ef-themes
-#+begin_src emacs-lisp
-  (setup ef-themes
-    (:package ef-themes)
-    (:require ef-themes)
-
-    (bind-keys ("<f8>" . ef-themes-toggle)
-               ("C-<f8>" . ef-themes-select)
-               ("M-<f8>" . ef-themes-rotate))
-    (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
-    (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
-#+end_src
-
-* Customize
-
-#+name: customize-buffers
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-24: Document these options:
-  ;; - `custom-buffer-style’
-  ;; - `custom-search-field' -- useful for Android and other touchscreen
-  ;;                            devices though
-  (setopt custom-theme-allow-multiple-selections t
-          custom-unlispify-tag-names nil)
-#+end_src
-
-* UI
-
-** Minibuffer completion
-
-#+name: vertico
-#+begin_src emacs-lisp
-  (setup vertico
-    (:package vertico)
-
-    (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
-
-    (bind-keys
-     ("C-c v r" . vertico-repeat)
-     :map vertico-map
-     ("C-c v s" . vertico-suspend))
-
-    (vertico-mode 1))
-
-  <<vertico-extensions>>
-#+end_src
-
-Vertico provides several extensions:
-#+name: vertico-extensions
-#+begin_src emacs-lisp
-  ;; More convenient path modification commands
-  (setup vertico-directory
-    (:load-after vertico)
-
-    (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
-
-  ;; On-demand change the type of UI
-  (setup vertico-multiform
-    (:load-after vertico)
-
-    (add-hook 'vertico-mode-hook #'vertico-multiform-mode)
-
-    (setopt vertico-multiform-categories
-            '((buffer flat (vertico-sort-function . nil))
-              (project-buffer flat (vertico-sort-function . nil))
-              (file grid (:keymap . vertico-directory-map))
-              (project-file grid)                ; For `project-find-file'
-              (command flat (vertico-flat-annotate . nil))
-              (symbol-help flat)
-              (kill-ring (vertico-sort-function . nil))
-              (color (vertico-sort-function . vertico-sort-history-length-alpha))
-              (jinx grid
-                    (vertico-grid-annotate . 20)
-                    (vertico-grid-max-columns . 12)
-                    (vertico-grid-separator
-                     . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
-            vertico-multiform-commands
-            `((pdf-view-goto-label
-               (vertico-sort-function . nil))
-              (".+-history" (vertico-sort-function . nil))
-              (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
-               (vertico-sort-function . nil))
-              (,(rx bol (literal "customize-"))
-               flat)
-              (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
-                            (literal "load-library")))
-               flat)
-              (,(rx bol (literal "consult-history"))
-               (vertico-sort-function . nil))
-              ;; NOTE 2025-06-18: Should these commands have a category like
-              ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
-              ;; perhaps I can propose a patch for it.
-              (,(rx (or "find-function"
-                        "find-library"
-                        "find-variable"))
-               flat))))
-
-  ;; A minimal, Ido-like UI
-  (setup vertico-flat
-    (:load-after vertico)
-
-    (setopt vertico-flat-annotate t
-            vertico-flat-format
-            `( :multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
-               :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
-               :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
-               :separator #("  |  " 0 5 (face minibuffer-prompt))
-               :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
-               :no-match ,(propertize "\n[No match]" 'face 'shadow)
-               :spacer #(" " 0 1 (cursor t)))))
-#+end_src
 
 * Configuration itself
 
@@ -545,6 +243,309 @@ We also do this:
     (:require on))
 #+end_src
 
+* Runtime performance
+
+Performance optimizations belonging in =early-init.el=:
+#+name: early-perf-optimizations
+#+begin_src emacs-lisp
+  ;; Graphical elements of Emacs frame
+  <<graphical-elements>>
+
+  ;; Native-compilations settings
+  (setq native-comp-jit-compilation t
+        native-comp-async-report-warnings-errors 'silent ; Show in *Warnings*  buffer but don't show buffer
+        native-comp-async-jobs-number
+        (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1)) ; Use as many cores as possible
+
+  ;; NOTE 2024-09-16: From Doom Emacs.  Usually, a second,
+  ;; case-insensitive pass over `auto-mode-alist' is time wasted.
+  (setopt auto-mode-case-fold nil)
+#+end_src
+
+** Garbage collection
+
+Set ~gc-cons-threshold~ to as high a number as possible just for startup.
+#+name: garbage-collection-early-init
+#+begin_src emacs-lisp
+  ;; Defer garbage collection until after starting Emacs by raising
+  ;; `gc-cons-threshold' to as high a number as possible.  See also my
+  ;; configuration of `gcmh-mode'.
+  (setopt gc-cons-threshold most-positive-fixnum)
+#+end_src
+Then set ~gc-cons-threshold~ to its actual value after initialization:
+#+name: garbage-collection-post-init
+#+begin_src emacs-lisp
+  ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
+  ;; reset the value after initialization.
+  (defun krisb-gc-set-options ()
+    "Set garbage collection options."
+    ;; NOTE 2024-02-11: Please reference
+    ;; https://emacsconf.org/2023/talks/gc/ for a statistically-informed
+    ;; recommendation for GC variables
+    (setopt garbage-collection-messages t
+            gc-cons-threshold (* 16 1024 1024) ; 16 mb
+            gc-cons-percentage 0.15))
+  (add-hook 'after-init-hook #'krisb-gc-set-options)
+#+end_src
+
+Some bespoke commands and helper functions related to garbage collection:
+#+name: garbage-collection-helpers
+#+begin_src emacs-lisp
+  ;; Diagnose memory usage: see how Emacs is using memory. From
+  ;; https://www.reddit.com/r/emacs/comments/ck4zb3/comment/evji1n7/?utm_source=share&utm_medium=web2x&context=3
+  (defun krisb-diagnose-garbage-collect ()
+    "Run `garbage-collect' and print stats about memory usage."
+    (interactive)
+    (message (cl-loop for (type size used free) in (garbage-collect)
+                      for used = (* used size)
+                      for free = (* (or free 0) size)
+                      for total = (file-size-human-readable (+ used free))
+                      for used = (file-size-human-readable used)
+                      for free = (file-size-human-readable free)
+                      concat (format "%s: %s + %s = %s\n" type used free total))))
+#+end_src
+
+*** GCMH
+
+#+name: gcmh
+#+begin_src emacs-lisp
+  ;; Garbage collect when idle.
+  ;; TODO 2025-05-23: Document
+  ;; - `gcmh-low-cons-threshold’
+  (setup gcmh
+    ;; Don't load gcmh if this Emacs uses the incremental garbage
+    ;; collector (IGC) from the MPS branch.
+    (:only-if (not (string-match-p "--with-mps=yes" system-configuration-options)))
+    (:package gcmh)
+
+    (:hide-mode)
+
+    (add-hook 'on-first-buffer-hook #'gcmh-mode)
+    (add-hook 'minibuffer-setup-hook #'krisb-gcmh-minibuffer-setup)
+    (add-hook 'minibuffer-exit-hook #'krisb-gcmh-minibuffer-exit)
+
+    (setopt gcmh-high-cons-threshold gc-cons-threshold
+            ;; If the idle delay is too long, we run the risk of runaway
+            ;; memory usage in busy sessions.  And if it's too low, then
+            ;; we may as well not be using gcmh at all.  See
+            ;; https://emacsconf.org/2023/talks/gc/ for a
+            ;; statistically-informed analysis of GC in Emacs.
+            gcmh-idle-delay 5
+            gcmh-verbose garbage-collection-messages))
+
+  <<gcmh-minibuffer>>
+#+end_src
+
+#+name: gcmh-minibuffer
+#+begin_src emacs-lisp
+  ;; Increase GC threshold when in minibuffer
+  (with-eval-after-load 'gcmh
+    (defvar krisb-gc-minibuffer--original gcmh-high-cons-threshold
+      "Temporary variable to hold `gcmh-high-cons-threshold'")
+
+    (defun krisb-gcmh-minibuffer-setup ()
+      "Temporarily have \"limitless\" `gc-cons-threshold'."
+      (when gcmh-mode
+        (setq gcmh-high-cons-threshold most-positive-fixnum)))
+
+    (defun krisb-gcmh-minibuffer-exit ()
+      "Restore value of `gc-cons-threshold'."
+      (when gcmh-mode
+        (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original)))
+
+    ;; Increase `gc-cons-threshold' while using corfu too, like we do
+    ;; for the minibuffer
+    (with-eval-after-load 'corfu
+      (advice-add 'completion-at-point :before #'krisb-gcmh-minibuffer-setup)
+      (advice-add 'corfu-quit :after #'krisb-gcmh-minibuffer-exit)
+      (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
+#+end_src
+
+* Theming
+
+** The Emacs frame
+
+Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorations):
+#+name: graphical-elements
+#+begin_src emacs-lisp
+  ;; NOTE 2024-10-03: From Doom Emacs.  If we're disabling these
+  ;; graphical elements, it's faster to do so before they've been
+  ;; initialized.
+  ;; HACK: I intentionally avoid calling `menu-bar-mode',
+  ;;   `tool-bar-mode', and `scroll-bar-mode' because their manipulation
+  ;;   of frame parameters can trigger/queue a superfluous (and
+  ;;   expensive, depending on the window system) frame redraw at
+  ;;   startup. The variables must be set to `nil' as well so users
+  ;;   don't have to call the functions twice to re-enable them.
+  (push '(menu-bar-lines . 0)   default-frame-alist)
+  (push '(tool-bar-lines . 0)   default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist)
+  (setq menu-bar-mode nil
+        tool-bar-mode nil
+        scroll-bar-mode nil)
+
+  ;; Frame defaults
+  (setq frame-resize-pixelwise t
+        frame-inhibit-implied-resize t
+        frame-title-format '("%b")
+        use-dialog-box t                  ; For mouse events
+        use-file-dialog nil
+        inhibit-x-resources t) ; REVIEW 2024-10-03: Not sure the precise effect
+
+  ;; Startup screen
+  (setopt inhibit-splash-screen t
+          inhibit-startup-screen t
+          inhibit-startup-echo-area-message user-login-name ; Read the docstring
+          inhibit-startup-buffer-menu t)
+#+end_src
+
+** User option: Make all themes safe
+
+This option controls which themes Emacs does not ask for confirmation to load. Setting it to ~t~ means Emacs never asks for confirmation:
+#+name: safe-themes
+#+begin_src emacs-lisp
+  ;; Make all themes safe
+  (setopt custom-safe-themes t)
+#+end_src
+
+** Theme helpers
+
+#+name: theme-helpers
+#+begin_src emacs-lisp
+  (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
+    "Enables LIGHT-THEME or DARK-THEME based on time of day.
+  LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
+
+  Night time begins at NIGHT-START hour and daytime begins at DAY-START
+  hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
+  default to 8."
+    (interactive)
+    (let ((hour (string-to-number (format-time-string "%H")))
+          (day-start (or day-start 8))
+          (night-start (or night-start 19)))
+      ;; Dark theme between NIGHT-START and DAY-START
+      (load-theme (if (or (<= night-start hour) (<= hour day-start))
+                      dark-theme light-theme)))
+    ;; Disable the remainder of the enabled themes.  We do this at the
+    ;; end to prevent going from a state of having a theme to having no
+    ;; theme, which would often cause a sudden drastic but momentary
+    ;; change in color (e.g. dark theme to light theme)
+    (mapc #'disable-theme (cdr custom-enabled-themes)))
+#+end_src
+
+** Ef-themes
+
+#+name: ef-themes
+#+begin_src emacs-lisp
+  (setup ef-themes
+    (:package ef-themes)
+    (:require ef-themes)
+
+    (bind-keys ("<f8>" . ef-themes-toggle)
+               ("C-<f8>" . ef-themes-select)
+               ("M-<f8>" . ef-themes-rotate))
+    (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
+    (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
+#+end_src
+
+* General interfaces
+
+** Customize
+
+#+name: customize-buffers
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-24: Document these options:
+  ;; - `custom-buffer-style’
+  ;; - `custom-search-field' -- useful for Android and other touchscreen
+  ;;                            devices though
+  (setopt custom-theme-allow-multiple-selections t
+          custom-unlispify-tag-names nil)
+#+end_src
+
+** Minibuffer completion
+
+#+name: vertico
+#+begin_src emacs-lisp
+  (setup vertico
+    (:package vertico)
+
+    (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+
+    (bind-keys
+     ("C-c v r" . vertico-repeat)
+     :map vertico-map
+     ("C-c v s" . vertico-suspend))
+
+    (vertico-mode 1))
+
+  <<vertico-extensions>>
+#+end_src
+
+Vertico provides several extensions:
+#+name: vertico-extensions
+#+begin_src emacs-lisp
+  ;; More convenient path modification commands
+  (setup vertico-directory
+    (:load-after vertico)
+
+    (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
+
+  ;; On-demand change the type of UI
+  (setup vertico-multiform
+    (:load-after vertico)
+
+    (add-hook 'vertico-mode-hook #'vertico-multiform-mode)
+
+    (setopt vertico-multiform-categories
+            '((buffer flat (vertico-sort-function . nil))
+              (project-buffer flat (vertico-sort-function . nil))
+              (file grid (:keymap . vertico-directory-map))
+              (project-file grid)                ; For `project-find-file'
+              (command flat (vertico-flat-annotate . nil))
+              (symbol-help flat)
+              (kill-ring (vertico-sort-function . nil))
+              (color (vertico-sort-function . vertico-sort-history-length-alpha))
+              (jinx grid
+                    (vertico-grid-annotate . 20)
+                    (vertico-grid-max-columns . 12)
+                    (vertico-grid-separator
+                     . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
+            vertico-multiform-commands
+            `((pdf-view-goto-label
+               (vertico-sort-function . nil))
+              (".+-history" (vertico-sort-function . nil))
+              (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
+               (vertico-sort-function . nil))
+              (,(rx bol (literal "customize-"))
+               flat)
+              (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
+                            (literal "load-library")))
+               flat)
+              (,(rx bol (literal "consult-history"))
+               (vertico-sort-function . nil))
+              ;; NOTE 2025-06-18: Should these commands have a category like
+              ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
+              ;; perhaps I can propose a patch for it.
+              (,(rx (or "find-function"
+                        "find-library"
+                        "find-variable"))
+               flat))))
+
+  ;; A minimal, Ido-like UI
+  (setup vertico-flat
+    (:load-after vertico)
+
+    (setopt vertico-flat-annotate t
+            vertico-flat-format
+            `( :multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
+               :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
+               :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
+               :separator #("  |  " 0 5 (face minibuffer-prompt))
+               :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
+               :no-match ,(propertize "\n[No match]" 'face 'shadow)
+               :spacer #(" " 0 1 (cursor t)))))
+#+end_src
+
 * Domains
 
 ** Programming
@@ -575,7 +576,7 @@ We also do this:
 
 *** PDFs
 
-* Platforms
+* Deployments
 
 ** Platform-specific configurations
 
