@@ -36,6 +36,8 @@
       use-file-dialog nil
       inhibit-x-resources t) ; REVIEW 2024-10-03: Not sure the precise effect
 
+(add-to-list 'default-frame-alist '(alpha-background . 100))
+
 ;; Startup screen
 (setopt inhibit-splash-screen t
         inhibit-startup-screen t

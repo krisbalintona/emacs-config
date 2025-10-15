@@ -5907,15 +5907,9 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; Recenter upon `next-error'
 (setopt next-error-recenter '(4))
 
-;; Disable the ring-bell (it's annoying)
-(setopt ring-bell-function #'ignore)
-
 ;; Enable `delete-selection-mode'.  When selecting text, if typing new
 ;; text, replace the selected text with the new text
 (delete-selection-mode t)
-
-;; Show context menu from right-click
-(when (display-graphic-p) (context-menu-mode 1))
 
 ;; Avoid collision of mouse with point
 (mouse-avoidance-mode 'jump)
@@ -5949,9 +5943,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; breaking in the middle of a word.
 (setopt word-wrap t)
 
-;; Don’t warn when advising
-(setopt ad-redefinition-action 'accept)
-
 ;; Prefer UTF-8 file and selection encoding
 (prefer-coding-system 'utf-8)
 ;; The clipboard on Windows is often a wider encoding (UTF-16), so
@@ -5973,44 +5964,10 @@ is to produce the opposite effect of both `fill-paragraph' and
 (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
   (add-hook mode #'krisb-sentence-end-double-space-setup))
 
-;; Trash
-(setopt trash-directory (no-littering-expand-var-file-name "trash")
-        delete-by-moving-to-trash t)
-
-(defun krisb-empty-trash ()
-  "Empty the trash directory."
-  (interactive)
-  (if delete-by-moving-to-trash
-      (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
-        (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
-          (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
-    (message "delete-by-moving-to-trash is nil; not emptying trash")))
-
-;; Frame background transparency toggle
-(add-to-list 'default-frame-alist '(alpha-background . 100))
-(defun krisb-toggle-window-transparency (&optional arg)
-  "Toggle the value of `alpha-background'.
-Toggles between 100 and 72 by default.  Can choose which value to change
-to if called with ARG, or any prefix argument."
-  (interactive "P")
-  (let ((transparency (pcase arg
-                        ((pred numberp) arg)
-                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
-                        (_
-                         (pcase (frame-parameter nil 'alpha-background)
-                           (72 100)
-                           (100 72)
-                           (t 100))))))
-    (set-frame-parameter nil 'alpha-background transparency)))
-(bind-key "<f9>" #'krisb-toggle-window-transparency)
-
 ;; `duplicate-dwim' binding
 ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
 ;; `duplicate-region-final-position' user options
 (bind-key "C-x ;" #'duplicate-dwim)
-
-;; Enable all disabled commands
-(setopt disabled-command-function nil)
 
 ;; Don't prompt user to confirm killing running sub-processes when
 ;; quitting Emacs

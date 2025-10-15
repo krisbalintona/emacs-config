@@ -220,6 +220,12 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
 ;;; Miscellaneous options for built-ins
 (setup emacs
+ ;; Disable the ring-bell (it's annoying)
+ (setopt ring-bell-function nil)
+ 
+ ;; Show context menu from right-click
+ (when (display-graphic-p) (context-menu-mode 1))
+ 
  ;; TODO 2025-10-14: Document:
  ;; `history-delete-duplicates'
  (setopt history-length 1000)
@@ -232,7 +238,30 @@ that.  Otherwise, remove it from `minor-mode-alist'."
    (setopt interprogram-cut-function
            (lambda (text)
              (start-process "wl-copy" nil "wl-copy"
-                            "--trim-newline" "--type" "text/plain;charset=utf-8" text)))))
+                            "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
+ 
+ ;; Move files into trash directory
+ (setopt trash-directory (no-littering-expand-var-file-name "trash")
+         delete-by-moving-to-trash t)
+ 
+ (defun krisb-empty-trash ()
+   "Empty the trash directory."
+   (interactive)
+   (if delete-by-moving-to-trash
+       (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
+         (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
+           (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
+     (message "delete-by-moving-to-trash is nil; not emptying trash")))
+ 
+ ;; Enable all disabled commands
+ (setopt disabled-command-function nil)
+ 
+ ;; Don’t warn when advising
+ (setopt ad-redefinition-action 'accept)
+ 
+ ;; Word wrapping.  Continue wrapped lines at whitespace rather than
+ ;; breaking in the middle of a word.
+ (setopt word-wrap t))
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
@@ -403,6 +432,24 @@ default to 8."
   ;; theme, which would often cause a sudden drastic but momentary
   ;; change in color (e.g. dark theme to light theme)
   (mapc #'disable-theme (cdr custom-enabled-themes)))
+
+
+;; Frame background transparency toggle
+(defun krisb-frame-toggle-transparency (&optional arg)
+  "Toggle the value of `alpha-background'.
+Toggles between 100 and 72 by default.  Can choose which value to change
+to if called with ARG, or any prefix argument."
+  (interactive "P")
+  (let ((transparency (pcase arg
+                        ((pred numberp) arg)
+                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
+                        (_
+                         (pcase (frame-parameter nil 'alpha-background)
+                           (72 100)
+                           (100 72)
+                           (t 100))))))
+    (set-frame-parameter nil 'alpha-background transparency)))
+(bind-key "<f9>" #'krisb-frame-toggle-transparency)
 
 ;;;; Ef-themes
 (setup ef-themes

@@ -483,12 +483,50 @@ Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorati
         use-file-dialog nil
         inhibit-x-resources t) ; REVIEW 2024-10-03: Not sure the precise effect
 
+  <<frame-transparency>>
+
   ;; Startup screen
   (setopt inhibit-splash-screen t
           inhibit-startup-screen t
           inhibit-startup-echo-area-message user-login-name ; Read the docstring
           inhibit-startup-buffer-menu t)
 #+end_src
+
+*** Transparency
+
+#+name: frame-transparency
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist '(alpha-background . 100))
+#+end_src
+
+#+name: frame-transparency-toggle
+#+begin_src emacs-lisp
+
+  ;; Frame background transparency toggle
+  (defun krisb-frame-toggle-transparency (&optional arg)
+    "Toggle the value of `alpha-background'.
+  Toggles between 100 and 72 by default.  Can choose which value to change
+  to if called with ARG, or any prefix argument."
+    (interactive "P")
+    (let ((transparency (pcase arg
+                          ((pred numberp) arg)
+                          ((pred car) (read-number "Change the transparency to which value (0-100)? "))
+                          (_
+                           (pcase (frame-parameter nil 'alpha-background)
+                             (72 100)
+                             (100 72)
+                             (t 100))))))
+      (set-frame-parameter nil 'alpha-background transparency)))
+  (bind-key "<f9>" #'krisb-frame-toggle-transparency)
+#+end_src
+
+** Disable the ring bell
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Disable the ring-bell (it's annoying)
+  (setopt ring-bell-function nil)
+#+end_src
+See also ~(elisp) Beeping~.
 
 ** User option: Make all themes safe
 
@@ -618,6 +656,13 @@ This option controls which themes Emacs does not ask for confirmation to load. S
 #+end_src
 
 * General interfaces
+
+** Context menu on right-click
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Show context menu from right-click
+  (when (display-graphic-p) (context-menu-mode 1))
+#+end_src
 
 ** Customize
 
@@ -860,6 +905,45 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   <<display-buffer-alist>>
 #+end_src
 
+* Trash
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Move files into trash directory
+  (setopt trash-directory (no-littering-expand-var-file-name "trash")
+          delete-by-moving-to-trash t)
+
+  (defun krisb-empty-trash ()
+    "Empty the trash directory."
+    (interactive)
+    (if delete-by-moving-to-trash
+        (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
+          (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
+            (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
+      (message "delete-by-moving-to-trash is nil; not emptying trash")))
+#+end_src
+
+* Disabled commands
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Enable all disabled commands
+  (setopt disabled-command-function nil)
+#+end_src
+
+* Don't warn when advising functions
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Don’t warn when advising
+  (setopt ad-redefinition-action 'accept)
+#+end_src
+
+* Word wrap
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Word wrapping.  Continue wrapped lines at whitespace rather than
+  ;; breaking in the middle of a word.
+  (setopt word-wrap t)
+#+end_src
+
 * Domains
 
 ** Programming
@@ -997,6 +1081,8 @@ Tell ~display-buffer-alist~ where to show help buffers:
   ;;; Themes
 
   <<theme-helpers>>
+
+  <<frame-transparency-toggle>>
 
   ;;;; Ef-themes
   <<ef-themes>>
