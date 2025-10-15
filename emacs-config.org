@@ -21,53 +21,9 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
           user-mail-address "krisbalintona@gmail.com")
 #+end_src
 
-* Configuration itself
+* Emacs package management
 
-** Bespoke configuration-wide variables and helpers
-
-#+name: config-helpers
-#+begin_src emacs-lisp
-  (defun krisb-wayland-p ()
-      "Return non-nil if Emacs is under Wayland."
-      (getenv "WAYLAND_DISPLAY"))
-#+end_src
-
-** Load path for personal libraries
-
-#+name: set-load-path
-#+begin_src emacs-lisp
-  ;;; Add modules and personal lisp files to `load-path'
-  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
-                      (expand-file-name "lisp" user-emacs-directory)))
-    (add-to-list 'load-path path))
-#+end_src
-
-** Dealing with ~custom-file~
-
-We could use a snippet like the one below to set and load the ~custom-file~:
-#+name: set-and-load-custom-file
-#+begin_src emacs-lisp
-  ;;; Set and load custom file
-  (setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
-  (when (file-exists-p custom-file)
-    (load custom-file))
-#+end_src
-
-However, we opt to avoid loading any customization set there so that changes set in one Emacs session don't accidentally persist across confusing me and potentially interfering with, e.g., my package.el configuration. This is one method to do so:
-#+name: just-set-custom-file
-#+begin_src emacs-lisp
-  ;;; Set `custom-file' but do not load it
-  ;; Write `custom-file' in a temporary directory but don't load it.
-  ;; This is just to avoid writing Custom options to the
-  ;; `user-init-file'.  See
-  ;; https://protesilaos.com/emacs/dotemacs#h:f2ffe0e9-a58d-4bba-9831-cc35940ea83f
-  ;; for a more detailed explanation.
-  (setopt custom-file (make-temp-file "emacs-custom-file-" nil ".el"))
-#+end_src
-
-** Package management
-
-*** Package.el
+** Package.el
 
 #+name: package.el
 #+begin_src emacs-lisp
@@ -84,10 +40,31 @@ However, we opt to avoid loading any customization set there so that changes set
           load-prefer-newer t)
 #+end_src
 
-*** Elpaca
+** Elpaca
 
 #+name: elpaca
 #+begin_src emacs-lisp
+#+end_src
+
+* Meta-configuration
+
+** Bespoke helpers and variables
+
+#+name: config-helpers
+#+begin_src emacs-lisp
+  (defun krisb-wayland-p ()
+      "Return non-nil if Emacs is under Wayland."
+      (getenv "WAYLAND_DISPLAY"))
+#+end_src
+
+** COMMENT Load path for personal libraries
+
+#+name: set-load-path
+#+begin_src emacs-lisp
+  ;;; Add modules and personal lisp files to `load-path'
+  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
+                      (expand-file-name "lisp" user-emacs-directory)))
+    (add-to-list 'load-path path))
 #+end_src
 
 ** Setup.el: A transparent =use-package= alternative
@@ -304,15 +281,27 @@ There is a problem when we use the typical ~(advice-add ... :override ...)~, nam
 
 # TODO 2025-06-03: Describe relation to https://elpa.gnu.org/packages/advice-patch.html.
 
-** Report total startup time
+** Dealing with ~custom-file~
 
-#+name: startup-time
+We could use a snippet like the one below to set and load the ~custom-file~:
+#+name: set-and-load-custom-file
 #+begin_src emacs-lisp
-  ;; Message for total init time after startup
-  (defun krisb-startup-time ()
-    "Report Emacs startup time."
-    (message "Total startup time: %s" (emacs-init-time)))
-  (add-hook 'after-init-hook #'krisb-startup-time)
+  ;;; Set and load custom file
+  (setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
+  (when (file-exists-p custom-file)
+    (load custom-file))
+#+end_src
+
+However, we opt to avoid loading any customization set there so that changes set in one Emacs session don't accidentally persist across confusing me and potentially interfering with, e.g., my package.el configuration. This is one method to do so:
+#+name: just-set-custom-file
+#+begin_src emacs-lisp
+  ;;; Set `custom-file' but do not load it
+  ;; Write `custom-file' in a temporary directory but don't load it.
+  ;; This is just to avoid writing Custom options to the
+  ;; `user-init-file'.  See
+  ;; https://protesilaos.com/emacs/dotemacs#h:f2ffe0e9-a58d-4bba-9831-cc35940ea83f
+  ;; for a more detailed explanation.
+  (setopt custom-file (make-temp-file "emacs-custom-file-" nil ".el"))
 #+end_src
 
 * Runtime performance
@@ -333,6 +322,7 @@ Performance optimizations belonging in =early-init.el=:
   ;; case-insensitive pass over `auto-mode-alist' is time wasted.
   (setopt auto-mode-case-fold nil)
 #+end_src
+See also [[graphical-elements][these settings place inside =early-init.el=]].
 
 ** Garbage collection
 
@@ -434,6 +424,33 @@ Some bespoke commands and helper functions related to garbage collection:
       (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
 #+end_src
 
+** Report total startup time
+
+#+name: startup-time
+#+begin_src emacs-lisp
+  ;; Message for total init time after startup
+  (defun krisb-startup-time ()
+    "Report Emacs startup time."
+    (message "Total startup time: %s" (emacs-init-time)))
+  (add-hook 'after-init-hook #'krisb-startup-time)
+#+end_src
+
+* Remove Emacs training wheels
+
+** Don't warn when using disabled commands
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Enable all disabled commands
+  (setopt disabled-command-function nil)
+#+end_src
+
+** Don't warn when advising functions
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Don’t warn when advising
+  (setopt ad-redefinition-action 'accept)
+#+end_src
+
 * System path
 
 #+name: exec-path-from-shell
@@ -452,7 +469,7 @@ Some bespoke commands and helper functions related to garbage collection:
     (exec-path-from-shell-initialize))
 #+end_src
 
-* Theming
+* Graphical and auditory elements
 
 ** The Emacs frame
 
@@ -520,15 +537,50 @@ Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorati
   (bind-key "<f9>" #'krisb-frame-toggle-transparency)
 #+end_src
 
-** Disable the ring bell
+** Style
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc
-  ;; Disable the ring-bell (it's annoying)
-  (setopt ring-bell-function nil)
+*** Themes
+
+Helpers:
+#+name: theme-helpers
+#+begin_src emacs-lisp
+  (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
+    "Enables LIGHT-THEME or DARK-THEME based on time of day.
+  LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
+
+  Night time begins at NIGHT-START hour and daytime begins at DAY-START
+  hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
+  default to 8."
+    (interactive)
+    (let ((hour (string-to-number (format-time-string "%H")))
+          (day-start (or day-start 8))
+          (night-start (or night-start 19)))
+      ;; Dark theme between NIGHT-START and DAY-START
+      (load-theme (if (or (<= night-start hour) (<= hour day-start))
+                      dark-theme light-theme)))
+    ;; Disable the remainder of the enabled themes.  We do this at the
+    ;; end to prevent going from a state of having a theme to having no
+    ;; theme, which would often cause a sudden drastic but momentary
+    ;; change in color (e.g. dark theme to light theme)
+    (mapc #'disable-theme (cdr custom-enabled-themes)))
 #+end_src
-See also ~(elisp) Beeping~.
 
-** User option: Make all themes safe
+**** Ef-themes
+
+#+name: ef-themes
+#+begin_src emacs-lisp
+  (setup ef-themes
+    (:package ef-themes)
+    (:require)
+
+    (:bind-keys ("<f8>" . ef-themes-toggle)
+                ("C-<f8>" . ef-themes-select)
+                ("M-<f8>" . ef-themes-rotate))
+    (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
+    (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
+#+end_src
+
+*** User option: Make all themes safe
 
 This option controls which themes Emacs does not ask for confirmation to load. Setting it to ~t~ means Emacs never asks for confirmation:
 #+name: safe-themes
@@ -537,7 +589,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
   (setopt custom-safe-themes t)
 #+end_src
 
-** Fontaine: Setting fonts
+*** Fontaine: Setting fonts
 
 #+name: fontaine
 #+begin_src emacs-lisp
@@ -615,72 +667,52 @@ This option controls which themes Emacs does not ask for confirmation to load. S
       (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 #+end_src
 
-** Theme helpers
+*** Word wrap
 
-#+name: theme-helpers
-#+begin_src emacs-lisp
-  (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
-    "Enables LIGHT-THEME or DARK-THEME based on time of day.
-  LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Word wrapping.  Continue wrapped lines at whitespace rather than
+  ;; breaking in the middle of a word.
+  (setopt word-wrap t)
+#+end_src
 
-  Night time begins at NIGHT-START hour and daytime begins at DAY-START
-  hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
-  default to 8."
+** Disable the ring bell
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Disable the ring-bell (it's annoying)
+  (setopt ring-bell-function #'ignore)
+#+end_src
+See also ~(elisp) Beeping~.
+
+* General file handling
+
+** Trash
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Move files into trash directory
+  (setopt trash-directory (no-littering-expand-var-file-name "trash")
+          delete-by-moving-to-trash t)
+
+  (defun krisb-empty-trash ()
+    "Empty the trash directory."
     (interactive)
-    (let ((hour (string-to-number (format-time-string "%H")))
-          (day-start (or day-start 8))
-          (night-start (or night-start 19)))
-      ;; Dark theme between NIGHT-START and DAY-START
-      (load-theme (if (or (<= night-start hour) (<= hour day-start))
-                      dark-theme light-theme)))
-    ;; Disable the remainder of the enabled themes.  We do this at the
-    ;; end to prevent going from a state of having a theme to having no
-    ;; theme, which would often cause a sudden drastic but momentary
-    ;; change in color (e.g. dark theme to light theme)
-    (mapc #'disable-theme (cdr custom-enabled-themes)))
+    (if delete-by-moving-to-trash
+        (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
+          (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
+            (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
+      (message "delete-by-moving-to-trash is nil; not emptying trash")))
 #+end_src
 
-** Ef-themes
+* Interfaces
 
-#+name: ef-themes
-#+begin_src emacs-lisp
-  (setup ef-themes
-    (:package ef-themes)
-    (:require)
+** Context menu
 
-    (:bind-keys ("<f8>" . ef-themes-toggle)
-                ("C-<f8>" . ef-themes-select)
-                ("M-<f8>" . ef-themes-rotate))
-    (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
-    (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
-#+end_src
-
-* General interfaces
-
-** Context menu on right-click
-
+A right-click menu:
 #+begin_src emacs-lisp :noweb-ref emacs-misc
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
 #+end_src
 
-** Customize
-
-#+name: customize-buffers
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-24: Document these options:
-  ;; - `custom-buffer-style’
-  ;; - `custom-search-field' -- useful for Android and other touchscreen
-  ;;                            devices though
-  (setopt custom-theme-allow-multiple-selections t
-          custom-unlispify-tag-names nil)
-#+end_src
-
 ** Completion
-
-*** Minibuffer
-
-**** Minibuffer History
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc
   ;; TODO 2025-10-14: Document:
@@ -688,7 +720,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
   (setopt history-length 1000)
 #+end_src
 
-**** Vertico: Alternative minibuffer completion interface
+*** Vertico: Minibuffer completion interface
 
 #+name: vertico
 #+begin_src emacs-lisp
@@ -772,9 +804,7 @@ Vertico provides several extensions:
                :spacer #(" " 0 1 (cursor t)))))
 #+end_src
 
-*** Inline
-
-**** Corfu: Inline completion interface
+*** Corfu: Inline completion interface
 
 #+name: corfu
 #+begin_src emacs-lisp
@@ -859,6 +889,18 @@ Vertico provides several extensions:
             corfu-popupinfo-min-width 25))
 #+end_src
 
+** Customize
+
+#+name: customize-buffers
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-24: Document these options:
+  ;; - `custom-buffer-style’
+  ;; - `custom-search-field' -- useful for Android and other touchscreen
+  ;;                            devices though
+  (setopt custom-theme-allow-multiple-selections t
+          custom-unlispify-tag-names nil)
+#+end_src
+
 * Clipboard
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc
@@ -905,56 +947,13 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   <<display-buffer-alist>>
 #+end_src
 
-* Trash
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc
-  ;; Move files into trash directory
-  (setopt trash-directory (no-littering-expand-var-file-name "trash")
-          delete-by-moving-to-trash t)
-
-  (defun krisb-empty-trash ()
-    "Empty the trash directory."
-    (interactive)
-    (if delete-by-moving-to-trash
-        (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
-          (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
-            (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
-      (message "delete-by-moving-to-trash is nil; not emptying trash")))
-#+end_src
-
-* Disabled commands
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc
-  ;; Enable all disabled commands
-  (setopt disabled-command-function nil)
-#+end_src
-
-* Don't warn when advising functions
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc
-  ;; Don’t warn when advising
-  (setopt ad-redefinition-action 'accept)
-#+end_src
-
-* Word wrap
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc
-  ;; Word wrapping.  Continue wrapped lines at whitespace rather than
-  ;; breaking in the middle of a word.
-  (setopt word-wrap t)
-#+end_src
-
 * Domains
 
 ** Programming
 
-*** Helpers
+*** Emacs-lisp
 
-*** Language-specific
-
-**** Emacs-lisp
-
-***** Help.el: Documentation
+**** Help.el: Documentation
 
 #+name: help.el
 #+begin_src emacs-lisp
@@ -991,25 +990,19 @@ Tell ~display-buffer-alist~ where to show help buffers:
                  (window-height . shrink-window-if-larger-than-buffer)))
 #+end_src
 
-***** Package authorship
+**** Package authorship
 
-*** Shells
+** Prose writing
 
-** Prose
+*** Grammar checking
 
-*** Linting
-
-*** Spell-checking
-
-** Ideation
-
-** Task direction
+*** Spell checking
 
 ** Media management
 
 *** Email
 
-*** PDFs
+** Task direction
 
 * Deployments
 

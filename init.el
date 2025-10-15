@@ -1,9 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Add modules and personal lisp files to `load-path'
-(dolist (path (list (expand-file-name "modules" user-emacs-directory)
-                    (expand-file-name "lisp" user-emacs-directory)))
-  (add-to-list 'load-path path))
+
 
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
@@ -220,8 +217,31 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
 ;;; Miscellaneous options for built-ins
 (setup emacs
+ ;; Enable all disabled commands
+ (setopt disabled-command-function nil)
+ 
+ ;; Don’t warn when advising
+ (setopt ad-redefinition-action 'accept)
+ 
+ ;; Word wrapping.  Continue wrapped lines at whitespace rather than
+ ;; breaking in the middle of a word.
+ (setopt word-wrap t)
+ 
  ;; Disable the ring-bell (it's annoying)
- (setopt ring-bell-function nil)
+ (setopt ring-bell-function #'ignore)
+ 
+ ;; Move files into trash directory
+ (setopt trash-directory (no-littering-expand-var-file-name "trash")
+         delete-by-moving-to-trash t)
+ 
+ (defun krisb-empty-trash ()
+   "Empty the trash directory."
+   (interactive)
+   (if delete-by-moving-to-trash
+       (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
+         (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
+           (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
+     (message "delete-by-moving-to-trash is nil; not emptying trash")))
  
  ;; Show context menu from right-click
  (when (display-graphic-p) (context-menu-mode 1))
@@ -238,30 +258,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
    (setopt interprogram-cut-function
            (lambda (text)
              (start-process "wl-copy" nil "wl-copy"
-                            "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
- 
- ;; Move files into trash directory
- (setopt trash-directory (no-littering-expand-var-file-name "trash")
-         delete-by-moving-to-trash t)
- 
- (defun krisb-empty-trash ()
-   "Empty the trash directory."
-   (interactive)
-   (if delete-by-moving-to-trash
-       (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
-         (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
-           (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
-     (message "delete-by-moving-to-trash is nil; not emptying trash")))
- 
- ;; Enable all disabled commands
- (setopt disabled-command-function nil)
- 
- ;; Don’t warn when advising
- (setopt ad-redefinition-action 'accept)
- 
- ;; Word wrapping.  Continue wrapped lines at whitespace rather than
- ;; breaking in the middle of a word.
- (setopt word-wrap t))
+                            "--trim-newline" "--type" "text/plain;charset=utf-8" text)))))
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We

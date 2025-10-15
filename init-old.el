@@ -5939,10 +5939,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; explanation (or try it out!)
 (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
 
-;; Word wrapping.  Continue wrapped lines at whitespace rather than
-;; breaking in the middle of a word.
-(setopt word-wrap t)
-
 ;; Prefer UTF-8 file and selection encoding
 (prefer-coding-system 'utf-8)
 ;; The clipboard on Windows is often a wider encoding (UTF-16), so
