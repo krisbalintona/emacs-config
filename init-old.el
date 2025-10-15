@@ -554,88 +554,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :ensure t
   :demand t)
 
-;;;; Corfu
-;; Faster, minimal, and more lightweight autocomplete that is more
-;; faithful to the Emacs infrastructure
-;; TODO 2025-05-20: Document the user options below in the literate
-;; config:
-;;
-;; - `corfu-auto'
-;; - `corfu-cycle'
-(use-package corfu
-  :ensure t
-  :demand t
-  :hook
-  (minibuffer-setup-hook . krisb-corfu-enable-in-minibuffer-conditionally)
-  :bind
-  (;; TODO 2025-05-20: Revisit this.
-   ;; ("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
-   :map corfu-map
-   ("M-d" . corfu-info-documentation)
-   ("M-m" . krisb-corfu-move-to-minibuffer))
-  :custom
-  (corfu-count 14)
-  (corfu-scroll-margin 3)
-  ;; Always have the same width
-  (corfu-min-width 75)
-  (corfu-max-width corfu-min-width)
-
-  ;; Allow spaces and don't quit on boundary to leverage orderless's
-  ;; space-separated components
-  (corfu-quit-at-boundary nil)
-  (corfu-separator ?\s) ; Use space
-  (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
-  :custom-face
-  ;; Always use a fixed-pitched font for corfu; variable pitch fonts
-  ;; (which will be adopted in a variable pitch buffer) have
-  ;; inconsistent spacing
-  (corfu-default ((t (:inherit 'default))))
-  :config
-  (global-corfu-mode 1)
-
-  ;; Enable corfu in minibuffer if `vertico-mode' is disabled.  From
-  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
-  (defun krisb-corfu-enable-in-minibuffer-conditionally ()
-    "Enable Corfu in the minibuffer if vertico is not active."
-    (unless (bound-and-true-p vertico-mode)
-      (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
-      (corfu-mode 1)))
-
-  ;; Transfer corfu completion to the minibuffer
-  (defun krisb-corfu-move-to-minibuffer ()
-    "Transfer corfu completion to the minibuffer.
-Taken from
-https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-minibuffer."
-    (interactive)
-    (pcase completion-in-region--data
-      (`(,beg ,end ,table ,pred ,extras)
-       (let ((completion-extra-properties extras)
-             completion-cycle-threshold completion-cycling)
-         (consult-completion-in-region beg end table pred)))))
-  (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer))
-
-;;;; Corfu-popupinfo
-;; Popup documentation window for corfu candidates
-(use-package corfu-popupinfo
-  :ensure nil
-  :after corfu
-  :defer t
-  :hook
-  (corfu-mode-hook . corfu-popupinfo-mode)
-  :bind
-  ( :map corfu-map
-    ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
-    ("M-l" . corfu-popupinfo-location))
-  :custom
-  (corfu-popupinfo-delay '(nil . 0.4))  ; Don't display initially
-  (corfu-popupinfo-direction '(right left vertical))
-  (corfu-popupinfo-hide t)
-  (corfu-popupinfo-resize t)
-  (corfu-popupinfo-max-height 70)
-  (corfu-popupinfo-max-width 80)
-  (corfu-popupinfo-min-height 1)
-  (corfu-popupinfo-min-width 25))
-
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular `completing-read'
 ;; minibuffers
@@ -4199,6 +4117,7 @@ Meant to be used as around advice for `org-archive--compute-location'."
   ;; Enable hiDPI support, but at the cost of memory! See politza/pdf-tools#51
   (pdf-view-use-scaling t)
   (pdf-view-use-imagemagick t)
+  (pdf-view-use-unicode-ligther nil)
   :config
   ;; Taken from Doom
   (defun krisb-pdf-view-cleanup-windows-h ()

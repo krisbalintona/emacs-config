@@ -52,7 +52,11 @@
   (package-install 'setup))
 
 (setup setup
-  (:package setup))
+  (:package setup)
+
+  ;; Demote setup errors to warnings.  Taken from the note left in
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-27.
+  (add-to-list 'setup-modifier-list 'setup-wrap-to-demote-errors))
 
 ;; Define my own setup.el macros
 (with-eval-after-load 'setup
@@ -533,6 +537,87 @@ default to 8."
                '((major-mode . help-mode)
                  (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
                  (window-height . shrink-window-if-larger-than-buffer))))
+
+;;; Corfu
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;; - `corfu-auto'
+;; - `corfu-cycle'
+;; Faster, minimal, and more lightweight autocomplete that is more
+;; faithful to the Emacs infrastructure
+(setup corfu
+  (:package corfu)
+  (:require corfu)
+
+  (:bind-keys
+   ;; TODO 2025-05-20: Revisit this.
+   ;; ("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
+   :map corfu-map
+   ("M-d" . corfu-info-documentation))
+
+  (setopt corfu-count 14
+          corfu-scroll-margin 3
+          ;; Always have the same width
+          corfu-min-width 75
+          corfu-max-width corfu-min-width)
+
+  ;; Allow spaces and don't quit on boundary to leverage orderless's
+  ;; space-separated components
+  (setopt corfu-quit-at-boundary nil
+          corfu-separator ?\s ; Use space
+          corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
+
+  ;; Always use a fixed-pitched font for corfu; variable pitch fonts
+  ;; (which will be adopted in a variable pitch buffer) have
+  ;; inconsistent spacing
+  (:face corfu-default ((t (:inherit 'default))))
+
+  (global-corfu-mode 1))
+
+;; Extras
+(setup corfu
+  ;; Enable corfu in minibuffer if `vertico-mode' is disabled.  From
+  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
+  (defun krisb-corfu-enable-in-minibuffer-conditionally ()
+    "Enable Corfu in the minibuffer if vertico is not active."
+    (unless (bound-and-true-p vertico-mode)
+      (setq-local corfu-auto nil) ; Ensure auto completion is disabled
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally)
+
+  (with-eval-after-load 'consult
+    ;; Transfer completion of corfu to the minibuffer.  Taken from
+    ;; https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-minibuffer.
+    (defun krisb-corfu-move-to-minibuffer ()
+      "Transfer corfu completion to the minibuffer."
+      (interactive)
+      (pcase completion-in-region--data
+        (`(,beg ,end ,table ,pred ,extras)
+         (let ((completion-extra-properties extras)
+               completion-cycle-threshold completion-cycling)
+           (consult-completion-in-region beg end table pred)))))
+    (:bind-keys :map corfu-map ("M-m" . krisb-corfu-move-to-minibuffer))
+    (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer)))
+
+;; Extension that comes with corfu.  Popup documentation window for
+;; corfu candidates
+(setup corfu-popupinfo
+  (:load-after corfu)
+
+  (add-hook 'corfu-mode-hook #'corfu-popupinfo-mode)
+
+  (:bind-keys :map corfu-map
+              ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
+              ("M-l" . corfu-popupinfo-location))
+
+  (setopt corfu-popupinfo-delay '(nil . 0.4)  ; Don't display initially
+          corfu-popupinfo-direction '(right left vertical)
+          corfu-popupinfo-hide t
+          corfu-popupinfo-resize t
+          corfu-popupinfo-max-height 70
+          corfu-popupinfo-max-width 80
+          corfu-popupinfo-min-height 1
+          corfu-popupinfo-min-width 25))
 
 ;;; Startup time
 ;; Message for total init time after startup
