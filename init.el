@@ -27,9 +27,35 @@
 ;;; Meta-configuration
 
 ;;;; Bespoke helpers
+;;;;; Variables
+;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
+;; does not exist, other packages that depend on this value are given
+;; a non-existing path, likely resulting in errors.  We might solve
+;; this by turning this into a function instead, returning nil if it
+;; doesn't exist, thereby avoiding passing a non-existing file path to
+;; these packages.
+(defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
+  "The directory holding my org files.")
+
+(defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
+  "My notes directory.")
+
+(defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
+  "The directory holding my main org-agenda files.")
+
+;;;;; Functions
 (defun krisb-wayland-p ()
-    "Return non-nil if Emacs is under Wayland."
-    (getenv "WAYLAND_DISPLAY"))
+  "Return non-nil if Emacs is under Wayland."
+  (getenv "WAYLAND_DISPLAY"))
+
+;;;;; Keymaps
+(defvar-keymap krisb-note-keymap
+  :doc "Prefix for my note-taking needs.")
+(bind-key "C-c n" krisb-note-keymap 'global-map)
+
+(defvar-keymap krisb-open-keymap
+  :doc "Prefix for opening various hings.")
+(bind-key "C-c o" krisb-open-keymap 'global-map)
 
 ;;;; Package.el
 (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
@@ -217,48 +243,48 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
 ;;; Miscellaneous options for built-ins
 (setup emacs
- ;; Enable all disabled commands
- (setopt disabled-command-function nil)
- 
- ;; Don’t warn when advising
- (setopt ad-redefinition-action 'accept)
- 
- ;; Word wrapping.  Continue wrapped lines at whitespace rather than
- ;; breaking in the middle of a word.
- (setopt word-wrap t)
- 
- ;; Disable the ring-bell (it's annoying)
- (setopt ring-bell-function #'ignore)
- 
- ;; Move files into trash directory
- (setopt trash-directory (no-littering-expand-var-file-name "trash")
-         delete-by-moving-to-trash t)
- 
- (defun krisb-empty-trash ()
-   "Empty the trash directory."
-   (interactive)
-   (if delete-by-moving-to-trash
-       (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
-         (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
-           (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
-     (message "delete-by-moving-to-trash is nil; not emptying trash")))
- 
- ;; Show context menu from right-click
- (when (display-graphic-p) (context-menu-mode 1))
- 
- ;; TODO 2025-10-14: Document:
- ;; `history-delete-duplicates'
- (setopt history-length 1000)
- 
- ;; Don’t wait until yanking to put clipboard text into `kill-ring’
- (setopt save-interprogram-paste-before-kill t)
- 
- ;; Wayland compatibility
- (when (krisb-wayland-p)
-   (setopt interprogram-cut-function
-           (lambda (text)
-             (start-process "wl-copy" nil "wl-copy"
-                            "--trim-newline" "--type" "text/plain;charset=utf-8" text)))))
+  ;; Enable all disabled commands
+  (setopt disabled-command-function nil)
+  
+  ;; Don’t warn when advising
+  (setopt ad-redefinition-action 'accept)
+  
+  ;; Word wrapping.  Continue wrapped lines at whitespace rather than
+  ;; breaking in the middle of a word.
+  (setopt word-wrap t)
+  
+  ;; Disable the ring-bell (it's annoying)
+  (setopt ring-bell-function #'ignore)
+  
+  ;; Move files into trash directory
+  (setopt trash-directory (no-littering-expand-var-file-name "trash")
+          delete-by-moving-to-trash t)
+  
+  (defun krisb-empty-trash ()
+    "Empty the trash directory."
+    (interactive)
+    (if delete-by-moving-to-trash
+        (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
+          (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
+            (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
+      (message "delete-by-moving-to-trash is nil; not emptying trash")))
+  
+  ;; Show context menu from right-click
+  (when (display-graphic-p) (context-menu-mode 1))
+  
+  ;; TODO 2025-10-14: Document:
+  ;; `history-delete-duplicates'
+  (setopt history-length 1000)
+  
+  ;; Don’t wait until yanking to put clipboard text into `kill-ring’
+  (setopt save-interprogram-paste-before-kill t)
+  
+  ;; Wayland compatibility
+  (when (krisb-wayland-p)
+    (setopt interprogram-cut-function
+            (lambda (text)
+              (start-process "wl-copy" nil "wl-copy"
+                             "--trim-newline" "--type" "text/plain;charset=utf-8" text)))))
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
@@ -582,10 +608,11 @@ to if called with ARG, or any prefix argument."
           describe-bindings-outline t
           describe-bindings-show-prefix-commands t)
 
-  (add-to-list 'display-buffer-alist
-               '((major-mode . help-mode)
-                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-                 (window-height . shrink-window-if-larger-than-buffer))))
+  (with-eval-after-load 'help
+    (add-to-list 'display-buffer-alist
+                 '((major-mode . help-mode)
+                   (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+                   (window-height . shrink-window-if-larger-than-buffer)))))
 
 ;;; Corfu
 ;; TODO 2025-05-20: Document the user options below in the literate
@@ -667,6 +694,120 @@ to if called with ARG, or any prefix argument."
           corfu-popupinfo-max-width 80
           corfu-popupinfo-min-height 1
           corfu-popupinfo-min-width 25))
+
+;;; Org
+;;;; Org built-ins
+;;;;; Org-mode
+(setup org
+  (:package org)
+  
+  (add-hook 'org-mode-hook #'variable-pitch-mode)
+  (add-hook 'org-mode-hook #'visual-line-mode)
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local line-spacing 0.2
+                                         fill-column 100)))
+
+  (setopt org-directory krisb-folio-directory)
+
+  ;; TODO 2025-05-22: Document:
+  ;; - `org-hide-macro-markers'
+  ;; - `org-pretty-entities-include-sub-superscripts' - see also `org-export-with-sub-superscripts'
+  ;; - `org-hidden-keywords'
+  ;; Fancy markup
+  (setopt org-hide-emphasis-markers t
+          org-pretty-entities t ; Show as UTF-8 characters (useful for math)
+          org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
+
+  ;; TODO 2025-05-22: Document:
+  ;; - `org-special-ctrl-k'
+  ;; Movement
+  (setopt org-special-ctrl-a/e t
+          org-ctrl-k-protect-subtree 'error)
+  
+  ;; Logging
+  (setopt org-log-done 'time
+          org-log-into-drawer t
+          org-log-refile 'time
+          org-log-reschedule 'time
+          org-log-redeadline 'time)
+
+  ;; TODO 2025-05-22: Document the "Org Plain List" customize group as
+  ;; well as these options:
+  ;; - `org-list-use-circular-motion'
+  ;; Plain lists
+  (setopt org-list-allow-alphabetical t
+          org-list-demote-modify-bullet
+          '(("+" . "-")
+            ("-" . "*")
+            ("*" . "+"))))
+
+;;;;; Org-agenda
+;; TODO 2025-05-24: Document these options:
+;; - `org-agenda-start-on-weekday’
+;; - `org-enforce-todo-checkbox-dependencies’
+;; - `org-agenda-show-inherited-tags’
+;; - `org-use-tag-inheritance’
+;; TODO 2025-05-24: Also mention these options that are elevant to org-agenda:
+;; - `org-extend-today-until’
+;; - `org-use-effective-time’
+;; - `org-use-property-inheritance’
+;; TODO 2025-05-24: Explain that `org-todo-keywords’ does not work
+;; when set directory locally.  Some relevant mailing list
+;; discussions:
+;; - https://lists.gnu.org/archive/html/emacs-orgmode/2020-05/msg00426.html,
+;; - https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
+;; We either must set it via file-local keywords or using #+SETUPFILE.
+(setup org-agenda
+
+  (add-hook 'org-agenda-mode #'hl-line-mode)
+  
+  (bind-keys :map krisb-open-keymap
+             ("a" . org-agenda))
+  
+  (setopt org-agenda-inhibit-startup t)
+  (setopt org-agenda-files (list krisb-org-agenda-directory))
+
+  ;; TODO 2025-10-15: Document these:
+  ;; - `org-use-fast-todo-selection'
+  ;; Todos
+  (setopt org-todo-keywords
+          '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
+                      "DONE(d!/@)" "CANCELED(c@/!)"))
+          org-todo-keyword-faces
+          '(("NEXT" . (bold success))
+            ("TODO" . org-todo)
+            ("HOLD" . (shadow error))
+            ("MAYBE" . (shadow org-todo))
+            ("DONE" . (bold org-done))
+            ("CANCELED" . error)))
+  (setopt org-enforce-todo-dependencies t)
+  (setopt org-agenda-dim-blocked-tasks t)
+
+  ;; Priorities
+  (setopt org-priority-highest ?A
+          org-priority-default ?E
+          org-priority-lowest ?F
+          org-priority-faces
+          '((?A . (bold org-priority))
+            (?B . (bold org-priority))
+            (?C . org-priority)
+            (?D . org-priority)
+            (?E . (shadow org-priority))
+            (?F . (shadow org-priority))))
+
+  ;; Effort
+  (setopt org-agenda-sort-noeffort-is-high nil)
+  
+  (with-eval-after-load 'org-agenda
+    (add-to-list 'display-buffer-alist
+                 '("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
+                   (display-buffer-in-side-window)
+                   (window-height . fit-window-to-buffer)
+                   (side . top)
+                   (slot . -2)
+                   (preserve-size . (nil . t))
+                   (window-parameters . ((mode-line-format . none)))
+                   (post-command-select-window . t)))))
 
 ;;; Startup time
 ;; Message for total init time after startup

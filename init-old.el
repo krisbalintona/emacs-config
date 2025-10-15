@@ -143,10 +143,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 ;;;; My variables, functions, macros, and keymaps
 
 ;;;;; Keymaps
-(defvar-keymap krisb-note-keymap
-  :doc "Prefix for my note-taking needs.")
-(bind-key "C-c n" krisb-note-keymap 'global-map)
-
 ;; TODO 2025-05-22: Revisit this.
 ;; (defvar-keymap krisb-file-keymap
 ;;   :doc "Prefix for file-related commands.")
@@ -157,35 +153,16 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 ;;   :doc "Prefix for yanking stuff.")
 ;; (bind-key "C-c i" krisb-yank-keymap 'global-map)
 
-(defvar-keymap krisb-open-keymap
-  :doc "Prefix for opening various hings.")
-(bind-key "C-c o" krisb-open-keymap 'global-map)
-
 (defvar-keymap krisb-toggle-keymap
   :doc "Prefix for toggling stuff.")
 (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 
 ;;;;; Directories
-;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
-;; does not exist, other packages that depend on this value are given
-;; a non-existing path, likelly resulting in errors.  We might solve
-;; this by turning this into a function instead, returning nil if it
-;; doesn't exist, thereby avoiding passing a non-existing file path to
-;; these packages.
-(defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
-  "The directory holding my org files.")
-
-(defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
-  "My notes directory.")
-
 (defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
   "The directory for my pre-export blog files.")
 
 (defvar krisb-org-archive-directory (expand-file-name "archive" krisb-folio-directory)
   "The archive directory for my org files.")
-
-(defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
-  "The directory holding my main org-agenda files.")
 
 (defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
   "Directory that houses my local email files.")
@@ -2778,16 +2755,9 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;;;; Org
 (use-package org
   :ensure nil                           ; Activated by elpaca earlier
-  :defer t
-  :hook
-  (org-mode-hook . variable-pitch-mode)
-  (org-mode-hook . visual-line-mode)
-  (org-mode-hook . (lambda () (setq-local line-spacing 0.2 fill-column 100)))
   :bind
   ("C-c s" . org-store-link)
   :custom
-  (org-directory krisb-folio-directory)
-
   ;; Headlines
   ;; TODO 2025-05-22: Document:
   ;; - `org-hide-leading-stars'
@@ -2805,41 +2775,6 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
      (default . t)))
   (org-startup-folded 'nofold)
   (org-fontify-done-headline nil)
-
-  ;; REVIEW 2025-05-24: Should this be set directory locally?
-  ;; Logging
-  (org-log-done 'time)
-  (org-log-into-drawer t)
-  (org-log-refile 'time)
-  (org-log-reschedule 'time)
-  (org-log-redeadline 'time)
-
-  ;; Plain lists
-  ;; TODO 2025-05-22: Document the "Org Plain List" customize group as
-  ;; well as these options:
-  ;; - `org-list-use-circular-motion'
-  ;; TODO 2025-05-22: Document that `org-list-demote-modify-bullet' is
-  ;; almost like a more versatile version of org-bulletproof
-  (org-list-allow-alphabetical t)
-  (org-list-demote-modify-bullet
-   '(("+" . "-")
-     ("-" . "*")
-     ("*" . "+")))
-
-  ;; Markup
-  ;; TODO 2025-05-22: Document:
-  ;; - `org-hide-macro-markers'
-  ;; - `org-pretty-entities-include-sub-superscripts' - see also `org-export-with-sub-superscripts'
-  ;; - `org-hidden-keywords'
-  (org-hide-emphasis-markers t)
-  (org-pretty-entities t) ; Show as UTF-8 characters (useful for math)
-  (org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
-
-  ;; Movement
-  ;; TODO 2025-05-22: Document:
-  ;; - `org-special-ctrl-k'
-  (org-special-ctrl-a/e t)
-  (org-ctrl-k-protect-subtree 'error)
 
   ;; Org blocks
   (org-structure-template-alist
@@ -2891,18 +2826,7 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
                     org-follow-link-hook))
       (add-hook hook #'pulsar-recenter-center)
       (add-hook hook #'pulsar-reveal-entry)))
-
-  ;; Add to `display-buffer-alist’
-  (add-to-list 'display-buffer-alist
-               '("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
-                 (display-buffer-in-side-window)
-                 (window-height . fit-window-to-buffer)
-                 (side . top)
-                 (slot . -2)
-                 (preserve-size . (nil . t))
-                 (window-parameters . ((mode-line-format . none)))
-                 (post-command-select-window . t)))
-
+  
   ;; Standardize creation of IDs and targets
   (defun krisb-org-create-custom-id ()
     "Get the CUSTOM_ID of the current entry.
@@ -5010,37 +4934,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
              org-node--candidate<>entry)))
 
 ;;;; Org-agenda
-;; TODO 2025-05-24: Document these options:
-;; - `org-agenda-start-on-weekday’
-;; - `org-enforce-todo-checkbox-dependencies’
-;; - `org-agenda-show-inherited-tags’
-;; - `org-use-tag-inheritance’
-;; TODO 2025-05-24: Also mention these options that are elevant to org-agenda:
-;; - `org-extend-today-until’
-;; - `org-use-effective-time’
-;; - `org-use-property-inheritance’
-;; TODO 2025-05-24: Explain that `org-todo-keywords’ does not work
-;; when set directory locally.  Some relevant mailing list
-;; discussions:
-;; https://lists.gnu.org/archive/html/emacs-orgmode/2020-05/msg00426.html,
-;; https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
-;; We either must set it via file-local keywords or using #+SETUPFILE.
 (use-package org-agenda
-  :ensure nil
-  :hook
-  (org-agenda-mode . hl-line-mode)
-  :bind
-  ( :map krisb-open-keymap
-    ("a" . org-agenda))
   :custom
-  ;; Files
-  (org-agenda-files (list krisb-org-agenda-directory))
-  (org-agenda-inhibit-startup t)
-
-  ;; Org agenda buffer
+  ;; Org-agenda buffer
   (org-agenda-window-setup 'only-window)
   (org-agenda-restore-windows-after-quit t)
-  (org-agenda-sticky t) ; Set to nil if frequently modifying `org-agenda-custom-commands'
+  (org-agenda-sticky t)
   (org-agenda-tags-column 0)
   ;; TODO 2025-05-24: Revisit these.
   ;; (org-agenda-format-date #'krisb-org-agenda-format-date-aligned)
@@ -5048,44 +4947,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   ;; (org-agenda-todo-ignore-scheduled nil)
   ;; (org-agenda-remove-times-when-in-prefix t)
   ;; (org-agenda-remove-tags 'prefix)
-
-  ;; Todos
-  (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
-               "DONE(d!/@)" "CANCELED(c@/!)")))
-  ;; TODO 2025-05-24: Revisit this.
-  ;; (org-use-fast-todo-selection 'expert)
-  (org-todo-keyword-faces
-   '(("NEXT" . (bold success))
-     ("TODO" . org-todo)
-     ("HOLD" . (shadow error))
-     ("MAYBE" . (shadow org-todo))
-     ("DONE" . (bold org-done))
-     ("CANCELED" . error)))
-  (org-enforce-todo-dependencies t)
-  (org-agenda-dim-blocked-tasks t)
-
-  ;; Priorities
-  (org-priority-highest ?A)
-  (org-priority-default ?E)
-  (org-priority-lowest ?F)
-  (org-priority-faces
-   '((?A . (bold org-priority))
-     (?B . (bold org-priority))
-     (?C . org-priority)
-     (?D . org-priority)
-     (?E . (shadow org-priority))
-     (?F . (shadow org-priority))))
-
+  
   ;; Tags
   ;; We set `org-tags-exclude-from-inheritance’ directory locally
-  (org-tag-faces
-   '(("project" . outline-1)))
+  (org-tag-faces '(("project" . outline-1)))
   ;; TODO 2025-05-24: Revisit this.
-  (org-fast-tag-selection-single-key 'expert)
-
-  ;; Effort
-  (org-agenda-sort-noeffort-is-high nil))
+  (org-fast-tag-selection-single-key 'expert))
 
 ;;;; Org-clock
 ;; TODO 2025-05-24: Document:
