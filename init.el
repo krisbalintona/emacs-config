@@ -195,6 +195,11 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   (:package el-patch)
   (:require el-patch))
 
+;;; Miscellaneous options for built-ins
+;; TODO 2025-10-14: Document:
+;; `history-delete-duplicates'
+(setopt history-length 1000)
+
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
 ;; reset the value after initialization.
@@ -463,6 +468,19 @@ default to 8."
             "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
 
   (exec-path-from-shell-initialize))
+
+;;; Savehist
+;; Make history of certain things (e.g. minibuffer) persistent across sessions
+(setup savehist
+  (:require savehist)
+
+  (setopt savehist-save-minibuffer-history t
+          savehist-autosave-interval 30)
+
+  (savehist-mode 1)
+
+  (dolist (var '((Info-history-list . 250)))
+    (add-to-list 'savehist-additional-variables var)))
 
 ;;; Startup time
 ;; Message for total init time after startup

@@ -6,7 +6,7 @@
 #+property: header-args :noweb yes
 
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
-#  LocalWords:  Minibuffer Vertico Fontaine Theming
+#  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer
 
 * About this document
 
@@ -609,7 +609,17 @@ This option controls which themes Emacs does not ask for confirmation to load. S
           custom-unlispify-tag-names nil)
 #+end_src
 
-** Vertico: Minibuffer completion
+** Minibuffer
+
+*** Minibuffer History
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; TODO 2025-10-14: Document:
+  ;; `history-delete-duplicates'
+  (setopt history-length 1000)
+#+end_src
+
+*** Vertico: Alternative minibuffer completion interface
 
 #+name: vertico
 #+begin_src emacs-lisp
@@ -691,6 +701,25 @@ Vertico provides several extensions:
                :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
                :no-match ,(propertize "\n[No match]" 'face 'shadow)
                :spacer #(" " 0 1 (cursor t)))))
+#+end_src
+
+* Persistence
+
+** Savehist: Persist minibuffer history
+
+#+name: savehist
+#+begin_src emacs-lisp
+  ;; Make history of certain things (e.g. minibuffer) persistent across sessions
+  (setup savehist
+    (:require savehist)
+
+    (setopt savehist-save-minibuffer-history t
+            savehist-autosave-interval 30)
+
+    (savehist-mode 1)
+
+    (dolist (var '((Info-history-list . 250)))
+      (add-to-list 'savehist-additional-variables var)))
 #+end_src
 
 * Domains
@@ -776,6 +805,9 @@ Vertico provides several extensions:
   ;;;; El-patch
   <<el-patch>>
 
+  ;;; Miscellaneous options for built-ins
+  <<emacs-misc>>
+
   ;;; Garbage collection
   <<garbage-collection-post-init>>
 
@@ -799,6 +831,9 @@ Vertico provides several extensions:
 
   ;;; Exec-path-from-shell
   <<exec-path-from-shell>>
+
+  ;;; Savehist
+  <<savehist>>
 
   ;;; Startup time
   <<startup-time>>
