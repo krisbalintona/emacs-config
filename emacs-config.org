@@ -189,7 +189,12 @@ Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes wit
         `(unless (executable-find ,executable)
            ,(setup-quit)))
       :documentation "If EXECUTABLE is not in the path, stop here."
-      :debug '(form)))
+      :debug '(form))
+
+    ;; Redefine :require macro to use current feature.
+    (setup-define :require
+      (lambda () `(require ',(setup-get 'feature) nil t))
+      :documentation "Try to require the current feature, or stop evaluating body."))
 
   ;; Add setup entries to imenu.  Modified from
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
@@ -241,7 +246,7 @@ This lets setup.el configurations be transparent rather than opaque: I understan
 
     ;; Require only after setting `no-littering-etc-directory' and
     ;; `no-littering-var-directory'
-    (:require no-littering)
+    (:require)
 
     ;; Sets more secure values for `auto-save-file-name-transforms',
     ;; `backup-directory-alist', and
@@ -282,7 +287,7 @@ We also do this:
   ;; - `on-switch-window-hook'
   (setup on
     (:package on)
-    (:require on))
+    (:require))
 #+end_src
 
 ** El-patch: override packages in a future-proof way
@@ -294,7 +299,7 @@ There is a problem when we use the typical ~(advice-add ... :override ...)~, nam
   (setup el-patch
     ;; Elpaca: :ensure (:wait t)
     (:package el-patch)
-    (:require el-patch))
+    (:require))
 #+end_src
 
 # TODO 2025-06-03: Describe relation to https://elpa.gnu.org/packages/advice-patch.html.
@@ -436,7 +441,7 @@ Some bespoke commands and helper functions related to garbage collection:
   ;; Ensure Emacs inherits specified variables from the user environment
   (setup exec-path-from-shell
     (:package exec-path-from-shell)
-    (:require exec-path-from-shell)
+    (:require)
 
     (setopt exec-path-from-shell-variables
             '("PATH" "MANPATH" "BROWSER"
@@ -502,7 +507,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
   (setup fontaine
     ;; Elpaca: :ensure (:wait t) ; To have faces set ASAP during startup
     (:package fontaine)
-    (:require fontaine)
+    (:require)
 
     (setopt fontaine-latest-state-file
             (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld")
@@ -603,7 +608,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
 #+begin_src emacs-lisp
   (setup ef-themes
     (:package ef-themes)
-    (:require ef-themes)
+    (:require)
 
     (:bind-keys ("<f8>" . ef-themes-toggle)
                 ("C-<f8>" . ef-themes-select)
@@ -736,7 +741,7 @@ Vertico provides several extensions:
   ;; faithful to the Emacs infrastructure
   (setup corfu
     (:package corfu)
-    (:require corfu)
+    (:require)
 
     (:bind-keys
      ;; TODO 2025-05-20: Revisit this.
@@ -837,7 +842,7 @@ Wayland specific:
 #+begin_src emacs-lisp
   ;; Make history of certain things (e.g. minibuffer) persistent across sessions
   (setup savehist
-    (:require savehist)
+    (:require)
 
     (setopt savehist-save-minibuffer-history t
             savehist-autosave-interval 30)

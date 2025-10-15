@@ -141,7 +141,12 @@ that.  Otherwise, remove it from `minor-mode-alist'."
       `(unless (executable-find ,executable)
          ,(setup-quit)))
     :documentation "If EXECUTABLE is not in the path, stop here."
-    :debug '(form)))
+    :debug '(form))
+
+  ;; Redefine :require macro to use current feature.
+  (setup-define :require
+    (lambda () `(require ',(setup-get 'feature) nil t))
+    :documentation "Try to require the current feature, or stop evaluating body."))
 
 ;; Add setup entries to imenu.  Modified from
 ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
@@ -183,7 +188,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
   ;; Require only after setting `no-littering-etc-directory' and
   ;; `no-littering-var-directory'
-  (:require no-littering)
+  (:require)
 
   ;; Sets more secure values for `auto-save-file-name-transforms',
   ;; `backup-directory-alist', and
@@ -205,13 +210,13 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 ;; - `on-switch-window-hook'
 (setup on
   (:package on)
-  (:require on))
+  (:require))
 
 ;;;; El-patch
 (setup el-patch
   ;; Elpaca: :ensure (:wait t)
   (:package el-patch)
-  (:require el-patch))
+  (:require))
 
 ;;; Miscellaneous options for built-ins
 (setup emacs
@@ -308,7 +313,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 (setup fontaine
   ;; Elpaca: :ensure (:wait t) ; To have faces set ASAP during startup
   (:package fontaine)
-  (:require fontaine)
+  (:require)
 
   (setopt fontaine-latest-state-file
           (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld")
@@ -402,7 +407,7 @@ default to 8."
 ;;;; Ef-themes
 (setup ef-themes
   (:package ef-themes)
-  (:require ef-themes)
+  (:require)
 
   (:bind-keys ("<f8>" . ef-themes-toggle)
               ("C-<f8>" . ef-themes-select)
@@ -488,7 +493,7 @@ default to 8."
 ;; Ensure Emacs inherits specified variables from the user environment
 (setup exec-path-from-shell
   (:package exec-path-from-shell)
-  (:require exec-path-from-shell)
+  (:require)
 
   (setopt exec-path-from-shell-variables
           '("PATH" "MANPATH" "BROWSER"
@@ -501,7 +506,7 @@ default to 8."
 ;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (setup savehist
-  (:require savehist)
+  (:require)
 
   (setopt savehist-save-minibuffer-history t
           savehist-autosave-interval 30)
@@ -547,7 +552,7 @@ default to 8."
 ;; faithful to the Emacs infrastructure
 (setup corfu
   (:package corfu)
-  (:require corfu)
+  (:require)
 
   (:bind-keys
    ;; TODO 2025-05-20: Revisit this.
