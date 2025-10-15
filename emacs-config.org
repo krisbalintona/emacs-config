@@ -17,11 +17,13 @@ Preview org blocks with noweb syntax with ~org-babel-expand-src-block~, bound to
 See also the useful command ~org-babel-goto-named-src-block~ and other useful commands in =(org) Key bindings and Useful Functions=.
 
 * Personal information
+
 #+name: bio
 #+begin_src emacs-lisp
   (setopt user-full-name "Kristoffer Balintona"
           user-mail-address "krisbalintona@gmail.com")
 #+end_src
+
 * Configuration itself
 
 ** Configuration-wide variables and helpers
@@ -369,8 +371,6 @@ Some bespoke commands and helper functions related to garbage collection:
     (:hide-mode)
 
     (add-hook 'on-first-buffer-hook #'gcmh-mode)
-    (add-hook 'minibuffer-setup-hook #'krisb-gcmh-minibuffer-setup)
-    (add-hook 'minibuffer-exit-hook #'krisb-gcmh-minibuffer-exit)
 
     (setopt gcmh-high-cons-threshold gc-cons-threshold
             ;; If the idle delay is too long, we run the risk of runaway
@@ -401,12 +401,33 @@ Some bespoke commands and helper functions related to garbage collection:
       (when gcmh-mode
         (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original)))
 
+    (add-hook 'minibuffer-setup-hook #'krisb-gcmh-minibuffer-setup)
+    (add-hook 'minibuffer-exit-hook #'krisb-gcmh-minibuffer-exit)
+
     ;; Increase `gc-cons-threshold' while using corfu too, like we do
     ;; for the minibuffer
     (with-eval-after-load 'corfu
       (advice-add 'completion-at-point :before #'krisb-gcmh-minibuffer-setup)
       (advice-add 'corfu-quit :after #'krisb-gcmh-minibuffer-exit)
       (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
+#+end_src
+
+* System path
+
+#+name: exec-path-from-shell
+#+begin_src emacs-lisp
+  ;; Ensure Emacs inherits specified variables from the user environment
+  (setup exec-path-from-shell
+    (:package exec-path-from-shell)
+    (:require exec-path-from-shell)
+
+    (setopt exec-path-from-shell-variables
+            '("PATH" "MANPATH" "BROWSER"
+              ;; `ssh-agent' environment variables.  See
+              ;; https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
+              "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
+
+    (exec-path-from-shell-initialize))
 #+end_src
 
 * Theming
@@ -526,8 +547,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
 
     ;; Persist the latest font preset when closing/starting Emacs and
     ;; while switching between themes.
-    (fontaine-mode 1)
-    )
+    (fontaine-mode 1))
 
   ;; Leverage with pulsar
   (with-eval-after-load 'fontaine
@@ -739,19 +759,21 @@ Vertico provides several extensions:
 
   <<customize-buffers>>
 
-  ;;; Package.el
+  ;;; Meta-configuration
+
+  ;;;; Package.el
   <<package.el>>
 
-  ;;; Setup.el
+  ;;;; Setup.el
   <<setup.el>>
 
-  ;;; No-littering.el
+  ;;;; No-littering.el
   <<no-littering>>
 
-  ;;; On.el
+  ;;;; On.el
   <<on.el>>
 
-  ;;; El-patch
+  ;;;; El-patch
   <<el-patch>>
 
   ;;; Garbage collection
@@ -774,6 +796,9 @@ Vertico provides several extensions:
 
   ;;; Vertico and extensions
   <<vertico>>
+
+  ;;; Exec-path-from-shell
+  <<exec-path-from-shell>>
 
   ;;; Startup time
   <<startup-time>>

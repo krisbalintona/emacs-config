@@ -27,7 +27,9 @@
 (setopt custom-theme-allow-multiple-selections t
         custom-unlispify-tag-names nil)
 
-;;; Package.el
+;;; Meta-configuration
+
+;;;; Package.el
 (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
                            ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
                            ("nongnu" . "https://elpa.nongnu.org/nongnu/")
@@ -40,7 +42,7 @@
 
         load-prefer-newer t)
 
-;;; Setup.el
+;;;; Setup.el
 (unless (package-installed-p 'setup)
   (package-install 'setup))
 
@@ -146,7 +148,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
       (push '(?s "Setup")
             (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types)))))
 
-;;; No-littering.el
+;;;; No-littering.el
 ;; Have packages write their files in locations adhering to a
 ;; convention.
 (setup no-littering
@@ -171,7 +173,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; detailed explanation.
   (no-littering-theme-backups))
 
-;;; On.el
+;;;; On.el
 ;; Package exposes a number of utility hooks and functions ported from
 ;; Doom Emacs.  The hooks make it easier to speed up Emacs startup by
 ;; providing finer-grained control of the timing at which packages are
@@ -187,7 +189,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   (:package on)
   (:require on))
 
-;;; El-patch
+;;;; El-patch
 (setup el-patch
   ;; Elpaca: :ensure (:wait t)
   (:package el-patch)
@@ -232,8 +234,6 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   (:hide-mode)
 
   (add-hook 'on-first-buffer-hook #'gcmh-mode)
-  (add-hook 'minibuffer-setup-hook #'krisb-gcmh-minibuffer-setup)
-  (add-hook 'minibuffer-exit-hook #'krisb-gcmh-minibuffer-exit)
 
   (setopt gcmh-high-cons-threshold gc-cons-threshold
           ;; If the idle delay is too long, we run the risk of runaway
@@ -258,6 +258,9 @@ that.  Otherwise, remove it from `minor-mode-alist'."
     "Restore value of `gc-cons-threshold'."
     (when gcmh-mode
       (setq gcmh-high-cons-threshold krisb-gc-minibuffer--original)))
+
+  (add-hook 'minibuffer-setup-hook #'krisb-gcmh-minibuffer-setup)
+  (add-hook 'minibuffer-exit-hook #'krisb-gcmh-minibuffer-exit)
 
   ;; Increase `gc-cons-threshold' while using corfu too, like we do
   ;; for the minibuffer
@@ -333,8 +336,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
   ;; Persist the latest font preset when closing/starting Emacs and
   ;; while switching between themes.
-  (fontaine-mode 1)
-  )
+  (fontaine-mode 1))
 
 ;; Leverage with pulsar
 (with-eval-after-load 'fontaine
@@ -447,6 +449,20 @@ default to 8."
              :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
              :no-match ,(propertize "\n[No match]" 'face 'shadow)
              :spacer #(" " 0 1 (cursor t)))))
+
+;;; Exec-path-from-shell
+;; Ensure Emacs inherits specified variables from the user environment
+(setup exec-path-from-shell
+  (:package exec-path-from-shell)
+  (:require exec-path-from-shell)
+
+  (setopt exec-path-from-shell-variables
+          '("PATH" "MANPATH" "BROWSER"
+            ;; `ssh-agent' environment variables.  See
+            ;; https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
+            "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
+
+  (exec-path-from-shell-initialize))
 
 ;;; Startup time
 ;; Message for total init time after startup

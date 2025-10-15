@@ -202,20 +202,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 
 ;;; A step below
 
-;;;; Exec-path-from-shell
-;; Ensure Emacs inherits specified variables from the user environment
-(use-package exec-path-from-shell
-  :ensure (:wait t)
-  :demand t
-  :custom
-  (exec-path-from-shell-variables
-   '("PATH" "MANPATH" "BROWSER"
-     ;; `ssh-agent' environment variables.  See
-     ;; https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
-     "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
-  :config
-  (exec-path-from-shell-initialize))
-
 ;;;; Theming
 
 ;;;;; Doric-themes
