@@ -278,24 +278,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 
 ;;; Two steps below
 
-;;;; Savehist
-;; Make history of certain things (e.g. minibuffer) persistent across sessions
-(use-package savehist
-  :ensure nil
-  :demand t
-  :custom
-  (history-length 1000)
-  ;; TODO 2025-05-19: Revisit this.  This should be placed elsewhere
-  ;; too.
-  ;; (history-delete-duplicates t)
-  (savehist-save-minibuffer-history t)
-  (savehist-autosave-interval 30)
-  :config
-  (savehist-mode 1)
-
-  (dolist (var '((Info-history-list . 250)))
-    (add-to-list 'savehist-additional-variables var)))
-
 ;;;; Desktop
 ;; Save buffers across Emacs sessions
 ;;
@@ -392,33 +374,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (isearch-lax-whitespace t)
   (search-whitespace-regexp ".*?"))
 
-;;;; Help
-(use-package help
-  :ensure nil
-  :defer t
-  :hook
-  (help-fns-describe-function-functions . shortdoc-help-fns-examples-function)
-  :bind
-  ("C-h C-k" . describe-keymap)
-  :custom
-  (help-window-select t)
-  (help-window-keep-selected t)
-
-  (help-enable-variable-value-editing t)
-  (help-clean-buttons t)
-  (help-enable-symbol-autoload t)
-
-  (describe-bindings-outline t)
-  (describe-bindings-show-prefix-commands t)
-
-  ;; TODO 2025-05-20: Revisit this.
-  ;; (help-at-pt-display-when-idle t)
-  :config
-  (add-to-list 'display-buffer-alist
-               '((major-mode . help-mode)
-                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-                 (window-height . shrink-window-if-larger-than-buffer))))
-
 ;;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (use-package elisp-demos
@@ -431,17 +386,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 
 ;;;; Insert spaces instead of tab characters
 (setopt indent-tabs-mode nil)
-
-;;;; Clipboard stuff
-;; Don’t wait until yanking to put clipboard text into `kill-ring’
-(setopt save-interprogram-paste-before-kill t)
-
-;; Wayland compatibility
-(when (getenv "WAYLAND_DISPLAY")
-  (setopt interprogram-cut-function
-          (lambda (text)
-            (start-process "wl-copy" nil "wl-copy"
-                           "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
 
 ;;;; Don’t let GTK override key sequences on wayland
 ;; See the section titled “Certain keys such as 'C-S-u' are not

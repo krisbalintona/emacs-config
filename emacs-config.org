@@ -3,7 +3,7 @@
 #+email: krisbalintona@gmail.com
 #+language: en_US
 #+options: num:t author:t email:t
-#+property: header-args :noweb yes
+#+property: header-args :noweb yes :noweb-sep "\n\n"
 
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
 #  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer
@@ -26,7 +26,14 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
 
 * Configuration itself
 
-** Configuration-wide variables and helpers
+** Bespoke configuration-wide variables and helpers
+
+#+name: config-helpers
+#+begin_src emacs-lisp
+  (defun krisb-wayland-p ()
+      "Return non-nil if Emacs is under Wayland."
+      (getenv "WAYLAND_DISPLAY"))
+#+end_src
 
 ** Load path for personal libraries
 
@@ -172,7 +179,16 @@ Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes wit
       (lambda (&rest args)
         `(bind-keys ,@args))
       :documentation "Bind KEY to COMMAND in current map."
-      :after-loaded t))
+      :after-loaded t)
+
+    ;; Macro for `executable-find'.  Taken from
+    ;; https://github.com/hiecaq/guix-config?tab=readme-ov-file#setupel
+    (setup-define :needs
+      (lambda (executable)
+        `(unless (executable-find ,executable)
+           ,(setup-quit)))
+      :documentation "If EXECUTABLE is not in the path, stop here."
+      :debug '(form)))
 
   ;; Add setup entries to imenu.  Modified from
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
@@ -703,6 +719,26 @@ Vertico provides several extensions:
                :spacer #(" " 0 1 (cursor t)))))
 #+end_src
 
+* Clipboard
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Don’t wait until yanking to put clipboard text into `kill-ring’
+  (setopt save-interprogram-paste-before-kill t)
+
+  ;; Wayland compatibility
+  <<clipboard-wayland>>
+#+end_src
+
+Wayland specific:
+#+name: clipboard-wayland
+#+begin_src emacs-lisp
+  (when (krisb-wayland-p)
+    (setopt interprogram-cut-function
+            (lambda (text)
+              (start-process "wl-copy" nil "wl-copy"
+                             "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
+#+end_src
+
 * Persistence
 
 ** Savehist: Persist minibuffer history
@@ -722,6 +758,13 @@ Vertico provides several extensions:
       (add-to-list 'savehist-additional-variables var)))
 #+end_src
 
+* Window control and management
+
+Below are other modifications to ~display-buffer-alist~ found elsewhere in this configuration:
+#+begin_src emacs-lisp
+  <<display-buffer-alist>>
+#+end_src
+
 * Domains
 
 ** Programming
@@ -731,6 +774,43 @@ Vertico provides several extensions:
 *** Language-specific
 
 **** Emacs-lisp
+
+***** Help.el: Documentation
+
+#+name: help.el
+#+begin_src emacs-lisp
+  ;; TODO 2025-10-14: Document:
+  ;; `help-at-pt-display-when-idle'
+  (setup help
+
+    (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function)
+
+    (:bind-keys :map help-map
+                ("C-k" . describe-keymap))
+
+    ;; Displaying buffer
+    (setopt help-window-select t
+            help-window-keep-selected t)
+
+    ;; Help buffers
+    (setopt help-enable-variable-value-editing t
+            help-clean-buttons t
+            help-enable-symbol-autoload t
+
+            describe-bindings-outline t
+            describe-bindings-show-prefix-commands t)
+
+    <<help-display-buffer-alist>>)
+#+end_src
+
+Tell ~display-buffer-alist~ where to show help buffers:
+#+name: help-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               '((major-mode . help-mode)
+                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+                 (window-height . shrink-window-if-larger-than-buffer)))
+#+end_src
 
 ***** Package authorship
 
@@ -754,13 +834,9 @@ Vertico provides several extensions:
 
 * Deployments
 
-** Platform-specific configurations
+** PC
 
-** Final configurations
-
-*** PC
-
-**** =early-init.el=
+*** =early-init.el=
 
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;; -*- lexical-binding: t; -*-
@@ -772,7 +848,7 @@ Vertico provides several extensions:
   <<garbage-collection-early-init>>
 #+end_src
 
-**** =init.el=
+*** =init.el=
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;; -*- lexical-binding: t; -*-
@@ -790,6 +866,9 @@ Vertico provides several extensions:
 
   ;;; Meta-configuration
 
+  ;;;; Bespoke helpers
+  <<config-helpers>>
+
   ;;;; Package.el
   <<package.el>>
 
@@ -806,7 +885,8 @@ Vertico provides several extensions:
   <<el-patch>>
 
   ;;; Miscellaneous options for built-ins
-  <<emacs-misc>>
+  (setup emacs
+   <<emacs-misc>>)
 
   ;;; Garbage collection
   <<garbage-collection-post-init>>
@@ -835,15 +915,18 @@ Vertico provides several extensions:
   ;;; Savehist
   <<savehist>>
 
+  ;;; Help.el
+  <<help.el>>
+
   ;;; Startup time
   <<startup-time>>
 #+end_src
 
-*** COMMENT Android
+** COMMENT Android
 
-**** =early-init.el=
+*** =early-init.el=
 
-**** =init.el=
+*** =init.el=
 
 #+begin_src emacs-lisp :tangle "init-android.el"
   <<package.el>>

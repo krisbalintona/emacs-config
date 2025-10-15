@@ -29,6 +29,11 @@
 
 ;;; Meta-configuration
 
+;;;; Bespoke helpers
+(defun krisb-wayland-p ()
+    "Return non-nil if Emacs is under Wayland."
+    (getenv "WAYLAND_DISPLAY"))
+
 ;;;; Package.el
 (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
                            ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
@@ -123,7 +128,16 @@ that.  Otherwise, remove it from `minor-mode-alist'."
     (lambda (&rest args)
       `(bind-keys ,@args))
     :documentation "Bind KEY to COMMAND in current map."
-    :after-loaded t))
+    :after-loaded t)
+
+  ;; Macro for `executable-find'.  Taken from
+  ;; https://github.com/hiecaq/guix-config?tab=readme-ov-file#setupel
+  (setup-define :needs
+    (lambda (executable)
+      `(unless (executable-find ,executable)
+         ,(setup-quit)))
+    :documentation "If EXECUTABLE is not in the path, stop here."
+    :debug '(form)))
 
 ;; Add setup entries to imenu.  Modified from
 ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
@@ -196,9 +210,20 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   (:require el-patch))
 
 ;;; Miscellaneous options for built-ins
-;; TODO 2025-10-14: Document:
-;; `history-delete-duplicates'
-(setopt history-length 1000)
+(setup emacs
+ ;; TODO 2025-10-14: Document:
+ ;; `history-delete-duplicates'
+ (setopt history-length 1000)
+ 
+ ;; Don’t wait until yanking to put clipboard text into `kill-ring’
+ (setopt save-interprogram-paste-before-kill t)
+ 
+ ;; Wayland compatibility
+ (when (krisb-wayland-p)
+   (setopt interprogram-cut-function
+           (lambda (text)
+             (start-process "wl-copy" nil "wl-copy"
+                            "--trim-newline" "--type" "text/plain;charset=utf-8" text)))))
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
@@ -481,6 +506,33 @@ default to 8."
 
   (dolist (var '((Info-history-list . 250)))
     (add-to-list 'savehist-additional-variables var)))
+
+;;; Help.el
+;; TODO 2025-10-14: Document:
+;; `help-at-pt-display-when-idle'
+(setup help
+
+  (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function)
+
+  (:bind-keys :map help-map
+              ("C-k" . describe-keymap))
+
+  ;; Displaying buffer
+  (setopt help-window-select t
+          help-window-keep-selected t)
+
+  ;; Help buffers
+  (setopt help-enable-variable-value-editing t
+          help-clean-buttons t
+          help-enable-symbol-autoload t
+
+          describe-bindings-outline t
+          describe-bindings-show-prefix-commands t)
+
+  (add-to-list 'display-buffer-alist
+               '((major-mode . help-mode)
+                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
+                 (window-height . shrink-window-if-larger-than-buffer))))
 
 ;;; Startup time
 ;; Message for total init time after startup
